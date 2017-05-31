@@ -106,3 +106,4 @@ etc/secret_key.txt
 # trash
 *.old
 *.bak
+*.~*
