@@ -9,6 +9,7 @@ src/o2f/db_password.py
 *.old
 *.bak
 *.~*
+nohup.out
 
 ####
 
