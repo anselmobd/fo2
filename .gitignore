@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# secret files
+etc/secret_key.txt
+
+# trash
+*.old
