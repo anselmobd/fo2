@@ -1,3 +1,17 @@
+# Development Environment DB
+src/db.sqlite3
+
+# Specific to the production environment
+etc/secret_key.txt
+src/o2f/db_password.py
+
+# Trash
+*.old
+*.bak
+*.~*
+
+####
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -99,11 +113,3 @@ ENV/
 
 # mypy
 .mypy_cache/
-
-# secret files
-etc/secret_key.txt
-
-# trash
-*.old
-*.bak
-*.~*
