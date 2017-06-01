@@ -22,6 +22,8 @@ from django.conf.urls.static import static
 from .views import index
 
 
+admin.autodiscover()
+
 urlpatterns = [
     url(r'^$', index, name='index'),
     # url(r'^', admin.site.urls),
