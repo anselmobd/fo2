@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 from .views import index
 
 
@@ -23,3 +25,5 @@ urlpatterns = [
     # url(r'^', admin.site.urls),
     url(r'^admin/', admin.site.urls),
 ]
+
+# urlpatterns += staticfiles_urlpatterns(),
