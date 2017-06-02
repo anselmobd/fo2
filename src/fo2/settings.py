@@ -29,7 +29,7 @@ with open(os.path.join(ROOT_DIR, 'etc/secret_key.txt')) as f:
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '192.168.1.96',  # production
+    'intranet', '192.168.1.96',  # production
     '192.168.1.247', 'localhost'  # development
 ]
 
