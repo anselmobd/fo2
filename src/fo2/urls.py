@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import include, url
 from django.contrib import admin
 from fo2.admin import intr_adm_site
 from django.conf import settings
@@ -30,4 +30,5 @@ urlpatterns = [
     # url(r'^', admin.site.urls),
     url(r'^rootadm/', admin.site.urls),
     url(r'^intradm/', intr_adm_site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^lotes/', include('lotes.urls')),
+  ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
