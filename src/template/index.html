@@ -1,5 +1,27 @@
 {% extends 'layout/layout.html' %}
+
 {% block title %}Principal{% endblock %}
-{% block content %}
+
+{% block header %}
 <h1>Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<h3>Systêtil - versões</h3>
+<ul>
+<li><h2><a href="http://intranet.tussor.com.br/oficial.systextil.html" target="_blank">Oficial</a></h2>
+<li><a href="http://intranet.tussor.com.br/simulacao.systextil.html" target="_blank">Simulação</a> (apenas para testes)
+<!-- /br>
+<li><a href="http://intranet.tussor.com.br/treinamento.systextil.html" target="_blank">Treinamento (antigo Teste)</a> (Onde foi feito o treinamento - Deve ser utilizada apenas como referência)
+-->
+</ul>
+<h3>Tussor - rotinas auxiliares ao Systêxtil</h3>
+<ul>
+<li><h2><a href="" target="_blank">---</a></h2>
+</ul>
+{% endblock %}
+
+{% block footer %}
+<span id='greasymonkeyversion'>Script Greasemonkey "Tussor_Intranet" não instalado no Firefox</span></br>
+<span id='greasymonkeyverify'>Chame o TI atualizar o Firefox, instalar o <a href="https://addons.mozilla.org/pt-BR/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> e instalar o script <a href="http://intranet/Tussor_Intranet.user.js" target="_blank">"Tussor_Intranet"</a></span>
 {% endblock %}
