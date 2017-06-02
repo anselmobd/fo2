@@ -11,6 +11,12 @@ src/fo2/db_password.py
 *.~*
 nohup.out
 
+# Documentation
+kb/
+
+# Secret configuration
+etc/secret_key.txt
+
 ####
 
 # Byte-compiled / optimized / DLL files
