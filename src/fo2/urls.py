@@ -15,11 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from fo2.admin import intr_adm_site
 from django.conf import settings
 from django.conf.urls.static import static
 
-
+from .admin import intr_adm_site
 from .views import index
 
 
