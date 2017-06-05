@@ -79,20 +79,36 @@ WSGI_APPLICATION = 'fo2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+if os.getenv('USER', '') == 'fo2_production':
+    SYSTEXTIL_DATABASE = {
+        'so': {  # Systextil Oficial
+            'ENGINE': 'django.db.backends.oracle',
+            'NAME': 'xe',
+            'USER': 'systextil',
+            'PASSWORD': 'oracle',
+            'HOST': 'localhost',
+            'PORT': '26521',
+        }
+    }
+else:
+    SYSTEXTIL_DATABASE = {
+        'so': {  # Systextil Oficial
+            'ENGINE': 'django.db.backends.oracle',
+            'NAME': 'xe',
+            'USER': 'systextil',
+            'PASSWORD': 'oracle',
+            'HOST': '192.168.1.93',
+            'PORT': '1521',
+        }
+    }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
-    'so': {  # Systextil Oficial
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'xe',
-        'USER': 'systextil',
-        'PASSWORD': 'oracle',
-        'HOST': 'localhost',
-        'PORT': '26521',
     }
 }
+DATABASES.update(SYSTEXTIL_DATABASE)
 
 
 # Password validation
