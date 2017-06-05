@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^rootadm/', admin.site.urls),
     url(r'^intradm/', intr_adm_site.urls),
     url(r'^lotes/', include('lotes.urls')),
+    url(r'^produto/', include('produto.urls')),
   ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
