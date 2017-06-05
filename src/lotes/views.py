@@ -1,8 +1,8 @@
-from django.http import HttpResponse
-# from django.shortcuts import render
-
-# Create your views here.
+from django.shortcuts import render
+from django.db import connections
 
 
 def index(request):
-    return HttpResponse("Tussor - rotinas auxiliares ao Systêxtil - Lotes - EM DESENVOLVIMENTO!")
+    context = {
+    }
+    return render(request, 'lotes/index.html', context)
