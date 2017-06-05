@@ -83,6 +83,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'so': {  # Systextil Oficial
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'xe',
+        'USER': 'systextil',
+        'PASSWORD': 'oracle',
+        'HOST': 'localhost',
+        'PORT': '26521',
     }
 }
 
