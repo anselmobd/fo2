@@ -1,5 +1,27 @@
 {% extends 'layout/layout.html' %}
 
+{% block stylesheet %}
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+thead {
+    font-weight: bold;
+}
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+div#divTable {
+  overflow-x: auto;
+}
+</style>
+{% endblock %}
+
 {% block title %}Produto - Intranet - Tussor{% endblock %}
 
 {% block header %}
@@ -8,8 +30,69 @@
 
 {% block content %}
 <h3>Estatísticas</h3>
-Quantidade de produtos: {{ quant }}
+Quantidade de produtos: <a id="stat_nivel">{{ quant }}</a>
+<span id="statistic"><span>
 {% endblock %}
 
 {% block footer %}
+{% endblock %}
+
+{% block javascript %}
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script>
+  var el = document.getElementById('stat_nivel');
+  el.onclick = showStatNivel;
+
+  function showStatNivel() {
+    el.onclick = null;
+    $.ajax({
+      type: 'GET',
+      url: 'ajax/stat_nivel/',
+      success: function (data) {
+        if (data) {
+          var theDiv = document.createElement('div');
+          theDiv.id = 'divTable'
+
+          var theTable = document.createElement('table');
+
+          thead = document.createElement('thead');
+          tr = document.createElement('tr');
+          td = document.createElement('td');
+          td.appendChild(document.createTextNode('Nível'));
+          tr.appendChild(td);
+          td = document.createElement('td');
+          td.appendChild(document.createTextNode('Quantidade'));
+          tr.appendChild(td);
+          thead.appendChild(tr);
+
+          tbody = document.createElement('tbody');
+          for (var row in data) {
+            var key = data[row][0];
+            var value = data[row][1];
+            tr = document.createElement('tr');
+            td1 = document.createElement('td');
+            td2 = document.createElement('td');
+            text1 = document.createTextNode(key);
+            text2 = document.createTextNode(value);
+            td1.appendChild(text1);
+            td2.appendChild(text2);
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tbody.appendChild(tr);
+          }
+
+          theTable.appendChild(thead);
+          theTable.appendChild(tbody);
+
+          theDiv.appendChild(theTable);
+
+          $("#statistic").before(theDiv);
+        }
+      }
+    });
+  }
+  </script>
 {% endblock %}
