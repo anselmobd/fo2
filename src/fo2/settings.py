@@ -86,8 +86,8 @@ if os.getenv('USER', '') == 'fo2_production':
             'NAME': 'xe',
             'USER': 'systextil',
             'PASSWORD': 'oracle',
-            'HOST': 'localhost',
-            'PORT': '26521',
+            'HOST': '192.168.1.93',
+            'PORT': '1521',
         }
     }
 else:
@@ -97,8 +97,8 @@ else:
             'NAME': 'xe',
             'USER': 'systextil',
             'PASSWORD': 'oracle',
-            'HOST': '192.168.1.93',
-            'PORT': '1521',
+            'HOST': 'localhost',
+            'PORT': '26521',
         }
     }
 
