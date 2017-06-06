@@ -1,5 +1,4 @@
-{% load static %}
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="utf-8">
@@ -17,24 +16,30 @@
 
 <!-- Custom styles for this template -->
 <link href="{% static "css/sticky-footer-navbar.css" %}" rel="stylesheet">
+{% block stylesheet %}{% endblock %}
 </head>
 <body>
-
-  <div class="container">
-    <a href="/">Início</a> | <a href="http://intranet.tussor.com.br/oficial.systextil.html" target="_blank">Systêxtil Oficial</a>
-    <div class="page-header">
-      {% block header %}
+  <header>
+    {% block pageheader %}
+    {% endblock %}
+  </header>
+  <main>
+    <div class="container">
+      <a href="/">Início</a> | <a href="http://intranet.tussor.com.br/oficial.systextil.html" target="_blank">Systêxtil Oficial</a>
+      <div class="page-header">
+        {% block header %}
+        {% endblock %}
+      </div>
+      {% block content %}
       {% endblock %}
     </div>
-    {% block content %}
-    {% endblock %}
-  </div>
-
+  </main>
   <footer class="footer">
     <div class="container">
       <p class="text-muted">{% block footer %}{% endblock %}</p>
     </div>
   </footer>
 
+  {% block javascript %}{% endblock %}
 </body>
 </html>
