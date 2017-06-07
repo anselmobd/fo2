@@ -10,6 +10,7 @@ src/fo2/db_password.py
 *.bak
 *.~*
 nohup.out
+~*
 
 # Documentation
 kb/
