@@ -14,6 +14,7 @@ def index(request):
         SELECT
           count(*) quant
         FROM BASI_030
+        WHERE p.NIVEL_ESTRUTURA <> 0
     '''
     cursor.execute(sql)
     data = rows_to_dict_list(cursor)
@@ -31,6 +32,7 @@ def stat_nivel(request):
           p.NIVEL_ESTRUTURA nivel
         , count(*) quant
         FROM BASI_030 p
+        WHERE p.NIVEL_ESTRUTURA <> 0
         GROUP BY
           p.NIVEL_ESTRUTURA
         ORDER BY
