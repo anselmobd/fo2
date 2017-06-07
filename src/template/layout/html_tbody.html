@@ -1,0 +1,11 @@
+<tbody>
+{% for row in data %}
+<tr>
+{% for field in fields %}
+<td>
+  {{ row|get_item:field }}
+</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</tbody>
