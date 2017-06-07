@@ -1,6 +1,15 @@
 from django.shortcuts import render
 from django.db import connections
 from django.http import JsonResponse
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+# from django.template.defaultfilters import lower
+from django.template.defaulttags import register
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 
 def rows_to_dict_list(cursor):
@@ -25,6 +34,7 @@ def index(request):
     return render(request, 'produto/index.html', context)
 
 
+# ajax json example
 def stat_nivel(request):
     cursor = connections['so'].cursor()
     sql = '''
@@ -40,11 +50,38 @@ def stat_nivel(request):
     '''
     cursor.execute(sql)
     data = cursor.fetchall()
-    print(data)
-    # data = {
-    #     1: 123,
-    #     2: 12,
-    #     9: 1234,
-    # }
-    # return JsonResponse(data)
     return JsonResponse(data, safe=False)
+
+
+# ajax template example
+def stat_nivelX(request):
+    html = render_to_string('produto/ajax/desenvolvimento.html', {})
+    return HttpResponse(html)
+
+
+# ajax template, url with value
+def stat_niveis(request, nivel):
+    print(nivel)
+    if nivel in ('1', '2', '9'):
+        cursor = connections['so'].cursor()
+        sql = '''
+            SELECT
+              p.REFERENCIA
+            , p.DESCR_REFERENCIA
+            FROM BASI_030 p
+            WHERE p.NIVEL_ESTRUTURA = %s
+            ORDER BY
+              p.REFERENCIA
+        '''
+        cursor.execute(sql, [nivel])
+        data = rows_to_dict_list(cursor)
+        context = {
+            'nivel': nivel,
+            'headers': ('Referência', 'Descrição'),
+            'fields': ('REFERENCIA', 'DESCR_REFERENCIA'),
+            'data': data,
+        }
+        html = render_to_string('produto/ajax/stat_niveis.html', context)
+        return HttpResponse(html)
+    else:
+        return stat_nivelX(request)
