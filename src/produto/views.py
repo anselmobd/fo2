@@ -13,7 +13,7 @@ def index(request):
     sql = '''
         SELECT
           count(*) quant
-        FROM BASI_030
+        FROM BASI_030 p
         WHERE p.NIVEL_ESTRUTURA <> 0
     '''
     cursor.execute(sql)
