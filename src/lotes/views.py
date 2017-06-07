@@ -51,5 +51,4 @@ def posicao(request):
     else:
         form = LoteForm()
     context['form'] = form
-    print(context)
     return render(request, 'lotes/posicao.html', context)
