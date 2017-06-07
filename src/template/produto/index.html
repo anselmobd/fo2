@@ -47,12 +47,17 @@ Quantidade de produtos: <a id="stat_nivel">{{ quant }}</a>
   el.onclick = showStatNivel;
 
   function showStatNivel() {
-    el.onclick = null;
     $.ajax({
       type: 'GET',
       url: 'ajax/stat_nivel/',
       success: function (data) {
         if (data) {
+          parent = el.parentNode
+          text = el.firstChild
+          parent.insertBefore(text,el);
+          parent.removeChild(el);
+          parent.normalize();
+
           var theDiv = document.createElement('div');
           theDiv.id = 'divTable'
 
