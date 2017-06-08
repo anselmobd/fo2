@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from . import __version__, __version__date__
+
+
+PROJ_VERSION = __version__
+PROJ_VERSION_DATE = __version__date__
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,9 +73,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
             ],
         },
     },
+]
+
+SETTINGS_EXPORT = [
+    'PROJ_VERSION',
+    'PROJ_VERSION_DATE',
 ]
 
 WSGI_APPLICATION = 'fo2.wsgi.application'
