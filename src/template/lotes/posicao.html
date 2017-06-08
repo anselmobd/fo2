@@ -1,5 +1,30 @@
 {% extends 'layout/layout.html' %}
 
+{% block stylesheet %}
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+thead {
+    font-weight: bold;
+}
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+div#divTable {
+  overflow-x: auto;
+}
+a:hover {
+ cursor:pointer;
+}
+</style>
+{% endblock %}
+
 {% block title %}Posição - Lotes - Intranet - Tussor{% endblock %}
 
 {% block header %}
@@ -10,12 +35,52 @@
 <form action="" method="post">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" value="Busca" />
+    <input type="submit" value="Busca"/>
 </form>
+<script>
+  var inp = document.getElementById('id_lote');
+  inp.select();
+</script>
 {% if codigo_estagio %}
-<h3>{{codigo_estagio}} - {{descricao_estagio}}</h3>
+<br/>
+Estágio atual do lote
+  {% if codigo_estagio == 'X' %}
+    {{lote}}:
+  {% else %}
+    <a id="lote">{{lote}}</a>:
+  {% endif %}
+<h3> {{codigo_estagio}} - {{descricao_estagio}}</h3>
+<span id="detalhes_lote"><span>
 {% endif %}
 {% endblock %}
 
-{% block footer %}
+{% block javascript %}
+{% if codigo_estagio %}
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script>
+  var el = document.getElementById('lote');
+  el.onclick = showDetalhesLote;
+
+  function showDetalhesLote() {
+    $.ajax({
+      type: 'GET',
+      url: 'ajax/detalhes_lote/'+$(this).text()+'/',
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        parent = el.parentNode
+        text = el.firstChild
+        parent.insertBefore(text,el);
+        parent.removeChild(el);
+        parent.normalize();
+        if (data) {
+          $("#detalhes_lote").html(data);
+        }
+      }
+    });
+  }
+  </script>
+{% endif %}
 {% endblock %}
