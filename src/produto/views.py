@@ -61,7 +61,6 @@ def stat_nivelX(request):
 
 # ajax template, url with value
 def stat_niveis(request, nivel):
-    print(nivel)
     if nivel in ('1', '2', '9'):
         cursor = connections['so'].cursor()
         sql = '''
