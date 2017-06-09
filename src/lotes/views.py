@@ -63,6 +63,7 @@ def get_op(cursor, context, periodo, ordem_confeccao):
         SELECT
           l.ORDEM_PRODUCAO OP
         , l.NOME_PROGRAMA_CRIACAO || ' - ' || p.DESCRICAO PRG
+        , l.SITUACAO_ORDEM SITU
         FROM PCPC_040 l
         JOIN HDOC_036 p
           ON p.CODIGO_PROGRAMA = l.NOME_PROGRAMA_CRIACAO
@@ -75,9 +76,16 @@ def get_op(cursor, context, periodo, ordem_confeccao):
     data = rows_to_dict_list(cursor)
     if len(data) == 0:
         return False
+    situacoes = {
+        2: 'ORDEM CONF. GERADA',
+        4: 'ORDENS EM PRODUCAO',
+        9: 'ORDEM CANCELADA',
+    }
+    for row in data:
+        row['SITU'] = '{} - {}'.format(row['SITU'], situacoes[row['SITU']])
     context.update({
-        'o_headers': ('OP', 'Criada em'),
-        'o_fields': ('OP', 'PRG'),
+        'o_headers': ('OP', 'Situação', 'Criada em'),
+        'o_fields': ('OP', 'SITU', 'PRG'),
         'o_data': data,
     })
     return True
@@ -116,8 +124,48 @@ def get_item(cursor, context, periodo, ordem_confeccao):
     return True
 
 
-# def get_estagios(cursor, context, periodo, ordem_confeccao):
-#     return True
+def get_estagios(cursor, context, periodo, ordem_confeccao):
+    sql = '''
+        SELECT
+          l.CODIGO_ESTAGIO EST
+        , e.DESCRICAO DESCR
+        , l.QTDE_PROGRAMADA Q_P
+        , l.QTDE_EM_PRODUCAO_PACOTE Q_EP
+        , l.QTDE_A_PRODUZIR_PACOTE Q_AP
+        , l.CODIGO_FAMILIA FAMI
+        , l.NUMERO_ORDEM OS
+        , coalesce(d.USUARIO_SYSTEXTIL, ' ') USU
+        , d.DATA_INSERCAO DT
+        , coalesce(d.PROCESSO_SYSTEXTIL, ' ') PRG
+        FROM PCPC_040 l
+        JOIN MQOP_005 e
+          ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+        LEFT JOIN PCPC_045 d
+          ON d.PCPC040_PERCONF = l.PERIODO_PRODUCAO
+         AND d.PCPC040_ORDCONF = l.ORDEM_CONFECCAO
+         AND d.PCPC040_ESTCONF = l.CODIGO_ESTAGIO
+        WHERE l.PERIODO_PRODUCAO = %s
+          AND l.ORDEM_CONFECCAO = %s
+        ORDER BY
+          l.SEQ_OPERACAO
+        , d.SEQUENCIA
+    '''
+    cursor.execute(sql, [periodo, ordem_confeccao])
+    data = rows_to_dict_list(cursor)
+    if len(data) == 0:
+        return False
+    for row in data:
+        if row['DT'] is None:
+            row['DT'] = ''
+    context.update({
+        'e_headers': ('Estágio', 'Descrição', 'Qtd. Prog.', 'Q. em Prod.',
+                      'Q. a Prod.', 'Família', 'Usuário', 'Data',
+                      'Programa', 'OS'),
+        'e_fields': ('EST', 'DESCR', 'Q_P', 'Q_EP',
+                     'Q_AP', 'FAMI', 'USU', 'DT', 'PRG', 'OS'),
+        'e_data': data,
+    })
+    return True
 
 
 def detalhes_lote(request, lote):
@@ -139,7 +187,7 @@ def detalhes_lote(request, lote):
 
     get_item(cursor, context, periodo, ordem_confeccao)
 
-    # get_estagios(cursor, context, periodo, ordem_confeccao)
+    get_estagios(cursor, context, periodo, ordem_confeccao)
 
     html = render_to_string('lotes/ajax/detalhes_lote.html', context)
     return HttpResponse(html)
