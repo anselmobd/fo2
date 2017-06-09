@@ -75,14 +75,10 @@ def get_op(cursor, context, periodo, ordem_confeccao):
     data = rows_to_dict_list(cursor)
     if len(data) == 0:
         return False
-    row = data[0]
     context.update({
         'o_headers': ('OP', 'Criada em'),
         'o_fields': ('OP', 'PRG'),
-        'o_data': [{
-            'OP': row['OP'],
-            'PRG': row['PRG']
-        }],
+        'o_data': data,
     })
     return True
 
@@ -90,17 +86,17 @@ def get_op(cursor, context, periodo, ordem_confeccao):
 def get_item(cursor, context, periodo, ordem_confeccao):
     sql = '''
         SELECT
-          l.PROCONF_NIVEL99 NIVEL
-        , l.PROCONF_GRUPO REF
-        , l.PROCONF_SUBGRUPO TAM
-        , l.PROCONF_ITEM COR
-        , l.QTDE_PROGRAMADA QTDE
+          l.PROCONF_NIVEL99
+          || '.' || l.PROCONF_GRUPO
+          || '.' || l.PROCONF_SUBGRUPO
+          || '.' || l.PROCONF_ITEM ITEM
         , i.NARRATIVA NARR
+        , l.QTDE_PROGRAMADA QTDE
         FROM PCPC_040 l
         JOIN BASI_010 i
           ON i.NIVEL_ESTRUTURA = l.PROCONF_NIVEL99
          AND i.GRUPO_ESTRUTURA = l.PROCONF_GRUPO
-         AND i.SUBGRU_ESTRUTURA = PROCONF_SUBGRUPO
+         AND i.SUBGRU_ESTRUTURA = l.PROCONF_SUBGRUPO
          AND i.ITEM_ESTRUTURA = l.PROCONF_ITEM
         WHERE l.PERIODO_PRODUCAO = %s
           AND l.ORDEM_CONFECCAO = %s
@@ -112,23 +108,16 @@ def get_item(cursor, context, periodo, ordem_confeccao):
     data = rows_to_dict_list(cursor)
     if len(data) == 0:
         return False
-    row = data[0]
     context.update({
-        'nivel': row['NIVEL'],
-        'ref': row['REF'],
-        'tam': row['TAM'],
-        'cor': row['COR'],
-        'qtde': row['QTDE'],
         'i_headers': ('Item', 'Descrição', 'Quantidade'),
-        'i_fields': ('ITEM', 'NARR', 'QTD'),
-        'i_data': [{
-            'ITEM': '{}.{}.{}.{}'.format(
-                row['NIVEL'], row['REF'], row['TAM'], row['COR']),
-            'NARR': row['NARR'],
-            'QTD': row['QTDE'],
-        }],
+        'i_fields': ('ITEM', 'NARR', 'QTDE'),
+        'i_data': data,
     })
     return True
+
+
+# def get_estagios(cursor, context, periodo, ordem_confeccao):
+#     return True
 
 
 def detalhes_lote(request, lote):
@@ -149,6 +138,8 @@ def detalhes_lote(request, lote):
         return HttpResponse('')
 
     get_item(cursor, context, periodo, ordem_confeccao)
+
+    # get_estagios(cursor, context, periodo, ordem_confeccao)
 
     html = render_to_string('lotes/ajax/detalhes_lote.html', context)
     return HttpResponse(html)
