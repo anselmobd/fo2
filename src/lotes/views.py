@@ -64,10 +64,13 @@ def get_op(cursor, context, periodo, ordem_confeccao):
           l.ORDEM_PRODUCAO OP
         , l.NOME_PROGRAMA_CRIACAO || ' - ' || p.DESCRICAO PRG
         , l.SITUACAO_ORDEM SITU
+        , o.DATA_HORA DT
         FROM PCPC_040 l
         JOIN HDOC_036 p
           ON p.CODIGO_PROGRAMA = l.NOME_PROGRAMA_CRIACAO
          AND p.LOCALE = 'pt_BR'
+        LEFT JOIN PCPC_020 o
+          ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PERIODO_PRODUCAO = %s
           AND l.ORDEM_CONFECCAO = %s
           AND rownum = 1
@@ -84,8 +87,8 @@ def get_op(cursor, context, periodo, ordem_confeccao):
     for row in data:
         row['SITU'] = '{} - {}'.format(row['SITU'], situacoes[row['SITU']])
     context.update({
-        'o_headers': ('OP', 'Situação', 'Criada em'),
-        'o_fields': ('OP', 'SITU', 'PRG'),
+        'o_headers': ('OP', 'Situação', 'Programa', 'Data/hora'),
+        'o_fields': ('OP', 'SITU', 'PRG', 'DT'),
         'o_data': data,
     })
     return True
@@ -127,8 +130,7 @@ def get_item(cursor, context, periodo, ordem_confeccao):
 def get_estagios(cursor, context, periodo, ordem_confeccao):
     sql = '''
         SELECT
-          l.CODIGO_ESTAGIO EST
-        , e.DESCRICAO DESCR
+          l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
         , l.QTDE_PROGRAMADA Q_P
         , l.QTDE_EM_PRODUCAO_PACOTE Q_EP
         , l.QTDE_A_PRODUZIR_PACOTE Q_AP
@@ -136,7 +138,7 @@ def get_estagios(cursor, context, periodo, ordem_confeccao):
         , l.NUMERO_ORDEM OS
         , coalesce(d.USUARIO_SYSTEXTIL, ' ') USU
         , d.DATA_INSERCAO DT
-        , coalesce(d.PROCESSO_SYSTEXTIL, ' ') PRG
+        , coalesce(d.PROCESSO_SYSTEXTIL || ' - ' || p.DESCRICAO, ' ') PRG
         FROM PCPC_040 l
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
@@ -144,6 +146,9 @@ def get_estagios(cursor, context, periodo, ordem_confeccao):
           ON d.PCPC040_PERCONF = l.PERIODO_PRODUCAO
          AND d.PCPC040_ORDCONF = l.ORDEM_CONFECCAO
          AND d.PCPC040_ESTCONF = l.CODIGO_ESTAGIO
+        LEFT JOIN HDOC_036 p
+          ON p.CODIGO_PROGRAMA = d.PROCESSO_SYSTEXTIL
+         AND p.LOCALE = 'pt_BR'
         WHERE l.PERIODO_PRODUCAO = %s
           AND l.ORDEM_CONFECCAO = %s
         ORDER BY
@@ -158,10 +163,10 @@ def get_estagios(cursor, context, periodo, ordem_confeccao):
         if row['DT'] is None:
             row['DT'] = ''
     context.update({
-        'e_headers': ('Estágio', 'Descrição', 'Qtd. Prog.', 'Q. em Prod.',
-                      'Q. a Prod.', 'Família', 'Usuário', 'Data',
+        'e_headers': ('Estágio', 'Prog.', 'Em Prod.',
+                      'A Prod.', 'Família', 'Usuário', 'Data',
                       'Programa', 'OS'),
-        'e_fields': ('EST', 'DESCR', 'Q_P', 'Q_EP',
+        'e_fields': ('EST', 'Q_P', 'Q_EP',
                      'Q_AP', 'FAMI', 'USU', 'DT', 'PRG', 'OS'),
         'e_data': data,
     })
