@@ -103,12 +103,13 @@ def get_op(cursor, context, periodo, ordem_confeccao):
     if len(data) == 0:
         return False
     situacoes = {
-        2: 'ORDEM CONF. GERADA',
-        4: 'ORDENS EM PRODUCAO',
+        1: 'ORDEM CONF. GERADA',
+        2: 'ORDENS EM PRODUCAO',
         9: 'ORDEM CANCELADA',
     }
     for row in data:
-        row['SITU'] = '{} - {}'.format(row['SITU'], situacoes[row['SITU']])
+        if row['SITU'] in situacoes:
+            row['SITU'] = '{} - {}'.format(row['SITU'], situacoes[row['SITU']])
     context.update({
         'o_headers': ('OP', 'Situação', 'Programa', 'Data/hora'),
         'o_fields': ('OP', 'SITU', 'PRG', 'DT'),
