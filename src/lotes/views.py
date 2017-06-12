@@ -58,13 +58,36 @@ def posicao(request):
     return render(request, 'lotes/posicao.html', context)
 
 
+def get_periodo_oc(cursor, context, periodo, ordem_confeccao):
+    sql = '''
+        SELECT
+          p.PERIODO_PRODUCAO PERIODO
+        , TO_CHAR(p.DATA_INI_PERIODO, 'DD/MM/YYYY') INI
+        , TO_CHAR(p.DATA_FIM_PERIODO - 1, 'DD/MM/YYYY') FIM
+        , %s OC
+        FROM PCPC_010 p
+        WHERE AREA_PERIODO = 1
+          AND PERIODO_PRODUCAO = %s
+    '''
+    cursor.execute(sql, [ordem_confeccao, periodo])
+    data = rows_to_dict_list(cursor)
+    if len(data) == 0:
+        return False
+    context.update({
+        'l_headers': ('Período', 'Incício', 'Fim', 'OC'),
+        'l_fields': ('PERIODO', 'INI', 'FIM', 'OC'),
+        'l_data': data,
+    })
+    return True
+
+
 def get_op(cursor, context, periodo, ordem_confeccao):
     sql = '''
         SELECT
           l.ORDEM_PRODUCAO OP
         , l.NOME_PROGRAMA_CRIACAO || ' - ' || p.DESCRICAO PRG
         , l.SITUACAO_ORDEM SITU
-        , o.DATA_HORA DT
+        , TO_CHAR(o.DATA_HORA, 'DD/MM/YYYY HH24:MI') DT
         FROM PCPC_040 l
         JOIN HDOC_036 p
           ON p.CODIGO_PROGRAMA = l.NOME_PROGRAMA_CRIACAO
@@ -137,7 +160,7 @@ def get_estagios(cursor, context, periodo, ordem_confeccao):
         , l.CODIGO_FAMILIA FAMI
         , l.NUMERO_ORDEM OS
         , coalesce(d.USUARIO_SYSTEXTIL, ' ') USU
-        , d.DATA_INSERCAO DT
+        , TO_CHAR(d.DATA_INSERCAO, 'DD/MM/YYYY HH24:MI') DT
         , coalesce(d.PROCESSO_SYSTEXTIL || ' - ' || p.DESCRICAO, ' ') PRG
         FROM PCPC_040 l
         JOIN MQOP_005 e
@@ -177,15 +200,10 @@ def detalhes_lote(request, lote):
     periodo = lote[:4]
     ordem_confeccao = lote[-5:]
     cursor = connections['so'].cursor()
+    context = {}
 
-    context = {
-        'l_headers': ('Período', 'OC'),
-        'l_fields': ('PER', 'OC'),
-        'l_data': [{
-            'PER': periodo,
-            'OC': ordem_confeccao,
-        }],
-    }
+    if not get_periodo_oc(cursor, context, periodo, ordem_confeccao):
+        return HttpResponse('')
 
     if not get_op(cursor, context, periodo, ordem_confeccao):
         return HttpResponse('')
