@@ -1,0 +1,16 @@
+{% extends 'layout/layout.html' %}
+
+{% block title %}Cadastros gerais - Intranet - Tussor{% endblock %}
+
+{% block header %}
+<h1>Cadastros gerais - Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<p><a href="/geral/">Cadastros gerais</a></p>
+<h3>Depósitos</h3>
+<table>
+  {% include "layout/html_thead.html" with data=headers only %}
+  {% include "layout/html_tbody.html" with fields=fields data=data only %}
+</table>
+{% endblock %}
