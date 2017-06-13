@@ -2,23 +2,7 @@
 
 {% block stylesheet %}
 <style>
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-thead {
-    font-weight: bold;
-}
-th, td {
-  text-align: left;
-  padding: 8px;
-}
-tr:nth-child(even) {
-  background-color: #f2f2f2
-}
-div#divTable {
-  overflow-x: auto;
-}
+{% include 'layout/simple_table.css' %}
 a:hover {
  cursor:pointer;
 }
@@ -32,6 +16,7 @@ a:hover {
 {% endblock %}
 
 {% block content %}
+<p><a href="/lotes/">Lotes</a></p>
 <form action="" method="post">
     {% csrf_token %}
     {{ form }}
