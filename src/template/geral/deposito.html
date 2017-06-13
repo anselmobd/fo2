@@ -1,5 +1,30 @@
 {% extends 'layout/layout.html' %}
 
+{% block stylesheet %}
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+thead {
+    font-weight: bold;
+}
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+div#divTable {
+  overflow-x: auto;
+}
+a:hover {
+ cursor:pointer;
+}
+</style>
+{% endblock %}
+
 {% block title %}Cadastros gerais - Intranet - Tussor{% endblock %}
 
 {% block header %}
