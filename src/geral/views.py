@@ -50,8 +50,9 @@ def deposito(request):
             row['PROP'] = '{} - {}'.format(
                 row['PROP'], propriedades[row['PROP']])
     context = {
+        'titulo': 'Depósitos',
         'headers': ('Depósito', 'Descrição', 'Propriedade', 'Terceiro'),
         'fields': ('COD', 'DESCR', 'PROP', 'CNPJ'),
         'data': data,
     }
-    return render(request, 'geral/deposito.html', context)
+    return render(request, 'geral/tabela_geral.html', context)
