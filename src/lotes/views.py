@@ -3,7 +3,7 @@ from django.db import connections
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
-from .forms import LoteForm
+from .forms import LoteForm, ResponsPorEstagioForm
 
 
 def rows_to_dict_list(cursor):
@@ -14,6 +14,65 @@ def rows_to_dict_list(cursor):
 def index(request):
     context = {}
     return render(request, 'lotes/index.html', context)
+
+
+def respons(request):
+    context = {}
+    if request.method == 'POST':
+        form = ResponsPorEstagioForm(request.POST)
+        if form.is_valid():
+            estagio = form.cleaned_data['estagio']
+            usuario = '%'+form.cleaned_data['usuario']+'%'
+            ordem = form.cleaned_data['ordem']
+            print(estagio)
+            print(usuario)
+            cursor = connections['so'].cursor()
+            sql = '''
+                SELECT
+                  e.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+                , COALESCE(u.USUARIO, '--SEM RESPONSAVEL--') || ' (' ||
+                  COALESCE(u.CODIGO_USUARIO, 0) || ')'USUARIO
+                FROM MQOP_005 e
+                LEFT JOIN MQOP_006 r
+                  ON r.CODIGO_ESTAGIO = e.CODIGO_ESTAGIO
+                 AND r.TIPO_MOVIMENTO = 0 -- bipa estágio
+                 --AND r.CODIGO_USUARIO < 90000
+                LEFT JOIN HDOC_030 u
+                  ON u.CODIGO_USUARIO = r.CODIGO_USUARIO
+                WHERE e.CODIGO_ESTAGIO <> 0
+                  AND ( %s is NULL OR e.CODIGO_ESTAGIO = %s )
+                  AND ( u.USUARIO like %s )
+                ORDER BY
+            '''
+            if ordem == 'e':
+                sql = sql + '''
+                      e.CODIGO_ESTAGIO
+                    , u.USUARIO
+                '''
+            else:
+                sql = sql + '''
+                      u.USUARIO
+                    , e.CODIGO_ESTAGIO
+                '''
+            cursor.execute(sql, (estagio, estagio, usuario))
+            data = rows_to_dict_list(cursor)
+            if len(data) != 0:
+                if ordem == 'e':
+                    context = {
+                        'headers': ('Estágio', 'Usuário'),
+                        'fields': ('ESTAGIO', 'USUARIO'),
+                        'data': data,
+                    }
+                else:
+                    context = {
+                        'headers': ('Usuário', 'Estágio'),
+                        'fields': ('USUARIO', 'ESTAGIO'),
+                        'data': data,
+                    }
+    else:
+        form = ResponsPorEstagioForm()
+    context['form'] = form
+    return render(request, 'lotes/respons.html', context)
 
 
 def posicao(request):

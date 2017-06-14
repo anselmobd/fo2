@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^posicao/$', views.posicao, name='posicao'),
     url(r'^posicao/ajax/detalhes_lote/(\d{9})/$',
         views.detalhes_lote, name='detalhes_lote'),
+    url(r'^respons/$', views.respons, name='respons'),
 ]
