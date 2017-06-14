@@ -1,0 +1,29 @@
+{% extends 'layout/layout.html' %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block title %}Responsável por estágio - Lotes - Intranet - Tussor{% endblock %}
+
+{% block header %}
+<h1>Responsável por estágio - Lotes - Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<p><a href="/lotes/">Lotes</a></p>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if data %}
+<h3>Responsável por estágio</h3>
+<table>
+  {% include "layout/html_thead.html" with data=headers only %}
+  {% include "layout/html_tbody.html" with fields=fields data=data only %}
+</table>
+{% endif %}
+{% endblock %}
