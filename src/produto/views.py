@@ -39,14 +39,24 @@ def stat_nivel(request):
     cursor = connections['so'].cursor()
     sql = '''
         SELECT
-          p.NIVEL_ESTRUTURA nivel
+          CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
+            CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
+            ELSE '1-MD'
+            END
+          ELSE p.NIVEL_ESTRUTURA
+          END nivel
         , count(*) quant
         FROM BASI_030 p
         WHERE p.NIVEL_ESTRUTURA <> 0
         GROUP BY
-          p.NIVEL_ESTRUTURA
+          CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
+            CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
+            ELSE '1-MD'
+            END
+          ELSE p.NIVEL_ESTRUTURA
+          END
         ORDER BY
-          p.NIVEL_ESTRUTURA
+          1
     '''
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -61,23 +71,64 @@ def stat_nivelX(request):
 
 # ajax template, url with value
 def stat_niveis(request, nivel):
-    if nivel in ('1', '2', '9'):
+    if nivel in ('1-MD', '1-PA', '2', '9'):
         cursor = connections['so'].cursor()
         sql = '''
             SELECT
               p.REFERENCIA
             , p.DESCR_REFERENCIA
+            , LISTAGG(t.TAMANHO_REF, ', ')
+              WITHIN GROUP (ORDER BY tam.ORDEM_TAMANHO) TAMANHOS
+            , cc.cores CORES
             FROM BASI_030 p
+            JOIN basi_020 t
+              ON t.BASI030_NIVEL030 = p.NIVEL_ESTRUTURA
+             AND t.BASI030_REFERENC = p.REFERENCIA
+            JOIN BASI_220 tam
+              ON tam.TAMANHO_REF = t.TAMANHO_REF
+            JOIN
+              ( SELECT
+                  c.NIVEL_ESTRUTURA
+                , c.GRUPO_ESTRUTURA
+                , LISTAGG(c.ITEM_ESTRUTURA, ', ')
+                  WITHIN GROUP (ORDER BY c.ITEM_ESTRUTURA) cores
+                FROM
+                  ( SELECT DISTINCT
+                      i.NIVEL_ESTRUTURA
+                    , i.GRUPO_ESTRUTURA
+                    , i.ITEM_ESTRUTURA
+                    FROM basi_010 i
+                  )  c
+                GROUP BY
+                  c.NIVEL_ESTRUTURA
+                , c.GRUPO_ESTRUTURA
+              ) cc
+              ON cc.NIVEL_ESTRUTURA = p.NIVEL_ESTRUTURA
+             AND cc.GRUPO_ESTRUTURA = p.REFERENCIA
             WHERE p.NIVEL_ESTRUTURA = %s
+        '''
+        if nivel == '1-PA':
+            sql = sql + '''
+                AND p.REFERENCIA <= '99999'
+            '''
+        elif nivel == '1-MD':
+            sql = sql + '''
+                AND p.REFERENCIA > '99999'
+            '''
+        sql = sql + '''
+            GROUP BY
+              p.REFERENCIA
+            , p.DESCR_REFERENCIA
+            , cc.cores
             ORDER BY
               p.REFERENCIA
         '''
-        cursor.execute(sql, [nivel])
+        cursor.execute(sql, [nivel[0]])
         data = rows_to_dict_list(cursor)
         context = {
             'nivel': nivel,
-            'headers': ('Referência', 'Descrição'),
-            'fields': ('REFERENCIA', 'DESCR_REFERENCIA'),
+            'headers': ('Referência', 'Descrição', 'Tamanhos', 'Cores'),
+            'fields': ('REFERENCIA', 'DESCR_REFERENCIA', 'TAMANHOS', 'CORES'),
             'data': data,
         }
         html = render_to_string('produto/ajax/stat_niveis.html', context)
