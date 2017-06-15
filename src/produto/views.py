@@ -6,6 +6,8 @@ from django.template.loader import render_to_string
 # from django.template.defaultfilters import lower
 from django.template.defaulttags import register
 
+import produto.models  # import produtos_n1_pa_basic
+
 
 @register.filter
 def get_item(dictionary, key):
@@ -42,6 +44,9 @@ def stat_nivel(request):
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
             ELSE '1-MD'
+            END ||
+            CASE WHEN p.OBSERVACAO3 IS NULL THEN ''
+            ELSE '-' || p.OBSERVACAO3
             END
           ELSE p.NIVEL_ESTRUTURA
           END nivel
@@ -52,6 +57,9 @@ def stat_nivel(request):
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
             ELSE '1-MD'
+            END ||
+            CASE WHEN p.OBSERVACAO3 IS NULL THEN ''
+            ELSE '-' || p.OBSERVACAO3
             END
           ELSE p.NIVEL_ESTRUTURA
           END
@@ -71,55 +79,70 @@ def stat_nivelX(request):
 
 # ajax template, url with value
 def stat_niveis(request, nivel):
-    if nivel in ('1-MD', '1-PA', '2', '9'):
+    if nivel[0:4] in ('1-MD', '1-PA'):
+        data = produto.models.produtos_n1_basic(nivel[2:])
+        context = {
+            'nivel': nivel,
+            'headers': ('#', 'Referência', 'Descrição',
+                        'Tamanhos', 'Cores', 'Estruturas', 'Roteiros'),
+            'fields': ('ROWNUM', 'REFERENCIA', 'DESCR_REFERENCIA',
+                       'TAMANHOS', 'CORES', 'ESTRUTURAS', 'ROTEIROS'),
+            'data': data,
+        }
+        html = render_to_string('produto/ajax/stat_niveis.html', context)
+        return HttpResponse(html)
+    elif nivel in ('2', '9'):
         cursor = connections['so'].cursor()
         sql = '''
             SELECT
-              p.REFERENCIA
+              ROWNUM
+            , p.REFERENCIA
             , p.DESCR_REFERENCIA
-            , LISTAGG(t.TAMANHO_REF, ', ')
-              WITHIN GROUP (ORDER BY tam.ORDEM_TAMANHO) TAMANHOS
-            , cc.cores CORES
+            , ttt.TAMANHOS
+            , ccc.CORES
             FROM BASI_030 p
-            JOIN basi_020 t
-              ON t.BASI030_NIVEL030 = p.NIVEL_ESTRUTURA
-             AND t.BASI030_REFERENC = p.REFERENCIA
-            JOIN BASI_220 tam
-              ON tam.TAMANHO_REF = t.TAMANHO_REF
-            JOIN
+            LEFT JOIN
               ( SELECT
+                  tt.BASI030_NIVEL030
+                , tt.BASI030_REFERENC
+                , LISTAGG(tt.TAMANHO_REF, ', ')
+                  WITHIN GROUP (ORDER BY tt.ORDEM_TAMANHO) tamanhos
+              FROM
+              ( SELECT DISTINCT
+                  t.BASI030_NIVEL030
+                , t.BASI030_REFERENC
+                , t.TAMANHO_REF
+                , tam.ORDEM_TAMANHO
+                FROM basi_020 t
+                LEFT JOIN BASI_220 tam
+                  ON tam.TAMANHO_REF = t.TAMANHO_REF
+              )  tt
+              GROUP BY
+                tt.BASI030_NIVEL030
+              , tt.BASI030_REFERENC
+              ) ttt
+            ON ttt.BASI030_NIVEL030 = p.NIVEL_ESTRUTURA
+            AND ttt.BASI030_REFERENC = p.REFERENCIA
+            LEFT JOIN
+              ( SELECT
+                  cc.NIVEL_ESTRUTURA
+                , cc.GRUPO_ESTRUTURA
+                , LISTAGG(cc.ITEM_ESTRUTURA, ', ')
+                  WITHIN GROUP (ORDER BY cc.ITEM_ESTRUTURA) cores
+              FROM
+              ( SELECT DISTINCT
                   c.NIVEL_ESTRUTURA
                 , c.GRUPO_ESTRUTURA
-                , LISTAGG(c.ITEM_ESTRUTURA, ', ')
-                  WITHIN GROUP (ORDER BY c.ITEM_ESTRUTURA) cores
-                FROM
-                  ( SELECT DISTINCT
-                      i.NIVEL_ESTRUTURA
-                    , i.GRUPO_ESTRUTURA
-                    , i.ITEM_ESTRUTURA
-                    FROM basi_010 i
-                  )  c
-                GROUP BY
-                  c.NIVEL_ESTRUTURA
-                , c.GRUPO_ESTRUTURA
-              ) cc
-              ON cc.NIVEL_ESTRUTURA = p.NIVEL_ESTRUTURA
-             AND cc.GRUPO_ESTRUTURA = p.REFERENCIA
+                , c.ITEM_ESTRUTURA
+                FROM basi_010 c
+              )  cc
+              GROUP BY
+                cc.NIVEL_ESTRUTURA
+              , cc.GRUPO_ESTRUTURA
+              ) ccc
+             ON ccc.NIVEL_ESTRUTURA = p.NIVEL_ESTRUTURA
+            AND ccc.GRUPO_ESTRUTURA = p.REFERENCIA
             WHERE p.NIVEL_ESTRUTURA = %s
-        '''
-        if nivel == '1-PA':
-            sql = sql + '''
-                AND p.REFERENCIA <= '99999'
-            '''
-        elif nivel == '1-MD':
-            sql = sql + '''
-                AND p.REFERENCIA > '99999'
-            '''
-        sql = sql + '''
-            GROUP BY
-              p.REFERENCIA
-            , p.DESCR_REFERENCIA
-            , cc.cores
             ORDER BY
               p.REFERENCIA
         '''
@@ -127,8 +150,9 @@ def stat_niveis(request, nivel):
         data = rows_to_dict_list(cursor)
         context = {
             'nivel': nivel,
-            'headers': ('Referência', 'Descrição', 'Tamanhos', 'Cores'),
-            'fields': ('REFERENCIA', 'DESCR_REFERENCIA', 'TAMANHOS', 'CORES'),
+            'headers': ('#', 'Referência', 'Descrição', 'Tamanhos', 'Cores'),
+            'fields': ('ROWNUM', 'REFERENCIA', 'DESCR_REFERENCIA',
+                       'TAMANHOS', 'CORES'),
             'data': data,
         }
         html = render_to_string('produto/ajax/stat_niveis.html', context)
