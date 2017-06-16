@@ -6,6 +6,11 @@ class LoteForm(forms.Form):
                            widget=forms.TextInput(attrs={'type': 'number'}))
 
 
+class OpForm(forms.Form):
+    op = forms.CharField(label='OP',
+                         widget=forms.TextInput(attrs={'type': 'number'}))
+
+
 class ResponsPorEstagioForm(forms.Form):
     estagio = forms.CharField(
         label='Estágio', max_length=2, required=False,
