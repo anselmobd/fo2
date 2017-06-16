@@ -133,11 +133,11 @@ def produtos_n1_basic(param):
     '''
     if qualidade == '':
         sql = sql + '''
-            AND p.OBSERVACAO3 is null
+            AND p.RESPONSAVEL is null
         '''
     else:
         sql = sql + '''
-            AND p.OBSERVACAO3 = '{}'
+            AND p.RESPONSAVEL = '{}'
         '''.format(qualidade)
     if tipo == 'PA':
         sql = sql + '''
