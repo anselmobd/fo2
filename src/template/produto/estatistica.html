@@ -1,0 +1,112 @@
+{% extends 'layout/layout.html' %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+a:hover {
+ cursor:pointer;
+}
+</style>
+{% endblock %}
+
+{% block title %}Produto - Intranet - Tussor{% endblock %}
+
+{% block header %}
+<h1>Produto - Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<p><a href="/produto/">Produto</a></p>
+<h3>Estatísticas</h3>
+Quantidade de produtos: <a id="stat_nivel">{{ quant }}</a>
+<span id="statistic"><span>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block javascript %}
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script>
+  var el = document.getElementById('stat_nivel');
+  el.onclick = showStatNivel;
+
+  function showStatNivelN() {
+    $.ajax({
+      type: 'GET',
+      url: '/produto/ajax/stat_niveis/'+this.className+'/',
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        if (data) {
+          $("#statistic").html(data);
+        }
+      }
+    });
+  }
+
+  function showStatNivel() {
+    $.ajax({
+      type: 'GET',
+      url: '/produto/ajax/stat_nivel/',
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success: function (data) {
+        if (data) {
+          parent = el.parentNode
+          text = el.firstChild
+          parent.insertBefore(text,el);
+          parent.removeChild(el);
+          parent.normalize();
+
+          var theDiv = document.createElement('div');
+          theDiv.id = 'divTable'
+
+          var theTable = document.createElement('table');
+
+          thead = document.createElement('thead');
+          tr = document.createElement('tr');
+          td = document.createElement('td');
+          td.appendChild(document.createTextNode('Nível'));
+          tr.appendChild(td);
+          td = document.createElement('td');
+          td.appendChild(document.createTextNode('Quantidade'));
+          tr.appendChild(td);
+          thead.appendChild(tr);
+
+          tbody = document.createElement('tbody');
+          for (var row in data) {
+            var key = data[row][0];
+            var value = data[row][1];
+            tr = document.createElement('tr');
+
+            td1 = document.createElement('td');
+            text1 = document.createTextNode(key);
+            td1.appendChild(text1);
+
+            td2 = document.createElement('td');
+            text2 = document.createTextNode(value);
+            link = document.createElement('a');
+            link.classList.add(key);
+            link.onclick = showStatNivelN;
+            link.appendChild(text2);
+            td2.appendChild(link);
+
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tbody.appendChild(tr);
+          }
+
+          theTable.appendChild(thead);
+          theTable.appendChild(tbody);
+
+          theDiv.appendChild(theTable);
+
+          $("#statistic").before(theDiv);
+        }
+      }
+    });
+  }
+  </script>
+{% endblock %}
