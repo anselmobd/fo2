@@ -3,7 +3,7 @@ from django.db import connections
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
-from .forms import LoteForm, ResponsPorEstagioForm
+from .forms import LoteForm, ResponsPorEstagioForm, OpForm
 
 
 def rows_to_dict_list(cursor):
@@ -16,6 +16,113 @@ def index(request):
     return render(request, 'lotes/index.html', context)
 
 
+def op(request):
+    context = {}
+    if request.method == 'POST':
+        form = OpForm(request.POST)
+        if form.is_valid():
+            op = form.cleaned_data['op']
+            cursor = connections['so'].cursor()
+            sql = '''
+                SELECT
+                  l.PROCONF_GRUPO REF
+                , l.PROCONF_SUBGRUPO TAM
+                , l.PROCONF_ITEM COR
+                , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
+                  ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
+                  END EST
+                , l.PERIODO_PRODUCAO PERIODO
+                , l.ORDEM_CONFECCAO OC
+                , l.SEQ_OPERACAO SEQ
+                , l.QTDE_EM_PRODUCAO_PACOTE EM_PROD
+                , l.QTDE_A_PRODUZIR_PACOTE A_PROD
+                , l.QTDE_PROGRAMADA QTD
+                FROM PCPC_040 l
+                JOIN MQOP_005 e
+                  ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+                WHERE 1=1
+                  AND l.ORDEM_PRODUCAO = %s
+                  AND l.SEQ_OPERACAO =
+                  (
+                    SELECT
+                      max(lms.SEQ_OPERACAO)
+                    FROM PCPC_040 lms
+                    WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                      AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                      AND lms.QTDE_EM_PRODUCAO_PACOTE =
+                          lms.QTDE_A_PRODUZIR_PACOTE
+                  )
+                ORDER BY
+                  l.PROCONF_GRUPO
+                , l.PROCONF_SUBGRUPO
+                , l.PROCONF_ITEM
+                , l.SEQ_OPERACAO
+                , l.ORDEM_CONFECCAO
+            '''
+            cursor.execute(sql, (op,))
+            data = rows_to_dict_list(cursor)
+            if len(data) != 0:
+                context = {
+                    'op': op,
+                    'headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
+                                'Período', 'OC', 'Quant.'),
+                    'fields': ('REF', 'TAM', 'COR', 'EST',
+                               'PERIODO', 'OC', 'QTD'),
+                    'data': data,
+                }
+
+            sql = '''
+                SELECT
+                  l.PROCONF_GRUPO REF
+                , l.PROCONF_SUBGRUPO TAM
+                , l.PROCONF_ITEM COR
+                , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
+                  ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
+                  END EST
+                , COUNT( l.ORDEM_CONFECCAO ) LOTES
+                , SUM( l.QTDE_PROGRAMADA ) QTD
+                FROM PCPC_040 l
+                JOIN MQOP_005 e
+                  ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+                WHERE 1=1
+                  AND l.ORDEM_PRODUCAO = %s
+                  AND l.SEQ_OPERACAO =
+                  (
+                    SELECT
+                      max(lms.SEQ_OPERACAO)
+                    FROM PCPC_040 lms
+                    WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                      AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                      AND lms.QTDE_EM_PRODUCAO_PACOTE =
+                          lms.QTDE_A_PRODUZIR_PACOTE
+                  )
+                GROUP BY
+                  l.PROCONF_GRUPO
+                , l.PROCONF_SUBGRUPO
+                , l.PROCONF_ITEM
+                , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
+                  ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
+                  END
+                ORDER BY
+                  l.PROCONF_GRUPO
+                , l.PROCONF_SUBGRUPO
+                , l.PROCONF_ITEM
+                , 4
+            '''
+            cursor.execute(sql, (op,))
+            t_data = rows_to_dict_list(cursor)
+            context.update({
+                't_headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
+                              'Qtd. Lotes', 'Quant. Itens'),
+                't_fields': ('REF', 'TAM', 'COR', 'EST', 'LOTES', 'QTD'),
+                't_data': t_data,
+            })
+    else:
+        form = OpForm()
+    context['form'] = form
+    return render(request, 'lotes/op.html', context)
+
+
 def respons(request):
     context = {}
     if request.method == 'POST':
@@ -24,8 +131,6 @@ def respons(request):
             estagio = form.cleaned_data['estagio']
             usuario = '%'+form.cleaned_data['usuario']+'%'
             ordem = form.cleaned_data['ordem']
-            print(estagio)
-            print(usuario)
             cursor = connections['so'].cursor()
             sql = '''
                 SELECT
@@ -86,15 +191,27 @@ def posicao(request):
             cursor = connections['so'].cursor()
             sql = '''
                 SELECT
-                  l.CODIGO_ESTAGIO
-                , e.DESCRICAO DESCRICAO_ESTAGIO
-                , l.QTDE_EM_PRODUCAO_PACOTE
+                  CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 0
+                  ELSE l.CODIGO_ESTAGIO
+                  END CODIGO_ESTAGIO
+                , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
+                  ELSE e.DESCRICAO
+                  END DESCRICAO_ESTAGIO
                 FROM PCPC_040 l
                 JOIN MQOP_005 e
                   ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
                 WHERE l.PERIODO_PRODUCAO = %s
                   AND l.ORDEM_CONFECCAO = %s
-                  AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+                  AND l.SEQ_OPERACAO =
+                  (
+                    SELECT
+                      max(lms.SEQ_OPERACAO)
+                    FROM PCPC_040 lms
+                    WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                      AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                      AND lms.QTDE_EM_PRODUCAO_PACOTE =
+                          lms.QTDE_A_PRODUZIR_PACOTE
+                  )
             '''
             cursor.execute(sql, [periodo, ordem_confeccao])
             data = rows_to_dict_list(cursor)
@@ -261,7 +378,6 @@ def detalhes_lote(request, lote):
     ordem_confeccao = lote[-5:]
     cursor = connections['so'].cursor()
     context = {}
-
     if not get_periodo_oc(cursor, context, periodo, ordem_confeccao):
         return HttpResponse('')
 
