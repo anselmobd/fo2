@@ -26,7 +26,7 @@ a:hover {
   var inp = document.getElementById('id_lote');
   inp.select();
 </script>
-{% if codigo_estagio %}
+{% if descricao_estagio %}
 <br/>
 Estágio atual do lote
   {% if codigo_estagio == 'X' %}
@@ -34,13 +34,13 @@ Estágio atual do lote
   {% else %}
     <a id="lote">{{lote}}</a>:
   {% endif %}
-<h3> {{codigo_estagio}} - {{descricao_estagio}}</h3>
+<h3>{{codigo_estagio}} - {{descricao_estagio}}</h3>
 <span id="detalhes_lote"><span>
 {% endif %}
 {% endblock %}
 
 {% block javascript %}
-{% if codigo_estagio %}
+{% if descricao_estagio %}
   <script
     src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
