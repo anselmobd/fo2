@@ -20,6 +20,58 @@ def rows_to_dict_list(cursor):
 
 
 def index(request):
+    context = {}
+    return render(request, 'produto/index.html', context)
+
+
+def lista_item_n1_sem_preco_medio(request):
+    context = {}
+    cursor = connections['so'].cursor()
+    sql = '''
+        SELECT
+          ptc.GRUPO_ESTRUTURA REF
+        , ptc.SUBGRU_ESTRUTURA TAM
+        , ptc.ITEM_ESTRUTURA COR
+        FROM basi_010 ptc
+        LEFT JOIN BASI_220 tam
+          ON tam.TAMANHO_REF = ptc.SUBGRU_ESTRUTURA
+        WHERE ptc.NIVEL_ESTRUTURA = 1
+          AND (  ptc.PRECO_MEDIO IN NULL
+              OR ptc.PRECO_MEDIO = 0
+              )
+        ORDER BY
+          ptc.GRUPO_ESTRUTURA
+        , tam.ORDEM_TAMANHO
+        , ptc.ITEM_ESTRUTURA
+    '''
+    cursor.execute(sql)
+    data = rows_to_dict_list(cursor)
+    if len(data) == 0:
+        context.update({
+            'mensagem':
+                'Não há itens de nível 1 sem definição de preço médio.',
+        })
+    else:
+        context.update({
+            'titulo': 'Produto',
+            'urltitulo': '/produto/',
+            'subtitulo': 'Itens de nível 1 sem definição de preço médio',
+            'headers': ('Referência', 'Tamanho', 'Cor'),
+            'fields': ('REF', 'TAM', 'COR'),
+            'data': data,
+        })
+    return render(request, 'layout/tabela_geral.html', context)
+
+
+# UPDATE basi_010 ptc
+# SET
+#   ptc.PRECO_MEDIO = 2
+# WHERE ptc.NIVEL_ESTRUTURA = 1
+#   AND ptc.PRECO_MEDIO <> 2
+# ;
+
+
+def estatistica(request):
     cursor = connections['so'].cursor()
     sql = '''
         SELECT
@@ -33,7 +85,7 @@ def index(request):
     context = {
         'quant': row['QUANT'],
     }
-    return render(request, 'produto/index.html', context)
+    return render(request, 'produto/estatistica.html', context)
 
 
 # ajax json example
