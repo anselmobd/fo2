@@ -45,8 +45,8 @@ def stat_nivel(request):
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
             ELSE '1-MD'
             END ||
-            CASE WHEN p.OBSERVACAO3 IS NULL THEN ''
-            ELSE '-' || p.OBSERVACAO3
+            CASE WHEN p.RESPONSAVEL IS NULL THEN ''
+            ELSE '-' || p.RESPONSAVEL
             END
           ELSE p.NIVEL_ESTRUTURA
           END nivel
@@ -58,8 +58,8 @@ def stat_nivel(request):
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
             ELSE '1-MD'
             END ||
-            CASE WHEN p.OBSERVACAO3 IS NULL THEN ''
-            ELSE '-' || p.OBSERVACAO3
+            CASE WHEN p.RESPONSAVEL IS NULL THEN ''
+            ELSE '-' || p.RESPONSAVEL
             END
           ELSE p.NIVEL_ESTRUTURA
           END
