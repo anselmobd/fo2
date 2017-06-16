@@ -28,7 +28,9 @@ def op(request):
             cursor = connections['so'].cursor()
             sql = '''
                 SELECT
-                  l.PROCONF_GRUPO REF
+                  l.ORDEM_PRODUCAO OP
+                , oss.NUMERO_ORDEM OS
+                , l.PROCONF_GRUPO REF
                 , l.PROCONF_SUBGRUPO TAM
                 , l.PROCONF_ITEM COR
                 , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
@@ -36,31 +38,30 @@ def op(request):
                   END EST
                 , l.PERIODO_PRODUCAO PERIODO
                 , l.ORDEM_CONFECCAO OC
-                , l.SEQ_OPERACAO SEQ
-                , l.QTDE_EM_PRODUCAO_PACOTE EM_PROD
-                , l.QTDE_A_PRODUZIR_PACOTE A_PROD
                 , l.QTDE_PROGRAMADA QTD
                 FROM PCPC_040 l
                 JOIN MQOP_005 e
                   ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+                JOIN (
+                  SELECT DISTINCT
+                    os.ORDEM_PRODUCAO
+                  , os.NUMERO_ORDEM
+                  FROM PCPC_040 os
+                  ) oss
+                  ON oss.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                 AND oss.NUMERO_ORDEM = l.NUMERO_ORDEM
                 WHERE 1=1
                   AND l.ORDEM_PRODUCAO = %s
-                  AND l.SEQ_OPERACAO =
-                  (
-                    SELECT
-                      max(lms.SEQ_OPERACAO)
-                    FROM PCPC_040 lms
-                    WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                      AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                      AND lms.QTDE_EM_PRODUCAO_PACOTE =
-                          lms.QTDE_A_PRODUZIR_PACOTE
-                  )
                 ORDER BY
-                  l.PROCONF_GRUPO
+                  l.ORDEM_PRODUCAO
+                , oss.NUMERO_ORDEM
+                , l.PROCONF_GRUPO
                 , l.PROCONF_SUBGRUPO
                 , l.PROCONF_ITEM
-                , l.SEQ_OPERACAO
+                , 6
+                , l.PERIODO_PRODUCAO
                 , l.ORDEM_CONFECCAO
+                , l.QTDE_PROGRAMADA
             '''
             cursor.execute(sql, (op,))
             data = rows_to_dict_list(cursor)
@@ -70,10 +71,10 @@ def op(request):
                 })
             else:
                 context.update({
-                    'headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
-                                'Período', 'OC', 'Quant.'),
-                    'fields': ('REF', 'TAM', 'COR', 'EST',
-                               'PERIODO', 'OC', 'QTD'),
+                    'headers': ('OS', 'Referência', 'Tamanho', 'Cor',
+                                'Estágio', 'Período', 'OC', 'Quant.'),
+                    'fields': ('OS', 'REF', 'TAM', 'COR',
+                               'EST', 'PERIODO', 'OC', 'QTD'),
                     'data': data,
                 })
 
@@ -123,6 +124,49 @@ def op(request):
                     't_fields': ('REF', 'TAM', 'COR', 'EST', 'LOTES', 'QTD'),
                     't_data': t_data,
                 })
+
+                sql = '''
+                    SELECT
+                      l.ORDEM_PRODUCAO OP
+                    , oss.NUMERO_ORDEM OS
+                    , l.PROCONF_GRUPO REF
+                    , l.PROCONF_SUBGRUPO TAM
+                    , l.PROCONF_ITEM COR
+                    , COUNT( l.ORDEM_CONFECCAO ) LOTES
+                    , SUM( l.QTDE_PROGRAMADA ) QTD
+                    FROM PCPC_040 l
+                    JOIN (
+                      SELECT DISTINCT
+                        os.ORDEM_PRODUCAO
+                      , os.NUMERO_ORDEM
+                      FROM PCPC_040 os
+                      ) oss
+                      ON oss.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                     AND oss.NUMERO_ORDEM = l.NUMERO_ORDEM
+                    WHERE 1=1
+                      AND l.ORDEM_PRODUCAO = %s
+                    GROUP BY
+                      l.ORDEM_PRODUCAO
+                    , oss.NUMERO_ORDEM
+                    , l.PROCONF_GRUPO
+                    , l.PROCONF_SUBGRUPO
+                    , l.PROCONF_ITEM
+                    ORDER BY
+                      l.ORDEM_PRODUCAO
+                    , oss.NUMERO_ORDEM
+                    , l.PROCONF_GRUPO
+                    , l.PROCONF_SUBGRUPO
+                    , l.PROCONF_ITEM
+                '''
+                cursor.execute(sql, (op,))
+                o_data = rows_to_dict_list(cursor)
+                context.update({
+                    'o_headers': ('OS', 'Referência', 'Tamanho', 'Cor',
+                                  'Qtd. Lotes', 'Quant. Itens'),
+                    'o_fields': ('OS', 'REF', 'TAM', 'COR', 'LOTES', 'QTD'),
+                    'o_data': o_data,
+                })
+
     else:
         form = OpForm()
 

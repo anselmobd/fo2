@@ -20,19 +20,23 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if op %}
-<h3>OP {{ op }}</h3>
+<h2>OP {{ op }}</h2>
 {% endif %}
 {% if msg_erro %}
-<h4>{{ msg_erro }}</h4>
+<h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-<h4>Totais</h4>
+<h3>Totais por referência + estágio</h3>
 <table>
   {% include "layout/html_thead.html" with data=t_headers only %}
   {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
 </table>
-<h3>OP {{ op }}</h3>
-<h4>Por lote</h4>
+<h3>Totais por OS + referência</h3>
+<table>
+  {% include "layout/html_thead.html" with data=o_headers only %}
+  {% include "layout/html_tbody.html" with fields=o_fields data=o_data only %}
+</table>
+<h3>Lotes (ordem: OS + referência + estágio + lote)</h3>
 <table>
   {% include "layout/html_thead.html" with data=headers only %}
   {% include "layout/html_tbody.html" with fields=fields data=data only %}
