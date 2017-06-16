@@ -22,6 +22,9 @@ def op(request):
         form = OpForm(request.POST)
         if form.is_valid():
             op = form.cleaned_data['op']
+            context.update({
+                'op': op,
+            })
             cursor = connections['so'].cursor()
             sql = '''
                 SELECT
@@ -61,64 +64,68 @@ def op(request):
             '''
             cursor.execute(sql, (op,))
             data = rows_to_dict_list(cursor)
-            if len(data) != 0:
-                context = {
-                    'op': op,
+            if len(data) == 0:
+                context.update({
+                    'msg_erro': 'Lotes não encontrados',
+                })
+            else:
+                context.update({
                     'headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
                                 'Período', 'OC', 'Quant.'),
                     'fields': ('REF', 'TAM', 'COR', 'EST',
                                'PERIODO', 'OC', 'QTD'),
                     'data': data,
-                }
+                })
 
-            sql = '''
-                SELECT
-                  l.PROCONF_GRUPO REF
-                , l.PROCONF_SUBGRUPO TAM
-                , l.PROCONF_ITEM COR
-                , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
-                  ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
-                  END EST
-                , COUNT( l.ORDEM_CONFECCAO ) LOTES
-                , SUM( l.QTDE_PROGRAMADA ) QTD
-                FROM PCPC_040 l
-                JOIN MQOP_005 e
-                  ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-                WHERE 1=1
-                  AND l.ORDEM_PRODUCAO = %s
-                  AND l.SEQ_OPERACAO =
-                  (
+                sql = '''
                     SELECT
-                      max(lms.SEQ_OPERACAO)
-                    FROM PCPC_040 lms
-                    WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                      AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                      AND lms.QTDE_EM_PRODUCAO_PACOTE =
-                          lms.QTDE_A_PRODUZIR_PACOTE
-                  )
-                GROUP BY
-                  l.PROCONF_GRUPO
-                , l.PROCONF_SUBGRUPO
-                , l.PROCONF_ITEM
-                , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
-                  ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
-                  END
-                ORDER BY
-                  l.PROCONF_GRUPO
-                , l.PROCONF_SUBGRUPO
-                , l.PROCONF_ITEM
-                , 4
-            '''
-            cursor.execute(sql, (op,))
-            t_data = rows_to_dict_list(cursor)
-            context.update({
-                't_headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
-                              'Qtd. Lotes', 'Quant. Itens'),
-                't_fields': ('REF', 'TAM', 'COR', 'EST', 'LOTES', 'QTD'),
-                't_data': t_data,
-            })
+                      l.PROCONF_GRUPO REF
+                    , l.PROCONF_SUBGRUPO TAM
+                    , l.PROCONF_ITEM COR
+                    , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
+                      ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
+                      END EST
+                    , COUNT( l.ORDEM_CONFECCAO ) LOTES
+                    , SUM( l.QTDE_PROGRAMADA ) QTD
+                    FROM PCPC_040 l
+                    JOIN MQOP_005 e
+                      ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+                    WHERE 1=1
+                      AND l.ORDEM_PRODUCAO = %s
+                      AND l.SEQ_OPERACAO =
+                      (
+                        SELECT
+                          max(lms.SEQ_OPERACAO)
+                        FROM PCPC_040 lms
+                        WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                          AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                          AND lms.QTDE_EM_PRODUCAO_PACOTE =
+                              lms.QTDE_A_PRODUZIR_PACOTE
+                      )
+                    GROUP BY
+                      l.PROCONF_GRUPO
+                    , l.PROCONF_SUBGRUPO
+                    , l.PROCONF_ITEM
+                    , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
+                      ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
+                      END
+                    ORDER BY
+                      l.PROCONF_GRUPO
+                    , l.PROCONF_SUBGRUPO
+                    , l.PROCONF_ITEM
+                    , 4
+                '''
+                cursor.execute(sql, (op,))
+                t_data = rows_to_dict_list(cursor)
+                context.update({
+                    't_headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
+                                  'Qtd. Lotes', 'Quant. Itens'),
+                    't_fields': ('REF', 'TAM', 'COR', 'EST', 'LOTES', 'QTD'),
+                    't_data': t_data,
+                })
     else:
         form = OpForm()
+
     context['form'] = form
     return render(request, 'lotes/op.html', context)
 
