@@ -25,7 +25,11 @@ def index(request):
 
 
 def lista_item_n1_sem_preco_medio(request):
-    context = {}
+    context = {
+        'titulo': 'Produto',
+        'urltitulo': '/produto/',
+        'subtitulo': 'Itens de nível 1 sem definição de preço médio',
+    }
     cursor = connections['so'].cursor()
     sql = '''
         SELECT
@@ -53,9 +57,6 @@ def lista_item_n1_sem_preco_medio(request):
         })
     else:
         context.update({
-            'titulo': 'Produto',
-            'urltitulo': '/produto/',
-            'subtitulo': 'Itens de nível 1 sem definição de preço médio',
             'headers': ('Referência', 'Tamanho', 'Cor'),
             'fields': ('REF', 'TAM', 'COR'),
             'data': data,
