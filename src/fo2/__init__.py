@@ -1,9 +1,13 @@
-__version__ = '0.1.2'
-__version__date__ = '2017/06/14'
+__version__ = '0.1.3'
+__version__date__ = '2017/06/16'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.3 - 2017/06/16
+#   . consulta de OP: lotes por estágios, por OS e individuais
+#   . lista produtos nível 1 sem preço médio
 #
 # - 0.1.2 - 2017/06/14
 #   . consulta de responsável por estágio

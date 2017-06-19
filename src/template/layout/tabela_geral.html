@@ -15,6 +15,9 @@
 {% block content %}
 <p><a href="{{ urltitulo }}">{{ titulo }}</a></p>
 <h3>{{ subtitulo }}</h3>
+{% if mensagem %}
+  <p>{{ mensagem }}</p>
+{% endif %}
 <table>
   {% include "layout/html_thead.html" with data=headers only %}
   {% include "layout/html_tbody.html" with fields=fields data=data only %}
