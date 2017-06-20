@@ -19,13 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .admin import intr_adm_site
-from .views import index
+from .views import IndexView
 
 
 # admin.autodiscover()
 
 urlpatterns = [
-    url(r'^$', index, name='index'),
+    url(r'^$', IndexView.as_view(), name='index'),
     # url(r'^', admin.site.urls),
     url(r'^rootadm/', admin.site.urls),
     url(r'^intradm/', intr_adm_site.urls),
