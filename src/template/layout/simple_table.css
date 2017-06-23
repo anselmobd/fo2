@@ -15,3 +15,8 @@ tr:nth-child(even) {
 div#divTable {
   overflow-x: auto;
 }
+th.group, tr.group {
+  border-bottom: black;
+  border-bottom-style: dashed;
+  border-bottom-width: thin;
+}

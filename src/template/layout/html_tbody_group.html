@@ -1,6 +1,6 @@
 <tbody>
 {% for row in data %}
-<tr style="border-bottom: black; border-bottom-style: dashed; border-bottom-width: thin;">
+<tr class="group">
 {% for field in fields %}
 {% if field in group %}
 {% if row|get_item:'rowspan' != 0 %}
