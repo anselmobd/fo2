@@ -1,17 +1,13 @@
 {% extends 'layout/layout.html' %}
 
-{% block title %}Lotes - Intranet - Tussor{% endblock %}
+{% block title %}Produção - Intranet - Tussor{% endblock %}
 
 {% block header %}
-<h1>Lotes - Intranet - Tussor (cuecas D`UOMO)</h1>
+<h1>Produção - Intranet - Tussor (cuecas D`UOMO)</h1>
 {% endblock %}
 
 {% block content %}
-<ul>
-  <li><a href="posicao/">Posição do lote</a> (<a href="posicaoOri/">versão anterior</a>)</li>
-  <li><a href="op/">OP</a></li>
-  <li><a href="respons/">Responsável por estágio</a></li>
-</ul>
+{% include 'lotes/menu.html' %}
 {% endblock %}
 
 {% block footer %}
