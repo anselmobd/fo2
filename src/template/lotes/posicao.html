@@ -19,12 +19,18 @@
     {{ form }}
     <input type="submit" value="Busca"/>
 </form>
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_lote');
+  inp.select();
+</script>
+{% endblock javascript %}
 
 {% if erro %}
 
 <h3>Lote não encontrado</h3>
 
-{% else %}
+{% elif lote %}
 
 <br/>
 Estágio atual do lote <b>{{lote}}</b>:
