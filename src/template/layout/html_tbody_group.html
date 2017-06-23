@@ -1,19 +1,19 @@
 <tbody>
 {% for row in data %}
-<tr class="group">
-{% for field in fields %}
-{% if field in group %}
-{% if row|get_item:'rowspan' != 0 %}
-<td rowspan="{{ row|get_item:'rowspan' }}">
-  {{ row|get_item:field }}
-</td>
-{% endif %}
-{% else %}
-<td>
-  {{ row|get_item:field }}
-</td>
-{% endif %}
-{% endfor %}
-</tr>
+  <tr class="group">
+  {% for field in fields %}
+    {% if field in group %}
+      {% if row|get_item:'rowspan' != 0 %}
+        <td rowspan="{{ row|get_item:'rowspan' }}">
+          {{ row|get_item:field }}
+        </td>
+      {% endif %}
+    {% else %}
+      <td>
+        {{ row|get_item:field }}
+      </td>
+    {% endif %}
+  {% endfor %}
+  </tr>
 {% endfor %}
 </tbody>

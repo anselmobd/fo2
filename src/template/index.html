@@ -11,9 +11,12 @@
 </ul>
 <h3>Tussor - rotinas auxiliares ao Systêxtil</h3>
 <ul>
-  <li><a href="lotes/">Lotes</a>
-  <li><a href="produto/">Produto</a>
-  <li><a href="geral/">Cadastros gerais</a>
+  <li><a href="lotes/">Produção</a></li>
+  {% include 'lotes/menu.html' %}
+  <li><a href="produto/">Produto</a></li>
+  {% include 'produto/menu.html' %}
+  <li><a href="geral/">Cadastros gerais</a></li>
+  {% include 'geral/menu.html' %}
 </ul>
 {% endblock %}
 
