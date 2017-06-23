@@ -3,9 +3,10 @@ from django.db import connections
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
-from .forms import LoteForm, ResponsPorEstagioForm, OpForm
+from fo2.template import group_rowspan
 
-import lotes.models  # import produtos_n1_pa_basic
+from .forms import LoteForm, ResponsPorEstagioForm, OpForm
+import lotes.models as models # import produtos_n1_pa_basic
 
 
 def rows_to_dict_list(cursor):
@@ -233,30 +234,17 @@ def respons(request):
     return render(request, 'lotes/respons.html', context)
 
 
-def group_rowspan(data, group):
-    for i in range(len(data)):
-        data[i]['rowspan'] = 1
-    inferior = []
-    atual = []
-    for i in range(len(data)-1, -1, -1):
-        atual = [data[i][f] for f in group]
-        if atual == inferior:
-            data[i]['rowspan'] = data[i]['rowspan'] + data[i+1]['rowspan']
-            data[i+1]['rowspan'] = 0
-        inferior = atual[:]
-
-
 def posicao_context(cursor, periodo, ordem_confeccao):
     context = {}
 
-    data = lotes.models.posicao_lote(cursor, periodo, ordem_confeccao)
+    data = models.posicao_lote(cursor, periodo, ordem_confeccao)
     row = data[0]
     context.update({
         'codigo_estagio': row['CODIGO_ESTAGIO'],
         'descricao_estagio': row['DESCRICAO_ESTAGIO'],
     })
 
-    data = lotes.models.posicao_periodo_oc(cursor, periodo, ordem_confeccao)
+    data = models.posicao_periodo_oc(cursor, periodo, ordem_confeccao)
     if len(data) != 0:
         context.update({
             'l_headers': ('Período', 'Incício', 'Fim', 'OC'),
@@ -264,7 +252,7 @@ def posicao_context(cursor, periodo, ordem_confeccao):
             'l_data': data,
         })
 
-    data = lotes.models.posicao_get_op(cursor, periodo, ordem_confeccao)
+    data = models.posicao_get_op(cursor, periodo, ordem_confeccao)
     if len(data) != 0:
         context.update({
             'o_headers': ('OP', 'Situação', 'Programa', 'Data/hora'),
@@ -272,14 +260,14 @@ def posicao_context(cursor, periodo, ordem_confeccao):
             'o_data': data,
         })
 
-    data = lotes.models.posicao_get_item(cursor, periodo, ordem_confeccao)
+    data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
     context.update({
         'i_headers': ('Item', 'Descrição', 'Quantidade'),
         'i_fields': ('ITEM', 'NARR', 'QTDE'),
         'i_data': data,
     })
 
-    data = lotes.models.posicao_estagios(cursor, periodo, ordem_confeccao)
+    data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
     group = ('EST', 'Q_P', 'Q_EP', 'Q_AP', 'FAMI', 'OS')
     group_rowspan(data, group)
     context.update({
@@ -306,7 +294,7 @@ def posicao(request):
             ordem_confeccao = lote[-5:]
 
             cursor = connections['so'].cursor()
-            data = lotes.models.existe_lote(cursor, periodo, ordem_confeccao)
+            data = models.existe_lote(cursor, periodo, ordem_confeccao)
             if len(data) == 0:
                 context['erro'] = '.'
             else:
