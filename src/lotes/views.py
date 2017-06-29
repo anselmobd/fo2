@@ -287,23 +287,24 @@ def respons(request):
             usuario = '%'+form.cleaned_data['usuario']+'%'
             ordem = form.cleaned_data['ordem']
             cursor = connections['so'].cursor()
-            sql = '''
+            sql = """
                 SELECT
                   e.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
-                , COALESCE(u.USUARIO, '--SEM RESPONSAVEL--') || ' (' ||
-                  COALESCE(u.CODIGO_USUARIO, 0) || ')'USUARIO
+                , CASE WHEN u.USUARIO IS NULL
+                  THEN '--SEM RESPONSAVEL--'
+                  ELSE u.USUARIO || ' (' || u.CODIGO_USUARIO || ')'
+                  END USUARIO
                 FROM MQOP_005 e
                 LEFT JOIN MQOP_006 r
                   ON r.CODIGO_ESTAGIO = e.CODIGO_ESTAGIO
-                 AND r.TIPO_MOVIMENTO = 0 -- bipa estágio
-                 --AND r.CODIGO_USUARIO < 90000
+                 AND r.TIPO_MOVIMENTO = 0
                 LEFT JOIN HDOC_030 u
                   ON u.CODIGO_USUARIO = r.CODIGO_USUARIO
                 WHERE e.CODIGO_ESTAGIO <> 0
                   AND ( %s is NULL OR e.CODIGO_ESTAGIO = %s )
-                  AND ( u.USUARIO like %s )
+                  AND ( coalesce( u.USUARIO, '_' ) like %s )
                 ORDER BY
-            '''
+            """
             if ordem == 'e':
                 sql = sql + '''
                       e.CODIGO_ESTAGIO
