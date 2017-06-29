@@ -92,6 +92,24 @@ def estatistica(request):
 # ajax json example
 def stat_nivel(request):
     cursor = connections['so'].cursor()
+
+    # Marca com 'OP' produtos com alguma OP, porém sem nenhuma marca
+    sql = '''
+        UPDATE BASI_030 r
+        SET
+          r.RESPONSAVEL = 'OP'
+        WHERE r.NIVEL_ESTRUTURA = 1
+          AND r.RESPONSAVEL IS NULL
+          AND EXISTS
+        ( SELECT
+            o.PERIODO_PRODUCAO
+          FROM PCPC_040 o
+          WHERE o.PROCONF_NIVEL99 = r.NIVEL_ESTRUTURA
+            AND o.PROCONF_GRUPO = r.REFERENCIA
+        )
+    '''
+    cursor.execute(sql)
+
     sql = '''
         SELECT
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
