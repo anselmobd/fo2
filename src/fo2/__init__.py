@@ -1,9 +1,15 @@
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 __version__date__ = '2017/06/23'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.5 - 2017/06/29
+#   . corrigido bug em view de OP
+#   . posição de lote reescrita - vira classe
+#   . responsáveis aparece estágio sem responsável
+#   . autofocus nos forms
 #
 # - 0.1.4 - 2017/06/23
 #   . menus reestruturados
