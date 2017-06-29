@@ -136,6 +136,16 @@ def op(request):
                  AND oss.NUMERO_ORDEM = l.NUMERO_ORDEM
                 WHERE 1=1
                   AND l.ORDEM_PRODUCAO = %s
+                  AND l.SEQ_OPERACAO =
+                  (
+                    SELECT
+                      max(lms.SEQ_OPERACAO)
+                    FROM PCPC_040 lms
+                    WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                      AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                      AND lms.QTDE_EM_PRODUCAO_PACOTE =
+                          lms.QTDE_A_PRODUZIR_PACOTE
+                  )
                 ORDER BY
                   l.ORDEM_PRODUCAO
                 , oss.NUMERO_ORDEM
@@ -229,6 +239,16 @@ def op(request):
                      AND oss.NUMERO_ORDEM = l.NUMERO_ORDEM
                     WHERE 1=1
                       AND l.ORDEM_PRODUCAO = %s
+                      AND l.SEQ_OPERACAO =
+                      (
+                        SELECT
+                          max(lms.SEQ_OPERACAO)
+                        FROM PCPC_040 lms
+                        WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                          AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                          AND lms.QTDE_EM_PRODUCAO_PACOTE =
+                              lms.QTDE_A_PRODUZIR_PACOTE
+                      )
                     GROUP BY
                       l.ORDEM_PRODUCAO
                     , oss.NUMERO_ORDEM
