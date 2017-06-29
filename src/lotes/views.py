@@ -110,52 +110,79 @@ def op(request):
                 'op': op,
             })
             cursor = connections['so'].cursor()
+
+            # por lote
             sql = '''
                 SELECT
-                  l.ORDEM_PRODUCAO OP
-                , oss.NUMERO_ORDEM OS
+                  l.NUMERO_ORDEM OS
                 , l.PROCONF_GRUPO REF
                 , l.PROCONF_SUBGRUPO TAM
                 , l.PROCONF_ITEM COR
-                , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
-                  ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
-                  END EST
+                , (
+                  SELECT
+                    CASE WHEN q.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
+                    ELSE q.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
+                    END EST
+                  FROM PCPC_040 q
+                  JOIN MQOP_005 e
+                    ON e.CODIGO_ESTAGIO = q.CODIGO_ESTAGIO
+                  WHERE q.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                    AND q.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                    AND q.SEQ_OPERACAO = (
+                        SELECT
+                          max(lms.SEQ_OPERACAO)
+                        FROM PCPC_040 lms
+                        WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                          AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                          AND lms.QTDE_EM_PRODUCAO_PACOTE =
+                              lms.QTDE_A_PRODUZIR_PACOTE
+                        )
+                  ) EST
                 , l.PERIODO_PRODUCAO PERIODO
                 , l.ORDEM_CONFECCAO OC
-                , l.QTDE_PROGRAMADA QTD
-                FROM PCPC_040 l
-                JOIN MQOP_005 e
-                  ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-                JOIN (
+                , (
+                  SELECT
+                    q.QTDE_PROGRAMADA
+                  FROM PCPC_040 q
+                  WHERE q.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                    AND q.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                    AND q.SEQ_OPERACAO = (
+                        SELECT
+                          max(lms.SEQ_OPERACAO)
+                        FROM PCPC_040 lms
+                        WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                          AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                          AND lms.QTDE_EM_PRODUCAO_PACOTE =
+                              lms.QTDE_A_PRODUZIR_PACOTE
+                        )
+                  ) QTD
+                FROM (
                   SELECT DISTINCT
                     os.ORDEM_PRODUCAO
-                  , os.NUMERO_ORDEM
+                  , os.PERIODO_PRODUCAO
+                  , os.ORDEM_CONFECCAO
+                  , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
+                  , os.PROCONF_GRUPO
+                  , os.PROCONF_SUBGRUPO
+                  , os.PROCONF_ITEM
                   FROM PCPC_040 os
-                  ) oss
-                  ON oss.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                 AND oss.NUMERO_ORDEM = l.NUMERO_ORDEM
-                WHERE 1=1
-                  AND l.ORDEM_PRODUCAO = %s
-                  AND l.SEQ_OPERACAO =
-                  (
-                    SELECT
-                      max(lms.SEQ_OPERACAO)
-                    FROM PCPC_040 lms
-                    WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                      AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                      AND lms.QTDE_EM_PRODUCAO_PACOTE =
-                          lms.QTDE_A_PRODUZIR_PACOTE
-                  )
+                  WHERE os.ORDEM_PRODUCAO = %s
+                  GROUP BY
+                    os.ORDEM_PRODUCAO
+                  , os.PERIODO_PRODUCAO
+                  , os.ORDEM_CONFECCAO
+                  , os.PROCONF_GRUPO
+                  , os.PROCONF_SUBGRUPO
+                  , os.PROCONF_ITEM
+                ) l
                 ORDER BY
                   l.ORDEM_PRODUCAO
-                , oss.NUMERO_ORDEM
+                , l.NUMERO_ORDEM
                 , l.PROCONF_GRUPO
                 , l.PROCONF_SUBGRUPO
                 , l.PROCONF_ITEM
-                , 6
                 , l.PERIODO_PRODUCAO
                 , l.ORDEM_CONFECCAO
-                , l.QTDE_PROGRAMADA
             '''
             cursor.execute(sql, (op,))
             data = rows_to_dict_list(cursor)
@@ -172,6 +199,7 @@ def op(request):
                     'data': data,
                 })
 
+                # por referencia
                 sql = '''
                     SELECT
                       l.PROCONF_GRUPO REF
@@ -219,49 +247,61 @@ def op(request):
                     't_data': t_data,
                 })
 
-                sql = '''
+                # por OS
+                sql = """
                     SELECT
-                      l.ORDEM_PRODUCAO OP
-                    , oss.NUMERO_ORDEM OS
+                      l.NUMERO_ORDEM OS
                     , l.PROCONF_GRUPO REF
                     , l.PROCONF_SUBGRUPO TAM
                     , l.PROCONF_ITEM COR
-                    , COUNT( l.ORDEM_CONFECCAO ) LOTES
-                    , SUM( l.QTDE_PROGRAMADA ) QTD
-                    FROM PCPC_040 l
-                    JOIN (
+                    , count( l.ORDEM_CONFECCAO ) LOTES
+                    , SUM (
+                        ( SELECT
+                            q.QTDE_PROGRAMADA
+                          FROM PCPC_040 q
+                          WHERE q.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                            AND q.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                            AND q.SEQ_OPERACAO = (
+                              SELECT
+                                min(o.SEQ_OPERACAO)
+                              FROM PCPC_040 o
+                              WHERE o.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                                AND o.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                            )
+                        )
+                      ) QTD
+                    FROM (
                       SELECT DISTINCT
                         os.ORDEM_PRODUCAO
-                      , os.NUMERO_ORDEM
+                      , os.PERIODO_PRODUCAO
+                      , os.ORDEM_CONFECCAO
+                      , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
+                      , os.PROCONF_GRUPO
+                      , os.PROCONF_SUBGRUPO
+                      , os.PROCONF_ITEM
                       FROM PCPC_040 os
-                      ) oss
-                      ON oss.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                     AND oss.NUMERO_ORDEM = l.NUMERO_ORDEM
-                    WHERE 1=1
-                      AND l.ORDEM_PRODUCAO = %s
-                      AND l.SEQ_OPERACAO =
-                      (
-                        SELECT
-                          max(lms.SEQ_OPERACAO)
-                        FROM PCPC_040 lms
-                        WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                          AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                          AND lms.QTDE_EM_PRODUCAO_PACOTE =
-                              lms.QTDE_A_PRODUZIR_PACOTE
-                      )
+                      WHERE os.ORDEM_PRODUCAO = %s
+                      GROUP BY
+                        os.ORDEM_PRODUCAO
+                      , os.PERIODO_PRODUCAO
+                      , os.ORDEM_CONFECCAO
+                      , os.PROCONF_GRUPO
+                      , os.PROCONF_SUBGRUPO
+                      , os.PROCONF_ITEM
+                    ) l
                     GROUP BY
                       l.ORDEM_PRODUCAO
-                    , oss.NUMERO_ORDEM
+                    , l.NUMERO_ORDEM
                     , l.PROCONF_GRUPO
                     , l.PROCONF_SUBGRUPO
                     , l.PROCONF_ITEM
                     ORDER BY
                       l.ORDEM_PRODUCAO
-                    , oss.NUMERO_ORDEM
+                    , l.NUMERO_ORDEM
                     , l.PROCONF_GRUPO
                     , l.PROCONF_SUBGRUPO
                     , l.PROCONF_ITEM
-                '''
+                """
                 cursor.execute(sql, (op,))
                 o_data = rows_to_dict_list(cursor)
                 context.update({
