@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^lotes/', include('lotes.urls')),
     url(r'^produto/', include('produto.urls')),
     url(r'^geral/', include('geral.urls')),
+    url(r'^contabil/', include('contabil.urls')),
   ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

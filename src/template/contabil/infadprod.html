@@ -1,0 +1,38 @@
+
+{% extends 'layout/layout.html' %}
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block title %}{{ titulo }} - Faturamento - Intranet - Tussor{% endblock %}
+
+{% block header %}
+<h1>{{ titulo }} - Cadastros gerais - Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<p><a href="/contabil/">Faturamento</a></p>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if erro %}
+
+  <h3>Pedido não encontrado</h3>
+
+{% elif cliente %}
+
+  <br/>
+  Pedido: <b>{{ pedido }}</b>:
+  <h3>Cliente: {{ cliente }}</h3>
+  <h3>{{ titulo }}</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody.html" with fields=fields data=data only %}
+  </table>
+
+{% endif %}
+{% endblock %}
