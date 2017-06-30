@@ -114,7 +114,7 @@ def op(request):
             # por lote
             sql = '''
                 SELECT
-                  CASE WHEN l.NUMERO_ORDEM = 0
+                  CASE WHEN dos.NUMERO_ORDEM IS NULL
                   THEN '0'
                   ELSE l.NUMERO_ORDEM || ' (' || eos.DESCRICAO || ')'
                   END OS
@@ -137,7 +137,8 @@ def op(request):
                   , os.PROCONF_SUBGRUPO
                   , os.PROCONF_ITEM
                   , max(
-                      CASE WHEN os.QTDE_EM_PRODUCAO_PACOTE = os.QTDE_A_PRODUZIR_PACOTE
+                      CASE WHEN os.QTDE_EM_PRODUCAO_PACOTE =
+                                os.QTDE_A_PRODUZIR_PACOTE
                       THEN os.SEQ_OPERACAO
                       ELSE 0
                       END
@@ -158,11 +159,12 @@ def op(request):
                  AND q.SEQ_OPERACAO = l.max_seq_operacao
                 JOIN MQOP_005 e
                   ON e.CODIGO_ESTAGIO = q.CODIGO_ESTAGIO
-                JOIN PCPC_040 dos
-                  ON dos.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                LEFT JOIN PCPC_040 dos
+                  ON l.NUMERO_ORDEM <> 0
+                 AND dos.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
                  AND dos.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
                  AND dos.NUMERO_ORDEM = l.NUMERO_ORDEM
-                JOIN MQOP_005 eos
+                LEFT JOIN MQOP_005 eos
                   ON eos.CODIGO_ESTAGIO = dos.CODIGO_ESTAGIO
                 ORDER BY
                   l.ORDEM_PRODUCAO
