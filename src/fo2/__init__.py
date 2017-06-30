@@ -1,9 +1,12 @@
-__version__ = '0.1.5'
+__version__ = '0.1.6'
 __version__date__ = '2017/06/23'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.6 - 2017/06/30
+#   . consulta infAdProd por número de pedido
 #
 # - 0.1.5 - 2017/06/29
 #   . corrigido bug em view de OP
