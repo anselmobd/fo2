@@ -1,0 +1,62 @@
+{% extends 'layout/layout.html' %}
+{% load l10n %}
+{% load humanize %}
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block title %}{{ titulo }} - Comercial - Intranet - Tussor{% endblock %}
+
+{% block header %}
+<h1>{{ titulo }} - Comercial - Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<p><a href="/comercial/">Comercial</a></p>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if erro %}
+
+  <h3>Cliente não encontrado</h3>
+
+{% elif cliente %}
+
+  <br/>
+  <h3>CNPJ: {{ cnpj }}</h3>
+  <h3>Cliente: {{ cliente }}</h3>
+  <h3>{{ titulo }}</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row|get_item:'DUPLICATA' }}</td>
+      <td>{{ row|get_item:'STAT' }}</td>
+      <td>{{ row|get_item:'PEDIDO' }}</td>
+      <td>{{ row|get_item:'EMISSAO' }}</td>
+      <td>{{ row|get_item:'VENC_ORI' }}</td>
+      <td>{{ row|get_item:'VENCIMENTO' }}</td>
+      <td>{{ row|get_item:'PRORROGADO' }}</td>
+      <td style='text-align:right'>{{ row|get_item:'VALOR'|floatformat:2|intcomma }}</td>
+      <td style='text-align:right'>{{ row|get_item:'QUANT'|intcomma }}</td>
+      <td style='text-align:right'>{{ row|get_item:'QUANT_FAT'|intcomma }}</td>
+      <td>{{ row|get_item:'DATA_PAGO' }}</td>
+      <td style='text-align:right'>{{ row|get_item:'VALOR_PAGO'|floatformat:2|intcomma }}</td>
+      <td style='text-align:right'>{{ row|get_item:'JUROS'|floatformat:2|intcomma }}</td>
+      <td style='text-align:right'>{{ row|get_item:'ATRASO' }}</td>
+      <td>{{ row|get_item:'OP' }}</td>
+      <td>{{ row|get_item:'BANCO' }}</td>
+      <td>{{ row|get_item:'DESCONTO' }}</td>
+      <td>{{ row|get_item:'OBSERVACAO' }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endif %}
+{% endblock %}
