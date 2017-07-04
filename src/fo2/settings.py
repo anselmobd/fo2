@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -102,7 +103,25 @@ DATABASES = {
         'PASSWORD': 'oracle',
         'HOST': 'localhost',
         'PORT': '26521',
-    }
+    },
+    # 'f1': {  # F1
+    #     'ENGINE': 'django.db.backends.firebird',
+    #     'NAME': '/dados/db/f1/f1.cdb',
+    #     'USER': 'sysdba',
+    #     'PASSWORD': '1firebir',
+    #     'HOST': '192.168.1.98',
+    #     'PORT': '3050',
+    #     'OPTIONS': {'charset': 'WIN1252'},
+    # },
+}
+
+DB_F1 = {
+    'NAME': '/dados/db/f1/f1.cdb',
+    'USER': 'sysdba',
+    'PASSWORD': '1firebir',
+    'HOST': '192.168.1.98',
+    'PORT': '3050',
+    'CHARSET': 'WIN1252',
 }
 
 
@@ -144,6 +163,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+USE_THOUSAND_SEPARATOR = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
