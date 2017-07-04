@@ -14,19 +14,17 @@ def index(request):
 class FichaCliente(View):
     Form_class = ClienteForm
     template_name = 'comercial/ficha_cliente.html'
-    context = {
-        'titulo': 'Ficha do Cliente (duplicatas)',
-    }
+    titulo = 'Ficha do Cliente (duplicatas)'
 
     def get(self, request, *args, **kwargs):
+        context = {'titulo': self.titulo}
         form = self.Form_class()
-        context = self.context
         context['form'] = form
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        context = {'titulo': self.titulo}
         form = self.Form_class(request.POST)
-        context = self.context
         if form.is_valid():
             cnpj9 = form.cleaned_data['cnpj9']
             cnpj4 = form.cleaned_data['cnpj4']
@@ -73,26 +71,6 @@ class FichaCliente(View):
                         'Banco',
                         'Desconto',
                         'Observação',
-                        ),
-                    'fields': (
-                        'DUPLICATA',
-                        'STAT',
-                        'PEDIDO',
-                        'EMISSAO',
-                        'VENC_ORI',
-                        'VENCIMENTO',
-                        'PRORROGADO',
-                        'VALOR',
-                        'QUANT',
-                        'QUANT_FAT',
-                        'DATA_PAGO',
-                        'VALOR_PAGO',
-                        'JUROS',
-                        'ATRASO',
-                        'OP',
-                        'BANCO',
-                        'DESCONTO',
-                        'OBSERVACAO',
                         ),
                     'data': data,
                 })
