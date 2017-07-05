@@ -1,9 +1,24 @@
 from fo2.models import rows_to_dict_list, cursorF1
 
 
-def ficha_cliente(cnpj9, cnpj4):
+def busca_clientes(cnpj):
     cursor = cursorF1()
-    cliente = "{:08d}{:04d}".format(int(cnpj9), int(cnpj4))
+    sql = """
+        SELECT
+          c.C_CGC CNPJ
+        , c.C_RSOC CLIENTE
+        FROM DIS_CLI c
+        WHERE c.C_CGC STARTING WITH ?
+           OR c.C_RSOC CONTAINING ?
+        ORDER BY
+          c.C_CGC
+    """
+    cursor.execute(sql, [cnpj[:14], cnpj])
+    return rows_to_dict_list(cursor)
+
+
+def ficha_cliente(cnpj):
+    cursor = cursorF1()
     sql = """
         SELECT
           c.C_CGC CNPJ
@@ -63,12 +78,12 @@ def ficha_cliente(cnpj9, cnpj4):
         FROM DIS_DUP d
         LEFT JOIN DIS_CLI c
           ON c.C_CGC = d.D_CGC
-        WHERE d.D_CGC STARTING WITH ?
+        WHERE d.D_CGC = ?
           AND D.D_STAT >= '0' -- nao canceladas
           AND d.D_CODFIS IN ( '5101', '6101', '6107', '6109'
                             , '5124', '6124', '5125', '6125') -- cpof de venda
         ORDER BY
           d.D_DUPNUM
     """
-    cursor.execute(sql, [cliente])
+    cursor.execute(sql, [cnpj])
     return rows_to_dict_list(cursor)

@@ -15,20 +15,45 @@
 
 {% block content %}
 <p><a href="/comercial/">Comercial</a></p>
-<form action="" method="post">
+<form action="/comercial/ficha/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if erro %}
+{% if conteudo %}
+{% if conteudo == 'nada' %}
 
   <h3>Cliente não encontrado</h3>
 
-{% elif cliente %}
+{% elif conteudo == 'lista' %}
+
+  <h3>Clientes encontrados</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>CNPJ</th>
+        <th>Razão Social</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for row in data %}
+    <tr>
+      <td><a href="{% url 'ficha_cliente_cnpj' row|get_item:'CNPJ' %}">{{ row|get_item:'CNPJ' }}</a></td>
+      <td>{{ row|get_item:'CLIENTE' }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% else %}
 
   <br/>
   <h3>CNPJ: {{ cnpj }}</h3>
   <h3>Cliente: {{ cliente }}</h3>
+  {% if conteudo == 'zerado' %}
+    <h3>Nenhuma duplicata encontrada</h3>
+
+  {% else %}
   <h3>{{ titulo }}</h3>
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
@@ -58,5 +83,7 @@
     </tbody>
   </table>
 
+  {% endif %}
+{% endif %}
 {% endif %}
 {% endblock %}
