@@ -1,9 +1,16 @@
-__version__ = '0.1.6'
-__version__date__ = '2017/06/23'
+__version__ = '0.1.8'
+__version__date__ = '2017/07/06'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.8 - 2017/07/06
+#   . iniciando app logística
+#   . controle de data de saída
+#
+# - 0.1.7 - 2017/07/05
+#   . ficha de cliente (consultando F1)
 #
 # - 0.1.6 - 2017/06/30
 #   . consulta infAdProd por número de pedido
