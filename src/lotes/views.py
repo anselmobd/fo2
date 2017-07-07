@@ -137,8 +137,7 @@ def op(request):
                   , os.PROCONF_SUBGRUPO
                   , os.PROCONF_ITEM
                   , max(
-                      CASE WHEN os.QTDE_EM_PRODUCAO_PACOTE =
-                                os.QTDE_A_PRODUZIR_PACOTE
+                      CASE WHEN os.QTDE_EM_PRODUCAO_PACOTE <> 0
                       THEN os.SEQ_OPERACAO
                       ELSE 0
                       END
@@ -213,8 +212,7 @@ def op(request):
                         FROM PCPC_040 lms
                         WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
                           AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                          AND lms.QTDE_EM_PRODUCAO_PACOTE =
-                              lms.QTDE_A_PRODUZIR_PACOTE
+                          AND lms.QTDE_EM_PRODUCAO_PACOTE <> 0
                       )
                     GROUP BY
                       l.PROCONF_GRUPO
