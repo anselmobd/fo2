@@ -97,6 +97,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'TIME_ZONE': 'America/Sao_Paulo',
     },
     'so': {  # Systextil Oficial
         'ENGINE': 'django.db.backends.oracle',
