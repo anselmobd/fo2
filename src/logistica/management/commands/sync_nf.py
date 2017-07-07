@@ -25,6 +25,7 @@ class Command(BaseCommand):
             sql = '''
                 SELECT
                   f.NUM_NOTA_FISCAL NF
+                , f.DATA_AUTORIZACAO_NFE FATURAMENTO
                 FROM FATU_050 f
                 WHERE f.NUM_NOTA_FISCAL > %s
                 ORDER BY
@@ -38,7 +39,8 @@ class Command(BaseCommand):
             for row in nfs_st:
                 if (row['NF'],) not in nfs:
                     self.stdout.write('sync_nf - insert {}'.format(row['NF']))
-                    nf = models.NotaFiscal(numero=row['NF'])
+                    nf = models.NotaFiscal(
+                        numero=row['NF'], faturamento=row['FATURAMENTO'])
                     nf.save()
 
             # get all canceled
