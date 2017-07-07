@@ -9,8 +9,10 @@ class NotaFiscalAdmin(admin.ModelAdmin):
                     'observacao']
     list_filter = ['ativa', 'saida', 'entrega', 'confirmada']
     search_fields = ['numero', 'observacao']
-    ordering = ('-numero',)
-    readonly_fields = ('ativa',)
+    ordering = ['-numero']
+    fields = (('numero', 'ativa'), 'saida', 'entrega', 'confirmada',
+              'observacao')
+    readonly_fields = ['numero', 'ativa']
 
 
 intr_adm_site.register(NotaFiscal, NotaFiscalAdmin)
