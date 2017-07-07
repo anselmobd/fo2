@@ -5,14 +5,14 @@ from .models import NotaFiscal
 
 
 class NotaFiscalAdmin(admin.ModelAdmin):
-    list_display = ['numero', 'ativa', 'saida', 'entrega', 'confirmada',
-                    'observacao']
-    list_filter = ['ativa', 'saida', 'entrega', 'confirmada']
+    list_display = ['numero', 'faturamento', 'ativa',
+                    'saida', 'entrega', 'confirmada', 'observacao']
+    list_filter = ('ativa', 'saida', 'entrega', 'confirmada', 'faturamento')
     search_fields = ['numero', 'observacao']
     ordering = ['-numero']
-    fields = (('numero', 'ativa'), 'saida', 'entrega', 'confirmada',
-              'observacao')
-    readonly_fields = ['numero', 'ativa']
+    fields = (('numero', 'faturamento', 'ativa'),
+              'saida', 'entrega', 'confirmada', 'observacao')
+    readonly_fields = ['numero', 'faturamento', 'ativa']
 
 
 intr_adm_site.register(NotaFiscal, NotaFiscalAdmin)
