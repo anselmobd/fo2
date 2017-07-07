@@ -14,6 +14,7 @@ DATABASES = {
         'NAME': "tussor_fo2_production",
         'USER': "tussor_fo2",
         'PASSWORD': DBPASS,
+        'TIME_ZONE': 'America/Sao_Paulo',
     },
     'so': {  # Systextil Oficial
         'ENGINE': 'django.db.backends.oracle',
