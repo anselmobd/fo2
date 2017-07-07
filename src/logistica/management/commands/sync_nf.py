@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 
@@ -63,6 +65,26 @@ class Command(BaseCommand):
                     self.stdout.write('sync_nf - cancela {}'.format(row['NF']))
                     nf = models.NotaFiscal.objects.get(numero=row['NF'])
                     nf.ativa = False
+                    nf.save()
+
+            # get data de faturamento
+            sql = '''
+                SELECT
+                  f.DATA_AUTORIZACAO_NFE FATURAMENTO
+                FROM FATU_050 f
+                WHERE f.NUM_NOTA_FISCAL = %s
+            '''
+            nfs = list(models.NotaFiscal.objects.filter(
+                faturamento=None, ativa=True).values_list('numero'))
+            for row in nfs:
+                # pprint(row)
+                cursor.execute(sql, [row[0]])
+                nfs_st = rows_to_dict_list(cursor)
+                # pprint(nfs_st)
+                if len(nfs_st) > 0:
+                    nf_st = nfs_st[0]
+                    nf = models.NotaFiscal.objects.get(numero=row[0])
+                    nf.faturamento = nf_st['FATURAMENTO']
                     nf.save()
 
         except Exception as e:
