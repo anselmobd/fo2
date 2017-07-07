@@ -19,27 +19,27 @@ def existe_lote(cursor, periodo, ordem_confeccao):
 def posicao_lote(cursor, periodo, ordem_confeccao):
     sql = '''
         SELECT
-          CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 0
-          ELSE l.CODIGO_ESTAGIO
-          END CODIGO_ESTAGIO
-        , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
-          ELSE e.DESCRICAO
-          END DESCRICAO_ESTAGIO
+          el.CODIGO_ESTAGIO
+        , el.DESCRICAO DESCRICAO_ESTAGIO
+        FROM (
+        SELECT
+          l.CODIGO_ESTAGIO
+        , e.DESCRICAO
         FROM PCPC_040 l
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         WHERE l.PERIODO_PRODUCAO = %s
           AND l.ORDEM_CONFECCAO = %s
-          AND l.SEQ_OPERACAO =
-          (
-            SELECT
-              max(lms.SEQ_OPERACAO)
-            FROM PCPC_040 lms
-            WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-              AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-              AND lms.QTDE_EM_PRODUCAO_PACOTE =
-                  lms.QTDE_A_PRODUZIR_PACOTE
-          )
+          AND l.QTDE_EM_PRODUCAO_PACOTE <> 0
+        UNION
+        SELECT
+          0
+        , 'FINALIZADA'
+        from dual
+        ORDER BY
+          1 DESC
+        ) el
+        WHERE rownum = 1
     '''
     cursor.execute(sql, [periodo, ordem_confeccao])
     return rows_to_dict_list(cursor)
