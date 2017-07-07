@@ -1,9 +1,12 @@
-__version__ = '0.1.8'
-__version__date__ = '2017/07/06'
+__version__ = '0.1.9'
+__version__date__ = '2017/07/07'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.9 - 2017/07/07
+#   . controle de data de saída: Mais informações
 #
 # - 0.1.8 - 2017/07/06
 #   . iniciando app logística
