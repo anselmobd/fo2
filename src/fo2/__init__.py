@@ -1,9 +1,14 @@
-__version__ = '0.1.9'
-__version__date__ = '2017/07/07'
+__version__ = '0.1.10'
+__version__date__ = '2017/07/10'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.10 - 2017/07/10
+#   . Evoluindo controle de data de saída
+#   . Evoluindo dados de pedido para conferencia
+#     Era só infAdProd, adicionei EAN e Narrativa
 #
 # - 0.1.9 - 2017/07/07
 #   . controle de data de saída: Mais informações
