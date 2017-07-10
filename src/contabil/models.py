@@ -13,7 +13,7 @@ def infadprod_pro_pedido(cursor, pedido):
         , i.CD_IT_PE_ITEM COR
         , i.CD_IT_PE_SUBGRUPO TAM
         , coalesce( ip.REF_CLIENTE, '-') INFADPROD
-        , rtc.CODIGO_BARRAS EAN
+        , coalesce( rtc.CODIGO_BARRAS, ' ') EAN
         , rtc.NARRATIVA
         FROM PEDI_100 p
         LEFT JOIN PEDI_010 c
