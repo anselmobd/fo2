@@ -41,8 +41,10 @@ class InfAdProd(View):
                 context.update({
                     'pedido': pedido,
                     'cliente': row['CLIENTE'],
-                    'headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'infAdProd'),
-                    'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'INFADPROD'),
+                    'headers': ('Nível', 'Ref.', 'Cor', 'Tam.',
+                                'infAdProd', 'EAN', 'Narrativa'),
+                    'fields': ('NIVEL', 'REF', 'COR', 'TAM',
+                               'INFADPROD', 'EAN', 'NARRATIVA'),
                     'data': data,
                 })
         context['form'] = form
