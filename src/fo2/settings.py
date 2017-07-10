@@ -184,3 +184,7 @@ STATIC_ROOT = os.path.join(ROOT_DIR, "static")
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(ROOT_DIR, "media")
+
+# Session limit
+
+SESSION_COOKIE_AGE = 8 * 60 * 60  # 8 horas
