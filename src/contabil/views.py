@@ -15,7 +15,7 @@ class InfAdProd(View):
     Form_class = InfAdProdForm
     template_name = 'contabil/infadprod.html'
     context = {
-        'titulo': 'InfAdProd',
+        'titulo': 'InfAdProd, EAN e Narrativa',
     }
 
     def get(self, request, *args, **kwargs):
