@@ -12,7 +12,8 @@ class NotaFiscalAdmin(admin.ModelAdmin):
                    'faturamento', 'cod_status']
     search_fields = ['numero', 'observacao']
     ordering = ['-numero']
-    fields = (('numero', 'faturamento', 'cod_status', 'msg_status', 'ativa'),
+    fields = (('numero', 'ativa'),
+              ('faturamento', 'cod_status', 'msg_status'),
               'saida', 'entrega', 'confirmada', 'observacao')
     readonly_fields = ['numero', 'faturamento',
                        'cod_status', 'msg_status', 'ativa']
