@@ -121,43 +121,39 @@ def op(request):
                 , l.PROCONF_GRUPO REF
                 , l.PROCONF_SUBGRUPO TAM
                 , l.PROCONF_ITEM COR
-                , CASE WHEN q.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
-                  ELSE q.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
-                  END EST
+                , COALESCE(
+                  ( SELECT
+                      le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO
+                    FROM PCPC_040 le
+                    JOIN MQOP_005 ed
+                      ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
+                    WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                      AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                      AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+                  )
+                  , 'FINALIZADO'
+                  ) EST
                 , l.PERIODO_PRODUCAO PERIODO
                 , l.ORDEM_CONFECCAO OC
-                , q.QTDE_PROGRAMADA QTD
+                , l.QTDE_PROGRAMADA QTD
                 FROM (
-                  SELECT DISTINCT
-                    os.ORDEM_PRODUCAO
-                  , os.PERIODO_PRODUCAO
+                  SELECT
+                    os.PERIODO_PRODUCAO
                   , os.ORDEM_CONFECCAO
-                  , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
                   , os.PROCONF_GRUPO
                   , os.PROCONF_SUBGRUPO
                   , os.PROCONF_ITEM
-                  , max(
-                      CASE WHEN os.QTDE_EM_PRODUCAO_PACOTE <> 0
-                      THEN os.SEQ_OPERACAO
-                      ELSE 0
-                      END
-                    ) max_seq_operacao
+                  , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
+                  , max( os.QTDE_PROGRAMADA ) QTDE_PROGRAMADA
                   FROM PCPC_040 os
                   WHERE os.ORDEM_PRODUCAO = %s
                   GROUP BY
-                    os.ORDEM_PRODUCAO
-                  , os.PERIODO_PRODUCAO
+                    os.PERIODO_PRODUCAO
                   , os.ORDEM_CONFECCAO
                   , os.PROCONF_GRUPO
                   , os.PROCONF_SUBGRUPO
                   , os.PROCONF_ITEM
                 ) l
-                JOIN PCPC_040 q
-                  ON q.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-                 AND q.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                 AND q.SEQ_OPERACAO = l.max_seq_operacao
-                JOIN MQOP_005 e
-                  ON e.CODIGO_ESTAGIO = q.CODIGO_ESTAGIO
                 LEFT JOIN PCPC_040 dos
                   ON l.NUMERO_ORDEM <> 0
                  AND dos.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
@@ -166,8 +162,7 @@ def op(request):
                 LEFT JOIN MQOP_005 eos
                   ON eos.CODIGO_ESTAGIO = dos.CODIGO_ESTAGIO
                 ORDER BY
-                  l.ORDEM_PRODUCAO
-                , l.NUMERO_ORDEM
+                  l.NUMERO_ORDEM
                 , l.PROCONF_GRUPO
                 , l.PROCONF_SUBGRUPO
                 , l.PROCONF_ITEM
