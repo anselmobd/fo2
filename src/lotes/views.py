@@ -111,7 +111,7 @@ def op(request):
             })
             cursor = connections['so'].cursor()
 
-            # por lote
+            # Lotes ordenados por OS + referência + estágio
             sql = '''
                 SELECT
                   CASE WHEN dos.NUMERO_ORDEM IS NULL
@@ -161,11 +161,13 @@ def op(request):
                  AND dos.NUMERO_ORDEM = l.NUMERO_ORDEM
                 LEFT JOIN MQOP_005 eos
                   ON eos.CODIGO_ESTAGIO = dos.CODIGO_ESTAGIO
+                LEFT JOIN BASI_220 t
+                  ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
                 ORDER BY
                   l.NUMERO_ORDEM
                 , l.PROCONF_GRUPO
-                , l.PROCONF_SUBGRUPO
                 , l.PROCONF_ITEM
+                , t.ORDEM_TAMANHO
                 , l.PERIODO_PRODUCAO
                 , l.ORDEM_CONFECCAO
             '''
@@ -184,43 +186,65 @@ def op(request):
                     'data': data,
                 })
 
-                # por referencia
+                # Totais por referência + estágio
                 sql = '''
                     SELECT
-                      l.PROCONF_GRUPO REF
-                    , l.PROCONF_SUBGRUPO TAM
-                    , l.PROCONF_ITEM COR
-                    , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
-                      ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
-                      END EST
-                    , COUNT( l.ORDEM_CONFECCAO ) LOTES
-                    , SUM( l.QTDE_PROGRAMADA ) QTD
-                    FROM PCPC_040 l
-                    JOIN MQOP_005 e
-                      ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-                    WHERE 1=1
-                      AND l.ORDEM_PRODUCAO = %s
-                      AND l.SEQ_OPERACAO =
-                      (
+                      lote.REF
+                    , lote.TAM
+                    , lote.COR
+                    , lote.EST
+                    , count(*) LOTES
+                    , sum(lote.QTD) QTD
+                    FROM (
+                      SELECT
+                        l.PROCONF_GRUPO REF
+                      , l.PROCONF_SUBGRUPO TAM
+                      , l.PROCONF_ITEM COR
+                      , COALESCE(
+                          ( SELECT
+                              le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO
+                            FROM PCPC_040 le
+                            JOIN MQOP_005 ed
+                              ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
+                            WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                              AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                              AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+                          )
+                        , 'FINALIZADO'
+                        ) EST
+                      , l.QTDE_PROGRAMADA QTD
+                      FROM (
                         SELECT
-                          max(lms.SEQ_OPERACAO)
-                        FROM PCPC_040 lms
-                        WHERE lms.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-                          AND lms.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                          AND lms.QTDE_EM_PRODUCAO_PACOTE <> 0
-                      )
+                          os.PROCONF_GRUPO
+                        , os.PROCONF_SUBGRUPO
+                        , os.PROCONF_ITEM
+                        , os.PERIODO_PRODUCAO
+                        , os.ORDEM_CONFECCAO
+                        , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
+                        , max( os.QTDE_PROGRAMADA ) QTDE_PROGRAMADA
+                        FROM PCPC_040 os
+                        WHERE os.ORDEM_PRODUCAO = %s
+                        GROUP BY
+                          os.PROCONF_GRUPO
+                        , os.PROCONF_SUBGRUPO
+                        , os.PROCONF_ITEM
+                        , os.PERIODO_PRODUCAO
+                        , os.ORDEM_CONFECCAO
+                      ) l
+                    ) lote
+                    LEFT JOIN BASI_220 t
+                      ON t.TAMANHO_REF = lote.TAM
                     GROUP BY
-                      l.PROCONF_GRUPO
-                    , l.PROCONF_SUBGRUPO
-                    , l.PROCONF_ITEM
-                    , CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 'FINALIZADO'
-                      ELSE l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO
-                      END
+                      lote.REF
+                    , lote.COR
+                    , t.ORDEM_TAMANHO
+                    , lote.TAM
+                    , lote.EST
                     ORDER BY
-                      l.PROCONF_GRUPO
-                    , l.PROCONF_SUBGRUPO
-                    , l.PROCONF_ITEM
-                    , 4
+                      lote.REF
+                    , lote.COR
+                    , t.ORDEM_TAMANHO
+                    , lote.EST
                 '''
                 cursor.execute(sql, (op,))
                 t_data = rows_to_dict_list(cursor)
@@ -231,7 +255,7 @@ def op(request):
                     't_data': t_data,
                 })
 
-                # por OS
+                # Totais por OS + referência
                 sql = """
                     SELECT
                       l.NUMERO_ORDEM OS
@@ -273,18 +297,21 @@ def op(request):
                       , os.PROCONF_SUBGRUPO
                       , os.PROCONF_ITEM
                     ) l
+                    LEFT JOIN BASI_220 t
+                      ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
                     GROUP BY
                       l.ORDEM_PRODUCAO
                     , l.NUMERO_ORDEM
                     , l.PROCONF_GRUPO
                     , l.PROCONF_SUBGRUPO
+                    , t.ORDEM_TAMANHO
                     , l.PROCONF_ITEM
                     ORDER BY
                       l.ORDEM_PRODUCAO
                     , l.NUMERO_ORDEM
                     , l.PROCONF_GRUPO
-                    , l.PROCONF_SUBGRUPO
                     , l.PROCONF_ITEM
+                    , t.ORDEM_TAMANHO
                 """
                 cursor.execute(sql, (op,))
                 o_data = rows_to_dict_list(cursor)
