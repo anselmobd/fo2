@@ -34,7 +34,7 @@ def posicao_lote(cursor, periodo, ordem_confeccao):
         UNION
         SELECT
           0
-        , 'FINALIZADA'
+        , 'FINALIZADO'
         from dual
         ORDER BY
           1 DESC
