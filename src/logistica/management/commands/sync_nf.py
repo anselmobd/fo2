@@ -23,7 +23,21 @@ class Command(BaseCommand):
                 , CAST( COALESCE( f.COD_STATUS, '0' ) AS INT ) COD_STATUS
                 , COALESCE( f.MSG_STATUS, ' ' ) MSG_STATUS
                 , f.SITUACAO_NFISC SITUACAO
+                , f.NATOP_NF_NAT_OPER NAT
+                , f.NATOP_NF_EST_OPER UF
+                , n.DESCR_NAT_OPER NATUREZA
+                , f.CGC_9 CNPJ9
+                , f.CGC_4 CNPJ4
+                , f.CGC_2 CNPJ2
+                , c.NOME_CLIENTE CLIENTE
                 FROM FATU_050 f
+                JOIN PEDI_010 c
+                  ON c.CGC_9 = f.CGC_9
+                 AND c.CGC_4 = f.CGC_4
+                 AND c.CGC_2 = f.CGC_2
+                JOIN PEDI_080 n
+                  ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
+                 AND n.ESTADO_NATOPER = f.NATOP_NF_EST_OPER
                 --WHERE rownum = 1
                 ORDER BY
                   f.NUM_NOTA_FISCAL DESC
@@ -41,13 +55,22 @@ class Command(BaseCommand):
                 else:
                     faturamento = timezone.make_aware(
                         row_st['FATURAMENTO'], timezone.get_current_timezone())
+                dest_cnpj = '{:08d}/{:04d}-{:02d}'.format(
+                    row_st['CNPJ9'],
+                    row_st['CNPJ4'],
+                    row_st['CNPJ2'])
                 edit = True
                 if (row_st['NF'],) in nfs_fo2:
                     nf_fo2 = models.NotaFiscal.objects.get(numero=row_st['NF'])
                     if nf_fo2.faturamento == faturamento \
+                            and nf_fo2.dest_cnpj == dest_cnpj \
+                            and nf_fo2.dest_nome == row_st['CLIENTE'] \
                             and nf_fo2.cod_status == row_st['COD_STATUS'] \
                             and nf_fo2.msg_status == row_st['MSG_STATUS'] \
-                            and nf_fo2.ativa == (row_st['SITUACAO'] == 1):
+                            and nf_fo2.uf == row_st['UF'] \
+                            and nf_fo2.natu_descr == row_st['NATUREZA'] \
+                            and nf_fo2.ativa == (row_st['SITUACAO'] == 1) \
+                            and nf_fo2.natu_venda == (row_st['NAT'] in (1, 2)):
                         edit = False
                     else:
                         self.stdout.write(
@@ -64,6 +87,15 @@ class Command(BaseCommand):
                         'date = {}'.format(faturamento))
                     nf_fo2.faturamento = faturamento
 
+                    self.stdout.write('cnpj = {}'.format(dest_cnpj))
+                    nf_fo2.dest_cnpj = dest_cnpj
+
+                    self.stdout.write('clie = {}'.format(row_st['CLIENTE']))
+                    nf_fo2.dest_nome = row_st['CLIENTE']
+
+                    self.stdout.write('uf = {}'.format(row_st['UF']))
+                    nf_fo2.uf = row_st['UF']
+
                     self.stdout.write('cod = {}'.format(row_st['COD_STATUS']))
                     nf_fo2.cod_status = row_st['COD_STATUS']
 
@@ -72,6 +104,12 @@ class Command(BaseCommand):
 
                     self.stdout.write('sit = {}'.format(row_st['SITUACAO']))
                     nf_fo2.ativa = (row_st['SITUACAO'] == 1)
+
+                    self.stdout.write('natu = {}'.format(row_st['NAT']))
+                    nf_fo2.natu_venda = (row_st['NAT'] in (1, 2))
+
+                    self.stdout.write('natu_descr = {}'.format(row_st['NATUREZA']))
+                    nf_fo2.natu_descr = row_st['NATUREZA']
 
                     nf_fo2.save()
                     self.stdout.write('saved')
