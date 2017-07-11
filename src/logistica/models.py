@@ -2,6 +2,7 @@ from django.db import models
 
 
 class NotaFiscal(models.Model):
+    # campos importados
     numero = models.IntegerField(unique=True, verbose_name='número')
     ativa = models.BooleanField(default=True)
     faturamento = models.DateTimeField(null=True, blank=True)
@@ -11,6 +12,20 @@ class NotaFiscal(models.Model):
     msg_status = models.CharField(
         max_length=100, null=True, blank=True,
         verbose_name='status (descr.)')
+    dest_cnpj = models.CharField(
+        max_length=20, null=True, blank=True,
+        verbose_name='CNPJ')
+    dest_nome = models.CharField(
+        max_length=100, null=True, blank=True,
+        verbose_name='Destinatário')
+    natu_venda = models.BooleanField(default=False, verbose_name='venda')
+    uf = models.CharField(
+        max_length=2, null=True, blank=True,
+        verbose_name='UF')
+    natu_descr = models.CharField(
+        max_length=100, null=True, blank=True,
+        verbose_name='natureza')
+    # campos editáveis
     saida = models.DateField(null=True, blank=True, verbose_name='saída')
     entrega = models.DateField(
         null=True, blank=True,
