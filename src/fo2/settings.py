@@ -168,6 +168,10 @@ USE_TZ = True
 
 USE_THOUSAND_SEPARATOR = True
 
+FORMAT_MODULE_PATH = [
+    'fo2.formats',
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
