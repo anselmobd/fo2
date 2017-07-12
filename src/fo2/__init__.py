@@ -1,9 +1,14 @@
-__version__ = '0.1.11'
-__version__date__ = '2017/07/11'
+__version__ = '0.1.12'
+__version__date__ = '2017/07/12'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.12 - 2017/07/12
+#   . controle de data de saída:
+#     . transportadora
+#     . ajustes de tela
 #
 # - 0.1.11 - 2017/07/11
 #   . melhorias na consulta de OP
