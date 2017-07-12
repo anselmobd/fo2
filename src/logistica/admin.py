@@ -6,8 +6,8 @@ from .models import NotaFiscal
 
 class NotaFiscalAdmin(admin.ModelAdmin):
     list_display = ['numero', 'dest_cnpj', 'dest_nome', 'uf',
-                    'natu_descr', 'natu_venda',
-                    'faturamento', 'cod_status', 'msg_status', 'ativa',
+                    'transp_nome', 'natu_venda',
+                    'faturamento', 'cod_status', 'ativa',
                     'saida', 'entrega', 'confirmada', 'observacao']
     list_filter = ['ativa', 'natu_venda', 'saida',
                    'entrega', 'confirmada',
@@ -16,14 +16,14 @@ class NotaFiscalAdmin(admin.ModelAdmin):
                      'dest_cnpj', 'dest_nome', 'natu_descr']
     ordering = ['-numero']
     fields = (('numero', 'ativa'),
+              ('dest_cnpj', 'dest_nome', 'uf', 'transp_nome'),
+              ('natu_venda', 'natu_descr'),
               ('faturamento', 'cod_status', 'msg_status'),
-              ('dest_cnpj', 'dest_nome', 'uf'),
-              ('natu_descr', 'natu_venda'),
               'saida', 'entrega', 'confirmada', 'observacao')
     readonly_fields = ['numero', 'faturamento',
                        'cod_status', 'msg_status', 'ativa',
                        'dest_cnpj', 'dest_nome', 'uf',
-                       'natu_descr', 'natu_venda',
+                       'transp_nome', 'natu_descr', 'natu_venda',
                        ]
 
 

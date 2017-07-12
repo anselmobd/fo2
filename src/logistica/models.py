@@ -8,7 +8,7 @@ class NotaFiscal(models.Model):
     faturamento = models.DateTimeField(null=True, blank=True)
     cod_status = models.IntegerField(
         null=True, blank=True,
-        verbose_name='status (cód.)')
+        verbose_name='status')
     msg_status = models.CharField(
         max_length=100, null=True, blank=True,
         verbose_name='status (descr.)')
@@ -25,6 +25,10 @@ class NotaFiscal(models.Model):
     natu_descr = models.CharField(
         max_length=100, null=True, blank=True,
         verbose_name='natureza')
+    transp_nome = models.CharField(
+        max_length=100, null=True, blank=True,
+        verbose_name='transportadora')
+
     # campos editáveis
     saida = models.DateField(null=True, blank=True, verbose_name='saída')
     entrega = models.DateField(
