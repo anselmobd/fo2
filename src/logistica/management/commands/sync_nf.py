@@ -30,7 +30,14 @@ class Command(BaseCommand):
                 , f.CGC_4 CNPJ4
                 , f.CGC_2 CNPJ2
                 , c.NOME_CLIENTE CLIENTE
-                , COALESCE( t.NOME_FANTASIA, ' ' ) TRANSP
+                , COALESCE(
+                    CASE WHEN f.TRANSPOR_FORNE9
+                            + f.TRANSPOR_FORNE4
+                            + f.TRANSPOR_FORNE2 = 0
+                    THEN 'O PROPRIO'
+                    ELSE t.NOME_FANTASIA
+                    END
+                  , '-') TRANSP
                 FROM FATU_050 f
                 JOIN PEDI_010 c
                   ON c.CGC_9 = f.CGC_9
