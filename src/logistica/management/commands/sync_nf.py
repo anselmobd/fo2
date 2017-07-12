@@ -30,6 +30,7 @@ class Command(BaseCommand):
                 , f.CGC_4 CNPJ4
                 , f.CGC_2 CNPJ2
                 , c.NOME_CLIENTE CLIENTE
+                , COALESCE( t.NOME_FANTASIA, ' ' ) TRANSP
                 FROM FATU_050 f
                 JOIN PEDI_010 c
                   ON c.CGC_9 = f.CGC_9
@@ -38,6 +39,11 @@ class Command(BaseCommand):
                 JOIN PEDI_080 n
                   ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
                  AND n.ESTADO_NATOPER = f.NATOP_NF_EST_OPER
+                LEFT JOIN SUPR_010 t
+                  ON t.TIPO_FORNECEDOR = 31 -- transportadora
+                 AND t.FORNECEDOR9 = f.TRANSPOR_FORNE9
+                 AND t.FORNECEDOR4 = f.TRANSPOR_FORNE4
+                 AND t.FORNECEDOR2 = f.TRANSPOR_FORNE2
                 --WHERE rownum = 1
                 ORDER BY
                   f.NUM_NOTA_FISCAL DESC
@@ -69,6 +75,7 @@ class Command(BaseCommand):
                             and nf_fo2.msg_status == row_st['MSG_STATUS'] \
                             and nf_fo2.uf == row_st['UF'] \
                             and nf_fo2.natu_descr == row_st['NATUREZA'] \
+                            and nf_fo2.transp_nome == row_st['TRANSP'] \
                             and nf_fo2.ativa == (row_st['SITUACAO'] == 1) \
                             and nf_fo2.natu_venda == (row_st['NAT'] in (1, 2)):
                         edit = False
@@ -108,8 +115,13 @@ class Command(BaseCommand):
                     self.stdout.write('natu = {}'.format(row_st['NAT']))
                     nf_fo2.natu_venda = (row_st['NAT'] in (1, 2))
 
-                    self.stdout.write('natu_descr = {}'.format(row_st['NATUREZA']))
+                    self.stdout.write(
+                        'natu_descr = {}'.format(row_st['NATUREZA']))
                     nf_fo2.natu_descr = row_st['NATUREZA']
+
+                    self.stdout.write(
+                        'transp_nome = {}'.format(row_st['TRANSP']))
+                    nf_fo2.transp_nome = row_st['TRANSP']
 
                     nf_fo2.save()
                     self.stdout.write('saved')
