@@ -1,0 +1,17 @@
+<tbody>
+{% for row in data %}
+  <tr>
+  {% for field in fields %}
+    {% if field in link %}
+      <td>
+        <a href="{{ row|get_item:'LINK' }}">{{ row|get_item:field }}</a>
+      </td>
+    {% else %}
+      <td>
+        {{ row|get_item:field }}
+      </td>
+    {% endif %}
+  {% endfor %}
+  </tr>
+{% endfor %}
+</tbody>
