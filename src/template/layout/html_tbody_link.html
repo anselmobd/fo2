@@ -4,7 +4,7 @@
   {% for field in fields %}
     {% if field in link %}
       <td>
-        <a href="{{ row|get_item:'LINK' }}">{{ row|get_item:field }}</a>
+        <a href="{{ row|get_item:'LINK' }}">{{ row|get_item:field }}&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
       </td>
     {% else %}
       <td>
