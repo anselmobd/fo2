@@ -8,7 +8,8 @@ urlpatterns = [
     url(r'^posicao/(?P<lote>\d+)/$', views.Posicao.as_view(),
         name='posicao_lote'),
     url(r'^respons/$', views.respons, name='respons'),
-    url(r'^op/$', views.op, name='op'),
+    url(r'^op/$', views.Op.as_view(), name='op'),
+    url(r'^op/(?P<op>\d+)/$', views.Op.as_view(), name='op_op'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
