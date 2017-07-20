@@ -26,6 +26,10 @@
 <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+<table>
+  {% include "layout/html_thead.html" with data=i_headers only %}
+  {% include "layout/html_tbody_link.html" with fields=i_fields data=i_data link=i_link only %}
+</table>
 <h3>Totais por referência + estágio</h3>
 <table>
   {% include "layout/html_thead.html" with data=t_headers only %}

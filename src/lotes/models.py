@@ -169,8 +169,16 @@ def op_inform(cursor, op):
           when o.REFERENCIA_PECA <= '99999' then 'PA'
           when o.REFERENCIA_PECA <= 'A9999' then 'PG'
           else 'MD'
-          end TIPO
+          end TIPO_REF
+        , CASE
+          WHEN o.ORDEM_PRINCIPAL <> 0 THEN 'Pai de'
+          WHEN ofi.ORDEM_PRODUCAO IS NOT NULL THEN 'Filha de'
+          ELSE 'Avulsa'
+          END TIPO_OP
+        , coalesce( ofi.ORDEM_PRODUCAO, o.ORDEM_PRINCIPAL ) OP_REL
         FROM PCPC_020 o
+        LEFT JOIN PCPC_020 ofi
+          ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
         WHERE o.ORDEM_PRODUCAO = %s
     '''
     cursor.execute(sql, [op])
