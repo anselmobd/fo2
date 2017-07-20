@@ -183,12 +183,17 @@ def op(request):
                     'msg_erro': 'Lotes não encontrados',
                 })
             else:
+                link = ('LOTE')
+                for row in data:
+                    row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
+                    row['LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
                 context.update({
                     'headers': ('OS', 'Referência', 'Tamanho', 'Cor',
-                                'Estágio', 'Período', 'OC', 'Quant.'),
+                                'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),
                     'fields': ('OS', 'REF', 'TAM', 'COR',
-                               'EST', 'PERIODO', 'OC', 'QTD'),
+                               'EST', 'PERIODO', 'OC', 'QTD', 'LOTE'),
                     'data': data,
+                    'link': link,
                 })
 
                 # Totais por referência + estágio
