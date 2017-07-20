@@ -171,8 +171,8 @@ def op_inform(cursor, op):
           else 'MD'
           end TIPO_REF
         , CASE
-          WHEN o.ORDEM_PRINCIPAL <> 0 THEN 'Pai de'
-          WHEN ofi.ORDEM_PRODUCAO IS NOT NULL THEN 'Filha de'
+          WHEN o.ORDEM_PRINCIPAL <> 0 THEN 'Filha de'
+          WHEN ofi.ORDEM_PRODUCAO IS NOT NULL THEN 'Mãe de'
           ELSE 'Avulsa'
           END TIPO_OP
         , coalesce( ofi.ORDEM_PRODUCAO, o.ORDEM_PRINCIPAL ) OP_REL
