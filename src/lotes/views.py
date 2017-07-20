@@ -74,15 +74,20 @@ class Posicao(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        form = self.Form_class()
-        context = {
-            'form': form
-        }
-        return render(request, self.template_name, context)
+        if 'lote' not in kwargs:
+            form = self.Form_class()
+            context = {
+                'form': form
+            }
+            return render(request, self.template_name, context)
+        else:
+            return self.post(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         context = {}
         form = self.Form_class(request.POST)
+        if 'lote' in kwargs:
+            form.data['lote'] = kwargs['lote']
         if form.is_valid():
             lote = form.cleaned_data['lote']
             periodo = lote[:4]
