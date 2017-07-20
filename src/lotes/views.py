@@ -56,10 +56,10 @@ class Posicao(View):
 
         data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
         context.update({
-            'i_headers': ('Tipo', 'Referência', 'Cor', 'Tamanho',
-                          'Quantidade', 'Descrição', 'Item'),
-            'i_fields': ('TIPO', 'REF', 'COR', 'TAM',
-                         'QTDE', 'NARR', 'ITEM'),
+            'i_headers': ('Quantidade', 'Tipo', 'Referência', 'Cor', 'Tamanho',
+                          'Descrição', 'Item'),
+            'i_fields': ('QTDE', 'TIPO', 'REF', 'COR', 'TAM',
+                         'NARR', 'ITEM'),
             'i_data': data,
         })
 
