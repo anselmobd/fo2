@@ -7,7 +7,10 @@ __version__date__ = '2017/07/20'
 #
 # - 0.1.13 - 2017/07/20
 #   . ficha de cliente: pequena correção e melhoria
-#   . visualização de OP: links para lotes
+#   . visualização de OP:
+#     . links para lotes
+#     . situação de OP
+#     . OP relacionada
 #   . posição de lote:
 #     . GET
 #     . apresentando como tipo (MD, PG, PA), ref., cor e tam.
