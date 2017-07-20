@@ -16,14 +16,14 @@ class FichaCliente(View):
     template_name = 'comercial/ficha_cliente.html'
     titulo = 'Ficha do Cliente (duplicatas)'
 
-    def get(self, request, cnpj=None, *args, **kwargs):
-        if cnpj is None:
+    def get(self, request, *args, **kwargs):
+        if 'cnpj' not in kwargs:
             context = {'titulo': self.titulo}
             form = self.Form_class()
             context['form'] = form
             return render(request, self.template_name, context)
         else:
-            return self.post(request, cnpj)
+            return self.post(request, *args, **kwargs)
 
     def post(self, request, cnpj=None, *args, **kwargs):
         context = {'titulo': self.titulo}
