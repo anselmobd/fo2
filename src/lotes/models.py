@@ -176,7 +176,21 @@ def op_inform(cursor, op):
           ELSE 'Avulsa'
           END TIPO_OP
         , coalesce( ofi.ORDEM_PRODUCAO, o.ORDEM_PRINCIPAL ) OP_REL
+        , o.SITUACAO ||
+          CASE
+          WHEN o.SITUACAO = 2 THEN '-Ordem conf. gerada'
+          WHEN o.SITUACAO = 4 THEN '-Ordens em produção'
+          WHEN o.SITUACAO = 9 THEN '-Ordem cancelada'
+          ELSE ' '
+          END SITUACAO
+        , o.COD_CANCELAMENTO ||
+          CASE
+          WHEN o.COD_CANCELAMENTO = 0 THEN ''
+          ELSE '-' || c.DESCRICAO
+          END CANCELAMENTO
         FROM PCPC_020 o
+        JOIN pcpt_050 c
+          ON c.COD_CANCELAMENTO = o.COD_CANCELAMENTO
         LEFT JOIN PCPC_020 ofi
           ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
         WHERE o.ORDEM_PRODUCAO = %s
