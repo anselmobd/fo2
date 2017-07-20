@@ -42,7 +42,7 @@ Estágio atual do lote <b>{{lote}}</b>:
 </table>
 <table>
   {% include "layout/html_thead.html" with data=o_headers only %}
-  {% include "layout/html_tbody.html" with fields=o_fields data=o_data only %}
+  {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
 </table>
 <table>
   {% include "layout/html_thead.html" with data=i_headers only %}
