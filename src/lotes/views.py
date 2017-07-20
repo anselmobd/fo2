@@ -44,16 +44,22 @@ class Posicao(View):
 
         data = models.posicao_get_op(cursor, periodo, ordem_confeccao)
         if len(data) != 0:
+            link = ('OP')
+            for row in data:
+                row['LINK'] = '/lotes/op/{}'.format(row['OP'])
             context.update({
                 'o_headers': ('OP', 'Situação', 'Programa', 'Data/hora'),
                 'o_fields': ('OP', 'SITU', 'PRG', 'DT'),
                 'o_data': data,
+                'o_link': link,
             })
 
         data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
         context.update({
-            'i_headers': ('Item', 'Descrição', 'Quantidade'),
-            'i_fields': ('ITEM', 'NARR', 'QTDE'),
+            'i_headers': ('Tipo', 'Referência', 'Cor', 'Tamanho',
+                          'Quantidade', 'Descrição', 'Item'),
+            'i_fields': ('TIPO', 'REF', 'COR', 'TAM',
+                         'QTDE', 'NARR', 'ITEM'),
             'i_data': data,
         })
 
@@ -74,14 +80,13 @@ class Posicao(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'lote' not in kwargs:
-            form = self.Form_class()
-            context = {
-                'form': form
-            }
-            return render(request, self.template_name, context)
-        else:
+        if 'lote' in kwargs:
             return self.post(request, *args, **kwargs)
+        else:
+            context = {}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {}
@@ -92,7 +97,6 @@ class Posicao(View):
             lote = form.cleaned_data['lote']
             periodo = lote[:4]
             ordem_confeccao = lote[-5:]
-
             cursor = connections['so'].cursor()
             data = models.existe_lote(cursor, periodo, ordem_confeccao)
             if len(data) == 0:
@@ -105,238 +109,72 @@ class Posicao(View):
         return render(request, self.template_name, context)
 
 
-def op(request):
-    context = {}
-    if request.method == 'POST':
-        form = OpForm(request.POST)
+class Op(View):
+    Form_class = OpForm
+    template_name = 'lotes/op.html'
+
+    def mount_context(self, cursor, op):
+        context = {'op': op}
+
+        # Lotes ordenados por OS + referência + estágio
+        data = models.op_lotes(cursor, op)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Lotes não encontrados',
+            })
+        else:
+            link = ('LOTE')
+            for row in data:
+                row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
+                row['LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
+            context.update({
+                'headers': ('OS', 'Referência', 'Tamanho', 'Cor',
+                            'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),
+                'fields': ('OS', 'REF', 'TAM', 'COR',
+                           'EST', 'PERIODO', 'OC', 'QTD', 'LOTE'),
+                'data': data,
+                'link': link,
+            })
+
+            # Totais por referência + estágio
+            t_data = models.op_ref_estagio(cursor, op)
+            context.update({
+                't_headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
+                              'Qtd. Lotes', 'Quant. Itens'),
+                't_fields': ('REF', 'TAM', 'COR', 'EST', 'LOTES', 'QTD'),
+                't_data': t_data,
+            })
+
+            # Totais por OS + referência
+            o_data = models.op_os_ref(cursor, op)
+            context.update({
+                'o_headers': ('OS', 'Referência', 'Tamanho', 'Cor',
+                              'Qtd. Lotes', 'Quant. Itens'),
+                'o_fields': ('OS', 'REF', 'TAM', 'COR', 'LOTES', 'QTD'),
+                'o_data': o_data,
+            })
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'op' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        form = self.Form_class(request.POST)
+        if 'op' in kwargs:
+            form.data['op'] = kwargs['op']
         if form.is_valid():
             op = form.cleaned_data['op']
-            context.update({
-                'op': op,
-            })
             cursor = connections['so'].cursor()
-
-            # Lotes ordenados por OS + referência + estágio
-            sql = '''
-                SELECT
-                  CASE WHEN dos.NUMERO_ORDEM IS NULL
-                  THEN '0'
-                  ELSE l.NUMERO_ORDEM || ' (' || eos.DESCRICAO || ')'
-                  END OS
-                , l.PROCONF_GRUPO REF
-                , l.PROCONF_SUBGRUPO TAM
-                , l.PROCONF_ITEM COR
-                , COALESCE(
-                  ( SELECT
-                      le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO
-                    FROM PCPC_040 le
-                    JOIN MQOP_005 ed
-                      ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
-                    WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-                      AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                      AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
-                  )
-                  , 'FINALIZADO'
-                  ) EST
-                , l.PERIODO_PRODUCAO PERIODO
-                , l.ORDEM_CONFECCAO OC
-                , l.QTDE_PROGRAMADA QTD
-                FROM (
-                  SELECT
-                    os.PERIODO_PRODUCAO
-                  , os.ORDEM_CONFECCAO
-                  , os.PROCONF_GRUPO
-                  , os.PROCONF_SUBGRUPO
-                  , os.PROCONF_ITEM
-                  , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
-                  , max( os.QTDE_PROGRAMADA ) QTDE_PROGRAMADA
-                  FROM PCPC_040 os
-                  WHERE os.ORDEM_PRODUCAO = %s
-                  GROUP BY
-                    os.PERIODO_PRODUCAO
-                  , os.ORDEM_CONFECCAO
-                  , os.PROCONF_GRUPO
-                  , os.PROCONF_SUBGRUPO
-                  , os.PROCONF_ITEM
-                ) l
-                LEFT JOIN PCPC_040 dos
-                  ON l.NUMERO_ORDEM <> 0
-                 AND dos.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-                 AND dos.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                 AND dos.NUMERO_ORDEM = l.NUMERO_ORDEM
-                LEFT JOIN MQOP_005 eos
-                  ON eos.CODIGO_ESTAGIO = dos.CODIGO_ESTAGIO
-                LEFT JOIN BASI_220 t
-                  ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
-                ORDER BY
-                  l.NUMERO_ORDEM
-                , l.PROCONF_GRUPO
-                , l.PROCONF_ITEM
-                , t.ORDEM_TAMANHO
-                , l.PERIODO_PRODUCAO
-                , l.ORDEM_CONFECCAO
-            '''
-            cursor.execute(sql, (op,))
-            data = rows_to_dict_list(cursor)
-            if len(data) == 0:
-                context.update({
-                    'msg_erro': 'Lotes não encontrados',
-                })
-            else:
-                link = ('LOTE')
-                for row in data:
-                    row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
-                    row['LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
-                context.update({
-                    'headers': ('OS', 'Referência', 'Tamanho', 'Cor',
-                                'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),
-                    'fields': ('OS', 'REF', 'TAM', 'COR',
-                               'EST', 'PERIODO', 'OC', 'QTD', 'LOTE'),
-                    'data': data,
-                    'link': link,
-                })
-
-                # Totais por referência + estágio
-                sql = '''
-                    SELECT
-                      lote.REF
-                    , lote.TAM
-                    , lote.COR
-                    , lote.EST
-                    , count(*) LOTES
-                    , sum(lote.QTD) QTD
-                    FROM (
-                      SELECT
-                        l.PROCONF_GRUPO REF
-                      , l.PROCONF_SUBGRUPO TAM
-                      , l.PROCONF_ITEM COR
-                      , COALESCE(
-                          ( SELECT
-                              le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO
-                            FROM PCPC_040 le
-                            JOIN MQOP_005 ed
-                              ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
-                            WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-                              AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                              AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
-                          )
-                        , 'FINALIZADO'
-                        ) EST
-                      , l.QTDE_PROGRAMADA QTD
-                      FROM (
-                        SELECT
-                          os.PROCONF_GRUPO
-                        , os.PROCONF_SUBGRUPO
-                        , os.PROCONF_ITEM
-                        , os.PERIODO_PRODUCAO
-                        , os.ORDEM_CONFECCAO
-                        , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
-                        , max( os.QTDE_PROGRAMADA ) QTDE_PROGRAMADA
-                        FROM PCPC_040 os
-                        WHERE os.ORDEM_PRODUCAO = %s
-                        GROUP BY
-                          os.PROCONF_GRUPO
-                        , os.PROCONF_SUBGRUPO
-                        , os.PROCONF_ITEM
-                        , os.PERIODO_PRODUCAO
-                        , os.ORDEM_CONFECCAO
-                      ) l
-                    ) lote
-                    LEFT JOIN BASI_220 t
-                      ON t.TAMANHO_REF = lote.TAM
-                    GROUP BY
-                      lote.REF
-                    , lote.COR
-                    , t.ORDEM_TAMANHO
-                    , lote.TAM
-                    , lote.EST
-                    ORDER BY
-                      lote.REF
-                    , lote.COR
-                    , t.ORDEM_TAMANHO
-                    , lote.EST
-                '''
-                cursor.execute(sql, (op,))
-                t_data = rows_to_dict_list(cursor)
-                context.update({
-                    't_headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
-                                  'Qtd. Lotes', 'Quant. Itens'),
-                    't_fields': ('REF', 'TAM', 'COR', 'EST', 'LOTES', 'QTD'),
-                    't_data': t_data,
-                })
-
-                # Totais por OS + referência
-                sql = """
-                    SELECT
-                      l.NUMERO_ORDEM OS
-                    , l.PROCONF_GRUPO REF
-                    , l.PROCONF_SUBGRUPO TAM
-                    , l.PROCONF_ITEM COR
-                    , count( l.ORDEM_CONFECCAO ) LOTES
-                    , SUM (
-                        ( SELECT
-                            q.QTDE_PROGRAMADA
-                          FROM PCPC_040 q
-                          WHERE q.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-                            AND q.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                            AND q.SEQ_OPERACAO = (
-                              SELECT
-                                min(o.SEQ_OPERACAO)
-                              FROM PCPC_040 o
-                              WHERE o.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-                                AND o.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                            )
-                        )
-                      ) QTD
-                    FROM (
-                      SELECT DISTINCT
-                        os.ORDEM_PRODUCAO
-                      , os.PERIODO_PRODUCAO
-                      , os.ORDEM_CONFECCAO
-                      , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
-                      , os.PROCONF_GRUPO
-                      , os.PROCONF_SUBGRUPO
-                      , os.PROCONF_ITEM
-                      FROM PCPC_040 os
-                      WHERE os.ORDEM_PRODUCAO = %s
-                      GROUP BY
-                        os.ORDEM_PRODUCAO
-                      , os.PERIODO_PRODUCAO
-                      , os.ORDEM_CONFECCAO
-                      , os.PROCONF_GRUPO
-                      , os.PROCONF_SUBGRUPO
-                      , os.PROCONF_ITEM
-                    ) l
-                    LEFT JOIN BASI_220 t
-                      ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
-                    GROUP BY
-                      l.ORDEM_PRODUCAO
-                    , l.NUMERO_ORDEM
-                    , l.PROCONF_GRUPO
-                    , l.PROCONF_SUBGRUPO
-                    , t.ORDEM_TAMANHO
-                    , l.PROCONF_ITEM
-                    ORDER BY
-                      l.ORDEM_PRODUCAO
-                    , l.NUMERO_ORDEM
-                    , l.PROCONF_GRUPO
-                    , l.PROCONF_ITEM
-                    , t.ORDEM_TAMANHO
-                """
-                cursor.execute(sql, (op,))
-                o_data = rows_to_dict_list(cursor)
-                context.update({
-                    'o_headers': ('OS', 'Referência', 'Tamanho', 'Cor',
-                                  'Qtd. Lotes', 'Quant. Itens'),
-                    'o_fields': ('OS', 'REF', 'TAM', 'COR', 'LOTES', 'QTD'),
-                    'o_data': o_data,
-                })
-
-    else:
-        form = OpForm()
-
-    context['form'] = form
-    return render(request, 'lotes/op.html', context)
+            context = self.mount_context(cursor, op)
+        context['form'] = form
+        return render(request, self.template_name, context)
 
 
 def respons(request):
