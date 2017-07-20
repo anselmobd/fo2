@@ -4,7 +4,7 @@ from fo2.models import rows_to_dict_list, cursorF1
 def busca_clientes(cnpj):
     cursor = cursorF1()
     sql = """
-        SELECT
+        SELECT FIRST 10000
           c.C_CGC CNPJ
         , c.C_RSOC CLIENTE
         FROM DIS_CLI c
