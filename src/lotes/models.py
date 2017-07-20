@@ -105,9 +105,9 @@ def posicao_get_item(cursor, periodo, ordem_confeccao):
         , l.PROCONF_SUBGRUPO TAM
         , l.PROCONF_ITEM COR
         , case
-          when l.PROCONF_GRUPO <= '99999' then 'MD'
+          when l.PROCONF_GRUPO <= '99999' then 'PA'
           when l.PROCONF_GRUPO <= 'A9999' then 'PG'
-          else 'PA'
+          else 'MD'
           end TIPO
         FROM PCPC_040 l
         JOIN BASI_010 i
@@ -159,6 +159,22 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
         if row['DT'] is None:
             row['DT'] = ''
     return data
+
+
+def op_inform(cursor, op):
+    # informações gerais
+    sql = '''
+        SELECT
+          case
+          when o.REFERENCIA_PECA <= '99999' then 'PA'
+          when o.REFERENCIA_PECA <= 'A9999' then 'PG'
+          else 'MD'
+          end TIPO
+        FROM PCPC_020 o
+        WHERE o.ORDEM_PRODUCAO = %s
+    '''
+    cursor.execute(sql, [op])
+    return rows_to_dict_list(cursor)
 
 
 def op_lotes(cursor, op):
