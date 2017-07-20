@@ -25,11 +25,11 @@ class FichaCliente(View):
         else:
             return self.post(request, *args, **kwargs)
 
-    def post(self, request, cnpj=None, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         context = {'titulo': self.titulo}
         form = self.Form_class(request.POST)
-        if cnpj is not None:
-            form.data['cnpj'] = cnpj
+        if 'cnpj' in kwargs:
+            form.data['cnpj'] = kwargs['cnpj']
         context['form'] = form
         if form.is_valid():
             cnpj = form.cleaned_data['cnpj']
