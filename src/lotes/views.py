@@ -138,8 +138,12 @@ class Op(View):
 
             # informações gerais
             i_data = models.op_inform(cursor, op)
-            i_link = ('OP_RELAC')
-            for row in i_data:
+            row = i_data[0]
+            if row['OP_REL'] == 0:
+                row['OP_REL'] = ''
+                i_link = []
+            else:
+                i_link = ('OP_RELAC')
                 row['LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
             context.update({
                 'i_headers': ('Tipo de referência', 'Tipo de OP',
