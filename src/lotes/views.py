@@ -136,6 +136,19 @@ class Op(View):
                 'link': link,
             })
 
+            # informações gerais
+            i_data = models.op_inform(cursor, op)
+            i_link = ('OP_RELAC')
+            for row in i_data:
+                row['LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
+            context.update({
+                'i_headers': ('Tipo de referência', 'Tipo de OP',
+                              'OP relacionada'),
+                'i_fields': ('TIPO_REF', 'TIPO_OP', 'OP_REL'),
+                'i_data': i_data,
+                'i_link': i_link,
+            })
+
             # Totais por referência + estágio
             t_data = models.op_ref_estagio(cursor, op)
             context.update({
