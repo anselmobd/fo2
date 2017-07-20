@@ -14,7 +14,7 @@
 
 {% block content %}
 <p><a href="/lotes/">Lotes</a></p>
-<form action="" method="post">
+<form action="/lotes/op/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
