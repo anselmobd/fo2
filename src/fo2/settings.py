@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     # Projeto
     'logistica',
+    'lotes',
 ]
 
 MIDDLEWARE = [
