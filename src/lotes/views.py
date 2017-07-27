@@ -146,12 +146,19 @@ class Op(View):
                 i_link = ('OP_RELAC')
                 row['LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
             context.update({
-                'i_headers': ('Tipo de referência', 'Situação', 'Cancelamento',
+                'i_headers': ('Situação', 'Cancelamento',
                               'Tipo de OP', 'OP relacionada'),
-                'i_fields': ('TIPO_REF', 'SITUACAO', 'CANCELAMENTO',
+                'i_fields': ('SITUACAO', 'CANCELAMENTO',
                              'TIPO_OP', 'OP_REL'),
                 'i_data': i_data,
                 'i_link': i_link,
+            })
+            context.update({
+                'i2_headers': ('Tipo de referência', 'Referência',
+                               'Alternativa', 'Roteiro'),
+                'i2_fields': ('TIPO_REF', 'REF',
+                              'ALTERNATIVA', 'ROTEIRO'),
+                'i2_data': i_data,
             })
 
             # Totais por referência + estágio
