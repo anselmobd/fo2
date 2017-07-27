@@ -223,6 +223,9 @@ def op_inform(cursor, op):
           WHEN o.COD_CANCELAMENTO = 0 THEN ''
           ELSE '-' || c.DESCRICAO
           END CANCELAMENTO
+        , o.ALTERNATIVA_PECA ALTERNATIVA
+        , o.ROTEIRO_PECA ROTEIRO
+        , o.REFERENCIA_PECA REF
         FROM PCPC_020 o
         JOIN pcpt_050 c
           ON c.COD_CANCELAMENTO = o.COD_CANCELAMENTO
