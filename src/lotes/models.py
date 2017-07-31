@@ -257,6 +257,41 @@ def op_inform(cursor, op):
     return rows_to_dict_list(cursor)
 
 
+def op_estagios(cursor, op):
+    # Lotes ordenados por OS + referência + estágio
+    sql = '''
+        SELECT
+          ll.EST
+        , (SELECT
+              cast( SUM( lp.QTDE_PECAS_PROD ) / SUM( lp.QTDE_PECAS_PROG ) * 100 AS NUMERIC(10,2) )
+            FROM pcpc_040 lp
+            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
+              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
+          ) PERC
+        , (SELECT
+              SUM( lp.QTDE_PECAS_PROD )
+            FROM pcpc_040 lp
+            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
+              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
+          ) PROD
+        FROM
+        (
+        SELECT DISTINCT
+          l.ORDEM_PRODUCAO
+        , l.SEQ_OPERACAO
+        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
+        FROM pcpc_040 l
+        JOIN MQOP_005 e
+          ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+        WHERE l.ORDEM_PRODUCAO = %s
+        ORDER BY
+          l.SEQ_OPERACAO
+        ) ll
+    '''
+    cursor.execute(sql, [op])
+    return rows_to_dict_list(cursor)
+
+
 def op_lotes(cursor, op):
     # Lotes ordenados por OS + referência + estágio
     sql = '''
