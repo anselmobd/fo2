@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<p><a href="/lotes/">Lotes</a></p>
+<p><a href="/lotes/">Produção</a></p>
 <form action="/lotes/op/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
