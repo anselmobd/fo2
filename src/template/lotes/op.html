@@ -47,7 +47,7 @@
 <h3>Totais por OS + referência</h3>
 <table>
   {% include "layout/html_thead.html" with data=o_headers only %}
-  {% include "layout/html_tbody.html" with fields=o_fields data=o_data only %}
+  {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
 </table>
 <h3>Lotes ordenados por OS + referência + estágio</h3>
 <table>

@@ -184,11 +184,18 @@ class Op(View):
 
             # Totais por OS + referência
             o_data = models.op_os_ref(cursor, op)
+            o_link = ('OS')
+            for row in o_data:
+                if row['OS']:
+                    row['LINK'] = '/lotes/os/{}'.format(row['OS'])
+                else:
+                    row['LINK'] = None
             context.update({
                 'o_headers': ('OS', 'Referência', 'Tamanho', 'Cor',
                               'Qtd. Lotes', 'Quant. Itens'),
                 'o_fields': ('OS', 'REF', 'TAM', 'COR', 'LOTES', 'QTD'),
                 'o_data': o_data,
+                'o_link': o_link,
             })
         return context
 
