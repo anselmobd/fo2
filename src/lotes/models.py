@@ -239,9 +239,9 @@ def op_inform(cursor, op):
               SUM( l.QTDE_PECAS_PROG )
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-              AND l.SEQUENCIA_ESTAGIO = (
+              AND l.SEQ_OPERACAO = (
                 SELECT
-                  MAX( ls.SEQUENCIA_ESTAGIO )
+                  MAX( ls.SEQ_OPERACAO )
                 FROM pcpc_040 ls
                 WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
               )
@@ -263,7 +263,8 @@ def op_estagios(cursor, op):
         SELECT
           ll.EST
         , (SELECT
-              cast( SUM( lp.QTDE_PECAS_PROD ) / SUM( lp.QTDE_PECAS_PROG ) * 100 AS NUMERIC(10,2) )
+              cast( SUM( lp.QTDE_PECAS_PROD ) / SUM( lp.QTDE_PECAS_PROG ) * 100
+                    AS NUMERIC(10,2) )
             FROM pcpc_040 lp
             WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
               AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO

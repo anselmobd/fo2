@@ -1,9 +1,13 @@
-__version__ = '0.1.13'
-__version__date__ = '2017/07/20'
+__version__ = '0.1.14'
+__version__date__ = '2017/07/31'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.14 - 2017/07/31
+#   . Posição de lote: Mais informações
+#   . OP: Mais informações
 #
 # - 0.1.13 - 2017/07/20
 #   . ficha de cliente: pequena correção e melhoria
