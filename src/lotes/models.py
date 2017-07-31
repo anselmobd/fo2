@@ -425,6 +425,25 @@ def op_ref_estagio(cursor, op):
     return rows_to_dict_list(cursor)
 
 
+def op_os(cursor, op):
+    # OSs da OP
+    sql = """
+        SELECT
+          l.NUMERO_ORDEM OS
+        , count(l.ORDEM_CONFECCAO) LOTES
+        , sum(l.QTDE_PECAS_PROG) QTD
+        FROM pcpc_040 l
+        WHERE l.ORDEM_PRODUCAO = %s
+          AND l.NUMERO_ORDEM <> 0
+        GROUP BY
+          l.NUMERO_ORDEM
+        ORDER BY
+          l.NUMERO_ORDEM
+    """
+    cursor.execute(sql, [op])
+    return rows_to_dict_list(cursor)
+
+
 def op_os_ref(cursor, op):
     # Totais por OS + referência
     sql = """
@@ -523,7 +542,7 @@ def os_inform(cursor, os):
 
 
 def os_op(cursor, os):
-    # Informações sobre OS
+    # Totais por OP
     sql = """
         SELECT
           l.ORDEM_PRODUCAO OP

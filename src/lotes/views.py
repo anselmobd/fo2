@@ -168,7 +168,7 @@ class Op(View):
             # Estágios
             e_data = models.op_estagios(cursor, op)
             context.update({
-                'e_headers': ('Estágio', '% Prod.', 'Quant. Prod.'),
+                'e_headers': ('Estágio', '% Produzida', 'Quant. Produzida'),
                 'e_fields': ('EST', 'PERC', 'PROD'),
                 'e_data': e_data,
             })
@@ -181,6 +181,23 @@ class Op(View):
                 't_fields': ('REF', 'TAM', 'COR', 'EST', 'LOTES', 'QTD'),
                 't_data': t_data,
             })
+
+            # OSs da OP
+            s_data = models.op_os(cursor, op)
+            if len(s_data) != 0 \
+                    and (len(s_data) > 1 or s_data[0]['OS'] != 0):
+                s_link = ('OS')
+                for row in s_data:
+                    if row['OS']:
+                        row['LINK'] = '/lotes/os/{}'.format(row['OS'])
+                    else:
+                        row['LINK'] = None
+                context.update({
+                    's_headers': ('OS', 'Lotes', 'Quant.'),
+                    's_fields': ('OS', 'LOTES', 'QTD'),
+                    's_data': s_data,
+                    's_link': s_link,
+                })
 
             # Totais por OS + referência
             o_data = models.op_os_ref(cursor, op)
@@ -247,7 +264,7 @@ class Os(View):
                 'data': data,
             })
 
-            # OPs
+            # Totais por OP
             o_data = models.os_op(cursor, os)
             if len(o_data) != 0:
                 o_link = ('OP')
