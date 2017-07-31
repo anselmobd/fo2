@@ -306,7 +306,8 @@ def op_lotes(cursor, op):
         , l.PROCONF_ITEM COR
         , COALESCE(
           ( SELECT
-              le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO
+              LISTAGG(le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO, ' & ')
+              WITHIN GROUP (ORDER BY le.CODIGO_ESTAGIO)
             FROM PCPC_040 le
             JOIN MQOP_005 ed
               ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
@@ -375,7 +376,8 @@ def op_ref_estagio(cursor, op):
           , l.PROCONF_ITEM COR
           , COALESCE(
               ( SELECT
-                  le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO
+                  LISTAGG(le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO, ' & ')
+                  WITHIN GROUP (ORDER BY le.CODIGO_ESTAGIO)
                 FROM PCPC_040 le
                 JOIN MQOP_005 ed
                   ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
