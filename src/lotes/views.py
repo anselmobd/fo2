@@ -64,14 +64,17 @@ class Posicao(View):
         })
 
         data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
-        group = ('EST', 'Q_P', 'Q_EP', 'Q_AP', 'FAMI', 'OS')
+        group = ('EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A', 'Q_PERDA',
+                 'FAMI', 'OS')
         group_rowspan(data, group)
         context.update({
-            'e_headers': ('Estágio', 'Prog.', 'Em Prod.',
-                          'A Prod.', 'Família', 'OS',
+            'e_headers': ('Estágio', 'Prog.', 'A Prod.',
+                          'Em Prod.', 'Prod.', '2a.',
+                          'Perda', 'Família', 'OS',
                           'Usuário', 'Data', 'Programa'),
-            'e_fields': ('EST', 'Q_P', 'Q_EP',
-                         'Q_AP', 'FAMI', 'OS',
+            'e_fields': ('EST', 'Q_P', 'Q_AP',
+                         'Q_EP', 'Q_PROD', 'Q_2A',
+                         'Q_PERDA', 'FAMI', 'OS',
                          'USU', 'DT', 'PRG'),
             'e_group': group,
             'e_data': data,
@@ -155,9 +158,9 @@ class Op(View):
             })
             context.update({
                 'i2_headers': ('Tipo de referência', 'Referência',
-                               'Alternativa', 'Roteiro'),
+                               'Alternativa', 'Roteiro', 'Qtd. Lotes'),
                 'i2_fields': ('TIPO_REF', 'REF',
-                              'ALTERNATIVA', 'ROTEIRO'),
+                              'ALTERNATIVA', 'ROTEIRO', 'LOTES'),
                 'i2_data': i_data,
             })
 
