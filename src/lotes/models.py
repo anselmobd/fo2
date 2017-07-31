@@ -235,6 +235,17 @@ def op_inform(cursor, op):
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
           ) LOTES
+        , ( SELECT
+              SUM( l.QTDE_PECAS_PROG )
+            FROM pcpc_040 l
+            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+              AND l.SEQUENCIA_ESTAGIO = (
+                SELECT
+                  MAX( ls.SEQUENCIA_ESTAGIO )
+                FROM pcpc_040 ls
+                WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+              )
+          ) QTD
         FROM PCPC_020 o
         JOIN pcpt_050 c
           ON c.COD_CANCELAMENTO = o.COD_CANCELAMENTO

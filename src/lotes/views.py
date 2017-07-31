@@ -158,9 +158,10 @@ class Op(View):
             })
             context.update({
                 'i2_headers': ('Tipo de referência', 'Referência',
-                               'Alternativa', 'Roteiro', 'Qtd. Lotes'),
+                               'Alternativa', 'Roteiro',
+                               'Qtd. Lotes', 'Quant. Itens'),
                 'i2_fields': ('TIPO_REF', 'REF',
-                              'ALTERNATIVA', 'ROTEIRO', 'LOTES'),
+                              'ALTERNATIVA', 'ROTEIRO', 'LOTES', 'QTD'),
                 'i2_data': i_data,
             })
 
