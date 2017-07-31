@@ -135,7 +135,7 @@ def posicao_get_item(cursor, periodo, ordem_confeccao):
           || '.' || l.PROCONF_SUBGRUPO
           || '.' || l.PROCONF_ITEM ITEM
         , i.NARRATIVA NARR
-        , l.QTDE_PROGRAMADA QTDE
+        , l.QTDE_PECAS_PROG QTDE
         , l.PROCONF_GRUPO REF
         , l.PROCONF_SUBGRUPO TAM
         , l.PROCONF_ITEM COR
@@ -164,9 +164,13 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
     sql = '''
         SELECT
           l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
-        , l.QTDE_PROGRAMADA Q_P
-        , l.QTDE_EM_PRODUCAO_PACOTE Q_EP
+        , l.QTDE_PROGRAMADA Q_PROG
+        , l.QTDE_PECAS_PROG Q_P
         , l.QTDE_A_PRODUZIR_PACOTE Q_AP
+        , l.QTDE_EM_PRODUCAO_PACOTE Q_EP
+        , l.QTDE_PECAS_PROD Q_PROD
+        , l.QTDE_PECAS_2A Q_2A
+        , l.QTDE_PERDAS Q_PERDA
         , l.CODIGO_FAMILIA FAMI
         , l.NUMERO_ORDEM OS
         , coalesce(d.USUARIO_SYSTEXTIL, ' ') USU
@@ -226,6 +230,11 @@ def op_inform(cursor, op):
         , o.ALTERNATIVA_PECA ALTERNATIVA
         , o.ROTEIRO_PECA ROTEIRO
         , o.REFERENCIA_PECA REF
+        , ( SELECT
+              COUNT( DISTINCT l.ORDEM_CONFECCAO )
+            FROM pcpc_040 l
+            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+          ) LOTES
         FROM PCPC_020 o
         JOIN pcpt_050 c
           ON c.COD_CANCELAMENTO = o.COD_CANCELAMENTO
