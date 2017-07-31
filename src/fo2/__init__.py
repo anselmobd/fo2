@@ -8,6 +8,7 @@ __version__date__ = '2017/07/31'
 # - 0.1.14 - 2017/07/31
 #   . Posição de lote: Mais informações
 #   . OP: Mais informações
+#   . OS: Iniciando busca de informações de OS
 #
 # - 0.1.13 - 2017/07/20
 #   . ficha de cliente: pequena correção e melhoria

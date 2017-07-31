@@ -1,0 +1,41 @@
+{% extends 'layout/layout.html' %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block title %}OS - Produção - Intranet - Tussor{% endblock %}
+
+{% block header %}
+<h1>OS - Produção - Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<p><a href="/lotes/">Produção</a></p>
+<form action="/lotes/os/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if os %}
+  <h2>OS {{ os }}</h2>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody.html" with fields=fields data=data only %}
+  </table>
+  {% if o_data %}
+    <h3>OP</h3>
+    <table>
+      {% include "layout/html_thead.html" with data=o_headers only %}
+      {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock %}

@@ -486,3 +486,53 @@ def op_os_ref(cursor, op):
     """
     cursor.execute(sql, [op])
     return rows_to_dict_list(cursor)
+
+
+def os_inform(cursor, os):
+    # Informações sobre OS
+    sql = """
+        SELECT
+          os.CODIGO_SERVICO || '-' || s.DESC_TERCEIRO SERV
+        , os.CGCTERC_FORNE9 CNPJ9
+        , os.CGCTERC_FORNE4 CNPJ4
+        , os.CGCTERC_FORNE2 CNPJ2
+        , f.NOME_FANTASIA NOME
+        , CASE os.SITUACAO_ORDEM
+          WHEN 1 THEN '1-Aberta'
+          WHEN 2 THEN '2-Em Processo'
+          WHEN 3 THEN '3-Baixa Parcial'
+          WHEN 4 THEN '4-Baixa Total'
+          ELSE '-'
+          END SITUACAO
+        , os.COD_CANC_ORDEM || '-' || c.DESCR_CANC_ORDEM CANC
+        FROM OBRF_080 os
+        JOIN OBRF_070 s
+          ON s.CODIGO_TERCEIRO = os.CODIGO_SERVICO
+        JOIN SUPR_010 f
+          ON f.FORNECEDOR9 = os.CGCTERC_FORNE9
+         AND f.FORNECEDOR4 = os.CGCTERC_FORNE4
+        JOIN OBRF_087 c
+          ON c.COD_CANC_ORDEM = os.COD_CANC_ORDEM
+        WHERE os.NUMERO_ORDEM = %s
+        ORDER BY
+          os.CODIGO_SERVICO
+        , os.CGCTERC_FORNE9
+    """
+    cursor.execute(sql, [os])
+    return rows_to_dict_list(cursor)
+
+
+def os_op(cursor, os):
+    # Informações sobre OS
+    sql = """
+        SELECT
+          l.ORDEM_PRODUCAO OP
+        , count(l.ORDEM_CONFECCAO) LOTES
+        , sum(l.QTDE_PECAS_PROG) QTD
+        FROM pcpc_040 l
+        WHERE l.NUMERO_ORDEM = %s
+        GROUP BY
+          l.ORDEM_PRODUCAO
+    """
+    cursor.execute(sql, [os])
+    return rows_to_dict_list(cursor)
