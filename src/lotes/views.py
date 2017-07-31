@@ -6,7 +6,7 @@ from django.views import View
 
 from fo2.template import group_rowspan
 
-from .forms import LoteForm, ResponsPorEstagioForm, OpForm
+from .forms import LoteForm, ResponsPorEstagioForm, OpForm, OsForm
 import lotes.models as models
 
 
@@ -210,6 +210,68 @@ class Op(View):
             op = form.cleaned_data['op']
             cursor = connections['so'].cursor()
             context = self.mount_context(cursor, op)
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class Os(View):
+    Form_class = OsForm
+    template_name = 'lotes/os.html'
+
+    def mount_context(self, cursor, os):
+        context = {'os': os}
+
+        # A ser produzido
+        data = models.os_inform(cursor, os)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'OS vazia',
+            })
+        else:
+            for row in data:
+                cnpj = '{:08d}/{:04d}-{:02d}'.format(
+                    row['CNPJ9'],
+                    row['CNPJ4'],
+                    row['CNPJ2'])
+                row['TERC'] = '{} - {}'.format(cnpj, row['NOME'])
+            context.update({
+                'headers': ('Serviço', 'Terceiro', 'Situação', 'Cancelamento'),
+                'fields': ('SERV', 'TERC', 'SITUACAO', 'CANC'),
+                'data': data,
+            })
+
+            # OPs
+            o_data = models.os_op(cursor, os)
+            if len(o_data) != 0:
+                o_link = ('OP')
+                for row in o_data:
+                    row['LINK'] = '/lotes/op/{}'.format(row['OP'])
+                context.update({
+                    'o_headers': ('OP', 'Lotes', 'Quant.'),
+                    'o_fields': ('OP', 'LOTES', 'QTD'),
+                    'o_data': o_data,
+                    'o_link': o_link,
+                })
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'os' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        form = self.Form_class(request.POST)
+        if 'os' in kwargs:
+            form.data['os'] = kwargs['os']
+        if form.is_valid():
+            os = form.cleaned_data['os']
+            cursor = connections['so'].cursor()
+            context = self.mount_context(cursor, os)
         context['form'] = form
         return render(request, self.template_name, context)
 

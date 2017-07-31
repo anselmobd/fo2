@@ -15,6 +15,13 @@ class OpForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
+class OsForm(forms.Form):
+    os = forms.CharField(
+        label='OS',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+
+
 class ResponsPorEstagioForm(forms.Form):
     estagio = forms.CharField(
         label='Estágio', max_length=2, required=False,

@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^respons/$', views.respons, name='respons'),
     url(r'^op/$', views.Op.as_view(), name='op'),
     url(r'^op/(?P<op>\d+)/$', views.Op.as_view(), name='op_op'),
+    url(r'^os/$', views.Os.as_view(), name='os'),
+    url(r'^os/(?P<os>\d+)/$', views.Os.as_view(), name='os_os'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
