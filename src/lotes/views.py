@@ -165,6 +165,14 @@ class Op(View):
                 'i2_data': i_data,
             })
 
+            # Estágios
+            e_data = models.op_estagios(cursor, op)
+            context.update({
+                'e_headers': ('Estágio', '% Prod.', 'Quant. Prod.'),
+                'e_fields': ('EST', 'PERC', 'PROD'),
+                'e_data': e_data,
+            })
+
             # Totais por referência + estágio
             t_data = models.op_ref_estagio(cursor, op)
             context.update({
