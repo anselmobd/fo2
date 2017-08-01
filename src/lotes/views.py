@@ -186,6 +186,15 @@ class Op(View):
                 'i2_data': i_data,
             })
 
+            # Grade
+            g_header, g_fields, g_data = models.op_sortimento(cursor, op)
+            if len(g_data) != 0:
+                context.update({
+                    'g_headers': g_header,
+                    'g_fields': g_fields,
+                    'g_data': g_data,
+                })
+
             # Estágios
             e_data = models.op_estagios(cursor, op)
             context.update({
