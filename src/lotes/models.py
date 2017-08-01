@@ -305,6 +305,87 @@ def op_estagios(cursor, op):
     return rows_to_dict_list(cursor)
 
 
+def op_sortimento(cursor, op):
+    # Grade de OP
+    sql = '''
+        SELECT DISTINCT
+          i.TAMANHO
+        , i.SEQUENCIA_TAMANHO
+        FROM PCPC_021 i
+        WHERE i.ORDEM_PRODUCAO = %s
+        ORDER BY
+          i.SEQUENCIA_TAMANHO
+    '''
+    cursor.execute(sql, [op])
+    tamanhos = rows_to_dict_list(cursor)
+    if len(tamanhos) == 0:
+        return ([], [], [])
+    elif len(tamanhos) == 1:
+        str_tam = 'Tamanho'
+    else:
+        str_tam = 'Tamanhos'
+
+    sql = '''
+        SELECT
+          i.SORTIMENTO
+        , max( p.DESCRICAO_15 ) DESCR
+        FROM PCPC_021 i
+        JOIN pcpc_020 op
+          ON op.ORDEM_PRODUCAO = i.ORDEM_PRODUCAO
+        LEFT JOIN basi_010 p
+          ON p.NIVEL_ESTRUTURA = 1
+         AND p.GRUPO_ESTRUTURA = op.REFERENCIA_PECA
+         AND p.ITEM_ESTRUTURA = i.SORTIMENTO
+        WHERE i.ORDEM_PRODUCAO = %s
+        GROUP BY
+          i.SORTIMENTO
+        ORDER BY
+          2
+    '''
+    cursor.execute(sql, [op])
+    cores = rows_to_dict_list(cursor)
+    if len(cores) == 1:
+        str_cor = 'Cor'
+    else:
+        str_cor = 'Cores'
+
+    sql = '''
+        SELECT
+          i.TAMANHO
+        , i.SORTIMENTO
+        , i.QUANTIDADE
+        FROM PCPC_021 i
+        WHERE i.ORDEM_PRODUCAO = %s
+        ORDER BY
+          i.SEQUENCIA_TAMANHO
+        , i.SORTIMENTO
+    '''
+    cursor.execute(sql, [op])
+    sortimento = rows_to_dict_list(cursor)
+
+    header = ['{}/{}'.format(str_cor, str_tam)]
+    fields = ['COR']
+    for tamanho in tamanhos:
+        header.append(tamanho['TAMANHO'])
+        fields.append(tamanho['TAMANHO'])
+
+    grade = []
+    for iCor, cor in enumerate(cores):
+        for iTam, field in enumerate(fields):
+            if iTam == 0:
+                grade.append({})
+                grade[iCor][field] = '{} - {}'.format(
+                    cor['SORTIMENTO'], cor['DESCR'])
+            else:
+                for item in sortimento:
+                    if item['SORTIMENTO'] == cor['SORTIMENTO'] and \
+                            item['TAMANHO'] == field:
+                        grade[iCor][field] = item['QUANTIDADE']
+                        break
+
+    return (header, fields, grade)
+
+
 def get_lotes(cursor, op='', os=''):
     # Lotes ordenados por OP + OS + referência + estágio
     sql = '''
