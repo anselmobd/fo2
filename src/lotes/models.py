@@ -293,11 +293,12 @@ def op_estagios(cursor, op):
     return rows_to_dict_list(cursor)
 
 
-def op_lotes(cursor, op):
-    # Lotes ordenados por OS + referência + estágio
+def get_lotes(cursor, op='', os=''):
+    # Lotes ordenados por OP + OS + referência + estágio
     sql = '''
         SELECT
-          CASE WHEN dos.NUMERO_ORDEM IS NULL
+          l.ORDEM_PRODUCAO OP
+        , CASE WHEN dos.NUMERO_ORDEM IS NULL
           THEN '0'
           ELSE l.NUMERO_ORDEM || ' (' || eos.DESCRICAO || ')'
           END OS
@@ -327,16 +328,20 @@ def op_lotes(cursor, op):
           , os.PROCONF_GRUPO
           , os.PROCONF_SUBGRUPO
           , os.PROCONF_ITEM
+          , os.ORDEM_PRODUCAO
           , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
           , max( os.QTDE_PROGRAMADA ) QTDE_PROGRAMADA
           FROM PCPC_040 os
-          WHERE os.ORDEM_PRODUCAO = %s
+          WHERE 1=1
+            AND (os.ORDEM_PRODUCAO = %s or %s IS NULL)
+            AND (os.NUMERO_ORDEM = %s or %s IS NULL)
           GROUP BY
             os.PERIODO_PRODUCAO
           , os.ORDEM_CONFECCAO
           , os.PROCONF_GRUPO
           , os.PROCONF_SUBGRUPO
           , os.PROCONF_ITEM
+          , os.ORDEM_PRODUCAO
         ) l
         LEFT JOIN PCPC_040 dos
           ON l.NUMERO_ORDEM <> 0
@@ -348,15 +353,21 @@ def op_lotes(cursor, op):
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
         ORDER BY
-          l.NUMERO_ORDEM
+          l.ORDEM_PRODUCAO
+        , l.NUMERO_ORDEM
         , l.PROCONF_GRUPO
         , l.PROCONF_ITEM
         , t.ORDEM_TAMANHO
         , l.PERIODO_PRODUCAO
         , l.ORDEM_CONFECCAO
     '''
-    cursor.execute(sql, [op])
+    cursor.execute(sql, [op, op, os, os])
     return rows_to_dict_list(cursor)
+
+
+def op_lotes(cursor, op):
+    # Lotes ordenados por OS + referência + estágio
+    return get_lotes(cursor, op=op)
 
 
 def op_ref_estagio(cursor, op):
@@ -555,3 +566,8 @@ def os_op(cursor, os):
     """
     cursor.execute(sql, [os])
     return rows_to_dict_list(cursor)
+
+
+def os_lotes(cursor, os):
+    # Lotes ordenados por OP + referência + estágio
+    return get_lotes(cursor, os=os)
