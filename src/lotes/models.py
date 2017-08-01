@@ -460,6 +460,11 @@ def op_os(cursor, op):
     return rows_to_dict_list(cursor)
 
 
+def op_get_os(cursor, op):
+    # Informações sobre OS
+    return get_os(cursor, op=op)
+
+
 def op_os_ref(cursor, op):
     # Totais por OS + referência
     sql = """
