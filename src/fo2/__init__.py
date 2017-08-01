@@ -5,6 +5,11 @@ __version__date__ = '2017/07/31'
 #
 # - ?.?.? - 20??/??/??
 #
+# - 0.1.15 - 2017/08/01
+#   . OS: lotes, insumos, retornos
+#   . Posição de lote: OSs
+#   . OP: Mais informações
+#
 # - 0.1.14 - 2017/07/31
 #   . Posição de lote: Mais informações
 #   . OP: Mais informações
