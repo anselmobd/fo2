@@ -39,11 +39,11 @@
   {% include "layout/html_thead.html" with data=e_headers only %}
   {% include "layout/html_tbody.html" with fields=e_fields data=e_data only %}
 </table>
-{% if s_data %}
+{% if os_data %}
   <h3>OSs da OP</h3>
   <table>
-    {% include "layout/html_thead.html" with data=s_headers only %}
-    {% include "layout/html_tbody_link.html" with fields=s_fields data=s_data link=s_link only %}
+    {% include "layout/html_thead.html" with data=os_headers only %}
+    {% include "layout/html_tbody_link.html" with fields=os_fields data=os_data link=os_link only %}
   </table>
 {% endif %}
 <h3>Totais por referência + estágio</h3>

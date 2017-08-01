@@ -204,20 +204,25 @@ class Op(View):
             })
 
             # OSs da OP
-            s_data = models.op_os(cursor, op)
-            if len(s_data) != 0 \
-                    and (len(s_data) > 1 or s_data[0]['OS'] != 0):
-                s_link = ('OS')
-                for row in s_data:
-                    if row['OS']:
-                        row['LINK'] = '/lotes/os/{}'.format(row['OS'])
-                    else:
-                        row['LINK'] = None
+            os_data = models.op_get_os(cursor, op)
+            if len(os_data) != 0:
+                os_link = ('OS')
+                for row in os_data:
+                    row['LINK'] = '/lotes/os/{}'.format(row['OS'])
+                    cnpj = '{:08d}/{:04d}-{:02d}'.format(
+                        row['CNPJ9'],
+                        row['CNPJ4'],
+                        row['CNPJ2'])
+                    row['TERC'] = '{} - {}'.format(cnpj, row['NOME'])
                 context.update({
-                    's_headers': ('OS', 'Lotes', 'Quant.'),
-                    's_fields': ('OS', 'LOTES', 'QTD'),
-                    's_data': s_data,
-                    's_link': s_link,
+                    'os_headers': ('OS', 'Serviço', 'Terceiro',
+                                   'Situação', 'Cancelamento',
+                                   'Lotes', 'Quant.'),
+                    'os_fields': ('OS', 'SERV', 'TERC',
+                                  'SITUACAO', 'CANC',
+                                  'LOTES', 'QTD'),
+                    'os_data': os_data,
+                    'os_link': os_link,
                 })
 
             # Totais por OS + referência
