@@ -95,6 +95,11 @@ def posicao_periodo_oc(cursor, periodo, ordem_confeccao):
     return rows_to_dict_list(cursor)
 
 
+def posicao_get_os(cursor, periodo, oc):
+    # Informações sobre OS
+    return get_os(cursor, periodo=periodo, oc=oc)
+
+
 def posicao_get_op(cursor, periodo, ordem_confeccao):
     sql = '''
         SELECT

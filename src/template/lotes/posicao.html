@@ -40,10 +40,12 @@ Estágio atual do lote <b>{{lote}}</b>:
   {% include "layout/html_thead.html" with data=o_headers only %}
   {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
 </table>
-<table>
-  {% include "layout/html_thead.html" with data=l_headers only %}
-  {% include "layout/html_tbody.html" with fields=l_fields data=l_data only %}
-</table>
+{% if os_data %}
+  <table>
+    {% include "layout/html_thead.html" with data=os_headers only %}
+    {% include "layout/html_tbody_link.html" with fields=os_fields data=os_data link=os_link only %}
+  </table>
+{% endif %}
 <table>
   {% include "layout/html_thead.html" with data=i_headers only %}
   {% include "layout/html_tbody.html" with fields=i_fields data=i_data only %}
