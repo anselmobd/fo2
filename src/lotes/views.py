@@ -54,6 +54,27 @@ class Posicao(View):
                 'o_link': link,
             })
 
+        os_data = models.posicao_get_os(cursor, periodo, ordem_confeccao)
+        if len(os_data) != 0:
+            os_link = ('OS')
+            for row in os_data:
+                row['LINK'] = '/lotes/os/{}'.format(row['OS'])
+                cnpj = '{:08d}/{:04d}-{:02d}'.format(
+                    row['CNPJ9'],
+                    row['CNPJ4'],
+                    row['CNPJ2'])
+                row['TERC'] = '{} - {}'.format(cnpj, row['NOME'])
+            context.update({
+                'os_headers': ('OS', 'Serviço', 'Terceiro',
+                               'Situação', 'Cancelamento',
+                               'Lotes', 'Quant.'),
+                'os_fields': ('OS', 'SERV', 'TERC',
+                              'SITUACAO', 'CANC',
+                              'LOTES', 'QTD'),
+                'os_data': os_data,
+                'os_link': os_link,
+            })
+
         data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
         context.update({
             'i_headers': ('Quantidade', 'Tipo', 'Referência', 'Cor', 'Tamanho',
