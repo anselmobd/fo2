@@ -259,8 +259,10 @@ class Os(View):
                     row['CNPJ2'])
                 row['TERC'] = '{} - {}'.format(cnpj, row['NOME'])
             context.update({
-                'headers': ('Serviço', 'Terceiro', 'Situação', 'Cancelamento'),
-                'fields': ('SERV', 'TERC', 'SITUACAO', 'CANC'),
+                'headers': ('Serviço', 'Terceiro', 'Situação', 'Cancelamento',
+                            'Lotes', 'Quant.'),
+                'fields': ('SERV', 'TERC', 'SITUACAO', 'CANC',
+                           'LOTES', 'QTD'),
                 'data': data,
             })
 
