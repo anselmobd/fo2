@@ -518,11 +518,12 @@ def op_os_ref(cursor, op):
     return rows_to_dict_list(cursor)
 
 
-def os_inform(cursor, os):
+def get_os(cursor, os='', op='', periodo='', oc=''):
     # Informações sobre OS
     sql = """
-        SELECT
-          os.CODIGO_SERVICO || '-' || s.DESC_TERCEIRO SERV
+        SELECT DISTINCT
+          os.NUMERO_ORDEM OS
+        , os.CODIGO_SERVICO || '-' || s.DESC_TERCEIRO SERV
         , os.CGCTERC_FORNE9 CNPJ9
         , os.CGCTERC_FORNE4 CNPJ4
         , os.CGCTERC_FORNE2 CNPJ2
@@ -535,6 +536,8 @@ def os_inform(cursor, os):
           ELSE '-'
           END SITUACAO
         , os.COD_CANC_ORDEM || '-' || c.DESCR_CANC_ORDEM CANC
+        , count(l.ORDEM_CONFECCAO) LOTES
+        , sum(l.QTDE_PECAS_PROG) QTD
         FROM OBRF_080 os
         JOIN OBRF_070 s
           ON s.CODIGO_TERCEIRO = os.CODIGO_SERVICO
@@ -543,13 +546,35 @@ def os_inform(cursor, os):
          AND f.FORNECEDOR4 = os.CGCTERC_FORNE4
         JOIN OBRF_087 c
           ON c.COD_CANC_ORDEM = os.COD_CANC_ORDEM
-        WHERE os.NUMERO_ORDEM = %s
-        ORDER BY
-          os.CODIGO_SERVICO
+        JOIN pcpc_040 l
+          ON l.NUMERO_ORDEM = os.NUMERO_ORDEM
+        WHERE 1=1
+          AND (os.NUMERO_ORDEM = %s or %s IS NULL)
+          AND (l.ORDEM_PRODUCAO = %s or %s IS NULL)
+          AND (l.PERIODO_PRODUCAO = %s or %s IS NULL)
+          AND (l.ORDEM_CONFECCAO = %s or %s IS NULL)
+          AND l.NUMERO_ORDEM <> 0
+        GROUP BY
+          os.NUMERO_ORDEM
+        , os.CODIGO_SERVICO
+        , s.DESC_TERCEIRO
         , os.CGCTERC_FORNE9
+        , os.CGCTERC_FORNE4
+        , os.CGCTERC_FORNE2
+        , f.NOME_FANTASIA
+        , os.SITUACAO_ORDEM
+        , os.COD_CANC_ORDEM
+        , c.DESCR_CANC_ORDEM
+        ORDER BY
+          os.NUMERO_ORDEM
     """
-    cursor.execute(sql, [os])
+    cursor.execute(sql, [os, os, op, op, periodo, periodo, oc, oc])
     return rows_to_dict_list(cursor)
+
+
+def os_inform(cursor, os):
+    # Informações sobre OS
+    return get_os(cursor, os=os)
 
 
 def os_op(cursor, os):
