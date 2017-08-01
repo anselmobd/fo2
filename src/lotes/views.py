@@ -168,7 +168,7 @@ class Op(View):
             # Estágios
             e_data = models.op_estagios(cursor, op)
             context.update({
-                'e_headers': ('Estágio', '% Produzida', 'Quant. Produzida'),
+                'e_headers': ('Estágio', '% Produzido', 'Itens Produzidos'),
                 'e_fields': ('EST', 'PERC', 'PROD'),
                 'e_data': e_data,
             })
@@ -276,6 +276,23 @@ class Os(View):
                     'o_data': o_data,
                     'o_link': o_link,
                 })
+
+        # Lotes ordenados por OS + referência + estágio
+        l_data = models.os_lotes(cursor, os)
+        if len(l_data) != 0:
+            l_link = ('LOTE')
+            for row in l_data:
+                row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
+                row['LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
+            context.update({
+                'l_headers': ('OP', 'Referência', 'Tamanho', 'Cor',
+                              'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),
+                'l_fields': ('OP', 'REF', 'TAM', 'COR',
+                             'EST', 'PERIODO', 'OC', 'QTD', 'LOTE'),
+                'l_data': l_data,
+                'l_link': l_link,
+            })
+
         return context
 
     def get(self, request, *args, **kwargs):
