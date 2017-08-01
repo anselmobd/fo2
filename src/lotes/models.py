@@ -280,6 +280,13 @@ def op_estagios(cursor, op):
             WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
               AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
           ) PROD
+        , (SELECT
+              count(*)
+            FROM pcpc_040 lp
+            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
+              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
+              AND lp.QTDE_EM_PRODUCAO_PACOTE <> 0
+          ) LOTES
         FROM
         (
         SELECT DISTINCT
