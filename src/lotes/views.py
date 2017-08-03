@@ -66,9 +66,11 @@ class Posicao(View):
                 row['TERC'] = '{} - {}'.format(cnpj, row['NOME'])
             context.update({
                 'os_headers': ('OS', 'Serviço', 'Terceiro',
+                               'Emissão', 'Entrega',
                                'Situação', 'Cancelamento',
                                'Lotes', 'Quant.'),
                 'os_fields': ('OS', 'SERV', 'TERC',
+                              'DATA_EMISSAO', 'DATA_ENTREGA',
                               'SITUACAO', 'CANC',
                               'LOTES', 'QTD'),
                 'os_data': os_data,
@@ -226,9 +228,11 @@ class Op(View):
                     row['TERC'] = '{} - {}'.format(cnpj, row['NOME'])
                 context.update({
                     'os_headers': ('OS', 'Serviço', 'Terceiro',
+                                   'Emissão', 'Entrega',
                                    'Situação', 'Cancelamento',
                                    'Lotes', 'Quant.'),
                     'os_fields': ('OS', 'SERV', 'TERC',
+                                  'DATA_EMISSAO', 'DATA_ENTREGA',
                                   'SITUACAO', 'CANC',
                                   'LOTES', 'QTD'),
                     'os_data': os_data,
