@@ -1,3 +1,5 @@
+import copy
+from pprint import pprint
 from django.db import models
 
 from fo2.models import rows_to_dict_list
@@ -305,86 +307,176 @@ def op_estagios(cursor, op):
     return rows_to_dict_list(cursor)
 
 
+class DataSql(object):
+    """docstring for DataDim."""
+    def __init__(self, cursor, args=[], sql=''):
+        self._cursor = cursor
+        self.args = args
+        if sql:
+            self.sql = sql
+
+    def execute(self, sql):
+        self._cursor.execute(sql, self.args)
+        return rows_to_dict_list(self._cursor)
+
+    @property
+    def sql(self): pass
+
+    @sql.setter
+    def sql(self, sql):
+        self.data = self.execute(sql)
+
+
+def dict_def_options(dict_, def_, *args):
+    for arg in args:
+        if arg in dict_:
+            return dict_[arg]
+    return def_
+
+
+def dict_options(dict_, *args):
+    return dict_def_options(dict_, None, *args)
+
+
+class GradeQtd(object):
+    """docstring for GradeQtd."""
+
+    class DataDim(DataSql):
+        """docstring for DataDim."""
+        def __init__(self, cursor, args, sql, **kwargs):
+            self.id_field = \
+                dict_def_options(kwargs, '', 'id', 'id_field')
+            self.facade_field = \
+                dict_def_options(kwargs, '', 'facade', 'facade_field'
+                                             'id', 'id_field')
+            self.name = kwargs.get('name', '')
+            self.name_plural = kwargs.get('name_plural', self.name+'s')
+            super(GradeQtd.DataDim, self).__init__(cursor, args, sql)
+
+    def __init__(self, cursor, args=[]):
+        self._cursor = cursor
+        self.args = args
+
+    def row(self, **kwargs):
+        if 'sql' in kwargs:
+            self._row = self.DataDim(
+                self._cursor, self.args, **kwargs)
+            if len(self._row.data) > 1 and self._row.name_plural:
+                self._row.name = self._row.name_plural
+            return self._row.data
+        return None
+
+    def col(self, **kwargs):
+        if 'sql' in kwargs:
+            self._col = self.DataDim(
+                self._cursor, self.args, **kwargs)
+            if len(self._col.data) > 1 and self._col.name_plural:
+                self._col.name = self._col.name_plural
+            return self._col.data
+        return None
+
+    def value(self, **kwargs):
+        if 'sql' in kwargs:
+            self._value = self.DataDim(
+                self._cursor, self.args, **kwargs)
+            self.do_table_data()
+            return self._value.data
+        return None
+
+    def do_table_data(self):
+        self.table_data = {
+            'header': [],
+            'fields': [],
+            'data': [],
+        }
+        if len(self._col.data) != 0 and len(self._row.data) != 0:
+            self.table_data['header'] = \
+                ['{}/{}'.format(self._row.name, self._col.name)]
+            self.table_data['fields'] = [self._row.id_field]
+            for col in self._col.data:
+                self.table_data['header'].append(col[self._col.id_field])
+                self.table_data['fields'].append(col[self._col.id_field])
+
+            for i_row, row in enumerate(self._row.data):
+                for i_field, field in enumerate(self.table_data['fields']):
+                    if i_field == 0:
+                        self.table_data['data'].append({})
+                        self.table_data['data'][i_row][field] = \
+                            row[self._row.facade_field]
+                    else:
+                        for value in self._value.data:
+                            if value[self._row.id_field] \
+                                == row[self._row.id_field] and \
+                                    value[self._col.id_field] == field:
+                                self.table_data['data'][i_row][field] = \
+                                    value[self._value.id_field]
+                                break
+
+        return self.table_data
+
+
 def op_sortimento(cursor, op):
     # Grade de OP
-    sql = '''
-        SELECT DISTINCT
-          i.TAMANHO
-        , i.SEQUENCIA_TAMANHO
-        FROM PCPC_021 i
-        WHERE i.ORDEM_PRODUCAO = %s
-        ORDER BY
-          i.SEQUENCIA_TAMANHO
-    '''
-    cursor.execute(sql, [op])
-    tamanhos = rows_to_dict_list(cursor)
-    if len(tamanhos) == 0:
-        return ([], [], [])
-    elif len(tamanhos) == 1:
-        str_tam = 'Tamanho'
-    else:
-        str_tam = 'Tamanhos'
+    grade = GradeQtd(cursor, [op])
 
-    sql = '''
-        SELECT
-          i.SORTIMENTO
-        , max( p.DESCRICAO_15 ) DESCR
-        FROM PCPC_021 i
-        JOIN pcpc_020 op
-          ON op.ORDEM_PRODUCAO = i.ORDEM_PRODUCAO
-        LEFT JOIN basi_010 p
-          ON p.NIVEL_ESTRUTURA = 1
-         AND p.GRUPO_ESTRUTURA = op.REFERENCIA_PECA
-         AND p.ITEM_ESTRUTURA = i.SORTIMENTO
-        WHERE i.ORDEM_PRODUCAO = %s
-        GROUP BY
-          i.SORTIMENTO
-        ORDER BY
-          2
-    '''
-    cursor.execute(sql, [op])
-    cores = rows_to_dict_list(cursor)
-    if len(cores) == 1:
-        str_cor = 'Cor'
-    else:
-        str_cor = 'Cores'
+    # tamanhos
+    grade.col(
+        id='TAMANHO',
+        name='Tamanho',
+        sql='''
+            SELECT DISTINCT
+              i.TAMANHO
+            , i.SEQUENCIA_TAMANHO
+            FROM PCPC_021 i
+            WHERE i.ORDEM_PRODUCAO = %s
+            ORDER BY
+              i.SEQUENCIA_TAMANHO
+        '''
+        )
 
-    sql = '''
-        SELECT
-          i.TAMANHO
-        , i.SORTIMENTO
-        , i.QUANTIDADE
-        FROM PCPC_021 i
-        WHERE i.ORDEM_PRODUCAO = %s
-        ORDER BY
-          i.SEQUENCIA_TAMANHO
-        , i.SORTIMENTO
-    '''
-    cursor.execute(sql, [op])
-    sortimento = rows_to_dict_list(cursor)
+    # cores
+    grade.row(
+        id='SORTIMENTO',
+        facade='DESCR',
+        name='Cor',
+        name_plural='Cores',
+        sql='''
+            SELECT
+              i.SORTIMENTO
+            , i.SORTIMENTO || ' - ' || max( p.DESCRICAO_15 ) DESCR
+            FROM PCPC_021 i
+            JOIN pcpc_020 op
+              ON op.ORDEM_PRODUCAO = i.ORDEM_PRODUCAO
+            LEFT JOIN basi_010 p
+              ON p.NIVEL_ESTRUTURA = 1
+             AND p.GRUPO_ESTRUTURA = op.REFERENCIA_PECA
+             AND p.ITEM_ESTRUTURA = i.SORTIMENTO
+            WHERE i.ORDEM_PRODUCAO = %s
+            GROUP BY
+              i.SORTIMENTO
+            ORDER BY
+              2
+        '''
+        )
 
-    header = ['{}/{}'.format(str_cor, str_tam)]
-    fields = ['COR']
-    for tamanho in tamanhos:
-        header.append(tamanho['TAMANHO'])
-        fields.append(tamanho['TAMANHO'])
+    # sortimento
+    grade.value(
+        id='QUANTIDADE',
+        sql='''
+            SELECT
+              i.TAMANHO
+            , i.SORTIMENTO
+            , i.QUANTIDADE
+            FROM PCPC_021 i
+            WHERE i.ORDEM_PRODUCAO = %s
+            ORDER BY
+              i.SEQUENCIA_TAMANHO
+            , i.SORTIMENTO
+        '''
+        )
 
-    grade = []
-    for iCor, cor in enumerate(cores):
-        for iTam, field in enumerate(fields):
-            if iTam == 0:
-                grade.append({})
-                grade[iCor][field] = '{} - {}'.format(
-                    cor['SORTIMENTO'], cor['DESCR'])
-            else:
-                for item in sortimento:
-                    if item['SORTIMENTO'] == cor['SORTIMENTO'] and \
-                            item['TAMANHO'] == field:
-                        grade[iCor][field] = item['QUANTIDADE']
-                        break
-
-    return (header, fields, grade)
-
+    return (grade.table_data['header'], grade.table_data['fields'],
+            grade.table_data['data'])
 
 def get_lotes(cursor, op='', os=''):
     # Lotes ordenados por OP + OS + referência + estágio
