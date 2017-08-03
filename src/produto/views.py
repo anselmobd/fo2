@@ -114,6 +114,7 @@ def stat_nivel(request):
         SELECT
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
+            WHEN p.REFERENCIA like 'A%' THEN '1-PG'
             ELSE '1-MD'
             END ||
             CASE WHEN p.RESPONSAVEL IS NULL THEN ''
@@ -127,6 +128,7 @@ def stat_nivel(request):
         GROUP BY
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
+            WHEN p.REFERENCIA like 'A%' THEN '1-PG'
             ELSE '1-MD'
             END ||
             CASE WHEN p.RESPONSAVEL IS NULL THEN ''
@@ -150,7 +152,7 @@ def stat_nivelX(request):
 
 # ajax template, url with value
 def stat_niveis(request, nivel):
-    if nivel[0:4] in ('1-MD', '1-PA'):
+    if nivel[0:4] in ('1-MD', '1-PG', '1-PA'):
         data = produto.models.produtos_n1_basic(nivel[2:])
         context = {
             'nivel': nivel,
