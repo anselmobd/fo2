@@ -711,6 +711,9 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         , os.COD_CANC_ORDEM || '-' || c.DESCR_CANC_ORDEM CANC
         , count(l.ORDEM_CONFECCAO) LOTES
         , sum(l.QTDE_PECAS_PROG) QTD
+        , os.DATA_EMISSAO
+        , os.DATA_ENTREGA
+        , os.OBSERVACAO
         FROM OBRF_080 os
         JOIN OBRF_070 s
           ON s.CODIGO_TERCEIRO = os.CODIGO_SERVICO
@@ -738,6 +741,9 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         , os.SITUACAO_ORDEM
         , os.COD_CANC_ORDEM
         , c.DESCR_CANC_ORDEM
+        , os.DATA_EMISSAO
+        , os.DATA_ENTREGA
+        , os.OBSERVACAO
         ORDER BY
           os.NUMERO_ORDEM
     """
