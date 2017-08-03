@@ -1,9 +1,12 @@
-__version__ = '0.1.14'
-__version__date__ = '2017/07/31'
+__version__ = '0.1.16'
+__version__date__ = '2017/08/03'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.16 - 2017/08/03
+#   . estatística de produto: prevendo PG
 #
 # - 0.1.15 - 2017/08/01
 #   . OS: lotes, insumos, retornos
