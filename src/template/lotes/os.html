@@ -30,6 +30,10 @@
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
   </table>
+  <table>
+    {% include "layout/html_thead.html" with data=headers2 only %}
+    {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
+  </table>
   {% if o_data %}
     <h3>OP</h3>
     <table>
