@@ -315,6 +315,15 @@ class Os(View):
                     'o_link': o_link,
                 })
 
+        # Grade
+        g_header, g_fields, g_data = models.os_sortimento(cursor, os)
+        if len(g_data) != 0:
+            context.update({
+                'g_headers': g_header,
+                'g_fields': g_fields,
+                'g_data': g_data,
+            })
+
         # Lotes ordenados por OS + referência + estágio
         l_data = models.os_lotes(cursor, os)
         if len(l_data) != 0:

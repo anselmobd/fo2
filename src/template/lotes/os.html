@@ -37,6 +37,13 @@
       {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
     </table>
   {% endif %}
+  {% if g_data %}
+    <h3>Grade de produtos a industrializar</h3>
+    <table>
+      {% include "layout/html_thead.html" with data=g_headers only %}
+      {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
+    </table>
+  {% endif %}
   <h3>Lotes ordenados por OP + referência + estágio</h3>
   <table>
     {% include "layout/html_thead.html" with data=l_headers only %}
