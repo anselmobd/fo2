@@ -773,7 +773,7 @@ def os_op(cursor, os):
 
 
 def os_lotes(cursor, os):
-    # Lotes ordenados por OP + referência + estágio
+    # Lotes ordenados por OS + referência + estágio
     return get_lotes(cursor, os=os)
 
 
@@ -838,3 +838,39 @@ def os_sortimento(cursor, os):
 
     return (grade.table_data['header'], grade.table_data['fields'],
             grade.table_data['data'])
+
+
+def os_itens(cursor, os):
+    # Itens para nota de OS
+    sql = """
+        SELECT
+          s.PRODSAI_NIVEL99 NIVEL
+        , s.PRODSAI_GRUPO REF
+        , s.PRODSAI_ITEM COR
+        , s.PRODSAI_SUBGRUPO TAM
+        , i.NARRATIVA
+        , r.UNIDADE_MEDIDA UN
+        , s.VALOR_PRODUTO VALOR_UN
+        , s.QTDE_ESTRUTURA QTD_ESTR
+        , s.QTDE_ENVIADA QTD_ENV
+        , s.NUM_NF_SAI NF
+        FROM OBRF_082 s
+        JOIN BASI_010 i
+          ON i.NIVEL_ESTRUTURA = s.PRODSAI_NIVEL99
+         AND i.GRUPO_ESTRUTURA = s.PRODSAI_GRUPO
+         AND i.SUBGRU_ESTRUTURA = s.PRODSAI_SUBGRUPO
+         AND i.ITEM_ESTRUTURA = s.PRODSAI_ITEM
+        JOIN BASI_030 r
+          ON r.NIVEL_ESTRUTURA = s.PRODSAI_NIVEL99
+         AND r.REFERENCIA = s.PRODSAI_GRUPO
+        LEFT JOIN BASI_220 tam
+          ON tam.TAMANHO_REF = s.PRODSAI_SUBGRUPO
+        WHERE s.NUMERO_ORDEM = %s
+        ORDER BY
+          s.PRODSAI_NIVEL99
+        , s.PRODSAI_GRUPO
+        , s.PRODSAI_ITEM
+        , tam.ORDEM_TAMANHO
+    """
+    cursor.execute(sql, [os])
+    return rows_to_dict_list(cursor)

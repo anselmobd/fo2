@@ -333,6 +333,17 @@ class Os(View):
                 'g_data': g_data,
             })
 
+        # Itens para nota de OS
+        i_data = models.os_itens(cursor, os)
+        context.update({
+            'i_headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Narrativa',
+                          'Unidade', 'Valor unitário', 'Qtd.Estrutura',
+                          'Qtd.Enviada', 'NF'),
+            'i_fields': ('NIVEL', 'REF', 'COR', 'TAM', 'NARRATIVA',
+                         'UN', 'VALOR_UN', 'QTD_ESTR', 'QTD_ENV', 'NF'),
+            'i_data': i_data,
+        })
+
         # Lotes ordenados por OS + referência + estágio
         l_data = models.os_lotes(cursor, os)
         if len(l_data) != 0:
