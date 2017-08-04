@@ -253,7 +253,15 @@ def op_inform(cursor, op):
                 WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
               )
           ) QTD
+        , o.DATA_PROGRAMACAO DT_DIGITACAO
+        , o.DATA_ENTRADA_CORTE DT_CORTE
+        , o.PERIODO_PRODUCAO PERIODO
+        , p.DATA_INI_PERIODO PERIODO_INI
+        , p.DATA_FIM_PERIODO PERIODO_FIM
         FROM PCPC_020 o
+        JOIN PCPC_010 p
+          ON p.AREA_PERIODO = 1
+         AND p.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
         JOIN pcpt_050 c
           ON c.COD_CANCELAMENTO = o.COD_CANCELAMENTO
         LEFT JOIN PCPC_020 ofi
