@@ -187,6 +187,13 @@ class Op(View):
                               'ALTERNATIVA', 'ROTEIRO', 'LOTES', 'QTD'),
                 'i2_data': i_data,
             })
+            context.update({
+                'i3_headers': ('Período', 'Período Início', 'Período Fim',
+                               'Data Digitação', 'Data Corte'),
+                'i3_fields': ('PERIODO', 'PERIODO_INI', 'PERIODO_FIM',
+                              'DT_DIGITACAO', 'DT_CORTE'),
+                'i3_data': i_data,
+            })
 
             # Grade
             g_header, g_fields, g_data = models.op_sortimento(cursor, op)

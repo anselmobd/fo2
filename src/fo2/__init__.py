@@ -1,9 +1,12 @@
-__version__ = '0.1.17'
+__version__ = '0.1.18'
 __version__date__ = '2017/08/04'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.18 - 2017/08/04
+#   . OP: datas
 #
 # - 0.1.17 - 2017/08/04
 #   . OS: datas, observação, insumos

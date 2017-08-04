@@ -34,6 +34,10 @@
   {% include "layout/html_thead.html" with data=i2_headers only %}
   {% include "layout/html_tbody.html" with fields=i2_fields data=i2_data only %}
 </table>
+<table>
+  {% include "layout/html_thead.html" with data=i3_headers only %}
+  {% include "layout/html_tbody.html" with fields=i3_fields data=i3_data only %}
+</table>
 {% if g_data %}
   <h3>Grade</h3>
   <table>
