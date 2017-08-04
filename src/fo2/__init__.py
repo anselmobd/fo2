@@ -1,15 +1,19 @@
-__version__ = '0.1.16'
-__version__date__ = '2017/08/03'
+__version__ = '0.1.17'
+__version__date__ = '2017/08/04'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
 #
+# - 0.1.17 - 2017/08/04
+#   . OS: datas, observação, insumos
+#
 # - 0.1.16 - 2017/08/03
 #   . estatística de produto: prevendo PG
+#   . OS: retornos, datas
 #
 # - 0.1.15 - 2017/08/01
-#   . OS: lotes, insumos, retornos
+#   . OS: lotes
 #   . Posição de lote: OSs
 #   . OP: Mais informações
 #
