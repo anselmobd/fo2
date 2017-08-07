@@ -8,6 +8,9 @@ from fo2.template import group_rowspan
 
 from .forms import LoteForm, ResponsPorEstagioForm, OpForm, OsForm
 import lotes.models as models
+import lotes.models.os as models_os
+import lotes.models.op as models_op
+import lotes.models.lote as models_lote
 
 
 def rows_to_dict_list(cursor):
@@ -27,14 +30,14 @@ class Posicao(View):
     def mount_context(self, cursor, periodo, ordem_confeccao):
         context = {}
 
-        data = models.posicao_lote(cursor, periodo, ordem_confeccao)
+        data = models_lote.posicao_lote(cursor, periodo, ordem_confeccao)
         row = data[0]
         context.update({
             'codigo_estagio': row['CODIGO_ESTAGIO'],
             'descricao_estagio': row['DESCRICAO_ESTAGIO'],
         })
 
-        data = models.posicao_periodo_oc(cursor, periodo, ordem_confeccao)
+        data = models_lote.posicao_periodo_oc(cursor, periodo, ordem_confeccao)
         if len(data) != 0:
             context.update({
                 'l_headers': ('Período', 'Incício', 'Fim', 'OC'),
@@ -42,7 +45,7 @@ class Posicao(View):
                 'l_data': data,
             })
 
-        data = models.posicao_get_op(cursor, periodo, ordem_confeccao)
+        data = models_lote.posicao_get_op(cursor, periodo, ordem_confeccao)
         if len(data) != 0:
             link = ('OP')
             for row in data:
@@ -54,7 +57,7 @@ class Posicao(View):
                 'o_link': link,
             })
 
-        os_data = models.posicao_get_os(cursor, periodo, ordem_confeccao)
+        os_data = models_lote.posicao_get_os(cursor, periodo, ordem_confeccao)
         if len(os_data) != 0:
             os_link = ('OS')
             for row in os_data:
@@ -77,7 +80,7 @@ class Posicao(View):
                 'os_link': os_link,
             })
 
-        data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
+        data = models_lote.posicao_get_item(cursor, periodo, ordem_confeccao)
         context.update({
             'i_headers': ('Quantidade', 'Tipo', 'Referência', 'Cor', 'Tamanho',
                           'Descrição', 'Item'),
@@ -86,7 +89,7 @@ class Posicao(View):
             'i_data': data,
         })
 
-        data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
+        data = models_lote.posicao_estagios(cursor, periodo, ordem_confeccao)
         group = ('EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A', 'Q_PERDA',
                  'FAMI', 'OS')
         group_rowspan(data, group)
@@ -124,7 +127,7 @@ class Posicao(View):
             periodo = lote[:4]
             ordem_confeccao = lote[-5:]
             cursor = connections['so'].cursor()
-            data = models.existe_lote(cursor, periodo, ordem_confeccao)
+            data = models_lote.existe_lote(cursor, periodo, ordem_confeccao)
             if len(data) == 0:
                 context['erro'] = '.'
             else:
@@ -143,7 +146,7 @@ class Op(View):
         context = {'op': op}
 
         # Lotes ordenados por OS + referência + estágio
-        data = models.op_lotes(cursor, op)
+        data = models_op.op_lotes(cursor, op)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Lotes não encontrados',
@@ -163,7 +166,7 @@ class Op(View):
             })
 
             # informações gerais
-            i_data = models.op_inform(cursor, op)
+            i_data = models_op.op_inform(cursor, op)
             row = i_data[0]
             if row['OP_REL'] == 0:
                 row['OP_REL'] = ''
@@ -196,7 +199,7 @@ class Op(View):
             })
 
             # Grade
-            g_header, g_fields, g_data = models.op_sortimento(cursor, op)
+            g_header, g_fields, g_data = models_op.op_sortimento(cursor, op)
             if len(g_data) != 0:
                 context.update({
                     'g_headers': g_header,
@@ -205,7 +208,7 @@ class Op(View):
                 })
 
             # Estágios
-            e_data = models.op_estagios(cursor, op)
+            e_data = models_op.op_estagios(cursor, op)
             context.update({
                 'e_headers': ('Estágio', '% Produzido', 'Itens Produzidos',
                               'Lotes no estágio'),
@@ -214,7 +217,7 @@ class Op(View):
             })
 
             # Totais por referência + estágio
-            t_data = models.op_ref_estagio(cursor, op)
+            t_data = models_op.op_ref_estagio(cursor, op)
             context.update({
                 't_headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
                               'Qtd. Lotes', 'Quant. Itens'),
@@ -223,7 +226,7 @@ class Op(View):
             })
 
             # OSs da OP
-            os_data = models.op_get_os(cursor, op)
+            os_data = models_op.op_get_os(cursor, op)
             if len(os_data) != 0:
                 os_link = ('OS')
                 for row in os_data:
@@ -247,7 +250,7 @@ class Op(View):
                 })
 
             # Totais por OS + referência
-            o_data = models.op_os_ref(cursor, op)
+            o_data = models_op.op_os_ref(cursor, op)
             o_link = ('OS')
             for row in o_data:
                 if row['OS']:
@@ -293,7 +296,7 @@ class Os(View):
         context = {'os': os}
 
         # A ser produzido
-        data = models.os_inform(cursor, os)
+        data = models_os.os_inform(cursor, os)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'OS vazia',
@@ -319,7 +322,7 @@ class Os(View):
             })
 
             # Totais por OP
-            o_data = models.os_op(cursor, os)
+            o_data = models_os.os_op(cursor, os)
             if len(o_data) != 0:
                 o_link = ('OP')
                 for row in o_data:
@@ -332,7 +335,7 @@ class Os(View):
                 })
 
         # Grade
-        g_header, g_fields, g_data = models.os_sortimento(cursor, os)
+        g_header, g_fields, g_data = models_os.os_sortimento(cursor, os)
         if len(g_data) != 0:
             context.update({
                 'g_headers': g_header,
@@ -341,7 +344,7 @@ class Os(View):
             })
 
         # Itens para nota de OS
-        i_data = models.os_itens(cursor, os)
+        i_data = models_os.os_itens(cursor, os)
         context.update({
             'i_headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Narrativa',
                           'Unidade', 'Valor unitário', 'Qtd.Estrutura',
@@ -352,7 +355,7 @@ class Os(View):
         })
 
         # Lotes ordenados por OS + referência + estágio
-        l_data = models.os_lotes(cursor, os)
+        l_data = models_os.os_lotes(cursor, os)
         if len(l_data) != 0:
             l_link = ('LOTE')
             for row in l_data:
