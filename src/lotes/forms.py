@@ -22,6 +22,13 @@ class OsForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
+class PorAlterForm(forms.Form):
+    periodo = forms.CharField(
+        label='Período', required=False,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+
+
 class ResponsPorEstagioForm(forms.Form):
     estagio = forms.CharField(
         label='Estágio', max_length=2, required=False,
