@@ -7,7 +7,7 @@ from django.views import View
 from fo2.template import group_rowspan
 from fo2.models import rows_to_dict_list
 
-from .forms import LoteForm, ResponsPorEstagioForm, OpForm, OsForm
+from .forms import LoteForm, ResponsPorEstagioForm, OpForm, OsForm, PorAlterForm
 import lotes.models as models
 
 
@@ -379,6 +379,50 @@ class Os(View):
             os = form.cleaned_data['os']
             cursor = connections['so'].cursor()
             context = self.mount_context(cursor, os)
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class PorAlter(View):
+    Form_class = PorAlterForm
+    template_name = 'lotes/por_alter.html'
+
+    def mount_context(self, cursor, periodo):
+        context = {'periodo': periodo}
+
+        # A ser produzido
+        data = models.por_alter_qtd(cursor, periodo)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Sem produção no período',
+            })
+        else:
+            context.update({
+                'headers': ('Período', 'Período Início', 'Período Fim',
+                            'Alternativa', 'Tipo', 'Quantidade'),
+                'fields': ('PERIODO', 'PERIODO_INI', 'PERIODO_INI',
+                           'ALT', 'TIPO', 'QTD'),
+                'data': data,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        form = self.Form_class(request.POST)
+        if 'periodo' in kwargs:
+            form.data['periodo'] = kwargs['periodo']
+        if form.is_valid():
+            periodo = form.cleaned_data['periodo']
+            if not periodo:
+                periodo = '0'
+            if int(periodo) < 0:
+                periodo = '0'
+            cursor = connections['so'].cursor()
+            context = self.mount_context(cursor, periodo)
         context['form'] = form
         return render(request, self.template_name, context)
 

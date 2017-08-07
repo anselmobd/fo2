@@ -12,6 +12,9 @@ urlpatterns = [
     url(r'^op/(?P<op>\d+)/$', views.Op.as_view(), name='op_op'),
     url(r'^os/$', views.Os.as_view(), name='os'),
     url(r'^os/(?P<os>\d+)/$', views.Os.as_view(), name='os_os'),
+    url(r'^por_alter/$', views.PorAlter.as_view(), name='por_alter'),
+    url(r'^por_alter/(?P<periodo>\d+)/$', views.Os.as_view(),
+        name='os_os_periodo'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 

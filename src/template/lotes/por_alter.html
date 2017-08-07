@@ -1,0 +1,34 @@
+{% extends 'layout/layout.html' %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block title %}Por Alternativa - Produção - Intranet - Tussor{% endblock %}
+
+{% block header %}
+<h1>Por Alternativa - Produção - Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<p><a href="/lotes/">Produção</a></p>
+<form action="/lotes/por_alter/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if os != 0 %}
+  <h2>OS {{ os }}</h2>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody.html" with fields=fields data=data only %}
+  </table>
+{% endif %}
+{% endblock %}
