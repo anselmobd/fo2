@@ -209,7 +209,7 @@ def op_ref_estagio(cursor, op):
               )
             , 'FINALIZADO'
             ) EST
-          , l.QTDE_PROGRAMADA QTD
+          , l.QTDE_PECAS_PROG QTD
           FROM (
             SELECT
               os.PROCONF_GRUPO
@@ -218,7 +218,7 @@ def op_ref_estagio(cursor, op):
             , os.PERIODO_PRODUCAO
             , os.ORDEM_CONFECCAO
             , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
-            , max( os.QTDE_PROGRAMADA ) QTDE_PROGRAMADA
+            , max( os.QTDE_PECAS_PROG ) QTDE_PECAS_PROG
             FROM PCPC_040 os
             WHERE os.ORDEM_PRODUCAO = %s
             GROUP BY
@@ -263,7 +263,7 @@ def op_os_ref(cursor, op):
         , count( l.ORDEM_CONFECCAO ) LOTES
         , SUM (
             ( SELECT
-                q.QTDE_PROGRAMADA
+                q.QTDE_PECAS_PROG
               FROM PCPC_040 q
               WHERE q.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
                 AND q.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO

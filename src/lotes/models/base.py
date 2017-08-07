@@ -30,7 +30,7 @@ def get_lotes(cursor, op='', os=''):
           ) EST
         , l.PERIODO_PRODUCAO PERIODO
         , l.ORDEM_CONFECCAO OC
-        , l.QTDE_PROGRAMADA QTD
+        , l.QTDE_PECAS_PROG QTD
         FROM (
           SELECT
             os.PERIODO_PRODUCAO
@@ -40,7 +40,7 @@ def get_lotes(cursor, op='', os=''):
           , os.PROCONF_ITEM
           , os.ORDEM_PRODUCAO
           , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
-          , max( os.QTDE_PROGRAMADA ) QTDE_PROGRAMADA
+          , max( os.QTDE_PECAS_PROG ) QTDE_PECAS_PROG
           FROM PCPC_040 os
           WHERE 1=1
             AND (os.ORDEM_PRODUCAO = %s or %s IS NULL)
