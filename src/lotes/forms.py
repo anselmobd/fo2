@@ -22,11 +22,53 @@ class OsForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
-class PorAlterForm(forms.Form):
-    periodo = forms.CharField(
-        label='Período', required=False,
+class AnPeriodoAlterForm(forms.Form):
+    periodo_de = forms.CharField(
+        label='Período: De',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+    periodo_ate = forms.CharField(
+        label='Até', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    def clean_periodo(self, periodo):
+        try:
+            i_periodo = int(float(periodo))
+            if i_periodo < 0:
+                periodo = None
+        except ValueError:
+            periodo = None
+        return periodo
+
+    def clean_periodo_de(self):
+        return self.clean_periodo(self.cleaned_data['periodo_de'])
+
+    def clean_periodo_ate(self):
+        return self.clean_periodo(self.cleaned_data['periodo_ate'])
+
+
+class AnDtCorteAlterForm(forms.Form):
+    data_de = forms.DateField(
+        label='Data do Corte/Gargalo: De',
+        widget=forms.DateInput(attrs={'type': 'date'}))
+    data_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    # alternativa = forms.CharField(
+    #     label='Alternativa', required=False,
+    #     widget=forms.TextInput(attrs={'type': 'number'}))
+    # roteiro = forms.CharField(
+    #     label='Roteiro', required=False,
+    #     widget=forms.TextInput(attrs={'type': 'number'}))
+    # tipo = forms.CharField(
+    #     label='Tipo (MD, PG, PA)', required=False, widget=forms.TextInput)
+    #
+    # def clean_tipo(self):
+    #     tipo = self.cleaned_data['tipo'].upper()
+    #     if tipo not in ('MD', 'PG', 'PA'):
+    #         tipo = ''
+    #     return tipo
 
 
 class ResponsPorEstagioForm(forms.Form):
