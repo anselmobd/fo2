@@ -473,12 +473,21 @@ class AnDtCorteAlter(View):
                 'data_de': data_de,
                 'data_ate': data_ate,
             })
+            total = {}
             for row in data:
                 if row['ORDEM_TOTAL'] == 1:
                     row['PERIODO'] = 'TOTAL'
                     row['PERIODO_INI'] = ''
                     row['PERIODO_FIM'] = ''
                     row['OPS'] = ''
+                    key = '{}#{}'.format(row['ALT'], row['TIPO_ORDEM'])
+                    if key not in total:
+                        total[key] = {
+                            'ALT': row['ALT'],
+                            'TIPO': row['TIPO'],
+                            'QTD': 0,
+                        }
+                    total[key]['QTD'] += row['QTD']
                 else:
                     if row['DATA_CORTE'] is None:
                         row['DATA_CORTE'] = 'Não definida'
@@ -488,7 +497,13 @@ class AnDtCorteAlter(View):
                     'class="glyphicon glyphicon-link" '
                     'aria-hidden="true"></span></a>',
                     row['OPS'])
-            # <a href="/lotes/op/254">254&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+
+            data_tot = [total[key] for key in sorted(total)]
+            context.update({
+                't_headers': ('Alternativa', 'Tipo', 'Quantidade'),
+                't_fields': ('ALT', 'TIPO', 'QTD'),
+                't_data': data_tot,
+            })
 
             group = ('DATA_CORTE', 'ALT', 'TIPO')
             group_rowspan(data, group)
@@ -500,6 +515,7 @@ class AnDtCorteAlter(View):
                 'fields': (
                     'DATA_CORTE', 'ALT', 'TIPO',
                     'PERIODO', 'PERIODO_INI', 'PERIODO_FIM', 'QTD', 'OPS'),
+                'safe': ('OPS',),
                 'group': group,
                 'data': data,
             })
