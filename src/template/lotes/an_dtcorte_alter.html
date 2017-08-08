@@ -26,9 +26,15 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+  <h3>Totais</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=t_headers only %}
+    {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
+  </table>
+  <h3>Detalhes</h3>
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group safe=1 only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group safe=safe only %}
   </table>
 {% endif %}
 {% endblock %}
