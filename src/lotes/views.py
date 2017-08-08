@@ -1,3 +1,5 @@
+import re
+
 from django.shortcuts import render
 from django.db import connections
 from django.http import HttpResponse
@@ -476,19 +478,28 @@ class AnDtCorteAlter(View):
                     row['PERIODO'] = 'TOTAL'
                     row['PERIODO_INI'] = ''
                     row['PERIODO_FIM'] = ''
+                    row['OPS'] = ''
                 else:
                     if row['DATA_CORTE'] is None:
                         row['DATA_CORTE'] = 'Não definida'
+                row['OPS'] = re.sub(
+                    r'([1234567890]+)',
+                    r'<a href="/lotes/op/\1">\1&nbsp;<span '
+                    'class="glyphicon glyphicon-link" '
+                    'aria-hidden="true"></span></a>',
+                    row['OPS'])
+            # <a href="/lotes/op/254">254&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+
             group = ('DATA_CORTE', 'ALT', 'TIPO')
             group_rowspan(data, group)
             context.update({
                 'headers': (
                     'Data do Corte', 'Alternativa', 'Tipo',
                     'Período', 'Período Início', 'Período Fim', 'Quantidade',
-                    'No. OPs'),
+                    'OPs'),
                 'fields': (
                     'DATA_CORTE', 'ALT', 'TIPO',
-                    'PERIODO', 'PERIODO_INI', 'PERIODO_FIM', 'QTD', 'NUM_OPS'),
+                    'PERIODO', 'PERIODO_INI', 'PERIODO_FIM', 'QTD', 'OPS'),
                 'group': group,
                 'data': data,
             })
