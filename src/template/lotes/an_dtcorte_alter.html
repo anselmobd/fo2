@@ -1,0 +1,34 @@
+{% extends 'layout/layout.html' %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block title %}Por Data de Corte/Gargalo e Alternativa - Produção - Intranet - Tussor{% endblock %}
+
+{% block header %}
+<h1>Por Data de Corte/Gargalo e Alternativa - Produção - Intranet - Tussor (cuecas D`UOMO)</h1>
+{% endblock %}
+
+{% block content %}
+<p><a href="/lotes/">Produção</a></p>
+<form action="/lotes/an_dtcorte_alter/" method="post">
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+    {% csrf_token %}
+</form>
+{% if data_de %}
+  <h3>Filtro: Data de Corte/Gargalo de {{ data_de }} até {{ data_ate }}</h3>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
+  </table>
+{% endif %}
+{% endblock %}

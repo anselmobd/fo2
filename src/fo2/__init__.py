@@ -1,12 +1,15 @@
-__version__ = '0.1.18'
-__version__date__ = '2017/08/04'
+__version__ = '0.1.19'
+__version__date__ = '2017/08/08'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
 #
-# - 0.1.19 - 2017/08/05
+# - 0.1.19 - 2017/08/08
 #   . refactoring de lotes.models
+#   . análise de produzido
+#     . qtd por período e alternativa
+#     . qtd por data de corte e alternativa
 #
 # - 0.1.18 - 2017/08/04
 #   . OP: datas

@@ -14,18 +14,21 @@
 
 {% block content %}
 <p><a href="/lotes/">Produção</a></p>
-<form action="/lotes/por_alter/" method="post">
+<form action="/lotes/an_periodo_alter/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
+{% if periodo_de %}
+  <h3>Filtro: Periodo de {{ periodo_de }} até {{ periodo_ate }}</h3>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
   </table>
 {% endif %}
 {% endblock %}

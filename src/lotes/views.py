@@ -7,7 +7,8 @@ from django.views import View
 from fo2.template import group_rowspan
 from fo2.models import rows_to_dict_list
 
-from .forms import LoteForm, ResponsPorEstagioForm, OpForm, OsForm, PorAlterForm
+from .forms import LoteForm, ResponsPorEstagioForm, OpForm, OsForm, \
+    AnPeriodoAlterForm, AnDtCorteAlterForm
 import lotes.models as models
 
 
@@ -383,46 +384,137 @@ class Os(View):
         return render(request, self.template_name, context)
 
 
-class PorAlter(View):
-    Form_class = PorAlterForm
-    template_name = 'lotes/por_alter.html'
+class AnPeriodoAlter(View):
+    Form_class = AnPeriodoAlterForm
+    template_name = 'lotes/an_periodo_alter.html'
 
-    def mount_context(self, cursor, periodo):
-        context = {'periodo': periodo}
-
+    def mount_context(self, cursor, periodo_de, periodo_ate):
         # A ser produzido
-        data = models.por_alter_qtd(cursor, periodo)
+        context = {}
+        if periodo_ate is None:
+            periodo_ate = periodo_de
+
+        data = models.an_periodo_alter_qtd(cursor, periodo_de, periodo_ate)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem produção no período',
             })
         else:
             context.update({
-                'headers': ('Período', 'Período Início', 'Período Fim',
-                            'Alternativa', 'Tipo', 'Quantidade'),
-                'fields': ('PERIODO', 'PERIODO_INI', 'PERIODO_INI',
-                           'ALT', 'TIPO', 'QTD'),
+                'periodo_de': periodo_de,
+                'periodo_ate': periodo_ate,
+            })
+            for row in data:
+                if row['ORDEM_TOTAL'] == 1:
+                    row['DATA_CORTE'] = 'TOTAL'
+                else:
+                    if row['DATA_CORTE'] is None:
+                        row['DATA_CORTE'] = 'Não definida'
+            group = ('PERIODO', 'PERIODO_INI', 'PERIODO_FIM',
+                     'ALT', 'TIPO')
+            group_rowspan(data, group)
+            context.update({
+                'headers': (
+                    'Período', 'Período Início', 'Período Fim',
+                    'Alternativa', 'Tipo', 'Data do Corte', 'Quantidade',
+                    'No. OPs'),
+                'fields': (
+                    'PERIODO', 'PERIODO_INI', 'PERIODO_FIM',
+                    'ALT', 'TIPO', 'DATA_CORTE', 'QTD', 'NUM_OPS'),
+                'group': group,
                 'data': data,
             })
 
         return context
 
     def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+        if 'periodo' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {}
         form = self.Form_class(request.POST)
         if 'periodo' in kwargs:
-            form.data['periodo'] = kwargs['periodo']
+            form.data['periodo_de'] = kwargs['periodo']
+            form.data['periodo_ate'] = kwargs['periodo']
         if form.is_valid():
-            periodo = form.cleaned_data['periodo']
-            if not periodo:
-                periodo = '0'
-            if int(periodo) < 0:
-                periodo = '0'
+            periodo_de = form.cleaned_data['periodo_de']
+            periodo_ate = form.cleaned_data['periodo_ate']
             cursor = connections['so'].cursor()
-            context = self.mount_context(cursor, periodo)
+            context = self.mount_context(cursor, periodo_de, periodo_ate)
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class AnDtCorteAlter(View):
+    Form_class = AnDtCorteAlterForm
+    template_name = 'lotes/an_dtcorte_alter.html'
+
+    def mount_context(self, cursor, data_de, data_ate):
+        # A ser produzido
+        context = {}
+        if data_ate is None:
+            data_ate = data_de
+
+        data = models.an_dtcorte_alter_qtd(cursor, data_de, data_ate)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Sem produção na data',
+            })
+        else:
+            context.update({
+                'data_de': data_de,
+                'data_ate': data_ate,
+            })
+            for row in data:
+                if row['ORDEM_TOTAL'] == 1:
+                    row['PERIODO'] = 'TOTAL'
+                    row['PERIODO_INI'] = ''
+                    row['PERIODO_FIM'] = ''
+                else:
+                    if row['DATA_CORTE'] is None:
+                        row['DATA_CORTE'] = 'Não definida'
+            group = ('DATA_CORTE', 'ALT', 'TIPO')
+            group_rowspan(data, group)
+            context.update({
+                'headers': (
+                    'Data do Corte', 'Alternativa', 'Tipo',
+                    'Período', 'Período Início', 'Período Fim', 'Quantidade',
+                    'No. OPs'),
+                'fields': (
+                    'DATA_CORTE', 'ALT', 'TIPO',
+                    'PERIODO', 'PERIODO_INI', 'PERIODO_FIM', 'QTD', 'NUM_OPS'),
+                'group': group,
+                'data': data,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'data' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        form = self.Form_class(request.POST)
+        if 'data' in kwargs:
+            form.data['data_de'] = kwargs['data']
+            form.data['data_ate'] = kwargs['data']
+        if form.is_valid():
+            data_de = form.cleaned_data['data_de']
+            data_ate = form.cleaned_data['data_ate']
+            cursor = connections['so'].cursor()
+            context = self.mount_context(cursor, data_de, data_ate)
         context['form'] = form
         return render(request, self.template_name, context)
 
