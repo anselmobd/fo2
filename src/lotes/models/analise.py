@@ -204,6 +204,12 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
               OR ( pp.TIPO_ORDEM = 1 AND l.PROCONF_GRUPO > 'A9999')
               OR ( pp.TIPO_ORDEM = 2 AND l.PROCONF_GRUPO LIKE 'A')
               )
+          AND l.SEQ_OPERACAO = (
+            SELECT
+              MAX( ls.SEQ_OPERACAO )
+            FROM pcpc_040 ls
+            WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+          )
         GROUP BY
           pp.DATA_ENTRADA_CORTE
         , pp.ALTERNATIVA_PECA
