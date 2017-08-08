@@ -40,6 +40,7 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate):
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
+          AND o.SITUACAO IN (2, 4)
           AND l.PERIODO_PRODUCAO >= %s
           AND l.PERIODO_PRODUCAO <= %s
         UNION
@@ -57,6 +58,7 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate):
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
+          AND o.SITUACAO IN (2, 4)
           AND l.PERIODO_PRODUCAO >= %s
           AND l.PERIODO_PRODUCAO <= %s
         ) pp
@@ -68,6 +70,7 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate):
           ON p.AREA_PERIODO = 1
          AND p.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
+          AND o.SITUACAO IN (2, 4)
           AND o.ALTERNATIVA_PECA = pp.ALTERNATIVA_PECA
           AND o.ROTEIRO_PECA = pp.ROTEIRO_PECA
           AND (  ( pp.TIPO_ORDEM = 3 AND l.PROCONF_GRUPO <= '99999')
@@ -119,6 +122,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
           END ORDEM_TOTAL
         , SUM( l.QTDE_PECAS_PROG ) QTD
         , COUNT(DISTINCT o.ORDEM_PRODUCAO) NUM_OPS
+        , pp.OPS
         FROM
         (
         SELECT distinct
@@ -131,13 +135,21 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
           ELSE 2
           END TIPO_ORDEM
         , DATA_ENTRADA_CORTE
+        , '' OPS
         FROM pcpc_040 l
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
+          AND o.SITUACAO IN (2, 4)
           AND o.DATA_ENTRADA_CORTE >= %s
           AND o.DATA_ENTRADA_CORTE <= %s
         UNION
+        SELECT
+          p1.*
+        , LISTAGG(o1.ORDEM_PRODUCAO, ', ')
+          WITHIN GROUP (ORDER BY o1.ORDEM_PRODUCAO) OPS
+        FROM
+        (
         SELECT distinct
           l.PERIODO_PRODUCAO
         , o.ALTERNATIVA_PECA
@@ -152,8 +164,26 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
+          AND o.SITUACAO IN (2, 4)
           AND o.DATA_ENTRADA_CORTE >= %s
           AND o.DATA_ENTRADA_CORTE <= %s
+        ) p1
+        JOIN PCPC_020 o1
+          ON o1.DATA_ENTRADA_CORTE = p1.DATA_ENTRADA_CORTE
+         AND o1.PERIODO_PRODUCAO = p1.PERIODO_PRODUCAO
+         AND o1.SITUACAO IN (2, 4)
+         AND o1.ALTERNATIVA_PECA = p1.ALTERNATIVA_PECA
+         AND o1.ROTEIRO_PECA = p1.ROTEIRO_PECA
+         AND (  ( p1.TIPO_ORDEM = 3 AND o1.REFERENCIA_PECA <= '99999')
+             OR ( p1.TIPO_ORDEM = 1 AND o1.REFERENCIA_PECA > 'A9999')
+             OR ( p1.TIPO_ORDEM = 2 AND o1.REFERENCIA_PECA LIKE 'A')
+             )
+        GROUP BY
+          p1.PERIODO_PRODUCAO
+        , p1.ALTERNATIVA_PECA
+        , p1.ROTEIRO_PECA
+        , p1.TIPO_ORDEM
+        , p1.DATA_ENTRADA_CORTE
         ) pp
         JOIN PCPC_020 o
           ON o.DATA_ENTRADA_CORTE = pp.DATA_ENTRADA_CORTE
@@ -167,6 +197,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
           ON p.AREA_PERIODO = 1
          AND p.PERIODO_PRODUCAO = pp.PERIODO_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
+          AND o.SITUACAO IN (2, 4)
           AND o.ALTERNATIVA_PECA = pp.ALTERNATIVA_PECA
           AND o.ROTEIRO_PECA = pp.ROTEIRO_PECA
           AND (  ( pp.TIPO_ORDEM = 3 AND l.PROCONF_GRUPO <= '99999')
@@ -181,6 +212,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
         , pp.PERIODO_PRODUCAO
         , p.DATA_INI_PERIODO
         , p.DATA_FIM_PERIODO
+        , pp.OPS
         ORDER BY
           pp.DATA_ENTRADA_CORTE
         , pp.ALTERNATIVA_PECA
