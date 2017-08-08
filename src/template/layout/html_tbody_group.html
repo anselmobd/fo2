@@ -10,7 +10,7 @@
       {% endif %}
     {% else %}
       <td>
-        {% if safe %}
+        {% if field in safe %}
           {{ row|get_item:field|safe }}
         {% else %}
           {{ row|get_item:field }}
