@@ -29,7 +29,7 @@ def op_inform(cursor, op):
         , o.COD_CANCELAMENTO ||
           CASE
           WHEN o.COD_CANCELAMENTO = 0 THEN ''
-          ELSE '-' || c.DESCRICAO
+          ELSE '-' || COALESCE(c.DESCRICAO, '')
           END CANCELAMENTO
         , o.ALTERNATIVA_PECA ALTERNATIVA
         , o.ROTEIRO_PECA ROTEIRO
@@ -59,7 +59,7 @@ def op_inform(cursor, op):
         JOIN PCPC_010 p
           ON p.AREA_PERIODO = 1
          AND p.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
-        JOIN pcpt_050 c
+        LEFT JOIN pcpt_050 c
           ON c.COD_CANCELAMENTO = o.COD_CANCELAMENTO
         LEFT JOIN PCPC_020 ofi
           ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
