@@ -4,6 +4,10 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+
+    url(r'^ref/$', views.Ref.as_view(), name='ref'),
+    url(r'^ref/(?P<ref>.+)/$', views.Ref.as_view(), name='ref_ref'),
+
     url(r'^estatistica/$', views.estatistica, name='estatistica'),
     url(r'^lista_item_n1_sem_preco_medio/$',
         views.lista_item_n1_sem_preco_medio,
