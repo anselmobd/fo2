@@ -1,22 +1,25 @@
 {% load static %}<!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fo2 - {% block title %}{% endblock %}</title>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <title>Fo2 - {% block title %}{% endblock %}</title>
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <!-- Bootstrap -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-<!-- Custom styles for this template -->
-<link href="{% static "css/sticky-footer-navbar.css" %}" rel="stylesheet">
-{% block stylesheet %}{% endblock %}
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  {% block stylesheet %}{% endblock %}
+
 </head>
 <body>
   <header>
@@ -24,8 +27,18 @@
     {% endblock %}
   </header>
   <main>
-    <div class="container">
-      <a href="/">Início</a> | <a href="http://intranet.tussor.com.br/oficial.systextil.html" target="_blank">Systêxtil Oficial</a>
+    <div class="container-fluid">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <a href="/">Início</a> | <a href="http://intranet.tussor.com.br/oficial.systextil.html" target="_blank">Systêxtil Oficial</a>
+          </div>
+          <div class="col-md-6" align="right">
+            <span id='greasymonkeyverify'>Chame o TI da Tussor para atualizar o Firefox e instalar o <a href="https://addons.mozilla.org/pt-BR/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> e o script <a href="http://intranet/Tussor_Intranet.user.js" target="_blank">"Tussor_Intranet"</a> |</span>
+            <small>Versão da Intranet: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})</small>
+          </div>
+        </div>
+      </div>
       <div class="page-header">
         {% block header %}
         {% endblock %}
@@ -34,12 +47,19 @@
       {% endblock %}
     </div>
   </main>
-  <footer class="footer">
-    <div class="container">
-      <p class="text-muted">{% block footer %}{% endblock %}&nbsp;|&nbsp;<small>Versão da Intranet: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})</small></p>
-    </div>
-  </footer>
-
+  {% block footer %}{% endblock %}
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/bootstrap.min.js"></script>
   {% block javascript %}{% endblock %}
+  <style>
+  /* Don't print link hrefs */
+  @media print {
+    a[href]:after {
+      content: none
+    }
+  }
+  </style>
 </body>
 </html>
