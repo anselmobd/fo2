@@ -1,9 +1,16 @@
-__version__ = '0.1.19'
-__version__date__ = '2017/08/08'
+__version__ = '0.1.20'
+__version__date__ = '2017/08/25'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.20 - 2017/08/25
+#   . view de referências (produtos confeccionados)
+#   . Layout:
+#     . sem bordas
+#     . eliminando footer
+#     . não imprime href link
 #
 # - 0.1.19 - 2017/08/08
 #   . refactoring de lotes.models
