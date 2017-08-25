@@ -3,20 +3,19 @@ from django.db import connections
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.views import View
 # from django.template.defaultfilters import lower
 from django.template.defaulttags import register
 
-import produto.models  # import produtos_n1_pa_basic
+from fo2.models import rows_to_dict_list
+
+from .forms import RefForm
+import produto.models as models
 
 
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
-
-
-def rows_to_dict_list(cursor):
-    columns = [i[0] for i in cursor.description]
-    return [dict(zip(columns, row)) for row in cursor]
 
 
 def index(request):
@@ -114,7 +113,8 @@ def stat_nivel(request):
         SELECT
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
-            WHEN p.REFERENCIA like 'A%' THEN '1-PG'
+            WHEN p.REFERENCIA like 'A%' or p.REFERENCIA like 'B%' THEN '1-PG'
+            WHEN p.REFERENCIA like 'Z%' THEN '1-MP'
             ELSE '1-MD'
             END ||
             CASE WHEN p.RESPONSAVEL IS NULL THEN ''
@@ -128,7 +128,8 @@ def stat_nivel(request):
         GROUP BY
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
-            WHEN p.REFERENCIA like 'A%' THEN '1-PG'
+            WHEN p.REFERENCIA like 'A%' or p.REFERENCIA like 'B%' THEN '1-PG'
+            WHEN p.REFERENCIA like 'Z%' THEN '1-MP'
             ELSE '1-MD'
             END ||
             CASE WHEN p.RESPONSAVEL IS NULL THEN ''
@@ -152,8 +153,8 @@ def stat_nivelX(request):
 
 # ajax template, url with value
 def stat_niveis(request, nivel):
-    if nivel[0:4] in ('1-MD', '1-PG', '1-PA'):
-        data = produto.models.produtos_n1_basic(nivel[2:])
+    if nivel[0:4] in ('1-MD', '1-PG', '1-PA', '1-MP'):
+        data = models.produtos_n1_basic(nivel[2:])
         context = {
             'nivel': nivel,
             'headers': ('#', 'Referência', 'Descrição',
@@ -232,3 +233,62 @@ def stat_niveis(request, nivel):
         return HttpResponse(html)
     else:
         return stat_nivelX(request)
+
+
+class Ref(View):
+    Form_class = RefForm
+    template_name = 'produto/ref.html'
+
+    def mount_context(self, cursor, ref):
+        context = {'ref': ref}
+
+        if len(ref) != 5:
+            context.update({
+                'msg_erro': 'Código de referência inválido',
+            })
+            return context
+
+        # Informações básicas
+        data = models.ref_inform(cursor, ref)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Referência não encontrada',
+            })
+        else:
+            context.update({
+                'headers': ('Descrição',),
+                'fields': ('DESCR',),
+                'data': data,
+            })
+
+            # Cores
+            c_data = models.ref_cores(cursor, ref)
+            if len(c_data) != 0:
+                context.update({
+                    'c_headers': ('Cor', 'Descrição'),
+                    'c_fields': ('COR', 'DESCR'),
+                    'c_data': c_data,
+                })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'ref' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        form = self.Form_class(request.POST)
+        if 'ref' in kwargs:
+            form.data['ref'] = kwargs['ref']
+        if form.is_valid():
+            ref = form.cleaned_data['ref']
+            cursor = connections['so'].cursor()
+            context = self.mount_context(cursor, ref)
+        context['form'] = form
+        return render(request, self.template_name, context)

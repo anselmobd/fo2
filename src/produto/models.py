@@ -147,7 +147,13 @@ def produtos_n1_basic(param):
         '''
     elif tipo == 'PG':
         sql = sql + '''
-            AND p.REFERENCIA like 'A%'
+            AND p.REFERENCIA like 'A%' or p.REFERENCIA like 'B%'
+            ORDER BY
+            p.REFERENCIA
+        '''
+    elif tipo == 'MP':
+        sql = sql + '''
+            AND p.REFERENCIA like 'Z%'
             ORDER BY
             p.REFERENCIA
         '''
@@ -160,3 +166,34 @@ def produtos_n1_basic(param):
     cursor.execute(sql)
     data = rows_to_dict_list(cursor)
     return data
+
+
+def ref_inform(cursor, ref):
+    # Totais por OP
+    sql = """
+        SELECT
+          r.REFERENCIA REF
+        , r.DESCR_REFERENCIA DESCR
+        FROM basi_030 r
+        WHERE r.REFERENCIA = %s
+    """
+    cursor.execute(sql, [ref])
+    return rows_to_dict_list(cursor)
+
+
+def ref_cores(cursor, ref):
+    return prod_cores(cursor, 1, ref)
+
+
+def prod_cores(cursor, nivel, grupo):
+    # Totais por OP
+    sql = """
+        SELECT DISTINCT
+          c.ITEM_ESTRUTURA COR
+        , c.DESCRICAO_15 DESCR
+        FROM basi_010 c
+        WHERE c.NIVEL_ESTRUTURA = %s
+          AND c.GRUPO_ESTRUTURA = %s
+    """
+    cursor.execute(sql, [nivel, grupo])
+    return rows_to_dict_list(cursor)
