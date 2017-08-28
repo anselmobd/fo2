@@ -1,4 +1,8 @@
-{% extends 'layout/layout.html' %}
+{% extends 'produto/index.html' %}
+
+{% block title.content %}Produtos confeccionados - {{ block.super }}{% endblock title.content %}
+
+{% block header.content %}Produtos confeccionados - <a href="/produto/">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -6,14 +10,7 @@
 </style>
 {% endblock %}
 
-{% block title %}Produtos confeccionados - Produto - Intranet - Tussor{% endblock %}
-
-{% block header %}
-<h1>Produtos confeccionados - Produto - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
-
 {% block content %}
-<p><a href="/produto/">Produto</a></p>
 <form action="/produto/ref/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
