@@ -1,15 +1,13 @@
 {% extends 'layout/layout.html' %}
 
-{% block title %}Intranet - Tussor{% endblock %}
+{% block title.content %}Intranet - {% endblock title.content %}
 
-{% block header %}
-<h1>Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
+{% block header.content %}Intranet - {% endblock header.content %}
 
 {% block content %}
 <h3><a href="http://intranet.tussor.com.br/oficial.systextil.html" target="_blank">Systêxtil (versão Oficial)</a></h3>
-</ul>
 <h3>Tussor - rotinas auxiliares ao Systêxtil</h3>
+<br />
 <ul>
   <li><a href="lotes/">Produção</a></li>
   {% include 'lotes/menu.html' %}
@@ -29,7 +27,4 @@
   <li><a href="logistica/">Logistica</a></li>
   {% include 'logistica/menu.html' %}
 </ul>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
