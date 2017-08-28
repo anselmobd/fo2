@@ -85,4 +85,8 @@ class ResponsPorEstagioForm(forms.Form):
         choices=CHOICES, initial='e', widget=forms.RadioSelect())
 
     def clean_usuario(self):
-        return self.cleaned_data['usuario'].upper()
+        usuario = self.cleaned_data['usuario'].upper()
+        data = self.data.copy()
+        data['usuario'] = usuario
+        self.data = data
+        return usuario
