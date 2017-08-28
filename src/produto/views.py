@@ -21,7 +21,7 @@ def get_item(dictionary, key):
 def index(request):
     context = {
         'titulo': 'Produto',
-        'url_menu': '/produto/',
+        'url_menu': 'produto/menu.html',
     }
     return render(request, 'layout/app_generic_index.html', context)
 
