@@ -272,6 +272,15 @@ class Ref(View):
                     'c_data': c_data,
                 })
 
+            # Tamanhos
+            t_data = models.ref_tamanhos(cursor, ref)
+            if len(t_data) != 0:
+                context.update({
+                    't_headers': ('Tamanho', 'Descrição'),
+                    't_fields': ('TAM', 'DESCR'),
+                    't_data': t_data,
+                })
+
         return context
 
     def get(self, request, *args, **kwargs):

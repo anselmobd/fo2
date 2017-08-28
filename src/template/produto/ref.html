@@ -27,11 +27,29 @@
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
   </table>
 {% endif %}
-{% if c_data %}
-  <h3>Cores</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=c_headers only %}
-    {% include "layout/html_tbody.html" with fields=c_fields data=c_data only %}
-  </table>
-{% endif %}
+<table>
+  <tr>
+    <td>
+      {% if c_data %}
+        <h3>Cores</h3>
+        <table>
+          {% include "layout/html_thead.html" with data=c_headers only %}
+          {% include "layout/html_tbody.html" with fields=c_fields data=c_data only %}
+        </table>
+      {% endif %}
+    </td>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+      {% if t_data %}
+        <h3>Tamanhos</h3>
+        <table>
+          {% include "layout/html_thead.html" with data=t_headers only %}
+          {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
+        </table>
+      {% endif %}
+    </td>
+  </tr>
+</table>
 {% endblock %}
