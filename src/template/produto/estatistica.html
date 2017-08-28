@@ -1,4 +1,7 @@
-{% extends 'layout/layout.html' %}
+{% extends 'produto/index.html' %}
+
+{% block title.content %}{{ tela }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ tela }} - <a href="/produto/">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -9,15 +12,7 @@ a:hover {
 </style>
 {% endblock %}
 
-{% block title %}Produto - Intranet - Tussor{% endblock %}
-
-{% block header %}
-<h1>Produto - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
-
 {% block content %}
-<p><a href="/produto/">Produto</a></p>
-<h3>Estatísticas</h3>
 Quantidade de produtos: <a id="stat_nivel">{{ quant }}</a>
 <span id="statistic"><span>
 {% endblock %}
