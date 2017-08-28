@@ -186,7 +186,7 @@ def ref_cores(cursor, ref):
 
 
 def prod_cores(cursor, nivel, grupo):
-    # Totais por OP
+    # Cores de produto
     sql = """
         SELECT DISTINCT
           c.ITEM_ESTRUTURA COR
@@ -194,6 +194,29 @@ def prod_cores(cursor, nivel, grupo):
         FROM basi_010 c
         WHERE c.NIVEL_ESTRUTURA = %s
           AND c.GRUPO_ESTRUTURA = %s
+    """
+    cursor.execute(sql, [nivel, grupo])
+    return rows_to_dict_list(cursor)
+
+
+def ref_tamanhos(cursor, ref):
+    return prod_tamanhos(cursor, 1, ref)
+
+
+def prod_tamanhos(cursor, nivel, grupo):
+    # Tamanhos de produto
+    sql = """
+        SELECT DISTINCT
+          t.TAMANHO_REF TAM
+        , t.DESCR_TAM_REFER DESCR
+        , tam.ORDEM_TAMANHO ORD
+        FROM basi_020 t
+        LEFT JOIN BASI_220 tam
+          ON tam.TAMANHO_REF = t.TAMANHO_REF
+        WHERE t.BASI030_NIVEL030 = %s
+          AND t.BASI030_REFERENC = %s
+        ORDER BY
+          tam.ORDEM_TAMANHO
     """
     cursor.execute(sql, [nivel, grupo])
     return rows_to_dict_list(cursor)
