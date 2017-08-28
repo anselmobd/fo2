@@ -6,7 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <title>Fo2 - {% block title %}{% endblock %}</title>
+  <title>{% block title %}
+  {% block title.pre %}Fo2 - {% endblock title.pre %}{% block title.content %}
+  {% endblock title.content %}{% block title.pos %}Tussor (cuecas D`UOMO){% endblock title.pos %}
+  {% endblock title %}</title>
 
   <!-- Bootstrap -->
   <!-- Latest compiled and minified CSS -->
@@ -17,6 +20,9 @@
 
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- Base CSS -->
+  <link href="{% static "css/base.css" %}" rel="stylesheet">
 
   {% block stylesheet %}{% endblock %}
 
@@ -41,6 +47,8 @@
       </div>
       <div class="page-header">
         {% block header %}
+          {% block header.pre %}<h1>{% endblock header.pre %}{% block header.content %}
+          {% endblock header.content %}{% block header.pos %}Tussor (cuecas D`UOMO)</h1>{% endblock header.pos %}
         {% endblock %}
       </div>
       {% block content %}
@@ -53,13 +61,5 @@
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="js/bootstrap.min.js"></script>
   {% block javascript %}{% endblock %}
-  <style>
-  /* Don't print link hrefs */
-  @media print {
-    a[href]:after {
-      content: none
-    }
-  }
-  </style>
 </body>
 </html>
