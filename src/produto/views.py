@@ -84,6 +84,7 @@ def estatistica(request):
     row = data[0]
     context = {
         'quant': row['QUANT'],
+        'tela': 'Contagem e Listagem'
     }
     return render(request, 'produto/estatistica.html', context)
 
@@ -238,6 +239,7 @@ def stat_niveis(request, nivel):
 class Ref(View):
     Form_class = RefForm
     template_name = 'produto/ref.html'
+    context = {'tela': 'Produtos confeccionados'}
 
     def mount_context(self, cursor, ref):
         context = {'ref': ref}
@@ -276,19 +278,17 @@ class Ref(View):
         if 'ref' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
-            context = {}
             form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
+            self.context['form'] = form
+            return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        context = {}
         form = self.Form_class(request.POST)
         if 'ref' in kwargs:
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
             ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
-            context = self.mount_context(cursor, ref)
-        context['form'] = form
-        return render(request, self.template_name, context)
+            self.context.update(self.mount_context(cursor, ref))
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
