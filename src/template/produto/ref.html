@@ -26,6 +26,10 @@
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
   </table>
+  <table>
+    {% include "layout/html_thead.html" with data=headers2 only %}
+    {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
+  </table>
 {% endif %}
 <table>
   <tr>
@@ -47,6 +51,31 @@
         <table>
           {% include "layout/html_thead.html" with data=t_headers only %}
           {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
+        </table>
+      {% endif %}
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td>
+      {% if e_data %}
+      <h3>Estruturas</h3>
+        <table>
+          {% include "layout/html_thead.html" with data=e_headers only %}
+          {% include "layout/html_tbody.html" with fields=e_fields data=e_data only %}
+        </table>
+      {% endif %}
+      </td>
+      <td>
+        &nbsp;
+      </td>
+      <td>
+      {% if r_data %}
+      <h3>Roteiros</h3>
+        <table>
+          {% include "layout/html_thead.html" with data=r_headers only %}
+          {% include "layout/html_tbody.html" with fields=r_fields data=r_data only %}
         </table>
       {% endif %}
     </td>

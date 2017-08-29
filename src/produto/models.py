@@ -174,7 +174,37 @@ def ref_inform(cursor, ref):
         SELECT
           r.REFERENCIA REF
         , r.DESCR_REFERENCIA DESCR
+        , ce.DESCR_CT_ESTOQUE
+          || ' (' || r.CONTA_ESTOQUE || ')' CONTA_ESTOQUE
+        , lin.DESCRICAO_LINHA
+          || ' (' || r.LINHA_PRODUTO || ')' LINHA
+        , col.DESCR_COLECAO
+          || ' (' || r.COLECAO || ')' COLECAO
+        , ac.DESCR_ARTIGO
+          || ' (' || r.ARTIGO || ')' ARTIGO
+        , r.CLASSIFIC_FISCAL || ' - ' || cf.DESCR_CLASS_FISC NCM
+        , r.COLECAO_CLIENTE
+        , r.CGC_CLIENTE_9 CNPJ9
+        , r.CGC_CLIENTE_4 CNPJ4
+        , r.CGC_CLIENTE_2 CNPJ2
+        , cl.NOME_CLIENTE NOME
+        , r.RESPONSAVEL STATUS
         FROM basi_030 r
+        JOIN BASI_150 ce
+          ON ce.CONTA_ESTOQUE = r.CONTA_ESTOQUE
+        JOIN BASI_120 lin
+          ON lin.NIVEL_ESTRUTURA = 1
+         AND lin.LINHA_PRODUTO = r.LINHA_PRODUTO
+        JOIN BASI_140 col
+          ON col.COLECAO = r.COLECAO
+        JOIN BASI_290 ac
+          ON ac.NIVEL_ESTRUTURA = 1
+         AND ac.ARTIGO = r.ARTIGO
+        JOIN BASI_240 cf
+          ON cf.CLASSIFIC_FISCAL = r.CLASSIFIC_FISCAL
+        JOIN PEDI_010 cl
+          ON cl.CGC_9 = r.CGC_CLIENTE_9
+         and cl.CGC_4 = r.CGC_CLIENTE_4
         WHERE r.REFERENCIA = %s
     """
     cursor.execute(sql, [ref])
@@ -219,4 +249,64 @@ def prod_tamanhos(cursor, nivel, grupo):
           tam.ORDEM_TAMANHO
     """
     cursor.execute(sql, [nivel, grupo])
+    return rows_to_dict_list(cursor)
+
+
+def ref_roteiros(cursor, ref):
+    # Totais por OP
+    sql = """
+        SELECT DISTINCT
+          r.NUMERO_ALTERNATI
+        , r.NUMERO_ROTEIRO
+        , r.NUMERO_ALTERNATI || '/' || r.NUMERO_ROTEIRO ROTEIRO
+        , r.NUMERO_ALTERNATI || ' (' ||
+          COALESCE( al.DESCRICAO, '' ) || ')' ALTERNATIVA
+        , r.NUMERO_ROTEIRO || ' (' ||
+          COALESCE( ro.DESCRICAO,
+            COALESCE( al.DESCRICAO, '' ) ) || ')' OPERACOES
+        FROM MQOP_050 r
+        LEFT JOIN BASI_070 ro
+          ON ro.ALTERNATIVA = r.NUMERO_ALTERNATI
+         AND ro.ROTEIRO = r.NUMERO_ROTEIRO
+         AND ro.NIVEL = r.NIVEL_ESTRUTURA
+         AND ro.GRUPO = r.GRUPO_ESTRUTURA
+        LEFT JOIN BASI_070 al
+          ON al.ALTERNATIVA = r.NUMERO_ALTERNATI
+         AND al.ROTEIRO = 0
+        WHERE r.NIVEL_ESTRUTURA = 1
+          AND r.GRUPO_ESTRUTURA = %s
+        ORDER BY
+          r.NUMERO_ALTERNATI
+        , r.NUMERO_ROTEIRO
+    """
+    cursor.execute(sql, [ref])
+    return rows_to_dict_list(cursor)
+
+
+def ref_estruturas(cursor, ref):
+    # Totais por OP
+    sql = """
+        SELECT DISTINCT
+          e.ALTERNATIVA_ITEM ALTERNATIVA
+        , COALESCE( al.DESCRICAO, '' ) DESCR
+        , COALESCE(
+          ( SELECT
+              ec.GRUPO_COMP
+            FROM BASI_050 ec
+            WHERE ec.NIVEL_ITEM = e.NIVEL_ITEM
+              AND ec.GRUPO_ITEM = e.GRUPO_ITEM
+              AND ec.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
+              AND ec.NIVEL_COMP = 1
+              AND rownum = 1
+          ), ' ') COMP_N1
+        FROM BASI_050 e
+        LEFT JOIN BASI_070 al
+          ON al.ALTERNATIVA = e.ALTERNATIVA_ITEM
+         AND al.ROTEIRO = 0
+        WHERE e.NIVEL_ITEM = 1
+          AND e.GRUPO_ITEM = %s
+        ORDER BY
+          e.ALTERNATIVA_ITEM
+    """
+    cursor.execute(sql, [ref])
     return rows_to_dict_list(cursor)

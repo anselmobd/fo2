@@ -257,9 +257,24 @@ class Ref(View):
             })
         else:
             context.update({
-                'headers': ('Descrição',),
-                'fields': ('DESCR',),
+                'headers': ('Descrição', 'Conta de estoque', 'Artigo', 'Linha',
+                            'Coleção'),
+                'fields': ('DESCR', 'CONTA_ESTOQUE', 'ARTIGO', 'LINHA',
+                           'COLECAO'),
                 'data': data,
+            })
+
+            for row in data:
+                cnpj = '{:08d}/{:04d}-{:02d}'.format(
+                    row['CNPJ9'],
+                    row['CNPJ4'],
+                    row['CNPJ2'])
+                row['CLIENTE'] = '{} - {}'.format(cnpj, row['NOME'])
+            context.update({
+                'headers2': ('Coleção', 'Cliente', 'NCM',
+                             'Status (Responsável)'),
+                'fields2': ('COLECAO_CLIENTE', 'CLIENTE', 'NCM', 'STATUS'),
+                'data2': data,
             })
 
             # Cores
@@ -278,6 +293,24 @@ class Ref(View):
                     't_headers': ('Tamanho', 'Descrição'),
                     't_fields': ('TAM', 'DESCR'),
                     't_data': t_data,
+                })
+
+            # Estruturas
+            e_data = models.ref_estruturas(cursor, ref)
+            if len(e_data) != 0:
+                context.update({
+                    'e_headers': ('Alternativa', 'Descrição', 'Componente produto'),
+                    'e_fields': ('ALTERNATIVA', 'DESCR', 'COMP_N1'),
+                    'e_data': e_data,
+                })
+
+            # Roteiros
+            r_data = models.ref_roteiros(cursor, ref)
+            if len(r_data) != 0:
+                context.update({
+                    'r_headers': ('Roteiro', 'Alternativa', 'Operações'),
+                    'r_fields': ('ROTEIRO', 'ALTERNATIVA', 'OPERACOES'),
+                    'r_data': r_data,
                 })
 
         return context
