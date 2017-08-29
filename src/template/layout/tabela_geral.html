@@ -1,19 +1,15 @@
 {% extends 'layout/layout.html' %}
 
+{% block title.content %}{{ subtitulo }} - {{ titulo }} - Intranet{% endblock title.content %}
+{% block header.content %}{{ subtitulo }} - <a href="{{ urltitulo }}">{{ titulo }} - Intranet</a>{% endblock header.content %}
+
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
 </style>
 {% endblock %}
 
-{% block title %}{{ subtitulo }} - {{ titulo }} - Intranet - Tussor{% endblock %}
-
-{% block header %}
-<h1>{{ subtitulo }} - {{ titulo }} - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
-
 {% block content %}
-<p><a href="{{ urltitulo }}">{{ titulo }}</a></p>
 <h3>{{ subtitulo }}</h3>
 {% if mensagem %}
   <p>{{ mensagem }}</p>
