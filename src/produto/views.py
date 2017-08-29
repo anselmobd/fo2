@@ -19,8 +19,11 @@ def get_item(dictionary, key):
 
 
 def index(request):
-    context = {}
-    return render(request, 'produto/index.html', context)
+    context = {
+        'titulo': 'Produto',
+        'url_menu': 'produto/menu.html',
+    }
+    return render(request, 'layout/app_generic_index.html', context)
 
 
 def lista_item_n1_sem_preco_medio(request):
