@@ -1,4 +1,8 @@
-{% extends 'layout/layout.html' %}
+{% extends 'comercial/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/comercial/">{{ block.super }}</a>{% endblock header.content %}
+
 {% load l10n %}
 {% load humanize %}
 {% block stylesheet %}
@@ -7,14 +11,7 @@
 </style>
 {% endblock %}
 
-{% block title %}{{ titulo }} - Comercial - Intranet - Tussor{% endblock %}
-
-{% block header %}
-<h1>{{ titulo }} - Comercial - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
-
 {% block content %}
-<p><a href="/comercial/">Comercial</a></p>
 <form action="/comercial/ficha/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
