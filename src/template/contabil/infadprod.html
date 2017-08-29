@@ -1,19 +1,15 @@
+{% extends 'contabil/index.html' %}
 
-{% extends 'layout/layout.html' %}
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/contabil/">{{ block.super }}</a>{% endblock header.content %}
+
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
 </style>
 {% endblock %}
 
-{% block title %}{{ titulo }} - Faturamento - Intranet - Tussor{% endblock %}
-
-{% block header %}
-<h1>{{ titulo }} - Cadastros gerais - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
-
 {% block content %}
-<p><a href="/contabil/">Faturamento</a></p>
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}

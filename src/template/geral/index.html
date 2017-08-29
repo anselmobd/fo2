@@ -1,10 +1,8 @@
-{% extends 'layout/layout.html' %}
+{% extends 'index.html' %}
 
-{% block title %}Cadastros gerais - Intranet - Tussor{% endblock %}
+{% block title.content %}Cadastros gerais - {{ block.super }}{% endblock title.content %}
 
-{% block header %}
-<h1>Cadastros gerais - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
+{% block header.content %}Cadastros gerais - {{ block.super }}{% endblock header.content %}
 
 {% block content %}
 {% include 'geral/menu.html' %}

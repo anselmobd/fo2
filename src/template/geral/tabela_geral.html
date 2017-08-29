@@ -1,4 +1,7 @@
-{% extends 'layout/layout.html' %}
+{% extends 'geral/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/geral/">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -6,15 +9,7 @@
 </style>
 {% endblock %}
 
-{% block title %}{{ titulo }} - Cadastros gerais - Intranet - Tussor{% endblock %}
-
-{% block header %}
-<h1>{{ titulo }} - Cadastros gerais - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
-
 {% block content %}
-<p><a href="/geral/">Cadastros gerais</a></p>
-<h3>{{ titulo }}</h3>
 <table>
   {% include "layout/html_thead.html" with data=headers only %}
   {% include "layout/html_tbody.html" with fields=fields data=data only %}

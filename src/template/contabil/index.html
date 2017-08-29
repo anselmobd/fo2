@@ -1,14 +1,9 @@
-{% extends 'layout/layout.html' %}
+{% extends 'index.html' %}
 
-{% block title %}Faturamento - Intranet - Tussor{% endblock %}
+{% block title.content %}Faturamento - {{ block.super }}{% endblock title.content %}
 
-{% block header %}
-<h1>Faturamento - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
+{% block header.content %}Faturamento - {{ block.super }}{% endblock header.content %}
 
 {% block content %}
 {% include 'contabil/menu.html' %}
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
