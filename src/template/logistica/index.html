@@ -1,14 +1,9 @@
-{% extends 'layout/layout.html' %}
+{% extends 'index.html' %}
 
-{% block title %}Logistica - Intranet - Tussor{% endblock %}
+{% block title.content %}Logistica - {{ block.super }}{% endblock title.content %}
 
-{% block header %}
-<h1>Logistica - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
+{% block header.content %}Logistica - {{ block.super }}{% endblock header.content %}
 
 {% block content %}
 {% include 'logistica/menu.html' %}
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
