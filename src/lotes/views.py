@@ -22,6 +22,7 @@ def index(request):
 class Posicao(View):
     Form_class = LoteForm
     template_name = 'lotes/posicao.html'
+    title_name = 'Posição do lote'
 
     def mount_context(self, cursor, periodo, ordem_confeccao):
         context = {}
@@ -104,13 +105,13 @@ class Posicao(View):
         if 'lote' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
-            context = {}
+            context = {'titulo': self.title_name}
             form = self.Form_class()
             context['form'] = form
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = {}
+        context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'lote' in kwargs:
             form.data['lote'] = kwargs['lote']
@@ -133,6 +134,7 @@ class Posicao(View):
 class Op(View):
     Form_class = OpForm
     template_name = 'lotes/op.html'
+    title_name = 'OP'
 
     def mount_context(self, cursor, op):
         context = {'op': op}
@@ -262,13 +264,13 @@ class Op(View):
         if 'op' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
-            context = {}
+            context = {'titulo': self.title_name}
             form = self.Form_class()
             context['form'] = form
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = {}
+        context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'op' in kwargs:
             form.data['op'] = kwargs['op']
@@ -283,6 +285,7 @@ class Op(View):
 class Os(View):
     Form_class = OsForm
     template_name = 'lotes/os.html'
+    title_name = 'OS'
 
     def mount_context(self, cursor, os):
         context = {'os': os}
@@ -368,20 +371,20 @@ class Os(View):
         if 'os' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
-            context = {}
+            context = {'titulo': self.title_name}
             form = self.Form_class()
             context['form'] = form
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = {}
+        context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'os' in kwargs:
             form.data['os'] = kwargs['os']
         if form.is_valid():
             os = form.cleaned_data['os']
             cursor = connections['so'].cursor()
-            context = self.mount_context(cursor, os)
+            context.update(self.mount_context(cursor, os))
         context['form'] = form
         return render(request, self.template_name, context)
 
@@ -389,6 +392,7 @@ class Os(View):
 class AnPeriodoAlter(View):
     Form_class = AnPeriodoAlterForm
     template_name = 'lotes/an_periodo_alter.html'
+    title_name = 'Por período e alternativa'
 
     def mount_context(self, cursor, periodo_de, periodo_ate):
         # A ser produzido
@@ -433,13 +437,13 @@ class AnPeriodoAlter(View):
         if 'periodo' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
-            context = {}
+            context = {'titulo': self.title_name}
             form = self.Form_class()
             context['form'] = form
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = {}
+        context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'periodo' in kwargs:
             form.data['periodo_de'] = kwargs['periodo']
@@ -448,7 +452,7 @@ class AnPeriodoAlter(View):
             periodo_de = form.cleaned_data['periodo_de']
             periodo_ate = form.cleaned_data['periodo_ate']
             cursor = connections['so'].cursor()
-            context = self.mount_context(cursor, periodo_de, periodo_ate)
+            context.update(self.mount_context(cursor, periodo_de, periodo_ate))
         context['form'] = form
         return render(request, self.template_name, context)
 
@@ -456,6 +460,7 @@ class AnPeriodoAlter(View):
 class AnDtCorteAlter(View):
     Form_class = AnDtCorteAlterForm
     template_name = 'lotes/an_dtcorte_alter.html'
+    title_name = 'Por data de corte e alternativa'
 
     def mount_context(self, cursor, data_de, data_ate):
         # A ser produzido
@@ -526,13 +531,13 @@ class AnDtCorteAlter(View):
         if 'data' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
-            context = {}
+            context = {'titulo': self.title_name}
             form = self.Form_class()
             context['form'] = form
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = {}
+        context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'data' in kwargs:
             form.data['data_de'] = kwargs['data']
@@ -541,13 +546,14 @@ class AnDtCorteAlter(View):
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
             cursor = connections['so'].cursor()
-            context = self.mount_context(cursor, data_de, data_ate)
+            context.update(self.mount_context(cursor, data_de, data_ate))
         context['form'] = form
         return render(request, self.template_name, context)
 
 
 def respons(request):
-    context = {}
+    title_name = 'Responsável por estágio'
+    context = {'titulo': title_name}
     if request.method == 'POST':
         form = ResponsPorEstagioForm(request.POST)
         if form.is_valid():
@@ -587,17 +593,17 @@ def respons(request):
             data = rows_to_dict_list(cursor)
             if len(data) != 0:
                 if ordem == 'e':
-                    context = {
+                    context.update({
                         'headers': ('Estágio', 'Usuário'),
                         'fields': ('ESTAGIO', 'USUARIO'),
                         'data': data,
-                    }
+                    })
                 else:
-                    context = {
+                    context.update({
                         'headers': ('Usuário', 'Estágio'),
                         'fields': ('USUARIO', 'ESTAGIO'),
                         'data': data,
-                    }
+                    })
     else:
         form = ResponsPorEstagioForm()
     context['form'] = form

@@ -1,4 +1,7 @@
-{% extends 'layout/layout.html' %}
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/lotes/">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -6,14 +9,7 @@
 </style>
 {% endblock %}
 
-{% block title %}Por Período e Alternativa - Produção - Intranet - Tussor{% endblock %}
-
-{% block header %}
-<h1>Por Período e Alternativa - Produção - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
-
 {% block content %}
-<p><a href="/lotes/">Produção</a></p>
 <form action="/lotes/an_periodo_alter/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
