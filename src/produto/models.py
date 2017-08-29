@@ -147,7 +147,7 @@ def produtos_n1_basic(param):
         '''
     elif tipo == 'PG':
         sql = sql + '''
-            AND p.REFERENCIA like 'A%' or p.REFERENCIA like 'B%'
+            AND (p.REFERENCIA like 'A%' or p.REFERENCIA like 'B%')
             ORDER BY
             p.REFERENCIA
         '''
