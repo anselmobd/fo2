@@ -1,0 +1,9 @@
+{% extends 'index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+
+{% block header.content %}{{ titulo }} - {{ block.super }}{% endblock header.content %}
+
+{% block content %}
+{% include url_menu %}
+{% endblock %}
