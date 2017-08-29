@@ -1,9 +1,12 @@
-__version__ = '0.1.21'
-__version__date__ = '2017/08/28'
+__version__ = '0.1.22'
+__version__date__ = '2017/08/29'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.22 - 2017/08/29
+#   . ajustes de layout (finalizado)
 #
 # - 0.1.21 - 2017/08/28
 #   . view de referências - continuando
