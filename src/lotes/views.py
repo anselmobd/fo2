@@ -75,13 +75,17 @@ class Posicao(View):
                 'os_link': os_link,
             })
 
-        data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
+        i_data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
+        i_link = ('REF')
+        for row in i_data:
+            row['LINK'] = '/produto/ref/{}'.format(row['REF'])
         context.update({
             'i_headers': ('Quantidade', 'Tipo', 'Referência', 'Cor', 'Tamanho',
                           'Descrição', 'Item'),
             'i_fields': ('QTDE', 'TIPO', 'REF', 'COR', 'TAM',
                          'NARR', 'ITEM'),
-            'i_data': data,
+            'i_data': i_data,
+            'i_link': i_link,
         })
 
         data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
