@@ -1,14 +1,9 @@
-{% extends 'layout/layout.html' %}
+{% extends 'index.html' %}
 
-{% block title %}Produção - Intranet - Tussor{% endblock %}
+{% block title.content %}Produção - {{ block.super }}{% endblock title.content %}
 
-{% block header %}
-<h1>Produção - Intranet - Tussor (cuecas D`UOMO)</h1>
-{% endblock %}
+{% block header.content %}Produção - {{ block.super }}{% endblock header.content %}
 
 {% block content %}
 {% include 'lotes/menu.html' %}
-{% endblock %}
-
-{% block footer %}
 {% endblock %}

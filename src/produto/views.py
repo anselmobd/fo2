@@ -242,7 +242,7 @@ def stat_niveis(request, nivel):
 class Ref(View):
     Form_class = RefForm
     template_name = 'produto/ref.html'
-    context = {'tela': 'Produtos confeccionados'}
+    title_name = 'Produtos confeccionados'
 
     def mount_context(self, cursor, ref):
         context = {'ref': ref}
@@ -290,17 +290,19 @@ class Ref(View):
         if 'ref' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
+            context = {'titulo': self.title_name}
             form = self.Form_class()
-            self.context['form'] = form
-            return render(request, self.template_name, self.context)
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'ref' in kwargs:
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
             ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
-            self.context.update(self.mount_context(cursor, ref))
-        self.context['form'] = form
-        return render(request, self.template_name, self.context)
+            context.update(self.mount_context(cursor, ref))
+        context['form'] = form
+        return render(request, self.template_name, context)
