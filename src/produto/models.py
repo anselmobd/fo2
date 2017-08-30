@@ -189,6 +189,23 @@ def ref_inform(cursor, ref):
         , r.CGC_CLIENTE_2 CNPJ2
         , cl.NOME_CLIENTE NOME
         , r.RESPONSAVEL STATUS
+        , COALESCE(
+          CASE WHEN r.REFERENCIA < 'C0000' THEN
+            CAST( CAST( regexp_replace(r.REFERENCIA, '[^0-9]', '')
+                        AS INTEGER ) AS VARCHAR2(5) )
+          ELSE
+            ( SELECT
+                  CASE WHEN ec.GRUPO_ITEM IS NULL THEN ' '
+                  ELSE CAST( CAST( regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
+                                   AS INTEGER ) AS VARCHAR2(5) )
+                  END
+                FROM BASI_050 ec
+                WHERE ec.NIVEL_COMP = r.NIVEL_ESTRUTURA
+                  AND ec.GRUPO_COMP = r.REFERENCIA
+                  AND rownum = 1
+            )
+          END
+          , ' ' ) MODELO
         FROM basi_030 r
         JOIN BASI_150 ce
           ON ce.CONTA_ESTOQUE = r.CONTA_ESTOQUE

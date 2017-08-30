@@ -256,6 +256,8 @@ class Ref(View):
                 'msg_erro': 'Referência não encontrada',
             })
         else:
+            if data[0]['MODELO'] != ' ':
+                context.update({'modelo': data[0]['MODELO']})
             context.update({
                 'headers': ('Descrição', 'Conta de estoque', 'Artigo', 'Linha',
                             'Coleção'),
