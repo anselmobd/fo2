@@ -376,10 +376,10 @@ class Modelo(View):
                         row['CNPJ2'])
                     row['CLIENTE'] = '{} - {}'.format(cnpj, row['NOME'])
             context.update({
-                'headers': ('Tipo', 'Referência', 'Coleção', 'Cliente',
-                            'Status (Responsável)'),
-                'fields': ('TIPO', 'REF', 'COLECAO_CLIENTE', 'CLIENTE',
-                           'STATUS'),
+                'headers': ('Tipo', 'Referência', 'Coleção', 'Descrição',
+                            'Cliente', 'Status (Responsável)'),
+                'fields': ('TIPO', 'REF', 'COLECAO_CLIENTE', 'DESCR',
+                           'CLIENTE', 'STATUS'),
                 'data': data,
                 'link': link,
             })
