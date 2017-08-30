@@ -256,12 +256,18 @@ class Ref(View):
                 'msg_erro': 'Referência não encontrada',
             })
         else:
+            modelo_link = \
+                '<a href="/produto/modelo/{}">{}&nbsp;' \
+                '<span class="glyphicon glyphicon-link" ' \
+                'aria-hidden="true"></span></a>'.format(
+                    data[0]['MODELO'], data[0]['MODELO'])
             if data[0]['MODELO'] != ' ':
-                context.update({'modelo': data[0]['MODELO']})
+                context.update({'modelo': modelo_link})
+
             context.update({
-                'headers': ('Descrição', 'Conta de estoque', 'Artigo', 'Linha',
+                'headers': ('Tipo', 'Descrição', 'Conta de estoque', 'Artigo', 'Linha',
                             'Coleção'),
-                'fields': ('DESCR', 'CONTA_ESTOQUE', 'ARTIGO', 'LINHA',
+                'fields': ('TIPO', 'DESCR', 'CONTA_ESTOQUE', 'ARTIGO', 'LINHA',
                            'COLECAO'),
                 'data': data,
             })

@@ -173,6 +173,11 @@ def ref_inform(cursor, ref):
     sql = """
         SELECT
           r.REFERENCIA REF
+        , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
+          WHEN r.REFERENCIA < 'C0000' THEN 'PG'
+          WHEN r.REFERENCIA < 'Z0000' THEN 'MD'
+          ELSE 'MP'
+          END TIPO
         , r.DESCR_REFERENCIA DESCR
         , ce.DESCR_CT_ESTOQUE
           || ' (' || r.CONTA_ESTOQUE || ')' CONTA_ESTOQUE
