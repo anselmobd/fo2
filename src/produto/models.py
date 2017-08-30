@@ -317,6 +317,7 @@ def modelo_inform(cursor, modelo):
     sql = """
         SELECT
           re.REF
+        , COALESCE( r.DESCR_REFERENCIA, ' ' ) DESCR
         , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
           WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
           WHEN r.REFERENCIA like 'Z%' THEN 'MP'
