@@ -297,11 +297,17 @@ class Ref(View):
 
             # Estruturas
             e_data = models.ref_estruturas(cursor, ref)
+            e_link = ('REF')
+            for row in e_data:
+                if row['REF'] != ' ':
+                    row['LINK'] = '/produto/ref/{}'.format(row['REF'])
             if len(e_data) != 0:
                 context.update({
-                    'e_headers': ('Alternativa', 'Descrição', 'Componente produto'),
-                    'e_fields': ('ALTERNATIVA', 'DESCR', 'COMP_N1'),
+                    'e_headers': ('Alternativa', 'Descrição',
+                                  'Componente produto'),
+                    'e_fields': ('ALTERNATIVA', 'DESCR', 'REF'),
                     'e_data': e_data,
+                    'e_link': e_link,
                 })
 
             # Roteiros

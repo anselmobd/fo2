@@ -298,7 +298,7 @@ def ref_estruturas(cursor, ref):
               AND ec.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
               AND ec.NIVEL_COMP = 1
               AND rownum = 1
-          ), ' ') COMP_N1
+          ), ' ') REF
         FROM BASI_050 e
         LEFT JOIN BASI_070 al
           ON al.ALTERNATIVA = e.ALTERNATIVA_ITEM
