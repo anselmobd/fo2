@@ -310,3 +310,52 @@ def ref_estruturas(cursor, ref):
     """
     cursor.execute(sql, [ref])
     return rows_to_dict_list(cursor)
+
+
+def modelo_inform(cursor, modelo):
+    # Totais por OP
+    sql = """
+        SELECT
+          re.REF
+        , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
+          WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
+          WHEN r.REFERENCIA like 'Z%' THEN 'MP'
+          ELSE 'MD'
+          END TIPO
+        , COALESCE( r.COLECAO_CLIENTE, ' ' ) COLECAO_CLIENTE
+        , r.CGC_CLIENTE_9 CNPJ9
+        , r.CGC_CLIENTE_4 CNPJ4
+        , r.CGC_CLIENTE_2 CNPJ2
+        , cl.NOME_CLIENTE NOME
+        , COALESCE( r.RESPONSAVEL, ' ' ) STATUS
+        FROM
+        (
+        SELECT
+          r.REFERENCIA REF
+        FROM basi_030 r
+        WHERE regexp_replace(r.REFERENCIA, '[^0-9]', '')
+              IN ('{}', '0{}', '00{}')
+          AND r.REFERENCIA < 'C0000'
+          AND r.NIVEL_ESTRUTURA = 1
+        UNION
+        SELECT DISTINCT
+          ec.GRUPO_COMP REF
+        FROM BASI_050 ec
+        WHERE ec.NIVEL_ITEM = 1
+          AND ec.NIVEL_COMP = 1
+          AND regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
+              IN ('{}', '0{}', '00{}')
+          AND ec.GRUPO_ITEM < 'C0000'
+        ) re
+        JOIN basi_030 r
+          ON r.REFERENCIA = re.REF
+         AND r.NIVEL_ESTRUTURA = 1
+        JOIN PEDI_010 cl
+          ON cl.CGC_9 = r.CGC_CLIENTE_9
+         and cl.CGC_4 = r.CGC_CLIENTE_4
+        ORDER BY
+          NLSSORT(re.REF,'NLS_SORT=BINARY_AI')
+    """
+    sql = sql.format(modelo, modelo, modelo, modelo, modelo, modelo)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)

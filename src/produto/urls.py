@@ -8,6 +8,10 @@ urlpatterns = [
     url(r'^ref/$', views.Ref.as_view(), name='ref'),
     url(r'^ref/(?P<ref>.+)/$', views.Ref.as_view(), name='ref_ref'),
 
+    url(r'^modelo/$', views.Modelo.as_view(), name='modelo'),
+    url(r'^modelo/(?P<modelo>.+)/$', views.Modelo.as_view(),
+        name='modelo_modelo'),
+
     url(r'^estatistica/$', views.estatistica, name='estatistica'),
     url(r'^lista_item_n1_sem_preco_medio/$',
         views.lista_item_n1_sem_preco_medio,

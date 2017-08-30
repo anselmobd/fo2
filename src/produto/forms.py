@@ -13,3 +13,10 @@ class RefForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+
+class ModeloForm(forms.Form):
+    modelo = forms.CharField(
+        label='Modelo', max_length=4, min_length=3,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
