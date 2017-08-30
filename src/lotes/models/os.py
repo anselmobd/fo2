@@ -55,8 +55,8 @@ def os_sortimento(cursor, os):
     grade.row(
         id='SORTIMENTO',
         facade='DESCR',
-        name='Produto/Cor',
-        name_plural='Produtos/Cores',
+        name='Produto-Cor',
+        name_plural='Produtos-Cores',
         sql='''
             SELECT
               s.PRODORD_GRUPO || ' - ' || s.PRODORD_ITEM SORTIMENTO
