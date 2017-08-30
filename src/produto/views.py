@@ -9,7 +9,7 @@ from django.template.defaulttags import register
 
 from fo2.models import rows_to_dict_list
 
-from .forms import RefForm
+from .forms import RefForm, ModeloForm
 import produto.models as models
 
 
@@ -339,5 +339,70 @@ class Ref(View):
             ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, ref))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class Modelo(View):
+    Form_class = ModeloForm
+    template_name = 'produto/modelo.html'
+    title_name = 'Modelo (parte numérica da referência do PA)'
+
+    def mount_context(self, cursor, modelo):
+        context = {'modelo': modelo}
+
+        if len(modelo) not in (3, 4):
+            context.update({
+                'msg_erro': 'Modelo inválido',
+            })
+            return context
+
+        # Informações básicas
+        data = models.modelo_inform(cursor, modelo)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Modelo não encontrado',
+            })
+        else:
+            link = ('REF')
+            for row in data:
+                row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+                if row['CNPJ9'] == 0:
+                    row['CLIENTE'] = ''
+                else:
+                    cnpj = '{:08d}/{:04d}-{:02d}'.format(
+                        row['CNPJ9'],
+                        row['CNPJ4'],
+                        row['CNPJ2'])
+                    row['CLIENTE'] = '{} - {}'.format(cnpj, row['NOME'])
+            context.update({
+                'headers': ('Tipo', 'Referência', 'Coleção', 'Cliente',
+                            'Status (Responsável)'),
+                'fields': ('TIPO', 'REF', 'COLECAO_CLIENTE', 'CLIENTE',
+                           'STATUS'),
+                'data': data,
+                'link': link,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'modelo' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'modelo' in kwargs:
+            form.data['modelo'] = kwargs['modelo']
+        if form.is_valid():
+            modelo = form.cleaned_data['modelo']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, modelo))
         context['form'] = form
         return render(request, self.template_name, context)
