@@ -63,7 +63,7 @@
       <h3>Estruturas</h3>
         <table>
           {% include "layout/html_thead.html" with data=e_headers only %}
-          {% include "layout/html_tbody.html" with fields=e_fields data=e_data only %}
+          {% include "layout/html_tbody_link.html" with fields=e_fields data=e_data link=e_link only %}
         </table>
       {% endif %}
       </td>
