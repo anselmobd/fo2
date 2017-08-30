@@ -1,4 +1,5 @@
 import re
+import copy
 
 from django.shortcuts import render
 from django.db import connections
@@ -165,6 +166,9 @@ class Op(View):
 
             # informações gerais
             i_data = models.op_inform(cursor, op)
+            i2_data = copy.deepcopy(i_data)
+            i3_data = copy.deepcopy(i_data)
+
             row = i_data[0]
             if row['OP_REL'] == 0:
                 row['OP_REL'] = ''
@@ -180,20 +184,26 @@ class Op(View):
                 'i_data': i_data,
                 'i_link': i_link,
             })
+
+            i2_link = ('REF')
+            row = i2_data[0]
+            row['LINK'] = '/produto/ref/{}'.format(row['REF'])
             context.update({
                 'i2_headers': ('Tipo de referência', 'Referência',
                                'Alternativa', 'Roteiro',
                                'Qtd. Lotes', 'Quant. Itens'),
                 'i2_fields': ('TIPO_REF', 'REF',
                               'ALTERNATIVA', 'ROTEIRO', 'LOTES', 'QTD'),
-                'i2_data': i_data,
+                'i2_data': i2_data,
+                'i2_link': i2_link,
             })
+
             context.update({
                 'i3_headers': ('Período', 'Período Início', 'Período Fim',
                                'Data Digitação', 'Data Corte'),
                 'i3_fields': ('PERIODO', 'PERIODO_INI', 'PERIODO_FIM',
                               'DT_DIGITACAO', 'DT_CORTE'),
-                'i3_data': i_data,
+                'i3_data': i3_data,
             })
 
             # Grade
@@ -281,7 +291,7 @@ class Op(View):
         if form.is_valid():
             op = form.cleaned_data['op']
             cursor = connections['so'].cursor()
-            context = self.mount_context(cursor, op)
+            context.update(self.mount_context(cursor, op))
         context['form'] = form
         return render(request, self.template_name, context)
 
@@ -344,6 +354,9 @@ class Os(View):
 
         # Itens para nota de OS
         i_data = models.os_itens(cursor, os)
+        i_link = ('REF')
+        for row in i_data:
+            row['LINK'] = '/produto/ref/{}'.format(row['REF'])
         context.update({
             'i_headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Narrativa',
                           'Unidade', 'Valor unitário', 'Qtd.Estrutura',
@@ -351,6 +364,7 @@ class Os(View):
             'i_fields': ('NIVEL', 'REF', 'COR', 'TAM', 'NARRATIVA',
                          'UN', 'VALOR_UN', 'QTD_ESTR', 'QTD_ENV', 'NF'),
             'i_data': i_data,
+            'i_link': i_link,
         })
 
         # Lotes ordenados por OS + referência + estágio
