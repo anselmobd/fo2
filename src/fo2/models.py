@@ -21,6 +21,10 @@ def cursorF1():
 
 
 def dict_def_options(dict_, def_, *args):
+    """
+    Return dict_[arg] for first arg in args that exists in dict_.
+    Otherwise, return default value.
+    """
     for arg in args:
         if arg in dict_:
             return dict_[arg]
@@ -28,6 +32,9 @@ def dict_def_options(dict_, def_, *args):
 
 
 def dict_options(dict_, *args):
+    """
+    Call dict_def_options with default value None
+    """
     return dict_def_options(dict_, None, *args)
 
 
@@ -104,7 +111,7 @@ class GradeQtd(object):
         }
         if len(self._col.data) != 0 and len(self._row.data) != 0:
             self.table_data['header'] = \
-                ['{}/{}'.format(self._row.name, self._col.name)]
+                ['{} / {}'.format(self._row.name, self._col.name)]
             self.table_data['fields'] = [self._row.id_field]
             for col in self._col.data:
                 self.table_data['header'].append(col[self._col.id_field])
