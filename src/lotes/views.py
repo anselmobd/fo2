@@ -218,9 +218,10 @@ class Op(View):
             # Estágios
             e_data = models.op_estagios(cursor, op)
             context.update({
-                'e_headers': ('Estágio', '% Produzido', 'Itens Produzidos',
-                              'Lotes no estágio'),
-                'e_fields': ('EST', 'PERC', 'PROD', 'LOTES'),
+                'e_headers': ('Estágio', '% Produzido',
+                              'Itens 1ª Qualidade', 'Itens 2ª Qualidade',
+                              'Itens Perda', 'Lotes no estágio'),
+                'e_fields': ('EST', 'PERC', 'PROD', 'Q2', 'PERDA', 'LOTES'),
                 'e_data': e_data,
             })
 
