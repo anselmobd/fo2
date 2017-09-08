@@ -88,6 +88,18 @@ def op_estagios(cursor, op):
               AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
           ) PROD
         , (SELECT
+              SUM( lp.QTDE_PECAS_2A )
+            FROM pcpc_040 lp
+            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
+              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
+          ) Q2
+        , (SELECT
+              SUM( lp.QTDE_PERDAS )
+            FROM pcpc_040 lp
+            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
+              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
+          ) PERDA
+        , (SELECT
               count(*)
             FROM pcpc_040 lp
             WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
