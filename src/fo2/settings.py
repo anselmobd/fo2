@@ -49,9 +49,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    # Projeto
+    # Project
     'logistica',
     'lotes',
+    'geral',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Project
+    'utils.middlewares.LoggedInUserMiddleware',
 ]
 
 ROOT_URLCONF = 'fo2.urls'
