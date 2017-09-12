@@ -1,9 +1,15 @@
-__version__ = '0.1.24'
-__version__date__ = '2017/09/11'
+__version__ = '0.1.25'
+__version__date__ = '2017/09/12'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.26 - 2017/09/12?
+#   . OP: depósitos destino da produção
+#
+# - 0.1.25 - 2017/09/12
+#   . gravando log de alterações na tabela RecordTracking
 #
 # - 0.1.24 - 2017/09/11
 #   . criando log de alterações em registros de tabelas
