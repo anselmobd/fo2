@@ -199,10 +199,10 @@ class Op(View):
             })
 
             context.update({
-                'i3_headers': ('Período', 'Período Início', 'Período Fim',
-                               'Data Digitação', 'Data Corte'),
-                'i3_fields': ('PERIODO', 'PERIODO_INI', 'PERIODO_FIM',
-                              'DT_DIGITACAO', 'DT_CORTE'),
+                'i3_headers': ('Depósito', 'Período', 'Período Início',
+                               'Período Fim', 'Data Digitação', 'Data Corte'),
+                'i3_fields': ('DEPOSITO', 'PERIODO', 'PERIODO_INI',
+                              'PERIODO_FIM', 'DT_DIGITACAO', 'DT_CORTE'),
                 'i3_data': i3_data,
             })
 
