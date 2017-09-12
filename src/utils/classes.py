@@ -1,14 +1,19 @@
-class Singleton(type):
+class SingletonMeta(type):
     '''
         Singleton pattern requires for GetUser class
     '''
-    def __init__(cls, name, bases, dicts):
+    def __init__(cls, name, bases, namespace):
+        super().__init__(name, bases, namespace)
         cls.instance = None
 
     def __call__(cls, *args, **kwargs):
         if cls.instance is None:
-            cls.instance = super(Singleton, cls).__call__(*args, **kwargs)
+            cls.instance = super().__call__(*args, **kwargs)
         return cls.instance
+
+
+class SingletonBaseMeta(metaclass=SingletonMeta):
+    pass
 
 
 class NotLoggedInUserException(Exception):
@@ -22,8 +27,7 @@ class NotLoggedInUserException(Exception):
         return self.val
 
 
-class LoggedInUser(object):
-    __metaclass__ = Singleton
+class LoggedInUser(SingletonBaseMeta):
 
     user = None
 
