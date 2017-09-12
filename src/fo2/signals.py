@@ -1,9 +1,15 @@
+from pprint import pprint
 import difflib
+
+from utils.classes import LoggedInUser
 
 
 def post_init_tracking(sender, instance, **kwargs):
     ''' signal post_init to track record changes '''
-    # print('--- post_init_tracking', sender.__name__)
+    print('--- post_init_tracking', sender.__name__)
+    pprint(sender.__dict__)
+    pprint(instance.__dict__)
+    pprint(kwargs)
     if hasattr(instance, 'id'):
         original = {}
         for field in sender._meta.get_fields():
@@ -14,7 +20,13 @@ def post_init_tracking(sender, instance, **kwargs):
 
 def post_save_tracking(sender, instance, **kwargs):
     ''' signal post_save to track record changes '''
-    # print('--- post_save_tracking', sender.__name__)
+    print('--- post_save_tracking', sender.__name__)
+    pprint(sender.__dict__)
+    pprint(instance.__dict__)
+    pprint(kwargs)
+    logged_in = LoggedInUser()
+    user = logged_in.user
+    print('user = {}'.format(user))
     if hasattr(instance, '__original_record_values'):
         original = getattr(instance, '__original_record_values')
         if original['id'] == getattr(instance, 'id'):
@@ -48,7 +60,10 @@ def post_save_tracking(sender, instance, **kwargs):
 
 def post_delete_tracking(sender, instance, **kwargs):
     ''' signal post_delete to track record deletions '''
-    # print('--- post_delete_tracking', sender.__name__)
+    print('--- post_delete_tracking', sender.__name__)
+    pprint(sender.__dict__)
+    pprint(instance.__dict__)
+    pprint(kwargs)
     if hasattr(instance, 'id'):
         record = {}
         record['id'] = getattr(instance, 'id')
