@@ -5,11 +5,11 @@ from .models import RecordTracking
 
 
 class RecordTrackingAdmin(admin.ModelAdmin):
-    list_display = ['table', 'record_id', 'iud', 'log']
-    search_fields = ['table', 'log']
-    ordering = ['record_id']
-    fields = ['table', 'record_id', 'iud', 'log']
-    readonly_fields = ['table', 'record_id', 'iud', 'log']
+    list_display = ['time', 'table', 'record_id', 'iud', 'log', 'user']
+    search_fields = ['table', 'log', 'user']
+    ordering = ['time', 'table', 'record_id']
+    fields = ['time', 'table', 'record_id', 'iud', 'log', 'user']
+    readonly_fields = ['time', 'table', 'record_id', 'iud', 'log', 'user']
 
 
 intr_adm_site.register(RecordTracking, RecordTrackingAdmin)
