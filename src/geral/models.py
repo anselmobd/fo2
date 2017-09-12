@@ -5,7 +5,8 @@ class RecordTracking(models.Model):
     user = models.CharField(
         max_length=64, verbose_name='Usuário')
     time = models.DateTimeField(
-        auto_now_add=False)
+        null=True, blank=True,
+        auto_now_add=True, verbose_name='Hora')
     table = models.CharField(
         max_length=64, verbose_name='Tabela')
     record_id = models.IntegerField(
@@ -17,5 +18,5 @@ class RecordTracking(models.Model):
 
     class Meta:
         db_table = "fo2_ger_record_tracking"
-        verbose_name = "log de alteração de registro"
-        verbose_name_plural = "logs de alterações de registros"
+        verbose_name = "log de registro"
+        verbose_name_plural = "logs de registro de tabela"
