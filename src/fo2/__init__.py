@@ -1,9 +1,16 @@
-__version__ = '0.1.23'
-__version__date__ = '2017/08/30'
+__version__ = '0.1.24'
+__version__date__ = '2017/09/11'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.24 - 2017/09/11
+#   . criando log de alterações em registros de tabelas
+#   . Criada tabela RecordTracking para guardar log de alterações
+#   . OP: adicionando quat. de 2a. qualidade e perda ao resumo por estágio
+#   . App Utils para Classes, Middlewares e outras coisas uteis para
+#     vários Apps
 #
 # - 0.1.23 - 2017/08/30
 #   . adição de varios links para referência
