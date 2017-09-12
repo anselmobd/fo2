@@ -55,6 +55,7 @@ def op_inform(cursor, op):
         , o.PERIODO_PRODUCAO PERIODO
         , p.DATA_INI_PERIODO PERIODO_INI
         , p.DATA_FIM_PERIODO PERIODO_FIM
+        , o.DEPOSITO_ENTRADA || ' - ' || d.DESCRICAO DEPOSITO
         FROM PCPC_020 o
         JOIN PCPC_010 p
           ON p.AREA_PERIODO = 1
@@ -63,6 +64,8 @@ def op_inform(cursor, op):
           ON c.COD_CANCELAMENTO = o.COD_CANCELAMENTO
         LEFT JOIN PCPC_020 ofi
           ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
+        JOIN BASI_205 d
+          ON d.CODIGO_DEPOSITO = o.DEPOSITO_ENTRADA
         WHERE o.ORDEM_PRODUCAO = %s
     '''
     cursor.execute(sql, [op])
