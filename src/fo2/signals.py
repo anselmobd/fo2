@@ -10,10 +10,6 @@ def post_init_tracking(sender, instance, **kwargs):
         Signal post_init to track record changes, if record has id field.
         Work in conjunction with post_save_tracking.
     '''
-    print('--- post_init_tracking', sender.__name__)
-    # pprint(sender.__dict__)
-    # pprint(instance.__dict__)
-    # pprint(kwargs)
     if hasattr(instance, 'id'):
         original = {}
         for field in sender._meta.get_fields():
@@ -27,10 +23,6 @@ def post_save_tracking(sender, instance, **kwargs):
         Signal post_save to track record changes, if record has id field.
         Work in conjunction with post_init_tracking.
     '''
-    print('--- post_save_tracking', sender.__name__)
-    # pprint(sender.__dict__)
-    # pprint(instance.__dict__)
-    # pprint(kwargs)
     if hasattr(instance, '__original_record_values'):
         logged_in = LoggedInUser()
         user = logged_in.user
@@ -85,10 +77,6 @@ def post_delete_tracking(sender, instance, **kwargs):
         Signal post_delete to track record deletions, if record has id field.
         Work in conjunction with post_init_tracking.
     '''
-    print('--- post_delete_tracking', sender.__name__)
-    # pprint(sender.__dict__)
-    # pprint(instance.__dict__)
-    # pprint(kwargs)
     if hasattr(instance, 'id'):
         logged_in = LoggedInUser()
         user = logged_in.user
