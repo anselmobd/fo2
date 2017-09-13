@@ -376,6 +376,7 @@ def modelo_inform(cursor, modelo):
         JOIN PEDI_010 cl
           ON cl.CGC_9 = r.CGC_CLIENTE_9
          and cl.CGC_4 = r.CGC_CLIENTE_4
+         and cl.CGC_2 = r.CGC_CLIENTE_2
         ORDER BY
           NLSSORT(re.REF,'NLS_SORT=BINARY_AI')
     """
