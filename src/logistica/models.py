@@ -28,13 +28,20 @@ class NotaFiscal(models.Model):
     transp_nome = models.CharField(
         max_length=100, null=True, blank=True,
         verbose_name='transportadora')
+    valor = models.DecimalField(
+        decimal_places=2, max_digits=10,
+        null=True, blank=True)
+    volumes = models.IntegerField(
+        null=True, blank=True)
 
     # campos editáveis
     saida = models.DateField(null=True, blank=True, verbose_name='saída')
     entrega = models.DateField(
         null=True, blank=True,
-        verbose_name='entrega/agendamento')
-    confirmada = models.BooleanField(default=False)
+        verbose_name='agendamento')
+    confirmada = models.BooleanField(
+        default=False,
+        verbose_name='entregue')
     observacao = models.TextField(
         null=True, blank=True,
         verbose_name='observação')
