@@ -3,6 +3,7 @@ from django.db import models
 
 class RecordTracking(models.Model):
     user = models.CharField(
+        null=True, blank=True,
         max_length=64, verbose_name='Usuário')
     time = models.DateTimeField(
         null=True, blank=True,
