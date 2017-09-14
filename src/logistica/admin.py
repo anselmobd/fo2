@@ -5,10 +5,13 @@ from .models import NotaFiscal
 
 
 class NotaFiscalAdmin(admin.ModelAdmin):
-    list_display = ['numero', 'volumes', 'valor', 'dest_cnpj', 'dest_nome', 'uf',
-                    'transp_nome', 'natu_venda',
+    list_per_page = 40
+    list_display = ['numero', 'volumes', 'valor',
+                    'dest_cnpj', 'dest_nome',
+                    'uf', 'transp_nome', 'natu_venda',
                     'faturamento', 'cod_status', 'ativa',
                     'saida', 'entrega', 'confirmada', 'observacao']
+    list_editable = ['saida', 'entrega', 'confirmada']
     list_filter = ['ativa', 'natu_venda', 'saida',
                    'entrega', 'confirmada',
                    'faturamento', 'transp_nome', 'cod_status', 'uf']
