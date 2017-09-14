@@ -19,6 +19,8 @@ class Command(BaseCommand):
             sql = '''
                 SELECT
                   f.NUM_NOTA_FISCAL NF
+                , f.BASE_ICMS VALOR
+                , f.QTDE_EMBALAGENS VOLUMES
                 , f.DATA_AUTORIZACAO_NFE FATURAMENTO
                 , CAST( COALESCE( f.COD_STATUS, '0' ) AS INT ) COD_STATUS
                 , COALESCE( f.MSG_STATUS, ' ' ) MSG_STATUS
@@ -76,6 +78,8 @@ class Command(BaseCommand):
                 if (row_st['NF'],) in nfs_fo2:
                     nf_fo2 = models.NotaFiscal.objects.get(numero=row_st['NF'])
                     if nf_fo2.faturamento == faturamento \
+                            and nf_fo2.valor == row_st['VALOR'] \
+                            and nf_fo2.volumes == row_st['VOLUMES'] \
                             and nf_fo2.dest_cnpj == dest_cnpj \
                             and nf_fo2.dest_nome == row_st['CLIENTE'] \
                             and nf_fo2.cod_status == row_st['COD_STATUS'] \
@@ -100,6 +104,12 @@ class Command(BaseCommand):
                     self.stdout.write(
                         'date = {}'.format(faturamento))
                     nf_fo2.faturamento = faturamento
+
+                    self.stdout.write('valor = {}'.format(row_st['VALOR']))
+                    nf_fo2.valor = row_st['VALOR']
+
+                    self.stdout.write('volumes = {}'.format(row_st['VOLUMES']))
+                    nf_fo2.volumes = row_st['VOLUMES']
 
                     self.stdout.write('cnpj = {}'.format(dest_cnpj))
                     nf_fo2.dest_cnpj = dest_cnpj
