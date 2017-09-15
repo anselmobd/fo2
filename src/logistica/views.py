@@ -19,7 +19,7 @@ class NotafiscalRel(View):
     template_name = 'logistica/notafiscal_rel.html'
     title_name = 'Controle de data de saída de NF'
 
-    def mount_context(self, data_de, data_ate):
+    def mount_context(self, data_de, data_ate, uf):
         # A ser produzido
         context = {}
         if data_ate is None:
@@ -29,12 +29,14 @@ class NotafiscalRel(View):
             'data_ate': data_ate,
         })
 
-        data = list(NotaFiscal.objects.filter(
+        select = NotaFiscal.objects.filter(
             faturamento__date__gte=data_de
             ).filter(
             faturamento__date__lte=data_ate
-            ).filter(natu_venda=True).filter(ativa=True).values())
-
+            ).filter(natu_venda=True).filter(ativa=True)
+        if uf:
+            select = select.filter(uf=uf)
+        data = list(select.values())
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma NF encontrada',
@@ -84,6 +86,7 @@ class NotafiscalRel(View):
         if form.is_valid():
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
-            context.update(self.mount_context(data_de, data_ate))
+            uf = form.cleaned_data['uf']
+            context.update(self.mount_context(data_de, data_ate, uf))
         context['form'] = form
         return render(request, self.template_name, context)
