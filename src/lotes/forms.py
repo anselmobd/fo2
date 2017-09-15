@@ -50,7 +50,8 @@ class AnPeriodoAlterForm(forms.Form):
 class AnDtCorteAlterForm(forms.Form):
     data_de = forms.DateField(
         label='Data do Corte/Gargalo: De',
-        widget=forms.DateInput(attrs={'type': 'date'}))
+        widget=forms.DateInput(attrs={'type': 'date',
+                               'autofocus': 'autofocus'}))
     data_ate = forms.DateField(
         label='Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
