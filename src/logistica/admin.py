@@ -6,15 +6,18 @@ from .models import NotaFiscal
 
 class NotaFiscalAdmin(admin.ModelAdmin):
     list_per_page = 40
-    list_display = ['numero', 'volumes', 'valor',
-                    'dest_cnpj', 'dest_nome',
-                    'uf', 'transp_nome', 'natu_venda',
-                    'faturamento', 'cod_status', 'ativa',
-                    'saida', 'entrega', 'confirmada', 'observacao']
+    list_display = ['numero', 'faturamento',
+                    'saida', 'entrega', 'confirmada',
+                    'natu_venda', 'ativa',
+                    'uf', 'transp_nome',
+                    'dest_nome', 'dest_cnpj',
+                    'valor', 'volumes',
+                    'cod_status',
+                    'observacao']
     list_editable = ['saida', 'entrega', 'confirmada']
-    list_filter = ['ativa', 'natu_venda', 'saida',
-                   'entrega', 'confirmada',
-                   'faturamento', 'transp_nome', 'cod_status', 'uf']
+    # list_filter = ['ativa', 'natu_venda', 'saida',
+    #                'entrega', 'confirmada',
+    #                'faturamento', 'transp_nome', 'cod_status', 'uf']
     search_fields = ['numero', 'dest_cnpj', 'dest_nome', 'natu_descr',
                      'transp_nome', 'observacao']
     ordering = ['-numero']
