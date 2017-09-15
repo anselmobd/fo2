@@ -66,7 +66,7 @@ class NotafiscalRel(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'data' in kwargs:
+        if 'dia' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
             context = {'titulo': self.title_name}
@@ -77,9 +77,10 @@ class NotafiscalRel(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'data' in kwargs:
-            form.data['data_de'] = kwargs['data']
-            form.data['data_ate'] = kwargs['data']
+        if 'dia' in kwargs:
+            data = '{dia}/{mes}/{ano}'.format(**kwargs)
+            form.data['data_de'] = data
+            form.data['data_ate'] = data
         if form.is_valid():
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
