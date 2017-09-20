@@ -62,24 +62,28 @@
 <table>
   <tr>
     <td>
-      {% if e_data %}
       <h3>Estruturas</h3>
+      {% if e_data %}
         <table>
           {% include "layout/html_thead.html" with data=e_headers only %}
           {% include "layout/html_tbody_link.html" with fields=e_fields data=e_data link=e_link only %}
         </table>
+      {% else %}
+        <h4>Sem estruturas!</h4>
       {% endif %}
       </td>
       <td>
         &nbsp;
       </td>
       <td>
-      {% if r_data %}
       <h3>Roteiros</h3>
+      {% if r_data %}
         <table>
           {% include "layout/html_thead.html" with data=r_headers only %}
           {% include "layout/html_tbody.html" with fields=r_fields data=r_data only %}
         </table>
+      {% else %}
+        <h4>Sem roteiros!</h4>
       {% endif %}
     </td>
   </tr>
