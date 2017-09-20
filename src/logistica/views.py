@@ -36,6 +36,9 @@ class NotafiscalRel(View):
             ).filter(natu_venda=True).filter(ativa=True)
         if uf:
             select = select.filter(uf=uf)
+            context.update({
+                'uf': uf,
+            })
         data = list(select.values())
         if len(data) == 0:
             context.update({
