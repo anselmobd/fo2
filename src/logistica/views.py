@@ -39,6 +39,7 @@ class NotafiscalRel(View):
             context.update({
                 'uf': uf,
             })
+        select = select.order_by('numero')
         data = list(select.values())
         if len(data) == 0:
             context.update({
