@@ -1,11 +1,14 @@
-__version__ = '0.1.25'
-__version__date__ = '2017/09/12'
+__version__ = '0.1.27'
+__version__date__ = '2017/09/20'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
 #
-# - 0.1.26 - 2017/09/12?
+# - 0.1.27 - 2017/09/20
+#   . Logística: relatório em tela da tabela de datas de saída
+#
+# - 0.1.26 - 2017/09/12
 #   . OP: depósitos destino da produção
 #
 # - 0.1.25 - 2017/09/12
