@@ -14,7 +14,7 @@ intr_adm_site = IntrAdmSite(name='intradm')
 # Alter root admin site to show LogEntry
 
 class LogEntryAdmin(admin.ModelAdmin):
-    search_fields = ('object_repr',)
+    search_fields = ('object_repr', 'object_id')
     list_filter = ('action_time', 'content_type',)
     list_display = ('action_time', 'user', 'content_type', 'tipo',
                     'object_repr')

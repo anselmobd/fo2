@@ -26,8 +26,8 @@ class NotaFiscalAdmin(admin.ModelAdmin):
               ('natu_venda', 'natu_descr'),
               ('volumes', 'valor'),
               ('faturamento', 'cod_status', 'msg_status'),
-              'saida', 'entrega', 'confirmada', 'observacao')
-    readonly_fields = ['numero', 'faturamento',
+              'saida', 'entrega', 'confirmada', 'observacao', 'id')
+    readonly_fields = ['id', 'numero', 'faturamento',
                        'volumes', 'valor',
                        'cod_status', 'msg_status', 'ativa',
                        'dest_cnpj', 'dest_nome', 'uf',
