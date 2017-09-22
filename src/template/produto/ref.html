@@ -33,69 +33,69 @@
     {% include "layout/html_thead.html" with data=headers2 only %}
     {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
   </table>
-{% endif %}
-<table>
-  <tr>
-    <td>
-      {% if c_data %}
-        <h3>Cores</h3>
-        <table>
-          {% include "layout/html_thead.html" with data=c_headers only %}
-          {% include "layout/html_tbody.html" with fields=c_fields data=c_data only %}
-        </table>
-      {% endif %}
-    </td>
-    <td>
-      &nbsp;
-    </td>
-    <td>
-      {% if t_data %}
-        <h3>Tamanhos</h3>
-        <table>
-          {% include "layout/html_thead.html" with data=t_headers only %}
-          {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
-        </table>
-      {% endif %}
-    </td>
-  </tr>
-</table>
-<table>
-  <tr>
-    <td>
-      <h3>Estruturas</h3>
-      {% if e_data %}
-        <table>
-          {% include "layout/html_thead.html" with data=e_headers only %}
-          {% include "layout/html_tbody_link.html" with fields=e_fields data=e_data link=e_link only %}
-        </table>
-      {% else %}
-        <h4>Sem estruturas!</h4>
-      {% endif %}
+  <table>
+    <tr>
+      <td>
+        {% if c_data %}
+          <h3>Cores</h3>
+          <table>
+            {% include "layout/html_thead.html" with data=c_headers only %}
+            {% include "layout/html_tbody.html" with fields=c_fields data=c_data only %}
+          </table>
+        {% endif %}
       </td>
       <td>
         &nbsp;
       </td>
       <td>
-      <h3>Roteiros</h3>
-      {% if r_data %}
-        <table>
-          {% include "layout/html_thead.html" with data=r_headers only %}
-          {% include "layout/html_tbody.html" with fields=r_fields data=r_data only %}
-        </table>
-      {% else %}
-        <h4>Sem roteiros!</h4>
-      {% endif %}
-    </td>
-  </tr>
-</table>
-{% if e_data %}
-  <h3>Detalhando Estruturas Que Tem Roteiro</h3>
-  {% for estr in estruts %}
-  <h4>{{ estr.alt }}</h4>
-  <table>
-    {% include "layout/html_thead.html" with data=estr.e_headers only %}
-    {% include "layout/html_tbody.html" with fields=estr.e_fields data=estr.e_data only %}
+        {% if t_data %}
+          <h3>Tamanhos</h3>
+          <table>
+            {% include "layout/html_thead.html" with data=t_headers only %}
+            {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
+          </table>
+        {% endif %}
+      </td>
+    </tr>
   </table>
-  {% endfor %}
+  <table>
+    <tr>
+      <td>
+        <h3>Estruturas</h3>
+        {% if e_data %}
+          <table>
+            {% include "layout/html_thead.html" with data=e_headers only %}
+            {% include "layout/html_tbody_link.html" with fields=e_fields data=e_data link=e_link only %}
+          </table>
+        {% else %}
+          <h4>Sem estruturas!</h4>
+        {% endif %}
+        </td>
+        <td>
+          &nbsp;
+        </td>
+        <td>
+        <h3>Roteiros</h3>
+        {% if r_data %}
+          <table>
+            {% include "layout/html_thead.html" with data=r_headers only %}
+            {% include "layout/html_tbody.html" with fields=r_fields data=r_data only %}
+          </table>
+        {% else %}
+          <h4>Sem roteiros!</h4>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+  {% if e_data %}
+    <h3>Detalhando Estruturas Que Tem Roteiro</h3>
+    {% for estr in estruts %}
+    <h4>{{ estr.alt }}</h4>
+    <table>
+      {% include "layout/html_thead.html" with data=estr.e_headers only %}
+      {% include "layout/html_tbody.html" with fields=estr.e_fields data=estr.e_data only %}
+    </table>
+    {% endfor %}
+  {% endif %}
 {% endif %}
 {% endblock %}
