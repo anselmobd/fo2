@@ -265,10 +265,10 @@ class Ref(View):
                 context.update({'modelo': modelo_link})
 
             context.update({
-                'headers': ('Tipo', 'Descrição', 'Conta de estoque', 'Artigo', 'Linha',
-                            'Coleção'),
-                'fields': ('TIPO', 'DESCR', 'CONTA_ESTOQUE', 'ARTIGO', 'LINHA',
-                           'COLECAO'),
+                'headers': ('Tipo', 'Descrição', 'Conta de estoque',
+                            'Artigo', 'Linha', 'Coleção'),
+                'fields': ('TIPO', 'DESCR', 'CONTA_ESTOQUE',
+                           'ARTIGO', 'LINHA', 'COLECAO'),
                 'data': data,
             })
 
