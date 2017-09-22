@@ -280,12 +280,11 @@ def ref_roteiros(cursor, ref):
         SELECT DISTINCT
           r.NUMERO_ALTERNATI
         , r.NUMERO_ROTEIRO
-        , r.NUMERO_ALTERNATI || '/' || r.NUMERO_ROTEIRO ROTEIRO
         , r.NUMERO_ALTERNATI || ' (' ||
           COALESCE( al.DESCRICAO, '' ) || ')' ALTERNATIVA
         , r.NUMERO_ROTEIRO || ' (' ||
           COALESCE( ro.DESCRICAO,
-            COALESCE( al.DESCRICAO, '' ) ) || ')' OPERACOES
+            COALESCE( al.DESCRICAO, '' ) ) || ')' ROTEIRO
         FROM MQOP_050 r
         LEFT JOIN BASI_070 ro
           ON ro.ALTERNATIVA = r.NUMERO_ALTERNATI
@@ -331,6 +330,35 @@ def ref_estruturas(cursor, ref):
           e.ALTERNATIVA_ITEM
     """
     cursor.execute(sql, [ref])
+    return rows_to_dict_list(cursor)
+
+
+def ref_estrutura_comp(cursor, ref, alt):
+    # Totais por OP
+    sql = """
+        SELECT
+          e.SEQUENCIA
+        , e.NIVEL_COMP NIVEL
+        , e.GRUPO_COMP REF
+        , r.DESCR_REFERENCIA DESCR
+        , e.SUB_COMP TAM
+        , e.ITEM_COMP COR
+        , e.ALTERNATIVA_COMP ALTERN
+        , e.CONSUMO
+        , e.ESTAGIO || '-' || es.DESCRICAO ESTAGIO
+        FROM BASI_050 e
+        LEFT JOIN basi_030 r
+          ON r.NIVEL_ESTRUTURA = e.NIVEL_COMP
+         AND r.REFERENCIA = e.GRUPO_COMP
+        LEFT JOIN MQOP_005 es
+          ON es.CODIGO_ESTAGIO = e.ESTAGIO
+        WHERE e.NIVEL_ITEM = 1
+          AND e.GRUPO_ITEM = %s
+          AND e.ALTERNATIVA_ITEM = %s
+        ORDER BY
+          e.SEQUENCIA
+    """
+    cursor.execute(sql, [ref, alt])
     return rows_to_dict_list(cursor)
 
 

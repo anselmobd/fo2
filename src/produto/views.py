@@ -322,10 +322,32 @@ class Ref(View):
             r_data = models.ref_roteiros(cursor, ref)
             if len(r_data) != 0:
                 context.update({
-                    'r_headers': ('Roteiro', 'Alternativa', 'Operações'),
-                    'r_fields': ('ROTEIRO', 'ALTERNATIVA', 'OPERACOES'),
+                    'r_headers': ('Alternativa', 'Roteiro'),
+                    'r_fields': ('ALTERNATIVA', 'ROTEIRO'),
                     'r_data': r_data,
                 })
+
+            # Detalhando Estruturas
+            estruts = []
+            for row in e_data:
+                if row['ALTERNATIVA'] in \
+                        [r['NUMERO_ALTERNATI'] for r in r_data]:
+                    estrutura = models.ref_estrutura_comp(
+                        cursor, ref, row['ALTERNATIVA'])
+                    estruts.append({
+                        'alt': '{}-{}'.format(
+                            row['ALTERNATIVA'], row['DESCR']),
+                        'e_headers': ('Sequência', 'Nível', 'Referência',
+                                      'Descrição', 'Tamanho', 'Cor',
+                                      'Alternativa', 'Consumo', 'Estágio'),
+                        'e_fields': ('SEQUENCIA', 'NIVEL', 'REF',
+                                     'DESCR', 'TAM', 'COR',
+                                     'ALTERN', 'CONSUMO', 'ESTAGIO'),
+                        'e_data': estrutura,
+                    })
+            context.update({
+                'estruts': estruts,
+            })
 
         return context
 
