@@ -1,0 +1,75 @@
+{% extends 'insumo/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/insumo/">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="/insumo/ref/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if ref %}
+  <h2>Nível: {{ nivel}} - Referência: {{ ref }}</h2>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody.html" with fields=fields data=data only %}
+  </table>
+  <table>
+    {% include "layout/html_thead.html" with data=headers2 only %}
+    {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
+  </table>
+  <table>
+    <tr>
+      <td>
+        {% if t_data %}
+          <h3>Tamanhos</h3>
+          <table>
+            {% include "layout/html_thead.html" with data=t_headers only %}
+            {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
+          </table>
+        {% endif %}
+      </td>
+      <td>
+        &nbsp;
+      </td>
+      <td>
+        {% if c_data %}
+          <h3>Cores</h3>
+          <table>
+            {% include "layout/html_thead.html" with data=c_headers only %}
+            {% include "layout/html_tbody.html" with fields=c_fields data=c_data only %}
+          </table>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td>
+        <h3>Parâmetros</h3>
+        {% if p_data %}
+          <table>
+            {% include "layout/html_thead.html" with data=p_headers only %}
+            {% include "layout/html_tbody.html" with fields=p_fields data=p_data only %}
+          </table>
+        {% else %}
+          <h4>Sem parâmetros!</h4>
+        {% endif %}
+        </td>
+      </td>
+    </tr>
+  </table>
+{% endif %}
+{% endblock %}
