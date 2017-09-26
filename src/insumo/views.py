@@ -85,6 +85,21 @@ class Ref(View):
                 'p_data': p_data,
             })
 
+        # Usado em
+        u_data = models.ref_usado_em(cursor, nivel, ref)
+        u_link = ('REF')
+        for row in u_data:
+            row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+        if len(u_data) != 0:
+            context.update({
+                'u_headers': ('Tipo', 'Referência', 'Descrição',
+                              'Alternativa', 'Consumo', 'Estágio'),
+                'u_fields': ('TIPO', 'REF', 'DESCR',
+                             'ALTERNATIVA', 'CONSUMO', 'ESTAGIO'),
+                'u_data': u_data,
+                'u_link': u_link,
+            })
+
         return context
 
     def get(self, request, *args, **kwargs):

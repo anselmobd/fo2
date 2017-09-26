@@ -80,3 +80,36 @@ def ref_parametros(cursor, nivel, ref):
     """
     cursor.execute(sql, [nivel, ref])
     return rows_to_dict_list(cursor)
+
+
+def ref_usado_em(cursor, nivel, ref):
+    # Informações básicas
+    sql = """
+        SELECT DISTINCT
+          CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
+          WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
+          WHEN r.REFERENCIA like 'Z%' THEN 'MP'
+          ELSE 'MD'
+          END TIPO
+        , e.GRUPO_ITEM REF
+        , r.DESCR_REFERENCIA DESCR
+        , e.ALTERNATIVA_ITEM ALTERNATIVA
+        , e.CONSUMO
+        , e.ESTAGIO || '-' || es.DESCRICAO ESTAGIO
+        FROM BASI_050 e
+        LEFT JOIN basi_030 r
+          ON r.NIVEL_ESTRUTURA = e.NIVEL_ITEM
+         AND r.REFERENCIA = e.GRUPO_ITEM
+        LEFT JOIN MQOP_005 es
+          ON es.CODIGO_ESTAGIO = e.ESTAGIO
+        WHERE r.RESPONSAVEL IS NOT NULL
+          AND e.NIVEL_ITEM = 1
+          AND e.NIVEL_COMP = {}
+          AND e.GRUPO_COMP = '{}'
+        ORDER BY
+          NLSSORT(e.GRUPO_ITEM,'NLS_SORT=BINARY_AI')
+        , e.ALTERNATIVA_ITEM
+    """
+    sql = sql.format(nivel, ref)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
