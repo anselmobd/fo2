@@ -262,6 +262,7 @@ def prod_tamanhos(cursor, nivel, grupo):
           t.TAMANHO_REF TAM
         , t.DESCR_TAM_REFER DESCR
         , tam.ORDEM_TAMANHO ORD
+        , t.DESC_TAM_FICHA COMPL
         FROM basi_020 t
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = t.TAMANHO_REF
