@@ -37,6 +37,19 @@ def ref_inform(cursor, nivel, ref):
         , r.CONTA_ESTOQUE || ' - ' || ce.DESCR_CT_ESTOQUE CONTA_ESTOQUE
         , r.CLASSIFIC_FISCAL || ' - ' || cf.DESCR_CLASS_FISC NCM
         , r.CODIGO_CONTABIL || ' - ' || cc.DESCRICAO CODIGO_CONTABIL
+        , r.LINHA_PRODUTO || ' - ' || lin.DESCRICAO_LINHA LINHA
+        , r.COLECAO || ' - ' || col.DESCR_COLECAO COLECAO
+        , r.ARTIGO  || ' - ' || ac.DESCR_ARTIGO ARTIGO
+        , CASE
+          WHEN r.TIPO_PRODUTO = 1
+              THEN '1 - Tecido Normal (liso e estampado)'
+          WHEN r.TIPO_PRODUTO = 2 THEN '2 - Tecido Listrado (com fio tinto)'
+          WHEN r.TIPO_PRODUTO = 3 THEN '3 - Gola'
+          WHEN r.TIPO_PRODUTO = 4 THEN '4 - Punho'
+          WHEN r.TIPO_PRODUTO = 5 THEN '5 - Ribanas'
+          WHEN r.TIPO_PRODUTO = 6
+              THEN '6 - Retilínea(Golas, punhos, tiras, decotes)'
+          END TIPO_PRODUTO
         FROM basi_030 r
         JOIN basi_200 um
           ON um.unidade_medida = r.UNIDADE_MEDIDA
@@ -47,6 +60,14 @@ def ref_inform(cursor, nivel, ref):
         JOIN CONT_540 cc
           ON cc.TIPO_CONTABIL = 3
          AND cc.CODIGO_CONTABIL = r.CODIGO_CONTABIL
+        LEFT JOIN BASI_120 lin
+          ON lin.NIVEL_ESTRUTURA = 2
+         AND lin.LINHA_PRODUTO = r.LINHA_PRODUTO
+        LEFT JOIN BASI_140 col
+          ON col.COLECAO = r.COLECAO
+        LEFT JOIN BASI_290 ac
+          ON ac.NIVEL_ESTRUTURA = 2
+         AND ac.ARTIGO = r.ARTIGO
         WHERE r.NIVEL_ESTRUTURA = %s
          AND r.REFERENCIA = %s
     """
