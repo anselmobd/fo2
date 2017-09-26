@@ -335,7 +335,7 @@ def ref_estruturas(cursor, ref):
 
 
 def ref_estrutura_comp(cursor, ref, alt):
-    # Totais por OP
+    # Detalhando Estruturas
     sql = """
         SELECT
           e.SEQUENCIA
