@@ -1,12 +1,13 @@
-__version__ = '0.1.27'
-__version__date__ = '2017/09/20'
+__version__ = '0.1.28'
+__version__date__ = '2017/09/26'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
 #
-# - 0.1.27 - 2017/09/20
-#   . Logística: relatório em tela da tabela de datas de saída
+# - 0.1.28 - 2017/09/26
+#   . Layout: alterações
+#   . Insumo: Início da APP
 #
 # - 0.1.26 - 2017/09/12
 #   . OP: depósitos destino da produção
