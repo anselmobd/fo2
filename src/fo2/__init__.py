@@ -1,9 +1,14 @@
-__version__ = '0.1.28'
+__version__ = '0.1.29'
 __version__date__ = '2017/09/26'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.29 - 2017/09/26
+#   . Produto: links para insumos
+#   . Insumo: adicionada informação de "Usado em"
+#       . links para produtos
 #
 # - 0.1.28 - 2017/09/26
 #   . Layout: alterações
