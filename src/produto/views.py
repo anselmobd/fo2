@@ -334,6 +334,14 @@ class Ref(View):
                         [r['NUMERO_ALTERNATI'] for r in r_data]:
                     estrutura = models.ref_estrutura_comp(
                         cursor, ref, row['ALTERNATIVA'])
+                    e_link = ('REF')
+                    for e_row in estrutura:
+                        if e_row['NIVEL'] == '1':
+                            e_row['LINK'] = '/produto/ref/{}'.format(
+                                e_row['REF'])
+                        else:
+                            e_row['LINK'] = '/insumo/ref/{}{}'.format(
+                                e_row['NIVEL'], e_row['REF'])
                     estruts.append({
                         'alt': '{}-{}'.format(
                             row['ALTERNATIVA'], row['DESCR']),
@@ -344,6 +352,7 @@ class Ref(View):
                                      'DESCR', 'TAM', 'COR',
                                      'ALTERN', 'CONSUMO', 'ESTAGIO'),
                         'e_data': estrutura,
+                        'e_link': e_link,
                     })
             context.update({
                 'estruts': estruts,

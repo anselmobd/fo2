@@ -93,7 +93,7 @@
     <h4>{{ estr.alt }}</h4>
     <table>
       {% include "layout/html_thead.html" with data=estr.e_headers only %}
-      {% include "layout/html_tbody.html" with fields=estr.e_fields data=estr.e_data only %}
+      {% include "layout/html_tbody_link.html" with fields=estr.e_fields data=estr.e_data link=e_link only %}
     </table>
     {% endfor %}
   {% endif %}
