@@ -70,6 +70,8 @@ def ref_parametros(cursor, nivel, ref):
         , p.ITEM_ESTRUTURA COR
         , p.CODIGO_DEPOSITO || ' - ' || d.DESCRICAO DEPOSITO
         , p.ESTOQUE_MINIMO
+        , p.ESTOQUE_MAXIMO
+        , p.TEMPO_REPOSICAO LEAD
         FROM BASI_015 p
         JOIN BASI_205 d
           ON d.CODIGO_DEPOSITO = p.CODIGO_DEPOSITO
