@@ -78,8 +78,10 @@ class Ref(View):
         p_data = models.ref_parametros(cursor, nivel, ref)
         if len(p_data) != 0:
             context.update({
-                'p_headers': ('Tamanho', 'Cor', 'Depósito', 'Estóque mínimo'),
-                'p_fields': ('TAM', 'COR', 'DEPOSITO', 'ESTOQUE_MINIMO'),
+                'p_headers': ('Tamanho', 'Cor', 'Depósito', 'Estóque mínimo',
+                              'Estoque máximo', 'Lead'),
+                'p_fields': ('TAM', 'COR', 'DEPOSITO', 'ESTOQUE_MINIMO',
+                             'ESTOQUE_MAXIMO', 'LEAD'),
                 'p_data': p_data,
             })
 
