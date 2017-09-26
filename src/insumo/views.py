@@ -56,6 +56,16 @@ class Ref(View):
             'data': data,
         })
 
+        # Informações básicas - tecidos
+        if nivel == '2':
+            context.update({
+                'm_headers': ('Linha de produto', 'Coleção',
+                              'Artigo de produo', 'Tipo de produto'),
+                'm_fields': ('LINHA', 'COLECAO',
+                             'ARTIGO', 'TIPO_PRODUTO'),
+                'm_data': data,
+            })
+
         # Cores
         c_data = models.ref_cores(cursor, nivel, ref)
         if len(c_data) != 0:
