@@ -8,6 +8,7 @@ from django.views import View
 from django.template import Template, Context
 
 from fo2 import settings
+from utils.classes import TermalPrint
 
 from lotes.forms import ImprimeLotesForm
 import lotes.models as models
@@ -48,66 +49,15 @@ class ImprimeLotes(View):
                 'data': data,
             })
 
-            termal_print_controls = {
-                'soh_': b'\x01',
-                'stx_': b'\x02',
-                'ctr_': b'\x0d',
-                'esc_': b'\x1b',
-            }
-
-            # self.print_lote_tag_test(data)
-
             impressao = models.ModeloTermica.objects.get(
                 codigo='CARTELA DE LOTE')
-            template_teg = impressao.modelo.replace('\r', '').replace('\n', '')
-            pprint(template_teg)
-            termal_print_context = {
-                'op': op,
-            }
-            termal_print_context.update(termal_print_controls)
-            pprint(termal_print_context)
-            t = Template(template_teg)
-            c = Context(termal_print_context)
-            s = t.render(c)
-            pprint(s)
-            self.print_lote_tag(s)
+
+            teg = TermalPrint()
+            teg.template(impressao.modelo, '\r\n')
+            teg.context(data[0])
+            teg.printer_send1()
 
         return context
-
-    def print_lote_tag(self, commands):
-        lpr = Popen(["/usr/bin/lp", "-dSuporteTI_SuporteTI", "-"], stdin=PIPE)
-        try:
-            lpr.stdin.write(commands.encode('utf-8'))
-        finally:
-            lpr.stdin.close()
-            lpr.wait()
-
-    def print_lote_tag_test(self, data):
-        lpr = Popen(["/usr/bin/lp", "-dSuporteTI_SuporteTI", "-"], stdin=PIPE)
-        try:
-            print('dirs:')
-            import os
-            pprint(
-                os.path.basename(os.path.dirname(os.path.realpath(__file__))))
-            pprint(settings.ROOT_DIR)
-            with open(os.path.join(settings.ROOT_DIR, 'end.ETQ'), 'rb') as f:
-                while True:
-                    byte = f.read(1)
-                    if not byte:
-                        break
-                    try:
-                        # pprint(byte)
-                        lpr.stdin.write(byte)
-                    except IOError as e:
-                        if e.errno == errno.EPIPE or e.errno == errno.EINVAL:
-                            # print('b')
-                            break
-                        else:
-                            # print('r')
-                            raise
-        finally:
-            lpr.stdin.close()
-            lpr.wait()
 
     def get(self, request):
         context = {'titulo': self.title_name}
