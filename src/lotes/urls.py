@@ -20,6 +20,8 @@ urlpatterns = [
         views.AnDtCorteAlter.as_view(), name='an_dtcorte_alter'),
     url(r'^an_dtcorte_alter/(?P<data>\d+)/$',
         views.AnDtCorteAlter.as_view(), name='an_dtcorte_alter_dtcorte'),
+    url(r'^imprime_lotes/$',
+        views.ImprimeLotes.as_view(), name='imprime_lotes'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 

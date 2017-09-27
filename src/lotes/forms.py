@@ -91,3 +91,16 @@ class ResponsPorEstagioForm(forms.Form):
         data['usuario'] = usuario
         self.data = data
         return usuario
+
+
+class ImprimeLotesForm(forms.Form):
+    op = forms.CharField(
+        label='OP',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    oc_ininial = forms.CharField(
+        label='OC inicial', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    oc_final = forms.CharField(
+        label='OC final', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
