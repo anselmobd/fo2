@@ -1,6 +1,12 @@
+import errno
+from subprocess import Popen, PIPE
+from pprint import pprint
+
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
+
+from fo2 import settings
 
 from lotes.forms import ImprimeLotesForm
 import lotes.models as models
@@ -41,7 +47,36 @@ class ImprimeLotes(View):
                 'data': data,
             })
 
+            self.print_lote_tag(data)
+
         return context
+
+    def print_lote_tag(self, data):
+        lpr = Popen(["/usr/bin/lp", "-dSuporteTI_SuporteTI", "-"], stdin=PIPE)
+        try:
+            print('dirs:')
+            import os
+            pprint(
+                os.path.basename(os.path.dirname(os.path.realpath(__file__))))
+            pprint(settings.ROOT_DIR)
+            with open(os.path.join(settings.ROOT_DIR, 'end.ETQ'), 'rb') as f:
+                while True:
+                    byte = f.read(1)
+                    if not byte:
+                        break
+                    try:
+                        # pprint(byte)
+                        lpr.stdin.write(byte)
+                    except IOError as e:
+                        if e.errno == errno.EPIPE or e.errno == errno.EINVAL:
+                            # print('b')
+                            break
+                        else:
+                            # print('r')
+                            raise
+        finally:
+            lpr.stdin.close()
+            lpr.wait()
 
     def get(self, request):
         context = {'titulo': self.title_name}
