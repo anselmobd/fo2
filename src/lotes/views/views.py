@@ -10,8 +10,8 @@ from django.views import View
 from fo2.template import group_rowspan
 from fo2.models import rows_to_dict_list
 
-from .forms import LoteForm, ResponsPorEstagioForm, OpForm, OsForm, \
-    AnPeriodoAlterForm, AnDtCorteAlterForm
+from lotes.forms import LoteForm, ResponsPorEstagioForm, OpForm, OsForm, \
+    AnPeriodoAlterForm, AnDtCorteAlterForm, ImprimeLotesForm
 import lotes.models as models
 
 
