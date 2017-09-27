@@ -1,12 +1,9 @@
 from django.db import models
 from django.db import connections
 
+from fo2.models import rows_to_dict_list
+
 import produto.models
-
-
-def rows_to_dict_list(cursor):
-    columns = [i[0] for i in cursor.description]
-    return [dict(zip(columns, row)) for row in cursor]
 
 
 def item_count_nivel(cursor, ref, nivel=None):
