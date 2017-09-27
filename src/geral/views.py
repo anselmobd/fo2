@@ -1,10 +1,7 @@
 from django.shortcuts import render
 from django.db import connections
 
-
-def rows_to_dict_list(cursor):
-    columns = [i[0] for i in cursor.description]
-    return [dict(zip(columns, row)) for row in cursor]
+from fo2.models import rows_to_dict_list
 
 
 def index(request):
