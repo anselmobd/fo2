@@ -3,8 +3,12 @@ from fo2.models import rows_to_dict_list
 from lotes.models import *
 
 
-def get_lotes(cursor, op='', os=''):
+def get_lotes(cursor, op='', os='', oc_ini='', oc_fim='', order=''):
     # Lotes ordenados por OP + OS + referência + estágio
+    if oc_ini == '':
+        oc_ini = 0
+    if oc_fim == '':
+        oc_fim = 99999
     sql = '''
         SELECT
           l.ORDEM_PRODUCAO OP
@@ -45,6 +49,8 @@ def get_lotes(cursor, op='', os=''):
           WHERE 1=1
             AND (os.ORDEM_PRODUCAO = %s or %s IS NULL)
             AND (os.NUMERO_ORDEM = %s or %s IS NULL)
+            AND (os.ORDEM_CONFECCAO >= %s or %s IS NULL)
+            AND (os.ORDEM_CONFECCAO <= %s or %s IS NULL)
           GROUP BY
             os.PERIODO_PRODUCAO
           , os.ORDEM_CONFECCAO
@@ -61,17 +67,25 @@ def get_lotes(cursor, op='', os=''):
         LEFT JOIN MQOP_005 eos
           ON eos.CODIGO_ESTAGIO = dos.CODIGO_ESTAGIO
         LEFT JOIN BASI_220 t
-          ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
-        ORDER BY
-          l.ORDEM_PRODUCAO
-        , l.NUMERO_ORDEM
-        , l.PROCONF_GRUPO
-        , l.PROCONF_ITEM
-        , t.ORDEM_TAMANHO
-        , l.PERIODO_PRODUCAO
-        , l.ORDEM_CONFECCAO
+        ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
     '''
-    cursor.execute(sql, [op, op, os, os])
+    if order == 'oc':
+        sql = sql + '''
+            ORDER BY
+              l.ORDEM_CONFECCAO
+        '''
+    else:
+        sql = sql + '''
+            ORDER BY
+              l.ORDEM_PRODUCAO
+            , l.NUMERO_ORDEM
+            , l.PROCONF_GRUPO
+            , l.PROCONF_ITEM
+            , t.ORDEM_TAMANHO
+            , l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO
+        '''
+    cursor.execute(sql, [op, op, os, os, oc_ini, oc_ini, oc_fim, oc_fim])
     return rows_to_dict_list(cursor)
 
 
