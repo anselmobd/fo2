@@ -3,13 +3,19 @@ from fo2.models import rows_to_dict_list
 from lotes.models import *
 
 
-def get_lotes(cursor, op='', os='', oc_ini='', oc_fim='', order=''):
+def get_lotes(cursor, op='', os='', tam='', cor='', order='',
+              oc_ini='', oc_fim='', pula=0, qtd_lotes=100000):
     # Lotes ordenados por OP + OS + referência + estágio
     if oc_ini == '':
         oc_ini = 0
     if oc_fim == '':
         oc_fim = 99999
+    if pula is None:
+        pula = 0
+    if qtd_lotes is None:
+        qtd_lotes = 100000
     sql = '''
+        WITH Table_qtd_lotes AS (
         SELECT
           l.ORDEM_PRODUCAO OP
         , CASE WHEN dos.NUMERO_ORDEM IS NULL
@@ -55,6 +61,8 @@ def get_lotes(cursor, op='', os='', oc_ini='', oc_fim='', order=''):
             AND (os.NUMERO_ORDEM = %s or %s IS NULL)
             AND (os.ORDEM_CONFECCAO >= %s or %s IS NULL)
             AND (os.ORDEM_CONFECCAO <= %s or %s IS NULL)
+            AND (os.PROCONF_SUBGRUPO = %s OR %s IS NULL)
+            AND (os.PROCONF_ITEM = %s OR %s IS NULL)
           GROUP BY
             os.PERIODO_PRODUCAO
           , os.ORDEM_CONFECCAO
@@ -80,10 +88,21 @@ def get_lotes(cursor, op='', os='', oc_ini='', oc_fim='', order=''):
         LEFT JOIN BASI_180 di
           ON di.DIVISAO_PRODUCAO = l.DIVISAO
     '''
-    if order == 'oc':
+    if order == 'o':
         sql = sql + '''
             ORDER BY
               l.ORDEM_CONFECCAO
+        '''
+    elif order == 't':
+        sql = sql + '''
+            ORDER BY
+              l.ORDEM_PRODUCAO
+            , l.NUMERO_ORDEM
+            , l.PROCONF_GRUPO
+            , t.ORDEM_TAMANHO
+            , l.PROCONF_ITEM
+            , l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO
         '''
     else:
         sql = sql + '''
@@ -96,8 +115,19 @@ def get_lotes(cursor, op='', os='', oc_ini='', oc_fim='', order=''):
             , l.PERIODO_PRODUCAO
             , l.ORDEM_CONFECCAO
         '''
-    cursor.execute(sql, [op, op, os, os, oc_ini, oc_ini, oc_fim, oc_fim])
-    return rows_to_dict_list(cursor)
+    sql = sql + '''
+        )
+        select * from Table_qtd_lotes where rownum <= %s
+    '''
+
+    qtd_rows = pula + qtd_lotes
+    cursor.execute(
+        sql, [op, op, os, os, oc_ini, oc_ini, oc_fim, oc_fim,
+              tam, tam, cor, cor, qtd_rows])
+    data = rows_to_dict_list(cursor)
+    for i in range(0, pula):
+        del(data[0])
+    return data
 
 
 def get_os(cursor, os='', op='', periodo='', oc=''):

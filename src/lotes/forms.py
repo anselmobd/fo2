@@ -98,9 +98,38 @@ class ImprimeLotesForm(forms.Form):
         label='OP',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
-    oc_ininial = forms.CharField(
+    tam = forms.CharField(
+        label='Apenas do tamanho', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+    cor = forms.CharField(
+        label='Apenas da cor', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+    order = forms.ChoiceField(
+        choices=[('t',  'Tamanho/Cor/OC'), ('o', 'OC'),
+                 ('c', 'Cor/Tamanho/OC')])
+    oc_ininial = forms.IntegerField(
         label='OC inicial', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
-    oc_final = forms.CharField(
+    oc_final = forms.IntegerField(
         label='OC final', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
+    pula = forms.IntegerField(
+        label='Pula quantos lotes', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    qtd_lotes = forms.IntegerField(
+        label='Imprime quantos lotes', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    def clean_tam(self):
+        tam = self.cleaned_data['tam'].upper()
+        data = self.data.copy()
+        data['tam'] = tam
+        self.data = data
+        return tam
+
+    def clean_cor(self):
+        cor = self.cleaned_data['cor'].upper()
+        data = self.data.copy()
+        data['cor'] = cor
+        self.data = data
+        return cor

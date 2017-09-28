@@ -13,7 +13,8 @@
 <form action="/lotes/imprime_lotes/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Imprime"/>
+    <input type="submit" value="Pesquisa" name="search"/>
+    <input type="submit" value="Imprime" name="print"/>
 </form>
 {% if op %}
 <h2>OP: {{ op }}</h2>
