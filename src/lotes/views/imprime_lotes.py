@@ -54,8 +54,24 @@ class ImprimeLotes(View):
 
             teg = TermalPrint()
             teg.template(impressao.modelo, '\r\n')
-            teg.context(data[0])
-            teg.printer_send1()
+            teg.printer_init()
+            try:
+                for row in data:
+                    row['op'] = '{:09}'.format(row['OP'])
+                    row['periodo'] = '{}'.format(row['PERIODO'])
+                    row['oc'] = '{:05}'.format(row['OC'])
+                    row['lote'] = '{}'.format(row['LOTE'])
+                    row['ref'] = row['REF']
+                    row['tam'] = row['TAM']
+                    row['cor'] = row['COR']
+                    row['narrativa'] = row['NARRATIVA']
+                    row['qtd'] = row['QTD']
+                    row['divisao'] = '{:04}'.format(row['DIVISAO'])
+                    row['descricao_divisao'] = row['DESCRICAO_DIVISAO']
+                    teg.context(row)
+                    teg.printer_send()
+            finally:
+                teg.printer_end()
 
         return context
 
