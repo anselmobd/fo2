@@ -95,7 +95,7 @@ class TermalPrint:
         return commands.encode('utf-8')
 
     def printer_init(self):
-        self._lpr = Popen([self._lp, "-d"+self._p, "-"], stdin=PIPE)
+        self._lpr = Popen([self._lp, "-d{}".format(self._p), "-"], stdin=PIPE)
         self._print_started = True
 
     def printer_end(self):
