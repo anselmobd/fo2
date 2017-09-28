@@ -16,20 +16,11 @@
     <input type="submit" value="Pesquisa" name="search"/>
     <input type="submit" value="Imprime" name="print"/>
 </form>
-{% if op %}
-<h2>OP: {{ op }}</h2>
-{% endif %}
-{% if oc_ininial %}
-<h2>OC inicial: {{ oc_ininial }}</h2>
-{% endif %}
-{% if oc_final %}
-<h2>OC final: {{ oc_final }}</h2>
-{% endif %}
 {% if msg_erro %}
 <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-<h3>{{ count }} lotes enviados para impressão</h3>
+<h3>{{ count }} lotes selecionados para impressão</h3>
 <h3>Lotes ordenados por OC</h3>
 <table>
   {% include "layout/html_thead.html" with data=headers only %}
