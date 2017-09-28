@@ -35,6 +35,9 @@ def get_lotes(cursor, op='', os='', oc_ini='', oc_fim='', order=''):
         , l.PERIODO_PRODUCAO PERIODO
         , l.ORDEM_CONFECCAO OC
         , l.QTDE_PECAS_PROG QTD
+        , r.NARRATIVA
+        , l.DIVISAO
+        , di.DESCRICAO DESCRICAO_DIVISAO
         FROM (
           SELECT
             os.PERIODO_PRODUCAO
@@ -45,6 +48,7 @@ def get_lotes(cursor, op='', os='', oc_ini='', oc_fim='', order=''):
           , os.ORDEM_PRODUCAO
           , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
           , max( os.QTDE_PECAS_PROG ) QTDE_PECAS_PROG
+          , max( os.CODIGO_FAMILIA ) DIVISAO
           FROM PCPC_040 os
           WHERE 1=1
             AND (os.ORDEM_PRODUCAO = %s or %s IS NULL)
@@ -67,7 +71,14 @@ def get_lotes(cursor, op='', os='', oc_ini='', oc_fim='', order=''):
         LEFT JOIN MQOP_005 eos
           ON eos.CODIGO_ESTAGIO = dos.CODIGO_ESTAGIO
         LEFT JOIN BASI_220 t
-        ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
+          ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
+        JOIN BASI_010 r
+          ON r.NIVEL_ESTRUTURA = 1
+         AND r.GRUPO_ESTRUTURA = l.PROCONF_GRUPO
+         AND r.SUBGRU_ESTRUTURA = l.PROCONF_SUBGRUPO
+         AND r.ITEM_ESTRUTURA = l.PROCONF_ITEM
+        LEFT JOIN BASI_180 di
+          ON di.DIVISAO_PRODUCAO = l.DIVISAO
     '''
     if order == 'oc':
         sql = sql + '''
