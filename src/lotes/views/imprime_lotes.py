@@ -5,6 +5,7 @@ from pprint import pprint
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template import Template, Context
 
 from fo2 import settings
@@ -14,7 +15,8 @@ from lotes.forms import ImprimeLotesForm
 import lotes.models as models
 
 
-class ImprimeLotes(View):
+class ImprimeLotes(LoginRequiredMixin, View):
+    login_url = '/intradm/login/'
     Form_class = ImprimeLotesForm
     template_name = 'lotes/imprime_lotes.html'
     title_name = 'Imprime cartela de lotes'
