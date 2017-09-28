@@ -44,11 +44,15 @@ class ImprimeLotes(View):
             })
             for row in data:
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
+                if row['DIVISAO'] is None:
+                    row['DESCRICAO_DIVISAO'] = ''
             context.update({
-                'headers': ('Referência', 'Tamanho', 'Cor',
-                            'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),
-                'fields': ('REF', 'TAM', 'COR',
-                           'EST', 'PERIODO', 'OC', 'QTD', 'LOTE'),
+                'headers': ('OP', 'Referência', 'Tamanho', 'Cor',
+                            'Estágio', 'Período', 'OC', 'Quant.', 'Lote',
+                            'Unidade'),
+                'fields': ('OP', 'REF', 'TAM', 'COR',
+                           'EST', 'PERIODO', 'OC', 'QTD', 'LOTE',
+                           'DESCRICAO_DIVISAO'),
                 'data': data,
             })
 
@@ -70,8 +74,16 @@ class ImprimeLotes(View):
                         row['cor'] = row['COR']
                         row['narrativa'] = row['NARRATIVA']
                         row['qtd'] = row['QTD']
-                        row['divisao'] = '{:04}'.format(row['DIVISAO'])
-                        row['descricao_divisao'] = row['DESCRICAO_DIVISAO']
+                        if row['DIVISAO'] is None:
+                            row['divisao'] = ''
+                        else:
+                            row['divisao'] =\
+                                'UNID: {}'.format(row['DIVISAO'])
+                        if row['DIVISAO'] is None:
+                            row['descricao_divisao'] = ''
+                        else:
+                            row['descricao_divisao'] =\
+                                row['DESCRICAO_DIVISAO']
                         teg.context(row)
                         teg.printer_send()
                 finally:
