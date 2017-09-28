@@ -42,8 +42,10 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         , l.ORDEM_CONFECCAO OC
         , l.QTDE_PECAS_PROG QTD
         , r.NARRATIVA
-        , l.DIVISAO
-        , di.DESCRICAO DESCRICAO_DIVISAO
+        , CASE WHEN l.DIVISAO = 0 THEN dp.DIVISAO_PRODUCAO
+          ELSE l.DIVISAO END DIVISAO
+        , CASE WHEN l.DIVISAO = 0 THEN dp.DESCRICAO
+          ELSE di.DESCRICAO END DESCRICAO_DIVISAO
         FROM (
           SELECT
             os.PERIODO_PRODUCAO
@@ -85,8 +87,15 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
          AND r.GRUPO_ESTRUTURA = l.PROCONF_GRUPO
          AND r.SUBGRU_ESTRUTURA = l.PROCONF_SUBGRUPO
          AND r.ITEM_ESTRUTURA = l.PROCONF_ITEM
-        LEFT JOIN BASI_180 di
+        LEFT JOIN BASI_180 di -- divisao de producao - unidade
           ON di.DIVISAO_PRODUCAO = l.DIVISAO
+        LEFT JOIN OBRF_080 osc -- OS capa
+          ON l.NUMERO_ORDEM <> 0
+         AND osc.NUMERO_ORDEM = l.NUMERO_ORDEM
+        LEFT JOIN BASI_180 dp -- divisao de producao - unidade
+          ON dp.FACCIONISTA9 = osc.CGCTERC_FORNE9
+         AND dp.FACCIONISTA4 = osc.CGCTERC_FORNE4
+         AND dp.FACCIONISTA2 = osc.CGCTERC_FORNE2
     '''
     if order == 'o':
         sql = sql + '''
@@ -126,7 +135,8 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
               tam, tam, cor, cor, qtd_rows])
     data = rows_to_dict_list(cursor)
     for i in range(0, pula):
-        del(data[0])
+        if len(data) != 0:
+            del(data[0])
     return data
 
 
