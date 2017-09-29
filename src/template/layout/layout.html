@@ -41,7 +41,8 @@
             <big><a href="http://intranet.tussor.com.br/oficial.systextil.html" target="_blank">Sistema Systêxtil</a></big>
           </div>
           <div class="col-md-4" align="center">
-            Tussor (cuecas D`UOMO)
+            Tussor (cuecas D`UOMO)<br />
+            {% if request.user.is_authenticated %}Usuário: '{{ request.user.username }}'{% endif %}
           </div>
           <div class="col-md-4" align="right">
             <small>Versão da Intranet: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})</small>
