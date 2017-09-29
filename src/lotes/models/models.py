@@ -1,13 +1,13 @@
 from django.db import models
-# from django.contrib.auth.models import User
-
-from fo2.models import rows_to_dict_list
-
+from django.contrib.auth.models import User
 
 class Impresso(models.Model):
     nome = models.CharField(
         max_length=100, null=True, blank=True,
         verbose_name='Nome')
+
+    def __str__(self):
+        return self.nome
 
     class Meta:
         db_table = "fo2_lot_impresso"
@@ -28,6 +28,9 @@ class ModeloTermica(models.Model):
         null=True, blank=True,
         verbose_name='campos')
 
+    def __str__(self):
+        return self.codigo
+
     class Meta:
         db_table = "fo2_lot_modelo_termica"
         verbose_name = "modelo de etiqueta térmica"
@@ -43,27 +46,31 @@ class ImpressoraTermica(models.Model):
         max_length=100, null=True, blank=True,
         verbose_name='Nome')
 
+    def __str__(self):
+        return self.nome
+
     class Meta:
         db_table = "fo2_lot_impr_termica"
         verbose_name = "impressora térmica"
         verbose_name_plural = "impressoras térmicas"
 
 
-# class UsuarioImpresso(models.Model):
-#     usuario = models.ForeignKey(
-#         User, on_delete=models.CASCADE,
-#         verbose_name='usuário')
-#     impresso = models.ForeignKey(
-#         Impresso, on_delete=models.CASCADE,
-#         verbose_name='impresso')
-#     impressora_termica = models.ForeignKey(
-#         ImpressoraTermica, on_delete=models.CASCADE,
-#         verbose_name='impressora térmica')
-#     modelo = models.ForeignKey(
-#         ModeloTermica, on_delete=models.CASCADE,
-#         verbose_name='modelo padrão')
-#
-#     class Meta:
-#         db_table = "fo2_lot_usuario_impresso"
-#         verbose_name = "Impressões de usuário"
-#         verbose_name_plural = "Impressões de usuários"
+class UsuarioImpresso(models.Model):
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        verbose_name='usuário')
+    impresso = models.ForeignKey(
+        Impresso, on_delete=models.CASCADE,
+        verbose_name='impresso')
+    impressora_termica = models.ForeignKey(
+        ImpressoraTermica, on_delete=models.CASCADE,
+        verbose_name='impressora térmica')
+    modelo = models.ForeignKey(
+        ModeloTermica, on_delete=models.CASCADE,
+        verbose_name='modelo padrão')
+
+    class Meta:
+        db_table = "fo2_lot_usuario_impresso"
+        verbose_name = "Impressos de usuário"
+        verbose_name_plural = "Impressos de usuários"
+        unique_together = ("usuario", "impresso")
