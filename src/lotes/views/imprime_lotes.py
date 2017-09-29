@@ -63,7 +63,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 try:
                     impresso = models.Impresso.objects.get(
                         nome='Cartela de Lote')
-                except UniversityDetails.DoesNotExist:
+                except models.Impresso.DoesNotExist:
                     impresso = None
                 if impresso is None:
                     context.update({
@@ -75,7 +75,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 try:
                     usuario_impresso = models.UsuarioImpresso.objects.get(
                         usuario=self.request.user, impresso=impresso)
-                except UniversityDetails.DoesNotExist:
+                except models.UsuarioImpresso.DoesNotExist:
                     usuario_impresso = None
                 if usuario_impresso is None:
                     context.update({
