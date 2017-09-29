@@ -20,7 +20,7 @@
 <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-<h3>{{ count }} lotes selecionados para impressão</h3>
+<h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
 <h3>Lotes ordenados por OC</h3>
 <table>
   {% include "layout/html_thead.html" with data=headers only %}
