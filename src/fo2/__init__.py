@@ -1,14 +1,18 @@
-__version__ = '0.1.29'
-__version__date__ = '2017/09/26'
+__version__ = '0.1.30'
+__version__date__ = '2017/09/29'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
 #
+# - 0.1.30 - 2017/09/29
+#   . Primeira rotina de impressão térmica
+#     . Impressão de etiqueta de lote
+#
 # - 0.1.29 - 2017/09/26
 #   . Produto: links para insumos
 #   . Insumo: adicionada informação de "Usado em"
-#       . links para produtos
+#     . links para produtos
 #
 # - 0.1.28 - 2017/09/26
 #   . Layout: alterações
