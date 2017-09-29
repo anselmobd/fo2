@@ -20,7 +20,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
     login_url = '/intradm/login/'
     Form_class = ImprimeLotesForm
     template_name = 'lotes/imprime_lotes.html'
-    title_name = 'Imprime cartela de lotes'
+    title_name = 'Imprime "Cartela de Lote"'
 
     def mount_context_and_print(self, cursor, op, tam, cor, order,
                                 oc_ininial, oc_final,
