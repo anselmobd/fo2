@@ -59,18 +59,24 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 'data': data,
             })
 
-            impresso = models.Impresso.objects.get(
-                nome='Cartela de Lote')
-            if impresso is None:
-                context.update({
-                    'msg_erro': 'Impresso não cadastrado',
-                })
-                do_print = False
+            if do_print:
+                try:
+                    impresso = models.Impresso.objects.get(
+                        nome='Cartela de Lote')
+                except UniversityDetails.DoesNotExist:
+                    impresso = None
+                if impresso is None:
+                    context.update({
+                        'msg_erro': 'Impresso não cadastrado',
+                    })
+                    do_print = False
 
             if do_print:
-                usuario_impresso = models.UsuarioImpresso.objects.get(
-                    usuario=self.request.user, impresso=impresso)
-                pprint(model_to_dict(usuario_impresso))
+                try:
+                    usuario_impresso = models.UsuarioImpresso.objects.get(
+                        usuario=self.request.user, impresso=impresso)
+                except UniversityDetails.DoesNotExist:
+                    usuario_impresso = None
                 if usuario_impresso is None:
                     context.update({
                         'msg_erro': 'Impresso não cadastrado para o usuário',
