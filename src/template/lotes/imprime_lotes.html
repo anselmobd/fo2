@@ -11,20 +11,21 @@
 
 {% block content %}
 <form action="/lotes/imprime_lotes/" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Pesquisa" name="search"/>
-    <input type="submit" value="Imprime" name="print"/>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Pesquisa" name="search"/>
+  <input type="submit" value="Imprime" name="print"/>
 </form>
 {% if msg_erro %}
-<h3>{{ msg_erro }}</h3>
-{% endif %}
-{% if data %}
-<h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
-<h3>Lotes ordenados por OC</h3>
-<table>
-  {% include "layout/html_thead.html" with data=headers only %}
-  {% include "layout/html_tbody.html" with fields=fields data=data only %}
-</table>
+  <h3>{{ msg_erro }}</h3>
+{% else %}
+  {% if data %}
+    <h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
+    <h3>Lotes ordenados por OC</h3>
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
 {% endif %}
 {% endblock %}
