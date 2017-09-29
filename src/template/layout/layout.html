@@ -42,7 +42,7 @@
           </div>
           <div class="col-md-4" align="center">
             Tussor (cuecas D`UOMO)<br />
-            {% if request.user.is_authenticated %}Usuário: '{{ request.user.username }}'{% endif %}
+            {% if request.user.is_authenticated %}Usuário: '{{ request.user.username }}'&nbsp;<a href="/encerrar">Encerrar sessão</a>{% endif %}
           </div>
           <div class="col-md-4" align="right">
             <small>Versão da Intranet: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})</small>
