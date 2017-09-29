@@ -63,10 +63,10 @@ class TermalPrint:
         'esc_': b'\x1b',
     }
 
-    def __init__(self):
+    def __init__(self, p='SuporteTI_SuporteTI'):
         self._print_started = False
         self.lp()
-        self.printer()
+        self.printer(p)
 
     def __del__(self):
         if self._print_started:
@@ -75,7 +75,7 @@ class TermalPrint:
     def lp(self, lp='/usr/bin/lp'):
         self._lp = copy.copy(lp)
 
-    def printer(self, p='SuporteTI_SuporteTI'):
+    def printer(self, p):
         self._p = copy.copy(p)
 
     def template(self, t, limpa):
@@ -94,7 +94,7 @@ class TermalPrint:
         commands = self._template.render(self._context)
         return commands.encode('utf-8')
 
-    def printer_init(self):
+    def printer_start(self):
         self._lpr = Popen([self._lp, "-d{}".format(self._p), "-"], stdin=PIPE)
         self._print_started = True
 
@@ -106,7 +106,7 @@ class TermalPrint:
         self._lpr.stdin.write(self.render())
 
     def printer_send1(self):
-        self.printer_init()
+        self.printer_start()
         try:
             self.printer_send()
         finally:

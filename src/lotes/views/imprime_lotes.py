@@ -7,6 +7,7 @@ from django.db import connections
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template import Template, Context
+from django.forms.models import model_to_dict
 
 from fo2 import settings
 from utils.classes import TermalPrint
@@ -23,7 +24,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
 
     def mount_context_and_print(self, cursor, op, tam, cor, order,
                                 oc_ininial, oc_final,
-                                pula, qtd_lotes, print):
+                                pula, qtd_lotes, do_print):
         context = {}
 
         oc_ininial_val = oc_ininial or 0
@@ -58,13 +59,28 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 'data': data,
             })
 
-            if print:
-                impressao = models.ModeloTermica.objects.get(
-                    codigo='CARTELA DE LOTE')
+            impresso = models.Impresso.objects.get(
+                nome='Cartela de Lote')
+            if impresso is None:
+                context.update({
+                    'msg_erro': 'Impresso não cadastrado',
+                })
+                do_print = False
 
-                teg = TermalPrint()
-                teg.template(impressao.modelo, '\r\n')
-                teg.printer_init()
+            if do_print:
+                usuario_impresso = models.UsuarioImpresso.objects.get(
+                    usuario=self.request.user, impresso=impresso)
+                pprint(model_to_dict(usuario_impresso))
+                if usuario_impresso is None:
+                    context.update({
+                        'msg_erro': 'Impresso não cadastrado para o usuário',
+                    })
+                    do_print = False
+
+            if do_print:
+                teg = TermalPrint(usuario_impresso.impressora_termica.nome)
+                teg.template(usuario_impresso.modelo.modelo, '\r\n')
+                teg.printer_start()
                 try:
                     for row in data:
                         row['op'] = '{:09}'.format(row['OP'])
@@ -100,6 +116,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
