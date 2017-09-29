@@ -2,7 +2,14 @@ from django.contrib import admin
 
 from fo2 import settings
 from fo2.admin import intr_adm_site
-from .models import ImpressoraTermica, ModeloTermica
+from .models import Impresso, ImpressoraTermica, ModeloTermica
+
+
+class ImpressoAdmin(admin.ModelAdmin):
+    list_display = ['nome']
+    search_fields = ['nome']
+    ordering = ['nome']
+    fields = ['nome']
 
 
 class ImpressoraTermicaAdmin(admin.ModelAdmin):
@@ -23,5 +30,6 @@ class ModeloTermicaAdmin(admin.ModelAdmin):
         js = [static_url+'/admin/lotes/modeloTermica.js', ]
 
 
+intr_adm_site.register(Impresso, ImpressoAdmin)
 intr_adm_site.register(ImpressoraTermica, ImpressoraTermicaAdmin)
 intr_adm_site.register(ModeloTermica, ModeloTermicaAdmin)
