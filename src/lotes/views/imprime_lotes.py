@@ -38,6 +38,11 @@ class ImprimeLotes(LoginRequiredMixin, View):
             context.update({
                 'msg_erro': 'Nehum lote selecionado',
             })
+        elif data[0]['OP_SITUACAO'] == 9:
+            context.update({
+                'msg_erro': 'OP cancelada!',
+            })
+            data = []
         else:
             context.update({
                 'op': op,
