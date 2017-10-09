@@ -3,6 +3,7 @@ from django.db import connections
 from django.views import View
 
 from .forms import RefForm
+from utils.forms import FiltroForm
 import insumo.models as models
 
 
@@ -130,5 +131,54 @@ class Ref(View):
             item = form.cleaned_data['item']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, item))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class ListaInsumo(View):
+    Form_class = FiltroForm
+    template_name = 'insumo/lista_insumo.html'
+    title_name = 'Listagem de insumos'
+
+    def mount_context(self, cursor, busca):
+        context = {'busca': busca}
+
+        # Informações básicas
+        data = models.lista_insumo(cursor, busca)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhum insumo selecionado',
+            })
+        else:
+            link = ('REF')
+            for row in data:
+                row['LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            context.update({
+                'headers': ('#', 'Nível', 'Referência', 'Descrição'),
+                'fields': ('NUM', 'NIVEL', 'REF', 'DESCR'),
+                'data': data,
+                'link': link,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'busca' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'busca' in kwargs:
+            form.data['busca'] = kwargs['busca']
+        if form.is_valid():
+            busca = form.cleaned_data['busca']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, busca))
         context['form'] = form
         return render(request, self.template_name, context)

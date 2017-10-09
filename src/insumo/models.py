@@ -131,3 +131,35 @@ def ref_usado_em(cursor, nivel, ref):
     sql = sql.format(nivel, ref)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def lista_insumo(cursor, busca):
+    # lista insumos
+    filtro = ''
+    for palavra in busca.split(' '):
+        filtro += """
+              AND (  r.REFERENCIA LIKE '%{}%'
+                  OR r.DESCR_REFERENCIA LIKE '%{}%'
+                  )
+        """.format(palavra, palavra)
+    sql = """
+        SELECT
+          rownum NUM
+        , rr.NIVEL
+        , rr.REF
+        , rr.DESCR
+        FROM (
+        SELECT
+          r.NIVEL_ESTRUTURA NIVEL
+        , r.REFERENCIA REF
+        , r.DESCR_REFERENCIA DESCR
+        FROM BASI_030 r
+        WHERE r.NIVEL_ESTRUTURA in (2, 9)
+          {}
+        ORDER BY
+          r.NIVEL_ESTRUTURA
+        , NLSSORT(r.REFERENCIA,'NLS_SORT=BINARY_AI')
+        ) rr
+    """.format(filtro)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
