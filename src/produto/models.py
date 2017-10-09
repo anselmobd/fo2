@@ -197,14 +197,15 @@ def ref_inform(cursor, ref):
                         AS INTEGER ) AS VARCHAR2(5) )
           ELSE
             ( SELECT
+                MAX(
                   CASE WHEN ec.GRUPO_ITEM IS NULL THEN ' '
                   ELSE CAST( CAST( regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
                                    AS INTEGER ) AS VARCHAR2(5) )
                   END
+                )
                 FROM BASI_050 ec
                 WHERE ec.NIVEL_COMP = r.NIVEL_ESTRUTURA
                   AND ec.GRUPO_COMP = r.REFERENCIA
-                  AND rownum = 1
             )
           END
           , ' ' ) MODELO
