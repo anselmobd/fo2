@@ -288,21 +288,19 @@ class Ref(View):
                 'data2': data,
             })
 
-            pa_data = {}
-            if data[0]['TIPO'] == 'MD':
-                # PAs
-                pa_data = models.ref_pas_de_md(cursor, ref)
-                pa_link = ('REF')
-                for row in pa_data:
-                    if row['REF'] != ' ':
-                        row['LINK'] = '/produto/ref/{}'.format(row['REF'])
-                if len(pa_data) != 0:
-                    context.update({
-                        'pa_headers': ('Tipo', 'Referência'),
-                        'pa_fields': ('TIPO', 'REF'),
-                        'pa_data': pa_data,
-                        'pa_link': pa_link,
-                    })
+            # PAs
+            pa_data = models.ref_utilizada_em(cursor, ref)
+            pa_link = ('REF')
+            for row in pa_data:
+                if row['REF'] != ' ':
+                    row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+            if len(pa_data) != 0:
+                context.update({
+                    'pa_headers': ('Tipo', 'Referência', 'Alternativa'),
+                    'pa_fields': ('TIPO', 'REF', 'ALTERNATIVA'),
+                    'pa_data': pa_data,
+                    'pa_link': pa_link,
+                })
 
             # Cores
             c_data = models.ref_cores(cursor, ref)
