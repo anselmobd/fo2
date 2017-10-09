@@ -231,6 +231,24 @@ def ref_inform(cursor, ref):
     return rows_to_dict_list(cursor)
 
 
+def ref_pas_de_md(cursor, ref):
+    # Totais por OP
+    sql = """
+        SELECT
+          ec.GRUPO_ITEM REF
+        , CASE WHEN ec.GRUPO_ITEM <= '99999' THEN 'PA'
+          WHEN ec.GRUPO_ITEM < 'C0000' THEN 'PG'
+          WHEN ec.GRUPO_ITEM < 'Z0000' THEN 'MD'
+          ELSE 'MP'
+          END TIPO
+        FROM BASI_050 ec
+        WHERE ec.NIVEL_COMP = 1
+          AND ec.GRUPO_COMP = %s
+    """
+    cursor.execute(sql, [ref])
+    return rows_to_dict_list(cursor)
+
+
 def ref_cores(cursor, ref):
     return prod_cores(cursor, 1, ref)
 

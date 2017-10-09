@@ -263,11 +263,14 @@ class Ref(View):
                     data[0]['MODELO'], data[0]['MODELO'])
             if data[0]['MODELO'] != ' ':
                 context.update({'modelo': modelo_link})
+            context.update({
+                'tipo': data[0]['TIPO'],
+            })
 
             context.update({
-                'headers': ('Tipo', 'Descrição', 'Conta de estoque',
+                'headers': ('Descrição', 'Conta de estoque',
                             'Artigo', 'Linha', 'Coleção'),
-                'fields': ('TIPO', 'DESCR', 'CONTA_ESTOQUE',
+                'fields': ('DESCR', 'CONTA_ESTOQUE',
                            'ARTIGO', 'LINHA', 'COLECAO'),
                 'data': data,
             })
@@ -284,6 +287,22 @@ class Ref(View):
                 'fields2': ('COLECAO_CLIENTE', 'CLIENTE', 'NCM', 'STATUS'),
                 'data2': data,
             })
+
+            pa_data = {}
+            if data[0]['TIPO'] == 'MD':
+                # PAs
+                pa_data = models.ref_pas_de_md(cursor, ref)
+                pa_link = ('REF')
+                for row in pa_data:
+                    if row['REF'] != ' ':
+                        row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+                if len(pa_data) != 0:
+                    context.update({
+                        'pa_headers': ('Tipo', 'Referência'),
+                        'pa_fields': ('TIPO', 'REF'),
+                        'pa_data': pa_data,
+                        'pa_link': pa_link,
+                    })
 
             # Cores
             c_data = models.ref_cores(cursor, ref)
