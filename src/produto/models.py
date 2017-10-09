@@ -428,3 +428,44 @@ def modelo_inform(cursor, modelo):
     sql = sql.format(modelo, modelo, modelo, modelo, modelo, modelo)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def lista_produto(cursor, busca):
+    # Tamanhos de produto
+    filtro = ''
+    for palavra in busca.split(' '):
+        filtro += """
+              AND (  r.REFERENCIA LIKE '%{}%'
+                  OR r.DESCR_REFERENCIA LIKE '%{}%'
+                  OR r.RESPONSAVEL LIKE '%{}%'
+                  )
+        """.format(palavra, palavra, palavra)
+    sql = """
+        SELECT
+          rownum NUM
+        , rr.NIVEL
+        , rr.REF
+        , rr.TIPO
+        , rr.DESCR
+        , rr.RESP
+        FROM (
+        SELECT
+          r.NIVEL_ESTRUTURA NIVEL
+        , r.REFERENCIA REF
+        , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
+          WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
+          WHEN r.REFERENCIA like 'Z%' THEN 'MP'
+          ELSE 'MD'
+          END TIPO
+        , r.DESCR_REFERENCIA DESCR
+        , r.RESPONSAVEL RESP
+        FROM BASI_030 r
+        WHERE r.NIVEL_ESTRUTURA = 1
+          AND r.RESPONSAVEL IS NOT NULL
+          {}
+        ORDER BY
+          NLSSORT(r.REFERENCIA,'NLS_SORT=BINARY_AI')
+        ) rr
+    """.format(filtro)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
