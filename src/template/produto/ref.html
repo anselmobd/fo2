@@ -16,7 +16,7 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if ref %}
-  <h2>Referência: {{ ref }}</h2>
+  <h2>Referência: {{ ref }} &nbsp; Tipo: {{ tipo }}</h3>
 {% endif %}
 {% if modelo %}
   <h3>Modelo: {{ modelo|safe }}</h3>
@@ -25,6 +25,7 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+  <h3>Informações básicas</h3>
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
@@ -60,6 +61,18 @@
   </table>
   <table>
     <tr>
+      {% if pa_data %}
+      <td>
+        <h3>Utilizado em</h3>
+        <table>
+          {% include "layout/html_thead.html" with data=pa_headers only %}
+          {% include "layout/html_tbody_link.html" with fields=pa_fields data=pa_data link=pa_link only %}
+        </table>
+      </td>
+      <td>
+        &nbsp;
+      </td>
+      {% endif %}
       <td>
         <h3>Estruturas</h3>
         {% if e_data %}
