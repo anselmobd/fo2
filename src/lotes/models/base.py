@@ -18,6 +18,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         WITH Table_qtd_lotes AS (
         SELECT
           l.ORDEM_PRODUCAO OP
+        , op.SITUACAO OP_SITUACAO
         , CASE WHEN dos.NUMERO_ORDEM IS NULL
           THEN '0'
           ELSE l.NUMERO_ORDEM || ' (' || eos.DESCRICAO || ')'
@@ -56,7 +57,9 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           , os.ORDEM_PRODUCAO
           , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
           , max( os.QTDE_PECAS_PROG ) QTDE_PECAS_PROG
-          , max( os.CODIGO_FAMILIA ) DIVISAO
+          , max( CASE WHEN os.CODIGO_FAMILIA < 1000
+                 THEN os.CODIGO_FAMILIA
+                 ELSE 0 END ) DIVISAO
           FROM PCPC_040 os
           WHERE 1=1
             AND (os.ORDEM_PRODUCAO = %s or %s IS NULL)
@@ -96,6 +99,8 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           ON dp.FACCIONISTA9 = osc.CGCTERC_FORNE9
          AND dp.FACCIONISTA4 = osc.CGCTERC_FORNE4
          AND dp.FACCIONISTA2 = osc.CGCTERC_FORNE2
+        JOIN PCPC_020 op -- OP capa
+          ON op.ordem_producao = l.ORDEM_PRODUCAO
     '''
     if order == 'o':
         sql = sql + '''
