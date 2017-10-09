@@ -12,6 +12,11 @@ urlpatterns = [
     url(r'^modelo/(?P<modelo>.+)/$', views.Modelo.as_view(),
         name='modelo_modelo'),
 
+    url(r'^lista_produto/$', views.ListaProduto.as_view(),
+        name='lista_produto'),
+    url(r'^lista_produto/(?P<busca>.+)/$', views.ListaProduto.as_view(),
+        name='lista_produto_busca'),
+
     url(r'^estatistica/$', views.estatistica, name='estatistica'),
     url(r'^lista_item_n1_sem_preco_medio/$',
         views.lista_item_n1_sem_preco_medio,

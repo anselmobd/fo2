@@ -9,7 +9,7 @@ from django.template.defaulttags import register
 
 from fo2.models import rows_to_dict_list
 
-from .forms import RefForm, ModeloForm
+from .forms import RefForm, ModeloForm, ListaProdutoForm
 import produto.models as models
 
 
@@ -462,5 +462,56 @@ class Modelo(View):
             modelo = form.cleaned_data['modelo']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, modelo))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class ListaProduto(View):
+    Form_class = ListaProdutoForm
+    template_name = 'produto/lista_produto.html'
+    title_name = 'Listagem de produtos'
+
+    def mount_context(self, cursor, busca):
+        context = {'busca': busca}
+
+        # Informações básicas
+        data = models.lista_produto(cursor, busca)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhum produto selecionado',
+            })
+        else:
+            link = ('REF')
+            for row in data:
+                row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+            context.update({
+                'headers': ('#', 'Tipo', 'Referência', 'Descrição',
+                            'Status (Responsável)'),
+                'fields': ('NUM', 'TIPO', 'REF', 'DESCR',
+                           'RESP'),
+                'data': data,
+                'link': link,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'busca' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'busca' in kwargs:
+            form.data['busca'] = kwargs['busca']
+        if form.is_valid():
+            busca = form.cleaned_data['busca']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, busca))
         context['form'] = form
         return render(request, self.template_name, context)
