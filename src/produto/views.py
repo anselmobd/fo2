@@ -9,7 +9,8 @@ from django.template.defaulttags import register
 
 from fo2.models import rows_to_dict_list
 
-from .forms import RefForm, ModeloForm, ListaProdutoForm
+from .forms import RefForm, ModeloForm
+from utils.forms import FiltroForm
 import produto.models as models
 
 
@@ -465,7 +466,7 @@ class Modelo(View):
 
 
 class ListaProduto(View):
-    Form_class = ListaProdutoForm
+    Form_class = FiltroForm
     template_name = 'produto/lista_produto.html'
     title_name = 'Listagem de produtos'
 
