@@ -305,6 +305,7 @@ class Ref(View):
 
             # Cores
             c_data = models.ref_cores(cursor, ref)
+            cores = ', '.join([data['COR'] for data in c_data])
             if len(c_data) != 0:
                 context.update({
                     'c_headers': ('Cor', 'Descrição'),
@@ -353,7 +354,12 @@ class Ref(View):
                     estrutura = models.ref_estrutura_comp(
                         cursor, ref, row['ALTERNATIVA'])
                     e_link = ('REF')
+                    dif_000000 = 0
                     for e_row in estrutura:
+                        if e_row['COR_REF'] == cores:
+                            e_row['COR_REF'] = '000000'
+                        if e_row['COR_REF'] != '000000':
+                            dif_000000 += 1
                         if e_row['NIVEL'] == '1':
                             e_row['LINK'] = '/produto/ref/{}'.format(
                                 e_row['REF'])
@@ -363,15 +369,18 @@ class Ref(View):
                     estruts.append({
                         'alt': '{}-{}'.format(
                             row['ALTERNATIVA'], row['DESCR']),
-                        'e_headers': ('Sequência', 'Nível', 'Referência',
+                        'e_headers': ['Sequência', 'Nível', 'Referência',
                                       'Descrição', 'Tamanho', 'Cor',
-                                      'Alternativa', 'Consumo', 'Estágio'),
-                        'e_fields': ('SEQUENCIA', 'NIVEL', 'REF',
+                                      'Alternativa', 'Consumo', 'Estágio'],
+                        'e_fields': ['SEQUENCIA', 'NIVEL', 'REF',
                                      'DESCR', 'TAM', 'COR',
-                                     'ALTERN', 'CONSUMO', 'ESTAGIO'),
+                                     'ALTERN', 'CONSUMO', 'ESTAGIO'],
                         'e_data': estrutura,
                         'e_link': e_link,
                     })
+                    if dif_000000 != 0:
+                        estruts[-1]['e_headers'].insert(0, 'Cor Referência')
+                        estruts[-1]['e_fields'].insert(0, 'COR_REF')
             context.update({
                 'estruts': estruts,
             })
