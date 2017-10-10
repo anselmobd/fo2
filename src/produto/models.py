@@ -267,6 +267,8 @@ def prod_cores(cursor, nivel, grupo):
         FROM basi_010 c
         WHERE c.NIVEL_ESTRUTURA = %s
           AND c.GRUPO_ESTRUTURA = %s
+        ORDER BY
+          c.ITEM_ESTRUTURA
     """
     cursor.execute(sql, [nivel, grupo])
     return rows_to_dict_list(cursor)
@@ -358,7 +360,7 @@ def ref_estruturas(cursor, ref):
 def ref_estrutura_comp(cursor, ref, alt):
     # Detalhando Estruturas
     sql = """
-        SELECT
+        SELECT DISTINCT
           e.SEQUENCIA
         , e.NIVEL_COMP NIVEL
         , e.GRUPO_COMP REF
@@ -368,6 +370,20 @@ def ref_estrutura_comp(cursor, ref, alt):
         , e.ALTERNATIVA_COMP ALTERN
         , e.CONSUMO
         , e.ESTAGIO || '-' || es.DESCRICAO ESTAGIO
+        , (
+          SELECT
+            LISTAGG(ee.ITEM_ITEM, ', ')
+              WITHIN GROUP (ORDER BY ee.ITEM_ITEM)
+          FROM BASI_050 ee
+          WHERE ee.SEQUENCIA = e.SEQUENCIA
+            AND ee.NIVEL_ITEM = e.NIVEL_ITEM
+            AND ee.GRUPO_ITEM = e.GRUPO_ITEM
+            AND ee.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
+            AND ee.NIVEL_COMP = e.NIVEL_COMP
+            AND ee.GRUPO_COMP = e.GRUPO_COMP
+            AND ee.SUB_COMP = e.SUB_COMP
+            AND ee.ITEM_COMP = e.ITEM_COMP
+          ) COR_REF
         FROM BASI_050 e
         LEFT JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = e.NIVEL_COMP
