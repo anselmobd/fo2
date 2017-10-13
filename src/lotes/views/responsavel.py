@@ -22,7 +22,7 @@ def respons(request):
                   e.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
                 , CASE WHEN u.USUARIO IS NULL
                   THEN '--SEM RESPONSAVEL--'
-                  ELSE u.USUARIO || ' (' || u.CODIGO_USUARIO || ')'
+                  ELSE u.USUARIO || ' ( ' || u.CODIGO_USUARIO || ' )'
                   END USUARIO
                 FROM MQOP_005 e
                 LEFT JOIN MQOP_006 r
