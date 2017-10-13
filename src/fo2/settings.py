@@ -34,8 +34,10 @@ with open(os.path.join(ROOT_DIR, 'etc/secret_key.txt')) as f:
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'intranet', 'intranet.tussor', '192.168.1.96',  # production
-    '192.168.1.247', 'localhost'  # development
+    # production
+    'intranet', 'intranet.tussor', 'in.cuecasduomo.com.br', '192.168.1.96',
+    # development
+    '192.168.1.247', 'localhost'
 ]
 
 
