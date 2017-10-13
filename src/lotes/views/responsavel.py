@@ -50,7 +50,7 @@ def respons(request):
             if len(data) != 0:
                 if ordem == 'e':
                     context.update({
-                        'headers': ('Estágio', 'Usuário'),
+                        'headers': ('Estágio', 'Usuário Systêxtil ( matrícula )'),
                         'fields': ('ESTAGIO', 'USUARIO'),
                         'data': data,
                     })
