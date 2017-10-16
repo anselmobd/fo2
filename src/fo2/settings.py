@@ -35,7 +35,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     # production
-    'intranet', 'intranet.tussor', 'in.cuecasduomo.com.br', '192.168.1.96',
+    'intranet', 'intranet.tussor', 'intranet.tussor.com.br', '192.168.1.96',
     # development
     '192.168.1.247', 'localhost'
 ]
