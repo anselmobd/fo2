@@ -140,3 +140,24 @@ class OpPendenteForm(forms.Form):
         label='Estágio', max_length=2, required=False,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+    periodo_de = forms.CharField(
+        label='Período: De', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    periodo_ate = forms.CharField(
+        label='Até', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    def clean_periodo(self, periodo, default):
+        try:
+            i_periodo = int(float(periodo))
+            if i_periodo < 0:
+                periodo = default
+        except ValueError:
+            periodo = default
+        return periodo
+
+    def clean_periodo_de(self):
+        return self.clean_periodo(self.cleaned_data['periodo_de'], 0)
+
+    def clean_periodo_ate(self):
+        return self.clean_periodo(self.cleaned_data['periodo_ate'], 9999)

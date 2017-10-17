@@ -13,18 +13,25 @@ class OpPendente(View):
     template_name = 'lotes/op_pendente.html'
     title_name = 'Ordens pendentes por estágio'
 
-    def mount_context(self, cursor, estagio):
-        # A ser produzido
+    def mount_context(self, cursor, estagio, periodo_de, periodo_ate):
+        data = models.op_pendente(cursor, estagio, periodo_de, periodo_ate)
         context = {}
-        context.update({
-            'estagio': estagio,
-        })
-        data = models.op_pendente(cursor, estagio)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem pendências',
             })
         else:
+            context.update({
+                'estagio': estagio,
+            })
+            if periodo_de != 0:
+                context.update({
+                    'periodo_de': periodo_de,
+                })
+            if periodo_ate != 9999:
+                context.update({
+                    'periodo_ate': periodo_ate,
+                })
             link = ('OP')
             for row in data:
                 row['LINK'] = '/lotes/op/{}'.format(row['OP'])
@@ -58,7 +65,10 @@ class OpPendente(View):
             form.data['estagio'] = kwargs['estagio']
         if form.is_valid():
             estagio = form.cleaned_data['estagio']
+            periodo_de = form.cleaned_data['periodo_de']
+            periodo_ate = form.cleaned_data['periodo_ate']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, estagio))
+            context.update(
+                self.mount_context(cursor, estagio, periodo_de, periodo_ate))
         context['form'] = form
         return render(request, self.template_name, context)
