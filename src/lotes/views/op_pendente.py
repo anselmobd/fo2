@@ -37,15 +37,16 @@ class OpPendente(View):
                 row['LINK'] = '/lotes/op/{}'.format(row['OP'])
                 row['DATA_INI'] = row['DATA_INI'].date()
                 row['DATA_FIM'] = row['DATA_FIM'].date()
+                row['DT_CORTE'] = row['DT_CORTE'].date()
             context.update({
                 'headers': (
                     'Estágio', 'Período',
                     'Data início', 'Data final',
-                    'Referência', 'OP', 'Quantidade de peças',
-                    'Quantidade de lotes'),
+                    'Referência', 'OP', 'Data de corte',
+                    'Quantidade de peças', 'Quantidade de lotes'),
                 'fields': (
                     'ESTAGIO', 'PERIODO', 'DATA_INI', 'DATA_FIM',
-                    'REF', 'OP', 'QTD', 'LOTES'),
+                    'REF', 'OP', 'DT_CORTE', 'QTD', 'LOTES'),
                 'data': data,
                 'link': link,
             })
