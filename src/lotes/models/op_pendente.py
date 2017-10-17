@@ -17,7 +17,10 @@ def op_pendente(cursor, estagio):
         FROM MQOP_005 e
         JOIN PCPC_040 l
           ON l.CODIGO_ESTAGIO = e.CODIGO_ESTAGIO
+        JOIN PCPC_020 o
+          ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.QTDE_EM_PRODUCAO_PACOTE <> 0
+          AND o.SITUACAO = 4 -- Ordens em produção
           AND ( %s is NULL or e.CODIGO_ESTAGIO = %s )
         GROUP BY
           e.CODIGO_ESTAGIO
