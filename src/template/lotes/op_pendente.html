@@ -15,8 +15,17 @@
     <input type="submit" value="Busca"/>
     {% csrf_token %}
 </form>
+{% if estagio or periodo_de or periodo_ate%}
+  <h3>Filtro</h3>
+{% endif %}
 {% if estagio %}
-  <h3>Filtro: Estagio {{ estagio }}</h3>
+  <h4>Estagio: {{ estagio }}</h4>
+{% endif %}
+{% if periodo_de %}
+  <h4>Período: De: {{ periodo_de }}</h4>
+{% endif %}
+{% if periodo_ate %}
+  <h4>Período: Até: {{ periodo_ate }}</h4>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
