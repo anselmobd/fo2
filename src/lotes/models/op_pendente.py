@@ -14,6 +14,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate):
         , p.DATA_FIM_PERIODO DATA_FIM
         , l.PROCONF_GRUPO REF
         , l.ORDEM_PRODUCAO OP
+        , o.DATA_ENTRADA_CORTE DT_CORTE
         , SUM( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD) QTD
         , COUNT(*) LOTES
         FROM MQOP_005 e
@@ -37,6 +38,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate):
         , p.DATA_FIM_PERIODO
         , l.PROCONF_GRUPO
         , l.ORDEM_PRODUCAO
+        , o.DATA_ENTRADA_CORTE
         ORDER BY
           e.CODIGO_ESTAGIO
         , l.PERIODO_PRODUCAO
