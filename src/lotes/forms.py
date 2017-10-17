@@ -133,3 +133,10 @@ class ImprimeLotesForm(forms.Form):
         data['cor'] = cor
         self.data = data
         return cor
+
+
+class OpPendenteForm(forms.Form):
+    estagio = forms.CharField(
+        label='Estágio', max_length=2, required=False,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
