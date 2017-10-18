@@ -37,7 +37,10 @@ class OpPendente(View):
                 row['LINK'] = '/lotes/op/{}'.format(row['OP'])
                 row['DATA_INI'] = row['DATA_INI'].date()
                 row['DATA_FIM'] = row['DATA_FIM'].date()
-                row['DT_CORTE'] = row['DT_CORTE'].date()
+                if row['DT_CORTE'] is None:
+                    row['DT_CORTE'] = ' '
+                else:
+                    row['DT_CORTE'] = row['DT_CORTE'].date()
             context.update({
                 'headers': (
                     'Estágio', 'Período',
