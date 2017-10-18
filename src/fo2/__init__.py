@@ -1,9 +1,13 @@
-__version__ = '0.1.30'
-__version__date__ = '2017/09/29'
+__version__ = '0.1.31'
+__version__date__ = '2017/10/18'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.31 - 2017/10/18
+#   . Ordens pendentes por estágio
+#   . Melhorias em várias telas
 #
 # - 0.1.30 - 2017/09/29
 #   . Primeira rotina de impressão térmica
