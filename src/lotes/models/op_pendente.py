@@ -8,12 +8,41 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate):
     # Ordens pendentes por estágio
     sql = """
         SELECT
-          e.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+          pend.*
+        , (
+          SELECT
+            COUNT(*)
+          FROM PCPC_040 ll -- lotes
+          WHERE ll.ORDEM_PRODUCAO = pend.OP
+            AND ll.SEQ_OPERACAO < pend.SEQ
+            AND ll.QTDE_EM_PRODUCAO_PACOTE <> 0
+          ) LOTES_ANTES
+        , (
+          SELECT
+            COUNT(*)
+          FROM PCPC_040 ll -- lotes
+          WHERE ll.ORDEM_PRODUCAO = pend.OP
+            AND ll.CODIGO_ESTAGIO = pend.CODIGO_ESTAGIO
+          ) QTD_LOTES
+        , (
+          SELECT
+            COUNT(*)
+          FROM PCPC_040 ll -- lotes
+          WHERE ll.ORDEM_PRODUCAO = pend.OP
+            AND ll.SEQ_OPERACAO > pend.SEQ
+            AND ll.QTDE_EM_PRODUCAO_PACOTE <> 0
+          ) LOTES_DEPOIS
+        FROM
+        (
+        SELECT
+          e.CODIGO_ESTAGIO
+        , e.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
         , l.PERIODO_PRODUCAO PERIODO
         , p.DATA_INI_PERIODO DATA_INI
         , p.DATA_FIM_PERIODO DATA_FIM
         , l.PROCONF_GRUPO REF
         , l.ORDEM_PRODUCAO OP
+        , l.SEQ_OPERACAO SEQ
         , o.DATA_ENTRADA_CORTE DT_CORTE
         , SUM( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD) QTD
         , COUNT(*) LOTES
@@ -38,12 +67,14 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate):
         , p.DATA_FIM_PERIODO
         , l.PROCONF_GRUPO
         , l.ORDEM_PRODUCAO
+        , l.SEQ_OPERACAO
         , o.DATA_ENTRADA_CORTE
         ORDER BY
           e.CODIGO_ESTAGIO
         , l.PERIODO_PRODUCAO
         , l.PROCONF_GRUPO
         , l.ORDEM_PRODUCAO
+        ) pend
     """
     cursor.execute(sql, (estagio, estagio, periodo_de, periodo_ate))
     return rows_to_dict_list(cursor)
