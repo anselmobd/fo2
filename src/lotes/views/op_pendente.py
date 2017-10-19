@@ -41,15 +41,35 @@ class OpPendente(View):
                     row['DT_CORTE'] = ' '
                 else:
                     row['DT_CORTE'] = row['DT_CORTE'].date()
+
+                total = \
+                    row['LOTES_ANTES'] + \
+                    row['LOTES'] + \
+                    row['LOTES_DEPOIS']
+                row['PERC_ANTES'] = round(
+                    row['LOTES_ANTES'] / row['QTD_LOTES'] * 100, 2)
+                row['PERC_LOTES'] = round(
+                    row['LOTES'] / row['QTD_LOTES'] * 100, 2)
+                row['PERC_DEPOIS'] = round(
+                    row['LOTES_DEPOIS'] / row['QTD_LOTES'] * 100, 2)
+                row['PERC_FINALIZADO'] = round(
+                    100 - row['PERC_ANTES'] - row['PERC_LOTES'] -
+                    row['PERC_DEPOIS'], 2)
+                row['PERC_FINALIZADO'] = abs(row['PERC_FINALIZADO'])
+
             context.update({
                 'headers': (
                     'Estágio', 'Período',
                     'Data início', 'Data final',
                     'Referência', 'OP', 'Data de corte',
-                    'Quantidade de peças', 'Quantidade de lotes'),
+                    'Quant. peças', 'Quant. lotes',
+                    'Total de lotes',
+                    '% Antes', '% No estágio', '% Depois', '% Finalizado'),
                 'fields': (
                     'ESTAGIO', 'PERIODO', 'DATA_INI', 'DATA_FIM',
-                    'REF', 'OP', 'DT_CORTE', 'QTD', 'LOTES'),
+                    'REF', 'OP', 'DT_CORTE', 'QTD', 'LOTES', 'QTD_LOTES',
+                    'PERC_ANTES', 'PERC_LOTES', 'PERC_DEPOIS',
+                    'PERC_FINALIZADO'),
                 'data': data,
                 'link': link,
             })
