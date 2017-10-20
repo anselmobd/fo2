@@ -7,6 +7,10 @@ class IndexView(TemplateView):
     template_name = "index.html"
 
 
+class InfoView(TemplateView):
+    template_name = "info.html"
+
+
 def logout_view(request):
     logout(request)
     return redirect('/')
