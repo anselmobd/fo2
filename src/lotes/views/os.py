@@ -67,12 +67,18 @@ class Os(View):
         i_link = ('REF')
         for row in i_data:
             row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+            if row['NF_RETORNO'] is None:
+                row['NF_RETORNO'] = ''
+            if row['QTD_RETORNO'] is None:
+                row['QTD_RETORNO'] = ''
         context.update({
             'i_headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Narrativa',
                           'Unidade', 'Valor unitário', 'Qtd.Estrutura',
-                          'Qtd.Enviada', 'NF'),
+                          'Qtd.Enviada', 'NF de saída',
+                          'NF de retorno', 'Qtd.Retorno'),
             'i_fields': ('NIVEL', 'REF', 'COR', 'TAM', 'NARRATIVA',
-                         'UN', 'VALOR_UN', 'QTD_ESTR', 'QTD_ENV', 'NF'),
+                         'UN', 'VALOR_UN', 'QTD_ESTR', 'QTD_ENV', 'NF',
+                         'NF_RETORNO', 'QTD_RETORNO'),
             'i_data': i_data,
             'i_link': i_link,
         })
