@@ -107,6 +107,8 @@ def os_itens(cursor, os):
         , s.QTDE_ESTRUTURA QTD_ESTR
         , s.QTDE_ENVIADA QTD_ENV
         , s.NUM_NF_SAI NF
+        , ie.CAPA_ENT_NRDOC NF_RETORNO
+        , ie.QUANTIDADE QTD_RETORNO
         FROM OBRF_082 s
         JOIN BASI_010 i
           ON i.NIVEL_ESTRUTURA = s.PRODSAI_NIVEL99
@@ -118,6 +120,12 @@ def os_itens(cursor, os):
          AND r.REFERENCIA = s.PRODSAI_GRUPO
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = s.PRODSAI_SUBGRUPO
+        LEFT JOIN OBRF_015 ie
+          ON ie.NUM_NOTA_ORIG = s.NUM_NF_SAI
+         AND ie.CODITEM_NIVEL99 = s.PRODSAI_NIVEL99
+         AND ie.CODITEM_GRUPO = s.PRODSAI_GRUPO
+         AND ie.CODITEM_SUBGRUPO = s.PRODSAI_SUBGRUPO
+         AND ie.CODITEM_ITEM = s.PRODSAI_ITEM
         WHERE s.NUMERO_ORDEM = %s
         ORDER BY
           s.PRODSAI_NIVEL99
