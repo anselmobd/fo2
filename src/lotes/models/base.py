@@ -17,7 +17,19 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
     sql = '''
         WITH Table_qtd_lotes AS (
         SELECT
-          l.ORDEM_PRODUCAO OP
+          COALESCE(
+          ( SELECT
+              MIN( le.CODIGO_ESTAGIO ) CODIGO_ESTAGIO
+            FROM PCPC_040 le
+            JOIN MQOP_005 ed
+              ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
+            WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+              AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+              AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+          )
+          , 9999
+          ) EST_NUM
+        , l.ORDEM_PRODUCAO OP
         , op.SITUACAO OP_SITUACAO
         , CASE WHEN dos.NUMERO_ORDEM IS NULL
           THEN '0'
@@ -102,12 +114,12 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         JOIN PCPC_020 op -- OP capa
           ON op.ordem_producao = l.ORDEM_PRODUCAO
     '''
-    if order == 'o':
+    if order == 'o':  # OC
         sql = sql + '''
             ORDER BY
               l.ORDEM_CONFECCAO
         '''
-    elif order == 't':
+    elif order == 't':  # OS + referência + tamanho + cor + OC
         sql = sql + '''
             ORDER BY
               l.ORDEM_PRODUCAO
@@ -118,7 +130,19 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
             , l.PERIODO_PRODUCAO
             , l.ORDEM_CONFECCAO
         '''
-    else:
+    elif order == 'e':  # estágio + OS + referência + cor + tamanho + OC
+        sql = sql + '''
+            ORDER BY
+              1
+            , l.ORDEM_PRODUCAO
+            , l.NUMERO_ORDEM
+            , l.PROCONF_GRUPO
+            , l.PROCONF_ITEM
+            , t.ORDEM_TAMANHO
+            , l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO
+        '''
+    else:  # elif order == '':  # OS + referência + cor + tamanho + OC
         sql = sql + '''
             ORDER BY
               l.ORDEM_PRODUCAO
