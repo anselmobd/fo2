@@ -85,9 +85,9 @@ class Os(View):
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
                 row['LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
             context.update({
-                'l_headers': ('OP', 'Referência', 'Tamanho', 'Cor',
+                'l_headers': ('OP', 'Referência', 'Cor', 'Tamanho',
                               'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),
-                'l_fields': ('OP', 'REF', 'TAM', 'COR',
+                'l_fields': ('OP', 'REF', 'COR', 'TAM',
                              'EST', 'PERIODO', 'OC', 'QTD', 'LOTE'),
                 'l_data': l_data,
                 'l_link': l_link,

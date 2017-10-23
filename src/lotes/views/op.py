@@ -28,10 +28,10 @@ class Op(View):
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
                 row['LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
             context.update({
-                'headers': ('OS', 'Referência', 'Tamanho', 'Cor',
-                            'Estágio', 'Período', 'OC', 'Quant.', 'Lote'),
-                'fields': ('OS', 'REF', 'TAM', 'COR',
-                           'EST', 'PERIODO', 'OC', 'QTD', 'LOTE'),
+                'headers': ('Estágio', 'OS', 'Referência', 'Cor', 'Tamanho',
+                            'Período', 'OC', 'Quant.', 'Lote'),
+                'fields': ('EST', 'OS', 'REF', 'COR', 'TAM',
+                           'PERIODO', 'OC', 'QTD', 'LOTE'),
                 'data': data,
                 'link': link,
             })
