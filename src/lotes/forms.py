@@ -147,6 +147,14 @@ class OpPendenteForm(forms.Form):
         label='Até', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
+    data_de = forms.DateField(
+        label='Data do Corte/Gargalo: De', required=False,
+        widget=forms.DateInput(attrs={'type': 'date',
+                               'autofocus': 'autofocus'}))
+    data_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
     def clean_periodo(self, periodo, default):
         try:
             i_periodo = int(float(periodo))

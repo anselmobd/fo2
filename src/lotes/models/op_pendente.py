@@ -4,7 +4,7 @@ from lotes.models import *
 from lotes.models.base import *
 
 
-def op_pendente(cursor, estagio, periodo_de, periodo_ate):
+def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate):
     # Ordens pendentes por estágio
     sql = """
         SELECT
@@ -59,6 +59,8 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate):
           AND ( %s is NULL or e.CODIGO_ESTAGIO = %s )
           AND l.PERIODO_PRODUCAO >= %s
           AND l.PERIODO_PRODUCAO <= %s
+          AND ( %s is NULL or o.DATA_ENTRADA_CORTE >= %s )
+          AND ( %s is NULL or o.DATA_ENTRADA_CORTE <= %s )
         GROUP BY
           e.CODIGO_ESTAGIO
         , e.DESCRICAO
@@ -76,5 +78,6 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate):
         , l.ORDEM_PRODUCAO
         ) pend
     """
-    cursor.execute(sql, (estagio, estagio, periodo_de, periodo_ate))
+    cursor.execute(sql, (estagio, estagio, periodo_de, periodo_ate,
+                   data_de, data_de, data_ate, data_ate))
     return rows_to_dict_list(cursor)
