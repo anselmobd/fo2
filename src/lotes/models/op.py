@@ -193,7 +193,7 @@ def op_sortimento(cursor, op):
 
 def op_lotes(cursor, op):
     # Lotes ordenados por OS + referência + estágio
-    return get_lotes(cursor, op=op)
+    return get_lotes(cursor, op=op, order='e')
 
 
 def op_ref_estagio(cursor, op):
