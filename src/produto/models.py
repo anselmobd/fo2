@@ -332,6 +332,33 @@ def ref_roteiros(cursor, ref):
     return rows_to_dict_list(cursor)
 
 
+def ref_1roteiro(cursor, ref, alternativa, roteiro):
+    # Totais por OP
+    sql = """
+        SELECT
+          r.SEQ_OPERACAO SEQ
+        , r.CODIGO_OPERACAO || ' - ' || o.NOME_OPERACAO OPERACAO
+        , r.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , CASE WHEN r.IND_ESTAGIO_GARGALO = 1
+          THEN 'Gargalo'
+          ELSE ' '
+          END GARGALO
+        FROM MQOP_050 r -- roteiro
+        JOIN MQOP_005 e -- estagio
+          ON e.CODIGO_ESTAGIO = r.CODIGO_ESTAGIO
+        JOIN MQOP_040 o -- operacao
+          ON o.CODIGO_OPERACAO = r.CODIGO_OPERACAO
+        WHERE r.NIVEL_ESTRUTURA = 1
+          AND r.GRUPO_ESTRUTURA = %s
+          AND r.NUMERO_ALTERNATI = %s
+          AND r.NUMERO_ROTEIRO = %s
+        ORDER BY
+          r.SEQ_OPERACAO
+    """
+    cursor.execute(sql, [ref,  alternativa, roteiro])
+    return rows_to_dict_list(cursor)
+
+
 def ref_estruturas(cursor, ref):
     # Totais por OP
     sql = """

@@ -346,6 +346,24 @@ class Ref(View):
                     'r_data': r_data,
                 })
 
+            # Detalhando Roteiros
+            roteiros = []
+            for row in r_data:
+                roteiro = models.ref_1roteiro(
+                    cursor, ref, row['NUMERO_ALTERNATI'],
+                    row['NUMERO_ROTEIRO'])
+                roteiros.append({
+                    'alternativa': row['ALTERNATIVA'],
+                    'roteiro': row['ROTEIRO'],
+                    'r_headers': ['Sequência', 'Operação', 'Estágio',
+                                  'Gargalo'],
+                    'r_fields': ['SEQ', 'OPERACAO', 'ESTAGIO', 'GARGALO'],
+                    'r_data': roteiro,
+                })
+            context.update({
+                'roteiros': roteiros,
+            })
+
             # Detalhando Estruturas
             estruts = []
             for row in e_data:

@@ -97,10 +97,20 @@
       </td>
     </tr>
   </table>
-  {% if e_data %}
+  {% if roteiros %}
+    <h3>Detalhando Roteiros</h3>
+    {% for roteiro in roteiros %}
+    <h4>Alternativa "{{ roteiro.alternativa }}" / Roteiro "{{ roteiro.roteiro }}"</h4>
+    <table>
+      {% include "layout/html_thead.html" with data=roteiro.r_headers only %}
+      {% include "layout/html_tbody.html" with fields=roteiro.r_fields data=roteiro.r_data only %}
+    </table>
+    {% endfor %}
+  {% endif %}
+  {% if estruts %}
     <h3>Detalhando Estruturas Que Tem Roteiro</h3>
     {% for estr in estruts %}
-    <h4>{{ estr.alt }}</h4>
+    <h4>Alternativa "{{ estr.alt }}"</h4>
     <table>
       {% include "layout/html_thead.html" with data=estr.e_headers only %}
       {% include "layout/html_tbody_link.html" with fields=estr.e_fields data=estr.e_data link=e_link only %}
