@@ -2,13 +2,29 @@ from django.shortcuts import render
 from django.db import connections
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django_tables2 import RequestConfig
 
 from fo2.models import rows_to_dict_list
+
+import lotes.models as models
+from lotes.tables import ImpressoraTermicaTable
 
 
 def index(request):
     context = {}
     return render(request, 'lotes/index.html', context)
+
+
+def impressoraTermica(request):
+    table = ImpressoraTermicaTable(
+        models.ImpressoraTermica.objects.all())
+    RequestConfig(request, paginate=False).configure(
+        table)
+    return render(
+        request, 'lotes/impressora_termica.html',
+        {'impressora_termica': table,
+         'titulo': 'Impressora Térmica',
+         })
 
 
 # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
