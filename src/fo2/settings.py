@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'logistica',
     'lotes',
     'geral',
+    'produto',
 ]
 
 MIDDLEWARE = [
