@@ -15,20 +15,23 @@
     <input type="submit" value="Busca"/>
     {% csrf_token %}
 </form>
-{% if data_de %}
-  <h3>Filtro:</h3>
-  <ul>
-    <li>Apenas notas fiscais de venda e ativas (não canceladas)</li>
+<h3>Filtro:</h3>
+<ul>
+  <li>Apenas notas fiscais de venda e ativas (não canceladas)</li>
+  {% if data_de %}
     {% if data_de == data_ate %}
       <li>Data de Faturamento igual a {{ data_de }}</li>
     {% else %}
       <li>Data de Faturamento de {{ data_de }} até {{ data_ate }}</li>
     {% endif %}
-    {% if uf %}
-      <li>UF: {{ uf }}</li>
-    {% endif %}
-  </ul>
-{% endif %}
+  {% endif %}
+  {% if uf %}
+    <li>UF: {{ uf }}</li>
+  {% endif %}
+  {% if nf %}
+    <li>NF: {{ nf }}</li>
+  {% endif %}
+</ul>
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
