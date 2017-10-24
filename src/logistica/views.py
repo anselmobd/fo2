@@ -19,25 +19,32 @@ class NotafiscalRel(View):
     template_name = 'logistica/notafiscal_rel.html'
     title_name = 'Controle de data de saída de NF'
 
-    def mount_context(self, data_de, data_ate, uf):
+    def mount_context(self, form):
         # A ser produzido
         context = {}
-        if data_ate is None:
-            data_ate = data_de
-        context.update({
-            'data_de': data_de,
-            'data_ate': data_ate,
-        })
+        if form['data_ate'] is None:
+            form['data_ate'] = form['data_de']
 
-        select = NotaFiscal.objects.filter(
-            faturamento__date__gte=data_de
-            ).filter(
-            faturamento__date__lte=data_ate
-            ).filter(natu_venda=True).filter(ativa=True)
-        if uf:
-            select = select.filter(uf=uf)
+        select = NotaFiscal.objects
+        if form['data_de']:
+            select = select.filter(
+                faturamento__date__gte=form['data_de']
+                ).filter(
+                faturamento__date__lte=form['data_ate']
+                ).filter(natu_venda=True).filter(ativa=True)
             context.update({
-                'uf': uf,
+                'data_de': form['data_de'],
+                'data_ate': form['data_ate'],
+            })
+        if form['uf']:
+            select = select.filter(uf=form['uf'])
+            context.update({
+                'uf': form['uf'],
+            })
+        if form['nf']:
+            select = select.filter(numero=form['nf'])
+            context.update({
+                'nf': form['nf'],
             })
         select = select.order_by('numero')
         data = list(select.values())
@@ -88,9 +95,6 @@ class NotafiscalRel(View):
             form.data['data_de'] = data
             form.data['data_ate'] = data
         if form.is_valid():
-            data_de = form.cleaned_data['data_de']
-            data_ate = form.cleaned_data['data_ate']
-            uf = form.cleaned_data['uf']
-            context.update(self.mount_context(data_de, data_ate, uf))
+            context.update(self.mount_context(form.cleaned_data))
         context['form'] = form
         return render(request, self.template_name, context)
