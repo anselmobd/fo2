@@ -39,7 +39,7 @@ def lista_item_n1_sem_preco_medio(request):
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = ptc.SUBGRU_ESTRUTURA
         WHERE ptc.NIVEL_ESTRUTURA = 1
-          AND (  ptc.PRECO_MEDIO IN NULL
+          AND (  ptc.PRECO_MEDIO IS NULL
               OR ptc.PRECO_MEDIO = 0
               )
         ORDER BY
