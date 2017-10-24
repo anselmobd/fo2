@@ -7,8 +7,7 @@ class NotafiscalRelForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date', 'size': 10,
                                'autofocus': 'autofocus'}))
     data_ate = forms.DateField(
-        label='Até', required=False,
-        help_text='Se vazio, considerado igual a "De".',
+        label='Data do Faturamento: Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date', 'size': 10}))
 
     uf = forms.CharField(
@@ -18,6 +17,11 @@ class NotafiscalRelForm(forms.Form):
     nf = forms.CharField(
         label='Número da NF', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
+
+    cliente = forms.CharField(
+        label='Usuário', required=False,
+        help_text='Parte do nome ou início do CNPJ.',
+        widget=forms.TextInput(attrs={'type': 'string'}))
 
     def clean_uf(self):
         uf = self.cleaned_data['uf'].upper()

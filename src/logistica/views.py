@@ -2,6 +2,7 @@ import datetime
 
 from django.shortcuts import render
 from django.views import View
+from django.db.models import When, F, Q
 
 from fo2.models import rows_to_dict_list
 
@@ -22,18 +23,19 @@ class NotafiscalRel(View):
     def mount_context(self, form):
         # A ser produzido
         context = {}
-        if form['data_ate'] is None:
-            form['data_ate'] = form['data_de']
-
-        select = NotaFiscal.objects
+        select = NotaFiscal.objects.filter(natu_venda=True).filter(ativa=True)
         if form['data_de']:
             select = select.filter(
                 faturamento__date__gte=form['data_de']
-                ).filter(
-                faturamento__date__lte=form['data_ate']
-                ).filter(natu_venda=True).filter(ativa=True)
+                )
             context.update({
                 'data_de': form['data_de'],
+            })
+        if form['data_ate']:
+            select = select.filter(
+                faturamento__date__lte=form['data_ate']
+                )
+            context.update({
                 'data_ate': form['data_ate'],
             })
         if form['uf']:
@@ -45,6 +47,13 @@ class NotafiscalRel(View):
             select = select.filter(numero=form['nf'])
             context.update({
                 'nf': form['nf'],
+            })
+        if form['cliente']:
+            condition = Q(dest_nome__icontains=form['cliente']) | \
+                        Q(dest_cnpj__contains=form['cliente'])
+            select = select.filter(condition)
+            context.update({
+                'cliente': form['cliente'],
             })
         select = select.order_by('numero')
         data = list(select.values())
@@ -67,11 +76,11 @@ class NotafiscalRel(View):
             context.update({
                 'headers': ('Número', 'Faturamento',
                             'Saida', 'Agendada', 'Entregue',
-                            'UF', 'Cliente', 'Transportadora',
+                            'UF', 'CNPJ', 'Cliente', 'Transportadora',
                             'Volumes', 'Valor', 'Observação'),
                 'fields': ('numero', 'faturamento',
                            'saida', 'entrega', 'confirmada',
-                           'uf', 'dest_nome', 'transp_nome',
+                           'uf', 'dest_cnpj', 'dest_nome', 'transp_nome',
                            'volumes', 'valor', 'observacao'),
                 'data': data,
             })
