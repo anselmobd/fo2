@@ -17,6 +17,9 @@ urlpatterns = [
     url(r'^lista_produto/(?P<busca>.+)/$', views.ListaProduto.as_view(),
         name='lista_produto_busca'),
 
+    url(r'^estr_estagio_de_insumo/$', views.EstrEstagioDeInsumo.as_view(),
+        name='estr_estagio_de_insumo'),
+
     url(r'^estatistica/$', views.estatistica, name='estatistica'),
     url(r'^lista_item_n1_sem_preco_medio/$',
         views.lista_item_n1_sem_preco_medio,
