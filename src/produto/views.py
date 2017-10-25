@@ -541,3 +541,41 @@ class ListaProduto(View):
             context.update(self.mount_context(cursor, busca))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class EstrEstagioDeInsumo(View):
+    Form_class = FiltroForm
+    template_name = 'produto/estr_estagio_de_insumo.html'
+    title_name = 'Estágio de insumo'
+
+    def mount_context(self, cursor):
+        context = {}
+
+        # Informações básicas
+        data = models.estr_estagio_de_insumo(cursor)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhum erro de estágio de insumo encontrado.',
+            })
+        else:
+            link = ('PROD')
+            for row in data:
+                row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+            context.update({
+                'headers': ('Ref.', 'Tam.', 'Cor', 'Alt.',
+                            'MP', 'MP Tam.', 'MP Cor', 'MP Alt.',
+                            'Estágio não encontrado', 'Responsável'),
+                'fields': ('PROD', 'TAM', 'COR', 'ALT',
+                           'MP', 'MP_TAM', 'MP_COR', 'MP_ALT',
+                           'ESTAGIO', 'RESPONSAVEL'),
+                'data': data,
+                'link': link,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context(cursor))
+        return render(request, self.template_name, context)

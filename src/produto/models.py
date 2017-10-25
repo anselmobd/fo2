@@ -521,3 +521,64 @@ def lista_produto(cursor, busca):
     """.format(filtro)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def estr_estagio_de_insumo(cursor):
+    # bursca problema de estágio de insumo
+    sql = """
+        SELECT DISTINCT
+          e.GRUPO_ITEM REF
+        , e.NIVEL_ITEM || '-' || e.GRUPO_ITEM ||
+          ' (' || rp.DESCR_REFERENCIA  || ')' PROD
+        , e.SUB_ITEM TAM
+        , e.ITEM_ITEM COR
+        , e.ALTERNATIVA_ITEM ALT
+        , e.GRUPO_COMP
+        , e.NIVEL_COMP || '-' || e.GRUPO_COMP ||
+          ' (' || rm.DESCR_REFERENCIA  || ')' MP
+        , e.SUB_COMP MP_TAM
+        , e.ITEM_COMP MP_COR
+        , e.ALTERNATIVA_COMP MP_ALT
+        , e.ESTAGIO || ' - ' || es.DESCRICAO ESTAGIO
+        , rp.RESPONSAVEL
+        FROM (
+        SELECT DISTINCT
+          ref.NIVEL_ESTRUTURA
+        , ref.REFERENCIA
+        , ref.RESPONSAVEL
+        , ref.DESCR_REFERENCIA
+        , rpro.NUMERO_ALTERNATI
+        FROM basi_030 REF -- produto
+        LEFT JOIN MQOP_050 rpro -- roteiro de produto
+          ON rpro.NIVEL_ESTRUTURA = ref.NIVEL_ESTRUTURA
+         AND rpro.GRUPO_ESTRUTURA = ref.REFERENCIA
+        WHERE ref.NIVEL_ESTRUTURA = 1
+        --  AND REF.REFERENCIA = '0679A'
+          AND rpro.NUMERO_ROTEIRO IS NOT NULL
+          AND ref.RESPONSAVEL IS NOT NULL
+        ) rp -- produto com algum roteiro
+        JOIN BASI_050 e -- estrutura de produto
+          ON e.NIVEL_ITEM = rp.NIVEL_ESTRUTURA
+         AND e.GRUPO_ITEM = rp.REFERENCIA
+         AND e.ALTERNATIVA_ITEM = rp.NUMERO_ALTERNATI
+        LEFT JOIN basi_030 rm -- referencia matéria prima
+          ON rm.NIVEL_ESTRUTURA = e.NIVEL_COMP
+         AND rm.REFERENCIA = e.GRUPO_COMP
+        LEFT JOIN MQOP_050 ri -- roteiro de produto com estágio do insumo
+          ON ri.CODIGO_ESTAGIO = e.ESTAGIO
+         AND ri.NIVEL_ESTRUTURA = e.NIVEL_ITEM
+         AND ri.GRUPO_ESTRUTURA = e.GRUPO_ITEM
+         AND ri.NUMERO_ALTERNATI = rp.NUMERO_ALTERNATI
+        LEFT JOIN MQOP_005 es -- cadastro de estagios
+          ON es.CODIGO_ESTAGIO = e.ESTAGIO
+        WHERE e.NIVEL_ITEM = 1
+          AND e.GRUPO_COMP not like 'DV%'
+        --  AND r.SEQ_OPERACAO IS NOT NULL
+          AND ri.SEQ_OPERACAO IS NULL
+        ORDER BY
+          e.GRUPO_ITEM
+        , e.ALTERNATIVA_ITEM
+        , e.GRUPO_COMP
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
