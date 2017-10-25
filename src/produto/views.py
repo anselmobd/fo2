@@ -558,14 +558,14 @@ class EstrEstagioDeInsumo(View):
                 'msg_erro': 'Nenhum erro de estágio de insumo encontrado.',
             })
         else:
-            link = ('PROD')
+            link = ('REF')
             for row in data:
                 row['LINK'] = '/produto/ref/{}'.format(row['REF'])
             context.update({
-                'headers': ('Ref.', 'Tam.', 'Cor', 'Alt.',
+                'headers': ('Ref.', 'Descrição', 'Tam.', 'Cor', 'Alt.',
                             'MP', 'MP Tam.', 'MP Cor', 'MP Alt.',
                             'Estágio não encontrado', 'Responsável'),
-                'fields': ('PROD', 'TAM', 'COR', 'ALT',
+                'fields': ('REF', 'DESCR', 'TAM', 'COR', 'ALT',
                            'MP', 'MP_TAM', 'MP_COR', 'MP_ALT',
                            'ESTAGIO', 'RESPONSAVEL'),
                 'data': data,
