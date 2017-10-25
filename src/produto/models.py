@@ -527,9 +527,9 @@ def estr_estagio_de_insumo(cursor):
     # bursca problema de estágio de insumo
     sql = """
         SELECT DISTINCT
-          e.GRUPO_ITEM REF
-        , e.NIVEL_ITEM || '-' || e.GRUPO_ITEM ||
-          ' (' || rp.DESCR_REFERENCIA  || ')' PROD
+          e.NIVEL_ITEM NIVEL
+        , e.GRUPO_ITEM REF
+        , rp.DESCR_REFERENCIA DESCR
         , e.SUB_ITEM TAM
         , e.ITEM_ITEM COR
         , e.ALTERNATIVA_ITEM ALT
