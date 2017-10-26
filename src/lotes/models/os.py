@@ -112,9 +112,10 @@ def os_itens(cursor, os):
         , ie.CAPA_ENT_NRDOC NF_RETORNO
         , ce.DATA_EMISSAO DATA_RETORNO
         , ie.QUANTIDADE QTD_RETORNO
-        , CASE WHEN ie.QUANTIDADE < s.QTDE_ENVIADA
-          THEN 'Parcial'
-          ELSE 'Total'
+        , CASE
+          WHEN ie.QUANTIDADE = s.QTDE_ENVIADA THEN 'Total'
+          WHEN ie.QUANTIDADE < s.QTDE_ENVIADA THEN 'Parcial'
+          ELSE 'Verificar'
           END RETORNO
         , CASE WHEN s.PRODSAI_NIVEL99 = 1 THEN
             CASE
@@ -138,7 +139,8 @@ def os_itens(cursor, os):
         LEFT JOIN FATU_050 nf -- nota fiscal da Tussor
           ON nf.NUM_NOTA_FISCAL = s.NUM_NF_SAI
         LEFT JOIN OBRF_015 ie
-          ON ie.NUM_NOTA_ORIG = s.NUM_NF_SAI
+          ON s.NUM_NF_SAI <> 0
+         AND ie.NUM_NOTA_ORIG = s.NUM_NF_SAI
          AND ie.CODITEM_NIVEL99 = s.PRODSAI_NIVEL99
          AND ie.CODITEM_GRUPO = s.PRODSAI_GRUPO
          AND ie.CODITEM_SUBGRUPO = s.PRODSAI_SUBGRUPO
