@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.db import connections
 from django.views import View
 
+from fo2.template import group_rowspan
+
 from lotes.forms import OsForm
 import lotes.models as models
 
@@ -64,23 +66,48 @@ class Os(View):
 
         # Itens para nota de OS
         i_data = models.os_itens(cursor, os)
-        i_link = ('REF')
         for row in i_data:
-            row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+            rowlinks = {}
+            if row['NIVEL'] is '1':
+                row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+            else:
+                row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+
+            if row['NF'] == 0:
+                row['NF'] = ''
+                row['DATA_NF'] = ''
+            else:
+                row['DATA_NF'] = row['DATA_NF'].date()
+
             if row['NF_RETORNO'] is None:
+                row['DIAS'] = ''
                 row['NF_RETORNO'] = ''
-            if row['QTD_RETORNO'] is None:
+                row['DATA_RETORNO'] = ''
                 row['QTD_RETORNO'] = ''
+                row['RETORNO'] = ''
+                row['APLICADO'] = ''
+            else:
+                row['DATA_RETORNO'] = row['DATA_RETORNO'].date()
+        i_group = ('NIVEL', 'REF', 'COR', 'TAM', 'NARRATIVA',
+                   'UN', 'VALOR_UN', 'QTD_ESTR',
+                   'QTD_ENV', 'NF', 'DATA_NF')
+        group_rowspan(i_data, i_group)
+
         context.update({
             'i_headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Narrativa',
                           'Unidade', 'Valor unitário', 'Qtd.Estrutura',
                           'Qtd.Enviada', 'NF de saída',
-                          'NF de retorno', 'Qtd.Retorno'),
+                          'Data emissão', 'Dias',
+                          'NF de retorno', 'Data emissão',
+                          'Qtd.Retorno', 'Retorno', 'Aplicado'),
             'i_fields': ('NIVEL', 'REF', 'COR', 'TAM', 'NARRATIVA',
-                         'UN', 'VALOR_UN', 'QTD_ESTR', 'QTD_ENV', 'NF',
-                         'NF_RETORNO', 'QTD_RETORNO'),
+                         'UN', 'VALOR_UN', 'QTD_ESTR',
+                         'QTD_ENV', 'NF',
+                         'DATA_NF', 'DIAS',
+                         'NF_RETORNO', 'DATA_RETORNO',
+                         'QTD_RETORNO', 'RETORNO', 'APLICADO'),
+            'i_group': i_group,
             'i_data': i_data,
-            'i_link': i_link,
         })
 
         # Lotes ordenados por OS + referência + estágio
