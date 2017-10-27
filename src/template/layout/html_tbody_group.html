@@ -1,10 +1,15 @@
 <tbody>
 {% for row in data %}
-  <tr class="group">
+  {% if group|length_is:"0" %}
+    <tr>
+  {% else %}
+    <tr class="group">
+  {% endif %}
   {% for field in fields %}
     {% if field in group %}
       {% if row|get_item:'rowspan' != 0 %}
         <td rowspan="{{ row|get_item:'rowspan' }}">
+          <!-- { % include "layout/html_tbody_fieldlink.html" with row=row field=field only %} -->
           {% with field|add:'|LINK' as field_link %}
             {% if row|get_item:field_link %}
               <a href="{{ row|get_item:field_link }}">{{ row|get_item:field }}&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
@@ -19,7 +24,7 @@
         {% if field in safe %}
           {{ row|get_item:field|safe }}
         {% else %}
-          {{ row|get_item:field }}
+          {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
         {% endif %}
       </td>
     {% endif %}
