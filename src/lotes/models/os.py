@@ -109,7 +109,7 @@ def os_itens(cursor, os):
         , s.NUM_NF_SAI NF
         , nf.DATA_EMISSAO DATA_NF
         , ce.DATA_EMISSAO - nf.DATA_EMISSAO DIAS
-        , ce.DOCUMENTO NF_RETORNO
+        , ie.CAPA_ENT_NRDOC NF_RETORNO
         , ce.DATA_EMISSAO DATA_RETORNO
         , ie.QUANTIDADE QTD_RETORNO
         , CASE
@@ -147,8 +147,8 @@ def os_itens(cursor, os):
          AND ie.CODITEM_ITEM = s.PRODSAI_ITEM
         LEFT JOIN OBRF_010 ce -- capa de nota fiscal de entrada
           ON ce.DOCUMENTO = ie.CAPA_ENT_NRDOC
-         AND ce.CNPJ9_REF = ie.CAPA_ENT_FORCLI9
-         AND ce.CNPJ4_REF = ie.CAPA_ENT_FORCLI4
+         AND ce.CGC_CLI_FOR_9 = ie.CAPA_ENT_FORCLI9
+         AND ce.CGC_CLI_FOR_4 = ie.CAPA_ENT_FORCLI4
         WHERE s.NUMERO_ORDEM = %s
         ORDER BY
           s.PRODSAI_NIVEL99
