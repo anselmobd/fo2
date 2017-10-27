@@ -14,4 +14,4 @@ def group_rowspan(data, group):
             data[i+1]['rowspan'] = 0
         inferior = atual[:]
     if noSpan:
-        del group[:]
+        del list(group)[:]
