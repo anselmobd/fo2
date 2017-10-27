@@ -62,10 +62,11 @@ class Op(View):
             row['LINK'] = '/produto/ref/{}'.format(row['REF'])
             context.update({
                 'i2_headers': ('Tipo de referência', 'Referência',
-                               'Alternativa', 'Roteiro',
+                               'Alternativa', 'Roteiro', 'Modelo',
                                'Qtd. Lotes', 'Quant. Itens'),
                 'i2_fields': ('TIPO_REF', 'REF',
-                              'ALTERNATIVA', 'ROTEIRO', 'LOTES', 'QTD'),
+                              'ALTERNATIVA', 'ROTEIRO', 'MODELO',
+                              'LOTES', 'QTD'),
                 'i2_data': i2_data,
                 'i2_link': i2_link,
             })

@@ -34,6 +34,28 @@ def op_inform(cursor, op):
         , o.ALTERNATIVA_PECA ALTERNATIVA
         , o.ROTEIRO_PECA ROTEIRO
         , o.REFERENCIA_PECA REF
+        , COALESCE(
+          CASE WHEN o.REFERENCIA_PECA < 'C0000' THEN
+            CAST( CAST( regexp_replace(o.REFERENCIA_PECA, '[^0-9]', '')
+                        AS INTEGER ) AS VARCHAR2(5) )
+          ELSE
+            ( SELECT
+                CAST( MAX(
+                  CASE WHEN ec.GRUPO_ITEM IS NULL THEN 0
+                  ELSE CAST( regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
+                             AS INTEGER )
+                  END
+                ) AS VARCHAR2(5) )
+                FROM BASI_050 ec
+                JOIN BASI_030 rr
+                  ON rr.NIVEL_ESTRUTURA = ec.NIVEL_ITEM
+                 AND rr.REFERENCIA = ec.GRUPO_ITEM
+                 AND rr.RESPONSAVEL IS NOT NULL
+                WHERE ec.NIVEL_COMP = 1
+                  AND ec.GRUPO_COMP = o.REFERENCIA_PECA
+            )
+          END
+          , ' ' ) MODELO
         , ( SELECT
               COUNT( DISTINCT l.ORDEM_CONFECCAO )
             FROM pcpc_040 l
