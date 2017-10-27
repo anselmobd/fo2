@@ -33,6 +33,9 @@ def respons(request):
                 WHERE e.CODIGO_ESTAGIO <> 0
                   AND ( %s is NULL OR e.CODIGO_ESTAGIO = %s )
                   AND ( coalesce( u.USUARIO, '_' ) like %s )
+                  AND ( e.CODIGO_ESTAGIO < 7 OR
+                        u.USUARIO not in ( 'ROSANGELA_PCP', 'ALESSANDRA_PCP' )
+                      )
                 ORDER BY
             """
             if ordem == 'e':
