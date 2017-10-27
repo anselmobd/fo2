@@ -16,7 +16,7 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if data %}
-<h3>Responsável por estágio</h3>
+<h3>Responsável por estágio (em procedimento padrão)</h3>
 <table>
   {% include "layout/html_thead.html" with data=headers only %}
   {% include "layout/html_tbody.html" with fields=fields data=data only %}
