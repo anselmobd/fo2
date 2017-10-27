@@ -88,9 +88,9 @@ class Os(View):
                 row['APLICADO'] = ''
             else:
                 row['DATA_RETORNO'] = row['DATA_RETORNO'].date()
-        i_group = ('NIVEL', 'REF', 'COR', 'TAM', 'NARRATIVA',
+        i_group = ['NIVEL', 'REF', 'COR', 'TAM', 'NARRATIVA',
                    'UN', 'VALOR_UN', 'QTD_ESTR',
-                   'QTD_ENV', 'NF', 'DATA_NF')
+                   'QTD_ENV', 'NF', 'DATA_NF']
         group_rowspan(i_data, i_group)
 
         context.update({
