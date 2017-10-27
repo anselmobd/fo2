@@ -87,7 +87,10 @@ class Os(View):
                 row['RETORNO'] = ''
                 row['APLICADO'] = ''
             else:
-                row['DATA_RETORNO'] = row['DATA_RETORNO'].date()
+                if row['DATA_RETORNO'] is None:
+                    row['DATA_RETORNO'] = ''
+                else:
+                    row['DATA_RETORNO'] = row['DATA_RETORNO'].date()
         i_group = ['NIVEL', 'REF', 'COR', 'TAM', 'NARRATIVA',
                    'UN', 'VALOR_UN', 'QTD_ESTR',
                    'QTD_ENV', 'NF', 'DATA_NF']
