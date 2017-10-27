@@ -10,6 +10,7 @@ urlpatterns = [
         name='posicao_lote'),
 
     url(r'^respons/$', views.respons, name='respons'),
+    url(r'^responsavel/$', views.responsTodos, name='respons_todos'),
 
     url(r'^op/$', views.Op.as_view(), name='op'),
     url(r'^op/(?P<op>\d+)/$', views.Op.as_view(), name='op_op'),

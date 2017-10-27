@@ -7,9 +7,19 @@ from fo2.models import rows_to_dict_list
 from lotes.forms import ResponsPorEstagioForm
 
 
+def responsTodos(request):
+    return responsCustom(request, True)
+
+
 def respons(request):
+    return responsCustom(request, False)
+
+
+def responsCustom(request, todos):
     title_name = 'Responsável por estágio'
     context = {'titulo': title_name}
+    if todos:
+        context.update({'todos': True})
     if request.method == 'POST':
         form = ResponsPorEstagioForm(request.POST)
         if form.is_valid():
@@ -33,9 +43,15 @@ def respons(request):
                 WHERE e.CODIGO_ESTAGIO <> 0
                   AND ( %s is NULL OR e.CODIGO_ESTAGIO = %s )
                   AND ( coalesce( u.USUARIO, '_' ) like %s )
-                  AND ( e.CODIGO_ESTAGIO < 7 OR
-                        u.USUARIO not in ( 'ROSANGELA_PCP', 'ALESSANDRA_PCP' )
-                      )
+            """
+            if not todos:
+                sql = sql + """
+                      AND ( e.CODIGO_ESTAGIO < 7 OR
+                            u.USUARIO not in ( 'ROSANGELA_PCP'
+                                             , 'ALESSANDRA_PCP' )
+                          )
+                """
+            sql = sql + """
                 ORDER BY
             """
             if ordem == 'e':
