@@ -7,8 +7,8 @@ class IndexView(TemplateView):
     template_name = "index.html"
 
 
-class InfoView(TemplateView):
-    template_name = "info.html"
+class IntranetView(TemplateView):
+    template_name = "intranet.html"
 
 
 def logout_view(request):
