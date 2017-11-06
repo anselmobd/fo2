@@ -49,8 +49,10 @@ class Os(View):
                 for row in o_data:
                     row['LINK'] = '/lotes/op/{}'.format(row['OP'])
                 context.update({
-                    'o_headers': ('OP', 'Lotes', 'Quant.'),
-                    'o_fields': ('OP', 'LOTES', 'QTD'),
+                    'o_headers': ('OP', 'Lotes', 'Quant.', 'Pedido',
+                                  'Pedido do cliente'),
+                    'o_fields': ('OP', 'LOTES', 'QTD', 'PEDIDO',
+                                 'PED_CLIENTE'),
                     'o_data': o_data,
                     'o_link': o_link,
                 })

@@ -16,10 +16,18 @@ def os_op(cursor, os):
           l.ORDEM_PRODUCAO OP
         , count(l.ORDEM_CONFECCAO) LOTES
         , sum(l.QTDE_PECAS_PROG) QTD
-        FROM pcpc_040 l
+        , o.PEDIDO_VENDA PEDIDO
+        , COALESCE(ped.COD_PED_CLIENTE, '') PED_CLIENTE
+        FROM pcpc_040 l -- lotes
+        JOIN PCPC_020 o -- OP
+          ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+        LEFT JOIN PEDI_100 ped -- pedido de venda
+          ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
         WHERE l.NUMERO_ORDEM = %s
         GROUP BY
           l.ORDEM_PRODUCAO
+        , o.PEDIDO_VENDA
+        , ped.COD_PED_CLIENTE
     """
     cursor.execute(sql, [os])
     return rows_to_dict_list(cursor)
