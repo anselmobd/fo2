@@ -57,9 +57,9 @@ class Op(View):
                 'i_link': i_link,
             })
 
-            i2_link = ('REF')
             row = i2_data[0]
-            row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+            row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+            row['MODELO|LINK'] = '/produto/modelo/{}'.format(row['MODELO'])
             context.update({
                 'i2_headers': ('Modelo', 'Tipo de referência', 'Referência',
                                'Alternativa', 'Roteiro',
@@ -68,7 +68,6 @@ class Op(View):
                               'ALTERNATIVA', 'ROTEIRO',
                               'LOTES', 'QTD'),
                 'i2_data': i2_data,
-                'i2_link': i2_link,
             })
 
             context.update({
