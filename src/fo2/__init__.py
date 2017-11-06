@@ -1,9 +1,14 @@
-__version__ = '0.1.31'
-__version__date__ = '2017/10/18'
+__version__ = '0.1.32'
+__version__date__ = '2017/11/06'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.32 - 2017/11/06
+#   . OP + número de pedido e pedido de cliente
+#   . renomeando páginas da intranet
+#   . Melhorias em várias telas
 #
 # - 0.1.31 - 2017/10/18
 #   . Ordens pendentes por estágio
