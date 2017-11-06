@@ -5,8 +5,8 @@ from django.contrib.admin import AdminSite
 
 
 class IntrAdmSite(AdminSite):
-    site_header = 'Intranet Tussor - Cadastros'
-    site_title = 'Fo2 - Intranet Tussor - Cadastros'
+    site_header = 'Apoio ao ERP (Tussor) - Cadastros'
+    site_title = 'Fo2 - Apoio ao ERP (Tussor) - Cadastros'
     index_title = 'Cadastros'
 
 
