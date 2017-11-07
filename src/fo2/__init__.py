@@ -1,9 +1,13 @@
-__version__ = '0.1.32'
-__version__date__ = '2017/11/06'
+__version__ = '0.1.33'
+__version__date__ = '2017/11/07'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.33 - 2017/11/07
+#   . Conferência de pedido: melhorias
+#   . Pedido: Inicio de desenvolvimento
 #
 # - 0.1.32 - 2017/11/06
 #   . OP + número de pedido e pedido de cliente
