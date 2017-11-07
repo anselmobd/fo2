@@ -38,6 +38,10 @@ urlpatterns = [
     url(r'^impressora_termica/$',
         views.impressoraTermica, name='impressora_termica'),
 
+    url(r'^pedido/$', views.Pedido.as_view(), name='pedido'),
+    url(r'^pedido/(?P<pedido>\d+)/$', views.Pedido.as_view(),
+        name='pedido_pedido'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
