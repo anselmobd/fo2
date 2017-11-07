@@ -169,3 +169,10 @@ class OpPendenteForm(forms.Form):
 
     def clean_periodo_ate(self):
         return self.clean_periodo(self.cleaned_data['periodo_ate'], 9999)
+
+
+class PedidoForm(forms.Form):
+    pedido = forms.CharField(
+        label='Pedido',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
