@@ -7,7 +7,11 @@ def infadprod_pro_pedido(cursor, pedido):
     sql = '''
         SELECT
           p.PEDIDO_VENDA PEDIDO
-        , c.NOME_CLIENTE || ' (' || c.CGC_9 || '/' || c.CGC_4 || ')' CLIENTE
+        , c.NOME_CLIENTE
+          || ' (' || lpad(c.CGC_9, 8, '0')
+          || '/' || lpad(c.CGC_4, 4, '0')
+          || '-' || lpad(c.CGC_2, 2, '0')
+          || ')' CLIENTE
         , i.CD_IT_PE_NIVEL99 NIVEL
         , i.CD_IT_PE_GRUPO REF
         , i.CD_IT_PE_ITEM COR
