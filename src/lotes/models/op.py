@@ -10,7 +10,7 @@ def op_inform(cursor, op):
         SELECT
           case
           when o.REFERENCIA_PECA <= '99999' then 'PA'
-          when o.REFERENCIA_PECA <= 'A9999' then 'PG'
+          when o.REFERENCIA_PECA <= 'B9999' then 'PG'
           else 'MD'
           end TIPO_REF
         , CASE
