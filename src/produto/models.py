@@ -4,6 +4,22 @@ from django.db import connections
 from fo2.models import rows_to_dict_list
 
 
+class Colecao(models.Model):
+    colecao = models.IntegerField(primary_key=True)
+    descr_colecao = models.CharField(
+        max_length=100,
+        verbose_name='Descrição')
+
+    def __str__(self):
+        return self.descr_colecao
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "BASI_140"
+        verbose_name = "Coleção"
+
+
 def produtos_n1_basic(param):
     tipo = param[0:2]
     qualidade = param[3:5]
