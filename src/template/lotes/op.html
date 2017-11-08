@@ -24,7 +24,7 @@
 {% if data %}
 <table>
   {% include "layout/html_thead.html" with data=i_headers only %}
-  {% include "layout/html_tbody_link.html" with fields=i_fields data=i_data link=i_link only %}
+  {% include "layout/html_tbody_group.html" with fields=i_fields data=i_data group=i_group only %}
 </table>
 <table>
   {% include "layout/html_thead.html" with data=i2_headers only %}
