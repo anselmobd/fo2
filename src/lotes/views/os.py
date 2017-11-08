@@ -45,16 +45,19 @@ class Os(View):
             # Totais por OP
             o_data = models.os_op(cursor, os)
             if len(o_data) != 0:
-                o_link = ('OP')
                 for row in o_data:
-                    row['LINK'] = '/lotes/op/{}'.format(row['OP'])
+                    row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+                    if row['PEDIDO'] == 0:
+                        row['PEDIDO'] = ''
+                    else:
+                        row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
+                            row['PEDIDO'])
                 context.update({
                     'o_headers': ('OP', 'Lotes', 'Quant.', 'Pedido',
                                   'Pedido do cliente'),
                     'o_fields': ('OP', 'LOTES', 'QTD', 'PEDIDO',
                                  'PED_CLIENTE'),
                     'o_data': o_data,
-                    'o_link': o_link,
                 })
 
         # Grade
