@@ -1,5 +1,7 @@
 from django import forms
 
+from produto.models import Colecao
+
 
 class LoteForm(forms.Form):
     lote = forms.CharField(
@@ -154,6 +156,11 @@ class OpPendenteForm(forms.Form):
     data_ate = forms.DateField(
         label='Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
+
+    colecao = forms.ModelChoiceField(
+        label='Coleção', required=False,
+        queryset=Colecao.objects.all().order_by(
+            'colecao'), empty_label="(Todas)")
 
     def clean_periodo(self, periodo, default):
         try:
