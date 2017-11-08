@@ -15,9 +15,9 @@ class OpPendente(View):
     title_name = 'Ordens pendentes por estágio'
 
     def mount_context(self, cursor, estagio, periodo_de, periodo_ate,
-                      data_de, data_ate):
+                      data_de, data_ate, colecao):
         data = models.op_pendente(cursor, estagio, periodo_de, periodo_ate,
-                                  data_de, data_ate)
+                                  data_de, data_ate, colecao.colecao)
         context = {}
         if len(data) == 0:
             context.update({
@@ -42,6 +42,10 @@ class OpPendente(View):
             if data_ate is not None:
                 context.update({
                     'data_ate': data_ate,
+                })
+            if colecao is not None:
+                context.update({
+                    'colecao': colecao.descr_colecao,
                 })
             link = ('OP')
             for row in data:
@@ -111,9 +115,10 @@ class OpPendente(View):
             periodo_ate = form.cleaned_data['periodo_ate']
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
+            colecao = form.cleaned_data['colecao']
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context(cursor, estagio, periodo_de, periodo_ate,
-                                   data_de, data_ate))
+                                   data_de, data_ate, colecao))
         context['form'] = form
         return render(request, self.template_name, context)
