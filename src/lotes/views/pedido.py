@@ -35,6 +35,26 @@ class Pedido(View):
                 'data': data,
             })
 
+            # OPs
+            o_data = models.ped_op(cursor, pedido)
+            for row in o_data:
+                row['ORDEM_PRODUCAO|LINK'] = '/lotes/op/{}'.format(
+                    row['ORDEM_PRODUCAO'])
+                row['REFERENCIA_PECA|LINK'] = '/produto/ref/{}'.format(
+                    row['REFERENCIA_PECA'])
+                if row['ORDEM_PRINCIPAL'] == 0:
+                    row['ORDEM_PRINCIPAL'] == ''
+                else:
+                    row['ORDEM_PRINCIPAL|LINK'] = '/lotes/op/{}'.format(
+                        row['ORDEM_PRINCIPAL'])
+            context.update({
+                'o_headers': ('OP', 'Tipo', 'Referência',
+                              'OP principal', 'Quantidade'),
+                'o_fields': ('ORDEM_PRODUCAO', 'TIPO', 'REFERENCIA_PECA',
+                             'ORDEM_PRINCIPAL', 'QTD'),
+                'o_data': o_data,
+            })
+
         return context
 
     def get(self, request, *args, **kwargs):
