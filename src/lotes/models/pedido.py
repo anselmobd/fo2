@@ -67,6 +67,8 @@ def ped_op(cursor, pedido):
                 WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
               )
           ) QTD
+        , o.DATA_PROGRAMACAO DT_DIGITACAO
+        , o.DATA_ENTRADA_CORTE DT_CORTE
         FROM PCPC_020 o -- OP
         WHERE o.PEDIDO_VENDA = %s
           AND o.SITUACAO <> 9
