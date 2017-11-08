@@ -16,8 +16,12 @@ class OpPendente(View):
 
     def mount_context(self, cursor, estagio, periodo_de, periodo_ate,
                       data_de, data_ate, colecao):
+        if colecao:
+            filtra_colecao = colecao.colecao
+        else:
+            filtra_colecao = None
         data = models.op_pendente(cursor, estagio, periodo_de, periodo_ate,
-                                  data_de, data_ate, colecao.colecao)
+                                  data_de, data_ate, filtra_colecao)
         context = {}
         if len(data) == 0:
             context.update({
