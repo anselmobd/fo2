@@ -47,11 +47,16 @@ class Pedido(View):
                 else:
                     row['ORDEM_PRINCIPAL|LINK'] = '/lotes/op/{}'.format(
                         row['ORDEM_PRINCIPAL'])
+                row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
+                row['DT_CORTE'] = row['DT_CORTE'].date()
             context.update({
                 'o_headers': ('OP', 'Tipo', 'Referência',
-                              'OP principal', 'Quantidade'),
+                              'OP principal', 'Quantidade',
+                              'Data Digitação', 'Data Corte'),
                 'o_fields': ('ORDEM_PRODUCAO', 'TIPO', 'REFERENCIA_PECA',
-                             'ORDEM_PRINCIPAL', 'QTD'),
+                             'ORDEM_PRINCIPAL', 'QTD',
+                             'DT_DIGITACAO', 'DT_CORTE'),
+
                 'o_data': o_data,
             })
 
