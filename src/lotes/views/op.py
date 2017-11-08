@@ -73,6 +73,11 @@ class Op(View):
                 'i2_data': i2_data,
             })
 
+            row = i3_data[0]
+            row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
+            row['DT_CORTE'] = row['DT_CORTE'].date()
+            row['PERIODO_INI'] = row['PERIODO_INI'].date()
+            row['PERIODO_FIM'] = row['PERIODO_FIM'].date()
             context.update({
                 'i3_headers': ('Depósito', 'Período', 'Período Início',
                                'Período Fim', 'Data Digitação', 'Data Corte'),
