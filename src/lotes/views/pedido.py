@@ -24,11 +24,12 @@ class Pedido(View):
             })
         else:
             context.update({
-                'headers': ('Número do pedido', 'Data de emissão',
+                'headers': ('Data de emissão',
                             'Cliente', 'Código do pedido no cliente',
-                            'Status do pedido'),
-                'fields': ('PEDIDO_VENDA', 'DT_EMISSAO',
-                           'CLIENTE', 'PEDIDO_CLIENTE', 'STATUS_PEDIDO'),
+                            'Status do pedido', 'Situação da venda'),
+                'fields': ('DT_EMISSAO',
+                           'CLIENTE', 'PEDIDO_CLIENTE',
+                           'STATUS_PEDIDO', 'SITUACAO_VENDA'),
                 'data': data,
             })
 

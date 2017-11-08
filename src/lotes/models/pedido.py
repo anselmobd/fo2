@@ -26,6 +26,12 @@ def ped_inform(cursor, pedido):
           WHEN 5 THEN '5-Cancelado'
           WHEN 9 THEN '9-Aberto na web'
           END STATUS_PEDIDO
+        , CASE ped.SITUACAO_VENDA
+          WHEN 0  THEN '0-Pedido liberado'
+          WHEN 5  THEN '5-Pedido suspenso'
+          WHEN 10 THEN '10-Faturado total'
+          WHEN 15 THEN '15-Pedido com NF cancelada'
+          END SITUACAO_VENDA
         FROM PEDI_100 ped -- pedido de venda
         LEFT JOIN PEDI_010 c
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
