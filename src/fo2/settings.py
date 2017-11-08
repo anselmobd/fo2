@@ -126,6 +126,8 @@ DATABASES = {
     # },
 }
 
+DATABASE_ROUTERS = ['utils.router.Router', ]
+
 DB_F1 = {
     'NAME': '/dados/db/f1/f1.cdb',
     'USER': 'sysdba',
