@@ -75,13 +75,13 @@ class OpPendente(View):
             context.update({
                 'headers': (
                     'Estágio', 'Período',
-                    'Data início', 'Data final',
+                    'Data início', 'Data final', 'Coleção',
                     'Referência', 'OP', 'Data de corte',
                     'Quant. peças', 'Quant. lotes',
                     'Total de lotes',
                     '% Antes', '% No estágio', '% Depois', '% Finalizado'),
                 'fields': (
-                    'ESTAGIO', 'PERIODO', 'DATA_INI', 'DATA_FIM',
+                    'ESTAGIO', 'PERIODO', 'DATA_INI', 'DATA_FIM', 'COLECAO',
                     'REF', 'OP', 'DT_CORTE', 'QTD', 'LOTES', 'QTD_LOTES',
                     'PERC_ANTES', 'PERC_LOTES', 'PERC_DEPOIS',
                     'PERC_FINALIZADO'),

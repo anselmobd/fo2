@@ -40,6 +40,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate):
         , l.PERIODO_PRODUCAO PERIODO
         , p.DATA_INI_PERIODO DATA_INI
         , p.DATA_FIM_PERIODO DATA_FIM
+        , r.COLECAO || ' - ' || c.DESCR_COLECAO COLECAO
         , l.PROCONF_GRUPO REF
         , l.ORDEM_PRODUCAO OP
         , l.SEQ_OPERACAO SEQ
@@ -49,6 +50,11 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate):
         FROM MQOP_005 e
         JOIN PCPC_040 l
           ON l.CODIGO_ESTAGIO = e.CODIGO_ESTAGIO
+        JOIN BASI_030 r -- cadastro de produtos
+          ON r.NIVEL_ESTRUTURA = l.PROCONF_NIVEL99
+         AND r.REFERENCIA = l.PROCONF_GRUPO
+        JOIN BASI_140 c -- cadastro de coleções de produtos
+          ON c.COLECAO = r.COLECAO
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         JOIN PCPC_010 p
@@ -68,12 +74,15 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate):
         , p.DATA_INI_PERIODO
         , p.DATA_FIM_PERIODO
         , l.PROCONF_GRUPO
+        , r.COLECAO
+        , c.DESCR_COLECAO
         , l.ORDEM_PRODUCAO
         , l.SEQ_OPERACAO
         , o.DATA_ENTRADA_CORTE
         ORDER BY
           e.CODIGO_ESTAGIO
         , l.PERIODO_PRODUCAO
+        , r.COLECAO
         , l.PROCONF_GRUPO
         , l.ORDEM_PRODUCAO
         ) pend
