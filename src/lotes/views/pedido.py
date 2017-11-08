@@ -18,6 +18,8 @@ class Pedido(View):
 
         # informações gerais
         data = models.ped_inform(cursor, pedido)
+        for row in data:
+            row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
