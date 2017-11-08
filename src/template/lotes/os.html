@@ -34,7 +34,7 @@
     <h3>OP</h3>
     <table>
       {% include "layout/html_thead.html" with data=o_headers only %}
-      {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
+      {% include "layout/html_tbody_group.html" with fields=o_fields data=o_data group=o_group only %}
     </table>
   {% endif %}
   {% if g_data %}
