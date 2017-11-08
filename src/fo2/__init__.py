@@ -1,9 +1,12 @@
-__version__ = '0.1.33'
-__version__date__ = '2017/11/07'
+__version__ = '0.1.34'
+__version__date__ = '2017/11/08'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.34 - 2017/11/08
+#   . OP pendente: filtro por coleção
 #
 # - 0.1.33 - 2017/11/07
 #   . Conferência de pedido: melhorias
