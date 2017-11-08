@@ -44,10 +44,12 @@ class Op(View):
             row = i_data[0]
             if row['OP_REL'] == 0:
                 row['OP_REL'] = ''
-                i_link = []
             else:
-                i_link = ('OP_RELAC')
-                row['LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
+                row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
+            if row['PEDIDO'] == 0:
+                row['PEDIDO'] = ''
+            else:
+                row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(row['PEDIDO'])
             context.update({
                 'i_headers': ('Situação', 'Cancelamento',
                               'Tipo de OP', 'OP relacionada', 'Pedido',
@@ -56,7 +58,6 @@ class Op(View):
                              'TIPO_OP', 'OP_REL', 'PEDIDO',
                              'PED_CLIENTE'),
                 'i_data': i_data,
-                'i_link': i_link,
             })
 
             row = i2_data[0]
