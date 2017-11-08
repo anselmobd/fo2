@@ -27,4 +27,11 @@
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
   </table>
 {% endif %}
+{% if o_data %}
+<h3>OP do pedido</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=o_headers only %}
+    {% include "layout/html_tbody_group.html" with fields=o_fields data=o_data group=o_group only %}
+  </table>
+{% endif %}
 {% endblock %}
