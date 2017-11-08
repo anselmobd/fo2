@@ -1,9 +1,14 @@
-__version__ = '0.1.34'
+__version__ = '0.1.35'
 __version__date__ = '2017/11/08'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.35 - 2017/11/08
+#   . Pedido: Situação da venda
+#   . OP e OS: Link para pedido
+#   . Pedido: OPs
 #
 # - 0.1.34 - 2017/11/08
 #   . OP pendente: filtro por coleção
