@@ -22,7 +22,8 @@ class Command(BaseCommand):
                 , f.BASE_ICMS VALOR
                 , f.QTDE_EMBALAGENS VOLUMES
                 , f.DATA_AUTORIZACAO_NFE FATURAMENTO
-                , CAST( COALESCE( f.COD_STATUS, '0' ) AS INT ) COD_STATUS
+                , CAST( COALESCE( '0' || f.COD_STATUS, '0' ) AS INT )
+                  COD_STATUS
                 , COALESCE( f.MSG_STATUS, ' ' ) MSG_STATUS
                 , f.SITUACAO_NFISC SITUACAO
                 , f.NATOP_NF_NAT_OPER NAT
