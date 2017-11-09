@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.db import connections
 from django.views import View
 
+from fo2.template import group_rowspan
+
 from lotes.forms import OpForm
 import lotes.models as models
 
@@ -38,25 +40,28 @@ class Op(View):
 
             # informações gerais
             i_data = models.op_inform(cursor, op)
-            i2_data = copy.deepcopy(i_data)
-            i3_data = copy.deepcopy(i_data)
+            i2_data = [i_data[0]]
+            i3_data = [i_data[0]]
 
-            row = i_data[0]
-            if row['OP_REL'] == 0:
-                row['OP_REL'] = ''
-            else:
-                row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
-            if row['PEDIDO'] == 0:
-                row['PEDIDO'] = ''
-            else:
-                row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(row['PEDIDO'])
+            for row in i_data:
+                if row['OP_REL'] == 0:
+                    row['OP_REL'] = ''
+                else:
+                    row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
+                if row['PEDIDO'] == 0:
+                    row['PEDIDO'] = ''
+                else:
+                    row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
+                        row['PEDIDO'])
+            i_group = ['SITUACAO', 'CANCELAMENTO', 'PEDIDO', 'PED_CLIENTE']
+            group_rowspan(i_data, i_group)
             context.update({
-                'i_headers': ('Situação', 'Cancelamento',
-                              'Tipo de OP', 'OP relacionada', 'Pedido',
-                              'Pedido do cliente'),
-                'i_fields': ('SITUACAO', 'CANCELAMENTO',
-                             'TIPO_OP', 'OP_REL', 'PEDIDO',
-                             'PED_CLIENTE'),
+                'i_headers': ('Situação', 'Cancelamento', 'Pedido',
+                              'Pedido do cliente', 'Tipo de OP',
+                              'OP relacionada'),
+                'i_fields': ('SITUACAO', 'CANCELAMENTO', 'PEDIDO',
+                             'PED_CLIENTE', 'TIPO_OP', 'OP_REL'),
+                'i_group': i_group,
                 'i_data': i_data,
             })
 
