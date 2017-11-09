@@ -15,7 +15,16 @@ def os_op(cursor, os):
         SELECT
           l.ORDEM_PRODUCAO OP
         , count(l.ORDEM_CONFECCAO) LOTES
-        , sum(l.QTDE_PECAS_PROG) QTD
+        , sum(
+            CASE WHEN l.QTDE_A_PRODUZIR_PACOTE <> 0
+            THEN l.QTDE_A_PRODUZIR_PACOTE
+            ELSE --l.QTDE_PECAS_PROG
+              QTDE_PECAS_PROD
+            + QTDE_CONSERTO
+            + QTDE_PECAS_2A
+            + QTDE_PERDAS
+            END
+          ) QTD
         , o.PEDIDO_VENDA PEDIDO
         , COALESCE(ped.COD_PED_CLIENTE, '') PED_CLIENTE
         FROM pcpc_040 l -- lotes
