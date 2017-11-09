@@ -51,7 +51,8 @@
           </div>
           <div class="col-md-4" align="right">
             <small>Versão da Intranet: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})</small>
-            <span id='greasymonkeyverify'><br />Chame o TI da Tussor para atualizar o Firefox e instalar o <a href="https://addons.mozilla.org/pt-BR/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> e o script <a href="http://intranet/Tussor_Intranet.user.js" target="_blank">"Tussor_Intranet"</a></span>
+            <span style='display:none' id='greasymonkeyverify'><br />Chame o TI da Tussor para atualizar o Firefox e instalar o <a href="https://addons.mozilla.org/pt-BR/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> e o script <a href="http://intranet/Tussor_Intranet.user.js" target="_blank">"Tussor_Intranet"</a></span>
+            <span style='display:none' id='tampermonkeyverify'><br />Chame o TI da Tussor para atualizar o Chromium ou o Chrome e instalar o <a href="https://chrome.google.com/webstore/search/Tampermonkey?hl=pt-BR" target="_blank">Tampermonkey</a> e o script <a href="http://intranet/Tussor_Fo2_Intranet.user.js" target="_blank">"Tussor_Fo2_Intranet"</a></span>
           </div>
         </div>
       </div>
@@ -74,5 +75,14 @@
   <!-- <script src="js/bootstrap.min.js"></script> -->
   <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
   {% block javascript %}{% endblock %}
+  <script>
+    var FIREFOX = /Firefox/i.test(navigator.userAgent);
+
+    if (FIREFOX) {
+      document.getElementById("greasymonkeyverify").style.display="inline";
+    } else {
+      document.getElementById("tampermonkeyverify").style.display="inline";
+    }
+  </script>
 </body>
 </html>
