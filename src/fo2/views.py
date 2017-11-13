@@ -17,5 +17,14 @@ def logout_view(request):
     return redirect('/')
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
 def myip_view(request):
-    return HttpResponse("Your IP is : %s" % request.META.get('REMOTE_ADDR'))
+    return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
