@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 from .admin import intr_adm_site
 from .views import IndexView, IntranetView, logout_view, myip_view, \
-    oficial_systextil_view
+    OficialSystextilView
 
 
 # admin.autodiscover()
@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^intranet/', IntranetView.as_view(), name='info'),
     url(r'^encerrar/', logout_view, name='encerrar'),
     url(r'^myip/', myip_view, name='myip'),
-    url(r'^oficial.systextil/', oficial_systextil_view,
+    url(r'^oficial.systextil/', OficialSystextilView.as_view(),
         name='oficial_systextil'),
     # url(r'^', admin.site.urls),
     url(r'^rootadm/', admin.site.urls),
