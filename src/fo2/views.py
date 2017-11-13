@@ -23,5 +23,5 @@ def myip_view(request):
     return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
 
 
-def oficial_systextil_view(request):
-    return redirect('http://oficial.systextil.tussor.com.br:8080/systextil')
+class OficialSystextilView(TemplateView):
+    template_name = "oficial_systextil.html"
