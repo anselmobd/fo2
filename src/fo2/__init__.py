@@ -1,9 +1,17 @@
-__version__ = '0.1.35'
-__version__date__ = '2017/11/08'
+__version__ = '0.1.37'
+__version__date__ = '2017/11/13'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.37 - 2017/11/13
+#   . Abrindo Systêxtil sem ajuda de página externa (funcionando também de fora
+#     da Tussor)
+#
+# - 0.1.36 - 2017/11/09
+#   . OP: Prevendo OP com mais de uma finha na informações básicas
+#   . OP e OS: acertando quantidades apresentadas - considerando perda e etc.
 #
 # - 0.1.35 - 2017/11/08
 #   . Pedido: Situação da venda
