@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .admin import intr_adm_site
-from .views import IndexView, IntranetView, logout_view
+from .views import IndexView, IntranetView, logout_view, myip_view
 
 
 # admin.autodiscover()
@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^intranet/', IntranetView.as_view(), name='info'),
     url(r'^encerrar/', logout_view, name='encerrar'),
+    url(r'^myip/', myip_view, name='myip'),
     # url(r'^', admin.site.urls),
     url(r'^rootadm/', admin.site.urls),
     url(r'^intradm/', intr_adm_site.urls),
