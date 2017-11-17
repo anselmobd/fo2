@@ -5,14 +5,13 @@
 {% block header.content %}Apoio ao ERP{% endblock header.content %}
 
 {% block content %}
-<!--h3><a href="http://intranet.tussor.com.br/oficial.systextil.html" target="_blank">Sistema Systêxtil</a></h3-->
 <h3>Rotinas auxiliares ao Systêxtil</h3>
 <br />
 <table>
   <tr>
     <td>
       <ul>
-        <li><a href="lotes/">Produção</a></li>
+        <li><a href="{% url 'lotes' %}">Produção</a></li>
         {% include 'lotes/menu.html' %}
       </ul>
     </td>
@@ -20,13 +19,13 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td>
       <ul>
-        <li><a href="produto/">Produto</a></li>
+        <li><a href="{% url 'produto' %}">Produto</a></li>
         {% include 'produto/menu.html' %}
         <br />
-        <li><a href="insumo/">Insumo</a></li>
+        <li><a href="{% url 'insumo' %}">Insumo</a></li>
         {% include 'insumo/menu.html' %}
         <br />
-        <li><a href="geral/">Cadastros gerais</a></li>
+        <li><a href="{% url 'geral' %}">Cadastros gerais</a></li>
         {% include 'geral/menu.html' %}
       </ul>
     </td>
@@ -34,13 +33,13 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td>
       <ul>
-        <li><a href="contabil/">Contabilidade</a></li>
+        <li><a href="{% url 'contabil' %}">Contabilidade</a></li>
         {% include 'contabil/menu.html' %}
         <br />
-        <li><a href="comercial/">Comercial</a></li>
+        <li><a href="{% url 'comercial' %}">Comercial</a></li>
         {% include 'comercial/menu.html' %}
         <br />
-        <li><a href="logistica/">Logistica</a></li>
+        <li><a href="{% url 'logistica' %}">Logistica</a></li>
         {% include 'logistica/menu.html' %}
       </ul>
     </td>
