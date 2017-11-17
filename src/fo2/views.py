@@ -10,8 +10,12 @@ def index_view(request):
     return redirect('apoio_ao_erp')
 
 
-class ApoioAoErpView(TemplateView):
-    template_name = "apoio_ao_erp.html"
+class IndexView(TemplateView):
+    template_name = "index.html"
+
+
+# class ApoioAoErpView(TemplateView):
+#     template_name = "apoio_ao_erp.html"
 
 
 class IntranetView(TemplateView):
