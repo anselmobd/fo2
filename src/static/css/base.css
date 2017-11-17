@@ -3,3 +3,36 @@
     content: none
   }
 }
+
+/*
+--------------------------------------------------
+  Systêxtil
+--------------------------------------------------
+*/
+
+.stnavbar{
+  text-decoration: none;
+  .stlogo{
+    font-family: "Roboto";
+    font-weight: 100;
+    color:#2764ae;
+  }
+  .stlogo b{
+    font-weight:900;
+  }
+}
+
+/* Thin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 100;
+  src: url("http://oficial.systextil.tussor.com.br:8080/systextil/Static_Content/fonts/roboto/Roboto-Thin.ttf") format('truetype');
+}
+/* Black */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 900;
+  src: url("http://oficial.systextil.tussor.com.br:8080/systextil/Static_Content/fonts/roboto/Roboto-Black.ttf") format('truetype');
+}
