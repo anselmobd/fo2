@@ -1,9 +1,13 @@
-__version__ = '0.1.37'
-__version__date__ = '2017/11/13'
+__version__ = '0.1.38'
+__version__date__ = '2017/11/17'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.38 - 2017/11/17
+#   . Alteração de layout e algumas ULRs
+#   . Adição de link de base de conhecimento
 #
 # - 0.1.37 - 2017/11/13
 #   . Abrindo Systêxtil sem ajuda de página externa (funcionando também de fora
