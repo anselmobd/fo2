@@ -13,8 +13,6 @@
 
   <!-- JQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> -->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>  -->
 
   <!-- Bootstrap -->
   <!-- Latest compiled and minified CSS -->
@@ -42,12 +40,12 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-5">
-            <big><a href="/intranet/">Intranet</a></big><br />
-            <a href="/">Apoio ao ERP - Consultas</a> &amp; <a href="/intradm/" target="_blank">Cadastros</a> | <a href="/oficial.systextil" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a>
+            <big><a href="{% url 'intranet' %}">Intranet</a></big><br />
+            <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP - Consultas</a> &amp; <a href="/intradm/" target="_blank">Cadastros</a> | <a href="{% url 'oficial_systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a>
           </div>
           <div class="col-md-2" align="center">
             Tussor (cuecas D'UOMO)<br />
-            {% if request.user.is_authenticated %}Usuário: '{{ request.user.username }}'&nbsp;<a href="/encerrar">Encerrar sessão</a>{% endif %}
+            {% if request.user.is_authenticated %}Usuário: '{{ request.user.username }}'&nbsp;<a href="{% url 'encerrar' %}">Encerrar sessão</a>{% endif %}
           </div>
           <div class="col-md-5" align="right">
             <small>Versão da Intranet: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})</small>
