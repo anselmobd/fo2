@@ -19,15 +19,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .admin import intr_adm_site
-from .views import IndexView, IntranetView, logout_view, myip_view, \
-    OficialSystextilView
+from .views import index_view, IntranetView, logout_view, myip_view, \
+    OficialSystextilView, ApoioAoErpView
 
 
 # admin.autodiscover()
 
 urlpatterns = [
-    # url(r'^$', index_view, name='index'),
-    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^$', index_view, name='index'),
+    url(r'^apoio_ao_erp/', ApoioAoErpView.as_view(), name='apoio_ao_erp'),
     url(r'^intranet/', IntranetView.as_view(), name='intranet'),
     url(r'^encerrar/', logout_view, name='encerrar'),
     url(r'^myip/', myip_view, name='myip'),
