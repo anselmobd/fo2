@@ -1,3 +1,5 @@
+import re
+
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
@@ -25,6 +27,7 @@ def responsCustom(request, todos):
         if form.is_valid():
             estagio = form.cleaned_data['estagio']
             usuario = '%'+form.cleaned_data['usuario']+'%'
+            usuario_num = re.sub("\D", "", form.cleaned_data['usuario'])
             ordem = form.cleaned_data['ordem']
             cursor = connections['so'].cursor()
             sql = """
@@ -42,7 +45,9 @@ def responsCustom(request, todos):
                   ON u.CODIGO_USUARIO = r.CODIGO_USUARIO
                 WHERE e.CODIGO_ESTAGIO <> 0
                   AND ( %s is NULL OR e.CODIGO_ESTAGIO = %s )
-                  AND ( coalesce( u.USUARIO, '_' ) like %s )
+                  AND ( ( coalesce( u.USUARIO, '_' ) like %s )
+                      OR ( %s is NOT NULL AND u.CODIGO_USUARIO = %s )
+                      )
             """
             if not todos:
                 sql = sql + """
@@ -64,12 +69,14 @@ def responsCustom(request, todos):
                       u.USUARIO
                     , e.CODIGO_ESTAGIO
                 '''
-            cursor.execute(sql, (estagio, estagio, usuario))
+            cursor.execute(sql, (estagio, estagio,
+                                 usuario, usuario_num, usuario_num))
             data = rows_to_dict_list(cursor)
             if len(data) != 0:
                 if ordem == 'e':
                     context.update({
-                        'headers': ('Estágio', 'Usuário Systêxtil ( matrícula )'),
+                        'headers': ('Estágio',
+                                    'Usuário Systêxtil ( matrícula )'),
                         'fields': ('ESTAGIO', 'USUARIO'),
                         'data': data,
                     })
