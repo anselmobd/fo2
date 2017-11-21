@@ -15,7 +15,9 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-<h4>({% if todos %}todos{% else %}procedimento padrão{% endif %})</h4>
+{% if todos %}
+  <h4>(todos)</h4>
+{% endif %}
 {% if data %}
 <table>
   {% include "layout/html_thead.html" with data=headers only %}
