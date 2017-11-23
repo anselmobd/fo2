@@ -1,10 +1,18 @@
-from django.shortcuts import render
+import re
+from pprint import pprint
+
+from django.shortcuts import render, redirect
 from django.db import connections
 from django.views import View
+from django.db import connections
+from django.http import JsonResponse, HttpResponse
 
-from .forms import RefForm
+from fo2.models import rows_to_dict_list
+
 from utils.forms import FiltroForm
+
 import insumo.models as models
+from .forms import RefForm
 
 
 def index(request):
@@ -182,3 +190,25 @@ class ListaInsumo(View):
             context.update(self.mount_context(cursor, busca))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+def rolo_json(request, *args, **kwargs):
+    if 'barcode' in kwargs:
+        barcode = re.sub("\D", "", kwargs['barcode'])[:9]
+        cursor = connections['so'].cursor()
+        sql = """
+            SELECT
+              x.CODIGO_ROLO ROLO
+            , x.PANOACAB_NIVEL99 NIVEL
+            , x.PANOACAB_GRUPO REF
+            , x.PANOACAB_SUBGRUPO TAM
+            , x.PANOACAB_ITEM COR
+            FROM PCPT_020 x -- cadastro de rolos
+            WHERE x.CODIGO_ROLO = %s
+        """
+        cursor.execute(sql, (barcode,))
+        data = rows_to_dict_list(cursor)
+        if len(data) == 0:
+            data = [{}]
+        return JsonResponse(data[0])
+    return HttpResponse('')

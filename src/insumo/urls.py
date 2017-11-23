@@ -13,4 +13,7 @@ urlpatterns = [
         name='lista_insumo'),
     url(r'^lista_insumo/(?P<busca>.+)/$', views.ListaInsumo.as_view(),
         name='lista_insumo_busca'),
+
+    url(r'^rolo/(?P<barcode>.*)/$',
+        views.rolo_json, name='mp_rolo_json'),
 ]
