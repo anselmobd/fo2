@@ -44,7 +44,7 @@ class Dispositivos(models.Model):
 class RoloBipado(models.Model):
     dispositivo = models.ForeignKey(Dispositivos, on_delete=models.CASCADE)
     rolo = models.IntegerField(
-        verbose_name='Código de barras')
+        verbose_name='Rolo')
     date = models.DateTimeField(
         auto_now_add=True, blank=True, verbose_name='Data/Hora')
     referencia = models.CharField(
