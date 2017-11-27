@@ -14,6 +14,6 @@ urlpatterns = [
     url(r'^lista_insumo/(?P<busca>.+)/$', views.ListaInsumo.as_view(),
         name='lista_insumo_busca'),
 
-    url(r'^rolo/(?P<barcode>.*)/$',
+    url(r'^rolo/(?P<barcode>.+)/(?P<origem>.+)/$',
         views.rolo_json, name='mp_rolo_json'),
 ]
