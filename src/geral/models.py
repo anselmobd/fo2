@@ -21,3 +21,15 @@ class RecordTracking(models.Model):
         db_table = "fo2_ger_record_tracking"
         verbose_name = "log de registro"
         verbose_name_plural = "logs de registro de tabela"
+
+
+class Dispositivos(models.Model):
+    key = models.CharField(
+        max_length=64, verbose_name='Chave de identificação')
+    nome = models.CharField(
+        null=True, blank=True,
+        max_length=64, verbose_name='Nome do dispositivo')
+
+    class Meta:
+        db_table = "fo2_ger_dispositivos"
+        verbose_name = "dispositivo"
