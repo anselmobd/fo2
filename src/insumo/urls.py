@@ -16,4 +16,8 @@ urlpatterns = [
 
     url(r'^rolo/(?P<barcode>.+)/(?P<origem>.+)/$',
         views.rolo_json, name='mp_rolo_json'),
+
+    url(r'^rolos_bipados/$', views.RolosBipados.as_view(),
+        name='rolos_bipados'),
+
 ]
