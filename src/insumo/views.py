@@ -13,7 +13,7 @@ from geral.models import Dispositivos, RoloBipado
 from utils.forms import FiltroForm
 
 import insumo.models as models
-from .forms import RefForm
+from .forms import RefForm, RolosBipadosForm
 
 
 def index(request):
@@ -228,3 +228,60 @@ def rolo_json(request, *args, **kwargs):
         rolo_bipado.save()
 
     return JsonResponse(data[0])
+
+
+class RolosBipados(View):
+    Form_class = RolosBipadosForm
+    template_name = 'insumo/rolos_bipados.html'
+    title_name = 'Rolos Bipados'
+
+    def mount_context(self, cursor, ref, cor):
+        context = {'ref': ref,
+                   'cor': cor}
+
+        # Lista rolos
+        rolos = RoloBipado.objects
+        if ref is not None:
+            rolos = rolos.filter(referencia=ref)
+        if cor != '':
+            rolos = rolos.filter(cor__contains=cor)
+        rolos = rolos.order_by('-date').\
+            select_related('dispositivo')
+        if len(rolos) == 0:
+            context.update({
+                'msg_erro': 'Nenhum rolo selecionado',
+            })
+        else:
+            # data = rolos.values()
+            data = []
+            for rolo in rolos:
+                row = rolo.__dict__
+                row['dispositivo'] = rolo.dispositivo
+                data.append(row)
+            pprint(data)
+            context.update({
+                'headers': ('dispositivo', 'Rolo', 'Data/hora',
+                            'Referencia', 'Tamanho', 'Cor'),
+                'fields': ('dispositivo', 'rolo', 'date',
+                           'referencia', 'tamanho', 'cor'),
+                'data': data,
+            })
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            ref = form.cleaned_data['ref']
+            cor = form.cleaned_data['cor']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, ref, cor))
+        context['form'] = form
+        return render(request, self.template_name, context)
