@@ -54,6 +54,10 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         , l.PERIODO_PRODUCAO PERIODO
         , l.ORDEM_CONFECCAO OC
         , l.QTDE_PECAS_PROG QTD
+        , l.QTDE_PECAS_PROD PROD1Q
+        , l.QTDE_CONSERTO CONSERTO
+        , l.QTDE_PECAS_2A PROD2Q
+        , l.QTDE_PERDAS PERDA
         , r.NARRATIVA
         , CASE WHEN l.DIVISAO = 0 THEN dp.DIVISAO_PRODUCAO
           ELSE l.DIVISAO END DIVISAO
@@ -69,6 +73,10 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           , os.ORDEM_PRODUCAO
           , max( os.NUMERO_ORDEM ) NUMERO_ORDEM
           , max( os.QTDE_PECAS_PROG ) QTDE_PECAS_PROG
+          , max( os.QTDE_PECAS_PROD ) QTDE_PECAS_PROD
+          , max( os.QTDE_CONSERTO ) QTDE_CONSERTO
+          , max( os.QTDE_PECAS_2A ) QTDE_PECAS_2A
+          , max( os.QTDE_PERDAS ) QTDE_PERDAS
           , max( CASE WHEN os.CODIGO_FAMILIA < 1000
                  THEN os.CODIGO_FAMILIA
                  ELSE 0 END ) DIVISAO
