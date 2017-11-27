@@ -198,6 +198,8 @@ def rolo_json(request, *args, **kwargs):
     if len(dispositivo) == 0:
         dispositivo = Dispositivos.objects.create(key=kwargs['origem'])
         dispositivo.save()
+    else:
+        dispositivo = dispositivo[0]
     barcode = re.sub("\D", "", kwargs['barcode'])[:9]
     cursor = connections['so'].cursor()
     sql = """
