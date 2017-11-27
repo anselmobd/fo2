@@ -9,7 +9,7 @@ from django.http import JsonResponse, HttpResponse
 
 from fo2.models import rows_to_dict_list
 
-from geral.models import Dispositivos
+from geral.models import Dispositivos, RoloBipado
 from utils.forms import FiltroForm
 
 import insumo.models as models
@@ -214,5 +214,15 @@ def rolo_json(request, *args, **kwargs):
     data = rows_to_dict_list(cursor)
     if len(data) == 0:
         data = [{}]
+    else:
+        row = data[0]
+        rolo_bipado = RoloBipado(
+            dispositivo=dispositivo,
+            rolo=row['ROLO'],
+            referencia=row['REF'],
+            tamanho=row['TAM'],
+            cor=row['COR'],
+            )
+        rolo_bipado.save()
+
     return JsonResponse(data[0])
-    return HttpResponse('')
