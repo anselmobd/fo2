@@ -1,4 +1,6 @@
+import os
 import re
+import time
 from pprint import pprint
 
 from django.shortcuts import render, redirect
@@ -7,6 +9,7 @@ from django.views import View
 from django.db import connections
 from django.http import JsonResponse, HttpResponse
 
+from fo2 import settings
 from fo2.models import rows_to_dict_list
 
 from geral.models import Dispositivos, RoloBipado
@@ -235,31 +238,65 @@ class RolosBipados(View):
     template_name = 'insumo/rolos_bipados.html'
     title_name = 'Rolos Bipados'
 
-    def mount_context(self, cursor, ref, cor):
-        context = {'ref': ref,
-                   'cor': cor}
-
+    def mount_context(self, cursor, dispositivo, ref, cor, data_de, data_ate):
+        context = {}
         # Lista rolos
-        rolos = RoloBipado.objects
-        if ref is not None:
+        rolos = RoloBipado.objects.select_related('dispositivo')
+        filename = ''
+        filenamesep = ''
+        if dispositivo != '':
+            rolos = rolos.filter(dispositivo__nome__icontains=dispositivo)
+            context.update({
+                'dispositivo': dispositivo,
+            })
+            filename += filenamesep + 'D_'+dispositivo
+            filenamesep = '-'
+        if ref != '':
             rolos = rolos.filter(referencia=ref)
+            context.update({
+                'ref': ref,
+            })
+            filename += filenamesep + 'R_'+ref
+            filenamesep = '-'
         if cor != '':
             rolos = rolos.filter(cor__contains=cor)
-        rolos = rolos.order_by('-date').\
-            select_related('dispositivo')
+            context.update({
+                'cor': cor,
+            })
+            filename += filenamesep + 'C_'+cor
+            filenamesep = '-'
+        if data_de is not None:
+            rolos = rolos.filter(date__gte=data_de)
+            context.update({
+                'data_de': data_de,
+            })
+            filename += filenamesep + 'DD_'+data_de.strftime("%Y.%m.%d")
+            filenamesep = '-'
+        if data_ate is not None:
+            rolos = rolos.filter(date__lte=data_ate)
+            context.update({
+                'data_ate': data_ate,
+            })
+            filename += filenamesep + 'DA_'+data_ate.strftime("%Y.%m.%d")
+            filenamesep = '-'
+        filename += filenamesep + time.strftime("%Y.%m.%d-%H.%M.%S") + '.TXT'
+        rolos = rolos.order_by('-date')
         if len(rolos) == 0:
             context.update({
                 'msg_erro': 'Nenhum rolo selecionado',
             })
         else:
-            # data = rolos.values()
             data = []
-            for rolo in rolos:
-                row = rolo.__dict__
-                row['dispositivo'] = rolo.dispositivo
-                data.append(row)
-            pprint(data)
+            dir_filename = os.path.join('insumos_rolos_bipados', filename)
+            arq = os.path.join(settings.MEDIA_ROOT, dir_filename)
+            with open(arq, 'w') as f:
+                for rolo in rolos:
+                    row = rolo.__dict__
+                    row['dispositivo'] = rolo.dispositivo
+                    data.append(row)
+                    print("{:06}{:09}".format(1, rolo.rolo), file=f)
             context.update({
+                'filename': dir_filename,
                 'headers': ('dispositivo', 'Rolo', 'Data/hora',
                             'Referencia', 'Tamanho', 'Cor'),
                 'fields': ('dispositivo', 'rolo', 'date',
@@ -279,9 +316,13 @@ class RolosBipados(View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
+            dispositivo = form.cleaned_data['dispositivo']
             ref = form.cleaned_data['ref']
             cor = form.cleaned_data['cor']
+            data_de = form.cleaned_data['data_de']
+            data_ate = form.cleaned_data['data_ate']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, ref, cor))
+            context.update(self.mount_context(
+                cursor, dispositivo, ref, cor, data_de, data_ate))
         context['form'] = form
         return render(request, self.template_name, context)

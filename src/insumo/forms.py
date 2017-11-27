@@ -16,13 +16,25 @@ class RefForm(forms.Form):
 
 
 class RolosBipadosForm(forms.Form):
-    ref = forms.CharField(
-        label='Referência', max_length=5, required=False,
+    dispositivo = forms.CharField(
+        label='Dispositivo', max_length=32, required=False,
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
+
+    ref = forms.CharField(
+        label='Referência', max_length=5, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
     cor = forms.CharField(
         label='Cor', max_length=6, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
+
+    data_de = forms.DateField(
+        label='Data de bipagem: De', required=False,
+        widget=forms.DateInput(attrs={'type': 'date',
+                               'autofocus': 'autofocus'}))
+    data_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()

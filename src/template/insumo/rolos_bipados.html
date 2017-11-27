@@ -15,8 +15,20 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if busca %}
-  <h2>Filtro: {{ busca }}</h2>
+{% if dispositivo %}
+  <h3>Dispositivo: {{ dispositivo }}</h3>
+{% endif %}
+{% if ref %}
+  <h3>Referência: {{ ref }}</h3>
+{% endif %}
+{% if cor %}
+  <h3>Cor: {{ cor }}</h3>
+{% endif %}
+{% if data_de %}
+  <h3>Data de: {{ data_de }}</h3>
+{% endif %}
+{% if data_ate %}
+  <h3>Data Ate: {{ data_ate }}</h3>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
