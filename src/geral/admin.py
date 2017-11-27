@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from fo2.admin import intr_adm_site
-from .models import RecordTracking, Dispositivos
+from .models import RecordTracking, Dispositivos, RoloBipado
 
 
 class RecordTrackingAdmin(admin.ModelAdmin):
@@ -20,6 +20,18 @@ class DispositivosAdmin(admin.ModelAdmin):
     readonly_fields = ['key']
 
 
+class RoloBipadoAdmin(admin.ModelAdmin):
+    list_display = [
+        'dispositivo', 'rolo', 'date', 'referencia', 'tamanho', 'cor']
+    search_fields = ['rolo', 'date', 'referencia', 'tamanho', 'cor']
+    ordering = ['referencia', 'tamanho', 'cor', 'rolo']
+    fields = ['dispositivo', 'rolo', 'date', 'referencia', 'tamanho', 'cor']
+    readonly_fields = [
+        'dispositivo', 'rolo', 'date', 'referencia', 'tamanho', 'cor']
+
+
 intr_adm_site.register(RecordTracking, RecordTrackingAdmin)
 
 intr_adm_site.register(Dispositivos, DispositivosAdmin)
+
+intr_adm_site.register(RoloBipado, RoloBipadoAdmin)
