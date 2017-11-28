@@ -80,7 +80,10 @@ class Op(View):
 
             row = i3_data[0]
             row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
-            row['DT_CORTE'] = row['DT_CORTE'].date()
+            if row['DT_CORTE'] is None:
+                row['DT_CORTE'] = ''
+            else:
+                row['DT_CORTE'] = row['DT_CORTE'].date()
             row['PERIODO_INI'] = row['PERIODO_INI'].date()
             row['PERIODO_FIM'] = row['PERIODO_FIM'].date()
             context.update({
