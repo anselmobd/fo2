@@ -121,3 +121,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Media específica
+media/insumos_rolos_bipados
