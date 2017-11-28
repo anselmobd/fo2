@@ -101,12 +101,13 @@ class ImprimeLotesForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
     tam = forms.CharField(
-        label='Apenas do tamanho', required=False,
+        label='Tamanho', required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
     cor = forms.CharField(
-        label='Apenas da cor', required=False,
+        label='Cor', required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
     order = forms.ChoiceField(
+        label='Ordem',
         choices=[('t',  'Tamanho/Cor/OC'), ('o', 'OC'),
                  ('c', 'Cor/Tamanho/OC')])
     oc_ininial = forms.IntegerField(
