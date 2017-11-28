@@ -123,10 +123,13 @@ class ImprimeLotesForm(forms.Form):
         label='Imprime quantos lotes', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
     ultimo = forms.CharField(
-        label='Último lote impresso',  required=False,
+        label='Último lote impresso', required=False,
         max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+    adesiva = forms.BooleanField(
+        label='Etiqueta adesiva', required=False,
+        initial=True)
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()

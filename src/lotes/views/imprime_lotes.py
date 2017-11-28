@@ -24,7 +24,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
 
     def mount_context_and_print(self, cursor, op, tam, cor, order,
                                 oc_ininial, oc_final,
-                                pula, qtd_lotes, ultimo, do_print):
+                                pula, qtd_lotes, ultimo,
+                                adesiva, do_print):
         context = {}
 
         oc_ininial_val = oc_ininial or 0
@@ -46,23 +47,16 @@ class ImprimeLotes(LoginRequiredMixin, View):
             })
             l_data = []
             return context
-
-        context.update({
-            'op': op,
-            'oc_ininial': oc_ininial,
-            'oc_final': oc_final,
-            'count': len(l_data),
-        })
-        pode_imprimir = ultimo is None
+        pula_lote = ultimo != ''
         data = []
         for row in l_data:
             row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
             if row['DIVISAO'] is None:
                 row['DESCRICAO_DIVISAO'] = ''
-            if pode_imprimir:
-                data.append(row)
+            if pula_lote:
+                pula_lote = row['LOTE'] != ultimo
             else:
-                pode_imprimir = row['LOTE'] == ultimo
+                data.append(row)
 
         if len(data) == 0:
             context.update({
@@ -70,7 +64,13 @@ class ImprimeLotes(LoginRequiredMixin, View):
             })
             return context
 
+        if adesiva:
+            cod_impresso = 'Cartela de Lote Adesiva'
+        else:
+            cod_impresso = 'Cartela de Lote Cartão'
         context.update({
+            'count': len(data),
+            'cod_impresso': cod_impresso,
             'headers': ('OP', 'Referência', 'Tamanho', 'Cor',
                         'Estágio', 'Período', 'OC', 'Quant.', 'Lote',
                         'Unidade'),
@@ -83,7 +83,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         if do_print:
             try:
                 impresso = models.Impresso.objects.get(
-                    nome='Cartela de Lote')
+                    nome=cod_impresso)
             except models.Impresso.DoesNotExist:
                 impresso = None
             if impresso is None:
@@ -156,11 +156,12 @@ class ImprimeLotes(LoginRequiredMixin, View):
             pula = form.cleaned_data['pula']
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
+            adesiva = form.cleaned_data['adesiva']
 
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
                     cursor, op, tam, cor, order, oc_ininial, oc_final,
-                    pula, qtd_lotes, ultimo, 'print' in request.POST))
+                    pula, qtd_lotes, ultimo, adesiva, 'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)
