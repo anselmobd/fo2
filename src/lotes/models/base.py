@@ -63,6 +63,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           ELSE l.DIVISAO END DIVISAO
         , CASE WHEN l.DIVISAO = 0 THEN dp.DESCRICAO
           ELSE di.DESCRICAO END DESCRICAO_DIVISAO
+        , op.DATA_ENTRADA_CORTE
         FROM (
           SELECT
             os.PERIODO_PRODUCAO
