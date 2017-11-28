@@ -89,6 +89,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     do_print = False
 
             if do_print:
+                e_data = models.op_estagios(cursor, op)
+                estagios = []
+                for e_row in e_data:
+                    estagios.append(e_row['EST'])
                 teg = TermalPrint(usuario_impresso.impressora_termica.nome)
                 teg.template(usuario_impresso.modelo.modelo, '\r\n')
                 teg.printer_start()
@@ -103,16 +107,12 @@ class ImprimeLotes(LoginRequiredMixin, View):
                         row['cor'] = row['COR']
                         row['narrativa'] = row['NARRATIVA']
                         row['qtd'] = row['QTD']
-                        if row['DIVISAO'] is None:
-                            row['divisao'] = ''
-                        else:
-                            row['divisao'] =\
-                                'UNID: {}'.format(row['DIVISAO'])
-                        if row['DIVISAO'] is None:
-                            row['descricao_divisao'] = ''
-                        else:
-                            row['descricao_divisao'] =\
-                                row['DESCRICAO_DIVISAO']
+                        row['divisao'] = row['DIVISAO']
+                        row['descricao_divisao'] = row['DESCRICAO_DIVISAO']
+                        row['data_entrada_corte'] = \
+                            row['DATA_ENTRADA_CORTE'].date()
+                        row['estagios'] = estagios
+                        pprint(estagios)
                         teg.context(row)
                         teg.printer_send()
                 finally:
