@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'lotes',
     'geral',
     'produto',
+    'utils',
 ]
 
 MIDDLEWARE = [
