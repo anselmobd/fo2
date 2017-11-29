@@ -14,19 +14,17 @@ def index(request):
 class InfAdProd(View):
     Form_class = InfAdProdForm
     template_name = 'contabil/infadprod.html'
-    context = {
-        'titulo': 'InfAdProd, EAN e Narrativa',
-    }
+    title_name = 'Itens de pedido (InfAdProd, EAN e Narrativa)'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
+        context = {'titulo': self.title_name}
         form = self.Form_class()
-        context = self.context
         context['form'] = form
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = self.Form_class(request.POST)
-        context = self.context
+        context = {'titulo': self.title_name}
         if form.is_valid():
             pedido = form.cleaned_data['pedido']
 
