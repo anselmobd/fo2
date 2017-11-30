@@ -9,3 +9,8 @@ def index(request):
 def campanhas(request):
     context = {'titulo': 'Campanhas'}
     return render(request, 'rh/campanhas.html', context)
+
+
+def datas(request):
+    context = {'titulo': 'Datas comemorativas'}
+    return render(request, 'rh/datas.html', context)
