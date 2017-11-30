@@ -1,0 +1,26 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="/rh/">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+  <h3>Mês 2017/12</h3>
+  <a href="/media/rh/DUOMO_Natal_2017_w600.jpg" target="_blank">
+    <h4>Natal 2017!</h4>
+    <img src="/media/rh/DUOMO_Natal_2017_w200.jpg" alt="">
+  </a>
+  <hr>
+  <h3>Mês 2017/11</h3>
+  <a href="/media/rh/DUOMO_Dia_Mundial_da_Gentileza_w600.jpg" target="_blank">
+    <h4>Dia mundial da Gentileza</h4>
+    <img src="/media/rh/DUOMO_Dia_Mundial_da_Gentileza_w200.jpg" alt="">
+  </a>
+</center>
+{% endblock %}
