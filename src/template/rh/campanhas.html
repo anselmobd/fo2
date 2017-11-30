@@ -1,0 +1,19 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="/rh/">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<ul>
+  <li><a href="/media/rh/DUOMO_Campanha_de_Natal_w600.jpg">Natal 2017 - Doe um brinquedo!<br />
+  <img src="/media/rh/DUOMO_Campanha_de_Natal_w200.png" alt=""></a></li>
+</ul>
+</center>
+{% endblock %}

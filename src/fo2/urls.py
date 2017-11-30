@@ -43,4 +43,5 @@ urlpatterns = [
     url(r'^contabil/', include('contabil.urls')),
     url(r'^comercial/', include('comercial.urls')),
     url(r'^logistica/', include('logistica.urls')),
+    url(r'^rh/', include('rh.urls')),
   ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

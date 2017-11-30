@@ -40,11 +40,11 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-4">
-            <big><a href="{% url 'intranet' %}">Intranet</a></big><br />
+            <big><a href="{% url 'intranet' %}">Intranet Tussor </a></big> | <a href="{% url 'rh' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH"> em ação!</a><br />
             <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a> | <a href="{% url 'oficial_systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a>
           </div>
           <div class="col-md-4" align="center">
-            Tussor (cuecas D'UOMO)<br />
+            <img src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO"><br />
             {% if request.user.is_authenticated %}Usuário: '{{ request.user.username }}'&nbsp;<a href="{% url 'encerrar' %}">Encerrar sessão</a>{% endif %}
           </div>
           <div class="col-md-4" align="right">
@@ -54,6 +54,8 @@
           </div>
         </div>
       </div>
+      {% block advice %}
+      {% endblock %}
       <div class="page-header">
         {% block header %}
           {% block header.pre %}<h1>{% endblock header.pre %}{% block header.content %}
