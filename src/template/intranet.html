@@ -1,4 +1,5 @@
 {% extends 'layout/layout.html' %}
+{% load static %}
 
 {% block title.content %}Intranet {% endblock title.content %}
 
@@ -16,6 +17,8 @@
       <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/overview" target="_blank">Base de conhecimento Systêxtil</a></li>
     </ul>
   </ul>
+  <br />
+  <li><a href="{% url 'rh' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
   <br />
   <li>Gerais</li>
   <ul>
