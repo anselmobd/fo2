@@ -1,9 +1,15 @@
-__version__ = '0.1.38'
-__version__date__ = '2017/11/17'
+__version__ = '0.1.39'
+__version__date__ = '2017/11/30'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.39 - 2017/11/30
+#   . App RH
+#   . Impressão de cartelas de lote melhorada
+#   . Toda rotina de bipagem para inventário de rolos e geração de arquivo
+#     de inventário para o Systêxtil
 #
 # - 0.1.38 - 2017/11/17
 #   . Alteração de layout e algumas ULRs
