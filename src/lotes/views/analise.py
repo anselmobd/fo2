@@ -15,13 +15,14 @@ class AnPeriodoAlter(View):
     template_name = 'lotes/an_periodo_alter.html'
     title_name = 'Por período e alternativa'
 
-    def mount_context(self, cursor, periodo_de, periodo_ate):
+    def mount_context(self, cursor, periodo_de, periodo_ate, alternativa):
         # A ser produzido
         context = {}
         if periodo_ate is None:
             periodo_ate = periodo_de
 
-        data = models.an_periodo_alter_qtd(cursor, periodo_de, periodo_ate)
+        data = models.an_periodo_alter_qtd(
+            cursor, periodo_de, periodo_ate, alternativa)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem produção no período',
@@ -72,8 +73,10 @@ class AnPeriodoAlter(View):
         if form.is_valid():
             periodo_de = form.cleaned_data['periodo_de']
             periodo_ate = form.cleaned_data['periodo_ate']
+            alternativa = form.cleaned_data['alternativa']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, periodo_de, periodo_ate))
+            context.update(self.mount_context(
+                cursor, periodo_de, periodo_ate, alternativa))
         context['form'] = form
         return render(request, self.template_name, context)
 
@@ -83,13 +86,14 @@ class AnDtCorteAlter(View):
     template_name = 'lotes/an_dtcorte_alter.html'
     title_name = 'Por data de corte e alternativa'
 
-    def mount_context(self, cursor, data_de, data_ate):
+    def mount_context(self, cursor, data_de, data_ate, alternativa):
         # A ser produzido
         context = {}
         if data_ate is None:
             data_ate = data_de
 
-        data = models.an_dtcorte_alter_qtd(cursor, data_de, data_ate)
+        data = models.an_dtcorte_alter_qtd(
+            cursor, data_de, data_ate, alternativa)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem produção na data',
@@ -166,7 +170,9 @@ class AnDtCorteAlter(View):
         if form.is_valid():
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
+            alternativa = form.cleaned_data['alternativa']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, data_de, data_ate))
+            context.update(self.mount_context(
+                cursor, data_de, data_ate, alternativa))
         context['form'] = form
         return render(request, self.template_name, context)
