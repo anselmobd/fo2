@@ -1,9 +1,12 @@
-__version__ = '0.1.39'
-__version__date__ = '2017/11/30'
+__version__ = '0.1.40'
+__version__date__ = '2017/12/01'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.40 - 2017/12/01
+#   . Pedido: grade de itens pedidos
 #
 # - 0.1.39 - 2017/11/30
 #   . App RH
