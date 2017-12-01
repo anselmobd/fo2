@@ -4,7 +4,7 @@ from lotes.models import *
 from lotes.models.base import *
 
 
-def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate):
+def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
     # Produção por periodo e alternativa
     sql = """
         SELECT
@@ -41,8 +41,9 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate):
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
           AND o.SITUACAO IN (2, 4)
-          AND l.PERIODO_PRODUCAO >= %s
-          AND l.PERIODO_PRODUCAO <= %s
+          AND l.PERIODO_PRODUCAO >= '{periodo_de}'
+          AND l.PERIODO_PRODUCAO <= '{periodo_ate}'
+          AND (o.ALTERNATIVA_PECA = '{alternativa}' OR '{alternativa}' IS NULL)
         UNION
         SELECT distinct
           l.PERIODO_PRODUCAO
@@ -59,8 +60,9 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate):
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
           AND o.SITUACAO IN (2, 4)
-          AND l.PERIODO_PRODUCAO >= %s
-          AND l.PERIODO_PRODUCAO <= %s
+          AND l.PERIODO_PRODUCAO >= '{periodo_de}'
+          AND l.PERIODO_PRODUCAO <= '{periodo_ate}'
+          AND (o.ALTERNATIVA_PECA = '{alternativa}' OR '{alternativa}' IS NULL)
         ) pp
         JOIN pcpc_040 l
           ON l.PERIODO_PRODUCAO = pp.PERIODO_PRODUCAO
@@ -75,7 +77,7 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate):
           AND o.ROTEIRO_PECA = pp.ROTEIRO_PECA
           AND (  ( pp.TIPO_ORDEM = 3 AND l.PROCONF_GRUPO <= '99999')
               OR ( pp.TIPO_ORDEM = 1 AND l.PROCONF_GRUPO > 'A9999')
-              OR ( pp.TIPO_ORDEM = 2 AND l.PROCONF_GRUPO LIKE 'A')
+              OR ( pp.TIPO_ORDEM = 2 AND l.PROCONF_GRUPO LIKE 'A%')
               )
           AND ( pp.DATA_ENTRADA_CORTE = (CURRENT_DATE - 100000)
               OR ( pp.DATA_ENTRADA_CORTE IS NULL
@@ -97,12 +99,13 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate):
         , pp.ROTEIRO_PECA
         , pp.TIPO_ORDEM
         , pp.DATA_ENTRADA_CORTE
-    """
-    cursor.execute(sql, (periodo_de, periodo_ate, periodo_de, periodo_ate))
+    """.format(periodo_de=periodo_de, periodo_ate=periodo_ate,
+               alternativa=alternativa)
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
-def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
+def an_dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
     # Produção por data de corte/gargalo e alternativa
     sql = """
         SELECT
@@ -141,8 +144,9 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
           AND o.SITUACAO IN (2, 4)
-          AND o.DATA_ENTRADA_CORTE >= %s
-          AND o.DATA_ENTRADA_CORTE <= %s
+          AND o.DATA_ENTRADA_CORTE >= '{data_de}'
+          AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
+          AND (o.ALTERNATIVA_PECA = '{alternativa}' OR '{alternativa}' IS NULL)
         UNION
         SELECT
           p1.*
@@ -165,8 +169,9 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         WHERE l.PROCONF_NIVEL99 = 1
           AND o.SITUACAO IN (2, 4)
-          AND o.DATA_ENTRADA_CORTE >= %s
-          AND o.DATA_ENTRADA_CORTE <= %s
+          AND o.DATA_ENTRADA_CORTE >= '{data_de}'
+          AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
+          AND (o.ALTERNATIVA_PECA = '{alternativa}' OR '{alternativa}' IS NULL)
         ) p1
         JOIN PCPC_020 o1
           ON o1.DATA_ENTRADA_CORTE = p1.DATA_ENTRADA_CORTE
@@ -176,7 +181,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
          AND o1.ROTEIRO_PECA = p1.ROTEIRO_PECA
          AND (  ( p1.TIPO_ORDEM = 3 AND o1.REFERENCIA_PECA <= '99999')
              OR ( p1.TIPO_ORDEM = 1 AND o1.REFERENCIA_PECA > 'A9999')
-             OR ( p1.TIPO_ORDEM = 2 AND o1.REFERENCIA_PECA LIKE 'A')
+             OR ( p1.TIPO_ORDEM = 2 AND o1.REFERENCIA_PECA LIKE 'A%')
              )
         GROUP BY
           p1.PERIODO_PRODUCAO
@@ -202,7 +207,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
           AND o.ROTEIRO_PECA = pp.ROTEIRO_PECA
           AND (  ( pp.TIPO_ORDEM = 3 AND l.PROCONF_GRUPO <= '99999')
               OR ( pp.TIPO_ORDEM = 1 AND l.PROCONF_GRUPO > 'A9999')
-              OR ( pp.TIPO_ORDEM = 2 AND l.PROCONF_GRUPO LIKE 'A')
+              OR ( pp.TIPO_ORDEM = 2 AND l.PROCONF_GRUPO LIKE 'A%')
               )
           AND l.SEQ_OPERACAO = (
             SELECT
@@ -225,6 +230,6 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate):
         , pp.ROTEIRO_PECA
         , pp.TIPO_ORDEM
         , pp.PERIODO_PRODUCAO
-    """
-    cursor.execute(sql, (data_de, data_ate, data_de, data_ate))
+    """.format(data_de=data_de, data_ate=data_ate, alternativa=alternativa)
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
