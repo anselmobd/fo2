@@ -60,6 +60,15 @@ class Pedido(View):
                 'o_data': o_data,
             })
 
+            # Grade
+            g_header, g_fields, g_data = models.ped_sortimento(cursor, pedido)
+            if len(g_data) != 0:
+                context.update({
+                    'g_headers': g_header,
+                    'g_fields': g_fields,
+                    'g_data': g_data,
+                })
+
         return context
 
     def get(self, request, *args, **kwargs):
