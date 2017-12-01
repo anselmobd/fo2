@@ -78,3 +78,67 @@ def ped_op(cursor, pedido):
     """
     cursor.execute(sql, [pedido])
     return rows_to_dict_list(cursor)
+
+
+def ped_sortimento(cursor, pedido):
+    # Grade de pedido
+    grade = GradeQtd(cursor, [pedido])
+
+    # tamanhos
+    grade.col(
+        id='TAMANHO',
+        name='Tamanho',
+        sql='''
+            SELECT DISTINCT
+              i.CD_IT_PE_SUBGRUPO TAMANHO
+            , t.ORDEM_TAMANHO
+            FROM PEDI_110 i -- item de pedido de venda
+            LEFT JOIN BASI_220 t -- tamanhos
+              ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
+            WHERE i.PEDIDO_VENDA = %s
+            ORDER BY
+              t.ORDEM_TAMANHO
+        '''
+        )
+
+    # cores
+    grade.row(
+        id='SORTIMENTO',
+        facade='DESCR',
+        name='Produto-Cor',
+        name_plural='Produtos-Cores',
+        sql='''
+            SELECT
+              i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM SORTIMENTO
+            , i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM || ' - ' ||
+              max( rtc.DESCRICAO_15 ) DESCR
+            FROM PEDI_110 i -- item de pedido de venda
+            JOIN BASI_010 rtc -- item (ref+tam+cor)
+              on rtc.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
+             AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
+             AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
+             AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
+            WHERE i.PEDIDO_VENDA = %s
+            GROUP BY
+              i.CD_IT_PE_GRUPO
+            , i.CD_IT_PE_ITEM
+            ORDER BY
+              2
+        '''
+        )
+
+    # sortimento
+    grade.value(
+        id='QUANTIDADE',
+        sql='''
+            SELECT
+              i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM SORTIMENTO
+            , i.CD_IT_PE_SUBGRUPO TAMANHO
+            , i.QTDE_PEDIDA QUANTIDADE
+            FROM PEDI_110 i -- item de pedido de venda
+            WHERE i.PEDIDO_VENDA = %s
+        '''
+        )
+
+    return (grade.table_data['header'], grade.table_data['fields'],
+            grade.table_data['data'])
