@@ -15,9 +15,8 @@
     <input type="submit" value="Busca"/>
     {% csrf_token %}
 </form>
-{% if estagio or periodo_de or periodo_ate%}
-  <h3>Filtro</h3>
-{% endif %}
+<h3>Filtro</h3>
+<h4>Ordens com situação 2 (Ordem cofec. gerada) ou 4 (Ordens em produção)</h4>
 {% if estagio %}
   <h4>Estagio: {{ estagio }}</h4>
 {% endif %}
