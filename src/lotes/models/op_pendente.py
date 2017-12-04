@@ -63,7 +63,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
           ON p.AREA_PERIODO = 1
          AND p.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
         WHERE l.QTDE_EM_PRODUCAO_PACOTE <> 0
-          AND o.SITUACAO = 4 -- Ordens em produção
+          AND o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
           AND ( %s is NULL or e.CODIGO_ESTAGIO = %s )
           AND l.PERIODO_PRODUCAO >= %s
           AND l.PERIODO_PRODUCAO <= %s
