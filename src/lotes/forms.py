@@ -177,6 +177,12 @@ class OpPendenteForm(forms.Form):
         queryset=Colecao.objects.all().order_by(
             'colecao'), empty_label="(Todas)")
 
+    CHOICES = [('-', 'Ambas (2 e 4)'),
+               ('2', '2 - Ordem cofecção gerada'),
+               ('4', '4 - Ordens em produção')]
+    situacao = forms.ChoiceField(
+        label='Situação', choices=CHOICES, initial='0')
+
     def clean_periodo(self, periodo, default):
         try:
             i_periodo = int(float(periodo))
@@ -191,6 +197,12 @@ class OpPendenteForm(forms.Form):
 
     def clean_periodo_ate(self):
         return self.clean_periodo(self.cleaned_data['periodo_ate'], 9999)
+
+    def clean_situacao(self):
+        if self.cleaned_data['situacao'] == '-':
+            return ''
+        else:
+            return self.cleaned_data['situacao']
 
 
 class PedidoForm(forms.Form):

@@ -16,7 +16,15 @@
     {% csrf_token %}
 </form>
 <h3>Filtro</h3>
-<h4>Ordens com situação 2 (Ordem cofec. gerada) ou 4 (Ordens em produção)</h4>
+<h4>Situação: {% if situacao %}
+  {% if situacao == '2' %}
+    2 (Ordem cofecção gerada)
+  {% elif situacao == '4' %}
+    4 (Ordens em produção)
+  {% endif %}
+{% else %}
+  2 (Ordem cofec. gerada) ou 4 (Ordens em produção)
+{% endif %}</h4>
 {% if estagio %}
   <h4>Estagio: {{ estagio }}</h4>
 {% endif %}
