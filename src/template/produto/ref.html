@@ -70,6 +70,15 @@
       </td>
       <td></td>
       <td style="border-left: thin solid lightgrey;"></td>
+      {% else %}
+        {% if tipo != 'PA' %}
+        <td>
+          <h3>Utilizado em</h3>
+          <h4>Sem utilização!</h4>
+        </td>
+        <td></td>
+        <td style="border-left: thin solid lightgrey;"></td>
+        {% endif %}
       {% endif %}
       <td>
         <h3>Estruturas</h3>
