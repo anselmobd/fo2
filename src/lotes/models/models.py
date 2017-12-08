@@ -22,9 +22,11 @@ class ModeloTermica(models.Model):
     nome = models.CharField(
         max_length=100, null=True, blank=True,
         verbose_name='nome')
-    modelo = models.TextField(
-        null=True, blank=True,
-        verbose_name='modelo')
+    # Tive problemas com esse campo pois ficou com tamanho 2048, sem forma
+    # de definir novo tamanho. Tive que passar para CharField
+    # modelo = models.TextField(
+    #     null=True, blank=True,
+    #     verbose_name='modelo')
     receita = models.CharField(
         null=True, blank=True, max_length=4096,
         verbose_name='receita')

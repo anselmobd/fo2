@@ -25,7 +25,7 @@ class ModeloTermicaAdmin(admin.ModelAdmin):
     list_display = ['codigo', 'nome']
     search_fields = ['codigo', 'nome']
     ordering = ['codigo']
-    fields = ['codigo', 'nome', 'modelo', 'receita']
+    fields = ['codigo', 'nome', 'receita']
 
     class Media:
         static_url = getattr(settings, 'STATIC_URL', '/static/')
