@@ -17,7 +17,16 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
     sql = '''
         WITH Table_qtd_lotes AS (
         SELECT
-          COALESCE(
+          ( SELECT
+              MIN( l1.ORDEM_CONFECCAO )
+            FROM PCPC_040 l1
+            WHERE l1.ORDEM_PRODUCAO   = l.ORDEM_PRODUCAO
+              AND l1.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+              AND l1.PROCONF_GRUPO    = l.PROCONF_GRUPO
+              AND l1.PROCONF_SUBGRUPO = l.PROCONF_SUBGRUPO
+              AND l1.PROCONF_ITEM     = l.PROCONF_ITEM
+          ) OC1
+        , COALESCE(
           ( SELECT
               MIN( le.CODIGO_ESTAGIO ) CODIGO_ESTAGIO
             FROM PCPC_040 le
