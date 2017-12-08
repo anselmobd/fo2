@@ -25,6 +25,9 @@ class ModeloTermica(models.Model):
     modelo = models.TextField(
         null=True, blank=True,
         verbose_name='modelo')
+    receita = models.CharField(
+        null=True, blank=True, max_length=4096,
+        verbose_name='receita')
     campos = models.TextField(
         null=True, blank=True,
         verbose_name='campos')
