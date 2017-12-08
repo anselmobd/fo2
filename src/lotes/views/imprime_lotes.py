@@ -1,6 +1,5 @@
 import errno
 from subprocess import Popen, PIPE
-from pprint import pprint
 
 from django.shortcuts import render
 from django.db import connections
@@ -116,7 +115,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             for e_row in e_data:
                 estagios.append(e_row['EST'])
             teg = TermalPrint(usuario_impresso.impressora_termica.nome)
-            teg.template(usuario_impresso.modelo.modelo, '\r\n')
+            teg.template(usuario_impresso.modelo.receita, '\r\n')
             teg.printer_start()
             try:
                 for row in data:
@@ -135,7 +134,6 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     row['data_entrada_corte'] = \
                         row['DATA_ENTRADA_CORTE'].date()
                     row['estagios'] = estagios
-                    pprint(estagios)
                     teg.context(row)
                     teg.printer_send()
             finally:
