@@ -25,7 +25,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
     def mount_context_and_print(self, cursor, op, tam, cor, order,
                                 oc_ininial, oc_final,
                                 pula, qtd_lotes, ultimo,
-                                adesiva, do_print):
+                                impresso, do_print):
         context = {}
 
         oc_ininial_val = oc_ininial or 0
@@ -64,10 +64,12 @@ class ImprimeLotes(LoginRequiredMixin, View):
             })
             return context
 
-        if adesiva:
+        if impresso == 'A':
             cod_impresso = 'Cartela de Lote Adesiva'
-        else:
+        elif impresso == 'C':
             cod_impresso = 'Cartela de Lote Cartão'
+        else:
+            cod_impresso = 'Cartela de Fundo'
         context.update({
             'count': len(data),
             'cod_impresso': cod_impresso,
@@ -156,12 +158,12 @@ class ImprimeLotes(LoginRequiredMixin, View):
             pula = form.cleaned_data['pula']
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
-            adesiva = form.cleaned_data['adesiva']
+            impresso = form.cleaned_data['impresso']
 
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
                     cursor, op, tam, cor, order, oc_ininial, oc_final,
-                    pula, qtd_lotes, ultimo, adesiva, 'print' in request.POST))
+                    pula, qtd_lotes, ultimo, impresso, 'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)
