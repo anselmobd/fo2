@@ -3,6 +3,7 @@ from django.contrib import admin
 from fo2 import settings
 from fo2.admin import intr_adm_site
 from .models import Impresso, ImpressoraTermica, ModeloTermica, UsuarioImpresso
+from .forms import ModeloTermicaForm
 
 
 class ImpressoAdmin(admin.ModelAdmin):
@@ -20,10 +21,11 @@ class ImpressoraTermicaAdmin(admin.ModelAdmin):
 
 
 class ModeloTermicaAdmin(admin.ModelAdmin):
+    form = ModeloTermicaForm
     list_display = ['codigo', 'nome']
     search_fields = ['codigo', 'nome']
     ordering = ['codigo']
-    fields = ['codigo', 'nome', 'modelo', 'campos']
+    fields = ['codigo', 'nome', 'modelo', 'receita']
 
     class Media:
         static_url = getattr(settings, 'STATIC_URL', '/static/')

@@ -212,3 +212,10 @@ class PedidoForm(forms.Form):
         label='Pedido',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+
+
+class ModeloTermicaForm(forms.ModelForm):
+    receita = forms.CharField(
+        label='Receita',
+        widget=forms.Textarea(
+            attrs={'max_length': 4096, 'rows': 20, 'cols': 79}))
