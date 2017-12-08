@@ -51,6 +51,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
         data = []
         for row in l_data:
             row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
+            if row['OC'] == row['OC1']:
+                row['PRIM'] = '*'
+            else:
+                row['PRIM'] = ''
             if row['DIVISAO'] is None:
                 row['DESCRICAO_DIVISAO'] = ''
             if pula_lote:
@@ -74,10 +78,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'count': len(data),
             'cod_impresso': cod_impresso,
             'headers': ('OP', 'Referência', 'Tamanho', 'Cor',
-                        'Estágio', 'Período', 'OC', 'Quant.', 'Lote',
+                        'Estágio', 'Período', 'OC', '1º', 'Quant.', 'Lote',
                         'Unidade'),
             'fields': ('OP', 'REF', 'TAM', 'COR',
-                       'EST', 'PERIODO', 'OC', 'QTD', 'LOTE',
+                       'EST', 'PERIODO', 'OC', 'PRIM', 'QTD', 'LOTE',
                        'DESCRICAO_DIVISAO'),
             'data': data,
         })
@@ -119,6 +123,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     row['op'] = '{:09}'.format(row['OP'])
                     row['periodo'] = '{}'.format(row['PERIODO'])
                     row['oc'] = '{:05}'.format(row['OC'])
+                    row['oc1'] = '{:05}'.format(row['OC1'])
                     row['lote'] = '{}'.format(row['LOTE'])
                     row['ref'] = row['REF']
                     row['tam'] = row['TAM']
