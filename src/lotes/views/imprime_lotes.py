@@ -131,8 +131,11 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     row['qtd'] = row['QTD']
                     row['divisao'] = row['DIVISAO']
                     row['descricao_divisao'] = row['DESCRICAO_DIVISAO']
-                    row['data_entrada_corte'] = \
-                        row['DATA_ENTRADA_CORTE'].date()
+                    if row['DATA_ENTRADA_CORTE']:
+                        row['data_entrada_corte'] = \
+                            row['DATA_ENTRADA_CORTE'].date()
+                    else:
+                        row['data_entrada_corte'] = '-'
                     row['estagios'] = estagios
                     teg.context(row)
                     teg.printer_send()
