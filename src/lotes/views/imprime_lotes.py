@@ -67,6 +67,21 @@ class ImprimeLotes(LoginRequiredMixin, View):
             })
             return context
 
+        # busca informação de OP mãe
+        opi_data = models.op_inform(cursor, op)
+        opi_row = opi_data[0]
+        op_mae = ''
+        ref_mae = ''
+        if opi_row['TIPO_OP'] == 'Filha de':
+            op_mae = opi_row['OP_REL']
+            opmaei_data = models.op_inform(cursor, op_mae)
+            opmaei_row = opmaei_data[0]
+            ref_mae = opmaei_row['REF']
+        for row in l_data:
+            row['OP_MAE'] = op_mae
+            row['REF_MAE'] = ref_mae
+
+        # prepara dados selecionados
         if impresso == 'A':
             cod_impresso = 'Cartela de Lote Adesiva'
         elif impresso == 'C':
@@ -78,10 +93,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'cod_impresso': cod_impresso,
             'headers': ('OP', 'Referência', 'Tamanho', 'Cor',
                         'Estágio', 'Período', 'OC', '1º', 'Quant.', 'Lote',
-                        'Unidade'),
+                        'Unidade', 'OP Mãe', 'Ref. Mãe'),
             'fields': ('OP', 'REF', 'TAM', 'COR',
                        'EST', 'PERIODO', 'OC', 'PRIM', 'QTD', 'LOTE',
-                       'DESCRICAO_DIVISAO'),
+                       'DESCRICAO_DIVISAO', 'OP_MAE', 'REF_MAE'),
             'data': data,
         })
 
@@ -119,7 +134,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             teg.printer_start()
             try:
                 for row in data:
-                    row['op'] = '{:09}'.format(row['OP'])
+                    row['op'] = '{}'.format(row['OP'])
                     row['periodo'] = '{}'.format(row['PERIODO'])
                     row['oc'] = '{:05}'.format(row['OC'])
                     row['oc1'] = '{:05}'.format(row['OC1'])
@@ -137,6 +152,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     else:
                         row['data_entrada_corte'] = '-'
                     row['estagios'] = estagios
+                    row['op_mae'] = row['OP_MAE']
+                    row['ref_mae'] = row['REF_MAE']
                     teg.context(row)
                     teg.printer_send()
             finally:
