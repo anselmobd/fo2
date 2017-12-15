@@ -2,6 +2,9 @@
   <li><a href="/produto/ref/">Produto</a> (nível 1)</li>
   <ul>
     <li><a href="/produto/lista_produto/">Busca</a></li>
+    {% if request.user.is_authenticated %}
+      <li><a href="/produto/estatistica/">Estatística</a></li>
+    {% endif %}
   </ul>
   <li><a href="/produto/modelo/">Modelo</a> (número do PA)</li>
   <!-- <li><a href="/produto/estatistica/">Contagem e listagem com informações básicas</a></li>
