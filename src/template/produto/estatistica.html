@@ -83,7 +83,7 @@ Quantidade de produtos: <a id="stat_nivel">{{ quant }}</a>
             td2 = document.createElement('td');
             text2 = document.createTextNode(value);
             link = document.createElement('a');
-            link.classList.add(key);
+            link.className = key;
             link.onclick = showStatNivelN;
             link.appendChild(text2);
             td2.appendChild(link);

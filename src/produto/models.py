@@ -22,7 +22,7 @@ class Colecao(models.Model):
 
 def produtos_n1_basic(param):
     tipo = param[0:2]
-    qualidade = param[3:5]
+    qualidade = param[3:]
     cursor = connections['so'].cursor()
     sql = '''
         SELECT
