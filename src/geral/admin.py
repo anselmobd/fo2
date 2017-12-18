@@ -1,7 +1,9 @@
 from django.contrib import admin
 
 from fo2.admin import intr_adm_site
-from .models import RecordTracking, Dispositivos, RoloBipado
+from .models import RecordTracking, Dispositivos, RoloBipado, Painel, \
+    PainelModulo, UsuarioPainelModulo, InformacaoModulo
+from .forms import PainelForm, InformacaoModuloForm
 
 
 class RecordTrackingAdmin(admin.ModelAdmin):
@@ -35,3 +37,38 @@ intr_adm_site.register(RecordTracking, RecordTrackingAdmin)
 intr_adm_site.register(Dispositivos, DispositivosAdmin)
 
 intr_adm_site.register(RoloBipado, RoloBipadoAdmin)
+
+
+class PainelAdmin(admin.ModelAdmin):
+    form = PainelForm
+    list_display = ['nome']
+    search_fields = ['nome']
+    ordering = ['nome']
+    fields = ['nome', 'layout']
+
+
+class PainelModuloAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'tipo']
+    search_fields = ['nome']
+    ordering = ['nome']
+    fields = ['nome', 'tipo']
+
+
+class UsuarioPainelModuloAdmin(admin.ModelAdmin):
+    list_display = ['usuario', 'painel_modulo']
+    fields = ['usuario', 'painel_modulo']
+
+
+class InformacaoModuloAdmin(admin.ModelAdmin):
+    form = InformacaoModuloForm
+    list_display = ['usuario', 'painel_modulo', 'data', 'chamada']
+    search_fields = ['chamada']
+    ordering = ['data']
+    fields = ['usuario', 'painel_modulo', 'data', 'chamada', 'texto']
+    readonly_fields = ['data']
+
+
+intr_adm_site.register(Painel, PainelAdmin)
+intr_adm_site.register(PainelModulo, PainelModuloAdmin)
+intr_adm_site.register(UsuarioPainelModulo, UsuarioPainelModuloAdmin)
+intr_adm_site.register(InformacaoModulo, InformacaoModuloAdmin)
