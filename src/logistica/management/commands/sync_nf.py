@@ -38,7 +38,6 @@ class Command(BaseCommand):
                             + f.TRANSPOR_FORNE4
                             + f.TRANSPOR_FORNE2 = 0
                     THEN 'O PROPRIO'
-                    ELSE t.NOME_FANTASIA
                     ELSE COALESCE( t.NOME_FANTASIA
                                  , '(' || f.TRANSPOR_FORNE9 || '/' ||
                                    f.TRANSPOR_FORNE4 || '-' ||
