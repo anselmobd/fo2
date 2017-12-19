@@ -1,0 +1,9 @@
+{% if list_geral_paineis %}
+  <br />
+  <li>Paineis</li>
+  <ul>
+    {% for painel in list_geral_paineis %}
+    <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
+    {% endfor %}
+  </ul>
+{% endif %}
