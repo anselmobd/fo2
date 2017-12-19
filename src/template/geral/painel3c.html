@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <title>Independent CSS scrolling panels (with inertia)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    /*I love me some border-box*/
+    * {
+        box-sizing: border-box;
+    }
+    /*This just stops me getting horizontal scrolling if anything overflows the width*/
+    body {
+        overflow-x: hidden;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        color: #333;
+    }
+    /*Just removing default browser padding/margin*/
+    html,
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    /*Flexbox gives us the flexiness we need. The top just stays put as there is no scrolling on the body due to the page never exceeding viewport height*/
+    .PN_Top {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        position: relative;
+        z-index: 10;
+        height: 5rem;
+        background-color: firebrick;
+        color: snow;
+    }
+    .PN_Top_Sub {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        position: relative;
+        z-index: 20;
+        height: 4rem;
+        background-color: firebrick;
+        color: #333;
+    }
+    /*This is our main wrapping element, it's made 100vh high to ensure it is always the correct size and then moved into place and padded with negative margin and padding*/
+    .PN_Container {
+        display: flex;
+        overflow: hidden;
+        height: 100vh;
+        margin-top: -9rem;
+        padding-top: 9rem;
+        position: relative;
+        width: 100%;
+        backface-visibility: hidden;
+        will-change: overflow;
+    }
+    /*All the scrollable sections should overflow and be whatever height they need to be. As they are flex-items (due to being inside a flex container) they could be made to stretch full height at all times if needed.
+    WebKit inertia scrolling is being added here for any present/future devices that are able to make use of it.
+    */
+    .PN_Left,
+    .PN_Middle,
+    .PN_Right {
+        overflow: auto;
+        height: auto;
+        padding: .5rem;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none;
+    }
+    /*Entirely optional – just wanted to remove the scrollbar on WebKit browsers as I find them ugly*/
+    .PN_Left::-webkit-scrollbar,
+    .PN_Middle::-webkit-scrollbar,
+    .PN_Right::-webkit-scrollbar {
+        display: none;
+    }
+    /*  Left and Right are set sizes while the Middle is set to flex one so it occupies all remaining space. This could be set as a width too if prefereable, perhaps using calc.*/
+    .PN_Left {
+      width: 33%;
+      background-color: #f2f2f2;
+    }
+
+    .PN_Middle {
+      flex: 1;
+      background-color: white;
+    }
+
+    .PN_Right {
+      width: 33%;
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="PN_Top">{{ titulo }}</div>
+  <div class="PN_Top_Sub">
+    <div class="PN_Left">{{ config.dados.0.modulo }}</div>
+    <div class="PN_Middle">{{ config.dados.1.modulo }}</div>
+    <div class="PN_Right">{{ config.dados.2.modulo }}</div>
+  </div>
+  <div class="PN_Container">
+    <div class="PN_Left">
+      {% for dados in config.dados.0.dados %}
+        <h3>{{ dados.chamada }}</h3>
+      {% endfor%}
+    </div>
+    <div class="PN_Middle">
+      {% for dados in config.dados.1.dados %}
+        <h3>{{ dados.chamada }}</h3>
+      {% endfor%}
+    </div>
+    <div class="PN_Right">
+      {% for dados in config.dados.2.dados %}
+        {{ dados.data }} - {{ dados.usuario.first_name }}
+        <h3>{{ dados.chamada }}</h3>
+        <hr>
+      {% endfor%}
+    </div>
+  </div>
+</body>
+</html>
