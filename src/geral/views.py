@@ -1,7 +1,12 @@
-from django.shortcuts import render
+import yaml
+
+from django.shortcuts import render, redirect
 from django.db import connections
+from django.views import View
 
 from fo2.models import rows_to_dict_list
+
+from .models import Painel, InformacaoModulo
 
 
 def index(request):
@@ -80,3 +85,30 @@ def estagio(request):
         'data': data,
     }
     return render(request, 'geral/tabela_geral.html', context)
+
+
+class PainelView(View):
+
+    def get(self, request, *args, **kwargs):
+        if 'painel' in kwargs:
+            if len(kwargs['painel']) == 0:
+                return redirect('apoio_ao_erp')
+
+        cursor = connections['so'].cursor()
+        painel = Painel.objects.filter(slug=kwargs['painel'])
+        if len(painel) == 0:
+            return redirect('apoio_ao_erp')
+
+        layout = painel[0].layout
+        config = yaml.load(layout)
+        for modulo in config['dados']:
+            modulo['dados'] = InformacaoModulo.objects.filter(
+                painel_modulo__nome=modulo['modulo']
+            ).order_by('-data')
+
+        context = {
+            'titulo': painel[0].nome,
+            'config': config,
+            }
+        return render(
+            request, 'geral/{}.html'.format(config['template']), context)
