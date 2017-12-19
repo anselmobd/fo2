@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 
 
 class RecordTracking(models.Model):
@@ -65,6 +66,7 @@ class Painel(models.Model):
     nome = models.CharField(
         null=True, blank=True,
         max_length=64)
+    slug = models.SlugField()
     layout = models.CharField(
         null=True, blank=True, max_length=4096,
         verbose_name='receita')
@@ -75,6 +77,11 @@ class Painel(models.Model):
     class Meta:
         db_table = "fo2_ger_painel"
         verbose_name = "painel"
+        verbose_name_plural = "paineis"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(Painel, self).save(*args, **kwargs)
 
 
 class PainelModulo(models.Model):
@@ -105,8 +112,8 @@ class UsuarioPainelModulo(models.Model):
 
     class Meta:
         db_table = "fo2_ger_usr_pnl_modulo"
-        verbose_name = "usuáio de modulo de painel"
-        verbose_name_plural = "usuáios de modulos de painel"
+        verbose_name = "usuário de modulo de painel"
+        verbose_name_plural = "usuários de modulos de painel"
 
 
 class InformacaoModulo(models.Model):
