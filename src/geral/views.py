@@ -199,6 +199,7 @@ class InformativoView(LoginRequiredMixin, View):
                     informativo = InformacaoModulo.objects.get(
                         id=self.informativo_id)
                 informativo.chamada = chamada
+                informativo.painel_modulo = self.modulo
                 informativo.save()
                 self.list_informativo()
             else:
