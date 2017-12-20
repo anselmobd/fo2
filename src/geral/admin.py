@@ -3,7 +3,7 @@ from django.contrib import admin
 from fo2.admin import intr_adm_site
 from .models import RecordTracking, Dispositivos, RoloBipado, Painel, \
     PainelModulo, UsuarioPainelModulo, InformacaoModulo
-from .forms import PainelForm, InformacaoModuloForm
+from .forms import PainelModelForm, InformacaoModuloModelForm
 
 
 class RecordTrackingAdmin(admin.ModelAdmin):
@@ -40,7 +40,7 @@ intr_adm_site.register(RoloBipado, RoloBipadoAdmin)
 
 
 class PainelAdmin(admin.ModelAdmin):
-    form = PainelForm
+    form = PainelModelForm
     list_display = ['nome', 'slug']
     search_fields = ['nome']
     ordering = ['nome']
@@ -49,10 +49,11 @@ class PainelAdmin(admin.ModelAdmin):
 
 
 class PainelModuloAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'tipo']
+    list_display = ['nome', 'slug', 'tipo']
     search_fields = ['nome']
     ordering = ['nome']
-    fields = ['nome', 'tipo']
+    fields = ['nome', 'slug', 'tipo']
+    readonly_fields = ['slug']
 
 
 class UsuarioPainelModuloAdmin(admin.ModelAdmin):
@@ -61,7 +62,7 @@ class UsuarioPainelModuloAdmin(admin.ModelAdmin):
 
 
 class InformacaoModuloAdmin(admin.ModelAdmin):
-    form = InformacaoModuloForm
+    form = InformacaoModuloModelForm
     list_display = ['usuario', 'painel_modulo', 'data', 'chamada']
     search_fields = ['chamada']
     ordering = ['data']
