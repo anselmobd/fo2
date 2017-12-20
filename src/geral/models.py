@@ -134,6 +134,7 @@ class InformacaoModulo(models.Model):
     chamada = models.CharField(
         max_length=200, null=True, blank=True,
         verbose_name='chamada')
+    habilitado = models.NullBooleanField(default=True)
     texto = models.CharField(
         null=True, blank=True, max_length=4096,
         verbose_name='receita')
