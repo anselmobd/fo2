@@ -20,7 +20,7 @@
     <form action="{% url 'ger_informativo_modulo' modulo_slug informativo_id %}" method="post">
   {% else %}
     <h2>Adiciona informativo</h2>
-    <form action="{% url 'ger_informativo_modulo' modulo_slug %}" method="post">
+    <form action="{% url 'ger_informativo_modulo' modulo_slug 'add' %}" method="post">
   {% endif %}
   {% csrf_token %}
   {{ form.as_p }}
