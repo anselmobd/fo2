@@ -101,12 +101,16 @@
   <div class="PN_Container">
     <div class="PN_Left">
       {% for dados in config.dados.0.dados %}
+        {{ dados.data }} - {{ dados.usuario.first_name }}
         <h3>{{ dados.chamada }}</h3>
+        <hr>
       {% endfor%}
     </div>
     <div class="PN_Middle">
       {% for dados in config.dados.1.dados %}
+        {{ dados.data }} - {{ dados.usuario.first_name }}
         <h3>{{ dados.chamada }}</h3>
+        <hr>
       {% endfor%}
     </div>
     <div class="PN_Right">
