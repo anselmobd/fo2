@@ -1,0 +1,17 @@
+{% extends 'layout/layout.html' %}
+{% load static %}
+
+{% block title.content %}Intranet {% endblock title.content %}
+
+{% block header.content %}Intranet Tussor{% endblock header.content %}
+
+{% block content %}
+<center>
+<h2>Login</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Login</button>
+</form>
+</center>
+{% endblock %}

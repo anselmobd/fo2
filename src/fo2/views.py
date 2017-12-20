@@ -18,11 +18,6 @@ class IntranetView(TemplateView):
     template_name = "intranet.html"
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('/')
-
-
 def myip_view(request):
     return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
 
