@@ -15,21 +15,23 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
 from .admin import intr_adm_site
-from .views import index_view, IntranetView, logout_view, myip_view, \
+from .views import index_view, IntranetView, myip_view, \
     OficialSystextilView, ApoioAoErpView
 
-
-# admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', index_view, name='index'),
     url(r'^apoio_ao_erp/', ApoioAoErpView.as_view(), name='apoio_ao_erp'),
     url(r'^intranet/', IntranetView.as_view(), name='intranet'),
-    url(r'^encerrar/', logout_view, name='encerrar'),
+    url(r'^accounts/login/$',
+        auth_views.login, {'template_name': 'login.html'},
+        name='login'),
+    url(r'^encerrar/', auth_views.logout, {'next_page': '/'}, name='encerrar'),
     url(r'^myip/', myip_view, name='myip'),
     url(r'^oficial.systextil/', OficialSystextilView.as_view(),
         name='oficial_systextil'),
