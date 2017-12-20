@@ -63,10 +63,12 @@ class UsuarioPainelModuloAdmin(admin.ModelAdmin):
 
 class InformacaoModuloAdmin(admin.ModelAdmin):
     form = InformacaoModuloModelForm
-    list_display = ['usuario', 'painel_modulo', 'data', 'chamada']
+    list_display = [
+        'usuario', 'painel_modulo', 'data', 'chamada', 'habilitado']
     search_fields = ['chamada']
     ordering = ['data']
-    fields = ['usuario', 'painel_modulo', 'data', 'chamada', 'texto']
+    fields = [
+        'usuario', 'painel_modulo', 'data', 'chamada', 'texto', 'habilitado']
     readonly_fields = ['data']
 
 
