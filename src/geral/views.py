@@ -3,10 +3,12 @@ import yaml
 from django.shortcuts import render, redirect
 from django.db import connections
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from fo2.models import rows_to_dict_list
 
-from .models import Painel, InformacaoModulo
+from .models import Painel, PainelModulo, InformacaoModulo, UsuarioPainelModulo
+from .forms import InformacaoModuloForm
 
 
 def index(request):
@@ -112,3 +114,93 @@ class PainelView(View):
             }
         return render(
             request, 'geral/{}.html'.format(config['template']), context)
+
+
+class InformativoView(LoginRequiredMixin, View):
+    Form_class = InformacaoModuloForm
+    template_name = 'geral/informativo.html'
+    title_name = 'Manutenção de informativos'
+    context = {}
+    informativo_id = None
+
+    def list_informativo(self):
+        self.context['informativos'] = InformacaoModulo.objects.filter(
+            painel_modulo=self.modulo).order_by('-data')
+
+    def tem_permissao(self, request, **kwargs):
+        modulo_slug = kwargs['modulo']
+        self.modulo = PainelModulo.objects.get(slug=modulo_slug)
+        self.context = {
+            'titulo': '{}/{}'.format(self.title_name, self.modulo.nome),
+            'modulo_slug': modulo_slug,
+            }
+
+        verificacao = UsuarioPainelModulo.objects.filter(
+            usuario=request.user, painel_modulo=self.modulo)
+        if len(verificacao) == 0:
+            self.context['msg_erro'] =\
+                'Usuário não tem direito de manter o informativo "{}"'.format(
+                    self.modulo.nome
+                )
+            return False
+        return True
+
+    def get_informativo_id(self, **kwargs):
+        if 'id' in kwargs:
+            self.informativo_id = kwargs['id']
+
+    def get(self, request, *args, **kwargs):
+        if not self.tem_permissao(request, **kwargs):
+            return render(request, self.template_name, self.context)
+
+        self.get_informativo_id(**kwargs)
+        if self.informativo_id == 'add':
+            form = self.Form_class()
+            self.context['form'] = form
+        else:
+            informativo_por_id = InformacaoModulo.objects.filter(
+                id=self.informativo_id)
+            if len(informativo_por_id) == 0:
+                self.list_informativo()
+            else:
+                self.context['informativo_id'] = self.informativo_id
+                form = self.Form_class(
+                    initial={'chamada': informativo_por_id[0].chamada})
+                self.context['form'] = form
+
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        if not self.tem_permissao(request, **kwargs):
+            return render(request, self.template_name, self.context)
+
+        form = None
+        self.get_informativo_id(**kwargs)
+        if self.informativo_id == 'add':
+            form = self.Form_class(request.POST)
+        else:
+            informativo_por_id = InformacaoModulo.objects.filter(
+                id=self.informativo_id)
+            if len(informativo_por_id) == 0:
+                self.list_informativo()
+            else:
+                self.context['informativo_id'] = self.informativo_id
+                form = self.Form_class(
+                    request.POST,
+                    initial={'chamada': informativo_por_id[0].chamada})
+
+        if form is not None:
+            if form.is_valid():
+                chamada = form.cleaned_data['chamada']
+                if self.informativo_id == 'add':
+                    informativo = InformacaoModulo(
+                        usuario=request.user)
+                else:
+                    informativo = InformacaoModulo.objects.get(
+                        id=self.informativo_id)
+                informativo.chamada = chamada
+                informativo.save()
+                self.list_informativo()
+            else:
+                self.context['form'] = form
+        return render(request, self.template_name, self.context)
