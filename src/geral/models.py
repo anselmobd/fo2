@@ -88,6 +88,7 @@ class PainelModulo(models.Model):
     nome = models.CharField(
         null=True, blank=True,
         max_length=64)
+    slug = models.SlugField()
     TIPOS_DE_MODULOS = (('I', 'Informativo'),)
     tipo = models.CharField(
         max_length=1, choices=TIPOS_DE_MODULOS,
@@ -100,6 +101,10 @@ class PainelModulo(models.Model):
         db_table = "fo2_ger_painel_modulo"
         verbose_name = "modulo de painel"
         verbose_name_plural = "modulos de painel"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(PainelModulo, self).save(*args, **kwargs)
 
 
 class UsuarioPainelModulo(models.Model):
