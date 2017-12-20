@@ -20,3 +20,4 @@ class InformacaoModuloForm(forms.Form):
         widget=forms.Textarea(
             attrs={'max_length': 200, 'rows': 5, 'cols': 39,
                    'style': 'vertical-align:top;'}))
+    habilitado = forms.BooleanField(required=False)
