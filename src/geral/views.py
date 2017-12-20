@@ -105,7 +105,8 @@ class PainelView(View):
         config = yaml.load(layout)
         for modulo in config['dados']:
             modulo['dados'] = InformacaoModulo.objects.filter(
-                painel_modulo__nome=modulo['modulo']
+                painel_modulo__nome=modulo['modulo'],
+                habilitado=True
             ).order_by('-data')
 
         context = {
@@ -165,7 +166,8 @@ class InformativoView(LoginRequiredMixin, View):
             else:
                 self.context['informativo_id'] = self.informativo_id
                 form = self.Form_class(
-                    initial={'chamada': informativo_por_id[0].chamada})
+                    initial={'chamada': informativo_por_id[0].chamada,
+                             'habilitado': informativo_por_id[0].habilitado})
                 self.context['form'] = form
 
         return render(request, self.template_name, self.context)
@@ -187,11 +189,13 @@ class InformativoView(LoginRequiredMixin, View):
                 self.context['informativo_id'] = self.informativo_id
                 form = self.Form_class(
                     request.POST,
-                    initial={'chamada': informativo_por_id[0].chamada})
+                    initial={'chamada': informativo_por_id[0].chamada,
+                             'habilitado': informativo_por_id[0].habilitado})
 
         if form is not None:
             if form.is_valid():
                 chamada = form.cleaned_data['chamada']
+                habilitado = form.cleaned_data['habilitado']
                 if self.informativo_id == 'add':
                     informativo = InformacaoModulo(
                         usuario=request.user)
@@ -199,6 +203,7 @@ class InformativoView(LoginRequiredMixin, View):
                     informativo = InformacaoModulo.objects.get(
                         id=self.informativo_id)
                 informativo.chamada = chamada
+                informativo.habilitado = habilitado
                 informativo.painel_modulo = self.modulo
                 informativo.save()
                 self.list_informativo()
