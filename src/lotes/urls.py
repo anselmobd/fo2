@@ -35,6 +35,9 @@ urlpatterns = [
     url(r'^imprime_lotes/$',
         views.ImprimeLotes.as_view(), name='imprime_lotes'),
 
+    url(r'^imprime_pacote3lotes/$',
+        views.ImprimePacote3Lotes.as_view(), name='imprime_pacote3lotes'),
+
     url(r'^impressora_termica/$',
         views.impressoraTermica, name='impressora_termica'),
 
