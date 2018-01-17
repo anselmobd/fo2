@@ -1,0 +1,32 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/lotes/">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="/lotes/imprime_pacote3lotes/" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Pesquisa" name="search"/>
+  <input type="submit" value="Imprime" name="print"/>
+</form>
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% else %}
+  {% if data %}
+    <h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
+    <h3>Impressão: {{ cod_impresso }}</h3>
+    <h3>Lotes ordenados por Cor/Tamanho/OC</h3>
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock %}
