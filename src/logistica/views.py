@@ -1,5 +1,6 @@
 import datetime
 
+from django.utils import timezone
 from django.shortcuts import render
 from django.views import View
 from django.db.models import When, F, Q
@@ -55,6 +56,8 @@ class NotafiscalRel(View):
             context.update({
                 'cliente': form['cliente'],
             })
+        if form['data_saida'] != 'A':
+            select = select.filter(saida__isnull=form['data_saida'] == 'N')
         select = select.order_by('numero')
         data = list(select.values())
         if len(data) == 0:
@@ -65,6 +68,9 @@ class NotafiscalRel(View):
             for row in data:
                 if row['saida'] is None:
                     row['saida'] = '-'
+                    row['atraso'] = (timezone.now() - row['faturamento']).days
+                else:
+                    row['atraso'] = (row['saida'] - row['faturamento'].date()).days
                 if row['entrega'] is None:
                     row['entrega'] = '-'
                 if row['confirmada']:
@@ -74,11 +80,11 @@ class NotafiscalRel(View):
                 if row['observacao'] is None:
                     row['observacao'] = ' '
             context.update({
-                'headers': ('Número', 'Faturamento',
+                'headers': ('Número', 'Faturamento', 'Atraso',
                             'Saida', 'Agendada', 'Entregue',
                             'UF', 'CNPJ', 'Cliente', 'Transportadora',
                             'Volumes', 'Valor', 'Observação'),
-                'fields': ('numero', 'faturamento',
+                'fields': ('numero', 'faturamento', 'atraso',
                            'saida', 'entrega', 'confirmada',
                            'uf', 'dest_cnpj', 'dest_nome', 'transp_nome',
                            'volumes', 'valor', 'observacao'),
