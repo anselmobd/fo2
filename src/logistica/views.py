@@ -58,7 +58,7 @@ class NotafiscalRel(View):
                 'cliente': form['cliente'],
             })
         if form['data_saida'] != 'N':
-            select = select.filter(saida__isnull=form['data_saida'] == 'V')
+            select = select.filter(saida__isnull=form['data_saida'] == 'S')
             context.update({
                 'data_saida': [
                     ord[1] for ord in form_obj.fields['data_saida'].choices
