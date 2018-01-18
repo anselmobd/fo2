@@ -166,13 +166,13 @@ class ImprimePacote3LotesForm(forms.Form):
         label='Cor', required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
     pula = forms.IntegerField(
-        label='Pula quantos lotes', required=False,
+        label='Pula quantos pacotes', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
     qtd_lotes = forms.IntegerField(
-        label='Imprime quantos lotes', required=False,
+        label='Imprime quantos pacotes', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
     ultimo = forms.CharField(
-        label='Último lote impresso', required=False,
+        label='Lote em última cartela de pacote impressa', required=False,
         max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
