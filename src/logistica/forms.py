@@ -23,6 +23,12 @@ class NotafiscalRelForm(forms.Form):
         help_text='Parte do nome ou início do CNPJ.',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    CHOICES = [('A', 'Ambas'),
+               ('S', 'Sim'),
+               ('N', 'Não')]
+    data_saida = forms.ChoiceField(
+        label='Com data de saída?', choices=CHOICES, initial='A')
+
     def clean_uf(self):
         uf = self.cleaned_data['uf'].upper()
         data = self.data.copy()
