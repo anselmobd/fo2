@@ -22,7 +22,7 @@
   {% if data %}
     <h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
     <h3>Impressão: {{ cod_impresso }}</h3>
-    <h3>Lotes ordenados por OC</h3>
+    <h3>Lotes ordenados por {{ ordem }}</h3>
     <table>
       {% include "layout/html_thead.html" with data=headers only %}
       {% include "layout/html_tbody.html" with fields=fields data=data only %}

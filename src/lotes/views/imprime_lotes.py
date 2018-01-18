@@ -24,7 +24,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
     def mount_context_and_print(self, cursor, op, tam, cor, order,
                                 oc_ininial, oc_final,
                                 pula, qtd_lotes, ultimo,
-                                impresso, selecao, do_print):
+                                impresso, selecao, order_descr, do_print):
         context = {}
 
         oc_ininial_val = oc_ininial or 0
@@ -104,6 +104,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         context.update({
             'count': len(data),
             'cod_impresso': cod_impresso,
+            'ordem': order_descr,
             'headers': ('OP', 'Referência', 'Tamanho', 'Cor',
                         'Estágio', 'Período', 'OC', '1º', 'Quant.', 'Lote',
                         'Unidade', 'OP Mãe', 'Ref. Mãe'),
@@ -189,6 +190,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
             order = form.cleaned_data['order']
+            order_descr = [ord[1] for ord in form.fields['order'].choices
+                           if ord[0] == order][0]
             oc_ininial = form.cleaned_data['oc_ininial']
             oc_final = form.cleaned_data['oc_final']
             pula = form.cleaned_data['pula']
@@ -201,7 +204,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             context.update(
                 self.mount_context_and_print(
                     cursor, op, tam, cor, order, oc_ininial, oc_final,
-                    pula, qtd_lotes, ultimo, impresso, selecao,
+                    pula, qtd_lotes, ultimo, impresso, selecao, order_descr,
                     'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)
