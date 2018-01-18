@@ -56,8 +56,8 @@ class NotafiscalRel(View):
             context.update({
                 'cliente': form['cliente'],
             })
-        if form['data_saida'] != 'A':
-            select = select.filter(saida__isnull=form['data_saida'] == 'N')
+        if form['data_saida'] != 'N':
+            select = select.filter(saida__isnull=form['data_saida'] == 'V')
         select = select.order_by('numero')
         data = list(select.values())
         if len(data) == 0:
@@ -68,9 +68,11 @@ class NotafiscalRel(View):
             for row in data:
                 if row['saida'] is None:
                     row['saida'] = '-'
-                    row['atraso'] = (timezone.now() - row['faturamento']).days
+                    row['atraso'] = (
+                        timezone.now() - row['faturamento']).days
                 else:
-                    row['atraso'] = (row['saida'] - row['faturamento'].date()).days
+                    row['atraso'] = (
+                        row['saida'] - row['faturamento'].date()).days
                 if row['entrega'] is None:
                     row['entrega'] = '-'
                 if row['confirmada']:
