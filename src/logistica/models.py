@@ -33,6 +33,12 @@ class NotaFiscal(models.Model):
         null=True, blank=True)
     volumes = models.IntegerField(
         null=True, blank=True)
+    pedido = models.IntegerField(
+        null=True, blank=True,
+        verbose_name='pedido')
+    ped_cliente = models.CharField(
+        max_length=30, null=True, blank=True,
+        verbose_name='pedido cliente')
 
     # campos editáveis
     saida = models.DateField(null=True, blank=True, verbose_name='saída')

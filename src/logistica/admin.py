@@ -23,11 +23,13 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     ordering = ['-numero']
     fields = (('numero', 'ativa'),
               ('dest_cnpj', 'dest_nome', 'uf', 'transp_nome'),
+              ('pedido', 'ped_cliente'),
               ('natu_venda', 'natu_descr'),
               ('volumes', 'valor'),
               ('faturamento', 'cod_status', 'msg_status'),
               'saida', 'entrega', 'confirmada', 'observacao', 'id')
     readonly_fields = ['id', 'numero', 'faturamento',
+                       'pedido', 'ped_cliente',
                        'volumes', 'valor',
                        'cod_status', 'msg_status', 'ativa',
                        'dest_cnpj', 'dest_nome', 'uf',
