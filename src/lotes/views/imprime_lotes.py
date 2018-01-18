@@ -311,24 +311,15 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             try:
                 for row in data:
                     row['op'] = '{}'.format(row['OP'])
-                    row['periodo'] = '{}'.format(row['PERIODO'])
-                    row['oc'] = '{:05}'.format(row['OC'])
-                    row['oc1'] = '{:05}'.format(row['OC1'])
-                    row['lote'] = '{}'.format(row['LOTE'])
+                    row['lote1'] = '{}'.format(row['LOTE1'])
+                    row['lote2'] = '{}'.format(row['LOTE2'])
+                    row['lote3'] = '{}'.format(row['LOTE3'])
+                    row['prim'] = row['PRIM']
                     row['ref'] = row['REF']
                     row['tam'] = row['TAM']
                     row['cor'] = row['COR']
                     row['narrativa'] = row['NARRATIVA']
-                    row['qtd'] = row['QTD']
-                    row['divisao'] = row['DIVISAO']
-                    row['descricao_divisao'] = row['DESCRICAO_DIVISAO']
-                    if row['DATA_ENTRADA_CORTE']:
-                        row['data_entrada_corte'] = \
-                            row['DATA_ENTRADA_CORTE'].date()
-                    else:
-                        row['data_entrada_corte'] = '-'
                     row['estagios'] = estagios
-                    row['op_mae'] = row['OP_MAE']
                     row['ref_mae'] = row['REF_MAE']
                     teg.context(row)
                     teg.printer_send()
