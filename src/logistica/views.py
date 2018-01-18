@@ -88,6 +88,8 @@ class NotafiscalRel(View):
                     row['confirmada'] = 'N'
                 if row['observacao'] is None:
                     row['observacao'] = ' '
+                if row['ped_cliente'] is None:
+                    row['ped_cliente'] = ' '
                 row['atraso_order'] = -row['atraso']
             if form['ordem'] == 'A':
                 data.sort(key=itemgetter('atraso_order'))
@@ -95,11 +97,13 @@ class NotafiscalRel(View):
                 'headers': ('Número', 'Faturamento', 'Atraso',
                             'Saida', 'Agendada', 'Entregue',
                             'UF', 'CNPJ', 'Cliente', 'Transportadora',
-                            'Volumes', 'Valor', 'Observação'),
+                            'Volumes', 'Valor', 'Observação',
+                            'Pedido', 'Ped.Cliente'),
                 'fields': ('numero', 'faturamento', 'atraso',
                            'saida', 'entrega', 'confirmada',
                            'uf', 'dest_cnpj', 'dest_nome', 'transp_nome',
-                           'volumes', 'valor', 'observacao'),
+                           'volumes', 'valor', 'observacao',
+                           'pedido', 'ped_cliente'),
                 'data': data,
             })
 
