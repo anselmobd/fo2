@@ -1,4 +1,5 @@
 import datetime
+from operator import itemgetter
 
 from django.utils import timezone
 from django.shortcuts import render
@@ -87,6 +88,9 @@ class NotafiscalRel(View):
                     row['confirmada'] = 'N'
                 if row['observacao'] is None:
                     row['observacao'] = ' '
+                row['atraso_order'] = -row['atraso']
+            if form['ordem'] == 'A':
+                data.sort(key=itemgetter('atraso_order'))
             context.update({
                 'headers': ('Número', 'Faturamento', 'Atraso',
                             'Saida', 'Agendada', 'Entregue',

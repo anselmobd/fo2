@@ -29,6 +29,11 @@ class NotafiscalRelForm(forms.Form):
     data_saida = forms.ChoiceField(
         label='Filtra por data de saída?', choices=CHOICES, initial='N')
 
+    CHOICES = [('N', 'Número da nota fiscal'),
+               ('A', 'Atraso (maior primeiro)')]
+    ordem = forms.ChoiceField(
+        label='Ordem de apresentação', choices=CHOICES, initial='N')
+
     def clean_uf(self):
         uf = self.cleaned_data['uf'].upper()
         data = self.data.copy()
