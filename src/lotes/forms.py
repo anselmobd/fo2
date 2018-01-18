@@ -138,6 +138,10 @@ class ImprimeLotesForm(forms.Form):
                ('F', 'Cartela de fundo')]
     impresso = forms.ChoiceField(
         label='Impresso', choices=CHOICES, initial='A')
+    CHOICES = [('T', 'Todos os lotes'),
+               ('P', 'Apenas o primeiro de cada 3 lotes semelhantes')]
+    selecao = forms.ChoiceField(
+        label='Seleção tardia de lotes', choices=CHOICES, initial='T')
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()
