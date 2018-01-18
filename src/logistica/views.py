@@ -21,7 +21,7 @@ class NotafiscalRel(View):
     template_name = 'logistica/notafiscal_rel.html'
     title_name = 'Controle de data de saída de NF'
 
-    def mount_context(self, form):
+    def mount_context(self, form, form_obj):
         # A ser produzido
         context = {}
         select = NotaFiscal.objects.filter(natu_venda=True).filter(ativa=True)
@@ -58,6 +58,12 @@ class NotafiscalRel(View):
             })
         if form['data_saida'] != 'N':
             select = select.filter(saida__isnull=form['data_saida'] == 'V')
+            context.update({
+                'data_saida': [
+                    ord[1] for ord in form_obj.fields['data_saida'].choices
+                    if ord[0] == form['data_saida']][0],
+            })
+
         select = select.order_by('numero')
         data = list(select.values())
         if len(data) == 0:
@@ -112,6 +118,6 @@ class NotafiscalRel(View):
             form.data['data_de'] = data
             form.data['data_ate'] = data
         if form.is_valid():
-            context.update(self.mount_context(form.cleaned_data))
+            context.update(self.mount_context(form.cleaned_data, form))
         context['form'] = form
         return render(request, self.template_name, context)

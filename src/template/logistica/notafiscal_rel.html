@@ -29,6 +29,9 @@
         {% if data_ate %}
           <li>Data de Faturamento até {{ data_ate }}</li>
         {% endif %}
+        {% if data_saida %}
+          <li>Filtra por data de saída? {{ data_saida }}</li>
+        {% endif %}
       {% endif %}
     {% endif %}
     {% if uf %}
