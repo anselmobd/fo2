@@ -24,7 +24,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
     def mount_context_and_print(self, cursor, op, tam, cor, order,
                                 oc_ininial, oc_final,
                                 pula, qtd_lotes, ultimo,
-                                impresso, do_print):
+                                impresso, selecao, do_print):
         context = {}
 
         oc_ininial_val = oc_ininial or 0
@@ -49,7 +49,18 @@ class ImprimeLotes(LoginRequiredMixin, View):
 
         pula_lote = ultimo != ''
         data = []
+        # 'P' = 'Apenas o primeiro de cada 3 lotes semelhantes'
+        if selecao == 'P':
+            p_cor = ''
+            p_tam = ''
         for row in l_data:
+            if selecao == 'P':
+                if p_cor != row['COR'] or p_tam != row['TAM']:
+                    p_cor = row['COR']
+                    p_tam = row['TAM']
+                    cor_tam_data = models.get_imprime_pocote3lotes(
+                        cursor, op, p_tam, p_cor)
+                    primeiros_lotes = [r['OC1'] for r in cor_tam_data]
             row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
             if row['OC'] == row['OC1']:
                 row['PRIM'] = '*'
@@ -60,7 +71,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
             if pula_lote:
                 pula_lote = row['LOTE'] != ultimo
             else:
-                data.append(row)
+                if selecao == 'T' or row['OC'] in primeiros_lotes:
+                    data.append(row)
 
         if len(data) == 0:
             context.update({
@@ -183,12 +195,13 @@ class ImprimeLotes(LoginRequiredMixin, View):
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
             impresso = form.cleaned_data['impresso']
+            selecao = form.cleaned_data['selecao']
 
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
                     cursor, op, tam, cor, order, oc_ininial, oc_final,
-                    pula, qtd_lotes, ultimo, impresso,
+                    pula, qtd_lotes, ultimo, impresso, selecao,
                     'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)
