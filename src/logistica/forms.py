@@ -19,7 +19,7 @@ class NotafiscalRelForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     cliente = forms.CharField(
-        label='Usuário', required=False,
+        label='Cliente', required=False,
         help_text='Parte do nome ou início do CNPJ.',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
