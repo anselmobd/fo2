@@ -44,7 +44,11 @@ class Command(BaseCommand):
                                    f.TRANSPOR_FORNE2 || ')' )
                     END
                   , '-') TRANSP
+                , f.PEDIDO_VENDA PEDIDO
+                , p.COD_PED_CLIENTE PED_CLIENTE
                 FROM FATU_050 f
+                JOIN PEDI_100 p
+                  ON p.PEDIDO_VENDA = f.PEDIDO_VENDA
                 JOIN PEDI_010 c
                   ON c.CGC_9 = f.CGC_9
                  AND c.CGC_4 = f.CGC_4
@@ -92,7 +96,10 @@ class Command(BaseCommand):
                             and nf_fo2.natu_descr == row_st['NATUREZA'] \
                             and nf_fo2.transp_nome == row_st['TRANSP'] \
                             and nf_fo2.ativa == (row_st['SITUACAO'] == 1) \
-                            and nf_fo2.natu_venda == (row_st['NAT'] in (1, 2)):
+                            and nf_fo2.natu_venda == (
+                                row_st['NAT'] in (1, 2)) \
+                            and nf_fo2.pedido == row_st['PEDIDO'] \
+                            and nf_fo2.ped_cliente == row_st['PED_CLIENTE']:
                         edit = False
                     else:
                         self.stdout.write(
@@ -143,6 +150,14 @@ class Command(BaseCommand):
                     self.stdout.write(
                         'transp_nome = {}'.format(row_st['TRANSP']))
                     nf_fo2.transp_nome = row_st['TRANSP']
+
+                    self.stdout.write(
+                        'pedido = {}'.format(row_st['PEDIDO']))
+                    nf_fo2.pedido = row_st['PEDIDO']
+
+                    self.stdout.write(
+                        'ped_cliente = {}'.format(row_st['PED_CLIENTE']))
+                    nf_fo2.ped_cliente = row_st['PED_CLIENTE']
 
                     nf_fo2.save()
                     self.stdout.write('saved')
