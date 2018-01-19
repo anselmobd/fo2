@@ -29,7 +29,7 @@
       OP Mãe: {{ op_mae }}&nbsp;&nbsp;
       Referência Mãe: {{ ref_mae }}<br />
     {% endif %}
-    {% if cor or tam or ultimo or pula or qtd_lotes or oc_ininial or oc_final %}
+    {% if cor or tam or ultimo or pula or qtd_lotes or oc_inicial or oc_final %}
       <h4>Filtro:</h4>
       {% if tam %}
         Tamanho: {{ tam }}<br />
@@ -37,8 +37,8 @@
       {% if cor %}
         Cor: {{ cor }}<br />
       {% endif %}
-      {% if oc_ininial %}
-        Iniciando pela OC {{ oc_ininial }}<br />
+      {% if oc_inicial %}
+        Iniciando pela OC {{ oc_inicial }}<br />
       {% endif %}
       {% if oc_final %}
         Finalizando pela OC {{ oc_final }}<br />
