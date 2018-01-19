@@ -1,4 +1,4 @@
-from fo2.models import rows_to_dict_list_lower
+from fo2.models import rows_to_dict_list_lower, dict_list_to_lower
 
 from lotes.models.base import *
 
@@ -6,10 +6,11 @@ from lotes.models.base import *
 def get_imprime_lotes(cursor, op, tam, cor, order, oc_ini, oc_fim,
                       pula, qtd_lotes):
     # get dados de lotes
-    return get_lotes(cursor, op=op, tam=tam, cor=cor, order=order,
+    data = get_lotes(cursor, op=op, tam=tam, cor=cor, order=order,
                      oc_ini=oc_ini, oc_fim=oc_fim,
                      pula=pula, qtd_lotes=qtd_lotes)
-
+    data = dict_list_to_lower(data)
+    return data
 
 def get_imprime_caixas_op_3lotes(cursor, op):
     sql = '''
