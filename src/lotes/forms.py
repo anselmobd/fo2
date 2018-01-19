@@ -116,7 +116,7 @@ class ImprimeLotesForm(forms.Form):
         label='Ordem',
         choices=[('t',  'Tamanho/Cor/OC'), ('o', 'OC'),
                  ('c', 'Cor/Tamanho/OC')])
-    oc_ininial = forms.IntegerField(
+    oc_inicial = forms.IntegerField(
         label='OC inicial', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
     oc_final = forms.IntegerField(

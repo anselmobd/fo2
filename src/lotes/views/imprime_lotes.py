@@ -22,17 +22,17 @@ class ImprimeLotes(LoginRequiredMixin, View):
     title_name = 'Imprime "Cartela de Lote"'
 
     def mount_context_and_print(self, cursor, op, tam, cor, order,
-                                oc_ininial, oc_final,
+                                oc_inicial, oc_final,
                                 pula, qtd_lotes, ultimo,
                                 impresso, order_descr, do_print):
         context = {}
 
-        oc_ininial_val = oc_ininial or 0
+        oc_inicial_val = oc_inicial or 0
         oc_final_val = oc_final or 99999
 
         # Lotes ordenados por OC
         l_data = models.get_imprime_lotes(
-            cursor, op, tam, cor, order, oc_ininial_val, oc_final_val,
+            cursor, op, tam, cor, order, oc_inicial_val, oc_final_val,
             pula, qtd_lotes)
         if len(l_data) == 0:
             context.update({
@@ -106,7 +106,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'ultimo': ultimo,
             'pula': pula,
             'qtd_lotes': qtd_lotes,
-            'oc_ininial': oc_ininial,
+            'oc_inicial': oc_inicial,
             'oc_final': oc_final,
             'headers': ('Tamanho', 'Cor', 'Período', 'OC', '1º', 'Quant.',
                         'Lote', 'Unidade'),
@@ -184,7 +184,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             order = form.cleaned_data['order']
             order_descr = [ord[1] for ord in form.fields['order'].choices
                            if ord[0] == order][0]
-            oc_ininial = form.cleaned_data['oc_ininial']
+            oc_inicial = form.cleaned_data['oc_inicial']
             oc_final = form.cleaned_data['oc_final']
             pula = form.cleaned_data['pula']
             qtd_lotes = form.cleaned_data['qtd_lotes']
@@ -194,7 +194,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
-                    cursor, op, tam, cor, order, oc_ininial, oc_final,
+                    cursor, op, tam, cor, order, oc_inicial, oc_final,
                     pula, qtd_lotes, ultimo, impresso, order_descr,
                     'print' in request.POST))
         context['form'] = form
