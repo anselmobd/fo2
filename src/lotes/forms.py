@@ -116,17 +116,17 @@ class ImprimeLotesForm(forms.Form):
         label='Ordem',
         choices=[('t',  'Tamanho/Cor/OC'), ('o', 'OC'),
                  ('c', 'Cor/Tamanho/OC')])
-    oc_inicial = forms.IntegerField(
-        label='OC inicial', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))
-    oc_final = forms.IntegerField(
-        label='OC final', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))
     pula = forms.IntegerField(
         label='Pula quantos lotes', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
     qtd_lotes = forms.IntegerField(
         label='Imprime quantos lotes', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    oc_inicial = forms.IntegerField(
+        label='OC inicial', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    oc_final = forms.IntegerField(
+        label='OC final', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
     ultimo = forms.CharField(
         label='Último lote impresso', required=False,
