@@ -170,17 +170,19 @@ class ImprimePacote3LotesForm(forms.Form):
     cor = forms.CharField(
         label='Cor', required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
+    ultimo = forms.CharField(
+        label='Lote em última etiqueta de caixa impressa', required=False,
+        max_length=9, min_length=9,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    ultima_cx = forms.CharField(
+        label='Número da última caixa impressa', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
     pula = forms.IntegerField(
         label='Pula quantos pacotes', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
     qtd_lotes = forms.IntegerField(
         label='Imprime quantos pacotes', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
-    ultimo = forms.CharField(
-        label='Lote em última cartela de pacote impressa', required=False,
-        max_length=9, min_length=9,
-        widget=forms.TextInput(attrs={'type': 'number',
-                               'autofocus': 'autofocus'}))
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()
