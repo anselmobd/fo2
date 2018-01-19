@@ -21,8 +21,34 @@
 {% else %}
   {% if data %}
     <h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
-    <h3>Impressão: {{ cod_impresso }}</h3>
-    <h3>Lotes ordenados por Cor/Tamanho/OC</h3>
+    Impressão: {{ cod_impresso }}<br />
+    OP: {{ op }}&nbsp;&nbsp;
+    Referência: {{ ref }}<br />
+    {% if op_mae %}
+      OP Mãe: {{ op_mae }}&nbsp;&nbsp;
+      Referência Mãe: {{ ref_mae }}<br />
+    {% endif %}
+    {% if cor or tam or ultimo or ultima_cx or pula or qtd_lotes %}
+      <h4>Filtro:</h4>
+      {% if cor %}
+        Cor: {{ cor }}<br />
+      {% endif %}
+      {% if tam %}
+        Tamanho: {{ tam }}<br />
+      {% endif %}
+      {% if ultimo %}
+        Depois da caixa com o lote {{ ultimo }}<br />
+      {% endif %}
+      {% if ultima_cx %}
+        Depois da caixa número {{ ultima_cx }}<br />
+      {% endif %}
+      {% if pula %}
+        Pula {{ pula }} caixa{{ pula|pluralize }}<br />
+      {% endif %}
+      {% if qtd_lotes %}
+        Seleciona {{ qtd_lotes }} caixa{{ qtd_lotes|pluralize }}<br />
+      {% endif %}
+    {% endif %}
     <table>
       {% include "layout/html_thead.html" with data=headers only %}
       {% include "layout/html_tbody.html" with fields=fields data=data only %}
