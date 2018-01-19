@@ -24,7 +24,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
     def mount_context_and_print(self, cursor, op, tam, cor, order,
                                 oc_ininial, oc_final,
                                 pula, qtd_lotes, ultimo,
-                                impresso, selecao, order_descr, do_print):
+                                impresso, order_descr, do_print):
         context = {}
 
         oc_ininial_val = oc_ininial or 0
@@ -49,24 +49,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
 
         pula_lote = ultimo != ''
         data = []
-        # 'P' = 'Apenas o primeiro de cada 3 lotes semelhantes'
-        if selecao == 'P':
-            p_cor = ''
-            p_tam = ''
-            primeiros_data = models.get_imprime_pocote3lotes(
-                cursor, op)
-            qtd_total = len(primeiros_data)
-            cont_total = 0
         for row in l_data:
-            if selecao == 'P':
-                if p_cor != row['COR'] or p_tam != row['TAM']:
-                    p_cor = row['COR']
-                    p_tam = row['TAM']
-                    cor_tam_data = models.get_imprime_pocote3lotes(
-                        cursor, op, p_tam, p_cor)
-                    primeiros_lotes = [r['OC1'] for r in cor_tam_data]
-                    qtd_cortam = len(primeiros_lotes)
-                    cont_cortam = 0
             row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
             if row['OC'] == row['OC1']:
                 row['PRIM'] = '*'
@@ -77,15 +60,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             if pula_lote:
                 pula_lote = row['LOTE'] != ultimo
             else:
-                if selecao == 'T' or row['OC'] in primeiros_lotes:
-                    if selecao == 'P':
-                        cont_total += 1
-                        cont_cortam += 1
-                        row['cont_total'] = '{}'.format(cont_total)
-                        row['qtd_total'] = '{}'.format(qtd_total)
-                        row['cont_cortam'] = '{}'.format(cont_cortam)
-                        row['qtd_cortam'] = '{}'.format(qtd_cortam)
-                    data.append(row)
+                data.append(row)
 
         if len(data) == 0:
             context.update({
@@ -213,13 +188,12 @@ class ImprimeLotes(LoginRequiredMixin, View):
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
             impresso = form.cleaned_data['impresso']
-            selecao = form.cleaned_data['selecao']
 
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
                     cursor, op, tam, cor, order, oc_ininial, oc_final,
-                    pula, qtd_lotes, ultimo, impresso, selecao, order_descr,
+                    pula, qtd_lotes, ultimo, impresso, order_descr,
                     'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)
