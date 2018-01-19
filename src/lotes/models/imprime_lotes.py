@@ -11,7 +11,8 @@ def get_imprime_lotes(cursor, op, tam, cor, order, oc_ini, oc_fim,
                      pula=pula, qtd_lotes=qtd_lotes)
 
 
-def get_imprime_pocote3lotes(cursor, op, tam, cor, pula=None, qtd_lotes=None):
+def get_imprime_pocote3lotes(
+        cursor, op, tam='', cor='', pula=None, qtd_lotes=None):
     # Lotes ordenados por OP + OS + referência + estágio
     if pula is None:
         pula = 0

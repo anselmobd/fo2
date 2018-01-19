@@ -135,7 +135,8 @@ class ImprimeLotesForm(forms.Form):
                                'autofocus': 'autofocus'}))
     CHOICES = [('A', 'Etiqueta adesiva'),
                ('C', 'Cartela'),
-               ('F', 'Cartela de fundo')]
+               ('F', 'Cartela de fundo'),
+               ('E', 'Etiqueta de caixa de lotes')]
     impresso = forms.ChoiceField(
         label='Impresso', choices=CHOICES, initial='A')
     CHOICES = [('T', 'Todos os lotes'),
