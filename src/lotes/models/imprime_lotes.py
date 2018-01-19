@@ -64,6 +64,7 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         , o.SITUACAO
         , o.PERIODO_PRODUCAO PERIODO
         , o.REFERENCIA_PECA REF
+        , o.DATA_ENTRADA_CORTE
         , t.ORDEM_TAMANHO TAMORD
         , r.NARRATIVA
         from Table_qtd_lotes tb

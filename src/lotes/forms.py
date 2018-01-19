@@ -183,6 +183,10 @@ class ImprimePacote3LotesForm(forms.Form):
     qtd_lotes = forms.IntegerField(
         label='Imprime quantos pacotes', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
+    CHOICES = [('B', 'Etiqueta de caixa com barras de 3 lotes'),
+               ('C', 'Etiqueta de caixa de lotes')]
+    impresso = forms.ChoiceField(
+        label='Impresso', choices=CHOICES, initial='B')
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()

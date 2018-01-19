@@ -233,7 +233,8 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
 
     def mount_context_and_print(self, cursor, op, tam, cor,
                                 parm_pula, parm_qtd_lotes,
-                                ultimo, ultima_cx, do_print):
+                                ultimo, ultima_cx, impresso, impresso_descr,
+                                do_print):
         context = {}
 
         # Pacotes de 3 Lotes
@@ -263,6 +264,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
                 p_tam = row['tam']
                 qtd_cortam = row['pacote']
             row['qtd_cortam'] = '{}'.format(qtd_cortam)
+            row['cont_cortam'] = '{}'.format(row['pacote'])
             row['cx_ct'] = '{} / {}'.format(row['pacote'], qtd_cortam)
 
         # completa informações da pesquisa
@@ -340,7 +342,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             row['ref_mae'] = ref_mae
 
         # prepara dados selecionados
-        cod_impresso = 'Cartela de Pacote de 3 Lotes Adesiva'
+        cod_impresso = impresso_descr
         context.update({
             'count': len(data),
             'cod_impresso': cod_impresso,
@@ -397,6 +399,11 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
                 for row in data:
                     row['op'] = '{}'.format(row['op'])
                     row['estagios'] = estagios
+                    if row['data_entrada_corte']:
+                        row['data_entrada_corte'] = \
+                            row['data_entrada_corte'].date()
+                    else:
+                        row['data_entrada_corte'] = '-'
                     teg.context(row)
                     teg.printer_send()
             finally:
@@ -422,11 +429,15 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
             ultima_cx = form.cleaned_data['ultima_cx']
+            impresso = form.cleaned_data['impresso']
+            impresso_descr = [ord[1] for ord in form.fields['impresso'].choices
+                              if ord[0] == impresso][0]
 
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
-                    cursor, op, tam, cor, pula, qtd_lotes, ultimo, ultima_cx,
+                    cursor, op, tam, cor, pula, qtd_lotes,
+                    ultimo, ultima_cx, impresso, impresso_descr,
                     'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)
