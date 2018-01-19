@@ -40,7 +40,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             })
             return context
 
-        if l_data[0]['OP_SITUACAO'] == 9:
+        if l_data[0]['op_situacao'] == 9:
             context.update({
                 'msg_erro': 'OP cancelada!',
             })
@@ -50,15 +50,15 @@ class ImprimeLotes(LoginRequiredMixin, View):
         pula_lote = ultimo != ''
         data = []
         for row in l_data:
-            row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
-            if row['OC'] == row['OC1']:
-                row['PRIM'] = '*'
+            row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
+            if row['oc'] == row['oc1']:
+                row['prim'] = '*'
             else:
-                row['PRIM'] = ''
-            if row['DIVISAO'] is None:
-                row['DESCRICAO_DIVISAO'] = ''
+                row['prim'] = ''
+            if row['divisao'] is None:
+                row['descricao_divisao'] = ''
             if pula_lote:
-                pula_lote = row['LOTE'] != ultimo
+                pula_lote = row['lote'] != ultimo
             else:
                 data.append(row)
 
@@ -79,8 +79,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
             opmaei_row = opmaei_data[0]
             ref_mae = opmaei_row['REF']
         for row in l_data:
-            row['OP_MAE'] = op_mae
-            row['REF_MAE'] = ref_mae
+            row['op_mae'] = op_mae
+            row['ref_mae'] = ref_mae
 
         # prepara dados selecionados
         if impresso == 'A':
@@ -98,9 +98,9 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'headers': ('OP', 'Referência', 'Tamanho', 'Cor',
                         'Estágio', 'Período', 'OC', '1º', 'Quant.', 'Lote',
                         'Unidade', 'OP Mãe', 'Ref. Mãe'),
-            'fields': ('OP', 'REF', 'TAM', 'COR',
-                       'EST', 'PERIODO', 'OC', 'PRIM', 'QTD', 'LOTE',
-                       'DESCRICAO_DIVISAO', 'OP_MAE', 'REF_MAE'),
+            'fields': ('op', 'ref', 'tam', 'cor',
+                       'est', 'periodo', 'oc', 'prim', 'qtd', 'lote',
+                       'descricao_divisao', 'op_mae', 'ref_mae'),
             'data': data,
         })
 
@@ -138,26 +138,17 @@ class ImprimeLotes(LoginRequiredMixin, View):
             teg.printer_start()
             try:
                 for row in data:
-                    row['op'] = '{}'.format(row['OP'])
-                    row['periodo'] = '{}'.format(row['PERIODO'])
-                    row['oc'] = '{:05}'.format(row['OC'])
-                    row['oc1'] = '{:05}'.format(row['OC1'])
-                    row['lote'] = '{}'.format(row['LOTE'])
-                    row['ref'] = row['REF']
-                    row['tam'] = row['TAM']
-                    row['cor'] = row['COR']
-                    row['narrativa'] = row['NARRATIVA']
-                    row['qtd'] = row['QTD']
-                    row['divisao'] = row['DIVISAO']
-                    row['descricao_divisao'] = row['DESCRICAO_DIVISAO']
-                    if row['DATA_ENTRADA_CORTE']:
+                    row['op'] = '{}'.format(row['op'])
+                    row['periodo'] = '{}'.format(row['periodo'])
+                    row['oc'] = '{:05}'.format(row['oc'])
+                    row['oc1'] = '{:05}'.format(row['oc1'])
+                    row['lote'] = '{}'.format(row['lote'])
+                    if row['data_entrada_corte']:
                         row['data_entrada_corte'] = \
-                            row['DATA_ENTRADA_CORTE'].date()
+                            row['data_entrada_corte'].date()
                     else:
                         row['data_entrada_corte'] = '-'
                     row['estagios'] = estagios
-                    row['op_mae'] = row['OP_MAE']
-                    row['ref_mae'] = row['REF_MAE']
                     teg.context(row)
                     teg.printer_send()
             finally:
