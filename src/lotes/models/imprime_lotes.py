@@ -1,4 +1,4 @@
-from fo2.models import rows_to_dict_list
+from fo2.models import rows_to_dict_list_lower
 
 from lotes.models.base import *
 
@@ -18,7 +18,7 @@ def get_imprime_caixas_op_3lotes(cursor, op):
           ll.OP
         , ll.COR
         , ll.TAM
-        , ll.pacote
+        , ll.PACOTE
         , MIN(ll.OC) OC1
         , CASE COUNT(ll.OC)
           WHEN 1 THEN NULL
@@ -57,7 +57,7 @@ def get_imprime_caixas_op_3lotes(cursor, op):
           ll.OP
         , ll.COR
         , ll.TAM
-        , ll.pacote
+        , ll.PACOTE
         )
         select
           tb.*
@@ -79,9 +79,9 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         ORDER BY
           tb.COR
         , t.ORDEM_TAMANHO
-        , tb.pacote
+        , tb.PACOTE
     '''
 
     cursor.execute(sql, [op])
-    data = rows_to_dict_list(cursor)
+    data = rows_to_dict_list_lower(cursor)
     return data
