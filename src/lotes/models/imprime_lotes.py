@@ -12,6 +12,7 @@ def get_imprime_lotes(cursor, op, tam, cor, order, oc_ini, oc_fim,
     data = dict_list_to_lower(data)
     return data
 
+
 def get_imprime_caixas_op_3lotes(cursor, op):
     sql = '''
         WITH Table_qtd_lotes AS (
@@ -62,6 +63,24 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         )
         select
           tb.*
+        , ( SELECT
+              max( os.QTDE_PECAS_PROG )
+            FROM PCPC_040 os
+            WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
+              AND os.ORDEM_CONFECCAO = tb.OC1
+          )	QTD1
+        , ( SELECT
+              max( os.QTDE_PECAS_PROG )
+            FROM PCPC_040 os
+            WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
+              AND os.ORDEM_CONFECCAO = tb.OC2
+          )	QTD2
+        , ( SELECT
+              max( os.QTDE_PECAS_PROG )
+            FROM PCPC_040 os
+            WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
+              AND os.ORDEM_CONFECCAO = tb.OC3
+          )	QTD3
         , o.SITUACAO
         , o.PERIODO_PRODUCAO PERIODO
         , o.REFERENCIA_PECA REF
