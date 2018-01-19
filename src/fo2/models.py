@@ -14,6 +14,17 @@ def rows_to_dict_list_lower(cursor):
     columns = [i[0].lower() for i in cursor.description]
     return [dict(zip(columns, row)) for row in cursor]
 
+
+def dict_list_to_lower(data):
+    data_lower = []
+    for row in data:
+        row_lower = {}
+        for key in row.keys():
+            row_lower[key.lower()] = row[key]
+        data_lower.append(row_lower)
+    return data_lower
+
+
 def cursorF1():
     con = fdb.connect(
         dsn='{}/{}:{}'.format(DB_F1['HOST'], DB_F1['PORT'], DB_F1['NAME']),
