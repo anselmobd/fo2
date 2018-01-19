@@ -253,14 +253,21 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             row['cx_op'] = '{} / {}'.format(cont_total, qtd_total)
 
             row['lote1'] = '{}{:05}'.format(row['periodo'], row['oc1'])
+            row['qtd_lotes'] = '1'
             if row['oc2']:
                 row['lote2'] = '{}{:05}'.format(row['periodo'], row['oc2'])
+                row['qtd_lotes'] = '2'
             else:
                 row['lote2'] = ' '
+                row['oc2'] = ''
+                row['qtd2'] = ''
             if row['oc3']:
                 row['lote3'] = '{}{:05}'.format(row['periodo'], row['oc3'])
+                row['qtd_lotes'] = '3'
             else:
                 row['lote3'] = ' '
+                row['oc3'] = ''
+                row['qtd3'] = ''
 
             if row['pacote'] == 1:
                 row['prim'] = '*'
@@ -333,9 +340,11 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             'pula': parm_pula,
             'qtd_lotes': parm_qtd_lotes,
             'headers': ('CX.OP', 'Cor', 'Tamanho', '1º', 'CX.Cor/Tam',
-                        'Lote 1', 'Lote 2', 'Lote 3'),
+                        'Lote 1', 'Qtd. 1', 'Lote 2', 'Qtd. 2',
+                        'Lote 3', 'Qtd. 3'),
             'fields': ('cx_op', 'cor', 'tam', 'prim', 'cx_ct',
-                       'lote1', 'lote2', 'lote3'),
+                       'lote1', 'qtd1', 'lote2', 'qtd2',
+                       'lote3', 'qtd3'),
             'data': data,
         })
 
