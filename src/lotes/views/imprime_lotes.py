@@ -68,6 +68,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
             })
             return context
 
+        ref = l_data[0]['ref']
+
         # busca informação de OP mãe
         opi_data = models.op_inform(cursor, op)
         opi_row = opi_data[0]
@@ -95,12 +97,21 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'count': len(data),
             'cod_impresso': cod_impresso,
             'ordem': order_descr,
-            'headers': ('OP', 'Referência', 'Tamanho', 'Cor',
-                        'Estágio', 'Período', 'OC', '1º', 'Quant.', 'Lote',
-                        'Unidade', 'OP Mãe', 'Ref. Mãe'),
-            'fields': ('op', 'ref', 'tam', 'cor',
-                       'est', 'periodo', 'oc', 'prim', 'qtd', 'lote',
-                       'descricao_divisao', 'op_mae', 'ref_mae'),
+            'op': op,
+            'ref': ref,
+            'op_mae': op_mae,
+            'ref_mae': ref_mae,
+            'cor': cor,
+            'tam': tam,
+            'ultimo': ultimo,
+            'pula': pula,
+            'qtd_lotes': qtd_lotes,
+            'oc_ininial': oc_ininial,
+            'oc_final': oc_final,
+            'headers': ('Tamanho', 'Cor', 'Período', 'OC', '1º', 'Quant.',
+                        'Lote', 'Unidade'),
+            'fields': ('tam', 'cor', 'periodo', 'oc', 'prim', 'qtd',
+                       'lote', 'descricao_divisao'),
             'data': data,
         })
 
