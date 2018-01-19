@@ -232,48 +232,92 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
     title_name = 'Imprime "Pacote de 3 Lotes"'
 
     def mount_context_and_print(self, cursor, op, tam, cor,
-                                pula, qtd_lotes, ultimo, do_print):
+                                parm_pula, parm_qtd_lotes,
+                                ultimo, ultima_cx, do_print):
         context = {}
 
         # Pacotes de 3 Lotes
-        l_data = models.get_imprime_pocote3lotes(
-            cursor, op, tam, cor, pula, qtd_lotes)
+        l_data = models.get_imprime_caixas_op_3lotes(cursor, op)
+
         if len(l_data) == 0:
             context.update({
                 'msg_erro': 'Nehum lote selecionado',
             })
             return context
 
-        if l_data[0]['SITUACAO'] == 9:
+        if l_data[0]['situacao'] == 9:
             context.update({
                 'msg_erro': 'OP cancelada!',
             })
             l_data = []
             return context
 
-        pula_lote = ultimo != ''
+        ref = l_data[0]['ref']
+
+        # atribui qtd_cortam
+        p_cor = ''
+        p_tam = ''
+        for row in reversed(l_data):
+            if p_cor != row['cor'] or p_tam != row['tam']:
+                p_cor = row['cor']
+                p_tam = row['tam']
+                qtd_cortam = row['pacote']
+            row['qtd_cortam'] = '{}'.format(qtd_cortam)
+            row['cx_ct'] = '{} / {}'.format(row['pacote'], qtd_cortam)
+
+        # completa informações da pesquisa
+        qtd_total = len(l_data)
+        cont_total = 0
+        for row in l_data:
+            row['qtd_total'] = '{}'.format(qtd_total)
+            cont_total += 1
+            row['cont_total'] = '{}'.format(cont_total)
+            row['cx_op'] = '{} / {}'.format(cont_total, qtd_total)
+
+            row['lote1'] = '{}{:05}'.format(row['periodo'], row['oc1'])
+            if row['oc2']:
+                row['lote2'] = '{}{:05}'.format(row['periodo'], row['oc2'])
+            else:
+                row['lote2'] = ' '
+            if row['oc3']:
+                row['lote3'] = '{}{:05}'.format(row['periodo'], row['oc3'])
+            else:
+                row['lote3'] = ' '
+
+            if row['pacote'] == 1:
+                row['prim'] = '*'
+            else:
+                row['prim'] = ''
+
+        # filtra resultado
+        if parm_pula is None:
+            pula = 0
+        else:
+            pula = parm_pula
+        if parm_qtd_lotes is None:
+            qtd_lotes = 1000000
+        else:
+            qtd_lotes = parm_qtd_lotes
+
+        pula_lote = ultimo != '' or ultima_cx != ''
         data = []
         for row in l_data:
-            row['LOTE1'] = '{}{:05}'.format(row['PERIODO'], row['OC1'])
-            if row['OC2']:
-                row['LOTE2'] = '{}{:05}'.format(row['PERIODO'], row['OC2'])
-            else:
-                row['LOTE2'] = ''
-            if row['OC3']:
-                row['LOTE3'] = '{}{:05}'.format(row['PERIODO'], row['OC3'])
-            else:
-                row['LOTE3'] = ''
-            if row['PACOTE'] == 1:
-                row['PRIM'] = '*'
-            else:
-                row['PRIM'] = ''
             if pula_lote:
                 pula_lote = \
-                    row['LOTE1'] != ultimo and \
-                    row['LOTE2'] != ultimo and \
-                    row['LOTE3'] != ultimo
+                    row['lote1'] != ultimo and \
+                    row['lote2'] != ultimo and \
+                    row['lote3'] != ultimo and \
+                    row['cont_total'] != ultima_cx
             else:
-                data.append(row)
+                print_lote = (tam == '' or row['tam'] == tam) \
+                    and (cor == '' or row['cor'] == cor)
+                if print_lote:
+                    if pula > 0:
+                        pula -= 1
+                    else:
+                        if qtd_lotes > 0:
+                            data.append(row)
+                            qtd_lotes -= 1
 
         if len(data) == 0:
             context.update({
@@ -287,23 +331,33 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
         op_mae = ''
         ref_mae = ''
         if opi_row['TIPO_OP'] == 'Filha de':
-            op_mae = opi_row['OP_REL']
+            op_mae = '{}'.format(opi_row['OP_REL'])
             opmaei_data = models.op_inform(cursor, op_mae)
             opmaei_row = opmaei_data[0]
             ref_mae = opmaei_row['REF']
         for row in l_data:
-            row['OP_MAE'] = op_mae
-            row['REF_MAE'] = ref_mae
+            row['op_mae'] = op_mae
+            row['ref_mae'] = ref_mae
 
         # prepara dados selecionados
         cod_impresso = 'Cartela de Pacote de 3 Lotes Adesiva'
         context.update({
             'count': len(data),
             'cod_impresso': cod_impresso,
-            'headers': ('OP', 'Referência', 'Cor', 'Tamanho', '1º',
-                        'Lote 1', 'Lote 2', 'Lote 3', 'OP Mãe', 'Ref. Mãe'),
-            'fields': ('OP', 'REF', 'COR', 'TAM', 'PRIM',
-                       'LOTE1', 'LOTE2', 'LOTE3', 'OP_MAE', 'REF_MAE'),
+            'op': op,
+            'ref': ref,
+            'op_mae': op_mae,
+            'ref_mae': ref_mae,
+            'cor': cor,
+            'tam': tam,
+            'ultima_cx': ultima_cx,
+            'ultimo': ultimo,
+            'pula': parm_pula,
+            'qtd_lotes': parm_qtd_lotes,
+            'headers': ('CX.OP', 'Cor', 'Tamanho', '1º', 'CX.Cor/Tam',
+                        'Lote 1', 'Lote 2', 'Lote 3'),
+            'fields': ('cx_op', 'cor', 'tam', 'prim', 'cx_ct',
+                       'lote1', 'lote2', 'lote3'),
             'data': data,
         })
 
@@ -341,17 +395,8 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             teg.printer_start()
             try:
                 for row in data:
-                    row['op'] = '{}'.format(row['OP'])
-                    row['lote1'] = '{}'.format(row['LOTE1'])
-                    row['lote2'] = '{}'.format(row['LOTE2'])
-                    row['lote3'] = '{}'.format(row['LOTE3'])
-                    row['prim'] = row['PRIM']
-                    row['ref'] = row['REF']
-                    row['tam'] = row['TAM']
-                    row['cor'] = row['COR']
-                    row['narrativa'] = row['NARRATIVA']
+                    row['op'] = '{}'.format(row['op'])
                     row['estagios'] = estagios
-                    row['ref_mae'] = row['REF_MAE']
                     teg.context(row)
                     teg.printer_send()
             finally:
@@ -376,11 +421,12 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             pula = form.cleaned_data['pula']
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
+            ultima_cx = form.cleaned_data['ultima_cx']
 
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
-                    cursor, op, tam, cor, pula, qtd_lotes, ultimo,
+                    cursor, op, tam, cor, pula, qtd_lotes, ultimo, ultima_cx,
                     'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)
