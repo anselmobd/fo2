@@ -53,6 +53,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
         if selecao == 'P':
             p_cor = ''
             p_tam = ''
+            primeiros_data = models.get_imprime_pocote3lotes(
+                cursor, op)
+            qtd_total = len(primeiros_data)
+            cont_total = 0
         for row in l_data:
             if selecao == 'P':
                 if p_cor != row['COR'] or p_tam != row['TAM']:
@@ -61,6 +65,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     cor_tam_data = models.get_imprime_pocote3lotes(
                         cursor, op, p_tam, p_cor)
                     primeiros_lotes = [r['OC1'] for r in cor_tam_data]
+                    qtd_cortam = len(primeiros_lotes)
+                    cont_cortam = 0
             row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
             if row['OC'] == row['OC1']:
                 row['PRIM'] = '*'
@@ -72,6 +78,13 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 pula_lote = row['LOTE'] != ultimo
             else:
                 if selecao == 'T' or row['OC'] in primeiros_lotes:
+                    if selecao == 'P':
+                        cont_total += 1
+                        cont_cortam += 1
+                        row['cont_total'] = '{}'.format(cont_total)
+                        row['qtd_total'] = '{}'.format(qtd_total)
+                        row['cont_cortam'] = '{}'.format(cont_cortam)
+                        row['qtd_cortam'] = '{}'.format(qtd_cortam)
                     data.append(row)
 
         if len(data) == 0:
@@ -99,8 +112,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
             cod_impresso = 'Cartela de Lote Adesiva'
         elif impresso == 'C':
             cod_impresso = 'Cartela de Lote Cartão'
-        else:
+        elif impresso == 'F':
             cod_impresso = 'Cartela de Fundo'
+        elif impresso == 'E':
+            cod_impresso = 'Etiqueta de caixa de lotes'
         context.update({
             'count': len(data),
             'cod_impresso': cod_impresso,
