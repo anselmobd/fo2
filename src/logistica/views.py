@@ -65,7 +65,7 @@ class NotafiscalRel(View):
                     if ord[0] == form['data_saida']][0],
             })
 
-        select = select.order_by('numero')
+        select = select.order_by('-numero')
         data = list(select.values())
         if len(data) == 0:
             context.update({
