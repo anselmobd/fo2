@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 , f.PEDIDO_VENDA PEDIDO
                 , p.COD_PED_CLIENTE PED_CLIENTE
                 FROM FATU_050 f
-                JOIN PEDI_100 p
+                LEFT JOIN PEDI_100 p
                   ON p.PEDIDO_VENDA = f.PEDIDO_VENDA
                 JOIN PEDI_010 c
                   ON c.CGC_9 = f.CGC_9
