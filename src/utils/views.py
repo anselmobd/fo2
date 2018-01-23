@@ -1,3 +1,11 @@
+from django.template.defaulttags import register
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
 def totalize_data(data, config):
     totrow = data[0].copy()
     for key in totrow:
