@@ -4,19 +4,12 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.views import View
-# from django.template.defaultfilters import lower
-from django.template.defaulttags import register
 
 from fo2.models import rows_to_dict_list
 
 from .forms import RefForm, ModeloForm
 from utils.forms import FiltroForm
 import produto.models as models
-
-
-@register.filter
-def get_item(dictionary, key):
-    return dictionary.get(key)
 
 
 def index(request):
