@@ -30,6 +30,9 @@ class ModeloTermica(models.Model):
     receita = models.CharField(
         null=True, blank=True, max_length=8192,
         verbose_name='receita')
+    gabarito = models.CharField(
+        null=True, blank=True, max_length=8192,
+        verbose_name='gabarito')
     campos = models.TextField(
         null=True, blank=True,
         verbose_name='campos')
