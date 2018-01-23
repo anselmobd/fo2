@@ -145,7 +145,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             for e_row in e_data:
                 estagios.append(e_row['EST'])
             teg = TermalPrint(usuario_impresso.impressora_termica.nome)
-            teg.template(usuario_impresso.modelo.receita, '\r\n')
+            teg.template(usuario_impresso.modelo.gabarito, '\r\n')
             teg.printer_start()
             try:
                 for row in data:
@@ -382,7 +382,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             for e_row in e_data:
                 estagios.append(e_row['EST'])
             teg = TermalPrint(usuario_impresso.impressora_termica.nome)
-            teg.template(usuario_impresso.modelo.receita, '\r\n')
+            teg.template(usuario_impresso.modelo.gabarito, '\r\n')
             teg.printer_start()
             try:
                 for row in data:
