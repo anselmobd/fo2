@@ -214,7 +214,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
     def mount_context_and_print(self, cursor, op, tam, cor,
                                 parm_pula, parm_qtd_lotes,
                                 ultimo, ultima_cx, impresso, impresso_descr,
-                                do_print):
+                                obs1, obs2, do_print):
         context = {}
 
         # Pacotes de 3 Lotes
@@ -386,6 +386,8 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             teg.printer_start()
             try:
                 for row in data:
+                    row['obs1'] = obs1
+                    row['obs2'] = obs2
                     row['op'] = '{}'.format(row['op'])
                     row['estagios'] = estagios
                     if row['data_entrada_corte']:
@@ -421,12 +423,14 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             impresso = form.cleaned_data['impresso']
             impresso_descr = [ord[1] for ord in form.fields['impresso'].choices
                               if ord[0] == impresso][0]
+            obs1 = form.cleaned_data['obs1']
+            obs2 = form.cleaned_data['obs2']
 
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
                     cursor, op, tam, cor, pula, qtd_lotes,
-                    ultimo, ultima_cx, impresso, impresso_descr,
+                    ultimo, ultima_cx, impresso, impresso_descr, obs1, obs2,
                     'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)
