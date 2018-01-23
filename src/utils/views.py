@@ -24,9 +24,13 @@ def word_slice(text, slice):
 
     slices = slice.split(':')
     inicio = int(slices[0]) if slices[0] != '' else 0
+    if inicio > len(text):
+        return ''
     inicio = adjust_cut(text,  inicio)
 
     fim = int(slices[1]) if slices[1] != '' else len(text)
+    if fim < inicio or fim < 0:
+        return ''
     if fim < len(text):
         fim = adjust_cut(text,  fim)
 
