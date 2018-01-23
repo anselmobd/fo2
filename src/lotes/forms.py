@@ -266,10 +266,6 @@ class PedidoForm(forms.Form):
 
 
 class ModeloTermicaForm(forms.ModelForm):
-    receita = forms.CharField(
-        label='Receita',
-        widget=forms.Textarea(
-            attrs={'max_length': 8192, 'rows': 20, 'cols': 79}))
     gabarito = forms.CharField(
         label='Gabarito',
         widget=forms.Textarea(
