@@ -189,6 +189,14 @@ class ImprimePacote3LotesForm(forms.Form):
                ('C', 'Etiqueta de caixa de lotes')]
     impresso = forms.ChoiceField(
         label='Impresso', choices=CHOICES, initial='B')
+    obs1 = forms.CharField(
+        label='Observação 1', required=False,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'style': 'width:20en'}))
+    obs2 = forms.CharField(
+        label='Observação 2', required=False,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'style': 'width:20en'}))
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()
