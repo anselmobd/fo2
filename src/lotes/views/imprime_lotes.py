@@ -69,6 +69,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             return context
 
         ref = l_data[0]['ref']
+        estagio = l_data[0]['est']
 
         # busca informação de OP mãe
         opi_data = models.op_inform(cursor, op)
@@ -108,6 +109,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'qtd_lotes': qtd_lotes,
             'oc_inicial': oc_inicial,
             'oc_final': oc_final,
+            'estagio': estagio,
             'headers': ('Tamanho', 'Cor', 'Período', 'OC', '1º', 'Quant.',
                         'Lote', 'Unidade'),
             'fields': ('tam', 'cor', 'periodo', 'oc', 'prim', 'qtd',
