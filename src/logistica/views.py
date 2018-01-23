@@ -57,6 +57,12 @@ class NotafiscalRel(View):
             context.update({
                 'cliente': form['cliente'],
             })
+        if form['transportadora']:
+            condition = Q(transp_nome__icontains=form['transportadora'])
+            select = select.filter(condition)
+            context.update({
+                'transportadora': form['transportadora'],
+            })
         if form['data_saida'] != 'N':
             select = select.filter(saida__isnull=form['data_saida'] == 'S')
             context.update({

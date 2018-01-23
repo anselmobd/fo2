@@ -30,6 +30,11 @@ class NotafiscalRelForm(forms.Form):
         help_text='Parte do nome ou início do CNPJ.',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    transportadora = forms.CharField(
+        label='Transportadora', required=False,
+        help_text='Sigla da transportadora.',
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
     CHOICES = [('N', 'Não filtra'),
                ('C', 'Com data de saída informada'),
                ('S', 'Sem data de saída')]
