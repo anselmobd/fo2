@@ -24,7 +24,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
     def mount_context_and_print(self, cursor, op, tam, cor, order,
                                 oc_inicial, oc_final,
                                 pula, qtd_lotes, ultimo,
-                                impresso, order_descr, do_print):
+                                impresso, order_descr, obs1, obs2, do_print):
         context = {}
 
         oc_inicial_val = oc_inicial or 0
@@ -151,6 +151,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
             teg.printer_start()
             try:
                 for row in data:
+                    row['obs1'] = obs1
+                    row['obs2'] = obs2
                     row['op'] = '{}'.format(row['op'])
                     row['periodo'] = '{}'.format(row['periodo'])
                     row['oc'] = '{:05}'.format(row['oc'])
@@ -192,12 +194,14 @@ class ImprimeLotes(LoginRequiredMixin, View):
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
             impresso = form.cleaned_data['impresso']
+            obs1 = form.cleaned_data['obs1']
+            obs2 = form.cleaned_data['obs2']
 
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
                     cursor, op, tam, cor, order, oc_inicial, oc_final,
-                    pula, qtd_lotes, ultimo, impresso, order_descr,
+                    pula, qtd_lotes, ultimo, impresso, order_descr, obs1, obs2,
                     'print' in request.POST))
         context['form'] = form
         return render(request, self.template_name, context)

@@ -131,13 +131,20 @@ class ImprimeLotesForm(forms.Form):
     ultimo = forms.CharField(
         label='Último lote impresso', required=False,
         max_length=9, min_length=9,
-        widget=forms.TextInput(attrs={'type': 'number',
-                               'autofocus': 'autofocus'}))
+        widget=forms.TextInput(attrs={'type': 'number'}))
     CHOICES = [('A', 'Etiqueta adesiva'),
                ('C', 'Cartela'),
                ('F', 'Cartela de fundo')]
     impresso = forms.ChoiceField(
         label='Impresso', choices=CHOICES, initial='A')
+    obs1 = forms.CharField(
+        label='Observação 1', required=False,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'style': 'width:20en'}))
+    obs2 = forms.CharField(
+        label='Observação 2', required=False,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'style': 'width:20en'}))
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()
