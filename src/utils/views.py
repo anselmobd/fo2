@@ -19,6 +19,9 @@ def word_slice(text, slice):
             val += 1
         return val
 
+    if text == '':
+        return text
+
     slices = slice.split(':')
     inicio = int(slices[0]) if slices[0] != '' else 0
     inicio = adjust_cut(text,  inicio)
