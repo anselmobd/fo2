@@ -17,7 +17,7 @@ class RecordTracking(models.Model):
     iud = models.CharField(
         max_length=1, verbose_name='Ação')
     log = models.CharField(
-        max_length=2048, verbose_name='Log')
+        max_length=65535, verbose_name='Log')
 
     class Meta:
         db_table = "fo2_ger_record_tracking"
