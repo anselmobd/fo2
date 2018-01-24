@@ -103,6 +103,7 @@ def op_estagios(cursor, op):
     sql = '''
         SELECT
           ll.EST
+        , ll.COD_EST
         , (SELECT
               cast( SUM( lp.QTDE_PECAS_PROD ) / SUM( lp.QTDE_PECAS_PROG ) * 100
                     AS NUMERIC(10,2) )
@@ -141,6 +142,7 @@ def op_estagios(cursor, op):
           l.ORDEM_PRODUCAO
         , l.SEQ_OPERACAO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
+        , l.CODIGO_ESTAGIO COD_EST
         FROM pcpc_040 l
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
