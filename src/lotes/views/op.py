@@ -68,6 +68,7 @@ class Op(View):
             row = i2_data[0]
             row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
             row['MODELO|LINK'] = '/produto/modelo/{}'.format(row['MODELO'])
+            qtd_lotes_fim = row['LOTES']
             context.update({
                 'i2_headers': ('Modelo', 'Tipo de referência', 'Referência',
                                'Alternativa', 'Roteiro',
@@ -105,12 +106,15 @@ class Op(View):
 
             # Estágios
             e_data = models.op_estagios(cursor, op)
+            for row in e_data:
+                qtd_lotes_fim -= row['LOTES']
             context.update({
                 'e_headers': ('Estágio', '% Produzido',
                               'Itens 1ª Qualidade', 'Itens 2ª Qualidade',
                               'Itens Perda', 'Lotes no estágio'),
                 'e_fields': ('EST', 'PERC', 'PROD', 'Q2', 'PERDA', 'LOTES'),
                 'e_data': e_data,
+                'qtd_lotes_fim': qtd_lotes_fim,
             })
 
             # Totais por referência + estágio
