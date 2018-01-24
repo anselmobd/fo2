@@ -59,9 +59,22 @@
         <li><a href="{% url 'logistica' %}">Logistica</a></li>
         {% include 'logistica/menu.html' %}
         <br />
-        <li><a href="/intradm/" target="_blank">Administração do Sistema de Apoio ao ERP</a></li>
+        <li>Apoio ao ERP</li>
         <ul>
-          <li><a href="/rootadm/" target="_blank">Administração de usuários</a></li>
+          <li>Usuário</li>
+            <ul>
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'encerrar' %}">Encerrar sessão</a></li>
+              <li><a href="/rootadm/password_change/?next=/">Alterar senha</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}?next=/">Se identificar (login)</a></li>
+            {% endif %}
+          </ul>
+          <li>Administração</li>
+          <ul>
+            <li><a href="/intradm/" target="_blank">Configurações e Dados</a></li>
+            <li><a href="/rootadm/" target="_blank">Usuários</a></li>
+          </ul>
         </ul>
       </ul>
     </td>
