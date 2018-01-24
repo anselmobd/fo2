@@ -22,6 +22,28 @@
         margin: 0;
     }
     /*Flexbox gives us the flexiness we need. The top just stays put as there is no scrolling on the body due to the page never exceeding viewport height*/
+    .PN_Top_Link {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        font-size: 0.8rem;
+        position: relative;
+        z-index: 5;
+        height: 1rem;
+        padding: 0 1rem 0 1rem;
+        background-color: firebrick;
+        color: snow;
+    }
+    .PN_Top_Link a.timer {
+        color: snow;
+        justify-content: right;
+        animation-name: timer;
+        animation-duration: 30s;
+    }
+    @keyframes timer {
+        0%   {color: snow;}
+        100% {color: IndianRed;}
+    }
     .PN_Top {
         display: flex;
         align-items: center;
@@ -29,7 +51,8 @@
         font-size: 3rem;
         position: relative;
         z-index: 10;
-        height: 5rem;
+        height: 3rem;
+        padding-bottom: 1rem;
         background-color: firebrick;
         color: snow;
     }
@@ -92,12 +115,16 @@
   </style>
   <script>
      let timerId;
-     let seconds=60;
+     let seconds=30;
      let count=seconds;
 
      resetCount = function() {
-      //  alert('on');
+       //  alert('on');
        count=seconds;
+
+       var elm = document.getElementById("timerlink");
+       var newone = elm.cloneNode(true);
+       elm.parentNode.replaceChild(newone, elm);
      }
 
      startTimer = function() {
@@ -108,12 +135,10 @@
          }
        },1000);
      }
-
-     resetTimer = function() {
-     }
   </script>
 </head>
 <body onload="startTimer();" onmouseover="resetCount();" onmousemove="resetCount();" onclick="resetCount();" ondblclick="resetCount();" onkeydown="resetCount();" onscroll="resetCount();">
+  <div class="PN_Top_Link"><a id="timerlink" class="timer" href=".">Recarrega</a></div>
   <div class="PN_Top">{{ titulo }}</div>
   <div class="PN_Top_Sub">
     <div class="PN_Left">{{ config.dados.0.modulo }}</div>
