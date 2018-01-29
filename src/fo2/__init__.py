@@ -1,9 +1,12 @@
-__version__ = '0.1.40'
-__version__date__ = '2017/12/01'
+__version__ = '0.1.50'
+__version__date__ = '29/01/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.50 - 2018/01/29
+#   . Várias melhorias
 #
 # - 0.1.40 - 2017/12/01
 #   . Pedido: grade de itens pedidos
