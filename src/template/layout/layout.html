@@ -48,8 +48,7 @@
             <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a> | <a href="{% url 'oficial_systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a>
           </div>
           <div class="col-md-4" align="center">
-            <img src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO"><br />
-            {% if request.user.is_authenticated %}Usuário: '{{ request.user.username }}'&nbsp;|&nbsp;<a href="{% url 'encerrar' %}">Encerrar sessão</a>{% endif %}
+            <img src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO">
           </div>
           <div class="col-md-4" align="right">
             <small>Versão da Intranet: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})</small>
