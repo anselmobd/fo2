@@ -1,12 +1,15 @@
+import os
 import copy
 from subprocess import Popen, PIPE
 
 from django.template import Template, Context
 
+from django.conf import settings
+
 
 class SingletonMeta(type):
     '''
-        Singleton pattern requires for GetUser class
+        Singleton pattern requires for LoggedInUser class
     '''
     def __init__(cls, name, bases, namespace):
         super().__init__(name, bases, namespace)
@@ -27,7 +30,7 @@ class NotLoggedInUserException(Exception):
     '''
     def __init__(self, val='No users have been logged in'):
         self.val = val
-        super(NotLoggedInUser, self).__init__()
+        super(NotLoggedInUserException, self).__init__()
 
     def __str__(self):
         return self.val
@@ -53,6 +56,33 @@ class LoggedInUser(SingletonBaseMeta):
     @property
     def have_user(self):
         return user is not None
+
+
+class GitVersion(SingletonBaseMeta):
+
+    git_version = None
+
+    @property
+    def version(self):
+        '''
+            Return current gitversion
+        '''
+        if self.git_version is None:
+            git_dir = os.path.dirname(settings.BASE_DIR)
+            print(git_dir)
+            try:
+                comm = 'git -C {} log -1 --pretty=format:"%h (%cd)" ' + \
+                    '--date=format:"%d/%m/%Y"'
+                comm = comm.format(git_dir)
+                print(comm)
+                # Date and hash ID
+                head = subprocess.Popen(
+                    comm, shell=True,
+                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                self.git_version = head.stdout.readline().strip().decode()
+            except Exception as e:
+                self.git_version = 'desconhecida'
+        return self.git_version
 
 
 class TermalPrint:
