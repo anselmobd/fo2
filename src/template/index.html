@@ -61,7 +61,7 @@
         <br />
         <li>Apoio ao ERP</li>
         <ul>
-          <li>Usuário</li>
+          <li>Usuário{% if request.user.is_authenticated %} ( {{ request.user.username }} ){% endif %}</li>
             <ul>
             {% if request.user.is_authenticated %}
             <li><a href="{% url 'encerrar' %}">Encerrar sessão</a></li>
