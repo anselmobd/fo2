@@ -22,14 +22,15 @@
 {% endblock %}
 
 {% block content %}
-<h3>Rotinas auxiliares ao Systêxtil</h3>
-<br />
 <table>
   <tr>
     <td>
       <ul>
         <li><a href="{% url 'lotes' %}">Produção</a></li>
         {% include 'lotes/menu.html' %}
+        <br />
+        <li><a href="{% url 'insumo' %}">Insumo</a></li>
+        {% include 'insumo/menu.html' %}
       </ul>
     </td>
     <td>&nbsp;</td>
@@ -38,9 +39,6 @@
       <ul>
         <li><a href="{% url 'produto' %}">Produto</a></li>
         {% include 'produto/menu.html' %}
-        <br />
-        <li><a href="{% url 'insumo' %}">Insumo</a></li>
-        {% include 'insumo/menu.html' %}
         <br />
         <li><a href="{% url 'geral' %}">Cadastros gerais</a></li>
         {% include 'geral/menu.html' %}
