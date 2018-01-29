@@ -11,11 +11,11 @@ class NotafiscalRelForm(forms.Form):
     data_de = forms.DateField(
         label='Data do Faturamento: De', required=False,
         initial=data_ini,
-        widget=forms.DateInput(attrs={'size': 10,
+        widget=forms.DateInput(attrs={'type': 'date',
                                'autofocus': 'autofocus'}))
     data_ate = forms.DateField(
-        label='Data do Faturamento: Até', required=False,
-        widget=forms.DateInput(attrs={'size': 10}))
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
 
     uf = forms.CharField(
         label='UF', max_length=2, min_length=2, required=False,
