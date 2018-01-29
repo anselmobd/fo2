@@ -1,5 +1,17 @@
 from django.template.defaulttags import register
 
+from utils.classes import GitVersion
+
+
+@register.simple_tag
+def git_ver():
+    '''
+    Retrieve and return the latest git commit hash ID and date
+    Use in template:  {% git_ver %}
+    '''
+    git_version = GitVersion()
+    return git_version.version
+
 
 @register.filter
 def get_item(dictionary, key):
