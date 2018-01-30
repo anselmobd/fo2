@@ -2,6 +2,7 @@ from .views import *
 from .lote import *
 from .responsavel import *
 from .op import *
+from .op_caixa import *
 from .os import *
 from .analise import *
 from .imprime_lotes import *

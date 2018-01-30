@@ -45,6 +45,10 @@ urlpatterns = [
     url(r'^pedido/(?P<pedido>\d+)/$', views.Pedido.as_view(),
         name='pedido_pedido'),
 
+    url(r'^op_caixa/$', views.OpCaixa.as_view(), name='op_caixa'),
+    url(r'^op_caixa/(?P<op>\d+)/$',
+        views.OpCaixa.as_view(), name='op_caixa_op'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
