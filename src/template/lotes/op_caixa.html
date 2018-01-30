@@ -1,0 +1,33 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/lotes/">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="noprint">
+<form action="/lotes/op_caixa/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+</div>
+{% if op %}
+<h2>OP {{ op }}</h2>
+{% endif %}
+{% if msg_erro %}
+<h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+<h3>Caixas e lotes</h3>
+<table>
+  {% include "layout/html_thead.html" with data=headers only %}
+  {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
+</table>
+{% endif %}
+{% endblock %}
