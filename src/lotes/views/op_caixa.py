@@ -43,9 +43,11 @@ class OpCaixa(View):
                 'num_caixa_txt': '-',
                 'cor_tam_caixa_txt': '-',
                 'lote': '-',
-                'qtd': '-'}
+                'qtd': '-',
+                'peso': '-'}
             for index, row in enumerate(data):
                 row['lote_num'] = index+1
+                row['peso'] = ' '
 
                 trocou_cor = cor != row['cor']
                 trocou_tam = tam != row['tam']
@@ -139,11 +141,11 @@ class OpCaixa(View):
             group_rowspan(data, group)
             context.update({
                 'headers': ('OP', 'Referência', 'Cx.OP',
-                            'Cor', 'Tamanho', 'Cx.C/T', 'Qtd.Cx.',
-                            'Lote', 'Quant.'),
+                            'Cor', 'Tamanho', 'Cx.C/T', 'Peças',
+                            'Lote', 'Quant.', 'Peso'),
                 'fields': ('op', 'ref', 'num_caixa_txt',
                            'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa',
-                           'lote', 'qtd'),
+                           'lote', 'qtd', 'peso'),
                 'group': group,
                 'data': data,
             })
