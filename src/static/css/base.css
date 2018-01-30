@@ -18,6 +18,14 @@
   a[href]:after {
     content: none
   }
+
+  .noprint {
+    display: none;
+  }
+
+  @page {
+     margin: 2cm;
+  }
 }
 
 /*
