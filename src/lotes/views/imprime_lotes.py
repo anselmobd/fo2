@@ -235,6 +235,13 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
 
         ref = l_data[0]['ref']
 
+        if ref[0] < 'C':
+            context.update({
+                'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
+            })
+            l_data = []
+            return context
+
         # atribui qtd_cortam
         p_cor = ''
         p_tam = ''
