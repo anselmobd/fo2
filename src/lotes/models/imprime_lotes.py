@@ -18,6 +18,7 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         WITH Table_qtd_lotes AS (
         SELECT
           ll.OP
+        , ll.PERIODO
         , ll.COR
         , ll.TAM
         , ll.PACOTE
@@ -35,26 +36,39 @@ def get_imprime_caixas_op_3lotes(cursor, op):
               order BY
                 os.ORDEM_CONFECCAO
               )
-            + 2 )/ 3 ) PACOTE
+            - 1 )/ (
+                      CASE WHEN r.COLECAO = 5 -- camisa
+                      THEN 2
+                      ELSE 3
+                      END
+                   ) ) + 1 PACOTE
         , os.ORDEM_PRODUCAO OP
+        , os.PERIODO_PRODUCAO PERIODO
         , os.PROCONF_ITEM COR
         , os.PROCONF_SUBGRUPO TAM
         , os.ORDEM_CONFECCAO OC
+        , os.PROCONF_GRUPO
         FROM PCPC_040 os
+        JOIN BASI_030 r
+          ON r.REFERENCIA = os.PROCONF_GRUPO
         WHERE os.ORDEM_PRODUCAO = %s
         GROUP BY
           os.ORDEM_PRODUCAO
+        , os.PERIODO_PRODUCAO
+        , os.PROCONF_GRUPO
+        , r.COLECAO
         , os.PROCONF_ITEM
         , os.PROCONF_SUBGRUPO
         , os.ORDEM_CONFECCAO
         ) ll
         GROUP BY
           ll.OP
+        , ll.PERIODO
         , ll.COR
         , ll.TAM
         , ll.PACOTE
         )
-        select
+        SELECT
           tb.*
         --
         , CASE tb.OC_COUNT
@@ -71,12 +85,7 @@ def get_imprime_caixas_op_3lotes(cursor, op):
               AND os_avg.ORDEM_CONFECCAO > tb.OC1
               AND os_avg.ORDEM_CONFECCAO < tb.OC_MAX
               AND rownum = 1
-        --    ORDER BY
-        --      os_avg.ORDEM_PRODUCAO
-        --    , os_avg.PROCONF_ITEM
-        --    , os_avg.PROCONF_SUBGRUPO
-        --    , os_avg.ORDEM_CONFECCAO
-          ) -- AVG(ll.OC)
+          )
           END OC2
         --
         , CASE WHEN tb.OC_COUNT = 3
@@ -87,7 +96,7 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         , ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
-            WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
+            WHERE os.PERIODO_PRODUCAO = tb.PERIODO
               AND os.ORDEM_CONFECCAO = tb.OC1
           )    QTD1
         --
@@ -97,14 +106,14 @@ def get_imprime_caixas_op_3lotes(cursor, op):
           ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
-            WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
+            WHERE os.PERIODO_PRODUCAO = tb.PERIODO
               AND os.ORDEM_CONFECCAO = tb.OC_MAX
           )
           ELSE
           ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
-            WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
+            WHERE os.PERIODO_PRODUCAO = tb.PERIODO
               AND os.ORDEM_CONFECCAO = (
                 SELECT
                   os_avg.ORDEM_CONFECCAO
@@ -124,14 +133,13 @@ def get_imprime_caixas_op_3lotes(cursor, op):
           ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
-            WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
+            WHERE os.PERIODO_PRODUCAO = tb.PERIODO
               AND os.ORDEM_CONFECCAO = tb.OC_MAX
           )
           ELSE NULL
           END QTD3
         --
         , o.SITUACAO
-        , o.PERIODO_PRODUCAO PERIODO
         , o.REFERENCIA_PECA REF
         , o.DATA_ENTRADA_CORTE
         , t.ORDEM_TAMANHO TAMORD
