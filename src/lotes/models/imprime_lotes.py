@@ -22,15 +22,8 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         , ll.TAM
         , ll.PACOTE
         , MIN(ll.OC) OC1
-        , CASE COUNT(ll.OC)
-          WHEN 1 THEN NULL
-          WHEN 2 THEN MAX(ll.OC)
-          WHEN 3 THEN AVG(ll.OC)
-          END OC2
-        , CASE WHEN COUNT(ll.OC) = 3
-          THEN MAX(ll.OC)
-          ELSE NULL
-          END OC3
+        , COUNT(ll.OC) OC_COUNT
+        , MAX(ll.OC) OC_MAX
         FROM (
         SELECT DISTINCT
           TRUNC( (
@@ -63,24 +56,80 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         )
         select
           tb.*
+        --
+        , CASE tb.OC_COUNT
+          WHEN 1 THEN NULL
+          WHEN 2 THEN tb.OC_MAX
+          WHEN 3 THEN
+          (
+            SELECT
+              os_avg.ORDEM_CONFECCAO
+            FROM PCPC_040 os_avg
+            WHERE os_avg.ORDEM_PRODUCAO = tb.OP
+              AND os_avg.PROCONF_ITEM = tb.COR
+              AND os_avg.PROCONF_SUBGRUPO = tb.TAM
+              AND os_avg.ORDEM_CONFECCAO > tb.OC1
+              AND os_avg.ORDEM_CONFECCAO < tb.OC_MAX
+              AND rownum = 1
+        --    ORDER BY
+        --      os_avg.ORDEM_PRODUCAO
+        --    , os_avg.PROCONF_ITEM
+        --    , os_avg.PROCONF_SUBGRUPO
+        --    , os_avg.ORDEM_CONFECCAO
+          ) -- AVG(ll.OC)
+          END OC2
+        --
+        , CASE WHEN tb.OC_COUNT = 3
+          THEN tb.OC_MAX
+          ELSE NULL
+          END OC3
+        --
         , ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
             WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
               AND os.ORDEM_CONFECCAO = tb.OC1
-          )	QTD1
-        , ( SELECT
+          )    QTD1
+        --
+        , CASE tb.OC_COUNT
+          WHEN 1 THEN NULL
+          WHEN 2 THEN
+          ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
             WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
-              AND os.ORDEM_CONFECCAO = tb.OC2
-          )	QTD2
-        , ( SELECT
+              AND os.ORDEM_CONFECCAO = tb.OC_MAX
+          )
+          ELSE
+          ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
             WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
-              AND os.ORDEM_CONFECCAO = tb.OC3
-          )	QTD3
+              AND os.ORDEM_CONFECCAO = (
+                SELECT
+                  os_avg.ORDEM_CONFECCAO
+                FROM PCPC_040 os_avg
+                WHERE os_avg.ORDEM_PRODUCAO = tb.OP
+                  AND os_avg.PROCONF_ITEM = tb.COR
+                  AND os_avg.PROCONF_SUBGRUPO = tb.TAM
+                  AND os_avg.ORDEM_CONFECCAO > tb.OC1
+                  AND os_avg.ORDEM_CONFECCAO < tb.OC_MAX
+                  AND rownum = 1
+              )
+          )
+          END QTD2
+        --
+        , CASE WHEN tb.OC_COUNT = 3
+          THEN
+          ( SELECT
+              max( os.QTDE_PECAS_PROG )
+            FROM PCPC_040 os
+            WHERE os.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
+              AND os.ORDEM_CONFECCAO = tb.OC_MAX
+          )
+          ELSE NULL
+          END QTD3
+        --
         , o.SITUACAO
         , o.PERIODO_PRODUCAO PERIODO
         , o.REFERENCIA_PECA REF
