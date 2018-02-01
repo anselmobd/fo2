@@ -209,7 +209,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
     login_url = '/intradm/login/'
     Form_class = ImprimePacote3LotesForm
     template_name = 'lotes/imprime_pacote3lotes.html'
-    title_name = 'Imprime "Pacote de 3 Lotes"'
+    title_name = 'Etiqueta de caixa de n lotes'
 
     def mount_context_and_print(self, cursor, op, tam, cor,
                                 parm_pula, parm_qtd_lotes,
@@ -252,6 +252,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
         cont_total = 0
         for row in l_data:
             row['qtd_total'] = '{}'.format(qtd_total)
+            row['qtd_pcs_cx'] = row['qtd1']
             cont_total += 1
             row['cont_total'] = '{}'.format(cont_total)
             row['cx_op'] = '{} / {}'.format(cont_total, qtd_total)
@@ -261,6 +262,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             if row['oc2']:
                 row['lote2'] = '{}{:05}'.format(row['periodo'], row['oc2'])
                 row['qtd_lotes'] = '2'
+                row['qtd_pcs_cx'] += row['qtd2']
             else:
                 row['lote2'] = ' '
                 row['oc2'] = ''
@@ -268,6 +270,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             if row['oc3']:
                 row['lote3'] = '{}{:05}'.format(row['periodo'], row['oc3'])
                 row['qtd_lotes'] = '3'
+                row['qtd_pcs_cx'] += row['qtd3']
             else:
                 row['lote3'] = ' '
                 row['oc3'] = ''
@@ -345,10 +348,10 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             'qtd_lotes': parm_qtd_lotes,
             'headers': ('CX.OP', 'Cor', 'Tamanho', '1º', 'CX.Cor/Tam',
                         'Lote 1', 'Qtd. 1', 'Lote 2', 'Qtd. 2',
-                        'Lote 3', 'Qtd. 3'),
+                        'Lote 3', 'Qtd. 3', 'Qtd. Caixa'),
             'fields': ('cx_op', 'cor', 'tam', 'prim', 'cx_ct',
                        'lote1', 'qtd1', 'lote2', 'qtd2',
-                       'lote3', 'qtd3'),
+                       'lote3', 'qtd3', 'qtd_pcs_cx'),
             'data': data,
         })
 
