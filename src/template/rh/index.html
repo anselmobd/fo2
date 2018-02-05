@@ -14,8 +14,14 @@
     <a href="/rh/datas/">Datas comemorativas <img src="/media/rh/DUOMO_Natal_2017_h50_icone.jpg" alt=""><img src="/media/rh/DUOMO_Dia_Mundial_da_Gentileza_h50_icone.jpg" alt=""></a>
   </h2>
   <hr>
-  <h2>Informações</h2>
-  <h4>02/02/2018 - <a target="_blank" href="/media/rh/2018-02-02_Carnaval_Feliz_Sexta.pdf">A Arte de se reinventar</a></h4>
+  {% if dicas %}
+    <h2>Dicas</h2>
+    {% for dica in dicas %}
+      {% if dica.data  %}
+        <h4>{{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a></h4>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
   <p>&nbsp;</p>
   <h4><img src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO"></h4>
 </center>
