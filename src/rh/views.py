@@ -24,7 +24,7 @@ def index(request):
       {
         'data': datetime.strptime('05/02/2018', '%d/%m/%Y').date(),
         'chamada': 'O quesito da harmonia',
-        'link': '/media/rh/DUOMO-05-02-Dica-da-Semana-segunda.jpg',
+        'link': '/media/rh/DUOMO-05-02-Dica-da-Semana.jpg',
       },
       {
         'data': datetime.strptime('02/02/2018', '%d/%m/%Y').date(),
