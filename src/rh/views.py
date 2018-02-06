@@ -14,7 +14,7 @@ def index(request):
       {
         'data': datetime.strptime('07/02/2018', '%d/%m/%Y').date(),
         'chamada': 'Movidos pela motivação',
-        'link': '/media/rh/DUOMO-05-02-Dica-da-Semana.jpg',
+        'link': '/media/rh/DUOMO-07-02-Dica-da-Semana.jpg',
       },
       {
         'data': datetime.strptime('06/02/2018', '%d/%m/%Y').date(),
