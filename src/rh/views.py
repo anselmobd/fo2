@@ -17,13 +17,18 @@ def index(request):
         'link': '/media/rh/DUOMO-05-02-Dica-da-Semana.jpg',
       },
       {
+        'data': datetime.strptime('06/02/2018', '%d/%m/%Y').date(),
+        'chamada': 'Evolução das alas',
+        'link': '/media/rh/DUOMO-06-02-Dica-da-Semana-03.jpg',
+      },
+      {
         'data': datetime.strptime('05/02/2018', '%d/%m/%Y').date(),
         'chamada': 'O quesito da harmonia',
         'link': '/media/rh/DUOMO-05-02-Dica-da-Semana-segunda.jpg',
       },
       {
         'data': datetime.strptime('02/02/2018', '%d/%m/%Y').date(),
-        'chamada': 'A Arte de se reinventar',
+        'chamada': 'A arte de se reinventar',
         'link': '/media/rh/2018-02-02_Carnaval_Feliz_Sexta.pdf',
       },
     ]
