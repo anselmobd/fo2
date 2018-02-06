@@ -29,7 +29,7 @@ def index(request):
       {
         'data': datetime.strptime('02/02/2018', '%d/%m/%Y').date(),
         'chamada': 'A arte de se reinventar',
-        'link': '/media/rh/2018-02-02_Carnaval_Feliz_Sexta.pdf',
+        'link': '/media/rh/DUOMO-02-02-Dica-da-Semana.jpg',
       },
     ]
     limpa_data_futura(dicas, 'data')
