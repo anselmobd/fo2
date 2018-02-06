@@ -19,7 +19,7 @@ def index(request):
       {
         'data': datetime.strptime('06/02/2018', '%d/%m/%Y').date(),
         'chamada': 'Evolução das alas',
-        'link': '/media/rh/DUOMO-06-02-Dica-da-Semana-03.jpg',
+        'link': '/media/rh/DUOMO-06-02-Dica-da-Semana.jpg',
       },
       {
         'data': datetime.strptime('05/02/2018', '%d/%m/%Y').date(),
