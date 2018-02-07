@@ -80,6 +80,7 @@ def op_inform(cursor, op):
         , o.DEPOSITO_ENTRADA || ' - ' || d.DESCRICAO DEPOSITO
         , o.PEDIDO_VENDA PEDIDO
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PED_CLIENTE
+        , r.NUMERO_MOLDE MOLDE
         FROM PCPC_020 o
         JOIN PCPC_010 p
           ON p.AREA_PERIODO = 1
@@ -92,6 +93,9 @@ def op_inform(cursor, op):
           ON d.CODIGO_DEPOSITO = o.DEPOSITO_ENTRADA
         LEFT JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
+        JOIN basi_030 r
+          ON r.NIVEL_ESTRUTURA = 1
+         AND r.REFERENCIA = o.REFERENCIA_PECA
         WHERE o.ORDEM_PRODUCAO = %s
     '''
     cursor.execute(sql, [op])
