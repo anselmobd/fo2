@@ -42,6 +42,7 @@ class Op(View):
             i_data = models.op_inform(cursor, op)
             i2_data = [i_data[0]]
             i3_data = [i_data[0]]
+            i4_data = [i_data[0]]
 
             for row in i_data:
                 if row['OP_REL'] == 0:
@@ -94,6 +95,13 @@ class Op(View):
                               'PERIODO_FIM', 'DT_DIGITACAO', 'DT_CORTE'),
                 'i3_data': i3_data,
             })
+
+            if i4_data[0]['OBSERVACAO']:
+                context.update({
+                    'i4_headers': ('Observação',),
+                    'i4_fields': ('OBSERVACAO',),
+                    'i4_data': i4_data,
+                })
 
             # Grade
             g_header, g_fields, g_data = models.op_sortimento(cursor, op)

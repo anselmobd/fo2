@@ -34,6 +34,12 @@
   {% include "layout/html_thead.html" with data=i3_headers only %}
   {% include "layout/html_tbody.html" with fields=i3_fields data=i3_data only %}
 </table>
+{% if i4_data %}
+  <table>
+    {% include "layout/html_thead.html" with data=i4_headers only %}
+    {% include "layout/html_tbody.html" with fields=i4_fields data=i4_data only %}
+  </table>
+{% endif %}
 {% if g_data %}
   <h3>Grade original a produzir</h3>
   <table>
