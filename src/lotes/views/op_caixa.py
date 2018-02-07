@@ -11,10 +11,122 @@ from lotes.forms import OpForm
 import lotes.models as models
 
 
+class CaixasDeLotes:
+
+    def __init__(self, lotes, lotes_por_caixa):
+        self.lotes_por_caixa = lotes_por_caixa
+        self.op = lotes[0]['op']
+        self.ref = lotes[0]['ref']
+        self.periodo = lotes[0]['periodo']
+
+        self.volumes = {}
+        self.qtd_caixas = 0
+
+        self.add_lotes(lotes)
+
+    def add_lotes(self, lotes):
+        for lote in lotes:
+            self.add_lote(lote)
+
+    def add_lote(self, lote):
+        refcortam = self.pick_refcortam_with_open_caixa(
+            lote['cor'], lote['ordem_tamanho'], lote['tam'])
+        refcortam['caixas'][-1]['lotes'].append(
+          {
+            'oc': lote['oc'],
+            'qtd': lote['qtd'],
+          }
+        )
+
+    def pick_refcortam_with_open_caixa(self, cor, ord_tam, tam):
+        refcortam = self.pick_refcortam(cor, ord_tam, tam)
+        if len(refcortam['caixas']) == 0 or \
+                (len(refcortam['caixas'][-1]['lotes']) % self.lotes_por_caixa
+                 ) == 0:
+            refcortam['caixas'].append(self.create_caixa())
+        return refcortam
+
+    def pick_refcortam(self, cor, ord_tam, tam):
+        if cor not in self.volumes.keys():
+            self.volumes[cor] = {}
+        if ord_tam not in self.volumes[cor].keys():
+            self.volumes[cor][ord_tam] = {
+                'tam': tam,
+                'caixas': [],
+            }
+        return(self.volumes[cor][ord_tam])
+
+    def create_caixa(self):
+        self.qtd_caixas += 1
+        return {'id_caixa': self.qtd_caixas,
+                'lotes': []
+                }
+
+    def as_data(self):
+        data = []
+        total_pecas = 0
+        for cor in sorted(self.volumes):
+            total_pecas_cor = 0
+            for ord_tam in self.volumes[cor]:
+                for idx_caixa, caixa in enumerate(
+                        self.volumes[cor][ord_tam]['caixas']):
+                    for lote in caixa['lotes']:
+                        lote_num = '{}{:05}'.format(self.periodo, lote['oc'])
+                        total_pecas += lote['qtd']
+                        total_pecas_cor += lote['qtd']
+                        row = {
+                            'op': self.op,
+                            'ref': self.ref,
+                            'num_caixa_txt': '{}/{}'.format(
+                                caixa['id_caixa'], self.qtd_caixas),
+                            'cor': cor,
+                            'tam': self.volumes[cor][ord_tam]['tam'],
+                            'cor_tam_caixa_txt': '{}/{}'.format(
+                                idx_caixa+1, len(
+                                    self.volumes[cor][ord_tam]['caixas'])),
+                            'qtd_caixa': sum(
+                                item['qtd'] for item in caixa['lotes']),
+                            'lote': lote_num,
+                            'lote|LINK': '/lotes/posicao/{}'.format(lote_num),
+                            'qtd': lote['qtd'],
+                            'peso': ' ',
+                        }
+                        data.append(row)
+            row = {
+                'op': 'Cor',
+                'ref': '-',
+                'num_caixa_txt': '-',
+                'cor': cor,
+                'tam': '-',
+                'cor_tam_caixa_txt': '-',
+                'qtd_caixa': total_pecas_cor,
+                'lote': '-',
+                'lote|LINK': '',
+                'qtd': '-',
+                'peso': '-',
+            }
+            data.append(row)
+        row = {
+            'op': 'Total',
+            'ref': '-',
+            'num_caixa_txt': '-',
+            'cor': '-',
+            'tam': '-',
+            'cor_tam_caixa_txt': '-',
+            'qtd_caixa': total_pecas,
+            'lote': '-',
+            'lote|LINK': '',
+            'qtd': '-',
+            'peso': '-',
+        }
+        data.append(row)
+        return data
+
+
 class OpCaixa(View):
     Form_class = OpForm
     template_name = 'lotes/op_caixa.html'
-    title_name = 'Caixas de Ordem de Produção'
+    title_name = 'Lista caixas de OP'
 
     def mount_context(self, cursor, op):
         context = {'op': op}
@@ -27,118 +139,17 @@ class OpCaixa(View):
                 'msg_erro': 'Lotes não encontradas',
             })
         else:
+            if data[0]['colecao'] == 5:  # camisa
+                lotes_por_caixa = 2
+            else:
+                lotes_por_caixa = 3
 
-            tot_caixas = 1
-            qtd_caixa = 0
-            qtd_total = 0
-            cor = data[0]['cor']
-            tam = data[0]['tam']
-            index_caixas = 0
-            cor_tam_caixas = 1
-            qtd_cor = 0
-            totalizadores = []
-            totalizador_filler = {
-                'ref': '-',
-                'tam': '-',
-                'num_caixa_txt': '-',
-                'cor_tam_caixa_txt': '-',
-                'lote': '-',
-                'qtd': '-',
-                'peso': '-'}
-            for index, row in enumerate(data):
-                row['lote_num'] = index+1
-                row['peso'] = ' '
-
-                trocou_cor = cor != row['cor']
-                trocou_tam = tam != row['tam']
-                trocou_cortam = trocou_cor or trocou_tam
-
-                if trocou_cor:
-                    dict_totalizador = {
-                        'lote_num': row['lote_num']-0.5,
-                        'op': 'Total',
-                        'cor': cor,
-                        'qtd_caixa': qtd_cor,
-                        }
-                    dict_totalizador.update(totalizador_filler)
-                    totalizadores.extend([dict_totalizador])
-                    qtd_cor = 0
-
-                if trocou_cortam:
-                    cor = row['cor']
-                    tam = row['tam']
-                    index_caixas = 0
-                    cor_tam_caixas = 0
-                else:
-                    index_caixas += 1
-
-                if trocou_cortam or index_caixas % 3 == 0:
-                    cor_tam_caixas += 1
-                    tot_caixas += 1
-                    qtd_caixa = row['qtd']
-                else:
-                    qtd_caixa += row['qtd']
-
-                row['cor_tam_caixa'] = cor_tam_caixas
-                row['num_caixa'] = tot_caixas
-                row['qtd_caixa'] = qtd_caixa
-
-                qtd_cor += row['qtd']
-                qtd_total += row['qtd']
-
-                row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
-                row['lote|LINK'] = '/lotes/posicao/{}'.format(row['lote'])
-
-            dict_totalizador = {
-                'lote_num': row['lote_num']+0.5,
-                'op': 'Total',
-                'cor': cor,
-                'qtd_caixa': qtd_cor,
-                }
-            dict_totalizador.update(totalizador_filler)
-            totalizadores.extend([dict_totalizador])
-
-            dict_totalizador = {
-                'lote_num': row['lote_num']+1,
-                'op': 'Total',
-                'cor': '-',
-                'qtd_caixa': qtd_total,
-                }
-            dict_totalizador.update(totalizador_filler)
-            totalizadores.extend([dict_totalizador])
-
-            tot_caixas = row['num_caixa']
-            num_caixa = 0
-            tot_ct_caixas = None
-            qtd_caixa = 0
-            cor = ''
-            tam = ''
-            for row in reversed(data):
-                row['num_caixa_txt'] = '{}/{}'.format(
-                    row['num_caixa'], tot_caixas)
-
-                trocou_cortam = cor != row['cor'] or tam != row['tam']
-                if trocou_cortam:
-                    cor = row['cor']
-                    tam = row['tam']
-                    tot_ct_caixas = row['cor_tam_caixa']
-
-                if num_caixa != row['num_caixa']:
-                    num_caixa = row['num_caixa']
-                    qtd_caixa = row['qtd_caixa']
-                else:
-                    row['qtd_caixa'] = qtd_caixa
-
-                row['cor_tam_caixa_txt'] = '{}/{}'.format(
-                    row['cor_tam_caixa'], tot_ct_caixas)
-
-            for totalizador in totalizadores:
-                data.append(totalizador)
-            data.sort(key=itemgetter('lote_num'))
+            caixas = CaixasDeLotes(data, lotes_por_caixa)
+            c_data = caixas.as_data()
 
             group = ['op', 'ref', 'num_caixa_txt',
                      'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa']
-            group_rowspan(data, group)
+            group_rowspan(c_data, group)
             context.update({
                 'headers': ('OP', 'Referência', 'Cx.OP',
                             'Cor', 'Tamanho', 'Cx.C/T', 'Peças',
@@ -147,7 +158,7 @@ class OpCaixa(View):
                            'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa',
                            'lote', 'qtd', 'peso'),
                 'group': group,
-                'data': data,
+                'data': c_data,
             })
 
         return context
