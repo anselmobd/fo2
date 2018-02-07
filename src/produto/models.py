@@ -229,6 +229,7 @@ def ref_inform(cursor, ref):
             )
           END
           , ' ' ) MODELO
+          , r.NUMERO_MOLDE
         FROM basi_030 r
         JOIN BASI_150 ce
           ON ce.CONTA_ESTOQUE = r.CONTA_ESTOQUE
