@@ -263,9 +263,9 @@ class Ref(View):
 
             context.update({
                 'headers': ('Descrição', 'Conta de estoque',
-                            'Artigo', 'Linha', 'Coleção'),
+                            'Artigo', 'Linha', 'Coleção', 'Modelagem'),
                 'fields': ('DESCR', 'CONTA_ESTOQUE',
-                           'ARTIGO', 'LINHA', 'COLECAO'),
+                           'ARTIGO', 'LINHA', 'COLECAO', 'NUMERO_MOLDE'),
                 'data': data,
             })
 
