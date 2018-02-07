@@ -37,6 +37,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           END OS
         , l.PROCONF_GRUPO REF
         , l.PROCONF_SUBGRUPO TAM
+        , t.ORDEM_TAMANHO
         , l.PROCONF_ITEM COR
         , COALESCE(
           ( SELECT
@@ -59,6 +60,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         , l.QTDE_PECAS_2A PROD2Q
         , l.QTDE_PERDAS PERDA
         , r.NARRATIVA
+        , ref.COLECAO
         , CASE WHEN l.DIVISAO = 0 THEN dp.DIVISAO_PRODUCAO
           ELSE l.DIVISAO END DIVISAO
         , CASE WHEN l.DIVISAO = 0 THEN dp.DESCRICAO
@@ -115,6 +117,9 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           ON eos.CODIGO_ESTAGIO = dos.CODIGO_ESTAGIO
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
+        JOIN BASI_030 ref
+          ON ref.NIVEL_ESTRUTURA = 1
+         AND ref.REFERENCIA = l.PROCONF_GRUPO
         JOIN BASI_010 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.GRUPO_ESTRUTURA = l.PROCONF_GRUPO
