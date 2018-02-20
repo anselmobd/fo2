@@ -83,6 +83,15 @@ def op_inform(cursor, op):
         , r.NUMERO_MOLDE MOLDE
         , o.OBSERVACAO
         , o.OBSERVACAO2
+        , ( SELECT
+              coalesce( max( l.CODIGO_FAMILIA || '-' || div.DESCRICAO ), ' ' )
+            FROM pcpc_040 l
+            LEFT JOIN BASI_180 div
+              ON div.DIVISAO_PRODUCAO = l.CODIGO_FAMILIA
+            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+              AND l.CODIGO_FAMILIA > 1
+              AND l.CODIGO_FAMILIA < 1000
+          ) UNIDADE
         FROM PCPC_020 o
         JOIN PCPC_010 p
           ON p.AREA_PERIODO = 1
