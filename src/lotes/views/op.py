@@ -96,10 +96,15 @@ class Op(View):
                 'i3_data': i3_data,
             })
 
-            if i4_data[0]['OBSERVACAO']:
+            row = i4_data[0]
+            if row['OBSERVACAO'] or row['OBSERVACAO2']:
+                if row['OBSERVACAO'] is None:
+                    row['OBSERVACAO'] = ''
+                if row['OBSERVACAO2'] is None:
+                    row['OBSERVACAO2'] = ''
                 context.update({
-                    'i4_headers': ('Observação',),
-                    'i4_fields': ('OBSERVACAO',),
+                    'i4_headers': ('Observação', 'Observação 2'),
+                    'i4_fields': ('OBSERVACAO', 'OBSERVACAO2'),
                     'i4_data': i4_data,
                 })
 

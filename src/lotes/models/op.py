@@ -82,6 +82,7 @@ def op_inform(cursor, op):
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PED_CLIENTE
         , r.NUMERO_MOLDE MOLDE
         , o.OBSERVACAO
+        , o.OBSERVACAO2
         FROM PCPC_020 o
         JOIN PCPC_010 p
           ON p.AREA_PERIODO = 1
