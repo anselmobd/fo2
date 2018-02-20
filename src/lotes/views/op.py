@@ -57,10 +57,10 @@ class Op(View):
             i_group = ['SITUACAO', 'CANCELAMENTO', 'PEDIDO', 'PED_CLIENTE']
             group_rowspan(i_data, i_group)
             context.update({
-                'i_headers': ('Situação', 'Cancelamento', 'Pedido',
+                'i_headers': ('Situação', 'Cancelamento', 'Unidade', 'Pedido',
                               'Pedido do cliente', 'Tipo de OP',
                               'OP relacionada'),
-                'i_fields': ('SITUACAO', 'CANCELAMENTO', 'PEDIDO',
+                'i_fields': ('SITUACAO', 'CANCELAMENTO', 'UNIDADE', 'PEDIDO',
                              'PED_CLIENTE', 'TIPO_OP', 'OP_REL'),
                 'i_group': i_group,
                 'i_data': i_data,
