@@ -34,7 +34,7 @@
 {% if data %}
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody_link.html" with fields=fields data=data link=link only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
   </table>
 {% endif %}
 {% endblock %}

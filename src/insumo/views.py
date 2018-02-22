@@ -356,14 +356,12 @@ class Necessidade(View):
             })
             return context
 
-        link = ('REF')
         for row in data:
-            row['LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
         context.update({
             'headers': ('Nível', 'Referência', 'Cor', 'Tamanho', 'Quant.'),
             'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD'),
             'data': data,
-            'link': link,
         })
 
         return context
