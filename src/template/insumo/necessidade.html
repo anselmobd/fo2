@@ -15,8 +15,17 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
+{% if op %}
+  <h2>OP: {{ op }}</h2>
+{% endif %}
+{% if data_corte %}
+  <h2>Data de corte: {{ data_corte }}</h2>
+{% endif %}
 {% if conta_estoque %}
   <h2>Conta de estoque: {{ conta_estoque }}</h2>
+{% endif %}
+{% if ref %}
+  <h2>Referência: {{ ref }}</h2>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
