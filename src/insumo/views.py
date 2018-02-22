@@ -16,7 +16,7 @@ from geral.models import Dispositivos, RoloBipado
 from utils.forms import FiltroForm
 
 import insumo.models as models
-from .forms import RefForm, RolosBipadosForm
+from .forms import RefForm, RolosBipadosForm, NecessidadeForm
 
 
 def index(request):
@@ -324,5 +324,50 @@ class RolosBipados(View):
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
                 cursor, dispositivo, ref, cor, data_de, data_ate))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class Necessidade(View):
+    Form_class = NecessidadeForm
+    template_name = 'insumo/necessidade.html'
+    title_name = 'Necessidade'
+
+    def mount_context(self, cursor, conta_estoque):
+        context = {'conta_estoque': conta_estoque}
+
+        # Informações básicas
+        data = models.necessidade(cursor, conta_estoque)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhum insumo selecionado',
+            })
+        else:
+            link = ('REFERENCIA')
+            for row in data:
+                row['LINK'] = '/insumo/ref/{}'.format(row['REFERENCIA'])
+            context.update({
+                'headers': ('Nível', 'Referência', 'Descrição'),
+                'fields': ('NIVEL_ESTRUTURA', 'REFERENCIA',
+                           'DESCR_REFERENCIA'),
+                'data': data,
+                'link': link,
+            })
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            conta_estoque = form.cleaned_data['conta_estoque']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, conta_estoque))
         context['form'] = form
         return render(request, self.template_name, context)
