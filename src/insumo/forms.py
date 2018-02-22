@@ -49,3 +49,10 @@ class RolosBipadosForm(forms.Form):
         data['cor'] = cor
         self.data = data
         return cor
+
+
+class NecessidadeForm(forms.Form):
+    conta_estoque = forms.CharField(
+        label='Conta de estoque', required=False,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))

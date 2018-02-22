@@ -163,3 +163,15 @@ def lista_insumo(cursor, busca):
     """.format(filtro)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def necessidade(cursor, conta_estoque):
+    # lista insumos
+    sql = """
+        SELECT
+          i.*
+        FROM basi_030 i
+        WHERE i.CONTA_ESTOQUE = %s
+    """
+    cursor.execute(sql, [conta_estoque])
+    return rows_to_dict_list(cursor)
