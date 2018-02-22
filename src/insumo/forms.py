@@ -52,7 +52,19 @@ class RolosBipadosForm(forms.Form):
 
 
 class NecessidadeForm(forms.Form):
-    conta_estoque = forms.CharField(
-        label='Conta de estoque', required=False,
+    op = forms.CharField(
+        label='OP', required=False,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+
+    data_corte = forms.DateField(
+        label='Data do Corte', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    conta_estoque = forms.CharField(
+        label='Conta de estoque', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    ref = forms.CharField(
+        label='Referência', max_length=5, min_length=5, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))

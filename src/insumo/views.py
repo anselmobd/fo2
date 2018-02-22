@@ -333,25 +333,38 @@ class Necessidade(View):
     template_name = 'insumo/necessidade.html'
     title_name = 'Necessidade'
 
-    def mount_context(self, cursor, conta_estoque):
-        context = {'conta_estoque': conta_estoque}
+    def mount_context(self, cursor, op, data_corte, conta_estoque, ref):
+        context = {}
+        if not (op or data_corte or conta_estoque or ref):
+            context.update({
+                'msg_erro': 'Especifique ao menos um filtro',
+            })
+            return context
 
-        # Informações básicas
-        data = models.necessidade(cursor, conta_estoque)
+        context.update({
+            'op': op,
+            'data_corte': data_corte,
+            'conta_estoque': conta_estoque,
+            'ref': ref,
+        })
+
+        data = models.necessidade(cursor, op, data_corte, conta_estoque, ref)
+
         if len(data) == 0:
             context.update({
-                'msg_erro': 'Nenhum insumo selecionado',
+                'msg_erro': 'Nenhuma necessidade de insumos encontrada',
             })
-        else:
-            link = ('REF')
-            for row in data:
-                row['LINK'] = '/insumo/ref/{}'.format(row['REF'])
-            context.update({
-                'headers': ('Nível', 'Referência', 'Cor', 'Tamanho', 'Quant.'),
-                'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD'),
-                'data': data,
-                'link': link,
-            })
+            return context
+
+        link = ('REF')
+        for row in data:
+            row['LINK'] = '/insumo/ref/{}'.format(row['REF'])
+        context.update({
+            'headers': ('Nível', 'Referência', 'Cor', 'Tamanho', 'Quant.'),
+            'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD'),
+            'data': data,
+            'link': link,
+        })
 
         return context
 
@@ -365,8 +378,12 @@ class Necessidade(View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
+            op = form.cleaned_data['op']
+            data_corte = form.cleaned_data['data_corte']
             conta_estoque = form.cleaned_data['conta_estoque']
+            ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, conta_estoque))
+            context.update(self.mount_context(
+                cursor, op, data_corte, conta_estoque, ref))
         context['form'] = form
         return render(request, self.template_name, context)
