@@ -16,17 +16,18 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if op %}
-  <h2>OP: {{ op }}</h2>
+  <h3>OP: {{ op }}</h3>
 {% endif %}
 {% if data_corte %}
-  <h2>Data de corte: {{ data_corte }}</h2>
+  <h3>Data de corte: {{ data_corte }}</h3>
 {% endif %}
 {% if conta_estoque %}
-  <h2>Conta de estoque: {{ conta_estoque }}</h2>
+  <h3>Conta de estoque: {{ conta_estoque }}</h3>
 {% endif %}
 {% if ref %}
-  <h2>Referência: {{ ref }}</h2>
+  <h3>Referência: {{ ref }}</h3>
 {% endif %}
+<h3>Apenas insumos de estágios não avançados dos lotes</h3>
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
