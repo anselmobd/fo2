@@ -343,13 +343,12 @@ class Necessidade(View):
                 'msg_erro': 'Nenhum insumo selecionado',
             })
         else:
-            link = ('REFERENCIA')
+            link = ('REF')
             for row in data:
-                row['LINK'] = '/insumo/ref/{}'.format(row['REFERENCIA'])
+                row['LINK'] = '/insumo/ref/{}'.format(row['REF'])
             context.update({
-                'headers': ('Nível', 'Referência', 'Descrição'),
-                'fields': ('NIVEL_ESTRUTURA', 'REFERENCIA',
-                           'DESCR_REFERENCIA'),
+                'headers': ('Nível', 'Referência', 'Cor', 'Tamanho', 'Quant.'),
+                'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD'),
                 'data': data,
                 'link': link,
             })

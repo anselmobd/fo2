@@ -169,9 +169,75 @@ def necessidade(cursor, conta_estoque):
     # lista insumos
     sql = """
         SELECT
-          i.*
-        FROM basi_030 i
-        WHERE i.CONTA_ESTOQUE = %s
+          ia.NIVEL_COMP NIVEL
+        , ia.GRUPO_COMP REF
+        , CASE WHEN ia.ITEM_COMP = '000000'
+          THEN co.ITEM_COMP
+          ELSE ia.ITEM_COMP
+          END COR
+        , CASE WHEN ia.SUB_COMP = '000'
+          THEN co.SUB_COMP
+          ELSE ia.SUB_COMP
+          END TAM
+        , sum( ia.CONSUMO *
+               ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
+               - l.QTDE_PERDAS - l.QTDE_CONSERTO
+               )
+             ) QTD
+        FROM PCPC_020 o -- OP
+        JOIN PCPC_040 l -- lote
+          ON l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+        JOIN BASI_050 ia -- insumos de alternativa
+          ON ia.NIVEL_ITEM = 1
+         AND ia.NIVEL_COMP <> 1
+         AND ia.GRUPO_ITEM = o.REFERENCIA_PECA
+         AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+         AND ia.ESTAGIO = l.CODIGO_ESTAGIO
+        LEFT JOIN BASI_040 co -- combinação
+          ON ( ia.ITEM_COMP = '000000' OR ia.SUB_COMP = '000')
+         AND co.GRUPO_ITEM = ia.GRUPO_ITEM
+         AND co.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+         AND co.SEQUENCIA = ia.SEQUENCIA
+         AND ( ( ia.ITEM_COMP = '000000'
+               AND co.ITEM_ITEM = l.PROCONF_ITEM
+               )
+             OR
+               ( ia.SUB_COMP = '000'
+               AND co.SUB_ITEM = l.PROCONF_SUBGRUPO
+               )
+             )
+        JOIN basi_030 r -- referencia
+          ON r.NIVEL_ESTRUTURA = ia.NIVEL_COMP
+         AND r.REFERENCIA = ia.GRUPO_COMP
+        WHERE 1=1
+          AND o.SITUACAO IN (2, 4)
+          AND o.ORDEM_PRODUCAO = 3445
+        --  AND o.DATA_ENTRADA_CORTE = TO_DATE('01/03/2018','DD/MM/YYYY')
+        --  AND l.PERIODO_PRODUCAO = 1807
+        --  AND l.ORDEM_CONFECCAO = 3261
+          AND ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
+              - l.QTDE_PERDAS - l.QTDE_CONSERTO
+              ) > 0
+        --  AND ia.GRUPO_COMP = 'TC004'
+        --  AND ia.GRUPO_COMP = 'TR018'
+          AND o.REFERENCIA_PECA = '00256'
+          AND r.CONTA_ESTOQUE = %s
+        GROUP BY
+          ia.NIVEL_COMP
+        , ia.GRUPO_COMP
+        , CASE WHEN ia.ITEM_COMP = '000000'
+          THEN co.ITEM_COMP
+          ELSE ia.ITEM_COMP
+          END
+        , CASE WHEN ia.SUB_COMP = '000'
+          THEN co.SUB_COMP
+          ELSE ia.SUB_COMP
+          END
+        ORDER BY
+          ia.NIVEL_COMP
+        , ia.GRUPO_COMP
+        , 3
+        , 4
     """
     cursor.execute(sql, [conta_estoque])
     return rows_to_dict_list(cursor)
