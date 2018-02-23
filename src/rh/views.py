@@ -12,6 +12,11 @@ def limpa_data_futura(lista, campo):
 def index(request):
     dicas = [
       {
+        'data': datetime.strptime('23/02/2018', '%d/%m/%Y').date(),
+        'chamada': '3 dicas essenciais',
+        'link': '/media/rh/DUOMO-23-02-Dica-da-Semana.jpg',
+      },
+      {
         'data': datetime.strptime('22/02/2018', '%d/%m/%Y').date(),
         'chamada': 'Haja com confiança e seja confiável',
         'link': '/media/rh/DUOMO-22-02-Dica-da-Semana.jpg',
