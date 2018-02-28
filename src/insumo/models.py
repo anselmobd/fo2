@@ -6,6 +6,24 @@ from fo2.models import rows_to_dict_list
 import produto.models
 
 
+class ContaEstoque(models.Model):
+    conta_estoque = models.IntegerField(
+        primary_key=True,
+        verbose_name='Código')
+    descr_ct_estoque = models.CharField(
+        max_length=100,
+        verbose_name='Descrição')
+
+    def __str__(self):
+        return '{}-{}'.format(self.conta_estoque, self.descr_ct_estoque)
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "BASI_150"
+        verbose_name = "Conta de estoque"
+
+
 def item_count_nivel(cursor, ref, nivel=None):
     # verifica existêcia, unicidade e nível
     param = [ref, ]
@@ -165,7 +183,10 @@ def lista_insumo(cursor, busca):
     return rows_to_dict_list(cursor)
 
 
-def necessidade(cursor, op, data_corte, conta_estoque, ref):
+def necessidade(
+        cursor, op, data_corte, data_corte_ate,
+        insumo, conta_estoque,
+        ref, conta_estoque_ref, colecao):
     filtro_op = ''
     if op:
         filtro_op = \
@@ -175,20 +196,48 @@ def necessidade(cursor, op, data_corte, conta_estoque, ref):
     filtro_data_corte = ''
     if data_corte:
         filtro_data_corte = \
-            "AND o.DATA_ENTRADA_CORTE = '{data_corte}'".format(
+            "AND o.DATA_ENTRADA_CORTE >= '{data_corte}'".format(
                 data_corte=data_corte)
+
+    filtro_data_corte_ate = ''
+    if data_corte_ate:
+        filtro_data_corte_ate = \
+            "AND o.DATA_ENTRADA_CORTE <= '{data_corte_ate}'".format(
+                data_corte_ate=data_corte_ate)
+    else:
+        filtro_data_corte_ate = \
+            "AND o.DATA_ENTRADA_CORTE <= '{data_corte}'".format(
+                data_corte=data_corte)
+
+    filtro_insumo = ''
+    if insumo:
+        filtro_insumo = \
+            "AND ia.GRUPO_COMP = '{insumo}'".format(
+                insumo=insumo)
 
     filtro_conta_estoque = ''
     if conta_estoque:
         filtro_conta_estoque = \
             "AND r.CONTA_ESTOQUE = '{conta_estoque}'".format(
-                conta_estoque=conta_estoque)
+                conta_estoque=conta_estoque.conta_estoque)
 
     filtro_ref = ''
     if ref:
         filtro_ref = \
             "AND o.REFERENCIA_PECA = '{ref}'".format(
                 ref=ref)
+
+    filtro_conta_estoque_ref = ''
+    if conta_estoque_ref:
+        filtro_conta_estoque_ref = \
+            "AND ref.CONTA_ESTOQUE = '{conta_estoque_ref}'".format(
+                conta_estoque_ref=conta_estoque_ref.conta_estoque)
+
+    filtro_colecao = ''
+    if colecao:
+        filtro_colecao = \
+            "AND ref.COLECAO = '{colecao}'".format(
+                colecao=colecao.colecao)
 
     # lista insumos
     sql = """
@@ -232,6 +281,9 @@ def necessidade(cursor, op, data_corte, conta_estoque, ref):
         JOIN basi_030 r -- referencia
           ON r.NIVEL_ESTRUTURA = ia.NIVEL_COMP
          AND r.REFERENCIA = ia.GRUPO_COMP
+        JOIN basi_030 ref -- referencia
+          ON ref.NIVEL_ESTRUTURA = 1
+         AND ref.REFERENCIA = o.REFERENCIA_PECA
         WHERE o.SITUACAO IN (2, 4)
           AND ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
           - l.QTDE_PERDAS - l.QTDE_CONSERTO
@@ -239,13 +291,17 @@ def necessidade(cursor, op, data_corte, conta_estoque, ref):
         --  AND o.ORDEM_PRODUCAO = 3445
           {filtro_op} -- filtro_op
           {filtro_data_corte} -- filtro_data_corte
+          {filtro_data_corte_ate} -- filtro_data_corte
         --  AND l.PERIODO_PRODUCAO = 1807
         --  AND l.ORDEM_CONFECCAO = 3261
         --  AND ia.GRUPO_COMP = 'TC004'
         --  AND ia.GRUPO_COMP = 'TR018'
         --  AND o.REFERENCIA_PECA = '00256'
-          {filtro_ref} -- filtro_ref
+          {filtro_insumo}
           {filtro_conta_estoque} -- filtro_conta_estoque
+          {filtro_ref} -- filtro_ref
+          {filtro_conta_estoque_ref}
+          {filtro_colecao}
         GROUP BY
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
@@ -262,11 +318,15 @@ def necessidade(cursor, op, data_corte, conta_estoque, ref):
         , ia.GRUPO_COMP
         , 3
         , 4
-    """.format(filtro_data_corte=filtro_data_corte,
-               filtro_conta_estoque=filtro_conta_estoque,
-               filtro_op=filtro_op,
-               filtro_ref=filtro_ref)
-    print(sql)
+    """.format(
+        filtro_op=filtro_op,
+        filtro_data_corte=filtro_data_corte,
+        filtro_data_corte_ate=filtro_data_corte_ate,
+        filtro_insumo=filtro_insumo,
+        filtro_conta_estoque=filtro_conta_estoque,
+        filtro_ref=filtro_ref,
+        filtro_conta_estoque_ref=filtro_conta_estoque_ref,
+        filtro_colecao=filtro_colecao)
     cursor.execute(sql)
     # , [data_corte, data_corte, conta_estoque, conta_estoque])
     return rows_to_dict_list(cursor)

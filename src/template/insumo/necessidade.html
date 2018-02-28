@@ -19,13 +19,30 @@
   <h3>OP: {{ op }}</h3>
 {% endif %}
 {% if data_corte %}
-  <h3>Data de corte: {{ data_corte }}</h3>
+  {% if data_corte_ate %}
+    <h3>Data inicial de Corte:
+  {% else %}
+    <h3>Data de Corte:
+  {% endif %}
+  {{ data_corte }}</h3>
+{% endif %}
+{% if data_corte_ate %}
+  <h3>Data final de Corte: {{ data_corte_ate }}</h3>
+{% endif %}
+{% if insumo %}
+  <h3>Referência do insumo: {{ insumo }}</h3>
 {% endif %}
 {% if conta_estoque %}
-  <h3>Conta de estoque: {{ conta_estoque }}</h3>
+  <h3>Conta de estoque do insumo: {{ conta_estoque }}</h3>
 {% endif %}
 {% if ref %}
-  <h3>Referência: {{ ref }}</h3>
+  <h3>Referência produzida: {{ ref }}</h3>
+{% endif %}
+{% if conta_estoque_ref %}
+  <h3>Conta de estoque do produzido: {{ conta_estoque_ref }}</h3>
+{% endif %}
+{% if colecao %}
+  <h3>Coleção do produzido: {{ colecao }}</h3>
 {% endif %}
 <h3>Apenas insumos de estágios não avançados dos lotes</h3>
 {% if msg_erro %}
