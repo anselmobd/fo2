@@ -235,7 +235,7 @@ class OpPendenteForm(forms.Form):
 
     colecao = forms.ModelChoiceField(
         label='Coleção', required=False,
-        queryset=Colecao.objects.all().order_by(
+        queryset=Colecao.objects.exclude(colecao=0).order_by(
             'colecao'), empty_label="(Todas)")
 
     CHOICES = [('-', 'Ambas (2 e 4)'),
