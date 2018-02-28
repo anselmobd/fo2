@@ -368,11 +368,24 @@ class Necessidade(View):
 
         for row in data:
             row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['OPS'] = re.sub(
+                r'([1234567890]+)',
+                r'<a href="/lotes/op/\1">\1&nbsp;<span '
+                'class="glyphicon glyphicon-link" '
+                'aria-hidden="true"></span></a>',
+                str(row['OPS']))
+            row['REFS'] = re.sub(
+                r'([^, ]+)',
+                r'<a href="/produto/ref/\1">\1&nbsp;<span '
+                'class="glyphicon glyphicon-link" '
+                'aria-hidden="true"></span></a>',
+                str(row['REFS']))
         context.update({
             'headers': ('Nível', 'Insumo', 'Cor', 'Tamanho', 'Quant.',
                         'Produzido', 'OPs'),
             'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD',
                        'REFS', 'OPS'),
+            'safe': ('REFS', 'OPS'),
             'data': data,
         })
 

@@ -51,7 +51,7 @@
 {% if data %}
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group safe=safe only %}
   </table>
 {% endif %}
 {% endblock %}
