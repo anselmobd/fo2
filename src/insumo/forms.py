@@ -1,5 +1,8 @@
 from django import forms
 
+from produto.models import Colecao
+from insumo.models import ContaEstoque
+
 
 class RefForm(forms.Form):
     item = forms.CharField(
@@ -59,12 +62,49 @@ class NecessidadeForm(forms.Form):
 
     data_corte = forms.DateField(
         label='Data do Corte', required=False,
+        help_text='(Se informar "Data final do Corte",'
+                  ' a "Data do Corte" funciona como inicial.)',
         widget=forms.DateInput(attrs={'type': 'date'}))
 
-    conta_estoque = forms.CharField(
-        label='Conta de estoque', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))
+    data_corte_ate = forms.DateField(
+        label='Data final do Corte', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    insumo = forms.CharField(
+        label='Referência do insumo',
+        max_length=5, min_length=5, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    conta_estoque = forms.ModelChoiceField(
+        label='Conta de estoque do insumo', required=False,
+        queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
+            'conta_estoque'), empty_label="(Todas)")
 
     ref = forms.CharField(
-        label='Referência', max_length=5, min_length=5, required=False,
+        label='Referência produzida',
+        max_length=5, min_length=5, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
+
+    conta_estoque_ref = forms.ModelChoiceField(
+        label='Conta de estoque do produzido', required=False,
+        queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
+            'conta_estoque'), empty_label="(Todas)")
+
+    colecao = forms.ModelChoiceField(
+        label='Coleção do produzido', required=False,
+        queryset=Colecao.objects.exclude(colecao=0).order_by(
+            'colecao'), empty_label="(Todas)")
+
+    def clean_insumo(self):
+        insumo = self.cleaned_data['insumo'].upper()
+        data = self.data.copy()
+        data['insumo'] = insumo
+        self.data = data
+        return insumo
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref

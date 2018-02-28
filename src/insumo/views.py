@@ -333,7 +333,10 @@ class Necessidade(View):
     template_name = 'insumo/necessidade.html'
     title_name = 'Necessidade'
 
-    def mount_context(self, cursor, op, data_corte, conta_estoque, ref):
+    def mount_context(
+            self, cursor, op, data_corte, data_corte_ate,
+            insumo, conta_estoque,
+            ref, conta_estoque_ref, colecao):
         context = {}
         if not (op or data_corte or conta_estoque or ref):
             context.update({
@@ -344,11 +347,18 @@ class Necessidade(View):
         context.update({
             'op': op,
             'data_corte': data_corte,
+            'data_corte_ate': data_corte_ate,
+            'insumo': insumo,
             'conta_estoque': conta_estoque,
             'ref': ref,
+            'conta_estoque_ref': conta_estoque_ref,
+            'colecao': colecao,
         })
 
-        data = models.necessidade(cursor, op, data_corte, conta_estoque, ref)
+        data = models.necessidade(
+            cursor, op, data_corte, data_corte_ate,
+            insumo, conta_estoque,
+            ref, conta_estoque_ref, colecao)
 
         if len(data) == 0:
             context.update({
@@ -378,10 +388,16 @@ class Necessidade(View):
         if form.is_valid():
             op = form.cleaned_data['op']
             data_corte = form.cleaned_data['data_corte']
+            data_corte_ate = form.cleaned_data['data_corte_ate']
+            insumo = form.cleaned_data['insumo']
             conta_estoque = form.cleaned_data['conta_estoque']
             ref = form.cleaned_data['ref']
+            conta_estoque_ref = form.cleaned_data['conta_estoque_ref']
+            colecao = form.cleaned_data['colecao']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, op, data_corte, conta_estoque, ref))
+                cursor, op, data_corte, data_corte_ate,
+                insumo, conta_estoque,
+                ref, conta_estoque_ref, colecao))
         context['form'] = form
         return render(request, self.template_name, context)
