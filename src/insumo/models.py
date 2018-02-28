@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.db import models
 from django.db import connections
 
@@ -252,6 +254,40 @@ def necessidade(
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END TAM
+        , REGEXP_REPLACE(
+            REGEXP_REPLACE(
+              REPLACE(
+                    XMLAGG(
+                      XMLELEMENT("A",(' '||o.REFERENCIA_PECA))
+                      ORDER BY o.REFERENCIA_PECA
+                    ).getClobVal()
+              , '</A><A>'
+              , ','
+              )
+            , '([^,]+)(,\\1)+'
+            , '\\1'
+            )
+          , '</?A> ?'
+          , ''
+          )
+          as REFS
+        , REGEXP_REPLACE(
+            REGEXP_REPLACE(
+              REPLACE(
+                    XMLAGG(
+                      XMLELEMENT("A",(' '||o.ORDEM_PRODUCAO))
+                      ORDER BY o.ORDEM_PRODUCAO
+                    ).getClobVal()
+              , '</A><A>'
+              , ','
+              )
+            , '([^,]+)(,\\1)+'
+            , '\\1'
+            )
+          , '</?A> ?'
+          , ''
+          )
+          as OPS
         , sum( ia.CONSUMO *
                ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
                - l.QTDE_PERDAS - l.QTDE_CONSERTO
