@@ -255,6 +255,7 @@ def necessidade(
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END TAM
+        , r.DESCR_REFERENCIA DESCR
         , r.UNIDADE_MEDIDA UNID
         , o.REFERENCIA_PECA REFP
         , o.ORDEM_PRODUCAO OP
@@ -323,6 +324,7 @@ def necessidade(
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END
+        , r.DESCR_REFERENCIA
         , r.UNIDADE_MEDIDA
         , o.REFERENCIA_PECA
         , o.ORDEM_PRODUCAO
@@ -337,6 +339,7 @@ def necessidade(
         SELECT
           n.NIVEL
         , n.REF
+        , n.DESCR
         , n.COR
         , n.TAM
         , n.UNID
@@ -367,6 +370,7 @@ def necessidade(
         GROUP BY
           n.NIVEL
         , n.REF
+        , n.DESCR
         , n.COR
         , n.TAM
         , n.UNID

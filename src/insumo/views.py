@@ -381,10 +381,12 @@ class Necessidade(View):
                 'aria-hidden="true"></span></a>',
                 str(row['REFS']))
         context.update({
-            'headers': ('Nível', 'Insumo', 'Cor', 'Tamanho',
+            'headers': ('Nível', 'Insumo', 'Descrição',
+                        'Cor', 'Tamanho',
                         'Quant.', 'Unid.',
                         'Produzido', 'OPs'),
-            'fields': ('NIVEL', 'REF', 'COR', 'TAM',
+            'fields': ('NIVEL', 'REF', 'DESCR',
+                       'COR', 'TAM',
                        'QTD', 'UNID',
                        'REFS', 'OPS'),
             'safe': ('REFS', 'OPS'),
