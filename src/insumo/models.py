@@ -243,6 +243,7 @@ def necessidade(
 
     # lista insumos
     sql = """
+        WITH NESSECIDADE AS (
         SELECT
           ia.NIVEL_COMP NIVEL
         , ia.GRUPO_COMP REF
@@ -254,40 +255,9 @@ def necessidade(
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END TAM
-        , REGEXP_REPLACE(
-            REGEXP_REPLACE(
-              REPLACE(
-                    XMLAGG(
-                      XMLELEMENT("A",(' '||o.REFERENCIA_PECA))
-                      ORDER BY o.REFERENCIA_PECA
-                    ).getClobVal()
-              , '</A><A>'
-              , ','
-              )
-            , '([^,]+)(,\\1)+'
-            , '\\1'
-            )
-          , '</?A> ?'
-          , ''
-          )
-          as REFS
-        , REGEXP_REPLACE(
-            REGEXP_REPLACE(
-              REPLACE(
-                    XMLAGG(
-                      XMLELEMENT("A",(' '||o.ORDEM_PRODUCAO))
-                      ORDER BY o.ORDEM_PRODUCAO
-                    ).getClobVal()
-              , '</A><A>'
-              , ','
-              )
-            , '([^,]+)(,\\1)+'
-            , '\\1'
-            )
-          , '</?A> ?'
-          , ''
-          )
-          as OPS
+        , r.UNIDADE_MEDIDA UNID
+        , o.REFERENCIA_PECA REFP
+        , o.ORDEM_PRODUCAO OP
         , sum( ia.CONSUMO *
                ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
                - l.QTDE_PERDAS - l.QTDE_CONSERTO
@@ -325,19 +295,23 @@ def necessidade(
           - l.QTDE_PERDAS - l.QTDE_CONSERTO
           ) > 0
         --  AND o.ORDEM_PRODUCAO = 3445
-          {filtro_op} -- filtro_op
-          {filtro_data_corte} -- filtro_data_corte
-          {filtro_data_corte_ate} -- filtro_data_corte
+        --  AND o.DATA_ENTRADA_CORTE >= TO_DATE('01/01/2018','DD/MM/YYYY')
+        --  AND o.DATA_ENTRADA_CORTE <= TO_DATE('01/01/2019','DD/MM/YYYY')
+        --  AND o.DATA_ENTRADA_CORTE >= '2018-03-01' -- filtro_data_corte
+        --  AND o.DATA_ENTRADA_CORTE <= '2018-03-09' -- filtro_data_corte
         --  AND l.PERIODO_PRODUCAO = 1807
         --  AND l.ORDEM_CONFECCAO = 3261
         --  AND ia.GRUPO_COMP = 'TC004'
         --  AND ia.GRUPO_COMP = 'TR018'
         --  AND o.REFERENCIA_PECA = '00256'
-          {filtro_insumo}
+          {filtro_op} -- filtro_op
+          {filtro_data_corte} -- filtro_data_corte
+          {filtro_data_corte_ate} -- filtro_data_corte
+          {filtro_insumo} -- filtro_insumo
           {filtro_conta_estoque} -- filtro_conta_estoque
           {filtro_ref} -- filtro_ref
-          {filtro_conta_estoque_ref}
-          {filtro_colecao}
+          {filtro_conta_estoque_ref} -- filtro_conta_estoque_ref
+          {filtro_colecao} --filtro_colecao
         GROUP BY
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
@@ -349,11 +323,58 @@ def necessidade(
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END
+        , r.UNIDADE_MEDIDA
+        , o.REFERENCIA_PECA
+        , o.ORDEM_PRODUCAO
         ORDER BY
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
         , 3
         , 4
+        , o.REFERENCIA_PECA
+        , o.ORDEM_PRODUCAO
+        )
+        SELECT
+          n.NIVEL
+        , n.REF
+        , n.COR
+        , n.TAM
+        , n.UNID
+        , REPLACE(
+            REGEXP_REPLACE(
+              LISTAGG('#'||n.REFP, ', ')
+              WITHIN GROUP (ORDER BY n.REFP)
+            , '([^,]+)(, \1)+'
+            , '\1'
+            )
+          , '#'
+          , ''
+          )
+          AS REFS
+        , REPLACE(
+            REGEXP_REPLACE(
+              LISTAGG('#'||n.OP, ', ')
+              WITHIN GROUP (ORDER BY n.OP)
+            , '([^,]+)(, \1)+'
+            , '\1'
+            )
+          , '#'
+          , ''
+          )
+          AS OPS
+        , sum( n.QTD ) QTD
+        FROM NESSECIDADE n
+        GROUP BY
+          n.NIVEL
+        , n.REF
+        , n.COR
+        , n.TAM
+        , n.UNID
+        ORDER BY
+          n.NIVEL
+        , n.REF
+        , n.COR
+        , n.TAM
     """.format(
         filtro_op=filtro_op,
         filtro_data_corte=filtro_data_corte,
