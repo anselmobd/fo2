@@ -206,7 +206,7 @@ def necessidade(
         filtro_data_corte_ate = \
             "AND o.DATA_ENTRADA_CORTE <= '{data_corte_ate}'".format(
                 data_corte_ate=data_corte_ate)
-    else:
+    elif data_corte:
         filtro_data_corte_ate = \
             "AND o.DATA_ENTRADA_CORTE <= '{data_corte}'".format(
                 data_corte=data_corte)
