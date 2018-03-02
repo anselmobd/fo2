@@ -189,7 +189,7 @@ def necessidade(
         cursor, op, data_corte, data_corte_ate,
         data_compra, data_compra_ate,
         insumo, conta_estoque,
-        ref, conta_estoque_ref, colecao):
+        ref, conta_estoque_ref, colecao, quais):
     filtro_op = ''
     if op:
         filtro_op = \
@@ -270,6 +270,17 @@ def necessidade(
             "AND ref.COLECAO = '{colecao}'".format(
                 colecao=colecao.colecao)
 
+    quais_insumos = ''
+    if quais == 'a':
+        quais_insumos = """
+            ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
+            - l.QTDE_PERDAS - l.QTDE_CONSERTO )
+        """
+    else:
+        quais_insumos = """
+            ( l.QTDE_PECAS_PROG )
+        """
+
     # lista insumos
     sql = """
         WITH NESSECIDADE AS (
@@ -291,8 +302,7 @@ def necessidade(
         , o.REFERENCIA_PECA REFP
         , o.ORDEM_PRODUCAO OP
         , sum( ia.CONSUMO *
-               ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
-               - l.QTDE_PERDAS - l.QTDE_CONSERTO
+               ( {quais_insumos}
                )
              ) QTD
         FROM PCPC_020 o -- OP
@@ -334,20 +344,15 @@ def necessidade(
           ON ref.NIVEL_ESTRUTURA = 1
          AND ref.REFERENCIA = o.REFERENCIA_PECA
         WHERE o.SITUACAO IN (2, 4)
-          AND ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
-          - l.QTDE_PERDAS - l.QTDE_CONSERTO
-          ) > 0
-        --  AND o.ORDEM_PRODUCAO = 3445
+        --  AND ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
+        --  - l.QTDE_PERDAS - l.QTDE_CONSERTO
+        --  ) > 0
+            AND (
+              {quais_insumos} -- quais_insumos
+            ) > 0
+          {filtro_op} -- filtro_op
         --  AND o.DATA_ENTRADA_CORTE >= TO_DATE('01/01/2018','DD/MM/YYYY')
         --  AND o.DATA_ENTRADA_CORTE <= TO_DATE('01/01/2019','DD/MM/YYYY')
-        --  AND o.DATA_ENTRADA_CORTE >= '2018-03-01' -- filtro_data_corte
-        --  AND o.DATA_ENTRADA_CORTE <= '2018-03-09' -- filtro_data_corte
-        --  AND l.PERIODO_PRODUCAO = 1807
-        --  AND l.ORDEM_CONFECCAO = 3261
-        --  AND ia.GRUPO_COMP = 'TC004'
-        --  AND ia.GRUPO_COMP = 'TR018'
-        --  AND o.REFERENCIA_PECA = '00256'
-          {filtro_op} -- filtro_op
           {filtro_data_corte} -- filtro_data_corte
           {filtro_data_corte_ate} -- filtro_data_corte_ate
           {filtro_data_compra} -- filtro_data_compra
@@ -439,7 +444,8 @@ def necessidade(
         filtro_conta_estoque=filtro_conta_estoque,
         filtro_ref=filtro_ref,
         filtro_conta_estoque_ref=filtro_conta_estoque_ref,
-        filtro_colecao=filtro_colecao)
+        filtro_colecao=filtro_colecao,
+        quais_insumos=quais_insumos)
     cursor.execute(sql)
     # , [data_corte, data_corte, conta_estoque, conta_estoque])
     return rows_to_dict_list(cursor)
