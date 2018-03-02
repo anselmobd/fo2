@@ -55,7 +55,11 @@
 {% if colecao %}
   <h3>Coleção do produzido: {{ colecao }}</h3>
 {% endif %}
-<h3>Apenas insumos de estágios não avançados dos lotes</h3>
+{% if quais == 'a' %}
+  <h3>Apenas insumos de estágios não avançados dos lotes</h3>
+{% else %}
+  <h3>Todos os insumos das OPs</h3>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}

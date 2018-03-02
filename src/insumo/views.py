@@ -337,7 +337,7 @@ class Necessidade(View):
             self, cursor, op, data_corte, data_corte_ate,
             data_compra, data_compra_ate,
             insumo, conta_estoque,
-            ref, conta_estoque_ref, colecao):
+            ref, conta_estoque_ref, colecao, quais):
         context = {}
         if not (op or data_corte or data_corte_ate or
                 data_compra or data_compra_ate or
@@ -359,13 +359,14 @@ class Necessidade(View):
             'ref': ref,
             'conta_estoque_ref': conta_estoque_ref,
             'colecao': colecao,
+            'quais': quais,
         })
 
         data = models.necessidade(
             cursor, op, data_corte, data_corte_ate,
             data_compra, data_compra_ate,
             insumo, conta_estoque,
-            ref, conta_estoque_ref, colecao)
+            ref, conta_estoque_ref, colecao, quais)
 
         if len(data) == 0:
             context.update({
@@ -390,7 +391,7 @@ class Necessidade(View):
         context.update({
             'headers': ('Nível', 'Insumo', 'Descrição',
                         'Cor', 'Tamanho',
-                        'Quant.', 'Unid.',
+                        'Necessidade', 'Unid.',
                         'Produzido', 'OPs',
                         'Estoq. Mínimo', 'Reposição'),
             'fields': ('NIVEL', 'REF', 'DESCR',
@@ -424,11 +425,12 @@ class Necessidade(View):
             ref = form.cleaned_data['ref']
             conta_estoque_ref = form.cleaned_data['conta_estoque_ref']
             colecao = form.cleaned_data['colecao']
+            quais = form.cleaned_data['quais']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
                 cursor, op, data_corte, data_corte_ate,
                 data_compra, data_compra_ate,
                 insumo, conta_estoque,
-                ref, conta_estoque_ref, colecao))
+                ref, conta_estoque_ref, colecao, quais))
         context['form'] = form
         return render(request, self.template_name, context)

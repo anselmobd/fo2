@@ -105,6 +105,12 @@ class NecessidadeForm(forms.Form):
         queryset=Colecao.objects.exclude(colecao=0).order_by(
             'colecao'), empty_label="(Todas)")
 
+    CHOICES = [('a', 'Apenas insumos de estágios não avançados dos lotes'),
+               ('t', 'Todos os insumos das OPs')]
+    quais = forms.ChoiceField(
+        label='Quais insumos',
+        choices=CHOICES, initial='a', widget=forms.RadioSelect())
+
     def clean_insumo(self):
         insumo = self.cleaned_data['insumo'].upper()
         data = self.data.copy()
