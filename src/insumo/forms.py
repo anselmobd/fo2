@@ -70,6 +70,16 @@ class NecessidadeForm(forms.Form):
         label='Data final do Corte', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 
+    data_compra = forms.DateField(
+        label='Data do Compra', required=False,
+        help_text='(Se informar "Data final do Compra",'
+                  ' a "Data do Compra" funciona como inicial.)',
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    data_compra_ate = forms.DateField(
+        label='Data final de Compra', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
     insumo = forms.CharField(
         label='Referência do insumo',
         max_length=5, min_length=5, required=False,

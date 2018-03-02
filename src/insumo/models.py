@@ -187,6 +187,7 @@ def lista_insumo(cursor, busca):
 
 def necessidade(
         cursor, op, data_corte, data_corte_ate,
+        data_compra, data_compra_ate,
         insumo, conta_estoque,
         ref, conta_estoque_ref, colecao):
     filtro_op = ''
@@ -210,6 +211,34 @@ def necessidade(
         filtro_data_corte_ate = \
             "AND o.DATA_ENTRADA_CORTE <= '{data_corte}'".format(
                 data_corte=data_corte)
+
+    filtro_data_compra = ''
+    if data_compra:
+        filtro_data_compra = """
+            AND ( o.DATA_ENTRADA_CORTE
+                - 7
+                - coalesce(parm.TEMPO_REPOSICAO, 0)
+                )
+                >= '{data_compra}'""".format(
+                    data_compra=data_compra)
+
+    filtro_data_compra_ate = ''
+    if data_compra_ate:
+        filtro_data_compra_ate = """
+            AND ( o.DATA_ENTRADA_CORTE
+                - 7
+                - coalesce(parm.TEMPO_REPOSICAO, 0)
+                )
+                <= '{data_compra_ate}'""".format(
+                data_compra_ate=data_compra_ate)
+    elif data_compra:
+        filtro_data_compra_ate = """
+            AND ( o.DATA_ENTRADA_CORTE
+                - 7
+                - coalesce(parm.TEMPO_REPOSICAO, 0)
+                )
+                <= '{data_compra}'""".format(
+                data_compra=data_compra)
 
     filtro_insumo = ''
     if insumo:
@@ -320,7 +349,9 @@ def necessidade(
         --  AND o.REFERENCIA_PECA = '00256'
           {filtro_op} -- filtro_op
           {filtro_data_corte} -- filtro_data_corte
-          {filtro_data_corte_ate} -- filtro_data_corte
+          {filtro_data_corte_ate} -- filtro_data_corte_ate
+          {filtro_data_compra} -- filtro_data_compra
+          {filtro_data_compra_ate} -- filtro_data_compra_ate
           {filtro_insumo} -- filtro_insumo
           {filtro_conta_estoque} -- filtro_conta_estoque
           {filtro_ref} -- filtro_ref
@@ -402,6 +433,8 @@ def necessidade(
         filtro_op=filtro_op,
         filtro_data_corte=filtro_data_corte,
         filtro_data_corte_ate=filtro_data_corte_ate,
+        filtro_data_compra=filtro_data_compra,
+        filtro_data_compra_ate=filtro_data_compra_ate,
         filtro_insumo=filtro_insumo,
         filtro_conta_estoque=filtro_conta_estoque,
         filtro_ref=filtro_ref,
