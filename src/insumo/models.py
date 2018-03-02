@@ -255,6 +255,8 @@ def necessidade(
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END TAM
+        , coalesce(parm.ESTOQUE_MINIMO, 0) STQ_MIN
+        , coalesce(parm.TEMPO_REPOSICAO, 0) REPOSICAO
         , r.DESCR_REFERENCIA DESCR
         , r.UNIDADE_MEDIDA UNID
         , o.REFERENCIA_PECA REFP
@@ -288,6 +290,17 @@ def necessidade(
         JOIN basi_030 r -- referencia
           ON r.NIVEL_ESTRUTURA = ia.NIVEL_COMP
          AND r.REFERENCIA = ia.GRUPO_COMP
+        LEFT JOIN BASI_015 parm -- parâmetros de item
+          ON parm.NIVEL_ESTRUTURA = ia.NIVEL_COMP
+         AND parm.GRUPO_ESTRUTURA = ia.GRUPO_COMP
+         AND parm.SUBGRU_ESTRUTURA = CASE WHEN ia.SUB_COMP = '000'
+             THEN cot.SUB_COMP
+             ELSE ia.SUB_COMP
+             END
+         AND parm.ITEM_ESTRUTURA = CASE WHEN ia.ITEM_COMP = '000000'
+             THEN coc.ITEM_COMP
+             ELSE ia.ITEM_COMP
+             END
         JOIN basi_030 ref -- referencia
           ON ref.NIVEL_ESTRUTURA = 1
          AND ref.REFERENCIA = o.REFERENCIA_PECA
@@ -324,6 +337,8 @@ def necessidade(
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END
+        , parm.ESTOQUE_MINIMO
+        , parm.TEMPO_REPOSICAO
         , r.DESCR_REFERENCIA
         , r.UNIDADE_MEDIDA
         , o.REFERENCIA_PECA
@@ -343,6 +358,8 @@ def necessidade(
         , n.COR
         , n.TAM
         , n.UNID
+        , n.STQ_MIN
+        , n.REPOSICAO
         , REPLACE(
             REGEXP_REPLACE(
               LISTAGG('#'||n.REFP, ', ')
@@ -374,6 +391,8 @@ def necessidade(
         , n.COR
         , n.TAM
         , n.UNID
+        , n.STQ_MIN
+        , n.REPOSICAO
         ORDER BY
           n.NIVEL
         , n.REF
