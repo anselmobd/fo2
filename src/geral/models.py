@@ -138,3 +138,11 @@ class InformacaoModulo(models.Model):
     texto = models.CharField(
         null=True, blank=True, max_length=4096,
         verbose_name='receita')
+
+
+class Pop(models.Model):
+    descricao = models.CharField(
+        max_length=255, blank=True, verbose_name='título')
+    pop = models.FileField(upload_to='pop/', verbose_name='Arquivo POP')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    habilitado = models.NullBooleanField(default=True)
