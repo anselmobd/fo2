@@ -1,9 +1,16 @@
-__version__ = '0.1.50'
-__version__date__ = '29/01/2018'
+__version__ = '0.1.61'
+__version__date__ = '12/03/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.61 - 2018/03/12
+#   . Ajustes nas páginas do RH
+#   . Uploda dos POPs
+#
+# - 0.1.60 - 2018/03/02
+#   . Várias melhorias
 #
 # - 0.1.50 - 2018/01/29
 #   . Várias melhorias
