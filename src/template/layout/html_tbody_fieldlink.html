@@ -1,6 +1,16 @@
 {% with field|add:'|LINK' as field_link %}
   {% if row|get_item:field_link %}
-    <a href="{{ row|get_item:field_link }}">{{ row|get_item:field }}&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    <a href="{{ row|get_item:field_link }}"
+    {% with field|add:'|TARGET' as field_target %}
+      {% if row|get_item:field_target %}
+        target="{{ row|get_item:field_target }}"
+      {% endif %}
+    {% endwith %}
+    >
+    {% if row|get_item:field %}
+      {{ row|get_item:field }}&nbsp;
+    {% endif %}
+    <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
   {% else %}
     {{ row|get_item:field }}
   {% endif %}
