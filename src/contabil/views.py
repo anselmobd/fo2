@@ -14,7 +14,7 @@ def index(request):
 class InfAdProd(View):
     Form_class = InfAdProdForm
     template_name = 'contabil/infadprod.html'
-    title_name = 'Itens de pedido (InfAdProd, EAN e Narrativa)'
+    title_name = 'Itens de pedido'
 
     def get(self, request):
         context = {'titulo': self.title_name}
