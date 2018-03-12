@@ -1,4 +1,4 @@
-from pprint import pprint
+# from pprint import pprint
 import difflib
 
 from utils.classes import LoggedInUser
@@ -26,7 +26,7 @@ def post_save_tracking(sender, instance, **kwargs):
     if hasattr(instance, '__original_record_values'):
         logged_in = LoggedInUser()
         user = logged_in.user
-        print('user = {}'.format(user))
+        # print('user = {}'.format(user))
         original = getattr(instance, '__original_record_values')
         if original['id'] == getattr(instance, 'id'):
             altered = {}
@@ -47,7 +47,7 @@ def post_save_tracking(sender, instance, **kwargs):
                         # the "+10" is to compensate the ".__delta__"
                         if (len(lindiff)+10) < len(new):
                             altered[k+'.__delta__'] = lindiff
-            print('{} altered = {}'.format(sender.__name__, altered))
+            # print('{} altered = {}'.format(sender.__name__, altered))
             rt = RecordTracking()
             rt.user = user
             rt.table = sender.__name__
@@ -55,13 +55,13 @@ def post_save_tracking(sender, instance, **kwargs):
             rt.iud = 'u'
             rt.log = altered
             rt.save()
-            print('rt.user = {}'.format(rt.user))
+            # print('rt.user = {}'.format(rt.user))
         else:
             record = {}
             for field in sender._meta.get_fields():
                 if hasattr(instance, field.name):
                     record[field.name] = getattr(instance, field.name)
-            print('{} inserted = {}'.format(sender.__name__, record))
+            # print('{} inserted = {}'.format(sender.__name__, record))
             rt = RecordTracking()
             rt.user = user
             rt.table = sender.__name__
@@ -69,7 +69,7 @@ def post_save_tracking(sender, instance, **kwargs):
             rt.iud = 'i'
             rt.log = record
             rt.save()
-            print('rt.user = {}'.format(rt.user))
+            # print('rt.user = {}'.format(rt.user))
 
 
 def post_delete_tracking(sender, instance, **kwargs):
@@ -80,7 +80,7 @@ def post_delete_tracking(sender, instance, **kwargs):
     if hasattr(instance, 'id'):
         logged_in = LoggedInUser()
         user = logged_in.user
-        print('user = {}'.format(user))
+        # print('user = {}'.format(user))
         record = {}
         record['id'] = getattr(instance, 'id')
         rt = RecordTracking()
@@ -90,4 +90,4 @@ def post_delete_tracking(sender, instance, **kwargs):
         rt.iud = 'd'
         rt.log = record
         rt.save()
-        print('{} deleted = {}'.format(sender.__name__, record))
+        # print('{} deleted = {}'.format(sender.__name__, record))
