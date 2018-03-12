@@ -1,0 +1,36 @@
+{% extends 'geral/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/geral/">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+  {% if form %}
+    {% if insert %}
+      <h4>Inserir</h4>
+    {% else %}
+      <h4>Editando</h4>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Gravar</button>
+      {% if edit %}
+        <button type="cancel">Cancelar</button>
+      {% endif %}
+    </form>
+  {% endif %}
+  {% if data %}
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% else %}
+    <h4>Nenhum Procedimento (POP) disponível</h4>
+  {% endif %}
+{% endblock %}

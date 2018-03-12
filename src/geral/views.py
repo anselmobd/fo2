@@ -1,14 +1,17 @@
 import yaml
+# from pprint import pprint
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db import connections
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from fo2.models import rows_to_dict_list
+# from utils.classes import LoggedInUser
 
-from .models import Painel, PainelModulo, InformacaoModulo, UsuarioPainelModulo
-from .forms import InformacaoModuloForm
+from .models import Painel, PainelModulo, InformacaoModulo, \
+                    UsuarioPainelModulo, Pop
+from .forms import InformacaoModuloForm, PopForm
 
 
 def index(request):
@@ -120,7 +123,7 @@ class PainelView(View):
 class InformativoView(LoginRequiredMixin, View):
     Form_class = InformacaoModuloForm
     template_name = 'geral/informativo.html'
-    title_name = 'Manutenção de informativos'
+    title_name = 'Informativos'
     context = {}
     informativo_id = None
 
@@ -132,7 +135,7 @@ class InformativoView(LoginRequiredMixin, View):
         modulo_slug = kwargs['modulo']
         self.modulo = PainelModulo.objects.get(slug=modulo_slug)
         self.context = {
-            'titulo': '{}/{}'.format(self.title_name, self.modulo.nome),
+            'titulo': '{} - {}'.format(self.modulo.nome, self.title_name),
             'modulo_slug': modulo_slug,
             }
 
@@ -210,3 +213,63 @@ class InformativoView(LoginRequiredMixin, View):
             else:
                 self.context['form'] = form
         return render(request, self.template_name, self.context)
+
+
+def pop(request, id=None):
+    context = {'titulo': 'Procedimentos (POPs)'}
+
+    can_edit = False
+    # logged_in = LoggedInUser()
+    # user = logged_in.user
+    user = None
+    if request.user.is_authenticated():
+        user = request.user
+    if user:
+        can_edit = user.username in ('fo2admin', 'mariana_ind')
+
+    if can_edit:
+        if id:
+            instance = get_object_or_404(Pop, id=id)
+            context.update({'edit': True})
+        else:
+            instance = None
+            context.update({'insert': True})
+        if request.method == 'POST':
+            form = PopForm(request.POST, request.FILES, instance=instance)
+            if form.is_valid():
+                form.save()
+                return redirect('pop')
+        else:
+            form = PopForm(instance=instance)
+        context.update({'form': form})
+
+    if can_edit:
+        select = Pop.objects.all()
+        select = select.order_by('-uploaded_at')
+    else:
+        select = Pop.objects.filter(habilitado=True)
+        select = select.order_by('descricao')
+    data = list(select.values())
+    for row in data:
+        row['descricao|LINK'] = '/media/{}'.format(row['pop'])  # row['id']
+        row['descricao|TARGET'] = '_blank'
+        row['habilitado'] = 'sim' if row['habilitado'] else 'não'
+        row['edit'] = ''
+            # '<span aria-hidden="true" class="glyphicon glyphicon-edit"></span>'
+        row['edit|LINK'] = row['id']
+    context.update({
+        'data': data,
+    })
+    if can_edit:
+        context.update({
+            'headers': ('Adicionado em', 'Título', 'Arquivo POP',
+                        'Habilitado', 'Editar'),
+            'fields': ('uploaded_at', 'descricao', 'pop',
+                       'habilitado', 'edit'),
+        })
+    else:
+        context.update({
+            'headers': ['Título'],
+            'fields': ['descricao'],
+        })
+    return render(request, 'geral/pop.html', context)
