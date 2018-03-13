@@ -11,12 +11,14 @@ from django.http import JsonResponse, HttpResponse
 
 from fo2 import settings
 from fo2.models import rows_to_dict_list
+from fo2.template import group_rowspan
 
 from geral.models import Dispositivos, RoloBipado
 from utils.forms import FiltroForm
+from utils.views import totalize_grouped_data
 
 import insumo.models as models
-from .forms import RefForm, RolosBipadosForm, NecessidadeForm
+from .forms import RefForm, RolosBipadosForm, NecessidadeForm, ReceberForm
 
 
 def index(request):
@@ -435,5 +437,77 @@ class Necessidade(View):
                 data_compra, data_compra_ate, periodo_compra,
                 insumo, conta_estoque,
                 ref, conta_estoque_ref, colecao, quais))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class Receber(View):
+    Form_class = ReceberForm
+    template_name = 'insumo/receber.html'
+    title_name = 'A Receber'
+
+    def mount_context(self, cursor, insumo, conta_estoque, recebimento):
+        context = {}
+        if not (insumo or conta_estoque):
+            context.update({
+                'msg_erro': 'Especifique ao menos um filtro',
+            })
+            return context
+        context.update({
+            'insumo': insumo,
+            'conta_estoque': conta_estoque,
+            'recebimento': recebimento,
+        })
+
+        data = models.receber(cursor, insumo, conta_estoque, recebimento)
+
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhuma necessidade de insumos encontrada',
+            })
+            return context
+
+        for row in data:
+            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['DT_ENTREGA'] = row['DT_ENTREGA'].date()
+
+        group = ['NIVEL', 'REF', 'COR', 'TAM']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['QTD_PEDIDA', 'QTD_RECEBIDA', 'QTD_A_RECEBER'],
+            'count': [],
+            'descr': {'DT_ENTREGA': 'Totais:'}
+        })
+        group_rowspan(data, group)
+
+        context.update({
+            'headers': ('Nível', 'Insumo', 'Cor', 'Tamanho', 'Dt. Entrega',
+                        'Qtd.Pedida', 'Qtd.Recebida', '%Recebido',
+                        'Qtd.A receber', '%A receber', 'Pedidos'),
+            'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'DT_ENTREGA',
+                       'QTD_PEDIDA', 'QTD_RECEBIDA', 'P_RECEBIDO',
+                       'QTD_A_RECEBER', 'P_A_RECEBER', 'PEDIDOS'),
+            'group': group,
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            insumo = form.cleaned_data['insumo']
+            conta_estoque = form.cleaned_data['conta_estoque']
+            recebimento = form.cleaned_data['recebimento']
+            cursor = connections['so'].cursor()
+            context.update(
+                self.mount_context(cursor, insumo, conta_estoque, recebimento))
         context['form'] = form
         return render(request, self.template_name, context)

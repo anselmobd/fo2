@@ -23,4 +23,7 @@ urlpatterns = [
     url(r'^necessidade/$', views.Necessidade.as_view(),
         name='insumo_necessidade'),
 
+    url(r'^receber/$', views.Receber.as_view(),
+        name='insumo_receber'),
+
 ]

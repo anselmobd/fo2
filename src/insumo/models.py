@@ -479,3 +479,81 @@ def necessidade(
     cursor.execute(sql)
     # , [data_corte, data_corte, conta_estoque, conta_estoque])
     return rows_to_dict_list(cursor)
+
+
+def receber(cursor, insumo, conta_estoque, recebimento):
+    filtro_insumo = ''
+    if insumo:
+        filtro_insumo = \
+            "AND x.ITEM_100_GRUPO = '{insumo}'".format(
+                insumo=insumo)
+
+    filtro_conta_estoque = ''
+    if conta_estoque:
+        filtro_conta_estoque = \
+            "AND r.CONTA_ESTOQUE = '{conta_estoque}'".format(
+                conta_estoque=conta_estoque.conta_estoque)
+
+    filtro_recebimento = ''
+    if recebimento == 'a':
+        filtro_recebimento = """
+            AND x.QTDE_SALDO_ITEM > 0
+        """
+
+    # lista insumos
+    sql = """
+        SELECT
+          x.ITEM_100_NIVEL99 NIVEL
+        , x.ITEM_100_GRUPO REF
+        , x.ITEM_100_SUBGRUPO TAM
+        , x.ITEM_100_ITEM COR
+        , x.DATA_PREV_ENTR DT_ENTREGA
+        , sum(x.QTDE_PEDIDA_ITEM) QTD_PEDIDA
+        , sum(x.QTDE_PEDIDA_ITEM)
+          - sum(x.QTDE_SALDO_ITEM) QTD_RECEBIDA
+        , ROUND(
+            (sum(x.QTDE_PEDIDA_ITEM) - sum(x.QTDE_SALDO_ITEM))
+            / sum(x.QTDE_PEDIDA_ITEM) * 100
+          , 1) P_RECEBIDO
+        , sum(GREATEST(x.QTDE_SALDO_ITEM, 0)) QTD_A_RECEBER
+        , ROUND(
+            sum(GREATEST(x.QTDE_SALDO_ITEM, 0))
+            / sum(x.QTDE_PEDIDA_ITEM) * 100
+          , 1) P_A_RECEBER
+        , REPLACE(
+            REGEXP_REPLACE(
+              LISTAGG('#'||x.NUM_PED_COMPRA, ', ')
+              WITHIN GROUP (ORDER BY x.NUM_PED_COMPRA)
+            , '([^,]+)(, @)+'
+            , '@'
+            )
+          , '#'
+          , ''
+          )
+          AS PEDIDOS
+        FROM SUPR_100 x -- item de pedido de compra
+        JOIN basi_030 r -- referencia
+          ON r.NIVEL_ESTRUTURA = x.ITEM_100_NIVEL99
+         AND r.REFERENCIA = x.ITEM_100_GRUPO
+        WHERE 1=1
+          {filtro_insumo} -- filtro_insumo
+          {filtro_conta_estoque} -- filtro_conta_estoque
+          {filtro_recebimento} -- filtro_recebimento
+        GROUP BY
+          x.ITEM_100_NIVEL99
+        , x.ITEM_100_GRUPO
+        , x.ITEM_100_SUBGRUPO
+        , x.ITEM_100_ITEM
+        , x.DATA_PREV_ENTR
+        ORDER BY
+          x.ITEM_100_NIVEL99
+        , x.ITEM_100_GRUPO
+        , x.ITEM_100_SUBGRUPO
+        , x.ITEM_100_ITEM
+        , x.DATA_PREV_ENTR
+    """.format(
+        filtro_insumo=filtro_insumo,
+        filtro_conta_estoque=filtro_conta_estoque,
+        filtro_recebimento=filtro_recebimento)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
