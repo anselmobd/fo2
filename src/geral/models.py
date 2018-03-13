@@ -144,5 +144,9 @@ class Pop(models.Model):
     descricao = models.CharField(
         max_length=255, blank=True, verbose_name='título')
     pop = models.FileField(upload_to='pop/', verbose_name='Arquivo POP')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Inserido em')
     habilitado = models.NullBooleanField(default=True)
+
+    class Meta:
+        permissions = (("can_manage_pop", "Can manage pop"),)
