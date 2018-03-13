@@ -149,3 +149,28 @@ class NecessidadeForm(forms.Form):
 
     def clean_periodo_compra(self):
         return self.clean_periodo(self.cleaned_data['periodo_compra'])
+
+
+class ReceberForm(forms.Form):
+    insumo = forms.CharField(
+        label='Referência do insumo',
+        max_length=5, min_length=5, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    conta_estoque = forms.ModelChoiceField(
+        label='Conta de estoque do insumo', required=False,
+        queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
+            'conta_estoque'), empty_label="(Todas)")
+
+    CHOICES = [('a', 'Apenas insumos com quantidades a receber'),
+               ('t', 'Todos os insumos com pedidos')]
+    recebimento = forms.ChoiceField(
+        label='Recebimento',
+        choices=CHOICES, initial='a', widget=forms.RadioSelect())
+
+    def clean_insumo(self):
+        insumo = self.cleaned_data['insumo'].upper()
+        data = self.data.copy()
+        data['insumo'] = insumo
+        self.data = data
+        return insumo

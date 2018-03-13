@@ -1,0 +1,40 @@
+{% extends 'insumo/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'insumo' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'insumo_receber' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if insumo %}
+  <h3>Referência do insumo: {{ insumo }}</h3>
+{% endif %}
+{% if conta_estoque %}
+  <h3>Conta de estoque do insumo: {{ conta_estoque }}</h3>
+{% endif %}
+{% if recebimento %}
+  {% if recebimento == 'a' %}
+    <h3>Apenas insumos com quantidades a receber</h3>
+  {% else %}
+    <h3>Todos os insumos com pedidos</h3>
+  {% endif %}
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
+  </table>
+{% endif %}
+{% endblock %}
