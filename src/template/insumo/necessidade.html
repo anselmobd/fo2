@@ -29,16 +29,22 @@
 {% if data_corte_ate %}
   <h3>Data final de Corte: {{ data_corte_ate }}</h3>
 {% endif %}
+{% if periodo_corte %}
+  <h3>Período do Corte: {{ periodo_corte }}</h3>
+{% endif %}
 {% if data_compra %}
   {% if data_compra_ate %}
-    <h3>Data inicial de Compra:
+    <h3>Data inicial de "Compra":
   {% else %}
-    <h3>Data de Compra:
+    <h3>Data de "Compra":
   {% endif %}
   {{ data_compra }}</h3>
 {% endif %}
 {% if data_compra_ate %}
-  <h3>Data final de Compra: {{ data_compra_ate }}</h3>
+  <h3>Data final de "Compra": {{ data_compra_ate }}</h3>
+{% endif %}
+{% if periodo_compra %}
+  <h3>Período de "Compra": {{ periodo_compra }}</h3>
 {% endif %}
 {% if insumo %}
   <h3>Referência do insumo: {{ insumo }}</h3>

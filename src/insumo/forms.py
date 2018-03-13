@@ -70,6 +70,11 @@ class NecessidadeForm(forms.Form):
         label='Data final do Corte', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 
+    periodo_corte = forms.CharField(
+        label='Período do Corte', required=False,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+
     data_compra = forms.DateField(
         label='Data de "Compra"', required=False,
         help_text='(Se informar "Data final de Compra",'
@@ -79,6 +84,11 @@ class NecessidadeForm(forms.Form):
     data_compra_ate = forms.DateField(
         label='Data final de "Compra"', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
+
+    periodo_compra = forms.CharField(
+        label='Período de "Compra"', required=False,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
 
     insumo = forms.CharField(
         label='Referência do insumo',
@@ -124,3 +134,18 @@ class NecessidadeForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+    def clean_periodo(self, periodo):
+        try:
+            i_periodo = int(float(periodo))
+            if i_periodo < 0:
+                periodo = None
+        except ValueError:
+            periodo = None
+        return periodo
+
+    def clean_periodo_corte(self):
+        return self.clean_periodo(self.cleaned_data['periodo_corte'])
+
+    def clean_periodo_compra(self):
+        return self.clean_periodo(self.cleaned_data['periodo_compra'])

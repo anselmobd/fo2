@@ -334,26 +334,27 @@ class Necessidade(View):
     title_name = 'Necessidade'
 
     def mount_context(
-            self, cursor, op, data_corte, data_corte_ate,
-            data_compra, data_compra_ate,
+            self, cursor, op, data_corte, data_corte_ate, periodo_corte,
+            data_compra, data_compra_ate, periodo_compra,
             insumo, conta_estoque,
             ref, conta_estoque_ref, colecao, quais):
         context = {}
-        if not (op or data_corte or data_corte_ate or
-                data_compra or data_compra_ate or
+        if not (op or data_corte or data_corte_ate or periodo_corte or
+                data_compra or data_compra_ate or periodo_compra or
                 insumo or conta_estoque or
                 ref or conta_estoque_ref or colecao):
             context.update({
                 'msg_erro': 'Especifique ao menos um filtro',
             })
             return context
-
         context.update({
             'op': op,
             'data_corte': data_corte,
             'data_corte_ate': data_corte_ate,
+            'periodo_corte': periodo_corte,
             'data_compra': data_compra,
             'data_compra_ate': data_compra_ate,
+            'periodo_compra': periodo_compra,
             'insumo': insumo,
             'conta_estoque': conta_estoque,
             'ref': ref,
@@ -363,8 +364,8 @@ class Necessidade(View):
         })
 
         data = models.necessidade(
-            cursor, op, data_corte, data_corte_ate,
-            data_compra, data_compra_ate,
+            cursor, op, data_corte, data_corte_ate, periodo_corte,
+            data_compra, data_compra_ate, periodo_compra,
             insumo, conta_estoque,
             ref, conta_estoque_ref, colecao, quais)
 
@@ -418,8 +419,10 @@ class Necessidade(View):
             op = form.cleaned_data['op']
             data_corte = form.cleaned_data['data_corte']
             data_corte_ate = form.cleaned_data['data_corte_ate']
+            periodo_corte = form.cleaned_data['periodo_corte']
             data_compra = form.cleaned_data['data_compra']
             data_compra_ate = form.cleaned_data['data_compra_ate']
+            periodo_compra = form.cleaned_data['periodo_compra']
             insumo = form.cleaned_data['insumo']
             conta_estoque = form.cleaned_data['conta_estoque']
             ref = form.cleaned_data['ref']
@@ -428,8 +431,8 @@ class Necessidade(View):
             quais = form.cleaned_data['quais']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, op, data_corte, data_corte_ate,
-                data_compra, data_compra_ate,
+                cursor, op, data_corte, data_corte_ate, periodo_corte,
+                data_compra, data_compra_ate, periodo_compra,
                 insumo, conta_estoque,
                 ref, conta_estoque_ref, colecao, quais))
         context['form'] = form
