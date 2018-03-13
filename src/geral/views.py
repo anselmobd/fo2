@@ -219,13 +219,11 @@ def pop(request, id=None):
     context = {'titulo': 'Procedimentos (POPs)'}
 
     can_edit = False
-    # logged_in = LoggedInUser()
-    # user = logged_in.user
     user = None
     if request.user.is_authenticated():
         user = request.user
     if user:
-        can_edit = user.username in ('fo2admin', 'mariana_ind')
+        can_edit = user.has_perm('geral.can_manage_pop')
 
     if can_edit:
         if id:
