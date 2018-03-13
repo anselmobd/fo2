@@ -186,8 +186,8 @@ def lista_insumo(cursor, busca):
 
 
 def necessidade(
-        cursor, op, data_corte, data_corte_ate,
-        data_compra, data_compra_ate,
+        cursor, op, data_corte, data_corte_ate, periodo_corte,
+        data_compra, data_compra_ate, periodo_compra,
         insumo, conta_estoque,
         ref, conta_estoque_ref, colecao, quais):
     filtro_op = ''
@@ -211,6 +211,12 @@ def necessidade(
         filtro_data_corte_ate = \
             "AND o.DATA_ENTRADA_CORTE <= '{data_corte}'".format(
                 data_corte=data_corte)
+
+    filtro_periodo_corte = ''
+    if periodo_corte:
+        filtro_periodo_corte = \
+            "AND pcorte.PERIODO_PRODUCAO = '{periodo_corte}'".format(
+                periodo_corte=periodo_corte)
 
     filtro_data_compra = ''
     if data_compra:
@@ -239,6 +245,12 @@ def necessidade(
                 )
                 <= '{data_compra}'""".format(
                 data_compra=data_compra)
+
+    filtro_periodo_compra = ''
+    if periodo_compra:
+        filtro_periodo_compra = \
+            "AND pcompra.PERIODO_PRODUCAO = '{periodo_compra}'".format(
+                periodo_compra=periodo_compra)
 
     filtro_insumo = ''
     if insumo:
@@ -308,6 +320,10 @@ def necessidade(
         FROM PCPC_020 o -- OP
         JOIN PCPC_040 l -- lote
           ON l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+        LEFT JOIN PCPC_010 pcorte
+          ON pcorte.AREA_PERIODO = 1
+         AND o.DATA_ENTRADA_CORTE >= pcorte.DATA_INI_PERIODO
+         AND o.DATA_ENTRADA_CORTE <= pcorte.DATA_FIM_PERIODO
         JOIN BASI_050 ia -- insumos de alternativa
           ON ia.NIVEL_ITEM = 1
          AND ia.NIVEL_COMP <> 1
@@ -340,6 +356,16 @@ def necessidade(
              THEN coc.ITEM_COMP
              ELSE ia.ITEM_COMP
              END
+        LEFT JOIN PCPC_010 pcompra
+          ON pcompra.AREA_PERIODO = 1
+         AND ( o.DATA_ENTRADA_CORTE
+             - 7
+             - coalesce(parm.TEMPO_REPOSICAO, 0)
+             ) >= pcompra.DATA_INI_PERIODO
+         AND ( o.DATA_ENTRADA_CORTE
+             - 7
+             - coalesce(parm.TEMPO_REPOSICAO, 0)
+             ) <= pcompra.DATA_FIM_PERIODO
         JOIN basi_030 ref -- referencia
           ON ref.NIVEL_ESTRUTURA = 1
          AND ref.REFERENCIA = o.REFERENCIA_PECA
@@ -355,8 +381,10 @@ def necessidade(
         --  AND o.DATA_ENTRADA_CORTE <= TO_DATE('01/01/2019','DD/MM/YYYY')
           {filtro_data_corte} -- filtro_data_corte
           {filtro_data_corte_ate} -- filtro_data_corte_ate
+          {filtro_periodo_corte} -- filtro_periodo_corte
           {filtro_data_compra} -- filtro_data_compra
           {filtro_data_compra_ate} -- filtro_data_compra_ate
+          {filtro_periodo_compra} -- filtro_periodo_compra
           {filtro_insumo} -- filtro_insumo
           {filtro_conta_estoque} -- filtro_conta_estoque
           {filtro_ref} -- filtro_ref
@@ -438,8 +466,10 @@ def necessidade(
         filtro_op=filtro_op,
         filtro_data_corte=filtro_data_corte,
         filtro_data_corte_ate=filtro_data_corte_ate,
+        filtro_periodo_corte=filtro_periodo_corte,
         filtro_data_compra=filtro_data_compra,
         filtro_data_compra_ate=filtro_data_compra_ate,
+        filtro_periodo_compra=filtro_periodo_compra,
         filtro_insumo=filtro_insumo,
         filtro_conta_estoque=filtro_conta_estoque,
         filtro_ref=filtro_ref,
