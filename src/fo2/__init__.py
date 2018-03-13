@@ -1,9 +1,13 @@
-__version__ = '0.1.61'
-__version__date__ = '12/03/2018'
+__version__ = '0.1.62'
+__version__date__ = '13/03/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.62 - 2018/03/13
+#   . POPs - Controle de usuário por permissões
+#   . login no cabeçalho
 #
 # - 0.1.61 - 2018/03/12
 #   . Ajustes nas páginas do RH
