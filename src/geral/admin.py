@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 from .models import RecordTracking, Dispositivos, RoloBipado, Painel, \
-    PainelModulo, UsuarioPainelModulo, InformacaoModulo
+    PainelModulo, UsuarioPainelModulo, InformacaoModulo, Pop
 from .forms import PainelModelForm, InformacaoModuloModelForm
 
 
@@ -76,3 +76,14 @@ intr_adm_site.register(Painel, PainelAdmin)
 intr_adm_site.register(PainelModulo, PainelModuloAdmin)
 intr_adm_site.register(UsuarioPainelModulo, UsuarioPainelModuloAdmin)
 intr_adm_site.register(InformacaoModulo, InformacaoModuloAdmin)
+
+
+class PopAdmin(admin.ModelAdmin):
+    list_display = ['descricao']
+    search_fields = ['descricao']
+    ordering = ['descricao']
+    fields = ['descricao', 'pop', 'habilitado', 'uploaded_at']
+    readonly_fields = ['uploaded_at']
+
+
+intr_adm_site.register(Pop, PopAdmin)
