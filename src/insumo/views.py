@@ -521,18 +521,19 @@ class Estoque(View):
     template_name = 'insumo/estoque.html'
     title_name = 'Estoque'
 
-    def mount_context(self, cursor, insumo):
+    def mount_context(self, cursor, insumo, conta_estoque):
         context = {}
-        if not (insumo):
+        if not (insumo or conta_estoque):
             context.update({
-                'msg_erro': 'Especifique um insumo',
+                'msg_erro': 'Especifique ao menos um filtro',
             })
             return context
         context.update({
             'insumo': insumo,
+            'conta_estoque': conta_estoque,
         })
 
-        data = models.estoque(cursor, insumo)
+        data = models.estoque(cursor, insumo, conta_estoque)
 
         if len(data) == 0:
             context.update({
@@ -540,7 +541,7 @@ class Estoque(View):
             })
             return context
 
-        group = ['NIVEL', 'REF', 'COR', 'TAM']
+        group = ['NIVEL', 'REF', 'DESCR', 'COR', 'TAM']
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QUANT'],
@@ -562,12 +563,12 @@ class Estoque(View):
                 row['ULT_SAIDA'] = ''
 
         context.update({
-            'headers': ('Nível', 'Insumo', 'Cor', 'Tamanho',
+            'headers': ('Nível', 'Insumo', 'Descrição', 'Cor', 'Tamanho',
                         'Depósito', 'Descrição',
                         'Quant.', 'Unidade',
                         'Dt.Última Entrada', 'Dt.Última Saída',
                         'Dt.Inventário'),
-            'fields': ('NIVEL', 'REF', 'COR', 'TAM',
+            'fields': ('NIVEL', 'REF', 'DESCR', 'COR', 'TAM',
                        'DEPOSITO', 'DESCRICAO',
                        'QUANT', 'UNID',
                        'ULT_ENTRADA', 'ULT_SAIDA',
@@ -591,8 +592,9 @@ class Estoque(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             insumo = form.cleaned_data['insumo']
+            conta_estoque = form.cleaned_data['conta_estoque']
             cursor = connections['so'].cursor()
             context.update(
-                self.mount_context(cursor, insumo))
+                self.mount_context(cursor, insumo, conta_estoque))
         context['form'] = form
         return render(request, self.template_name, context)

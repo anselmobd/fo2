@@ -182,6 +182,11 @@ class EstoqueForm(forms.Form):
         max_length=5, min_length=5, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    conta_estoque = forms.ModelChoiceField(
+        label='Conta de estoque do insumo', required=False,
+        queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
+            'conta_estoque'), empty_label="(Todas)")
+
     def clean_insumo(self):
         insumo = self.cleaned_data['insumo'].upper()
         data = self.data.copy()
