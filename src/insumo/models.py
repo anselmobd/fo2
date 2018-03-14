@@ -497,9 +497,20 @@ def receber(cursor, insumo, conta_estoque, recebimento):
     filtro_recebimento = ''
     if recebimento == 'a':
         filtro_recebimento = """
-            AND CASE WHEN pc.COD_CANCELAMENTO = 0
-                THEN x.QTDE_SALDO_ITEM
-                ELSE 0 END > 0
+            AND (
+              CASE WHEN (
+                CASE WHEN pc.COD_CANCELAMENTO = 0
+                  THEN x.QTDE_SALDO_ITEM
+                  ELSE 0 END
+                / x.QTDE_PEDIDA_ITEM
+                ) <= 0.05
+              THEN 0
+              ELSE
+                CASE WHEN pc.COD_CANCELAMENTO = 0
+                  THEN x.QTDE_SALDO_ITEM
+                  ELSE 0 END
+              END
+            ) > 0
         """
 
     sql = """
@@ -517,14 +528,41 @@ def receber(cursor, insumo, conta_estoque, recebimento):
             (sum(x.QTDE_PEDIDA_ITEM) - sum(x.QTDE_SALDO_ITEM))
             / sum(x.QTDE_PEDIDA_ITEM) * 100
           , 1) P_RECEBIDO
-        , sum(GREATEST(CASE WHEN pc.COD_CANCELAMENTO = 0
-                            THEN x.QTDE_SALDO_ITEM
-                            ELSE 0 END, 0)) QTD_A_RECEBER
+          , sum(
+              GREATEST(
+                CASE WHEN '{recebimento}' = 'a' AND
+                  (
+                  CASE WHEN pc.COD_CANCELAMENTO = 0
+                    THEN x.QTDE_SALDO_ITEM
+                    ELSE 0 END
+                  / x.QTDE_PEDIDA_ITEM
+                  ) <= 0.05
+                THEN 0
+                ELSE
+                  CASE WHEN pc.COD_CANCELAMENTO = 0
+                    THEN x.QTDE_SALDO_ITEM
+                    ELSE 0 END
+                END
+              , 0)
+            ) QTD_A_RECEBER
         , ROUND(
-            sum(GREATEST(CASE WHEN pc.COD_CANCELAMENTO = 0
-                              THEN x.QTDE_SALDO_ITEM
-                              ELSE 0 END, 0))
-            / sum(x.QTDE_PEDIDA_ITEM) * 100
+            sum(
+              GREATEST(
+             '{recebimento}' = 'a' AND    CASE WHEN '{recebimento}' = 'a' AND
+                  (
+                  CASE WHEN pc.COD_CANCELAMENTO = 0
+                    THEN x.QTDE_SALDO_ITEM
+                    ELSE 0 END
+                  / x.QTDE_PEDIDA_ITEM
+                  ) <= 0.05
+                THEN 0
+                ELSE
+                  CASE WHEN pc.COD_CANCELAMENTO = 0
+                    THEN x.QTDE_SALDO_ITEM
+                    ELSE 0 END
+                END
+              , 0)
+            ) / sum(x.QTDE_PEDIDA_ITEM) * 100
           , 1) P_A_RECEBER
         , REPLACE(
             REGEXP_REPLACE(
@@ -561,6 +599,7 @@ def receber(cursor, insumo, conta_estoque, recebimento):
         , x.ITEM_100_ITEM
         , x.DATA_PREV_ENTR
     """.format(
+        recebimento=recebimento,
         filtro_insumo=filtro_insumo,
         filtro_conta_estoque=filtro_conta_estoque,
         filtro_recebimento=filtro_recebimento)
