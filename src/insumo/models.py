@@ -548,7 +548,7 @@ def receber(cursor, insumo, conta_estoque, recebimento):
         , ROUND(
             sum(
               GREATEST(
-             '{recebimento}' = 'a' AND    CASE WHEN '{recebimento}' = 'a' AND
+                CASE WHEN '{recebimento}' = 'a' AND
                   (
                   CASE WHEN pc.COD_CANCELAMENTO = 0
                     THEN x.QTDE_SALDO_ITEM
