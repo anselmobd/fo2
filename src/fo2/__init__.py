@@ -11,6 +11,7 @@ __version__date__ = '13/03/2018'
 #   . Necessidade: Adicionado filtros de periodo de corte e
 #                  de periodo de compra
 #   . Insumo: Tela de A Receber
+#   . Insumo: Tela de Estoque
 #
 # - 0.1.61 - 2018/03/12
 #   . Ajustes nas páginas do RH
