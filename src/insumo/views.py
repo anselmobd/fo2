@@ -598,3 +598,87 @@ class Estoque(View):
                 self.mount_context(cursor, insumo, conta_estoque))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class Mapa(View):
+    Form_class = EstoqueForm
+    template_name = 'insumo/mapa.html'
+    title_name = 'Mapa de compras'
+
+    def mount_context(self, cursor, insumo, conta_estoque):
+        context = {}
+        if not (insumo or conta_estoque):
+            context.update({
+                'msg_erro': 'Especifique ao menos um filtro',
+            })
+            return context
+        context.update({
+            'insumo': insumo,
+            'conta_estoque': conta_estoque,
+        })
+
+        data = models.estoque(cursor, insumo, conta_estoque)
+
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhum estoque de insumos encontrado',
+            })
+            return context
+
+        group = ['NIVEL', 'REF', 'DESCR', 'COR', 'TAM']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['QUANT'],
+            'count': [],
+            'descr': {'DESCRICAO': 'Total:'}
+        })
+        group_rowspan(data, group)
+
+        for row in data:
+            # row['QUANT|STYLE'] = 'text-align: right;'
+            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            if row['ULT_ENTRADA']:
+                row['ULT_ENTRADA'] = row['ULT_ENTRADA'].date()
+            else:
+                row['ULT_ENTRADA'] = ''
+            if row['ULT_SAIDA']:
+                row['ULT_SAIDA'] = row['ULT_SAIDA'].date()
+            else:
+                row['ULT_SAIDA'] = ''
+
+        context.update({
+            'headers': ('Nível', 'Insumo', 'Descrição', 'Cor', 'Tamanho',
+                        'Depósito', 'Descrição',
+                        'Quant.', 'Unidade',
+                        'Dt.Última Entrada', 'Dt.Última Saída',
+                        'Dt.Inventário'),
+            'fields': ('NIVEL', 'REF', 'DESCR', 'COR', 'TAM',
+                       'DEPOSITO', 'DESCRICAO',
+                       'QUANT', 'UNID',
+                       'ULT_ENTRADA', 'ULT_SAIDA',
+                       'DT_INVENTARIO'),
+            'style': {'QUANT': 'text-align: right;',
+                      'Quant.': 'text-align: right;'},
+            'group': group,
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            insumo = form.cleaned_data['insumo']
+            conta_estoque = form.cleaned_data['conta_estoque']
+            cursor = connections['so'].cursor()
+            context.update(
+                self.mount_context(cursor, insumo, conta_estoque))
+        context['form'] = form
+        return render(request, self.template_name, context)
