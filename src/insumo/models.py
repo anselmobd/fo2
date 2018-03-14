@@ -497,10 +497,11 @@ def receber(cursor, insumo, conta_estoque, recebimento):
     filtro_recebimento = ''
     if recebimento == 'a':
         filtro_recebimento = """
-            AND x.QTDE_SALDO_ITEM > 0
+            AND CASE WHEN pc.COD_CANCELAMENTO = 0
+                THEN x.QTDE_SALDO_ITEM
+                ELSE 0 END > 0
         """
 
-    # lista insumos
     sql = """
         SELECT
           x.ITEM_100_NIVEL99 NIVEL
@@ -516,9 +517,13 @@ def receber(cursor, insumo, conta_estoque, recebimento):
             (sum(x.QTDE_PEDIDA_ITEM) - sum(x.QTDE_SALDO_ITEM))
             / sum(x.QTDE_PEDIDA_ITEM) * 100
           , 1) P_RECEBIDO
-        , sum(GREATEST(x.QTDE_SALDO_ITEM, 0)) QTD_A_RECEBER
+        , sum(GREATEST(CASE WHEN pc.COD_CANCELAMENTO = 0
+                            THEN x.QTDE_SALDO_ITEM
+                            ELSE 0 END, 0)) QTD_A_RECEBER
         , ROUND(
-            sum(GREATEST(x.QTDE_SALDO_ITEM, 0))
+            sum(GREATEST(CASE WHEN pc.COD_CANCELAMENTO = 0
+                              THEN x.QTDE_SALDO_ITEM
+                              ELSE 0 END, 0))
             / sum(x.QTDE_PEDIDA_ITEM) * 100
           , 1) P_A_RECEBER
         , REPLACE(
@@ -533,6 +538,8 @@ def receber(cursor, insumo, conta_estoque, recebimento):
           )
           AS PEDIDOS
         FROM SUPR_100 x -- item de pedido de compra
+        JOIN SUPR_090 pc -- pedido de compra
+          ON pc.PEDIDO_COMPRA = x.NUM_PED_COMPRA
         JOIN basi_030 r -- referencia
           ON r.NIVEL_ESTRUTURA = x.ITEM_100_NIVEL99
          AND r.REFERENCIA = x.ITEM_100_GRUPO
@@ -561,18 +568,24 @@ def receber(cursor, insumo, conta_estoque, recebimento):
     return rows_to_dict_list(cursor)
 
 
-def estoque(cursor, insumo):
+def estoque(cursor, insumo, conta_estoque):
     filtro_insumo = ''
     if insumo:
         filtro_insumo = \
             "AND e.CDITEM_GRUPO = '{insumo}'".format(
                 insumo=insumo)
 
-    # lista insumos
+    filtro_conta_estoque = ''
+    if conta_estoque:
+        filtro_conta_estoque = \
+            "AND r.CONTA_ESTOQUE = '{conta_estoque}'".format(
+                conta_estoque=conta_estoque.conta_estoque)
+
     sql = """
         SELECT
           e.CDITEM_NIVEL99 NIVEL
         , e.CDITEM_GRUPO REF
+        , r.DESCR_REFERENCIA DESCR
         , e.CDITEM_SUBGRUPO TAM
         , e.CDITEM_ITEM COR
         , r.UNIDADE_MEDIDA UNID
@@ -591,6 +604,7 @@ def estoque(cursor, insumo):
           ON d.CODIGO_DEPOSITO = e.DEPOSITO
         WHERE 1=1
           {filtro_insumo} -- filtro_insumo
+          {filtro_conta_estoque} -- filtro_conta_estoque
         ORDER BY
           e.CDITEM_NIVEL99
         , e.CDITEM_GRUPO
@@ -598,6 +612,7 @@ def estoque(cursor, insumo):
         , e.CDITEM_ITEM
         , e.DEPOSITO
     """.format(
-        filtro_insumo=filtro_insumo)
+        filtro_insumo=filtro_insumo,
+        filtro_conta_estoque=filtro_conta_estoque)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
