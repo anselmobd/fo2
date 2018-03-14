@@ -557,3 +557,45 @@ def receber(cursor, insumo, conta_estoque, recebimento):
         filtro_recebimento=filtro_recebimento)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def estoque(cursor, insumo):
+    filtro_insumo = ''
+    if insumo:
+        filtro_insumo = \
+            "AND e.CDITEM_GRUPO = '{insumo}'".format(
+                insumo=insumo)
+
+    # lista insumos
+    sql = """
+        SELECT
+          e.CDITEM_NIVEL99 NIVEL
+        , e.CDITEM_GRUPO REF
+        , e.CDITEM_SUBGRUPO TAM
+        , e.CDITEM_ITEM COR
+        , r.UNIDADE_MEDIDA UNID
+        , e.DEPOSITO
+        , d.DESCRICAO
+        , e.QTDE_ESTOQUE_ATU QUANT
+        , e.DATA_ULT_ENTRADA ULT_ENTRADA
+        , e.DATA_ULT_SAIDA ULT_SAIDA
+        , e.DT_INVENTARIO
+        --, e.*
+        FROM ESTQ_040 e -- estoque por depósito
+        JOIN basi_030 r -- referencia
+          ON r.NIVEL_ESTRUTURA = e.CDITEM_NIVEL99
+         AND r.REFERENCIA = e.CDITEM_GRUPO
+        JOIN BASI_205 d -- cadastro de depósitos
+          ON d.CODIGO_DEPOSITO = e.DEPOSITO
+        WHERE 1=1
+          {filtro_insumo} -- filtro_insumo
+        ORDER BY
+          e.CDITEM_NIVEL99
+        , e.CDITEM_GRUPO
+        , e.CDITEM_SUBGRUPO
+        , e.CDITEM_ITEM
+        , e.DEPOSITO
+    """.format(
+        filtro_insumo=filtro_insumo)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)

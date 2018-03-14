@@ -174,3 +174,17 @@ class ReceberForm(forms.Form):
         data['insumo'] = insumo
         self.data = data
         return insumo
+
+
+class EstoqueForm(forms.Form):
+    insumo = forms.CharField(
+        label='Referência do insumo',
+        max_length=5, min_length=5, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_insumo(self):
+        insumo = self.cleaned_data['insumo'].upper()
+        data = self.data.copy()
+        data['insumo'] = insumo
+        self.data = data
+        return insumo
