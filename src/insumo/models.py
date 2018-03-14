@@ -505,6 +505,7 @@ def receber(cursor, insumo, conta_estoque, recebimento):
         SELECT
           x.ITEM_100_NIVEL99 NIVEL
         , x.ITEM_100_GRUPO REF
+        , r.DESCR_REFERENCIA DESCR
         , x.ITEM_100_SUBGRUPO TAM
         , x.ITEM_100_ITEM COR
         , x.DATA_PREV_ENTR DT_ENTREGA
@@ -542,6 +543,7 @@ def receber(cursor, insumo, conta_estoque, recebimento):
         GROUP BY
           x.ITEM_100_NIVEL99
         , x.ITEM_100_GRUPO
+        , r.DESCR_REFERENCIA
         , x.ITEM_100_SUBGRUPO
         , x.ITEM_100_ITEM
         , x.DATA_PREV_ENTR
