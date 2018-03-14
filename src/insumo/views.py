@@ -472,7 +472,7 @@ class Receber(View):
             row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
             row['DT_ENTREGA'] = row['DT_ENTREGA'].date()
 
-        group = ['NIVEL', 'REF', 'COR', 'TAM']
+        group = ['NIVEL', 'REF', 'DESCR', 'COR', 'TAM']
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD_PEDIDA', 'QTD_RECEBIDA', 'QTD_A_RECEBER'],
@@ -482,10 +482,12 @@ class Receber(View):
         group_rowspan(data, group)
 
         context.update({
-            'headers': ('Nível', 'Insumo', 'Cor', 'Tamanho', 'Dt. Entrega',
+            'headers': ('Nível', 'Insumo', 'Descrição', 'Cor',
+                        'Tamanho', 'Dt. Entrega',
                         'Qtd.Pedida', 'Qtd.Recebida', '%Recebido',
                         'Qtd.A receber', '%A receber', 'Pedidos'),
-            'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'DT_ENTREGA',
+            'fields': ('NIVEL', 'REF', 'DESCR', 'COR',
+                       'TAM', 'DT_ENTREGA',
                        'QTD_PEDIDA', 'QTD_RECEBIDA', 'P_RECEBIDO',
                        'QTD_A_RECEBER', 'P_A_RECEBER', 'PEDIDOS'),
             'group': group,
