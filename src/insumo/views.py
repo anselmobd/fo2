@@ -565,7 +565,7 @@ class Estoque(View):
         context.update({
             'headers': ('Nível', 'Insumo', 'Descrição', 'Cor', 'Tamanho',
                         'Depósito', 'Descrição',
-                        'Quant.', 'Unidade',
+                        'Quant.', 'Unid.',
                         'Dt.Última Entrada', 'Dt.Última Saída',
                         'Dt.Inventário'),
             'fields': ('NIVEL', 'REF', 'DESCR', 'COR', 'TAM',
