@@ -14,8 +14,10 @@
             style="{{ row|get_item:field_style }}"
           {% endif %}
         {% endwith %}
-        {% if style|get_item:field %}
-          style="{{ style|get_item:field }}"
+        {% if style %}
+          {% if style|get_item:field %}
+            style="{{ style|get_item:field }}"
+          {% endif %}
         {% endif %}
         >
           {% if field in safe %}
@@ -32,8 +34,10 @@
           style="{{ row|get_item:field_style }}"
         {% endif %}
       {% endwith %}
-      {% if style|get_item:field %}
-        style="{{ style|get_item:field }}"
+      {% if style %}
+        {% if style|get_item:field %}
+          style="{{ style|get_item:field }}"
+        {% endif %}
       {% endif %}
       >
         {% if field in safe %}
