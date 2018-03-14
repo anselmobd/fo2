@@ -18,7 +18,8 @@ from utils.forms import FiltroForm
 from utils.views import totalize_grouped_data
 
 import insumo.models as models
-from .forms import RefForm, RolosBipadosForm, NecessidadeForm, ReceberForm
+from .forms import RefForm, RolosBipadosForm, NecessidadeForm, ReceberForm, \
+                   EstoqueForm
 
 
 def index(request):
@@ -463,7 +464,7 @@ class Receber(View):
 
         if len(data) == 0:
             context.update({
-                'msg_erro': 'Nenhuma necessidade de insumos encontrada',
+                'msg_erro': 'Nenhum pedido de insumos encontrado',
             })
             return context
 
@@ -509,5 +510,87 @@ class Receber(View):
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context(cursor, insumo, conta_estoque, recebimento))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class Estoque(View):
+    Form_class = EstoqueForm
+    template_name = 'insumo/estoque.html'
+    title_name = 'Estoque'
+
+    def mount_context(self, cursor, insumo):
+        context = {}
+        if not (insumo):
+            context.update({
+                'msg_erro': 'Especifique um insumo',
+            })
+            return context
+        context.update({
+            'insumo': insumo,
+        })
+
+        data = models.estoque(cursor, insumo)
+
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhum estoque de insumos encontrado',
+            })
+            return context
+
+        group = ['NIVEL', 'REF', 'COR', 'TAM']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['QUANT'],
+            'count': [],
+            'descr': {'DESCRICAO': 'Total:'}
+        })
+        group_rowspan(data, group)
+
+        for row in data:
+            # row['QUANT|STYLE'] = 'text-align: right;'
+            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            if row['ULT_ENTRADA']:
+                row['ULT_ENTRADA'] = row['ULT_ENTRADA'].date()
+            else:
+                row['ULT_ENTRADA'] = ''
+            if row['ULT_SAIDA']:
+                row['ULT_SAIDA'] = row['ULT_SAIDA'].date()
+            else:
+                row['ULT_SAIDA'] = ''
+
+        context.update({
+            'headers': ('Nível', 'Insumo', 'Cor', 'Tamanho',
+                        'Depósito', 'Descrição',
+                        'Quant.', 'Unidade',
+                        'Dt.Última Entrada', 'Dt.Última Saída',
+                        'Dt.Inventário'),
+            'fields': ('NIVEL', 'REF', 'COR', 'TAM',
+                       'DEPOSITO', 'DESCRICAO',
+                       'QUANT', 'UNID',
+                       'ULT_ENTRADA', 'ULT_SAIDA',
+                       'DT_INVENTARIO'),
+            'style': {'QUANT': 'text-align: right;',
+                      'Quant.': 'text-align: right;'},
+            'group': group,
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            insumo = form.cleaned_data['insumo']
+            cursor = connections['so'].cursor()
+            context.update(
+                self.mount_context(cursor, insumo))
         context['form'] = form
         return render(request, self.template_name, context)

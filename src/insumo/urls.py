@@ -26,4 +26,7 @@ urlpatterns = [
     url(r'^receber/$', views.Receber.as_view(),
         name='insumo_receber'),
 
+    url(r'^estoque/$', views.Estoque.as_view(),
+        name='insumo_estoque'),
+
 ]
