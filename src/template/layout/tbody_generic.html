@@ -8,17 +8,41 @@
   {% for field in fields %}
     {% if group and field in group %}
       {% if row|get_item:'rowspan' != 0 %}
-        <td rowspan="{{ row|get_item:'rowspan' }}">
+        <td rowspan="{{ row|get_item:'rowspan' }}"
+        {% with field|add:'|STYLE' as field_style %}
+          {% if row|get_item:field_style %}
+            style="{{ row|get_item:field_style }}"
+          {% endif %}
+        {% endwith %}
+        {% if style|get_item:field %}
+          style="{{ style|get_item:field }}"
+        {% endif %}
+        >
+          {% if field in safe %}
+            {{ row|get_item:field|safe }}
+          {% else %}
+            {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
+          {% endif %}
+        </td>
       {% endif %}
     {% else %}
-      <td>
+      <td
+      {% with field|add:'|STYLE' as field_style %}
+        {% if row|get_item:field_style %}
+          style="{{ row|get_item:field_style }}"
+        {% endif %}
+      {% endwith %}
+      {% if style|get_item:field %}
+        style="{{ style|get_item:field }}"
+      {% endif %}
+      >
+        {% if field in safe %}
+          {{ row|get_item:field|safe }}
+        {% else %}
+          {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
+        {% endif %}
+      </td>
     {% endif %}
-    {% if field in safe %}
-      {{ row|get_item:field|safe }}
-    {% else %}
-      {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
-    {% endif %}
-    </td>
   {% endfor %}
   </tr>
 {% endfor %}
