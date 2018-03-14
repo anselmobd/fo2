@@ -1,9 +1,13 @@
-__version__ = '0.1.62'
-__version__date__ = '13/03/2018'
+__version__ = '0.1.63'
+__version__date__ = '14/03/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.63 - 2018/03/14
+#   . Insumo: Tela de A Receber - melhorias
+#   . Insumo: Tela de Estoque - melhorias
 #
 # - 0.1.62 - 2018/03/13
 #   . POPs - Controle de usuário por permissões
