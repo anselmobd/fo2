@@ -449,11 +449,11 @@ class Receber(View):
 
     def mount_context(self, cursor, insumo, conta_estoque, recebimento):
         context = {}
-        if not (insumo or conta_estoque):
-            context.update({
-                'msg_erro': 'Especifique ao menos um filtro',
-            })
-            return context
+        # if not (insumo or conta_estoque):
+        #     context.update({
+        #         'msg_erro': 'Especifique ao menos um filtro',
+        #     })
+        #     return context
         context.update({
             'insumo': insumo,
             'conta_estoque': conta_estoque,
