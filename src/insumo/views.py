@@ -3,6 +3,7 @@ import re
 import time
 from pprint import pprint
 
+from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.db import connections
 from django.views import View
@@ -600,10 +601,10 @@ class Estoque(View):
         return render(request, self.template_name, context)
 
 
-class Mapa(View):
+class MapaRefs(View):
     Form_class = EstoqueForm
-    template_name = 'insumo/mapa.html'
-    title_name = 'Mapa de compras'
+    template_name = 'insumo/mapa_ref.html'
+    title_name = 'Referências para Mapa de compras'
 
     def mount_context(self, cursor, insumo, conta_estoque):
         context = {}
@@ -617,21 +618,26 @@ class Mapa(View):
             'conta_estoque': conta_estoque,
         })
 
-        data = models.mapa(cursor, insumo, conta_estoque)
+        data = models.mapa_refs(cursor, insumo, conta_estoque)
 
         if len(data) == 0:
             context.update({
-                'msg_erro': 'Nenhum estoque de insumos encontrado',
+                'msg_erro':
+                    'Nenhum insumo com necessidade de compra encontrado',
             })
             return context
-
         for row in data:
-            # row['QUANT|STYLE'] = 'text-align: right;'
-            row['NIVEL_REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            link = reverse(
+                'insumo_mapa',
+                args=[row['NIVEL'], row['REF'], row['COR'], row['TAM']])
+            row['REF|LINK'] = link
+            row['DESCR|LINK'] = link
+            row['COR|LINK'] = link
+            row['TAM|LINK'] = link
 
         context.update({
-            'headers': ['Insumo'],
-            'fields': ['NIVEL_REF'],
+            'headers': ['Nível', 'Insumo', 'Descrição', 'Cor', 'Tamanho'],
+            'fields': ['NIVEL', 'REF', 'DESCR', 'COR', 'TAM'],
             'data': data,
         })
 
@@ -653,4 +659,51 @@ class Mapa(View):
             context.update(
                 self.mount_context(cursor, insumo, conta_estoque))
         context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class Mapa(View):
+    template_name = 'insumo/mapa.html'
+    title_name = 'Mapa de compras'
+
+    def mount_context(self, cursor, nivel, ref, cor, tam):
+        context = {
+            'nivel': nivel,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+        }
+
+        data = models.mapa(cursor, nivel, ref, cor, tam)
+
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Item não encontrado',
+            })
+            return context
+
+        # for row in data:
+        #     link = reverse(
+        #         'insumo_mapa',
+        #         args=[row['NIVEL'], row['REF'], row['COR'], row['TAM']])
+        #     row['REF|LINK'] = link
+        #     row['DESCR|LINK'] = link
+        #     row['COR|LINK'] = link
+        #     row['TAM|LINK'] = link
+
+        context.update({
+            'headers': ['Nível', 'Insumo', 'Descrição', 'Cor', 'Tamanho'],
+            'fields': ['NIVEL', 'REF', 'DESCR', 'COR', 'TAM'],
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        context.update(
+            self.mount_context(
+                cursor, kwargs['nivel'], kwargs['ref'],
+                kwargs['cor'], kwargs['tam']))
         return render(request, self.template_name, context)
