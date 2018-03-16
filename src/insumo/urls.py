@@ -29,4 +29,7 @@ urlpatterns = [
     url(r'^estoque/$', views.Estoque.as_view(),
         name='insumo_estoque'),
 
+    url(r'^mapa/$', views.Mapa.as_view(),
+        name='insumo_mapa'),
+
 ]
