@@ -636,7 +636,7 @@ def estoque(cursor, insumo, conta_estoque):
     return rows_to_dict_list(cursor)
 
 
-def mapa(cursor, insumo, conta_estoque):
+def mapa_refs(cursor, insumo, conta_estoque):
     filtro_insumo = ''
     if insumo:
         filtro_insumo = \
@@ -651,8 +651,17 @@ def mapa(cursor, insumo, conta_estoque):
 
     sql = """
         SELECT
-          ia.NIVEL_COMP || '.' || ia.GRUPO_COMP NIVEL_REF
+          ia.NIVEL_COMP NIVEL
         , ia.GRUPO_COMP REF
+        , ins.DESCR_REFERENCIA DESCR
+        , CASE WHEN ia.ITEM_COMP = '000000'
+          THEN coc.ITEM_COMP
+          ELSE ia.ITEM_COMP
+          END COR
+        , CASE WHEN ia.SUB_COMP = '000'
+          THEN cot.SUB_COMP
+          ELSE ia.SUB_COMP
+          END TAM
         FROM BASI_030 ref -- referencia
         JOIN PCPC_020 op -- OP
           ON op.REFERENCIA_PECA = ref.REFERENCIA
@@ -676,6 +685,9 @@ def mapa(cursor, insumo, conta_estoque):
          AND cot.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
          AND cot.SEQUENCIA = ia.SEQUENCIA
          AND cot.SUB_ITEM = lote.PROCONF_SUBGRUPO
+        JOIN BASI_030 ins
+          ON ins.NIVEL_ESTRUTURA = ia.NIVEL_COMP
+         AND ins.REFERENCIA = ia.GRUPO_COMP
         WHERE op.SITUACAO IN (2, 4) -- não cancelada
           {filtro_insumo} -- filtro_insumo
           {filtro_conta_estoque} -- filtro_conta_estoque
@@ -684,11 +696,39 @@ def mapa(cursor, insumo, conta_estoque):
         GROUP BY
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
+        , ins.DESCR_REFERENCIA
+        , CASE WHEN ia.ITEM_COMP = '000000'
+          THEN coc.ITEM_COMP
+          ELSE ia.ITEM_COMP
+          END
+        , CASE WHEN ia.SUB_COMP = '000'
+          THEN cot.SUB_COMP
+          ELSE ia.SUB_COMP
+          END
         ORDER BY
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
+        , 3
+        , 4
     """.format(
         filtro_insumo=filtro_insumo,
         filtro_conta_estoque=filtro_conta_estoque)
     cursor.execute(sql)
+    return rows_to_dict_list(cursor)
+
+
+def mapa(cursor, nivel, ref, cor, tam):
+    sql = """
+        SELECT
+          i.NIVEL_ESTRUTURA NIVEL
+        , i.GRUPO_ESTRUTURA REF
+        , i.ITEM_ESTRUTURA COR
+        , i.SUBGRU_ESTRUTURA TAM
+        FROM BASI_010 i
+        WHERE i.NIVEL_ESTRUTURA = %s
+          AND i.GRUPO_ESTRUTURA = %s
+          AND i.ITEM_ESTRUTURA = %s
+          AND i.SUBGRU_ESTRUTURA = %s
+    """
+    cursor.execute(sql, [nivel, ref, cor, tam])
     return rows_to_dict_list(cursor)

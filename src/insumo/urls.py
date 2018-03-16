@@ -29,7 +29,10 @@ urlpatterns = [
     url(r'^estoque/$', views.Estoque.as_view(),
         name='insumo_estoque'),
 
-    url(r'^mapa/$', views.Mapa.as_view(),
-        name='insumo_mapa'),
+    url(r'^mapa_ref/$', views.MapaRefs.as_view(),
+        name='insumo_mapa_ref'),
+
+    url(r'^mapa/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/(?P<tam>.{1,3})/$',
+        views.Mapa.as_view(), name='insumo_mapa'),
 
 ]

@@ -10,9 +10,13 @@
 {% endblock %}
 
 {% block content %}
-<h1>Em desenvolvimento!</h1>
-{% if ref %}
-  <h3>Referência do insumo: {{ ref }}</h3>
+<form action="{% url 'insumo_mapa_ref' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if insumo %}
+  <h3>Referência do insumo: {{ insumo }}</h3>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
