@@ -634,3 +634,61 @@ def estoque(cursor, insumo, conta_estoque):
         filtro_conta_estoque=filtro_conta_estoque)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def mapa(cursor, insumo, conta_estoque):
+    filtro_insumo = ''
+    if insumo:
+        filtro_insumo = \
+            "AND ia.GRUPO_COMP = '{insumo}'".format(
+                insumo=insumo)
+
+    filtro_conta_estoque = ''
+    if conta_estoque:
+        filtro_conta_estoque = \
+            "AND ref.CONTA_ESTOQUE = '{conta_estoque}'".format(
+                conta_estoque=conta_estoque.conta_estoque)
+
+    sql = """
+        SELECT
+          ia.NIVEL_COMP || '.' || ia.GRUPO_COMP NIVEL_REF
+        , ia.GRUPO_COMP REF
+        FROM BASI_030 ref -- referencia
+        JOIN PCPC_020 op -- OP
+          ON op.REFERENCIA_PECA = ref.REFERENCIA
+        JOIN PCPC_040 lote -- lote
+          ON lote.ORDEM_PRODUCAO = op.ORDEM_PRODUCAO
+        JOIN BASI_050 ia -- insumos de alternativa
+          ON ia.NIVEL_ITEM = 1
+         AND ia.NIVEL_COMP <> 1
+         AND ia.GRUPO_ITEM = op.REFERENCIA_PECA
+         AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+         AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
+        LEFT JOIN BASI_040 coc -- combinação cor
+          ON ia.ITEM_COMP = '000000'
+         AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
+         AND coc.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+         AND coc.SEQUENCIA = ia.SEQUENCIA
+         AND coc.ITEM_ITEM = lote.PROCONF_ITEM
+        LEFT JOIN BASI_040 cot -- combinação tamanho
+          ON ia.SUB_COMP = '000'
+         AND cot.GRUPO_ITEM = ia.GRUPO_ITEM
+         AND cot.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+         AND cot.SEQUENCIA = ia.SEQUENCIA
+         AND cot.SUB_ITEM = lote.PROCONF_SUBGRUPO
+        WHERE op.SITUACAO IN (2, 4) -- não cancelada
+          {filtro_insumo} -- filtro_insumo
+          {filtro_conta_estoque} -- filtro_conta_estoque
+        --  AND op.DATA_ENTRADA_CORTE >= TO_DATE('16/03/2018','DD/MM/YYYY')
+        --  AND op.ORDEM_PRODUCAO > 5078
+        GROUP BY
+          ia.NIVEL_COMP
+        , ia.GRUPO_COMP
+        ORDER BY
+          ia.NIVEL_COMP
+        , ia.GRUPO_COMP
+    """.format(
+        filtro_insumo=filtro_insumo,
+        filtro_conta_estoque=filtro_conta_estoque)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
