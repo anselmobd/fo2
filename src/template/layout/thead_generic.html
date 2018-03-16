@@ -2,8 +2,10 @@
 <tr>
 {% for info in data %}
 <th
-{% if style|get_item:info %}
-  style="{{ style|get_item:info }}"
+{% if style %}
+  {% if style|get_item:info %}
+    style="{{ style|get_item:info }}"
+  {% endif %}
 {% endif %}
 >
 {{ info }}
