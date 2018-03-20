@@ -697,12 +697,20 @@ class Mapa(View):
 
         data_ind = models.insumo_necessidade_dia(cursor, nivel, ref, cor, tam)
 
+        max_digits = 0
+        for row in data_ind:
+            num_digits = str(row['QTD_INSUMO'])[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+
         for row in data_ind:
             row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
+            row['QTD_INSUMO|DECIMALS'] = max_digits
 
         context.update({
-            'headers_ind': ['Semana', 'Quantidade necessária'],
+            'headers_ind': ['Semana da necessidade', 'Quantidade necessária'],
             'fields_ind': ['SEMANA_NECESSIDADE', 'QTD_INSUMO'],
+            'style_ind': {'QTD_INSUMO': 'text-align: right;',
+                          'Quantidade necessária': 'text-align: right;'},
             'data_ind': data_ind,
         })
 
