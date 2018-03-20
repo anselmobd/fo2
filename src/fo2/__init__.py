@@ -1,9 +1,16 @@
-__version__ = '0.1.63'
-__version__date__ = '14/03/2018'
+__version__ = '0.1.65'
+__version__date__ = '20/03/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.65 - 2018/03/20
+#   . Intranet: Link para GS1
+#
+# - 0.1.64 - 2018/03/16
+#   . Insumo: Insumos para mapa de compras
+#   . Insumo: Iniciano Mmapa de compras
 #
 # - 0.1.63 - 2018/03/14
 #   . Insumo: Tela de A Receber - melhorias
