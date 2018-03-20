@@ -695,6 +695,17 @@ class Mapa(View):
             'data_id': data_id,
         })
 
+        data_ind = models.insumo_necessidade_dia(cursor, nivel, ref, cor, tam)
+
+        for row in data_ind:
+            row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
+
+        context.update({
+            'headers_ind': ['Semana', 'Quantidade necessária'],
+            'fields_ind': ['SEMANA_NECESSIDADE', 'QTD_INSUMO'],
+            'data_ind': data_ind,
+        })
+
         return context
 
     def get(self, request, *args, **kwargs):
