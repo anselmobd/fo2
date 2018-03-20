@@ -646,7 +646,7 @@ def mapa_refs(cursor, insumo, conta_estoque):
     filtro_conta_estoque = ''
     if conta_estoque:
         filtro_conta_estoque = \
-            "AND ref.CONTA_ESTOQUE = '{conta_estoque}'".format(
+            "AND ins.CONTA_ESTOQUE = {conta_estoque}".format(
                 conta_estoque=conta_estoque.conta_estoque)
 
     sql = """
