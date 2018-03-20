@@ -20,4 +20,10 @@
     {% include "layout/tbody_generic.html" with fields=fields_id data=data_id only %}
   </table>
 {% endif %}
+{% if data_ind %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers_ind only %}
+    {% include "layout/tbody_generic.html" with fields=fields_ind data=data_ind only %}
+  </table>
+{% endif %}
 {% endblock %}
