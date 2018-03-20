@@ -654,14 +654,10 @@ def mapa_refs(cursor, insumo, conta_estoque):
           ia.NIVEL_COMP NIVEL
         , ia.GRUPO_COMP REF
         , ins.DESCR_REFERENCIA DESCR
-        , CASE WHEN ia.ITEM_COMP = '000000'
-          THEN coc.ITEM_COMP
-          ELSE ia.ITEM_COMP
-          END COR
-        , CASE WHEN ia.SUB_COMP = '000'
-          THEN cot.SUB_COMP
-          ELSE ia.SUB_COMP
-          END TAM
+        , ic.ITEM_ESTRUTURA COR
+        , ic.DESCRICAO_15 DESCR_COR
+        , it.TAMANHO_REF TAM
+        , it.DESCR_TAM_REFER DESCR_TAM
         FROM BASI_030 ref -- referencia
         JOIN PCPC_020 op -- OP
           ON op.REFERENCIA_PECA = ref.REFERENCIA
@@ -673,21 +669,38 @@ def mapa_refs(cursor, insumo, conta_estoque):
          AND ia.GRUPO_ITEM = op.REFERENCIA_PECA
          AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
          AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
-        LEFT JOIN BASI_040 coc -- combinação cor
-          ON ia.ITEM_COMP = '000000'
-         AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
-         AND coc.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
-         AND coc.SEQUENCIA = ia.SEQUENCIA
-         AND coc.ITEM_ITEM = lote.PROCONF_ITEM
+        JOIN BASI_030 ins -- insumo referencia
+          ON ins.NIVEL_ESTRUTURA = ia.NIVEL_COMP
+         AND ins.REFERENCIA = ia.GRUPO_COMP
         LEFT JOIN BASI_040 cot -- combinação tamanho
           ON ia.SUB_COMP = '000'
          AND cot.GRUPO_ITEM = ia.GRUPO_ITEM
          AND cot.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
          AND cot.SEQUENCIA = ia.SEQUENCIA
          AND cot.SUB_ITEM = lote.PROCONF_SUBGRUPO
-        JOIN BASI_030 ins
-          ON ins.NIVEL_ESTRUTURA = ia.NIVEL_COMP
-         AND ins.REFERENCIA = ia.GRUPO_COMP
+        JOIN BASI_020 it -- insumo tamanho
+          ON it.BASI030_NIVEL030 = ia.NIVEL_COMP
+         AND it.BASI030_REFERENC = ia.GRUPO_COMP
+         AND it.TAMANHO_REF
+            = CASE WHEN ia.SUB_COMP = '000'
+              THEN cot.SUB_COMP
+              ELSE ia.SUB_COMP
+              END
+        LEFT JOIN BASI_040 coc -- combinação cor
+          ON ia.ITEM_COMP = '000000'
+         AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
+         AND coc.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+         AND coc.SEQUENCIA = ia.SEQUENCIA
+         AND coc.ITEM_ITEM = lote.PROCONF_ITEM
+        JOIN BASI_010 ic -- insumo cor
+          ON ic.NIVEL_ESTRUTURA = ia.NIVEL_COMP
+         AND ic.GRUPO_ESTRUTURA = ia.GRUPO_COMP
+         AND ic.SUBGRU_ESTRUTURA = it.TAMANHO_REF
+         AND ic.ITEM_ESTRUTURA
+            = CASE WHEN ia.ITEM_COMP = '000000'
+              THEN coc.ITEM_COMP
+              ELSE ia.ITEM_COMP
+              END
         WHERE op.SITUACAO IN (2, 4) -- não cancelada
           {filtro_insumo} -- filtro_insumo
           {filtro_conta_estoque} -- filtro_conta_estoque
@@ -697,19 +710,15 @@ def mapa_refs(cursor, insumo, conta_estoque):
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
         , ins.DESCR_REFERENCIA
-        , CASE WHEN ia.ITEM_COMP = '000000'
-          THEN coc.ITEM_COMP
-          ELSE ia.ITEM_COMP
-          END
-        , CASE WHEN ia.SUB_COMP = '000'
-          THEN cot.SUB_COMP
-          ELSE ia.SUB_COMP
-          END
+        , ic.ITEM_ESTRUTURA
+        , ic.DESCRICAO_15
+        , it.TAMANHO_REF
+        , it.DESCR_TAM_REFER
         ORDER BY
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
-        , 3
-        , 4
+        , ic.ITEM_ESTRUTURA
+        , it.TAMANHO_REF
     """.format(
         filtro_insumo=filtro_insumo,
         filtro_conta_estoque=filtro_conta_estoque)

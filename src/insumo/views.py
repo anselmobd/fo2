@@ -631,13 +631,18 @@ class MapaRefs(View):
                 'insumo_mapa',
                 args=[row['NIVEL'], row['REF'], row['COR'], row['TAM']])
             row['REF|LINK'] = link
-            row['DESCR|LINK'] = link
             row['COR|LINK'] = link
             row['TAM|LINK'] = link
+            row['REF|TARGET'] = '_blank'
+            row['COR|TARGET'] = '_blank'
+            row['TAM|TARGET'] = '_blank'
+            row['REF'] = row['REF'] + ' - ' + row['DESCR']
+            row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
+            row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
 
         context.update({
-            'headers': ['Nível', 'Insumo', 'Descrição', 'Cor', 'Tamanho'],
-            'fields': ['NIVEL', 'REF', 'DESCR', 'COR', 'TAM'],
+            'headers': ['Nível', 'Insumo', 'Cor', 'Tamanho'],
+            'fields': ['NIVEL', 'REF', 'COR', 'TAM'],
             'data': data,
         })
 
