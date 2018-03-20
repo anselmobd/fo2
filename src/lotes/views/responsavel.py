@@ -54,7 +54,8 @@ def responsCustom(request, todos):
                       AND u.CODIGO_USUARIO <> 99001 -- Anselmo
                       AND ( e.CODIGO_ESTAGIO < 7 OR
                             u.USUARIO not in ( 'ROSANGELA_PCP'
-                                             , 'ALESSANDRA_PCP' )
+                                             , 'ALESSANDRA_PCP'
+                                             , 'ADRIANA_PCP' )
                           )
                 """
             sql = sql + """
