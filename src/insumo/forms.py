@@ -198,7 +198,7 @@ class EstoqueForm(forms.Form):
 class MapaRefsForm(forms.Form):
     insumo = forms.CharField(
         label='Referência do insumo',
-        help_text='(código inteiro ou parcial])',
+        help_text='(código inteiro ou parcial)',
         max_length=5, min_length=2, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
@@ -207,10 +207,11 @@ class MapaRefsForm(forms.Form):
         queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
             'conta_estoque'), empty_label="(Todas)")
 
-    CHOICES = [('a', 'Apenas insumos com necessidades a partir de hoje'),
+    CHOICES = [('a', 'Apenas insumos com necessidades a partir desta semana'),
                ('t', 'Todos os insumos')]
     necessidade = forms.ChoiceField(
         label='Necessidades',
+        help_text='(data de necessidade = data do corte - 7 dias)',
         choices=CHOICES, initial='a', widget=forms.RadioSelect())
 
     def clean_insumo(self):
