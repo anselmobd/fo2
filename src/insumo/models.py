@@ -650,8 +650,10 @@ def mapa_refs(cursor, insumo, conta_estoque, necessidade):
 
     filtro_necessidade = ''
     if necessidade == 'a':
+        # TO_DATE('20/03/2018','DD/MM/YYYY')
         filtro_necessidade = \
-            "AND op.DATA_ENTRADA_CORTE >= TO_DATE('20/03/2018','DD/MM/YYYY')"
+            "AND TRUNC(op.DATA_ENTRADA_CORTE - 7, 'iw') " \
+            "    >= TRUNC(sysdate, 'iw')"
 
     filtro_conta_estoque = ''
     if conta_estoque:
