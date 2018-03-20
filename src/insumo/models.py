@@ -636,12 +636,22 @@ def estoque(cursor, insumo, conta_estoque):
     return rows_to_dict_list(cursor)
 
 
-def mapa_refs(cursor, insumo, conta_estoque):
+def mapa_refs(cursor, insumo, conta_estoque, necessidade):
     filtro_insumo = ''
     if insumo:
-        filtro_insumo = \
-            "AND ia.GRUPO_COMP = '{insumo}'".format(
-                insumo=insumo)
+        if len(insumo) == 5:
+            filtro_insumo = \
+                "AND ia.GRUPO_COMP = '{insumo}'".format(
+                    insumo=insumo)
+        else:
+            filtro_insumo = \
+                "AND ia.GRUPO_COMP LIKE '%{insumo}%'".format(
+                    insumo=insumo)
+
+    filtro_necessidade = ''
+    if necessidade == 'a':
+        filtro_necessidade = \
+            "AND op.DATA_ENTRADA_CORTE >= TO_DATE('20/03/2018','DD/MM/YYYY')"
 
     filtro_conta_estoque = ''
     if conta_estoque:
@@ -704,6 +714,7 @@ def mapa_refs(cursor, insumo, conta_estoque):
         WHERE op.SITUACAO IN (2, 4) -- não cancelada
           {filtro_insumo} -- filtro_insumo
           {filtro_conta_estoque} -- filtro_conta_estoque
+          {filtro_necessidade} -- filtro_necessidade
         --  AND op.DATA_ENTRADA_CORTE >= TO_DATE('16/03/2018','DD/MM/YYYY')
         --  AND op.ORDEM_PRODUCAO > 5078
         GROUP BY
@@ -721,7 +732,8 @@ def mapa_refs(cursor, insumo, conta_estoque):
         , it.TAMANHO_REF
     """.format(
         filtro_insumo=filtro_insumo,
-        filtro_conta_estoque=filtro_conta_estoque)
+        filtro_conta_estoque=filtro_conta_estoque,
+        filtro_necessidade=filtro_necessidade)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
