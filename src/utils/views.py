@@ -1,3 +1,5 @@
+import re
+
 from django.template.defaulttags import register
 
 from utils.classes import GitVersion
@@ -16,6 +18,25 @@ def git_ver():
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+def transp_decimals(text):
+    separa_zeros = re.compile("^(.*\,[^0]*)(0*)$")
+    reg = separa_zeros.search(text)
+    if reg:
+        zeros = reg.group(2)
+        if zeros:
+            inicio = reg.group(1)
+            if inicio[-1] == ',':
+                inicio = inicio[:-1]
+                zeros = ','+zeros
+            return ''.join([
+                inicio,
+                '<span style="opacity: 0;">',
+                zeros,
+                '</span>'])
+    return text
 
 
 @register.filter
