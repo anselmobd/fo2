@@ -738,18 +738,32 @@ def mapa_refs(cursor, insumo, conta_estoque, necessidade):
     return rows_to_dict_list(cursor)
 
 
-def mapa(cursor, nivel, ref, cor, tam):
+def insumo_descr(cursor, nivel, ref, cor, tam):
     sql = """
         SELECT
           i.NIVEL_ESTRUTURA NIVEL
-        , i.GRUPO_ESTRUTURA REF
-        , i.ITEM_ESTRUTURA COR
-        , i.SUBGRU_ESTRUTURA TAM
-        FROM BASI_010 i
-        WHERE i.NIVEL_ESTRUTURA = %s
-          AND i.GRUPO_ESTRUTURA = %s
-          AND i.ITEM_ESTRUTURA = %s
-          AND i.SUBGRU_ESTRUTURA = %s
-    """
-    cursor.execute(sql, [nivel, ref, cor, tam])
+        , i.REFERENCIA REF
+        , i.DESCR_REFERENCIA DESCR
+        , ic.ITEM_ESTRUTURA COR
+        , ic.DESCRICAO_15 DESCR_COR
+        , it.TAMANHO_REF TAM
+        , it.DESCR_TAM_REFER DESCR_TAM
+        FROM BASI_030 i -- insumo
+        JOIN BASI_020 it -- insumo tamanho
+          ON it.BASI030_NIVEL030 = i.NIVEL_ESTRUTURA
+         AND it.BASI030_REFERENC = i.REFERENCIA
+         AND it.TAMANHO_REF = '{tam}'
+        JOIN BASI_010 ic -- insumo cor
+          ON ic.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
+         AND ic.GRUPO_ESTRUTURA = i.REFERENCIA
+         AND ic.SUBGRU_ESTRUTURA = it.TAMANHO_REF
+         AND ic.ITEM_ESTRUTURA = '{cor}'
+        WHERE i.NIVEL_ESTRUTURA = {nivel}
+          AND i.REFERENCIA = '{ref}'
+    """.format(
+        nivel=nivel,
+        ref=ref,
+        cor=cor,
+        tam=tam)
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
