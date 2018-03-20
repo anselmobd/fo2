@@ -10,17 +10,14 @@
 {% endblock %}
 
 {% block content %}
-<h1>Em desenvolvimento!</h1>
-{% if ref %}
-  <h3>Referência do insumo: {{ ref }}</h3>
-{% endif %}
+<h1 style="color: brown;">Em desenvolvimento!</h1>
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
-{% if data %}
+{% if data_id %}
   <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
+    {% include "layout/thead_generic.html" with data=headers_id only %}
+    {% include "layout/tbody_generic.html" with fields=fields_id data=data_id only %}
   </table>
 {% endif %}
 {% endblock %}

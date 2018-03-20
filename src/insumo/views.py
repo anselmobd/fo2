@@ -674,34 +674,25 @@ class Mapa(View):
     title_name = 'Mapa de compras'
 
     def mount_context(self, cursor, nivel, ref, cor, tam):
-        context = {
-            'nivel': nivel,
-            'ref': ref,
-            'cor': cor,
-            'tam': tam,
-        }
+        context = {}
 
-        data = models.mapa(cursor, nivel, ref, cor, tam)
+        data_id = models.insumo_descr(cursor, nivel, ref, cor, tam)
 
-        if len(data) == 0:
+        if len(data_id) == 0:
             context.update({
                 'msg_erro': 'Item não encontrado',
             })
             return context
 
-        # for row in data:
-        #     link = reverse(
-        #         'insumo_mapa',
-        #         args=[row['NIVEL'], row['REF'], row['COR'], row['TAM']])
-        #     row['REF|LINK'] = link
-        #     row['DESCR|LINK'] = link
-        #     row['COR|LINK'] = link
-        #     row['TAM|LINK'] = link
+        for row in data_id:
+            row['REF'] = row['REF'] + ' - ' + row['DESCR']
+            row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
+            row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
 
         context.update({
-            'headers': ['Nível', 'Insumo', 'Descrição', 'Cor', 'Tamanho'],
-            'fields': ['NIVEL', 'REF', 'DESCR', 'COR', 'TAM'],
-            'data': data,
+            'headers_id': ['Nível', 'Insumo', 'Cor', 'Tamanho'],
+            'fields_id': ['NIVEL', 'REF', 'COR', 'TAM'],
+            'data_id': data_id,
         })
 
         return context
