@@ -604,7 +604,7 @@ class Estoque(View):
 class MapaRefs(View):
     Form_class = EstoqueForm
     template_name = 'insumo/mapa_ref.html'
-    title_name = 'Insumos para Mapa de compras'
+    title_name = 'Insumos para mapa de compras'
 
     def mount_context(self, cursor, insumo, conta_estoque):
         context = {}
