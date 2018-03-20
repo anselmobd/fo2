@@ -23,7 +23,7 @@
     {% with field|add:'|DECIMALS' as field_decimails %}
       {% with row|get_item:field_decimails as decimails %}
         {% if decimails %}
-          {{ row|get_item:field|floatformat:decimails }}
+          {{ row|get_item:field|floatformat:decimails|transp_decimals|safe }}
         {% else %}
           {{ row|get_item:field }}
         {% endif %}
