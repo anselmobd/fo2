@@ -193,3 +193,28 @@ class EstoqueForm(forms.Form):
         data['insumo'] = insumo
         self.data = data
         return insumo
+
+
+class MapaRefsForm(forms.Form):
+    insumo = forms.CharField(
+        label='Referência do insumo',
+        max_length=5, min_length=2, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    conta_estoque = forms.ModelChoiceField(
+        label='Conta de estoque do insumo', required=False,
+        queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
+            'conta_estoque'), empty_label="(Todas)")
+
+    CHOICES = [('a', 'Apenas insumos com necessidades a partir de hoje'),
+               ('t', 'Todos os insumos')]
+    necessidade = forms.ChoiceField(
+        label='Necessidades',
+        choices=CHOICES, initial='a', widget=forms.RadioSelect())
+
+    def clean_insumo(self):
+        insumo = self.cleaned_data['insumo'].upper()
+        data = self.data.copy()
+        data['insumo'] = insumo
+        self.data = data
+        return insumo

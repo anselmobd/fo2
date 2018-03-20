@@ -20,7 +20,7 @@ from utils.views import totalize_grouped_data
 
 import insumo.models as models
 from .forms import RefForm, RolosBipadosForm, NecessidadeForm, ReceberForm, \
-                   EstoqueForm
+                   EstoqueForm, MapaRefsForm
 
 
 def index(request):
@@ -602,11 +602,11 @@ class Estoque(View):
 
 
 class MapaRefs(View):
-    Form_class = EstoqueForm
+    Form_class = MapaRefsForm
     template_name = 'insumo/mapa_ref.html'
     title_name = 'Insumos para mapa de compras'
 
-    def mount_context(self, cursor, insumo, conta_estoque):
+    def mount_context(self, cursor, insumo, conta_estoque, necessidade):
         context = {}
         # if not (insumo or conta_estoque):
         #     context.update({
@@ -616,14 +616,15 @@ class MapaRefs(View):
         context.update({
             'insumo': insumo,
             'conta_estoque': conta_estoque,
+            'necessidade': necessidade,
         })
 
-        data = models.mapa_refs(cursor, insumo, conta_estoque)
+        data = models.mapa_refs(cursor, insumo, conta_estoque, necessidade)
 
         if len(data) == 0:
             context.update({
                 'msg_erro':
-                    'Nenhum insumo com necessidade de compra encontrado',
+                    'Nenhum insumo selecionado',
             })
             return context
         for row in data:
@@ -660,9 +661,10 @@ class MapaRefs(View):
         if form.is_valid():
             insumo = form.cleaned_data['insumo']
             conta_estoque = form.cleaned_data['conta_estoque']
+            necessidade = form.cleaned_data['necessidade']
             cursor = connections['so'].cursor()
             context.update(
-                self.mount_context(cursor, insumo, conta_estoque))
+                self.mount_context(cursor, insumo, conta_estoque, necessidade))
         context['form'] = form
         return render(request, self.template_name, context)
 
