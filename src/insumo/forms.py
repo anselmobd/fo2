@@ -198,6 +198,7 @@ class EstoqueForm(forms.Form):
 class MapaRefsForm(forms.Form):
     insumo = forms.CharField(
         label='Referência do insumo',
+        help_text='(código inteiro ou parcial])',
         max_length=5, min_length=2, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
