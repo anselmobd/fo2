@@ -2,6 +2,7 @@ import os
 import re
 import time
 from pprint import pprint
+import datetime
 
 from django.urls import reverse
 from django.shortcuts import render, redirect
@@ -17,6 +18,7 @@ from fo2.template import group_rowspan
 from geral.models import Dispositivos, RoloBipado
 from utils.forms import FiltroForm
 from utils.views import totalize_grouped_data
+from utils.functions import segunda, max_not_None, min_not_None
 
 import insumo.models as models
 from .forms import RefForm, RolosBipadosForm, NecessidadeForm, ReceberForm, \
@@ -48,7 +50,7 @@ class Ref(View):
                 nivel = row['NIVEL']
                 ref = item
         else:
-            nivel = item[0]
+            nivedatetimel = item[0]
             ref = item[-5:]
             print(nivel, ref)
             data = models.item_count_nivel(cursor, ref, nivel)
@@ -687,7 +689,8 @@ class Mapa(View):
         for row in data_id:
             row['REF'] = row['REF'] + ' - ' + row['DESCR']
             row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
-            row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
+            if row['TAM'] != row['DESCR_TAM']:
+                row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
             if row['ULT_ENTRADA']:
                 row['ULT_ENTRADA'] = row['ULT_ENTRADA'].date()
             else:
@@ -714,6 +717,15 @@ class Mapa(View):
                           'DT_INVENTARIO'],
             'data_id': data_id,
         })
+
+        semana_estoque = max_not_None(
+            segunda(data_id[0]['ULT_ENTRADA']),
+            segunda(data_id[0]['ULT_SAIDA']),
+            segunda(data_id[0]['DT_INVENTARIO']))
+        estoque = {}
+        estoque[semana_estoque] = data_id[0]['QUANT']
+
+        print(semana_estoque)
 
         data_ins = models.insumo_necessidade_semana(
             cursor, nivel, ref, cor, tam)
@@ -753,6 +765,106 @@ class Mapa(View):
             'style_irs': {'QTD_A_RECEBER': 'text-align: right;',
                           'Quantidade a receber': 'text-align: right;'},
             'data_irs': data_irs,
+        })
+
+        necessidades = {x['SEMANA_NECESSIDADE']: x['QTD_INSUMO']
+                        for x in data_ins}
+        recebimentos = {x['SEMANA_ENTREGA']: x['QTD_A_RECEBER']
+                        for x in data_irs}
+        pprint(necessidades)
+        pprint(recebimentos)
+
+        semana_hoje = segunda(datetime.date.today())
+
+        if len(data_ins) > 0:
+            pri_necessidade = data_ins[0]['SEMANA_NECESSIDADE']
+            ult_necessidade = data_ins[-1]['SEMANA_NECESSIDADE'] + \
+                datetime.timedelta(days=7)
+        else:
+            pri_necessidade = None
+            ult_necessidade = None
+
+        if len(data_irs) > 0:
+            ult_entrega = data_irs[-1]['SEMANA_ENTREGA'] + \
+                datetime.timedelta(days=7)
+        else:
+            ult_entrega = None
+
+        # data_irs[0]['SEMANA_ENTREGA'],
+        print('semana vvvvvvvv')
+        print(semana_hoje)
+        print(pri_necessidade)
+        print(semana_estoque)
+        print('semana ^^^^^^^^')
+
+        semana = min_not_None(
+            semana_hoje,
+            pri_necessidade,
+            semana_estoque)
+
+        semana_fim = max_not_None(
+            ult_entrega,
+            ult_necessidade,
+            semana_estoque,
+            semana)
+
+        print(semana)
+        print(semana_fim)
+
+        data = []
+        acha_estoque_final = False
+        estoque_final = 0
+        recebimento = 0
+        print('semana = {}'.format(semana))
+        print('semana_fim = {}'.format(semana_fim))
+        while semana <= semana_fim:
+            if semana in recebimentos:
+                recebimento += recebimentos[semana]
+
+            if semana in necessidades:
+                necessidade = necessidades[semana]
+            else:
+                necessidade = 0
+
+            if semana in estoque:
+                qtd_estoque = estoque[semana]
+                acha_estoque_final = True
+            else:
+                qtd_estoque = 0
+
+            if acha_estoque_final:
+                estoque_final = \
+                    estoque_final + qtd_estoque - necessidade + recebimento
+
+            if semana < semana_hoje:
+                qdt_recebimento = 0
+            else:
+                qdt_recebimento = recebimento
+                recebimento = 0
+
+            data.append({
+                'DATA': semana,
+                'NECESSIDADE': necessidade,
+                'RECEBIMENTO': qdt_recebimento,
+                'ESTOQUE': qtd_estoque,
+                'COMPRAR': 0,
+            })
+            semana += datetime.timedelta(days=7)
+
+        print(estoque_final)
+
+        qtd_estoque = estoque_final
+        for row in reversed(data):
+            qtd_estoque = qtd_estoque + row['NECESSIDADE'] - row['RECEBIMENTO']
+            row['ESTOQUE_CALC'] = qtd_estoque
+
+        pprint(data)
+        context.update({
+            'headers': ['Semana', 'Estoque', 'Estoque Calc.',
+                        'Necessidade', 'A receber', 'Comprar'],
+            'fields': ['DATA', 'ESTOQUE', 'ESTOQUE_CALC',
+                       'NECESSIDADE', 'RECEBIMENTO', 'COMPRAR'],
+            'data': data,
         })
 
         return context
