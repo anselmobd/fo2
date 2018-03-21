@@ -1,5 +1,4 @@
 import datetime
-# from pprint import pprint
 
 
 def get_client_ip(request):
@@ -32,20 +31,13 @@ def max_not_None(*args):
 
 
 def min_not_None(*args):
-    # print('IN min_not_None')
-    # pprint(args)
     mini = None
     for v in args:
-        # pprint(v)
         if v:
-            # print('v not None')
             if mini:
-                # print('mini not None')
                 mini = min(
                     mini,
                     v)
             else:
                 mini = v
-            # print('mini = {}'.format(mini))
-    # print('OUT min_not_None')
     return mini
