@@ -778,6 +778,8 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
          AND e.CDITEM_GRUPO = i.REFERENCIA
          AND e.CDITEM_SUBGRUPO = it.TAMANHO_REF
          AND e.CDITEM_ITEM = ic.ITEM_ESTRUTURA
+         -- vvv não tenho certeza disso, mas evita aparecer mais de um registro
+         AND e.LOTE_ACOMP = 0
          AND ( ( i.NIVEL_ESTRUTURA = 2
                AND e.DEPOSITO = 202 -- TECIDOS ESTOQUE
                )
