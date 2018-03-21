@@ -808,8 +808,8 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
 def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
     sql = """
         SELECT
-          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE + 365) - 7,
-                'iw') SEMANA_NECESSIDADE
+          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+            SEMANA_NECESSIDADE
         , sum( ia.CONSUMO *
                (
             ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
@@ -851,7 +851,7 @@ def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
               ELSE ia.SUB_COMP
               END = '{tam}'
         GROUP BY
-          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE + 365) - 7, 'iw')
+          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
         HAVING
           sum( ia.CONSUMO *
                (
