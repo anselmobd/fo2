@@ -690,8 +690,10 @@ class Mapa(View):
             row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
 
         context.update({
-            'headers_id': ['Nível', 'Insumo', 'Cor', 'Tamanho'],
-            'fields_id': ['NIVEL', 'REF', 'COR', 'TAM'],
+            'headers_id': ['Nível', 'Insumo', 'Cor', 'Tamanho',
+                           'Estoq. Mínimo', 'Reposição', 'Unid.'],
+            'fields_id': ['NIVEL', 'REF', 'COR', 'TAM',
+                          'STQ_MIN', 'REPOSICAO', 'UNID'],
             'data_id': data_id,
         })
 

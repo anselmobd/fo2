@@ -750,6 +750,9 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
         , ic.DESCRICAO_15 DESCR_COR
         , it.TAMANHO_REF TAM
         , it.DESCR_TAM_REFER DESCR_TAM
+        , coalesce(parm.ESTOQUE_MINIMO, 0) STQ_MIN
+        , coalesce(parm.TEMPO_REPOSICAO, 0) REPOSICAO
+        , i.UNIDADE_MEDIDA UNID
         FROM BASI_030 i -- insumo
         JOIN BASI_020 it -- insumo tamanho
           ON it.BASI030_NIVEL030 = i.NIVEL_ESTRUTURA
@@ -760,6 +763,11 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
          AND ic.GRUPO_ESTRUTURA = i.REFERENCIA
          AND ic.SUBGRU_ESTRUTURA = it.TAMANHO_REF
          AND ic.ITEM_ESTRUTURA = '{cor}'
+        LEFT JOIN BASI_015 parm -- parâmetros de item
+          ON parm.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
+         AND parm.GRUPO_ESTRUTURA = i.REFERENCIA
+         AND parm.SUBGRU_ESTRUTURA = it.TAMANHO_REF
+         AND parm.ITEM_ESTRUTURA = ic.ITEM_ESTRUTURA
         WHERE i.NIVEL_ESTRUTURA = {nivel}
           AND i.REFERENCIA = '{ref}'
     """.format(
