@@ -52,7 +52,6 @@ class Ref(View):
         else:
             nivedatetimel = item[0]
             ref = item[-5:]
-            print(nivel, ref)
             data = models.item_count_nivel(cursor, ref, nivel)
             row = data[0]
         if row['COUNT'] == 0:
@@ -725,8 +724,6 @@ class Mapa(View):
         estoque = {}
         estoque[semana_estoque] = data_id[0]['QUANT']
 
-        print(semana_estoque)
-
         data_ins = models.insumo_necessidade_semana(
             cursor, nivel, ref, cor, tam)
 
@@ -771,8 +768,6 @@ class Mapa(View):
                         for x in data_ins}
         recebimentos = {x['SEMANA_ENTREGA']: x['QTD_A_RECEBER']
                         for x in data_irs}
-        pprint(necessidades)
-        pprint(recebimentos)
 
         semana_hoje = segunda(datetime.date.today())
 
@@ -790,13 +785,6 @@ class Mapa(View):
         else:
             ult_entrega = None
 
-        # data_irs[0]['SEMANA_ENTREGA'],
-        print('semana vvvvvvvv')
-        print(semana_hoje)
-        print(pri_necessidade)
-        print(semana_estoque)
-        print('semana ^^^^^^^^')
-
         semana = min_not_None(
             semana_hoje,
             pri_necessidade,
@@ -808,15 +796,10 @@ class Mapa(View):
             semana_estoque,
             semana)
 
-        print(semana)
-        print(semana_fim)
-
         data = []
         acha_estoque_final = False
         estoque_final = 0
         recebimento = 0
-        print('semana = {}'.format(semana))
-        print('semana_fim = {}'.format(semana_fim))
         while semana <= semana_fim:
             if semana in recebimentos:
                 recebimento += recebimentos[semana]
@@ -851,14 +834,11 @@ class Mapa(View):
             })
             semana += datetime.timedelta(days=7)
 
-        print(estoque_final)
-
         qtd_estoque = estoque_final
         for row in reversed(data):
             qtd_estoque = qtd_estoque + row['NECESSIDADE'] - row['RECEBIMENTO']
             row['ESTOQUE_CALC'] = qtd_estoque
 
-        pprint(data)
         context.update({
             'headers': ['Semana', 'Estoque', 'Estoque Calc.',
                         'Necessidade', 'A receber', 'Comprar'],
