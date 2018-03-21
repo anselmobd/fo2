@@ -20,10 +20,16 @@
     {% include "layout/tbody_generic.html" with fields=fields_id data=data_id only %}
   </table>
 {% endif %}
-{% if data_ind %}
+{% if data_ins %}
   <table>
-    {% include "layout/thead_generic.html" with data=headers_ind style=style_ind only %}
-    {% include "layout/tbody_generic.html" with fields=fields_ind data=data_ind style=style_ind only %}
+    {% include "layout/thead_generic.html" with data=headers_ins style=style_ins only %}
+    {% include "layout/tbody_generic.html" with fields=fields_ins data=data_ins style=style_ins only %}
+  </table>
+{% endif %}
+{% if data_irs %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers_irs style=style_irs only %}
+    {% include "layout/tbody_generic.html" with fields=fields_irs data=data_irs style=style_irs only %}
   </table>
 {% endif %}
 {% endblock %}
