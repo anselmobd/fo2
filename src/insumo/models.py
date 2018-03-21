@@ -804,7 +804,7 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
     return rows_to_dict_list(cursor)
 
 
-def insumo_necessidade_dia(cursor, nivel, ref, cor, tam):
+def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
     sql = """
         SELECT
           TRUNC(op.DATA_ENTRADA_CORTE - 7, 'iw') SEMANA_NECESSIDADE
@@ -857,6 +857,55 @@ def insumo_necessidade_dia(cursor, nivel, ref, cor, tam):
             - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
                )
              ) > 0
+        ORDER BY
+          1
+    """.format(
+        nivel=nivel,
+        ref=ref,
+        cor=cor,
+        tam=tam)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
+
+
+def insumo_recebimento_semana(cursor, nivel, ref, cor, tam):
+    sql = """
+        SELECT
+          TRUNC(x.DATA_PREV_ENTR, 'iw') SEMANA_ENTREGA
+        , sum(
+            GREATEST(
+              CASE WHEN pc.COD_CANCELAMENTO = 0
+                THEN x.QTDE_SALDO_ITEM
+                ELSE 0 END
+            , 0)
+          ) QTD_A_RECEBER
+        FROM SUPR_100 x -- item de pedido de compra
+        JOIN SUPR_090 pc -- pedido de compra
+          ON pc.PEDIDO_COMPRA = x.NUM_PED_COMPRA
+        JOIN basi_030 r -- referencia
+          ON r.NIVEL_ESTRUTURA = x.ITEM_100_NIVEL99
+         AND r.REFERENCIA = x.ITEM_100_GRUPO
+        WHERE 1=1
+          AND x.ITEM_100_NIVEL99 = {nivel}
+          AND x.ITEM_100_GRUPO = '{ref}'
+          AND x.ITEM_100_SUBGRUPO = '{tam}'
+          AND x.ITEM_100_ITEM = '{cor}'
+        GROUP BY
+          x.ITEM_100_NIVEL99
+        , x.ITEM_100_GRUPO
+        , x.ITEM_100_SUBGRUPO
+        , x.ITEM_100_ITEM
+        , TRUNC(x.DATA_PREV_ENTR, 'iw')
+        HAVING
+          ROUND(
+            sum(
+              GREATEST(
+                CASE WHEN pc.COD_CANCELAMENTO = 0
+                  THEN x.QTDE_SALDO_ITEM
+                  ELSE 0 END
+              , 0)
+            ) / sum(x.QTDE_PEDIDA_ITEM) * 100
+          , 1) >= 5
         ORDER BY
           1
     """.format(
