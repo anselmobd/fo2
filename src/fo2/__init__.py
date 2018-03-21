@@ -1,9 +1,12 @@
-__version__ = '0.1.65'
-__version__date__ = '20/03/2018'
+__version__ = '0.1.66'
+__version__date__ = '21/03/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.66 - 2018/03/21
+#   . Insumo: Primeira versão completa do Mapa de compras por insumo
 #
 # - 0.1.65 - 2018/03/20
 #   . Intranet: Link para GS1
