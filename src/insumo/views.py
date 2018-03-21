@@ -688,12 +688,30 @@ class Mapa(View):
             row['REF'] = row['REF'] + ' - ' + row['DESCR']
             row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
             row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
+            if row['ULT_ENTRADA']:
+                row['ULT_ENTRADA'] = row['ULT_ENTRADA'].date()
+            else:
+                row['ULT_ENTRADA'] = ''
+            if row['ULT_SAIDA']:
+                row['ULT_SAIDA'] = row['ULT_SAIDA'].date()
+            else:
+                row['ULT_SAIDA'] = ''
+            if row['DT_INVENTARIO']:
+                row['DT_INVENTARIO'] = row['DT_INVENTARIO'].date()
+            else:
+                row['DT_INVENTARIO'] = ''
 
         context.update({
             'headers_id': ['Nível', 'Insumo', 'Cor', 'Tamanho',
-                           'Estoq. Mínimo', 'Reposição', 'Unid.'],
+                           'Est.Mínimo', 'Rep.',
+                           'Quant.', 'Unid.',
+                           'Última Entrada', 'Última Saída',
+                           'Inventário'],
             'fields_id': ['NIVEL', 'REF', 'COR', 'TAM',
-                          'STQ_MIN', 'REPOSICAO', 'UNID'],
+                          'STQ_MIN', 'REPOSICAO',
+                          'QUANT', 'UNID',
+                          'ULT_ENTRADA', 'ULT_SAIDA',
+                          'DT_INVENTARIO'],
             'data_id': data_id,
         })
 
