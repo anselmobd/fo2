@@ -1,3 +1,5 @@
+import datetime
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -6,3 +8,7 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+def segunda(dt):
+    return dt + datetime.timedelta(days=-dt.weekday())
