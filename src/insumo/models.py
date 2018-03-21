@@ -752,6 +752,7 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
         , it.DESCR_TAM_REFER DESCR_TAM
         , coalesce(parm.ESTOQUE_MINIMO, 0) STQ_MIN
         , coalesce(parm.TEMPO_REPOSICAO, 0) REPOSICAO
+        , coalesce(parm.LOTE_MULTIPLO, 0) LOTE_MULTIPLO
         , i.UNIDADE_MEDIDA UNID
         , COALESCE(e.QTDE_ESTOQUE_ATU, 0) QUANT
         , e.DATA_ULT_ENTRADA ULT_ENTRADA
