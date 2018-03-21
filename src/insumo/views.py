@@ -3,6 +3,7 @@ import re
 import time
 from pprint import pprint
 import datetime
+import math
 
 from django.urls import reverse
 from django.shortcuts import render, redirect
@@ -705,12 +706,12 @@ class Mapa(View):
 
         context.update({
             'headers_id': ['Nível', 'Insumo', 'Cor', 'Tamanho',
-                           'Est.Mínimo', 'Rep.',
+                           'Est.Mínimo', 'Rep.', 'Múltiplo',
                            'Estoque', 'Unid.',
                            'Última Entrada', 'Última Saída',
                            'Inventário'],
             'fields_id': ['NIVEL', 'REF', 'COR', 'TAM',
-                          'STQ_MIN', 'REPOSICAO',
+                          'STQ_MIN', 'REPOSICAO', 'LOTE_MULTIPLO',
                           'QUANT', 'UNID',
                           'ULT_ENTRADA', 'ULT_SAIDA',
                           'DT_INVENTARIO'],
@@ -723,6 +724,10 @@ class Mapa(View):
             segunda(data_id[0]['DT_INVENTARIO']))
         estoque = {}
         estoque[semana_estoque] = data_id[0]['QUANT']
+
+        estoque_minimo = data_id[0]['STQ_MIN']
+        dias_reposicao = data_id[0]['REPOSICAO']
+        lote_multiplo = data_id[0]['LOTE_MULTIPLO']
 
         data_ins = models.insumo_necessidade_semana(
             cursor, nivel, ref, cor, tam)
@@ -772,7 +777,9 @@ class Mapa(View):
         semana_hoje = segunda(datetime.date.today())
 
         if len(data_ins) > 0:
-            pri_necessidade = data_ins[0]['SEMANA_NECESSIDADE']
+            pri_necessidade = segunda(
+                data_ins[0]['SEMANA_NECESSIDADE'] +
+                datetime.timedelta(days=-dias_reposicao))
             ult_necessidade = data_ins[-1]['SEMANA_NECESSIDADE'] + \
                 datetime.timedelta(days=7)
         else:
@@ -831,6 +838,8 @@ class Mapa(View):
                 'RECEBIMENTO': qdt_recebimento,
                 'ESTOQUE': qtd_estoque,
                 'COMPRAR': 0,
+                'RECEBER': 0,
+                'ESTOQUE_NOVO': 0,
             })
             semana += datetime.timedelta(days=7)
 
@@ -839,11 +848,31 @@ class Mapa(View):
             qtd_estoque = qtd_estoque + row['NECESSIDADE'] - row['RECEBIMENTO']
             row['ESTOQUE_CALC'] = qtd_estoque
 
+        qtd_estoque_novo = data[0]['ESTOQUE_CALC']
+        for row in data:
+            row['ESTOQUE_NOVO'] = qtd_estoque_novo
+            qtd_estoque_novo = \
+                qtd_estoque_novo - row['NECESSIDADE'] + row['RECEBIMENTO']
+            if qtd_estoque_novo < estoque_minimo:
+                receber = estoque_minimo - qtd_estoque_novo
+                receber = max(receber, lote_multiplo)
+                row['RECEBER'] = receber
+                qtd_estoque_novo += receber
+
+        for i in reversed(range(len(data))):
+            if data[i]['RECEBER'] != 0:
+                data[i - math.ceil(dias_reposicao / 7)]['COMPRAR'] = \
+                    data[i]['RECEBER']
+
         context.update({
-            'headers': ['Semana', 'Estoque', 'Estoque Calc.',
-                        'Necessidade', 'A receber', 'Comprar'],
+            'headers': ['Semana', 'Estoque real', 'Estoque calc.',
+                        'Estoque corrigido',
+                        'Necessidade', 'A receber',
+                        'Compra extra', 'A receber extra'],
             'fields': ['DATA', 'ESTOQUE', 'ESTOQUE_CALC',
-                       'NECESSIDADE', 'RECEBIMENTO', 'COMPRAR'],
+                       'ESTOQUE_NOVO',
+                       'NECESSIDADE', 'RECEBIMENTO',
+                       'COMPRAR', 'RECEBER'],
             'data': data,
         })
 
