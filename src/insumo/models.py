@@ -753,6 +753,10 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
         , coalesce(parm.ESTOQUE_MINIMO, 0) STQ_MIN
         , coalesce(parm.TEMPO_REPOSICAO, 0) REPOSICAO
         , i.UNIDADE_MEDIDA UNID
+        , COALESCE(e.QTDE_ESTOQUE_ATU, 0) QUANT
+        , e.DATA_ULT_ENTRADA ULT_ENTRADA
+        , e.DATA_ULT_SAIDA ULT_SAIDA
+        , e.DT_INVENTARIO
         FROM BASI_030 i -- insumo
         JOIN BASI_020 it -- insumo tamanho
           ON it.BASI030_NIVEL030 = i.NIVEL_ESTRUTURA
@@ -768,6 +772,27 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
          AND parm.GRUPO_ESTRUTURA = i.REFERENCIA
          AND parm.SUBGRU_ESTRUTURA = it.TAMANHO_REF
          AND parm.ITEM_ESTRUTURA = ic.ITEM_ESTRUTURA
+        LEFT JOIN ESTQ_040 e -- estoque por depósito
+          ON e.CDITEM_NIVEL99 = i.NIVEL_ESTRUTURA
+         AND e.CDITEM_GRUPO = i.REFERENCIA
+         AND e.CDITEM_SUBGRUPO = it.TAMANHO_REF
+         AND e.CDITEM_ITEM = ic.ITEM_ESTRUTURA
+         AND ( ( i.NIVEL_ESTRUTURA = 2
+               AND e.DEPOSITO = 202 -- TECIDOS ESTOQUE
+               )
+             OR
+               ( i.NIVEL_ESTRUTURA = 9
+               AND
+                 ( ( i.CONTA_ESTOQUE = 22 -- FIOS
+                   AND e.DEPOSITO = 212 -- FIO TECELAGEM ESTOQUE
+                   )
+                 OR
+                   ( i.CONTA_ESTOQUE <> 22 -- NÃO FIOS
+                   AND e.DEPOSITO = 231 -- MAT PRIMA ESTOQUE
+                   )
+                 )
+               )
+             )
         WHERE i.NIVEL_ESTRUTURA = {nivel}
           AND i.REFERENCIA = '{ref}'
     """.format(
