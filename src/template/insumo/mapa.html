@@ -27,18 +27,30 @@
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
   </table>
 {% endif %}
-{% if data_ins %}
-  <h2>Necessidades semanais</h2>
-  <table>
-    {% include "layout/thead_generic.html" with data=headers_ins style=style_ins only %}
-    {% include "layout/tbody_generic.html" with fields=fields_ins data=data_ins style=style_ins only %}
-  </table>
-{% endif %}
-{% if data_irs %}
-  <h2>Recebimentos semanais</h2>
-  <table>
-    {% include "layout/thead_generic.html" with data=headers_irs style=style_irs only %}
-    {% include "layout/tbody_generic.html" with fields=fields_irs data=data_irs style=style_irs only %}
-  </table>
-{% endif %}
+<table>
+  <tr>
+    <td>
+      {% if data_ins %}
+        <h2>Necessidades semanais</h2>
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_ins style=style_ins only %}
+          {% include "layout/tbody_generic.html" with fields=fields_ins data=data_ins style=style_ins only %}
+        </table>
+      {% endif %}
+    </td>
+    {% if data_ins and data_irs %}
+      <td></td>
+      <td style="border-left: thin solid lightgrey;"></td>
+    {% endif %}
+    <td>
+      {% if data_irs %}
+        <h2>Recebimentos semanais</h2>
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_irs style=style_irs only %}
+          {% include "layout/tbody_generic.html" with fields=fields_irs data=data_irs style=style_irs only %}
+        </table>
+      {% endif %}
+    </td>
+  </tr>
+</table>
 {% endblock %}
