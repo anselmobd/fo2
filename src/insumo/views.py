@@ -678,6 +678,7 @@ class Mapa(View):
     def mount_context(self, cursor, nivel, ref, cor, tam):
         context = {}
 
+        # Informações gerais
         data_id = models.insumo_descr(cursor, nivel, ref, cor, tam)
 
         if len(data_id) == 0:
@@ -718,17 +719,13 @@ class Mapa(View):
             'data_id': data_id,
         })
 
-        semana_estoque = max_not_None(
-            segunda(data_id[0]['ULT_ENTRADA']),
-            segunda(data_id[0]['ULT_SAIDA']),
-            segunda(data_id[0]['DT_INVENTARIO']))
-        estoque = {}
-        estoque[semana_estoque] = data_id[0]['QUANT']
+        semana_hoje = segunda(datetime.date.today())
 
         estoque_minimo = data_id[0]['STQ_MIN']
         dias_reposicao = data_id[0]['REPOSICAO']
         lote_multiplo = data_id[0]['LOTE_MULTIPLO']
 
+        # Necessidades
         data_ins = models.insumo_necessidade_semana(
             cursor, nivel, ref, cor, tam)
 
@@ -749,6 +746,7 @@ class Mapa(View):
             'data_ins': data_ins,
         })
 
+        # Recebimentos
         data_irs = models.insumo_recebimento_semana(
             cursor, nivel, ref, cor, tam)
 
@@ -769,108 +767,126 @@ class Mapa(View):
             'data_irs': data_irs,
         })
 
-        necessidades = {x['SEMANA_NECESSIDADE']: x['QTD_INSUMO']
-                        for x in data_ins}
-        recebimentos = {x['SEMANA_ENTREGA']: x['QTD_A_RECEBER']
-                        for x in data_irs}
+        # Dicionários por semana (sem passado)
+        estoque = {}
+        estoque[semana_hoje] = data_id[0]['QUANT']
 
-        semana_hoje = segunda(datetime.date.today())
+        necessidades = {}
+        pri_necessidade = None
+        ult_necessidade = None
+        for row in data_ins:
+            semana = max(
+                row['SEMANA_NECESSIDADE'],
+                semana_hoje)
+            if semana in necessidades:
+                necessidades[semana] += row['QTD_INSUMO']
+            else:
+                necessidades[semana] = row['QTD_INSUMO']
+            if pri_necessidade is None:
+                pri_necessidade = semana
+            ult_necessidade = semana
 
-        if len(data_ins) > 0:
-            pri_necessidade = segunda(
-                data_ins[0]['SEMANA_NECESSIDADE'] +
-                datetime.timedelta(days=-dias_reposicao))
-            ult_necessidade = data_ins[-1]['SEMANA_NECESSIDADE'] + \
-                datetime.timedelta(days=7)
-        else:
-            pri_necessidade = None
-            ult_necessidade = None
+        recebimentos = {}
+        pri_recebimento = None
+        ult_recebimento = None
+        for row in data_irs:
+            semana = max(
+                row['SEMANA_ENTREGA'],
+                semana_hoje)
+            if semana in recebimentos:
+                recebimentos[semana] += row['QTD_A_RECEBER']
+            else:
+                recebimentos[semana] = row['QTD_A_RECEBER']
+            if pri_recebimento is None:
+                pri_recebimento = semana
+            ult_recebimento = semana
 
-        if len(data_irs) > 0:
-            ult_entrega = data_irs[-1]['SEMANA_ENTREGA'] + \
-                datetime.timedelta(days=7)
-        else:
-            ult_entrega = None
-
-        semana = min_not_None(
-            semana_hoje,
-            pri_necessidade,
-            semana_estoque)
+        # criando mapa de compras
+        semana = semana_hoje
 
         semana_fim = max_not_None(
-            ult_entrega,
-            ult_necessidade,
-            semana_estoque,
-            semana)
+            ult_recebimento,
+            ult_necessidade)
+        semana_fim += datetime.timedelta(days=7)
 
         data = []
-        acha_estoque_final = False
         estoque_final = 0
-        recebimento = 0
         while semana <= semana_fim:
             if semana in recebimentos:
-                recebimento += recebimentos[semana]
+                recebimento = recebimentos[semana]
+            else:
+                recebimento = 0
 
             if semana in necessidades:
                 necessidade = necessidades[semana]
             else:
                 necessidade = 0
 
-            if semana in estoque:
+            if semana == semana_hoje:
                 qtd_estoque = estoque[semana]
-                acha_estoque_final = True
             else:
-                qtd_estoque = 0
-
-            if acha_estoque_final:
-                estoque_final = \
-                    estoque_final + qtd_estoque - necessidade + recebimento
-
-            if semana < semana_hoje:
-                qdt_recebimento = 0
-            else:
-                qdt_recebimento = recebimento
-                recebimento = 0
+                qtd_estoque = qtd_estoque - necessidade + recebimento
 
             data.append({
                 'DATA': semana,
                 'NECESSIDADE': necessidade,
-                'RECEBIMENTO': qdt_recebimento,
+                'RECEBIMENTO': recebimento,
                 'ESTOQUE': qtd_estoque,
                 'COMPRAR': 0,
                 'RECEBER': 0,
-                'ESTOQUE_NOVO': 0,
             })
             semana += datetime.timedelta(days=7)
 
-        qtd_estoque = estoque_final
-        for row in reversed(data):
-            qtd_estoque = qtd_estoque + row['NECESSIDADE'] - row['RECEBIMENTO']
-            row['ESTOQUE_CALC'] = qtd_estoque
+        # monta sugestões de compra
+        for i in range(len(data)):
+            row = data[i]
+            sugestao_quatidade = 0
+            if row['ESTOQUE'] < estoque_minimo:
+                sugestao_quatidade = estoque_minimo - row['ESTOQUE']
+                sugestao_quatidade = max(sugestao_quatidade, lote_multiplo)
+                sugestao_receber = row['DATA']
+                sugestao_comprar = segunda(
+                    row['DATA'] + datetime.timedelta(days=-dias_reposicao))
+                if sugestao_comprar < semana_hoje:
+                    avancar = semana_hoje - sugestao_comprar
+                    delta_avancar = datetime.timedelta(days=avancar.days)
+                    sugestao_comprar += delta_avancar
+                    sugestao_receber += delta_avancar
 
-        qtd_estoque_novo = data[0]['ESTOQUE_CALC']
-        for row in data:
-            row['ESTOQUE_NOVO'] = qtd_estoque_novo
-            qtd_estoque_novo = \
-                qtd_estoque_novo - row['NECESSIDADE'] + row['RECEBIMENTO']
-            if qtd_estoque_novo < estoque_minimo:
-                receber = estoque_minimo - qtd_estoque_novo
-                receber = max(receber, lote_multiplo)
-                row['RECEBER'] = receber
-                qtd_estoque_novo += receber
+            if sugestao_quatidade != 0:
 
-        for i in reversed(range(len(data))):
-            if data[i]['RECEBER'] != 0:
-                data[i - math.ceil(dias_reposicao / 7)]['COMPRAR'] = \
-                    data[i]['RECEBER']
+                if semana_fim < sugestao_receber:
+                    semana = semana_fim + datetime.timedelta(days=7)
+                    semana_fim = sugestao_receber
+                    while semana <= semana_fim:
+                        data.append({
+                            'DATA': semana,
+                            'NECESSIDADE': 0,
+                            'RECEBIMENTO': 0,
+                            'ESTOQUE': 0,
+                            'COMPRAR': 0,
+                            'RECEBER': 0,
+                        })
+                        semana += datetime.timedelta(days=7)
+
+                estoque = None
+                for row in data:
+                    if row['DATA'] == sugestao_comprar:
+                        row['COMPRAR'] = sugestao_quatidade
+                    if row['DATA'] == sugestao_receber:
+                        row['RECEBER'] = sugestao_quatidade
+
+                    if estoque is None:
+                        estoque = row['ESTOQUE']
+                    else:
+                        row['ESTOQUE'] = estoque - row['NECESSIDADE'] + \
+                            row['RECEBIMENTO'] + row['RECEBER']
 
         context.update({
-            'headers': ['Semana', 'Estoque real', 'Estoque calc.',
-                        'Estoque corrigido',
-                        'Necessidade', 'A receber',
-                        'Compra extra', 'A receber extra'],
-            'fields': ['DATA', 'ESTOQUE', 'ESTOQUE_CALC',
-                       'ESTOQUE_NOVO',
+            'headers': ['Semana', 'Estoque',
+                        'Necessidade', 'Recebimento',
+                        'Compra sugerida', 'Recebimento sugerido'],
+            'fields': ['DATA', 'ESTOQUE',
                        'NECESSIDADE', 'RECEBIMENTO',
                        'COMPRAR', 'RECEBER'],
             'data': data,
