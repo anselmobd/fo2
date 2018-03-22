@@ -704,15 +704,17 @@ class Mapa(View):
                 row['DT_INVENTARIO'] = row['DT_INVENTARIO'].date()
             else:
                 row['DT_INVENTARIO'] = ''
+            semanas = math.ceil(row['REPOSICAO'] / 7)
+            row['REP_STR'] = '{}d. ({}s.)'.format(row['REPOSICAO'], semanas)
 
         context.update({
             'headers_id': ['Nível', 'Insumo', 'Cor', 'Tamanho',
-                           'Est.Mínimo', 'Rep.', 'Múltiplo',
+                           'Reposição', 'Est.Mínimo', 'Múltiplo',
                            'Estoque', 'Unid.',
                            'Última Entrada', 'Última Saída',
                            'Inventário'],
             'fields_id': ['NIVEL', 'REF', 'COR', 'TAM',
-                          'STQ_MIN', 'REPOSICAO', 'LOTE_MULTIPLO',
+                          'REP_STR', 'STQ_MIN', 'LOTE_MULTIPLO',
                           'QUANT', 'UNID',
                           'ULT_ENTRADA', 'ULT_SAIDA',
                           'DT_INVENTARIO'],
