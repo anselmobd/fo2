@@ -897,10 +897,20 @@ class Mapa(View):
                     estoque_ideal = estoque_ideal - row['NECESSIDADE'] + \
                         row['RECEBIMENTO'] + row['RECEBER_IDEAL']
 
+        max_digits = 0
+        for row in data_sug:
+            num_digits = str(row['QUANT'])[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+
+        for row in data_sug:
+            row['QUANT|DECIMALS'] = max_digits
+
         context.update({
             'headers_sug': ['Semana de compra', 'Semana de chegada',
                             'Quantidade'],
             'fields_sug': ['SEMANA_COMPRA', 'SEMANA_RECEPCAO', 'QUANT'],
+            'style_sug': {'QUANT': 'text-align: right;',
+                          'Quantidade': 'text-align: right;'},
             'data_sug': data_sug,
         })
 
