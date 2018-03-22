@@ -29,7 +29,7 @@
 {% endif %}
 <table>
   <tr>
-    <td>
+    <td style="vertical-align: top;">
       {% if data_ins %}
         <h2>Necessidades semanais</h2>
         <table>
@@ -38,16 +38,31 @@
         </table>
       {% endif %}
     </td>
-    {% if data_ins and data_irs %}
-      <td></td>
-      <td style="border-left: thin solid lightgrey;"></td>
+    {% if data_ins %}
+      {% if data_irs or data_sug %}
+        <td></td>
+        <td style="border-left: thin solid lightgrey;"></td>
+      {% endif %}
     {% endif %}
-    <td>
+    <td style="vertical-align: top;">
       {% if data_irs %}
         <h2>Recebimentos semanais</h2>
         <table>
           {% include "layout/thead_generic.html" with data=headers_irs style=style_irs only %}
           {% include "layout/tbody_generic.html" with fields=fields_irs data=data_irs style=style_irs only %}
+        </table>
+      {% endif %}
+    </td>
+    {% if data_irs and data_sug %}
+      <td></td>
+      <td style="border-left: thin solid lightgrey;"></td>
+    {% endif %}
+    <td style="vertical-align: top;">
+      {% if data_sug %}
+        <h2>Sugestões ideais</h2>
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_sug style=style_sug only %}
+          {% include "layout/tbody_generic.html" with fields=fields_sug data=data_sug style=style_sug only %}
         </table>
       {% endif %}
     </td>
