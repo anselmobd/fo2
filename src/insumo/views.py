@@ -721,6 +721,7 @@ class Mapa(View):
 
         semana_hoje = segunda(datetime.date.today())
 
+        estoque = data_id[0]['QUANT']
         estoque_minimo = data_id[0]['STQ_MIN']
         dias_reposicao = data_id[0]['REPOSICAO']
         lote_multiplo = data_id[0]['LOTE_MULTIPLO']
@@ -768,9 +769,6 @@ class Mapa(View):
         })
 
         # Dicionários por semana (sem passado)
-        estoque = {}
-        estoque[semana_hoje] = data_id[0]['QUANT']
-
         necessidades = {}
         pri_necessidade = None
         ult_necessidade = None
@@ -810,7 +808,6 @@ class Mapa(View):
         semana_fim += datetime.timedelta(days=7)
 
         data = []
-        estoque_final = 0
         while semana <= semana_fim:
             if semana in recebimentos:
                 recebimento = recebimentos[semana]
@@ -822,19 +819,16 @@ class Mapa(View):
             else:
                 necessidade = 0
 
-            if semana == semana_hoje:
-                qtd_estoque = estoque[semana]
-            else:
-                qtd_estoque = qtd_estoque - necessidade + recebimento
-
             data.append({
                 'DATA': semana,
                 'NECESSIDADE': necessidade,
                 'RECEBIMENTO': recebimento,
-                'ESTOQUE': qtd_estoque,
+                'ESTOQUE': estoque,
                 'COMPRAR': 0,
                 'RECEBER': 0,
             })
+            estoque = estoque - necessidade + recebimento
+
             semana += datetime.timedelta(days=7)
 
         # monta sugestões de compra
