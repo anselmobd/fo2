@@ -576,8 +576,7 @@ class Estoque(View):
                        'QUANT', 'UNID',
                        'ULT_ENTRADA', 'ULT_SAIDA',
                        'DT_INVENTARIO'),
-            'style': {'QUANT': 'text-align: right;',
-                      'Quant.': 'text-align: right;'},
+            'style': {8: 'text-align: right;'},
             'group': group,
             'data': data,
         })
@@ -744,8 +743,7 @@ class Mapa(View):
         context.update({
             'headers_ins': ['Semana da necessidade', 'Quantidade necessária'],
             'fields_ins': ['SEMANA_NECESSIDADE', 'QTD_INSUMO'],
-            'style_ins': {'QTD_INSUMO': 'text-align: right;',
-                          'Quantidade necessária': 'text-align: right;'},
+            'style_ins': {2: 'text-align: right;'},
             'data_ins': data_ins,
         })
 
@@ -765,8 +763,7 @@ class Mapa(View):
         context.update({
             'headers_irs': ['Semana do recebimento', 'Quantidade a receber'],
             'fields_irs': ['SEMANA_ENTREGA', 'QTD_A_RECEBER'],
-            'style_irs': {'QTD_A_RECEBER': 'text-align: right;',
-                          'Quantidade a receber': 'text-align: right;'},
+            'style_irs': {2: 'text-align: right;'},
             'data_irs': data_irs,
         })
 
@@ -909,8 +906,7 @@ class Mapa(View):
             'headers_sug': ['Semana de compra', 'Semana de chegada',
                             'Quantidade'],
             'fields_sug': ['SEMANA_COMPRA', 'SEMANA_RECEPCAO', 'QUANT'],
-            'style_sug': {'QUANT': 'text-align: right;',
-                          'Quantidade': 'text-align: right;'},
+            'style_sug': {3: 'text-align: right;'},
             'data_sug': data_sug,
         })
 
