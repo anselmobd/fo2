@@ -721,7 +721,7 @@ class Mapa(View):
 
         semana_hoje = segunda(datetime.date.today())
 
-        estoque = data_id[0]['QUANT']
+        qtd_estoque = data_id[0]['QUANT']
         estoque_minimo = data_id[0]['STQ_MIN']
         dias_reposicao = data_id[0]['REPOSICAO']
         lote_multiplo = data_id[0]['LOTE_MULTIPLO']
@@ -808,6 +808,7 @@ class Mapa(View):
         semana_fim += datetime.timedelta(days=7)
 
         data = []
+        estoque = qtd_estoque
         while semana <= semana_fim:
             if semana in recebimentos:
                 recebimento = recebimentos[semana]
@@ -849,9 +850,9 @@ class Mapa(View):
 
             if sugestao_quatidade != 0:
 
-                if semana_fim < sugestao_receber:
+                if semana_fim <= sugestao_receber:
                     semana = semana_fim + datetime.timedelta(days=7)
-                    semana_fim = sugestao_receber
+                    semana_fim = sugestao_receber + datetime.timedelta(days=7)
                     while semana <= semana_fim:
                         data.append({
                             'DATA': semana,
@@ -863,18 +864,16 @@ class Mapa(View):
                         })
                         semana += datetime.timedelta(days=7)
 
-                estoque = None
+                estoque = qtd_estoque
                 for row in data:
                     if row['DATA'] == sugestao_comprar:
                         row['COMPRAR'] = sugestao_quatidade
                     if row['DATA'] == sugestao_receber:
                         row['RECEBER'] = sugestao_quatidade
 
-                    if estoque is None:
-                        estoque = row['ESTOQUE']
-                    else:
-                        row['ESTOQUE'] = estoque - row['NECESSIDADE'] + \
-                            row['RECEBIMENTO'] + row['RECEBER']
+                    row['ESTOQUE'] = estoque
+                    estoque = estoque - row['NECESSIDADE'] + \
+                        row['RECEBIMENTO'] + row['RECEBER']
 
         context.update({
             'headers': ['Semana', 'Estoque',
