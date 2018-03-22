@@ -50,6 +50,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
         pula_lote = ultimo != ''
         data = []
         for row in l_data:
+            row['narrativa'] = ' '.join((
+                row['descr_referencia'],
+                row['descr_tamanho'],
+                row['descr_cor']))
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             if row['oc'] == row['oc1']:
                 row['prim'] = '*'
@@ -108,9 +112,11 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'qtd_lotes': qtd_lotes,
             'oc_inicial': oc_inicial,
             'oc_final': oc_final,
-            'headers': ('Tamanho', 'Cor', 'Período', 'OC', '1º', 'Quant.',
+            'headers': ('Tamanho', 'Cor', 'Narrativa',
+                        'Período', 'OC', '1º', 'Quant.',
                         'Lote', 'Estágio', 'Unidade'),
-            'fields': ('tam', 'cor', 'periodo', 'oc', 'prim', 'qtd',
+            'fields': ('tam', 'cor', 'narrativa',
+                       'periodo', 'oc', 'prim', 'qtd',
                        'lote', 'est', 'descricao_divisao'),
             'data': data,
         })
