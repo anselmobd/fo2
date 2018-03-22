@@ -910,6 +910,24 @@ class Mapa(View):
             'data_sug': data_sug,
         })
 
+        max_digits = 0
+        for row in data:
+            num_digits = max(
+                str(row['ESTOQUE'])[::-1].find('.'),
+                str(row['NECESSIDADE'])[::-1].find('.'),
+                str(row['RECEBIMENTO'])[::-1].find('.'),
+                str(row['COMPRAR'])[::-1].find('.'),
+                str(row['RECEBER'])[::-1].find('.'),
+                )
+            max_digits = max(max_digits, num_digits)
+
+        for row in data:
+            row['ESTOQUE|DECIMALS'] = max_digits
+            row['NECESSIDADE|DECIMALS'] = max_digits
+            row['RECEBIMENTO|DECIMALS'] = max_digits
+            row['COMPRAR|DECIMALS'] = max_digits
+            row['RECEBER|DECIMALS'] = max_digits
+
         context.update({
             'headers': ['Semana', 'Estoque',
                         'Necessidade', 'Recebimento',
@@ -917,6 +935,11 @@ class Mapa(View):
             'fields': ['DATA', 'ESTOQUE',
                        'NECESSIDADE', 'RECEBIMENTO',
                        'COMPRAR', 'RECEBER'],
+            'style': {2: 'text-align: right;',
+                      3: 'text-align: right;',
+                      4: 'text-align: right;',
+                      5: 'text-align: right;',
+                      6: 'text-align: right;'},
             'data': data,
         })
 
