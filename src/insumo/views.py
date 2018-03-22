@@ -825,23 +825,34 @@ class Mapa(View):
                 'NECESSIDADE': necessidade,
                 'RECEBIMENTO': recebimento,
                 'ESTOQUE': estoque,
+                'ESTOQUE_IDEAL': estoque,
                 'COMPRAR': 0,
                 'RECEBER': 0,
+                'RECEBER_IDEAL': 0,
             })
             estoque = estoque - necessidade + recebimento
 
             semana += datetime.timedelta(days=7)
 
         # monta sugestões de compra
+        data_sug = []
         for i in range(len(data)):
             row = data[i]
             sugestao_quatidade = 0
-            if row['ESTOQUE'] < estoque_minimo:
-                sugestao_quatidade = estoque_minimo - row['ESTOQUE']
+            if row['ESTOQUE_IDEAL'] < estoque_minimo:
+                sugestao_quatidade = estoque_minimo - row['ESTOQUE_IDEAL']
                 sugestao_quatidade = max(sugestao_quatidade, lote_multiplo)
-                sugestao_receber = row['DATA']
+                sugestao_receber_ideal = row['DATA'] + \
+                    datetime.timedelta(days=-7)
+                sugestao_receber = row['DATA'] + datetime.timedelta(days=-7)
                 sugestao_comprar = segunda(
-                    row['DATA'] + datetime.timedelta(days=-dias_reposicao))
+                    sugestao_receber +
+                    datetime.timedelta(days=-dias_reposicao))
+                data_sug.append({
+                    'SEMANA_COMPRA': sugestao_comprar,
+                    'SEMANA_RECEPCAO': sugestao_receber,
+                    'QUANT': sugestao_quatidade,
+                })
                 if sugestao_comprar < semana_hoje:
                     avancar = semana_hoje - sugestao_comprar
                     delta_avancar = datetime.timedelta(days=avancar.days)
@@ -859,21 +870,37 @@ class Mapa(View):
                             'NECESSIDADE': 0,
                             'RECEBIMENTO': 0,
                             'ESTOQUE': 0,
+                            'ESTOQUE_IDEAL': 0,
                             'COMPRAR': 0,
                             'RECEBER': 0,
+                            'RECEBER_IDEAL': 0,
                         })
                         semana += datetime.timedelta(days=7)
 
                 estoque = qtd_estoque
+                estoque_ideal = qtd_estoque
                 for row in data:
                     if row['DATA'] == sugestao_comprar:
-                        row['COMPRAR'] = sugestao_quatidade
+                        row['COMPRAR'] += sugestao_quatidade
                     if row['DATA'] == sugestao_receber:
-                        row['RECEBER'] = sugestao_quatidade
+                        row['RECEBER'] += sugestao_quatidade
+                    if row['DATA'] == sugestao_receber_ideal:
+                        row['RECEBER_IDEAL'] += sugestao_quatidade
 
                     row['ESTOQUE'] = estoque
                     estoque = estoque - row['NECESSIDADE'] + \
                         row['RECEBIMENTO'] + row['RECEBER']
+
+                    row['ESTOQUE_IDEAL'] = estoque_ideal
+                    estoque_ideal = estoque_ideal - row['NECESSIDADE'] + \
+                        row['RECEBIMENTO'] + row['RECEBER_IDEAL']
+
+        context.update({
+            'headers_sug': ['Semana de compra', 'Semana de chegada',
+                            'Quantidade'],
+            'fields_sug': ['SEMANA_COMPRA', 'SEMANA_RECEPCAO', 'QUANT'],
+            'data_sug': data_sug,
+        })
 
         context.update({
             'headers': ['Semana', 'Estoque',
