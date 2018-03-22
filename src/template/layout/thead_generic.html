@@ -6,6 +6,9 @@
   {% if style|get_item:info %}
     style="{{ style|get_item:info }}"
   {% endif %}
+  {% if style|get_item:forloop.counter %}
+    style="{{ style|get_item:forloop.counter }}"
+  {% endif %}
 {% endif %}
 >
 {{ info }}
