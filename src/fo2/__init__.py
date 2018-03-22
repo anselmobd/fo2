@@ -7,6 +7,8 @@ __version__date__ = '22/03/2018'
 #
 # - 0.1.67 - 2018/03/22
 #   . Mapa de compras: Corrigido o cálculo do estoque
+#   . Mapa de compras: Corrigido o sugestão de compras'
+#   . Mapa de compras: Mostrando sugestão ideal
 #
 # - 0.1.66 - 2018/03/21
 #   . Insumo: Primeira versão completa do Mapa de compras por insumo
