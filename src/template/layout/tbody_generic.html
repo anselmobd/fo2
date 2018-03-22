@@ -15,9 +15,6 @@
           {% endif %}
         {% endwith %}
         {% if style %}
-          {% if style|get_item:field %}
-            style="{{ style|get_item:field }}"
-          {% endif %}
           {% if style|get_item:forloop.counter %}
             style="{{ style|get_item:forloop.counter }}"
           {% endif %}
@@ -38,9 +35,6 @@
         {% endif %}
       {% endwith %}
       {% if style %}
-        {% if style|get_item:field %}
-          style="{{ style|get_item:field }}"
-        {% endif %}
         {% if style|get_item:forloop.counter %}
           style="{{ style|get_item:forloop.counter }}"
         {% endif %}
