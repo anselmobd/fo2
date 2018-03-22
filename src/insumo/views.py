@@ -51,7 +51,7 @@ class Ref(View):
                 nivel = row['NIVEL']
                 ref = item
         else:
-            nivedatetimel = item[0]
+            nivel = item[0]
             ref = item[-5:]
             data = models.item_count_nivel(cursor, ref, nivel)
             row = data[0]
