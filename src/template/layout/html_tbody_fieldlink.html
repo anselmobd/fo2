@@ -8,10 +8,10 @@
     {% endwith %}
     >
     {% if row|get_item:field %}
-      {% with field|add:'|DECIMALS' as field_decimails %}
-        {% with row|get_item:field_decimails as decimails %}
-          {% if decimails %}
-            {{ row|get_item:field|floatformat:decimails }}
+      {% with field|add:'|DECIMALS' as field_decimals %}
+        {% with row|get_item:field_decimals as decimals %}
+          {% if decimals %}
+            {{ row|get_item:field|floatformat:decimals }}
           {% else %}
             {{ row|get_item:field }}
           {% endif %}
@@ -20,10 +20,10 @@
     {% endif %}
     <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
   {% else %}
-    {% with field|add:'|DECIMALS' as field_decimails %}
-      {% with row|get_item:field_decimails as decimails %}
-        {% if decimails %}
-          {{ row|get_item:field|floatformat:decimails|transp_decimals|safe }}
+    {% with field|add:'|DECIMALS' as field_decimals %}
+      {% with row|get_item:field_decimals as decimals %}
+        {% if decimals %}
+          {{ row|get_item:field|floatformat:decimals|transp_decimals|safe }}
         {% else %}
           {{ row|get_item:field }}
         {% endif %}
