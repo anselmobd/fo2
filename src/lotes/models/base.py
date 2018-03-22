@@ -60,6 +60,9 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         , l.QTDE_PECAS_2A PROD2Q
         , l.QTDE_PERDAS PERDA
         , r.NARRATIVA
+        , ref.DESCR_REFERENCIA
+        , tam.DESCR_TAM_REFER DESCR_TAMANHO
+        , r.DESCRICAO_15 DESCR_COR
         , ref.COLECAO
         , CASE WHEN l.DIVISAO = 0 THEN dp.DIVISAO_PRODUCAO
           ELSE l.DIVISAO END DIVISAO
@@ -120,6 +123,10 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         JOIN BASI_030 ref
           ON ref.NIVEL_ESTRUTURA = 1
          AND ref.REFERENCIA = l.PROCONF_GRUPO
+        JOIN BASI_020 tam
+          ON tam.BASI030_NIVEL030 = 1
+         AND tam.BASI030_REFERENC = l.PROCONF_GRUPO
+         AND tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
         JOIN BASI_010 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.GRUPO_ESTRUTURA = l.PROCONF_GRUPO
