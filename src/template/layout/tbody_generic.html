@@ -9,16 +9,40 @@
     {% if group and field in group %}
       {% if row|get_item:'rowspan' != 0 %}
         <td rowspan="{{ row|get_item:'rowspan' }}"
+
         {% with field|add:'|STYLE' as field_style %}
           {% if row|get_item:field_style %}
-            style="{{ row|get_item:field_style }}"
+            style="
           {% endif %}
         {% endwith %}
         {% if style %}
           {% if style|get_item:forloop.counter %}
-            style="{{ style|get_item:forloop.counter }}"
+            style="
           {% endif %}
         {% endif %}
+
+        {% with field|add:'|STYLE' as field_style %}
+          {% if row|get_item:field_style %}
+            {{ row|get_item:field_style }}
+          {% endif %}
+        {% endwith %}
+        {% if style %}
+          {% if style|get_item:forloop.counter %}
+            {{ style|get_item:forloop.counter }}
+          {% endif %}
+        {% endif %}
+
+        {% with field|add:'|STYLE' as field_style %}
+          {% if row|get_item:field_style %}
+            "
+          {% endif %}
+        {% endwith %}
+        {% if style %}
+          {% if style|get_item:forloop.counter %}
+            "
+          {% endif %}
+        {% endif %}
+
         >
           {% if field in safe %}
             {{ row|get_item:field|safe }}
@@ -29,16 +53,42 @@
       {% endif %}
     {% else %}
       <td
-      {% with field|add:'|STYLE' as field_style %}
-        {% if row|get_item:field_style %}
-          style="{{ row|get_item:field_style }}"
+
+        {% with field|add:'|STYLE' as field_style %}
+          {% if row|get_item:field_style %}
+            style="
+          {% else %}
+            {% if style %}
+              {% if style|get_item:forloop.counter %}
+                style="
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endwith %}
+
+        {% with field|add:'|STYLE' as field_style %}
+          {% if row|get_item:field_style %}
+            {{ row|get_item:field_style }};
+          {% endif %}
+        {% endwith %}
+        {% if style %}
+          {% if style|get_item:forloop.counter %}
+            {{ style|get_item:forloop.counter }};
+          {% endif %}
         {% endif %}
-      {% endwith %}
-      {% if style %}
-        {% if style|get_item:forloop.counter %}
-          style="{{ style|get_item:forloop.counter }}"
-        {% endif %}
-      {% endif %}
+
+        {% with field|add:'|STYLE' as field_style %}
+          {% if row|get_item:field_style %}
+            "
+          {% else %}
+            {% if style %}
+              {% if style|get_item:forloop.counter %}
+                "
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endwith %}
+
       >
         {% if field in safe %}
           {{ row|get_item:field|safe }}
