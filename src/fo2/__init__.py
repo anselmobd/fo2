@@ -1,9 +1,16 @@
-__version__ = '0.1.67'
-__version__date__ = '22/03/2018'
+__version__ = '0.1.68'
+__version__date__ = '23/03/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.68 - 2018/03/23
+#   . Mapa de compras: insumo já enviado para facção não conta como necessidade
+#   . Impressão de etiquetas de lote: Parou de utilizar a narrativa da nota e
+#     passou a utilizar a narrativa montada na hora com as descrições de
+#     referencia, tamanho e cor.
+#   . Impressão de etiquetas de lote: apresenta a narrativa ma tela
 #
 # - 0.1.67 - 2018/03/22
 #   . Mapa de compras: Corrigido o cálculo do estoque
@@ -36,7 +43,7 @@ __version__date__ = '22/03/2018'
 #   . Ajustes nas páginas do RH
 #   . Uploda dos POPs
 #
-# - 0.1.60 - 2018/03/02
+# - 0.1.60 - 2018/de03/02
 #   . Várias melhorias
 #
 # - 0.1.50 - 2018/01/29
