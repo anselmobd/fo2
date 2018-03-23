@@ -809,6 +809,7 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
 
 def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
     sql = """
+        WITH NECES AS (
         SELECT
           TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
             SEMANA_NECESSIDADE
@@ -861,8 +862,42 @@ def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
             - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
                )
              ) > 0
+        --
+        UNION
+        --
+        SELECT
+          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+            SEMANA_NECESSIDADE
+        , - sum( nfs.QTDE_ESTRUTURA ) QTD
+        FROM (
+          SELECT UNIQUE
+            os.NUMERO_ORDEM
+          , l.ORDEM_PRODUCAO
+          FROM OBRF_080 os
+          JOIN pcpc_040 l
+            ON l.NUMERO_ORDEM = os.NUMERO_ORDEM
+          WHERE l.ORDEM_PRODUCAO = 5264
+            AND l.NUMERO_ORDEM <> 0
+        ) o
+        JOIN OBRF_082 nfs
+          ON nfs.NUMERO_ORDEM = o.NUMERO_ORDEM
+        JOIN PCPC_020 op -- OP
+          ON op.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+        WHERE nfs.PRODSAI_NIVEL99 = {nivel}
+          AND nfs.PRODSAI_GRUPO = '{ref}'
+          AND nfs.PRODSAI_ITEM = '{cor}'
+          AND nfs.PRODSAI_SUBGRUPO = '{tam}'
+        GROUP BY
+          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+        )
+        SELECT
+          n.SEMANA_NECESSIDADE
+        , sum(n.QTD_INSUMO) QTD_INSUMO
+        FROM NECES n
+        GROUP BY
+          n.SEMANA_NECESSIDADE
         ORDER BY
-          1
+          n.SEMANA_NECESSIDADE
     """.format(
         nivel=nivel,
         ref=ref,
