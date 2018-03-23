@@ -736,9 +736,15 @@ class Mapa(View):
             num_digits = str(row['QTD_INSUMO'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
+        semana1 = None
         for row in data_ins:
             row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
             row['QTD_INSUMO|DECIMALS'] = max_digits
+            if semana1 is None:
+                semana1 = row['SEMANA_NECESSIDADE']
+            if semana1 < semana_hoje and \
+                    row['SEMANA_NECESSIDADE'] <= semana_hoje:
+                row['QTD_INSUMO|STYLE'] = 'font-weight: bold;'
 
         context.update({
             'headers_ins': ['Semana da necessidade', 'Quantidade necessária'],
@@ -756,9 +762,14 @@ class Mapa(View):
             num_digits = str(row['QTD_A_RECEBER'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
+        semana1 = None
         for row in data_irs:
             row['SEMANA_ENTREGA'] = row['SEMANA_ENTREGA'].date()
             row['QTD_A_RECEBER|DECIMALS'] = max_digits
+            if semana1 is None:
+                semana1 = row['SEMANA_ENTREGA']
+            if semana1 < semana_hoje and row['SEMANA_ENTREGA'] <= semana_hoje:
+                row['QTD_A_RECEBER|STYLE'] = 'font-weight: bold;'
 
         context.update({
             'headers_irs': ['Semana do recebimento', 'Quantidade a receber'],
@@ -828,6 +839,7 @@ class Mapa(View):
                 'COMPRAR': 0,
                 'RECEBER': 0,
                 'RECEBER_IDEAL': 0,
+                'RECEBER_IDEAL_ANTES': 0,
             })
             estoque = estoque - necessidade + recebimento
 
@@ -873,6 +885,7 @@ class Mapa(View):
                             'COMPRAR': 0,
                             'RECEBER': 0,
                             'RECEBER_IDEAL': 0,
+                            'RECEBER_IDEAL_ANTES': 0,
                         })
                         semana += datetime.timedelta(days=7)
 
@@ -883,15 +896,21 @@ class Mapa(View):
                         row['COMPRAR'] += sugestao_quatidade
                     if row['DATA'] == sugestao_receber:
                         row['RECEBER'] += sugestao_quatidade
-                    if row['DATA'] == sugestao_receber_ideal:
-                        row['RECEBER_IDEAL'] += sugestao_quatidade
+                    if sugestao_receber_ideal < semana_hoje:
+                        if row['DATA'] == semana_hoje:
+                            row['RECEBER_IDEAL_ANTES'] += sugestao_quatidade
+                    else:
+                        if row['DATA'] == sugestao_receber_ideal:
+                            row['RECEBER_IDEAL'] += sugestao_quatidade
 
                     row['ESTOQUE'] = estoque
                     estoque = estoque - row['NECESSIDADE'] + \
                         row['RECEBIMENTO'] + row['RECEBER']
 
-                    row['ESTOQUE_IDEAL'] = estoque_ideal
-                    estoque_ideal = estoque_ideal - row['NECESSIDADE'] + \
+                    row['ESTOQUE_IDEAL'] = \
+                        row['RECEBER_IDEAL_ANTES'] + estoque_ideal
+                    estoque_ideal = row['RECEBER_IDEAL_ANTES'] + \
+                        estoque_ideal - row['NECESSIDADE'] + \
                         row['RECEBIMENTO'] + row['RECEBER_IDEAL']
 
         max_digits = 0
@@ -899,8 +918,13 @@ class Mapa(View):
             num_digits = str(row['QUANT'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
+        semana1 = None
         for row in data_sug:
             row['QUANT|DECIMALS'] = max_digits
+            if semana1 is None:
+                semana1 = row['SEMANA_COMPRA']
+            if semana1 < semana_hoje and row['SEMANA_COMPRA'] <= semana_hoje:
+                row['QUANT|STYLE'] = 'font-weight: bold;'
 
         context.update({
             'headers_sug': ['Semana de compra', 'Semana de chegada',
