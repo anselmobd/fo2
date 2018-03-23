@@ -144,11 +144,21 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         , o.DATA_ENTRADA_CORTE
         , t.ORDEM_TAMANHO TAMORD
         , r.NARRATIVA
+        , ref.DESCR_REFERENCIA
+        , tam.DESCR_TAM_REFER DESCR_TAMANHO
+        , r.DESCRICAO_15 DESCR_COR
         from Table_qtd_lotes tb
         JOIN PCPC_020 o -- OP capa
           ON o.ORDEM_PRODUCAO = tb.OP
         JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = tb.TAM
+        JOIN BASI_030 ref
+          ON ref.NIVEL_ESTRUTURA = 1
+         AND ref.REFERENCIA = o.REFERENCIA_PECA
+        JOIN BASI_020 tam
+          ON tam.BASI030_NIVEL030 = 1
+         AND tam.BASI030_REFERENC = o.REFERENCIA_PECA
+         AND tam.TAMANHO_REF = tb.TAM
         JOIN BASI_010 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.GRUPO_ESTRUTURA = o.REFERENCIA_PECA
