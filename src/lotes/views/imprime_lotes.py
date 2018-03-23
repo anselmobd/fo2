@@ -52,8 +52,8 @@ class ImprimeLotes(LoginRequiredMixin, View):
         for row in l_data:
             row['narrativa'] = ' '.join((
                 row['descr_referencia'],
-                row['descr_tamanho'],
-                row['descr_cor']))
+                row['descr_cor'],
+                row['descr_tamanho']))
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             if row['oc'] == row['oc1']:
                 row['prim'] = '*'
@@ -264,6 +264,10 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
         qtd_total = len(l_data)
         cont_total = 0
         for row in l_data:
+            row['narrativa'] = ' '.join((
+                row['descr_referencia'],
+                row['descr_cor'],
+                row['descr_tamanho']))
             row['qtd_total'] = '{}'.format(qtd_total)
             row['qtd_pcs_cx'] = row['qtd1']
             cont_total += 1
@@ -359,10 +363,12 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             'ultimo': ultimo,
             'pula': parm_pula,
             'qtd_lotes': parm_qtd_lotes,
-            'headers': ('CX.OP', 'Cor', 'Tamanho', '1º', 'CX.Cor/Tam',
+            'headers': ('CX.OP', 'Cor', 'Tamanho', 'Narrativa',
+                        '1º', 'CX.Cor/Tam',
                         'Lote 1', 'Qtd. 1', 'Lote 2', 'Qtd. 2',
                         'Lote 3', 'Qtd. 3', 'Qtd. Caixa'),
-            'fields': ('cx_op', 'cor', 'tam', 'prim', 'cx_ct',
+            'fields': ('cx_op', 'cor', 'tam', 'narrativa',
+                       'prim', 'cx_ct',
                        'lote1', 'qtd1', 'lote2', 'qtd2',
                        'lote3', 'qtd3', 'qtd_pcs_cx'),
             'data': data,
