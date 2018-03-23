@@ -896,6 +896,8 @@ def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
         FROM NECES n
         GROUP BY
           n.SEMANA_NECESSIDADE
+        HAVING
+          sum(n.QTD_INSUMO) > 0
         ORDER BY
           n.SEMANA_NECESSIDADE
     """.format(
