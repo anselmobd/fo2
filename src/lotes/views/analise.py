@@ -110,6 +110,12 @@ class AnDtCorteAlter(View):
             })
             total = {}
             for row in data:
+                if row['PERIODO_INI'] is not None:
+                    row['PERIODO_INI'] = row['PERIODO_INI'].date()
+                if row['PERIODO_FIM'] is not None:
+                    row['PERIODO_FIM'] = row['PERIODO_FIM'].date()
+                if row['DATA_CORTE'] is not None:
+                    row['DATA_CORTE'] = row['DATA_CORTE'].date()
                 if row['ORDEM_TOTAL'] == 1:
                     row['PERIODO'] = 'TOTAL'
                     row['PERIODO_INI'] = ''
@@ -151,6 +157,7 @@ class AnDtCorteAlter(View):
                     'DATA_CORTE', 'ALT', 'TIPO',
                     'PERIODO', 'PERIODO_INI', 'PERIODO_FIM', 'QTD', 'OPS'),
                 'safe': ('OPS',),
+                'style': {7: 'text-align: right;'},
                 'group': group,
                 'data': data,
             })

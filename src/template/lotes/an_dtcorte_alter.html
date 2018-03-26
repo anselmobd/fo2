@@ -29,8 +29,8 @@
   </table>
   <h3>Detalhes</h3>
   <table>
-    {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group safe=safe only %}
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data group=group safe=safe style=style only %}
   </table>
 {% endif %}
 {% endblock %}
