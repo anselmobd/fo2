@@ -1,9 +1,14 @@
-__version__ = '0.1.68'
-__version__date__ = '23/03/2018'
+__version__ = '0.1.69'
+__version__date__ = '26/03/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.69 - 2018/03/26
+#   . OP por período e alternativa: ajustes de apresentação
+#   . OP por data de corte e alternativa: ajustes de apresentação
+#   . Mapa de compras: Detalhe de necessidade de insumo em uma semana
 #
 # - 0.1.68 - 2018/03/23
 #   . Mapa de compras: insumo já enviado para facção não conta como necessidade
