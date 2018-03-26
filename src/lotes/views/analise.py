@@ -33,6 +33,9 @@ class AnPeriodoAlter(View):
                 'periodo_ate': periodo_ate,
             })
             for row in data:
+                row['PERIODO_INI'] = row['PERIODO_INI'].date()
+                row['PERIODO_FIM'] = row['PERIODO_FIM'].date()
+                row['DATA_CORTE'] = row['DATA_CORTE'].date()
                 if row['ORDEM_TOTAL'] == 1:
                     row['DATA_CORTE'] = 'TOTAL'
                 else:
@@ -49,6 +52,8 @@ class AnPeriodoAlter(View):
                 'fields': (
                     'PERIODO', 'PERIODO_INI', 'PERIODO_FIM',
                     'ALT', 'TIPO', 'DATA_CORTE', 'QTD', 'NUM_OPS'),
+                'style': {7: 'text-align: right;',
+                          8: 'text-align: right;'},
                 'group': group,
                 'data': data,
             })
