@@ -956,3 +956,82 @@ def insumo_recebimento_semana(cursor, nivel, ref, cor, tam):
         tam=tam)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
+    sql = """
+        SELECT
+          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw') SEMANA
+        , op.REFERENCIA_PECA REF
+        , ref.DESCR_REFERENCIA DESCR
+        , op.ORDEM_PRODUCAO OP
+        , trunc(sum(
+            ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
+            - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
+             ) ) QTD_PRODUTO
+        , sum( ia.CONSUMO *
+               (
+            ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
+            - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
+               )
+             ) QTD_INSUMO
+        FROM BASI_030 ref -- referencia
+        JOIN PCPC_020 op -- OP
+          ON op.REFERENCIA_PECA = ref.REFERENCIA
+        JOIN PCPC_040 lote -- lote
+          ON lote.ORDEM_PRODUCAO = op.ORDEM_PRODUCAO
+        JOIN BASI_050 ia -- insumos de alternativa
+          ON ia.NIVEL_ITEM = 1
+         AND ia.NIVEL_COMP <> 1
+         AND ia.GRUPO_ITEM = op.REFERENCIA_PECA
+         AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+         AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
+        LEFT JOIN BASI_040 coc -- combinação cor
+          ON ia.ITEM_COMP = '000000'
+         AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
+         AND coc.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+         AND coc.SEQUENCIA = ia.SEQUENCIA
+         AND coc.ITEM_ITEM = lote.PROCONF_ITEM
+        LEFT JOIN BASI_040 cot -- combinação tamanho
+          ON ia.SUB_COMP = '000'
+         AND cot.GRUPO_ITEM = ia.GRUPO_ITEM
+         AND cot.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+         AND cot.SEQUENCIA = ia.SEQUENCIA
+         AND cot.SUB_ITEM = lote.PROCONF_SUBGRUPO
+        WHERE op.SITUACAO IN (2, 4) -- não cancelada
+          AND ia.NIVEL_COMP = {nivel}
+          AND ia.GRUPO_COMP = '{ref}'
+          AND CASE WHEN ia.ITEM_COMP = '000000'
+              THEN coc.ITEM_COMP
+              ELSE ia.ITEM_COMP
+              END = '{cor}'
+          AND CASE WHEN ia.SUB_COMP = '000'
+              THEN cot.SUB_COMP
+              ELSE ia.SUB_COMP
+              END = '{tam}'
+          AND TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+              = '{semana}'
+        GROUP BY
+          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+        , op.REFERENCIA_PECA
+        , ref.DESCR_REFERENCIA
+        , op.ORDEM_PRODUCAO
+        HAVING
+          sum( ia.CONSUMO *
+               (
+            ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
+            - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
+               )
+             ) > 0
+        ORDER BY
+          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+        , op.REFERENCIA_PECA
+        , op.ORDEM_PRODUCAO
+    """.format(
+        nivel=nivel,
+        ref=ref,
+        cor=cor,
+        tam=tam,
+        semana=semana)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)

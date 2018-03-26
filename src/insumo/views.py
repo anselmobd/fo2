@@ -739,6 +739,10 @@ class Mapa(View):
         semana1 = None
         for row in data_ins:
             row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
+            row['SEMANA_NECESSIDADE|LINK'] = reverse(
+                'insumo_necessidade_detalhe',
+                args=[nivel, ref, cor, tam, row['SEMANA_NECESSIDADE']])
+            row['SEMANA_NECESSIDADE|TARGET'] = '_blank'
             row['QTD_INSUMO|DECIMALS'] = max_digits
             if semana1 is None:
                 semana1 = row['SEMANA_NECESSIDADE']
@@ -976,4 +980,81 @@ class Mapa(View):
             self.mount_context(
                 cursor, kwargs['nivel'], kwargs['ref'],
                 kwargs['cor'], kwargs['tam']))
+        return render(request, self.template_name, context)
+
+
+class MapaNecessidadeDetalhe(View):
+    template_name = 'insumo/necessidade_detalhe.html'
+    title_name = 'Detalhe de necessidade de insumo em uma semana'
+
+    def mount_context(self, cursor, nivel, ref, cor, tam, semana):
+        context = {}
+
+        # Informações gerais
+        data_id = models.insumo_descr(cursor, nivel, ref, cor, tam)
+
+        if len(data_id) == 0:
+            context.update({
+                'msg_erro': 'Item não encontrado',
+            })
+            return context
+
+        for row in data_id:
+            row['REF'] = row['REF'] + ' - ' + row['DESCR']
+            row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
+            if row['TAM'] != row['DESCR_TAM']:
+                row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
+
+        context.update({
+            'headers_id': ['Nível', 'Insumo', 'Cor', 'Tamanho', 'Unid.'],
+            'fields_id': ['NIVEL', 'REF', 'COR', 'TAM', 'UNID'],
+            'data_id': data_id,
+        })
+
+        # detalhes da necessidade
+        data = models.insumo_necessidade_detalhe(
+            cursor, nivel, ref, cor, tam, semana)
+
+        max_digits = 0
+        for row in data:
+            num_digits = str(row['QTD_INSUMO'])[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+
+        for row in data:
+            semana = row['SEMANA'].date()
+            row['REF|LINK'] = reverse('ref_ref', args=[row['REF']])
+            row['REF'] = row['REF'] + ' - ' + row['DESCR']
+            row['QTD_INSUMO|DECIMALS'] = max_digits
+            row['OP|LINK'] = reverse('op_op', args=[row['OP']])
+
+        group = ['REF', 'DESCR']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['QTD_PRODUTO', 'QTD_INSUMO'],
+            'count': [],
+            'descr': {'OP': 'Totais:'}
+        })
+        group_rowspan(data, group)
+
+        context.update({
+            'semana': semana,
+            'headers': ['Produto a produzir', 'OP',
+                        'Quantidade a produzir', 'Quantidade de insumo'],
+            'fields': ['REF', 'OP',
+                       'QTD_PRODUTO', 'QTD_INSUMO'],
+            'style': {3: 'text-align: right;',
+                      4: 'text-align: right;'},
+            'group': group,
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        context.update(
+            self.mount_context(
+                cursor, kwargs['nivel'], kwargs['ref'],
+                kwargs['cor'], kwargs['tam'], kwargs['semana']))
         return render(request, self.template_name, context)
