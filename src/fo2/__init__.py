@@ -1,9 +1,12 @@
-__version__ = '0.1.69'
-__version__date__ = '26/03/2018'
+__version__ = '0.1.70'
+__version__date__ = '27/03/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.70 - 2018/03/27
+#   . Mapa de compras: Correção no calculo de necessidades.
 #
 # - 0.1.69 - 2018/03/26
 #   . OP por período e alternativa: ajustes de apresentação
