@@ -171,6 +171,11 @@ def op_estagios(cursor, op):
 
 
 def op_sortimento(cursor, op):
+    header, fields, data, total = op_sortimentos(cursor, op, 't')
+    return header, fields, data
+
+
+def op_sortimentos(cursor, op, tipo):
     # Grade de OP
     grade = GradeQtd(cursor, [op])
 
@@ -214,24 +219,50 @@ def op_sortimento(cursor, op):
         '''
         )
 
-    # sortimento
-    grade.value(
-        id='QUANTIDADE',
-        sql='''
-            SELECT
-              i.TAMANHO
-            , i.SORTIMENTO
-            , i.QUANTIDADE
-            FROM PCPC_021 i
-            WHERE i.ORDEM_PRODUCAO = %s
-            ORDER BY
-              i.SEQUENCIA_TAMANHO
-            , i.SORTIMENTO
-        '''
-        )
+    if tipo == 't':  # Total a produzir
+        # sortimento
+        grade.value(
+            id='QUANTIDADE',
+            sql='''
+                SELECT
+                  i.TAMANHO
+                , i.SORTIMENTO
+                , i.QUANTIDADE
+                FROM PCPC_021 i
+                WHERE i.ORDEM_PRODUCAO = %s
+                ORDER BY
+                  i.SEQUENCIA_TAMANHO
+                , i.SORTIMENTO
+            '''
+            )
+
+    elif tipo == 'p':  # Perda
+        # sortimento
+        grade.value(
+            id='QUANTIDADE',
+            sql='''
+                SELECT
+                  oi.TAMANHO TAMANHO
+                , oi.SORTIMENTO SORTIMENTO
+                , sum(lote.QTDE_PERDAS ) QUANTIDADE
+                FROM PCPC_021 oi
+                JOIN PCPC_040 lote
+                  ON lote.ORDEM_PRODUCAO = oi.ORDEM_PRODUCAO
+                 AND lote.PROCONF_SUBGRUPO = oi.TAMANHO
+                 AND lote.PROCONF_ITEM = oi.SORTIMENTO
+                WHERE oi.ORDEM_PRODUCAO = %s
+                GROUP BY
+                  oi.SEQUENCIA_TAMANHO
+                , oi.TAMANHO
+                , oi.SORTIMENTO
+                ORDER BY
+                  oi.SEQUENCIA_TAMANHO
+                , oi.SORTIMENTO
+            '''
+            )
 
     return (grade.table_data['header'], grade.table_data['fields'],
-            grade.table_data['data'])
+            grade.table_data['data'], grade.total)
 
 
 def op_lotes(cursor, op):
