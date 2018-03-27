@@ -91,6 +91,7 @@ class GradeQtd(object):
     def __init__(self, cursor, args=[]):
         self._cursor = cursor
         self.args = args
+        self.total = 0
 
     def row(self, **kwargs):
         if 'sql' in kwargs:
@@ -146,6 +147,7 @@ class GradeQtd(object):
                                     value[self._col.id_field] == field:
                                 self.table_data['data'][i_row][field] = \
                                     value[self._value.id_field]
+                                self.total += value[self._value.id_field]
                                 break
 
         return self.table_data
