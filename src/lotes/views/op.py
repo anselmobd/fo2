@@ -117,6 +117,16 @@ class Op(View):
                     'g_data': g_data,
                 })
 
+            # Grade de perda
+            gp_header, gp_fields, gp_data, total = models.op_sortimentos(
+                cursor, op, 'p')
+            if total != 0:
+                context.update({
+                    'gp_headers': gp_header,
+                    'gp_fields': gp_fields,
+                    'gp_data': gp_data,
+                })
+
             # Estágios
             e_data = models.op_estagios(cursor, op)
             for row in e_data:

@@ -47,6 +47,13 @@
     {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
   </table>
 {% endif %}
+{% if gp_data %}
+  <h3>Grade de perdas</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=gp_headers only %}
+    {% include "layout/html_tbody.html" with fields=gp_fields data=gp_data only %}
+  </table>
+{% endif %}
 <h3>Estágios</h3>
 <div>
   <canvas id="estagioChart" height="30"></canvas>
