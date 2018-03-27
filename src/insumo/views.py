@@ -1024,7 +1024,6 @@ class MapaNecessidadeDetalhe(View):
             semana = row['SEMANA'].date()
             row['REF|LINK'] = reverse('ref_ref', args=[row['REF']])
             row['REF'] = row['REF'] + ' - ' + row['DESCR']
-            row['QTD_INSUMO|DECIMALS'] = max_digits
             row['OP|LINK'] = reverse('op_op', args=[row['OP']])
 
         group = ['REF', 'DESCR']
@@ -1035,6 +1034,9 @@ class MapaNecessidadeDetalhe(View):
             'descr': {'OP': 'Totais:'}
         })
         group_rowspan(data, group)
+
+        for row in data:
+            row['QTD_INSUMO|DECIMALS'] = max_digits
 
         context.update({
             'semana': semana,
