@@ -828,6 +828,8 @@ def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
           ON ia.NIVEL_ITEM = 1
          AND ia.NIVEL_COMP <> 1
          AND ia.GRUPO_ITEM = op.REFERENCIA_PECA
+         AND (ia.SUB_ITEM = lote.PROCONF_SUBGRUPO OR ia.SUB_ITEM = '000')
+         AND (ia.ITEM_ITEM = lote.PROCONF_ITEM OR ia.ITEM_ITEM = '000000')
          AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
          AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
         LEFT JOIN BASI_040 coc -- combinação cor
@@ -984,6 +986,8 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
           ON ia.NIVEL_ITEM = 1
          AND ia.NIVEL_COMP <> 1
          AND ia.GRUPO_ITEM = op.REFERENCIA_PECA
+         AND (ia.SUB_ITEM = lote.PROCONF_SUBGRUPO OR ia.SUB_ITEM = '000')
+         AND (ia.ITEM_ITEM = lote.PROCONF_ITEM OR ia.ITEM_ITEM = '000000')
          AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
          AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
         LEFT JOIN BASI_040 coc -- combinação cor
