@@ -7,6 +7,7 @@ __version__date__ = '27/03/2018'
 #
 # - 0.1.70 - 2018/03/27
 #   . Mapa de compras: Correção no calculo de necessidades.
+#   . OP: Mostra grade de perdas e de segunda qualidade
 #
 # - 0.1.69 - 2018/03/26
 #   . OP por período e alternativa: ajustes de apresentação
