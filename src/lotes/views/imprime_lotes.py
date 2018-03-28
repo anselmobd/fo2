@@ -217,10 +217,49 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
     template_name = 'lotes/imprime_pacote3lotes.html'
     title_name = 'Etiqueta de caixa de n lotes'
 
+    def sync_lotes(self, cursor, op):
+        data_lotes_syst = models.op_lotes(cursor, op)
+        lotes_syst_dict = {}
+        for row in data_lotes_syst:
+            row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
+            lotes_syst_dict[row['LOTE']] = row
+
+        data_lotes_fo2 = models.Lote.objects.filter(op=op)
+        lotes_fo2 = set()
+        for row in data_lotes_fo2:
+            lotes_fo2.add(row.lote)
+
+            if row.lote in lotes_syst_dict:
+                lote = lotes_syst_dict[row.lote]
+                if row.referencia != lote['REF'] or \
+                        row.tamanho != lote['TAM'] or \
+                        row.cor != lote['COR'] or \
+                        row.qtd_produzir != lote['QTD']:
+                    row.referencia = lote['REF']
+                    row.tamanho = lote['TAM']
+                    row.cor = lote['COR']
+                    row.qtd_produzir = lote['QTD']
+                    row.save()
+
+        for lote_num in lotes_syst_dict:
+            row = lotes_syst_dict[lote_num]
+            if row['LOTE'] not in lotes_fo2:
+                lote = models.Lote()
+                lote.lote = row['LOTE']
+                lote.op = row['OP']
+                lote.referencia = row['REF']
+                lote.tamanho = row['TAM']
+                lote.cor = row['COR']
+                lote.qtd_produzir = row['QTD']
+                lote.save()
+
     def mount_context_and_print(self, cursor, op, tam, cor,
                                 parm_pula, parm_qtd_lotes,
                                 ultimo, ultima_cx, impresso, impresso_descr,
                                 obs1, obs2, do_print):
+
+        self.sync_lotes(cursor, op)
+
         context = {}
 
         # Pacotes de 3 Lotes

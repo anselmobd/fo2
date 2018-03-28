@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -88,3 +89,37 @@ class UsuarioImpresso(models.Model):
         verbose_name = "Impressos de usuário"
         verbose_name_plural = "Impressos de usuários"
         unique_together = ("usuario", "impresso")
+
+
+class Lote(models.Model):
+    lote = models.CharField(
+        max_length=20, verbose_name='lote')
+    op = models.IntegerField(
+        null=True, blank=True,
+        verbose_name='OP')
+    referencia = models.CharField(
+        max_length=5, verbose_name='Referência')
+    tamanho = models.CharField(
+        max_length=3, verbose_name='Tamanho')
+    cor = models.CharField(
+        max_length=6, verbose_name='Cor')
+    qtd_produzir = models.IntegerField(
+        verbose_name='quantidade')
+    create_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='criado em')
+    update_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='alterado em')
+
+    def save(self, *args, **kwargs):
+        ''' On create and update, get timestamps '''
+        if self.id:
+            self.update_at = timezone.now()
+        else:  # At create have no "id"
+            self.create_at = timezone.now()
+        return super(Lote, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_cd_lote"
+        verbose_name = "lote"
