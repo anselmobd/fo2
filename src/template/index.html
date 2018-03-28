@@ -27,7 +27,7 @@
 {% block content %}
 <table>
   <tr>
-    <td>
+    <td style="vertical-align: top;">
       <ul>
         <li><a href="{% url 'lotes' %}">Produção</a></li>
         {% include 'lotes/menu.html' %}
@@ -38,7 +38,7 @@
     </td>
     <td>&nbsp;</td>
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
-    <td>
+    <td style="vertical-align: top;">
       <ul>
         <li><a href="{% url 'produto' %}">Produto</a></li>
         {% include 'produto/menu.html' %}
@@ -49,7 +49,7 @@
     </td>
     <td>&nbsp;</td>
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
-    <td>
+    <td style="vertical-align: top;">
       <ul>
         <li><a href="{% url 'contabil' %}">Contabilidade</a></li>
         {% include 'contabil/menu.html' %}
