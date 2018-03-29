@@ -101,6 +101,8 @@ class Lote(models.Model):
         max_length=5, verbose_name='Referência')
     tamanho = models.CharField(
         max_length=3, verbose_name='Tamanho')
+    ordem_tamanho = models.SmallIntegerField(
+        default=0, verbose_name='ordem tamanho')
     cor = models.CharField(
         max_length=6, verbose_name='Cor')
     qtd_produzir = models.IntegerField(
