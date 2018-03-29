@@ -1,4 +1,5 @@
 import errno
+from pprint import pprint
 from subprocess import Popen, PIPE
 
 from django.shortcuts import render
@@ -233,10 +234,12 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
                 lote = lotes_syst_dict[row.lote]
                 if row.referencia != lote['REF'] or \
                         row.tamanho != lote['TAM'] or \
+                        row.ordem_tamanho != lote['ORDEM_TAMANHO'] or \
                         row.cor != lote['COR'] or \
                         row.qtd_produzir != lote['QTD']:
                     row.referencia = lote['REF']
                     row.tamanho = lote['TAM']
+                    row.ordem_tamanho = lote['ORDEM_TAMANHO']
                     row.cor = lote['COR']
                     row.qtd_produzir = lote['QTD']
                     row.save()
@@ -249,6 +252,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
                 lote.op = row['OP']
                 lote.referencia = row['REF']
                 lote.tamanho = row['TAM']
+                lote.ordem_tamanho = row['ORDEM_TAMANHO']
                 lote.cor = row['COR']
                 lote.qtd_produzir = row['QTD']
                 lote.save()
