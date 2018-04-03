@@ -91,6 +91,40 @@ class UsuarioImpresso(models.Model):
         unique_together = ("usuario", "impresso")
 
 
+class Caixa(models.Model):
+    caixa = models.CharField(
+        max_length=20)
+    TIPOS_DE_CAIXAS = (('o', 'OP'), ('a', 'Avulsa'))
+    tipo_doc = models.CharField(
+        max_length=1, choices=TIPOS_DE_CAIXAS,
+        default='o', verbose_name='tipo de documento')
+    id_doc = models.CharField(
+        max_length=64, null=True, blank=True,
+        verbose_name='identificador do documento')
+    ordem = models.IntegerField(
+        null=True, blank=True,
+        verbose_name='ordem da caixa')
+    ativa = models.NullBooleanField(default=True)
+    create_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='criada em')
+    update_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='alterado em')
+
+    def save(self, *args, **kwargs):
+        ''' On create and update, get timestamps '''
+        if self.id:
+            self.update_at = timezone.now()
+        else:  # At create have no "id"
+            self.create_at = timezone.now()
+        return super(Caixa, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_cd_caixa"
+        verbose_name = "caixa"
+
+
 class Lote(models.Model):
     lote = models.CharField(
         max_length=20, verbose_name='lote')
@@ -113,6 +147,8 @@ class Lote(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
+    caixa = models.ForeignKey(
+        Caixa, null=True, default=None, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
@@ -125,3 +161,14 @@ class Lote(models.Model):
     class Meta:
         db_table = "fo2_cd_lote"
         verbose_name = "lote"
+
+
+# class LoteCaixa(models.Model):
+#     lote = models.ForeignKey(
+#         Lote, on_delete=models.CASCADE)
+#     caixa = models.ForeignKey(
+#         Caixa, on_delete=models.CASCADE)
+#
+#     class Meta:
+#         db_table = "fo2_cd_caixa_lote"
+#         verbose_name = "lote na caixa"
