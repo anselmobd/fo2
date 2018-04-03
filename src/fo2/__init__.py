@@ -1,9 +1,15 @@
-__version__ = '0.1.70'
-__version__date__ = '27/03/2018'
+__version__ = '0.1.72'
+__version__date__ = '03/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.72 - 2018/04/03
+#   . Caixas: Iniciando rotina de controle de caixas.
+#
+# - 0.1.71 - 2018/03/28
+#   . RH: Páscoa.
 #
 # - 0.1.70 - 2018/03/27
 #   . Mapa de compras: Correção no calculo de necessidades.
