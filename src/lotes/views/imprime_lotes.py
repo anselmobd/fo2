@@ -4,6 +4,7 @@ from subprocess import Popen, PIPE
 
 from django.shortcuts import render
 from django.db import connections
+from django.db.models import Count
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template import Template, Context
@@ -219,13 +220,16 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
     title_name = 'Etiqueta de caixa de n lotes'
 
     def sync_lotes(self, cursor, op):
+        print('\n--- sync_lotes\n')
+        referencia = None
         data_lotes_syst = models.op_lotes(cursor, op)
         lotes_syst_dict = {}
         for row in data_lotes_syst:
             row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
             lotes_syst_dict[row['LOTE']] = row
+            referencia = row['REF']
 
-        data_lotes_fo2 = models.Lote.objects.filter(op=op)
+        data_lotes_fo2 = models.Lote.objects.select_related().filter(op=op)
         lotes_fo2 = set()
         for row in data_lotes_fo2:
             lotes_fo2.add(row.lote)
@@ -244,6 +248,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
                     row.qtd_produzir = lote['QTD']
                     row.save()
 
+        lotes = []
         for lote_num in lotes_syst_dict:
             row = lotes_syst_dict[lote_num]
             if row['LOTE'] not in lotes_fo2:
@@ -255,14 +260,104 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
                 lote.ordem_tamanho = row['ORDEM_TAMANHO']
                 lote.cor = row['COR']
                 lote.qtd_produzir = row['QTD']
+                lotes.append(lote)
+                print('lotes.append(lote)')
+        if len(lotes) != 0:
+            models.Lote.objects.bulk_create(lotes)
+
+        return referencia
+
+    def verifica_lotes(self, cursor, op, ref):
+        lotes = models.Lote.objects.select_related().filter(
+            op=op).order_by('cor', 'ordem_tamanho', 'lote')  # .values()
+        # for lote in lotes:
+        #     pprint(lote)
+        caixas = models.Caixa.objects.select_related().filter(
+            tipo_doc='o', id_doc=op).values()
+        # for caixa in caixas:
+        #     pprint(caixa)
+        for lote in lotes:
+            print(lote.caixa)
+            # if lote.caixa is not None:
+
+    def verifica_lotes0(self, cursor, op, ref):
+        print('\n--- verifica_lotes\n')
+        lotes_sem_caixa = models.Lote.objects.select_related().filter(
+            op=op, caixa=None).order_by('cor', 'ordem_tamanho', 'lote')
+        print('lotes sem caixa = {}'.format(len(lotes_sem_caixa)))
+
+        if lotes_sem_caixa:
+            self.encaixotar_lotes(cursor, op, ref, lotes_sem_caixa)
+
+    def encaixotar_lotes(self, cursor, op, ref, lotes_sem_caixa):
+        print('ref = {}'.format(ref))
+        data_colecao = models.get_ref_colecao(cursor, ref)
+        if data_colecao[0]['colecao'] == 5:
+            lotes_por_caixa = 2
+        else:
+            lotes_por_caixa = 3
+        print('lotes por caixa = {}'.format(lotes_por_caixa))
+
+        for row in lotes_sem_caixa:
+            print('{}-{}-{}-{}-{} sem caixa'.format(
+                row.op,
+                row.lote,
+                row.referencia,
+                row.tamanho,
+                row.cor))
+            caixa = self.selectiona_caixa(
+                row.op,
+                row.tamanho,
+                row.cor,
+                lotes_por_caixa)
+            if caixa is not None:
+                lote = models.Lote.objects.get(pk=row.id)
+                lote.caixa = caixa
                 lote.save()
+
+    def cria_caixa(self, op):
+        # print('--- --- --- cria_caixa')
+        caixa = models.Caixa()
+        caixa.tipo_doc = 'o'
+        caixa.id_doc = op
+        caixa.save()
+        return caixa
+
+    def selectiona_caixa(self, op, tam, cor, lotes_por_caixa):
+        # print('--- --- --- selectiona_caixa')
+        # caixas = models.Caixa.objects.filter(tipo_doc='o', id_doc=op)
+        # print('caixas')
+        # print(caixas)
+
+        caixa_nao_completa = models.Lote.objects\
+            .filter(op=op,
+                    tamanho=tam,
+                    cor=cor)\
+            .values('caixa')\
+            .annotate(quant=Count('lote'))\
+            .values('caixa', 'quant')\
+            .filter(quant__lt=lotes_por_caixa,
+                    caixa__isnull=False)
+        # print('caixa_nao_completa')
+        # print(caixa_nao_completa)
+        # print(len(caixa_nao_completa))
+
+        if len(caixa_nao_completa) == 0:
+            pprint('Não achou caixa aberta não completa - criar caixa')
+            return self.cria_caixa(op)
+        else:
+            pprint('Achou caixa aberta não completa!!!')
+            item = caixa_nao_completa.first()
+            pprint(item)
+            return models.Caixa.objects.get(pk=item['caixa'])
 
     def mount_context_and_print(self, cursor, op, tam, cor,
                                 parm_pula, parm_qtd_lotes,
                                 ultimo, ultima_cx, impresso, impresso_descr,
                                 obs1, obs2, do_print):
 
-        self.sync_lotes(cursor, op)
+        # ref = self.sync_lotes(cursor, op)
+        # self.verifica_lotes(cursor, op, ref)
 
         context = {}
 
