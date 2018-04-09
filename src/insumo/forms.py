@@ -224,7 +224,7 @@ class MapaRefsForm(forms.Form):
 
 class PrevisaoForm(forms.Form):
     periodo = forms.CharField(
-        label='Período', max_length=4, min_length=1,
+        label='Período da previsão', max_length=4, min_length=1,
         help_text='(Início da descrição da previsão)',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
