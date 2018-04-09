@@ -1074,7 +1074,7 @@ class Previsao(View):
     def mount_context(
             self, cursor, periodo):
         context = {}
-        if not (periodo_corte):
+        if not (periodo):
             context.update({
                 'msg_erro': 'Especifique um periodo',
             })
@@ -1083,40 +1083,25 @@ class Previsao(View):
             'periodo': periodo,
         })
 
-        data = models.necessidade(cursor, periodo)
-
+        data = models.previsao(cursor, periodo)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma previsao de produção encontrada',
             })
             return context
 
-        for row in data:
-            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
-            row['OPS'] = re.sub(
-                r'([1234567890]+)',
-                r'<a href="/lotes/op/\1">\1&nbsp;<span '
-                'class="glyphicon glyphicon-link" '
-                'aria-hidden="true"></span></a>',
-                str(row['OPS']))
-            row['REFS'] = re.sub(
-                r'([^, ]+)',
-                r'<a href="/produto/ref/\1">\1&nbsp;<span '
-                'class="glyphicon glyphicon-link" '
-                'aria-hidden="true"></span></a>',
-                str(row['REFS']))
         context.update({
-            'headers': ('Nível', 'Insumo', 'Descrição',
+            'prev_descr': data[0]['PREV_DESCR'],
+        })
+        for row in data:
+            row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+        context.update({
+            'headers': ('Nível', 'Insumo',
                         'Cor', 'Tamanho',
-                        'Necessidade', 'Unid.',
-                        'Produzido', 'OPs',
-                        'Estoq. Mínimo', 'Reposição'),
-            'fields': ('NIVEL', 'REF', 'DESCR',
+                        'Alternativa', 'Quantidade'),
+            'fields': ('NIVEL', 'REF',
                        'COR', 'TAM',
-                       'QTD', 'UNID',
-                       'REFS', 'OPS',
-                       'STQ_MIN', 'REPOSICAO'),
-            'safe': ('REFS', 'OPS'),
+                       'ALT', 'QTD'),
             'data': data,
         })
 
@@ -1134,7 +1119,6 @@ class Previsao(View):
         if form.is_valid():
             periodo = form.cleaned_data['periodo']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(
-                cursor, periodo))
+            context.update(self.mount_context(cursor, periodo))
         context['form'] = form
         return render(request, self.template_name, context)
