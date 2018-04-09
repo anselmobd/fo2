@@ -1071,8 +1071,64 @@ class Previsao(View):
     template_name = 'insumo/previsao.html'
     title_name = 'Previsão'
 
-    def mount_context(
-            self, cursor, periodo):
+    def mount_context(self, cursor, periodo):
+        context = {}
+        if not (periodo):
+            context.update({
+                'msg_erro': 'Especifique um periodo',
+            })
+            return context
+        context.update({
+            'periodo': periodo,
+        })
+
+        data = models.previsao(cursor, periodo)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhuma previsao de produção encontrada',
+            })
+            return context
+
+        context.update({
+            'prev_descr': data[0]['PREV_DESCR'],
+        })
+        for row in data:
+            row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+        context.update({
+            'headers': ('Nível', 'Insumo',
+                        'Cor', 'Tamanho',
+                        'Alternativa', 'Quantidade'),
+            'fields': ('NIVEL', 'REF',
+                       'COR', 'TAM',
+                       'ALT', 'QTD'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            periodo = form.cleaned_data['periodo']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, periodo))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class NecessidadePrevisao(View):
+    Form_class = PrevisaoForm
+    template_name = 'insumo/necessidade_previsao.html'
+    title_name = 'Necessidade da previsão'
+
+    def mount_context(self, cursor, periodo):
         context = {}
         if not (periodo):
             context.update({

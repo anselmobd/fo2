@@ -43,4 +43,7 @@ urlpatterns = [
     url(r'^previsao/$', views.Previsao.as_view(),
         name='insumo_previsao'),
 
+    url(r'^necessidade_previsao/$', views.NecessidadePrevisao.as_view(),
+        name='insumo_necessidade_previsao'),
+
 ]
