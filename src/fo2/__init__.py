@@ -8,6 +8,7 @@ __version__date__ = '09/04/2018'
 # - 0.1.73 - 2018/04/09
 #   . Previsão de produção: Tela que apresenta previsão já distribuida pelas
 #     cores e tamanhos
+#   . Necessidade de insumos de Previsão de produção
 #
 # - 0.1.72 - 2018/04/03
 #   . Caixas: Iniciando rotina de controle de caixas.
