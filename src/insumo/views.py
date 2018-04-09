@@ -1149,8 +1149,56 @@ class NecessidadePrevisao(View):
         context.update({
             'prev_descr': data[0]['PREV_DESCR'],
         })
-        for row in data:
-            row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+
+        insumo = []
+        while True:
+            dual_nivel1 = ''
+            union = ''
+            for row in data:
+                # print(row['NIVEL'], row['REF'])
+                if row['NIVEL'] == '1':
+                    dual_select = '''
+                        SELECT
+                          {nivel} NIVEL
+                        , '{ref}' REF
+                        , '{cor}' COR
+                        , '{tam}' TAM
+                        , {qtd} QTD
+                        , {alt} ALT
+                        FROM SYS.DUAL
+                    '''.format(
+                        nivel=row['NIVEL'],
+                        ref=row['REF'],
+                        cor=row['COR'],
+                        tam=row['TAM'],
+                        qtd=row['QTD'],
+                        alt=row['ALT'],
+                    )
+                    dual_nivel1 += union + dual_select
+                    union = ' UNION '
+                else:
+                    busca_insumo = [
+                        item for item in insumo
+                        if item['NIVEL'] == row['NIVEL']
+                        and item['REF'] == row['REF']
+                        and item['COR'] == row['COR']
+                        and item['TAM'] == row['TAM']
+                        and item['ALT'] == row['ALT']
+                        ]
+                    # pprint(busca_insumo)
+                    if busca_insumo == []:
+                        insumo.append(row)
+                    else:
+                        busca_insumo[0]['QTD'] += row['QTD']
+            if dual_nivel1 == '':
+                break
+            else:
+                # print(dual_nivel1)
+                data = models.necessidade_previsao(cursor, dual_nivel1)
+                # print(len(data))
+
+        for row in insumo:
+            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
         context.update({
             'headers': ('Nível', 'Insumo',
                         'Cor', 'Tamanho',
@@ -1158,7 +1206,7 @@ class NecessidadePrevisao(View):
             'fields': ('NIVEL', 'REF',
                        'COR', 'TAM',
                        'ALT', 'QTD'),
-            'data': data,
+            'data': insumo,
         })
 
         return context
