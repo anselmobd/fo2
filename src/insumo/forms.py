@@ -220,3 +220,20 @@ class MapaRefsForm(forms.Form):
         data['insumo'] = insumo
         self.data = data
         return insumo
+
+
+class PrevisaoForm(forms.Form):
+    periodo = forms.CharField(
+        label='Período', max_length=4, min_length=4,
+        help_text='(Código da necessidade.)',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+
+    def clean_periodo(self, periodo):
+        try:
+            i_periodo = int(float(periodo))
+            if i_periodo < 0:
+                periodo = None
+        except ValueError:
+            periodo = None
+        return periodo
