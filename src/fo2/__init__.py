@@ -1,9 +1,13 @@
-__version__ = '0.1.72'
-__version__date__ = '03/04/2018'
+__version__ = '0.1.73'
+__version__date__ = '09/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.73 - 2018/04/09
+#   . Previsão de produção: Tela que apresenta previsão já distribuida pelas
+#     cores e tamanhos
 #
 # - 0.1.72 - 2018/04/03
 #   . Caixas: Iniciando rotina de controle de caixas.
