@@ -1126,3 +1126,48 @@ def previsao(cursor, periodo):
         )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def necessidade_previsao(cursor, dual_nivel1):
+    # insumos de produtos selecionados em dual_nivel1
+    sql = """
+        WITH previsao AS (
+        {dual_nivel1}
+        )
+        SELECT
+          ia.NIVEL_COMP NIVEL
+        , ia.GRUPO_COMP REF
+        , CASE WHEN ia.ITEM_COMP = '000000'
+          THEN coc.ITEM_COMP
+          ELSE ia.ITEM_COMP
+          END COR
+        , CASE WHEN ia.SUB_COMP = '000'
+          THEN cot.SUB_COMP
+          ELSE ia.SUB_COMP
+          END TAM
+        , ia.ALTERNATIVA_COMP ALT
+        , ia.CONSUMO * pre.QTD QTD
+        FROM previsao pre
+        JOIN BASI_050 ia -- insumos de alternativa
+          ON ia.NIVEL_ITEM = pre.NIVEL
+         AND ia.GRUPO_ITEM = pre.REF
+         AND (ia.SUB_ITEM = pre.TAM OR ia.SUB_ITEM = '000')
+         AND (ia.ITEM_ITEM = pre.COR OR ia.ITEM_ITEM = '000000')
+         AND ia.ALTERNATIVA_ITEM = pre.ALT
+        LEFT JOIN BASI_040 coc -- combinação cor
+          ON ia.ITEM_COMP = '000000'
+         AND coc.GRUPO_ITEM = pre.REF
+         AND coc.ALTERNATIVA_ITEM = pre.ALT
+         AND coc.SEQUENCIA = ia.SEQUENCIA
+         AND coc.ITEM_ITEM = pre.COR
+        LEFT JOIN BASI_040 cot -- combinação tamanho
+          ON ia.SUB_COMP = '000'
+         AND cot.GRUPO_ITEM = pre.REF
+         AND cot.ALTERNATIVA_ITEM = pre.ALT
+         AND cot.SEQUENCIA = ia.SEQUENCIA
+         AND cot.SUB_ITEM = pre.TAM
+    """.format(
+        dual_nivel1=dual_nivel1,
+        )
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
