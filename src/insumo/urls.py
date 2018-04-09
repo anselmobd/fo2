@@ -40,4 +40,7 @@ urlpatterns = [
         views.MapaNecessidadeDetalhe.as_view(),
         name='insumo_necessidade_detalhe'),
 
+    url(r'^previsao/$', views.Previsao.as_view(),
+        name='insumo_previsao'),
+
 ]

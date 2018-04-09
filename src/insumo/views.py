@@ -23,7 +23,7 @@ from utils.functions import segunda, max_not_None, min_not_None
 
 import insumo.models as models
 from .forms import RefForm, RolosBipadosForm, NecessidadeForm, ReceberForm, \
-                   EstoqueForm, MapaRefsForm
+                   EstoqueForm, MapaRefsForm, PrevisaoForm
 
 
 def index(request):
@@ -757,6 +757,10 @@ class Mapa(View):
             'data_ins': data_ins,
         })
 
+        # Previsões
+        # data_ins = models.insumo_previsoes_semana_insumo(
+        #     cursor, nivel, ref, cor, tam)
+
         # Recebimentos
         data_irs = models.insumo_recebimento_semana(
             cursor, nivel, ref, cor, tam)
@@ -1059,4 +1063,78 @@ class MapaNecessidadeDetalhe(View):
             self.mount_context(
                 cursor, kwargs['nivel'], kwargs['ref'],
                 kwargs['cor'], kwargs['tam'], kwargs['semana']))
+        return render(request, self.template_name, context)
+
+
+class Previsao(View):
+    Form_class = PrevisaoForm
+    template_name = 'insumo/previsao.html'
+    title_name = 'Previsão'
+
+    def mount_context(
+            self, cursor, periodo):
+        context = {}
+        if not (periodo_corte):
+            context.update({
+                'msg_erro': 'Especifique um periodo',
+            })
+            return context
+        context.update({
+            'periodo': periodo,
+        })
+
+        data = models.necessidade(cursor, periodo)
+
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhuma previsao de produção encontrada',
+            })
+            return context
+
+        for row in data:
+            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['OPS'] = re.sub(
+                r'([1234567890]+)',
+                r'<a href="/lotes/op/\1">\1&nbsp;<span '
+                'class="glyphicon glyphicon-link" '
+                'aria-hidden="true"></span></a>',
+                str(row['OPS']))
+            row['REFS'] = re.sub(
+                r'([^, ]+)',
+                r'<a href="/produto/ref/\1">\1&nbsp;<span '
+                'class="glyphicon glyphicon-link" '
+                'aria-hidden="true"></span></a>',
+                str(row['REFS']))
+        context.update({
+            'headers': ('Nível', 'Insumo', 'Descrição',
+                        'Cor', 'Tamanho',
+                        'Necessidade', 'Unid.',
+                        'Produzido', 'OPs',
+                        'Estoq. Mínimo', 'Reposição'),
+            'fields': ('NIVEL', 'REF', 'DESCR',
+                       'COR', 'TAM',
+                       'QTD', 'UNID',
+                       'REFS', 'OPS',
+                       'STQ_MIN', 'REPOSICAO'),
+            'safe': ('REFS', 'OPS'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            periodo = form.cleaned_data['periodo']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(
+                cursor, periodo))
+        context['form'] = form
         return render(request, self.template_name, context)

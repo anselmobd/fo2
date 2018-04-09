@@ -4,8 +4,11 @@
     <li><a href="{% url 'lista_insumo' %}">Busca</a></li>
   </ul>
   <li><a href="{% url 'insumo_mapa_ref' %}">Insumos para mapa de compras</a></li>
-  <li><a href="{% url 'insumo_necessidade' %}">Necessidade</a></li>
-  <li><a href="{% url 'insumo_receber' %}">A Receber</a></li>
-  <li><a href="{% url 'insumo_estoque' %}">Estoque</a></li>
+  <ul>
+    <li><a href="{% url 'insumo_necessidade' %}">Necessidade</a></li>
+    <li><a href="{% url 'insumo_receber' %}">A Receber</a></li>
+    <li><a href="{% url 'insumo_estoque' %}">Estoque</a></li>
+    <li><a href="{% url 'insumo_previsao' %}">Previsão</a></li>
+  </ul>
   <li><a href="{% url 'rolos_bipados' %}">Rolos Bipados</a></li>
 </ul>
