@@ -139,10 +139,10 @@ class NecessidadeForm(forms.Form):
         try:
             i_periodo = int(float(periodo))
             if i_periodo < 0:
-                periodo = None
+                i_periodo = None
         except ValueError:
-            periodo = None
-        return periodo
+            i_periodo = None
+        return i_periodo
 
     def clean_periodo_corte(self):
         return self.clean_periodo(self.cleaned_data['periodo_corte'])
@@ -224,15 +224,15 @@ class MapaRefsForm(forms.Form):
 
 class PrevisaoForm(forms.Form):
     periodo = forms.CharField(
-        label='Período', max_length=4, min_length=4,
-        help_text='(Código da necessidade.)',
+        label='Período', max_length=4, min_length=1,
+        help_text='(Início da descrição da previsão)',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
-    def clean_periodo(self, periodo):
+    def clean_periodo(self):
         try:
-            i_periodo = int(float(periodo))
-            if i_periodo < 0:
+            periodo = int(float(self.cleaned_data['periodo']))
+            if periodo < 0:
                 periodo = None
         except ValueError:
             periodo = None

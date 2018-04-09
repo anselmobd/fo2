@@ -1039,3 +1039,90 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
         semana=semana)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def previsao(cursor, periodo):
+    filtro_periodo = ''
+    if periodo:
+        # TO_DATE('20/03/2018','DD/MM/YYYY')
+        filtro_periodo = \
+            "WHERE prev.DESCRICAO LIKE '{} %'".format(periodo)
+
+    # lista primeiro nível de necessidade da pŕevisao
+    sql = """
+        SELECT
+          prev.NR_SOLICITACAO NR
+        , prev.DESCRICAO PREV_DESCR
+        , prev.NIVEL_ESTRUTURA NIVEL
+        , prev.GRUPO_ESTRUTURA REF
+        , ic.ITEM_ESTRUTURA COR
+        , it.TAMANHO_REF TAM
+        , SUM(
+          prev.QTDE_NEC_BRUTAS
+          /
+          CASE WHEN prev.ITEM_ESTRUTURA = '000000'
+          THEN
+            ( SELECT
+                count(*)
+              FROM BASI_010 icc -- item cor contador
+              WHERE icc.NIVEL_ESTRUTURA = ic.NIVEL_ESTRUTURA
+                AND icc.GRUPO_ESTRUTURA = ic.GRUPO_ESTRUTURA
+                AND icc.SUBGRU_ESTRUTURA = ic.SUBGRU_ESTRUTURA
+            )
+          ELSE 1
+          END
+          /
+          CASE WHEN prev.SUBGRU_ESTRUTURA = '000'
+          THEN
+            ( SELECT
+                count(*)
+              FROM BASI_020 itc -- item tamanho contador
+              WHERE itc.BASI030_NIVEL030 = it.BASI030_NIVEL030
+                AND itc.BASI030_REFERENC = it.BASI030_REFERENC
+            )
+          ELSE 1
+          END
+          ) QTD
+        , CASE WHEN prev.ALTERNATIVA = 0
+          THEN ic.NUMERO_ALTERNATI
+          ELSE prev.ALTERNATIVA
+          END ALT
+        FROM RCNB_020 prev
+        LEFT JOIN BASI_020 it -- combinação tam
+          ON ( prev.SUBGRU_ESTRUTURA = '000'
+             OR it.TAMANHO_REF = prev.SUBGRU_ESTRUTURA
+             )
+         AND it.BASI030_NIVEL030 = prev.NIVEL_ESTRUTURA
+         AND it.BASI030_REFERENC = prev.GRUPO_ESTRUTURA
+        LEFT JOIN BASI_220 tam
+          ON tam.TAMANHO_REF = it.TAMANHO_REF
+        LEFT JOIN BASI_010 ic -- combinação cor
+          ON ( prev.ITEM_ESTRUTURA = '000000'
+             OR ic.ITEM_ESTRUTURA = prev.ITEM_ESTRUTURA
+             )
+         AND ic.NIVEL_ESTRUTURA = prev.NIVEL_ESTRUTURA
+         AND ic.GRUPO_ESTRUTURA = prev.GRUPO_ESTRUTURA
+         AND ic.SUBGRU_ESTRUTURA = it.TAMANHO_REF
+        {filtro_periodo} -- filtro_periodo
+        GROUP BY
+          prev.NR_SOLICITACAO
+        , prev.DESCRICAO
+        , prev.NIVEL_ESTRUTURA
+        , prev.GRUPO_ESTRUTURA
+        , ic.ITEM_ESTRUTURA
+        , tam.ORDEM_TAMANHO
+        , it.TAMANHO_REF
+        , CASE WHEN prev.ALTERNATIVA = 0
+          THEN ic.NUMERO_ALTERNATI
+          ELSE prev.ALTERNATIVA
+          END
+        ORDER BY
+          prev.NIVEL_ESTRUTURA
+        , prev.GRUPO_ESTRUTURA
+        , ic.ITEM_ESTRUTURA
+        , tam.ORDEM_TAMANHO
+    """.format(
+        filtro_periodo=filtro_periodo,
+        )
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
