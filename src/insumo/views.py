@@ -1092,8 +1092,16 @@ class Previsao(View):
         context.update({
             'prev_descr': data[0]['PREV_DESCR'],
         })
+
+        max_digits = 0
         for row in data:
+            num_digits = str(row['QTD']).strip('0')[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+
+        for row in data:
+            row['QTD|DECIMALS'] = max_digits
             row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+
         context.update({
             'headers': ('Nível', 'Insumo',
                         'Cor', 'Tamanho',
@@ -1101,6 +1109,7 @@ class Previsao(View):
             'fields': ('NIVEL', 'REF',
                        'COR', 'TAM',
                        'ALT', 'QTD'),
+            'style': {6: 'text-align: right;'},
             'data': data,
         })
 
@@ -1126,7 +1135,7 @@ class Previsao(View):
 class NecessidadePrevisao(View):
     Form_class = PrevisaoForm
     template_name = 'insumo/necessidade_previsao.html'
-    title_name = 'Necessidade da previsão'
+    title_name = 'Necessidade de insumos da previsão'
 
     def mount_context(self, cursor, periodo):
         context = {}
@@ -1155,7 +1164,6 @@ class NecessidadePrevisao(View):
             dual_nivel1 = ''
             union = ''
             for row in data:
-                # print(row['NIVEL'], row['REF'])
                 if row['NIVEL'] == '1':
                     dual_select = '''
                         SELECT
@@ -1185,7 +1193,6 @@ class NecessidadePrevisao(View):
                         and item['TAM'] == row['TAM']
                         and item['ALT'] == row['ALT']
                         ]
-                    # pprint(busca_insumo)
                     if busca_insumo == []:
                         insumo.append(row)
                     else:
@@ -1193,12 +1200,17 @@ class NecessidadePrevisao(View):
             if dual_nivel1 == '':
                 break
             else:
-                # print(dual_nivel1)
                 data = models.necessidade_previsao(cursor, dual_nivel1)
-                # print(len(data))
+
+        max_digits = 0
+        for row in insumo:
+            num_digits = str(row['QTD']).strip('0')[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
 
         for row in insumo:
+            row['QTD|DECIMALS'] = max_digits
             row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+
         context.update({
             'headers': ('Nível', 'Insumo',
                         'Cor', 'Tamanho',
@@ -1206,6 +1218,7 @@ class NecessidadePrevisao(View):
             'fields': ('NIVEL', 'REF',
                        'COR', 'TAM',
                        'ALT', 'QTD'),
+            'style': {6: 'text-align: right;'},
             'data': insumo,
         })
 

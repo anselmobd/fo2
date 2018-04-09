@@ -16,18 +16,18 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if periodo %}
-  <h3>Período da previsão: {{ periodo }}</h3>
+  <h4>Período selecionado: {{ periodo|safe }}</h4>
 {% endif %}
 {% if prev_descr %}
-  <h3>Descrição da previsão: {{ prev_descr }}</h3>
+  <h4>Descrição da previsão: {{ prev_descr }}</h4>
 {% endif %}
 {% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
+  <h4>{{ msg_erro }}</h4>
 {% endif %}
 {% if data %}
   <table>
-    {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group safe=safe only %}
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data group=group safe=safe style=style only %}
   </table>
 {% endif %}
 {% endblock %}
