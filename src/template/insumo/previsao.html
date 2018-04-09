@@ -1,0 +1,78 @@
+{% extends 'insumo/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'insumo' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'insumo_necessidade' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if op %}
+  <h3>OP: {{ op }}</h3>
+{% endif %}
+{% if data_corte %}
+  {% if data_corte_ate %}
+    <h3>Data inicial de Corte:
+  {% else %}
+    <h3>Data de Corte:
+  {% endif %}
+  {{ data_corte }}</h3>
+{% endif %}
+{% if data_corte_ate %}
+  <h3>Data final de Corte: {{ data_corte_ate }}</h3>
+{% endif %}
+{% if periodo_corte %}
+  <h3>Período do Corte: {{ periodo_corte }}</h3>
+{% endif %}
+{% if data_compra %}
+  {% if data_compra_ate %}
+    <h3>Data inicial de "Compra":
+  {% else %}
+    <h3>Data de "Compra":
+  {% endif %}
+  {{ data_compra }}</h3>
+{% endif %}
+{% if data_compra_ate %}
+  <h3>Data final de "Compra": {{ data_compra_ate }}</h3>
+{% endif %}
+{% if periodo_compra %}
+  <h3>Período de "Compra": {{ periodo_compra }}</h3>
+{% endif %}
+{% if insumo %}
+  <h3>Referência do insumo: {{ insumo }}</h3>
+{% endif %}
+{% if conta_estoque %}
+  <h3>Conta de estoque do insumo: {{ conta_estoque }}</h3>
+{% endif %}
+{% if ref %}
+  <h3>Referência produzida: {{ ref }}</h3>
+{% endif %}
+{% if conta_estoque_ref %}
+  <h3>Conta de estoque do produzido: {{ conta_estoque_ref }}</h3>
+{% endif %}
+{% if colecao %}
+  <h3>Coleção do produzido: {{ colecao }}</h3>
+{% endif %}
+{% if quais == 'a' %}
+  <h3>Apenas insumos de estágios não avançados dos lotes</h3>
+{% else %}
+  <h3>Todos os insumos das OPs</h3>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group safe=safe only %}
+  </table>
+{% endif %}
+{% endblock %}
