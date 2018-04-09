@@ -4,6 +4,7 @@ import time
 from pprint import pprint
 import datetime
 import math
+from operator import itemgetter
 
 from django.urls import reverse
 from django.shortcuts import render, redirect
@@ -1201,6 +1202,9 @@ class NecessidadePrevisao(View):
                 break
             else:
                 data = models.necessidade_previsao(cursor, dual_nivel1)
+
+        insumo = sorted(
+            insumo, key=itemgetter('NIVEL', 'REF', 'COR', 'ORD_TAM', 'ALT'))
 
         max_digits = 0
         for row in insumo:

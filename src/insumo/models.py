@@ -1145,6 +1145,7 @@ def necessidade_previsao(cursor, dual_nivel1):
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END TAM
+        , tam.ORDEM_TAMANHO ORD_TAM
         , ia.ALTERNATIVA_COMP ALT
         , ia.CONSUMO * pre.QTD QTD
         FROM previsao pre
@@ -1166,6 +1167,21 @@ def necessidade_previsao(cursor, dual_nivel1):
          AND cot.ALTERNATIVA_ITEM = pre.ALT
          AND cot.SEQUENCIA = ia.SEQUENCIA
          AND cot.SUB_ITEM = pre.TAM
+        LEFT JOIN BASI_220 tam
+          ON tam.TAMANHO_REF =
+            CASE WHEN ia.SUB_COMP = '000'
+            THEN cot.SUB_COMP
+            ELSE ia.SUB_COMP
+            END
+        ORDER BY
+          ia.NIVEL_COMP
+        , ia.GRUPO_COMP
+        , CASE WHEN ia.ITEM_COMP = '000000'
+          THEN coc.ITEM_COMP
+          ELSE ia.ITEM_COMP
+          END
+        , tam.ORDEM_TAMANHO
+        , ia.ALTERNATIVA_COMP
     """.format(
         dual_nivel1=dual_nivel1,
         )
