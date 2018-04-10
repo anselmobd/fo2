@@ -21,11 +21,12 @@
 {% if prev_descr %}
   <h4>Descrição da previsão: {{ prev_descr }}</h4>
 {% endif %}
-{% if periodo %}
-  <a href="{% url 'insumo_necessidade_1_previsao' periodo=periodo %}">Necessidade de insumos da previsão para {{ periodo|safe }}</a><br />
-{% endif %}
 {% if msg_erro %}
   <h4>{{ msg_erro }}</h4>
+{% else %}
+  {% if periodo %}
+  <a href="{% url 'insumo_necessidade_1_previsao' periodo=periodo %}">Necessidade de insumos da previsão para {{ periodo|safe }}</a><br />
+  {% endif %}
 {% endif %}
 {% if data %}
   <table>
