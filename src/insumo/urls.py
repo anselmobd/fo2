@@ -47,7 +47,7 @@ urlpatterns = [
         views.Necessidade1Previsao.as_view(),
         name='insumo_necessidade_1_previsao'),
 
-    # url(r'^necessidades_previsoes/$', views.NecessidadesPrevisoes.as_view(),
-    #     name='insumo_necessidades_previsoes'),
+    url(r'^necessidades_previsoes/$', views.NecessidadesPrevisoes.as_view(),
+        name='insumo_necessidades_previsoes'),
 
 ]
