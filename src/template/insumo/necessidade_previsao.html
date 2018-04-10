@@ -10,11 +10,6 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'insumo_necessidade_previsao' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Busca"/>
-</form>
 {% if periodo %}
   <h4>Período selecionado: {{ periodo|safe }}</h4>
 {% endif %}
