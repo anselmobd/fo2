@@ -1041,18 +1041,26 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
     return rows_to_dict_list(cursor)
 
 
-def previsao(cursor, periodo):
+def previsao(cursor, periodo=None):
+    filtro_date = ''
     filtro_periodo = ''
     if periodo:
         # TO_DATE('20/03/2018','DD/MM/YYYY')
+        filtro_date = ''
         filtro_periodo = \
-            "WHERE prev.DESCRICAO LIKE '{} %'".format(periodo)
+            "AND prev.DESCRICAO LIKE '{} %'".format(periodo)
+    else:
+        filtro_date = 'AND p.DATA_INI_PERIODO > (CURRENT_DATE + 30)'
+        filtro_periodo = ''
 
     # lista primeiro nível de necessidade da pŕevisao
     sql = """
         SELECT
           prev.NR_SOLICITACAO NR
         , prev.DESCRICAO PREV_DESCR
+        , p.PERIODO_PRODUCAO
+        , p.DATA_INI_PERIODO INI_PERIODO
+        , p.DATA_INI_PERIODO - 7 DT_NECESSIDADE
         , prev.NIVEL_ESTRUTURA NIVEL
         , prev.GRUPO_ESTRUTURA REF
         , ic.ITEM_ESTRUTURA COR
@@ -1103,10 +1111,18 @@ def previsao(cursor, periodo):
          AND ic.NIVEL_ESTRUTURA = prev.NIVEL_ESTRUTURA
          AND ic.GRUPO_ESTRUTURA = prev.GRUPO_ESTRUTURA
          AND ic.SUBGRU_ESTRUTURA = it.TAMANHO_REF
-        {filtro_periodo} -- filtro_periodo
+        JOIN PCPC_010 p
+          ON p.PERIODO_PRODUCAO = SUBSTR(prev.DESCRICAO, 1, 4)
+          {filtro_date} -- filtro_date
+        WHERE TRANSLATE(SUBSTR(prev.DESCRICAO, 1, 4),
+                               '0123456789', '9999999999') = '9999'
+          {filtro_periodo} -- filtro_periodo
         GROUP BY
           prev.NR_SOLICITACAO
         , prev.DESCRICAO
+        , p.PERIODO_PRODUCAO
+        , p.DATA_INI_PERIODO
+        , p.DATA_INI_PERIODO - 7
         , prev.NIVEL_ESTRUTURA
         , prev.GRUPO_ESTRUTURA
         , ic.ITEM_ESTRUTURA
@@ -1122,9 +1138,11 @@ def previsao(cursor, periodo):
         , ic.ITEM_ESTRUTURA
         , tam.ORDEM_TAMANHO
     """.format(
+        filtro_date=filtro_date,
         filtro_periodo=filtro_periodo,
         )
     cursor.execute(sql)
+    print(sql)
     return rows_to_dict_list(cursor)
 
 
