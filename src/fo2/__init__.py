@@ -1,9 +1,13 @@
-__version__ = '0.1.73'
-__version__date__ = '09/04/2018'
+__version__ = '0.1.74'
+__version__date__ = '10/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.74 - 2018/04/10
+#   . Necessidade de insumos de Previsão de produção passou a ser link em
+#     Previsão de produção
 #
 # - 0.1.73 - 2018/04/09
 #   . Previsão de produção: Tela que apresenta previsão já distribuida pelas
