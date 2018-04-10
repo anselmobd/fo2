@@ -1142,7 +1142,6 @@ def previsao(cursor, periodo=None):
         filtro_periodo=filtro_periodo,
         )
     cursor.execute(sql)
-    print(sql)
     return rows_to_dict_list(cursor)
 
 
