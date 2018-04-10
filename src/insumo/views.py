@@ -8,7 +8,6 @@ from operator import itemgetter
 
 from django.urls import reverse
 from django.shortcuts import render, redirect
-from django.db import connections
 from django.views import View
 from django.db import connections
 from django.http import JsonResponse, HttpResponse
@@ -1234,5 +1233,5 @@ class Necessidade1Previsao(View):
         return render(request, self.template_name, context)
 
 
-# class NecessidadesPrevisoes(View):
-#     pass
+class NecessidadesPrevisoes(View):
+    pass
