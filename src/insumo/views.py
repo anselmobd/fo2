@@ -1133,8 +1133,7 @@ class Previsao(View):
         return render(request, self.template_name, context)
 
 
-class NecessidadePrevisao(View):
-    Form_class = PrevisaoForm
+class Necessidade1Previsao(View):
     template_name = 'insumo/necessidade_previsao.html'
     title_name = 'Necessidade de insumos da previsão'
 
@@ -1228,18 +1227,12 @@ class NecessidadePrevisao(View):
 
         return context
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context(cursor, kwargs['periodo']))
         return render(request, self.template_name, context)
 
-    def post(self, request):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        if form.is_valid():
-            periodo = form.cleaned_data['periodo']
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, periodo))
-        context['form'] = form
-        return render(request, self.template_name, context)
+
+# class NecessidadesPrevisoes(View):
+#     pass
