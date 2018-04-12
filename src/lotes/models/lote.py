@@ -58,7 +58,7 @@ def posicao2_lote(cursor, periodo, ordem_confeccao):
         SELECT
           0 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , l.QTDE_PECAS_PROD QTD
-        , 'FINALIZADO' TIPO
+        , 'FINALIZADO 1A.' TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
@@ -80,6 +80,29 @@ def posicao2_lote(cursor, periodo, ordem_confeccao):
         --
         SELECT
           1000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
+        , l.QTDE_PECAS_2A QTD
+        , 'FINALIZADO 2A.' TIPO
+        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        FROM lotes sel
+        JOIN PCPC_040 l
+          ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
+         AND l.ORDEM_CONFECCAO = sel.ORDEM_CONFECCAO
+        JOIN MQOP_005 e
+          ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+        WHERE l.QTDE_PECAS_2A <> 0
+          AND l.SEQUENCIA_ESTAGIO
+              = (
+                SELECT
+                  max(ms.SEQUENCIA_ESTAGIO)
+                FROM PCPC_040 ms
+                WHERE ms.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
+                  AND ms.ORDEM_CONFECCAO = sel.ORDEM_CONFECCAO
+              )
+        --
+        UNION
+        --
+        SELECT
+          2000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO QTD
         , 'A PRODUZIR' TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
@@ -94,7 +117,7 @@ def posicao2_lote(cursor, periodo, ordem_confeccao):
         UNION
         --
         SELECT
-          2000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
+          3000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , l.QTDE_CONSERTO QTD
         , 'EM CONSERTO' TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
@@ -109,12 +132,10 @@ def posicao2_lote(cursor, periodo, ordem_confeccao):
         UNION
         --
         SELECT
-          3000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
+          4000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , l.QTDE_PERDAS QTD
         , 'PERDAS' TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
-        --, sel.PERIODO_PRODUCAO
-        --, sel.ORDEM_CONFECCAO
         FROM lotes sel
         JOIN PCPC_040 l
           ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
