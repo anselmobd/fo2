@@ -59,7 +59,7 @@ def posicao2_lote(cursor, periodo, ordem_confeccao):
           0 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , l.QTDE_PECAS_PROD QTD
         , 'FINALIZADO 1A.' TIPO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO || ' (ULTIMO)' ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
           ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
@@ -82,7 +82,7 @@ def posicao2_lote(cursor, periodo, ordem_confeccao):
           1000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , l.QTDE_PECAS_2A QTD
         , 'FINALIZADO 2A.' TIPO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO || ' (ULTIMO)' ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
           ON l.PERIODO_PRODUCAO = sel.PERIODO_PRODUCAO
@@ -245,7 +245,7 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
         , l.QTDE_PECAS_PROD Q_PROD
         , l.QTDE_PECAS_2A Q_2A
         , l.QTDE_PERDAS Q_PERDA
-        , l.QTDE_CONSERTO Q_CONCERTO
+        , l.QTDE_CONSERTO Q_CONSERTO
         , l.CODIGO_FAMILIA FAMI
         , l.NUMERO_ORDEM OS
         , coalesce(d.USUARIO_SYSTEXTIL, ' ') USU
