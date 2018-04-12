@@ -34,8 +34,8 @@ Estágio atual do lote <b>{{lote}}</b>:
   <tr>
     <td style="vertical-align: top;">
       <table>
-        {% include "layout/html_thead.html" with data=p_headers only %}
-        {% include "layout/html_tbody_link.html" with fields=p_fields data=p_data link=p_link only %}
+        {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
+        {% include "layout/tbody_generic.html" with fields=p_fields data=p_data link=p_link style=p_style only %}
       </table>
     </td>
     <td></td>
