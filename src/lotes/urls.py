@@ -9,6 +9,10 @@ urlpatterns = [
     url(r'^posicao/(?P<lote>\d+)/$', views.Posicao.as_view(),
         name='posicao_lote'),
 
+    url(r'^posicao2/$', views.Posicao2.as_view(), name='posicao2'),
+    url(r'^posicao2/(?P<lote>\d+)/$', views.Posicao2.as_view(),
+        name='posicao2_lote'),
+
     url(r'^respons/$', views.respons, name='respons'),
     url(r'^responsavel/$', views.responsTodos, name='respons_todos'),
 
