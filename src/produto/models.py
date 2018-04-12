@@ -507,8 +507,10 @@ def lista_produto(cursor, busca):
               AND (  r.REFERENCIA LIKE '%{}%'
                   OR r.DESCR_REFERENCIA LIKE '%{}%'
                   OR r.RESPONSAVEL LIKE '%{}%'
+                  OR r.CGC_CLIENTE_9 LIKE '%{}%'
+                  OR COALESCE(c.FANTASIA_CLIENTE, c.NOME_CLIENTE) LIKE '%{}%'
                   )
-        """.format(palavra, palavra, palavra)
+        """.format(palavra, palavra, palavra, palavra, palavra)
     sql = """
         SELECT
           rownum NUM
@@ -517,6 +519,10 @@ def lista_produto(cursor, busca):
         , rr.TIPO
         , rr.DESCR
         , rr.RESP
+        , rr.CNPJ9
+        , rr.CNPJ4
+        , rr.CNPJ2
+        , rr.CLIENTE
         FROM (
         SELECT
           r.NIVEL_ESTRUTURA NIVEL
@@ -528,7 +534,15 @@ def lista_produto(cursor, busca):
           END TIPO
         , r.DESCR_REFERENCIA DESCR
         , r.RESPONSAVEL RESP
+        , r.CGC_CLIENTE_9 CNPJ9
+        , r.CGC_CLIENTE_4 CNPJ4
+        , r.CGC_CLIENTE_2 CNPJ2
+        , COALESCE(c.FANTASIA_CLIENTE, c.NOME_CLIENTE) CLIENTE
         FROM BASI_030 r
+        LEFT JOIN PEDI_010 c
+          ON c.CGC_9 = r.CGC_CLIENTE_9
+         AND c.CGC_4 = r.CGC_CLIENTE_4
+         AND c.CGC_2 = r.CGC_CLIENTE_2
         WHERE r.NIVEL_ESTRUTURA = 1
           AND r.RESPONSAVEL IS NOT NULL
           {}

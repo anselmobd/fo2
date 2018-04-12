@@ -503,11 +503,16 @@ class ListaProduto(View):
             link = ('REF')
             for row in data:
                 row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+                cnpj = '{:08d}/{:04d}-{:02d}'.format(
+                    row['CNPJ9'],
+                    row['CNPJ4'],
+                    row['CNPJ2'])
+                row['CLIENTE'] = '{} - {}'.format(cnpj, row['CLIENTE'])
             context.update({
                 'headers': ('#', 'Tipo', 'Referência', 'Descrição',
-                            'Status (Responsável)'),
+                            'Status (Responsável)', 'Cliente'),
                 'fields': ('NUM', 'TIPO', 'REF', 'DESCR',
-                           'RESP'),
+                           'RESP', 'CLIENTE'),
                 'data': data,
                 'link': link,
             })
