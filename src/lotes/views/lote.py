@@ -141,6 +141,10 @@ class Posicao2(View):
             context.update({
                 'p_headers': ('Posição', 'Quantidade', 'Estágio'),
                 'p_fields': ('TIPO', 'QTD', 'ESTAGIO'),
+                'p_style': {1: 'font-size: large;',
+                            2: 'font-size: large;',
+                            3: 'font-size: large;',
+                            },
                 'p_data': data,
             })
 
