@@ -276,6 +276,20 @@ def op_sortimentos(cursor, op, tipo):
                  AND lote.PROCONF_SUBGRUPO = oi.TAMANHO
                  AND lote.PROCONF_ITEM = oi.SORTIMENTO
                 WHERE oi.ORDEM_PRODUCAO = %s
+                  AND lote.SEQUENCIA_ESTAGIO
+                      = COALESCE(
+                          (
+                            SELECT
+                              MAX(ulote.SEQUENCIA_ESTAGIO)
+                            FROM PCPC_040 ulote
+                            WHERE ulote.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+                              AND ulote.ORDEM_CONFECCAO = lote.ORDEM_CONFECCAO
+                              AND ulote.QTDE_PECAS_2A > 0
+                            GROUP BY
+                              ulote.ORDEM_PRODUCAO
+                            , ulote.ORDEM_CONFECCAO
+                          )
+                        , 0)
                 GROUP BY
                   oi.SEQUENCIA_TAMANHO
                 , oi.TAMANHO
