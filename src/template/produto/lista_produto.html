@@ -13,6 +13,7 @@
 <form action="/produto/lista_produto/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    Busca Filtro em Referência, Descrição, Responsável, início de CNPJ e Nome fantasia do cliente (ou Razão Social)<br />
     <input type="submit" value="Busca"/>
 </form>
 {% if busca %}
