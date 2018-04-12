@@ -142,6 +142,7 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
         , l.QTDE_PECAS_PROD Q_PROD
         , l.QTDE_PECAS_2A Q_2A
         , l.QTDE_PERDAS Q_PERDA
+        , l.QTDE_CONSERTO Q_CONCERTO
         , l.CODIGO_FAMILIA FAMI
         , l.NUMERO_ORDEM OS
         , coalesce(d.USUARIO_SYSTEXTIL, ' ') USU

@@ -79,15 +79,17 @@ class Posicao(View):
 
         data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
         group = ('EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A', 'Q_PERDA',
-                 'FAMI', 'OS')
+                 'Q_CONCERTO', 'FAMI', 'OS')
         group_rowspan(data, group)
         context.update({
             'e_headers': (
                 'Estágio', 'Prog.', 'A Prod.', 'Em Prod.', 'Prod.', '2a.',
-                'Perda', 'Família', 'OS', 'Usuário', 'Data', 'Programa'),
+                'Perda', 'Concerto', 'Família', 'OS', 'Usuário', 'Data',
+                'Programa'),
             'e_fields': (
                 'EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A',
-                'Q_PERDA', 'FAMI', 'OS', 'USU', 'DT', 'PRG'),
+                'Q_PERDA', 'Q_CONCERTO', 'FAMI', 'OS', 'USU', 'DT',
+                'PRG'),
             'e_group': group,
             'e_data': data,
         })
