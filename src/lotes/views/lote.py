@@ -162,8 +162,10 @@ class Posicao2(View):
             for row in data:
                 row['LINK'] = '/lotes/op/{}'.format(row['OP'])
             context.update({
-                'o_headers': ('OP', 'Situação', 'Programa', 'Data/hora'),
-                'o_fields': ('OP', 'SITU', 'PRG', 'DT'),
+                'o_headers': ('OP', 'Situação', 'Programa',
+                              'Data digitação', 'Data de corte'),
+                'o_fields': ('OP', 'SITU', 'PRG',
+                             'DT', 'DT_CORTE'),
                 'o_data': data,
                 'o_link': link,
             })

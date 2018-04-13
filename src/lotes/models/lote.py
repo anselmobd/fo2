@@ -176,6 +176,7 @@ def posicao_get_op(cursor, periodo, ordem_confeccao):
         , l.NOME_PROGRAMA_CRIACAO || ' - ' || p.DESCRICAO PRG
         , l.SITUACAO_ORDEM SITU
         , TO_CHAR(o.DATA_HORA, 'DD/MM/YYYY HH24:MI') DT
+        , TO_CHAR(o.DATA_ENTRADA_CORTE, 'DD/MM/YYYY') DT_CORTE
         FROM PCPC_040 l
         JOIN HDOC_036 p
           ON p.CODIGO_PROGRAMA = l.NOME_PROGRAMA_CRIACAO
