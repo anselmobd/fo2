@@ -1,0 +1,9 @@
+{% extends 'index.html' %}
+
+{% block title.content %}CD - {{ block.super }}{% endblock title.content %}
+
+{% block header.content %}CD - {{ block.super }}{% endblock header.content %}
+
+{% block content %}
+{% include 'cd/menu.html' %}
+{% endblock %}

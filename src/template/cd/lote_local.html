@@ -1,0 +1,35 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/cd/">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="/cd/lote_local/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_lote');
+  inp.select();
+</script>
+{% endblock javascript %}
+
+{% if erro %}
+
+  <h3>Lote não encontrado</h3>
+
+{% elif lote %}
+
+  <br/>
+  Lote informado: <b>{{lote}}</b>
+
+{% endif %}
+{% endblock content %}
