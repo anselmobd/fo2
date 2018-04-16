@@ -29,7 +29,13 @@
 {% elif lote %}
 
 <br/>
+<p>
 Lote selecionado: <b>{{lote}}</b>
+</p>
+<table>
+  {% include "layout/html_thead.html" with data=i_headers only %}
+  {% include "layout/html_tbody_link.html" with fields=i_fields data=i_data link=i_link only %}
+</table>
 <table>
   <tr>
     <td style="vertical-align: top;">
@@ -49,10 +55,6 @@ Lote selecionado: <b>{{lote}}</b>
   </tr>
 </table>
 <br />
-<table>
-  {% include "layout/html_thead.html" with data=i_headers only %}
-  {% include "layout/html_tbody_link.html" with fields=i_fields data=i_data link=i_link only %}
-</table>
 <table>
   {% include "layout/html_thead.html" with data=o_headers only %}
   {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
