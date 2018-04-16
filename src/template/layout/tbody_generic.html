@@ -20,11 +20,23 @@
             {% endif %}
           {% endif %}
         ">
+          {% with field|add:'|HOVER' as field_hover %}
+            {% if row|get_item:field_hover %}
+              <span title="{{ row|get_item:field_hover }}">
+            {% endif %}
+          {% endwith %}
+
           {% if field in safe %}
             {{ row|get_item:field|safe }}
           {% else %}
             {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
           {% endif %}
+
+          {% with field|add:'|HOVER' as field_hover %}
+            {% if row|get_item:field_hover %}
+              </span>
+            {% endif %}
+          {% endwith %}
         </td>
       {% endif %}
     {% else %}
@@ -40,11 +52,23 @@
           {% endif %}
         {% endif %}
       ">
+        {% with field|add:'|HOVER' as field_hover %}
+          {% if row|get_item:field_hover %}
+            <span title="{{ row|get_item:field_hover }}">
+          {% endif %}
+        {% endwith %}
+
         {% if field in safe %}
           {{ row|get_item:field|safe }}
         {% else %}
           {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
         {% endif %}
+
+        {% with field|add:'|HOVER' as field_hover %}
+          {% if row|get_item:field_hover %}
+            </span>
+          {% endif %}
+        {% endwith %}
       </td>
     {% endif %}
   {% endfor %}
