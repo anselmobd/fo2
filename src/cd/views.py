@@ -4,6 +4,8 @@ from django.views import View
 
 from cd.forms import LoteForm
 
+import lotes.models
+
 
 def index(request):
     context = {}
@@ -19,6 +21,16 @@ class LotelLocal(View):
         context = {'lote': lote}
         periodo = lote[:4]
         ordem_confeccao = lote[-5:]
+
+        data = lotes.models.posicao_get_op(
+            cursor, periodo, ordem_confeccao)
+        if len(data) == 0:
+            context.update({'erro': 'Lote não encontrado'})
+            return context
+
+        row = data[0]
+        op = row['OP']
+        context.update({'op': op})
 
         return context
 

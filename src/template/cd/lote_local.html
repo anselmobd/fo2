@@ -21,15 +21,16 @@
   inp.select();
 </script>
 {% endblock javascript %}
-
+<br/>
+Lote informado: <b>{{lote}}</b>
 {% if erro %}
 
-  <h3>Lote não encontrado</h3>
+  <h3>{{ erro }}</h3>
 
-{% elif lote %}
+{% else %}
 
   <br/>
-  Lote informado: <b>{{lote}}</b>
+  OP: <b>{{ op }}</b>
 
 {% endif %}
 {% endblock content %}
