@@ -1,9 +1,17 @@
-__version__ = '0.1.74'
-__version__date__ = '10/04/2018'
+__version__ = '0.1.76'
+__version__date__ = '16/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.76 - 2018/04/16
+#   . Posição de lote: nova visualização (ainda e evolução)
+#
+# - 0.1.75 - 2018/04/12
+#   . OP: Corrigindo totais de 2a. qualidade
+#   . Busca de produto: Por cliente
+#   . Posição de lote: Mostra quantidade em conserto
 #
 # - 0.1.74 - 2018/04/10
 #   . Necessidade de insumos de Previsão de produção passou a ser link em
