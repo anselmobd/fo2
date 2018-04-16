@@ -5,12 +5,12 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='lotes'),
 
-    url(r'^posicao/$', views.Posicao.as_view(), name='posicao'),
-    url(r'^posicao/(?P<lote>\d+)/$', views.Posicao.as_view(),
+    url(r'^posicao/$', views.Posicao2.as_view(), name='posicao'),
+    url(r'^posicao/(?P<lote>\d+)/$', views.Posicao2.as_view(),
         name='posicao_lote'),
 
-    url(r'^posicao2/$', views.Posicao2.as_view(), name='posicao2'),
-    url(r'^posicao2/(?P<lote>\d+)/$', views.Posicao2.as_view(),
+    url(r'^posicao2/$', views.Posicao.as_view(), name='posicao2'),
+    url(r'^posicao2/(?P<lote>\d+)/$', views.Posicao.as_view(),
         name='posicao2_lote'),
 
     url(r'^respons/$', views.respons, name='respons'),
