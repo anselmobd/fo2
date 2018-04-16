@@ -29,7 +29,7 @@
 {% elif lote %}
 
 <br/>
-Estágio atual do lote <b>{{lote}}</b>:
+Lote selecionado: <b>{{lote}}</b>
 <table>
   <tr>
     <td style="vertical-align: top;">
@@ -48,6 +48,7 @@ Estágio atual do lote <b>{{lote}}</b>:
     </td>
   </tr>
 </table>
+<br />
 <table>
   {% include "layout/html_thead.html" with data=i_headers only %}
   {% include "layout/html_tbody_link.html" with fields=i_fields data=i_data link=i_link only %}
@@ -62,6 +63,22 @@ Estágio atual do lote <b>{{lote}}</b>:
     {% include "layout/html_tbody_link.html" with fields=os_fields data=os_data link=os_link only %}
   </table>
 {% endif %}
+<br />
+<table>
+  {% include "layout/html_thead.html" with data=se_headers only %}
+  {% include "layout/html_tbody_group.html" with fields=se_fields data=se_data only %}
+</table>
+<br />
+<table>
+  {% include "layout/thead_generic.html" with data=hh_headers only %}
+  {% include "layout/tbody_generic.html" with fields=hh_fields data=hh_data only %}
+</table>
+<br />
+<table>
+  {% include "layout/thead_generic.html" with data=h_headers only %}
+  {% include "layout/tbody_generic.html" with fields=h_fields data=h_data only %}
+</table>
+<br />
 <table>
   {% include "layout/html_thead.html" with data=e_headers only %}
   {% include "layout/html_tbody_group.html" with fields=e_fields data=e_data group=e_group only %}
