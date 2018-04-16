@@ -274,3 +274,59 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
         if row['DT'] is None:
             row['DT'] = ''
     return data
+
+
+def posicao_so_estagios(cursor, periodo, ordem_confeccao):
+    sql = '''
+        SELECT
+          l.CODIGO_ESTAGIO COD_EST
+        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
+        , l.QTDE_PROGRAMADA Q_PROG
+        , l.QTDE_PECAS_PROG Q_P
+        , l.QTDE_A_PRODUZIR_PACOTE Q_AP
+        , l.QTDE_EM_PRODUCAO_PACOTE Q_EP
+        , l.QTDE_PECAS_PROD Q_PROD
+        , l.QTDE_PECAS_2A Q_2A
+        , l.QTDE_PERDAS Q_PERDA
+        , l.QTDE_CONSERTO Q_CONSERTO
+        , l.CODIGO_FAMILIA FAMI
+        , l.NUMERO_ORDEM OS
+        FROM PCPC_040 l
+        JOIN MQOP_005 e
+          ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+        WHERE l.PERIODO_PRODUCAO = %s
+          AND l.ORDEM_CONFECCAO = %s
+        ORDER BY
+          l.SEQ_OPERACAO
+    '''
+    cursor.execute(sql, [periodo, ordem_confeccao])
+    return rows_to_dict_list(cursor)
+
+
+def posicao_historico(cursor, periodo, ordem_confeccao):
+    sql = '''
+        SELECT
+          TO_CHAR(h.DATA_INSERCAO, 'DD/MM/YYYY HH24:MI:SS') DT
+        , h.PCPC040_ESTCONF EST
+        , h.TURNO_PRODUCAO TURNO
+        , h.CODIGO_FAMILIA FAMILIA
+        , h.QTDE_PRODUZIDA Q_P1
+        , h.QTDE_PECAS_2A Q_P2
+        , h.QTDE_CONSERTO Q_C
+        , h.QTDE_PERDAS Q_P
+        , coalesce(h.USUARIO_SYSTEXTIL, ' ') USU
+        , coalesce(h.PROCESSO_SYSTEXTIL, ' ') PRG
+        , coalesce(p.DESCRICAO, ' ') PRG_DESCR
+        FROM PCPC_045 h
+        LEFT JOIN HDOC_036 p
+          ON p.CODIGO_PROGRAMA = h.PROCESSO_SYSTEXTIL
+         AND p.LOCALE = 'pt_BR'
+        WHERE h.PCPC040_PERCONF = %s
+          AND h.PCPC040_ORDCONF = %s
+        ORDER BY
+          h.DATA_INSERCAO
+        , h.PCPC040_ESTCONF
+        , h.SEQUENCIA
+    '''
+    cursor.execute(sql, [periodo, ordem_confeccao])
+    return rows_to_dict_list(cursor)
