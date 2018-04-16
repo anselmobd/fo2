@@ -135,7 +135,7 @@ class Lote(models.Model):
         max_length=5, verbose_name='Referência')
     tamanho = models.CharField(
         max_length=3, verbose_name='Tamanho')
-    ordem_tamanho = models.SmallIntegerField(
+    ordem_tamanho = models.IntegerField(
         default=0, verbose_name='ordem tamanho')
     cor = models.CharField(
         max_length=6, verbose_name='Cor')
@@ -147,6 +147,8 @@ class Lote(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
+    local = models.CharField(
+        default='', max_length=3)
     caixa = models.ForeignKey(
         Caixa, null=True, default=None, on_delete=models.CASCADE)
 
