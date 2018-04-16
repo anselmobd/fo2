@@ -204,22 +204,136 @@ class Posicao2(View):
             'i_link': i_link,
         })
 
-        data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
-        group = ('EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A', 'Q_PERDA',
-                 'Q_CONSERTO', 'FAMI', 'OS')
-        group_rowspan(data, group)
+        data = models.posicao_so_estagios(cursor, periodo, ordem_confeccao)
+        estagios = []
+        q_programada = None
+        for row in data:
+            estagios.append(row['COD_EST'])
+            if q_programada is None:
+                q_programada = row['Q_P']
+            if row['Q_AP'] == 0:
+                row['Q_AP'] = '.'
+            if row['Q_EP'] == 0:
+                row['Q_EP'] = '.'
+            if row['Q_PROD'] == 0:
+                row['Q_PROD'] = '.'
+            if row['Q_2A'] == 0:
+                row['Q_2A'] = '.'
+            if row['Q_PERDA'] == 0:
+                row['Q_PERDA'] = '.'
+            if row['Q_CONSERTO'] == 0:
+                row['Q_CONSERTO'] = '.'
+            if row['FAMI'] == 0:
+                row['FAMI'] = '.'
+            if row['OS'] == 0:
+                row['OS'] = '.'
         context.update({
-            'e_headers': (
-                'Estágio', 'Prog.', 'A Prod.', 'Em Prod.', 'Prod.', '2a.',
-                'Perda', 'Conserto', 'Família', 'OS', 'Usuário', 'Data',
-                'Programa'),
-            'e_fields': (
-                'EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A',
-                'Q_PERDA', 'Q_CONSERTO', 'FAMI', 'OS', 'USU', 'DT',
-                'PRG'),
-            'e_group': group,
-            'e_data': data,
+            'se_headers': (
+                'Estágio', 'Progr.', 'A Prod.', 'Em Prod.',
+                'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Conserto',
+                'Família', 'OS'),
+            'se_fields': (
+                'EST', 'Q_P', 'Q_AP', 'Q_EP',
+                'Q_PROD', 'Q_2A', 'Q_PERDA', 'Q_CONSERTO',
+                'FAMI', 'OS'),
+            'se_data': data,
         })
+
+        # data = models.posicao_historico(cursor, periodo, ordem_confeccao)
+        # hh_headers = ['Data', 'Turno', 'Família', 'Estágio']
+        # hh_fields = ['DT', 'TURNO', 'FAMILIA', 'EST']
+        # for row in data:
+        #     for estagio in estagios:
+        #         field_est = 'Q_E{}'.format(estagio)
+        #         row[field_est] = ''
+        #         sep = ''
+        #         if estagio == row['EST']:
+        #             if row['Q_P1'] != 0:
+        #                 if row['Q_P1'] > 0:
+        #                     indicador = '->'
+        #                 else:
+        #                     indicador = '<-'
+        #                 row[field_est] += sep + '1ª:{}{}'.format(
+        #                     row['Q_P1'], indicador)
+        #                 sep = ', '
+        #             if row['Q_P2'] != 0:
+        #                 pprint(row['Q_P2'])
+        #                 if row['Q_P2'] > 0:
+        #                     indicador = '->'
+        #                 else:
+        #                     indicador = '<-'
+        #                 row[field_est] += sep + '2ª:{}{}'.format(
+        #                     row['Q_P2'], indicador)
+        #                 sep = ', '
+        #         else:
+        #             row[field_est] = '.'
+        #     row['PRG|HOVER'] = row['PRG_DESCR']
+        #     if row['FAMILIA'] == 0:
+        #         row['FAMILIA'] = '.'
+        #     if row['Q_P1'] == 0:
+        #         row['Q_P1'] = '.'
+        #     if row['Q_P2'] == 0:
+        #         row['Q_P2'] = '.'
+        #     if row['Q_P'] == 0:
+        #         row['Q_P'] = '.'
+        #     if row['Q_C'] == 0:
+        #         row['Q_C'] = '.'
+        # for estagio in estagios:
+        #     hh_fields.append('Q_E{}'.format(estagio))
+        # hh_fields += [
+        #     'Q_P1', 'Q_P2', 'Q_P', 'Q_C',
+        #     'USU', 'PRG']
+        # hh_headers += estagios
+        # hh_headers += [
+        #     'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Conserto',
+        #     'Usuário', 'Programa']
+        # context.update({
+        #     'hh_headers': hh_headers,
+        #     'hh_fields': hh_fields,
+        #     'hh_data': data,
+        # })
+
+        data = models.posicao_historico(cursor, periodo, ordem_confeccao)
+        for row in data:
+            row['PRG|HOVER'] = row['PRG_DESCR']
+            if row['FAMILIA'] == 0:
+                row['FAMILIA'] = '.'
+            if row['Q_P1'] == 0:
+                row['Q_P1'] = '.'
+            if row['Q_P2'] == 0:
+                row['Q_P2'] = '.'
+            if row['Q_P'] == 0:
+                row['Q_P'] = '.'
+            if row['Q_C'] == 0:
+                row['Q_C'] = '.'
+        context.update({
+            'h_headers': (
+                'Data', 'Turno', 'Família', 'Estágio',
+                'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Conserto',
+                'Usuário', 'Programa'),
+            'h_fields': (
+                'DT', 'TURNO', 'FAMILIA', 'EST',
+                'Q_P1', 'Q_P2', 'Q_P', 'Q_C',
+                'USU', 'PRG'),
+            'h_data': data,
+        })
+
+        # data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
+        # group = ('EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A', 'Q_PERDA',
+        #          'Q_CONSERTO', 'FAMI', 'OS')
+        # group_rowspan(data, group)
+        # context.update({
+        #     'e_headers': (
+        #         'Estágio', 'Progr.', 'A Prod.', 'Em Prod.', 'Prod.', '2a.',
+        #         'Perda', 'Conserto', 'Família', 'OS', 'Usuário', 'Data',
+        #         'Programa'),
+        #     'e_fields': (
+        #         'EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A',
+        #         'Q_PERDA', 'Q_CONSERTO', 'FAMI', 'OS', 'USU', 'DT',
+        #         'PRG'),
+        #     'e_group': group,
+        #     'e_data': data,
+        # })
 
         return context
 
