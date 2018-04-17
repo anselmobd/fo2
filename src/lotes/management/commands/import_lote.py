@@ -112,7 +112,11 @@ class Command(BaseCommand):
             sql = '''
                 SELECT
                   le.op
-                , sum(le.qtd_produzir*(1+substr(le.lote, 9, 1))) prog
+                , sum( le.qtd_produzir
+                       * ( 1
+                         + CAST( substr(le.lote, 9, 1) as INTEGER )
+                         )
+                     ) prog
                 FROM fo2_cd_lote le
                 --WHERE le.OP < 20
                 GROUP BY
