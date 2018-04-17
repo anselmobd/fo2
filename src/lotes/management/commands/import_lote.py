@@ -2,8 +2,6 @@ import sys
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
-from django.db.models import F, Sum
-from django.utils import timezone
 
 from fo2.models import rows_to_dict_list_lower
 import lotes.models as models
