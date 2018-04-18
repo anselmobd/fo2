@@ -19,7 +19,7 @@ def index(request):
 class LotelLocal(View):
     Form_class = LoteForm
     template_name = 'cd/lote_local.html'
-    title_name = 'Bipa lote indicando local'
+    title_name = 'Inventariar 63'
 
     def mount_context(self, cursor, form):
         endereco = form.cleaned_data['endereco']
