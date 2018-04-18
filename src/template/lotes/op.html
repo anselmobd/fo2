@@ -40,27 +40,45 @@
     {% include "layout/html_tbody.html" with fields=i4_fields data=i4_data only %}
   </table>
 {% endif %}
-{% if g_data %}
-  <h3>Grade original a produzir</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=g_headers only %}
-    {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
-  </table>
-{% endif %}
-{% if gp_data %}
-  <h3>Grade de perdas</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=gp_headers only %}
-    {% include "layout/html_tbody.html" with fields=gp_fields data=gp_data only %}
-  </table>
-{% endif %}
-{% if gs_data %}
-  <h3>Grade de segunda qualidade</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=gs_headers only %}
-    {% include "layout/html_tbody.html" with fields=gs_fields data=gs_data only %}
-  </table>
-{% endif %}
+<table>
+  <tr>
+    <td style="vertical-align: top;">
+      {% if g_data %}
+        <h3>Grade original a produzir</h3>
+        <table>
+          {% include "layout/html_thead.html" with data=g_headers only %}
+          {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
+        </table>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
+      <h3>Grade de perdas</h3>
+      {% if gp_data %}
+        <table>
+          {% include "layout/html_thead.html" with data=gp_headers only %}
+          {% include "layout/html_tbody.html" with fields=gp_fields data=gp_data only %}
+        </table>
+      {% else %}
+        <h3>Vazia</h3>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
+      <h3>Grade de 2ª qualidade</h3>
+      {% if gs_data %}
+        <table>
+          {% include "layout/html_thead.html" with data=gs_headers only %}
+          {% include "layout/html_tbody.html" with fields=gs_fields data=gs_data only %}
+        </table>
+      {% else %}
+        <h3>Vazia</h3>
+      {% endif %}
+    </td>
+  </tr>
+</table>
 <h3>Estágios</h3>
 <div>
   <canvas id="estagioChart" height="30"></canvas>
