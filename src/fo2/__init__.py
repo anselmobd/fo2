@@ -1,15 +1,19 @@
-__version__ = '0.1.78'
-__version__date__ = '17/04/2018'
+__version__ = '0.1.79'
+__version__date__ = '18/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
 #
+# - 0.1.79 - 2018/04/18
+#   . CD: Primeira versão funcional de rotina de inventário de lotes,
+#         com endereço
+#
 # - 0.1.78 - 2018/04/17
 #   . Util: Command para importar lotes
 #
 # - 0.1.77 - 2018/04/16
-#   . CD: iniciando rotina de inventário de lotes, como endereço
+#   . CD: iniciando rotina de inventário de lotes, com endereço
 #
 # - 0.1.76 - 2018/04/16
 #   . Posição de lote: nova visualização (ainda e evolução)
