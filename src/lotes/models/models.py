@@ -148,7 +148,10 @@ class Lote(models.Model):
         null=True, blank=True,
         verbose_name='alterado em')
     local = models.CharField(
-        default='', max_length=3)
+        default=None, max_length=3)
+    local_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='localizado em')
     caixa = models.ForeignKey(
         Caixa, null=True, default=None, on_delete=models.CASCADE)
 
@@ -158,6 +161,8 @@ class Lote(models.Model):
             self.update_at = timezone.now()
         else:  # At create have no "id"
             self.create_at = timezone.now()
+            if self.local:
+                self.local_at = timezone.now()
         return super(Lote, self).save(*args, **kwargs)
 
     class Meta:
