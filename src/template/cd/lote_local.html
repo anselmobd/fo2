@@ -13,24 +13,45 @@
 <form action="/cd/lote_local/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Busca"/>
+    {% if confirma %}
+      {% if local %}
+        {% if local != endereco%}
+          <h3>Lote identificado: <b>{{ lote }}</b></h3>
+          <h3><b>Endereço atual: {{ local }}</b></h3>
+          <h3><b>Trocar</b> para endereço <b>{{ endereco }}</b>?</h3>
+        {% endif %}
+      {% else %}
+        <h3>Lote identificado: <b>{{ lote }}</b></h3>
+        <h3>Colocar no endereço <b>{{ endereco }}</b>?</h3>
+      {% endif %}
+      <input type="submit" name="confirma" value="Confirma"/>
+    {% else %}
+      <input type="submit" name="identifica" value="Identifica"/>
+    {% endif %}
 </form>
+<br/>
 {% block javascript %}
 <script>
   var inp = document.getElementById('id_lote');
   inp.select();
 </script>
 {% endblock javascript %}
-<br/>
-Lote informado: <b>{{lote}}</b>
 {% if erro %}
-
   <h3>{{ erro }}</h3>
-
 {% else %}
-
-  <br/>
-  OP: <b>{{ op }}</b>
-
+  {% if identificado %}
+    <h3>Lote <b>{{ identificado }}</b> colocado no endereço <b>{{ endereco }}</b></h3>
+  {% elif lote %}
+    {% if local %}
+      {% if local == endereco%}
+        <h3>Lote identificado: <b>{{ lote }}</b></h3>
+        <h3>Endereço <b>{{ local }}</b> já é o atual.</h3>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  {% if referencia %}
+    <h3>Item: <b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></h3>
+    <h3>Qtd.: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;&nbsp;&nbsp;OP: <b>{{ op }}</b></h3>
+  {% endif %}
 {% endif %}
 {% endblock content %}
