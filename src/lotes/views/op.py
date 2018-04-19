@@ -154,8 +154,10 @@ class Op(View):
             context.update({
                 'e_headers': ('Estágio', '% Produzido',
                               'Itens 1ª Qualidade', 'Itens 2ª Qualidade',
-                              'Itens Perda', 'Lotes no estágio'),
-                'e_fields': ('EST', 'PERC', 'PROD', 'Q2', 'PERDA', 'LOTES'),
+                              'Itens Perda', 'Itens Conserto', 'Lotes no estágio'),
+                'e_fields': ('EST', 'PERC',
+                             'PROD', 'Q2',
+                             'PERDA', 'CONSERTO', 'LOTES'),
                 'e_data': e_data,
                 'qtd_lotes_fim': qtd_lotes_fim,
             })
