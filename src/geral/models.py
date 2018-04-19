@@ -44,7 +44,8 @@ class Dispositivos(models.Model):
 
 
 class RoloBipado(models.Model):
-    dispositivo = models.ForeignKey(Dispositivos, on_delete=models.CASCADE)
+    dispositivo = models.ForeignKey(
+        Dispositivos, on_delete=models.CASCADE, null=True, blank=True)
     rolo = models.IntegerField(
         verbose_name='Rolo')
     date = models.DateTimeField(
@@ -55,6 +56,9 @@ class RoloBipado(models.Model):
         max_length=3, verbose_name='Tamanho')
     cor = models.CharField(
         max_length=6, verbose_name='Cor')
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='usuário')
 
     class Meta:
         db_table = "fo2_ger_rolo_bipado"
