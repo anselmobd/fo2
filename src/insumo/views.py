@@ -11,6 +11,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.db import connections
 from django.http import JsonResponse, HttpResponse
+from django.db.models import Q
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2 import settings
 from fo2.models import rows_to_dict_list
@@ -22,8 +24,8 @@ from utils.views import totalize_grouped_data
 from utils.functions import segunda, max_not_None, min_not_None
 
 import insumo.models as models
-from .forms import RefForm, RolosBipadosForm, NecessidadeForm, ReceberForm, \
-                   EstoqueForm, MapaRefsForm, PrevisaoForm
+from .forms import RefForm, RolosBipadosForm, RoloForm, NecessidadeForm, \
+                   ReceberForm, EstoqueForm, MapaRefsForm, PrevisaoForm
 
 
 def index(request):
@@ -251,7 +253,10 @@ class RolosBipados(View):
         filename = ''
         filenamesep = ''
         if dispositivo != '':
-            rolos = rolos.filter(dispositivo__nome__icontains=dispositivo)
+            rolos = rolos.filter(
+                Q(dispositivo__nome__icontains=dispositivo)
+                | Q(usuario__username__icontains=dispositivo)
+                )
             context.update({
                 'dispositivo': dispositivo,
             })
@@ -292,22 +297,27 @@ class RolosBipados(View):
                 'msg_erro': 'Nenhum rolo selecionado',
             })
         else:
-            data = []
+            rolos = rolos.values(
+                'dispositivo__nome', 'usuario__username', 'rolo', 'date',
+                'referencia', 'tamanho', 'cor')
             dir_filename = os.path.join('insumos_rolos_bipados', filename)
             arq = os.path.join(settings.MEDIA_ROOT, dir_filename)
             with open(arq, 'w') as f:
                 for rolo in rolos:
-                    row = rolo.__dict__
-                    row['dispositivo'] = rolo.dispositivo
-                    data.append(row)
-                    print("{:06}{:09}".format(1, rolo.rolo), file=f)
+                    print("{:06}{:09}".format(1, rolo['rolo']), file=f)
+                    if not rolo['dispositivo__nome']:
+                        rolo['dispositivo__nome'] = '-'
+                    if not rolo['usuario__username']:
+                        rolo['usuario__username'] = '-'
             context.update({
                 'filename': dir_filename,
-                'headers': ('dispositivo', 'Rolo', 'Data/hora',
+                'headers': ('Dispositivo', 'Usuário',
+                            'Rolo', 'Data/hora',
                             'Referencia', 'Tamanho', 'Cor'),
-                'fields': ('dispositivo', 'rolo', 'date',
+                'fields': ('dispositivo__nome', 'usuario__username',
+                           'rolo', 'date',
                            'referencia', 'tamanho', 'cor'),
-                'data': data,
+                'data': rolos,
             })
 
         return context
@@ -330,6 +340,109 @@ class RolosBipados(View):
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
                 cursor, dispositivo, ref, cor, data_de, data_ate))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class BipaRolo(PermissionRequiredMixin, View):
+    permission_required = 'lotes.can_inventorize_lote'
+    Form_class = RoloForm
+    template_name = 'cd/bipa_rolo.html'
+    title_name = 'Bipa rolo'
+
+    def mount_context(self, request, cursor, form):
+        endereco = form.cleaned_data['endereco']
+        lote = form.cleaned_data['lote']
+        identificado = form.cleaned_data['identificado']
+
+        context = {'endereco': endereco}
+
+        try:
+            lote_rec = lotes.models.Lote.objects.get(lote=lote)
+        except lotes.models.Lote.DoesNotExist:
+            context.update({'erro': 'Lote não encontrado'})
+            return context
+        context.update({
+            'op': lote_rec.op,
+            'referencia': lote_rec.referencia,
+            'cor': lote_rec.cor,
+            'tamanho': lote_rec.tamanho,
+            'qtd_produzir': lote_rec.qtd_produzir,
+            'local': lote_rec.local,
+            })
+
+        # print('identificado={}'.format(identificado))
+        if identificado:
+            # print('if identificado')
+            form.data['identificado'] = None
+            form.data['lote'] = None
+            if lote != identificado:
+                context.update({
+                    'erro': 'A confirmação é bipando o mesmo lote. '
+                            'Identifique o lote novamente.'})
+                return context
+
+            try:
+                lote_rec = lotes.models.Lote.objects.get(lote=lote)
+            except lotes.models.Lote.DoesNotExist:
+                context.update({
+                    'erro': 'Lote não encontrado no banco de dados'})
+                return context
+
+            lote_rec.local = endereco
+            # print('request.user = {}'.format(request.user))
+            # pprint(request.user.__dict__['_wrapped'].__dict__)
+            # print('request.user = {}'.format(request.user))
+            lote_rec.local_usuario = request.user
+            lote_rec.save()
+
+            context['identificado'] = identificado
+        else:
+            # print('if not identificado')
+            context['lote'] = lote
+            # periodo = lote[:4]
+            # ordem_confeccao = lote[-5:]
+
+            # data = lotes.models.posicao_get_op(
+            #     cursor, periodo, ordem_confeccao)
+            # if len(data) == 0:
+            #     context.update({'erro': 'Lote não encontrado'})
+            #     return context
+            # row = data[0]
+            # op = row['OP']
+
+            # print('lote_rec.local = "{}" endereco = "{}"'.format(
+            #     lote_rec.local, endereco))
+            if lote_rec.local != endereco:
+                context['confirma'] = True
+                form.data['identificado'] = form.data['lote']
+            form.data['lote'] = None
+
+        # lotes_rec = lotes.models.Lote.objects.get(local=endereco)
+        # data = rows_to_dict_list_lower(lotes_rec)
+        # pprint(data)
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'lote' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'lote' in kwargs:
+            form.data['lote'] = kwargs['lote']
+        if form.is_valid():
+            # pprint(request.POST)
+            cursor = connections['so'].cursor()
+            data = self.mount_context(request, cursor, form)
+            context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
 
