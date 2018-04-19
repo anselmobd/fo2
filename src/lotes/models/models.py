@@ -168,6 +168,7 @@ class Lote(models.Model):
     class Meta:
         db_table = "fo2_cd_lote"
         verbose_name = "lote"
+        permissions = (("can_inventorize_lote", "Can inventorize lote"),)
 
 
 # class LoteCaixa(models.Model):
