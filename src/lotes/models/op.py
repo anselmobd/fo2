@@ -145,6 +145,12 @@ def op_estagios(cursor, op):
               AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
           ) PERDA
         , (SELECT
+              SUM( lp.QTDE_CONSERTO )
+            FROM pcpc_040 lp
+            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
+              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
+          ) CONSERTO
+        , (SELECT
               count(*)
             FROM pcpc_040 lp
             WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
