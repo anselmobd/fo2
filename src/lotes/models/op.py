@@ -261,6 +261,31 @@ def op_sortimentos(cursor, op, tipo):
             '''
             )
 
+    elif tipo == 'c':  # Conserto
+        # sortimento
+        grade.value(
+            id='QUANTIDADE',
+            sql='''
+                SELECT
+                  oi.TAMANHO TAMANHO
+                , oi.SORTIMENTO SORTIMENTO
+                , sum(lote.QTDE_CONSERTO ) QUANTIDADE
+                FROM PCPC_021 oi
+                JOIN PCPC_040 lote
+                  ON lote.ORDEM_PRODUCAO = oi.ORDEM_PRODUCAO
+                 AND lote.PROCONF_SUBGRUPO = oi.TAMANHO
+                 AND lote.PROCONF_ITEM = oi.SORTIMENTO
+                WHERE oi.ORDEM_PRODUCAO = %s
+                GROUP BY
+                  oi.SEQUENCIA_TAMANHO
+                , oi.TAMANHO
+                , oi.SORTIMENTO
+                ORDER BY
+                  oi.SEQUENCIA_TAMANHO
+                , oi.SORTIMENTO
+            '''
+            )
+
     elif tipo == 's':  # Segunda qualidade
         # sortimento
         grade.value(

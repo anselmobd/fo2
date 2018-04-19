@@ -137,6 +137,16 @@ class Op(View):
                     'gs_data': gs_data,
                 })
 
+            # Grade de conserto
+            gc_header, gc_fields, gc_data, total = models.op_sortimentos(
+                cursor, op, 'c')
+            if total != 0:
+                context.update({
+                    'gc_headers': gc_header,
+                    'gc_fields': gc_fields,
+                    'gc_data': gc_data,
+                })
+
             # Estágios
             e_data = models.op_estagios(cursor, op)
             for row in e_data:
