@@ -64,6 +64,7 @@ class RoloBipado(models.Model):
         db_table = "fo2_ger_rolo_bipado"
         verbose_name = "rolo bipado"
         verbose_name_plural = "rolos bipados"
+        permissions = (("can_beep_rolo", "Can beep rolo"),)
 
 
 class Painel(models.Model):
