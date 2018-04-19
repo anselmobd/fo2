@@ -3,6 +3,7 @@ from pprint import pprint
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.models import rows_to_dict_list_lower
 
@@ -16,7 +17,8 @@ def index(request):
     return render(request, 'cd/index.html', context)
 
 
-class LotelLocal(View):
+class LotelLocal(PermissionRequiredMixin, View):
+    permission_required = 'lotes.can_inventorize_lote'
     Form_class = cd.forms.LoteForm
     template_name = 'cd/lote_local.html'
     title_name = 'Inventariar 63'
