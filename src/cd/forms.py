@@ -25,3 +25,54 @@ class LoteForm(forms.Form):
             raise forms.ValidationError(
                 "Depois da letra inicial deve ter apenas números.")
         return endereco
+
+
+class EstoqueForm(forms.Form):
+    endereco = forms.CharField(
+        label='Endereço', required=False, min_length=2, max_length=3,
+        widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
+    lote = forms.CharField(
+        label='Lote', required=False, min_length=9, max_length=9,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    op = forms.CharField(
+        label='OP', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    ref = forms.CharField(
+        label='Referência', required=False, min_length=5, max_length=5,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+    tam = forms.CharField(
+        label='Tamanho', required=False, min_length=1, max_length=3,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+    cor = forms.CharField(
+        label='Cor', required=False, min_length=1, max_length=6,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_endereco(self):
+        endereco = self.cleaned_data['endereco'].upper()
+        if endereco:
+            if not endereco[0].isalpha():
+                raise forms.ValidationError(
+                    "Deve iniciar com uma letra.")
+            if not endereco[1:].isdigit():
+                raise forms.ValidationError(
+                    "Depois da letra inicial deve ter apenas números.")
+        data = self.data.copy()
+        data['endereco'] = endereco
+        self.data = data
+        return endereco
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
+
+    def clean_cor(self):
+        cor = self.cleaned_data['cor'].upper()
+        if cor:
+            cor = cor.zfill(6)
+        data = self.data.copy()
+        data['cor'] = cor
+        self.data = data
+        return cor

@@ -1,0 +1,52 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'cd_estoque' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+</form>
+<br/>
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% else %}
+  {% if data %}
+    {% if endereco or lote or op or ref or tam or cor %}
+      <h3>Busca por</h3>
+    {% endif %}
+    {% if endereco %}
+      <h4>Endereço: <b>{{ endereco }}</b></h4>
+    {% endif %}
+    {% if lote %}
+      <h4>Lote: <b>{{ lote }}</b></h4>
+    {% endif %}
+    {% if op %}
+      <h4>OP: <b>{{ op }}</b></h4>
+    {% endif %}
+    {% if ref %}
+      <h4>Referência: <b>{{ ref }}</b></h4>
+    {% endif %}
+    {% if tam %}
+      <h4>Tamanho: <b>{{ tam }}</b></h4>
+    {% endif %}
+    {% if cor %}
+      <h4>Cor: <b>{{ cor }}</b></h4>
+    {% endif %}
+  {% endif %}
+  {% if data %}
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock content %}
