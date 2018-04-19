@@ -23,7 +23,7 @@ class LotelLocal(PermissionRequiredMixin, View):
     template_name = 'cd/lote_local.html'
     title_name = 'Inventariar 63'
 
-    def mount_context(self, cursor, form):
+    def mount_context(self, request, cursor, form):
         endereco = form.cleaned_data['endereco']
         lote = form.cleaned_data['lote']
         identificado = form.cleaned_data['identificado']
@@ -63,6 +63,10 @@ class LotelLocal(PermissionRequiredMixin, View):
                 return context
 
             lote_rec.local = endereco
+            # print('request.user = {}'.format(request.user))
+            # pprint(request.user.__dict__['_wrapped'].__dict__)
+            # print('request.user = {}'.format(request.user))
+            lote_rec.local_usuario = request.user
             lote_rec.save()
 
             context['identificado'] = identificado
@@ -110,7 +114,7 @@ class LotelLocal(PermissionRequiredMixin, View):
         if form.is_valid():
             # pprint(request.POST)
             cursor = connections['so'].cursor()
-            data = self.mount_context(cursor, form)
+            data = self.mount_context(request, cursor, form)
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
@@ -156,17 +160,20 @@ class Estoque(View):
             data_rec = data_rec.filter(tamanho=tam)
         if cor:
             data_rec = data_rec.filter(cor=cor)
-        data = data_rec.values()
+        data = data_rec.values(
+            'local', 'local_at', 'local_usuario__username', 'op', 'lote',
+            'referencia', 'tamanho', 'cor', 'qtd_produzir')
+        pprint(data)
         # pprint(data[0])
         # pprint(list(data_rec.values()[:3]))
         # print('len ->>>>>>>>>', len(data_rec.values()[:3]))
         # for row in data_rec[:3]:
         #     pprint(row.lote)
         context.update({
-            'headers': ('Endereço', 'OP', 'Lote',
-                        'Referência', 'Tamanho', 'Cor', 'Quant'),
-            'fields': ('local', 'op', 'lote',
-                       'referencia', 'tamanho', 'cor', 'qtd_produzir'),
+            'headers': ('Endereço', 'Em', 'Por', 'Lote',
+                        'Referência', 'Tamanho', 'Cor', 'Quant', 'OP'),
+            'fields': ('local', 'local_at', 'local_usuario__username', 'lote',
+                       'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op'),
             'data': data,
         })
 
