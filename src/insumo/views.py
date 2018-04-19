@@ -345,9 +345,9 @@ class RolosBipados(View):
 
 
 class BipaRolo(PermissionRequiredMixin, View):
-    permission_required = 'lotes.can_inventorize_lote'
+    permission_required = 'geral.can_beep_rolo'
     Form_class = RoloForm
-    template_name = 'cd/bipa_rolo.html'
+    template_name = 'insumo/bipa_rolo.html'
     title_name = 'Bipa rolo'
 
     def mount_context(self, request, cursor, form):
