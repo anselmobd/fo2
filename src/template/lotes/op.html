@@ -44,7 +44,7 @@
   <tr>
     <td style="vertical-align: top;">
       {% if g_data %}
-        <h3>Grade original a produzir</h3>
+        <h3>Grades: Original a produzir</h3>
         <table>
           {% include "layout/html_thead.html" with data=g_headers only %}
           {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
@@ -54,7 +54,20 @@
     <td></td>
     <td style="border-left: thin solid lightgrey;"></td>
     <td style="vertical-align: top;">
-      <h3>Grade de perdas</h3>
+      <h3>2ª qualidade</h3>
+      {% if gs_data %}
+        <table>
+          {% include "layout/html_thead.html" with data=gs_headers only %}
+          {% include "layout/html_tbody.html" with fields=gs_fields data=gs_data only %}
+        </table>
+      {% else %}
+        <h3>Vazia</h3>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
+      <h3>Perdas</h3>
       {% if gp_data %}
         <table>
           {% include "layout/html_thead.html" with data=gp_headers only %}
@@ -67,11 +80,11 @@
     <td></td>
     <td style="border-left: thin solid lightgrey;"></td>
     <td style="vertical-align: top;">
-      <h3>Grade de 2ª qualidade</h3>
-      {% if gs_data %}
+      <h3>Conserto</h3>
+      {% if gc_data %}
         <table>
-          {% include "layout/html_thead.html" with data=gs_headers only %}
-          {% include "layout/html_tbody.html" with fields=gs_fields data=gs_data only %}
+          {% include "layout/html_thead.html" with data=gc_headers only %}
+          {% include "layout/html_tbody.html" with fields=gc_fields data=gc_data only %}
         </table>
       {% else %}
         <h3>Vazia</h3>
