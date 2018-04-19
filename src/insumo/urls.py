@@ -20,6 +20,9 @@ urlpatterns = [
     url(r'^rolos_bipados/$', views.RolosBipados.as_view(),
         name='rolos_bipados'),
 
+    url(r'^bipa_rolo/$', views.BipaRolo.as_view(),
+        name='insumo_bipa_rolo'),
+
     url(r'^necessidade/$', views.Necessidade.as_view(),
         name='insumo_necessidade'),
 

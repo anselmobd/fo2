@@ -20,7 +20,7 @@ class RefForm(forms.Form):
 
 class RolosBipadosForm(forms.Form):
     dispositivo = forms.CharField(
-        label='Dispositivo', max_length=32, required=False,
+        label='Dispositivo ou Usuário', max_length=32, required=False,
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
 
@@ -52,6 +52,16 @@ class RolosBipadosForm(forms.Form):
         data['cor'] = cor
         self.data = data
         return cor
+
+
+class RoloForm(forms.Form):
+    rolo = forms.CharField(
+        label='Rolo', max_length=9, min_length=9,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    identificado = forms.CharField(
+        label='identificado', required=False,
+        widget=forms.HiddenInput())
 
 
 class NecessidadeForm(forms.Form):
