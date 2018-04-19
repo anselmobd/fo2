@@ -1,7 +1,7 @@
 {% extends 'cd/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="/cd/">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="/cd/lote_local/" method="post">
+<form action="{% url 'cd_lote_local' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     {% if confirma %}
