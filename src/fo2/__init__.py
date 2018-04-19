@@ -1,9 +1,12 @@
-__version__ = '0.1.79'
-__version__date__ = '18/04/2018'
+__version__ = '0.1.80'
+__version__date__ = '19/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.80 - 2018/04/19
+#   . CD - estoque: Primeira versão funcional de pesquisa de estoque de 63-CD
 #
 # - 0.1.79 - 2018/04/18
 #   . CD: Primeira versão funcional de rotina de inventário de lotes,
