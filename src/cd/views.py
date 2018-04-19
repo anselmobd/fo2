@@ -8,7 +8,7 @@ from fo2.models import rows_to_dict_list_lower
 
 import lotes.models
 
-from cd.forms import LoteForm
+import cd.forms
 
 
 def index(request):
@@ -17,7 +17,7 @@ def index(request):
 
 
 class LotelLocal(View):
-    Form_class = LoteForm
+    Form_class = cd.forms.LoteForm
     template_name = 'cd/lote_local.html'
     title_name = 'Inventariar 63'
 
@@ -107,6 +107,84 @@ class LotelLocal(View):
             form.data['lote'] = kwargs['lote']
         if form.is_valid():
             # pprint(request.POST)
+            cursor = connections['so'].cursor()
+            data = self.mount_context(cursor, form)
+            context.update(data)
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class Estoque(View):
+    Form_class = cd.forms.EstoqueForm
+    template_name = 'cd/estoque.html'
+    title_name = 'Inventariar 63'
+
+    def mount_context(self, cursor, form):
+        endereco = form.cleaned_data['endereco']
+        lote = form.cleaned_data['lote']
+        op = form.cleaned_data['op']
+        ref = form.cleaned_data['ref']
+        tam = form.cleaned_data['tam']
+        cor = form.cleaned_data['cor']
+
+        context = {'endereco': endereco,
+                   'lote': lote,
+                   'op': op,
+                   'ref': ref,
+                   'tam': tam,
+                   'cor': cor,
+                   }
+
+        data_rec = lotes.models.Lote.objects
+        if endereco:
+            data_rec = data_rec.filter(local=endereco)
+        else:
+            # data_rec = data_rec.filter(local__isnull=False)
+            data_rec = data_rec.exclude(
+                local__isnull=True
+            ).exclude(
+                local__exact='')
+        if lote:
+            data_rec = data_rec.filter(lote=lote)
+        if op:
+            data_rec = data_rec.filter(op=op)
+        if ref:
+            data_rec = data_rec.filter(referencia=ref)
+        if tam:
+            data_rec = data_rec.filter(tamanho=tam)
+        if cor:
+            data_rec = data_rec.filter(cor=cor)
+        data = data_rec.values()
+        # pprint(data[0])
+        # pprint(list(data_rec.values()[:3]))
+        # print('len ->>>>>>>>>', len(data_rec.values()[:3]))
+        # for row in data_rec[:3]:
+        #     pprint(row.lote)
+        context.update({
+            'headers': ('Endereço', 'OP', 'Lote',
+                        'Referência', 'Tamanho', 'Cor', 'Quant'),
+            'fields': ('local', 'op', 'lote',
+                       'referencia', 'tamanho', 'cor', 'qtd_produzir'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'lote' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'lote' in kwargs:
+            form.data['lote'] = kwargs['lote']
+        if form.is_valid():
             cursor = connections['so'].cursor()
             data = self.mount_context(cursor, form)
             context.update(data)
