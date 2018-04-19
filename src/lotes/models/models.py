@@ -152,6 +152,9 @@ class Lote(models.Model):
     local_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='localizado em')
+    local_usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='localizado por')
     caixa = models.ForeignKey(
         Caixa, null=True, default=None, on_delete=models.CASCADE)
 
@@ -159,10 +162,10 @@ class Lote(models.Model):
         ''' On create and update, get timestamps '''
         if self.id:
             self.update_at = timezone.now()
-        else:  # At create have no "id"
-            self.create_at = timezone.now()
             if self.local:
                 self.local_at = timezone.now()
+        else:  # At create have no "id"
+            self.create_at = timezone.now()
         return super(Lote, self).save(*args, **kwargs)
 
     class Meta:
