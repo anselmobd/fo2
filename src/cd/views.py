@@ -44,9 +44,7 @@ class LotelLocal(PermissionRequiredMixin, View):
             'local': lote_rec.local,
             })
 
-        # print('identificado={}'.format(identificado))
         if identificado:
-            # print('if identificado')
             form.data['identificado'] = None
             form.data['lote'] = None
             if lote != identificado:
@@ -55,45 +53,17 @@ class LotelLocal(PermissionRequiredMixin, View):
                             'Identifique o lote novamente.'})
                 return context
 
-            # try:
-            #     lote_rec = lotes.models.Lote.objects.get(lote=lote)
-            # except lotes.models.Lote.DoesNotExist:
-            #     context.update({
-            #         'erro': 'Lote não encontrado no banco de dados'})
-            #     return context
-
             lote_rec.local = endereco
-            # print('request.user = {}'.format(request.user))
-            # pprint(request.user.__dict__['_wrapped'].__dict__)
-            # print('request.user = {}'.format(request.user))
             lote_rec.local_usuario = request.user
             lote_rec.save()
 
             context['identificado'] = identificado
         else:
-            # print('if not identificado')
             context['lote'] = lote
-            # periodo = lote[:4]
-            # ordem_confeccao = lote[-5:]
-
-            # data = lotes.models.posicao_get_op(
-            #     cursor, periodo, ordem_confeccao)
-            # if len(data) == 0:
-            #     context.update({'erro': 'Lote não encontrado'})
-            #     return context
-            # row = data[0]
-            # op = row['OP']
-
-            # print('lote_rec.local = "{}" endereco = "{}"'.format(
-            #     lote_rec.local, endereco))
             if lote_rec.local != endereco:
                 context['confirma'] = True
                 form.data['identificado'] = form.data['lote']
             form.data['lote'] = None
-
-        # lotes_rec = lotes.models.Lote.objects.get(local=endereco)
-        # data = rows_to_dict_list_lower(lotes_rec)
-        # pprint(data)
 
         return context
 
@@ -112,7 +82,6 @@ class LotelLocal(PermissionRequiredMixin, View):
         if 'lote' in kwargs:
             form.data['lote'] = kwargs['lote']
         if form.is_valid():
-            # pprint(request.POST)
             cursor = connections['so'].cursor()
             data = self.mount_context(request, cursor, form)
             context.update(data)
