@@ -1,18 +1,18 @@
+import datetime
+import math
 import os
 import re
 import time
-from pprint import pprint
-import datetime
-import math
 from operator import itemgetter
+from pprint import pprint
 
-from django.urls import reverse
-from django.shortcuts import render, redirect
-from django.views import View
 from django.db import connections
-from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.views import View
 
 from fo2 import settings
 from fo2.models import rows_to_dict_list
@@ -20,12 +20,19 @@ from fo2.template import group_rowspan
 
 from geral.models import Dispositivos, RoloBipado
 from utils.forms import FiltroForm
-from utils.views import totalize_grouped_data
 from utils.functions import segunda, max_not_None, min_not_None
+from utils.views import totalize_grouped_data
 
 import insumo.models as models
-from .forms import RefForm, RolosBipadosForm, RoloForm, NecessidadeForm, \
-                   ReceberForm, EstoqueForm, MapaRefsForm, PrevisaoForm
+from .forms import \
+    EstoqueForm, \
+    MapaRefsForm, \
+    NecessidadeForm, \
+    PrevisaoForm, \
+    RefForm, \
+    RoloForm, \
+    RolosBipadosForm, \
+    ReceberForm
 
 
 def index(request):
@@ -213,18 +220,7 @@ def rolo_json(request, *args, **kwargs):
         dispositivo = dispositivo[0]
     barcode = re.sub("\D", "", kwargs['barcode'])[:9]
     cursor = connections['so'].cursor()
-    sql = """
-        SELECT
-          x.CODIGO_ROLO ROLO
-        , x.PANOACAB_NIVEL99 NIVEL
-        , x.PANOACAB_GRUPO REF
-        , x.PANOACAB_SUBGRUPO TAM
-        , x.PANOACAB_ITEM COR
-        FROM PCPT_020 x -- cadastro de rolos
-        WHERE x.CODIGO_ROLO = %s
-    """
-    cursor.execute(sql, (barcode,))
-    data = rows_to_dict_list(cursor)
+    data = models.rolo_ref(cursor, barcode)
     if len(data) == 0:
         data = [{}]
     else:
@@ -350,77 +346,51 @@ class BipaRolo(PermissionRequiredMixin, View):
     template_name = 'insumo/bipa_rolo.html'
     title_name = 'Bipa rolo'
 
-    def mount_context(self, request, cursor, form):
-        endereco = form.cleaned_data['endereco']
-        lote = form.cleaned_data['lote']
+    def mount_context(self, request, form):
+        cursor = connections['so'].cursor()
+
+        rolo = form.cleaned_data['rolo']
         identificado = form.cleaned_data['identificado']
 
-        context = {'endereco': endereco}
+        context = {}
 
-        try:
-            lote_rec = lotes.models.Lote.objects.get(lote=lote)
-        except lotes.models.Lote.DoesNotExist:
-            context.update({'erro': 'Lote não encontrado'})
+        data = models.rolo_ref(cursor, rolo)
+        if len(data) == 0:
+            context.update({'erro': 'Rolo não encontrado'})
             return context
+
+        row = data[0]
         context.update({
-            'op': lote_rec.op,
-            'referencia': lote_rec.referencia,
-            'cor': lote_rec.cor,
-            'tamanho': lote_rec.tamanho,
-            'qtd_produzir': lote_rec.qtd_produzir,
-            'local': lote_rec.local,
+            'rolo': row['ROLO'],
+            'referencia': row['REF'],
+            'cor': row['COR'],
+            'tamanho': row['TAM'],
             })
 
-        # print('identificado={}'.format(identificado))
         if identificado:
-            # print('if identificado')
             form.data['identificado'] = None
-            form.data['lote'] = None
-            if lote != identificado:
+            form.data['rolo'] = None
+            if rolo != identificado:
                 context.update({
-                    'erro': 'A confirmação é bipando o mesmo lote. '
-                            'Identifique o lote novamente.'})
+                    'erro': 'A confirmação é bipando o mesmo rolo. '
+                            'Identifique o rolo novamente.'})
                 return context
 
-            try:
-                lote_rec = lotes.models.Lote.objects.get(lote=lote)
-            except lotes.models.Lote.DoesNotExist:
-                context.update({
-                    'erro': 'Lote não encontrado no banco de dados'})
-                return context
-
-            lote_rec.local = endereco
-            # print('request.user = {}'.format(request.user))
-            # pprint(request.user.__dict__['_wrapped'].__dict__)
-            # print('request.user = {}'.format(request.user))
-            lote_rec.local_usuario = request.user
-            lote_rec.save()
+            rolo_bipado = RoloBipado(
+                usuario=request.user,
+                rolo=row['ROLO'],
+                referencia=row['REF'],
+                tamanho=row['TAM'],
+                cor=row['COR'],
+                )
+            rolo_bipado.save()
 
             context['identificado'] = identificado
         else:
-            # print('if not identificado')
-            context['lote'] = lote
-            # periodo = lote[:4]
-            # ordem_confeccao = lote[-5:]
-
-            # data = lotes.models.posicao_get_op(
-            #     cursor, periodo, ordem_confeccao)
-            # if len(data) == 0:
-            #     context.update({'erro': 'Lote não encontrado'})
-            #     return context
-            # row = data[0]
-            # op = row['OP']
-
-            # print('lote_rec.local = "{}" endereco = "{}"'.format(
-            #     lote_rec.local, endereco))
-            if lote_rec.local != endereco:
-                context['confirma'] = True
-                form.data['identificado'] = form.data['lote']
-            form.data['lote'] = None
-
-        # lotes_rec = lotes.models.Lote.objects.get(local=endereco)
-        # data = rows_to_dict_list_lower(lotes_rec)
-        # pprint(data)
+            context['rolo'] = rolo
+            context['confirma'] = True
+            form.data['identificado'] = form.data['rolo']
+            form.data['rolo'] = None
 
         return context
 
@@ -435,13 +405,11 @@ class BipaRolo(PermissionRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
+        form = self.Form_class(request.POST.copy())
         if 'lote' in kwargs:
             form.data['lote'] = kwargs['lote']
         if form.is_valid():
-            # pprint(request.POST)
-            cursor = connections['so'].cursor()
-            data = self.mount_context(request, cursor, form)
+            data = self.mount_context(request, form)
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
