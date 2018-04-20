@@ -25,7 +25,17 @@ class NotafiscalRel(View):
     def mount_context(self, form, form_obj):
         # A ser produzido
         context = {}
-        select = NotaFiscal.objects.filter(natu_venda=True).filter(ativa=True)
+        if form['listadas'] == 'V':
+            select = NotaFiscal.objects.filter(
+                natu_venda=True).filter(ativa=True)
+            context.update({
+                'listadas': 'V',
+            })
+        else:
+            select = NotaFiscal.objects
+            context.update({
+                'listadas': 'T',
+            })
         if form['data_de']:
             select = select.filter(
                 faturamento__date__gte=form['data_de']
@@ -97,16 +107,24 @@ class NotafiscalRel(View):
                 if row['ped_cliente'] is None:
                     row['ped_cliente'] = ' '
                 row['atraso_order'] = -row['atraso']
+                if row['natu_venda']:
+                    row['venda'] = 'Sim'
+                else:
+                    row['venda'] = 'Não'
+                if row['ativa']:
+                    row['ativa'] = 'Sim'
+                else:
+                    row['ativa'] = 'Não'
             if form['ordem'] == 'A':
                 data.sort(key=itemgetter('atraso_order'))
             context.update({
-                'headers': ('Número', 'Faturamento', 'Atraso',
-                            'Saida', 'Agendada', 'Entregue',
+                'headers': ('Número', 'Faturamento', 'Venda', 'Ativa',
+                            'Atraso', 'Saida', 'Agendada', 'Entregue',
                             'UF', 'CNPJ', 'Cliente', 'Transportadora',
                             'Volumes', 'Valor', 'Observação',
                             'Pedido', 'Ped.Cliente'),
-                'fields': ('numero', 'faturamento', 'atraso',
-                           'saida', 'entrega', 'confirmada',
+                'fields': ('numero', 'faturamento', 'venda', 'ativa',
+                           'atraso', 'saida', 'entrega', 'confirmada',
                            'uf', 'dest_cnpj', 'dest_nome', 'transp_nome',
                            'volumes', 'valor', 'observacao',
                            'pedido', 'ped_cliente'),

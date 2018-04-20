@@ -18,7 +18,11 @@
 {% if request.POST %}
   <h3>Filtro:</h3>
   <ul>
-    <li>Apenas notas fiscais de venda e ativas (não canceladas)</li>
+    {% if listadas == 'V' %}
+      <li>Notas Listadas: Apenas notas fiscais de venda e ativas (não canceladas)</li>
+    {% else %}
+      <li>Notas Listadas: Todas as notas fiscais</li>
+    {% endif %}
     {% if data_de or data_ate %}
       {% if data_de == data_ate %}
         <li>Data de Faturamento igual a {{ data_de }}</li>
