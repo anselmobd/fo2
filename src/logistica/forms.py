@@ -46,6 +46,11 @@ class NotafiscalRelForm(forms.Form):
     ordem = forms.ChoiceField(
         label='Ordem de apresentação', choices=CHOICES, initial='A')
 
+    CHOICES = [('V', 'Apenas NF de venda e ativas (não canceladas)'),
+               ('T', 'Totas as notas fiscais')]
+    listadas = forms.ChoiceField(
+        label='Notas listadas', choices=CHOICES, initial='V')
+
     def clean_uf(self):
         uf = self.cleaned_data['uf'].upper()
         data = self.data.copy()
@@ -55,6 +60,7 @@ class NotafiscalRelForm(forms.Form):
 
     def clean_data_de(self):
         data_de = self.cleaned_data['data_de']
-        if data_de.year < 100:
-            data_de = data_de.timedelta(years=2000)
+        if data_de:
+            if data_de.year < 100:
+                data_de = data_de.timedelta(years=2000)
         return data_de
