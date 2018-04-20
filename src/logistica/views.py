@@ -73,6 +73,11 @@ class NotafiscalRel(View):
             context.update({
                 'transportadora': form['transportadora'],
             })
+        if form['entregue'] != 'T':
+            select = select.filter(confirmada=form['entregue'] == 'S')
+            context.update({
+                'entregue': form['entregue'],
+            })
         if form['data_saida'] != 'N':
             select = select.filter(saida__isnull=form['data_saida'] == 'S')
             context.update({

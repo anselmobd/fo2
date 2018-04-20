@@ -35,6 +35,12 @@ class NotafiscalRelForm(forms.Form):
         help_text='Sigla da transportadora.',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    CHOICES = [('T', 'Todos (Sim ou Não)'),
+               ('S', 'Sim'),
+               ('N', 'Não')]
+    entregue = forms.ChoiceField(
+        choices=CHOICES, initial='T')
+
     CHOICES = [('N', 'Não filtra'),
                ('C', 'Com data de saída informada'),
                ('S', 'Sem data de saída')]

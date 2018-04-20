@@ -21,6 +21,13 @@
     {% if listadas == 'V' %}
       <li>Apenas notas fiscais de venda e ativas (não canceladas)</li>
     {% endif %}
+    {% if entregue %}
+      {% if entregue == 'V' %}
+        <li>Entregue: Sim</li>
+      {% else %}
+        <li>Entregue: Não</li>
+      {% endif %}
+    {% endif %}
     {% if data_de or data_ate %}
       {% if data_de == data_ate %}
         <li>Data de Faturamento igual a {{ data_de }}</li>
