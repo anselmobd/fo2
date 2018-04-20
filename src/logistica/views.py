@@ -118,10 +118,10 @@ class NotafiscalRel(View):
             if form['ordem'] == 'A':
                 data.sort(key=itemgetter('atraso_order'))
             context.update({
-                'headers': ('Número', 'Faturamento', 'Venda', 'Ativa',
-                            'Atraso', 'Saida', 'Agendada', 'Entregue',
-                            'UF', 'CNPJ', 'Cliente', 'Transportadora',
-                            'Volumes', 'Valor', 'Observação',
+                'headers': ('No.', 'Faturamento', 'Venda', 'Ativa',
+                            'Atraso', 'Saída', 'Agendada', 'Entregue',
+                            'UF', 'CNPJ', 'Cliente', 'Transp.',
+                            'Vol.', 'Valor', 'Observação',
                             'Pedido', 'Ped.Cliente'),
                 'fields': ('numero', 'faturamento', 'venda', 'ativa',
                            'atraso', 'saida', 'entrega', 'confirmada',
