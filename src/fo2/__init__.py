@@ -1,9 +1,12 @@
-__version__ = '0.1.80'
-__version__date__ = '19/04/2018'
+__version__ = '0.1.81'
+__version__date__ = '20/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.81 - 2018/04/20
+#   . Insumos: Tela de bipar rolo
 #
 # - 0.1.80 - 2018/04/19
 #   . CD - estoque: Primeira versão funcional de pesquisa de estoque de 63-CD
