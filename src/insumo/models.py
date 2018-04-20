@@ -1204,3 +1204,19 @@ def necessidade_previsao(cursor, dual_nivel1):
         )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def rolo_ref(cursor, barcode):
+    # pega informações do item rolo
+    sql = """
+        SELECT
+          x.CODIGO_ROLO ROLO
+        , x.PANOACAB_NIVEL99 NIVEL
+        , x.PANOACAB_GRUPO REF
+        , x.PANOACAB_SUBGRUPO TAM
+        , x.PANOACAB_ITEM COR
+        FROM PCPT_020 x -- cadastro de rolos
+        WHERE x.CODIGO_ROLO = %s
+    """
+    cursor.execute(sql, (barcode,))
+    return rows_to_dict_list(cursor)
