@@ -7,6 +7,7 @@ __version__date__ = '20/04/2018'
 #
 # - 0.1.81 - 2018/04/20
 #   . Insumos: Tela de bipar rolo
+#   . Acompanhamento de NF: Melhora nos filtros e dados mostrados
 #
 # - 0.1.80 - 2018/04/19
 #   . CD - estoque: Primeira versão funcional de pesquisa de estoque de 63-CD
