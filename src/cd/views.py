@@ -1,9 +1,9 @@
 from pprint import pprint
 
-from django.shortcuts import render
 from django.db import connections
-from django.views import View
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import render
+from django.views import View
 
 from fo2.models import rows_to_dict_list_lower
 
@@ -55,12 +55,12 @@ class LotelLocal(PermissionRequiredMixin, View):
                             'Identifique o lote novamente.'})
                 return context
 
-            try:
-                lote_rec = lotes.models.Lote.objects.get(lote=lote)
-            except lotes.models.Lote.DoesNotExist:
-                context.update({
-                    'erro': 'Lote não encontrado no banco de dados'})
-                return context
+            # try:
+            #     lote_rec = lotes.models.Lote.objects.get(lote=lote)
+            # except lotes.models.Lote.DoesNotExist:
+            #     context.update({
+            #         'erro': 'Lote não encontrado no banco de dados'})
+            #     return context
 
             lote_rec.local = endereco
             # print('request.user = {}'.format(request.user))
