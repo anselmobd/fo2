@@ -14,16 +14,7 @@
     {% csrf_token %}
     {{ form.as_p }}
     {% if confirma %}
-      {% if local %}
-        {% if local != endereco%}
-          <h3>Lote identificado: <b>{{ lote }}</b></h3>
-          <h3><b>Endereço atual: {{ local }}</b></h3>
-          <h3><b>Trocar</b> para endereço <b>{{ endereco }}</b>?</h3>
-        {% endif %}
-      {% else %}
-        <h3>Lote identificado: <b>{{ lote }}</b></h3>
-        <h3>Colocar no endereço <b>{{ endereco }}</b>?</h3>
-      {% endif %}
+      <h3>Rolo identificado: <b>{{ rolo }}</b></h3>
       <input type="submit" name="confirma" value="Confirma"/>
     {% else %}
       <input type="submit" name="identifica" value="Identifica"/>
@@ -32,7 +23,7 @@
 <br/>
 {% block javascript %}
 <script>
-  var inp = document.getElementById('id_lote');
+  var inp = document.getElementById('id_rolo');
   inp.select();
 </script>
 {% endblock javascript %}
@@ -40,18 +31,12 @@
   <h3>{{ erro }}</h3>
 {% else %}
   {% if identificado %}
-    <h3>Lote <b>{{ identificado }}</b> colocado no endereço <b>{{ endereco }}</b></h3>
-  {% elif lote %}
-    {% if local %}
-      {% if local == endereco%}
-        <h3>Lote identificado: <b>{{ lote }}</b></h3>
-        <h3>Endereço <b>{{ local }}</b> já é o atual.</h3>
-      {% endif %}
-    {% endif %}
+    <h3>Rolo <b>{{ identificado }}</b> adicionado no inventário.</h3>
   {% endif %}
   {% if referencia %}
-    <h3>Item: <b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></h3>
-    <h3>Qtd.: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;&nbsp;&nbsp;OP: <b>{{ op }}</b></h3>
+    <h3>Referência: <b>{{ referencia }}</b></h3>
+    <h3>Cor: <b>{{ cor }}</b></h3>
+    <h3>Tamanho: <b>{{ tamanho }}</b></h3>
   {% endif %}
 {% endif %}
 {% endblock content %}
