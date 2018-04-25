@@ -53,3 +53,15 @@ def infadprod_pro_pedido(cursor, pedido):
     '''
     cursor.execute(sql, [pedido])
     return rows_to_dict_list(cursor)
+
+
+def reme_indu(cursor, data_de, data_ate):
+    sql = '''
+        SELECT
+          1
+        FROM DUAL
+        WHERE 1=2
+          AND %s=%s
+    '''
+    cursor.execute(sql, [data_de, data_ate])
+    return rows_to_dict_list(cursor)

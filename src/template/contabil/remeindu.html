@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'contabil_infadprod' %}" method="post">
+<form action="{% url 'contabil_remeindu' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
