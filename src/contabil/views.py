@@ -1,3 +1,4 @@
+from pprint import pprint
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
@@ -65,22 +66,39 @@ class RemessaIndustr(View):
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
             if not data_ate:
-                data_de = data_ate
+                data_ate = data_de
 
             cursor = connections['so'].cursor()
-            data = models.reme_indu(cursor, data_de, data_ate)
+            data = models.reme_indu(
+                cursor, dt_saida_de=data_de, dt_saida_ate=data_ate)
             if len(data) == 0:
                 context['erro'] = 'Remessa não encontrada'
             else:
-                row = data[0]
+                for row in data:
+                    row['DT'] = row['DT'].date()
+                    if row['DT_RET'] is None:
+                        row['DT_RET'] = '-'
+                        row['NF_RET'] = '-'
+                        row['QTD_RET'] = '-'
+                    else:
+                        row['DT_RET'] = row['DT_RET'].date()
+                    if row['PED'] == 0:
+                        row['PED'] = '-'
+                        row['PED_CLI'] = '-'
+                        row['CLI'] = '-'
                 context.update({
                     'data_de': data_de,
                     'data_ate': data_ate,
-                    'headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Quantidade',
-                                'infAdProd', 'EAN', 'Narrativa'),
-                    'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD',
-                               'INFADPROD', 'EAN', 'NARRATIVA'),
+                    'headers': ('OP', 'Ref.', 'Cor', 'Tam.', 'OS', 'Quant.',
+                                'Data saída', 'NF. saída', 'Facção',
+                                'Data retorno', 'NF retorno', 'Quant. retorno',
+                                'Pedido', 'Ped. cliente', 'Cliente'),
+                    'fields': ('OP', 'REF', 'COR', 'TAM', 'OS', 'QTD',
+                               'DT', 'NF', 'FACCAO',
+                               'DT_RET', 'NF_RET', 'QTD_RET',
+                               'PED', 'PED_CLI', 'CLI'),
                     'data': data,
                 })
+
         context['form'] = form
         return render(request, self.template_name, context)
