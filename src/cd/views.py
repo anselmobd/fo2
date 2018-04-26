@@ -73,7 +73,6 @@ class LotelLocal(PermissionRequiredMixin, View):
                     'referencia', 'cor', 'tamanho',
                     'local_at', 'local_usuario__username')
         if len(lotes_no_local):
-            # pprint(lotes_no_local)
             q_itens = 0
             for row in lotes_no_local:
                 q_itens += row['qtd_produzir']
@@ -178,7 +177,7 @@ class Estoque(View):
             fields = ('referencia', 'tamanho', 'cor', 'qtd_produzir',
                       'local', 'op', 'lote', 'local_at',
                       'local_usuario__username')
-        else:  # Endereço OP Referência Cor Tamanho Lote
+        else:  # E: Endereço OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
             headers = ('Endereço', 'OP', 'Referência', 'Tamanho', 'Cor',
@@ -191,12 +190,6 @@ class Estoque(View):
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
             'referencia', 'tamanho', 'cor', 'qtd_produzir')
-        # pprint(data)
-        # pprint(data[0])
-        # pprint(list(data_rec.values()[:3]))
-        # print('len ->>>>>>>>>', len(data_rec.values()[:3]))
-        # for row in data_rec[:3]:
-        #     pprint(row.lote)
         context.update({
             'headers': headers,
             'fields': fields,
@@ -206,7 +199,17 @@ class Estoque(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'lote' in kwargs:
+        if 'ordem' in kwargs:
+            if kwargs['ordem'] == 'B':  # Hora de bipagem
+                kwargs['endereco'] = kwargs['filtro']
+            # OP Referência Cor Tamanho Endereço Lote
+            elif kwargs['ordem'] == 'O':
+                kwargs['op'] = kwargs['filtro']
+            # Referência Cor Tamanho Endereço OP Lote
+            elif kwargs['ordem'] == 'R':
+                kwargs['ref'] = kwargs['filtro']
+            else:  # E: Endereço OP Referência Cor Tamanho Lote
+                kwargs['endereco'] = kwargs['filtro']
             return self.post(request, *args, **kwargs)
         else:
             context = {'titulo': self.title_name}
@@ -217,8 +220,14 @@ class Estoque(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'lote' in kwargs:
-            form.data['lote'] = kwargs['lote']
+        if 'ordem' in kwargs:
+            form.data['ordem'] = kwargs['ordem']
+            if 'endereco' in kwargs:
+                form.data['endereco'] = kwargs['endereco']
+            if 'op' in kwargs:
+                form.data['op'] = kwargs['op']
+            if 'ref' in kwargs:
+                form.data['ref'] = kwargs['ref']
         if form.is_valid():
             cursor = connections['so'].cursor()
             data = self.mount_context(cursor, form)
