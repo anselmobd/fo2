@@ -92,7 +92,7 @@ class LotelLocal(PermissionRequiredMixin, View):
 class Estoque(View):
     Form_class = cd.forms.EstoqueForm
     template_name = 'cd/estoque.html'
-    title_name = 'Inventariar 63'
+    title_name = 'Estoque 63'
 
     def mount_context(self, cursor, form):
         endereco = form.cleaned_data['endereco']
