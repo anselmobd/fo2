@@ -47,10 +47,10 @@ class EstoqueForm(forms.Form):
         label='Cor', required=False, min_length=1, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
     CHOICES = [('B', 'Hora de bipagem'),
-               ('O', 'OP Referência Cor Tamanho Lote'),
+               ('O', 'OP Referência Cor Tamanho Local Lote'),
                ('L', 'Local OP Referência Cor Tamanho Lote')]
     ordem = forms.ChoiceField(
-        label='Ordem', choices=CHOICES, initial='B')
+        label='Ordenação', choices=CHOICES, initial='B')
 
     def clean_endereco(self):
         endereco = self.cleaned_data['endereco'].upper()
