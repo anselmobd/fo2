@@ -73,6 +73,13 @@ class EstoqueForm(forms.Form):
         self.data = data
         return ref
 
+    def clean_tam(self):
+        tam = self.cleaned_data['tam'].upper()
+        data = self.data.copy()
+        data['tam'] = tam
+        self.data = data
+        return tam
+
     def clean_cor(self):
         cor = self.cleaned_data['cor'].upper()
         if cor:
