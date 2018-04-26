@@ -164,7 +164,7 @@ class Estoque(View):
                       'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op')
         elif ordem == 'O':  # OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
-                'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
+                'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
             headers = ('OP', 'Referência', 'Tamanho', 'Cor', 'Quant',
                        'Lote', 'Endereço', 'Em', 'Por')
             fields = ('op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
