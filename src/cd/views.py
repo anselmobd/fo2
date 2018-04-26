@@ -65,6 +65,30 @@ class LotelLocal(PermissionRequiredMixin, View):
                 form.data['identificado'] = form.data['lote']
             form.data['lote'] = None
 
+        lotes_no_local = lotes.models.Lote.objects.filter(
+            local=endereco).order_by(
+                '-local_at'
+                ).values(
+                    'op', 'lote', 'qtd_produzir',
+                    'referencia', 'cor', 'tamanho',
+                    'local_at', 'local_usuario__username')
+        if len(lotes_no_local):
+            # pprint(lotes_no_local)
+            q_itens = 0
+            for row in lotes_no_local:
+                q_itens += row['qtd_produzir']
+            context.update({
+                'q_lotes': len(lotes_no_local),
+                'q_itens': q_itens,
+                'headers': ('Bipado em', 'Bipado por',
+                            'Lote', 'Quant.',
+                            'Ref.', 'Cor', 'Tam.', 'OP'),
+                'fields': ('local_at', 'local_usuario__username',
+                           'lote', 'qtd_produzir',
+                           'referencia', 'cor', 'tamanho', 'op'),
+                'data': lotes_no_local,
+                })
+
         return context
 
     def get(self, request, *args, **kwargs):
