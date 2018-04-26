@@ -84,8 +84,9 @@ class RemessaIndustr(View):
                         row['DT_RET'] = row['DT_RET'].date()
                     if row['PED'] == 0:
                         row['PED'] = '-'
-                        row['PED_CLI'] = '-'
                         row['CLI'] = '-'
+                    if row['PED_CLI'] is None:
+                        row['PED_CLI'] = '-'
                 context.update({
                     'data_de': data_de,
                     'data_ate': data_ate,
