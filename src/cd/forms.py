@@ -48,6 +48,7 @@ class EstoqueForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'string'}))
     CHOICES = [('B', 'Hora de bipagem'),
                ('O', 'OP Referência Cor Tamanho Endereço Lote'),
+               ('R', 'Referência Cor Tamanho Endereço OP Lote'),
                ('E', 'Endereço OP Referência Cor Tamanho Lote')]
     ordem = forms.ChoiceField(
         label='Ordenação', choices=CHOICES, initial='B')

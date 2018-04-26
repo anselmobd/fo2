@@ -169,6 +169,15 @@ class Estoque(View):
                        'Endereço', 'Lote', 'Em', 'Por')
             fields = ('op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
                       'local', 'lote', 'local_at', 'local_usuario__username')
+        elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
+            data_rec = data_rec.order_by(
+                'referencia', 'cor', 'ordem_tamanho', 'local', 'op', 'lote')
+            headers = ('Referência', 'Tamanho', 'Cor', 'Quant',
+                       'Endereço', 'OP', 'Lote', 'Em',
+                       'Por')
+            fields = ('referencia', 'tamanho', 'cor', 'qtd_produzir',
+                      'local', 'op', 'lote', 'local_at',
+                      'local_usuario__username')
         else:  # Endereço OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
