@@ -125,6 +125,7 @@ class Estoque(View):
         ref = form.cleaned_data['ref']
         tam = form.cleaned_data['tam']
         cor = form.cleaned_data['cor']
+        ordem = form.cleaned_data['ordem']
 
         context = {'endereco': endereco,
                    'lote': lote,
@@ -132,6 +133,7 @@ class Estoque(View):
                    'ref': ref,
                    'tam': tam,
                    'cor': cor,
+                   'ordem': ordem,
                    }
 
         data_rec = lotes.models.Lote.objects
@@ -153,20 +155,42 @@ class Estoque(View):
             data_rec = data_rec.filter(tamanho=tam)
         if cor:
             data_rec = data_rec.filter(cor=cor)
+
+        if ordem == 'B':  # Hora de bipagem
+            data_rec = data_rec.order_by('-local_at')
+            headers = ('Em', 'Por', 'Endereço', 'Lote',
+                       'Referência', 'Tamanho', 'Cor', 'Quant', 'OP')
+            fields = ('local_at', 'local_usuario__username', 'local', 'lote',
+                      'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op')
+        elif ordem == 'O':  # OP Referência Cor Tamanho Lote
+            data_rec = data_rec.order_by(
+                'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
+            headers = ('OP', 'Referência', 'Tamanho', 'Cor', 'Quant',
+                       'Lote', 'Endereço', 'Em', 'Por')
+            fields = ('op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
+                      'lote', 'local', 'local_at', 'local_usuario__username')
+        else:  # Local OP Referência Cor Tamanho Lote
+            data_rec = data_rec.order_by(
+                'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
+            headers = ('Endereço', 'OP', 'Referência', 'Tamanho', 'Cor',
+                       'Quant', 'Lote',
+                       'Em', 'Por')
+            fields = ('local', 'op', 'referencia', 'tamanho', 'cor',
+                      'qtd_produzir', 'lote',
+                      'local_at', 'local_usuario__username')
+
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
             'referencia', 'tamanho', 'cor', 'qtd_produzir')
-        pprint(data)
+        # pprint(data)
         # pprint(data[0])
         # pprint(list(data_rec.values()[:3]))
         # print('len ->>>>>>>>>', len(data_rec.values()[:3]))
         # for row in data_rec[:3]:
         #     pprint(row.lote)
         context.update({
-            'headers': ('Endereço', 'Em', 'Por', 'Lote',
-                        'Referência', 'Tamanho', 'Cor', 'Quant', 'OP'),
-            'fields': ('local', 'local_at', 'local_usuario__username', 'lote',
-                       'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op'),
+            'headers': headers,
+            'fields': fields,
             'data': data,
         })
 
