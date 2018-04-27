@@ -16,16 +16,35 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if erro %}
-
   <h3>{{ erro }}</h3>
-
 {% elif data %}
-
-  <br/>
+  {% if data_de or faccao or cliente or pedido or pedido_cliente %}
+    <h3>Busca por</h3>
+  {% endif %}
+  {% if faccao %}
+    <h4>Facção: <b>{{ faccao }}</b></h4>
+  {% endif %}
+  {% if cliente %}
+    <h4>Cliente: <b>{{ cliente }}</b></h4>
+  {% endif %}
+  {% if pedido %}
+    <h4>Pedido Tussor: <b>{{ pedido }}</b></h4>
+  {% endif %}
+  {% if pedido_cliente %}
+    <h4>Pedido do cliente: <b>{{ pedido_cliente }}</b></h4>
+  {% endif %}
+  {% if data_de %}
+    <h4>Data da remessa:
+    {% if data_de == data_ate %}
+      <b>{{ data_de }}</b>
+    {% else %}
+      De <b>{{ data_de }}</b> até <b>{{ data_ate }}</b>
+    {% endif %}
+    </h4>
+  {% endif %}
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
   </table>
-
 {% endif %}
 {% endblock %}
