@@ -1,5 +1,6 @@
 # Development Environment DB
 src/db.sqlite3
+src/db.sqlite3-journal
 
 # Specific to the production environment
 etc/secret_key.txt
