@@ -29,7 +29,7 @@ class LoteForm(forms.Form):
 
 class EstoqueForm(forms.Form):
     endereco = forms.CharField(
-        label='Endereço', required=False, min_length=2, max_length=3,
+        label='Endereço', required=False, min_length=3, max_length=3,
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     lote = forms.CharField(
         label='Lote', required=False, min_length=9, max_length=9,
