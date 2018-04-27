@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^estoque/$', views.Estoque.as_view(), name='cd_estoque'),
     url(r'^estoque/(?P<ordem>.)/(?P<filtro>.+)/$',
         views.Estoque.as_view(), name='cd_estoque_filtro'),
+    url(r'^troca_local/$', views.TrocaLocal.as_view(), name='cd_troca_local'),
 ]
