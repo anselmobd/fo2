@@ -46,6 +46,14 @@ class EstoqueForm(forms.Form):
     cor = forms.CharField(
         label='Cor', required=False, min_length=1, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
+    data_de = forms.DateField(
+        label='Data inicial', required=False,
+        help_text='(Data de bipagem)',
+        widget=forms.DateInput(attrs={'type': 'date'}))
+    data_ate = forms.DateField(
+        label='Data final', required=False,
+        help_text='(Se não informar, assume igual a inicial.)',
+        widget=forms.DateInput(attrs={'type': 'date'}))
     CHOICES = [('B', 'Hora de bipagem'),
                ('O', 'OP Referência Cor Tamanho Endereço Lote'),
                ('R', 'Referência Cor Tamanho Endereço OP Lote'),

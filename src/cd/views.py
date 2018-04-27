@@ -1,4 +1,5 @@
 from pprint import pprint
+from datetime import timedelta
 
 from django.db import connections
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -124,6 +125,10 @@ class Estoque(View):
         ref = form.cleaned_data['ref']
         tam = form.cleaned_data['tam']
         cor = form.cleaned_data['cor']
+        data_de = form.cleaned_data['data_de']
+        data_ate = form.cleaned_data['data_ate']
+        if not data_ate:
+            data_ate = data_de
         ordem = form.cleaned_data['ordem']
 
         context = {'endereco': endereco,
@@ -133,8 +138,12 @@ class Estoque(View):
                    'tam': tam,
                    'cor': cor,
                    'ordem': ordem,
+                   'data_de': data_de,
+                   'data_ate': data_ate,
                    }
 
+        if data_ate:
+            data_ate = data_ate + timedelta(days=1)
         data_rec = lotes.models.Lote.objects
         if endereco:
             data_rec = data_rec.filter(local=endereco)
@@ -154,6 +163,9 @@ class Estoque(View):
             data_rec = data_rec.filter(tamanho=tam)
         if cor:
             data_rec = data_rec.filter(cor=cor)
+        if data_de:
+            data_rec = data_rec.filter(local_at__gte=data_de)
+            data_rec = data_rec.filter(local_at__lte=data_ate)
 
         if ordem == 'B':  # Hora de bipagem
             data_rec = data_rec.order_by('-local_at')

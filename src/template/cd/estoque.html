@@ -41,6 +41,15 @@
     {% if cor %}
       <h4>Cor: <b>{{ cor }}</b></h4>
     {% endif %}
+    {% if data_de %}
+      <h4>Data de bipagem:
+      {% if data_de == data_ate %}
+        <b>{{ data_de }}</b>
+      {% else %}
+        De <b>{{ data_de }}</b> até <b>{{ data_ate }}</b>
+      {% endif %}
+      </h4>
+    {% endif %}
     <h4>Ordenação:
       {% if ordem == 'B' %}
         Hora de bipagem
