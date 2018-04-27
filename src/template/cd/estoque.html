@@ -20,7 +20,7 @@
   <h3>{{ erro }}</h3>
 {% else %}
   {% if data %}
-    {% if endereco or lote or op or ref or tam or cor %}
+    {% if endereco or lote or op or ref or tam or cor or data_de %}
       <h3>Busca por</h3>
     {% endif %}
     {% if endereco %}
@@ -50,7 +50,7 @@
       {% endif %}
       </h4>
     {% endif %}
-    <h4>Ordenação:
+    <h3>Ordenação:
       {% if ordem == 'B' %}
         Hora de bipagem
       {% elif ordem == 'O' %}
@@ -60,7 +60,7 @@
       {% elif ordem == 'E' %}
         Endereço OP Referência Cor Tamanho Lote
       {% endif %}
-    </h4>
+    </h3>
   {% endif %}
   {% if data %}
     <table>
