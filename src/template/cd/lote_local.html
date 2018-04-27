@@ -54,8 +54,8 @@
     <h3>Qtd.: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;&nbsp;&nbsp;OP: <b>{{ op }}</b></h3>
   {% endif %}
   {% if data %}
-  <hr>
-  <h3>Endereço <b>{{ endereco }}</b> contém <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h3>
+    <hr>
+    <h3>Endereço <b>{{ endereco }}</b> contém <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h3>
     <table>
       {% include "layout/html_thead.html" with data=headers only %}
       {% include "layout/html_tbody.html" with fields=fields data=data only %}
