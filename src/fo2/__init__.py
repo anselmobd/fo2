@@ -1,9 +1,16 @@
-__version__ = '0.1.82'
-__version__date__ = '25/04/2018'
+__version__ = '0.1.84'
+__version__date__ = '27/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.84 - 2018/04/27
+#   . CD - troca endereço de lote no 63-CD
+#   . CD - estoque 63: Filtro por data
+#
+# - 0.1.83 - 2018/04/26
+#   . CD: Melhorias nas telas de inventário e de pesquisa no estoque 63
 #
 # - 0.1.82 - 2018/04/25
 #   . primeira versão funcional de Relatório de remessa para industrialização
