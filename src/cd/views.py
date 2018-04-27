@@ -114,7 +114,7 @@ class LotelLocal(PermissionRequiredMixin, View):
 
 
 class TrocaLocal(PermissionRequiredMixin, View):
-    permission_required = 'lotes.can_inventorize_lote'
+    permission_required = 'lotes.can_relocate_lote'
     Form_class = cd.forms.TrocaLocalForm
     template_name = 'cd/troca_local.html'
     title_name = 'Trocal endereço'
