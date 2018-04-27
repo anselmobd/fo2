@@ -1,0 +1,49 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'cd_troca_local' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if confirma %}
+      <input type="submit" name="confirma" value="Confirma troca"/>
+    {% else %}
+      <input type="submit" name="troca" value="Troca"/>
+    {% endif %}
+</form>
+<br/>
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_endereco_de');
+  inp.select();
+</script>
+{% endblock javascript %}
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% elif endereco_de %}
+  <h4>Trocar endereço de lotes de <b>{{ endereco_de }}</b> para <b>{{ endereco_para }}</b></h4>
+  {% if data %}
+    {% if confirma %}
+      <br />
+      <h4>Endereço <b>antigo</b> (<b>{{ endereco_de }}</b>)
+    {% else %}
+      <h3>Troca de endereços efetuada!</h3>
+      <br />
+      <h4>Endereço <b>novo</b> (<b>{{ endereco_para }}</b>)
+    {% endif %}
+    contém <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h4>
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock content %}

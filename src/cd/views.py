@@ -113,6 +113,84 @@ class LotelLocal(PermissionRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
+class TrocaLocal(PermissionRequiredMixin, View):
+    permission_required = 'lotes.can_inventorize_lote'
+    Form_class = cd.forms.TrocaLocalForm
+    template_name = 'cd/troca_local.html'
+    title_name = 'Trocal endereço'
+
+    def mount_context(self, request, cursor, form):
+        endereco_de = form.cleaned_data['endereco_de']
+        endereco_para = form.cleaned_data['endereco_para']
+
+        context = {'endereco_de': endereco_de,
+                   'endereco_para': endereco_para}
+
+        lotes_de = lotes.models.Lote.objects.filter(local=endereco_de)
+        if len(lotes_de) == 0:
+            context.update({'erro': 'Endereço antigo está vazio'})
+            return context
+
+        lotes_para = lotes.models.Lote.objects.filter(local=endereco_para)
+        if len(lotes_para) != 0:
+            context.update({'erro': 'Endereço novo NÃO está vazio'})
+            return context
+
+        if request.POST.get("troca"):
+            context.update({'confirma': True})
+            busca_endereco = endereco_de
+
+        else:
+            lotes_recs = lotes.models.Lote.objects.filter(local=endereco_de)
+            for lote in lotes_recs:
+                lote.local = endereco_para
+                lote.local_usuario = request.user
+                lote.save()
+            form.data['endereco_de'] = None
+            form.data['endereco_para'] = None
+            busca_endereco = endereco_para
+
+        lotes_no_local = lotes.models.Lote.objects.filter(
+            local=busca_endereco).order_by(
+                'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
+                ).values(
+                    'op', 'lote', 'qtd_produzir',
+                    'referencia', 'cor', 'tamanho',
+                    'local_at', 'local_usuario__username')
+        q_itens = 0
+        for row in lotes_no_local:
+            q_itens += row['qtd_produzir']
+        context.update({
+            'q_lotes': len(lotes_no_local),
+            'q_itens': q_itens,
+            'headers': ('Referência', 'Tamanho', 'Cor', 'Quant',
+                        'OP', 'Lote', 'Em',
+                        'Por'),
+            'fields': ('referencia', 'tamanho', 'cor', 'qtd_produzir',
+                       'op', 'lote', 'local_at',
+                       'local_usuario__username'),
+            'data': lotes_no_local,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            cursor = connections['so'].cursor()
+            data = self.mount_context(request, cursor, form)
+            context.update(data)
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
 class Estoque(View):
     Form_class = cd.forms.EstoqueForm
     template_name = 'cd/estoque.html'
