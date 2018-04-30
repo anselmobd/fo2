@@ -9,7 +9,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Syncronizing Lotes'
-    __MAX_TASKS__ = 100
+    __MAX_TASKS__ = 10
 
     def itercur(self, cursor):
         for row in cursor:
