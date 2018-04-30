@@ -123,13 +123,21 @@ class Command(BaseCommand):
                     'Lote {} excluido'.format(row.lote))
 
     def exclui(self, op):
-        pass
-        # self.stdout.write(
-        #     'Excluindo lotes da OP {}'.format(op))
-        # lotes = models.Lote.objects.filter(op=op)
-        # self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)))
-        # for row in lotes:
-        #     row.delete()
+        self.stdout.write(
+            'Excluindo lotes da OP {}'.format(op))
+        lotes = models.Lote.objects.filter(op=op)
+        lotes_localizados = lotes.exclude(
+                local__isnull=True
+            ).exclude(
+                local__exact='')
+        self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)))
+        self.stdout.write('Fo2 tem {} lotes localizados'.format(
+            len(lotes_localizados)))
+        if len(lotes_localizados) == 0:
+            for row in lotes:
+                row.delete()
+        else:
+            self.stdout.write('OP {} não excluida em Fo2'.format(op))
 
     def handle(self, *args, **options):
         self.stdout.write('---\n{}'.format(datetime.datetime.now()))
