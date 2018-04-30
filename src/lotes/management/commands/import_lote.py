@@ -123,12 +123,13 @@ class Command(BaseCommand):
                     'Lote {} excluido'.format(row.lote))
 
     def exclui(self, op):
-        self.stdout.write(
-            'Excluindo lotes da OP {}'.format(op))
-        lotes = models.Lote.objects.filter(op=op)
-        self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)))
-        for row in lotes:
-            row.delete()
+        pass
+        # self.stdout.write(
+        #     'Excluindo lotes da OP {}'.format(op))
+        # lotes = models.Lote.objects.filter(op=op)
+        # self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)))
+        # for row in lotes:
+        #     row.delete()
 
     def handle(self, *args, **options):
         self.stdout.write('---\n{}'.format(datetime.datetime.now()))
