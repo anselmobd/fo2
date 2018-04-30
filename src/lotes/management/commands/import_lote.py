@@ -86,11 +86,15 @@ class Command(BaseCommand):
     def atualiza(self, op):
         self.stdout.write(
             'Atualizando lotes da OP {}'.format(op))
+
+        # atualizando Systêxtil -> Fo2
         lotes = self.get_lotes_op(op)
-        # self.stdout.write('{} lotes'.format(len(lotes)))
+        self.stdout.write('Sistêxtil tem {} lotes'.format(len(lotes)))
+        sys_lotes = []
         for row in lotes:
             acao = ''
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
+            sys_lotes.append(row['lote'])
             # self.stdout.write('OC {}'.format(row['oc']))
             try:
                 # self.stdout.write('try')
@@ -108,6 +112,15 @@ class Command(BaseCommand):
                 lote.save()
                 self.stdout.write(
                     'Lote {} {}'.format(row['lote'], acao))
+
+        # atualizando Fo2 -> Systêxtil
+        lotes = models.Lote.objects.filter(op=op)
+        self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)))
+        for row in lotes:
+            if row.lote not in sys_lotes:
+                row.delete()
+                self.stdout.write(
+                    'Lote {} excluido'.format(row.lote))
 
     def handle(self, *args, **options):
         self.stdout.write('---\n{}'.format(datetime.datetime.now()))
