@@ -9,7 +9,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Syncronizing Lotes'
-    __MAX_TASKS__ = 10
+    __MAX_TASKS__ = 100
 
     def itercur(self, cursor):
         for row in cursor:
@@ -31,6 +31,8 @@ class Command(BaseCommand):
             LEFT JOIN BASI_220 t
               ON t.TAMANHO_REF = le.PROCONF_SUBGRUPO
             WHERE le.ORDEM_PRODUCAO = %s
+              AND le.QTDE_PECAS_PROG IS NOT NULL
+              AND le.QTDE_PECAS_PROG <> 0
             ORDER BY
               le.ORDEM_PRODUCAO
             , le.ORDEM_CONFECCAO
@@ -39,13 +41,36 @@ class Command(BaseCommand):
         return rows_to_dict_list_lower(cursor)
 
     def set_lote(self, lote, row):
-        lote.lote = row['lote']
-        lote.op = row['op']
-        lote.referencia = row['ref']
-        lote.tamanho = row['tam']
-        lote.ordem_tamanho = row['ord_tam']
-        lote.cor = row['cor']
-        lote.qtd_produzir = row['quant']
+        alter = False
+        if lote.lote != row['lote']:
+            alter = True
+            lote.lote = row['lote']
+            # self.stdout.write('lote {}'.format(lote.lote))
+        if lote.op != row['op']:
+            alter = True
+            lote.op = row['op']
+            # self.stdout.write('op {}'.format(lote.op))
+        if lote.referencia != row['ref']:
+            alter = True
+            lote.referencia = row['ref']
+            # self.stdout.write('ref {}'.format(lote.referencia))
+        if lote.tamanho != row['tam']:
+            alter = True
+            lote.tamanho = row['tam']
+            # self.stdout.write('tam {}'.format(lote.tamanho))
+        if lote.ordem_tamanho != row['ord_tam']:
+            alter = True
+            lote.ordem_tamanho = row['ord_tam']
+            # self.stdout.write('ord_tam {}'.format(lote.ordem_tamanho))
+        if lote.cor != row['cor']:
+            alter = True
+            lote.cor = row['cor']
+            # self.stdout.write('cor {}'.format(lote.cor))
+        if lote.qtd_produzir != row['quant']:
+            alter = True
+            lote.qtd_produzir = row['quant']
+            # self.stdout.write('quant {}'.format(lote.qtd_produzir))
+        return alter
 
     def inclui(self, op):
         self.stdout.write(
@@ -61,16 +86,27 @@ class Command(BaseCommand):
         self.stdout.write(
             'Atualizando lotes da OP {}'.format(op))
         lotes = self.get_lotes_op(op)
+        # self.stdout.write('{} lotes'.format(len(lotes)))
         for row in lotes:
+            acao = ''
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
+            # self.stdout.write('OC {}'.format(row['oc']))
             try:
+                # self.stdout.write('try')
                 lote = models.Lote.objects.get(lote=row['lote'])
+                acao = 'alterado'
             except models.Lote.DoesNotExist:
+                # self.stdout.write('except')
                 lote = None
             if not lote:
+                # self.stdout.write('not lote')
+                acao = 'incluido'
                 lote = models.Lote()
-            self.set_lote(lote, row)
-            lote.save()
+            if self.set_lote(lote, row):
+                # self.stdout.write('save')
+                lote.save()
+                self.stdout.write(
+                    'Lote {} {}'.format(row['lote'], acao))
 
     def handle(self, *args, **options):
         try:
@@ -88,6 +124,8 @@ class Command(BaseCommand):
                   JOIN PCPC_020 op -- OP capa
                     ON op.ordem_producao = le.ORDEM_PRODUCAO
                   WHERE op.COD_CANCELAMENTO = 0
+                    AND le.QTDE_PECAS_PROG IS NOT NULL
+                    AND le.QTDE_PECAS_PROG <> 0
                     --AND op.ORDEM_PRODUCAO < 80
                   ORDER BY
                     le.ORDEM_PRODUCAO
