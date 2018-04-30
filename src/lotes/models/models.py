@@ -148,6 +148,7 @@ class Lote(models.Model):
         null=True, blank=True,
         verbose_name='alterado em')
     local = models.CharField(
+        null=True, blank=True,
         default=None, max_length=3)
     local_at = models.DateTimeField(
         null=True, blank=True,
