@@ -1,9 +1,14 @@
-__version__ = '0.1.84'
-__version__date__ = '27/04/2018'
+__version__ = '0.1.85'
+__version__date__ = '30/04/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.85 - 2018/04/27
+#   . Lotes sincronizados: Problema com log de alterações
+#   . CD: Rotina de inventário de lotes também pode ser utilizada para retirar
+#         lotes do CD
 #
 # - 0.1.84 - 2018/04/27
 #   . CD - troca endereço de lote no 63-CD
