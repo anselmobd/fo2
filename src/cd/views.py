@@ -29,6 +29,9 @@ class LotelLocal(PermissionRequiredMixin, View):
         lote = form.cleaned_data['lote']
         identificado = form.cleaned_data['identificado']
 
+        if endereco == 'SAI':
+            endereco = None
+
         context = {'endereco': endereco}
 
         try:
@@ -66,6 +69,9 @@ class LotelLocal(PermissionRequiredMixin, View):
                 form.data['identificado'] = form.data['lote']
             form.data['lote'] = None
 
+        if not endereco:
+            return context
+
         lotes_no_local = lotes.models.Lote.objects.filter(
             local=endereco).order_by(
                 '-local_at'
@@ -73,7 +79,7 @@ class LotelLocal(PermissionRequiredMixin, View):
                     'op', 'lote', 'qtd_produzir',
                     'referencia', 'cor', 'tamanho',
                     'local_at', 'local_usuario__username')
-        if len(lotes_no_local):
+        if lotes_no_local:
             q_itens = 0
             for row in lotes_no_local:
                 q_itens += row['qtd_produzir']
