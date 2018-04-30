@@ -1,4 +1,5 @@
 import sys
+import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
@@ -109,6 +110,7 @@ class Command(BaseCommand):
                     'Lote {} {}'.format(row['lote'], acao))
 
     def handle(self, *args, **options):
+        self.stdout.write('---\n{}'.format(datetime.datetime.now()))
         try:
 
             # pega no Systêxtil a lista OPs com um valor de teste de quantidade
