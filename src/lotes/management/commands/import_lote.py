@@ -122,6 +122,14 @@ class Command(BaseCommand):
                 self.stdout.write(
                     'Lote {} excluido'.format(row.lote))
 
+    def exclui(self, op):
+        self.stdout.write(
+            'Excluindo lotes da OP {}'.format(op))
+        lotes = models.Lote.objects.filter(op=op)
+        self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)))
+        for row in lotes:
+            row.delete()
+
     def handle(self, *args, **options):
         self.stdout.write('---\n{}'.format(datetime.datetime.now()))
         try:
@@ -189,6 +197,7 @@ class Command(BaseCommand):
             op_f = -1
             inclui_op = []
             atualiza_op = []
+            exclui_op = []
             count_task = 0
             while count_task < self.__MAX_TASKS__:
 
@@ -220,6 +229,7 @@ class Command(BaseCommand):
                 elif op_s > op_f:
                     self.stdout.write(
                         'OP {} não mais ativa'.format(op_f))
+                    exclui_op.append(op_f)
                 else:
                     if row_s[fidx_s['prog']] != row_f[fidx_f['prog']]:
                         self.stdout.write(
@@ -234,6 +244,10 @@ class Command(BaseCommand):
             if len(atualiza_op) != 0:
                 for op in atualiza_op:
                     self.atualiza(op)
+
+            if len(exclui_op) != 0:
+                for op in exclui_op:
+                    self.exclui(op)
 
         except Exception as e:
             raise CommandError('Error syncing lotes "{}"'.format(e))
