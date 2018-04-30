@@ -61,8 +61,6 @@
         Endereço OP Referência Cor Tamanho Lote
       {% endif %}
     </h3>
-  {% endif %}
-  {% if data %}
     <table>
       {% include "layout/html_thead.html" with data=headers only %}
       {% include "layout/html_tbody.html" with fields=fields data=data only %}
