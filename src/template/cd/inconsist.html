@@ -22,6 +22,9 @@
   <h3>{{ erro }}</h3>
 {% else %}
   {% if data %}
+    {% if data_size %}
+      <h4>Listagem limitada a <b>{{ data_size }}</b> inconsistências</h4>
+    {% endif %}
     {% if endereco or lote or op or ref or tam or cor or data_de %}
       <h3>Busca por</h3>
     {% endif %}
@@ -66,8 +69,8 @@
   {% endif %}
   {% if data %}
     <table>
-      {% include "layout/html_thead.html" with data=headers only %}
-      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
     </table>
   {% endif %}
 {% endif %}

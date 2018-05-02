@@ -338,10 +338,10 @@ class Inconsistencias(View):
     title_name = 'Inconsistências Systêxtil 63'
 
     def mount_context(self, cursor):
-        context = {}
-
         step = 10
         data_size = 30
+        context = {'data_size': data_size}
+
         data = []
         for i in range(0, 999999999, step):
             print(i)
