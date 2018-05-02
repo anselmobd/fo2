@@ -340,8 +340,8 @@ class Inconsistencias(View):
     def mount_context(self, cursor):
         context = {}
 
-        step = 20
-        data_size = 50
+        step = 10
+        data_size = 30
         data = []
         for i in range(0, 999999999, step):
             print(i)
@@ -411,6 +411,8 @@ class Inconsistencias(View):
                 row = {}
                 sep = ''
                 row['op'] = op['op']
+                row['op|LINK'] = '/cd/estoque/O/{}/'.format(op['op'])
+                row['op|TARGET'] = '_blank'
                 row['cr'] = ''
                 estagios_op = [r for r in estagios if r['op'] == op['op']]
                 if len(estagios_op) == 0:
