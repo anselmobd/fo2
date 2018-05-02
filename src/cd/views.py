@@ -339,89 +339,100 @@ class Inconsistencias(View):
 
     def mount_context(self, cursor):
         context = {}
-        ops = lotes.models.Lote.objects.all().exclude(
-                local__isnull=True
-            ).exclude(
-                local__exact='').values('op').distinct().order_by('op')[0:99]
-        filtro = ''
-        filtro_sep = ''
-        for op in ops:
-            lotes_recs = lotes.models.Lote.objects.filter(
-                    op=op['op']
-                ).exclude(
+
+        step = 20
+        data_size = 50
+        data = []
+        for i in range(0, 999999999, step):
+            print(i)
+
+            ops = lotes.models.Lote.objects.all().exclude(
                     local__isnull=True
                 ).exclude(
-                    local__exact='').values('lote').distinct()
+                    local__exact=''
+                ).values('op').distinct().order_by('op')[i:i+step]
+            if len(ops) == 0:
+                break
 
-            ocs = ''
-            sep = ''
-            for lote in lotes_recs:
-                ocs += sep + lote['lote'][4:].strip('0')
-                sep = ','
+            filtro = ''
+            filtro_sep = ''
+            for op in ops:
+                lotes_recs = lotes.models.Lote.objects.filter(
+                        op=op['op']
+                    ).exclude(
+                        local__isnull=True
+                    ).exclude(
+                        local__exact='').values('lote').distinct()
 
-            op_ocs = '( op.ORDEM_PRODUCAO = {} ' \
-                'AND le63.ORDEM_CONFECCAO in ({}) )'.format(op['op'], ocs)
-            op['oc'] = op_ocs
+                ocs = ''
+                sep = ''
+                for lote in lotes_recs:
+                    ocs += sep + lote['lote'][4:].strip('0')
+                    sep = ','
 
-            filtro += filtro_sep + op_ocs
-            filtro_sep = ' OR '
+                op_ocs = '( op.ORDEM_PRODUCAO = {} ' \
+                    'AND le63.ORDEM_CONFECCAO in ({}) )'.format(op['op'], ocs)
+                op['oc'] = op_ocs
 
-        sql = '''
-            SELECT
-              op.ORDEM_PRODUCAO OP
-            , le.SEQUENCIA_ESTAGIO SEQ
-            , le.CODIGO_ESTAGIO EST
-            , le63.SEQUENCIA_ESTAGIO SEQ63
-            , sum(le.QTDE_EM_PRODUCAO_PACOTE) QTD
-            FROM PCPC_020 op -- OP capa
-            LEFT JOIN PCPC_040 le63 -- lote estágio 63
-              ON le63.ordem_producao = op.ORDEM_PRODUCAO
-             AND le63.CODIGO_ESTAGIO = 63
-            LEFT JOIN PCPC_040 le -- lote estágio atual
-              ON le.ordem_producao = op.ORDEM_PRODUCAO
-             AND le.PERIODO_PRODUCAO = le63.PERIODO_PRODUCAO
-             AND le.ORDEM_CONFECCAO = le63.ORDEM_CONFECCAO
-             AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
-            WHERE op.COD_CANCELAMENTO = 0
-              AND ({filtro})
-            GROUP BY
-              op.ORDEM_PRODUCAO
-            , le.SEQUENCIA_ESTAGIO
-            , le.CODIGO_ESTAGIO
-            , le63.SEQUENCIA_ESTAGIO
-            ORDER BY
-              op.ORDEM_PRODUCAO
-            , le.SEQUENCIA_ESTAGIO
-        '''.format(filtro=filtro)
-        print(sql)
-        cursor.execute(sql)
-        estagios = rows_to_dict_list_lower(cursor)
+                filtro += filtro_sep + op_ocs
+                filtro_sep = ' OR '
 
-        data = []
-        for op in ops:
-            row = {}
-            sep = ''
-            row['op'] = op['op']
-            row['cr'] = ''
-            estagios_op = [r for r in estagios if r['op'] == op['op']]
-            if len(estagios_op) == 0:
-                row['cr'] = 'OP sem estágio 63'
-            else:
-                for estagio_op in estagios_op:
-                    if estagio_op['est'] is None:
-                        row['cr'] += sep + 'Finalizada'
-                    elif estagio_op['est'] == 63:
-                        row['cr'] += sep + '63-OK'
-                    else:
-                        if estagio_op['seq'] < estagio_op['seq63']:
-                            row['cr'] += sep + 'Atrasados em {}'.format(
-                                estagio_op['est'])
+            sql = '''
+                SELECT
+                  op.ORDEM_PRODUCAO OP
+                , le.SEQUENCIA_ESTAGIO SEQ
+                , le.CODIGO_ESTAGIO EST
+                , le63.SEQUENCIA_ESTAGIO SEQ63
+                , sum(le.QTDE_EM_PRODUCAO_PACOTE) QTD
+                FROM PCPC_020 op -- OP capa
+                LEFT JOIN PCPC_040 le63 -- lote estágio 63
+                  ON le63.ordem_producao = op.ORDEM_PRODUCAO
+                 AND le63.CODIGO_ESTAGIO = 63
+                LEFT JOIN PCPC_040 le -- lote estágio atual
+                  ON le.ordem_producao = op.ORDEM_PRODUCAO
+                 AND le.PERIODO_PRODUCAO = le63.PERIODO_PRODUCAO
+                 AND le.ORDEM_CONFECCAO = le63.ORDEM_CONFECCAO
+                 AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+                WHERE op.COD_CANCELAMENTO = 0
+                  AND ({filtro})
+                GROUP BY
+                  op.ORDEM_PRODUCAO
+                , le.SEQUENCIA_ESTAGIO
+                , le.CODIGO_ESTAGIO
+                , le63.SEQUENCIA_ESTAGIO
+                ORDER BY
+                  op.ORDEM_PRODUCAO
+                , le.SEQUENCIA_ESTAGIO
+            '''.format(filtro=filtro)
+            cursor.execute(sql)
+            estagios = rows_to_dict_list_lower(cursor)
+
+            for op in ops:
+                row = {}
+                sep = ''
+                row['op'] = op['op']
+                row['cr'] = ''
+                estagios_op = [r for r in estagios if r['op'] == op['op']]
+                if len(estagios_op) == 0:
+                    row['cr'] = 'OP sem estágio 63'
+                else:
+                    for estagio_op in estagios_op:
+                        if estagio_op['est'] is None:
+                            row['cr'] += sep + 'Finalizada'
+                        elif estagio_op['est'] == 63:
+                            row['cr'] += sep + '63-OK'
                         else:
-                            row['cr'] += sep + 'Adiantados em {}'.format(
-                                estagio_op['est'])
-                    sep = ', '
-            if row['cr'] != '63-OK':
-                data.append(row)
+                            if estagio_op['seq'] < estagio_op['seq63']:
+                                row['cr'] += sep + 'Atrasados em {}'.format(
+                                    estagio_op['est'])
+                            else:
+                                row['cr'] += sep + 'Adiantados em {}'.format(
+                                    estagio_op['est'])
+                        sep = ', '
+                if row['cr'] != '63-OK':
+                    data.append(row)
+            if len(data) >= data_size:
+                break
 
         context.update({
             'headers': ['OP', 'Crítica'],
