@@ -342,7 +342,7 @@ class Inconsistencias(View):
         ops = lotes.models.Lote.objects.all().exclude(
                 local__isnull=True
             ).exclude(
-                local__exact='').values('op').distinct().order_by('op')[0:19]
+                local__exact='').values('op').distinct().order_by('op')[0:99]
         filtro = ''
         filtro_sep = ''
         for op in ops:
