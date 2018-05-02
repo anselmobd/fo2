@@ -5,6 +5,7 @@ from django.db import connections
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
+from django.urls import reverse
 
 from fo2.models import rows_to_dict_list_lower
 
@@ -416,7 +417,8 @@ class Inconsistencias(View):
                 row = {}
                 sep = ''
                 row['op'] = op['op']
-                row['op|LINK'] = '/cd/estoque/O/{}/'.format(op['op'])
+                row['op|LINK'] = reverse(
+                    'cd_estoque_filtro', args=['O', op['op']])
                 row['op|TARGET'] = '_blank'
                 row['cr'] = ''
                 estagios_op = [r for r in estagios if r['op'] == op['op']]
@@ -446,7 +448,7 @@ class Inconsistencias(View):
                 'opnext': data[data_size-1]['op']+1,
             })
         context.update({
-            'headers': ['OP', 'Crítica doa lotes'],
+            'headers': ['OP', 'Crítica dos lotes'],
             'fields': ['op', 'cr'],
             'data': data[:data_size],
         })
