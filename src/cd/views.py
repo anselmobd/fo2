@@ -342,7 +342,7 @@ class Inconsistencias(View):
         ops = lotes.models.Lote.objects.all().exclude(
                 local__isnull=True
             ).exclude(
-                local__exact='').values('op').distinct()
+                local__exact='').values('op').distinct().order_by('op')[0:19]
         filtro = ''
         filtro_sep = ''
         for op in ops:
@@ -420,7 +420,8 @@ class Inconsistencias(View):
                             row['cr'] += sep + 'Adiantados em {}'.format(
                                 estagio_op['est'])
                     sep = ', '
-            data.append(row)
+            if row['cr'] != '63-OK':
+                data.append(row)
 
         context.update({
             'headers': ['OP', 'Crítica'],
