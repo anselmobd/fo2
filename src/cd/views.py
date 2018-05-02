@@ -420,24 +420,24 @@ class Inconsistencias(View):
                 else:
                     for estagio_op in estagios_op:
                         if estagio_op['est'] is None:
-                            row['cr'] += sep + 'Finalizada'
+                            row['cr'] += sep + 'Finalizados'
                         elif estagio_op['est'] == 63:
-                            row['cr'] += sep + '63-OK'
+                            row['cr'] += sep + 'OK no 63'
                         else:
                             if estagio_op['seq'] < estagio_op['seq63']:
-                                row['cr'] += sep + 'Atrasados em {}'.format(
+                                row['cr'] += sep + 'Atrasados no {}'.format(
                                     estagio_op['est'])
                             else:
-                                row['cr'] += sep + 'Adiantados em {}'.format(
+                                row['cr'] += sep + 'Adiantados no {}'.format(
                                     estagio_op['est'])
                         sep = ', '
-                if row['cr'] != '63-OK':
+                if row['cr'] != 'OK no 63':
                     data.append(row)
             if len(data) >= data_size:
                 break
 
         context.update({
-            'headers': ['OP', 'Crítica'],
+            'headers': ['OP', 'Crítica doa lotes'],
             'fields': ['op', 'cr'],
             'data': data[:data_size],
         })
