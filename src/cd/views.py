@@ -337,16 +337,21 @@ class Inconsistencias(View):
     template_name = 'cd/inconsist.html'
     title_name = 'Inconsistências Systêxtil 63'
 
-    def mount_context(self, cursor):
+    def mount_context(self, cursor, opini):
         step = 10
         data_size = 30
-        context = {'data_size': data_size}
+        context = {
+            'data_size': data_size,
+            'opini': opini,
+        }
 
         data = []
         for i in range(0, 999999999, step):
             print(i)
 
-            ops = lotes.models.Lote.objects.all().exclude(
+            ops = lotes.models.Lote.objects.filter(
+                    op__gte=opini
+                ).exclude(
                     local__isnull=True
                 ).exclude(
                     local__exact=''
@@ -436,6 +441,10 @@ class Inconsistencias(View):
             if len(data) >= data_size:
                 break
 
+        if len(data) >= data_size:
+            context.update({
+                'opnext': data[data_size-1]['op']+1,
+            })
         context.update({
             'headers': ['OP', 'Crítica doa lotes'],
             'fields': ['op', 'cr'],
@@ -444,10 +453,14 @@ class Inconsistencias(View):
         return context
 
     def get(self, request, *args, **kwargs):
+        if 'opini' in kwargs:
+            opini = kwargs['opini']
+        else:
+            opini = 0
         context = {'titulo': self.title_name}
         # form = self.Form_class()
         # context['form'] = form
         cursor = connections['so'].cursor()
-        data = self.mount_context(cursor)
+        data = self.mount_context(cursor, opini)
         context.update(data)
         return render(request, self.template_name, context)

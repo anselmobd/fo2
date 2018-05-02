@@ -21,10 +21,22 @@
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% else %}
+  {% if opini %}
+    <a href="{% url 'cd_inconsist' %}">OPs iniciais</a>
+  {% endif %}
+  {% if opini and opnext %}
+    |
+  {% endif %}
+  {% if opnext %}
+    <a href="{% url 'cd_inconsist_opini' opini=opnext %}">Próximas OPs</a>
+  {% endif %}
+  {% if data_size %}
+  <h4>Listagem por ordem de número de OP (limitada a <b>{{ data_size }}</b> inconsistências)</h4>
+  {% if opini %}
+    <h4>A partir da OP <b>{{ opini }}</b></h4>
+  {% endif %}
+  {% endif %}
   {% if data %}
-    {% if data_size %}
-      <h4>Listagem limitada a <b>{{ data_size }}</b> inconsistências</h4>
-    {% endif %}
     {% if endereco or lote or op or ref or tam or cor or data_de %}
       <h3>Busca por</h3>
     {% endif %}
