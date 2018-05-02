@@ -345,25 +345,41 @@ class Inconsistencias(View):
     template_name = 'cd/inconsist.html'
     title_name = 'Inconsistências Systêxtil 63'
 
-    def mount_context(self, cursor, opini):
+    def mount_context(self, cursor, ordem, opini):
         step = 10
         data_size = 30
         context = {
             'data_size': data_size,
             'opini': opini,
+            'ordem': ordem,
         }
 
         data = []
         for i in range(0, 999999999, step):
-            print(i)
-
-            ops = lotes.models.Lote.objects.filter(
-                    op__gte=opini
-                ).exclude(
+            ops = lotes.models.Lote.objects
+            if ordem == 'A':
+                ops = ops.filter(
+                        op__gte=opini
+                    )
+            else:
+                if opini == 0:
+                    ops = ops.filter(
+                            op__lte=999999999
+                        )
+                else:
+                    ops = ops.filter(
+                            op__lte=opini
+                        )
+            ops = ops.exclude(
                     local__isnull=True
                 ).exclude(
                     local__exact=''
-                ).values('op').distinct().order_by('op')[i:i+step]
+                ).values('op').distinct()
+            if ordem == 'A':
+                ops = ops.order_by('op')
+            else:  # if ordem == 'D':
+                ops = ops.order_by('-op')
+            ops = ops[i:i+step]
             if len(ops) == 0:
                 break
 
@@ -451,9 +467,10 @@ class Inconsistencias(View):
                 break
 
         if len(data) >= data_size:
-            context.update({
-                'opnext': data[data_size-1]['op']+1,
-            })
+            if ordem == 'A':
+                context.update({'opnext': data[data_size-1]['op']+1})
+            else:
+                context.update({'opnext': data[data_size-1]['op']-1})
         context.update({
             'headers': ['OP', 'Crítica dos lotes'],
             'fields': ['op', 'cr'],
@@ -463,13 +480,25 @@ class Inconsistencias(View):
 
     def get(self, request, *args, **kwargs):
         if 'opini' in kwargs:
-            opini = kwargs['opini']
+            opini = int(kwargs['opini'])
         else:
             opini = 0
+
+        if 'ordem' in kwargs:
+            ordem = kwargs['ordem']
+        else:
+            ordem = 'A'
+        if len(ordem) == 2:
+            if ordem[1] == '-':
+                if ordem[0] == 'A':
+                    ordem = 'D'
+                else:
+                    ordem = 'A'
+
         context = {'titulo': self.title_name}
         # form = self.Form_class()
         # context['form'] = form
         cursor = connections['so'].cursor()
-        data = self.mount_context(cursor, opini)
+        data = self.mount_context(cursor, ordem, opini)
         context.update(data)
         return render(request, self.template_name, context)
