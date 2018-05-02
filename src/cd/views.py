@@ -437,7 +437,7 @@ class Inconsistencias(View):
         context.update({
             'headers': ['OP', 'Crítica'],
             'fields': ['op', 'cr'],
-            'data': data,
+            'data': data[:50],
         })
         return context
 
