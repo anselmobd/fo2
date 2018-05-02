@@ -287,6 +287,13 @@ class Estoque(View):
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
             'referencia', 'tamanho', 'cor', 'qtd_produzir')
+        for row in data:
+            row['op|LINK'] = reverse(
+                'op_op', args=[row['op']])
+            row['lote|LINK'] = reverse(
+                'posicao_lote', args=[row['lote']])
+            row['local|LINK'] = reverse(
+                'cd_estoque_filtro', args=['E', row['local']])
         context.update({
             'headers': headers,
             'fields': fields,
