@@ -502,3 +502,90 @@ class Inconsistencias(View):
         data = self.mount_context(cursor, ordem, opini)
         context.update(data)
         return render(request, self.template_name, context)
+
+
+class Mapa(View):
+    # Form_class = cd.forms.EstoqueForm
+    template_name = 'cd/mapa.html'
+    title_name = 'Mapa 63'
+
+    def mount_context(self, cursor):
+        enderecos = {}
+        letras = [
+            {'letra': 'A', 'int_ini': 1},
+            {'letra': 'A', 'int_ini': 29},
+            {'letra': 'A', 'int_ini': 57},
+            {'letra': 'r'},
+            {'letra': 'B', 'int_ini': 57},
+            {'letra': 'B', 'int_ini': 29},
+            {'letra': 'B', 'int_ini': 1},
+            {'letra': 'l'},
+            {'letra': 'C', 'int_ini': 1},
+            {'letra': 'C', 'int_ini': 29},
+            {'letra': 'C', 'int_ini': 57},
+            {'letra': 'r'},
+            {'letra': 'l'},
+            {'letra': 'D', 'int_ini': 1},
+            {'letra': 'D', 'int_ini': 29},
+            {'letra': 'D', 'int_ini': 57},
+            {'letra': 'r'},
+            {'letra': 'E', 'int_ini': 57},
+            {'letra': 'E', 'int_ini': 29},
+            {'letra': 'E', 'int_ini': 1},
+            {'letra': 'l'},
+            {'letra': 'F', 'int_ini': 1},
+            {'letra': 'F', 'int_ini': 29},
+            {'letra': 'F', 'int_ini': 57},
+            {'letra': 'r'},
+            {'letra': 'G', 'int_ini': 57},
+            {'letra': 'G', 'int_ini': 29},
+            {'letra': 'G', 'int_ini': 1},
+        ]
+        for num, letra in enumerate(letras):
+            ends_linha = []
+            for int_end in range(28):
+                if letra['letra'] == 'r':
+                    conteudo = ''
+                elif letra['letra'] == 'l':
+                    conteudo = '==='
+                else:
+                    conteudo = '{}{}'.format(
+                        letra['letra'], letra['int_ini']+27-int_end)
+                ends_linha.append(conteudo)
+            enderecos[num] = ends_linha
+        context = {
+            'linhas': [
+                'A3º', 'A2º', 'A1º', 'rua A/B', 'B1º', 'B2º', 'B3º', '===',
+                'C3º', 'C2º', 'C1º', 'rua C', '===',
+                'D3º', 'D2º', 'D1º', 'rua D/E', 'E1º', 'E2º', 'E3º', '===',
+                'F3º', 'F2º', 'F1º', 'rua F/G', 'G1º', 'G2º', 'G3º'
+                ],
+            'enderecos': enderecos,
+            }
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        data = self.mount_context(cursor)
+        context.update(data)
+        return render(request, self.template_name, context)
+
+
+class Conferencia(View):
+    # Form_class = cd.forms.EstoqueForm
+    template_name = 'cd/conferencia.html'
+    title_name = 'Conferência 63'
+
+    def mount_context(self, cursor):
+        enderecos = {}
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        data = self.mount_context(cursor)
+        context.update(data)
+        return render(request, self.template_name, context)

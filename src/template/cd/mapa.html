@@ -1,0 +1,31 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<table>
+  {% for linha in linhas %}
+    <tr>
+      <td>
+        {{linha}}
+      </td>
+      {% for coluna in enderecos|get_item:forloop.counter0 %}
+      <td>
+        {{coluna}}
+      </td>
+      {% endfor %}
+      <td>
+        {{linha}}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+
+{% endblock content %}
