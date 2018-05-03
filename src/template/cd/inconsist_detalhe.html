@@ -1,0 +1,25 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% else %}
+  <h4>Inconsistências da OP <a href="{% url 'cd_estoque_filtro' ordem='O' filtro=op %}">{{ op }} <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></h4>
+  <h4>(Apenas adiantados e atrasados)</h4>
+  {% if data %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock content %}
