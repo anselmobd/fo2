@@ -21,71 +21,67 @@
   inp.select();
 </script>
 {% endblock javascript %}
-
 {% if erro %}
-
-<h3>Lote não encontrado</h3>
-
+  <h3>Lote não encontrado</h3>
 {% elif lote %}
-
-<br/>
-<p>
-Lote selecionado: <b>{{lote}}</b>
-</p>
-<table>
-  {% include "layout/html_thead.html" with data=i_headers only %}
-  {% include "layout/html_tbody_link.html" with fields=i_fields data=i_data link=i_link only %}
-</table>
-<table>
-  <tr>
-    <td style="vertical-align: top;">
-      <table>
-        {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
-        {% include "layout/tbody_generic.html" with fields=p_fields data=p_data link=p_link style=p_style only %}
-      </table>
-    </td>
-    <td></td>
-    <td style="border-left: thin solid lightgrey;"></td>
-    <td style="vertical-align: top;">
-      <table>
-        {% include "layout/html_thead.html" with data=l_headers only %}
-        {% include "layout/html_tbody.html" with fields=l_fields data=l_data only %}
-      </table>
-    </td>
-  </tr>
-</table>
-<br />
-<table>
-  {% include "layout/html_thead.html" with data=o_headers only %}
-  {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
-</table>
-{% if os_data %}
+  <br/>
+  <p>
+  Lote selecionado: <b>{{lote}}</b>
+  </p>
   <table>
-    {% include "layout/html_thead.html" with data=os_headers only %}
-    {% include "layout/html_tbody_link.html" with fields=os_fields data=os_data link=os_link only %}
+    {% include "layout/html_thead.html" with data=i_headers only %}
+    {% include "layout/html_tbody_link.html" with fields=i_fields data=i_data link=i_link only %}
   </table>
-{% endif %}
-<br />
-<table>
-  {% include "layout/html_thead.html" with data=se_headers only %}
-  {% include "layout/html_tbody_group.html" with fields=se_fields data=se_data only %}
-</table>
-<br />
-<table>
-  {% include "layout/thead_generic.html" with data=hh_headers only %}
-  {% include "layout/tbody_generic.html" with fields=hh_fields data=hh_data only %}
-</table>
-<br />
-<table>
-  {% include "layout/thead_generic.html" with data=h_headers only %}
-  {% include "layout/tbody_generic.html" with fields=h_fields data=h_data only %}
-</table>
-<br />
-{% if e_data %}
   <table>
-    {% include "layout/html_thead.html" with data=e_headers only %}
-    {% include "layout/html_tbody_group.html" with fields=e_fields data=e_data group=e_group only %}
+    <tr>
+      <td style="vertical-align: top;">
+        <table>
+          {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
+          {% include "layout/tbody_generic.html" with fields=p_fields data=p_data link=p_link style=p_style only %}
+        </table>
+      </td>
+      <td></td>
+      <td style="border-left: thin solid lightgrey;"></td>
+      <td style="vertical-align: top;">
+        <table>
+          {% include "layout/html_thead.html" with data=l_headers only %}
+          {% include "layout/html_tbody.html" with fields=l_fields data=l_data only %}
+        </table>
+      </td>
+    </tr>
   </table>
-{% endif %}
+  <br />
+  <table>
+    {% include "layout/html_thead.html" with data=o_headers only %}
+    {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
+  </table>
+  {% if os_data %}
+    <table>
+      {% include "layout/html_thead.html" with data=os_headers only %}
+      {% include "layout/html_tbody_link.html" with fields=os_fields data=os_data link=os_link only %}
+    </table>
+  {% endif %}
+  <br />
+  <table>
+    {% include "layout/html_thead.html" with data=se_headers only %}
+    {% include "layout/html_tbody_group.html" with fields=se_fields data=se_data only %}
+  </table>
+  <br />
+  <table>
+    {% include "layout/thead_generic.html" with data=hh_headers only %}
+    {% include "layout/tbody_generic.html" with fields=hh_fields data=hh_data only %}
+  </table>
+  <br />
+  <table>
+    {% include "layout/thead_generic.html" with data=h_headers only %}
+    {% include "layout/tbody_generic.html" with fields=h_fields data=h_data only %}
+  </table>
+  <br />
+  {% if e_data %}
+    <table>
+      {% include "layout/html_thead.html" with data=e_headers only %}
+      {% include "layout/html_tbody_group.html" with fields=e_fields data=e_data group=e_group only %}
+    </table>
+  {% endif %}
 {% endif %}
 {% endblock content %}
