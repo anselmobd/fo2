@@ -135,3 +135,24 @@ class EstoqueForm(forms.Form):
         data['cor'] = cor
         self.data = data
         return cor
+
+
+class ConfereForm(forms.Form):
+    endereco = forms.CharField(
+        label='Endereço', required=False, min_length=1, max_length=3,
+        widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
+
+    def clean_endereco(self):
+        endereco = self.cleaned_data['endereco'].upper()
+        if endereco:
+            if not endereco[0].isalpha():
+                raise forms.ValidationError(
+                    "Deve iniciar com uma letra.")
+            if len(endereco) > 1:
+                if not endereco[1:].isdigit():
+                    raise forms.ValidationError(
+                        "Depois da letra inicial deve ter apenas números.")
+        data = self.data.copy()
+        data['endereco'] = endereco
+        self.data = data
+        return endereco
