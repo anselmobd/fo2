@@ -81,10 +81,11 @@ Lote selecionado: <b>{{lote}}</b>
   {% include "layout/tbody_generic.html" with fields=h_fields data=h_data only %}
 </table>
 <br />
-<table>
-  {% include "layout/html_thead.html" with data=e_headers only %}
-  {% include "layout/html_tbody_group.html" with fields=e_fields data=e_data group=e_group only %}
-</table>
-
+{% if e_data %}
+  <table>
+    {% include "layout/html_thead.html" with data=e_headers only %}
+    {% include "layout/html_tbody_group.html" with fields=e_fields data=e_data group=e_group only %}
+  </table>
+{% endif %}
 {% endif %}
 {% endblock content %}
