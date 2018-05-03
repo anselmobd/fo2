@@ -1,9 +1,14 @@
-__version__ = '0.1.85'
-__version__date__ = '30/04/2018'
+__version__ = '0.1.86'
+__version__date__ = '03/05/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.86 - 2018/05/03
+#   . CD: Inconsistências Systêxtil
+#   . CD: Primeira versão de Detalhes de Inconsistência
+#   . CD: Iniciando (não funcional) mapa e conferencia de endereços
 #
 # - 0.1.85 - 2018/04/27
 #   . Lotes sincronizados: Problema com log de alterações
