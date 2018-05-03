@@ -23,7 +23,7 @@ class LotelLocal(PermissionRequiredMixin, View):
     permission_required = 'lotes.can_inventorize_lote'
     Form_class = cd.forms.LoteForm
     template_name = 'cd/lote_local.html'
-    title_name = 'Inventariar 63'
+    title_name = 'Inventariar'
 
     def mount_context(self, request, cursor, form):
         endereco = form.cleaned_data['endereco']
@@ -201,7 +201,7 @@ class TrocaLocal(PermissionRequiredMixin, View):
 class Estoque(View):
     Form_class = cd.forms.EstoqueForm
     template_name = 'cd/estoque.html'
-    title_name = 'Estoque 63'
+    title_name = 'Estoque'
 
     def mount_context(self, cursor, form):
         endereco = form.cleaned_data['endereco']
@@ -343,7 +343,7 @@ class Estoque(View):
 class Inconsistencias(View):
     # Form_class = cd.forms.EstoqueForm
     template_name = 'cd/inconsist.html'
-    title_name = 'Inconsistências Systêxtil 63'
+    title_name = 'Inconsistências Systêxtil'
 
     def mount_context(self, cursor, ordem, opini):
         step = 10
@@ -441,7 +441,7 @@ class Inconsistencias(View):
                 sep = ''
                 row['op'] = op['op']
                 row['op|LINK'] = reverse(
-                    'cd_estoque_filtro', args=['O', op['op']])
+                    'cd_inconsist_detalhe_op', args=[op['op']])
                 row['op|TARGET'] = '_blank'
                 row['cr'] = ''
                 estagios_op = [r for r in estagios if r['op'] == op['op']]
@@ -507,7 +507,7 @@ class Inconsistencias(View):
 class Mapa(View):
     # Form_class = cd.forms.EstoqueForm
     template_name = 'cd/mapa.html'
-    title_name = 'Mapa 63'
+    title_name = 'Mapa'
 
     def mount_context(self, cursor):
         enderecos = {}
@@ -576,10 +576,10 @@ class Mapa(View):
 class Conferencia(View):
     # Form_class = cd.forms.EstoqueForm
     template_name = 'cd/conferencia.html'
-    title_name = 'Conferência 63'
+    title_name = 'Conferência'
 
     def mount_context(self, cursor):
-        enderecos = {}
+        context = {}
 
         return context
 
@@ -587,5 +587,74 @@ class Conferencia(View):
         context = {'titulo': self.title_name}
         cursor = connections['so'].cursor()
         data = self.mount_context(cursor)
+        context.update(data)
+        return render(request, self.template_name, context)
+
+
+class InconsistenciasDetalhe(View):
+    template_name = 'cd/inconsist_detalhe.html'
+    title_name = 'Detalhe de inconsistência'
+
+    def mount_context(self, cursor, op):
+        context = {'op': op}
+
+        lotes_recs = lotes.models.Lote.objects.filter(
+            op=op
+        ).exclude(
+            local__isnull=True
+        ).exclude(
+            local__exact=''
+        ).values('lote').distinct()
+        if len(lotes_recs) == 0:
+            return context
+
+        ocs = ''
+        ocs_sep = ''
+        for lote in lotes_recs:
+            ocs += ocs_sep + lote['lote'][4:].strip('0')
+            ocs_sep = ', '
+
+        sql = '''
+            SELECT
+              le.ORDEM_PRODUCAO OP
+            , le.PERIODO_PRODUCAO PERIODO
+            , le.SEQUENCIA_ESTAGIO SEQ
+            , le.CODIGO_ESTAGIO EST
+            , le.ORDEM_CONFECCAO OC
+            , le.QTDE_EM_PRODUCAO_PACOTE QTD
+            FROM PCPC_040 le -- lote estágio atual
+            WHERE le.QTDE_EM_PRODUCAO_PACOTE <> 0
+              AND le.ORDEM_PRODUCAO = {op}
+              AND le.ORDEM_CONFECCAO IN (
+              {ocs}
+              )
+              AND le.CODIGO_ESTAGIO <> 63
+            ORDER BY
+              le.ORDEM_PRODUCAO
+            , le.SEQUENCIA_ESTAGIO
+            , le.CODIGO_ESTAGIO
+            , le.ORDEM_CONFECCAO
+        '''.format(op=op, ocs=ocs)
+        print(sql)
+        cursor.execute(sql)
+        data = rows_to_dict_list_lower(cursor)
+        for row in data:
+            row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
+            row['lote|LINK'] = reverse(
+                'posicao_lote', args=[row['lote']])
+        context.update({
+            'headers': ['Estágio', 'Lote', 'Quantidade'],
+            'fields': ['est', 'lote', 'qtd'],
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        op = int(kwargs['op'])
+
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        data = self.mount_context(cursor, op)
         context.update(data)
         return render(request, self.template_name, context)
