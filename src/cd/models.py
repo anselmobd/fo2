@@ -19,6 +19,9 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
         SELECT
           CASE WHEN i.SEQ = 0 THEN 99
           ELSE i.SEQ END SEQ
+        , i.REF
+        , i.TAM
+        , i.COR
         , i.OC
         , i.OP
         , i.PERIODO
@@ -29,6 +32,9 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
             e.OC
           , e.OP
           , e.PERIODO
+          , e.REF
+          , e.TAM
+          , e.COR
           , MAX(e.SEQ) SEQ
           , MAX(e.EST) EST
           , MAX(e.QTD) QTD
@@ -38,6 +44,9 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
             , le.ORDEM_CONFECCAO OC
             , le.ORDEM_PRODUCAO OP
             , le.PERIODO_PRODUCAO PERIODO
+            , le.PROCONF_GRUPO REF
+            , le.PROCONF_SUBGRUPO TAM
+            , le.PROCONF_ITEM COR
             , le.CODIGO_ESTAGIO EST
             , le.QTDE_EM_PRODUCAO_PACOTE QTD
             FROM PCPC_040 le -- lote estágio atual
@@ -52,6 +61,9 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
             , le.ORDEM_CONFECCAO OC
             , le.ORDEM_PRODUCAO OP
             , le.PERIODO_PRODUCAO PERIODO
+            , le.PROCONF_GRUPO REF
+            , le.PROCONF_SUBGRUPO TAM
+            , le.PROCONF_ITEM COR
             , 0 EST
             , le.QTDE_PECAS_PROD QTD
             FROM PCPC_040 le -- lote estágio atual
@@ -65,11 +77,17 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
             e.OC
           , e.OP
           , e.PERIODO
+          , e.REF
+          , e.TAM
+          , e.COR
         ) i
         {filtro_est63}-- WHERE i.EST <> 63
         ORDER BY
           1
-        , 2
+        , i.REF
+        , i.TAM
+        , i.COR
+        , i.OC
     '''.format(op=op, ocs=ocs_str, filtro_est63=filtro_est63)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
