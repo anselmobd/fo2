@@ -629,6 +629,20 @@ class InconsistenciasDetalhe(View):
             'data': data,
         })
 
+        data63 = models.inconsistencias_detalhe(cursor, op, ocs, est63=True)
+
+        for row in data63:
+            if row['qtd'] == 0:
+                row['qtd'] = '-'
+            row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
+            row['lote|LINK'] = reverse(
+                'posicao_lote', args=[row['lote']])
+        context.update({
+            'headers63': ['Estágio', 'Lote', 'Quantidade'],
+            'fields63': ['est', 'lote', 'qtd'],
+            'data63': data63,
+        })
+
         return context
 
     def get(self, request, *args, **kwargs):
