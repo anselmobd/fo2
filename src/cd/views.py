@@ -673,8 +673,8 @@ class InconsistenciasDetalhe(View):
         cursor.execute(sql)
         data = rows_to_dict_list_lower(cursor)
         for row in data:
-            if row['est'] == 999999:
-                row['est'] = 'Finalizado'
+            if row['seq'] == 999999:
+                row['seq'] = 'Finalizado'
             if row['qtd'] == 0:
                 row['qtd'] = '-'
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
