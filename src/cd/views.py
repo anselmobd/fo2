@@ -11,6 +11,7 @@ from fo2.models import rows_to_dict_list_lower
 
 import lotes.models
 
+import cd.models as models
 import cd.forms
 
 
@@ -608,70 +609,12 @@ class InconsistenciasDetalhe(View):
         if len(lotes_recs) == 0:
             return context
 
-        ocs = ''
-        ocs_sep = ''
+        ocs = []
         for lote in lotes_recs:
-            ocs += ocs_sep + lote['lote'][4:].strip('0')
-            ocs_sep = ', '
+            ocs.append(lote['lote'][4:].strip('0'))
 
-        sql = '''
-            SELECT
-              CASE WHEN i.SEQ = 0 THEN 99
-              ELSE i.SEQ END SEQ
-            , i.OC
-            , i.OP
-            , i.PERIODO
-            , i.EST
-            , i.QTD
-            FROM (
-              SELECT
-                e.OC
-              , e.OP
-              , e.PERIODO
-              , MAX(e.SEQ) SEQ
-              , MAX(e.EST) EST
-              , MAX(e.QTD) QTD
-              FROM (
-                SELECT
-                  le.SEQUENCIA_ESTAGIO SEQ
-                , le.ORDEM_CONFECCAO OC
-                , le.ORDEM_PRODUCAO OP
-                , le.PERIODO_PRODUCAO PERIODO
-                , le.CODIGO_ESTAGIO EST
-                , le.QTDE_EM_PRODUCAO_PACOTE QTD
-                FROM PCPC_040 le -- lote estágio atual
-                WHERE le.QTDE_EM_PRODUCAO_PACOTE <> 0
-                  AND le.ORDEM_PRODUCAO = {op}
-                  AND le.ORDEM_CONFECCAO IN (
-                  {ocs}
-                  )
-                UNION
-                SELECT DISTINCT
-                  0 SEQ
-                , le.ORDEM_CONFECCAO OC
-                , le.ORDEM_PRODUCAO OP
-                , le.PERIODO_PRODUCAO PERIODO
-                , 0 EST
-                , 0 QTD
-                FROM PCPC_040 le -- lote estágio atual
-                WHERE le.QTDE_EM_PRODUCAO_PACOTE = 0
-                  AND le.ORDEM_PRODUCAO = {op}
-                  AND le.ORDEM_CONFECCAO IN (
-                  {ocs}
-                  )
-              ) e
-              GROUP BY
-                e.OC
-              , e.OP
-              , e.PERIODO
-            ) i
-            WHERE i.EST <> 63
-            ORDER BY
-              1
-            , 2
-        '''.format(op=op, ocs=ocs)
-        cursor.execute(sql)
-        data = rows_to_dict_list_lower(cursor)
+        data = models.inconsistencias_detalhe(cursor, op, ocs)
+
         for row in data:
             if row['seq'] == 99:
                 row['est'] = 'Finalizado'
