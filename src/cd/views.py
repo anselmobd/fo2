@@ -347,7 +347,7 @@ class Inconsistencias(View):
 
     def mount_context(self, cursor, ordem, opini):
         step = 10
-        data_size = 30
+        data_size = 20
         context = {
             'data_size': data_size,
             'opini': opini,
