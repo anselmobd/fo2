@@ -674,7 +674,7 @@ class InconsistenciasDetalhe(View):
         data = rows_to_dict_list_lower(cursor)
         for row in data:
             if row['seq'] == 99:
-                row['seq'] = 'Finalizado'
+                row['est'] = 'Finalizado'
             if row['qtd'] == 0:
                 row['qtd'] = '-'
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
