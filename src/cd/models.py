@@ -53,7 +53,7 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
             , le.ORDEM_PRODUCAO OP
             , le.PERIODO_PRODUCAO PERIODO
             , 0 EST
-            , 0 QTD
+            , le.QTDE_PECAS_PROD QTD
             FROM PCPC_040 le -- lote estágio atual
             WHERE le.QTDE_EM_PRODUCAO_PACOTE = 0
               AND le.ORDEM_PRODUCAO = {op}
