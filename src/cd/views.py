@@ -616,10 +616,10 @@ class InconsistenciasDetalhe(View):
 
         sql = '''
             SELECT
-              i.OC
+              i.SEQ
+            , i.OC
             , i.OP
             , i.PERIODO
-            , i.SEQ
             , i.EST
             , i.QTD
             FROM (
