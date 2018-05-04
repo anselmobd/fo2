@@ -3,12 +3,17 @@ from django.db import models
 from fo2.models import rows_to_dict_list_lower
 
 
-def inconsistencias_detalhe(cursor, op, ocs):
+def inconsistencias_detalhe(cursor, op, ocs, est63=False):
     ocs_str = ''
     ocs_sep = ''
     for oc in ocs:
         ocs_str += ocs_sep + oc
         ocs_sep = ', '
+
+    if est63:
+        filtro_est63 = 'WHERE i.EST = 63'
+    else:
+        filtro_est63 = 'WHERE i.EST <> 63'
 
     sql = '''
         SELECT
@@ -61,10 +66,10 @@ def inconsistencias_detalhe(cursor, op, ocs):
           , e.OP
           , e.PERIODO
         ) i
-        WHERE i.EST <> 63
+        {filtro_est63}-- WHERE i.EST <> 63
         ORDER BY
           1
         , 2
-    '''.format(op=op, ocs=ocs_str)
+    '''.format(op=op, ocs=ocs_str, filtro_est63=filtro_est63)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
