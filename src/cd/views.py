@@ -616,29 +616,66 @@ class InconsistenciasDetalhe(View):
 
         sql = '''
             SELECT
-              le.ORDEM_PRODUCAO OP
-            , le.PERIODO_PRODUCAO PERIODO
-            , le.SEQUENCIA_ESTAGIO SEQ
-            , le.CODIGO_ESTAGIO EST
-            , le.ORDEM_CONFECCAO OC
-            , le.QTDE_EM_PRODUCAO_PACOTE QTD
-            FROM PCPC_040 le -- lote estágio atual
-            WHERE le.QTDE_EM_PRODUCAO_PACOTE <> 0
-              AND le.ORDEM_PRODUCAO = {op}
-              AND le.ORDEM_CONFECCAO IN (
-              {ocs}
-              )
-              AND le.CODIGO_ESTAGIO <> 63
+              i.OC
+            , i.OP
+            , i.PERIODO
+            , i.SEQ
+            , i.EST
+            , i.QTD
+            FROM (
+              SELECT
+                e.OC
+              , e.OP
+              , e.PERIODO
+              , MAX(e.SEQ) SEQ
+              , MAX(e.EST) EST
+              , MAX(e.QTD) QTD
+              FROM (
+                SELECT
+                  le.SEQUENCIA_ESTAGIO SEQ
+                , le.ORDEM_CONFECCAO OC
+                , le.ORDEM_PRODUCAO OP
+                , le.PERIODO_PRODUCAO PERIODO
+                , le.CODIGO_ESTAGIO EST
+                , le.QTDE_EM_PRODUCAO_PACOTE QTD
+                FROM PCPC_040 le -- lote estágio atual
+                WHERE le.QTDE_EM_PRODUCAO_PACOTE <> 0
+                  AND le.ORDEM_PRODUCAO = {op}
+                  AND le.ORDEM_CONFECCAO IN (
+                  {ocs}
+                  )
+                UNION
+                SELECT DISTINCT
+                  0 SEQ
+                , le.ORDEM_CONFECCAO OC
+                , le.ORDEM_PRODUCAO OP
+                , le.PERIODO_PRODUCAO PERIODO
+                , 0 EST
+                , 0 QTD
+                FROM PCPC_040 le -- lote estágio atual
+                WHERE le.QTDE_EM_PRODUCAO_PACOTE = 0
+                  AND le.ORDEM_PRODUCAO = {op}
+                  AND le.ORDEM_CONFECCAO IN (
+                  {ocs}
+                  )
+              ) e
+              GROUP BY
+                e.OC
+              , e.OP
+              , e.PERIODO
+            ) i
+            WHERE i.EST <> 63
             ORDER BY
-              le.ORDEM_PRODUCAO
-            , le.SEQUENCIA_ESTAGIO
-            , le.CODIGO_ESTAGIO
-            , le.ORDEM_CONFECCAO
+              1
+            , 2
         '''.format(op=op, ocs=ocs)
-        print(sql)
         cursor.execute(sql)
         data = rows_to_dict_list_lower(cursor)
         for row in data:
+            if row['est'] == 0:
+                row['est'] = 'Finalizado'
+            if row['qtd'] == 0:
+                row['qtd'] = '-'
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             row['lote|LINK'] = reverse(
                 'posicao_lote', args=[row['lote']])

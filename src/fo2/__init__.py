@@ -1,9 +1,12 @@
-__version__ = '0.1.86'
-__version__date__ = '03/05/2018'
+__version__ = '0.1.87'
+__version__date__ = '04/05/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.87 - 2018/05/04
+#   . CD - Detalhes de Inconsistência: Melhorias
 #
 # - 0.1.86 - 2018/05/03
 #   . CD: Inconsistências Systêxtil
