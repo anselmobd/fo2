@@ -616,7 +616,7 @@ class InconsistenciasDetalhe(View):
 
         sql = '''
             SELECT
-              CASE WHEN i.SEQ = 0 THEN 999999
+              CASE WHEN i.SEQ = 0 THEN 99
               ELSE i.SEQ END SEQ
             , i.OC
             , i.OP
@@ -673,7 +673,7 @@ class InconsistenciasDetalhe(View):
         cursor.execute(sql)
         data = rows_to_dict_list_lower(cursor)
         for row in data:
-            if row['seq'] == 999999:
+            if row['seq'] == 99:
                 row['seq'] = 'Finalizado'
             if row['qtd'] == 0:
                 row['qtd'] = '-'
