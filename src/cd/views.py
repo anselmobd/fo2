@@ -613,6 +613,10 @@ class InconsistenciasDetalhe(View):
         for lote in lotes_recs:
             ocs.append(lote['lote'][4:].strip('0'))
 
+        headers = ['Estágio', 'Lote', 'Referência', 'Cor', 'Tamanho',
+                   'Quantidade']
+        fields = ['est', 'lote', 'ref', 'cor', 'tam', 'qtd']
+
         data = models.inconsistencias_detalhe(cursor, op, ocs)
 
         for row in data:
@@ -624,8 +628,8 @@ class InconsistenciasDetalhe(View):
             row['lote|LINK'] = reverse(
                 'posicao_lote', args=[row['lote']])
         context.update({
-            'headers': ['Estágio', 'Lote', 'Quantidade'],
-            'fields': ['est', 'lote', 'qtd'],
+            'headers': headers,
+            'fields': fields,
             'data': data,
         })
 
@@ -638,8 +642,8 @@ class InconsistenciasDetalhe(View):
             row['lote|LINK'] = reverse(
                 'posicao_lote', args=[row['lote']])
         context.update({
-            'headers63': ['Estágio', 'Lote', 'Quantidade'],
-            'fields63': ['est', 'lote', 'qtd'],
+            'headers63': headers,
+            'fields63': fields,
             'data63': data63,
         })
 
