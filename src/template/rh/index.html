@@ -3,24 +3,39 @@
 
 {% block title.content %}RH em ação!{% endblock title.content %}
 
-{% block header.content %}<center><a href="{% url 'rh' %}"><img src="{% static 'img/RH_100.jpg' %}" alt="RH em ação!"></a></center>{% endblock header.content %}
-
 {% block content %}
 <center>
-  <h2>
-    <a href="/rh/datas/">Datas comemorativas <img src="/media/rh/DUOMO-Pascoa-2018_h50_icone.jpg" alt=""><img style="opacity: 0.8;" src="/media/rh/DUOMO-Dia-da-Mulher_h50_icone.jpg" alt=""><img style="opacity: 0.6;" src="/media/rh/DUOMO_Natal_2017_h50_icone.jpg" alt=""><img style="opacity: 0.4;" src="/media/rh/DUOMO_Dia_Mundial_da_Gentileza_h50_icone.jpg" alt=""></a>
-  </h2>
-  <h2>
-    <a href="/rh/campanhas/">Campanhas <img src="/media/rh/DUOMO-Febre-Amarela_h50_icone.png" alt=""><img style="opacity: 0.8;" src="/media/rh/DUOMO_Campanha_de_Natal_h50_icone.png" alt=""><img style="opacity: 0.6;" src="/media/rh/DUOMO_Novembro_Azul_17_h50_icone.jpg" alt=""></a>
-  </h2>
-  <hr>
-  {% if dicas %}
-    <h2>Dicas</h2>
-    {% for dica in dicas %}
-      {% if dica.data  %}
-        <h4>{{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a></h4>
-      {% endif %}
-    {% endfor %}
-  {% endif %}
+  <table>
+    <tr>
+      <td style="vertical-align: top; padding-top: 2em;>
+        <a href="{% url 'rh' %}"><img src="{% static 'img/RH_100.jpg' %}" alt="RH em ação!"></a>
+      </td>
+      <td style="width: 5em;">
+        &nbsp;
+      </td>
+      <td>
+        <h2>
+          <a href="/rh/datas/">Datas comemorativas <img src="/media/rh/banner_duomo_maes_2018_h50_icone.png" title="Feliz Dia das Mães!"
+            ><img style="opacity: 0.8;max-width: 45px;" src="/media/rh/DUOMO-Pascoa-2018_h50_icone.jpg" title="Boa Páscoa para todos!"
+            ><img style="opacity: 0.6;max-width: 39px;" src="/media/rh/DUOMO-Dia-da-Mulher_h50_icone.jpg" title="Dia da Mulher"
+            ><img style="opacity: 0.4;max-width: 32px;" src="/media/rh/DUOMO_Natal_2017_h50_icone.jpg" title="Natal 2017!"
+            ><img style="opacity: 0.2;max-width: 22px;" src="/media/rh/DUOMO_Dia_Mundial_da_Gentileza_h50_icone.jpg" title="Dia mundial da Gentileza"></a>
+        </h2>
+        <h2>
+          <a href="/rh/campanhas/">Campanhas <img src="/media/rh/DUOMO-Febre-Amarela_h50_icone.png" title="Febre Amarela"
+            ><img style="opacity: 0.8;max-width: 45px;" src="/media/rh/DUOMO_Campanha_de_Natal_h50_icone.png" title="Natal 2017"
+            ><img style="opacity: 0.6;max-width: 39px;" src="/media/rh/DUOMO_Novembro_Azul_17_h50_icone.jpg" title="Novembro Azul"></a>
+        </h2>
+        {% if dicas %}
+          <h2>Dicas</h2>
+          {% for dica in dicas %}
+            {% if dica.data  %}
+              <h4>{{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a></h4>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </td>
+    </tr>
+  </table>
 </center>
 {% endblock %}
