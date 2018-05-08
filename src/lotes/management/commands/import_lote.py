@@ -88,7 +88,8 @@ class Command(BaseCommand):
               , t.ORDEM_TAMANHO ORD_TAM
               , le.PROCONF_ITEM COR
               , le.QTDE_PECAS_PROG QTD_PRODUZIR
-              , max(le.SEQUENCIA_ESTAGIO) ULTIMO_ESTAGIO
+              , max(le.CODIGO_ESTAGIO) ULTIMO_ESTAGIO
+              , max(le.SEQUENCIA_ESTAGIO) ULTIMA_SEQ_ESTAGIO
               , sum(
                   ( 1
                   + le.QTDE_PECAS_PROG
@@ -126,7 +127,11 @@ class Command(BaseCommand):
               ON l.ORDEM_CONFECCAO IS NULL
              AND lf.ORDEM_PRODUCAO = lote.OP
              AND lf.ORDEM_CONFECCAO = lote.OC
-             AND lf.SEQUENCIA_ESTAGIO = lote.ULTIMO_ESTAGIO
+             AND (  (   lote.ULTIMA_SEQ_ESTAGIO = 0
+                    AND lf.CODIGO_ESTAGIO = lote.ULTIMO_ESTAGIO)
+                 OR (   lote.ULTIMA_SEQ_ESTAGIO <> 0
+                    AND lf.SEQUENCIA_ESTAGIO = lote.ULTIMA_SEQ_ESTAGIO)
+                 )
         '''
         cursor.execute(sql, [op])
         return rows_to_dict_list_lower(cursor)
