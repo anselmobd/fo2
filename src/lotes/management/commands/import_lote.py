@@ -18,54 +18,43 @@ class Command(BaseCommand):
             dict_row = dict(zip(columns, row))
             yield dict_row
 
-    def get_ops_hash_s(self):
+    def get_ops_trail_s(self):
         cursor_s = connections['so'].cursor()
         sql = '''
-            WITH lotes AS
-            (
-              SELECT DISTINCT
-                le.ORDEM_PRODUCAO
-              , le.ORDEM_CONFECCAO
-              , le.QTDE_PECAS_PROG
-              FROM PCPC_040 le -- lote estágio
-              JOIN PCPC_020 op -- OP capa
-                ON op.ordem_producao = le.ORDEM_PRODUCAO
-              WHERE op.COD_CANCELAMENTO = 0
-                AND le.QTDE_PECAS_PROG IS NOT NULL
-                AND le.QTDE_PECAS_PROG <> 0
-                --AND op.ORDEM_PRODUCAO < 80
-              ORDER BY
-                le.ORDEM_PRODUCAO
-              , le.ORDEM_CONFECCAO
-            )
             SELECT
               lo.ORDEM_PRODUCAO op
-            , sum(lo.QTDE_PECAS_PROG*(1+mod(lo.ORDEM_CONFECCAO, 10))) hash
-            FROM lotes lo
+            , sum(
+                ( 1
+                + lo.QTDE_PECAS_PROG
+                + lo.QTDE_EM_PRODUCAO_PACOTE
+                + lo.QTDE_PECAS_PROD
+                )
+              * (1 + lo.CODIGO_ESTAGIO)
+              * (1 + mod(lo.ORDEM_CONFECCAO, 111))
+              ) trail
+            FROM PCPC_040 lo -- lote estágio
+            JOIN PCPC_020 op -- OP capa
+              ON op.ordem_producao = lo.ORDEM_PRODUCAO
+            WHERE op.COD_CANCELAMENTO = 0
             GROUP BY
               lo.ORDEM_PRODUCAO
             ORDER BY
-              1
+              lo.ORDEM_PRODUCAO
         '''
         cursor_s.execute(sql)
         return self.iter_cursor(cursor_s)
 
-    def get_ops_hash_f(self):
+    def get_ops_trail_f(self):
         cursor_f = connections['default'].cursor()
         sql = '''
             SELECT
               le.op
-            , sum( le.qtd_produzir
-                   * ( 1
-                     + CAST( substr(le.lote, 9, 1) as INTEGER )
-                     )
-                 ) hash
+            , sum( le.trail ) trail
             FROM fo2_cd_lote le
-            --WHERE le.OP < 20
             GROUP BY
               le.op
             ORDER BY
-              1
+              le.op
         '''
         cursor_f.execute(sql)
         return self.iter_cursor(cursor_f)
@@ -73,24 +62,71 @@ class Command(BaseCommand):
     def get_lotes_op(self, op):
         cursor = connections['so'].cursor()
         sql = '''
-            SELECT DISTINCT
-              le.ORDEM_PRODUCAO OP
-            , le.PERIODO_PRODUCAO PERIODO
-            , le.ORDEM_CONFECCAO OC
-            , le.PROCONF_GRUPO REF
-            , le.PROCONF_SUBGRUPO TAM
-            , t.ORDEM_TAMANHO ORD_TAM
-            , le.PROCONF_ITEM COR
-            , le.QTDE_PECAS_PROG QUANT
-            FROM PCPC_040 le -- lote estágio
-            LEFT JOIN BASI_220 t
-              ON t.TAMANHO_REF = le.PROCONF_SUBGRUPO
-            WHERE le.ORDEM_PRODUCAO = %s
-              AND le.QTDE_PECAS_PROG IS NOT NULL
-              AND le.QTDE_PECAS_PROG <> 0
-            ORDER BY
-              le.ORDEM_PRODUCAO
-            , le.ORDEM_CONFECCAO
+            SELECT
+              lote.OP
+            , lote.PERIODO
+            , lote.OC
+            , lote.REF
+            , lote.TAM
+            , lote.ORD_TAM
+            , lote.COR
+            , lote.QTD_PRODUZIR
+            --, lote.ULTIMO_ESTAGIO
+            , lote.TRAIL
+            , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 999
+              ELSE l.CODIGO_ESTAGIO END ESTAGIO
+            , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN lf.QTDE_PECAS_PROD
+              ELSE l.QTDE_EM_PRODUCAO_PACOTE END QTD
+            FROM
+            (
+              SELECT
+                le.ORDEM_PRODUCAO OP
+              , le.PERIODO_PRODUCAO PERIODO
+              , le.ORDEM_CONFECCAO OC
+              , le.PROCONF_GRUPO REF
+              , le.PROCONF_SUBGRUPO TAM
+              , t.ORDEM_TAMANHO ORD_TAM
+              , le.PROCONF_ITEM COR
+              , le.QTDE_PECAS_PROG QTD_PRODUZIR
+              , max(le.SEQUENCIA_ESTAGIO) ULTIMO_ESTAGIO
+              , sum(
+                  ( 1
+                  + le.QTDE_PECAS_PROG
+                  + le.QTDE_EM_PRODUCAO_PACOTE
+                  + le.QTDE_PECAS_PROD
+                  )
+                * (1 + le.CODIGO_ESTAGIO)
+                * (1 + mod(le.ORDEM_CONFECCAO, 111))
+                ) trail
+              FROM PCPC_040 le -- lote estágio
+              LEFT JOIN BASI_220 t
+                ON t.TAMANHO_REF = le.PROCONF_SUBGRUPO
+              WHERE le.ORDEM_PRODUCAO = %s
+            --    AND le.ORDEM_CONFECCAO = 22
+                AND le.QTDE_PECAS_PROG IS NOT NULL
+                AND le.QTDE_PECAS_PROG <> 0
+              GROUP BY
+                le.ORDEM_PRODUCAO
+              , le.PERIODO_PRODUCAO
+              , le.ORDEM_CONFECCAO
+              , le.PROCONF_GRUPO
+              , le.PROCONF_SUBGRUPO
+              , t.ORDEM_TAMANHO
+              , le.PROCONF_ITEM
+              , le.QTDE_PECAS_PROG
+              ORDER BY
+                le.ORDEM_PRODUCAO
+              , le.ORDEM_CONFECCAO
+            ) lote
+            LEFT JOIN PCPC_040 l -- lote estágio
+              ON l.ORDEM_PRODUCAO = lote.OP
+             AND l.ORDEM_CONFECCAO = lote.OC
+             AND l.QTDE_EM_PRODUCAO_PACOTE <> 0
+            LEFT JOIN PCPC_040 lf -- lote estágio
+              ON l.ORDEM_CONFECCAO IS NULL
+             AND lf.ORDEM_PRODUCAO = lote.OP
+             AND lf.ORDEM_CONFECCAO = lote.OC
+             AND lf.SEQUENCIA_ESTAGIO = lote.ULTIMO_ESTAGIO
         '''
         cursor.execute(sql, [op])
         return rows_to_dict_list_lower(cursor)
@@ -121,10 +157,22 @@ class Command(BaseCommand):
             alter = True
             lote.cor = row['cor']
             # self.stdout.write('cor {}'.format(lote.cor))
-        if lote.qtd_produzir != row['quant']:
+        if lote.estagio != row['estagio']:
             alter = True
-            lote.qtd_produzir = row['quant']
-            # self.stdout.write('quant {}'.format(lote.qtd_produzir))
+            lote.estagio = row['estagio']
+            # self.stdout.write('estagio {}'.format(lote.estagio))
+        if lote.qtd != row['qtd']:
+            alter = True
+            lote.qtd = row['qtd']
+            # self.stdout.write('qtd {}'.format(lote.qtd))
+        if lote.qtd_produzir != row['qtd_produzir']:
+            alter = True
+            lote.qtd_produzir = row['qtd_produzir']
+            # self.stdout.write('qtd_produzir {}'.format(lote.qtd_produzir))
+        if lote.trail != row['trail']:
+            alter = True
+            lote.trail = row['trail']
+            # self.stdout.write('trail {}'.format(lote.trail))
         return alter
 
     def inclui(self, op):
@@ -216,10 +264,10 @@ class Command(BaseCommand):
         try:
 
             # pega no Systêxtil a lista OPs com um valor de teste de quantidade
-            ics = self.get_ops_hash_s()
+            ics = self.get_ops_trail_s()
 
             # pega no Fo2 a lista OPs com um valor de teste de quantidade
-            icf = self.get_ops_hash_f()
+            icf = self.get_ops_trail_f()
 
             op_s = -1
             op_f = -1
@@ -257,7 +305,7 @@ class Command(BaseCommand):
                         'OP {} não mais ativa'.format(op_f))
                     self.exclui_op.append(op_f)
                 else:
-                    if row_s['hash'] != row_f['hash']:
+                    if row_s['trail'] != row_f['trail']:
                         self.stdout.write(
                             'Atualizar OP {} no Fo2'.format(op_f))
                         self.atualiza_op.append(op_s)
