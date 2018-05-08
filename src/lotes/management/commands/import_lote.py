@@ -12,9 +12,63 @@ class Command(BaseCommand):
     help = 'Syncronizing Lotes'
     __MAX_TASKS__ = 10
 
-    def itercur(self, cursor):
+    def iter_cursor(self, cursor):
+        columns = [i[0].lower() for i in cursor.description]
         for row in cursor:
-            yield row
+            dict_row = dict(zip(columns, row))
+            yield dict_row
+
+    def get_ops_hash_s(self):
+        cursor_s = connections['so'].cursor()
+        sql = '''
+            WITH lotes AS
+            (
+              SELECT DISTINCT
+                le.ORDEM_PRODUCAO
+              , le.ORDEM_CONFECCAO
+              , le.QTDE_PECAS_PROG
+              FROM PCPC_040 le -- lote estágio
+              JOIN PCPC_020 op -- OP capa
+                ON op.ordem_producao = le.ORDEM_PRODUCAO
+              WHERE op.COD_CANCELAMENTO = 0
+                AND le.QTDE_PECAS_PROG IS NOT NULL
+                AND le.QTDE_PECAS_PROG <> 0
+                --AND op.ORDEM_PRODUCAO < 80
+              ORDER BY
+                le.ORDEM_PRODUCAO
+              , le.ORDEM_CONFECCAO
+            )
+            SELECT
+              lo.ORDEM_PRODUCAO op
+            , sum(lo.QTDE_PECAS_PROG*(1+mod(lo.ORDEM_CONFECCAO, 10))) hash
+            FROM lotes lo
+            GROUP BY
+              lo.ORDEM_PRODUCAO
+            ORDER BY
+              1
+        '''
+        cursor_s.execute(sql)
+        return self.iter_cursor(cursor_s)
+
+    def get_ops_hash_f(self):
+        cursor_f = connections['default'].cursor()
+        sql = '''
+            SELECT
+              le.op
+            , sum( le.qtd_produzir
+                   * ( 1
+                     + CAST( substr(le.lote, 9, 1) as INTEGER )
+                     )
+                 ) hash
+            FROM fo2_cd_lote le
+            --WHERE le.OP < 20
+            GROUP BY
+              le.op
+            ORDER BY
+              1
+        '''
+        cursor_f.execute(sql)
+        return self.iter_cursor(cursor_f)
 
     def get_lotes_op(self, op):
         cursor = connections['so'].cursor()
@@ -139,88 +193,51 @@ class Command(BaseCommand):
         else:
             self.stdout.write('OP {} não excluida em Fo2'.format(op))
 
+    def init_tasks(self):
+        self.inclui_op = []
+        self.atualiza_op = []
+        self.exclui_op = []
+
+    def exec_tasks(self):
+        if len(self.inclui_op) != 0:
+            for op in self.inclui_op:
+                self.inclui(op)
+
+        if len(self.atualiza_op) != 0:
+            for op in self.atualiza_op:
+                self.atualiza(op)
+
+        if len(self.exclui_op) != 0:
+            for op in self.exclui_op:
+                self.exclui(op)
+
     def handle(self, *args, **options):
         self.stdout.write('---\n{}'.format(datetime.datetime.now()))
         try:
 
             # pega no Systêxtil a lista OPs com um valor de teste de quantidade
-            cursor_s = connections['so'].cursor()
-            sql = '''
-                WITH lotes AS
-                (
-                  SELECT DISTINCT
-                    le.ORDEM_PRODUCAO
-                  , le.ORDEM_CONFECCAO
-                  , le.QTDE_PECAS_PROG
-                  FROM PCPC_040 le -- lote estágio
-                  JOIN PCPC_020 op -- OP capa
-                    ON op.ordem_producao = le.ORDEM_PRODUCAO
-                  WHERE op.COD_CANCELAMENTO = 0
-                    AND le.QTDE_PECAS_PROG IS NOT NULL
-                    AND le.QTDE_PECAS_PROG <> 0
-                    --AND op.ORDEM_PRODUCAO < 80
-                  ORDER BY
-                    le.ORDEM_PRODUCAO
-                  , le.ORDEM_CONFECCAO
-                )
-                SELECT
-                  lo.ORDEM_PRODUCAO op
-                , sum(lo.QTDE_PECAS_PROG*(1+mod(lo.ORDEM_CONFECCAO, 10))) prog
-                FROM lotes lo
-                GROUP BY
-                  lo.ORDEM_PRODUCAO
-                ORDER BY
-                  1
-            '''
-            cursor_s.execute(sql)
-            fidx_s = {
-                item[0].lower(): i
-                for i, item in enumerate(cursor_s.description)}
+            ics = self.get_ops_hash_s()
 
             # pega no Fo2 a lista OPs com um valor de teste de quantidade
-            cursor_f = connections['default'].cursor()
-            sql = '''
-                SELECT
-                  le.op
-                , sum( le.qtd_produzir
-                       * ( 1
-                         + CAST( substr(le.lote, 9, 1) as INTEGER )
-                         )
-                     ) prog
-                FROM fo2_cd_lote le
-                --WHERE le.OP < 20
-                GROUP BY
-                  le.op
-                ORDER BY
-                  1
-            '''
-            cursor_f.execute(sql)
-            fidx_f = {
-                item[0].lower(): i
-                for i, item in enumerate(cursor_f.description)}
-
-            ics = self.itercur(cursor_s)
-            icf = self.itercur(cursor_f)
+            icf = self.get_ops_hash_f()
 
             op_s = -1
             op_f = -1
-            inclui_op = []
-            atualiza_op = []
-            exclui_op = []
+            self.init_tasks()
             count_task = 0
             while count_task < self.__MAX_TASKS__:
 
                 if op_s != sys.maxsize and (op_s < 0 or op_s <= op_f):
                     try:
                         row_s = next(ics)
-                        getop_s = row_s[fidx_f['op']]
+                        getop_s = row_s['op']
                     except StopIteration:
                         getop_s = sys.maxsize
 
                 if op_f != sys.maxsize and (op_f < 0 or op_f <= op_s):
                     try:
                         row_f = next(icf)
-                        getop_f = row_f[fidx_f['op']]
+                        getop_f = row_f['op']
                     except StopIteration:
                         getop_f = sys.maxsize
 
@@ -233,30 +250,20 @@ class Command(BaseCommand):
                 if op_s < op_f:
                     self.stdout.write(
                         'Incluir OP {} no Fo2'.format(op_s))
-                    inclui_op.append(op_s)
+                    self.inclui_op.append(op_s)
                     count_task += 1
                 elif op_s > op_f:
                     self.stdout.write(
                         'OP {} não mais ativa'.format(op_f))
-                    exclui_op.append(op_f)
+                    self.exclui_op.append(op_f)
                 else:
-                    if row_s[fidx_s['prog']] != row_f[fidx_f['prog']]:
+                    if row_s['hash'] != row_f['hash']:
                         self.stdout.write(
                             'Atualizar OP {} no Fo2'.format(op_f))
-                        atualiza_op.append(op_s)
+                        self.atualiza_op.append(op_s)
                         count_task += 1
 
-            if len(inclui_op) != 0:
-                for op in inclui_op:
-                    self.inclui(op)
-
-            if len(atualiza_op) != 0:
-                for op in atualiza_op:
-                    self.atualiza(op)
-
-            if len(exclui_op) != 0:
-                for op in exclui_op:
-                    self.exclui(op)
+            self.exec_tasks()
 
         except Exception as e:
             raise CommandError('Error syncing lotes "{}"'.format(e))
