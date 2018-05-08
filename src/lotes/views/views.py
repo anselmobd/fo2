@@ -7,6 +7,7 @@ from django_tables2 import RequestConfig
 from fo2.models import rows_to_dict_list
 
 import lotes.models as models
+import lotes.forms as forms
 from lotes.tables import ImpressoraTermicaTable
 
 
@@ -33,7 +34,7 @@ def impressoraTermica(request):
 def posicaoOri(request):
     context = {}
     if request.method == 'POST':
-        form = LoteForm(request.POST)
+        form = forms.LoteForm(request.POST)
         if form.is_valid():
             lote = form.cleaned_data['lote']
             periodo = lote[:4]
@@ -79,7 +80,7 @@ def posicaoOri(request):
                     'descricao_estagio': row['DESCRICAO_ESTAGIO'],
                 }
     else:
-        form = LoteForm()
+        form = forms.LoteForm()
     context['form'] = form
     return render(request, 'lotes/posicaoOri.html', context)
 
