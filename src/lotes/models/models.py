@@ -140,7 +140,11 @@ class Lote(models.Model):
     cor = models.CharField(
         max_length=6, verbose_name='Cor')
     qtd_produzir = models.IntegerField(
-        verbose_name='quantidade')
+        verbose_name='quantidade a produzir')
+    estagio = models.IntegerField(
+        default=0)
+    qtd = models.IntegerField(
+        default=0, verbose_name='quantidade em produçao ou produzida')
     create_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='criado em')
@@ -158,6 +162,7 @@ class Lote(models.Model):
         verbose_name='localizado por')
     caixa = models.ForeignKey(
         Caixa, null=True, default=None, on_delete=models.CASCADE)
+    trail = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
