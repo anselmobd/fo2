@@ -27,6 +27,12 @@
             ><img style="opacity: 0.78;max-width: 39px;" src="/media/rh/DUOMO_Novembro_Azul_17_h50_icone.jpg" title="Novembro Azul"></a>
         </h2>
         {% if dicas %}
+              </td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <td style="vertical-align: top;">
           <h2>Dicas</h2>
           {% for dica in dicas %}
             {% if dica.data  %}
@@ -34,6 +40,13 @@
             {% endif %}
           {% endfor %}
         {% endif %}
+      </td>
+      <td style="width: 5em;">
+        &nbsp;
+      </td>
+      <td style="vertical-align: top;">
+        <h2>Agenda</h2>
+        <h4>14/5 a 18/5/2018 - <a target="_blank" href="/media/rh/DUOMO-SIPAT2018_w600.jpg">SIPAT 2018</a></h4>
       </td>
     </tr>
   </table>
