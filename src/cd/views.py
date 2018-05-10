@@ -255,39 +255,51 @@ class Estoque(View):
 
         if ordem == 'B':  # Hora de bipagem
             data_rec = data_rec.order_by('-local_at')
-            headers = ('Em', 'Por', 'Endereço', 'Lote',
-                       'Referência', 'Tamanho', 'Cor', 'Quant', 'OP')
-            fields = ('local_at', 'local_usuario__username', 'local', 'lote',
-                      'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op')
+            headers = (
+                'Em', 'Por', 'Endereço', 'Lote',
+                'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.', 'OP',
+                'Estágio', 'Qtd.')
+            fields = (
+                'local_at', 'local_usuario__username', 'local', 'lote',
+                'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op',
+                'estagio', 'qtd')
         elif ordem == 'O':  # OP Referência Cor Tamanho Endereço Lote
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
-            headers = ('OP', 'Referência', 'Tamanho', 'Cor', 'Quant',
-                       'Endereço', 'Lote', 'Em', 'Por')
-            fields = ('op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                      'local', 'lote', 'local_at', 'local_usuario__username')
+            headers = (
+                'OP', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
+                'Estágio', 'Qtd.', 'Endereço', 'Lote', 'Em',
+                'Por')
+            fields = (
+                'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
+                'estagio', 'qtd', 'local', 'lote', 'local_at',
+                'local_usuario__username')
         elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
             data_rec = data_rec.order_by(
                 'referencia', 'cor', 'ordem_tamanho', 'local', 'op', 'lote')
-            headers = ('Referência', 'Tamanho', 'Cor', 'Quant',
-                       'Endereço', 'OP', 'Lote', 'Em',
-                       'Por')
-            fields = ('referencia', 'tamanho', 'cor', 'qtd_produzir',
-                      'local', 'op', 'lote', 'local_at',
-                      'local_usuario__username')
+            headers = (
+                'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
+                'Estágio', 'Qtd.', 'Endereço', 'OP', 'Lote', 'Em',
+                'Por')
+            fields = (
+                'referencia', 'tamanho', 'cor', 'qtd_produzir',
+                'estagio', 'qtd', 'local', 'op', 'lote', 'local_at',
+                'local_usuario__username')
         else:  # E: Endereço OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
-            headers = ('Endereço', 'OP', 'Referência', 'Tamanho', 'Cor',
-                       'Quant', 'Lote',
-                       'Em', 'Por')
-            fields = ('local', 'op', 'referencia', 'tamanho', 'cor',
-                      'qtd_produzir', 'lote',
-                      'local_at', 'local_usuario__username')
+            headers = (
+                'Endereço', 'OP', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
+                'Estágio', 'Qtd.', 'Lote', 'Em',
+                'Por')
+            fields = (
+                'local', 'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
+                'estagio', 'qtd', 'lote', 'local_at',
+                'local_usuario__username')
 
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
-            'referencia', 'tamanho', 'cor', 'qtd_produzir')
+            'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio')
         for row in data:
             row['op|LINK'] = reverse(
                 'op_op', args=[row['op']])
@@ -295,6 +307,8 @@ class Estoque(View):
                 'posicao_lote', args=[row['lote']])
             row['local|LINK'] = reverse(
                 'cd_estoque_filtro', args=['E', row['local']])
+            if row['estagio'] == 999:
+                row['estagio'] = 'Finalizado'
         context.update({
             'headers': headers,
             'fields': fields,
