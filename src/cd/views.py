@@ -258,43 +258,43 @@ class Estoque(View):
             headers = (
                 'Em', 'Por', 'Endereço', 'Lote',
                 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.', 'OP',
-                'Estágio', 'Qtd.')
+                'Estágio', 'Alter.', 'Qtd.')
             fields = (
                 'local_at', 'local_usuario__username', 'local', 'lote',
                 'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op',
-                'estagio', 'qtd')
+                'estagio', 'qtd_dif', 'qtd')
         elif ordem == 'O':  # OP Referência Cor Tamanho Endereço Lote
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
             headers = (
                 'OP', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
-                'Estágio', 'Qtd.', 'Endereço', 'Lote', 'Em',
+                'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'Lote', 'Em',
                 'Por')
             fields = (
                 'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd', 'local', 'lote', 'local_at',
+                'estagio', 'qtd_dif', 'qtd', 'local', 'lote', 'local_at',
                 'local_usuario__username')
         elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
             data_rec = data_rec.order_by(
                 'referencia', 'cor', 'ordem_tamanho', 'local', 'op', 'lote')
             headers = (
                 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
-                'Estágio', 'Qtd.', 'Endereço', 'OP', 'Lote', 'Em',
+                'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'OP', 'Lote', 'Em',
                 'Por')
             fields = (
                 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd', 'local', 'op', 'lote', 'local_at',
+                'estagio', 'qtd_dif', 'qtd', 'local', 'op', 'lote', 'local_at',
                 'local_usuario__username')
         else:  # E: Endereço OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
             headers = (
                 'Endereço', 'OP', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
-                'Estágio', 'Qtd.', 'Lote', 'Em',
+                'Estágio', 'Alter.', 'Qtd.', 'Lote', 'Em',
                 'Por')
             fields = (
                 'local', 'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd', 'lote', 'local_at',
+                'estagio', 'qtd_dif', 'qtd', 'lote', 'local_at',
                 'local_usuario__username')
 
         data = data_rec.values(
@@ -309,6 +309,10 @@ class Estoque(View):
                 'cd_estoque_filtro', args=['E', row['local']])
             if row['estagio'] == 999:
                 row['estagio'] = 'Finalizado'
+            if row['qtd'] == row['qtd_produzir']:
+                row['qtd_dif'] = ''
+            else:
+                row['qtd_dif'] = '*'
         context.update({
             'headers': headers,
             'fields': fields,
