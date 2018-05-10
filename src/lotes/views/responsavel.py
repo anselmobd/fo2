@@ -37,8 +37,11 @@ def responsCustom(request, todos):
                 if ordem == 'e':
                     context.update({
                         'headers': ('Estágio',
-                                    'Usuário Systêxtil ( matrícula )'),
-                        'fields': ('ESTAGIO', 'USUARIO'),
+                                    'Usuário Systêxtil ( matrícula )',
+                                    'Baixa Lote', 'Estorna Lote',
+                                    'Cria OS', 'Cancela OS'),
+                        'fields': ('ESTAGIO', 'USUARIO',
+                                   'BL', 'EL', 'CO', 'AO'),
                         'data': data,
                     })
                 else:
