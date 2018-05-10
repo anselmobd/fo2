@@ -196,7 +196,8 @@ class Command(BaseCommand):
 
         # atualizando Systêxtil -> Fo2
         lotes = self.get_lotes_op(op)
-        self.stdout.write('Sistêxtil tem {} lotes'.format(len(lotes)))
+        self.stdout.write(
+            'Sistêxtil tem {} lotes'.format(len(lotes)), ending='')
         sys_lotes = []
         for row in lotes:
             acao = ''
@@ -206,28 +207,31 @@ class Command(BaseCommand):
             try:
                 # self.stdout.write('try')
                 lote = models.Lote.objects.get(lote=row['lote'])
-                acao = 'alterado'
+                acao = 'A'
             except models.Lote.DoesNotExist:
                 # self.stdout.write('except')
                 lote = None
             if not lote:
                 # self.stdout.write('not lote')
-                acao = 'incluido'
+                acao = 'I'
                 lote = models.Lote()
             if self.set_lote(lote, row):
                 # self.stdout.write('save')
                 lote.save()
                 self.stdout.write(
-                    'Lote {} {}'.format(row['lote'], acao))
+                    ' {}{}'.format(
+                        acao, row['lote'][4:].strip('0')), ending='')
 
         # atualizando Fo2 -> Systêxtil
         lotes = models.Lote.objects.filter(op=op)
-        self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)))
+        self.stdout.write('')
+        self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)), ending='')
         for row in lotes:
             if row.lote not in sys_lotes:
                 row.delete()
                 self.stdout.write(
-                    'Lote {} excluido'.format(row.lote))
+                    ' E{}'.format(row.lote[4:]), ending='')
+        self.stdout.write('')
 
     def exclui(self, op):
         self.stdout.write(
