@@ -37,7 +37,7 @@ class Command(BaseCommand):
                     le.PERIODO_PRODUCAO
                   , le.ORDEM_CONFECCAO
                 ) r
-                WHERE rownum <= 1000
+                WHERE rownum <= 100
             '''
             cursor.execute(sql_get)
             lotes = rows_to_dict_list_lower(cursor)
