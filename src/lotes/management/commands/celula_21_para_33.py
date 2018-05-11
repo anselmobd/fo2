@@ -43,7 +43,7 @@ class Command(BaseCommand):
             lotes_ori = rows_to_dict_list(cursor)
             # self.stdout.write('len(lotes_ori) = {}'.format(len(lotes_ori)))
 
-            # set PRECO_MEDIO
+            # set CODIGO_FAMILIA
             sql_set = '''
                 UPDATE PCPC_040 l
                 SET
@@ -68,7 +68,7 @@ class Command(BaseCommand):
             for ori in lotes_ori:
                 if ori not in lotes_new:
                     if date:
-                        print(date)
+                        self.stdout.write(date)
                         date = None
                     self.stdout.write(str(ori))
 
