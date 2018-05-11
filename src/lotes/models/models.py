@@ -164,12 +164,19 @@ class Lote(models.Model):
         Caixa, null=True, default=None, on_delete=models.CASCADE)
     trail = models.IntegerField(default=0)
 
+    __original_local = None
+
+    def __init__(self, *args, **kwargs):
+        super(Lote, self).__init__(*args, **kwargs)
+        self.__original_local = self.local
+
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
         if self.id:
             self.update_at = timezone.now()
-            if self.local:
-                self.local_at = timezone.now()
+            if self.local or self.__original_local:
+                if self.__original_local != self.local:
+                    self.local_at = timezone.now()
         else:  # At create have no "id"
             self.create_at = timezone.now()
         return super(Lote, self).save(*args, **kwargs)
