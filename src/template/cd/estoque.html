@@ -6,22 +6,54 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+span.spanlink {
+  cursor:pointer;
+  color:#337ab7;
+}
+span.spanlink:hover {
+  color:##23527c;
+  text-decoration:underline;
+}
+.mypagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 0;
+}
 </style>
 {% endblock %}
 
+{% block javascript %}
+  <script type="text/javascript">
+    function setPageAndSubmit(page) {
+      document.getElementById('id_page').value = page;
+      document.formName.submit();
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
-<form action="{% url 'cd_estoque' %}" method="post">
+<form action="{% url 'cd_estoque' %}" method="post" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
 </form>
-<br/>
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% else %}
   {% if data %}
-    {% if endereco or lote or op or ref or tam or cor or data_de %}
-      <h3>Busca por</h3>
+  {% if data.paginator.num_pages != 1 %}
+    <div class="mypagination">
+      <br/>
+      {% if data.has_previous %}
+        <span class="spanlink" onclick="setPageAndSubmit(1)">&nbsp;<<&nbsp;</span>
+        <span class="spanlink" onclick="setPageAndSubmit({{ data.previous_page_number }})">&nbsp;<&nbsp;</span>
+      {% endif %}
+        <span>Página {{ data.number }} de {{ data.paginator.num_pages }}</span>
+      {% if data.has_next %}
+        <span class="spanlink" onclick="setPageAndSubmit({{ data.next_page_number }})">&nbsp;>&nbsp;</span>
+        <span class="spanlink" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">&nbsp;>>&nbsp;</span>
+      {% endif %}
+      </div>
     {% endif %}
     {% if endereco %}
       <h4>Endereço: <b>{{ endereco }}</b></h4>
@@ -50,7 +82,7 @@
       {% endif %}
       </h4>
     {% endif %}
-    <h3>Ordenação:
+    <h4>Ordenação:
       {% if ordem == 'B' %}
         Hora de bipagem
       {% elif ordem == 'O' %}
@@ -60,7 +92,7 @@
       {% elif ordem == 'E' %}
         Endereço OP Referência Cor Tamanho Lote
       {% endif %}
-    </h3>
+    </h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data only %}
