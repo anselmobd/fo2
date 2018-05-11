@@ -220,7 +220,7 @@ class Command(BaseCommand):
                 lote.save()
                 self.stdout.write(
                     ' {}{}'.format(
-                        acao, row['lote'][4:].strip('0')), ending='')
+                        acao, row['lote'][4:].lstrip('0')), ending='')
 
         # atualizando Fo2 -> Systêxtil
         lotes = models.Lote.objects.filter(op=op)
@@ -230,7 +230,7 @@ class Command(BaseCommand):
             if row.lote not in sys_lotes:
                 row.delete()
                 self.stdout.write(
-                    ' E{}'.format(row.lote[4:]), ending='')
+                    ' E{}'.format(row.lote[4:].lstrip('0')), ending='')
         self.stdout.write('')
 
     def exclui(self, op):
