@@ -1,6 +1,7 @@
 from pprint import pprint
 from datetime import timedelta
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connections
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
@@ -205,6 +206,8 @@ class Estoque(View):
     title_name = 'Estoque'
 
     def mount_context(self, cursor, form):
+        page = form.cleaned_data['page']
+
         endereco = form.cleaned_data['endereco']
         lote = form.cleaned_data['lote']
         op = form.cleaned_data['op']
@@ -300,6 +303,19 @@ class Estoque(View):
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
             'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio')
+
+        print('data pre len = "{}"'.format(len(data)))
+
+        paginator = Paginator(data, 100)
+        try:
+            data = paginator.page(page)
+        except PageNotAnInteger:
+            data = paginator.page(1)
+        except EmptyPage:
+            data = paginator.page(paginator.num_pages)
+
+        print('data pos len = "{}"'.format(len(data)))
+
         for row in data:
             row['op|LINK'] = reverse(
                 'op_op', args=[row['op']])

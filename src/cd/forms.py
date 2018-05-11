@@ -98,6 +98,8 @@ class EstoqueForm(forms.Form):
                ('E', 'Endereço OP Referência Cor Tamanho Lote')]
     ordem = forms.ChoiceField(
         label='Ordenação', choices=CHOICES, initial='B')
+    page = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())
 
     def clean_endereco(self):
         endereco = self.cleaned_data['endereco'].upper()
