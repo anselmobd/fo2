@@ -1,9 +1,19 @@
-__version__ = '0.1.87'
-__version__date__ = '04/05/2018'
+__version__ = '0.1.89'
+__version__date__ = '11/05/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.89 - 2018/05/11
+#   . CD Estoque: Paginação
+#   . Utilitários: Comando para corrigir sequancias zeradas de estágios
+#     de lotes
+#
+# - 0.1.88 - 2018/05/10
+#   . Responsável por estágio: Mais detalhes
+#   . RH: Vários
+#   . Lotes sincronizados: Estágio e quantidade atuais
 #
 # - 0.1.87 - 2018/05/04
 #   . CD - Detalhes de Inconsistência: Melhorias
