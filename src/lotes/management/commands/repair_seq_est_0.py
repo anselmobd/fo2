@@ -25,14 +25,8 @@ class Command(BaseCommand):
                   SELECT DISTINCT
                     le.PERIODO_PRODUCAO
                   , le.ORDEM_CONFECCAO
-                  , count(*)
                   FROM pcpc_040 le
                   WHERE le.SEQUENCIA_ESTAGIO = 0
-                  GROUP BY
-                    le.PERIODO_PRODUCAO
-                  , le.ORDEM_CONFECCAO
-                  HAVING
-                    count(*) > 1
                   ORDER BY
                     le.PERIODO_PRODUCAO
                   , le.ORDEM_CONFECCAO
