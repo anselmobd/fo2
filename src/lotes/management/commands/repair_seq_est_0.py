@@ -13,6 +13,7 @@ class Command(BaseCommand):
     help = 'Repair zeroed SEQUENCIA_ESTAGIO field in PCPC_040 TABLE.'
 
     def handle(self, *args, **options):
+        self.stdout.write('---\n{}'.format(datetime.datetime.now()))
         try:
             cursor = connections['so'].cursor()
 
@@ -42,14 +43,15 @@ class Command(BaseCommand):
             sql_seq = '''
                 SELECT
                   ROW_NUMBER() OVER (
-                    PARTITION BY le.ORDEM_CONFECCAO ORDER BY le.ROWID
+                    PARTITION BY le.ORDEM_CONFECCAO
+                    ORDER BY le.SEQ_OPERACAO, le.ROWID
                   ) SEQ
                 , le.ROWID RID
                 FROM pcpc_040 le
                 WHERE le.PERIODO_PRODUCAO = %s
                   AND le.ORDEM_CONFECCAO = %s
                 ORDER BY
-                  le.ROWID
+                  le.SEQ_OPERACAO
             '''
             for lote in lotes:
                 # self.stdout.write(str([lote['periodo'], lote['oc']]))
