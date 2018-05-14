@@ -28,31 +28,49 @@ span.spanlink:hover {
       document.getElementById('id_page').value = page;
       document.formName.submit();
     }
+    function showHideMyFilter() {
+      var x = document.getElementById("myfilter");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        document.getElementById("txtmyfilter").innerHTML = "Esconde";
+      } else {
+        x.style.display = "none";
+        document.getElementById("txtmyfilter").innerHTML = "Mostra";
+      }
+    }
   </script>
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'cd_estoque' %}" method="post" name="formName">
+<button onclick="showHideMyFilter()"><span id="txtmyfilter">Esconde</span> campos de filtro</button>
+<div id="myfilter">
+  <form action="{% url 'cd_estoque' %}" method="post" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
-</form>
+  </form>
+</div>
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% else %}
   {% if data %}
-  {% if data.paginator.num_pages != 1 %}
-    <div class="mypagination">
-      <br/>
-      {% if data.has_previous %}
-        <span class="spanlink" onclick="setPageAndSubmit(1)">&nbsp;<<&nbsp;</span>
-        <span class="spanlink" onclick="setPageAndSubmit({{ data.previous_page_number }})">&nbsp;<&nbsp;</span>
-      {% endif %}
-        <span>Página {{ data.number }} de {{ data.paginator.num_pages }}</span>
-      {% if data.has_next %}
-        <span class="spanlink" onclick="setPageAndSubmit({{ data.next_page_number }})">&nbsp;>&nbsp;</span>
-        <span class="spanlink" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">&nbsp;>>&nbsp;</span>
-      {% endif %}
+    <script type="text/javascript">
+      window.onload = function() {
+        showHideMyFilter();
+      }
+    </script>
+    {% if data.paginator.num_pages != 1 %}
+      <div class="mypagination">
+        <br/>
+        {% if data.has_previous %}
+          <span class="spanlink" onclick="setPageAndSubmit(1)">&nbsp;<<&nbsp;</span>
+          <span class="spanlink" onclick="setPageAndSubmit({{ data.previous_page_number }})">&nbsp;<&nbsp;</span>
+        {% endif %}
+          <span>Página {{ data.number }} de {{ data.paginator.num_pages }}</span>
+        {% if data.has_next %}
+          <span class="spanlink" onclick="setPageAndSubmit({{ data.next_page_number }})">&nbsp;>&nbsp;</span>
+          <span class="spanlink" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">&nbsp;>>&nbsp;</span>
+        {% endif %}
       </div>
     {% endif %}
     {% if endereco %}
