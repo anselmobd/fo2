@@ -638,14 +638,14 @@ class Conferencia(View):
             'group': group,
             'sum': ['qlotes', 'qtdsum'],
             'count': [],
-            'descr': {'tamanho': 'Totais:'}
+            'descr': {'op': 'Totais:'}
         })
         group_rowspan(data, group)
 
-        headers = ['Endereço', 'OP', 'Referência', 'Cor', 'Tamanho',
-                   'Lotes', 'Qtd.']
-        fields = ['local', 'op', 'referencia', 'cor', 'tamanho',
-                  'qlotes', 'qtdsum']
+        headers = ['Endereço', 'OP', 'Lotes', 'Qtd.',
+                   'Referência', 'Cor', 'Tamanho']
+        fields = ['local', 'op', 'qlotes', 'qtdsum',
+                  'referencia', 'cor', 'tamanho']
 
         context.update({
             'headers': headers,
