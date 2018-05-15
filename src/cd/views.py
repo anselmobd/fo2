@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connections
+from django.db.models import Count, Sum
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
@@ -469,6 +470,7 @@ class Inconsistencias(View):
                 , le.SEQUENCIA_ESTAGIO
             '''.format(filtro=filtro)
             cursor.execute(sql)
+            print(sql)
             estagios = rows_to_dict_list_lower(cursor)
 
             for op in ops:
@@ -615,6 +617,32 @@ class Conferencia(View):
 
     def mount_context(self, cursor):
         context = {}
+        locais_recs = lotes.models.Lote.objects.all().exclude(
+            local__isnull=True
+        ).exclude(
+            local__exact=''
+        ).values('local', 'op', 'referencia', 'cor', 'tamanho').annotate(
+            qlotes=Count('lote'),
+            qtdsum=Sum('qtd')
+        ).order_by('local', 'op', 'referencia', 'cor', 'ordem_tamanho')
+        # ).values('local').distinct()
+        if len(locais_recs) == 0:
+            return context
+
+        # ocs = []
+        # for lote in lotes_recs:
+        #     ocs.append(lote['lote'][4:].strip('0'))
+
+        headers = ['Endereço', 'OP', 'Referência', 'Cor', 'Tamanho',
+                   'Lotes', 'Qtd.']
+        fields = ['local', 'op', 'referencia', 'cor', 'tamanho',
+                  'qlotes', 'qtdsum']
+
+        context.update({
+            'headers': headers,
+            'fields': fields,
+            'data': locais_recs,
+        })
 
         return context
 
