@@ -37,9 +37,9 @@
       <a href="{% url 'cd_inconsist_opini' ordem=ordem_inv opini=0 %}"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span></a>
     {% endwith %}
     de OP (limitada a <b>{{ data_size }}</b>)</h4>
-  {% if opini %}
-    <h4>Iniciando pela OP <b>{{ opini }}</b></h4>
-  {% endif %}
+    {% if opini %}
+      <h4>Iniciando pela OP <b>{{ opini }}</b></h4>
+    {% endif %}
   {% endif %}
   {% if data %}
     {% if endereco or lote or op or ref or tam or cor or data_de %}
