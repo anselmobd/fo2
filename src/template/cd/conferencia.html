@@ -10,4 +10,10 @@
 {% endblock %}
 
 {% block content %}
+{% if data %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+  </table>
+{% endif %}
 {% endblock content %}
