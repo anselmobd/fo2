@@ -1,5 +1,6 @@
 from pprint import pprint
 from datetime import timedelta
+# import pandas as pd
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connections
@@ -615,7 +616,7 @@ class Mapa(View):
 class Conferencia(View):
     # Form_class = cd.forms.EstoqueForm
     template_name = 'cd/conferencia.html'
-    title_name = 'Conferência'
+    title_name = 'Conferência detalhada'
 
     def mount_context(self, cursor):
         context = {}
@@ -651,6 +652,46 @@ class Conferencia(View):
             'headers': headers,
             'fields': fields,
             'group': group,
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        data = self.mount_context(cursor)
+        context.update(data)
+        return render(request, self.template_name, context)
+
+
+class ConferenciaSimples(View):
+    # Form_class = cd.forms.EstoqueForm
+    template_name = 'cd/conferencia.html'
+    title_name = 'Conferência Simples'
+
+    def mount_context(self, cursor):
+        context = {'simples': 's'}
+        locais_recs = lotes.models.Lote.objects.all().exclude(
+            local__isnull=True
+        ).exclude(
+            local__exact=''
+        ).values('local').annotate(
+            qlotes=Count('lote'),
+            qtdsum=Sum('qtd')
+        ).order_by('local')
+        if len(locais_recs) == 0:
+            return context
+
+        data = list(locais_recs.values(
+            'local', 'qlotes', 'qtdsum'))
+
+        headers = ['Endereço', 'Lotes (caixas)', 'Qtd. peças']
+        fields = ['local', 'qlotes', 'qtdsum']
+
+        context.update({
+            'headers': headers,
+            'fields': fields,
             'data': data,
         })
 

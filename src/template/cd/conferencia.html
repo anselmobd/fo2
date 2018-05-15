@@ -11,6 +11,11 @@
 
 {% block content %}
 {% if data %}
+  {% if simples %}
+    <a href="{% url 'cd_conferencia_detalhada' %}">Mostrar conferência detalhada</a>
+  {% else %}
+    <a href="{% url 'cd_conferencia' %}">Mostrar conferência simples</a>
+  {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group only %}

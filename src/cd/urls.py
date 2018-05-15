@@ -15,6 +15,9 @@ urlpatterns = [
     url(r'^inconsist_detalhe/(?P<op>\d+)/$',
         views.InconsistenciasDetalhe.as_view(),
         name='cd_inconsist_detalhe_op'),
-    url(r'^conferencia/$', views.Conferencia.as_view(), name='cd_conferencia'),
+    url(r'^conferencia/$',
+        views.ConferenciaSimples.as_view(), name='cd_conferencia'),
+    url(r'^conferencia_detalhada/$',
+        views.Conferencia.as_view(), name='cd_conferencia_detalhada'),
     url(r'^mapa/$', views.Mapa.as_view(), name='cd_mapa'),
 ]
