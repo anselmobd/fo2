@@ -42,7 +42,7 @@ span.spanlink:hover {
 {% endblock %}
 
 {% block content %}
-<button onclick="showHideMyFilter()"><span id="txtmyfilter">Esconde</span> campos de filtro</button>
+<button onclick="showHideMyFilter()"><span id="txtmyfilter">Esconde</span> campos de filtro</button><br/>
 <div id="myfilter">
   <form action="{% url 'cd_estoque' %}" method="post" name="formName">
     {% csrf_token %}
