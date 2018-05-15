@@ -10,7 +10,9 @@ from django.views import View
 from django.urls import reverse
 
 from fo2.models import rows_to_dict_list_lower
+from fo2.template import group_rowspan
 
+from utils.views import totalize_grouped_data
 import lotes.models
 
 import cd.models as models
@@ -625,13 +627,20 @@ class Conferencia(View):
             qlotes=Count('lote'),
             qtdsum=Sum('qtd')
         ).order_by('local', 'op', 'referencia', 'cor', 'ordem_tamanho')
-        # ).values('local').distinct()
         if len(locais_recs) == 0:
             return context
 
-        # ocs = []
-        # for lote in lotes_recs:
-        #     ocs.append(lote['lote'][4:].strip('0'))
+        data = list(locais_recs.values(
+            'local', 'op', 'referencia', 'cor', 'tamanho', 'qlotes', 'qtdsum'))
+
+        group = ['local']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['qlotes', 'qtdsum'],
+            'count': [],
+            'descr': {'tamanho': 'Totais:'}
+        })
+        group_rowspan(data, group)
 
         headers = ['Endereço', 'OP', 'Referência', 'Cor', 'Tamanho',
                    'Lotes', 'Qtd.']
@@ -641,7 +650,8 @@ class Conferencia(View):
         context.update({
             'headers': headers,
             'fields': fields,
-            'data': locais_recs,
+            'group': group,
+            'data': data,
         })
 
         return context
