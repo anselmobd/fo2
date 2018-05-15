@@ -172,6 +172,16 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
             , l.PERIODO_PRODUCAO
             , l.ORDEM_CONFECCAO
         '''
+    elif order == 'r':  # referência + cor + tamanho + OC
+        sql = sql + '''
+            ORDER BY
+              l.ORDEM_PRODUCAO
+            , l.PROCONF_GRUPO
+            , l.PROCONF_ITEM
+            , t.ORDEM_TAMANHO
+            , l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO
+        '''
     else:  # elif order == '':  # OS + referência + cor + tamanho + OC
         sql = sql + '''
             ORDER BY
