@@ -132,7 +132,7 @@ class OpCaixa(View):
 
         # Lotes ordenados por OS + referência + estágio
         data = models.get_imprime_lotes(
-            cursor, op, None, None, 'c', None, None, None, None)
+            cursor, op, None, None, 'r', None, None, None, None)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Lotes não encontradas',
