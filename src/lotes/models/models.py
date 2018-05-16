@@ -202,28 +202,33 @@ class Lote(models.Model):
 #         verbose_name = "lote na caixa"
 
 
-# class SolicitaLote(models.Model):
-#     codigo = models.CharField(
-#         unique=True, max_length=20,
-#         verbose_name='código')
-#     descricao = models.CharField(
-#         max_length=200, null=True, blank=True,
-#         verbose_name='descrição')
-#     usuario = models.ForeignKey(
-#         User, on_delete=models.CASCADE, null=True, blank=True,
-#         verbose_name='usuário')
-#     aberta = models.NullBooleanField(default=True)
-#     create_at = models.DateTimeField(
-#         null=True, blank=True,
-#         verbose_name='criado em')
-#
-#     def save(self, *args, **kwargs):
-#         self.codigo = self.codigo and self.codigo.upper()
-#         ''' On create get timestamps '''
-#         if not self.id:
-#             self.create_at = timezone.now()
-#         super(SolicitaLote, self).save(*args, **kwargs)
-#
-#     class Meta:
-#         db_table = "fo2_cd_solicita_lote"
-#         verbose_name = "Solicitação de lote"
+class SolicitaLote(models.Model):
+    codigo = models.CharField(
+        unique=True, max_length=20,
+        verbose_name='código')
+    descricao = models.CharField(
+        max_length=200, null=True, blank=True,
+        verbose_name='descrição')
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='usuário')
+    ativa = models.NullBooleanField(default=True)
+    create_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='criado em')
+    update_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='alterado em')
+
+    def save(self, *args, **kwargs):
+        self.codigo = self.codigo and self.codigo.upper()
+        ''' On create and update, get timestamps '''
+        self.update_at = timezone.now()
+        # At create have no "id"
+        if not self.id:
+            self.create_at = timezone.now()
+        super(SolicitaLote, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_cd_solicita_lote"
+        verbose_name = "Solicitação de lote"
