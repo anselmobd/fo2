@@ -19,5 +19,7 @@ urlpatterns = [
         views.ConferenciaSimples.as_view(), name='cd_conferencia'),
     url(r'^conferencia_detalhada/$',
         views.Conferencia.as_view(), name='cd_conferencia_detalhada'),
+    url(r'^solicitacoes/(?P<id>[^/]+)?$',
+        views.Solicitacoes.as_view(), name='cd_solicitacoes'),
     url(r'^mapa/$', views.Mapa.as_view(), name='cd_mapa'),
 ]

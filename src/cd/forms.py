@@ -158,3 +158,14 @@ class ConfereForm(forms.Form):
         data['endereco'] = endereco
         self.data = data
         return endereco
+
+
+class SolicitacaoForm(forms.Form):
+    codigo = forms.CharField(
+        label='Código', max_length=20, min_length=1,
+        widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
+    descricao = forms.CharField(
+        label='Descrição', required=False,
+        widget=forms.TextInput(attrs={'size': 60}))
+    ativa = forms.BooleanField(
+        label='Ativa para o usuário', required=False)

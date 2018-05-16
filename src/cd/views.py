@@ -2,10 +2,12 @@ from pprint import pprint
 from datetime import timedelta
 # import pandas as pd
 
+from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connections
 from django.db.models import Count, Sum
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins \
+    import PermissionRequiredMixin, LoginRequiredMixin
 from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
@@ -15,6 +17,7 @@ from fo2.template import group_rowspan
 
 from utils.views import totalize_grouped_data
 import lotes.models
+from geral.functions import has_permission
 
 import cd.models as models
 import cd.forms
@@ -769,4 +772,102 @@ class InconsistenciasDetalhe(View):
         cursor = connections['so'].cursor()
         data = self.mount_context(cursor, op)
         context.update(data)
+        return render(request, self.template_name, context)
+
+
+class Solicitacoes(LoginRequiredMixin, View):
+    Form_class = cd.forms.SolicitacaoForm
+    template_name = 'cd/solicitacoes.html'
+    title_name = 'Solicitações de lotes'
+    SL = lotes.models.SolicitaLote
+    id = None
+
+    def list(self):
+        fields = ('codigo', 'ativa', 'descricao',
+                  'usuario', 'update_at')
+        descriptions = ('Código', 'Ativa para o usuário', 'Descrição',
+                        'Usuário', 'Última alteração')
+        headers = dict(zip(fields, descriptions))
+
+        data = self.SL.objects.all().order_by('-update_at')
+        context = {
+            'headers': headers,
+            'fields': fields,
+            'data': data,
+        }
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+
+        if self.id:
+            if self.id == 'add':
+                if has_permission(request, 'lotes.add_solicitalote'):
+                    context['form'] = self.Form_class()
+                else:
+                    context['msg_erro'] = \
+                        'Usuário não tem direito de criar solicitações.'
+                    self.id = None
+            else:
+                if has_permission(request, 'lotes.change_solicitalote'):
+                    data = self.SL.objects.filter(id=self.id)
+                    if len(data) == 0:
+                        self.id = None
+                    else:
+                        row = data[0]
+                        context['id'] = self.id
+                        context['form'] = self.Form_class(
+                            initial={'codigo': row.codigo,
+                                     'descricao': row.descricao,
+                                     'ativa': row.ativa})
+                else:
+                    context['msg_erro'] = \
+                        'Usuário não tem direito de alterar solicitações.'
+                    self.id = None
+
+        if not self.id:
+            context.update(self.list())
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            codigo = form.cleaned_data['codigo']
+            descricao = form.cleaned_data['descricao']
+            ativa = form.cleaned_data['ativa']
+            grava = True
+            if ativa:
+                outras_ativas = self.SL.objects.filter(
+                    usuario=request.user,
+                    ativa=True
+                )
+                if self.id != 'add':
+                    outras_ativas = outras_ativas.exclude(id=self.id)
+                if len(outras_ativas) != 0:
+                    context['msg_erro'] = \
+                        'Outra solicitação ja está ativa para esse usuário.'
+                    grava = False
+            if grava:
+                if self.id == 'add':
+                    solicitacao = self.SL()
+                else:
+                    solicitacao = self.SL.objects.get(id=self.id)
+                solicitacao.usuario = request.user
+                solicitacao.codigo = codigo
+                solicitacao.descricao = descricao
+                solicitacao.ativa = ativa
+                solicitacao.save()
+
+            context.update(self.list())
+        else:
+            self.context['form'] = form
         return render(request, self.template_name, context)
