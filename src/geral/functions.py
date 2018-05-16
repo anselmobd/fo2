@@ -8,3 +8,13 @@ def get_list_geral_paineis(context):
     return {'list_geral_paineis': paineis,
             'list_geral_modulos': modulos,
             }
+
+
+def has_permission(request, permission):
+    can = False
+    user = None
+    if request.user.is_authenticated():
+        user = request.user
+    if user:
+        can = user.has_perm(permission)
+    return can
