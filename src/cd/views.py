@@ -1039,6 +1039,36 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'e_data': por_endereco,
         })
 
+        referencias = lotes.models.SolicitaLoteQtd.objects.filter(
+            solicitacao=solicitacao
+        ).values('lote__referencia').distinct()
+
+        grades = []
+        for referencia in referencias:
+            grade = lotes.models.SolicitaLoteQtd.objects.filter(
+                solicitacao=solicitacao,
+                lote__referencia=referencia['lote__referencia']
+            ).values(
+                'lote__referencia', 'lote__cor', 'lote__tamanho'
+            ).annotate(
+                qtdsum=Sum('qtd')
+            ).order_by(
+                'lote__referencia', 'lote__cor', 'lote__tamanho'
+            )
+
+            context_ref = {
+                're_headers': ['Referência', 'Cor', 'Tamanho',
+                               'Quant. Solicitada'],
+                're_fields': ['lote__referencia', 'lote__cor', 'lote__tamanho',
+                              'qtdsum'],
+                're_data': grade,
+            }
+            grades.append(context_ref)
+
+        context.update({
+            'grades': grades,
+        })
+
         return context
 
     def get(self, request, *args, **kwargs):
