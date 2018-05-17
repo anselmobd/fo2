@@ -1,9 +1,18 @@
-__version__ = '0.1.89'
-__version__date__ = '11/05/2018'
+__version__ = '0.1.91'
+__version__date__ = '17/05/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.91 - 2018/05/17
+#   . CD estoque - Solicitação: Funcionando solicitação de qtd de lote
+#
+# - 0.1.90 - 2018/05/15
+#   . CD estoque: Iniciada rotina de solicitação de lotes
+#   . Lista de caixas de lotes: Corrigida
+#   . CD estoque: show/hide filtro
+#   . CD estoque: Tela de conferencia de endereços 63
 #
 # - 0.1.89 - 2018/05/11
 #   . CD Estoque: Paginação
