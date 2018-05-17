@@ -21,6 +21,8 @@ urlpatterns = [
         views.Conferencia.as_view(), name='cd_conferencia_detalhada'),
     url(r'^solicitacoes/(?P<id>[^/]+)?$',
         views.Solicitacoes.as_view(), name='cd_solicitacoes'),
+    url(r'^solicitacao_detalhe/(?P<solicit_id>[^/]+)?$',
+        views.SolicitacaoDetalhe.as_view(), name='cd_solicitacao_detalhe'),
     url(r'^solicita/(?P<solicitacao_id>[^/]+)/'
         '(?P<lote>[^/]+)/(?P<qtd>[^/]+)?/$',
         views.solicita_lote, name='cd_solicita_lote'),
