@@ -7,6 +7,8 @@ __version__date__ = '17/05/2018'
 #
 # - 0.1.91 - 2018/05/17
 #   . CD estoque - Solicitação: Funcionando solicitação de qtd de lote
+#   . CD estoque - Solicitação: Tela com detalhes de uma solicitação inidiada
+#     e funcional
 #
 # - 0.1.90 - 2018/05/15
 #   . CD estoque: Iniciada rotina de solicitação de lotes
