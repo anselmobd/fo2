@@ -11,13 +11,14 @@ from django.contrib.auth.mixins \
 from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
+from django.http import JsonResponse
 
 from fo2.models import rows_to_dict_list_lower
 from fo2.template import group_rowspan
 
 from utils.views import totalize_grouped_data
 import lotes.models
-from geral.functions import has_permission
+from geral.functions import request_user, has_permission
 
 import cd.models as models
 import cd.forms
@@ -212,7 +213,8 @@ class Estoque(View):
     template_name = 'cd/estoque.html'
     title_name = 'Estoque'
 
-    def mount_context(self, cursor, form):
+    def mount_context(self, cursor, form, user):
+        linhas_pagina = 100
         page = form.cleaned_data['page']
 
         endereco = form.cleaned_data['endereco']
@@ -236,6 +238,7 @@ class Estoque(View):
                    'ordem': ordem,
                    'data_de': data_de,
                    'data_ate': data_ate,
+                   'linhas_pagina': linhas_pagina,
                    }
 
         if data_ate:
@@ -265,55 +268,56 @@ class Estoque(View):
 
         if ordem == 'B':  # Hora de bipagem
             data_rec = data_rec.order_by('-local_at')
-            headers = (
+            headers = [
                 'Em', 'Por', 'Endereço', 'Lote',
                 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.', 'OP',
-                'Estágio', 'Alter.', 'Qtd.')
-            fields = (
+                'Estágio', 'Alter.', 'Qtd.']
+            fields = [
                 'local_at', 'local_usuario__username', 'local', 'lote',
                 'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op',
-                'estagio', 'qtd_dif', 'qtd')
+                'estagio', 'qtd_dif', 'qtd']
         elif ordem == 'O':  # OP Referência Cor Tamanho Endereço Lote
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
-            headers = (
+            headers = [
                 'OP', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
                 'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'Lote', 'Em',
-                'Por')
-            fields = (
+                'Por']
+            fields = [
                 'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
                 'estagio', 'qtd_dif', 'qtd', 'local', 'lote', 'local_at',
-                'local_usuario__username')
+                'local_usuario__username']
         elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
             data_rec = data_rec.order_by(
                 'referencia', 'cor', 'ordem_tamanho', 'local', 'op', 'lote')
-            headers = (
+            headers = [
                 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
                 'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'OP', 'Lote', 'Em',
-                'Por')
-            fields = (
+                'Por']
+            fields = [
                 'referencia', 'tamanho', 'cor', 'qtd_produzir',
                 'estagio', 'qtd_dif', 'qtd', 'local', 'op', 'lote', 'local_at',
-                'local_usuario__username')
+                'local_usuario__username']
         else:  # E: Endereço OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
-            headers = (
+            headers = [
                 'Endereço', 'OP', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
                 'Estágio', 'Alter.', 'Qtd.', 'Lote', 'Em',
-                'Por')
-            fields = (
+                'Por']
+            fields = [
                 'local', 'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
                 'estagio', 'qtd_dif', 'qtd', 'lote', 'local_at',
-                'local_usuario__username')
+                'local_usuario__username']
 
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
-            'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio')
+            'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio',
+            'create_at', 'update_at')
 
         print('data pre len = "{}"'.format(len(data)))
 
-        paginator = Paginator(data, 100)
+        paginator = Paginator(data, linhas_pagina)
         try:
             data = paginator.page(page)
         except PageNotAnInteger:
@@ -321,9 +325,50 @@ class Estoque(View):
         except EmptyPage:
             data = paginator.page(paginator.num_pages)
 
-        print('data pos len = "{}"'.format(len(data)))
+        # print('data pos len = "{}"'.format(len(data)))
 
+        solicit_cod = None
+        solicit_recs = lotes.models.SolicitaLote.objects.filter(
+            usuario=user, ativa=True)
+        if len(solicit_recs) == 1:
+            solicit_cod = solicit_recs[0].codigo
+            solicit_id = solicit_recs[0].id
+
+        if solicit_cod:
+            headers.append('Solicita')
+            fields.append('solicita')
         for row in data:
+            if row['qtd'] and solicit_cod:
+                if row['update_at'] is None:
+                    row['update_at'] = row['create_at']
+                slq = lotes.models.SolicitaLoteQtd.objects.filter(
+                    lote__lote=row['lote'], update_at__gte=row['update_at']
+                    ).aggregate(Sum('qtd'))
+                slq_qtd = 0
+                if slq:
+                    if slq['qtd__sum']:
+                        slq_qtd = slq['qtd__sum']
+
+                row['solicita'] = '''
+                    <a title="Solicita" href="#"
+                     onclick="solicita_lote(
+                        \'{lote}\', \'{ref}\', \'{cor}\', \'{tam}\',
+                        \'{qtd_resta}\', \'{solicit_cod}\', \'{solicit_id}\',
+                        \'{qtd_limite}\');"
+                    ><span id="qtd_resta_{lote}">{qtd_resta}</span><span
+                    class="glyphicon glyphicon-triangle-bottom"
+                    aria-hidden="true"></span></a>
+                '''.format(
+                    lote=row['lote'],
+                    ref=row['referencia'],
+                    cor=row['cor'],
+                    tam=row['tamanho'],
+                    qtd_resta=row['qtd'] - slq_qtd,
+                    solicit_cod=solicit_cod,
+                    solicit_id=solicit_id,
+                    qtd_limite=row['qtd'])
+            else:
+                row['solicita'] = '0'
             row['op|LINK'] = reverse(
                 'op_op', args=[row['op']])
             row['lote|LINK'] = reverse(
@@ -337,6 +382,7 @@ class Estoque(View):
             else:
                 row['qtd_dif'] = '*'
         context.update({
+            'safe': ['solicita'],
             'headers': headers,
             'fields': fields,
             'data': data,
@@ -376,7 +422,8 @@ class Estoque(View):
                 form.data['ref'] = kwargs['ref']
         if form.is_valid():
             cursor = connections['so'].cursor()
-            data = self.mount_context(cursor, form)
+            user = request_user(request)
+            data = self.mount_context(cursor, form, user)
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
@@ -871,3 +918,60 @@ class Solicitacoes(LoginRequiredMixin, View):
         else:
             self.context['form'] = form
         return render(request, self.template_name, context)
+
+
+def solicita_lote(request, solicitacao_id, lote, qtd):
+    data = {}
+
+    try:
+        solicitacao = lotes.models.SolicitaLote.objects.get(
+            id=solicitacao_id)
+    except lotes.models.SolicitaLote.DoesNotExist:
+        data.update({
+            'result': 'ERR',
+            'descricao_erro': 'Solicitação não encontrada por id',
+        })
+        return JsonResponse(data, safe=False)
+
+    try:
+        lote_rec = lotes.models.Lote.objects.get(lote=lote)
+    except lotes.models.Lote.DoesNotExist:
+        data.update({
+            'result': 'ERR',
+            'descricao_erro': 'Lote não encontrado',
+        })
+        return JsonResponse(data, safe=False)
+
+    try:
+        iqtd = int(qtd)
+    except ValueError:
+        iqtd = -1
+    if iqtd < 1 or iqtd > lote_rec.qtd:
+        data.update({
+            'result': 'ERR',
+            'descricao_erro': 'Quantidade inválida',
+        })
+        return JsonResponse(data, safe=False)
+
+    try:
+        solicita = lotes.models.SolicitaLoteQtd()
+        solicita.solicitacao = solicitacao
+        solicita.lote = lote_rec
+        solicita.qtd = iqtd
+        solicita.save()
+    except lotes.models.Lote.DoesNotExist:
+        data.update({
+            'result': 'ERR',
+            'descricao_erro':
+                'Erro ao criar registro de quantidade solicitada',
+        })
+        return JsonResponse(data, safe=False)
+
+    data = {
+        'result': 'OK',
+        'solicitacao_id': solicitacao_id,
+        'lote': lote,
+        'qtd': iqtd,
+        'solicita_qtd_id': solicita.id,
+    }
+    return JsonResponse(data, safe=False)
