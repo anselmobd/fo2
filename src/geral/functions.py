@@ -10,11 +10,16 @@ def get_list_geral_paineis(context):
             }
 
 
-def has_permission(request, permission):
-    can = False
+def request_user(request):
     user = None
     if request.user.is_authenticated():
         user = request.user
+    return user
+
+
+def has_permission(request, permission):
+    can = False
+    user = request_user(request)
     if user:
         can = user.has_perm(permission)
     return can
