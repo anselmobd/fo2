@@ -232,3 +232,32 @@ class SolicitaLote(models.Model):
     class Meta:
         db_table = "fo2_cd_solicita_lote"
         verbose_name = "Solicitação de lote"
+
+
+class SolicitaLoteQtd(models.Model):
+    solicitacao = models.ForeignKey(
+        SolicitaLote, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='Solicitação')
+    lote = models.ForeignKey(
+        Lote, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='Lote')
+    qtd = models.IntegerField(
+        default=0, verbose_name='quantidade solicitada')
+    create_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='criado em')
+    update_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='alterado em')
+
+    def save(self, *args, **kwargs):
+        ''' On create and update, get timestamps '''
+        self.update_at = timezone.now()
+        # At create have no "id"
+        if not self.id:
+            self.create_at = timezone.now()
+        super(SolicitaLoteQtd, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_cd_solicita_lote_qtd"
+        verbose_name = "Quantidades Solicitadas de lotes"
