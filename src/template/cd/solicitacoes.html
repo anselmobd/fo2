@@ -62,8 +62,14 @@
                   <span class="glyphicon glyphicon-ban-circle" style="color: red" aria-hidden="true"></span>
                 {% endif %}
               {% else %}
-                {% if row|get_obj_attr:field %}
-                  {{row|get_obj_attr:field}}
+                {% if row|get_item:field %}
+                  {% with field|add:'|LINK' as field_link %}
+                    {% if row|get_item:field_link %}
+                      <a href="{{ row|get_item:field_link }}">{{row|get_item:field}}</a>
+                    {% else %}
+                      {{row|get_item:field}}
+                    {% endif %}
+                  {% endwith %}
                 {% endif %}
               {% endif %}
             </td>

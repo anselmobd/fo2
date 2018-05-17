@@ -1,0 +1,26 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% else %}
+  <h4>Solicitação: <b>{{ solicitacao.codigo }} ({{ solicitacao.descricao }})</b></h4>
+  {% if data %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
+    </table>
+  {% else %}
+    <b>Vazia</b>
+  {% endif %}
+{% endif %}
+{% endblock %}

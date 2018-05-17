@@ -315,8 +315,6 @@ class Estoque(View):
             'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio',
             'create_at', 'update_at')
 
-        print('data pre len = "{}"'.format(len(data)))
-
         paginator = Paginator(data, linhas_pagina)
         try:
             data = paginator.page(page)
@@ -324,8 +322,6 @@ class Estoque(View):
             data = paginator.page(1)
         except EmptyPage:
             data = paginator.page(paginator.num_pages)
-
-        # print('data pos len = "{}"'.format(len(data)))
 
         solicit_cod = None
         solicit_recs = lotes.models.SolicitaLote.objects.filter(
@@ -523,7 +519,6 @@ class Inconsistencias(View):
                 , le.SEQUENCIA_ESTAGIO
             '''.format(filtro=filtro)
             cursor.execute(sql)
-            print(sql)
             estagios = rows_to_dict_list_lower(cursor)
 
             for op in ops:
@@ -831,12 +826,18 @@ class Solicitacoes(LoginRequiredMixin, View):
 
     def list(self):
         fields = ('codigo', 'ativa', 'descricao',
-                  'usuario', 'update_at')
+                  'usuario__username', 'update_at')
         descriptions = ('Código', 'Ativa para o usuário', 'Descrição',
                         'Usuário', 'Última alteração')
         headers = dict(zip(fields, descriptions))
 
         data = self.SL.objects.all().order_by('-update_at')
+        data = list(data.values(
+            'codigo', 'ativa', 'descricao',
+            'usuario__username', 'update_at', 'id'))
+        for row in data:
+            row['codigo|LINK'] = reverse(
+                'cd_solicitacao_detalhe', args=[row['id']])
         context = {
             'headers': headers,
             'fields': fields,
@@ -975,3 +976,54 @@ def solicita_lote(request, solicitacao_id, lote, qtd):
         'solicita_qtd_id': solicita.id,
     }
     return JsonResponse(data, safe=False)
+
+
+class SolicitacaoDetalhe(LoginRequiredMixin, View):
+    template_name = 'cd/solicitacao_detalhe.html'
+    title_name = 'Detalhes de solicitação'
+
+    def mount_context(self, solicit_id, user):
+        context = {'user': user}
+
+        try:
+            solicitacao = lotes.models.SolicitaLote.objects.get(
+                id=solicit_id)
+        except lotes.models.SolicitaLote.DoesNotExist:
+            context['erro'] = \
+                'Id de solicitação inválido.'
+            return context
+
+        context['solicitacao'] = solicitacao
+
+        solicit_qtds = lotes.models.SolicitaLoteQtd.objects.filter(
+            solicitacao=solicitacao
+        ).order_by('-update_at').values(
+            'id', 'lote__op', 'lote__lote', 'lote__referencia',
+            'lote__cor', 'lote__tamanho', 'qtd', 'update_at')
+
+        for row in solicit_qtds:
+            row['delete'] = '''
+                <a title="Solicita" href="/cd/solicitacao_detalhe/{id}"
+                ><span class="glyphicon glyphicon-remove"
+                aria-hidden="true"></span></a>
+            '''.format(id=row['id'])
+        context.update({
+            'safe': ['delete'],
+            'headers': ['OP', 'Lote', 'Referência',
+                        'Cor', 'Tamanho', 'Quant. Solicitada', 'Em', ''],
+            'fields': ['lote__op', 'lote__lote', 'lote__referencia',
+                       'lote__cor', 'lote__tamanho', 'qtd', 'update_at',
+                       'delete'],
+            'data': solicit_qtds,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        if 'solicit_id' in kwargs:
+            solicit_id = kwargs['solicit_id']
+            user = request_user(request)
+            data = self.mount_context(solicit_id, user)
+            context.update(data)
+        return render(request, self.template_name, context)
