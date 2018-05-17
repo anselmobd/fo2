@@ -1003,10 +1003,11 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
         for row in solicit_qtds:
             row['delete'] = '''
-                <a title="Solicita" href="/cd/solicitacao_detalhe/{id}"
+                <a title="Exclui"
+                href="/cd/solicitacao_detalhe/{solicit_id}/d/{id}"
                 ><span class="glyphicon glyphicon-remove"
                 aria-hidden="true"></span></a>
-            '''.format(id=row['id'])
+            '''.format(solicit_id=solicitacao.id, id=row['id'])
         context.update({
             'safe': ['delete'],
             'headers': ['OP', 'Lote', 'Referência',
@@ -1021,6 +1022,16 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
+        if 'acao' in kwargs:
+            acao = kwargs['acao']
+            slq_id = kwargs['id']
+            try:
+                solicit_qtds = lotes.models.SolicitaLoteQtd.objects.get(
+                    id=slq_id)
+                if acao == 'd':
+                    solicit_qtds.delete()
+            except lotes.models.SolicitaLoteQtd.DoesNotExist:
+                pass
         if 'solicit_id' in kwargs:
             solicit_id = kwargs['solicit_id']
             user = request_user(request)
