@@ -1018,6 +1018,27 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'data': solicit_qtds,
         })
 
+        por_endereco = lotes.models.SolicitaLoteQtd.objects.filter(
+            solicitacao=solicitacao
+        ).values(
+            'lote__local', 'lote__op', 'lote__lote',
+            'lote__referencia', 'lote__cor', 'lote__tamanho'
+        ).annotate(
+            qtdsum=Sum('qtd')
+        ).order_by(
+            'lote__local', 'lote__op', 'lote__referencia', 'lote__cor',
+            'lote__tamanho', 'lote__lote'
+        )
+
+        context.update({
+            'e_headers': ['Endereço', 'OP', 'Lote', 'Referência',
+                          'Cor', 'Tamanho', 'Quant. Solicitada'],
+            'e_fields': ['lote__local', 'lote__op', 'lote__lote',
+                         'lote__referencia', 'lote__cor', 'lote__tamanho',
+                         'qtdsum'],
+            'e_data': por_endereco,
+        })
+
         return context
 
     def get(self, request, *args, **kwargs):

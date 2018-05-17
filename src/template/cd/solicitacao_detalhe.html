@@ -14,11 +14,32 @@
   <h3>{{ erro }}</h3>
 {% else %}
   <h4>Solicitação: <b>{{ solicitacao.codigo }} ({{ solicitacao.descricao }})</b></h4>
+
   {% if data %}
-    <table>
-      {% include "layout/thead_generic.html" with data=headers only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
-    </table>
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#home">Lotes em ordem de seleção</a></li>
+      <li><a data-toggle="tab" href="#menu1">Lotes agrupados por endereço</a></li>
+      <li><a data-toggle="tab" href="#menu2">Referências em grade</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="home" class="tab-pane fade in active">
+        <table>
+          {% include "layout/thead_generic.html" with data=headers only %}
+          {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
+        </table>
+      </div>
+      <div id="menu1" class="tab-pane fade">
+        <table>
+          {% include "layout/thead_generic.html" with data=e_headers only %}
+          {% include "layout/tbody_generic.html" with fields=e_fields data=e_data safe=e_safe only %}
+        </table>
+      </div>
+      <div id="menu2" class="tab-pane fade">
+        <h3>Grade</h3>
+      </div>
+    </div>
+
   {% else %}
     <b>Vazia</b>
   {% endif %}
