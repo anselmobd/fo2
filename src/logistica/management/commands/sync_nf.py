@@ -86,9 +86,9 @@ class Command(BaseCommand):
                 if (row_st['NF'],) in nfs_fo2:
                     nf_fo2 = models.NotaFiscal.objects.get(numero=row_st['NF'])
                     natu_venda = (row_st['NAT'] in (1, 2)) \
-                        or (row_st['DIV_NAT']='8'
-                            and (row_st['COD_NAT']='8.11'
-                                 or row_st['COD_NAT']='5.11'))
+                        or (row_st['DIV_NAT'] == '8'
+                            and (row_st['COD_NAT'] == '8.11'
+                                 or row_st['COD_NAT'] == '5.11'))
 
                     if nf_fo2.faturamento == faturamento \
                             and nf_fo2.valor == row_st['VALOR'] \
@@ -148,9 +148,9 @@ class Command(BaseCommand):
                     self.stdout.write('div nat = {}'.format(row_st['DIV_NAT']))
                     self.stdout.write('cod nat = {}'.format(row_st['COD_NAT']))
                     nf_fo2.natu_venda = (row_st['NAT'] in (1, 2)) \
-                        or (row_st['DIV_NAT']='8'
-                            and (row_st['COD_NAT']='8.11'
-                                 or row_st['COD_NAT']='5.11'))
+                        or (row_st['DIV_NAT'] == '8'
+                            and (row_st['COD_NAT'] == '8.11'
+                                 or row_st['COD_NAT'] == '5.11'))
 
                     self.stdout.write(
                         'natu_descr = {}'.format(row_st['NATUREZA']))
