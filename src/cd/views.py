@@ -444,16 +444,16 @@ class Inconsistencias(View):
             ops = lotes.models.Lote.objects
             if ordem == 'A':
                 ops = ops.filter(
-                        op__gte=opini
+                        op__gt=opini
                     )
             else:
-                if opini == 0:
+                if opini == -1:
                     ops = ops.filter(
                             op__lte=999999999
                         )
                 else:
                     ops = ops.filter(
-                            op__lte=opini
+                            op__lt=opini
                         )
             ops = ops.exclude(
                     local__isnull=True
@@ -552,10 +552,7 @@ class Inconsistencias(View):
                 break
 
         if len(data) >= data_size:
-            if ordem == 'A':
-                context.update({'opnext': data[data_size-1]['op']+1})
-            else:
-                context.update({'opnext': data[data_size-1]['op']-1})
+            context.update({'opnext': data[data_size-1]['op']})
         context.update({
             'headers': ['OP', 'Crítica dos lotes'],
             'fields': ['op', 'cr'],
@@ -567,7 +564,7 @@ class Inconsistencias(View):
         if 'opini' in kwargs:
             opini = int(kwargs['opini'])
         else:
-            opini = 0
+            opini = -1
 
         if 'ordem' in kwargs:
             ordem = kwargs['ordem']
