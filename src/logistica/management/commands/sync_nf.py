@@ -29,6 +29,8 @@ class Command(BaseCommand):
                 , f.NATOP_NF_NAT_OPER NAT
                 , f.NATOP_NF_EST_OPER UF
                 , n.DESCR_NAT_OPER NATUREZA
+                , n.COD_NATUREZA COD_NAT
+                , n.DIVISAO_NATUR DIV_NAT
                 , f.CGC_9 CNPJ9
                 , f.CGC_4 CNPJ4
                 , f.CGC_2 CNPJ2
