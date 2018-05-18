@@ -10,7 +10,7 @@ urlpatterns = [
         views.Estoque.as_view(), name='cd_estoque_filtro'),
     url(r'^troca_local/$', views.TrocaLocal.as_view(), name='cd_troca_local'),
     url(r'^inconsist/$', views.Inconsistencias.as_view(), name='cd_inconsist'),
-    url(r'^inconsist/(?P<ordem>.-?)/(?P<opini>\d+)/$',
+    url(r'^inconsist/(?P<ordem>.-?)/(?P<opini>-?\d+)/$',
         views.Inconsistencias.as_view(), name='cd_inconsist_opini'),
     url(r'^inconsist_detalhe/(?P<op>\d+)/$',
         views.InconsistenciasDetalhe.as_view(),

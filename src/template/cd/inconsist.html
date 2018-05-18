@@ -22,7 +22,7 @@
   <h3>{{ erro }}</h3>
 {% else %}
   {% if opini %}
-    <a href="{% url 'cd_inconsist_opini' ordem=ordem opini=0 %}">OPs iniciais</a>
+    <a href="{% url 'cd_inconsist_opini' ordem=ordem opini=-1 %}">OPs iniciais</a>
   {% endif %}
   {% if opini and opnext %}
     |
@@ -34,11 +34,17 @@
   <h4>Listagem
     {% if ordem == 'A' %}ascendente{% else %}descendente{% endif %}
     {% with ordem|add:'-' as ordem_inv %}
-      <a href="{% url 'cd_inconsist_opini' ordem=ordem_inv opini=0 %}"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span></a>
+      <a href="{% url 'cd_inconsist_opini' ordem=ordem_inv opini=-1 %}"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span></a>
     {% endwith %}
-    de OP (limitada a <b>{{ data_size }}</b>)</h4>
+    de OP (limitada a <b>{{ data_size }}</b> OPs)</h4>
     {% if opini %}
-      <h4>Iniciando pela OP <b>{{ opini }}</b></h4>
+      {% if opini != -1 %}
+        {% if ordem == 'A' %}
+          <h4>OP maior que <b>{{ opini }}</b></h4>
+        {% else %}
+          <h4>OP menor que <b>{{ opini }}</b></h4>
+        {% endif %}
+      {% endif %}
     {% endif %}
   {% endif %}
   {% if data %}
