@@ -89,7 +89,7 @@ class Command(BaseCommand):
                     nf_fo2 = models.NotaFiscal.objects.get(numero=row_st['NF'])
                     natu_venda = (row_st['NAT'] in (1, 2)) \
                         or (row_st['DIV_NAT'] == '8'
-                            and (row_st['COD_NAT'] == '8.11'
+                            and (row_st['COD_NAT'] == '6.11'
                                  or row_st['COD_NAT'] == '5.11'))
 
                     if nf_fo2.faturamento == faturamento \
