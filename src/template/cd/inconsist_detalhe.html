@@ -14,14 +14,14 @@
   <h3>{{ erro }}</h3>
 {% else %}
   <h4>Lotes inventariados da OP <a href="{% url 'cd_estoque_filtro' ordem='O' filtro=op %}">{{ op }} <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></h4>
-  <h4>Inconsistentes (adiantados, atrasados e finalizados)</h4>
+  <h4>Inconsistentes (adiantados, atrasados e finalizados no Systêxtil)</h4>
   {% if data %}
     <table>
       {% include "layout/thead_generic.html" with data=headers only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data only %}
     </table>
   {% endif %}
-  <h4>Consistentes (no estágio 63)</h4>
+  <h4>Consistentes (no estágio 63 do Sistêxtil)</h4>
   {% if data63 %}
     <table>
       {% include "layout/thead_generic.html" with data=headers63 only %}
