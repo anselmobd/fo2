@@ -85,6 +85,11 @@ class Command(BaseCommand):
                 edit = True
                 if (row_st['NF'],) in nfs_fo2:
                     nf_fo2 = models.NotaFiscal.objects.get(numero=row_st['NF'])
+                    natu_venda = (row_st['NAT'] in (1, 2)) \
+                        or (row_st['DIV_NAT']='8'
+                            and (row_st['COD_NAT']='8.11'
+                                 or row_st['COD_NAT']='5.11'))
+
                     if nf_fo2.faturamento == faturamento \
                             and nf_fo2.valor == row_st['VALOR'] \
                             and nf_fo2.volumes == row_st['VOLUMES'] \
@@ -96,8 +101,7 @@ class Command(BaseCommand):
                             and nf_fo2.natu_descr == row_st['NATUREZA'] \
                             and nf_fo2.transp_nome == row_st['TRANSP'] \
                             and nf_fo2.ativa == (row_st['SITUACAO'] == 1) \
-                            and nf_fo2.natu_venda == (
-                                row_st['NAT'] in (1, 2)) \
+                            and nf_fo2.natu_venda == natu_venda \
                             and nf_fo2.pedido == row_st['PEDIDO'] \
                             and nf_fo2.ped_cliente == row_st['PED_CLIENTE']:
                         edit = False
@@ -141,7 +145,12 @@ class Command(BaseCommand):
                     nf_fo2.ativa = (row_st['SITUACAO'] == 1)
 
                     self.stdout.write('natu = {}'.format(row_st['NAT']))
-                    nf_fo2.natu_venda = (row_st['NAT'] in (1, 2))
+                    self.stdout.write('div nat = {}'.format(row_st['DIV_NAT']))
+                    self.stdout.write('cod nat = {}'.format(row_st['COD_NAT']))
+                    nf_fo2.natu_venda = (row_st['NAT'] in (1, 2)) \
+                        or (row_st['DIV_NAT']='8'
+                            and (row_st['COD_NAT']='8.11'
+                                 or row_st['COD_NAT']='5.11'))
 
                     self.stdout.write(
                         'natu_descr = {}'.format(row_st['NATUREZA']))
