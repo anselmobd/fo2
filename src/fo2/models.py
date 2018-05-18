@@ -73,6 +73,50 @@ class DataSql(object):
         self.data = self.execute(sql)
 
 
+class ExecSql(object):
+    """
+    Initialize with cursor, args=[] (or *args) and parameters:
+    - receive data when run DataSql.execute n times, passing only the sql
+    Or pass sql also in inicialization:
+    - receive imediatly data
+    Parameters can be:
+    - result:
+      - '' or upper: process cursor with rows_to_dict_list
+      - lower: process cursor with rows_to_dict_list_lower
+      - cursor; not process the cursor
+    """
+    def __init__(self, cursor, *_args, args=[], sql='', **kwargs):
+        self._cursor = cursor
+        if args:
+            self.args = args
+        else:
+            if _args:
+                self.args = _args
+        self.result = 'upper'
+        if 'result' in {k.lower() for k in kwargs}:
+            self.result = {k.lower(): v for k, v in kwargs.items()}['result']
+        if sql:
+            self.sql = sql
+
+    def execute(self, sql=''):
+        if sql:
+            self.sql = sql
+        self._cursor.execute(self.sql, self.args)
+        if self.result == 'lower':
+            return rows_to_dict_list_lower(self._cursor)
+        elif self.result == 'cursor':
+            return self._cursor
+        else:
+            return rows_to_dict_list(self._cursor)
+
+    @property
+    def sql(self): pass
+
+    @sql.setter
+    def sql(self, sql):
+        self.data = self.execute(sql)
+
+
 class GradeQtd(object):
     """docstring for GradeQtd."""
 
