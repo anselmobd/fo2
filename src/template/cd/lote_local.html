@@ -71,4 +71,11 @@
     </table>
   {% endif %}
 {% endif %}
+<script>
+  function stn(n) {
+    var snd = new Audio("/media/"+n+".mp3");
+    snd.play();
+  }
+  stn({{ q_lotes }});
+</script>
 {% endblock content %}
