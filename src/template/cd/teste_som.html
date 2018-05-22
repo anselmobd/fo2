@@ -1,0 +1,18 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+{% endblock %}
+
+{% block content %}
+Teste de Som
+<script>
+  function stn(n) {
+    var snd = new Audio("/media/"+n+".mp3");
+    snd.play();
+  }
+  stn(4);
+</script>
+{% endblock content %}

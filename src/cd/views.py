@@ -29,6 +29,11 @@ def index(request):
     return render(request, 'cd/index.html', context)
 
 
+def teste_som(request):
+    context = {}
+    return render(request, 'cd/teste_som.html', context)
+
+
 class LotelLocal(PermissionRequiredMixin, View):
     permission_required = 'lotes.can_inventorize_lote'
     Form_class = cd.forms.LoteForm
