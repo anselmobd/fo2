@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db import connections
+from django.db import connections, connection
 from django.db.models import Count, Sum
 from django.contrib.auth.mixins \
     import PermissionRequiredMixin, LoginRequiredMixin
@@ -40,7 +40,7 @@ class LotelLocal(PermissionRequiredMixin, View):
     template_name = 'cd/lote_local.html'
     title_name = 'Inventariar'
 
-    def mount_context(self, request, cursor, form):
+    def mount_context(self, request, form):
         endereco = form.cleaned_data['endereco']
         lote = form.cleaned_data['lote']
         identificado = form.cleaned_data['identificado']
@@ -128,8 +128,7 @@ class LotelLocal(PermissionRequiredMixin, View):
         if 'lote' in kwargs:
             form.data['lote'] = kwargs['lote']
         if form.is_valid():
-            cursor = connections['so'].cursor()
-            data = self.mount_context(request, cursor, form)
+            data = self.mount_context(request, form)
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
@@ -141,7 +140,7 @@ class TrocaLocal(PermissionRequiredMixin, View):
     template_name = 'cd/troca_local.html'
     title_name = 'Trocal endereço'
 
-    def mount_context(self, request, cursor, form):
+    def mount_context(self, request, form):
         endereco_de = form.cleaned_data['endereco_de']
         endereco_para = form.cleaned_data['endereco_para']
 
@@ -206,8 +205,7 @@ class TrocaLocal(PermissionRequiredMixin, View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
-            cursor = connections['so'].cursor()
-            data = self.mount_context(request, cursor, form)
+            data = self.mount_context(request, form)
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
@@ -218,7 +216,7 @@ class Estoque(View):
     template_name = 'cd/estoque.html'
     title_name = 'Estoque'
 
-    def mount_context(self, cursor, form, user):
+    def mount_context(self, form, user):
         linhas_pagina = 100
         page = form.cleaned_data['page']
 
@@ -422,9 +420,8 @@ class Estoque(View):
             if 'ref' in kwargs:
                 form.data['ref'] = kwargs['ref']
         if form.is_valid():
-            cursor = connections['so'].cursor()
             user = request_user(request)
-            data = self.mount_context(cursor, form, user)
+            data = self.mount_context(form, user)
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
@@ -596,7 +593,7 @@ class Mapa(View):
     template_name = 'cd/mapa.html'
     title_name = 'Mapa'
 
-    def mount_context(self, cursor):
+    def mount_context(self):
         enderecos = {}
         letras = [
             {'letra': 'A', 'int_ini': 1},
@@ -654,8 +651,7 @@ class Mapa(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
-        data = self.mount_context(cursor)
+        data = self.mount_context()
         context.update(data)
         return render(request, self.template_name, context)
 
@@ -665,7 +661,7 @@ class Conferencia(View):
     template_name = 'cd/conferencia.html'
     title_name = 'Conferência detalhada'
 
-    def mount_context(self, cursor):
+    def mount_context(self):
         context = {}
         locais_recs = lotes.models.Lote.objects.all().exclude(
             local__isnull=True
@@ -706,8 +702,7 @@ class Conferencia(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
-        data = self.mount_context(cursor)
+        data = self.mount_context()
         context.update(data)
         return render(request, self.template_name, context)
 
@@ -717,7 +712,7 @@ class ConferenciaSimples(View):
     template_name = 'cd/conferencia.html'
     title_name = 'Conferência Simples'
 
-    def mount_context(self, cursor):
+    def mount_context(self):
         context = {'simples': 's'}
         locais_recs = lotes.models.Lote.objects.all().exclude(
             local__isnull=True
@@ -746,8 +741,7 @@ class ConferenciaSimples(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
-        data = self.mount_context(cursor)
+        data = self.mount_context()
         context.update(data)
         return render(request, self.template_name, context)
 
