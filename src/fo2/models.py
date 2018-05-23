@@ -127,7 +127,7 @@ class GradeQtd(object):
             self.id_field = \
                 dict_def_options(kwargs, '', 'id', 'id_field')
             self.facade_field = \
-                dict_def_options(kwargs, '', 'facade', 'facade_field'
+                dict_def_options(kwargs, '', 'facade', 'facade_field',
                                              'id', 'id_field')
             self.name = kwargs.get('name', '')
             self.name_plural = kwargs.get('name_plural', self.name+'s')
