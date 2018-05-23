@@ -888,7 +888,6 @@ class Solicitacoes(LoginRequiredMixin, View):
             codigo = form.cleaned_data['codigo']
             descricao = form.cleaned_data['descricao']
             ativa = form.cleaned_data['ativa']
-            grava = True
             if ativa:
                 outras_ativas = self.SL.objects.filter(
                     usuario=request.user,
@@ -897,19 +896,18 @@ class Solicitacoes(LoginRequiredMixin, View):
                 if self.id != 'add':
                     outras_ativas = outras_ativas.exclude(id=self.id)
                 if len(outras_ativas) != 0:
-                    context['msg_erro'] = \
-                        'Outra solicitação ja está ativa para esse usuário.'
-                    grava = False
-            if grava:
-                if self.id == 'add':
-                    solicitacao = self.SL()
-                else:
-                    solicitacao = self.SL.objects.get(id=self.id)
-                solicitacao.usuario = request.user
-                solicitacao.codigo = codigo
-                solicitacao.descricao = descricao
-                solicitacao.ativa = ativa
-                solicitacao.save()
+                    for soli in outras_ativas:
+                        soli.ativa = False
+                        soli.save()
+            if self.id == 'add':
+                solicitacao = self.SL()
+            else:
+                solicitacao = self.SL.objects.get(id=self.id)
+            solicitacao.usuario = request.user
+            solicitacao.codigo = codigo
+            solicitacao.descricao = descricao
+            solicitacao.ativa = ativa
+            solicitacao.save()
 
             context.update(self.list())
         else:
