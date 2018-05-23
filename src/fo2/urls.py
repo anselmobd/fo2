@@ -20,12 +20,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .admin import intr_adm_site
-from .views import index_view, IntranetView, myip_view, \
+from .views import index_view, test_view, IntranetView, myip_view, \
     OficialSystextilView, ApoioAoErpView
 
 
 urlpatterns = [
     url(r'^$', index_view, name='index'),
+    url(r'^t$', test_view, name='test'),
     url(r'^apoio_ao_erp/', ApoioAoErpView.as_view(), name='apoio_ao_erp'),
     url(r'^intranet/', IntranetView.as_view(), name='intranet'),
     url(r'^accounts/login/$',
