@@ -232,12 +232,18 @@ class GradeQtd(object):
                                 col_tots[i_field] += value
 
                         if tot_row and not tot_col:
-                            self.table_data['data'][i_row][field] = \
-                                col_tots[i_field]
+                            if i_field in col_tots:
+                                v_tot = col_tots[i_field]
+                            else:
+                                v_tot = 0
+                            self.table_data['data'][i_row][field] = v_tot
 
                         if not tot_row and tot_col:
-                            self.table_data['data'][i_row][field] = \
-                                row_tots[i_row]
+                            if i_row in row_tots:
+                                v_tot = row_tots[i_row]
+                            else:
+                                v_tot = 0
+                            self.table_data['data'][i_row][field] = v_tot
 
                         if tot_row and tot_col:
                             self.table_data['data'][i_row][field] = self.total
