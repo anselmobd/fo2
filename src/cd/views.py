@@ -1103,6 +1103,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             grade.col(
                 id='tamanho',
                 name='Tamanho',
+                total='Total',
                 sql=sql
                 )
             # pprint(grade._col.data)
@@ -1123,6 +1124,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 id='cor',
                 name='Cor',
                 name_plural='Cores',
+                total='Total',
                 sql=sql
                 )
             # pprint(grade._row.data)
@@ -1149,13 +1151,13 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 id='qtd',
                 sql=sql
                 )
-            # pprint(grade._value.data)
 
             context_ref = {
                 'referencia': referencia['lote__referencia'],
                 'headers': grade.table_data['header'],
                 'fields': grade.table_data['fields'],
                 'data': grade.table_data['data'],
+                'total': grade.total,
             }
             grades2.append(context_ref)
 
