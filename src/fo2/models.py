@@ -1,4 +1,6 @@
+import sys
 import fdb
+from pprint import pprint
 
 from django.db import models
 
@@ -131,7 +133,20 @@ class GradeQtd(object):
                                              'id', 'id_field')
             self.name = kwargs.get('name', '')
             self.name_plural = kwargs.get('name_plural', self.name+'s')
+            self.total = kwargs.get('total', '')
             super(GradeQtd.DataDim, self).__init__(cursor, args, sql)
+
+        def execute(self, sql):
+            data_dim = super(GradeQtd.DataDim, self).execute(sql)
+            if self.total == '' or len(data_dim) == 1:
+                self.idx_total = -1
+            else:
+                self.idx_total = len(data_dim)
+                column = {self.id_field: self.total}
+                if self.facade_field != self.id_field:
+                    column[self.facade_field] = self.total
+                data_dim.append(column)
+            return data_dim
 
     def __init__(self, cursor, args=[]):
         self._cursor = cursor
@@ -175,8 +190,17 @@ class GradeQtd(object):
                 ['{} / {}'.format(self._row.name, self._col.name)]
             self.table_data['fields'] = [self._row.id_field]
             for col in self._col.data:
-                self.table_data['header'].append(col[self._col.id_field])
+                self.table_data['header'].append(col[self._col.facade_field])
                 self.table_data['fields'].append(col[self._col.id_field])
+
+            row_tots = {}
+            for i in range(0, self._row.idx_total):
+                row_tots[i] = 0
+            if self._col.idx_total != -1:
+                self._col.idx_total += 1
+            col_tots = {}
+            for i in range(1, self._col.idx_total):
+                col_tots[i] = 0
 
             for i_row, row in enumerate(self._row.data):
                 for i_field, field in enumerate(self.table_data['fields']):
@@ -185,14 +209,37 @@ class GradeQtd(object):
                         self.table_data['data'][i_row][field] = \
                             row[self._row.facade_field]
                     else:
-                        self.table_data['data'][i_row][field] = 0
-                        for value in self._value.data:
-                            if value[self._row.id_field] \
-                                == row[self._row.id_field] and \
-                                    value[self._col.id_field] == field:
-                                self.table_data['data'][i_row][field] = \
-                                    value[self._value.id_field]
-                                self.total += value[self._value.id_field]
-                                break
+                        tot_row = i_row == self._row.idx_total
+                        tot_col = i_field == self._col.idx_total
+
+                        if not tot_row and not tot_col:
+                            value_list = [
+                                v[self._value.id_field]
+                                for v in self._value.data
+                                if v[self._row.id_field] ==
+                                row[self._row.id_field]
+                                and v[self._col.id_field] == field]
+                            if len(value_list) == 1:
+                                value = value_list[0]
+                            else:
+                                value = 0
+
+                            self.table_data['data'][i_row][field] = value
+                            self.total += value
+                            if i_row in row_tots:
+                                row_tots[i_row] += value
+                            if i_field in col_tots:
+                                col_tots[i_field] += value
+
+                        if tot_row and not tot_col:
+                            self.table_data['data'][i_row][field] = \
+                                col_tots[i_field]
+
+                        if not tot_row and tot_col:
+                            self.table_data['data'][i_row][field] = \
+                                row_tots[i_row]
+
+                        if tot_row and tot_col:
+                            self.table_data['data'][i_row][field] = self.total
 
         return self.table_data
