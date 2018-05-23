@@ -36,10 +36,18 @@
         </table>
       </div>
       <div id="menu2" class="tab-pane fade">
-        {% for grade in grades %}
+        <!-- {% for grade in grades %}
           <table>
             {% include "layout/thead_generic.html" with data=grade.re_headers only %}
             {% include "layout/tbody_generic.html" with fields=grade.re_fields data=grade.re_data only %}
+          </table>
+        {% endfor %}
+        <h3>Sortimento</h3> -->
+        {% for grade in grades2 %}
+          <h4>Referência: {{grade.referencia}}</h4>
+          <table style="width: auto;">
+            {% include "layout/thead_generic.html" with data=grade.headers only %}
+            {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data only %}
           </table>
         {% endfor %}
       </div>

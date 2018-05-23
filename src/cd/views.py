@@ -13,7 +13,7 @@ from django.views import View
 from django.urls import reverse
 from django.http import JsonResponse
 
-from fo2.models import rows_to_dict_list_lower
+from fo2.models import rows_to_dict_list_lower, GradeQtd
 from fo2.template import group_rowspan
 
 from utils.views import totalize_grouped_data
@@ -1039,30 +1039,131 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             solicitacao=solicitacao
         ).values('lote__referencia').distinct()
 
-        grades = []
+        # grades = []
+        # for referencia in referencias:
+        #     grade = lotes.models.SolicitaLoteQtd.objects.filter(
+        #         solicitacao=solicitacao,
+        #         lote__referencia=referencia['lote__referencia']
+        #     ).values(
+        #         'lote__referencia', 'lote__cor', 'lote__tamanho'
+        #     ).annotate(
+        #         qtdsum=Sum('qtd')
+        #     ).order_by(
+        #         'lote__referencia', 'lote__cor', 'lote__tamanho'
+        #     )
+        #
+        #     context_ref = {
+        #         're_headers': ['Referência', 'Cor', 'Tamanho',
+        #                        'Quant. Solicitada'],
+        #         're_fields': ['lote__referencia', 'lote__cor',
+        #                       'lote__tamanho', 'qtdsum'],
+        #         're_data': grade,
+        #     }
+        #     grades.append(context_ref)
+        #
+        # context.update({
+        #     'grades': grades,
+        # })
+
+        cursor = connections['so'].cursor()
+        sql = """
+            SELECT
+              t.TAMANHO_REF
+            , t.ORDEM_TAMANHO
+            FROM BASI_220 t
+        """
+        data_tams = rows_to_dict_list_lower(cursor.execute(sql))
+        tam_to_ordem = ''
+        for tam in data_tams:
+            tam_to_ordem += "  when l.tamanho = '{}' then {} \n".format(
+                tam['tamanho_ref'], tam['ordem_tamanho'])
+
+        cursor_def = connection.cursor()
+        grades2 = []
         for referencia in referencias:
-            grade = lotes.models.SolicitaLoteQtd.objects.filter(
-                solicitacao=solicitacao,
-                lote__referencia=referencia['lote__referencia']
-            ).values(
-                'lote__referencia', 'lote__cor', 'lote__tamanho'
-            ).annotate(
-                qtdsum=Sum('qtd')
-            ).order_by(
-                'lote__referencia', 'lote__cor', 'lote__tamanho'
-            )
+            # Grade de OP
+            grade = GradeQtd(
+                cursor_def, [solicit_id, referencia['lote__referencia']])
+
+            # tamanhos
+            sql = '''
+                SELECT distinct
+                  case
+                  {tam_to_ordem} else 9999
+                  end ordem_tamanho
+                , l.tamanho
+                from fo2_cd_solicita_lote_qtd s
+                join fo2_cd_lote l
+                  on l.id = s.lote_id
+                where s.solicitacao_id = %s
+                  and l.referencia = %s
+                order by
+                  1
+            '''.format(
+                tam_to_ordem=tam_to_ordem,
+                )
+            grade.col(
+                id='tamanho',
+                name='Tamanho',
+                sql=sql
+                )
+            # pprint(grade._col.data)
+
+            # cores
+            sql = '''
+                SELECT distinct
+                  l.cor
+                from fo2_cd_solicita_lote_qtd sq
+                join fo2_cd_lote l
+                  on l.id = sq.lote_id
+                where sq.solicitacao_id = %s
+                  and l.referencia = %s
+                order by
+                  1
+            '''
+            grade.row(
+                id='cor',
+                name='Cor',
+                name_plural='Cores',
+                sql=sql
+                )
+            # pprint(grade._row.data)
+
+            # sortimento
+            sql = '''
+                SELECT distinct
+                  l.tamanho
+                , l.cor
+                , sum(sq.qtd) qtd
+                from fo2_cd_solicita_lote_qtd sq
+                join fo2_cd_lote l
+                  on l.id = sq.lote_id
+                where sq.solicitacao_id = %s
+                  and l.referencia = %s
+                group by
+                  l.tamanho
+                , l.cor
+                order by
+                  l.tamanho
+                , l.cor
+            '''
+            grade.value(
+                id='qtd',
+                sql=sql
+                )
+            # pprint(grade._value.data)
 
             context_ref = {
-                're_headers': ['Referência', 'Cor', 'Tamanho',
-                               'Quant. Solicitada'],
-                're_fields': ['lote__referencia', 'lote__cor', 'lote__tamanho',
-                              'qtdsum'],
-                're_data': grade,
+                'referencia': referencia['lote__referencia'],
+                'headers': grade.table_data['header'],
+                'fields': grade.table_data['fields'],
+                'data': grade.table_data['data'],
             }
-            grades.append(context_ref)
+            grades2.append(context_ref)
 
+        # pprint(grades2)
         context.update({
-            'grades': grades,
+            'grades2': grades2,
         })
 
         return context
