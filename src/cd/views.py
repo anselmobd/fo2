@@ -349,7 +349,7 @@ class Estoque(View):
                         slq_qtd = slq['qtd__sum']
 
                 row['solicita'] = '''
-                    <a title="Solicita" href="#"
+                    <a title="Solicita" href="javascript:void(0);"
                      onclick="solicita_lote(
                         \'{lote}\', \'{ref}\', \'{cor}\', \'{tam}\',
                         \'{qtd_resta}\', \'{solicit_cod}\', \'{solicit_id}\',
