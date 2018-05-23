@@ -16,7 +16,7 @@
   <h4>Solicitação: <b>{{ solicitacao.codigo }} ({{ solicitacao.descricao }})</b></h4>
 
   {% if data %}
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" id="myTab">
       <li class="active"><a data-toggle="tab" href="#home">Lotes em ordem de seleção</a></li>
       <li><a data-toggle="tab" href="#menu1">Lotes agrupados por endereço</a></li>
       <li><a data-toggle="tab" href="#menu2">Referências em grade</a></li>
@@ -57,4 +57,18 @@
     <b>Vazia</b>
   {% endif %}
 {% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function(){
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    if(activeTab){
+        $('#myTab a[href="' + activeTab + '"]').tab('show');
+    }
+});
+</script>
 {% endblock %}
