@@ -44,7 +44,11 @@
         {% endfor %}
         <h3>Sortimento</h3> -->
         {% for grade in grades2 %}
+          {% if forloop.counter != 1 %}
+            <hr>
+          {% endif %}
           <h4>Referência: <b>{{grade.referencia}}</b></h4>
+          <!-- Quantidade total: {{grade.total}} -->
           <table style="width: auto;">
             {% include "layout/thead_generic.html" with data=grade.headers only %}
             {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data only %}
