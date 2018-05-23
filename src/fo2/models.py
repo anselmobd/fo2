@@ -75,26 +75,27 @@ class DataSql(object):
 
 class ExecSql(object):
     """
-    Initialize with cursor, args=[] (or *args) and parameters:
+    Initialize with cursor, args=[] (or *arguments) and parameters:
     - receive data when run DataSql.execute n times, passing only the sql
     Or pass sql also in inicialization:
     - receive imediatly data
     Parameters can be:
-    - result:
+    - result_case:
       - '' or upper: process cursor with rows_to_dict_list
       - lower: process cursor with rows_to_dict_list_lower
       - cursor; not process the cursor
     """
-    def __init__(self, cursor, *_args, args=[], sql='', **kwargs):
+    def __init__(self, cursor, *arguments, args=None, sql='', **kwargs):
         self._cursor = cursor
-        if args:
-            self.args = args
-        else:
-            if _args:
-                self.args = _args
-        self.result = 'upper'
-        if 'result' in {k.lower() for k in kwargs}:
-            self.result = {k.lower(): v for k, v in kwargs.items()}['result']
+        self.args = []
+        if len(arguments) != 0:
+            self.args = arguments
+        if args is not None:
+            self.args.append(args)
+        self.result_case = 'upper'
+        if 'result_case' in {k.lower() for k in kwargs}:
+            self.result_case = {
+                k.lower(): v for k, v in kwargs.items()}['result_case']
         if sql:
             self.sql = sql
 
@@ -102,9 +103,9 @@ class ExecSql(object):
         if sql:
             self.sql = sql
         self._cursor.execute(self.sql, self.args)
-        if self.result == 'lower':
+        if self.result_case == 'lower':
             return rows_to_dict_list_lower(self._cursor)
-        elif self.result == 'cursor':
+        elif self.result_case == 'cursor':
             return self._cursor
         else:
             return rows_to_dict_list(self._cursor)
