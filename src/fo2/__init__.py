@@ -1,9 +1,17 @@
-__version__ = '0.1.91'
-__version__date__ = '17/05/2018'
+__version__ = '0.1.92'
+__version__date__ = '23/05/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.92 - 2018/05/23
+#   . Detalhe de solicitação - Melhor apresentação das grades
+#   . Solicitações - Ao ativar uma solicitação as outras do mesmo usuário são
+#     desativadas
+#   . Solicitações - Não reposiciona tela ao solicitar lote
+#   . Detalhe de solicitação - Mantém aba em refresh
+#   . Detalhe de solicitação - Grades com totalizadores
 #
 # - 0.1.91 - 2018/05/17
 #   . CD estoque - Solicitação: Funcionando solicitação de qtd de lote
