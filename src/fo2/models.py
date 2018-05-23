@@ -35,22 +35,22 @@ def cursorF1():
     return con.cursor()
 
 
-def dict_def_options(dict_, def_, *args):
+def dict_def_options(dictionary, default, *args):
     """
-    Return dict_[arg] for first arg in args that exists in dict_.
+    Return dictionary[arg] for first arg in args that exists in dictionary.
     Otherwise, return default value.
     """
     for arg in args:
-        if arg in dict_:
-            return dict_[arg]
-    return def_
+        if arg in dictionary:
+            return dictionary[arg]
+    return default
 
 
-def dict_options(dict_, *args):
+def dict_options(dictionary, *args):
     """
     Call dict_def_options with default value None
     """
-    return dict_def_options(dict_, None, *args)
+    return dict_def_options(dictionary, None, *args)
 
 
 class DataSql(object):
