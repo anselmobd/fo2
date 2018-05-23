@@ -1,6 +1,4 @@
-import sys
 import fdb
-from pprint import pprint
 
 from django.db import models
 
@@ -138,7 +136,8 @@ class GradeQtd(object):
 
         def execute(self, sql):
             data_dim = super(GradeQtd.DataDim, self).execute(sql)
-            if self.total == '' or len(data_dim) == 1:
+            self.niveis = len(data_dim)
+            if self.total == '' or self.niveis == 1:
                 self.idx_total = -1
             else:
                 self.idx_total = len(data_dim)
@@ -194,13 +193,17 @@ class GradeQtd(object):
                 self.table_data['fields'].append(col[self._col.id_field])
 
             row_tots = {}
-            for i in range(0, self._row.idx_total):
-                row_tots[i] = 0
+            if self._col.idx_total != -1:
+                for i in range(0, self._row.niveis):
+                    row_tots[i] = 0
+
+            col_tots = {}
+            if self._row.idx_total != -1:
+                for i in range(0, self._col.niveis):
+                    col_tots[i+1] = 0
+
             if self._col.idx_total != -1:
                 self._col.idx_total += 1
-            col_tots = {}
-            for i in range(1, self._col.idx_total):
-                col_tots[i] = 0
 
             for i_row, row in enumerate(self._row.data):
                 for i_field, field in enumerate(self.table_data['fields']):
@@ -232,18 +235,12 @@ class GradeQtd(object):
                                 col_tots[i_field] += value
 
                         if tot_row and not tot_col:
-                            if i_field in col_tots:
-                                v_tot = col_tots[i_field]
-                            else:
-                                v_tot = 0
-                            self.table_data['data'][i_row][field] = v_tot
+                            self.table_data['data'][i_row][field] = \
+                                col_tots[i_field]
 
                         if not tot_row and tot_col:
-                            if i_row in row_tots:
-                                v_tot = row_tots[i_row]
-                            else:
-                                v_tot = 0
-                            self.table_data['data'][i_row][field] = v_tot
+                            self.table_data['data'][i_row][field] = \
+                                row_tots[i_row]
 
                         if tot_row and tot_col:
                             self.table_data['data'][i_row][field] = self.total
