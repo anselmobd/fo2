@@ -3,7 +3,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='lotes'),
+    url(r'^$', views.index, name='index'),
 
     url(r'^posicao/$', views.Posicao.as_view(), name='posicao'),
     url(r'^posicao/(?P<lote>\d+)/$', views.Posicao.as_view(),
@@ -48,6 +48,9 @@ urlpatterns = [
     url(r'^op_caixa/$', views.OpCaixa.as_view(), name='op_caixa'),
     url(r'^op_caixa/(?P<op>\d+)/$',
         views.OpCaixa.as_view(), name='op_caixa_op'),
+
+    url(r'^distribuicao/$',
+        views.Distribuicao.as_view(), name='distribuicao'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
