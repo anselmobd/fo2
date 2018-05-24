@@ -332,12 +332,13 @@ class Estoque(View):
         if len(solicit_recs) == 1:
             solicit_cod = solicit_recs[0].codigo
             solicit_id = solicit_recs[0].id
+            context['solicit_cod'] = solicit_cod
+            context['solicit_id'] = solicit_id
 
-        if solicit_cod:
-            headers.append('Solicita')
-            fields.append('solicita')
+        headers.append('Solicitar')
+        fields.append('solicita')
         for row in data:
-            if row['qtd'] and solicit_cod:
+            if row['qtd']:
                 if row['update_at'] is None:
                     row['update_at'] = row['create_at']
                 slq = lotes.models.SolicitaLoteQtd.objects.filter(
@@ -348,24 +349,27 @@ class Estoque(View):
                     if slq['qtd__sum']:
                         slq_qtd = slq['qtd__sum']
 
-                row['solicita'] = '''
-                    <a title="Solicita" href="javascript:void(0);"
-                     onclick="solicita_lote(
-                        \'{lote}\', \'{ref}\', \'{cor}\', \'{tam}\',
-                        \'{qtd_resta}\', \'{solicit_cod}\', \'{solicit_id}\',
-                        \'{qtd_limite}\');"
-                    ><span id="qtd_resta_{lote}">{qtd_resta}</span><span
-                    class="glyphicon glyphicon-triangle-bottom"
-                    aria-hidden="true"></span></a>
-                '''.format(
-                    lote=row['lote'],
-                    ref=row['referencia'],
-                    cor=row['cor'],
-                    tam=row['tamanho'],
-                    qtd_resta=row['qtd'] - slq_qtd,
-                    solicit_cod=solicit_cod,
-                    solicit_id=solicit_id,
-                    qtd_limite=row['qtd'])
+                if solicit_cod and (row['qtd'] - slq_qtd) > 0:
+                    row['solicita'] = '''
+                        <a title="Solicita" href="javascript:void(0);"
+                         onclick="solicita_lote(
+                            \'{lote}\', \'{ref}\', \'{cor}\', \'{tam}\',
+                            \'{qtd_resta}\', \'{solicit_cod}\',
+                            \'{solicit_id}\', \'{qtd_limite}\');"
+                        ><span id="qtd_resta_{lote}">{qtd_resta}</span><span
+                        class="glyphicon glyphicon-triangle-bottom"
+                        aria-hidden="true"></span></a>
+                    '''.format(
+                        lote=row['lote'],
+                        ref=row['referencia'],
+                        cor=row['cor'],
+                        tam=row['tamanho'],
+                        qtd_resta=row['qtd'] - slq_qtd,
+                        solicit_cod=solicit_cod,
+                        solicit_id=solicit_id,
+                        qtd_limite=row['qtd'])
+                else:
+                    row['solicita'] = row['qtd'] - slq_qtd
             else:
                 row['solicita'] = '0'
             row['op|LINK'] = reverse(
