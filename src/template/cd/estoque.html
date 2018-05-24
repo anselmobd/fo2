@@ -175,7 +175,7 @@ span.spanlink:hover {
   </div>
   <div class="col-md-6" align="right">
     {% if solicit_cod %}
-      Solicitação: <a href="http://localhost:8088/cd/solicitacao_detalhe/{{solicit_id}}" target="_blank">{{solicit_cod}}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+      Solicitação: <a href="{% url 'cd_solicitacao_detalhe' solicit_id %}" target="_blank">{{solicit_cod}}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
     {% endif %}
   </div>
 </div>
