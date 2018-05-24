@@ -278,3 +278,16 @@ class ModeloTermicaForm(forms.ModelForm):
         label='Gabarito',
         widget=forms.Textarea(
             attrs={'max_length': 8192, 'rows': 20, 'cols': 79}))
+
+
+class DistribuicaoForm(forms.Form):
+    estagio = forms.CharField(
+        label='Estágio', max_length=2, required=False,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    data_de = forms.DateField(
+        label='Data da distribuição: De',
+        widget=forms.DateInput(attrs={'type': 'date'}))
+    data_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))

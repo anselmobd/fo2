@@ -8,3 +8,4 @@ from .analise import *
 from .imprime_lotes import *
 from .op_pendente import *
 from .pedido import *
+from .distribuicao import *
