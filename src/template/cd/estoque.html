@@ -106,12 +106,13 @@ span.spanlink:hover {
           success : function(data) {
             if (data) {
               if (data['result'] == 'OK') {
-                $("#retorno_solicitado").html('Solicitação registrada. (Id: '+data['solicita_qtd_id']+')');
+                // $("#retorno_solicitado").html('Solicitação registrada. (Id: '+data['solicita_qtd_id']+')');
                 var qtd_resta = document.getElementById("qtd_resta_"+lote).innerHTML;
                 document.getElementById("qtd_resta_"+lote).innerHTML = qtd_resta - data['qtd'];
                 close_solicita_lote();
               } else {
-                $("#retorno_solicitado").html(data['descricao_erro']);
+                // $("#retorno_solicitado").html(data['descricao_erro']);
+                alert('Erro: '+data['descricao_erro']);
               }
             } else {
               alert('Não executado');
@@ -165,10 +166,19 @@ span.spanlink:hover {
     <input name="id_solicitado" id="id_solicitado" type="hidden">
     <p>&nbsp;</p>
     <p><input name="btn_solicitar" id="btn_solicitar" type="submit" value="Adiciona à solicitação" onclick="solicitar();"></p>
-    <span id="retorno_solicitado"><span>
+    <!-- <span id="retorno_solicitado"><span> -->
   </div>
 </div>
-<button onclick="showHideMyFilter()"><span id="txtmyfilter">Esconde</span> campos de filtro</button><br/>
+<div class="row">
+  <div class="col-md-6">
+    <button onclick="showHideMyFilter()"><span id="txtmyfilter">Esconde</span> campos de filtro</button><br/>
+  </div>
+  <div class="col-md-6" align="right">
+    {% if solicit_cod %}
+      Solicitação: <a href="http://localhost:8088/cd/solicitacao_detalhe/{{solicit_id}}" target="_blank">{{solicit_cod}}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    {% endif %}
+  </div>
+</div>
 <div id="myfilter">
   <form action="{% url 'cd_estoque' %}" method="post" name="formName">
     {% csrf_token %}
