@@ -1,9 +1,13 @@
-__version__ = '0.1.92'
-__version__date__ = '23/05/2018'
+__version__ = '0.1.93'
+__version__date__ = '24/05/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.93 - 2018/05/24
+#   . Estoque - Sempre apresenta quantidade disponível para solicitar
+#             - adicionado link para detalhamento de solicitação
 #
 # - 0.1.92 - 2018/05/23
 #   . Detalhe de solicitação - Melhor apresentação das grades
