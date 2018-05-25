@@ -1243,3 +1243,70 @@ class EnderecoLote(View):
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class Grade(View):
+    Form_class = cd.forms.AskReferenciaForm
+    template_name = 'cd/grade_estoque.html'
+    title_name = 'Grade de estoque'
+
+    def mount_context(self, request, form):
+        ref = form.cleaned_data['ref']
+
+        if len(ref) == 5:
+            context = {'ref': ref}
+        else:
+            ref = int('0{}'.format(
+                ''.join([c for c in ref if c.isdigit()])))
+            context = {'ref': ref}
+
+            referencias = lotes.models.Lote.objects.all().values(
+                'referencia').distinct().order_by('referencia')
+            for row in referencias:
+                row['modelo'] = int(
+                    ''.join([c for c in row['referencia'] if c.isdigit()]))
+
+            if ref == 0:
+                referencias = sorted(
+                    referencias, key=lambda k: (k['modelo'], k['referencia']))
+
+                group = ['modelo']
+                group_rowspan(referencias, group)
+                context.update({
+                    'headers': ['Ref. numérica', 'Referência'],
+                    'fields': ['modelo', 'referencia'],
+                    'group': group,
+                    'data': referencias,
+                })
+            else:
+                refs = [
+                    {'referencia': row['referencia']}
+                    for row in referencias
+                    if row['modelo'] == ref]
+                context.update({
+                    'headers': ['Referência'],
+                    'fields': ['referencia'],
+                    'data': refs,
+                })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'referencia' in kwargs and kwargs['referencia'] is not None:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'referencia' in kwargs and kwargs['referencia'] is not None:
+            form.data['referencia'] = kwargs['referencia']
+        if form.is_valid():
+            data = self.mount_context(request, form)
+            context.update(data)
+        context['form'] = form
+        return render(request, self.template_name, context)

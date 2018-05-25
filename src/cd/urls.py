@@ -31,4 +31,6 @@ urlpatterns = [
     url(r'^mapa/$', views.Mapa.as_view(), name='cd_mapa'),
     url(r'^endereco_lote/(?P<lote>[^/]+)?$', views.EnderecoLote.as_view(),
         name='cd_endereco_lote'),
+    url(r'^grade_estoque/(?P<referencia>[^/]+)?$',
+        views.Grade.as_view(), name='cd_grade_estoque'),
 ]
