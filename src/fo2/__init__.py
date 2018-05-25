@@ -5,6 +5,10 @@ __version__date__ = '24/05/2018'
 #
 # - ?.?.? - 20??/??/??
 #
+# - 0.1.94 - 2018/05/25
+#   . Produção - Distribuição de lotes - primeira versão
+#   . CD - Verifica endereço de lote
+#
 # - 0.1.93 - 2018/05/24
 #   . Estoque - Sempre apresenta quantidade disponível para solicitar
 #             - adicionado link para detalhamento de solicitação
