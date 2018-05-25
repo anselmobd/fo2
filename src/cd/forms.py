@@ -184,3 +184,10 @@ class AskReferenciaForm(forms.Form):
         help_text='(vazio, referência exata ou parte numérica)',
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
