@@ -1067,19 +1067,6 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         #     'grades': grades,
         # })
 
-        cursor = connections['so'].cursor()
-        sql = """
-            SELECT
-              t.TAMANHO_REF
-            , t.ORDEM_TAMANHO
-            FROM BASI_220 t
-        """
-        data_tams = rows_to_dict_list_lower(cursor.execute(sql))
-        tam_to_ordem = ''
-        for tam in data_tams:
-            tam_to_ordem += "  when l.tamanho = '{}' then {} \n".format(
-                tam['tamanho_ref'], tam['ordem_tamanho'])
-
         cursor_def = connection.cursor()
         grades2 = []
         for referencia in referencias:
