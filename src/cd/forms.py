@@ -176,3 +176,10 @@ class AskLoteForm(forms.Form):
         label='Lote', max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+
+
+class AskReferenciaForm(forms.Form):
+    ref = forms.CharField(
+        label='Referência', required=False, max_length=5,
+        widget=forms.TextInput(attrs={'type': 'string',
+                               'autofocus': 'autofocus'}))
