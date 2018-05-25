@@ -13,7 +13,7 @@ from django.views import View
 from django.urls import reverse
 from django.http import JsonResponse
 
-from fo2.models import rows_to_dict_list_lower
+from fo2.models import rows_to_dict_list_lower, GradeQtd
 from fo2.template import group_rowspan
 
 from utils.views import totalize_grouped_data
@@ -1046,7 +1046,8 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         for referencia in referencias:
             # Grade de solicitação
             context_ref = models.grade_solicitacao(
-                cursor_def, solicit_id, referencia['lote__referencia'])
+                cursor_def, referencia['lote__referencia'],
+                solicit_id=solicit_id)
 
             grades2.append(context_ref)
 

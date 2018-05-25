@@ -93,24 +93,29 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
     return rows_to_dict_list_lower(cursor)
 
 
-def grade_solicitacao(cursor, solicit_id, referencia):
+def grade_solicitacao(cursor, referencia, solicit_id=None):
     # Grade de solicitação
-    grade = GradeQtd(
-        cursor, [solicit_id, referencia])
+    grade = GradeQtd(cursor, [referencia])
+
+    if solicit_id is None:
+        filter_solicit_id = '--'
+    else:
+        filter_solicit_id = 'and sq.solicitacao_id = {}'.format(solicit_id)
 
     # tamanhos
     sql = '''
         SELECT distinct
           l.ordem_tamanho
         , l.tamanho
-        from fo2_cd_solicita_lote_qtd s
+        from fo2_cd_solicita_lote_qtd sq
         join fo2_cd_lote l
-          on l.id = s.lote_id
-        where s.solicitacao_id = %s
-          and l.referencia = %s
+          on l.id = sq.lote_id
+        where l.referencia = %s
+          {filter_solicit_id}
         order by
           1
-    '''
+    '''.format(
+        filter_solicit_id=filter_solicit_id)
     grade.col(
         id='tamanho',
         name='Tamanho',
@@ -125,11 +130,12 @@ def grade_solicitacao(cursor, solicit_id, referencia):
         from fo2_cd_solicita_lote_qtd sq
         join fo2_cd_lote l
           on l.id = sq.lote_id
-        where sq.solicitacao_id = %s
-          and l.referencia = %s
+        where l.referencia = %s
+          {filter_solicit_id}
         order by
           1
-    '''
+    '''.format(
+        filter_solicit_id=filter_solicit_id)
     grade.row(
         id='cor',
         name='Cor',
@@ -147,15 +153,16 @@ def grade_solicitacao(cursor, solicit_id, referencia):
         from fo2_cd_solicita_lote_qtd sq
         join fo2_cd_lote l
           on l.id = sq.lote_id
-        where sq.solicitacao_id = %s
-          and l.referencia = %s
+        where l.referencia = %s
+          {filter_solicit_id}
         group by
           l.tamanho
         , l.cor
         order by
           l.tamanho
         , l.cor
-    '''
+    '''.format(
+        filter_solicit_id=filter_solicit_id)
     grade.value(
         id='qtd',
         sql=sql
