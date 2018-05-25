@@ -13,6 +13,7 @@
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% else %}
+  <a href="{% url 'cd_solicitacoes' %}">Voltar para Solicitações</a>
   <h4>Solicitação: <b>{{ solicitacao.codigo }} ({{ solicitacao.descricao }})</b></h4>
 
   {% if data %}
