@@ -1041,32 +1041,6 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             solicitacao=solicitacao
         ).values('lote__referencia').distinct()
 
-        # grades = []
-        # for referencia in referencias:
-        #     grade = lotes.models.SolicitaLoteQtd.objects.filter(
-        #         solicitacao=solicitacao,
-        #         lote__referencia=referencia['lote__referencia']
-        #     ).values(
-        #         'lote__referencia', 'lote__cor', 'lote__tamanho'
-        #     ).annotate(
-        #         qtdsum=Sum('qtd')
-        #     ).order_by(
-        #         'lote__referencia', 'lote__cor', 'lote__tamanho'
-        #     )
-        #
-        #     context_ref = {
-        #         're_headers': ['Referência', 'Cor', 'Tamanho',
-        #                        'Quant. Solicitada'],
-        #         're_fields': ['lote__referencia', 'lote__cor',
-        #                       'lote__tamanho', 'qtdsum'],
-        #         're_data': grade,
-        #     }
-        #     grades.append(context_ref)
-        #
-        # context.update({
-        #     'grades': grades,
-        # })
-
         cursor_def = connection.cursor()
         grades2 = []
         for referencia in referencias:
