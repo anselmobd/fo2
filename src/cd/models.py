@@ -1,6 +1,6 @@
 from django.db import models
 
-from fo2.models import rows_to_dict_list_lower
+from fo2.models import rows_to_dict_list_lower, GradeQtd
 
 
 def inconsistencias_detalhe(cursor, op, ocs, est63=False):
@@ -91,3 +91,82 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
     '''.format(op=op, ocs=ocs_str, filtro_est63=filtro_est63)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def grade_solicitacao(cursor, solicit_id, referencia):
+    # Grade de solicitação
+    grade = GradeQtd(
+        cursor, [solicit_id, referencia])
+
+    # tamanhos
+    sql = '''
+        SELECT distinct
+          l.ordem_tamanho
+        , l.tamanho
+        from fo2_cd_solicita_lote_qtd s
+        join fo2_cd_lote l
+          on l.id = s.lote_id
+        where s.solicitacao_id = %s
+          and l.referencia = %s
+        order by
+          1
+    '''
+    grade.col(
+        id='tamanho',
+        name='Tamanho',
+        total='Total',
+        sql=sql
+        )
+
+    # cores
+    sql = '''
+        SELECT distinct
+          l.cor
+        from fo2_cd_solicita_lote_qtd sq
+        join fo2_cd_lote l
+          on l.id = sq.lote_id
+        where sq.solicitacao_id = %s
+          and l.referencia = %s
+        order by
+          1
+    '''
+    grade.row(
+        id='cor',
+        name='Cor',
+        name_plural='Cores',
+        total='Total',
+        sql=sql
+        )
+
+    # sortimento
+    sql = '''
+        SELECT distinct
+          l.tamanho
+        , l.cor
+        , sum(sq.qtd) qtd
+        from fo2_cd_solicita_lote_qtd sq
+        join fo2_cd_lote l
+          on l.id = sq.lote_id
+        where sq.solicitacao_id = %s
+          and l.referencia = %s
+        group by
+          l.tamanho
+        , l.cor
+        order by
+          l.tamanho
+        , l.cor
+    '''
+    grade.value(
+        id='qtd',
+        sql=sql
+        )
+
+    context_ref = {
+        'referencia': referencia,
+        'headers': grade.table_data['header'],
+        'fields': grade.table_data['fields'],
+        'data': grade.table_data['data'],
+        'total': grade.total,
+    }
+
+    return context_ref
