@@ -169,3 +169,10 @@ class SolicitacaoForm(forms.Form):
         widget=forms.TextInput(attrs={'size': 60}))
     ativa = forms.BooleanField(
         label='Ativa para o usuário', required=False)
+
+
+class AskLoteForm(forms.Form):
+    lote = forms.CharField(
+        label='Lote', max_length=9, min_length=9,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))

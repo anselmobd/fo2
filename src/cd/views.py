@@ -1190,3 +1190,56 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             data = self.mount_context(solicit_id, user)
             context.update(data)
         return render(request, self.template_name, context)
+
+
+class EnderecoLote(View):
+    Form_class = cd.forms.AskLoteForm
+    template_name = 'cd/endereco_lote.html'
+    title_name = 'Verifica endereço de Lote'
+
+    def mount_context(self, request, form):
+        lote = form.cleaned_data['lote']
+
+        context = {'lote': lote}
+
+        try:
+            lote_rec = lotes.models.Lote.objects.get(lote=lote)
+        except lotes.models.Lote.DoesNotExist:
+            context.update({'erro': 'Lote não encontrado'})
+            return context
+
+        context.update({
+            'op': lote_rec.op,
+            'referencia': lote_rec.referencia,
+            'cor': lote_rec.cor,
+            'tamanho': lote_rec.tamanho,
+            'qtd_produzir': lote_rec.qtd_produzir,
+            'local': lote_rec.local,
+            })
+
+        lotes_no_local = lotes.models.Lote.objects.filter(local=lote_rec.local)
+        context.update({
+            'q_lotes': len(lotes_no_local),
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'lote' in kwargs and kwargs['lote'] is not None:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'lote' in kwargs and kwargs['lote'] is not None:
+            form.data['lote'] = kwargs['lote']
+        if form.is_valid():
+            data = self.mount_context(request, form)
+            context.update(data)
+        context['form'] = form
+        return render(request, self.template_name, context)

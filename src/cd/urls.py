@@ -29,4 +29,6 @@ urlpatterns = [
         '(?P<lote>[^/]+)/(?P<qtd>[^/]+)/$',
         views.solicita_lote, name='cd_solicita_lote'),
     url(r'^mapa/$', views.Mapa.as_view(), name='cd_mapa'),
+    url(r'^endereco_lote/(?P<lote>[^/]+)?$', views.EnderecoLote.as_view(),
+        name='cd_endereco_lote'),
 ]
