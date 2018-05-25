@@ -126,7 +126,6 @@ class OpPendente(View):
             data_ate = form.cleaned_data['data_ate']
             colecao = form.cleaned_data['colecao']
             situacao = form.cleaned_data['situacao']
-            print('"{}"'.format(situacao))
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context(cursor, estagio, periodo_de, periodo_ate,
