@@ -13,7 +13,7 @@ from django.views import View
 from django.urls import reverse
 from django.http import JsonResponse
 
-from fo2.models import rows_to_dict_list_lower, GradeQtd
+from fo2.models import rows_to_dict_list_lower
 from fo2.template import group_rowspan
 
 from utils.views import totalize_grouped_data
@@ -1083,89 +1083,12 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         cursor_def = connection.cursor()
         grades2 = []
         for referencia in referencias:
-            # Grade de OP
-            grade = GradeQtd(
-                cursor_def, [solicit_id, referencia['lote__referencia']])
+            # Grade de solicitação
+            context_ref = models.grade_solicitacao(
+                cursor_def, solicit_id, referencia['lote__referencia'])
 
-            # tamanhos
-            sql = '''
-                SELECT distinct
-                  case
-                  {tam_to_ordem} else 9999
-                  end ordem_tamanho
-                , l.tamanho
-                from fo2_cd_solicita_lote_qtd s
-                join fo2_cd_lote l
-                  on l.id = s.lote_id
-                where s.solicitacao_id = %s
-                  and l.referencia = %s
-                order by
-                  1
-            '''.format(
-                tam_to_ordem=tam_to_ordem,
-                )
-            grade.col(
-                id='tamanho',
-                name='Tamanho',
-                total='Total',
-                sql=sql
-                )
-            # pprint(grade._col.data)
-
-            # cores
-            sql = '''
-                SELECT distinct
-                  l.cor
-                from fo2_cd_solicita_lote_qtd sq
-                join fo2_cd_lote l
-                  on l.id = sq.lote_id
-                where sq.solicitacao_id = %s
-                  and l.referencia = %s
-                order by
-                  1
-            '''
-            grade.row(
-                id='cor',
-                name='Cor',
-                name_plural='Cores',
-                total='Total',
-                sql=sql
-                )
-            # pprint(grade._row.data)
-
-            # sortimento
-            sql = '''
-                SELECT distinct
-                  l.tamanho
-                , l.cor
-                , sum(sq.qtd) qtd
-                from fo2_cd_solicita_lote_qtd sq
-                join fo2_cd_lote l
-                  on l.id = sq.lote_id
-                where sq.solicitacao_id = %s
-                  and l.referencia = %s
-                group by
-                  l.tamanho
-                , l.cor
-                order by
-                  l.tamanho
-                , l.cor
-            '''
-            grade.value(
-                id='qtd',
-                sql=sql
-                )
-
-            context_ref = {
-                'referencia': referencia['lote__referencia'],
-                'headers': grade.table_data['header'],
-                'fields': grade.table_data['fields'],
-                'data': grade.table_data['data'],
-                'total': grade.total,
-            }
             grades2.append(context_ref)
 
-        # pprint(grades2)
         context.update({
             'grades2': grades2,
         })
