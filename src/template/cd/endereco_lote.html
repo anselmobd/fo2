@@ -1,0 +1,37 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'cd_endereco_lote' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+</form>
+<br/>
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% else %}
+  {% if lote %}
+    <h4>Lote <b>{{ lote }}</b></h4>
+    <h4>Item: <b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></h4>
+    <h4>Qtd.: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;&nbsp;&nbsp;OP: <b>{{ op }}</b></h4>
+    <h2>Endereço <b>{{ local }}</b></h2>
+    <h3>Contém <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}</h3>
+  {% endif %}
+{% endif %}
+<script>
+  function stn(n) {
+    var snd = new Audio("/media/number/"+n+".mp3");
+    snd.play();
+  }
+  stn({{ q_lotes }});
+</script>
+{% endblock content %}
