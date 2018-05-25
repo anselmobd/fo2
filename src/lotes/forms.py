@@ -291,3 +291,12 @@ class DistribuicaoForm(forms.Form):
     data_ate = forms.DateField(
         label='Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
+
+    def clean_estagio(self):
+        estagio = self.cleaned_data['estagio']
+        if estagio == '':
+            estagio = '22'
+        data = self.data.copy()
+        data['estagio'] = estagio
+        self.data = data
+        return estagio
