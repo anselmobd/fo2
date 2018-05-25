@@ -19,11 +19,15 @@
   {% if estagio %}
     <h4>Estágio: {{ estagio }}</h4>
   {% endif %}
-  {% if data_de %}
-    <h4>Data de: {{ data_de }}</h4>
-  {% endif %}
-  {% if data_ate %}
-    <h4>Data até: {{ data_ate }}</h4>
+  {% if data_de == data_ate %}
+    <h4>Data: {{ data_de }}</h4>
+  {% else %}
+    {% if data_de %}
+      <h4>Data de: {{ data_de }}</h4>
+    {% endif %}
+    {% if data_ate %}
+      <h4>Data até: {{ data_ate }}</h4>
+    {% endif %}
   {% endif %}
 {% endif %}
 {% if msg_erro %}
@@ -34,5 +38,7 @@
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
   </table>
+{% else %}
+  <h4>Nenhum lote selecionado.</h4>
 {% endif %}
 {% endblock %}

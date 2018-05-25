@@ -14,11 +14,23 @@ class Distribuicao(View):
     title_name = 'Distribuição'
 
     def mount_context(self, cursor, estagio, data_de, data_ate):
+        if data_ate is None and data_de is not None:
+            data_ate = data_de
         context = {
             'estagio': estagio,
             'data_de': data_de,
             'data_ate': data_ate,
             }
+
+        data = models.distribuicao(cursor, estagio, data_de, data_ate)
+        for row in data:
+            # row['DATA'] = row['data'].date()
+            pass
+        context.update({
+            'headers': ('Data', 'Família', 'OPs', 'Lotes', 'Peças'),
+            'fields': ('DATA', 'FAMILIA', 'OPS', 'LOTES', 'PECAS'),
+            'data': data,
+        })
 
         return context
 
