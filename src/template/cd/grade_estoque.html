@@ -26,16 +26,25 @@
       {% for grade in grades %}
         {% if link_num %}
           {% if grade.refnum %}
-            <h4>Referência numérica: <b><a href="{% url 'cd_grade_estoque' grade.refnum %}">{{ grade.refnum }}</a></b></h4>
+            {% if link_num_hr %}
+              <hr>
+            {% endif %}
+            <h4 style="padding-left: 2em;">Referência numérica: <b><a href="{% url 'cd_grade_estoque' grade.refnum %}">{{ grade.refnum }}</a></b></h4>
           {% endif %}
         {% endif %}
         {% if title_tipo %}
           {% if grade.tipo %}
-            <h4>Tipo: <b>{{ grade.tipo }}</b></h4>
+            {% if title_tipo_hr %}
+              <hr style="margin-left: 3em;">
+            {% endif %}
+            <h4 style="padding-left: 4em;">Tipo: <b>{{ grade.tipo }}</b></h4>
           {% endif %}
         {% endif %}
         {% if title_ref %}
-          <h4>Referência: <b>{{ grade.ref }}</b></h4>
+          <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
+        {% endif %}
+        {% if link_ref %}
+          <h4 style="padding-left: 6em;">Referência: <b><a href="{% url 'cd_grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
         {% endif %}
         <table>
           <tr>
