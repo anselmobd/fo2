@@ -1137,13 +1137,14 @@ class Grade(View):
 
     def tipo(self, ref):
         if ref[0].isdigit():
-            return 'PA', 1
+            value = ('PA', 1, 'PA/PG')
         elif ref[0] in ('A', 'B'):
-            return 'PG', 1
+            value = ('PG', 2, 'PA/PG')
         elif ref[0] in ('F', 'Z'):
-            return 'MP', 3
+            value = ('MP', 4, 'MP')
         else:
-            return 'MD', 2
+            value = ('MD', 3, 'MD')
+        return dict(zip(('tipo', 'ordem', 'grade'), value))
 
     def mount_context(self, request, ref, exec):
         if ref == 'todas':
@@ -1160,26 +1161,17 @@ class Grade(View):
                 'title_tipo': 1,
                 'title_ref': 1,
             })
+            referencias = [{
+                'referencia': ref,
+                'modelo': refnum,
+            }]
+            row = referencias[0]
+            tipo = self.tipo(ref)
+            row['tipo'] = tipo['tipo']
+            row['ordem_tipo'] = tipo['ordem']
+            row['grade_tipo'] = tipo['grade']
 
-            grades_ref = []
-            invent_ref = models.grade_solicitacao(cursor_def, ref, tipo='i')
-            grade_ref = {
-                'tipo': self.tipo(ref)[0],
-                'ref': ref,
-                'refnum': refnum,
-                'inventario': invent_ref}
-
-            solic_ref = models.grade_solicitacao(cursor_def, ref, tipo='s')
-            if solic_ref['total'] != 0:
-                dispon_ref = models.grade_solicitacao(
-                    cursor_def, ref, tipo='d')
-                grade_ref.update({
-                    'solicitacoes': solic_ref,
-                    'disponivel': dispon_ref,
-                    })
-            grades_ref.append(grade_ref)
-
-            context.update({'grades': grades_ref})
+            exec = 'grade'
         else:
             data_rec = lotes.models.Lote.objects
             data_rec = data_rec.exclude(
@@ -1201,8 +1193,10 @@ class Grade(View):
                         'cd_grade_estoque', args=[row['referencia']])
                     row['modelo|LINK'] = reverse(
                         'cd_grade_estoque', args=[row['modelo']])
-                    row['tipo'], row['ordem_tipo'] = \
-                        self.tipo(row['referencia'])
+                    tipo = self.tipo(row['referencia'])
+                    row['tipo'] = tipo['tipo']
+                    row['ordem_tipo'] = tipo['ordem']
+                    row['grade_tipo'] = tipo['grade']
                 referencias = sorted(
                     referencias, key=lambda k: (
                         k['modelo'], k['ordem_tipo'], k['referencia']))
@@ -1221,20 +1215,29 @@ class Grade(View):
                     })
                 else:
                     context.update({
-                        'erro': 'Em desenvolvimento!',
+                        'link_tot': 1,
+                        'link_num': 1,
+                        'link_num_hr': 1,
+                        'title_tipo': 1,
+                        'title_tipo_hr': 1,
+                        'link_ref': 1,
                     })
             else:
-                refs = [
-                    {'referencia': row['referencia']}
+                referencias = [
+                    {'referencia': row['referencia'],
+                     'modelo': row['modelo'],
+                     }
                     for row in referencias
                     if row['modelo'] == refnum]
-                for row in refs:
+                for row in referencias:
                     row['referencia|LINK'] = reverse(
                         'cd_grade_estoque', args=[row['referencia']])
-                    row['tipo'], row['ordem_tipo'] = \
-                        self.tipo(row['referencia'])
-                refs = sorted(
-                    refs, key=lambda k: (
+                    tipo = self.tipo(row['referencia'])
+                    row['tipo'] = tipo['tipo']
+                    row['ordem_tipo'] = tipo['ordem']
+                    row['grade_tipo'] = tipo['grade']
+                referencias = sorted(
+                    referencias, key=lambda k: (
                         k['ordem_tipo'], k['referencia']))
                 if exec == 'busca':
                     context.update({
@@ -1244,61 +1247,58 @@ class Grade(View):
                     context.update({
                         'headers': ['Tipo', 'Grade de referência'],
                         'fields': ['tipo', 'referencia'],
-                        'data': refs,
+                        'data': referencias,
                     })
                 else:
                     context.update({
                         'link_tot': 1,
                         'link_num': 1,
                         'title_tipo': 1,
-                        'title_ref': 1,
+                        'title_tipo_hr': 1,
+                        'link_ref': 1,
                     })
 
-                    grades_ref = []
-                    refnum_ant = -1
+        if exec == 'grade':
+            grades_ref = []
+            refnum_ant = -1
+            tipo_ant = '##'
+            for row in referencias:
+                ref = row['referencia']
+                invent_ref = models.grade_solicitacao(
+                    cursor_def, ref, tipo='i')
+                grade_ref = {
+                    'ref': ref,
+                    'inventario': invent_ref}
+
+                if refnum_ant != row['modelo']:
+                    grade_ref.update({'refnum': row['modelo']})
+                    refnum_ant = row['modelo']
                     tipo_ant = '##'
-                    for row in refs:
-                        ref = row['referencia']
-                        invent_ref = models.grade_solicitacao(
-                            cursor_def, ref, tipo='i')
-                        grade_ref = {
-                            'ref': ref,
-                            'inventario': invent_ref}
 
-                        if refnum_ant != refnum:
-                            grade_ref.update({'refnum': refnum})
-                            refnum_ant = refnum
+                if tipo_ant != row['grade_tipo']:
+                    grade_ref.update({'tipo': row['grade_tipo']})
+                    tipo_ant = row['grade_tipo']
 
-                        tipo = self.tipo(ref)[0]
-                        if tipo_ant != tipo:
-                            grade_ref.update({'tipo': tipo})
-                            tipo_ant = tipo
+                solic_ref = models.grade_solicitacao(
+                    cursor_def, ref, tipo='s')
+                if solic_ref['total'] != 0:
+                    dispon_ref = models.grade_solicitacao(
+                        cursor_def, ref, tipo='d')
+                    grade_ref.update({
+                        'solicitacoes': solic_ref,
+                        'disponivel': dispon_ref,
+                        })
+                grades_ref.append(grade_ref)
 
-                        solic_ref = models.grade_solicitacao(
-                            cursor_def, ref, tipo='s')
-                        if solic_ref['total'] != 0:
-                            dispon_ref = models.grade_solicitacao(
-                                cursor_def, ref, tipo='d')
-                            grade_ref.update({
-                                'solicitacoes': solic_ref,
-                                'disponivel': dispon_ref,
-                                })
-                        grades_ref.append(grade_ref)
-
-                    context.update({'grades': grades_ref})
-
+            context.update({'grades': grades_ref})
 
         return context
 
     def get(self, request, *args, **kwargs):
-        pprint(kwargs)
         if 'referencia' in kwargs and kwargs['referencia'] is not None:
             ref = kwargs['referencia']
         else:
             ref = ''
-        #     print('go!!!!!!!!!')
-        #     return self.post(request, *args, **kwargs)
-        # else:
         context = {'titulo': self.title_name}
         data = self.mount_context(request, ref, 'grade')
         context.update(data)
@@ -1307,12 +1307,8 @@ class Grade(View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        pprint(kwargs)
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        # if 'referencia' in kwargs and kwargs['referencia'] is not None:
-        #     print('go form!!!!!!!!!')
-        #     form.data['ref'] = kwargs['referencia']
         if form.is_valid():
             ref = form.cleaned_data['ref']
             data = self.mount_context(request, ref, 'busca')
