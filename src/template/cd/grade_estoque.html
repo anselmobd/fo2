@@ -24,7 +24,7 @@
     {% endif %}
     {% if grades %}
       {% if modelos.paginator.num_pages != 1 %}
-        ({{modelos_pagina}} modelos por página)<br/>
+        ({{modelos_pagina}} referências numéricas por página)<br/>
         <ul class="pagination">
           {% if modelos.has_previous %}
             <li><a href="?page={{ modelos.previous_page_number }}">&laquo;</a></li>
