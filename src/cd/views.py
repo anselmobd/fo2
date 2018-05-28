@@ -1151,19 +1151,22 @@ class Grade(View):
         refnum = int('0{}'.format(
             ''.join([c for c in ref if c.isdigit()])))
         context = {'ref': ref, 'refnum': refnum}
+        cursor_def = connection.cursor()
 
         if len(ref) == 5:
             context.update({
                 'link_tot': 1,
                 'link_num': 1,
+                'title_tipo': 1,
                 'title_ref': 1,
             })
-            cursor_def = connection.cursor()
 
             grades_ref = []
             invent_ref = models.grade_solicitacao(cursor_def, ref, tipo='i')
             grade_ref = {
-                'tipo': self.tipo(ref),
+                'tipo': self.tipo(ref)[0],
+                'ref': ref,
+                'refnum': refnum,
                 'inventario': invent_ref}
 
             solic_ref = models.grade_solicitacao(cursor_def, ref, tipo='s')
@@ -1235,14 +1238,55 @@ class Grade(View):
                         k['ordem_tipo'], k['referencia']))
                 if exec == 'busca':
                     context.update({
+                        'link_tot': 1,
+                        'link_num': 1,
+                        })
+                    context.update({
                         'headers': ['Tipo', 'Grade de referência'],
                         'fields': ['tipo', 'referencia'],
                         'data': refs,
                     })
                 else:
                     context.update({
-                        'erro': 'Em desenvolvimento',
+                        'link_tot': 1,
+                        'link_num': 1,
+                        'title_tipo': 1,
+                        'title_ref': 1,
                     })
+
+                    grades_ref = []
+                    refnum_ant = -1
+                    tipo_ant = '##'
+                    for row in refs:
+                        ref = row['referencia']
+                        invent_ref = models.grade_solicitacao(
+                            cursor_def, ref, tipo='i')
+                        grade_ref = {
+                            'ref': ref,
+                            'inventario': invent_ref}
+
+                        if refnum_ant != refnum:
+                            grade_ref.update({'refnum': refnum})
+                            refnum_ant = refnum
+
+                        tipo = self.tipo(ref)[0]
+                        if tipo_ant != tipo:
+                            grade_ref.update({'tipo': tipo})
+                            tipo_ant = tipo
+
+                        solic_ref = models.grade_solicitacao(
+                            cursor_def, ref, tipo='s')
+                        if solic_ref['total'] != 0:
+                            dispon_ref = models.grade_solicitacao(
+                                cursor_def, ref, tipo='d')
+                            grade_ref.update({
+                                'solicitacoes': solic_ref,
+                                'disponivel': dispon_ref,
+                                })
+                        grades_ref.append(grade_ref)
+
+                    context.update({'grades': grades_ref})
+
 
         return context
 
