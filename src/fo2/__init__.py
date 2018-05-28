@@ -1,9 +1,15 @@
-__version__ = '0.1.93'
-__version__date__ = '24/05/2018'
+__version__ = '0.1.95'
+__version__date__ = '28/05/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.95 - 2018/05/28
+#   . CD - Visualizando o estoque em grades de
+#          . inventário
+#          . solicitações
+#          . disponível
 #
 # - 0.1.94 - 2018/05/25
 #   . Produção - Distribuição de lotes - primeira versão
