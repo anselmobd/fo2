@@ -798,7 +798,7 @@ class InconsistenciasDetalhe(View):
                 row['qtd'] = '-'
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             row['lote|LINK'] = reverse(
-                'posicao_lote', args=[row['lote']])
+                'producao:posicao_lote', args=[row['lote']])
         context.update({
             'headers63': headers,
             'fields63': fields,
