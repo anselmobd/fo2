@@ -103,7 +103,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
     grade = GradeQtd(cursor, [referencia])
 
     if solicit_id is None:
-        filter_solicit_id = '--'
+        filter_solicit_id = 'and min(sq.qtd, l.qtd) > 0'
     else:
         filter_solicit_id = 'and sq.solicitacao_id = {}'.format(solicit_id)
 
@@ -112,6 +112,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
         sql = '''
             SELECT distinct
               l.tamanho
+            , l.ordem_tamanho
             from fo2_cd_lote l
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
@@ -125,6 +126,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
         sql = '''
             SELECT distinct
               l.tamanho
+            , l.ordem_tamanho
             from fo2_cd_lote l
             where l.referencia = %s
               and l.qtd > 0
@@ -135,6 +137,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
         sql = '''
             SELECT distinct
               l.tamanho
+            , l.ordem_tamanho
             from fo2_cd_lote l
             left join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
@@ -143,7 +146,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
               l.ordem_tamanho
             , l.tamanho
             having
-              sum(l.qtd) - sum(coalesce(sq.qtd, 0)) > 0
+              sum(l.qtd) - sum(min(coalesce(sq.qtd, 0), l.qtd)) > 0
             order by
               l.ordem_tamanho
         '''
@@ -189,7 +192,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             group by
               l.cor
             having
-              sum(l.qtd) - sum(coalesce(sq.qtd, 0)) > 0
+              sum(l.qtd) - sum(min(coalesce(sq.qtd, 0), l.qtd)) > 0
             order by
               l.cor
         '''
@@ -241,7 +244,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             SELECT distinct
               l.tamanho
             , l.cor
-            , sum(l.qtd) - sum(coalesce(sq.qtd, 0)) qtd
+            , sum(l.qtd) - sum(min(coalesce(sq.qtd, 0), l.qtd)) qtd
             from fo2_cd_lote l
             left join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
