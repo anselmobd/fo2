@@ -103,7 +103,12 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
     grade = GradeQtd(cursor, [referencia])
 
     if solicit_id is None:
-        filter_solicit_id = 'and min(sq.qtd, l.qtd) > 0'
+        filter_solicit_id = '''
+            and case when l.qtd < sq.qtd
+              then l.qtd
+              else sq.qtd
+              end > 0
+        '''
     else:
         filter_solicit_id = 'and sq.solicitacao_id = {}'.format(solicit_id)
 
