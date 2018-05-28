@@ -11,16 +11,62 @@
 
 {% block content %}
   <form action="{% url 'cd_grade_estoque' %}" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" name="busca" value="Busca"/>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
   </form>
   <br/>
   {% if erro %}
     <h3>{{ erro }}</h3>
   {% else %}
-    {% if ref %}
-      <h4>Referência: <b>{{ ref }}</b></h4>
+    {% if link_tot %}
+      <a href="{% url 'cd_grade_estoque' 'todas' %}">Todas as grades por referência</a><br/>
+    {% endif %}
+    {% if link_num %}
+      {% if refnum %}
+        Referência numérica: <b><a href="{% url 'cd_grade_estoque' refnum %}">{{ refnum }}</a></b><br/>
+      {% endif %}
+    {% endif %}
+    {% if title_ref %}
+      {% if ref %}
+        <h4>Referência: <b>{{ ref }}</b></h4>
+      {% endif %}
+    {% endif %}
+    {% if grades %}
+      {% for grade in grades %}
+        {{ grade.tipo }}
+        <table>
+          <tr>
+            <td style="vertical-align: top;">
+              <h4>Inventário</h4>
+              <table style="width: auto;">
+                {% include "layout/thead_generic.html" with data=grade.inventario.headers only %}
+                {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group only %}
+              </table>
+            </td>
+            {% if grade.solicitacoes %}
+              <td>&nbsp;</td>
+              <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+              <td style="vertical-align: top;">
+                <h4>Solicitações</h4>
+                <table style="width: auto;">
+                  {% include "layout/thead_generic.html" with data=grade.solicitacoes.headers only %}
+                  {% include "layout/tbody_generic.html" with fields=grade.solicitacoes.fields data=grade.solicitacoes.data group=grade.solicitacoes.group only %}
+                </table>
+              </td>
+              <td>&nbsp;</td>
+              <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+              <td style="vertical-align: top;">
+                <h4>Disponível</h4>
+                <table style="width: auto;">
+                  {% include "layout/thead_generic.html" with data=grade.disponivel.headers only %}
+                  {% include "layout/tbody_generic.html" with fields=grade.disponivel.fields data=grade.disponivel.data group=grade.disponivel.group only %}
+                </table>
+              </td>
+            {% endif %}
+          </tr>
+        </table>
+      {% endfor %}
     {% endif %}
     {% if data %}
       <table>
