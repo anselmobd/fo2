@@ -93,7 +93,12 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
     return rows_to_dict_list_lower(cursor)
 
 
-def grade_solicitacao(cursor, referencia, solicit_id=None):
+# tipo: s = solicitação
+#           se solicit_id, então: uma solicitação
+#                          senão: todas as solicitação
+#       i = inventário
+#       d = disponível (inventário - todas as solicitações)
+def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
     # Grade de solicitação
     grade = GradeQtd(cursor, [referencia])
 
@@ -103,19 +108,45 @@ def grade_solicitacao(cursor, referencia, solicit_id=None):
         filter_solicit_id = 'and sq.solicitacao_id = {}'.format(solicit_id)
 
     # tamanhos
-    sql = '''
-        SELECT distinct
-          l.ordem_tamanho
-        , l.tamanho
-        from fo2_cd_solicita_lote_qtd sq
-        join fo2_cd_lote l
-          on l.id = sq.lote_id
-        where l.referencia = %s
-          {filter_solicit_id}
-        order by
-          1
-    '''.format(
-        filter_solicit_id=filter_solicit_id)
+    if tipo == 's':
+        sql = '''
+            SELECT distinct
+              l.tamanho
+            from fo2_cd_lote l
+            join fo2_cd_solicita_lote_qtd sq
+              on sq.lote_id = l.id
+            where l.referencia = %s
+              {filter_solicit_id}
+            order by
+              l.ordem_tamanho
+        '''.format(
+            filter_solicit_id=filter_solicit_id)
+    elif tipo == 'i':
+        sql = '''
+            SELECT distinct
+              l.tamanho
+            from fo2_cd_lote l
+            where l.referencia = %s
+              and l.qtd > 0
+            order by
+              l.ordem_tamanho
+        '''
+    elif tipo == 'd':
+        sql = '''
+            SELECT distinct
+              l.tamanho
+            from fo2_cd_lote l
+            left join fo2_cd_solicita_lote_qtd sq
+              on sq.lote_id = l.id
+            where l.referencia = %s
+            group by
+              l.ordem_tamanho
+            , l.tamanho
+            having
+              sum(l.qtd) - sum(coalesce(sq.qtd, 0)) > 0
+            order by
+              l.ordem_tamanho
+        '''
     grade.col(
         id='tamanho',
         name='Tamanho',
@@ -124,18 +155,44 @@ def grade_solicitacao(cursor, referencia, solicit_id=None):
         )
 
     # cores
-    sql = '''
-        SELECT distinct
-          l.cor
-        from fo2_cd_solicita_lote_qtd sq
-        join fo2_cd_lote l
-          on l.id = sq.lote_id
-        where l.referencia = %s
-          {filter_solicit_id}
-        order by
-          1
-    '''.format(
-        filter_solicit_id=filter_solicit_id)
+    if tipo == 's':
+        sql = '''
+            SELECT distinct
+              l.cor
+            from fo2_cd_lote l
+            join fo2_cd_solicita_lote_qtd sq
+              on sq.lote_id = l.id
+            where l.referencia = %s
+              {filter_solicit_id}
+            order by
+              l.cor
+        '''.format(
+            filter_solicit_id=filter_solicit_id)
+    elif tipo == 'i':
+        sql = '''
+            SELECT distinct
+              l.cor
+            from fo2_cd_lote l
+            where l.referencia = %s
+              and l.qtd > 0
+            order by
+              l.cor
+        '''
+    elif tipo == 'd':
+        sql = '''
+            SELECT distinct
+              l.cor
+            from fo2_cd_lote l
+            left join fo2_cd_solicita_lote_qtd sq
+              on sq.lote_id = l.id
+            where l.referencia = %s
+            group by
+              l.cor
+            having
+              sum(l.qtd) - sum(coalesce(sq.qtd, 0)) > 0
+            order by
+              l.cor
+        '''
     grade.row(
         id='cor',
         name='Cor',
@@ -145,24 +202,57 @@ def grade_solicitacao(cursor, referencia, solicit_id=None):
         )
 
     # sortimento
-    sql = '''
-        SELECT distinct
-          l.tamanho
-        , l.cor
-        , sum(sq.qtd) qtd
-        from fo2_cd_solicita_lote_qtd sq
-        join fo2_cd_lote l
-          on l.id = sq.lote_id
-        where l.referencia = %s
-          {filter_solicit_id}
-        group by
-          l.tamanho
-        , l.cor
-        order by
-          l.tamanho
-        , l.cor
-    '''.format(
-        filter_solicit_id=filter_solicit_id)
+    if tipo == 's':
+        sql = '''
+            SELECT distinct
+              l.tamanho
+            , l.cor
+            , sum(sq.qtd) qtd
+            from fo2_cd_lote l
+            join fo2_cd_solicita_lote_qtd sq
+              on sq.lote_id = l.id
+            where l.referencia = %s
+              {filter_solicit_id}
+            group by
+              l.tamanho
+            , l.cor
+            order by
+              l.tamanho
+            , l.cor
+        '''.format(
+            filter_solicit_id=filter_solicit_id)
+    elif tipo == 'i':
+        sql = '''
+            SELECT distinct
+              l.tamanho
+            , l.cor
+            , sum(l.qtd) qtd
+            from fo2_cd_lote l
+            where l.referencia = %s
+            group by
+              l.tamanho
+            , l.cor
+            order by
+              l.tamanho
+            , l.cor
+        '''
+    elif tipo == 'd':
+        sql = '''
+            SELECT distinct
+              l.tamanho
+            , l.cor
+            , sum(l.qtd) - sum(coalesce(sq.qtd, 0)) qtd
+            from fo2_cd_lote l
+            left join fo2_cd_solicita_lote_qtd sq
+              on sq.lote_id = l.id
+            where l.referencia = %s
+            group by
+              l.tamanho
+            , l.cor
+            order by
+              l.tamanho
+            , l.cor
+        '''
     grade.value(
         id='qtd',
         sql=sql
