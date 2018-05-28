@@ -70,14 +70,14 @@
         {% endif %}
         <table>
           <tr>
-            <td style="vertical-align: top;">
-              <h4>Inventário</h4>
-              <table style="width: auto;">
-                {% include "layout/thead_generic.html" with data=grade.inventario.headers only %}
-                {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group only %}
-              </table>
-            </td>
             {% if grade.solicitacoes %}
+              <td style="vertical-align: top;">
+                <h4>Disponível</h4>
+                <table style="width: auto;">
+                  {% include "layout/thead_generic.html" with data=grade.disponivel.headers only %}
+                  {% include "layout/tbody_generic.html" with fields=grade.disponivel.fields data=grade.disponivel.data group=grade.disponivel.group only %}
+                </table>
+              </td>
               <td>&nbsp;</td>
               <td style="border-left: thin solid lightgrey;">&nbsp;</td>
               <td style="vertical-align: top;">
@@ -90,10 +90,18 @@
               <td>&nbsp;</td>
               <td style="border-left: thin solid lightgrey;">&nbsp;</td>
               <td style="vertical-align: top;">
-                <h4>Disponível</h4>
+                <h4>Inventário</h4>
                 <table style="width: auto;">
-                  {% include "layout/thead_generic.html" with data=grade.disponivel.headers only %}
-                  {% include "layout/tbody_generic.html" with fields=grade.disponivel.fields data=grade.disponivel.data group=grade.disponivel.group only %}
+                  {% include "layout/thead_generic.html" with data=grade.inventario.headers only %}
+                  {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group only %}
+                </table>
+              </td>
+            {% else %}
+              <td style="vertical-align: top;">
+                <h4>Disponível = Inventário</h4>
+                <table style="width: auto;">
+                  {% include "layout/thead_generic.html" with data=grade.inventario.headers only %}
+                  {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group only %}
                 </table>
               </td>
             {% endif %}
