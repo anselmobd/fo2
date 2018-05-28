@@ -1146,7 +1146,8 @@ class Grade(View):
             value = ('MD', 3, 'MD')
         return dict(zip(('tipo', 'ordem', 'grade'), value))
 
-    def mount_context(self, request, ref, exec):
+    def mount_context(self, request, ref, exec, page=1):
+        modelos_pagina = 3
         if ref == 'todas':
             ref = ''
         refnum = int('0{}'.format(
@@ -1154,7 +1155,7 @@ class Grade(View):
         context = {'ref': ref, 'refnum': refnum}
         cursor_def = connection.cursor()
 
-        if len(ref) == 5:
+        if len(ref) == 5:  # Referência
             context.update({
                 'link_tot': 1,
                 'link_num': 1,
@@ -1171,8 +1172,9 @@ class Grade(View):
             row['ordem_tipo'] = tipo['ordem']
             row['grade_tipo'] = tipo['grade']
 
+            modelos = [refnum]
             exec = 'grade'
-        else:
+        else:  # Todos ou Modelo
             data_rec = lotes.models.Lote.objects
             data_rec = data_rec.exclude(
                 local__isnull=True
@@ -1187,7 +1189,7 @@ class Grade(View):
                 row['modelo'] = int(
                     ''.join([c for c in row['referencia'] if c.isdigit()]))
 
-            if refnum == 0:
+            if refnum == 0:  # Todos
                 for row in referencias:
                     row['referencia|LINK'] = reverse(
                         'cd_grade_estoque', args=[row['referencia']])
@@ -1213,7 +1215,7 @@ class Grade(View):
                         'group': group,
                         'data': referencias,
                     })
-                else:
+                else:  # exec == 'grade'
                     context.update({
                         'link_tot': 1,
                         'link_num': 1,
@@ -1222,10 +1224,15 @@ class Grade(View):
                         'title_tipo_hr': 1,
                         'link_ref': 1,
                     })
-            else:
+                    modelos = []
+                    for ref in referencias:
+                        if ref['modelo'] not in modelos:
+                            modelos.append(ref['modelo'])
+                    pprint(modelos)
+            else:  # Modelo
                 referencias = [
                     {'referencia': row['referencia'],
-                     'modelo': row['modelo'],
+                     'modelo': refnum,
                      }
                     for row in referencias
                     if row['modelo'] == refnum]
@@ -1249,7 +1256,7 @@ class Grade(View):
                         'fields': ['tipo', 'referencia'],
                         'data': referencias,
                     })
-                else:
+                else:  # exec == 'grade'
                     context.update({
                         'link_tot': 1,
                         'link_num': 1,
@@ -1257,50 +1264,65 @@ class Grade(View):
                         'title_tipo_hr': 1,
                         'link_ref': 1,
                     })
+                    modelos = [refnum]
 
         if exec == 'grade':
+            paginator = Paginator(modelos, modelos_pagina)
+            try:
+                modelos = paginator.page(page)
+            except PageNotAnInteger:
+                modelos = paginator.page(1)
+            except EmptyPage:
+                modelos = paginator.page(paginator.num_pages)
             grades_ref = []
-            refnum_ant = -1
-            tipo_ant = '##'
-            for row in referencias:
-                ref = row['referencia']
-                invent_ref = models.grade_solicitacao(
-                    cursor_def, ref, tipo='i')
-                grade_ref = {
-                    'ref': ref,
-                    'inventario': invent_ref}
+            for modelo in modelos:
+                refnum_ant = -1
+                tipo_ant = '##'
+                for row in [ref for ref in referencias
+                            if ref['modelo'] == modelo]:
+                    ref = row['referencia']
+                    invent_ref = models.grade_solicitacao(
+                        cursor_def, ref, tipo='i')
+                    grade_ref = {
+                        'ref': ref,
+                        'inventario': invent_ref}
 
-                if refnum_ant != row['modelo']:
-                    grade_ref.update({'refnum': row['modelo']})
-                    refnum_ant = row['modelo']
-                    tipo_ant = '##'
+                    if refnum_ant != row['modelo']:
+                        grade_ref.update({'refnum': row['modelo']})
+                        refnum_ant = row['modelo']
+                        tipo_ant = '##'
 
-                if tipo_ant != row['grade_tipo']:
-                    grade_ref.update({'tipo': row['grade_tipo']})
-                    tipo_ant = row['grade_tipo']
+                    if tipo_ant != row['grade_tipo']:
+                        grade_ref.update({'tipo': row['grade_tipo']})
+                        tipo_ant = row['grade_tipo']
 
-                solic_ref = models.grade_solicitacao(
-                    cursor_def, ref, tipo='s')
-                if solic_ref['total'] != 0:
-                    dispon_ref = models.grade_solicitacao(
-                        cursor_def, ref, tipo='d')
-                    grade_ref.update({
-                        'solicitacoes': solic_ref,
-                        'disponivel': dispon_ref,
-                        })
-                grades_ref.append(grade_ref)
+                    solic_ref = models.grade_solicitacao(
+                        cursor_def, ref, tipo='s')
+                    if solic_ref['total'] != 0:
+                        dispon_ref = models.grade_solicitacao(
+                            cursor_def, ref, tipo='d')
+                        grade_ref.update({
+                            'solicitacoes': solic_ref,
+                            'disponivel': dispon_ref,
+                            })
+                    grades_ref.append(grade_ref)
 
-            context.update({'grades': grades_ref})
+            context.update({
+                'grades': grades_ref,
+                'modelos': modelos,
+                'modelos_pagina': modelos_pagina,
+                })
 
         return context
 
     def get(self, request, *args, **kwargs):
+        page = request.GET.get('page', 1)
         if 'referencia' in kwargs and kwargs['referencia'] is not None:
             ref = kwargs['referencia']
         else:
             ref = ''
         context = {'titulo': self.title_name}
-        data = self.mount_context(request, ref, 'grade')
+        data = self.mount_context(request, ref, 'grade', page)
         context.update(data)
         form = self.Form_class()
         context['form'] = form
