@@ -151,7 +151,11 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
               l.ordem_tamanho
             , l.tamanho
             having
-              sum(l.qtd) - sum(min(coalesce(sq.qtd, 0), l.qtd)) > 0
+              sum(l.qtd)
+            - sum( case when l.qtd < coalesce(sq.qtd, 0)
+                   then l.qtd
+                   else coalesce(sq.qtd, 0)
+                   end ) > 0
             order by
               l.ordem_tamanho
         '''
