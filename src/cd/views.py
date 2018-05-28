@@ -1147,7 +1147,7 @@ class Grade(View):
         return dict(zip(('tipo', 'ordem', 'grade'), value))
 
     def mount_context(self, request, ref, exec, page=1):
-        modelos_pagina = 3
+        modelos_pagina = 5
         if ref == 'todas':
             ref = ''
         refnum = int('0{}'.format(
