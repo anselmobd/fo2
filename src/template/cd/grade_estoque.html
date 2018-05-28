@@ -20,21 +20,23 @@
     <h3>{{ erro }}</h3>
   {% else %}
     {% if link_tot %}
-      <a href="{% url 'cd_grade_estoque' 'todas' %}">Todas as grades por referência</a><br/>
-    {% endif %}
-    {% if link_num %}
-      {% if refnum %}
-        Referência numérica: <b><a href="{% url 'cd_grade_estoque' refnum %}">{{ refnum }}</a></b><br/>
-      {% endif %}
-    {% endif %}
-    {% if title_ref %}
-      {% if ref %}
-        <h4>Referência: <b>{{ ref }}</b></h4>
-      {% endif %}
+      <h4><a href="{% url 'cd_grade_estoque' 'todas' %}">Todas as grades por referência</a></h4>
     {% endif %}
     {% if grades %}
       {% for grade in grades %}
-        {{ grade.tipo }}
+        {% if link_num %}
+          {% if grade.refnum %}
+            <h4>Referência numérica: <b><a href="{% url 'cd_grade_estoque' grade.refnum %}">{{ grade.refnum }}</a></b></h4>
+          {% endif %}
+        {% endif %}
+        {% if title_tipo %}
+          {% if grade.tipo %}
+            <h4>Tipo: <b>{{ grade.tipo }}</b></h4>
+          {% endif %}
+        {% endif %}
+        {% if title_ref %}
+          <h4>Referência: <b>{{ grade.ref }}</b></h4>
+        {% endif %}
         <table>
           <tr>
             <td style="vertical-align: top;">
@@ -69,6 +71,11 @@
       {% endfor %}
     {% endif %}
     {% if data %}
+      {% if link_num %}
+        {% if refnum %}
+          <h4>Grades da referência numérica: <b><a href="{% url 'cd_grade_estoque' refnum %}">{{ refnum }}</a></b></h4>
+        {% endif %}
+      {% endif %}
       <table>
         {% include "layout/thead_generic.html" with data=headers only %}
         {% include "layout/tbody_generic.html" with fields=fields data=data group=group only %}
