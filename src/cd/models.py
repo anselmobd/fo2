@@ -201,7 +201,11 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             group by
               l.cor
             having
-              sum(l.qtd) - sum(min(coalesce(sq.qtd, 0), l.qtd)) > 0
+              sum(l.qtd)
+            - sum( case when l.qtd < coalesce(sq.qtd, 0)
+                   then l.qtd
+                   else coalesce(sq.qtd, 0)
+                   end ) > 0
             order by
               l.cor
         '''
@@ -253,7 +257,11 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             SELECT distinct
               l.tamanho
             , l.cor
-            , sum(l.qtd) - sum(min(coalesce(sq.qtd, 0), l.qtd)) qtd
+            , sum(l.qtd)
+            - sum( case when l.qtd < coalesce(sq.qtd, 0)
+                   then l.qtd
+                   else coalesce(sq.qtd, 0)
+                   end ) qtd
             from fo2_cd_lote l
             left join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
