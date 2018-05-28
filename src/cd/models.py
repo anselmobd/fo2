@@ -134,6 +134,8 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             , l.ordem_tamanho
             from fo2_cd_lote l
             where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
               and l.qtd > 0
             order by
               l.ordem_tamanho
@@ -147,6 +149,8 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             left join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
             where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
             group by
               l.ordem_tamanho
             , l.tamanho
@@ -186,6 +190,8 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
               l.cor
             from fo2_cd_lote l
             where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
               and l.qtd > 0
             order by
               l.cor
@@ -198,6 +204,8 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             left join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
             where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
             group by
               l.cor
             having
@@ -245,6 +253,8 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             , sum(l.qtd) qtd
             from fo2_cd_lote l
             where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
             group by
               l.tamanho
             , l.cor
@@ -266,6 +276,8 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             left join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
             where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
             group by
               l.tamanho
             , l.cor
