@@ -19,6 +19,9 @@
               {{ style|get_item:forloop.counter }}
             {% endif %}
           {% endif %}
+          {% if row|get_item:'|STYLE' %}
+            {{ row|get_item:'|STYLE' }}
+          {% endif %}
         ">
           {% with field|add:'|HOVER' as field_hover %}
             {% if row|get_item:field_hover %}
@@ -50,6 +53,9 @@
           {% if style|get_item:forloop.counter %}
             {{ style|get_item:forloop.counter }}
           {% endif %}
+        {% endif %}
+        {% if row|get_item:'|STYLE' %}
+          {{ row|get_item:'|STYLE' }}
         {% endif %}
       ">
         {% with field|add:'|HOVER' as field_hover %}
