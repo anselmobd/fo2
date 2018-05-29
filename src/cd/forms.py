@@ -180,8 +180,9 @@ class AskLoteForm(forms.Form):
 
 class AskReferenciaForm(forms.Form):
     ref = forms.CharField(
-        label='Referência', required=False, max_length=5,
-        help_text='(vazio, referência exata ou parte numérica)',
+        label='Filtro', required=False, max_length=5,
+        help_text='(referência, com 5 caracteres, '
+                  'ou parte numérica da referência ou vazio)',
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
 
