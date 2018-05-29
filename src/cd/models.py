@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.db import models
 
 from fo2.models import rows_to_dict_list_lower, GradeQtd
@@ -296,11 +298,20 @@ def grade_solicitacao(
         sql=sql
         )
 
+    fields = grade.table_data['fields']
+    data = grade.table_data['data']
+    style = {}
+    right_bold_style = 'text-align: right; font-weight: bold;'
+    for i in range(2, len(fields)):
+        style[i] = 'text-align: right;'
+    style[len(fields)] = right_bold_style
+
     context_ref = {
         'referencia': referencia,
         'headers': grade.table_data['header'],
-        'fields': grade.table_data['fields'],
-        'data': grade.table_data['data'],
+        'fields': fields,
+        'data': data,
+        'style': style,
         'total': grade.total,
     }
 
