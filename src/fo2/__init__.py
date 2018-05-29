@@ -1,9 +1,13 @@
-__version__ = '0.1.95'
-__version__date__ = '28/05/2018'
+__version__ = '0.1.96'
+__version__date__ = '29/05/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.96 - 2018/05/29
+#   . Pedido - Apresentando também data de embarque e observação
+#   . OP - Responsáveis e datas de movimentações de estágios
 #
 # - 0.1.95 - 2018/05/28
 #   . CD - Visualizando o estoque em grades de
