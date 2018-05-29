@@ -301,10 +301,12 @@ def grade_solicitacao(
     fields = grade.table_data['fields']
     data = grade.table_data['data']
     style = {}
-    right_bold_style = 'text-align: right; font-weight: bold;'
+    right_style = 'text-align: right;'
+    bold_style = 'font-weight: bold;'
     for i in range(2, len(fields)):
-        style[i] = 'text-align: right;'
-    style[len(fields)] = right_bold_style
+        style[i] = right_style
+    style[len(fields)] = right_style + bold_style
+    data[-1]['|STYLE'] = bold_style
 
     context_ref = {
         'referencia': referencia,
