@@ -20,18 +20,21 @@ class Pedido(View):
         data = models.ped_inform(cursor, pedido)
         for row in data:
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
+            row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
             })
         else:
             context.update({
-                'headers': ('Data de emissão',
+                'headers': ('Data de emissão', 'Data de embarque',
                             'Cliente', 'Código do pedido no cliente',
-                            'Status do pedido', 'Situação da venda'),
-                'fields': ('DT_EMISSAO',
+                            'Status do pedido', 'Situação da venda',
+                            'Observação'),
+                'fields': ('DT_EMISSAO', 'DT_EMBARQUE',
                            'CLIENTE', 'PEDIDO_CLIENTE',
-                           'STATUS_PEDIDO', 'SITUACAO_VENDA'),
+                           'STATUS_PEDIDO', 'SITUACAO_VENDA',
+                           'OBSERVACAO'),
                 'data': data,
             })
 

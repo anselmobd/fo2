@@ -11,6 +11,8 @@ def ped_inform(cursor, pedido):
           ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA DT_EMISSAO
         , ped.DATA_PREV_RECEB DT_RECEBIMENTO
+        , ped.DATA_ENTR_VENDA DT_EMBARQUE
+        , ped.OBSERVACAO
         , c.NOME_CLIENTE
           || ' (' || lpad(c.CGC_9, 8, '0')
           || '/' || lpad(c.CGC_4, 4, '0')
