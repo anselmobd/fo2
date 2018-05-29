@@ -144,6 +144,57 @@ def op_estagios(cursor, op):
     return rows_to_dict_list(cursor)
 
 
+def op_movi_estagios(cursor, op):
+    # Lotes ordenados por OS + referência + estágio
+    sql = '''
+        SELECT
+          ll.EST
+        , u.USUARIO_SYSTEXTIL
+        , count(*) LOTES
+        , MIN(u.DATA_PRODUCAO) DT_MIN
+        , ROUND( TO_DATE('01/01/2001','DD/MM/YYYY')
+               + AVG(u.DATA_PRODUCAO - TO_DATE('01/01/2001','DD/MM/YYYY'))
+               - MIN(u.DATA_PRODUCAO)
+               ) DIA_INI
+        , TO_DATE('01/01/2001','DD/MM/YYYY')
+        + AVG(u.DATA_PRODUCAO - TO_DATE('01/01/2001','DD/MM/YYYY')) DT_AVG
+        , ROUND( MAX(u.DATA_PRODUCAO)
+               - ( TO_DATE('01/01/2001','DD/MM/YYYY')
+                 + AVG(u.DATA_PRODUCAO - TO_DATE('01/01/2001','DD/MM/YYYY'))
+                 )
+               ) DIA_FIM
+        , MAX(u.DATA_PRODUCAO) DT_MAX
+        FROM (
+          SELECT DISTINCT
+            l.SEQ_OPERACAO
+          , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
+          , l.CODIGO_ESTAGIO
+          , l.ORDEM_PRODUCAO
+          FROM pcpc_040 l
+          JOIN MQOP_005 e
+            ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+          WHERE l.ORDEM_PRODUCAO = %s
+        ) ll
+        JOIN pcpc_045 u
+          ON u.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
+         AND u.PCPC040_ESTCONF = ll.CODIGO_ESTAGIO
+         AND u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
+             u.QTDE_PERDAS + u.QTDE_CONSERTO > 0
+        GROUP BY
+          ll.SEQ_OPERACAO
+        , ll.EST
+        , u.PCPC040_ESTCONF
+        , u.USUARIO_SYSTEXTIL
+        ORDER BY
+          ll.SEQ_OPERACAO
+        , 4 -- DT_MIN
+        , 3 DESC -- LOTES
+        , u.USUARIO_SYSTEXTIL
+    '''
+    cursor.execute(sql, [op])
+    return rows_to_dict_list(cursor)
+
+
 def op_sortimento(cursor, op):
     header, fields, data, total = op_sortimentos(cursor, op, 't')
     return header, fields, data
