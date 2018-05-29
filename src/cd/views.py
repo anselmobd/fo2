@@ -1286,7 +1286,7 @@ class Grade(View):
                             if ref['modelo'] == modelo]:
                     ref = row['referencia']
                     invent_ref = models.grade_solicitacao(
-                        cursor_def, ref, tipo='i')
+                        cursor_def, ref, tipo='i', grade_inventario=True)
                     grade_ref = {
                         'ref': ref,
                         'inventario': invent_ref}
@@ -1301,10 +1301,10 @@ class Grade(View):
                         tipo_ant = row['grade_tipo']
 
                     solic_ref = models.grade_solicitacao(
-                        cursor_def, ref, tipo='s')
+                        cursor_def, ref, tipo='s', grade_inventario=True)
                     if solic_ref['total'] != 0:
                         dispon_ref = models.grade_solicitacao(
-                            cursor_def, ref, tipo='d')
+                            cursor_def, ref, tipo='d', grade_inventario=True)
                         grade_ref.update({
                             'solicitacoes': solic_ref,
                             'disponivel': dispon_ref,
