@@ -231,7 +231,10 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             SELECT distinct
               l.tamanho
             , l.cor
-            , sum(sq.qtd) qtd
+            , sum(case when l.qtd < coalesce(sq.qtd, 0)
+                  then l.qtd
+                  else coalesce(sq.qtd, 0)
+                  end) qtd
             from fo2_cd_lote l
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
