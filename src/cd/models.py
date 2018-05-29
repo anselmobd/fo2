@@ -98,7 +98,8 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
 #                          senão: todas as solicitação
 #       i = inventário
 #       d = disponível (inventário - todas as solicitações)
-def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
+def grade_solicitacao(
+        cursor, referencia, solicit_id=None, tipo='s', grade_inventario=False):
     # Grade de solicitação
     grade = GradeQtd(cursor, [referencia])
 
@@ -113,7 +114,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
         filter_solicit_id = 'and sq.solicitacao_id = {}'.format(solicit_id)
 
     # tamanhos
-    if tipo == 's':
+    if not grade_inventario and tipo == 's':
         sql = '''
             SELECT distinct
               l.tamanho
@@ -127,7 +128,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
               l.ordem_tamanho
         '''.format(
             filter_solicit_id=filter_solicit_id)
-    elif tipo == 'i':
+    elif grade_inventario or tipo == 'i':
         sql = '''
             SELECT distinct
               l.tamanho
@@ -140,7 +141,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             order by
               l.ordem_tamanho
         '''
-    elif tipo == 'd':
+    elif not grade_inventario and tipo == 'd':
         sql = '''
             SELECT distinct
               l.tamanho
@@ -171,7 +172,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
         )
 
     # cores
-    if tipo == 's':
+    if not grade_inventario and tipo == 's':
         sql = '''
             SELECT distinct
               l.cor
@@ -184,7 +185,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
               l.cor
         '''.format(
             filter_solicit_id=filter_solicit_id)
-    elif tipo == 'i':
+    elif grade_inventario or tipo == 'i':
         sql = '''
             SELECT distinct
               l.cor
@@ -196,7 +197,7 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             order by
               l.cor
         '''
-    elif tipo == 'd':
+    elif not grade_inventario and tipo == 'd':
         sql = '''
             SELECT distinct
               l.cor
