@@ -239,6 +239,8 @@ def grade_solicitacao(cursor, referencia, solicit_id=None, tipo='s'):
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
             where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
               {filter_solicit_id}
             group by
               l.tamanho
