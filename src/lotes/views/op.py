@@ -154,7 +154,8 @@ class Op(View):
             context.update({
                 'e_headers': ('Estágio', '% Produzido',
                               'Itens 1ª Qualidade', 'Itens 2ª Qualidade',
-                              'Itens Perda', 'Itens Conserto', 'Lotes no estágio'),
+                              'Itens Perda', 'Itens Conserto',
+                              'Lotes no estágio'),
                 'e_fields': ('EST', 'PERC',
                              'PROD', 'Q2',
                              'PERDA', 'CONSERTO', 'LOTES'),
@@ -209,6 +210,22 @@ class Op(View):
                 'o_fields': ('OS', 'REF', 'TAM', 'COR', 'LOTES', 'QTD'),
                 'o_data': o_data,
                 'o_link': o_link,
+            })
+
+            # Detalhamento de movimentações de estágios
+            u_data = models.op_movi_estagios(cursor, op)
+            for row in u_data:
+                if row['DT_MIN'] == row['DT_MAX']:
+                    row['DT_MAX'] = '='
+                else:
+                    row['DT_MAX'] = row['DT_MAX'].date()
+                row['DT_MIN'] = row['DT_MIN'].date()
+            context.update({
+                'u_headers': ('Estagio', 'De', 'Até',
+                              'Usuário', 'Lotes'),
+                'u_fields': ('EST', 'DT_MIN', 'DT_MAX',
+                             'USUARIO_SYSTEXTIL', 'LOTES'),
+                'u_data': u_data,
             })
         return context
 
