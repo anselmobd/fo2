@@ -117,60 +117,28 @@ def op_estagios(cursor, op):
     # Lotes ordenados por OS + referência + estágio
     sql = '''
         SELECT
-          ll.EST
-        , ll.COD_EST
-        , (SELECT
-              cast( SUM( lp.QTDE_PECAS_PROD ) / SUM( lp.QTDE_PECAS_PROG ) * 100
-                    AS NUMERIC(10,2) )
-            FROM pcpc_040 lp
-            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
-              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
-          ) PERC
-        , (SELECT
-              SUM( lp.QTDE_PECAS_PROD )
-            FROM pcpc_040 lp
-            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
-              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
-          ) PROD
-        , (SELECT
-              SUM( lp.QTDE_PECAS_2A )
-            FROM pcpc_040 lp
-            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
-              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
-          ) Q2
-        , (SELECT
-              SUM( lp.QTDE_PERDAS )
-            FROM pcpc_040 lp
-            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
-              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
-          ) PERDA
-        , (SELECT
-              SUM( lp.QTDE_CONSERTO )
-            FROM pcpc_040 lp
-            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
-              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
-          ) CONSERTO
-        , (SELECT
-              count(*)
-            FROM pcpc_040 lp
-            WHERE lp.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
-              AND lp.SEQ_OPERACAO = ll.SEQ_OPERACAO
-              AND lp.QTDE_EM_PRODUCAO_PACOTE <> 0
-          ) LOTES
-        FROM
-        (
-        SELECT DISTINCT
-          l.ORDEM_PRODUCAO
-        , l.SEQ_OPERACAO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
+          l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
         , l.CODIGO_ESTAGIO COD_EST
+        , cast( SUM( l.QTDE_PECAS_PROD ) / SUM( l.QTDE_PECAS_PROG ) * 100
+                AS NUMERIC(10,2) ) PERC
+        , SUM( l.QTDE_PECAS_PROD ) PROD
+        , SUM( l.QTDE_PECAS_2A ) Q2
+        , SUM( l.QTDE_PERDAS ) PERDA
+        , SUM( l.QTDE_CONSERTO ) CONSERTO
+        , SUM(
+          CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE <> 0 THEN 1 ELSE 0 END
+          ) LOTES
         FROM pcpc_040 l
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         WHERE l.ORDEM_PRODUCAO = %s
+        GROUP BY
+          l.SEQ_OPERACAO
+        , l.CODIGO_ESTAGIO
+        , e.DESCRICAO
+        , l.ORDEM_PRODUCAO
         ORDER BY
           l.SEQ_OPERACAO
-        ) ll
     '''
     cursor.execute(sql, [op])
     return rows_to_dict_list(cursor)
