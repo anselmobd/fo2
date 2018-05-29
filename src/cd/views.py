@@ -1148,8 +1148,12 @@ class Grade(View):
 
     def mount_context(self, request, ref, exec, page=1):
         modelos_pagina = 5
-        if ref == 'todas':
+        todas = ref == 'todas'
+        if todas:
             ref = ''
+            exec = 'grade'
+        else:
+            exec = 'busca'
         refnum = int('0{}'.format(
             ''.join([c for c in ref if c.isdigit()])))
         context = {'ref': ref, 'refnum': refnum}
