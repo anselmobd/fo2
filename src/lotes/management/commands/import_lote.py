@@ -10,7 +10,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Syncronizing Lotes'
-    __MAX_TASKS__ = 10
+    __MAX_TASKS = 10
 
     def iter_cursor(self, cursor):
         columns = [i[0].lower() for i in cursor.description]
@@ -123,6 +123,11 @@ class Command(BaseCommand):
               ON l.ORDEM_PRODUCAO = lote.OP
              AND l.ORDEM_CONFECCAO = lote.OC
              AND l.QTDE_EM_PRODUCAO_PACOTE <> 0
+             AND (  (   lote.ULTIMA_SEQ_ESTAGIO = 0
+                    AND l.CODIGO_ESTAGIO = lote.ULTIMO_ESTAGIO)
+                 OR (   lote.ULTIMA_SEQ_ESTAGIO <> 0
+                    AND l.SEQUENCIA_ESTAGIO = lote.ULTIMA_SEQ_ESTAGIO)
+                 )
             LEFT JOIN PCPC_040 lf -- lote estágio
               ON l.ORDEM_CONFECCAO IS NULL
              AND lf.ORDEM_PRODUCAO = lote.OP
@@ -184,11 +189,17 @@ class Command(BaseCommand):
         self.stdout.write(
             'Incluindo lotes da OP {}'.format(op))
         lotes = self.get_lotes_op(op)
+        self.stdout.write(
+            'Sistêxtil tem {} lotes'.format(len(lotes)), ending='')
         for row in lotes:
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             lote = models.Lote()
             self.set_lote(lote, row)
             lote.save()
+            self.stdout.write(
+                ' {}{}'.format(
+                    'I', row['lote'][4:].lstrip('0')), ending='')
+        self.stdout.write('')
 
     def atualiza(self, op):
         self.stdout.write(
@@ -282,7 +293,7 @@ class Command(BaseCommand):
             op_f = -1
             self.init_tasks()
             count_task = 0
-            while count_task < self.__MAX_TASKS__:
+            while count_task < self.__MAX_TASKS:
 
                 if op_s != sys.maxsize and (op_s < 0 or op_s <= op_f):
                     try:
