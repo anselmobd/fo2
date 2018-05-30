@@ -1,7 +1,7 @@
 <thead>
   <tr>
     {% for info in data %}
-      <th{% spaceless %}
+      <th {% spaceless %}
         {% if style %}
           {% if style|get_item:forloop.counter %}
             style="{{ style|get_item:forloop.counter }}"
