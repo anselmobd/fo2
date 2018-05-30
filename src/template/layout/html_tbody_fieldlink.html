@@ -1,12 +1,12 @@
 {% with field|add:'|LINK' as field_link %}
   {% if row|get_item:field_link %}
-    <a href="{{ row|get_item:field_link }}"
+    <a href="{{ row|get_item:field_link }}"{% spaceless %}
     {% with field|add:'|TARGET' as field_target %}
       {% if row|get_item:field_target %}
         target="{{ row|get_item:field_target }}"
       {% endif %}
     {% endwith %}
-    >
+    {% endspaceless %}>{% spaceless %}
     {% if row|get_item:field %}
       {% with field|add:'|DECIMALS' as field_decimals %}
         {% with row|get_item:field_decimals as decimals %}
@@ -18,7 +18,7 @@
         {% endwith %}
       {% endwith %}
     {% endif %}
-    <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    {% endspaceless %}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
   {% else %}
     {% with field|add:'|DECIMALS' as field_decimals %}
       {% with row|get_item:field_decimals as decimals %}
