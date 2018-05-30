@@ -1,15 +1,15 @@
 <thead>
-<tr>
-{% for info in data %}
-<th
-{% if style %}
-  {% if style|get_item:forloop.counter %}
-    style="{{ style|get_item:forloop.counter }}"
-  {% endif %}
-{% endif %}
->
-{{ info }}
-</th>
-{% endfor %}
-</tr>
+  <tr>
+    {% for info in data %}
+      <th{% spaceless %}
+        {% if style %}
+          {% if style|get_item:forloop.counter %}
+            style="{{ style|get_item:forloop.counter }}"
+          {% endif %}
+        {% endif %}
+        {% endspaceless %}>{% spaceless %}
+        {{ info }}
+      {% endspaceless %}</th>
+    {% endfor %}
+  </tr>
 </thead>
