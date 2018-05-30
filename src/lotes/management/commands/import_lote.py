@@ -123,11 +123,6 @@ class Command(BaseCommand):
               ON l.ORDEM_PRODUCAO = lote.OP
              AND l.ORDEM_CONFECCAO = lote.OC
              AND l.QTDE_EM_PRODUCAO_PACOTE <> 0
-             AND (  (   lote.ULTIMA_SEQ_ESTAGIO = 0
-                    AND l.CODIGO_ESTAGIO = lote.ULTIMO_ESTAGIO)
-                 OR (   lote.ULTIMA_SEQ_ESTAGIO <> 0
-                    AND l.SEQUENCIA_ESTAGIO = lote.ULTIMA_SEQ_ESTAGIO)
-                 )
             LEFT JOIN PCPC_040 lf -- lote estágio
               ON l.ORDEM_CONFECCAO IS NULL
              AND lf.ORDEM_PRODUCAO = lote.OP
