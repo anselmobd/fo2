@@ -10,8 +10,13 @@ def limpa_data_futura(lista, campo):
 
 
 def fotos(request):
-    context = {'titulo': 'Fotos'}
+    context = {'titulo': 'Fotos - SIPAT 2018'}
     return render(request, 'rh/fotos.html', context)
+
+
+def videos(request):
+    context = {'titulo': 'Vídeos - SIPAT 2018'}
+    return render(request, 'rh/videos.html', context)
 
 
 def index(request):
