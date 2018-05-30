@@ -9,13 +9,25 @@ def limpa_data_futura(lista, campo):
             item[campo] = None
 
 
+def fotos(request):
+    context = {'titulo': 'Fotos'}
+    return render(request, 'rh/fotos.html', context)
+
+
 def index(request):
-    dicas = [
+    pensamentos = [
+      {
+        'data': datetime.strptime('14/05/2018', '%d/%m/%Y').date(),
+        'chamada': 'Arrisca',
+        'link': '/media/rh/DUOMO-2018-05-14-Pensamento.jpg',
+      },
       {
         'data': datetime.strptime('04/05/2018', '%d/%m/%Y').date(),
         'chamada': 'Custa R$ 0,00',
         'link': '/media/rh/DUOMO-2018-05-04-Dica.jpg',
       },
+    ]
+    dicas = [
       {
         'data': datetime.strptime('23/02/2018', '%d/%m/%Y').date(),
         'chamada': '3 dicas essenciais',
@@ -63,7 +75,10 @@ def index(request):
       },
     ]
     limpa_data_futura(dicas, 'data')
-    context = {'dicas': dicas}
+    context = {
+        'dicas': dicas,
+        'pensamentos': pensamentos,
+        }
     return render(request, 'rh/index.html', context)
 
 
