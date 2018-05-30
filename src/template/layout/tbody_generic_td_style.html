@@ -3,9 +3,11 @@
     {{ style|get_item:forloop.counter }}
   {% endif %}
 {% endif %}
+
 {% if row|get_item:'|STYLE' %}
   {{ row|get_item:'|STYLE' }}
 {% endif %}
+
 {% with field|add:'|STYLE' as field_style %}
   {% if row|get_item:field_style %}
     {{ row|get_item:field_style }}
