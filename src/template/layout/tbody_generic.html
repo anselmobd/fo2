@@ -1,5 +1,5 @@
 <tbody>
-{% for row in data %}
+{% for row in data %}{% spaceless %}
   {% if not group or group|length_is:"0" %}
     <tr>
   {% else %}
@@ -8,76 +8,21 @@
   {% for field in fields %}
     {% if group and field in group %}
       {% if row|get_item:'rowspan' != 0 %}
-        <td rowspan="{{ row|get_item:'rowspan' }}" style="
-          {% with field|add:'|STYLE' as field_style %}
-            {% if row|get_item:field_style %}
-              {{ row|get_item:field_style }}
-            {% endif %}
-          {% endwith %}
-          {% if style %}
-            {% if style|get_item:forloop.counter %}
-              {{ style|get_item:forloop.counter }}
-            {% endif %}
-          {% endif %}
-          {% if row|get_item:'|STYLE' %}
-            {{ row|get_item:'|STYLE' }}
-          {% endif %}
-        ">
-          {% with field|add:'|HOVER' as field_hover %}
-            {% if row|get_item:field_hover %}
-              <span title="{{ row|get_item:field_hover }}">
-            {% endif %}
-          {% endwith %}
-
-          {% if field in safe %}
-            {{ row|get_item:field|safe }}
-          {% else %}
-            {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
-          {% endif %}
-
-          {% with field|add:'|HOVER' as field_hover %}
-            {% if row|get_item:field_hover %}
-              </span>
-            {% endif %}
-          {% endwith %}
-        </td>
+        <td rowspan="{{ row|get_item:'rowspan' }}" style="{% spaceless %}
+          {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
+          {% endspaceless %}">{% spaceless %}
+          {% include "layout/tbody_generic_td_content.html" with row=row field=field only %}
+          {% endspaceless %}</td>
       {% endif %}
     {% else %}
-      <td style="
-        {% with field|add:'|STYLE' as field_style %}
-          {% if row|get_item:field_style %}
-            {{ row|get_item:field_style }}
-          {% endif %}
-        {% endwith %}
-        {% if style %}
-          {% if style|get_item:forloop.counter %}
-            {{ style|get_item:forloop.counter }}
-          {% endif %}
-        {% endif %}
-        {% if row|get_item:'|STYLE' %}
-          {{ row|get_item:'|STYLE' }}
-        {% endif %}
-      ">
-        {% with field|add:'|HOVER' as field_hover %}
-          {% if row|get_item:field_hover %}
-            <span title="{{ row|get_item:field_hover }}">
-          {% endif %}
-        {% endwith %}
-
-        {% if field in safe %}
-          {{ row|get_item:field|safe }}
-        {% else %}
-          {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
-        {% endif %}
-
-        {% with field|add:'|HOVER' as field_hover %}
-          {% if row|get_item:field_hover %}
-            </span>
-          {% endif %}
-        {% endwith %}
-      </td>
+      <td style="{% spaceless %}
+        {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
+        {% endspaceless %}">{% spaceless %}
+        {% include "layout/tbody_generic_td_content.html" with row=row field=field only %}
+        {% endspaceless %}</td>
     {% endif %}
   {% endfor %}
   </tr>
+  {% endspaceless %}
 {% endfor %}
 </tbody>
