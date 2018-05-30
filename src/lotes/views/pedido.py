@@ -21,6 +21,8 @@ class Pedido(View):
         for row in data:
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
+            if row['OBSERVACAO'] is None:
+                row['OBSERVACAO'] = '-'
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
