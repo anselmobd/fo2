@@ -1,0 +1,20 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="/rh/">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<h3>Palestra motivacional - SIPAT 2018</h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QLzsaYKGRY4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<hr/>
+<h3>Primeiros socorros - SIPAT 2018</h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/wJtXNCTK6Ho" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</center>
+{% endblock %}
