@@ -125,6 +125,17 @@ class Caixa(models.Model):
         verbose_name = "caixa"
 
 
+class Op(models.Model):
+    op = models.IntegerField(
+        verbose_name='OP')
+    pedido = models.IntegerField()
+    varejo = models.BooleanField(default=False)
+    cancelada = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "fo2_prod_op"
+
+
 class Lote(models.Model):
     lote = models.CharField(
         max_length=20, verbose_name='lote')
