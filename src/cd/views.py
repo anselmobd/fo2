@@ -1358,7 +1358,10 @@ class Historico(View):
             if row['dt'] is None:
                 row['dt'] = 'Não inventariado'
             if row['endereco'] is None:
-                row['endereco'] = '-'
+                if row['usuario'] is None:
+                    row['endereco'] = '-'
+                else:
+                    row['endereco'] = 'SAIU!'
             if row['usuario'] is None:
                 row['usuario'] = '-'
         context.update({
