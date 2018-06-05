@@ -1341,3 +1341,46 @@ class Grade(View):
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class Historico(View):
+    Form_class = cd.forms.HistoricoForm
+    template_name = 'cd/historico.html'
+    title_name = 'Histórico'
+
+    def mount_context(self, cursor, op):
+        context = {
+            'op': op,
+            }
+
+        data = models.historico(cursor, op)
+        for row in data:
+            if row['dt'] is None:
+                row['dt'] = 'Não inventariado'
+            if row['endereco'] is None:
+                row['endereco'] = '-'
+            if row['usuario'] is None:
+                row['usuario'] = '-'
+        context.update({
+            'headers': ('Data', 'Qtd. de lotes', 'Endereço', 'Usuário'),
+            'fields': ('dt', 'qtd', 'endereco', 'usuario'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            op = form.cleaned_data['op']
+            cursor = connection.cursor()
+            context.update(self.mount_context(cursor, op))
+        context['form'] = form
+        return render(request, self.template_name, context)
