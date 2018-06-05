@@ -1,11 +1,15 @@
-__version__ = '0.1.96'
-__version__date__ = '29/05/2018'
+__version__ = '0.1.97'
+__version__date__ = '05/06/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
 #
+# - 0.1.97 - 2018/06/05
+#   . CD - Histórico simples de OP no CD
+#
 # - 0.1.96 - 2018/05/29
+#   . RH - Fotos e vídeos SIPAT 2018
 #   . Pedido - Apresentando também data de embarque e observação
 #   . OP - Responsáveis e datas de movimentações de estágios
 #
