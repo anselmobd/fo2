@@ -197,4 +197,5 @@ class AskReferenciaForm(forms.Form):
 class HistoricoForm(forms.Form):
     op = forms.CharField(
         label='OP', required=True,
-        widget=forms.TextInput(attrs={'type': 'number'}))
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
