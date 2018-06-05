@@ -98,8 +98,10 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
 # tipo: s = solicitação
 #           se solicit_id, então: uma solicitação
 #                          senão: todas as solicitação
+#       S = todas as solicitação + todos os pedidos
 #       i = inventário
 #       d = disponível (inventário - todas as solicitações)
+#       D = disponível (inventário - todas as solicitações - pedidos)
 def grade_solicitacao(
         cursor, referencia, solicit_id=None, tipo='s', grade_inventario=False):
     # Grade de solicitação
@@ -231,7 +233,7 @@ def grade_solicitacao(
     # sortimento
     if tipo == 's':
         sql = '''
-            SELECT distinct
+            SELECT
               l.tamanho
             , l.cor
             , sum(case when l.qtd < coalesce(sq.qtd, 0)
@@ -253,9 +255,43 @@ def grade_solicitacao(
             , l.cor
         '''.format(
             filter_solicit_id=filter_solicit_id)
+    elif tipo == 'S':
+        sql = '''
+            SELECT
+              l.tamanho
+            , l.cor
+            , sum(
+               case when o.pedido <> 0
+               then l.qtd
+               else
+                 case when l.qtd < coalesce(sq.qtd, 0)
+                 then l.qtd
+                 else coalesce(sq.qtd, 0)
+                 end
+               end) qtd
+            from fo2_cd_lote l
+            join fo2_prod_op o
+              on o.op = l.op
+            left join fo2_cd_solicita_lote_qtd sq
+              on sq.lote_id = l.id
+            where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
+              {filter_solicit_id}
+              and ( o.pedido <> 0
+                  or sq.id is not null
+                  )
+            group by
+              l.tamanho
+            , l.cor
+            order by
+              l.tamanho
+            , l.cor
+        '''.format(
+            filter_solicit_id=filter_solicit_id)
     elif tipo == 'i':
         sql = '''
-            SELECT distinct
+            SELECT
               l.tamanho
             , l.cor
             , sum(l.qtd) qtd
@@ -272,7 +308,7 @@ def grade_solicitacao(
         '''
     elif tipo == 'd':
         sql = '''
-            SELECT distinct
+            SELECT
               l.tamanho
             , l.cor
             , sum(l.qtd -
@@ -318,3 +354,27 @@ def grade_solicitacao(
     }
 
     return context_ref
+
+
+def historico(cursor, op):
+    sql = '''
+        SELECT
+          date(l.local_at) dt
+        , count(*) qtd
+        , l."local" endereco
+        , u.username usuario
+        from fo2_cd_lote l
+        left join auth_user u
+          on u.id = l.local_usuario_id
+        where l.op = %s
+        group by
+          date(l.local_at)
+        , l."local"
+        , u.username
+        order by
+          1
+        , l."local"
+        , u.username
+    '''
+    cursor.execute(sql, [op])
+    return rows_to_dict_list_lower(cursor)
