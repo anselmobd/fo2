@@ -1354,6 +1354,9 @@ class Historico(View):
             }
 
         data = models.historico(cursor, op)
+        if len(data) == 0:
+            context.update({'erro': 'Sem lotes ativos'})
+            return context
         for row in data:
             if row['dt'] is None:
                 row['dt'] = 'Não inventariado'
