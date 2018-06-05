@@ -33,4 +33,6 @@ urlpatterns = [
         name='cd_endereco_lote'),
     url(r'^grade_estoque/(?P<referencia>[^/]+)?/?$',
         views.Grade.as_view(), name='cd_grade_estoque'),
+    url(r'^historico/?$',
+        views.Historico.as_view(), name='cd_historico'),
 ]

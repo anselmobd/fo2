@@ -192,3 +192,9 @@ class AskReferenciaForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+
+class HistoricoForm(forms.Form):
+    op = forms.CharField(
+        label='OP', required=True,
+        widget=forms.TextInput(attrs={'type': 'number'}))
