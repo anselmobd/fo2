@@ -112,7 +112,7 @@ def posicao2_lote(cursor, periodo, ordem_confeccao):
          AND l.ORDEM_CONFECCAO = sel.ORDEM_CONFECCAO
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-        WHERE l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO <> 0
+        WHERE l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO > 0
         --
         UNION
         --
