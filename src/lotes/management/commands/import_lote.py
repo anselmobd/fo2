@@ -184,9 +184,19 @@ class Command(BaseCommand):
         self.stdout.write(
             'Incluindo lotes da OP {}'.format(op))
         lotes = self.get_lotes_op(op)
-        self.stdout.write(
-            'Sistêxtil tem {} lotes'.format(len(lotes)), ending='')
+        ocs = []
         for row in lotes:
+            if row['oc'] not in ocs:
+                ocs.append(row['oc'])
+        self.stdout.write(
+            'Sistêxtil tem {} lotes'.format(len(ocs)), ending='')
+        for oc in ocs:
+            oc_estagios = [row for row in lotes if row['oc'] == oc]
+            oc_est63 = [row for row in oc_estagios if row['estagio'] == 63]
+            if len(oc_est63) == 0:
+                row = oc_estagios[-1]
+            else:
+                row = oc_est63[0]
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             lote = models.Lote()
             self.set_lote(lote, row)
@@ -202,10 +212,21 @@ class Command(BaseCommand):
 
         # atualizando Systêxtil -> Fo2
         lotes = self.get_lotes_op(op)
-        self.stdout.write(
-            'Sistêxtil tem {} lotes'.format(len(lotes)), ending='')
-        sys_lotes = []
+        ocs = []
         for row in lotes:
+            if row['oc'] not in ocs:
+                ocs.append(row['oc'])
+        self.stdout.write(
+            'Sistêxtil tem {} lotes'.format(len(ocs)), ending='')
+        sys_lotes = []
+        for oc in ocs:
+            oc_estagios = [row for row in lotes if row['oc'] == oc]
+            oc_est63 = [row for row in oc_estagios if row['estagio'] == 63]
+            if len(oc_est63) == 0:
+                row = oc_estagios[-1]
+            else:
+                row = oc_est63[0]
+
             acao = ''
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             sys_lotes.append(row['lote'])
