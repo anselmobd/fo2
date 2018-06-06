@@ -1,0 +1,8 @@
+{% if style %}
+  {% if style|get_item:0 %}
+    {{ style|get_item:0 }}
+  {% endif %}
+  {% if style|get_item:count %}
+    {{ style|get_item:count }}
+  {% endif %}
+{% endif %}

@@ -1,18 +1,10 @@
 <thead>
-  <tr>
-    {% for info in data %}
-      <th {% spaceless %}
-        {% if style %}
-          {% if style|get_item:0 %}
-            style="{{ style|get_item:0 }}"
-          {% endif %}
-          {% if style|get_item:forloop.counter %}
-            style="{{ style|get_item:forloop.counter }}"
-          {% endif %}
-        {% endif %}
+  <tr>{% for info in data %}
+    <th {% spaceless %}style="{% spaceless %}
+        {% include "layout/tbody_generic_style.html" with count=forloop.counter style=style only %}
+        {% endspaceless %}"
         {% endspaceless %}>{% spaceless %}
         {{ info }}
-      {% endspaceless %}</th>
-    {% endfor %}
+      {% endspaceless %}</th>{% endfor %}
   </tr>
 </thead>
