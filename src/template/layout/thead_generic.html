@@ -3,6 +3,9 @@
     {% for info in data %}
       <th {% spaceless %}
         {% if style %}
+          {% if style|get_item:0 %}
+            style="{{ style|get_item:0 }}"
+          {% endif %}
           {% if style|get_item:forloop.counter %}
             style="{{ style|get_item:forloop.counter }}"
           {% endif %}
