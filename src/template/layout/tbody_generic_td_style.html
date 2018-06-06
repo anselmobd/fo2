@@ -1,6 +1,6 @@
 {% if style %}
-  {% if style|get_item:forloop.counter %}
-    {{ style|get_item:forloop.counter }}
+  {% if style|get_item:count %}
+    {{ style|get_item:count }}
   {% endif %}
 {% endif %}
 
