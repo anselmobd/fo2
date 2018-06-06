@@ -1292,7 +1292,7 @@ class Grade(View):
                         'inventario': invent_ref,
                         }
                     pedido_ref = models.grade_solicitacao(
-                        cursor_def, ref, tipo='p')
+                        cursor_def, ref, tipo='p', grade_inventario=True)
                     if pedido_ref['total'] != 0:
                         grade_ref.update({
                             'pedido': pedido_ref,
