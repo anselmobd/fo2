@@ -1,11 +1,4 @@
-{% if style %}
-  {% if style|get_item:0 %}
-    {{ style|get_item:0 }}
-  {% endif %}
-  {% if style|get_item:count %}
-    {{ style|get_item:count }}
-  {% endif %}
-{% endif %}
+{% include "layout/tbody_generic_style.html" with count=count style=style only %}
 
 {% if row|get_item:'|STYLE' %}
   {{ row|get_item:'|STYLE' }}
