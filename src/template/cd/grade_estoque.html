@@ -105,6 +105,15 @@
                 </table>
               </td>
             {% endif %}
+            <td>&nbsp;</td>
+            <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+            <td style="vertical-align: top;">
+              <h4>Pedido</h4>
+              <table style="width: auto;">
+                {% include "layout/thead_generic.html" with data=grade.pedido.headers style=grade.pedido.style only %}
+                {% include "layout/tbody_generic.html" with fields=grade.pedido.fields data=grade.pedido.data group=grade.pedido.group style=grade.pedido.style only %}
+              </table>
+            </td>
           </tr>
         </table>
       {% endfor %}
