@@ -98,10 +98,13 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
 # tipo: s = solicitação
 #           se solicit_id, então: uma solicitação
 #                          senão: todas as solicitação
+#       p = todos os pedidos
 #       S = todas as solicitação + todos os pedidos
 #       i = inventário
 #       d = disponível (inventário - todas as solicitações)
 #       D = disponível (inventário - todas as solicitações - pedidos)
+# grade_inventario: pega cores e tamanhos do inventário,
+#                   mesmo que o tipo seja outro
 def grade_solicitacao(
         cursor, referencia, solicit_id=None, tipo='s', grade_inventario=False):
     # Grade de solicitação
@@ -132,6 +135,21 @@ def grade_solicitacao(
               l.ordem_tamanho
         '''.format(
             filter_solicit_id=filter_solicit_id)
+    elif not grade_inventario and tipo == 'p':
+        sql = '''
+            SELECT distinct
+              l.tamanho
+            , l.ordem_tamanho
+            from fo2_cd_lote l
+            join fo2_prod_op o
+              on o.op = l.op
+            where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
+              and o.pedido <> 0
+            order by
+              l.ordem_tamanho
+        '''
     elif grade_inventario or tipo == 'i':
         sql = '''
             SELECT distinct
@@ -189,6 +207,20 @@ def grade_solicitacao(
               l.cor
         '''.format(
             filter_solicit_id=filter_solicit_id)
+    elif not grade_inventario and tipo == 'p':
+        sql = '''
+            SELECT distinct
+              l.cor
+            from fo2_cd_lote l
+            join fo2_prod_op o
+              on o.op = l.op
+            where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
+              and o.pedido <> 0
+            order by
+              l.cor
+        '''
     elif grade_inventario or tipo == 'i':
         sql = '''
             SELECT distinct
@@ -255,6 +287,26 @@ def grade_solicitacao(
             , l.cor
         '''.format(
             filter_solicit_id=filter_solicit_id)
+    elif tipo == 'p':
+        sql = '''
+            SELECT
+              l.tamanho
+            , l.cor
+            , sum(l.qtd) qtd
+            from fo2_cd_lote l
+            join fo2_prod_op o
+              on o.op = l.op
+            where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
+              and o.pedido <> 0
+            group by
+              l.tamanho
+            , l.cor
+            order by
+              l.tamanho
+            , l.cor
+        '''
     elif tipo == 'S':
         sql = '''
             SELECT

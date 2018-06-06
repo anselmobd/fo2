@@ -1287,9 +1287,13 @@ class Grade(View):
                     ref = row['referencia']
                     invent_ref = models.grade_solicitacao(
                         cursor_def, ref, tipo='i', grade_inventario=True)
+                    pedido_ref = models.grade_solicitacao(
+                        cursor_def, ref, tipo='p')
                     grade_ref = {
                         'ref': ref,
-                        'inventario': invent_ref}
+                        'inventario': invent_ref,
+                        'pedido': pedido_ref,
+                        }
 
                     if refnum_ant != row['modelo']:
                         grade_ref.update({'refnum': row['modelo']})
