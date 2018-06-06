@@ -23,28 +23,7 @@
       <h4><a href="{% url 'cd_grade_estoque' 'todas' %}">Todas as grades por referência</a></h4>
     {% endif %}
     {% if grades %}
-      {% if modelos.paginator.num_pages != 1 %}
-        ({{modelos_pagina}} referências numéricas por página)<br/>
-        <ul class="pagination">
-          {% if modelos.has_previous %}
-            <li><a href="?page={{ modelos.previous_page_number }}">&laquo;</a></li>
-          {% else %}
-            <li class="disabled"><span>&laquo;</span></li>
-          {% endif %}
-          {% for i in modelos.paginator.page_range %}
-            {% if modelos.number == i %}
-              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-            {% else %}
-              <li><a href="?page={{ i }}">{{ i }}</a></li>
-            {% endif %}
-          {% endfor %}
-          {% if modelos.has_next %}
-            <li><a href="?page={{ modelos.next_page_number }}">&raquo;</a></li>
-          {% else %}
-            <li class="disabled"><span>&raquo;</span></li>
-          {% endif %}
-        </ul>
-      {% endif %}
+      {% include "cd/grade_estoque_paginator.html" with modelos_pagina=modelos_pagina modelos=modelos only %}
       {% for grade in grades %}
         {% if link_num %}
           {% if grade.refnum %}
@@ -119,6 +98,7 @@
           </tr>
         </table>
       {% endfor %}
+      {% include "cd/grade_estoque_paginator.html" with modelos_pagina=modelos_pagina modelos=modelos only %}
     {% endif %}
     {% if data %}
       {% if link_num %}
