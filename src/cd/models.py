@@ -95,33 +95,29 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
     return rows_to_dict_list_lower(cursor)
 
 
-# tipo: s = solicitação
-#           se solicit_id, então: uma solicitação
-#                          senão: todas as solicitação
+# tipo: 1s = uma solicitação
+#            solicit_id é obrigatório
+#       s = todas as solicitação
 #       p = todos os pedidos
-#       S = todas as solicitação + todos os pedidos
+#       sp = todas as solicitação + todos os pedidos
 #       i = inventário
-#       d = disponível (inventário - todas as solicitações)
-#       D = disponível (inventário - todas as solicitações - pedidos)
+#       i-s = disponível (inventário - todas as solicitações)
+#       i-sp = disponível (inventário - todas as solicitações - pedidos)
 # grade_inventario: pega cores e tamanhos do inventário,
 #                   mesmo que o tipo seja outro
 def grade_solicitacao(
-        cursor, referencia, solicit_id=None, tipo='s', grade_inventario=False):
+        cursor, referencia, solicit_id=None, tipo='1s',
+        grade_inventario=False):
     # Grade de solicitação
     grade = GradeQtd(cursor, [referencia])
 
     if solicit_id is None:
-        filter_solicit_id = '''
-            and case when l.qtd < sq.qtd
-              then l.qtd
-              else sq.qtd
-              end > 0
-        '''
+        filter_solicit_id = ''
     else:
         filter_solicit_id = 'and sq.solicitacao_id = {}'.format(solicit_id)
 
     # tamanhos
-    if not grade_inventario and tipo == 's':
+    if not grade_inventario and tipo == '1s':
         sql = '''
             SELECT distinct
               l.tamanho
@@ -135,6 +131,39 @@ def grade_solicitacao(
               l.ordem_tamanho
         '''.format(
             filter_solicit_id=filter_solicit_id)
+    elif not grade_inventario and tipo == 's':
+        sql = '''
+            SELECT
+              l.tamanho
+            , l.ordem_tamanho
+            from fo2_cd_lote l
+            where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
+            group by
+              l.tamanho
+            , l.ordem_tamanho
+            having
+              sum(
+                case
+                when l.qtd < coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                then l.qtd
+                else coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                end
+              ) > 0
+            order by
+              l.ordem_tamanho
+        '''
     elif not grade_inventario and tipo == 'p':
         sql = '''
             SELECT distinct
@@ -163,26 +192,36 @@ def grade_solicitacao(
             order by
               l.ordem_tamanho
         '''
-    elif not grade_inventario and tipo == 'd':
+    elif not grade_inventario and tipo == 'i-s':
         sql = '''
-            SELECT distinct
+            SELECT
               l.tamanho
             , l.ordem_tamanho
             from fo2_cd_lote l
-            left join fo2_cd_solicita_lote_qtd sq
-              on sq.lote_id = l.id
             where l.referencia = %s
               and l.local is not null
               and l.local <> ''
             group by
-              l.ordem_tamanho
-            , l.tamanho
+              l.tamanho
+            , l.ordem_tamanho
             having
-              sum(l.qtd -
-                  case when l.qtd < coalesce(sq.qtd, 0)
-                  then l.qtd
-                  else coalesce(sq.qtd, 0)
-                  end ) > 0
+              sum( l.qtd -
+                case
+                when l.qtd < coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                then l.qtd
+                else coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                end
+              ) > 0
             order by
               l.ordem_tamanho
         '''
@@ -194,7 +233,7 @@ def grade_solicitacao(
         )
 
     # cores
-    if not grade_inventario and tipo == 's':
+    if not grade_inventario and tipo == '1s':
         sql = '''
             SELECT distinct
               l.cor
@@ -207,6 +246,37 @@ def grade_solicitacao(
               l.cor
         '''.format(
             filter_solicit_id=filter_solicit_id)
+    elif not grade_inventario and tipo == 's':
+        sql = '''
+            SELECT
+              l.cor
+            from fo2_cd_lote l
+            where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
+            group by
+              l.cor
+            having
+              sum(
+                case
+                when l.qtd < coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                then l.qtd
+                else coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                end
+              ) > 0
+            order by
+              l.cor
+        '''
     elif not grade_inventario and tipo == 'p':
         sql = '''
             SELECT distinct
@@ -233,24 +303,34 @@ def grade_solicitacao(
             order by
               l.cor
         '''
-    elif not grade_inventario and tipo == 'd':
+    elif not grade_inventario and tipo == 'i-s':
         sql = '''
-            SELECT distinct
+            SELECT
               l.cor
             from fo2_cd_lote l
-            left join fo2_cd_solicita_lote_qtd sq
-              on sq.lote_id = l.id
             where l.referencia = %s
               and l.local is not null
               and l.local <> ''
             group by
               l.cor
             having
-              sum(l.qtd -
-                  case when l.qtd < coalesce(sq.qtd, 0)
-                  then l.qtd
-                  else coalesce(sq.qtd, 0)
-                  end ) > 0
+              sum( l.qtd -
+                case
+                when l.qtd < coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                then l.qtd
+                else coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                end
+              ) > 0
             order by
               l.cor
         '''
@@ -263,7 +343,7 @@ def grade_solicitacao(
         )
 
     # sortimento
-    if tipo == 's':
+    if tipo == '1s':
         sql = '''
             SELECT
               l.tamanho
@@ -287,6 +367,57 @@ def grade_solicitacao(
             , l.cor
         '''.format(
             filter_solicit_id=filter_solicit_id)
+    elif tipo == 's':
+        sql = '''
+            SELECT
+              l.tamanho
+            , l.cor
+            , sum(
+                case
+                when l.qtd < coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                then l.qtd
+                else coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                end
+              ) qtd
+            from fo2_cd_lote l
+            where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
+            group by
+              l.tamanho
+            , l.cor
+            having
+              sum(
+                case
+                when l.qtd < coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                then l.qtd
+                else coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                end
+              ) > 0
+            order by
+              l.tamanho
+            , l.cor
+        '''
     elif tipo == 'p':
         sql = '''
             SELECT
@@ -307,40 +438,73 @@ def grade_solicitacao(
               l.tamanho
             , l.cor
         '''
-    elif tipo == 'S':
+    elif tipo == 'sp':
         sql = '''
             SELECT
               l.tamanho
             , l.cor
             , sum(
-               case when o.pedido <> 0
-               then l.qtd
-               else
-                 case when l.qtd < coalesce(sq.qtd, 0)
-                 then l.qtd
-                 else coalesce(sq.qtd, 0)
-                 end
-               end) qtd
+                case when o.pedido <> 0 then l.qtd
+                else
+                  case
+                  when l.qtd < coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0)
+                  then l.qtd
+                  else coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0)
+                  end
+                end
+              ) qtd
             from fo2_cd_lote l
             join fo2_prod_op o
               on o.op = l.op
-            left join fo2_cd_solicita_lote_qtd sq
-              on sq.lote_id = l.id
             where l.referencia = %s
               and l.local is not null
               and l.local <> ''
-              {filter_solicit_id}
               and ( o.pedido <> 0
-                  or sq.id is not null
+                  or coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0) > 0
                   )
             group by
               l.tamanho
             , l.cor
+            having
+              sum(
+                case when o.pedido <> 0 then l.qtd
+                else
+                  case
+                  when l.qtd < coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0)
+                  then l.qtd
+                  else coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0)
+                  end
+                end
+              ) > 0
             order by
               l.tamanho
             , l.cor
-        '''.format(
-            filter_solicit_id=filter_solicit_id)
+        '''
     elif tipo == 'i':
         sql = '''
             SELECT
@@ -358,25 +522,114 @@ def grade_solicitacao(
               l.tamanho
             , l.cor
         '''
-    elif tipo == 'd':
+    elif tipo == 'i-s':
         sql = '''
             SELECT
               l.tamanho
             , l.cor
-            , sum(l.qtd -
-                  case when l.qtd < coalesce(sq.qtd, 0)
-                  then l.qtd
-                  else coalesce(sq.qtd, 0)
-                  end ) qtd
+            , sum( l.qtd -
+                case
+                when l.qtd < coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                then l.qtd
+                else coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                end
+              ) qtd
             from fo2_cd_lote l
-            left join fo2_cd_solicita_lote_qtd sq
-              on sq.lote_id = l.id
             where l.referencia = %s
               and l.local is not null
               and l.local <> ''
             group by
               l.tamanho
             , l.cor
+            having
+              sum( l.qtd -
+                case
+                when l.qtd < coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                then l.qtd
+                else coalesce(
+                  ( select
+                      sum(ss.qtd) qtd
+                    from fo2_cd_solicita_lote_qtd ss
+                    where ss.lote_id = l.id
+                  ), 0)
+                end
+              ) > 0
+            order by
+              l.tamanho
+            , l.cor
+        '''
+    elif tipo == 'i-sp':
+        sql = '''
+            SELECT
+              l.tamanho
+            , l.cor
+            , sum(
+                l.qtd
+              - case when o.pedido <> 0 then l.qtd
+                else
+                  case
+                  when l.qtd < coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0)
+                  then l.qtd
+                  else coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0)
+                  end
+                end
+              ) qtd
+            from fo2_cd_lote l
+            join fo2_prod_op o
+              on o.op = l.op
+            where l.referencia = %s
+              and l.local is not null
+              and l.local <> ''
+            group by
+              l.tamanho
+            , l.cor
+            having
+              sum(
+                l.qtd
+              - case when o.pedido <> 0 then l.qtd
+                else
+                  case
+                  when l.qtd < coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0)
+                  then l.qtd
+                  else coalesce(
+                    ( select
+                        sum(ss.qtd) qtd
+                      from fo2_cd_solicita_lote_qtd ss
+                      where ss.lote_id = l.id
+                    ), 0)
+                  end
+                end
+              ) > 0
             order by
               l.tamanho
             , l.cor
