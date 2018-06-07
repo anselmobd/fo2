@@ -1146,7 +1146,7 @@ class Grade(View):
             value = ('MD', 3, 'MD')
         return dict(zip(('tipo', 'ordem', 'grade'), value))
 
-    def mount_context(self, request, ref, exec, page=1):
+    def mount_context(self, request, ref, exec, page=1, detalhe=False):
         modelos_pagina = 5
         if ref == '':
             exec = 'busca'
@@ -1156,7 +1156,10 @@ class Grade(View):
             exec = 'grade'
         refnum = int('0{}'.format(
             ''.join([c for c in ref if c.isdigit()])))
-        context = {'ref': ref, 'refnum': refnum}
+        context = {
+            'ref': ref,
+            'refnum': refnum,
+            'detalhe': detalhe,}
         cursor_def = connection.cursor()
 
         if len(ref) == 5:  # Referência
@@ -1164,7 +1167,7 @@ class Grade(View):
                 'link_tot': 1,
                 'link_num': 1,
                 'title_tipo': 1,
-                'title_ref': 1,
+                'link_ref': 1,
             })
             referencias = [{
                 'referencia': ref,
@@ -1300,20 +1303,6 @@ class Grade(View):
                         grade_ref.update({'tipo': row['grade_tipo']})
                         tipo_ant = row['grade_tipo']
 
-                    # solic_ref = models.grade_solicitacao(
-                    #     cursor_def, ref, tipo='s', grade_inventario=True)
-                    # if solic_ref['total'] != 0:
-                    #     grade_ref.update({
-                    #         'solicitacoes': solic_ref,
-                    #         })
-
-                    # pedido_ref = models.grade_solicitacao(
-                    #     cursor_def, ref, tipo='p', grade_inventario=True)
-                    # if pedido_ref['total'] != 0:
-                    #     grade_ref.update({
-                    #         'pedido': pedido_ref,
-                    #         })
-
                     solped_ref = models.grade_solicitacao(
                         cursor_def, ref, tipo='sp', grade_inventario=True)
                     if solped_ref['total'] != 0:
@@ -1324,6 +1313,22 @@ class Grade(View):
                             'solped': solped_ref,
                             'disponivel': dispon_ref,
                             })
+                        if detalhe:
+                            solic_ref = models.grade_solicitacao(
+                                cursor_def, ref, tipo='s',
+                                grade_inventario=True)
+                            if solic_ref['total'] != 0:
+                                grade_ref.update({
+                                    'solicitacoes': solic_ref,
+                                    })
+                            pedido_ref = models.grade_solicitacao(
+                                cursor_def, ref, tipo='p',
+                                grade_inventario=True)
+                            if pedido_ref['total'] != 0:
+                                grade_ref.update({
+                                    'pedido': pedido_ref,
+                                    })
+
                     grades_ref.append(grade_ref)
 
             context.update({
@@ -1340,8 +1345,12 @@ class Grade(View):
             ref = kwargs['referencia']
         else:
             ref = ''
+        if 'detalhe' in kwargs and kwargs['detalhe'] is not None:
+            detalhe = kwargs['detalhe'] == 'detalhe'
+        else:
+            detalhe = False
         context = {'titulo': self.title_name}
-        data = self.mount_context(request, ref, 'grade', page)
+        data = self.mount_context(request, ref, 'grade', page, detalhe)
         context.update(data)
         form = self.Form_class()
         context['form'] = form
