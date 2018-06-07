@@ -49,7 +49,7 @@
         {% endif %}
         <table>
           <tr>
-            {% if grade.solicitacoes %}
+            {% if grade.solped %}
               <td style="vertical-align: top;">
                 <h4>Disponível</h4>
                 <table style="width: auto;">
@@ -60,10 +60,10 @@
               <td>&nbsp;</td>
               <td style="border-left: thin solid lightgrey;">&nbsp;</td>
               <td style="vertical-align: top;">
-                <h4>Solicitações</h4>
+                <h4>Solicitações+Pedidos</h4>
                 <table style="width: auto;">
-                  {% include "layout/thead_generic.html" with data=grade.solicitacoes.headers style=grade.solicitacoes.style only %}
-                  {% include "layout/tbody_generic.html" with fields=grade.solicitacoes.fields data=grade.solicitacoes.data group=grade.solicitacoes.group style=grade.solicitacoes.style only %}
+                  {% include "layout/thead_generic.html" with data=grade.solped.headers style=grade.solped.style only %}
+                  {% include "layout/tbody_generic.html" with fields=grade.solped.fields data=grade.solped.data group=grade.solped.group style=grade.solped.style only %}
                 </table>
               </td>
               <td>&nbsp;</td>
@@ -81,6 +81,17 @@
                 <table style="width: auto;">
                   {% include "layout/thead_generic.html" with data=grade.inventario.headers style=grade.inventario.style only %}
                   {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group style=grade.inventario.style only %}
+                </table>
+              </td>
+            {% endif %}
+            {% if grade.solicitacoes %}
+              <td>&nbsp;</td>
+              <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+              <td style="vertical-align: top;">
+                <h4>Solicitações</h4>
+                <table style="width: auto;">
+                  {% include "layout/thead_generic.html" with data=grade.solicitacoes.headers style=grade.solicitacoes.style only %}
+                  {% include "layout/tbody_generic.html" with fields=grade.solicitacoes.fields data=grade.solicitacoes.data group=grade.solicitacoes.group style=grade.solicitacoes.style only %}
                 </table>
               </td>
             {% endif %}
