@@ -1291,13 +1291,6 @@ class Grade(View):
                         'ref': ref,
                         'inventario': invent_ref,
                         }
-                    pedido_ref = models.grade_solicitacao(
-                        cursor_def, ref, tipo='p', grade_inventario=True)
-                    if pedido_ref['total'] != 0:
-                        grade_ref.update({
-                            'pedido': pedido_ref,
-                            })
-
                     if refnum_ant != row['modelo']:
                         grade_ref.update({'refnum': row['modelo']})
                         refnum_ant = row['modelo']
@@ -1307,13 +1300,28 @@ class Grade(View):
                         grade_ref.update({'tipo': row['grade_tipo']})
                         tipo_ant = row['grade_tipo']
 
-                    solic_ref = models.grade_solicitacao(
-                        cursor_def, ref, tipo='s', grade_inventario=True)
-                    if solic_ref['total'] != 0:
+                    # solic_ref = models.grade_solicitacao(
+                    #     cursor_def, ref, tipo='s', grade_inventario=True)
+                    # if solic_ref['total'] != 0:
+                    #     grade_ref.update({
+                    #         'solicitacoes': solic_ref,
+                    #         })
+
+                    # pedido_ref = models.grade_solicitacao(
+                    #     cursor_def, ref, tipo='p', grade_inventario=True)
+                    # if pedido_ref['total'] != 0:
+                    #     grade_ref.update({
+                    #         'pedido': pedido_ref,
+                    #         })
+
+                    solped_ref = models.grade_solicitacao(
+                        cursor_def, ref, tipo='sp', grade_inventario=True)
+                    if solped_ref['total'] != 0:
                         dispon_ref = models.grade_solicitacao(
-                            cursor_def, ref, tipo='d', grade_inventario=True)
+                            cursor_def, ref, tipo='i-sp',
+                            grade_inventario=True)
                         grade_ref.update({
-                            'solicitacoes': solic_ref,
+                            'solped': solped_ref,
                             'disponivel': dispon_ref,
                             })
                     grades_ref.append(grade_ref)
