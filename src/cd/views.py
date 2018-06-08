@@ -1159,7 +1159,7 @@ class Grade(View):
         context = {
             'ref': ref,
             'refnum': refnum,
-            'detalhe': detalhe,}
+            'detalhe': detalhe, }
         cursor_def = connection.cursor()
 
         if len(ref) == 5:  # Referência
