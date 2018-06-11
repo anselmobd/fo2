@@ -53,7 +53,10 @@ class Pedido(View):
                     row['ORDEM_PRINCIPAL|LINK'] = '/lotes/op/{}'.format(
                         row['ORDEM_PRINCIPAL'])
                 row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
-                row['DT_CORTE'] = row['DT_CORTE'].date()
+                if row['DT_CORTE'] is None:
+                    row['DT_CORTE'] = '-'
+                else:
+                    row['DT_CORTE'] = row['DT_CORTE'].date()
             context.update({
                 'o_headers': ('OP', 'Tipo', 'Referência',
                               'OP principal', 'Quantidade',
