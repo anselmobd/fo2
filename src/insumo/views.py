@@ -1147,6 +1147,19 @@ class MapaNecessidadeDetalhe(View):
         return render(request, self.template_name, context)
 
 
+def float16digits(qtd):
+    # str(qtd) retorna muito mais dígitos que o
+    #   {{ field|floatformat:decimals }}
+    # por isso crio um float com decimais limitadas a 16.
+    # Esta rotina é bem burra e específica
+    sqtd = str(qtd)
+    if '.' in sqtd:
+        sqtd = sqtd[:17]
+    else:
+        sqtd = sqtd[:16]
+    return float(sqtd)
+
+
 class Previsao(View):
     Form_class = PrevisaoForm
     template_name = 'insumo/previsao.html'
@@ -1176,7 +1189,8 @@ class Previsao(View):
 
         max_digits = 0
         for row in data:
-            num_digits = str(row['QTD']).strip('0')[::-1].find('.')
+            qtd = float16digits(row['QTD'])
+            num_digits = str(qtd).strip('0')[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
         for row in data:
