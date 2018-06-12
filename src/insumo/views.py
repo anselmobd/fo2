@@ -1310,12 +1310,23 @@ class Necessidade1Previsao(View):
             max_digits = max(max_digits, num_digits)
 
         for row in insumo:
-            row['QTD|DECIMALS'] = max_digits
             row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
             if row['COR'] != row['COR_DESCR']:
                 row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
             if row['TAM'] != row['TAM_DESCR']:
                 row['TAM'] = '{} ({})'.format(row['TAM'], row['TAM_DESCR'])
+
+        group = ['NIVEL', 'REF', 'REF_DESCR']
+        totalize_grouped_data(insumo, {
+            'group': group,
+            'sum': ['QTD'],
+            'count': [],
+            'descr': {'ALT': 'Total:'}
+        })
+        group_rowspan(insumo, group)
+
+        for row in insumo:
+            row['QTD|DECIMALS'] = max_digits
 
         context.update({
             'headers': ('Nível', 'Insumo', 'Descrição',
@@ -1326,6 +1337,7 @@ class Necessidade1Previsao(View):
                        'ALT', 'QTD'),
             'style': {7: 'text-align: right;'},
             'data': insumo,
+            'group': group,
         })
 
         return context
