@@ -1228,20 +1228,21 @@ def previsao(cursor, periodo=None):
 def necessidade_previsao(cursor, dual_nivel1):
     # insumos de produtos selecionados em dual_nivel1
     sql = """
-        WITH previsao AS (
-        {dual_nivel1}
-        )
+        WITH previsao AS ({dual_nivel1})
         SELECT
           ia.NIVEL_COMP NIVEL
         , ia.GRUPO_COMP REF
+        , ir.DESCR_REFERENCIA REF_DESCR
         , CASE WHEN ia.ITEM_COMP = '000000'
           THEN coc.ITEM_COMP
           ELSE ia.ITEM_COMP
           END COR
+        , ic.DESCRICAO_15 COR_DESCR
         , CASE WHEN ia.SUB_COMP = '000'
           THEN cot.SUB_COMP
           ELSE ia.SUB_COMP
           END TAM
+        , it.DESCR_TAM_REFER TAM_DESCR
         , tam.ORDEM_TAMANHO ORD_TAM
         , ia.ALTERNATIVA_COMP ALT
         , ia.CONSUMO * pre.QTD QTD
@@ -1270,6 +1271,30 @@ def necessidade_previsao(cursor, dual_nivel1):
             THEN cot.SUB_COMP
             ELSE ia.SUB_COMP
             END
+        LEFT JOIN BASI_030 ir -- item referencia
+          ON ir.NIVEL_ESTRUTURA = ia.NIVEL_COMP
+         AND ir.REFERENCIA = ia.GRUPO_COMP
+        LEFT JOIN BASI_020 it -- item tamanho
+          ON it.BASI030_NIVEL030 = ia.NIVEL_COMP
+         AND it.BASI030_REFERENC = ia.GRUPO_COMP
+         AND it.TAMANHO_REF =
+          CASE WHEN ia.SUB_COMP = '000'
+          THEN cot.SUB_COMP
+          ELSE ia.SUB_COMP
+          END
+        LEFT JOIN BASI_010 ic -- item cor
+          ON ic.NIVEL_ESTRUTURA = ia.NIVEL_COMP
+         AND ic.GRUPO_ESTRUTURA = ia.GRUPO_COMP
+         AND ic.SUBGRU_ESTRUTURA =
+          CASE WHEN ia.SUB_COMP = '000'
+          THEN cot.SUB_COMP
+          ELSE ia.SUB_COMP
+          END
+         AND ic.ITEM_ESTRUTURA =
+          CASE WHEN ia.ITEM_COMP = '000000'
+          THEN coc.ITEM_COMP
+          ELSE ia.ITEM_COMP
+          END
         ORDER BY
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
