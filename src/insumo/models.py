@@ -1051,10 +1051,16 @@ def previsao(cursor, periodo=None):
             "AND prev.DESCRICAO LIKE '{} %'".format(periodo)
     else:
         filtro_date = 'AND p.DATA_INI_PERIODO > (CURRENT_DATE + 30)'
-        filtro_periodo = ''
+        filtro_periodo = """
+            AND TRANSLATE( SUBSTR(prev.DESCRICAO, 1, 5)
+                         , '0123456789'
+                         , '9999999999'
+                         ) = '9999 '
+            """
 
     # lista primeiro nível de necessidade da pŕevisao
     sql = """
+        WITH previsao AS (
         SELECT
           prev.NR_SOLICITACAO NR
         , prev.DESCRICAO PREV_DESCR
@@ -1065,9 +1071,22 @@ def previsao(cursor, periodo=None):
         , prev.GRUPO_ESTRUTURA REF
         , ic.ITEM_ESTRUTURA COR
         , it.TAMANHO_REF TAM
-        , SUM(
-          prev.QTDE_NEC_BRUTAS
-          /
+        , tam.ORDEM_TAMANHO ORD_TAM
+        , SUM(prev.QTDE_NEC_BRUTAS) QTDE_NEC_BRUTAS
+        , MAX(
+          CASE WHEN prev.ITEM_ESTRUTURA = '000000'
+          THEN
+            ( SELECT
+                MIN(icc.ITEM_ESTRUTURA)
+              FROM BASI_010 icc -- item cor contador
+              WHERE icc.NIVEL_ESTRUTURA = ic.NIVEL_ESTRUTURA
+                AND icc.GRUPO_ESTRUTURA = ic.GRUPO_ESTRUTURA
+                AND icc.SUBGRU_ESTRUTURA = ic.SUBGRU_ESTRUTURA
+            )
+          ELSE prev.ITEM_ESTRUTURA
+          END
+          ) MIN_COR
+        , MAX(
           CASE WHEN prev.ITEM_ESTRUTURA = '000000'
           THEN
             ( SELECT
@@ -1079,7 +1098,22 @@ def previsao(cursor, periodo=None):
             )
           ELSE 1
           END
-          /
+          ) COUNT_COR
+        , MAX(
+          CASE WHEN prev.SUBGRU_ESTRUTURA = '000'
+          THEN
+            ( SELECT
+                MIN(tamc.ORDEM_TAMANHO)
+              FROM BASI_020 itc -- item tamanho contador
+              LEFT JOIN BASI_220 tamc
+                ON tamc.TAMANHO_REF = itc.TAMANHO_REF
+              WHERE itc.BASI030_NIVEL030 = it.BASI030_NIVEL030
+                AND itc.BASI030_REFERENC = it.BASI030_REFERENC
+            )
+          ELSE 0
+          END
+          ) MIN_ORD_TAM
+        , MAX(
           CASE WHEN prev.SUBGRU_ESTRUTURA = '000'
           THEN
             ( SELECT
@@ -1090,7 +1124,7 @@ def previsao(cursor, periodo=None):
             )
           ELSE 1
           END
-          ) QTD
+          ) COUNT_TAM
         , CASE WHEN prev.ALTERNATIVA = 0
           THEN ic.NUMERO_ALTERNATI
           ELSE prev.ALTERNATIVA
@@ -1113,9 +1147,9 @@ def previsao(cursor, periodo=None):
          AND ic.SUBGRU_ESTRUTURA = it.TAMANHO_REF
         JOIN PCPC_010 p
           ON p.PERIODO_PRODUCAO = SUBSTR(prev.DESCRICAO, 1, 4)
+         AND p.AREA_PERIODO = 1
           {filtro_date} -- filtro_date
-        WHERE TRANSLATE(SUBSTR(prev.DESCRICAO, 1, 4),
-                               '0123456789', '9999999999') = '9999'
+        WHERE 1=1
           {filtro_periodo} -- filtro_periodo
         GROUP BY
           prev.NR_SOLICITACAO
@@ -1137,6 +1171,40 @@ def previsao(cursor, periodo=None):
         , prev.GRUPO_ESTRUTURA
         , ic.ITEM_ESTRUTURA
         , tam.ORDEM_TAMANHO
+        )
+        SELECT
+          pp.NR
+        , pp.PREV_DESCR
+        , pp.PERIODO_PRODUCAO
+        , pp.INI_PERIODO
+        , pp.DT_NECESSIDADE
+        , pp.NIVEL
+        , pp.REF
+        , pp.COR
+        , pp.MIN_COR
+        , pp.TAM
+        , pp.ORD_TAM
+        , pp.MIN_ORD_TAM
+        , pp.ALT
+        , CASE WHEN pp.COR = pp.MIN_COR AND pp.ORD_TAM = pp.MIN_ORD_TAM
+          THEN
+            pp.QTDE_NEC_BRUTAS -
+            (
+              TRUNC(
+                pp.QTDE_NEC_BRUTAS
+                / pp.COUNT_COR
+                / pp.COUNT_TAM
+              )
+            * ((pp.COUNT_COR * pp.COUNT_TAM) - 1)
+            )
+          ELSE
+            TRUNC(
+              pp.QTDE_NEC_BRUTAS
+              / pp.COUNT_COR
+              / pp.COUNT_TAM
+            )
+          END QTD
+        FROM previsao pp
     """.format(
         filtro_date=filtro_date,
         filtro_periodo=filtro_periodo,
