@@ -1194,12 +1194,23 @@ class Previsao(View):
             max_digits = max(max_digits, num_digits)
 
         for row in data:
-            row['QTD|DECIMALS'] = max_digits
             row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
             if row['COR'] != row['COR_DESCR']:
                 row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
             if row['TAM'] != row['TAM_DESCR']:
                 row['TAM'] = '{} ({})'.format(row['TAM'], row['TAM_DESCR'])
+
+        group = ['NIVEL', 'REF', 'REF_DESCR']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['QTD'],
+            'count': [],
+            'descr': {'ALT': 'Total:'}
+        })
+        group_rowspan(data, group)
+
+        for row in data:
+            row['QTD|DECIMALS'] = max_digits
 
         context.update({
             'headers': ('Nível', 'Referência', 'Descrição',
@@ -1210,6 +1221,7 @@ class Previsao(View):
                        'ALT', 'QTD'),
             'style': {7: 'text-align: right;'},
             'data': data,
+            'group': group,
         })
 
         return context
