@@ -1196,15 +1196,19 @@ class Previsao(View):
         for row in data:
             row['QTD|DECIMALS'] = max_digits
             row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+            if row['COR'] != row['COR_DESCR']:
+                row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
+            if row['TAM'] != row['TAM_DESCR']:
+                row['TAM'] = '{} ({})'.format(row['TAM'], row['TAM_DESCR'])
 
         context.update({
-            'headers': ('Nível', 'Insumo',
+            'headers': ('Nível', 'Referência', 'Descrição',
                         'Cor', 'Tamanho',
                         'Alternativa', 'Quantidade'),
-            'fields': ('NIVEL', 'REF',
+            'fields': ('NIVEL', 'REF', 'REF_DESCR',
                        'COR', 'TAM',
                        'ALT', 'QTD'),
-            'style': {6: 'text-align: right;'},
+            'style': {7: 'text-align: right;'},
             'data': data,
         })
 

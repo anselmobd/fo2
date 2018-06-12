@@ -1069,8 +1069,11 @@ def previsao(cursor, periodo=None):
         , p.DATA_INI_PERIODO - 7 DT_NECESSIDADE
         , prev.NIVEL_ESTRUTURA NIVEL
         , prev.GRUPO_ESTRUTURA REF
+        , ir.DESCR_REFERENCIA REF_DESCR
         , ic.ITEM_ESTRUTURA COR
+        , ic.DESCRICAO_15 COR_DESCR
         , it.TAMANHO_REF TAM
+        , it.DESCR_TAM_REFER TAM_DESCR
         , tam.ORDEM_TAMANHO ORD_TAM
         , SUM(prev.QTDE_NEC_BRUTAS) QTDE_NEC_BRUTAS
         , MAX(
@@ -1130,6 +1133,9 @@ def previsao(cursor, periodo=None):
           ELSE prev.ALTERNATIVA
           END ALT
         FROM RCNB_020 prev
+        LEFT JOIN BASI_030 ir -- combinação referencia
+           ON ir.NIVEL_ESTRUTURA = prev.NIVEL_ESTRUTURA
+          AND ir.REFERENCIA = prev.GRUPO_ESTRUTURA
         LEFT JOIN BASI_020 it -- combinação tam
           ON ( prev.SUBGRU_ESTRUTURA = '000'
              OR it.TAMANHO_REF = prev.SUBGRU_ESTRUTURA
@@ -1159,9 +1165,12 @@ def previsao(cursor, periodo=None):
         , p.DATA_INI_PERIODO - 7
         , prev.NIVEL_ESTRUTURA
         , prev.GRUPO_ESTRUTURA
+        , ir.DESCR_REFERENCIA
         , ic.ITEM_ESTRUTURA
+        , ic.DESCRICAO_15
         , tam.ORDEM_TAMANHO
         , it.TAMANHO_REF
+        , it.DESCR_TAM_REFER
         , CASE WHEN prev.ALTERNATIVA = 0
           THEN ic.NUMERO_ALTERNATI
           ELSE prev.ALTERNATIVA
@@ -1180,9 +1189,12 @@ def previsao(cursor, periodo=None):
         , pp.DT_NECESSIDADE
         , pp.NIVEL
         , pp.REF
+        , pp.REF_DESCR
         , pp.COR
+        , pp.COR_DESCR
         , pp.MIN_COR
         , pp.TAM
+        , pp.TAM_DESCR
         , pp.ORD_TAM
         , pp.MIN_ORD_TAM
         , pp.ALT
