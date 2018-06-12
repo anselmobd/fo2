@@ -1300,8 +1300,9 @@ class Necessidade1Previsao(View):
             insumo, key=itemgetter('NIVEL', 'REF', 'COR', 'ORD_TAM', 'ALT'))
 
         max_digits = 0
-        for row in insumo:
-            num_digits = str(row['QTD']).strip('0')[::-1].find('.')
+        for row in data:
+            qtd = float16digits(row['QTD'])
+            num_digits = str(qtd).strip('0')[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
         for row in insumo:
