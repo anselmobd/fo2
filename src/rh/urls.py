@@ -8,4 +8,8 @@ urlpatterns = [
     url(r'^datas/$', views.datas, name='rh_datas'),
     url(r'^fotos/$', views.fotos, name='rh_fotos'),
     url(r'^videos/$', views.videos, name='rh_videos'),
+    url(r'^fotos_brigadista2018/$', views.fotos_brigadista2018,
+        name='rh_fotos_brigadista2018'),
+    url(r'^videos_brigadista2018/$', views.videos_brigadista2018,
+        name='rh_videos_brigadista2018'),
 ]

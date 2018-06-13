@@ -1,3 +1,6 @@
+# Media
+media/rh/brigadista2018
+
 # Development Environment DB
 src/db.sqlite3
 src/db.sqlite3-journal
