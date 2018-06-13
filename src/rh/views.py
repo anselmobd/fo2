@@ -19,6 +19,16 @@ def videos(request):
     return render(request, 'rh/videos.html', context)
 
 
+def fotos_brigadista2018(request):
+    context = {'titulo': 'Fotos - Brigadistas 2018'}
+    return render(request, 'rh/fotos_brigadista2018.html', context)
+
+
+def videos_brigadista2018(request):
+    context = {'titulo': 'Vídeos - Brigadistas 2018'}
+    return render(request, 'rh/videos_brigadista2018.html', context)
+
+
 def index(request):
     pensamentos = [
       {
