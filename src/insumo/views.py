@@ -1363,4 +1363,117 @@ class Necessidade1Previsao(View):
 
 
 class NecessidadesPrevisoes(View):
-    pass
+    template_name = 'insumo/necessidades_previsoes.html'
+    title_name = 'Necessidades das Previsões'
+
+    def mount_context(self, cursor):
+        context = {}
+
+        data = models.previsao(cursor)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhuma previsao de produção encontrada',
+            })
+            return context
+
+        previsoes = set()
+        for row in data:
+            previsoes.add(row['PREV_DESCR'])
+        p_data = [{'PREV_DESCR': p} for p in previsoes]
+        context.update({
+            'p_headers': ('Previsão',),
+            'p_fields': ('PREV_DESCR',),
+            'p_data': p_data,
+        })
+
+        insumo = []
+        while True:
+            dual_nivel1 = ''
+            union = ''
+            for row in data:
+                if row['NIVEL'] == '1':
+                    dual_select = '''
+                        SELECT
+                          {nivel} NIVEL
+                        , '{ref}' REF
+                        , '{cor}' COR
+                        , '{tam}' TAM
+                        , {qtd} QTD
+                        , {alt} ALT
+                        FROM SYS.DUAL
+                    '''.format(
+                        nivel=row['NIVEL'],
+                        ref=row['REF'],
+                        cor=row['COR'],
+                        tam=row['TAM'],
+                        qtd=row['QTD'],
+                        alt=row['ALT'],
+                    )
+                    dual_nivel1 += union + dual_select
+                    union = ' UNION '
+                else:
+                    busca_insumo = [
+                        item for item in insumo
+                        if item['NIVEL'] == row['NIVEL']
+                        and item['REF'] == row['REF']
+                        and item['COR'] == row['COR']
+                        and item['TAM'] == row['TAM']
+                        and item['ALT'] == row['ALT']
+                        ]
+                    if busca_insumo == []:
+                        insumo.append(row)
+                    else:
+                        busca_insumo[0]['QTD'] += row['QTD']
+            if dual_nivel1 == '':
+                break
+            else:
+                data = models.necessidade_previsao(cursor, dual_nivel1)
+
+        insumo = sorted(
+            insumo, key=itemgetter('NIVEL', 'REF', 'COR', 'ORD_TAM', 'ALT'))
+
+        max_digits = 0
+        for row in data:
+            qtd = float16digits(row['QTD'])
+            num_digits = str(qtd).strip('0')[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+
+        for row in insumo:
+            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            if row['COR'] != row['COR_DESCR']:
+                row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
+            if row['TAM'] != row['TAM_DESCR']:
+                row['TAM'] = '{} ({})'.format(row['TAM'], row['TAM_DESCR'])
+
+        group = ['NIVEL', 'REF', 'REF_DESCR']
+        totalize_grouped_data(insumo, {
+            'group': group,
+            'sum': ['QTD'],
+            'count': [],
+            'descr': {'ALT': 'Total:'},
+            'flags': ['NO_TOT_1'],
+        })
+        group_rowspan(insumo, group)
+
+        for row in insumo:
+            row['QTD|DECIMALS'] = max_digits
+
+        context.update({
+            'headers': ('Nível', 'Insumo', 'Descrição',
+                        'Cor', 'Tamanho',
+                        'Alternativa', 'Quantidade'),
+            'fields': ('NIVEL', 'REF', 'REF_DESCR',
+                       'COR', 'TAM',
+                       'ALT', 'QTD'),
+            'style': {7: 'text-align: right;'},
+            'data': insumo,
+            'group': group,
+        })
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context(cursor))
+        return render(request, self.template_name, context)
