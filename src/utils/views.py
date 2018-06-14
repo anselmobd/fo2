@@ -115,7 +115,10 @@ def totalize_grouped_data(data, config):
                     totrow[key] = sum[key]
                 for key in config['count']:
                     totrow[key] = group_count
-                if 'NO_TOT_1' not in config['flags'] or group_count > 1:
+                total = True
+                if 'flags' in config and 'NO_TOT_1' in config['flags']:
+                    total = group_count > 1
+                if total:
                     totrows[row_idx] = totrow
                 init_group = True
 
