@@ -98,15 +98,14 @@ def totalize_data(data, config):
 
 
 def totalize_grouped_data(data, config):
-    endrow = data[0].copy()
-    for key in endrow:
-        endrow[key] = 0
-    data.append(endrow)
+    temp_end_row = data[0].copy()
+    for key in temp_end_row:
+        temp_end_row[key] = 0
+    data.append(temp_end_row)
 
     totrows = {}
-    row_count = 0
     init_group = True
-    for row in data:
+    for row_idx, row in enumerate(data):
 
         if not init_group:
             if list_key != [row[key] for key in config['group']]:
@@ -116,13 +115,14 @@ def totalize_grouped_data(data, config):
                     totrow[key] = sum[key]
                 for key in config['count']:
                     totrow[key] = group_count
-                totrows[row_count] = totrow
+                if 'NO_TOT_1' not in config['flags'] or group_count > 1:
+                    totrows[row_idx] = totrow
                 init_group = True
 
         if init_group:
             group_count = 0
             list_key = [row[key] for key in config['group']]
-            totrow = data[row_count].copy()
+            totrow = row.copy()
             for key in totrow:
                 if key not in config['group']:
                     totrow[key] = ''
@@ -132,10 +132,8 @@ def totalize_grouped_data(data, config):
         for key in sum:
             sum[key] += row[key]
         group_count += 1
-        row_count += 1
 
-    for i in range(row_count-1, 0, -1):
+    for i in range(len(data)-1, 0, -1):
         if i in totrows:
             data.insert(i, totrows[i])
-            row_count += 1
-    del(data[row_count-1])
+    del(data[len(data)-1])
