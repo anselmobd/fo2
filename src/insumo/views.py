@@ -1200,12 +1200,12 @@ class Previsao(View):
             if row['TAM'] != row['TAM_DESCR']:
                 row['TAM'] = '{} ({})'.format(row['TAM'], row['TAM_DESCR'])
 
-        group = ['NIVEL', 'REF', 'REF_DESCR']
+        group = ['NIVEL', 'REF', 'REF_DESCR', 'ALT']
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD'],
             'count': [],
-            'descr': {'ALT': 'Total:'},
+            'descr': {'TAM': 'Total:'},
         })
         group_rowspan(data, group)
 
@@ -1213,12 +1213,10 @@ class Previsao(View):
             row['QTD|DECIMALS'] = max_digits
 
         context.update({
-            'headers': ('Nível', 'Referência', 'Descrição',
-                        'Cor', 'Tamanho',
-                        'Alternativa', 'Quantidade'),
-            'fields': ('NIVEL', 'REF', 'REF_DESCR',
-                       'COR', 'TAM',
-                       'ALT', 'QTD'),
+            'headers': ('Nível', 'Referência', 'Descrição', 'Alternativa',
+                        'Cor', 'Tamanho', 'Quantidade'),
+            'fields': ('NIVEL', 'REF', 'REF_DESCR', 'ALT',
+                       'COR', 'TAM', 'QTD'),
             'style': {7: 'text-align: right;'},
             'data': data,
             'group': group,
@@ -1313,7 +1311,7 @@ class Necessidade1Previsao(View):
                 data = models.necessidade_previsao(cursor, dual_nivel1)
 
         insumo = sorted(
-            insumo, key=itemgetter('NIVEL', 'REF', 'COR', 'ORD_TAM', 'ALT'))
+            insumo, key=itemgetter('NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
 
         max_digits = 0
         for row in data:
@@ -1328,12 +1326,12 @@ class Necessidade1Previsao(View):
             if row['TAM'] != row['TAM_DESCR']:
                 row['TAM'] = '{} ({})'.format(row['TAM'], row['TAM_DESCR'])
 
-        group = ['NIVEL', 'REF', 'REF_DESCR']
+        group = ['NIVEL', 'REF', 'REF_DESCR', 'ALT']
         totalize_grouped_data(insumo, {
             'group': group,
             'sum': ['QTD'],
             'count': [],
-            'descr': {'ALT': 'Total:'},
+            'descr': {'TAM': 'Total:'},
             'flags': ['NO_TOT_1'],
         })
         group_rowspan(insumo, group)
@@ -1342,12 +1340,10 @@ class Necessidade1Previsao(View):
             row['QTD|DECIMALS'] = max_digits
 
         context.update({
-            'headers': ('Nível', 'Insumo', 'Descrição',
-                        'Cor', 'Tamanho',
-                        'Alternativa', 'Quantidade'),
-            'fields': ('NIVEL', 'REF', 'REF_DESCR',
-                       'COR', 'TAM',
-                       'ALT', 'QTD'),
+            'headers': ('Nível', 'Insumo', 'Descrição', 'Alternativa',
+                        'Cor', 'Tamanho', 'Quantidade'),
+            'fields': ('NIVEL', 'REF', 'REF_DESCR', 'ALT',
+                       'COR', 'TAM', 'QTD'),
             'style': {7: 'text-align: right;'},
             'data': insumo,
             'group': group,
@@ -1430,7 +1426,7 @@ class NecessidadesPrevisoes(View):
                 data = models.necessidade_previsao(cursor, dual_nivel1)
 
         insumo = sorted(
-            insumo, key=itemgetter('NIVEL', 'REF', 'COR', 'ORD_TAM', 'ALT'))
+            insumo, key=itemgetter('NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
 
         max_digits = 0
         for row in data:
@@ -1445,12 +1441,12 @@ class NecessidadesPrevisoes(View):
             if row['TAM'] != row['TAM_DESCR']:
                 row['TAM'] = '{} ({})'.format(row['TAM'], row['TAM_DESCR'])
 
-        group = ['NIVEL', 'REF', 'REF_DESCR']
+        group = ['NIVEL', 'REF', 'REF_DESCR', 'ALT']
         totalize_grouped_data(insumo, {
             'group': group,
             'sum': ['QTD'],
             'count': [],
-            'descr': {'ALT': 'Total:'},
+            'descr': {'TAM': 'Total:'},
             'flags': ['NO_TOT_1'],
         })
         group_rowspan(insumo, group)
@@ -1459,12 +1455,10 @@ class NecessidadesPrevisoes(View):
             row['QTD|DECIMALS'] = max_digits
 
         context.update({
-            'headers': ('Nível', 'Insumo', 'Descrição',
-                        'Cor', 'Tamanho',
-                        'Alternativa', 'Quantidade'),
-            'fields': ('NIVEL', 'REF', 'REF_DESCR',
-                       'COR', 'TAM',
-                       'ALT', 'QTD'),
+            'headers': ('Nível', 'Insumo', 'Descrição', 'Alternativa',
+                        'Cor', 'Tamanho', 'Quantidade'),
+            'fields': ('NIVEL', 'REF', 'REF_DESCR', 'ALT',
+                       'COR', 'TAM', 'QTD'),
             'style': {7: 'text-align: right;'},
             'data': insumo,
             'group': group,
