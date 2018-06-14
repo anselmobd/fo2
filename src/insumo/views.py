@@ -1205,7 +1205,7 @@ class Previsao(View):
             'group': group,
             'sum': ['QTD'],
             'count': [],
-            'descr': {'ALT': 'Total:'}
+            'descr': {'ALT': 'Total:'},
         })
         group_rowspan(data, group)
 
@@ -1333,7 +1333,8 @@ class Necessidade1Previsao(View):
             'group': group,
             'sum': ['QTD'],
             'count': [],
-            'descr': {'ALT': 'Total:'}
+            'descr': {'ALT': 'Total:'},
+            'flags': ['NO_TOT_1'],
         })
         group_rowspan(insumo, group)
 
