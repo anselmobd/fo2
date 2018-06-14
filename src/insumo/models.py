@@ -1064,6 +1064,10 @@ def previsao(cursor, periodo=None):
         SELECT
           prev.NR_SOLICITACAO NR
         , prev.DESCRICAO PREV_DESCR
+        , CASE WHEN prev.ALTERNATIVA = 0
+          THEN ic.NUMERO_ALTERNATI
+          ELSE prev.ALTERNATIVA
+          END ALT
         , p.PERIODO_PRODUCAO
         , p.DATA_INI_PERIODO INI_PERIODO
         , p.DATA_INI_PERIODO - 7 DT_NECESSIDADE
@@ -1128,10 +1132,6 @@ def previsao(cursor, periodo=None):
           ELSE 1
           END
           ) COUNT_TAM
-        , CASE WHEN prev.ALTERNATIVA = 0
-          THEN ic.NUMERO_ALTERNATI
-          ELSE prev.ALTERNATIVA
-          END ALT
         FROM RCNB_020 prev
         LEFT JOIN BASI_030 ir -- combinação referencia
            ON ir.NIVEL_ESTRUTURA = prev.NIVEL_ESTRUTURA
@@ -1180,6 +1180,7 @@ def previsao(cursor, periodo=None):
         , prev.GRUPO_ESTRUTURA
         , ic.ITEM_ESTRUTURA
         , tam.ORDEM_TAMANHO
+        , 3
         )
         SELECT
           pp.NR
@@ -1298,12 +1299,12 @@ def necessidade_previsao(cursor, dual_nivel1):
         ORDER BY
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
+        , ia.ALTERNATIVA_COMP
         , CASE WHEN ia.ITEM_COMP = '000000'
           THEN coc.ITEM_COMP
           ELSE ia.ITEM_COMP
           END
         , tam.ORDEM_TAMANHO
-        , ia.ALTERNATIVA_COMP
     """.format(
         dual_nivel1=dual_nivel1,
         )
