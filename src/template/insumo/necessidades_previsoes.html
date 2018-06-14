@@ -1,0 +1,26 @@
+{% extends 'insumo/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'insumo' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if msg_erro %}
+  <h4>{{ msg_erro }}</h4>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
+    {% include "layout/tbody_generic.html" with fields=p_fields data=p_data group=p_group safe=p_safe style=p_style only %}
+  </table>
+  <table>
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data group=group safe=safe style=style only %}
+  </table>
+{% endif %}
+{% endblock %}
