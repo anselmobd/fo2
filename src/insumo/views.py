@@ -1374,11 +1374,12 @@ class NecessidadesPrevisoes(View):
 
         previsoes = set()
         for row in data:
-            previsoes.add(row['PREV_DESCR'])
-        p_data = [{'PREV_DESCR': p} for p in previsoes]
+            previsoes.add((row['PREV_DESCR'], row['INI_PERIODO']))
+        p_data = [{'PREV_DESCR': p[0], 'INI_PERIODO': p[1].date()}
+                  for p in previsoes]
         context.update({
-            'p_headers': ('Previsão',),
-            'p_fields': ('PREV_DESCR',),
+            'p_headers': ('Previsão', 'Início de período'),
+            'p_fields': ('PREV_DESCR', 'INI_PERIODO'),
             'p_data': p_data,
         })
 
