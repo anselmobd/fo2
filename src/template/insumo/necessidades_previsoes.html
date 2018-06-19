@@ -14,6 +14,7 @@
   <h4>{{ msg_erro }}</h4>
 {% endif %}
 {% if data %}
+  <h4>Total das necessadades de insumos das previsões cujo início de período é maior que "hoje + 30 dias"</h4>
   <table>
     {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
     {% include "layout/tbody_generic.html" with fields=p_fields data=p_data group=p_group safe=p_safe style=p_style only %}
