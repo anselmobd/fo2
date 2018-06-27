@@ -342,7 +342,7 @@ class Estoque(View):
                 if row['update_at'] is None:
                     row['update_at'] = row['create_at']
                 slq = lotes.models.SolicitaLoteQtd.objects.filter(
-                    lote__lote=row['lote'], update_at__gte=row['update_at']
+                    lote__lote=row['lote'],  # update_at__gte=row['update_at']
                     ).aggregate(Sum('qtd'))
                 slq_qtd = 0
                 if slq:
