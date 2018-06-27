@@ -751,7 +751,7 @@ class MapaRefs(View):
         return render(request, self.template_name, context)
 
 
-class Mapa(View):
+class MapaPorInsumo(View):
     template_name = 'insumo/mapa.html'
     title_name = 'Mapa de compras'
 
@@ -832,7 +832,7 @@ class Mapa(View):
                 row['QTD_INSUMO|STYLE'] = 'font-weight: bold;'
 
         context.update({
-            'headers_ins': ['Semana da necessidade', 'Quantidade necessária'],
+            'headers_ins': ['Semana', 'Quantidade'],
             'fields_ins': ['SEMANA_NECESSIDADE', 'QTD_INSUMO'],
             'style_ins': {2: 'text-align: right;'},
             'data_ins': data_ins,
@@ -861,7 +861,7 @@ class Mapa(View):
                 row['QTD_A_RECEBER|STYLE'] = 'font-weight: bold;'
 
         context.update({
-            'headers_irs': ['Semana do recebimento', 'Quantidade a receber'],
+            'headers_irs': ['Semana', 'Quantidade'],
             'fields_irs': ['SEMANA_ENTREGA', 'QTD_A_RECEBER'],
             'style_irs': {2: 'text-align: right;'},
             'data_irs': data_irs,
