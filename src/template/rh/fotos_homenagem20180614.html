@@ -1,0 +1,24 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="/rh/">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<h4>Homenagem aos funcionários Thiago e Silvio pelo combate ao princípio de incêndio na tecelagem</h4>
+<p>
+  <a target="_blank" href="/media/rh/homenagem20180614/Modelo placa.jpg"><img src="/media/rh/homenagem20180614/thumb.Modelo placa.jpg"></a>
+  <a target="_blank" href="/media/rh/homenagem20180614/IMG_20180614_111231622_HDR.jpg"><img src="/media/rh/homenagem20180614/thumb.IMG_20180614_111231622_HDR.jpg"></a>
+  <a target="_blank" href="/media/rh/homenagem20180614/IMG_20180614_110057158_HDR.jpg"><img src="/media/rh/homenagem20180614/thumb.IMG_20180614_110057158_HDR.jpg"></a>
+</p>
+</center>
+{% endblock %}
