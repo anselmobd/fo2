@@ -1,9 +1,16 @@
-__version__ = '0.1.97'
-__version__date__ = '05/06/2018'
+__version__ = '0.1.99'
+__version__date__ = '29/06/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.99 - 2018/06/29
+#   . RH - Atualizações
+#   . Comandos utilitários
+#
+# - 0.1.98 - 2018/06/19
+#   . insumos/Previsão - Diversos desenvolvimentos
 #
 # - 0.1.97 - 2018/06/05
 #   . CD - Histórico simples de OP no CD
