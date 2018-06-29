@@ -41,10 +41,10 @@ class Command(BaseCommand):
                 ref_systextil))
 
         self.stdout.write(
-            'Importando EANs do Tussor, referência: {}'.format(
+            'Importando EANs do Tussor, referência: "{}"'.format(
                 ref_tussor))
         self.stdout.write(
-            'Escrevendo EANs no Systêxtil, referência = {}'.format(
+            'Escrevendo EANs no Systêxtil, referência = "{}"'.format(
                 ref_systextil))
 
         try:
@@ -78,7 +78,9 @@ class Command(BaseCommand):
                 WHERE GRUPO_ESTRUTURA=%s
                   and SUBGRU_ESTRUTURA=%s
                   and ITEM_ESTRUTURA=%s
-                  and CODIGO_BARRAS<>%s
+                  and (  CODIGO_BARRAS IS null
+                      OR CODIGO_BARRAS<>%s
+                      )
             '''
             for ref_bar in ref_bars:
                 cursor.execute(sql_set, [
