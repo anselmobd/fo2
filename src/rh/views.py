@@ -19,6 +19,11 @@ def videos(request):
     return render(request, 'rh/videos.html', context)
 
 
+def fotos_homenagem20180614(request):
+    context = {'titulo': 'Fotos - Homenagem a Thiago e Silvio'}
+    return render(request, 'rh/fotos_homenagem20180614.html', context)
+
+
 def fotos_brigadista2018(request):
     context = {'titulo': 'Fotos - Brigadistas 2018'}
     return render(request, 'rh/fotos_brigadista2018.html', context)
@@ -43,6 +48,16 @@ def index(request):
       },
     ]
     dicas = [
+      {
+        'data': datetime.strptime('25/06/2018', '%d/%m/%Y').date(),
+        'chamada': 'Mudança',
+        'link': '/media/rh/Dica-da-Semana-2018-06-25.jpg',
+      },
+      {
+        'data': datetime.strptime('11/06/2018', '%d/%m/%Y').date(),
+        'chamada': 'Pequenas Gentilezas',
+        'link': '/media/rh/Dica-da-Semana-2018-06-11.jpg',
+      },
       {
         'data': datetime.strptime('23/02/2018', '%d/%m/%Y').date(),
         'chamada': '3 dicas essenciais',
