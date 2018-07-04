@@ -250,14 +250,33 @@ def op_sortimentos(cursor, op, tipo):
             id='QUANTIDADE',
             sql='''
                 SELECT
-                  i.TAMANHO
-                , i.SORTIMENTO
-                , i.QUANTIDADE
-                FROM PCPC_021 i
-                WHERE i.ORDEM_PRODUCAO = %s
+                  lote.PROCONF_SUBGRUPO TAMANHO
+                , lote.PROCONF_ITEM SORTIMENTO
+                , sum(lote.QTDE_PECAS_PROG ) QUANTIDADE
+                FROM PCPC_040 lote
+                LEFT JOIN BASI_220 tam
+                  ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
+                WHERE lote.ORDEM_PRODUCAO = %s
+                  AND lote.SEQUENCIA_ESTAGIO
+                      = COALESCE(
+                          (
+                            SELECT
+                              MIN(ulote.SEQUENCIA_ESTAGIO)
+                            FROM PCPC_040 ulote
+                            WHERE ulote.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+                              AND ulote.ORDEM_CONFECCAO = lote.ORDEM_CONFECCAO
+                            GROUP BY
+                              ulote.ORDEM_PRODUCAO
+                            , ulote.ORDEM_CONFECCAO
+                          )
+                        , 0)
+                GROUP BY
+                  tam.ORDEM_TAMANHO
+                , lote.PROCONF_SUBGRUPO
+                , lote.PROCONF_ITEM
                 ORDER BY
-                  i.SEQUENCIA_TAMANHO
-                , i.SORTIMENTO
+                  tam.ORDEM_TAMANHO
+                , lote.PROCONF_ITEM
             '''
             )
 
@@ -267,22 +286,20 @@ def op_sortimentos(cursor, op, tipo):
             id='QUANTIDADE',
             sql='''
                 SELECT
-                  oi.TAMANHO TAMANHO
-                , oi.SORTIMENTO SORTIMENTO
+                  lote.PROCONF_SUBGRUPO TAMANHO
+                , lote.PROCONF_ITEM SORTIMENTO
                 , sum(lote.QTDE_PERDAS ) QUANTIDADE
-                FROM PCPC_021 oi
-                JOIN PCPC_040 lote
-                  ON lote.ORDEM_PRODUCAO = oi.ORDEM_PRODUCAO
-                 AND lote.PROCONF_SUBGRUPO = oi.TAMANHO
-                 AND lote.PROCONF_ITEM = oi.SORTIMENTO
-                WHERE oi.ORDEM_PRODUCAO = %s
+                FROM PCPC_040 lote
+                LEFT JOIN BASI_220 tam
+                  ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
+                WHERE lote.ORDEM_PRODUCAO = %s
                 GROUP BY
-                  oi.SEQUENCIA_TAMANHO
-                , oi.TAMANHO
-                , oi.SORTIMENTO
+                  tam.ORDEM_TAMANHO
+                , lote.PROCONF_SUBGRUPO
+                , lote.PROCONF_ITEM
                 ORDER BY
-                  oi.SEQUENCIA_TAMANHO
-                , oi.SORTIMENTO
+                  tam.ORDEM_TAMANHO
+                , lote.PROCONF_ITEM
             '''
             )
 
@@ -292,22 +309,20 @@ def op_sortimentos(cursor, op, tipo):
             id='QUANTIDADE',
             sql='''
                 SELECT
-                  oi.TAMANHO TAMANHO
-                , oi.SORTIMENTO SORTIMENTO
+                  lote.PROCONF_SUBGRUPO TAMANHO
+                , lote.PROCONF_ITEM SORTIMENTO
                 , sum(lote.QTDE_CONSERTO ) QUANTIDADE
-                FROM PCPC_021 oi
-                JOIN PCPC_040 lote
-                  ON lote.ORDEM_PRODUCAO = oi.ORDEM_PRODUCAO
-                 AND lote.PROCONF_SUBGRUPO = oi.TAMANHO
-                 AND lote.PROCONF_ITEM = oi.SORTIMENTO
-                WHERE oi.ORDEM_PRODUCAO = %s
+                FROM PCPC_040 lote
+                LEFT JOIN BASI_220 tam
+                  ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
+                WHERE lote.ORDEM_PRODUCAO = %s
                 GROUP BY
-                  oi.SEQUENCIA_TAMANHO
-                , oi.TAMANHO
-                , oi.SORTIMENTO
+                  tam.ORDEM_TAMANHO
+                , lote.PROCONF_SUBGRUPO
+                , lote.PROCONF_ITEM
                 ORDER BY
-                  oi.SEQUENCIA_TAMANHO
-                , oi.SORTIMENTO
+                  tam.ORDEM_TAMANHO
+                , lote.PROCONF_ITEM
             '''
             )
 
@@ -317,15 +332,13 @@ def op_sortimentos(cursor, op, tipo):
             id='QUANTIDADE',
             sql='''
                 SELECT
-                  oi.TAMANHO TAMANHO
-                , oi.SORTIMENTO SORTIMENTO
+                  lote.PROCONF_SUBGRUPO TAMANHO
+                , lote.PROCONF_ITEM SORTIMENTO
                 , sum(lote.QTDE_PECAS_2A ) QUANTIDADE
-                FROM PCPC_021 oi
-                JOIN PCPC_040 lote
-                  ON lote.ORDEM_PRODUCAO = oi.ORDEM_PRODUCAO
-                 AND lote.PROCONF_SUBGRUPO = oi.TAMANHO
-                 AND lote.PROCONF_ITEM = oi.SORTIMENTO
-                WHERE oi.ORDEM_PRODUCAO = %s
+                FROM PCPC_040 lote
+                LEFT JOIN BASI_220 tam
+                  ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
+                WHERE lote.ORDEM_PRODUCAO = %s
                   AND lote.SEQUENCIA_ESTAGIO
                       = COALESCE(
                           (
@@ -341,12 +354,12 @@ def op_sortimentos(cursor, op, tipo):
                           )
                         , 0)
                 GROUP BY
-                  oi.SEQUENCIA_TAMANHO
-                , oi.TAMANHO
-                , oi.SORTIMENTO
+                  tam.ORDEM_TAMANHO
+                , lote.PROCONF_SUBGRUPO
+                , lote.PROCONF_ITEM
                 ORDER BY
-                  oi.SEQUENCIA_TAMANHO
-                , oi.SORTIMENTO
+                  tam.ORDEM_TAMANHO
+                , lote.PROCONF_ITEM
             '''
             )
 
