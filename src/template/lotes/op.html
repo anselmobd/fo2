@@ -61,7 +61,7 @@
           {% include "layout/html_tbody.html" with fields=gs_fields data=gs_data only %}
         </table>
       {% else %}
-        <h3>Vazia</h3>
+        <b>Vazia</b>
       {% endif %}
     </td>
     <td></td>
@@ -74,7 +74,7 @@
           {% include "layout/html_tbody.html" with fields=gp_fields data=gp_data only %}
         </table>
       {% else %}
-        <h3>Vazia</h3>
+        <b>Vazia</b>
       {% endif %}
     </td>
     <td></td>
@@ -87,7 +87,7 @@
           {% include "layout/html_tbody.html" with fields=gc_fields data=gc_data only %}
         </table>
       {% else %}
-        <h3>Vazia</h3>
+        <b>Vazia</b>
       {% endif %}
     </td>
   </tr>
@@ -124,10 +124,14 @@
   {% include "layout/html_tbody_link.html" with fields=fields data=data link=link only %}
 </table>
 <h3>Responsáveis e datas de movimentações de estágios</h3>
-<table>
-  {% include "layout/html_thead.html" with data=u_headers only %}
-  {% include "layout/html_tbody_link.html" with fields=u_fields data=u_data only %}
-</table>
+{% if os_data %}
+  <table>
+    {% include "layout/html_thead.html" with data=u_headers only %}
+    {% include "layout/html_tbody_link.html" with fields=u_fields data=u_data only %}
+  </table>
+{% else %}
+  <b>Nenhuma movimentação</b>
+{% endif %}
 {% endif %}
 {% endblock %}
 
