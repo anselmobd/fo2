@@ -810,96 +810,104 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
 def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
     sql = """
         WITH NECES AS (
-        SELECT
-          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
-            SEMANA_NECESSIDADE
-        , sum( ia.CONSUMO *
-               (
-            ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
-            - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
-               )
-             ) QTD_INSUMO
-        FROM BASI_030 ref -- referencia
-        JOIN PCPC_020 op -- OP
-          ON op.REFERENCIA_PECA = ref.REFERENCIA
-        JOIN PCPC_040 lote -- lote
-          ON lote.ORDEM_PRODUCAO = op.ORDEM_PRODUCAO
-        JOIN BASI_050 ia -- insumos de alternativa
-          ON ia.NIVEL_ITEM = 1
-         AND ia.NIVEL_COMP <> 1
-         AND ia.GRUPO_ITEM = op.REFERENCIA_PECA
-         AND (ia.SUB_ITEM = lote.PROCONF_SUBGRUPO OR ia.SUB_ITEM = '000')
-         AND (ia.ITEM_ITEM = lote.PROCONF_ITEM OR ia.ITEM_ITEM = '000000')
-         AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
-         AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
-        LEFT JOIN BASI_040 coc -- combinação cor
-          ON ia.ITEM_COMP = '000000'
-         AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
-         AND coc.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
-         AND coc.SEQUENCIA = ia.SEQUENCIA
-         AND coc.ITEM_ITEM = lote.PROCONF_ITEM
-        LEFT JOIN BASI_040 cot -- combinação tamanho
-          ON ia.SUB_COMP = '000'
-         AND cot.GRUPO_ITEM = ia.GRUPO_ITEM
-         AND cot.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
-         AND cot.SEQUENCIA = ia.SEQUENCIA
-         AND cot.SUB_ITEM = lote.PROCONF_SUBGRUPO
-        WHERE op.SITUACAO IN (2, 4) -- não cancelada
-          AND ia.NIVEL_COMP = {nivel}
-          AND ia.GRUPO_COMP = '{ref}'
-          AND CASE WHEN ia.ITEM_COMP = '000000'
-              THEN coc.ITEM_COMP
-              ELSE ia.ITEM_COMP
-              END = '{cor}'
-          AND CASE WHEN ia.SUB_COMP = '000'
-              THEN cot.SUB_COMP
-              ELSE ia.SUB_COMP
-              END = '{tam}'
-        GROUP BY
-          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
-        HAVING
-          sum( ia.CONSUMO *
-               (
-            ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
-            - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
-               )
-             ) > 0
-        --
-        UNION
-        --
-        SELECT
-          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
-            SEMANA_NECESSIDADE
-        , - sum( nfs.QTDE_ESTRUTURA ) QTD
-        FROM (
-          SELECT UNIQUE
-            os.NUMERO_ORDEM
-          , l.ORDEM_PRODUCAO
-          FROM OBRF_080 os
-          JOIN pcpc_040 l
-            ON l.NUMERO_ORDEM = os.NUMERO_ORDEM
-          WHERE l.ORDEM_PRODUCAO = 5264
-            AND l.NUMERO_ORDEM <> 0
-        ) o
-        JOIN OBRF_082 nfs
-          ON nfs.NUMERO_ORDEM = o.NUMERO_ORDEM
-        JOIN PCPC_020 op -- OP
-          ON op.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-        WHERE nfs.PRODSAI_NIVEL99 = {nivel}
-          AND nfs.PRODSAI_GRUPO = '{ref}'
-          AND nfs.PRODSAI_ITEM = '{cor}'
-          AND nfs.PRODSAI_SUBGRUPO = '{tam}'
-        GROUP BY
-          TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+          SELECT
+            ness.SEMANA_NECESSIDADE
+          , ness.ORDEM_PRODUCAO
+          , ness.QTD_INSUMO
+          , oss.NUMERO_ORDEM
+          , sum( nfs.QTDE_ESTRUTURA ) QTD_OS
+          FROM (
+            SELECT
+              TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+                SEMANA_NECESSIDADE
+            , op.ORDEM_PRODUCAO
+            , sum( ia.CONSUMO *
+                   (
+                ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
+                - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
+                   )
+                 ) QTD_INSUMO
+            FROM BASI_030 ref -- referencia
+            JOIN PCPC_020 op -- OP
+              ON op.REFERENCIA_PECA = ref.REFERENCIA
+            JOIN PCPC_040 lote -- lote
+              ON lote.ORDEM_PRODUCAO = op.ORDEM_PRODUCAO
+            JOIN BASI_050 ia -- insumos de alternativa
+              ON ia.NIVEL_ITEM = 1
+             AND ia.NIVEL_COMP <> 1
+             AND ia.GRUPO_ITEM = op.REFERENCIA_PECA
+             AND (ia.SUB_ITEM = lote.PROCONF_SUBGRUPO OR ia.SUB_ITEM = '000')
+             AND (ia.ITEM_ITEM = lote.PROCONF_ITEM OR ia.ITEM_ITEM = '000000')
+             AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+             AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
+            LEFT JOIN BASI_040 coc -- combinação cor
+              ON ia.ITEM_COMP = '000000'
+             AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
+             AND coc.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+             AND coc.SEQUENCIA = ia.SEQUENCIA
+             AND coc.ITEM_ITEM = lote.PROCONF_ITEM
+            LEFT JOIN BASI_040 cot -- combinação tamanho
+              ON ia.SUB_COMP = '000'
+             AND cot.GRUPO_ITEM = ia.GRUPO_ITEM
+             AND cot.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
+             AND cot.SEQUENCIA = ia.SEQUENCIA
+             AND cot.SUB_ITEM = lote.PROCONF_SUBGRUPO
+            WHERE op.SITUACAO IN (2, 4) -- não cancelada
+              AND ia.NIVEL_COMP = {nivel}
+              AND ia.GRUPO_COMP = '{ref}'
+              AND CASE WHEN ia.ITEM_COMP = '000000'
+                  THEN coc.ITEM_COMP
+                  ELSE ia.ITEM_COMP
+                  END = '{cor}'
+              AND CASE WHEN ia.SUB_COMP = '000'
+                  THEN cot.SUB_COMP
+                  ELSE ia.SUB_COMP
+                  END = '{tam}'
+            GROUP BY
+              TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
+            , op.ORDEM_PRODUCAO
+            HAVING
+              sum( ia.CONSUMO *
+                   (
+                ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
+                - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
+                   )
+                 ) > 0
+            ORDER BY
+              1, 2
+          ) ness
+          LEFT JOIN (
+            SELECT UNIQUE
+              os.NUMERO_ORDEM
+            , l.ORDEM_PRODUCAO
+            FROM OBRF_080 os
+            JOIN pcpc_040 l
+              ON l.NUMERO_ORDEM = os.NUMERO_ORDEM
+            WHERE l.NUMERO_ORDEM <> 0
+          ) oss
+            ON oss.ORDEM_PRODUCAO = ness.ORDEM_PRODUCAO
+          LEFT JOIN OBRF_082 nfs
+            ON nfs.NUMERO_ORDEM = oss.NUMERO_ORDEM
+            AND nfs.PRODSAI_NIVEL99 = {nivel}
+            AND nfs.PRODSAI_GRUPO = '{ref}'
+            AND nfs.PRODSAI_ITEM = '{cor}'
+            AND nfs.PRODSAI_SUBGRUPO = '{tam}'
+          GROUP BY
+            ness.SEMANA_NECESSIDADE
+          , ness.ORDEM_PRODUCAO
+          , ness.QTD_INSUMO
+          , oss.NUMERO_ORDEM
+        --  ORDER BY
+        --    1, 2, 3, 4
         )
         SELECT
           n.SEMANA_NECESSIDADE
-        , sum(n.QTD_INSUMO) QTD_INSUMO
+        , sum(n.QTD_INSUMO) - coalesce(sum(n.QTD_OS), 0) QTD_INSUMO
         FROM NECES n
         GROUP BY
           n.SEMANA_NECESSIDADE
         HAVING
-          sum(n.QTD_INSUMO) > 0
+          sum(n.QTD_INSUMO) - coalesce(sum(n.QTD_OS), 0) > 0
         ORDER BY
           n.SEMANA_NECESSIDADE
     """.format(
