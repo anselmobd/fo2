@@ -72,10 +72,12 @@ class Op(View):
             qtd_lotes_fim = row['LOTES']
             context.update({
                 'i2_headers': ('Modelo', 'Tipo de referência', 'Referência',
-                               'Alternativa', 'Roteiro', 'Modelagem',
+                               'Alternativa', 'Roteiro',
+                               'Descrição', 'Modelagem',
                                'Qtd. Lotes', 'Quant. Itens'),
                 'i2_fields': ('MODELO', 'TIPO_REF', 'REF',
-                              'ALTERNATIVA', 'ROTEIRO', 'MOLDE',
+                              'ALTERNATIVA', 'ROTEIRO',
+                              'DESCR_REF', 'MOLDE',
                               'LOTES', 'QTD'),
                 'i2_data': i2_data,
             })

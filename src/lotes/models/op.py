@@ -81,6 +81,7 @@ def op_inform(cursor, op):
         , o.PEDIDO_VENDA PEDIDO
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PED_CLIENTE
         , r.NUMERO_MOLDE MOLDE
+        , r.DESCR_REFERENCIA DESCR_REF
         , o.OBSERVACAO
         , o.OBSERVACAO2
         , ( SELECT
