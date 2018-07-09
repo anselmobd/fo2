@@ -552,18 +552,30 @@ class Receber(View):
             })
             return context
 
+        max_digits = 0
         for row in data:
             row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
             row['DT_ENTREGA'] = row['DT_ENTREGA'].date()
+            num_digits = str(row['QTD_RECEBIDA'])[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+            num_digits = str(row['QTD_A_RECEBER'])[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
 
         group = ['NIVEL', 'REF', 'DESCR', 'COR', 'TAM']
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['QTD_PEDIDA', 'QTD_RECEBIDA', 'QTD_A_RECEBER'],
             'count': [],
-            'descr': {'DT_ENTREGA': 'Totais:'}
+            'descr': {'DT_ENTREGA': 'Totais:'},
+            'row_style': 'font-weight: bold;',
         })
         group_rowspan(data, group)
+
+        for row in data:
+            row['P_RECEBIDO|DECIMALS'] = 1
+            row['P_A_RECEBER|DECIMALS'] = 1
+            row['QTD_RECEBIDA|DECIMALS'] = max_digits
+            row['QTD_A_RECEBER|DECIMALS'] = max_digits
 
         context.update({
             'headers': ('Nível', 'Insumo', 'Descrição', 'Cor',
@@ -574,6 +586,11 @@ class Receber(View):
                        'TAM', 'DT_ENTREGA',
                        'QTD_PEDIDA', 'QTD_RECEBIDA', 'P_RECEBIDO',
                        'QTD_A_RECEBER', 'P_A_RECEBER', 'PEDIDOS'),
+            'style': {7: 'text-align: right;',
+                      8: 'text-align: right;',
+                      9: 'text-align: right;',
+                      10: 'text-align: right;',
+                      11: 'text-align: right;'},
             'group': group,
             'data': data,
         })
@@ -1120,6 +1137,7 @@ class MapaNecessidadeDetalhe(View):
             'flags': ['NO_TOT_1'],
             'global_sum': ['QTD_INSUMO'],
             'global_descr': {'QTD_PRODUTO': 'Total geral:'},
+            'row_style': 'font-weight: bold;',
         })
         group_rowspan(data, group)
 
