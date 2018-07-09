@@ -711,7 +711,7 @@ class MapaRefs(View):
             return context
         for row in data:
             link = reverse(
-                'insumo_mapa',
+                'insumo_mapa_por_insumo',
                 args=[row['NIVEL'], row['REF'], row['COR'], row['TAM']])
             row['REF|LINK'] = link
             row['COR|LINK'] = link
