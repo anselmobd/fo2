@@ -823,8 +823,8 @@ def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
             , op.ORDEM_PRODUCAO
             , sum( ia.CONSUMO *
                    (
-                ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
-                - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
+                ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD
+                - lote.QTDE_PECAS_2A - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
                    )
                  ) QTD_INSUMO
             FROM BASI_030 ref -- referencia
@@ -869,8 +869,8 @@ def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
             HAVING
               sum( ia.CONSUMO *
                    (
-                ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
-                - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
+                ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD
+                - lote.QTDE_PECAS_2A - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
                    )
                  ) > 0
             ORDER BY
