@@ -1,9 +1,20 @@
-__version__ = '0.1.99'
-__version__date__ = '29/06/2018'
+__version__ = '0.1.101'
+__version__date__ = '09/07/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.101 - 2018/07/09
+#   . Insumos
+#     . Mapa de compra - Cálculo de Necessidades semanais estava errado
+#     . Detalhe de necessidade de insumo em uma semana - Diversas melhorias de
+#       layout
+#     . Recebido - Diversas melhorias de layout
+#
+# - 0.1.100 - 2018/06/29
+#   . OP - Mostrando grades atuais de OP ignorando a grade inicial, pois podem
+#          ter sido adicionados novos lotes
 #
 # - 0.1.99 - 2018/06/29
 #   . RH - Atualizações
