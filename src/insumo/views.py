@@ -839,7 +839,7 @@ class MapaPorInsumo(View):
         })
 
         # Previsões
-        # data_ins = models.insumo_previsoes_semana_insumo(
+        # data_prev = models.insumo_previsoes_semana_insumo(
         #     cursor, nivel, ref, cor, tam)
 
         # Recebimentos
@@ -1116,7 +1116,10 @@ class MapaNecessidadeDetalhe(View):
             'group': group,
             'sum': ['QTD_PRODUTO', 'QTD_INSUMO'],
             'count': [],
-            'descr': {'OP': 'Totais:'}
+            'descr': {'OP': 'Totais:'},
+            'flags': ['NO_TOT_1'],
+            'global_sum': ['QTD_INSUMO'],
+            'global_descr': {'QTD_PRODUTO': 'Total geral:'},
         })
         group_rowspan(data, group)
 
