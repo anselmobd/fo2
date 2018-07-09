@@ -100,8 +100,21 @@ def totalize_data(data, config):
 def totalize_grouped_data(data, config):
     temp_end_row = data[0].copy()
     for key in temp_end_row:
-        temp_end_row[key] = 0
+        temp_end_row[key] = ''
     data.append(temp_end_row)
+
+    if 'global_sum' in config:
+        global_count = 0
+        global_tot = temp_end_row.copy()
+        if 'global_descr' not in config:
+            config['global_descr'] = config['descr']
+        for key in config['global_descr']:
+            global_tot[key] = config['global_descr'][key]
+        for key in config['global_sum']:
+            global_tot[key] = 0
+
+    for key in config['sum']:
+        temp_end_row[key] = 0
 
     totrows = {}
     init_group = True
@@ -136,7 +149,20 @@ def totalize_grouped_data(data, config):
             sum[key] += row[key]
         group_count += 1
 
+        if 'global_sum' in config:
+            global_count += 1
+            for key in config['global_sum']:
+                global_tot[key] += row[key]
+
     for i in range(len(data)-1, 0, -1):
         if i in totrows:
             data.insert(i, totrows[i])
+
+    if 'global_sum' in config:
+        total = True
+        if 'flags' in config and 'NO_TOT_1' in config['flags']:
+            total = global_count > 2  # por conta do temp_end_row
+        if total:
+            data.insert(len(data)-1, global_tot)
+
     del(data[len(data)-1])
