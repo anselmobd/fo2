@@ -1,4 +1,5 @@
 import re
+from pprint import pprint
 
 from django.template.defaulttags import register
 
@@ -156,6 +157,8 @@ def totalize_grouped_data(data, config):
 
     for i in range(len(data)-1, 0, -1):
         if i in totrows:
+            if 'row_style' in config:
+                totrows[i]['|STYLE'] = config['row_style']
             data.insert(i, totrows[i])
 
     if 'global_sum' in config:
@@ -163,6 +166,8 @@ def totalize_grouped_data(data, config):
         if 'flags' in config and 'NO_TOT_1' in config['flags']:
             total = global_count > 2  # por conta do temp_end_row
         if total:
+            if 'row_style' in config:
+                global_tot['|STYLE'] = config['row_style']
             data.insert(len(data)-1, global_tot)
 
     del(data[len(data)-1])
