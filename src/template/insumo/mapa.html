@@ -43,6 +43,19 @@
     <td></td>
     <td style="border-left: thin solid lightgrey;"></td>
     <td style="vertical-align: top;">
+      <h2>Necessidades das previsões</h2>
+      {% if data_prev %}
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_prev style=style_prev only %}
+          {% include "layout/tbody_generic.html" with fields=fields_prev data=data_prev style=style_prev only %}
+        </table>
+      {% else %}
+        <b>Nenhuma</b>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
       <h2>Recebimentos semanais</h2>
       {% if data_irs %}
         <table>
