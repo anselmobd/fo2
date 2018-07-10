@@ -1,9 +1,13 @@
-__version__ = '0.1.101'
-__version__date__ = '09/07/2018'
+__version__ = '0.1.102'
+__version__date__ = '10/07/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.102 - 2018/07/10
+#   . Insumos
+#     . Mapa de compra - Apresentando também necessidades das previsões
 #
 # - 0.1.101 - 2018/07/09
 #   . Insumos
