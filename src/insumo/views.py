@@ -858,16 +858,35 @@ class MapaPorInsumo(View):
         # Previsões
         data_prev = models.insumo_previsoes_semana_insumo(
             cursor, nivel, ref, cor, tam)
-        pprint(data_prev)
 
         max_digits = 0
         for row in data_prev:
+            row['DT_NECESSIDADE'] = row['DT_NECESSIDADE'].date()
             num_digits = str(row['QTD'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
+        # Descontando das necessidades previtas as necessidades reais
+        prev_idx = len(data_prev) - 1
+        if prev_idx >= 0:
+            for ness in reversed(data_ins):
+                while prev_idx >= 0:
+                    if data_prev[prev_idx]['DT_NECESSIDADE'] \
+                            <= ness['SEMANA_NECESSIDADE']:
+                        data_prev[prev_idx]['QTD'] -= ness['QTD_INSUMO']
+                        data_prev[prev_idx]['ITALIC'] = True
+                        ness['ITALIC'] = True
+                        break
+                    else:
+                        prev_idx -= 1
+
+        for row in data_ins:
+            if 'ITALIC' in row:
+                row['QTD_INSUMO|STYLE'] = 'font-style: italic;'
+
         for row in data_prev:
-            row['DT_NECESSIDADE'] = row['DT_NECESSIDADE'].date()
             row['QTD|DECIMALS'] = max_digits
+            if 'ITALIC' in row:
+                row['QTD|STYLE'] = 'font-style: italic;'
 
         context.update({
             'headers_prev': ['Semana', 'Quantidade'],
