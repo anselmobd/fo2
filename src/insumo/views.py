@@ -856,8 +856,25 @@ class MapaPorInsumo(View):
         })
 
         # Previsões
-        # data_prev = models.insumo_previsoes_semana_insumo(
-        #     cursor, nivel, ref, cor, tam)
+        data_prev = models.insumo_previsoes_semana_insumo(
+            cursor, nivel, ref, cor, tam)
+        pprint(data_prev)
+
+        max_digits = 0
+        for row in data_prev:
+            num_digits = str(row['QTD'])[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+
+        for row in data_prev:
+            row['DT_NECESSIDADE'] = row['DT_NECESSIDADE'].date()
+            row['QTD|DECIMALS'] = max_digits
+
+        context.update({
+            'headers_prev': ['Semana', 'Quantidade'],
+            'fields_prev': ['DT_NECESSIDADE', 'QTD'],
+            'style_prev': {2: 'text-align: right;'},
+            'data_prev': data_prev,
+        })
 
         # Recebimentos
         data_irs = models.insumo_recebimento_semana(
@@ -885,17 +902,25 @@ class MapaPorInsumo(View):
         })
 
         # Dicionários por semana (sem passado)
+        data_ness = [{
+            'DT': x['SEMANA_NECESSIDADE'],
+            'QTD': x['QTD_INSUMO']
+            } for x in data_ins]
+        data_ness.extend([{
+            'DT': x['DT_NECESSIDADE'],
+            'QTD': x['QTD']
+            } for x in data_prev])
         necessidades = {}
         pri_necessidade = None
         ult_necessidade = None
-        for row in data_ins:
+        for row in data_ness:
             semana = max(
-                row['SEMANA_NECESSIDADE'],
+                row['DT'],
                 semana_hoje)
             if semana in necessidades:
-                necessidades[semana] += row['QTD_INSUMO']
+                necessidades[semana] += row['QTD']
             else:
-                necessidades[semana] = row['QTD_INSUMO']
+                necessidades[semana] = row['QTD']
             if pri_necessidade is None:
                 pri_necessidade = semana
             ult_necessidade = semana
