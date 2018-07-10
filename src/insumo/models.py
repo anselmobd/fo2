@@ -1,4 +1,5 @@
 from pprint import pprint
+from operator import itemgetter
 
 from django.db import models
 from django.db import connections
@@ -1053,7 +1054,6 @@ def previsao(cursor, periodo=None):
     filtro_date = ''
     filtro_periodo = ''
     if periodo:
-        # TO_DATE('20/03/2018','DD/MM/YYYY')
         filtro_date = ''
         filtro_periodo = \
             "AND prev.DESCRICAO LIKE '{} %'".format(periodo)
@@ -1066,7 +1066,7 @@ def previsao(cursor, periodo=None):
                          ) = '9999 '
             """
 
-    # lista primeiro nível de necessidade da pŕevisao
+    # lista primeiro nível de necessidade da previsao
     sql = """
         WITH previsao AS (
         SELECT
@@ -1078,7 +1078,7 @@ def previsao(cursor, periodo=None):
           END ALT
         , p.PERIODO_PRODUCAO
         , p.DATA_INI_PERIODO INI_PERIODO
-        , p.DATA_INI_PERIODO - 7 DT_NECESSIDADE
+        , p.DATA_INI_PERIODO - 6 DT_NECESSIDADE
         , prev.NIVEL_ESTRUTURA NIVEL
         , prev.GRUPO_ESTRUTURA REF
         , ir.DESCR_REFERENCIA REF_DESCR
@@ -1170,7 +1170,7 @@ def previsao(cursor, periodo=None):
         , prev.DESCRICAO
         , p.PERIODO_PRODUCAO
         , p.DATA_INI_PERIODO
-        , p.DATA_INI_PERIODO - 7
+        , p.DATA_INI_PERIODO - 6
         , prev.NIVEL_ESTRUTURA
         , prev.GRUPO_ESTRUTURA
         , ir.DESCR_REFERENCIA
@@ -1234,8 +1234,13 @@ def previsao(cursor, periodo=None):
     return rows_to_dict_list(cursor)
 
 
-def necessidade_previsao(cursor, dual_nivel1):
+def necessidade_previsao(cursor, dual_nivel1, extra_field=None):
     # insumos de produtos selecionados em dual_nivel1
+    stm_extra_field = ''
+    if extra_field is not None:
+        stm_extra_field = ', pre.{extra_field} {extra_field}'.format(
+            extra_field=extra_field)
+
     sql = """
         WITH previsao AS ({dual_nivel1})
         SELECT
@@ -1255,6 +1260,7 @@ def necessidade_previsao(cursor, dual_nivel1):
         , tam.ORDEM_TAMANHO ORD_TAM
         , ia.ALTERNATIVA_COMP ALT
         , ia.CONSUMO * pre.QTD QTD
+        {stm_extra_field} -- stm_extra_field
         FROM previsao pre
         JOIN BASI_050 ia -- insumos de alternativa
           ON ia.NIVEL_ITEM = pre.NIVEL
@@ -1315,6 +1321,7 @@ def necessidade_previsao(cursor, dual_nivel1):
         , tam.ORDEM_TAMANHO
     """.format(
         dual_nivel1=dual_nivel1,
+        stm_extra_field=stm_extra_field,
         )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
@@ -1334,3 +1341,62 @@ def rolo_ref(cursor, barcode):
     """
     cursor.execute(sql, (barcode,))
     return rows_to_dict_list(cursor)
+
+
+def insumo_previsoes_semana_insumo(cursor, nivel, ref, cor, tam):
+    data = previsao(cursor)
+    insumo = []
+    while True:
+        dual_nivel1 = ''
+        union = ''
+        # TO_DATE('20/03/2018','DD/MM/YYYY')
+        for row in data:
+            if row['NIVEL'] == '1':
+                dual_select = '''
+                    SELECT
+                      {nivel} NIVEL
+                    , '{ref}' REF
+                    , '{cor}' COR
+                    , '{tam}' TAM
+                    , {qtd} QTD
+                    , {alt} ALT
+                    , TO_DATE('{dt}','YYYY-MM-DD') DT_NECESSIDADE
+                    FROM SYS.DUAL
+                '''.format(
+                    nivel=row['NIVEL'],
+                    ref=row['REF'],
+                    cor=row['COR'],
+                    tam=row['TAM'],
+                    qtd=row['QTD'],
+                    alt=row['ALT'],
+                    dt=row['DT_NECESSIDADE'].date(),
+                )
+                dual_nivel1 += union + dual_select
+                union = ' UNION '
+            elif row['NIVEL'] == nivel \
+                    and row['REF'] == ref \
+                    and row['COR'] == cor \
+                    and row['TAM'] == tam:
+                busca_insumo = [
+                    item for item in insumo
+                    if item['DT_NECESSIDADE'] == row['DT_NECESSIDADE']
+                    and item['NIVEL'] == row['NIVEL']
+                    and item['REF'] == row['REF']
+                    and item['COR'] == row['COR']
+                    and item['TAM'] == row['TAM']
+                    and item['ALT'] == row['ALT']
+                    ]
+                if busca_insumo == []:
+                    insumo.append(row)
+                else:
+                    busca_insumo[0]['QTD'] += row['QTD']
+        if dual_nivel1 == '':
+            break
+        else:
+            data = necessidade_previsao(cursor, dual_nivel1, 'DT_NECESSIDADE')
+
+    insumo = sorted(
+        insumo, key=itemgetter(
+            'DT_NECESSIDADE', 'NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
+
+    return insumo
