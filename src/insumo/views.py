@@ -1354,6 +1354,7 @@ class Necessidade1Previsao(View):
             'count': [],
             'descr': {'TAM': 'Total:'},
             'flags': ['NO_TOT_1'],
+            'row_style': 'font-weight: bold;',
         })
         group_rowspan(insumo, group)
 
