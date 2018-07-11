@@ -1543,7 +1543,7 @@ class NecessidadesPrevisoes(View):
 
 class MapaPorSemana(View):
     Form_class = MapaPorSemanaForm
-    template_name = 'insumo/sem.html'
+    template_name = 'insumo/mapa_sem.html'
     title_name = 'Mapa de compras por semana'
 
     def mount_context(self, cursor, item):
