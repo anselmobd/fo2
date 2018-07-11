@@ -6,16 +6,16 @@ urlpatterns = [
     url(r'^$', views.index, name='insumo'),
 
     url(r'^ref/$', views.Ref.as_view(), name='mp_ref'),
-    url(r'^ref/(?P<item>[29]?\.?.{5})/$',
-        views.Ref.as_view(), name='mp_ref_ref'),
+    url(r'^ref/(?P<item>[29]?\.?.{5})/$', views.Ref.as_view(),
+        name='mp_ref_ref'),
 
     url(r'^lista_insumo/$', views.ListaInsumo.as_view(),
         name='lista_insumo'),
     url(r'^lista_insumo/(?P<busca>.+)/$', views.ListaInsumo.as_view(),
         name='lista_insumo_busca'),
 
-    url(r'^rolo/(?P<barcode>.+)/(?P<origem>.+)/$',
-        views.rolo_json, name='mp_rolo_json'),
+    url(r'^rolo/(?P<barcode>.+)/(?P<origem>.+)/$', views.rolo_json,
+        name='mp_rolo_json'),
 
     url(r'^rolos_bipados/$', views.RolosBipados.as_view(),
         name='rolos_bipados'),
@@ -36,7 +36,8 @@ urlpatterns = [
         name='insumo_mapa_ref'),
 
     url(r'^mapa/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/(?P<tam>.{1,3})/$',
-        views.MapaPorInsumo.as_view(), name='insumo_mapa_por_insumo'),
+        views.MapaPorInsumo.as_view(),
+        name='insumo_mapa_por_insumo'),
 
     url(r'^necessidade_detalhe/(?P<nivel>[29])/(?P<ref>.{5})/'
         '(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
@@ -53,4 +54,9 @@ urlpatterns = [
     url(r'^necessidades_previsoes/$', views.NecessidadesPrevisoes.as_view(),
         name='insumo_necessidades_previsoes'),
 
+    url(r'^mapa_sem/$', views.MapaPorSemana.as_view(),
+        name='insumo_mapa_sem'),
+    url(r'^mapa_sem/(?P<periodo>\d{1,4})/(?P<qtd_semanas>\d{1,2})/?$',
+        views.MapaPorSemana.as_view(),
+        name='insumo_mapa_sem_get'),
 ]
