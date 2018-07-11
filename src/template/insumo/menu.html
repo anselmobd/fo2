@@ -3,12 +3,14 @@
   <ul>
     <li><a href="{% url 'lista_insumo' %}">Busca</a></li>
   </ul>
-  <li><a href="{% url 'insumo_mapa_ref' %}">Insumos para mapa de compras</a></li>
+  <li><a href="{% url 'insumo_mapa_ref' %}">Mapa de compras por insumo</a></li>
+  <li><a href="{% url 'insumo_mapa_sem' %}">Mapa de compras por semana</a></li>
+  <li>Análises de insumos</li>
   <ul>
-    <li><a href="{% url 'insumo_necessidade' %}">Necessidade</a></li>
+    <li><a href="{% url 'insumo_necessidade' %}">Necessidade (OP)</a></li>
     <li><a href="{% url 'insumo_receber' %}">A Receber</a></li>
     <li><a href="{% url 'insumo_estoque' %}">Estoque</a></li>
-    <li><a href="{% url 'insumo_necessidades_previsoes' %}">Insumos para previsões</a></li>
+    <li><a href="{% url 'insumo_necessidades_previsoes' %}">Total de previsões</a></li>
     <ul>
       <li><a href="{% url 'insumo_previsao' %}">Previsão detalhada</a></li>
     </ul>
