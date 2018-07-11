@@ -32,7 +32,8 @@ from .forms import \
     RefForm, \
     RoloForm, \
     RolosBipadosForm, \
-    ReceberForm
+    ReceberForm, \
+    MapaPorSemanaForm
 
 
 def index(request):
@@ -1537,4 +1538,36 @@ class NecessidadesPrevisoes(View):
         context = {'titulo': self.title_name}
         cursor = connections['so'].cursor()
         context.update(self.mount_context(cursor))
+        return render(request, self.template_name, context)
+
+
+class MapaPorSemana(View):
+    Form_class = MapaPorSemanaForm
+    template_name = 'insumo/sem.html'
+    title_name = 'Mapa de compras por semana'
+
+    def mount_context(self, cursor, item):
+        context = {'item': item}
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'item' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'item' in kwargs:
+            form.data['item'] = kwargs['item']
+        if form.is_valid():
+            item = form.cleaned_data['item']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, item))
+        context['form'] = form
         return render(request, self.template_name, context)
