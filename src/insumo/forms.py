@@ -246,3 +246,29 @@ class PrevisaoForm(forms.Form):
         except ValueError:
             periodo = None
         return periodo
+
+
+class MapaPorSemanaForm(forms.Form):
+    periodo = forms.CharField(
+        label='Período (semana)', max_length=4, min_length=1,
+        help_text='(Semana inicial)',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    qtd_semanas = forms.CharField(
+        label='Quantidade de semanas', max_length=2, min_length=1,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    def clean_positive(self, field_name):
+        try:
+            field_value = int(float(self.cleaned_data[field_name]))
+            if field_value < 0:
+                field_value = None
+        except ValueError:
+            field_value = None
+        return field_value
+
+    def clean_periodo(self):
+        return self.clean_positive('periodo')
+
+    def clean_qtd_semanas(self):
+        return self.clean_positive('qtd_semanas')
