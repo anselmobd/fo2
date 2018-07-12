@@ -3,60 +3,60 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='insumo'),
+    url(r'^$', views.index, name='index'),
 
-    url(r'^ref/$', views.Ref.as_view(), name='mp_ref'),
+    url(r'^ref/$', views.Ref.as_view(), name='ref'),
     url(r'^ref/(?P<item>[29]?\.?.{5})/$', views.Ref.as_view(),
-        name='mp_ref_ref'),
+        name='ref__get'),
 
-    url(r'^lista_insumo/$', views.ListaInsumo.as_view(),
-        name='lista_insumo'),
-    url(r'^lista_insumo/(?P<busca>.+)/$', views.ListaInsumo.as_view(),
-        name='lista_insumo_busca'),
+    url(r'^busca/$', views.Busca.as_view(),
+        name='busca'),
+    url(r'^busca/(?P<busca>.+)/$', views.Busca.as_view(),
+        name='busca__get'),
 
     url(r'^rolo/(?P<barcode>.+)/(?P<origem>.+)/$', views.rolo_json,
-        name='mp_rolo_json'),
+        name='rolo_json'),
 
     url(r'^rolos_bipados/$', views.RolosBipados.as_view(),
         name='rolos_bipados'),
 
     url(r'^bipa_rolo/$', views.BipaRolo.as_view(),
-        name='insumo_bipa_rolo'),
+        name='bipa_rolo'),
 
     url(r'^necessidade/$', views.Necessidade.as_view(),
-        name='insumo_necessidade'),
+        name='necessidade'),
 
     url(r'^receber/$', views.Receber.as_view(),
-        name='insumo_receber'),
+        name='receber'),
 
     url(r'^estoque/$', views.Estoque.as_view(),
-        name='insumo_estoque'),
+        name='estoque'),
 
-    url(r'^mapa_ref/$', views.MapaRefs.as_view(),
-        name='insumo_mapa_ref'),
+    url(r'^mapa_por_ref/$', views.MapaPorRefs.as_view(),
+        name='mapa_por_ref'),
 
     url(r'^mapa/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/(?P<tam>.{1,3})/$',
         views.MapaPorInsumo.as_view(),
-        name='insumo_mapa_por_insumo'),
+        name='mapa'),
 
-    url(r'^necessidade_detalhe/(?P<nivel>[29])/(?P<ref>.{5})/'
+    url(r'^mapa_necessidade_detalhe/(?P<nivel>[29])/(?P<ref>.{5})/'
         '(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
         views.MapaNecessidadeDetalhe.as_view(),
-        name='insumo_necessidade_detalhe'),
+        name='mapa_necessidade_detalhe'),
 
     url(r'^previsao/$', views.Previsao.as_view(),
-        name='insumo_previsao'),
+        name='previsao'),
 
     url(r'^necessidade_1_previsao/(?P<periodo>.{4})/$',
         views.Necessidade1Previsao.as_view(),
-        name='insumo_necessidade_1_previsao'),
+        name='necessidade_1_previsao'),
 
     url(r'^necessidades_previsoes/$', views.NecessidadesPrevisoes.as_view(),
-        name='insumo_necessidades_previsoes'),
+        name='necessidades_previsoes'),
 
-    url(r'^mapa_sem/$', views.MapaPorSemana.as_view(),
-        name='insumo_mapa_sem'),
-    url(r'^mapa_sem/(?P<periodo>\d{1,4})/(?P<qtd_semanas>\d{1,2})/?$',
+    url(r'^mapa_por_sem/$', views.MapaPorSemana.as_view(),
+        name='mapa_por_sem'),
+    url(r'^mapa_por_sem/(?P<periodo>\d{1,4})/(?P<qtd_semanas>\d{1,2})/?$',
         views.MapaPorSemana.as_view(),
-        name='insumo_mapa_sem_get'),
+        name='mapa_por_sem__get'),
 ]
