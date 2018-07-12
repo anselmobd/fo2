@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^intradm/', intr_adm_site.urls),
     url(r'^lotes/', include('lotes.urls', namespace='producao')),
     url(r'^produto/', include('produto.urls')),
-    url(r'^insumo/', include('insumo.urls')),
+    url(r'^insumo/', include('insumo.urls', namespace='insumo')),
     url(r'^geral/', include('geral.urls')),
     url(r'^contabil/', include('contabil.urls')),
     url(r'^comercial/', include('comercial.urls')),
