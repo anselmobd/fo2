@@ -11,7 +11,7 @@
 
 {% block content %}
 <h3 style="color: red;">Em desenvolvimento...</h3>
-<form action="{% url 'insumo:mapa_por_ref' %}" method="post">
+<form action="{% url 'insumo:mapa_por_sem' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>

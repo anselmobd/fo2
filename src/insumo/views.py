@@ -1547,13 +1547,13 @@ class MapaPorSemana(View):
     template_name = 'insumo/mapa_sem.html'
     title_name = 'Mapa de compras por semana'
 
-    def mount_context(self, cursor, item):
-        context = {'item': item}
+    def mount_context(self, cursor, periodo):
+        context = {'periodo': periodo}
 
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'item' in kwargs:
+        if 'periodo' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
             context = {'titulo': self.title_name}
@@ -1564,11 +1564,12 @@ class MapaPorSemana(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'item' in kwargs:
-            form.data['item'] = kwargs['item']
+        if 'periodo' in kwargs:
+            form.data['periodo'] = kwargs['periodo']
         if form.is_valid():
-            item = form.cleaned_data['item']
+            periodo = form.cleaned_data['periodo']
+            qtd_semanas = form.cleaned_data['qtd_semanas']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, item))
+            context.update(self.mount_context(cursor, periodo))
         context['form'] = form
         return render(request, self.template_name, context)
