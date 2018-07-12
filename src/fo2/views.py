@@ -27,5 +27,5 @@ def myip_view(request):
     return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
 
 
-class OficialSystextilView(TemplateView):
+class SystextilView(TemplateView):
     template_name = "oficial_systextil.html"
