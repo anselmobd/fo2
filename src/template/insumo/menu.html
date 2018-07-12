@@ -1,23 +1,23 @@
 <ul>
-  <li><a href="{% url 'mp_ref' %}">Insumo</a> (níveis 2 e 9)</li>
+  <li><a href="{% url 'insumo:ref' %}">Insumo</a> (níveis 2 e 9)</li>
   <ul>
-    <li><a href="{% url 'lista_insumo' %}">Busca</a></li>
+    <li><a href="{% url 'insumo:busca' %}">Busca</a></li>
   </ul>
-  <li><a href="{% url 'insumo_mapa_ref' %}">Mapa de compras por insumo</a></li>
-  <li><a href="{% url 'insumo_mapa_sem' %}">Mapa de compras por semana</a></li>
+  <li><a href="{% url 'insumo:mapa_por_ref' %}">Mapa de compras por insumo</a></li>
+  <li><a href="{% url 'insumo:mapa_por_sem' %}">Mapa de compras por semana</a></li>
   <li>Análises de insumos</li>
   <ul>
-    <li><a href="{% url 'insumo_necessidade' %}">Necessidade (OP)</a></li>
-    <li><a href="{% url 'insumo_receber' %}">A Receber</a></li>
-    <li><a href="{% url 'insumo_estoque' %}">Estoque</a></li>
-    <li><a href="{% url 'insumo_necessidades_previsoes' %}">Total de previsões</a></li>
+    <li><a href="{% url 'insumo:necessidade' %}">Necessidade (OP)</a></li>
+    <li><a href="{% url 'insumo:receber' %}">A Receber</a></li>
+    <li><a href="{% url 'insumo:estoque' %}">Estoque</a></li>
+    <li><a href="{% url 'insumo:necessidades_previsoes' %}">Total de previsões</a></li>
     <ul>
-      <li><a href="{% url 'insumo_previsao' %}">Previsão detalhada</a></li>
+      <li><a href="{% url 'insumo:previsao' %}">Previsão detalhada</a></li>
     </ul>
   </ul>
   <li>Rolos</li>
   <ul>
-    <li><a href="{% url 'insumo_bipa_rolo' %}">Bipa rolo</a></li>
-    <li><a href="{% url 'rolos_bipados' %}">Lista rolos bipados</a></li>
+    <li><a href="{% url 'insumo:bipa_rolo' %}">Bipa rolo</a></li>
+    <li><a href="{% url 'insumo:rolos_bipados' %}">Lista rolos bipados</a></li>
   </ul>
 </ul>

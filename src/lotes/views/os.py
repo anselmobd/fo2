@@ -77,7 +77,7 @@ class Os(View):
             if row['NIVEL'] is '1':
                 row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
             else:
-                row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
+                row['REF|LINK'] = reverse('insumo:ref__get', args=[row['REF']])
 
             if row['NF'] == 0:
                 row['NF'] = ''

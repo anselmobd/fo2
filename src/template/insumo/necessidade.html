@@ -1,7 +1,7 @@
 {% extends 'insumo/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'insumo' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'insumo:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'insumo_necessidade' %}" method="post">
+<form action="{% url 'insumo:necessidade' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>

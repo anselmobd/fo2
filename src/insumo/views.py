@@ -163,7 +163,7 @@ class Ref(View):
         return render(request, self.template_name, context)
 
 
-class ListaInsumo(View):
+class Busca(View):
     Form_class = FiltroForm
     template_name = 'insumo/lista_insumo.html'
     title_name = 'Listagem de insumos'
@@ -180,7 +180,7 @@ class ListaInsumo(View):
         else:
             link = ('REF')
             for row in data:
-                row['LINK'] = reverse('mp_ref_ref', args=[row['REF']])
+                row['LINK'] = reverse('insumo:ref__get', args=[row['REF']])
             context.update({
                 'headers': ('#', 'Nível', 'Referência', 'Descrição'),
                 'fields': ('NUM', 'NIVEL', 'REF', 'DESCR'),
@@ -297,7 +297,7 @@ class RolosBipados(View):
             rolos = rolos.values(
                 'dispositivo__nome', 'usuario__username', 'rolo', 'date',
                 'referencia', 'tamanho', 'cor')
-            dir_filename = os.path.join('insumos_rolos_bipados', filename)
+            dir_filename = os.path.join('insumo:rolos_bipados', filename)
             arq = os.path.join(settings.MEDIA_ROOT, dir_filename)
             with open(arq, 'w') as f:
                 for rolo in rolos:
@@ -464,7 +464,7 @@ class Necessidade(View):
             return context
 
         for row in data:
-            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
+            row['REF|LINK'] = reverse('insumo:ref__get', args=[row['REF']])
             row['OPS'] = re.sub(
                 r'([1234567890]+)',
                 r'<a href="/lotes/op/\1">\1&nbsp;<span '
@@ -555,7 +555,7 @@ class Receber(View):
 
         max_digits = 0
         for row in data:
-            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
+            row['REF|LINK'] = reverse('insumo:ref__get', args=[row['REF']])
             row['DT_ENTREGA'] = row['DT_ENTREGA'].date()
             num_digits = str(row['QTD_RECEBIDA'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
@@ -654,7 +654,7 @@ class Estoque(View):
 
         for row in data:
             # row['QUANT|STYLE'] = 'text-align: right;'
-            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
+            row['REF|LINK'] = reverse('insumo:ref__get', args=[row['REF']])
             if row['ULT_ENTRADA']:
                 row['ULT_ENTRADA'] = row['ULT_ENTRADA'].date()
             else:
@@ -701,7 +701,7 @@ class Estoque(View):
         return render(request, self.template_name, context)
 
 
-class MapaRefs(View):
+class MapaPorRefs(View):
     Form_class = MapaRefsForm
     template_name = 'insumo/mapa_ref.html'
     title_name = 'Insumos para mapa de compras'
@@ -729,7 +729,7 @@ class MapaRefs(View):
             return context
         for row in data:
             link = reverse(
-                'insumo_mapa_por_insumo',
+                'insumo:mapa',
                 args=[row['NIVEL'], row['REF'], row['COR'], row['TAM']])
             row['REF|LINK'] = link
             row['COR|LINK'] = link
@@ -839,7 +839,7 @@ class MapaPorInsumo(View):
         for row in data_ins:
             row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
             row['SEMANA_NECESSIDADE|LINK'] = reverse(
-                'insumo_necessidade_detalhe',
+                'insumo:mapa_necessidade_detalhe',
                 args=[nivel, ref, cor, tam, row['SEMANA_NECESSIDADE']])
             row['SEMANA_NECESSIDADE|TARGET'] = '_blank'
             row['QTD_INSUMO|DECIMALS'] = max_digits
@@ -1386,7 +1386,7 @@ class Necessidade1Previsao(View):
             max_digits = max(max_digits, num_digits)
 
         for row in insumo:
-            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
+            row['REF|LINK'] = reverse('insumo:ref__get', args=[row['REF']])
             if row['COR'] != row['COR_DESCR']:
                 row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
             if row['TAM'] != row['TAM_DESCR']:
@@ -1503,7 +1503,7 @@ class NecessidadesPrevisoes(View):
             max_digits = max(max_digits, num_digits)
 
         for row in insumo:
-            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
+            row['REF|LINK'] = reverse('insumo:ref__get', args=[row['REF']])
             if row['COR'] != row['COR_DESCR']:
                 row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
             if row['TAM'] != row['TAM_DESCR']:
