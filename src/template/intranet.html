@@ -6,7 +6,7 @@
 {% block header.content %}Intranet Tussor{% endblock header.content %}
 
 {% block advice %}
-  <!-- <center><big>Confira as <b>Dicas</b> em <a href="{% url 'rh' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH"> em ação!</a></big></center> -->
+  <!-- <center><big>Confira as <b>Dicas</b> em <a href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH"> em ação!</a></big></center> -->
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
   <tr>
     <td style="vertical-align: top;">
       <ul>
-        <li><a href="{% url 'rh' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
+        <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
         <br />
         <li>ERP</li>
         <ul>

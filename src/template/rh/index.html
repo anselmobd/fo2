@@ -8,21 +8,21 @@
   <table>
     <tr>
       <td style="vertical-align: top; padding-top: 2em;>
-        <a href="{% url 'rh' %}"><img src="{% static 'img/RH_100.jpg' %}" alt="RH em ação!"></a>
+        <a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_100.jpg' %}" alt="RH em ação!"></a>
       </td>
       <td style="width: 5em;">
         &nbsp;
       </td>
       <td>
         <h2>
-          <a href="/rh/datas/">Datas comemorativas <img src="/media/rh/banner_duomo_maes_2018_h50_icone.png" title="Feliz Dia das Mães!"
+          <a href="{% url 'rh:datas' %}">Datas comemorativas <img src="/media/rh/banner_duomo_maes_2018_h50_icone.png" title="Feliz Dia das Mães!"
             ><img style="opacity: 0.90;max-width: 45px;" src="/media/rh/DUOMO-Pascoa-2018_h50_icone.jpg" title="Boa Páscoa para todos!"
             ><img style="opacity: 0.78;max-width: 39px;" src="/media/rh/DUOMO-Dia-da-Mulher_h50_icone.jpg" title="Dia da Mulher"
             ><img style="opacity: 0.64;max-width: 32px;" src="/media/rh/DUOMO_Natal_2017_h50_icone.jpg" title="Natal 2017!"
             ><img style="opacity: 0.44;max-width: 22px;" src="/media/rh/DUOMO_Dia_Mundial_da_Gentileza_h50_icone.jpg" title="Dia mundial da Gentileza"></a>
         </h2>
         <h2>
-          <a href="/rh/campanhas/">Campanhas <img src="/media/rh/DUOMO-Febre-Amarela_h50_icone.png" title="Febre Amarela"
+          <a href="{% url 'rh:campanhas' %}">Campanhas <img src="/media/rh/DUOMO-Febre-Amarela_h50_icone.png" title="Febre Amarela"
             ><img style="opacity: 0.90;max-width: 45px;" src="/media/rh/DUOMO_Campanha_de_Natal_h50_icone.png" title="Natal 2017"
             ><img style="opacity: 0.78;max-width: 39px;" src="/media/rh/DUOMO_Novembro_Azul_17_h50_icone.jpg" title="Novembro Azul"></a>
         </h2>
@@ -53,11 +53,11 @@
         {% endfor %}
         <h2>Agenda</h2>
         <h4>14/6/2018 - Homenagem a Thiago e Silvio</h4>
-        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh_fotos_homenagem20180614' %}">fotos</a> da homenagem</a></h4>
+        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_homenagem20180614' %}">fotos</a> da homenagem</a></h4>
         <h4>2/6/2018 - Formação de brigadistas 2018</h4>
-        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh_fotos_brigadista2018' %}">fotos</a> e <a target="_blank" href="{% url 'rh_videos_brigadista2018' %}">vídeos</a> do treinamento</a></h4>
+        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_brigadista2018' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos_brigadista2018' %}">vídeos</a> do treinamento</a></h4>
         <h4>14/5 a 18/5/2018 - <a target="_blank" href="/media/rh/DUOMO-SIPAT2018_w600.jpg">SIPAT 2018</a></h4>
-        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh_fotos' %}">fotos</a> e <a target="_blank" href="{% url 'rh_videos' %}">vídeos</a> do evento</a></h4>
+        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos' %}">vídeos</a> do evento</a></h4>
       </td>
     </tr>
   </table>
