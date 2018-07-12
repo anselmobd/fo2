@@ -165,7 +165,7 @@ class Ref(View):
 
 class Busca(View):
     Form_class = FiltroForm
-    template_name = 'insumo/lista_insumo.html'
+    template_name = 'insumo/busca.html'
     title_name = 'Listagem de insumos'
 
     def mount_context(self, cursor, busca):
@@ -1308,7 +1308,7 @@ class Previsao(View):
 
 
 class Necessidade1Previsao(View):
-    template_name = 'insumo/necessidade_previsao.html'
+    template_name = 'insumo/necessidade_1_previsao.html'
     title_name = 'Necessidade de insumos da previsão'
 
     def mount_context(self, cursor, periodo):
