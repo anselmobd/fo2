@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db import connections
+from django.urls import reverse
 from django.views import View
 
 from fo2.template import group_rowspan
@@ -76,7 +77,7 @@ class Os(View):
             if row['NIVEL'] is '1':
                 row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
             else:
-                row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+                row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
 
             if row['NF'] == 0:
                 row['NF'] = ''
