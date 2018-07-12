@@ -2,6 +2,7 @@ import copy
 
 from django.shortcuts import render
 from django.db import connections
+from django.urls import reverse
 from django.views import View
 
 from fo2.template import group_rowspan
@@ -67,8 +68,9 @@ class Op(View):
             })
 
             row = i2_data[0]
-            row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
-            row['MODELO|LINK'] = '/produto/modelo/{}'.format(row['MODELO'])
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+            row['MODELO|LINK'] = reverse(
+                'produto:modelo__get', args=[row['MODELO']])
             qtd_lotes_fim = row['LOTES']
             context.update({
                 'i2_headers': ('Modelo', 'Tipo de referência', 'Referência',

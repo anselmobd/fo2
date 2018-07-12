@@ -75,7 +75,8 @@ class Os(View):
         for row in i_data:
             rowlinks = {}
             if row['NIVEL'] is '1':
-                row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+                row['REF|LINK'] = reverse(
+                    'produto:ref__get', args=[row['REF']])
             else:
                 row['REF|LINK'] = reverse('insumo:ref__get', args=[row['REF']])
 

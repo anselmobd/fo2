@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.shortcuts import render
 from django.db import connections
+from django.urls import reverse
 from django.views import View
 
 from fo2.template import group_rowspan
@@ -73,7 +74,7 @@ class Posicao(View):
         i_data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
         i_link = ('REF')
         for row in i_data:
-            row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+            row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
         context.update({
             'i_headers': ('Quantidade', 'Tipo', 'Referência', 'Cor', 'Tamanho',
                           'Descrição', 'Item'),

@@ -252,10 +252,12 @@ class Ref(View):
             })
         else:
             modelo_link = \
-                '<a href="/produto/modelo/{}">{}&nbsp;' \
+                '<a href="{modelo_link}">{modelo}&nbsp;' \
                 '<span class="glyphicon glyphicon-link" ' \
                 'aria-hidden="true"></span></a>'.format(
-                    data[0]['MODELO'], data[0]['MODELO'])
+                    modelo_link=reverse(
+                        'produto:modelo__get', args=[data[0]['MODELO']]),
+                    modelo=data[0]['MODELO'])
             if data[0]['MODELO'] != ' ':
                 context.update({'modelo': modelo_link})
             context.update({
@@ -288,7 +290,7 @@ class Ref(View):
             pa_link = ('REF')
             for row in pa_data:
                 if row['REF'] != ' ':
-                    row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+                    row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
             if len(pa_data) != 0:
                 context.update({
                     'pa_headers': ('Tipo', 'Referência', 'Alternativa'),
@@ -321,7 +323,7 @@ class Ref(View):
             e_link = ('REF')
             for row in e_data:
                 if row['REF'] != ' ':
-                    row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+                    row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
             if len(e_data) != 0:
                 context.update({
                     'e_headers': ('Alternativa', 'Descrição',
@@ -373,8 +375,8 @@ class Ref(View):
                         if e_row['COR_REF'] != '000000':
                             dif_000000 += 1
                         if e_row['NIVEL'] == '1':
-                            e_row['LINK'] = '/produto/ref/{}'.format(
-                                e_row['REF'])
+                            e_row['LINK'] = reverse(
+                                'produto:ref__get', args=[e_row['REF']])
                         else:
                             e_row['LINK'] = reverse(
                                 'insumo:ref__get',
@@ -445,7 +447,7 @@ class Modelo(View):
         else:
             link = ('REF')
             for row in data:
-                row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+                row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
                 if row['CNPJ9'] == 0:
                     row['CLIENTE'] = ''
                 else:
@@ -487,16 +489,16 @@ class Modelo(View):
         return render(request, self.template_name, context)
 
 
-class ListaProduto(View):
+class Busca(View):
     Form_class = FiltroForm
-    template_name = 'produto/lista_produto.html'
+    template_name = 'produto/busca.html'
     title_name = 'Listagem de produtos'
 
     def mount_context(self, cursor, busca):
         context = {'busca': busca}
 
         # Informações básicas
-        data = models.lista_produto(cursor, busca)
+        data = models.busca(cursor, busca)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum produto selecionado',
@@ -504,7 +506,7 @@ class ListaProduto(View):
         else:
             link = ('REF')
             for row in data:
-                row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+                row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
                 cnpj = '{:08d}/{:04d}-{:02d}'.format(
                     row['CNPJ9'],
                     row['CNPJ4'],
@@ -560,7 +562,7 @@ class EstrEstagioDeInsumo(View):
         else:
             link = ('REF')
             for row in data:
-                row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+                row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
             context.update({
                 'headers': ('Ref.', 'Descrição', 'Tam.', 'Cor', 'Alt.',
                             'MP', 'MP Tam.', 'MP Cor', 'MP Alt.',
