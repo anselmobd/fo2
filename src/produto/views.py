@@ -3,6 +3,7 @@ from django.db import connections
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.views import View
 
 from fo2.models import rows_to_dict_list
@@ -375,8 +376,9 @@ class Ref(View):
                             e_row['LINK'] = '/produto/ref/{}'.format(
                                 e_row['REF'])
                         else:
-                            e_row['LINK'] = '/insumo/ref/{}{}'.format(
-                                e_row['NIVEL'], e_row['REF'])
+                            e_row['LINK'] = reverse(
+                                'mp_ref_ref',
+                                args=[e_row['NIVEL']+e_row['REF']])
                     estruts.append({
                         'alt': '{}-{}'.format(
                             row['ALTERNATIVA'], row['DESCR']),

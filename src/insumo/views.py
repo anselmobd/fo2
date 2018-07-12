@@ -180,7 +180,7 @@ class ListaInsumo(View):
         else:
             link = ('REF')
             for row in data:
-                row['LINK'] = '/insumo/ref/{}'.format(row['REF'])
+                row['LINK'] = reverse('mp_ref_ref', args=[row['REF']])
             context.update({
                 'headers': ('#', 'Nível', 'Referência', 'Descrição'),
                 'fields': ('NUM', 'NIVEL', 'REF', 'DESCR'),
@@ -464,7 +464,7 @@ class Necessidade(View):
             return context
 
         for row in data:
-            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
             row['OPS'] = re.sub(
                 r'([1234567890]+)',
                 r'<a href="/lotes/op/\1">\1&nbsp;<span '
@@ -555,7 +555,7 @@ class Receber(View):
 
         max_digits = 0
         for row in data:
-            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
             row['DT_ENTREGA'] = row['DT_ENTREGA'].date()
             num_digits = str(row['QTD_RECEBIDA'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
@@ -654,7 +654,7 @@ class Estoque(View):
 
         for row in data:
             # row['QUANT|STYLE'] = 'text-align: right;'
-            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
             if row['ULT_ENTRADA']:
                 row['ULT_ENTRADA'] = row['ULT_ENTRADA'].date()
             else:
@@ -1386,7 +1386,7 @@ class Necessidade1Previsao(View):
             max_digits = max(max_digits, num_digits)
 
         for row in insumo:
-            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
             if row['COR'] != row['COR_DESCR']:
                 row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
             if row['TAM'] != row['TAM_DESCR']:
@@ -1503,7 +1503,7 @@ class NecessidadesPrevisoes(View):
             max_digits = max(max_digits, num_digits)
 
         for row in insumo:
-            row['REF|LINK'] = '/insumo/ref/{}'.format(row['REF'])
+            row['REF|LINK'] = reverse('mp_ref_ref', args=[row['REF']])
             if row['COR'] != row['COR_DESCR']:
                 row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
             if row['TAM'] != row['TAM_DESCR']:
