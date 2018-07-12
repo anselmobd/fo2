@@ -377,7 +377,7 @@ class Ref(View):
                                 e_row['REF'])
                         else:
                             e_row['LINK'] = reverse(
-                                'mp_ref_ref',
+                                'insumo:ref__get',
                                 args=[e_row['NIVEL']+e_row['REF']])
                     estruts.append({
                         'alt': '{}-{}'.format(
