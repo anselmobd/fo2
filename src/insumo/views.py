@@ -1171,7 +1171,7 @@ class MapaNecessidadeDetalhe(View):
             semana = row['SEMANA'].date()
             row['REF|LINK'] = reverse('ref_ref', args=[row['REF']])
             row['REF'] = row['REF'] + ' - ' + row['DESCR']
-            row['OP|LINK'] = reverse('producao:op_op', args=[row['OP']])
+            row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
 
         group = ['REF', 'DESCR']
         totalize_grouped_data(data, {

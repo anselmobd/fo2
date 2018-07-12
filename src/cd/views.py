@@ -373,9 +373,9 @@ class Estoque(View):
             else:
                 row['solicita'] = '0'
             row['op|LINK'] = reverse(
-                'producao:op_op', args=[row['op']])
+                'producao:op__get', args=[row['op']])
             row['lote|LINK'] = reverse(
-                'producao:posicao_lote', args=[row['lote']])
+                'producao:posicao__get', args=[row['lote']])
             row['local|LINK'] = reverse(
                 'cd_estoque_filtro', args=['E', row['local']])
             if row['estagio'] == 999:
@@ -784,7 +784,7 @@ class InconsistenciasDetalhe(View):
                 row['qtd'] = '-'
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             row['lote|LINK'] = reverse(
-                'producao:posicao_lote', args=[row['lote']])
+                'producao:posicao__get', args=[row['lote']])
         context.update({
             'headers': headers,
             'fields': fields,
@@ -798,7 +798,7 @@ class InconsistenciasDetalhe(View):
                 row['qtd'] = '-'
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             row['lote|LINK'] = reverse(
-                'producao:posicao_lote', args=[row['lote']])
+                'producao:posicao__get', args=[row['lote']])
         context.update({
             'headers63': headers,
             'fields63': fields,
