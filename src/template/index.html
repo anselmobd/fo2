@@ -56,10 +56,10 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
-        <li><a href="{% url 'contabil' %}">Contabilidade</a></li>
+        <li><a href="{% url 'contabil:index' %}">Contabilidade</a></li>
         {% include 'contabil/menu.html' %}
         <br />
-        <li><a href="{% url 'comercial' %}">Comercial</a></li>
+        <li><a href="{% url 'comercial:index' %}">Comercial</a></li>
         {% include 'comercial/menu.html' %}
         <br />
         <li><a href="{% url 'logistica' %}">Logistica</a></li>

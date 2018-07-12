@@ -39,9 +39,9 @@ urlpatterns = [
 
     url(r'^geral/', include('geral.urls')),
 
-    url(r'^contabil/', include('contabil.urls')),
+    url(r'^contabil/', include('contabil.urls', namespace='contabil')),
 
-    url(r'^comercial/', include('comercial.urls')),
+    url(r'^comercial/', include('comercial.urls', namespace='comercial')),
 
     url(r'^logistica/', include('logistica.urls')),
 

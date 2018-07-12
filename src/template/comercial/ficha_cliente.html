@@ -1,7 +1,7 @@
 {% extends 'comercial/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="/comercial/">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'comercial:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% load l10n %}
 {% load humanize %}
@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="/comercial/ficha/" method="post">
+<form action="{% url 'comercial:ficha_cliente' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
@@ -35,7 +35,7 @@
     <tbody>
     {% for row in data %}
     <tr>
-      <td><a href="{% url 'ficha_cliente_cnpj' row|get_item:'CNPJ' %}">{{ row|get_item:'CNPJ' }}</a></td>
+      <td><a href="{% url 'comercial:ficha_cliente__get' row|get_item:'CNPJ' %}">{{ row|get_item:'CNPJ' }}</a></td>
       <td>{{ row|get_item:'CLIENTE' }}</td>
     </tr>
     {% endfor %}
