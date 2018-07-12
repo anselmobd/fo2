@@ -1,7 +1,7 @@
 {% extends 'produto/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="/produto/">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="/produto/lista_produto/" method="post">
+<form action="{% url 'produto:busca' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     Busca Filtro em Referência, Descrição, Responsável, início de CNPJ e Nome fantasia do cliente (ou Razão Social)<br />

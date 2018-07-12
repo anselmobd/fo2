@@ -128,7 +128,7 @@ class Ref(View):
         u_data = models.ref_usado_em(cursor, nivel, ref)
         u_link = ('REF')
         for row in u_data:
-            row['LINK'] = '/produto/ref/{}'.format(row['REF'])
+            row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
         if len(u_data) != 0:
             context.update({
                 'u_headers': ('Tipo', 'Referência', 'Descrição',
@@ -473,9 +473,10 @@ class Necessidade(View):
                 str(row['OPS']))
             row['REFS'] = re.sub(
                 r'([^, ]+)',
-                r'<a href="/produto/ref/\1">\1&nbsp;<span '
+                r'<a href="{produto_ref}\1">\1&nbsp;<span '
                 'class="glyphicon glyphicon-link" '
-                'aria-hidden="true"></span></a>',
+                'aria-hidden="true"></span></a>'.format(
+                    produto_ref=reverse('produto:ref')),
                 str(row['REFS']))
         context.update({
             'headers': ('Nível', 'Insumo', 'Descrição',
@@ -1169,7 +1170,7 @@ class MapaNecessidadeDetalhe(View):
 
         for row in data:
             semana = row['SEMANA'].date()
-            row['REF|LINK'] = reverse('ref_ref', args=[row['REF']])
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['REF'] = row['REF'] + ' - ' + row['DESCR']
             row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
 
@@ -1260,7 +1261,7 @@ class Previsao(View):
             max_digits = max(max_digits, num_digits)
 
         for row in data:
-            row['REF|LINK'] = '/produto/ref/{}'.format(row['REF'])
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             if row['COR'] != row['COR_DESCR']:
                 row['COR'] = '{} ({})'.format(row['COR'], row['COR_DESCR'])
             if row['TAM'] != row['TAM_DESCR']:

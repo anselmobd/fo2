@@ -2,6 +2,7 @@ import copy
 
 from django.shortcuts import render
 from django.db import connections
+from django.urls import reverse
 from django.views import View
 
 from lotes.forms import PedidoForm
@@ -45,8 +46,8 @@ class Pedido(View):
             for row in o_data:
                 row['ORDEM_PRODUCAO|LINK'] = '/lotes/op/{}'.format(
                     row['ORDEM_PRODUCAO'])
-                row['REFERENCIA_PECA|LINK'] = '/produto/ref/{}'.format(
-                    row['REFERENCIA_PECA'])
+                row['REFERENCIA_PECA|LINK'] = reverse(
+                    'produto:ref__get', args=[row['REFERENCIA_PECA']])
                 if row['ORDEM_PRINCIPAL'] == 0:
                     row['ORDEM_PRINCIPAL'] == ''
                 else:

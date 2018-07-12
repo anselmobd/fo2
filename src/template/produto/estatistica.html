@@ -1,7 +1,7 @@
 {% extends 'produto/index.html' %}
 
 {% block title.content %}{{ tela }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ tela }} - <a href="/produto/">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ tela }} - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -32,7 +32,7 @@ Quantidade de produtos: <a id="stat_nivel">{{ quant }}</a>
   function showStatNivelN() {
     $.ajax({
       type: 'GET',
-      url: '/produto/ajax/stat_niveis/'+this.className+'/',
+      url: '{% url 'produto:stat_niveis' '9' %}'.replace('9', this.className),
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success : function(data) {
         if (data) {
@@ -45,7 +45,7 @@ Quantidade de produtos: <a id="stat_nivel">{{ quant }}</a>
   function showStatNivel() {
     $.ajax({
       type: 'GET',
-      url: '/produto/ajax/stat_nivel/',
+      url: '{% url 'produto:stat_nivel' %}',
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success: function (data) {
         if (data) {

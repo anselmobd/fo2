@@ -499,7 +499,7 @@ def modelo_inform(cursor, modelo):
     return rows_to_dict_list(cursor)
 
 
-def lista_produto(cursor, busca):
+def busca(cursor, busca):
     # Tamanhos de produto
     filtro = ''
     for palavra in busca.split(' '):
