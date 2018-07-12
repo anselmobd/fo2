@@ -1,7 +1,11 @@
+from pprint import pprint
+import pytz
+
+from django.utils import timezone
 from django import forms
 
 from produto.models import Colecao
-from insumo.models import ContaEstoque
+from insumo.models import ContaEstoque, Periodo
 
 
 class RefForm(forms.Form):
@@ -258,7 +262,18 @@ class MapaPorSemanaForm(forms.Form):
         label='Quantidade de semanas', max_length=2, min_length=1,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
-    def clean_positive(self, field_name):
+    def __init__(self, *args, **kwargs):
+        super(MapaPorSemanaForm, self).__init__(*args, **kwargs)
+
+        periodo_atual = Periodo.confeccao.filter(
+            data_ini_periodo__lte=timezone.now().date()).filter(
+            data_fim_periodo__gte=timezone.now().date()).values()
+        periodo_default = periodo_atual[0]['periodo_producao'] \
+            if periodo_atual else ''
+
+        self.fields['periodo'].initial = periodo_default
+
+    def clean__positive(self, field_name):
         try:
             field_value = int(float(self.cleaned_data[field_name]))
             if field_value < 0:
@@ -268,7 +283,7 @@ class MapaPorSemanaForm(forms.Form):
         return field_value
 
     def clean_periodo(self):
-        return self.clean_positive('periodo')
+        return self.clean__positive('periodo')
 
     def clean_qtd_semanas(self):
-        return self.clean_positive('qtd_semanas')
+        return self.clean__positive('qtd_semanas')
