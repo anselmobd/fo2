@@ -1,9 +1,12 @@
-__version__ = '0.1.102'
-__version__date__ = '10/07/2018'
+__version__ = '0.1.103'
+__version__date__ = '12/07/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.103 - 2018/07/12
+#   . Interno: Muitas correções de namespace
 #
 # - 0.1.102 - 2018/07/10
 #   . Insumos
