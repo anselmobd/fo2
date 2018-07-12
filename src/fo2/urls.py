@@ -43,7 +43,7 @@ urlpatterns = [
 
     url(r'^comercial/', include('comercial.urls', namespace='comercial')),
 
-    url(r'^logistica/', include('logistica.urls')),
+    url(r'^logistica/', include('logistica.urls', namespace='logistica')),
 
     url(r'^rh/', include('rh.urls', namespace='rh')),
 
