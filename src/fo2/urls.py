@@ -45,7 +45,7 @@ urlpatterns = [
 
     url(r'^logistica/', include('logistica.urls')),
 
-    url(r'^rh/', include('rh.urls')),
+    url(r'^rh/', include('rh.urls', namespace='rh')),
 
     url(r'^cd/', include('cd.urls')),
 
