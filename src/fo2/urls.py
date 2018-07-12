@@ -33,7 +33,7 @@ urlpatterns = [
 
     url(r'^lotes/', include('lotes.urls', namespace='producao')),
 
-    url(r'^produto/', include('produto.urls')),
+    url(r'^produto/', include('produto.urls', namespace='produto')),
 
     url(r'^insumo/', include('insumo.urls', namespace='insumo')),
 
