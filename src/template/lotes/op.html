@@ -124,7 +124,7 @@
   {% include "layout/html_tbody_link.html" with fields=fields data=data link=link only %}
 </table>
 <h3>Responsáveis e datas de movimentações de estágios</h3>
-{% if os_data %}
+{% if u_data %}
   <table>
     {% include "layout/html_thead.html" with data=u_headers only %}
     {% include "layout/html_tbody_link.html" with fields=u_fields data=u_data only %}
