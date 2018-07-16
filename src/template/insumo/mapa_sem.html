@@ -16,16 +16,8 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if insumo %}
-  <h3>Referência do insumo: {{ insumo }}</h3>
-{% endif %}
-{% if conta_estoque %}
-  <h3>Conta de estoque do insumo: {{ conta_estoque }}</h3>
-{% endif %}
-{% if necessidade == 'a' %}
-  <h3>Apenas insumos com necessidades a partir desta semana</h3>
-{% elif necessidade == 't' %}
-  <h3>Todos os insumos</h3>
+{% if periodo_ini %}
+  <h3>Periodo: {{ periodo|safe }} (segunda{{ qtd_semanas|pluralize }}-feira{{ qtd_semanas|pluralize }}: {{ periodo_ini }}{% if periodo_ini != periodo_fim %} - {{ periodo_fim }}{% endif %})</h3>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>

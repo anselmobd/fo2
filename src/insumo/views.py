@@ -5,6 +5,7 @@ import re
 import time
 from operator import itemgetter
 from pprint import pprint
+from datetime import timedelta
 
 from django.db import connections
 from django.db.models import Q
@@ -1547,6 +1548,30 @@ class MapaPorSemana(View):
     template_name = 'insumo/mapa_sem.html'
     title_name = 'Mapa de compras por semana'
 
+    def mount_context_pre(self, cursor, periodo, qtd_semanas):
+        if periodo is None:
+            return {}
+
+        if qtd_semanas is None:
+            qtd_semanas = 1
+        periodo_atual = models.Periodo.confeccao.filter(
+            periodo_producao=periodo
+        ).values()
+        periodo_ini = ''
+        periodo_fim = ''
+        if periodo_atual:
+            periodo_ini = periodo_atual[0]['data_ini_periodo'].date()
+            periodo_ini += timedelta(days=1)
+            periodo_fim = periodo_ini+timedelta(weeks=qtd_semanas-1)
+
+        context = {'periodo': periodo,
+                   'periodo_ini': periodo_ini,
+                   'periodo_fim': periodo_fim,
+                   'qtd_semanas': qtd_semanas,
+                   }
+
+        return context
+
     def mount_context(self, cursor, periodo):
         context = {'periodo': periodo}
 
@@ -1558,6 +1583,15 @@ class MapaPorSemana(View):
         else:
             context = {'titulo': self.title_name}
             form = self.Form_class()
+            periodo = None
+            if form.fields['periodo'].initial:
+                periodo = form.fields['periodo'].initial
+            qtd_semanas = None
+            if form.fields['qtd_semanas'].initial:
+                qtd_semanas = form.fields['qtd_semanas'].initial
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context_pre(
+                cursor, periodo, qtd_semanas))
             context['form'] = form
             return render(request, self.template_name, context)
 
@@ -1570,6 +1604,8 @@ class MapaPorSemana(View):
             periodo = form.cleaned_data['periodo']
             qtd_semanas = form.cleaned_data['qtd_semanas']
             cursor = connections['so'].cursor()
+            context.update(self.mount_context_pre(
+                cursor, periodo, qtd_semanas))
             context.update(self.mount_context(cursor, periodo))
         context['form'] = form
         return render(request, self.template_name, context)
