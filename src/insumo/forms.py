@@ -255,7 +255,7 @@ class PrevisaoForm(forms.Form):
 class MapaPorSemanaForm(forms.Form):
     periodo = forms.CharField(
         label='Período (semana)', max_length=4, min_length=1,
-        help_text='(Semana inicial)',
+        help_text='(segunda-feira inicial)',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
     qtd_semanas = forms.CharField(
@@ -266,20 +266,27 @@ class MapaPorSemanaForm(forms.Form):
         super(MapaPorSemanaForm, self).__init__(*args, **kwargs)
 
         periodo_atual = Periodo.confeccao.filter(
-            data_ini_periodo__lte=timezone.now().date()).filter(
-            data_fim_periodo__gte=timezone.now().date()).values()
+            data_ini_periodo__lte=timezone.now()
+        ).filter(
+            data_fim_periodo__gte=timezone.now()
+        ).values()
         periodo_default = periodo_atual[0]['periodo_producao'] \
             if periodo_atual else ''
 
         self.fields['periodo'].initial = periodo_default
+        self.fields['qtd_semanas'].initial = 1
 
     def clean__positive(self, field_name):
         try:
             field_value = int(float(self.cleaned_data[field_name]))
-            if field_value < 0:
+            if field_value <= 0:
                 field_value = None
         except ValueError:
             field_value = None
+        if field_value is None:
+            raise forms.ValidationError(
+                "Esperado um valor numérico maior que zero.",
+                code='não positivo')
         return field_value
 
     def clean_periodo(self):
