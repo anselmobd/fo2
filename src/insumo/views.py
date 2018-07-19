@@ -1616,8 +1616,19 @@ class MapaPorSemana(View):
 
 def mapa_sem_ref(request, ref):
     template_name = 'insumo/mapa_sem_ref.html'
+    cursor = connections['so'].cursor()
+    sql = """
+        SELECT
+          r.DESCR_REFERENCIA
+        FROM BASI_030 r
+        WHERE r.NIVEL_ESTRUTURA = 1
+          AND r.REFERENCIA = %s
+    """
+    cursor.execute(sql, [ref])
+    row = cursor.fetchone()
     context = {
         'ref': ref,
+        'descr': row[0],
     }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
