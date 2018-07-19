@@ -299,7 +299,7 @@ class RolosBipados(View):
             rolos = rolos.values(
                 'dispositivo__nome', 'usuario__username', 'rolo', 'date',
                 'referencia', 'tamanho', 'cor')
-            dir_filename = os.path.join('insumo:rolos_bipados', filename)
+            dir_filename = os.path.join('insumo_rolos_bipados', filename)
             arq = os.path.join(settings.MEDIA_ROOT, dir_filename)
             with open(arq, 'w') as f:
                 for rolo in rolos:
