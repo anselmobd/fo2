@@ -22,10 +22,46 @@
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
-{% if data %}
+{% if refs %}
+  {% for ref in refs %}
+    - {{ ref }}</br>
+    <!-- { % include "insumo/mapa_sem_ref.html" with ref=ref only %} -->
+  {% endfor %}
+  <h4>Table</h4>
   <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
+    <thead>
+    <tr>
+    <th>
+    Referências
+    </th>
+    </tr>
+    </thead>
+    <tbody id="tbrefs">
+    </tbody>
   </table>
 {% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  var refs = [
+    {% for ref in refs %}
+      {% if forloop.counter > 1 %}, {% endif %}'{{ ref }}'
+    {% endfor %}
+  ];
+
+  var tbRefs = document.getElementById('tbrefs');
+
+  for (var i = 0, l = refs.length; i < l; i++) {
+    alert(refs[i]);
+    tr = document.createElement('tr');
+    td = document.createElement('td');
+    text = document.createTextNode(refs[i]);
+    td.appendChild(text);
+    tr.appendChild(td);
+    tbRefs.appendChild(tr);
+
+  }
+
+</script>
 {% endblock %}
