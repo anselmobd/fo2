@@ -1,9 +1,9 @@
 {% if th %}
-  <tr><th>Nível</th><th>Referência</th><th align="right">Descrição</th></tr>
+  <tr><th>Nível</th><th>Referência</th><th>Descrição</th><th>Cor</th><th>Tamanho</th></tr>
 {% else %}
   {% if data %}
     {% for row in data %}
-      <tr id="id_{{ row.ref }}" class="key_ref _ref_{{ row.ref }}"><td>{{ row.nivel }}</td><td>{{ row.ref }}</td><td align="right">{{ row.descr }}</td></tr>
+      <tr id="id_{{ ref }}" class="key_ref _ref_{{ ref }}"><td>{{ nivel }}</td><td>{{ ref }}</td><td align="right">{{ row.descr }}</td><td>{{ cor }}</td><td>{{ tam }}</td></tr>
       <!-- <td>{{ ref }}</td><td align="right">{{ descr }}</td> -->
     {% endfor %}
   {% endif %}

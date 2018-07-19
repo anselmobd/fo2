@@ -1574,7 +1574,13 @@ class MapaPorSemana(View):
         return context
 
     def mount_context(self, cursor, periodo, qtd_semanas):
-        refs = ['9CA001', '9CX001']
+        cursor = connections['so'].cursor()
+        data = models.insumos_cor_tamanho_usados(cursor)
+        pprint(data)
+        refs = []
+        for row in data:
+            refs.append('{}.{}.{}.{}'.format(
+                row['nivel'], row['ref'], row['cor'], row['tam']))
 
         context = {'refs': refs}
 
@@ -1617,14 +1623,21 @@ class MapaPorSemana(View):
 def mapa_sem_ref(request, item):
     template_name = 'insumo/mapa_sem_ref.html'
     context = {}
-    if len(item) < 6:
+    if len(item) == 2:
         context['th'] = True
     else:
         nivel = item[0]
-        ref = item[1:]
+        ref = item[2:7]
+        cor = item[8:14]
+        tam = item[15:18]
         cursor = connections['so'].cursor()
         data = models.compras_periodo_insumo(cursor, nivel, ref)
-        context['data'] = data
-        context['item'] = item
+        context = {
+            'data': data,
+            'nivel': nivel,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+        }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
