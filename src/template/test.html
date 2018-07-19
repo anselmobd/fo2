@@ -4,70 +4,143 @@
 </head>
 <body>
 <style>
-#pop_back {
-  display:none;
-  z-index:100;
-  opacity: 0.5;
-
-  width: 100%;
-  height: 100%;
-  margin: 0em;
-  left: 0em;
-  top: 0em;
-  background: black;
-  position: fixed;
-}
-#pop {
-  display:none;
-  z-index:110;
-  opacity: 1;
-
-  width: 15em;
-  height: 15em;
-  background-color: #fff;
-
-  position: fixed;
-  top:0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  margin: auto;
-  border:5px solid #ddd;
-  padding:3px;
-}
 </style>
 
+<p>div</p>
+<button onclick="ss('ref')">ord ref</button>
+<button onclick="ss('qtd')">ord qtd</button>
+<button onclick="console.log(keyCache)">log</button>
+
+<div id="list">
+    <div id="iCX001" class="key_ref _ref_CX001 key_qtd _qtd_1245">CX001: 1245</div>
+    <div id="iPA002" class="key_ref _ref_PA002 key_qtd _qtd_1345">PA002: 1345</div>
+    <div id="iPA001" class="key_ref _ref_PA001 key_qtd _qtd_0245">PA001:  245</div>
+    <div id="iCA001" class="key_ref _ref_CA001 key_qtd _qtd_1244">CA001: 1244</div>
+    <div id="iSA001" class="key_ref _ref_SA001 key_qtd _qtd_0135">SA001:  135</div>
+</div>
+
+<p>table</p>
+<button onclick="sortChildren('tlist', 'ref')">ord ref</button>
+<button onclick="sortChildren('tlist', 'qtd')">ord qtd</button>
+<button onclick="console.log(keyCache)">log</button>
+
+<table>
+  <tbody id="tlist">
+    <tr id="tCX001" class="key_ref _ref_CX001 key_qtd _qtd_1245"><td>CX001</td><td align="right">1245</td></tr>
+    <tr id="tPA002" class="key_ref _ref_PA002 key_qtd _qtd_1345"><td>PA002</td><td align="right">1345</td></tr>
+    <tr id="tPA001" class="key_ref _ref_PA001 key_qtd _qtd_0245"><td>PA001</td><td align="right">245</td></tr>
+    <tr id="tCA001" class="key_ref _ref_CA001 key_qtd _qtd_1244"><td>CA001</td><td align="right">1244</td></tr>
+    <tr id="tSA001" class="key_ref _ref_SA001 key_qtd _qtd_0135"><td>SA001</td><td align="right">135</td></tr>
+  </tbody>
+</table>
+
+<p>dinamic table</p>
+<table>
+  <tbody id="dtlist">
+  </tbody>
+</table>
+
 <script type="text/javascript">
-  function solic_l() {
-    document.getElementById('pop_back').style.display='block';
-    document.getElementById('pop').style.display='block';
+  var refs = ['asdff', 'qweee'];
+  var toAdd = document.getElementById('dtlist');
+
+  for (var i = 0, l = refs.length; i < l; i++) {
+    alert(refs[i]);
+    tr = document.createElement('tr');
+    td = document.createElement('td');
+    text = document.createTextNode(refs[i]);
+    td.appendChild(text);
+    tr.appendChild(td);
+    toAdd.appendChild(tr);
   }
-  function close_solic_l() {
-    document.getElementById('pop_back').style.display='none';
-    document.getElementById('pop').style.display='none';
+
+  // console.log('-> load');
+  // var kCache = {};
+  var keyCache = {};
+
+  function classKeyCache(key, el) {
+    var value = getClassKey(el, key);
+    if ( !keyCache[key] ) {
+      keyCache[key] = {}
+    }
+    keyCache[key][el.id] = value
+    console.log(key+'.'+el.id+': '+value);
+    return value;
+  }
+
+  function getKeyCache(key, id) {
+    if ( keyCache[key] ) {
+      return keyCache[key][id];
+    }
+    return NaN;
+  }
+
+  // function classKCache(el) {
+  //   // console.log('-> classKCache');
+  //   var value = getClassKey(el, 'ref');
+  //   kCache[el.id] = value
+  //   console.log(el.id+': '+value);
+  //   return value;
+  // }
+
+  function getClassKey(el, key) {
+    // console.log('-> getClasKey '+key);
+    var cl = el.classList;
+    for (i = 0; i < cl.length; i++) {
+      if ( cl[i] == ('key_'+key) ) {
+        if ( i++ < cl.length ) {
+          cls = cl[i].split('_')
+          if ( cls[1] == key ) {
+            return cls[2];
+          }
+        }
+      }
+    }
+    return NaN;
+  }
+
+  function ss(sortKey) {
+    sortChildren('list', sortKey)
+  }
+
+  function sortChildren(parentId, sortKey) {
+    // console.log('-> ss');
+    var toSort = document.getElementById(parentId).children;
+    // console.log(toSort);
+
+    toSort = Array.prototype.slice.call(toSort, 0);
+
+    // toSort.sort(function(a, b) {
+    //   return a.id.localeCompare(b.id)
+    // });
+    toSort.sort(function(a, b) {
+      // console.log('-> sortfunc');
+      // console.log(a.id);
+      // console.log(a.className);
+      // console.log(a.classList);
+      // console.log(getClassKey(a, 'ref'));
+      akey = getKeyCache(sortKey, a.id) || classKeyCache(sortKey, a);
+      bkey = getKeyCache(sortKey, b.id) || classKeyCache(sortKey, b);
+      // akey = kCache[a.id] || classKCache(a);
+      // bkey = kCache[b.id] || classKCache(b);
+      // akey = a.id; // keys[a.id] || addKey(a.id, a.class)
+      // bkey = b.id; // keys[b.id] || addKey(b.id, b.class)
+      // console.log(akey+' '+bkey);
+      return akey.localeCompare(bkey)
+    });
+
+    // var parent = document.getElementById('list');
+    // parent.innerHTML = '';
+    //
+    // for(var i = 0, l = toSort.length; i < l; i++) {
+    //     parent.appendChild(toSort[i]);
+    // }
+    for (var i = 0, l = toSort.length; i < l; i++) {
+        toSort[i].parentNode.appendChild(toSort[i]);
+    }
+
   }
 </script>
 
-<div id="pop_back">
-</div>
-<div id="pop" onkeypress="enter_solicitar(event);" tabindex="1">
-  <a class="pop" href="#" onclick="close_solic_l();">x</a>
-  <div style="text-align:center;">
-    <a id="pp"></a>
-    <h4>data</h4> <h4>data</h4>
-  </div>
-</div>
-<p><a title="Solic" href="#pp" onclick="solic_l();">line 1</a></p>
-<p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p>
-<p><a title="Solic" href="#pp" onclick="solic_l();">line 2</a></p>
-<p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p>
-<p><a title="Solic" href="#pp" onclick="solic_l();">line 3</a></p>
-<p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p>
-<p><a title="Solic" href="#pp" onclick="solic_l();">line 4</a></p>
-<p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p>
-<p><a title="Solic" href="#pp" onclick="solic_l();">line 5</a></p>
-<p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p> <p>&nbsp;</p>
-<p><a title="Solic" href="#pp" onclick="solic_l();">line 6</a></p>
 </body>
 </html>
