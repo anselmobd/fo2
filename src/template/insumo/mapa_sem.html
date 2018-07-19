@@ -59,7 +59,8 @@
 
     $.ajax({
       type: 'GET',
-      url: '{% url 'insumo:mapa_por_sem_ref__get' '000000' %}'.replace('000000', refer),
+      url: '{% url 'insumo:mapa_por_sem_ref__get' '0.00000.000000.000' %}'.replace(
+        '0.00000.000000.000', refer),
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success : function(data) {
         if (data) {
