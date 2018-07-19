@@ -59,8 +59,7 @@ urlpatterns = [
     url(r'^mapa_por_sem/(?P<periodo>\d{1,4})/(?P<qtd_semanas>\d{1,2})/?$',
         views.MapaPorSemana.as_view(),
         name='mapa_por_sem__get'),
-
-    url(r'^mapa_por_sem_ref/(?P<item>(?:.{2}|.{6}))/$',
+    url(r'^mapa_por_sem_ref/(?P<item>(?:.{2}|\d\..{5}\..{6}\..{1,3}))/$',
         views.mapa_sem_ref,
         name='mapa_por_sem_ref__get'),
 ]
