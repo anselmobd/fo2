@@ -266,7 +266,7 @@ class MapaPorSemanaForm(forms.Form):
 
     qtd_itens = forms.CharField(
         label='Quantidade limite de itens listados abaixo',
-        max_length=4, min_length=1,
+        max_length=4, min_length=1, required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     def __init__(self, *args, **kwargs):
@@ -282,7 +282,7 @@ class MapaPorSemanaForm(forms.Form):
 
         self.fields['periodo'].initial = periodo_default
         self.fields['qtd_semanas'].initial = 1
-        self.fields['qtd_itens'].initial = 10 if settings.DEBUG else 0
+        self.fields['qtd_itens'].initial = 100
 
     def clean__positive(self, field_name):
         try:
@@ -304,6 +304,6 @@ class MapaPorSemanaForm(forms.Form):
         return self.clean__positive('qtd_semanas')
 
     def clean_qtd_itens(self):
-        if self.cleaned_data['qtd_itens'] == '0':
+        if self.cleaned_data['qtd_itens'].zfill(1) == '0':
             return '0'
         return self.clean__positive('qtd_itens')
