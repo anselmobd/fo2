@@ -1,10 +1,23 @@
 {% if th %}
-  <tr><th>Nível</th><th>Referência</th><th>Descrição</th><th>Cor</th><th>Tamanho</th></tr>
+  <tr>
+    <th>Nível</th>
+    <th>Insumo</th>
+    <th>Cor</th>
+    <th>Tamanho</th>
+    <th style="text-align: right;">Estoque</th>
+    <th style="text-align: right;">Comprar</th>
+  </tr>
 {% else %}
   {% if data %}
     {% for row in data %}
-      <tr id="id_{{ nivel }}_{{ ref }}_{{ cor }}_{{ tam }}" class="key_ref _ref_{{ nivel }}{{ ref }}{{ cor }}{{ tam_order }}"><td>{{ nivel }}</td><td>{{ ref }}</td><td align="right">{{ row.descr }}</td><td>{{ cor }}</td><td>{{ tam }}</td></tr>
-      <!-- <td>{{ ref }}</td><td align="right">{{ descr }}</td> -->
+      <tr id="id_{{ nivel }}_{{ ref }}_{{ cor }}_{{ tam }}" class="key_ref _ref_{{ nivel }}{{ ref }}{{ cor }}{{ tam_order }}">
+        <td>{{ nivel }}</td>
+        <td><a href="{% url 'insumo:mapa' nivel ref cor tam %}" target="_blank">{{ ref }} - {{ row.descr }}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></td>
+        <td>{{ cor }} - {{ row.descr_cor }}</td>
+        <td>{{ tam }} - {{ row.descr_tam }}</td>
+        <td style="text-align: right;">{{ estoque }}</td>
+        <td style="text-align: right;">{{ comprar }}</td>
+      </tr>
     {% endfor %}
   {% endif %}
 {% endif %}
