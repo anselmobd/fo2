@@ -3,7 +3,7 @@
 {% else %}
   {% if data %}
     {% for row in data %}
-      <tr id="id_{{ ref }}" class="key_ref _ref_{{ ref }}"><td>{{ nivel }}</td><td>{{ ref }}</td><td align="right">{{ row.descr }}</td><td>{{ cor }}</td><td>{{ tam }}</td></tr>
+      <tr id="id_{{ nivel }}_{{ ref }}_{{ cor }}_{{ tam }}" class="key_ref _ref_{{ nivel }}{{ ref }}{{ cor }}{{ tam_order }}"><td>{{ nivel }}</td><td>{{ ref }}</td><td align="right">{{ row.descr }}</td><td>{{ cor }}</td><td>{{ tam }}</td></tr>
       <!-- <td>{{ ref }}</td><td align="right">{{ descr }}</td> -->
     {% endfor %}
   {% endif %}
