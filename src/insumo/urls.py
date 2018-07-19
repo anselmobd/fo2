@@ -60,7 +60,7 @@ urlpatterns = [
         views.MapaPorSemana.as_view(),
         name='mapa_por_sem__get'),
 
-    url(r'^mapa_por_sem_ref/(?P<ref>.{5})/?$',
+    url(r'^mapa_por_sem_ref/(?P<item>(?:.{2}|.{6}))/$',
         views.mapa_sem_ref,
         name='mapa_por_sem_ref__get'),
 ]
