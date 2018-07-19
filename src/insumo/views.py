@@ -1638,6 +1638,7 @@ def mapa_sem_ref(request, item):
             'ref': ref,
             'cor': cor,
             'tam': tam,
+            'tam_order': tam.zfill(3),
         }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
