@@ -14,6 +14,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
+from django.template.loader import render_to_string
 
 from fo2 import settings
 from fo2.models import rows_to_dict_list
@@ -1572,8 +1573,10 @@ class MapaPorSemana(View):
 
         return context
 
-    def mount_context(self, cursor, periodo):
-        context = {'periodo': periodo}
+    def mount_context(self, cursor, periodo, qtd_semanas):
+        refs = ['M5072', 'M0617']
+
+        context = {'refs': refs}
 
         return context
 
@@ -1606,6 +1609,15 @@ class MapaPorSemana(View):
             cursor = connections['so'].cursor()
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
-            context.update(self.mount_context(cursor, periodo))
+            context.update(self.mount_context(cursor, periodo, qtd_semanas))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+def mapa_sem_ref(request, ref):
+    template_name = 'insumo/mapa_sem_ref.html'
+    context = {
+        'ref': ref,
+    }
+    html = render_to_string(template_name, context)
+    return HttpResponse(html)
