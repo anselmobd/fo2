@@ -1430,7 +1430,7 @@ def insumo_previsoes_semana_insumo(cursor, nivel, ref, cor, tam):
     return insumo
 
 
-def insumos_cor_tamanho_usados(cursor):
+def insumos_cor_tamanho_usados(cursor, qtd_itens):
     sql = """
         WITH insumos AS
         (
@@ -1473,8 +1473,8 @@ def insumos_cor_tamanho_usados(cursor):
         SELECT
           i.*
         FROM insumos i
-        WHERE rownum < 10
-    """
+        WHERE rownum <= {qtd_itens}
+    """.format(qtd_itens=qtd_itens)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
 
