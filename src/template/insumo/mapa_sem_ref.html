@@ -1,2 +1,10 @@
-<!-- <tr id="id{{ ref }}" class="key_ref _ref_{{ ref }}"><td>{{ ref }}</td><td align="right">1245</td></tr> -->
-<td>{{ ref }}</td><td align="right">{{ descr }}</td>
+{% if th %}
+  <tr><th>Nível</th><th>Referência</th><th align="right">Descrição</th></tr>
+{% else %}
+  {% if data %}
+    {% for row in data %}
+      <tr id="id_{{ row.ref }}" class="key_ref _ref_{{ row.ref }}"><td>{{ row.nivel }}</td><td>{{ row.ref }}</td><td align="right">{{ row.descr }}</td></tr>
+      <!-- <td>{{ ref }}</td><td align="right">{{ descr }}</td> -->
+    {% endfor %}
+  {% endif %}
+{% endif %}

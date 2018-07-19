@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+
 <h3 style="color: red;">Em desenvolvimento...</h3>
 <form action="{% url 'insumo:mapa_por_sem' %}" method="post">
     {% csrf_token %}
@@ -23,41 +24,19 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if refs %}
-  {% for ref in refs %}
-    - {{ ref }}</br>
-    <!-- { % include "insumo/mapa_sem_ref.html" with ref=ref only %} -->
-  {% endfor %}
-  <h4>Table</h4>
   <table>
-    <thead id="threfs">
-    <tr>
-    <th>
-    Referências
-    </th>
-    </tr>
+    <thead id="refs_thead">
     </thead>
-    <tbody id="tbrefs">
-    </tbody>
-  </table>
-  <h4>Din. Table</h4>
-  <table>
-    <tbody id="dtbrefs">
+    <tbody id="refs_tbody">
     </tbody>
   </table>
 {% endif %}
+
 {% endblock %}
 
 {% block javascript %}
+{% if refs %}
 <script type="text/javascript">
-
-  function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-      if ((new Date().getTime() - start) > milliseconds){
-        break;
-      }
-    }
-  }
 
   var refs = [
     {% for ref in refs %}
@@ -65,85 +44,40 @@
     {% endfor %}
   ];
 
-  var tbRefs = document.getElementById('tbrefs');
+  var tHead = document.getElementById('refs_thead');
+  var tBody = document.getElementById('refs_tbody');
+  var iRefAjax = -1;
 
-  for (var i = 0, l = refs.length; i < l; i++) {
-    // alert(refs[i]);
-    tr = document.createElement('tr');
-    tr.id = 'ref_'+refs[i];
+  function doAjax1Ref(header) {
+    if (header) {
+      refer = 'th';
+      aggregator = tHead;
+    } else {
+      refer = refs[iRefAjax];
+      aggregator = tBody;
+    }
 
-    td = document.createElement('td');
-    td.classList.add('field_ref');
-    text = document.createTextNode(refs[i]);
-    td.appendChild(text);
-    tr.appendChild(td);
-
-    td = document.createElement('td');
-    td.classList.add('field_data');
-    tr.appendChild(td);
-
-    tbRefs.appendChild(tr);
-
-  }
-
-  $("input#id_periodo").on('change keyup paste', function () {
-    console.log( $(this).val() );
-  });
-
-  var dtbRefs = document.getElementById('dtbrefs');
-  var iRefAjax = 0;
-
-  function doAjax1Ref() {
     $.ajax({
       type: 'GET',
-      url: '{% url 'insumo:mapa_por_sem_ref__get' '00000' %}'.replace('00000', refs[iRefAjax]),
+      url: '{% url 'insumo:mapa_por_sem_ref__get' '000000' %}'.replace('000000', refer),
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success : function(data) {
         if (data) {
-          var tr = document.createElement('tr');
-          tr.id = 'rec_'+refs[iRefAjax];
-          tr.innerHTML = (data);
-          dtbRefs.appendChild(tr);
+          aggregator.insertAdjacentHTML('beforeend', data);
         }
       }
     });
+
+    iRefAjax++;
     if (iRefAjax < refs.length) {
-      iRefAjax++;
-      setTimeout(function(){ doAjax1Ref(); }, 0);
+      setTimeout(function(){ doAjax1Ref(false); }, 0);
     }
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-      // alert("Ready!");
-      // setTimeout(function(){ alert("setTimeout"); }, 3000);
-      if (dtbRefs) {
-        setTimeout(function(){ doAjax1Ref(); }, 0);
-      }
-      for (var i = 0, l = refs.length; i < l; i++) {
-        var rec = document.getElementById('ref_'+refs[i]);
-        var ref = rec.getElementsByClassName('field_ref')[0];
-        var data = rec.getElementsByClassName('field_data')[0];
-        data.innerHTML = ref.innerHTML;
-      }
-
-      for (var i = 90, l = refs.length; i < l; i++) {
-        $.ajax({
-          type: 'GET',
-          url: '{% url 'insumo:mapa_por_sem_ref__get' '00000' %}'.replace('00000', refs[i]),
-          data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
-          success : function(data) {
-            if (data) {
-              var tr = document.createElement('tr');
-              tr.id = 'rec_'+refs[i];
-              tr.innerHTML = (data);
-              dtbRefs.appendChild(tr);
-            }
-          }
-        });
-        // sleep(2000);
-      }
-
+      setTimeout(function(){ doAjax1Ref(true); }, 0);
   }, false);
 
 </script>
+{% endif %}
 {% endblock %}
