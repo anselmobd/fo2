@@ -17,7 +17,7 @@ from django.views import View
 from django.template.loader import render_to_string
 
 from fo2 import settings
-from fo2.models import rows_to_dict_list
+from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 from fo2.template import group_rowspan
 
 from geral.models import Dispositivos, RoloBipado
@@ -1574,7 +1574,7 @@ class MapaPorSemana(View):
         return context
 
     def mount_context(self, cursor, periodo, qtd_semanas):
-        refs = ['M5072', 'M0617']
+        refs = ['9CA001', '9CX001']
 
         context = {'refs': refs}
 
@@ -1614,21 +1614,17 @@ class MapaPorSemana(View):
         return render(request, self.template_name, context)
 
 
-def mapa_sem_ref(request, ref):
+def mapa_sem_ref(request, item):
     template_name = 'insumo/mapa_sem_ref.html'
-    cursor = connections['so'].cursor()
-    sql = """
-        SELECT
-          r.DESCR_REFERENCIA
-        FROM BASI_030 r
-        WHERE r.NIVEL_ESTRUTURA = 1
-          AND r.REFERENCIA = %s
-    """
-    cursor.execute(sql, [ref])
-    row = cursor.fetchone()
-    context = {
-        'ref': ref,
-        'descr': row[0],
-    }
+    context = {}
+    if len(item) < 6:
+        context['th'] = True
+    else:
+        nivel = item[0]
+        ref = item[1:]
+        cursor = connections['so'].cursor()
+        data = models.compras_periodo_insumo(cursor, nivel, ref)
+        context['data'] = data
+        context['item'] = item
     html = render_to_string(template_name, context)
     return HttpResponse(html)
