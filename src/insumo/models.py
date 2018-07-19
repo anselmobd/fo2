@@ -4,7 +4,7 @@ from operator import itemgetter
 from django.db import models
 from django.db import connections
 
-from fo2.models import rows_to_dict_list
+from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
 import produto.models
 
@@ -1428,3 +1428,59 @@ def insumo_previsoes_semana_insumo(cursor, nivel, ref, cor, tam):
             'DT_NECESSIDADE', 'NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
 
     return insumo
+
+
+def insumos_cor_tamanho_usados(cursor):
+    sql = """
+        SELECT DISTINCT
+          r.NIVEL_ESTRUTURA NIVEL
+        , r.REFERENCIA REF
+        , r.DESCR_REFERENCIA DESCR
+        , t.TAMANHO_REF TAM
+        , t.DESCR_TAM_REFER DESCR_TAM
+        , tam.ORDEM_TAMANHO ORDEM TAM
+        , c.ITEM_ESTRUTURA COR
+        , c.DESCRICAO_15 DESCR_COR
+        FROM BASI_030 r -- referencia
+        JOIN BASI_020 t -- tamanho
+          ON t.BASI030_NIVEL030 = r.NIVEL_ESTRUTURA
+         AND t.BASI030_REFERENC = r.REFERENCIA
+        LEFT JOIN BASI_220 tam -- cadastro de tamanhos
+          ON tam.TAMANHO_REF = t.TAMANHO_REF
+        JOIN BASI_010 c -- cor
+          ON c.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
+         AND c.GRUPO_ESTRUTURA = r.REFERENCIA
+         AND c.SUBGRU_ESTRUTURA = t.TAMANHO_REF
+        JOIN BASI_050 ia -- insumos de alternativa
+          ON ia.NIVEL_COMP = r.NIVEL_ESTRUTURA
+         AND ia.GRUPO_COMP = r.REFERENCIA
+         AND (ia.SUB_COMP = t.TAMANHO_REF OR ia.SUB_COMP = '000')
+         AND (ia.ITEM_COMP = c.ITEM_ESTRUTURA OR ia.ITEM_COMP = '000000')
+        WHERE r.NIVEL_ESTRUTURA IN (2, 9)
+          AND r.DESCR_REFERENCIA NOT LIKE '-%'
+          AND t.DESCR_TAM_REFER  NOT LIKE '-%'
+          AND c.DESCRICAO_15  NOT LIKE '-%'
+          AND c.ITEM_ATIVO = 0 -- ativo
+        ORDER BY
+          r.NIVEL_ESTRUTURA
+        , r.REFERENCIA
+        , c.ITEM_ESTRUTURA
+        , tam.ORDEM_TAMANHO
+        , t.TAMANHO_REF
+    """
+    cursor.execute(sql, [nivel, ref])
+    return rows_to_dict_list_lower(cursor)
+
+
+def compras_periodo_insumo(cursor, nivel, ref):
+    sql = """
+        SELECT
+          r.NIVEL_ESTRUTURA NIVEL
+        , r.REFERENCIA REF
+        , r.DESCR_REFERENCIA DESCR
+        FROM BASI_030 r
+        WHERE r.NIVEL_ESTRUTURA = %s
+          AND r.REFERENCIA = %s
+    """
+    cursor.execute(sql, [nivel, ref])
+    return rows_to_dict_list_lower(cursor)
