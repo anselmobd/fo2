@@ -66,17 +66,17 @@
         if (data) {
           aggregator.insertAdjacentHTML('beforeend', data);
         }
+        iRefAjax++;
+        if (iRefAjax < refs.length) {
+          setTimeout(function(){ doAjax1Ref(false); }, 0);
+        }
       }
     });
 
-    iRefAjax++;
-    if (iRefAjax < refs.length) {
-      setTimeout(function(){ doAjax1Ref(false); }, 10);
-    }
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(function(){ doAjax1Ref(true); }, 10);
+      setTimeout(function(){ doAjax1Ref(true); }, 0);
   }, false);
 
 </script>
