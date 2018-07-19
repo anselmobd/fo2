@@ -19,6 +19,7 @@ class InformacaoModuloModelForm(forms.ModelForm):
 
 class InformacaoModuloForm(forms.Form):
     chamada = forms.CharField(
+        help_text='(máximo 200 caracteres)',
         widget=forms.Textarea(
             attrs={'max_length': 200, 'rows': 5, 'cols': 39,
                    'style': 'vertical-align:top;'}))

@@ -48,3 +48,35 @@
   {% endif %}
 {% endif %}
 {% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  var chamada = document.getElementById("id_chamada")
+  var chamadaSpan = chamada.parentElement.getElementsByTagName('span')[0];
+  var chamadaSpanCor = chamadaSpan.style.color;
+  var chamadaContentOk = chamada.value;
+  var chamadaTamanhoOk = chamadaContentOk.length
+
+  function atuChamadaSpan() {
+    tam = chamada.value.length
+    if (tam > 200) {
+      chamadaSpan.style.color = 'red';
+      chamada.value = chamadaContentOk;
+      tam = chamadaTamanhoOk
+    } else {
+      chamadaSpan.style.color = chamadaSpanCor;
+      chamadaContentOk = chamada.value;
+      chamadaTamanhoOk = tam
+    }
+    chamadaSpan.innerHTML = '(digitados '+tam+'; máximo 200 caracteres)';
+  }
+
+  atuChamadaSpan();
+
+  $("textarea#id_chamada").on('change keyup paste', function () {
+    var tamanho = $(this).val().length;
+    atuChamadaSpan()
+  });
+
+</script>
+{% endblock %}
