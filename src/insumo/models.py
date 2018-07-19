@@ -1431,6 +1431,11 @@ def insumo_previsoes_semana_insumo(cursor, nivel, ref, cor, tam):
 
 
 def insumos_cor_tamanho_usados(cursor, qtd_itens):
+    filtra_qtd_itens = ''
+    if qtd_itens != '0':
+        filtra_qtd_itens = 'WHERE rownum <= {qtd_itens}'.format(
+            qtd_itens=qtd_itens)
+
     sql = """
         WITH insumos AS
         (
@@ -1473,8 +1478,8 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens):
         SELECT
           i.*
         FROM insumos i
-        WHERE rownum <= {qtd_itens}
-    """.format(qtd_itens=qtd_itens)
+        {filtra_qtd_itens} -- filtra_qtd_itens
+    """.format(filtra_qtd_itens=filtra_qtd_itens)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
 
