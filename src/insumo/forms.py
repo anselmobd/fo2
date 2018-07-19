@@ -4,7 +4,9 @@ import pytz
 from django.utils import timezone
 from django import forms
 
+from fo2 import settings
 from produto.models import Colecao
+
 from insumo.models import ContaEstoque, Periodo
 
 
@@ -280,7 +282,7 @@ class MapaPorSemanaForm(forms.Form):
 
         self.fields['periodo'].initial = periodo_default
         self.fields['qtd_semanas'].initial = 1
-        self.fields['qtd_itens'].initial = 10
+        self.fields['qtd_itens'].initial = 10 if settings.DEBUG else 0
 
     def clean__positive(self, field_name):
         try:
@@ -302,4 +304,6 @@ class MapaPorSemanaForm(forms.Form):
         return self.clean__positive('qtd_semanas')
 
     def clean_qtd_itens(self):
+        if self.cleaned_data['qtd_itens'] == '0':
+            return '0'
         return self.clean__positive('qtd_itens')
