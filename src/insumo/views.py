@@ -1576,7 +1576,6 @@ class MapaPorSemana(View):
     def mount_context(self, cursor, periodo, qtd_semanas):
         cursor = connections['so'].cursor()
         data = models.insumos_cor_tamanho_usados(cursor)
-        pprint(data)
         refs = []
         for row in data:
             refs.append('{}.{}.{}.{}'.format(
@@ -1631,7 +1630,13 @@ def mapa_sem_ref(request, item):
         cor = item[8:14]
         tam = item[15:18]
         cursor = connections['so'].cursor()
-        data = models.compras_periodo_insumo(cursor, nivel, ref)
+        data = models.compras_periodo_insumo(cursor, nivel, ref, cor, tam)
+        estoque = 0
+        comprar = 0
+        if len(data) > 0:
+            comprar = 1
+        if comprar == 0:
+            data = []
         context = {
             'data': data,
             'nivel': nivel,
@@ -1639,6 +1644,8 @@ def mapa_sem_ref(request, item):
             'cor': cor,
             'tam': tam,
             'tam_order': tam.zfill(3),
+            'estoque': estoque,
+            'comprar': comprar,
         }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
