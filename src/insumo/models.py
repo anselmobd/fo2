@@ -787,46 +787,37 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
         , e.DATA_ULT_ENTRADA ULT_ENTRADA
         , e.DATA_ULT_SAIDA ULT_SAIDA
         , e.DT_INVENTARIO
-        FROM BASI_030 i -- insumo
+        FROM BASI_010 ic -- insumo cor
         JOIN BASI_020 it -- insumo tamanho
-          ON it.BASI030_NIVEL030 = i.NIVEL_ESTRUTURA
-         AND it.BASI030_REFERENC = i.REFERENCIA
-         AND it.TAMANHO_REF = '{tam}'
-        JOIN BASI_010 ic -- insumo cor
-          ON ic.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
-         AND ic.GRUPO_ESTRUTURA = i.REFERENCIA
-         AND ic.SUBGRU_ESTRUTURA = it.TAMANHO_REF
-         AND ic.ITEM_ESTRUTURA = '{cor}'
+          ON it.BASI030_NIVEL030 = ic.NIVEL_ESTRUTURA
+         AND it.BASI030_REFERENC = ic.GRUPO_ESTRUTURA
+         AND it.TAMANHO_REF = ic.SUBGRU_ESTRUTURA
+        JOIN BASI_030 i -- insumo
+          ON i.NIVEL_ESTRUTURA = ic.NIVEL_ESTRUTURA
+         AND i.REFERENCIA = ic.GRUPO_ESTRUTURA
         LEFT JOIN BASI_015 parm -- parâmetros de item
-          ON parm.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
-         AND parm.GRUPO_ESTRUTURA = i.REFERENCIA
-         AND parm.SUBGRU_ESTRUTURA = it.TAMANHO_REF
+          ON parm.NIVEL_ESTRUTURA = ic.NIVEL_ESTRUTURA
+         AND parm.GRUPO_ESTRUTURA = ic.GRUPO_ESTRUTURA
+         AND parm.SUBGRU_ESTRUTURA = ic.SUBGRU_ESTRUTURA
          AND parm.ITEM_ESTRUTURA = ic.ITEM_ESTRUTURA
         LEFT JOIN ESTQ_040 e -- estoque por depósito
-          ON e.CDITEM_NIVEL99 = i.NIVEL_ESTRUTURA
-         AND e.CDITEM_GRUPO = i.REFERENCIA
-         AND e.CDITEM_SUBGRUPO = it.TAMANHO_REF
+          ON e.CDITEM_NIVEL99 = ic.NIVEL_ESTRUTURA
+         AND e.CDITEM_GRUPO = ic.GRUPO_ESTRUTURA
+         AND e.CDITEM_SUBGRUPO = ic.SUBGRU_ESTRUTURA
          AND e.CDITEM_ITEM = ic.ITEM_ESTRUTURA
          -- vvv não tenho certeza disso, mas evita aparecer mais de um registro
          AND e.LOTE_ACOMP = 0
-         AND ( ( i.NIVEL_ESTRUTURA = 2
-               AND e.DEPOSITO = 202 -- TECIDOS ESTOQUE
-               )
-             OR
-               ( i.NIVEL_ESTRUTURA = 9
-               AND
-                 ( ( i.CONTA_ESTOQUE = 22 -- FIOS
-                   AND e.DEPOSITO = 212 -- FIO TECELAGEM ESTOQUE
-                   )
-                 OR
-                   ( i.CONTA_ESTOQUE <> 22 -- NÃO FIOS
-                   AND e.DEPOSITO = 231 -- MAT PRIMA ESTOQUE
-                   )
-                 )
-               )
-             )
-        WHERE i.NIVEL_ESTRUTURA = {nivel}
-          AND i.REFERENCIA = '{ref}'
+         AND e.DEPOSITO =
+             CASE WHEN i.NIVEL_ESTRUTURA = 2 THEN 202
+             ELSE -- i.NIVEL_ESTRUTURA = 9
+               CASE WHEN i.CONTA_ESTOQUE = 22 THEN 212
+               ELSE 231
+               END
+             END
+        WHERE ic.NIVEL_ESTRUTURA = {nivel}
+          AND ic.GRUPO_ESTRUTURA = '{ref}'
+          AND ic.ITEM_ESTRUTURA = '{cor}'
+          AND ic.SUBGRU_ESTRUTURA = '{tam}'
     """.format(
         nivel=nivel,
         ref=ref,
