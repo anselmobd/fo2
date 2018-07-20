@@ -1573,9 +1573,9 @@ class MapaPorSemana(View):
 
         return context
 
-    def mount_context(self, cursor, periodo, qtd_semanas, qtd_itens):
+    def mount_context(self, cursor, periodo, qtd_semanas, qtd_itens, insumo):
         cursor = connections['so'].cursor()
-        data = models.insumos_cor_tamanho_usados(cursor, qtd_itens)
+        data = models.insumos_cor_tamanho_usados(cursor, qtd_itens, insumo)
         refs = []
         for row in data:
             refs.append('{}.{}.{}.{}'.format(
@@ -1605,18 +1605,23 @@ class MapaPorSemana(View):
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
+        form = self.Form_class(request.POST.copy())
         if 'periodo' in kwargs:
             form.data['periodo'] = kwargs['periodo']
         if form.is_valid():
             periodo = form.cleaned_data['periodo']
             qtd_semanas = form.cleaned_data['qtd_semanas']
             qtd_itens = form.cleaned_data['qtd_itens']
+            insumo = form.cleaned_data['insumo']
+
+            insumo = ' '.join(insumo.strip().upper().split())
+            form.data['insumo'] = insumo
+
             cursor = connections['so'].cursor()
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
             context.update(self.mount_context(
-                cursor, periodo, qtd_semanas, qtd_itens))
+                cursor, periodo, qtd_semanas, qtd_itens, insumo))
         context['form'] = form
         return render(request, self.template_name, context)
 
