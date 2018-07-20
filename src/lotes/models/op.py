@@ -136,7 +136,7 @@ def op_relacionamentos(cursor, op):
         )
         SELECT
           o.OP
-        , 1 SEQ
+        , 10
         , CAST('é Mãe de' AS varchar2(50)) REL
         , coalesce(ofi.ORDEM_PRODUCAO, 0) OP_REL
         FROM ordemp o
@@ -147,7 +147,20 @@ def op_relacionamentos(cursor, op):
         --
         SELECT
           o.OP
-        , 2 SEQ
+        , 15
+        , CAST('é Avó de' AS varchar2(50)) REL
+        , coalesce(one.ORDEM_PRODUCAO, 0) OP_REL
+        FROM ordemp o
+        JOIN PCPC_020 ofi
+          ON ofi.ORDEM_PRINCIPAL = o.OP
+        JOIN PCPC_020 one
+          ON one.ORDEM_PRINCIPAL = ofi.ORDEM_PRODUCAO
+        --
+        UNION
+        --
+        SELECT
+          o.OP
+        , 20
         , CAST('é Filha de' AS varchar2(50)) REL
         , o.ORDEM_PRINCIPAL OP_REL
         FROM ordemp o
@@ -157,7 +170,20 @@ def op_relacionamentos(cursor, op):
         --
         SELECT
           o.OP
-        , 3 SEQ
+        , 25
+        , CAST('é Neta de' AS varchar2(50)) REL
+        , one.ORDEM_PRINCIPAL OP_REL
+        FROM ordemp o
+        JOIN PCPC_020 one
+          ON one.ORDEM_PRODUCAO = o.ORDEM_PRINCIPAL
+        WHERE o.ORDEM_PRINCIPAL <> 0
+          AND one.ORDEM_PRINCIPAL <> 0
+        --
+        UNION
+        --
+        SELECT
+          o.OP
+        , 30
         , CAST('é Mestra de' AS varchar2(50)) REL
         , ose.ORDEM_PRODUCAO OP_REL
         FROM ordemp o
@@ -168,7 +194,7 @@ def op_relacionamentos(cursor, op):
         --
         SELECT
           o.OP
-        , 4 SEQ
+        , 40
         , CAST('é Seguidora de' AS varchar2(50)) REL
         , o.ORDEM_MESTRE OP_REL
         FROM ordemp o
