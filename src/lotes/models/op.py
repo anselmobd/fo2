@@ -14,11 +14,13 @@ def op_inform(cursor, op):
           else 'MD'
           end TIPO_REF
         , CASE
-          WHEN o.ORDEM_PRINCIPAL <> 0 THEN 'Filha de'
-          WHEN ofi.ORDEM_PRODUCAO IS NOT NULL THEN 'Mãe de'
+          WHEN o.ORDEM_PRINCIPAL <> 0
+            OR ofi.ORDEM_PRODUCAO IS NOT NULL
+            OR ome.ORDEM_PRODUCAO IS NOT NULL
+            OR ose.ORDEM_PRODUCAO IS NOT NULL
+          THEN 'Relacionada'
           ELSE 'Avulsa'
           END TIPO_OP
-        , coalesce( ofi.ORDEM_PRODUCAO, o.ORDEM_PRINCIPAL ) OP_REL
         , o.SITUACAO ||
           CASE
           WHEN o.SITUACAO = 2 THEN '-Ordem conf. gerada'
@@ -101,6 +103,12 @@ def op_inform(cursor, op):
           ON c.COD_CANCELAMENTO = o.COD_CANCELAMENTO
         LEFT JOIN PCPC_020 ofi
           ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
+        LEFT JOIN PCPC_020 ome
+          ON ome.ORDEM_PRODUCAO = o.ORDEM_MESTRE
+         AND o.ORDEM_MESTRE <> 0
+         AND o.ORDEM_MESTRE IS NOT NULL
+        LEFT JOIN PCPC_020 ose
+          ON ose.ORDEM_MESTRE = o.ORDEM_PRODUCAO
         JOIN BASI_205 d
           ON d.CODIGO_DEPOSITO = o.DEPOSITO_ENTRADA
         LEFT JOIN PEDI_100 ped -- pedido de venda
@@ -109,6 +117,66 @@ def op_inform(cursor, op):
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
         WHERE o.ORDEM_PRODUCAO = %s
+          AND rownum = 1
+    '''
+    cursor.execute(sql, [op])
+    return rows_to_dict_list(cursor)
+
+
+def op_relacionamentos(cursor, op):
+    sql = '''
+        WITH ordemp AS
+        (
+          SELECT
+            o.ORDEM_PRODUCAO OP
+          , o.ORDEM_PRINCIPAL
+          , o.ORDEM_MESTRE
+          FROM PCPC_020 o
+          WHERE o.ORDEM_PRODUCAO  = %s
+        )
+        SELECT
+          o.OP
+        , 1 SEQ
+        , CAST('é Mãe de' AS varchar2(50)) REL
+        , coalesce(ofi.ORDEM_PRODUCAO, 0) OP_REL
+        FROM ordemp o
+        JOIN PCPC_020 ofi
+          ON ofi.ORDEM_PRINCIPAL = o.OP
+        --
+        UNION
+        --
+        SELECT
+          o.OP
+        , 2 SEQ
+        , CAST('é Filha de' AS varchar2(50)) REL
+        , o.ORDEM_PRINCIPAL OP_REL
+        FROM ordemp o
+        WHERE o.ORDEM_PRINCIPAL <> 0
+        --
+        UNION
+        --
+        SELECT
+          o.OP
+        , 3 SEQ
+        , CAST('é Mestra de' AS varchar2(50)) REL
+        , ose.ORDEM_PRODUCAO OP_REL
+        FROM ordemp o
+        JOIN PCPC_020 ose
+          ON ose.ORDEM_MESTRE = o.OP
+        --
+        UNION
+        --
+        SELECT
+          o.OP
+        , 4 SEQ
+        , CAST('é Seguidora de' AS varchar2(50)) REL
+        , o.ORDEM_MESTRE OP_REL
+        FROM ordemp o
+        WHERE o.ORDEM_MESTRE <> 0
+        --
+        ORDER BY
+          1
+        , 2
     '''
     cursor.execute(sql, [op])
     return rows_to_dict_list(cursor)
