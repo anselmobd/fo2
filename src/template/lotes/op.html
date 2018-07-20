@@ -26,6 +26,12 @@
   {% include "layout/html_thead.html" with data=i_headers only %}
   {% include "layout/html_tbody_group.html" with fields=i_fields data=i_data group=i_group only %}
 </table>
+{% if r_data %}
+  <table>
+    {% include "layout/html_thead.html" with data=r_headers only %}
+    {% include "layout/html_tbody_group.html" with fields=r_fields data=r_data only %}
+  </table>
+{% endif %}
 <table>
   {% include "layout/html_thead.html" with data=i2_headers only %}
   {% include "layout/html_tbody_group.html" with fields=i2_fields data=i2_data group=i2_group only %}
