@@ -46,24 +46,16 @@ class Op(View):
             i4_data = [i_data[0]]
 
             for row in i_data:
-                if row['OP_REL'] == 0:
-                    row['OP_REL'] = ''
-                else:
-                    row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
                 if row['PEDIDO'] == 0:
                     row['PEDIDO'] = ''
                 else:
                     row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
                         row['PEDIDO'])
-            i_group = ['SITUACAO', 'CANCELAMENTO', 'PEDIDO', 'PED_CLIENTE']
-            group_rowspan(i_data, i_group)
             context.update({
                 'i_headers': ('Situação', 'Cancelamento', 'Unidade', 'Pedido',
-                              'Pedido do cliente', 'Tipo de OP',
-                              'OP relacionada'),
+                              'Pedido do cliente', 'Relacionamento com OPs'),
                 'i_fields': ('SITUACAO', 'CANCELAMENTO', 'UNIDADE', 'PEDIDO',
-                             'PED_CLIENTE', 'TIPO_OP', 'OP_REL'),
-                'i_group': i_group,
+                             'PED_CLIENTE', 'TIPO_OP'),
                 'i_data': i_data,
             })
 
@@ -110,6 +102,18 @@ class Op(View):
                     'i4_headers': ('Observação', 'Observação 2'),
                     'i4_fields': ('OBSERVACAO', 'OBSERVACAO2'),
                     'i4_data': i4_data,
+                })
+
+            # relacionamentos entre OPs
+            r_data = models.op_relacionamentos(cursor, op)
+            for row in r_data:
+                row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
+            if len(r_data) != 0:
+                context.update({
+                    'r_headers': ('OP', 'Tipo de relacionamento',
+                                  'OP relacionada'),
+                    'r_fields': ('OP', 'REL', 'OP_REL'),
+                    'r_data': r_data,
                 })
 
             # Grade
