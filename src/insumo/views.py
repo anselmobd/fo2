@@ -1632,13 +1632,24 @@ def mapa_sem_ref(request, item):
         cor = item[8:14]
         tam = item[15:18]
         cursor = connections['so'].cursor()
-        data = models.compras_periodo_insumo(cursor, nivel, ref, cor, tam)
-        estoque = 0
+
+        data = models.insumo_descr(cursor, nivel, ref, cor, tam)
+
         comprar = 0
-        if len(data) > 0:
+        for row in data:
             comprar = 1
+            row['REF'] = row['REF'] + ' - ' + row['DESCR']
+            row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
+            if row['TAM'] != row['DESCR_TAM']:
+                row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
+            semanas = math.ceil(row['REPOSICAO'] / 7)
+            row['REP_STR'] = '{}d. ({}s.)'.format(row['REPOSICAO'], semanas)
+            row['QUANT'] = round(row['QUANT'])
+
         if comprar == 0:
             data = []
+
+        estoque = 0
         context = {
             'data': data,
             'nivel': nivel,
