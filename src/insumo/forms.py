@@ -269,6 +269,12 @@ class MapaPorSemanaForm(forms.Form):
         max_length=4, min_length=1, required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
+    insumo = forms.CharField(
+        label='Filtra do insumo',
+        help_text='(código exato ou parciais do código e descrição)',
+        min_length=2, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
     def __init__(self, *args, **kwargs):
         super(MapaPorSemanaForm, self).__init__(*args, **kwargs)
 

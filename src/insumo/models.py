@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 from operator import itemgetter
 
@@ -1421,11 +1422,41 @@ def insumo_previsoes_semana_insumo(cursor, nivel, ref, cor, tam):
     return insumo
 
 
-def insumos_cor_tamanho_usados(cursor, qtd_itens):
+def insumos_cor_tamanho_usados(cursor, qtd_itens, insumo):
     filtra_qtd_itens = ''
     if qtd_itens != '0':
         filtra_qtd_itens = 'WHERE rownum <= {qtd_itens}'.format(
             qtd_itens=qtd_itens)
+
+    filtra_insumo = ''
+    if insumo:
+        sep = ' AND '
+        ref = ''
+        nivel = ''
+
+        so_ref = re.compile("^[A-Z0-9]{5}$")
+        nivelref = re.compile("^\d[A-Z0-9]{5}$")
+        nivel_ref = re.compile("^\d[\. -][A-Z0-9]{5}$")
+        if so_ref.match(insumo):
+            ref = insumo
+        elif nivelref.match(insumo) or nivel_ref.match(insumo):
+            ref = insumo[-5:]
+            nivel = insumo[0]
+        else:
+            for parte in insumo.split():
+                if parte:
+                    filtra_insumo += sep + """
+                        ( r.REFERENCIA LIKE '%{parte}%'
+                        OR r.DESCR_REFERENCIA LIKE '%{parte}%')
+                    """.format(parte=parte)
+        if nivel:
+            filtra_insumo += sep + """
+                r.NIVEL_ESTRUTURA = '{nivel}'
+            """.format(nivel=nivel)
+        if ref:
+            filtra_insumo += sep + """
+                r.REFERENCIA = '{ref}'
+            """.format(ref=ref)
 
     sql = """
         WITH insumos AS
@@ -1459,6 +1490,7 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens):
               AND t.DESCR_TAM_REFER  NOT LIKE '-%'
               AND c.DESCRICAO_15  NOT LIKE '-%'
               AND c.ITEM_ATIVO = 0 -- ativo
+              {filtra_insumo} -- filtra_insumo
             ORDER BY
               r.NIVEL_ESTRUTURA
             , r.REFERENCIA
@@ -1470,7 +1502,10 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens):
           i.*
         FROM insumos i
         {filtra_qtd_itens} -- filtra_qtd_itens
-    """.format(filtra_qtd_itens=filtra_qtd_itens)
+    """.format(
+        filtra_qtd_itens=filtra_qtd_itens,
+        filtra_insumo=filtra_insumo)
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
 
