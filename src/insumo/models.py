@@ -1505,7 +1505,6 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens, insumo):
     """.format(
         filtra_qtd_itens=filtra_qtd_itens,
         filtra_insumo=filtra_insumo)
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
 
