@@ -21,6 +21,12 @@ def op_inform(cursor, op):
           THEN 'Relacionada'
           ELSE 'Avulsa'
           END TIPO_OP
+        , CASE
+          WHEN o.ORDEM_PRINCIPAL <> 0 THEN 'Filha de'
+          WHEN ofi.ORDEM_PRODUCAO IS NOT NULL THEN 'Mãe de'
+          ELSE 'Avulsa'
+          END TIPO_FM_OP
+        , coalesce( ofi.ORDEM_PRODUCAO, o.ORDEM_PRINCIPAL ) OP_REL
         , o.SITUACAO ||
           CASE
           WHEN o.SITUACAO = 2 THEN '-Ordem conf. gerada'
