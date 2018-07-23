@@ -828,7 +828,21 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
     return rows_to_dict_list(cursor)
 
 
-def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
+def insumo_necessidade_semana(
+        cursor, nivel, ref, cor, tam, dtini=None, nsem=None):
+
+    # if nsem is not None:
+    #     nsem = int(nsem)
+    # filtra_DATA_ENTRADA_CORTE = ''
+    # if dtini is not None:
+    try:
+        filtra_DATA_ENTRADA_CORTE = \
+            "AND op.DATA_ENTRADA_CORTE < " \
+            "(TO_DATE('{dtini}','YYYYMMDD')+6+7+7*{nsem})".format(
+                dtini=dtini, nsem=int(nsem)-1)
+    except Exception:
+        filtra_DATA_ENTRADA_CORTE = ''
+
     sql = """
         WITH NECES AS (
           SELECT
@@ -884,6 +898,7 @@ def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
                   THEN cot.SUB_COMP
                   ELSE ia.SUB_COMP
                   END = '{tam}'
+              {filtra_DATA_ENTRADA_CORTE} -- filtra_DATA_ENTRADA_CORTE
             GROUP BY
               TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
             , op.ORDEM_PRODUCAO
@@ -935,7 +950,9 @@ def insumo_necessidade_semana(cursor, nivel, ref, cor, tam):
         nivel=nivel,
         ref=ref,
         cor=cor,
-        tam=tam)
+        tam=tam,
+        filtra_DATA_ENTRADA_CORTE=filtra_DATA_ENTRADA_CORTE
+    )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
@@ -1070,7 +1087,7 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
     return rows_to_dict_list(cursor)
 
 
-def previsao(cursor, periodo=None):
+def previsao(cursor, periodo=None, dtini=None, nsem=None):
     filtro_date = ''
     filtro_periodo = ''
     if periodo:
@@ -1085,6 +1102,14 @@ def previsao(cursor, periodo=None):
                          , '9999999999'
                          ) = '9999 '
             """
+    try:
+        filtra_DATA_INI_PERIODO = \
+            "AND p.DATA_INI_PERIODO < " \
+            "(TO_DATE('{dtini}','YYYYMMDD')+6+7+7*{nsem})".format(
+                dtini=dtini, nsem=int(nsem)-1)
+    except Exception:
+        filtra_DATA_INI_PERIODO = ''
+
 
     # lista primeiro nível de necessidade da previsao
     sql = """
@@ -1185,6 +1210,7 @@ def previsao(cursor, periodo=None):
           {filtro_date} -- filtro_date
         WHERE 1=1
           {filtro_periodo} -- filtro_periodo
+          {filtra_DATA_INI_PERIODO} -- filtra_DATA_INI_PERIODO
         GROUP BY
           prev.NR_SOLICITACAO
         , prev.DESCRICAO
@@ -1249,6 +1275,7 @@ def previsao(cursor, periodo=None):
     """.format(
         filtro_date=filtro_date,
         filtro_periodo=filtro_periodo,
+        filtra_DATA_INI_PERIODO=filtra_DATA_INI_PERIODO,
         )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
@@ -1363,8 +1390,9 @@ def rolo_ref(cursor, barcode):
     return rows_to_dict_list(cursor)
 
 
-def insumo_previsoes_semana_insumo(cursor, nivel, ref, cor, tam):
-    data = previsao(cursor)
+def insumo_previsoes_semana_insumo(
+        cursor, nivel, ref, cor, tam, dtini=None, nsem=None):
+    data = previsao(cursor, dtini=dtini, nsem=nsem)
     insumo = []
     while True:
         dual_nivel1 = ''
