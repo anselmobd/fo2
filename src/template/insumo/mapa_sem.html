@@ -43,6 +43,8 @@
       {% if forloop.counter > 1 %}, {% endif %}'{{ ref }}'
     {% endfor %}
   ];
+  var dtini = {{ periodo_ini_int|safe }};
+  var nsem = {{ qtd_semanas }};
 
   var tHead = document.getElementById('refs_thead');
   var tBody = document.getElementById('refs_tbody');
@@ -57,10 +59,13 @@
       aggregator = tBody;
     }
 
+    var link = '{% url 'insumo:mapa_por_sem_ref__get' '0.00000.000000.000' '20180723' '99' %}';
+    link = link.replace('0.00000.000000.000', refer);
+    link = link.replace('20180723', dtini);
+    link = link.replace('99', nsem);
     $.ajax({
       type: 'GET',
-      url: '{% url 'insumo:mapa_por_sem_ref__get' '0.00000.000000.000' %}'.replace(
-        '0.00000.000000.000', refer),
+      url: link,
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success : function(data) {
         if (data) {
