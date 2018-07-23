@@ -831,10 +831,6 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
 def insumo_necessidade_semana(
         cursor, nivel, ref, cor, tam, dtini=None, nsem=None):
 
-    # if nsem is not None:
-    #     nsem = int(nsem)
-    # filtra_DATA_ENTRADA_CORTE = ''
-    # if dtini is not None:
     try:
         filtra_DATA_ENTRADA_CORTE = \
             "AND op.DATA_ENTRADA_CORTE < " \
@@ -957,7 +953,17 @@ def insumo_necessidade_semana(
     return rows_to_dict_list(cursor)
 
 
-def insumo_recebimento_semana(cursor, nivel, ref, cor, tam):
+def insumo_recebimento_semana(
+        cursor, nivel, ref, cor, tam, dtini=None, nsem=None):
+
+    try:
+        filtra_DATA_PREV_ENTR = \
+            "AND x.DATA_PREV_ENTR < " \
+            "(TO_DATE('{dtini}','YYYYMMDD')+6+7*{nsem})".format(
+                dtini=dtini, nsem=int(nsem)-1)
+    except Exception:
+        filtra_DATA_PREV_ENTR = ''
+
     sql = """
         SELECT
           TRUNC(x.DATA_PREV_ENTR, 'iw') SEMANA_ENTREGA
@@ -979,6 +985,7 @@ def insumo_recebimento_semana(cursor, nivel, ref, cor, tam):
           AND x.ITEM_100_GRUPO = '{ref}'
           AND x.ITEM_100_SUBGRUPO = '{tam}'
           AND x.ITEM_100_ITEM = '{cor}'
+          {filtra_DATA_PREV_ENTR} -- filtra_DATA_PREV_ENTR
         GROUP BY
           x.ITEM_100_NIVEL99
         , x.ITEM_100_GRUPO
@@ -1001,7 +1008,9 @@ def insumo_recebimento_semana(cursor, nivel, ref, cor, tam):
         nivel=nivel,
         ref=ref,
         cor=cor,
-        tam=tam)
+        tam=tam,
+        filtra_DATA_PREV_ENTR=filtra_DATA_PREV_ENTR
+    )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
