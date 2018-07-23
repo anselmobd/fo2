@@ -870,7 +870,7 @@ class MapaPorInsumo(View):
             num_digits = str(row['QTD'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
-        # Descontando das necessidades previstas as necessidades reais
+        # Descontando das necessidades previtas as necessidades reais
         prev_idx = len(data_prev) - 1
         if prev_idx >= 0:
             for ness in reversed(data_ins):
@@ -1667,7 +1667,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
             data_prev = models.insumo_previsoes_semana_insumo(
                 cursor, nivel, ref, cor, tam, dtini, nsem)
 
-            # Descontando das necessidades previstas as necessidades reais
+            # Descontando das necessidades previtas as necessidades reais
             prev_idx = len(data_prev) - 1
             if prev_idx >= 0:
                 for ness in reversed(data_ins):
@@ -1684,6 +1684,15 @@ def mapa_sem_ref(request, item, dtini, nsem):
                 previsao += row['QTD']
             previsao = round(previsao)
 
+            # Recebimentos
+            data_irs = models.insumo_recebimento_semana(
+                cursor, nivel, ref, cor, tam)
+
+            recebimentos = 0
+            for row in data_irs:
+                recebimentos += row['QTD_A_RECEBER']
+            recebimentos = round(recebimentos)
+
         if comprar == 0:
             data = []
 
@@ -1699,6 +1708,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
             'comprar': comprar,
             'necessidade': necessidade,
             'previsao': previsao,
+            'recebimentos': recebimentos,
         }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
