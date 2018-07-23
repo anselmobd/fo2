@@ -1585,7 +1585,11 @@ class MapaPorSemana(View):
             refs.append('{}.{}.{}.{}'.format(
                 row['nivel'], row['ref'], row['cor'], row['tam']))
 
-        context = {'refs': refs}
+        context = {
+            'refs': refs,
+            'qtd_itens': qtd_itens,
+            'insumo': insumo,
+        }
 
         return context
 
@@ -1646,7 +1650,6 @@ def mapa_sem_ref(request, item, dtini, nsem):
 
         comprar = 0
         for row in data:
-            comprar = 1
             row['REF'] = row['REF'] + ' - ' + row['DESCR']
             row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
             if row['TAM'] != row['DESCR_TAM']:
@@ -1655,48 +1658,47 @@ def mapa_sem_ref(request, item, dtini, nsem):
             row['REP_STR'] = '{}d. ({}s.)'.format(row['REPOSICAO'], semanas)
             row['QUANT'] = round(row['QUANT'])
 
-            # Necessidades
-            data_ins = models.insumo_necessidade_semana(
-                cursor, nivel, ref, cor, tam, dtini, nsem)
-            necessidade = 0
-            for row in data_ins:
-                necessidade += row['QTD_INSUMO']
-            necessidade = round(necessidade)
+        # Necessidades
+        data_ins = models.insumo_necessidade_semana(
+            cursor, nivel, ref, cor, tam, dtini, nsem)
+        necessidade = 0
+        for row in data_ins:
+            necessidade += row['QTD_INSUMO']
+        necessidade = round(necessidade)
 
-            # Previsões
-            data_prev = models.insumo_previsoes_semana_insumo(
-                cursor, nivel, ref, cor, tam, dtini, nsem)
+        # Previsões
+        data_prev = models.insumo_previsoes_semana_insumo(
+            cursor, nivel, ref, cor, tam, dtini, nsem)
 
-            # Descontando das necessidades previtas as necessidades reais
-            prev_idx = len(data_prev) - 1
-            if prev_idx >= 0:
-                for ness in reversed(data_ins):
-                    while prev_idx >= 0:
-                        if data_prev[prev_idx]['DT_NECESSIDADE'] \
-                                <= ness['SEMANA_NECESSIDADE']:
-                            data_prev[prev_idx]['QTD'] -= ness['QTD_INSUMO']
-                            break
-                        else:
-                            prev_idx -= 1
+        # Descontando das necessidades previtas as necessidades reais
+        prev_idx = len(data_prev) - 1
+        if prev_idx >= 0:
+            for ness in reversed(data_ins):
+                while prev_idx >= 0:
+                    if data_prev[prev_idx]['DT_NECESSIDADE'] \
+                            <= ness['SEMANA_NECESSIDADE']:
+                        data_prev[prev_idx]['QTD'] -= ness['QTD_INSUMO']
+                        break
+                    else:
+                        prev_idx -= 1
 
-            previsao = 0
-            for row in data_prev:
-                previsao += row['QTD']
-            previsao = round(previsao)
+        previsao = 0
+        for row in data_prev:
+            previsao += row['QTD']
+        previsao = round(previsao)
 
-            # Recebimentos
-            data_irs = models.insumo_recebimento_semana(
-                cursor, nivel, ref, cor, tam, dtini, nsem)
+        # Recebimentos
+        data_irs = models.insumo_recebimento_semana(
+            cursor, nivel, ref, cor, tam, dtini, nsem)
 
-            recebimentos = 0
-            for row in data_irs:
-                recebimentos += row['QTD_A_RECEBER']
-            recebimentos = round(recebimentos)
+        recebimentos = 0
+        for row in data_irs:
+            recebimentos += row['QTD_A_RECEBER']
+        recebimentos = round(recebimentos)
 
-        if comprar == 0:
-            data = []
+        comprar = necessidade + previsao + data[0]['STQ_MIN'] \
+            - data[0]['QUANT'] - recebimentos
 
-        estoque = 0
         context = {
             'data': data,
             'nivel': nivel,
@@ -1704,11 +1706,10 @@ def mapa_sem_ref(request, item, dtini, nsem):
             'cor': cor,
             'tam': tam,
             'tam_order': tam.zfill(3),
-            'estoque': estoque,
-            'comprar': comprar,
             'necessidade': necessidade,
             'previsao': previsao,
             'recebimentos': recebimentos,
+            'comprar': comprar,
         }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
