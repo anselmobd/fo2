@@ -11,6 +11,7 @@
     <th>Unid.</th>
     <th style="text-align: right;">Necessidade</th>
     <th style="text-align: right;">Previsão</th>
+    <th style="text-align: right;">Recebimentos</th>
   </tr>
 {% else %}
   {% if data %}
@@ -27,6 +28,7 @@
         <td>{{ row.UNID }}</td>
         <td style="text-align: right;">{{ necessidade }}</td>
         <td style="text-align: right;">{{ previsao }}</td>
+        <td style="text-align: right;">{{ recebimentos }}</td>
       </tr>
     {% endfor %}
   {% endif %}
