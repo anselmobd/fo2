@@ -1,9 +1,13 @@
-__version__ = '0.1.104'
-__version__date__ = '19/07/2018'
+__version__ = '0.1.105'
+__version__date__ = '23/07/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.105 - 2018/07/23
+#   . Insumos
+#     . Mapa de compra por semana - Primeira versão funcional
 #
 # - 0.1.104 - 2018/07/19
 #   . Painel: Limitando imput em edição chamada de informativo
