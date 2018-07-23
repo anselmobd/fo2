@@ -33,6 +33,7 @@ from .forms import \
     PrevisaoForm, \
     RefForm, \
     RoloForm, \
+    BipaRoloForm, \
     RolosBipadosForm, \
     ReceberForm, \
     MapaPorSemanaForm
@@ -91,7 +92,7 @@ class Ref(View):
         if nivel == '2':
             context.update({
                 'm_headers': ('Linha de produto', 'Coleção',
-                              'Artigo de produo', 'Tipo de produto'),
+                              'Artigo de produto', 'Tipo de produto'),
                 'm_fields': ('LINHA', 'COLECAO',
                              'ARTIGO', 'TIPO_PRODUTO'),
                 'm_data': data,
@@ -345,7 +346,7 @@ class RolosBipados(View):
 
 class BipaRolo(PermissionRequiredMixin, View):
     permission_required = 'geral.can_beep_rolo'
-    Form_class = RoloForm
+    Form_class = BipaRoloForm
     template_name = 'insumo/bipa_rolo.html'
     title_name = 'Bipa rolo'
 
@@ -1667,3 +1668,44 @@ def mapa_sem_ref(request, item):
         }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
+
+
+class Rolo(View):
+    Form_class = RoloForm
+    template_name = 'insumo/rolo.html'
+    title_name = 'Rolo'
+
+    def mount_context(self, cursor, rolo):
+        context = {'rolo': rolo}
+
+        data = models.rolo_inform(cursor, rolo)
+        context.update({
+            'headers': ('Rolo', 'Nível', 'Referência',
+                        'Cor', 'Tamanho', 'OP'),
+            'fields': ('codigo_rolo', 'panoacab_nivel99', 'panoacab_grupo',
+                       'panoacab_item', 'panoacab_subgrupo', 'ordem_producao'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'rolo' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'rolo' in kwargs:
+            form.data['rolo'] = kwargs['rolo']
+        if form.is_valid():
+            rolo = form.cleaned_data['rolo']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, rolo))
+        context['form'] = form
+        return render(request, self.template_name, context)

@@ -1537,3 +1537,22 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
     """
     cursor.execute(sql, [nivel, ref, cor, tam])
     return rows_to_dict_list_lower(cursor)
+
+
+def rolo_inform(cursor, rolo):
+    sql = """
+        SELECT
+          ro.CODIGO_ROLO
+        , ro.PANOACAB_NIVEL99
+        , ro.PANOACAB_GRUPO
+        , ro.PANOACAB_SUBGRUPO
+        , ro.PANOACAB_ITEM
+        , ro.ROLO_ESTOQUE
+        , COALESCE(re.ORDEM_PRODUCAO, 0) ORDEM_PRODUCAO
+        FROM PCPT_020 ro -- cadastro de rolos
+        LEFT JOIN TMRP_141 re -- reserva de rolo para OP
+          ON re.CODIGO_ROLO = ro.CODIGO_ROLO
+        WHERE ro.CODIGO_ROLO = %s
+    """
+    cursor.execute(sql, [rolo])
+    return rows_to_dict_list_lower(cursor)

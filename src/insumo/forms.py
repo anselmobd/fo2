@@ -60,13 +60,20 @@ class RolosBipadosForm(forms.Form):
         return cor
 
 
-class RoloForm(forms.Form):
+class BipaRoloForm(forms.Form):
     rolo = forms.CharField(
         label='Rolo', max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     identificado = forms.CharField(
         label='identificado', required=False,
         widget=forms.HiddenInput())
+
+
+class RoloForm(forms.Form):
+    rolo = forms.CharField(
+        label='Rolo', max_length=9, min_length=1,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
 
 
 class NecessidadeForm(forms.Form):

@@ -62,4 +62,8 @@ urlpatterns = [
     url(r'^mapa_por_sem_ref/(?P<item>(?:.{2}|\d\..{5}\..{6}\..{1,3}))/$',
         views.mapa_sem_ref,
         name='mapa_por_sem_ref__get'),
+
+    url(r'^roloinfo/$', views.Rolo.as_view(), name='rolo'),
+    url(r'^roloinfo/(?P<rolo>[29]?\.?.{5})/$', views.Rolo.as_view(),
+        name='rolo__get'),
 ]
