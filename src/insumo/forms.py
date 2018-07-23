@@ -277,7 +277,7 @@ class MapaPorSemanaForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     insumo = forms.CharField(
-        label='Filtra do insumo',
+        label='Filtro do insumo',
         help_text='(código exato ou parciais do código e descrição)',
         min_length=2, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
