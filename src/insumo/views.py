@@ -1686,7 +1686,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
 
             # Recebimentos
             data_irs = models.insumo_recebimento_semana(
-                cursor, nivel, ref, cor, tam)
+                cursor, nivel, ref, cor, tam, dtini, nsem)
 
             recebimentos = 0
             for row in data_irs:
