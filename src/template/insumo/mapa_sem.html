@@ -11,14 +11,20 @@
 
 {% block content %}
 
-<h3 style="color: red;">Em desenvolvimento...</h3>
+<!-- <h3 style="color: red;">Em desenvolvimento...</h3> -->
 <form action="{% url 'insumo:mapa_por_sem' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
 {% if periodo_ini %}
-  <h3>Periodo: {{ periodo|safe }} (segunda{{ qtd_semanas|pluralize }}-feira{{ qtd_semanas|pluralize }}: {{ periodo_ini }}{% if periodo_ini != periodo_fim %} - {{ periodo_fim }}{% endif %})</h3>
+  <h4>Periodo: {{ periodo|safe }} (segunda{{ qtd_semanas|pluralize }}-feira{{ qtd_semanas|pluralize }}: {{ periodo_ini }}{% if periodo_ini != periodo_fim %} - {{ periodo_fim }}{% endif %})</h4>
+{% endif %}
+{% if qtd_itens %}
+  <h4>Quantidade limite de itens processados: {{ qtd_itens }}</h4>
+{% endif %}
+{% if insumo %}
+  <h4>Filtro do insumo: {{ insumo }}</h4>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
