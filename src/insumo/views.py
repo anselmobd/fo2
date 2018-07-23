@@ -1559,17 +1559,20 @@ class MapaPorSemana(View):
         periodo_atual = models.Periodo.confeccao.filter(
             periodo_producao=periodo
         ).values()
-        periodo_ini = ''
-        periodo_fim = ''
+        periodo_ini = 0
+        periodo_fim = 0
         if periodo_atual:
             periodo_ini = periodo_atual[0]['data_ini_periodo'].date()
             periodo_ini += timedelta(days=1)
             periodo_fim = periodo_ini+timedelta(weeks=qtd_semanas-1)
+        periodo_ini_int = periodo_ini.year*10000 + \
+            periodo_ini.month*100 + periodo_ini.day
 
         context = {'periodo': periodo,
                    'periodo_ini': periodo_ini,
                    'periodo_fim': periodo_fim,
                    'qtd_semanas': qtd_semanas,
+                   'periodo_ini_int': periodo_ini_int,
                    }
 
         return context
@@ -1627,7 +1630,7 @@ class MapaPorSemana(View):
         return render(request, self.template_name, context)
 
 
-def mapa_sem_ref(request, item):
+def mapa_sem_ref(request, item, dtini, nsem):
     template_name = 'insumo/mapa_sem_ref.html'
     context = {}
     if len(item) == 2:
@@ -1652,6 +1655,22 @@ def mapa_sem_ref(request, item):
             row['REP_STR'] = '{}d. ({}s.)'.format(row['REPOSICAO'], semanas)
             row['QUANT'] = round(row['QUANT'])
 
+            # Necessidades
+            data_nec = models.insumo_necessidade_semana(
+                cursor, nivel, ref, cor, tam, dtini, nsem)
+            necessidade = 0
+            for row in data_nec:
+                necessidade += row['QTD_INSUMO']
+            necessidade = round(necessidade)
+
+            # Previsões
+            data_prev = models.insumo_previsoes_semana_insumo(
+                cursor, nivel, ref, cor, tam, dtini, nsem)
+            previsao = 0
+            for row in data_prev:
+                previsao += row['QTD']
+            previsao = round(previsao)
+
         if comprar == 0:
             data = []
 
@@ -1665,6 +1684,8 @@ def mapa_sem_ref(request, item):
             'tam_order': tam.zfill(3),
             'estoque': estoque,
             'comprar': comprar,
+            'necessidade': necessidade,
+            'previsao': previsao,
         }
     html = render_to_string(template_name, context)
     return HttpResponse(html)

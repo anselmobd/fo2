@@ -9,7 +9,8 @@
     <th style="text-align: right;">Múltiplo</th>
     <th style="text-align: right;">Estoque</th>
     <th>Unid.</th>
-    <th style="text-align: right;">Comprar</th>
+    <th style="text-align: right;">Necessidade</th>
+    <th style="text-align: right;">Previsão</th>
   </tr>
 {% else %}
   {% if data %}
@@ -24,7 +25,8 @@
         <td style="text-align: right;">{{ row.LOTE_MULTIPLO }}</td>
         <td style="text-align: right;">{{ row.QUANT }}</td>
         <td>{{ row.UNID }}</td>
-        <td style="text-align: right;">{{ comprar }}</td>
+        <td style="text-align: right;">{{ necessidade }}</td>
+        <td style="text-align: right;">{{ previsao }}</td>
       </tr>
     {% endfor %}
   {% endif %}
