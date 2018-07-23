@@ -9,9 +9,10 @@
     <th style="text-align: right;">Múltiplo</th>
     <th style="text-align: right;">Estoque</th>
     <th>Unid.</th>
-    <th style="text-align: right;">Necessidade</th>
+    <th style="text-align: right;">Necess.</th>
     <th style="text-align: right;">Previsão</th>
-    <th style="text-align: right;">Recebimentos</th>
+    <th style="text-align: right;">Receb.</th>
+    <th style="text-align: right;">Comprar</th>
   </tr>
 {% else %}
   {% if data %}
@@ -29,6 +30,7 @@
         <td style="text-align: right;">{{ necessidade }}</td>
         <td style="text-align: right;">{{ previsao }}</td>
         <td style="text-align: right;">{{ recebimentos }}</td>
+        <td style="text-align: right;">{{ comprar }}</td>
       </tr>
     {% endfor %}
   {% endif %}
