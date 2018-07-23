@@ -81,7 +81,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         opi_row = opi_data[0]
         op_mae = ''
         ref_mae = ''
-        if opi_row['TIPO_OP'] == 'Filha de':
+        if opi_row['TIPO_FM_OP'] == 'Filha de':
             op_mae = opi_row['OP_REL']
             opmaei_data = models.op_inform(cursor, op_mae)
             opmaei_row = opmaei_data[0]
@@ -477,7 +477,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
         opi_row = opi_data[0]
         op_mae = ''
         ref_mae = ''
-        if opi_row['TIPO_OP'] == 'Filha de':
+        if opi_row['TIPO_FM_OP'] == 'Filha de':
             op_mae = '{}'.format(opi_row['OP_REL'])
             opmaei_data = models.op_inform(cursor, op_mae)
             opmaei_row = opmaei_data[0]
