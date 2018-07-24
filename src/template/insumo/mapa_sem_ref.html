@@ -13,6 +13,8 @@
     <th style="text-align: right;">Previsão</th>
     <th style="text-align: right;">Receb.</th>
     <th style="text-align: right;">Comprar</th>
+    <th>Chegada</th>
+    <th style="text-align: right;">Excesso</th>
   </tr>
 {% else %}
   {% if data %}
@@ -31,6 +33,8 @@
         <td style="text-align: right;">{{ previsao }}</td>
         <td style="text-align: right;">{{ recebimentos }}</td>
         <td style="text-align: right;">{{ comprar }}</td>
+        <td>{{ dt_chegada }}</td>
+        <td style="text-align: right;">{{ excesso }}</td>
       </tr>
     {% endfor %}
   {% endif %}

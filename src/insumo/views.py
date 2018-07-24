@@ -1652,16 +1652,15 @@ def mapa_sem_ref(request, item, dtini, nsem):
         cursor = connections['so'].cursor()
 
         data = models.insumo_descr(cursor, nivel, ref, cor, tam)
+        drow = data[0]
 
-        comprar = 0
-        for row in data:
-            row['REF'] = row['REF'] + ' - ' + row['DESCR']
-            row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
-            if row['TAM'] != row['DESCR_TAM']:
-                row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
-            semanas = math.ceil(row['REPOSICAO'] / 7)
-            row['REP_STR'] = '{}d. ({}s.)'.format(row['REPOSICAO'], semanas)
-            row['QUANT'] = round(row['QUANT'])
+        drow['REF'] = drow['REF'] + ' (' + drow['DESCR'] + ')'
+        drow['COR'] = drow['COR'] + ' (' + drow['DESCR_COR'] + ')'
+        if drow['TAM'] != drow['DESCR_TAM']:
+            drow['TAM'] = drow['TAM'] + ' (' + drow['DESCR_TAM'] + ')'
+        semanas = math.ceil(drow['REPOSICAO'] / 7)
+        drow['REP_STR'] = '{}d. ({}s.)'.format(drow['REPOSICAO'], semanas)
+        drow['QUANT'] = round(drow['QUANT'])
 
         # Necessidades
         data_ins = models.insumo_necessidade_semana(
@@ -1701,8 +1700,20 @@ def mapa_sem_ref(request, item, dtini, nsem):
             recebimentos += row['QTD_A_RECEBER']
         recebimentos = round(recebimentos)
 
-        comprar = necessidade + previsao + data[0]['STQ_MIN'] \
-            - data[0]['QUANT'] - recebimentos
+        comprar = necessidade + previsao + drow['STQ_MIN'] \
+            - drow['QUANT'] - recebimentos
+
+        if comprar < 0:
+            excesso = -comprar
+            comprar = 0
+        else:
+            excesso = 0
+
+        if comprar > 0:
+            dt_chegada = datetime.date.today() + \
+                datetime.timedelta(days=drow['REPOSICAO'])
+        else:
+            dt_chegada = ''
 
         context = {
             'data': data,
@@ -1715,6 +1726,8 @@ def mapa_sem_ref(request, item, dtini, nsem):
             'previsao': previsao,
             'recebimentos': recebimentos,
             'comprar': comprar,
+            'dt_chegada': dt_chegada,
+            'excesso': excesso,
         }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
