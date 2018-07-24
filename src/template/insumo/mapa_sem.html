@@ -23,6 +23,12 @@
 {% if qtd_itens %}
   <h4>Quantidade limite de itens processados: {{ qtd_itens }}</h4>
 {% endif %}
+{% if nivel == '2' %}
+  <h4>Nível 2 - em rolos</h4>
+{% endif %}
+{% if nivel == '9' %}
+  <h4>Nível 9 - demais insumos</h4>
+{% endif %}
 {% if insumo %}
   <h4>Filtro do insumo: {{ insumo }}</h4>
 {% endif %}
