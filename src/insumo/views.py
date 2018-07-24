@@ -1011,7 +1011,8 @@ class MapaPorInsumo(View):
                     sugestao_quatidade = max(sugestao_quatidade, lote_multiplo)
                     sugestao_receber_ideal = row['DATA'] + \
                         datetime.timedelta(days=-7)
-                    sugestao_receber = row['DATA'] + datetime.timedelta(days=-7)
+                    sugestao_receber = row['DATA'] + datetime.timedelta(
+                        days=-7)
                     sugestao_comprar = segunda(
                         sugestao_receber +
                         datetime.timedelta(days=-dias_reposicao))
@@ -1030,7 +1031,8 @@ class MapaPorInsumo(View):
 
                     if semana_fim <= sugestao_receber:
                         semana = semana_fim + datetime.timedelta(days=7)
-                        semana_fim = sugestao_receber + datetime.timedelta(days=7)
+                        semana_fim = sugestao_receber + datetime.timedelta(
+                            days=7)
                         while semana <= semana_fim:
                             data.append({
                                 'DATA': semana,
@@ -1054,7 +1056,8 @@ class MapaPorInsumo(View):
                             row['RECEBER'] += sugestao_quatidade
                         if sugestao_receber_ideal < semana_hoje:
                             if row['DATA'] == semana_hoje:
-                                row['RECEBER_IDEAL_ANTES'] += sugestao_quatidade
+                                row['RECEBER_IDEAL_ANTES'] += \
+                                    sugestao_quatidade
                         else:
                             if row['DATA'] == sugestao_receber_ideal:
                                 row['RECEBER_IDEAL'] += sugestao_quatidade
@@ -1079,7 +1082,8 @@ class MapaPorInsumo(View):
                 row['QUANT|DECIMALS'] = max_digits
                 if semana1 is None:
                     semana1 = row['SEMANA_COMPRA']
-                if semana1 < semana_hoje and row['SEMANA_COMPRA'] <= semana_hoje:
+                if semana1 < semana_hoje and \
+                        row['SEMANA_COMPRA'] <= semana_hoje:
                     row['QUANT|STYLE'] = 'font-weight: bold;'
 
             context.update({
