@@ -279,15 +279,12 @@ class MapaPorSemanaForm(forms.Form):
     CHOICES = [(2, 'Nível 2 - em rolos'),
                (9, 'Nível 9 - demais insumos'),
                (0, 'Ambos')]
-    nivel = forms.ChoiceField(
-        label='Nível',
-        choices=CHOICES, initial=0, widget=forms.RadioSelect())
+    nivel = forms.ChoiceField(label='Nível', choices=CHOICES, initial=0)
 
     CHOICES = [('U', 'Utilizados em alguma estrutura de produto'),
                ('N', 'Não utilizados em nenhum estrutura de produto'),
                ('T', 'Todos')]
-    uso = forms.ChoiceField(
-        choices=CHOICES, initial='U', widget=forms.RadioSelect())
+    uso = forms.ChoiceField(choices=CHOICES, initial='U')
 
     insumo = forms.CharField(
         label='Filtro do insumo',
