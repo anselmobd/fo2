@@ -20,10 +20,11 @@
   {% if data %}
     {% for row in data %}
       <tr id="id_{{ nivel }}_{{ ref }}_{{ cor }}_{{ tam }}" class="key_ref _ref_{{ nivel }}{{ ref }}{{ cor }}{{ tam_order }}
-        {% if comprar > 0 %}flag_comprar{% endif %}
-        {% if excesso > 0 and recebimentos > 0 %}flag_exc_com_receb{% endif %}
-        {% if excesso > 0 and recebimentos == 0 %}flag_exc_sem_receb{% endif %}
-        {% if comprar == 0 and excesso == 0 %}flag_zerado{% endif %}
+        {% if comprar > 0 %}flag_comprar
+        {% elif excesso > 0 and recebimentos > 0 %}flag_exc_com_receb
+        {% elif excesso > 0 and recebimentos == 0 %}flag_exc_sem_receb
+        {% elif comprar == 0 and excesso == 0 %}flag_zerado
+        {% endif %}
         "
         {% if excesso > 0 and recebimentos == 0 %}style="display: none;"{% endif %}
         {% if comprar == 0 and excesso == 0 %}style="display: none;"{% endif %}
