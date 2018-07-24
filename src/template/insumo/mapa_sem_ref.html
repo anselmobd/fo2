@@ -19,7 +19,15 @@
 {% else %}
   {% if data %}
     {% for row in data %}
-      <tr id="id_{{ nivel }}_{{ ref }}_{{ cor }}_{{ tam }}" class="key_ref _ref_{{ nivel }}{{ ref }}{{ cor }}{{ tam_order }}">
+      <tr id="id_{{ nivel }}_{{ ref }}_{{ cor }}_{{ tam }}" class="key_ref _ref_{{ nivel }}{{ ref }}{{ cor }}{{ tam_order }}
+        {% if comprar > 0 %}flag_comprar{% endif %}
+        {% if excesso > 0 and recebimentos > 0 %}flag_exc_com_receb{% endif %}
+        {% if excesso > 0 and recebimentos == 0 %}flag_exc_sem_receb{% endif %}
+        {% if comprar == 0 and excesso == 0 %}flag_zerado{% endif %}
+        "
+        {% if excesso > 0 and recebimentos == 0 %}style="display: none;"{% endif %}
+        {% if comprar == 0 and excesso == 0 %}style="display: none;"{% endif %}
+        >
         <td>{{ nivel }}</td>
         <td><a href="{% url 'insumo:mapa' nivel ref cor tam %}" target="_blank">{{ row.REF }}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></td>
         <td>{{ row.COR }}</td>
