@@ -276,6 +276,13 @@ class MapaPorSemanaForm(forms.Form):
         max_length=4, min_length=1, required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
+    CHOICES = [(2, 'Nível 2 - em rolos'),
+               (9, 'Nível 9 - demais insumos'),
+               (0, 'Ambos')]
+    nivel = forms.ChoiceField(
+        label='Nível',
+        choices=CHOICES, initial=0, widget=forms.RadioSelect())
+
     insumo = forms.CharField(
         label='Filtro do insumo',
         help_text='(código exato ou parciais do código e descrição)',

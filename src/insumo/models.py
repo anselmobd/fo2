@@ -1459,11 +1459,15 @@ def insumo_previsoes_semana_insumo(
     return insumo
 
 
-def insumos_cor_tamanho_usados(cursor, qtd_itens, insumo):
+def insumos_cor_tamanho_usados(cursor, qtd_itens, nivel, insumo):
     filtra_qtd_itens = ''
     if qtd_itens != '0':
         filtra_qtd_itens = 'WHERE rownum <= {qtd_itens}'.format(
             qtd_itens=qtd_itens)
+
+    filtra_nivel = ''
+    if nivel in ['2', '9']:
+        filtra_nivel = "AND r.NIVEL_ESTRUTURA = '{nivel}'".format(nivel=nivel)
 
     filtra_insumo = ''
     if insumo:
@@ -1527,6 +1531,7 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens, insumo):
               AND t.DESCR_TAM_REFER  NOT LIKE '-%'
               AND c.DESCRICAO_15  NOT LIKE '-%'
               AND c.ITEM_ATIVO = 0 -- ativo
+              {filtra_nivel} -- filtra_nivel
               {filtra_insumo} -- filtra_insumo
             ORDER BY
               r.NIVEL_ESTRUTURA
@@ -1541,6 +1546,7 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens, insumo):
         {filtra_qtd_itens} -- filtra_qtd_itens
     """.format(
         filtra_qtd_itens=filtra_qtd_itens,
+        filtra_nivel=filtra_nivel,
         filtra_insumo=filtra_insumo)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
