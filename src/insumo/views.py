@@ -970,157 +970,158 @@ class MapaPorInsumo(View):
         semana_fim = max_not_None(
             ult_recebimento,
             ult_necessidade)
-        semana_fim += datetime.timedelta(days=7)
+        if semana_fim is not None:
+            semana_fim += datetime.timedelta(days=7)
 
-        data = []
-        estoque = qtd_estoque
-        while semana <= semana_fim:
-            if semana in recebimentos:
-                recebimento = recebimentos[semana]
-            else:
-                recebimento = 0
+            data = []
+            estoque = qtd_estoque
+            while semana <= semana_fim:
+                if semana in recebimentos:
+                    recebimento = recebimentos[semana]
+                else:
+                    recebimento = 0
 
-            if semana in necessidades:
-                necessidade = necessidades[semana]
-            else:
-                necessidade = 0
+                if semana in necessidades:
+                    necessidade = necessidades[semana]
+                else:
+                    necessidade = 0
 
-            data.append({
-                'DATA': semana,
-                'NECESSIDADE': necessidade,
-                'RECEBIMENTO': recebimento,
-                'ESTOQUE': estoque,
-                'ESTOQUE_IDEAL': estoque,
-                'COMPRAR': 0,
-                'RECEBER': 0,
-                'RECEBER_IDEAL': 0,
-                'RECEBER_IDEAL_ANTES': 0,
-            })
-            estoque = estoque - necessidade + recebimento
-
-            semana += datetime.timedelta(days=7)
-
-        # monta sugestões de compra
-        data_sug = []
-        for i in range(len(data)):
-            row = data[i]
-            sugestao_quatidade = 0
-            if row['ESTOQUE_IDEAL'] < estoque_minimo:
-                sugestao_quatidade = estoque_minimo - row['ESTOQUE_IDEAL']
-                sugestao_quatidade = max(sugestao_quatidade, lote_multiplo)
-                sugestao_receber_ideal = row['DATA'] + \
-                    datetime.timedelta(days=-7)
-                sugestao_receber = row['DATA'] + datetime.timedelta(days=-7)
-                sugestao_comprar = segunda(
-                    sugestao_receber +
-                    datetime.timedelta(days=-dias_reposicao))
-                data_sug.append({
-                    'SEMANA_COMPRA': sugestao_comprar,
-                    'SEMANA_RECEPCAO': sugestao_receber,
-                    'QUANT': sugestao_quatidade,
+                data.append({
+                    'DATA': semana,
+                    'NECESSIDADE': necessidade,
+                    'RECEBIMENTO': recebimento,
+                    'ESTOQUE': estoque,
+                    'ESTOQUE_IDEAL': estoque,
+                    'COMPRAR': 0,
+                    'RECEBER': 0,
+                    'RECEBER_IDEAL': 0,
+                    'RECEBER_IDEAL_ANTES': 0,
                 })
-                if sugestao_comprar < semana_hoje:
-                    avancar = semana_hoje - sugestao_comprar
-                    delta_avancar = datetime.timedelta(days=avancar.days)
-                    sugestao_comprar += delta_avancar
-                    sugestao_receber += delta_avancar
+                estoque = estoque - necessidade + recebimento
 
-            if sugestao_quatidade != 0:
+                semana += datetime.timedelta(days=7)
 
-                if semana_fim <= sugestao_receber:
-                    semana = semana_fim + datetime.timedelta(days=7)
-                    semana_fim = sugestao_receber + datetime.timedelta(days=7)
-                    while semana <= semana_fim:
-                        data.append({
-                            'DATA': semana,
-                            'NECESSIDADE': 0,
-                            'RECEBIMENTO': 0,
-                            'ESTOQUE': 0,
-                            'ESTOQUE_IDEAL': 0,
-                            'COMPRAR': 0,
-                            'RECEBER': 0,
-                            'RECEBER_IDEAL': 0,
-                            'RECEBER_IDEAL_ANTES': 0,
-                        })
-                        semana += datetime.timedelta(days=7)
+            # monta sugestões de compra
+            data_sug = []
+            for i in range(len(data)):
+                row = data[i]
+                sugestao_quatidade = 0
+                if row['ESTOQUE_IDEAL'] < estoque_minimo:
+                    sugestao_quatidade = estoque_minimo - row['ESTOQUE_IDEAL']
+                    sugestao_quatidade = max(sugestao_quatidade, lote_multiplo)
+                    sugestao_receber_ideal = row['DATA'] + \
+                        datetime.timedelta(days=-7)
+                    sugestao_receber = row['DATA'] + datetime.timedelta(days=-7)
+                    sugestao_comprar = segunda(
+                        sugestao_receber +
+                        datetime.timedelta(days=-dias_reposicao))
+                    data_sug.append({
+                        'SEMANA_COMPRA': sugestao_comprar,
+                        'SEMANA_RECEPCAO': sugestao_receber,
+                        'QUANT': sugestao_quatidade,
+                    })
+                    if sugestao_comprar < semana_hoje:
+                        avancar = semana_hoje - sugestao_comprar
+                        delta_avancar = datetime.timedelta(days=avancar.days)
+                        sugestao_comprar += delta_avancar
+                        sugestao_receber += delta_avancar
 
-                estoque = qtd_estoque
-                estoque_ideal = qtd_estoque
-                for row in data:
-                    if row['DATA'] == sugestao_comprar:
-                        row['COMPRAR'] += sugestao_quatidade
-                    if row['DATA'] == sugestao_receber:
-                        row['RECEBER'] += sugestao_quatidade
-                    if sugestao_receber_ideal < semana_hoje:
-                        if row['DATA'] == semana_hoje:
-                            row['RECEBER_IDEAL_ANTES'] += sugestao_quatidade
-                    else:
-                        if row['DATA'] == sugestao_receber_ideal:
-                            row['RECEBER_IDEAL'] += sugestao_quatidade
+                if sugestao_quatidade != 0:
 
-                    row['ESTOQUE'] = estoque
-                    estoque = estoque - row['NECESSIDADE'] + \
-                        row['RECEBIMENTO'] + row['RECEBER']
+                    if semana_fim <= sugestao_receber:
+                        semana = semana_fim + datetime.timedelta(days=7)
+                        semana_fim = sugestao_receber + datetime.timedelta(days=7)
+                        while semana <= semana_fim:
+                            data.append({
+                                'DATA': semana,
+                                'NECESSIDADE': 0,
+                                'RECEBIMENTO': 0,
+                                'ESTOQUE': 0,
+                                'ESTOQUE_IDEAL': 0,
+                                'COMPRAR': 0,
+                                'RECEBER': 0,
+                                'RECEBER_IDEAL': 0,
+                                'RECEBER_IDEAL_ANTES': 0,
+                            })
+                            semana += datetime.timedelta(days=7)
 
-                    row['ESTOQUE_IDEAL'] = \
-                        row['RECEBER_IDEAL_ANTES'] + estoque_ideal
-                    estoque_ideal = row['RECEBER_IDEAL_ANTES'] + \
-                        estoque_ideal - row['NECESSIDADE'] + \
-                        row['RECEBIMENTO'] + row['RECEBER_IDEAL']
+                    estoque = qtd_estoque
+                    estoque_ideal = qtd_estoque
+                    for row in data:
+                        if row['DATA'] == sugestao_comprar:
+                            row['COMPRAR'] += sugestao_quatidade
+                        if row['DATA'] == sugestao_receber:
+                            row['RECEBER'] += sugestao_quatidade
+                        if sugestao_receber_ideal < semana_hoje:
+                            if row['DATA'] == semana_hoje:
+                                row['RECEBER_IDEAL_ANTES'] += sugestao_quatidade
+                        else:
+                            if row['DATA'] == sugestao_receber_ideal:
+                                row['RECEBER_IDEAL'] += sugestao_quatidade
 
-        max_digits = 0
-        for row in data_sug:
-            num_digits = str(row['QUANT'])[::-1].find('.')
-            max_digits = max(max_digits, num_digits)
+                        row['ESTOQUE'] = estoque
+                        estoque = estoque - row['NECESSIDADE'] + \
+                            row['RECEBIMENTO'] + row['RECEBER']
 
-        semana1 = None
-        for row in data_sug:
-            row['QUANT|DECIMALS'] = max_digits
-            if semana1 is None:
-                semana1 = row['SEMANA_COMPRA']
-            if semana1 < semana_hoje and row['SEMANA_COMPRA'] <= semana_hoje:
-                row['QUANT|STYLE'] = 'font-weight: bold;'
+                        row['ESTOQUE_IDEAL'] = \
+                            row['RECEBER_IDEAL_ANTES'] + estoque_ideal
+                        estoque_ideal = row['RECEBER_IDEAL_ANTES'] + \
+                            estoque_ideal - row['NECESSIDADE'] + \
+                            row['RECEBIMENTO'] + row['RECEBER_IDEAL']
 
-        context.update({
-            'headers_sug': ['Semana de compra', 'Semana de chegada',
-                            'Quantidade'],
-            'fields_sug': ['SEMANA_COMPRA', 'SEMANA_RECEPCAO', 'QUANT'],
-            'style_sug': {3: 'text-align: right;'},
-            'data_sug': data_sug,
-        })
+            max_digits = 0
+            for row in data_sug:
+                num_digits = str(row['QUANT'])[::-1].find('.')
+                max_digits = max(max_digits, num_digits)
 
-        max_digits = 0
-        for row in data:
-            num_digits = max(
-                str(row['ESTOQUE'])[::-1].find('.'),
-                str(row['NECESSIDADE'])[::-1].find('.'),
-                str(row['RECEBIMENTO'])[::-1].find('.'),
-                str(row['COMPRAR'])[::-1].find('.'),
-                str(row['RECEBER'])[::-1].find('.'),
-                )
-            max_digits = max(max_digits, num_digits)
+            semana1 = None
+            for row in data_sug:
+                row['QUANT|DECIMALS'] = max_digits
+                if semana1 is None:
+                    semana1 = row['SEMANA_COMPRA']
+                if semana1 < semana_hoje and row['SEMANA_COMPRA'] <= semana_hoje:
+                    row['QUANT|STYLE'] = 'font-weight: bold;'
 
-        for row in data:
-            row['ESTOQUE|DECIMALS'] = max_digits
-            row['NECESSIDADE|DECIMALS'] = max_digits
-            row['RECEBIMENTO|DECIMALS'] = max_digits
-            row['COMPRAR|DECIMALS'] = max_digits
-            row['RECEBER|DECIMALS'] = max_digits
+            context.update({
+                'headers_sug': ['Semana de compra', 'Semana de chegada',
+                                'Quantidade'],
+                'fields_sug': ['SEMANA_COMPRA', 'SEMANA_RECEPCAO', 'QUANT'],
+                'style_sug': {3: 'text-align: right;'},
+                'data_sug': data_sug,
+            })
 
-        context.update({
-            'headers': ['Semana', 'Estoque',
-                        'Necessidade', 'Recebimento',
-                        'Compra sugerida', 'Recebimento sugerido'],
-            'fields': ['DATA', 'ESTOQUE',
-                       'NECESSIDADE', 'RECEBIMENTO',
-                       'COMPRAR', 'RECEBER'],
-            'style': {2: 'text-align: right;',
-                      3: 'text-align: right;',
-                      4: 'text-align: right;',
-                      5: 'text-align: right;',
-                      6: 'text-align: right;'},
-            'data': data,
-        })
+            max_digits = 0
+            for row in data:
+                num_digits = max(
+                    str(row['ESTOQUE'])[::-1].find('.'),
+                    str(row['NECESSIDADE'])[::-1].find('.'),
+                    str(row['RECEBIMENTO'])[::-1].find('.'),
+                    str(row['COMPRAR'])[::-1].find('.'),
+                    str(row['RECEBER'])[::-1].find('.'),
+                    )
+                max_digits = max(max_digits, num_digits)
+
+            for row in data:
+                row['ESTOQUE|DECIMALS'] = max_digits
+                row['NECESSIDADE|DECIMALS'] = max_digits
+                row['RECEBIMENTO|DECIMALS'] = max_digits
+                row['COMPRAR|DECIMALS'] = max_digits
+                row['RECEBER|DECIMALS'] = max_digits
+
+            context.update({
+                'headers': ['Semana', 'Estoque',
+                            'Necessidade', 'Recebimento',
+                            'Compra sugerida', 'Recebimento sugerido'],
+                'fields': ['DATA', 'ESTOQUE',
+                           'NECESSIDADE', 'RECEBIMENTO',
+                           'COMPRAR', 'RECEBER'],
+                'style': {2: 'text-align: right;',
+                          3: 'text-align: right;',
+                          4: 'text-align: right;',
+                          5: 'text-align: right;',
+                          6: 'text-align: right;'},
+                'data': data,
+            })
 
         return context
 
