@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
 <style>
@@ -24,7 +25,12 @@
 <button onclick="sortChildren('tlist', 'qtd')">ord qtd</button>
 <button onclick="console.log(keyCache)">log</button>
 
+<p>Mostrar: <input id="chk_comprar" type="checkbox" name="chk_comprar" value="chk_comprar" checked>Comprar<br></p>
+<div id="algo">algo</div>
 <table>
+  <thead id="thead">
+    <tr><th>ref</th><th align="right">val</th></tr>
+  </thead>
   <tbody id="tlist">
     <tr id="tCX001" class="key_ref _ref_CX001 key_qtd _qtd_1245"><td>CX001</td><td align="right">1245</td></tr>
     <tr id="tPA002" class="key_ref _ref_PA002 key_qtd _qtd_1345"><td>PA002</td><td align="right">1345</td></tr>
@@ -45,7 +51,7 @@
   var toAdd = document.getElementById('dtlist');
 
   for (var i = 0, l = refs.length; i < l; i++) {
-    alert(refs[i]);
+    // alert(refs[i]);
     tr = document.createElement('tr');
     td = document.createElement('td');
     text = document.createTextNode(refs[i]);
@@ -140,7 +146,39 @@
     }
 
   }
-</script>
 
+  $( document ).ready(function() {
+
+    // var toHide = document.getElementById("tlist").children;
+    var toHide = $("#tlist > tr");
+    // var algo = document.getElementById("algo");
+    var algo = $("#algo");
+
+    // document.getElementById('chk_comprar').onclick = function(){
+    $("#chk_comprar").on('change', function () {
+      // alert(123);
+      if ($(this).is(':checked')) {
+        alert('on');
+        $('.key_ref._ref_PA002').show();
+      } else {
+        toHide.each(function(el) {
+          console.log(toHide[el]);
+          $('.key_ref._ref_PA002').hide();
+        });
+      }
+    });
+
+    console.log( 'ready!' );
+
+    // $('#chk_comprar').change(function() {
+    //     if(this.checked) {
+    //         var returnVal = confirm("Are you sure?");
+    //         // $(this).prop("checked", returnVal);
+    //     }
+    //     // $('#textbox1').val(this.checked);
+    // });
+
+  });
+</script>
 </body>
 </html>
