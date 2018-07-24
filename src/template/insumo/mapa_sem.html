@@ -6,6 +6,13 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+
+tbody#refs_tbody tr {
+  border-bottom-width: 1px;
+  border-bottom-style: dotted;
+  border-bottom-color: lightgray;
+}
+
 </style>
 {% endblock %}
 
@@ -17,6 +24,9 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
+{% if refs %}
+<h4>Insumos calculados: <span id="icount">0</span><span id="detotal"> / <span id="itotal">...</span></span></h4>
+{% endif %}
 {% if periodo_ini %}
   <h4>Periodo: {{ periodo|safe }} (segunda{{ qtd_semanas|pluralize }}-feira{{ qtd_semanas|pluralize }}: {{ periodo_ini }}{% if periodo_ini != periodo_fim %} - {{ periodo_fim }}{% endif %})</h4>
 {% endif %}
@@ -42,6 +52,12 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if refs %}
+  <p>Mostrar:
+    <input id="chk_comprar" type="checkbox" checked> Comprar |
+    <input id="chk_exc_com_receb" type="checkbox" checked> Excesso com Recebimento |
+    <input id="chk_exc_sem_receb" type="checkbox"> Excesso sem Recebimento |
+    <input id="chk_zerado" type="checkbox"> Comprar e exceso zerados
+  </p>
   <table>
     <thead id="refs_thead">
     </thead>
@@ -88,10 +104,13 @@
       success : function(data) {
         if (data) {
           aggregator.insertAdjacentHTML('beforeend', data);
+          $("#icount").text(iRefAjax+1);
         }
         iRefAjax++;
         if (iRefAjax < refs.length) {
           setTimeout(function(){ doAjax1Ref(false); }, 0);
+        } else {
+          $("#detotal").text('');
         }
       }
     });
@@ -101,6 +120,37 @@
   document.addEventListener('DOMContentLoaded', function() {
       setTimeout(function(){ doAjax1Ref(true); }, 0);
   }, false);
+
+  function showHide(el, onOff) {
+    if (onOff) {
+      el.show();
+    } else {
+      el.hide();
+    }
+  }
+
+  $( document ).ready(function() {
+
+    $("#itotal").text(refs.length);
+
+
+    $("#chk_comprar").on('change', function () {
+      showHide($('.flag_comprar'), $(this).is(':checked'))
+    });
+
+    $("#chk_zerado").on('change', function () {
+      showHide($('.flag_zerado'), $(this).is(':checked'))
+    });
+
+    $("#chk_exc_com_receb").on('change', function () {
+      showHide($('.flag_exc_com_receb'), $(this).is(':checked'))
+    });
+
+    $("#chk_exc_sem_receb").on('change', function () {
+      showHide($('.flag_exc_sem_receb'), $(this).is(':checked'))
+    });
+
+  });
 
 </script>
 {% endif %}
