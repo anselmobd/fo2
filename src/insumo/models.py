@@ -1459,7 +1459,7 @@ def insumo_previsoes_semana_insumo(
     return insumo
 
 
-def insumos_cor_tamanho_usados(cursor, qtd_itens, nivel, insumo):
+def insumos_cor_tamanho_usados(cursor, qtd_itens, nivel, uso, insumo):
     filtra_qtd_itens = ''
     if qtd_itens != '0':
         filtra_qtd_itens = 'WHERE rownum <= {qtd_itens}'.format(
@@ -1468,6 +1468,12 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens, nivel, insumo):
     filtra_nivel = ''
     if nivel in ['2', '9']:
         filtra_nivel = "AND r.NIVEL_ESTRUTURA = '{nivel}'".format(nivel=nivel)
+
+    filtra_uso = ''
+    if uso == 'U':
+        filtra_uso = "AND ia.NIVEL_COMP IS NOT NULL"
+    elif uso == 'N':
+        filtra_uso = "AND ia.NIVEL_COMP IS NULL"
 
     filtra_insumo = ''
     if insumo:
@@ -1521,7 +1527,7 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens, nivel, insumo):
               ON c.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
              AND c.GRUPO_ESTRUTURA = r.REFERENCIA
              AND c.SUBGRU_ESTRUTURA = t.TAMANHO_REF
-            JOIN BASI_050 ia -- insumos de alternativa
+            LEFT JOIN BASI_050 ia -- insumos de alternativa
               ON ia.NIVEL_COMP = r.NIVEL_ESTRUTURA
              AND ia.GRUPO_COMP = r.REFERENCIA
              AND (ia.SUB_COMP = t.TAMANHO_REF OR ia.SUB_COMP = '000')
@@ -1532,6 +1538,7 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens, nivel, insumo):
               AND c.DESCRICAO_15  NOT LIKE '-%'
               AND c.ITEM_ATIVO = 0 -- ativo
               {filtra_nivel} -- filtra_nivel
+              {filtra_uso} -- filtra_uso
               {filtra_insumo} -- filtra_insumo
             ORDER BY
               r.NIVEL_ESTRUTURA
@@ -1547,6 +1554,7 @@ def insumos_cor_tamanho_usados(cursor, qtd_itens, nivel, insumo):
     """.format(
         filtra_qtd_itens=filtra_qtd_itens,
         filtra_nivel=filtra_nivel,
+        filtra_uso=filtra_uso,
         filtra_insumo=filtra_insumo)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)

@@ -29,6 +29,12 @@
 {% if nivel == '9' %}
   <h4>Nível 9 - demais insumos</h4>
 {% endif %}
+{% if uso == 'U' %}
+  <h4>Utilizados em alguma estrutura de produto</h4>
+{% endif %}
+{% if uso == 'N' %}
+  <h4>Não utilizados em nenhum estrutura de produto</h4>
+{% endif %}
 {% if insumo %}
   <h4>Filtro do insumo: {{ insumo }}</h4>
 {% endif %}

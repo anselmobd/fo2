@@ -283,6 +283,12 @@ class MapaPorSemanaForm(forms.Form):
         label='Nível',
         choices=CHOICES, initial=0, widget=forms.RadioSelect())
 
+    CHOICES = [('U', 'Utilizados em alguma estrutura de produto'),
+               ('N', 'Não utilizados em nenhum estrutura de produto'),
+               ('T', 'Todos')]
+    uso = forms.ChoiceField(
+        choices=CHOICES, initial='U', widget=forms.RadioSelect())
+
     insumo = forms.CharField(
         label='Filtro do insumo',
         help_text='(código exato ou parciais do código e descrição)',
