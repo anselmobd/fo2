@@ -833,8 +833,8 @@ def insumo_necessidade_semana(
 
     try:
         filtra_DATA_ENTRADA_CORTE = \
-            "AND op.DATA_ENTRADA_CORTE < " \
-            "(TO_DATE('{dtini}','YYYYMMDD')+6+7+7*{nsem})".format(
+            "AND coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) <= " \
+            "(TO_DATE('{dtini}','YYYYMMDD')+6+7*{nsem}+7)".format(
                 dtini=dtini, nsem=int(nsem)-1)
     except Exception:
         filtra_DATA_ENTRADA_CORTE = ''
