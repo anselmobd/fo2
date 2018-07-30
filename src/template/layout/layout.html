@@ -61,8 +61,26 @@
           <div class="col-md-6 hidden-xs" align="right">
             <small>
               {% if request.user.is_authenticated %}Usuário: {{ request.user.username }} - <a href="{% url 'encerrar' %}">Encerrar sessão</a>{% else %}<a href="{% url 'login' %}?next=/">Identificar-se (Login)</a>{% endif %} | Versão: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})
-              <span style='display:none' id='greasymonkeyverify'><br />(TI: Instalar o <a href="https://addons.mozilla.org/pt-BR/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> e o script <a href="http://intranet/Tussor_Intranet.user.js" target="_blank">"Tussor_Intranet"</a>)</span>
-              <span style='display:none' id='tampermonkeyverify'><br />(TI: Instalar o <a href="https://chrome.google.com/webstore/search/Tampermonkey?hl=pt-BR" target="_blank">Tampermonkey</a> e o script <a href="http://intranet/Tussor_Fo2_Intranet.user.js" target="_blank">"Tussor_Fo2_Intranet"</a>)</span>
+              <span style='display:none' id='greasymonkeyverify' title='script monkey verify'>
+                <span style='font-size: 0.5em;' class='icon'>
+                  <a href='#' onclick='javascript:s_show();'>
+                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                  </a>
+                </span>
+                <span style='display:none' class='content'><br />
+                  (<a href='#' onclick='javascript:s_hide();'>TI</a>: Instalar o <a href="https://addons.mozilla.org/pt-BR/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> e o script <a href="http://intranet/Tussor_Intranet.user.js" target="_blank">"Tussor_Intranet"</a>)
+                </span>
+              </span>
+              <span style='display:none' id='tampermonkeyverify' title='script monkey verify'>
+                <span style='font-size: 0.5em;' class='icon'>
+                  <a href='#' onclick='javascript:s_show();'>
+                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                  </a>
+                </span>
+                <span style='display:none' class='content'><br />
+                  (<a href='#' onclick='javascript:s_hide();'>TI</a>: Instalar o <a href="https://chrome.google.com/webstore/search/Tampermonkey?hl=pt-BR" target="_blank">Tampermonkey</a> e o script <a href="http://intranet/Tussor_Fo2_Intranet.user.js" target="_blank">"Tussor_Fo2_Intranet"</a>)
+                </span>
+              </span>
             </small>
           </div>
           <div class="col-md-4 visible-xs" align="right">
@@ -101,10 +119,22 @@
     var FIREFOX = /Firefox/i.test(navigator.userAgent);
 
     if (FIREFOX) {
-      document.getElementById("greasymonkeyverify").style.display="inline";
+      var monkey = document.getElementById("greasymonkeyverify");
     } else {
-      document.getElementById("tampermonkeyverify").style.display="inline";
+      var monkey = document.getElementById("tampermonkeyverify");
     }
+    monkey.style.display="inline";
+
+    function s_show() {
+      monkey.getElementsByClassName('icon')[0].style.display="none";
+      monkey.getElementsByClassName('content')[0].style.display="inline";
+    }
+
+    function s_hide() {
+      monkey.getElementsByClassName('icon')[0].style.display="inline";
+      monkey.getElementsByClassName('content')[0].style.display="none";
+    }
+
   </script>
   {% block footer_space %}<p>&nbsp;</p>{% endblock %}
 </body>
