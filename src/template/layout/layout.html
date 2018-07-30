@@ -60,7 +60,7 @@
           </div>
           <div class="col-md-6 hidden-xs" align="right">
             <small>
-              {% if request.user.is_authenticated %}Usuário: {{ request.user.username }} - <a href="{% url 'encerrar' %}">Encerrar sessão</a>{% else %}<a href="{% url 'login' %}?next=/">Identificar-se (Login)</a>{% endif %} | Versão: {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})
+              {% if request.user.is_authenticated %}{{ request.user.username }} - <a href="{% url 'encerrar' %}">Encerrar sessão</a>{% else %}<a href="{% url 'login' %}?next=/">Identificar-se</a>{% endif %} | <span title="Versão">{{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})</span>
               <span style='display:none' id='greasymonkeyverify' title='script monkey verify'>
                 <span style='font-size: 0.5em;' class='icon'>
                   <a href='#' onclick='javascript:s_show();'>
