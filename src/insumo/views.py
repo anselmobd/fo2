@@ -1008,7 +1008,12 @@ class MapaPorInsumo(View):
                 sugestao_quatidade = 0
                 if row['ESTOQUE_IDEAL'] < estoque_minimo:
                     sugestao_quatidade = estoque_minimo - row['ESTOQUE_IDEAL']
-                    sugestao_quatidade = max(sugestao_quatidade, lote_multiplo)
+                    if lote_multiplo != 0:
+                        qtd_quebrada = sugestao_quatidade % lote_multiplo
+                        if qtd_quebrada != 0:
+                            qtd_lote_mult = sugestao_quatidade // lote_multiplo
+                            qtd_lote_mult += 1
+                            sugestao_quatidade = lote_multiplo * qtd_lote_mult
                     sugestao_receber_ideal = row['DATA'] + \
                         datetime.timedelta(days=-7)
                     sugestao_receber = row['DATA'] + datetime.timedelta(
