@@ -1670,7 +1670,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
 
         # Necessidades
         data_ins = models.insumo_necessidade_semana(
-            cursor, nivel, ref, cor, tam, dtini, nsem)
+            cursor, nivel, ref, cor, tam, dtini, int(nsem) + semanas)
         necessidade = 0
         for row in data_ins:
             necessidade += row['QTD_INSUMO']
@@ -1678,7 +1678,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
 
         # Previsões
         data_prev = models.insumo_previsoes_semana_insumo(
-            cursor, nivel, ref, cor, tam, dtini, nsem)
+            cursor, nivel, ref, cor, tam, dtini, int(nsem) + semanas)
 
         # Descontando das necessidades previtas as necessidades reais
         prev_idx = len(data_prev) - 1
@@ -1699,7 +1699,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
 
         # Recebimentos
         data_irs = models.insumo_recebimento_semana(
-            cursor, nivel, ref, cor, tam, dtini, nsem)
+            cursor, nivel, ref, cor, tam, dtini, int(nsem) + semanas)
 
         recebimentos = 0
         for row in data_irs:
