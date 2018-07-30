@@ -1748,11 +1748,27 @@ class Rolo(View):
         context = {'rolo': rolo}
 
         data = models.rolo_inform(cursor, rolo)
+
+        rolo_estoque_dict = {
+            0: '0 (Em produção)',
+            1: '1 (Em estoque)',
+            2: '2 (Faturado ou fora do estoque)',
+            3: '3 (Relacionado a pedido)',
+            4: '4 (Em trânsito)',
+            5: '5 (Coletado)',
+            7: '7 (Relacionado a ordem de serviço)',
+            8: '8 (Rolo com nota emitida em processo de cancelamento)',
+        }
+        for row in data:
+            row['rolo_estoque'] = rolo_estoque_dict[row['rolo_estoque']]
+
         context.update({
             'headers': ('Rolo', 'Nível', 'Referência',
-                        'Cor', 'Tamanho', 'OP'),
+                        'Cor', 'Tamanho', 'Situação',
+                        'OP'),
             'fields': ('codigo_rolo', 'panoacab_nivel99', 'panoacab_grupo',
-                       'panoacab_item', 'panoacab_subgrupo', 'ordem_producao'),
+                       'panoacab_item', 'panoacab_subgrupo', 'rolo_estoque',
+                       'ordem_producao'),
             'data': data,
         })
 
