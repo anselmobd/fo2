@@ -1,9 +1,15 @@
-__version__ = '0.1.106'
-__version__date__ = '24/07/2018'
+__version__ = '0.1.107'
+__version__date__ = '24/07/18'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.107 - 2018/07/24
+#   . Insumos
+#     . Mapa de compra por semana
+#       - acertados valores considerando lead time
+#       - acertando lote múltiplo
 #
 # - 0.1.106 - 2018/07/24
 #   . Insumos
