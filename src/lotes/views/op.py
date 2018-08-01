@@ -7,12 +7,12 @@ from django.views import View
 
 from fo2.template import group_rowspan
 
-from lotes.forms import OpForm
+import lotes.forms as forms
 import lotes.models as models
 
 
 class Op(View):
-    Form_class = OpForm
+    Form_class = forms.OpForm
     template_name = 'lotes/op.html'
     title_name = 'OP'
 
@@ -255,5 +255,63 @@ class Op(View):
             op = form.cleaned_data['op']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, op))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class BuscaOP(View):
+    Form_class = forms.BuscaOpForm
+    template_name = 'lotes/busca_op.html'
+    title_name = 'Busca OP'
+
+    def mount_context(self, cursor, ref):
+        context = {'ref': ref}
+
+        # Lotes ordenados por OS + referência + estágio
+        data = models.busca_op(cursor, ref=ref)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'OPs não encontradas',
+            })
+            return context
+
+        for row in data:
+            row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
+            if row['DT_CORTE'] is None:
+                row['DT_CORTE'] = ''
+            else:
+                row['DT_CORTE'] = row['DT_CORTE'].date()
+        context.update({
+            'headers': ('OP', 'Situação', 'Cancelamento',
+                        'Tipo', 'Referência',
+                        'Alt.', 'Roteiro',
+                        'Q. Lotes', 'Q. Itens',
+                        'Depósito', 'Período',
+                        'Data Digitação', 'Data Corte',),
+            'fields': ('OP', 'SITUACAO', 'CANCELAMENTO',
+                       'TIPO_REF', 'REF',
+                       'ALTERNATIVA', 'ROTEIRO',
+                       'LOTES', 'QTD',
+                       'DEPOSITO_CODIGO', 'PERIODO',
+                       'DT_DIGITACAO', 'DT_CORTE'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            ref = form.cleaned_data['ref']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, ref))
         context['form'] = form
         return render(request, self.template_name, context)

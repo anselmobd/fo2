@@ -300,3 +300,17 @@ class DistribuicaoForm(forms.Form):
         data['estagio'] = estagio
         self.data = data
         return estagio
+
+
+class BuscaOpForm(forms.Form):
+    ref = forms.CharField(
+        label='Referência', required=False, min_length=5, max_length=5,
+        widget=forms.TextInput(attrs={'type': 'string',
+                               'autofocus': 'autofocus'}))
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
