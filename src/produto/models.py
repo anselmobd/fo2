@@ -382,18 +382,22 @@ def ref_estruturas(cursor, ref):
         SELECT DISTINCT
           ia.ALTERNATIVA_ITEM ALTERNATIVA
         , COALESCE( al.DESCRICAO, '' ) DESCR
-        , LISTAGG(ia.GRUPO_COMP, ', ')
-          WITHIN GROUP (ORDER BY ia.ALTERNATIVA_ITEM) REF
+        , COALESCE(
+          ( SELECT
+              LISTAGG(COALESCE(ec.GRUPO_COMP, ''), ', ')
+              WITHIN GROUP (ORDER BY ec.ALTERNATIVA_ITEM) REF
+            FROM BASI_050 ec
+            WHERE ec.NIVEL_ITEM = ia.NIVEL_ITEM
+              AND ec.GRUPO_ITEM = ia.GRUPO_ITEM
+              AND ec.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
+              AND ec.NIVEL_COMP = 1
+          ), ' ') REF
         FROM BASI_050 ia -- insumos de alternativa
         LEFT JOIN BASI_070 al -- cadastro de altern. de estrutura e de roteiro
           ON al.ROTEIRO = 0 -- seleciona cadastro de alternativas de estrutura
          AND al.ALTERNATIVA = ia.ALTERNATIVA_ITEM
         WHERE ia.NIVEL_ITEM = 1
-          AND ia.NIVEL_COMP = 1
           AND ia.GRUPO_ITEM = %s
-        GROUP BY
-          ia.ALTERNATIVA_ITEM
-        , al.DESCRICAO
         ORDER BY
           ia.ALTERNATIVA_ITEM
     """
