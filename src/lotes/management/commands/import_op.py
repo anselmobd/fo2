@@ -28,7 +28,7 @@ class Command(BaseCommand):
             , CASE WHEN o.OBSERVACAO2 LIKE '%(VAREJO)%'
               THEN 1 ELSE 0 END varejo
             , case -- o.COD_CANCELAMENTO
-              when o.SITUACAO == 9 then 9 -- != 0 equivalia a "cancelada"
+              when o.SITUACAO = 9 then 9 -- != 0 equivalia a "cancelada"
               else 0 -- == 0 equivalia a "não cancelada"
               end cancelada
             FROM PCPC_020 o -- OP capa
