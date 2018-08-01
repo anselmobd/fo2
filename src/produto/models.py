@@ -380,26 +380,22 @@ def ref_estruturas(cursor, ref):
     # Totais por OP
     sql = """
         SELECT DISTINCT
-          e.ALTERNATIVA_ITEM ALTERNATIVA
+          ia.ALTERNATIVA_ITEM ALTERNATIVA
         , COALESCE( al.DESCRICAO, '' ) DESCR
-        , COALESCE(
-          ( SELECT
-              ec.GRUPO_COMP
-            FROM BASI_050 ec
-            WHERE ec.NIVEL_ITEM = e.NIVEL_ITEM
-              AND ec.GRUPO_ITEM = e.GRUPO_ITEM
-              AND ec.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
-              AND ec.NIVEL_COMP = 1
-              AND rownum = 1
-          ), ' ') REF
-        FROM BASI_050 e
-        LEFT JOIN BASI_070 al
-          ON al.ALTERNATIVA = e.ALTERNATIVA_ITEM
-         AND al.ROTEIRO = 0
-        WHERE e.NIVEL_ITEM = 1
-          AND e.GRUPO_ITEM = %s
+        , LISTAGG(ia.GRUPO_COMP, ', ')
+          WITHIN GROUP (ORDER BY ia.ALTERNATIVA_ITEM) REF
+        FROM BASI_050 ia -- insumos de alternativa
+        LEFT JOIN BASI_070 al -- cadastro de altern. de estrutura e de roteiro
+          ON al.ROTEIRO = 0 -- seleciona cadastro de alternativas de estrutura
+         AND al.ALTERNATIVA = ia.ALTERNATIVA_ITEM
+        WHERE ia.NIVEL_ITEM = 1
+          AND ia.NIVEL_COMP = 1
+          AND ia.GRUPO_ITEM = %s
+        GROUP BY
+          ia.ALTERNATIVA_ITEM
+        , al.DESCRICAO
         ORDER BY
-          e.ALTERNATIVA_ITEM
+          ia.ALTERNATIVA_ITEM
     """
     cursor.execute(sql, [ref])
     return rows_to_dict_list(cursor)
