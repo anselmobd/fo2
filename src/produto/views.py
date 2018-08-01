@@ -1,3 +1,5 @@
+import re
+
 from django.shortcuts import render
 from django.db import connections
 from django.http import JsonResponse
@@ -290,7 +292,8 @@ class Ref(View):
             pa_link = ('REF')
             for row in pa_data:
                 if row['REF'] != ' ':
-                    row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
+                    row['LINK'] = reverse(
+                        'produto:ref__get', args=[row['REF']])
             if len(pa_data) != 0:
                 context.update({
                     'pa_headers': ('Tipo', 'Referência', 'Alternativa'),
@@ -320,17 +323,23 @@ class Ref(View):
 
             # Estruturas
             e_data = models.ref_estruturas(cursor, ref)
-            e_link = ('REF')
             for row in e_data:
                 if row['REF'] != ' ':
-                    row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
+                    row['REF'] = re.sub(
+                        r'([A-Z0-9]+)',
+                        r'<a href="'+reverse(
+                            'produto:ref'
+                        )+r'\1">\1&nbsp;<span '
+                        'class="glyphicon glyphicon-link" '
+                        'aria-hidden="true"></span></a>',
+                        row['REF'])
             if len(e_data) != 0:
                 context.update({
                     'e_headers': ('Alternativa', 'Descrição',
                                   'Componente produto'),
                     'e_fields': ('ALTERNATIVA', 'DESCR', 'REF'),
                     'e_data': e_data,
-                    'e_link': e_link,
+                    'e_safe': ('REF',),
                 })
 
             # Roteiros
