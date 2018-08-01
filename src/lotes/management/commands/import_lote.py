@@ -35,7 +35,7 @@ class Command(BaseCommand):
             FROM PCPC_040 lo -- lote estágio
             JOIN PCPC_020 op -- OP capa
               ON op.ordem_producao = lo.ORDEM_PRODUCAO
-            WHERE op.COD_CANCELAMENTO = 0
+            WHERE op.SITUACAO <> 9 -- op.COD_CANCELAMENTO = 0
             GROUP BY
               lo.ORDEM_PRODUCAO
             ORDER BY

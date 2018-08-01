@@ -513,7 +513,7 @@ class Inconsistencias(View):
                  AND le.PERIODO_PRODUCAO = le63.PERIODO_PRODUCAO
                  AND le.ORDEM_CONFECCAO = le63.ORDEM_CONFECCAO
                  AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
-                WHERE op.COD_CANCELAMENTO = 0
+                WHERE op.SITUACAO <> 9 -- op.COD_CANCELAMENTO = 0
                   AND ({filtro})
                 GROUP BY
                   op.ORDEM_PRODUCAO
