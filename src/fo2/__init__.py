@@ -1,9 +1,12 @@
-__version__ = '0.1.107'
-__version__date__ = '24/07/18'
+__version__ = '0.1.108'
+__version__date__ = '01/08/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.108 - 2018/08/01
+#   . Produto: apresentando os vários componentes produto de uma alternativa
 #
 # - 0.1.107 - 2018/07/24
 #   . Insumos
