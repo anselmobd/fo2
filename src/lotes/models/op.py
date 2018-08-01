@@ -5,10 +5,28 @@ from lotes.models.base import *
 
 
 def op_inform(cursor, op):
-    # informações gerais
+    # informações gerais de 1 OP
+    return(busca_op(cursor, op=op))
+
+
+def busca_op(cursor, op=None, ref=None):
+    filtra_op = ""
+    if op is not None:
+        filtra_op = """
+            AND o.ORDEM_PRODUCAO = '{}'
+            AND rownum = 1
+        """.format(op)
+
+    filtra_ref = ""
+    if ref is not None:
+        filtra_ref = """
+            AND o.REFERENCIA_PECA = '{}'
+        """.format(ref)
+
     sql = '''
         SELECT
-          case
+          o.ORDEM_PRODUCAO OP
+        , case
           when o.REFERENCIA_PECA <= '99999' then 'PA'
           when o.REFERENCIA_PECA <= 'B9999' then 'PG'
           else 'MD'
@@ -85,6 +103,7 @@ def op_inform(cursor, op):
         , o.PERIODO_PRODUCAO PERIODO
         , p.DATA_INI_PERIODO PERIODO_INI
         , p.DATA_FIM_PERIODO PERIODO_FIM
+        , o.DEPOSITO_ENTRADA DEPOSITO_CODIGO
         , o.DEPOSITO_ENTRADA || ' - ' || d.DESCRICAO DEPOSITO
         , o.PEDIDO_VENDA PEDIDO
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PED_CLIENTE
@@ -122,10 +141,18 @@ def op_inform(cursor, op):
         JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
-        WHERE o.ORDEM_PRODUCAO = %s
-          AND rownum = 1
-    '''
-    cursor.execute(sql, [op])
+        WHERE 1=1
+          -- AND o.ORDEM_PRODUCAO = %s
+          -- AND rownum = 1
+          {filtra_op} -- filtra_op
+          {filtra_ref} -- filtra_ref
+        ORDER BY
+           o.ORDEM_PRODUCAO DESC
+    '''.format(
+        filtra_op=filtra_op,
+        filtra_ref=filtra_ref,
+    )
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
