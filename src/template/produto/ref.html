@@ -84,8 +84,8 @@
         <h3>Estruturas</h3>
         {% if e_data %}
           <table>
-            {% include "layout/html_thead.html" with data=e_headers only %}
-            {% include "layout/html_tbody_link.html" with fields=e_fields data=e_data link=e_link only %}
+            {% include "layout/thead_generic.html" with data=e_headers only %}
+            {% include "layout/tbody_generic.html" with fields=e_fields data=e_data safe=e_safe only %}
           </table>
         {% else %}
           <h4>Sem estruturas!</h4>
