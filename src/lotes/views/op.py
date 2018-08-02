@@ -267,7 +267,6 @@ class BuscaOP(View):
     def mount_context(self, cursor, ref):
         context = {'ref': ref}
 
-        # Lotes ordenados por OS + referência + estágio
         data = models.busca_op(cursor, ref=ref)
         if len(data) == 0:
             context.update({
@@ -313,5 +312,69 @@ class BuscaOP(View):
             ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, ref))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class ComponentesDeOp(View):
+    Form_class = forms.OpForm
+    template_name = 'lotes/componentes_de_op.html'
+    title_name = 'Grades de produtos componentes de OP'
+
+    def mount_context(self, cursor, op):
+        context = {'op': op}
+
+        # Lotes ordenados por OS + referência + estágio
+        i2_data = models.op_inform(cursor, op)
+        if len(i2_data) == 0:
+            context.update({
+                'msg_erro': 'OP não encontrada',
+            })
+            return context
+
+        # referência
+        row = i2_data[0]
+        row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+        row['MODELO|LINK'] = reverse(
+            'produto:modelo__get', args=[row['MODELO']])
+        context.update({
+            'i2_headers': ('Modelo', 'Tipo de referência', 'Referência',
+                           'Alternativa', 'Roteiro',
+                           'Descrição'),
+            'i2_fields': ('MODELO', 'TIPO_REF', 'REF',
+                          'ALTERNATIVA', 'ROTEIRO',
+                          'DESCR_REF'),
+            'i2_data': i2_data,
+        })
+
+        # Grade
+        g_header, g_fields, g_data = models.op_sortimento(cursor, op)
+        if len(g_data) != 0:
+            context.update({
+                'g_headers': g_header,
+                'g_fields': g_fields,
+                'g_data': g_data,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'op' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'op' in kwargs:
+            form.data['op'] = kwargs['op']
+        if form.is_valid():
+            op = form.cleaned_data['op']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, op))
         context['form'] = form
         return render(request, self.template_name, context)
