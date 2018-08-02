@@ -500,6 +500,7 @@ class Inconsistencias(View):
             sql = '''
                 SELECT
                   op.ORDEM_PRODUCAO OP
+                , op.SITUACAO
                 , le.SEQUENCIA_ESTAGIO SEQ
                 , le.CODIGO_ESTAGIO EST
                 , le63.SEQUENCIA_ESTAGIO SEQ63
@@ -513,10 +514,12 @@ class Inconsistencias(View):
                  AND le.PERIODO_PRODUCAO = le63.PERIODO_PRODUCAO
                  AND le.ORDEM_CONFECCAO = le63.ORDEM_CONFECCAO
                  AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
-                WHERE op.SITUACAO <> 9 -- op.COD_CANCELAMENTO = 0
+                WHERE 1=1
+                  -- AND op.SITUACAO <> 9 -- op.COD_CANCELAMENTO = 0
                   AND ({filtro})
                 GROUP BY
                   op.ORDEM_PRODUCAO
+                , op.SITUACAO
                 , le.SEQUENCIA_ESTAGIO
                 , le.CODIGO_ESTAGIO
                 , le63.SEQUENCIA_ESTAGIO
@@ -540,7 +543,9 @@ class Inconsistencias(View):
                     row['cr'] = 'OP sem estágio 63'
                 else:
                     for estagio_op in estagios_op:
-                        if estagio_op['est'] is None:
+                        if estagio_op['situacao'] == 9:
+                            row['cr'] += sep + 'OP Cancelada'
+                        elif estagio_op['est'] is None:
                             row['cr'] += sep + 'Finalizados'
                         elif estagio_op['est'] == 63:
                             row['cr'] += sep + 'OK no 63'
