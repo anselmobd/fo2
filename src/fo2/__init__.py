@@ -1,12 +1,18 @@
-__version__ = '0.1.108'
-__version__date__ = '01/08/2018'
+__version__ = '0.1.109'
+__version__date__ = '02/08/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
 #
+# - 0.1.109 - 2018/08/02
+#   . OP: Acertar grades de OP (considerando lotes adicionados)
+#   . OP: Grades de produtos componentes de OP
+#   . Contábil: Descr. Cliente (infAdProd)
+#
 # - 0.1.108 - 2018/08/01
 #   . Produto: apresentando os vários componentes produto de uma alternativa
+#   . OP: Busca OP
 #
 # - 0.1.107 - 2018/07/24
 #   . Insumos
