@@ -665,3 +665,30 @@ def op_tam_cor_qtd(cursor, op):
     """
     cursor.execute(sql, [op])
     return rows_to_dict_list(cursor)
+
+
+def conserto(cursor):
+    sql = """
+        SELECT
+          lote.PROCONF_GRUPO REF
+        , lote.PROCONF_ITEM COR
+        , lote.PROCONF_SUBGRUPO TAM
+        , sum(lote.QTDE_CONSERTO ) QTD
+        FROM PCPC_040 lote
+        LEFT JOIN BASI_220 tam
+          ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
+        GROUP BY
+          lote.PROCONF_GRUPO
+        , lote.PROCONF_ITEM
+        , tam.ORDEM_TAMANHO
+        , lote.PROCONF_SUBGRUPO
+        HAVING
+          sum(lote.QTDE_CONSERTO ) > 0
+        ORDER BY
+          lote.PROCONF_GRUPO
+        , lote.PROCONF_ITEM
+        , tam.ORDEM_TAMANHO
+        , lote.PROCONF_SUBGRUPO
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)

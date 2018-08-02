@@ -59,6 +59,9 @@ urlpatterns = [
     url(r'^distribuicao/$',
         views.Distribuicao.as_view(), name='distribuicao'),
 
+    url(r'^conserto/$',
+        views.Conserto.as_view(), name='conserto'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),

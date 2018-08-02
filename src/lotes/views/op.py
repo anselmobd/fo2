@@ -439,3 +439,33 @@ class ComponentesDeOp(View):
             context.update(self.mount_context(cursor, op))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class Conserto(View):
+    template_name = 'lotes/conserto.html'
+    title_name = 'Produtos em conserto'
+
+    def mount_context(self, cursor):
+        context = {}
+
+        # Peças no conserto
+        data = models.conserto(cursor)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhuma peça em conserto',
+            })
+            return context
+
+        context.update({
+            'headers': ('Referência', 'Cor', 'Tamanho', 'Quantidade'),
+            'fields': ('REF', 'COR', 'TAM', 'QTD'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context(cursor))
+        return render(request, self.template_name, context)
