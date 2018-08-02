@@ -1,0 +1,37 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<table>
+  <thead>
+    <tr>
+    <th>
+      Nome
+    </th>
+    <th>
+      Dia
+    </th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for pessoa in aniversariantes %}
+    <tr>
+    <td>
+      {{ pessoa.1}}
+    </td>
+    <td>
+      {{ pessoa.0}}
+    </td>
+    </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

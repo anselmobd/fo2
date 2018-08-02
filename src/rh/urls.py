@@ -21,4 +21,6 @@ urlpatterns = [
 
     url(r'^videos_brigadista2018/$', views.videos_brigadista2018,
         name='videos_brigadista2018'),
+
+    url(r'^aniversariantes/$', views.aniversariantes, name='aniversariantes'),
 ]
