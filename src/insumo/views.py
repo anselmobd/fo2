@@ -1388,7 +1388,7 @@ class Necessidade1Previsao(View):
             if dual_nivel1 == '':
                 break
             else:
-                data = models.necessidade_previsao(cursor, dual_nivel1)
+                data = models.insumos_de_produtos_em_dual(cursor, dual_nivel1)
 
         insumo = sorted(
             insumo, key=itemgetter('NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
@@ -1506,7 +1506,7 @@ class NecessidadesPrevisoes(View):
             if dual_nivel1 == '':
                 break
             else:
-                data = models.necessidade_previsao(cursor, dual_nivel1)
+                data = models.insumos_de_produtos_em_dual(cursor, dual_nivel1)
 
         insumo = sorted(
             insumo, key=itemgetter('NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
