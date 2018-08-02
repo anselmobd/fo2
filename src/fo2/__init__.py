@@ -1,9 +1,12 @@
-__version__ = '0.1.109'
+__version__ = '0.1.110'
 __version__date__ = '02/08/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.110 - 2018/08/02
+#   . OP: Tela que apresenta todos os produtos em conserto.
 #
 # - 0.1.109 - 2018/08/02
 #   . OP: Acertar grades de OP (considerando lotes adicionados)
