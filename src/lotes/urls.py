@@ -17,6 +17,11 @@ urlpatterns = [
     url(r'^op/$', views.Op.as_view(), name='op'),
     url(r'^op/(?P<op>\d+)/$', views.Op.as_view(), name='op__get'),
 
+    url(r'^componentes_de_op/$', views.ComponentesDeOp.as_view(),
+        name='componentes_de_op'),
+    url(r'^componentes_de_op/(?P<op>\d+)/$', views.ComponentesDeOp.as_view(),
+        name='componentes_de_op__get'),
+
     url(r'^os/$', views.Os.as_view(), name='os'),
     url(r'^os/(?P<os>\d+)/$', views.Os.as_view(), name='os__get'),
 

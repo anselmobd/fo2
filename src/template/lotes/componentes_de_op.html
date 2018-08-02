@@ -1,0 +1,38 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/lotes/">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<h4 style="color:red;">Em desenvolvimento!</h4>
+<form action="/lotes/componentes_de_op/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if op %}
+<h2>OP {{ op }}</h2>
+{% endif %}
+{% if msg_erro %}
+<h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if i2_data %}
+  <table>
+    {% include "layout/html_thead.html" with data=i2_headers only %}
+    {% include "layout/html_tbody_group.html" with fields=i2_fields data=i2_data group=i2_group only %}
+  </table>
+{% endif %}
+{% if g_data %}
+  <h3>Grades</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=g_headers only %}
+    {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
+  </table>
+{% endif %}
+{% endblock %}
