@@ -1,4 +1,5 @@
 import copy
+from pprint import pprint
 
 from django.shortcuts import render
 from django.db import connections
@@ -6,6 +7,8 @@ from django.urls import reverse
 from django.views import View
 
 from fo2.template import group_rowspan
+
+from insumo.models import insumos_de_produtos_em_dual
 
 import lotes.forms as forms
 import lotes.models as models
@@ -325,36 +328,94 @@ class ComponentesDeOp(View):
         context = {'op': op}
 
         # Lotes ordenados por OS + referência + estágio
-        i2_data = models.op_inform(cursor, op)
-        if len(i2_data) == 0:
+        ref_data = models.op_inform(cursor, op)
+        if len(ref_data) == 0:
             context.update({
                 'msg_erro': 'OP não encontrada',
             })
             return context
 
         # referência
-        row = i2_data[0]
-        row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
-        row['MODELO|LINK'] = reverse(
-            'produto:modelo__get', args=[row['MODELO']])
+        ref_row = ref_data[0]
+        ref_row['REF|LINK'] = reverse(
+            'produto:ref__get', args=[ref_row['REF']])
+        ref_row['MODELO|LINK'] = reverse(
+            'produto:modelo__get', args=[ref_row['MODELO']])
         context.update({
-            'i2_headers': ('Modelo', 'Tipo de referência', 'Referência',
-                           'Alternativa', 'Roteiro',
-                           'Descrição'),
-            'i2_fields': ('MODELO', 'TIPO_REF', 'REF',
-                          'ALTERNATIVA', 'ROTEIRO',
-                          'DESCR_REF'),
-            'i2_data': i2_data,
+            'ref_headers': ('Modelo', 'Tipo de referência', 'Referência',
+                            'Alternativa', 'Roteiro',
+                            'Descrição'),
+            'ref_fields': ('MODELO', 'TIPO_REF', 'REF',
+                           'ALTERNATIVA', 'ROTEIRO',
+                           'DESCR_REF'),
+            'ref_data': ref_data,
         })
 
-        # Grade
-        g_header, g_fields, g_data = models.op_sortimento(cursor, op)
-        if len(g_data) != 0:
-            context.update({
-                'g_headers': g_header,
-                'g_fields': g_fields,
-                'g_data': g_data,
-            })
+        # tam, cor e quantidade de produto de OP
+        data = models.op_tam_cor_qtd(cursor, op)
+        for row in data:
+            row['NIVEL'] = '1'
+            row['REF'] = ref_row['REF']
+            row['ALT'] = ref_row['ALTERNATIVA']
+
+        comp_headers = ['Nivel', 'Ref.', 'Tamanho', 'Cor', 'Alt.', 'Qtd.']
+        comp_fields = ['NIVEL', 'REF', 'TAM', 'COR', 'ALT', 'QTD']
+
+        componentes = []
+        componentes_nivel = 0
+        while True:
+            if len(data) == 0:
+                break
+
+            if componentes_nivel == 0:
+                header_text = 'Produtos da OP'
+            else:
+                header_text = 'Produtos componentes {}ª descendência'.format(
+                    componentes_nivel)
+
+            table = {
+                'header_text': header_text,
+                'headers': comp_headers,
+                'fields': comp_fields,
+                'data': data,
+            }
+            componentes.append(table)
+
+            dual_nivel1 = None
+            for row in data:
+                if row['NIVEL'] == '1':
+                    dual_select = '''
+                        SELECT
+                        '{nivel}' NIVEL
+                        , '{ref}' REF
+                        , '{cor}' COR
+                        , '{tam}' TAM
+                        , {qtd} QTD
+                        , {alt} ALT
+                        FROM SYS.DUAL
+                    '''.format(
+                        nivel=row['NIVEL'],
+                        ref=row['REF'],
+                        cor=row['COR'],
+                        tam=row['TAM'],
+                        qtd=row['QTD'],
+                        alt=row['ALT'],
+                    )
+                    if dual_nivel1 is None:
+                        dual_nivel1 = dual_select
+                    else:
+                        dual_nivel1 = ' UNION '.join(
+                            (dual_nivel1, dual_select))
+            if dual_nivel1 is None:
+                data = []
+            else:
+                data = insumos_de_produtos_em_dual(cursor, dual_nivel1)
+                data = [f_row for f_row in data if (f_row['NIVEL'] == '1')]
+            componentes_nivel += 1
+
+        context.update({
+            'componentes': componentes,
+        })
 
         return context
 
