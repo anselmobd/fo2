@@ -142,8 +142,6 @@ def busca_op(cursor, op=None, ref=None):
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
         WHERE 1=1
-          -- AND o.ORDEM_PRODUCAO = %s
-          -- AND rownum = 1
           {filtra_op} -- filtra_op
           {filtra_ref} -- filtra_ref
         ORDER BY
@@ -338,12 +336,14 @@ def op_sortimentos(cursor, op, tipo):
         name='Tamanho',
         sql='''
             SELECT DISTINCT
-              i.TAMANHO
-            , i.SEQUENCIA_TAMANHO
-            FROM PCPC_021 i
-            WHERE i.ORDEM_PRODUCAO = %s
+              lote.PROCONF_SUBGRUPO TAMANHO
+            , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
+            FROM PCPC_040 lote
+            LEFT JOIN BASI_220 tam
+              ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
+            WHERE lote.ORDEM_PRODUCAO = %s
             ORDER BY
-              i.SEQUENCIA_TAMANHO
+              2
         '''
         )
 
@@ -355,18 +355,16 @@ def op_sortimentos(cursor, op, tipo):
         name_plural='Cores',
         sql='''
             SELECT
-              i.SORTIMENTO
-            , i.SORTIMENTO || ' - ' || max( p.DESCRICAO_15 ) DESCR
-            FROM PCPC_021 i
-            JOIN pcpc_020 op
-              ON op.ORDEM_PRODUCAO = i.ORDEM_PRODUCAO
+              lote.PROCONF_ITEM SORTIMENTO
+            , lote.PROCONF_ITEM || ' - ' || max( p.DESCRICAO_15 ) DESCR
+            FROM PCPC_040 lote
             LEFT JOIN basi_010 p
               ON p.NIVEL_ESTRUTURA = 1
-             AND p.GRUPO_ESTRUTURA = op.REFERENCIA_PECA
-             AND p.ITEM_ESTRUTURA = i.SORTIMENTO
-            WHERE i.ORDEM_PRODUCAO = %s
+             AND p.GRUPO_ESTRUTURA = lote.PROCONF_GRUPO
+             AND p.ITEM_ESTRUTURA = lote.PROCONF_ITEM
+            WHERE lote.ORDEM_PRODUCAO = %s
             GROUP BY
-              i.SORTIMENTO
+              lote.PROCONF_ITEM
             ORDER BY
               2
         '''
