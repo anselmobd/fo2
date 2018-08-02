@@ -20,6 +20,7 @@ def infadprod_pro_pedido(cursor, pedido):
         , i.CD_IT_PE_SUBGRUPO TAM
         , i.QTDE_PEDIDA QTD
         , coalesce( ip.REF_CLIENTE, '-') INFADPROD
+        , coalesce( ip.DESCR_REF_CLIENTE, '-') DESCRCLI
         , coalesce( rtc.CODIGO_BARRAS, ' ') EAN
         , rtc.NARRATIVA
         FROM PEDI_100 p -- pedido de venda
