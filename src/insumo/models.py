@@ -1290,7 +1290,7 @@ def previsao(cursor, periodo=None, dtini=None, nsem=None):
     return rows_to_dict_list(cursor)
 
 
-def necessidade_previsao(cursor, dual_nivel1, extra_field=None):
+def insumos_de_produtos_em_dual(cursor, dual_nivel1, extra_field=None):
     # insumos de produtos selecionados em dual_nivel1
     stm_extra_field = ''
     if extra_field is not None:
@@ -1450,7 +1450,8 @@ def insumo_previsoes_semana_insumo(
         if dual_nivel1 == '':
             break
         else:
-            data = necessidade_previsao(cursor, dual_nivel1, 'DT_NECESSIDADE')
+            data = insumos_de_produtos_em_dual(
+                cursor, dual_nivel1, 'DT_NECESSIDADE')
 
     insumo = sorted(
         insumo, key=itemgetter(
