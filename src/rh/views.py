@@ -120,3 +120,44 @@ def campanhas(request):
 def datas(request):
     context = {'titulo': 'Datas comemorativas'}
     return render(request, 'rh/datas.html', context)
+
+
+def aniversariantes(request):
+    aniversariantes = [
+        ['03/08', 'VERONICA CORDEIRO BEZERRA DOS SANTOS'],
+        ['03/08', 'SIMONE DA SILVA SARAIVA'],
+        ['06/08', 'CARLOS ALBERTO DE SOUSA CARVALHO JUNIOR'],
+        ['06/08', 'JONAS MARTINS'],
+        ['07/08', 'PEDRO JOSÉ NASCIMENTO DE OLIVEIRA'],
+        ['07/08', 'JORGE MARCELO DE ALMEIDA GARGAGLIONE'],
+        ['09/08', 'SONIA MARIA DO NASCIMENTO REIS'],
+        ['09/08', 'LUZIA VIEIRA DA SILVA ARAUJO'],
+        ['10/08', 'MARIA APARECIDA TIBURCIO'],
+        ['11/08', 'TAMIRES FERNANDA DOS SANTOS MARINS'],
+        ['12/08', 'DOUGLAS DOS SANTOS ALVES'],
+        ['13/08', 'FABIANA ABREU DE JESUS'],
+        ['14/08', 'ADRIANA MARIA DE SOUZA MONTEIRO'],
+        ['15/08', 'ANDREZA SILVA DE BRITO'],
+        ['15/08', 'CLAUDIA TEIXEIRA DA SILVA AVELINO'],
+        ['17/08', 'LEILIANE MARIA DA SILVA'],
+        ['17/08', 'REGINA MARIA SANDRA DOS SANTOS'],
+        ['18/08', 'PATRICIA DE OLIVEIRA'],
+        ['18/08', 'VALQUIRIA EVANGELISTA DA SILVA'],
+        ['19/08', 'ERIKA CRISTINA ARIGONY ANTONIO'],
+        ['20/08', 'FABIANA VASQUES GONÇALVES'],
+        ['21/08', 'MARIA DA GLORIA MIRANDA DA CRUZ'],
+        ['21/08', 'FABIOLA SEGUNDO DA MOTTA TEIXEIRA'],
+        ['25/08', 'LORRAINE CRISTINE MARTINS DE ANDRADE'],
+        ['26/08', 'SUELEN CLAUDINO VICENTE'],
+        ['27/08', 'VERONICA CRISTINA DE CARVALHO SOARES'],
+        ['27/08', 'MILENA THUANE DA SILVA CONCEIÇÃO'],
+        ['28/08', 'MARIA LUCIA DE JESUS ALVES'],
+        ['28/08', 'ROBERTA GOMES DA SILVA'],
+        ['30/08', 'AFONSO HENRIQUES DE MAGALHÃES PEREIRA'],
+    ]
+    context = {}
+    context = {
+        'titulo': 'Aniversariantes do mês de Agosto de 2018',
+        'aniversariantes': aniversariantes,
+        }
+    return render(request, 'rh/aniversariantes.html', context)
