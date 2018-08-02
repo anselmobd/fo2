@@ -39,9 +39,12 @@ class InfAdProd(View):
                     'pedido': pedido,
                     'cliente': row['CLIENTE'],
                     'headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Quantidade',
-                                'infAdProd', 'EAN', 'Narrativa'),
+                                'Ref.Cliente (infAdProd)',
+                                'Descr.Cliente (infAdProd)',
+                                'EAN', 'Narrativa'),
                     'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD',
-                               'INFADPROD', 'EAN', 'NARRATIVA'),
+                               'INFADPROD', 'DESCRCLI',
+                               'EAN', 'NARRATIVA'),
                     'data': data,
                 })
         context['form'] = form
