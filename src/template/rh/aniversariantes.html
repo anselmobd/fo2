@@ -14,10 +14,13 @@
   <thead>
     <tr>
     <th>
+      Dia
+    </th>
+    <th>
       Nome
     </th>
     <th>
-      Dia
+      Setor
     </th>
     </tr>
   </thead>
@@ -25,10 +28,13 @@
   {% for pessoa in aniversariantes %}
     <tr>
     <td>
-      {{ pessoa.1}}
+      {{ pessoa.0}}
     </td>
     <td>
-      {{ pessoa.0}}
+      {{ pessoa.2}}
+    </td>
+    <td>
+      {{ pessoa.1}}
     </td>
     </tr>
   {% endfor %}
