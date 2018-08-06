@@ -54,6 +54,11 @@ def index(request):
     ]
     dicas = [
       {
+        'data': datetime.strptime('06/08/2018', '%d/%m/%Y').date(),
+        'chamada': 'No lugar do outro',
+        'link': '/media/rh/Dica-da-Semana-2018-08-06.jpg',
+      },
+      {
         'data': datetime.strptime('25/06/2018', '%d/%m/%Y').date(),
         'chamada': 'Mudança',
         'link': '/media/rh/Dica-da-Semana-2018-06-25.jpg',
