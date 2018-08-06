@@ -34,6 +34,11 @@ def videos_brigadista2018(request):
     return render(request, 'rh/videos_brigadista2018.html', context)
 
 
+def fotos_20180720_dia_do_amigo(request):
+    context = {'titulo': 'Fotos - Dia do amigo 2018'}
+    return render(request, 'rh/20180720_dia_do_amigo.html', context)
+
+
 def index(request):
     pensamentos = [
       {
