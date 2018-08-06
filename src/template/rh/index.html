@@ -34,10 +34,10 @@
           <table>
             <tr>
               <td style="vertical-align: top;">
-          <h2>Dicas</h2>
+          <h3>Dicas</h3>
           {% for dica in dicas %}
             {% if dica.data  %}
-              <h4>{{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a></h4>
+              {{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
             {% endif %}
           {% endfor %}
         {% endif %}
@@ -46,20 +46,20 @@
         &nbsp;
       </td>
       <td style="vertical-align: top;">
-        <h2>Pensamentos</h2>
+        <h3>Pensamentos</h3>
         {% for pensamento in pensamentos %}
           {% if pensamento.data  %}
-            <h4>{{ pensamento.data }} - <a target="_blank" href="{{ pensamento.link }}">{{ pensamento.chamada }}</a></h4>
+            {{ pensamento.data }} - <a target="_blank" href="{{ pensamento.link }}">{{ pensamento.chamada }}</a><br/>
           {% endif %}
         {% endfor %}
-        <h2>Agenda</h2>
-        <h4>20/7/2018 - Dia do amigo - <a target="_blank" href="{% url 'rh:20180720_dia_do_amigo' %}">Fotos</a></h4>
-        <h4>14/6/2018 - Homenagem a Thiago e Silvio</h4>
-        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_homenagem20180614' %}">fotos</a> da homenagem</h4>
-        <h4>2/6/2018 - Formação de brigadistas 2018</h4>
-        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_brigadista2018' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos_brigadista2018' %}">vídeos</a> do treinamento</h4>
-        <h4>14/5 a 18/5/2018 - <a target="_blank" href="/media/rh/DUOMO-SIPAT2018_w600.jpg">SIPAT 2018</a></h4>
-        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos' %}">vídeos</a> do evento</a></h4>
+        <h3>Agenda</h3>
+        20/7/2018 - Dia do amigo - <a target="_blank" href="{% url 'rh:20180720_dia_do_amigo' %}">Fotos</a><br/>
+        14/6/2018 - Homenagem a Thiago e Silvio<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_homenagem20180614' %}">fotos</a> da homenagem<br/>
+        2/6/2018 - Formação de brigadistas 2018<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_brigadista2018' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos_brigadista2018' %}">vídeos</a> do treinamento<br/>
+        14/5 a 18/5/2018 - <a target="_blank" href="/media/rh/DUOMO-SIPAT2018_w600.jpg">SIPAT 2018</a><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos' %}">vídeos</a> do evento</a><br/>
       </td>
     </tr>
   </table>
