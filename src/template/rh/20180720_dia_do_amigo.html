@@ -1,0 +1,33 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<h4>Dia da amigo</h4>
+<p>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180719_065026776.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180719_065026776.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180719_071447189.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180719_071447189.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180719_084851493.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180719_084851493.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180719_180446587.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180719_180446587.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180720_064525701.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180720_064525701.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180720_073426752.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180720_073426752.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180720_074704551.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180720_074704551.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180720_074752994.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180720_074752994.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180720_074811817_HDR.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180720_074811817_HDR.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180720_074919715_BURST001.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180720_074919715_BURST001.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180720_074927553.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180720_074927553.jpg"></a>
+  <a target="_blank" href="/media/rh/20180720_dia_do_amigo/IMG_20180720_074950160.jpg"><img src="/media/rh/20180720_dia_do_amigo/thumb.IMG_20180720_074950160.jpg"></a>
+</p>
+</center>
+{% endblock %}
