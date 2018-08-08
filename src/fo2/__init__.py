@@ -1,9 +1,12 @@
-__version__ = '0.1.111'
-__version__date__ = '06/08/2018'
+__version__ = '0.1.112'
+__version__date__ = '08/08/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.112 - 2018/08/08
+#   . CD: Só inventaria lotes que estejam nos estágios 57 ou 63
 #
 # - 0.1.111 - 2018/08/06
 #   . RH: Melhorias em aniversariantes
