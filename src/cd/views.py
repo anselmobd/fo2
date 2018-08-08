@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connections, connection
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Q
 from django.contrib.auth.mixins \
     import PermissionRequiredMixin, LoginRequiredMixin
 from django.shortcuts import render
@@ -55,6 +55,7 @@ class LotelLocal(PermissionRequiredMixin, View):
         except lotes.models.Lote.DoesNotExist:
             context.update({'erro': 'Lote não encontrado'})
             return context
+
         context.update({
             'op': lote_rec.op,
             'referencia': lote_rec.referencia,
@@ -63,6 +64,16 @@ class LotelLocal(PermissionRequiredMixin, View):
             'qtd_produzir': lote_rec.qtd_produzir,
             'local': lote_rec.local,
             })
+
+        try:
+            lote_rec_estag = lotes.models.Lote.objects.filter(
+                Q(estagio=57) | Q(estagio=63)).get(lote=lote)
+        except lotes.models.Lote.DoesNotExist:
+            context.update({
+                'erroestagio': '57 ou 63',
+                'estagio': lote_rec.estagio,
+                })
+            return context
 
         if identificado:
             form.data['identificado'] = None
