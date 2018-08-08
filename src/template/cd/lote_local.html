@@ -58,6 +58,15 @@
       {% endif %}
     {% endif %}
   {% endif %}
+  {% if erroestagio %}
+    <h3>Não é possível inventariar esse lote!</h3>
+    <h3>Lote não está nos estágios {{ erroestagio }}.</h3>
+    {% if estagio == 999 %}
+      <h3>Estágio: FINALIZADO</h3>
+    {% else %}
+      <h3>Estágio: {{ estagio }}</h3>
+    {% endif %}
+  {% endif %}
   {% if referencia %}
     <h3>Item: <b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></h3>
     <h3>Qtd.: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;&nbsp;&nbsp;OP: <b>{{ op }}</b></h3>
