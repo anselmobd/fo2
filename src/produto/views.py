@@ -10,7 +10,7 @@ from django.views import View
 
 from fo2.models import rows_to_dict_list
 
-from .forms import RefForm, ModeloForm
+from .forms import RefForm, ModeloForm, BuscaForm
 from utils.forms import FiltroForm
 import produto.models as models
 
@@ -499,15 +499,15 @@ class Modelo(View):
 
 
 class Busca(View):
-    Form_class = FiltroForm
+    Form_class = BuscaForm
     template_name = 'produto/busca.html'
     title_name = 'Listagem de produtos'
 
-    def mount_context(self, cursor, busca):
+    def mount_context(self, cursor, busca, cor):
         context = {'busca': busca}
 
         # Informações básicas
-        data = models.busca(cursor, busca)
+        data = models.busca(cursor, busca, cor)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum produto selecionado',
@@ -521,11 +521,20 @@ class Busca(View):
                     row['CNPJ4'],
                     row['CNPJ2'])
                 row['CLIENTE'] = '{} - {}'.format(cnpj, row['CLIENTE'])
+
+            headers = ['#', 'Tipo', 'Referência', 'Descrição',
+                       'Status (Responsável)', 'Cliente']
+            fields = ['NUM', 'TIPO', 'REF', 'DESCR',
+                      'RESP', 'CLIENTE']
+            if len(cor) != 0:
+                headers.append('Cor')
+                headers.append('Cor Descr.')
+                fields.append('COR')
+                fields.append('COR_DESC')
+
             context.update({
-                'headers': ('#', 'Tipo', 'Referência', 'Descrição',
-                            'Status (Responsável)', 'Cliente'),
-                'fields': ('NUM', 'TIPO', 'REF', 'DESCR',
-                           'RESP', 'CLIENTE'),
+                'headers': headers,
+                'fields': fields,
                 'data': data,
                 'link': link,
             })
@@ -548,8 +557,9 @@ class Busca(View):
             form.data['busca'] = kwargs['busca']
         if form.is_valid():
             busca = form.cleaned_data['busca']
+            cor = form.cleaned_data['cor']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, busca))
+            context.update(self.mount_context(cursor, busca, cor))
         context['form'] = form
         return render(request, self.template_name, context)
 

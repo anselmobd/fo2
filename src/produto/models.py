@@ -499,23 +499,43 @@ def modelo_inform(cursor, modelo):
     return rows_to_dict_list(cursor)
 
 
-def busca(cursor, busca):
-    # Tamanhos de produto
+def busca(cursor, busca, cor):
     filtro = ''
     for palavra in busca.split(' '):
-        filtro += """
-              AND (  r.REFERENCIA LIKE '%{}%'
-                  OR r.DESCR_REFERENCIA LIKE '%{}%'
-                  OR r.RESPONSAVEL LIKE '%{}%'
-                  OR r.CGC_CLIENTE_9 LIKE '%{}%'
-                  OR COALESCE(c.FANTASIA_CLIENTE, c.NOME_CLIENTE) LIKE '%{}%'
+        filtro += """--
+              AND (  r.REFERENCIA LIKE '%{palavra}%'
+                  OR r.DESCR_REFERENCIA LIKE '%{palavra}%'
+                  OR r.RESPONSAVEL LIKE '%{palavra}%'
+                  OR r.CGC_CLIENTE_9 LIKE '%{palavra}%'
+                  OR c.NOME_CLIENTE LIKE '%{palavra}%'
+                  OR c.FANTASIA_CLIENTE LIKE '%{palavra}%'
                   )
-        """.format(palavra, palavra, palavra, palavra, palavra)
+        """.format(palavra=palavra)
+    filtro_cor = ''
+    get_cor = ''
+    if len(cor.strip()) == 0:
+        get_cor = """--
+            , '' COR
+            , '' COR_DESC
+        """
+    else:
+        get_cor = """--
+            , cor.ITEM_ESTRUTURA COR
+            , cor.DESCRICAO_15 COR_DESC
+        """
+    for palavra in cor.split(' '):
+        filtro_cor += """--
+              AND (  cor.ITEM_ESTRUTURA LIKE '%{palavra}%'
+                  OR cor.DESCRICAO_15 LIKE '%{palavra}%'
+                  )
+        """.format(palavra=palavra)
     sql = """
         SELECT
           rownum NUM
         , rr.NIVEL
         , rr.REF
+        , rr.COR
+        , rr.COR_DESC
         , rr.TIPO
         , rr.DESCR
         , rr.RESP
@@ -524,7 +544,7 @@ def busca(cursor, busca):
         , rr.CNPJ2
         , rr.CLIENTE
         FROM (
-        SELECT
+        SELECT DISTINCT
           r.NIVEL_ESTRUTURA NIVEL
         , r.REFERENCIA REF
         , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
@@ -538,18 +558,27 @@ def busca(cursor, busca):
         , r.CGC_CLIENTE_4 CNPJ4
         , r.CGC_CLIENTE_2 CNPJ2
         , COALESCE(c.FANTASIA_CLIENTE, c.NOME_CLIENTE) CLIENTE
+        {get_cor} -- get_cor
         FROM BASI_030 r
+        LEFT JOIN BASI_010 cor
+          ON cor.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
+         AND cor.GRUPO_ESTRUTURA = r.REFERENCIA
         LEFT JOIN PEDI_010 c
           ON c.CGC_9 = r.CGC_CLIENTE_9
          AND c.CGC_4 = r.CGC_CLIENTE_4
          AND c.CGC_2 = r.CGC_CLIENTE_2
         WHERE r.NIVEL_ESTRUTURA = 1
           AND r.RESPONSAVEL IS NOT NULL
-          {}
+          {filtro} -- filtro
+          {filtro_cor} -- filtro_cor
         ORDER BY
           NLSSORT(r.REFERENCIA,'NLS_SORT=BINARY_AI')
         ) rr
-    """.format(filtro)
+    """.format(
+        filtro=filtro,
+        filtro_cor=filtro_cor,
+        get_cor=get_cor,
+        )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
