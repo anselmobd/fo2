@@ -1,9 +1,14 @@
-__version__ = '0.1.112'
-__version__date__ = '08/08/2018'
+__version__ = '0.1.113'
+__version__date__ = '09/08/2018'
 
 # histórico
 #
 # - ?.?.? - 20??/??/??
+#
+# - 0.1.113 - 2018/08/09
+#   . Produto: Na busca de produto, pode buscas por cor e, se o fizer,
+#              apresenta a cor
+#   . CD : Também permite movimentar lotes finalizados
 #
 # - 0.1.112 - 2018/08/08
 #   . CD: Só inventaria lotes que estejam nos estágios 57 ou 63
