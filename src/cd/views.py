@@ -67,10 +67,10 @@ class LotelLocal(PermissionRequiredMixin, View):
 
         try:
             lote_rec_estag = lotes.models.Lote.objects.filter(
-                Q(estagio=57) | Q(estagio=63)).get(lote=lote)
+                Q(estagio=57) | Q(estagio=63) | Q(estagio=999)).get(lote=lote)
         except lotes.models.Lote.DoesNotExist:
             context.update({
-                'erroestagio': '57 ou 63',
+                'erroestagio': '57 ou 63, ou finalizado',
                 'estagio': lote_rec.estagio,
                 })
             return context
