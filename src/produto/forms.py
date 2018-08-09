@@ -1,5 +1,7 @@
 from django import forms
 
+from utils.forms import FiltroForm
+
 
 class RefForm(forms.Form):
     ref = forms.CharField(
@@ -20,3 +22,16 @@ class ModeloForm(forms.Form):
         label='Modelo', max_length=4, min_length=3,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+
+
+class BuscaForm(FiltroForm):
+    cor = forms.CharField(
+        max_length=6, required=False,
+        widget=forms.TextInput())
+
+    def clean_cor(self):
+        cor = self.cleaned_data['cor'].upper()
+        data = self.data.copy()
+        data['cor'] = cor
+        self.data = data
+        return cor
