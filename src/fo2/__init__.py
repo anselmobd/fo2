@@ -1,9 +1,13 @@
-__version__ = '0.1.113'
-__version__date__ = '09/08/2018'
+__version__ = '0.1.114'
+__version__date__ = '10/08/2018'
 
 # histórico
 #
-# - ?.?.? - 20??/??/??
+# - ?.?.??? - 20??/??/??
+#
+# - 0.1.114 - 2018/08/10
+#   . Produto: Melhoria na apresentação da estrutura
+#   . OP: Grades de produtos componentes de OP
 #
 # - 0.1.113 - 2018/08/09
 #   . Produto: Na busca de produto, pode buscas por cor e, se o fizer,
