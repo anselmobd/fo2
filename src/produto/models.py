@@ -431,8 +431,12 @@ def ref_estrutura_comp(cursor, ref, alt):
         , e.GRUPO_COMP REF
         , r.DESCR_REFERENCIA DESCR
         , e.SUB_COMP TAM
-        , CASE WHEN coc.SUB_ITEM IS NULL
-          THEN e.ITEM_COMP
+        , CASE WHEN cocv.SUB_ITEM IS NULL
+          THEN
+            CASE WHEN e.ITEM_COMP = '000000'
+            THEN '=='
+            ELSE e.ITEM_COMP
+            END
           ELSE coc.ITEM_ITEM || ' -> ' || coc.ITEM_COMP
           END COR
         , coc.ITEM_ITEM
@@ -443,8 +447,16 @@ def ref_estrutura_comp(cursor, ref, alt):
         LEFT JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = e.NIVEL_COMP
          AND r.REFERENCIA = e.GRUPO_COMP
+        LEFT JOIN BASI_040 cocv -- combinação cor - verifica se todos iguais
+          ON e.ITEM_COMP = '000000'
+         AND cocv.SUB_ITEM = '000'
+         AND cocv.GRUPO_ITEM = e.GRUPO_ITEM
+         AND cocv.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
+         AND cocv.SEQUENCIA = e.SEQUENCIA
+         AND cocv.ITEM_ITEM != cocv.ITEM_COMP
         LEFT JOIN BASI_040 coc -- combinação cor
           ON e.ITEM_COMP = '000000'
+         AND cocv.SUB_ITEM IS NOT NULL
          AND coc.SUB_ITEM = '000'
          AND coc.GRUPO_ITEM = e.GRUPO_ITEM
          AND coc.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
