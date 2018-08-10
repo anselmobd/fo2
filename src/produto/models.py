@@ -448,8 +448,16 @@ def ref_estrutura_comp(cursor, ref, alt):
                   AND coc1.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
                   AND coc1.SEQUENCIA = e.SEQUENCIA
               ) = 1
-            THEN '= ' || coc.ITEM_COMP
-            ELSE coc.ITEM_ITEM || ' -> ' || coc.ITEM_COMP
+            THEN '= ' ||
+              CASE WHEN coc.ITEM_COMP = '000000'
+              THEN '?'
+              ELSE coc.ITEM_COMP
+              END
+            ELSE coc.ITEM_ITEM || ' -> ' ||
+              CASE WHEN coc.ITEM_COMP = '000000'
+              THEN '?'
+              ELSE coc.ITEM_COMP
+              END
             END
           END COR
         , e.ALTERNATIVA_COMP ALTERN
