@@ -406,11 +406,26 @@ class ComponentesDeOp(View):
                     else:
                         dual_nivel1 = ' UNION '.join(
                             (dual_nivel1, dual_select))
-            if dual_nivel1 is None:
-                data = []
-            else:
-                data = insumos_de_produtos_em_dual(cursor, dual_nivel1)
-                data = [f_row for f_row in data if (f_row['NIVEL'] == '1')]
+            data = []
+            if dual_nivel1 is not None:
+                insumos = insumos_de_produtos_em_dual(
+                    cursor, dual_nivel1, order='tc')
+                # data = [f_row for f_row in data if (f_row['NIVEL'] == '1')]
+                for row in insumos:
+                    if row['NIVEL'] == '1':
+                        busca_insumo = [
+                            item for item in data
+                            if item['NIVEL'] == row['NIVEL']
+                            and item['REF'] == row['REF']
+                            and item['COR'] == row['COR']
+                            and item['TAM'] == row['TAM']
+                            and item['ALT'] == row['ALT']
+                            ]
+                        if busca_insumo == []:
+                            data.append(row)
+                        else:
+                            busca_insumo[0]['QTD'] += row['QTD']
+
             componentes_nivel += 1
 
         context.update({
