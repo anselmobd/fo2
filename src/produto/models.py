@@ -410,14 +410,6 @@ def ref_estrutura_comp(cursor, ref, alt):
     sql = """
         SELECT DISTINCT
           e.SEQUENCIA
-        , e.NIVEL_COMP NIVEL
-        , e.GRUPO_COMP REF
-        , r.DESCR_REFERENCIA DESCR
-        , e.SUB_COMP TAM
-        , e.ITEM_COMP COR
-        , e.ALTERNATIVA_COMP ALTERN
-        , e.CONSUMO
-        , e.ESTAGIO || '-' || es.DESCRICAO ESTAGIO
         , (
           SELECT
             LISTAGG(ee.ITEM_ITEM, ', ')
@@ -431,7 +423,18 @@ def ref_estrutura_comp(cursor, ref, alt):
             AND ee.GRUPO_COMP = e.GRUPO_COMP
             AND ee.SUB_COMP = e.SUB_COMP
             AND ee.ITEM_COMP = e.ITEM_COMP
+            AND ee.ALTERNATIVA_COMP = e.ALTERNATIVA_COMP
+            AND ee.CONSUMO = e.CONSUMO
+            AND ee.ESTAGIO = e.ESTAGIO
           ) COR_REF
+        , e.NIVEL_COMP NIVEL
+        , e.GRUPO_COMP REF
+        , r.DESCR_REFERENCIA DESCR
+        , e.SUB_COMP TAM
+        , e.ITEM_COMP COR
+        , e.ALTERNATIVA_COMP ALTERN
+        , e.CONSUMO
+        , e.ESTAGIO || '-' || es.DESCRICAO ESTAGIO
         FROM BASI_050 e
         LEFT JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = e.NIVEL_COMP
@@ -443,6 +446,7 @@ def ref_estrutura_comp(cursor, ref, alt):
           AND e.ALTERNATIVA_ITEM = %s
         ORDER BY
           e.SEQUENCIA
+        , 2
     """
     cursor.execute(sql, [ref, alt])
     return rows_to_dict_list(cursor)
