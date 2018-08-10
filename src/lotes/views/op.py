@@ -8,6 +8,7 @@ from django.views import View
 
 from fo2.template import group_rowspan
 
+from utils.views import totalize_grouped_data
 from insumo.models import insumos_de_produtos_em_dual
 
 import lotes.forms as forms
@@ -373,17 +374,27 @@ class ComponentesDeOp(View):
                 header_text = 'Produtos componentes {}ª descendência'.format(
                     componentes_nivel)
 
+            group = ['NIVEL', 'REF']
+            totalize_grouped_data(data, {
+                'group': group,
+                'sum': ['QTD'],
+                'count': [],
+                'descr': {'ALT': 'Total:'}
+            })
+            group_rowspan(data, group)
+
             table = {
                 'header_text': header_text,
                 'headers': comp_headers,
                 'fields': comp_fields,
+                'group': group,
                 'data': data,
             }
             componentes.append(table)
 
             dual_nivel1 = None
             for row in data:
-                if row['NIVEL'] == '1':
+                if row['NIVEL'] == '1' and row['ALT'] != 'Total:':
                     dual_select = '''
                         SELECT
                         '{nivel}' NIVEL
