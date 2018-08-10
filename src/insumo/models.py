@@ -1290,12 +1290,30 @@ def previsao(cursor, periodo=None, dtini=None, nsem=None):
     return rows_to_dict_list(cursor)
 
 
-def insumos_de_produtos_em_dual(cursor, dual_nivel1, extra_field=None):
+def insumos_de_produtos_em_dual(
+        cursor, dual_nivel1, extra_field=None, order='ct'):
     # insumos de produtos selecionados em dual_nivel1
     stm_extra_field = ''
     if extra_field is not None:
         stm_extra_field = ', pre.{extra_field} {extra_field}'.format(
             extra_field=extra_field)
+
+    if order == 'ct':
+        ordem_choice = '''
+            , CASE WHEN ia.ITEM_COMP = '000000'
+              THEN coc.ITEM_COMP
+              ELSE ia.ITEM_COMP
+              END
+            , tam.ORDEM_TAMANHO
+        '''
+    elif order == 'tc':
+        ordem_choice = '''
+            , tam.ORDEM_TAMANHO
+            , CASE WHEN ia.ITEM_COMP = '000000'
+              THEN coc.ITEM_COMP
+              ELSE ia.ITEM_COMP
+              END
+        '''
 
     sql = """
         WITH previsao AS ({dual_nivel1})
@@ -1370,14 +1388,11 @@ def insumos_de_produtos_em_dual(cursor, dual_nivel1, extra_field=None):
           ia.NIVEL_COMP
         , ia.GRUPO_COMP
         , ia.ALTERNATIVA_COMP
-        , CASE WHEN ia.ITEM_COMP = '000000'
-          THEN coc.ITEM_COMP
-          ELSE ia.ITEM_COMP
-          END
-        , tam.ORDEM_TAMANHO
+        {ordem_choice} -- ordem_choice
     """.format(
         dual_nivel1=dual_nivel1,
         stm_extra_field=stm_extra_field,
+        ordem_choice=ordem_choice,
         )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
