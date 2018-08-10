@@ -434,12 +434,24 @@ def ref_estrutura_comp(cursor, ref, alt):
         , CASE WHEN cocv.SUB_ITEM IS NULL
           THEN
             CASE WHEN e.ITEM_COMP = '000000'
-            THEN '=='
+            THEN '= ='
             ELSE e.ITEM_COMP
             END
-          ELSE coc.ITEM_ITEM || ' -> ' || coc.ITEM_COMP
+          ELSE
+            CASE WHEN
+              ( SELECT
+                  count(DISTINCT coc1.ITEM_COMP)
+                FROM BASI_040 coc1 -- comb. cor - verifica se é sempre a mesma
+                WHERE e.ITEM_COMP = '000000'
+                  AND coc1.SUB_ITEM = '000'
+                  AND coc1.GRUPO_ITEM = e.GRUPO_ITEM
+                  AND coc1.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
+                  AND coc1.SEQUENCIA = e.SEQUENCIA
+              ) = 1
+            THEN '= ' || coc.ITEM_COMP
+            ELSE coc.ITEM_ITEM || ' -> ' || coc.ITEM_COMP
+            END
           END COR
-        , coc.ITEM_ITEM
         , e.ALTERNATIVA_COMP ALTERN
         , e.CONSUMO
         , e.ESTAGIO || '-' || es.DESCRICAO ESTAGIO
@@ -469,7 +481,7 @@ def ref_estrutura_comp(cursor, ref, alt):
         ORDER BY
           e.SEQUENCIA
         , 2
-        , coc.ITEM_ITEM
+        , 7
     """
     cursor.execute(sql, [ref, alt])
     return rows_to_dict_list(cursor)
