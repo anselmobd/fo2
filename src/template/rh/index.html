@@ -7,7 +7,7 @@
 <center>
   <table>
     <tr>
-      <td style="vertical-align: top; padding-top: 2em;>
+      <td style="vertical-align: top; padding-top: 2em;">
         <a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_100.jpg' %}" alt="RH em ação!"></a>
       </td>
       <td style="width: 5em;">
@@ -29,30 +29,33 @@
             ><img style="opacity: 0.90;max-width: 45px;" src="/media/rh/DUOMO_Campanha_de_Natal_h50_icone.png" title="Natal 2017"
             ><img style="opacity: 0.78;max-width: 39px;" src="/media/rh/DUOMO_Novembro_Azul_17_h50_icone.jpg" title="Novembro Azul"></a>
         </h2>
-        {% if dicas %}
-              </td>
-            </tr>
-          </table>
-          <table>
-            <tr>
-              <td style="vertical-align: top;">
-          <h3>Dicas</h3>
-          {% for dica in dicas %}
-            {% if dica.data  %}
-              {{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
       </td>
-      <td style="width: 5em;">
-        &nbsp;
-      </td>
+    </tr>
+  </table>
+  <table>
+    <tr>
       <td style="vertical-align: top;">
         <h3>Pensamentos</h3>
         {% for pensamento in pensamentos %}
           {% if pensamento.data  %}
             {{ pensamento.data }} - <a target="_blank" href="{{ pensamento.link }}">{{ pensamento.chamada }}</a><br/>
           {% endif %}
+        {% endfor %}
+        <h3>Dicas</h3>
+        {% for dica in dicas %}
+          {% if dica.data  %}
+            {{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
+          {% endif %}
+        {% endfor %}
+      </td>
+      <td style="width: 5em;">
+        &nbsp;
+      </td>
+      <td style="vertical-align: top;">
+        <h3>RH indica</h3>
+        {% for link in links %}
+          <a target="_blank" href="{{ link.link }}">{{ link.chamada }}</a><br/>
+          <div style="padding-left: 2em; width: 20em;">{{ link.descricao }}</div>
         {% endfor %}
         <h3>Agenda</h3>
         20/7/2018 - Dia do amigo - <a target="_blank" href="{% url 'rh:20180720_dia_do_amigo' %}">Fotos</a><br/>
