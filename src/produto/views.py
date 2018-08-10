@@ -1,4 +1,5 @@
 import re
+from pprint import pprint
 
 from django.shortcuts import render
 from django.db import connections
@@ -9,6 +10,7 @@ from django.urls import reverse
 from django.views import View
 
 from fo2.models import rows_to_dict_list
+from fo2.template import group_rowspan
 
 from .forms import RefForm, ModeloForm, BuscaForm
 from utils.forms import FiltroForm
@@ -390,21 +392,32 @@ class Ref(View):
                             e_row['LINK'] = reverse(
                                 'insumo:ref__get',
                                 args=[e_row['NIVEL']+e_row['REF']])
+
+                    e_headers = ['Sequência', 'Nível', 'Referência',
+                                 'Descrição', 'Tamanho', 'Cor',
+                                 'Alternativa', 'Consumo', 'Estágio']
+                    e_fields = ['SEQUENCIA', 'NIVEL', 'REF',
+                                'DESCR', 'TAM', 'COR',
+                                'ALTERN', 'CONSUMO', 'ESTAGIO']
+                    e_group = ['SEQUENCIA', 'NIVEL', 'REF', 'DESCR', 'TAM']
+
+                    if dif_000000 != 0:
+                        e_headers.insert(0, 'Cor Referência')
+                        e_fields.insert(0, 'COR_REF')
+                        e_group.insert(0, 'COR_REF')
+
+                    group_rowspan(estrutura, e_group)
+
                     estruts.append({
                         'alt': '{}-{}'.format(
                             row['ALTERNATIVA'], row['DESCR']),
-                        'e_headers': ['Sequência', 'Nível', 'Referência',
-                                      'Descrição', 'Tamanho', 'Cor',
-                                      'Alternativa', 'Consumo', 'Estágio'],
-                        'e_fields': ['SEQUENCIA', 'NIVEL', 'REF',
-                                     'DESCR', 'TAM', 'COR',
-                                     'ALTERN', 'CONSUMO', 'ESTAGIO'],
+                        'e_headers': e_headers,
+                        'e_fields': e_fields,
                         'e_data': estrutura,
                         'e_link': e_link,
+                        'e_group': e_group,
                     })
-                    if dif_000000 != 0:
-                        estruts[-1]['e_headers'].insert(0, 'Cor Referência')
-                        estruts[-1]['e_fields'].insert(0, 'COR_REF')
+
             context.update({
                 'estruts': estruts,
             })
