@@ -453,7 +453,23 @@ def ref_estrutura_comp(cursor, ref, alt):
               THEN '?'
               ELSE coc.ITEM_COMP
               END
-            ELSE coc.ITEM_ITEM || ' -> ' ||
+            ELSE
+              CASE WHEN e.NIVEL_COMP = 1
+              THEN coc.ITEM_ITEM
+              ELSE
+                ( SELECT
+                    LISTAGG(coc1.ITEM_ITEM, ', ')
+                      WITHIN GROUP (ORDER BY coc1.ITEM_ITEM)
+                  FROM BASI_040 coc1 -- comb. cor - com mesma tratucao
+                  WHERE e.ITEM_COMP = '000000'
+                    AND coc1.SUB_ITEM = '000'
+                    AND coc1.GRUPO_ITEM = e.GRUPO_ITEM
+                    AND coc1.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
+                    AND coc1.SEQUENCIA = e.SEQUENCIA
+                    AND coc1.ITEM_COMP = coc.ITEM_COMP
+                )
+              END
+              || ' -> ' ||
               CASE WHEN coc.ITEM_COMP = '000000'
               THEN '?'
               ELSE coc.ITEM_COMP
