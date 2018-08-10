@@ -431,7 +431,11 @@ def ref_estrutura_comp(cursor, ref, alt):
         , e.GRUPO_COMP REF
         , r.DESCR_REFERENCIA DESCR
         , e.SUB_COMP TAM
-        , e.ITEM_COMP COR
+        , CASE WHEN coc.SUB_ITEM IS NULL
+          THEN e.ITEM_COMP
+          ELSE coc.ITEM_ITEM || ' -> ' || coc.ITEM_COMP
+          END COR
+        , coc.ITEM_ITEM
         , e.ALTERNATIVA_COMP ALTERN
         , e.CONSUMO
         , e.ESTAGIO || '-' || es.DESCRICAO ESTAGIO
@@ -439,6 +443,12 @@ def ref_estrutura_comp(cursor, ref, alt):
         LEFT JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = e.NIVEL_COMP
          AND r.REFERENCIA = e.GRUPO_COMP
+        LEFT JOIN BASI_040 coc -- combinação cor
+          ON e.ITEM_COMP = '000000'
+         AND coc.SUB_ITEM = '000'
+         AND coc.GRUPO_ITEM = e.GRUPO_ITEM
+         AND coc.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
+         AND coc.SEQUENCIA = e.SEQUENCIA
         LEFT JOIN MQOP_005 es
           ON es.CODIGO_ESTAGIO = e.ESTAGIO
         WHERE e.NIVEL_ITEM = 1
@@ -447,6 +457,7 @@ def ref_estrutura_comp(cursor, ref, alt):
         ORDER BY
           e.SEQUENCIA
         , 2
+        , coc.ITEM_ITEM
     """
     cursor.execute(sql, [ref, alt])
     return rows_to_dict_list(cursor)
