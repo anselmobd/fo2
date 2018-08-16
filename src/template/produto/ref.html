@@ -17,6 +17,10 @@
 </form>
 {% if ref %}
   <h2>Referência: {{ ref }}&nbsp;&nbsp;&nbsp;Tipo: {{ tipo }}</h2>
+  {% url 'producao:busca_op__get' ref as busca_op_ref %}
+  {% with 'Lista OPs da referência ' as text %}
+    {% include "layout/link.html" with link=busca_op_ref text=text|add:ref only %}
+  {% endwith %}
 {% endif %}
 {% if modelo %}
   <h3>Modelo: {{ modelo|safe }}</h3>
