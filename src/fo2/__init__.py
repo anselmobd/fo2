@@ -1,9 +1,16 @@
-__version__ = '0.1.114'
-__version__date__ = '10/08/2018'
+__version__ = '0.1.116'
+__version__date__ = '16/08/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+
+# - 0.1.116 - 2018/08/16
+#   . Produto : Estruturas: Correções de visualizão
+#   . Produto e OP: Diversos links adicionados entre telas
+#
+# - 0.1.115 - 2018/08/13
+#   . CD : inventariar: Também permite movimentar lotes no 66 no systêxtil
 #
 # - 0.1.114 - 2018/08/10
 #   . Produto: Melhoria na apresentação da estrutura
