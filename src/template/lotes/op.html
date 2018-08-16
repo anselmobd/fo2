@@ -16,7 +16,11 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if op %}
-<h2>OP {{ op }}</h2>
+  <h3>OP {{ op }}</h3>
+  {% url 'producao:componentes_de_op__get' op as comp_op %}
+  {% with 'Produtos componentes da OP ' as text %}
+    {% include "layout/link.html" with link=comp_op text=text|add:op only %}
+  {% endwith %}
 {% endif %}
 {% if msg_erro %}
 <h3>{{ msg_erro }}</h3>
