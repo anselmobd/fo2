@@ -14,6 +14,9 @@ urlpatterns = [
     url(r'^responsavel/$', views.responsTodos, name='respons_todos'),
 
     url(r'^busca_op/$', views.BuscaOP.as_view(), name='busca_op'),
+    url(r'^busca_op/(?P<ref>\d+)/$', views.BuscaOP.as_view(),
+        name='busca_op__get'),
+
     url(r'^op/$', views.Op.as_view(), name='op'),
     url(r'^op/(?P<op>\d+)/$', views.Op.as_view(), name='op__get'),
 
