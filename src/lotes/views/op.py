@@ -280,6 +280,7 @@ class BuscaOP(View):
 
         for row in data:
             row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
             if row['DT_CORTE'] is None:
                 row['DT_CORTE'] = ''
