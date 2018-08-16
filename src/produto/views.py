@@ -386,10 +386,10 @@ class Ref(View):
                         if e_row['COR_REF'] != '000000':
                             dif_000000 += 1
                         if e_row['NIVEL'] == '1':
-                            e_row['LINK'] = reverse(
+                            e_row['REF|LINK'] = reverse(
                                 'produto:ref__get', args=[e_row['REF']])
                         else:
-                            e_row['LINK'] = reverse(
+                            e_row['REF|LINK'] = reverse(
                                 'insumo:ref__get',
                                 args=[e_row['NIVEL']+e_row['REF']])
 
@@ -399,7 +399,8 @@ class Ref(View):
                     e_fields = ['SEQUENCIA', 'NIVEL', 'REF',
                                 'DESCR', 'TAM', 'COR',
                                 'ALTERN', 'CONSUMO', 'ESTAGIO']
-                    e_group = ['SEQUENCIA', 'NIVEL', 'REF', 'DESCR', 'TAM']
+                    e_group = ['SEQUENCIA', 'NIVEL', 'REF', 'DESCR', 'TAM',
+                               'ALTERN', 'CONSUMO', 'ESTAGIO']
 
                     if dif_000000 != 0:
                         e_headers.insert(0, 'Cor Referência')
