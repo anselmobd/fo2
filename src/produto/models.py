@@ -381,6 +381,8 @@ def ref_estruturas(cursor, ref):
     sql = """
         SELECT DISTINCT
           ia.ALTERNATIVA_ITEM ALTERNATIVA
+        , ia.SUB_ITEM TAM
+        , ia.ITEM_ITEM COR
         , COALESCE( al.DESCRICAO, '' ) DESCR
         , COALESCE(
           ( SELECT
@@ -390,6 +392,8 @@ def ref_estruturas(cursor, ref):
             WHERE ec.NIVEL_ITEM = ia.NIVEL_ITEM
               AND ec.GRUPO_ITEM = ia.GRUPO_ITEM
               AND ec.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
+              AND ec.SUB_ITEM = ia.SUB_ITEM
+              AND ec.ITEM_ITEM = ia.ITEM_ITEM
               AND ec.NIVEL_COMP = 1
           ), ' ') REF
         FROM BASI_050 ia -- insumos de alternativa
@@ -400,6 +404,8 @@ def ref_estruturas(cursor, ref):
           AND ia.GRUPO_ITEM = %s
         ORDER BY
           ia.ALTERNATIVA_ITEM
+        , ia.SUB_ITEM
+        , ia.ITEM_ITEM
     """
     cursor.execute(sql, [ref])
     return rows_to_dict_list(cursor)
