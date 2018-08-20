@@ -338,8 +338,8 @@ class Ref(View):
             if len(e_data) != 0:
                 context.update({
                     'e_headers': ('Alternativa', 'Descrição',
-                                  'Componente produto'),
-                    'e_fields': ('ALTERNATIVA', 'DESCR', 'REF'),
+                                  'Componente produto', 'Tamanho', 'Cor'),
+                    'e_fields': ('ALTERNATIVA', 'DESCR', 'REF', 'TAM', 'COR'),
                     'e_data': e_data,
                     'e_safe': ('REF',),
                 })
