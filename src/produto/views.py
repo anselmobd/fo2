@@ -326,7 +326,7 @@ class Ref(View):
             # Estruturas
             e_data = models.ref_estruturas(cursor, ref)
             for row in e_data:
-                if row['REF'] != ' ':
+                if row['REF'] != '-':
                     row['REF'] = re.sub(
                         r'([A-Z0-9]+)',
                         r'<a href="'+reverse(
@@ -348,8 +348,8 @@ class Ref(View):
             r_data = models.ref_roteiros(cursor, ref)
             if len(r_data) != 0:
                 context.update({
-                    'r_headers': ('Alternativa', 'Roteiro'),
-                    'r_fields': ('ALTERNATIVA', 'ROTEIRO'),
+                    'r_headers': ('Alternativa', 'Roteiro', 'Tamanho', 'Cor'),
+                    'r_fields': ('ALTERNATIVA', 'ROTEIRO', 'TAM', 'COR'),
                     'r_data': r_data,
                 })
 

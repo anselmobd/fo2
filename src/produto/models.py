@@ -326,24 +326,37 @@ def ref_roteiros(cursor, ref):
           r.NUMERO_ALTERNATI
         , r.NUMERO_ROTEIRO
         , r.NUMERO_ALTERNATI || ' (' ||
-          COALESCE( al.DESCRICAO, '' ) || ')' ALTERNATIVA
+          COALESCE( al.DESCRICAO, COALESCE( alg.DESCRICAO, '' ) ) || ')'
+          ALTERNATIVA
         , r.NUMERO_ROTEIRO || ' (' ||
           COALESCE( ro.DESCRICAO,
-            COALESCE( al.DESCRICAO, '' ) ) || ')' ROTEIRO
+            COALESCE( alg.DESCRICAO, '' ) ) || ')' ROTEIRO
+        , r.SUBGRU_ESTRUTURA TAM
+        , r.ITEM_ESTRUTURA COR
         FROM MQOP_050 r
         LEFT JOIN BASI_070 ro
           ON ro.ALTERNATIVA = r.NUMERO_ALTERNATI
          AND ro.ROTEIRO = r.NUMERO_ROTEIRO
          AND ro.NIVEL = r.NIVEL_ESTRUTURA
          AND ro.GRUPO = r.GRUPO_ESTRUTURA
-        LEFT JOIN BASI_070 al
-          ON al.ALTERNATIVA = r.NUMERO_ALTERNATI
-         AND al.ROTEIRO = 0
+         AND ro.SUBGRUPO = r.SUBGRU_ESTRUTURA
+         AND ro.ITEM = r.ITEM_ESTRUTURA
+        -- específico
+        LEFT JOIN BASI_070 al -- cadastro de altern. de estrutura e de roteiro
+          ON al.ROTEIRO = 0 -- seleciona cadastro de alternativas de estrutura
+         AND al.ALTERNATIVA = r.NUMERO_ALTERNATI
+         AND al.GRUPO = r.GRUPO_ESTRUTURA -- seleciona nome esclusivo da ref
+        -- genérico
+        LEFT JOIN BASI_070 alg -- cadastro de altern. de estrutura e de roteiro
+          ON alg.ROTEIRO = 0 -- seleciona cadastro de alternativas de estrutura
+         AND alg.ALTERNATIVA = r.NUMERO_ALTERNATI
         WHERE r.NIVEL_ESTRUTURA = 1
           AND r.GRUPO_ESTRUTURA = %s
         ORDER BY
           r.NUMERO_ALTERNATI
         , r.NUMERO_ROTEIRO
+        , r.SUBGRU_ESTRUTURA
+        , r.ITEM_ESTRUTURA
     """
     cursor.execute(sql, [ref])
     return rows_to_dict_list(cursor)
@@ -383,23 +396,29 @@ def ref_estruturas(cursor, ref):
           ia.ALTERNATIVA_ITEM ALTERNATIVA
         , ia.SUB_ITEM TAM
         , ia.ITEM_ITEM COR
-        , COALESCE( al.DESCRICAO, '' ) DESCR
+        , COALESCE( al.DESCRICAO, COALESCE( alg.DESCRICAO, '' ) ) DESCR
         , COALESCE(
           ( SELECT
               LISTAGG(COALESCE(ec.GRUPO_COMP, ''), ', ')
               WITHIN GROUP (ORDER BY ec.ALTERNATIVA_ITEM) REF
-            FROM BASI_050 ec
+            FROM BASI_050 ec -- componente de nivel 1
             WHERE ec.NIVEL_ITEM = ia.NIVEL_ITEM
               AND ec.GRUPO_ITEM = ia.GRUPO_ITEM
               AND ec.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
               AND ec.SUB_ITEM = ia.SUB_ITEM
               AND ec.ITEM_ITEM = ia.ITEM_ITEM
               AND ec.NIVEL_COMP = 1
-          ), ' ') REF
+          ), '-') REF
         FROM BASI_050 ia -- insumos de alternativa
+        -- específico
         LEFT JOIN BASI_070 al -- cadastro de altern. de estrutura e de roteiro
           ON al.ROTEIRO = 0 -- seleciona cadastro de alternativas de estrutura
          AND al.ALTERNATIVA = ia.ALTERNATIVA_ITEM
+         AND al.GRUPO = ia.GRUPO_ITEM -- seleciona nome esclusivo da referência
+        -- genérico
+        LEFT JOIN BASI_070 alg -- cadastro de altern. de estrutura e de roteiro
+          ON alg.ROTEIRO = 0 -- seleciona cadastro de alternativas de estrutura
+         AND alg.ALTERNATIVA = ia.ALTERNATIVA_ITEM
         WHERE ia.NIVEL_ITEM = 1
           AND ia.GRUPO_ITEM = %s
         ORDER BY
