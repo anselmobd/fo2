@@ -268,6 +268,9 @@ class Ref(View):
                 'tipo': data[0]['TIPO'],
             })
 
+            if data[0]['NUMERO_MOLDE'] is None:
+                data[0]['NUMERO_MOLDE'] = '-'
+
             context.update({
                 'headers': ('Descrição', 'Conta de estoque',
                             'Artigo', 'Linha', 'Coleção', 'Modelagem'),
@@ -326,7 +329,12 @@ class Ref(View):
             # Estruturas
             e_data = models.ref_estruturas(cursor, ref)
             conta_ref = 0
+            conta_tam_cor = 0
             for row in e_data:
+                row['ALT'] = '{} ({})'.format(
+                    row['ALTERNATIVA'], row['DESCR'])
+                if row['TAM'] != '000' or row['COR'] != '000000':
+                    conta_tam_cor += 1
                 if row['REF'] != '-':
                     conta_ref += 1
                     row['REF'] = re.sub(
@@ -338,11 +346,14 @@ class Ref(View):
                         'aria-hidden="true"></span></a>',
                         row['REF'])
 
-            e_headers = ['Alternativa', 'Descrição', 'Tamanho', 'Cor']
-            e_fields = ['ALTERNATIVA', 'DESCR', 'TAM', 'COR']
+            e_headers = ['Alternativa']
+            e_fields = ['ALT']
             if conta_ref != 0:
-                e_headers.insert(2, 'Componente produto')
-                e_fields.insert(2, 'REF')
+                e_headers.append('Componente produto')
+                e_fields.append('REF')
+            if conta_tam_cor != 0:
+                e_headers.extend(['Tamanho', 'Cor'])
+                e_fields.extend(['TAM', 'COR'])
 
             if len(e_data) != 0:
                 context.update({
@@ -354,10 +365,22 @@ class Ref(View):
 
             # Roteiros
             r_data = models.ref_roteiros(cursor, ref)
+
+            conta_tam_cor = 0
+            for row in r_data:
+                if row['TAM'] != '000' or row['COR'] != '000000':
+                    conta_tam_cor += 1
+
+            r_headers = ['Alternativa', 'Roteiro']
+            r_fields = ['ALTERNATIVA', 'ROTEIRO']
+            if conta_tam_cor != 0:
+                r_headers.extend(['Tamanho', 'Cor'])
+                r_fields.extend(['TAM', 'COR'])
+
             if len(r_data) != 0:
                 context.update({
-                    'r_headers': ('Alternativa', 'Roteiro', 'Tamanho', 'Cor'),
-                    'r_fields': ('ALTERNATIVA', 'ROTEIRO', 'TAM', 'COR'),
+                    'r_headers': r_headers,
+                    'r_fields': r_fields,
                     'r_data': r_data,
                 })
 
