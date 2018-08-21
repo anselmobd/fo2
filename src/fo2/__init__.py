@@ -1,10 +1,16 @@
-__version__ = '0.1.116'
-__version__date__ = '16/08/2018'
+__version__ = '0.1.118'
+__version__date__ = '21/08/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
-
+#
+# - 0.1.118 - 2018/08/21
+#   . Produto : Detalha roteiros por cor / tamanho
+#
+# - 0.1.117 - 2018/08/20
+#   . Produto : Alternativas e roteiros: preve alternativas por cor
+#
 # - 0.1.116 - 2018/08/16
 #   . Produto : Estruturas: Correções de visualizão
 #   . Produto e OP: Diversos links adicionados entre telas
