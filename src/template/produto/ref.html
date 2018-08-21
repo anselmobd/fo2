@@ -10,21 +10,33 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'produto:ref' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Busca"/>
-</form>
-{% if ref %}
-  <h2>Referência: {{ ref }}&nbsp;&nbsp;&nbsp;Tipo: {{ tipo }}</h2>
-  {% url 'producao:busca_op__get' ref as busca_op_ref %}
-  {% with 'Lista OPs da referência ' as text %}
-    {% include "layout/link.html" with link=busca_op_ref text=text|add:ref only %}
-  {% endwith %}
-{% endif %}
-{% if modelo %}
-  <h3>Modelo: {{ modelo|safe }}</h3>
-{% endif %}
+<table>
+  <tr>
+    {% if ref and not msg_erro %}
+      <td style="vertical-align: top;">
+        {% if ref %}
+          <h2>Referência: {{ ref }}&nbsp;&nbsp;&nbsp;Tipo: {{ tipo }}</h2>
+          {% url 'producao:busca_op__get' ref as busca_op_ref %}
+          {% with 'Lista OPs da referência ' as text %}
+            {% include "layout/link.html" with link=busca_op_ref text=text|add:ref only %}
+          {% endwith %}
+        {% endif %}
+        {% if modelo %}
+          <h3>Modelo: {{ modelo|safe }}</h3>
+        {% endif %}
+      </td>
+      <td></td>
+      <td style="border-left: thin solid lightgrey;"></td>
+    {% endif %}
+    <td style="vertical-align: top;">
+      <form action="{% url 'produto:ref' %}" method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" value="Busca"/>
+      </form>
+    </td>
+  </tr>
+</table>
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
