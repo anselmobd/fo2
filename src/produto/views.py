@@ -358,10 +358,12 @@ class Ref(View):
             for row in r_data:
                 roteiro = models.ref_1roteiro(
                     cursor, ref, row['NUMERO_ALTERNATI'],
-                    row['NUMERO_ROTEIRO'])
+                    row['NUMERO_ROTEIRO'], row['TAM'], row['COR'])
                 roteiros.append({
                     'alternativa': row['ALTERNATIVA'],
                     'roteiro': row['ROTEIRO'],
+                    'tamanho': row['TAM'],
+                    'cor': row['COR'],
                     'r_headers': ['Sequência', 'Operação', 'Estágio',
                                   'Gargalo'],
                     'r_fields': ['SEQ', 'OPERACAO', 'ESTAGIO', 'GARGALO'],
