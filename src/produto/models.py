@@ -362,7 +362,7 @@ def ref_roteiros(cursor, ref):
     return rows_to_dict_list(cursor)
 
 
-def ref_1roteiro(cursor, ref, alternativa, roteiro):
+def ref_1roteiro(cursor, ref, alternativa, roteiro, tamanho, cor):
     # Totais por OP
     sql = """
         SELECT
@@ -382,10 +382,12 @@ def ref_1roteiro(cursor, ref, alternativa, roteiro):
           AND r.GRUPO_ESTRUTURA = %s
           AND r.NUMERO_ALTERNATI = %s
           AND r.NUMERO_ROTEIRO = %s
+          AND r.SUBGRU_ESTRUTURA = %s
+          AND r.ITEM_ESTRUTURA = %s
         ORDER BY
           r.SEQ_OPERACAO
     """
-    cursor.execute(sql, [ref,  alternativa, roteiro])
+    cursor.execute(sql, [ref,  alternativa, roteiro, tamanho, cor])
     return rows_to_dict_list(cursor)
 
 
