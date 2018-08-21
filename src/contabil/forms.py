@@ -10,20 +10,21 @@ class InfAdProdForm(forms.Form):
 
 class RemessaIndustrForm(forms.Form):
     data_de = forms.DateField(
-        label='Data inicial', required=True,
+        label='Data inicial', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 
     data_ate = forms.DateField(
         label='Data final', required=False,
-        help_text='(Se não informar, assume igual a inicial.)',
         widget=forms.DateInput(attrs={'type': 'date'}))
 
     faccao = forms.CharField(
         label='Facção', required=False,
+        help_text='Busca no nome e no CNPJ da facção',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     cliente = forms.CharField(
         label='Cliente', required=False,
+        help_text='Busca no nome e no CNPJ do cliente',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     pedido = forms.CharField(
@@ -33,6 +34,13 @@ class RemessaIndustrForm(forms.Form):
     pedido_cliente = forms.CharField(
         label='Pedido de cliente', required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
+
+    CHOICES = [('T', 'Todas as remessas'),
+               ('S', 'Só remessas Sem retorno'),
+               ('C', 'Só remessas Com retorno'),
+               ]
+    retorno = forms.ChoiceField(
+        label='Retorno', choices=CHOICES, initial='T')
 
     def clean_faccao(self):
         faccao = self.cleaned_data['faccao'].upper()

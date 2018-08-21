@@ -33,14 +33,25 @@
   {% if pedido_cliente %}
     <h4>Pedido do cliente: <b>{{ pedido_cliente }}</b></h4>
   {% endif %}
-  {% if data_de %}
+  {% if data_de or data_ate %}
     <h4>Data da remessa:
     {% if data_de == data_ate %}
       <b>{{ data_de }}</b>
     {% else %}
-      De <b>{{ data_de }}</b> até <b>{{ data_ate }}</b>
+      {% if data_de %}
+        a partir de <b>{{ data_de }}</b>
+      {% endif %}
+      {% if data_ate %}
+        até <b>{{ data_ate }}</b>
+      {% endif %}
     {% endif %}
     </h4>
+  {% endif %}
+  {% if retorno == 'S' %}
+    <h4>Retorno: Só remessas <b>Sem</b> retorno</h4>
+  {% endif %}
+  {% if retorno == 'C' %}
+    <h4>Retorno: Só remessas <b>Com</b> retorno</h4>
   {% endif %}
   <table>
     {% include "layout/html_thead.html" with data=headers only %}

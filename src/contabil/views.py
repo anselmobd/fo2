@@ -68,18 +68,18 @@ class RemessaIndustr(View):
         if form.is_valid():
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
-            if not data_ate:
-                data_ate = data_de
             faccao = form.cleaned_data['faccao']
             cliente = form.cleaned_data['cliente']
             pedido = form.cleaned_data['pedido']
             pedido_cliente = form.cleaned_data['pedido_cliente']
+            retorno = form.cleaned_data['retorno']
 
             cursor = connections['so'].cursor()
             data = models.reme_indu(
                 cursor, dt_saida_de=data_de, dt_saida_ate=data_ate,
                 faccao=faccao, cliente=cliente,
-                pedido=pedido, pedido_cliente=pedido_cliente)
+                pedido=pedido, pedido_cliente=pedido_cliente,
+                retorno=retorno)
             if len(data) == 0:
                 context['erro'] = 'Remessa não encontrada'
             else:
@@ -103,6 +103,7 @@ class RemessaIndustr(View):
                     'cliente': cliente,
                     'pedido': pedido,
                     'pedido_cliente': pedido_cliente,
+                    'retorno': retorno,
                     'headers': ('OP', 'Ref.', 'Cor', 'Tam.', 'OS', 'Quant.',
                                 'Data saída', 'NF. saída', 'Facção',
                                 'Data retorno', 'NF retorno', 'Quant. retorno',
