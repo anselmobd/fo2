@@ -325,8 +325,10 @@ class Ref(View):
 
             # Estruturas
             e_data = models.ref_estruturas(cursor, ref)
+            conta_ref = 0
             for row in e_data:
                 if row['REF'] != '-':
+                    conta_ref += 1
                     row['REF'] = re.sub(
                         r'([A-Z0-9]+)',
                         r'<a href="'+reverse(
@@ -335,11 +337,17 @@ class Ref(View):
                         'class="glyphicon glyphicon-link" '
                         'aria-hidden="true"></span></a>',
                         row['REF'])
+
+            e_headers = ['Alternativa', 'Descrição', 'Tamanho', 'Cor']
+            e_fields = ['ALTERNATIVA', 'DESCR', 'TAM', 'COR']
+            if conta_ref != 0:
+                e_headers.insert(2, 'Componente produto')
+                e_fields.insert(2, 'REF')
+
             if len(e_data) != 0:
                 context.update({
-                    'e_headers': ('Alternativa', 'Descrição',
-                                  'Componente produto', 'Tamanho', 'Cor'),
-                    'e_fields': ('ALTERNATIVA', 'DESCR', 'REF', 'TAM', 'COR'),
+                    'e_headers': e_headers,
+                    'e_fields': e_fields,
                     'e_data': e_data,
                     'e_safe': ('REF',),
                 })
