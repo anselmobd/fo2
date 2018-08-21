@@ -62,7 +62,8 @@ def reme_indu(
         cursor, op=None, os=None,
         dt_saida_de=None, dt_saida_ate=None, nf_saida=None,
         dt_entrada_de=None, dt_entrada_ate=None, nf_entrada=None,
-        faccao=None, pedido=None, pedido_cliente=None, cliente=None):
+        faccao=None, pedido=None, pedido_cliente=None, cliente=None,
+        retorno=None):
 
     op_filter = ''
     if op:
@@ -129,6 +130,12 @@ def reme_indu(
                 || '-' || lpad(c.CGC_2, 2, '0')
                 || ')' LIKE '%{}%'
         """.format(cliente)
+
+    retorno_filter = ''
+    if retorno == 'S':
+        retorno_filter = "AND nfec.DOCUMENTO is NULL"
+    elif retorno == 'C':
+        retorno_filter = "AND nfec.DOCUMENTO is NOT NULL"
 
     sql = '''
         WITH op_os AS
@@ -226,6 +233,7 @@ def reme_indu(
         --      || '-' || lpad(c.CGC_2, 2, '0')
         --      || ')' LIKE '%RENN%'  -- cliente
         {cliente_filter}
+        {retorno_filter} -- retorno_filter
         GROUP BY
           oo.ORDEM_PRODUCAO
         , oo.PROCONF_GRUPO
@@ -248,15 +256,15 @@ def reme_indu(
         , c.CGC_4
         , c.CGC_2
         ORDER BY
-          oo.ORDEM_PRODUCAO
-        , os.NUMERO_ORDEM
-        , oo.PROCONF_GRUPO
-        , oo.PROCONF_ITEM
-        , t.ORDEM_TAMANHO
-        , nf.DATA_EMISSAO
-        , nf.NUM_NOTA_FISCAL
-        , nfec.DATA_EMISSAO
-        , nfec.DOCUMENTO
+          oo.ORDEM_PRODUCAO -- op
+        , os.NUMERO_ORDEM -- os
+        , oo.PROCONF_GRUPO -- ref
+        , oo.PROCONF_ITEM -- cor
+        , t.ORDEM_TAMANHO -- tam
+        , nf.DATA_EMISSAO -- data remessa
+        , nf.NUM_NOTA_FISCAL -- nf remessa
+        , nfec.DATA_EMISSAO -- data retorno
+        , nfec.DOCUMENTO -- nf retorno
     '''.format(
         op_filter=op_filter,
         os_filter=os_filter,
@@ -267,7 +275,9 @@ def reme_indu(
         faccao_filter=faccao_filter,
         pedido_filter=pedido_filter,
         pedido_cliente_filter=pedido_cliente_filter,
-        cliente_filter=cliente_filter)
+        cliente_filter=cliente_filter,
+        retorno_filter=retorno_filter,
+        )
     # print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
