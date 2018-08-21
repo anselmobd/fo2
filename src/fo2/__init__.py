@@ -7,6 +7,8 @@ __version__date__ = '21/08/2018'
 #
 # - 0.1.118 - 2018/08/21
 #   . Produto : Detalha roteiros por cor / tamanho
+#   . Produto : Diversas melhorias
+#   . Remessas para industrialização: Novos filtros
 #
 # - 0.1.117 - 2018/08/20
 #   . Produto : Alternativas e roteiros: preve alternativas por cor
