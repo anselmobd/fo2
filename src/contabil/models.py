@@ -137,6 +137,22 @@ def reme_indu(
     elif retorno == 'C':
         retorno_filter = "AND nfec.DOCUMENTO is NOT NULL"
 
+    detalhe_select = ', NULL TAM'
+    detalhe_join = ''
+    detalhe_group = ''
+    detalhe_order = ''
+    if detalhe == 'T':
+        detalhe_select = ', oo.PROCONF_SUBGRUPO TAM'
+        detalhe_join = '''
+            LEFT JOIN BASI_220 t -- tamanhos
+              ON t.TAMANHO_REF = oo.PROCONF_SUBGRUPO
+        '''
+        detalhe_group = '''
+            , t.ORDEM_TAMANHO
+            , oo.PROCONF_SUBGRUPO
+        '''
+        detalhe_order = ', t.ORDEM_TAMANHO -- tam'
+
     sql = '''
         WITH op_os AS
         ( SELECT DISTINCT
@@ -151,7 +167,7 @@ def reme_indu(
           oo.ORDEM_PRODUCAO OP
         , oo.PROCONF_GRUPO REF
         , oo.PROCONF_ITEM COR
-        , oo.PROCONF_SUBGRUPO TAM
+        {detalhe_select} -- , oo.PROCONF_SUBGRUPO TAM
         , os.NUMERO_ORDEM OS
         , SUM(osi.QTDE_ENVIADA) QTD
         , nf.DATA_EMISSAO DT
@@ -200,8 +216,9 @@ def reme_indu(
           ON nfec.DOCUMENTO = nfei.CAPA_ENT_NRDOC
          AND nfec.CGC_CLI_FOR_9 = nfei.CAPA_ENT_FORCLI9
          AND nfec.CGC_CLI_FOR_4 = nfei.CAPA_ENT_FORCLI4
-        LEFT JOIN BASI_220 t -- tamanhos
-          ON t.TAMANHO_REF = oo.PROCONF_SUBGRUPO
+        --LEFT JOIN BASI_220 t -- tamanhos
+        --  ON t.TAMANHO_REF = oo.PROCONF_SUBGRUPO
+        {detalhe_join} -- detalhe_join
         WHERE 1=1
         --  AND op.ordem_producao = 3480 -- op
         {op_filter}
@@ -238,8 +255,9 @@ def reme_indu(
           oo.ORDEM_PRODUCAO
         , oo.PROCONF_GRUPO
         , oo.PROCONF_ITEM
-        , t.ORDEM_TAMANHO
-        , oo.PROCONF_SUBGRUPO
+        -- , t.ORDEM_TAMANHO
+        -- , oo.PROCONF_SUBGRUPO
+        {detalhe_group} -- detalhe_group
         , os.NUMERO_ORDEM
         , nf.DATA_EMISSAO
         , nf.NUM_NOTA_FISCAL
@@ -260,7 +278,7 @@ def reme_indu(
         , os.NUMERO_ORDEM -- os
         , oo.PROCONF_GRUPO -- ref
         , oo.PROCONF_ITEM -- cor
-        , t.ORDEM_TAMANHO -- tam
+        {detalhe_order} -- , t.ORDEM_TAMANHO -- tam
         , nf.DATA_EMISSAO -- data remessa
         , nf.NUM_NOTA_FISCAL -- nf remessa
         , nfec.DATA_EMISSAO -- data retorno
@@ -277,6 +295,10 @@ def reme_indu(
         pedido_cliente_filter=pedido_cliente_filter,
         cliente_filter=cliente_filter,
         retorno_filter=retorno_filter,
+        detalhe_select=detalhe_select,
+        detalhe_join=detalhe_join,
+        detalhe_group=detalhe_group,
+        detalhe_order=detalhe_order,
         )
     # print(sql)
     cursor.execute(sql)

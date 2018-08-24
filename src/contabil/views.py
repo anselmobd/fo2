@@ -97,6 +97,8 @@ class RemessaIndustr(View):
                         row['CLI'] = '-'
                     if row['PED_CLI'] is None:
                         row['PED_CLI'] = '-'
+                    if row['TAM'] is None:
+                        row['TAM'] = '-'
                 context.update({
                     'data_de': data_de,
                     'data_ate': data_ate,
@@ -105,6 +107,7 @@ class RemessaIndustr(View):
                     'pedido': pedido,
                     'pedido_cliente': pedido_cliente,
                     'retorno': retorno,
+                    'detalhe': detalhe,
                     'headers': ('OP', 'Ref.', 'Cor', 'Tam.', 'OS', 'Quant.',
                                 'Data saída', 'NF. saída', 'Facção',
                                 'Data retorno', 'NF retorno', 'Quant. retorno',
