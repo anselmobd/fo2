@@ -37,12 +37,14 @@
       {% include "layout/html_tbody_group.html" with fields=o_fields data=o_data group=o_group only %}
     </table>
   {% endif %}
+  <h3>Grade de produtos a industrializar</h3>
   {% if g_data %}
-    <h3>Grade de produtos a industrializar</h3>
     <table>
       {% include "layout/html_thead.html" with data=g_headers only %}
       {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
     </table>
+  {% else %}
+    Nenhum
   {% endif %}
   {% if i_data %}
     <h3>Itens para nota de OS</h3>
@@ -52,9 +54,13 @@
     </table>
   {% endif %}
   <h3>Lotes ordenados por OP + referência + cor + tamanho</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=l_headers only %}
-    {% include "layout/html_tbody_link.html" with fields=l_fields data=l_data link=l_link only %}
-  </table>
+  {% if l_data %}
+    <table>
+      {% include "layout/html_thead.html" with data=l_headers only %}
+      {% include "layout/html_tbody_link.html" with fields=l_fields data=l_data link=l_link only %}
+    </table>
+  {% else %}
+    Nenhum
+  {% endif %}
 {% endif %}
 {% endblock %}
