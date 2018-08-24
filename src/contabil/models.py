@@ -76,11 +76,11 @@ def reme_indu(
     dt_saida_filter = ''
     pprint(dt_saida_de)
     if dt_saida_de:
-        dt_saida_filter += """
+        dt_saida_filter += """ --
             AND nf.DATA_EMISSAO >= '{}'
         """.format(dt_saida_de)
     if dt_saida_ate:
-        dt_saida_filter += """
+        dt_saida_filter += """ --
             AND nf.DATA_EMISSAO <= '{}'
         """.format(dt_saida_ate)
 
@@ -90,11 +90,11 @@ def reme_indu(
 
     dt_entrada_filter = ''
     if dt_entrada_de:
-        dt_entrada_filter += """
+        dt_entrada_filter += """ --
             AND nfec.DATA_EMISSAO >= '{}'
         """.format(dt_entrada_de)
     if dt_entrada_ate:
-        dt_entrada_filter += """
+        dt_entrada_filter += """ --
             AND nfec.DATA_EMISSAO <= '{}'
         """.format(dt_entrada_ate)
 
@@ -104,7 +104,7 @@ def reme_indu(
 
     faccao_filter = ''
     if faccao:
-        faccao_filter = """
+        faccao_filter = """ --
             AND cind.NOME_CLIENTE
                 || ' (' || lpad(cind.CGC_9, 8, '0')
                 || '/' || lpad(cind.CGC_4, 4, '0')
@@ -123,7 +123,7 @@ def reme_indu(
 
     cliente_filter = ''
     if cliente:
-        cliente_filter = """
+        cliente_filter = """ --
             AND c.NOME_CLIENTE
                 || ' (' || lpad(c.CGC_9, 8, '0')
                 || '/' || lpad(c.CGC_4, 4, '0')
@@ -143,11 +143,11 @@ def reme_indu(
     detalhe_order = ''
     if detalhe == 'T':
         detalhe_select = ', oo.PROCONF_SUBGRUPO TAM'
-        detalhe_join = '''
+        detalhe_join = ''' --
             LEFT JOIN BASI_220 t -- tamanhos
               ON t.TAMANHO_REF = oo.PROCONF_SUBGRUPO
         '''
-        detalhe_group = '''
+        detalhe_group = ''' --
             , t.ORDEM_TAMANHO
             , oo.PROCONF_SUBGRUPO
         '''
@@ -200,6 +200,8 @@ def reme_indu(
         JOIN OBRF_082 osi -- OS - item de nota
           ON osi.NUMERO_ORDEM = os.NUMERO_ORDEM
          AND osi.PRODSAI_GRUPO = oo.PROCONF_GRUPO
+         AND osi.PRODSAI_SUBGRUPO = oo.PROCONF_SUBGRUPO
+         AND osi.PRODSAI_ITEM = oo.PROCONF_ITEM
         JOIN FATU_050 nf -- nota fiscal da Tussor - capa
           ON nf.NUM_NOTA_FISCAL = osi.NUM_NF_SAI
         LEFT JOIN PEDI_010 cind -- cliente - industrializador
@@ -221,35 +223,35 @@ def reme_indu(
         {detalhe_join} -- detalhe_join
         WHERE 1=1
         --  AND op.ordem_producao = 3480 -- op
-        {op_filter}
+        {op_filter} -- op_filter
         --  AND os.NUMERO_ORDEM = 2170 -- os
-        {os_filter}
+        {os_filter} -- os_filter
         --  AND nf.DATA_EMISSAO = TO_DATE('19/03/2018','DD/MM/YYYY')
                                                          -- dt_saida
-        {dt_saida_filter}
+        {dt_saida_filter} -- dt_saida_filter
         --  AND nf.NUM_NOTA_FISCAL = 63422 -- nf_saida
-        {nf_saida_filter}
+        {nf_saida_filter} -- nf_saida_filter
         --  AND nfec.DATA_EMISSAO = TO_DATE('26/03/2018','DD/MM/YYYY')
                                                          -- dt_entrada
-        {dt_entrada_filter}
+        {dt_entrada_filter} -- dt_entrada_filter
         --  AND nfec.DOCUMENTO = 54603 -- nf_entrada
-        {nf_entrada_filter}
+        {nf_entrada_filter} -- nf_entrada_filter
         --  AND cind.NOME_CLIENTE
         --      || ' (' || lpad(cind.CGC_9, 8, '0')
         --      || '/' || lpad(cind.CGC_4, 4, '0')
         --      || '-' || lpad(cind.CGC_2, 2, '0')
         --      || ')' LIKE '%LAU%'  -- faccao
-        {faccao_filter}
+        {faccao_filter} -- faccao_filter
         --  AND op.PEDIDO_VENDA = 3472 -- pedido
-        {pedido_filter}
+        {pedido_filter} -- pedido_filter
         --  AND ped.COD_PED_CLIENTE like '2341494' -- pedido_cliente
-        {pedido_cliente_filter}
+        {pedido_cliente_filter} -- pedido_cliente_filter
         --  AND c.NOME_CLIENTE
         --      || ' (' || lpad(c.CGC_9, 8, '0')
         --      || '/' || lpad(c.CGC_4, 4, '0')
         --      || '-' || lpad(c.CGC_2, 2, '0')
         --      || ')' LIKE '%RENN%'  -- cliente
-        {cliente_filter}
+        {cliente_filter} -- cliente_filter
         {retorno_filter} -- retorno_filter
         GROUP BY
           oo.ORDEM_PRODUCAO
@@ -300,6 +302,5 @@ def reme_indu(
         detalhe_group=detalhe_group,
         detalhe_order=detalhe_order,
         )
-    # print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
