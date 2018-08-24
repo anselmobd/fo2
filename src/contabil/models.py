@@ -63,7 +63,7 @@ def reme_indu(
         dt_saida_de=None, dt_saida_ate=None, nf_saida=None,
         dt_entrada_de=None, dt_entrada_ate=None, nf_entrada=None,
         faccao=None, pedido=None, pedido_cliente=None, cliente=None,
-        retorno=None):
+        retorno=None, detalhe=None):
 
     op_filter = ''
     if op:
