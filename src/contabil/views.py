@@ -1,5 +1,7 @@
 from pprint import pprint
+
 from django.shortcuts import render
+from django.urls import reverse
 from django.db import connections
 from django.views import View
 
@@ -99,6 +101,12 @@ class RemessaIndustr(View):
                         row['PED_CLI'] = '-'
                     if row['TAM'] is None:
                         row['TAM'] = '-'
+                    row['OP|LINK'] = reverse(
+                        'producao:op__get', args=[row['OP']])
+                    row['OS|LINK'] = reverse(
+                        'producao:os__get', args=[row['OS']])
+                    row['PED|LINK'] = reverse(
+                        'producao:pedido__get', args=[row['PED']])
                 context.update({
                     'data_de': data_de,
                     'data_ate': data_ate,
