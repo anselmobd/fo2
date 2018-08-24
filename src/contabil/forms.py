@@ -42,6 +42,12 @@ class RemessaIndustrForm(forms.Form):
     retorno = forms.ChoiceField(
         label='Retorno', choices=CHOICES, initial='T')
 
+    CHOICES = [('C', 'Apenas por cor'),
+               ('T', 'Por cor e tamanho'),
+               ]
+    detalhe = forms.ChoiceField(
+        label='Detalhe', choices=CHOICES, initial='C')
+
     def clean_faccao(self):
         faccao = self.cleaned_data['faccao'].upper()
         data = self.data.copy()
