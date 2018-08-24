@@ -249,14 +249,18 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
          AND f.FORNECEDOR4 = os.CGCTERC_FORNE4
         JOIN OBRF_087 c
           ON c.COD_CANC_ORDEM = os.COD_CANC_ORDEM
-        JOIN pcpc_040 l
+        LEFT JOIN pcpc_040 l
           ON l.NUMERO_ORDEM = os.NUMERO_ORDEM
         WHERE 1=1
-          AND (os.NUMERO_ORDEM = %s or %s IS NULL)
-          AND (l.ORDEM_PRODUCAO = %s or %s IS NULL)
-          AND (l.PERIODO_PRODUCAO = %s or %s IS NULL)
-          AND (l.ORDEM_CONFECCAO = %s or %s IS NULL)
-          AND l.NUMERO_ORDEM <> 0
+          AND (os.NUMERO_ORDEM = %s
+               OR ( %s IS NULL
+                   AND (l.ORDEM_PRODUCAO = %s OR %s IS NULL)
+                   AND (l.PERIODO_PRODUCAO = %s OR %s IS NULL)
+                   AND (l.ORDEM_CONFECCAO = %s OR %s IS NULL)
+                   AND l.NUMERO_ORDEM IS NOT NULL
+                   AND l.NUMERO_ORDEM <> 0
+                  )
+              )
         GROUP BY
           os.NUMERO_ORDEM
         , os.CODIGO_SERVICO
