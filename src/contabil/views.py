@@ -86,7 +86,9 @@ class RemessaIndustr(View):
             if len(data) == 0:
                 context['erro'] = 'Remessa não encontrada'
             else:
+                total_pecas = 0
                 for row in data:
+                    total_pecas += row['QTD']
                     row['DT'] = row['DT'].date()
                     if row['DT_RET'] is None:
                         row['DT_RET'] = '-'
@@ -117,6 +119,7 @@ class RemessaIndustr(View):
                     'pedido_cliente': pedido_cliente,
                     'retorno': retorno,
                     'detalhe': detalhe,
+                    'total_pecas': total_pecas,
                     'headers': ('OP', 'Ref.', 'Cor', 'Tam.', 'OS', 'Quant.',
                                 'Data saída', 'NF. saída', 'Facção',
                                 'Data retorno', 'NF retorno', 'Quant. retorno',

@@ -56,9 +56,12 @@
   {% if detalhe == 'C' %}
     <h4>Detalhe: Apenas por cor (não por tamanho)</h4>
   {% endif %}
-  <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data group=group safe=safe style=style only %}
-  </table>
+  {% if data %}
+    Total de peças: {{ total_pecas }}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data group=group safe=safe style=style only %}
+    </table>
+  {% endif %}
 {% endif %}
 {% endblock %}
