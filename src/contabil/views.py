@@ -105,8 +105,9 @@ class RemessaIndustr(View):
                         'producao:op__get', args=[row['OP']])
                     row['OS|LINK'] = reverse(
                         'producao:os__get', args=[row['OS']])
-                    row['PED|LINK'] = reverse(
-                        'producao:pedido__get', args=[row['PED']])
+                    if row['PED'] != '-':
+                        row['PED|LINK'] = reverse(
+                            'producao:pedido__get', args=[row['PED']])
                 context.update({
                     'data_de': data_de,
                     'data_ate': data_ate,
