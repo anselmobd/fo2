@@ -1,7 +1,7 @@
 {% extends 'rh/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>Aniversariantes de {{ datames|date:'F \d\e Y' }}</center>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>

@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^20180720_dia_do_amigo/$', views.fotos_20180720_dia_do_amigo,
         name='20180720_dia_do_amigo'),
 
-    url(r'^aniversariantes/$', views.aniversariantes, name='aniversariantes'),
+    url(r'^aniversariantes/(?P<ano>\d{4})/(?P<mes>\d+)/$',
+        views.aniversariantes, name='aniversariantes'),
 ]
