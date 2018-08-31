@@ -5,6 +5,10 @@ __version__date__ = '21/08/2018'
 #
 # - ?.?.??? - 20??/??/??
 #
+# - 0.1.119 - 2018/08/24
+#   . Remessa : Total por cor; Total geral de peças
+#   . OS : Sem lotes não aparecia
+#
 # - 0.1.118 - 2018/08/21
 #   . Produto : Detalha roteiros por cor / tamanho
 #   . Produto : Diversas melhorias
