@@ -140,36 +140,29 @@ class Lote(models.Model):
     lote = models.CharField(
         db_index=True, max_length=20, verbose_name='lote')
     op = models.IntegerField(
-        null=True, blank=True,
-        verbose_name='OP')
+        db_index=True, null=True, blank=True, verbose_name='OP')
     referencia = models.CharField(
-        max_length=5, verbose_name='Referência')
+        db_index=True, max_length=5, verbose_name='Referência')
     tamanho = models.CharField(
-        max_length=3, verbose_name='Tamanho')
+        db_index=True, max_length=3, verbose_name='Tamanho')
     ordem_tamanho = models.IntegerField(
-        default=0, verbose_name='ordem tamanho')
+        db_index=True, default=0, verbose_name='ordem tamanho')
     cor = models.CharField(
-        max_length=6, verbose_name='Cor')
+        db_index=True, max_length=6, verbose_name='Cor')
     qtd_produzir = models.IntegerField(
         verbose_name='quantidade a produzir')
     estagio = models.IntegerField(
-        default=0)
+        db_index=True, default=0)
     qtd = models.IntegerField(
         default=0, verbose_name='quantidade em produçao ou produzida')
     create_at = models.DateTimeField(
-        null=True, blank=True,
-        verbose_name='criado em')
+        db_index=True, null=True, blank=True, verbose_name='criado em')
     update_at = models.DateTimeField(
-        null=True, blank=True,
-        verbose_name='alterado em')
+        db_index=True, null=True, blank=True, verbose_name='alterado em')
     local = models.CharField(
-        db_index=True,
-        null=True, blank=True,
-        default=None, max_length=3)
+        db_index=True, null=True, blank=True, default=None, max_length=3)
     local_at = models.DateTimeField(
-        db_index=True,
-        null=True, blank=True,
-        verbose_name='localizado em')
+        db_index=True, null=True, blank=True, verbose_name='localizado em')
     local_usuario = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True,
         verbose_name='localizado por')
