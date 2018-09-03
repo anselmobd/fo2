@@ -12,6 +12,13 @@ class Command(BaseCommand):
     help = 'Syncronizing Lotes'
     __MAX_TASKS = 10
 
+    def my_println(self, text=''):
+        self.my_print(text, ending='\n')
+
+    def my_print(self, text='', ending=''):
+        self.stdout.write(text, ending=ending)
+        self.stdout.flush()
+
     def iter_cursor(self, cursor):
         columns = [i[0].lower() for i in cursor.description]
         for row in cursor:
@@ -181,15 +188,13 @@ class Command(BaseCommand):
         return alter
 
     def inclui(self, op):
-        self.stdout.write(
-            'Incluindo lotes da OP {}'.format(op))
+        self.my_println('Incluindo lotes da OP {}'.format(op))
         lotes = self.get_lotes_op(op)
         ocs = []
         for row in lotes:
             if row['oc'] not in ocs:
                 ocs.append(row['oc'])
-        self.stdout.write(
-            'Sistêxtil tem {} lotes'.format(len(ocs)), ending='')
+        self.my_print('Sistêxtil tem {} lotes'.format(len(ocs)))
         for oc in ocs:
             oc_estagios = [row for row in lotes if row['oc'] == oc]
             oc_est63 = [row for row in oc_estagios if row['estagio'] == 63]
@@ -201,14 +206,11 @@ class Command(BaseCommand):
             lote = models.Lote()
             self.set_lote(lote, row)
             lote.save()
-            self.stdout.write(
-                ' {}{}'.format(
-                    'I', row['lote'][4:].lstrip('0')), ending='')
-        self.stdout.write('')
+            self.my_print(' {}{}'.format('I', row['lote'][4:].lstrip('0')))
+        self.my_println()
 
     def atualiza(self, op):
-        self.stdout.write(
-            'Atualizando lotes da OP {}'.format(op))
+        self.my_println('Atualizando lotes da OP {}'.format(op))
 
         # atualizando Systêxtil -> Fo2
         lotes = self.get_lotes_op(op)
@@ -216,8 +218,7 @@ class Command(BaseCommand):
         for row in lotes:
             if row['oc'] not in ocs:
                 ocs.append(row['oc'])
-        self.stdout.write(
-            'Sistêxtil tem {} lotes'.format(len(ocs)), ending='')
+        self.my_print('Sistêxtil tem {} lotes'.format(len(ocs)))
         sys_lotes = []
         for oc in ocs:
             oc_estagios = [row for row in lotes if row['oc'] == oc]
@@ -245,37 +246,34 @@ class Command(BaseCommand):
             if self.set_lote(lote, row):
                 # self.stdout.write('save')
                 lote.save()
-                self.stdout.write(
-                    ' {}{}'.format(
-                        acao, row['lote'][4:].lstrip('0')), ending='')
+                self.my_print(
+                    ' {}{}'.format(acao, row['lote'][4:].lstrip('0')))
 
         # atualizando Fo2 -> Systêxtil
         lotes = models.Lote.objects.filter(op=op)
-        self.stdout.write('')
-        self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)), ending='')
+        self.my_println()
+        self.my_print('Fo2 tem {} lotes'.format(len(lotes)))
         for row in lotes:
             if row.lote not in sys_lotes:
                 row.delete()
-                self.stdout.write(
-                    ' E{}'.format(row.lote[4:].lstrip('0')), ending='')
-        self.stdout.write('')
+                self.my_print(' E{}'.format(row.lote[4:].lstrip('0')))
+        self.my_println()
 
     def exclui(self, op):
-        self.stdout.write(
-            'Excluindo lotes da OP {}'.format(op))
+        self.my_println('Excluindo lotes da OP {}'.format(op))
         lotes = models.Lote.objects.filter(op=op)
         lotes_localizados = lotes.exclude(
                 local__isnull=True
             ).exclude(
                 local__exact='')
-        self.stdout.write('Fo2 tem {} lotes'.format(len(lotes)))
-        self.stdout.write('Fo2 tem {} lotes localizados'.format(
+        self.my_println('Fo2 tem {} lotes'.format(len(lotes)))
+        self.my_println('Fo2 tem {} lotes localizados'.format(
             len(lotes_localizados)))
         if len(lotes_localizados) == 0:
             for row in lotes:
                 row.delete()
         else:
-            self.stdout.write('OP {} não excluida em Fo2'.format(op))
+            self.my_println('OP {} não excluida em Fo2'.format(op))
 
     def init_tasks(self):
         self.inclui_op = []
@@ -296,7 +294,8 @@ class Command(BaseCommand):
                 self.exclui(op)
 
     def handle(self, *args, **options):
-        self.stdout.write('---\n{}'.format(datetime.datetime.now()))
+        self.my_println('---')
+        self.my_println('{}'.format(datetime.datetime.now()))
         try:
 
             # pega no Systêxtil a lista OPs com um valor de teste de quantidade
@@ -332,18 +331,15 @@ class Command(BaseCommand):
                     break
 
                 if op_s < op_f:
-                    self.stdout.write(
-                        'Incluir OP {} no Fo2'.format(op_s))
+                    self.my_println('Incluir OP {} no Fo2'.format(op_s))
                     self.inclui_op.append(op_s)
                     count_task += 1
                 elif op_s > op_f:
-                    self.stdout.write(
-                        'OP {} não mais ativa'.format(op_f))
+                    self.my_println('OP {} não mais ativa'.format(op_f))
                     self.exclui_op.append(op_f)
                 else:
                     if row_s['trail'] != row_f['trail']:
-                        self.stdout.write(
-                            'Atualizar OP {} no Fo2'.format(op_f))
+                        self.my_println('Atualizar OP {} no Fo2'.format(op_f))
                         self.atualiza_op.append(op_s)
                         count_task += 1
 
