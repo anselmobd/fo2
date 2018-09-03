@@ -138,7 +138,7 @@ class Op(models.Model):
 
 class Lote(models.Model):
     lote = models.CharField(
-        max_length=20, verbose_name='lote')
+        db_index=True, max_length=20, verbose_name='lote')
     op = models.IntegerField(
         null=True, blank=True,
         verbose_name='OP')
