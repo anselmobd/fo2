@@ -82,7 +82,7 @@ class Command(BaseCommand):
 
         try:
             op = models.Op.objects.get(op=row['op'])
-        except lotes.models.Lote.DoesNotExist:
+        except lotes.models.Op.DoesNotExist:
             self.stdout.write('OP {} não encontrada em Fo2'.format(op))
             return
         if self.set_op(op, row):
@@ -94,7 +94,7 @@ class Command(BaseCommand):
             'Excluindo OP {}'.format(op))
         try:
             op = models.Op.objects.get(op=op)
-        except lotes.models.Lote.DoesNotExist:
+        except lotes.models.Op.DoesNotExist:
             self.stdout.write('OP {} não encontrada em Fo2'.format(op))
             return
         op.delete()
