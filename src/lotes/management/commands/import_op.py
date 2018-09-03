@@ -13,6 +13,13 @@ class Command(BaseCommand):
     help = 'Syncronizing OPs'
     __MAX_TASKS = 100
 
+    def my_println(self, text=''):
+        self.my_print(text, ending='\n')
+
+    def my_print(self, text='', ending=''):
+        self.stdout.write(text, ending=ending)
+        self.stdout.flush()
+
     def iter_cursor(self, cursor):
         columns = [i[0].lower() for i in cursor.description]
         for row in cursor:
@@ -70,32 +77,29 @@ class Command(BaseCommand):
         return alter
 
     def inclui(self, row):
-        self.stdout.write(
-            'Incluindo OP {}'.format(row['op']))
+        self.my_println('Incluindo OP {}'.format(row['op']))
         op = models.Op()
         self.set_op(op, row)
         op.save()
 
     def atualiza(self, row):
-        self.stdout.write(
-            'Atualizando OP {}'.format(row['op']))
+        self.my_println('Atualizando OP {}'.format(row['op']))
 
         try:
             op = models.Op.objects.get(op=row['op'])
         except lotes.models.Op.DoesNotExist:
-            self.stdout.write('OP {} não encontrada em Fo2'.format(op))
+            self.my_println('OP {} não encontrada em Fo2'.format(op))
             return
         if self.set_op(op, row):
             # self.stdout.write('save')
             op.save()
 
     def exclui(self, op):
-        self.stdout.write(
-            'Excluindo OP {}'.format(op))
+        self.my_println('Excluindo OP {}'.format(op))
         try:
             op = models.Op.objects.get(op=op)
         except lotes.models.Op.DoesNotExist:
-            self.stdout.write('OP {} não encontrada em Fo2'.format(op))
+            self.my_println('OP {} não encontrada em Fo2'.format(op))
             return
         op.delete()
 
@@ -126,7 +130,8 @@ class Command(BaseCommand):
         return igual
 
     def handle(self, *args, **options):
-        self.stdout.write('---\n{}'.format(datetime.datetime.now()))
+        self.my_println('---')
+        self.my_println('{}'.format(datetime.datetime.now()))
         try:
 
             # pega OPs no Systêxtil
@@ -162,18 +167,15 @@ class Command(BaseCommand):
                     break
 
                 if op_s < op_f:
-                    self.stdout.write(
-                        'Incluir OP {} no Fo2'.format(op_s))
+                    self.my_println('Incluir OP {} no Fo2'.format(op_s))
                     self.inclui_op.append(row_s)
                     count_task += 1
                 elif op_s > op_f:
-                    self.stdout.write(
-                        'OP {} não mais ativa'.format(op_f))
+                    self.my_println('OP {} não mais ativa'.format(op_f))
                     self.exclui_op.append(op_f)
                 else:
                     if not self.iguais(row_s, row_f):
-                        self.stdout.write(
-                            'Atualizar OP {} no Fo2'.format(op_f))
+                        self.my_println('Atualizar OP {} no Fo2'.format(op_f))
                         self.atualiza_op.append(row_s)
                         count_task += 1
 
@@ -181,3 +183,5 @@ class Command(BaseCommand):
 
         except Exception as e:
             raise CommandError('Error syncing OPs "{}"'.format(e))
+
+        self.my_println('{}'.format(datetime.datetime.now()))
