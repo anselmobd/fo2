@@ -184,4 +184,4 @@ class Command(BaseCommand):
         except Exception as e:
             raise CommandError('Error syncing OPs "{}"'.format(e))
 
-        self.my_println('{}'.format(datetime.datetime.now()))
+        self.my_println(format(datetime.datetime.now()), '%H:%M:%S.%f')
