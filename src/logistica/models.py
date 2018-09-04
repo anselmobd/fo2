@@ -40,6 +40,8 @@ class NotaFiscal(models.Model):
     ped_cliente = models.CharField(
         max_length=30, null=True, blank=True,
         verbose_name='pedido cliente')
+    trail = models.CharField(
+        db_index=True, max_length=32, null=True, blank=True, default='')
 
     # campos editáveis
     saida = models.DateField(null=True, blank=True, verbose_name='saída')
