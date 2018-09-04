@@ -3,7 +3,8 @@ from django.db import models
 
 class NotaFiscal(models.Model):
     # campos importados
-    numero = models.IntegerField(unique=True, verbose_name='número')
+    numero = models.IntegerField(
+        db_index=True, unique=True, verbose_name='número')
     ativa = models.BooleanField(default=True)
     faturamento = models.DateTimeField(null=True, blank=True)
     cod_status = models.IntegerField(
