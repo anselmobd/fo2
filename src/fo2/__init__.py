@@ -1,9 +1,14 @@
-__version__ = '0.1.118'
-__version__date__ = '21/08/2018'
+__version__ = '0.1.120'
+__version__date__ = '04/09/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.120 - 2018/09/04
+#   . Command : Indexando lotes do Fo2 e melhorando output de commands que
+#               atualizam essa tabela.
+#               Melhoria de performance do command de sincronização de NF.
 #
 # - 0.1.119 - 2018/08/24
 #   . Remessa : Total por cor; Total geral de peças

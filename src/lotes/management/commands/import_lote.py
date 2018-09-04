@@ -348,4 +348,4 @@ class Command(BaseCommand):
         except Exception as e:
             raise CommandError('Error syncing lotes "{}"'.format(e))
 
-        self.my_println(format(datetime.datetime.now()), '%H:%M:%S.%f')
+        self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
