@@ -86,14 +86,11 @@ class Command(BaseCommand):
             cursor.execute(sql)
             nfs_st = rows_to_dict_list(cursor)
             # self.my_println('len(nfs_st) = {}'.format(len(nfs_st)))
-            # self.my_println('{}'.format(datetime.datetime.now()))
 
             nfs_fo2 = list(models.NotaFiscal.objects.values_list('numero'))
             # self.my_println('len(nfs_fo2) = {}'.format(len(nfs_fo2)))
-            # self.my_println('{}'.format(datetime.datetime.now()))
 
             for row_st in nfs_st:
-                # self.my_println('NF = {}'.format(row_st['NF']))
                 edit = True
                 if row_st['FATURAMENTO'] is None:
                     faturamento = None
@@ -160,81 +157,57 @@ class Command(BaseCommand):
                     nf_fo2 = models.NotaFiscal(numero=row_st['NF'])
 
                 if edit:
-                    # pprint(row_st)
-                    self.my_println('NF = {}'.format(row_st['NF']))
-
                     self.print_diff('data', nf_fo2.faturamento, faturamento)
-                    # self.my_println(
-                    #     'date = {}'.format(faturamento))
                     nf_fo2.faturamento = faturamento
 
                     self.print_diff('valor', nf_fo2.valor, row_st['VALOR'])
-                    # self.my_println('valor = {}'.format(row_st['VALOR']))
                     nf_fo2.valor = row_st['VALOR']
 
                     self.print_diff(
                         'volumes', nf_fo2.volumes, row_st['VOLUMES'])
-                    # self.my_println('volumes = {}'.format(row_st['VOLUMES']))
                     nf_fo2.volumes = row_st['VOLUMES']
 
                     self.print_diff('cnpj', nf_fo2.dest_cnpj, dest_cnpj)
-                    # self.my_println('cnpj = {}'.format(dest_cnpj))
                     nf_fo2.dest_cnpj = dest_cnpj
 
                     self.print_diff(
                         'clie', nf_fo2.dest_nome, row_st['CLIENTE'])
-                    # self.my_println('clie = {}'.format(row_st['CLIENTE']))
                     nf_fo2.dest_nome = row_st['CLIENTE']
 
                     self.print_diff('uf', nf_fo2.uf, row_st['UF'])
-                    # self.my_println('uf = {}'.format(row_st['UF']))
                     nf_fo2.uf = row_st['UF']
 
                     self.print_diff(
                         'cod', nf_fo2.cod_status, row_st['COD_STATUS'])
-                    # self.my_println('cod = {}'.format(row_st['COD_STATUS']))
                     nf_fo2.cod_status = row_st['COD_STATUS']
 
                     self.print_diff(
                         'msg', nf_fo2.msg_status, row_st['MSG_STATUS'])
-                    # self.my_println('msg = {}'.format(row_st['MSG_STATUS']))
                     nf_fo2.msg_status = row_st['MSG_STATUS']
 
                     self.print_diff(
                         'sit', nf_fo2.ativa, (row_st['SITUACAO'] == 1))
-                    # self.my_println('sit = {}'.format(row_st['SITUACAO']))
                     nf_fo2.ativa = (row_st['SITUACAO'] == 1)
 
                     self.print_diff(
                         'natu_venda', nf_fo2.natu_venda, natu_venda)
-                    # self.my_println('natu = {}'.format(row_st['NAT']))
-                    # self.my_println('div nat = {}'.format(row_st['DIV_NAT']))
-                    # self.my_println('cod nat = {}'.format(row_st['COD_NAT']))
                     nf_fo2.natu_venda = natu_venda
 
                     self.print_diff(
                         'natu_descr', nf_fo2.natu_descr, row_st['NATUREZA'])
-                    # self.my_println(
-                    #     'natu_descr = {}'.format(row_st['NATUREZA']))
                     nf_fo2.natu_descr = row_st['NATUREZA']
 
                     self.print_diff(
                         'transp_nome', nf_fo2.transp_nome, row_st['TRANSP'])
-                    # self.my_println(
-                    #     'transp_nome = {}'.format(row_st['TRANSP']))
                     nf_fo2.transp_nome = row_st['TRANSP']
 
                     self.print_diff(
                         'pedido', nf_fo2.pedido, row_st['PEDIDO'])
-                    # self.my_println(
-                    #     'pedido = {}'.format(row_st['PEDIDO']))
                     nf_fo2.pedido = row_st['PEDIDO']
 
                     self.print_diff(
                         'ped_cliente',
                         nf_fo2.ped_cliente, row_st['PED_CLIENTE'])
-                    # self.my_println(
-                    #     'ped_cliente = {}'.format(row_st['PED_CLIENTE']))
                     nf_fo2.ped_cliente = row_st['PED_CLIENTE']
 
                     self.print_diff('trail', nf_fo2.trail, trail)
