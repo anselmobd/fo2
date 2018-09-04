@@ -128,26 +128,31 @@ class Command(BaseCommand):
                 trail = hash_object.hexdigest()
 
                 if (row_st['NF'],) in nfs_fo2:
-
-                    nf_fo2 = models.NotaFiscal.objects.get(numero=row_st['NF'])
-                    if nf_fo2.faturamento == faturamento \
-                            and nf_fo2.valor == row_st['VALOR'] \
-                            and nf_fo2.volumes == row_st['VOLUMES'] \
-                            and nf_fo2.dest_cnpj == dest_cnpj \
-                            and nf_fo2.dest_nome == row_st['CLIENTE'] \
-                            and nf_fo2.cod_status == row_st['COD_STATUS'] \
-                            and nf_fo2.msg_status == row_st['MSG_STATUS'] \
-                            and nf_fo2.uf == row_st['UF'] \
-                            and nf_fo2.natu_descr == row_st['NATUREZA'] \
-                            and nf_fo2.transp_nome == row_st['TRANSP'] \
-                            and nf_fo2.ativa == (row_st['SITUACAO'] == 1) \
-                            and nf_fo2.natu_venda == natu_venda \
-                            and nf_fo2.pedido == row_st['PEDIDO'] \
-                            and nf_fo2.ped_cliente == row_st['PED_CLIENTE'] \
-                            and nf_fo2.trail == trail:
+                    try:
+                        models.NotaFiscal.objects.get(
+                            numero=row_st['NF'], trail=trail)
                         edit = False
+                    # if nf_fo2.faturamento == faturamento \
+                    #         and nf_fo2.valor == row_st['VALOR'] \
+                    #         and nf_fo2.volumes == row_st['VOLUMES'] \
+                    #         and nf_fo2.dest_cnpj == dest_cnpj \
+                    #         and nf_fo2.dest_nome == row_st['CLIENTE'] \
+                    #         and nf_fo2.cod_status == row_st['COD_STATUS'] \
+                    #         and nf_fo2.msg_status == row_st['MSG_STATUS'] \
+                    #         and nf_fo2.uf == row_st['UF'] \
+                    #         and nf_fo2.natu_descr == row_st['NATUREZA'] \
+                    #         and nf_fo2.transp_nome == row_st['TRANSP'] \
+                    #         and nf_fo2.ativa == (row_st['SITUACAO'] == 1) \
+                    #         and nf_fo2.natu_venda == natu_venda \
+                    #         and nf_fo2.pedido == row_st['PEDIDO'] \
+                    #         and nf_fo2.ped_cliente == row_st['PED_CLIENTE'] \
+                    #         and nf_fo2.trail == trail:
+                    #     edit = False
 
-                    else:
+                    # else:
+                    except models.NotaFiscal.DoesNotExist as e:
+                        nf_fo2 = models.NotaFiscal.objects.get(
+                            numero=row_st['NF'])
                         self.my_println(
                             'sync_nf - update {}'.format(row_st['NF']))
 
@@ -214,7 +219,6 @@ class Command(BaseCommand):
                     nf_fo2.trail = trail
 
                     nf_fo2.save()
-                    self.my_println('saved')
 
         except Exception as e:
             raise CommandError('Error syncing NF "{}"'.format(e))
