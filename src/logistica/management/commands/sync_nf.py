@@ -85,10 +85,10 @@ class Command(BaseCommand):
             '''
             cursor.execute(sql)
             nfs_st = rows_to_dict_list(cursor)
-            # self.my_println('len(nfs_st) = {}'.format(len(nfs_st)))
 
-            nfs_fo2 = list(models.NotaFiscal.objects.values_list('numero'))
-            # self.my_println('len(nfs_fo2) = {}'.format(len(nfs_fo2)))
+            nfs_fo2_list = list(models.NotaFiscal.objects.values_list(
+                'numero', 'trail'))
+            nfs_fo2 = {nf[0]: nf[1] for nf in nfs_fo2_list}
 
             for row_st in nfs_st:
                 edit = True
@@ -127,30 +127,10 @@ class Command(BaseCommand):
                 hash_object = hashlib.md5(hash_cache.encode())
                 trail = hash_object.hexdigest()
 
-                if (row_st['NF'],) in nfs_fo2:
-                    try:
-                        models.NotaFiscal.objects.get(
-                            numero=row_st['NF'], trail=trail)
+                if row_st['NF'] in nfs_fo2.keys():
+                    if trail == nfs_fo2[row_st['NF']]:
                         edit = False
-                    # if nf_fo2.faturamento == faturamento \
-                    #         and nf_fo2.valor == row_st['VALOR'] \
-                    #         and nf_fo2.volumes == row_st['VOLUMES'] \
-                    #         and nf_fo2.dest_cnpj == dest_cnpj \
-                    #         and nf_fo2.dest_nome == row_st['CLIENTE'] \
-                    #         and nf_fo2.cod_status == row_st['COD_STATUS'] \
-                    #         and nf_fo2.msg_status == row_st['MSG_STATUS'] \
-                    #         and nf_fo2.uf == row_st['UF'] \
-                    #         and nf_fo2.natu_descr == row_st['NATUREZA'] \
-                    #         and nf_fo2.transp_nome == row_st['TRANSP'] \
-                    #         and nf_fo2.ativa == (row_st['SITUACAO'] == 1) \
-                    #         and nf_fo2.natu_venda == natu_venda \
-                    #         and nf_fo2.pedido == row_st['PEDIDO'] \
-                    #         and nf_fo2.ped_cliente == row_st['PED_CLIENTE'] \
-                    #         and nf_fo2.trail == trail:
-                    #     edit = False
-
-                    # else:
-                    except models.NotaFiscal.DoesNotExist as e:
+                    else:
                         nf_fo2 = models.NotaFiscal.objects.get(
                             numero=row_st['NF'])
                         self.my_println(
