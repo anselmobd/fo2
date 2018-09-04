@@ -1,4 +1,6 @@
 from pprint import pprint
+import hashlib
+import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
@@ -11,7 +13,21 @@ import logistica.models as models
 class Command(BaseCommand):
     help = 'Sync NF list from Systêxtil'
 
+    def my_println(self, text=''):
+        self.my_print(text, ending='\n')
+
+    def my_print(self, text='', ending=''):
+        self.stdout.write(text, ending=ending)
+        self.stdout.flush()
+
+    def print_diff(self, title, antigo, novo):
+        if antigo != novo:
+            self.my_println(
+                '{} = {}'.format(title, novo))
+
     def handle(self, *args, **options):
+        self.my_println('---')
+        self.my_println('{}'.format(datetime.datetime.now()))
         try:
             cursor = connections['so'].cursor()
 
@@ -69,29 +85,54 @@ class Command(BaseCommand):
             '''
             cursor.execute(sql)
             nfs_st = rows_to_dict_list(cursor)
-            # self.stdout.write('len(nfs_st) = {}'.format(len(nfs_st)))
+            # self.my_println('len(nfs_st) = {}'.format(len(nfs_st)))
+            # self.my_println('{}'.format(datetime.datetime.now()))
 
             nfs_fo2 = list(models.NotaFiscal.objects.values_list('numero'))
-            # self.stdout.write('len(nfs_fo2) = {}'.format(len(nfs_fo2)))
+            # self.my_println('len(nfs_fo2) = {}'.format(len(nfs_fo2)))
+            # self.my_println('{}'.format(datetime.datetime.now()))
 
             for row_st in nfs_st:
+                # self.my_println('NF = {}'.format(row_st['NF']))
+                edit = True
                 if row_st['FATURAMENTO'] is None:
                     faturamento = None
                 else:
                     faturamento = timezone.make_aware(
-                        row_st['FATURAMENTO'], timezone.get_current_timezone())
+                        row_st['FATURAMENTO'],
+                        timezone.get_current_timezone())
                 dest_cnpj = '{:08d}/{:04d}-{:02d}'.format(
                     row_st['CNPJ9'],
                     row_st['CNPJ4'],
                     row_st['CNPJ2'])
-                edit = True
-                if (row_st['NF'],) in nfs_fo2:
-                    nf_fo2 = models.NotaFiscal.objects.get(numero=row_st['NF'])
-                    natu_venda = (row_st['NAT'] in (1, 2)) \
-                        or (row_st['DIV_NAT'] == '8'
-                            and (row_st['COD_NAT'] == '6.11'
-                                 or row_st['COD_NAT'] == '5.11'))
+                natu_venda = (row_st['NAT'] in (1, 2)) \
+                    or (row_st['DIV_NAT'] == '8'
+                        and (row_st['COD_NAT'] == '6.11'
+                             or row_st['COD_NAT'] == '5.11'))
 
+                hash_cache = ';'.join(map(format, (
+                    row_st['NF'],
+                    faturamento,
+                    row_st['VALOR'],
+                    row_st['VOLUMES'],
+                    dest_cnpj,
+                    row_st['CLIENTE'],
+                    row_st['COD_STATUS'],
+                    row_st['MSG_STATUS'],
+                    row_st['UF'],
+                    row_st['NATUREZA'],
+                    row_st['TRANSP'],
+                    row_st['SITUACAO'] == 1,
+                    natu_venda,
+                    row_st['PEDIDO'],
+                    row_st['PED_CLIENTE'],
+                )))
+                hash_object = hashlib.md5(hash_cache.encode())
+                trail = hash_object.hexdigest()
+
+                if (row_st['NF'],) in nfs_fo2:
+
+                    nf_fo2 = models.NotaFiscal.objects.get(numero=row_st['NF'])
                     if nf_fo2.faturamento == faturamento \
                             and nf_fo2.valor == row_st['VALOR'] \
                             and nf_fo2.volumes == row_st['VOLUMES'] \
@@ -105,73 +146,104 @@ class Command(BaseCommand):
                             and nf_fo2.ativa == (row_st['SITUACAO'] == 1) \
                             and nf_fo2.natu_venda == natu_venda \
                             and nf_fo2.pedido == row_st['PEDIDO'] \
-                            and nf_fo2.ped_cliente == row_st['PED_CLIENTE']:
+                            and nf_fo2.ped_cliente == row_st['PED_CLIENTE'] \
+                            and nf_fo2.trail == trail:
                         edit = False
+
                     else:
-                        self.stdout.write(
+                        self.my_println(
                             'sync_nf - update {}'.format(row_st['NF']))
+
                 else:
-                    self.stdout.write(
+                    self.my_println(
                         'sync_nf - insert {}'.format(row_st['NF']))
                     nf_fo2 = models.NotaFiscal(numero=row_st['NF'])
+
                 if edit:
                     # pprint(row_st)
-                    self.stdout.write(
-                        'NF = {}'.format(row_st['NF']))
-                    self.stdout.write(
-                        'date = {}'.format(faturamento))
+                    self.my_println('NF = {}'.format(row_st['NF']))
+
+                    self.print_diff('data', nf_fo2.faturamento, faturamento)
+                    # self.my_println(
+                    #     'date = {}'.format(faturamento))
                     nf_fo2.faturamento = faturamento
 
-                    self.stdout.write('valor = {}'.format(row_st['VALOR']))
+                    self.print_diff('valor', nf_fo2.valor, row_st['VALOR'])
+                    # self.my_println('valor = {}'.format(row_st['VALOR']))
                     nf_fo2.valor = row_st['VALOR']
 
-                    self.stdout.write('volumes = {}'.format(row_st['VOLUMES']))
+                    self.print_diff(
+                        'volumes', nf_fo2.volumes, row_st['VOLUMES'])
+                    # self.my_println('volumes = {}'.format(row_st['VOLUMES']))
                     nf_fo2.volumes = row_st['VOLUMES']
 
-                    self.stdout.write('cnpj = {}'.format(dest_cnpj))
+                    self.print_diff('cnpj', nf_fo2.dest_cnpj, dest_cnpj)
+                    # self.my_println('cnpj = {}'.format(dest_cnpj))
                     nf_fo2.dest_cnpj = dest_cnpj
 
-                    self.stdout.write('clie = {}'.format(row_st['CLIENTE']))
+                    self.print_diff(
+                        'clie', nf_fo2.dest_nome, row_st['CLIENTE'])
+                    # self.my_println('clie = {}'.format(row_st['CLIENTE']))
                     nf_fo2.dest_nome = row_st['CLIENTE']
 
-                    self.stdout.write('uf = {}'.format(row_st['UF']))
+                    self.print_diff('uf', nf_fo2.uf, row_st['UF'])
+                    # self.my_println('uf = {}'.format(row_st['UF']))
                     nf_fo2.uf = row_st['UF']
 
-                    self.stdout.write('cod = {}'.format(row_st['COD_STATUS']))
+                    self.print_diff(
+                        'cod', nf_fo2.cod_status, row_st['COD_STATUS'])
+                    # self.my_println('cod = {}'.format(row_st['COD_STATUS']))
                     nf_fo2.cod_status = row_st['COD_STATUS']
 
-                    self.stdout.write('msg = {}'.format(row_st['MSG_STATUS']))
+                    self.print_diff(
+                        'msg', nf_fo2.msg_status, row_st['MSG_STATUS'])
+                    # self.my_println('msg = {}'.format(row_st['MSG_STATUS']))
                     nf_fo2.msg_status = row_st['MSG_STATUS']
 
-                    self.stdout.write('sit = {}'.format(row_st['SITUACAO']))
+                    self.print_diff(
+                        'sit', nf_fo2.ativa, (row_st['SITUACAO'] == 1))
+                    # self.my_println('sit = {}'.format(row_st['SITUACAO']))
                     nf_fo2.ativa = (row_st['SITUACAO'] == 1)
 
-                    self.stdout.write('natu = {}'.format(row_st['NAT']))
-                    self.stdout.write('div nat = {}'.format(row_st['DIV_NAT']))
-                    self.stdout.write('cod nat = {}'.format(row_st['COD_NAT']))
-                    nf_fo2.natu_venda = (row_st['NAT'] in (1, 2)) \
-                        or (row_st['DIV_NAT'] == '8'
-                            and (row_st['COD_NAT'] == '8.11'
-                                 or row_st['COD_NAT'] == '5.11'))
+                    self.print_diff(
+                        'natu_venda', nf_fo2.natu_venda, natu_venda)
+                    # self.my_println('natu = {}'.format(row_st['NAT']))
+                    # self.my_println('div nat = {}'.format(row_st['DIV_NAT']))
+                    # self.my_println('cod nat = {}'.format(row_st['COD_NAT']))
+                    nf_fo2.natu_venda = natu_venda
 
-                    self.stdout.write(
-                        'natu_descr = {}'.format(row_st['NATUREZA']))
+                    self.print_diff(
+                        'natu_descr', nf_fo2.natu_descr, row_st['NATUREZA'])
+                    # self.my_println(
+                    #     'natu_descr = {}'.format(row_st['NATUREZA']))
                     nf_fo2.natu_descr = row_st['NATUREZA']
 
-                    self.stdout.write(
-                        'transp_nome = {}'.format(row_st['TRANSP']))
+                    self.print_diff(
+                        'transp_nome', nf_fo2.transp_nome, row_st['TRANSP'])
+                    # self.my_println(
+                    #     'transp_nome = {}'.format(row_st['TRANSP']))
                     nf_fo2.transp_nome = row_st['TRANSP']
 
-                    self.stdout.write(
-                        'pedido = {}'.format(row_st['PEDIDO']))
+                    self.print_diff(
+                        'pedido', nf_fo2.pedido, row_st['PEDIDO'])
+                    # self.my_println(
+                    #     'pedido = {}'.format(row_st['PEDIDO']))
                     nf_fo2.pedido = row_st['PEDIDO']
 
-                    self.stdout.write(
-                        'ped_cliente = {}'.format(row_st['PED_CLIENTE']))
+                    self.print_diff(
+                        'ped_cliente',
+                        nf_fo2.ped_cliente, row_st['PED_CLIENTE'])
+                    # self.my_println(
+                    #     'ped_cliente = {}'.format(row_st['PED_CLIENTE']))
                     nf_fo2.ped_cliente = row_st['PED_CLIENTE']
 
+                    self.print_diff('trail', nf_fo2.trail, trail)
+                    nf_fo2.trail = trail
+
                     nf_fo2.save()
-                    self.stdout.write('saved')
+                    self.my_println('saved')
 
         except Exception as e:
             raise CommandError('Error syncing NF "{}"'.format(e))
+
+        self.my_println('{}'.format(datetime.datetime.now()))
