@@ -97,11 +97,12 @@ class Command(BaseCommand):
     def exclui(self, op):
         self.my_println('Excluindo OP {}'.format(op))
         try:
-            op = models.Op.objects.get(op=op)
+            ops = models.Op.objects.filter(op=op)
+            for op in ops:
+                op.delete()
         except models.Op.DoesNotExist:
             self.my_println('OP {} não encontrada em Fo2'.format(op))
             return
-        op.delete()
 
     def init_tasks(self):
         self.inclui_op = []
