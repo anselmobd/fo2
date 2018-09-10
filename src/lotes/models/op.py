@@ -673,6 +673,7 @@ def op_conserto(cursor):
           lote.PROCONF_GRUPO REF
         , lote.PROCONF_ITEM COR
         , lote.PROCONF_SUBGRUPO TAM
+        , lote.ORDEM_PRODUCAO OP
         , sum(lote.QTDE_CONSERTO ) QTD
         FROM PCPC_040 lote
         LEFT JOIN BASI_220 tam
@@ -682,6 +683,7 @@ def op_conserto(cursor):
         , lote.PROCONF_ITEM
         , tam.ORDEM_TAMANHO
         , lote.PROCONF_SUBGRUPO
+        , lote.ORDEM_PRODUCAO
         HAVING
           sum(lote.QTDE_CONSERTO ) > 0
         ORDER BY
@@ -689,6 +691,7 @@ def op_conserto(cursor):
         , lote.PROCONF_ITEM
         , tam.ORDEM_TAMANHO
         , lote.PROCONF_SUBGRUPO
+        , lote.ORDEM_PRODUCAO
     """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
