@@ -488,6 +488,10 @@ class OpConserto(View):
             })
             return context
 
+        for row in data:
+            row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+
         context.update({
             'headers': ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade'),
             'fields': ('REF', 'COR', 'TAM', 'OP', 'QTD'),
