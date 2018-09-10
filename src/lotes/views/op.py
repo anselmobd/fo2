@@ -489,8 +489,8 @@ class OpConserto(View):
             return context
 
         context.update({
-            'headers': ('Referência', 'Cor', 'Tamanho', 'Quantidade'),
-            'fields': ('REF', 'COR', 'TAM', 'QTD'),
+            'headers': ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade'),
+            'fields': ('REF', 'COR', 'TAM', 'OP', 'QTD'),
             'data': data,
         })
 
