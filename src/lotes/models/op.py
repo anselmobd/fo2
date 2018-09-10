@@ -667,7 +667,7 @@ def op_tam_cor_qtd(cursor, op):
     return rows_to_dict_list(cursor)
 
 
-def conserto(cursor):
+def op_conserto(cursor):
     sql = """
         SELECT
           lote.PROCONF_GRUPO REF

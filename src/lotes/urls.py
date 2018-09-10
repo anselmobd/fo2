@@ -63,7 +63,7 @@ urlpatterns = [
         views.Distribuicao.as_view(), name='distribuicao'),
 
     url(r'^conserto/$',
-        views.Conserto.as_view(), name='conserto'),
+        views.OpConserto.as_view(), name='conserto'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 

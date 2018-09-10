@@ -432,7 +432,7 @@ class ComponentesDeOp(View):
                     if row['NIVEL'] == '1':
                         busca_insumo = [
                             item for item in data
-                            if item['NIVEL'] == row['NIVEL']
+                            if item['NIVEL'] == row['NIVEL']op_
                             and item['REF'] == row['REF']
                             and item['COR'] == row['COR']
                             and item['TAM'] == row['TAM']
@@ -473,7 +473,7 @@ class ComponentesDeOp(View):
         return render(request, self.template_name, context)
 
 
-class Conserto(View):
+class OpConserto(View):
     template_name = 'lotes/conserto.html'
     title_name = 'Produtos em conserto'
 
@@ -481,7 +481,7 @@ class Conserto(View):
         context = {}
 
         # Peças no conserto
-        data = models.conserto(cursor)
+        data = models.op_conserto(cursor)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma peça em conserto',
