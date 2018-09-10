@@ -432,7 +432,7 @@ class ComponentesDeOp(View):
                     if row['NIVEL'] == '1':
                         busca_insumo = [
                             item for item in data
-                            if item['NIVEL'] == row['NIVEL']op_
+                            if item['NIVEL'] == row['NIVEL']
                             and item['REF'] == row['REF']
                             and item['COR'] == row['COR']
                             and item['TAM'] == row['TAM']
