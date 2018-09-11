@@ -509,7 +509,7 @@ class OpConserto(View):
 
 class OpPerda(View):
     template_name = 'lotes/perda.html'
-    title_name = 'Perdas de produtos'
+    title_name = 'Perdas de produção'
 
     def mount_context(self, cursor):
         context = {}
@@ -518,7 +518,7 @@ class OpPerda(View):
         data = models.op_perda(cursor)
         if len(data) == 0:
             context.update({
-                'msg_erro': 'Nenhuma perda de produtos',
+                'msg_erro': 'Nenhuma perda de produção',
             })
             return context
 
