@@ -1,0 +1,22 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="/lotes/">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if msg_erro %}
+<h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
+  </table>
+{% endif %}
+{% endblock %}
