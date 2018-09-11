@@ -11,33 +11,51 @@
 
 {% block content %}
 <table>
-  <thead>
-    <tr>
-    <th>
-      Dia
-    </th>
-    <th>
-      Nome
-    </th>
-    <th>
-      Setor
-    </th>
-    </tr>
-  </thead>
   <tbody>
-  {% for pessoa in aniversariantes %}
     <tr>
-    <td>
-      {{ pessoa.0}}
-    </td>
-    <td>
-      {{ pessoa.2}}
-    </td>
-    <td>
-      {{ pessoa.1}}
-    </td>
+      <td>
+        {% if intmesant %}
+          <a href="{% url 'rh:aniversariantes' intanoant intmesant %}">< Mês anterior</a>
+        {% endif %}
+      </td>
+      <td style="text-align:right">
+        {% if intmespos %}
+          <a href="{% url 'rh:aniversariantes' intanopos intmespos %}">Mês posterior ></a>
+        {% endif %}
+      </td>
     </tr>
-  {% endfor %}
-</tbody>
+  </tbody>
 </table>
+{%if aniversariantes %}
+  <table>
+    <thead>
+      <tr>
+      <th>
+        Dia
+      </th>
+      <th>
+        Nome
+      </th>
+      <th>
+        Setor
+      </th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for pessoa in aniversariantes %}
+      <tr>
+      <td>
+        {{ pessoa.0}}
+      </td>
+      <td>
+        {{ pessoa.2}}
+      </td>
+      <td>
+        {{ pessoa.1}}
+      </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
 {% endblock %}
