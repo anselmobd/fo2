@@ -1,9 +1,13 @@
-__version__ = '0.1.120'
-__version__date__ = '04/09/2018'
+__version__ = '0.1.121'
+__version__date__ = '11/09/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.121 - 2018/09/11
+#   . Produção : Tela de perdas
+#   . Produção : Tela de conserto melhorada
 #
 # - 0.1.120 - 2018/09/04
 #   . Command : Indexando lotes do Fo2 e melhorando output de commands que
