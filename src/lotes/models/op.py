@@ -695,3 +695,33 @@ def op_conserto(cursor):
     """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def op_perda(cursor):
+    sql = """
+        SELECT
+          lote.PROCONF_GRUPO REF
+        , lote.PROCONF_ITEM COR
+        , lote.PROCONF_SUBGRUPO TAM
+        , lote.ORDEM_PRODUCAO OP
+        , sum(lote.QTDE_PERDAS ) QTD
+        FROM PCPC_040 lote
+        LEFT JOIN BASI_220 tam
+          ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
+        GROUP BY
+          lote.PROCONF_GRUPO
+        , lote.PROCONF_ITEM
+        , tam.ORDEM_TAMANHO
+        , lote.PROCONF_SUBGRUPO
+        , lote.ORDEM_PRODUCAO
+        HAVING
+          sum(lote.QTDE_PERDAS ) > 0
+        ORDER BY
+          lote.PROCONF_GRUPO
+        , lote.PROCONF_ITEM
+        , tam.ORDEM_TAMANHO
+        , lote.PROCONF_SUBGRUPO
+        , lote.ORDEM_PRODUCAO
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
