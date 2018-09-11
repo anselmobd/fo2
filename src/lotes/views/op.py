@@ -505,3 +505,37 @@ class OpConserto(View):
         cursor = connections['so'].cursor()
         context.update(self.mount_context(cursor))
         return render(request, self.template_name, context)
+
+
+class OpPerda(View):
+    template_name = 'lotes/perda.html'
+    title_name = 'Perdas de produtos'
+
+    def mount_context(self, cursor):
+        context = {}
+
+        # Peças em perda
+        data = models.op_perda(cursor)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhuma perda de produtos',
+            })
+            return context
+
+        for row in data:
+            row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+
+        context.update({
+            'headers': ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade'),
+            'fields': ('REF', 'COR', 'TAM', 'OP', 'QTD'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context(cursor))
+        return render(request, self.template_name, context)
