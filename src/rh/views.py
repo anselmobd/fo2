@@ -3,6 +3,8 @@ from datetime import datetime
 
 from django.shortcuts import render
 
+from utils.functions import inc_month
+
 
 def limpa_data_futura(lista, campo):
     for item in lista:
@@ -155,6 +157,7 @@ def aniversariantes(request, ano, mes):
     intano = int(ano)
     mes = '{:02}'.format(intmes)
     datames = datetime(intano, intmes, 1)
+
     aniversariantes = [
         ['03/08', 'RECURSOS HUMANOS', 'SIMONE DA SILVA SARAIVA'],
         ['03/08', 'TECELAGEM', 'VERONICA CORDEIRO BEZERRA DOS SANTOS'],
@@ -231,8 +234,35 @@ def aniversariantes(request, ano, mes):
         ['29/09', 'FABIANA CRISTINA DA SILVA ', 'COSTUREIRA'],
         ['30/09', 'VALESCA NUNES DE FREITAS ', 'ASSIST. DE PRODUÇÃO'],
     ]
+
+    anteriormes = inc_month(datames, -1)
+    intmesant = anteriormes.month
+    mesant = '{:02}'.format(intmesant)
+    temmesant = False
+    for pessoa in aniversariantes:
+        if pessoa[0][-2:] == mesant:
+            temmesant = True
+            break
+    if not temmesant:
+        intmesant = None
+
+    posteriosmes = inc_month(datames, 1)
+    intmespos = posteriosmes.month
+    mespos = '{:02}'.format(intmespos)
+    temmespos = False
+    for pessoa in aniversariantes:
+        if pessoa[0][-2:] == mespos:
+            temmespos = True
+            break
+    if not temmespos:
+        intmespos = None
+
     context = {
         'datames': datames,
+        'intmesant': intmesant,
+        'intanoant': anteriormes.year,
+        'intmespos': intmespos,
+        'intanopos': posteriosmes.year,
         'aniversariantes': [
             pessoa for pessoa in aniversariantes
             if pessoa[0][-2:] == mes],
