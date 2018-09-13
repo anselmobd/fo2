@@ -15,3 +15,24 @@ class PorDepositoForm(forms.Form):
     cor = forms.CharField(
         label='Cor', max_length=6, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
+
+    def clean_tam(self):
+        tam = self.cleaned_data['tam'].upper()
+        data = self.data.copy()
+        data['tam'] = tam
+        self.data = data
+        return tam
+
+    def clean_cor(self):
+        cor = self.cleaned_data['cor'].upper()
+        data = self.data.copy()
+        data['cor'] = cor
+        self.data = data
+        return cor
