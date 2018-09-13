@@ -280,6 +280,8 @@ class Ref(View):
             })
 
             for row in data:
+                if row['STATUS'] is None:
+                    row['STATUS'] = '-'
                 cnpj = '{:08d}/{:04d}-{:02d}'.format(
                     row['CNPJ9'],
                     row['CNPJ4'],
