@@ -568,11 +568,20 @@ class Busca(View):
             link = ('REF')
             for row in data:
                 row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
-                cnpj = '{:08d}/{:04d}-{:02d}'.format(
-                    row['CNPJ9'],
-                    row['CNPJ4'],
-                    row['CNPJ2'])
-                row['CLIENTE'] = '{} - {}'.format(cnpj, row['CLIENTE'])
+                if row['CNPJ9'] is None:
+                    row['CNPJ9'] = 0
+                if row['CNPJ4'] is None:
+                    row['CNPJ4'] = 0
+                if row['CNPJ2'] is None:
+                    row['CNPJ2'] = 0
+                if row['CNPJ9'] == 0:
+                    row['CLIENTE'] = '-'
+                else:
+                    cnpj = '{:08d}/{:04d}-{:02d}'.format(
+                        row['CNPJ9'],
+                        row['CNPJ4'],
+                        row['CNPJ2'])
+                    row['CLIENTE'] = '{} - {}'.format(cnpj, row['CLIENTE'])
 
             headers = ['#', 'Tipo', 'Referência', 'Descrição',
                        'Status (Responsável)', 'Cliente']
