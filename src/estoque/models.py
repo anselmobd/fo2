@@ -30,12 +30,17 @@ def por_deposito(cursor, nivel, ref, tam, cor):
           {filtro_tam} -- filtro_tam
           {filtro_cor} -- filtro_cor
           -- AND e.DEPOSITO = 231
+        ORDER BY
+          e.CDITEM_NIVEL99
+        , e.CDITEM_GRUPO
+        , e.CDITEM_SUBGRUPO
+        , e.CDITEM_ITEM
+        , e.DEPOSITO
     '''.format(
         filtro_nivel=filtro_nivel,
         filtro_ref=filtro_ref,
         filtro_tam=filtro_tam,
         filtro_cor=filtro_cor,
     )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
