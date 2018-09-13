@@ -1176,44 +1176,46 @@ class MapaNecessidadeDetalhe(View):
         data = models.insumo_necessidade_detalhe(
             cursor, nivel, ref, cor, tam, semana)
 
-        max_digits = 0
-        for row in data:
-            num_digits = str(row['QTD_INSUMO'])[::-1].find('.')
-            max_digits = max(max_digits, num_digits)
+        if len(data) != 0:
+            max_digits = 0
+            for row in data:
+                num_digits = str(row['QTD_INSUMO'])[::-1].find('.')
+                max_digits = max(max_digits, num_digits)
 
-        for row in data:
-            semana = row['SEMANA'].date()
-            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
-            row['REF'] = row['REF'] + ' - ' + row['DESCR']
-            row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
+            for row in data:
+                semana = row['SEMANA'].date()
+                row['REF|LINK'] = reverse(
+                    'produto:ref__get', args=[row['REF']])
+                row['REF'] = row['REF'] + ' - ' + row['DESCR']
+                row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
 
-        group = ['REF', 'DESCR']
-        totalize_grouped_data(data, {
-            'group': group,
-            'sum': ['QTD_PRODUTO', 'QTD_INSUMO'],
-            'count': [],
-            'descr': {'OP': 'Totais:'},
-            'flags': ['NO_TOT_1'],
-            'global_sum': ['QTD_INSUMO'],
-            'global_descr': {'QTD_PRODUTO': 'Total geral:'},
-            'row_style': 'font-weight: bold;',
-        })
-        group_rowspan(data, group)
+            group = ['REF', 'DESCR']
+            totalize_grouped_data(data, {
+                'group': group,
+                'sum': ['QTD_PRODUTO', 'QTD_INSUMO'],
+                'count': [],
+                'descr': {'OP': 'Totais:'},
+                'flags': ['NO_TOT_1'],
+                'global_sum': ['QTD_INSUMO'],
+                'global_descr': {'QTD_PRODUTO': 'Total geral:'},
+                'row_style': 'font-weight: bold;',
+            })
+            group_rowspan(data, group)
 
-        for row in data:
-            row['QTD_INSUMO|DECIMALS'] = max_digits
+            for row in data:
+                row['QTD_INSUMO|DECIMALS'] = max_digits
 
-        context.update({
-            'semana': semana,
-            'headers': ['Produto a produzir', 'OP',
-                        'Quantidade a produzir', 'Quantidade de insumo'],
-            'fields': ['REF', 'OP',
-                       'QTD_PRODUTO', 'QTD_INSUMO'],
-            'style': {3: 'text-align: right;',
-                      4: 'text-align: right;'},
-            'group': group,
-            'data': data,
-        })
+            context.update({
+                'semana': semana,
+                'headers': ['Produto a produzir', 'OP',
+                            'Quantidade a produzir', 'Quantidade de insumo'],
+                'fields': ['REF', 'OP',
+                           'QTD_PRODUTO', 'QTD_INSUMO'],
+                'style': {3: 'text-align: right;',
+                          4: 'text-align: right;'},
+                'group': group,
+                'data': data,
+            })
 
         return context
 
