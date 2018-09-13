@@ -296,13 +296,16 @@ class Ref(View):
             pa_data = models.ref_utilizada_em(cursor, ref)
             pa_link = ('REF')
             for row in pa_data:
+                if row['RESPONSAVEL'] is None:
+                    row['RESPONSAVEL'] = '-'
                 if row['REF'] != ' ':
                     row['LINK'] = reverse(
                         'produto:ref__get', args=[row['REF']])
             if len(pa_data) != 0:
                 context.update({
-                    'pa_headers': ('Tipo', 'Referência', 'Alternativa'),
-                    'pa_fields': ('TIPO', 'REF', 'ALTERNATIVA'),
+                    'pa_headers': ('Tipo', 'Referência', 'Alternativa',
+                                   'Responsável'),
+                    'pa_fields': ('TIPO', 'REF', 'ALTERNATIVA', 'RESPONSAVEL'),
                     'pa_data': pa_data,
                     'pa_link': pa_link,
                 })
