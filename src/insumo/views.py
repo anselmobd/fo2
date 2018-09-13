@@ -46,7 +46,7 @@ def index(request):
 class Ref(View):
     Form_class = RefForm
     template_name = 'insumo/ref.html'
-    title_name = 'Insumos'
+    title_name = 'Insumo'
 
     def mount_context(self, cursor, item):
         context = {'item': item}

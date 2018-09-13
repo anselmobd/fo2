@@ -237,7 +237,7 @@ def stat_niveis(request, nivel):
 class Ref(View):
     Form_class = RefForm
     template_name = 'produto/ref.html'
-    title_name = 'Produtos confeccionados'
+    title_name = 'Produto'
 
     def mount_context(self, cursor, ref):
         context = {'ref': ref}
