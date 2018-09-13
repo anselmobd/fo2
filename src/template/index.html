@@ -61,6 +61,9 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
+        <li><a href="{% url 'estoque:index' %}">Estoque Systêxtil</a></li>
+        {% include 'estoque/menu.html' %}
+        <br />
         <li><a href="{% url 'contabil:index' %}">Contabilidade</a></li>
         {% include 'contabil/menu.html' %}
         <br />
