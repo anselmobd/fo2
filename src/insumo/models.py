@@ -884,6 +884,7 @@ def insumo_necessidade_semana(
              AND cot.SEQUENCIA = ia.SEQUENCIA
              AND cot.SUB_ITEM = lote.PROCONF_SUBGRUPO
             WHERE op.SITUACAO IN (2, 4) -- não cancelada
+              AND lote.NUMERO_ORDEM = 0
               AND ia.NIVEL_COMP = {nivel}
               AND ia.GRUPO_COMP = '{ref}'
               AND CASE WHEN ia.ITEM_COMP = '000000'
