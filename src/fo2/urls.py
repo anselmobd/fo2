@@ -49,6 +49,8 @@ urlpatterns = [
 
     url(r'^cd/', include('cd.urls')),
 
+    url(r'^estoque/', include('estoque.urls', namespace='estoque')),
+
     # Links para fora
 
     url(r'^systextil/', SystextilView.as_view(), name='systextil'),
