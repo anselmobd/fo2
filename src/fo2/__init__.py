@@ -1,9 +1,13 @@
-__version__ = '0.1.121'
-__version__date__ = '11/09/2018'
+__version__ = '0.1.122'
+__version__date__ = '13/09/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.122 - 2018/09/13
+#   . Correções e ajustes
+#   . Estoque Systêxtil: Mostra estoque por depósitos
 #
 # - 0.1.121 - 2018/09/11
 #   . Produção : Tela de perdas
