@@ -263,12 +263,12 @@ def ref_utilizada_em(cursor, ref):
           ELSE 'MP'
           END TIPO
         , ec.ALTERNATIVA_ITEM ALTERNATIVA
+        , r.RESPONSAVEL
         FROM BASI_050 ec
         JOIN BASI_030 r
           ON r.NIVEL_ESTRUTURA = ec.NIVEL_ITEM
          AND r.REFERENCIA = ec.GRUPO_ITEM
         WHERE ec.NIVEL_COMP = 1
-          AND r.RESPONSAVEL IS NOT NULL
           AND ec.GRUPO_COMP = %s
     """
     cursor.execute(sql, [ref])
