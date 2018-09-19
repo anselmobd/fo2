@@ -125,15 +125,17 @@
   {% if roteiros %}
     <h3>Detalhando Roteiros</h3>
     {% for roteiro in roteiros %}
-    <h4>Alternativa "{{ roteiro.alternativa }}" - Roteiro "{{ roteiro.roteiro }}"
-      {% if roteiro.tamanho != '000' or roteiro.cor != '000000' %}
-        - Tamanho "{{ roteiro.tamanho }}"  - Cor "{{ roteiro.cor }}"
-      {% endif %}
-    </h4>
-    <table>
-      {% include "layout/html_thead.html" with data=roteiro.r_headers only %}
-      {% include "layout/html_tbody.html" with fields=roteiro.r_fields data=roteiro.r_data only %}
-    </table>
+      {% for titulo in roteiro.r_titulos %}
+        <h4>{% if forloop.counter != 1 %}= {% endif %}Alternativa "{{ titulo.alternativa }}" - Roteiro "{{ titulo.roteiro }}"
+          {% if titulo.tamanho != '000' or titulo.cor != '000000' %}
+            - Tamanho "{{ titulo.tamanho }}"  - Cor "{{ titulo.cor }}"
+          {% endif %}
+        </h4>
+      {% endfor %}
+      <table>
+        {% include "layout/html_thead.html" with data=roteiro.r_headers only %}
+        {% include "layout/html_tbody.html" with fields=roteiro.r_fields data=roteiro.r_data only %}
+      </table>
     {% endfor %}
   {% endif %}
   {% if estruts %}
