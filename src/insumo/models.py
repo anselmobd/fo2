@@ -1349,6 +1349,7 @@ def insumos_de_produtos_em_dual(
          AND coc.GRUPO_ITEM = pre.REF
          AND coc.ALTERNATIVA_ITEM = pre.ALT
          AND coc.SEQUENCIA = ia.SEQUENCIA
+         AND coc.SUB_ITEM = ia.SUB_ITEM
          AND coc.ITEM_ITEM = pre.COR
         LEFT JOIN BASI_040 cot -- combinação tamanho
           ON ia.SUB_COMP = '000'
@@ -1356,6 +1357,7 @@ def insumos_de_produtos_em_dual(
          AND cot.ALTERNATIVA_ITEM = pre.ALT
          AND cot.SEQUENCIA = ia.SEQUENCIA
          AND cot.SUB_ITEM = pre.TAM
+         AND cot.ITEM_ITEM = ia.ITEM_ITEM
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF =
             CASE WHEN ia.SUB_COMP = '000'
