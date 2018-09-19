@@ -398,10 +398,11 @@ class ComponentesDeOp(View):
             }
             componentes.append(table)
 
-            dual_nivel1 = None
+            dual_nivel = None
+            dual_nivel_list = []
             for row in data:
                 if row['NIVEL'] == '1' and row['ALT'] != 'Total:':
-                    dual_select = '''
+                    dual_nivel_list.append('''
                         SELECT
                         '{nivel}' NIVEL
                         , '{ref}' REF
@@ -417,16 +418,13 @@ class ComponentesDeOp(View):
                         tam=row['TAM'],
                         qtd=row['QTD'],
                         alt=row['ALT'],
-                    )
-                    if dual_nivel1 is None:
-                        dual_nivel1 = dual_select
-                    else:
-                        dual_nivel1 = ' UNION '.join(
-                            (dual_nivel1, dual_select))
+                    ))
+            dual_nivel = ' UNION '.join(dual_nivel_list)
             data = []
-            if dual_nivel1 is not None:
+
+            if dual_nivel is not None:
                 insumos = insumos_de_produtos_em_dual(
-                    cursor, dual_nivel1, order='tc')
+                    cursor, dual_nivel, order='tc')
                 # data = [f_row for f_row in data if (f_row['NIVEL'] == '1')]
                 for row in insumos:
                     if row['NIVEL'] == '1':
