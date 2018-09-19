@@ -152,6 +152,11 @@ def datas(request):
     return render(request, 'rh/datas.html', context)
 
 
+def mensagens(request):
+    context = {'titulo': 'Mensagens'}
+    return render(request, 'rh/mensagens.html', context)
+
+
 def aniversariantes(request, ano, mes):
     intmes = int(mes)
     intano = int(ano)
