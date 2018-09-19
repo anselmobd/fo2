@@ -1,0 +1,20 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+  <h3>Mês 09/2018</h3>
+  <a href="/media/rh/mensagem_2018-09-19_primavera_w600.jpg" target="_blank">
+    <h4>Primavera</h4>
+    <img src="/media/rh/mensagem_2018-09-19_primavera_w200.jpg" alt="">
+  </a>
+</center>
+{% endblock %}
