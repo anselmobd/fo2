@@ -57,6 +57,11 @@ def index(request):
     ]
     dicas = [
       {
+        'data': datetime.strptime('18/09/2018', '%d/%m/%Y').date(),
+        'chamada': 'Pessoas de sucesso',
+        'link': '/media/rh/dica_2018-09-18_pessoas-de-sucesso.png',
+      },
+      {
         'data': datetime.strptime('04/09/2018', '%d/%m/%Y').date(),
         'chamada': 'Farmácia interna',
         'link': '/media/rh/Dica-da-Semana-2018-09-04-farmacia_interna.jpg',
