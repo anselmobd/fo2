@@ -392,26 +392,42 @@ class Ref(View):
             # Detalhando Roteiros
             roteiros = []
             for row in r_data:
-                roteiro = models.ref_1roteiro(
-                    cursor, ref, row['NUMERO_ALTERNATI'],
-                    row['NUMERO_ROTEIRO'], row['TAM'], row['COR'])
-                roteiros.append({
+                roteiro_tit = {
                     'alternativa': row['ALTERNATIVA'],
                     'roteiro': row['ROTEIRO'],
                     'tamanho': row['TAM'],
                     'cor': row['COR'],
-                    'r_headers': ['Sequência', 'Operação', 'Estágio',
-                                  'Gargalo'],
-                    'r_fields': ['SEQ', 'OPERACAO', 'ESTAGIO', 'GARGALO'],
-                    'r_data': roteiro,
-                })
+                }
+                roteiro = models.ref_1roteiro(
+                    cursor, ref, row['NUMERO_ALTERNATI'],
+                    row['NUMERO_ROTEIRO'], row['TAM'], row['COR'])
+                inserir = True
+                for roteiro1 in roteiros:
+                    if roteiro1['r_data'] == roteiro:
+                        roteiro1['r_titulos'].append(roteiro_tit)
+                        inserir = False
+                if inserir:
+                    roteiros.append({
+                        'r_titulos': [roteiro_tit],
+                        'r_headers': ['Sequência', 'Operação', 'Estágio',
+                                      'Gargalo'],
+                        'r_fields': ['SEQ', 'OPERACAO', 'ESTAGIO', 'GARGALO'],
+                        'r_data': roteiro,
+                    })
             context.update({
                 'roteiros': roteiros,
             })
 
+            estr_data = []
+            for row in e_data:
+                if not next((estr for estr in estr_data
+                             if estr["ALTERNATIVA"] == row["ALTERNATIVA"]),
+                            False):
+                    estr_data.append(row)
+
             # Detalhando Estruturas
             estruts = []
-            for row in e_data:
+            for row in estr_data:
                 if row['ALTERNATIVA'] in \
                         [r['NUMERO_ALTERNATI'] for r in r_data]:
                     estrutura = models.ref_estrutura_comp(
