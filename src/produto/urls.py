@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^modelo/(?P<modelo>.+)/$', views.Modelo.as_view(),
         name='modelo__get'),
 
+    url(r'^gtin/$', views.Gtin.as_view(), name='gtin'),
+
     url(r'^busca/$', views.Busca.as_view(),
         name='busca'),
     url(r'^busca/(?P<busca>.+)/$', views.Busca.as_view(),
