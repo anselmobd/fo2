@@ -7,6 +7,7 @@ __version__date__ = '20/09/2018'
 #
 # - 0.1.124 - 2018/09/20
 #   . Produto: GTIN
+#   . Produção: Planejamento de expedição
 #
 # - 0.1.123 - 2018/09/19
 #   . Correções e ajustes:
