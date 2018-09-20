@@ -1,9 +1,16 @@
-__version__ = '0.1.122'
-__version__date__ = '13/09/2018'
+__version__ = '0.1.124'
+__version__date__ = '20/09/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.124 - 2018/09/20
+#   . Produto: GTIN
+#
+# - 0.1.123 - 2018/09/19
+#   . Correções e ajustes:
+#     . ComponentesDeOp
 #
 # - 0.1.122 - 2018/09/13
 #   . Correções e ajustes
