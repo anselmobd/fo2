@@ -684,12 +684,13 @@ class Gtin(View):
     template_name = 'produto/gtin.html'
     title_name = 'GTIN (EAN13)'
 
-    def mount_context(self, cursor, ref):
+    def mount_context(self, cursor, ref, gtin):
         context = {
             'ref': ref,
+            'gtin': gtin,
             }
 
-        data = models.gtin(cursor, ref)
+        data = models.gtin(cursor, ref=ref, gtin=gtin)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
@@ -703,17 +704,29 @@ class Gtin(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        if 'gtin' in request.GET:
+            kwargs['gtin'] = request.GET['gtin']
+            return self.post(request, *args, **kwargs)
+        elif 'ref' in request.GET:
+            kwargs['ref'] = request.GET['ref']
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        if 'ref' in kwargs:
+            form.data['ref'] = kwargs['ref']
+        if 'gtin' in kwargs:
+            form.data['gtin'] = kwargs['gtin']
         if form.is_valid():
             ref = form.cleaned_data['ref']
+            gtin = form.cleaned_data['gtin']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, ref))
+            context.update(self.mount_context(cursor, ref, gtin))
         context['form'] = form
         return render(request, self.template_name, context)

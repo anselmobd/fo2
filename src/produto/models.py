@@ -734,24 +734,43 @@ def estr_estagio_de_insumo(cursor):
     return rows_to_dict_list(cursor)
 
 
-def gtin(cursor, ref):
-    # Tamanhos de produto
+def gtin(cursor, ref=None, gtin=None):
+    filtra_ref = ''
+    if ref != '':
+        filtra_ref = '''--
+          AND rtc.GRUPO_ESTRUTURA = '{}' '''.format(ref)
+
+    filtra_gtin = ''
+    if gtin != '':
+        filtra_gtin = '''--
+          AND ( rtc.CODIGO_BARRAS IS NOT NULL
+              AND rtc.CODIGO_BARRAS = '{}' ) '''.format(gtin)
+
     sql = """
         SELECT
           rtc.GRUPO_ESTRUTURA REF
         , rtc.SUBGRU_ESTRUTURA TAM
         , rtc.ITEM_ESTRUTURA COR
-        , coalesce( rtc.CODIGO_BARRAS, 'SEM GTIN') GTIN
+        , CASE WHEN rtc.CODIGO_BARRAS IS NULL
+                 OR rtc.CODIGO_BARRAS LIKE ' %'
+          THEN 'SEM GTIN'
+          ELSE rtc.CODIGO_BARRAS
+          END GTIN
         FROM BASI_010 rtc -- item (ref+tam+cor)
         LEFT JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = rtc.SUBGRU_ESTRUTURA
         WHERE rtc.NIVEL_ESTRUTURA = 1
-          AND rtc.GRUPO_ESTRUTURA = %s
+          {filtra_ref} -- filtra_ref
+          {filtra_gtin} -- filtra_gtin
         ORDER BY
           rtc.GRUPO_ESTRUTURA
         , rtc.ITEM_ESTRUTURA
         , t.ORDEM_TAMANHO
         , rtc.SUBGRU_ESTRUTURA
-    """
-    cursor.execute(sql, [ref])
+    """.format(
+        filtra_ref=filtra_ref,
+        filtra_gtin=filtra_gtin,
+    )
+    print(sql)
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)

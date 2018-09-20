@@ -39,9 +39,12 @@ class BuscaForm(FiltroForm):
 
 class GtinForm(forms.Form):
     ref = forms.CharField(
-        label='Referência', max_length=5, min_length=5,
+        label='Referência', max_length=5, min_length=5, required=False,
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
+    gtin = forms.CharField(
+        label='GTIN', max_length=13, min_length=13, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
