@@ -732,3 +732,26 @@ def estr_estagio_de_insumo(cursor):
     """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def gtin(cursor, ref):
+    # Tamanhos de produto
+    sql = """
+        SELECT
+          rtc.GRUPO_ESTRUTURA REF
+        , rtc.SUBGRU_ESTRUTURA TAM
+        , rtc.ITEM_ESTRUTURA COR
+        , coalesce( rtc.CODIGO_BARRAS, 'SEM GTIN') GTIN
+        FROM BASI_010 rtc -- item (ref+tam+cor)
+        LEFT JOIN BASI_220 t -- tamanhos
+          ON t.TAMANHO_REF = rtc.SUBGRU_ESTRUTURA
+        WHERE rtc.NIVEL_ESTRUTURA = 1
+          AND rtc.GRUPO_ESTRUTURA = %s
+        ORDER BY
+          rtc.GRUPO_ESTRUTURA
+        , rtc.ITEM_ESTRUTURA
+        , t.ORDEM_TAMANHO
+        , rtc.SUBGRU_ESTRUTURA
+    """
+    cursor.execute(sql, [ref])
+    return rows_to_dict_list(cursor)

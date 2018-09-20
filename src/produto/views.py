@@ -12,7 +12,7 @@ from django.views import View
 from fo2.models import rows_to_dict_list
 from fo2.template import group_rowspan
 
-from .forms import RefForm, ModeloForm, BuscaForm
+from .forms import RefForm, ModeloForm, BuscaForm, GtinForm
 from utils.forms import FiltroForm
 import produto.models as models
 
@@ -676,4 +676,44 @@ class EstrEstagioDeInsumo(View):
         context = {'titulo': self.title_name}
         cursor = connections['so'].cursor()
         context.update(self.mount_context(cursor))
+        return render(request, self.template_name, context)
+
+
+class Gtin(View):
+    Form_class = GtinForm
+    template_name = 'produto/gtin.html'
+    title_name = 'GTIN (EAN13)'
+
+    def mount_context(self, cursor, ref):
+        context = {
+            'ref': ref,
+            }
+
+        data = models.gtin(cursor, ref)
+        if len(data) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
+
+        context.update({
+            'headers': ('Referência', 'Cor', 'Tamanho', 'GTIN'),
+            'fields': ('REF', 'COR', 'TAM', 'GTIN'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            ref = form.cleaned_data['ref']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, ref))
+        context['form'] = form
         return render(request, self.template_name, context)

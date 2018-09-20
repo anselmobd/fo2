@@ -35,3 +35,17 @@ class BuscaForm(FiltroForm):
         data['cor'] = cor
         self.data = data
         return cor
+
+
+class GtinForm(forms.Form):
+    ref = forms.CharField(
+        label='Referência', max_length=5, min_length=5,
+        widget=forms.TextInput(attrs={'type': 'string',
+                               'autofocus': 'autofocus'}))
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
