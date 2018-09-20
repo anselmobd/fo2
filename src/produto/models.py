@@ -756,6 +756,11 @@ def gtin(cursor, ref=None, gtin=None):
           THEN 'SEM GTIN'
           ELSE rtc.CODIGO_BARRAS
           END GTIN
+        , ( SELECT
+              count(*)
+            FROM BASI_010 ean
+            WHERE ean.CODIGO_BARRAS = rtc.CODIGO_BARRAS
+          ) QTD
         FROM BASI_010 rtc -- item (ref+tam+cor)
         LEFT JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = rtc.SUBGRU_ESTRUTURA
@@ -771,6 +776,5 @@ def gtin(cursor, ref=None, gtin=None):
         filtra_ref=filtra_ref,
         filtra_gtin=filtra_gtin,
     )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
