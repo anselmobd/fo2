@@ -5,6 +5,9 @@ from django.db import connections
 from django.urls import reverse
 from django.views import View
 
+from utils.views import totalize_grouped_data
+from fo2.template import group_rowspan
+
 import lotes.forms as forms
 import lotes.models as models
 
@@ -133,14 +136,27 @@ class Expedicao(View):
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
 
+        group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
+                 'DT_EMISSAO', 'DT_EMBARQUE',
+                 'CLIENTE']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['QTD'],
+            'count': [],
+            'descr': {'TAM': 'Total:'},
+        })
+        group_rowspan(data, group)
+
         context.update({
-            'headers': ('Pedido na Tussor', 'Pedido no cliente',
-                        'Data de emissão', 'Data de embarque',
+            'headers': ('Pedido Tussor', 'Pedido cliente',
+                        'Data emissão', 'Data embarque',
                         'Cliente', 'Referência', 'Cor', 'Tamanho', 'Quant.'),
             'fields': ('PEDIDO_VENDA', 'PEDIDO_CLIENTE',
                        'DT_EMISSAO', 'DT_EMBARQUE',
                        'CLIENTE', 'REF', 'COR', 'TAM', 'QTD'),
             'data': data,
+            'group': group,
+            'style': {9: 'text-align: right;'},
         })
 
         return context
