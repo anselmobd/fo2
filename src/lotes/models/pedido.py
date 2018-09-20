@@ -202,7 +202,15 @@ def ped_expedicao(
           WHEN 10 THEN '10-Faturado total'
           WHEN 15 THEN '15-Pedido com NF cancelada'
           END SITUACAO_VENDA
+        , i.CD_IT_PE_GRUPO REF
+        , i.CD_IT_PE_ITEM COR
+        , i.CD_IT_PE_SUBGRUPO TAM
+        , i.QTDE_PEDIDA QTD
         FROM PEDI_100 ped -- pedido de venda
+        JOIN PEDI_110 i -- item de pedido de venda
+          ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
+        LEFT JOIN BASI_220 t -- tamanhos
+          ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
         LEFT JOIN PEDI_010 c
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
@@ -213,6 +221,9 @@ def ped_expedicao(
           {filtro_cliente} -- filtro_cliente
         ORDER BY
           ped.PEDIDO_VENDA DESC
+        , i.CD_IT_PE_GRUPO
+        , i.CD_IT_PE_ITEM
+        , t.ORDEM_TAMANHO
     """.format(
         filtro_dt_embarque=filtro_dt_embarque,
         filtro_pedido_tussor=filtro_pedido_tussor,

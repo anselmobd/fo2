@@ -136,10 +136,10 @@ class Expedicao(View):
         context.update({
             'headers': ('Pedido na Tussor', 'Pedido no cliente',
                         'Data de emissão', 'Data de embarque',
-                        'Cliente'),
+                        'Cliente', 'Referência', 'Cor', 'Tamanho', 'Quant.'),
             'fields': ('PEDIDO_VENDA', 'PEDIDO_CLIENTE',
                        'DT_EMISSAO', 'DT_EMBARQUE',
-                       'CLIENTE'),
+                       'CLIENTE', 'REF', 'COR', 'TAM', 'QTD'),
             'data': data,
         })
 
