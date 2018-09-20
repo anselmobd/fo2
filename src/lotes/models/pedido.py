@@ -211,6 +211,8 @@ def ped_expedicao(
           {filtro_pedido_tussor} -- filtro_pedido_tussor
           {filtro_pedido_cliente} -- filtro_pedido_cliente
           {filtro_cliente} -- filtro_cliente
+        ORDER BY
+          ped.PEDIDO_VENDA DESC
     """.format(
         filtro_dt_embarque=filtro_dt_embarque,
         filtro_pedido_tussor=filtro_pedido_tussor,
