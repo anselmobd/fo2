@@ -5,12 +5,12 @@ from django.db import connections
 from django.urls import reverse
 from django.views import View
 
-from lotes.forms import PedidoForm
+import lotes.forms as forms
 import lotes.models as models
 
 
 class Pedido(View):
-    Form_class = PedidoForm
+    Form_class = forms.PedidoForm
     template_name = 'lotes/pedido.html'
     title_name = 'Pedido'
 
@@ -19,16 +19,16 @@ class Pedido(View):
 
         # informações gerais
         data = models.ped_inform(cursor, pedido)
-        for row in data:
-            row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
-            row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
-            if row['OBSERVACAO'] is None:
-                row['OBSERVACAO'] = '-'
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
             })
         else:
+            for row in data:
+                row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
+                row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
+                if row['OBSERVACAO'] is None:
+                    row['OBSERVACAO'] = '-'
             context.update({
                 'headers': ('Data de emissão', 'Data de embarque',
                             'Cliente', 'Código do pedido no cliente',
@@ -98,5 +98,69 @@ class Pedido(View):
             pedido = form.cleaned_data['pedido']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, pedido))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class Expedicao(View):
+    Form_class = forms.ExpedicaoForm
+    template_name = 'lotes/expedicao.html'
+    title_name = 'Expedição'
+
+    def mount_context(
+            self, cursor, dt_embarque, pedido_tussor, pedido_cliente, cliente):
+        context = {
+            'dt_embarque': dt_embarque,
+            'pedido_tussor': pedido_tussor,
+            'pedido_cliente': pedido_cliente,
+            'cliente': cliente,
+        }
+
+        data = models.ped_expedicao(
+            cursor,
+            dt_embarque=dt_embarque,
+            pedido_tussor=pedido_tussor,
+            pedido_cliente=pedido_cliente,
+            cliente=cliente
+        )
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nada selecionado',
+            })
+            return context
+
+        for row in data:
+            row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
+            row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
+
+        context.update({
+            'headers': ('Pedido na Tussor', 'Pedido no cliente',
+                        'Data de emissão', 'Data de embarque',
+                        'Cliente'),
+            'fields': ('PEDIDO_VENDA', 'PEDIDO_CLIENTE',
+                       'DT_EMISSAO', 'DT_EMBARQUE',
+                       'CLIENTE'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            dt_embarque = form.cleaned_data['dt_embarque']
+            pedido_tussor = form.cleaned_data['pedido_tussor']
+            pedido_cliente = form.cleaned_data['pedido_cliente']
+            cliente = form.cleaned_data['cliente']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(
+                cursor, dt_embarque, pedido_tussor, pedido_cliente, cliente))
         context['form'] = form
         return render(request, self.template_name, context)
