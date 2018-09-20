@@ -314,3 +314,30 @@ class BuscaOpForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+
+class ExpedicaoForm(forms.Form):
+    dt_embarque = forms.DateField(
+        label='Data do embarque', required=False,
+        widget=forms.DateInput(attrs={'type': 'date',
+                               'autofocus': 'autofocus'}))
+
+    pedido_tussor = forms.CharField(
+        label='Pedido na Tussor', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    pedido_cliente = forms.CharField(
+        label='Pedido no cliente', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    cliente = forms.CharField(
+        label='Cliente', required=False,
+        help_text='Parte do nome ou início do CNPJ.',
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_cliente(self):
+        cliente = self.cleaned_data['cliente'].upper()
+        data = self.data.copy()
+        data['cliente'] = cliente
+        self.data = data
+        return cliente
