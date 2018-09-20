@@ -1,5 +1,6 @@
 import re
 from pprint import pprint
+import urllib
 
 from django.shortcuts import render
 from django.db import connections
@@ -695,9 +696,21 @@ class Gtin(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
+        for row in data:
+            if row['GTIN'] == 'SEM GTIN':
+                row['QTD'] = ''
+            else:
+                if row['QTD'] == 1:
+                    row['QTD'] = 'Único'
+                else:
+                    row['QTD|LINK'] = '{}?{}'.format(
+                        reverse('produto:gtin'),
+                        urllib.parse.urlencode({
+                            'gtin': row['GTIN'],
+                        }))
         context.update({
-            'headers': ('Referência', 'Cor', 'Tamanho', 'GTIN'),
-            'fields': ('REF', 'COR', 'TAM', 'GTIN'),
+            'headers': ('Referência', 'Cor', 'Tamanho', 'GTIN', 'Iguais'),
+            'fields': ('REF', 'COR', 'TAM', 'GTIN', 'QTD'),
             'data': data,
         })
 
