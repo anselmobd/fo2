@@ -1024,15 +1024,22 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
         for row in solicit_qtds:
             row['delete'] = '''
-                <a title="Exclui"
+                <a title="Exclui lote"
                 href="/cd/solicitacao_detalhe/{solicit_id}/d/{id}"
                 ><span class="glyphicon glyphicon-remove"
                 aria-hidden="true"></span></a>
             '''.format(solicit_id=solicitacao.id, id=row['id'])
+        limpa = '''
+            <a title="Limpa solicitação"
+            href="/cd/solicitacao_detalhe/{solicit_id}/l"
+            ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"
+            ></span></a>
+        '''.format(solicit_id=solicitacao.id)
+
         context.update({
             'safe': ['delete'],
             'headers': ['Endereço', 'OP', 'Lote', 'Referência',
-                        'Cor', 'Tamanho', 'Quant. Solicitada', 'Em', ''],
+                        'Cor', 'Tamanho', 'Quant. Solicitada', 'Em', (limpa,)],
             'fields': ['lote__local', 'lote__op', 'lote__lote',
                        'lote__referencia', 'lote__cor', 'lote__tamanho', 'qtd',
                        'update_at', 'delete'],
@@ -1083,21 +1090,30 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        if 'acao' in kwargs:
-            acao = kwargs['acao']
-            slq_id = kwargs['id']
+
+        acao = kwargs['acao']
+        slq_id = kwargs['id']
+        solicit_id = kwargs['solicit_id']
+
+        if acao == 'd' and slq_id is not None:
             try:
                 solicit_qtds = lotes.models.SolicitaLoteQtd.objects.get(
                     id=slq_id)
-                if acao == 'd':
-                    solicit_qtds.delete()
+                solicit_qtds.delete()
             except lotes.models.SolicitaLoteQtd.DoesNotExist:
                 pass
-        if 'solicit_id' in kwargs:
-            solicit_id = kwargs['solicit_id']
-            user = request_user(request)
-            data = self.mount_context(solicit_id, user)
-            context.update(data)
+
+        if acao == 'l' and solicit_id is not None:
+            try:
+                solicit_qtds = lotes.models.SolicitaLoteQtd.objects.filter(
+                    solicitacao__id=solicit_id)
+                solicit_qtds.delete()
+            except lotes.models.SolicitaLoteQtd.DoesNotExist:
+                pass
+
+        user = request_user(request)
+        data = self.mount_context(solicit_id, user)
+        context.update(data)
         return render(request, self.template_name, context)
 
 
@@ -1263,7 +1279,6 @@ class Grade(View):
                     for ref in referencias:
                         if ref['modelo'] not in modelos:
                             modelos.append(ref['modelo'])
-                    pprint(modelos)
             else:  # Modelo
                 referencias = [
                     {'referencia': row['referencia'],
