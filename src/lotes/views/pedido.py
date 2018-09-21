@@ -112,13 +112,14 @@ class Expedicao(View):
 
     def mount_context(
             self, cursor, embarque_de, embarque_ate,
-            pedido_tussor, pedido_cliente, cliente):
+            pedido_tussor, pedido_cliente, cliente, detalhe):
         context = {
             'embarque_de': embarque_de,
             'embarque_ate': embarque_ate,
             'pedido_tussor': pedido_tussor,
             'pedido_cliente': pedido_cliente,
             'cliente': cliente,
+            'detalhe': detalhe,
         }
 
         data = models.ped_expedicao(
@@ -127,7 +128,8 @@ class Expedicao(View):
             embarque_ate=embarque_ate,
             pedido_tussor=pedido_tussor,
             pedido_cliente=pedido_cliente,
-            cliente=cliente
+            cliente=cliente,
+            detalhe=detalhe,
         )
         if len(data) == 0:
             context.update({
@@ -150,16 +152,31 @@ class Expedicao(View):
         })
         group_rowspan(data, group)
 
+        headers = ['Pedido Tussor', 'Pedido cliente',
+                   'Data emissão', 'Data embarque', 'Cliente', 'Referência']
+        if detalhe == 'c':
+            headers.append('Cor')
+            headers.append('Tamanho')
+        headers.append('Quant.')
+
+        fields = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
+                  'DT_EMISSAO', 'DT_EMBARQUE', 'CLIENTE', 'REF']
+        if detalhe == 'c':
+            fields.append('COR')
+            fields.append('TAM')
+        fields.append('QTD')
+
+        if detalhe == 'r':
+            style = {9: 'text-align: right;'}
+        else:
+            style = {7: 'text-align: right;'}
+
         context.update({
-            'headers': ('Pedido Tussor', 'Pedido cliente',
-                        'Data emissão', 'Data embarque',
-                        'Cliente', 'Referência', 'Cor', 'Tamanho', 'Quant.'),
-            'fields': ('PEDIDO_VENDA', 'PEDIDO_CLIENTE',
-                       'DT_EMISSAO', 'DT_EMBARQUE',
-                       'CLIENTE', 'REF', 'COR', 'TAM', 'QTD'),
+            'headers': headers,
+            'fields': fields,
             'data': data,
             'group': group,
-            'style': {9: 'text-align: right;'},
+            'style': style,
         })
 
         return context
@@ -179,9 +196,10 @@ class Expedicao(View):
             pedido_tussor = form.cleaned_data['pedido_tussor']
             pedido_cliente = form.cleaned_data['pedido_cliente']
             cliente = form.cleaned_data['cliente']
+            detalhe = form.cleaned_data['detalhe']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
                 cursor, embarque_de, embarque_ate,
-                pedido_tussor, pedido_cliente, cliente))
+                pedido_tussor, pedido_cliente, cliente, detalhe))
         context['form'] = form
         return render(request, self.template_name, context)

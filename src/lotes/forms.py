@@ -337,6 +337,11 @@ class ExpedicaoForm(forms.Form):
         help_text='Parte do nome ou início do CNPJ.',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    CHOICES = [('r', 'Por referência'),
+               ('c', 'Por referência-cor-tamanho')]
+    detalhe = forms.ChoiceField(
+        label='Detalhe', choices=CHOICES, initial='r')
+
     def clean_cliente(self):
         cliente = self.cleaned_data['cliente'].upper()
         data = self.data.copy()

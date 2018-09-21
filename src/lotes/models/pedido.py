@@ -149,7 +149,7 @@ def ped_sortimento(cursor, pedido):
 def ped_expedicao(
         cursor, embarque_de='', embarque_ate='',
         pedido_tussor='', pedido_cliente='',
-        cliente='', cor_tamanho=False):
+        cliente='', detalhe='r'):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -186,32 +186,21 @@ def ped_expedicao(
         , ped.DATA_EMIS_VENDA DT_EMISSAO
         , ped.DATA_PREV_RECEB DT_RECEBIMENTO
         , ped.DATA_ENTR_VENDA DT_EMBARQUE
-        , ped.OBSERVACAO
         , c.NOME_CLIENTE
           || ' (' || lpad(c.CGC_9, 8, '0')
           || '/' || lpad(c.CGC_4, 4, '0')
           || '-' || lpad(c.CGC_2, 2, '0')
           || ')' CLIENTE
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
-        , CASE ped.STATUS_PEDIDO
-          WHEN 0 THEN '0-Digitado'
-          WHEN 1 THEN '1-Financeiro'
-          WHEN 2 THEN '2-Liberado Financeiro'
-          WHEN 3 THEN '3-Faturamento'
-          WHEN 4 THEN '4-A cancelar'
-          WHEN 5 THEN '5-Cancelado'
-          WHEN 9 THEN '9-Aberto na web'
-          END STATUS_PEDIDO
-        , CASE ped.SITUACAO_VENDA
-          WHEN 0  THEN '0-Pedido liberado'
-          WHEN 5  THEN '5-Pedido suspenso'
-          WHEN 10 THEN '10-Faturado total'
-          WHEN 15 THEN '15-Pedido com NF cancelada'
-          END SITUACAO_VENDA
         , i.CD_IT_PE_GRUPO REF
-        , i.CD_IT_PE_ITEM COR
-        , i.CD_IT_PE_SUBGRUPO TAM
-        , i.QTDE_PEDIDA QTD
+    """
+    if detalhe == 'c':
+        sql += """
+            , i.CD_IT_PE_ITEM COR
+            , i.CD_IT_PE_SUBGRUPO TAM
+        """
+    sql += """
+        , sum(i.QTDE_PEDIDA) QTD
         FROM PEDI_100 ped -- pedido de venda
         JOIN PEDI_110 i -- item de pedido de venda
           ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
@@ -226,12 +215,35 @@ def ped_expedicao(
           {filtro_pedido_tussor} -- filtro_pedido_tussor
           {filtro_pedido_cliente} -- filtro_pedido_cliente
           {filtro_cliente} -- filtro_cliente
+        GROUP BY
+          ped.PEDIDO_VENDA
+        , ped.DATA_EMIS_VENDA
+        , ped.DATA_PREV_RECEB
+        , ped.DATA_ENTR_VENDA
+        , c.NOME_CLIENTE
+        , c.CGC_9
+        , c.CGC_4
+        , c.CGC_2
+        , ped.COD_PED_CLIENTE
+        , i.CD_IT_PE_GRUPO
+    """
+    if detalhe == 'c':
+        sql += """
+            , i.CD_IT_PE_ITEM
+            , t.ORDEM_TAMANHO
+            , i.CD_IT_PE_SUBGRUPO
+        """
+    sql += """
         ORDER BY
           ped.PEDIDO_VENDA DESC
         , i.CD_IT_PE_GRUPO
-        , i.CD_IT_PE_ITEM
-        , t.ORDEM_TAMANHO
-    """.format(
+    """
+    if detalhe == 'c':
+        sql += """
+            , i.CD_IT_PE_ITEM
+            , t.ORDEM_TAMANHO
+        """
+    sql = sql.format(
         filtro_embarque_de=filtro_embarque_de,
         filtro_embarque_ate=filtro_embarque_ate,
         filtro_pedido_tussor=filtro_pedido_tussor,
