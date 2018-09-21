@@ -235,7 +235,8 @@ def ped_expedicao(
         """
     sql += """
         ORDER BY
-          ped.PEDIDO_VENDA DESC
+          ped.DATA_ENTR_VENDA DESC
+        , ped.PEDIDO_VENDA DESC
         , i.CD_IT_PE_GRUPO
     """
     if detalhe == 'c':

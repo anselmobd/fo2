@@ -47,6 +47,7 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+<h4>Em ordem descendente de data de embarque e número de pedido na Tussor</h4>
   <table>
     {% include "layout/thead_generic.html" with data=headers only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
