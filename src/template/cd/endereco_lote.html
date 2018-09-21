@@ -26,7 +26,11 @@
   <h3>{{ erro }}</h3>
 {% else %}
   {% if lote %}
-    <h2>Endereço <b>{{ local }}</b> (<b>{{ q_lotes }}</b> caixa{{ q_lotes|pluralize }})</h2>
+    <h2>Endereço: <b>{{ local }}</b>
+    {% if q_lotes > 0 %}
+      (<b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }})
+    {% endif %}
+    </h2>
     <h4>Lote <b>{{ lote }}</b></h4>
     <h4>Item: <b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></h4>
     <h4>Qtd.: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;&nbsp;&nbsp;OP: <b>{{ op }}</b></h4>

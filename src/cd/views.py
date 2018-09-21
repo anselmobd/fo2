@@ -1110,18 +1110,22 @@ class EnderecoLote(View):
             context.update({'erro': 'Lote não encontrado'})
             return context
 
+        if lote_rec.local is None:
+            local = 'Não endereçado'
+            lotes_no_local = -1
+        else:
+            local = lote_rec.local
+            lotes_no_local = len(lotes.models.Lote.objects.filter(
+                local=lote_rec.local))
+
         context.update({
             'op': lote_rec.op,
             'referencia': lote_rec.referencia,
             'cor': lote_rec.cor,
             'tamanho': lote_rec.tamanho,
             'qtd_produzir': lote_rec.qtd_produzir,
-            'local': lote_rec.local,
-            })
-
-        lotes_no_local = lotes.models.Lote.objects.filter(local=lote_rec.local)
-        context.update({
-            'q_lotes': len(lotes_no_local),
+            'local': local,
+            'q_lotes': lotes_no_local,
             })
 
         return context
