@@ -5,7 +5,8 @@ from datetime import timedelta
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connections, connection
-from django.db.models import Count, Sum, Q
+from django.db.models import Count, Sum, Q, Value
+from django.db.models.functions import Coalesce
 from django.contrib.auth.mixins \
     import PermissionRequiredMixin, LoginRequiredMixin
 from django.shortcuts import render
@@ -1010,11 +1011,16 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
         context['solicitacao'] = solicitacao
 
-        solicit_qtds = lotes.models.SolicitaLoteQtd.objects.filter(
-            solicitacao=solicitacao
-        ).order_by('-update_at').values(
+        solicit_qtds = lotes.models.SolicitaLoteQtd.objects.values(
             'id', 'lote__op', 'lote__lote', 'lote__referencia',
-            'lote__cor', 'lote__tamanho', 'qtd', 'update_at')
+            'lote__cor', 'lote__tamanho', 'qtd', 'update_at'
+        ).annotate(
+            lote__local=Coalesce('lote__local', Value('-ausente-'))
+        ).filter(
+            solicitacao=solicitacao
+        ).order_by(
+            '-update_at'
+        )
 
         for row in solicit_qtds:
             row['delete'] = '''
@@ -1025,21 +1031,22 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             '''.format(solicit_id=solicitacao.id, id=row['id'])
         context.update({
             'safe': ['delete'],
-            'headers': ['OP', 'Lote', 'Referência',
+            'headers': ['Endereço', 'OP', 'Lote', 'Referência',
                         'Cor', 'Tamanho', 'Quant. Solicitada', 'Em', ''],
-            'fields': ['lote__op', 'lote__lote', 'lote__referencia',
-                       'lote__cor', 'lote__tamanho', 'qtd', 'update_at',
-                       'delete'],
+            'fields': ['lote__local', 'lote__op', 'lote__lote',
+                       'lote__referencia', 'lote__cor', 'lote__tamanho', 'qtd',
+                       'update_at', 'delete'],
             'data': solicit_qtds,
         })
 
-        por_endereco = lotes.models.SolicitaLoteQtd.objects.filter(
-            solicitacao=solicitacao
-        ).values(
-            'lote__local', 'lote__op', 'lote__lote',
+        por_endereco = lotes.models.SolicitaLoteQtd.objects.values(
+            'lote__op', 'lote__lote',
             'lote__referencia', 'lote__cor', 'lote__tamanho'
         ).annotate(
+            lote__local=Coalesce('lote__local', Value('-ausente-')),
             qtdsum=Sum('qtd')
+        ).filter(
+            solicitacao=solicitacao
         ).order_by(
             'lote__local', 'lote__op', 'lote__referencia', 'lote__cor',
             'lote__tamanho', 'lote__lote'
