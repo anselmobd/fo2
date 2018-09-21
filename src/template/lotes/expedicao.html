@@ -38,6 +38,11 @@
 {% if cliente %}
   <h4>Filtro de cliente: {{ cliente }}</h4>
 {% endif %}
+{% if detalhe == 'r' %}
+  <h4>Quantidade por referência</h4>
+{% else %}
+  <h4>Quantidade por referência, cor e tamanho</h4>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
