@@ -147,13 +147,19 @@ def ped_sortimento(cursor, pedido):
 
 
 def ped_expedicao(
-        cursor, dt_embarque='', pedido_tussor='', pedido_cliente='',
-        cliente=''):
+        cursor, embarque_de='', embarque_ate='',
+        pedido_tussor='', pedido_cliente='',
+        cliente='', cor_tamanho=False):
 
-    filtro_dt_embarque = ''
-    if dt_embarque is not None:
-        filtro_dt_embarque = '''--
-            AND ped.DATA_ENTR_VENDA = '{}' '''.format(dt_embarque)
+    filtro_embarque_de = ''
+    if embarque_de is not None:
+        filtro_embarque_de = '''--
+            AND ped.DATA_ENTR_VENDA >= '{}' '''.format(embarque_de)
+
+    filtro_embarque_ate = ''
+    if embarque_ate is not None:
+        filtro_embarque_ate = '''--
+            AND ped.DATA_ENTR_VENDA <= '{}' '''.format(embarque_ate)
 
     filtro_pedido_tussor = ''
     if pedido_tussor != '':
@@ -215,7 +221,8 @@ def ped_expedicao(
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
         WHERE 1=1
-          {filtro_dt_embarque} -- filtro_dt_embarque
+          {filtro_embarque_de} -- filtro_embarque_de
+          {filtro_embarque_ate} -- filtro_embarque_ate
           {filtro_pedido_tussor} -- filtro_pedido_tussor
           {filtro_pedido_cliente} -- filtro_pedido_cliente
           {filtro_cliente} -- filtro_cliente
@@ -225,7 +232,8 @@ def ped_expedicao(
         , i.CD_IT_PE_ITEM
         , t.ORDEM_TAMANHO
     """.format(
-        filtro_dt_embarque=filtro_dt_embarque,
+        filtro_embarque_de=filtro_embarque_de,
+        filtro_embarque_ate=filtro_embarque_ate,
         filtro_pedido_tussor=filtro_pedido_tussor,
         filtro_pedido_cliente=filtro_pedido_cliente,
         filtro_cliente=filtro_cliente,

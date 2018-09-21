@@ -227,8 +227,7 @@ class OpPendenteForm(forms.Form):
 
     data_de = forms.DateField(
         label='Data do Corte/Gargalo: De', required=False,
-        widget=forms.DateInput(attrs={'type': 'date',
-                               'autofocus': 'autofocus'}))
+        widget=forms.DateInput(attrs={'type': 'date'}))
     data_ate = forms.DateField(
         label='Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
@@ -317,10 +316,13 @@ class BuscaOpForm(forms.Form):
 
 
 class ExpedicaoForm(forms.Form):
-    dt_embarque = forms.DateField(
-        label='Data do embarque', required=False,
+    embarque_de = forms.DateField(
+        label='Data do embarque: De', required=False,
         widget=forms.DateInput(attrs={'type': 'date',
                                'autofocus': 'autofocus'}))
+    embarque_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
 
     pedido_tussor = forms.CharField(
         label='Pedido na Tussor', required=False,

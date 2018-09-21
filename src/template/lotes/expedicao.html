@@ -15,14 +15,25 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
+{% if embarque_de or embarque_ate %}
+  <h4>Data de embarque:
+  {% if embarque_de == embarque_ate %}
+    {{ embarque_de }}
+  {% else %}
+    {% if embarque_de %}
+      a partir de {{ embarque_de }}
+    {% endif %}
+    {% if embarque_ate %}
+      até {{ embarque_ate }}
+    {% endif %}
+  {% endif %}
+  </h4>
+{% endif %}
 {% if pedido_tussor %}
   <h4>Pedido na Tussor {{ pedido_tussor }}</h4>
 {% endif %}
 {% if pedido_cliente %}
   <h4>Pedido no cliente {{ pedido_cliente }}</h4>
-{% endif %}
-{% if dt_embarque %}
-  <h4>Data de embarque {{ dt_embarque }}</h4>
 {% endif %}
 {% if cliente %}
   <h4>Filtro de cliente: {{ cliente }}</h4>
