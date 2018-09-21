@@ -1110,7 +1110,7 @@ class EnderecoLote(View):
             context.update({'erro': 'Lote não encontrado'})
             return context
 
-        if lote_rec.local is None:
+        if lote_rec.local is None or lote_rec.local == '':
             local = 'Não endereçado'
             lotes_no_local = -1
         else:
