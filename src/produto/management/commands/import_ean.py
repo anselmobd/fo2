@@ -24,6 +24,10 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('ref_tussor')
         parser.add_argument('ref_systextil')
+        parser.add_argument(
+            "-f", "--force",
+            action="store_true",
+            help='Force write EAN, even if existing')
 
     def handle(self, *args, **options):
         dis_bar_file = '/run/user/1000/gvfs/smb-share:server=192.168.1.100,' \
@@ -39,6 +43,7 @@ class Command(BaseCommand):
         if len(ref_systextil) != 5:
             raise CommandError('Referência Systêxtil {} errada.'.format(
                 ref_systextil))
+        force = options['force']
 
         self.stdout.write(
             'Importando EANs do Tussor, referência: "{}"'.format(
@@ -74,23 +79,34 @@ class Command(BaseCommand):
             sql_set = '''
                 UPDATE SYSTEXTIL.BASI_010
                 SET
-                  CODIGO_BARRAS=%s
-                WHERE GRUPO_ESTRUTURA=%s
-                  and SUBGRU_ESTRUTURA=%s
-                  and ITEM_ESTRUTURA=%s
+                  CODIGO_BARRAS='{ean}'
+                WHERE GRUPO_ESTRUTURA='{ref}'
+                  and SUBGRU_ESTRUTURA='{tam}'
+                  and ITEM_ESTRUTURA='{cor}'
                   and (  CODIGO_BARRAS IS null
-                      OR CODIGO_BARRAS<>%s
-                      )
             '''
+            if force:
+                sql_set += """
+                        OR CODIGO_BARRAS<>'{ean}'
+                """
+            else:
+                sql_set += """
+                        OR CODIGO_BARRAS <> ''
+                        OR CODIGO_BARRAS LIKE ' %'
+                        OR CODIGO_BARRAS LIKE '%GTIN%'
+                """
+            sql_set += " )"
+
             for ref_bar in ref_bars:
-                cursor.execute(sql_set, [
-                    ref_bar['ean'],
-                    ref_systextil,
-                    ref_bar['tamanho'],
-                    ref_bar['cor'],
-                    ref_bar['ean']
-                    ])
-                pprint(ref_bar)
+                sql = sql_set.format(
+                    ean=ref_bar['ean'],
+                    ref=ref_systextil,
+                    tam=ref_bar['tamanho'],
+                    cor=ref_bar['cor'],
+                )
+                cursor.execute(sql)
+                if cursor.rowcount > 0:
+                    pprint(ref_bar)
 
         except Exception as e:
             raise CommandError('Error importing EANs. {}'.format(e))
