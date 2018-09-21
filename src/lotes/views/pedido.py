@@ -111,9 +111,11 @@ class Expedicao(View):
     title_name = 'Expedição'
 
     def mount_context(
-            self, cursor, dt_embarque, pedido_tussor, pedido_cliente, cliente):
+            self, cursor, embarque_de, embarque_ate,
+            pedido_tussor, pedido_cliente, cliente):
         context = {
-            'dt_embarque': dt_embarque,
+            'embarque_de': embarque_de,
+            'embarque_ate': embarque_ate,
             'pedido_tussor': pedido_tussor,
             'pedido_cliente': pedido_cliente,
             'cliente': cliente,
@@ -121,7 +123,8 @@ class Expedicao(View):
 
         data = models.ped_expedicao(
             cursor,
-            dt_embarque=dt_embarque,
+            embarque_de=embarque_de,
+            embarque_ate=embarque_ate,
             pedido_tussor=pedido_tussor,
             pedido_cliente=pedido_cliente,
             cliente=cliente
@@ -171,12 +174,14 @@ class Expedicao(View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
-            dt_embarque = form.cleaned_data['dt_embarque']
+            embarque_de = form.cleaned_data['embarque_de']
+            embarque_ate = form.cleaned_data['embarque_ate']
             pedido_tussor = form.cleaned_data['pedido_tussor']
             pedido_cliente = form.cleaned_data['pedido_cliente']
             cliente = form.cleaned_data['cliente']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, dt_embarque, pedido_tussor, pedido_cliente, cliente))
+                cursor, embarque_de, embarque_ate,
+                pedido_tussor, pedido_cliente, cliente))
         context['form'] = form
         return render(request, self.template_name, context)
