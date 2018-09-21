@@ -348,3 +348,25 @@ class ExpedicaoForm(forms.Form):
         data['cliente'] = cliente
         self.data = data
         return cliente
+
+    def clean(self):
+        clean_ef = super(ExpedicaoForm, self).clean()
+
+        if not any(
+            clean_ef.get(x, '')
+            for x in (
+                'embarque_de',
+                'embarque_ate',
+                'pedido_tussor',
+                'pedido_cliente',
+                'cliente',
+            )
+        ):
+            list_msg = ['Ao menos um destes campos deve ser preenchido']
+            self._errors['embarque_de'] = self.error_class(list_msg)
+            self._errors['embarque_ate'] = self.error_class(list_msg)
+            self._errors['pedido_tussor'] = self.error_class(list_msg)
+            self._errors['pedido_cliente'] = self.error_class(list_msg)
+            self._errors['cliente'] = self.error_class(list_msg)
+
+        return clean_ef
