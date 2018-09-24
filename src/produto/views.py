@@ -458,7 +458,7 @@ class Ref(View):
                                'ALTERN', 'CONSUMO', 'ESTAGIO']
 
                     if dif_000000 != 0:
-                        e_headers.insert(0, 'Cor Referência')
+                        e_headers.insert(0, 'Cor Alternativa')
                         e_fields.insert(0, 'COR_REF')
                         e_group.insert(0, 'COR_REF')
 
