@@ -4,7 +4,7 @@ from lotes.models import *
 from lotes.models.base import *
 
 
-def distribuicao(cursor, estagio, data_de, data_ate):
+def distribuicao(cursor, estagio, data_de, data_ate, familia):
     sql = '''
         SELECT
           TO_CHAR(h.DATA_INSERCAO, 'YYYY/MM/DD') DATA_SORT
@@ -17,6 +17,7 @@ def distribuicao(cursor, estagio, data_de, data_ate):
         WHERE h.PCPC040_ESTCONF = %s
           AND TO_DATE(h.DATA_INSERCAO) >= %s
           AND TO_DATE(h.DATA_INSERCAO)-1 <= %s
+          AND (-1 = %s OR h.CODIGO_FAMILIA = %s)
         GROUP BY
           TO_CHAR(h.DATA_INSERCAO, 'YYYY/MM/DD')
         , TO_CHAR(h.DATA_INSERCAO, 'DD/MM/YYYY')
@@ -25,5 +26,5 @@ def distribuicao(cursor, estagio, data_de, data_ate):
           1
         , h.CODIGO_FAMILIA
     '''
-    cursor.execute(sql, [estagio, data_de, data_ate])
+    cursor.execute(sql, [estagio, data_de, data_ate, familia, familia])
     return rows_to_dict_list(cursor)
