@@ -31,8 +31,10 @@ class Distribuicao(View):
         data = models.distribuicao(
             cursor, estagio, data_de, data_ate, familia_divisao)
         context.update({
-            'headers': ('Data', 'Família', 'OPs', 'Lotes', 'Peças'),
-            'fields': ('DATA', 'FAMILIA', 'OPS', 'LOTES', 'PECAS'),
+            'headers': ('Data', 'Família', 'OP', 'Referência',
+                        'Tamanho', 'Cor', 'Lotes', 'Peças'),
+            'fields': ('DATA', 'FAMILIA', 'OP', 'REF',
+                       'TAM', 'COR', 'LOTES', 'PECAS'),
             'data': data,
         })
 
