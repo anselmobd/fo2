@@ -1,6 +1,7 @@
 from django import forms
 
 from produto.models import Colecao
+from .models import Familia
 
 
 class LoteForm(forms.Form):
@@ -290,6 +291,10 @@ class DistribuicaoForm(forms.Form):
     data_ate = forms.DateField(
         label='Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
+    familia = forms.ModelChoiceField(
+        label='Família', required=False,
+        queryset=Familia.objects.all().order_by(
+            'divisao_producao'), empty_label="(Todas)")
 
     def clean_estagio(self):
         estagio = self.cleaned_data['estagio']
