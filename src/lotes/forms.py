@@ -292,7 +292,7 @@ class DistribuicaoForm(forms.Form):
         label='Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
     familia = forms.ModelChoiceField(
-        label='Família', required=False,
+        label='Família (teares)', required=False,
         queryset=Familia.objects.filter(
             divisao_producao__range=['3000', '3999']).order_by(
             'divisao_producao'), empty_label="(Todas)")
