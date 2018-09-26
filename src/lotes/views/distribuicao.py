@@ -15,7 +15,7 @@ import lotes.models as models
 class Distribuicao(View):
     Form_class = DistribuicaoForm
     template_name = 'lotes/distribuicao.html'
-    title_name = 'Distribuição'
+    title_name = 'Distribuição Tecelagem'
 
     def mount_context(self, cursor, estagio, data_de, data_ate, familia):
         if data_ate is None and data_de is not None:
@@ -64,7 +64,8 @@ class Distribuicao(View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
-            estagio = form.cleaned_data['estagio']
+            # estagio = form.cleaned_data['estagio']
+            estagio = '22'
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
             familia = form.cleaned_data['familia']
