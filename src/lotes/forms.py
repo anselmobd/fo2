@@ -281,10 +281,10 @@ class ModeloTermicaForm(forms.ModelForm):
 
 
 class DistribuicaoForm(forms.Form):
-    estagio = forms.CharField(
-        label='Estágio', max_length=2, required=False,
-        widget=forms.TextInput(attrs={'type': 'number',
-                               'autofocus': 'autofocus'}))
+    # estagio = forms.CharField(
+    #     label='Estágio', max_length=2, required=False,
+    #     widget=forms.TextInput(attrs={'type': 'number',
+    #                            'autofocus': 'autofocus'}))
     data_de = forms.DateField(
         label='Data da distribuição: De',
         widget=forms.DateInput(attrs={'type': 'date'}))
@@ -297,14 +297,14 @@ class DistribuicaoForm(forms.Form):
             divisao_producao__range=['3000', '3999']).order_by(
             'divisao_producao'), empty_label="(Todas)")
 
-    def clean_estagio(self):
-        estagio = self.cleaned_data['estagio']
-        if estagio == '':
-            estagio = '22'
-        data = self.data.copy()
-        data['estagio'] = estagio
-        self.data = data
-        return estagio
+    # def clean_estagio(self):
+    #     estagio = self.cleaned_data['estagio']
+    #     if estagio == '':
+    #         estagio = '22'
+    #     data = self.data.copy()
+    #     data['estagio'] = estagio
+    #     self.data = data
+    #     return estagio
 
 
 class BuscaOpForm(forms.Form):
