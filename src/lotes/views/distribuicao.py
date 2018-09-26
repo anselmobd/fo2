@@ -5,6 +5,9 @@ from django.shortcuts import render
 from django.db import connections
 from django.views import View
 
+from utils.views import totalize_grouped_data
+from fo2.template import group_rowspan
+
 from lotes.forms import DistribuicaoForm
 import lotes.models as models
 
@@ -30,12 +33,23 @@ class Distribuicao(View):
 
         data = models.distribuicao(
             cursor, estagio, data_de, data_ate, familia_divisao)
+
+        group = ['DATA', 'FAMILIA']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['LOTES', 'PECAS'],
+            'count': [],
+            'descr': {'COR': 'Totais:'},
+        })
+        group_rowspan(data, group)
+
         context.update({
             'headers': ('Data', 'Família', 'OP', 'Referência',
                         'Tamanho', 'Cor', 'Lotes', 'Peças'),
             'fields': ('DATA', 'FAMILIA', 'OP', 'REF',
                        'TAM', 'COR', 'LOTES', 'PECAS'),
             'data': data,
+            'group': group,
         })
 
         return context
