@@ -1,12 +1,21 @@
-__version__ = '0.1.125'
-__version__date__ = '21/09/2018'
+__version__ = '0.1.127'
+__version__date__ = '26/09/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
 #
+# - 0.1.127 - 2018/09/26
+#   . Distribuição: Totais
+#
+# - 0.1.126 - 2018/09/25
+#   . Distribuição: Filtro por família
+#
 # - 0.1.125 - 2018/09/21
 #   . Produção: Planejamento de expedição: melhoria
+#   . CD: Verifica endereço de Lote: bug corrigido
+#   . CD: Detalhes de solicitação: apresentando "-ausente-" uando não tem
+#     endereço
 #
 # - 0.1.124 - 2018/09/20
 #   . Produto: GTIN
