@@ -307,6 +307,7 @@ def posicao_historico(cursor, periodo, ordem_confeccao):
     sql = '''
         SELECT
           TO_CHAR(h.DATA_INSERCAO, 'DD/MM/YYYY HH24:MI:SS') DT
+        , h.DATA_PRODUCAO DT_PROD
         , h.PCPC040_ESTCONF EST
         , h.TURNO_PRODUCAO TURNO
         , h.CODIGO_FAMILIA FAMILIA
