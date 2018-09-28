@@ -186,13 +186,14 @@ class Posicao(View):
                 row['Q_P'] = '.'
             if row['Q_C'] == 0:
                 row['Q_C'] = '.'
+            row['DT_PROD'] = row['DT_PROD'].date()
         context.update({
             'h_headers': (
-                'Data', 'Turno', 'Família', 'Estágio',
+                'Data Bipagem', 'Data Produção', 'Turno', 'Família', 'Estágio',
                 'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Conserto',
                 'Usuário', 'Programa'),
             'h_fields': (
-                'DT', 'TURNO', 'FAMILIA', 'EST',
+                'DT', 'DT_PROD', 'TURNO', 'FAMILIA', 'EST',
                 'Q_P1', 'Q_P2', 'Q_P', 'Q_C',
                 'USU', 'PRG'),
             'h_data': data,
