@@ -866,18 +866,21 @@ class MapaPorInsumo(View):
 
         max_digits = 0
         for row in data_prev:
+            row['QTD_ORIGINAL'] = row['QTD']
             row['DT_NECESSIDADE'] = row['DT_NECESSIDADE'].date()
             num_digits = str(row['QTD'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
-        # Descontando das necessidades previtas as necessidades reais
+        # Descontando das necessidades previstas as necessidades reais
         prev_idx = len(data_prev) - 1
         if prev_idx >= 0:
             for ness in reversed(data_ins):
                 while prev_idx >= 0:
-                    if data_prev[prev_idx]['DT_NECESSIDADE'] \
-                            <= ness['SEMANA_NECESSIDADE']:
+                    if data_prev[prev_idx]['DT_NECESSIDADE'] <= \
+                            ness['SEMANA_NECESSIDADE']:
                         data_prev[prev_idx]['QTD'] -= ness['QTD_INSUMO']
+                        if data_prev[prev_idx]['QTD'] < 0:
+                            data_prev[prev_idx]['QTD'] = 0
                         data_prev[prev_idx]['ITALIC'] = True
                         ness['ITALIC'] = True
                         break
@@ -888,15 +891,26 @@ class MapaPorInsumo(View):
             if 'ITALIC' in row:
                 row['QTD_INSUMO|STYLE'] = 'font-style: italic;'
 
+        previsao_alterada = False
         for row in data_prev:
+            if row['QTD_ORIGINAL'] != row['QTD']:
+                previsao_alterada = True
             row['QTD|DECIMALS'] = max_digits
             if 'ITALIC' in row:
                 row['QTD|STYLE'] = 'font-style: italic;'
 
+        headers_prev = ['Semana', 'Previsto']
+        fields_prev = ['DT_NECESSIDADE', 'QTD_ORIGINAL']
+        style_prev = {2: 'text-align: right;'}
+        if previsao_alterada:
+            headers_prev.append(('Previsto -</br>Necessidade',))
+            fields_prev.append('QTD')
+            style_prev[3] = 'text-align: right;'
+
         context.update({
-            'headers_prev': ['Semana', 'Quantidade'],
-            'fields_prev': ['DT_NECESSIDADE', 'QTD'],
-            'style_prev': {2: 'text-align: right;'},
+            'headers_prev': headers_prev,
+            'fields_prev': fields_prev,
+            'style_prev': style_prev,
             'data_prev': data_prev,
         })
 
@@ -1001,10 +1015,11 @@ class MapaPorInsumo(View):
 
                 semana += datetime.timedelta(days=7)
 
-            # monta sugestões de compra
+            # percorre o mapa de compras para montar sugestões de compra
             data_sug = []
-            for i in range(len(data)):
-                row = data[i]
+            for row in data:
+
+                # pega uma sugestão se estoque < mínimo
                 sugestao_quatidade = 0
                 if row['ESTOQUE_IDEAL'] < estoque_minimo:
                     sugestao_quatidade = estoque_minimo - row['ESTOQUE_IDEAL']
@@ -1014,10 +1029,9 @@ class MapaPorInsumo(View):
                             qtd_lote_mult = sugestao_quatidade // lote_multiplo
                             qtd_lote_mult += 1
                             sugestao_quatidade = lote_multiplo * qtd_lote_mult
-                    sugestao_receber_ideal = row['DATA'] + \
-                        datetime.timedelta(days=-7)
-                    sugestao_receber = row['DATA'] + datetime.timedelta(
-                        days=-7)
+                    sugestao_receber = \
+                        row['DATA'] + datetime.timedelta(days=-7)
+                    sugestao_receber_ideal = sugestao_receber
                     sugestao_comprar = segunda(
                         sugestao_receber +
                         datetime.timedelta(days=-dias_reposicao))
@@ -1026,14 +1040,19 @@ class MapaPorInsumo(View):
                         'SEMANA_RECEPCAO': sugestao_receber,
                         'QUANT': sugestao_quatidade,
                     })
+
+                    # se a sugestão á comprar está no passado, mude para hoje
                     if sugestao_comprar < semana_hoje:
                         avancar = semana_hoje - sugestao_comprar
-                        delta_avancar = datetime.timedelta(days=avancar.days)
-                        sugestao_comprar += delta_avancar
-                        sugestao_receber += delta_avancar
+                        sugestao_receber += datetime.timedelta(
+                            days=avancar.days)
+                        sugestao_comprar = semana_hoje
 
+                # se essa linha do mapa gerou alguma sugestão de compra:
                 if sugestao_quatidade != 0:
 
+                    # se sugestão de compra chega ou passa da última data do
+                    # mapa de compras, adicionar mais datas
                     if semana_fim <= sugestao_receber:
                         semana = semana_fim + datetime.timedelta(days=7)
                         semana_fim = sugestao_receber + datetime.timedelta(
@@ -1052,6 +1071,9 @@ class MapaPorInsumo(View):
                             })
                             semana += datetime.timedelta(days=7)
 
+                    # atualiza o mapa de compras com a sugestão calculada
+                    # calcula "estoque" e "estoque ideal" (feito com as
+                    # sugestões ideais)
                     estoque = qtd_estoque
                     estoque_ideal = qtd_estoque
                     for row in data:
