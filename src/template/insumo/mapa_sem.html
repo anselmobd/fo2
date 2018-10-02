@@ -56,7 +56,7 @@ tbody#refs_tbody tr {
     <input id="chk_comprar" type="checkbox" checked> Compra sugerida |
     <input id="chk_exc_com_receb" type="checkbox" checked> Excesso com Recebimento |
     <input id="chk_exc_sem_receb" type="checkbox"> Excesso sem Recebimento |
-    <input id="chk_zerado" type="checkbox"> Comprar e excesso zerados
+    <input id="chk_zerado" type="checkbox"> Compra sugerida e excesso zerados
   </p>
   <table>
     <thead id="refs_thead">
@@ -104,6 +104,13 @@ tbody#refs_tbody tr {
       success : function(data) {
         if (data) {
           aggregator.insertAdjacentHTML('beforeend', data);
+          if ( tBody.rows.length > 0 ) {
+            var last_id = tBody.rows[tBody.rows.length-1].id;
+            showHide($('#'+last_id+'.flag_comprar'), $("#chk_comprar").is(':checked'));
+            showHide($('.flag_zerado'), $("#chk_zerado").is(':checked'));
+            showHide($('.flag_exc_com_receb'), $("#chk_exc_com_receb").is(':checked'));
+            showHide($('.flag_exc_sem_receb'), $("#chk_exc_sem_receb").is(':checked'));
+          }
           $("#icount").text(iRefAjax+1);
         }
         iRefAjax++;
