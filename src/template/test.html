@@ -46,6 +46,22 @@
   </tbody>
 </table>
 
+<p>table for id sort</p>
+<button onclick="sortById('tb1')">ord by id</button>
+<table>
+  <thead id="th1">
+    <tr><th>ref</th><th align="right">val</th></tr>
+  </thead>
+  <tbody id="tb1">
+    <tr id="tCX001"><td>CX001</td><td align="right">ultimo</td></tr>
+    <tr id="tPA002"><td>PA002</td><td align="right">1345</td></tr>
+    <tr id="tPA001"><td>PA001</td><td align="right">245</td></tr>
+    <tr id="tCA001"><td>CA001</td><td align="right">1244</td></tr>
+    <tr id="tSA001"><td>SA001</td><td align="right">135</td></tr>
+  </tbody>
+</table>
+
+
 <script type="text/javascript">
   var refs = ['asdff', 'qweee'];
   var toAdd = document.getElementById('dtlist');
@@ -145,6 +161,28 @@
         toSort[i].parentNode.appendChild(toSort[i]);
     }
 
+  }
+
+  function sortById(parentId) {
+
+    function displayKey(el) {
+      var prekey = '';
+      if (el.cells[1].innerHTML == 'ultimo') {
+        prekey = 'zzz';
+      }
+      return prekey+el.id;
+    }
+
+    var toSort = document.getElementById(parentId).children;
+    toSort = Array.prototype.slice.call(toSort, 0);
+    toSort.sort(function(a, b) {
+      akey = displayKey(a);
+      bkey = displayKey(b);
+      return akey.localeCompare(bkey)
+    });
+    for (var i = 0, l = toSort.length; i < l; i++) {
+        toSort[i].parentNode.appendChild(toSort[i]);
+    }
   }
 
   $( document ).ready(function() {
