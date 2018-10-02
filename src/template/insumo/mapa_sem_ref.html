@@ -25,10 +25,7 @@
         {% elif excesso > 0 and recebimentos == 0 %}flag_exc_sem_receb
         {% elif comprar == 0 and excesso == 0 %}flag_zerado
         {% endif %}
-        "
-        {% if excesso > 0 and recebimentos == 0 %}style="display: none;"{% endif %}
-        {% if comprar == 0 and excesso == 0 %}style="display: none;"{% endif %}
-        >
+        ">
         <td>{{ nivel }}</td>
         <td><a href="{% url 'insumo:mapa' nivel ref cor tam %}" target="_blank">{{ row.REF }}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></td>
         <td>{{ row.COR }}</td>
