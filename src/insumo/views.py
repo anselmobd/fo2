@@ -1133,6 +1133,8 @@ class MapaPorInsumo(View):
                 max_digits = max(max_digits, num_digits)
 
             for row in data:
+                if row['ESTOQUE'] < estoque_minimo:
+                    row['ESTOQUE|STYLE'] = 'color: red;'
                 row['ESTOQUE|DECIMALS'] = max_digits
                 row['NECESSIDADE|DECIMALS'] = max_digits
                 row['RECEBIMENTO|DECIMALS'] = max_digits
