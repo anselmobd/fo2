@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from fo2 import settings
 from fo2.admin import intr_adm_site
-from .models import Impresso, ImpressoraTermica, ModeloTermica, UsuarioImpresso
+from .models import Impresso, ImpressoraTermica, ModeloTermica, \
+    UsuarioImpresso, Lote
 from .forms import ModeloTermicaForm
 
 
@@ -55,7 +56,21 @@ class UsuarioImpressoAdmin(admin.ModelAdmin):
               'impressora_termica', 'modelo']
 
 
+class LoteAdmin(admin.ModelAdmin):
+    list_display = [
+        'lote', 'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
+        'estagio', 'local'
+    ]
+    ordering = ['lote']
+    search_fields = ['lote', 'op', 'referencia', 'local']
+    fields = [
+        'lote', 'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
+        'estagio', 'local'
+    ]
+
+
 intr_adm_site.register(Impresso, ImpressoAdmin)
 intr_adm_site.register(ImpressoraTermica, ImpressoraTermicaAdmin)
 intr_adm_site.register(ModeloTermica, ModeloTermicaAdmin)
 intr_adm_site.register(UsuarioImpresso, UsuarioImpressoAdmin)
+intr_adm_site.register(Lote, LoteAdmin)
