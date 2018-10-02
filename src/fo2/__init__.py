@@ -1,9 +1,19 @@
-__version__ = '0.1.127'
-__version__date__ = '26/09/2018'
+__version__ = '0.1.130'
+__version__date__ = '02/10/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.130 - 2018/10/02
+#   . Mapa: Pequenos ajustes
+#
+# - 0.1.129 - 2018/09/29
+#   . Mapa de semanal: Pequenos ajustes
+#
+# - 0.1.128 - 2018/09/29
+#   . Lote: Data produção no histórico de bipagens
+#   . Mapa de 1 insumo: Pequenos ajustes
 #
 # - 0.1.127 - 2018/09/26
 #   . Distribuição: Totais
