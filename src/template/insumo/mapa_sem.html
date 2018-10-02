@@ -126,14 +126,16 @@ tbody#refs_tbody tr {
       success : function(data) {
         if (data) {
           aggregator.insertAdjacentHTML('beforeend', data);
+
           if ( tBody.rows.length > 0 ) {
             var last_id = tBody.rows[tBody.rows.length-1].id;
             showHide($('#'+last_id+'.flag_comprar'), $("#chk_comprar").is(':checked'));
-            showHide($('.flag_zerado'), $("#chk_zerado").is(':checked'));
-            showHide($('.flag_exc_com_receb'), $("#chk_exc_com_receb").is(':checked'));
-            showHide($('.flag_exc_sem_receb'), $("#chk_exc_sem_receb").is(':checked'));
+            showHide($('#'+last_id+'.flag_zerado'), $("#chk_zerado").is(':checked'));
+            showHide($('#'+last_id+'.flag_exc_com_receb'), $("#chk_exc_com_receb").is(':checked'));
+            showHide($('#'+last_id+'.flag_exc_sem_receb'), $("#chk_exc_sem_receb").is(':checked'));
             sortByDisplayId(tBody);
           }
+
           $("#icount").text(iRefAjax+1);
         }
         iRefAjax++;
@@ -162,7 +164,6 @@ tbody#refs_tbody tr {
   $( document ).ready(function() {
 
     $("#itotal").text(refs.length);
-
 
     $("#chk_comprar").on('change', function () {
       showHide($('.flag_comprar'), $(this).is(':checked'))
