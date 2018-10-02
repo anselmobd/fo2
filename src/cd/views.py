@@ -42,14 +42,27 @@ class LotelLocal(PermissionRequiredMixin, View):
     title_name = 'Inventariar'
 
     def mount_context(self, request, form):
+        cursor = connections['so'].cursor()
+
         endereco = form.cleaned_data['endereco']
         lote = form.cleaned_data['lote']
+        periodo = lote[:4]
+        ordem_confeccao = lote[-5:]
         identificado = form.cleaned_data['identificado']
 
         if endereco == 'SAI':
             endereco = None
 
         context = {'endereco': endereco}
+
+        lote_sys = lotes.models.posicao_get_item(
+            cursor, periodo, ordem_confeccao)
+        if len(lote_sys) == 0:
+            if endereco is not None:
+                context.update({
+                    'erro': 'Lote não encontrado no Systêxtil. Única ação '
+                            'possivel é dar saída (Endereço "SAI").'})
+                return context
 
         try:
             lote_rec = lotes.models.Lote.objects.get(lote=lote)
@@ -66,16 +79,17 @@ class LotelLocal(PermissionRequiredMixin, View):
             'local': lote_rec.local,
             })
 
-        try:
-            lote_rec_estag = lotes.models.Lote.objects.filter(
-                Q(estagio=63) | Q(estagio=66) |
-                Q(estagio=999)).get(lote=lote)
-        except lotes.models.Lote.DoesNotExist:
-            context.update({
-                'erroestagio': '57, 63, 66 ou finalizado',
-                'estagio': lote_rec.estagio,
-                })
-            return context
+        if len(lote_sys) != 0:
+            try:
+                lote_rec_estag = lotes.models.Lote.objects.filter(
+                    Q(estagio=63) | Q(estagio=66) |
+                    Q(estagio=999)).get(lote=lote)
+            except lotes.models.Lote.DoesNotExist:
+                context.update({
+                    'erroestagio': '57, 63, 66 ou finalizado',
+                    'estagio': lote_rec.estagio,
+                    })
+                return context
 
         if identificado:
             form.data['identificado'] = None
