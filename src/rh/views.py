@@ -82,6 +82,11 @@ def index(request):
         'link': '/media/rh/Dica-da-Semana-2018-08-06.jpg',
       },
       {
+        'data': datetime.strptime('30/07/2018', '%d/%m/%Y').date(),
+        'chamada': 'Desenvolvimento da equipe',
+        'link': '/media/rh/dica_2018-07-30_desenvolvimento_da_equipe.png',
+      },
+      {
         'data': datetime.strptime('25/06/2018', '%d/%m/%Y').date(),
         'chamada': 'Mudança',
         'link': '/media/rh/Dica-da-Semana-2018-06-25.jpg',
