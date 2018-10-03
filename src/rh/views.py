@@ -175,9 +175,14 @@ def mensagens(request):
     return render(request, 'rh/mensagens.html', context)
 
 
-def aniversariantes(request, ano, mes):
-    intmes = int(mes)
-    intano = int(ano)
+def aniversariantes(request, *args, **kwargs):
+    if 'mes' in kwargs:
+        intmes = int(kwargs['mes'])
+        intano = int(kwargs['ano'])
+    else:
+        now = datetime.now()
+        intano = now.year
+        intmes = now.month
     mes = '{:02}'.format(intmes)
     datames = datetime(intano, intmes, 1)
 
