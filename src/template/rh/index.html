@@ -3,6 +3,8 @@
 
 {% block title.content %}RH em ação!{% endblock title.content %}
 
+{% block header.content %}{% endblock %}
+
 {% block content %}
 <center>
   <table>
@@ -19,8 +21,8 @@
             <img                                         src="/media/rh/mensagem_2018-09-19_primavera_h50.jpg" title="Primavera"
             ></a>
         </h2>
-        <h2><a href="{% url 'rh:aniversariantes' 2018 10 %}">Aniversariantes
-          <img src="/media/rh/aniversario_h50_icone.jpg" title="aniversariantes"></a></h2>
+        <h2><a href="{% url 'rh:aniversariantes_now' %}">Aniversariantes
+          <img src="/media/rh/baloes_h50_icone.jpg" title="aniversariantes"></a></h2>
         <h2>
           <a href="{% url 'rh:datas' %}">Datas comemorativas
             <img                                         src="/media/rh/datas_comemorativas/2018-08-12_Dia_dos_Pais_h50_icone.jpg" title="Dia dos Pais!"
