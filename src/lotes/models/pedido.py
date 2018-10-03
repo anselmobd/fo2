@@ -209,7 +209,7 @@ def ped_expedicao(
         LEFT JOIN PEDI_010 c
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
-        WHERE 1=1
+        WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
           {filtro_embarque_de} -- filtro_embarque_de
           {filtro_embarque_ate} -- filtro_embarque_ate
           {filtro_pedido_tussor} -- filtro_pedido_tussor
