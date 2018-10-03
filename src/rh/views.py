@@ -57,6 +57,11 @@ def index(request):
     ]
     dicas = [
       {
+        'data': datetime.strptime('02/10/2018', '%d/%m/%Y').date(),
+        'chamada': 'Alta performance com suas equipes',
+        'link': '/media/rh/dica_2018-10-02_alta_performance_equipe.jpg',
+      },
+      {
         'data': datetime.strptime('18/09/2018', '%d/%m/%Y').date(),
         'chamada': 'Pessoas de sucesso',
         'link': '/media/rh/dica_2018-09-18_pessoas-de-sucesso.png',
