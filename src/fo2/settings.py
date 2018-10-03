@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 from . import __version__, __version__date__
 
+from .db_password import DBPASS, DBPASS_PERSONA
+
 
 PROJ_VERSION = __version__
 PROJ_VERSION_DATE = __version__date__
@@ -117,6 +119,14 @@ DATABASES = {
         'PASSWORD': 'oracle',
         'HOST': 'localhost',
         'PORT': '26521',
+    },
+    'persona': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "nasajon_db",
+        'USER': "nasajon_user",
+        'PASSWORD': DBPASS_PERSONA,
+        'HOST': 'localhost',
+        'PORT': '25434',
     },
     # 'f1': {  # F1
     #     'ENGINE': 'django.db.backends.firebird',

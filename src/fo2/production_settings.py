@@ -2,7 +2,7 @@
 
 from .settings import *
 
-from .db_password import DBPASS
+from .db_password import DBPASS, DBPASS_PERSONA
 
 DEBUG = False
 
@@ -22,5 +22,13 @@ DATABASES = {
         'PASSWORD': 'oracle',
         'HOST': '192.168.1.93',
         'PORT': '1521',
-    }
+    },
+    'persona': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "nasajon_db",
+        'USER': "nasajon_user",
+        'PASSWORD': DBPASS_PERSONA,
+        'HOST': '192.168.1.96',
+        'PORT': '5434',
+    },
 }
