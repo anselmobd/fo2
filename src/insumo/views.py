@@ -832,7 +832,7 @@ class MapaPorInsumo(View):
 
         semana_recebimento = segunda(
             semana_hoje +
-            datetime.timedelta(days=dias_reposicao))
+            datetime.timedelta(days=dias_reposicao+7))
 
         # Necessidades
         data_ins = models.insumo_necessidade_semana(
@@ -1146,7 +1146,7 @@ class MapaPorInsumo(View):
                     row['ESTOQUE|STYLE'] = 'color: red;'
                 if row['COMPRAR_PASSADO'] > 0:
                     row['COMPRAR_PASSADO|STYLE'] = 'color: red;'
-                if row['DATA'] <= semana_recebimento and \
+                if row['DATA'] < semana_recebimento and \
                         row['RECEBER'] > 0:
                     row['RECEBER|STYLE'] = 'color: red;'
 
