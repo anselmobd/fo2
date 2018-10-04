@@ -1,9 +1,17 @@
-__version__ = '0.1.130'
-__version__date__ = '02/10/2018'
+__version__ = '0.1.132'
+__version__date__ = '04/10/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.132 - 2018/10/04
+#   . Mapa: Separação de valores passados
+#   . Mapa: Mais uso de cores para compreensão
+#
+# - 0.1.131 - 2018/10/03
+#   . RH: Aniversariantes from Persona
+#   . Expedição: Bug mostrava pedidos cancelados
 #
 # - 0.1.130 - 2018/10/02
 #   . Mapa: Pequenos ajustes
