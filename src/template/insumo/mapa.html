@@ -22,7 +22,7 @@
 {% endif %}
 {% if data %}
   <h2>Mapa de compras</h2>
-  <table>
+  <table id="mapa_table">
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
   </table>
@@ -81,4 +81,88 @@
     </td>
   </tr>
 </table>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+
+// https://stackoverflow.com/questions/48310081/how-to-draw-arrow-in-html-table-across-cells
+
+// gets the center of a table cell relative to the document
+function getCellCenter(table, row, column) {
+  var tableRow = $(table).find('tr')[row];
+  var tableCell = $(tableRow).find('td')[column];
+
+  var offset = $(tableCell).offset();
+  var width = $(tableCell).innerWidth();
+  var height = $(tableCell).innerHeight();
+
+  return {
+    x: offset.left + width / 2,
+    y: offset.top + height / 2
+  }
+}
+
+// draws an arrow on the document from the start to the end offsets
+function drawArrow(start, end) {
+
+  // create a canvas to draw the arrow on
+  var canvas = document.createElement('canvas');
+  canvas.width = $('body').innerWidth();
+  canvas.height = $('body').innerHeight();
+  $(canvas).css('position', 'absolute');
+  $(canvas).css('pointer-events', 'none');
+  $(canvas).css('top', '0');
+  $(canvas).css('left', '0');
+  $(canvas).css('opacity', '0.85');
+  $('body').append(canvas);
+
+  // get the drawing context
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'steelblue';
+  ctx.strokeStyle = 'steelblue';
+
+  // draw line from start to end
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  ctx.lineTo(end.x, end.y);
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // draw circle at beginning of line
+  ctx.beginPath();
+  ctx.arc(start.x, start.y, 4, 0, Math.PI * 2, true);
+  ctx.fill();
+
+  // draw pointer at end of line (needs rotation)
+  ctx.beginPath();
+  var angle = Math.atan2(end.y - start.y, end.x - start.x);
+  ctx.translate(end.x, end.y);
+  ctx.rotate(angle);
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-10, -7);
+  ctx.lineTo(-10, 7);
+  ctx.lineTo(0, 0);
+  ctx.fill();
+
+  // reset canvas context
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  return canvas;
+}
+
+// finds the center of the start and end cells, and then calls drawArrow
+function drawArrowOnTable(table, startRow, startColumn, endRow, endColumn) {
+  drawArrow(
+    getCellCenter($(table), startRow, startColumn),
+    getCellCenter($(table), endRow, endColumn)
+  );
+}
+
+// draw an arrow from (1, 0) to (2, 4)
+// drawArrowOnTable('#mapa_table', 1, 6, 4, 7);
+// drawArrowOnTable('#mapa_table', 1, 6, 5, 7);
+// drawArrowOnTable('#mapa_table', 4, 5, 9, 7);
+
+</script>
 {% endblock %}
