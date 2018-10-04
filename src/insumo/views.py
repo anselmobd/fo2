@@ -894,7 +894,8 @@ class MapaPorInsumo(View):
 
         for row in data_ins:
             if 'ITALIC' in row:
-                row['QTD_INSUMO|STYLE'] = 'font-style: italic;'
+                row['QTD_INSUMO|STYLE'] = \
+                    'font-weight: bold; font-style: italic;'
 
         previsao_alterada = False
         for row in data_prev:
@@ -902,7 +903,8 @@ class MapaPorInsumo(View):
                 previsao_alterada = True
             row['QTD|DECIMALS'] = max_digits
             if 'ITALIC' in row:
-                row['QTD|STYLE'] = 'font-style: italic;'
+                row['QTD|STYLE'] = \
+                    'font-weight: bold; font-style: italic;'
 
         headers_prev = ['Semana', 'Previsto']
         fields_prev = ['DT_NECESSIDADE', 'QTD_ORIGINAL']
