@@ -854,8 +854,9 @@ class MapaPorInsumo(View):
             if semana1 is None:
                 semana1 = row['SEMANA_NECESSIDADE']
             if semana1 < semana_hoje and \
-                    row['SEMANA_NECESSIDADE'] <= semana_hoje:
-                row['QTD_INSUMO|STYLE'] = 'font-weight: bold;'
+                    row['SEMANA_NECESSIDADE'] < semana_hoje:
+                row['QTD_INSUMO|STYLE'] = \
+                'font-weight: bold; color: darkorange;'
 
         context.update({
             'headers_ins': ['Semana', 'Quantidade'],
@@ -934,7 +935,8 @@ class MapaPorInsumo(View):
             if semana1 is None:
                 semana1 = row['SEMANA_ENTREGA']
             if semana1 < semana_hoje and row['SEMANA_ENTREGA'] <= semana_hoje:
-                row['QTD_A_RECEBER|STYLE'] = 'font-weight: bold;'
+                row['QTD_A_RECEBER|STYLE'] = \
+                    'font-weight: bold; color: darkcyan;'
 
         context.update({
             'headers_irs': ['Semana', 'Quantidade'],
@@ -953,19 +955,18 @@ class MapaPorInsumo(View):
             'QTD': x['QTD']
             } for x in data_prev])
         necessidades = {}
-        pri_necessidade = None
+        necessidades_passadas = 0
         ult_necessidade = None
         for row in data_ness:
-            semana = max(
-                row['DT'],
-                semana_hoje)
-            if semana in necessidades:
-                necessidades[semana] += row['QTD']
+            if row['DT'] < semana_hoje:
+                necessidades_passadas += row['QTD']
+                ult_necessidade = semana_hoje
             else:
-                necessidades[semana] = row['QTD']
-            if pri_necessidade is None:
-                pri_necessidade = semana
-            ult_necessidade = semana
+                if row['DT'] in necessidades:
+                    necessidades[row['DT']] += row['QTD']
+                else:
+                    necessidades[row['DT']] = row['QTD']
+                ult_necessidade = row['DT']
 
         recebimentos = {}
         pri_recebimento = None
@@ -1005,9 +1006,15 @@ class MapaPorInsumo(View):
                 else:
                     necessidade = 0
 
+                if semana == semana_hoje:
+                    necessidade_passada = necessidades_passadas
+                else:
+                    necessidade_passada = 0
+
                 data.append({
                     'DATA': semana,
                     'NECESSIDADE': necessidade,
+                    'NECESSIDADE_PASSADA': necessidade_passada,
                     'RECEBIMENTO': recebimento,
                     'ESTOQUE': estoque,
                     'ESTOQUE_IDEAL': estoque,
@@ -1017,7 +1024,8 @@ class MapaPorInsumo(View):
                     'RECEBER_IDEAL': 0,
                     'RECEBER_IDEAL_ANTES': 0,
                 })
-                estoque = estoque - necessidade + recebimento
+                estoque = estoque \
+                    - necessidade - necessidade_passada + recebimento
 
                 semana += datetime.timedelta(days=7)
 
@@ -1066,6 +1074,7 @@ class MapaPorInsumo(View):
                             data.append({
                                 'DATA': semana,
                                 'NECESSIDADE': 0,
+                                'NECESSIDADE_PASSADA': 0,
                                 'RECEBIMENTO': 0,
                                 'ESTOQUE': 0,
                                 'ESTOQUE_IDEAL': 0,
@@ -1098,14 +1107,19 @@ class MapaPorInsumo(View):
                                 row['RECEBER_IDEAL'] += sugestao_quatidade
 
                         row['ESTOQUE'] = estoque
-                        estoque = estoque - row['NECESSIDADE'] + \
-                            row['RECEBIMENTO']  # + row['RECEBER']
+                        estoque = estoque \
+                            - row['NECESSIDADE'] \
+                            - row['NECESSIDADE_PASSADA'] \
+                            + row['RECEBIMENTO']  # + row['RECEBER']
 
                         row['ESTOQUE_IDEAL'] = \
                             row['RECEBER_IDEAL_ANTES'] + estoque_ideal
-                        estoque_ideal = row['RECEBER_IDEAL_ANTES'] + \
-                            estoque_ideal - row['NECESSIDADE'] + \
-                            row['RECEBIMENTO'] + row['RECEBER_IDEAL']
+                        estoque_ideal = row['RECEBER_IDEAL_ANTES'] \
+                            + estoque_ideal \
+                            - row['NECESSIDADE'] \
+                            - row['NECESSIDADE_PASSADA'] \
+                            + row['RECEBIMENTO'] \
+                            + row['RECEBER_IDEAL']
 
             max_digits = 0
             for row in data_sug:
@@ -1119,7 +1133,8 @@ class MapaPorInsumo(View):
                     semana1 = row['SEMANA_COMPRA']
                 if semana1 < semana_hoje and \
                         row['SEMANA_COMPRA'] < semana_hoje:
-                    row['QUANT|STYLE'] = 'font-weight: bold;'
+                    row['QUANT|STYLE'] = \
+                        'font-weight: bold; color: darkmagenta;'
 
             context.update({
                 'headers_sug': ['Semana de compra', 'Semana de chegada',
@@ -1134,6 +1149,7 @@ class MapaPorInsumo(View):
                 num_digits = max(
                     str(row['ESTOQUE'])[::-1].find('.'),
                     str(row['NECESSIDADE'])[::-1].find('.'),
+                    str(row['NECESSIDADE_PASSADA'])[::-1].find('.'),
                     str(row['RECEBIMENTO'])[::-1].find('.'),
                     str(row['COMPRAR'])[::-1].find('.'),
                     str(row['COMPRAR_PASSADO'])[::-1].find('.'),
@@ -1144,14 +1160,20 @@ class MapaPorInsumo(View):
             for row in data:
                 if row['ESTOQUE'] < estoque_minimo:
                     row['ESTOQUE|STYLE'] = 'color: red;'
+                if row['NECESSIDADE_PASSADA'] > 0:
+                    row['NECESSIDADE_PASSADA|STYLE'] = \
+                        'font-weight: bold; color: darkorange;'
                 if row['COMPRAR_PASSADO'] > 0:
-                    row['COMPRAR_PASSADO|STYLE'] = 'color: red;'
+                    row['COMPRAR_PASSADO|STYLE'] = \
+                        'font-weight: bold; color: darkmagenta;'
                 if row['DATA'] < semana_recebimento and \
                         row['RECEBER'] > 0:
-                    row['RECEBER|STYLE'] = 'color: red;'
+                    row['RECEBER|STYLE'] = \
+                        'font-weight: bold; color: darkmagenta;'
 
                 row['ESTOQUE|DECIMALS'] = max_digits
                 row['NECESSIDADE|DECIMALS'] = max_digits
+                row['NECESSIDADE_PASSADA|DECIMALS'] = max_digits
                 row['RECEBIMENTO|DECIMALS'] = max_digits
                 row['COMPRAR|DECIMALS'] = max_digits
                 row['COMPRAR_PASSADO|DECIMALS'] = max_digits
@@ -1159,18 +1181,20 @@ class MapaPorInsumo(View):
 
             context.update({
                 'headers': ['Semana', 'Estoque Real',
-                            'Necessidade', 'Recebimento',
+                            'Necessidade', 'Necessidade passada',
+                            'Recebimento',
                             'Compra sugerida', 'Compra atrasada',
                             'Recebimento sugerido'],
                 'fields': ['DATA', 'ESTOQUE',
-                           'NECESSIDADE', 'RECEBIMENTO',
+                           'NECESSIDADE', 'NECESSIDADE_PASSADA', 'RECEBIMENTO',
                            'COMPRAR', 'COMPRAR_PASSADO', 'RECEBER'],
                 'style': {2: 'text-align: right;',
                           3: 'text-align: right;',
                           4: 'text-align: right;',
                           5: 'text-align: right;',
                           6: 'text-align: right;',
-                          7: 'text-align: right;'},
+                          7: 'text-align: right;',
+                          8: 'text-align: right;'},
                 'data': data,
             })
 
