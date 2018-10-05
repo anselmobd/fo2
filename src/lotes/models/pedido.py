@@ -202,14 +202,17 @@ def ped_expedicao(
     sql += """
         , sum(i.QTDE_PEDIDA) QTD
         FROM PEDI_100 ped -- pedido de venda
+        LEFT JOIN FATU_050 f -- fatura
+          ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
         JOIN PEDI_110 i -- item de pedido de venda
           ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
         LEFT JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
-        LEFT JOIN PEDI_010 c
+        LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+          AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_embarque_de} -- filtro_embarque_de
           {filtro_embarque_ate} -- filtro_embarque_ate
           {filtro_pedido_tussor} -- filtro_pedido_tussor
