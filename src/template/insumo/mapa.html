@@ -86,28 +86,21 @@
 {% block javascript %}
 <script type="text/javascript">
 
+// baseado em
 // https://stackoverflow.com/questions/48310081/how-to-draw-arrow-in-html-table-across-cells
 
-// gets the center of a table cell relative to the document
-function getCellCenter(table, row, column) {
-  var tableRow = $(table).find('tr')[row];
-  var tableCell = $(tableRow).find('td')[column];
+// create vars canvas e context
+var canvas = null;
+var ctx = null;
 
-  var offset = $(tableCell).offset();
-  var width = $(tableCell).innerWidth();
-  var height = $(tableCell).innerHeight();
+arrows = [];
+{% for arrow in arrows %}
+  arrows.push([{% for val in arrow %}{% if forloop.counter != 1 %}, {% endif %}{{ val }}{% endfor %}]);
+{% endfor %}
 
-  return {
-    x: offset.left + width / 2,
-    y: offset.top + height / 2
-  }
-}
-
-// draws an arrow on the document from the start to the end offsets
-function drawArrow(start, end) {
-
-  // create a canvas to draw the arrow on
-  var canvas = document.createElement('canvas');
+// init canvas e context
+function iniCanvas() {
+  canvas = document.createElement('canvas');
   canvas.width = $('body').innerWidth();
   canvas.height = $('body').innerHeight();
   $(canvas).css('position', 'absolute');
@@ -116,9 +109,38 @@ function drawArrow(start, end) {
   $(canvas).css('left', '0');
   $(canvas).css('opacity', '0.85');
   $('body').append(canvas);
+  ctx = canvas.getContext('2d');
+}
 
-  // get the drawing context
-  var ctx = canvas.getContext('2d');
+// gets the center of a table cell relative to the document
+function getCellCenter(table, row, column, position) {
+  var tableRow = $(table).find('tr')[row];
+  var tableCell = $(tableRow).find('td')[column];
+
+  var offset = $(tableCell).offset();
+  var width = $(tableCell).innerWidth();
+  var height = $(tableCell).innerHeight();
+
+  if (position == 'c') {
+    return {
+      x: offset.left + width / 2,
+      y: offset.top + height / 2
+    }
+  } else if (position == 'r') {
+    return {
+      x: offset.left + width,
+      y: offset.top + height / 2
+    }
+  } else if (position == 'l') {
+    return {
+      x: offset.left,
+      y: offset.top + height / 2
+    }
+  }
+}
+
+// draws an arrow on the document from the start to the end offsets
+function drawArrow(start, end) {
   ctx.fillStyle = 'steelblue';
   ctx.strokeStyle = 'steelblue';
 
@@ -147,22 +169,39 @@ function drawArrow(start, end) {
 
   // reset canvas context
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-  return canvas;
 }
 
 // finds the center of the start and end cells, and then calls drawArrow
-function drawArrowOnTable(table, startRow, startColumn, endRow, endColumn) {
+function drawArrowOnTable(table, startRow, startColumn, startPos,
+                                 endRow, endColumn, endPos) {
   drawArrow(
-    getCellCenter($(table), startRow, startColumn),
-    getCellCenter($(table), endRow, endColumn)
+    getCellCenter($(table), startRow, startColumn, startPos),
+    getCellCenter($(table), endRow, endColumn, endPos)
   );
 }
 
-// draw an arrow from (1, 0) to (2, 4)
-// drawArrowOnTable('#mapa_table', 1, 6, 4, 7);
-// drawArrowOnTable('#mapa_table', 1, 6, 5, 7);
-// drawArrowOnTable('#mapa_table', 4, 5, 9, 7);
+function clearCanvas() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  canvas.width = $('body').innerWidth();
+  canvas.height = $('body').innerHeight();
+}
+
+function doArrows() {
+  clearCanvas();
+  var i;
+  for (i = 0; i < arrows.length; i++) {
+    drawArrowOnTable('#mapa_table', arrows[i][0], arrows[i][1], 'r', arrows[i][2], arrows[i][3], 'c');
+  }
+}
+
+$(window).resize(function(){
+  doArrows();
+});
+
+$(document).ready(function(){
+  iniCanvas();
+  doArrows();
+});
 
 </script>
 {% endblock %}
