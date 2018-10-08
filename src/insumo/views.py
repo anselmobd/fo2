@@ -856,7 +856,7 @@ class MapaPorInsumo(View):
             if semana1 < semana_hoje and \
                     row['SEMANA_NECESSIDADE'] < semana_hoje:
                 row['QTD_INSUMO|STYLE'] = \
-                'font-weight: bold; color: darkorange;'
+                    'font-weight: bold; color: darkorange;'
 
         context.update({
             'headers_ins': ['Semana', 'Quantidade'],
@@ -1159,7 +1159,8 @@ class MapaPorInsumo(View):
                     )
                 max_digits = max(max_digits, num_digits)
 
-            for row in data:
+            arrows = []
+            for index, row in enumerate(data):
                 if row['ESTOQUE'] < estoque_minimo:
                     row['ESTOQUE|STYLE'] = 'color: red;'
                 if row['NECESSIDADE_PASSADA'] > 0:
@@ -1181,6 +1182,13 @@ class MapaPorInsumo(View):
                 row['COMPRAR_PASSADO|DECIMALS'] = max_digits
                 row['RECEBER|DECIMALS'] = max_digits
 
+                isemana = index+1
+                if row['RECEBER'] > 0:
+                    if isemana <= semanas:
+                        arrows.append([1, 6, isemana, 7])
+                    else:
+                        arrows.append([isemana-semanas, 5, isemana, 7])
+
             context.update({
                 'headers': ['Semana', 'Estoque Real',
                             'Necessidade', 'Necessidade passada',
@@ -1198,6 +1206,7 @@ class MapaPorInsumo(View):
                           7: 'text-align: right;',
                           8: 'text-align: right;'},
                 'data': data,
+                'arrows': arrows,
             })
 
         return context
