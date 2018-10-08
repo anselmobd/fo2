@@ -1,9 +1,13 @@
-__version__ = '0.1.132'
-__version__date__ = '04/10/2018'
+__version__ = '0.1.133'
+__version__date__ = '08/10/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.133 - 2018/10/08
+#   . Mapa: setas para esclarescer relação entre compra e recebimento
+#   . Mapa: Separando recebimentos atrasados
 #
 # - 0.1.132 - 2018/10/04
 #   . Mapa: Separação de valores passados
