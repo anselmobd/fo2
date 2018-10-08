@@ -936,7 +936,7 @@ class MapaPorInsumo(View):
             row['QTD_A_RECEBER|DECIMALS'] = max_digits
             if semana1 is None:
                 semana1 = row['SEMANA_ENTREGA']
-            if semana1 < semana_hoje and row['SEMANA_ENTREGA'] <= semana_hoje:
+            if semana1 < semana_hoje and row['SEMANA_ENTREGA'] < semana_hoje:
                 row['QTD_A_RECEBER|STYLE'] = \
                     'font-weight: bold; color: darkcyan;'
 
@@ -973,17 +973,20 @@ class MapaPorInsumo(View):
         recebimentos = {}
         pri_recebimento = None
         ult_recebimento = None
+        recebimentos_atrasados = 0
         for row in data_irs:
-            semana = max(
-                row['SEMANA_ENTREGA'],
-                semana_hoje)
-            if semana in recebimentos:
-                recebimentos[semana] += row['QTD_A_RECEBER']
+            if row['SEMANA_ENTREGA'] < semana_hoje:
+                recebimentos_atrasados += row['QTD_A_RECEBER']
+                ult_recebimento = semana_hoje
             else:
-                recebimentos[semana] = row['QTD_A_RECEBER']
-            if pri_recebimento is None:
-                pri_recebimento = semana
-            ult_recebimento = semana
+                semana = row['SEMANA_ENTREGA']
+                if semana in recebimentos:
+                    recebimentos[semana] += row['QTD_A_RECEBER']
+                else:
+                    recebimentos[semana] = row['QTD_A_RECEBER']
+                if pri_recebimento is None:
+                    pri_recebimento = semana
+                ult_recebimento = semana
 
         semana = semana_hoje
 
@@ -1010,14 +1013,17 @@ class MapaPorInsumo(View):
 
                 if semana == semana_hoje:
                     necessidade_passada = necessidades_passadas
+                    recebimento_atrasado = recebimentos_atrasados
                 else:
                     necessidade_passada = 0
+                    recebimento_atrasado = 0
 
                 data.append({
                     'DATA': semana,
                     'NECESSIDADE': necessidade,
                     'NECESSIDADE_PASSADA': necessidade_passada,
                     'RECEBIMENTO': recebimento,
+                    'RECEBIMENTO_ATRASADO': recebimento_atrasado,
                     'ESTOQUE': estoque,
                     'ESTOQUE_IDEAL': estoque,
                     'COMPRAR': 0,
@@ -1027,7 +1033,8 @@ class MapaPorInsumo(View):
                     'RECEBER_IDEAL_ANTES': 0,
                 })
                 estoque = estoque \
-                    - necessidade - necessidade_passada + recebimento
+                    - necessidade - necessidade_passada \
+                    + recebimento + recebimento_atrasado
 
                 semana += datetime.timedelta(days=7)
 
@@ -1078,6 +1085,7 @@ class MapaPorInsumo(View):
                                 'NECESSIDADE': 0,
                                 'NECESSIDADE_PASSADA': 0,
                                 'RECEBIMENTO': 0,
+                                'RECEBIMENTO_ATRASADO': 0,
                                 'ESTOQUE': 0,
                                 'ESTOQUE_IDEAL': 0,
                                 'COMPRAR': 0,
@@ -1112,7 +1120,8 @@ class MapaPorInsumo(View):
                         estoque = estoque \
                             - row['NECESSIDADE'] \
                             - row['NECESSIDADE_PASSADA'] \
-                            + row['RECEBIMENTO']  # + row['RECEBER']
+                            + row['RECEBIMENTO'] \
+                            + row['RECEBIMENTO_ATRASADO']
 
                         row['ESTOQUE_IDEAL'] = \
                             row['RECEBER_IDEAL_ANTES'] + estoque_ideal
@@ -1121,6 +1130,7 @@ class MapaPorInsumo(View):
                             - row['NECESSIDADE'] \
                             - row['NECESSIDADE_PASSADA'] \
                             + row['RECEBIMENTO'] \
+                            + row['RECEBIMENTO_ATRASADO'] \
                             + row['RECEBER_IDEAL']
 
             max_digits = 0
@@ -1153,6 +1163,7 @@ class MapaPorInsumo(View):
                     str(row['NECESSIDADE'])[::-1].find('.'),
                     str(row['NECESSIDADE_PASSADA'])[::-1].find('.'),
                     str(row['RECEBIMENTO'])[::-1].find('.'),
+                    str(row['RECEBIMENTO_ATRASADO'])[::-1].find('.'),
                     str(row['COMPRAR'])[::-1].find('.'),
                     str(row['COMPRAR_PASSADO'])[::-1].find('.'),
                     str(row['RECEBER'])[::-1].find('.'),
@@ -1166,6 +1177,9 @@ class MapaPorInsumo(View):
                 if row['NECESSIDADE_PASSADA'] > 0:
                     row['NECESSIDADE_PASSADA|STYLE'] = \
                         'font-weight: bold; color: darkorange;'
+                if row['RECEBIMENTO_ATRASADO'] > 0:
+                    row['RECEBIMENTO_ATRASADO|STYLE'] = \
+                        'font-weight: bold; color: darkcyan;'
                 if row['COMPRAR_PASSADO'] > 0:
                     row['COMPRAR_PASSADO|STYLE'] = \
                         'font-weight: bold; color: darkmagenta;'
@@ -1178,6 +1192,7 @@ class MapaPorInsumo(View):
                 row['NECESSIDADE|DECIMALS'] = max_digits
                 row['NECESSIDADE_PASSADA|DECIMALS'] = max_digits
                 row['RECEBIMENTO|DECIMALS'] = max_digits
+                row['RECEBIMENTO_ATRASADO|DECIMALS'] = max_digits
                 row['COMPRAR|DECIMALS'] = max_digits
                 row['COMPRAR_PASSADO|DECIMALS'] = max_digits
                 row['RECEBER|DECIMALS'] = max_digits
@@ -1185,18 +1200,19 @@ class MapaPorInsumo(View):
                 isemana = index+1
                 if row['RECEBER'] > 0:
                     if isemana <= semanas:
-                        arrows.append([1, 6, isemana, 7])
+                        arrows.append([1, 7, isemana, 8])
                     else:
-                        arrows.append([isemana-semanas, 5, isemana, 7])
+                        arrows.append([isemana-semanas, 6, isemana, 8])
 
             context.update({
                 'headers': ['Semana', 'Estoque Real',
                             'Necessidade', 'Necessidade passada',
-                            'Recebimento',
+                            'Recebimento', 'Recebimento atrasado',
                             'Compra sugerida', 'Compra atrasada',
                             'Recebimento sugerido'],
                 'fields': ['DATA', 'ESTOQUE',
-                           'NECESSIDADE', 'NECESSIDADE_PASSADA', 'RECEBIMENTO',
+                           'NECESSIDADE', 'NECESSIDADE_PASSADA',
+                           'RECEBIMENTO', 'RECEBIMENTO_ATRASADO',
                            'COMPRAR', 'COMPRAR_PASSADO', 'RECEBER'],
                 'style': {2: 'text-align: right;',
                           3: 'text-align: right;',
@@ -1204,7 +1220,8 @@ class MapaPorInsumo(View):
                           5: 'text-align: right;',
                           6: 'text-align: right;',
                           7: 'text-align: right;',
-                          8: 'text-align: right;'},
+                          8: 'text-align: right;',
+                          9: 'text-align: right;'},
                 'data': data,
                 'arrows': arrows,
             })
