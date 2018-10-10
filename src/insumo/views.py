@@ -808,6 +808,8 @@ class MapaPorInsumo(View):
                 row['DT_INVENTARIO'] = ''
             semanas = math.ceil(row['REPOSICAO'] / 7)
             row['REP_STR'] = '{}d. ({}s.)'.format(row['REPOSICAO'], semanas)
+            if row['QUANT'] < row['STQ_MIN']:
+                row['QUANT|STYLE'] = 'font-weight: bold; color: red;'
 
         context.update({
             'headers_id': ['Nível', 'Insumo', 'Cor', 'Tamanho',
@@ -1137,6 +1139,9 @@ class MapaPorInsumo(View):
 
             for row in data_sug:
                 row['QUANT|DECIMALS'] = max_digits
+                if row['SEMANA_RECEPCAO'] < semana_hoje:
+                    row['SEMANA_RECEPCAO|STYLE'] = \
+                        'font-weight: bold; color: red;'
                 if row['SEMANA_COMPRA'] < semana_hoje:
                     row['QUANT|STYLE'] = \
                         'font-weight: bold; color: darkmagenta;'
@@ -1166,7 +1171,10 @@ class MapaPorInsumo(View):
             arrows = []
             for index, row in enumerate(data):
                 if row['ESTOQUE'] < estoque_minimo:
-                    row['ESTOQUE|STYLE'] = 'color: red;'
+                    if index == 0:
+                        row['ESTOQUE|STYLE'] = 'font-weight: bold; color: red;'
+                    else:
+                        row['ESTOQUE|STYLE'] = 'color: red;'
                 if row['NECESSIDADE_PASSADA'] > 0:
                     row['NECESSIDADE_PASSADA|STYLE'] = \
                         'font-weight: bold; color: darkorange;'
