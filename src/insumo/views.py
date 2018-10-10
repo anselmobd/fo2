@@ -930,13 +930,10 @@ class MapaPorInsumo(View):
             num_digits = str(row['QTD_A_RECEBER'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
-        semana1 = None
         for row in data_irs:
             row['SEMANA_ENTREGA'] = row['SEMANA_ENTREGA'].date()
             row['QTD_A_RECEBER|DECIMALS'] = max_digits
-            if semana1 is None:
-                semana1 = row['SEMANA_ENTREGA']
-            if semana1 < semana_hoje and row['SEMANA_ENTREGA'] < semana_hoje:
+            if row['SEMANA_ENTREGA'] < semana_hoje:
                 row['QTD_A_RECEBER|STYLE'] = \
                     'font-weight: bold; color: darkcyan;'
 
@@ -1138,13 +1135,9 @@ class MapaPorInsumo(View):
                 num_digits = str(row['QUANT'])[::-1].find('.')
                 max_digits = max(max_digits, num_digits)
 
-            semana1 = None
             for row in data_sug:
                 row['QUANT|DECIMALS'] = max_digits
-                if semana1 is None:
-                    semana1 = row['SEMANA_COMPRA']
-                if semana1 < semana_hoje and \
-                        row['SEMANA_COMPRA'] < semana_hoje:
+                if row['SEMANA_COMPRA'] < semana_hoje:
                     row['QUANT|STYLE'] = \
                         'font-weight: bold; color: darkmagenta;'
 
