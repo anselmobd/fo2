@@ -1100,13 +1100,17 @@ class MapaPorInsumo(View):
                     # sugestões ideais)
                     estoque = qtd_estoque
                     estoque_ideal = qtd_estoque
-                    for row in data:
+                    for index, row in enumerate(data):
                         if row['DATA'] == sugestao_comprar:
                             row['COMPRAR'] += sugestao_quatidade
                         if row['DATA'] == sugestao_comprar_passado:
                             row['COMPRAR_PASSADO'] += sugestao_quatidade
-                        if row['DATA'] == sugestao_receber:
-                            row['RECEBER'] += sugestao_quatidade
+                        if index == 0:
+                            if row['DATA'] >= sugestao_receber:
+                                row['RECEBER'] += sugestao_quatidade
+                        else:
+                            if row['DATA'] == sugestao_receber:
+                                row['RECEBER'] += sugestao_quatidade
                         if sugestao_receber_ideal < semana_hoje:
                             if row['DATA'] == semana_hoje:
                                 row['RECEBER_IDEAL_ANTES'] += \
