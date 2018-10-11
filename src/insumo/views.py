@@ -773,6 +773,277 @@ class MapaPorRefs(View):
         return render(request, self.template_name, context)
 
 
+def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
+    datas = {}
+
+    data_id = models.insumo_descr(cursor, nivel, ref, cor, tam)
+
+    if len(data_id) == 0:
+        datas.update({
+            'msg_erro': 'Item não encontrado!',
+        })
+        return datas
+
+    for row in data_id:
+        row['SEMANAS'] = math.ceil(row['REPOSICAO'] / 7)
+
+    semana_hoje = segunda(datetime.date.today())
+
+    semanas = data_id[0]['SEMANAS']
+    qtd_estoque = data_id[0]['QUANT']
+    estoque_minimo = data_id[0]['STQ_MIN']
+    dias_reposicao = data_id[0]['REPOSICAO']
+    lote_multiplo = data_id[0]['LOTE_MULTIPLO']
+
+    semana_recebimento = segunda(
+        semana_hoje +
+        datetime.timedelta(days=dias_reposicao+7))
+
+    # Necessidades
+    data_ins = models.insumo_necessidade_semana(
+        cursor, nivel, ref, cor, tam)
+
+    for row in data_ins:
+        row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
+
+    # Previsões
+    data_prev = models.insumo_previsoes_semana_insumo(
+        cursor, nivel, ref, cor, tam)
+
+    for row in data_prev:
+        row['DT_NECESSIDADE'] = row['DT_NECESSIDADE'].date()
+        row['QTD_ORIGINAL'] = row['QTD']
+
+    # Descontando das necessidades previstas as necessidades reais
+    prev_idx = len(data_prev) - 1
+    if prev_idx >= 0:
+        for ness in reversed(data_ins):
+            while prev_idx >= 0:
+                if data_prev[prev_idx]['DT_NECESSIDADE'] <= \
+                        ness['SEMANA_NECESSIDADE']:
+                    data_prev[prev_idx]['QTD'] -= ness['QTD_INSUMO']
+                    if data_prev[prev_idx]['QTD'] < 0:
+                        data_prev[prev_idx]['QTD'] = 0
+                    data_prev[prev_idx]['ITALIC'] = True
+                    ness['ITALIC'] = True
+                    break
+                else:
+                    prev_idx -= 1
+
+    # Recebimentos
+    data_irs = models.insumo_recebimento_semana(
+        cursor, nivel, ref, cor, tam)
+
+    # Dicionários por semana (sem passado)
+    data_ness = [{
+        'DT': x['SEMANA_NECESSIDADE'],
+        'QTD': x['QTD_INSUMO']
+        } for x in data_ins]
+    data_ness.extend([{
+        'DT': x['DT_NECESSIDADE'],
+        'QTD': x['QTD']
+        } for x in data_prev])
+    necessidades = {}
+    necessidades_passadas = 0
+    ult_necessidade = None
+    for row in data_ness:
+        if row['DT'] < semana_hoje:
+            necessidades_passadas += row['QTD']
+            ult_necessidade = semana_hoje
+        else:
+            if row['DT'] in necessidades:
+                necessidades[row['DT']] += row['QTD']
+            else:
+                necessidades[row['DT']] = row['QTD']
+            ult_necessidade = row['DT']
+
+    recebimentos = {}
+    pri_recebimento = None
+    ult_recebimento = None
+    recebimentos_atrasados = 0
+    for row in data_irs:
+        row['SEMANA_ENTREGA'] = row['SEMANA_ENTREGA'].date()
+        if row['SEMANA_ENTREGA'] < semana_hoje:
+            recebimentos_atrasados += row['QTD_A_RECEBER']
+            ult_recebimento = semana_hoje
+        else:
+            semana = row['SEMANA_ENTREGA']
+            if semana in recebimentos:
+                recebimentos[semana] += row['QTD_A_RECEBER']
+            else:
+                recebimentos[semana] = row['QTD_A_RECEBER']
+            if pri_recebimento is None:
+                pri_recebimento = semana
+            ult_recebimento = semana
+
+    semana = semana_hoje
+
+    semana_fim = max_not_None(
+        ult_recebimento,
+        ult_necessidade)
+
+    datas.update({
+        'data_id': data_id,
+        'semana_hoje': semana_hoje,
+        'data_ins': data_ins,
+        'data_prev': data_prev,
+        'data_irs': data_irs,
+    })
+
+    # se tem alguma entrada ou saída
+    if semana_fim is not None:
+        # criando mapa de compras
+        semana_fim += datetime.timedelta(days=7)
+
+        data = []
+        estoque = qtd_estoque
+        while semana <= semana_fim:
+            if semana in recebimentos:
+                recebimento = recebimentos[semana]
+            else:
+                recebimento = 0
+
+            if semana in necessidades:
+                necessidade = necessidades[semana]
+            else:
+                necessidade = 0
+
+            if semana == semana_hoje:
+                necessidade_passada = necessidades_passadas
+                recebimento_atrasado = recebimentos_atrasados
+            else:
+                necessidade_passada = 0
+                recebimento_atrasado = 0
+
+            data.append({
+                'DATA': semana,
+                'NECESSIDADE': necessidade,
+                'NECESSIDADE_PASSADA': necessidade_passada,
+                'RECEBIMENTO': recebimento,
+                'RECEBIMENTO_ATRASADO': recebimento_atrasado,
+                'ESTOQUE': estoque,
+                'ESTOQUE_IDEAL': estoque,
+                'COMPRAR': 0,
+                'COMPRAR_PASSADO': 0,
+                'RECEBER': 0,
+                'RECEBER_IDEAL': 0,
+                'RECEBER_IDEAL_ANTES': 0,
+            })
+            estoque = estoque \
+                - necessidade - necessidade_passada \
+                + recebimento + recebimento_atrasado
+
+            semana += datetime.timedelta(days=7)
+
+        # percorre o mapa de compras para montar sugestões de compra
+        data_sug = []
+        for row in data:
+
+            # pega uma sugestão se estoque < mínimo
+            sugestao_quatidade = 0
+            if row['ESTOQUE_IDEAL'] < estoque_minimo:
+                sugestao_quatidade = estoque_minimo - row['ESTOQUE_IDEAL']
+                if lote_multiplo != 0:
+                    qtd_quebrada = sugestao_quatidade % lote_multiplo
+                    if qtd_quebrada != 0:
+                        qtd_lote_mult = sugestao_quatidade // lote_multiplo
+                        qtd_lote_mult += 1
+                        sugestao_quatidade = lote_multiplo * qtd_lote_mult
+                sugestao_receber = \
+                    row['DATA'] + datetime.timedelta(days=-7)
+                sugestao_receber_ideal = sugestao_receber
+                sugestao_comprar = segunda(
+                    sugestao_receber +
+                    datetime.timedelta(days=-dias_reposicao))
+                data_sug.append({
+                    'SEMANA_COMPRA': sugestao_comprar,
+                    'SEMANA_RECEPCAO': sugestao_receber,
+                    'QUANT': sugestao_quatidade,
+                })
+
+                # se a sugestão á comprar está no passado, mude para hoje
+                if sugestao_comprar < semana_hoje:
+                    sugestao_comprar_passado = semana_hoje
+                else:
+                    sugestao_comprar_passado = None
+
+            # se essa linha do mapa gerou alguma sugestão de compra
+            if sugestao_quatidade != 0:
+
+                # se sugestão de compra chega ou passa da última data do
+                # mapa de compras, adicionar mais datas
+                if semana_fim <= sugestao_receber:
+                    semana = semana_fim + datetime.timedelta(days=7)
+                    semana_fim = sugestao_receber + datetime.timedelta(
+                        days=7)
+                    while semana <= semana_fim:
+                        data.append({
+                            'DATA': semana,
+                            'NECESSIDADE': 0,
+                            'NECESSIDADE_PASSADA': 0,
+                            'RECEBIMENTO': 0,
+                            'RECEBIMENTO_ATRASADO': 0,
+                            'ESTOQUE': 0,
+                            'ESTOQUE_IDEAL': 0,
+                            'COMPRAR': 0,
+                            'COMPRAR_PASSADO': 0,
+                            'RECEBER': 0,
+                            'RECEBER_IDEAL': 0,
+                            'RECEBER_IDEAL_ANTES': 0,
+                        })
+                        semana += datetime.timedelta(days=7)
+
+                # atualiza o mapa de compras com a sugestão calculada
+                # calcula "estoque" e "estoque ideal" (feito com as
+                # sugestões ideais)
+                estoque = qtd_estoque
+                estoque_ideal = qtd_estoque
+                for index, row in enumerate(data):
+                    if row['DATA'] == sugestao_comprar:
+                        row['COMPRAR'] += sugestao_quatidade
+                    if row['DATA'] == sugestao_comprar_passado:
+                        row['COMPRAR_PASSADO'] += sugestao_quatidade
+                    if index == 0:
+                        if row['DATA'] >= sugestao_receber:
+                            row['RECEBER'] += sugestao_quatidade
+                    else:
+                        if row['DATA'] == sugestao_receber:
+                            row['RECEBER'] += sugestao_quatidade
+                    if sugestao_receber_ideal < semana_hoje:
+                        if row['DATA'] == semana_hoje:
+                            row['RECEBER_IDEAL_ANTES'] += \
+                                sugestao_quatidade
+                    else:
+                        if row['DATA'] == sugestao_receber_ideal:
+                            row['RECEBER_IDEAL'] += sugestao_quatidade
+
+                    row['ESTOQUE'] = estoque
+                    estoque = estoque \
+                        - row['NECESSIDADE'] \
+                        - row['NECESSIDADE_PASSADA'] \
+                        + row['RECEBIMENTO'] \
+                        + row['RECEBIMENTO_ATRASADO']
+
+                    row['ESTOQUE_IDEAL'] = \
+                        row['RECEBER_IDEAL_ANTES'] + estoque_ideal
+                    estoque_ideal = row['RECEBER_IDEAL_ANTES'] \
+                        + estoque_ideal \
+                        - row['NECESSIDADE'] \
+                        - row['NECESSIDADE_PASSADA'] \
+                        + row['RECEBIMENTO'] \
+                        + row['RECEBIMENTO_ATRASADO'] \
+                        + row['RECEBER_IDEAL']
+
+        datas.update({
+            'data_sug': data_sug,
+            'data': data,
+            'estoque_minimo': estoque_minimo,
+            'semana_recebimento': semana_recebimento,
+            'semanas': semanas,
+        })
+    return datas
+
+
 class MapaPorInsumo(View):
     template_name = 'insumo/mapa.html'
     title_name = 'Mapa de compras'
@@ -780,14 +1051,14 @@ class MapaPorInsumo(View):
     def mount_context(self, cursor, nivel, ref, cor, tam):
         context = {}
 
-        # Informações gerais
-        data_id = models.insumo_descr(cursor, nivel, ref, cor, tam)
-
-        if len(data_id) == 0:
+        datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
+        if 'msg_erro' in datas:
             context.update({
-                'msg_erro': 'Item não encontrado',
+                'msg_erro': datas['msg_erro'],
             })
             return context
+
+        data_id = datas['data_id']
 
         for row in data_id:
             row['REF'] = row['REF'] + ' - ' + row['DESCR']
@@ -806,8 +1077,8 @@ class MapaPorInsumo(View):
                 row['DT_INVENTARIO'] = row['DT_INVENTARIO'].date()
             else:
                 row['DT_INVENTARIO'] = ''
-            semanas = math.ceil(row['REPOSICAO'] / 7)
-            row['REP_STR'] = '{}d. ({}s.)'.format(row['REPOSICAO'], semanas)
+            row['REP_STR'] = '{}d. ({}s.)'.format(
+                row['REPOSICAO'], row['SEMANAS'])
             if row['QUANT'] < row['STQ_MIN']:
                 row['QUANT|STYLE'] = 'font-weight: bold; color: red;'
 
@@ -825,40 +1096,28 @@ class MapaPorInsumo(View):
             'data_id': data_id,
         })
 
-        semana_hoje = segunda(datetime.date.today())
-
-        qtd_estoque = data_id[0]['QUANT']
-        estoque_minimo = data_id[0]['STQ_MIN']
-        dias_reposicao = data_id[0]['REPOSICAO']
-        lote_multiplo = data_id[0]['LOTE_MULTIPLO']
-
-        semana_recebimento = segunda(
-            semana_hoje +
-            datetime.timedelta(days=dias_reposicao+7))
+        semana_hoje = datas['semana_hoje']
 
         # Necessidades
-        data_ins = models.insumo_necessidade_semana(
-            cursor, nivel, ref, cor, tam)
+        data_ins = datas['data_ins']
 
         max_digits = 0
         for row in data_ins:
             num_digits = str(row['QTD_INSUMO'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
 
-        semana1 = None
         for row in data_ins:
-            row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
             row['SEMANA_NECESSIDADE|LINK'] = reverse(
                 'insumo:mapa_necessidade_detalhe',
                 args=[nivel, ref, cor, tam, row['SEMANA_NECESSIDADE']])
             row['SEMANA_NECESSIDADE|TARGET'] = '_blank'
             row['QTD_INSUMO|DECIMALS'] = max_digits
-            if semana1 is None:
-                semana1 = row['SEMANA_NECESSIDADE']
-            if semana1 < semana_hoje and \
-                    row['SEMANA_NECESSIDADE'] < semana_hoje:
+            if row['SEMANA_NECESSIDADE'] < semana_hoje:
                 row['QTD_INSUMO|STYLE'] = \
                     'font-weight: bold; color: darkorange;'
+            if 'ITALIC' in row:
+                row['QTD_INSUMO|STYLE'] = \
+                    'font-weight: bold; font-style: italic;'
 
         context.update({
             'headers_ins': ['Semana', 'Quantidade'],
@@ -868,36 +1127,12 @@ class MapaPorInsumo(View):
         })
 
         # Previsões
-        data_prev = models.insumo_previsoes_semana_insumo(
-            cursor, nivel, ref, cor, tam)
+        data_prev = datas['data_prev']
 
         max_digits = 0
         for row in data_prev:
-            row['QTD_ORIGINAL'] = row['QTD']
-            row['DT_NECESSIDADE'] = row['DT_NECESSIDADE'].date()
             num_digits = str(row['QTD'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
-
-        # Descontando das necessidades previstas as necessidades reais
-        prev_idx = len(data_prev) - 1
-        if prev_idx >= 0:
-            for ness in reversed(data_ins):
-                while prev_idx >= 0:
-                    if data_prev[prev_idx]['DT_NECESSIDADE'] <= \
-                            ness['SEMANA_NECESSIDADE']:
-                        data_prev[prev_idx]['QTD'] -= ness['QTD_INSUMO']
-                        if data_prev[prev_idx]['QTD'] < 0:
-                            data_prev[prev_idx]['QTD'] = 0
-                        data_prev[prev_idx]['ITALIC'] = True
-                        ness['ITALIC'] = True
-                        break
-                    else:
-                        prev_idx -= 1
-
-        for row in data_ins:
-            if 'ITALIC' in row:
-                row['QTD_INSUMO|STYLE'] = \
-                    'font-weight: bold; font-style: italic;'
 
         previsao_alterada = False
         for row in data_prev:
@@ -924,8 +1159,7 @@ class MapaPorInsumo(View):
         })
 
         # Recebimentos
-        data_irs = models.insumo_recebimento_semana(
-            cursor, nivel, ref, cor, tam)
+        data_irs = datas['data_irs']
 
         max_digits = 0
         for row in data_irs:
@@ -933,7 +1167,6 @@ class MapaPorInsumo(View):
             max_digits = max(max_digits, num_digits)
 
         for row in data_irs:
-            row['SEMANA_ENTREGA'] = row['SEMANA_ENTREGA'].date()
             row['QTD_A_RECEBER|DECIMALS'] = max_digits
             if row['SEMANA_ENTREGA'] < semana_hoje:
                 row['QTD_A_RECEBER|STYLE'] = \
@@ -946,195 +1179,13 @@ class MapaPorInsumo(View):
             'data_irs': data_irs,
         })
 
-        # Dicionários por semana (sem passado)
-        data_ness = [{
-            'DT': x['SEMANA_NECESSIDADE'],
-            'QTD': x['QTD_INSUMO']
-            } for x in data_ins]
-        data_ness.extend([{
-            'DT': x['DT_NECESSIDADE'],
-            'QTD': x['QTD']
-            } for x in data_prev])
-        necessidades = {}
-        necessidades_passadas = 0
-        ult_necessidade = None
-        for row in data_ness:
-            if row['DT'] < semana_hoje:
-                necessidades_passadas += row['QTD']
-                ult_necessidade = semana_hoje
-            else:
-                if row['DT'] in necessidades:
-                    necessidades[row['DT']] += row['QTD']
-                else:
-                    necessidades[row['DT']] = row['QTD']
-                ult_necessidade = row['DT']
-
-        recebimentos = {}
-        pri_recebimento = None
-        ult_recebimento = None
-        recebimentos_atrasados = 0
-        for row in data_irs:
-            if row['SEMANA_ENTREGA'] < semana_hoje:
-                recebimentos_atrasados += row['QTD_A_RECEBER']
-                ult_recebimento = semana_hoje
-            else:
-                semana = row['SEMANA_ENTREGA']
-                if semana in recebimentos:
-                    recebimentos[semana] += row['QTD_A_RECEBER']
-                else:
-                    recebimentos[semana] = row['QTD_A_RECEBER']
-                if pri_recebimento is None:
-                    pri_recebimento = semana
-                ult_recebimento = semana
-
-        semana = semana_hoje
-
-        semana_fim = max_not_None(
-            ult_recebimento,
-            ult_necessidade)
         # se tem alguma entrada ou saída
-        if semana_fim is not None:
-            # criando mapa de compras
-            semana_fim += datetime.timedelta(days=7)
+        if 'data_sug' in datas:
 
-            data = []
-            estoque = qtd_estoque
-            while semana <= semana_fim:
-                if semana in recebimentos:
-                    recebimento = recebimentos[semana]
-                else:
-                    recebimento = 0
-
-                if semana in necessidades:
-                    necessidade = necessidades[semana]
-                else:
-                    necessidade = 0
-
-                if semana == semana_hoje:
-                    necessidade_passada = necessidades_passadas
-                    recebimento_atrasado = recebimentos_atrasados
-                else:
-                    necessidade_passada = 0
-                    recebimento_atrasado = 0
-
-                data.append({
-                    'DATA': semana,
-                    'NECESSIDADE': necessidade,
-                    'NECESSIDADE_PASSADA': necessidade_passada,
-                    'RECEBIMENTO': recebimento,
-                    'RECEBIMENTO_ATRASADO': recebimento_atrasado,
-                    'ESTOQUE': estoque,
-                    'ESTOQUE_IDEAL': estoque,
-                    'COMPRAR': 0,
-                    'COMPRAR_PASSADO': 0,
-                    'RECEBER': 0,
-                    'RECEBER_IDEAL': 0,
-                    'RECEBER_IDEAL_ANTES': 0,
-                })
-                estoque = estoque \
-                    - necessidade - necessidade_passada \
-                    + recebimento + recebimento_atrasado
-
-                semana += datetime.timedelta(days=7)
-
-            # percorre o mapa de compras para montar sugestões de compra
-            data_sug = []
-            for row in data:
-
-                # pega uma sugestão se estoque < mínimo
-                sugestao_quatidade = 0
-                if row['ESTOQUE_IDEAL'] < estoque_minimo:
-                    sugestao_quatidade = estoque_minimo - row['ESTOQUE_IDEAL']
-                    if lote_multiplo != 0:
-                        qtd_quebrada = sugestao_quatidade % lote_multiplo
-                        if qtd_quebrada != 0:
-                            qtd_lote_mult = sugestao_quatidade // lote_multiplo
-                            qtd_lote_mult += 1
-                            sugestao_quatidade = lote_multiplo * qtd_lote_mult
-                    sugestao_receber = \
-                        row['DATA'] + datetime.timedelta(days=-7)
-                    sugestao_receber_ideal = sugestao_receber
-                    sugestao_comprar = segunda(
-                        sugestao_receber +
-                        datetime.timedelta(days=-dias_reposicao))
-                    data_sug.append({
-                        'SEMANA_COMPRA': sugestao_comprar,
-                        'SEMANA_RECEPCAO': sugestao_receber,
-                        'QUANT': sugestao_quatidade,
-                    })
-
-                    # se a sugestão á comprar está no passado, mude para hoje
-                    if sugestao_comprar < semana_hoje:
-                        sugestao_comprar_passado = semana_hoje
-                    else:
-                        sugestao_comprar_passado = None
-
-                # se essa linha do mapa gerou alguma sugestão de compra
-                if sugestao_quatidade != 0:
-
-                    # se sugestão de compra chega ou passa da última data do
-                    # mapa de compras, adicionar mais datas
-                    if semana_fim <= sugestao_receber:
-                        semana = semana_fim + datetime.timedelta(days=7)
-                        semana_fim = sugestao_receber + datetime.timedelta(
-                            days=7)
-                        while semana <= semana_fim:
-                            data.append({
-                                'DATA': semana,
-                                'NECESSIDADE': 0,
-                                'NECESSIDADE_PASSADA': 0,
-                                'RECEBIMENTO': 0,
-                                'RECEBIMENTO_ATRASADO': 0,
-                                'ESTOQUE': 0,
-                                'ESTOQUE_IDEAL': 0,
-                                'COMPRAR': 0,
-                                'COMPRAR_PASSADO': 0,
-                                'RECEBER': 0,
-                                'RECEBER_IDEAL': 0,
-                                'RECEBER_IDEAL_ANTES': 0,
-                            })
-                            semana += datetime.timedelta(days=7)
-
-                    # atualiza o mapa de compras com a sugestão calculada
-                    # calcula "estoque" e "estoque ideal" (feito com as
-                    # sugestões ideais)
-                    estoque = qtd_estoque
-                    estoque_ideal = qtd_estoque
-                    for index, row in enumerate(data):
-                        if row['DATA'] == sugestao_comprar:
-                            row['COMPRAR'] += sugestao_quatidade
-                        if row['DATA'] == sugestao_comprar_passado:
-                            row['COMPRAR_PASSADO'] += sugestao_quatidade
-                        if index == 0:
-                            if row['DATA'] >= sugestao_receber:
-                                row['RECEBER'] += sugestao_quatidade
-                        else:
-                            if row['DATA'] == sugestao_receber:
-                                row['RECEBER'] += sugestao_quatidade
-                        if sugestao_receber_ideal < semana_hoje:
-                            if row['DATA'] == semana_hoje:
-                                row['RECEBER_IDEAL_ANTES'] += \
-                                    sugestao_quatidade
-                        else:
-                            if row['DATA'] == sugestao_receber_ideal:
-                                row['RECEBER_IDEAL'] += sugestao_quatidade
-
-                        row['ESTOQUE'] = estoque
-                        estoque = estoque \
-                            - row['NECESSIDADE'] \
-                            - row['NECESSIDADE_PASSADA'] \
-                            + row['RECEBIMENTO'] \
-                            + row['RECEBIMENTO_ATRASADO']
-
-                        row['ESTOQUE_IDEAL'] = \
-                            row['RECEBER_IDEAL_ANTES'] + estoque_ideal
-                        estoque_ideal = row['RECEBER_IDEAL_ANTES'] \
-                            + estoque_ideal \
-                            - row['NECESSIDADE'] \
-                            - row['NECESSIDADE_PASSADA'] \
-                            + row['RECEBIMENTO'] \
-                            + row['RECEBIMENTO_ATRASADO'] \
-                            + row['RECEBER_IDEAL']
+            data_sug = datas['data_sug']
+            estoque_minimo = datas['estoque_minimo']
+            semana_recebimento = datas['semana_recebimento']
+            semanas = datas['semanas']
 
             max_digits = 0
             for row in data_sug:
@@ -1157,6 +1208,8 @@ class MapaPorInsumo(View):
                 'style_sug': {3: 'text-align: right;'},
                 'data_sug': data_sug,
             })
+
+            data = datas['data']
 
             max_digits = 0
             for row in data:
