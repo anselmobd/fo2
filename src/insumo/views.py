@@ -36,7 +36,8 @@ from .forms import \
     BipaRoloForm, \
     RolosBipadosForm, \
     ReceberForm, \
-    MapaPorSemanaForm
+    MapaPorSemanaForm, \
+    MapaPorSemanaNewForm
 
 
 def index(request):
@@ -1711,7 +1712,7 @@ class NecessidadesPrevisoes(View):
 
 
 class MapaPorSemanaNew(View):
-    Form_class = MapaPorSemanaForm
+    Form_class = MapaPorSemanaNewForm
     template_name = 'insumo/mapa_sem_new.html'
     title_name = 'Mapa de compras por semana (Novo)'
 
@@ -1772,8 +1773,8 @@ class MapaPorSemanaNew(View):
             if form.fields['periodo'].initial:
                 periodo = form.fields['periodo'].initial
             qtd_semanas = None
-            if form.fields['qtd_semanas'].initial:
-                qtd_semanas = form.fields['qtd_semanas'].initial
+            # if form.fields['qtd_semanas'].initial:
+            #     qtd_semanas = form.fields['qtd_semanas'].initial
             cursor = connections['so'].cursor()
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
@@ -1787,7 +1788,8 @@ class MapaPorSemanaNew(View):
             form.data['periodo'] = kwargs['periodo']
         if form.is_valid():
             periodo = form.cleaned_data['periodo']
-            qtd_semanas = form.cleaned_data['qtd_semanas']
+            qtd_semanas = None
+            # qtd_semanas = form.cleaned_data['qtd_semanas']
             qtd_itens = form.cleaned_data['qtd_itens']
             nivel = form.cleaned_data['nivel']
             uso = form.cleaned_data['uso']
