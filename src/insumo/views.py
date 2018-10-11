@@ -1710,6 +1710,169 @@ class NecessidadesPrevisoes(View):
         return render(request, self.template_name, context)
 
 
+class MapaPorSemanaNew(View):
+    Form_class = MapaPorSemanaForm
+    template_name = 'insumo/mapa_sem_new.html'
+    title_name = 'Mapa de compras por semana (Novo)'
+
+    def mount_context_pre(self, cursor, periodo, qtd_semanas):
+        if periodo is None:
+            return {}
+
+        if qtd_semanas is None:
+            qtd_semanas = 1
+        periodo_atual = models.Periodo.confeccao.filter(
+            periodo_producao=periodo
+        ).values()
+        periodo_ini = 0
+        periodo_fim = 0
+        if periodo_atual:
+            periodo_ini = periodo_atual[0]['data_ini_periodo'].date()
+            periodo_ini += timedelta(days=1)
+            periodo_fim = periodo_ini+timedelta(weeks=qtd_semanas-1)
+        periodo_ini_int = periodo_ini.year*10000 + \
+            periodo_ini.month*100 + periodo_ini.day
+
+        context = {'periodo': periodo,
+                   'periodo_ini': periodo_ini,
+                   'periodo_fim': periodo_fim,
+                   'qtd_semanas': qtd_semanas,
+                   'periodo_ini_int': periodo_ini_int,
+                   }
+
+        return context
+
+    def mount_context(
+            self, cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo):
+        cursor = connections['so'].cursor()
+        data = models.insumos_cor_tamanho_usados(
+            cursor, qtd_itens, nivel, uso, insumo)
+        refs = []
+        for row in data:
+            refs.append('{}.{}.{}.{}'.format(
+                row['nivel'], row['ref'], row['cor'], row['tam']))
+
+        context = {
+            'refs': refs,
+            'qtd_itens': qtd_itens,
+            'nivel': nivel,
+            'uso': uso,
+            'insumo': insumo,
+        }
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'periodo' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            periodo = None
+            if form.fields['periodo'].initial:
+                periodo = form.fields['periodo'].initial
+            qtd_semanas = None
+            if form.fields['qtd_semanas'].initial:
+                qtd_semanas = form.fields['qtd_semanas'].initial
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context_pre(
+                cursor, periodo, qtd_semanas))
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST.copy())
+        if 'periodo' in kwargs:
+            form.data['periodo'] = kwargs['periodo']
+        if form.is_valid():
+            periodo = form.cleaned_data['periodo']
+            qtd_semanas = form.cleaned_data['qtd_semanas']
+            qtd_itens = form.cleaned_data['qtd_itens']
+            nivel = form.cleaned_data['nivel']
+            uso = form.cleaned_data['uso']
+            insumo = form.cleaned_data['insumo']
+
+            insumo = ' '.join(insumo.strip().upper().split())
+            form.data['insumo'] = insumo
+
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context_pre(
+                cursor, periodo, qtd_semanas))
+            context.update(self.mount_context(
+                cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+def mapa_sem_ref_new(request, item, dtini):
+    template_name = 'insumo/mapa_sem_ref_new.html'
+    context = {}
+    if len(item) == 2:
+        context['th'] = True
+    else:
+        cursor = connections['so'].cursor()
+        nivel = item[0]
+        ref = item[2:7]
+        cor = item[8:14]
+        tam = item[15:18]
+
+        datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
+        if 'msg_erro' in datas:
+            context.update({
+                'data': [],
+            })
+            html = render_to_string(template_name, context)
+            return HttpResponse(html)
+
+        data = datas['data_id']
+        drow = data[0]
+
+        drow['REF'] = drow['REF'] + ' (' + drow['DESCR'] + ')'
+        drow['COR'] = drow['COR'] + ' (' + drow['DESCR_COR'] + ')'
+        if drow['TAM'] != drow['DESCR_TAM']:
+            drow['TAM'] = drow['TAM'] + ' (' + drow['DESCR_TAM'] + ')'
+        semanas = math.ceil(drow['REPOSICAO'] / 7)
+        drow['REP_STR'] = '{}d.({}s.)'.format(drow['REPOSICAO'], semanas)
+        drow['QUANT'] = round(drow['QUANT'])
+
+        compra_atrasada = 0
+        comprar = 0
+        dt_chegada = None
+
+        if 'data_sug' in datas:
+            data_sug = datas['data_sug']
+            semana_hoje = segunda(datetime.date.today())
+
+            dtsem = datetime.datetime.strptime(dtini, '%Y%m%d').date()
+
+            for row in data_sug:
+                if row['SEMANA_COMPRA'] < semana_hoje:
+                    compra_atrasada += row['QUANT']
+                if row['SEMANA_COMPRA'] == dtsem:
+                    comprar += row['QUANT']
+                    dt_chegada = row['SEMANA_RECEPCAO']
+            comprar = round(comprar)
+            compra_atrasada = round(compra_atrasada)
+
+        if dt_chegada is None:
+            dt_chegada = '-'
+
+        context = {
+            'data': data,
+            'nivel': nivel,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+            'tam_order': tam.zfill(3),
+            'compra_atrasada': compra_atrasada,
+            'comprar': comprar,
+            'dt_chegada': dt_chegada,
+        }
+    html = render_to_string(template_name, context)
+    return HttpResponse(html)
+
+
 class MapaPorSemana(View):
     Form_class = MapaPorSemanaForm
     template_name = 'insumo/mapa_sem.html'

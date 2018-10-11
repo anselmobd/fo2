@@ -1,0 +1,184 @@
+{% extends 'insumo/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'insumo:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+
+tbody#refs_tbody tr {
+  border-bottom-width: 1px;
+  border-bottom-style: dotted;
+  border-bottom-color: lightgray;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- <h3 style="color: red;">Em desenvolvimento...</h3> -->
+<form action="{% url 'insumo:mapa_por_semana' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if refs %}
+<h4>Insumos calculados: <span id="icount">0</span><span id="detotal"> / <span id="itotal">...</span></span></h4>
+{% endif %}
+{% if periodo_ini %}
+  <h4>Periodo: {{ periodo|safe }} (segunda{{ qtd_semanas|pluralize }}-feira{{ qtd_semanas|pluralize }}: {{ periodo_ini }}{% if periodo_ini != periodo_fim %} - {{ periodo_fim }}{% endif %})</h4>
+{% endif %}
+{% if qtd_itens %}
+  <h4>Quantidade limite de itens processados: {{ qtd_itens }}</h4>
+{% endif %}
+{% if nivel == '2' %}
+  <h4>Nível 2 - em rolos</h4>
+{% endif %}
+{% if nivel == '9' %}
+  <h4>Nível 9 - demais insumos</h4>
+{% endif %}
+{% if uso == 'U' %}
+  <h4>Utilizados em alguma estrutura de produto</h4>
+{% endif %}
+{% if uso == 'N' %}
+  <h4>Não utilizados em nenhum estrutura de produto</h4>
+{% endif %}
+{% if insumo %}
+  <h4>Filtro do insumo: {{ insumo }}</h4>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if refs %}
+  <p>Mostrar:
+    <input id="chk_comprar" type="checkbox" checked> Compra sugerida |
+    <input id="chk_compra_atrasada" type="checkbox"> Apenas Compra Atrasada |
+    <input id="chk_zerado" type="checkbox"> Sem Compra
+  </p>
+  <table>
+    <thead id="refs_thead">
+    </thead>
+    <tbody id="refs_tbody">
+    </tbody>
+  </table>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+{% if refs %}
+<script type="text/javascript">
+
+  var refs = [
+    {% for ref in refs %}
+      {% if forloop.counter > 1 %}, {% endif %}'{{ ref }}'
+    {% endfor %}
+  ];
+  var dtini = {{ periodo_ini_int|safe }};
+  var nsem = {{ qtd_semanas }};
+
+  var tHead = document.getElementById('refs_thead');
+  var tBody = document.getElementById('refs_tbody');
+  var iRefAjax = -1;
+
+  function sortByDisplayId(parentEl) {
+
+    function displayId(el) {
+      var prekey = '';
+      if (el.style.display == 'none') {
+        prekey = 'Z';
+      }
+      return prekey+el.id;
+    }
+
+    var toSort = parentEl.children;
+    toSort = Array.prototype.slice.call(toSort, 0);
+    toSort.sort(function(a, b) {
+      akey = displayId(a);
+      bkey = displayId(b);
+      return akey.localeCompare(bkey)
+    });
+    for (var i = 0, l = toSort.length; i < l; i++) {
+        toSort[i].parentNode.appendChild(toSort[i]);
+    }
+  }
+
+  function doAjax1Ref(header) {
+    if (header) {
+      refer = 'th';
+      aggregator = tHead;
+    } else {
+      refer = refs[iRefAjax];
+      aggregator = tBody;
+    }
+
+    var link = '{% url 'insumo:mapa_por_semana_ref__get' '0.00000.000000.000' '20180723' %}';
+    link = link.replace('20180723', dtini);
+    link = link.replace('0.00000.000000.000', refer);
+    $.ajax({
+      type: 'GET',
+      url: link,
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        if (data) {
+          aggregator.insertAdjacentHTML('beforeend', data);
+
+          if ( tBody.rows.length > 0 ) {
+            var last_id = tBody.rows[tBody.rows.length-1].id;
+            showHide($('#'+last_id+'.flag_comprar'), $("#chk_comprar").is(':checked'));
+            showHide($('#'+last_id+'.flag_compra_atrasada'), $("#chk_compra_atrasada").is(':checked'));
+            showHide($('#'+last_id+'.flag_zerado'), $("#chk_zerado").is(':checked'));
+            sortByDisplayId(tBody);
+          }
+
+          $("#icount").text(iRefAjax+1);
+        }
+        iRefAjax++;
+        if (iRefAjax < refs.length) {
+          setTimeout(function(){ doAjax1Ref(false); }, 0);
+        } else {
+          $("#detotal").text('');
+        }
+      }
+    });
+
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function(){ doAjax1Ref(true); }, 0);
+  }, false);
+
+  function showHide(el, onOff) {
+    if (onOff) {
+      el.show();
+    } else {
+      el.hide();
+    }
+  }
+
+  $( document ).ready(function() {
+
+    $("#itotal").text(refs.length);
+
+    $("#chk_comprar").on('change', function () {
+      showHide($('.flag_comprar'), $(this).is(':checked'))
+      sortByDisplayId(tBody);
+    });
+
+    $("#chk_compra_atrasada").on('change', function () {
+      showHide($('.flag_compra_atrasada'), $(this).is(':checked'))
+      sortByDisplayId(tBody);
+    });
+
+    $("#chk_zerado").on('change', function () {
+      showHide($('.flag_zerado'), $(this).is(':checked'))
+      sortByDisplayId(tBody);
+    });
+
+  });
+
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% if th %}
+  <tr>
+    <th>Nível</th>
+    <th>Insumo</th>
+    <th>Cor</th>
+    <th>Tamanho</th>
+    <th>Reposição</th>
+    <th style="text-align: right;">Mínimo</th>
+    <th style="text-align: right;">Múltiplo</th>
+    <th style="text-align: right;">Estoque</th>
+    <th>Unid.</th>
+    <th style="text-align: right;">Compra<br/>atrasada</th>
+    <th style="text-align: right;">Compra<br/>sugerida</th>
+    <th>Chegada</th>
+  </tr>
+{% else %}
+  {% if data %}
+    {% for row in data %}
+      <tr id="id_{{ nivel }}_{{ ref }}_{{ cor }}_{{ tam }}" class="key_ref _ref_{{ nivel }}{{ ref }}{{ cor }}{{ tam_order }}
+        {% if comprar > 0 %}flag_comprar
+        {% else %}
+          {% if compra_atrasada > 0 %}flag_compra_atrasada
+          {% else %}flag_zerado
+          {% endif %}
+        {% endif %}
+        ">
+        <td>{{ nivel }}</td>
+        <td><a href="{% url 'insumo:mapa' nivel ref cor tam %}" target="_blank">{{ row.REF }}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></td>
+        <td>{{ row.COR }}</td>
+        <td>{{ row.TAM }}</td>
+        <td>{{ row.REP_STR }}</td>
+        <td style="text-align: right;">{{ row.STQ_MIN }}</td>
+        <td style="text-align: right;">{{ row.LOTE_MULTIPLO }}</td>
+        <td style="text-align: right;">{{ row.QUANT }}</td>
+        <td>{{ row.UNID }}</td>
+        <td style="text-align: right;">{{ compra_atrasada }}</td>
+        <td style="text-align: right;">{{ comprar }}</td>
+        <td>{{ dt_chegada }}</td>
+      </tr>
+    {% endfor %}
+  {% endif %}
+{% endif %}
