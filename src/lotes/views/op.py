@@ -233,9 +233,9 @@ class Op(View):
                     row['DT_MAX'] = row['DT_MAX'].date()
                 row['DT_MIN'] = row['DT_MIN'].date()
             context.update({
-                'u_headers': ('Estagio', 'De', 'Até',
+                'u_headers': ('Estagio', 'Movimento', 'De', 'Até',
                               'Usuário', 'Lotes'),
-                'u_fields': ('EST', 'DT_MIN', 'DT_MAX',
+                'u_fields': ('EST', 'MOV', 'DT_MIN', 'DT_MAX',
                              'USUARIO_SYSTEXTIL', 'LOTES'),
                 'u_data': u_data,
             })

@@ -277,6 +277,11 @@ def op_movi_estagios(cursor, op):
           ll.EST
         , u.USUARIO_SYSTEXTIL
         , count(*) LOTES
+        , CASE WHEN u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
+                    u.QTDE_PERDAS + u.QTDE_CONSERTO < 0
+          THEN 'ESTORNO'
+          ELSE 'BAIXA'
+          END MOV
         , MIN(u.DATA_PRODUCAO) DT_MIN
         , ROUND( TO_DATE('01/01/2001','DD/MM/YYYY')
                + AVG(u.DATA_PRODUCAO - TO_DATE('01/01/2001','DD/MM/YYYY'))
@@ -304,16 +309,22 @@ def op_movi_estagios(cursor, op):
         JOIN pcpc_045 u
           ON u.ORDEM_PRODUCAO = ll.ORDEM_PRODUCAO
          AND u.PCPC040_ESTCONF = ll.CODIGO_ESTAGIO
-         AND u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
-             u.QTDE_PERDAS + u.QTDE_CONSERTO > 0
+         --AND u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
+         --  u.QTDE_PERDAS + u.QTDE_CONSERTO <> 0
         GROUP BY
           ll.SEQ_OPERACAO
         , ll.EST
+        , CASE WHEN u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
+                    u.QTDE_PERDAS + u.QTDE_CONSERTO < 0
+          THEN 'ESTORNO'
+          ELSE 'BAIXA'
+          END
         , u.PCPC040_ESTCONF
         , u.USUARIO_SYSTEXTIL
         ORDER BY
           ll.SEQ_OPERACAO
-        , 4 -- DT_MIN
+        , 5 -- DT_MIN
+        , 4 -- MOVIMENTO
         , 3 DESC -- LOTES
         , u.USUARIO_SYSTEXTIL
     '''
