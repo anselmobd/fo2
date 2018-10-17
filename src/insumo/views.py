@@ -844,6 +844,8 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         'DT': x['DT_NECESSIDADE'],
         'QTD': x['QTD']
         } for x in data_prev])
+    data_ness = sorted(data_ness, key=itemgetter('DT'))
+
     necessidades = {}
     necessidades_passadas = 0
     ult_necessidade = None
@@ -939,7 +941,6 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         # percorre o mapa de compras para montar sugestões de compra
         data_sug = []
         for row in data:
-
             # pega uma sugestão se estoque < mínimo
             sugestao_quatidade = 0
             if row['ESTOQUE_IDEAL'] < estoque_minimo:
