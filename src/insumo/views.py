@@ -1260,9 +1260,9 @@ class MapaPorInsumo(View):
                 isemana = index+1
                 if row['RECEBER'] > 0:
                     if isemana <= semanas:
-                        arrows.append([1, 7, isemana, 8])
+                        arrows.append([1, 7, isemana, 8, 7])
                     else:
-                        arrows.append([isemana-semanas, 6, isemana, 8])
+                        arrows.append([isemana-semanas, 6, isemana, 8, 0])
 
             context.update({
                 'headers': ['Semana', 'Estoque Real',
