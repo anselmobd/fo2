@@ -140,9 +140,14 @@ function getCellCenter(table, row, column, position) {
 }
 
 // draws an arrow on the document from the start to the end offsets
-function drawArrow(start, end) {
-  ctx.fillStyle = 'steelblue';
-  ctx.strokeStyle = 'steelblue';
+function drawArrow(start, end, mark) {
+  if (mark) {
+    ctx.fillStyle = 'darkmagenta';
+    ctx.strokeStyle = 'darkmagenta';
+  } else {
+    ctx.fillStyle = 'steelblue';
+    ctx.strokeStyle = 'steelblue';
+  }
 
   // draw line from start to end
   ctx.beginPath();
@@ -173,10 +178,11 @@ function drawArrow(start, end) {
 
 // finds the center of the start and end cells, and then calls drawArrow
 function drawArrowOnTable(table, startRow, startColumn, startPos,
-                                 endRow, endColumn, endPos) {
+                                 endRow, endColumn, endPos, mark) {
   drawArrow(
     getCellCenter($(table), startRow, startColumn, startPos),
-    getCellCenter($(table), endRow, endColumn, endPos)
+    getCellCenter($(table), endRow, endColumn, endPos),
+    mark
   );
 }
 
@@ -190,7 +196,7 @@ function doArrows() {
   clearCanvas();
   var i;
   for (i = 0; i < arrows.length; i++) {
-    drawArrowOnTable('#mapa_table', arrows[i][0], arrows[i][1], 'r', arrows[i][2], arrows[i][3], 'c');
+    drawArrowOnTable('#mapa_table', arrows[i][0], arrows[i][1], 'r', arrows[i][2], arrows[i][3], 'c', arrows[i][1]==arrows[i][4]);
   }
 }
 
