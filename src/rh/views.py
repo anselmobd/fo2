@@ -230,3 +230,13 @@ def aniversariantes(request, *args, **kwargs):
         'aniversariantes': aniver_db,
         }
     return render(request, 'rh/aniversariantes.html', context)
+
+
+def v2018_dia_rosa_fotos(request):
+    context = {'titulo': 'Fotos - Dia Rosa 2018'}
+    return render(request, 'rh/2018_dia_rosa_fotos.html', context)
+
+
+def v2018_dia_rosa_videos(request):
+    context = {'titulo': 'Vídeos - Dia Rosa 2018'}
+    return render(request, 'rh/2018_dia_rosa_videos.html', context)
