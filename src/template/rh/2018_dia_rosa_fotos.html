@@ -1,0 +1,60 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<p>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/07b2577e-1e12-4d57-9bc0-879b0bf3fb03.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.07b2577e-1e12-4d57-9bc0-879b0bf3fb03.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/2e0046e1-438a-43d6-b8fa-52b3ca18199e.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.2e0046e1-438a-43d6-b8fa-52b3ca18199e.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/3a016b48-5f50-46e1-98f3-eaeba8900808.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.3a016b48-5f50-46e1-98f3-eaeba8900808.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/8949b989-4221-47eb-80ea-13e390c2ba31.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.8949b989-4221-47eb-80ea-13e390c2ba31.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/98ba95f2-6c68-40b6-b6e1-a991bc433d68.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.98ba95f2-6c68-40b6-b6e1-a991bc433d68.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/9bcfde77-1f94-4c5a-8bbe-cffe82967cf5.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.9bcfde77-1f94-4c5a-8bbe-cffe82967cf5.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/af8d1177-b4bf-40b4-bb33-b83db6b00d0e.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.af8d1177-b4bf-40b4-bb33-b83db6b00d0e.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/b70e7396-a52d-46c4-8b39-1d5ab6864b4a.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.b70e7396-a52d-46c4-8b39-1d5ab6864b4a.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/b794a8a3-2030-4b00-9eb8-774f3ebb7912.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.b794a8a3-2030-4b00-9eb8-774f3ebb7912.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/baca9fe7-4ec7-4ea8-8d3d-87e0b9fecd28.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.baca9fe7-4ec7-4ea8-8d3d-87e0b9fecd28.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/bd1ecd2f-e406-4c39-ab29-dda360310d7e.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.bd1ecd2f-e406-4c39-ab29-dda360310d7e.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/c3e6c31c-0349-4828-9bfd-3e47eee6ac17.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.c3e6c31c-0349-4828-9bfd-3e47eee6ac17.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/e673aab9-376c-4b74-bc11-2cd6e45d983f.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.e673aab9-376c-4b74-bc11-2cd6e45d983f.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/ebeb5334-d610-47c9-af04-33089cae8a42.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.ebeb5334-d610-47c9-af04-33089cae8a42.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/f90ee213-0175-42d2-9104-eb44ef831c46.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.f90ee213-0175-42d2-9104-eb44ef831c46.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG_20181017_083258495.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG_20181017_083258495.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG_20181017_083308569.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG_20181017_083308569.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG_20181017_090934743.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG_20181017_090934743.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG_20181017_090947660.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG_20181017_090947660.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG_20181017_091044639.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG_20181017_091044639.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG_20181017_091046564.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG_20181017_091046564.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG_20181017_091427542.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG_20181017_091427542.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG_20181017_101133_081.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG_20181017_101133_081.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0018.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0018.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0021.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0021.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0024.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0024.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0030.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0030.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0035.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0035.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0066.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0066.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0068.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0068.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0070.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0070.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0082.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0082.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0083.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0083.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181017-WA0091.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181017-WA0091.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181018-WA0006.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181018-WA0006.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181018-WA0009.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181018-WA0009.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181018-WA0011.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181018-WA0011.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181018-WA0013.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181018-WA0013.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181018-WA0015.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181018-WA0015.jpg"></a>
+<a target="_blank" href="/media/rh/2018-10-17_dia_rosa/IMG-20181018-WA0016.jpg"><img src="/media/rh/2018-10-17_dia_rosa/thumb.IMG-20181018-WA0016.jpg"></a>
+</p>
+</center>
+{% endblock %}

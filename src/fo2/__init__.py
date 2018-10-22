@@ -1,9 +1,17 @@
-__version__ = '0.1.133'
-__version__date__ = '08/10/2018'
+__version__ = '0.1.135'
+__version__date__ = '22/10/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.135 - 2018/10/22
+#   . RH: Dia Rosa
+#
+# - 0.1.134 - 2018/10/17
+#   . Mapa: Poderia faltar a última sugestão de compra
+#   . OP: Em "Responsáveis e datas de movimentações de estágios" aparece o tipo
+#         de movimento
 #
 # - 0.1.133 - 2018/10/08
 #   . Mapa: setas para esclarescer relação entre compra e recebimento

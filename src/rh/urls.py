@@ -24,6 +24,12 @@ urlpatterns = [
     url(r'^videos_brigadista2018/$', views.videos_brigadista2018,
         name='videos_brigadista2018'),
 
+    url(r'^2018_dia_rosa_fotos/$', views.v2018_dia_rosa_fotos,
+        name='2018_dia_rosa_fotos'),
+
+    url(r'^2018_dia_rosa_videos/$', views.v2018_dia_rosa_videos,
+        name='2018_dia_rosa_videos'),
+
     url(r'^20180720_dia_do_amigo/$', views.fotos_20180720_dia_do_amigo,
         name='20180720_dia_do_amigo'),
 
