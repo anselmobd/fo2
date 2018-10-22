@@ -60,6 +60,11 @@ def index(request):
     ]
     dicas = [
       {
+        'data': datetime.strptime('22/10/2018', '%d/%m/%Y').date(),
+        'chamada': 'Se colocar no lugar do outro',
+        'link': '/media/rh/dicas/2018-10-22_no_lugar_do_outro.jpg',
+      },
+      {
         'data': datetime.strptime('09/10/2018', '%d/%m/%Y').date(),
         'chamada': 'Sem coroa',
         'link': '/media/rh/dicas/2018-10-09_lider.png',
