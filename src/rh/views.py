@@ -46,18 +46,7 @@ def fotos_20180720_dia_do_amigo(request):
 
 
 def index(request):
-    pensamentos = [
-      {
-        'data': datetime.strptime('14/05/2018', '%d/%m/%Y').date(),
-        'chamada': 'Arrisca',
-        'link': '/media/rh/DUOMO-2018-05-14-Pensamento.jpg',
-      },
-      {
-        'data': datetime.strptime('04/05/2018', '%d/%m/%Y').date(),
-        'chamada': 'Custa R$ 0,00',
-        'link': '/media/rh/DUOMO-2018-05-04-Dica.jpg',
-      },
-    ]
+    pensamentos = []
     dicas = [
       {
         'data': datetime.strptime('22/10/2018', '%d/%m/%Y').date(),
@@ -78,6 +67,11 @@ def index(request):
         'data': datetime.strptime('18/09/2018', '%d/%m/%Y').date(),
         'chamada': 'Pessoas de sucesso',
         'link': '/media/rh/dica_2018-09-18_pessoas-de-sucesso.png',
+      },
+      {
+        'data': datetime.strptime('05/09/2018', '%d/%m/%Y').date(),
+        'chamada': 'Concentre-se e desconecte-se!',
+        'link': '/media/rh/2018-09-Desconecte.pdf',
       },
       {
         'data': datetime.strptime('04/09/2018', '%d/%m/%Y').date(),
@@ -108,6 +102,16 @@ def index(request):
         'data': datetime.strptime('11/06/2018', '%d/%m/%Y').date(),
         'chamada': 'Pequenas Gentilezas',
         'link': '/media/rh/Dica-da-Semana-2018-06-11.jpg',
+      },
+      {
+        'data': datetime.strptime('14/05/2018', '%d/%m/%Y').date(),
+        'chamada': 'Arrisca',
+        'link': '/media/rh/DUOMO-2018-05-14-Pensamento.jpg',
+      },
+      {
+        'data': datetime.strptime('04/05/2018', '%d/%m/%Y').date(),
+        'chamada': 'Custa R$ 0,00',
+        'link': '/media/rh/DUOMO-2018-05-04-Dica.jpg',
       },
       {
         'data': datetime.strptime('23/02/2018', '%d/%m/%Y').date(),

@@ -16,11 +16,6 @@
         &nbsp;
       </td>
       <td>
-        <h2>
-          <a href="{% url 'rh:mensagens' %}">Mensagens
-            <img                                         src="/media/rh/mensagem_2018-09-19_primavera_h50.jpg" title="Primavera"
-            ></a>
-        </h2>
         <h2><a href="{% url 'rh:aniversariantes_now' %}">Aniversariantes
           <img src="/media/rh/baloes_h50_icone.jpg" title="aniversariantes"></a></h2>
         <h2>
@@ -41,26 +36,27 @@
             ><img style="opacity: 0.44;max-width: 22px;" src="/media/rh/DUOMO_Novembro_Azul_17_h50_icone.jpg" title="Novembro Azul"
             ></a>
         </h2>
+        <h2>
+          <a href="{% url 'rh:mensagens' %}">Mensagens
+            <img                                         src="/media/rh/mensagem_2018-09-19_primavera_h50.jpg" title="Primavera"
+            ></a>
+        </h2>
       </td>
     </tr>
   </table>
   <table>
     <tr>
       <td style="vertical-align: top;" colspan="3">
-        <h3>Atenção!</h3>
-        05/09/2018 - <a target="_blank" href="/media/rh/2018-09-Desconecte.pdf">Desconecte-se!</a><br/>
-        <div style="padding-left: 2em;">Concentre-se no seu trabalho e desconecte-se para se conectar profissionalmente!</div>
+        <h3>RH indica</h3>
+        {% for link in links %}
+          <a target="_blank" href="{{ link.link }}">{{ link.chamada }}</a><br/>
+          <div style="padding-left: 2em;">{{ link.descricao }}</div>
+        {% endfor %}
       </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-        <h3>Pensamentos</h3>
-        {% for pensamento in pensamentos %}
-          {% if pensamento.data  %}
-            {{ pensamento.data }} - <a target="_blank" href="{{ pensamento.link }}">{{ pensamento.chamada }}</a><br/>
-          {% endif %}
-        {% endfor %}
-        <h3>Dicas</h3>
+        <h3>Dicas e Pensamentos</h3>
         {% for dica in dicas %}
           {% if dica.data  %}
             {{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
@@ -71,11 +67,6 @@
         &nbsp;
       </td>
       <td style="vertical-align: top;">
-        <h3>RH indica</h3>
-        {% for link in links %}
-          <a target="_blank" href="{{ link.link }}">{{ link.chamada }}</a><br/>
-          <div style="padding-left: 2em; width: 20em;">{{ link.descricao }}</div>
-        {% endfor %}
         <h3>Fotos e Vídeos</h3>
         17/10/2018 - Dia Rosa 2018<br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:2018_dia_rosa_fotos' %}">fotos</a> e <a target="_blank" href="{% url 'rh:2018_dia_rosa_videos' %}">vídeos</a> desse dia<br/>
