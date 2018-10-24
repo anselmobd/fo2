@@ -9,7 +9,7 @@ from django.views import View
 from fo2.template import group_rowspan
 
 from utils.views import totalize_grouped_data
-from insumo.models import insumos_de_produtos_em_dual
+from insumo.queries import insumos_de_produtos_em_dual
 
 import lotes.forms as forms
 import lotes.models as models
