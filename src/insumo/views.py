@@ -25,6 +25,7 @@ from utils.forms import FiltroForm
 from utils.functions import segunda, max_not_None, min_not_None
 from utils.views import totalize_grouped_data
 
+import insumo.queries as queries
 import insumo.models as models
 from .forms import \
     EstoqueForm, \
@@ -53,7 +54,7 @@ class Ref(View):
         context = {'item': item}
 
         if len(item) == 5:
-            data = models.item_count_nivel(cursor, item)
+            data = queries.item_count_nivel(cursor, item)
             row = data[0]
             if row['COUNT'] > 1:
                 context.update({
@@ -67,7 +68,7 @@ class Ref(View):
         else:
             nivel = item[0]
             ref = item[-5:]
-            data = models.item_count_nivel(cursor, ref, nivel)
+            data = queries.item_count_nivel(cursor, ref, nivel)
             row = data[0]
         if row['COUNT'] == 0:
             context.update({
@@ -80,7 +81,7 @@ class Ref(View):
         })
 
         # Informações básicas
-        data = models.ref_inform(cursor, nivel, ref)
+        data = queries.ref_inform(cursor, nivel, ref)
         context.update({
             'headers': ('Descrição', 'Unidade de medida', 'Conta de estoque',
                         'NCM', 'Código Contábil'),
@@ -100,7 +101,7 @@ class Ref(View):
             })
 
         # Cores
-        c_data = models.ref_cores(cursor, nivel, ref)
+        c_data = queries.ref_cores(cursor, nivel, ref)
         if len(c_data) != 0:
             context.update({
                 'c_headers': ('Cor', 'Descrição'),
@@ -109,7 +110,7 @@ class Ref(View):
             })
 
         # Tamanhos
-        t_data = models.ref_tamanhos(cursor, nivel, ref)
+        t_data = queries.ref_tamanhos(cursor, nivel, ref)
         if len(t_data) != 0:
             context.update({
                 't_headers': ('Tamanho', 'Descrição', 'Complemento'),
@@ -118,7 +119,7 @@ class Ref(View):
             })
 
         # Parametros
-        p_data = models.ref_parametros(cursor, nivel, ref)
+        p_data = queries.ref_parametros(cursor, nivel, ref)
         if len(p_data) != 0:
             context.update({
                 'p_headers': ('Tamanho', 'Cor', 'Depósito', 'Estoque mínimo',
@@ -129,7 +130,7 @@ class Ref(View):
             })
 
         # Usado em
-        u_data = models.ref_usado_em(cursor, nivel, ref)
+        u_data = queries.ref_usado_em(cursor, nivel, ref)
         u_link = ('REF')
         for row in u_data:
             row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
@@ -176,7 +177,7 @@ class Busca(View):
         context = {'busca': busca}
 
         # Informações básicas
-        data = models.lista_insumo(cursor, busca)
+        data = queries.lista_insumo(cursor, busca)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum insumo selecionado',
@@ -225,7 +226,7 @@ def rolo_json(request, *args, **kwargs):
         dispositivo = dispositivo[0]
     barcode = re.sub("\D", "", kwargs['barcode'])[:9]
     cursor = connections['so'].cursor()
-    data = models.rolo_ref(cursor, barcode)
+    data = queries.rolo_ref(cursor, barcode)
     if len(data) == 0:
         data = [{}]
     else:
@@ -359,7 +360,7 @@ class BipaRolo(PermissionRequiredMixin, View):
 
         context = {}
 
-        data = models.rolo_ref(cursor, rolo)
+        data = queries.rolo_ref(cursor, rolo)
         if len(data) == 0:
             context.update({'erro': 'Rolo não encontrado'})
             return context
@@ -455,7 +456,7 @@ class Necessidade(View):
             'quais': quais,
         })
 
-        data = models.necessidade(
+        data = queries.necessidade(
             cursor, op, data_corte, data_corte_ate, periodo_corte,
             data_compra, data_compra_ate, periodo_compra,
             insumo, conta_estoque,
@@ -550,7 +551,7 @@ class Receber(View):
             'recebimento': recebimento,
         })
 
-        data = models.receber(cursor, insumo, conta_estoque, recebimento)
+        data = queries.receber(cursor, insumo, conta_estoque, recebimento)
 
         if len(data) == 0:
             context.update({
@@ -640,7 +641,7 @@ class Estoque(View):
             'conta_estoque': conta_estoque,
         })
 
-        data = models.estoque(cursor, insumo, conta_estoque)
+        data = queries.estoque(cursor, insumo, conta_estoque)
 
         if len(data) == 0:
             context.update({
@@ -724,7 +725,7 @@ class MapaPorRefs(View):
             'necessidade': necessidade,
         })
 
-        data = models.mapa_refs(cursor, insumo, conta_estoque, necessidade)
+        data = queries.mapa_refs(cursor, insumo, conta_estoque, necessidade)
 
         if len(data) == 0:
             context.update({
@@ -777,7 +778,7 @@ class MapaPorRefs(View):
 def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
     datas = {}
 
-    data_id = models.insumo_descr(cursor, nivel, ref, cor, tam)
+    data_id = queries.insumo_descr(cursor, nivel, ref, cor, tam)
 
     if len(data_id) == 0:
         datas.update({
@@ -801,14 +802,14 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         datetime.timedelta(days=dias_reposicao+7))
 
     # Necessidades
-    data_ins = models.insumo_necessidade_semana(
+    data_ins = queries.insumo_necessidade_semana(
         cursor, nivel, ref, cor, tam)
 
     for row in data_ins:
         row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
 
     # Previsões
-    data_prev = models.insumo_previsoes_semana_insumo(
+    data_prev = queries.insumo_previsoes_semana_insumo(
         cursor, nivel, ref, cor, tam)
 
     for row in data_prev:
@@ -832,7 +833,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                     prev_idx -= 1
 
     # Recebimentos
-    data_irs = models.insumo_recebimento_semana(
+    data_irs = queries.insumo_recebimento_semana(
         cursor, nivel, ref, cor, tam)
 
     # Dicionários por semana (sem passado)
@@ -1306,7 +1307,7 @@ class MapaNecessidadeDetalhe(View):
         context = {}
 
         # Informações gerais
-        data_id = models.insumo_descr(cursor, nivel, ref, cor, tam)
+        data_id = queries.insumo_descr(cursor, nivel, ref, cor, tam)
 
         if len(data_id) == 0:
             context.update({
@@ -1327,7 +1328,7 @@ class MapaNecessidadeDetalhe(View):
         })
 
         # detalhes da necessidade
-        data = models.insumo_necessidade_detalhe(
+        data = queries.insumo_necessidade_detalhe(
             cursor, nivel, ref, cor, tam, semana)
 
         if len(data) != 0:
@@ -1412,7 +1413,7 @@ class Previsao(View):
             'periodo': periodo,
         })
 
-        data = models.previsao(cursor, periodo)
+        data = queries.previsao(cursor, periodo)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma previsao de produção encontrada',
@@ -1492,7 +1493,7 @@ class Necessidade1Previsao(View):
             'periodo': periodo,
         })
 
-        data = models.previsao(cursor, periodo)
+        data = queries.previsao(cursor, periodo)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma previsao de produção encontrada',
@@ -1544,7 +1545,7 @@ class Necessidade1Previsao(View):
             if dual_nivel1 == '':
                 break
             else:
-                data = models.insumos_de_produtos_em_dual(cursor, dual_nivel1)
+                data = queries.insumos_de_produtos_em_dual(cursor, dual_nivel1)
 
         insumo = sorted(
             insumo, key=itemgetter('NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
@@ -1602,7 +1603,7 @@ class NecessidadesPrevisoes(View):
     def mount_context(self, cursor):
         context = {}
 
-        data = models.previsao(cursor)
+        data = queries.previsao(cursor)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma previsao de produção encontrada',
@@ -1662,7 +1663,7 @@ class NecessidadesPrevisoes(View):
             if dual_nivel1 == '':
                 break
             else:
-                data = models.insumos_de_produtos_em_dual(cursor, dual_nivel1)
+                data = queries.insumos_de_produtos_em_dual(cursor, dual_nivel1)
 
         insumo = sorted(
             insumo, key=itemgetter('NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
@@ -1747,7 +1748,7 @@ class MapaPorSemanaNew(View):
     def mount_context(
             self, cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo):
         cursor = connections['so'].cursor()
-        data = models.insumos_cor_tamanho_usados(
+        data = queries.insumos_cor_tamanho_usados(
             cursor, qtd_itens, nivel, uso, insumo)
         refs = []
         for row in data:
@@ -1911,7 +1912,7 @@ class MapaPorSemana(View):
     def mount_context(
             self, cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo):
         cursor = connections['so'].cursor()
-        data = models.insumos_cor_tamanho_usados(
+        data = queries.insumos_cor_tamanho_usados(
             cursor, qtd_itens, nivel, uso, insumo)
         refs = []
         for row in data:
@@ -1983,7 +1984,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
         tam = item[15:18]
         cursor = connections['so'].cursor()
 
-        data = models.insumo_descr(cursor, nivel, ref, cor, tam)
+        data = queries.insumo_descr(cursor, nivel, ref, cor, tam)
         drow = data[0]
 
         drow['REF'] = drow['REF'] + ' (' + drow['DESCR'] + ')'
@@ -1995,7 +1996,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
         drow['QUANT'] = round(drow['QUANT'])
 
         # Necessidades
-        data_ins = models.insumo_necessidade_semana(
+        data_ins = queries.insumo_necessidade_semana(
             cursor, nivel, ref, cor, tam, dtini, int(nsem) + semanas)
         necessidade = 0
         for row in data_ins:
@@ -2003,7 +2004,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
         necessidade = round(necessidade)
 
         # Previsões
-        data_prev = models.insumo_previsoes_semana_insumo(
+        data_prev = queries.insumo_previsoes_semana_insumo(
             cursor, nivel, ref, cor, tam, dtini, int(nsem) + semanas)
 
         # Descontando das necessidades previtas as necessidades reais
@@ -2024,7 +2025,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
         previsao = round(previsao)
 
         # Recebimentos
-        data_irs = models.insumo_recebimento_semana(
+        data_irs = queries.insumo_recebimento_semana(
             cursor, nivel, ref, cor, tam, dtini, int(nsem) + semanas)
 
         recebimentos = 0
@@ -2073,7 +2074,7 @@ class Rolo(View):
     def mount_context(self, cursor, rolo):
         context = {'rolo': rolo}
 
-        data = models.rolo_inform(cursor, rolo)
+        data = queries.rolo_inform(cursor, rolo)
 
         rolo_estoque_dict = {
             0: '0 (Em produção)',
