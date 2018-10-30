@@ -95,6 +95,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           , max( CASE WHEN os.CODIGO_FAMILIA < 1000
                  THEN os.CODIGO_FAMILIA
                  ELSE 0 END ) DIVISAO
+          , max( os.ROWID ) ROW_ID
           FROM PCPC_040 os
           WHERE 1=1
             AND (os.ORDEM_PRODUCAO = %s or %s IS NULL)
@@ -181,6 +182,15 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
             , t.ORDEM_TAMANHO
             , l.PERIODO_PRODUCAO
             , l.ORDEM_CONFECCAO
+        '''
+    elif order == 'w':  # referência + cor + tamanho + ROWID
+        sql = sql + '''
+            ORDER BY
+              l.ORDEM_PRODUCAO
+            , l.PROCONF_GRUPO
+            , l.PROCONF_ITEM
+            , t.ORDEM_TAMANHO
+            , l.ROW_ID
         '''
     else:  # elif order == '':  # OS + referência + cor + tamanho + OC
         sql = sql + '''
