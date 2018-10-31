@@ -412,22 +412,22 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             row['cont_total'] = '{}'.format(cont_total)
             row['cx_op'] = '{} / {}'.format(cont_total, qtd_total)
 
-            row['lote1'] = '{}{:05}'.format(row['periodo'], row['oc1'])
+            # row['lote1'] = '{}{:05}'.format(row['periodo'], row['oc1'])
             row['qtd_lotes'] = '1'
             if row['oc2']:
-                row['lote2'] = '{}{:05}'.format(row['periodo'], row['oc2'])
+                # row['lote2'] = '{}{:05}'.format(row['periodo'], row['oc2'])
                 row['qtd_lotes'] = '2'
                 row['qtd_pcs_cx'] += row['qtd2']
             else:
-                row['lote2'] = ' '
+                # row['lote2'] = ' '
                 row['oc2'] = ''
                 row['qtd2'] = ''
             if row['oc3']:
-                row['lote3'] = '{}{:05}'.format(row['periodo'], row['oc3'])
+                # row['lote3'] = '{}{:05}'.format(row['periodo'], row['oc3'])
                 row['qtd_lotes'] = '3'
                 row['qtd_pcs_cx'] += row['qtd3']
             else:
-                row['lote3'] = ' '
+                # row['lote3'] = ' '
                 row['oc3'] = ''
                 row['qtd3'] = ''
 
