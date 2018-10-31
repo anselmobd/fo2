@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from fo2.models import rows_to_dict_list_lower, dict_list_to_lower
 
 from lotes.models.base import *
@@ -31,13 +33,12 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         WITH Table_qtd_lotes AS (
         SELECT
           ll.OP
-        , ll.PERIODO
         , ll.COR
         , ll.TAM
         , ll.PACOTE
-        , MIN(ll.OC) OC1
-        , COUNT(ll.OC) OC_COUNT
-        , MAX(ll.OC) OC_MAX
+        , MIN(ll.LOTE) LOTE1
+        , COUNT(ll.LOTE) LOTE_COUNT
+        , MAX(ll.LOTE) LOTE_MAX
         FROM (
         SELECT DISTINCT
           TRUNC( (
@@ -47,7 +48,7 @@ def get_imprime_caixas_op_3lotes(cursor, op):
                 os.PROCONF_ITEM
               , os.PROCONF_SUBGRUPO
               order BY
-                os.ORDEM_CONFECCAO
+                (os.PERIODO_PRODUCAO * 100000) + os.ORDEM_CONFECCAO
               )
             - 1 )/ (
                       CASE WHEN r.COLECAO = 5 -- camisa
@@ -56,27 +57,27 @@ def get_imprime_caixas_op_3lotes(cursor, op):
                       END
                    ) ) + 1 PACOTE
         , os.ORDEM_PRODUCAO OP
-        , os.PERIODO_PRODUCAO PERIODO
         , os.PROCONF_ITEM COR
         , os.PROCONF_SUBGRUPO TAM
-        , os.ORDEM_CONFECCAO OC
-        , os.PROCONF_GRUPO
+        , (os.PERIODO_PRODUCAO * 100000) + os.ORDEM_CONFECCAO LOTE
         FROM PCPC_040 os
         JOIN BASI_030 r
           ON r.REFERENCIA = os.PROCONF_GRUPO
         WHERE os.ORDEM_PRODUCAO = %s
         GROUP BY
           os.ORDEM_PRODUCAO
-        , os.PERIODO_PRODUCAO
-        , os.PROCONF_GRUPO
         , r.COLECAO
         , os.PROCONF_ITEM
         , os.PROCONF_SUBGRUPO
-        , os.ORDEM_CONFECCAO
+        , (os.PERIODO_PRODUCAO * 100000) + os.ORDEM_CONFECCAO
         ) ll
         GROUP BY
           ll.OP
-        , ll.PERIODO
+        , ll.COR
+        , ll.TAM
+        , ll.PACOTE
+        ORDER BY
+          ll.OP
         , ll.COR
         , ll.TAM
         , ll.PACOTE
@@ -84,70 +85,86 @@ def get_imprime_caixas_op_3lotes(cursor, op):
         SELECT
           tb.*
         --
-        , CASE tb.OC_COUNT
+        , CASE tb.LOTE_COUNT
           WHEN 1 THEN NULL
-          WHEN 2 THEN tb.OC_MAX
+          WHEN 2 THEN tb.LOTE_MAX
           WHEN 3 THEN
           (
             SELECT
-              os_avg.ORDEM_CONFECCAO
+              (os_avg.PERIODO_PRODUCAO * 100000) + os_avg.ORDEM_CONFECCAO
             FROM PCPC_040 os_avg
             WHERE os_avg.ORDEM_PRODUCAO = tb.OP
               AND os_avg.PROCONF_ITEM = tb.COR
               AND os_avg.PROCONF_SUBGRUPO = tb.TAM
-              AND os_avg.ORDEM_CONFECCAO > tb.OC1
-              AND os_avg.ORDEM_CONFECCAO < tb.OC_MAX
+              AND os_avg.PERIODO_PRODUCAO >= trunc(tb.LOTE1 / 100000)
+              AND os_avg.ORDEM_CONFECCAO > mod(tb.LOTE1, 100000)
+              AND os_avg.PERIODO_PRODUCAO <= trunc(tb.LOTE_MAX / 100000)
+              AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
               AND rownum = 1
           )
-          END OC2
+          END LOTE2
         --
-        , CASE WHEN tb.OC_COUNT = 3
-          THEN tb.OC_MAX
+        , CASE WHEN tb.LOTE_COUNT = 3
+          THEN tb.LOTE_MAX
           ELSE NULL
-          END OC3
+          END LOTE3
         --
         , ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
-            WHERE os.PERIODO_PRODUCAO = tb.PERIODO
-              AND os.ORDEM_CONFECCAO = tb.OC1
+            WHERE os.PERIODO_PRODUCAO = trunc(tb.LOTE1 / 100000)
+              AND os.ORDEM_CONFECCAO = mod(tb.LOTE1, 100000)
           )    QTD1
         --
-        , CASE tb.OC_COUNT
+        , CASE tb.LOTE_COUNT
           WHEN 1 THEN NULL
           WHEN 2 THEN
           ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
-            WHERE os.PERIODO_PRODUCAO = tb.PERIODO
-              AND os.ORDEM_CONFECCAO = tb.OC_MAX
+            WHERE os.PERIODO_PRODUCAO = trunc(tb.LOTE_MAX / 100000)
+              AND os.ORDEM_CONFECCAO = mod(tb.LOTE_MAX, 100000)
           )
           ELSE
           ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
-            WHERE os.PERIODO_PRODUCAO = tb.PERIODO
-              AND os.ORDEM_CONFECCAO = (
+            WHERE os.PERIODO_PRODUCAO = trunc((
                 SELECT
-                  os_avg.ORDEM_CONFECCAO
+                  (os_avg.PERIODO_PRODUCAO * 100000) + os_avg.ORDEM_CONFECCAO
                 FROM PCPC_040 os_avg
                 WHERE os_avg.ORDEM_PRODUCAO = tb.OP
                   AND os_avg.PROCONF_ITEM = tb.COR
                   AND os_avg.PROCONF_SUBGRUPO = tb.TAM
-                  AND os_avg.ORDEM_CONFECCAO > tb.OC1
-                  AND os_avg.ORDEM_CONFECCAO < tb.OC_MAX
+                  AND os_avg.PERIODO_PRODUCAO >= trunc(tb.LOTE1 / 100000)
+                  AND os_avg.ORDEM_CONFECCAO > mod(tb.LOTE1, 100000)
+                  AND os_avg.PERIODO_PRODUCAO <= trunc(tb.LOTE_MAX / 100000)
+                  AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
                   AND rownum = 1
-              )
+              ) / 100000)
+              AND os.ORDEM_CONFECCAO = mod((
+                SELECT
+                  (os_avg.PERIODO_PRODUCAO * 100000) + os_avg.ORDEM_CONFECCAO
+                FROM PCPC_040 os_avg
+                WHERE os_avg.ORDEM_PRODUCAO = tb.OP
+                  AND os_avg.PROCONF_ITEM = tb.COR
+                  AND os_avg.PROCONF_SUBGRUPO = tb.TAM
+                  AND os_avg.PERIODO_PRODUCAO >= trunc(tb.LOTE1 / 100000)
+                  AND os_avg.ORDEM_CONFECCAO > mod(tb.LOTE1, 100000)
+                  AND os_avg.PERIODO_PRODUCAO <= trunc(tb.LOTE_MAX / 100000)
+                  AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
+                  AND rownum = 1
+              ), 100000)
           )
           END QTD2
         --
-        , CASE WHEN tb.OC_COUNT = 3
+        , CASE WHEN tb.LOTE_COUNT = 3
           THEN
           ( SELECT
               max( os.QTDE_PECAS_PROG )
             FROM PCPC_040 os
-            WHERE os.PERIODO_PRODUCAO = tb.PERIODO
-              AND os.ORDEM_CONFECCAO = tb.OC_MAX
+            WHERE os.PERIODO_PRODUCAO = trunc(tb.LOTE_MAX / 100000)
+              AND os.ORDEM_CONFECCAO = mod(tb.LOTE_MAX, 100000)
           )
           ELSE NULL
           END QTD3
@@ -184,4 +201,25 @@ def get_imprime_caixas_op_3lotes(cursor, op):
     '''
     cursor.execute(sql, [op])
     data = rows_to_dict_list_lower(cursor)
+
+    for row in data:
+        row['oc1'] = row['lote1'] % 100000
+        row['oc_count'] = row['lote_count'] % 100000
+        row['oc_max'] = row['lote_max'] % 100000
+        row['lote1'] = str(row['lote1'])
+
+        if row['lote2']:
+            row['oc2'] = row['lote2'] % 100000
+            row['lote2'] = str(row['lote2'])
+        else:
+            row['oc2'] = None
+            row['lote2'] = ' '
+
+        if row['lote3']:
+            row['oc3'] = row['lote3'] % 100000
+            row['lote3'] = str(row['lote3'])
+        else:
+            row['oc3'] = None
+            row['lote3'] = ' '
+
     return data
