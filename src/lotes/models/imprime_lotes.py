@@ -105,7 +105,9 @@ def get_imprime_caixas_op_3lotes(cursor, op):
               AND os_avg.PERIODO_PRODUCAO >= trunc(tb.LOTE1 / 100000)
               AND os_avg.ORDEM_CONFECCAO > mod(tb.LOTE1, 100000)
               AND os_avg.PERIODO_PRODUCAO <= trunc(tb.LOTE_MAX / 100000)
-              AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
+              AND ((os_avg.PERIODO_PRODUCAO * 100000)
+                  + os_avg.ORDEM_CONFECCAO) < tb.LOTE_MAX
+              -- AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
               AND rownum = 1
           )
           END LOTE2
@@ -147,7 +149,9 @@ def get_imprime_caixas_op_3lotes(cursor, op):
                     AND os_avg.PERIODO_PRODUCAO >= trunc(tb.LOTE1 / 100000)
                     AND os_avg.ORDEM_CONFECCAO > mod(tb.LOTE1, 100000)
                     AND os_avg.PERIODO_PRODUCAO <= trunc(tb.LOTE_MAX / 100000)
-                    AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
+                    AND ((os_avg.PERIODO_PRODUCAO * 100000)
+                        + os_avg.ORDEM_CONFECCAO) < tb.LOTE_MAX
+--                    AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
                     AND rownum = 1
                 )
               / 100000
@@ -164,7 +168,9 @@ def get_imprime_caixas_op_3lotes(cursor, op):
                     AND os_avg.PERIODO_PRODUCAO >= trunc(tb.LOTE1 / 100000)
                     AND os_avg.ORDEM_CONFECCAO > mod(tb.LOTE1, 100000)
                     AND os_avg.PERIODO_PRODUCAO <= trunc(tb.LOTE_MAX / 100000)
-                    AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
+                    AND ((os_avg.PERIODO_PRODUCAO * 100000)
+                        + os_avg.ORDEM_CONFECCAO) < tb.LOTE_MAX
+--                    AND os_avg.ORDEM_CONFECCAO < mod(tb.LOTE_MAX, 100000)
                     AND rownum = 1
                 )
               , 100000
