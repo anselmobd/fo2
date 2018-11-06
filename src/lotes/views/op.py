@@ -1,4 +1,5 @@
 import copy
+import datetime
 from pprint import pprint
 
 from django.shortcuts import render
@@ -506,17 +507,21 @@ class OpConserto(View):
 
 
 class OpPerda(View):
+    Form_class = forms.OpPerdaForm
     template_name = 'lotes/perda.html'
     title_name = 'Perdas de produção'
 
-    def mount_context(self, cursor):
-        context = {}
-
+    def mount_context(self, cursor, data_de, data_ate, detalhe):
+        context = {
+            'data_de': data_de,
+            'data_ate': data_ate,
+            'detalhe': detalhe,
+        }
         # Peças em perda
-        data = models.op_perda(cursor)
+        data = models.op_perda(cursor, data_de, data_ate, detalhe)
         if len(data) == 0:
             context.update({
-                'msg_erro': 'Nenhuma perda de produção',
+                'msg_erro': 'Nenhuma perda de produção encontrada',
             })
             return context
 
@@ -524,16 +529,46 @@ class OpPerda(View):
             row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
 
+        group = ['REF']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['QTD'],
+            'count': [],
+            'descr': {'OP': 'Total:'},
+            'flags': ['NO_TOT_1'],
+        })
+        group_rowspan(data, group)
+
+        if detalhe == 'c':
+            headers = ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade')
+            fields = ('REF', 'COR', 'TAM', 'OP', 'QTD')
+        else:
+            headers = ('Referência', 'OP', 'Quantidade')
+            fields = ('REF', 'OP', 'QTD')
         context.update({
-            'headers': ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade'),
-            'fields': ('REF', 'COR', 'TAM', 'OP', 'QTD'),
+            'headers': headers,
+            'fields': fields,
             'data': data,
+            'group': group,
         })
 
         return context
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
-        context.update(self.mount_context(cursor))
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            data_de = form.cleaned_data['data_de']
+            data_ate = form.cleaned_data['data_ate']
+            detalhe = form.cleaned_data['detalhe']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(
+                cursor, data_de, data_ate, detalhe))
+        context['form'] = form
         return render(request, self.template_name, context)
