@@ -536,6 +536,8 @@ class OpPerda(View):
             'count': [],
             'descr': {'OP': 'Total:'},
             'flags': ['NO_TOT_1'],
+            'global_sum': ['QTD'],
+            'global_descr': {'OP': 'Total geral:'},
         })
         group_rowspan(data, group)
 
