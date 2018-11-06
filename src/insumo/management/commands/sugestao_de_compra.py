@@ -1,14 +1,14 @@
 # import sys
 import re
-import datetime
+from datetime import datetime
 from pprint import pprint
+import pytz
 
+from django.utils import timezone
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 
-# from fo2.models import rows_to_dict_list_lower
-# import lotes.models as models
-
+import insumo.models as models
 from insumo.views import MapaPorInsumo_dados
 
 
@@ -23,68 +23,102 @@ class Command(BaseCommand):
         self.stdout.write(text, ending=ending)
         self.stdout.flush()
 
-    # def iter_cursor(self, cursor):
-    #     columns = [i[0].lower() for i in cursor.description]
-    #     for row in cursor:
-    #         dict_row = dict(zip(columns, row))
-    #         yield dict_row
-    #
-    # def get_someting(self):
-    #     cursor_s = connections['so'].cursor()
-    #     sql = '''
-    #         SELECT
-    #           1
-    #         FROM DUAL
-    #     '''
-    #     cursor_s.execute(sql)
-    #     return self.iter_cursor(cursor_s)
-
     def valid_1A(self, s, tam, descr):
         pat = re.compile(r"^[0-9A-Z]{%s}$" % (tam))
         if not pat.match(s):
             msg = "Valor de '{}' inválido: '{}'.".format(descr, s)
             raise Exception(msg)
 
-    def conta_nao_None(self, name):
-        if self.kwargs[name] is None:
-            return 0
-        else:
-            return 1
+    def countNone(self, *values):
+        count = 0
+        for value in values:
+            if value is None:
+                count += 1
+        return count
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'nivel', help='nivel', choices=['2', '9'], nargs='?')
+            'nivel_ou_tipo', help='nivel ou tipo',
+            choices=['2', '9', 'e', 't'], nargs='?')
         parser.add_argument('referencia', help='5 caracteres', nargs='?')
         parser.add_argument('cor', help='6 caracteres', nargs='?')
         parser.add_argument('tamanho', help='1 a 3 caracteres', nargs='?')
 
     def handle(self, *args, **kwargs):
         self.my_println('---')
-        self.my_println('{}'.format(datetime.datetime.now()))
-        self.kwargs = kwargs
+        self.my_println('{}'.format(datetime.now()))
 
+        nivel = kwargs['nivel_ou_tipo']
+        ref = kwargs['referencia']
+        cor = kwargs['cor']
+        tam = kwargs['tamanho']
         try:
-            conta_parm = \
-                self.conta_nao_None('nivel') + \
-                self.conta_nao_None('referencia') + \
-                self.conta_nao_None('cor') + \
-                self.conta_nao_None('tamanho')
-            if conta_parm % 4 != 0:
-                msg = "Informe as 4 partes do código do item ou nada"
-                raise Exception(msg)
+            conta_none = self.countNone(nivel, ref, cor, tam)
+            if conta_none % 3 != 0:
+                raise Exception(
+                    "Informe as 4 partes do código do item "
+                    "ou o tipo de execução")
 
-            if conta_parm == 4:
-                nivel = kwargs['nivel']
-                ref = kwargs['referencia']
-                cor = kwargs['cor']
-                tam = kwargs['tamanho']
+            if conta_none == 3:
+                if nivel == 'e':
+                    print('só utilizados em estrutura')
+                elif nivel == 't':
+                    print('todos')
+            elif conta_none == 0:
                 self.valid_1A(ref, 5, 'Referencia')
                 self.valid_1A(cor, 6, 'Cor')
                 self.valid_1A(tam, '1,3', 'Tamanho')
 
                 cursor = connections['so'].cursor()
                 datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
-                pprint(datas['data_sug'])
+                data_sug = datas['data_sug']
+                pprint(data_sug)
+
+                sc = models.SugestaoCompra.objects.filter(
+                    nivel=nivel,
+                    referencia=ref,
+                    tamanho=tam,
+                    cor=cor,
+                ).order_by('-data').first()
+
+                ultima_sug = []
+                if sc:
+                    print(sc.id)
+                    scd = models.SugestaoCompraDatas.objects.filter(
+                        sugestao=sc).order_by('data_compra').values()
+                    for data in scd:
+                        pprint(data)
+                        ultima_sug.append({
+                            'QUANT': data['qtd'],
+                            'SEMANA_COMPRA': data['data_compra'],
+                            'SEMANA_RECEPCAO': data['data_recepcao'],
+                        })
+                    pprint(ultima_sug)
+                    print(ultima_sug == data_sug)
+
+                if ultima_sug == data_sug:
+                    print('Sugestão inalterada')
+                else:
+                    print('Gravando nova sugestão')
+                    sc = models.SugestaoCompra()
+                    sc.nivel = nivel
+                    sc.referencia = ref
+                    sc.tamanho = tam
+                    sc.ordem_tamanho = 0
+                    sc.cor = cor
+                    sc.data = timezone.now()
+                    sc.save()
+                    print(sc.id)
+
+                    for sugestao in data_sug:
+                        pprint(sugestao)
+                        scd = models.SugestaoCompraDatas()
+                        scd.sugestao = sc
+                        scd.data_compra = sugestao['SEMANA_COMPRA']
+                        scd.data_recepcao = sugestao['SEMANA_RECEPCAO']
+                        scd.qtd = sugestao['QUANT']
+                        scd.save()
+                        print(scd.id)
 
             # pega xyz
             # ixyz = self.get_someting()
@@ -102,4 +136,4 @@ class Command(BaseCommand):
             raise CommandError(
                 'Error montando sugestão de compras "{}"'.format(e))
 
-        self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
+        self.my_println(format(datetime.now(), '%H:%M:%S.%f'))
