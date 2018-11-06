@@ -528,8 +528,8 @@ class OpPerda(View):
         for row in data:
             row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
-            row['PERC'] = '{0:.2f}%'.format(row['QTD'] / row['QTDOP'] * 100)
-            row['PERC'] = row['PERC'].replace('.', ',')
+            row['PERC'] = row['QTD'] / row['QTDOP'] * 100
+            row['PERC|DECIMALS'] = 2
 
         group = ['REF']
         totalize_grouped_data(data, {
@@ -546,14 +546,23 @@ class OpPerda(View):
         if detalhe == 'c':
             headers = ('Referência', 'Cor', 'Tamanho', 'OP', 'Quantidade', '%')
             fields = ('REF', 'COR', 'TAM', 'OP', 'QTD', 'PERC')
+            style = {
+                5: 'text-align: right;',
+                6: 'text-align: right;',
+            }
         else:
             headers = ('Referência', 'OP', 'Quantidade', '%')
             fields = ('REF', 'OP', 'QTD', 'PERC')
+            style = {
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+            }
         context.update({
             'headers': headers,
             'fields': fields,
             'data': data,
             'group': group,
+            'style': style,
         })
 
         return context
