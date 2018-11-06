@@ -721,6 +721,17 @@ def op_perda(cursor, data_de, data_ate, detalhe):
     sql += """
         , lote.ORDEM_PRODUCAO OP
         , sum(lote.QTDE_PERDAS ) QTD
+        , ( SELECT
+              SUM( l.QTDE_PECAS_PROG )
+            FROM pcpc_040 l
+            WHERE l.ORDEM_PRODUCAO = 9242
+              AND l.SEQ_OPERACAO = (
+                SELECT
+                  MIN( ls.SEQ_OPERACAO )
+                FROM pcpc_040 ls
+                WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+              )
+          ) QTDOP
         FROM PCPC_040 lote
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
