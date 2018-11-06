@@ -1,7 +1,7 @@
 {% extends 'lotes/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="/lotes/">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -10,10 +10,28 @@
 {% endblock %}
 
 {% block content %}
+<form action="{% url 'producao:perda' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
 {% if msg_erro %}
 <h3>{{ msg_erro }}</h3>
 {% endif %}
+{% if data_de %}
+  <h4>Data do Corte: De: {{ data_de }}</h4>
+{% endif %}
+{% if data_ate %}
+  <h4>Até: {{ data_ate }}</h4>
+{% endif %}
 {% if data %}
+  <h4>Detalhe:
+    {% if detalhe == 'r' %}
+      Por referência
+    {% else %}
+      Por referência-cor-tamanho
+    {% endif %}
+  </h4>
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
