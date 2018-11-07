@@ -1185,7 +1185,7 @@ class MapaPorInsumo(View):
         })
 
         # se tem alguma entrada ou saída
-        if 'data_sug' in datas:
+        if len(datas['data_sug']) != 0:
 
             data_sug = datas['data_sug']
             estoque_minimo = datas['estoque_minimo']
@@ -1846,7 +1846,7 @@ def mapa_sem_ref_new(request, item, dtini):
         comprar = 0
         dt_chegada = None
 
-        if 'data_sug' in datas:
+        if len(datas['data_sug']) != 0:
             data_sug = datas['data_sug']
             semana_hoje = segunda(datetime.date.today())
 
