@@ -10,6 +10,7 @@ from django.db import connections
 
 import insumo.models as models
 from insumo.views import MapaPorInsumo_dados
+from insumo.queries import insumos_cor_tamanho_usados
 
 
 class Command(BaseCommand):
@@ -118,28 +119,41 @@ class Command(BaseCommand):
                 if nivel == 'e':
                     self.my_println('Insumos de estruturas')
                     insumos = [
-                        {
-                            'nivel': 2,
-                            'ref': 'MA002',
-                            'cor': '0000BR',
-                            'tam': 'UNI',
-                        },
-                        {
-                            'nivel': 2,
-                            'ref': 'MA002',
-                            'cor': '0000PR',
-                            'tam': 'UNI',
-                        },
+                        {'nivel': '2',
+                         'ref': 'AM001',
+                         'cor': '0000BR',
+                         'tam': '0BR',
+                         },
+                        {'nivel': '2',
+                         'ref': 'MA002',
+                         'cor': '0000BR',
+                         'tam': 'UNI',
+                         },
+                        {'nivel': '2',
+                         'ref': 'MA002',
+                         'cor': '0000PR',
+                         'tam': 'UNI',
+                         },
+                        {'nivel': '9',
+                         'ref': 'CA001',
+                         'cor': '0000PR',
+                         'tam': 'UNI',
+                         },
                     ]
-                    for insumo in insumos:
-                        nivel = insumo['nivel']
-                        ref = insumo['ref']
-                        cor = insumo['cor']
-                        tam = insumo['tam']
-                        self.sugestao_de_insumo(nivel, ref, cor, tam)
 
                 elif nivel == 't':
                     self.my_println('Todos os insumos')
+
+                    cursor_ = connections['so'].cursor()
+                    insumos = insumos_cor_tamanho_usados(
+                        cursor_, 4)
+
+                for insumo in insumos:
+                    nivel = insumo['nivel']
+                    ref = insumo['ref']
+                    cor = insumo['cor']
+                    tam = insumo['tam']
+                    self.sugestao_de_insumo(nivel, ref, cor, tam)
 
             elif conta_none == 0:
                 self.valid_1A(ref, 5, 'Referencia')
@@ -159,7 +173,7 @@ class Command(BaseCommand):
             #         field = row_xyz['field']
             #     except StopIteration:
             #         pass
-            #
+
         except Exception as e:
             raise CommandError(
                 'Error montando sugestão de compras "{}"'.format(e))
