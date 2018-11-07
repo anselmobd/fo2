@@ -15,7 +15,7 @@ from insumo.queries import insumos_cor_tamanho_usados
 
 class Command(BaseCommand):
     help = 'Monta tabela de sugestão de compras por insumo.'
-    __MAX_TASKS = 6
+    __MAX_TASKS = 10
     __cursor = None
 
     def my_println(self, text=''):
@@ -65,9 +65,9 @@ class Command(BaseCommand):
         ultima_sug = []
         if sc:
             if limite == 'd':
-                delta_limite = timedelta(hours=20)
+                delta_limite = timedelta(hours=24)
             elif limite == 'h':
-                delta_limite = timedelta(minutes=50)
+                delta_limite = timedelta(minutes=180)
             else:  # elif limite == 'm':
                 delta_limite = timedelta(minutes=1)
             if sc.data > timezone.now() - delta_limite:
