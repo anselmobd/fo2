@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 
@@ -66,6 +67,16 @@ class SugestaoCompra(models.Model):
     data = models.DateTimeField(
         db_index=True,
         verbose_name='Data do calculo')
+    create_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Criada em')
+
+    def save(self, *args, **kwargs):
+        ''' On create, get timestamps '''
+        # At create have no "id"
+        if not self.id:
+            self.create_at = timezone.now()
+        super(SugestaoCompra, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_sugestao_compra"
