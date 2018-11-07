@@ -1,8 +1,8 @@
-# import sys
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from pprint import pprint
 import pytz
+import time
 
 from django.utils import timezone
 from django.core.management.base import BaseCommand, CommandError
@@ -15,8 +15,8 @@ from insumo.queries import insumos_cor_tamanho_usados
 
 class Command(BaseCommand):
     help = 'Monta tabela de sugestão de compras por insumo.'
-    # __MAX_TASKS = 100
-    so_cursor = None
+    __MAX_TASKS = 6
+    __cursor = None
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -41,25 +41,20 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             'nivel_ou_tipo', help='nivel ou tipo',
-            choices=['2', '9', 'e', 't'], nargs='?')
+            choices=['2', '9', 'u', 'n', 't'], nargs='?')
         parser.add_argument('referencia', help='5 caracteres', nargs='?')
         parser.add_argument('cor', help='6 caracteres', nargs='?')
         parser.add_argument('tamanho', help='1 a 3 caracteres', nargs='?')
 
     @property
     def cursor(self):
-        if self.so_cursor is None:
-            self.so_cursor = connections['so'].cursor()
-        return self.so_cursor
+        if self.__cursor is None:
+            self.__cursor = connections['so'].cursor()
+        return self.__cursor
 
-    def sugestao_de_insumo(self, nivel, ref, cor, tam):
-        self.my_println('Insumo {}.{}.{}.{}'.format(
+    def sugestao_de_insumo(self, nivel, ref, cor, tam, limite):
+        self.my_print('{}.{}.{}.{} '.format(
             nivel, ref, cor, tam))
-
-        # cursor = connections['so'].cursor()
-        datas = MapaPorInsumo_dados(self.cursor, nivel, ref, cor, tam)
-        data_sug = datas['data_sug']
-        # pprint(data_sug)
 
         sc = models.SugestaoCompra.objects.filter(
             nivel=nivel,
@@ -70,21 +65,33 @@ class Command(BaseCommand):
 
         ultima_sug = []
         if sc:
-            # print(sc.id)
+            if limite == 'd':
+                delta_limite = timedelta(hours=20)
+            elif limite == 'h':
+                delta_limite = timedelta(minutes=50)
+            else:  # elif limite == 'm':
+                delta_limite = timedelta(minutes=1)
+            if sc.data > timezone.now() - delta_limite:
+                self.my_println('Sugestão recente')
+                return False
+
             scd = models.SugestaoCompraDatas.objects.filter(
                 sugestao=sc).order_by('data_compra').values()
             for data in scd:
-                # pprint(data)
                 ultima_sug.append({
                     'QUANT': data['qtd'],
                     'SEMANA_COMPRA': data['data_compra'],
                     'SEMANA_RECEPCAO': data['data_recepcao'],
                 })
-            # pprint(ultima_sug)
-            # print(ultima_sug == data_sug)
 
-        if ultima_sug == data_sug:
+        datas = MapaPorInsumo_dados(self.cursor, nivel, ref, cor, tam)
+        data_sug = datas['data_sug']
+        time.sleep(1)
+
+        if sc and ultima_sug == data_sug:
             self.my_println('Sugestão inalterada')
+            sc.data = timezone.now()
+            sc.save()
         else:
             self.my_println('Nova sugestão')
             sc = models.SugestaoCompra()
@@ -95,17 +102,16 @@ class Command(BaseCommand):
             sc.cor = cor
             sc.data = timezone.now()
             sc.save()
-            # print(sc.id)
 
             for sugestao in data_sug:
-                # pprint(sugestao)
                 scd = models.SugestaoCompraDatas()
                 scd.sugestao = sc
                 scd.data_compra = sugestao['SEMANA_COMPRA']
                 scd.data_recepcao = sugestao['SEMANA_RECEPCAO']
                 scd.qtd = sugestao['QUANT']
                 scd.save()
-                # print(scd.id)
+
+        return True
 
     def handle(self, *args, **kwargs):
         self.my_println('---')
@@ -123,63 +129,39 @@ class Command(BaseCommand):
                     "ou o tipo de execução")
 
             if conta_none == 3:
-                if nivel == 'e':
-                    self.my_println('Insumos de estruturas')
-                    insumos = [
-                        {'nivel': '2',
-                         'ref': 'AM001',
-                         'cor': '0000BR',
-                         'tam': '0BR',
-                         },
-                        {'nivel': '2',
-                         'ref': 'MA002',
-                         'cor': '0000BR',
-                         'tam': 'UNI',
-                         },
-                        {'nivel': '2',
-                         'ref': 'MA002',
-                         'cor': '0000PR',
-                         'tam': 'UNI',
-                         },
-                        {'nivel': '9',
-                         'ref': 'CA001',
-                         'cor': '0000PR',
-                         'tam': 'UNI',
-                         },
-                    ]
+                if nivel == 'u':
+                    self.my_println('Insumos utilizados em estruturas')
+                    insumos = insumos_cor_tamanho_usados(self.cursor, uso='U')
+                    limite = 'h'
+
+                elif nivel == 'n':
+                    self.my_println('Insumos não utilizados em estruturas')
+                    insumos = insumos_cor_tamanho_usados(self.cursor, uso='N')
+                    limite = 'd'
 
                 elif nivel == 't':
                     self.my_println('Todos os insumos')
+                    insumos = insumos_cor_tamanho_usados(self.cursor)
+                    limite = 'd'
 
-                    # cursor_ = connections['so'].cursor()
-                    insumos = insumos_cor_tamanho_usados(
-                        self.cursor, 4)
-
+                count_task = 0
                 for insumo in insumos:
                     nivel = insumo['nivel']
                     ref = insumo['ref']
                     cor = insumo['cor']
                     tam = insumo['tam']
-                    self.sugestao_de_insumo(nivel, ref, cor, tam)
+                    if self.sugestao_de_insumo(nivel, ref, cor, tam, limite):
+                        count_task += 1
+                    if count_task >= self.__MAX_TASKS:
+                        self.my_println('Chegou ao limite de tarefas')
+                        break
 
             elif conta_none == 0:
                 self.valid_1A(ref, 5, 'Referencia')
                 self.valid_1A(cor, 6, 'Cor')
                 self.valid_1A(tam, '1,3', 'Tamanho')
 
-                self.sugestao_de_insumo(nivel, ref, cor, tam)
-
-            # pega xyz
-            # ixyz = self.get_someting()
-            #
-            count_task = 0
-            # while count_task < self.__MAX_TASKS:
-            #
-            #     try:
-            #         row_xyz = next(ixyz)
-            #         field = row_xyz['field']
-            #     except StopIteration:
-            #         pass
+                self.sugestao_de_insumo(nivel, ref, cor, tam, 'm')
 
         except Exception as e:
             raise CommandError(
