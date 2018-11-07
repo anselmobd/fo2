@@ -16,6 +16,7 @@ from insumo.queries import insumos_cor_tamanho_usados
 class Command(BaseCommand):
     help = 'Monta tabela de sugestão de compras por insumo.'
     # __MAX_TASKS = 100
+    so_cursor = None
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -45,12 +46,18 @@ class Command(BaseCommand):
         parser.add_argument('cor', help='6 caracteres', nargs='?')
         parser.add_argument('tamanho', help='1 a 3 caracteres', nargs='?')
 
+    @property
+    def cursor(self):
+        if self.so_cursor is None:
+            self.so_cursor = connections['so'].cursor()
+        return self.so_cursor
+
     def sugestao_de_insumo(self, nivel, ref, cor, tam):
         self.my_println('Insumo {}.{}.{}.{}'.format(
             nivel, ref, cor, tam))
 
-        cursor = connections['so'].cursor()
-        datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
+        # cursor = connections['so'].cursor()
+        datas = MapaPorInsumo_dados(self.cursor, nivel, ref, cor, tam)
         data_sug = datas['data_sug']
         # pprint(data_sug)
 
@@ -144,9 +151,9 @@ class Command(BaseCommand):
                 elif nivel == 't':
                     self.my_println('Todos os insumos')
 
-                    cursor_ = connections['so'].cursor()
+                    # cursor_ = connections['so'].cursor()
                     insumos = insumos_cor_tamanho_usados(
-                        cursor_, 4)
+                        self.cursor, 4)
 
                 for insumo in insumos:
                     nivel = insumo['nivel']
