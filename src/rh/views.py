@@ -49,6 +49,11 @@ def index(request):
     pensamentos = []
     dicas = [
       {
+        'data': datetime.strptime('07/11/2018', '%d/%m/%Y').date(),
+        'chamada': 'Inspire Pessoas',
+        'link': '/media/rh/dicas/2018-11-07_inspire_pessoas.jpg',
+      },
+      {
         'data': datetime.strptime('22/10/2018', '%d/%m/%Y').date(),
         'chamada': 'Se colocar no lugar do outro',
         'link': '/media/rh/dicas/2018-10-22_no_lugar_do_outro.jpg',
