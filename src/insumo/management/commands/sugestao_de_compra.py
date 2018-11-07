@@ -44,6 +44,61 @@ class Command(BaseCommand):
         parser.add_argument('cor', help='6 caracteres', nargs='?')
         parser.add_argument('tamanho', help='1 a 3 caracteres', nargs='?')
 
+    def sugestao_de_insumo(self, nivel, ref, cor, tam):
+        self.my_println('Insumo {}.{}.{}.{}'.format(
+            nivel, ref, cor, tam))
+
+        cursor = connections['so'].cursor()
+        datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
+        data_sug = datas['data_sug']
+        # pprint(data_sug)
+
+        sc = models.SugestaoCompra.objects.filter(
+            nivel=nivel,
+            referencia=ref,
+            tamanho=tam,
+            cor=cor,
+        ).order_by('-data').first()
+
+        ultima_sug = []
+        if sc:
+            # print(sc.id)
+            scd = models.SugestaoCompraDatas.objects.filter(
+                sugestao=sc).order_by('data_compra').values()
+            for data in scd:
+                # pprint(data)
+                ultima_sug.append({
+                    'QUANT': data['qtd'],
+                    'SEMANA_COMPRA': data['data_compra'],
+                    'SEMANA_RECEPCAO': data['data_recepcao'],
+                })
+            # pprint(ultima_sug)
+            # print(ultima_sug == data_sug)
+
+        if ultima_sug == data_sug:
+            self.my_println('Sugestão inalterada')
+        else:
+            self.my_println('Nova sugestão')
+            sc = models.SugestaoCompra()
+            sc.nivel = nivel
+            sc.referencia = ref
+            sc.tamanho = tam
+            sc.ordem_tamanho = 0
+            sc.cor = cor
+            sc.data = timezone.now()
+            sc.save()
+            # print(sc.id)
+
+            for sugestao in data_sug:
+                # pprint(sugestao)
+                scd = models.SugestaoCompraDatas()
+                scd.sugestao = sc
+                scd.data_compra = sugestao['SEMANA_COMPRA']
+                scd.data_recepcao = sugestao['SEMANA_RECEPCAO']
+                scd.qtd = sugestao['QUANT']
+                scd.save()
+                # print(scd.id)
+
     def handle(self, *args, **kwargs):
         self.my_println('---')
         self.my_println('{}'.format(datetime.now()))
@@ -61,64 +116,37 @@ class Command(BaseCommand):
 
             if conta_none == 3:
                 if nivel == 'e':
-                    print('só utilizados em estrutura')
+                    self.my_println('Insumos de estruturas')
+                    insumos = [
+                        {
+                            'nivel': 2,
+                            'ref': 'MA002',
+                            'cor': '0000BR',
+                            'tam': 'UNI',
+                        },
+                        {
+                            'nivel': 2,
+                            'ref': 'MA002',
+                            'cor': '0000PR',
+                            'tam': 'UNI',
+                        },
+                    ]
+                    for insumo in insumos:
+                        nivel = insumo['nivel']
+                        ref = insumo['ref']
+                        cor = insumo['cor']
+                        tam = insumo['tam']
+                        self.sugestao_de_insumo(nivel, ref, cor, tam)
+
                 elif nivel == 't':
-                    print('todos')
+                    self.my_println('Todos os insumos')
+
             elif conta_none == 0:
                 self.valid_1A(ref, 5, 'Referencia')
                 self.valid_1A(cor, 6, 'Cor')
                 self.valid_1A(tam, '1,3', 'Tamanho')
 
-                cursor = connections['so'].cursor()
-                datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
-                data_sug = datas['data_sug']
-                pprint(data_sug)
-
-                sc = models.SugestaoCompra.objects.filter(
-                    nivel=nivel,
-                    referencia=ref,
-                    tamanho=tam,
-                    cor=cor,
-                ).order_by('-data').first()
-
-                ultima_sug = []
-                if sc:
-                    print(sc.id)
-                    scd = models.SugestaoCompraDatas.objects.filter(
-                        sugestao=sc).order_by('data_compra').values()
-                    for data in scd:
-                        pprint(data)
-                        ultima_sug.append({
-                            'QUANT': data['qtd'],
-                            'SEMANA_COMPRA': data['data_compra'],
-                            'SEMANA_RECEPCAO': data['data_recepcao'],
-                        })
-                    pprint(ultima_sug)
-                    print(ultima_sug == data_sug)
-
-                if ultima_sug == data_sug:
-                    print('Sugestão inalterada')
-                else:
-                    print('Gravando nova sugestão')
-                    sc = models.SugestaoCompra()
-                    sc.nivel = nivel
-                    sc.referencia = ref
-                    sc.tamanho = tam
-                    sc.ordem_tamanho = 0
-                    sc.cor = cor
-                    sc.data = timezone.now()
-                    sc.save()
-                    print(sc.id)
-
-                    for sugestao in data_sug:
-                        pprint(sugestao)
-                        scd = models.SugestaoCompraDatas()
-                        scd.sugestao = sc
-                        scd.data_compra = sugestao['SEMANA_COMPRA']
-                        scd.data_recepcao = sugestao['SEMANA_RECEPCAO']
-                        scd.qtd = sugestao['QUANT']
-                        scd.save()
-                        print(scd.id)
+                self.sugestao_de_insumo(nivel, ref, cor, tam)
 
             # pega xyz
             # ixyz = self.get_someting()
