@@ -53,8 +53,7 @@ class Command(BaseCommand):
         return self.__cursor
 
     def sugestao_de_insumo(self, nivel, ref, cor, tam, limite):
-        self.my_print('{}.{}.{}.{} '.format(
-            nivel, ref, cor, tam))
+        item = '{}.{}.{}.{}'.format(nivel, ref, cor, tam)
 
         sc = models.SugestaoCompra.objects.filter(
             nivel=nivel,
@@ -72,7 +71,8 @@ class Command(BaseCommand):
             else:  # elif limite == 'm':
                 delta_limite = timedelta(minutes=1)
             if sc.data > timezone.now() - delta_limite:
-                self.my_println('Sugestão recente')
+                if self.verbosity > 1:
+                    self.my_println('{} Sugestão recente'.format(item))
                 return False
 
             scd = models.SugestaoCompraDatas.objects.filter(
@@ -89,11 +89,11 @@ class Command(BaseCommand):
         time.sleep(1)
 
         if sc and ultima_sug == data_sug:
-            self.my_println('Sugestão inalterada')
+            self.my_println('{} Sugestão inalterada'.format(item))
             sc.data = timezone.now()
             sc.save()
         else:
-            self.my_println('Nova sugestão')
+            self.my_println('{} Nova sugestão'.format(item))
             sc = models.SugestaoCompra()
             sc.nivel = nivel
             sc.referencia = ref
@@ -116,6 +116,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.my_println('---')
         self.my_println('{}'.format(datetime.now()))
+        self.verbosity = kwargs['verbosity']
 
         nivel = kwargs['nivel_ou_tipo']
         ref = kwargs['referencia']
