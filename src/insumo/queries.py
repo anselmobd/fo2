@@ -1432,7 +1432,8 @@ def insumo_previsoes_semana_insumo(
     return insumo
 
 
-def insumos_cor_tamanho_usados(cursor, qtd_itens, nivel, uso, insumo):
+def insumos_cor_tamanho_usados(
+        cursor, qtd_itens, nivel=None, uso=None, insumo=None):
     filtra_qtd_itens = ''
     if qtd_itens != '0':
         filtra_qtd_itens = 'WHERE rownum <= {qtd_itens}'.format(
