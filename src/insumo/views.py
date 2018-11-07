@@ -894,6 +894,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         'data_irs': data_irs,
     })
 
+    data_sug = []
     # se tem alguma entrada ou saída
     if semana_fim is not None:
         # criando mapa de compras
@@ -940,7 +941,6 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
             semana += datetime.timedelta(days=7)
 
         # percorre o mapa de compras para montar sugestões de compra
-        data_sug = []
         for row in data:
             # pega uma sugestão se estoque < mínimo
             sugestao_quatidade = 0
@@ -1038,12 +1038,14 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                         + row['RECEBER_IDEAL']
 
         datas.update({
-            'data_sug': data_sug,
             'data': data,
             'estoque_minimo': estoque_minimo,
             'semana_recebimento': semana_recebimento,
             'semanas': semanas,
         })
+    datas.update({
+        'data_sug': data_sug,
+    })
     return datas
 
 
