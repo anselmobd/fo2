@@ -154,7 +154,7 @@ class Command(BaseCommand):
                     if self.sugestao_de_insumo(nivel, ref, cor, tam, limite):
                         count_task += 1
                     if count_task >= self.__MAX_TASKS:
-                        self.my_println('Chegou ao limite de tarefas')
+                        self.my_println('{} tarefas'.format(self.__MAX_TASKS))
                         break
 
             elif conta_none == 0:
