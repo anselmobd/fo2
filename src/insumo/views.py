@@ -2167,8 +2167,10 @@ class MapaSemanal(View):
 
                 row['REF'] = rowi['REF'] + ' (' + rowi['DESCR'] + ')'
                 row['COR'] = rowi['COR'] + ' (' + rowi['DESCR_COR'] + ')'
-                if rowi['TAM'] != rowi['DESCR_TAM']:
+                if rowi['TAM'] == rowi['DESCR_TAM']:
                     row['TAM'] = rowi['TAM'] + ' (' + rowi['DESCR_TAM'] + ')'
+                else:
+                    row['TAM'] = rowi['TAM']
 
                 semanas = math.ceil(rowi['REPOSICAO'] / 7)
                 row['REP_STR'] = '{}d.({}s.)'.format(
