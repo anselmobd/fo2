@@ -49,6 +49,11 @@ tbody#refs_tbody tr {
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+  <p>Mostrar:
+    <input id="chk_comprar" type="checkbox" checked> Compra sugerida |
+    <input id="chk_compra_atrasada" type="checkbox"> Apenas Compra Atrasada |
+    <input id="chk_zerado" type="checkbox"> Sem Compra
+  </p>
   <table>
     <thead id="refs_thead">
       <tr>
@@ -68,16 +73,25 @@ tbody#refs_tbody tr {
     </thead>
     <tbody id="refs_tbody">
       {% for row in data %}
-        <tr>
+        <tr id="id_{{ row.nivel }}_{{ row.ref }}_{{ row.cor }}_{{ row.tam }}" class="key_ref _ref_{{ row.nivel }}{{ row.ref }}{{ row.cor }}{{ row.tam_order }}
+          {% if row.comprar > 0 %}flag_comprar
+          {% else %}
+            {% if row.compra_atrasada > 0 %}flag_compra_atrasada
+            {% else %}flag_zerado
+            {% endif %}
+          {% endif %}
+          "
+          {% if row.comprar == 0 %}style="display: none;"{% endif %}
+          >
           <td>{{ row.nivel }}</td>
-          <td>{{ row.ref }}</td>
-          <td>{{ row.cor }}</td>
-          <td>{{ row.tam }}</td>
-          <td>{{ row.rep_str }}</td>
-          <td style="text-align: right;">{{ row.info.STQ_MIN }}</td>
-          <td style="text-align: right;">{{ row.info.LOTE_MULTIPLO }}</td>
-          <td style="text-align: right;">{{ row.info.QUANT }}</td>
-          <td>{{ row.info.UNID }}</td>
+          <td><a href="{% url 'insumo:mapa' row.nivel row.ref row.cor row.tam %}" target="_blank">{{ row.REF }}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></td>
+          <td>{{ row.COR }}</td>
+          <td>{{ row.TAM }}</td>
+          <td>{{ row.REP_STR }}</td>
+          <td style="text-align: right;">{{ row.STQ_MIN }}</td>
+          <td style="text-align: right;">{{ row.LOTE_MULTIPLO }}</td>
+          <td style="text-align: right;">{{ row.QUANT }}</td>
+          <td>{{ row.UNID }}</td>
           <td style="text-align: right;">{{ row.compra_atrasada }}</td>
           <td style="text-align: right;">{{ row.comprar }}</td>
           <td>{{ row.dt_chegada }}</td>
@@ -85,6 +99,70 @@ tbody#refs_tbody tr {
       {% endfor %}
     </tbody>
   </table>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+
+{% if data %}
+<script type="text/javascript">
+
+  var tHead = document.getElementById('refs_thead');
+  var tBody = document.getElementById('refs_tbody');
+
+  function sortByDisplayId(parentEl) {
+
+    function displayId(el) {
+      var prekey = '';
+      if (el.style.display == 'none') {
+        prekey = 'Z';
+      }
+      return prekey+el.id;
+    }
+
+    var toSort = parentEl.children;
+    toSort = Array.prototype.slice.call(toSort, 0);
+    toSort.sort(function(a, b) {
+      akey = displayId(a);
+      bkey = displayId(b);
+      return akey.localeCompare(bkey)
+    });
+    for (var i = 0, l = toSort.length; i < l; i++) {
+        toSort[i].parentNode.appendChild(toSort[i]);
+    }
+  }
+
+  function showHide(el, onOff) {
+    if (onOff) {
+      el.show();
+    } else {
+      el.hide();
+    }
+  }
+
+  $( document ).ready(function() {
+
+    $("#chk_comprar").on('change', function () {
+      showHide($('.flag_comprar'), $(this).is(':checked'))
+      sortByDisplayId(tBody);
+    });
+
+    $("#chk_compra_atrasada").on('change', function () {
+      showHide($('.flag_compra_atrasada'), $(this).is(':checked'))
+      sortByDisplayId(tBody);
+    });
+
+    $("#chk_zerado").on('change', function () {
+      showHide($('.flag_zerado'), $(this).is(':checked'))
+      sortByDisplayId(tBody);
+    });
+
+    sortByDisplayId(tBody);
+
+  });
+
+</script>
 {% endif %}
 
 {% endblock %}
