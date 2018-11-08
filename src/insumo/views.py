@@ -2138,21 +2138,23 @@ class MapaSemanal(View):
         periodo_atual = models.Periodo.confeccao.filter(
             periodo_producao=periodo
         ).values()
-        periodo_ini = 0
+        self.periodo_ini = 0
         if periodo_atual:
-            periodo_ini = periodo_atual[0]['data_ini_periodo'].date()
-            periodo_ini += timedelta(days=1)
-            periodo_ini_int = periodo_ini.year*10000 + \
-                periodo_ini.month*100 + periodo_ini.day
+            self.periodo_ini = periodo_atual[0]['data_ini_periodo'].date()
+            self.periodo_ini += timedelta(days=1)
+            periodo_ini_int = self.periodo_ini.year*10000 + \
+                self.periodo_ini.month*100 + self.periodo_ini.day
 
             context = {'periodo': periodo,
-                       'periodo_ini': periodo_ini,
+                       'periodo_ini': self.periodo_ini,
                        'periodo_ini_int': periodo_ini_int,
                        }
 
         return context
 
     def mount_context(self, cursor, periodo, nivel, uso, insumo):
+        semana_hoje = segunda(datetime.date.today())
+
         cursor = connections['so'].cursor()
         data = queries.insumos_cor_tamanho_usados(
             cursor, '0', nivel, uso, insumo)
@@ -2163,20 +2165,40 @@ class MapaSemanal(View):
             if info:
                 rowi = info[0]
 
-                row['ref'] = rowi['REF'] + ' (' + rowi['DESCR'] + ')'
-                row['cor'] = rowi['COR'] + ' (' + rowi['DESCR_COR'] + ')'
+                row['REF'] = rowi['REF'] + ' (' + rowi['DESCR'] + ')'
+                row['COR'] = rowi['COR'] + ' (' + rowi['DESCR_COR'] + ')'
                 if rowi['TAM'] != rowi['DESCR_TAM']:
-                    row['tam'] = rowi['TAM'] + ' (' + rowi['DESCR_TAM'] + ')'
+                    row['TAM'] = rowi['TAM'] + ' (' + rowi['DESCR_TAM'] + ')'
 
                 semanas = math.ceil(rowi['REPOSICAO'] / 7)
-                row['rep_str'] = '{}d.({}s.)'.format(
+                row['REP_STR'] = '{}d.({}s.)'.format(
                     rowi['REPOSICAO'], semanas)
-
-                row['info'] = rowi
+                row['STQ_MIN'] = round(rowi['STQ_MIN'])
+                row['LOTE_MULTIPLO'] = round(rowi['LOTE_MULTIPLO'])
+                row['QUANT'] = round(rowi['QUANT'])
+                row['UNID'] = rowi['UNID']
 
                 row['compra_atrasada'] = 0
                 row['comprar'] = 0
-                row['dt_chegada'] = 0
+                row['dt_chegada'] = ' '
+
+                sc = models.SugestaoCompra.objects.filter(
+                    nivel=row['nivel'],
+                    referencia=row['ref'],
+                    tamanho=row['tam'],
+                    cor=row['cor'],
+                ).order_by('-data').first()
+                if sc:
+                    scd = models.SugestaoCompraDatas.objects.filter(
+                        sugestao=sc).order_by('data_compra').values()
+                    pprint(scd)
+                    for sugest in scd:
+                        if sugest['data_compra'] < semana_hoje:
+                            row['compra_atrasada'] += sugest['qtd']
+                        elif sugest['data_compra'] == self.periodo_ini:
+                            row['comprar'] = round(sugest['qtd'])
+                            row['dt_chegada'] = sugest['data_recepcao']
+                row['compra_atrasada'] = round(row['compra_atrasada'])
 
         context = {
             'data': data,
