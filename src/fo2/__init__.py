@@ -1,9 +1,12 @@
-__version__ = '0.1.135'
-__version__date__ = '22/10/2018'
+__version__ = '0.1.136'
+__version__date__ = '08/11/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.136 - 2018/11/08
+#   . Insumos: Mapa Semanal
 #
 # - 0.1.135 - 2018/10/22
 #   . RH: Dia Rosa
