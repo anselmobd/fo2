@@ -394,3 +394,56 @@ class MapaPorSemanaNewForm(forms.Form):
         if self.cleaned_data['qtd_itens'].zfill(1) == '0':
             return '0'
         return self.clean__positive('qtd_itens')
+
+
+class MapaSemanalForm(forms.Form):
+    periodo = forms.CharField(
+        label='Período (semana)', max_length=4, min_length=1,
+        help_text='(segunda-feira inicial)',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+
+    CHOICES = [(2, 'Nível 2 - em rolos'),
+               (9, 'Nível 9 - demais insumos'),
+               (0, 'Ambos')]
+    nivel = forms.ChoiceField(label='Nível', choices=CHOICES, initial=0)
+
+    CHOICES = [('U', 'Utilizados em alguma estrutura de produto'),
+               ('N', 'Não utilizados em nenhum estrutura de produto'),
+               ('T', 'Todos')]
+    uso = forms.ChoiceField(choices=CHOICES, initial='U')
+
+    insumo = forms.CharField(
+        label='Filtro do insumo',
+        help_text='(código exato ou parciais do código e descrição)',
+        min_length=2, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def __init__(self, *args, **kwargs):
+        super(MapaSemanalForm, self).__init__(*args, **kwargs)
+
+        periodo_atual = Periodo.confeccao.filter(
+            data_ini_periodo__lte=timezone.now()
+        ).filter(
+            data_fim_periodo__gte=timezone.now()
+        ).values()
+        periodo_default = periodo_atual[0]['periodo_producao'] \
+            if periodo_atual else ''
+
+        self.fields['periodo'].initial = periodo_default
+
+    def clean__positive(self, field_name):
+        try:
+            field_value = int(float(self.cleaned_data[field_name]))
+            if field_value <= 0:
+                field_value = None
+        except ValueError:
+            field_value = None
+        if field_value is None:
+            raise forms.ValidationError(
+                "Esperado um valor numérico maior que zero.",
+                code='não positivo')
+        return field_value
+
+    def clean_periodo(self):
+        return self.clean__positive('periodo')

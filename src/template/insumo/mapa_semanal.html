@@ -1,0 +1,90 @@
+{% extends 'insumo/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'insumo:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+
+tbody#refs_tbody tr {
+  border-bottom-width: 1px;
+  border-bottom-style: dotted;
+  border-bottom-color: lightgray;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- <h3 style="color: red;">Em desenvolvimento...</h3> -->
+<form action="{% url 'insumo:mapa_semanal' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if data %}
+  <h4>Quant. de insumos: {{ data|length }}</h4>
+{% endif %}
+{% if periodo_ini %}
+  <h4>Periodo: {{ periodo|safe }} (segunda-feira: {{ periodo_ini }})</h4>
+{% endif %}
+{% if nivel == '2' %}
+  <h4>Nível 2 - em rolos</h4>
+{% endif %}
+{% if nivel == '9' %}
+  <h4>Nível 9 - demais insumos</h4>
+{% endif %}
+{% if uso == 'U' %}
+  <h4>Utilizados em alguma estrutura de produto</h4>
+{% endif %}
+{% if uso == 'N' %}
+  <h4>Não utilizados em nenhum estrutura de produto</h4>
+{% endif %}
+{% if insumo %}
+  <h4>Filtro do insumo: {{ insumo }}</h4>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    <thead id="refs_thead">
+      <tr>
+        <th>Nível</th>
+        <th>Insumo</th>
+        <th>Cor</th>
+        <th>Tamanho</th>
+        <th>Reposição</th>
+        <th style="text-align: right;">Mínimo</th>
+        <th style="text-align: right;">Múltiplo</th>
+        <th style="text-align: right;">Estoque</th>
+        <th>Unid.</th>
+        <th style="text-align: right;">Compra<br/>atrasada</th>
+        <th style="text-align: right;">Compra<br/>sugerida</th>
+        <th>Chegada</th>
+      </tr>
+    </thead>
+    <tbody id="refs_tbody">
+      {% for row in data %}
+        <tr>
+          <td>{{ row.nivel }}</td>
+          <td>{{ row.ref }}</td>
+          <td>{{ row.cor }}</td>
+          <td>{{ row.tam }}</td>
+          <td>{{ row.rep_str }}</td>
+          <td style="text-align: right;">{{ row.info.STQ_MIN }}</td>
+          <td style="text-align: right;">{{ row.info.LOTE_MULTIPLO }}</td>
+          <td style="text-align: right;">{{ row.info.QUANT }}</td>
+          <td>{{ row.info.UNID }}</td>
+          <td style="text-align: right;">{{ row.compra_atrasada }}</td>
+          <td style="text-align: right;">{{ row.comprar }}</td>
+          <td>{{ row.dt_chegada }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% endblock %}
