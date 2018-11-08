@@ -38,7 +38,8 @@ from .forms import \
     RolosBipadosForm, \
     ReceberForm, \
     MapaPorSemanaForm, \
-    MapaPorSemanaNewForm
+    MapaPorSemanaNewForm, \
+    MapaSemanalForm
 
 
 def index(request):
@@ -2121,5 +2122,102 @@ class Rolo(View):
             rolo = form.cleaned_data['rolo']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, rolo))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class MapaSemanal(View):
+    Form_class = MapaSemanalForm
+    template_name = 'insumo/mapa_semanal.html'
+    title_name = 'Mapa de compras por semana (Rápido)'
+
+    def mount_context_pre(self, cursor, periodo):
+        if periodo is None:
+            return {}
+
+        periodo_atual = models.Periodo.confeccao.filter(
+            periodo_producao=periodo
+        ).values()
+        periodo_ini = 0
+        if periodo_atual:
+            periodo_ini = periodo_atual[0]['data_ini_periodo'].date()
+            periodo_ini += timedelta(days=1)
+            periodo_ini_int = periodo_ini.year*10000 + \
+                periodo_ini.month*100 + periodo_ini.day
+
+            context = {'periodo': periodo,
+                       'periodo_ini': periodo_ini,
+                       'periodo_ini_int': periodo_ini_int,
+                       }
+
+        return context
+
+    def mount_context(self, cursor, periodo, nivel, uso, insumo):
+        cursor = connections['so'].cursor()
+        data = queries.insumos_cor_tamanho_usados(
+            cursor, '0', nivel, uso, insumo)
+
+        for row in data:
+            info = queries.insumo_descr(
+                cursor, row['nivel'], row['ref'], row['cor'], row['tam'])
+            if info:
+                rowi = info[0]
+
+                row['ref'] = rowi['REF'] + ' (' + rowi['DESCR'] + ')'
+                row['cor'] = rowi['COR'] + ' (' + rowi['DESCR_COR'] + ')'
+                if rowi['TAM'] != rowi['DESCR_TAM']:
+                    row['tam'] = rowi['TAM'] + ' (' + rowi['DESCR_TAM'] + ')'
+
+                semanas = math.ceil(rowi['REPOSICAO'] / 7)
+                row['rep_str'] = '{}d.({}s.)'.format(
+                    rowi['REPOSICAO'], semanas)
+
+                row['info'] = rowi
+
+                row['compra_atrasada'] = 0
+                row['comprar'] = 0
+                row['dt_chegada'] = 0
+
+        context = {
+            'data': data,
+            'nivel': nivel,
+            'uso': uso,
+            'insumo': insumo,
+        }
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+
+        form = self.Form_class()
+        periodo = None
+        if form.fields['periodo'].initial:
+            periodo = form.fields['periodo'].initial
+        context['form'] = form
+
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context_pre(cursor, periodo))
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+
+        form = self.Form_class(request.POST.copy())
+        if form.is_valid():
+            periodo = form.cleaned_data['periodo']
+            nivel = form.cleaned_data['nivel']
+            uso = form.cleaned_data['uso']
+            insumo = form.cleaned_data['insumo']
+
+            insumo = ' '.join(insumo.strip().upper().split())
+            form.data['insumo'] = insumo
+
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context_pre(cursor, periodo))
+            context.update(self.mount_context(
+                cursor, periodo, nivel, uso, insumo))
+
         context['form'] = form
         return render(request, self.template_name, context)

@@ -74,6 +74,13 @@ urlpatterns = [
         views.mapa_sem_ref_new,
         name='mapa_por_semana_ref__get'),
 
+    url(r'^mapa_semanal/$',
+        views.MapaSemanal.as_view(),
+        name='mapa_semanal'),
+    url(r'^mapa_semanal/(?P<periodo>\d{1,4})/?$',
+        views.MapaSemanal.as_view(),
+        name='mapa_semanal__get'),
+
     url(r'^roloinfo/$', views.Rolo.as_view(), name='rolo'),
     url(r'^roloinfo/(?P<rolo>[29]?\.?.{5})/$', views.Rolo.as_view(),
         name='rolo__get'),
