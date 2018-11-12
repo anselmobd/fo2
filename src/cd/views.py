@@ -86,7 +86,7 @@ class LotelLocal(PermissionRequiredMixin, View):
                     Q(estagio=999)).get(lote=lote)
             except lotes.models.Lote.DoesNotExist:
                 context.update({
-                    'erroestagio': '57, 63, 66 ou finalizado',
+                    'erroestagio': '63, 66 ou finalizado',
                     'estagio': lote_rec.estagio,
                     })
                 return context
