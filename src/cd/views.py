@@ -70,6 +70,13 @@ class LotelLocal(PermissionRequiredMixin, View):
             context.update({'erro': 'Lote não encontrado'})
             return context
 
+        if lote_rec.referencia >= 'C0000':
+            if endereco is not None:
+                context.update({
+                    'erro': 'Lote de MD. Única ação '
+                            'possivel é dar saída (Endereço "SAI").'})
+                return context
+
         context.update({
             'op': lote_rec.op,
             'referencia': lote_rec.referencia,
