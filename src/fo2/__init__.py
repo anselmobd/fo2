@@ -1,9 +1,13 @@
-__version__ = '0.1.136'
-__version__date__ = '08/11/2018'
+__version__ = '0.1.137'
+__version__date__ = '16/11/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.137 - 2018/11/16
+#   . Cartela de lote: Adicionada data e hora de impressão
+#                      Implementada Cartela de Complemento
 #
 # - 0.1.136 - 2018/11/08
 #   . Insumos: Mapa Semanal
