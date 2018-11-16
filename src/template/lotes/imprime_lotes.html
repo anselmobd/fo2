@@ -20,6 +20,10 @@
   <h3>{{ msg_erro }}</h3>
 {% else %}
   {% if data %}
+    {% if estagio %}
+      <h4>Atenção: Impressão de Cartela de Complemento</h4>
+      <h4>Estágio de quebra de lote: {{ estagio }}</h4>
+    {% endif %}
     <h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
     Impressão: {{ cod_impresso }}<br />
     Lotes ordenados por {{ ordem }}<br />
