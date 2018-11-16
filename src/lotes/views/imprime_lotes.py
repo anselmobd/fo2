@@ -1,4 +1,6 @@
 import errno
+import re
+from datetime import datetime
 from pprint import pprint
 from subprocess import Popen, PIPE
 
@@ -23,7 +25,14 @@ class ImprimeLotes(LoginRequiredMixin, View):
     template_name = 'lotes/imprime_lotes.html'
     title_name = 'Imprime "Cartela de Lote"'
 
-    def mount_context_and_print(self, cursor, op, tam, cor, order,
+    def est_list(self, est):
+        estagios = est.split(' & ')
+        estList = []
+        for estagio in estagios:
+            estList.append(re.sub(r'^([1234567890]+).*$', r'\1', estagio))
+        return estList
+
+    def mount_context_and_print(self, cursor, op, estagio, tam, cor, order,
                                 oc_inicial, oc_final,
                                 pula, qtd_lotes, ultimo,
                                 impresso, order_descr, obs1, obs2, do_print):
@@ -52,6 +61,9 @@ class ImprimeLotes(LoginRequiredMixin, View):
         pula_lote = ultimo != ''
         data = []
         for row in l_data:
+            row['datahora'] = format(datetime.now(), '%d/%m/%y %H:%M')
+            row['qtdtot'] = None
+            row['parcial'] = None
             row['narrativa'] = ' '.join((
                 row['descr_referencia'],
                 row['descr_cor'],
@@ -66,7 +78,19 @@ class ImprimeLotes(LoginRequiredMixin, View):
             if pula_lote:
                 pula_lote = row['lote'] != ultimo
             else:
-                data.append(row)
+                if estagio == '':
+                    data.append(row)
+                else:
+                    estagios = self.est_list(row['est'])
+                    quants = row['quants'].split(';')
+                    if estagio in estagios:
+                        iestagio = estagios.index(estagio)
+                        if len(quants) > (iestagio+1):
+                            row['parcial'] = True
+                            row['qtdtot'] = row['qtd']
+                            row['estagio'] = estagio
+                            row['qtd'] = quants[iestagio]
+                            data.append(row)
 
         if len(data) == 0:
             context.update({
@@ -104,6 +128,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'cod_impresso': cod_impresso,
             'ordem': order_descr,
             'op': op,
+            'estagio': estagio,
             'ref': ref,
             'op_mae': op_mae,
             'ref_mae': ref_mae,
@@ -189,6 +214,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             op = form.cleaned_data['op']
+            estagio = form.cleaned_data['estagio']
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
             order = form.cleaned_data['order']
@@ -206,7 +232,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context_and_print(
-                    cursor, op, tam, cor, order, oc_inicial, oc_final,
+                    cursor, op, estagio, tam, cor, order, oc_inicial, oc_final,
                     pula, qtd_lotes, ultimo, impresso, order_descr, obs1, obs2,
                     'print' in request.POST))
         context['form'] = form
