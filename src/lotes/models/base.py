@@ -40,18 +40,31 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         , t.ORDEM_TAMANHO
         , l.PROCONF_ITEM COR
         , COALESCE(
-          ( SELECT
-              LISTAGG(le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO, ' & ')
-              WITHIN GROUP (ORDER BY le.CODIGO_ESTAGIO)
-            FROM PCPC_040 le
-            JOIN MQOP_005 ed
-              ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
-            WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-              AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-              AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
-          )
+            ( SELECT
+                LISTAGG(le.CODIGO_ESTAGIO || ' - ' || ed.DESCRICAO, ' & ')
+                WITHIN GROUP (ORDER BY le.CODIGO_ESTAGIO)
+              FROM PCPC_040 le
+              JOIN MQOP_005 ed
+                ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
+              WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+            )
           , 'FINALIZADO'
           ) EST
+        , COALESCE(
+            ( SELECT
+                LISTAGG(le.QTDE_EM_PRODUCAO_PACOTE, ';')
+                WITHIN GROUP (ORDER BY le.CODIGO_ESTAGIO)
+              FROM PCPC_040 le
+              JOIN MQOP_005 ed
+                ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
+              WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+                AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
+                AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+            )
+          , ' '
+          ) QUANTS
         , l.PERIODO_PRODUCAO PERIODO
         , l.ORDEM_CONFECCAO OC
         , l.QTDE_PECAS_PROG QTD
@@ -70,14 +83,14 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           ELSE di.DESCRICAO END DESCRICAO_DIVISAO
         , op.DATA_ENTRADA_CORTE
         , ( SELECT
-            MIN( l1.ORDEM_CONFECCAO )
-          FROM PCPC_040 l1
-          WHERE l1.ORDEM_PRODUCAO   = l.ORDEM_PRODUCAO
-            AND l1.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-            AND l1.PROCONF_GRUPO    = l.PROCONF_GRUPO
-            AND l1.PROCONF_SUBGRUPO = l.PROCONF_SUBGRUPO
-            AND l1.PROCONF_ITEM     = l.PROCONF_ITEM
-        ) OC1
+              MIN( l1.ORDEM_CONFECCAO )
+            FROM PCPC_040 l1
+            WHERE l1.ORDEM_PRODUCAO   = l.ORDEM_PRODUCAO
+              AND l1.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
+              AND l1.PROCONF_GRUPO    = l.PROCONF_GRUPO
+              AND l1.PROCONF_SUBGRUPO = l.PROCONF_SUBGRUPO
+              AND l1.PROCONF_ITEM     = l.PROCONF_ITEM
+          ) OC1
         FROM (
           SELECT
             os.PERIODO_PRODUCAO
