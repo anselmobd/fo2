@@ -109,6 +109,12 @@ class ImprimeLotesForm(forms.Form):
         label='OP',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+    estagio = forms.CharField(
+        label='Estágio de quebra de lote', required=False,
+        help_text='Só imprime cartela de lote com quantidade parcial nesse '
+                  'estágio.',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
     tam = forms.CharField(
         label='Tamanho', required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
