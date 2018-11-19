@@ -234,6 +234,25 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
 
 def get_os(cursor, os='', op='', periodo='', oc=''):
     # Informações sobre OS
+
+    filtro_os = ''
+    filtro_op = ''
+    filtro_periodo = ''
+    filtro_oc = ''
+    filtro_join = ''
+    if os is not None and os != '':
+        filtro_os = "AND os.NUMERO_ORDEM = '{}'".format(os)
+    else:
+        if op is not None and op != '':
+            filtro_op = "AND l.ORDEM_PRODUCAO = '{}'".format(op)
+        if periodo is not None and periodo != '':
+            filtro_periodo = "AND l.PERIODO_PRODUCAO = '{}'".format(periodo)
+        if oc is not None and oc != '':
+            filtro_oc = "AND l.ORDEM_CONFECCAO = '{}'".format(oc)
+
+        if filtro_op or filtro_periodo or filtro_oc:
+            filtro_join = \
+                'AND l.NUMERO_ORDEM IS NOT NULL AND l.NUMERO_ORDEM != 0'
     sql = """
         SELECT DISTINCT
           os.NUMERO_ORDEM OS
@@ -275,15 +294,11 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         LEFT JOIN pcpc_040 l
           ON l.NUMERO_ORDEM = os.NUMERO_ORDEM
         WHERE 1=1
-          AND (os.NUMERO_ORDEM = %s
-               OR ( %s IS NULL
-                   AND (l.ORDEM_PRODUCAO = %s OR %s IS NULL)
-                   AND (l.PERIODO_PRODUCAO = %s OR %s IS NULL)
-                   AND (l.ORDEM_CONFECCAO = %s OR %s IS NULL)
-                   AND l.NUMERO_ORDEM IS NOT NULL
-                   AND l.NUMERO_ORDEM <> 0
-                  )
-              )
+          {filtro_os} -- filtro_os
+          {filtro_op} -- filtro_op
+          {filtro_periodo} -- filtro_periodo
+          {filtro_oc} -- filtro_oc
+          {filtro_join} -- filtro_join
         GROUP BY
           os.NUMERO_ORDEM
         , os.CODIGO_SERVICO
@@ -300,6 +315,12 @@ def get_os(cursor, os='', op='', periodo='', oc=''):
         , os.OBSERVACAO
         ORDER BY
           os.NUMERO_ORDEM
-    """
-    cursor.execute(sql, [os, os, op, op, periodo, periodo, oc, oc])
+    """.format(
+        filtro_os=filtro_os,
+        filtro_op=filtro_op,
+        filtro_periodo=filtro_periodo,
+        filtro_oc=filtro_oc,
+        filtro_join=filtro_join,
+    )
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
