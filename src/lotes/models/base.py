@@ -111,12 +111,12 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           , max( os.ROWID ) ROW_ID
           FROM PCPC_040 os
           WHERE 1=1
-            AND (os.ORDEM_PRODUCAO = %s or %s IS NULL)
-            AND (os.NUMERO_ORDEM = %s or %s IS NULL)
-            AND (os.ORDEM_CONFECCAO >= %s or %s IS NULL)
-            AND (os.ORDEM_CONFECCAO <= %s or %s IS NULL)
-            AND (os.PROCONF_SUBGRUPO = %s OR %s IS NULL)
-            AND (os.PROCONF_ITEM = %s OR %s IS NULL)
+            AND (%s IS NULL OR os.ORDEM_PRODUCAO = %s)
+            AND (%s IS NULL OR os.NUMERO_ORDEM = %s)
+            AND (%s IS NULL OR os.ORDEM_CONFECCAO >= %s)
+            AND (%s IS NULL OR os.ORDEM_CONFECCAO <= %s)
+            AND (%s IS NULL OR os.PROCONF_SUBGRUPO = %s)
+            AND (%s IS NULL OR os.PROCONF_ITEM = %s)
           GROUP BY
             os.PERIODO_PRODUCAO
           , os.ORDEM_CONFECCAO
