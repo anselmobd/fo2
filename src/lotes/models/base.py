@@ -4,8 +4,8 @@ from lotes.models import *
 
 
 def get_lotes(cursor, op='', os='', tam='', cor='', order='',
-              oc_ini='', oc_fim='', pula=0, qtd_lotes=100000):
-    # Lotes ordenados por OP + OS + referência + estágio
+              oc_ini='', oc_fim='', pula=None, qtd_lotes=None):
+    # Lotes
     if oc_ini == '':
         oc_ini = 0
     if oc_fim == '':
@@ -15,6 +15,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
     if qtd_lotes is None:
         qtd_lotes = 100000
 
+    # order by
     if order == 'o':  # OC
         sql_order = '''ORDER BY
               l.ORDEM_CONFECCAO'''
