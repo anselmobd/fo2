@@ -12,8 +12,15 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         oc_fim = 99999
     if pula is None:
         pula = 0
-    if qtd_lotes is None:
-        qtd_lotes = 100000
+
+    sql_pre_qtd_lotes = ''
+    sql_pos_qtd_lotes = ''
+    if qtd_lotes is not None:
+        qtd_rows = pula + qtd_lotes
+        sql_pre_qtd_lotes = 'WITH Table_qtd_lotes AS ('
+        sql_pos_qtd_lotes = """)
+            select * from Table_qtd_lotes where rownum <= {}""".format(
+                qtd_rows)
 
     # order by
     if order == 'o':  # OC
@@ -64,7 +71,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
             , l.ORDEM_CONFECCAO'''
 
     sql = '''
-        WITH Table_qtd_lotes AS (
+        {sql_pre_qtd_lotes} -- sql_pre_qtd_lotes
         SELECT
           COALESCE(
           ( SELECT
@@ -206,17 +213,18 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
          AND dp.FACCIONISTA2 = osc.CGCTERC_FORNE2
         JOIN PCPC_020 op -- OP capa
           ON op.ordem_producao = l.ORDEM_PRODUCAO
-        {sql_order}
-        )
-        select * from Table_qtd_lotes where rownum <= %s
+        {sql_order} -- sql_order
+        {sql_pos_qtd_lotes} -- sql_pos_qtd_lotes
     '''.format(
         sql_order=sql_order,
+        sql_pre_qtd_lotes=sql_pre_qtd_lotes,
+        sql_pos_qtd_lotes=sql_pos_qtd_lotes,
     )
+    print(sql)
 
-    qtd_rows = pula + qtd_lotes
     cursor.execute(
         sql, [op, op, os, os, oc_ini, oc_ini, oc_fim, oc_fim,
-              tam, tam, cor, cor, qtd_rows])
+              tam, tam, cor, cor])
     data = rows_to_dict_list(cursor)
     for i in range(0, pula):
         if len(data) != 0:
