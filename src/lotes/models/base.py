@@ -14,6 +14,54 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         pula = 0
     if qtd_lotes is None:
         qtd_lotes = 100000
+
+    if order == 'o':  # OC
+        sql_order = '''ORDER BY
+              l.ORDEM_CONFECCAO'''
+    elif order == 't':  # OS + referência + tamanho + cor + OC
+        sql_order = '''ORDER BY
+              l.ORDEM_PRODUCAO
+            , l.NUMERO_ORDEM
+            , l.PROCONF_GRUPO
+            , t.ORDEM_TAMANHO
+            , l.PROCONF_ITEM
+            , l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO'''
+    elif order == 'e':  # estágio + OS + referência + cor + tamanho + OC
+        sql_order = '''ORDER BY
+              1
+            , l.ORDEM_PRODUCAO
+            , l.NUMERO_ORDEM
+            , l.PROCONF_GRUPO
+            , l.PROCONF_ITEM
+            , t.ORDEM_TAMANHO
+            , l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO'''
+    elif order == 'r':  # referência + cor + tamanho + OC
+        sql_order = '''ORDER BY
+              l.ORDEM_PRODUCAO
+            , l.PROCONF_GRUPO
+            , l.PROCONF_ITEM
+            , t.ORDEM_TAMANHO
+            , l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO'''
+    elif order == 'w':  # referência + cor + tamanho + ROWID
+        sql_order = '''ORDER BY
+              l.ORDEM_PRODUCAO
+            , l.PROCONF_GRUPO
+            , l.PROCONF_ITEM
+            , t.ORDEM_TAMANHO
+            , l.ROW_ID'''
+    else:  # elif order == '':  # OS + referência + cor + tamanho + OC
+        sql_order = '''ORDER BY
+              l.ORDEM_PRODUCAO
+            , l.NUMERO_ORDEM
+            , l.PROCONF_GRUPO
+            , l.PROCONF_ITEM
+            , t.ORDEM_TAMANHO
+            , l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO'''
+
     sql = '''
         WITH Table_qtd_lotes AS (
         SELECT
@@ -157,69 +205,12 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
          AND dp.FACCIONISTA2 = osc.CGCTERC_FORNE2
         JOIN PCPC_020 op -- OP capa
           ON op.ordem_producao = l.ORDEM_PRODUCAO
-    '''
-    if order == 'o':  # OC
-        sql = sql + '''
-            ORDER BY
-              l.ORDEM_CONFECCAO
-        '''
-    elif order == 't':  # OS + referência + tamanho + cor + OC
-        sql = sql + '''
-            ORDER BY
-              l.ORDEM_PRODUCAO
-            , l.NUMERO_ORDEM
-            , l.PROCONF_GRUPO
-            , t.ORDEM_TAMANHO
-            , l.PROCONF_ITEM
-            , l.PERIODO_PRODUCAO
-            , l.ORDEM_CONFECCAO
-        '''
-    elif order == 'e':  # estágio + OS + referência + cor + tamanho + OC
-        sql = sql + '''
-            ORDER BY
-              1
-            , l.ORDEM_PRODUCAO
-            , l.NUMERO_ORDEM
-            , l.PROCONF_GRUPO
-            , l.PROCONF_ITEM
-            , t.ORDEM_TAMANHO
-            , l.PERIODO_PRODUCAO
-            , l.ORDEM_CONFECCAO
-        '''
-    elif order == 'r':  # referência + cor + tamanho + OC
-        sql = sql + '''
-            ORDER BY
-              l.ORDEM_PRODUCAO
-            , l.PROCONF_GRUPO
-            , l.PROCONF_ITEM
-            , t.ORDEM_TAMANHO
-            , l.PERIODO_PRODUCAO
-            , l.ORDEM_CONFECCAO
-        '''
-    elif order == 'w':  # referência + cor + tamanho + ROWID
-        sql = sql + '''
-            ORDER BY
-              l.ORDEM_PRODUCAO
-            , l.PROCONF_GRUPO
-            , l.PROCONF_ITEM
-            , t.ORDEM_TAMANHO
-            , l.ROW_ID
-        '''
-    else:  # elif order == '':  # OS + referência + cor + tamanho + OC
-        sql = sql + '''
-            ORDER BY
-              l.ORDEM_PRODUCAO
-            , l.NUMERO_ORDEM
-            , l.PROCONF_GRUPO
-            , l.PROCONF_ITEM
-            , t.ORDEM_TAMANHO
-            , l.PERIODO_PRODUCAO
-            , l.ORDEM_CONFECCAO
-        '''
-    sql = sql + '''
+        {sql_order}
         )
         select * from Table_qtd_lotes where rownum <= %s
-    '''
+    '''.format(
+        sql_order=sql_order,
+    )
 
     qtd_rows = pula + qtd_lotes
     cursor.execute(
