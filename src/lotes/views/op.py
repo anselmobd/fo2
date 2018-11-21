@@ -1,5 +1,5 @@
 import copy
-import datetime
+import time
 from pprint import pprint
 
 from django.shortcuts import render
@@ -10,6 +10,7 @@ from django.views import View
 from fo2.template import group_rowspan
 
 from utils.views import totalize_grouped_data
+from utils.classes import Perf
 from insumo.queries import insumos_de_produtos_em_dual
 
 import lotes.forms as forms
@@ -22,10 +23,14 @@ class Op(View):
     title_name = 'OP'
 
     def mount_context(self, cursor, op):
+        p = Perf(False)
+
         context = {'op': op}
 
         # Lotes ordenados por OS + referência + estágio
         data = models.op_lotes(cursor, op)
+        p.prt('op_lotes')
+
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Lotes não encontrados',
@@ -46,6 +51,8 @@ class Op(View):
 
             # informações gerais
             i_data = models.op_inform(cursor, op)
+            p.prt('op_inform')
+
             i2_data = [i_data[0]]
             i3_data = [i_data[0]]
             i4_data = [i_data[0]]
@@ -111,6 +118,8 @@ class Op(View):
 
             # relacionamentos entre OPs
             r_data = models.op_relacionamentos(cursor, op)
+            p.prt('op_relacionamentos')
+
             for row in r_data:
                 row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
             if len(r_data) != 0:
@@ -123,6 +132,8 @@ class Op(View):
 
             # Grade
             g_header, g_fields, g_data = models.op_sortimento(cursor, op)
+            p.prt('op_sortimento 1ª')
+
             if len(g_data) != 0:
                 context.update({
                     'g_headers': g_header,
@@ -133,6 +144,8 @@ class Op(View):
             # Grade de perda
             gp_header, gp_fields, gp_data, total = models.op_sortimentos(
                 cursor, op, 'p')
+            p.prt('op_sortimentos perda')
+
             if total != 0:
                 context.update({
                     'gp_headers': gp_header,
@@ -143,6 +156,8 @@ class Op(View):
             # Grade de segunda qualidade
             gs_header, gs_fields, gs_data, total = models.op_sortimentos(
                 cursor, op, 's')
+            p.prt('op_sortimentos 2ª')
+
             if total != 0:
                 context.update({
                     'gs_headers': gs_header,
@@ -153,6 +168,8 @@ class Op(View):
             # Grade de conserto
             gc_header, gc_fields, gc_data, total = models.op_sortimentos(
                 cursor, op, 'c')
+            p.prt('op_sortimentos conserto')
+
             if total != 0:
                 context.update({
                     'gc_headers': gc_header,
@@ -162,6 +179,8 @@ class Op(View):
 
             # Estágios
             e_data = models.op_estagios(cursor, op)
+            p.prt('op_estagios')
+
             for row in e_data:
                 qtd_lotes_fim -= row['LOTES']
             context.update({
@@ -178,6 +197,8 @@ class Op(View):
 
             # Totais por referência + estágio
             t_data = models.op_ref_estagio(cursor, op)
+            p.prt('op_ref_estagio')
+
             context.update({
                 't_headers': ('Referência', 'Tamanho', 'Cor', 'Estágio',
                               'Qtd. Lotes', 'Quant. Itens'),
@@ -187,6 +208,8 @@ class Op(View):
 
             # OSs da OP
             os_data = models.op_get_os(cursor, op)
+            p.prt('op_get_os')
+
             if len(os_data) != 0:
                 os_link = ('OS')
                 for row in os_data:
@@ -211,6 +234,8 @@ class Op(View):
 
             # Totais por OS + referência
             o_data = models.op_os_ref(cursor, op)
+            p.prt('op_os_ref')
+
             o_link = ('OS')
             for row in o_data:
                 if row['OS']:
@@ -227,6 +252,8 @@ class Op(View):
 
             # Detalhamento de movimentações de estágios
             u_data = models.op_movi_estagios(cursor, op)
+            p.prt('op_movi_estagios')
+
             for row in u_data:
                 if row['DT_MIN'] == row['DT_MAX']:
                     row['DT_MAX'] = '='
