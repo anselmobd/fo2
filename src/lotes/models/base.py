@@ -220,7 +220,6 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         sql_pre_qtd_lotes=sql_pre_qtd_lotes,
         sql_pos_qtd_lotes=sql_pos_qtd_lotes,
     )
-    print(sql)
 
     cursor.execute(
         sql, [op, op, os, os, oc_ini, oc_ini, oc_fim, oc_fim,
