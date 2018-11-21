@@ -5,8 +5,8 @@ from fo2.models import rows_to_dict_list_lower, dict_list_to_lower
 from lotes.models.base import *
 
 
-def get_imprime_lotes(cursor, op, tam, cor, order, oc_ini, oc_fim,
-                      pula, qtd_lotes):
+def get_imprime_lotes(cursor, op='', tam='', cor='', order='',
+                      oc_ini='', oc_fim='', pula=None, qtd_lotes=None):
     # get dados de lotes
     data = get_lotes(cursor, op=op, tam=tam, cor=cor, order=order,
                      oc_ini=oc_ini, oc_fim=oc_fim,
