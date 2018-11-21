@@ -29,7 +29,7 @@ class GtinRange(models.Model):
         verbose_name='Código identificador do range')
 
     def __str__(self):
-        return '({}){} ({})'.format(self.pais, self.codigo, self.ordem)
+        return '{} - ({}){}'.format(self.ordem, self.pais, self.codigo)
 
     class Meta:
         db_table = "fo2_gtin_range"
