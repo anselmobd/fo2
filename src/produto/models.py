@@ -21,12 +21,15 @@ class GtinRange(models.Model):
     ordem = models.IntegerField(
         unique=True,
         verbose_name='Ordem de adoção do range')
+    pais = models.CharField(
+        max_length=3,
+        verbose_name='Código do país do range')
     codigo = models.CharField(
         max_length=5, unique=True,
         verbose_name='Código identificador do range')
 
     def __str__(self):
-        return '{} ({})'.format(self.codigo, self.ordem)
+        return '({}){} ({})'.format(self.pais, self.codigo, self.ordem)
 
     class Meta:
         db_table = "fo2_gtin_range"
