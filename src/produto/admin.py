@@ -8,7 +8,7 @@ from .models import GtinRange
 class GtinRangeAdmin(admin.ModelAdmin):
     search_fields = ['codigo']
     ordering = ['ordem']
-    fields = ['ordem', 'codigo']
+    fields = ['ordem', 'pais', 'codigo']
 
 
 intr_adm_site.register(GtinRange, GtinRangeAdmin)
