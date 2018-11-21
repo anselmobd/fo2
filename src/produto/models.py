@@ -15,3 +15,19 @@ class Colecao(models.Model):
         app_label = 'systextil'
         db_table = "BASI_140"
         verbose_name = "Coleção"
+
+
+class GtinRange(models.Model):
+    ordem = models.IntegerField(
+        unique=True,
+        verbose_name='Ordem de adoção do range')
+    codigo = models.CharField(
+        max_length=6, unique=True,
+        verbose_name='Código identificador do range')
+
+    def __str__(self):
+        return '{} ({})'.format(self.codigo, self.ordem)
+
+    class Meta:
+        db_table = "fo2_gtin_range"
+        verbose_name = "Range de GTIN"
