@@ -6,7 +6,7 @@ from django.db import connections
 
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
-import produto.models
+import produto.queries
 
 
 def item_count_nivel(cursor, ref, nivel=None):
@@ -76,11 +76,11 @@ def ref_inform(cursor, nivel, ref):
 
 
 def ref_cores(cursor, nivel, ref):
-    return produto.models.prod_cores(cursor, nivel, ref)
+    return produto.queries.prod_cores(cursor, nivel, ref)
 
 
 def ref_tamanhos(cursor, nivel, ref):
-    return produto.models.prod_tamanhos(cursor, nivel, ref)
+    return produto.queries.prod_tamanhos(cursor, nivel, ref)
 
 
 def ref_parametros(cursor, nivel, ref):

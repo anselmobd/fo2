@@ -15,7 +15,7 @@ from fo2.template import group_rowspan
 
 from .forms import RefForm, ModeloForm, BuscaForm, GtinForm
 from utils.forms import FiltroForm
-import produto.models as models
+import produto.queries as queries
 
 
 def index(request):
@@ -154,7 +154,7 @@ def stat_nivelX(request):
 # ajax template, url with value
 def stat_niveis(request, nivel):
     if nivel[0:4] in ('1-MD', '1-PG', '1-PA', '1-MP'):
-        data = models.produtos_n1_basic(nivel[2:])
+        data = queries.produtos_n1_basic(nivel[2:])
         context = {
             'nivel': nivel,
             'headers': ('#', 'Referência', 'Descrição',
@@ -250,7 +250,7 @@ class Ref(View):
             return context
 
         # Informações básicas
-        data = models.ref_inform(cursor, ref)
+        data = queries.ref_inform(cursor, ref)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Referência não encontrada',
@@ -296,7 +296,7 @@ class Ref(View):
             })
 
             # PAs
-            pa_data = models.ref_utilizada_em(cursor, ref)
+            pa_data = queries.ref_utilizada_em(cursor, ref)
             pa_link = ('REF')
             for row in pa_data:
                 if row['RESPONSAVEL'] is None:
@@ -314,7 +314,7 @@ class Ref(View):
                 })
 
             # Cores
-            c_data = models.ref_cores(cursor, ref)
+            c_data = queries.ref_cores(cursor, ref)
             cores = ', '.join([data['COR'] for data in c_data])
             if len(c_data) != 0:
                 context.update({
@@ -324,7 +324,7 @@ class Ref(View):
                 })
 
             # Tamanhos
-            t_data = models.ref_tamanhos(cursor, ref)
+            t_data = queries.ref_tamanhos(cursor, ref)
             if len(t_data) != 0:
                 context.update({
                     't_headers': ('Tamanho', 'Descrição'),
@@ -333,7 +333,7 @@ class Ref(View):
                 })
 
             # Estruturas
-            e_data = models.ref_estruturas(cursor, ref)
+            e_data = queries.ref_estruturas(cursor, ref)
             conta_ref = 0
             conta_tam_cor = 0
             for row in e_data:
@@ -370,7 +370,7 @@ class Ref(View):
                 })
 
             # Roteiros
-            r_data = models.ref_roteiros(cursor, ref)
+            r_data = queries.ref_roteiros(cursor, ref)
 
             conta_tam_cor = 0
             for row in r_data:
@@ -399,7 +399,7 @@ class Ref(View):
                     'tamanho': row['TAM'],
                     'cor': row['COR'],
                 }
-                roteiro = models.ref_1roteiro(
+                roteiro = queries.ref_1roteiro(
                     cursor, ref, row['NUMERO_ALTERNATI'],
                     row['NUMERO_ROTEIRO'], row['TAM'], row['COR'])
                 inserir = True
@@ -431,7 +431,7 @@ class Ref(View):
             for row in estr_data:
                 if row['ALTERNATIVA'] in \
                         [r['NUMERO_ALTERNATI'] for r in r_data]:
-                    estrutura = models.ref_estrutura_comp(
+                    estrutura = queries.ref_estrutura_comp(
                         cursor, ref, row['ALTERNATIVA'])
                     e_link = ('REF')
                     dif_000000 = 0
@@ -517,7 +517,7 @@ class Modelo(View):
             return context
 
         # Informações básicas
-        data = models.modelo_inform(cursor, modelo)
+        data = queries.modelo_inform(cursor, modelo)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Modelo não encontrado',
@@ -576,7 +576,7 @@ class Busca(View):
         context = {'busca': busca}
 
         # Informações básicas
-        data = models.busca(cursor, busca, cor)
+        data = queries.busca(cursor, busca, cor)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum produto selecionado',
@@ -651,7 +651,7 @@ class EstrEstagioDeInsumo(View):
         context = {}
 
         # Informações básicas
-        data = models.estr_estagio_de_insumo(cursor)
+        data = queries.estr_estagio_de_insumo(cursor)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum erro de estágio de insumo encontrado.',
@@ -691,7 +691,7 @@ class Gtin(View):
             'gtin': gtin,
             }
 
-        data = models.gtin(cursor, ref=ref, gtin=gtin)
+        data = queries.gtin(cursor, ref=ref, gtin=gtin)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
