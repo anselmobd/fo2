@@ -22,7 +22,7 @@ class GtinRange(models.Model):
         unique=True,
         verbose_name='Ordem de adoção do range')
     codigo = models.CharField(
-        max_length=6, unique=True,
+        max_length=5, unique=True,
         verbose_name='Código identificador do range')
 
     def __str__(self):
