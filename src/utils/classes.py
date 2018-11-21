@@ -1,5 +1,6 @@
 import os
 import copy
+import time
 from subprocess import Popen, PIPE
 
 from django.template import Template, Context
@@ -141,3 +142,29 @@ class TermalPrint:
             self.printer_send()
         finally:
             self.printer_end()
+
+
+class Perf:
+    def __init__(self, on=True):
+        self.on() if on else self.off()
+
+    def on(self):
+        self.active = True
+        self.reset()
+
+    def off(self):
+        self.active = False
+
+    def reset(self):
+        if self.active:
+            self.inicio = time.perf_counter()
+            self.last = time.perf_counter()
+
+    def prt(self, descr):
+        if self.active:
+            print('{:6.3f} {:6.3f} {}'.format(
+                time.perf_counter()-self.last,
+                time.perf_counter()-self.inicio,
+                descr
+                ))
+            self.last = time.perf_counter()
