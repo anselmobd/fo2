@@ -34,3 +34,18 @@ class GtinRange(models.Model):
     class Meta:
         db_table = "fo2_gtin_range"
         verbose_name = "Range de GTIN"
+
+
+class Produto(models.Model):
+    referencia = models.CharField(
+        db_index=True, max_length=5,
+        verbose_name='Referência')
+    ativo = models.NullBooleanField(default=True)
+
+    def __str__(self):
+        ativo = '' if self.ativo else '--'
+        return '{}{}'.format(ativo, self.referencia)
+
+    class Meta:
+        db_table = "fo2_produto"
+        verbose_name = "Produto"
