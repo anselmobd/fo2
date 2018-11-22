@@ -2,7 +2,7 @@ from django import forms
 
 from utils.forms import FiltroForm
 
-from .models import Produto
+from .models import Produto, S_Produto
 
 
 class RefForm(forms.Form):
@@ -69,4 +69,9 @@ class ProdutoForm(forms.ModelForm):
                 "Referência deve ter 5 números ou letras")
         if referencia > '99999':
             raise forms.ValidationError("Referência não parece ser de PA")
+        try:
+            sprod = S_Produto.objects.get(
+                nivel_estrutura='1', referencia=referencia)
+        except S_Produto.DoesNotExist:
+            raise forms.ValidationError("Referência não existe no Systêxtil")
         return self.cleaned_data
