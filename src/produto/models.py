@@ -70,3 +70,24 @@ class Produto(models.Model):
     class Meta:
         db_table = "fo2_produto"
         verbose_name = "Produto"
+
+
+class ProdutoCor(models.Model):
+    produto = models.ForeignKey(
+        Produto, on_delete=models.CASCADE,
+        verbose_name='Referência')
+    cor = models.CharField(
+        db_index=True, max_length=6, verbose_name='Cor')
+    ativa = models.NullBooleanField(default=True)
+    imp_cod = models.CharField(
+        max_length=6, verbose_name='Código impresso')
+    imp_descr = models.CharField(
+        max_length=6, verbose_name='Descrição impressa')
+
+    def __str__(self):
+        ativa = '' if self.ativa else '--'
+        return '{}({}) {}'.format(ativa, self.produto, self.cor)
+
+    class Meta:
+        db_table = "fo2_produto_cor"
+        verbose_name = "Cor de um produto"
