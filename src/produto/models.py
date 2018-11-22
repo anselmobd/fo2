@@ -36,6 +36,24 @@ class GtinRange(models.Model):
         verbose_name = "Range de GTIN"
 
 
+class S_Produto(models.Model):
+    nivel_estrutura = models.CharField(
+        primary_key=True, max_length=1,
+        verbose_name='Nível')
+    referencia = models.CharField(
+        primary_key=True, max_length=5,
+        verbose_name='Referência')
+
+    def __str__(self):
+        return '{}.{}'.format(self.nivel_estrutura, self.referencia)
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "BASI_030"
+        verbose_name = "Produto (Systêxtil)"
+
+
 class Produto(models.Model):
     referencia = models.CharField(
         db_index=True, max_length=5,
