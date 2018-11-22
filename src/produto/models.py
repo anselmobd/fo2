@@ -40,7 +40,10 @@ class Produto(models.Model):
     referencia = models.CharField(
         db_index=True, max_length=5,
         verbose_name='Referência')
-    ativo = models.NullBooleanField(default=True)
+    ativo = models.BooleanField(default=True)
+    imp_cod = models.CharField(
+        max_length=6, null=True, blank=True,
+        verbose_name='Código impresso')
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
