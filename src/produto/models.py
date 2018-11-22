@@ -80,9 +80,11 @@ class ProdutoCor(models.Model):
         db_index=True, max_length=6, verbose_name='Cor')
     ativa = models.BooleanField(default=True)
     imp_cod = models.CharField(
-        max_length=6, verbose_name='Código impresso')
+        max_length=6, null=True, blank=True,
+        verbose_name='Código impresso')
     imp_descr = models.CharField(
-        max_length=6, verbose_name='Descrição impressa')
+        max_length=6, null=True, blank=True,
+        verbose_name='Descrição impressa')
 
     def __str__(self):
         ativa = '' if self.ativa else '--'
@@ -91,3 +93,4 @@ class ProdutoCor(models.Model):
     class Meta:
         db_table = "fo2_produto_cor"
         verbose_name = "Cor de um produto"
+        verbose_name_plural = "Cores de um produto"
