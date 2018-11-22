@@ -3,6 +3,7 @@ from django.contrib import admin
 from fo2.admin import intr_adm_site
 
 from .models import GtinRange, Produto
+from .forms import ProdutoForm
 
 
 class GtinRangeAdmin(admin.ModelAdmin):
@@ -12,6 +13,7 @@ class GtinRangeAdmin(admin.ModelAdmin):
 
 
 class ProdutoAdmin(admin.ModelAdmin):
+    form = ProdutoForm
     search_fields = ['referencia']
     ordering = ['referencia']
 
