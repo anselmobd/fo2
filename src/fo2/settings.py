@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_tables2',
+    # 'nested_inline',
     # Project
     'logistica',
     'lotes',
