@@ -2,6 +2,8 @@ from django import forms
 
 from utils.forms import FiltroForm
 
+from .models import Produto
+
 
 class RefForm(forms.Form):
     ref = forms.CharField(
@@ -52,3 +54,19 @@ class GtinForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+
+class ProdutoForm(forms.ModelForm):
+    class Meta:
+        model = Produto
+        fields = '__all__'
+
+    def clean(self):
+        referencia = self.cleaned_data.get('referencia').upper()
+        self.cleaned_data['referencia'] = referencia
+        if len(referencia) != 5:
+            raise forms.ValidationError(
+                "Referência deve ter 5 números ou letras")
+        if referencia > '99999':
+            raise forms.ValidationError("Referência não parece ser de PA")
+        return self.cleaned_data
