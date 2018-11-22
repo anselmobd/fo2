@@ -78,7 +78,7 @@ class ProdutoCor(models.Model):
         verbose_name='Referência')
     cor = models.CharField(
         db_index=True, max_length=6, verbose_name='Cor')
-    ativa = models.NullBooleanField(default=True)
+    ativa = models.BooleanField(default=True)
     imp_cod = models.CharField(
         max_length=6, verbose_name='Código impresso')
     imp_descr = models.CharField(
