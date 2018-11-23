@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django_tables2',
     # 'nested_inline',
     # Project
+    'base',
     'logistica',
     'lotes',
     'geral',
