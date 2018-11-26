@@ -1,15 +1,18 @@
 - model: base.TipoImagem
   pk: 1
   fields:
-    codigo: 1
-    descricao: Storage
+    nome: Diversas
+    slug: diversas
+    descricao: Imagens diversas
 - model: base.TipoImagem
   pk: 2
   fields:
-    codigo: 2
-    descricao: RH
+    nome: RH em Ação
+    slug: rh-em-acao
+    descricao: Imagens de dicas comunicados e eventos do RH
 - model: base.TipoImagem
   pk: 3
   fields:
-    codigo: 3
-    descricao: TAG - imagem de produto
+    nome: TAG
+    slug: tag
+    descricao: Imagens de produtos para TAG
