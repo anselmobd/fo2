@@ -94,3 +94,27 @@ class ProdutoCor(models.Model):
         db_table = "fo2_produto_cor"
         verbose_name = "Cor de um produto"
         verbose_name_plural = "Cores de um produto"
+
+
+class ProdutoTamanho(models.Model):
+    produto = models.ForeignKey(
+        Produto, on_delete=models.CASCADE,
+        verbose_name='Referência')
+    tamanho = models.CharField(
+        db_index=True, max_length=6)
+    ativo = models.BooleanField(default=True)
+    imp_cod = models.CharField(
+        max_length=6, null=True, blank=True,
+        verbose_name='Código impresso')
+    imp_descr = models.CharField(
+        max_length=6, null=True, blank=True,
+        verbose_name='Descrição impressa')
+
+    def __str__(self):
+        ativo = '' if self.ativo else '--'
+        return '{}({}) {}'.format(ativo, self.produto, self.tamanho)
+
+    class Meta:
+        db_table = "fo2_produto_tamanho"
+        verbose_name = "Tamanho de um produto"
+        verbose_name_plural = "Tamanhos de um produto"
