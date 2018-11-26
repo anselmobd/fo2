@@ -1,0 +1,15 @@
+- model: base.TipoImagem
+  pk: 1
+  fields:
+    codigo: 1
+    descricao: Storage
+- model: base.TipoImagem
+  pk: 2
+  fields:
+    codigo: 2
+    descricao: RH
+- model: base.TipoImagem
+  pk: 3
+  fields:
+    codigo: 3
+    descricao: TAG - imagem de produto
