@@ -159,7 +159,7 @@ class ProdutoItem(models.Model):
 
     def __str__(self):
         return '{} {} {}'.format(
-            self.produto.referencia, self.tamanho.tamanho, self.cor.cor)
+            self.produto.referencia, self.cor.cor, self.tamanho.tamanho)
 
     class Meta:
         db_table = "fo2_produto_item"
