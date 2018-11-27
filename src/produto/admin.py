@@ -41,7 +41,7 @@ class ComposicaoAdmin(admin.ModelAdmin):
 
 
 class ComposicaoLinhaAdmin(admin.ModelAdmin):
-    pass
+    ordering = ['composicao', 'ordem']
 
 
 intr_adm_site.register(GtinRange, GtinRangeAdmin)
