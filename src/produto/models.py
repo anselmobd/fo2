@@ -125,6 +125,8 @@ class ProdutoTamanho(models.Model):
     produto = models.ForeignKey(
         Produto, on_delete=models.CASCADE,
         verbose_name='Referência')
+    tamanho = models.ForeignKey(
+        Tamanho, on_delete=models.PROTECT)
     ativo = models.BooleanField(default=True)
     imp_cod = models.CharField(
         max_length=6, null=True, blank=True,
@@ -135,7 +137,7 @@ class ProdutoTamanho(models.Model):
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
-        return '{}({})'.format(ativo, self.produto)
+        return '{}({}) {}'.format(ativo, self.produto, self.tamanho.nome)
 
     class Meta:
         db_table = "fo2_produto_tamanho"
@@ -157,7 +159,7 @@ class ProdutoItem(models.Model):
 
     def __str__(self):
         return '{} {} {}'.format(
-            self.produto.referencia, self.cor.cor, self.tamanho)
+            self.produto.referencia, self.cor.cor, self.tamanho.tamanho.nome)
 
     class Meta:
         db_table = "fo2_produto_item"
