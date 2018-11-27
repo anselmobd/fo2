@@ -54,6 +54,20 @@ class S_Produto(models.Model):
         verbose_name = "Produto (Systêxtil)"
 
 
+class Composicao(models.Model):
+    descricao = models.CharField(
+        'descrição',
+        max_length=200)
+
+    def __str__(self):
+        return self.descricao
+
+    class Meta:
+        db_table = "fo2_composicao"
+        verbose_name = "Composição"
+        verbose_name_plural = "Composições"
+
+
 class Produto(models.Model):
     referencia = models.CharField(
         db_index=True, max_length=5,
@@ -62,6 +76,9 @@ class Produto(models.Model):
     imp_cod = models.CharField(
         max_length=6, null=True, blank=True,
         verbose_name='Código impresso')
+    composicao = models.ForeignKey(
+        Composicao, on_delete=models.SET_NULL, null=True,
+        verbose_name='Composição')
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
@@ -120,20 +137,6 @@ class ProdutoTamanho(models.Model):
         verbose_name_plural = "Tamanhos de um produto"
 
 
-class Composicao(models.Model):
-    descricao = models.CharField(
-        'descrição',
-        max_length=200)
-
-    def __str__(self):
-        return self.descricao
-
-    class Meta:
-        db_table = "fo2_composicao"
-        verbose_name = "Composição"
-        verbose_name_plural = "Composições"
-
-
 class ComposicaoLinha(models.Model):
     composicao = models.ForeignKey(
         Composicao, on_delete=models.CASCADE,
@@ -142,7 +145,7 @@ class ComposicaoLinha(models.Model):
     linha = models.CharField(max_length=100)
 
     def __str__(self):
-        return '({}){}-{}'.format(self.composicao, self.ordem, self.linha)
+        return '({}) {}: {}'.format(self.composicao, self.ordem, self.linha)
 
     class Meta:
         db_table = "fo2_composicao_linha"
