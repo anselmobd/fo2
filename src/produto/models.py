@@ -79,10 +79,10 @@ class Produto(models.Model):
         max_length=6, null=True, blank=True,
         verbose_name='Código impresso')
     composicao = models.ForeignKey(
-        Composicao, on_delete=models.SET_NULL, null=True,
+        Composicao, on_delete=models.SET_NULL, null=True, blank=True,
         verbose_name='Composição')
     imagem_tag = models.ForeignKey(
-        ImagemTag, on_delete=models.SET_NULL, null=True,
+        ImagemTag, on_delete=models.SET_NULL, null=True, blank=True,
         verbose_name='Imagem no TAG')
 
     def __str__(self):
