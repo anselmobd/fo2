@@ -145,6 +145,24 @@ class ProdutoTamanho(models.Model):
         verbose_name_plural = "Tamanhos de um produto"
 
 
+class ProdutoItem(models.Model):
+    produto = models.ForeignKey(
+        Produto, on_delete=models.CASCADE,
+        verbose_name='Referência')
+    cor = models.ForeignKey(
+        ProdutoCor, on_delete=models.CASCADE)
+    tamanho = models.ForeignKey(
+        ProdutoTamanho, on_delete=models.CASCADE)
+    gtin_tag = models.CharField(
+        max_length=13, null=True, blank=True,
+        verbose_name='GTIN no TAG')
+
+    class Meta:
+        db_table = "fo2_produto_item"
+        verbose_name = "Item do produto"
+        verbose_name_plural = "Itens do produto"
+
+
 class ComposicaoLinha(models.Model):
     composicao = models.ForeignKey(
         Composicao, on_delete=models.CASCADE,
