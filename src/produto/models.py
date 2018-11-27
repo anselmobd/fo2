@@ -108,7 +108,7 @@ class ProdutoCor(models.Model):
         max_length=6, null=True, blank=True,
         verbose_name='Descrição impressa')
     composicao = models.ForeignKey(
-        Composicao, on_delete=models.SET_NULL, null=True,
+        Composicao, on_delete=models.SET_NULL, null=True, blank=True,
         verbose_name='Composição')
 
     def __str__(self):
