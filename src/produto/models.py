@@ -1,5 +1,7 @@
 from django.db import models
 
+from base.models import ImagemTag
+
 
 class Colecao(models.Model):
     colecao = models.IntegerField(primary_key=True)
@@ -79,6 +81,9 @@ class Produto(models.Model):
     composicao = models.ForeignKey(
         Composicao, on_delete=models.SET_NULL, null=True,
         verbose_name='Composição')
+    imagem_tag = models.ForeignKey(
+        ImagemTag, on_delete=models.SET_NULL, null=True,
+        verbose_name='Imagem do TAG')
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
