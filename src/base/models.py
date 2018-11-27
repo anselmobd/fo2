@@ -75,3 +75,15 @@ class ImagemTag(Imagem):
         proxy = True
         verbose_name = "Imagem para TAG"
         verbose_name_plural = "Imagens para TAG"
+
+
+class Tamanho(models.Model):
+    nome = models.CharField(max_length=3)
+    ordem = models.IntegerField()
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = "fo2_tamanho"
+        verbose_name = "Tamanho"
