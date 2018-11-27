@@ -118,3 +118,17 @@ class ProdutoTamanho(models.Model):
         db_table = "fo2_produto_tamanho"
         verbose_name = "Tamanho de um produto"
         verbose_name_plural = "Tamanhos de um produto"
+
+
+class Composicao(models.Model):
+    descricao = models.CharField(
+        'descrição',
+        max_length=200)
+
+    def __str__(self):
+        return self.descricao
+
+    class Meta:
+        db_table = "fo2_composicao"
+        verbose_name = "Composição"
+        verbose_name_plural = "Composições"
