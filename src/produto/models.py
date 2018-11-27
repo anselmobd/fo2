@@ -83,7 +83,7 @@ class Produto(models.Model):
         verbose_name='Composição')
     imagem_tag = models.ForeignKey(
         ImagemTag, on_delete=models.SET_NULL, null=True,
-        verbose_name='Imagem do TAG')
+        verbose_name='Imagem no TAG')
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
