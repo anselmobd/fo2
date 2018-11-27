@@ -102,6 +102,9 @@ class ProdutoCor(models.Model):
     imp_descr = models.CharField(
         max_length=6, null=True, blank=True,
         verbose_name='Descrição impressa')
+    composicao = models.ForeignKey(
+        Composicao, on_delete=models.SET_NULL, null=True,
+        verbose_name='Composição')
 
     def __str__(self):
         ativa = '' if self.ativa else '--'
