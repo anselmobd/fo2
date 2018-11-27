@@ -31,10 +31,12 @@ class ProdutoAdmin(admin.ModelAdmin):
 
 class ProdutoCorAdmin(admin.ModelAdmin):
     search_fields = ['produto__referencia', 'cor']
+    ordering = ['produto__referencia', 'cor']
 
 
 class ProdutoTamanhoAdmin(admin.ModelAdmin):
     search_fields = ['produto__referencia', 'tamanho']
+    ordering = ['produto__referencia', 'tamanho']
 
 
 class ProdutoItemAdmin(admin.ModelAdmin):
