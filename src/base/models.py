@@ -60,3 +60,18 @@ class Imagem(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.descricao)
         super(Imagem, self).save(*args, **kwargs)
+
+
+class ImagemTagManager(models.Manager):
+    def get_queryset(self):
+        return super(ImagemTagManager, self).get_queryset().filter(
+            tipo_imagem__nome='TAG')
+
+
+class ImagemTag(Imagem):
+    objects = ImagemTagManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Imagem para TAG"
+        verbose_name_plural = "Imagens para TAG"
