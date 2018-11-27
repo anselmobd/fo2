@@ -36,12 +36,14 @@ class ProdutoCorAdmin(admin.ModelAdmin):
 
 class ProdutoTamanhoAdmin(admin.ModelAdmin):
     search_fields = ['produto__referencia', 'tamanho__nome']
-    ordering = ['produto__referencia', 'tamanho__nome']
+    ordering = ['produto__referencia', 'tamanho__ordem']
 
 
 class ProdutoItemAdmin(admin.ModelAdmin):
     search_fields = [
         'produto__referencia', 'cor__cor', 'tamanho__tamanho__nome']
+    ordering = [
+        'produto__referencia', 'cor__cor', 'tamanho__tamanho__ordem']
 
 
 class ComposicaoAdmin(admin.ModelAdmin):
