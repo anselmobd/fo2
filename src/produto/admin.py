@@ -35,11 +35,13 @@ class ProdutoCorAdmin(admin.ModelAdmin):
 
 
 class ProdutoTamanhoAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['produto__referencia', 'tamanho__nome']
+    ordering = ['produto__referencia', 'tamanho__nome']
 
 
 class ProdutoItemAdmin(admin.ModelAdmin):
-    search_fields = ['produto__referencia', 'tamanho__tamanho', 'cor__cor']
+    search_fields = [
+        'produto__referencia', 'cor__cor', 'tamanho__tamanho__nome']
 
 
 class ComposicaoAdmin(admin.ModelAdmin):
