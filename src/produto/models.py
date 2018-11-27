@@ -157,6 +157,10 @@ class ProdutoItem(models.Model):
         max_length=13, null=True, blank=True,
         verbose_name='GTIN no TAG')
 
+    def __str__(self):
+        return '{} {} {}'.format(
+            self.produto.referencia, self.tamanho.tamanho, self.cor.cor)
+
     class Meta:
         db_table = "fo2_produto_item"
         verbose_name = "Item do produto"
