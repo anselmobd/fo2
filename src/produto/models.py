@@ -1,6 +1,6 @@
 from django.db import models
 
-from base.models import ImagemTag
+from base.models import ImagemTag, Tamanho
 
 
 class Colecao(models.Model):
@@ -125,8 +125,6 @@ class ProdutoTamanho(models.Model):
     produto = models.ForeignKey(
         Produto, on_delete=models.CASCADE,
         verbose_name='Referência')
-    tamanho = models.CharField(
-        db_index=True, max_length=6)
     ativo = models.BooleanField(default=True)
     imp_cod = models.CharField(
         max_length=6, null=True, blank=True,
@@ -137,7 +135,7 @@ class ProdutoTamanho(models.Model):
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
-        return '{}({}) {}'.format(ativo, self.produto, self.tamanho)
+        return '{}({})'.format(ativo, self.produto)
 
     class Meta:
         db_table = "fo2_produto_tamanho"
