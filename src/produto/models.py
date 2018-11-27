@@ -132,3 +132,19 @@ class Composicao(models.Model):
         db_table = "fo2_composicao"
         verbose_name = "Composição"
         verbose_name_plural = "Composições"
+
+
+class ComposicaoLinha(models.Model):
+    composicao = models.ForeignKey(
+        Composicao, on_delete=models.CASCADE,
+        verbose_name='Composição')
+    ordem = models.IntegerField()
+    linha = models.CharField(max_length=100)
+
+    def __str__(self):
+        return '({}){}-{}'.format(self.composicao, self.ordem, self.linha)
+
+    class Meta:
+        db_table = "fo2_composicao_linha"
+        verbose_name = "Linha da Composição"
+        verbose_name_plural = "Linhas da Composição"
