@@ -1,9 +1,12 @@
-__version__ = '0.1.137'
-__version__date__ = '16/11/2018'
+__version__ = '0.1.138'
+__version__date__ = '27/11/2018'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.138 - 2018/11/27
+#   . GTIN: Várias tabelas para cadastro de produto e GTIN
 #
 # - 0.1.137 - 2018/11/16
 #   . Cartela de lote: Adicionada data e hora de impressão
