@@ -427,3 +427,13 @@ class OpPerdaForm(forms.Form):
 class ImprimeTagForm(forms.Form):
     item = forms.ModelChoiceField(
         queryset=ProdutoItem.objects.all())
+    quant = forms.IntegerField(
+        label='Quantidade',
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    def clean_quant(self):
+        quant = self.cleaned_data['quant']
+        if quant < 1:
+            raise forms.ValidationError(
+                "Informe uma quantidade maior que zero.")
+        return quant
