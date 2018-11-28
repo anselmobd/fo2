@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from django import forms
 
-from produto.models import Colecao
+from produto.models import Colecao, ProdutoItem
 from .models import Familia
 
 
@@ -422,3 +422,8 @@ class OpPerdaForm(forms.Form):
             data['data_ate'] = data_ate
             self.data = data
         return data_ate
+
+
+class ImprimeTagForm(forms.Form):
+    item = forms.ModelChoiceField(
+        queryset=ProdutoItem.objects.all())
