@@ -623,9 +623,10 @@ class ImprimeTag(View):
     template_name = 'lotes/imprime_tag.html'
     title_name = 'Imprime TAG'
 
-    def mount_context_and_print(self, cursor, item):
+    def mount_context_and_print(self, cursor, item, quant):
         context = {
             'item': item,
+            'quant': quant,
         }
 
         return context
@@ -642,8 +643,9 @@ class ImprimeTag(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             item = form.cleaned_data['item']
+            quant = form.cleaned_data['quant']
 
             cursor = connections['so'].cursor()
-            context.update(self.mount_context_and_print(cursor, item))
+            context.update(self.mount_context_and_print(cursor, item, quant))
         context['form'] = form
         return render(request, self.template_name, context)
