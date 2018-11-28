@@ -15,7 +15,8 @@ from django.forms.models import model_to_dict
 from fo2 import settings
 from utils.classes import TermalPrint
 
-from lotes.forms import ImprimeLotesForm, ImprimePacote3LotesForm
+from lotes.forms import ImprimeLotesForm, ImprimePacote3LotesForm, \
+    ImprimeTagForm
 import lotes.models as models
 
 
@@ -613,5 +614,36 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
                     cursor, op, tam, cor, pula, qtd_lotes,
                     ultimo, ultima_cx, impresso, impresso_descr, obs1, obs2,
                     'print' in request.POST))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class ImprimeTag(View):
+    Form_class = ImprimeTagForm
+    template_name = 'lotes/imprime_tag.html'
+    title_name = 'Imprime TAG'
+
+    def mount_context_and_print(self, cursor, item):
+        context = {
+            'item': item,
+        }
+
+        return context
+
+    def get(self, request):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        self.request = request
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            item = form.cleaned_data['item']
+
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context_and_print(cursor, item))
         context['form'] = form
         return render(request, self.template_name, context)

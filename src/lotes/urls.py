@@ -70,6 +70,9 @@ urlpatterns = [
     url(r'^perda/$',
         views.OpPerda.as_view(), name='perda'),
 
+    url(r'^imprime_tag/$',
+        views.ImprimeTag.as_view(), name='imprime_tag'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
