@@ -620,7 +620,8 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class ImprimeTag(View):
+class ImprimeTag(LoginRequiredMixin, View):
+    login_url = '/intradm/login/'
     Form_class = ImprimeTagForm
     template_name = 'lotes/imprime_tag.html'
     title_name = 'Imprime TAG'
