@@ -158,6 +158,9 @@ class ProdutoItem(models.Model):
     gtin_tag = models.CharField(
         max_length=13, null=True, blank=True,
         verbose_name='GTIN no TAG')
+    gtin = models.CharField(
+        max_length=13, null=True, blank=True,
+        verbose_name='GTIN no XML')
 
     def __str__(self):
         return '{} {} {}'.format(

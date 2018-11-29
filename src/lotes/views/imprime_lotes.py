@@ -685,7 +685,10 @@ class ImprimeTag(LoginRequiredMixin, View):
                             cor = row['item'].cor.cor
                         cor = cor.strip()
 
-                    gtin = row['item'].gtin_tag.strip()
+                    gtin = row['item'].gtin_tag
+                    if gtin is None:
+                        gtin = row['item'].gtin
+                    gtin = gtin.strip()
 
                     nome_arquivo = (os.path.join(
                         settings.MEDIA_ROOT,
