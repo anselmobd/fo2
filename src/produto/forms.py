@@ -67,7 +67,7 @@ class ProdutoForm(forms.ModelForm):
         if len(referencia) != 5:
             raise forms.ValidationError(
                 "Referência deve ter 5 números ou letras")
-        if referencia > '99999':
+        if referencia >= 'A0000':
             raise forms.ValidationError("Referência não parece ser de PA")
         try:
             sprod = S_Produto.objects.get(
