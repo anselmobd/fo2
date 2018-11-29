@@ -93,6 +93,8 @@ class TermalPrint:
         'ctr_': b'\x0d',
         'esc_': b'\x1b',
     }
+    _mark_ini = b'[#[binary:'
+    _mark_fim = b']#]'
 
     def __init__(self, p='SuporteTI_SuporteTI'):
         self._print_started = False
@@ -109,11 +111,23 @@ class TermalPrint:
     def printer(self, p):
         self._p = copy.copy(p)
 
-    def template(self, t, limpa):
+    def template(self, t, limpa, strip_end_line=''):
         tt = copy.copy(t)
+
+        if strip_end_line != '':
+            tts = copy.copy(tt)
+            for i in range(len(strip_end_line)-1):
+                tts = tts.replace(strip_end_line[i], '')
+            tts = tts.split(strip_end_line[-1])
+            ttl = []
+            for line in tts:
+                ttl.append(line.strip())
+            tt = strip_end_line.join(ttl)
+
         if limpa:
             for l in limpa:
                 tt = tt.replace(l, '')
+
         self._template = Template(tt)
 
     def context(self, c):
@@ -123,7 +137,22 @@ class TermalPrint:
 
     def render(self):
         commands = self._template.render(self._context)
-        return commands.encode('utf-8')
+        bcommands = commands.encode('cp850')
+
+        pos_mark = bcommands.find(self._mark_ini)
+        while pos_mark >= 0:
+            pos_nome = pos_mark+len(self._mark_ini)
+            len_name = bcommands[pos_nome:].find(self._mark_fim)
+            name = bcommands[pos_nome:pos_nome+len_name].decode()
+            bcommands = \
+                bcommands[:pos_mark] + \
+                self._context[name] + \
+                bcommands[pos_mark+len(
+                    self._mark_ini)+len_name+len(self._mark_fim):]
+            pos_mark = bcommands.find(self._mark_ini)
+            break
+
+        return bcommands
 
     def printer_start(self):
         self._lpr = Popen([self._lp, "-d{}".format(self._p), "-"], stdin=PIPE)
