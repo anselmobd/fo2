@@ -2,6 +2,8 @@ import os
 import copy
 import time
 from subprocess import Popen, PIPE
+import struct
+from pprint import pprint
 
 from django.template import Template, Context
 
@@ -84,6 +86,22 @@ class GitVersion(SingletonBaseMeta):
             except Exception as e:
                 self.git_version = 'desconhecida'
         return self.git_version
+
+
+def rawbytes(s):
+    """Convert a string to raw bytes without encoding"""
+    outlist = []
+    for cp in s:
+        num = ord(cp)
+        if num < 255:
+            outlist.append(struct.pack('B', num))
+        elif num < 65535:
+            outlist.append(struct.pack('>H', num))
+        else:
+            b = (num & 0xFF0000) >> 16
+            H = num & 0xFFFF
+            outlist.append(struct.pack('>bH', b, H))
+    return b''.join(outlist)
 
 
 class TermalPrint:
