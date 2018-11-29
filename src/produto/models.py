@@ -84,6 +84,8 @@ class Produto(models.Model):
     imagem_tag = models.ForeignKey(
         ImagemTag, on_delete=models.SET_NULL, null=True, blank=True,
         verbose_name='Imagem no TAG')
+    cor_no_tag = models.BooleanField(
+        default=True, verbose_name='Imprime cor no TAG')
 
     def __str__(self):
         ativo = '' if self.ativo else '--'

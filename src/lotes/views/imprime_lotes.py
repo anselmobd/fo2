@@ -678,10 +678,12 @@ class ImprimeTag(LoginRequiredMixin, View):
                         tam = row['item'].tamanho.tamanho.nome
                     tam = tam.strip()
 
-                    cor = row['item'].cor.imp_cod
-                    if cor is None:
-                        cor = row['item'].cor.cor
-                    cor = cor.strip()
+                    cor = ''
+                    if row['item'].produto.cor_no_tag:
+                        cor = row['item'].cor.imp_cod
+                        if cor is None:
+                            cor = row['item'].cor.cor
+                        cor = cor.strip()
 
                     gtin = row['item'].gtin_tag.strip()
 
