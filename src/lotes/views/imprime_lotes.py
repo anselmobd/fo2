@@ -82,17 +82,29 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 pula_lote = row['lote'] != ultimo
             else:
                 if estagio == '':
+                    row['qtd_tela'] = row['qtd']
                     data.append(row)
                 else:
                     estagios = self.est_list(row['est'])
                     quants = row['quants'].split(';')
                     if estagio in estagios:
                         iestagio = estagios.index(estagio)
+                        do_append = False
                         if len(quants) > (iestagio+1):
+                            do_append = True
+                        else:
+                            totquants = 0
+                            for q in [int(x) for x in quants]:
+                                totquants += q
+                            if totquants < row['qtd']:
+                                do_append = True
+                        if do_append:
                             row['parcial'] = True
                             row['qtdtot'] = row['qtd']
                             row['estagio'] = estagio
                             row['qtd'] = quants[iestagio]
+                            row['qtd_tela'] = '{} ({})'.format(
+                                row['qtd'], row['qtdtot'])
                             data.append(row)
 
         if len(data) == 0:
@@ -146,7 +158,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                         'Período', 'OC', '1º', 'Quant.',
                         'Lote', 'Estágio', 'Unidade'),
             'fields': ('tam', 'cor', 'narrativa',
-                       'periodo', 'oc', 'prim', 'qtd',
+                       'periodo', 'oc', 'prim', 'qtd_tela',
                        'lote', 'est', 'descricao_divisao'),
             'data': data,
         })
