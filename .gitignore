@@ -26,6 +26,7 @@ nohup.out
 
 # Documentation
 kb/
+kb
 
 # Secret configuration
 etc/secret_key.txt
