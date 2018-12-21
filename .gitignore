@@ -1,9 +1,8 @@
 # Uploads
 media/upload/
 
-# Media
-media/rh/brigadista2018
-media/rh/00 Original
+# Media Original
+media/00_Original
 
 # Development Environment DB
 src/db.sqlite3
