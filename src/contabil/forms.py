@@ -36,7 +36,7 @@ class RemessaIndustrForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     op = forms.CharField(
-        label='OP',
+        label='OP', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     CHOICES = [('T', 'Todas as remessas'),
