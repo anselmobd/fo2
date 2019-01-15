@@ -9,6 +9,10 @@ from .views import index_view, test_view, IntranetView, myip_view, \
     SystextilView, ApoioAoErpView
 
 
+admin.site.site_header = "Apoio ao ERP - Administração"
+admin.site.site_title = "Apoio Admin"
+admin.site.index_title = "Cadastros"
+
 urlpatterns = [
     url(r'^$', index_view, name='index'),
 
