@@ -35,6 +35,10 @@ class RemessaIndustrForm(forms.Form):
         label='Pedido de cliente', required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    op = forms.CharField(
+        label='OP',
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
     CHOICES = [('T', 'Todas as remessas'),
                ('S', 'Só remessas Sem retorno'),
                ('C', 'Só remessas Com retorno'),
