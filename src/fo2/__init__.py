@@ -1,9 +1,17 @@
-__version__ = '0.1.138'
-__version__date__ = '27/11/2018'
+__version__ = '0.1.140'
+__version__date__ = '16/01/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.140 - 2019/01/16
+#   . Adição de link de teste de velocidade de link e reorganização da página
+#
+# - 0.1.139 - 2019/01/15
+#   . Remessas para industrialização adicionar o filtro de OP
+#   . Cartela: impressão de lote parcial não funcionava quando
+#              parte estava finalizada
 #
 # - 0.1.138 - 2018/11/27
 #   . GTIN: Várias tabelas para cadastro de produto e GTIN
