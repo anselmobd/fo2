@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
 from .admin import intr_adm_site
 from .views import index_view, test_view, IntranetView, myip_view, \
@@ -15,6 +16,9 @@ admin.site.index_title = "Cadastros"
 
 urlpatterns = [
     url(r'^$', index_view, name='index'),
+
+    url(r'^favicon\.ico$',
+        RedirectView.as_view(url='/static/favicon.ico')),
 
     url(r'^apoio_ao_erp/', ApoioAoErpView.as_view(), name='apoio_ao_erp'),
 
