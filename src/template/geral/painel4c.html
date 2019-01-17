@@ -130,7 +130,7 @@
 
      resetCount = function() {
        //  alert('on');
-       count=seconds;
+       var count=seconds;
 
        let elm = document.getElementById("timerlink");
        let newone = elm.cloneNode(true);
@@ -138,8 +138,8 @@
      }
 
      startTimer = function() {
-       timerId = setInterval(function() {
-         count = count - 1;
+       var timerId = setInterval(function() {
+         var count = count - 1;
          if (count<=0) {
            location.reload(true);
          }
