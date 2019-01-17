@@ -117,16 +117,16 @@
     }
   </style>
   <script>
-     let timerId;
-     let seconds=30;
-     let count=seconds;
+     var timerId;
+     var seconds=30;
+     var count=seconds;
 
      resetCount = function() {
        //  alert('on');
        count=seconds;
 
-       var elm = document.getElementById("timerlink");
-       var newone = elm.cloneNode(true);
+       let elm = document.getElementById("timerlink");
+       let newone = elm.cloneNode(true);
        elm.parentNode.replaceChild(newone, elm);
      }
 
