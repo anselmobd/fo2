@@ -10,7 +10,7 @@ def get_list_geral_paineis(context):
     popAssuntos = None
     if context.environ['PATH_INFO'] in [
             reverse('apoio_ao_erp'),
-            reverse('geral')]:
+            reverse('geral:index')]:
         paineis = Painel.objects.all()
         modulos = PainelModulo.objects.all().order_by('nome')
         popAssuntos = PopAssunto.objects.all().order_by('nome')
