@@ -79,10 +79,10 @@ intr_adm_site.register(InformacaoModulo, InformacaoModuloAdmin)
 
 
 class PopAdmin(admin.ModelAdmin):
-    list_display = ['descricao']
+    list_display = ['assunto', 'descricao']
     search_fields = ['descricao']
     ordering = ['descricao']
-    fields = ['descricao', 'pop', 'habilitado', 'uploaded_at']
+    fields = ['assunto', 'descricao', 'pop', 'habilitado', 'uploaded_at']
     readonly_fields = ['uploaded_at']
 
 
