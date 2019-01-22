@@ -45,7 +45,7 @@ urlpatterns = [
 
     url(r'^insumo/', include('insumo.urls', namespace='insumo')),
 
-    url(r'^geral/', include('geral.urls')),
+    url(r'^geral/', include('geral.urls', namespace='geral')),
 
     url(r'^contabil/', include('contabil.urls', namespace='contabil')),
 
