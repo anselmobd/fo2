@@ -2,6 +2,30 @@
   <li><a href="/geral/deposito/">Depósitos</a></li>
   <li><a href="/geral/estagio/">Estágios</a></li>
 </ul>
-{% include 'geral/paineis.html' %}
-<br />
-<li><a href="/geral/pop/">Procedimentos (POPs)</a></li>
+{% if list_geral_paineis %}
+  <br />
+  <li>Paineis</li>
+  <ul>
+    {% for painel in list_geral_paineis %}
+    <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% if list_geral_modulos %}
+  <br />
+  <li>Manutenção de informativo</li>
+  <ul>
+    {% for modulo in list_geral_modulos %}
+      <li><a href="/geral/informativo/{{ modulo.slug }}/">{{ modulo.nome }}</a></li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% if list_geral_pop_assuntos %}
+  <br />
+  <li><a href="/geral/pop/">Procedimentos (POPs)</a></li>
+  <ul>
+    {% for pop_assunto in list_geral_pop_assuntos %}
+      <li><a href="/geral/pop/{{ pop_assunto.slug }}/">{{ pop_assunto.nome }}</a></li>
+    {% endfor %}
+  </ul>
+{% endif %}
