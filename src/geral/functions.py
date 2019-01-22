@@ -1,19 +1,22 @@
 from django.urls import reverse
 
-from .models import Painel, PainelModulo
+from .models import Painel, PainelModulo, PopAssunto
 
 
 # http://kkabardi.me/post/dynamic-menu-navigation-django/
 def get_list_geral_paineis(context):
     paineis = None
     modulos = None
+    popAssuntos = None
     if context.environ['PATH_INFO'] in [
             reverse('apoio_ao_erp'),
             reverse('geral')]:
         paineis = Painel.objects.all()
         modulos = PainelModulo.objects.all().order_by('nome')
+        popAssuntos = PopAssunto.objects.all().order_by('nome')
     return {'list_geral_paineis': paineis,
             'list_geral_modulos': modulos,
+            'list_geral_pop_assuntos': popAssuntos,
             }
 
 
