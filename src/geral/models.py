@@ -152,8 +152,14 @@ class PopAssunto(models.Model):
         'diretório',
         max_length=50, blank=True)
 
+    def __str__(self):
+        return self.nome
+
 
 class Pop(models.Model):
+    assunto = models.ForeignKey(
+        PopAssunto, on_delete=models.CASCADE, default=1,
+        verbose_name='assunto do POP')
     descricao = models.CharField(
         max_length=255, blank=True, verbose_name='título')
     pop = models.FileField(upload_to='pop/', verbose_name='Arquivo POP')
