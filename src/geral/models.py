@@ -148,12 +148,17 @@ class InformacaoModulo(models.Model):
 class PopAssunto(models.Model):
     nome = models.CharField(
         max_length=255, blank=True)
+    slug = models.SlugField(default='slug')
     diretorio = models.CharField(
         'diretório',
         max_length=50, blank=True)
 
     def __str__(self):
         return self.nome
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(PopAssunto, self).save(*args, **kwargs)
 
 
 class Pop(models.Model):
