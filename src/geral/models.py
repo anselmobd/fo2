@@ -145,6 +145,14 @@ class InformacaoModulo(models.Model):
         verbose_name='receita')
 
 
+class PopAssunto(models.Model):
+    nome = models.CharField(
+        max_length=255, blank=True)
+    diretorio = models.CharField(
+        'diretório',
+        max_length=50, blank=True)
+
+
 class Pop(models.Model):
     descricao = models.CharField(
         max_length=255, blank=True, verbose_name='título')
