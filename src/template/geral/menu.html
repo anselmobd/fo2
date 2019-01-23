@@ -22,10 +22,10 @@
 {% endif %}
 {% if list_geral_pop_assuntos %}
   <br />
-  <li><a href="/geral/pop/">Procedimentos (POPs)</a></li>
+  <li>Procedimentos (POPs)</li>
   <ul>
     {% for pop_assunto in list_geral_pop_assuntos %}
-      <li><a href="/geral/pop/{{ pop_assunto.slug }}/">{{ pop_assunto.nome }}</a></li>
+      <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
     {% endfor %}
   </ul>
 {% endif %}
