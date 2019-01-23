@@ -105,16 +105,33 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
 #       i-sp = disponível (inventário - todas as solicitações - pedidos)
 # grade_inventario: pega cores e tamanhos do inventário,
 #                   mesmo que o tipo seja outro
+# referencia: pode ser uma referência oi uma lista de referências
 def grade_solicitacao(
         cursor, referencia, solicit_id=None, tipo='1s',
         grade_inventario=False):
+
     # Grade de solicitação
-    grade = GradeQtd(cursor, [referencia])
+    grade = GradeQtd(cursor)
+
+    if isinstance(referencia, str):
+        filter_referencia = "and l.referencia = '{}'".format(referencia)
+    else:
+        filter_referencia = "and l.referencia in ("
+        sep = ''
+        for ref in referencia:
+            filter_referencia += "{}'{}'".format(sep, ref)
+            sep = ', '
+        filter_referencia += ")"
 
     if solicit_id is None:
         filter_solicit_id = ''
     else:
         filter_solicit_id = 'and sq.solicitacao_id = {}'.format(solicit_id)
+
+    filtros = {
+        'filter_solicit_id': filter_solicit_id,
+        'filter_referencia': filter_referencia,
+    }
 
     # tamanhos
     if not grade_inventario and tipo == '1s':
@@ -125,19 +142,20 @@ def grade_solicitacao(
             from fo2_cd_lote l
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
-            where l.referencia = %s
-              {filter_solicit_id}
+            where 1=1
+              {filter_referencia} -- filter_referencia
+              {filter_solicit_id} -- filter_solicit_id
             order by
               l.ordem_tamanho
-        '''.format(
-            filter_solicit_id=filter_solicit_id)
+        '''.format(**filtros)
     elif not grade_inventario and tipo == 's':
         sql = '''
             SELECT
               l.tamanho
             , l.ordem_tamanho
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
             group by
@@ -163,7 +181,7 @@ def grade_solicitacao(
               ) > 0
             order by
               l.ordem_tamanho
-        '''
+        '''.format(**filtros)
     elif not grade_inventario and tipo == 'p':
         sql = '''
             SELECT distinct
@@ -172,33 +190,36 @@ def grade_solicitacao(
             from fo2_cd_lote l
             join fo2_prod_op o
               on o.op = l.op
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
               and o.pedido <> 0
             order by
               l.ordem_tamanho
-        '''
+        '''.format(**filtros)
     elif grade_inventario or tipo == 'i':
         sql = '''
             SELECT distinct
               l.tamanho
             , l.ordem_tamanho
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
               and l.qtd > 0
             order by
               l.ordem_tamanho
-        '''
+        '''.format(**filtros)
     elif not grade_inventario and tipo == 'i-s':
         sql = '''
             SELECT
               l.tamanho
             , l.ordem_tamanho
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
             group by
@@ -224,7 +245,7 @@ def grade_solicitacao(
               ) > 0
             order by
               l.ordem_tamanho
-        '''
+        '''.format(**filtros)
     grade.col(
         id='tamanho',
         name='Tamanho',
@@ -240,18 +261,19 @@ def grade_solicitacao(
             from fo2_cd_lote l
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
-            where l.referencia = %s
-              {filter_solicit_id}
+            where 1=1
+              {filter_referencia} -- filter_referencia
+              {filter_solicit_id} -- filter_solicit_id
             order by
               l.cor
-        '''.format(
-            filter_solicit_id=filter_solicit_id)
+        '''.format(**filtros)
     elif not grade_inventario and tipo == 's':
         sql = '''
             SELECT
               l.cor
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
             group by
@@ -276,7 +298,7 @@ def grade_solicitacao(
               ) > 0
             order by
               l.cor
-        '''
+        '''.format(**filtros)
     elif not grade_inventario and tipo == 'p':
         sql = '''
             SELECT distinct
@@ -284,31 +306,34 @@ def grade_solicitacao(
             from fo2_cd_lote l
             join fo2_prod_op o
               on o.op = l.op
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
               and o.pedido <> 0
             order by
               l.cor
-        '''
+        '''.format(**filtros)
     elif grade_inventario or tipo == 'i':
         sql = '''
             SELECT distinct
               l.cor
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
               and l.qtd > 0
             order by
               l.cor
-        '''
+        '''.format(**filtros)
     elif not grade_inventario and tipo == 'i-s':
         sql = '''
             SELECT
               l.cor
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
             group by
@@ -333,7 +358,7 @@ def grade_solicitacao(
               ) > 0
             order by
               l.cor
-        '''
+        '''.format(**filtros)
     grade.row(
         id='cor',
         name='Cor',
@@ -355,18 +380,18 @@ def grade_solicitacao(
             from fo2_cd_lote l
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
-              {filter_solicit_id}
+              {filter_solicit_id} -- filter_solicit_id
             group by
               l.tamanho
             , l.cor
             order by
               l.tamanho
             , l.cor
-        '''.format(
-            filter_solicit_id=filter_solicit_id)
+        '''.format(**filtros)
     elif tipo == 's':
         sql = '''
             SELECT
@@ -390,7 +415,8 @@ def grade_solicitacao(
                 end
               ) qtd
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
             group by
@@ -417,7 +443,7 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''
+        '''.format(**filtros)
     elif tipo == 'p':
         sql = '''
             SELECT
@@ -427,7 +453,8 @@ def grade_solicitacao(
             from fo2_cd_lote l
             join fo2_prod_op o
               on o.op = l.op
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
               and o.pedido <> 0
@@ -437,7 +464,7 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''
+        '''.format(**filtros)
     elif tipo == 'sp':
         sql = '''
             SELECT
@@ -466,7 +493,8 @@ def grade_solicitacao(
             from fo2_cd_lote l
             join fo2_prod_op o
               on o.op = l.op
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
               and ( o.pedido <> 0
@@ -504,7 +532,7 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''
+        '''.format(**filtros)
     elif tipo == 'i':
         sql = '''
             SELECT
@@ -512,7 +540,8 @@ def grade_solicitacao(
             , l.cor
             , sum(l.qtd) qtd
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
             group by
@@ -521,7 +550,7 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''
+        '''.format(**filtros)
     elif tipo == 'i-s':
         sql = '''
             SELECT
@@ -545,7 +574,8 @@ def grade_solicitacao(
                 end
               ) qtd
             from fo2_cd_lote l
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
             group by
@@ -572,7 +602,7 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''
+        '''.format(**filtros)
     elif tipo == 'i-sp':
         sql = '''
             SELECT
@@ -602,7 +632,8 @@ def grade_solicitacao(
             from fo2_cd_lote l
             join fo2_prod_op o
               on o.op = l.op
-            where l.referencia = %s
+            where 1=1
+              {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
             group by
@@ -633,7 +664,7 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''
+        '''.format(**filtros)
     grade.value(
         id='qtd',
         sql=sql
