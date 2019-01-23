@@ -12,9 +12,9 @@
 {% block content %}
   {% if form %}
     {% if insert %}
-      <h4>Inserir</h4>
+      <h3>Inserir</h3>
     {% else %}
-      <h4>Editando</h4>
+      <h3>Editando</h3>
     {% endif %}
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
@@ -24,6 +24,7 @@
         <button type="cancel">Cancelar</button>
       {% endif %}
     </form>
+    <hr>
   {% endif %}
   {% if data %}
     <table>
