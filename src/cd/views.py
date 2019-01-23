@@ -1349,8 +1349,9 @@ class Grade(View):
             for modelo in modelos:
                 refnum_ant = -1
                 tipo_ant = '##'
-                for row in [ref for ref in referencias
-                            if ref['modelo'] == modelo]:
+                mod_referencias = [
+                    ref for ref in referencias if ref['modelo'] == modelo]
+                for row in mod_referencias:
                     ref = row['referencia']
                     invent_ref = models.grade_solicitacao(
                         cursor_def, ref, tipo='i', grade_inventario=True)
@@ -1395,6 +1396,23 @@ class Grade(View):
 
                     grades_ref.append(grade_ref)
 
+                refs = []
+                if len(mod_referencias) > 1:
+                    refs = [row['referencia'] for row in mod_referencias
+                            if row['grade_tipo'] == 'PA/PG']
+
+                if len(refs) > 1:
+                    dispon_modelo = models.grade_solicitacao(
+                        cursor_def, refs, tipo='i-sp',
+                        grade_inventario=True)
+                    grade_ref = {
+                        'refnum': modelo,
+                        'ref': '',
+                        'tipo': 'PA/PG',
+                        'titulo': 'Total disponível',
+                        'inventario': dispon_modelo,
+                    }
+                    grades_ref.append(grade_ref)
             context.update({
                 'grades': grades_ref,
                 'modelos': modelos,

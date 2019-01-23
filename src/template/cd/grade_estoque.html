@@ -44,11 +44,13 @@
             <h4 style="padding-left: 4em;">Tipo: <b>{{ grade.tipo }}</b></h4>
           {% endif %}
         {% endif %}
-        {% if title_ref %}
-          <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
-        {% endif %}
-        {% if link_ref %}
-          <h4 style="padding-left: 6em;">Referência: <b><a href="{% url 'cd_grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
+        {% if grade.ref %}
+          {% if title_ref %}
+            <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
+          {% endif %}
+          {% if link_ref %}
+            <h4 style="padding-left: 6em;">Referência: <b><a href="{% url 'cd_grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
+          {% endif %}
         {% endif %}
         <table>
           <tr>
@@ -106,7 +108,11 @@
               </td>
             {% else %}
               <td style="vertical-align: top;">
-                <h4>Disponível = Inventário</h4>
+                {% if grade.titulo %}
+                  <h4>{{ grade.titulo }}</h4>
+                {% else %}
+                  <h4>Disponível = Inventário</h4>
+                {% endif %}
                 <table style="width: auto;">
                   {% include "layout/thead_generic.html" with data=grade.inventario.headers style=grade.inventario.style only %}
                   {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group style=grade.inventario.style only %}
