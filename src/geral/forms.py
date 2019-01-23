@@ -29,4 +29,4 @@ class InformacaoModuloForm(forms.Form):
 class PopForm(forms.ModelForm):
     class Meta:
         model = Pop
-        fields = ('descricao', 'pop', 'habilitado')
+        fields = ('assunto', 'descricao', 'pop', 'habilitado')

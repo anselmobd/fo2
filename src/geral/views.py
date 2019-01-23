@@ -1,16 +1,17 @@
 import yaml
-# from pprint import pprint
+from pprint import pprint
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import connections
 from django.views import View
+from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from fo2.models import rows_to_dict_list
 # from utils.classes import LoggedInUser
 
 from .models import Painel, PainelModulo, InformacaoModulo, \
-                    UsuarioPainelModulo, Pop
+                    UsuarioPainelModulo, Pop, PopAssunto
 from .forms import InformacaoModuloForm, PopForm
 
 
@@ -215,8 +216,10 @@ class InformativoView(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
 
-def pop(request, id=None):
-    context = {'titulo': 'Procedimentos (POPs)'}
+def pop(request, pop_assunto=None, id=None):
+    select = PopAssunto.objects.get(slug=pop_assunto)
+
+    context = {'titulo': 'POPs de {}'.format(select.nome)}
 
     can_edit = False
     user = None
@@ -236,33 +239,34 @@ def pop(request, id=None):
             form = PopForm(request.POST, request.FILES, instance=instance)
             if form.is_valid():
                 form.save()
-                return redirect('pop')
+                return redirect('geral:pop', pop_assunto)
         else:
             form = PopForm(instance=instance)
         context.update({'form': form})
 
     if can_edit:
-        select = Pop.objects.all()
+        select = Pop.objects.filter(assunto__slug=pop_assunto)
         select = select.order_by('-uploaded_at')
     else:
-        select = Pop.objects.filter(habilitado=True)
+        select = Pop.objects.filter(assunto__slug=pop_assunto, habilitado=True)
         select = select.order_by('descricao')
-    data = list(select.values())
+    select = select.values(
+        'id', 'uploaded_at', 'assunto__nome', 'descricao', 'pop', 'habilitado')
+    data = list(select)
     for row in data:
-        row['descricao|LINK'] = '/media/{}'.format(row['pop'])  # row['id']
+        row['descricao|LINK'] = '/media/{}'.format(row['pop'])
         row['descricao|TARGET'] = '_blank'
         row['habilitado'] = 'sim' if row['habilitado'] else 'não'
         row['edit'] = ''
-            # '<span aria-hidden="true" class="glyphicon glyphicon-edit"></span>'
-        row['edit|LINK'] = row['id']
+        row['edit|LINK'] = reverse('geral:pop', args=[pop_assunto, row['id']])
     context.update({
         'data': data,
     })
     if can_edit:
         context.update({
-            'headers': ('Adicionado em', 'Título', 'Arquivo POP',
+            'headers': ('Adicionado em', 'Assunto', 'Título', 'Arquivo POP',
                         'Habilitado', 'Editar'),
-            'fields': ('uploaded_at', 'descricao', 'pop',
+            'fields': ('uploaded_at', 'assunto__nome', 'descricao', 'pop',
                        'habilitado', 'edit'),
         })
     else:
