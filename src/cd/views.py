@@ -865,15 +865,17 @@ class Solicitacoes(LoginRequiredMixin, View):
 
     def lista(self):
         fields = ('codigo', 'ativa', 'descricao',
-                  'usuario__username', 'update_at')
+                  'usuario__username', 'update_at', 'total_qtd')
         descriptions = ('Código', 'Ativa para o usuário', 'Descrição',
-                        'Usuário', 'Última alteração')
+                        'Usuário', 'Última alteração', 'Qtd. total')
         headers = dict(zip(fields, descriptions))
 
-        data = self.SL.objects.all().order_by('-update_at')
+        data = self.SL.objects.all()
+        data = data.annotate(total_qtd=Sum('solicitaloteqtd__qtd'))
+        data = data.order_by('-update_at')
         data = list(data.values(
             'codigo', 'ativa', 'descricao',
-            'usuario__username', 'update_at', 'id'))
+            'usuario__username', 'update_at', 'id', 'total_qtd'))
         for row in data:
             row['codigo|LINK'] = reverse(
                 'cd_solicitacao_detalhe', args=[row['id']])
