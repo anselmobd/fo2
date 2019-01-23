@@ -180,3 +180,17 @@ class Pop(models.Model):
 
     class Meta:
         permissions = (("can_manage_pop", "Can manage pop"),)
+
+
+class UsuarioPopAssunto(models.Model):
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        verbose_name='usuário')
+    assunto = models.ForeignKey(
+        PopAssunto, on_delete=models.CASCADE,
+        verbose_name='assunto de POP')
+
+    class Meta:
+        db_table = "fo2_ger_usr_pop_assunto"
+        verbose_name = "usuário de assunto de POP"
+        verbose_name_plural = "usuários de assuntos de POPs"
