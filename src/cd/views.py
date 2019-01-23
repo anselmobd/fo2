@@ -1406,7 +1406,6 @@ class Grade(View):
                         cursor_def, refs, tipo='i-sp',
                         grade_inventario=True)
                     grade_ref = {
-                        'refnum': modelo,
                         'ref': '',
                         'tipo': 'PA/PG',
                         'titulo': 'Total disponível',
