@@ -863,7 +863,7 @@ class Solicitacoes(LoginRequiredMixin, View):
     SL = lotes.models.SolicitaLote
     id = None
 
-    def list(self):
+    def lista(self):
         fields = ('codigo', 'ativa', 'descricao',
                   'usuario__username', 'update_at')
         descriptions = ('Código', 'Ativa para o usuário', 'Descrição',
@@ -916,7 +916,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                     self.id = None
 
         if not self.id:
-            context.update(self.list())
+            context.update(self.lista())
 
         return render(request, self.template_name, context)
 
@@ -952,7 +952,7 @@ class Solicitacoes(LoginRequiredMixin, View):
             solicitacao.ativa = ativa
             solicitacao.save()
 
-            context.update(self.list())
+            context.update(self.lista())
         else:
             self.context['form'] = form
         return render(request, self.template_name, context)
