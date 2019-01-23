@@ -12,7 +12,7 @@ from fo2.models import rows_to_dict_list
 # from utils.classes import LoggedInUser
 
 from .models import Painel, PainelModulo, InformacaoModulo, \
-                    UsuarioPainelModulo, Pop, PopAssunto
+                    UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
 from .forms import InformacaoModuloForm, PopForm
 
 
@@ -228,6 +228,10 @@ def pop(request, pop_assunto=None, id=None):
         user = request.user
     if user:
         can_edit = user.has_perm('geral.can_manage_pop')
+        if can_edit:
+            verificacao = UsuarioPopAssunto.objects.filter(
+                usuario=request.user, assunto=assunto)
+            can_edit = len(verificacao) != 0
 
     if can_edit:
         if id:
