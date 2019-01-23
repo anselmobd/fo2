@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -161,13 +163,17 @@ class PopAssunto(models.Model):
         super(PopAssunto, self).save(*args, **kwargs)
 
 
+def pop_upload_to(instance, filename):
+    return os.path.join('pop', instance.assunto.diretorio, filename)
+
+
 class Pop(models.Model):
     assunto = models.ForeignKey(
         PopAssunto, on_delete=models.CASCADE, default=1,
         verbose_name='assunto do POP')
     descricao = models.CharField(
         max_length=255, blank=True, verbose_name='título')
-    pop = models.FileField(upload_to='pop/', verbose_name='Arquivo POP')
+    pop = models.FileField(upload_to=pop_upload_to, verbose_name='Arquivo POP')
     uploaded_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Inserido em')
     habilitado = models.NullBooleanField(default=True)
