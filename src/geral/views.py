@@ -6,6 +6,7 @@ from django.db import connections
 from django.views import View
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django import forms
 
 from fo2.models import rows_to_dict_list
 # from utils.classes import LoggedInUser
@@ -217,9 +218,9 @@ class InformativoView(LoginRequiredMixin, View):
 
 
 def pop(request, pop_assunto=None, id=None):
-    select = PopAssunto.objects.get(slug=pop_assunto)
+    assunto = PopAssunto.objects.get(slug=pop_assunto)
 
-    context = {'titulo': 'POPs de {}'.format(select.nome)}
+    context = {'titulo': 'POPs de {}'.format(assunto.nome)}
 
     can_edit = False
     user = None
@@ -241,7 +242,12 @@ def pop(request, pop_assunto=None, id=None):
                 form.save()
                 return redirect('geral:pop', pop_assunto)
         else:
-            form = PopForm(instance=instance)
+            if instance is None:
+                form = PopForm()
+                form.fields['assunto'].initial = assunto.id
+            else:
+                form = PopForm(instance=instance)
+        form.fields['assunto'].widget = forms.HiddenInput()
         context.update({'form': form})
 
     if can_edit:
@@ -250,8 +256,7 @@ def pop(request, pop_assunto=None, id=None):
     else:
         select = Pop.objects.filter(assunto__slug=pop_assunto, habilitado=True)
         select = select.order_by('descricao')
-    select = select.values(
-        'id', 'uploaded_at', 'assunto__nome', 'descricao', 'pop', 'habilitado')
+    select = select.values()
     data = list(select)
     for row in data:
         row['descricao|LINK'] = '/media/{}'.format(row['pop'])
@@ -264,9 +269,9 @@ def pop(request, pop_assunto=None, id=None):
     })
     if can_edit:
         context.update({
-            'headers': ('Adicionado em', 'Assunto', 'Título', 'Arquivo POP',
+            'headers': ('Adicionado em', 'Título', 'Arquivo POP',
                         'Habilitado', 'Editar'),
-            'fields': ('uploaded_at', 'assunto__nome', 'descricao', 'pop',
+            'fields': ('uploaded_at', 'descricao', 'pop',
                        'habilitado', 'edit'),
         })
     else:
