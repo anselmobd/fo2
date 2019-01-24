@@ -718,7 +718,7 @@ def historico(cursor, op):
 
 def solicita_lote(cursor):
     sql = '''
-        SELECT
+        select
           s.id
         , s.codigo
         , s.descricao
@@ -726,6 +726,7 @@ def solicita_lote(cursor):
         , s.create_at
         , s.update_at
         , s.usuario_id
+        , u.username usuario__username
         , sum(sq.qtd) total_qtd
         , sum(
             case when l.local is null
@@ -738,6 +739,8 @@ def solicita_lote(cursor):
           on sq.solicitacao_id = s.id
         left join fo2_cd_lote l
           on l.id = sq.lote_id
+        left join auth_user u
+          on u.id = s.usuario_id
         group by
           s.id
         , s.codigo
@@ -746,6 +749,7 @@ def solicita_lote(cursor):
         , s.create_at
         , s.update_at
         , s.usuario_id
+        , u.username
         order by
           s.update_at desc
     '''
