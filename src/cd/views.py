@@ -860,22 +860,27 @@ class Solicitacoes(LoginRequiredMixin, View):
     Form_class = cd.forms.SolicitacaoForm
     template_name = 'cd/solicitacoes.html'
     title_name = 'Solicitações de lotes'
+    cursor = connection.cursor()
     SL = lotes.models.SolicitaLote
     id = None
 
     def lista(self):
         fields = ('codigo', 'ativa', 'descricao',
-                  'usuario__username', 'update_at', 'total_qtd')
+                  'usuario__username', 'update_at',
+                  'total_qtd', 'total_no_cd')
         descriptions = ('Código', 'Ativa para o usuário', 'Descrição',
-                        'Usuário', 'Última alteração', 'Qtd. total')
+                        'Usuário', 'Última alteração', 'Qtd. total',
+                        'Qtd. do CD')
         headers = dict(zip(fields, descriptions))
 
-        data = self.SL.objects.all()
-        data = data.annotate(total_qtd=Sum('solicitaloteqtd__qtd'))
-        data = data.order_by('-update_at')
-        data = list(data.values(
-            'codigo', 'ativa', 'descricao',
-            'usuario__username', 'update_at', 'id', 'total_qtd'))
+        # data = self.SL.objects.all()
+        # data = data.annotate(total_qtd=Sum('solicitaloteqtd__qtd'))
+        # data = data.order_by('-update_at')
+        # data = list(data.values(
+        #     'codigo', 'ativa', 'descricao',
+        #     'usuario__username', 'update_at', 'id', 'total_qtd'))
+
+        data = models.solicita_lote(self.cursor)
         for row in data:
             row['codigo|LINK'] = reverse(
                 'cd_solicitacao_detalhe', args=[row['id']])
