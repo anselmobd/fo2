@@ -714,3 +714,40 @@ def historico(cursor, op):
     '''
     cursor.execute(sql, [op])
     return rows_to_dict_list_lower(cursor)
+
+
+def solicita_lote(cursor):
+    sql = '''
+        SELECT
+          s.id
+        , s.codigo
+        , s.descricao
+        , s.ativa
+        , s.create_at
+        , s.update_at
+        , s.usuario_id
+        , sum(sq.qtd) total_qtd
+        , sum(
+            case when l.local is null
+            then 0
+            else sq.qtd
+            end
+          ) total_no_cd
+        from fo2_cd_solicita_lote s
+        left join fo2_cd_solicita_lote_qtd sq
+          on sq.solicitacao_id = s.id
+        left join fo2_cd_lote l
+          on l.id = sq.lote_id
+        group by
+          s.id
+        , s.codigo
+        , s.descricao
+        , s.ativa
+        , s.create_at
+        , s.update_at
+        , s.usuario_id
+        order by
+          s.update_at desc
+    '''
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
