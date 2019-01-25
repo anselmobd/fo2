@@ -385,13 +385,26 @@ class Estoque(View):
 
                 if solicit_cod and (row['qtd'] - slq_qtd) > 0:
                     row['solicita'] = '''
-                        <a title="Solicita" href="javascript:void(0);"
+                        <a title="Solicitação parcial"
+                         href="javascript:void(0);"
                          onclick="solicita_lote(
                             \'{lote}\', \'{ref}\', \'{cor}\', \'{tam}\',
                             \'{qtd_resta}\', \'{solicit_cod}\',
-                            \'{solicit_id}\', \'{qtd_limite}\');"
-                        ><span id="qtd_resta_{lote}">{qtd_resta}</span><span
+                            \'{solicit_id}\', \'{qtd_limite}\', \'N\');"
+                        ><span
                         class="glyphicon glyphicon-triangle-bottom"
+                        aria-hidden="true"></span></a>
+                        &nbsp;
+                        <span id="qtd_resta_{lote}">{qtd_resta}</span>
+                        &nbsp;
+                        <a title="Solicitação inteira"
+                         href="javascript:void(0);"
+                         onclick="solicita_lote(
+                            \'{lote}\', \'{ref}\', \'{cor}\', \'{tam}\',
+                            \'{qtd_resta}\', \'{solicit_cod}\',
+                            \'{solicit_id}\', \'{qtd_limite}\', \'S\');"
+                        ><span
+                        class="glyphicon glyphicon-unchecked"
                         aria-hidden="true"></span></a>
                     '''.format(
                         lote=row['lote'],
@@ -872,13 +885,6 @@ class Solicitacoes(LoginRequiredMixin, View):
                         'Usuário', 'Última alteração', 'Qtd. total',
                         'Qtd. do CD')
         headers = dict(zip(fields, descriptions))
-
-        # data = self.SL.objects.all()
-        # data = data.annotate(total_qtd=Sum('solicitaloteqtd__qtd'))
-        # data = data.order_by('-update_at')
-        # data = list(data.values(
-        #     'codigo', 'ativa', 'descricao',
-        #     'usuario__username', 'update_at', 'id', 'total_qtd'))
 
         data = models.solicita_lote(self.cursor)
         for row in data:
