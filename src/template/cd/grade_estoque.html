@@ -20,13 +20,15 @@
     <h3>{{ erro }}</h3>
   {% else %}
     {% if link_tot %}
-      <h4><a href="{% url 'cd_grade_estoque' 'todas' %}">Todas as grades por referência</a></h4>
+      <h4><a href="{% url 'cd_grade_estoque' 'todas' %}">Todas as grades por referência</a>&nbsp;-&nbsp;<a href="{% url 'cd_grade_estoque' 'totais' %}">Total disponível de PA/PG por modelo (número)</a></h4>
     {% endif %}
     {% if grades %}
-      {% if modelos.paginator.num_pages != 1 %}
-        ({{modelos_pagina}} referências numéricas por página)<br/>
+      {% if modelos.paginator %}
+        {% if modelos.paginator.num_pages != 1 %}
+          ({{modelos_pagina}} referências numéricas por página)<br/>
+        {% endif %}
+        {% include "cd/grade_estoque_paginator.html" with modelos_pagina=modelos_pagina modelos=modelos only %}
       {% endif %}
-      {% include "cd/grade_estoque_paginator.html" with modelos_pagina=modelos_pagina modelos=modelos only %}
       {% for grade in grades %}
         {% if link_num %}
           {% if grade.refnum %}
@@ -122,7 +124,9 @@
           </tr>
         </table>
       {% endfor %}
-      {% include "cd/grade_estoque_paginator.html" with modelos_pagina=modelos_pagina modelos=modelos only %}
+      {% if modelos.paginator %}
+        {% include "cd/grade_estoque_paginator.html" with modelos_pagina=modelos_pagina modelos=modelos only %}
+      {% endif %}
     {% endif %}
     {% if data %}
       {% if link_num %}
