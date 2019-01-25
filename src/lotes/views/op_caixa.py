@@ -138,6 +138,12 @@ class OpCaixa(View):
                 'msg_erro': 'Lotes não encontradas',
             })
         else:
+            if data[0]['ref'] < 'C':
+                context.update({
+                    'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
+                })
+                l_data = []
+                return context
             if data[0]['colecao'] == 5:  # camisa
                 lotes_por_caixa = 2
             else:
