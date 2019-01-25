@@ -870,12 +870,13 @@ class InconsistenciasDetalhe(View):
 
 
 class Solicitacoes(LoginRequiredMixin, View):
-    Form_class = cd.forms.SolicitacaoForm
-    template_name = 'cd/solicitacoes.html'
-    title_name = 'Solicitações de lotes'
-    cursor = connection.cursor()
-    SL = lotes.models.SolicitaLote
-    id = None
+
+    def __init__(self):
+        self.Form_class = cd.forms.SolicitacaoForm
+        self.template_name = 'cd/solicitacoes.html'
+        self.title_name = 'Solicitações de lotes'
+        self.SL = lotes.models.SolicitaLote
+        self.id = None
 
     def lista(self):
         fields = ('codigo', 'ativa', 'descricao',
@@ -886,7 +887,8 @@ class Solicitacoes(LoginRequiredMixin, View):
                         'Qtd. do CD')
         headers = dict(zip(fields, descriptions))
 
-        data = models.solicita_lote(self.cursor)
+        cursor_def = connection.cursor()
+        data = models.solicita_lote(cursor_def)
         for row in data:
             row['codigo|LINK'] = reverse(
                 'cd_solicitacao_detalhe', args=[row['id']])
