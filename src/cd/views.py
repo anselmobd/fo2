@@ -36,10 +36,12 @@ def teste_som(request):
 
 
 class LotelLocal(PermissionRequiredMixin, View):
-    permission_required = 'lotes.can_inventorize_lote'
-    Form_class = cd.forms.LoteForm
-    template_name = 'cd/lote_local.html'
-    title_name = 'Inventariar'
+
+    def __init__(self):
+        self.permission_required = 'lotes.can_inventorize_lote'
+        self.Form_class = cd.forms.LoteForm
+        self.template_name = 'cd/lote_local.html'
+        self.title_name = 'Inventariar'
 
     def mount_context(self, request, form):
         cursor = connections['so'].cursor()
@@ -169,10 +171,12 @@ class LotelLocal(PermissionRequiredMixin, View):
 
 
 class TrocaLocal(PermissionRequiredMixin, View):
-    permission_required = 'lotes.can_relocate_lote'
-    Form_class = cd.forms.TrocaLocalForm
-    template_name = 'cd/troca_local.html'
-    title_name = 'Trocal endereço'
+
+    def __init__(self):
+        self.permission_required = 'lotes.can_relocate_lote'
+        self.Form_class = cd.forms.TrocaLocalForm
+        self.template_name = 'cd/troca_local.html'
+        self.title_name = 'Trocal endereço'
 
     def mount_context(self, request, form):
         endereco_de = form.cleaned_data['endereco_de']
@@ -246,9 +250,11 @@ class TrocaLocal(PermissionRequiredMixin, View):
 
 
 class Estoque(View):
-    Form_class = cd.forms.EstoqueForm
-    template_name = 'cd/estoque.html'
-    title_name = 'Estoque'
+
+    def __init__(self):
+        self.Form_class = cd.forms.EstoqueForm
+        self.template_name = 'cd/estoque.html'
+        self.title_name = 'Estoque'
 
     def mount_context(self, form, user):
         linhas_pagina = 100
@@ -479,9 +485,10 @@ class Estoque(View):
 
 
 class Inconsistencias(View):
-    # Form_class = cd.forms.EstoqueForm
-    template_name = 'cd/inconsist.html'
-    title_name = 'Inconsistências Systêxtil'
+
+    def __init__(self):
+        self.template_name = 'cd/inconsist.html'
+        self.title_name = 'Inconsistências Systêxtil'
 
     def mount_context(self, cursor, ordem, opini):
         step = 10
@@ -645,9 +652,10 @@ class Inconsistencias(View):
 
 
 class Mapa(View):
-    # Form_class = cd.forms.EstoqueForm
-    template_name = 'cd/mapa.html'
-    title_name = 'Mapa'
+
+    def __init__(self):
+        self.template_name = 'cd/mapa.html'
+        self.title_name = 'Mapa'
 
     def mount_context(self):
         enderecos = {}
@@ -713,9 +721,10 @@ class Mapa(View):
 
 
 class Conferencia(View):
-    # Form_class = cd.forms.EstoqueForm
-    template_name = 'cd/conferencia.html'
-    title_name = 'Conferência detalhada'
+
+    def __init__(self):
+        self.template_name = 'cd/conferencia.html'
+        self.title_name = 'Conferência detalhada'
 
     def mount_context(self):
         context = {}
@@ -764,9 +773,10 @@ class Conferencia(View):
 
 
 class ConferenciaSimples(View):
-    # Form_class = cd.forms.EstoqueForm
-    template_name = 'cd/conferencia.html'
-    title_name = 'Conferência Simples'
+
+    def __init__(self):
+        self.template_name = 'cd/conferencia.html'
+        self.title_name = 'Conferência Simples'
 
     def mount_context(self):
         context = {'simples': 's'}
@@ -803,8 +813,10 @@ class ConferenciaSimples(View):
 
 
 class InconsistenciasDetalhe(View):
-    template_name = 'cd/inconsist_detalhe.html'
-    title_name = 'Detalhe de inconsistência'
+
+    def __init__(self):
+        self.template_name = 'cd/inconsist_detalhe.html'
+        self.title_name = 'Detalhe de inconsistência'
 
     def mount_context(self, cursor, op):
         context = {'op': op}
@@ -1031,8 +1043,10 @@ def solicita_lote(request, solicitacao_id, lote, qtd):
 
 
 class SolicitacaoDetalhe(LoginRequiredMixin, View):
-    template_name = 'cd/solicitacao_detalhe.html'
-    title_name = 'Detalhes de solicitação'
+
+    def __init__(self):
+        self.template_name = 'cd/solicitacao_detalhe.html'
+        self.title_name = 'Detalhes de solicitação'
 
     def mount_context(self, solicit_id, user):
         context = {'user': user}
@@ -1154,9 +1168,11 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
 
 class EnderecoLote(View):
-    Form_class = cd.forms.AskLoteForm
-    template_name = 'cd/endereco_lote.html'
-    title_name = 'Verifica endereço de Lote'
+
+    def __init__(self):
+        self.Form_class = cd.forms.AskLoteForm
+        self.template_name = 'cd/endereco_lote.html'
+        self.title_name = 'Verifica endereço de Lote'
 
     def mount_context(self, request, form):
         lote = form.cleaned_data['lote']
@@ -1211,9 +1227,11 @@ class EnderecoLote(View):
 
 
 class Grade(View):
-    Form_class = cd.forms.AskReferenciaForm
-    template_name = 'cd/grade_estoque.html'
-    title_name = 'Seleção de grade de estoque'
+
+    def __init__(self):
+        self.Form_class = cd.forms.AskReferenciaForm
+        self.template_name = 'cd/grade_estoque.html'
+        self.title_name = 'Seleção de grade de estoque'
 
     def tipo(self, ref):
         if ref[0].isdigit():
@@ -1464,9 +1482,11 @@ class Grade(View):
 
 
 class Historico(View):
-    Form_class = cd.forms.HistoricoForm
-    template_name = 'cd/historico.html'
-    title_name = 'Histórico'
+
+    def __init__(self):
+        self.Form_class = cd.forms.HistoricoForm
+        self.template_name = 'cd/historico.html'
+        self.title_name = 'Histórico'
 
     def mount_context(self, cursor, op):
         context = {
