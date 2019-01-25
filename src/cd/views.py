@@ -1449,8 +1449,7 @@ class Grade(View):
 
                 if len(refs) > totaliza_mais_que:
                     dispon_modelo = models.grade_solicitacao(
-                        cursor_def, refs, tipo='i-sp',
-                        grade_inventario=True)
+                        cursor_def, refs, tipo='i-sp')
                     if dispon_modelo['total'] != 0:
                         grade_ref = {
                             'ref': '',
