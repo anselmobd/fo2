@@ -1252,6 +1252,10 @@ class Grade(View):
         if todas:
             ref = ''
             exec = 'grade'
+        totais = ref == 'totais'
+        if totais:
+            ref = ''
+            exec = 'totais'
         refnum = int('0{}'.format(
             ''.join([c for c in ref if c.isdigit()])))
         context = {
@@ -1279,7 +1283,7 @@ class Grade(View):
 
             modelos = [refnum]
             exec = 'grade'
-        else:  # Todos ou Modelo
+        else:  # Todos ou Modelo ou Totais
             data_rec = lotes.models.Lote.objects
             data_rec = data_rec.exclude(
                 local__isnull=True
@@ -1294,7 +1298,7 @@ class Grade(View):
                 row['modelo'] = int(
                     ''.join([c for c in row['referencia'] if c.isdigit()]))
 
-            if refnum == 0:  # Todos
+            if refnum == 0:  # Todos ou Totais
                 for row in referencias:
                     row['referencia|LINK'] = reverse(
                         'cd_grade_estoque', args=[row['referencia']])
@@ -1370,21 +1374,26 @@ class Grade(View):
                     })
                     modelos = [refnum]
 
-        if exec == 'grade':
-            paginator = Paginator(modelos, modelos_pagina)
-            try:
-                modelos = paginator.page(page)
-            except PageNotAnInteger:
-                modelos = paginator.page(1)
-            except EmptyPage:
-                modelos = paginator.page(paginator.num_pages)
+        if exec in ['grade', 'totais']:
+            if not totais:
+                paginator = Paginator(modelos, modelos_pagina)
+                try:
+                    modelos = paginator.page(page)
+                except PageNotAnInteger:
+                    modelos = paginator.page(1)
+                except EmptyPage:
+                    modelos = paginator.page(paginator.num_pages)
             grades_ref = []
             for modelo in modelos:
                 refnum_ant = -1
                 tipo_ant = '##'
                 mod_referencias = [
                     ref for ref in referencias if ref['modelo'] == modelo]
-                for row in mod_referencias:
+                if totais:
+                    mod_referencias_todos = []
+                else:  # todos ou modelo
+                    mod_referencias_todos = mod_referencias
+                for row in mod_referencias_todos:
                     ref = row['referencia']
                     invent_ref = models.grade_solicitacao(
                         cursor_def, ref, tipo='i', grade_inventario=True)
@@ -1430,21 +1439,28 @@ class Grade(View):
                     grades_ref.append(grade_ref)
 
                 refs = []
-                if len(mod_referencias) > 1:
+                if totais:
+                    totaliza_mais_que = 0
+                else:
+                    totaliza_mais_que = 1
+                if len(mod_referencias) > totaliza_mais_que:
                     refs = [row['referencia'] for row in mod_referencias
                             if row['grade_tipo'] == 'PA/PG']
 
-                if len(refs) > 1:
+                if len(refs) > totaliza_mais_que:
                     dispon_modelo = models.grade_solicitacao(
                         cursor_def, refs, tipo='i-sp',
                         grade_inventario=True)
-                    grade_ref = {
-                        'ref': '',
-                        'tipo': 'PA/PG',
-                        'titulo': 'Total disponível',
-                        'inventario': dispon_modelo,
-                    }
-                    grades_ref.append(grade_ref)
+                    if dispon_modelo['total'] != 0:
+                        grade_ref = {
+                            'ref': '',
+                            'tipo': 'PA/PG',
+                            'titulo': 'Total disponível',
+                            'inventario': dispon_modelo,
+                        }
+                        if totais:
+                            grade_ref.update({'refnum': modelo})
+                        grades_ref.append(grade_ref)
             context.update({
                 'grades': grades_ref,
                 'modelos': modelos,
