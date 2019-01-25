@@ -612,3 +612,49 @@ class OpPerda(View):
                 cursor, data_de, data_ate, detalhe))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class ListaLotes(View):
+
+    def __init__(self):
+        self.Form_class = forms.OpForm
+        self.template_name = 'lotes/lista_lotes.html'
+        self.title_name = 'Lista lotes de OP'
+
+    def mount_context(self, cursor, op):
+        context = {'op': op}
+
+        data = models.base.get_lotes(cursor, op=op, order='o')
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Sem lotes',
+            })
+            return context
+        # colunas OP, Referência, Cor, Tamanho, Período, OC, Quant.)
+        for row in data:
+            row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+        context.update({
+            'headers': ('OP', 'Rerefência', 'Tamanho', 'Cor', 'Período', 'OC',
+                        'Quantidade'),
+            'fields': ('OP', 'REF', 'TAM', 'COR', 'PERIODO', 'OC', 'QTD'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            op = form.cleaned_data['op']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, op))
+        context['form'] = form
+        return render(request, self.template_name, context)
