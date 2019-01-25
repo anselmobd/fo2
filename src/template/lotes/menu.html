@@ -1,37 +1,37 @@
 <ul>
-  <li><a href="/lotes/posicao/">Lote</a></li>
-  <li><a href="/lotes/op/">OP</a></li>
+  <li><a href="{% url 'producao:posicao' %}">Lote</a></li>
+  <li><a href="{% url 'producao:op' %}">OP</a></li>
   <ul>
-    <li><a href="/lotes/busca_op/">Busca OP</a></li>
-    <li><a href="/lotes/op_caixa/">Lista caixas de OP</a></li>
-    <li><a href="/lotes/componentes_de_op/">Produtos componentes de OP</a></li>
+    <li><a href="{% url 'producao:busca_op' %}">Busca OP</a></li>
+    <li><a href="{% url 'producao:op_caixa' %}">Lista caixas de OP</a></li>
+    <li><a href="{% url 'producao:componentes_de_op' %}">Produtos componentes de OP</a></li>
   </ul>
-  <li><a href="/lotes/os/">OS</a></li>
-  <li><a href="/lotes/pedido/">Pedido</a></li>
+  <li><a href="{% url 'producao:os' %}">OS</a></li>
+  <li><a href="{% url 'producao:pedido' %}">Pedido</a></li>
   <ul>
-    <li><a href="/lotes/expedicao/">Expedição</a></li>
+    <li><a href="{% url 'producao:expedicao' %}">Expedição</a></li>
   </ul>
-  <li><a href="/lotes/respons/">Responsável por estágio</a></li>
+  <li><a href="{% url 'producao:respons' %}">Responsável por estágio</a></li>
   <li><a href="{% url 'producao:distribuicao' %}">Distribuição Tecelagem</a></li>
   <li><a href="{% url 'producao:conserto' %}">Produtos em conserto</a></li>
   <li><a href="{% url 'producao:perda' %}">Perdas de produção</a></li>
   <br />
   <li>Análise</li>
   <ul>
-    <li><a href="/lotes/an_dtcorte_alter/">Produção por data de corte e alternativa</a></li>
-    <li><a href="/lotes/an_periodo_alter/">Produção por período e alternativa</a></li>
-    <li><a href="/lotes/op_pendente/">Ordens pendentes por estágio</a></li>
+    <li><a href="{% url 'producao:an_dtcorte_alter' %}">Produção por data de corte e alternativa</a></li>
+    <li><a href="{% url 'producao:an_periodo_alter' %}">Produção por período e alternativa</a></li>
+    <li><a href="{% url 'producao:op_pendente' %}">Ordens pendentes por estágio</a></li>
   </ul>
   <br />
   <li>Impressão</li>
   <ul>
-    <li><a href="/lotes/imprime_lotes/">Cartela de lote</a></li>
-    <li><a href="/lotes/imprime_pacote3lotes/">Etiqueta de caixa de <i>n</i> lotes</a></li>
+    <li><a href="{% url 'producao:imprime_lotes' %}">Cartela de lote</a></li>
+    <li><a href="{% url 'producao:imprime_pacote3lotes' %}">Etiqueta de caixa de <i>n</i> lotes</a></li>
     <li><a href="{% url 'producao:imprime_tag' %}">TAG</a></li>
     <!-- {% if request.user.is_authenticated %}
       <li>Tabelas de configuração</li>
       <ul>
-        <li><a href="/lotes/impressora_termica/">Impressora térmica</a></li>
+        <li><a href="{% url 'producao:impressora_termica' %}">Impressora térmica</a></li>
       </ul>
     {% endif %} -->
   </ul>
