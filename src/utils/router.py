@@ -13,12 +13,16 @@ class Router(object):
         return 'default'
 
     def allow_relation(self, obj1, obj2, **hints):
-        if obj1._meta.app_label == 'systextil' or \
+        if obj1._meta.app_label == 'systextil' and \
            obj2._meta.app_label == 'systextil':
-            return False
-        return True
+            return True
+        elif 'systextil' not in [obj1._meta.app_label, obj2._meta.app_label]:
+            return None
+        return False
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         if app_label == 'systextil':
+            return db == 'so'
+        elif db == 'so':
             return False
-        return True
+        return None
