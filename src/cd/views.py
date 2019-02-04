@@ -1247,18 +1247,17 @@ class Grade(View):
     def mount_context(self, request, ref, exec, page=1, detalhe=False):
         modelos_pagina = 5
         sel_modelos = []
-        exec = ''
 
         if ref == '':
             exec = 'busca'
+        else:
+            if ref[0] == '_':
+                sel_modelos = ref[1:].split('_')
+                ref = 'totais'
         todas = ref == 'todas'
         if todas:
             ref = ''
             exec = 'grade'
-        if exec == '':
-            if ref[0] == '_':
-                sel_modelos = ref[1:].split('_')
-                ref = 'totais'
         totais = ref == 'totais'
         if totais:
             ref = ''
@@ -1316,7 +1315,7 @@ class Grade(View):
                 referencias = [row for row in refs_copy
                                if str(row['modelo']) in sel_modelos]
 
-            if refnum == 0:  # Todos ou Totais
+            if refnum == 0:  # Todos ou Totais ou busca vazio
                 for row in referencias:
                     row['referencia|LINK'] = reverse(
                         'cd_grade_estoque', args=[row['referencia']])
@@ -1355,7 +1354,7 @@ class Grade(View):
                     for ref in referencias:
                         if ref['modelo'] not in modelos:
                             modelos.append(ref['modelo'])
-            else:  # Modelo
+            else:  # Modelo ou busca
                 referencias = [
                     {'referencia': row['referencia'],
                      'modelo': refnum,
@@ -1372,6 +1371,7 @@ class Grade(View):
                 referencias = sorted(
                     referencias, key=lambda k: (
                         k['ordem_tipo'], k['referencia']))
+
                 if exec == 'busca':
                     context.update({
                         'link_tot': 1,
@@ -1485,6 +1485,7 @@ class Grade(View):
 
                         grade_ref = {
                             'ref': '',
+                            'refnum': row['modelo'],
                             'tipo': 'PA/PG',
                             'titulo': 'Total disponível',
                             'inventario': dispon_modelo,
