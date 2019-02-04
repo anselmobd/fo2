@@ -1,0 +1,132 @@
+{% if exec != 'totais' %}
+  {% if link_tot %}
+    <h4><a href="{% url 'cd_grade_estoque' 'todas' %}">Todas as grades por referência</a>&nbsp;-&nbsp;<a target="_blank" href="{% url 'cd_grade_estoque' 'totais' %}">Total disponível de PA/PG por modelo (número)</a></h4>
+  {% endif %}
+{% else %}
+  <div class="limpa">
+    <a hfer="%" onclick="$('a').contents().unwrap(); $('.limpa').remove();">Limpa para salvar</a><br />
+  </div>
+{% endif %}
+{% if grades %}
+  {% if modelos.paginator %}
+    {% if modelos.paginator.num_pages != 1 %}
+      ({{modelos_pagina}} referências numéricas por página)<br/>
+    {% endif %}
+    {% include "cd/grade_estoque_paginator.html" with modelos_pagina=modelos_pagina modelos=modelos only %}
+  {% endif %}
+  {% for grade in grades %}
+    <div class="mod_{{ grade.refnum|safe }}">
+    {% if link_num %}
+      {% if grade.refnum %}
+        {% if link_num_hr and exec != 'totais' %}
+          <hr>
+        {% endif %}
+        {% if exec == 'totais' %}
+          <h4 style="padding-left: 2em;">Referência numérica: <b><a ref="%" onclick="$('.mod_{{ grade.refnum|safe }}').remove();">{{ grade.refnum }}</a></b></h4>
+        {% else %}
+          <h4 style="padding-left: 2em;">Referência numérica: <b><a href="{% url 'cd_grade_estoque' grade.refnum %}">{{ grade.refnum }}</a></b></h4>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+    {% if title_tipo and exec != 'totais' %}
+      {% if grade.tipo %}
+        {% if title_tipo_hr and exec != 'totais' %}
+          <hr style="margin-left: 3em;">
+        {% endif %}
+        <h4 style="padding-left: 4em;">Tipo: <b>{{ grade.tipo }}</b></h4>
+      {% endif %}
+    {% endif %}
+    {% if grade.ref %}
+      {% if title_ref %}
+        <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
+      {% endif %}
+      {% if link_ref %}
+        <h4 style="padding-left: 6em;">Referência: <b><a href="{% url 'cd_grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
+      {% endif %}
+    {% endif %}
+    <table>
+      <tr>
+        {% if grade.solped %}
+          <td style="vertical-align: top;">
+            <h4>Disponível</h4>
+            <table style="width: auto;">
+              {% include "layout/thead_generic.html" with data=grade.disponivel.headers style=grade.disponivel.style only %}
+              {% include "layout/tbody_generic.html" with fields=grade.disponivel.fields data=grade.disponivel.data group=grade.disponivel.group style=grade.disponivel.style only %}
+            </table>
+          </td>
+          <td>&nbsp;</td>
+          <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+          <td style="vertical-align: top;">
+            {% if detalhe %}
+              <h4>Solicitações+Pedidos</h4>
+            {% else %}
+              <h4><a href="{% url 'cd_grade_estoque_detalhe' grade.ref 'detalhe' %}">Solicitações+Pedidos</a></h4>
+            {% endif%}
+            <table style="width: auto;">
+              {% include "layout/thead_generic.html" with data=grade.solped.headers style=grade.solped.style only %}
+              {% include "layout/tbody_generic.html" with fields=grade.solped.fields data=grade.solped.data group=grade.solped.group style=grade.solped.style only %}
+            </table>
+          </td>
+          {% if grade.solicitacoes %}
+            <td>&nbsp;</td>
+            <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+            <td style="vertical-align: top;">
+              <h4>Solicitações</h4>
+              <table style="width: auto;">
+                {% include "layout/thead_generic.html" with data=grade.solicitacoes.headers style=grade.solicitacoes.style only %}
+                {% include "layout/tbody_generic.html" with fields=grade.solicitacoes.fields data=grade.solicitacoes.data group=grade.solicitacoes.group style=grade.solicitacoes.style only %}
+              </table>
+            </td>
+          {% endif %}
+          {% if grade.pedido %}
+            <td>&nbsp;</td>
+            <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+            <td style="vertical-align: top;">
+              <h4>Pedido</h4>
+              <table style="width: auto;">
+                {% include "layout/thead_generic.html" with data=grade.pedido.headers style=grade.pedido.style only %}
+                {% include "layout/tbody_generic.html" with fields=grade.pedido.fields data=grade.pedido.data group=grade.pedido.group style=grade.pedido.style only %}
+              </table>
+            </td>
+          {% endif %}
+          <td>&nbsp;</td>
+          <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+          <td style="vertical-align: top;">
+            <h4>Inventário</h4>
+            <table style="width: auto;">
+              {% include "layout/thead_generic.html" with data=grade.inventario.headers style=grade.inventario.style only %}
+              {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group style=grade.inventario.style only %}
+            </table>
+          </td>
+        {% else %}
+          <td style="vertical-align: top;">
+            {% if grade.titulo %}
+              <h4>{{ grade.titulo }}</h4>
+            {% else %}
+              <h4>Disponível = Inventário</h4>
+            {% endif %}
+            <table style="width: auto;">
+              {% include "layout/thead_generic.html" with data=grade.inventario.headers style=grade.inventario.style only %}
+              {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group style=grade.inventario.style only %}
+            </table>
+          </td>
+        {% endif %}
+      </tr>
+    </table>
+    </div>
+  {% endfor %}
+  {% if modelos.paginator %}
+    {% include "cd/grade_estoque_paginator.html" with modelos_pagina=modelos_pagina modelos=modelos only %}
+  {% endif %}
+{% endif %}
+{% if data %}
+  {% if link_num %}
+    {% if refnum %}
+      <h4>Grades da referência numérica: <b><a href="{% url 'cd_grade_estoque' refnum %}">{{ refnum }}</a></b></h4>
+    {% endif %}
+  {% endif %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data group=group only %}
+  </table>
+{% endif %}
