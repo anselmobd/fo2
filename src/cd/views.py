@@ -1261,8 +1261,13 @@ class Grade(View):
         context = {
             'ref': ref,
             'refnum': refnum,
-            'detalhe': detalhe, }
+            'detalhe': detalhe,
+            'exec': exec,
+        }
         cursor_def = connection.cursor()
+
+        if totais:
+            self.template_name = 'cd/grade_estoque_totais.html'
 
         if len(ref) == 5:  # Referência
             context.update({
@@ -1450,6 +1455,15 @@ class Grade(View):
                 if len(refs) > totaliza_mais_que:
                     dispon_modelo = models.grade_solicitacao(
                         cursor_def, refs, tipo='i-sp')
+                    if totais:  # se for totais adiciona borda entre as colunas
+                        for i in range(1, len(dispon_modelo['fields'])):
+                            i_column = i + 1
+                            ori_style = ''
+                            if i_column in dispon_modelo['style']:
+                                ori_style = dispon_modelo['style'][i_column]
+                            dispon_modelo['style'][i_column] = ori_style + \
+                                'border-left-style: solid;' \
+                                'border-left-width: thin;'
                     if dispon_modelo['total'] != 0:
                         grade_ref = {
                             'ref': '',
