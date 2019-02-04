@@ -1,0 +1,81 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
+
+  <title>{% block title %}
+  {% block title.pre %}Fo2 - {% endblock title.pre %}{% block title.content %}
+  {% endblock title.content %}{% block title.pos %} - Tussor (cuecas D`UOMO){% endblock title.pos %}
+  {% endblock title %}</title>
+
+  <!--Chart.js-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js" integrity="sha256-N4u5BjTLNwmGul6RgLoESPNqDFVUibVuOYhP4gJgrew=" crossorigin="anonymous"></script>
+
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Bootstrap -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- Base CSS -->
+  <link href="{% static "css/base.css" %}" rel="stylesheet">
+
+  {% block stylesheet %}{% endblock %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+
+</head>
+<body>
+  <main>
+    <div class="container-fluid">
+      {% block content %}
+      {% include "cd/grade_estoque_conteudo.html" %}
+      {% endblock %}
+    </div>
+  </main>
+  {% block footer %}{% endblock %}
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> -->
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- <script src="js/bootstrap.min.js"></script> -->
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+  {% block javascript %}{% endblock %}
+  <script>
+    var FIREFOX = /Firefox/i.test(navigator.userAgent);
+
+    if (FIREFOX) {
+      var monkey = document.getElementById("greasymonkeyverify");
+    } else {
+      var monkey = document.getElementById("tampermonkeyverify");
+    }
+    monkey.style.display="inline";
+
+    function s_show() {
+      monkey.getElementsByClassName('icon')[0].style.display="none";
+      monkey.getElementsByClassName('content')[0].style.display="inline";
+    }
+
+    function s_hide() {
+      monkey.getElementsByClassName('icon')[0].style.display="inline";
+      monkey.getElementsByClassName('content')[0].style.display="none";
+    }
+
+  </script>
+  {% block footer_space %}<p>&nbsp;</p>{% endblock %}
+</body>
+</html>
