@@ -1246,16 +1246,24 @@ class Grade(View):
 
     def mount_context(self, request, ref, exec, page=1, detalhe=False):
         modelos_pagina = 5
+        sel_modelos = []
+        exec = ''
+
         if ref == '':
             exec = 'busca'
         todas = ref == 'todas'
         if todas:
             ref = ''
             exec = 'grade'
+        if exec == '':
+            if ref[0] == '_':
+                sel_modelos = ref[1:].split('_')
+                ref = 'totais'
         totais = ref == 'totais'
         if totais:
             ref = ''
             exec = 'totais'
+
         refnum = int('0{}'.format(
             ''.join([c for c in ref if c.isdigit()])))
         context = {
@@ -1297,11 +1305,16 @@ class Grade(View):
             ).exclude(
                 qtd__lte=0)
 
-            referencias = data_rec.values(
-                'referencia').distinct().order_by('referencia')
+            referencias = data_rec.distinct().values(
+                'referencia').order_by('referencia')
             for row in referencias:
                 row['modelo'] = int(
                     ''.join([c for c in row['referencia'] if c.isdigit()]))
+
+            if len(sel_modelos) > 0:
+                refs_copy = referencias[:]
+                referencias = [row for row in refs_copy
+                               if str(row['modelo']) in sel_modelos]
 
             if refnum == 0:  # Todos ou Totais
                 for row in referencias:
@@ -1400,6 +1413,7 @@ class Grade(View):
                     mod_referencias_todos = mod_referencias
                 for row in mod_referencias_todos:
                     ref = row['referencia']
+
                     invent_ref = models.grade_solicitacao(
                         cursor_def, ref, tipo='i', grade_inventario=True)
                     grade_ref = {
@@ -1455,16 +1469,20 @@ class Grade(View):
                 if len(refs) > totaliza_mais_que:
                     dispon_modelo = models.grade_solicitacao(
                         cursor_def, refs, tipo='i-sp')
-                    if totais:  # se for totais adiciona borda entre as colunas
-                        for i in range(1, len(dispon_modelo['fields'])):
-                            i_column = i + 1
-                            ori_style = ''
-                            if i_column in dispon_modelo['style']:
-                                ori_style = dispon_modelo['style'][i_column]
-                            dispon_modelo['style'][i_column] = ori_style + \
-                                'border-left-style: solid;' \
-                                'border-left-width: thin;'
                     if dispon_modelo['total'] != 0:
+
+                        if totais:  # se for totais add borda entre as colunas
+                            for i in range(1, len(dispon_modelo['fields'])):
+                                i_column = i + 1
+                                ori_style = ''
+                                if i_column in dispon_modelo['style']:
+                                    ori_style = dispon_modelo[
+                                        'style'][i_column]
+                                dispon_modelo['style'][i_column] = \
+                                    ori_style + \
+                                    'border-left-style: solid;' \
+                                    'border-left-width: thin;'
+
                         grade_ref = {
                             'ref': '',
                             'tipo': 'PA/PG',
@@ -1472,8 +1490,35 @@ class Grade(View):
                             'inventario': dispon_modelo,
                         }
                         if totais:
+                            grade_ref.update({'titulo': '-'})
                             grade_ref.update({'refnum': modelo})
                         grades_ref.append(grade_ref)
+
+            if totais:
+                refs = [row['referencia'] for row in referencias
+                        if row['grade_tipo'] == 'PA/PG']
+                dispon_sel_modelo = models.grade_solicitacao(
+                    cursor_def, refs, tipo='i-sp')
+
+                for i in range(1, len(dispon_sel_modelo['fields'])):
+                    i_column = i + 1
+                    ori_style = ''
+                    if i_column in dispon_sel_modelo['style']:
+                        ori_style = dispon_sel_modelo[
+                            'style'][i_column]
+                    dispon_sel_modelo['style'][i_column] = \
+                        ori_style + \
+                        'border-left-style: solid;' \
+                        'border-left-width: thin;'
+                grade_ref = {
+                    'ref': '',
+                    'tipo': 'PA/PG',
+                    'titulo': '-',
+                    'inventario': dispon_sel_modelo,
+                }
+                grade_ref.update({'refnum': 'TOTAL'})
+                grades_ref.append(grade_ref)
+
             context.update({
                 'grades': grades_ref,
                 'modelos': modelos,

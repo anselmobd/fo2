@@ -4,7 +4,9 @@
   {% endif %}
 {% else %}
   <div class="limpa">
-    <a hfer="%" onclick="$('a').contents().unwrap(); $('.limpa').remove();">Limpa para salvar</a><br />
+    <a href="{% url 'cd_grade_estoque' 'totais' %}">Reiniciar</a>&nbsp;|&nbsp;
+    <a href="#" onclick="recalcula_total(); return false;">Recalcular</a>&nbsp;|&nbsp;
+    <a href="#" onclick="$('a').contents().unwrap(); $('.limpa').remove(); return false;">Limpa para salvar</a><br />
   </div>
 {% endif %}
 {% if grades %}
@@ -16,13 +18,26 @@
   {% endif %}
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
+      {% if grade.refnum != 'TOTAL' %}
+        <div class="div_func" onclick="func_{{ grade.refnum|safe }}();">
+          <script>
+            function func_{{ grade.refnum|safe }}() {
+              $("#sel_modelos").append("_{{ grade.refnum|safe }}");
+            };
+          </script>
+        </div>
+      {% endif %}
     {% if link_num %}
       {% if grade.refnum %}
         {% if link_num_hr and exec != 'totais' %}
           <hr>
         {% endif %}
         {% if exec == 'totais' %}
-          <h4 style="padding-left: 2em;">Referência numérica: <b><a ref="%" onclick="$('.mod_{{ grade.refnum|safe }}').remove();">{{ grade.refnum }}</a></b></h4>
+          {% if grade.refnum == 'TOTAL' %}
+            <h4 style="padding-left: 2em;"><b>Total das grades acima</b></h4>
+          {% else %}
+            <h4 style="padding-left: 2em;">Referência numérica: <b><a href="#" onclick="$('.mod_{{ grade.refnum|safe }}').remove(); $('.mod_TOTAL').remove(); return false;">{{ grade.refnum }}</a></b></h4>
+          {% endif %}
         {% else %}
           <h4 style="padding-left: 2em;">Referência numérica: <b><a href="{% url 'cd_grade_estoque' grade.refnum %}">{{ grade.refnum }}</a></b></h4>
         {% endif %}
@@ -101,7 +116,9 @@
         {% else %}
           <td style="vertical-align: top;">
             {% if grade.titulo %}
-              <h4>{{ grade.titulo }}</h4>
+              {% if grade.titulo != '-' %}
+                <h4>{{ grade.titulo }}</h4>
+              {% endif %}
             {% else %}
               <h4>Disponível = Inventário</h4>
             {% endif %}
@@ -129,4 +146,13 @@
     {% include "layout/thead_generic.html" with data=headers only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group only %}
   </table>
+{% endif %}
+{% if exec == 'totais' %}
+  <span id="sel_modelos" style="display:none;"></span>
+  <script>
+    function recalcula_total() {
+      $('.div_func').click();
+      window.open("{% url 'cd_grade_estoque' %}"+$("#sel_modelos").text(), "_self");
+    }
+  </script>
 {% endif %}
