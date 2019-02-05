@@ -78,10 +78,18 @@ class Pedido(View):
             # Grade
             g_header, g_fields, g_data = models.ped_sortimento(cursor, pedido)
             if len(g_data) != 0:
+                g_style = {}
+                for i in range(1, len(g_fields)):
+                    i_column = i + 1
+                    g_style[i_column] = \
+                        'border-left-style: solid;' \
+                        'border-left-width: thin;'
+
                 context.update({
                     'g_headers': g_header,
                     'g_fields': g_fields,
                     'g_data': g_data,
+                    'g_style': g_style,
                 })
 
         return context
