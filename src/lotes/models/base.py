@@ -25,7 +25,8 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
     # order by
     if order == 'o':  # OC
         sql_order = '''ORDER BY
-              l.ORDEM_CONFECCAO'''
+              l.PERIODO_PRODUCAO
+            , l.ORDEM_CONFECCAO'''
     elif order == 't':  # OS + referência + tamanho + cor + OC
         sql_order = '''ORDER BY
               l.ORDEM_PRODUCAO
