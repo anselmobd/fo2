@@ -64,6 +64,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         pula_lote = ultimo != ''
         data = []
         for row in l_data:
+            row['num_lote'] = '{}/{}'.format(row['nlote'], row['totlotes'])
             row['datahora'] = format(datetime.now(), '%d/%m/%y %H:%M')
             row['qtdtot'] = None
             row['parcial'] = None
@@ -156,10 +157,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
             'oc_final': oc_final,
             'headers': ('Tamanho', 'Cor', 'Narrativa',
                         'Período', 'OC', '1º', 'Quant.',
-                        'Lote', 'Estágio', 'Unidade'),
+                        'Lote', 'Estágio', 'Unidade', '#'),
             'fields': ('tam', 'cor', 'narrativa',
                        'periodo', 'oc', 'prim', 'qtd_tela',
-                       'lote', 'est', 'descricao_divisao'),
+                       'lote', 'est', 'descricao_divisao', 'num_lote'),
             'data': data,
         })
 
