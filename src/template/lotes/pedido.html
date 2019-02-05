@@ -42,9 +42,9 @@
 {% endif %}
 {% if g_data %}
   <h3>Grade de produtos do pedido</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=g_headers only %}
-    {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
+  <table style="width: auto;">
+    {% include "layout/thead_generic.html" with data=g_headers style=g_style only %}
+    {% include "layout/tbody_generic.html" with fields=g_fields data=g_data style=g_style only %}
   </table>
 {% endif %}
 {% endblock %}
