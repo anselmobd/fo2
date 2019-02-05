@@ -124,6 +124,30 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           ) QUANTS
         , l.PERIODO_PRODUCAO PERIODO
         , l.ORDEM_CONFECCAO OC
+        , ( SELECT
+              count(*)
+            FROM (
+              SELECT DISTINCT
+                l_n.PERIODO_PRODUCAO
+              , l_n.ORDEM_CONFECCAO
+              , l_n.ORDEM_PRODUCAO
+              FROM PCPC_040 l_n
+            ) l_nn
+            WHERE l_nn.PERIODO_PRODUCAO <= l.PERIODO_PRODUCAO
+              AND l_nn.ORDEM_CONFECCAO <= l.ORDEM_CONFECCAO
+              AND l_nn.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+          ) NLOTE
+        , ( SELECT
+              count(*)
+            FROM (
+              SELECT DISTINCT
+                l_t.PERIODO_PRODUCAO
+              , l_t.ORDEM_CONFECCAO
+              , l_t.ORDEM_PRODUCAO
+              FROM PCPC_040 l_t
+            ) l_tt
+            WHERE l_tt.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+          ) TOTLOTES
         , l.QTDE_PECAS_PROG QTD
         , l.QTDE_PECAS_PROD PROD1Q
         , l.QTDE_CONSERTO CONSERTO
