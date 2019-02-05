@@ -631,13 +631,17 @@ class ListaLotes(View):
             })
             return context
         # colunas OP, Referência, Cor, Tamanho, Período, OC, Quant.)
+        i = 1
         for row in data:
+            row['N'] = '{}/{}'.format(i, len(data))
+            i += 1
             row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
         context.update({
             'headers': ('OP', 'Rerefência', 'Tamanho', 'Cor', 'Período', 'OC',
-                        'Quantidade'),
-            'fields': ('OP', 'REF', 'TAM', 'COR', 'PERIODO', 'OC', 'QTD'),
+                        'Quantidade', '#'),
+            'fields': ('OP', 'REF', 'TAM', 'COR', 'PERIODO', 'OC',
+                       'QTD', 'N'),
             'data': data,
         })
 
