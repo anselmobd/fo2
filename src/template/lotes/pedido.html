@@ -27,6 +27,12 @@
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
   </table>
 {% endif %}
+{% if data2 %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers2 only %}
+    {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
+  </table>
+{% endif %}
 {% if o_data %}
 <h3>OP do pedido</h3>
   <table>

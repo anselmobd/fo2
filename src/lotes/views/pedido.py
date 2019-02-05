@@ -34,14 +34,17 @@ class Pedido(View):
                     row['OBSERVACAO'] = '-'
             context.update({
                 'headers': ('Data de emissão', 'Data de embarque',
-                            'Cliente', 'Código do pedido no cliente',
-                            'Status do pedido', 'Situação da venda',
-                            'Observação'),
+                            'Cliente', 'Código do pedido no cliente'),
                 'fields': ('DT_EMISSAO', 'DT_EMBARQUE',
-                           'CLIENTE', 'PEDIDO_CLIENTE',
-                           'STATUS_PEDIDO', 'SITUACAO_VENDA',
-                           'OBSERVACAO'),
+                           'CLIENTE', 'PEDIDO_CLIENTE'),
                 'data': data,
+            })
+            context.update({
+                'headers2': ('Status do pedido', 'Situação da venda',
+                             'Observação'),
+                'fields2': ('STATUS_PEDIDO', 'SITUACAO_VENDA',
+                            'OBSERVACAO'),
+                'data2': data,
             })
 
             # OPs
