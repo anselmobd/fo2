@@ -9,6 +9,20 @@ def ped_inform(cursor, pedido):
     sql = """
         SELECT
           ped.PEDIDO_VENDA
+        , COALESCE(
+            ( SELECT
+                LISTAGG(i.CODIGO_DEPOSITO, ', ')
+                WITHIN GROUP (ORDER BY i.CODIGO_DEPOSITO)
+              FROM (
+                SELECT DISTINCT
+                  ii.CODIGO_DEPOSITO
+                , ii.PEDIDO_VENDA
+                FROM PEDI_110 ii
+              ) i
+              WHERE i.PEDIDO_VENDA = ped.PEDIDO_VENDA
+            )
+          , ' '
+          ) DEPOSITO
         , ped.DATA_EMIS_VENDA DT_EMISSAO
         , ped.DATA_PREV_RECEB DT_RECEBIMENTO
         , ped.DATA_ENTR_VENDA DT_EMBARQUE
