@@ -208,6 +208,7 @@ def aniversariantes(request, *args, **kwargs):
     aniversariantes = [
         ['27/08', 'Arnaldo Silva da Costa', 'Logística'],
         ['03/10', 'Anselmo Blanco Dominguez', 'TI'],
+        ['17/02', 'Antonio Ricardo Maganhães Moraes', 'Diretor'],
     ]
 
     anteriormes = inc_month(datames, -1)
