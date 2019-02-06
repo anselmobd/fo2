@@ -151,6 +151,7 @@ class Expedicao(View):
             pedido_cliente=pedido_cliente,
             cliente=cliente,
             detalhe=detalhe,
+            deposito=deposito,
         )
         if len(data) == 0:
             context.update({
