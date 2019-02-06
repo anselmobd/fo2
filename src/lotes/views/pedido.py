@@ -162,6 +162,8 @@ class Expedicao(View):
         for row in data:
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
+            row['PEDIDO_VENDA|LINK'] = reverse(
+                'producao:pedido__get', args=[row['PEDIDO_VENDA']])
 
         group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
                  'DT_EMISSAO', 'DT_EMBARQUE',
