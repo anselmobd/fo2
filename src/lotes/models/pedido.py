@@ -163,7 +163,7 @@ def ped_sortimento(cursor, pedido):
 def ped_expedicao(
         cursor, embarque_de='', embarque_ate='',
         pedido_tussor='', pedido_cliente='',
-        cliente='', detalhe='r'):
+        cliente='', deposito='-', detalhe='r'):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -194,6 +194,12 @@ def ped_expedicao(
               || '-' || lpad(c.CGC_2, 2, '0')
               || ')' like '%{}%' '''.format(cliente)
 
+    filtro_deposito = ''
+    if deposito != '-':
+        filtro_cliente = '''--
+            AND i.CODIGO_DEPOSITO = '{}'
+            '''.format(deposito)
+
     sql = """
         SELECT
           ped.PEDIDO_VENDA
@@ -207,6 +213,7 @@ def ped_expedicao(
           || ')' CLIENTE
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
         , i.CD_IT_PE_GRUPO REF
+        , i.CODIGO_DEPOSITO DEPOSITO
     """
     if detalhe == 'c':
         sql += """
@@ -232,6 +239,7 @@ def ped_expedicao(
           {filtro_pedido_tussor} -- filtro_pedido_tussor
           {filtro_pedido_cliente} -- filtro_pedido_cliente
           {filtro_cliente} -- filtro_cliente
+          {filtro_deposito} -- filtro_deposito
         GROUP BY
           ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA
@@ -243,6 +251,7 @@ def ped_expedicao(
         , c.CGC_2
         , ped.COD_PED_CLIENTE
         , i.CD_IT_PE_GRUPO
+        , i.CODIGO_DEPOSITO
     """
     if detalhe == 'c':
         sql += """
@@ -267,6 +276,7 @@ def ped_expedicao(
         filtro_pedido_tussor=filtro_pedido_tussor,
         filtro_pedido_cliente=filtro_pedido_cliente,
         filtro_cliente=filtro_cliente,
+        filtro_deposito=filtro_deposito,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
