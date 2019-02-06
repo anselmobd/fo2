@@ -6,8 +6,8 @@
   {% if not limpo %}
     <div class="limpa">
       <a href="{% url 'cd_grade_estoque' 'totais' %}">Reiniciar</a>&nbsp;|&nbsp;
-      <a href="#" onclick="recalcula_total(); return false;">Recalcular</a>&nbsp;|&nbsp;
-      <a href="#" onclick="window.location.href=window.location.href+'?limpo=S'; return false;">Limpa para salvar</a><br />
+      <a href="#" onclick="recalcula_total(false); return false;">Recalcular</a>&nbsp;|&nbsp;
+      <a href="#" onclick="recalcula_total(true); return false;">Limpa para salvar</a><br />
     </div>
   {% endif %}
 {% endif %}
@@ -156,9 +156,13 @@
 {% if exec == 'totais' %}
   <span id="sel_modelos" style="display:none;"></span>
   <script>
-    function recalcula_total() {
+    function recalcula_total(limpa) {
+      var limpo = ''
+      if (limpa) {
+        limpo = '?limpo=S'
+      }
       $('.div_func').click();
-      window.open("{% url 'cd_grade_estoque' %}"+$("#sel_modelos").text(), "_self");
+      window.open("{% url 'cd_grade_estoque' %}"+$("#sel_modelos").text()+limpo, "_self");
     }
   </script>
 {% endif %}
