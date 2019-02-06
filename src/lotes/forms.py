@@ -352,8 +352,8 @@ class ExpedicaoForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     CHOICES = [('-', 'Todos os Depósitos'),
-               ('101', 'PA Atacado'),
-               ('102', 'PA Varejo')]
+               ('101', '101-PA Atacado'),
+               ('102', '102-PA Varejo')]
     deposito = forms.ChoiceField(
         label='Depósito', choices=CHOICES, initial='-')
 
