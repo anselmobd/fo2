@@ -1244,7 +1244,7 @@ class Grade(View):
             value = ('MD', 3, 'MD')
         return dict(zip(('tipo', 'ordem', 'grade'), value))
 
-    def mount_context(self, request, ref, exec, page=1, detalhe=False):
+    def mount_context(self, request, ref, exec, limpo, page=1, detalhe=False):
         modelos_pagina = 5
         sel_modelos = []
 
@@ -1271,6 +1271,9 @@ class Grade(View):
             'detalhe': detalhe,
             'exec': exec,
         }
+        if limpo:
+            context['limpo'] = True
+
         cursor_def = connection.cursor()
 
         if totais:
@@ -1530,6 +1533,7 @@ class Grade(View):
 
     def get(self, request, *args, **kwargs):
         page = request.GET.get('page', 1)
+        limpo = request.GET.get('limpo', 'N') == 'S'
         if 'referencia' in kwargs and kwargs['referencia'] is not None:
             ref = kwargs['referencia']
         else:
@@ -1539,7 +1543,7 @@ class Grade(View):
         else:
             detalhe = False
         context = {'titulo': self.title_name}
-        data = self.mount_context(request, ref, 'grade', page, detalhe)
+        data = self.mount_context(request, ref, 'grade', limpo, page, detalhe)
         context.update(data)
         form = self.Form_class()
         context['form'] = form

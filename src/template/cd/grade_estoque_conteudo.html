@@ -3,11 +3,13 @@
     <h4><a href="{% url 'cd_grade_estoque' 'todas' %}">Todas as grades por referência</a>&nbsp;-&nbsp;<a target="_blank" href="{% url 'cd_grade_estoque' 'totais' %}">Total disponível de PA/PG por modelo (número)</a></h4>
   {% endif %}
 {% else %}
-  <div class="limpa">
-    <a href="{% url 'cd_grade_estoque' 'totais' %}">Reiniciar</a>&nbsp;|&nbsp;
-    <a href="#" onclick="recalcula_total(); return false;">Recalcular</a>&nbsp;|&nbsp;
-    <a href="#" onclick="$('a').contents().unwrap(); $('.limpa').remove(); return false;">Limpa para salvar</a><br />
-  </div>
+  {% if not limpo %}
+    <div class="limpa">
+      <a href="{% url 'cd_grade_estoque' 'totais' %}">Reiniciar</a>&nbsp;|&nbsp;
+      <a href="#" onclick="recalcula_total(); return false;">Recalcular</a>&nbsp;|&nbsp;
+      <a href="#" onclick="window.location.href=window.location.href+'?limpo=S'; return false;">Limpa para salvar</a><br />
+    </div>
+  {% endif %}
 {% endif %}
 {% if grades %}
   {% if modelos.paginator %}
@@ -36,7 +38,11 @@
           {% if grade.refnum == 'TOTAL' %}
             <h4 style="padding-left: 2em;"><b>Total das grades acima</b></h4>
           {% else %}
-            <h4 style="padding-left: 2em;">Referência numérica: <b><a href="#" onclick="$('.mod_{{ grade.refnum|safe }}').remove(); $('.mod_TOTAL').remove(); return false;">{{ grade.refnum }}</a></b></h4>
+            {% if limpo %}
+              <h4 style="padding-left: 2em;">Referência numérica: <b>{{ grade.refnum }}</b></h4>
+            {% else %}
+              <h4 style="padding-left: 2em;">Referência numérica: <b><a href="#" onclick="$('.mod_{{ grade.refnum|safe }}').remove(); $('.mod_TOTAL').remove(); return false;">{{ grade.refnum }}</a></b></h4>
+            {% endif %}
           {% endif %}
         {% else %}
           <h4 style="padding-left: 2em;">Referência numérica: <b><a href="{% url 'cd_grade_estoque' grade.refnum %}">{{ grade.refnum }}</a></b></h4>
