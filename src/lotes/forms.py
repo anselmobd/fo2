@@ -351,6 +351,12 @@ class ExpedicaoForm(forms.Form):
         help_text='Parte do nome ou início do CNPJ.',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    CHOICES = [('-', 'Todos os Depósitos'),
+               ('101', 'PA Atacado'),
+               ('102', 'PA Varejo')]
+    deposito = forms.ChoiceField(
+        label='Depósito', choices=CHOICES, initial='-')
+
     CHOICES = [('r', 'Por referência'),
                ('c', 'Por referência-cor-tamanho')]
     detalhe = forms.ChoiceField(
