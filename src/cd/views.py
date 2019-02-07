@@ -1554,7 +1554,7 @@ class Grade(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             ref = form.cleaned_data['ref']
-            data = self.mount_context(request, ref, 'busca')
+            data = self.mount_context(request, ref, 'busca', False)
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
