@@ -31,6 +31,14 @@ class BuscaForm(FiltroForm):
         max_length=6, required=False,
         widget=forms.TextInput())
 
+    alternativa = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    roteiro = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
     def clean_cor(self):
         cor = self.cleaned_data['cor'].upper()
         data = self.data.copy()
