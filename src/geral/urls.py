@@ -17,4 +17,6 @@ urlpatterns = [
         views.InformativoView.as_view(), name='informativo_modulo'),
 
     url(r'^pop/(?P<pop_assunto>[^/]+)/(?P<id>\d+)?$', views.pop, name='pop'),
+
+    url(r'^fluxo/$', views.gera_fluxo_dot, name='fluxo'),
 ]

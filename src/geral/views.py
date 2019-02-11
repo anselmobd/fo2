@@ -7,6 +7,8 @@ from django.views import View
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django import forms
+from django.http import HttpResponse
+from django.template import loader
 
 from fo2.models import rows_to_dict_list
 # from utils.classes import LoggedInUser
@@ -284,3 +286,573 @@ def pop(request, pop_assunto=None, id=None):
             'fields': ['descricao'],
         })
     return render(request, 'geral/pop.html', context)
+
+
+def update_dict(original, adding):
+    result = original.copy()
+    for key in adding.keys():
+        if adding[key] is None:
+            continue
+        if isinstance(adding[key], dict):
+            if key not in result or not isinstance(result[key], dict):
+                result[key] = adding[key].copy()
+            else:
+                result[key] = update_dict(result[key], adding[key])
+        else:
+            result[key] = adding[key]
+    return result
+
+
+def gera_fluxo_dot(request):
+    alternativas = {
+        1: {
+            'num': '01',
+            'descr': 'Interno'
+        },
+        11: {
+            'num': '11',
+            'descr': 'PB Interno'
+        },
+        21: {
+            'num': '21',
+            'descr': 'PG Interno'
+        },
+        31: {
+            'num': '31',
+            'descr': 'PA de PG Interno'
+        },
+        2: {
+            'num': '02',
+            'descr': 'Unidade Sem Corte'
+        },
+        12: {
+            'num': '12',
+            'descr': 'PB Unidade Sem Corte'
+        },
+        22: {
+            'num': '22',
+            'descr': 'PG Unidade Sem Corte'
+        },
+        32: {
+            'num': '32',
+            'descr': 'PA de PG Unidade Sem Corte'
+        },
+    }
+
+    roteiros = {
+        'md': {
+            1: {
+                'num': '01',
+                'descr': 'MD Interno'
+            },
+            2: {
+                'num': '02',
+                'descr': 'MD Unidade Sem Corte'
+            },
+        },
+        'pb': {
+            11: {
+                'num': '11',
+                'descr': 'PB Interno'
+            },
+            12: {
+                'num': '12',
+                'descr': 'PB Unidade Sem Corte'
+            },
+        },
+        'pg': {
+            21: {
+                'num': '21',
+                'descr': 'PG Interno'
+            },
+            22: {
+                'num': '22',
+                'descr': 'PG Unidade Sem Corte'
+            },
+        },
+        'pa': {
+            1: {
+                'num': '01',
+                'descr': 'PA Interno'
+            },
+            11: {
+                'num': '11',
+                'descr': 'PA de PB Interno'
+            },
+            21: {
+                'num': '21',
+                'descr': 'PA de PG Interno'
+            },
+            31: {
+                'num': '31',
+                'descr': 'PA de PG Interno'
+            },
+            2: {
+                'num': '02',
+                'descr': 'PA Unidade Sem Corte'
+            },
+            12: {
+                'num': '12',
+                'descr': 'PA de PB Unidade Sem Corte'
+            },
+            22: {
+                'num': '22',
+                'descr': 'PA de PG Unidade Sem Corte'
+            },
+            32: {
+                'num': '32',
+                'descr': 'PA de PG Unidade Sem Corte'
+            },
+        }
+    }
+
+    estagios = {
+        3: {
+            'num': '03',
+            'descr': 'PCP (Liberação)',
+            'deposito': '-',
+        },
+        6: {
+            'num': '06',
+            'descr': 'Risco',
+            'deposito': '-',
+        },
+        12: {
+            'num': '12',
+            'descr': 'Etiquetas',
+            'deposito': '231',
+        },
+        15: {
+            'num': '15',
+            'descr': 'Corte',
+            'deposito': '-',
+        },
+        18: {
+            'num': '18',
+            'descr': 'Separação insumo',
+            'deposito': '231',
+        },
+        21: {
+            'num': '21',
+            'descr': 'Distribuição',
+            'deposito': '-',
+        },
+        'os': {
+            'num': 'OS',
+            'descr': 'OS/NF',
+            'deposito': '',
+        },
+        24: {
+            'num': '24',
+            'descr': 'Recepção',
+            'deposito': '-',
+        },
+        33: {
+            'num': '33',
+            'descr': 'Costura Costurado',
+            'deposito': '231',
+        },
+        45: {
+            'num': '45',
+            'descr': 'Transfer / TAG',
+            'deposito': '231',
+        },
+        48: {
+            'num': '48',
+            'descr': 'Revisão',
+            'deposito': '-',
+        },
+        51: {
+            'num': '51',
+            'descr': 'CD MD',
+            'deposito': '-',
+        },
+        55: {
+            'num': '55',
+            'descr': 'Terceiro RJ',
+            'deposito': '231',
+        },
+        57: {
+            'num': '57',
+            'descr': 'Armazena',
+            'deposito': '-',
+        },
+        60: {
+            'num': '60',
+            'descr': 'Embalagem',
+            'deposito': '231',
+        },
+        63: {
+            'num': '63',
+            'descr': 'CD',
+            'deposito': '-',
+        },
+        66: {
+            'num': '66',
+            'descr': 'Expedição',
+            'deposito': '231',
+        },
+    }
+
+    fluxo_padrao_cueca = {
+        'estagios': estagios,
+        'versao_num': '19.01',
+        'versao_data': '11/02/2019',
+        'tem_mp': False,
+        'md_p_pb': {
+            'nivel': 'md',
+            'alt_incr': 0,
+            'nome': 'mdpb',
+            'cabecalho': 'MD p/ PB - <b><u>M</u></b>999*<br />'
+                         'Com acessórios (TAG)<br />para encabidar',
+        },
+        'md': {
+            'nivel': 'md',
+            'alt_incr': 0,
+            'nome': 'mdpg',
+            'cabecalho': 'MD p/ PB - <b><u>M</u></b>999<b><u>A</u></b><br />'
+                         'Sem acessórios (TAG)<br />para encabidar',
+        },
+        'pb': {
+            'nivel': 'pb',
+            'alt_incr': 10,
+            'nome': 'pb1x',
+            'cabecalho': 'PB - <b><u>B</u></b>999*<br />'
+                         'Depósito da OP: 231<br /><br />'
+                         'Individual Encabidado',
+        },
+        'pg': {
+            'nivel': 'pg',
+            'alt_incr': 20,
+            'nome': 'pg2x',
+            'cabecalho': 'PG - <b><u>A</u></b>999*<br />'
+                         'Depósito da OP: 231<br /><br />'
+                         'Kit ou<br />Individual Encabidado ou<br />'
+                         'Individual Embalado',
+        },
+        'pa_de_md': {
+            'nivel': 'pa',
+            'alt_incr': 0,
+            'nome': 'pa0x',
+            'cabecalho': 'Kit ou<br />Individual Encabidado ou<br />'
+                         'Individual Embalado<br />'
+                         '(a desativar)',
+        },
+        'pa_a_de_pb': {
+            'nivel': 'pa',
+            'alt_incr': 10,
+            'nome': 'pa1x',
+            'cabecalho': 'Individual Encabidado',
+        },
+        'pa_e_de_pg': {
+            'nivel': 'pa',
+            'alt_incr': 20,
+            'nome': 'pa2x',
+            'cabecalho': 'Kit ou<br />Individual Embalado',
+        },
+        'pa_a_de_pg': {
+            'nivel': 'pa',
+            'alt_incr': 30,
+            'nome': 'pa3x',
+            'cabecalho': 'Individual Emcabidado',
+        },
+    }
+
+    fluxo1 = {
+        'fluxo_num': 1,
+        'fluxo_nome': 'Interno',
+        'produto': 'CUECA COM costura - PRAIA - SHORT',
+        'caracteristicas': [
+            'Corte: Interno',
+            'Estamparia: Interna ou Sem',
+            'Costura: Interna',
+        ],
+        'tem_mp': True,
+        'md_p_pb': {
+            'alternativa': alternativas[1],
+            'roteiro': roteiros['md'][1],
+            'estagios': {
+                3: ['', ],
+                6: ['', ],
+                12: ['', ],
+                15: ['', [
+                    'Malha',
+                ]],
+                18: ['', [
+                    'Etiquetas',
+                    'Elástico',
+                    'TAG',
+                    'Transfer',
+                ]],
+                21: ['', ],
+                33: ['#', ],
+                45: ['', ],
+                48: ['', ],
+                51: ['', ],
+            }
+        },
+        'md': {
+            'alternativa': alternativas[1],
+            'roteiro': roteiros['md'][1],
+            'estagios': {
+                3: ['', ],
+                6: ['', ],
+                12: ['', ],
+                15: ['', [
+                    'Malha',
+                ]],
+                18: ['', [
+                    'Etiquetas',
+                    'Elástico',
+                    'Transfer',
+                ]],
+                21: ['', ],
+                33: ['#', ],
+                45: ['', ],
+                48: ['', ],
+                51: ['', ],
+            }
+        },
+        'pb': {
+            'alternativa': alternativas[11],
+            'roteiro': roteiros['pb'][11],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Cabide',
+                ]],
+                60: ['#', ['MD p/ PB<br /><b><u>M</u></b>999*']],
+                57: ['', []],
+                63: ['', []],
+            }
+        },
+        'pg': {
+            'alternativa': alternativas[21],
+            'roteiro': roteiros['pg'][21],
+            'estagios': {
+                3: ['', ],
+                18: ['', ],
+                60: ['#', [
+                    'MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>']],
+                57: ['', []],
+                63: ['', []],
+            }
+        },
+        'pa_de_md': {
+            'alternativa': alternativas[1],
+            'roteiro': roteiros['pa'][1],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'TAG',
+                    'Cabide',
+                    'Embalagem',
+                    'Cartela',
+                ]],
+                60: ['#', ['MD<br /><b><u>M</u></b>999*']],
+                57: ['', []],
+                63: ['', []],
+                66: ['', [
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+            }
+        },
+        'pa_a_de_pb': {
+            'alternativa': alternativas[11],
+            'roteiro': roteiros['pa'][11],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PB<br /><b><u>B</u></b>999*']],
+            }
+        },
+        'pa_e_de_pg': {
+            'alternativa': alternativas[21],
+            'roteiro': roteiros['pa'][21],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Embalagem',
+                    'Cartela',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+            }
+        },
+        'pa_a_de_pg': {
+            'alternativa': alternativas[31],
+            'roteiro': roteiros['pa'][31],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'TAG',
+                    'Cabide',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+            }
+        },
+    }
+
+    fluxo2 = {
+        'fluxo_num': 2,
+        'fluxo_nome': 'Externo',
+        'produto': 'CUECA COM costura',
+        'caracteristicas': [
+            'Corte: Interno',
+            'Costura: Externa',
+        ],
+        'md_p_pb': {
+            'alternativa': alternativas[2],
+            'roteiro': roteiros['md'][2],
+            'estagios': {
+                3: ['', ],
+                6: ['', ],
+                15: ['', [
+                    'Malha',
+                ]],
+                18: ['', ],
+                12: ['#', ],
+            }
+        },
+        'md': {
+            'alternativa': alternativas[2],
+            'roteiro': roteiros['md'][2],
+            'estagios': {
+                3: ['', ],
+                6: ['', ],
+                15: ['', [
+                    'Malha',
+                ]],
+                18: ['', ],
+                12: ['#', ],
+            }
+        },
+        'pb': {
+            'alternativa': alternativas[12],
+            'roteiro': roteiros['pb'][12],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Etiquetas',
+                    'Elástico',
+                    'TAG',
+                    'Cabide',
+                ]],
+                21: ['', []],
+                'os': ['', ['MD p/ PB<br /><b><u>M</u></b>999*']],
+                24: ['#', []],
+                55: ['', []],
+                57: ['', []],
+                63: ['', []],
+            }
+        },
+        'pg': {
+            'alternativa': alternativas[22],
+            'roteiro': roteiros['pg'][22],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Etiquetas',
+                    'Elástico',
+                ]],
+                21: ['', []],
+                'os': ['', [
+                    'MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>']],
+                24: ['#', []],
+                55: ['', []],
+                57: ['', []],
+                63: ['', []],
+            }
+        },
+        'pa_de_md': {
+            'alternativa': alternativas[2],
+            'roteiro': roteiros['pa'][2],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Etiquetas',
+                    'Elástico',
+                    'TAG',
+                    'Transfer',
+                    'Cabide',
+                    'Embalagem',
+                    'Cartela',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                21: ['', []],
+                'os': ['', ['MD<br /><b><u>M</u></b>999*']],
+                24: ['#', []],
+                55: ['', []],
+                57: ['', []],
+                63: ['', []],
+                66: ['', []],
+            }
+        },
+        'pa_a_de_pb': {
+            'alternativa': alternativas[12],
+            'roteiro': roteiros['pa'][12],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Transfer',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PB<br /><b><u>B</u></b>999*']],
+            }
+        },
+        'pa_e_de_pg': {
+            'alternativa': alternativas[22],
+            'roteiro': roteiros['pa'][22],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Transfer',
+                    'Embalagem',
+                    'Cartela',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+            }
+        },
+        'pa_a_de_pg': {
+            'alternativa': alternativas[32],
+            'roteiro': roteiros['pa'][32],
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Transfer',
+                    'TAG',
+                    'Cabide',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+            }
+        },
+    }
+
+    fluxo = update_dict(fluxo_padrao_cueca, fluxo1)
+
+    return render(
+        request, 'geral/fluxo.html', fluxo, content_type='text/plain')
+
+    # filename = 'roteiros_alt{fluxo_num}_{versao_num}_{versao_data}.dot'.format(
+    #     **fluxo
+    # )
+    #
+    # templ = loader.get_template('geral/fluxo.html')
+    # http_resp = HttpResponse(
+    #     templ.render(fluxo, request), content_type='text/plain')
+    # http_resp['Content-Disposition'] = \
+    #     'attachment; filename="{filename}"'.format(filename=filename)
+    # return http_resp
