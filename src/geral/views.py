@@ -304,7 +304,7 @@ def update_dict(original, adding):
 
 
 def gera_fluxo_dot(request):
-    alt_descr = {
+    alternativas = {
         1: 'Interno',
         11: 'PB Interno',
         21: 'PG Interno',
@@ -315,7 +315,7 @@ def gera_fluxo_dot(request):
         32: 'PA de PG Unidade Sem Corte',
     }
 
-    rot_descr = {
+    roteiros = {
         'md': {
             1: 'MD Interno',
             2: 'MD Unidade Sem Corte',
@@ -342,87 +342,71 @@ def gera_fluxo_dot(request):
 
     estagios = {
         3: {
-            'num': '03',
             'descr': 'PCP (Liberação)',
             'deposito': '-',
         },
         6: {
-            'num': '06',
             'descr': 'Risco',
             'deposito': '-',
         },
         12: {
-            'num': '12',
             'descr': 'Etiquetas',
             'deposito': '231',
         },
         15: {
-            'num': '15',
             'descr': 'Corte',
             'deposito': '-',
         },
         18: {
-            'num': '18',
             'descr': 'Separação insumo',
             'deposito': '231',
         },
         21: {
-            'num': '21',
             'descr': 'Distribuição',
             'deposito': '-',
         },
         'os': {
-            'num': 'OS',
+            'codigo': 'OS',
             'descr': 'OS/NF',
             'deposito': '',
         },
         24: {
-            'num': '24',
             'descr': 'Recepção',
             'deposito': '-',
         },
         33: {
-            'num': '33',
             'descr': 'Costura Costurado',
             'deposito': '231',
         },
         45: {
-            'num': '45',
             'descr': 'Transfer / TAG',
             'deposito': '231',
         },
         48: {
-            'num': '48',
             'descr': 'Revisão',
             'deposito': '-',
         },
         51: {
-            'num': '51',
             'descr': 'CD MD',
             'deposito': '-',
         },
         55: {
-            'num': '55',
             'descr': 'Terceiro RJ',
             'deposito': '231',
         },
         57: {
-            'num': '57',
             'descr': 'Armazena',
             'deposito': '-',
         },
         60: {
-            'num': '60',
             'descr': 'Embalagem',
             'deposito': '231',
         },
         63: {
-            'num': '63',
             'descr': 'CD',
             'deposito': '-',
         },
         66: {
-            'num': '66',
             'descr': 'Expedição',
             'deposito': '231',
         },
@@ -431,8 +415,8 @@ def gera_fluxo_dot(request):
     fluxo_padrao_cueca = {
         # gerais
         'estagios': estagios,
-        'alt_descr': alt_descr,
-        'rot_descr': rot_descr,
+        'alternativas': alternativas,
+        'roteiros': roteiros,
         # específicos
         'versao_num': '19.01',
         'versao_data': '11/02/2019',
