@@ -315,70 +315,28 @@ def gera_fluxo_dot(request):
         32: 'PA de PG Unidade Sem Corte',
     }
 
-    roteiros = {
+    rot_descr = {
         'md': {
-            1: {
-                'num': '01',
-                'descr': 'MD Interno'
-            },
-            2: {
-                'num': '02',
-                'descr': 'MD Unidade Sem Corte'
-            },
+            1: 'MD Interno',
+            2: 'MD Unidade Sem Corte',
         },
         'pb': {
-            11: {
-                'num': '11',
-                'descr': 'PB Interno'
-            },
-            12: {
-                'num': '12',
-                'descr': 'PB Unidade Sem Corte'
-            },
+            11: 'PB Interno',
+            12: 'PB Unidade Sem Corte',
         },
         'pg': {
-            21: {
-                'num': '21',
-                'descr': 'PG Interno'
-            },
-            22: {
-                'num': '22',
-                'descr': 'PG Unidade Sem Corte'
-            },
+            21: 'PG Interno',
+            22: 'PG Unidade Sem Corte',
         },
         'pa': {
-            1: {
-                'num': '01',
-                'descr': 'PA Interno'
-            },
-            11: {
-                'num': '11',
-                'descr': 'PA de PB Interno'
-            },
-            21: {
-                'num': '21',
-                'descr': 'PA de PG Interno'
-            },
-            31: {
-                'num': '31',
-                'descr': 'PA de PG Interno'
-            },
-            2: {
-                'num': '02',
-                'descr': 'PA Unidade Sem Corte'
-            },
-            12: {
-                'num': '12',
-                'descr': 'PA de PB Unidade Sem Corte'
-            },
-            22: {
-                'num': '22',
-                'descr': 'PA de PG Unidade Sem Corte'
-            },
-            32: {
-                'num': '32',
-                'descr': 'PA de PG Unidade Sem Corte'
-            },
+            1: 'PA Interno',
+            11: 'PA de PB Interno',
+            21: 'PA de PG Interno',
+            31: 'PA de PG Interno',
+            2: 'PA Unidade Sem Corte',
+            12: 'PA de PB Unidade Sem Corte',
+            22: 'PA de PG Unidade Sem Corte',
+            32: 'PA de PG Unidade Sem Corte',
         }
     }
 
@@ -474,6 +432,7 @@ def gera_fluxo_dot(request):
         # gerais
         'estagios': estagios,
         'alt_descr': alt_descr,
+        'rot_descr': rot_descr,
         # específicos
         'versao_num': '19.01',
         'versao_data': '11/02/2019',
@@ -548,7 +507,6 @@ def gera_fluxo_dot(request):
         ],
         'tem_mp': True,
         'md_p_pb': {
-            'roteiro': roteiros['md'][1],
             'estagios': {
                 3: ['', ],
                 6: ['', ],
@@ -570,7 +528,6 @@ def gera_fluxo_dot(request):
             }
         },
         'md': {
-            'roteiro': roteiros['md'][1],
             'estagios': {
                 3: ['', ],
                 6: ['', ],
@@ -591,7 +548,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pb': {
-            'roteiro': roteiros['pb'][11],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -603,7 +559,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pg': {
-            'roteiro': roteiros['pg'][21],
             'estagios': {
                 3: ['', ],
                 18: ['', ],
@@ -614,7 +569,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_de_md': {
-            'roteiro': roteiros['pa'][1],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -633,7 +587,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_a_de_pb': {
-            'roteiro': roteiros['pa'][11],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -644,7 +597,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_e_de_pg': {
-            'roteiro': roteiros['pa'][21],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -657,7 +609,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_a_de_pg': {
-            'roteiro': roteiros['pa'][31],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -680,7 +631,6 @@ def gera_fluxo_dot(request):
             'Costura: Externa',
         ],
         'md_p_pb': {
-            'roteiro': roteiros['md'][2],
             'estagios': {
                 3: ['', ],
                 6: ['', ],
@@ -692,7 +642,6 @@ def gera_fluxo_dot(request):
             }
         },
         'md': {
-            'roteiro': roteiros['md'][2],
             'estagios': {
                 3: ['', ],
                 6: ['', ],
@@ -704,7 +653,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pb': {
-            'roteiro': roteiros['pb'][12],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -722,7 +670,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pg': {
-            'roteiro': roteiros['pg'][22],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -739,7 +686,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_de_md': {
-            'roteiro': roteiros['pa'][2],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -763,7 +709,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_a_de_pb': {
-            'roteiro': roteiros['pa'][12],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -775,7 +720,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_e_de_pg': {
-            'roteiro': roteiros['pa'][22],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -789,7 +733,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_a_de_pg': {
-            'roteiro': roteiros['pa'][32],
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -806,16 +749,16 @@ def gera_fluxo_dot(request):
 
     fluxo = update_dict(fluxo_padrao_cueca, fluxo2)
 
-    return render(
-        request, 'geral/fluxo.html', fluxo, content_type='text/plain')
+    # return render(
+    #     request, 'geral/fluxo.html', fluxo, content_type='text/plain')
 
-    # filename = 'roteiros_alt{fluxo_num}_{versao_num}_{versao_data}.dot'.format(
-    #     **fluxo
-    # )
-    #
-    # templ = loader.get_template('geral/fluxo.html')
-    # http_resp = HttpResponse(
-    #     templ.render(fluxo, request), content_type='text/plain')
-    # http_resp['Content-Disposition'] = \
-    #     'attachment; filename="{filename}"'.format(filename=filename)
-    # return http_resp
+    filename = 'roteiros_alt{fluxo_num}_{versao_num}_{versao_data}.dot'.format(
+        **fluxo
+    )
+
+    templ = loader.get_template('geral/fluxo.html')
+    http_resp = HttpResponse(
+        templ.render(fluxo, request), content_type='text/plain')
+    http_resp['Content-Disposition'] = \
+        'attachment; filename="{filename}"'.format(filename=filename)
+    return http_resp

@@ -1,6 +1,8 @@
 subgraph cluster_{{bloco.nome}} {
   {% with fluxo_num|add:bloco.alt_incr as alt_num %}
-  label = <{{bloco.cabecalho|safe}}<br /><br />Alternativa {{alt_num}}: {{alt_descr|get_item:alt_num}}<br />Roteiro {{bloco.roteiro.num}}: {{bloco.roteiro.descr}}>
+  {% with rot_descr|get_item:bloco.nivel as rot_dict %}
+  label = <{{bloco.cabecalho|safe}}<br /><br />Alternativa {{alt_num}}: {{alt_descr|get_item:alt_num}}<br />Roteiro {{alt_num}}: {{rot_dict|get_item:alt_num}}>
+  {% endwith %}
   {% endwith %}
   style=rounded
   {{bloco.nome}} [
