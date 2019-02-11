@@ -1,0 +1,96 @@
+digraph G {
+  compound=true
+  newrank=true
+  rankdir = LR
+
+  labelloc="t"
+  label="
+    Fluxo {{fluxo_num}} - {{fluxo_nome}}
+    Versão {{versao_num}} ({{versao_data}})
+
+    {{produto}}
+    {% for caracteristica in caracteristicas %}
+    {{caracteristica}}{% endfor %}
+  "
+  {% if tem_mp %}
+  L_MP [shape=rarrow,style=dashed,label="MP"]{% endif %}
+  L_MD [shape=rarrow,style=dashed,label="MD"]
+  L_PGPB [shape=rarrow,style=dashed,label="PG / PB"]
+  L_PA [shape=rarrow,style=dashed,label="PA"]
+
+  {% if tem_mp %}L_MP -> {% endif %}L_MD -> L_PGPB -> L_PA [style=invis]
+
+  {
+    node [
+      shape = "note"
+    ]
+
+    subgraph cluster_pa {
+      label = "PA - 9999*\nDepósito da OP: 101/102"
+      style="dotted, rounded"
+
+      {% if pa_de_md %}
+        {% include "geral/fluxo_bloco.html" with bloco=pa_de_md %}
+      {% endif %}
+
+      {% if pa_a_de_pb %}
+        {% include "geral/fluxo_bloco.html" with bloco=pa_a_de_pb %}
+      {% endif %}
+
+      {% if pa_e_de_pg %}
+        {% include "geral/fluxo_bloco.html" with bloco=pa_e_de_pg %}
+      {% endif %}
+
+      {% if pa_a_de_pg %}
+        {% include "geral/fluxo_bloco.html" with bloco=pa_a_de_pg %}
+      {% endif %}
+
+    }
+
+    {% if tem_mp %}
+    mpforro [
+      label = "Forro - F9999\nFluxo 8"
+    ]
+    {% endif %}
+
+    subgraph cluster_md {
+      label = "MD\nDepósito da OP: 231"
+      style="dotted, rounded"
+
+      {% if md_p_pb %}
+        {% include "geral/fluxo_bloco.html" with bloco=md_p_pb %}
+      {% endif %}
+
+      {% if md %}
+        {% include "geral/fluxo_bloco.html" with bloco=md %}
+      {% endif %}
+
+    }
+
+    {% if pb %}
+      {% include "geral/fluxo_bloco.html" with bloco=pb %}
+    {% endif %}
+
+    {% if pg %}
+      {% include "geral/fluxo_bloco.html" with bloco=pg %}
+    {% endif %}
+
+  }
+
+  {% if tem_mp %}
+  {rank = same L_MP mpforro}{% endif %}
+  {rank = same L_MD mdpb mdpg}
+  {rank = same L_PGPB pb1x pg2x}
+  {rank = same L_PA pa0x pa1x pa2x pa3x}
+
+  {% if tem_mp %}
+  mpforro -> mdpb
+  mpforro -> mdpg{% endif %}
+  mdpb -> pb1x [ltail=cluster_mdpb]
+  mdpg -> pg2x [ltail=cluster_mdpg]
+  mdpb -> pa0x [ltail=cluster_md]
+  pb1x -> pa1x [ltail=cluster_pb1x]
+  pg2x -> pa2x [ltail=cluster_pg2x]
+  pg2x -> pa3x [ltail=cluster_pg2x]
+
+}
