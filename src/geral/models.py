@@ -166,7 +166,7 @@ class PopAssunto(models.Model):
         super(PopAssunto, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = "fo2_ger_doc_assunto"
+        db_table = "fo2_ger_pop_assunto"
 
 
 def pop_upload_to(instance, filename):
@@ -185,7 +185,7 @@ class Pop(models.Model):
     habilitado = models.NullBooleanField(default=True)
 
     class Meta:
-        db_table = "fo2_ger_doc"
+        db_table = "fo2_ger_pop"
         permissions = (("can_manage_pop", "Can manage pop"),)
 
 
@@ -198,6 +198,6 @@ class UsuarioPopAssunto(models.Model):
         verbose_name='assunto de POP')
 
     class Meta:
-        db_table = "fo2_ger_usr_doc_assunto"
+        db_table = "fo2_ger_usr_pop_assunto"
         verbose_name = "usuário de assunto de POP"
         verbose_name_plural = "usuários de assuntos de POPs"
