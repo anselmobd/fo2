@@ -572,7 +572,7 @@ def modelo_inform(cursor, modelo):
     return rows_to_dict_list(cursor)
 
 
-def busca(cursor, busca, cor):
+def busca_produto(cursor, busca, cor, roteiro, alternativa):
     filtro = ''
     for palavra in busca.split(' '):
         filtro += """--
@@ -584,6 +584,7 @@ def busca(cursor, busca, cor):
                   OR c.FANTASIA_CLIENTE LIKE '%{palavra}%'
                   )
         """.format(palavra=palavra)
+
     filtro_cor = ''
     get_cor = ''
     if len(cor.strip()) == 0:
@@ -602,6 +603,37 @@ def busca(cursor, busca, cor):
                   OR cor.DESCRICAO_15 LIKE '%{palavra}%'
                   )
         """.format(palavra=palavra)
+
+    get_alternativa = ''
+    get_roteiro = ''
+
+    if roteiro == 0 and alternativa == 0:
+        get_alternativa = """--
+            , 0 ALTERNATIVA
+        """
+        get_roteiro = """--
+            , 0 ROTEIRO
+        """
+    else:
+        get_alternativa = """--
+            , ia.ALTERNATIVA_ITEM ALTERNATIVA
+        """
+        get_roteiro = """--
+            , ro.NUMERO_ROTEIRO ROTEIRO
+        """
+
+    filtro_alternativa = ''
+    if alternativa != 0:
+        filtro_alternativa += """--
+              AND ia.ALTERNATIVA_ITEM = {alternativa}
+        """.format(alternativa=alternativa)
+
+    filtro_roteiro = ''
+    if roteiro != 0:
+        filtro_roteiro += """--
+              AND ro.NUMERO_ROTEIRO = {roteiro}
+        """.format(roteiro=roteiro)
+
     sql = """
         SELECT
           rownum NUM
@@ -616,6 +648,8 @@ def busca(cursor, busca, cor):
         , rr.CNPJ4
         , rr.CNPJ2
         , rr.CLIENTE
+        , rr.ROTEIRO
+        , rr.ALTERNATIVA
         FROM (
         SELECT DISTINCT
           r.NIVEL_ESTRUTURA NIVEL
@@ -632,6 +666,8 @@ def busca(cursor, busca, cor):
         , r.CGC_CLIENTE_2 CNPJ2
         , COALESCE(c.FANTASIA_CLIENTE, c.NOME_CLIENTE) CLIENTE
         {get_cor} -- get_cor
+        {get_roteiro} -- get_roteiro
+        {get_alternativa} -- get_alternativa
         FROM BASI_030 r
         LEFT JOIN BASI_010 cor
           ON cor.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
@@ -640,18 +676,31 @@ def busca(cursor, busca, cor):
           ON c.CGC_9 = r.CGC_CLIENTE_9
          AND c.CGC_4 = r.CGC_CLIENTE_4
          AND c.CGC_2 = r.CGC_CLIENTE_2
+        LEFT JOIN MQOP_050 ro
+          ON ro.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
+         AND ro.GRUPO_ESTRUTURA = r.REFERENCIA
+        LEFT JOIN BASI_050 ia -- insumos de alternativa
+          ON ia.NIVEL_COMP = r.NIVEL_ESTRUTURA
+         AND ia.GRUPO_COMP = r.REFERENCIA
         WHERE r.NIVEL_ESTRUTURA = 1
           AND r.RESPONSAVEL IS NOT NULL
           {filtro} -- filtro
           {filtro_cor} -- filtro_cor
+          {filtro_roteiro} -- filtro_roteiro
+          {filtro_alternativa} -- filtro_alternativa
         ORDER BY
           NLSSORT(r.REFERENCIA,'NLS_SORT=BINARY_AI')
         ) rr
     """.format(
         filtro=filtro,
         filtro_cor=filtro_cor,
+        filtro_roteiro=filtro_roteiro,
+        filtro_alternativa=filtro_alternativa,
         get_cor=get_cor,
+        get_roteiro=get_roteiro,
+        get_alternativa=get_alternativa,
         )
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 

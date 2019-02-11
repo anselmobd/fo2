@@ -572,11 +572,14 @@ class Busca(View):
     template_name = 'produto/busca.html'
     title_name = 'Listagem de produtos'
 
-    def mount_context(self, cursor, busca, cor):
+    def mount_context(self, cursor, busca, cor, roteiro, alternativa):
         context = {'busca': busca}
 
-        # Informações básicas
-        data = queries.busca(cursor, busca, cor)
+        if roteiro is None:
+            roteiro = 0
+        if alternativa is None:
+            alternativa = 0
+        data = queries.busca_produto(cursor, busca, cor, roteiro, alternativa)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum produto selecionado',
@@ -585,6 +588,10 @@ class Busca(View):
             link = ('REF')
             for row in data:
                 row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
+                if row['ALTERNATIVA'] is None:
+                    row['ALTERNATIVA'] = '-'
+                if row['ROTEIRO'] is None:
+                    row['ROTEIRO'] = '-'
                 if row['CNPJ9'] is None:
                     row['CNPJ9'] = 0
                 if row['CNPJ4'] is None:
@@ -609,6 +616,12 @@ class Busca(View):
                 headers.append('Cor Descr.')
                 fields.append('COR')
                 fields.append('COR_DESC')
+
+            if roteiro != 0 or alternativa != 0:
+                headers.append('Alternativa')
+                fields.append('ALTERNATIVA')
+                headers.append('Roteiro')
+                fields.append('ROTEIRO')
 
             context.update({
                 'headers': headers,
@@ -636,8 +649,11 @@ class Busca(View):
         if form.is_valid():
             busca = form.cleaned_data['busca']
             cor = form.cleaned_data['cor']
+            roteiro = form.cleaned_data['roteiro']
+            alternativa = form.cleaned_data['alternativa']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, busca, cor))
+            context.update(self.mount_context(
+                cursor, busca, cor, roteiro, alternativa))
         context['form'] = form
         return render(request, self.template_name, context)
 
