@@ -304,39 +304,15 @@ def update_dict(original, adding):
 
 
 def gera_fluxo_dot(request):
-    alternativas = {
-        1: {
-            'num': '01',
-            'descr': 'Interno'
-        },
-        11: {
-            'num': '11',
-            'descr': 'PB Interno'
-        },
-        21: {
-            'num': '21',
-            'descr': 'PG Interno'
-        },
-        31: {
-            'num': '31',
-            'descr': 'PA de PG Interno'
-        },
-        2: {
-            'num': '02',
-            'descr': 'Unidade Sem Corte'
-        },
-        12: {
-            'num': '12',
-            'descr': 'PB Unidade Sem Corte'
-        },
-        22: {
-            'num': '22',
-            'descr': 'PG Unidade Sem Corte'
-        },
-        32: {
-            'num': '32',
-            'descr': 'PA de PG Unidade Sem Corte'
-        },
+    alt_descr = {
+        1: 'Interno',
+        11: 'PB Interno',
+        21: 'PG Interno',
+        31: 'PA de PG Interno',
+        2: 'Unidade Sem Corte',
+        12: 'PB Unidade Sem Corte',
+        22: 'PG Unidade Sem Corte',
+        32: 'PA de PG Unidade Sem Corte',
     }
 
     roteiros = {
@@ -495,7 +471,10 @@ def gera_fluxo_dot(request):
     }
 
     fluxo_padrao_cueca = {
+        # gerais
         'estagios': estagios,
+        'alt_descr': alt_descr,
+        # específicos
         'versao_num': '19.01',
         'versao_data': '11/02/2019',
         'tem_mp': False,
@@ -569,7 +548,6 @@ def gera_fluxo_dot(request):
         ],
         'tem_mp': True,
         'md_p_pb': {
-            'alternativa': alternativas[1],
             'roteiro': roteiros['md'][1],
             'estagios': {
                 3: ['', ],
@@ -592,7 +570,6 @@ def gera_fluxo_dot(request):
             }
         },
         'md': {
-            'alternativa': alternativas[1],
             'roteiro': roteiros['md'][1],
             'estagios': {
                 3: ['', ],
@@ -614,7 +591,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pb': {
-            'alternativa': alternativas[11],
             'roteiro': roteiros['pb'][11],
             'estagios': {
                 3: ['', ],
@@ -627,7 +603,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pg': {
-            'alternativa': alternativas[21],
             'roteiro': roteiros['pg'][21],
             'estagios': {
                 3: ['', ],
@@ -639,7 +614,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_de_md': {
-            'alternativa': alternativas[1],
             'roteiro': roteiros['pa'][1],
             'estagios': {
                 3: ['', ],
@@ -659,7 +633,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_a_de_pb': {
-            'alternativa': alternativas[11],
             'roteiro': roteiros['pa'][11],
             'estagios': {
                 3: ['', ],
@@ -671,7 +644,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_e_de_pg': {
-            'alternativa': alternativas[21],
             'roteiro': roteiros['pa'][21],
             'estagios': {
                 3: ['', ],
@@ -685,7 +657,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_a_de_pg': {
-            'alternativa': alternativas[31],
             'roteiro': roteiros['pa'][31],
             'estagios': {
                 3: ['', ],
@@ -709,7 +680,6 @@ def gera_fluxo_dot(request):
             'Costura: Externa',
         ],
         'md_p_pb': {
-            'alternativa': alternativas[2],
             'roteiro': roteiros['md'][2],
             'estagios': {
                 3: ['', ],
@@ -722,7 +692,6 @@ def gera_fluxo_dot(request):
             }
         },
         'md': {
-            'alternativa': alternativas[2],
             'roteiro': roteiros['md'][2],
             'estagios': {
                 3: ['', ],
@@ -735,7 +704,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pb': {
-            'alternativa': alternativas[12],
             'roteiro': roteiros['pb'][12],
             'estagios': {
                 3: ['', ],
@@ -754,7 +722,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pg': {
-            'alternativa': alternativas[22],
             'roteiro': roteiros['pg'][22],
             'estagios': {
                 3: ['', ],
@@ -772,7 +739,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_de_md': {
-            'alternativa': alternativas[2],
             'roteiro': roteiros['pa'][2],
             'estagios': {
                 3: ['', ],
@@ -797,7 +763,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_a_de_pb': {
-            'alternativa': alternativas[12],
             'roteiro': roteiros['pa'][12],
             'estagios': {
                 3: ['', ],
@@ -810,7 +775,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_e_de_pg': {
-            'alternativa': alternativas[22],
             'roteiro': roteiros['pa'][22],
             'estagios': {
                 3: ['', ],
@@ -825,7 +789,6 @@ def gera_fluxo_dot(request):
             }
         },
         'pa_a_de_pg': {
-            'alternativa': alternativas[32],
             'roteiro': roteiros['pa'][32],
             'estagios': {
                 3: ['', ],
@@ -841,7 +804,7 @@ def gera_fluxo_dot(request):
         },
     }
 
-    fluxo = update_dict(fluxo_padrao_cueca, fluxo1)
+    fluxo = update_dict(fluxo_padrao_cueca, fluxo2)
 
     return render(
         request, 'geral/fluxo.html', fluxo, content_type='text/plain')
