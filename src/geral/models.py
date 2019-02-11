@@ -146,6 +146,9 @@ class InformacaoModulo(models.Model):
         null=True, blank=True, max_length=4096,
         verbose_name='receita')
 
+    class Meta:
+        db_table = "fo2_ger_modulo_info"
+
 
 class PopAssunto(models.Model):
     nome = models.CharField(
@@ -161,6 +164,9 @@ class PopAssunto(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
         super(PopAssunto, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ger_doc_assunto"
 
 
 def pop_upload_to(instance, filename):
@@ -179,6 +185,7 @@ class Pop(models.Model):
     habilitado = models.NullBooleanField(default=True)
 
     class Meta:
+        db_table = "fo2_ger_doc"
         permissions = (("can_manage_pop", "Can manage pop"),)
 
 
@@ -191,6 +198,6 @@ class UsuarioPopAssunto(models.Model):
         verbose_name='assunto de POP')
 
     class Meta:
-        db_table = "fo2_ger_usr_pop_assunto"
+        db_table = "fo2_ger_usr_doc_assunto"
         verbose_name = "usuário de assunto de POP"
         verbose_name_plural = "usuários de assuntos de POPs"
