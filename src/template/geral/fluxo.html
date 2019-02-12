@@ -30,19 +30,19 @@ digraph G {
       style="dotted, rounded"
 
       {% if pa_de_md %}
-        {% include fluxo_bloco with bloco=pa_de_md %}
+        {% include template_bloco with bloco=pa_de_md %}
       {% endif %}
 
       {% if pa_a_de_pb %}
-        {% include "geral/fluxo_bloco.html" with bloco=pa_a_de_pb %}
+        {% include template_bloco with bloco=pa_a_de_pb %}
       {% endif %}
 
       {% if pa_e_de_pg %}
-        {% include "geral/fluxo_bloco.html" with bloco=pa_e_de_pg %}
+        {% include template_bloco with bloco=pa_e_de_pg %}
       {% endif %}
 
       {% if pa_a_de_pg %}
-        {% include "geral/fluxo_bloco.html" with bloco=pa_a_de_pg %}
+        {% include template_bloco with bloco=pa_a_de_pg %}
       {% endif %}
 
     }
@@ -58,21 +58,21 @@ digraph G {
       style="dotted, rounded"
 
       {% if md_p_pb %}
-        {% include "geral/fluxo_bloco.html" with bloco=md_p_pb %}
+        {% include template_bloco with bloco=md_p_pb %}
       {% endif %}
 
       {% if md_p_pg %}
-        {% include "geral/fluxo_bloco.html" with bloco=md_p_pg %}
+        {% include template_bloco with bloco=md_p_pg %}
       {% endif %}
 
     }
 
     {% if pb %}
-      {% include "geral/fluxo_bloco.html" with bloco=pb %}
+      {% include template_bloco with bloco=pb %}
     {% endif %}
 
     {% if pg %}
-      {% include "geral/fluxo_bloco.html" with bloco=pg %}
+      {% include template_bloco with bloco=pg %}
     {% endif %}
 
   }

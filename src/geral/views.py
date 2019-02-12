@@ -482,6 +482,9 @@ def gera_fluxo_dot(request, destino, id):
         'estagios': estagios,
         'alternativas': alternativas,
         'roteiros': roteiros,
+        # templates
+        'template_base': 'geral/fluxo.html',
+        'template_bloco': 'geral/fluxo_bloco.html',
         # específicos
         'versao_num': '19.01',
         'versao_data': '11/02/2019',
@@ -941,15 +944,12 @@ def gera_fluxo_dot(request, destino, id):
     })
 
     fluxo = update_dict(fluxo_padrao_cueca, fluxo_config[id])
-    fluxo.update({
-        'fluxo_bloco': 'geral/fluxo_bloco.html',
-    })
 
     if destino in ['a', 'f']:
         filename = \
             'roteiros_alt{fluxo_num}_{versao_num}_{versao_data}.dot'.format(
                 **fluxo)
-        templ = loader.get_template('geral/fluxo.html')
+        templ = loader.get_template(fluxo['template_base'])
         http_resp = HttpResponse(
             templ.render(fluxo, request), content_type='text/plain')
         http_resp['Content-Disposition'] = \
@@ -958,4 +958,4 @@ def gera_fluxo_dot(request, destino, id):
 
     else:
         return render(
-            request, 'geral/fluxo.html', fluxo, content_type='text/plain')
+            request, fluxo['template_base'], fluxo, content_type='text/plain')
