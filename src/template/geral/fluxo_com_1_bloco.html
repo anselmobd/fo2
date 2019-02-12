@@ -1,0 +1,28 @@
+digraph G {
+  newrank=true;
+  rankdir = LR;
+
+  labelloc="t";
+  label="
+    Fluxo {{fluxo_num}} - {{fluxo_nome}}
+    Versão {{versao_num}} ({{versao_data}})
+
+    {{produto}}
+    {% for caracteristica in caracteristicas %}
+    {{caracteristica}}{% endfor %}
+  "
+
+  L_SETA [shape=rarrow,style=dashed,label="{{ seta_label }}"]
+
+  {
+    node [
+      shape = "note"
+    ]
+
+    {% include template_bloco with bloco=bloco %}
+
+  }
+
+  {rank = same L_SETA bloco}
+
+}

@@ -548,6 +548,23 @@ def gera_fluxo_dot(request, destino, id):
         },
     }
 
+    fluxo_com_1_bloco = {
+        # gerais
+        'estagios': estagios,
+        'alternativas': alternativas,
+        'roteiros': roteiros,
+        # templates
+        'template_base': 'geral/fluxo_com_1_bloco.html',
+        'template_bloco': 'geral/fluxo_bloco.html',
+        # específicos
+        'versao_num': '19.01',
+        'versao_data': '11/02/2019',
+        'bloco': {
+            'alt_incr': 0,
+            'nome': 'bloco',
+        },
+    }
+
     fluxo_config = {}
 
     fluxo_config[1] = {
