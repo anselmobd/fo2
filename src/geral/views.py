@@ -313,20 +313,26 @@ def gera_fluxo_dot(request):
         12: 'PB Unidade Sem Corte',
         22: 'PG Unidade Sem Corte',
         32: 'PA de PG Unidade Sem Corte',
+        3: 'Unidade Com Corte',
+        13: 'PB Unidade Com Corte',
+        24: 'PG Unidade Com Corte',
     }
 
     roteiros = {
         'md': {
             1: 'MD Interno',
             2: 'MD Unidade Sem Corte',
+            3: 'MD Unidade Com Corte',
         },
         'pb': {
             11: 'PB Interno',
             12: 'PB Unidade Sem Corte',
+            13: 'PB Unidade Com Corte',
         },
         'pg': {
             21: 'PG Interno',
             22: 'PG Unidade Sem Corte',
+            23: 'PG Unidade Com Corte',
         },
         'pa': {
             1: 'PA Interno',
@@ -337,6 +343,9 @@ def gera_fluxo_dot(request):
             12: 'PA de PB Unidade Sem Corte',
             22: 'PA de PG Unidade Sem Corte',
             32: 'PA de PG Unidade Sem Corte',
+            3: 'PA Unidade Com Corte',
+            13: 'PA de PB Unidade Com Corte',
+            23: 'PA de PG Unidade Com Corte',
         }
     }
 
@@ -390,6 +399,10 @@ def gera_fluxo_dot(request):
             'descr': 'CD MD',
             'deposito': '-',
         },
+        54: {
+            'descr': 'Terceiro MG',
+            'deposito': '231',
+        },
         55: {
             'descr': 'Terceiro RJ',
             'deposito': '231',
@@ -428,7 +441,7 @@ def gera_fluxo_dot(request):
             'cabecalho': 'MD p/ PB - <b><u>M</u></b>999*<br />'
                          'Com acessórios (TAG)<br />para encabidar',
         },
-        'md': {
+        'md_p_pg': {
             'nivel': 'md',
             'alt_incr': 0,
             'nome': 'mdpg',
@@ -491,27 +504,17 @@ def gera_fluxo_dot(request):
         ],
         'tem_mp': True,
         'md_p_pb': {
-            'estagios': {
-                3: ['', ],
-                6: ['', ],
-                12: ['', ],
-                15: ['', [
-                    'Malha',
-                ]],
-                18: ['', [
-                    'Etiquetas',
-                    'Elástico',
-                    'TAG',
-                    'Transfer',
-                ]],
-                21: ['', ],
-                33: ['#', ],
-                45: ['', ],
-                48: ['', ],
-                51: ['', ],
-            }
+            'ests': [3, 6, 12, 15, 18, 21, 33, 45, 48, 51],
+            'gargalo': 33,
+            'insumos': {
+                15: ['Malha', ],
+                18: ['Etiquetas',
+                     'Elástico',
+                     'TAG',
+                     'Transfer', ],
+            },
         },
-        'md': {
+        'md_p_pg': {
             'estagios': {
                 3: ['', ],
                 6: ['', ],
@@ -625,7 +628,7 @@ def gera_fluxo_dot(request):
                 12: ['#', ],
             }
         },
-        'md': {
+        'md_p_pg': {
             'estagios': {
                 3: ['', ],
                 6: ['', ],
@@ -731,7 +734,116 @@ def gera_fluxo_dot(request):
         },
     }
 
-    fluxo = update_dict(fluxo_padrao_cueca, fluxo2)
+    fluxo3 = {
+        'fluxo_num': 3,
+        'fluxo_nome': 'Externo',
+        'produto': 'CUECA COM costura',
+        'caracteristicas': [
+            'Corte: Externo',
+            'Costura: Externa',
+        ],
+        'md_p_pb': {
+            'cabecalho': 'MD - <b><u>M</u></b>999*',
+            'ests': [3, 6, 12],
+            'gargalo': 12,
+        },
+        'md_p_pg': False,
+        'pb': {
+            'ests': [3, 18, 21, 'os', 24, 54, 57, 63],
+            'gargalo': 24,
+            'insumos': {
+                18: [
+                    'Malha',
+                    'Etiquetas',
+                    'Elástico',
+                    'TAG',
+                    'Cabide',
+                ],
+                'os': ['MD<br /><b><u>M</u></b>999*', ],
+            },
+        },
+        'pg': {
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Etiquetas',
+                    'Elástico',
+                ]],
+                21: ['', []],
+                'os': ['', [
+                    'MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>']],
+                24: ['#', []],
+                55: ['', []],
+                57: ['', []],
+                63: ['', []],
+            }
+        },
+        'pa_de_md': {
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Etiquetas',
+                    'Elástico',
+                    'TAG',
+                    'Transfer',
+                    'Cabide',
+                    'Embalagem',
+                    'Cartela',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                21: ['', []],
+                'os': ['', ['MD<br /><b><u>M</u></b>999*']],
+                24: ['#', []],
+                55: ['', []],
+                57: ['', []],
+                63: ['', []],
+                66: ['', []],
+            }
+        },
+        'pa_a_de_pb': {
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Transfer',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PB<br /><b><u>B</u></b>999*']],
+            }
+        },
+        'pa_e_de_pg': {
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Transfer',
+                    'Embalagem',
+                    'Cartela',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+            }
+        },
+        'pa_a_de_pg': {
+            'estagios': {
+                3: ['', ],
+                18: ['', [
+                    'Transfer',
+                    'TAG',
+                    'Cabide',
+                    'Etiquetas',
+                    'Caixa',
+                ]],
+                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+            }
+        },
+    }
+
+    fluxo = update_dict(fluxo_padrao_cueca, fluxo3)
+    fluxo.update({
+        'fluxo_bloco': 'geral/fluxo_bloco.html',
+    })
 
     # return render(
     #     request, 'geral/fluxo.html', fluxo, content_type='text/plain')
@@ -739,7 +851,6 @@ def gera_fluxo_dot(request):
     filename = 'roteiros_alt{fluxo_num}_{versao_num}_{versao_data}.dot'.format(
         **fluxo
     )
-
     templ = loader.get_template('geral/fluxo.html')
     http_resp = HttpResponse(
         templ.render(fluxo, request), content_type='text/plain')
