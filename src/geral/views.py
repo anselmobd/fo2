@@ -326,6 +326,7 @@ def gera_fluxo_dot(request, destino, id):
         15: 'PB Praia',
         25: 'PG Praia',
         35: 'PA de PG Praia',
+        6: 'Camisa',
         8: 'Forro Interno',
     }
 
@@ -339,6 +340,7 @@ def gera_fluxo_dot(request, destino, id):
             3: 'MD Unidade Com Corte',
             4: 'MD Sem Costura',
             5: 'MD Praia',
+            6: 'MD Camisa',
         },
         'pb': {
             11: 'PB Interno',
@@ -953,7 +955,7 @@ def gera_fluxo_dot(request, destino, id):
             'insumos': {
                 15: ['Malha', ],
                 18: ['Etiquetas',
-                     'Eslático',
+                     'Eslástico',
                      'TAG',
                      'Transfer', ],
             },
@@ -964,11 +966,37 @@ def gera_fluxo_dot(request, destino, id):
             'insumos': {
                 15: ['Malha', ],
                 18: ['Etiquetas',
-                     'Eslático',
+                     'Eslástico',
                      'Transfer', ],
             },
         },
     })
+
+    fluxo_config[6] = {
+        'base': '1_bloco',
+        'fluxo_num': 6,
+        'fluxo_nome': 'Externo',
+        'produto': 'CAMISA',
+        'caracteristicas': [
+            'Corte: Interno',
+            'Costura: Externa',
+        ],
+        'seta_label': 'MD',
+        'bloco': {
+            'nivel': 'md',
+            'cabecalho': 'MD - x9999<br />'
+                         'Depósito da OP: 231',
+            'ests': [3, 6, 12, 15, 18, 21, 'os', 24, 55, 45, 51],
+            'gargalo': 24,
+            'insumos': {
+                15: ['Malha', ],
+                18: ['Etiquetas',
+                     'Eslástico',
+                     'TAG',
+                     'Transfer', ],
+            },
+        },
+    }
 
     fluxo_config[8] = {
         'base': '1_bloco',
