@@ -907,7 +907,38 @@ def gera_fluxo_dot(request, destino, id):
         },
     })
 
-
+    fluxo_config[5] = fluxo_config[1].copy()
+    fluxo_config[5].update({
+        'fluxo_num': 5,
+        'fluxo_nome': 'Externo',
+        'produto': 'PRAIA',
+        'caracteristicas': [
+            'Corte: Interno',
+            'Estamparia: Interna ou Sem',
+            'Costura: Externa',
+        ],
+        'md_p_pb': {
+            'ests': [3, 6, 12, 15, 18, 21, 'os', 24, 55, 45, 51],
+            'gargalo': 24,
+            'insumos': {
+                15: ['Malha', ],
+                18: ['Etiquetas',
+                     'Eslático',
+                     'TAG',
+                     'Transfer', ],
+            },
+        },
+        'md_p_pg': {
+            'ests': [3, 6, 12, 15, 18, 21, 'os', 24, 55, 45, 51],
+            'gargalo': 24,
+            'insumos': {
+                15: ['Malha', ],
+                18: ['Etiquetas',
+                     'Eslático',
+                     'Transfer', ],
+            },
+        },
+    })
 
     fluxo = update_dict(fluxo_padrao_cueca, fluxo_config[id])
     fluxo.update({
