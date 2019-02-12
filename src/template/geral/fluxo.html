@@ -30,7 +30,7 @@ digraph G {
       style="dotted, rounded"
 
       {% if pa_de_md %}
-        {% include "geral/fluxo_bloco.html" with bloco=pa_de_md %}
+        {% include fluxo_bloco with bloco=pa_de_md %}
       {% endif %}
 
       {% if pa_a_de_pb %}
@@ -61,8 +61,8 @@ digraph G {
         {% include "geral/fluxo_bloco.html" with bloco=md_p_pb %}
       {% endif %}
 
-      {% if md %}
-        {% include "geral/fluxo_bloco.html" with bloco=md %}
+      {% if md_p_pg %}
+        {% include "geral/fluxo_bloco.html" with bloco=md_p_pg %}
       {% endif %}
 
     }
@@ -79,16 +79,24 @@ digraph G {
 
   {% if tem_mp %}
   {rank = same L_MP mpforro}{% endif %}
-  {rank = same L_MD mdpb mdpg}
+  {rank = same L_MD  mdpb{% if md_p_pg %} mdpg{% endif %}}
   {rank = same L_PGPB pb1x pg2x}
   {rank = same L_PA pa0x pa1x pa2x pa3x}
 
   {% if tem_mp %}
-  mpforro -> mdpb
-  mpforro -> mdpg{% endif %}
+  mpforro -> mdpb{% if md_p_pg %}
+  mpforro -> mdpg{% endif %}{% endif %}
   mdpb -> pb1x [ltail=cluster_mdpb]
-  mdpg -> pg2x [ltail=cluster_mdpg]
-  mdpb -> pa0x [ltail=cluster_md]
+  {% if md_p_pg %}
+    mdpg -> pg2x [ltail=cluster_mdpg]
+  {% else %}
+    mdpb -> pg2x [ltail=cluster_mdpb]
+  {% endif %}
+  {% if md_p_pg %}
+    mdpb -> pa0x [ltail=cluster_md]
+  {% else %}
+    mdpb -> pa0x [ltail=cluster_mdpb]
+  {% endif %}
   pb1x -> pa1x [ltail=cluster_pb1x]
   pg2x -> pa2x [ltail=cluster_pg2x]
   pg2x -> pa3x [ltail=cluster_pg2x]
