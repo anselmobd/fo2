@@ -326,9 +326,13 @@ def gera_fluxo_dot(request, destino, id):
         15: 'PB Praia',
         25: 'PG Praia',
         35: 'PA de PG Praia',
+        8: 'Forro Interno',
     }
 
     roteiros = {
+        'mp': {
+            8: 'Forro Interno',
+        },
         'md': {
             1: 'MD Interno',
             2: 'MD Unidade Sem Corte',
@@ -965,6 +969,27 @@ def gera_fluxo_dot(request, destino, id):
             },
         },
     })
+
+    fluxo_config[8] = {
+        'base': '1_bloco',
+        'fluxo_num': 8,
+        'fluxo_nome': 'Parte',
+        'produto': 'PRAIA (Forro)',
+        'caracteristicas': [
+            'Corte: Interno',
+        ],
+        'seta_label': 'MP',
+        'bloco': {
+            'nivel': 'mp',
+            'cabecalho': 'MP - <b><u>F</u></b>9999<br />'
+                         'Depósito da OP: 231',
+            'ests': [3, 6, 15],
+            'gargalo': 6,
+            'insumos': {
+                15: ['Malha', ],
+            },
+        },
+    }
 
     fluxo = update_dict(
         fluxo_padrao[fluxo_config[id]['base']], fluxo_config[id])
