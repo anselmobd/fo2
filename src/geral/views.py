@@ -477,7 +477,8 @@ def gera_fluxo_dot(request, destino, id):
         },
     }
 
-    fluxo_padrao_cueca = {
+    fluxo_padrao = {}
+    fluxo_padrao['cueca'] = {
         # gerais
         'estagios': estagios,
         'alternativas': alternativas,
@@ -548,7 +549,7 @@ def gera_fluxo_dot(request, destino, id):
         },
     }
 
-    fluxo_com_1_bloco = {
+    fluxo_padrao['1_bloco'] = {
         # gerais
         'estagios': estagios,
         'alternativas': alternativas,
@@ -568,6 +569,7 @@ def gera_fluxo_dot(request, destino, id):
     fluxo_config = {}
 
     fluxo_config[1] = {
+        'base': 'cueca',
         'fluxo_num': 1,
         'fluxo_nome': 'Interno',
         'produto': 'CUECA COM costura - PRAIA - SHORT',
@@ -684,6 +686,7 @@ def gera_fluxo_dot(request, destino, id):
     }
 
     fluxo_config[2] = {
+        'base': 'cueca',
         'fluxo_num': 2,
         'fluxo_nome': 'Externo',
         'produto': 'CUECA COM costura',
@@ -809,6 +812,7 @@ def gera_fluxo_dot(request, destino, id):
     }
 
     fluxo_config[3] = {
+        'base': 'cueca',
         'fluxo_num': 3,
         'fluxo_nome': 'Externo',
         'produto': 'CUECA COM costura',
@@ -897,6 +901,7 @@ def gera_fluxo_dot(request, destino, id):
 
     fluxo_config[4] = fluxo_config[1].copy()
     fluxo_config[4].update({
+        'base': 'cueca',
         'fluxo_num': 4,
         'fluxo_nome': 'Sem costura',
         'produto': 'CUECA SEM costura',
@@ -929,6 +934,7 @@ def gera_fluxo_dot(request, destino, id):
 
     fluxo_config[5] = fluxo_config[1].copy()
     fluxo_config[5].update({
+        'base': 'cueca',
         'fluxo_num': 5,
         'fluxo_nome': 'Externo',
         'produto': 'PRAIA',
@@ -960,7 +966,8 @@ def gera_fluxo_dot(request, destino, id):
         },
     })
 
-    fluxo = update_dict(fluxo_padrao_cueca, fluxo_config[id])
+    fluxo = update_dict(
+        fluxo_padrao[fluxo_config[id]['base']], fluxo_config[id])
 
     if destino in ['a', 'f']:
         filename = \
