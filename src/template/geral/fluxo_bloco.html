@@ -9,6 +9,26 @@ subgraph cluster_{{bloco.nome}} {
     label = <
     <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
     <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+    {% if bloco.ests %}
+      {% for estagio_key in bloco.ests %}{% spaceless %}
+        {% with estagios|get_item:estagio_key as est %}
+          <tr>
+            <td>{% if bloco.gargalo and bloco.gargalo == estagio_key %}#{% endif %}</td>
+            <td align="left">{% if est.codigo %}{{est.codigo}}{% else %}{{estagio_key|stringformat:"02d"}}{% endif %}-{{est.descr}}</td>
+            <td>{{est.deposito}}</td>
+            <td>{% if bloco.insumos %}{% with bloco.insumos|get_item:estagio_key as insumos %}{% spaceless %}
+              {% if insumos %}
+                <table BORDER="1" CELLPADDING="0" CELLSPACING="0">
+                  {% for insumo in insumos %}
+                    <tr><td BORDER="0">{{insumo|safe}}</td></tr>
+                  {% endfor %}
+                </table>
+              {% else %}-{% endif %}
+              {% endspaceless %}{% endwith %}{% else %}-{% endif %}</td>
+          </tr>
+        {% endwith %}{% endspaceless %}
+      {% endfor %}
+    {% else %}
     {% for estagio_key, estagio_data in bloco.estagios.items %}
       {% with estagios|get_item:estagio_key as est %}
       <tr><td>{{estagio_data.0}}</td><td align="left">{% if est.codigo %}{{est.codigo}}{% else %}{{estagio_key|stringformat:"02d"}}{% endif %}-{{est.descr}}</td><td>{{est.deposito}}</td><td>{% if estagio_data.1 %}{% spaceless %}
@@ -20,6 +40,7 @@ subgraph cluster_{{bloco.nome}} {
         {% endspaceless %}{% else %}-{% endif %}</td></tr>
       {% endwith %}
     {% endfor %}
+    {% endif %}
     </table>
     >
   ]
