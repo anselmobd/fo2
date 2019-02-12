@@ -81,7 +81,7 @@ digraph G {
   {rank = same L_MP mpforro}{% endif %}
   {rank = same L_MD  mdpb{% if md_p_pg %} mdpg{% endif %}}
   {rank = same L_PGPB pb1x pg2x}
-  {rank = same L_PA pa0x pa1x pa2x pa3x}
+  {rank = same L_PA pa0x pa1x pa2x{% if pa_a_de_pg %} pa3x{% endif %}}
 
   {% if tem_mp %}
   mpforro -> mdpb{% if md_p_pg %}
@@ -99,6 +99,8 @@ digraph G {
   {% endif %}
   pb1x -> pa1x [ltail=cluster_pb1x]
   pg2x -> pa2x [ltail=cluster_pg2x]
+  {% if pa_a_de_pg %}
   pg2x -> pa3x [ltail=cluster_pg2x]
+  {% endif %}
 
 }
