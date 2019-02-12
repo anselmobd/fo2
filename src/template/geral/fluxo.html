@@ -15,7 +15,7 @@ digraph G {
   {% if tem_mp %}
   L_MP [shape=rarrow,style=dashed,label="MP"]{% endif %}
   L_MD [shape=rarrow,style=dashed,label="MD"]
-  L_PGPB [shape=rarrow,style=dashed,label="PG / PB"]
+  L_PGPB [shape=rarrow,style=dashed,label="{{ seta_pg_label }}"]
   L_PA [shape=rarrow,style=dashed,label="PA"]
 
   {% if tem_mp %}L_MP -> {% endif %}L_MD -> L_PGPB -> L_PA [style=invis]
@@ -79,14 +79,15 @@ digraph G {
 
   {% if tem_mp %}
   {rank = same L_MP mpforro}{% endif %}
+
   {rank = same L_MD  mdpb{% if md_p_pg %} mdpg{% endif %}}
-  {rank = same L_PGPB pb1x pg2x}
-  {rank = same L_PA pa0x pa1x pa2x{% if pa_a_de_pg %} pa3x{% endif %}}
+  {rank = same L_PGPB{% if pb %} pb1x{% endif %} pg2x}
+  {rank = same L_PA pa0x{% if pa_a_de_pb %} pa1x{% endif %} pa2x{% if pa_a_de_pg %} pa3x{% endif %}}
 
   {% if tem_mp %}
   mpforro -> mdpb{% if md_p_pg %}
   mpforro -> mdpg{% endif %}{% endif %}
-  mdpb -> pb1x [ltail=cluster_mdpb]
+  {% if pb %}mdpb -> pb1x [ltail=cluster_mdpb]{% endif %}
   {% if md_p_pg %}
     mdpg -> pg2x [ltail=cluster_mdpg]
   {% else %}
@@ -97,7 +98,9 @@ digraph G {
   {% else %}
     mdpb -> pa0x [ltail=cluster_mdpb]
   {% endif %}
-  pb1x -> pa1x [ltail=cluster_pb1x]
+  {% if pb and pa_a_de_pb %}
+    pb1x -> pa1x [ltail=cluster_pb1x]
+  {% endif %}
   pg2x -> pa2x [ltail=cluster_pg2x]
   {% if pa_a_de_pg %}
   pg2x -> pa3x [ltail=cluster_pg2x]
