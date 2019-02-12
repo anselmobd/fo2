@@ -303,7 +303,7 @@ def update_dict(original, adding):
     return result
 
 
-def gera_fluxo_dot(request):
+def gera_fluxo_dot(request, destino):
     alternativas = {
         1: 'Interno',
         11: 'PB Interno',
@@ -845,15 +845,17 @@ def gera_fluxo_dot(request):
         'fluxo_bloco': 'geral/fluxo_bloco.html',
     })
 
-    # return render(
-    #     request, 'geral/fluxo.html', fluxo, content_type='text/plain')
+    if destino in ['a', 'f']:
+        filename = \
+            'roteiros_alt{fluxo_num}_{versao_num}_{versao_data}.dot'.format(
+                **fluxo)
+        templ = loader.get_template('geral/fluxo.html')
+        http_resp = HttpResponse(
+            templ.render(fluxo, request), content_type='text/plain')
+        http_resp['Content-Disposition'] = \
+            'attachment; filename="{filename}"'.format(filename=filename)
+        return http_resp
 
-    filename = 'roteiros_alt{fluxo_num}_{versao_num}_{versao_data}.dot'.format(
-        **fluxo
-    )
-    templ = loader.get_template('geral/fluxo.html')
-    http_resp = HttpResponse(
-        templ.render(fluxo, request), content_type='text/plain')
-    http_resp['Content-Disposition'] = \
-        'attachment; filename="{filename}"'.format(filename=filename)
-    return http_resp
+    else:
+        return render(
+            request, 'geral/fluxo.html', fluxo, content_type='text/plain')
