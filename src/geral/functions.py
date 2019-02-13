@@ -1,4 +1,8 @@
+from pprint import pprint
+
 from django.urls import reverse
+from django.template.defaulttags import register
+from django.db.models import Min
 
 from .models import Painel, PainelModulo, PopAssunto
 
@@ -18,6 +22,23 @@ def get_list_geral_paineis(context):
             'list_geral_modulos': modulos,
             'list_geral_pop_assuntos': popAssuntos,
             }
+
+
+@register.filter
+def list_geral(data):
+    if data == 'pop_assuntos_grupos':
+        return PopAssunto.objects.exclude(grupo_slug='').values(
+            'grupo').annotate(Min('grupo_slug')).order_by('grupo')
+    return ''
+
+
+@register.filter
+def list_geral_filtro(data, filtro):
+    if data == 'pop_assuntos':
+        filtro_list = filtro.split('==')
+        filtro_dict = {filtro_list[0]: filtro_list[1]}
+        return PopAssunto.objects.filter(**filtro_dict).order_by('nome')
+    return ''
 
 
 def request_user(request):
