@@ -28,18 +28,18 @@ class Posicao(View):
                 'p_data': data,
             })
 
-        data = models.posicao_periodo_oc(cursor, periodo, ordem_confeccao)
-        if len(data) != 0:
+        oc_data = models.posicao_periodo_oc(cursor, periodo, ordem_confeccao)
+        if len(oc_data) != 0:
             context.update({
                 'l_headers': ('Período', 'Incício', 'Fim', 'OC'),
                 'l_fields': ('PERIODO', 'INI', 'FIM', 'OC'),
-                'l_data': data,
+                'l_data': oc_data,
             })
 
-        data = models.posicao_get_op(cursor, periodo, ordem_confeccao)
-        if len(data) != 0:
+        op_data = models.posicao_get_op(cursor, periodo, ordem_confeccao)
+        if len(op_data) != 0:
             link = ('OP')
-            for row in data:
+            for row in op_data:
                 row['LINK'] = '/lotes/op/{}'.format(row['OP'])
             context.update({
                 'o_headers': ('OP', 'Situação', 'Programa',
@@ -49,6 +49,13 @@ class Posicao(View):
                 'o_data': data,
                 'o_link': link,
             })
+
+        nlote_data = models.base.get_lotes(
+            cursor, op=op_data[0]['OP'], oc=oc_data[0]['OC'], order='o')
+        nloted = nlote_data[0]
+        context.update({
+            'nloted': nloted,
+        })
 
         os_data = models.posicao_get_os(cursor, periodo, ordem_confeccao)
         if len(os_data) != 0:
