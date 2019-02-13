@@ -20,12 +20,26 @@
     {% endfor %}
   </ul>
 {% endif %}
+
 {% if list_geral_pop_assuntos %}
-  <br />
-  <li>Procedimentos (POPs)</li>
-  <ul>
-    {% for pop_assunto in list_geral_pop_assuntos %}
-      <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
-    {% endfor %}
-  </ul>
+  {% if 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}
+    <br />
+    <li>Procedimentos (POPs)</li>
+    <ul>
+      {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}
+        <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% for grupo in 'pop_assuntos_grupos'|list_geral %}
+    <br />
+    <li>{{grupo.grupo}}</li>
+    <ul>
+      {% with 'grupo_slug=='|add:grupo.grupo_slug__min as filtro %}
+        {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:filtro %}
+          <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
+        {% endfor %}
+      {% endwith %}
+    </ul>
+  {% endfor %}
 {% endif %}
