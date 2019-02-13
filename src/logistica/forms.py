@@ -3,13 +3,18 @@ from datetime import datetime, timedelta
 from django import forms
 
 
+class NotafiscalChaveForm(forms.Form):
+    chave = forms.CharField(
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+
 class NotafiscalRelForm(forms.Form):
 
     def data_ini():
         return (datetime.now().replace(day=1)-timedelta(days=1)).replace(day=1)
 
     data_de = forms.DateField(
-        label='Data do Faturamento: De', required=False,
+        label='Data do Faturamento: De',
         initial=data_ini,
         widget=forms.DateInput(attrs={'type': 'date',
                                'autofocus': 'autofocus'}))
