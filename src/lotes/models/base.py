@@ -4,8 +4,11 @@ from lotes.models import *
 
 
 def get_lotes(cursor, op='', os='', tam='', cor='', order='',
-              oc_ini='', oc_fim='', pula=None, qtd_lotes=None):
+              oc_ini='', oc_fim='', pula=None, qtd_lotes=None, oc=''):
     # Lotes
+    if oc != '':
+        oc_ini = oc
+        oc_fim = oc
     if oc_ini == '':
         oc_ini = 0
     if oc_fim == '':
