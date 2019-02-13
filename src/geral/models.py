@@ -154,6 +154,9 @@ class PopAssunto(models.Model):
     nome = models.CharField(
         max_length=255, blank=True)
     slug = models.SlugField(default='slug')
+    grupo = models.CharField(
+        max_length=255, blank=True)
+    grupo_slug = models.SlugField(default='slug')
     diretorio = models.CharField(
         'diretório',
         max_length=50, blank=True)
@@ -163,6 +166,7 @@ class PopAssunto(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
+        self.grupo_slug = slugify(self.grupo)
         super(PopAssunto, self).save(*args, **kwargs)
 
     class Meta:
