@@ -1,0 +1,45 @@
+{% extends 'logistica/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'logistica:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+#id_chave {
+    width: 52ex;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'logistica:notafiscal_chave' %}" method="post">
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+    {% csrf_token %}
+</form>
+{% if request.POST %}
+  <h3>Chave: {{ chave }}</h3>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data1 %}
+  <h3>Nota Fiscal - {{status}}</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=headers1 only %}
+    {% include "layout/html_tbody.html" with fields=fields1 data=data1 only %}
+  </table>
+  <table>
+    {% include "layout/html_thead.html" with data=headers2 only %}
+    {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
+  </table>
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_chave');
+  inp.select();
+</script>
+{% endblock javascript %}
