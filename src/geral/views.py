@@ -327,6 +327,8 @@ def gera_fluxo_dot(request, destino, id):
         25: 'PG Praia',
         35: 'PA de PG Praia',
         6: 'Camisa',
+        7: 'Pijama',
+        27: 'PG Pijama',
         8: 'Forro Interno',
         9: 'Meia',
         29: 'PG Meia',
@@ -358,6 +360,7 @@ def gera_fluxo_dot(request, destino, id):
             23: 'PG Unidade Com Corte',
             24: 'PG Sem Costura',
             25: 'PG Praia',
+            27: 'PG Pijama',
             29: 'PG Meia',
         },
         'pa': {
@@ -380,6 +383,8 @@ def gera_fluxo_dot(request, destino, id):
             15: 'PA de PB Praia',
             25: 'PA de PG Praia',
             35: 'PA de PG Praia',
+            7: 'PA Pijama',
+            27: 'PA de PG Pijama',
             9: 'PA Meia',
             29: 'PA de PG Meia',
         }
@@ -521,6 +526,8 @@ def gera_fluxo_dot(request, destino, id):
             'cabecalho': 'MD p/ PB - <b><u>M</u></b>999<b><u>A</u></b><br />'
                          'Sem acessórios (TAG)<br />para encabidar',
         },
+        'mdext1': False,
+        'mdext2': False,
         'pb': {
             'nivel': 'pb',
             'alt_incr': 10,
@@ -1007,6 +1014,58 @@ def gera_fluxo_dot(request, destino, id):
         },
     }
 
+    fluxo_config[7] = {
+        'base': 'cueca',
+        'fluxo_num': 7,
+        'fluxo_nome': 'Pijama',
+        'produto': 'PIJAMA',
+        'caracteristicas': [],
+        'seta_pg_label': 'PG',
+        'md_p_pb': False,
+        'md_p_pg': False,
+        'mdext1':  {
+            'cabecalho': 'MD SAMBA - <b><u>M</u></b>999*<br />Fluxo 1',
+        },
+        'mdext2':  {
+            'cabecalho': 'MD CAMISA - <b><u>M</u></b>999*<br />Fluxo 6',
+        },
+        'pb': False,
+        'pg': {
+            'cabecalho': 'PG - <b><u>A</u></b>999*<br />'
+                         'Depósito da OP: 231<br /><br />'
+                         'Kit',
+            'ests': [3, 18, 60, 57, 63],
+            'gargalo': 60,
+            'insumos': {
+                60: [
+                    'MD SAMBA<br /><b><u>M</u></b>999*',
+                    'MD CAMISA<br /><b><u>M</u></b>999*',
+                ],
+            },
+        },
+        'pa_de_md': {
+            'cabecalho': 'Kit',
+            'ests': [3, 18, 60, 57, 63, 66],
+            'gargalo': 60,
+            'insumos': {
+                60: [
+                    'MD SAMBA<br /><b><u>M</u></b>999*',
+                    'MD CAMISA<br /><b><u>M</u></b>999*',
+                ],
+            }
+        },
+        'pa_a_de_pb': False,
+        'pa_e_de_pg': {
+            'cabecalho': 'Kit',
+            'ests': [3, 18, 66],
+            'gargalo': 66,
+            'insumos': {
+                66: ['PG<br /><b><u>A</u></b>999*'],
+            }
+        },
+        'pa_a_de_pg': False,
+    }
+
     fluxo_config[8] = {
         'base': '1_bloco',
         'fluxo_num': 8,
@@ -1187,6 +1246,9 @@ def gera_fluxo_dot(request, destino, id):
 
     fluxo = update_dict(
         fluxo_padrao[fluxo_config[id]['base']], fluxo_config[id])
+    fluxo.update({
+        'rascunho': '#Rascunho#',
+    })
 
     if destino in ['a', 'f']:
         filename = \

@@ -6,7 +6,7 @@ digraph G {
   labelloc="t"
   label="
     Fluxo {{fluxo_num}} - {{fluxo_nome}}
-    Versão {{versao_num}} ({{versao_data}})
+    {{rascunho}} Versão {{versao_num}} ({{versao_data}})
 
     {{produto}}
     {% for caracteristica in caracteristicas %}
@@ -53,6 +53,7 @@ digraph G {
     ]
     {% endif %}
 
+    {% if md_p_pb or md_p_pg %}
     subgraph cluster_md {
       label = "MD\nDepósito da OP: 231"
       style="dotted, rounded"
@@ -66,6 +67,19 @@ digraph G {
       {% endif %}
 
     }
+    {% endif %}
+
+    {% if mdext1 %}
+      mdext1 [
+        label = <{{ mdext1.cabecalho|safe }}>
+      ]
+    {% endif %}
+
+    {% if mdext2 %}
+      mdext2 [
+        label = <{{ mdext2.cabecalho|safe }}>
+      ]
+    {% endif %}
 
     {% if pb %}
       {% include template_bloco with bloco=pb %}
@@ -80,24 +94,51 @@ digraph G {
   {% if tem_mp %}
   {rank = same L_MP mpforro}{% endif %}
 
-  {rank = same L_MD  mdpb{% if md_p_pg %} mdpg{% endif %}}
+  {rank = same L_MD{% if md_p_pb %} mdpb{% endif %}{% if md_p_pg %} mdpg{% endif %}{% if mdext1 %} mdext1{% endif %}{% if mdext2 %} mdext2{% endif %}}
   {rank = same L_PGPB{% if pb %} pb1x{% endif %} pg2x}
   {rank = same L_PA pa0x{% if pa_a_de_pb %} pa1x{% endif %} pa2x{% if pa_a_de_pg %} pa3x{% endif %}}
 
-  {% if tem_mp %}
-  mpforro -> mdpb{% if md_p_pg %}
-  mpforro -> mdpg{% endif %}{% endif %}
-  {% if pb %}mdpb -> pb1x [ltail=cluster_mdpb]{% endif %}
+  {% if tem_mp %}{% if md_p_pb %}
+  mpforro -> mdpb{% endif %}{% if md_p_pg %}
+  mpforro -> mdpg{% endif %}
+  {% endif %}
+
+  {% if pb and md_p_pb %}mdpb -> pb1x [ltail=cluster_mdpb]{% endif %}
   {% if md_p_pg %}
     mdpg -> pg2x [ltail=cluster_mdpg]
   {% else %}
-    mdpb -> pg2x [ltail=cluster_mdpb]
+    {% if md_p_pb %}
+      mdpb -> pg2x [ltail=cluster_mdpb]
+    {% endif %}
   {% endif %}
-  {% if md_p_pg %}
-    mdpb -> pa0x [ltail=cluster_md]
-  {% else %}
-    mdpb -> pa0x [ltail=cluster_mdpb]
+  {% if md_p_pb %}
+    {% if md_p_pg %}
+      mdpb -> pa0x [ltail=cluster_md]
+    {% else %}
+      mdpb -> pa0x [ltail=cluster_mdpb]
+    {% endif %}
   {% endif %}
+
+  {% if mdext1 %}
+    mdext1 -> pa0x
+    {% if pb %}
+      mdext1 -> pb1x
+    {% endif %}
+    {% if pg %}
+      mdext1 -> pg2x
+    {% endif %}
+  {% endif %}
+
+  {% if mdext2 %}
+    mdext2 -> pa0x
+    {% if pb %}
+      mdext2 -> pb1x
+    {% endif %}
+    {% if pg %}
+      mdext2 -> pg2x
+    {% endif %}
+  {% endif %}
+
   {% if pb and pa_a_de_pb %}
     pb1x -> pa1x [ltail=cluster_pb1x]
   {% endif %}
