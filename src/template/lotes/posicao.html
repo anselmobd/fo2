@@ -20,7 +20,7 @@
 {% elif lote %}
   <br/>
   <p>
-  Lote selecionado: <b>{{lote}}</b>
+  Lote selecionado: <b>{{lote}}</b> ( <b>{{ nloted.NLOTE }}</b> / {{ nloted.TOTLOTES }} )
   </p>
   <table>
     {% include "layout/html_thead.html" with data=i_headers only %}
