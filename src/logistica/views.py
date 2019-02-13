@@ -1,6 +1,7 @@
 import datetime
 from operator import itemgetter
 
+from django.db import connections
 from django.utils import timezone
 from django.shortcuts import render
 from django.views import View
@@ -9,7 +10,8 @@ from django.db.models import When, F, Q
 from fo2.models import rows_to_dict_list
 
 from .models import NotaFiscal
-from .forms import NotafiscalRelForm
+from .queries import get_nf_pela_chave
+from .forms import NotafiscalRelForm, NotafiscalChaveForm
 
 
 def index(request):
@@ -156,5 +158,86 @@ class NotafiscalRel(View):
             form.data['data_ate'] = data
         if form.is_valid():
             context.update(self.mount_context(form.cleaned_data, form))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class NotafiscalChave(View):
+    Form_class = NotafiscalChaveForm
+    template_name = 'logistica/notafiscal_chave.html'
+    title_name = 'Informação sobre NF bipando DANFE'
+
+    def mount_context(self, form):
+        context = {
+            'chave': form['chave'],
+        }
+        cursor = connections['so'].cursor()
+        data_nf = get_nf_pela_chave(cursor, form['chave'])
+        if len(data_nf) == 0:
+            context.update({
+                'msg_erro': 'Nenhuma NF encontrada',
+            })
+        else:
+            nf = data_nf[0]['NUM_NOTA_FISCAL']
+            select = NotaFiscal.objects.filter(numero=nf)
+            data = list(select.values())
+            for row in data:
+                if row['saida'] is None:
+                    row['saida'] = '-'
+                    row['atraso'] = (
+                        timezone.now() - row['faturamento']).days
+                else:
+                    row['atraso'] = (
+                        row['saida'] - row['faturamento'].date()).days
+                if row['entrega'] is None:
+                    row['entrega'] = '-'
+                if row['confirmada']:
+                    row['confirmada'] = 'S'
+                else:
+                    row['confirmada'] = 'N'
+                if row['observacao'] is None:
+                    row['observacao'] = ' '
+                if row['ped_cliente'] is None:
+                    row['ped_cliente'] = ' '
+                row['atraso_order'] = -row['atraso']
+                if row['natu_venda']:
+                    row['venda'] = 'Sim'
+                else:
+                    row['venda'] = 'Não'
+                if row['ativa']:
+                    status = 'ATIVA'
+                    row['ativa'] = 'Sim'
+                else:
+                    status = 'CANCELDA'
+                    row['ativa'] = 'Não'
+            context.update({
+                'status': status,
+                'headers1': ('No.', 'Faturamento', 'Venda', 'Ativa',
+                             'Atraso', 'Saída', 'Agendada', 'Entregue',),
+                'fields1': ('numero', 'faturamento', 'venda', 'ativa',
+                            'atraso', 'saida', 'entrega', 'confirmada'),
+                'data1': data,
+                'headers2': ('UF', 'CNPJ', 'Cliente', 'Transp.',
+                             'Vol.', 'Valor', 'Observação',
+                             'Pedido', 'Ped.Cliente'),
+                'fields2': ('uf', 'dest_cnpj', 'dest_nome', 'transp_nome',
+                            'volumes', 'valor', 'observacao',
+                            'pedido', 'ped_cliente'),
+                'data2': data,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            context.update(self.mount_context(form.cleaned_data))
         context['form'] = form
         return render(request, self.template_name, context)

@@ -9,4 +9,7 @@ urlpatterns = [
         views.NotafiscalRel.as_view(), name='notafiscal_rel'),
     url(r'^notafiscal_rel/(?P<dia>\d+)/(?P<mes>\d+)/(?P<ano>\d+)/$',
         views.NotafiscalRel.as_view(), name='notafiscal_rel__get'),
+
+    url(r'^notafiscal_chave/$',
+        views.NotafiscalChave.as_view(), name='notafiscal_chave'),
 ]
