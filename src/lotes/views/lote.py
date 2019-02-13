@@ -46,7 +46,7 @@ class Posicao(View):
                               'Data digitação', 'Data de corte'),
                 'o_fields': ('OP', 'SITU', 'PRG',
                              'DT', 'DT_CORTE'),
-                'o_data': data,
+                'o_data': op_data,
                 'o_link': link,
             })
 
