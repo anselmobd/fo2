@@ -511,18 +511,24 @@ def gera_fluxo_dot(request, destino, id):
     roteiros = dict_roteiros()
     estagios = dict_estagios()
 
-    fluxo_padrao = {}
-    fluxo_padrao['cueca'] = {
+    fluxo_base = {
         # gerais
         'estagios': estagios,
         'alternativas': alternativas,
         'roteiros': roteiros,
         # templates
-        'template_base': 'geral/fluxo.html',
         'template_bloco': 'geral/fluxo_bloco.html',
         # específicos
         'versao_num': '19.01',
         'versao_data': '11/02/2019',
+    }
+
+    fluxo_padrao = {}
+    fluxo_padrao['cueca'] = fluxo_base.copy()
+    fluxo_padrao['cueca'].update({
+        # templates
+        'template_base': 'geral/fluxo.html',
+        # específicos
         'tem_mp': False,
         'seta_pg_label': 'PG / PB',
         'md_p_pb': {
@@ -584,24 +590,18 @@ def gera_fluxo_dot(request, destino, id):
             'nome': 'pa3x',
             'cabecalho': 'Individual Emcabidado',
         },
-    }
+    })
 
-    fluxo_padrao['1_bloco'] = {
-        # gerais
-        'estagios': estagios,
-        'alternativas': alternativas,
-        'roteiros': roteiros,
+    fluxo_padrao['1_bloco'] = fluxo_base.copy()
+    fluxo_padrao['1_bloco'].update({
         # templates
         'template_base': 'geral/fluxo_com_1_bloco.html',
-        'template_bloco': 'geral/fluxo_bloco.html',
         # específicos
-        'versao_num': '19.01',
-        'versao_data': '11/02/2019',
         'bloco': {
             'alt_incr': 0,
             'nome': 'bloco',
         },
-    }
+    })
 
     fluxo_config = {}
 
