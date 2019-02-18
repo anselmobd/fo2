@@ -1122,6 +1122,10 @@ def gera_fluxo_dot(request, destino, id):
             'ests': [3, 18, 60, 57, 63],
             'gargalo': 60,
             'insumos': {
+                18: [
+                    'Embalagem',
+                    'Cartela',
+                ],
                 60: [
                     'MD SAMBA<br /><b><u>M</u></b>999*',
                     'MD CAMISA<br /><b><u>M</u></b>999*',
@@ -1133,6 +1137,12 @@ def gera_fluxo_dot(request, destino, id):
             'ests': [3, 18, 60, 57, 63, 66],
             'gargalo': 60,
             'insumos': {
+                18: [
+                    'Embalagem',
+                    'Cartela',
+                    'Etiquetas',
+                    'Caixa',
+                ],
                 60: [
                     'MD SAMBA<br /><b><u>M</u></b>999*',
                     'MD CAMISA<br /><b><u>M</u></b>999*',
@@ -1145,6 +1155,10 @@ def gera_fluxo_dot(request, destino, id):
             'ests': [3, 18, 66],
             'gargalo': 66,
             'insumos': {
+                18: [
+                    'Etiquetas',
+                    'Caixa',
+                ],
                 66: ['PG<br /><b><u>A</u></b>999*'],
             }
         },
