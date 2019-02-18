@@ -1002,38 +1002,76 @@ def gera_fluxo_dot(request, destino, id):
         },
     })
 
-    fluxo_config[5] = fluxo_config[1].copy()
-    fluxo_config[5].update({
+    # 5
+    fluxo_aux = {
         'fluxo_num': 5,
-        'fluxo_nome': 'Externo',
+        'fluxo_nome': 'Costura externa de praia',
         'produto': 'PRAIA',
         'caracteristicas': [
             'Corte: Interno',
             'Estamparia: Interna ou Sem',
             'Costura: Externa',
         ],
-        'md_p_pb': {
-            'ests': [3, 6, 12, 15, 18, 21, 'os', 24, 55, 45, 51],
-            'gargalo': 24,
-            'insumos': {
-                15: ['Malha', ],
-                18: ['Etiquetas',
-                     'Eslástico',
-                     'TAG',
-                     'Transfer', ],
-            },
-        },
+        'seta_pg_label': 'PG',
+        'tem_mp': True,
+        'md_p_pb': False,
         'md_p_pg': {
+            'cabecalho': 'MD - <b><u>M</u></b>999*',
             'ests': [3, 6, 12, 15, 18, 21, 'os', 24, 55, 45, 51],
             'gargalo': 24,
             'insumos': {
                 15: ['Malha', ],
-                18: ['Etiquetas',
+                18: ['Transfer', ],
+                55: ['Etiquetas',
                      'Eslástico',
-                     'Transfer', ],
+                     'Cadarço', ],
             },
         },
-    })
+        'pb': False,
+        'pg': {
+            'cabecalho': 'PG - <b><u>A</u></b>999*<br />'
+                         'Depósito da OP: 231',
+            'insumos': {
+                18: ['TAG', ],
+                60: ['MD<br /><b><u>M</u></b>999*', ],
+            },
+        },
+        'pa_de_md': {
+            'cabecalho': 'Individual Encabidado ou<br />'
+                         'Individual Embalado<br />'
+                         '(a desativar)',
+            'insumos': {
+                18: [
+                    'TAG',
+                    'Cabide',
+                    'Embalagem',
+                    'Etiquetas',
+                    'Caixa',
+                ],
+            }
+        },
+        'pa_enc_de_pb': False,
+        'pa_emb_de_pg': {
+            'cabecalho': 'Individual Embalado',
+            'insumos': {
+                18: [
+                    'Embalagem',
+                    'Etiquetas',
+                    'Caixa',
+                ],
+            }
+        },
+        'pa_enc_de_pg': {
+            'insumos': {
+                18: [
+                    'Cabide',
+                    'Etiquetas',
+                    'Caixa',
+                ],
+            }
+        },
+    }
+    fluxo_config[5] = update_dict(fluxo_config[1], fluxo_aux)
 
     fluxo_config[6] = {
         'base': '1_bloco',
