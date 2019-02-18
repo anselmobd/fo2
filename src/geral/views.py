@@ -1076,7 +1076,7 @@ def gera_fluxo_dot(request, destino, id):
     fluxo_config[6] = {
         'base': '1_bloco',
         'fluxo_num': 6,
-        'fluxo_nome': 'Externo',
+        'fluxo_nome': 'Costura externa de camisa',
         'produto': 'CAMISA',
         'caracteristicas': [
             'Corte: Interno',
@@ -1091,10 +1091,10 @@ def gera_fluxo_dot(request, destino, id):
             'gargalo': 24,
             'insumos': {
                 15: ['Malha', ],
-                18: ['Etiquetas',
+                18: ['Transfer', ],
+                55: ['Etiquetas',
                      'Eslástico',
-                     'TAG',
-                     'Transfer', ],
+                     'TAG', ],
             },
         },
     }
