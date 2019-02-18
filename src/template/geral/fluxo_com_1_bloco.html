@@ -5,8 +5,9 @@ digraph G {
   labelloc="t";
   label="
     Fluxo {{fluxo_num}} - {{fluxo_nome}}
-    {{rascunho}} Versão {{versao_num}} ({{versao_data}})
-
+    Versão {{versao_num}} ({{versao_data}})
+    {% if rascunho %}{{rascunho}}
+    {% endif %}
     {{produto}}
     {% for caracteristica in caracteristicas %}
     {{caracteristica}}{% endfor %}
