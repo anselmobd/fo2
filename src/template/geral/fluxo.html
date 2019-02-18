@@ -33,16 +33,16 @@ digraph G {
         {% include template_bloco with bloco=pa_de_md %}
       {% endif %}
 
-      {% if pa_a_de_pb %}
-        {% include template_bloco with bloco=pa_a_de_pb %}
+      {% if pa_enc_de_pb %}
+        {% include template_bloco with bloco=pa_enc_de_pb %}
       {% endif %}
 
-      {% if pa_e_de_pg %}
-        {% include template_bloco with bloco=pa_e_de_pg %}
+      {% if pa_emb_de_pg %}
+        {% include template_bloco with bloco=pa_emb_de_pg %}
       {% endif %}
 
-      {% if pa_a_de_pg %}
-        {% include template_bloco with bloco=pa_a_de_pg %}
+      {% if pa_enc_de_pg %}
+        {% include template_bloco with bloco=pa_enc_de_pg %}
       {% endif %}
 
     }
@@ -96,7 +96,7 @@ digraph G {
 
   {rank = same L_MD{% if md_p_pb %} mdpb{% endif %}{% if md_p_pg %} mdpg{% endif %}{% if mdext1 %} mdext1{% endif %}{% if mdext2 %} mdext2{% endif %}}
   {rank = same L_PGPB{% if pb %} pb1x{% endif %} pg2x}
-  {rank = same L_PA pa0x{% if pa_a_de_pb %} pa1x{% endif %} pa2x{% if pa_a_de_pg %} pa3x{% endif %}}
+  {rank = same L_PA pa0x{% if pa_enc_de_pb %} pa1x{% endif %} pa2x{% if pa_enc_de_pg %} pa3x{% endif %}}
 
   {% if tem_mp %}{% if md_p_pb %}
   mpforro -> mdpb{% endif %}{% if md_p_pg %}
@@ -139,11 +139,11 @@ digraph G {
     {% endif %}
   {% endif %}
 
-  {% if pb and pa_a_de_pb %}
+  {% if pb and pa_enc_de_pb %}
     pb1x -> pa1x [ltail=cluster_pb1x]
   {% endif %}
   pg2x -> pa2x [ltail=cluster_pg2x]
-  {% if pa_a_de_pg %}
+  {% if pa_enc_de_pg %}
   pg2x -> pa3x [ltail=cluster_pg2x]
   {% endif %}
 
