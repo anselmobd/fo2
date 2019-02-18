@@ -573,19 +573,19 @@ def gera_fluxo_dot(request, destino, id):
                          'Individual Embalado<br />'
                          '(a desativar)',
         },
-        'pa_a_de_pb': {
+        'pa_enc_de_pb': {
             'nivel': 'pa',
             'alt_incr': 10,
             'nome': 'pa1x',
             'cabecalho': 'Individual Encabidado',
         },
-        'pa_e_de_pg': {
+        'pa_emb_de_pg': {
             'nivel': 'pa',
             'alt_incr': 20,
             'nome': 'pa2x',
             'cabecalho': 'Kit ou<br />Individual Embalado',
         },
-        'pa_a_de_pg': {
+        'pa_enc_de_pg': {
             'nivel': 'pa',
             'alt_incr': 30,
             'nome': 'pa3x',
@@ -687,7 +687,7 @@ def gera_fluxo_dot(request, destino, id):
                 ]],
             }
         },
-        'pa_a_de_pb': {
+        'pa_enc_de_pb': {
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -697,7 +697,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['#', ['PB<br /><b><u>B</u></b>999*']],
             }
         },
-        'pa_e_de_pg': {
+        'pa_emb_de_pg': {
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -709,7 +709,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['#', ['PG<br /><b><u>A</u></b>999*']],
             }
         },
-        'pa_a_de_pg': {
+        'pa_enc_de_pg': {
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -815,7 +815,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['', []],
             }
         },
-        'pa_a_de_pb': {
+        'pa_enc_de_pb': {
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -826,7 +826,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['#', ['PB<br /><b><u>B</u></b>999*']],
             }
         },
-        'pa_e_de_pg': {
+        'pa_emb_de_pg': {
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -839,7 +839,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['#', ['PG<br /><b><u>A</u></b>999*']],
             }
         },
-        'pa_a_de_pg': {
+        'pa_enc_de_pg': {
             'estagios': {
                 3: ['', ],
                 18: ['', [
@@ -915,7 +915,7 @@ def gera_fluxo_dot(request, destino, id):
                 ],
             }
         },
-        'pa_a_de_pb': {
+        'pa_enc_de_pb': {
             'ests': [3, 18, 66],
             'gargalo': 66,
             'insumos': {
@@ -927,7 +927,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['PB<br /><b><u>B</u></b>999*'],
             }
         },
-        'pa_e_de_pg': {
+        'pa_emb_de_pg': {
             'ests': [3, 18, 66],
             'gargalo': 66,
             'insumos': {
@@ -939,7 +939,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['PG<br /><b><u>A</u></b>999*'],
             }
         },
-        'pa_a_de_pg': False,
+        'pa_enc_de_pg': False,
     }
 
     fluxo_config[4] = fluxo_config[1].copy()
@@ -1073,8 +1073,8 @@ def gera_fluxo_dot(request, destino, id):
                 ],
             }
         },
-        'pa_a_de_pb': False,
-        'pa_e_de_pg': {
+        'pa_enc_de_pb': False,
+        'pa_emb_de_pg': {
             'cabecalho': 'Kit',
             'ests': [3, 18, 66],
             'gargalo': 66,
@@ -1082,7 +1082,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['PG<br /><b><u>A</u></b>999*'],
             }
         },
-        'pa_a_de_pg': False,
+        'pa_enc_de_pg': False,
     }
 
     fluxo_config[8] = {
@@ -1143,15 +1143,15 @@ def gera_fluxo_dot(request, destino, id):
                 60: ['MD<br /><b><u>M</u></b>999*'],
             }
         },
-        'pa_a_de_pb': False,
-        'pa_e_de_pg': {
+        'pa_enc_de_pb': False,
+        'pa_emb_de_pg': {
             'ests': [3, 18, 66],
             'gargalo': 66,
             'insumos': {
                 66: ['PG<br /><b><u>A</u></b>999*'],
             }
         },
-        'pa_a_de_pg': False,
+        'pa_enc_de_pg': False,
     }
 
     fluxo_config[51] = fluxo_config[1].copy()
@@ -1227,7 +1227,7 @@ def gera_fluxo_dot(request, destino, id):
                 ]],
             }
         },
-        'pa_a_de_pb': {
+        'pa_enc_de_pb': {
             'estagios': {
                 3: ['', ],
                 19: ['', [
@@ -1237,7 +1237,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['#', ['PB<br /><b><u>B</u></b>999*']],
             }
         },
-        'pa_e_de_pg': {
+        'pa_emb_de_pg': {
             'estagios': {
                 3: ['', ],
                 19: ['', [
@@ -1249,7 +1249,7 @@ def gera_fluxo_dot(request, destino, id):
                 66: ['#', ['PG<br /><b><u>A</u></b>999*']],
             }
         },
-        'pa_a_de_pg': {
+        'pa_enc_de_pg': {
             'estagios': {
                 3: ['', ],
                 19: ['', [
