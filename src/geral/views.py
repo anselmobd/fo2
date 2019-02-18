@@ -444,7 +444,7 @@ def dict_estagios():
         },
         28: {
             'descr': 'Passadoria',
-            'deposito': '231',
+            'deposito': '-',
         },
         30: {
             'descr': 'Tecelagem fundo',
@@ -616,7 +616,6 @@ def gera_fluxo_dot(request, destino, id):
         'produto': 'CUECA COM costura',
         'caracteristicas': [
             'Corte: Interno',
-            'Estamparia: Interna ou Sem',
             'Costura: Interna',
         ],
         'md_p_pb': {
@@ -713,6 +712,11 @@ def gera_fluxo_dot(request, destino, id):
     fluxo_aux = {
         'fluxo_var': '_p',
         'produto': 'PRAIA - SHORT',
+        'caracteristicas': [
+            'Corte: Interno',
+            'Estamparia: Interna ou Sem',
+            'Costura: Interna',
+        ],
         'seta_pg_label': 'PG',
         'tem_mp': True,
         'md_p_pb': False,
@@ -1189,42 +1193,48 @@ def gera_fluxo_dot(request, destino, id):
     fluxo_config[9] = {
         'base': 'cueca',
         'fluxo_num': 9,
-        'fluxo_nome': 'Meia',
         'produto': 'MEIA',
+        'fluxo_nome': 'Meia',
         'caracteristicas': [
             'Tecelagem: Interna',
-            'Costura: Interna',
         ],
         'seta_pg_label': 'PG',
         'md_p_pb': {
             'cabecalho': 'MD - <b><u>M</u></b>999*<br />'
                          'Depósito da OP: 231',
-            'ests': [3, 22, 9, 27, 28, 18, 48, 51],
+            'ests': [3, 22, 9, 27, 28, 51],
             'gargalo': 27,
             'insumos': {
-                9: ['Fio', ],
-                18: ['Etiquetas',
-                     'TAG', ],
+                27: ['Fio', ],
             },
         },
         'md_p_pg': False,
         'pb': False,
         'pg': {
-            'ests': [3, 18, 60, 57, 63],
+            'cabecalho': 'PG - <b><u>A</u></b>999*<br />'
+                         'Depósito da OP: 231<br /><br />'
+                         'Kit',
+            'ests': [3, 18, 60, 48, 57, 63],
             'gargalo': 60,
             'insumos': {
+                18: ['Etiquetas',
+                     'TAG', ],
                 60: ['MD<br /><b><u>M</u></b>999*', ],
             },
         },
         'pa_de_md': {
+            'cabecalho': 'Kit',
             'ests': [3, 18, 60, 57, 63, 66],
             'gargalo': 60,
             'insumos': {
+                18: ['Etiquetas',
+                     'TAG', ],
                 60: ['MD<br /><b><u>M</u></b>999*'],
             }
         },
         'pa_enc_de_pb': False,
         'pa_emb_de_pg': {
+            'cabecalho': 'Kit',
             'ests': [3, 18, 66],
             'gargalo': 66,
             'insumos': {
@@ -1234,114 +1244,48 @@ def gera_fluxo_dot(request, destino, id):
         'pa_enc_de_pg': False,
     }
 
-    fluxo_config[51] = fluxo_config[1].copy()
-    fluxo_config[51].update({
+    # 51
+    fluxo_aux = {
         'fluxo_num': 51,
-        'md_p_pb': {
-            'ests': [3, 6, 12, 15, 19, 21, 33, 45, 48, 51],
-            'gargalo': 33,
+    }
+    aux_blocos = [
+        'md_p_pb', 'md_p_pg', 'pb', 'pg', 'pa_de_md', 'pa_enc_de_pb',
+        'pa_emb_de_pg', 'pa_enc_de_pg',
+    ]
+    for aux_bloco in aux_blocos:
+        fluxo_aux[aux_bloco] = {
+            'ests': [e if e != 18 else 19
+                     for e in fluxo_config[1][aux_bloco]['ests']],
             'insumos': {
-                15: ['Malha', ],
-                19: ['Etiquetas',
-                     'Elástico',
-                     'TAG',
-                     'Transfer', ],
+                18: [],
+                19: (fluxo_config[1][aux_bloco]['insumos'][18]
+                     if 18 in fluxo_config[1][aux_bloco]['insumos'] else [])
             },
-        },
-        'md_p_pg': {
-            'estagios': {
-                3: ['', ],
-                6: ['', ],
-                12: ['', ],
-                15: ['', [
-                    'Malha',
-                ]],
-                19: ['', [
-                    'Etiquetas',
-                    'Elástico',
-                    'Transfer',
-                ]],
-                21: ['', ],
-                33: ['#', ],
-                45: ['', ],
-                48: ['', ],
-                51: ['', ],
+        }
+    fluxo_config[51] = update_dict(fluxo_config[1], fluxo_aux)
+
+    # 51p
+    fluxo_aux = {
+        'fluxo_num': 51,
+        'fluxo_var': '_p',
+    }
+    aux_blocos = [
+        'md_p_pb', 'md_p_pg', 'pb', 'pg', 'pa_de_md', 'pa_enc_de_pb',
+        'pa_emb_de_pg', 'pa_enc_de_pg',
+    ]
+    for aux_bloco in aux_blocos:
+        if fluxo_config['1p'][aux_bloco]:
+            fluxo_aux[aux_bloco] = {
+                'ests': [e if e != 18 else 19
+                         for e in fluxo_config['1p'][aux_bloco]['ests']],
+                'insumos': {
+                    18: [],
+                    19: (fluxo_config['1p'][aux_bloco]['insumos'][18]
+                         if 18 in fluxo_config['1p'][aux_bloco]['insumos']
+                         else [])
+                },
             }
-        },
-        'pb': {
-            'estagios': {
-                3: ['', ],
-                19: ['', [
-                    'Cabide',
-                ]],
-                60: ['#', ['MD p/ PB<br /><b><u>M</u></b>999*']],
-                57: ['', []],
-                63: ['', []],
-            }
-        },
-        'pg': {
-            'estagios': {
-                3: ['', ],
-                19: ['', ],
-                60: ['#', [
-                    'MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>']],
-                57: ['', []],
-                63: ['', []],
-            }
-        },
-        'pa_de_md': {
-            'estagios': {
-                3: ['', ],
-                19: ['', [
-                    'TAG',
-                    'Cabide',
-                    'Embalagem',
-                    'Cartela',
-                ]],
-                60: ['#', ['MD<br /><b><u>M</u></b>999*']],
-                57: ['', []],
-                63: ['', []],
-                66: ['', [
-                    'Etiquetas',
-                    'Caixa',
-                ]],
-            }
-        },
-        'pa_enc_de_pb': {
-            'estagios': {
-                3: ['', ],
-                19: ['', [
-                    'Etiquetas',
-                    'Caixa',
-                ]],
-                66: ['#', ['PB<br /><b><u>B</u></b>999*']],
-            }
-        },
-        'pa_emb_de_pg': {
-            'estagios': {
-                3: ['', ],
-                19: ['', [
-                    'Embalagem',
-                    'Cartela',
-                    'Etiquetas',
-                    'Caixa',
-                ]],
-                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
-            }
-        },
-        'pa_enc_de_pg': {
-            'estagios': {
-                3: ['', ],
-                19: ['', [
-                    'TAG',
-                    'Cabide',
-                    'Etiquetas',
-                    'Caixa',
-                ]],
-                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
-            }
-        },
-    })
+    fluxo_config['51p'] = update_dict(fluxo_config['1p'], fluxo_aux)
 
     fluxo = update_dict(
         fluxo_padrao[fluxo_config[id]['base']], fluxo_config[id])
