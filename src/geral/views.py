@@ -971,7 +971,7 @@ def gera_fluxo_dot(request, destino, id):
     fluxo_config[4] = fluxo_config[1].copy()
     fluxo_config[4].update({
         'fluxo_num': 4,
-        'fluxo_nome': 'Sem costura',
+        'fluxo_nome': 'Tecelagem de cueca',
         'produto': 'CUECA SEM costura',
         'caracteristicas': [
             'Tecelagem: Interna',
@@ -983,6 +983,7 @@ def gera_fluxo_dot(request, destino, id):
             'ests': [3, 22, 9, 27, 30, 36, 21, 'os', 24, 39, 18, 45, 48, 51],
             'gargalo': 27,
             'insumos': {
+                27: ['Fio', ],
                 15: ['Malha', ],
                 18: ['Etiquetas',
                      'TAG',
@@ -993,6 +994,7 @@ def gera_fluxo_dot(request, destino, id):
             'ests': [3, 22, 9, 27, 30, 36, 21, 'os', 24, 39, 18, 45, 48, 51],
             'gargalo': 27,
             'insumos': {
+                27: ['Fio', ],
                 15: ['Malha', ],
                 18: ['Etiquetas',
                      'Transfer', ],
