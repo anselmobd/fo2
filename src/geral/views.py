@@ -717,7 +717,7 @@ def gera_fluxo_dot(request, destino, id):
         'tem_mp': True,
         'md_p_pb': False,
         'md_p_pg': {
-            'cabecalho': 'MD p/ PG - <b><u>M</u></b>999*',
+            'cabecalho': 'MD - <b><u>M</u></b>999*',
             'insumos': {
                 18: ['Etiquetas',
                      'Elástico',
@@ -731,7 +731,7 @@ def gera_fluxo_dot(request, destino, id):
                          'Depósito da OP: 231',
             'insumos': {
                 18: ['TAG', ],
-                60: ['MD p/ PB<br /><b><u>M</u></b>999*', ],
+                60: ['MD<br /><b><u>M</u></b>999*', ],
             },
         },
         'pa_de_md': {
