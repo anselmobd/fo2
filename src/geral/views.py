@@ -519,8 +519,9 @@ def gera_fluxo_dot(request, destino, id):
         # templates
         'template_bloco': 'geral/fluxo_bloco.html',
         # específicos
+        'rascunho': '#Rascunho#',
         'versao_num': '19.01',
-        'versao_data': '11/02/2019',
+        'versao_data': '18/02/2019',
     }
 
     fluxo_padrao = {}
@@ -1264,9 +1265,6 @@ def gera_fluxo_dot(request, destino, id):
 
     fluxo = update_dict(
         fluxo_padrao[fluxo_config[id]['base']], fluxo_config[id])
-    fluxo.update({
-        'rascunho': '#Rascunho#',
-    })
 
     if destino in ['a', 'f']:
         filename = \
