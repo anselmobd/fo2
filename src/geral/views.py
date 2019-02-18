@@ -713,6 +713,7 @@ def gera_fluxo_dot(request, destino, id):
     fluxo_aux = {
         'fluxo_var': '_p',
         'produto': 'PRAIA - SHORT',
+        'seta_pg_label': 'PG',
         'tem_mp': True,
         'md_p_pb': False,
         'md_p_pg': {
@@ -773,71 +774,60 @@ def gera_fluxo_dot(request, destino, id):
     fluxo_config[2] = {
         'base': 'cueca',
         'fluxo_num': 2,
-        'fluxo_nome': 'Externo',
+        'fluxo_nome': 'Costura externa',
         'produto': 'CUECA COM costura',
         'caracteristicas': [
             'Corte: Interno',
             'Costura: Externa',
         ],
         'md_p_pb': {
-            'estagios': {
-                3: ['', ],
-                6: ['', ],
-                15: ['', [
-                    'Malha',
-                ]],
-                18: ['', ],
-                12: ['#', ],
-            }
+            'ests': [3, 6, 15, 18, 12],
+            'gargalo': 12,
+            'insumos': {
+                15: ['Malha', ],
+            },
         },
         'md_p_pg': {
-            'estagios': {
-                3: ['', ],
-                6: ['', ],
-                15: ['', [
-                    'Malha',
-                ]],
-                18: ['', ],
-                12: ['#', ],
-            }
+            'ests': [3, 6, 15, 18, 12],
+            'gargalo': 12,
+            'insumos': {
+                15: ['Malha', ],
+            },
         },
         'pb': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 21, 'os', 24, 55, 57, 63],
+            'gargalo': 24,
+            'insumos': {
+                'os': ['MD p/ PB<br /><b><u>M</u></b>999*'],
+                55: [
                     'Etiquetas',
                     'Elástico',
                     'TAG',
                     'Cabide',
-                ]],
-                21: ['', []],
-                'os': ['', ['MD p/ PB<br /><b><u>M</u></b>999*']],
-                24: ['#', []],
-                55: ['', []],
-                57: ['', []],
-                63: ['', []],
+                ],
             }
         },
         'pg': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 21, 'os', 24, 55, 57, 63],
+            'gargalo': 24,
+            'insumos': {
+                'os': ['MD p/ PB<br /><b><u>M</u></b>999<b><u>A</u></b>'],
+                55: [
                     'Etiquetas',
                     'Elástico',
-                ]],
-                21: ['', []],
-                'os': ['', [
-                    'MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>']],
-                24: ['#', []],
-                55: ['', []],
-                57: ['', []],
-                63: ['', []],
+                ],
             }
         },
         'pa_de_md': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 21, 'os', 24, 55, 57, 63, 66],
+            'gargalo': 24,
+            'insumos': {
+                18: [
+                    'Etiquetas',
+                    'Caixa',
+                ],
+                'os': ['MD<br /><b><u>M</u></b>999*'],
+                55: [
                     'Etiquetas',
                     'Elástico',
                     'TAG',
@@ -845,53 +835,47 @@ def gera_fluxo_dot(request, destino, id):
                     'Cabide',
                     'Embalagem',
                     'Cartela',
-                    'Etiquetas',
-                    'Caixa',
-                ]],
-                21: ['', []],
-                'os': ['', ['MD<br /><b><u>M</u></b>999*']],
-                24: ['#', []],
-                55: ['', []],
-                57: ['', []],
-                63: ['', []],
-                66: ['', []],
+                ],
             }
         },
         'pa_enc_de_pb': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 66],
+            'gargalo': 66,
+            'insumos': {
+                18: [
                     'Transfer',
                     'Etiquetas',
                     'Caixa',
-                ]],
-                66: ['#', ['PB<br /><b><u>B</u></b>999*']],
+                ],
+                66: ['PB<br /><b><u>B</u></b>999*'],
             }
         },
         'pa_emb_de_pg': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 66],
+            'gargalo': 66,
+            'insumos': {
+                18: [
                     'Transfer',
                     'Embalagem',
                     'Cartela',
                     'Etiquetas',
                     'Caixa',
-                ]],
-                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+                ],
+                66: ['PG<br /><b><u>A</u></b>999*'],
             }
         },
         'pa_enc_de_pg': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 66],
+            'gargalo': 66,
+            'insumos': {
+                18: [
                     'Transfer',
                     'TAG',
                     'Cabide',
                     'Etiquetas',
                     'Caixa',
-                ]],
-                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+                ],
+                66: ['PG<br /><b><u>A</u></b>999*'],
             }
         },
     }
@@ -899,7 +883,7 @@ def gera_fluxo_dot(request, destino, id):
     fluxo_config[3] = {
         'base': 'cueca',
         'fluxo_num': 3,
-        'fluxo_nome': 'Externo',
+        'fluxo_nome': 'Corte e costura externos',
         'produto': 'CUECA COM costura',
         'caracteristicas': [
             'Corte: Externo',
@@ -943,17 +927,17 @@ def gera_fluxo_dot(request, destino, id):
             'insumos': {
                 18: [
                     'Etiquetas',
+                    'Caixa',
+                ],
+                'os': ['MD<br /><b><u>M</u></b>999*'],
+                54: [
+                    'Etiquetas',
                     'Elástico',
                     'TAG',
                     'Transfer',
                     'Cabide',
                     'Embalagem',
                     'Cartela',
-                ],
-                'os': ['MD<br /><b><u>M</u></b>999*'],
-                66: [
-                    'Etiquetas',
-                    'Caixa',
                 ],
             }
         },
