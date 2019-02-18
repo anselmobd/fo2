@@ -6,8 +6,9 @@ digraph G {
   labelloc="t"
   label="
     Fluxo {{fluxo_num}} - {{fluxo_nome}}
-    {{rascunho}} Versão {{versao_num}} ({{versao_data}})
-
+    Versão {{versao_num}} ({{versao_data}})
+    {% if rascunho %}{{rascunho}}
+    {% endif %}
     {{produto}}
     {% for caracteristica in caracteristicas %}
     {{caracteristica}}{% endfor %}
@@ -116,6 +117,10 @@ digraph G {
       mdpb -> pa0x [ltail=cluster_md]
     {% else %}
       mdpb -> pa0x [ltail=cluster_mdpb]
+    {% endif %}
+  {% else %}
+    {% if md_p_pg %}
+      mdpg -> pa0x [ltail=cluster_mdpg]
     {% endif %}
   {% endif %}
 

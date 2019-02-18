@@ -510,21 +510,24 @@ def gera_fluxo_dot(request, destino, id):
     alternativas = dict_alternativas()
     roteiros = dict_roteiros()
     estagios = dict_estagios()
-
     fluxo_base = {
         # gerais
-        'estagios': estagios,
         'alternativas': alternativas,
         'roteiros': roteiros,
+        'estagios': estagios,
         # templates
         'template_bloco': 'geral/fluxo_bloco.html',
         # específicos
-        'rascunho': '#Rascunho#',
+        # 'rascunho': '#Rascunho#',
+        'rascunho': '#Pré versão final#',
         'versao_num': '19.01',
         'versao_data': '18/02/2019',
+        'versao_sufixo': '20190218_beta1',
+        'fluxo_var': '',
     }
 
     fluxo_padrao = {}
+
     fluxo_padrao['cueca'] = fluxo_base.copy()
     fluxo_padrao['cueca'].update({
         # templates
@@ -543,7 +546,7 @@ def gera_fluxo_dot(request, destino, id):
             'nivel': 'md',
             'alt_incr': 0,
             'nome': 'mdpg',
-            'cabecalho': 'MD p/ PB - <b><u>M</u></b>999<b><u>A</u></b><br />'
+            'cabecalho': 'MD p/ PG - <b><u>M</u></b>999<b><u>A</u></b><br />'
                          'Sem acessórios (TAG)<br />para encabidar',
         },
         'mdext1': False,
@@ -616,7 +619,6 @@ def gera_fluxo_dot(request, destino, id):
             'Estamparia: Interna ou Sem',
             'Costura: Interna',
         ],
-        'tem_mp': True,
         'md_p_pb': {
             'ests': [3, 6, 12, 15, 18, 21, 33, 45, 48, 51],
             'gargalo': 33,
@@ -629,104 +631,144 @@ def gera_fluxo_dot(request, destino, id):
             },
         },
         'md_p_pg': {
-            'estagios': {
-                3: ['', ],
-                6: ['', ],
-                12: ['', ],
-                15: ['', [
-                    'Malha',
-                ]],
-                18: ['', [
-                    'Etiquetas',
-                    'Elástico',
-                    'Transfer',
-                ]],
-                21: ['', ],
-                33: ['#', ],
-                45: ['', ],
-                48: ['', ],
-                51: ['', ],
-            }
+            'ests': [3, 6, 12, 15, 18, 21, 33, 45, 48, 51],
+            'gargalo': 33,
+            'insumos': {
+                15: ['Malha', ],
+                18: ['Etiquetas',
+                     'Elástico',
+                     'Transfer', ],
+            },
         },
         'pb': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
-                    'Cabide',
-                ]],
-                60: ['#', ['MD p/ PB<br /><b><u>M</u></b>999*']],
-                57: ['', []],
-                63: ['', []],
-            }
+            'ests': [3, 18, 60, 57, 63],
+            'gargalo': 60,
+            'insumos': {
+                18: ['Cabide', ],
+                60: ['MD p/ PB<br /><b><u>M</u></b>999*', ],
+            },
         },
         'pg': {
-            'estagios': {
-                3: ['', ],
-                18: ['', ],
-                60: ['#', [
-                    'MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>']],
-                57: ['', []],
-                63: ['', []],
-            }
+            'ests': [3, 18, 60, 57, 63],
+            'gargalo': 60,
+            'insumos': {
+                60: ['MD p/ PB<br /><b><u>M</u></b>999<b><u>A</u></b>', ],
+            },
         },
         'pa_de_md': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 60, 57, 63, 66],
+            'gargalo': 60,
+            'insumos': {
+                18: [
                     'TAG',
                     'Cabide',
                     'Embalagem',
                     'Cartela',
-                ]],
-                60: ['#', ['MD<br /><b><u>M</u></b>999*']],
-                57: ['', []],
-                63: ['', []],
-                66: ['', [
                     'Etiquetas',
                     'Caixa',
-                ]],
+                ],
+                60: ['MD<br /><b><u>M</u></b>999*'],
             }
         },
         'pa_enc_de_pb': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 66],
+            'gargalo': 66,
+            'insumos': {
+                18: [
                     'Etiquetas',
                     'Caixa',
-                ]],
-                66: ['#', ['PB<br /><b><u>B</u></b>999*']],
+                ],
+                66: ['PB<br /><b><u>B</u></b>999*'],
             }
         },
         'pa_emb_de_pg': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 66],
+            'gargalo': 66,
+            'insumos': {
+                18: [
                     'Embalagem',
                     'Cartela',
                     'Etiquetas',
                     'Caixa',
-                ]],
-                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+                ],
+                66: ['PG<br /><b><u>A</u></b>999*'],
             }
         },
         'pa_enc_de_pg': {
-            'estagios': {
-                3: ['', ],
-                18: ['', [
+            'ests': [3, 18, 66],
+            'gargalo': 66,
+            'insumos': {
+                18: [
                     'TAG',
                     'Cabide',
                     'Etiquetas',
                     'Caixa',
-                ]],
-                66: ['#', ['PG<br /><b><u>A</u></b>999*']],
+                ],
+                66: ['PG<br /><b><u>A</u></b>999*'],
             }
         },
     }
 
-    fluxo_config['1p'] = fluxo_config[1].copy()
-    fluxo_config['1p'].update({
+    # 1p
+    fluxo_aux = {
+        'fluxo_var': '_p',
         'produto': 'PRAIA - SHORT',
-    })
+        'tem_mp': True,
+        'md_p_pb': False,
+        'md_p_pg': {
+            'cabecalho': 'MD p/ PG - <b><u>M</u></b>999*',
+            'insumos': {
+                18: ['Etiquetas',
+                     'Elástico',
+                     'Cadarço',
+                     'Transfer', ],
+            },
+        },
+        'pb': False,
+        'pg': {
+            'cabecalho': 'PG - <b><u>A</u></b>999*<br />'
+                         'Depósito da OP: 231',
+            'insumos': {
+                18: ['TAG', ],
+                60: ['MD p/ PB<br /><b><u>M</u></b>999*', ],
+            },
+        },
+        'pa_de_md': {
+            'cabecalho': 'Individual Encabidado ou<br />'
+                         'Individual Embalado<br />'
+                         '(a desativar)',
+            'insumos': {
+                18: [
+                    'TAG',
+                    'Cabide',
+                    'Embalagem',
+                    'Etiquetas',
+                    'Caixa',
+                ],
+            }
+        },
+        'pa_enc_de_pb': False,
+        'pa_emb_de_pg': {
+            'cabecalho': 'Individual Embalado',
+            'insumos': {
+                18: [
+                    'Embalagem',
+                    'Etiquetas',
+                    'Caixa',
+                ],
+            }
+        },
+        'pa_enc_de_pg': {
+            'insumos': {
+                18: [
+                    'Cabide',
+                    'Etiquetas',
+                    'Caixa',
+                ],
+            }
+        },
+    }
+    fluxo_config['1p'] = update_dict(fluxo_config[1], fluxo_aux)
 
     fluxo_config[2] = {
         'base': 'cueca',
@@ -1268,8 +1310,8 @@ def gera_fluxo_dot(request, destino, id):
 
     if destino in ['a', 'f']:
         filename = \
-            'roteiros_alt{fluxo_num}_{versao_num}_{versao_data}.dot'.format(
-                **fluxo)
+            'roteiros_alt{fluxo_num}{fluxo_var}_{versao_num}_{versao_sufixo}' \
+            '.dot'.format(**fluxo)
         templ = loader.get_template(fluxo['template_base'])
         http_resp = HttpResponse(
             templ.render(fluxo, request), content_type='text/plain')
