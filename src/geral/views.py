@@ -303,10 +303,8 @@ def update_dict(original, adding):
     return result
 
 
-def gera_fluxo_dot(request, destino, id):
-    id = int(id)
-
-    alternativas = {
+def dict_alternativas():
+    return {
         1: 'Interno',
         11: 'PB Interno',
         21: 'PG Interno',
@@ -334,7 +332,9 @@ def gera_fluxo_dot(request, destino, id):
         29: 'PG Meia',
     }
 
-    roteiros = {
+
+def dict_roteiros():
+    return {
         'mp': {
             8: 'Forro Interno',
         },
@@ -390,7 +390,9 @@ def gera_fluxo_dot(request, destino, id):
         }
     }
 
-    estagios = {
+
+def dict_estagios():
+    return {
         3: {
             'descr': 'PCP (Liberação)',
             'deposito': '-',
@@ -498,6 +500,17 @@ def gera_fluxo_dot(request, destino, id):
         },
     }
 
+
+def gera_fluxo_dot(request, destino, id):
+    try:
+        id = int(id)
+    except Exception:
+        pass
+
+    alternativas = dict_alternativas()
+    roteiros = dict_roteiros()
+    estagios = dict_estagios()
+
     fluxo_padrao = {}
     fluxo_padrao['cueca'] = {
         # gerais
@@ -596,7 +609,7 @@ def gera_fluxo_dot(request, destino, id):
         'base': 'cueca',
         'fluxo_num': 1,
         'fluxo_nome': 'Interno',
-        'produto': 'CUECA COM costura - PRAIA - SHORT',
+        'produto': 'CUECA COM costura',
         'caracteristicas': [
             'Corte: Interno',
             'Estamparia: Interna ou Sem',
@@ -708,6 +721,11 @@ def gera_fluxo_dot(request, destino, id):
             }
         },
     }
+
+    fluxo_config['1p'] = fluxo_config[1].copy()
+    fluxo_config['1p'].update({
+        'produto': 'PRAIA - SHORT',
+    })
 
     fluxo_config[2] = {
         'base': 'cueca',

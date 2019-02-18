@@ -18,6 +18,6 @@ urlpatterns = [
 
     url(r'^pop/(?P<pop_assunto>[^/]+)/(?P<id>\d+)?$', views.pop, name='pop'),
 
-    url(r'^fluxo/(?P<destino>.)/(?P<id>\d+)$',
+    url(r'^fluxo/(?P<destino>.)/(?P<id>.+)/$',
         views.gera_fluxo_dot, name='fluxo'),
 ]
