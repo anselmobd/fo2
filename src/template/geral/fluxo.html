@@ -16,12 +16,12 @@ digraph G {
   {% if tem_mp %}
   L_MP [shape=rarrow,style=dashed,label="MP"]{% endif %}
   L_MD [shape=rarrow,style=dashed,label="MD"]
-  {% if pb or pb %}
+  {% if pb or pg %}
   L_PGPB [shape=rarrow,style=dashed,label="{{ seta_pg_label }}"]
   {% endif %}
   L_PA [shape=rarrow,style=dashed,label="PA"]
 
-  {% if tem_mp %}L_MP -> {% endif %}L_MD -> {% if pb or pb %}L_PGPB -> {% endif %}L_PA [style=invis]
+  {% if tem_mp %}L_MP -> {% endif %}L_MD -> {% if pb or pg %}L_PGPB -> {% endif %}L_PA [style=invis]
 
   {
     node [
@@ -98,8 +98,8 @@ digraph G {
   {rank = same L_MP mpforro}{% endif %}
 
   {rank = same L_MD{% if md_p_pb %} mdpb{% endif %}{% if md_p_pg %} mdpg{% endif %}{% if mdext1 %} mdext1{% endif %}{% if mdext2 %} mdext2{% endif %}}
-  {% if pb or pb %}
-  {rank = same L_PGPB{% if pb %} pb1x{% endif %}{% if pb %} pg2x{% endif %}}
+  {% if pb or pg %}
+  {rank = same L_PGPB{% if pb %} pb1x{% endif %}{% if pg %} pg2x{% endif %}}
   {% endif %}
   {rank = same L_PA pa0x{% if pa_enc_de_pb %} pa1x{% endif %}{% if pa_emb_de_pg %} pa2x{% endif %}{% if pa_enc_de_pg %} pa3x{% endif %}}
 
@@ -115,7 +115,7 @@ digraph G {
     {% endif %}
   {% else %}
     {% if md_p_pb %}
-      {% if pb %}
+      {% if pg %}
         mdpb -> pg2x [ltail=cluster_mdpb]
       {% endif %}
     {% endif %}
