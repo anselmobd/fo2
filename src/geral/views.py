@@ -1207,7 +1207,7 @@ def dict_fluxo(id):
         'base': 'cueca',
         'fluxo_num': 9,
         'produto': 'MEIA',
-        'fluxo_nome': 'Meia',
+        'fluxo_nome': 'Tecelagem de meia',
         'caracteristicas': [
             'Tecelagem: Interna',
         ],
@@ -1237,7 +1237,7 @@ def dict_fluxo(id):
         },
         'pa_de_md': {
             'cabecalho': 'Kit',
-            'ests': [3, 18, 60, 57, 63, 66],
+            'ests': [3, 18, 60, 48, 57, 63, 66],
             'gargalo': 60,
             'insumos': {
                 18: ['Etiquetas',
