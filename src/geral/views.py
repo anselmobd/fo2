@@ -530,7 +530,7 @@ def dict_fluxo(id):
         'versao_num': '19.01',
         'versao_data': '19/02/2019',
         'versao_sufixo': '20190219',
-        'fluxo_var': '',
+        'id': id,
     }
 
     fluxo_padrao = {}
@@ -619,7 +619,6 @@ def dict_fluxo(id):
 
     fluxo_config[1] = {
         'base': 'cueca',
-        'fluxo_num': 1,
         'fluxo_nome': 'Interno',
         'produto': 'CUECA COM costura',
         'caracteristicas': [
@@ -717,7 +716,6 @@ def dict_fluxo(id):
 
     # 1p
     fluxo_aux = {
-        'fluxo_var': '_p',
         'produto': 'SHORT',
         'caracteristicas': [
             'Corte: Interno',
@@ -785,7 +783,6 @@ def dict_fluxo(id):
 
     fluxo_config[2] = {
         'base': 'cueca',
-        'fluxo_num': 2,
         'fluxo_nome': 'Costura externa',
         'produto': 'CUECA COM costura',
         'caracteristicas': [
@@ -894,7 +891,6 @@ def dict_fluxo(id):
 
     fluxo_config[3] = {
         'base': 'cueca',
-        'fluxo_num': 3,
         'fluxo_nome': 'Corte e costura externos',
         'produto': 'CUECA COM costura',
         'caracteristicas': [
@@ -983,7 +979,6 @@ def dict_fluxo(id):
 
     fluxo_config[4] = fluxo_config[1].copy()
     fluxo_config[4].update({
-        'fluxo_num': 4,
         'fluxo_nome': 'Tecelagem de cueca',
         'produto': 'CUECA SEM costura',
         'caracteristicas': [
@@ -1017,7 +1012,6 @@ def dict_fluxo(id):
 
     # 5 <- 1
     fluxo_aux = {
-        'fluxo_num': 5,
         'fluxo_nome': 'Costura externa de praia',
         'produto': 'PRAIA',
         'caracteristicas': [
@@ -1094,7 +1088,6 @@ def dict_fluxo(id):
 
     fluxo_config[6] = {
         'base': '1_bloco',
-        'fluxo_num': 6,
         'fluxo_nome': 'Costura externa de camisa',
         'produto': 'CAMISA',
         'caracteristicas': [
@@ -1118,7 +1111,6 @@ def dict_fluxo(id):
 
     fluxo_config[7] = {
         'base': 'cueca',
-        'fluxo_num': 7,
         'fluxo_nome': 'Pijama',
         'produto': 'PIJAMA',
         'caracteristicas': [],
@@ -1184,7 +1176,6 @@ def dict_fluxo(id):
 
     fluxo_config[8] = {
         'base': '1_bloco',
-        'fluxo_num': 8,
         'fluxo_nome': 'Parte',
         'produto': 'PRAIA (Forro)',
         'caracteristicas': [
@@ -1205,7 +1196,6 @@ def dict_fluxo(id):
 
     fluxo_config[9] = {
         'base': 'cueca',
-        'fluxo_num': 9,
         'produto': 'MEIA',
         'fluxo_nome': 'Tecelagem de meia',
         'caracteristicas': [
@@ -1258,9 +1248,7 @@ def dict_fluxo(id):
     }
 
     # 51
-    fluxo_aux = {
-        'fluxo_num': 51,
-    }
+    fluxo_aux = {}
     aux_blocos = [
         'md_p_pb', 'md_p_pg', 'pb', 'pg', 'pa_de_md', 'pa_enc_de_pb',
         'pa_emb_de_pg', 'pa_enc_de_pg',
@@ -1279,8 +1267,6 @@ def dict_fluxo(id):
 
     # 51p
     fluxo_aux = {
-        'fluxo_num': 51,
-        'fluxo_var': '_p',
         'produto': 'PRAIA - SHORT',
         'tem_mp': True,
         'pg': False,
@@ -1318,7 +1304,7 @@ def gera_fluxo_dot(request, destino, id):
 
     if destino in ['a', 'f']:
         filename = \
-            'roteiros_alt{fluxo_num}{fluxo_var}_{versao_num}_{versao_sufixo}' \
+            'roteiros_alt{id}_{versao_num}_{versao_sufixo}' \
             '.dot'.format(**fluxo)
         templ = loader.get_template(fluxo['template_base'])
         http_resp = HttpResponse(
