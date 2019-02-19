@@ -320,10 +320,10 @@ def dict_alternativas():
         14: 'PB Sem Costura',
         24: 'PG Sem Costura',
         34: 'PA de PG Sem Costura',
-        5: 'Praia',
-        15: 'PB Praia',
-        25: 'PG Praia',
-        35: 'PA de PG Praia',
+        5: 'Sunga',
+        15: 'PB Sunga',
+        25: 'PG Sunga',
+        35: 'PA de PG Sunga',
         6: 'Camisa',
         7: 'Pijama',
         27: 'PG Pijama',
@@ -347,7 +347,7 @@ def dict_roteiros():
             2: 'MD Unidade Sem Corte',
             3: 'MD Unidade Com Corte',
             4: 'MD Sem Costura',
-            5: 'MD Praia',
+            5: 'MD Sunga',
             6: 'MD Camisa',
             9: 'MD Meia',
             51: 'MD Interno',
@@ -357,7 +357,7 @@ def dict_roteiros():
             12: 'PB Unidade Sem Corte',
             13: 'PB Unidade Com Corte',
             14: 'PB Sem Costura',
-            15: 'PB Praia',
+            15: 'PB Sunga',
             61: 'PB Interno',
         },
         'pg': {
@@ -365,7 +365,7 @@ def dict_roteiros():
             22: 'PG Unidade Sem Corte',
             23: 'PG Unidade Com Corte',
             24: 'PG Sem Costura',
-            25: 'PG Praia',
+            25: 'PG Sunga',
             27: 'PG Pijama',
             29: 'PG Meia',
             71: 'PG Interno',
@@ -386,10 +386,10 @@ def dict_roteiros():
             14: 'PA de PB Sem Costura',
             24: 'PA de PG Sem Costura',
             34: 'PA de PG Sem Costura',
-            5: 'PA Praia',
-            15: 'PA de PB Praia',
-            25: 'PA de PG Praia',
-            35: 'PA de PG Praia',
+            5: 'PA Sunga',
+            15: 'PA de PB Sunga',
+            25: 'PA de PG Sunga',
+            35: 'PA de PG Sunga',
             7: 'PA Pijama',
             27: 'PA de PG Pijama',
             9: 'PA Meia',
@@ -513,6 +513,12 @@ def dict_estagios():
 
 
 def dict_fluxo(id):
+    try:
+        id = int(id)
+        fluxo_num = int(id)
+    except Exception:
+        fluxo_num = int(id[:-1])
+
     alternativas = dict_alternativas()
     roteiros = dict_roteiros()
     estagios = dict_estagios()
@@ -531,6 +537,7 @@ def dict_fluxo(id):
         'versao_data': '19/02/2019',
         'versao_sufixo': '20190219',
         'id': id,
+        'fluxo_num': fluxo_num,
     }
 
     fluxo_padrao = {}
@@ -1012,8 +1019,8 @@ def dict_fluxo(id):
 
     # 5 <- 1
     fluxo_aux = {
-        'fluxo_nome': 'Costura externa de praia',
-        'produto': 'PRAIA',
+        'fluxo_nome': 'Costura externa de sunga',
+        'produto': 'SUNGA',
         'caracteristicas': [
             'Corte: Interno',
             'Estamparia: Interna ou Sem',
@@ -1177,7 +1184,7 @@ def dict_fluxo(id):
     fluxo_config[8] = {
         'base': '1_bloco',
         'fluxo_nome': 'Parte',
-        'produto': 'PRAIA (Forro)',
+        'produto': 'SUNGA (Forro)',
         'caracteristicas': [
             'Corte: Interno',
         ],
@@ -1267,7 +1274,7 @@ def dict_fluxo(id):
 
     # 51p
     fluxo_aux = {
-        'produto': 'PRAIA - SHORT',
+        'produto': 'SUNGA - SHORT',
         'tem_mp': True,
         'pg': False,
         'pa_emb_de_pg': False,
@@ -1295,11 +1302,6 @@ def dict_fluxo(id):
 
 
 def gera_fluxo_dot(request, destino, id):
-    try:
-        id = int(id)
-    except Exception:
-        pass
-
     fluxo = dict_fluxo(id)
 
     if destino in ['a', 'f']:
