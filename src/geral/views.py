@@ -315,7 +315,7 @@ def dict_alternativas():
         32: 'PA de PG Unidade Sem Corte',
         3: 'Unidade Com Corte',
         13: 'PB Unidade Com Corte',
-        24: 'PG Unidade Com Corte',
+        23: 'PG Unidade Com Corte',
         4: 'Sem Costura',
         14: 'PB Sem Costura',
         24: 'PG Sem Costura',
@@ -330,6 +330,10 @@ def dict_alternativas():
         8: 'Forro Interno',
         9: 'Meia',
         29: 'PG Meia',
+        51: 'Interno',
+        61: 'PB Interno',
+        71: 'PG Interno',
+        81: 'PA de PG Interno',
     }
 
 
@@ -346,6 +350,7 @@ def dict_roteiros():
             5: 'MD Praia',
             6: 'MD Camisa',
             9: 'MD Meia',
+            51: 'MD Interno',
         },
         'pb': {
             11: 'PB Interno',
@@ -353,6 +358,7 @@ def dict_roteiros():
             13: 'PB Unidade Com Corte',
             14: 'PB Sem Costura',
             15: 'PB Praia',
+            61: 'PB Interno',
         },
         'pg': {
             21: 'PG Interno',
@@ -362,6 +368,7 @@ def dict_roteiros():
             25: 'PG Praia',
             27: 'PG Pijama',
             29: 'PG Meia',
+            71: 'PG Interno',
         },
         'pa': {
             1: 'PA Interno',
@@ -387,6 +394,10 @@ def dict_roteiros():
             27: 'PA de PG Pijama',
             9: 'PA Meia',
             29: 'PA de PG Meia',
+            51: 'PA Interno',
+            61: 'PA de PB Interno',
+            71: 'PA de PG Interno',
+            81: 'PA de PG Interno',
         }
     }
 
@@ -519,10 +530,10 @@ def gera_fluxo_dot(request, destino, id):
         'template_bloco': 'geral/fluxo_bloco.html',
         # específicos
         # 'rascunho': '#Rascunho#',
-        'rascunho': '#Pré versão final#',
+        'rascunho': '',
         'versao_num': '19.01',
-        'versao_data': '18/02/2019',
-        'versao_sufixo': '20190218_beta1',
+        'versao_data': '19/02/2019',
+        'versao_sufixo': '20190219',
         'fluxo_var': '',
     }
 
@@ -651,7 +662,7 @@ def gera_fluxo_dot(request, destino, id):
             'ests': [3, 18, 60, 57, 63],
             'gargalo': 60,
             'insumos': {
-                60: ['MD p/ PB<br /><b><u>M</u></b>999<b><u>A</u></b>', ],
+                60: ['MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>', ],
             },
         },
         'pa_de_md': {
@@ -659,7 +670,6 @@ def gera_fluxo_dot(request, destino, id):
             'gargalo': 60,
             'insumos': {
                 18: [
-                    'TAG',
                     'Cabide',
                     'Embalagem',
                     'Cartela',
@@ -815,7 +825,7 @@ def gera_fluxo_dot(request, destino, id):
             'ests': [3, 18, 21, 'os', 24, 55, 57, 63],
             'gargalo': 24,
             'insumos': {
-                'os': ['MD p/ PB<br /><b><u>M</u></b>999<b><u>A</u></b>'],
+                'os': ['MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>'],
                 55: [
                     'Etiquetas',
                     'Elástico',
@@ -903,26 +913,28 @@ def gera_fluxo_dot(request, destino, id):
             'ests': [3, 18, 21, 'os', 24, 54, 57, 63],
             'gargalo': 24,
             'insumos': {
-                18: [
+                'os': ['MD<br /><b><u>M</u></b>999*', ],
+                57: [
                     'Malha',
                     'Etiquetas',
                     'Elástico',
+                    'Transfer',
                     'TAG',
                     'Cabide',
                 ],
-                'os': ['MD<br /><b><u>M</u></b>999*', ],
             },
         },
         'pg': {
             'ests': [3, 18, 21, 'os', 24, 54, 57, 63],
             'gargalo': 24,
             'insumos': {
-                18: [
+                'os': ['MD<br /><b><u>M</u></b>999*', ],
+                57: [
                     'Malha',
                     'Etiquetas',
                     'Elástico',
+                    'Transfer',
                 ],
-                'os': ['MD<br /><b><u>M</u></b>999*', ],
             },
         },
         'pa_de_md': {
@@ -938,7 +950,6 @@ def gera_fluxo_dot(request, destino, id):
                     'Etiquetas',
                     'Elástico',
                     'TAG',
-                    'Transfer',
                     'Cabide',
                     'Embalagem',
                     'Cartela',
@@ -950,7 +961,6 @@ def gera_fluxo_dot(request, destino, id):
             'gargalo': 66,
             'insumos': {
                 18: [
-                    'Transfer',
                     'Etiquetas',
                     'Caixa',
                 ],
@@ -962,7 +972,8 @@ def gera_fluxo_dot(request, destino, id):
             'gargalo': 66,
             'insumos': {
                 18: [
-                    'Transfer',
+                    'Embalagem',
+                    'Cartela',
                     'Etiquetas',
                     'Caixa',
                 ],
@@ -1096,9 +1107,7 @@ def gera_fluxo_dot(request, destino, id):
             'insumos': {
                 15: ['Malha', ],
                 18: ['Transfer', ],
-                55: ['Etiquetas',
-                     'Eslástico',
-                     'TAG', ],
+                55: ['Etiquetas', ],
             },
         },
     }
