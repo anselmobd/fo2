@@ -575,6 +575,7 @@ def dict_fluxo(id):
                          'Kit ou<br />Individual Encabidado ou<br />'
                          'Individual Embalado',
         },
+        'pa_cabecalho': 'PA - 9999*\nDepósito da OP: 101/102',
         'pa_de_md': {
             'nivel': 'pa',
             'alt_incr': 0,
@@ -717,22 +718,23 @@ def dict_fluxo(id):
     # 1p
     fluxo_aux = {
         'fluxo_var': '_p',
-        'produto': 'PRAIA - SHORT',
+        'produto': 'SHORT',
         'caracteristicas': [
             'Corte: Interno',
             'Estamparia: Interna ou Sem',
             'Costura: Interna',
         ],
         'seta_pg_label': 'PG',
-        'tem_mp': True,
+        'tem_mp': False,
         'md_p_pb': False,
         'md_p_pg': {
             'cabecalho': 'MD - <b><u>M</u></b>999*',
             'insumos': {
+                15: ['Forro',
+                     'Malha', ],
                 18: ['Etiquetas',
                      'Elástico',
-                     'Cadarço',
-                     'Transfer', ],
+                     'Cadarço', ],
             },
         },
         'pb': False,
@@ -1013,7 +1015,7 @@ def dict_fluxo(id):
         },
     })
 
-    # 5
+    # 5 <- 1
     fluxo_aux = {
         'fluxo_num': 5,
         'fluxo_nome': 'Costura externa de praia',
@@ -1027,13 +1029,14 @@ def dict_fluxo(id):
         'tem_mp': True,
         'md_p_pb': False,
         'md_p_pg': {
-            'cabecalho': 'MD - <b><u>M</u></b>999*',
+            'cabecalho': 'MD - <b><u>C</u></b>999*',
             'ests': [3, 6, 12, 15, 18, 21, 'os', 24, 55, 45, 51],
             'gargalo': 24,
             'insumos': {
                 15: ['Malha', ],
                 18: ['Transfer', ],
                 55: ['Etiquetas',
+                     'Forro - <b><u>F</u></b>999*',
                      'Eslástico',
                      'Cadarço', ],
             },
@@ -1044,11 +1047,13 @@ def dict_fluxo(id):
                          'Depósito da OP: 231',
             'insumos': {
                 18: ['TAG', ],
-                60: ['MD<br /><b><u>M</u></b>999*', ],
+                60: ['MD<br /><b><u>C</u></b>999*', ],
             },
         },
+        'pa_cabecalho': 'PA\nDepósito da OP: 101/102',
         'pa_de_md': {
-            'cabecalho': 'Individual Encabidado ou<br />'
+            'cabecalho': 'PA - 9999*<br /><br />'
+                         'Individual Encabidado ou<br />'
                          'Individual Embalado<br />'
                          '(a desativar)',
             'insumos': {
@@ -1063,7 +1068,8 @@ def dict_fluxo(id):
         },
         'pa_enc_de_pb': False,
         'pa_emb_de_pg': {
-            'cabecalho': 'Individual Embalado',
+            'cabecalho': 'PA - 9999<b><u>A</u></b><br /><br />'
+                         'Individual Embalado',
             'insumos': {
                 18: [
                     'Embalagem',
@@ -1073,6 +1079,8 @@ def dict_fluxo(id):
             }
         },
         'pa_enc_de_pg': {
+            'cabecalho': 'PA - 9999<b><u>A</u></b><br /><br />'
+                         'Individual Encabidado',
             'insumos': {
                 18: [
                     'Cabide',
@@ -1273,6 +1281,8 @@ def dict_fluxo(id):
     fluxo_aux = {
         'fluxo_num': 51,
         'fluxo_var': '_p',
+        'produto': 'PRAIA - SHORT',
+        'tem_mp': True,
     }
     aux_blocos = [
         'md_p_pb', 'md_p_pg', 'pb', 'pg', 'pa_de_md', 'pa_enc_de_pb',
