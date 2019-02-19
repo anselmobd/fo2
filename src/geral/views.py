@@ -512,15 +512,11 @@ def dict_estagios():
     }
 
 
-def gera_fluxo_dot(request, destino, id):
-    try:
-        id = int(id)
-    except Exception:
-        pass
-
+def dict_fluxo(id):
     alternativas = dict_alternativas()
     roteiros = dict_roteiros()
     estagios = dict_estagios()
+
     fluxo_base = {
         # gerais
         'alternativas': alternativas,
@@ -1296,8 +1292,17 @@ def gera_fluxo_dot(request, destino, id):
             }
     fluxo_config['51p'] = update_dict(fluxo_config['1p'], fluxo_aux)
 
-    fluxo = update_dict(
+    return update_dict(
         fluxo_padrao[fluxo_config[id]['base']], fluxo_config[id])
+
+
+def gera_fluxo_dot(request, destino, id):
+    try:
+        id = int(id)
+    except Exception:
+        pass
+
+    fluxo = dict_fluxo(id)
 
     if destino in ['a', 'f']:
         filename = \
