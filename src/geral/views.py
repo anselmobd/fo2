@@ -1283,10 +1283,12 @@ def dict_fluxo(id):
         'fluxo_var': '_p',
         'produto': 'PRAIA - SHORT',
         'tem_mp': True,
+        'pg': False,
+        'pa_emb_de_pg': False,
+        'pa_enc_de_pg': False,
     }
     aux_blocos = [
-        'md_p_pb', 'md_p_pg', 'pb', 'pg', 'pa_de_md', 'pa_enc_de_pb',
-        'pa_emb_de_pg', 'pa_enc_de_pg',
+        'md_p_pb', 'md_p_pg', 'pb', 'pa_de_md', 'pa_enc_de_pb',
     ]
     for aux_bloco in aux_blocos:
         if fluxo_config['1p'][aux_bloco]:
