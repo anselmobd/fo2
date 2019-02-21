@@ -143,7 +143,13 @@ def produtos_n1_basic(param):
         '''
     elif tipo == 'PG':
         sql = sql + '''
-            AND (p.REFERENCIA like 'A%' or p.REFERENCIA like 'B%')
+            AND (p.REFERENCIA like 'A%')
+            ORDER BY
+            p.REFERENCIA
+        '''
+    elif tipo == 'PB':
+        sql = sql + '''
+            AND (p.REFERENCIA like 'B%')
             ORDER BY
             p.REFERENCIA
         '''
@@ -170,7 +176,8 @@ def ref_inform(cursor, ref):
         SELECT
           r.REFERENCIA REF
         , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
-          WHEN r.REFERENCIA < 'C0000' THEN 'PG'
+          WHEN r.REFERENCIA < 'B0000' THEN 'PG'
+          WHEN r.REFERENCIA < 'C0000' THEN 'PB'
           WHEN r.REFERENCIA < 'Z0000' THEN 'MD'
           ELSE 'MP'
           END TIPO
@@ -242,7 +249,8 @@ def ref_utilizada_em(cursor, ref):
         SELECT DISTINCT
           ec.GRUPO_ITEM REF
         , CASE WHEN ec.GRUPO_ITEM <= '99999' THEN 'PA'
-          WHEN ec.GRUPO_ITEM < 'C0000' THEN 'PG'
+          WHEN ec.GRUPO_ITEM < 'B0000' THEN 'PG'
+          WHEN ec.GRUPO_ITEM < 'C0000' THEN 'PB'
           WHEN ec.GRUPO_ITEM < 'Z0000' THEN 'MD'
           ELSE 'MP'
           END TIPO
@@ -529,7 +537,8 @@ def modelo_inform(cursor, modelo):
           re.REF
         , COALESCE( r.DESCR_REFERENCIA, ' ' ) DESCR
         , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
-          WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
+          WHEN r.REFERENCIA like 'A%' THEN 'PG'
+          WHEN r.REFERENCIA like 'B%' THEN 'PB'
           WHEN r.REFERENCIA like 'Z%' THEN 'MP'
           ELSE 'MD'
           END TIPO
@@ -656,7 +665,8 @@ def busca_produto(cursor, busca, cor, roteiro, alternativa):
           r.NIVEL_ESTRUTURA NIVEL
         , r.REFERENCIA REF
         , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
-          WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
+          WHEN r.REFERENCIA like 'A%' THEN 'PG'
+          WHEN r.REFERENCIA like 'B%' THEN 'PB'
           WHEN r.REFERENCIA like 'Z%' THEN 'MP'
           ELSE 'MD'
           END TIPO
