@@ -1345,26 +1345,36 @@ def dict_colecao_fluxos(colecao, tipo, ref):
         },
     }
 
+    col_id = None
     for col_tuple in cf:
         if colecao in col_tuple:
             col_id = col_tuple
             break
+    if col_id is None:
+        return []
     col_dict = cf[col_id]
 
+    tipo_id = None
     for tipo_tuple in col_dict:
         if tipo in tipo_tuple:
             tipo_id = tipo_tuple
             break
+    if tipo_id is None:
+        return []
     tipo_dict = col_dict[tipo_id]
 
-    inicio = ''
     if tipo == 'md':
         inicio = ref[0]
+    else:
+        inicio = ''
 
     if inicio in tipo_dict:
         return tipo_dict[inicio]
     else:
-        return tipo_dict['']
+        if '' in tipo_dict:
+            return tipo_dict['']
+        else:
+            return []
 
 
 def gera_fluxo_dot(request, destino, id):
