@@ -20,10 +20,20 @@
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
-{% endif %}
-{% if roteiros %}
-  <pre>
-    {{roteiros}}
-  </pre>
+{% else %}
+  <h4>Coleção: {{ colecao }}</h4>
+  <h4>Tipo: {{ tipo|upper }}</h4>
+  {% if fluxos %}
+    <h4>Fluxos</h4>
+    <pre>
+      {{fluxos}}
+    </pre>
+  {% endif %}
+  {% if roteiros %}
+    <h4>Roteiros</h4>
+    <pre>
+      {{roteiros}}
+    </pre>
+  {% endif %}
 {% endif %}
 {% endblock %}
