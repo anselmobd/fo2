@@ -1343,6 +1343,9 @@ def dict_colecao_fluxos(colecao, tipo, ref):
                        'C': [5],
                        },
         },
+        (50, ): {
+            ('md', ): {'V': [8]}
+        },
     }
 
     col_id = None
