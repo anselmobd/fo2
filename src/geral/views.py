@@ -1396,7 +1396,7 @@ def gera_fluxo_dot(request, destino, id):
             request, fluxo['template_base'], fluxo, content_type='text/plain')
 
 
-def roteiros_de_fluxo(request, id):
+def get_roteiros_de_fluxo(id):
     fluxo = dict_fluxo(id)
 
     roteiros = {}
@@ -1414,7 +1414,11 @@ def roteiros_de_fluxo(request, id):
                     fluxo[k]['ests'],
                     fluxo[k]['gargalo'],
                 ]
+    return roteiros
 
+
+def roteiros_de_fluxo(request, id):
+    roteiros = get_roteiros_de_fluxo(id)
     return HttpResponse(
         pformat(roteiros, indent=4),
         content_type='text/plain')
