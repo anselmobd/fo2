@@ -227,7 +227,7 @@ def ref_inform(cursor, ref):
          AND ac.ARTIGO = r.ARTIGO
         JOIN BASI_240 cf
           ON cf.CLASSIFIC_FISCAL = r.CLASSIFIC_FISCAL
-        JOIN PEDI_010 cl
+        LEFT JOIN PEDI_010 cl
           ON cl.CGC_9 = r.CGC_CLIENTE_9
          and cl.CGC_4 = r.CGC_CLIENTE_4
         WHERE r.REFERENCIA = %s
