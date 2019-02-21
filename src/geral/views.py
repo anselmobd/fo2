@@ -13,9 +13,11 @@ from django.template import loader
 from fo2.models import rows_to_dict_list
 # from utils.classes import LoggedInUser
 
+import produto.queries
+
 from .models import Painel, PainelModulo, InformacaoModulo, \
                     UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
-from .forms import InformacaoModuloForm, PopForm
+from .forms import InformacaoModuloForm, PopForm, GeraRoteirosRefForm
 
 
 def index(request):
@@ -1344,3 +1346,41 @@ def roteiros_de_fluxo(request, id):
     return HttpResponse(
         pformat(roteiros, indent=4),
         content_type='text/plain')
+
+
+class GeraRoteirosRef(View):
+    Form_class = GeraRoteirosRefForm
+    template_name = 'geral/gera_roteiros_ref.html'
+    title_name = 'Gera roteiros de referência'
+
+    def mount_context(self, cursor, ref):
+        context = {
+            'ref': ref,
+            }
+
+        data = produto.queries.ref_inform(cursor, ref)
+        if len(data) == 0:
+            context.update({'erro': 'Referência não encontrada'})
+            return context
+
+        context.update({
+            'roteiros': 'teste',
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            ref = form.cleaned_data['ref']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, ref))
+        context['form'] = form
+        return render(request, self.template_name, context)
