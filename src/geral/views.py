@@ -1305,6 +1305,27 @@ def dict_fluxo(id):
         fluxo_padrao[fluxo_config[id]['base']], fluxo_config[id])
 
 
+def dict_colecao_fluxos(colecao, tipo, ref):
+    cf = {
+        1: {
+            'pa': {'': [1, 2, 3, 51]},
+            'pg': {'': [1, 2, 3, 51]},
+            'pb': {'': [1, 2, 3, 51]},
+            'md': {'M': [1, 51],
+                   'C': [2],
+                   'R': [3],
+                   }
+        },
+    }
+    inicio = ''
+    if tipo == 'md':
+        inicio = ref[0]
+        if inicio < 'C':
+            inicio = ''
+
+    return cf[colecao][tipo][inicio]
+
+
 def gera_fluxo_dot(request, destino, id):
     fluxo = dict_fluxo(id)
 
@@ -1363,8 +1384,18 @@ class GeraRoteirosRef(View):
             context.update({'erro': 'Referência não encontrada'})
             return context
 
+        info = data[0]
+        tipo = info['TIPO'].lower()
+        colecao = info['COLECAO']
+        colecao_id = info['CODIGO_COLECAO']
+
+        fluxos = dict_colecao_fluxos(colecao_id, tipo, ref)
+
         context.update({
-            'roteiros': 'teste',
+            'colecao': colecao,
+            'tipo': tipo,
+            'fluxos': fluxos,
+            'roteiros': 'roteiros',
         })
 
         return context
