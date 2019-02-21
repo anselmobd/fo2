@@ -1408,6 +1408,8 @@ def get_roteiros_de_fluxo(id):
                     tipo = fluxo[k]['nivel']
                 else:
                     tipo = k[:2]
+                if tipo == 'mp':
+                    tipo = 'md'
                 if tipo not in roteiros:
                     roteiros[tipo] = {}
                 roteiros[tipo][fluxo_num+fluxo[k]['alt_incr']] = [
@@ -1446,11 +1448,17 @@ class GeraRoteirosRef(View):
 
         fluxos = dict_colecao_fluxos(colecao_id, tipo, ref)
 
+        roteiros = []
+        for fluxo in fluxos:
+            fluxo_roteiros = get_roteiros_de_fluxo(fluxo)
+            if tipo in fluxo_roteiros:
+                roteiros += list(fluxo_roteiros[tipo].keys())
+
         context.update({
             'colecao': colecao,
             'tipo': tipo,
             'fluxos': fluxos,
-            'roteiros': 'roteiros',
+            'roteiros': roteiros,
         })
 
         return context
