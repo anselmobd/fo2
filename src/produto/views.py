@@ -113,7 +113,8 @@ def stat_nivel(request):
         SELECT
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
-            WHEN p.REFERENCIA like 'A%' or p.REFERENCIA like 'B%' THEN '1-PG'
+            WHEN p.REFERENCIA like 'A%' THEN '1-PG'
+            WHEN p.REFERENCIA like 'B%' THEN '1-PB'
             WHEN p.REFERENCIA like 'Z%' THEN '1-MP'
             ELSE '1-MD'
             END ||
@@ -128,7 +129,8 @@ def stat_nivel(request):
         GROUP BY
           CASE WHEN p.NIVEL_ESTRUTURA = 1 THEN
             CASE WHEN p.REFERENCIA <= '99999' THEN '1-PA'
-            WHEN p.REFERENCIA like 'A%' or p.REFERENCIA like 'B%' THEN '1-PG'
+            WHEN p.REFERENCIA like 'A%' THEN '1-PG'
+            WHEN p.REFERENCIA like 'B%' THEN '1-PB'
             WHEN p.REFERENCIA like 'Z%' THEN '1-MP'
             ELSE '1-MD'
             END ||
@@ -153,7 +155,7 @@ def stat_nivelX(request):
 
 # ajax template, url with value
 def stat_niveis(request, nivel):
-    if nivel[0:4] in ('1-MD', '1-PG', '1-PA', '1-MP'):
+    if nivel[0:4] in ('1-MD', '1-PB', '1-PG', '1-PA', '1-MP'):
         data = queries.produtos_n1_basic(nivel[2:])
         context = {
             'nivel': nivel,
@@ -281,6 +283,8 @@ class Ref(View):
             })
 
             for row in data:
+                if row['COLECAO_CLIENTE'] is None:
+                    row['COLECAO_CLIENTE'] = '-'
                 if row['STATUS'] is None:
                     row['STATUS'] = '-'
                 if row['CNPJ9'] is None:
