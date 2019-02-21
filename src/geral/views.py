@@ -1363,18 +1363,15 @@ def dict_colecao_fluxos(colecao, tipo, ref):
         return []
     tipo_dict = col_dict[tipo_id]
 
+    inicio = ['']
     if tipo == 'md':
-        inicio = ref[0]
-    else:
-        inicio = ''
+        inicio.insert(0, ref[0])
 
-    if inicio in tipo_dict:
-        return tipo_dict[inicio]
-    else:
-        if '' in tipo_dict:
-            return tipo_dict['']
-        else:
-            return []
+    for ini in inicio:
+        if ini in tipo_dict:
+            return tipo_dict[ini]
+
+    return []
 
 
 def gera_fluxo_dot(request, destino, id):
