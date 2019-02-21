@@ -20,4 +20,7 @@ urlpatterns = [
 
     url(r'^fluxo/(?P<destino>.)/(?P<id>.+)/$',
         views.gera_fluxo_dot, name='fluxo'),
+
+    url(r'^roteiros_de_fluxo/(?P<id>.+)/$',
+        views.roteiros_de_fluxo, name='roteiros_de_fluxo'),
 ]

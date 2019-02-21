@@ -1,5 +1,5 @@
 import yaml
-from pprint import pprint
+from pprint import pprint, pformat
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import connections
@@ -1320,3 +1320,27 @@ def gera_fluxo_dot(request, destino, id):
     else:
         return render(
             request, fluxo['template_base'], fluxo, content_type='text/plain')
+
+
+def roteiros_de_fluxo(request, id):
+    fluxo = dict_fluxo(id)
+
+    roteiros = {}
+    fluxo_num = fluxo['fluxo_num']
+    for k in fluxo:
+        if isinstance(fluxo[k], dict):
+            if 'ests' in fluxo[k]:
+                if k == 'bloco':
+                    tipo = fluxo[k]['nivel']
+                else:
+                    tipo = k[:2]
+                if tipo not in roteiros:
+                    roteiros[tipo] = {}
+                roteiros[tipo][fluxo_num+fluxo[k]['alt_incr']] = [
+                    fluxo[k]['ests'],
+                    fluxo[k]['gargalo'],
+                ]
+
+    return HttpResponse(
+        pformat(roteiros, indent=4),
+        content_type='text/plain')
