@@ -1308,54 +1308,42 @@ def dict_fluxo(id):
 def dict_colecao_fluxos(colecao, tipo, ref):
     cf = {
         (1, 2, 3, 4, 13, 15, ): {
-            'pa': {'': [1, 2, 3, 51]},
-            'pg': {'': [1, 2, 3, 51]},
-            'pb': {'': [1, 2, 3, 51]},
-            'md': {'M': [1, 51],
-                   'C': [2],
-                   'R': [3],
-                   },
+            ('pa', 'pg', 'pb', ): {'': [1, 2, 3, 51]},
+            ('md', ): {'M': [1, 51],
+                       'C': [2],
+                       'R': [3],
+                       },
         },
         (5, ): {
-            'md': {'M': [51],
-                   'C': [6],
-                   },
+            ('md', ): {'M': [51],
+                       'C': [6],
+                       },
         },
         (6, ): {
-            'md': {'M': [51]}
+            ('md', ): {'M': [51]}
         },
         (7, ): {
-            'pa': {'': [7, 51]},
-            'pg': {'': [7, 51]},
+            ('pa', 'pg'): {'': [7, 51]},
         },
         (8, ): {
-            'pa': {'': [5, '51p']},
-            'pg': {'': [5]},
-            'md': {'M': ['51p'],
-                   'C': [5],
-                   'F': [8],
-                   },
+            ('pa', ): {'': [5, '51p']},
+            ('pg', ): {'': [5]},
+            ('md', ): {'M': ['51p'],
+                       'C': [5],
+                       'F': [8],
+                       },
         },
         (9, 10, 11, 12, 16, 17, ): {
-            'pa': {'': [4]},
-            'pg': {'': [4]},
-            'pb': {'': [4]},
-            'md': {'': [4]},
+            ('pa', 'pg', 'pb', 'md', ): {'': [4]},
         },
         (18, ): {
-            'pa': {'': ['1p', 5, '51p']},
-            'pg': {'': ['1p', 5]},
-            'md': {'M': ['1p', '51p'],
-                   'C': [5],
-                   },
+            ('pa', ): {'': ['1p', 5, '51p']},
+            ('pg', ): {'': ['1p', 5]},
+            ('md', ): {'M': ['1p', '51p'],
+                       'C': [5],
+                       },
         },
     }
-
-    inicio = ''
-    if tipo == 'md':
-        inicio = ref[0]
-        if inicio < 'C':
-            inicio = ''
 
     for col_tuple in cf:
         if colecao in col_tuple:
@@ -1363,7 +1351,20 @@ def dict_colecao_fluxos(colecao, tipo, ref):
             break
     col_dict = cf[col_id]
 
-    return col_dict[tipo][inicio]
+    for tipo_tuple in col_dict:
+        if tipo in tipo_tuple:
+            tipo_id = tipo_tuple
+            break
+    tipo_dict = col_dict[tipo_id]
+
+    inicio = ''
+    if tipo == 'md':
+        inicio = ref[0]
+
+    if inicio in tipo_dict:
+        return tipo_dict[inicio]
+    else:
+        return tipo_dict['']
 
 
 def gera_fluxo_dot(request, destino, id):
