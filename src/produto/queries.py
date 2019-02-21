@@ -179,6 +179,7 @@ def ref_inform(cursor, ref):
           || ' (' || r.CONTA_ESTOQUE || ')' CONTA_ESTOQUE
         , lin.DESCRICAO_LINHA
           || ' (' || r.LINHA_PRODUTO || ')' LINHA
+        , r.COLECAO CODIGO_COLECAO
         , col.DESCR_COLECAO
           || ' (' || r.COLECAO || ')' COLECAO
         , ac.DESCR_ARTIGO
