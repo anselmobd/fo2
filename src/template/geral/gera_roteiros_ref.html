@@ -28,12 +28,16 @@
     <pre>
       {{fluxos}}
     </pre>
-  {% endif %}
-  {% if roteiros %}
-    <h4>Roteiros</h4>
-    <pre>
-      {{roteiros}}
-    </pre>
+    {% if roteiros %}
+      <h4>Roteiros</h4>
+      <pre>
+        {{roteiros}}
+      </pre>
+    {% else %}
+      <h4>Sem roteiros</h4>
+    {% endif %}
+  {% else %}
+    <h4>Sem fluxos</h4>
   {% endif %}
 {% endif %}
 {% endblock %}
