@@ -30,3 +30,16 @@ class PopForm(forms.ModelForm):
     class Meta:
         model = Pop
         fields = ('assunto', 'descricao', 'pop', 'habilitado')
+
+
+class GeraRoteirosRefForm(forms.Form):
+    ref = forms.CharField(
+        label='Referência', max_length=5, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
