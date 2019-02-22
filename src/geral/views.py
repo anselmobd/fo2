@@ -1429,7 +1429,7 @@ def roteiros_de_fluxo(request, id):
 class GeraRoteirosRef(View):
     Form_class = GeraRoteirosRefForm
     template_name = 'geral/gera_roteiros_ref.html'
-    title_name = 'Gera roteiros de referência'
+    title_name = 'Roteiros por referência'
 
     def mount_context(self, cursor, ref):
         context = {
