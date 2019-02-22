@@ -810,7 +810,7 @@ class RoteirosPadraoRef(View):
                     for estagio in estagios_os:
                         if isinstance(estagio, int):
                             if estagio == gargalo:
-                                estagios_a_criar.append((estagio,'Gargalo'))
+                                estagios_a_criar.append((estagio, 'Gargalo'))
                             else:
                                 estagios_a_criar.append((estagio,))
                     estagios.update({
@@ -847,3 +847,16 @@ class RoteirosPadraoRef(View):
             context.update(self.mount_context(cursor, ref))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class GeraRoteirosPadraoRef(View):
+
+    def get(self, request, *args, **kwargs):
+        ref = kwargs['ref']
+        if ref is None:
+            return HttpResponse('', content_type='text/plain')
+
+        cursor = connections['so'].cursor()
+        return HttpResponse(
+            ref,
+            content_type='text/plain')
