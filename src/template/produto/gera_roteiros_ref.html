@@ -14,6 +14,9 @@
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
+    {% if estagios %}
+      <input type="submit" name="gera" value="Gera roteiros"/>
+    {% endif %}
 </form>
 {% if ref %}
   <h4>Referência: {{ ref }}</h4>
