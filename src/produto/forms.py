@@ -83,3 +83,16 @@ class ProdutoForm(forms.ModelForm):
         except S_Produto.DoesNotExist:
             raise forms.ValidationError("Referência não existe no Systêxtil")
         return self.cleaned_data
+
+
+class GeraRoteirosRefForm(forms.Form):
+    ref = forms.CharField(
+        label='Referência', max_length=5, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
