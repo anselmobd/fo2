@@ -1,9 +1,13 @@
-__version__ = '0.1.140'
-__version__date__ = '16/01/2019'
+__version__ = '0.1.141'
+__version__date__ = '19/02/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.141 - 2019/02/19
+#   . Rotina para gerar arquivos DOT para gerar fluxos de roteiros_ref
+#   . Diversos
 #
 # - 0.1.140 - 2019/01/16
 #   . Adição de link de teste de velocidade de link e reorganização da página
