@@ -23,7 +23,4 @@ urlpatterns = [
 
     url(r'^roteiros_de_fluxo/(?P<id>.+)/$',
         views.roteiros_de_fluxo, name='roteiros_de_fluxo'),
-
-    url(r'^roteiros_ref/(?P<ref>[^/]+)?/?$',
-        views.GeraRoteirosRef.as_view(), name='gera_roteiros_ref'),
 ]

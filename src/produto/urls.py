@@ -32,4 +32,7 @@ urlpatterns = [
 
     url(r'^ajax/stat_niveis/([129]{1}.*)/$',
         views.stat_niveis, name='stat_niveis'),
+
+    url(r'^gera_roteiros_ref/(?P<ref>[^/]+)?/?$',
+        views.GeraRoteirosRef.as_view(), name='gera_roteiros_ref'),
 ]
