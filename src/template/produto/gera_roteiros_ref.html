@@ -1,7 +1,7 @@
 {% extends 'cd/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'estoque:index' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -9,11 +9,18 @@
 </style>
 {% endblock %}
 
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_ref');
+  inp.select();
+</script>
+{% endblock javascript %}
+
 {% block content %}
-<form action="" method="post">
+<form action="{% url 'produto:gera_roteiros_ref' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Busca"/>
+    <input type="submit" value="Busca roteiros padrão"/>
 </form>
 {% if ref %}
   <h4>Referência: {{ ref }}</h4>
@@ -26,9 +33,11 @@
   <h4>Tipo: {{ tipo|upper }}</h4>
   {% if fluxos %}
     <h4>Fluxos</h4>
-    <pre>
-      {{fluxos}}
-    </pre>
+    <p>
+      {%for fluxo in fluxos%}{%spaceless%}
+      {%endspaceless%}{%if forloop.counter > 1%}, {%endif%}{{fluxo}}{%spaceless%}
+      {%endspaceless%}{%endfor%}
+    </p>
     {% if roteiros %}
       <h4>Roteiros</h4>
       <pre>
