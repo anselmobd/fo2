@@ -771,10 +771,10 @@ class Gtin(View):
         return render(request, self.template_name, context)
 
 
-class GeraRoteirosRef(View):
+class RoteirosPadraoRef(View):
     Form_class = GeraRoteirosRefForm
-    template_name = 'produto/gera_roteiros_ref.html'
-    title_name = 'Roteiros por referência'
+    template_name = 'produto/roteiros_padrao_ref.html'
+    title_name = 'Roteiros padrão por referência'
 
     def mount_context(self, cursor, ref):
         context = {
