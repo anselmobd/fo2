@@ -799,6 +799,8 @@ def dict_fluxo(id):
             'Costura: Externa',
         ],
         'md_p_pb': {
+            'cabecalho': 'MD p/ PB - <b><u>C</u></b>999*<br />'
+                         'Com acessórios (TAG)<br />para encabidar',
             'ests': [3, 6, 15, 18, 12],
             'gargalo': 12,
             'insumos': {
@@ -806,6 +808,8 @@ def dict_fluxo(id):
             },
         },
         'md_p_pg': {
+            'cabecalho': 'MD p/ PG - <b><u>C</u></b>999<b><u>A</u></b><br />'
+                         'Sem acessórios (TAG)<br />para encabidar',
             'ests': [3, 6, 15, 18, 12],
             'gargalo': 12,
             'insumos': {
@@ -816,7 +820,7 @@ def dict_fluxo(id):
             'ests': [3, 18, 21, 'os', 24, 55, 57, 63],
             'gargalo': 24,
             'insumos': {
-                'os': ['MD p/ PB<br /><b><u>M</u></b>999*'],
+                'os': ['MD p/ PB<br /><b><u>C</u></b>999*'],
                 55: [
                     'Etiquetas',
                     'Elástico',
@@ -829,7 +833,7 @@ def dict_fluxo(id):
             'ests': [3, 18, 21, 'os', 24, 55, 57, 63],
             'gargalo': 24,
             'insumos': {
-                'os': ['MD p/ PG<br /><b><u>M</u></b>999<b><u>A</u></b>'],
+                'os': ['MD p/ PG<br /><b><u>C</u></b>999<b><u>A</u></b>'],
                 55: [
                     'Etiquetas',
                     'Elástico',
@@ -844,7 +848,7 @@ def dict_fluxo(id):
                     'Etiquetas',
                     'Caixa',
                 ],
-                'os': ['MD<br /><b><u>M</u></b>999*'],
+                'os': ['MD<br /><b><u>C</u></b>999*'],
                 55: [
                     'Etiquetas',
                     'Elástico',
@@ -907,7 +911,7 @@ def dict_fluxo(id):
             'Costura: Externa',
         ],
         'md_p_pb': {
-            'cabecalho': 'MD - <b><u>M</u></b>999*',
+            'cabecalho': 'MD - <b><u>R</u></b>999*',
             'ests': [3, 6, 12],
             'gargalo': 12,
         },
@@ -916,7 +920,7 @@ def dict_fluxo(id):
             'ests': [3, 18, 21, 'os', 24, 54, 57, 63],
             'gargalo': 24,
             'insumos': {
-                'os': ['MD<br /><b><u>M</u></b>999*', ],
+                'os': ['MD<br /><b><u>R</u></b>999*', ],
                 57: [
                     'Malha',
                     'Etiquetas',
@@ -931,7 +935,7 @@ def dict_fluxo(id):
             'ests': [3, 18, 21, 'os', 24, 54, 57, 63],
             'gargalo': 24,
             'insumos': {
-                'os': ['MD<br /><b><u>M</u></b>999*', ],
+                'os': ['MD<br /><b><u>R</u></b>999*', ],
                 57: [
                     'Malha',
                     'Etiquetas',
@@ -948,7 +952,7 @@ def dict_fluxo(id):
                     'Etiquetas',
                     'Caixa',
                 ],
-                'os': ['MD<br /><b><u>M</u></b>999*'],
+                'os': ['MD<br /><b><u>R</u></b>999*'],
                 54: [
                     'Etiquetas',
                     'Elástico',
@@ -1067,6 +1071,7 @@ def dict_fluxo(id):
                     'Etiquetas',
                     'Caixa',
                 ],
+                60: ['MD<br /><b><u>C</u></b>999*'],
             }
         },
         'pa_enc_de_pb': False,
