@@ -37,8 +37,8 @@
       {% if estagios %}
         <h4>Estágios</h4>
         <pre>
-          {%for estagio_key in estagios%}
-            {{estagio_key}}: {{estagios|get_item:estagio_key}}{%spaceless%}
+          {%for roteiro in roteiros%}
+            {{roteiro}}: {{estagios|get_item:roteiro}}{%spaceless%}
           {%endspaceless%}{%endfor%}
         </pre>
       {% else %}
