@@ -810,9 +810,9 @@ class GeraRoteirosRef(View):
                     for estagio in estagios_os:
                         if isinstance(estagio, int):
                             if estagio == gargalo:
-                                estagios_a_criar.append((estagio, 'Gargalo'))
+                                estagios_a_criar.append((estagio,'Gargalo'))
                             else:
-                                estagios_a_criar.append(estagio)
+                                estagios_a_criar.append((estagio,))
                     estagios.update({
                         rot_num: estagios_a_criar
                     })
