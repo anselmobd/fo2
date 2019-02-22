@@ -40,16 +40,31 @@
     </p>
     {% if roteiros %}
       <h4>Roteiros</h4>
-      <pre>
-        {{roteiros}}
-      </pre>
+      <p>
+        {%for roteiro in roteiros%}{%spaceless%}
+        {%endspaceless%}{%if forloop.counter > 1%}, {%endif%}{{roteiro}}{%spaceless%}
+        {%endspaceless%}{%endfor%}
+      </p>
       {% if estagios %}
-        <h4>Estágios</h4>
-        <pre>
+        <h4>Estágios dos roteiros</h4>
+        <ul>
           {%for roteiro in roteiros%}
-            {{roteiro}}: {{estagios|get_item:roteiro}}{%spaceless%}
-          {%endspaceless%}{%endfor%}
-        </pre>
+          <li>
+            Roteiro {{roteiro}}
+            <ul>
+              {% with estagios|get_item:roteiro as ests%}
+              {%for est in ests%}
+                <li>
+                  {%for info in est%}{%spaceless%}
+                  {%endspaceless%}{%if forloop.counter > 1%}, {%endif%}{{info}}{%spaceless%}
+                  {%endspaceless%}{%endfor%}
+                </li>
+              {%endfor%}
+              {%endwith%}
+            </ul>
+          </li>
+          {%endfor%}
+        </ul>
       {% else %}
         <h4>Sem roteiros</h4>
       {% endif %}
