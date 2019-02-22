@@ -34,6 +34,16 @@
       <pre>
         {{roteiros}}
       </pre>
+      {% if estagios %}
+        <h4>Estágios</h4>
+        <pre>
+          {%for estagio_key in estagios%}
+            {{estagio_key}}: {{estagios|get_item:estagio_key}}{%spaceless%}
+          {%endspaceless%}{%endfor%}
+        </pre>
+      {% else %}
+        <h4>Sem roteiros</h4>
+      {% endif %}
     {% else %}
       <h4>Sem roteiros</h4>
     {% endif %}
