@@ -17,7 +17,7 @@ import produto.queries
 
 from .models import Painel, PainelModulo, InformacaoModulo, \
                     UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
-from .forms import InformacaoModuloForm, PopForm, GeraRoteirosRefForm
+from .forms import InformacaoModuloForm, PopForm
 
 
 def index(request):
@@ -1429,76 +1429,3 @@ def roteiros_de_fluxo(request, id):
     return HttpResponse(
         pformat(roteiros, indent=4),
         content_type='text/plain')
-
-
-class GeraRoteirosRef(View):
-    Form_class = GeraRoteirosRefForm
-    template_name = 'geral/gera_roteiros_ref.html'
-    title_name = 'Roteiros por referência'
-
-    def mount_context(self, cursor, ref):
-        context = {
-            'ref': ref,
-            }
-
-        data = produto.queries.ref_inform(cursor, ref)
-        if len(data) == 0:
-            context.update({'erro': 'Referência não encontrada'})
-            return context
-
-        info = data[0]
-        tipo = info['TIPO'].lower()
-        colecao = info['COLECAO']
-        colecao_id = info['CODIGO_COLECAO']
-
-        fluxos = dict_colecao_fluxos(colecao_id, tipo, ref)
-
-        roteiros = []
-        for fluxo in fluxos:
-            fluxo_roteiros = get_roteiros_de_fluxo(fluxo)
-            if tipo in fluxo_roteiros:
-                roteiros += list(fluxo_roteiros[tipo].keys())
-
-        estagios = {}
-        for fluxo in fluxos:
-            fluxo_roteiros = get_roteiros_de_fluxo(fluxo)
-            if tipo in fluxo_roteiros:
-                for rot_num in fluxo_roteiros[tipo]:
-                    estagios_os = fluxo_roteiros[tipo][rot_num][0]
-                    gargalo = fluxo_roteiros[tipo][rot_num][1]
-                    estagios_a_criar = []
-                    for estagio in estagios_os:
-                        if isinstance(estagio, int):
-                            if estagio == gargalo:
-                                estagios_a_criar.append((estagio, 'Gargalo'))
-                            else:
-                                estagios_a_criar.append(estagio)
-                    estagios.update({
-                        rot_num: estagios_a_criar
-                    })
-
-        context.update({
-            'colecao': colecao,
-            'tipo': tipo,
-            'fluxos': fluxos,
-            'roteiros': roteiros,
-            'estagios': estagios,
-        })
-
-        return context
-
-    def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        if form.is_valid():
-            ref = form.cleaned_data['ref']
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, ref))
-        context['form'] = form
-        return render(request, self.template_name, context)
