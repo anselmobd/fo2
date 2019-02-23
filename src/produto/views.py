@@ -957,7 +957,29 @@ class GeraRoteirosPadraoRef(View):
         if len(data) == 0:
             return nada
 
-        output = gera_roteiros_padrao_ref(ref)
+        quant = kwargs['quant']
+        if quant is None:
+            quant = 1
+        else:
+            try:
+                quant = int(quant)
+            except Exception:
+                quant = 1
+
+        if quant == 1:
+            output = gera_roteiros_padrao_ref(ref)
+        else:
+            output = ''
+            refs = queries.get_refs(cursor)
+            count = 0
+            for referencia in refs:
+                if referencia['REFERENCIA'] >= ref:
+                    count += 1
+                    if count <= quant:
+                        output += '\n\n= referencia: '+\
+                            referencia['REFERENCIA']+'\n'
+                        output += gera_roteiros_padrao_ref(
+                            referencia['REFERENCIA'])
 
         return HttpResponse(
             output,
