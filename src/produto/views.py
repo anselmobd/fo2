@@ -1,5 +1,5 @@
 import re
-from pprint import pprint
+from pprint import pprint, pformat
 import urllib
 
 from django.shortcuts import render
@@ -853,10 +853,103 @@ class GeraRoteirosPadraoRef(View):
 
     def get(self, request, *args, **kwargs):
         ref = kwargs['ref']
+        nada = HttpResponse('', content_type='text/plain')
         if ref is None:
-            return HttpResponse('', content_type='text/plain')
+            return nada
 
+        ref = ref.upper()
         cursor = connections['so'].cursor()
+        data = queries.ref_inform(cursor, ref)
+        if len(data) == 0:
+            return nada
+
+        info = data[0]
+        tipo = info['TIPO'].lower()
+        colecao = info['COLECAO']
+        colecao_id = info['CODIGO_COLECAO']
+
+        fluxos = dict_colecao_fluxos(colecao_id, tipo, ref)
+
+        roteiros = {}
+        for fluxo in fluxos:
+            fluxo_roteiros = get_roteiros_de_fluxo(fluxo)
+            if tipo in fluxo_roteiros:
+                for rot_num in fluxo_roteiros[tipo]:
+                    roteiros.update({
+                        rot_num: fluxo_roteiros[tipo][rot_num]
+                    })
+
+        roteiros_db = queries.get_roteiros_ref(cursor, ref)
+
+        output = ''
+        sqls = []
+        for roteiro in roteiros:
+            roteiros[roteiro][0] = [
+                est for est in roteiros[roteiro][0] if isinstance(est, int)]
+            estagios = roteiros[roteiro][0]
+            gargalo = roteiros[roteiro][1]
+            output += 'roteiro {}\n'.format(roteiro)
+            output += pformat(roteiros[roteiro], indent=4)+'\n'
+
+            tam_cores = set()
+            for row in roteiros_db:
+                if row['NUMERO_ROTEIRO'] == roteiro:
+                    tam_cores.add(
+                        (row['SUBGRU_ESTRUTURA'], row['ITEM_ESTRUTURA']))
+
+            if len(tam_cores) == 0:
+                    tam_cores.add(('000', '000000'))
+
+            for tam_cor in tam_cores:
+                output += pformat(tam_cor, indent=4)+'\n'
+
+                tam, cor = tam_cor
+                estagios_db = [[], None]
+                for row in roteiros_db:
+                    if row['NUMERO_ROTEIRO'] == roteiro and \
+                            row['SUBGRU_ESTRUTURA'] == tam and \
+                            row['ITEM_ESTRUTURA'] == cor:
+                        estagios_db[0].append(row['CODIGO_ESTAGIO'])
+                        if row['IND_ESTAGIO_GARGALO'] == 1:
+                            if estagios_db[1] is None:
+                                estagios_db[1] = row['CODIGO_ESTAGIO']
+                            else:
+                                estagios_db[1] = 999
+
+                output += pformat(estagios_db, indent=4)+'\n'
+                if estagios_db != roteiros[roteiro]:
+                    if estagios_db[0] != estagios:
+                        if len(estagios_db[0]) != 0:
+                            output += '-> exclui estagios\n'
+                            delete = queries.mount_delete_estagios(
+                                roteiro, ref, tam, cor)
+                            # print(delete)
+                            sqls.append(delete)
+                        output += '-> inclui estagios\n'
+                        inserts = queries.mount_inserts_estagios(
+                            roteiro, ref, tam, cor, estagios)
+                        for insert in inserts:
+                            # print(insert)
+                            sqls.append(insert)
+                    else:
+                        if estagios_db[1] is not None:
+                            output += '-> exclui gargalo {}\n'.format(
+                                estagios_db[1])
+                            unsetg = queries.mount_unset_gargalo(
+                                roteiro, ref, tam, cor)
+                            # print(unsetg)
+                            sqls.append(unsetg)
+                    output += '-> inclui gargalo {}\n'.format(gargalo)
+                    setg = queries.mount_set_gargalo(
+                        roteiro, ref, tam, cor, gargalo)
+                    # print(setg)
+                    sqls.append(setg)
+
+        # output += pformat(sqls, indent=4)+'\n'
+        for sql in sqls:
+            # print(sql)
+            cursor.execute(sql)
+
         return HttpResponse(
-            ref,
+            output,
             content_type='text/plain')
