@@ -1009,3 +1009,14 @@ def mount_inserts_estagios(roteiro, ref, tam, cor, estagios):
             seq=seq,
         ))
     return inserts
+
+
+def get_refs(cursor):
+    sql = """
+        SELECT
+          r.REFERENCIA
+        FROM basi_030 r
+        WHERE r.NIVEL_ESTRUTURA = 1
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
