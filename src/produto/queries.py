@@ -1017,6 +1017,8 @@ def get_refs(cursor):
           r.REFERENCIA
         FROM basi_030 r
         WHERE r.NIVEL_ESTRUTURA = 1
+        ORDER BY
+          r.REFERENCIA
     """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
