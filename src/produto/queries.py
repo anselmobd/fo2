@@ -1,6 +1,6 @@
 from django.db import connections
 
-from fo2.models import rows_to_dict_list
+from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
 
 def produtos_n1_basic(param):
@@ -821,3 +821,191 @@ def gtin(cursor, ref=None, gtin=None):
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def get_roteiros_ref(cursor, ref):
+    sql = """
+        SELECT DISTINCT
+          er.NIVEL_ESTRUTURA
+        , er.GRUPO_ESTRUTURA
+        , er.SUBGRU_ESTRUTURA
+        , er.ITEM_ESTRUTURA
+        , er.NUMERO_ALTERNATI
+        , er.NUMERO_ROTEIRO
+        , er.SEQ_OPERACAO
+        , er.CODIGO_ESTAGIO
+        , er.IND_ESTAGIO_GARGALO
+        FROM MQOP_050 er
+        WHERE er.NIVEL_ESTRUTURA = 1
+          AND er.NUMERO_ROTEIRO = er.NUMERO_ALTERNATI
+          AND er.GRUPO_ESTRUTURA = %s
+        ORDER BY
+          er.NUMERO_ROTEIRO
+        , er.SEQ_OPERACAO
+    """
+    cursor.execute(sql, [ref])
+    return rows_to_dict_list(cursor)
+
+
+def mount_set_gargalo(roteiro, ref, tam, cor, estagio):
+    return '''
+        UPDATE SYSTEXTIL.MQOP_050
+        SET
+          IND_ESTAGIO_GARGALO = 1
+        WHERE NIVEL_ESTRUTURA = '1'
+          AND GRUPO_ESTRUTURA = '{ref}'
+          AND SUBGRU_ESTRUTURA = '{tam}'
+          AND ITEM_ESTRUTURA = '{cor}'
+          AND NUMERO_ALTERNATI = {roteiro}
+          AND NUMERO_ROTEIRO = {roteiro}
+          AND CODIGO_ESTAGIO = {estagio}
+    '''.format(
+        roteiro=roteiro,
+        ref=ref,
+        tam=tam,
+        cor=cor,
+        estagio=estagio,
+    )
+
+
+def mount_unset_gargalo(roteiro, ref, tam, cor):
+    return '''
+        UPDATE SYSTEXTIL.MQOP_050
+        SET
+          IND_ESTAGIO_GARGALO = 0
+        WHERE NIVEL_ESTRUTURA = '1'
+          AND GRUPO_ESTRUTURA = '{ref}'
+          AND SUBGRU_ESTRUTURA = '{tam}'
+          AND ITEM_ESTRUTURA = '{cor}'
+          AND NUMERO_ALTERNATI = {roteiro}
+          AND NUMERO_ROTEIRO = {roteiro}
+    '''.format(
+        roteiro=roteiro,
+        ref=ref,
+        tam=tam,
+        cor=cor,
+    )
+
+
+def mount_delete_estagios(roteiro, ref, tam, cor):
+    return '''
+        DELETE FROM SYSTEXTIL.MQOP_050
+        WHERE NIVEL_ESTRUTURA = '1'
+          AND GRUPO_ESTRUTURA = '{ref}'
+          AND SUBGRU_ESTRUTURA = '{tam}'
+          AND ITEM_ESTRUTURA = '{cor}'
+          AND NUMERO_ALTERNATI = {roteiro}
+          AND NUMERO_ROTEIRO = {roteiro}
+    '''.format(
+        roteiro=roteiro,
+        ref=ref,
+        tam=tam,
+        cor=cor,
+    )
+
+
+def mount_inserts_estagios(roteiro, ref, tam, cor, estagios):
+    ordem = 0
+    inserts = []
+    for estagio in estagios:
+        ordem += 1
+        seq = ordem * 10
+        inserts.append('''
+            INSERT INTO SYSTEXTIL.MQOP_050
+            ( NIVEL_ESTRUTURA
+            , GRUPO_ESTRUTURA
+            , SUBGRU_ESTRUTURA
+            , ITEM_ESTRUTURA
+            , NUMERO_ALTERNATI
+            , NUMERO_ROTEIRO
+            , SEQ_OPERACAO
+            , CODIGO_OPERACAO
+            , MINUTOS
+            , CODIGO_ESTAGIO
+            , CENTRO_CUSTO
+            , SEQUENCIA_ESTAGIO
+            , ESTAGIO_ANTERIOR
+            , ESTAGIO_DEPENDE
+            , SEPARA_OPERACAO
+            , MINUTOS_HOMEM
+            , CCUSTO_HOMEM
+            , NUMERO_CORDAS
+            , NUMERO_ROLOS
+            , VELOCIDADE
+            , CODIGO_FAMILIA
+            , OBSERVACAO
+            , TIPO_PROCESSO
+            , PECAS_1_HORA
+            , PECAS_8_HORAS
+            , CUSTO_MINUTO
+            , PERC_EFICIENCIA
+            , TEMPERATURA
+            , TEMPO_LOTE_PRODUCAO
+            , PECAS_LOTE_PRODUCAO
+            , TIME_CELULA
+            , CODIGO_APARELHO
+            , PERC_EFIC_ROT
+            , NUMERO_OPERADORAS
+            , CONSIDERA_EFIC
+            , SEQ_OPERACAO_AGRUPADORA
+            , CODIGO_PARTE_PECA
+            , SEQ_JUNCAO_PARTE_PECA
+            , SITUACAO
+            , PERC_PERDAS
+            , PERC_CUSTOS
+            , IND_ESTAGIO_GARGALO
+            )
+            VALUES
+            ( '1'  -- NIVEL_ESTRUTURA
+            , '{ref}'  -- GRUPO_ESTRUTURA
+            , '{tam}'  -- SUBGRU_ESTRUTURA
+            , '{cor}'  -- ITEM_ESTRUTURA
+            , {roteiro}  -- NUMERO_ALTERNATI
+            , {roteiro}  -- NUMERO_ROTEIRO
+            , {seq}  -- SEQ_OPERACAO
+            , {estagio}  -- CODIGO_OPERACAO
+            , 0  -- MINUTOS
+            , {estagio}  -- CODIGO_ESTAGIO
+            , 0  -- CENTRO_CUSTO
+            , {ordem}  -- SEQUENCIA_ESTAGIO
+            , 0  -- ESTAGIO_ANTERIOR
+            , 0  -- ESTAGIO_DEPENDE
+            , NULL  -- SEPARA_OPERACAO
+            , 0  -- MINUTOS_HOMEM
+            , 0  -- CCUSTO_HOMEM
+            , 0  -- NUMERO_CORDAS
+            , 0  -- NUMERO_ROLOS
+            , 0  -- VELOCIDADE
+            , 0  -- CODIGO_FAMILIA
+            , NULL  -- OBSERVACAO
+            , 0  -- TIPO_PROCESSO
+            , 0  -- PECAS_1_HORA
+            , 0  -- PECAS_8_HORAS
+            , 0  -- CUSTO_MINUTO
+            , 0  -- PERC_EFICIENCIA
+            , 0  -- TEMPERATURA
+            , 0  -- TEMPO_LOTE_PRODUCAO
+            , 0  -- PECAS_LOTE_PRODUCAO
+            , 0  -- TIME_CELULA
+            , NULL  -- CODIGO_APARELHO
+            , 0  -- PERC_EFIC_ROT
+            , 0  -- NUMERO_OPERADORAS
+            , 0  -- CONSIDERA_EFIC
+            , 0  -- SEQ_OPERACAO_AGRUPADORA
+            , NULL  -- CODIGO_PARTE_PECA
+            , 0  -- SEQ_JUNCAO_PARTE_PECA
+            , 0  -- SITUACAO
+            , 0  -- PERC_PERDAS
+            , 0  -- PERC_CUSTOS
+            , 0  -- IND_ESTAGIO_GARGALO
+            )
+        '''.format(
+            roteiro=roteiro,
+            ref=ref,
+            tam=tam,
+            cor=cor,
+            estagio=estagio,
+            ordem=ordem,
+            seq=seq,
+        ))
+    return inserts
