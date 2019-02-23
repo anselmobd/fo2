@@ -888,8 +888,8 @@ class GeraRoteirosPadraoRef(View):
                 est for est in roteiros[roteiro][0] if isinstance(est, int)]
             estagios = roteiros[roteiro][0]
             gargalo = roteiros[roteiro][1]
-            output += 'roteiro {}\n'.format(roteiro)
-            output += pformat(roteiros[roteiro], indent=4)+'\n'
+            output += '\nroteiro {}\n'.format(roteiro)
+            output += 'padrao: '+pformat(roteiros[roteiro], indent=4)+'\n'
 
             tam_cores = set()
             for row in roteiros_db:
@@ -901,7 +901,7 @@ class GeraRoteirosPadraoRef(View):
                     tam_cores.add(('000', '000000'))
 
             for tam_cor in tam_cores:
-                output += pformat(tam_cor, indent=4)+'\n'
+                output += 'tamanho, cor: '+pformat(tam_cor, indent=4)+'\n'
 
                 tam, cor = tam_cor
                 estagios_db = [[], None]
@@ -916,7 +916,7 @@ class GeraRoteirosPadraoRef(View):
                             else:
                                 estagios_db[1] = 999
 
-                output += pformat(estagios_db, indent=4)+'\n'
+                output += 'systextil: '+pformat(estagios_db, indent=4)+'\n'
                 if estagios_db != roteiros[roteiro]:
                     if estagios_db[0] != estagios:
                         if len(estagios_db[0]) != 0:
