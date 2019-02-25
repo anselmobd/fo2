@@ -1004,7 +1004,12 @@ class GeraRoteirosPadraoRef(View):
                     gargalo_errado
                 )
         output = stats + output
-
-        return HttpResponse(
-            output,
-            content_type='text/plain')
+        context = {
+            'titulo': 'Padronização de roteiros',
+            'output': output,
+        }
+        template_name = 'produto/output.html'
+        return render(request, template_name, context)
+        # return HttpResponse(
+        #     output,
+        #     content_type='text/plain')
