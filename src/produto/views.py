@@ -850,6 +850,10 @@ class RoteirosPadraoRef(View):
 
 
 def gera_roteiros_padrao_ref(ref):
+    roteiro_correto = 0
+    roteiro_errado = 0
+    gargalo_errado = 0
+
     cursor = connections['so'].cursor()
     data = queries.ref_inform(cursor, ref)
 
@@ -860,6 +864,7 @@ def gera_roteiros_padrao_ref(ref):
 
     fluxos = dict_colecao_fluxos(colecao_id, tipo, ref)
 
+    # pega dos fluxos os roteiros padrão
     roteiros = {}
     for fluxo in fluxos:
         fluxo_roteiros = get_roteiros_de_fluxo(fluxo)
@@ -874,26 +879,30 @@ def gera_roteiros_padrao_ref(ref):
     output = ''
     sqls = []
     for roteiro in roteiros:
+        # retira indicação de 'os', que não é um estágio
         roteiros[roteiro][0] = [
             est for est in roteiros[roteiro][0] if isinstance(est, int)]
+
         estagios = roteiros[roteiro][0]
         gargalo = roteiros[roteiro][1]
         output += '\nroteiro {}\n'.format(roteiro)
         output += 'padrao: '+pformat(roteiros[roteiro], indent=4)+'\n'
 
+        # pega do DB de um número de roteiro específico as variações de
+        # estrutura por tam. e cor
         tam_cores = set()
         for row in roteiros_db:
             if row['NUMERO_ROTEIRO'] == roteiro:
                 tam_cores.add(
                     (row['SUBGRU_ESTRUTURA'], row['ITEM_ESTRUTURA']))
-
         if len(tam_cores) == 0:
                 tam_cores.add(('000', '000000'))
 
         for tam_cor in tam_cores:
             output += 'tamanho, cor: '+pformat(tam_cor, indent=4)+'\n'
-
             tam, cor = tam_cor
+
+            # pega no DB os estágios de determinado roteiro, tam. e cor
             estagios_db = [[], None]
             for row in roteiros_db:
                 if row['NUMERO_ROTEIRO'] == roteiro and \
@@ -905,10 +914,13 @@ def gera_roteiros_padrao_ref(ref):
                             estagios_db[1] = row['CODIGO_ESTAGIO']
                         else:
                             estagios_db[1] = 999
-
             output += 'systextil: '+pformat(estagios_db, indent=4)+'\n'
-            if estagios_db != roteiros[roteiro]:
+
+            if estagios_db == roteiros[roteiro]:
+                roteiro_correto += 1
+            else:
                 if estagios_db[0] != estagios:
+                    roteiro_errado += 1
                     if len(estagios_db[0]) != 0:
                         output += '-> exclui estagios\n'
                         delete = queries.mount_delete_estagios(
@@ -922,6 +934,7 @@ def gera_roteiros_padrao_ref(ref):
                         # print(insert)
                         sqls.append(insert)
                 else:
+                    gargalo_errado += 1
                     if estagios_db[1] is not None:
                         output += '-> exclui gargalo {}\n'.format(
                             estagios_db[1])
@@ -940,22 +953,18 @@ def gera_roteiros_padrao_ref(ref):
         # print(sql)
         cursor.execute(sql)
 
-    return output
+    return output, [roteiro_correto, roteiro_errado, gargalo_errado]
 
 
 class GeraRoteirosPadraoRef(View):
 
     def get(self, request, *args, **kwargs):
         ref = kwargs['ref']
-        nada = HttpResponse('', content_type='text/plain')
         if ref is None:
-            return nada
+            return HttpResponse('', content_type='text/plain')
 
         ref = ref.upper()
         cursor = connections['so'].cursor()
-        data = queries.ref_inform(cursor, ref)
-        if len(data) == 0:
-            return nada
 
         quant = kwargs['quant']
         if quant is None:
@@ -966,20 +975,35 @@ class GeraRoteirosPadraoRef(View):
             except Exception:
                 quant = 1
 
-        if quant == 1:
-            output = gera_roteiros_padrao_ref(ref)
-        else:
-            output = ''
-            refs = queries.get_refs(cursor)
-            count = 0
-            for referencia in refs:
-                if referencia['REFERENCIA'] >= ref:
-                    count += 1
-                    if count <= quant:
-                        output += '\n\n= referencia: '+\
-                            referencia['REFERENCIA']+'\n'
-                        output += gera_roteiros_padrao_ref(
-                            referencia['REFERENCIA'])
+        roteiro_correto = 0
+        roteiro_errado = 0
+        gargalo_errado = 0
+
+        output = ''
+        refs = queries.get_refs(cursor)
+        count = 0
+        for referencia in refs:
+            if referencia['REFERENCIA'] >= ref:
+                count += 1
+                if count <= quant:
+                    output_ref, stat = gera_roteiros_padrao_ref(
+                        referencia['REFERENCIA'])
+                    roteiro_correto += stat[0]
+                    roteiro_errado += stat[1]
+                    gargalo_errado += stat[2]
+                    output += '\n\n= referencia: ' + \
+                        referencia['REFERENCIA'] + '\n'
+                    output += output_ref
+
+        stats = 'Roteiros inalterados: {}\n' + \
+                'Roteiros recriados: {}\n' + \
+                'Gargalos corrigidos: {}\n'
+        stats = stats.format(
+                    roteiro_correto,
+                    roteiro_errado,
+                    gargalo_errado
+                )
+        output = stats + output
 
         return HttpResponse(
             output,
