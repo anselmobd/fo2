@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.models import rows_to_dict_list
 from fo2.template import group_rowspan
@@ -956,7 +957,10 @@ def gera_roteiros_padrao_ref(ref):
     return output, [roteiro_correto, roteiro_errado, gargalo_errado]
 
 
-class GeraRoteirosPadraoRef(View):
+class GeraRoteirosPadraoRef(PermissionRequiredMixin, View):
+
+    def __init__(self):
+        self.permission_required = 'base.can_generate_product_stages'
 
     def get(self, request, *args, **kwargs):
         ref = kwargs['ref']
