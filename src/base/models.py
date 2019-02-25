@@ -2,6 +2,18 @@ import os
 
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
+
+
+class Colaborador(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    obs = models.CharField(max_length=1000)
+
+    class Meta:
+        db_table = "fo2_colaboradoor"
+        permissions = (
+            ("can_generate_product_stages", "Can generate product stages"),
+        )
 
 
 class TipoImagem(models.Model):
