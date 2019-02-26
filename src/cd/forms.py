@@ -3,7 +3,7 @@ from django import forms
 
 class LoteForm(forms.Form):
     endereco = forms.CharField(
-        label='Endereço', min_length=2, max_length=3,
+        label='Endereço', min_length=2, max_length=4,
         help_text='(Informe endereço, para posicionar o lote no CD, '
                   'ou o "SAI" para tirar o lote do CD)',
         widget=forms.TextInput())
@@ -32,10 +32,10 @@ class LoteForm(forms.Form):
 
 class TrocaLocalForm(forms.Form):
     endereco_de = forms.CharField(
-        label='Endereço antigo', min_length=3, max_length=3,
+        label='Endereço antigo', min_length=2, max_length=4,
         widget=forms.TextInput())
     endereco_para = forms.CharField(
-        label='Endereço novo', min_length=3, max_length=3,
+        label='Endereço novo', min_length=2, max_length=4,
         widget=forms.TextInput())
 
     def limpa_endereco(self, campo):
@@ -67,7 +67,7 @@ class TrocaLocalForm(forms.Form):
 
 class EstoqueForm(forms.Form):
     endereco = forms.CharField(
-        label='Endereço', required=False, min_length=3, max_length=3,
+        label='Endereço', required=False, min_length=2, max_length=4,
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     lote = forms.CharField(
         label='Lote', required=False, min_length=9, max_length=9,
@@ -141,7 +141,7 @@ class EstoqueForm(forms.Form):
 
 class ConfereForm(forms.Form):
     endereco = forms.CharField(
-        label='Endereço', required=False, min_length=1, max_length=3,
+        label='Endereço', required=False, min_length=1, max_length=4,
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
 
     def clean_endereco(self):
