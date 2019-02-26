@@ -1,9 +1,13 @@
-__version__ = '0.1.141'
-__version__date__ = '19/02/2019'
+__version__ = '0.1.142'
+__version__date__ = '25/02/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.142 - 2019/02/25
+#   . Rotina para gerar roteiros padrão baseado na documentação dos fluxos
+#
 #
 # - 0.1.141 - 2019/02/19
 #   . Rotina para gerar arquivos DOT para gerar fluxos de roteiros_ref
