@@ -176,7 +176,7 @@ class Lote(models.Model):
     update_at = models.DateTimeField(
         db_index=True, null=True, blank=True, verbose_name='alterado em')
     local = models.CharField(
-        db_index=True, null=True, blank=True, default=None, max_length=3)
+        db_index=True, null=True, blank=True, default=None, max_length=4)
     local_at = models.DateTimeField(
         db_index=True, null=True, blank=True, verbose_name='localizado em')
     local_usuario = models.ForeignKey(
