@@ -60,14 +60,18 @@ span.spanlink:hover {
 {% block javascript %}
   <script type="text/javascript">
     function solicita_lote(lote, ref, cor, tam, qtd, cod, solict_id, qtd_limite, direto) {
+      var qtd_resta = parseInt(document.getElementById("qtd_resta_"+lote).innerHTML, 10);
+      if (qtd_resta == 0) {
+        return false
+      }
       document.getElementById("lote_solicitado").innerHTML = lote;
       document.getElementById("ref_solicitado").innerHTML = ref;
       document.getElementById("cor_solicitado").innerHTML = cor;
       document.getElementById("tam_solicitado").innerHTML = tam;
       document.getElementById("cod_solicitado").innerHTML = cod;
       document.getElementById("id_solicitado").value = solict_id;
-      document.getElementById("qtd_limite").value = qtd_limite;
-      document.getElementById("qtd_solicitado").value = qtd;
+      document.getElementById("qtd_limite").value = qtd_resta;
+      document.getElementById("qtd_solicitado").value = qtd_resta;
       if (direto == 'N') {
         document.getElementById('pop_back').style.display='block';
         document.getElementById('pop').style.display='block';
