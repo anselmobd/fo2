@@ -391,7 +391,7 @@ class Estoque(View):
 
                 if solicit_cod and (row['qtd'] - slq_qtd) > 0:
                     row['solicita'] = '''
-                        <a title="Solicitação parcial"
+                        <a title="Solicitação parcial de lote"
                          href="javascript:void(0);"
                          onclick="solicita_lote(
                             \'{lote}\', \'{ref}\', \'{cor}\', \'{tam}\',
@@ -403,7 +403,8 @@ class Estoque(View):
                         &nbsp;
                         <span id="qtd_resta_{lote}">{qtd_resta}</span>
                         &nbsp;
-                        <a title="Solicitação inteira"
+                        <a class="solicitacao_inteira_de_lote"
+                         title="Solicitação inteira de lote"
                          href="javascript:void(0);"
                          onclick="solicita_lote(
                             \'{lote}\', \'{ref}\', \'{cor}\', \'{tam}\',

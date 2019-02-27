@@ -153,6 +153,11 @@ span.spanlink:hover {
         document.getElementById("txtmyfilter").innerHTML = "Mostra";
       }
     }
+    function solicita_op() {
+      $( ".solicitacao_inteira_de_lote" ).each(function( index ) {
+        $( this ).click();
+      });
+    }
   </script>
 {% endblock %}
 
@@ -233,7 +238,8 @@ span.spanlink:hover {
       <h4>Lote: <b>{{ lote }}</b></h4>
     {% endif %}
     {% if op %}
-      <h4>OP: <b>{{ op }}</b></h4>
+      <h4>OP: <b>{{ op }}</b>
+      <a title="Solicitação inteira de OP" href="javascript:void(0);" onclick="solicita_op();"><span id="booom" class="glyphicon glyphicon-unchecked" aria-hidden="true"></span></a></h4>
     {% endif %}
     {% if ref %}
       <h4>Referência: <b>{{ ref }}</b></h4>
