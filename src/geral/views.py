@@ -536,8 +536,8 @@ def dict_fluxo(id):
         # 'rascunho': '#Rascunho#',
         'rascunho': '',
         'versao_num': '19.01',
-        'versao_data': '19/02/2019',
-        'versao_sufixo': '20190219',
+        'versao_data': '27/02/2019',
+        'versao_sufixo': '20190227',
         'id': id,
         'fluxo_num': fluxo_num,
     }
@@ -901,6 +901,39 @@ def dict_fluxo(id):
             }
         },
     }
+
+    # 2p <- 2
+    fluxo_aux = {
+        'produto': 'SHORT',
+        'md_p_pb': {
+            'cabecalho': 'MD - <b><u>C</u></b>999*',
+            'insumos': {
+                15: ['Forro',
+                     'Malha', ],
+            },
+        },
+        'md_p_pg': False,
+        'pb': False,
+        'pg': False,
+        'pa_de_md': {
+            'ests': [3, 18, 21, 'os', 24, 54, 57, 63, 66],
+            'insumos': {
+                54: [
+                    'Etiquetas',
+                    'Elástico',
+                    'Ilhós',
+                    'Transfer',
+                    'Cabide',
+                    'Embalagem',
+                ],
+                55: [],
+            }
+        },
+        'pa_enc_de_pb': False,
+        'pa_emb_de_pg': False,
+        'pa_enc_de_pg': False,
+    }
+    fluxo_config['2p'] = update_dict(fluxo_config[2], fluxo_aux)
 
     fluxo_config[3] = {
         'base': 'cueca',
