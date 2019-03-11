@@ -111,6 +111,9 @@
         <td style="border-left: thin solid lightgrey;"></td>
         <td style="vertical-align: top;">
         <h3>Roteiros</h3>
+        {% if gera_roteiros_link %}
+          {% include "layout/link.html" with link=gera_roteiros_link text="Gera roteiros padronizados" target="_BLANK" only %}
+        {% endif %}
         {% if r_data %}
           <table>
             {% include "layout/html_thead.html" with data=r_headers only %}
