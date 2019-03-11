@@ -16,6 +16,7 @@ from fo2.template import group_rowspan
 
 from utils.forms import FiltroForm
 from geral.views import dict_colecao_fluxos, get_roteiros_de_fluxo
+from geral.functions import has_permission
 
 from .forms import RefForm, ModeloForm, BuscaForm, GtinForm, \
     GeraRoteirosRefForm
@@ -246,7 +247,7 @@ class Ref(View):
     template_name = 'produto/ref.html'
     title_name = 'Produto'
 
-    def mount_context(self, cursor, ref):
+    def mount_context(self, request, cursor, ref):
         context = {'ref': ref}
 
         if len(ref) != 5:
@@ -400,6 +401,12 @@ class Ref(View):
                     'r_fields': r_fields,
                     'r_data': r_data,
                 })
+            if has_permission(request, 'base.can_generate_product_stages'):
+                context.update({
+                    'gera_roteiros_link': reverse(
+                        'produto:gera_roteiros_padrao_ref', args=[ref, 1])
+
+                })
 
             # Detalhando Roteiros
             roteiros = []
@@ -508,7 +515,7 @@ class Ref(View):
         if form.is_valid():
             ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, ref))
+            context.update(self.mount_context(request, cursor, ref))
         context['form'] = form
         return render(request, self.template_name, context)
 
