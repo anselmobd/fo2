@@ -36,7 +36,7 @@ urlpatterns = [
     url(r'^roteiros_padrao_ref/(?P<ref>[^/]+)?/?$',
         views.RoteirosPadraoRef.as_view(), name='roteiros_padrao_ref'),
 
-    url(r'^gera_roteiros_padrao_ref/(?P<ref>[^/]+)?/?(?P<quant>[^/]+)?/?$',
+    url(r'^gera_roteiros_padrao_ref/(?P<ref>[^/]+)?/(?P<quant>[^/]+)?/?$',
         views.GeraRoteirosPadraoRef.as_view(),
         name='gera_roteiros_padrao_ref'),
 ]
