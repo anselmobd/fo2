@@ -9,19 +9,30 @@ def op_inform(cursor, op):
     return(busca_op(cursor, op=op))
 
 
-def busca_op(cursor, op=None, ref=None):
+def busca_op(cursor, op=None, ref=None, deposito=None):
     filtra_op = ""
-    if op is not None:
+    if op is not None and op != '':
         filtra_op = """
             AND o.ORDEM_PRODUCAO = '{}'
             AND rownum = 1
         """.format(op)
 
     filtra_ref = ""
-    if ref is not None:
-        filtra_ref = """
-            AND o.REFERENCIA_PECA = '{}'
-        """.format(ref)
+    if ref is not None and ref != '':
+        if '%' in ref:
+            filtra_ref = """
+                AND o.REFERENCIA_PECA like '{}'
+            """.format(ref)
+        else:
+            filtra_ref = """
+                AND o.REFERENCIA_PECA = '{}'
+            """.format(ref)
+
+    filtra_deposito = ""
+    if deposito is not None and deposito != '':
+        filtra_deposito = """
+            AND o.DEPOSITO_ENTRADA = '{}'
+        """.format(deposito)
 
     sql = '''
         SELECT
@@ -144,11 +155,13 @@ def busca_op(cursor, op=None, ref=None):
         WHERE 1=1
           {filtra_op} -- filtra_op
           {filtra_ref} -- filtra_ref
+          {filtra_deposito} -- filtra_deposito
         ORDER BY
            o.ORDEM_PRODUCAO DESC
     '''.format(
         filtra_op=filtra_op,
         filtra_ref=filtra_ref,
+        filtra_deposito=filtra_deposito,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
