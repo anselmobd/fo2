@@ -297,7 +297,10 @@ class BuscaOP(View):
     title_name = 'Busca OP'
 
     def mount_context(self, cursor, ref, deposito):
-        context = {'ref': ref}
+        context = {
+            'ref': ref,
+            'deposito': deposito,
+        }
 
         data = models.busca_op(cursor, ref=ref, deposito=deposito)
         if len(data) == 0:
