@@ -317,9 +317,13 @@ class DistribuicaoForm(forms.Form):
 
 class BuscaOpForm(forms.Form):
     ref = forms.CharField(
-        label='Referência', required=False, min_length=5, max_length=5,
+        label='Referência', required=False, min_length=1, max_length=5,
+        help_text='(aceita filtro com "%")',
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
+    deposito = forms.CharField(
+        label='Depósito', required=False, max_length=3,
+        widget=forms.TextInput(attrs={'type': 'string'}))
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
