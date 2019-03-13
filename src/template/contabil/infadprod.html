@@ -24,6 +24,7 @@
   <br/>
   Pedido: <b>{{ pedido }}</b>
   <h3>Cliente: {{ cliente }}</h3>
+  <a href="{% url 'producao:pedido__get' pedido %}">Informações sobre o pedido</a>
   <h3>{{ titulo }}</h3>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
