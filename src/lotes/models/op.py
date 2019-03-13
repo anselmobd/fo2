@@ -98,7 +98,8 @@ def busca_op(cursor, op=None, ref=None, deposito=None):
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
           ) LOTES
-        , ( SELECT
+        , COALESCE(
+          ( SELECT
               SUM( l.QTDE_PECAS_PROG )
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
@@ -108,7 +109,8 @@ def busca_op(cursor, op=None, ref=None, deposito=None):
                 FROM pcpc_040 ls
                 WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
               )
-          ) QTD
+          )
+          , 0 ) QTD
         , o.DATA_PROGRAMACAO DT_DIGITACAO
         , o.DATA_ENTRADA_CORTE DT_CORTE
         , o.PERIODO_PRODUCAO PERIODO
