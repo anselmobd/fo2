@@ -22,10 +22,9 @@
 {% elif cliente %}
 
   <br/>
-  Pedido: <b>{{ pedido }}</b>
+  <h3>Pedido: {{ pedido }}</h3>
+  <a href="{% url 'producao:pedido__get' pedido %}">Capa, grade e OPs do pedido&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></a>
   <h3>Cliente: {{ cliente }}</h3>
-  <a href="{% url 'producao:pedido__get' pedido %}">Informações sobre o pedido</a>
-  <h3>{{ titulo }}</h3>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
