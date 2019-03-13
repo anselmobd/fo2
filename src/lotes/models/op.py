@@ -120,7 +120,7 @@ def busca_op(cursor, op=None, ref=None, deposito=None):
         , o.DEPOSITO_ENTRADA || ' - ' || d.DESCRICAO DEPOSITO
         , o.PEDIDO_VENDA PEDIDO
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PED_CLIENTE
-        , r.NUMERO_MOLDE MOLDE
+        , COALESCE(r.NUMERO_MOLDE, '-') MOLDE
         , r.DESCR_REFERENCIA DESCR_REF
         , o.OBSERVACAO
         , o.OBSERVACAO2
