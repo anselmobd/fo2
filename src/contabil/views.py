@@ -36,17 +36,28 @@ class InfAdProd(View):
             if len(data) == 0:
                 context['erro'] = 'Pedido não encontrado'
             else:
+                for row in data:
+                    row['VALOR|DECIMALS'] = 2
+                    row['VALOR_TOTAL'] = row['VALOR'] * row['QTD']
+                    row['VALOR_TOTAL|DECIMALS'] = 2
                 row = data[0]
                 context.update({
                     'pedido': pedido,
                     'cliente': row['CLIENTE'],
                     'headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Quantidade',
+                                'Valor unitário', 'Valor total',
                                 'Ref.Cliente (infAdProd)',
                                 'Descr.Cliente (infAdProd)',
                                 'EAN', 'Narrativa'),
                     'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD',
+                               'VALOR', 'VALOR_TOTAL',
                                'INFADPROD', 'DESCRCLI',
                                'EAN', 'NARRATIVA'),
+                    'style': {
+                        5: 'text-align: right;',
+                        6: 'text-align: right;',
+                        7: 'text-align: right;',
+                    },
                     'data': data,
                 })
         context['form'] = form
