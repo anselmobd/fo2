@@ -21,15 +21,20 @@ class InfAdProd(View):
     template_name = 'contabil/infadprod.html'
     title_name = 'Itens de pedido'
 
-    def get(self, request):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+    def get(self, request, *args, **kwargs):
+        if 'pedido' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
-    def post(self, request):
-        form = self.Form_class(request.POST)
+    def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'pedido' in kwargs and kwargs['pedido'] is not None:
+            form.data['pedido'] = kwargs['pedido']
         if form.is_valid():
             pedido = form.cleaned_data['pedido']
 
