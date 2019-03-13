@@ -19,6 +19,7 @@ def infadprod_pro_pedido(cursor, pedido):
         , i.CD_IT_PE_ITEM COR
         , i.CD_IT_PE_SUBGRUPO TAM
         , i.QTDE_PEDIDA QTD
+        , i.VALOR_UNITARIO VALOR
         , coalesce( ip.REF_CLIENTE, '-') INFADPROD
         , coalesce( ip.DESCR_REF_CLIENTE, '-') DESCRCLI
         , coalesce( rtc.CODIGO_BARRAS, ' ') EAN
