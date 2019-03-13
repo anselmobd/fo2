@@ -27,15 +27,20 @@ class Op(View):
 
         context = {'op': op}
 
-        # Lotes ordenados por OS + referência + estágio
-        data = models.op_lotes(cursor, op)
-        p.prt('op_lotes')
+        # informações gerais
+        i_data = models.op_inform(cursor, op)
+        p.prt('op_inform')
 
-        if len(data) == 0:
+        if len(i_data) == 0:
             context.update({
-                'msg_erro': 'Lotes não encontrados',
+                'msg_erro': 'OP não encontrada',
             })
         else:
+
+            # Lotes ordenados por OS + referência + estágio
+            data = models.op_lotes(cursor, op)
+            p.prt('op_lotes')
+
             link = ('LOTE')
             for row in data:
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
@@ -48,10 +53,6 @@ class Op(View):
                 'data': data,
                 'link': link,
             })
-
-            # informações gerais
-            i_data = models.op_inform(cursor, op)
-            p.prt('op_inform')
 
             i2_data = [i_data[0]]
             i3_data = [i_data[0]]

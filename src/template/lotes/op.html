@@ -17,15 +17,15 @@
 </form>
 {% if op %}
   <h3>OP {{ op }}</h3>
-  {% url 'producao:componentes_de_op__get' op as comp_op %}
-  {% with 'Produtos componentes da OP ' as text %}
-    {% include "layout/link.html" with link=comp_op text=text|add:op only %}
-  {% endwith %}
 {% endif %}
 {% if msg_erro %}
 <h3>{{ msg_erro }}</h3>
 {% endif %}
-{% if data %}
+{% if i_data %}
+{% url 'producao:componentes_de_op__get' op as comp_op %}
+{% with 'Produtos componentes da OP ' as text %}
+  {% include "layout/link.html" with link=comp_op text=text|add:op only %}
+{% endwith %}
 <table>
   {% include "layout/html_thead.html" with data=i_headers only %}
   {% include "layout/html_tbody_group.html" with fields=i_fields data=i_data group=i_group only %}
@@ -50,6 +50,8 @@
     {% include "layout/html_tbody.html" with fields=i4_fields data=i4_data only %}
   </table>
 {% endif %}
+{% endif %}
+{% if data %}
 <table>
   <tr>
     <td style="vertical-align: top;">
