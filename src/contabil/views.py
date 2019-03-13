@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.db import connections
 from django.views import View
 
+from utils.views import totalize_grouped_data
+
 import contabil.forms as forms
 import contabil.models as models
 
@@ -37,8 +39,18 @@ class InfAdProd(View):
                 context['erro'] = 'Pedido não encontrado'
             else:
                 for row in data:
-                    row['VALOR|DECIMALS'] = 2
                     row['VALOR_TOTAL'] = row['VALOR'] * row['QTD']
+
+                totalize_grouped_data(data, {
+                    'group': [],
+                    'sum': ['QTD', 'VALOR_TOTAL'],
+                    'global_sum': ['QTD', 'VALOR_TOTAL'],
+                    'global_descr': {'REF': 'Totais:'},
+                    'row_style': 'font-weight: bold;',
+                })
+
+                for row in data:
+                    row['VALOR|DECIMALS'] = 2
                     row['VALOR_TOTAL|DECIMALS'] = 2
                 row = data[0]
                 context.update({
