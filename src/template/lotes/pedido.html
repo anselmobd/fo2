@@ -47,6 +47,7 @@
   </table>
 {% endif %}
 {% if g_data %}
+  <br /><a href="{% url 'contabil:infadprod' pedido %}">Informações sobre itens do pedido</a>
   <h3>Grade de produtos do pedido</h3>
   <table style="width: auto;">
     {% include "layout/thead_generic.html" with data=g_headers style=g_style only %}
