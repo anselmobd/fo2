@@ -732,6 +732,7 @@ class Gtin(View):
 
         for row in data:
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+            row['REF|TARGET'] = '_blank'
             row['BAR'] = 'GTINs'
             row['BAR|LINK'] = '{}?{}'.format(
                 reverse('produto:gtin'),
