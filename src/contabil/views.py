@@ -22,7 +22,7 @@ class InfAdProd(View):
     title_name = 'Itens de pedido'
 
     def get(self, request, *args, **kwargs):
-        if 'pedido' in kwargs:
+        if 'pedido' in kwargs and kwargs['pedido'] is not None:
             return self.post(request, *args, **kwargs)
         else:
             context = {'titulo': self.title_name}
