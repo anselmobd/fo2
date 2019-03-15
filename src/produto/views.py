@@ -603,9 +603,8 @@ class Busca(View):
                 'msg_erro': 'Nenhum produto selecionado',
             })
         else:
-            link = ('REF')
             for row in data:
-                row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
+                row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
                 if row['ALTERNATIVA'] is None:
                     row['ALTERNATIVA'] = '-'
                 if row['ROTEIRO'] is None:
@@ -645,7 +644,6 @@ class Busca(View):
                 'headers': headers,
                 'fields': fields,
                 'data': data,
-                'link': link,
             })
 
         return context
