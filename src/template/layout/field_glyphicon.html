@@ -2,7 +2,7 @@
   {% with field|add:'|GLYPHICON' as field_glyphicon %}
     {% with row|get_item:field_glyphicon as glyphicon %}
       {% if glyphicon %}
-        <span class="{{glyphicon}}" aria-hidden="true"></span>
+        <span class="glyphicon {{glyphicon}}" aria-hidden="true"></span>
       {% else %}
         <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
       {% endif %}
