@@ -8,26 +8,10 @@
     {% endwith %}
     {% endspaceless %}>{% spaceless %}
     {% if row|get_item:field %}
-      {% with field|add:'|DECIMALS' as field_decimals %}
-        {% with row|get_item:field_decimals as decimals %}
-          {% if decimals %}
-            {{ row|get_item:field|floatformat:decimals }}
-          {% else %}
-            {{ row|get_item:field }}
-          {% endif %}
-        {% endwith %}
-      {% endwith %}
+      {% include "layout/field_decimals.html" with row=row field=field only %}
     {% endif %}
     {% endspaceless %}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
   {% else %}
-    {% with field|add:'|DECIMALS' as field_decimals %}
-      {% with row|get_item:field_decimals as decimals %}
-        {% if decimals %}
-          {{ row|get_item:field|floatformat:decimals|transp_decimals|safe }}
-        {% else %}
-          {{ row|get_item:field }}
-        {% endif %}
-      {% endwith %}
-    {% endwith %}
+    {% include "layout/field_decimals.html" with row=row field=field only %}
   {% endif %}
 {% endwith %}

@@ -1,0 +1,9 @@
+{% with field|add:'|DECIMALS' as field_decimals %}
+  {% with row|get_item:field_decimals as decimals %}
+    {% if decimals %}
+      {{ row|get_item:field|floatformat:decimals|transp_decimals|safe }}
+    {% else %}
+      {{ row|get_item:field }}
+    {% endif %}
+  {% endwith %}
+{% endwith %}
