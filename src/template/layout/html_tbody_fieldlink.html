@@ -10,7 +10,7 @@
     {% if row|get_item:field %}
       {% include "layout/field_decimals.html" with row=row field=field only %}
     {% endif %}
-    {% endspaceless %}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    {% endspaceless %}{% include "layout/field_glyphicon.html" with row=row field=field only %}</a>
   {% else %}
     {% include "layout/field_decimals.html" with row=row field=field only %}
   {% endif %}
