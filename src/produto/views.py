@@ -733,7 +733,8 @@ class Gtin(View):
         for row in data:
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['REF|TARGET'] = '_blank'
-            row['BAR'] = 'GTINs'
+            row['BAR'] = ''
+            row['BAR|GLYPHICON'] = 'glyphicon glyphicon-barcode'
             row['BAR|LINK'] = '{}?{}'.format(
                 reverse('produto:gtin'),
                 urllib.parse.urlencode({
@@ -751,7 +752,7 @@ class Gtin(View):
                             'gtin': row['GTIN'],
                         }))
 
-        headers = ['Referência', '']
+        headers = ['Referência', 'GTINs']
         fields = ['REF', 'BAR']
         if ref and not gtin:
             headers = []
