@@ -734,7 +734,7 @@ class Gtin(View):
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['REF|TARGET'] = '_blank'
             row['BAR'] = ''
-            row['BAR|GLYPHICON'] = 'glyphicon glyphicon-barcode'
+            row['BAR|GLYPHICON'] = 'glyphicon-barcode'
             row['BAR|LINK'] = '{}?{}'.format(
                 reverse('produto:gtin'),
                 urllib.parse.urlencode({
