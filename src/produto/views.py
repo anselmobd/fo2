@@ -731,6 +731,13 @@ class Gtin(View):
             return context
 
         for row in data:
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+            row['BAR'] = 'GTINs'
+            row['BAR|LINK'] = '{}?{}'.format(
+                reverse('produto:gtin'),
+                urllib.parse.urlencode({
+                    'ref': row['REF'],
+                }))
             if row['GTIN'] == 'SEM GTIN':
                 row['QTD'] = ''
             else:
@@ -743,14 +750,24 @@ class Gtin(View):
                             'gtin': row['GTIN'],
                         }))
 
-        headers = ['Referência', 'Cor', 'Tamanho', 'GTIN']
-        fields = ['REF', 'COR', 'TAM', 'GTIN']
+        headers = ['Referência', '']
+        fields = ['REF', 'BAR']
+        if ref and not gtin:
+            headers = []
+            fields = []
+        headers.append('Cor')
+        fields.append('COR')
+        headers.append('Tamanho')
+        fields.append('TAM')
+
         if gtin and not ref:
             context.update({
                 'qtd_repetido': data[0]['QTD']
             })
         else:
-            headers.append('Iguais')
+            headers.append('GTIN')
+            fields.append('GTIN')
+            headers.append('')
             fields.append('QTD')
 
         context.update({
