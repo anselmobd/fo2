@@ -742,9 +742,20 @@ class Gtin(View):
                         urllib.parse.urlencode({
                             'gtin': row['GTIN'],
                         }))
+
+        headers = ['Referência', 'Cor', 'Tamanho', 'GTIN']
+        fields = ['REF', 'COR', 'TAM', 'GTIN']
+        if gtin and not ref:
+            context.update({
+                'qtd_repetido': data[0]['QTD']
+            })
+        else:
+            headers.append('Iguais')
+            fields.append('QTD')
+
         context.update({
-            'headers': ('Referência', 'Cor', 'Tamanho', 'GTIN', 'Iguais'),
-            'fields': ('REF', 'COR', 'TAM', 'GTIN', 'QTD'),
+            'headers': headers,
+            'fields': fields,
             'data': data,
         })
 
