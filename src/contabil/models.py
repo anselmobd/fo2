@@ -23,6 +23,14 @@ def infadprod_pro_pedido(cursor, pedido):
         , coalesce( ip.REF_CLIENTE, '-') INFADPROD
         , coalesce( ip.DESCR_REF_CLIENTE, '-') DESCRCLI
         , coalesce( rtc.CODIGO_BARRAS, ' ') EAN
+        , CASE WHEN rtc.CODIGO_BARRAS IS NULL OR rtc.CODIGO_BARRAS = 'SEM GTIN'
+          THEN 0
+          ELSE (
+            SELECT count(*)
+            FROM BASI_010 gtin
+            WHERE gtin.CODIGO_BARRAS = rtc.CODIGO_BARRAS
+          )
+          END COUNT_GTIN
         , rtc.NARRATIVA
         FROM PEDI_100 p -- pedido de venda
         LEFT JOIN PEDI_010 c
