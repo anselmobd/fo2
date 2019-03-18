@@ -41,7 +41,7 @@ class InfAdProd(View):
                     row['COUNT_GTIN|LINK'] = '{}?{}'.format(
                         reverse('produto:gtin'),
                         urllib.parse.urlencode({
-                            'gtin': row['EAN'],
+                            'gtin': row['GTIN'],
                         }))
                     row['COUNT_GTIN|TARGET'] = '_BLANK'
 
@@ -67,7 +67,7 @@ class InfAdProd(View):
                 'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD',
                            'VALOR', 'VALOR_TOTAL',
                            'INFADPROD', 'DESCRCLI',
-                           'EAN', 'COUNT_GTIN', 'NARRATIVA'),
+                           'GTIN', 'COUNT_GTIN', 'NARRATIVA'),
                 'style': {
                     5: 'text-align: right;',
                     6: 'text-align: right;',
