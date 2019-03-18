@@ -1,4 +1,5 @@
 from pprint import pprint
+import urllib
 
 from django.shortcuts import render
 from django.urls import reverse
@@ -32,6 +33,17 @@ class InfAdProd(View):
         else:
             for row in data:
                 row['VALOR_TOTAL'] = row['VALOR'] * row['QTD']
+                if row['COUNT_GTIN'] == 0:
+                    row['COUNT_GTIN'] = '-'
+                elif row['COUNT_GTIN'] == 1:
+                    row['COUNT_GTIN'] = 'Único'
+                else:
+                    row['COUNT_GTIN|LINK'] = '{}?{}'.format(
+                        reverse('produto:gtin'),
+                        urllib.parse.urlencode({
+                            'gtin': row['EAN'],
+                        }))
+                    row['COUNT_GTIN|TARGET'] = '_BLANK'
 
             totalize_grouped_data(data, {
                 'group': [],
@@ -49,13 +61,13 @@ class InfAdProd(View):
                 'cliente': row['CLIENTE'],
                 'headers': ('Nível', 'Ref.', 'Cor', 'Tam.', 'Quantidade',
                             'Valor unitário', 'Valor total',
-                            'Ref.Cliente (infAdProd)',
-                            'Descr.Cliente (infAdProd)',
-                            'EAN', 'Narrativa'),
+                            'Ref.Clie.(infAdProd)',
+                            'Descr.Clie.(infAdProd)',
+                            'GTIN', '#', 'Narrativa'),
                 'fields': ('NIVEL', 'REF', 'COR', 'TAM', 'QTD',
                            'VALOR', 'VALOR_TOTAL',
                            'INFADPROD', 'DESCRCLI',
-                           'EAN', 'NARRATIVA'),
+                           'EAN', 'COUNT_GTIN', 'NARRATIVA'),
                 'style': {
                     5: 'text-align: right;',
                     6: 'text-align: right;',
