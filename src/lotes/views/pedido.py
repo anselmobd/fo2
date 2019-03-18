@@ -165,43 +165,53 @@ class Expedicao(View):
             row['PEDIDO_VENDA|LINK'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO_VENDA']])
 
-        group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
-                 'DT_EMISSAO', 'DT_EMBARQUE',
-                 'CLIENTE']
-        totalize_grouped_data(data, {
-            'group': group,
-            'sum': ['QTD'],
-            'count': [],
-            'descr': {'REF': 'Total:'},
-        })
-        group_rowspan(data, group)
+        if detalhe != 'o':
+            group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
+                     'DT_EMISSAO', 'DT_EMBARQUE',
+                     'CLIENTE']
+            totalize_grouped_data(data, {
+                'group': group,
+                'sum': ['QTD'],
+                'count': [],
+                'descr': {'REF': 'Total:'},
+            })
+            group_rowspan(data, group)
 
         headers = ['Pedido Tussor', 'Pedido cliente',
-                   'Data emissão', 'Data embarque', 'Cliente', 'Referência']
+                   'Data emissão', 'Data embarque', 'Cliente']
+        if detalhe in ('r', 'c'):
+            headers.append('Referência')
         if detalhe == 'c':
             headers.append('Cor')
             headers.append('Tamanho')
         headers.append('Quant.')
 
         fields = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
-                  'DT_EMISSAO', 'DT_EMBARQUE', 'CLIENTE', 'REF']
+                  'DT_EMISSAO', 'DT_EMBARQUE', 'CLIENTE']
+        if detalhe in ('r', 'c'):
+            fields.append('REF')
         if detalhe == 'c':
             fields.append('COR')
             fields.append('TAM')
         fields.append('QTD')
 
-        if detalhe == 'r':
-            style = {9: 'text-align: right;'}
-        else:
-            style = {7: 'text-align: right;'}
+        quant_col = 6
+        if detalhe in ('r', 'c'):
+            quant_col += 1
+        if detalhe == 'c':
+            quant_col += 2
+        style = {quant_col: 'text-align: right;'}
 
         context.update({
             'headers': headers,
             'fields': fields,
             'data': data,
-            'group': group,
             'style': style,
         })
+        if detalhe != 'o':
+            context.update({
+                'group': group,
+            })
 
         return context
 

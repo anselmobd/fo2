@@ -361,10 +361,13 @@ class ExpedicaoForm(forms.Form):
     deposito = forms.ChoiceField(
         label='Depósito', choices=CHOICES, initial='-')
 
-    CHOICES = [('r', 'Por referência'),
-               ('c', 'Por referência-cor-tamanho')]
+    CHOICES = [
+        ('r', 'Por referência'),
+        ('c', 'Por referência-cor-tamanho'),
+        ('o', 'Por OP'),
+    ]
     detalhe = forms.ChoiceField(
-        label='Detalhe', choices=CHOICES, initial='r')
+        label='Detalhe', choices=CHOICES, initial='o')
 
     def clean_cliente(self):
         cliente = self.cleaned_data['cliente'].upper()
