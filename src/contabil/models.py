@@ -22,7 +22,7 @@ def infadprod_pro_pedido(cursor, pedido):
         , i.VALOR_UNITARIO VALOR
         , coalesce( ip.REF_CLIENTE, '-') INFADPROD
         , coalesce( ip.DESCR_REF_CLIENTE, '-') DESCRCLI
-        , coalesce( rtc.CODIGO_BARRAS, ' ') EAN
+        , coalesce( rtc.CODIGO_BARRAS, ' ') GTIN
         , CASE WHEN rtc.CODIGO_BARRAS IS NULL OR rtc.CODIGO_BARRAS = 'SEM GTIN'
           THEN 0
           ELSE (
