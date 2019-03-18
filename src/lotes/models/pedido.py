@@ -212,9 +212,12 @@ def ped_expedicao(
           || '-' || lpad(c.CGC_2, 2, '0')
           || ')' CLIENTE
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
-        , i.CD_IT_PE_GRUPO REF
         , i.CODIGO_DEPOSITO DEPOSITO
     """
+    if detalhe in ('r', 'c'):
+        sql += """
+            , i.CD_IT_PE_GRUPO REF
+        """
     if detalhe == 'c':
         sql += """
             , i.CD_IT_PE_ITEM COR
@@ -250,9 +253,12 @@ def ped_expedicao(
         , c.CGC_4
         , c.CGC_2
         , ped.COD_PED_CLIENTE
-        , i.CD_IT_PE_GRUPO
         , i.CODIGO_DEPOSITO
     """
+    if detalhe in ('r', 'c'):
+        sql += """
+            , i.CD_IT_PE_GRUPO
+        """
     if detalhe == 'c':
         sql += """
             , i.CD_IT_PE_ITEM
@@ -263,8 +269,11 @@ def ped_expedicao(
         ORDER BY
           ped.DATA_ENTR_VENDA DESC
         , ped.PEDIDO_VENDA DESC
-        , i.CD_IT_PE_GRUPO
     """
+    if detalhe in ('r', 'c'):
+        sql += """
+            , i.CD_IT_PE_GRUPO
+        """
     if detalhe == 'c':
         sql += """
             , i.CD_IT_PE_ITEM
