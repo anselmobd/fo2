@@ -122,18 +122,20 @@ class NotafiscalRel(View):
                     row['ativa'] = 'Sim'
                 else:
                     row['ativa'] = 'Não'
+                if row['nf_devolucao'] is None:
+                    row['nf_devolucao'] = 'Não'
             if form['ordem'] == 'A':
                 data.sort(key=itemgetter('atraso_order'))
             context.update({
                 'headers': ('No.', 'Faturamento', 'Venda', 'Ativa',
-                            'Atraso', 'Saída', 'Agendada', 'Entregue',
-                            'UF', 'CNPJ', 'Cliente', 'Transp.',
-                            'Vol.', 'Valor', 'Observação',
+                            'Devolvida', 'Atraso', 'Saída', 'Agendada',
+                            'Entregue', 'UF', 'CNPJ', 'Cliente',
+                            'Transp.', 'Vol.', 'Valor', 'Observação',
                             'Pedido', 'Ped.Cliente'),
                 'fields': ('numero', 'faturamento', 'venda', 'ativa',
-                           'atraso', 'saida', 'entrega', 'confirmada',
-                           'uf', 'dest_cnpj', 'dest_nome', 'transp_nome',
-                           'volumes', 'valor', 'observacao',
+                           'nf_devolucao', 'atraso', 'saida', 'entrega',
+                           'confirmada', 'uf', 'dest_cnpj', 'dest_nome',
+                           'transp_nome', 'volumes', 'valor', 'observacao',
                            'pedido', 'ped_cliente'),
                 'data': data,
             })
