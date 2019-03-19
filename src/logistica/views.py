@@ -212,12 +212,20 @@ class NotafiscalChave(View):
                 else:
                     status = 'CANCELDA'
                     row['ativa'] = 'Não'
+                if row['nf_devolucao'] is None:
+                    row['nf_devolucao'] = 'Não'
+                    nf_devolucao = ''
+                else:
+                    nf_devolucao = row['nf_devolucao']
             context.update({
                 'status': status,
+                'nf_devolucao': nf_devolucao,
                 'headers1': ('No.', 'Faturamento', 'Venda', 'Ativa',
-                             'Atraso', 'Saída', 'Agendada', 'Entregue',),
+                             'Devolvida', 'Atraso', 'Saída', 'Agendada',
+                             'Entregue',),
                 'fields1': ('numero', 'faturamento', 'venda', 'ativa',
-                            'atraso', 'saida', 'entrega', 'confirmada'),
+                            'nf_devolucao', 'atraso', 'saida', 'entrega',
+                            'confirmada'),
                 'data1': data,
                 'headers2': ('UF', 'CNPJ', 'Cliente', 'Transp.',
                              'Vol.', 'Valor', 'Observação',
