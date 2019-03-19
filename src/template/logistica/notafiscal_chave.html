@@ -26,6 +26,9 @@
 {% endif %}
 {% if data1 %}
   <h3>Nota Fiscal - {{status}}</h3>
+  {% if nf_devolucao %}
+    <h3>Devolvida pela nota de entrada {{nf_devolucao}}</h3>
+  {% endif %}
   <table>
     {% include "layout/html_thead.html" with data=headers1 only %}
     {% include "layout/html_tbody.html" with fields=fields1 data=data1 only %}
