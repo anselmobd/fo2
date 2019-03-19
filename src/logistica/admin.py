@@ -5,10 +5,10 @@ from .models import NotaFiscal
 
 
 class NotaFiscalAdmin(admin.ModelAdmin):
-    list_per_page = 40
+    list_per_page = 50
     list_display = ['numero', 'faturamento',
                     'saida', 'entrega', 'confirmada',
-                    'natu_venda', 'ativa',
+                    'natu_venda', 'ativa', 'nf_devolucao',
                     'uf', 'transp_nome',
                     'dest_nome', 'dest_cnpj',
                     'valor', 'volumes',
@@ -21,7 +21,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     search_fields = ['numero', 'dest_cnpj', 'dest_nome', 'natu_descr',
                      'transp_nome', 'observacao']
     ordering = ['-numero']
-    fields = (('numero', 'ativa'),
+    fields = (('numero', 'ativa', 'nf_devolucao'),
               ('dest_cnpj', 'dest_nome', 'uf', 'transp_nome'),
               ('pedido', 'ped_cliente'),
               ('natu_venda', 'natu_descr'),
@@ -31,7 +31,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     readonly_fields = ['id', 'numero', 'faturamento',
                        'pedido', 'ped_cliente',
                        'volumes', 'valor',
-                       'cod_status', 'msg_status', 'ativa',
+                       'cod_status', 'msg_status', 'ativa', 'nf_devolucao',
                        'dest_cnpj', 'dest_nome', 'uf',
                        'transp_nome', 'natu_descr', 'natu_venda',
                        ]
