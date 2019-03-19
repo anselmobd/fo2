@@ -40,6 +40,8 @@ class NotaFiscal(models.Model):
     ped_cliente = models.CharField(
         max_length=30, null=True, blank=True,
         verbose_name='pedido cliente')
+    nf_devolucao = models.IntegerField(
+        null=True, blank=True, verbose_name='Devolução')
     trail = models.CharField(
         db_index=True, max_length=32, null=True, blank=True, default='')
 
