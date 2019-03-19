@@ -12,6 +12,7 @@ import logistica.models as models
 
 class Command(BaseCommand):
     help = 'Sync NF list from Systêxtil'
+    __MAX_TASKS = 100
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -64,7 +65,11 @@ class Command(BaseCommand):
                   , '-') TRANSP
                 , f.PEDIDO_VENDA PEDIDO
                 , p.COD_PED_CLIENTE PED_CLIENTE
+                , fe.DOCUMENTO NF_DEVOLUCAO
                 FROM FATU_050 f
+                LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
+                  ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+                 AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
                 LEFT JOIN PEDI_100 p
                   ON p.PEDIDO_VENDA = f.PEDIDO_VENDA
                 JOIN PEDI_010 c
@@ -90,8 +95,8 @@ class Command(BaseCommand):
                 'numero', 'trail'))
             nfs_fo2 = {nf[0]: nf[1] for nf in nfs_fo2_list}
 
+            count_task = 0
             for row_st in nfs_st:
-                edit = True
                 if row_st['FATURAMENTO'] is None:
                     faturamento = None
                 else:
@@ -105,7 +110,9 @@ class Command(BaseCommand):
                 natu_venda = (row_st['NAT'] in (1, 2)) \
                     or (row_st['DIV_NAT'] == '8'
                         and (row_st['COD_NAT'] == '6.11'
-                             or row_st['COD_NAT'] == '5.11'))
+                             or row_st['COD_NAT'] == '5.11'
+                             )
+                        )
 
                 hash_cache = ';'.join(map(format, (
                     row_st['NF'],
@@ -123,10 +130,12 @@ class Command(BaseCommand):
                     natu_venda,
                     row_st['PEDIDO'],
                     row_st['PED_CLIENTE'],
+                    row_st['NF_DEVOLUCAO'],
                 )))
                 hash_object = hashlib.md5(hash_cache.encode())
                 trail = hash_object.hexdigest()
 
+                edit = True
                 if row_st['NF'] in nfs_fo2.keys():
                     if trail == nfs_fo2[row_st['NF']]:
                         edit = False
@@ -195,10 +204,20 @@ class Command(BaseCommand):
                         nf_fo2.ped_cliente, row_st['PED_CLIENTE'])
                     nf_fo2.ped_cliente = row_st['PED_CLIENTE']
 
+                    self.print_diff(
+                        'nf_devolucao',
+                        nf_fo2.nf_devolucao, row_st['NF_DEVOLUCAO'])
+                    nf_fo2.nf_devolucao = row_st['NF_DEVOLUCAO']
+
                     self.print_diff('trail', nf_fo2.trail, trail)
                     nf_fo2.trail = trail
 
                     nf_fo2.save()
+                    count_task += 1
+
+                    if count_task >= self.__MAX_TASKS:
+                        self.my_println('{} tarefas'.format(self.__MAX_TASKS))
+                        break
 
         except Exception as e:
             raise CommandError('Error syncing NF "{}"'.format(e))
