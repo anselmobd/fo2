@@ -711,7 +711,6 @@ def busca_produto(cursor, busca, cor, roteiro, alternativa):
         get_roteiro=get_roteiro,
         get_alternativa=get_alternativa,
         )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
