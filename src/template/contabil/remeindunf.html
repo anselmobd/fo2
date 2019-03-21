@@ -73,8 +73,15 @@
   {% if retorno == 'C' %}
     <h4>Retorno: Só remessas <b>Com</b> retorno</h4>
   {% endif %}
+  {% if detalhe == 'I' %}
+    <h4>Detalhamento por item</h4>
+  {% else %}
+    <h4>Detalhamento por referência</h4>
+  {% endif %}
   {% if data %}
-    Total de peças: {{ total_pecas }}
+    {% if detalhe == 'I' %}
+      Total de peças: {{ total_pecas }}
+    {% endif %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data group=group safe=safe style=style only %}
