@@ -321,7 +321,7 @@ def reme_indu_nf(
         dt_saida_de=None, dt_saida_ate=None, nf_saida=None,
         dt_entrada_de=None, dt_entrada_ate=None, nf_entrada=None,
         faccao=None, pedido=None, pedido_cliente=None, cliente=None,
-        retorno=None):
+        retorno=None, detalhe=None):
 
     op_filter = ''
     if op:
@@ -396,24 +396,34 @@ def reme_indu_nf(
     elif retorno == 'C':
         retorno_filter = "AND nfec.DOCUMENTO is NOT NULL"
 
+    '''
+    if detalhe == 'I':
+    sql = '''
+
     sql = '''
         WITH remessa AS
         (
         SELECT
           nf.NUM_NOTA_FISCAL NF
         , nf.DATA_EMISSAO DT
-        , cind.FANTASIA_CLIENTE FACCAO
-        , inf.SEQ_ITEM_NFISC SEQ
-        , inf.NIVEL_ESTRUTURA NIVEL
-        , inf.GRUPO_ESTRUTURA REF
-        , inf.SUBGRU_ESTRUTURA TAM
-        , inf.ITEM_ESTRUTURA COR
-        , sum(inf.QTDE_ITEM_FATUR) QTD
+        , cind.FANTASIA_CLIENTE FACCAO'''
+    if detalhe == 'I':
+        sql += '''
+            , inf.SEQ_ITEM_NFISC SEQ
+            , inf.NIVEL_ESTRUTURA NIVEL
+            , inf.GRUPO_ESTRUTURA REF
+            , inf.SUBGRU_ESTRUTURA TAM
+            , inf.ITEM_ESTRUTURA COR
+            , sum(inf.QTDE_ITEM_FATUR) QTD'''
+    sql += '''
         , min(osi.NUMERO_ORDEM) OS
         , min(l.ORDEM_PRODUCAO) OP
         , nfec.DOCUMENTO NF_RET
-        , nfec.DATA_EMISSAO DT_RET
-        , sum(nfei.QUANTIDADE) QTD_RET
+        , nfec.DATA_EMISSAO DT_RET'''
+    if detalhe == 'I':
+        sql += '''
+            , sum(nfei.QUANTIDADE) QTD_RET'''
+    sql += '''
         FROM FATU_050 nf -- nota fiscal da Tussor - capa
         JOIN PEDI_080 nop -- natureza da operação
           ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
@@ -465,12 +475,15 @@ def reme_indu_nf(
         GROUP BY
           nf.NUM_NOTA_FISCAL
         , nf.DATA_EMISSAO
-        , cind.FANTASIA_CLIENTE
-        , inf.SEQ_ITEM_NFISC
-        , inf.NIVEL_ESTRUTURA
-        , inf.GRUPO_ESTRUTURA
-        , inf.SUBGRU_ESTRUTURA
-        , inf.ITEM_ESTRUTURA
+        , cind.FANTASIA_CLIENTE'''
+    if detalhe == 'I':
+        sql += '''
+            , inf.SEQ_ITEM_NFISC
+            , inf.NIVEL_ESTRUTURA
+            , inf.GRUPO_ESTRUTURA
+            , inf.SUBGRU_ESTRUTURA
+            , inf.ITEM_ESTRUTURA'''
+    sql += '''
         , nfec.DOCUMENTO
         , nfec.DATA_EMISSAO
         )
@@ -494,10 +507,14 @@ def reme_indu_nf(
           {pedido_cliente_filter} -- pedido_cliente_filter
           {cliente_filter} -- cliente_filter
         ORDER BY
-          r.NF
-        , r.SEQ
+          r.NF'''
+    if detalhe == 'I':
+        sql += '''
+            , r.SEQ'''
+    sql += '''
         , r.NF_RET
-    '''.format(
+    '''
+    sql = sql.format(
         op_filter=op_filter,
         os_filter=os_filter,
         dt_saida_filter=dt_saida_filter,
@@ -510,6 +527,5 @@ def reme_indu_nf(
         cliente_filter=cliente_filter,
         retorno_filter=retorno_filter,
         )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
