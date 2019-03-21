@@ -9,4 +9,6 @@ urlpatterns = [
         views.InfAdProd.as_view(), name='infadprod'),
 
     url(r'^remeindu/$', views.RemessaIndustr.as_view(), name='remeindu'),
+
+    url(r'^remeindunf/$', views.RemessaIndustrNF.as_view(), name='remeindunf'),
 ]
