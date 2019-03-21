@@ -21,18 +21,6 @@
   {% if data_de or faccao or cliente or pedido or pedido_cliente %}
     <h3>Busca por</h3>
   {% endif %}
-  {% if faccao %}
-    <h4>Facção: <b>{{ faccao }}</b></h4>
-  {% endif %}
-  {% if cliente %}
-    <h4>Cliente: <b>{{ cliente }}</b></h4>
-  {% endif %}
-  {% if pedido %}
-    <h4>Pedido Tussor: <b>{{ pedido }}</b></h4>
-  {% endif %}
-  {% if pedido_cliente %}
-    <h4>Pedido do cliente: <b>{{ pedido_cliente }}</b></h4>
-  {% endif %}
   {% if data_de or data_ate %}
     <h4>Data da remessa:
     {% if data_de == data_ate %}
@@ -46,6 +34,18 @@
       {% endif %}
     {% endif %}
     </h4>
+  {% endif %}
+  {% if faccao %}
+    <h4>Facção: <b>{{ faccao }}</b></h4>
+  {% endif %}
+  {% if cliente %}
+    <h4>Cliente: <b>{{ cliente }}</b></h4>
+  {% endif %}
+  {% if pedido %}
+    <h4>Pedido Tussor: <b>{{ pedido }}</b></h4>
+  {% endif %}
+  {% if pedido_cliente %}
+    <h4>Pedido do cliente: <b>{{ pedido_cliente }}</b></h4>
   {% endif %}
   {% if retorno == 'S' %}
     <h4>Retorno: Só remessas <b>Sem</b> retorno</h4>

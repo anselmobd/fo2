@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.db import connections
 from django.views import View
 
+from fo2.template import group_rowspan
 from utils.views import totalize_grouped_data
 
 import contabil.forms as forms
@@ -244,6 +245,10 @@ class RemessaIndustrNF(View):
                     else:
                         row['PED|LINK'] = reverse(
                             'producao:pedido__get', args=[row['PED']])
+
+                group = ['NF', 'DT', 'FACCAO']
+                group_rowspan(data, group)
+
                 context.update({
                     'data_de': data_de,
                     'data_ate': data_ate,
@@ -253,15 +258,18 @@ class RemessaIndustrNF(View):
                     'pedido_cliente': pedido_cliente,
                     'retorno': retorno,
                     'total_pecas': total_pecas,
-                    'headers': ('OP', 'Ref.', 'Cor', 'Tam.', 'OS', 'Quant.',
-                                'Data saída', 'NF. saída', 'Facção',
-                                'Data retorno', 'NF retorno', 'Quant. retorno',
+                    'headers': ('NF. saída', 'Data saída', 'Facção', 'Seq.',
+                                'Nivel', 'Ref.', 'Cor', 'Tam.', 'Quant.',
+                                'OS', 'OP',
+                                'NF retorno', 'Data retorno', 'Quant. retorno',
                                 'Pedido', 'Ped. cliente', 'Cliente'),
-                    'fields': ('OP', 'REF', 'COR', 'TAM', 'OS', 'QTD',
-                               'DT', 'NF', 'FACCAO',
-                               'DT_RET', 'NF_RET', 'QTD_RET',
+                    'fields': ('NF', 'DT', 'FACCAO', 'SEQ',
+                               'NIVEL', 'REF', 'COR', 'TAM', 'QTD',
+                               'OS', 'OP',
+                               'NF_RET', 'DT_RET', 'QTD_RET',
                                'PED', 'PED_CLI', 'CLI'),
                     'data': data,
+                    'group': group,
                 })
 
         context['form'] = form
