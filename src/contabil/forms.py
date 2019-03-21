@@ -78,8 +78,8 @@ class RemessaIndustrNFForm(RemessaIndustrBaseForm):
         label='NF Remessa', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
-    CHOICES = [('I', 'Por item'),
-               ('R', 'Por referência'),
+    CHOICES = [('I', 'Por item de NF de remessa'),
+               ('N', 'Por NF de remessa'),
                ]
     detalhe = forms.ChoiceField(
         label='Detalhamento', choices=CHOICES, initial='I')
