@@ -101,7 +101,7 @@ class InfAdProd(View):
 class RemessaIndustr(View):
     Form_class = forms.RemessaIndustrForm
     template_name = 'contabil/remeindu.html'
-    title_name = 'Remessas para industrialização'
+    title_name = 'Industrialização por OP'
 
     def get(self, request):
         context = {'titulo': self.title_name}
