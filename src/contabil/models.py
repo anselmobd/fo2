@@ -83,7 +83,6 @@ def reme_indu(
         os_filter = 'AND os.NUMERO_ORDEM = {}'.format(os)
 
     dt_saida_filter = ''
-    pprint(dt_saida_de)
     if dt_saida_de:
         dt_saida_filter += """ --
             AND nf.DATA_EMISSAO >= '{}'
