@@ -8,7 +8,7 @@ class InfAdProdForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
-class RemessaIndustrNFForm(forms.Form):
+class RemessaIndustrBaseForm(forms.Form):
     data_de = forms.DateField(
         label='NF Remessa - Data inicial', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
@@ -59,6 +59,24 @@ class RemessaIndustrNFForm(forms.Form):
         data['cliente'] = cliente
         self.data = data
         return cliente
+
+
+class RemessaIndustrNFForm(RemessaIndustrBaseForm):
+    data_ret_de = forms.DateField(
+        label='NF Retorno - Data inicial', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    data_ret_ate = forms.DateField(
+        label='NF Retorno - Data final', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    nf_ret = forms.CharField(
+        label='NF Retorno', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    nf = forms.CharField(
+        label='NF Remessa', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
 
 
 class RemessaIndustrForm(RemessaIndustrNFForm):
