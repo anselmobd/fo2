@@ -496,6 +496,7 @@ def reme_indu_nf(
         ORDER BY
           r.NF
         , r.SEQ
+        , r.NF_RET
     '''.format(
         op_filter=op_filter,
         os_filter=os_filter,
