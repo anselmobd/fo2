@@ -182,7 +182,7 @@ class RemessaIndustr(View):
 
 
 class RemessaIndustrNF(View):
-    Form_class = forms.RemessaIndustrForm
+    Form_class = forms.RemessaIndustrNFForm
     template_name = 'contabil/remeindunf.html'
     title_name = 'Industrialização por NF de remessa'
 
