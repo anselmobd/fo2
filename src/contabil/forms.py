@@ -8,7 +8,7 @@ class InfAdProdForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
-class RemessaIndustrForm(forms.Form):
+class RemessaIndustrNFForm(forms.Form):
     data_de = forms.DateField(
         label='NF Remessa - Data inicial', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
@@ -46,12 +46,6 @@ class RemessaIndustrForm(forms.Form):
     retorno = forms.ChoiceField(
         label='Retorno', choices=CHOICES, initial='T')
 
-    CHOICES = [('C', 'Apenas por cor'),
-               ('T', 'Por cor e tamanho'),
-               ]
-    detalhe = forms.ChoiceField(
-        label='Detalhe', choices=CHOICES, initial='C')
-
     def clean_faccao(self):
         faccao = self.cleaned_data['faccao'].upper()
         data = self.data.copy()
@@ -65,3 +59,11 @@ class RemessaIndustrForm(forms.Form):
         data['cliente'] = cliente
         self.data = data
         return cliente
+
+
+class RemessaIndustrForm(RemessaIndustrNFForm):
+    CHOICES = [('C', 'Apenas por cor'),
+               ('T', 'Por cor e tamanho'),
+               ]
+    detalhe = forms.ChoiceField(
+        label='Detalhe', choices=CHOICES, initial='C')
