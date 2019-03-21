@@ -114,6 +114,7 @@ def reme_indu(
     if faccao:
         faccao_filter = """ --
             AND cind.NOME_CLIENTE
+                || '; ' || cind.FANTASIA_CLIENTE
                 || ' (' || lpad(cind.CGC_9, 8, '0')
                 || '/' || lpad(cind.CGC_4, 4, '0')
                 || '-' || lpad(cind.CGC_2, 2, '0')
@@ -133,6 +134,7 @@ def reme_indu(
     if cliente:
         cliente_filter = """ --
             AND c.NOME_CLIENTE
+                || '; ' || c.FANTASIA_CLIENTE
                 || ' (' || lpad(c.CGC_9, 8, '0')
                 || '/' || lpad(c.CGC_4, 4, '0')
                 || '-' || lpad(c.CGC_2, 2, '0')
