@@ -187,15 +187,24 @@ class RemessaIndustrNF(View):
     template_name = 'contabil/remeindunf.html'
     title_name = 'Industrialização por NF de remessa'
 
-    def get(self, request):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+    def get(self, request, *args, **kwargs):
+        if 'nf' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         form = self.Form_class(request.POST)
         context = {'titulo': self.title_name}
+        if 'nf' in kwargs:
+            if kwargs['nf'] is not None:
+                form.data['nf'] = kwargs['nf']
+                form.data['retorno'] = 'T'
+            if kwargs['detalhe'] is not None:
+                form.data['detalhe'] = kwargs['detalhe']
         if form.is_valid():
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
@@ -209,6 +218,7 @@ class RemessaIndustrNF(View):
             data_ret_ate = form.cleaned_data['data_ret_ate']
             nf_ret = form.cleaned_data['nf_ret']
             nf = form.cleaned_data['nf']
+            detalhe = form.cleaned_data['detalhe']
 
             cursor = connections['so'].cursor()
             data = models.reme_indu_nf(
@@ -217,13 +227,14 @@ class RemessaIndustrNF(View):
                 pedido=pedido, pedido_cliente=pedido_cliente, op=op,
                 retorno=retorno,
                 dt_entrada_de=data_ret_de, dt_entrada_ate=data_ret_ate,
-                nf_entrada=nf_ret, nf_saida=nf)
+                nf_entrada=nf_ret, nf_saida=nf, detalhe=detalhe)
             if len(data) == 0:
                 context['erro'] = 'Remessa não encontrada'
             else:
                 total_pecas = 0
                 for row in data:
-                    total_pecas += row['QTD']
+                    if detalhe == 'I':
+                        total_pecas += row['QTD']
                     row['DT'] = row['DT'].date()
                     if row['DT_RET'] is None:
                         row['DT_RET'] = '-'
@@ -233,8 +244,6 @@ class RemessaIndustrNF(View):
                         row['DT_RET'] = row['DT_RET'].date()
                     if row['PED_CLI'] is None:
                         row['PED_CLI'] = '-'
-                    if row['TAM'] is None:
-                        row['TAM'] = '-'
                     if row['OP'] is None:
                         row['OP'] = '-'
                     else:
@@ -251,6 +260,32 @@ class RemessaIndustrNF(View):
                     else:
                         row['PED|LINK'] = reverse(
                             'producao:pedido__get', args=[row['PED']])
+                    row['NF|LINK'] = reverse(
+                        'contabil:remeindunf__get', args=[row['NF'], 'I'])
+                    row['NF|TARGET'] = '_BLANK'
+
+                if detalhe == 'I':
+                    headers = ('NF. saída', 'Data saída', 'Facção', 'OP',
+                               'Pedido', 'Ped. cliente', 'Cliente',
+                               'OS', 'Seq.', 'Nivel', 'Ref.', 'Cor', 'Tam.',
+                               'Quant.',
+                               'NF retorno', 'Data retorno', 'Quant. retorno',
+                               )
+                    fields = ('NF', 'DT', 'FACCAO', 'OP',
+                              'PED', 'PED_CLI', 'CLI',
+                              'OS', 'SEQ', 'NIVEL', 'REF', 'COR', 'TAM',
+                              'QTD',
+                              'NF_RET', 'DT_RET', 'QTD_RET'
+                              )
+                else:
+                    headers = ('NF. saída', 'Data saída', 'Facção', 'OP',
+                               'Pedido', 'Ped. cliente', 'Cliente',
+                               'OS', 'NF retorno', 'Data retorno',
+                               )
+                    fields = ('NF', 'DT', 'FACCAO', 'OP',
+                              'PED', 'PED_CLI', 'CLI',
+                              'OS', 'NF_RET', 'DT_RET'
+                              )
 
                 group = ['NF', 'DT', 'FACCAO', 'OP', 'PED', 'PED_CLI', 'CLI']
                 group_rowspan(data, group)
@@ -267,18 +302,10 @@ class RemessaIndustrNF(View):
                     'data_ret_ate': data_ret_ate,
                     'nf_ret': nf_ret,
                     'nf': nf,
+                    'detalhe': detalhe,
                     'total_pecas': total_pecas,
-                    'headers': ('NF. saída', 'Data saída', 'Facção', 'OP',
-                                'Pedido', 'Ped. cliente', 'Cliente',
-                                'OS', 'Seq.', 'Nivel', 'Ref.', 'Cor', 'Tam.',
-                                'Quant.',
-                                'NF retorno', 'Data retorno', 'Quant. retorno',
-                                ),
-                    'fields': ('NF', 'DT', 'FACCAO', 'OP',
-                               'PED', 'PED_CLI', 'CLI',
-                               'OS', 'SEQ', 'NIVEL', 'REF', 'COR', 'TAM',
-                               'QTD',
-                               'NF_RET', 'DT_RET', 'QTD_RET'),
+                    'headers': headers,
+                    'fields': fields,
                     'data': data,
                     'group': group,
                 })

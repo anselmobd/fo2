@@ -10,5 +10,8 @@ urlpatterns = [
 
     url(r'^remeindu/$', views.RemessaIndustr.as_view(), name='remeindu'),
 
-    url(r'^remeindunf/$', views.RemessaIndustrNF.as_view(), name='remeindunf'),
+    url(r'^remeindunf/?$',
+        views.RemessaIndustrNF.as_view(), name='remeindunf'),
+    url(r'^remeindunf/(?P<nf>.+)?/(?P<detalhe>.+)?/$',
+        views.RemessaIndustrNF.as_view(), name='remeindunf__get'),
 ]
