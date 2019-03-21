@@ -10,11 +10,11 @@ class InfAdProdForm(forms.Form):
 
 class RemessaIndustrForm(forms.Form):
     data_de = forms.DateField(
-        label='Data inicial', required=False,
+        label='NF Remessa - Data inicial', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 
     data_ate = forms.DateField(
-        label='Data final', required=False,
+        label='NF Remessa - Data final', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 
     faccao = forms.CharField(
