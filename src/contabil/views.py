@@ -205,13 +205,19 @@ class RemessaIndustrNF(View):
             pedido_cliente = form.cleaned_data['pedido_cliente']
             op = form.cleaned_data['op']
             retorno = form.cleaned_data['retorno']
+            data_ret_de = form.cleaned_data['data_ret_de']
+            data_ret_ate = form.cleaned_data['data_ret_ate']
+            nf_ret = form.cleaned_data['nf_ret']
+            nf = form.cleaned_data['nf']
 
             cursor = connections['so'].cursor()
             data = models.reme_indu_nf(
                 cursor, dt_saida_de=data_de, dt_saida_ate=data_ate,
                 faccao=faccao, cliente=cliente,
                 pedido=pedido, pedido_cliente=pedido_cliente, op=op,
-                retorno=retorno)
+                retorno=retorno,
+                dt_entrada_de=data_ret_de, dt_entrada_ate=data_ret_ate,
+                nf_entrada=nf_ret, nf_saida=nf)
             if len(data) == 0:
                 context['erro'] = 'Remessa não encontrada'
             else:
@@ -246,7 +252,7 @@ class RemessaIndustrNF(View):
                         row['PED|LINK'] = reverse(
                             'producao:pedido__get', args=[row['PED']])
 
-                group = ['NF', 'DT', 'FACCAO']
+                group = ['NF', 'DT', 'FACCAO', 'OP', 'PED', 'PED_CLI', 'CLI']
                 group_rowspan(data, group)
 
                 context.update({
@@ -257,17 +263,22 @@ class RemessaIndustrNF(View):
                     'pedido': pedido,
                     'pedido_cliente': pedido_cliente,
                     'retorno': retorno,
+                    'data_ret_de': data_ret_de,
+                    'data_ret_ate': data_ret_ate,
+                    'nf_ret': nf_ret,
+                    'nf': nf,
                     'total_pecas': total_pecas,
-                    'headers': ('NF. saída', 'Data saída', 'Facção', 'Seq.',
-                                'Nivel', 'Ref.', 'Cor', 'Tam.', 'Quant.',
-                                'OS', 'OP',
+                    'headers': ('NF. saída', 'Data saída', 'Facção', 'OP',
+                                'Pedido', 'Ped. cliente', 'Cliente',
+                                'OS', 'Seq.', 'Nivel', 'Ref.', 'Cor', 'Tam.',
+                                'Quant.',
                                 'NF retorno', 'Data retorno', 'Quant. retorno',
-                                'Pedido', 'Ped. cliente', 'Cliente'),
-                    'fields': ('NF', 'DT', 'FACCAO', 'SEQ',
-                               'NIVEL', 'REF', 'COR', 'TAM', 'QTD',
-                               'OS', 'OP',
-                               'NF_RET', 'DT_RET', 'QTD_RET',
-                               'PED', 'PED_CLI', 'CLI'),
+                                ),
+                    'fields': ('NF', 'DT', 'FACCAO', 'OP',
+                               'PED', 'PED_CLI', 'CLI',
+                               'OS', 'SEQ', 'NIVEL', 'REF', 'COR', 'TAM',
+                               'QTD',
+                               'NF_RET', 'DT_RET', 'QTD_RET'),
                     'data': data,
                     'group': group,
                 })

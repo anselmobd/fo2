@@ -18,7 +18,7 @@
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% elif data %}
-  {% if data_de or faccao or cliente or pedido or pedido_cliente %}
+  {% if data_de or faccao or cliente or pedido or pedido_cliente or data_ret_de or nf_ret or nf %}
     <h3>Busca por</h3>
   {% endif %}
   {% if data_de or data_ate %}
@@ -34,6 +34,26 @@
       {% endif %}
     {% endif %}
     </h4>
+  {% endif %}
+  {% if nf %}
+    <h4>NF de remessa: <b>{{ nf }}</b></h4>
+  {% endif %}
+  {% if data_ret_de or data_ret_ate %}
+    <h4>Data da retorno:
+    {% if data_ret_de == data_ret_ate %}
+      <b>{{ data_ret_de }}</b>
+    {% else %}
+      {% if data_ret_de %}
+        a partir de <b>{{ data_ret_de }}</b>
+      {% endif %}
+      {% if data_ret_ate %}
+        até <b>{{ data_ret_ate }}</b>
+      {% endif %}
+    {% endif %}
+    </h4>
+  {% endif %}
+  {% if nf_ret %}
+    <h4>NF de retorno: <b>{{ nf_ret }}</b></h4>
   {% endif %}
   {% if faccao %}
     <h4>Facção: <b>{{ faccao }}</b></h4>
