@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'contabil:remeindu' %}" method="post">
+<form action="{% url 'contabil:remeindunf' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
@@ -52,9 +52,6 @@
   {% endif %}
   {% if retorno == 'C' %}
     <h4>Retorno: Só remessas <b>Com</b> retorno</h4>
-  {% endif %}
-  {% if detalhe == 'C' %}
-    <h4>Detalhe: Apenas por cor (não por tamanho)</h4>
   {% endif %}
   {% if data %}
     Total de peças: {{ total_pecas }}
