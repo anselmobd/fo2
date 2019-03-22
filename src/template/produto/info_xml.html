@@ -16,7 +16,11 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if ref %}
-  <h4>Referência: {{ ref }}</h4>
+  <h4>Referência: <a
+    target="_BLANK"
+    href="{{ref_link}}">{{ref}}<span
+    class="glyphicon glyphicon-link"
+    aria-hidden="true"></span></a></h4>
   <h4>Cliente: {{ cliente }}</h4>
 {% endif %}
 {% if erro %}
