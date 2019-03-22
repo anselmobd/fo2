@@ -13,6 +13,7 @@ urlpatterns = [
         name='modelo__get'),
 
     url(r'^gtin/$', views.Gtin.as_view(), name='gtin'),
+    url(r'^info_xml/$', views.InfoXml.as_view(), name='info_xml'),
 
     url(r'^busca/$', views.Busca.as_view(),
         name='busca'),
