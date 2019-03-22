@@ -1039,9 +1039,29 @@ def info_xml(cursor, ref=None):
           THEN 'SEM GTIN'
           ELSE rtc.CODIGO_BARRAS
           END GTIN
+        , ic.REF_CLIENTE SKU_INFADPROD
+        , rtc.PRODUTO_INTEGRACAO SKU_NARRATIVA
+        , rtc.NARRATIVA
+        , c.FANTASIA_CLIENTE
+          || ' (' ||  c.NOME_CLIENTE
+          || ' - ' || lpad(c.CGC_9, 8, '0')
+          || '/' || lpad(c.CGC_4, 4, '0')
+          || '-' || lpad(c.CGC_2, 2, '0')
+          || ')' CLIENTE
         FROM BASI_010 rtc -- item (ref+tam+cor)
+        LEFT JOIN ESTQ_400 ic -- item do cliente
+          ON ic.NIVEL_ESTRUTURA = rtc.NIVEL_ESTRUTURA
+         AND ic.GRUPO_ESTRUTURA = rtc.GRUPO_ESTRUTURA
+         AND ic.SUBGRUPO_ESTRUTURA = rtc.SUBGRU_ESTRUTURA
+         AND ic.ITEM_ESTRUTURA = rtc.ITEM_ESTRUTURA
         LEFT JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = rtc.SUBGRU_ESTRUTURA
+        JOIN BASI_030 r
+          ON r.REFERENCIA = rtc.GRUPO_ESTRUTURA
+        LEFT JOIN PEDI_010 c -- cliente
+          ON c.CGC_9 = r.CGC_CLIENTE_9
+         AND c.CGC_4 = r.CGC_CLIENTE_4
+         AND c.CGC_2 = r.CGC_CLIENTE_2
         WHERE rtc.NIVEL_ESTRUTURA = 1
           {filtra_ref} -- filtra_ref
         ORDER BY
