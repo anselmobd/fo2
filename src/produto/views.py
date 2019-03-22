@@ -1135,6 +1135,7 @@ class PorCliente(View):
             'REF', 'DESCR']
 
         context.update({
+            'cliente_encontrado': data[0]['CLIENTE'],
             'headers': headers,
             'fields': fields,
             'data': data,
