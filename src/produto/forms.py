@@ -96,3 +96,16 @@ class GeraRoteirosRefForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+
+class ClienteForm(forms.Form):
+    cliente = forms.CharField(
+        widget=forms.TextInput(attrs={'type': 'string',
+                               'autofocus': 'autofocus'}))
+
+    def clean_cliente(self):
+        cliente = self.cleaned_data['cliente'].upper()
+        data = self.data.copy()
+        data['cliente'] = cliente
+        self.data = data
+        return cliente
