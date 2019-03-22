@@ -1068,21 +1068,20 @@ class InfoXml(View):
             return context
 
         for row in data:
-            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
-            row['REF|TARGET'] = '_blank'
             if row['SKU_INFADPROD'] is None:
                 row['SKU_INFADPROD'] = '-'
             if row['SKU_NARRATIVA'] is None:
                 row['SKU_NARRATIVA'] = '-'
 
         headers = [
-            'Referência', 'Tamanho', 'Cor', 'GTIN',
+            'Tamanho', 'Cor', 'GTIN',
             'SKU indAdProd', 'SKU Narrativa', 'Narrativa']
         fields = [
-            'REF', 'TAM', 'COR', 'GTIN',
+            'TAM', 'COR', 'GTIN',
             'SKU_INFADPROD', 'SKU_NARRATIVA', 'NARRATIVA']
 
         context.update({
+            'ref_link': reverse('produto:ref__get', args=[row['REF']]),
             'cliente': data[0]['CLIENTE'],
             'headers': headers,
             'fields': fields,
