@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^gtin/$', views.Gtin.as_view(), name='gtin'),
 
     url(r'^info_xml/$', views.InfoXml.as_view(), name='info_xml'),
+    url(r'^info_xml/(?P<ref>.+)/$',
+        views.InfoXml.as_view(), name='info_xml__get'),
 
     url(r'^por_cliente/$', views.PorCliente.as_view(), name='por_cliente'),
 

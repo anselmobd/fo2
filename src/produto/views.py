@@ -1091,14 +1091,19 @@ class InfoXml(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        if 'ref' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        if 'ref' in kwargs:
+            form.data['ref'] = kwargs['ref']
         if form.is_valid():
             ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
@@ -1119,6 +1124,10 @@ class PorCliente(View):
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
+
+        for row in data:
+            row['REF|LINK'] = reverse(
+                'produto:info_xml__get', args=[row['REF']])
 
         headers = [
             'Referência', 'Descrição']
