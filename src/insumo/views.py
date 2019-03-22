@@ -2193,7 +2193,6 @@ class MapaSemanal(View):
                 if sc:
                     scd = models.SugestaoCompraDatas.objects.filter(
                         sugestao=sc).order_by('data_compra').values()
-                    pprint(scd)
                     for sugest in scd:
                         if sugest['data_compra'] < semana_hoje:
                             row['compra_atrasada'] += sugest['qtd']
