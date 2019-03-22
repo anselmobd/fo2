@@ -1130,12 +1130,11 @@ class PorCliente(View):
                 'produto:info_xml__get', args=[row['REF']])
 
         headers = [
-            'Referência', 'Descrição']
+            'Referência', 'Descrição', 'Cliente']
         fields = [
-            'REF', 'DESCR']
+            'REF', 'DESCR', 'CLIENTE']
 
         context.update({
-            'cliente_encontrado': data[0]['CLIENTE'],
             'headers': headers,
             'fields': fields,
             'data': data,
