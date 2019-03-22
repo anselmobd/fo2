@@ -19,7 +19,7 @@ from geral.views import dict_colecao_fluxos, get_roteiros_de_fluxo
 from geral.functions import has_permission
 
 from .forms import RefForm, ModeloForm, BuscaForm, GtinForm, \
-    GeraRoteirosRefForm
+    GeraRoteirosRefForm, ClienteForm
 import produto.queries as queries
 
 
@@ -1103,5 +1103,48 @@ class InfoXml(View):
             ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, ref))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class PorCliente(View):
+    Form_class = ClienteForm
+    template_name = 'produto/por_cliente.html'
+    title_name = 'Por cliente'
+
+    def mount_context(self, cursor, cliente):
+        context = {'cliente': cliente}
+
+        data = queries.por_cliente(cursor, cliente=cliente)
+        if len(data) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
+
+        headers = [
+            'Referência', 'Descrição']
+        fields = [
+            'REF', 'DESCR']
+
+        context.update({
+            'headers': headers,
+            'fields': fields,
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            cliente = form.cleaned_data['cliente']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, cliente))
         context['form'] = form
         return render(request, self.template_name, context)

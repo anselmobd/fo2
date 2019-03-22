@@ -1074,3 +1074,42 @@ def info_xml(cursor, ref=None):
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def por_cliente(cursor, cliente=None):
+    filtra_cliente = ''
+    if cliente != '':
+        filtra_cliente = '''--
+          AND c.FANTASIA_CLIENTE
+              || ' (' ||  c.NOME_CLIENTE
+              || ' - ' || lpad(c.CGC_9, 8, '0')
+              || '/' || lpad(c.CGC_4, 4, '0')
+              || '-' || lpad(c.CGC_2, 2, '0')
+              || ')'
+              LIKE '%{}%' '''.format(cliente)
+
+    sql = """
+        SELECT
+          r.REFERENCIA REF
+        , r.DESCR_REFERENCIA DESCR
+        , c.FANTASIA_CLIENTE
+          || ' (' ||  c.NOME_CLIENTE
+          || ' - ' || lpad(c.CGC_9, 8, '0')
+          || '/' || lpad(c.CGC_4, 4, '0')
+          || '-' || lpad(c.CGC_2, 2, '0')
+          || ')' CLIENTE
+        FROM BASI_030 r
+        LEFT JOIN PEDI_010 c -- cliente
+          ON c.CGC_9 = r.CGC_CLIENTE_9
+         AND c.CGC_4 = r.CGC_CLIENTE_4
+         AND c.CGC_2 = r.CGC_CLIENTE_2
+        WHERE r.NIVEL_ESTRUTURA = 1
+          {filtra_cliente} -- filtra_cliente
+        ORDER BY
+          r.REFERENCIA
+    """.format(
+        filtra_cliente=filtra_cliente,
+    )
+    print(sql)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
