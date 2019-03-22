@@ -292,7 +292,6 @@ class RemessaIndustrNF(View):
                               )
                     style = {}
 
-
                 group = ['NF', 'DT', 'FACCAO', 'OP', 'PED', 'PED_CLI', 'CLI']
                 group_rowspan(data, group)
 
