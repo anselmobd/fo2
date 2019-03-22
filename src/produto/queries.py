@@ -1048,6 +1048,7 @@ def info_xml(cursor, ref=None):
           || '/' || lpad(c.CGC_4, 4, '0')
           || '-' || lpad(c.CGC_2, 2, '0')
           || ')' CLIENTE
+        , c.CGC_9 CNPJ9
         FROM BASI_010 rtc -- item (ref+tam+cor)
         LEFT JOIN ESTQ_400 ic -- item do cliente
           ON ic.NIVEL_ESTRUTURA = rtc.NIVEL_ESTRUTURA

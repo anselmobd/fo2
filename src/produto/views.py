@@ -1083,6 +1083,8 @@ class InfoXml(View):
         context.update({
             'ref_link': reverse('produto:ref__get', args=[row['REF']]),
             'cliente': data[0]['CLIENTE'],
+            'cliente_link': reverse(
+                'produto:por_cliente__get',args=[data[0]['CNPJ9']]),
             'headers': headers,
             'fields': fields,
             'data': data,
@@ -1143,14 +1145,19 @@ class PorCliente(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        if 'cliente' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        if 'cliente' in kwargs:
+            form.data['cliente'] = kwargs['cliente']
         if form.is_valid():
             cliente = form.cleaned_data['cliente']
             cursor = connections['so'].cursor()
