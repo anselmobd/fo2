@@ -82,7 +82,7 @@ class RemessaIndustrNFForm(RemessaIndustrBaseForm):
                ('N', 'Por NF de remessa'),
                ]
     detalhe = forms.ChoiceField(
-        label='Detalhamento', choices=CHOICES, initial='I')
+        label='Detalhamento', choices=CHOICES, initial='N')
 
 
 class RemessaIndustrForm(RemessaIndustrNFForm):
