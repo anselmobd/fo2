@@ -1052,3 +1052,48 @@ class GeraRoteirosPadraoRef(PermissionRequiredMixin, View):
         # return HttpResponse(
         #     output,
         #     content_type='text/plain')
+
+
+class InfoXml(View):
+    Form_class = RefForm
+    template_name = 'produto/info_xml.html'
+    title_name = 'Informações p/ NFe XML'
+
+    def mount_context(self, cursor, ref):
+        context = {'ref': ref}
+
+        data = queries.info_xml(cursor, ref=ref)
+        if len(data) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
+
+        for row in data:
+            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+            row['REF|TARGET'] = '_blank'
+
+        headers = ['Referência', 'Tamanho', 'Cor', 'GTIN']
+        fields = ['REF', 'TAM', 'COR', 'BAR']
+
+        context.update({
+            'headers': headers,
+            'fields': fields,
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            ref = form.cleaned_data['ref']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, ref))
+        context['form'] = form
+        return render(request, self.template_name, context)
