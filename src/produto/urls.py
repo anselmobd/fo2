@@ -19,6 +19,8 @@ urlpatterns = [
         views.InfoXml.as_view(), name='info_xml__get'),
 
     url(r'^por_cliente/$', views.PorCliente.as_view(), name='por_cliente'),
+    url(r'^por_cliente/(?P<cliente>.+)/$',
+        views.PorCliente.as_view(), name='por_cliente__get'),
 
     url(r'^busca/$', views.Busca.as_view(),
         name='busca'),
