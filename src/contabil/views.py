@@ -277,6 +277,10 @@ class RemessaIndustrNF(View):
                               'QTD',
                               'NF_RET', 'DT_RET', 'QTD_RET'
                               )
+                    style = {
+                        14: 'text-align: right;',
+                        17: 'text-align: right;',
+                    }
                 else:
                     headers = ('NF. saída', 'Data saída', 'Facção', 'OP',
                                'Pedido', 'Ped. cliente', 'Cliente',
@@ -286,6 +290,8 @@ class RemessaIndustrNF(View):
                               'PED', 'PED_CLI', 'CLI',
                               'OS', 'NF_RET', 'DT_RET'
                               )
+                    style = {}
+
 
                 group = ['NF', 'DT', 'FACCAO', 'OP', 'PED', 'PED_CLI', 'CLI']
                 group_rowspan(data, group)
@@ -308,6 +314,7 @@ class RemessaIndustrNF(View):
                     'fields': fields,
                     'data': data,
                     'group': group,
+                    'style': style,
                 })
 
         context['form'] = form
