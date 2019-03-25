@@ -54,3 +54,13 @@ class RotinaLogisticaAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(models.RotinaLogistica, RotinaLogisticaAdmin)
+
+
+class PosicaoCargaAlteracaoAdmin(admin.ModelAdmin):
+    list_display = [
+        'inicial', 'ordem', 'descricao', 'final', 'efeito']
+    ordering = ['inicial', 'ordem']
+
+
+intr_adm_site.register(
+    models.PosicaoCargaAlteracao, PosicaoCargaAlteracaoAdmin)
