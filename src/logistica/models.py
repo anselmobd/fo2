@@ -72,3 +72,14 @@ class PosicaoCarga(models.Model):
         db_table = "fo2_pos_carga"
         verbose_name = "Posição de carga(NF)"
         verbose_name_plural = "Posições de carga(NF)"
+
+
+class RotinaLogistica(models.Model):
+    codigo = models.CharField(
+        max_length=30,
+        db_index=True, unique=True)
+
+    class Meta:
+        db_table = "fo2_logist_rotina"
+        verbose_name = "Rotina ligada à app Logistica"
+        verbose_name_plural = "Rotinas ligadas à app Logistica"
