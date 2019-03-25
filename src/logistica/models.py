@@ -2,6 +2,20 @@ from django.db import models
 from django.utils.text import slugify
 
 
+class PosicaoCarga(models.Model):
+    nome = models.CharField(
+        max_length=20,
+        db_index=True, unique=True)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = "fo2_pos_carga"
+        verbose_name = "Posição de carga(NF)"
+        verbose_name_plural = "Posições de carga(NF)"
+
+
 class NotaFiscal(models.Model):
     # campos importados
     numero = models.IntegerField(
@@ -45,6 +59,10 @@ class NotaFiscal(models.Model):
         null=True, blank=True, verbose_name='Devolução')
     trail = models.CharField(
         db_index=True, max_length=32, null=True, blank=True, default='')
+    posicao = models.ForeignKey(
+        PosicaoCarga, default=1,
+        verbose_name='Posição',
+        on_delete=models.PROTECT)
 
     # campos editáveis
     saida = models.DateField(null=True, blank=True, verbose_name='saída')
@@ -62,20 +80,6 @@ class NotaFiscal(models.Model):
         db_table = "fo2_fat_nf"
         verbose_name = "Nota Fiscal"
         verbose_name_plural = "Notas Fiscais"
-
-
-class PosicaoCarga(models.Model):
-    nome = models.CharField(
-        max_length=20,
-        db_index=True, unique=True)
-
-    def __str__(self):
-        return self.nome
-
-    class Meta:
-        db_table = "fo2_pos_carga"
-        verbose_name = "Posição de carga(NF)"
-        verbose_name_plural = "Posições de carga(NF)"
 
 
 class RotinaLogistica(models.Model):
