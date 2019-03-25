@@ -7,9 +7,9 @@
   pk: 2
   fields:
     nome: Anota data de saída
-    slug: anota_data_de_saida
+    slug: anota-data-de-saida
 - model: logistica.RotinaLogistica
   pk: 3
   fields:
     nome: Retira data de saída
-    slug: retira_data_de_saida
+    slug: retira-data-de-saida
