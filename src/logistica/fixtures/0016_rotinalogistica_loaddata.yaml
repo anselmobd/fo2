@@ -1,0 +1,8 @@
+- model: logistica.RotinaLogistica
+  pk: 1
+  fields:
+    codigo: anota_data_de_saida
+- model: logistica.RotinaLogistica
+  pk: 2
+  fields:
+    codigo: retira_data_de_saida
