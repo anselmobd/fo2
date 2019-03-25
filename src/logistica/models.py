@@ -75,11 +75,16 @@ class PosicaoCarga(models.Model):
 
 
 class RotinaLogistica(models.Model):
-    codigo = models.CharField(
+    nome = models.CharField(
         max_length=30,
         db_index=True, unique=True)
+    slug = models.SlugField()
 
     class Meta:
         db_table = "fo2_logist_rotina"
         verbose_name = "Rotina ligada à app Logistica"
         verbose_name_plural = "Rotinas ligadas à app Logistica"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.descricao)
+        super(Imagem, self).save(*args, **kwargs)

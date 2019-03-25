@@ -1,12 +1,15 @@
 - model: logistica.RotinaLogistica
   pk: 1
   fields:
-    codigo: nulo
+    nome: Nulo
+    slug: nulo
 - model: logistica.RotinaLogistica
   pk: 2
   fields:
-    codigo: anota_data_de_saida
+    nome: Anota data de saída
+    slug: anota_data_de_saida
 - model: logistica.RotinaLogistica
   pk: 3
   fields:
-    codigo: retira_data_de_saida
+    nome: Retira data de saída
+    slug: retira_data_de_saida
