@@ -1,0 +1,56 @@
+- model: logistica.PosicaoCargaAlteracao
+  pk: 1
+  fields:
+    inicial: 1
+    ordem: 0
+    descricao: "NF Recebida para embarque"
+    efeito: 1
+    final: 2
+- model: logistica.PosicaoCargaAlteracao
+  pk: 2
+  fields:
+    inicial: 2
+    ordem: 1
+    descricao: "Cancela embarque de NF"
+    efeito: 1
+    final: 1
+- model: logistica.PosicaoCargaAlteracao
+  pk: 3
+  fields:
+    inicial: 2
+    ordem: 2
+    descricao: "Embarque terminado e carga despachado"
+    efeito: 2
+    final: 3
+- model: logistica.PosicaoCargaAlteracao
+  pk: 4
+  fields:
+    inicial: 3
+    ordem: 1
+    descricao: "Carga ainda não despachada"
+    efeito: 3
+    final: 2
+- model: logistica.PosicaoCargaAlteracao
+  pk: 5
+  fields:
+    inicial: 3
+    ordem: 2
+    descricao: "NF voltou para desembarque"
+    efeito: 3
+    final: 4
+- model: logistica.PosicaoCargaAlteracao
+  pk: 6
+  fields:
+    inicial: 4
+    ordem: 1
+    descricao: "Desembarque cancelado e carga redespachada"
+    efeito: 2
+    final: 3
+- model: logistica.PosicaoCargaAlteracao
+  pk: 7
+  fields:
+    inicial: 4
+    ordem: 2
+    descricao: "Desembarque de NF finalizado"
+    efeito: 1
+    final: 1
