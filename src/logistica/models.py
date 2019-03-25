@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 class NotaFiscal(models.Model):
@@ -86,5 +87,29 @@ class RotinaLogistica(models.Model):
         verbose_name_plural = "Rotinas ligadas à app Logistica"
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.descricao)
-        super(Imagem, self).save(*args, **kwargs)
+        self.slug = slugify(self.nome)
+        super(RotinaLogistica, self).save(*args, **kwargs)
+
+
+class PosicaoCargaAlteracao(models.Model):
+    inicial = models.ForeignKey(
+        PosicaoCarga,
+        verbose_name='Estado inicial',
+        related_name='posicao_inicial_set',
+        on_delete=models.PROTECT)
+    ordem = models.IntegerField(default=0)
+    descricao = models.CharField(
+        'descrição', max_length=200)
+    efeito = models.ForeignKey(
+        RotinaLogistica, default=1,
+        on_delete=models.PROTECT)
+    final = models.ForeignKey(
+        PosicaoCarga,
+        verbose_name='Estado Final',
+        related_name='posicao_final_set',
+        on_delete=models.PROTECT)
+
+    class Meta:
+        db_table = "fo2_pos_carga_alt"
+        verbose_name = "Alteração de posição de carga(NF)"
+        verbose_name_plural = "Alterações de Posição de carga(NF)"
