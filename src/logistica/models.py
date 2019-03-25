@@ -76,6 +76,15 @@ class NotaFiscal(models.Model):
         null=True, blank=True,
         verbose_name='observação')
 
+    def save(self, *args, **kwargs):
+        if self.saida:
+            if self.posicao.id != 3:
+                self.posicao = PosicaoCarga.objects.get(id=3)
+        else:
+            if self.posicao.id == 3:
+                self.posicao = PosicaoCarga.objects.get(id=1)
+        super(NotaFiscal, self).save(*args, **kwargs)
+
     class Meta:
         db_table = "fo2_fat_nf"
         verbose_name = "Nota Fiscal"
