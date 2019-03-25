@@ -61,3 +61,14 @@ class NotaFiscal(models.Model):
         db_table = "fo2_fat_nf"
         verbose_name = "Nota Fiscal"
         verbose_name_plural = "Notas Fiscais"
+
+
+class PosicaoCarga(models.Model):
+    nome = models.CharField(
+        max_length=20,
+        db_index=True, unique=True)
+
+    class Meta:
+        db_table = "fo2_pos_carga"
+        verbose_name = "Posição de carga(NF)"
+        verbose_name_plural = "Posições de carga(NF)"
