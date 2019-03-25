@@ -7,7 +7,7 @@ import logistica.models as models
 
 class NotaFiscalAdmin(admin.ModelAdmin):
     list_per_page = 50
-    list_display = ['numero', 'faturamento',
+    list_display = ['numero', 'faturamento', 'posicao',
                     'saida', 'entrega', 'confirmada',
                     'natu_venda', 'ativa', 'nf_devolucao',
                     'uf', 'transp_nome',
@@ -22,14 +22,14 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     search_fields = ['numero', 'dest_cnpj', 'dest_nome', 'natu_descr',
                      'transp_nome', 'observacao']
     ordering = ['-numero']
-    fields = (('numero', 'ativa', 'nf_devolucao'),
+    fields = (('numero', 'ativa', 'nf_devolucao', 'posicao'),
               ('dest_cnpj', 'dest_nome', 'uf', 'transp_nome'),
               ('pedido', 'ped_cliente'),
               ('natu_venda', 'natu_descr'),
               ('volumes', 'valor'),
               ('faturamento', 'cod_status', 'msg_status'),
               'saida', 'entrega', 'confirmada', 'observacao', 'id')
-    readonly_fields = ['id', 'numero', 'faturamento',
+    readonly_fields = ['id', 'numero', 'faturamento', 'posicao',
                        'pedido', 'ped_cliente',
                        'volumes', 'valor',
                        'cod_status', 'msg_status', 'ativa', 'nf_devolucao',
