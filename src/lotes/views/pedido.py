@@ -164,6 +164,11 @@ class Expedicao(View):
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
             row['PEDIDO_VENDA|LINK'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO_VENDA']])
+            if detalhe == 'p':
+                if row['GTIN_OK'] == 'S':
+                    row['GTIN_OK'] = 'Sim'
+                else:
+                    row['GTIN_OK'] = 'Não'
 
         if detalhe != 'p':
             group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
@@ -177,8 +182,13 @@ class Expedicao(View):
             })
             group_rowspan(data, group)
 
-        headers = ['Pedido Tussor', 'Pedido cliente',
-                   'Data emissão', 'Data embarque', 'Cliente']
+        headers = ['Pedido Tussor']
+        if detalhe == 'p':
+            headers.append('GTIN OK')
+        headers.append('Pedido cliente')
+        headers.append('Data emissão')
+        headers.append('Data embarque')
+        headers.append('Cliente')
         if detalhe in ('r', 'c'):
             headers.append('Referência')
         if detalhe == 'c':
@@ -186,8 +196,13 @@ class Expedicao(View):
             headers.append('Tamanho')
         headers.append('Quant.')
 
-        fields = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
-                  'DT_EMISSAO', 'DT_EMBARQUE', 'CLIENTE']
+        fields = ['PEDIDO_VENDA']
+        if detalhe == 'p':
+            fields.append('GTIN_OK')
+        fields.append('PEDIDO_CLIENTE')
+        fields.append('DT_EMISSAO')
+        fields.append('DT_EMBARQUE')
+        fields.append('CLIENTE')
         if detalhe in ('r', 'c'):
             fields.append('REF')
         if detalhe == 'c':
