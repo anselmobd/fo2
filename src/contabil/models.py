@@ -5,7 +5,7 @@ from django.db import models
 from fo2.models import rows_to_dict_list
 
 
-def infadprod_pro_pedido(cursor, pedido):
+def infadprod_por_pedido(cursor, pedido):
     sql = '''
         SELECT
           p.PEDIDO_VENDA PEDIDO

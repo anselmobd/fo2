@@ -28,7 +28,7 @@ class InfAdProd(View):
             'pedido': pedido,
         }
         cursor = connections['so'].cursor()
-        data = models.infadprod_pro_pedido(cursor, pedido)
+        data = models.infadprod_por_pedido(cursor, pedido)
         if len(data) == 0:
             context['erro'] = 'Pedido não encontrado'
         else:
