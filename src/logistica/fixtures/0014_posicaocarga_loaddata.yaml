@@ -1,0 +1,16 @@
+- model: logistica.PosicaoCarga
+  pk: 1
+  fields:
+    nome: Interna
+- model: logistica.PosicaoCarga
+  pk: 2
+  fields:
+    nome: Embarcando
+- model: logistica.PosicaoCarga
+  pk: 3
+  fields:
+    nome: Despachada
+- model: logistica.PosicaoCarga
+  pk: 4
+  fields:
+    nome: Desembarcando
