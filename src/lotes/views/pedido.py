@@ -165,7 +165,7 @@ class Expedicao(View):
             row['PEDIDO_VENDA|LINK'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO_VENDA']])
 
-        if detalhe != 'o':
+        if detalhe != 'p':
             group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
@@ -208,7 +208,7 @@ class Expedicao(View):
             'data': data,
             'style': style,
         })
-        if detalhe != 'o':
+        if detalhe != 'p':
             context.update({
                 'group': group,
             })
