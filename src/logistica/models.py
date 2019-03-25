@@ -69,6 +69,9 @@ class PosicaoCarga(models.Model):
         max_length=20,
         db_index=True, unique=True)
 
+    def __str__(self):
+        return self.nome
+
     class Meta:
         db_table = "fo2_pos_carga"
         verbose_name = "Posição de carga(NF)"
@@ -80,6 +83,9 @@ class RotinaLogistica(models.Model):
         max_length=30,
         db_index=True, unique=True)
     slug = models.SlugField()
+
+    def __str__(self):
+        return self.nome
 
     class Meta:
         db_table = "fo2_logist_rotina"
