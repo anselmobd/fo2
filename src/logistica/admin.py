@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from fo2.admin import intr_adm_site
-from .models import NotaFiscal
+
+import logistica.models as models
 
 
 class NotaFiscalAdmin(admin.ModelAdmin):
@@ -37,4 +38,19 @@ class NotaFiscalAdmin(admin.ModelAdmin):
                        ]
 
 
-intr_adm_site.register(NotaFiscal, NotaFiscalAdmin)
+intr_adm_site.register(models.NotaFiscal, NotaFiscalAdmin)
+
+
+class PosicaoCargaAdmin(admin.ModelAdmin):
+    list_display = ['nome']
+
+
+intr_adm_site.register(models.PosicaoCarga, PosicaoCargaAdmin)
+
+
+class RotinaLogisticaAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'slug']
+    readonly_fields = ['slug']
+
+
+intr_adm_site.register(models.RotinaLogistica, RotinaLogisticaAdmin)
