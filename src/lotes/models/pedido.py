@@ -200,7 +200,48 @@ def ped_expedicao(
             AND i.CODIGO_DEPOSITO = '{}'
             '''.format(deposito)
 
-    sql = """
+    sql = ""
+    if detalhe == 'p':
+        sql += """
+            WITH conta_gtin AS
+            (
+            SELECT
+              p.PEDIDO_VENDA
+            , MIN(
+              CASE WHEN rtc.CODIGO_BARRAS IS NULL
+                     OR rtc.CODIGO_BARRAS = 'SEM GTIN'
+              THEN 0
+              ELSE (
+                SELECT count(*)
+                FROM BASI_010 gtin
+                WHERE gtin.CODIGO_BARRAS = rtc.CODIGO_BARRAS
+              )
+              END
+              ) MIN_GTIN
+            , MAX(
+              CASE WHEN rtc.CODIGO_BARRAS IS NULL
+                     OR rtc.CODIGO_BARRAS = 'SEM GTIN'
+              THEN 0
+              ELSE (
+                SELECT count(*)
+                FROM BASI_010 gtin
+                WHERE gtin.CODIGO_BARRAS = rtc.CODIGO_BARRAS
+              )
+              END
+              ) MAX_GTIN
+            FROM PEDI_100 p -- pedido de venda
+            JOIN PEDI_110 i -- item de pedido de venda
+              ON i.PEDIDO_VENDA = p.PEDIDO_VENDA
+            JOIN BASI_010 rtc -- item (ref+tam+cor)
+              on rtc.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
+             AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
+             AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
+             AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
+            GROUP BY
+              p.PEDIDO_VENDA
+            )
+        """
+    sql += """
         SELECT
           ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA DT_EMISSAO
@@ -225,6 +266,13 @@ def ped_expedicao(
         """
     sql += """
         , sum(i.QTDE_PEDIDA) QTD
+    """
+    if detalhe == 'p':
+        sql += """
+            , CASE WHEN cg.PEDIDO_VENDA IS NULL THEN 'N'
+              ELSE 'S' END GTIN_OK
+        """
+    sql += """
         FROM PEDI_100 ped -- pedido de venda
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
@@ -235,6 +283,15 @@ def ped_expedicao(
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+        """
+    if detalhe == 'p':
+        sql += """
+            LEFT JOIN conta_gtin cg
+              ON cg.PEDIDO_VENDA = ped.PEDIDO_VENDA
+             AND cg.MIN_GTIN = 1
+             AND cg.MAX_GTIN = 1
+        """
+    sql += """
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
           AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_embarque_de} -- filtro_embarque_de
@@ -264,6 +321,10 @@ def ped_expedicao(
             , i.CD_IT_PE_ITEM
             , t.ORDEM_TAMANHO
             , i.CD_IT_PE_SUBGRUPO
+        """
+    if detalhe == 'p':
+        sql += """
+            , cg.PEDIDO_VENDA
         """
     sql += """
         ORDER BY
