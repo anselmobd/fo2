@@ -89,6 +89,8 @@ class NotaFiscal(models.Model):
         db_table = "fo2_fat_nf"
         verbose_name = "Nota Fiscal"
         verbose_name_plural = "Notas Fiscais"
+        permissions = (("can_beep_shipment", "Can beep shipment"),
+                       )
 
 
 class RotinaLogistica(models.Model):
