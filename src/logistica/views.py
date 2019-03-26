@@ -186,73 +186,94 @@ class NotafiscalChave(PermissionRequiredMixin, View):
             })
         else:
             nf = data_nf[0]['NUM_NOTA_FISCAL']
-            fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
-            select = NotaFiscal.objects.filter(numero=nf)
-            data = list(select.values(*fields, 'posicao__nome'))
-            for row in data:
-                if row['saida'] is None:
-                    row['saida'] = '-'
-                    row['atraso'] = (
-                        timezone.now() - row['faturamento']).days
-                else:
-                    row['atraso'] = (
-                        row['saida'] - row['faturamento'].date()).days
-                if row['entrega'] is None:
-                    row['entrega'] = '-'
-                if row['confirmada']:
-                    row['confirmada'] = 'S'
-                else:
-                    row['confirmada'] = 'N'
-                if row['observacao'] is None:
-                    row['observacao'] = ' '
-                if row['ped_cliente'] is None:
-                    row['ped_cliente'] = ' '
-                row['atraso_order'] = -row['atraso']
-                if row['natu_venda']:
-                    row['venda'] = 'Sim'
-                else:
-                    row['venda'] = 'Não'
-                if row['ativa']:
-                    status = 'ATIVA'
-                    row['ativa'] = 'Sim'
-                else:
-                    status = 'CANCELDA'
-                    row['ativa'] = 'Não'
-                if row['nf_devolucao'] is None:
-                    row['nf_devolucao'] = 'Não'
-                    nf_devolucao = ''
-                else:
-                    nf_devolucao = row['nf_devolucao']
 
-            pos_alt = list(PosicaoCargaAlteracao.objects.filter(
-                inicial_id=data[0]['posicao_id']).values())
-            pprint(self.request)
+            alt_action = [
+                k for k in self.request.POST.keys() if k.startswith('alt_')]
+            if alt_action:
+                nota_fiscal = NotaFiscal.objects.get(numero=nf)
+
+                num_action = alt_action[0].split('_')[1]
+                pos_carga_alt = PosicaoCargaAlteracao.objects.values().get(
+                    id=num_action)
+
+                if nota_fiscal.posicao_id == pos_carga_alt['inicial_id']:
+                    if pos_carga_alt['efeito_id'] == 2:
+                        nota_fiscal.saida = timezone.now()
+                    elif pos_carga_alt['efeito_id'] == 3:
+                        nota_fiscal.saida = None
+                    nota_fiscal.save()
+
+                    nota_fiscal.posicao_id = pos_carga_alt['final_id']
+                    nota_fiscal.save()
+
+            fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
+            row = NotaFiscal.objects.values(
+                *fields, 'posicao__nome').get(numero=nf)
+
+            if row['saida'] is None:
+                row['saida'] = '-'
+                row['atraso'] = (
+                    timezone.now() - row['faturamento']).days
+            else:
+                row['atraso'] = (
+                    row['saida'] - row['faturamento'].date()).days
+            if row['entrega'] is None:
+                row['entrega'] = '-'
+            if row['confirmada']:
+                row['confirmada'] = 'S'
+            else:
+                row['confirmada'] = 'N'
+            if row['observacao'] is None:
+                row['observacao'] = ' '
+            if row['ped_cliente'] is None:
+                row['ped_cliente'] = ' '
+            row['atraso_order'] = -row['atraso']
+            if row['natu_venda']:
+                row['venda'] = 'Sim'
+            else:
+                row['venda'] = 'Não'
+            if row['ativa']:
+                status = 'ATIVA'
+                row['ativa'] = 'Sim'
+            else:
+                status = 'CANCELADA'
+                row['ativa'] = 'Não'
+            if row['nf_devolucao'] is None:
+                row['nf_devolucao'] = 'Não'
+                nf_devolucao = ''
+            else:
+                nf_devolucao = row['nf_devolucao']
+                status = 'DEVOLVIDA'
+
             acoes = []
-            for alt in pos_alt:
-                acoes.append({
-                    'name': 'alt_{}'.format(alt['id']),
-                    'descr': alt['descricao'],
-                })
+            if status == 'ATIVA':
+                pos_alt = list(PosicaoCargaAlteracao.objects.filter(
+                    inicial_id=row['posicao_id']).order_by('-ordem').values())
+                for alt in pos_alt:
+                    acoes.append({
+                        'name': 'alt_{}'.format(alt['id']),
+                        'descr': alt['descricao'],
+                    })
 
             context.update({
                 'status': status,
                 'nf_devolucao': nf_devolucao,
                 'acoes': acoes,
-                'posicao': data[0]['posicao__nome'],
+                'posicao': row['posicao__nome'],
                 'headers1': ('No.', 'Faturamento', 'Venda', 'Ativa',
                              'Devolvida', 'Atraso',
                              'Saída', 'Agendada', 'Entregue',),
                 'fields1': ('numero', 'faturamento', 'venda', 'ativa',
                             'nf_devolucao', 'atraso',
                             'saida', 'entrega', 'confirmada'),
-                'data1': data,
+                'data1': [row],
                 'headers2': ('UF', 'CNPJ', 'Cliente', 'Transp.',
                              'Vol.', 'Valor', 'Observação',
                              'Pedido', 'Ped.Cliente'),
                 'fields2': ('uf', 'dest_cnpj', 'dest_nome', 'transp_nome',
                             'volumes', 'valor', 'observacao',
                             'pedido', 'ped_cliente'),
-                'data2': data,
+                'data2': [row],
             })
 
         return context

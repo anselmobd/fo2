@@ -16,22 +16,23 @@
 <form action="{% url 'logistica:notafiscal_chave' %}" method="post">
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
-    {%if acoes%}
-      &nbsp;&nbsp;|
-      {%for acao in acoes%}
-        &nbsp;&nbsp;<input type="submit" name="{{acao|get_item:'name'}}" value="{{acao|get_item:'descr'}}"/>
-      {%endfor%}
-    {%endif%}
     {% csrf_token %}
+    {% if request.POST %}
+    <h3>Chave: {{ chave }}</h3>
+    {% endif %}
+    {% if msg_erro %}
+    <h3>{{ msg_erro }}</h3>
+    {% endif %}
+    {% if data1 %}
+      <h3>Nota Fiscal: {{status}}</h3>
+      <h4>Posição: {{posicao}}
+      {%for acao in acoes%}
+        <input type="submit" name="{{acao|get_item:'name'}}" value="{{acao|get_item:'descr'}}"/>&nbsp;&nbsp;
+      {%endfor%}
+      </h4>
+    {% endif %}
 </form>
-{% if request.POST %}
-  <h3>Chave: {{ chave }}</h3>
-{% endif %}
-{% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
-{% endif %}
 {% if data1 %}
-  <h3>Nota Fiscal: {{status}} &nbsp;&nbsp;|&nbsp;&nbsp; Posição: {{posicao}}</h3>
   {% if nf_devolucao %}
     <h3>Devolvida pela nota de entrada {{nf_devolucao}}</h3>
   {% endif %}
