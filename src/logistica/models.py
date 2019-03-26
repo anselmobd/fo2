@@ -77,12 +77,13 @@ class NotaFiscal(models.Model):
         verbose_name='observação')
 
     def save(self, *args, **kwargs):
-        if self.saida:
-            if self.posicao.id != 3:
-                self.posicao = PosicaoCarga.objects.get(id=3)
-        else:
-            if self.posicao.id == 3:
-                self.posicao = PosicaoCarga.objects.get(id=1)
+        if self.id:
+            if self.saida:
+                if self.posicao.id != 3:
+                    self.posicao = PosicaoCarga.objects.get(id=3)
+            else:
+                if self.posicao.id == 3:
+                    self.posicao = PosicaoCarga.objects.get(id=1)
         super(NotaFiscal, self).save(*args, **kwargs)
 
     class Meta:
