@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.models import rows_to_dict_list
 
-from .models import NotaFiscal
+from .models import *
 from .queries import get_nf_pela_chave
 from .forms import NotafiscalRelForm, NotafiscalChaveForm
 
@@ -223,15 +223,27 @@ class NotafiscalChave(PermissionRequiredMixin, View):
                     nf_devolucao = ''
                 else:
                     nf_devolucao = row['nf_devolucao']
+
+            pos_alt = list(PosicaoCargaAlteracao.objects.filter(
+                inicial_id=data[0]['posicao_id']).values())
+            pprint(self.request)
+            acoes = []
+            for alt in pos_alt:
+                acoes.append({
+                    'name': 'alt_{}'.format(alt['id']),
+                    'descr': alt['descricao'],
+                })
+
             context.update({
                 'status': status,
                 'nf_devolucao': nf_devolucao,
                 'acoes': acoes,
+                'posicao': data[0]['posicao__nome'],
                 'headers1': ('No.', 'Faturamento', 'Venda', 'Ativa',
-                             'Devolvida', 'Atraso', 'Posição',
+                             'Devolvida', 'Atraso',
                              'Saída', 'Agendada', 'Entregue',),
                 'fields1': ('numero', 'faturamento', 'venda', 'ativa',
-                            'nf_devolucao', 'atraso', 'posicao__nome',
+                            'nf_devolucao', 'atraso',
                             'saida', 'entrega', 'confirmada'),
                 'data1': data,
                 'headers2': ('UF', 'CNPJ', 'Cliente', 'Transp.',
@@ -246,12 +258,14 @@ class NotafiscalChave(PermissionRequiredMixin, View):
         return context
 
     def get(self, request, *args, **kwargs):
+        self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class()
         context['form'] = form
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
