@@ -31,6 +31,12 @@
       {%endfor%}
     {% endif %}
 </form>
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_chave');
+  inp.select();
+</script>
+{% endblock javascript %}
 {% if data1 %}
   {% if nf_devolucao %}
     <h3>Devolvida pela nota de entrada {{nf_devolucao}}</h3>
@@ -52,10 +58,3 @@
   {% endif %}
 {% endif %}
 {% endblock %}
-
-{% block javascript %}
-<script>
-  var inp = document.getElementById('id_chave');
-  inp.select();
-</script>
-{% endblock javascript %}
