@@ -135,3 +135,29 @@ class PosicaoCargaAlteracao(models.Model):
         db_table = "fo2_pos_carga_alt"
         verbose_name = "Alteração de posição de carga(NF)"
         verbose_name_plural = "Alterações de Posição de carga(NF)"
+
+
+class PosicaoCargaAlteracaoLog(models.Model):
+    numero = models.IntegerField(
+        db_index=True, verbose_name='número')
+    time = models.DateTimeField(
+        db_index=True,
+        auto_now_add=True, verbose_name='Hora')
+    user = models.CharField(
+        db_index=True,
+        max_length=64, verbose_name='Usuário')
+    inicial = models.ForeignKey(
+        PosicaoCarga,
+        verbose_name='Estado inicial',
+        related_name='log_posicao_inicial_set',
+        on_delete=models.PROTECT)
+    final = models.ForeignKey(
+        PosicaoCarga,
+        verbose_name='Estado Final',
+        related_name='log_posicao_final_set',
+        on_delete=models.PROTECT)
+    saida = models.DateField(null=True, blank=True, verbose_name='saída')
+
+    class Meta:
+        db_table = "fo2_pos_carga_alt_log"
+        verbose_name = "Log de alteração de posição de carga(NF)"
