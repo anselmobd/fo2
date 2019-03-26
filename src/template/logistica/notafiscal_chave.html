@@ -16,6 +16,12 @@
 <form action="{% url 'logistica:notafiscal_chave' %}" method="post">
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
+    {%if acoes%}
+      &nbsp;&nbsp;|
+      {%for acao in acoes%}
+        &nbsp;&nbsp;<input type="submit" name="{{acao|get_item:'name'}}" value="{{acao|get_item:'descr'}}"/>
+      {%endfor%}
+    {%endif%}
     {% csrf_token %}
 </form>
 {% if request.POST %}
