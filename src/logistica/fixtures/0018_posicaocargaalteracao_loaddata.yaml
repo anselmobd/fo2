@@ -2,7 +2,7 @@
   pk: 1
   fields:
     inicial: 1
-    ordem: 0
+    ordem: 1
     descricao: "NF Recebida para embarque"
     efeito: 1
     final: 2
@@ -41,16 +41,32 @@
 - model: logistica.PosicaoCargaAlteracao
   pk: 6
   fields:
+    inicial: 3
+    ordem: 3
+    descricao: "Carga entregue"
+    efeito: 4
+    final: 5
+- model: logistica.PosicaoCargaAlteracao
+  pk: 7
+  fields:
     inicial: 4
     ordem: 1
     descricao: "Desembarque cancelado e carga redespachada"
     efeito: 2
     final: 3
 - model: logistica.PosicaoCargaAlteracao
-  pk: 7
+  pk: 8
   fields:
     inicial: 4
     ordem: 2
     descricao: "Desembarque de NF finalizado"
     efeito: 1
     final: 1
+- model: logistica.PosicaoCargaAlteracao
+  pk: 9
+  fields:
+    inicial: 5
+    ordem: 1
+    descricao: "Entrega cancelada"
+    efeito: 5
+    final: 3
