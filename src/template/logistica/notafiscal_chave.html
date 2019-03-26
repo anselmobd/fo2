@@ -25,11 +25,10 @@
     {% endif %}
     {% if data1 %}
       <h3>Nota Fiscal: {{status}}</h3>
-      <h4>Posição: {{posicao}}
+      <h3>Posição: {{posicao}}</h2>
       {%for acao in acoes%}
-        <input type="submit" name="{{acao|get_item:'name'}}" value="{{acao|get_item:'descr'}}"/>&nbsp;&nbsp;
+        <input type="submit" name="{{acao|get_item:'name'}}" value="{{acao|get_item:'descr'}}"/>&nbsp;&nbsp;&nbsp;&nbsp;
       {%endfor%}
-      </h4>
     {% endif %}
 </form>
 {% if data1 %}
@@ -44,6 +43,13 @@
     {% include "layout/html_thead.html" with data=headers2 only %}
     {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
   </table>
+  {% if datalog %}
+  <h4>Log de uso desta rotina</h4>
+  <table>
+    {% include "layout/html_thead.html" with data=headerslog only %}
+    {% include "layout/html_tbody.html" with fields=fieldslog data=datalog only %}
+  </table>
+  {% endif %}
 {% endif %}
 {% endblock %}
 

@@ -206,6 +206,13 @@ class NotafiscalChave(PermissionRequiredMixin, View):
                     nota_fiscal.posicao_id = pos_carga_alt['final_id']
                     nota_fiscal.save()
 
+                    pca_log = PosicaoCargaAlteracaoLog(
+                        numero=nf, user=self.request.user)
+                    pca_log.inicial_id = pos_carga_alt['inicial_id']
+                    pca_log.final_id = pos_carga_alt['final_id']
+                    pca_log.saida = nota_fiscal.saida
+                    pca_log.save()
+
             fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
             row = NotaFiscal.objects.values(
                 *fields, 'posicao__nome').get(numero=nf)
@@ -274,6 +281,25 @@ class NotafiscalChave(PermissionRequiredMixin, View):
                             'volumes', 'valor', 'observacao',
                             'pedido', 'ped_cliente'),
                 'data2': [row],
+            })
+
+            datalog = list(
+                PosicaoCargaAlteracaoLog.objects.filter(
+                    numero=nf).order_by('-time').values(
+                        'numero', 'time', 'user',
+                        'inicial__nome', 'final__nome', 'saida')
+            )
+            for row in datalog:
+                if row['saida'] is None:
+                    row['saida'] = '-'
+            context.update({
+                'headerslog': ('Hora', 'Usuário',
+                               'Posição inicial', 'Posição final',
+                               'Data de saída'),
+                'fieldslog': ('time', 'user',
+                              'inicial__nome', 'final__nome',
+                              'saida'),
+                'datalog': datalog,
             })
 
         return context
