@@ -13,3 +13,13 @@
   fields:
     nome: Retira data de saída
     slug: retira-data-de-saida
+- model: logistica.RotinaLogistica
+  pk: 4
+  fields:
+    nome: Marca como entregue
+    slug: marca-como-entregue
+- model: logistica.RotinaLogistica
+  pk: 5
+  fields:
+    nome: Desmarca como entregue
+    slug: desmarca-como-entregue

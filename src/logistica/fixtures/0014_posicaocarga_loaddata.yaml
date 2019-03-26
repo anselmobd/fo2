@@ -14,3 +14,7 @@
   pk: 4
   fields:
     nome: Desembarcando
+- model: logistica.PosicaoCarga
+  pk: 5
+  fields:
+    nome: Entregue

@@ -201,6 +201,12 @@ class NotafiscalChave(PermissionRequiredMixin, View):
                         nota_fiscal.saida = timezone.now()
                     elif pos_carga_alt['efeito_id'] == 3:
                         nota_fiscal.saida = None
+                    elif pos_carga_alt['efeito_id'] == 4:
+                        if nota_fiscal.entrega is None:
+                            nota_fiscal.entrega = timezone.now()
+                        nota_fiscal.confirmada = True
+                    elif pos_carga_alt['efeito_id'] == 5:
+                        nota_fiscal.confirmada = False
                     nota_fiscal.save()
 
                     nota_fiscal.posicao_id = pos_carga_alt['final_id']
