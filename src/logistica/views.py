@@ -29,6 +29,7 @@ class NotafiscalRel(View):
     def mount_context(self, form, form_obj):
         # A ser produzido
         context = {}
+        fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
         if form['listadas'] == 'V':
             select = NotaFiscal.objects.filter(
                 natu_venda=True).filter(ativa=True)
@@ -91,7 +92,7 @@ class NotafiscalRel(View):
             })
 
         select = select.order_by('-numero')
-        data = list(select.values())
+        data = list(select.values(*fields, 'posicao__nome'))
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma NF encontrada',
@@ -130,12 +131,14 @@ class NotafiscalRel(View):
                 data.sort(key=itemgetter('atraso_order'))
             context.update({
                 'headers': ('No.', 'Faturamento', 'Venda', 'Ativa',
-                            'Devolvida', 'Atraso', 'Saída', 'Agendada',
+                            'Devolvida', 'Posição',
+                            'Atraso', 'Saída', 'Agendada',
                             'Entregue', 'UF', 'CNPJ', 'Cliente',
                             'Transp.', 'Vol.', 'Valor', 'Observação',
                             'Pedido', 'Ped.Cliente'),
                 'fields': ('numero', 'faturamento', 'venda', 'ativa',
-                           'nf_devolucao', 'atraso', 'saida', 'entrega',
+                           'nf_devolucao', 'posicao__nome',
+                           'atraso', 'saida', 'entrega',
                            'confirmada', 'uf', 'dest_cnpj', 'dest_nome',
                            'transp_nome', 'volumes', 'valor', 'observacao',
                            'pedido', 'ped_cliente'),
