@@ -1,3 +1,4 @@
+from pprint import pprint
 import datetime
 from operator import itemgetter
 
@@ -6,6 +7,7 @@ from django.utils import timezone
 from django.shortcuts import render
 from django.views import View
 from django.db.models import When, F, Q
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.models import rows_to_dict_list
 
@@ -164,10 +166,13 @@ class NotafiscalRel(View):
         return render(request, self.template_name, context)
 
 
-class NotafiscalChave(View):
-    Form_class = NotafiscalChaveForm
-    template_name = 'logistica/notafiscal_chave.html'
-    title_name = 'Informação sobre NF bipando DANFE'
+class NotafiscalChave(PermissionRequiredMixin, View):
+
+    def __init__(self):
+        self.permission_required = 'logistica.can_beep_shipment'
+        self.Form_class = NotafiscalChaveForm
+        self.template_name = 'logistica/notafiscal_chave.html'
+        self.title_name = 'Informação sobre NF bipando DANFE'
 
     def mount_context(self, form):
         context = {
@@ -181,8 +186,9 @@ class NotafiscalChave(View):
             })
         else:
             nf = data_nf[0]['NUM_NOTA_FISCAL']
+            fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
             select = NotaFiscal.objects.filter(numero=nf)
-            data = list(select.values())
+            data = list(select.values(*fields, 'posicao__nome'))
             for row in data:
                 if row['saida'] is None:
                     row['saida'] = '-'
@@ -220,12 +226,13 @@ class NotafiscalChave(View):
             context.update({
                 'status': status,
                 'nf_devolucao': nf_devolucao,
+                'acoes': acoes,
                 'headers1': ('No.', 'Faturamento', 'Venda', 'Ativa',
-                             'Devolvida', 'Atraso', 'Saída', 'Agendada',
-                             'Entregue',),
+                             'Devolvida', 'Atraso', 'Posição',
+                             'Saída', 'Agendada', 'Entregue',),
                 'fields1': ('numero', 'faturamento', 'venda', 'ativa',
-                            'nf_devolucao', 'atraso', 'saida', 'entrega',
-                            'confirmada'),
+                            'nf_devolucao', 'atraso', 'posicao__nome',
+                            'saida', 'entrega', 'confirmada'),
                 'data1': data,
                 'headers2': ('UF', 'CNPJ', 'Cliente', 'Transp.',
                              'Vol.', 'Valor', 'Observação',
