@@ -1167,3 +1167,51 @@ class PorCliente(View):
             context.update(self.mount_context(cursor, cliente))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class Custo(View):
+    Form_class = GeraRoteirosRefForm
+    template_name = 'produto/custo.html'
+    title_name = 'Custo por referência'
+
+    def mount_context(self, cursor, ref):
+        if ref == '':
+            return {}
+
+        context = {
+            'ref': ref,
+            }
+
+        data = queries.ref_custo(cursor, ref=ref)
+        if len(data) == 0:
+            context.update({'erro': 'Referência não encontrada'})
+            return context
+
+        context.update({
+            'headers': ['Ref.'],
+            'fields': ['REF'],
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'ref' in kwargs and kwargs['ref'] is not None:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'ref' in kwargs and kwargs['ref'] is not None:
+            form.data['ref'] = kwargs['ref']
+        if form.is_valid():
+            ref = form.cleaned_data['ref']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, ref))
+        context['form'] = form
+        return render(request, self.template_name, context)

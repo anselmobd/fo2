@@ -47,4 +47,8 @@ urlpatterns = [
     url(r'^gera_roteiros_padrao_ref/(?P<ref>[^/]+)?/(?P<quant>[^/]+)?/?$',
         views.GeraRoteirosPadraoRef.as_view(),
         name='gera_roteiros_padrao_ref'),
+
+    url(r'^custo/(?P<ref>[^/]+)?/?$',
+        views.Custo.as_view(), name='custo'),
+
 ]
