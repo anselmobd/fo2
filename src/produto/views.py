@@ -1198,6 +1198,7 @@ class Custo(View):
             tam = alternativa['TAM']
 
         alt = alternativa['ALTERNATIVA']
+        alt_descr = alternativa['DESCR']
 
         data = []
 
@@ -1207,7 +1208,7 @@ class Custo(View):
                     cursor, ref, tam, cor)
                 custo = [{
                     'ESTRUT_NIVEL': 0,
-                    'SEQ': 0,
+                    'SEQ': '',
                     'NIVEL': '1',
                     'REF': ref,
                     'TAM': tam,
@@ -1215,8 +1216,8 @@ class Custo(View):
                     'DESCR': narrativa[0]['NARRATIVA'],
                     'ALT': alt,
                     'CONSUMO': 1,
-                    'CUSTO': 0,
                     'PRECO': 0,
+                    'CUSTO': 0,
                     }]
             else:
                 custo = queries.ref_custo(cursor, ref, tam, cor, alt)
@@ -1239,27 +1240,41 @@ class Custo(View):
         busca_custo(cursor, 0, data, ref, tam, cor, alt)
 
         data[0]['|STYLE'] = 'font-weight: bold;'
+        data[0]['CONSUMO'] = ''
+        data[0]['PRECO'] = ''
 
+        max_estrut_nivel = 0
         max_digits_consumo = 0
         max_digits_preco = 0
         for row in data:
+            max_estrut_nivel = max(max_estrut_nivel, row['ESTRUT_NIVEL'])
             num_digits_consumo = str(row['CONSUMO'])[::-1].find('.')
             max_digits_consumo = max(max_digits_consumo, num_digits_consumo)
             if row['NIVEL'] != '1':
                 num_digits_preco = str(row['PRECO'])[::-1].find('.')
                 max_digits_preco = max(max_digits_preco, num_digits_preco)
-
+        ident = 1
         for row in data:
             row['CONSUMO|DECIMALS'] = max_digits_consumo
             row['PRECO|DECIMALS'] = max_digits_preco
             row['CUSTO|DECIMALS'] = 3
+            if row['ESTRUT_NIVEL'] != 0:
+                row['|STYLE'] = 'padding-left: {}em;'.format(
+                    row['ESTRUT_NIVEL']*ident)
+            row['CONSUMO|STYLE'] = 'padding-right: {}em;'.format(
+                (max_estrut_nivel+1-row['ESTRUT_NIVEL'])*ident)
+            row['PRECO|STYLE'] = 'padding-right: {}em;'.format(
+                (max_estrut_nivel+1-row['ESTRUT_NIVEL'])*ident)
+            row['CUSTO|STYLE'] = 'padding-right: {}em;'.format(
+                (max_estrut_nivel+1-row['ESTRUT_NIVEL'])*ident)
 
         context.update({
             'cor': cor,
             'tam': tam,
             'alt': alt,
-            'headers': ['Nivel de estrutura',
-                        'Sequência', 'Nível de ref.', 'Referência',
+            'alt_descr': alt_descr,
+            'headers': ['Estrutura',
+                        'Sequência', 'Nível', 'Referência',
                         'Tamanho', 'Cor', 'Narrativa',
                         'Alternativa', 'Consumo', 'Preço', 'Custo'],
             'fields': ['ESTRUT_NIVEL',
