@@ -1198,13 +1198,13 @@ class Custo(View):
             tam = alternativa['TAM']
 
         alt = alternativa['ALTERNATIVA']
-        self.narrativa = queries.item_narrativa(
-            cursor, ref, tam, cor)[0]['NARRATIVA']
 
         data = []
 
         def busca_custo(cursor, estrut_nivel, data, ref, tam, cor, alt):
             if estrut_nivel == 0:
+                narrativa = queries.item_narrativa(
+                    cursor, ref, tam, cor)
                 custo = [{
                     'ESTRUT_NIVEL': 0,
                     'SEQ': 0,
@@ -1212,7 +1212,7 @@ class Custo(View):
                     'REF': ref,
                     'TAM': tam,
                     'COR': cor,
-                    'DESCR': self.narrativa,
+                    'DESCR': narrativa[0]['NARRATIVA'],
                     'ALT': alt,
                     'CONSUMO': 1,
                     'CUSTO': 0,
