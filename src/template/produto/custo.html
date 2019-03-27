@@ -23,7 +23,7 @@
 {% else %}
   Primeiro tamanho: {{tam}}<br />
   Primeira cor: {{cor}}<br />
-  Primeira alternativa: {{alt}}
+  Primeira alternativa: {{alt}} ({{alt_descr}})
   {% if data %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
