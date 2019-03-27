@@ -867,7 +867,7 @@ class RoteirosPadraoRef(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'ref' in kwargs:
+        if 'ref' in kwargs and kwargs['ref'] is not None:
             return self.post(request, *args, **kwargs)
         else:
             context = {'titulo': self.title_name}
