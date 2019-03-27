@@ -27,7 +27,7 @@
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
-{% endif %}
+{% else %}
 {% if ref %}
   <h4>Coleção: {{ colecao }}</h4>
   <h4>Tipo: {{ tipo|upper }}</h4>
@@ -74,5 +74,6 @@
   {% else %}
     <h4>Sem fluxos</h4>
   {% endif %}
+{% endif %}
 {% endif %}
 {% endblock %}

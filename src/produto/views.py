@@ -813,6 +813,9 @@ class RoteirosPadraoRef(View):
     title_name = 'Roteiros padrão por referência'
 
     def mount_context(self, cursor, ref):
+        if ref == '':
+            return {}
+
         context = {
             'ref': ref,
             }
