@@ -1238,6 +1238,22 @@ class Custo(View):
 
         busca_custo(cursor, 0, data, ref, tam, cor, alt)
 
+        data[0]['|STYLE'] = 'font-weight: bold;'
+
+        max_digits_consumo = 0
+        max_digits_preco = 0
+        for row in data:
+            num_digits_consumo = str(row['CONSUMO'])[::-1].find('.')
+            max_digits_consumo = max(max_digits_consumo, num_digits_consumo)
+            if row['NIVEL'] != '1':
+                num_digits_preco = str(row['PRECO'])[::-1].find('.')
+                max_digits_preco = max(max_digits_preco, num_digits_preco)
+
+        for row in data:
+            row['CONSUMO|DECIMALS'] = max_digits_consumo
+            row['PRECO|DECIMALS'] = max_digits_preco
+            row['CUSTO|DECIMALS'] = 3
+
         context.update({
             'cor': cor,
             'tam': tam,
@@ -1250,6 +1266,9 @@ class Custo(View):
                        'SEQ', 'NIVEL', 'REF',
                        'TAM', 'COR', 'DESCR',
                        'ALT', 'CONSUMO', 'PRECO', 'CUSTO'],
+            'style': {9: 'text-align: right;',
+                      10: 'text-align: right;',
+                      11: 'text-align: right;'},
             'data': data,
         })
 
