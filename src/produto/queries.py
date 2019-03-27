@@ -1111,6 +1111,26 @@ def por_cliente(cursor, cliente=None):
     """.format(
         filtra_cliente=filtra_cliente,
     )
-    print(sql)
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
+
+
+def ref_custo(cursor, ref=None):
+    filtra_ref = ''
+    if ref != '':
+        filtra_ref = '''--
+          AND r.REFERENCIA = '{}' '''.format(ref)
+
+    sql = """
+        SELECT
+          r.REFERENCIA REF
+        FROM BASI_030 r
+        WHERE r.NIVEL_ESTRUTURA = 1
+          {filtra_ref} -- filtra_ref
+        ORDER BY
+          r.REFERENCIA
+    """.format(
+        filtra_ref=filtra_ref,
+    )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
