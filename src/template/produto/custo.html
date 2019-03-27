@@ -21,6 +21,9 @@
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% else %}
+  Primeiro tamanho: {{tam}}<br />
+  Primeira cor: {{cor}}<br />
+  Primeira alternativa: {{alt}}
   {% if data %}
     <table>
       {% include "layout/thead_generic.html" with data=headers only %}
