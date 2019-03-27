@@ -964,13 +964,11 @@ def gera_roteiros_padrao_ref(ref):
                         output += '-> exclui estagios\n'
                         delete = queries.mount_delete_estagios(
                             roteiro, ref, tam, cor)
-                        # print(delete)
                         sqls.append(delete)
                     output += '-> inclui estagios\n'
                     inserts = queries.mount_inserts_estagios(
                         roteiro, ref, tam, cor, estagios)
                     for insert in inserts:
-                        # print(insert)
                         sqls.append(insert)
                 else:
                     gargalo_errado += 1
@@ -979,17 +977,14 @@ def gera_roteiros_padrao_ref(ref):
                             estagios_db[1])
                         unsetg = queries.mount_unset_gargalo(
                             roteiro, ref, tam, cor)
-                        # print(unsetg)
                         sqls.append(unsetg)
                 output += '-> inclui gargalo {}\n'.format(gargalo)
                 setg = queries.mount_set_gargalo(
                     roteiro, ref, tam, cor, gargalo)
-                # print(setg)
                 sqls.append(setg)
 
     # output += pformat(sqls, indent=4)+'\n'
     for sql in sqls:
-        # print(sql)
         cursor.execute(sql)
 
     return output, [roteiro_correto, roteiro_errado, gargalo_errado]
@@ -1174,22 +1169,87 @@ class Custo(View):
     template_name = 'produto/custo.html'
     title_name = 'Custo por referência'
 
-    def mount_context(self, cursor, ref):
+    def mount_context(self, ref):
         if ref == '':
             return {}
-
         context = {
             'ref': ref,
             }
+        cursor = connections['so'].cursor()
 
-        data = queries.ref_custo(cursor, ref=ref)
-        if len(data) == 0:
+        info = queries.ref_inform(cursor, ref)
+        if len(info) == 0:
             context.update({'erro': 'Referência não encontrada'})
             return context
 
+        alternativas = queries.ref_estruturas(cursor, ref)
+        alternativa = alternativas[0]
+
+        if alternativa['COR'] == '000000':
+            cores = queries.ref_cores(cursor, ref)
+            cor = cores[0]['COR']
+        else:
+            cor = alternativa['COR']
+
+        if alternativa['TAM'] == '000':
+            tamanhos = queries.ref_tamanhos(cursor, ref)
+            tam = tamanhos[0]['TAM']
+        else:
+            tam = alternativa['TAM']
+
+        alt = alternativa['ALTERNATIVA']
+        self.narrativa = queries.item_narrativa(
+            cursor, ref, tam, cor)[0]['NARRATIVA']
+
+        data = []
+
+        def busca_custo(cursor, estrut_nivel, data, ref, tam, cor, alt):
+            if estrut_nivel == 0:
+                custo = [{
+                    'ESTRUT_NIVEL': 0,
+                    'SEQ': 0,
+                    'NIVEL': '1',
+                    'REF': ref,
+                    'TAM': tam,
+                    'COR': cor,
+                    'DESCR': self.narrativa,
+                    'ALT': alt,
+                    'CONSUMO': 1,
+                    'CUSTO': 0,
+                    'PRECO': 0,
+                    }]
+            else:
+                custo = queries.ref_custo(cursor, ref, tam, cor, alt)
+
+            total_custo = 0
+            for comp in custo:
+                comp['ESTRUT_NIVEL'] = estrut_nivel
+                data.append(comp)
+                if comp['NIVEL'] == '1':
+                    pai_idx = len(data)
+                    sub_custo = busca_custo(
+                        cursor, estrut_nivel+1, data,
+                        comp['REF'], comp['TAM'], comp['COR'], comp['ALT'])
+                    comp = data[pai_idx-1]
+                    comp['PRECO'] = sub_custo
+                    comp['CUSTO'] = comp['CONSUMO'] * comp['PRECO']
+                total_custo += comp['CUSTO']
+            return total_custo
+
+        busca_custo(cursor, 0, data, ref, tam, cor, alt)
+
         context.update({
-            'headers': ['Ref.'],
-            'fields': ['REF'],
+            'cor': cor,
+            'tam': tam,
+            'alt': alt,
+            'headers': ['Nivel de estrutura',
+                        'Sequência', 'Nível de ref.', 'Referência',
+                        'Tamanho', 'Cor', 'Narrativa',
+                        'Alternativa', 'Consumo', 'Preço', 'Custo'],
+            'fields': ['ESTRUT_NIVEL',
+                       'SEQ', 'NIVEL', 'REF',
+                       'TAM', 'COR', 'DESCR',
+                       'ALT', 'CONSUMO', 'PRECO', 'CUSTO'],
             'data': data,
         })
 
@@ -1211,7 +1271,6 @@ class Custo(View):
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
             ref = form.cleaned_data['ref']
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, ref))
+            context.update(self.mount_context(ref))
         context['form'] = form
         return render(request, self.template_name, context)
