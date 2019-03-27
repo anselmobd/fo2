@@ -19,7 +19,7 @@
   fields:
     inicial: 2
     ordem: 2
-    descricao: "Embarque terminado e carga despachado"
+    descricao: "Embarque terminado e carga despachada"
     efeito: 2
     final: 3
 - model: logistica.PosicaoCargaAlteracao
