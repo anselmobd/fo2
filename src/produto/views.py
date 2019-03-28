@@ -18,8 +18,7 @@ from utils.forms import FiltroForm
 from geral.views import dict_colecao_fluxos, get_roteiros_de_fluxo
 from geral.functions import has_permission
 
-from .forms import RefForm, ModeloForm, BuscaForm, GtinForm, \
-    GeraRoteirosRefForm, ClienteForm
+import produto.forms as forms
 import produto.queries as queries
 
 
@@ -243,7 +242,7 @@ def stat_niveis(request, nivel):
 
 
 class Ref(View):
-    Form_class = RefForm
+    Form_class = forms.RefForm
     template_name = 'produto/ref.html'
     title_name = 'Produto'
 
@@ -521,7 +520,7 @@ class Ref(View):
 
 
 class Modelo(View):
-    Form_class = ModeloForm
+    Form_class = forms.ModeloForm
     template_name = 'produto/modelo.html'
     title_name = 'Modelo (parte numérica da referência do PA)'
 
@@ -586,7 +585,7 @@ class Modelo(View):
 
 
 class Busca(View):
-    Form_class = BuscaForm
+    Form_class = forms.BuscaForm
     template_name = 'produto/busca.html'
     title_name = 'Listagem de produtos'
 
@@ -713,7 +712,7 @@ class EstrEstagioDeInsumo(View):
 
 
 class Gtin(View):
-    Form_class = GtinForm
+    Form_class = forms.GtinForm
     template_name = 'produto/gtin.html'
     title_name = 'GTIN (EAN13)'
 
@@ -808,7 +807,7 @@ class Gtin(View):
 
 
 class RoteirosPadraoRef(View):
-    Form_class = GeraRoteirosRefForm
+    Form_class = forms.GeraRoteirosRefForm
     template_name = 'produto/roteiros_padrao_ref.html'
     title_name = 'Roteiros padrão por referência'
 
@@ -1053,7 +1052,7 @@ class GeraRoteirosPadraoRef(PermissionRequiredMixin, View):
 
 
 class InfoXml(View):
-    Form_class = RefForm
+    Form_class = forms.RefForm
     template_name = 'produto/info_xml.html'
     title_name = 'Informações p/ NFe XML'
 
@@ -1113,7 +1112,7 @@ class InfoXml(View):
 
 
 class PorCliente(View):
-    Form_class = ClienteForm
+    Form_class = forms.ClienteForm
     template_name = 'produto/por_cliente.html'
     title_name = 'Por cliente'
 
@@ -1165,11 +1164,11 @@ class PorCliente(View):
 
 
 class Custo(View):
-    Form_class = GeraRoteirosRefForm
+    Form_class = forms.CustoDetalhadoForm
     template_name = 'produto/custo.html'
     title_name = 'Custo por referência'
 
-    def mount_context(self, ref):
+    def mount_context(self, ref, tamanho, cor, alternativa):
         if ref == '':
             return {}
         context = {
@@ -1183,22 +1182,48 @@ class Custo(View):
             return context
 
         alternativas = queries.ref_estruturas(cursor, ref)
-        alternativa = alternativas[0]
-
-        if alternativa['COR'] == '000000':
+        alternativa0 = alternativas[0]
+        if cor == '':
+            if alternativa0['COR'] == '000000':
+                cores = queries.ref_cores(cursor, ref)
+                cor = cores[0]['COR']
+            else:
+                cor = alternativa0['COR']
+        else:
             cores = queries.ref_cores(cursor, ref)
-            cor = cores[0]['COR']
-        else:
-            cor = alternativa['COR']
+            if cor not in [c['COR'] for c in cores]:
+                context.update({'erro': 'Cor não existe nessa referência'})
+                return context
 
-        if alternativa['TAM'] == '000':
+        if tamanho == '':
+            if alternativa0['TAM'] == '000':
+                tamanhos = queries.ref_tamanhos(cursor, ref)
+                tam = tamanhos[0]['TAM']
+            else:
+                tam = alternativa0['TAM']
+        else:
             tamanhos = queries.ref_tamanhos(cursor, ref)
-            tam = tamanhos[0]['TAM']
-        else:
-            tam = alternativa['TAM']
+            if tamanho in [t['TAM'] for t in tamanhos]:
+                tam = tamanho
+            else:
+                context.update({'erro': 'Tamanho não existe nessa referência'})
+                return context
 
-        alt = alternativa['ALTERNATIVA']
-        alt_descr = alternativa['DESCR']
+        pprint(alternativas)
+        if alternativa is None:
+            alt = alternativa0['ALTERNATIVA']
+            alt_descr = alternativa0['DESCR']
+        else:
+            if alternativa in [a['ALTERNATIVA'] for a in alternativas]:
+                alt = alternativa
+                alt_descr = [
+                    a['DESCR']
+                    for a in alternativas
+                    if a['ALTERNATIVA'] == alt][0]
+            else:
+                context.update(
+                    {'erro': 'Alternativa não existe nessa referência'})
+                return context
 
         data = []
 
@@ -1289,8 +1314,12 @@ class Custo(View):
 
         return context
 
+    def get_arg(self, kwargs, field):
+        return kwargs['ref'] if 'ref' in kwargs else None
+
     def get(self, request, *args, **kwargs):
-        if 'ref' in kwargs and kwargs['ref'] is not None:
+        ref = self.get_arg(kwargs, 'ref')
+        if ref is not None:
             return self.post(request, *args, **kwargs)
         else:
             context = {'titulo': self.title_name}
@@ -1301,10 +1330,14 @@ class Custo(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'ref' in kwargs and kwargs['ref'] is not None:
+        ref = self.get_arg(kwargs, 'ref')
+        if ref is not None:
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
             ref = form.cleaned_data['ref']
-            context.update(self.mount_context(ref))
+            tamanho = form.cleaned_data['tamanho']
+            cor = form.cleaned_data['cor']
+            alternativa = form.cleaned_data['alternativa']
+            context.update(self.mount_context(ref, tamanho, cor, alternativa))
         context['form'] = form
         return render(request, self.template_name, context)
