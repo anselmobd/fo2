@@ -15,6 +15,9 @@ Utilize esta rotina quando o Systêxtil der erros como "Existem estágios com o 
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
+    {%if count_repair%}
+    <input type="submit" name="repair" value="Reparar"/>
+    {%endif%}
 </form>
 {% if op %}
   <h2>OP: {{ op }}</h2>

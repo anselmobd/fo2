@@ -150,6 +150,8 @@ class Op(models.Model):
 
     class Meta:
         db_table = "fo2_prod_op"
+        permissions = (("can_repair_seq_op", "Can repair sequence OP"),
+                       )
 
 
 class Lote(models.Model):
