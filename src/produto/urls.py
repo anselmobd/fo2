@@ -48,7 +48,7 @@ urlpatterns = [
         views.GeraRoteirosPadraoRef.as_view(),
         name='gera_roteiros_padrao_ref'),
 
-    url(r'^custo/(?P<ref>[^/]+)?/?$',
+    url(r'^custo/(?P<ref>[^/]+)?/?(?P<tamanho>[^/]+)?/?(?P<cor>[^/]+)?/?(?P<alternativa>[^/]+)?/?$',
         views.Custo.as_view(), name='custo'),
 
 ]

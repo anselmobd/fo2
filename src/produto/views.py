@@ -1209,7 +1209,6 @@ class Custo(View):
                 context.update({'erro': 'Tamanho não existe nessa referência'})
                 return context
 
-        pprint(alternativas)
         if alternativa is None:
             alt = alternativa0['ALTERNATIVA']
             alt_descr = alternativa0['DESCR']
@@ -1315,7 +1314,12 @@ class Custo(View):
         return context
 
     def get_arg(self, kwargs, field):
-        return kwargs['ref'] if 'ref' in kwargs else None
+        return kwargs[field] if field in kwargs else None
+
+    def set_form_arg(self, form, kwargs, field):
+        value = self.get_arg(kwargs, field)
+        if value is not None:
+            form.data[field] = value
 
     def get(self, request, *args, **kwargs):
         ref = self.get_arg(kwargs, 'ref')
@@ -1330,9 +1334,11 @@ class Custo(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        ref = self.get_arg(kwargs, 'ref')
-        if ref is not None:
-            form.data['ref'] = kwargs['ref']
+        self.set_form_arg(form, kwargs, 'ref')
+        self.set_form_arg(form, kwargs, 'tamanho')
+        self.set_form_arg(form, kwargs, 'cor')
+        self.set_form_arg(form, kwargs, 'alternativa')
+
         if form.is_valid():
             ref = form.cleaned_data['ref']
             tamanho = form.cleaned_data['tamanho']
