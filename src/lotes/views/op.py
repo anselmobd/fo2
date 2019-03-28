@@ -667,3 +667,48 @@ class ListaLotes(View):
             context.update(self.mount_context(cursor, op))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class CorrigeSequenciamento(View):
+
+    def __init__(self):
+        self.Form_class = forms.OpForm
+        self.template_name = 'lotes/corrige_sequenciamento.html'
+        self.title_name = 'Corrige sequenciamento de lotes de OP'
+
+    def mount_context(self, cursor, op):
+        context = {'op': op}
+
+        data = models.base.get_lotes(cursor, op=op, order='o')
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Sem lotes',
+            })
+            return context
+
+        for row in data:
+            row['INFO'] = 'x'
+
+        context.update({
+            'headers': ['Período', 'OC', 'Informação'],
+            'fields': ['PERIODO', 'OC', 'INFO'],
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            op = form.cleaned_data['op']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, op))
+        context['form'] = form
+        return render(request, self.template_name, context)
