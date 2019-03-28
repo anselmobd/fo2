@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.db import connections
 from django.urls import reverse
 from django.views import View
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.template import group_rowspan
 
@@ -15,6 +16,7 @@ from insumo.queries import insumos_de_produtos_em_dual
 
 import lotes.forms as forms
 import lotes.models as models
+import lotes.functions as functions
 
 
 class Op(View):
@@ -669,9 +671,10 @@ class ListaLotes(View):
         return render(request, self.template_name, context)
 
 
-class CorrigeSequenciamento(View):
+class CorrigeSequenciamento(PermissionRequiredMixin, View):
 
     def __init__(self):
+        self.permission_required = 'logistica.can_beep_shipment'
         self.Form_class = forms.OpForm
         self.template_name = 'lotes/corrige_sequenciamento.html'
         self.title_name = 'Corrige sequenciamento de lotes de OP'
@@ -687,7 +690,10 @@ class CorrigeSequenciamento(View):
             return context
 
         for row in data:
-            row['INFO'] = 'x'
+            if functions.repair_sequencia_estagio(row['PERIODO'], row['OC']):
+                row['INFO'] = 'Reparado'
+            else:
+                row['INFO'] = 'Estava OK'
 
         context.update({
             'headers': ['Período', 'OC', 'Informação'],

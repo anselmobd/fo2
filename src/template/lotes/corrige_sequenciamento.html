@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+Utilize esta rotina quando o Systêxtil der erros como "Existem estágios com o sequenciamento errado." ou similares.
 <form action="{% url 'producao:corrige_sequenciamento' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
