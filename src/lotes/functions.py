@@ -1,5 +1,7 @@
+from fo2.models import rows_to_dict_list_lower
 
-def repair_sequencia_estagio(cursor, periodo, oc):
+
+def repair_sequencia_estagio(cursor, periodo, oc, exec):
 
     # get new and old value to SEQUENCIA_ESTAGIO and ROWIDs
     sql_seq = '''
@@ -27,9 +29,14 @@ def repair_sequencia_estagio(cursor, periodo, oc):
         WHERE le.ROWID = %s
     '''
     corrigido = False
+    alt = ''
+    sep = ''
     for seq in seqs:
         if seq['seq_new'] != seq['seq_old']:
-            cursor.execute(sql_setseq, [seq['seq'], seq['rid']])
+            if exec:
+                cursor.execute(sql_setseq, [seq['seq_new'], seq['rid']])
+            alt += '{}{}-{}'.format(sep, seq['seq_old'], seq['seq_new'])
+            sep = ', '
             corrigido = True
 
-    return corrigido
+    return corrigido, alt

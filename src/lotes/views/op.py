@@ -674,47 +674,65 @@ class ListaLotes(View):
 class CorrigeSequenciamento(PermissionRequiredMixin, View):
 
     def __init__(self):
-        self.permission_required = 'logistica.can_beep_shipment'
+        self.permission_required = 'lotes.can_repair_seq_op'
         self.Form_class = forms.OpForm
         self.template_name = 'lotes/corrige_sequenciamento.html'
         self.title_name = 'Corrige sequenciamento de lotes de OP'
 
-    def mount_context(self, cursor, op):
-        context = {'op': op}
+    def mount_context(self):
+        op = self.form.cleaned_data['op']
+        self.context.update({
+            'op': op
+        })
+
+        cursor = connections['so'].cursor()
 
         data = models.base.get_lotes(cursor, op=op, order='o')
         if len(data) == 0:
-            context.update({
+            self.context.update({
                 'msg_erro': 'Sem lotes',
             })
-            return context
+            return
 
+        exec = 'repair' in self.request.POST.keys()
+
+        count_repair = 0
         for row in data:
-            if functions.repair_sequencia_estagio(row['PERIODO'], row['OC']):
-                row['INFO'] = 'Reparado'
+            ret, alt = functions.repair_sequencia_estagio(
+                    cursor, row['PERIODO'], row['OC'], exec)
+            if ret:
+                if exec:
+                    row['INFO'] = 'Reparado'
+                else:
+                    row['INFO'] = 'Reparar'
+                    count_repair += 1
             else:
-                row['INFO'] = 'Estava OK'
+                row['INFO'] = 'OK'
+            row['ALT'] = alt
 
-        context.update({
-            'headers': ['Período', 'OC', 'Informação'],
-            'fields': ['PERIODO', 'OC', 'INFO'],
+        self.context.update({
+            'count_repair': count_repair,
+            'headers': ['Período', 'OC', 'Informação', 'Alteração'],
+            'fields': ['PERIODO', 'OC', 'INFO', 'ALT'],
             'data': data,
         })
 
-        return context
+    def start(self, request):
+        self.request = request
+        self.context = {'titulo': self.title_name}
+
+    def end(self):
+        self.context['form'] = self.form
+        return render(self.request, self.template_name, self.context)
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.start(request)
+        self.form = self.Form_class()
+        return self.end()
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        if form.is_valid():
-            op = form.cleaned_data['op']
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, op))
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.start(request)
+        self.form = self.Form_class(self.request.POST)
+        if self.form.is_valid():
+            self.mount_context()
+        return self.end()
