@@ -12,4 +12,7 @@ urlpatterns = [
 
     url(r'^notafiscal_chave/$',
         views.NotafiscalChave.as_view(), name='notafiscal_chave'),
+
+    url(r'^notafiscal_embarcando/$',
+        views.NotafiscalEmbarcando.as_view(), name='notafiscal_embarcando'),
 ]
