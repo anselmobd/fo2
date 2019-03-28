@@ -76,6 +76,9 @@ urlpatterns = [
     url(r'^lista_lotes/$',
         views.ListaLotes.as_view(), name='lista_lotes'),
 
+    url(r'^corrige_sequenciamento/$',
+        views.CorrigeSequenciamento.as_view(), name='corrige_sequenciamento'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
