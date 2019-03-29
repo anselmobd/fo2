@@ -15,4 +15,8 @@ urlpatterns = [
 
     url(r'^notafiscal_embarcando/$',
         views.NotafiscalEmbarcando.as_view(), name='notafiscal_embarcando'),
+
+    url(r'^notafiscal_movimentadas/$',
+        views.NotafiscalMovimentadas.as_view(),
+        name='notafiscal_movimentadas'),
 ]

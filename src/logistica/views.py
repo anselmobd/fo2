@@ -10,10 +10,11 @@ from django.db.models import When, F, Q
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.models import rows_to_dict_list
+from base.views import O2BaseView
 
 from .models import *
 from .queries import get_nf_pela_chave
-from .forms import NotafiscalRelForm, NotafiscalChaveForm
+from .forms import *
 
 
 def index(request):
@@ -402,4 +403,135 @@ class NotafiscalEmbarcando(View):
     def get(self, request, *args, **kwargs):
         self.start(request)
         self.mount_context()
+        return self.end()
+
+
+class NotafiscalMovimentadas(O2BaseView):
+
+    def __init__(self):
+        self.Form_class = NfPosicaoForm
+        self.template_name = 'logistica/notafiscal_movimentadas.html'
+        self.title_name = 'Notas fiscais movimentadas'
+
+    def mount_context(self):
+        data = self.form.cleaned_data['data']
+        posicao = self.form.cleaned_data['posicao']
+
+        if data is None and posicao is None:
+            return
+
+        if data is None:
+            if posicao.id != 2:
+                self.context.update({
+                    'msg_erro': 'Sem data, só pode pesquisar "Embarcando"'})
+                return
+
+        nfs_mov = PosicaoCargaAlteracaoLog.objects
+
+        if data is not None:
+            nfs_mov = nfs_mov.filter(time__contains=data)
+
+        if posicao is not None:
+            nfs_mov = nfs_mov.filter(
+                Q(inicial=posicao) | Q(final=posicao))
+
+        nfs_mov = nfs_mov.distinct().values()
+        if len(nfs_mov) == 0:
+            self.context.update({
+                'msg_erro': 'Nenhum movimento de NF encontrado'})
+            return
+
+        # pprint(list(nfs_mov))
+
+        fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
+
+        nfs_mov = PosicaoCargaAlteracaoLog.objects
+
+        if data is not None:
+            nfs_mov = nfs_mov.filter(time__contains=data)
+
+        if posicao is not None:
+            nfs_mov = nfs_mov.filter(final=posicao)
+
+        nfs_mov = nfs_mov.distinct().values()
+
+        pprint(list(nfs_mov))
+
+        # return
+
+        if len(nfs_mov) != 0:
+            numeros = set()
+            for log in nfs_mov:
+                numeros.add(log['numero'])
+            pprint(numeros)
+
+            nfs = NotaFiscal.objects.filter(
+                posicao_id=posicao.id, numero__in=numeros).order_by('-numero')
+            dados = list(nfs.values(*fields, 'posicao__nome'))
+
+            pprint(nfs)
+
+            for row in dados:
+                if row['saida'] is None:
+                    row['saida'] = '-'
+                    if row['faturamento'] is not None:
+                        row['atraso'] = (
+                            timezone.now() - row['faturamento']).days
+                    else:
+                        row['atraso'] = 999
+                else:
+                    if row['faturamento'] is not None:
+                        row['atraso'] = (
+                            row['saida'] - row['faturamento'].date()).days
+                    else:
+                        row['atraso'] = 999
+                if row['entrega'] is None:
+                    row['entrega'] = '-'
+                if row['confirmada']:
+                    row['confirmada'] = 'S'
+                else:
+                    row['confirmada'] = 'N'
+                if row['observacao'] is None:
+                    row['observacao'] = ' '
+                if row['ped_cliente'] is None:
+                    row['ped_cliente'] = ' '
+                row['atraso_order'] = -row['atraso']
+                if row['natu_venda']:
+                    row['venda'] = 'Sim'
+                else:
+                    row['venda'] = 'Não'
+                if row['ativa']:
+                    row['ativa'] = 'Sim'
+                else:
+                    row['ativa'] = 'Não'
+                if row['nf_devolucao'] is None:
+                    row['nf_devolucao'] = 'Não'
+
+            self.context.update({
+                'data': data,
+                'posicao': posicao,
+                'headers': ('No.', 'Faturamento', 'Venda', 'Ativa',
+                            'Devolvida', 'Posição',
+                            'Atraso', 'Saída', 'Agendada',
+                            'Entregue', 'UF', 'Cliente',
+                            'Transp.', 'Vol.', 'Valor',
+                            'Pedido', 'Ped.Cliente'),
+                'fields': ('numero', 'faturamento', 'venda', 'ativa',
+                           'nf_devolucao', 'posicao__nome',
+                           'atraso', 'saida', 'entrega',
+                           'confirmada', 'uf', 'dest_nome',
+                           'transp_nome', 'volumes', 'valor',
+                           'pedido', 'ped_cliente'),
+                'dados': dados,
+                'quant': len(dados),
+            })
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.start(request, kwargs)
+        self.form = self.Form_class(self.request.POST)
+        if self.form.is_valid():
+            self.mount_context()
         return self.end()
