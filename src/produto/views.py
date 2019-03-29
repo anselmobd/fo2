@@ -1164,22 +1164,29 @@ class PorCliente(View):
 
 
 class Custo(View):
-    Form_class = forms.CustoDetalhadoForm
-    template_name = 'produto/custo.html'
-    title_name = 'Custo por referência'
 
-    def mount_context(self, ref, tamanho, cor, alternativa):
+    def __init__(self):
+        self.Form_class = forms.CustoDetalhadoForm
+        self.template_name = 'produto/custo.html'
+        self.title_name = 'Custo por referência'
+
+    def mount_context(self):
+        ref = self.form.cleaned_data['ref']
+        tamanho = self.form.cleaned_data['tamanho']
+        cor = self.form.cleaned_data['cor']
+        alternativa = self.form.cleaned_data['alternativa']
+
         if ref == '':
             return {}
-        context = {
+        self.context.update({
             'ref': ref,
-            }
+            })
         cursor = connections['so'].cursor()
 
         info = queries.ref_inform(cursor, ref)
         if len(info) == 0:
-            context.update({'erro': 'Referência não encontrada'})
-            return context
+            self.context.update({'erro': 'Referência não encontrada'})
+            return
 
         alternativas = queries.ref_estruturas(cursor, ref)
         alternativa0 = alternativas[0]
@@ -1192,8 +1199,8 @@ class Custo(View):
         else:
             cores = queries.ref_cores(cursor, ref)
             if cor not in [c['COR'] for c in cores]:
-                context.update({'erro': 'Cor não existe nessa referência'})
-                return context
+                self.context.update({'erro': 'Cor não existe nessa referência'})
+                return
 
         if tamanho == '':
             if alternativa0['TAM'] == '000':
@@ -1206,8 +1213,9 @@ class Custo(View):
             if tamanho in [t['TAM'] for t in tamanhos]:
                 tam = tamanho
             else:
-                context.update({'erro': 'Tamanho não existe nessa referência'})
-                return context
+                self.context.update({
+                    'erro': 'Tamanho não existe nessa referência'})
+                return
 
         if alternativa is None:
             alt = alternativa0['ALTERNATIVA']
@@ -1220,16 +1228,15 @@ class Custo(View):
                     for a in alternativas
                     if a['ALTERNATIVA'] == alt][0]
             else:
-                context.update(
-                    {'erro': 'Alternativa não existe nessa referência'})
-                return context
+                self.context.update({
+                    'erro': 'Alternativa não existe nessa referência'})
+                return
 
         data = []
 
         def busca_custo(cursor, estrut_nivel, data, ref, tam, cor, alt):
             if estrut_nivel == 0:
-                narrativa = queries.item_narrativa(
-                    cursor, ref, tam, cor)
+                narrativa = queries.item_narrativa(cursor, ref, tam, cor)
                 custo = [{
                     'ESTRUT_NIVEL': 0,
                     'SEQ': '',
@@ -1292,7 +1299,7 @@ class Custo(View):
             row['CUSTO|STYLE'] = 'padding-right: {}em;'.format(
                 (max_estrut_nivel+1-row['ESTRUT_NIVEL'])*ident)
 
-        context.update({
+        self.context.update({
             'cor': cor,
             'tam': tam,
             'alt': alt,
@@ -1311,39 +1318,41 @@ class Custo(View):
             'data': data,
         })
 
-        return context
+    def start(self, request, kwargs):
+        self.request = request
+        self.kwargs = kwargs
+        self.context = {'titulo': self.title_name}
 
-    def get_arg(self, kwargs, field):
-        return kwargs[field] if field in kwargs else None
+    def end(self):
+        self.context['form'] = self.form
+        return render(self.request, self.template_name, self.context)
 
-    def set_form_arg(self, form, kwargs, field):
-        value = self.get_arg(kwargs, field)
+    def get_arg(self, field):
+        return self.kwargs[field] if field in self.kwargs else None
+
+    def set_form_arg(self, field):
+        value = self.get_arg(field)
         if value is not None:
-            form.data[field] = value
+            self.form.data[field] = value
 
     def get(self, request, *args, **kwargs):
-        ref = self.get_arg(kwargs, 'ref')
-        if ref is not None:
+        self.start(request, kwargs)
+
+        if self.get_arg('ref') is not None:
             return self.post(request, *args, **kwargs)
-        else:
-            context = {'titulo': self.title_name}
-            form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
+
+        self.form = self.Form_class()
+        return self.end()
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        self.set_form_arg(form, kwargs, 'ref')
-        self.set_form_arg(form, kwargs, 'tamanho')
-        self.set_form_arg(form, kwargs, 'cor')
-        self.set_form_arg(form, kwargs, 'alternativa')
+        self.start(request, kwargs)
+        self.form = self.Form_class(self.request.POST)
 
-        if form.is_valid():
-            ref = form.cleaned_data['ref']
-            tamanho = form.cleaned_data['tamanho']
-            cor = form.cleaned_data['cor']
-            alternativa = form.cleaned_data['alternativa']
-            context.update(self.mount_context(ref, tamanho, cor, alternativa))
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.set_form_arg('ref')
+        self.set_form_arg('tamanho')
+        self.set_form_arg('cor')
+        self.set_form_arg('alternativa')
+
+        if self.form.is_valid():
+            self.mount_context()
+        return self.end()
