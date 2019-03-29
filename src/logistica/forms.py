@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 from django import forms
 
+from .models import *
+
 
 class NotafiscalChaveForm(forms.Form):
     chave = forms.CharField(
@@ -75,3 +77,10 @@ class NotafiscalRelForm(forms.Form):
             if data_de.year < 100:
                 data_de = data_de.timedelta(years=2000)
         return data_de
+
+
+class NfPosicaoForm(forms.Form):
+    posicao = forms.ModelChoiceField(
+        label='posição', required=False,
+        queryset=PosicaoCarga.objects.all().order_by(
+            'id'), empty_label="(Todas)")
