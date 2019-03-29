@@ -17,6 +17,7 @@ from fo2.template import group_rowspan
 from utils.forms import FiltroForm
 from geral.views import dict_colecao_fluxos, get_roteiros_de_fluxo
 from geral.functions import has_permission
+from base.views import O2BaseView
 
 import produto.forms as forms
 import produto.queries as queries
@@ -1162,26 +1163,6 @@ class PorCliente(View):
             context.update(self.mount_context(cursor, cliente))
         context['form'] = form
         return render(request, self.template_name, context)
-
-
-class O2BaseView(View):
-
-    def start(self, request, kwargs):
-        self.request = request
-        self.kwargs = kwargs
-        self.context = {'titulo': self.title_name}
-
-    def end(self):
-        self.context['form'] = self.form
-        return render(self.request, self.template_name, self.context)
-
-    def get_arg(self, field):
-        return self.kwargs[field] if field in self.kwargs else None
-
-    def set_form_arg(self, field):
-        value = self.get_arg(field)
-        if value is not None:
-            self.form.data[field] = value
 
 
 class Custo(O2BaseView):
