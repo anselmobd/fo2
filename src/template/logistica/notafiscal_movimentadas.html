@@ -1,0 +1,35 @@
+{% extends 'logistica/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'logistica:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'logistica:notafiscal_movimentadas' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if data %}
+  <h4>Data: {{ data }}</h4>
+{% endif %}
+{% if posicao %}
+  <h4>Posição: {{ posicao }}</h4>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% else %}
+  {% if dados %}
+    <h3>{{quant}} NF{{quant|pluralize}}</h3>
+    <table>
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock %}
