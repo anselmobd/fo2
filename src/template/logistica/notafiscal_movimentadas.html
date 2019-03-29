@@ -24,12 +24,14 @@
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% else %}
-  {% if dados %}
-    <h3>{{quant}} NF{{quant|pluralize}}</h3>
-    <table>
-      {% include "layout/thead_generic.html" with data=headers style=style only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
-    </table>
-  {% endif %}
+  {% for passo in passo_context %}
+    {% if passo.dados %}
+      <h3>{{passo.quant}} NF{{passo.quant|pluralize}} movida{{passo.quant|pluralize}} {{passo.descr}}</h3>
+      <table>
+        {% include "layout/thead_generic.html" with data=passo.headers style=passo.style only %}
+        {% include "layout/tbody_generic.html" with fields=passo.fields data=passo.dados style=passo.style only %}
+      </table>
+    {% endif %}
+  {% endfor %}
 {% endif %}
 {% endblock %}
