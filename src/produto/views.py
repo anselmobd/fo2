@@ -1164,7 +1164,27 @@ class PorCliente(View):
         return render(request, self.template_name, context)
 
 
-class Custo(View):
+class O2BaseView(View):
+
+    def start(self, request, kwargs):
+        self.request = request
+        self.kwargs = kwargs
+        self.context = {'titulo': self.title_name}
+
+    def end(self):
+        self.context['form'] = self.form
+        return render(self.request, self.template_name, self.context)
+
+    def get_arg(self, field):
+        return self.kwargs[field] if field in self.kwargs else None
+
+    def set_form_arg(self, field):
+        value = self.get_arg(field)
+        if value is not None:
+            self.form.data[field] = value
+
+
+class Custo(O2BaseView):
 
     def __init__(self):
         self.Form_class = forms.CustoDetalhadoForm
@@ -1312,23 +1332,6 @@ class Custo(View):
             'data': data,
         })
 
-    def start(self, request, kwargs):
-        self.request = request
-        self.kwargs = kwargs
-        self.context = {'titulo': self.title_name}
-
-    def end(self):
-        self.context['form'] = self.form
-        return render(self.request, self.template_name, self.context)
-
-    def get_arg(self, field):
-        return self.kwargs[field] if field in self.kwargs else None
-
-    def set_form_arg(self, field):
-        value = self.get_arg(field)
-        if value is not None:
-            self.form.data[field] = value
-
     def get(self, request, *args, **kwargs):
         self.start(request, kwargs)
 
@@ -1352,7 +1355,7 @@ class Custo(View):
         return self.end()
 
 
-class CustoRef(View):
+class CustoRef(O2BaseView):
 
     def __init__(self):
         self.Form_class = forms.ReferenciaForm
@@ -1369,23 +1372,6 @@ class CustoRef(View):
             })
 
         cursor = connections['so'].cursor()
-
-    def start(self, request, kwargs):
-        self.request = request
-        self.kwargs = kwargs
-        self.context = {'titulo': self.title_name}
-
-    def end(self):
-        self.context['form'] = self.form
-        return render(self.request, self.template_name, self.context)
-
-    def get_arg(self, field):
-        return self.kwargs[field] if field in self.kwargs else None
-
-    def set_form_arg(self, field):
-        value = self.get_arg(field)
-        if value is not None:
-            self.form.data[field] = value
 
     def get(self, request, *args, **kwargs):
         self.start(request, kwargs)
