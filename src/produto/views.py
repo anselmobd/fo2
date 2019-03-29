@@ -603,7 +603,8 @@ class Busca(View):
             })
         else:
             for row in data:
-                row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
+                row['REF|LINK'] = reverse(
+                    'produto:ref__get', args=[row['REF']])
                 if row['ALTERNATIVA'] is None:
                     row['ALTERNATIVA'] = '-'
                 if row['ROTEIRO'] is None:
@@ -1081,7 +1082,7 @@ class InfoXml(View):
             'ref_link': reverse('produto:ref__get', args=[row['REF']]),
             'cliente': data[0]['CLIENTE'],
             'cliente_link': reverse(
-                'produto:por_cliente__get',args=[data[0]['CNPJ9']]),
+                'produto:por_cliente__get', args=[data[0]['CNPJ9']]),
             'headers': headers,
             'fields': fields,
             'data': data,
@@ -1200,7 +1201,8 @@ class Custo(View):
         else:
             cores = queries.ref_cores(cursor, ref)
             if cor not in [c['COR'] for c in cores]:
-                self.context.update({'erro': 'Cor não existe nessa referência'})
+                self.context.update({
+                    'erro': 'Cor não existe nessa referência'})
                 return
 
         if tamanho == '':
