@@ -1168,7 +1168,7 @@ class Custo(View):
     def __init__(self):
         self.Form_class = forms.CustoDetalhadoForm
         self.template_name = 'produto/custo.html'
-        self.title_name = 'Custo por referência'
+        self.title_name = 'Custo de item'
 
     def mount_context(self):
         ref = self.form.cleaned_data['ref']
@@ -1177,10 +1177,11 @@ class Custo(View):
         alternativa = self.form.cleaned_data['alternativa']
 
         if ref == '':
-            return {}
+            return
         self.context.update({
             'ref': ref,
             })
+
         cursor = connections['so'].cursor()
 
         info = queries.ref_inform(cursor, ref)
@@ -1238,17 +1239,10 @@ class Custo(View):
             if estrut_nivel == 0:
                 narrativa = queries.item_narrativa(cursor, ref, tam, cor)
                 custo = [{
-                    'ESTRUT_NIVEL': 0,
-                    'SEQ': '',
-                    'NIVEL': '1',
-                    'REF': ref,
-                    'TAM': tam,
-                    'COR': cor,
+                    'ESTRUT_NIVEL': 0, 'SEQ': '',
+                    'NIVEL': '1', 'REF': ref, 'TAM': tam, 'COR': cor,
                     'DESCR': narrativa[0]['NARRATIVA'],
-                    'ALT': alt,
-                    'CONSUMO': 1,
-                    'PRECO': 0,
-                    'CUSTO': 0,
+                    'ALT': alt, 'CONSUMO': 1, 'PRECO': 0, 'CUSTO': 0,
                     }]
             else:
                 custo = queries.ref_custo(cursor, ref, tam, cor, alt)
@@ -1258,11 +1252,9 @@ class Custo(View):
                 comp['ESTRUT_NIVEL'] = estrut_nivel
                 data.append(comp)
                 if comp['NIVEL'] == '1':
-                    pai_idx = len(data)
                     sub_custo = busca_custo(
                         cursor, estrut_nivel+1, data,
                         comp['REF'], comp['TAM'], comp['COR'], comp['ALT'])
-                    comp = data[pai_idx-1]
                     comp['PRECO'] = sub_custo
                     comp['CUSTO'] = comp['CONSUMO'] * comp['PRECO']
                 total_custo += comp['CUSTO']
@@ -1352,6 +1344,61 @@ class Custo(View):
         self.set_form_arg('tamanho')
         self.set_form_arg('cor')
         self.set_form_arg('alternativa')
+
+        if self.form.is_valid():
+            self.mount_context()
+        return self.end()
+
+
+class CustoRef(View):
+
+    def __init__(self):
+        self.Form_class = forms.ReferenciaForm
+        self.template_name = 'produto/custo_ref.html'
+        self.title_name = 'Custo de referência'
+
+    def mount_context(self):
+        ref = self.form.cleaned_data['ref']
+
+        if ref == '':
+            return
+        self.context.update({
+            'ref': ref,
+            })
+
+        cursor = connections['so'].cursor()
+
+    def start(self, request, kwargs):
+        self.request = request
+        self.kwargs = kwargs
+        self.context = {'titulo': self.title_name}
+
+    def end(self):
+        self.context['form'] = self.form
+        return render(self.request, self.template_name, self.context)
+
+    def get_arg(self, field):
+        return self.kwargs[field] if field in self.kwargs else None
+
+    def set_form_arg(self, field):
+        value = self.get_arg(field)
+        if value is not None:
+            self.form.data[field] = value
+
+    def get(self, request, *args, **kwargs):
+        self.start(request, kwargs)
+
+        if self.get_arg('ref') is not None:
+            return self.post(request, *args, **kwargs)
+
+        self.form = self.Form_class()
+        return self.end()
+
+    def post(self, request, *args, **kwargs):
+        self.start(request, kwargs)
+        self.form = self.Form_class(self.request.POST)
+
+        self.set_form_arg('ref')
 
         if self.form.is_valid():
             self.mount_context()

@@ -52,4 +52,7 @@ urlpatterns = [
          '(?P<alternativa>[^/]+)?/?$').encode('unicode-escape'),
         views.Custo.as_view(), name='custo'),
 
+    url(r'^custo_ref/(?P<ref>[^/]+)?/?$',
+        views.CustoRef.as_view(), name='custo_ref'),
+
 ]
