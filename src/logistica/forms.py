@@ -80,7 +80,13 @@ class NotafiscalRelForm(forms.Form):
 
 
 class NfPosicaoForm(forms.Form):
+    data = forms.DateField(
+        label='Data de movimento da carga',
+        initial=datetime.now(),
+        widget=forms.DateInput(attrs={'type': 'date',
+                               'autofocus': 'autofocus'}))
+
     posicao = forms.ModelChoiceField(
-        label='posição', required=False,
+        label='Posição', required=False,
         queryset=PosicaoCarga.objects.all().order_by(
             'id'), empty_label="(Todas)")
