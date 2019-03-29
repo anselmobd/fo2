@@ -427,107 +427,108 @@ class NotafiscalMovimentadas(O2BaseView):
                 return
 
         nfs_mov = PosicaoCargaAlteracaoLog.objects
-
         if data is not None:
             nfs_mov = nfs_mov.filter(time__contains=data)
-
         if posicao is not None:
             nfs_mov = nfs_mov.filter(
                 Q(inicial=posicao) | Q(final=posicao))
-
         nfs_mov = nfs_mov.distinct().values()
         if len(nfs_mov) == 0:
             self.context.update({
                 'msg_erro': 'Nenhum movimento de NF encontrado'})
             return
 
-        # pprint(list(nfs_mov))
-
         fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
 
-        nfs_mov = PosicaoCargaAlteracaoLog.objects
+        passo_context = []
+        for passo in range(2):
+            nfs_mov = PosicaoCargaAlteracaoLog.objects
+            if data is not None:
+                nfs_mov = nfs_mov.filter(time__contains=data)
+            if passo == 0:
+                descr = ' para a posição selecionada'
+                if posicao is not None:
+                    nfs_mov = nfs_mov.filter(final=posicao)
+            else:
+                descr = ' para fora da posição selecionada'
+                if posicao is not None:
+                    nfs_mov = nfs_mov.filter(inicial=posicao)
+            nfs_mov = nfs_mov.distinct().values()
 
-        if data is not None:
-            nfs_mov = nfs_mov.filter(time__contains=data)
+            if len(nfs_mov) != 0:
+                numeros = set()
+                for log in nfs_mov:
+                    numeros.add(log['numero'])
 
-        if posicao is not None:
-            nfs_mov = nfs_mov.filter(final=posicao)
+                nfs = NotaFiscal.objects.filter(
+                    posicao_id=posicao.id, numero__in=numeros
+                    ).order_by('-numero')
+                dados = list(nfs.values(*fields, 'posicao__nome'))
 
-        nfs_mov = nfs_mov.distinct().values()
-
-        pprint(list(nfs_mov))
-
-        # return
-
-        if len(nfs_mov) != 0:
-            numeros = set()
-            for log in nfs_mov:
-                numeros.add(log['numero'])
-            pprint(numeros)
-
-            nfs = NotaFiscal.objects.filter(
-                posicao_id=posicao.id, numero__in=numeros).order_by('-numero')
-            dados = list(nfs.values(*fields, 'posicao__nome'))
-
-            pprint(nfs)
-
-            for row in dados:
-                if row['saida'] is None:
-                    row['saida'] = '-'
-                    if row['faturamento'] is not None:
-                        row['atraso'] = (
-                            timezone.now() - row['faturamento']).days
+                for row in dados:
+                    if row['saida'] is None:
+                        row['saida'] = '-'
+                        if row['faturamento'] is not None:
+                            row['atraso'] = (
+                                timezone.now() - row['faturamento']).days
+                        else:
+                            row['atraso'] = 999
                     else:
-                        row['atraso'] = 999
-                else:
-                    if row['faturamento'] is not None:
-                        row['atraso'] = (
-                            row['saida'] - row['faturamento'].date()).days
+                        if row['faturamento'] is not None:
+                            row['atraso'] = (
+                                row['saida'] - row['faturamento'].date()).days
+                        else:
+                            row['atraso'] = 999
+                    if row['entrega'] is None:
+                        row['entrega'] = '-'
+                    if row['confirmada']:
+                        row['confirmada'] = 'S'
                     else:
-                        row['atraso'] = 999
-                if row['entrega'] is None:
-                    row['entrega'] = '-'
-                if row['confirmada']:
-                    row['confirmada'] = 'S'
-                else:
-                    row['confirmada'] = 'N'
-                if row['observacao'] is None:
-                    row['observacao'] = ' '
-                if row['ped_cliente'] is None:
-                    row['ped_cliente'] = ' '
-                row['atraso_order'] = -row['atraso']
-                if row['natu_venda']:
-                    row['venda'] = 'Sim'
-                else:
-                    row['venda'] = 'Não'
-                if row['ativa']:
-                    row['ativa'] = 'Sim'
-                else:
-                    row['ativa'] = 'Não'
-                if row['nf_devolucao'] is None:
-                    row['nf_devolucao'] = 'Não'
+                        row['confirmada'] = 'N'
+                    if row['observacao'] is None:
+                        row['observacao'] = ' '
+                    if row['ped_cliente'] is None:
+                        row['ped_cliente'] = ' '
+                    row['atraso_order'] = -row['atraso']
+                    if row['natu_venda']:
+                        row['venda'] = 'Sim'
+                    else:
+                        row['venda'] = 'Não'
+                    if row['ativa']:
+                        row['ativa'] = 'Sim'
+                    else:
+                        row['ativa'] = 'Não'
+                    if row['nf_devolucao'] is None:
+                        row['nf_devolucao'] = 'Não'
 
-            self.context.update({
-                'data': data,
-                'posicao': posicao,
-                'headers': ('No.', 'Faturamento', 'Venda', 'Ativa',
-                            'Devolvida', 'Posição',
-                            'Atraso', 'Saída', 'Agendada',
-                            'Entregue', 'UF', 'Cliente',
-                            'Transp.', 'Vol.', 'Valor',
-                            'Pedido', 'Ped.Cliente'),
-                'fields': ('numero', 'faturamento', 'venda', 'ativa',
-                           'nf_devolucao', 'posicao__nome',
-                           'atraso', 'saida', 'entrega',
-                           'confirmada', 'uf', 'dest_nome',
-                           'transp_nome', 'volumes', 'valor',
-                           'pedido', 'ped_cliente'),
-                'dados': dados,
-                'quant': len(dados),
-            })
+                passo_context.append({
+                    'descr': descr,
+                    'data': data,
+                    'posicao': posicao,
+                    'headers': ('No.', 'Faturamento', 'Venda', 'Ativa',
+                                'Devolvida', 'Posição',
+                                'Atraso', 'Saída', 'Agendada',
+                                'Entregue', 'UF', 'Cliente',
+                                'Transp.', 'Vol.', 'Valor',
+                                'Pedido', 'Ped.Cliente'),
+                    'fields': ('numero', 'faturamento', 'venda', 'ativa',
+                               'nf_devolucao', 'posicao__nome',
+                               'atraso', 'saida', 'entrega',
+                               'confirmada', 'uf', 'dest_nome',
+                               'transp_nome', 'volumes', 'valor',
+                               'pedido', 'ped_cliente'),
+                    'dados': dados,
+                    'quant': len(dados),
+                })
+        self.context.update({
+            'passo_context': passo_context, })
 
     def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+        self.start(request, kwargs)
+        self.form = self.Form_class()
+        if self.form.is_valid():
+            self.mount_context()
+        return self.end()
 
     def post(self, request, *args, **kwargs):
         self.start(request, kwargs)
