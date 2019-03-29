@@ -173,6 +173,12 @@ class O2FieldCorForm(forms.Form):
         return O2BaseForm.cleanner_pad(self, 'cor', 6)
 
 
+class ReferenciaForm(
+        O2BaseForm,
+        O2FieldRefForm):
+    pass
+
+
 class CustoDetalhadoForm(
         O2BaseForm,
         O2FieldRefForm,
