@@ -10,6 +10,8 @@ class O2BaseView(View):
         self.context = {'titulo': self.title_name}
 
     def end(self):
+        if self.form.is_valid():
+            self.mount_context()
         self.context['form'] = self.form
         return render(self.request, self.template_name, self.context)
 
