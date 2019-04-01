@@ -10,7 +10,7 @@ from django.db.models import When, F, Q
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.models import rows_to_dict_list
-from base.views import O2BaseView
+from base.views import O2BaseGetPostView, O2BaseGetView
 
 from .models import *
 from .queries import get_nf_pela_chave
@@ -331,9 +331,10 @@ class NotafiscalChave(PermissionRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class NotafiscalEmbarcando(View):
+class NotafiscalEmbarcando(O2BaseGetView):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(NotafiscalEmbarcando, self).__init__(*args, **kwargs)
         self.template_name = 'logistica/notafiscal_embarcando.html'
         self.title_name = 'Notas fiscais embarcando'
 
@@ -393,20 +394,8 @@ class NotafiscalEmbarcando(View):
             'quant': len(data),
         })
 
-    def start(self, request):
-        self.request = request
-        self.context = {'titulo': self.title_name}
 
-    def end(self):
-        return render(self.request, self.template_name, self.context)
-
-    def get(self, request, *args, **kwargs):
-        self.start(request)
-        self.mount_context()
-        return self.end()
-
-
-class NotafiscalMovimentadas(O2BaseView):
+class NotafiscalMovimentadas(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(NotafiscalMovimentadas, self).__init__(*args, **kwargs)

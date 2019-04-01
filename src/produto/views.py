@@ -17,7 +17,7 @@ from fo2.template import group_rowspan
 from utils.forms import FiltroForm
 from geral.views import dict_colecao_fluxos, get_roteiros_de_fluxo
 from geral.functions import has_permission
-from base.views import O2BaseView
+from base.views import O2BaseGetPostView
 
 import produto.forms as forms
 import produto.queries as queries
@@ -1165,7 +1165,7 @@ class PorCliente(View):
         return render(request, self.template_name, context)
 
 
-class Custo(O2BaseView):
+class Custo(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(Custo, self).__init__(*args, **kwargs)
@@ -1316,7 +1316,7 @@ class Custo(O2BaseView):
         })
 
 
-class CustoRef(O2BaseView):
+class CustoRef(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(CustoRef, self).__init__(*args, **kwargs)
