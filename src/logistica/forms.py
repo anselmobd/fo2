@@ -82,7 +82,7 @@ class NotafiscalRelForm(forms.Form):
 class NfPosicaoForm(forms.Form):
     data = forms.DateField(
         label='Data de movimento da carga',
-        help_text='Só pode fircar vazia de posição form "Embarcando".',
+        help_text='Só pode ficar vazia de posição form "Embarcando".',
         initial=datetime.now(), required=False,
         widget=forms.DateInput(attrs={'type': 'date',
                                'autofocus': 'autofocus'}))
