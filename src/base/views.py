@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 
 
-class O2BaseView(View):
+class O2BaseCustomView(View):
 
     def __init__(self):
         self.get_args = []
@@ -12,14 +12,17 @@ class O2BaseView(View):
         self.kwargs = kwargs
         self.context = {'titulo': self.title_name}
 
+    def get_arg(self, field):
+        return self.kwargs[field] if field in self.kwargs else None
+
+
+class O2BaseGetPostView(O2BaseCustomView):
+
     def render_mount(self):
         if self.form.is_valid():
             self.mount_context()
         self.context['form'] = self.form
         return render(self.request, self.template_name, self.context)
-
-    def get_arg(self, field):
-        return self.kwargs[field] if field in self.kwargs else None
 
     def set_form_arg(self, field):
         value = self.get_arg(field)
@@ -42,5 +45,17 @@ class O2BaseView(View):
 
         for arg in self.get_args:
             self.set_form_arg(arg)
+
+        return self.render_mount()
+
+
+class O2BaseGetView(O2BaseCustomView):
+
+    def render_mount(self):
+        self.mount_context()
+        return render(self.request, self.template_name, self.context)
+
+    def get(self, request, *args, **kwargs):
+        self.init_self(request, kwargs)
 
         return self.render_mount()
