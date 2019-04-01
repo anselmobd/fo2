@@ -526,13 +526,9 @@ class NotafiscalMovimentadas(O2BaseView):
     def get(self, request, *args, **kwargs):
         self.start(request, kwargs)
         self.form = self.Form_class()
-        if self.form.is_valid():
-            self.mount_context()
         return self.end()
 
     def post(self, request, *args, **kwargs):
         self.start(request, kwargs)
         self.form = self.Form_class(self.request.POST)
-        if self.form.is_valid():
-            self.mount_context()
         return self.end()

@@ -1331,8 +1331,6 @@ class Custo(O2BaseView):
         self.set_form_arg('cor')
         self.set_form_arg('alternativa')
 
-        if self.form.is_valid():
-            self.mount_context()
         return self.end()
 
 
@@ -1369,6 +1367,4 @@ class CustoRef(O2BaseView):
 
         self.set_form_arg('ref')
 
-        if self.form.is_valid():
-            self.mount_context()
         return self.end()
