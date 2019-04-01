@@ -1167,10 +1167,12 @@ class PorCliente(View):
 
 class Custo(O2BaseView):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(Custo, self).__init__(*args, **kwargs)
         self.Form_class = forms.CustoDetalhadoForm
         self.template_name = 'produto/custo.html'
         self.title_name = 'Custo de item'
+        self.get_args = ['ref', 'tamanho', 'cor', 'alternativa']
 
     def mount_context(self):
         ref = self.form.cleaned_data['ref']
@@ -1313,33 +1315,15 @@ class Custo(O2BaseView):
             'data': data,
         })
 
-    def get(self, request, *args, **kwargs):
-        self.start(request, kwargs)
-
-        if self.get_arg('ref') is not None:
-            return self.post(request, *args, **kwargs)
-
-        self.form = self.Form_class()
-        return self.end()
-
-    def post(self, request, *args, **kwargs):
-        self.start(request, kwargs)
-        self.form = self.Form_class(self.request.POST)
-
-        self.set_form_arg('ref')
-        self.set_form_arg('tamanho')
-        self.set_form_arg('cor')
-        self.set_form_arg('alternativa')
-
-        return self.end()
-
 
 class CustoRef(O2BaseView):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(CustoRef, self).__init__(*args, **kwargs)
         self.Form_class = forms.ReferenciaForm
         self.template_name = 'produto/custo_ref.html'
         self.title_name = 'Custo de referência'
+        self.get_args = ['ref']
 
     def mount_context(self):
         ref = self.form.cleaned_data['ref']
@@ -1351,20 +1335,3 @@ class CustoRef(O2BaseView):
             })
 
         cursor = connections['so'].cursor()
-
-    def get(self, request, *args, **kwargs):
-        self.start(request, kwargs)
-
-        if self.get_arg('ref') is not None:
-            return self.post(request, *args, **kwargs)
-
-        self.form = self.Form_class()
-        return self.end()
-
-    def post(self, request, *args, **kwargs):
-        self.start(request, kwargs)
-        self.form = self.Form_class(self.request.POST)
-
-        self.set_form_arg('ref')
-
-        return self.end()

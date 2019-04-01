@@ -408,7 +408,8 @@ class NotafiscalEmbarcando(View):
 
 class NotafiscalMovimentadas(O2BaseView):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(NotafiscalMovimentadas, self).__init__(*args, **kwargs)
         self.Form_class = NfPosicaoForm
         self.template_name = 'logistica/notafiscal_movimentadas.html'
         self.title_name = 'Notas fiscais movimentadas'
@@ -522,13 +523,3 @@ class NotafiscalMovimentadas(O2BaseView):
                 })
         self.context.update({
             'passo_context': passo_context, })
-
-    def get(self, request, *args, **kwargs):
-        self.start(request, kwargs)
-        self.form = self.Form_class()
-        return self.end()
-
-    def post(self, request, *args, **kwargs):
-        self.start(request, kwargs)
-        self.form = self.Form_class(self.request.POST)
-        return self.end()
