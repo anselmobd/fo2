@@ -7,12 +7,12 @@ class O2BaseView(View):
     def __init__(self):
         self.get_args = []
 
-    def start(self, request, kwargs):
+    def init_self(self, request, kwargs):
         self.request = request
         self.kwargs = kwargs
         self.context = {'titulo': self.title_name}
 
-    def end(self):
+    def render_mount(self):
         if self.form.is_valid():
             self.mount_context()
         self.context['form'] = self.form
@@ -27,20 +27,20 @@ class O2BaseView(View):
             self.form.data[field] = value
 
     def get(self, request, *args, **kwargs):
-        self.start(request, kwargs)
+        self.init_self(request, kwargs)
 
         for arg in self.get_args:
             if self.get_arg(arg) is not None:
                 return self.post(request, *args, **kwargs)
 
         self.form = self.Form_class()
-        return self.end()
+        return self.render_mount()
 
     def post(self, request, *args, **kwargs):
-        self.start(request, kwargs)
+        self.init_self(request, kwargs)
         self.form = self.Form_class(self.request.POST)
 
         for arg in self.get_args:
             self.set_form_arg(arg)
 
-        return self.end()
+        return self.render_mount()
