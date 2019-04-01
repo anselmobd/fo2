@@ -170,22 +170,24 @@ class NotafiscalRel(View):
         return render(request, self.template_name, context)
 
 
-class NotafiscalChave(PermissionRequiredMixin, View):
+class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(NotafiscalChave, self).__init__(*args, **kwargs)
         self.permission_required = 'logistica.can_beep_shipment'
         self.Form_class = NotafiscalChaveForm
         self.template_name = 'logistica/notafiscal_chave.html'
         self.title_name = 'Informação sobre NF bipando DANFE'
+        self.get_args = ['chave']
 
-    def mount_context(self, form):
-        context = {
-            'chave': form['chave'],
-        }
+    def mount_context(self):
+        self.context.update({
+            'chave': self.form.cleaned_data['chave'],
+        })
         cursor = connections['so'].cursor()
-        data_nf = get_nf_pela_chave(cursor, form['chave'])
+        data_nf = get_nf_pela_chave(cursor, self.form.cleaned_data['chave'])
         if len(data_nf) == 0:
-            context.update({
+            self.context.update({
                 'msg_erro': 'Nenhuma NF encontrada',
             })
         else:
@@ -272,7 +274,7 @@ class NotafiscalChave(PermissionRequiredMixin, View):
                         'descr': alt['descricao'],
                     })
 
-            context.update({
+            self.context.update({
                 'status': status,
                 'nf_devolucao': nf_devolucao,
                 'acoes': acoes,
@@ -302,7 +304,7 @@ class NotafiscalChave(PermissionRequiredMixin, View):
             for row in datalog:
                 if row['saida'] is None:
                     row['saida'] = '-'
-            context.update({
+            self.context.update({
                 'headerslog': ('Hora', 'Usuário',
                                'Posição inicial', 'Posição final',
                                'Data de saída'),
@@ -311,24 +313,6 @@ class NotafiscalChave(PermissionRequiredMixin, View):
                               'saida'),
                 'datalog': datalog,
             })
-
-        return context
-
-    def get(self, request, *args, **kwargs):
-        self.request = request
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        self.request = request
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        if form.is_valid():
-            context.update(self.mount_context(form.cleaned_data))
-        context['form'] = form
-        return render(request, self.template_name, context)
 
 
 class NotafiscalEmbarcando(O2BaseGetView):
