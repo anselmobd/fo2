@@ -42,6 +42,8 @@ class PorDeposito(View):
                             'Quantidades Positivas', 'Quantidades Negativas'),
                 'fields': ('cditem_nivel99', 'cditem_grupo', 'dep_descr',
                            'qtd_positiva', 'qtd_negativa'),
+                'style': {4: 'text-align: right;',
+                          5: 'text-align: right;'},
             })
         else:
             context.update({
@@ -49,6 +51,7 @@ class PorDeposito(View):
                             'Cor', 'Depósito', 'Quantidade'),
                 'fields': ('cditem_nivel99', 'cditem_grupo', 'cditem_subgrupo',
                            'cditem_item', 'dep_descr', 'qtd'),
+                'style': {6: 'text-align: right;'},
             })
         context.update({
             'data': data,
