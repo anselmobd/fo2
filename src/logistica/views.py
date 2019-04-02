@@ -101,6 +101,9 @@ class NotafiscalRel(View):
             })
         else:
             for row in data:
+                row['numero|LINK'] = reverse(
+                    'logistica:notafiscal_nf', args=[row['numero']])
+                row['numero|TARGET'] = '_BLANK'
                 if row['saida'] is None:
                     row['saida'] = '-'
                     row['atraso'] = (
@@ -333,6 +336,9 @@ class NotafiscalEmbarcando(O2BaseGetView):
             })
 
         for row in data:
+            row['numero|LINK'] = reverse(
+                'logistica:notafiscal_nf', args=[row['numero']])
+            row['numero|TARGET'] = '_BLANK'
             if row['saida'] is None:
                 row['saida'] = '-'
                 row['atraso'] = (
@@ -441,6 +447,9 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
                 dados = list(nfs.values(*fields, 'posicao__nome'))
 
                 for row in dados:
+                    row['numero|LINK'] = reverse(
+                        'logistica:notafiscal_nf', args=[row['numero']])
+                    row['numero|TARGET'] = '_BLANK'
                     if row['saida'] is None:
                         row['saida'] = '-'
                         if row['faturamento'] is not None:
