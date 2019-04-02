@@ -16,7 +16,8 @@ class PorDeposito(View):
     template_name = 'estoque/por_deposito.html'
     title_name = 'Estoque por depósito'
 
-    def mount_context(self, cursor, nivel, ref, tam, cor, deposito):
+    def mount_context(
+            self, cursor, nivel, ref, tam, cor, deposito, agrupamento):
         context = {
             'nivel': nivel,
             'ref': ref,
@@ -25,17 +26,31 @@ class PorDeposito(View):
             'deposito': deposito,
             }
 
+        if agrupamento == 'r':
+            group = 'r'
+        else:
+            group = ''
         data = models.por_deposito(
-            cursor, nivel, ref, tam, cor, deposito, zerados=False)
+            cursor, nivel, ref, tam, cor, deposito, zerados=False, group=group)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
 
+        if agrupamento == 'r':
+            context.update({
+                'headers': ('Nível', 'Referência', 'Depósito',
+                            'Quantidades Positivas', 'Quantidades Negativas'),
+                'fields': ('cditem_nivel99', 'cditem_grupo', 'dep_descr',
+                           'qtd_positiva', 'qtd_negativa'),
+            })
+        else:
+            context.update({
+                'headers': ('Nível', 'Referência', 'Tamanho',
+                            'Cor', 'Depósito', 'Quantidade'),
+                'fields': ('cditem_nivel99', 'cditem_grupo', 'cditem_subgrupo',
+                           'cditem_item', 'dep_descr', 'qtd'),
+            })
         context.update({
-            'headers': ('Nível', 'Referência', 'Tamanho',
-                        'Cor', 'Depósito', 'Quantidade'),
-            'fields': ('cditem_nivel99', 'cditem_grupo', 'cditem_subgrupo',
-                       'cditem_item', 'dep_descr', 'qtde_estoque_atu'),
             'data': data,
         })
 
@@ -56,8 +71,9 @@ class PorDeposito(View):
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
             deposito = form.cleaned_data['deposito']
+            agrupamento = form.cleaned_data['agrupamento']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, nivel, ref, tam, cor, deposito))
+                cursor, nivel, ref, tam, cor, deposito, agrupamento))
         context['form'] = form
         return render(request, self.template_name, context)
