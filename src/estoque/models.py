@@ -3,7 +3,7 @@ from django.db import models
 from fo2.models import rows_to_dict_list_lower
 
 
-def por_deposito(cursor, nivel, ref, tam, cor):
+def por_deposito(cursor, nivel, ref, tam, cor, deposito='999'):
     filtro_nivel = ''
     if nivel is not None:
         filtro_nivel = "AND e.CDITEM_NIVEL99 = {nivel}".format(nivel=nivel)
@@ -20,6 +20,11 @@ def por_deposito(cursor, nivel, ref, tam, cor):
     if cor != '':
         filtro_cor = "AND e.CDITEM_ITEM = '{cor}'".format(cor=cor)
 
+    filtro_deposito = ''
+    if deposito != '999':
+        filtro_deposito = "AND e.DEPOSITO = '{deposito}'".format(
+            deposito=deposito)
+
     sql = '''
         SELECT
           e.*
@@ -29,7 +34,7 @@ def por_deposito(cursor, nivel, ref, tam, cor):
           {filtro_ref} -- filtro_ref
           {filtro_tam} -- filtro_tam
           {filtro_cor} -- filtro_cor
-          -- AND e.DEPOSITO = 231
+          {filtro_deposito} -- filtro_deposito
         ORDER BY
           e.CDITEM_NIVEL99
         , e.CDITEM_GRUPO
@@ -41,6 +46,7 @@ def por_deposito(cursor, nivel, ref, tam, cor):
         filtro_ref=filtro_ref,
         filtro_tam=filtro_tam,
         filtro_cor=filtro_cor,
+        filtro_deposito=filtro_deposito,
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
