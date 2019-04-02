@@ -1165,7 +1165,8 @@ class PorCliente(View):
         return render(request, self.template_name, context)
 
 
-def busca_custo(cursor, estrut_nivel, data, ref, tam, cor, alt):
+def componentes_e_custo_de_item(
+        cursor, estrut_nivel, data, ref, tam, cor, alt):
     if estrut_nivel == 0:
         narrativa = queries.item_narrativa(cursor, ref, tam, cor)
         custo = [{
@@ -1182,7 +1183,7 @@ def busca_custo(cursor, estrut_nivel, data, ref, tam, cor, alt):
         comp['ESTRUT_NIVEL'] = estrut_nivel
         data.append(comp)
         if comp['NIVEL'] == '1':
-            sub_custo = busca_custo(
+            sub_custo = componentes_e_custo_de_item(
                 cursor, estrut_nivel+1, data,
                 comp['REF'], comp['TAM'], comp['COR'], comp['ALT'])
             comp['PRECO'] = sub_custo
@@ -1265,8 +1266,7 @@ class Custo(O2BaseGetPostView):
                 return
 
         data = []
-
-        busca_custo(cursor, 0, data, ref, tam, cor, alt)
+        componentes_e_custo_de_item(cursor, 0, data, ref, tam, cor, alt)
 
         data[0]['|STYLE'] = 'font-weight: bold;'
         data[0]['CONSUMO'] = ''
@@ -1336,3 +1336,48 @@ class CustoRef(O2BaseGetPostView):
             })
 
         cursor = connections['so'].cursor()
+
+        estruturas = queries.ref_estruturas(cursor, ref)
+        pprint(estruturas)
+        if len(estruturas) == 0:
+            self.context.update({
+                'erro': 'Referência sem estruturas'})
+            return
+        alternativas = {}
+        for estr in estruturas:
+            alternativas[estr['ALTERNATIVA']] = estr['DESCR']
+        pprint(alternativas)
+
+        cor_descr = queries.ref_cores(cursor, ref)
+        cores = [cd['COR'] for cd in cor_descr]
+        pprint(cores)
+
+        tam_descr = queries.ref_tamanhos(cursor, ref)
+        tamanhos = [td['TAM'] for td in tam_descr]
+        pprint(tamanhos)
+
+        grades = []
+        for alt in alternativas.keys():
+            alt_data = []
+            for cor in cores:
+                for tam in tamanhos:
+                    data = []
+                    componentes_e_custo_de_item(
+                        cursor, 0, data, ref, tam, cor, alt)
+                    alt_data.append({
+                        'COR': cor,
+                        'TAM': tam,
+                        'CUSTO': data[0]['CUSTO'],
+                        'CUSTO|DECIMALS': 3
+                    })
+            grades.append({
+                'alt': alt,
+                'alt_descr': alternativas[alt],
+                'headers': ['Cor', 'Tamanho', 'Custo'],
+                'fields': ['COR', 'TAM', 'CUSTO'],
+                'data': alt_data,
+            })
+        pprint(grades)
+        self.context.update({
+            'grades': grades,
+        })

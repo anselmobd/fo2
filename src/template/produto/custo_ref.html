@@ -21,14 +21,14 @@
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% else %}
-  {% if data %}
-    Primeiro tamanho: {{tam}}<br />
-    Primeira cor: {{cor}}<br />
-    Primeira alternativa: {{alt}} ({{alt_descr}})
-    <table>
-      {% include "layout/thead_generic.html" with data=headers style=style only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
-    </table>
+  {% if grades %}
+    {%for grade in grades%}
+      <h4>Alternativa: {{grade|get_item:'alt'}} ({{grade|get_item:'alt_descr'}})</h4>
+      <table>
+        {% include "layout/thead_generic.html" with data=grade|get_item:'headers' only %}
+        {% include "layout/tbody_generic.html" with fields=grade|get_item:'fields' data=grade|get_item:'data' only %}
+      </table>
+    {% endfor %}
   {% endif %}
 {% endif %}
 {% endblock %}
