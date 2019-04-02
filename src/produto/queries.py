@@ -1235,3 +1235,45 @@ def item_narrativa(cursor, ref, tam, cor):
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+class CustoItem:
+    def __init__(self, cursor, ref, tam, cor, alt):
+        self.data = []
+        self.cursor = cursor
+        self.ref = ref
+        self.tam = tam
+        self.cor = cor
+        self.alt = alt
+
+    def componentes_e_custo(
+            self, cursor, estrut_nivel, ref, tam, cor, alt):
+        if estrut_nivel == 0:
+            narrativa = item_narrativa(cursor, ref, tam, cor)
+            custo = [{
+                'ESTRUT_NIVEL': 0, 'SEQ': '',
+                'NIVEL': '1', 'REF': ref, 'TAM': tam, 'COR': cor,
+                'DESCR': narrativa[0]['NARRATIVA'],
+                'ALT': alt, 'CONSUMO': 1, 'PRECO': 0, 'CUSTO': 0,
+                }]
+        else:
+            custo = ref_custo(cursor, ref, tam, cor, alt)
+
+        total_custo = 0
+        for comp in custo:
+            comp['ESTRUT_NIVEL'] = estrut_nivel
+            self.data.append(comp)
+            if comp['NIVEL'] == '1':
+                sub_custo = self.componentes_e_custo(
+                    cursor, estrut_nivel+1,
+                    comp['REF'], comp['TAM'], comp['COR'], comp['ALT'])
+                comp['PRECO'] = sub_custo
+                comp['CUSTO'] = comp['CONSUMO'] * comp['PRECO']
+            total_custo += comp['CUSTO']
+        return total_custo
+
+    def get_data(self):
+        self.componentes_e_custo(
+            self.cursor, 0,
+            self.ref, self.tam, self.cor, self.alt)
+        return self.data

@@ -1165,33 +1165,6 @@ class PorCliente(View):
         return render(request, self.template_name, context)
 
 
-def componentes_e_custo_de_item(
-        cursor, estrut_nivel, data, ref, tam, cor, alt):
-    if estrut_nivel == 0:
-        narrativa = queries.item_narrativa(cursor, ref, tam, cor)
-        custo = [{
-            'ESTRUT_NIVEL': 0, 'SEQ': '',
-            'NIVEL': '1', 'REF': ref, 'TAM': tam, 'COR': cor,
-            'DESCR': narrativa[0]['NARRATIVA'],
-            'ALT': alt, 'CONSUMO': 1, 'PRECO': 0, 'CUSTO': 0,
-            }]
-    else:
-        custo = queries.ref_custo(cursor, ref, tam, cor, alt)
-
-    total_custo = 0
-    for comp in custo:
-        comp['ESTRUT_NIVEL'] = estrut_nivel
-        data.append(comp)
-        if comp['NIVEL'] == '1':
-            sub_custo = componentes_e_custo_de_item(
-                cursor, estrut_nivel+1, data,
-                comp['REF'], comp['TAM'], comp['COR'], comp['ALT'])
-            comp['PRECO'] = sub_custo
-            comp['CUSTO'] = comp['CONSUMO'] * comp['PRECO']
-        total_custo += comp['CUSTO']
-    return total_custo
-
-
 class Custo(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
@@ -1265,8 +1238,7 @@ class Custo(O2BaseGetPostView):
                     'erro': 'Alternativa não existe nessa referência'})
                 return
 
-        data = []
-        componentes_e_custo_de_item(cursor, 0, data, ref, tam, cor, alt)
+        data = queries.CustoItem(cursor, ref, tam, cor, alt).get_data()
 
         data[0]['|STYLE'] = 'font-weight: bold;'
         data[0]['CONSUMO'] = ''
@@ -1357,9 +1329,8 @@ class CustoRef(O2BaseGetPostView):
             alt_data = []
             for cor in cores:
                 for tam in tamanhos:
-                    data = []
-                    componentes_e_custo_de_item(
-                        cursor, 0, data, ref, tam, cor, alt)
+                    data = queries.CustoItem(
+                        cursor, ref, tam, cor, alt).get_data()
                     alt_data.append({
                         'COR': cor,
                         'TAM': tam,
