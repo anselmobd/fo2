@@ -1,4 +1,5 @@
 from django.db import connections
+from functools import lru_cache
 
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
@@ -1115,6 +1116,7 @@ def por_cliente(cursor, cliente=None):
     return rows_to_dict_list(cursor)
 
 
+@lru_cache(maxsize=128)
 def ref_custo(cursor, ref, tam, cor, alt):
     filtra_ref = ''
     if ref != '':
@@ -1204,6 +1206,7 @@ def ref_custo(cursor, ref, tam, cor, alt):
     return rows_to_dict_list(cursor)
 
 
+@lru_cache(maxsize=32)
 def item_narrativa(cursor, ref, tam, cor):
     filtra_ref = ''
     if ref != '':
