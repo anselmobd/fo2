@@ -27,8 +27,16 @@ def por_deposito(cursor, nivel, ref, tam, cor, deposito='999'):
 
     sql = '''
         SELECT
-          e.*
+          e.cditem_nivel99
+        , e.cditem_grupo
+        , e.cditem_subgrupo
+        , e.cditem_item
+        , e.deposito
+        , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR
+        , e.qtde_estoque_atu
         FROM ESTQ_040 e
+        LEFT JOIN BASI_205 d
+          ON d.CODIGO_DEPOSITO = e.DEPOSITO
         WHERE 1=1
           {filtro_nivel} -- filtro_nivel
           {filtro_ref} -- filtro_ref

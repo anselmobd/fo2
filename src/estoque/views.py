@@ -34,7 +34,7 @@ class PorDeposito(View):
             'headers': ('Nível', 'Referência', 'Tamanho',
                         'Cor', 'Depósito', 'Quantidade'),
             'fields': ('cditem_nivel99', 'cditem_grupo', 'cditem_subgrupo',
-                       'cditem_item', 'deposito', 'qtde_estoque_atu'),
+                       'cditem_item', 'dep_descr', 'qtde_estoque_atu'),
             'data': data,
         })
 
