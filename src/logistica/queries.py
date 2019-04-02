@@ -13,3 +13,15 @@ def get_nf_pela_chave(cursor, chave):
     """
     cursor.execute(sql, [chave])
     return rows_to_dict_list(cursor)
+
+
+def get_chave_pela_nf(cursor, nf):
+    sql = """
+        SELECT
+          f.NUMERO_DANF_NFE
+        FROM FATU_050 f
+        WHERE f.CODIGO_EMPRESA = 1
+          AND f.NUM_NOTA_FISCAL = %s
+    """
+    cursor.execute(sql, [nf])
+    return rows_to_dict_list(cursor)
