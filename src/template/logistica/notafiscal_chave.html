@@ -24,7 +24,7 @@
     <h3>{{ msg_erro }}</h3>
     {% endif %}
     {% if data1 %}
-      <h3>Nota Fiscal: {{status}}</h3>
+      <h3>Nota Fiscal: {{nf}} - {{status}}</h3>
       <h3>Posição: {{posicao}}</h2>
       {%for acao in acoes%}
         <input type="submit" name="{{acao|get_item:'name'}}" value="{{acao|get_item:'descr'}}"/>&nbsp;&nbsp;&nbsp;&nbsp;
