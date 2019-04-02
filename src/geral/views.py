@@ -18,6 +18,7 @@ import produto.queries
 from .models import Painel, PainelModulo, InformacaoModulo, \
                     UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
 from .forms import InformacaoModuloForm, PopForm
+import geral.queries as queries
 
 
 def index(request):
@@ -26,28 +27,7 @@ def index(request):
 
 
 def deposito(request):
-    cursor = connections['so'].cursor()
-    sql = '''
-        SELECT
-          d.CODIGO_DEPOSITO COD
-        , d.DESCRICAO DESCR
-        , d.TIP_PROPRIEDADE_DEPOSITO PROP
-        , d.CNPJ9
-        , d.CNPJ4
-        , d.CNPJ2
-        , CASE WHEN d.CNPJ9 = 0 THEN ' '
-          ELSE coalesce(coalesce(f.NOME_FANTASIA, f.NOME_FORNECEDOR), '#')
-          END FORN
-        FROM BASI_205 d
-        LEFT JOIN SUPR_010 f
-          ON f.FORNECEDOR9 = d.CNPJ9
-         AND f.FORNECEDOR4 = d.CNPJ4
-         AND f.FORNECEDOR2 = d.CNPJ2
-        ORDER BY
-          d.CODIGO_DEPOSITO
-    '''
-    cursor.execute(sql)
-    data = rows_to_dict_list(cursor)
+    data = queries.deposito()
     propriedades = {
         1: 'Próprio',
         2: 'Em terceiros',
