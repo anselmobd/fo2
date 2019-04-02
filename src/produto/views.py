@@ -1338,7 +1338,6 @@ class CustoRef(O2BaseGetPostView):
         cursor = connections['so'].cursor()
 
         estruturas = queries.ref_estruturas(cursor, ref)
-        pprint(estruturas)
         if len(estruturas) == 0:
             self.context.update({
                 'erro': 'Referência sem estruturas'})
@@ -1346,15 +1345,12 @@ class CustoRef(O2BaseGetPostView):
         alternativas = {}
         for estr in estruturas:
             alternativas[estr['ALTERNATIVA']] = estr['DESCR']
-        pprint(alternativas)
 
         cor_descr = queries.ref_cores(cursor, ref)
         cores = [cd['COR'] for cd in cor_descr]
-        pprint(cores)
 
         tam_descr = queries.ref_tamanhos(cursor, ref)
         tamanhos = [td['TAM'] for td in tam_descr]
-        pprint(tamanhos)
 
         grades = []
         for alt in alternativas.keys():
@@ -1368,16 +1364,21 @@ class CustoRef(O2BaseGetPostView):
                         'COR': cor,
                         'TAM': tam,
                         'CUSTO': data[0]['CUSTO'],
-                        'CUSTO|DECIMALS': 3
+                        'CUSTO|DECIMALS': 3,
+                        'DET': '',
+                        'DET|TARGET': '_BLANK',
+                        'DET|GLYPHICON': 'glyphicon-th-list',
+                        'DET|LINK': '{}{}/{}/{}/{}'.format(
+                            reverse('produto:custo'),
+                            ref, tam, cor, alt),
                     })
             grades.append({
                 'alt': alt,
                 'alt_descr': alternativas[alt],
-                'headers': ['Cor', 'Tamanho', 'Custo'],
-                'fields': ['COR', 'TAM', 'CUSTO'],
+                'headers': ['Cor', 'Tamanho', 'Custo', 'Detalhe'],
+                'fields': ['COR', 'TAM', 'CUSTO', 'DET'],
                 'data': alt_data,
             })
-        pprint(grades)
         self.context.update({
             'grades': grades,
         })
