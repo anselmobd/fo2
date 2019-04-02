@@ -280,13 +280,14 @@ class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
 
             self.context.update({
                 'status': status,
+                'nf': row['numero'],
                 'nf_devolucao': nf_devolucao,
                 'acoes': acoes,
                 'posicao': row['posicao__nome'],
-                'headers1': ('No.', 'Faturamento', 'Venda', 'Ativa',
+                'headers1': ('Faturamento', 'Venda', 'Ativa',
                              'Devolvida', 'Atraso',
                              'Saída', 'Agendada', 'Entregue',),
-                'fields1': ('numero', 'faturamento', 'venda', 'ativa',
+                'fields1': ('faturamento', 'venda', 'ativa',
                             'nf_devolucao', 'atraso',
                             'saida', 'entrega', 'confirmada'),
                 'data1': [row],
