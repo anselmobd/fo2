@@ -4,7 +4,8 @@ from fo2.models import rows_to_dict_list_lower
 
 
 def por_deposito(
-        cursor, nivel, ref, tam, cor, deposito='999', zerados=True, group=''):
+        cursor, nivel, ref, tam, cor, deposito='999', zerados=True, group='',
+        tipo='t'):
     filtro_nivel = ''
     if nivel is not None:
         filtro_nivel = "AND e.CDITEM_NIVEL99 = {nivel}".format(nivel=nivel)
@@ -52,6 +53,21 @@ def por_deposito(
             , e.deposito
             , d.DESCRICAO'''
 
+    filtro_tipo = ''
+    if tipo == 'a':
+        filtro_tipo = "AND e.cditem_grupo < 'A0000'"
+    elif tipo == 'g':
+        filtro_tipo = "AND e.cditem_grupo like 'A%'"
+    elif tipo == 'b':
+        filtro_tipo = "AND e.cditem_grupo like 'B%'"
+    elif tipo == 'p':
+        filtro_tipo = \
+            "AND (e.cditem_grupo like 'A%' OR e.cditem_grupo like 'B%')"
+    elif tipo == 'v':
+        filtro_tipo = "AND e.cditem_grupo < 'C0000'"
+    elif tipo == 'm':
+        filtro_tipo = "AND e.cditem_grupo >= 'C0000'"
+
     sql = '''
         SELECT
           e.cditem_nivel99
@@ -69,6 +85,7 @@ def por_deposito(
           {filtro_cor} -- filtro_cor
           {filtro_deposito} -- filtro_deposito
           {filtro_zerados} -- filtro_zerados
+          {filtro_tipo} -- filtro_tipo
         {group_fields} -- group_fields
         ORDER BY
           e.CDITEM_NIVEL99
@@ -83,6 +100,7 @@ def por_deposito(
         filtro_cor=filtro_cor,
         filtro_deposito=filtro_deposito,
         filtro_zerados=filtro_zerados,
+        filtro_tipo=filtro_tipo,
         group_fields=group_fields,
     )
     cursor.execute(sql)

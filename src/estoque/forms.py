@@ -37,6 +37,17 @@ class PorDepositoForm(forms.Form):
     agrupamento = forms.ChoiceField(
         choices=CHOICES, initial='rct')
 
+    CHOICES = [('t', 'Todos'),
+               ('a', 'PA'),
+               ('g', 'PG'),
+               ('b', 'PB'),
+               ('p', 'PG/PB'),
+               ('v', 'PA/PG/PB'),
+               ('m', 'MD'),
+               ]
+    tipo = forms.ChoiceField(
+        choices=CHOICES, initial='t')
+
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
         data = self.data.copy()

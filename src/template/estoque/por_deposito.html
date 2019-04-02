@@ -30,6 +30,24 @@
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
 {% endif %}
+{% if agrupamento == 'r' %}
+  <h4>Agrupado por referência e depósito</h4>
+{% endif %}
+  <h4>Tipo de produto:
+    {% if tipo == 'a' %}
+      PA
+    {% elif tipo == 'g' %}
+      PG
+    {% elif tipo == 'b' %}
+      PB
+    {% elif tipo == 'p' %}
+      /PG/PB
+    {% elif tipo == 'v' %}
+      PA/PG/PB
+    {% elif tipo == 'm' %}
+      MD
+    {% endif %}
+  </h4>
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% endif %}
