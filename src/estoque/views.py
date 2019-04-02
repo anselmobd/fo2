@@ -17,13 +17,15 @@ class PorDeposito(View):
     title_name = 'Estoque por depósito'
 
     def mount_context(
-            self, cursor, nivel, ref, tam, cor, deposito, agrupamento):
+            self, cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo):
         context = {
             'nivel': nivel,
             'ref': ref,
             'tam': tam,
             'cor': cor,
             'deposito': deposito,
+            'agrupamento': agrupamento,
+            'tipo': tipo,
             }
 
         if agrupamento == 'r':
@@ -31,7 +33,8 @@ class PorDeposito(View):
         else:
             group = ''
         data = models.por_deposito(
-            cursor, nivel, ref, tam, cor, deposito, zerados=False, group=group)
+            cursor, nivel, ref, tam, cor, deposito, zerados=False, group=group,
+            tipo=tipo)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
@@ -75,8 +78,9 @@ class PorDeposito(View):
             cor = form.cleaned_data['cor']
             deposito = form.cleaned_data['deposito']
             agrupamento = form.cleaned_data['agrupamento']
+            tipo = form.cleaned_data['tipo']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, nivel, ref, tam, cor, deposito, agrupamento))
+                cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo))
         context['form'] = form
         return render(request, self.template_name, context)
