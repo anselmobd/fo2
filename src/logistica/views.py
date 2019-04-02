@@ -4,8 +4,9 @@ from operator import itemgetter
 
 from django.db import connections
 from django.utils import timezone
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
+from django.urls import reverse
 from django.db.models import When, F, Q
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -13,7 +14,7 @@ from fo2.models import rows_to_dict_list
 from base.views import O2BaseGetPostView, O2BaseGetView
 
 from .models import *
-from .queries import get_nf_pela_chave
+from .queries import get_nf_pela_chave, get_chave_pela_nf
 from .forms import *
 
 
@@ -496,3 +497,16 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
                 })
         self.context.update({
             'passo_context': passo_context, })
+
+
+def notafiscal_nf(request, *args, **kwargs):
+    if 'nf' not in kwargs or kwargs['nf'] is None:
+        return redirect('logistica:index')
+
+    cursor = connections['so'].cursor()
+    data_nf = get_chave_pela_nf(cursor, kwargs['nf'])
+    if len(data_nf) == 0:
+        return redirect('logistica:index')
+
+    return redirect(
+        'logistica:notafiscal_chave', data_nf[0]['NUMERO_DANF_NFE'])
