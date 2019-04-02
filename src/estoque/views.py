@@ -25,7 +25,8 @@ class PorDeposito(View):
             'deposito': deposito,
             }
 
-        data = models.por_deposito(cursor, nivel, ref, tam, cor, deposito)
+        data = models.por_deposito(
+            cursor, nivel, ref, tam, cor, deposito, zerados=False)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
