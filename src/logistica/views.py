@@ -92,6 +92,11 @@ class NotafiscalRel(View):
                     ord[1] for ord in form_obj.fields['data_saida'].choices
                     if ord[0] == form['data_saida']][0],
             })
+        if form['posicao'] is not None:
+            select = select.filter(posicao_id=form['posicao'].id)
+            context.update({
+                'posicao': form['posicao'].nome,
+            })
 
         select = select.order_by('-numero')
         data = list(select.values(*fields, 'posicao__nome'))
