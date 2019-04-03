@@ -84,6 +84,16 @@ class NotaFiscal(models.Model):
             else:
                 if self.posicao.id == 3:
                     self.posicao = PosicaoCarga.objects.get(id=1)
+        if self.id:
+            if self.confirmada:
+                if self.posicao.id != 5:
+                    self.posicao = PosicaoCarga.objects.get(id=5)
+            else:
+                if self.posicao.id == 5:
+                    if self.saida:
+                        self.posicao = PosicaoCarga.objects.get(id=3)
+                    else:
+                        self.posicao = PosicaoCarga.objects.get(id=1)
         super(NotaFiscal, self).save(*args, **kwargs)
 
     class Meta:
