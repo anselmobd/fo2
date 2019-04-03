@@ -3,7 +3,7 @@
   fields:
     inicial: 1
     ordem: 1
-    descricao: "NF entregue ao apoio"
+    descricao: "Entrega ao apoio"
     efeito: 1
     final: 2
 - model: logistica.PosicaoCargaAlteracao
@@ -11,7 +11,7 @@
   fields:
     inicial: 2
     ordem: 1
-    descricao: "Devolve NF à logística"
+    descricao: "Devolve à logística"
     efeito: 1
     final: 1
 - model: logistica.PosicaoCargaAlteracao

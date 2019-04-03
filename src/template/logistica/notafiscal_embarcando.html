@@ -14,7 +14,7 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-  <h3>{{quant}} NF{{quant|pluralize}} embarcando</h3>
+  <h3>{{quant}} NF{{quant|pluralize}} entregue{{quant|pluralize}} ao apoio</h3>
   <table>
     {% include "layout/thead_generic.html" with data=headers only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data only %}
