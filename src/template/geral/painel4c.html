@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <title>Independent CSS scrolling panels (with inertia)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <style>
     /*I love me some border-box*/
     * {
@@ -122,6 +124,16 @@
       width: 25%;
       background-color: white;
     }
+    .invisible {
+        visibility: hidden;
+        position: absolute;
+        top: -9999px;
+    }
+
+    .visible {
+        visibility: visible;
+        position: static;
+    }
   </style>
   <script>
      var timerId;
@@ -148,6 +160,9 @@
   </script>
 </head>
 <body onload="startTimer();" onmouseover="resetCount();" onmousemove="resetCount();" onclick="resetCount();" ondblclick="resetCount();" onkeydown="resetCount();" onscroll="resetCount();">
+  <div id="aviso_rh" class="invisible">
+    <h1><center><a href="/media/rh/Regulamento_interno.pdf" target="_blank">Clique aqui para ler o Regulamento interno da Tussor</a></center></h1>
+  </div>
   <div class="PN_Top_Link"><a id="timerlink" class="timer" href=".">Recarrega</a></div>
   <div class="PN_Top">{{ titulo }}</div>
   <div class="PN_Top_Sub">
@@ -188,3 +203,21 @@
   </div>
 </body>
 </html>
+<script>
+  function myCreateCookie(name, value, hours, minutes, seconds) {
+    if (hours || minutes || seconds) {
+      var date = new Date();
+      date.setTime(date.getTime()+(hours*60*60*1000)+(minutes*60*1000)+(seconds*1000));
+      var expires = "; expires="+date.toGMTString();
+    } else {
+      var expires = "";
+    }
+    document.cookie = name+"="+value+expires+"; path=/";
+  }
+
+  if (document.cookie.split(';').filter((item) =>
+      item.trim().startsWith('Tussor_Aviso_RH=')).length == 0) {
+    $('#aviso_rh').removeClass('invisible').addClass('visible');
+    myCreateCookie("Tussor_Aviso_RH", "RH", 1, 0, 0);
+  }
+</script>
