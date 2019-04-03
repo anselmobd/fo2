@@ -167,8 +167,10 @@ def index(request):
     limpa_data_futura(dicas, 'data')
     links = [
         {'chamada': 'Escola do Trabalhador',
-         'descricao': 'O Ministério do Trabalho tem cursos gratuitos em '
-            'várias áreas, basta se inscrever e fazer os cursos on line.',
+         'descricao':
+            'O Ministério do Trabalho tem cursos<br />'
+            'gratuitos em várias áreas, basta se<br />'
+            'inscrever e fazer os cursos on line.',
          'link': 'http://escolatrabalho.gov.br/'},
     ]
     context = {

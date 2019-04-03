@@ -46,11 +46,20 @@
   </table>
   <table>
     <tr>
-      <td style="vertical-align: top;" colspan="3">
+      <td style="vertical-align: top;">
+        <h3>Regulamento interno</h3>
+        <a href="/media/rh/campanhas/2018-11-05_novembro-azul.pdf" target="_blank">
+          Slides da apresentação do Regulamento interno
+        </a>
+      </td>
+      <td style="width: 5em;">
+        &nbsp;
+      </td>
+      <td style="vertical-align: top;">
         <h3>RH indica</h3>
         {% for link in links %}
           <a target="_blank" href="{{ link.link }}">{{ link.chamada }}</a><br/>
-          <div style="padding-left: 2em;">{{ link.descricao }}</div>
+          <div style="padding-left: 2em;">{{ link.descricao|safe }}</div>
         {% endfor %}
       </td>
     </tr>
