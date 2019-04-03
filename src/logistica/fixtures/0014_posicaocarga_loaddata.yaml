@@ -5,7 +5,7 @@
 - model: logistica.PosicaoCarga
   pk: 2
   fields:
-    nome: Embarcando
+    nome: NF entregue ao apoio
 - model: logistica.PosicaoCarga
   pk: 3
   fields:
