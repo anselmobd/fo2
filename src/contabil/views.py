@@ -263,16 +263,20 @@ class RemessaIndustrNF(View):
                     row['NF|LINK'] = reverse(
                         'contabil:remeindunf__get', args=[row['NF'], 'I'])
                     row['NF|TARGET'] = '_BLANK'
+                    if row['SITUACAO'] == 1:
+                        row['ATIVA'] = 'Ativa'
+                    else:
+                        row['ATIVA'] = 'Cancelada'
 
                 if detalhe == 'I':
-                    headers = ('NF. saída', 'Data saída', 'Facção', 'OP',
-                               'Pedido', 'Ped. cliente', 'Cliente',
+                    headers = ('NF. saída', 'Situação', 'Data saída', 'Facção',
+                               'OP', 'Pedido', 'Ped. cliente', 'Cliente',
                                'OS', 'Seq.', 'Nivel', 'Ref.', 'Cor', 'Tam.',
                                'Quant.',
                                'NF retorno', 'Data retorno', 'Quant. retorno',
                                )
-                    fields = ('NF', 'DT', 'FACCAO', 'OP',
-                              'PED', 'PED_CLI', 'CLI',
+                    fields = ('NF', 'ATIVA', 'DT', 'FACCAO',
+                              'OP','PED', 'PED_CLI', 'CLI',
                               'OS', 'SEQ', 'NIVEL', 'REF', 'COR', 'TAM',
                               'QTD',
                               'NF_RET', 'DT_RET', 'QTD_RET'
@@ -282,12 +286,12 @@ class RemessaIndustrNF(View):
                         17: 'text-align: right;',
                     }
                 else:
-                    headers = ('NF. saída', 'Data saída', 'Facção', 'OP',
-                               'Pedido', 'Ped. cliente', 'Cliente',
+                    headers = ('NF. saída', 'Situação', 'Data saída', 'Facção',
+                               'OP', 'Pedido', 'Ped. cliente', 'Cliente',
                                'OS', 'NF retorno', 'Data retorno',
                                )
-                    fields = ('NF', 'DT', 'FACCAO', 'OP',
-                              'PED', 'PED_CLI', 'CLI',
+                    fields = ('NF', 'ATIVA', 'DT', 'FACCAO',
+                              'OP', 'PED', 'PED_CLI', 'CLI',
                               'OS', 'NF_RET', 'DT_RET'
                               )
                     style = {}

@@ -405,6 +405,7 @@ def reme_indu_nf(
         (
         SELECT
           nf.NUM_NOTA_FISCAL NF
+        , nf.SITUACAO_NFISC SITUACAO
         , nf.DATA_EMISSAO DT
         , cind.FANTASIA_CLIENTE FACCAO'''
     if detalhe == 'I':
@@ -474,6 +475,7 @@ def reme_indu_nf(
           {nf_entrada_filter} -- nf_entrada_filter
         GROUP BY
           nf.NUM_NOTA_FISCAL
+        , nf.SITUACAO_NFISC
         , nf.DATA_EMISSAO
         , cind.FANTASIA_CLIENTE'''
     if detalhe == 'I':
