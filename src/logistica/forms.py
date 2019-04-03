@@ -64,6 +64,11 @@ class NotafiscalRelForm(forms.Form):
     listadas = forms.ChoiceField(
         label='Notas listadas', choices=CHOICES, initial='V')
 
+    posicao = forms.ModelChoiceField(
+        label='Posição', required=False,
+        queryset=PosicaoCarga.objects.all().order_by('id'),
+        empty_label='--Todas--')
+
     def clean_uf(self):
         uf = self.cleaned_data['uf'].upper()
         data = self.data.copy()
