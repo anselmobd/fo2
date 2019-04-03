@@ -321,7 +321,7 @@ def reme_indu_nf(
         dt_saida_de=None, dt_saida_ate=None, nf_saida=None,
         dt_entrada_de=None, dt_entrada_ate=None, nf_entrada=None,
         faccao=None, pedido=None, pedido_cliente=None, cliente=None,
-        retorno=None, detalhe=None):
+        retorno=None, detalhe=None, situacao=None):
 
     op_filter = ''
     if op:
@@ -344,6 +344,21 @@ def reme_indu_nf(
     nf_saida_filter = ''
     if nf_saida:
         nf_saida_filter = 'AND nf.NUM_NOTA_FISCAL = {}'.format(nf_saida)
+
+    situacao_filter = ''
+    if situacao == 'A':
+        situacao_filter += """ --
+            AND nf.SITUACAO_NFISC = 1
+            AND fe.DOCUMENTO IS NULL
+        """
+    elif situacao == 'C':
+        situacao_filter += """ --
+            AND nf.SITUACAO_NFISC != 1
+        """
+    elif situacao == 'D':
+        situacao_filter += """ --
+            AND fe.DOCUMENTO IS NOT NULL
+        """
 
     dt_entrada_filter = ''
     if dt_entrada_de:
@@ -475,6 +490,7 @@ def reme_indu_nf(
           {faccao_filter} -- faccao_filter
           {os_filter} -- os_filter
           {retorno_filter} -- retorno_filter
+          {situacao_filter} -- situacao_filter
           {dt_entrada_filter} -- dt_entrada_filter
           {nf_entrada_filter} -- nf_entrada_filter
         GROUP BY
@@ -526,6 +542,7 @@ def reme_indu_nf(
         os_filter=os_filter,
         dt_saida_filter=dt_saida_filter,
         nf_saida_filter=nf_saida_filter,
+        situacao_filter=situacao_filter,
         dt_entrada_filter=dt_entrada_filter,
         nf_entrada_filter=nf_entrada_filter,
         faccao_filter=faccao_filter,

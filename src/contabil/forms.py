@@ -62,6 +62,14 @@ class RemessaIndustrBaseForm(forms.Form):
 
 
 class RemessaIndustrNFForm(RemessaIndustrBaseForm):
+    CHOICES = [('T', 'Todas as remessas'),
+               ('A', 'Ativa'),
+               ('C', 'Canceladas'),
+               ('D', 'Devolvidas'),
+               ]
+    situacao = forms.ChoiceField(
+        label='Situação', choices=CHOICES, initial='A')
+
     data_ret_de = forms.DateField(
         label='NF Retorno - Data inicial', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
