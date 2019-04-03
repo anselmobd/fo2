@@ -407,6 +407,7 @@ def reme_indu_nf(
           nf.NUM_NOTA_FISCAL NF
         , nf.SITUACAO_NFISC SITUACAO
         , nf.DATA_EMISSAO DT
+        , fe.DOCUMENTO NF_DEVOLUCAO
         , cind.FANTASIA_CLIENTE FACCAO'''
     if detalhe == 'I':
         sql += '''
@@ -426,6 +427,9 @@ def reme_indu_nf(
             , sum(nfei.QUANTIDADE) QTD_RET'''
     sql += '''
         FROM FATU_050 nf -- nota fiscal da Tussor - capa
+        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
+          ON fe.NOTA_DEV = nf.NUM_NOTA_FISCAL
+         AND fe.SITUACAO_ENTRADA = 1 -- ativa
         JOIN PEDI_080 nop -- natureza da operação
           ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
          AND nop.ESTADO_NATOPER = nf.NATOP_NF_EST_OPER
@@ -477,6 +481,7 @@ def reme_indu_nf(
           nf.NUM_NOTA_FISCAL
         , nf.SITUACAO_NFISC
         , nf.DATA_EMISSAO
+        , fe.DOCUMENTO
         , cind.FANTASIA_CLIENTE'''
     if detalhe == 'I':
         sql += '''

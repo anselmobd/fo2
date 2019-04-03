@@ -264,7 +264,10 @@ class RemessaIndustrNF(View):
                         'contabil:remeindunf__get', args=[row['NF'], 'I'])
                     row['NF|TARGET'] = '_BLANK'
                     if row['SITUACAO'] == 1:
-                        row['ATIVA'] = 'Ativa'
+                        if row['NF_DEVOLUCAO'] is None:
+                            row['ATIVA'] = 'Ativa'
+                        else:
+                            row['ATIVA'] = row['NF_DEVOLUCAO']
                     else:
                         row['ATIVA'] = 'Cancelada'
 
@@ -276,7 +279,7 @@ class RemessaIndustrNF(View):
                                'NF retorno', 'Data retorno', 'Quant. retorno',
                                )
                     fields = ('NF', 'ATIVA', 'DT', 'FACCAO',
-                              'OP','PED', 'PED_CLI', 'CLI',
+                              'OP', 'PED', 'PED_CLI', 'CLI',
                               'OS', 'SEQ', 'NIVEL', 'REF', 'COR', 'TAM',
                               'QTD',
                               'NF_RET', 'DT_RET', 'QTD_RET'
