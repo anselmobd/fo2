@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from fo2.models import cursorF1, rows_to_dict_list, \
     rows_to_dict_list_lower
 
@@ -90,7 +92,7 @@ def ficha_cliente(cnpj):
     return rows_to_dict_list(cursor)
 
 
-def get_vendas_cor(cursor, cnpj):
+def get_vendas_cor(cursor, ref):
     sql = """
         WITH vendido AS
         (
@@ -146,27 +148,50 @@ def get_vendas_cor(cursor, cnpj):
         , inf.SEQ_ITEM_NFISC
         )
         SELECT
-          sum(v.qtd)
+          sum(v.qtd) qtd
         --, v.COLECAO
         --, v.MODELO
-        --, v.REF
+    """
+    if ref != '':
+        sql += """
+            , v.REF
+        """
+    sql += """
         , v.COR
         FROM vendido v
         WHERE v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
         --  AND v.COL = 1
         --  AND v.MODELO = '417'
-        --  AND v.REF = '0417R'
+    """
+    if ref != '':
+        sql += """
+            AND v.REF = '{}'
+        """.format(ref)
+    sql += """
         GROUP BY
         --  v.COLECAO
         --, v.MODELO
-        --, v.REF
-        --,
-          v.COR
+    """
+    if ref != '':
+        sql += """
+              v.REF
+            , v.COR
+        """
+    else:
+        sql += """
+            v.COR
+        """
+    sql += """
         ORDER BY
           1 DESC
         --, v.COLECAO
         --, v.MODELO
-        --, v.REF
+    """
+    if ref != '':
+        sql += """
+            , v.REF
+        """
+    sql += """
         , v.COR
     """
     cursor.execute(sql)
