@@ -1,4 +1,5 @@
-from fo2.models import rows_to_dict_list, cursorF1
+from fo2.models import cursorF1, rows_to_dict_list, \
+    rows_to_dict_list_lower
 
 
 def busca_clientes(cnpj):
@@ -87,3 +88,86 @@ def ficha_cliente(cnpj):
     """
     cursor.execute(sql, [cnpj])
     return rows_to_dict_list(cursor)
+
+
+def get_vendas_cor(cursor, cnpj):
+    sql = """
+        WITH vendido AS
+        (
+        SELECT
+          nf.NUM_NOTA_FISCAL NF
+        , nf.DATA_EMISSAO DT
+        , nf.NATOP_NF_NAT_OPER NATOP
+        , nop.COD_NATUREZA COD_NAT
+        , nop.DIVISAO_NATUR DIV_NAT
+        , inf.NIVEL_ESTRUTURA NIVEL
+        , inf.GRUPO_ESTRUTURA REF
+        , TRIM(LEADING '0' FROM
+               (REGEXP_REPLACE(inf.GRUPO_ESTRUTURA,
+                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\1'
+                               ))) MODELO
+        , inf.SUBGRU_ESTRUTURA TAM
+        , inf.ITEM_ESTRUTURA COR
+        , inf.QTDE_ITEM_FATUR QTD
+        , inf.VALOR_UNITARIO PRECO
+        , r.COLECAO COL
+        , col.DESCR_COLECAO COLECAO
+        FROM FATU_050 nf -- nota fiscal da Tussor - capa
+        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
+          ON fe.NOTA_DEV = nf.NUM_NOTA_FISCAL
+         AND fe.SITUACAO_ENTRADA = 1 -- ativa
+        JOIN PEDI_080 nop -- natureza da operação
+          ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
+         AND nop.ESTADO_NATOPER = nf.NATOP_NF_EST_OPER
+        JOIN fatu_060 inf -- item de nf de saída
+          ON inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
+        LEFT JOIN BASI_030 r -- item (ref+tam+cor)
+          on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
+         AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
+        LEFT JOIN BASI_140 col
+          ON col.COLECAO = r.COLECAO
+        --JOIN BASI_010 rtc -- item (ref+tam+cor)
+        --  on rtc.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
+        -- AND rtc.GRUPO_ESTRUTURA = inf.GRUPO_ESTRUTURA
+        -- AND rtc.SUBGRU_ESTRUTURA = inf.SUBGRU_ESTRUTURA
+        -- AND rtc.ITEM_ESTRUTURA = inf.ITEM_ESTRUTURA
+        WHERE 1=1
+          AND (nf.NATOP_NF_NAT_OPER IN (1, 2)
+               OR (nop.DIVISAO_NATUR = 8
+                   AND nop.COD_NATUREZA in ('5.11', '6.11')
+                  )
+              )
+          AND nf.SITUACAO_NFISC = 1
+          AND fe.DOCUMENTO IS NULL
+        ORDER BY
+        --  nf.NATOP_NF_NAT_OPER DESC
+        --,
+          nf.NUM_NOTA_FISCAL DESC
+        , inf.SEQ_ITEM_NFISC
+        )
+        SELECT
+          sum(v.qtd)
+        --, v.COLECAO
+        --, v.MODELO
+        --, v.REF
+        , v.COR
+        FROM vendido v
+        WHERE v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
+        --  AND v.COL = 1
+        --  AND v.MODELO = '417'
+        --  AND v.REF = '0417R'
+        GROUP BY
+        --  v.COLECAO
+        --, v.MODELO
+        --, v.REF
+        --,
+          v.COR
+        ORDER BY
+          1 DESC
+        --, v.COLECAO
+        --, v.MODELO
+        --, v.REF
+        , v.COR
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
