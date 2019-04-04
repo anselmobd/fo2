@@ -16,5 +16,23 @@
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
-</form>
+  </form>
+  {% if request.POST %}
+    <h3>Filtro:</h3>
+    <ul>
+      {% if cnpj %}
+        <li>CNPJ: {{cnpj}}</li>
+      {% endif %}
+    </ul>
+  {% endif %}
+  {% if msg_erro %}
+    <h3>{{ msg_erro }}</h3>
+  {% endif %}
+  {% if data %}
+    <h3>Distrubuição</h3>
+    <table>
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
 {% endblock %}
