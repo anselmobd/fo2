@@ -9,4 +9,7 @@ urlpatterns = [
         name='ficha_cliente'),
     url(r'^ficha_cliente/(?P<cnpj>\d+)/$', views.FichaCliente.as_view(),
         name='ficha_cliente__get'),
+
+    url(r'^vendas_cor/$', views.VendasPorCor.as_view(), name='vendas_cor'),
+
 ]
