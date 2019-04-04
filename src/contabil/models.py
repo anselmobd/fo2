@@ -470,10 +470,10 @@ def reme_indu_nf(
           )
         LEFT JOIN OBRF_015 nfei -- nota fiscal de entrada - item
           ON nfei.NUM_NOTA_ORIG = nf.NUM_NOTA_FISCAL
-         AND nfei.CODITEM_NIVEL99 = osi.PRODSAI_NIVEL99
-         AND nfei.CODITEM_GRUPO = osi.PRODSAI_GRUPO
-         AND nfei.CODITEM_SUBGRUPO = osi.PRODSAI_SUBGRUPO
-         AND nfei.CODITEM_ITEM = osi.PRODSAI_ITEM
+         AND nfei.CODITEM_NIVEL99 = inf.NIVEL_ESTRUTURA
+         AND nfei.CODITEM_GRUPO = inf.GRUPO_ESTRUTURA
+         AND nfei.CODITEM_SUBGRUPO = inf.SUBGRU_ESTRUTURA
+         AND nfei.CODITEM_ITEM = inf.ITEM_ESTRUTURA
         LEFT JOIN OBRF_010 nfec -- nota fiscal de entrada - capa
           ON nfec.DOCUMENTO = nfei.CAPA_ENT_NRDOC
          AND nfec.CGC_CLI_FOR_9 = nfei.CAPA_ENT_FORCLI9
