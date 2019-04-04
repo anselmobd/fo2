@@ -109,22 +109,32 @@ class VendasPorCor(O2BaseGetPostView):
         self.Form_class = forms.VendasPorCorForm
         self.template_name = 'comercial/vendas_cor.html'
         self.title_name = 'Distribuição de vendas por cor'
-        self.get_args = ['cnpj']
+        self.get_args = ['ref']
 
     def mount_context(self):
-        cnpj = self.form.cleaned_data['cnpj']
+        # cliente = self.form.cleaned_data['cliente']
+        ref = self.form.cleaned_data['ref']
         self.context.update({
-            'cnpj': cnpj,
+            # 'cliente': cliente,
+            'ref': ref,
         })
         cursor = connections['so'].cursor()
-        data = models.get_vendas_cor(cursor, cnpj)
+        data = models.get_vendas_cor(cursor, ref)
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Nenhuma venda encontrada',
             })
         else:
+            qtd_total = 0
+            for row in data:
+                qtd_total += row['qtd']
+            for row in data:
+                row['distr'] = row['qtd'] / qtd_total * 100
+                row['distr|DECIMALS'] = 2
+
             self.context.update({
-                'headers': ['Cor'],
-                'fields': ['cor'],
+                'headers': ['Cor', '%'],
+                'fields': ['cor', 'distr'],
+                'style': {2: 'text-align: right;'},
                 'data': data,
             })

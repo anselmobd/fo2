@@ -20,9 +20,17 @@
   {% if request.POST %}
     <h3>Filtro:</h3>
     <ul>
-      {% if cnpj %}
-        <li>CNPJ: {{cnpj}}</li>
+      <li>Desde: 01/01/2019</li>
+      {% if cliente %}
+        <li>Filtro de cliente: {{cliente}}</li>
       {% endif %}
+      <li>Referência:
+      {% if ref %}
+          {{ref}}
+      {% else %}
+          Todas
+      {% endif %}
+      </li>
     </ul>
   {% endif %}
   {% if msg_erro %}
@@ -31,8 +39,8 @@
   {% if data %}
     <h3>Distrubuição</h3>
     <table>
-      {% include "layout/thead_generic.html" with data=headers only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
   {% endif %}
 {% endblock %}
