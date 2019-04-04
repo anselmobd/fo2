@@ -20,3 +20,6 @@ th.group, tr.group {
   border-bottom-style: dashed;
   border-bottom-width: thin;
 }
+table:not(.layout) tbody tr:hover {
+  background-color: #DDD;
+}

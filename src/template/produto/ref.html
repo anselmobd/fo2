@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<table>
+<table class="layout">
   <tr>
     {% if ref and not msg_erro %}
       <td style="vertical-align: top;">
@@ -50,7 +50,7 @@
     {% include "layout/html_thead.html" with data=headers2 only %}
     {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
   </table>
-  <table>
+  <table class="layout">
     <tr>
       <td style="vertical-align: top;">
         {% if c_data %}
@@ -74,7 +74,7 @@
       </td>
     </tr>
   </table>
-  <table>
+  <table class="layout">
     <tr>
       {% if pa_data %}
       <td>
