@@ -341,7 +341,14 @@ class BuscaOpForm(forms.Form):
                ('c', 'Canceladas'),
                ]
     situacao = forms.ChoiceField(
-        label='Situação', choices=CHOICES, initial='a')
+        label='Situação da OP', choices=CHOICES, initial='a')
+
+    CHOICES = [('t', 'Todas as OPs'),
+               ('p', 'Em produção'),
+               ('f', 'Finalizadas'),
+               ]
+    posicao = forms.ChoiceField(
+        label='Posição da produção', choices=CHOICES, initial='t')
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
