@@ -2,7 +2,10 @@ import re
 
 from django import forms
 
-from base.forms import O2BaseForm, O2FieldRefForm, O2FieldTamanhoForm, \
+from base.forms import \
+    O2BaseForm, \
+    O2FieldRefForm, \
+    O2FieldTamanhoForm, \
     O2FieldCorForm
 
 from utils.forms import FiltroForm
@@ -140,4 +143,6 @@ class CustoDetalhadoForm(
             'cor',
             'alternativa',
         ])
-        self.fields['ref'].required = True
+        ref = self.fields['ref']
+        ref.required = True
+        ref.widget.attrs.update({'autofocus': 'autofocus'})
