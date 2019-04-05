@@ -1,0 +1,41 @@
+{% extends 'contabil/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'geral:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  function open_fluxo(destino, id){
+     var newwindow = window.open("http://localhost:8088/geral/fluxo/"+destino+"/"+id);
+     return false;
+   }
+</script>
+{% endblock javascript %}
+
+{% block content %}
+<form action="{% url 'geral:gera_fluxo_dot' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Gera"/>
+</form>
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% else %}
+  {% if request.POST %}
+    {% if id %}
+      <h3>Fluxo: {{id}}</h3>
+    {% endif %}
+    <script type="text/javascript">
+      window.onload = function() {
+        open_fluxo('{{destino}}', '{{id}}');
+      }
+    </script>
+  {% endif %}
+{% endif %}
+{% endblock %}

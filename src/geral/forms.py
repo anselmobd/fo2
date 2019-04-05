@@ -30,3 +30,15 @@ class PopForm(forms.ModelForm):
     class Meta:
         model = Pop
         fields = ('assunto', 'descricao', 'pop', 'habilitado')
+
+
+class GeraFluxoDotForm(forms.Form):
+    id = forms.CharField(
+        label='Fluxo', max_length=3, min_length=1,
+        widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
+
+    CHOICES = [('t', 'Tela'),
+               ('a', 'Arquivo'),
+               ]
+    destino = forms.ChoiceField(
+        label='Gera arquivo para', choices=CHOICES, initial='t')

@@ -1,14 +1,17 @@
-import yaml
 from pprint import pprint, pformat
+import yaml
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.db import connections
-from django.views import View
-from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django import forms
+from django.db import connections
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.views import View
+
+from base.views import O2BaseGetPostView
 
 from fo2.models import rows_to_dict_list
 # from utils.classes import LoggedInUser
@@ -17,7 +20,7 @@ import produto.queries
 
 from .models import Painel, PainelModulo, InformacaoModulo, \
                     UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
-from .forms import InformacaoModuloForm, PopForm
+import geral.forms as forms
 import geral.queries as queries
 
 
@@ -107,7 +110,7 @@ class PainelView(View):
 
 
 class InformativoView(LoginRequiredMixin, View):
-    Form_class = InformacaoModuloForm
+    Form_class = forms.InformacaoModuloForm
     template_name = 'geral/informativo.html'
     title_name = 'Informativos'
     context = {}
@@ -225,16 +228,16 @@ def pop(request, pop_assunto=None, id=None):
             instance = None
             context.update({'insert': True})
         if request.method == 'POST':
-            form = PopForm(request.POST, request.FILES, instance=instance)
+            form = forms.PopForm(request.POST, request.FILES, instance=instance)
             if form.is_valid():
                 form.save()
                 return redirect('geral:pop', pop_assunto)
         else:
             if instance is None:
-                form = PopForm()
+                form = forms.PopForm()
                 form.fields['assunto'].initial = assunto.id
             else:
-                form = PopForm(instance=instance)
+                form = forms.PopForm(instance=instance)
         form.fields['assunto'].widget = forms.HiddenInput()
         context.update({'form': form})
 
@@ -1319,6 +1322,9 @@ def dict_fluxo(id):
             }
     fluxo_config['51p'] = update_dict(fluxo_config['1p'], fluxo_aux)
 
+    if id not in fluxo_config:
+        return None
+
     return update_dict(
         fluxo_padrao[fluxo_config[id]['base']], fluxo_config[id])
 
@@ -1397,6 +1403,8 @@ def dict_colecao_fluxos(colecao, tipo, ref):
 
 def gera_fluxo_dot(request, destino, id):
     fluxo = dict_fluxo(id)
+    if fluxo is None:
+        return HttpResponse("Fluxo {} não encontrado".format(id))
 
     if destino in ['a', 'f']:
         filename = \
@@ -1411,7 +1419,30 @@ def gera_fluxo_dot(request, destino, id):
 
     else:
         return render(
-            request, fluxo['template_base'], fluxo, content_type='text/plain')
+            request, fluxo['template_base'], fluxo,
+            content_type='text/plain')
+
+
+class GeraFluxoDot(O2BaseGetPostView):
+    def __init__(self, *args, **kwargs):
+        super(GeraFluxoDot, self).__init__(*args, **kwargs)
+        self.Form_class = forms.GeraFluxoDotForm
+        self.template_name = 'geral/gera_fluxo_dot.html'
+        self.title_name = 'Gera fluxo ".dot"'
+        self.get_args = ['destino', 'id']
+
+    def mount_context(self):
+        destino = self.form.cleaned_data['destino']
+        id = self.form.cleaned_data['id']
+        self.context.update({
+            'destino': destino,
+            'id': id,
+        })
+        fluxo = dict_fluxo(id)
+        if fluxo is None:
+            self.context.update({
+                'erro': "Fluxo {} não encontrado".format(id),
+            })
 
 
 def get_roteiros_de_fluxo(id):
