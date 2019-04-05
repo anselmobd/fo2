@@ -7,7 +7,7 @@ from django import forms
 class O2BaseForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
-        super(O2BaseForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if hasattr(self, 'Meta'):
 

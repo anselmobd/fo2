@@ -140,7 +140,7 @@ class CustoDetalhadoForm(
         autofocus_field = 'ref'
 
     def __init__(self, *args, **kwargs):
-        super(CustoDetalhadoForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.order_fields([
             'ref',
             'tamanho',
