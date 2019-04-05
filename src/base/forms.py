@@ -34,6 +34,10 @@ class O2BaseForm(forms.Form):
             field = self.cleanner_pad_field(field, length)
         return self.saver(field_name, field)
 
+    def required_fields(self, fields):
+        for field in fields:
+            self.fields[field].required = True
+
 
 class O2FieldRefForm(forms.Form):
     ref = forms.CharField(

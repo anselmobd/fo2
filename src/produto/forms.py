@@ -143,6 +143,6 @@ class CustoDetalhadoForm(
             'cor',
             'alternativa',
         ])
+        self.required_fields(['ref'])
         ref = self.fields['ref']
-        ref.required = True
         ref.widget.attrs.update({'autofocus': 'autofocus'})
