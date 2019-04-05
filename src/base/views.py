@@ -15,6 +15,9 @@ class O2BaseCustomView(View):
     def get_arg(self, field):
         return self.kwargs[field] if field in self.kwargs else None
 
+    def my_render(self):
+        return render(self.request, self.template_name, self.context)
+
 
 class O2BaseGetPostView(O2BaseCustomView):
 
@@ -22,7 +25,7 @@ class O2BaseGetPostView(O2BaseCustomView):
         if self.form.is_valid():
             self.mount_context()
         self.context['form'] = self.form
-        return render(self.request, self.template_name, self.context)
+        return my_render()
 
     def set_form_arg(self, field):
         value = self.get_arg(field)
@@ -53,7 +56,7 @@ class O2BaseGetView(O2BaseCustomView):
 
     def render_mount(self):
         self.mount_context()
-        return render(self.request, self.template_name, self.context)
+        return my_render()
 
     def get(self, request, *args, **kwargs):
         self.init_self(request, kwargs)
