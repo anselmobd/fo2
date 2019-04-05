@@ -20,7 +20,7 @@ import produto.queries
 
 from .models import Painel, PainelModulo, InformacaoModulo, \
                     UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
-import geral.forms as forms
+import geral.forms
 import geral.queries as queries
 
 
@@ -110,7 +110,7 @@ class PainelView(View):
 
 
 class InformativoView(LoginRequiredMixin, View):
-    Form_class = forms.InformacaoModuloForm
+    Form_class = geral.forms.InformacaoModuloForm
     template_name = 'geral/informativo.html'
     title_name = 'Informativos'
     context = {}
@@ -228,16 +228,16 @@ def pop(request, pop_assunto=None, id=None):
             instance = None
             context.update({'insert': True})
         if request.method == 'POST':
-            form = forms.PopForm(request.POST, request.FILES, instance=instance)
+            form = geral.forms.PopForm(request.POST, request.FILES, instance=instance)
             if form.is_valid():
                 form.save()
                 return redirect('geral:pop', pop_assunto)
         else:
             if instance is None:
-                form = forms.PopForm()
+                form = geral.forms.PopForm()
                 form.fields['assunto'].initial = assunto.id
             else:
-                form = forms.PopForm(instance=instance)
+                form = geral.forms.PopForm(instance=instance)
         form.fields['assunto'].widget = forms.HiddenInput()
         context.update({'form': form})
 
@@ -1469,7 +1469,7 @@ def gera_fluxo_dot(request, destino, id):
 class GeraFluxoDot(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(GeraFluxoDot, self).__init__(*args, **kwargs)
-        self.Form_class = forms.GeraFluxoDotForm
+        self.Form_class = geral.forms.GeraFluxoDotForm
         self.template_name = 'geral/gera_fluxo_dot.html'
         self.title_name = 'Gera fluxo ".dot"'
         self.get_args = ['destino', 'id']
