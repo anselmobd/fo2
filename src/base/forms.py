@@ -6,6 +6,17 @@ from django import forms
 
 class O2BaseForm(forms.Form):
 
+    def __init__(self, *args, **kwargs):
+        super(O2BaseForm, self).__init__(*args, **kwargs)
+
+        if hasattr(self, 'Meta'):
+
+            if hasattr(self.Meta, 'required_fields'):
+                self.required_fields(self.Meta.required_fields)
+
+            if hasattr(self.Meta, 'autofocus_field'):
+                self.autofocus_field(self.Meta.autofocus_field)
+
     def saver(self, field_name, field):
         data = self.data.copy()
         data[field_name] = field
