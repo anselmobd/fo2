@@ -7,7 +7,7 @@ from .models import *
 
 class NotafiscalChaveForm(forms.Form):
     chave = forms.CharField(
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput())
 
 
 class NotafiscalRelForm(forms.Form):
@@ -26,7 +26,7 @@ class NotafiscalRelForm(forms.Form):
 
     uf = forms.CharField(
         label='UF', max_length=2, min_length=2, required=False,
-        widget=forms.TextInput(attrs={'type': 'char', 'size': 2}))
+        widget=forms.TextInput(attrs={'size': 2}))
 
     nf = forms.CharField(
         label='Número da NF', required=False,
@@ -35,12 +35,12 @@ class NotafiscalRelForm(forms.Form):
     cliente = forms.CharField(
         label='Cliente', required=False,
         help_text='Parte do nome ou início do CNPJ.',
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput())
 
     transportadora = forms.CharField(
         label='Transportadora', required=False,
         help_text='Sigla da transportadora.',
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput())
 
     CHOICES = [('N', 'Não filtra'),
                ('C', 'Com data de saída informada'),
