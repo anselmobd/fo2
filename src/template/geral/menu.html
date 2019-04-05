@@ -2,6 +2,9 @@
   <li><a href="{% url 'geral:deposito' %}">Depósitos</a></li>
   <li><a href="{% url 'geral:estagio' %}">Estágios</a></li>
   <li><a href="{% url 'geral:unidade' %}">Unidades / Divisões</a></li>
+  {% if request.user.is_authenticated %}
+    <li><a href="{% url 'geral:gera_fluxo_dot' %}">Gera fluxo ".dot"</a></li>
+  {% endif %}
 </ul>
 {% if list_geral_paineis %}
   <br />
