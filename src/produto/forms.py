@@ -124,6 +124,7 @@ class ReferenciaForm(
         O2FieldRefForm):
 
     class Meta:
+        required_fields = ['ref']
         autofocus_field = 'ref'
 
 
