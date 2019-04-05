@@ -136,14 +136,11 @@ class CustoDetalhadoForm(
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     class Meta:
-        required_fields = ['ref']
-        autofocus_field = 'ref'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.order_fields([
+        order_fields = [
             'ref',
             'tamanho',
             'cor',
             'alternativa',
-        ])
+        ]
+        required_fields = ['ref']
+        autofocus_field = 'ref'

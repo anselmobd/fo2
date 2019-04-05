@@ -11,6 +11,9 @@ class O2BaseForm(forms.Form):
 
         if hasattr(self, 'Meta'):
 
+            if hasattr(self.Meta, 'order_fields'):
+                self.order_fields(self.Meta.order_fields)
+
             if hasattr(self.Meta, 'required_fields'):
                 self.required_fields(self.Meta.required_fields)
 
