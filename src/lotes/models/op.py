@@ -9,7 +9,7 @@ def op_inform(cursor, op):
     return(busca_op(cursor, op=op))
 
 
-def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None):
+def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None, situacao=None):
     filtra_op = ""
     if op is not None and op != '':
         filtra_op = """
@@ -33,6 +33,12 @@ def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None):
         filtra_deposito = """
             AND o.DEPOSITO_ENTRADA = '{}'
         """.format(deposito)
+
+    filtra_situacao = ""
+    if situacao == 'a':
+        filtra_situacao = "AND o.SITUACAO != 9"
+    elif situacao == 'c':
+        filtra_situacao = "AND o.SITUACAO = 9"
 
     filtro_tipo = ''
     if tipo == 'a':
@@ -174,6 +180,7 @@ def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None):
           {filtra_ref} -- filtra_ref
           {filtra_deposito} -- filtra_deposito
           {filtro_tipo} -- filtro_tipo
+          {filtra_situacao} -- filtra_situacao
         ORDER BY
            o.ORDEM_PRODUCAO DESC
     '''.format(
@@ -181,6 +188,7 @@ def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None):
         filtra_ref=filtra_ref,
         filtra_deposito=filtra_deposito,
         filtro_tipo=filtro_tipo,
+        filtra_situacao=filtra_situacao,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
