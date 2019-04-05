@@ -325,6 +325,18 @@ class BuscaOpForm(forms.Form):
         label='Depósito', required=False, max_length=3,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    CHOICES = [('t', 'Todos'),
+               ('a', 'PA'),
+               ('g', 'PG'),
+               ('b', 'PB'),
+               ('p', 'PG/PB'),
+               ('v', 'PA/PG/PB'),
+               ('m', 'MD'),
+               ]
+    tipo = forms.ChoiceField(
+        choices=CHOICES, initial='t')
+
+
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
         data = self.data.copy()
