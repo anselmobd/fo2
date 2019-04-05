@@ -299,13 +299,14 @@ class BuscaOP(View):
     template_name = 'lotes/busca_op.html'
     title_name = 'Busca OP'
 
-    def mount_context(self, cursor, ref, deposito):
+    def mount_context(self, cursor, ref, deposito, tipo):
         context = {
             'ref': ref,
             'deposito': deposito,
+            'tipo': tipo,
         }
 
-        data = models.busca_op(cursor, ref=ref, deposito=deposito)
+        data = models.busca_op(cursor, ref=ref, deposito=deposito, tipo=tipo)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'OPs não encontradas',
@@ -355,8 +356,9 @@ class BuscaOP(View):
         if form.is_valid():
             ref = form.cleaned_data['ref']
             deposito = form.cleaned_data['deposito']
+            tipo = form.cleaned_data['tipo']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, ref, deposito))
+            context.update(self.mount_context(cursor, ref, deposito, tipo))
         context['form'] = form
         return render(request, self.template_name, context)
 

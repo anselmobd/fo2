@@ -9,7 +9,7 @@ def op_inform(cursor, op):
     return(busca_op(cursor, op=op))
 
 
-def busca_op(cursor, op=None, ref=None, deposito=None):
+def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None):
     filtra_op = ""
     if op is not None and op != '':
         filtra_op = """
@@ -33,6 +33,21 @@ def busca_op(cursor, op=None, ref=None, deposito=None):
         filtra_deposito = """
             AND o.DEPOSITO_ENTRADA = '{}'
         """.format(deposito)
+
+    filtro_tipo = ''
+    if tipo == 'a':
+        filtro_tipo = "AND o.REFERENCIA_PECA < 'A0000'"
+    elif tipo == 'g':
+        filtro_tipo = "AND o.REFERENCIA_PECA like 'A%'"
+    elif tipo == 'b':
+        filtro_tipo = "AND o.REFERENCIA_PECA like 'B%'"
+    elif tipo == 'p':
+        filtro_tipo = \
+            "AND (o.REFERENCIA_PECA like 'A%' OR o.REFERENCIA_PECA like 'B%')"
+    elif tipo == 'v':
+        filtro_tipo = "AND o.REFERENCIA_PECA < 'C0000'"
+    elif tipo == 'm':
+        filtro_tipo = "AND o.REFERENCIA_PECA >= 'C0000'"
 
     sql = '''
         SELECT
@@ -158,12 +173,14 @@ def busca_op(cursor, op=None, ref=None, deposito=None):
           {filtra_op} -- filtra_op
           {filtra_ref} -- filtra_ref
           {filtra_deposito} -- filtra_deposito
+          {filtro_tipo} -- filtro_tipo
         ORDER BY
            o.ORDEM_PRODUCAO DESC
     '''.format(
         filtra_op=filtra_op,
         filtra_ref=filtra_ref,
         filtra_deposito=filtra_deposito,
+        filtro_tipo=filtro_tipo,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
