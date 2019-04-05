@@ -9,7 +9,9 @@ def op_inform(cursor, op):
     return(busca_op(cursor, op=op))
 
 
-def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None, situacao=None):
+def busca_op(
+        cursor, op=None, ref=None, deposito=None, tipo=None, situacao=None,
+        posicao=None):
     filtra_op = ""
     if op is not None and op != '':
         filtra_op = """
@@ -33,6 +35,26 @@ def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None, situacao=None)
         filtra_deposito = """
             AND o.DEPOSITO_ENTRADA = '{}'
         """.format(deposito)
+
+    filtra_posicao = ""
+    if posicao == 'p':
+        filtra_posicao = """--
+            AND
+            ( SELECT
+                sum(l.QTDE_EM_PRODUCAO_PACOTE) QTD
+              FROM PCPC_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
+            ) > 0"""
+    elif posicao == 'f':
+        filtra_posicao = """--
+            AND
+            ( SELECT
+                sum(l.QTDE_EM_PRODUCAO_PACOTE) QTD
+              FROM PCPC_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
+            ) = 0"""
 
     filtra_situacao = ""
     if situacao == 'a':
@@ -181,6 +203,7 @@ def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None, situacao=None)
           {filtra_deposito} -- filtra_deposito
           {filtro_tipo} -- filtro_tipo
           {filtra_situacao} -- filtra_situacao
+          {filtra_posicao} -- filtra_posicao
         ORDER BY
            o.ORDEM_PRODUCAO DESC
     '''.format(
@@ -189,6 +212,7 @@ def busca_op(cursor, op=None, ref=None, deposito=None, tipo=None, situacao=None)
         filtra_deposito=filtra_deposito,
         filtro_tipo=filtro_tipo,
         filtra_situacao=filtra_situacao,
+        filtra_posicao=filtra_posicao,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
