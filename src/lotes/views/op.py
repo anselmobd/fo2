@@ -119,6 +119,17 @@ class Op(View):
                     'i4_data': i4_data,
                 })
 
+            # posição de OP
+            p_data = models.posicao_op(cursor, op)
+            p.prt('posicao_op')
+            if len(p_data) != 0:
+                context.update({
+                    'p_headers': ('Posição', 'Quantidade', 'Estágio'),
+                    'p_fields': ('TIPO', 'QTD', 'ESTAGIO'),
+                    'p_style': {0: 'font-size: large;', },
+                    'p_data': p_data,
+                })
+
             # relacionamentos entre OPs
             r_data = models.op_relacionamentos(cursor, op)
             p.prt('op_relacionamentos')
