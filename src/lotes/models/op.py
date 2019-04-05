@@ -46,6 +46,16 @@ def busca_op(
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
             ) > 0"""
+    elif posicao == 'p63':
+        filtra_posicao = """--
+            AND
+            ( SELECT
+                sum(l.QTDE_EM_PRODUCAO_PACOTE) QTD
+              FROM PCPC_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
+                AND l.CODIGO_ESTAGIO <> 63
+            ) > 0"""
     elif posicao == 'f':
         filtra_posicao = """--
             AND
@@ -54,6 +64,16 @@ def busca_op(
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
+            ) = 0"""
+    elif posicao == 'f63':
+        filtra_posicao = """--
+            AND
+            ( SELECT
+                sum(l.QTDE_EM_PRODUCAO_PACOTE) QTD
+              FROM PCPC_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
+                AND l.CODIGO_ESTAGIO <> 63
             ) = 0"""
 
     filtra_situacao = ""
