@@ -319,6 +319,7 @@ def dict_alternativas():
         61: 'PB Interno',
         71: 'PG Interno',
         81: 'PA de PG Interno',
+        52: 'Sobra de Multimarca',
     }
 
 
@@ -336,6 +337,7 @@ def dict_roteiros():
             6: 'MD Camisa',
             9: 'MD Meia',
             51: 'MD Interno',
+            52: 'Sobra de Multimarca',
         },
         'pb': {
             11: 'PB Interno',
@@ -383,6 +385,7 @@ def dict_roteiros():
             61: 'PA de PB Interno',
             71: 'PA de PG Interno',
             81: 'PA de PG Interno',
+            52: 'Sobra de Multimarca',
         }
     }
 
@@ -519,8 +522,8 @@ def dict_fluxo(id):
         # 'rascunho': '#Rascunho#',
         'rascunho': '',
         'versao_num': '19.01',
-        'versao_data': '27/02/2019',
-        'versao_sufixo': '20190227',
+        'versao_data': '05/04/2019',
+        'versao_sufixo': '20190405',
         'id': id,
         'fluxo_num': fluxo_num,
     }
@@ -533,7 +536,10 @@ def dict_fluxo(id):
         'template_base': 'geral/fluxo.html',
         # específicos
         'tem_mp': False,
+        'seta_md_label': 'MD',
         'seta_pg_label': 'PG / PB',
+        'seta_pa_label': 'PA',
+        'md_cabecalho': 'MD\nDepósito da OP: 231',
         'md_p_pb': {
             'nivel': 'md',
             'alt_incr': 0,
@@ -1321,6 +1327,43 @@ def dict_fluxo(id):
                 },
             }
     fluxo_config['51p'] = update_dict(fluxo_config['1p'], fluxo_aux)
+
+    fluxo_config[52] = {
+        'base': 'cueca',
+        'produto': 'MULTIMARCA',
+        'fluxo_nome': 'Sobra de multimarca',
+        'caracteristicas': [],
+        'seta_md_label': 'PPG',
+        'seta_pa_label': 'PG',
+        'md_cabecalho': 'PPG\nDepósito da OP: 231',
+        'md_p_pb': {
+            'cabecalho': '<b><u>D</u></b>999* - para Desmontar',
+            'ests': [3, 57, 63],
+            'gargalo': 57,
+            'insumos': {
+                57: ['MD<br /><b><u>M</u></b>999*', ],
+            },
+        },
+        'md_p_pg': False,
+        'pb': False,
+        'pg': False,
+        'pa_cabecalho': 'PG\nDepósito da OP: 231',
+        'pa_de_md': {
+            'cabecalho': '<b><u>A</u></b>999* - Remontado',
+            'ests': [3, 18, 45, 48, 51, 60, 57, 63],
+            'gargalo': 60,
+            'insumos': {
+                18: ['Cartela',
+                     'Transfer',
+                     'Etiquetas',
+                     'TAG', ],
+                60: ['PPG<br /><b><u>D</u></b>999*'],
+            }
+        },
+        'pa_enc_de_pb': False,
+        'pa_emb_de_pg': False,
+        'pa_enc_de_pg': False,
+    }
 
     if id not in fluxo_config:
         return None
