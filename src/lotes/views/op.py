@@ -126,7 +126,7 @@ class Op(View):
                 context.update({
                     'p_headers': ('Posição', 'Quantidade', 'Estágio'),
                     'p_fields': ('TIPO', 'QTD', 'ESTAGIO'),
-                    'p_style': {0: 'font-size: large;', },
+                    'p_style': {2: 'font-weight: bold; text-align: right;'},
                     'p_data': p_data,
                 })
 
