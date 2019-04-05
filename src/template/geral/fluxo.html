@@ -15,11 +15,11 @@ digraph G {
   "
   {% if tem_mp %}
   L_MP [shape=rarrow,style=dashed,label="MP"]{% endif %}
-  L_MD [shape=rarrow,style=dashed,label="MD"]
+  L_MD [shape=rarrow,style=dashed,label="{{ seta_md_label }}"]
   {% if pb or pg %}
   L_PGPB [shape=rarrow,style=dashed,label="{{ seta_pg_label }}"]
   {% endif %}
-  L_PA [shape=rarrow,style=dashed,label="PA"]
+  L_PA [shape=rarrow,style=dashed,label="{{ seta_pa_label }}"]
 
   {% if tem_mp %}L_MP -> {% endif %}L_MD -> {% if pb or pg %}L_PGPB -> {% endif %}L_PA [style=invis]
 
@@ -58,7 +58,7 @@ digraph G {
 
     {% if md_p_pb or md_p_pg %}
     subgraph cluster_md {
-      label = "MD\nDepósito da OP: 231"
+      label = "{{md_cabecalho}}"
       style="dotted, rounded"
 
       {% if md_p_pb %}
