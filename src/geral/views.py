@@ -1,7 +1,7 @@
 from pprint import pprint, pformat
 import yaml
 
-from django.forms
+import django.forms
 from django.db import connections
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
