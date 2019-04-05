@@ -346,6 +346,8 @@ class BuscaOpForm(forms.Form):
     CHOICES = [('t', 'Todas as OPs'),
                ('p', 'Em produção'),
                ('f', 'Finalizadas'),
+               ('p63', 'Em produção, exceto 63-CD'),
+               ('f63', 'Finalizadas, incluindo 63-CD'),
                ]
     posicao = forms.ChoiceField(
         label='Posição da produção', choices=CHOICES, initial='t')
