@@ -1,3 +1,4 @@
+from pprint import pprint
 import re
 
 from django import forms
@@ -37,6 +38,16 @@ class O2BaseForm(forms.Form):
     def required_fields(self, fields):
         for field in fields:
             self.fields[field].required = True
+
+    def autofocus_field(self, field):
+        fields = list(self.fields)
+        for a_field in fields:
+            attrs = self.fields[a_field].widget.attrs
+            if a_field == field:
+                attrs.update({'autofocus': 'autofocus'})
+            else:
+                if 'autofocus' in attrs:
+                    attrs.pop('autofocus')
 
 
 class O2FieldRefForm(forms.Form):
