@@ -122,7 +122,9 @@ class ClienteForm(forms.Form):
 class ReferenciaForm(
         O2BaseForm,
         O2FieldRefForm):
-    pass
+
+    class Meta:
+        autofocus_field = 'ref'
 
 
 class CustoDetalhadoForm(
