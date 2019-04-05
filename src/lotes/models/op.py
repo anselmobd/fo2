@@ -210,7 +210,7 @@ def posicao_op(cursor, op):
           0 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , sum(l.QTDE_PECAS_PROD) QTD
         , 'FINALIZADO 1A.' TIPO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
         FROM ops o
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = o.op
@@ -226,16 +226,16 @@ def posicao_op(cursor, op):
         UNION
         --
         SELECT
-          0 + l.SEQUENCIA_ESTAGIO SEQUENCIA
-        , sum(l.QTDE_PECAS_PROD + QTDE_PECAS_2A) QTD
-        , 'FINALIZADO 1A.' TIPO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+          1000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
+        , sum(QTDE_PECAS_2A) QTD
+        , 'FINALIZADO 2A.' TIPO
+        , l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
         FROM ops o
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = o.op
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-        WHERE (l.QTDE_PECAS_PROD + QTDE_PECAS_2A) <> 0
+        WHERE (QTDE_PECAS_2A) <> 0
           AND l.SEQUENCIA_ESTAGIO = o.MAXSEQ
         GROUP BY
           l.SEQUENCIA_ESTAGIO
@@ -248,7 +248,7 @@ def posicao_op(cursor, op):
           2000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , sum(l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO) QTD
         , 'A PRODUZIR' TIPO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
         FROM ops o
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = o.op
@@ -266,7 +266,7 @@ def posicao_op(cursor, op):
           3000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , sum(l.QTDE_CONSERTO) QTD
         , 'EM CONSERTO' TIPO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
         FROM ops o
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = o.op
@@ -284,7 +284,7 @@ def posicao_op(cursor, op):
           4000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , sum(l.QTDE_PERDAS) QTD
         , 'PERDAS' TIPO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
         FROM ops o
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = o.op
