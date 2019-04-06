@@ -55,21 +55,17 @@ class BuscaForm(FiltroForm):
         return cor
 
 
-class GtinForm(forms.Form):
-    ref = forms.CharField(
-        label='Referência', max_length=5, min_length=5, required=False,
-        widget=forms.TextInput(attrs={'type': 'string',
-                               'autofocus': 'autofocus'}))
+class GtinForm(
+        O2BaseForm,
+        O2FieldRefForm):
+
     gtin = forms.CharField(
         label='GTIN', max_length=13, min_length=13, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
-    def clean_ref(self):
-        ref = self.cleaned_data['ref'].upper()
-        data = self.data.copy()
-        data['ref'] = ref
-        self.data = data
-        return ref
+    class Meta:
+        order_fields = ['ref', 'gtin']
+        autofocus_field = 'ref'
 
 
 class ProdutoForm(forms.ModelForm):
