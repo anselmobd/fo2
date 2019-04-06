@@ -6,8 +6,19 @@ from django import forms
 
 from fo2 import settings
 from produto.models import Colecao
+from base.forms import \
+    O2BaseForm, \
+    O2FieldFiltroForm
 
 from insumo.models import ContaEstoque, Periodo
+
+
+class FiltroForm(
+        O2BaseForm,
+        O2FieldFiltroForm):
+
+    class Meta:
+        autofocus_field = 'filtro'
 
 
 class RefForm(forms.Form):

@@ -15,8 +15,8 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if busca %}
-  <h2>Filtro: {{ busca }}</h2>
+{% if filtro %}
+  <h2>Filtro: {{ filtro }}</h2>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>

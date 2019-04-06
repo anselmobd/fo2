@@ -21,7 +21,6 @@ from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 from fo2.template import group_rowspan
 
 from geral.models import Dispositivos, RoloBipado
-from utils.forms import FiltroForm
 from utils.functions import segunda, max_not_None, min_not_None
 from utils.views import totalize_grouped_data
 
@@ -39,7 +38,8 @@ from .forms import \
     ReceberForm, \
     MapaPorSemanaForm, \
     MapaPorSemanaNewForm, \
-    MapaSemanalForm
+    MapaSemanalForm, \
+    FiltroForm
 
 
 def index(request):
@@ -174,11 +174,11 @@ class Busca(View):
     template_name = 'insumo/busca.html'
     title_name = 'Listagem de insumos'
 
-    def mount_context(self, cursor, busca):
-        context = {'busca': busca}
+    def mount_context(self, cursor, filtro):
+        context = {'filtro': filtro}
 
         # Informações básicas
-        data = queries.lista_insumo(cursor, busca)
+        data = queries.lista_insumo(cursor, filtro)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum insumo selecionado',
@@ -197,7 +197,7 @@ class Busca(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'busca' in kwargs:
+        if 'filtro' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
             context = {'titulo': self.title_name}
@@ -208,12 +208,12 @@ class Busca(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'busca' in kwargs:
-            form.data['busca'] = kwargs['busca']
+        if 'filtro' in kwargs:
+            form.data['filtro'] = kwargs['filtro']
         if form.is_valid():
-            busca = form.cleaned_data['busca']
+            filtro = form.cleaned_data['filtro']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, busca))
+            context.update(self.mount_context(cursor, filtro))
         context['form'] = form
         return render(request, self.template_name, context)
 
