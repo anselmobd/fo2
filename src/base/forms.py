@@ -99,3 +99,13 @@ class O2FieldGtinForm(forms.Form):
 
     def clean_cor(self):
         return O2BaseForm.cleanner(self, 'gtin')
+
+
+class O2FieldFiltroForm(forms.Form):
+    filtro = forms.CharField(
+        required=False,
+        help_text='Busca vários valores separados por espaço.',
+        widget=forms.TextInput())
+
+    def clean_filtro(self):
+        return O2BaseForm.cleanner(self, 'filtro')
