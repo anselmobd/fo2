@@ -90,3 +90,12 @@ class O2FieldCorForm(forms.Form):
 
     def clean_cor(self):
         return O2BaseForm.cleanner_pad(self, 'cor', 6)
+
+
+class O2FieldGtinForm(forms.Form):
+    gtin = forms.CharField(
+        label='GTIN', max_length=13, min_length=13, required=False,
+        widget=forms.TextInput(attrs={'size': 13}))
+
+    def clean_cor(self):
+        return O2BaseForm.cleanner(self, 'gtin')
