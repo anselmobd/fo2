@@ -243,7 +243,7 @@ def stat_niveis(request, nivel):
 
 
 class Ref(View):
-    Form_class = forms.RefForm
+    Form_class = forms.ReferenciaForm
     template_name = 'produto/ref.html'
     title_name = 'Produto'
 
@@ -1054,7 +1054,7 @@ class GeraRoteirosPadraoRef(PermissionRequiredMixin, View):
 
 
 class InfoXml(View):
-    Form_class = forms.RefForm
+    Form_class = forms.ReferenciaForm
     template_name = 'produto/info_xml.html'
     title_name = 'Informações p/ NFe XML'
 
