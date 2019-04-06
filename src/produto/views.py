@@ -586,18 +586,18 @@ class Modelo(View):
 
 
 class Busca(View):
-    Form_class = forms.BuscaForm
+    Form_class = forms.FiltroRefForm
     template_name = 'produto/busca.html'
     title_name = 'Listagem de produtos'
 
-    def mount_context(self, cursor, busca, cor, roteiro, alternativa):
-        context = {'busca': busca}
+    def mount_context(self, cursor, filtro, cor, roteiro, alternativa):
+        context = {'filtro': filtro}
 
         if roteiro is None:
             roteiro = 0
         if alternativa is None:
             alternativa = 0
-        data = queries.busca_produto(cursor, busca, cor, roteiro, alternativa)
+        data = queries.busca_produto(cursor, filtro, cor, roteiro, alternativa)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum produto selecionado',
@@ -650,7 +650,7 @@ class Busca(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'busca' in kwargs:
+        if 'filtro' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
             context = {'titulo': self.title_name}
@@ -661,16 +661,16 @@ class Busca(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'busca' in kwargs:
-            form.data['busca'] = kwargs['busca']
+        if 'filtro' in kwargs:
+            form.data['filtro'] = kwargs['filtro']
         if form.is_valid():
-            busca = form.cleaned_data['busca']
+            filtro = form.cleaned_data['filtro']
             cor = form.cleaned_data['cor']
             roteiro = form.cleaned_data['roteiro']
             alternativa = form.cleaned_data['alternativa']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, busca, cor, roteiro, alternativa))
+                cursor, filtro, cor, roteiro, alternativa))
         context['form'] = form
         return render(request, self.template_name, context)
 

@@ -583,9 +583,9 @@ def modelo_inform(cursor, modelo):
     return rows_to_dict_list(cursor)
 
 
-def busca_produto(cursor, busca, cor, roteiro, alternativa):
+def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa):
     filtro = ''
-    for palavra in busca.split(' '):
+    for palavra in filtro_inteiro.split(' '):
         filtro += """--
               AND (  r.REFERENCIA LIKE '%{palavra}%'
                   OR r.DESCR_REFERENCIA LIKE '%{palavra}%'

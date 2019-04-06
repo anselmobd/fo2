@@ -7,9 +7,8 @@ from base.forms import \
     O2FieldRefForm, \
     O2FieldTamanhoForm, \
     O2FieldCorForm, \
-    O2FieldGtinForm
-
-from utils.forms import FiltroForm
+    O2FieldGtinForm, \
+    O2FieldFiltroForm
 
 from .models import Produto, S_Produto
 
@@ -21,10 +20,10 @@ class ModeloForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
-class BuscaForm(FiltroForm):
-    cor = forms.CharField(
-        max_length=6, required=False,
-        widget=forms.TextInput())
+class FiltroRefForm(
+        O2BaseForm,
+        O2FieldFiltroForm,
+        O2FieldCorForm):
 
     alternativa = forms.IntegerField(
         required=False,
@@ -34,12 +33,9 @@ class BuscaForm(FiltroForm):
         required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
-    def clean_cor(self):
-        cor = self.cleaned_data['cor'].upper()
-        data = self.data.copy()
-        data['cor'] = cor
-        self.data = data
-        return cor
+    class Meta:
+        order_fields = ['filtro', 'cor', 'alternativa', 'roteiro']
+        autofocus_field = 'filtro'
 
 
 class GtinForm(
