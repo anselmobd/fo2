@@ -6,7 +6,8 @@ from base.forms import \
     O2BaseForm, \
     O2FieldRefForm, \
     O2FieldTamanhoForm, \
-    O2FieldCorForm
+    O2FieldCorForm, \
+    O2FieldGtinForm
 
 from utils.forms import FiltroForm
 
@@ -57,11 +58,8 @@ class BuscaForm(FiltroForm):
 
 class GtinForm(
         O2BaseForm,
-        O2FieldRefForm):
-
-    gtin = forms.CharField(
-        label='GTIN', max_length=13, min_length=13, required=False,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        O2FieldRefForm,
+        O2FieldGtinForm):
 
     class Meta:
         order_fields = ['ref', 'gtin']
