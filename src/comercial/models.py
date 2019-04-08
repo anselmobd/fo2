@@ -1,4 +1,5 @@
 from pprint import pprint
+from datetime import datetime, timedelta
 
 from fo2.models import cursorF1, rows_to_dict_list, \
     rows_to_dict_list_lower
@@ -92,7 +93,16 @@ def ficha_cliente(cnpj):
     return rows_to_dict_list(cursor)
 
 
-def get_vendas_cor(cursor, ref):
+def get_vendas_cor(cursor, ref, periodo=None):
+    hoje = datetime.now().date()
+    ini_mes = hoje - timedelta(days=hoje.day-1)
+
+    filtra_periodo = ''
+    if periodo == '3m+':
+        ini_periodo = dec_months(ini_mes, 3).strftime('%Y-%m-%d')
+        filtra_periodo = "  AND v.dt >= TO_DATE('{}', 'yyyy-mm-dd')".format(
+            ini_periodo)
+
     sql = """
         WITH vendido AS
         (
@@ -159,7 +169,9 @@ def get_vendas_cor(cursor, ref):
     sql += """
         , v.COR
         FROM vendido v
-        WHERE v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
+        WHERE 1=1
+        --  AND v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
+        {filtra_periodo} -- filtra_periodo
         --  AND v.COL = 1
         --  AND v.MODELO = '417'
     """
@@ -194,5 +206,8 @@ def get_vendas_cor(cursor, ref):
     sql += """
         , v.COR
     """
+    sql = sql.format(
+        filtra_periodo=filtra_periodo,
+    )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
