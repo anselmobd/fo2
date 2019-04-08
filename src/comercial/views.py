@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
@@ -119,22 +121,51 @@ class VendasPorCor(O2BaseGetPostView):
             'ref': ref,
         })
         cursor = connections['so'].cursor()
-        data = models.get_vendas_cor(cursor, ref, periodo='3m+')
+
+        periodos = {
+            '3m+': '3 meses',
+            '6m+': '6 meses',
+            '12m+': '1 ano',
+            '24m+': '2 anos',
+        }
+        data = []
+        zero_data_row = {p: 0 for p in periodos.keys()}
+        total_data_row = zero_data_row.copy()
+
+        for periodo in periodos.keys():
+            data_periodo = models.get_vendas_cor(cursor, ref, periodo=periodo)
+            for row in data_periodo:
+                data_row = [dr for dr in data if dr['cor'] == row['cor']]
+                if len(data_row) == 0:
+                    data.append({
+                        'cor': row['cor'],
+                        **zero_data_row
+                    })
+                    data_row = data[len(data)-1]
+                else:
+                    data_row = data_row[0]
+                data_row[periodo] = row['qtd']
+                total_data_row[periodo] += row['qtd']
+
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Nenhuma venda encontrada',
             })
         else:
-            qtd_total = 0
             for row in data:
-                qtd_total += row['qtd']
-            for row in data:
-                row['distr'] = row['qtd'] / qtd_total * 100
-                row['distr|DECIMALS'] = 2
+                for periodo in periodos.keys():
+                    if total_data_row[periodo] > 0:
+                        row[periodo] = row[periodo] / total_data_row[periodo] * 100
+                    row['{}|DECIMALS'.format(periodo)] = 2
 
             self.context.update({
-                'headers': ['Cor', '%'],
-                'fields': ['cor', 'distr'],
-                'style': {2: 'text-align: right;'},
+                'headers': ['Cor', *periodos.values()],
+                'fields': ['cor', *periodos.keys()],
+                'style': {
+                    2: 'text-align: right;',
+                    3: 'text-align: right;',
+                    4: 'text-align: right;',
+                    5: 'text-align: right;',
+                },
                 'data': data,
             })

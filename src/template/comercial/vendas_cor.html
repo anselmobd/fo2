@@ -20,10 +20,6 @@
   {% if request.POST %}
     <h3>Filtro:</h3>
     <ul>
-      <li>Desde: 01/01/2019</li>
-      {% if cliente %}
-        <li>Filtro de cliente: {{cliente}}</li>
-      {% endif %}
       <li>Referência:
       {% if ref %}
           {{ref}}
