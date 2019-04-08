@@ -14,6 +14,30 @@ def inc_month(dt, months):
     return newdt
 
 
+def dec_month(dt, day=None):
+    if day is None:
+        day = dt.day
+    dt = dt.replace(day=1)
+    dt = dt - timedelta(days=1)
+    for _ in range(4):
+        try:
+            dt_return = dt.replace(day=day)
+            break
+        except Exception:
+            day -= 1
+    return dt_return
+
+
+def dec_months(dt, number, day=None):
+    if day is None:
+        day = dt.day
+    dt_return = dec_month(dt, day)
+    if number == 1:
+        return dt_return
+    else:
+        return dec_months(dt_return, number-1, day)
+
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
