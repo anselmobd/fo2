@@ -1,9 +1,13 @@
-__version__ = '0.1.143'
-__version__date__ = '01/04/2019'
+__version__ = '0.1.144'
+__version__date__ = '08/04/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.144 - 2019/04/08
+#   . Muitas coisas
+#   . Fechado para acesso externo
 #
 # - 0.1.143 - 2019/04/02
 #   . Muitas coisas
