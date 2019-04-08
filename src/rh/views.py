@@ -50,6 +50,11 @@ def fotos_2019_04_01_1o_cafe(request):
     return render(request, 'rh/fotos_2019_04_01_1o_cafe.html', context)
 
 
+def fotos_2019_03_lorena(request):
+    context = {'titulo': 'Funcionária Lorena homenageada'}
+    return render(request, 'rh/fotos_2019_03_lorena.html', context)
+
+
 def index(request):
     pensamentos = []
     dicas = [
