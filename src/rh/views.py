@@ -45,6 +45,11 @@ def fotos_20180720_dia_do_amigo(request):
     return render(request, 'rh/20180720_dia_do_amigo.html', context)
 
 
+def fotos_2019_04_01_1o_cafe(request):
+    context = {'titulo': '1º Café com RH de 2019'}
+    return render(request, 'rh/fotos_2019_04_01_1o_cafe.html', context)
+
+
 def index(request):
     pensamentos = []
     dicas = [
