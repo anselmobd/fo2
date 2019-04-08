@@ -1,6 +1,7 @@
 import re
 
 from django.shortcuts import redirect
+from django.http import HttpResponse
 
 from fo2 import settings
 
