@@ -39,7 +39,7 @@ from .forms import \
     MapaPorSemanaForm, \
     MapaPorSemanaNewForm, \
     MapaSemanalForm, \
-    FiltroForm
+    FiltroMpForm
 
 
 def index(request):
@@ -170,7 +170,7 @@ class Ref(View):
 
 
 class Busca(View):
-    Form_class = FiltroForm
+    Form_class = FiltroMpForm
     template_name = 'insumo/busca.html'
     title_name = 'Listagem de insumos'
 
