@@ -122,17 +122,13 @@ class VendasPorCor(O2BaseGetPostView):
         })
         cursor = connections['so'].cursor()
 
-        periodos = {
-            '3m+': '3 meses',
-            '6m+': '6 meses',
-            '12m+': '1 ano',
-            '24m+': '2 anos',
-        }
+        periodos = ['3m+', '6m+', '12m+', '24m+']
+        periodos_descr = ['3 meses', '6 meses', '1 ano', '2 anos']
         data = []
-        zero_data_row = {p: 0 for p in periodos.keys()}
+        zero_data_row = {p: 0 for p in periodos}
         total_data_row = zero_data_row.copy()
 
-        for periodo in periodos.keys():
+        for periodo in periodos:
             data_periodo = models.get_vendas_cor(cursor, ref, periodo=periodo)
             for row in data_periodo:
                 data_row = [dr for dr in data if dr['cor'] == row['cor']]
@@ -153,14 +149,14 @@ class VendasPorCor(O2BaseGetPostView):
             })
         else:
             for row in data:
-                for periodo in periodos.keys():
+                for periodo in periodos:
                     if total_data_row[periodo] > 0:
-                        row[periodo] = row[periodo] / total_data_row[periodo] * 100
+                        row[periodo] /= (total_data_row[periodo] / 100)
                     row['{}|DECIMALS'.format(periodo)] = 2
 
             self.context.update({
-                'headers': ['Cor', *periodos.values()],
-                'fields': ['cor', *periodos.keys()],
+                'headers': ['Cor', *periodos_descr],
+                'fields': ['cor', *periodos],
                 'style': {
                     2: 'text-align: right;',
                     3: 'text-align: right;',
