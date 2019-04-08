@@ -5,6 +5,8 @@ from django.http import HttpResponse
 
 from fo2 import settings
 
+from utils.functions import get_client_ip
+
 
 try:
     from django.utils.deprecation import MiddlewareMixin
@@ -56,5 +58,5 @@ class NeedToLoginOrLocalMiddleware(object):
         if liberated_by_url:
             return self.get_response(request)
 
-        return HttpResponse("Your IP is : {}".format(user_ip))
+        return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
         return redirect(settings.N2LOL_REDIRECT)
