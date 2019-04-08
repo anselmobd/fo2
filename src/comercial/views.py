@@ -119,7 +119,7 @@ class VendasPorCor(O2BaseGetPostView):
             'ref': ref,
         })
         cursor = connections['so'].cursor()
-        data = models.get_vendas_cor(cursor, ref)
+        data = models.get_vendas_cor(cursor, ref, periodo='3m+')
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Nenhuma venda encontrada',
