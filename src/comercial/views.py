@@ -6,6 +6,8 @@ from django.views import View
 
 from base.views import O2BaseGetPostView
 
+import produto.queries
+
 import comercial.forms as forms
 import comercial.models as models
 
@@ -121,6 +123,21 @@ class VendasPorCor(O2BaseGetPostView):
             'ref': ref,
         })
         cursor = connections['so'].cursor()
+
+        if ref == '':
+            descricao = ''
+        else:
+            # Informações básicas
+            data = produto.queries.ref_inform(cursor, ref)
+            if len(data) == 0:
+                context.update({
+                    'msg_erro': 'Referência não encontrada',
+                })
+            else:
+                descricao = data[0]['DESCR']
+        self.context.update({
+            'descricao': descricao,
+        })
 
         periodos = ['3m+', '6m+', '12m+', '24m+']
         periodos_descr = ['3 meses', '6 meses', '1 ano', '2 anos']
