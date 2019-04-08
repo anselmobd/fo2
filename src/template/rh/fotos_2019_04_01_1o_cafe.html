@@ -1,0 +1,26 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<h4>O Café com RH foi uma iniciativa do setor de Recursos Humanos, com base em reunir os empregados novos e antigos para uma bate-papo descontraído sobre diversos assuntos, a fim de promover uma cultura positiva, proativa e um bom clima organizacional.</h4>
+<p>
+  <a target="_blank" href="/media/rh/fotos/2019_04_01_1o_cafe/IMG_1097.JPG"><img src="/media/rh/fotos/2019_04_01_1o_cafe/thumb.IMG_1097.JPG"></a>
+  <a target="_blank" href="/media/rh/fotos/2019_04_01_1o_cafe/IMG_1098.JPG"><img src="/media/rh/fotos/2019_04_01_1o_cafe/thumb.IMG_1098.JPG"></a>
+  <a target="_blank" href="/media/rh/fotos/2019_04_01_1o_cafe/IMG_1099.JPG"><img src="/media/rh/fotos/2019_04_01_1o_cafe/thumb.IMG_1099.JPG"></a>
+  <a target="_blank" href="/media/rh/fotos/2019_04_01_1o_cafe/IMG_1100.JPG"><img src="/media/rh/fotos/2019_04_01_1o_cafe/thumb.IMG_1100.JPG"></a>
+  <a target="_blank" href="/media/rh/fotos/2019_04_01_1o_cafe/IMG_1101.JPG"><img src="/media/rh/fotos/2019_04_01_1o_cafe/thumb.IMG_1101.JPG"></a>
+</p>
+</center>
+{% endblock %}
