@@ -100,10 +100,17 @@ def get_vendas_cor(cursor, ref, periodo=None):
     ini_mes = hoje - timedelta(days=hoje.day-1)
 
     filtra_periodo = ''
-    if periodo == '3m+':
-        ini_periodo = dec_months(ini_mes, 3).strftime('%Y-%m-%d')
+    if periodo is not None:
+        if periodo == '3m+':
+            ini_periodo = dec_months(ini_mes, 3)
+        elif periodo == '6m+':
+            ini_periodo = dec_months(ini_mes, 6)
+        elif periodo == '12m+':
+            ini_periodo = dec_months(ini_mes, 12)
+        elif periodo == '24m+':
+            ini_periodo = dec_months(ini_mes, 24)
         filtra_periodo = "  AND v.dt >= TO_DATE('{}', 'yyyy-mm-dd')".format(
-            ini_periodo)
+            ini_periodo.strftime('%Y-%m-%d'))
 
     sql = """
         WITH vendido AS
