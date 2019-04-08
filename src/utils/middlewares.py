@@ -38,7 +38,8 @@ class NeedToLoginOrLocalMiddleware(object):
         if request.user.is_authenticated:
             return self.get_response(request)
 
-        user_ip = request.META['REMOTE_ADDR']
+        # user_ip = request.META['REMOTE_ADDR']
+        user_ip = get_client_ip(request)
         authenticated_by_ip = False
         for ip in settings.N2LOL_ALLOWED_IP_BLOCKS:
             authenticated_by_ip = \
