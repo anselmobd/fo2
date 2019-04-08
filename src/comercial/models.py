@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from fo2.models import cursorF1, rows_to_dict_list, \
     rows_to_dict_list_lower
 
+from utils.functions import dec_months
+
 
 def busca_clientes(cnpj):
     cursor = cursorF1()

@@ -18,7 +18,7 @@ def dec_month(dt, day=None):
     if day is None:
         day = dt.day
     dt = dt.replace(day=1)
-    dt = dt - timedelta(days=1)
+    dt = dt - datetime.timedelta(days=1)
     for _ in range(4):
         try:
             dt_return = dt.replace(day=day)
