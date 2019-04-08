@@ -56,5 +56,5 @@ class NeedToLoginOrLocalMiddleware(object):
         if liberated_by_url:
             return self.get_response(request)
 
-        return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
+        return HttpResponse("Your IP is : {}".format(user_ip))
         return redirect(settings.N2LOL_REDIRECT)
