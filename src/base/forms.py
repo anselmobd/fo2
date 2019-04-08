@@ -26,6 +26,12 @@ class O2BaseForm(forms.Form):
         self.data = data
         return field
 
+    def upper(self, field_name):
+        field = self.cleaned_data[field_name]
+        if field != '':
+            field = field.upper()
+        return self.saver(field_name, field)
+
     def cleanner_field(self, field):
         field = field.upper()
         field = re.search('[A-Z0-9]+', field).group(0)
@@ -108,4 +114,4 @@ class O2FieldFiltroForm(forms.Form):
         widget=forms.TextInput())
 
     def clean_filtro(self):
-        return O2BaseForm.cleanner(self, 'filtro')
+        return O2BaseForm.upper(self, 'filtro')
