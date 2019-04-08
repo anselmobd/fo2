@@ -1,0 +1,26 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<h4>A funcionária Lorena recebeu uma homenagem no Conselho Regional de Contabilidade o mérito de formanda destaque por ter concluído com
+coeficiente de rendimento de maior destaque o bacharelado em Ciência Contábeis, sua 2ª graduação.</h4>
+<h4>Parabéns Lorena!</h4>
+<h4>Estamos orgulhosos em ter você conosco!</h4>
+<p>
+  <a target="_blank" href="/media/rh/fotos/2019_03_lorena/ISPU0300.JPG"><img src="/media/rh/fotos/2019_03_lorena/thumb.ISPU0300.JPG"></a>
+  <a target="_blank" href="/media/rh/fotos/2019_03_lorena/UFNR6263.JPG"><img src="/media/rh/fotos/2019_03_lorena/thumb.UFNR6263.JPG"></a>
+</p>
+</center>
+{% endblock %}
