@@ -13,7 +13,7 @@ from base.forms import \
 from insumo.models import ContaEstoque, Periodo
 
 
-class FiltroForm(
+class FiltroMpForm(
         O2BaseForm,
         O2FieldFiltroForm):
 
