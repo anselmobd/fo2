@@ -198,6 +198,11 @@ def ref_inform(cursor, ref):
         , r.CGC_CLIENTE_4 CNPJ4
         , r.CGC_CLIENTE_2 CNPJ2
         , cl.NOME_CLIENTE NOME
+        , cl.FANTASIA_CLIENTE
+          || ' (' || lpad(r.CGC_CLIENTE_9, 8, '0')
+          || '/' || lpad(r.CGC_CLIENTE_4, 4, '0')
+          || '-' || lpad(r.CGC_CLIENTE_2, 2, '0')
+          || ') ' || cl.NOME_CLIENTE CLIENTE
         , r.RESPONSAVEL STATUS
         , COALESCE(
           CASE WHEN r.REFERENCIA < 'C0000' THEN
