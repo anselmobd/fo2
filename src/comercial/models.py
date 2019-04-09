@@ -97,6 +97,17 @@ def ficha_cliente(cnpj):
 
 def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
 
+    select_col = ''
+    filtra_col = ''
+    group_col = ''
+    order_col = ''
+    if colecao is not None:
+        ref = None
+        select_col = ", v.COL"
+        filtra_col = "AND v.COL = '{}'".format(colecao)
+        group_col = ", v.COL"
+        order_col = ", v.COL"
+
     select_ref = ''
     filtra_ref = ''
     group_ref = ''
@@ -180,6 +191,7 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
           sum(v.qtd) qtd
         --, v.COLECAO
         --, v.MODELO
+          {select_col} -- select_col
           {select_ref} -- select_ref
           , v.COR
         FROM vendido v
@@ -188,26 +200,34 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
           {filtra_periodo} -- filtra_periodo
         --  AND v.COL = 1
         --  AND v.MODELO = '417'
+          {filtra_col} -- filtra_col
           {filtra_ref} -- filtra_ref
         GROUP BY
           1
         --  v.COLECAO
         --, v.MODELO
+        {group_col} -- group_col
         {group_ref} -- group_ref
         , v.COR
         ORDER BY
           1 DESC
         --, v.COLECAO
         --, v.MODELO
+        {order_col} -- order_col
         {order_ref} -- order_ref
         , v.COR
     """
     sql = sql.format(
+        select_col=select_col,
         select_ref=select_ref,
+        filtra_col=filtra_col,
         filtra_ref=filtra_ref,
         filtra_periodo=filtra_periodo,
+        group_col=group_col,
         group_ref=group_ref,
+        order_col=order_col,
         order_ref=order_ref,
     )
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
