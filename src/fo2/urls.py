@@ -55,6 +55,8 @@ urlpatterns = [
 
     url(r'^rh/', include('rh.urls', namespace='rh')),
 
+    url(r'^dp/', include('dp.urls', namespace='dp')),
+
     url(r'^cd/', include('cd.urls')),
 
     url(r'^estoque/', include('estoque.urls', namespace='estoque')),
