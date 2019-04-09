@@ -39,6 +39,9 @@ urlpatterns = [
     url(r'^fotos_2019_03_lorena/$', views.fotos_2019_03_lorena,
         name='fotos_2019_03_lorena'),
 
+    url(r'^media_2019_04_09_dicas/$', views.media_2019_04_09_dicas,
+        name='media_2019_04_09_dicas'),
+
     url(r'^aniversariantes/$',
         views.aniversariantes, name='aniversariantes_now'),
     url(r'^aniversariantes/(?P<ano>\d{4})/(?P<mes>\d{1,2})/?$',
