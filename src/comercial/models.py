@@ -108,6 +108,10 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
         group_col = ", v.COL"
         order_col = ", v.COL"
 
+    filtra_cliente = ''
+    if cliente is not None:
+        filtra_cliente = "AND v.CNPJ9 = '{}'".format(cliente)
+
     select_ref = ''
     filtra_ref = ''
     group_ref = ''
@@ -154,6 +158,7 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
         , inf.VALOR_UNITARIO PRECO
         , r.COLECAO COL
         , col.DESCR_COLECAO COLECAO
+        , r.CGC_CLIENTE_9 CNPJ9
         FROM FATU_050 nf -- nota fiscal da Tussor - capa
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = nf.NUM_NOTA_FISCAL
@@ -197,11 +202,12 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
         FROM vendido v
         WHERE 1=1
         --  AND v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
-          {filtra_periodo} -- filtra_periodo
         --  AND v.COL = 1
         --  AND v.MODELO = '417'
+          {filtra_cliente} -- filtra_cliente
           {filtra_col} -- filtra_col
           {filtra_ref} -- filtra_ref
+          {filtra_periodo} -- filtra_periodo
         GROUP BY
           1
         --  v.COLECAO
@@ -220,6 +226,7 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
     sql = sql.format(
         select_col=select_col,
         select_ref=select_ref,
+        filtra_cliente=filtra_cliente,
         filtra_col=filtra_col,
         filtra_ref=filtra_ref,
         filtra_periodo=filtra_periodo,
@@ -228,6 +235,5 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
         order_col=order_col,
         order_ref=order_ref,
     )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
