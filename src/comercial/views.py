@@ -127,6 +127,7 @@ class VendasPorCor(O2BaseGetPostView):
         descricao = ''
         codigo_colecao = ''
         colecao = ''
+        cliente_cnpj9 = ''
         cliente = ''
         if self.ref != '':
             # Informações básicas
@@ -140,6 +141,7 @@ class VendasPorCor(O2BaseGetPostView):
                 descricao = data[0]['DESCR']
                 codigo_colecao = data[0]['CODIGO_COLECAO']
                 colecao = data[0]['COLECAO']
+                cliente_cnpj9 = data[0]['CNPJ9']
                 cliente = data[0]['CLIENTE']
         self.context.update({
             'descricao': descricao,
@@ -156,7 +158,7 @@ class VendasPorCor(O2BaseGetPostView):
         else:
             grades.append(self.get_grade(self.ref, nome='da referência'))
             grades.append(self.get_grade(
-                self.ref, codigo_colecao, cliente, nome='da coleção para o cliente'))
+                self.ref, codigo_colecao, cliente_cnpj9, nome='da coleção para o cliente'))
         self.context.update({
             'grades': grades,
         })
