@@ -183,8 +183,8 @@ def index(request):
     links = [
         {'chamada': 'Escola do Trabalhador',
          'descricao':
-            'O Ministério do Trabalho tem cursos<br />'
-            'gratuitos em várias áreas, basta se<br />'
+            'O Ministério do Trabalho tem cursos '
+            'gratuitos em várias áreas, basta se '
             'inscrever e fazer os cursos on line.',
          'link': 'http://escolatrabalho.gov.br/'},
     ]
