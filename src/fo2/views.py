@@ -27,5 +27,9 @@ def myip_view(request):
     return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
 
 
+def ack_view(request):
+    return HttpResponse("Ack")
+
+
 class SystextilView(TemplateView):
     template_name = "oficial_systextil.html"

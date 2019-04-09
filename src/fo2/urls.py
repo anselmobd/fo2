@@ -7,7 +7,7 @@ from django.views.generic import RedirectView
 
 from .admin import intr_adm_site
 from .views import index_view, test_view, IntranetView, myip_view, \
-    SystextilView, ApoioAoErpView
+    SystextilView, ApoioAoErpView, ack_view
 
 
 admin.site.site_header = "Apoio ao ERP - Administração"
@@ -66,6 +66,8 @@ urlpatterns = [
     # Links utilitários
 
     url(r'^myip/', myip_view, name='myip'),
+
+    url(r'^ack$', ack_view, name='ack'),
 
     # Acesso a teste.html para testes de html e css
 
