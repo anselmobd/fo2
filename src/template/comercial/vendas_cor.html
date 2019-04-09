@@ -22,11 +22,19 @@
     <ul>
       <li>Referência:
       {% if ref %}
-          {{ref}} - {{descricao}}
+          {{ref}}
+          {% if descricao %}
+            - {{descricao}}
+          {% endif %}
       {% else %}
           Todas
       {% endif %}
       </li>
+      {% if cliente %}
+        <li>Cliente:
+          {{cliente}}
+        </li>
+      {% endif %}
     </ul>
   {% endif %}
   {% if msg_erro %}
