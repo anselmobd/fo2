@@ -124,19 +124,22 @@ class VendasPorCor(O2BaseGetPostView):
         })
         cursor = connections['so'].cursor()
 
-        if ref == '':
-            descricao = ''
-        else:
+        descricao = ''
+        cliente = ''
+        if ref != '':
             # Informações básicas
             data = produto.queries.ref_inform(cursor, ref)
             if len(data) == 0:
-                context.update({
+                self.context.update({
                     'msg_erro': 'Referência não encontrada',
                 })
+                return
             else:
                 descricao = data[0]['DESCR']
+                cliente = data[0]['CLIENTE']
         self.context.update({
             'descricao': descricao,
+            'cliente': cliente,
         })
 
         periodos = ['3m+', '6m+', '12m+', '24m+']
