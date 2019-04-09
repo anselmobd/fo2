@@ -6,7 +6,7 @@ import struct
 from pprint import pprint
 
 from django.template import Template, Context
-
+from django.core.exceptions import ValidationError
 from django.conf import settings
 
 
@@ -215,3 +215,15 @@ class Perf:
                 descr
                 ))
             self.last = time.perf_counter()
+
+
+class LowerCaseValidator(object):
+    def validate(self, password, user=None):
+        if password != password.lower():
+            raise ValidationError(
+                "Sua senha não pode ter maiúsculas.",
+                code='password_with_upper',
+            )
+
+    def get_help_text(self):
+        return "Sua senha não pode ter maiúsculas."
