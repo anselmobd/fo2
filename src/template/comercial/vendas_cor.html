@@ -48,7 +48,11 @@
   {% if grades %}
     {%for grade in grades%}
       {% if grade.data %}
-        <h3>Distrubuição (%)</h3>
+        <h3>Distribuição
+          {% if grade.nome %}
+            {{grade.nome}}
+          {% endif %}
+          (%)</h3>
         <table>
           {% include "layout/thead_generic.html" with data=grade.headers style=grade.style only %}
           {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data style=grade.style only %}

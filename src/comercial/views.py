@@ -149,20 +149,27 @@ class VendasPorCor(O2BaseGetPostView):
         self.periodos_descr = ['3 meses', '6 meses', '1 ano', '2 anos']
 
         grades = []
-        for _ in range(1):
+        if self.ref == '':
             grades.append(self.get_grade())
+        else:
+            grades.append(self.get_grade(self.ref, nome='da referência'))
+            grades.append(self.get_grade(
+                self.ref, colecao, cliente, nome='da coleção para o cliente'))
         self.context.update({
             'grades': grades,
         })
 
-    def get_grade(self):
-        grade = {}
+    def get_grade(self, ref=None, colecao=None, cliente=None, nome=None):
+        grade = {
+            'nome': nome,
+        }
         data = []
         zero_data_row = {p: 0 for p in self.periodos}
         total_data_row = zero_data_row.copy()
         for periodo in self.periodos:
             data_periodo = models.get_vendas_cor(
-                self.cursor, self.ref, periodo=periodo)
+                self.cursor, ref=ref, periodo=periodo, colecao=colecao,
+                cliente=cliente)
             for row in data_periodo:
                 data_row = [dr for dr in data if dr['cor'] == row['cor']]
                 if len(data_row) == 0:
