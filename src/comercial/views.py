@@ -150,9 +150,13 @@ class VendasPorCor(O2BaseGetPostView):
 
         grades = []
         for _ in range(1):
-            self.get_data()
+            grades.append(self.get_grade())
+        self.context.update({
+            'grades': grades,
+        })
 
-    def get_data(self):
+    def get_grade(self):
+        grade = {}
         data = []
         zero_data_row = {p: 0 for p in self.periodos}
         total_data_row = zero_data_row.copy()
@@ -173,7 +177,7 @@ class VendasPorCor(O2BaseGetPostView):
                 total_data_row[periodo] += row['qtd']
 
         if len(data) == 0:
-            self.context.update({
+            grade.update({
                 'msg_erro': 'Nenhuma venda encontrada',
             })
         else:
@@ -183,7 +187,7 @@ class VendasPorCor(O2BaseGetPostView):
                         row[periodo] /= (total_data_row[periodo] / 100)
                     row['{}|DECIMALS'.format(periodo)] = 2
 
-            self.context.update({
+            grade.update({
                 'headers': ['Cor', *self.periodos_descr],
                 'fields': ['cor', *self.periodos],
                 'style': {
@@ -194,3 +198,4 @@ class VendasPorCor(O2BaseGetPostView):
                 },
                 'data': data,
             })
+        return grade
