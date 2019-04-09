@@ -79,7 +79,12 @@ MIDDLEWARE = [
 ]
 
 N2LOL_REDIRECT = 'intranet'
-N2LOL_ALLOWED_URLS = ['^/intranet/$', '^/accounts/login/.*$', ]
+N2LOL_ALLOWED_URLS = [
+    '^/intranet/$',
+    '^/accounts/login/.*$',
+    '^/rh/.*$',
+    '^/media/rh/.*$',
+]
 N2LOL_ALLOWED_IP_BLOCKS = ['^192\.168\.1\..+$', '^127\.0\.0\.1$']
 
 ROOT_URLCONF = 'fo2.urls'
