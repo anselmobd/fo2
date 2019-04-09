@@ -117,18 +117,19 @@ class VendasPorCor(O2BaseGetPostView):
 
     def mount_context(self):
         # cliente = self.form.cleaned_data['cliente']
-        ref = self.form.cleaned_data['ref']
+        self.ref = self.form.cleaned_data['ref']
         self.context.update({
             # 'cliente': cliente,
-            'ref': ref,
+            'ref': self.ref,
         })
-        cursor = connections['so'].cursor()
+        self.cursor = connections['so'].cursor()
 
         descricao = ''
+        colecao = ''
         cliente = ''
-        if ref != '':
+        if self.ref != '':
             # Informações básicas
-            data = produto.queries.ref_inform(cursor, ref)
+            data = produto.queries.ref_inform(self.cursor, self.ref)
             if len(data) == 0:
                 self.context.update({
                     'msg_erro': 'Referência não encontrada',
@@ -136,20 +137,28 @@ class VendasPorCor(O2BaseGetPostView):
                 return
             else:
                 descricao = data[0]['DESCR']
+                colecao = data[0]['COLECAO']
                 cliente = data[0]['CLIENTE']
         self.context.update({
             'descricao': descricao,
+            'colecao': colecao,
             'cliente': cliente,
         })
 
-        periodos = ['3m+', '6m+', '12m+', '24m+']
-        periodos_descr = ['3 meses', '6 meses', '1 ano', '2 anos']
-        data = []
-        zero_data_row = {p: 0 for p in periodos}
-        total_data_row = zero_data_row.copy()
+        self.periodos = ['3m+', '6m+', '12m+', '24m+']
+        self.periodos_descr = ['3 meses', '6 meses', '1 ano', '2 anos']
 
-        for periodo in periodos:
-            data_periodo = models.get_vendas_cor(cursor, ref, periodo=periodo)
+        grades = []
+        for _ in range(1):
+            self.get_data()
+
+    def get_data(self):
+        data = []
+        zero_data_row = {p: 0 for p in self.periodos}
+        total_data_row = zero_data_row.copy()
+        for periodo in self.periodos:
+            data_periodo = models.get_vendas_cor(
+                self.cursor, self.ref, periodo=periodo)
             for row in data_periodo:
                 data_row = [dr for dr in data if dr['cor'] == row['cor']]
                 if len(data_row) == 0:
@@ -169,14 +178,14 @@ class VendasPorCor(O2BaseGetPostView):
             })
         else:
             for row in data:
-                for periodo in periodos:
+                for periodo in self.periodos:
                     if total_data_row[periodo] > 0:
                         row[periodo] /= (total_data_row[periodo] / 100)
                     row['{}|DECIMALS'.format(periodo)] = 2
 
             self.context.update({
-                'headers': ['Cor', *periodos_descr],
-                'fields': ['cor', *periodos],
+                'headers': ['Cor', *self.periodos_descr],
+                'fields': ['cor', *self.periodos],
                 'style': {
                     2: 'text-align: right;',
                     3: 'text-align: right;',
