@@ -1138,8 +1138,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         })
 
         grades_total = models.grade_solicitacao(
-            cursor_def, None,
-            solicit_id=solicit_id)
+            cursor_def, solicit_id=solicit_id)
 
         context.update({
             'gt': grades_total,

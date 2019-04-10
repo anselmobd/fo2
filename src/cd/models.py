@@ -95,6 +95,9 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
     return rows_to_dict_list_lower(cursor)
 
 
+# referencia: None = grade total (da solicitação)
+#             string = filtra uma referência
+#             list = lista de referências
 # tipo: 1s = uma solicitação
 #            solicit_id é obrigatório
 #       s = todas as solicitação
@@ -107,7 +110,7 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
 #                   mesmo que o tipo seja outro
 # referencia: pode ser uma referência oi uma lista de referências
 def grade_solicitacao(
-        cursor, referencia, solicit_id=None, tipo='1s',
+        cursor, referencia=None, solicit_id=None, tipo='1s',
         grade_inventario=False):
 
     # Grade de solicitação
