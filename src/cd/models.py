@@ -113,7 +113,9 @@ def grade_solicitacao(
     # Grade de solicitação
     grade = GradeQtd(cursor)
 
-    if isinstance(referencia, str):
+    if referencia is None:
+        filter_referencia = '--'
+    elif isinstance(referencia, str):
         filter_referencia = "and l.referencia = '{}'".format(referencia)
     else:
         filter_referencia = "and l.referencia in ("

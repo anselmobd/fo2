@@ -1137,6 +1137,14 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'grades2': grades2,
         })
 
+        grades_total = models.grade_solicitacao(
+            cursor_def, None,
+            solicit_id=solicit_id)
+
+        context.update({
+            'gt': grades_total,
+        })
+
         return context
 
     def get(self, request, *args, **kwargs):
