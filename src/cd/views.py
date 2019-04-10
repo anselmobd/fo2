@@ -1130,18 +1130,24 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             context_ref = models.grade_solicitacao(
                 cursor_def, referencia['lote__referencia'],
                 solicit_id=solicit_id)
-
+            context_ref.update({
+                'style': {i: 'text-align: right;'
+                          for i in range(2, len(context_ref['fields'])+1)},
+            })
             grades2.append(context_ref)
 
         context.update({
             'grades2': grades2,
         })
 
-        grades_total = models.grade_solicitacao(
+        grade_total = models.grade_solicitacao(
             cursor_def, solicit_id=solicit_id)
-
+        grade_total.update({
+            'style': {i: 'text-align: right;'
+                      for i in range(2, len(grade_total['fields'])+1)},
+        })
         context.update({
-            'gt': grades_total,
+            'gt': grade_total,
         })
 
         return context
