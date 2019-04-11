@@ -455,9 +455,12 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
                     numeros.add(log['numero'])
 
                 nfs = NotaFiscal.objects
-                if posicao is not None:
+                if posicao is None:
+                    nfs = nfs.filter(
+                        numero__in=numeros).order_by('posicao__id', '-numero')
+                else:
                     nfs = nfs.filter(posicao_id=posicao.id)
-                nfs = nfs.filter(numero__in=numeros).order_by('-numero')
+                    nfs = nfs.filter(numero__in=numeros).order_by('-numero')
 
                 dados = list(nfs.values(*fields, 'posicao__nome'))
 
