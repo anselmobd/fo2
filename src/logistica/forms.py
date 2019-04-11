@@ -93,6 +93,6 @@ class NfPosicaoForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
     posicao = forms.ModelChoiceField(
-        label='Posição',
-        queryset=PosicaoCarga.objects.all().order_by(
-            'id'), initial=2)
+        label='Posição', required=False,
+        queryset=PosicaoCarga.objects.all().order_by('id'),
+        initial=2, empty_label='--Todas--')
