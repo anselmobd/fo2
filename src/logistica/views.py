@@ -132,9 +132,9 @@ class NotafiscalRel(View):
                 else:
                     row['venda'] = 'Não'
                 if row['ativa']:
-                    row['ativa'] = 'Sim'
+                    row['ativa'] = 'Ativa'
                 else:
-                    row['ativa'] = 'Não'
+                    row['ativa'] = 'Cancelada'
                 if row['nf_devolucao'] is None:
                     row['nf_devolucao'] = 'Não'
             if form['ordem'] == 'A':
@@ -262,10 +262,10 @@ class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
                 row['venda'] = 'Não'
             if row['ativa']:
                 status = 'ATIVA'
-                row['ativa'] = 'Sim'
+                row['ativa'] = 'Ativa'
             else:
                 status = 'CANCELADA'
-                row['ativa'] = 'Não'
+                row['ativa'] = 'Cancelada'
             if row['nf_devolucao'] is None:
                 row['nf_devolucao'] = 'Não'
                 nf_devolucao = ''
@@ -368,9 +368,9 @@ class NotafiscalEmbarcando(O2BaseGetView):
             else:
                 row['venda'] = 'Não'
             if row['ativa']:
-                row['ativa'] = 'Sim'
+                row['ativa'] = 'Ativa'
             else:
-                row['ativa'] = 'Não'
+                row['ativa'] = 'Cancelada'
             if row['nf_devolucao'] is None:
                 row['nf_devolucao'] = 'Não'
 
@@ -497,9 +497,9 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
                     else:
                         row['venda'] = 'Não'
                     if row['ativa']:
-                        row['ativa'] = 'Sim'
+                        row['ativa'] = 'Ativa'
                     else:
-                        row['ativa'] = 'Não'
+                        row['ativa'] = 'Cancelada'
                     if row['nf_devolucao'] is None:
                         row['nf_devolucao'] = 'Não'
 
