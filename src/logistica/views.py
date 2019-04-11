@@ -186,7 +186,7 @@ class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
         self.permission_required = 'logistica.can_beep_shipment'
         self.Form_class = NotafiscalChaveForm
         self.template_name = 'logistica/notafiscal_chave.html'
-        self.title_name = 'Informação sobre NF bipando DANFE'
+        self.title_name = 'Movimenta NF por chave'
         self.get_args = ['chave']
 
     def mount_context(self):
@@ -410,7 +410,8 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
         if data is None:
             if posicao.id != 2:
                 self.context.update({
-                    'msg_erro': 'Sem data, só pode pesquisar "Embarcando"'})
+                    'msg_erro': 'Sem data, '
+                                'só pode pesquisar "Entregue ao apoio"'})
                 return
 
         nfs_mov = PosicaoCargaAlteracaoLog.objects
