@@ -429,13 +429,19 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
         fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
 
         passo_context = []
-        for passo in range(2):
+        if posicao is None:
+            n_passos = 1
+        else:
+            n_passos = 2
+        for passo in range(n_passos):
             nfs_mov = PosicaoCargaAlteracaoLog.objects
             if data is not None:
                 nfs_mov = nfs_mov.filter(time__contains=data)
             if passo == 0:
-                descr = ' para a posição selecionada'
-                if posicao is not None:
+                if posicao is None:
+                    descr = ''
+                else:
+                    descr = ' para a posição selecionada'
                     nfs_mov = nfs_mov.filter(final=posicao)
             else:
                 descr = ' para fora da posição selecionada'
@@ -448,9 +454,11 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
                 for log in nfs_mov:
                     numeros.add(log['numero'])
 
-                nfs = NotaFiscal.objects.filter(
-                    posicao_id=posicao.id, numero__in=numeros
-                    ).order_by('-numero')
+                nfs = NotaFiscal.objects
+                if posicao is not None:
+                    nfs = nfs.filter(posicao_id=posicao.id)
+                nfs = nfs.filter(numero__in=numeros).order_by('-numero')
+
                 dados = list(nfs.values(*fields, 'posicao__nome'))
 
                 for row in dados:
