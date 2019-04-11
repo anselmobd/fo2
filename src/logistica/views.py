@@ -274,10 +274,10 @@ class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
                 status = 'DEVOLVIDA'
 
             acoes = []
-            if status == 'ATIVA':
-                pos_alt = list(PosicaoCargaAlteracao.objects.filter(
-                    inicial_id=row['posicao_id']).order_by('-ordem').values())
-                for alt in pos_alt:
+            pos_alt = list(PosicaoCargaAlteracao.objects.filter(
+                inicial_id=row['posicao_id']).order_by('-ordem').values())
+            for alt in pos_alt:
+                if (not alt['so_nfs_ativas']) or status == 'ATIVA':
                     acoes.append({
                         'name': 'alt_{}'.format(alt['id']),
                         'descr': alt['descricao'],
