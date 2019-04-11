@@ -140,6 +140,9 @@ class PosicaoCargaAlteracao(models.Model):
         verbose_name='Estado Final',
         related_name='posicao_final_set',
         on_delete=models.PROTECT)
+    so_nfs_ativas = models.BooleanField(
+        verbose_name='Só NFs ativas',
+        default=True)
 
     class Meta:
         db_table = "fo2_pos_carga_alt"
