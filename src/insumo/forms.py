@@ -10,7 +10,7 @@ from base.forms import \
     O2BaseForm, \
     O2FieldFiltroForm
 
-from insumo.models import ContaEstoque, Periodo
+from insumo.models import ContaEstoque, Periodo, TipoContaEstoque
 
 
 class FiltroMpForm(
@@ -20,7 +20,19 @@ class FiltroMpForm(
     conta_estoque = forms.ModelChoiceField(
         label='Conta de estoque do insumo', required=False,
         queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
-            'conta_estoque'), empty_label="(Todas)")
+            'conta_estoque'),
+        empty_label="(Todas)")
+
+    CHOICES = [(None, '--Todos--')]
+    tipos_ce = TipoContaEstoque.objects.all()
+    for tipo_ce in tipos_ce:
+        CHOICES.append((
+            tipo_ce.codigo,
+            '{}-{}'.format(tipo_ce.codigo, tipo_ce.descricao)
+        ))
+    tipo_conta_estoque = forms.ChoiceField(
+        label='Tipo de conta de estoque do insumo',
+        required=False, choices=CHOICES, initial=None)
 
     class Meta:
         autofocus_field = 'filtro'
