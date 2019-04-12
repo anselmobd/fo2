@@ -228,7 +228,8 @@ def pop(request, pop_assunto=None, id=None):
             instance = None
             context.update({'insert': True})
         if request.method == 'POST':
-            form = forms.PopForm(request.POST, request.FILES, instance=instance)
+            form = forms.PopForm(
+                request.POST, request.FILES, instance=instance)
             if form.is_valid():
                 form.save()
                 return redirect('geral:pop', pop_assunto)
