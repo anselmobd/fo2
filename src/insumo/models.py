@@ -100,3 +100,42 @@ class SugestaoCompraDatas(models.Model):
     class Meta:
         db_table = "fo2_sugestao_compra_datas"
         verbose_name = "Datas da sugestão de compra"
+
+
+class HDoc001(models.Model):
+    tipo = models.IntegerField(
+        primary_key=True)
+    codigo = models.IntegerField(
+        primary_key=True,
+        verbose_name='Código')
+    descricao = models.CharField(
+        verbose_name='Descrição')
+
+    def __str__(self):
+        return '{}-{}-{}'.format(self.tipo, self.codigo, self.descricao)
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "HDOC_001"
+        verbose_name = "Tabela auxiliar HDOC_001"
+
+
+class TipoContaEstoqueManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            TipoContaEstoqueManager, self).get_queryset().filter(tipo=420)
+
+
+class TipoContaEstoque(HDoc001):
+    objects = TipoContaEstoqueManager()
+
+    def __str__(self):
+        return '{}-{}'.format(self.codigo, self.descricao)
+
+    class Meta:
+        proxy = True
+        managed = False
+        app_label = 'systextil'
+        db_table = "HDOC_001"
+        verbose_name = "Tipo de conta de estoque"
