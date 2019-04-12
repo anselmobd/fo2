@@ -136,8 +136,7 @@ def ref_usado_em(cursor, nivel, ref):
     return rows_to_dict_list(cursor)
 
 
-def lista_insumo(cursor, busca):
-    # lista insumos
+def lista_insumo(cursor, busca, conta_estoque):
     filtro = ''
     for palavra in busca.split(' '):
         filtro += """
@@ -145,6 +144,13 @@ def lista_insumo(cursor, busca):
                   OR r.DESCR_REFERENCIA LIKE '%{}%'
                   )
         """.format(palavra, palavra)
+
+    filtro_conta_estoque = ''
+    if conta_estoque is not None:
+        filtro_conta_estoque += """
+              AND r.CONTA_ESTOQUE = {}
+        """.format(conta_estoque.conta_estoque)
+
     sql = """
         SELECT
           rownum NUM
@@ -158,12 +164,16 @@ def lista_insumo(cursor, busca):
         , r.DESCR_REFERENCIA DESCR
         FROM BASI_030 r
         WHERE r.NIVEL_ESTRUTURA in (2, 9)
-          {}
+          {filtro} -- filtro
+          {filtro_conta_estoque} -- filtro_conta_estoque
         ORDER BY
           r.NIVEL_ESTRUTURA
         , NLSSORT(r.REFERENCIA,'NLS_SORT=BINARY_AI')
         ) rr
-    """.format(filtro)
+    """.format(
+        filtro=filtro,
+        filtro_conta_estoque=filtro_conta_estoque,
+    )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
