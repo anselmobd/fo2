@@ -17,6 +17,11 @@ class FiltroMpForm(
         O2BaseForm,
         O2FieldFiltroForm):
 
+    conta_estoque = forms.ModelChoiceField(
+        label='Conta de estoque do insumo', required=False,
+        queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
+            'conta_estoque'), empty_label="(Todas)")
+
     class Meta:
         autofocus_field = 'filtro'
 
