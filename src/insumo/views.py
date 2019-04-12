@@ -174,11 +174,12 @@ class Busca(View):
     template_name = 'insumo/busca.html'
     title_name = 'Listagem de insumos'
 
-    def mount_context(self, cursor, filtro, conta_estoque):
+    def mount_context(self, cursor, filtro, conta_estoque, tipo_conta_estoque):
         context = {'filtro': filtro}
 
         # Informações básicas
-        data = queries.lista_insumo(cursor, filtro, conta_estoque)
+        data = queries.lista_insumo(
+            cursor, filtro, conta_estoque, tipo_conta_estoque)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum insumo selecionado',
@@ -215,8 +216,10 @@ class Busca(View):
         if form.is_valid():
             filtro = form.cleaned_data['filtro']
             conta_estoque = form.cleaned_data['conta_estoque']
+            tipo_conta_estoque = form.cleaned_data['tipo_conta_estoque']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, filtro, conta_estoque))
+            context.update(self.mount_context(
+                cursor, filtro, conta_estoque, tipo_conta_estoque))
         context['form'] = form
         return render(request, self.template_name, context)
 
