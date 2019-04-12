@@ -188,8 +188,10 @@ class Busca(View):
             for row in data:
                 row['LINK'] = reverse('insumo:ref__get', args=[row['REF']])
             context.update({
-                'headers': ('#', 'Nível', 'Referência', 'Descrição'),
-                'fields': ('NUM', 'NIVEL', 'REF', 'DESCR'),
+                'headers': ('#', 'Nível', 'Referência', 'Descrição',
+                            'Conta de estoque'),
+                'fields': ('NUM', 'NIVEL', 'REF', 'DESCR',
+                           'CONTA_ESTOQUE'),
                 'data': data,
                 'link': link,
             })

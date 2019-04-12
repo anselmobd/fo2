@@ -157,12 +157,16 @@ def lista_insumo(cursor, busca, conta_estoque):
         , rr.NIVEL
         , rr.REF
         , rr.DESCR
+        , rr.CONTA_ESTOQUE
         FROM (
         SELECT
           r.NIVEL_ESTRUTURA NIVEL
         , r.REFERENCIA REF
         , r.DESCR_REFERENCIA DESCR
+        , r.CONTA_ESTOQUE || '-' || ce.ce.DESCR_CT_ESTOQUE CONTA_ESTOQUE
         FROM BASI_030 r
+        LEFT JOIN BASI_150 ce
+          ON ce.CONTA_ESTOQUE = r.CONTA_ESTOQUE
         WHERE r.NIVEL_ESTRUTURA in (2, 9)
           {filtro} -- filtro
           {filtro_conta_estoque} -- filtro_conta_estoque
