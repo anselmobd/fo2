@@ -26,10 +26,12 @@
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
   </table>
-  <table>
-    {% include "layout/html_thead.html" with data=b2_headers only %}
-    {% include "layout/html_tbody.html" with fields=b2_fields data=b2_data only %}
-  </table>
+  {% if b2_data %}
+    <table>
+      {% include "layout/html_thead.html" with data=b2_headers only %}
+      {% include "layout/html_tbody.html" with fields=b2_fields data=b2_data only %}
+    </table>
+  {% endif %}
   {% if m_data %}
     <table>
       {% include "layout/html_thead.html" with data=m_headers only %}
