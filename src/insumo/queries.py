@@ -31,8 +31,13 @@ def item_count_nivel(cursor, ref, nivel=None):
 def ref_inform(cursor, nivel, ref):
     # Informações básicas
     sql = """
-        SELECT
+        SELECT DISTINCT
           r.DESCR_REFERENCIA DESCR
+        , f.NOME_FORNECEDOR
+          || ' (' || lpad(f.FORNECEDOR9, 8, '0')
+          || '/' || lpad(f.FORNECEDOR4, 4, '0')
+          || '-' || lpad(f.FORNECEDOR2, 2, '0')
+          || ')' FORNECEDOR
         , r.UNIDADE_MEDIDA || ' - ' || um.DESCR_UNIDADE UM
         , r.CONTA_ESTOQUE || ' - ' || ce.DESCR_CT_ESTOQUE CONTA_ESTOQUE
         , r.CLASSIFIC_FISCAL || ' - ' || cf.DESCR_CLASS_FISC NCM
@@ -61,15 +66,33 @@ def ref_inform(cursor, nivel, ref):
           ON cc.TIPO_CONTABIL = 3
          AND cc.CODIGO_CONTABIL = r.CODIGO_CONTABIL
         LEFT JOIN BASI_120 lin
-          ON lin.NIVEL_ESTRUTURA = 2
+          ON lin.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
          AND lin.LINHA_PRODUTO = r.LINHA_PRODUTO
         LEFT JOIN BASI_140 col
           ON col.COLECAO = r.COLECAO
         LEFT JOIN BASI_290 ac
-          ON ac.NIVEL_ESTRUTURA = 2
+          ON ac.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
          AND ac.ARTIGO = r.ARTIGO
+        LEFT JOIN supr_100 ipc -- item de pedido de compra
+          ON ipc.ITEM_100_NIVEL99 = r.NIVEL_ESTRUTURA
+         AND ipc.ITEM_100_GRUPO = r.REFERENCIA
+        LEFT JOIN supr_090 pc -- pedido de compra
+          ON pc.PEDIDO_COMPRA = ipc.NUM_PED_COMPRA
+        LEFT JOIN SUPR_010 f -- fornecedor
+          ON f.FORNECEDOR9 = pc.FORN_PED_FORNE9
+         AND f.FORNECEDOR4 = pc.FORN_PED_FORNE4
+         AND f.FORNECEDOR2 = pc.FORN_PED_FORNE2
         WHERE r.NIVEL_ESTRUTURA = %s
          AND r.REFERENCIA = %s
+         AND pc.DATETIME_PEDIDO =
+             ( SELECT
+                 max(pc2.DATETIME_PEDIDO)
+               FROM supr_090 pc2 -- pedido de compra
+               JOIN supr_100 ipc2 -- item de pedido de compra
+                 ON ipc2.NUM_PED_COMPRA = pc2.PEDIDO_COMPRA
+               WHERE ipc2.ITEM_100_NIVEL99 = r.NIVEL_ESTRUTURA
+                 AND ipc2.ITEM_100_GRUPO = r.REFERENCIA
+             )
     """
     cursor.execute(sql, [nivel, ref])
     return rows_to_dict_list(cursor)

@@ -91,6 +91,14 @@ class Ref(View):
             'data': data,
         })
 
+        # Informações básicas 2
+        data = queries.ref_inform(cursor, nivel, ref)
+        context.update({
+            'b2_headers': ['Último fornecedor'],
+            'b2_fields': ['FORNECEDOR'],
+            'b2_data': data,
+        })
+
         # Informações básicas - tecidos
         if nivel == '2':
             context.update({
@@ -177,7 +185,6 @@ class Busca(View):
     def mount_context(self, cursor, filtro, conta_estoque, tipo_conta_estoque):
         context = {'filtro': filtro}
 
-        # Informações básicas
         data = queries.lista_insumo(
             cursor, filtro, conta_estoque, tipo_conta_estoque)
         if len(data) == 0:
