@@ -33,11 +33,14 @@ def ref_inform(cursor, nivel, ref):
     sql = """
         SELECT DISTINCT
           r.DESCR_REFERENCIA DESCR
-        , f.NOME_FORNECEDOR
-          || ' (' || lpad(f.FORNECEDOR9, 8, '0')
-          || '/' || lpad(f.FORNECEDOR4, 4, '0')
-          || '-' || lpad(f.FORNECEDOR2, 2, '0')
-          || ')' FORNECEDOR
+        , CASE WHEN f.NOME_FORNECEDOR IS NULL THEN ''
+          ELSE
+            f.NOME_FORNECEDOR
+            || ' (' || lpad(f.FORNECEDOR9, 8, '0')
+            || '/' || lpad(f.FORNECEDOR4, 4, '0')
+            || '-' || lpad(f.FORNECEDOR2, 2, '0')
+            || ')'
+          END FORNECEDOR
         , r.UNIDADE_MEDIDA || ' - ' || um.DESCR_UNIDADE UM
         , r.CONTA_ESTOQUE || ' - ' || ce.DESCR_CT_ESTOQUE CONTA_ESTOQUE
         , r.CLASSIFIC_FISCAL || ' - ' || cf.DESCR_CLASS_FISC NCM
@@ -84,14 +87,16 @@ def ref_inform(cursor, nivel, ref):
          AND f.FORNECEDOR2 = pc.FORN_PED_FORNE2
         WHERE r.NIVEL_ESTRUTURA = %s
          AND r.REFERENCIA = %s
-         AND pc.DATETIME_PEDIDO =
-             ( SELECT
-                 max(pc2.DATETIME_PEDIDO)
-               FROM supr_090 pc2 -- pedido de compra
-               JOIN supr_100 ipc2 -- item de pedido de compra
-                 ON ipc2.NUM_PED_COMPRA = pc2.PEDIDO_COMPRA
-               WHERE ipc2.ITEM_100_NIVEL99 = r.NIVEL_ESTRUTURA
-                 AND ipc2.ITEM_100_GRUPO = r.REFERENCIA
+         AND ( pc.DATETIME_PEDIDO IS NULL OR
+               pc.DATETIME_PEDIDO =
+               ( SELECT
+                   max(pc2.DATETIME_PEDIDO)
+                 FROM supr_090 pc2 -- pedido de compra
+                 JOIN supr_100 ipc2 -- item de pedido de compra
+                   ON ipc2.NUM_PED_COMPRA = pc2.PEDIDO_COMPRA
+                 WHERE ipc2.ITEM_100_NIVEL99 = r.NIVEL_ESTRUTURA
+                   AND ipc2.ITEM_100_GRUPO = r.REFERENCIA
+               )
              )
     """
     cursor.execute(sql, [nivel, ref])

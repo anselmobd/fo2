@@ -91,13 +91,14 @@ class Ref(View):
             'data': data,
         })
 
-        # Informações básicas 2
-        data = queries.ref_inform(cursor, nivel, ref)
-        context.update({
-            'b2_headers': ['Último fornecedor'],
-            'b2_fields': ['FORNECEDOR'],
-            'b2_data': data,
-        })
+        if data[0]['FORNECEDOR'] is not None:
+            # Informações básicas 2
+            data = queries.ref_inform(cursor, nivel, ref)
+            context.update({
+                'b2_headers': ['Último fornecedor'],
+                'b2_fields': ['FORNECEDOR'],
+                'b2_data': data,
+            })
 
         # Informações básicas - tecidos
         if nivel == '2':
