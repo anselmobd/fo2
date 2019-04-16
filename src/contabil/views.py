@@ -286,8 +286,8 @@ class RemessaIndustrNF(View):
                               'NF_RET', 'DT_RET', 'QTD_RET'
                               )
                     style = {
-                        14: 'text-align: right;',
-                        17: 'text-align: right;',
+                        15: 'text-align: right;',
+                        18: 'text-align: right;',
                     }
                 else:
                     headers = ('NF. saída', 'Situação', 'Data saída', 'Facção',
@@ -300,7 +300,9 @@ class RemessaIndustrNF(View):
                               )
                     style = {}
 
-                group = ['NF', 'DT', 'FACCAO', 'OP', 'PED', 'PED_CLI', 'CLI']
+                group = [
+                    'NF', 'ATIVA', 'DT', 'FACCAO',
+                    'OP', 'PED', 'PED_CLI', 'CLI']
                 group_rowspan(data, group)
 
                 context.update({
