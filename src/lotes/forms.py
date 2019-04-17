@@ -389,9 +389,10 @@ class ExpedicaoForm(forms.Form):
         label='Depósito', choices=CHOICES, initial='-')
 
     CHOICES = [
-        ('r', 'Por referência'),
-        ('c', 'Por referência-cor-tamanho'),
-        ('p', 'Por Pedido (e qualidade de GTIN)'),
+        ('r', 'Por pedido-referência'),
+        ('c', 'Por pedido-referência-cor-tamanho'),
+        ('p', 'Por pedido (e qualidade de GTIN)'),
+        ('g', 'Por grade de referência'),
     ]
     detalhe = forms.ChoiceField(
         label='Detalhe', choices=CHOICES, initial='p')

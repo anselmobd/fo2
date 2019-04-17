@@ -43,11 +43,17 @@
 {% elif deposito == '102' %}
   <h4>Depósito: 102-PA Varejo</h4>
 {% endif %}
+<h4>Detalhe:
 {% if detalhe == 'r' %}
-  <h4>Quantidade por referência</h4>
-{% else %}
-  <h4>Quantidade por referência, cor e tamanho</h4>
+  Por pedido-referência
+{% elif detalhe == 'c' %}
+  Por pedido-referência-cor-tamanho
+{% elif detalhe == 'p' %}
+  Por pedido (e qualidade de GTIN)
+{% elif detalhe == 'g' %}
+  Por grade de referência
 {% endif %}
+</h4>
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}

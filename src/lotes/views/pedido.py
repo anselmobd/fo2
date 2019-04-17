@@ -143,6 +143,10 @@ class Expedicao(View):
             'deposito': deposito,
         }
 
+        if detalhe == 'g':
+
+            return context
+
         data = models.ped_expedicao(
             cursor,
             embarque_de=embarque_de,
