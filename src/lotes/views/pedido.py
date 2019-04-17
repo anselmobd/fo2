@@ -174,8 +174,8 @@ class Expedicao(View):
                     data_refs.append({
                         'ref': referencia,
                         'grade': {
-                            'headers': ['cor', 'tam', 'qtd'],
-                            'fields': ['cor', 'tam', 'qtd'],
+                            'headers': ['Tamanho', 'Cor', 'Quantidade'],
+                            'fields': ['tam', 'cor', 'qtd'],
                             'data': grade,
                         }
                     })

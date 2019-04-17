@@ -435,13 +435,13 @@ def grade_expedicao(
           {filtro_deposito} -- filtro_deposito
         GROUP BY
           i.CD_IT_PE_GRUPO
-        , i.CD_IT_PE_ITEM
         , t.ORDEM_TAMANHO
         , i.CD_IT_PE_SUBGRUPO
+        , i.CD_IT_PE_ITEM
         ORDER BY
           i.CD_IT_PE_GRUPO
-        , i.CD_IT_PE_ITEM
         , t.ORDEM_TAMANHO
+        , i.CD_IT_PE_ITEM
     """
     sql = sql.format(
         filtro_embarque_de=filtro_embarque_de,
