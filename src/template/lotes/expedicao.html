@@ -64,4 +64,13 @@
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
   </table>
 {% endif %}
+{% if data_refs %}
+  {% for data in data_refs %}
+    <h4>Referência: {{ data.ref }}</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=data.grade.headers style=data.grade.style only %}
+      {% include "layout/tbody_generic.html" with fields=data.grade.fields data=data.grade.data group=data.grade.group style=data.grade.style only %}
+    </table>
+  {% endfor %}
+{% endif %}
 {% endblock %}

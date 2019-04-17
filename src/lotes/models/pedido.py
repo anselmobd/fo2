@@ -451,6 +451,5 @@ def grade_expedicao(
         filtro_cliente=filtro_cliente,
         filtro_deposito=filtro_deposito,
     )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
