@@ -162,6 +162,7 @@ class Expedicao(View):
 
             referencia = None
             grade = []
+            quant = 0
             data_refs = []
             data.append({
                 'REF': 'ZZZZZ',
@@ -171,20 +172,29 @@ class Expedicao(View):
             })
             for row in data:
                 if referencia is not None and referencia != row['REF']:
+                    grade.append({
+                        'tam': '',
+                        'cor': 'Total',
+                        'qtd': quant,
+                        '|STYLE': 'font-weight: bold;'
+                    })
                     data_refs.append({
                         'ref': referencia,
                         'grade': {
                             'headers': ['Tamanho', 'Cor', 'Quantidade'],
                             'fields': ['tam', 'cor', 'qtd'],
                             'data': grade,
+                            'style': {3: 'text-align: right;'},
                         }
                     })
                     grade = []
+                    quant = 0
                 grade.append({
-                    'cor': row['COR'],
                     'tam': row['TAM'],
+                    'cor': row['COR'],
                     'qtd': row['QTD'],
                 })
+                quant += row['QTD']
                 referencia = row['REF']
             context.update({
                 'data_refs': data_refs,
