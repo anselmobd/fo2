@@ -268,9 +268,9 @@ class Expedicao(View):
             fields.append('TAM')
         fields.append('QTD')
 
-        quant_col = 6
-        if detalhe in ('r', 'c'):
-            quant_col += 1
+        quant_col = 7
+        # if detalhe in ('r', 'c'):
+        #     quant_col += 0
         if detalhe == 'c':
             quant_col += 2
         style = {quant_col: 'text-align: right;'}
