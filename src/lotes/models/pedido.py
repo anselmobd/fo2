@@ -196,7 +196,7 @@ def ped_expedicao(
 
     filtro_deposito = ''
     if deposito != '-':
-        filtro_cliente = '''--
+        filtro_deposito = '''--
             AND i.CODIGO_DEPOSITO = '{}'
             '''.format(deposito)
 
