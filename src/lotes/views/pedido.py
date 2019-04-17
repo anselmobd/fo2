@@ -161,22 +161,33 @@ class Expedicao(View):
                 return context
 
             referencia = None
-            quant = 0
-            data_r = []
+            grade = []
+            data_refs = []
+            data.append({
+                'REF': 'ZZZZZ',
+                'COR': '-',
+                'TAM': '-',
+                'QTD': 0,
+            })
             for row in data:
                 if referencia is not None and referencia != row['REF']:
-                    data_r.append({
+                    data_refs.append({
                         'ref': referencia,
-                        'quant': quant,
+                        'grade': {
+                            'headers': ['cor', 'tam', 'qtd'],
+                            'fields': ['cor', 'tam', 'qtd'],
+                            'data': grade,
+                        }
                     })
-                    quant = 0
-                quant += row['QTD']
+                    grade = []
+                grade.append({
+                    'cor': row['COR'],
+                    'tam': row['TAM'],
+                    'qtd': row['QTD'],
+                })
                 referencia = row['REF']
-            pprint(data_r)
             context.update({
-                'headers': ['ref', 'quant'],
-                'fields': ['ref', 'quant'],
-                'data': data_r,
+                'data_refs': data_refs,
             })
             return context
 
