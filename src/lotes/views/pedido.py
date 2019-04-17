@@ -1,3 +1,4 @@
+from pprint import pprint
 import copy
 
 from django.shortcuts import render
@@ -144,7 +145,39 @@ class Expedicao(View):
         }
 
         if detalhe == 'g':
+            data = models.grade_expedicao(
+                cursor,
+                embarque_de=embarque_de,
+                embarque_ate=embarque_ate,
+                pedido_tussor=pedido_tussor,
+                pedido_cliente=pedido_cliente,
+                cliente=cliente,
+                deposito=deposito,
+            )
+            if len(data) == 0:
+                context.update({
+                    'msg_erro': 'Nada selecionado',
+                })
+                return context
 
+            referencia = None
+            quant = 0
+            data_r = []
+            for row in data:
+                if referencia is not None and referencia != row['REF']:
+                    data_r.append({
+                        'ref': referencia,
+                        'quant': quant,
+                    })
+                    quant = 0
+                quant += row['QTD']
+                referencia = row['REF']
+            pprint(data_r)
+            context.update({
+                'headers': ['ref', 'quant'],
+                'fields': ['ref', 'quant'],
+                'data': data_r,
+            })
             return context
 
         data = models.ped_expedicao(
