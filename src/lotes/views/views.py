@@ -187,7 +187,7 @@ def get_estagios(cursor, context, periodo, ordem_confeccao):
         , l.QTDE_A_PRODUZIR_PACOTE Q_AP
         , l.CODIGO_FAMILIA FAMI
         , l.NUMERO_ORDEM OS
-        , coalesce(d.USUARIO_SYSTEXTIL, ' ') USU
+        , coalesce(u.USUARIO, ' ') USU
         , TO_CHAR(d.DATA_INSERCAO, 'DD/MM/YYYY HH24:MI') DT
         , coalesce(d.PROCESSO_SYSTEXTIL || ' - ' || p.DESCRICAO, ' ') PRG
         FROM PCPC_040 l
@@ -200,6 +200,8 @@ def get_estagios(cursor, context, periodo, ordem_confeccao):
         LEFT JOIN HDOC_036 p
           ON p.CODIGO_PROGRAMA = d.PROCESSO_SYSTEXTIL
          AND p.LOCALE = 'pt_BR'
+        LEFT JOIN HDOC_030 u
+          ON u.CODIGO_USUARIO = d.CODIGO_USUARIO
         WHERE l.PERIODO_PRODUCAO = %s
           AND l.ORDEM_CONFECCAO = %s
         ORDER BY
