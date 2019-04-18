@@ -466,7 +466,7 @@ def op_movi_estagios(cursor, op):
     sql = '''
         SELECT
           ll.EST
-        , u.USUARIO_SYSTEXTIL
+        , uu.USUARIO USUARIO_SYSTEXTIL
         , count(*) LOTES
         , CASE WHEN u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
                     u.QTDE_PERDAS + u.QTDE_CONSERTO < 0
@@ -502,6 +502,8 @@ def op_movi_estagios(cursor, op):
          AND u.PCPC040_ESTCONF = ll.CODIGO_ESTAGIO
          --AND u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
          --  u.QTDE_PERDAS + u.QTDE_CONSERTO <> 0
+        LEFT JOIN HDOC_030 uu
+          ON uu.CODIGO_USUARIO = u.CODIGO_USUARIO
         GROUP BY
           ll.SEQ_OPERACAO
         , ll.EST
@@ -511,13 +513,13 @@ def op_movi_estagios(cursor, op):
           ELSE 'BAIXA'
           END
         , u.PCPC040_ESTCONF
-        , u.USUARIO_SYSTEXTIL
+        , uu.USUARIO
         ORDER BY
           ll.SEQ_OPERACAO
         , 5 -- DT_MIN
         , 4 -- MOVIMENTO
         , 3 DESC -- LOTES
-        , u.USUARIO_SYSTEXTIL
+        , uu.USUARIO
     '''
     cursor.execute(sql, [op])
     return rows_to_dict_list(cursor)
