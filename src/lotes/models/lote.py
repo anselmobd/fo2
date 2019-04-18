@@ -251,7 +251,7 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
         , l.QTDE_CONSERTO Q_CONSERTO
         , l.CODIGO_FAMILIA FAMI
         , l.NUMERO_ORDEM OS
-        , coalesce(d.USUARIO_SYSTEXTIL, ' ') USU
+        , coalesce(u.USUARIO, ' ') USU
         , TO_CHAR(d.DATA_INSERCAO, 'DD/MM/YYYY HH24:MI') DT
         , coalesce(d.PROCESSO_SYSTEXTIL || ' - ' || p.DESCRICAO, ' ') PRG
         FROM PCPC_040 l
@@ -264,6 +264,8 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
         LEFT JOIN HDOC_036 p
           ON p.CODIGO_PROGRAMA = d.PROCESSO_SYSTEXTIL
          AND p.LOCALE = 'pt_BR'
+        LEFT JOIN HDOC_030 u
+          ON u.CODIGO_USUARIO = d.CODIGO_USUARIO
         WHERE l.PERIODO_PRODUCAO = %s
           AND l.ORDEM_CONFECCAO = %s
         ORDER BY
@@ -317,13 +319,15 @@ def posicao_historico(cursor, periodo, ordem_confeccao):
         , h.QTDE_PECAS_2A Q_P2
         , h.QTDE_CONSERTO Q_C
         , h.QTDE_PERDAS Q_P
-        , coalesce(h.USUARIO_SYSTEXTIL, ' ') USU
+        , coalesce(u.USUARIO, ' ') USU
         , coalesce(h.PROCESSO_SYSTEXTIL, ' ') PRG
         , coalesce(p.DESCRICAO, ' ') PRG_DESCR
         FROM PCPC_045 h
         LEFT JOIN HDOC_036 p
           ON p.CODIGO_PROGRAMA = h.PROCESSO_SYSTEXTIL
          AND p.LOCALE = 'pt_BR'
+        LEFT JOIN HDOC_030 u
+          ON u.CODIGO_USUARIO = h.CODIGO_USUARIO
         WHERE h.PCPC040_PERCONF = %s
           AND h.PCPC040_ORDCONF = %s
         ORDER BY
