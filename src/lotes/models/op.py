@@ -466,7 +466,7 @@ def op_movi_estagios(cursor, op):
     sql = '''
         SELECT
           ll.EST
-        , uu.USUARIO USUARIO_SYSTEXTIL
+        , uu.USUARIO USU
         , count(*) LOTES
         , CASE WHEN u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
                     u.QTDE_PERDAS + u.QTDE_CONSERTO < 0

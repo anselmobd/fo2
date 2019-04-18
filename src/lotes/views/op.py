@@ -278,7 +278,7 @@ class Op(View):
                 'u_headers': ('Estagio', 'Movimento', 'De', 'Até',
                               'Usuário', 'Lotes'),
                 'u_fields': ('EST', 'MOV', 'DT_MIN', 'DT_MAX',
-                             'USUARIO_SYSTEXTIL', 'LOTES'),
+                             'USU', 'LOTES'),
                 'u_data': u_data,
             })
         return context
