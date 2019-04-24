@@ -10,7 +10,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Syncronizing Lotes'
-    __MAX_TASKS = 10
+    __MAX_TASKS = 1000
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -57,7 +57,7 @@ class Command(BaseCommand):
             GROUP BY
               lo.ORDEM_PRODUCAO
             ORDER BY
-              lo.ORDEM_PRODUCAO DESC
+              lo.ORDEM_PRODUCAO
         '''
         cursor_s.execute(sql)
         return self.iter_cursor(cursor_s)
@@ -78,7 +78,7 @@ class Command(BaseCommand):
             GROUP BY
               le.op
             ORDER BY
-              le.op DESC
+              le.op
         '''
         cursor_f.execute(sql)
         return self.iter_cursor(cursor_f)
