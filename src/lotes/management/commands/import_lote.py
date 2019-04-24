@@ -37,9 +37,9 @@ class Command(BaseCommand):
               lo.ORDEM_PRODUCAO op
             , sum(
                 ( 1
-                + lo.QTDE_PECAS_PROG
-                + lo.QTDE_EM_PRODUCAO_PACOTE
-                + lo.QTDE_PECAS_PROD
+                + lo.QTDE_PECAS_PROG * 2
+                + lo.QTDE_EM_PRODUCAO_PACOTE * 3
+                + lo.QTDE_PECAS_PROD * 5
                 )
               * (1 + lo.CODIGO_ESTAGIO)
               * (1 + mod(lo.ORDEM_CONFECCAO, 111))
@@ -116,9 +116,9 @@ class Command(BaseCommand):
               , max(le.SEQUENCIA_ESTAGIO) ULTIMA_SEQ_ESTAGIO
               , sum(
                   ( 1
-                  + le.QTDE_PECAS_PROG
-                  + le.QTDE_EM_PRODUCAO_PACOTE
-                  + le.QTDE_PECAS_PROD
+                  + le.QTDE_PECAS_PROG * 2
+                  + le.QTDE_EM_PRODUCAO_PACOTE * 3
+                  + le.QTDE_PECAS_PROD * 5
                   )
                 * (1 + le.CODIGO_ESTAGIO)
                 * (1 + mod(le.ORDEM_CONFECCAO, 111))
