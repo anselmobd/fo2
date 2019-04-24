@@ -57,7 +57,7 @@ class Command(BaseCommand):
             GROUP BY
               lo.ORDEM_PRODUCAO
             ORDER BY
-              lo.ORDEM_PRODUCAO
+              lo.ORDEM_PRODUCAO DESC
         '''
         cursor_s.execute(sql)
         return self.iter_cursor(cursor_s)
@@ -78,7 +78,7 @@ class Command(BaseCommand):
             GROUP BY
               le.op
             ORDER BY
-              le.op
+              le.op DESC
         '''
         cursor_f.execute(sql)
         return self.iter_cursor(cursor_f)
