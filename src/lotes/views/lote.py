@@ -16,7 +16,7 @@ class Posicao(View):
     template_name = 'lotes/posicao.html'
     title_name = 'Posição do lote'
 
-    def mount_context(self, cursor, periodo, ordem_confeccao):
+    def mount_context(self, cursor, periodo, ordem_confeccao, lote):
         context = {}
 
         data = models.posicao2_lote(cursor, periodo, ordem_confeccao)
@@ -223,6 +223,23 @@ class Posicao(View):
         #     'e_data': data,
         # })
 
+        slq = models.SolicitaLoteQtd.objects.filter(
+            lote__lote=lote,
+            ).order_by('-create_at').values(
+            'solicitacao_id', 'solicitacao__codigo', 'create_at', 'qtd')
+        slq_link = ('solicitacao__codigo')
+        for row in slq:
+            row['LINK'] = reverse(
+                'cd_solicitacao_detalhe', args=[row['solicitacao_id']])
+        context.update({
+            'slq_headers': (
+                'Solicidação', 'Data', 'Quantidade'),
+            'slq_fields': (
+                'solicitacao__codigo', 'create_at', 'qtd'),
+            'slq_data': slq,
+            'slq_link': slq_link,
+        })
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -249,7 +266,8 @@ class Posicao(View):
                 context['erro'] = '.'
             else:
                 context['lote'] = lote
-                data = self.mount_context(cursor, periodo, ordem_confeccao)
+                data = self.mount_context(
+                    cursor, periodo, ordem_confeccao, lote)
                 context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)

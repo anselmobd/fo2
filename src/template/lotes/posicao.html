@@ -77,6 +77,13 @@
     {% include "layout/html_thead.html" with data=e_headers only %}
     {% include "layout/html_tbody_group.html" with fields=e_fields data=e_data group=e_group only %}
   </table>
+  {% if slq_data %}
+    <h3>Solicitações</h3>
+    <table>
+      {% include "layout/html_thead.html" with data=slq_headers only %}
+      {% include "layout/html_tbody_link.html" with fields=slq_fields data=slq_data link=slq_link only %}
+    </table>
+  {% endif %}
 {% endif %}
 {% endblock content %}
 
