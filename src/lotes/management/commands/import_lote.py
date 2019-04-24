@@ -12,6 +12,11 @@ class Command(BaseCommand):
     help = 'Syncronizing Lotes'
     __MAX_TASKS = 10
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '-o', '--op', type=int,
+            help='Indica uma OP específica a ser tratada')
+
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
 
@@ -43,6 +48,12 @@ class Command(BaseCommand):
             JOIN PCPC_020 op -- OP capa
               ON op.ordem_producao = lo.ORDEM_PRODUCAO
             WHERE op.SITUACAO <> 9 -- op.COD_CANCELAMENTO = 0
+        '''
+        if self.oponly is not None:
+            sql += '''--
+                  AND op.ordem_producao = {}
+            '''.format(self.oponly)
+        sql += '''--
             GROUP BY
               lo.ORDEM_PRODUCAO
             ORDER BY
@@ -58,6 +69,12 @@ class Command(BaseCommand):
               le.op
             , sum( le.trail ) trail
             FROM fo2_cd_lote le
+        '''
+        if self.oponly is not None:
+            sql += '''--
+                WHERE le.op = {}
+            '''.format(self.oponly)
+        sql += '''--
             GROUP BY
               le.op
             ORDER BY
@@ -296,6 +313,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
+
+        self.oponly = options['op']
+
         try:
 
             # pega no Systêxtil a lista OPs com um valor de teste de quantidade
