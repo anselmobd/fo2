@@ -10,7 +10,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Syncronizing Lotes'
-    __MAX_TASKS = 1000
+    __MAX_TASKS = 50
 
     def add_arguments(self, parser):
         parser.add_argument(
