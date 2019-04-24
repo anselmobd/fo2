@@ -16,6 +16,9 @@ class Command(BaseCommand):
         parser.add_argument(
             '-o', '--op', type=int,
             help='Indica uma OP específica a ser tratada')
+        parser.add_argument(
+            '-i', '--opini', type=int,
+            help='Indica a OP inicial do processamento')
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -53,6 +56,10 @@ class Command(BaseCommand):
             sql += '''--
                   AND op.ordem_producao = {}
             '''.format(self.oponly)
+        elif self.opini is not None:
+            sql += '''--
+                  AND op.ordem_producao >= {}
+            '''.format(self.opini)
         sql += '''--
             GROUP BY
               lo.ORDEM_PRODUCAO
@@ -74,6 +81,10 @@ class Command(BaseCommand):
             sql += '''--
                 WHERE le.op = {}
             '''.format(self.oponly)
+        elif self.opini is not None:
+            sql += '''--
+                WHERE le.op >= {}
+            '''.format(self.opini)
         sql += '''--
             GROUP BY
               le.op
@@ -315,6 +326,7 @@ class Command(BaseCommand):
         self.my_println('{}'.format(datetime.datetime.now()))
 
         self.oponly = options['op']
+        self.opini = options['opini']
 
         try:
 
