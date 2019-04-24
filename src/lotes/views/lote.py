@@ -226,16 +226,19 @@ class Posicao(View):
         slq = models.SolicitaLoteQtd.objects.filter(
             lote__lote=lote,
             ).order_by('-create_at').values(
-            'solicitacao_id', 'solicitacao__codigo', 'create_at', 'qtd')
+            'solicitacao_id', 'solicitacao__codigo', 'solicitacao__descricao',
+            'solicitacao__usuario__username', 'create_at', 'qtd')
         slq_link = ('solicitacao__codigo')
         for row in slq:
             row['LINK'] = reverse(
                 'cd_solicitacao_detalhe', args=[row['solicitacao_id']])
         context.update({
             'slq_headers': (
-                'Solicidação', 'Data', 'Quantidade'),
+                'Solicidação', 'Descrição',
+                'Usuário', 'Data', 'Quantidade'),
             'slq_fields': (
-                'solicitacao__codigo', 'create_at', 'qtd'),
+                'solicitacao__codigo', 'solicitacao__descricao',
+                'solicitacao__usuario__username', 'create_at', 'qtd'),
             'slq_data': slq,
             'slq_link': slq_link,
         })
