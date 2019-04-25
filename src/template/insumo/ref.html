@@ -63,37 +63,23 @@
       </td>
     </tr>
   </table>
-  <table>
-    <tr>
-      <td>
-        <h3>Parâmetros</h3>
-        {% if p_data %}
-          <table>
-            {% include "layout/html_thead.html" with data=p_headers only %}
-            {% include "layout/html_tbody.html" with fields=p_fields data=p_data only %}
-          </table>
-        {% else %}
-          <h4>Sem parâmetros!</h4>
-        {% endif %}
-        </td>
-      </td>
-    </tr>
-  </table>
-  <table>
-    <tr>
-      <td>
-        <h3>Usado em (Lista apenas referências com responsável)</h3>
-        {% if u_data %}
-          <table>
-            {% include "layout/html_thead.html" with data=u_headers only %}
-            {% include "layout/html_tbody_link.html" with fields=u_fields data=u_data link=u_link only %}
-          </table>
-        {% else %}
-          <h4>Não utilizado!</h4>
-        {% endif %}
-        </td>
-      </td>
-    </tr>
-  </table>
+  <h3>Parâmetros</h3>
+  {% if p_data %}
+    <table>
+      {% include "layout/html_thead.html" with data=p_headers only %}
+      {% include "layout/html_tbody.html" with fields=p_fields data=p_data only %}
+    </table>
+  {% else %}
+    <h4>Sem parâmetros!</h4>
+  {% endif %}
+  <h3>Usado em (Lista apenas referências com responsável)</h3>
+  {% if u_data %}
+    <table>
+      {% include "layout/html_thead.html" with data=u_headers only %}
+      {% include "layout/html_tbody_link.html" with fields=u_fields data=u_data link=u_link only %}
+    </table>
+  {% else %}
+    <h4>Não utilizado!</h4>
+  {% endif %}
 {% endif %}
 {% endblock %}
