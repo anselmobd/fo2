@@ -50,8 +50,11 @@ class Oracle:
             print('[Execute error] {}'.format(e))
             sys.exit(3)
 
-        return self.cursor.fetchall()
-
+        result = {
+            'fields': [f[0] for f in self.cursor.description],
+            'data': self.cursor.fetchall(),
+        }
+        return result
 
     def close(self):
         try:
@@ -62,18 +65,47 @@ class Oracle:
             print('[Closing error] {}'.format(e))
             sys.exit(4)
 
+
+class Inventario:
+
+    def __init__(self, ora):
+        self.ora = ora
+
+    def get_refs(self, nivel=None):
+        if nivel is None:
+            nivel = 9
+        sql = """
+            SELECT
+              r.REFERENCIA
+            FROM BASI_030 r
+            WHERE r.NIVEL_ESTRUTURA = :nivel
+              AND r.REFERENCIA NOT LIKE 'DV%'
+              AND rownum <= 10
+            ORDER BY
+              r.REFERENCIA
+        """
+        self.refs = self.ora.execute(sql, nivel=nivel)
+
+        pprint(self.refs['data'])
+        pprint(self.refs['fields'])
+
+
 if __name__ == '__main__':
     ora = Oracle()
     ora.connect()
 
-    sql = """
-        SELECT
-          u.USUARIO
-        FROM HDOC_030 u
-        WHERE u.CODIGO_USUARIO = :codigo
-    """
-    data = ora.execute(sql, codigo=99101)
+    # sql = """
+    #     SELECT
+    #       u.USUARIO
+    #     FROM HDOC_030 u
+    #     WHERE u.CODIGO_USUARIO = :codigo
+    # """
+    # data, fields = ora.execute(sql, codigo=99001)
 
-    pprint(data)
+    # pprint(fields)
+    # pprint(data)
+
+    inv = Inventario(ora)
+    inv.get_refs()
 
     ora.close()
