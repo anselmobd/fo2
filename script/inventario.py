@@ -74,6 +74,7 @@ class Inventario:
         self._refs = None
         self._ano = None
         self._mes = None
+        self._print_fields = True
 
     @property
     def nivel(self):
@@ -132,10 +133,12 @@ class Inventario:
 
     def get_invent(self):
         self.param_ok()
+        self._print_fields = True
         count = len(self._refs['data'])
         for i, values in enumerate(self._refs['data']):
             row = dict(zip(self._refs['keys'], values))
-            print('({}/{}) {}'.format(i+1, count, row['REFERENCIA']))
+            sys.stderr.write(
+                '({}/{}) {}\n'.format(i+1, count, row['REFERENCIA']))
             self.get_ref_invent(row['REFERENCIA'])
 
     def get_ref_invent(self, ref):
@@ -207,6 +210,9 @@ class Inventario:
 
         nkeys = len(ref_invent['keys'])
         mask = self.make_csv_mask(nkeys)
+        if self._print_fields:
+            print(mask.format(*ref_invent['keys']))
+            self._print_fields = False
         for values in ref_invent['data']:
             print(mask.format(*values))
 
