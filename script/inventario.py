@@ -51,7 +51,7 @@ class Oracle:
             sys.exit(3)
 
         result = {
-            'fields': [f[0] for f in self.cursor.description],
+            'keys': [f[0] for f in self.cursor.description],
             'data': self.cursor.fetchall(),
         }
         return result
@@ -69,43 +69,86 @@ class Oracle:
 class Inventario:
 
     def __init__(self, ora):
-        self.ora = ora
+        self._ora = ora
+        self._nivel = 9
+        self._refs = None
+        self._ano = None
+        self._mes = None
 
-    def get_refs(self, nivel=None):
+    @property
+    def nivel(self):
+        return self._nivel
+
+    @nivel.setter
+    def nivel(self, value):
+        self._nivel = value
+
+    @property
+    def ano(self):
+        return self._ano
+
+    @ano.setter
+    def ano(self, value):
+        self._ano = value
+
+    @property
+    def mes(self):
+        return self._mes
+
+    @mes.setter
+    def mes(self, value):
+        self._mes = value
+
+    def get_refs(self, nivel=None, rownum=None):
         if nivel is None:
-            nivel = 9
+            nivel = self.nivel
+        else:
+            self.nivel = nivel
+
+        rownum_filter = ''
+        if rownum is not None:
+            rownum_filter = 'AND rownum <= {}'.format(rownum)
+
         sql = """
             SELECT
               r.REFERENCIA
             FROM BASI_030 r
             WHERE r.NIVEL_ESTRUTURA = :nivel
               AND r.REFERENCIA NOT LIKE 'DV%'
-              AND rownum <= 10
+              {rownum_filter} -- rownum_filter
             ORDER BY
               r.REFERENCIA
-        """
-        self.refs = self.ora.execute(sql, nivel=nivel)
+        """.format(
+            rownum_filter=rownum_filter
+        )
+        self._refs = self._ora.execute(sql, nivel=self.nivel)
+        # pprint(self._refs['data'])
+        # pprint(self._refs['keys'])
 
-        pprint(self.refs['data'])
-        pprint(self.refs['fields'])
+    def param_ok(self):
+        if self.ano is None or \
+                self.mes is None or \
+                self._refs is None:
+            raise ValueError(
+                "Refs, ano e mes pós inventário devem ser informados")
+
+    def get_invent(self):
+        self.param_ok()
+        for values in self._refs['data']:
+            row = dict(zip(self._refs['keys'], values))
+            print(row['REFERENCIA'])
 
 
 if __name__ == '__main__':
     ora = Oracle()
     ora.connect()
 
-    # sql = """
-    #     SELECT
-    #       u.USUARIO
-    #     FROM HDOC_030 u
-    #     WHERE u.CODIGO_USUARIO = :codigo
-    # """
-    # data, fields = ora.execute(sql, codigo=99001)
-
-    # pprint(fields)
-    # pprint(data)
-
     inv = Inventario(ora)
-    inv.get_refs()
+    inv.nivel = 9
+    inv.get_refs(rownum=5)
+
+    inv.ano = 2019
+    inv.mes = 1
+    inv.get_invent()
 
     ora.close()
