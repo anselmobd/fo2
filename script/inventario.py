@@ -77,13 +77,14 @@ class Inventario:
         # inicialização fixa
         self._print_fields = True
 
-        # valor default
+        # parametros - valor default
         self._nivel = 9
-
-        # valor nulo
-        self._refs = None
+        self._ref = None
         self._ano = None
         self._mes = None
+
+        # outras variaveis utilizadas
+        self._refs = None
         self._mask = ''
 
     @property
@@ -93,6 +94,14 @@ class Inventario:
     @nivel.setter
     def nivel(self, value):
         self._nivel = value
+
+    @property
+    def ref(self):
+        return self._ref
+
+    @ref.setter
+    def ref(self, value):
+        self._ref = value
 
     @property
     def ano(self):
@@ -116,7 +125,10 @@ class Inventario:
         else:
             self.nivel = nivel
 
-        nivel_filter = 'AND r.NIVEL_ESTRUTURA = {}'.format(self.nivel)
+        nivel_filter = "AND r.NIVEL_ESTRUTURA = {}".format(self.nivel)
+        ref_filter = ""
+        if self.ref is not None:
+            ref_filter = "AND r.REFERENCIA = '{}'".format(self.ref)
 
         rownum_filter = ''
         if rownum is not None:
@@ -131,7 +143,7 @@ class Inventario:
             FROM BASI_030 r
             WHERE r.REFERENCIA NOT LIKE 'DV%'
               {nivel_filter} -- nivel_filter
-              -- AND r.REFERENCIA = 'CA010'
+              {ref_filter} -- ref_filter
             ORDER BY
               r.REFERENCIA
             )
@@ -141,6 +153,7 @@ class Inventario:
             {rownum_filter} -- rownum_filter
         """.format(
             nivel_filter=nivel_filter,
+            ref_filter=ref_filter,
             rownum_filter=rownum_filter,
         )
         # print(sql)
@@ -363,13 +376,17 @@ def parse_args():
         type=int,
         nargs='?',
         )
+    parser.add_argument(
+        "-r", "--ref",
+        type=str,
+        help='Força apenas esse referência')
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_args()
 
-    # print(args.rownum)
+    print(args.ref)
 
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
@@ -378,6 +395,7 @@ if __name__ == '__main__':
 
     inv = Inventario(ora)
     inv.nivel = args.nivel
+    inv.ref = args.ref
 
     inv.get_refs(rownum=args.rownum)
 
