@@ -143,18 +143,23 @@ class Inventario:
             self.get_ref_invent(row['NIVEL'], row['REF'])
 
     def get_ref_invent(self, nivel, ref):
+        fitro_data = '''--
+            AND e.DATA_MOVIMENTO < TO_DATE('{ano}-{mes}-01','YYYY-MM-DD')
+        '''.format(ano=self.ano, mes=self.mes)
+
         sql = """
             SELECT
-              e.NIVEL_ESTRUTURA
-            , e.GRUPO_ESTRUTURA
-            , e.SUBGRUPO_ESTRUTURA
-            , e.ITEM_ESTRUTURA
-            , e.CODIGO_DEPOSITO
-            , e.data_movimento
-            , e.sequencia_ficha
-            , e.saldo_fisico
-            , e.saldo_financeiro
-            , e.preco_medio_unitario
+              e.NIVEL_ESTRUTURA NIVEL
+            , e.GRUPO_ESTRUTURA REF
+            , r.DESCR_REFERENCIA REF_DESCR
+            , e.SUBGRUPO_ESTRUTURA TAM
+            , t.DESCR_TAM_REFER TAM_DESCR
+            , e.ITEM_ESTRUTURA COR
+            , i.DESCRICAO_15 COR_DESCR
+            , sum(e.saldo_fisico) QTD
+            , sum(e.saldo_financeiro)
+              / sum(e.saldo_fisico) PRECO
+            , 0 VALOR
             FROM estq_310 e
             JOIN (
               SELECT
@@ -177,7 +182,8 @@ class Inventario:
                 FROM estq_310 e
                 WHERE e.NIVEL_ESTRUTURA = :nivel
                   AND e.GRUPO_ESTRUTURA = :ref
-                  AND e.DATA_MOVIMENTO < TO_DATE('2019-01-01','YYYY-MM-DD')
+                  -- AND e.DATA_MOVIMENTO < TO_DATE('2019-01-01','YYYY-MM-DD')
+                  {fitro_data} -- fitro_data
                 GROUP BY
                   e.NIVEL_ESTRUTURA
                 , e.GRUPO_ESTRUTURA
@@ -206,8 +212,42 @@ class Inventario:
              and eseq.item_estrutura     = e.item_estrutura
              and eseq.data_busca         = e.data_movimento
              and eseq.SEQUENCIA_BUSCA    = e.SEQUENCIA_FICHA
-        """
-        ref_invent = self._ora.execute(sql, ref=ref, nivel=nivel)
+            JOIN basi_030 r
+              ON r.NIVEL_ESTRUTURA = e.NIVEL_ESTRUTURA
+             AND r.REFERENCIA = e.GRUPO_ESTRUTURA
+             AND r.DESCR_REFERENCIA NOT LIKE '-%'
+            JOIN basi_020 t
+              ON t.BASI030_NIVEL030 = e.NIVEL_ESTRUTURA
+             AND t.BASI030_REFERENC = e.GRUPO_ESTRUTURA
+             AND t.TAMANHO_REF = e.SUBGRUPO_ESTRUTURA
+             AND t.DESCR_TAM_REFER NOT LIKE '-%'
+            JOIN basi_010 i
+              ON i.NIVEL_ESTRUTURA = e.NIVEL_ESTRUTURA
+             AND i.GRUPO_ESTRUTURA = e.GRUPO_ESTRUTURA
+             AND i.SUBGRU_ESTRUTURA = e.SUBGRUPO_ESTRUTURA
+             AND i.ITEM_ESTRUTURA = e.ITEM_ESTRUTURA
+             AND i.DESCRICAO_15 NOT LIKE '-%'
+            WHERE 1=1
+              AND e.saldo_fisico >= 1
+            GROUP BY
+              e.NIVEL_ESTRUTURA
+            , e.GRUPO_ESTRUTURA
+            , r.DESCR_REFERENCIA
+            , e.SUBGRUPO_ESTRUTURA
+            , t.DESCR_TAM_REFER
+            , e.ITEM_ESTRUTURA
+            , i.DESCRICAO_15
+            ORDER BY
+              e.NIVEL_ESTRUTURA
+            , e.GRUPO_ESTRUTURA
+            , e.SUBGRUPO_ESTRUTURA
+            , e.ITEM_ESTRUTURA
+        """.format(
+            fitro_data=fitro_data,
+        )
+        # print(sql)
+        ref_invent = self._ora.execute(
+            sql, ref=ref, nivel=nivel)
 
         nkeys = len(ref_invent['keys'])
         mask = self.make_csv_mask(nkeys)
@@ -215,6 +255,11 @@ class Inventario:
             print(mask.format(*ref_invent['keys']))
             self._print_fields = False
         for values in ref_invent['data']:
+            row = dict(zip(ref_invent['keys'], values))
+            row['QTD'] = round(row['QTD'], 2)
+            row['PRECO'] = round(row['PRECO'], 4)
+            row['VALOR'] = row['QTD'] * row['PRECO']
+            values = row.values()
             print(mask.format(*values))
 
     def make_csv_mask(self, nkeys):
@@ -231,11 +276,11 @@ if __name__ == '__main__':
     ora.connect()
 
     inv = Inventario(ora)
-    inv.nivel = 2
-    inv.get_refs(rownum=5)
+    inv.nivel = 9
+    inv.get_refs(rownum=10)
 
-    inv.ano = 2019
-    inv.mes = 1
+    inv.ano = '2019'
+    inv.mes = '01'
     inv.get_invent()
 
     ora.close()
