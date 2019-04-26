@@ -240,6 +240,7 @@ class Inventario:
              AND i.DESCRICAO_15 NOT LIKE '-%'
             WHERE 1=1
               AND e.saldo_fisico >= 1
+              AND e.saldo_financeiro > 0
             GROUP BY
               e.NIVEL_ESTRUTURA
             , e.GRUPO_ESTRUTURA
