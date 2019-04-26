@@ -137,10 +137,13 @@ class Inventario:
         sql = """
             WITH SEL AS
             (
-            SELECT
+            SELECT DISTINCT
               r.NIVEL_ESTRUTURA NIVEL
             , r.REFERENCIA REF
             FROM BASI_030 r
+            JOIN BASI_050 ia -- insumos de alternativa
+              ON ia.NIVEL_COMP = r.NIVEL_ESTRUTURA
+             AND ia.GRUPO_COMP = r.REFERENCIA
             WHERE r.REFERENCIA NOT LIKE 'DV%'
               {nivel_filter} -- nivel_filter
               {ref_filter} -- ref_filter
@@ -220,11 +223,28 @@ class Inventario:
                 , e.CODIGO_DEPOSITO
                 , max(e.DATA_MOVIMENTO) DATA_BUSCA
                 FROM estq_310 e
+                JOIN BASI_030 r
+                  ON r.NIVEL_ESTRUTURA = e.NIVEL_ESTRUTURA
+                 AND r.REFERENCIA = e.GRUPO_ESTRUTURA
                 WHERE 1=1
                   {fitro_nivel} -- fitro_nivel
                   {fitro_ref} -- fitro_ref
                   -- AND e.DATA_MOVIMENTO < TO_DATE('2019-01-01','YYYY-MM-DD')
                   {fitro_data} -- fitro_data
+                  AND 1 = (
+                    CASE WHEN e.NIVEL_ESTRUTURA = 2 THEN
+                      CASE WHEN e.CODIGO_DEPOSITO = 202 THEN 1 ELSE 0 END
+                    WHEN e.NIVEL_ESTRUTURA = 9 THEN
+                      CASE WHEN r.CONTA_ESTOQUE = 22 THEN
+                        CASE WHEN e.CODIGO_DEPOSITO = 212 THEN 1 ELSE 0 END
+                      ELSE
+                        CASE WHEN e.CODIGO_DEPOSITO = 231 THEN 1 ELSE 0 END
+                      END
+                    ELSE -- i.NIVEL_ESTRUTURA = 1
+                      CASE WHEN e.CODIGO_DEPOSITO in (101, 102) THEN 1
+                      ELSE 0 END
+                    END
+                  )
                 GROUP BY
                   e.NIVEL_ESTRUTURA
                 , e.GRUPO_ESTRUTURA
@@ -386,7 +406,7 @@ def parse_args():
 if __name__ == '__main__':
     args = parse_args()
 
-    print(args.ref)
+    # print(args.ref)
 
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
