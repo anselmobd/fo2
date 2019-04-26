@@ -385,6 +385,20 @@ def parse_args():
         epilog="(c) Tussor & Oxigenai",
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
+        "ano",
+        help='Ano do mês pós inventário',
+        type=int,
+        metavar="[2019-2029]",
+        choices=range(2019, 2030),
+        )
+    parser.add_argument(
+        "mes",
+        help='Mês pós inventário',
+        type=int,
+        metavar="[1-12]",
+        choices=range(1, 13),
+        )
+    parser.add_argument(
         "nivel",
         help='Nivel dos produtos (1, 2 ou 9)',
         type=int,
@@ -419,8 +433,8 @@ if __name__ == '__main__':
 
     inv.get_refs(rownum=args.rownum)
 
-    inv.ano = '2019'
-    inv.mes = '01'
+    inv.ano = '{}'.format(args.ano)
+    inv.mes = '{:02}'.format(args.mes)
     inv.print_inventario()
 
     ora.close()
