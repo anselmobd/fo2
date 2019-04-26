@@ -69,12 +69,20 @@ class Oracle:
 class Inventario:
 
     def __init__(self, ora):
+        # inicializado via parâmetros
         self._ora = ora
+
+        # inicialização fixa
+        self._print_fields = True
+
+        # valor default
         self._nivel = 9
+
+        # valor nulo
         self._refs = None
         self._ano = None
         self._mes = None
-        self._print_fields = True
+        self._mask = ''
 
     @property
     def nivel(self):
@@ -159,7 +167,6 @@ class Inventario:
             , sum(e.saldo_fisico) QTD
             , sum(e.saldo_financeiro)
               / sum(e.saldo_fisico) PRECO
-            , 0 VALOR
             FROM estq_310 e
             JOIN (
               SELECT
@@ -245,22 +252,25 @@ class Inventario:
         """.format(
             fitro_data=fitro_data,
         )
-        # print(sql)
         ref_invent = self._ora.execute(
             sql, ref=ref, nivel=nivel)
 
-        nkeys = len(ref_invent['keys'])
-        mask = self.make_csv_mask(nkeys)
-        if self._print_fields:
-            print(mask.format(*ref_invent['keys']))
-            self._print_fields = False
         for values in ref_invent['data']:
             row = dict(zip(ref_invent['keys'], values))
             row['QTD'] = round(row['QTD'], 2)
             row['PRECO'] = round(row['PRECO'], 4)
             row['VALOR'] = row['QTD'] * row['PRECO']
-            values = row.values()
-            print(mask.format(*values))
+            self.print_row(row)
+
+    def print_row(self, row):
+        values = row.values()
+        keys = row.keys()
+        if self._print_fields:
+            nkeys = len(keys)
+            self._mask = self.make_csv_mask(nkeys)
+            print(self._mask.format(*keys))
+            self._print_fields = False
+        print(self._mask.format(*values))
 
     def make_csv_mask(self, nkeys):
         sep = ''
