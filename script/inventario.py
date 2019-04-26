@@ -112,7 +112,8 @@ class Inventario:
 
         sql = """
             SELECT
-              r.REFERENCIA
+              r.NIVEL_ESTRUTURA NIVEL
+            , r.REFERENCIA REF
             FROM BASI_030 r
             WHERE r.NIVEL_ESTRUTURA = :nivel
               AND r.REFERENCIA NOT LIKE 'DV%'
@@ -138,10 +139,10 @@ class Inventario:
         for i, values in enumerate(self._refs['data']):
             row = dict(zip(self._refs['keys'], values))
             sys.stderr.write(
-                '({}/{}) {}\n'.format(i+1, count, row['REFERENCIA']))
-            self.get_ref_invent(row['REFERENCIA'])
+                '({}/{}) {}.{}\n'.format(i+1, count, row['NIVEL'], row['REF']))
+            self.get_ref_invent(row['NIVEL'], row['REF'])
 
-    def get_ref_invent(self, ref):
+    def get_ref_invent(self, nivel, ref):
         sql = """
             SELECT
               e.NIVEL_ESTRUTURA
@@ -174,8 +175,8 @@ class Inventario:
                 , e.CODIGO_DEPOSITO
                 , max(e.DATA_MOVIMENTO) DATA_BUSCA
                 FROM estq_310 e
-                WHERE e.NIVEL_ESTRUTURA = 9
-                  AND e.GRUPO_ESTRUTURA = :referencia
+                WHERE e.NIVEL_ESTRUTURA = :nivel
+                  AND e.GRUPO_ESTRUTURA = :ref
                   AND e.DATA_MOVIMENTO < TO_DATE('2019-01-01','YYYY-MM-DD')
                 GROUP BY
                   e.NIVEL_ESTRUTURA
@@ -206,7 +207,7 @@ class Inventario:
              and eseq.data_busca         = e.data_movimento
              and eseq.SEQUENCIA_BUSCA    = e.SEQUENCIA_FICHA
         """
-        ref_invent = self._ora.execute(sql, referencia=ref)
+        ref_invent = self._ora.execute(sql, ref=ref, nivel=nivel)
 
         nkeys = len(ref_invent['keys'])
         mask = self.make_csv_mask(nkeys)
@@ -230,7 +231,7 @@ if __name__ == '__main__':
     ora.connect()
 
     inv = Inventario(ora)
-    inv.nivel = 9
+    inv.nivel = 2
     inv.get_refs(rownum=5)
 
     inv.ano = 2019
