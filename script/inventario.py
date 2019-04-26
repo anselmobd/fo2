@@ -3,6 +3,7 @@
 import sys
 import cx_Oracle
 from pprint import pprint
+import locale
 
 
 class Oracle:
@@ -114,24 +115,34 @@ class Inventario:
         else:
             self.nivel = nivel
 
+        nivel_filter = 'AND r.NIVEL_ESTRUTURA = {}'.format(self.nivel)
+
         rownum_filter = ''
         if rownum is not None:
-            rownum_filter = 'AND rownum <= {}'.format(rownum)
+            rownum_filter = 'WHERE rownum <= {}'.format(rownum)
 
         sql = """
+            WITH SEL AS
+            (
             SELECT
               r.NIVEL_ESTRUTURA NIVEL
             , r.REFERENCIA REF
             FROM BASI_030 r
-            WHERE r.NIVEL_ESTRUTURA = :nivel
-              AND r.REFERENCIA NOT LIKE 'DV%'
-              {rownum_filter} -- rownum_filter
+            WHERE r.REFERENCIA NOT LIKE 'DV%'
+              {nivel_filter} -- nivel_filter
             ORDER BY
               r.REFERENCIA
+            )
+            SELECT
+              s.*
+            FROM SEL s
+            {rownum_filter} -- rownum_filter
         """.format(
-            rownum_filter=rownum_filter
+            nivel_filter=nivel_filter,
+            rownum_filter=rownum_filter,
         )
-        self._refs = self._ora.execute(sql, nivel=self.nivel)
+        print(sql)
+        self._refs = self._ora.execute(sql)
 
     def param_ok(self):
         if self.ano is None or \
@@ -140,7 +151,7 @@ class Inventario:
             raise ValueError(
                 "Refs, ano e mes pós inventário devem ser informados")
 
-    def get_invent(self):
+    def print_inventario(self):
         self.param_ok()
         self._print_fields = True
         count = len(self._refs['data'])
@@ -148,9 +159,9 @@ class Inventario:
             row = dict(zip(self._refs['keys'], values))
             sys.stderr.write(
                 '({}/{}) {}.{}\n'.format(i+1, count, row['NIVEL'], row['REF']))
-            self.get_ref_invent(row['NIVEL'], row['REF'])
+            self.print_ref_inv(row['NIVEL'], row['REF'])
 
-    def get_ref_invent(self, nivel, ref):
+    def print_ref_inv(self, nivel, ref):
         fitro_data = '''--
             AND e.DATA_MOVIMENTO < TO_DATE('{ano}-{mes}-01','YYYY-MM-DD')
         '''.format(ano=self.ano, mes=self.mes)
@@ -280,26 +291,30 @@ class Inventario:
                 row['COR_DESCR'],
             )
             row['CONTA_CONTABIL'] = 377
-            colunas = [
-                'CODIGO',
-                'DESCRICAO',
-                'UNIDADE',
-                'QTD',
-                'PRECO',
-                'VALOR',
-                'CONTA_CONTABIL',
-            ]
+            colunas = {
+                'CODIGO': 'Código',
+                'DESCRICAO': 'Descrição',
+                'UNIDADE': 'Unidade',
+                'QTD': 'Quantidade',
+                'PRECO': 'Valor unitário',
+                'VALOR': 'Valor total',
+                'CONTA_CONTABIL': 'Conta contábil',
+            }
             self.print_row(row, colunas)
 
     def print_row(self, row, colunas=None):
         if colunas is not None:
-            row = {key: row[key] for key in colunas}
-        values = row.values()
+            row = {colunas[key]: row[key] for key in colunas.keys()}
+        values = list(row.values())
         keys = row.keys()
         if self._print_fields:
             self._mask = self.make_csv_mask(values)
-            print(self._mask.format(*keys))
+            print(';'.join(keys))
             self._print_fields = False
+        for i in range(len(values)):
+            if not isinstance(values[i], str):
+                values[i] = locale.currency(
+                    values[i], grouping=True, symbol=None)
         print(self._mask.format(*values))
 
     def make_csv_mask(self, values):
@@ -315,15 +330,18 @@ class Inventario:
 
 
 if __name__ == '__main__':
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
     ora = Oracle()
     ora.connect()
 
     inv = Inventario(ora)
-    inv.nivel = 2
-    inv.get_refs(rownum=10)
+    # inv.nivel = 2
+    inv.get_refs(nivel=9, rownum=1)
+    # inv.get_refs(nivel=9)
 
     inv.ano = '2019'
     inv.mes = '01'
-    inv.get_invent()
+    inv.print_inventario()
 
     ora.close()
