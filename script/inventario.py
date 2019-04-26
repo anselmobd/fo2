@@ -131,7 +131,7 @@ class Inventario:
             FROM BASI_030 r
             WHERE r.REFERENCIA NOT LIKE 'DV%'
               {nivel_filter} -- nivel_filter
-              AND r.REFERENCIA = 'CA010'
+              -- AND r.REFERENCIA = 'CA010'
             ORDER BY
               r.REFERENCIA
             )
@@ -357,13 +357,19 @@ def parse_args():
         type=int,
         choices=[1, 2, 9],
         )
+    parser.add_argument(
+        "rownum",
+        help='Limite na quantidade de produtos',
+        type=int,
+        nargs='?',
+        )
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_args()
 
-    print(args.nivel)
+    # print(args.rownum)
 
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
@@ -373,8 +379,7 @@ if __name__ == '__main__':
     inv = Inventario(ora)
     inv.nivel = args.nivel
 
-    # inv.get_refs(nivel=9, rownum=10)
-    inv.get_refs()
+    inv.get_refs(rownum=args.rownum)
 
     inv.ano = '2019'
     inv.mes = '01'
