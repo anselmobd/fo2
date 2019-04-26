@@ -297,17 +297,19 @@ class Inventario:
         values = row.values()
         keys = row.keys()
         if self._print_fields:
-            nkeys = len(keys)
-            self._mask = self.make_csv_mask(nkeys)
+            self._mask = self.make_csv_mask(values)
             print(self._mask.format(*keys))
             self._print_fields = False
         print(self._mask.format(*values))
 
-    def make_csv_mask(self, nkeys):
+    def make_csv_mask(self, values):
         sep = ''
         result = ''
-        for _ in range(nkeys):
-            result += sep + '"{}"'
+        for val in values:
+            if isinstance(val, str):
+                result += sep + '"{}"'
+            else:
+                result += sep + '{}'
             sep = ';'
         return result
 
