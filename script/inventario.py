@@ -160,6 +160,8 @@ class Inventario:
               e.NIVEL_ESTRUTURA NIVEL
             , e.GRUPO_ESTRUTURA REF
             , r.DESCR_REFERENCIA REF_DESCR
+            , r.UNIDADE_MEDIDA REF_UNID
+            , um.UNID_MED_TRIB UNIDADE
             , e.SUBGRUPO_ESTRUTURA TAM
             , t.DESCR_TAM_REFER TAM_DESCR
             , e.ITEM_ESTRUTURA COR
@@ -223,6 +225,8 @@ class Inventario:
               ON r.NIVEL_ESTRUTURA = e.NIVEL_ESTRUTURA
              AND r.REFERENCIA = e.GRUPO_ESTRUTURA
              AND r.DESCR_REFERENCIA NOT LIKE '-%'
+            JOIN basi_200 um
+              ON um.unidade_medida = r.UNIDADE_MEDIDA
             JOIN basi_020 t
               ON t.BASI030_NIVEL030 = e.NIVEL_ESTRUTURA
              AND t.BASI030_REFERENC = e.GRUPO_ESTRUTURA
@@ -240,6 +244,8 @@ class Inventario:
               e.NIVEL_ESTRUTURA
             , e.GRUPO_ESTRUTURA
             , r.DESCR_REFERENCIA
+            , r.UNIDADE_MEDIDA
+            , um.UNID_MED_TRIB
             , e.SUBGRUPO_ESTRUTURA
             , t.DESCR_TAM_REFER
             , e.ITEM_ESTRUTURA
@@ -260,6 +266,18 @@ class Inventario:
             row['QTD'] = round(row['QTD'], 2)
             row['PRECO'] = round(row['PRECO'], 4)
             row['VALOR'] = row['QTD'] * row['PRECO']
+            row['CODIGO'] = '{}.{}.{}.{}'.format(
+                row['NIVEL'],
+                row['REF'],
+                row['TAM'],
+                row['COR'],
+            )
+            row['DESCRICAO'] = '{} {} {} {}'.format(
+                row['CODIGO'],
+                row['REF_DESCR'],
+                row['TAM_DESCR'],
+                row['COR_DESCR'],
+            )
             self.print_row(row)
 
     def print_row(self, row):
@@ -286,7 +304,7 @@ if __name__ == '__main__':
     ora.connect()
 
     inv = Inventario(ora)
-    inv.nivel = 9
+    inv.nivel = 2
     inv.get_refs(rownum=10)
 
     inv.ano = '2019'
