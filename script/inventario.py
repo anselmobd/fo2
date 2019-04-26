@@ -278,9 +278,21 @@ class Inventario:
                 row['TAM_DESCR'],
                 row['COR_DESCR'],
             )
-            self.print_row(row)
+            row['CONTA_CONTABIL'] = 377
+            colunas = [
+                'CODIGO',
+                'DESCRICAO',
+                'UNIDADE',
+                'QTD',
+                'PRECO',
+                'VALOR',
+                'CONTA_CONTABIL',
+            ]
+            self.print_row(row, colunas)
 
-    def print_row(self, row):
+    def print_row(self, row, colunas=None):
+        if colunas is not None:
+            row = {key: row[key] for key in colunas}
         values = row.values()
         keys = row.keys()
         if self._print_fields:
