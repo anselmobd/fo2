@@ -4,6 +4,7 @@ import sys
 import cx_Oracle
 from pprint import pprint
 import locale
+import argparse
 
 
 class Oracle:
@@ -130,6 +131,7 @@ class Inventario:
             FROM BASI_030 r
             WHERE r.REFERENCIA NOT LIKE 'DV%'
               {nivel_filter} -- nivel_filter
+              AND r.REFERENCIA = 'CA010'
             ORDER BY
               r.REFERENCIA
             )
@@ -141,7 +143,7 @@ class Inventario:
             nivel_filter=nivel_filter,
             rownum_filter=rownum_filter,
         )
-        print(sql)
+        # print(sql)
         self._refs = self._ora.execute(sql)
 
     def param_ok(self):
@@ -162,6 +164,10 @@ class Inventario:
             self.print_ref_inv(row['NIVEL'], row['REF'])
 
     def print_ref_inv(self, nivel, ref):
+        fitro_nivel = "AND e.NIVEL_ESTRUTURA = {}".format(nivel)
+
+        fitro_ref = "AND e.GRUPO_ESTRUTURA = '{}'".format(ref)
+
         fitro_data = '''--
             AND e.DATA_MOVIMENTO < TO_DATE('{ano}-{mes}-01','YYYY-MM-DD')
         '''.format(ano=self.ano, mes=self.mes)
@@ -177,6 +183,7 @@ class Inventario:
             , t.DESCR_TAM_REFER TAM_DESCR
             , e.ITEM_ESTRUTURA COR
             , i.DESCRICAO_15 COR_DESCR
+            , i.PRECO_CUSTO_INFO PRECO_INFORMADO
             , sum(e.saldo_fisico) QTD
             , sum(e.saldo_financeiro)
               / sum(e.saldo_fisico) PRECO
@@ -200,8 +207,9 @@ class Inventario:
                 , e.CODIGO_DEPOSITO
                 , max(e.DATA_MOVIMENTO) DATA_BUSCA
                 FROM estq_310 e
-                WHERE e.NIVEL_ESTRUTURA = :nivel
-                  AND e.GRUPO_ESTRUTURA = :ref
+                WHERE 1=1
+                  {fitro_nivel} -- fitro_nivel
+                  {fitro_ref} -- fitro_ref
                   -- AND e.DATA_MOVIMENTO < TO_DATE('2019-01-01','YYYY-MM-DD')
                   {fitro_data} -- fitro_data
                 GROUP BY
@@ -262,21 +270,30 @@ class Inventario:
             , t.DESCR_TAM_REFER
             , e.ITEM_ESTRUTURA
             , i.DESCRICAO_15
+            , i.PRECO_CUSTO_INFO
             ORDER BY
               e.NIVEL_ESTRUTURA
             , e.GRUPO_ESTRUTURA
             , e.SUBGRUPO_ESTRUTURA
             , e.ITEM_ESTRUTURA
         """.format(
+            fitro_nivel=fitro_nivel,
+            fitro_ref=fitro_ref,
             fitro_data=fitro_data,
         )
-        ref_invent = self._ora.execute(
-            sql, ref=ref, nivel=nivel)
+        # print(sql)
+        ref_invent = self._ora.execute(sql)
 
         for values in ref_invent['data']:
             row = dict(zip(ref_invent['keys'], values))
             row['QTD'] = round(row['QTD'], 2)
-            row['PRECO'] = round(row['PRECO'], 4)
+            # Se preço baseado no saldo_financeiro for muito diferente do
+            # informado, usa o atualmente informado
+            if row['PRECO'] > row['PRECO_INFORMADO']*1.2 or \
+                    row['PRECO'] < row['PRECO_INFORMADO']*0.8:
+                row['PRECO'] = round(row['PRECO_INFORMADO'], 4)
+            else:
+                row['PRECO'] = round(row['PRECO'], 4)
             row['VALOR'] = row['QTD'] * row['PRECO']
             row['CODIGO'] = '{}.{}.{}.{}'.format(
                 row['NIVEL'],
@@ -329,16 +346,35 @@ class Inventario:
         return result
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='Gera CSV de inventário',
+        epilog="(c) Tussor & Oxigenai",
+        formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument(
+        "nivel",
+        help='Nivel dos produtos (1, 2 ou 9)',
+        type=int,
+        choices=[1, 2, 9],
+        )
+    return parser.parse_args()
+
+
 if __name__ == '__main__':
+    args = parse_args()
+
+    print(args.nivel)
+
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
     ora = Oracle()
     ora.connect()
 
     inv = Inventario(ora)
-    # inv.nivel = 2
-    inv.get_refs(nivel=9, rownum=1)
-    # inv.get_refs(nivel=9)
+    inv.nivel = args.nivel
+
+    # inv.get_refs(nivel=9, rownum=10)
+    inv.get_refs()
 
     inv.ano = '2019'
     inv.mes = '01'
