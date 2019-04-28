@@ -85,6 +85,7 @@ N2LOL_ALLOWED_URLS = [
     '^/accounts/login/.*$',
     '^/rh/.*$',
     '^/media/rh/.*$',
+    '^/ack$',
 ]
 N2LOL_ALLOWED_IP_BLOCKS = ['^192\.168\.1\..+$', '^127\.0\.0\.1$']
 
