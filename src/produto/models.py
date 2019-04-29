@@ -74,6 +74,9 @@ class Produto(models.Model):
     referencia = models.CharField(
         db_index=True, max_length=5,
         verbose_name='Referência')
+    descricao = models.CharField(
+        'descrição', default='',
+        max_length=200)
     ativo = models.BooleanField(default=True)
     imp_cod = models.CharField(
         max_length=6, null=True, blank=True,
@@ -102,6 +105,9 @@ class ProdutoCor(models.Model):
         verbose_name='Referência')
     cor = models.CharField(
         db_index=True, max_length=6, verbose_name='Cor')
+    descricao = models.CharField(
+        'descrição', default='',
+        max_length=200)
     ativa = models.BooleanField(default=True)
     imp_cod = models.CharField(
         max_length=6, null=True, blank=True,
@@ -129,6 +135,9 @@ class ProdutoTamanho(models.Model):
         verbose_name='Referência')
     tamanho = models.ForeignKey(
         Tamanho, on_delete=models.PROTECT)
+    descricao = models.CharField(
+        'descrição', default='',
+        max_length=200)
     ativo = models.BooleanField(default=True)
     imp_cod = models.CharField(
         max_length=6, null=True, blank=True,
@@ -161,6 +170,9 @@ class ProdutoItem(models.Model):
     gtin = models.CharField(
         max_length=13, null=True, blank=True,
         verbose_name='GTIN no XML')
+    custo = models.DecimalField(
+        decimal_places=4, max_digits=12,
+        null=True, blank=True)
 
     def __str__(self):
         return '{} {} {}'.format(
