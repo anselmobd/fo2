@@ -84,6 +84,7 @@ class Inventario:
         self._ref = None
         self._ano = None
         self._mes = None
+        self._prolong = None
 
         # outras variaveis utilizadas
         self._refs = None
@@ -114,6 +115,16 @@ class Inventario:
     @ref.setter
     def ref(self, value):
         self._ref = value
+
+    @property
+    def prolong(self):
+        return self._prolong
+
+    @prolong.setter
+    def prolong(self, value):
+        self._prolong = value
+        if value:
+            self._print_header = False
 
     @property
     def ano(self):
@@ -189,7 +200,6 @@ class Inventario:
 
     def print(self):
         self.param_ok()
-        self._print_header = True
         count = len(self._refs['data'])
         for i, values in enumerate(self._refs['data']):
             row = dict(zip(self._refs['keys'], values))
@@ -469,6 +479,10 @@ def parse_args():
         epilog="(c) Tussor & Oxigenai",
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
+        "-p", "--prolong",
+        help='Não imprime header',
+        action='store_true')
+    parser.add_argument(
         "tipo",
         help='Tipo de saída (Inventário ou blocoK)',
         metavar="[i, k]",
@@ -521,6 +535,7 @@ if __name__ == '__main__':
     inv.tipo = args.tipo
     inv.nivel = args.nivel
     inv.ref = args.ref
+    inv.prolong = args.prolong
 
     inv.get_refs(rownum=args.rownum)
 
