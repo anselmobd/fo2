@@ -141,6 +141,7 @@ class Inventario:
         self._print_header = True
 
         # parametros - valor default (ou None)
+        self._origem = None
         self._tipo = None
         self._nivel = None
         self._ref = None
@@ -153,6 +154,14 @@ class Inventario:
         self._mask = ''
         self._colunas = None
         self._tipo_params = None
+
+    @property
+    def origem(self):
+        return self._origem
+
+    @origem.setter
+    def origem(self, value):
+        self._origem = value
 
     @property
     def tipo(self):
@@ -601,10 +610,14 @@ if __name__ == '__main__':
 
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
-    db = Oracle()
+    if args.origem == 's':
+        db = Oracle()
+    else:
+        db = Postgre()
     db.connect()
 
     inv = Inventario(db)
+    inv.origem = args.origem
     inv.tipo = args.tipo
     inv.nivel = args.nivel
     inv.ref = args.ref
