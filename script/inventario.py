@@ -557,6 +557,7 @@ class Inventario:
                 'DT_FIN': dt_fim_str,
             }
 
+        self._mask = None
         for values in ref_invent['data']:
             row = dict(zip(ref_invent['keys'], values))
             if self.tipo == 'i':
@@ -610,13 +611,14 @@ class Inventario:
         values = list(row.values())
         keys = row.keys()
         if self._print_header:
-            self._mask = self.make_csv_mask(values)
             print(';'.join(keys))
             self._print_header = False
         for i in range(len(values)):
             if not isinstance(values[i], str):
                 values[i] = locale.currency(
                     values[i], grouping=True, symbol=None)
+        if self._mask is None:
+            self._mask = self.make_csv_mask(values)
         print(self._mask.format(*values))
 
     def print_pipe_row(self, row):
@@ -631,7 +633,8 @@ class Inventario:
                 self._tipo_params['DT_FIN'],
             ))
             self._print_header = False
-        self._mask = self.make_pipe_mask(values)
+        if self._mask is None:
+            self._mask = self.make_pipe_mask(values)
         print(self._mask.format(*values))
 
     def make_csv_mask(self, values):
