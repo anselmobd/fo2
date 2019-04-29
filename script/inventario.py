@@ -5,6 +5,7 @@ import cx_Oracle
 from pprint import pprint
 import locale
 import argparse
+from datetime import datetime, timedelta
 
 
 class Oracle:
@@ -347,6 +348,13 @@ class Inventario:
                 }
             }
         else:
+            dt_pos_fim = datetime.strptime(
+                '01/{mes}/{ano}'.format(mes=self.mes, ano=self.ano),
+                '%d/%m/%Y')
+            dt_fim = dt_pos_fim-timedelta(days=1)
+            dt_fim_str = dt_fim.strftime('%d%m%Y')
+            dt_ini = dt_fim-timedelta(days=dt_fim.day-1)
+            dt_ini_str = dt_ini.strftime('%d%m%Y')
             self._tipo_params = {
                 'colunas': [
                     'REG',
@@ -356,8 +364,8 @@ class Inventario:
                     'IND_EST',
                     'COD_PART',
                 ],
-                'DT_INI': '01012019',
-                'DT_FIN': '31012019',
+                'DT_INI': dt_ini_str,
+                'DT_FIN': dt_fim_str,
             }
 
         for values in ref_invent['data']:
