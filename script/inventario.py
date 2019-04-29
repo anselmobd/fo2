@@ -2,17 +2,20 @@
 
 import sys
 import cx_Oracle
+import psycopg2
 from pprint import pprint
 import locale
 import argparse
 from datetime import datetime, timedelta
+
+from db_password import DBPASS_POSTGRE, DBPASS_ORACLE
 
 
 class Oracle:
 
     def __init__(self):
         self.username = 'systextil'
-        self.password = 'oracle'
+        self.password = DBPASS_ORACLE
         self.hostname = 'localhost'
         self.port = 26521
         self.servicename = 'XE'
@@ -61,10 +64,69 @@ class Oracle:
 
     def close(self):
         try:
-            if self.cursor is not None:
-                self.cursor.close()
-            self.con.close()
+            if self.con:
+                if self.cursor is not None:
+                    self.cursor.close()
+                self.con.close()
         except cx_Oracle.DatabaseError as e:
+            print('[Closing error] {}'.format(e))
+            sys.exit(4)
+
+
+class Postgre:
+
+    def __init__(self):
+        self.username = "tussor_fo2"
+        self.password = DBPASS_POSTGRE
+        self.hostname = "127.0.0.1"
+        self.port = 25432
+        self.database = "tussor_fo2_production"
+
+    def connect(self):
+        try:
+            self.con = psycopg2.connect(
+                user=self.username,
+                password=self.password,
+                host=self.hostname,
+                port=self.port,
+                database=self.database,
+            )
+        except psycopg2.Error as e:
+            print('[Connection error] {}'.format(e))
+            sys.exit(1)
+
+        self.cursor = self.con.cursor()
+
+        try:
+            self.cursor.execute(
+                'SELECT version();')
+        except psycopg2.Error as e:
+            print('[Cursor test error] {}'.format(e))
+            sys.exit(2)
+
+    def execute(self, sql, **xargs):
+        try:
+            if len(xargs.keys()) == 0:
+                self.cursor.execute(sql)
+            else:
+                self.cursor.execute(sql, xargs)
+        except psycopg2.Error as e:
+            print('[Execute error] {}'.format(e))
+            sys.exit(3)
+
+        result = {
+            'keys': [f[0] for f in self.cursor.description],
+            'data': self.cursor.fetchall(),
+        }
+        return result
+
+    def close(self):
+        try:
+            if self.con:
+                if self.cursor is not None:
+                    self.cursor.close()
+                self.con.close()
+        except psycopg2.Error as e:
             print('[Closing error] {}'.format(e))
             sys.exit(4)
 
