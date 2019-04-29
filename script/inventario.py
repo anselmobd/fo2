@@ -551,27 +551,30 @@ def parse_args():
         epilog="(c) Tussor & Oxigenai",
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
+        "origem",
+        choices=['s', 'f'],
+        help='Origem dos dados (Systextil ou Fo2-intranet)')
+    parser.add_argument(
         "-p", "--prolong",
         help='Não imprime header',
         action='store_true')
     parser.add_argument(
         "tipo",
         help='Tipo de saída (Inventário ou blocoK)',
-        metavar="[i, k]",
         choices=['i', 'k'],
         )
     parser.add_argument(
         "ano",
         help='Ano do mês pós inventário',
         type=int,
-        metavar="[2019-2029]",
+        metavar="{2019-2029}",
         choices=range(2019, 2030),
         )
     parser.add_argument(
         "mes",
         help='Mês pós inventário',
         type=int,
-        metavar="[1-12]",
+        metavar="{1-12}",
         choices=range(1, 13),
         )
     parser.add_argument(
@@ -595,8 +598,6 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-
-    # print(args.ref)
 
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
