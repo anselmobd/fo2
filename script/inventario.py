@@ -77,8 +77,9 @@ class Inventario:
         # inicialização fixa
         self._print_fields = True
 
-        # parametros - valor default
-        self._nivel = 9
+        # parametros - valor default (ou None)
+        self._tipo = None
+        self._nivel = None
         self._ref = None
         self._ano = None
         self._mes = None
@@ -86,6 +87,14 @@ class Inventario:
         # outras variaveis utilizadas
         self._refs = None
         self._mask = ''
+
+    @property
+    def tipo(self):
+        return self._tipo
+
+    @tipo.setter
+    def tipo(self, value):
+        self._tipo = value
 
     @property
     def nivel(self):
@@ -385,6 +394,12 @@ def parse_args():
         epilog="(c) Tussor & Oxigenai",
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
+        "tipo",
+        help='Tipo de saída (Inventário ou blocoK)',
+        metavar="[i, k]",
+        choices=['i', 'k'],
+        )
+    parser.add_argument(
         "ano",
         help='Ano do mês pós inventário',
         type=int,
@@ -428,6 +443,7 @@ if __name__ == '__main__':
     ora.connect()
 
     inv = Inventario(ora)
+    inv.tipo = args.tipo
     inv.nivel = args.nivel
     inv.ref = args.ref
 
