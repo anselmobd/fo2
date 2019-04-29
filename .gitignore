@@ -12,6 +12,7 @@ src/sqlite3/
 # Specific to the production environment
 etc/secret_key.txt
 src/fo2/db_password.py
+script/db_password.py
 
 # Trash
 *.old
