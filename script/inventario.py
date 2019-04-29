@@ -76,7 +76,7 @@ class Inventario:
         self._ora = ora
 
         # inicialização fixa
-        self._print_fields = True
+        self._print_header = True
 
         # parametros - valor default (ou None)
         self._tipo = None
@@ -189,7 +189,7 @@ class Inventario:
 
     def print(self):
         self.param_ok()
-        self._print_fields = True
+        self._print_header = True
         count = len(self._refs['data'])
         for i, values in enumerate(self._refs['data']):
             row = dict(zip(self._refs['keys'], values))
@@ -420,10 +420,10 @@ class Inventario:
             row = {cols[key]: row[key] for key in cols.keys()}
         values = list(row.values())
         keys = row.keys()
-        if self._print_fields:
+        if self._print_header:
             self._mask = self.make_csv_mask(values)
             print(';'.join(keys))
-            self._print_fields = False
+            self._print_header = False
         for i in range(len(values)):
             if not isinstance(values[i], str):
                 values[i] = locale.currency(
@@ -435,13 +435,13 @@ class Inventario:
             cols = self._tipo_params['colunas']
             row = {key: row[key] for key in cols}
         values = list(row.values())
-        if self._print_fields:
+        if self._print_header:
             print('|K0010|')
             print('|K100|{}|{}|'.format(
                 self._tipo_params['DT_INI'],
                 self._tipo_params['DT_FIN'],
             ))
-            self._print_fields = False
+            self._print_header = False
         self._mask = self.make_pipe_mask(values)
         print(self._mask.format(*values))
 
