@@ -547,8 +547,8 @@ class Inventario:
             self._tipo_params = {
                 'colunas': [
                     'REG',
-                    'COD_ITEM',
                     'DT_EST',
+                    'COD_ITEM',
                     'QTD',
                     'IND_EST',
                     'COD_PART',
