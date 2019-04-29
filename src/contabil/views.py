@@ -10,7 +10,7 @@ from fo2.template import group_rowspan
 from utils.views import totalize_grouped_data
 
 import contabil.forms as forms
-import contabil.models as models
+import contabil.queries as queries
 
 
 def index(request):
@@ -28,7 +28,7 @@ class InfAdProd(View):
             'pedido': pedido,
         }
         cursor = connections['so'].cursor()
-        data = models.infadprod_por_pedido(cursor, pedido)
+        data = queries.infadprod_por_pedido(cursor, pedido)
         if len(data) == 0:
             context['erro'] = 'Pedido não encontrado'
         else:
@@ -125,7 +125,7 @@ class RemessaIndustr(View):
             detalhe = form.cleaned_data['detalhe']
 
             cursor = connections['so'].cursor()
-            data = models.reme_indu(
+            data = queries.reme_indu(
                 cursor, dt_saida_de=data_de, dt_saida_ate=data_ate,
                 faccao=faccao, cliente=cliente,
                 pedido=pedido, pedido_cliente=pedido_cliente, op=op,
@@ -222,7 +222,7 @@ class RemessaIndustrNF(View):
             detalhe = form.cleaned_data['detalhe']
 
             cursor = connections['so'].cursor()
-            data = models.reme_indu_nf(
+            data = queries.reme_indu_nf(
                 cursor, dt_saida_de=data_de, dt_saida_ate=data_ate,
                 faccao=faccao, cliente=cliente,
                 pedido=pedido, pedido_cliente=pedido_cliente, op=op,
