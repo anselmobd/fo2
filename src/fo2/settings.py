@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     # 'nested_inline',
     # Project
     'base',
+    'contabil',
     'logistica',
     'lotes',
     'geral',
