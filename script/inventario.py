@@ -436,7 +436,7 @@ class Inventario:
             row = {key: row[key] for key in cols}
         values = list(row.values())
         if self._print_header:
-            print('|K0010|')
+            print('|K001|0|')
             print('|K100|{}|{}|'.format(
                 self._tipo_params['DT_INI'],
                 self._tipo_params['DT_FIN'],
