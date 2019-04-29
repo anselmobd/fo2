@@ -184,7 +184,7 @@ class Inventario:
             raise ValueError(
                 "Refs, ano e mes pós inventário devem ser informados")
 
-    def print_inventario(self):
+    def print(self):
         self.param_ok()
         self._print_fields = True
         count = len(self._refs['data'])
@@ -192,9 +192,9 @@ class Inventario:
             row = dict(zip(self._refs['keys'], values))
             sys.stderr.write(
                 '({}/{}) {}.{}\n'.format(i+1, count, row['NIVEL'], row['REF']))
-            self.print_ref_inv(row['NIVEL'], row['REF'])
+            self.print_ref(row['NIVEL'], row['REF'])
 
-    def print_ref_inv(self, nivel, ref):
+    def print_ref(self, nivel, ref):
         fitro_nivel = "AND e.NIVEL_ESTRUTURA = {}".format(nivel)
 
         fitro_ref = "AND e.GRUPO_ESTRUTURA = '{}'".format(ref)
@@ -333,9 +333,9 @@ class Inventario:
         ref_invent = self._ora.execute(sql)
 
         if self.tipo == 'i':
-            self.print_ref_tipo_inv(ref_invent)
+            self.print_ref_inv(ref_invent)
 
-    def print_ref_tipo_inv(self, ref_invent):
+    def print_ref_inv(self, ref_invent):
         for values in ref_invent['data']:
             row = dict(zip(ref_invent['keys'], values))
             row['QTD'] = round(row['QTD'], 2)
@@ -461,6 +461,6 @@ if __name__ == '__main__':
 
     inv.ano = args.ano
     inv.mes = args.mes
-    inv.print_inventario()
+    inv.print()
 
     ora.close()
