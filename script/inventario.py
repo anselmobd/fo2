@@ -87,6 +87,7 @@ class Inventario:
         # outras variaveis utilizadas
         self._refs = None
         self._mask = ''
+        self._colunas = None
 
     @property
     def tipo(self):
@@ -333,34 +334,7 @@ class Inventario:
         ref_invent = self._ora.execute(sql)
 
         if self.tipo == 'i':
-            self.print_ref_inv(ref_invent)
-
-    def print_ref_inv(self, ref_invent):
-        for values in ref_invent['data']:
-            row = dict(zip(ref_invent['keys'], values))
-            row['QTD'] = round(row['QTD'], 2)
-            # Se preço baseado no saldo_financeiro for muito diferente do
-            # informado, usa o atualmente informado
-            if row['PRECO'] > row['PRECO_INFORMADO']*1.2 or \
-                    row['PRECO'] < row['PRECO_INFORMADO']*0.8:
-                row['PRECO'] = round(row['PRECO_INFORMADO'], 4)
-            else:
-                row['PRECO'] = round(row['PRECO'], 4)
-            row['VALOR'] = row['QTD'] * row['PRECO']
-            row['CODIGO'] = '{}.{}.{}.{}'.format(
-                row['NIVEL'],
-                row['REF'],
-                row['TAM'],
-                row['COR'],
-            )
-            row['DESCRICAO'] = '{} {} {} {}'.format(
-                row['CODIGO'],
-                row['REF_DESCR'],
-                row['TAM_DESCR'],
-                row['COR_DESCR'],
-            )
-            row['CONTA_CONTABIL'] = 377
-            colunas = {
+            self._colunas = {
                 'CODIGO': 'Código',
                 'DESCRICAO': 'Descrição',
                 'UNIDADE': 'Unidade',
@@ -369,11 +343,51 @@ class Inventario:
                 'VALOR': 'Valor total',
                 'CONTA_CONTABIL': 'Conta contábil',
             }
-            self.print_row(row, colunas)
+        else:
+            self._colunas = {
+                'CODIGO': 'Código',
+                'QTD': 'Quantidade',
+            }
 
-    def print_row(self, row, colunas=None):
-        if colunas is not None:
-            row = {colunas[key]: row[key] for key in colunas.keys()}
+        for values in ref_invent['data']:
+            row = dict(zip(ref_invent['keys'], values))
+            if self.tipo == 'i':
+                self.print_ref_inv(row)
+            else:
+                self.print_ref_blocok(row)
+
+    def print_ref_inv(self, row):
+        row['QTD'] = round(row['QTD'], 2)
+        # Se preço baseado no saldo_financeiro for muito diferente do
+        # informado, usa o atualmente informado
+        if row['PRECO'] > row['PRECO_INFORMADO']*1.2 or \
+                row['PRECO'] < row['PRECO_INFORMADO']*0.8:
+            row['PRECO'] = round(row['PRECO_INFORMADO'], 4)
+        else:
+            row['PRECO'] = round(row['PRECO'], 4)
+        row['VALOR'] = row['QTD'] * row['PRECO']
+        row['CODIGO'] = '{}.{}.{}.{}'.format(
+            row['NIVEL'],
+            row['REF'],
+            row['TAM'],
+            row['COR'],
+        )
+        row['DESCRICAO'] = '{} {} {} {}'.format(
+            row['CODIGO'],
+            row['REF_DESCR'],
+            row['TAM_DESCR'],
+            row['COR_DESCR'],
+        )
+        row['CONTA_CONTABIL'] = 377
+        self.print_row(row)
+
+    def print_ref_blocok(self, row):
+        pass
+
+    def print_row(self, row):
+        if self._colunas is not None:
+            row = {self._colunas[key]: row[key]
+                   for key in self._colunas.keys()}
         values = list(row.values())
         keys = row.keys()
         if self._print_fields:
