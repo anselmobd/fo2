@@ -335,26 +335,29 @@ class Inventario:
         ref_invent = self._ora.execute(sql)
 
         if self.tipo == 'i':
-            self._colunas = {
-                'CODIGO': 'Código',
-                'DESCRICAO': 'Descrição',
-                'UNIDADE': 'Unidade',
-                'QTD': 'Quantidade',
-                'PRECO': 'Valor unitário',
-                'VALOR': 'Valor total',
-                'CONTA_CONTABIL': 'Conta contábil',
+            self._tipo_params = {
+                'colunas': {
+                    'CODIGO': 'Código',
+                    'DESCRICAO': 'Descrição',
+                    'UNIDADE': 'Unidade',
+                    'QTD': 'Quantidade',
+                    'PRECO': 'Valor unitário',
+                    'VALOR': 'Valor total',
+                    'CONTA_CONTABIL': 'Conta contábil',
+                }
             }
         else:
-            self._colunas = {
-                'REG': 'REG',
-                'COD_ITEM': 'COD_ITEM',
-                'DT_EST': 'DT_EST',
-                'QTD': 'QTD',
-                'IND_EST': 'IND_EST',
-                'COD_PART': 'COD_PART',
-            }
             self._tipo_params = {
-                'DT_EST': '31012019',
+                'colunas': [
+                    'REG',
+                    'COD_ITEM',
+                    'DT_EST',
+                    'QTD',
+                    'IND_EST',
+                    'COD_PART',
+                ],
+                'DT_INI': '01012019',
+                'DT_FIN': '31012019',
             }
 
         for values in ref_invent['data']:
@@ -387,7 +390,7 @@ class Inventario:
             row['COR_DESCR'],
         )
         row['CONTA_CONTABIL'] = 377
-        self.print_row(row)
+        self.print_csv_row(row)
 
     def print_ref_blocok(self, row):
         row['REG'] = 'K200'
@@ -397,16 +400,16 @@ class Inventario:
             row['TAM'],
             row['COR'],
         )
-        row['DT_EST'] = self._tipo_params['DT_EST']
+        row['DT_EST'] = self._tipo_params['DT_FIN']
         row['QTD'] = round(row['QTD'], 3)
         row['IND_EST'] = '0'
         row['COD_PART'] = ''
-        self.print_row(row)
+        self.print_pipe_row(row)
 
-    def print_row(self, row):
-        if self._colunas is not None:
-            row = {self._colunas[key]: row[key]
-                   for key in self._colunas.keys()}
+    def print_csv_row(self, row):
+        if 'colunas' in self._tipo_params:
+            cols = self._tipo_params['colunas']
+            row = {cols[key]: row[key] for key in cols.keys()}
         values = list(row.values())
         keys = row.keys()
         if self._print_fields:
@@ -419,6 +422,21 @@ class Inventario:
                     values[i], grouping=True, symbol=None)
         print(self._mask.format(*values))
 
+    def print_pipe_row(self, row):
+        if 'colunas' in self._tipo_params:
+            cols = self._tipo_params['colunas']
+            row = {key: row[key] for key in cols}
+        values = list(row.values())
+        if self._print_fields:
+            print('|K0010|')
+            print('|K100|{}|{}|'.format(
+                self._tipo_params['DT_INI'],
+                self._tipo_params['DT_FIN'],
+            ))
+            self._print_fields = False
+        self._mask = self.make_pipe_mask(values)
+        print(self._mask.format(*values))
+
     def make_csv_mask(self, values):
         sep = ''
         result = ''
@@ -428,6 +446,12 @@ class Inventario:
             else:
                 result += sep + '{}'
             sep = ';'
+        return result
+
+    def make_pipe_mask(self, values):
+        result = '|'
+        for _ in range(len(values)):
+            result += '{}|'
         return result
 
 
