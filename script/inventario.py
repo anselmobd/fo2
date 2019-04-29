@@ -316,16 +316,8 @@ class Inventario:
         )
         return sql
 
-    def param_ok(self):
-        if self.ano is None or \
-                self.mes is None or \
-                self._refs is None:
-            raise ValueError(
-                "Refs, ano e mes pós inventário devem ser informados")
-
     def print(self):
         self.get_refs()
-        self.param_ok()
         count = len(self._refs['data'])
         for i, values in enumerate(self._refs['data']):
             row = dict(zip(self._refs['keys'], values))
