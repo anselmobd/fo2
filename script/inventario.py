@@ -325,7 +325,65 @@ class Inventario:
                 '({}/{}) {}.{}\n'.format(i+1, count, row['NIVEL'], row['REF']))
             self.print_ref(row['NIVEL'], row['REF'])
 
-    def print_ref(self, nivel, ref):
+    def get_quant_sql(self, nivel, ref):
+        if self.origem == 's':
+            sql = self.get_quant_systextil_sql(nivel, ref)
+        else:
+            sql = self.get_quant_fo2_sql(nivel, ref)
+        return sql
+
+    def get_quant_fo2_sql(self, nivel, ref):
+        fitro_nivel = ""
+        if self.nivel != 1:
+            fitro_nivel = "AND 1=2"
+
+        fitro_ref = "AND e.referencia = '{}'".format(ref)
+
+        fitro_data = '''--
+            AND e."data" < TO_DATE('{ano}-{mes}-01','YYYY-MM-DD')
+        '''.format(ano=self.ano, mes=self.mes)
+
+        sql = """
+            SELECT
+              '1' "NIVEL"
+            , e.referencia "REF"
+            , e.tamanho "TAM"
+            , e.cor "COR"
+            , edt.DATA_BUSCA
+            , e.qtd "QTD"
+            FROM fo2_estoque_manual e
+            JOIN (
+              SELECT
+                e.referencia
+              , e.tamanho
+              , e.cor
+              , max(e."data") DATA_BUSCA
+              FROM fo2_estoque_manual e
+              WHERE 1=1
+                {fitro_nivel} -- fitro_nivel
+                {fitro_ref} -- fitro_ref
+                {fitro_data} -- fitro_data
+              GROUP BY
+                e.referencia
+              , e.tamanho
+              , e.cor
+            ) edt
+              on edt.referencia = e.referencia
+             and edt.tamanho    = e.tamanho
+             and edt.cor        = e.cor
+             and edt.data_busca = e."data"
+            ORDER BY
+              e.referencia
+            , e.tamanho
+            , e.cor
+        """.format(
+            fitro_nivel=fitro_nivel,
+            fitro_ref=fitro_ref,
+            fitro_data=fitro_data,
+        )
+        return sql
+
+    def get_quant_systextil_sql(self, nivel, ref):
         fitro_nivel = "AND e.NIVEL_ESTRUTURA = {}".format(nivel)
 
         fitro_ref = "AND e.GRUPO_ESTRUTURA = '{}'".format(ref)
@@ -460,7 +518,10 @@ class Inventario:
             fitro_ref=fitro_ref,
             fitro_data=fitro_data,
         )
-        # print(sql)
+        return sql
+
+    def print_ref(self, nivel, ref):
+        sql = self.get_quant_sql(nivel, ref)
         ref_invent = self._db.execute(sql)
 
         if self.tipo == 'i':
