@@ -145,6 +145,7 @@ class Inventario:
         self._tipo = None
         self._nivel = None
         self._ref = None
+        self._rownum = None
         self._ano = None
         self._mes = None
         self._prolong = None
@@ -188,6 +189,14 @@ class Inventario:
         self._ref = value
 
     @property
+    def rownum(self):
+        return self._rownum
+
+    @rownum.setter
+    def rownum(self, value):
+        self._rownum = value
+
+    @property
     def prolong(self):
         return self._prolong
 
@@ -219,14 +228,14 @@ class Inventario:
         else:
             self._mes = value
 
-    def get_refs(self, rownum=None):
+    def get_refs(self):
         if self.origem == 's':
-            sql = self.get_sql_systextil_refs(rownum)
+            sql = self.get_sql_systextil_refs()
         else:
-            sql = self.get_sql_fo2_refs(rownum)
+            sql = self.get_sql_fo2_refs()
         self._refs = self._db.execute(sql)
 
-    def get_sql_systextil_refs(self, rownum=None):
+    def get_sql_systextil_refs(self):
         nivel_filter = "AND r.NIVEL_ESTRUTURA = {}".format(self.nivel)
 
         insumos_de_alternativa = ''
@@ -244,8 +253,8 @@ class Inventario:
                 ref_filter = "AND r.REFERENCIA <= '99999'"
 
         rownum_filter = ''
-        if rownum is not None:
-            rownum_filter = 'WHERE rownum <= {}'.format(rownum)
+        if self.rownum is not None:
+            rownum_filter = 'WHERE rownum <= {}'.format(self.rownum)
 
         sql = """
             WITH SEL AS
@@ -273,7 +282,7 @@ class Inventario:
         )
         return sql
 
-    def get_sql_fo2_refs(self, rownum=None):
+    def get_sql_fo2_refs(self):
         nivel_filter = ""
         if self.nivel != 1:
             nivel_filter = "AND 1=2"
@@ -286,8 +295,8 @@ class Inventario:
                 ref_filter = "AND e.referencia <= '99999'"
 
         rownum_filter = ''
-        if rownum is not None:
-            rownum_filter = 'limit {}'.format(rownum)
+        if self.rownum is not None:
+            rownum_filter = 'limit {}'.format(self.rownum)
 
         sql = """
             select distinct
@@ -656,9 +665,10 @@ if __name__ == '__main__':
     inv.tipo = args.tipo
     inv.nivel = args.nivel
     inv.ref = args.ref
+    inv.rownum = args.rownum
     inv.prolong = args.prolong
 
-    inv.get_refs(rownum=args.rownum)
+    inv.get_refs()
 
     inv.ano = args.ano
     inv.mes = args.mes
