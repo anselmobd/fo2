@@ -220,6 +220,12 @@ class Inventario:
             self._mes = value
 
     def get_refs(self, nivel=None, rownum=None):
+        if self.origem == 's':
+            self.get_systextil_refs(nivel, rownum)
+        else:
+            self.get_fo2_refs(nivel, rownum)
+
+    def get_systextil_refs(self, nivel=None, rownum=None):
         if nivel is None:
             nivel = self.nivel
         else:
@@ -269,7 +275,45 @@ class Inventario:
             ref_filter=ref_filter,
             rownum_filter=rownum_filter,
         )
-        # print(sql)
+        self._refs = self._db.execute(sql)
+
+    def get_fo2_refs(self, nivel=None, rownum=None):
+        if nivel is None:
+            nivel = self.nivel
+        else:
+            self.nivel = nivel
+
+        nivel_filter = ""
+        if self.nivel != 1:
+            nivel_filter = "AND 1=2"
+
+        ref_filter = ""
+        if self.ref is not None:
+            ref_filter = "AND e.referencia = '{}'".format(self.ref)
+        else:
+            if nivel == 1:
+                ref_filter = "AND e.referencia <= '99999'"
+
+        rownum_filter = ''
+        if rownum is not None:
+            rownum_filter = 'limit {}'.format(rownum)
+
+        sql = """
+            select distinct
+              '1' "NIVEL"
+            , e.referencia "REF"
+            from fo2_estoque_manual e
+            where 1=1
+              {nivel_filter} -- nivel_filter
+              {ref_filter} -- ref_filter
+            order by
+              e.referencia
+            {rownum_filter} -- rownum_filter
+        """.format(
+            nivel_filter=nivel_filter,
+            ref_filter=ref_filter,
+            rownum_filter=rownum_filter,
+        )
         self._refs = self._db.execute(sql)
 
     def param_ok(self):
