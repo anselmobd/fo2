@@ -219,23 +219,18 @@ class Inventario:
         else:
             self._mes = value
 
-    def get_refs(self, nivel=None, rownum=None):
+    def get_refs(self, rownum=None):
         if self.origem == 's':
-            sql = self.get_sql_systextil_refs(nivel, rownum)
+            sql = self.get_sql_systextil_refs(rownum)
         else:
-            sql = self.get_sql_fo2_refs(nivel, rownum)
+            sql = self.get_sql_fo2_refs(rownum)
         self._refs = self._db.execute(sql)
 
-    def get_sql_systextil_refs(self, nivel=None, rownum=None):
-        if nivel is None:
-            nivel = self.nivel
-        else:
-            self.nivel = nivel
-
+    def get_sql_systextil_refs(self, rownum=None):
         nivel_filter = "AND r.NIVEL_ESTRUTURA = {}".format(self.nivel)
 
         insumos_de_alternativa = ''
-        if nivel != 1:
+        if self.nivel != 1:
             insumos_de_alternativa = '''--
                 JOIN BASI_050 ia -- insumos de alternativa
                   ON ia.NIVEL_COMP = r.NIVEL_ESTRUTURA
@@ -245,7 +240,7 @@ class Inventario:
         if self.ref is not None:
             ref_filter = "AND r.REFERENCIA = '{}'".format(self.ref)
         else:
-            if nivel == 1:
+            if self.nivel == 1:
                 ref_filter = "AND r.REFERENCIA <= '99999'"
 
         rownum_filter = ''
@@ -278,12 +273,7 @@ class Inventario:
         )
         return sql
 
-    def get_sql_fo2_refs(self, nivel=None, rownum=None):
-        if nivel is None:
-            nivel = self.nivel
-        else:
-            self.nivel = nivel
-
+    def get_sql_fo2_refs(self, rownum=None):
         nivel_filter = ""
         if self.nivel != 1:
             nivel_filter = "AND 1=2"
@@ -292,7 +282,7 @@ class Inventario:
         if self.ref is not None:
             ref_filter = "AND e.referencia = '{}'".format(self.ref)
         else:
-            if nivel == 1:
+            if self.nivel == 1:
                 ref_filter = "AND e.referencia <= '99999'"
 
         rownum_filter = ''
