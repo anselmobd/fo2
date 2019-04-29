@@ -155,9 +155,20 @@ class Inventario:
             self.nivel = nivel
 
         nivel_filter = "AND r.NIVEL_ESTRUTURA = {}".format(self.nivel)
+
+        insumos_de_alternativa = ''
+        if nivel != 1:
+            insumos_de_alternativa = '''--
+                JOIN BASI_050 ia -- insumos de alternativa
+                  ON ia.NIVEL_COMP = r.NIVEL_ESTRUTURA
+                 AND ia.GRUPO_COMP = r.REFERENCIA
+            '''
         ref_filter = ""
         if self.ref is not None:
             ref_filter = "AND r.REFERENCIA = '{}'".format(self.ref)
+        else:
+            if nivel == 1:
+                ref_filter = "AND r.REFERENCIA <= '99999'"
 
         rownum_filter = ''
         if rownum is not None:
@@ -170,9 +181,7 @@ class Inventario:
               r.NIVEL_ESTRUTURA NIVEL
             , r.REFERENCIA REF
             FROM BASI_030 r
-            JOIN BASI_050 ia -- insumos de alternativa
-              ON ia.NIVEL_COMP = r.NIVEL_ESTRUTURA
-             AND ia.GRUPO_COMP = r.REFERENCIA
+            {insumos_de_alternativa} -- insumos_de_alternativa
             WHERE r.REFERENCIA NOT LIKE 'DV%'
               {nivel_filter} -- nivel_filter
               {ref_filter} -- ref_filter
@@ -184,6 +193,7 @@ class Inventario:
             FROM SEL s
             {rownum_filter} -- rownum_filter
         """.format(
+            insumos_de_alternativa=insumos_de_alternativa,
             nivel_filter=nivel_filter,
             ref_filter=ref_filter,
             rownum_filter=rownum_filter,
