@@ -324,6 +324,7 @@ class Inventario:
                 "Refs, ano e mes pós inventário devem ser informados")
 
     def print(self):
+        self.get_refs()
         self.param_ok()
         count = len(self._refs['data'])
         for i, values in enumerate(self._refs['data']):
@@ -667,9 +668,6 @@ if __name__ == '__main__':
     inv.ref = args.ref
     inv.rownum = args.rownum
     inv.prolong = args.prolong
-
-    inv.get_refs()
-
     inv.ano = args.ano
     inv.mes = args.mes
     inv.print()
