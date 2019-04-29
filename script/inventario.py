@@ -118,7 +118,10 @@ class Inventario:
 
     @ano.setter
     def ano(self, value):
-        self._ano = value
+        if isinstance(value, int):
+            self._ano = '{}'.format(value)
+        else:
+            self._ano = value
 
     @property
     def mes(self):
@@ -126,7 +129,10 @@ class Inventario:
 
     @mes.setter
     def mes(self, value):
-        self._mes = value
+        if isinstance(value, int):
+            self._mes = '{:02}'.format(value)
+        else:
+            self._mes = value
 
     def get_refs(self, nivel=None, rownum=None):
         if nivel is None:
@@ -449,8 +455,8 @@ if __name__ == '__main__':
 
     inv.get_refs(rownum=args.rownum)
 
-    inv.ano = '{}'.format(args.ano)
-    inv.mes = '{:02}'.format(args.mes)
+    inv.ano = args.ano
+    inv.mes = args.mes
     inv.print_inventario()
 
     ora.close()
