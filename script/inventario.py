@@ -133,9 +133,9 @@ class Postgre:
 
 class Inventario:
 
-    def __init__(self, ora):
+    def __init__(self, db):
         # inicializado via parâmetros
-        self._ora = ora
+        self._db = db
 
         # inicialização fixa
         self._print_header = True
@@ -261,7 +261,7 @@ class Inventario:
             rownum_filter=rownum_filter,
         )
         # print(sql)
-        self._refs = self._ora.execute(sql)
+        self._refs = self._db.execute(sql)
 
     def param_ok(self):
         if self.ano is None or \
@@ -415,7 +415,7 @@ class Inventario:
             fitro_data=fitro_data,
         )
         # print(sql)
-        ref_invent = self._ora.execute(sql)
+        ref_invent = self._db.execute(sql)
 
         if self.tipo == 'i':
             self._tipo_params = {
@@ -600,10 +600,10 @@ if __name__ == '__main__':
 
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
-    ora = Oracle()
-    ora.connect()
+    db = Oracle()
+    db.connect()
 
-    inv = Inventario(ora)
+    inv = Inventario(db)
     inv.tipo = args.tipo
     inv.nivel = args.nivel
     inv.ref = args.ref
@@ -615,4 +615,4 @@ if __name__ == '__main__':
     inv.mes = args.mes
     inv.print()
 
-    ora.close()
+    db.close()
