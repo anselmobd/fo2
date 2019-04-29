@@ -633,6 +633,10 @@ class Inventario:
                 self._tipo_params['DT_FIN'],
             ))
             self._print_header = False
+        for i in range(len(values)):
+            if not isinstance(values[i], str):
+                values[i] = locale.currency(
+                    values[i], grouping=False, symbol=None)
         if self._mask is None:
             self._mask = self.make_pipe_mask(values)
         print(self._mask.format(*values))
