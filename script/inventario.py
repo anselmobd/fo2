@@ -88,6 +88,7 @@ class Inventario:
         self._refs = None
         self._mask = ''
         self._colunas = None
+        self._tipo_params = None
 
     @property
     def tipo(self):
@@ -345,8 +346,15 @@ class Inventario:
             }
         else:
             self._colunas = {
-                'CODIGO': 'Código',
-                'QTD': 'Quantidade',
+                'REG': 'REG',
+                'COD_ITEM': 'COD_ITEM',
+                'DT_EST': 'DT_EST',
+                'QTD': 'QTD',
+                'IND_EST': 'IND_EST',
+                'COD_PART': 'COD_PART',
+            }
+            self._tipo_params = {
+                'DT_EST': '31012019',
             }
 
         for values in ref_invent['data']:
@@ -382,7 +390,18 @@ class Inventario:
         self.print_row(row)
 
     def print_ref_blocok(self, row):
-        pass
+        row['REG'] = 'K200'
+        row['COD_ITEM'] = '{}.{}.{}.{}'.format(
+            row['NIVEL'],
+            row['REF'],
+            row['TAM'],
+            row['COR'],
+        )
+        row['DT_EST'] = self._tipo_params['DT_EST']
+        row['QTD'] = round(row['QTD'], 3)
+        row['IND_EST'] = '0'
+        row['COD_PART'] = ''
+        self.print_row(row)
 
     def print_row(self, row):
         if self._colunas is not None:
