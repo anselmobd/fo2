@@ -332,6 +332,10 @@ class Inventario:
         # print(sql)
         ref_invent = self._ora.execute(sql)
 
+        if self.tipo == 'i':
+            self.print_ref_tipo_inv(ref_invent)
+
+    def print_ref_tipo_inv(self, ref_invent):
         for values in ref_invent['data']:
             row = dict(zip(ref_invent['keys'], values))
             row['QTD'] = round(row['QTD'], 2)
