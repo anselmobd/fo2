@@ -1698,6 +1698,8 @@ class HistoricoLote(View):
                     row['local'] = '-'
                 else:
                     row['local'] = '='
+            if row['local'] Is None':
+                row['local'] = 'SAIU!'
 
         context.update({
             'headers': ('Data', 'Estágio', 'Local', 'Usuário'),
