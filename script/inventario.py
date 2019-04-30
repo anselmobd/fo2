@@ -420,6 +420,9 @@ class Inventario:
             , r.DESCR_REFERENCIA REF_DESCR
             , r.UNIDADE_MEDIDA REF_UNID
             , um.UNID_MED_TRIB UNIDADE
+            , '01' TIPO_ITEM
+            , r.CLASSIFIC_FISCAL NCM
+            , 0 ALIQ_ICMS
             , e.SUBGRUPO_ESTRUTURA TAM
             , t.DESCR_TAM_REFER TAM_DESCR
             , e.ITEM_ESTRUTURA COR
@@ -524,6 +527,7 @@ class Inventario:
             , r.DESCR_REFERENCIA
             , r.UNIDADE_MEDIDA
             , um.UNID_MED_TRIB
+            , r.CLASSIFIC_FISCAL
             , e.SUBGRUPO_ESTRUTURA
             , t.DESCR_TAM_REFER
             , e.ITEM_ESTRUTURA
@@ -557,7 +561,7 @@ class Inventario:
                     'CONTA_CONTABIL': 'Conta contábil',
                 }
             }
-        else:
+        elif self.tipo == 'k':
             dt_pos_fim = datetime.strptime(
                 '01/{mes}/{ano}'.format(mes=self.mes, ano=self.ano),
                 '%d/%m/%Y')
@@ -577,14 +581,34 @@ class Inventario:
                 'DT_INI': dt_ini_str,
                 'DT_FIN': dt_fim_str,
             }
+        else:  # self.tipo == '2'
+            self._tipo_params = {
+                'colunas': [
+                    'REG',
+                    'COD_ITEM',
+                    'DESCR_ITEM',
+                    'COD_BARRA',
+                    'COD_ANT_ITEM',
+                    'UNID_INV',
+                    'TIPO_ITEM',
+                    'COD_NCM',
+                    'EX_IPI',
+                    'COD_GEN',
+                    'COD_LST',
+                    'ALIQ_ICMS',
+                    'CEST',
+                ],
+            }
 
         self._mask = None
         for values in ref_invent['data']:
             row = dict(zip(ref_invent['keys'], values))
             if self.tipo == 'i':
                 self.print_ref_inv(row)
-            else:
+            elif self.tipo == 'k':
                 self.print_ref_blocok(row)
+            else:  # self.tipo == '2'
+                self.print_ref_bloco0200(row)
 
     def print_ref_inv(self, row):
         row['QTD'] = round(row['QTD'], 2)
@@ -613,6 +637,20 @@ class Inventario:
 
     def print_ref_blocok(self, row):
         row['REG'] = 'K200'
+        row['COD_ITEM'] = '{}.{}.{}.{}'.format(
+            row['NIVEL'],
+            row['REF'],
+            row['TAM'],
+            row['COR'],
+        )
+        row['DT_EST'] = self._tipo_params['DT_FIN']
+        row['QTD'] = round(row['QTD'], 3)
+        row['IND_EST'] = '0'
+        row['COD_PART'] = ''
+        self.print_pipe_row(row)
+
+    def print_ref_bloco0200(self, row):
+        row['REG'] = '0200'
         row['COD_ITEM'] = '{}.{}.{}.{}'.format(
             row['NIVEL'],
             row['REF'],
@@ -696,8 +734,8 @@ def parse_args():
         action='store_true')
     parser.add_argument(
         "tipo",
-        help='Tipo de saída (Inventário ou blocoK)',
-        choices=['i', 'k'],
+        help='Tipo de saída (Inventário, bloco K200 ou 0200)',
+        choices=['i', 'k', '2'],
         )
     parser.add_argument(
         "ano",
