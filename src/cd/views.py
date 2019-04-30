@@ -1698,7 +1698,7 @@ class HistoricoLote(View):
                     row['local'] = '-'
                 else:
                     row['local'] = '='
-            if row['local'] is None':
+            if row['local'] is None:
                 row['local'] = 'SAIU!'
 
         context.update({
