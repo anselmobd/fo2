@@ -1666,18 +1666,18 @@ class HistoricoLote(View):
         old_usuario = None
         old_local = None
         for row in data:
+            n_info = 0
             log = row['log']
-            # print('#{}#'.format(log))
             log = log.replace("<UTC>", "utc")
             log = re.sub(
                 r'^(.*)<SimpleLazyObject: <User: ([^\s]*)>>(.*)$',
                 r'\1"\2"\3', log)
             dict_log = eval(log)
-            # pprint(dict_log)
 
             if 'estagio' in dict_log:
                 row['estagio'] = dict_log['estagio']
                 old_estagio = row['estagio']
+                n_info += 1
             else:
                 if old_estagio is None:
                     row['estagio'] = '-'
@@ -1689,6 +1689,7 @@ class HistoricoLote(View):
             if 'local' in dict_log:
                 row['local'] = dict_log['local']
                 old_local = row['local']
+                n_info += 1
             else:
                 if old_local is None:
                     row['local'] = '-'
@@ -1700,16 +1701,19 @@ class HistoricoLote(View):
             if 'local_usuario' in dict_log:
                 row['local_usuario'] = dict_log['local_usuario']
                 old_usuario = row['local_usuario']
+                n_info += 1
             else:
                 if old_usuario is None or row['local'] in ('-', '='):
                     row['local_usuario'] = '-'
                 else:
                     row['local_usuario'] = '='
 
+            row['n_info'] = n_info
+
         context.update({
             'headers': ('Data', 'Estágio', 'Local', 'Usuário'),
             'fields': ('time', 'estagio', 'local', 'local_usuario'),
-            'data': data,
+            'data': [row for row in data if row['n_info'] != 0],
         })
 
         return context
