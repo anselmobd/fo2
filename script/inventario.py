@@ -321,6 +321,7 @@ class Inventario:
         count = len(self._refs['data'])
         for i, values in enumerate(self._refs['data']):
             row = dict(zip(self._refs['keys'], values))
+            sys.stdout.flush()
             sys.stderr.write(
                 '({}/{}) {}.{}\n'.format(i+1, count, row['NIVEL'], row['REF']))
             self.print_ref(row['NIVEL'], row['REF'])
