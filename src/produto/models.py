@@ -89,6 +89,11 @@ class Produto(models.Model):
         verbose_name='Imagem no TAG')
     cor_no_tag = models.BooleanField(
         default=True, verbose_name='Imprime cor no TAG')
+    ncm = models.CharField(
+        max_length=8, default='',
+        verbose_name='NCM')
+    unidade = models.CharField(
+        max_length=2, default='')
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
