@@ -1719,14 +1719,19 @@ class HistoricoLote(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        if 'lote' in kwargs and kwargs['lote'] is not None:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        if 'lote' in kwargs and kwargs['lote'] is not None:
+            form.data['lote'] = kwargs['lote']
         if form.is_valid():
             lote = form.cleaned_data['lote']
             cursor = connection.cursor()
