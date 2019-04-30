@@ -1,6 +1,8 @@
 from pprint import pprint
+import re
+import datetime
 from datetime import timedelta
-# import pandas as pd
+from pytz import utc
 
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -13,6 +15,8 @@ from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
 from django.http import JsonResponse
+from django.utils.functional import SimpleLazyObject
+from django.contrib.auth.models import User
 
 from fo2.models import rows_to_dict_list_lower, GradeQtd
 from fo2.template import group_rowspan
@@ -1659,10 +1663,35 @@ class HistoricoLote(View):
             context.update({'erro': 'Lote não encontrado ou nunca endereçado'})
             return context
         for row in data:
-            row['endereco'] = '-'
+            log = row['log']
+            # print('#{}#'.format(log))
+            log = log.replace("<UTC>", "utc")
+            log = re.sub(
+                r'^(.*)<SimpleLazyObject: <User: ([^\s]*)>>(.*)$',
+                r'\1"\2"\3', log)
+            dict_log = eval(log)
+            # pprint(dict_log)
+
+            if 'estagio' in dict_log:
+                row['estagio'] = dict_log['estagio']
+            else:
+                row['estagio'] = '='
+            if row['estagio'] == 999:
+                row['estagio'] = 'Finalizado'
+
+            if 'local_usuario' in dict_log:
+                row['local_usuario'] = dict_log['local_usuario']
+            else:
+                row['local_usuario'] = '-'
+
+            if 'local' in dict_log:
+                row['local'] = dict_log['local']
+            else:
+                row['local'] = ''
+
         context.update({
-            'headers': ('Data', 'Endereço', 'Usuário'),
-            'fields': ('time', 'endereco', 'usuario'),
+            'headers': ('Data', 'Estágio', 'Local', 'Usuário'),
+            'fields': ('time', 'estagio', 'local', 'local_usuario'),
             'data': data,
         })
 
