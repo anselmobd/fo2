@@ -29,8 +29,8 @@
   </table>
   <h3>Por lote</h3>
   <table>
-    {% include "layout/html_thead.html" with data=d_headers only %}
-    {% include "layout/html_tbody.html" with fields=d_fields data=d_data only %}
+    {% include "layout/thead_generic.html" with data=d_headers only %}
+    {% include "layout/tbody_generic.html" with fields=d_fields data=d_data only %}
   </table>
 {% endif %}
 {% endblock %}

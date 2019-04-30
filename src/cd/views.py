@@ -1621,6 +1621,9 @@ class Historico(View):
                     row['endereco'] = 'SAIU!'
             if row['usuario'] is None:
                 row['usuario'] = '-'
+            row['lote|TARGET'] = '_BLANK'
+            row['lote|LINK'] = reverse(
+                'cd_historico_lote', args=[row['lote']])
         context.update({
             'd_headers': ('Lote', 'Última data', 'Endereço', 'Usuário'),
             'd_fields': ('lote', 'dt', 'endereco', 'usuario'),
