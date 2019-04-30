@@ -585,13 +585,13 @@ class Inventario:
             self._tipo_params = {
                 'colunas': [
                     'REG',
-                    'COD_ITEM',
-                    'DESCR_ITEM',
+                    'CODIGO',  # 'COD_ITEM'
+                    'DESCRICAO',  # 'DESCR_ITEM'
                     'COD_BARRA',
                     'COD_ANT_ITEM',
-                    'UNID_INV',
+                    'UNIDADE',  # 'UNID_INV'
                     'TIPO_ITEM',
-                    'COD_NCM',
+                    'NCM',  # 'COD_NCM'
                     'EX_IPI',
                     'COD_GEN',
                     'COD_LST',
@@ -603,6 +603,7 @@ class Inventario:
         self._mask = None
         for values in ref_invent['data']:
             row = dict(zip(ref_invent['keys'], values))
+            self.ref_calc(row)
             if self.tipo == 'i':
                 self.print_ref_inv(row)
             elif self.tipo == 'k':
@@ -610,16 +611,7 @@ class Inventario:
             else:  # self.tipo == '2'
                 self.print_ref_bloco0200(row)
 
-    def print_ref_inv(self, row):
-        row['QTD'] = round(row['QTD'], 2)
-        # Se preço baseado no saldo_financeiro for muito diferente do
-        # informado, usa o atualmente informado
-        if row['PRECO'] > float(row['PRECO_INFORMADO'])*1.2 or \
-                row['PRECO'] < float(row['PRECO_INFORMADO'])*0.8:
-            row['PRECO'] = round(row['PRECO_INFORMADO'], 4)
-        else:
-            row['PRECO'] = round(row['PRECO'], 4)
-        row['VALOR'] = row['QTD'] * row['PRECO']
+    def ref_calc(self, row):
         row['CODIGO'] = '{}.{}.{}.{}'.format(
             row['NIVEL'],
             row['REF'],
@@ -632,36 +624,37 @@ class Inventario:
             row['TAM_DESCR'],
             row['COR_DESCR'],
         )
+
+    def print_ref_inv(self, row):
+        row['QTD'] = round(row['QTD'], 2)
+        # Se preço baseado no saldo_financeiro for muito diferente do
+        # informado, usa o atualmente informado
+        if row['PRECO'] > float(row['PRECO_INFORMADO'])*1.2 or \
+                row['PRECO'] < float(row['PRECO_INFORMADO'])*0.8:
+            row['PRECO'] = round(row['PRECO_INFORMADO'], 4)
+        else:
+            row['PRECO'] = round(row['PRECO'], 4)
+        row['VALOR'] = row['QTD'] * row['PRECO']
         row['CONTA_CONTABIL'] = 377
         self.print_csv_row(row)
 
     def print_ref_blocok(self, row):
         row['REG'] = 'K200'
-        row['COD_ITEM'] = '{}.{}.{}.{}'.format(
-            row['NIVEL'],
-            row['REF'],
-            row['TAM'],
-            row['COR'],
-        )
         row['DT_EST'] = self._tipo_params['DT_FIN']
         row['QTD'] = round(row['QTD'], 3)
         row['IND_EST'] = '0'
         row['COD_PART'] = ''
-        self.print_pipe_row(row)
+        self.print_pipek_row(row)
 
     def print_ref_bloco0200(self, row):
         row['REG'] = '0200'
-        row['COD_ITEM'] = '{}.{}.{}.{}'.format(
-            row['NIVEL'],
-            row['REF'],
-            row['TAM'],
-            row['COR'],
-        )
-        row['DT_EST'] = self._tipo_params['DT_FIN']
-        row['QTD'] = round(row['QTD'], 3)
-        row['IND_EST'] = '0'
-        row['COD_PART'] = ''
-        self.print_pipe_row(row)
+        row['COD_BARRA'] = ''
+        row['COD_ANT_ITEM'] = ''
+        row['EX_IPI'] = ''
+        row['COD_GEN'] = row['NCM'][:2]
+        row['COD_LST'] = ''
+        row['CEST'] = ''
+        self.print_pipe2_row(row)
 
     def print_csv_row(self, row):
         if 'colunas' in self._tipo_params:
@@ -676,7 +669,7 @@ class Inventario:
             self._mask = self.make_csv_mask(values)
         self.print_row_values(values)
 
-    def print_pipe_row(self, row):
+    def print_pipek_row(self, row):
         if 'colunas' in self._tipo_params:
             cols = self._tipo_params['colunas']
             row = {key: row[key] for key in cols}
@@ -688,6 +681,15 @@ class Inventario:
                 self._tipo_params['DT_FIN'],
             ))
             self._print_header = False
+        if self._mask is None:
+            self._mask = self.make_pipe_mask(values)
+        self.print_row_values(values)
+
+    def print_pipe2_row(self, row):
+        if 'colunas' in self._tipo_params:
+            cols = self._tipo_params['colunas']
+            row = {key: row[key] for key in cols}
+        values = list(row.values())
         if self._mask is None:
             self._mask = self.make_pipe_mask(values)
         self.print_row_values(values)
