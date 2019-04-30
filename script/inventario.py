@@ -633,13 +633,9 @@ class Inventario:
         if self._print_header:
             print(';'.join(keys))
             self._print_header = False
-        for i in range(len(values)):
-            if not isinstance(values[i], str):
-                values[i] = locale.currency(
-                    values[i], grouping=True, symbol=None)
         if self._mask is None:
             self._mask = self.make_csv_mask(values)
-        print(self._mask.format(*values))
+        self.print_row_values(values)
 
     def print_pipe_row(self, row):
         if 'colunas' in self._tipo_params:
@@ -653,12 +649,17 @@ class Inventario:
                 self._tipo_params['DT_FIN'],
             ))
             self._print_header = False
-        for i in range(len(values)):
-            if not isinstance(values[i], str):
-                values[i] = locale.currency(
-                    values[i], grouping=False, symbol=None)
         if self._mask is None:
             self._mask = self.make_pipe_mask(values)
+        self.print_row_values(values)
+
+    def print_row_values(self, values):
+        for i in range(len(values)):
+            if isinstance(values[i], str):
+                values[i] = values[i].strip()
+            else:
+                values[i] = locale.currency(
+                    values[i], grouping=False, symbol=None)
         print(self._mask.format(*values))
 
     def make_csv_mask(self, values):
