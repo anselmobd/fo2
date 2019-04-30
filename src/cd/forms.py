@@ -199,3 +199,10 @@ class HistoricoForm(forms.Form):
         label='OP', required=True,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+
+
+class ALoteForm(forms.Form):
+    lote = forms.CharField(
+        label='Lote', max_length=9, min_length=9,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))

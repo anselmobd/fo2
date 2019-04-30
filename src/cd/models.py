@@ -818,6 +818,23 @@ def historico_detalhe(cursor, op):
     return rows_to_dict_list_lower(cursor)
 
 
+def historico_lote(cursor, lote):
+    sql = '''
+        select
+          t.*
+        from fo2_cd_lote l
+        join fo2_ger_record_tracking t
+          on t."table" = 'Lote'
+         and t.record_id = l.id
+        where l.lote = %s
+          and t.iud = 'u'
+        order by
+          t."time"
+    '''
+    cursor.execute(sql, [lote])
+    return rows_to_dict_list_lower(cursor)
+
+
 def solicita_lote(cursor):
     sql = '''
         select

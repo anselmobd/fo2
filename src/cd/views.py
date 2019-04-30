@@ -1579,7 +1579,7 @@ class Historico(View):
     def __init__(self):
         self.Form_class = cd.forms.HistoricoForm
         self.template_name = 'cd/historico.html'
-        self.title_name = 'Histórico'
+        self.title_name = 'Histórico de OP'
 
     def mount_context(self, cursor, op):
         context = {
@@ -1638,5 +1638,48 @@ class Historico(View):
             op = form.cleaned_data['op']
             cursor = connection.cursor()
             context.update(self.mount_context(cursor, op))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class HistoricoLote(View):
+
+    def __init__(self):
+        self.Form_class = cd.forms.ALoteForm
+        self.template_name = 'cd/historico_lote.html'
+        self.title_name = 'Histórico de lote'
+
+    def mount_context(self, cursor, lote):
+        context = {
+            'lote': lote,
+            }
+
+        data = models.historico_lote(cursor, lote)
+        if len(data) == 0:
+            context.update({'erro': 'Lote não encontrado ou nunca endereçado'})
+            return context
+        for row in data:
+            row['endereco'] = '-'
+        context.update({
+            'headers': ('Data', 'Endereço', 'Usuário'),
+            'fields': ('time', 'endereco', 'usuario'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            lote = form.cleaned_data['lote']
+            cursor = connection.cursor()
+            context.update(self.mount_context(cursor, lote))
         context['form'] = form
         return render(request, self.template_name, context)
