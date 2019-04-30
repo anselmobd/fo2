@@ -15,7 +15,7 @@ class RecordTracking(models.Model):
     table = models.CharField(
         max_length=64, verbose_name='Tabela')
     record_id = models.IntegerField(
-        verbose_name='Id do registro')
+        db_index=True, verbose_name='Id do registro')
     iud = models.CharField(
         max_length=1, verbose_name='Ação')
     log = models.CharField(
