@@ -347,11 +347,19 @@ class Inventario:
             SELECT
               '1' "NIVEL"
             , e.referencia "REF"
+            , p.descricao "REF_DESCR"
+            , 'UN' "REF_UNID"
+            , 'UN' "UNIDADE"
             , e.tamanho "TAM"
+            , pt.descricao "TAM_DESCR"
             , e.cor "COR"
-            , edt.DATA_BUSCA
+            , pc.descricao "COR_DESCR"
+            , i.custo "PRECO_INFORMADO"
             , e.qtd "QTD"
+            , i.custo "PRECO"
             FROM fo2_estoque_manual e
+            left join fo2_tamanho t
+              on t.nome = e.tamanho
             JOIN (
               SELECT
                 e.referencia
@@ -372,6 +380,18 @@ class Inventario:
              and edt.tamanho    = e.tamanho
              and edt.cor        = e.cor
              and edt.data_busca = e."data"
+            left join fo2_produto p
+              on p.referencia = e.referencia
+            left join fo2_produto_tamanho pt
+              on pt.produto_id = p.id
+             and pt.tamanho_id = t.id
+            left join fo2_produto_cor pc
+              on pc.produto_id = p.id
+             and pc.cor = e.cor
+            left join fo2_produto_item i
+              on i.produto_id = p.id
+             and i.tamanho_id = pt.id
+             and i.cor_id = pc.id
             ORDER BY
               e.referencia
             , e.tamanho
@@ -569,8 +589,8 @@ class Inventario:
         row['QTD'] = round(row['QTD'], 2)
         # Se preço baseado no saldo_financeiro for muito diferente do
         # informado, usa o atualmente informado
-        if row['PRECO'] > row['PRECO_INFORMADO']*1.2 or \
-                row['PRECO'] < row['PRECO_INFORMADO']*0.8:
+        if row['PRECO'] > float(row['PRECO_INFORMADO'])*1.2 or \
+                row['PRECO'] < float(row['PRECO_INFORMADO'])*0.8:
             row['PRECO'] = round(row['PRECO_INFORMADO'], 4)
         else:
             row['PRECO'] = round(row['PRECO'], 4)
