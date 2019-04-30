@@ -22,9 +22,15 @@
   <h4>{{ erro }}</h4>
 {% endif %}
 {% if data %}
+  <h3>Por data</h3>
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
+  </table>
+  <h3>Por lote</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=d_headers only %}
+    {% include "layout/html_tbody.html" with fields=d_fields data=d_data only %}
   </table>
 {% endif %}
 {% endblock %}
