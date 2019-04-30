@@ -1662,6 +1662,8 @@ class HistoricoLote(View):
         if len(data) == 0:
             context.update({'erro': 'Lote não encontrado ou nunca endereçado'})
             return context
+        old_estagio = None
+        old_local = None
         for row in data:
             log = row['log']
             # print('#{}#'.format(log))
@@ -1674,8 +1676,12 @@ class HistoricoLote(View):
 
             if 'estagio' in dict_log:
                 row['estagio'] = dict_log['estagio']
+                old_estagio = row['estagio']
             else:
-                row['estagio'] = '='
+                if old_estagio is None:
+                    row['estagio'] = '-'
+                else:
+                    row['estagio'] = '='
             if row['estagio'] == 999:
                 row['estagio'] = 'Finalizado'
 
@@ -1686,8 +1692,12 @@ class HistoricoLote(View):
 
             if 'local' in dict_log:
                 row['local'] = dict_log['local']
+                old_local = row['local']
             else:
-                row['local'] = ''
+                if old_local is None:
+                    row['local'] = '-'
+                else:
+                    row['local'] = '='
 
         context.update({
             'headers': ('Data', 'Estágio', 'Local', 'Usuário'),
