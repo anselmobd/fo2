@@ -1592,7 +1592,7 @@ class Historico(View):
             return context
         for row in data:
             if row['dt'] is None:
-                row['dt'] = 'Não inventariado'
+                row['dt'] = 'Nunca inventariado'
             if row['endereco'] is None:
                 if row['usuario'] is None:
                     row['endereco'] = '-'
@@ -1604,6 +1604,23 @@ class Historico(View):
             'headers': ('Data', 'Qtd. de lotes', 'Endereço', 'Usuário'),
             'fields': ('dt', 'qtd', 'endereco', 'usuario'),
             'data': data,
+        })
+
+        data = models.historico_detalhe(cursor, op)
+        for row in data:
+            if row['dt'] is None:
+                row['dt'] = 'Nunca inventariado'
+            if row['endereco'] is None:
+                if row['usuario'] is None:
+                    row['endereco'] = '-'
+                else:
+                    row['endereco'] = 'SAIU!'
+            if row['usuario'] is None:
+                row['usuario'] = '-'
+        context.update({
+            'd_headers': ('Lote', 'Última data', 'Endereço', 'Usuário'),
+            'd_fields': ('lote', 'dt', 'endereco', 'usuario'),
+            'd_data': data,
         })
 
         return context

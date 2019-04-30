@@ -799,6 +799,25 @@ def historico(cursor, op):
     return rows_to_dict_list_lower(cursor)
 
 
+def historico_detalhe(cursor, op):
+    sql = '''
+        SELECT
+          date(l.local_at) dt
+        , l.lote
+        , l."local" endereco
+        , u.username usuario
+        from fo2_cd_lote l
+        left join auth_user u
+          on u.id = l.local_usuario_id
+        where l.op = %s
+        order by
+          1
+        , l."local"
+    '''
+    cursor.execute(sql, [op])
+    return rows_to_dict_list_lower(cursor)
+
+
 def solicita_lote(cursor):
     sql = '''
         select
