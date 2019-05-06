@@ -66,14 +66,14 @@ class Sped:
                 linhas += len(self.blocos[bloco])
         return linhas
 
-    def bloco_001(self, nivel):
-        self.blocos['{}001'.format(nivel)] = ['|{}001|1|'.format(nivel)]
-
-    def bloco_insere(self, nome):
+    def bloco_insere(self, nome, valor=None):
         self.blocos[nome] = ['|{}|'.format(nome)]
+        if valor is not None:
+            self.blocos[nome][0] += \
+                '{}|'.format(valor)
 
-    def bloco_990_calcula(self, nivel):
-        self.blocos['{}990'.format(nivel)][0] += \
+    def bloco_calcula(self, nome, nivel):
+        self.blocos[nome][0] += \
             '{}|'.format(self.conta_linhas(nivel))
 
     def bloco9900_insere(self):
@@ -82,7 +82,7 @@ class Sped:
     def print(self):
         self.bloco0000()
 
-        self.bloco_001('0')
+        self.bloco_insere('0001', '1')
         # 0200 vem de arquivo
         self.bloco_insere('0990')
 
@@ -91,14 +91,15 @@ class Sped:
         # K200 vem de arquivo
         self.bloco_insere('K990')
 
-        self.bloco_001('9')
+        self.bloco_insere('9001', '1')
+        self.bloco9900_insere()
         self.bloco_insere('9990')
 
         self.bloco_insere('9999')
 
-        self.bloco9900_insere()
-        self.bloco_990_calcula('0')
-        self.bloco_990_calcula('K')
+
+        self.bloco_calcula('0990', '0')
+        self.bloco_calcula('K990', 'K')
 
         for bloco in sorted(self.blocos.keys()):
             if bloco not in ('0200', 'K200'):
