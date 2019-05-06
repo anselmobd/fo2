@@ -41,10 +41,7 @@ class Sped:
 
     def import_bloco(self, arq):
         with open(arq) as data:
-            while True:
-                linha = data.readline()
-                if not linha:
-                    break
+            for linha in data.readlines():
                 bloco = linha[1:5]
                 if bloco not in self.blocos:
                     self.blocos[bloco] = []
