@@ -1108,7 +1108,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         })
 
         por_endereco = lotes.models.SolicitaLoteQtd.objects.values(
-            'lote__op', 'lote__lote',
+            'lote__op', 'lote__lote', 'lote__qtd_produzir',
             'lote__referencia', 'lote__cor', 'lote__tamanho'
         ).annotate(
             lote__local=Coalesce('lote__local', Value('-ausente-')),
@@ -1120,12 +1120,19 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'lote__tamanho', 'lote__lote'
         )
 
+        for lote in por_endereco:
+            if lote['qtdsum'] == lote['lote__qtd_produzir']:
+                lote['inteira_parcial'] = 'Lote inteiro'
+            else:
+                lote['inteira_parcial'] = 'Parcial'
+
         context.update({
-            'e_headers': ['Endereço', 'OP', 'Lote', 'Referência',
-                          'Cor', 'Tamanho', 'Quant. Solicitada'],
+            'e_headers': ['Endereço', 'OP', 'Lote',
+                          'Referência', 'Cor', 'Tamanho',
+                          'Quant. Solicitada', 'Solicitação'],
             'e_fields': ['lote__local', 'lote__op', 'lote__lote',
                          'lote__referencia', 'lote__cor', 'lote__tamanho',
-                         'qtdsum'],
+                         'qtdsum', 'inteira_parcial'],
             'e_data': por_endereco,
         })
 
