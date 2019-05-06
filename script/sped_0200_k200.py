@@ -39,13 +39,16 @@ class Sped:
         else:
             self._mes = value
 
+    def import_linha(self, linha):
+        bloco = linha[1:5]
+        if bloco not in self.blocos:
+            self.blocos[bloco] = []
+        self.blocos[bloco].append(linha)
+
     def import_bloco(self, arq):
         with open(arq) as data:
             for linha in data.readlines():
-                bloco = linha[1:5]
-                if bloco not in self.blocos:
-                    self.blocos[bloco] = []
-                self.blocos[bloco].append(linha)
+                self.import_linha(linha)
 
     def bloco0000(self):
         dt_pos_fim = datetime.strptime(
