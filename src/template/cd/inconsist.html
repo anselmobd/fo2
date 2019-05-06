@@ -1,7 +1,7 @@
 {% extends 'cd/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'cd_index' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -11,7 +11,7 @@
 
 {% block content %}
 {% comment %}
-<form action="{% url 'cd_inconsist' %}" method="post">
+<form action="{% url 'cd:inconsist' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
@@ -22,19 +22,19 @@
   <h3>{{ erro }}</h3>
 {% else %}
   {% if opini %}
-    <a href="{% url 'cd_inconsist_opini' ordem=ordem opini=-1 %}">OPs iniciais</a>
+    <a href="{% url 'cd:inconsist_opini' ordem=ordem opini=-1 %}">OPs iniciais</a>
   {% endif %}
   {% if opini and opnext %}
     |
   {% endif %}
   {% if opnext %}
-    <a href="{% url 'cd_inconsist_opini' ordem=ordem opini=opnext %}">Próximas OPs</a>
+    <a href="{% url 'cd:inconsist_opini' ordem=ordem opini=opnext %}">Próximas OPs</a>
   {% endif %}
   {% if data_size %}
   <h4>Listagem
     {% if ordem == 'A' %}ascendente{% else %}descendente{% endif %}
     {% with ordem|add:'-' as ordem_inv %}
-      <a href="{% url 'cd_inconsist_opini' ordem=ordem_inv opini=-1 %}"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span></a>
+      <a href="{% url 'cd:inconsist_opini' ordem=ordem_inv opini=-1 %}"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span></a>
     {% endwith %}
     de OP (limitada a <b>{{ data_size }}</b> OPs)</h4>
     {% if opini %}

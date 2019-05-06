@@ -231,7 +231,7 @@ class Posicao(View):
         slq_link = ('solicitacao__codigo')
         for row in slq:
             row['LINK'] = reverse(
-                'cd_solicitacao_detalhe', args=[row['solicitacao_id']])
+                'cd:solicitacao_detalhe', args=[row['solicitacao_id']])
         context.update({
             'slq_headers': (
                 'Solicidação', 'Descrição',

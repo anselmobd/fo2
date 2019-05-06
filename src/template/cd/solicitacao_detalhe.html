@@ -1,7 +1,7 @@
 {% extends 'cd/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'cd_index' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -13,7 +13,7 @@
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% else %}
-  <a href="{% url 'cd_solicitacoes' %}">Voltar para Solicitações</a>
+  <a href="{% url 'cd:solicitacoes' %}">Voltar para Solicitações</a>
   <h4>Solicitação: <b>{{ solicitacao.codigo }} ({{ solicitacao.descricao }})</b></h4>
 
   {% if data %}

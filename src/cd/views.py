@@ -435,7 +435,7 @@ class Estoque(View):
             row['lote|LINK'] = reverse(
                 'producao:posicao__get', args=[row['lote']])
             row['local|LINK'] = reverse(
-                'cd_estoque_filtro', args=['E', row['local']])
+                'cd:estoque_filtro', args=['E', row['local']])
             if row['estagio'] == 999:
                 row['estagio'] = 'Finalizado'
             if row['qtd'] == row['qtd_produzir']:
@@ -594,7 +594,7 @@ class Inconsistencias(View):
                 sep = ''
                 row['op'] = op['op']
                 row['op|LINK'] = reverse(
-                    'cd_inconsist_detalhe_op', args=[op['op']])
+                    'cd:inconsist_detalhe_op', args=[op['op']])
                 row['op|TARGET'] = '_blank'
                 row['cr'] = ''
                 estagios_op = [r for r in estagios if r['op'] == op['op']]
@@ -908,7 +908,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         data = models.solicita_lote(cursor_def)
         for row in data:
             row['codigo|LINK'] = reverse(
-                'cd_solicitacao_detalhe', args=[row['id']])
+                'cd:solicitacao_detalhe', args=[row['id']])
         context = {
             'headers': headers,
             'fields': fields,
@@ -1079,7 +1079,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
         for row in solicit_qtds:
             link = reverse(
-                'cd_solicitacao_detalhe__get3',
+                'cd:solicitacao_detalhe__get3',
                 args=[solicitacao.id, 'd', row['id']])
             row['delete'] = '''
                 <a title="Exclui lote"
@@ -1088,7 +1088,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 aria-hidden="true"></span></a>
             '''.format(link=link)
         link = reverse(
-            'cd_solicitacao_detalhe__get2',
+            'cd:solicitacao_detalhe__get2',
             args=[solicitacao.id, 'l'])
         limpa = '''
             <a title="Limpa solicitação"
@@ -1351,9 +1351,9 @@ class Grade(View):
             if refnum == 0:  # Todos ou Totais ou busca vazio
                 for row in referencias:
                     row['referencia|LINK'] = reverse(
-                        'cd_grade_estoque', args=[row['referencia']])
+                        'cd:grade_estoque', args=[row['referencia']])
                     row['modelo|LINK'] = reverse(
-                        'cd_grade_estoque', args=[row['modelo']])
+                        'cd:grade_estoque', args=[row['modelo']])
                     tipo = self.tipo(row['referencia'])
                     row['tipo'] = tipo['tipo']
                     row['ordem_tipo'] = tipo['ordem']
@@ -1396,7 +1396,7 @@ class Grade(View):
                     if row['modelo'] == refnum]
                 for row in referencias:
                     row['referencia|LINK'] = reverse(
-                        'cd_grade_estoque', args=[row['referencia']])
+                        'cd:grade_estoque', args=[row['referencia']])
                     tipo = self.tipo(row['referencia'])
                     row['tipo'] = tipo['tipo']
                     row['ordem_tipo'] = tipo['ordem']
@@ -1635,7 +1635,7 @@ class Historico(View):
                 row['usuario'] = '-'
             row['lote|TARGET'] = '_BLANK'
             row['lote|LINK'] = reverse(
-                'cd_historico_lote', args=[row['lote']])
+                'cd:historico_lote', args=[row['lote']])
         context.update({
             'd_headers': ('Lote', 'Última data', 'Endereço', 'Usuário'),
             'd_fields': ('lote', 'dt', 'endereco', 'usuario'),
