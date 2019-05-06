@@ -39,9 +39,16 @@ class Sped:
         else:
             self._mes = value
 
-    def import_bloco(self, bloco, arq):
+    def import_bloco(self, arq):
         with open(arq) as data:
-            self.blocos[bloco] = data.readlines()
+            while True:
+                linha = data.readline()
+                if not linha:
+                    break
+                bloco = linha[1:5]
+                if bloco not in self.blocos:
+                    self.blocos[bloco] = []
+                self.blocos[bloco].append(linha)
 
     def bloco0000(self):
         dt_pos_fim = datetime.strptime(
@@ -77,6 +84,8 @@ class Sped:
             '{}|'.format(self.conta_linhas(nivel))
 
     def bloco9900_insere(self):
+        blocos = ['9900']
+
         pass
 
     def print(self):
@@ -92,11 +101,11 @@ class Sped:
         self.bloco_insere('K990')
 
         self.bloco_insere('9001', '1')
-        self.bloco9900_insere()
         self.bloco_insere('9990')
 
         self.bloco_insere('9999')
 
+        self.bloco9900_insere()
 
         self.bloco_calcula('0990', '0')
         self.bloco_calcula('K990', 'K')
@@ -144,6 +153,6 @@ if __name__ == '__main__':
     sped = Sped()
     sped.ano = args.ano
     sped.mes = args.mes
-    sped.import_bloco('0200', args.arq0200)
-    sped.import_bloco('K200', args.arqk200)
+    sped.import_bloco(args.arq0200)
+    sped.import_bloco(args.arqk200)
     sped.print()
