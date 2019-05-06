@@ -167,27 +167,27 @@ def ped_expedicao(
 
     filtro_embarque_de = ''
     if embarque_de is not None:
-        filtro_embarque_de = '''--
+        filtro_embarque_de = ''' --
             AND ped.DATA_ENTR_VENDA >= '{}' '''.format(embarque_de)
 
     filtro_embarque_ate = ''
     if embarque_ate is not None:
-        filtro_embarque_ate = '''--
+        filtro_embarque_ate = ''' --
             AND ped.DATA_ENTR_VENDA <= '{}' '''.format(embarque_ate)
 
     filtro_pedido_tussor = ''
     if pedido_tussor != '':
-        filtro_pedido_tussor = '''--
+        filtro_pedido_tussor = ''' --
             AND ped.PEDIDO_VENDA = '{}' '''.format(pedido_tussor)
 
     filtro_pedido_cliente = ''
     if pedido_cliente != '':
-        filtro_pedido_cliente = '''--
+        filtro_pedido_cliente = ''' --
             AND ped.COD_PED_CLIENTE = '{}' '''.format(pedido_cliente)
 
     filtro_cliente = ''
     if cliente != '':
-        filtro_cliente = '''--
+        filtro_cliente = ''' --
             AND c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
@@ -196,13 +196,13 @@ def ped_expedicao(
 
     filtro_deposito = ''
     if deposito != '-':
-        filtro_deposito = '''--
+        filtro_deposito = ''' --
             AND i.CODIGO_DEPOSITO = '{}'
             '''.format(deposito)
 
     sql = ""
     if detalhe == 'p':
-        sql += """
+        sql += """ --
             WITH conta_gtin AS
             (
             SELECT
@@ -239,9 +239,8 @@ def ped_expedicao(
              AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
             GROUP BY
               p.PEDIDO_VENDA
-            )
-        """
-    sql += """
+            )"""
+    sql += """ --
         SELECT
           ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA DT_EMISSAO
@@ -253,26 +252,21 @@ def ped_expedicao(
           || '-' || lpad(c.CGC_2, 2, '0')
           || ')' CLIENTE
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
-        , i.CODIGO_DEPOSITO DEPOSITO
-    """
+        , i.CODIGO_DEPOSITO DEPOSITO"""
     if detalhe in ('r', 'c'):
-        sql += """
-            , i.CD_IT_PE_GRUPO REF
-        """
+        sql += """ --
+            , i.CD_IT_PE_GRUPO REF """
     if detalhe == 'c':
-        sql += """
+        sql += """ --
             , i.CD_IT_PE_ITEM COR
-            , i.CD_IT_PE_SUBGRUPO TAM
-        """
-    sql += """
-        , sum(i.QTDE_PEDIDA) QTD
-    """
+            , i.CD_IT_PE_SUBGRUPO TAM"""
+    sql += """ --
+        , sum(i.QTDE_PEDIDA) QTD"""
     if detalhe == 'p':
-        sql += """
+        sql += """ --
             , CASE WHEN cg.PEDIDO_VENDA IS NULL THEN 'N'
-              ELSE 'S' END GTIN_OK
-        """
-    sql += """
+              ELSE 'S' END GTIN_OK"""
+    sql += """ --
         FROM PEDI_100 ped -- pedido de venda
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
@@ -282,15 +276,13 @@ def ped_expedicao(
           ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
-         AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
-        """
+         AND c.CGC_4 = ped.CLI_PED_CGC_CLI4"""
     if detalhe == 'p':
-        sql += """
+        sql += """ --
             LEFT JOIN conta_gtin cg
               ON cg.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND cg.MIN_GTIN = 1
-             AND cg.MAX_GTIN = 1
-        """
+             AND cg.MAX_GTIN = 1"""
     sql += """
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
           AND f.NUM_NOTA_FISCAL IS NULL
@@ -310,36 +302,29 @@ def ped_expedicao(
         , c.CGC_4
         , c.CGC_2
         , ped.COD_PED_CLIENTE
-        , i.CODIGO_DEPOSITO
-    """
+        , i.CODIGO_DEPOSITO"""
     if detalhe in ('r', 'c'):
-        sql += """
-            , i.CD_IT_PE_GRUPO
-        """
+        sql += """ --
+            , i.CD_IT_PE_GRUPO"""
     if detalhe == 'c':
-        sql += """
+        sql += """ --
             , i.CD_IT_PE_ITEM
             , t.ORDEM_TAMANHO
-            , i.CD_IT_PE_SUBGRUPO
-        """
+            , i.CD_IT_PE_SUBGRUPO"""
     if detalhe == 'p':
-        sql += """
-            , cg.PEDIDO_VENDA
-        """
-    sql += """
+        sql += """ --
+            , cg.PEDIDO_VENDA"""
+    sql += """ --
         ORDER BY
           ped.DATA_ENTR_VENDA DESC
-        , ped.PEDIDO_VENDA DESC
-    """
+        , ped.PEDIDO_VENDA DESC"""
     if detalhe in ('r', 'c'):
-        sql += """
-            , i.CD_IT_PE_GRUPO
-        """
+        sql += """ --
+            , i.CD_IT_PE_GRUPO"""
     if detalhe == 'c':
-        sql += """
+        sql += """ --
             , i.CD_IT_PE_ITEM
-            , t.ORDEM_TAMANHO
-        """
+            , t.ORDEM_TAMANHO"""
     sql = sql.format(
         filtro_embarque_de=filtro_embarque_de,
         filtro_embarque_ate=filtro_embarque_ate,
