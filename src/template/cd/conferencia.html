@@ -1,7 +1,7 @@
 {% extends 'cd/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'cd_index' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -12,9 +12,9 @@
 {% block content %}
 {% if data %}
   {% if simples %}
-    <a href="{% url 'cd_conferencia_detalhada' %}">Mostrar conferência detalhada</a>
+    <a href="{% url 'cd:conferencia_detalhada' %}">Mostrar conferência detalhada</a>
   {% else %}
-    <a href="{% url 'cd_conferencia' %}">Mostrar conferência simples</a>
+    <a href="{% url 'cd:conferencia' %}">Mostrar conferência simples</a>
   {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers only %}

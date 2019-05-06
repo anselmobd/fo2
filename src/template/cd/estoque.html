@@ -1,7 +1,7 @@
 {% extends 'cd/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'cd_index' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
 <style>
@@ -188,12 +188,12 @@ span.spanlink:hover {
   </div>
   <div class="col-md-6" align="right">
     {% if solicit_cod %}
-      Solicitação: <a href="{% url 'cd_solicitacao_detalhe' solicit_id %}" target="_blank">{{solicit_cod}}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+      Solicitação: <a href="{% url 'cd:solicitacao_detalhe' solicit_id %}" target="_blank">{{solicit_cod}}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
     {% endif %}
   </div>
 </div>
 <div id="myfilter">
-  <form action="{% url 'cd_estoque' %}" method="post" name="formName">
+  <form action="{% url 'cd:estoque' %}" method="post" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>

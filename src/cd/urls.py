@@ -3,49 +3,63 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='cd_index'),
+    url(r'^$', views.index, name='index'),
+
     url(r'^s/$', views.teste_som, name='teste_som'),
-    url(r'^lote_local/$', views.LotelLocal.as_view(), name='cd_lote_local'),
-    url(r'^estoque/$', views.Estoque.as_view(), name='cd_estoque'),
+
+    url(r'^lote_local/$', views.LotelLocal.as_view(), name='lote_local'),
+
     url(r'^estoque/(?P<ordem>.)/(?P<filtro>.+)/$',
-        views.Estoque.as_view(), name='cd_estoque_filtro'),
-    url(r'^troca_local/$', views.TrocaLocal.as_view(), name='cd_troca_local'),
-    url(r'^inconsist/$', views.Inconsistencias.as_view(), name='cd_inconsist'),
+        views.Estoque.as_view(), name='estoque_filtro'),
+    url(r'^estoque/$', views.Estoque.as_view(), name='estoque'),
+
+    url(r'^troca_local/$', views.TrocaLocal.as_view(), name='troca_local'),
+
     url(r'^inconsist/(?P<ordem>.-?)/(?P<opini>-?\d+)/$',
-        views.Inconsistencias.as_view(), name='cd_inconsist_opini'),
+        views.Inconsistencias.as_view(), name='inconsist_opini'),
+    url(r'^inconsist/$', views.Inconsistencias.as_view(), name='inconsist'),
+
     url(r'^inconsist_detalhe/(?P<op>\d+)/$',
         views.InconsistenciasDetalhe.as_view(),
-        name='cd_inconsist_detalhe_op'),
+        name='inconsist_detalhe_op'),
+
     url(r'^conferencia/$',
-        views.ConferenciaSimples.as_view(), name='cd_conferencia'),
+        views.ConferenciaSimples.as_view(), name='conferencia'),
+
     url(r'^conferencia_detalhada/$',
-        views.Conferencia.as_view(), name='cd_conferencia_detalhada'),
+        views.Conferencia.as_view(), name='conferencia_detalhada'),
+
     url(r'^solicitacoes/(?P<id>[^/]+)?$',
-        views.Solicitacoes.as_view(), name='cd_solicitacoes'),
+        views.Solicitacoes.as_view(), name='solicitacoes'),
 
     url(r'^solicitacao_detalhe/(?P<solicit_id>[^/]+)'
         '/(?P<acao>[^/]+)/(?P<id>[^/]+)$',
         views.SolicitacaoDetalhe.as_view(),
-        name='cd_solicitacao_detalhe__get3'),
+        name='solicitacao_detalhe__get3'),
     url(r'^solicitacao_detalhe/(?P<solicit_id>[^/]+)'
         '/(?P<acao>[^/]+)$',
         views.SolicitacaoDetalhe.as_view(),
-        name='cd_solicitacao_detalhe__get2'),
+        name='solicitacao_detalhe__get2'),
     url(r'^solicitacao_detalhe/(?P<solicit_id>[^/]+)',
-        views.SolicitacaoDetalhe.as_view(), name='cd_solicitacao_detalhe'),
+        views.SolicitacaoDetalhe.as_view(), name='solicitacao_detalhe'),
 
     url(r'^solicita/(?P<solicitacao_id>[^/]+)/'
         '(?P<lote>[^/]+)/(?P<qtd>[^/]+)/$',
-        views.solicita_lote, name='cd_solicita_lote'),
-    url(r'^mapa/$', views.Mapa.as_view(), name='cd_mapa'),
+        views.solicita_lote, name='solicita_lote'),
+
+    url(r'^mapa/$', views.Mapa.as_view(), name='mapa'),
+
     url(r'^endereco_lote/(?P<lote>[^/]+)?$', views.EnderecoLote.as_view(),
-        name='cd_endereco_lote'),
-    url(r'^grade_estoque/(?P<referencia>[^/]+)?/?$',
-        views.Grade.as_view(), name='cd_grade_estoque'),
+        name='endereco_lote'),
+
     url(r'^grade_estoque/(?P<referencia>[^/]+)/(?P<detalhe>[^/]+)?/?$',
-        views.Grade.as_view(), name='cd_grade_estoque_detalhe'),
+        views.Grade.as_view(), name='grade_estoque_detalhe'),
+    url(r'^grade_estoque/(?P<referencia>[^/]+)?/?$',
+        views.Grade.as_view(), name='grade_estoque'),
+
     url(r'^historico/?$',
-        views.Historico.as_view(), name='cd_historico'),
+        views.Historico.as_view(), name='historico'),
+
     url(r'^historico_lote/(?P<lote>[^/]+)?$',
-        views.HistoricoLote.as_view(), name='cd_historico_lote'),
+        views.HistoricoLote.as_view(), name='historico_lote'),
 ]

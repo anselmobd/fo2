@@ -57,7 +57,7 @@ urlpatterns = [
 
     url(r'^dp/', include('dp.urls', namespace='dp')),
 
-    url(r'^cd/', include('cd.urls')),
+    url(r'^cd/', include('cd.urls', namespace='cd')),
 
     url(r'^estoque/', include('estoque.urls', namespace='estoque')),
 
