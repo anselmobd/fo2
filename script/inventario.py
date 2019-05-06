@@ -576,7 +576,7 @@ class Inventario:
                 'colunas': [
                     'REG',
                     'DT_EST',
-                    'COD_ITEM',
+                    'CODIGO',  # 'COD_ITEM'
                     'QTD',
                     'IND_EST',
                     'COD_PART',
