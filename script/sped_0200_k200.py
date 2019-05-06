@@ -16,6 +16,7 @@ class Sped:
 
         # outras variaveis utilizadas
         self.blocos = {}
+        self.ordem = '0BCDEGHK19'
 
     @property
     def ano(self):
@@ -39,6 +40,12 @@ class Sped:
         else:
             self._mes = value
 
+    def bloco_ordem(self, nome):
+        return '{:02}{}'.format(
+            self.ordem.find(nome[0]),
+            nome
+        )
+
     def import_linha(self, linha):
         bloco = linha[1:5]
         if bloco not in self.blocos:
@@ -47,7 +54,7 @@ class Sped:
 
     def import_bloco(self, arq):
         with open(arq) as data:
-            for linha in data.readlines():
+            for linha in data.read().splitlines():
                 self.import_linha(linha)
 
     def bloco0000(self):
@@ -87,8 +94,20 @@ class Sped:
 
     def bloco9900_insere_todos(self):
         blocos = ['9900']
+        for bloco in self.blocos.keys():
+            blocos.append(bloco)
+        for bloco in sorted(blocos, key=self.bloco_ordem):
+            self.bloco_insere('9900|{}'.format(bloco))
 
-        pass
+    def bloco9900_calcula_todos(self):
+        blocos9900 = [bloco[5:9]
+                      for bloco in self.blocos.keys()
+                      if '|' in bloco]
+        for bloco in blocos9900:
+            self.set_bloco_valor(
+                '9900|{}'.format(bloco),
+                self.conta_linhas(bloco),
+            )
 
     def print(self):
         self.bloco0000()
@@ -111,11 +130,14 @@ class Sped:
 
         self.bloco_calcula('0990', '0')
         self.bloco_calcula('K990', 'K')
+        self.bloco_calcula('9990', '9')
+        self.bloco_calcula('9999', '')
 
-        for bloco in sorted(self.blocos.keys()):
-            if bloco not in ('0200', 'K200'):
-                for linha in self.blocos[bloco]:
-                    print(linha)
+        self.bloco9900_calcula_todos()
+
+        for bloco in sorted(self.blocos.keys(), key=self.bloco_ordem):
+            for linha in self.blocos[bloco]:
+                print(linha)
 
 
 def parse_args():
