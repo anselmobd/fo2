@@ -73,17 +73,19 @@ class Sped:
                 linhas += len(self.blocos[bloco])
         return linhas
 
+    def set_bloco_valor(self, nome, valor):
+        self.blocos[nome][0] += \
+            '{}|'.format(valor)
+
     def bloco_insere(self, nome, valor=None):
         self.blocos[nome] = ['|{}|'.format(nome)]
         if valor is not None:
-            self.blocos[nome][0] += \
-                '{}|'.format(valor)
+            self.set_bloco_valor(nome, valor)
 
     def bloco_calcula(self, nome, nivel):
-        self.blocos[nome][0] += \
-            '{}|'.format(self.conta_linhas(nivel))
+        self.set_bloco_valor(nome, self.conta_linhas(nivel))
 
-    def bloco9900_insere(self):
+    def bloco9900_insere_todos(self):
         blocos = ['9900']
 
         pass
@@ -105,7 +107,7 @@ class Sped:
 
         self.bloco_insere('9999')
 
-        self.bloco9900_insere()
+        self.bloco9900_insere_todos()
 
         self.bloco_calcula('0990', '0')
         self.bloco_calcula('K990', 'K')
