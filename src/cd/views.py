@@ -1078,18 +1078,24 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         )
 
         for row in solicit_qtds:
+            link = reverse(
+                'cd_solicitacao_detalhe__get3',
+                args=[solicitacao.id, 'd', row['id']])
             row['delete'] = '''
                 <a title="Exclui lote"
-                href="/cd/solicitacao_detalhe/{solicit_id}/d/{id}"
+                href="{link}"
                 ><span class="glyphicon glyphicon-remove"
                 aria-hidden="true"></span></a>
-            '''.format(solicit_id=solicitacao.id, id=row['id'])
+            '''.format(link=link)
+        link = reverse(
+            'cd_solicitacao_detalhe__get2',
+            args=[solicitacao.id, 'l'])
         limpa = '''
             <a title="Limpa solicitação"
-            href="/cd/solicitacao_detalhe/{solicit_id}/l"
+            href="{link}"
             ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"
             ></span></a>
-        '''.format(solicit_id=solicitacao.id)
+        '''.format(link=link)
 
         context.update({
             'safe': ['delete'],
@@ -1159,8 +1165,14 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
 
-        acao = kwargs['acao']
-        slq_id = kwargs['id']
+        if 'acao' in kwargs:
+            acao = kwargs['acao']
+        else:
+            acao = None
+        if 'id' in kwargs:
+            slq_id = kwargs['id']
+        else:
+            slq_id = None
         solicit_id = kwargs['solicit_id']
 
         if acao == 'd' and slq_id is not None:
