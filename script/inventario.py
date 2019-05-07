@@ -266,7 +266,7 @@ class Inventario:
             {insumos_de_alternativa} -- insumos_de_alternativa
             WHERE r.REFERENCIA NOT LIKE 'DV%' -- diversos
               AND (r.NIVEL_ESTRUTURA != 9
-                   OR r.REFERENCIA != 'IP001') -- inspeção
+                   OR r.REFERENCIA != 'IP001') -- inspecao
               {nivel_filter} -- nivel_filter
               {ref_filter} -- ref_filter
             ORDER BY
