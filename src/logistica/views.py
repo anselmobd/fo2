@@ -62,6 +62,8 @@ class NotafiscalRel(View):
     title_name = 'Controle de data de saída de NF'
 
     def mount_context(self, form, form_obj):
+        print('init')
+        sys.stdout.flush()
         line_tik()
         context = {}
         fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
@@ -199,6 +201,8 @@ class NotafiscalRel(View):
                 'data': data,
             })
             line_tik()
+        print('fim')
+        sys.stdout.flush()
         return context
 
     def get(self, request, *args, **kwargs):
