@@ -1,3 +1,4 @@
+import sys
 from pprint import pprint
 import datetime
 from operator import itemgetter
@@ -99,7 +100,10 @@ class NotafiscalRel(View):
             })
 
         select = select.order_by('-numero')
-        data = list(select.values(*fields, 'posicao__nome'))
+        dataset = select.values(*fields, 'posicao__nome')
+        print(dataset.query)
+        sys.stdout.flush()
+        data = list(dataset)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma NF encontrada',
