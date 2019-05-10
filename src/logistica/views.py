@@ -49,6 +49,7 @@ def debug(message, level=None, depth=1):
             message=message,
             )
         )
+    sys.stdout.flush()
 
 
 def line_tik():
