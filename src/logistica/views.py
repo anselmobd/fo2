@@ -1,6 +1,7 @@
 import sys
 from pprint import pprint
 import datetime
+from datetime import timedelta
 from operator import itemgetter
 
 from django.db import connections
@@ -46,14 +47,14 @@ class NotafiscalRel(View):
             })
         if form['data_de']:
             select = select.filter(
-                faturamento__date__gte=form['data_de']
+                faturamento__gte=form['data_de']
                 )
             context.update({
                 'data_de': form['data_de'],
             })
         if form['data_ate']:
             select = select.filter(
-                faturamento__date__lte=form['data_ate']
+                faturamento__lte=form['data_ate'] + timedelta(days=1)
                 )
             context.update({
                 'data_ate': form['data_ate'],
