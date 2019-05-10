@@ -20,7 +20,8 @@ class NotaFiscal(models.Model):
     # campos importados
     numero = models.IntegerField(
         db_index=True, unique=True, verbose_name='número')
-    ativa = models.BooleanField(default=True)
+    ativa = models.BooleanField(
+        db_index=True, default=True)
     faturamento = models.DateTimeField(null=True, blank=True)
     cod_status = models.IntegerField(
         null=True, blank=True,
@@ -34,7 +35,8 @@ class NotaFiscal(models.Model):
     dest_nome = models.CharField(
         max_length=100, null=True, blank=True,
         verbose_name='Destinatário')
-    natu_venda = models.BooleanField(default=False, verbose_name='venda')
+    natu_venda = models.BooleanField(
+        db_index=True, default=False, verbose_name='venda')
     uf = models.CharField(
         max_length=2, null=True, blank=True,
         verbose_name='UF')
