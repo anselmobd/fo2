@@ -1,7 +1,9 @@
 import sys
+import inspect
 from pprint import pprint
 import datetime
 from datetime import timedelta
+import time
 from operator import itemgetter
 
 from django.db import connections
@@ -25,15 +27,44 @@ def index(request):
     return render(request, 'logistica/index.html', context)
 
 
+def debug(message, level=None, depth=1):
+    callerframerecord = inspect.stack()[depth]
+    frame = callerframerecord[0]
+    info = inspect.getframeinfo(frame)
+    if level is None:
+        level = 0
+    msg = ''
+    if level >= 3:
+        msg += 'file={filename}-'
+    if level >= 2:
+        msg += 'func={function}-'
+    if level >= 1:
+        msg += 'line={line}-'
+    msg += '{message}'
+    print(
+        msg.format(
+            filename=info.filename,
+            function=info.function,
+            line=info.lineno,
+            message=message,
+            )
+        )
+
+
+def line_tik():
+    debug(int(round(time.time() * 1000)), 1, depth=2)
+
+
 class NotafiscalRel(View):
     Form_class = NotafiscalRelForm
     template_name = 'logistica/notafiscal_rel.html'
     title_name = 'Controle de data de saída de NF'
 
     def mount_context(self, form, form_obj):
-        # A ser produzido
+        line_tik()
         context = {}
         fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
+        line_tik()
         if form['listadas'] == 'V':
             select = NotaFiscal.objects.filter(
                 natu_venda=True).filter(ativa=True)
@@ -45,6 +76,7 @@ class NotafiscalRel(View):
             context.update({
                 'listadas': 'T',
             })
+        line_tik()
         if form['data_de']:
             select = select.filter(
                 faturamento__gte=form['data_de']
@@ -76,6 +108,7 @@ class NotafiscalRel(View):
             context.update({
                 'cliente': form['cliente'],
             })
+        line_tik()
         if form['transportadora']:
             condition = Q(transp_nome__icontains=form['transportadora'])
             select = select.filter(condition)
@@ -100,16 +133,20 @@ class NotafiscalRel(View):
                 'posicao': form['posicao'].nome,
             })
 
+        line_tik()
         select = select.order_by('-numero')
         dataset = select.values(*fields, 'posicao__nome')
-        print(dataset.query)
-        sys.stdout.flush()
+        # print(dataset.query)
+        # sys.stdout.flush()
+        line_tik()
         data = list(dataset)
+        line_tik()
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma NF encontrada',
             })
         else:
+            line_tik()
             for row in data:
                 row['numero|LINK'] = reverse(
                     'logistica:notafiscal_nf', args=[row['numero']])
@@ -142,6 +179,7 @@ class NotafiscalRel(View):
                     row['ativa'] = 'Cancelada'
                 if row['nf_devolucao'] is None:
                     row['nf_devolucao'] = 'Não'
+            line_tik()
             if form['ordem'] == 'A':
                 data.sort(key=itemgetter('atraso_order'))
             context.update({
@@ -159,7 +197,7 @@ class NotafiscalRel(View):
                            'pedido', 'ped_cliente'),
                 'data': data,
             })
-
+            line_tik()
         return context
 
     def get(self, request, *args, **kwargs):
