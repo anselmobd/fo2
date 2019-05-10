@@ -224,7 +224,14 @@ class NotafiscalRel(View):
         if form.is_valid():
             context.update(self.mount_context(form.cleaned_data, form))
         context['form'] = form
-        return render(request, self.template_name, context)
+        print('antes')
+        sys.stdout.flush()
+        line_tik()
+        result = render(request, self.template_name, context)
+        line_tik()
+        print('depois')
+        sys.stdout.flush()
+        return result
 
 
 class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
