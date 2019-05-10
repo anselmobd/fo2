@@ -3,6 +3,7 @@ import inspect
 from pprint import pprint
 import datetime
 from datetime import timedelta
+import pytz
 import time
 from operator import itemgetter
 
@@ -62,6 +63,7 @@ class NotafiscalRel(View):
     title_name = 'Controle de data de saída de NF'
 
     def mount_context(self, form, form_obj):
+        local = pytz.timezone("America/Sao_Paulo")
         print('init')
         sys.stdout.flush()
         line_tik()
@@ -81,15 +83,25 @@ class NotafiscalRel(View):
             })
         line_tik()
         if form['data_de']:
+            datatime_de = datetime.combine(
+                form['data_de'], datetime.min.time())
+            local_dt = local.localize(datatime_de, is_dst=None)
+            # local_dt = local.localize(form['data_de'])
+            # local_dt = form['data_de']
+            dt_de = local_dt.astimezone(pytz.utc)
             select = select.filter(
-                faturamento__gte=form['data_de']
+                faturamento__gte=dt_de
                 )
             context.update({
                 'data_de': form['data_de'],
             })
         if form['data_ate']:
+            datatime_ate = datetime.combine(
+                form['data_ate'] + timedelta(days=1), datetime.min.time())
+            local_dt = local.localize(datatime_ate, is_dst=None)
+            dt_ate = local_dt.astimezone(pytz.utc)
             select = select.filter(
-                faturamento__lte=form['data_ate'] + timedelta(days=1)
+                faturamento__lte=dt_ate
                 )
             context.update({
                 'data_ate': form['data_ate'],
