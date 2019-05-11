@@ -69,6 +69,9 @@ class NotafiscalRelForm(forms.Form):
         queryset=PosicaoCarga.objects.all().order_by('id'),
         empty_label='--Todas--')
 
+    page = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())
+
     def clean_uf(self):
         uf = self.cleaned_data['uf'].upper()
         data = self.data.copy()

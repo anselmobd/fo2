@@ -6,17 +6,88 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+span.spanlink {
+  cursor:pointer;
+  color:#337ab7;
+}
+span.spanlink:hover {
+  color:##23527c;
+  text-decoration:underline;
+}
+.mypagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 0;
+}
+#pop_back {
+  display:none;
+  z-index:100;
+  opacity: 0.5;
+
+  width: 100%;
+  height: 100%;
+  margin: 0em;
+  left: 0em;
+  top: 0em;
+  background: black;
+  position: fixed;
+}
+#pop {
+  display:none;
+  z-index:110;
+  opacity: 1;
+
+  width: 22em;
+  height: 23em;
+  background-color: #fff;
+
+  position: fixed;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  margin: auto;
+  border:5px solid #ddd;
+  padding:3px;
+}
+#pop p {
+  margin: 0px;
+}
 </style>
 {% endblock %}
 
+{% block javascript %}
+  <script type="text/javascript">
+    function showHideMyFilter() {
+      var x = document.getElementById("myfilter");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        document.getElementById("txtmyfilter").innerHTML = "Esconde";
+        document.getElementById('id_page').value = 1;
+      } else {
+        x.style.display = "none";
+        document.getElementById("txtmyfilter").innerHTML = "Mostra";
+      }
+    }
+    function setPageAndSubmit(page) {
+      document.getElementById('id_page').value = page;
+      document.formName.submit();
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
-<form action="{% url 'logistica:notafiscal_rel' %}" method="post">
+<button onclick="showHideMyFilter()"><span id="txtmyfilter">Esconde</span> campos de filtro</button><br/>
+<div id="myfilter">
+  <form action="{% url 'logistica:notafiscal_rel' %}" method="post" name="formName">
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
     {% csrf_token %}
-</form>
+  </form>
+</div>
 {% if request.POST %}
-  <h3>Filtro:</h3>
+  <h4>Filtro:</h4>
   <ul>
     {% if listadas == 'V' %}
       <li>Apenas notas fiscais de venda e ativas (não canceladas)</li>
@@ -59,12 +130,63 @@
       <li>Posição: {{ posicao }}</li>
     {% endif %}
   </ul>
+  <h4>Ordenação:
+    {% if ordem == 'N' %}
+      Número da nota fiscal
+    {% elif ordem == 'A' %}
+      Atraso (maior primeiro)
+    {% endif %}
+  </h4>
 {% endif %}
 {% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
+  <h4>{{ msg_erro }}</h4>
 {% endif %}
 {% if data %}
-  <h3>Notas Fiscais de venda</h3>
+  <script type="text/javascript">
+    window.onload = function() {
+      showHideMyFilter();
+    }
+  </script>
+  <h4>Encontrada{{ data_length|pluralize }} {{ data_length }} Nota{{ data_length|pluralize }} Fisca{{ data_length|pluralize:"l,is" }}
+    {% if data.paginator.num_pages != 1 %}
+      <small>({{linhas_pagina}} por página)</small>
+    {% endif %}
+  </h4>
+
+  {% if data.paginator.num_pages != 1 %}
+    <ul class="pagination">
+      {% if data.number > 4 %}
+        <li><a href="#" onclick="setPageAndSubmit(1)">
+          <span>1
+            {% if data.number > 5 %}
+              <span class="glyphicon glyphicon-step-backward"></span>
+            {% endif %}
+          </span>
+        </a></li>
+      {% endif %}
+      {% for i in data.paginator.page_range %}
+        {% if i|add:"3"  >= data.number %}
+          {% if i|add:"-3" <= data.number %}
+            {% if data.number == i %}
+              <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li><a href="#" onclick="setPageAndSubmit({{ i }})">{{ i }}</a></li>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      {% if data.number < data.paginator.num_pages|add:"-3" %}
+        <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">
+          <span>
+            {% if data.number < data.paginator.num_pages|add:"-4" %}
+              <span class="glyphicon glyphicon-step-forward"></span>
+            {% endif %}
+          {{ data.paginator.num_pages }}</span>
+        </a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
   <table>
     {% include "layout/thead_generic.html" with data=headers only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data only %}
