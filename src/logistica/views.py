@@ -30,7 +30,7 @@ def index(request):
 class NotafiscalRel(View):
     Form_class = NotafiscalRelForm
     template_name = 'logistica/notafiscal_rel.html'
-    title_name = 'Controle de data de saída de NF'
+    title_name = 'Consulta de datas de NF'
 
     def mount_context(self, form, form_obj):
         linhas_pagina = 100
@@ -371,7 +371,7 @@ class NotafiscalEmbarcando(O2BaseGetView):
     def __init__(self, *args, **kwargs):
         super(NotafiscalEmbarcando, self).__init__(*args, **kwargs)
         self.template_name = 'logistica/notafiscal_embarcando.html'
-        self.title_name = 'Notas fiscais embarcando'
+        self.title_name = 'Notas fiscais entregues ao apoio'
 
     def mount_context(self):
         fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
@@ -379,7 +379,7 @@ class NotafiscalEmbarcando(O2BaseGetView):
         data = list(nfs.values(*fields, 'posicao__nome'))
         if len(data) == 0:
             self.context.update({
-                'msg_erro': 'Nenhuma NF embarcando',
+                'msg_erro': 'Nenhuma NF entregues ao apoio',
             })
 
         for row in data:
