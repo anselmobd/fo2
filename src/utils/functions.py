@@ -1,4 +1,6 @@
 import datetime
+import inspect
+import time
 
 
 def inc_month(dt, months):
@@ -78,3 +80,32 @@ def min_not_None(*args):
             else:
                 mini = v
     return mini
+
+
+def debug(message, level=None, depth=1):
+    callerframerecord = inspect.stack()[depth]
+    frame = callerframerecord[0]
+    info = inspect.getframeinfo(frame)
+    if level is None:
+        level = 0
+    msg = ''
+    if level >= 3:
+        msg += 'file={filename}-'
+    if level >= 2:
+        msg += 'func={function}-'
+    if level >= 1:
+        msg += 'line={line}-'
+    msg += '{message}'
+    print(
+        msg.format(
+            filename=info.filename,
+            function=info.function,
+            line=info.lineno,
+            message=message,
+            )
+        )
+    sys.stdout.flush()
+
+
+def line_tik():
+    debug(int(round(time.time() * 1000))/1000, 1, depth=2)
