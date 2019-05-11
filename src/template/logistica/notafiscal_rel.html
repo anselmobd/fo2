@@ -147,7 +147,7 @@ span.spanlink:hover {
       showHideMyFilter();
     }
   </script>
-  <h4>Encontrada{{ data_length|pluralize }} {{ data_length }} Nota{{ data_length|pluralize }} Fisca{{ data_length|pluralize:"l,is" }}
+  <h4>{{ data_length }} Nota{{ data_length|pluralize }} Fisca{{ data_length|pluralize:"l,is" }}
     {% if data.paginator.num_pages != 1 %}
       <small>({{linhas_pagina}} por página)</small>
     {% endif %}
