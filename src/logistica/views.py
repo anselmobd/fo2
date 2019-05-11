@@ -34,10 +34,12 @@ class NotafiscalRel(View):
 
     def mount_context(self, form, form_obj):
         linhas_pagina = 100
+        paginas_vizinhas = 5
         local = pytz.timezone("America/Sao_Paulo")
 
         context = {
             'linhas_pagina': linhas_pagina,
+            'paginas_vizinhas': paginas_vizinhas,
             'ordem': form['ordem'],
         }
 

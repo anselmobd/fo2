@@ -153,20 +153,22 @@ span.spanlink:hover {
     {% endif %}
   </h4>
 
+  {% with pag_neib=paginas_vizinhas|stringformat:"i" %}
+  {% with pag_neibn="-"|add:pag_neib %}
   {% if data.paginator.num_pages != 1 %}
     <ul class="pagination">
-      {% if data.number > 4 %}
+      {% if data.number > pag_neib|add:1 %}
         <li><a href="#" onclick="setPageAndSubmit(1)">
           <span>1
-            {% if data.number > 5 %}
+            {% if data.number > pag_neib|add:2 %}
               <span class="glyphicon glyphicon-step-backward"></span>
             {% endif %}
           </span>
         </a></li>
       {% endif %}
       {% for i in data.paginator.page_range %}
-        {% if i|add:"3"  >= data.number %}
-          {% if i|add:"-3" <= data.number %}
+        {% if i >= data.number|add:pag_neibn %}
+          {% if i <= data.number|add:pag_neib %}
             {% if data.number == i %}
               <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
             {% else %}
@@ -175,10 +177,10 @@ span.spanlink:hover {
           {% endif %}
         {% endif %}
       {% endfor %}
-      {% if data.number < data.paginator.num_pages|add:"-3" %}
+      {% if data.number < data.paginator.num_pages|add:pag_neibn %}
         <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">
           <span>
-            {% if data.number < data.paginator.num_pages|add:"-4" %}
+            {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
               <span class="glyphicon glyphicon-step-forward"></span>
             {% endif %}
           {{ data.paginator.num_pages }}</span>
@@ -186,6 +188,8 @@ span.spanlink:hover {
       {% endif %}
     </ul>
   {% endif %}
+  {% endwith %}
+  {% endwith %}
 
   <table>
     {% include "layout/thead_generic.html" with data=headers only %}
