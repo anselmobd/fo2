@@ -67,12 +67,19 @@ class Op(View):
                     row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
                         row['PEDIDO'])
             context.update({
-                'i_headers': ('Situação', 'Cancelamento', 'Unidade', 'Pedido',
+                'i_headers': ('Situação', 'Cancelamento', 'Pedido',
                               'Pedido do cliente', 'Relacionamento com OPs'),
-                'i_fields': ('SITUACAO', 'CANCELAMENTO', 'UNIDADE', 'PEDIDO',
+                'i_fields': ('SITUACAO', 'CANCELAMENTO', 'PEDIDO',
                              'PED_CLIENTE', 'TIPO_OP'),
                 'i_data': i_data,
             })
+            # context.update({
+            #     'i_headers': ('Situação', 'Cancelamento', 'Unidade', 'Pedido',
+            #                   'Pedido do cliente', 'Relacionamento com OPs'),
+            #     'i_fields': ('SITUACAO', 'CANCELAMENTO', 'UNIDADE', 'PEDIDO',
+            #                  'PED_CLIENTE', 'TIPO_OP'),
+            #     'i_data': i_data,
+            # })
 
             row = i2_data[0]
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
