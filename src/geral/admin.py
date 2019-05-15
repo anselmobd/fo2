@@ -3,7 +3,7 @@ from django.contrib import admin
 from fo2.admin import intr_adm_site
 from .models import RecordTracking, Dispositivos, RoloBipado, Painel, \
     PainelModulo, UsuarioPainelModulo, InformacaoModulo, Pop, PopAssunto, \
-    UsuarioPopAssunto, TipoParametro, Parametro
+    UsuarioPopAssunto, TipoParametro, Parametro, Config
 from .forms import PainelModelForm, InformacaoModuloModelForm
 
 
@@ -122,3 +122,11 @@ class ParametroAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(Parametro, ParametroAdmin)
+
+
+class ConfigAdmin(admin.ModelAdmin):
+    list_display = ['parametro', 'valor']
+    fields = ['parametro', 'valor']
+
+
+intr_adm_site.register(Config, ConfigAdmin)
