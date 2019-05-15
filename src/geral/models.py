@@ -214,5 +214,10 @@ class TipoParametro(models.Model):
     descricao = models.CharField(
         max_length=255, unique=True, verbose_name='descrição')
 
+    def __str__(self):
+        return '{} - {}'.format(self.codigo, self.descricao)
+
     class Meta:
         db_table = "fo2_param_tipo"
+        verbose_name = "Tipo de parâmetro"
+        verbose_name_plural = "Tipos de parâmetros"
