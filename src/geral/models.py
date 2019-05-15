@@ -221,3 +221,27 @@ class TipoParametro(models.Model):
         db_table = "fo2_param_tipo"
         verbose_name = "Tipo de parâmetro"
         verbose_name_plural = "Tipos de parâmetros"
+
+
+class Parametro(models.Model):
+    codigo = models.CharField(
+        max_length=25, unique=True, verbose_name='código')
+
+    descricao = models.CharField(
+        max_length=255, unique=True, verbose_name='descrição')
+
+    tipo = models.ForeignKey(
+        TipoParametro, on_delete=models.CASCADE)
+
+    ajuda = models.CharField(
+        max_length=65535)
+
+    habilitado = models.NullBooleanField(
+        default=True)
+
+    usuario = models.NullBooleanField(
+        default=True, verbose_name='usuário')
+
+    class Meta:
+        db_table = "fo2_parametro"
+        verbose_name = "Parâmetro"
