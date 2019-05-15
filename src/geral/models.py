@@ -245,3 +245,15 @@ class Parametro(models.Model):
     class Meta:
         db_table = "fo2_parametro"
         verbose_name = "Parâmetro"
+
+
+class Config(models.Model):
+    parametro = models.ForeignKey(
+        Parametro, on_delete=models.CASCADE)
+
+    valor = models.CharField(
+        max_length=255)
+
+    class Meta:
+        db_table = "fo2_config"
+        verbose_name = "Configuração"
