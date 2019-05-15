@@ -125,8 +125,8 @@ intr_adm_site.register(Parametro, ParametroAdmin)
 
 
 class ConfigAdmin(admin.ModelAdmin):
-    list_display = ['parametro', 'valor']
-    fields = ['parametro', 'valor']
+    list_display = ['parametro', 'usuario', 'valor']
+    fields = ['parametro', 'usuario', 'valor']
 
 
 intr_adm_site.register(Config, ConfigAdmin)

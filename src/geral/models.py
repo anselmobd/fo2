@@ -254,6 +254,10 @@ class Config(models.Model):
     parametro = models.ForeignKey(
         Parametro, on_delete=models.CASCADE)
 
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='usuário')
+
     valor = models.CharField(
         max_length=255)
 
