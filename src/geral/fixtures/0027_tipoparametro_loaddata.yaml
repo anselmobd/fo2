@@ -1,0 +1,5 @@
+- model: geral.TipoParametro
+  pk: 1
+  fields:
+    codigo: SN
+    descricao: Sim ou Não
