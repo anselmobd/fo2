@@ -13,6 +13,7 @@ from fo2.template import group_rowspan
 from utils.views import totalize_grouped_data
 from utils.classes import Perf
 from insumo.queries import insumos_de_produtos_em_dual
+from geral.functions import config_param_value
 
 import lotes.forms as forms
 import lotes.models as models
@@ -66,11 +67,23 @@ class Op(View):
                 else:
                     row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
                         row['PEDIDO'])
+            if config_param_value('OP-UNIDADE') == 'S':
+                i_headers = (
+                    'Situação', 'Cancelamento', 'Unidade', 'Pedido',
+                    'Pedido do cliente', 'Relacionamento com OPs')
+                i_fields = (
+                    'SITUACAO', 'CANCELAMENTO', 'UNIDADE', 'PEDIDO',
+                    'PED_CLIENTE', 'TIPO_OP')
+            else:
+                i_headers = (
+                    'Situação', 'Cancelamento', 'Pedido',
+                    'Pedido do cliente', 'Relacionamento com OPs')
+                i_fields = (
+                    'SITUACAO', 'CANCELAMENTO', 'PEDIDO',
+                    'PED_CLIENTE', 'TIPO_OP')
             context.update({
-                'i_headers': ('Situação', 'Cancelamento', 'Unidade', 'Pedido',
-                              'Pedido do cliente', 'Relacionamento com OPs'),
-                'i_fields': ('SITUACAO', 'CANCELAMENTO', 'UNIDADE', 'PEDIDO',
-                             'PED_CLIENTE', 'TIPO_OP'),
+                'i_headers': i_headers,
+                'i_fields': i_fields,
                 'i_data': i_data,
             })
 
