@@ -234,13 +234,16 @@ class Parametro(models.Model):
         TipoParametro, on_delete=models.CASCADE)
 
     ajuda = models.CharField(
-        max_length=65535)
+        max_length=65535, null=True, blank=True)
 
     habilitado = models.NullBooleanField(
         default=True)
 
     usuario = models.NullBooleanField(
         default=True, verbose_name='usuário')
+
+    def __str__(self):
+        return '({}) {}'.format(self.codigo, self.descricao)
 
     class Meta:
         db_table = "fo2_parametro"
