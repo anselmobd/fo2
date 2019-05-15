@@ -205,3 +205,14 @@ class UsuarioPopAssunto(models.Model):
         db_table = "fo2_ger_usr_pop_assunto"
         verbose_name = "usuário de assunto de POP"
         verbose_name_plural = "usuários de assuntos de POPs"
+
+
+class TipoParametro(models.Model):
+    codigo = models.CharField(
+        max_length=5, unique=True, verbose_name='código')
+
+    descricao = models.CharField(
+        max_length=255, unique=True, verbose_name='descrição')
+
+    class Meta:
+        db_table = "fo2_param_tipo"
