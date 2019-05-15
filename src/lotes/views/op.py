@@ -67,7 +67,8 @@ class Op(View):
                 else:
                     row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
                         row['PEDIDO'])
-            if config_param_value('OP-UNIDADE') == 'S':
+            val_parm = config_param_value('OP-UNIDADE')
+            if val_parm is None or val_parm == 'S':
                 i_headers = (
                     'Situação', 'Cancelamento', 'Unidade', 'Pedido',
                     'Pedido do cliente', 'Relacionamento com OPs')
