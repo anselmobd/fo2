@@ -5,6 +5,7 @@ from django.template.defaulttags import register
 from django.db.models import Min
 
 from .models import Painel, PainelModulo, PopAssunto
+import geral.models as models
 
 
 # http://kkabardi.me/post/dynamic-menu-navigation-django/
@@ -56,5 +57,24 @@ def has_permission(request, permission):
     return can
 
 
-def config_param_value(p):
-    return 'N'
+def config_param_value(param_codigo, usuario):
+    try:
+        param = models.Parametro.objects.get(codigo=param_codigo)
+    except models.Parametro.DoesNotExist:
+        return None
+
+    result = None
+    try:
+        value = models.Config.objects.get(parametro=param, usuario=None)
+        result = value.valor
+    except models.Config.DoesNotExist:
+        pass
+
+    if usuario.is_authenticated:
+        try:
+            value = models.Config.objects.get(parametro=param, usuario=usuario)
+            result = value.valor
+        except models.Config.DoesNotExist:
+            pass
+
+    return result
