@@ -67,9 +67,6 @@ class Op(View):
                 else:
                     row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
                         row['PEDIDO'])
-            pprint(request)
-            pprint(request.user)
-            print('---------')
             val_parm = config_param_value('OP-UNIDADE', request.user)
             if val_parm is None or val_parm == 'S':
                 i_headers = (
