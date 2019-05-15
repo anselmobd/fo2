@@ -54,3 +54,7 @@ def has_permission(request, permission):
     if user:
         can = user.has_perm(permission)
     return can
+
+
+def config_param_value(p):
+    return 'N'
