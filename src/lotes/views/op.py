@@ -25,7 +25,7 @@ class Op(View):
     template_name = 'lotes/op.html'
     title_name = 'OP'
 
-    def mount_context(self, cursor, op):
+    def mount_context(self, cursor, op, request):
         p = Perf(False)
 
         context = {'op': op}
@@ -67,7 +67,10 @@ class Op(View):
                 else:
                     row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
                         row['PEDIDO'])
-            val_parm = config_param_value('OP-UNIDADE')
+            pprint(request)
+            pprint(request.user)
+            print('---------')
+            val_parm = config_param_value('OP-UNIDADE', request.user)
             if val_parm is None or val_parm == 'S':
                 i_headers = (
                     'Situação', 'Cancelamento', 'Unidade', 'Pedido',
@@ -314,7 +317,7 @@ class Op(View):
         if form.is_valid():
             op = form.cleaned_data['op']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, op))
+            context.update(self.mount_context(cursor, op, request))
         context['form'] = form
         return render(request, self.template_name, context)
 
