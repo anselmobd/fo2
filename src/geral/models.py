@@ -257,3 +257,4 @@ class Config(models.Model):
     class Meta:
         db_table = "fo2_config"
         verbose_name = "Configuração"
+        verbose_name_plural = "Configurações"
