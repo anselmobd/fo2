@@ -69,6 +69,11 @@ class NotafiscalRelForm(forms.Form):
         queryset=PosicaoCarga.objects.all().order_by('id'),
         empty_label='--Todas--')
 
+    por_pagina = forms.IntegerField(
+        label='NF por página', required=False,
+        help_text='Padrão: 100 por página.',
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 
