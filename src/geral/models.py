@@ -77,6 +77,8 @@ class Painel(models.Model):
     layout = models.CharField(
         null=True, blank=True, max_length=4096,
         verbose_name='receita')
+    habilitado = models.NullBooleanField(
+        default=True)
 
     def __str__(self):
         return self.nome
