@@ -17,7 +17,7 @@ def get_list_geral_paineis(context):
             reverse('apoio_ao_erp'),
             reverse('geral:index')]:
         paineis = Painel.objects.filter(habilitado=True)
-        modulos = PainelModulo.objects.all().order_by('nome')
+        modulos = PainelModulo.objects.filter(habilitado=True).order_by('nome')
         popAssuntos = PopAssunto.objects.all().order_by('nome')
     return {'list_geral_paineis': paineis,
             'list_geral_modulos': modulos,

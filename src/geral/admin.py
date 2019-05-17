@@ -50,10 +50,10 @@ class PainelAdmin(admin.ModelAdmin):
 
 
 class PainelModuloAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'slug', 'tipo']
+    list_display = ['nome', 'slug', 'tipo', 'habilitado']
     search_fields = ['nome']
     ordering = ['nome']
-    fields = ['nome', 'slug', 'tipo']
+    fields = ['nome', 'slug', 'tipo', 'habilitado']
     readonly_fields = ['slug']
 
 
