@@ -42,10 +42,10 @@ intr_adm_site.register(RoloBipado, RoloBipadoAdmin)
 
 class PainelAdmin(admin.ModelAdmin):
     form = PainelModelForm
-    list_display = ['nome', 'slug']
+    list_display = ['nome', 'slug', 'habilitado']
     search_fields = ['nome']
     ordering = ['nome']
-    fields = ['nome', 'slug', 'layout']
+    fields = ['nome', 'slug', 'layout', 'habilitado']
     readonly_fields = ['slug']
 
 
