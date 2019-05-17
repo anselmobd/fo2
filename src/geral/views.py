@@ -3,7 +3,8 @@ import yaml
 
 import django.forms
 from django.db import connections
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins \
+    import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
@@ -1559,3 +1560,18 @@ def unidade(request):
         'data': data,
     }
     return render(request, 'geral/unidade.html', context)
+
+
+class Configuracao(PermissionRequiredMixin, O2BaseGetPostView):
+    def __init__(self, *args, **kwargs):
+        super(Configuracao, self).__init__(*args, **kwargs)
+        self.permission_required = 'geral.change_config'
+        self.Form_class = forms.ConfigForm
+        self.template_name = 'geral/config.html'
+        self.title_name = 'Configuração'
+
+    def mount_context(self):
+        op_unidade = self.form.cleaned_data['op_unidade']
+        self.context.update({
+            'op_unidade': op_unidade,
+        })

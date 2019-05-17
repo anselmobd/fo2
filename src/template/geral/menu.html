@@ -6,6 +6,10 @@
     <li><a href="{% url 'geral:gera_fluxo_dot' %}">Gera fluxo ".dot"</a></li>
   {% endif %}
 </ul>
+{% if request.user.is_authenticated %}
+  <!-- <br />
+  <li><a href="{% url 'geral:configuracao' %}">Configuração</a></li> -->
+{% endif %}
 {% if list_geral_paineis %}
   <br />
   <li>Paineis</li>
