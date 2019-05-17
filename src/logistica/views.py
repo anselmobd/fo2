@@ -33,7 +33,10 @@ class NotafiscalRel(View):
     title_name = 'Consulta de datas de NF'
 
     def mount_context(self, form, form_obj):
-        linhas_pagina = 100
+        if form['por_pagina']:
+            linhas_pagina = form['por_pagina']
+        else:
+            linhas_pagina = 100
         paginas_vizinhas = 5
         local = pytz.timezone("America/Sao_Paulo")
 
