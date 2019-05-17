@@ -261,6 +261,7 @@ class Estoque(View):
         self.title_name = 'Estoque'
 
     def mount_context(self, form, user):
+        cursor = connections['so'].cursor()
         linhas_pagina = 100
         page = form.cleaned_data['page']
 
@@ -317,21 +318,21 @@ class Estoque(View):
             data_rec = data_rec.order_by('-local_at')
             headers = [
                 'Em', 'Por', 'Endereço', 'Lote',
-                'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.', 'OP',
+                'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.', 'OP', 'Pedido',
                 'Estágio', 'Alter.', 'Qtd.']
             fields = [
                 'local_at', 'local_usuario__username', 'local', 'lote',
-                'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op',
+                'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op', 'pedido',
                 'estagio', 'qtd_dif', 'qtd']
         elif ordem == 'O':  # OP Referência Cor Tamanho Endereço Lote
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
             headers = [
-                'OP', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
+                'OP', 'Pedido', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
                 'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'Lote', 'Em',
                 'Por']
             fields = [
-                'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
+                'op', 'pedido', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
                 'estagio', 'qtd_dif', 'qtd', 'local', 'lote', 'local_at',
                 'local_usuario__username']
         elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
@@ -339,23 +340,23 @@ class Estoque(View):
                 'referencia', 'cor', 'ordem_tamanho', 'local', 'op', 'lote')
             headers = [
                 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
-                'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'OP', 'Lote', 'Em',
-                'Por']
+                'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'OP', 'Pedido',
+                'Lote', 'Em', 'Por']
             fields = [
                 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd_dif', 'qtd', 'local', 'op', 'lote', 'local_at',
-                'local_usuario__username']
+                'estagio', 'qtd_dif', 'qtd', 'local', 'op', 'pedido',
+                'lote', 'local_at', 'local_usuario__username']
         else:  # E: Endereço OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
             headers = [
-                'Endereço', 'OP', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
-                'Estágio', 'Alter.', 'Qtd.', 'Lote', 'Em',
-                'Por']
+                'Endereço', 'OP', 'Pedido', 'Referência', 'Tamanho', 'Cor',
+                'Qtd.Ori.', 'Estágio', 'Alter.', 'Qtd.', 'Lote',
+                'Em', 'Por']
             fields = [
-                'local', 'op', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd_dif', 'qtd', 'lote', 'local_at',
-                'local_usuario__username']
+                'local', 'op', 'pedido', 'referencia', 'tamanho', 'cor',
+                'qtd_produzir', 'estagio', 'qtd_dif', 'qtd', 'lote',
+                'local_at', 'local_usuario__username']
 
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
@@ -370,6 +371,14 @@ class Estoque(View):
         except EmptyPage:
             data = paginator.page(paginator.num_pages)
 
+        ops = set()
+        for row in data:
+            ops.add(row['op'])
+        ops_info = lotes.models.busca_ops_info(cursor, ops)
+        for row in ops_info:
+            if row['pedido'] == 0:
+                row['pedido'] = '-'
+
         solicit_cod = None
         solicit_recs = lotes.models.SolicitaLote.objects.filter(
             usuario=user, ativa=True)
@@ -382,6 +391,9 @@ class Estoque(View):
         headers.append('Solicitar')
         fields.append('solicita')
         for row in data:
+            row['pedido'] = [op_info for op_info in ops_info
+                             if op_info['op'] == row['op']
+                             ][0]['pedido']
             if row['qtd']:
                 if row['update_at'] is None:
                     row['update_at'] = row['create_at']

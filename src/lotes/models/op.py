@@ -1,4 +1,4 @@
-from fo2.models import rows_to_dict_list, GradeQtd
+from fo2.models import rows_to_dict_list, rows_to_dict_list_lower, GradeQtd
 
 from lotes.models import *
 from lotes.models.base import *
@@ -959,3 +959,28 @@ def op_perda(cursor, data_de, data_ate, detalhe):
     """
     cursor.execute(sql, [data_de, data_ate])
     return rows_to_dict_list(cursor)
+
+
+def busca_ops_info(cursor, ops):
+    filtro_op = ''
+    sep = '('
+    for op in ops:
+        filtro_op += "{} '{}'".format(sep, op)
+        sep = ','
+
+    sql = """
+        SELECT
+          op.ORDEM_PRODUCAO OP
+        , op.PEDIDO_VENDA PEDIDO
+        FROM PCPC_020 op -- OP capa
+        WHERE op.ORDEM_PRODUCAO IN
+        --( 12345
+        --, 12334
+        {filtro_op} -- filtro_op
+        )
+    """.format(
+        filtro_op=filtro_op,
+    )
+
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
