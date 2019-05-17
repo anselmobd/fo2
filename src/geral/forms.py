@@ -42,3 +42,11 @@ class GeraFluxoDotForm(forms.Form):
                ]
     destino = forms.ChoiceField(
         label='Gera arquivo para', choices=CHOICES, initial='t')
+
+
+class ConfigForm(forms.Form):
+    CHOICES = [('S', 'Sim'),
+               ('N', 'Não'),
+               ]
+    op_unidade = forms.ChoiceField(
+        label='Mostra informação de unidade', choices=CHOICES, initial=None)

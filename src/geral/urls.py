@@ -29,4 +29,6 @@ urlpatterns = [
 
     url(r'^unidade/$', views.unidade, name='unidade'),
 
+    url(r'^configuracao/$', views.Configuracao.as_view(), name='configuracao'),
+
 ]
