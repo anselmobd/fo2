@@ -57,11 +57,13 @@ def has_permission(request, permission):
     return can
 
 
-def config_param_value(param_codigo, usuario):
+def config_param_value(param_codigo, usuario=None):
+    # print('config_param_value')
     try:
         param = models.Parametro.objects.get(codigo=param_codigo)
     except models.Parametro.DoesNotExist:
         return None
+    # pprint(param)
 
     result = None
     try:
@@ -69,6 +71,11 @@ def config_param_value(param_codigo, usuario):
         result = value.valor
     except models.Config.DoesNotExist:
         pass
+    # print('value default')
+    # pprint(result)
+
+    if usuario is None:
+        return result
 
     if usuario.is_authenticated:
         try:
@@ -76,5 +83,7 @@ def config_param_value(param_codigo, usuario):
             result = value.valor
         except models.Config.DoesNotExist:
             pass
+    # print('value user')
+    # pprint(result)
 
     return result
