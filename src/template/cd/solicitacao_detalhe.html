@@ -26,7 +26,11 @@
 
     <div class="tab-content">
       <div id="home" class="tab-pane fade in active">
-        <div style="text-align:right; margin-right:3em;"><a href="{% url 'cd:solicitacao_detalhe__get2' solicitacao.id 'de' %}" onclick="if(confirm('Confirma cancelamento?')){return true}else{return false};">Cancela solicitação de lotes endereçados</a></div>
+        <div style="text-align:right; margin-right:3em;"><a
+          href="{% url 'cd:solicitacao_detalhe__get2' solicitacao.id 'de' %}"
+          onclick="if(confirm('Confirma cancelamento?')){return true}else{return false};"
+          ><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span
+            > Cancela solicitação de lotes endereçados</a></div>
         <table>
           {% include "layout/thead_generic.html" with data=headers only %}
           {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
