@@ -1211,6 +1211,15 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             except lotes.models.SolicitaLoteQtd.DoesNotExist:
                 pass
 
+        # desreserva endereçados
+        if acao == 'de' and solicit_id is not None:
+            try:
+                solicit_qtds = lotes.models.SolicitaLoteQtd.objects.filter(
+                    solicitacao__id=solicit_id, lote__local__isnull=False)
+                solicit_qtds.delete()
+            except lotes.models.SolicitaLoteQtd.DoesNotExist:
+                pass
+
         user = request_user(request)
         data = self.mount_context(solicit_id, user)
         context.update(data)
