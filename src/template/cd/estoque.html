@@ -210,7 +210,9 @@ span.spanlink:hover {
   {% endif %}
   {% if op %}
     <h4>OP: <b>{{ op }}</b>
-    <a title="Solicitação inteira de OP" href="javascript:void(0);" onclick="solicita_op();"><span id="booom" class="glyphicon glyphicon-unchecked" aria-hidden="true"></span></a></h4>
+    {% if data %}
+      <a title="Solicitação inteira de OP" href="javascript:void(0);" onclick="solicita_op();"><span id="booom" class="glyphicon glyphicon-unchecked" aria-hidden="true"></span></a></h4>
+    {% endif %}
   {% endif %}
   {% if ref %}
     <h4>Referência: <b>{{ ref }}</b></h4>
