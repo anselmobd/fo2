@@ -371,13 +371,14 @@ class Estoque(View):
         except EmptyPage:
             data = paginator.page(paginator.num_pages)
 
-        ops = set()
-        for row in data:
-            ops.add(row['op'])
-        ops_info = lotes.models.busca_ops_info(cursor, ops)
-        for row in ops_info:
-            if row['pedido'] == 0:
-                row['pedido'] = '-'
+        if len(data) != 0:
+            ops = set()
+            for row in data:
+                ops.add(row['op'])
+            ops_info = lotes.models.busca_ops_info(cursor, ops)
+            for row in ops_info:
+                if row['pedido'] == 0:
+                    row['pedido'] = '-'
 
         solicit_cod = None
         solicit_recs = lotes.models.SolicitaLote.objects.filter(
