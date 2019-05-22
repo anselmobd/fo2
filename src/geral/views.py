@@ -21,8 +21,10 @@ import produto.queries
 
 from .models import Painel, PainelModulo, InformacaoModulo, \
                     UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
+import geral.models as models
 import geral.forms as forms
 import geral.queries as queries
+from geral.functions import config_param_value
 
 
 def index(request):
@@ -1562,9 +1564,8 @@ def unidade(request):
     return render(request, 'geral/unidade.html', context)
 
 
-class Configuracao(PermissionRequiredMixin, O2BaseGetPostView):
+class Configuracao(PermissionRequiredMixin, View):
     def __init__(self, *args, **kwargs):
-        super(Configuracao, self).__init__(*args, **kwargs)
         self.permission_required = 'geral.change_config'
         self.Form_class = forms.ConfigForm
         self.template_name = 'geral/config.html'
@@ -1575,3 +1576,34 @@ class Configuracao(PermissionRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'op_unidade': op_unidade,
         })
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        print('get')
+        if request.user.is_superuser:
+            print('then')
+            val_parm = config_param_value('OP-UNIDADE')
+        else:
+            print('else')
+            val_parm = config_param_value('OP-UNIDADE', request.user)
+        form = self.Form_class()
+        print(val_parm)
+        form.data['op_unidade'] = val_parm
+        print(form.data['op_unidade'])
+        if form.is_valid():
+            context['form'] = form
+        else:
+            print('not valid')
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'lote' in kwargs and kwargs['lote'] is not None:
+            form.data['lote'] = kwargs['lote']
+        if form.is_valid():
+            lote = form.cleaned_data['lote']
+            cursor = connection.cursor()
+            context.update(self.mount_context(cursor, lote))
+        context['form'] = form
+        return render(request, self.template_name, context)
