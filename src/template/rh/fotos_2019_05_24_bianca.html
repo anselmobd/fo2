@@ -1,0 +1,24 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<h4>A empresa Cuecas D'UOMO parabeniza a funcionária Bianca Vasques pelo empenho e esforço em ter terminado a sua faculdade de Administração.</h4>
+<h4>Temos muito orgulho de vê-la se formando, após ultrapassar seus limites e superar alguns obstáculos!</h4>
+<h4>Parabéns e Muito Sucesso!</h4>
+<p>
+  <a target="_blank" href="/media/rh/fotos/2019_05_24_bianca/Bianca.JPG"><img src="/media/rh/fotos/2019_05_24_bianca/thumb.Bianca.JPG"></a>
+</p>
+</center>
+{% endblock %}

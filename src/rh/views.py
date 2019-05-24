@@ -55,6 +55,11 @@ def fotos_2019_03_lorena(request):
     return render(request, 'rh/fotos_2019_03_lorena.html', context)
 
 
+def fotos_2019_05_24_bianca(request):
+    context = {'titulo': 'Funcionária Bianca Vasques homenageada'}
+    return render(request, 'rh/fotos_2019_05_24_bianca.html', context)
+
+
 def media_2019_04_09_dicas(request):
     context = {'titulo': 'Dicas de comportamento no ambiente de trabalho'}
     return render(request, 'rh/media_2019_04_09_dicas.html', context)

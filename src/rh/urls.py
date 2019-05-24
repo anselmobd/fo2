@@ -39,6 +39,9 @@ urlpatterns = [
     url(r'^fotos_2019_03_lorena/$', views.fotos_2019_03_lorena,
         name='fotos_2019_03_lorena'),
 
+    url(r'^fotos_2019_05_24_bianca/$', views.fotos_2019_05_24_bianca,
+        name='fotos_2019_05_24_bianca'),
+
     url(r'^media_2019_04_09_dicas/$', views.media_2019_04_09_dicas,
         name='media_2019_04_09_dicas'),
 
