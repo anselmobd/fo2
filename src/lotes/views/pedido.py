@@ -170,7 +170,9 @@ class Expedicao(View):
                 'TAM': '-',
                 'QTD': 0,
             })
+            qtd_total = 0
             for row in data:
+                qtd_total += row['QTD']
                 if referencia is not None and referencia != row['REF']:
                     grade.append({
                         'tam': '',
@@ -198,6 +200,7 @@ class Expedicao(View):
                 referencia = row['REF']
             context.update({
                 'data_refs': data_refs,
+                'qtd_total': qtd_total,
             })
             return context
 
@@ -217,7 +220,9 @@ class Expedicao(View):
             })
             return context
 
+        qtd_total = 0
         for row in data:
+            qtd_total += row['QTD']
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
             row['PEDIDO_VENDA|LINK'] = reverse(
@@ -280,6 +285,7 @@ class Expedicao(View):
             'fields': fields,
             'data': data,
             'style': style,
+            'qtd_total': qtd_total,
         })
         if detalhe != 'p':
             context.update({
