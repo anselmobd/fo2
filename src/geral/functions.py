@@ -88,7 +88,7 @@ def config_set_value(param_codigo, value, usuario=None):
     try:
         param = models.Parametro.objects.get(codigo=param_codigo)
     except models.Parametro.DoesNotExist:
-        return
+        return False
 
     try:
         config = models.Config.objects.get(parametro=param, usuario=usuario)
@@ -96,4 +96,6 @@ def config_set_value(param_codigo, value, usuario=None):
             config.valor = value
             config.save()
     except Exception as e:
-        pass
+        return False
+
+    return True
