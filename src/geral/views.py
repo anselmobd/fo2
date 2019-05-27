@@ -24,7 +24,7 @@ from .models import Painel, PainelModulo, InformacaoModulo, \
 import geral.models as models
 import geral.forms as forms
 import geral.queries as queries
-from geral.functions import config_param_value
+from geral.functions import config_get_value, config_set_value
 
 
 def index(request):
@@ -1573,22 +1573,22 @@ class Configuracao(PermissionRequiredMixin, View):
 
     def get_values(self, request):
         values = {}
-        if request.user.is_superuser:
-            values['op_unidade'] = config_param_value('OP-UNIDADE')
-        else:
-            values['op_unidade'] = config_param_value(
-                'OP-UNIDADE', request.user)
+        for field in self.Form_class.field_param:
+            param = self.Form_class.field_param[field]
+            if request.user.is_superuser:
+                values[field] = config_get_value(param)
+            else:
+                values[field] = config_get_value(param, request.user)
         return values
 
     def set_values(self, request, values):
-        for key in values:
-            pass
-
-    # def mount_context(self):
-    #     op_unidade = self.form.cleaned_data['op_unidade']
-    #     self.context.update({
-    #         'op_unidade': op_unidade,
-    #     })
+        if request.user.is_superuser:
+            usuario = None
+        else:
+            usuario = request.user
+        for field in self.Form_class.field_param:
+            param = self.Form_class.field_param[field]
+            config_set_value(param, values[field], usuario=usuario)
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
@@ -1605,7 +1605,5 @@ class Configuracao(PermissionRequiredMixin, View):
             values = {}
             values['op_unidade'] = form.cleaned_data['op_unidade']
             self.set_values(request, values)
-            # cursor = connection.cursor()
-            # context.update(self.mount_context(cursor, lote))
-        # context['form'] = form
+        context['form'] = form
         return render(request, self.template_name, context)
