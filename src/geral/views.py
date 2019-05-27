@@ -1586,9 +1586,11 @@ class Configuracao(PermissionRequiredMixin, View):
             usuario = None
         else:
             usuario = request.user
+        ok = True
         for field in self.Form_class.field_param:
             param = self.Form_class.field_param[field]
-            config_set_value(param, values[field], usuario=usuario)
+            ok = ok and config_set_value(param, values[field], usuario=usuario)
+        return ok
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
@@ -1604,6 +1606,9 @@ class Configuracao(PermissionRequiredMixin, View):
         if form.is_valid():
             values = {}
             values['op_unidade'] = form.cleaned_data['op_unidade']
-            self.set_values(request, values)
+            if self.set_values(request, values):
+                context['msg'] = 'Valores salvos!'
+            else:
+                context['msg'] = 'Houve algum erro ao salvar os valores!'
         context['form'] = form
         return render(request, self.template_name, context)

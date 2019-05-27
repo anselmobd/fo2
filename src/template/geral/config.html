@@ -15,4 +15,7 @@
     {{ form.as_p }}
     <input type="submit" value="Grava"/>
 </form>
+{% if msg %}
+  <h3>{{ msg }}</h3>
+{% endif %}
 {% endblock %}
