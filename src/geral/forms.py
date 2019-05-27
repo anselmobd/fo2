@@ -50,3 +50,7 @@ class ConfigForm(forms.Form):
                ]
     op_unidade = forms.ChoiceField(
         label='Mostra informação de unidade', choices=CHOICES)
+
+    field_param = {
+        'op_unidade': 'OP-UNIDADE',
+    }
