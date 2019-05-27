@@ -1571,39 +1571,41 @@ class Configuracao(PermissionRequiredMixin, View):
         self.template_name = 'geral/config.html'
         self.title_name = 'Configuração'
 
-    def mount_context(self):
-        op_unidade = self.form.cleaned_data['op_unidade']
-        self.context.update({
-            'op_unidade': op_unidade,
-        })
+    def get_values(self, request):
+        values = {}
+        if request.user.is_superuser:
+            values['op_unidade'] = config_param_value('OP-UNIDADE')
+        else:
+            values['op_unidade'] = config_param_value(
+                'OP-UNIDADE', request.user)
+        return values
+
+    def set_values(self, request, values):
+        for key in values:
+            pass
+
+    # def mount_context(self):
+    #     op_unidade = self.form.cleaned_data['op_unidade']
+    #     self.context.update({
+    #         'op_unidade': op_unidade,
+    #     })
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        print('get')
-        if request.user.is_superuser:
-            print('then')
-            val_parm = config_param_value('OP-UNIDADE')
-        else:
-            print('else')
-            val_parm = config_param_value('OP-UNIDADE', request.user)
         form = self.Form_class()
-        print(val_parm)
-        form.data['op_unidade'] = val_parm
-        print(form.data['op_unidade'])
-        if form.is_valid():
-            context['form'] = form
-        else:
-            print('not valid')
+        values = self.get_values(request)
+        form.fields["op_unidade"].initial = values['op_unidade']
+        context['form'] = form
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'lote' in kwargs and kwargs['lote'] is not None:
-            form.data['lote'] = kwargs['lote']
         if form.is_valid():
-            lote = form.cleaned_data['lote']
-            cursor = connection.cursor()
-            context.update(self.mount_context(cursor, lote))
-        context['form'] = form
+            values = {}
+            values['op_unidade'] = form.cleaned_data['op_unidade']
+            self.set_values(request, values)
+            # cursor = connection.cursor()
+            # context.update(self.mount_context(cursor, lote))
+        # context['form'] = form
         return render(request, self.template_name, context)
