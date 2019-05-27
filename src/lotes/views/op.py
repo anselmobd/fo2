@@ -13,7 +13,7 @@ from fo2.template import group_rowspan
 from utils.views import totalize_grouped_data
 from utils.classes import Perf
 from insumo.queries import insumos_de_produtos_em_dual
-from geral.functions import config_param_value
+from geral.functions import config_get_value
 
 import lotes.forms as forms
 import lotes.models as models
@@ -67,7 +67,7 @@ class Op(View):
                 else:
                     row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
                         row['PEDIDO'])
-            val_parm = config_param_value('OP-UNIDADE', request.user)
+            val_parm = config_get_value('OP-UNIDADE', request.user)
             if val_parm is None:
                 val_parm = 'S'
             else:
