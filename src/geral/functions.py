@@ -57,33 +57,43 @@ def has_permission(request, permission):
     return can
 
 
-def config_param_value(param_codigo, usuario=None):
-    # print('config_param_value')
+def config_get_value(param_codigo, usuario=None):
     try:
         param = models.Parametro.objects.get(codigo=param_codigo)
     except models.Parametro.DoesNotExist:
         return None
-    # pprint(param)
 
     result = None
     try:
-        value = models.Config.objects.get(parametro=param, usuario=None)
-        result = value.valor
+        config = models.Config.objects.get(parametro=param, usuario=None)
+        result = config.valor
     except models.Config.DoesNotExist:
         pass
-    # print('value default')
-    # pprint(result)
 
     if usuario is None:
         return result
 
     if usuario.is_authenticated:
         try:
-            value = models.Config.objects.get(parametro=param, usuario=usuario)
-            result = value.valor
+            config = models.Config.objects.get(
+                parametro=param, usuario=usuario)
+            result = config.valor
         except models.Config.DoesNotExist:
             pass
-    # print('value user')
-    # pprint(result)
 
     return result
+
+
+def config_set_value(param_codigo, value, usuario=None):
+    try:
+        param = models.Parametro.objects.get(codigo=param_codigo)
+    except models.Parametro.DoesNotExist:
+        return
+
+    try:
+        config = models.Config.objects.get(parametro=param, usuario=usuario)
+        if config.valor != value:
+            config.valor = value
+            config.save()
+    except Exception as e:
+        pass
