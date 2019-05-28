@@ -1,9 +1,14 @@
-__version__ = '0.1.144'
-__version__date__ = '08/04/2019'
+__version__ = '0.1.145'
+__version__date__ = '28/05/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.145 - 2019/05/28
+#   . Muitas coisas
+#   . Configuração
+#   . Consulta saída de NF + filtro por pedido
 #
 # - 0.1.144 - 2019/04/08
 #   . Muitas coisas
