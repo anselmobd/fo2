@@ -32,15 +32,23 @@ class NotafiscalRelForm(forms.Form):
         label='Número da NF', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
+    transportadora = forms.CharField(
+        label='Transportadora', required=False,
+        help_text='Sigla da transportadora.',
+        widget=forms.TextInput())
+
     cliente = forms.CharField(
         label='Cliente', required=False,
         help_text='Parte do nome ou início do CNPJ.',
         widget=forms.TextInput())
 
-    transportadora = forms.CharField(
-        label='Transportadora', required=False,
-        help_text='Sigla da transportadora.',
-        widget=forms.TextInput())
+    pedido = forms.CharField(
+        label='Pedido Tussor', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    ped_cliente = forms.CharField(
+        label='Pedido de cliente', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
 
     CHOICES = [('N', 'Não filtra'),
                ('C', 'Com data de saída informada'),

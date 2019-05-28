@@ -93,6 +93,12 @@ class NotafiscalRel(View):
             context.update({
                 'nf': form['nf'],
             })
+        if form['transportadora']:
+            condition = Q(transp_nome__icontains=form['transportadora'])
+            select = select.filter(condition)
+            context.update({
+                'transportadora': form['transportadora'],
+            })
         if form['cliente']:
             condition = Q(dest_nome__icontains=form['cliente']) | \
                         Q(dest_cnpj__contains=form['cliente'])
@@ -100,11 +106,15 @@ class NotafiscalRel(View):
             context.update({
                 'cliente': form['cliente'],
             })
-        if form['transportadora']:
-            condition = Q(transp_nome__icontains=form['transportadora'])
-            select = select.filter(condition)
+        if form['pedido']:
+            select = select.filter(pedido=form['pedido'])
             context.update({
-                'transportadora': form['transportadora'],
+                'pedido': form['pedido'],
+            })
+        if form['ped_cliente']:
+            select = select.filter(ped_cliente=form['ped_cliente'])
+            context.update({
+                'ped_cliente': form['ped_cliente'],
             })
         if form['entregue'] != 'T':
             select = select.filter(confirmada=form['entregue'] == 'S')
@@ -214,10 +224,10 @@ class NotafiscalRel(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'dia' in kwargs:
-            data = '{dia}/{mes}/{ano}'.format(**kwargs)
-            form.data['data_de'] = data
-            form.data['data_ate'] = data
+        # if 'dia' in kwargs:
+        #     data = '{dia}/{mes}/{ano}'.format(**kwargs)
+        #     form.data['data_de'] = data  # não funciona
+        #     form.data['data_ate'] = data
         if form.is_valid():
             context.update(self.mount_context(form.cleaned_data, form))
         context['form'] = form

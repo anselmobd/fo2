@@ -120,11 +120,17 @@ span.spanlink:hover {
     {% if nf %}
       <li>NF: {{ nf }}</li>
     {% endif %}
+    {% if transportadora %}
+      <li>Transportadora: {{ transportadora }}</li>
+    {% endif %}
     {% if cliente %}
       <li>Cliente: {{ cliente }}</li>
     {% endif %}
-    {% if transportadora %}
-      <li>Transportadora: {{ transportadora }}</li>
+    {% if pedido %}
+      <li>Pedido Tussor: {{ pedido }}</li>
+    {% endif %}
+    {% if ped_cliente %}
+      <li>Pedido de cliente: {{ ped_cliente }}</li>
     {% endif %}
     {% if posicao %}
       <li>Posição: {{ posicao }}</li>
