@@ -363,6 +363,7 @@ class Estoque(View):
             'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio',
             'create_at', 'update_at')
 
+        quant_lotes = len(data)
         paginator = Paginator(data, linhas_pagina)
         try:
             data = paginator.page(page)
@@ -460,6 +461,7 @@ class Estoque(View):
             'headers': headers,
             'fields': fields,
             'data': data,
+            'quant_lotes': quant_lotes,
         })
 
         return context
