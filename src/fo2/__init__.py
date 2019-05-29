@@ -1,14 +1,18 @@
-__version__ = '0.1.145'
-__version__date__ = '28/05/2019'
+__version__ = '0.1.146'
+__version__date__ = '29/05/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
 #
+# - 0.1.146 - 2019/05/29
+#   . Estoque + quantidade de lotes selecionados
+#
 # - 0.1.145 - 2019/05/28
 #   . Muitas coisas
 #   . Configuração
 #   . Consulta saída de NF + filtro por pedido
+#   . Filtros de pedido na tela de Consulta de datas de NF
 #
 # - 0.1.144 - 2019/04/08
 #   . Muitas coisas
