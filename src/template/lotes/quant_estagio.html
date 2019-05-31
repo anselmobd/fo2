@@ -15,15 +15,15 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if estagio %}
-  <br /><a href="{% url 'producao:quant_estagio' %}">Totais gerais dos estágios</a>
+<br /><a href="{% url 'producao:quant_estagio__get' '0' %}">Totais gerais dos estágios</a>
+{% if estagio and estagio != '0' %}
   <h3>Estagio: {{ estagio }}</h3>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-  {% if not estagio %}
+  {% if estagio == '0' %}
     <h3>Totais gerais dos estágios</h3>
   {% endif %}
   <table>

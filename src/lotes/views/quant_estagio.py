@@ -14,10 +14,10 @@ class QuantEstagio(View):
     template_name = 'lotes/quant_estagio.html'
     title_name = 'Quantidades por estágio'
 
-    def mount_context(self, cursor, estagio=None):
+    def mount_context(self, cursor, estagio):
         context = {'estagio': estagio}
 
-        if estagio is None:
+        if estagio == '0':
             data = models.totais_estagios(cursor)
         else:
             data = models.quant_estagio(cursor, estagio)
@@ -27,7 +27,7 @@ class QuantEstagio(View):
             })
             return context
 
-        if estagio is None:
+        if estagio == '0':
             context.update({
                 'headers': ('Estágio', 'Quantidade'),
                 'fields': ('ESTAGIO', 'QUANT'),
@@ -49,8 +49,6 @@ class QuantEstagio(View):
             context = {'titulo': self.title_name}
             form = self.Form_class()
             context['form'] = form
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor))
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -59,11 +57,8 @@ class QuantEstagio(View):
         if 'estagio' in kwargs:
             form.data['estagio'] = kwargs['estagio']
         if form.is_valid():
-            print('valid')
             estagio = form.cleaned_data['estagio']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, estagio))
-        else:
-            print('invalid')
         context['form'] = form
         return render(request, self.template_name, context)

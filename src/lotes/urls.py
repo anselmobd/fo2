@@ -81,6 +81,8 @@ urlpatterns = [
 
     url(r'^quant_estagio/$',
         views.QuantEstagio.as_view(), name='quant_estagio'),
+    url(r'^quant_estagio/(?P<estagio>\d+)/$',
+        views.QuantEstagio.as_view(), name='quant_estagio__get'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
