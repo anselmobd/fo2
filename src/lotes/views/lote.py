@@ -98,22 +98,11 @@ class Posicao(View):
             estagios.append(row['COD_EST'])
             if q_programada is None:
                 q_programada = row['Q_P']
-            if row['Q_AP'] == 0:
-                row['Q_AP'] = '.'
-            if row['Q_EP'] == 0:
-                row['Q_EP'] = '.'
-            if row['Q_PROD'] == 0:
-                row['Q_PROD'] = '.'
-            if row['Q_2A'] == 0:
-                row['Q_2A'] = '.'
-            if row['Q_PERDA'] == 0:
-                row['Q_PERDA'] = '.'
-            if row['Q_CONSERTO'] == 0:
-                row['Q_CONSERTO'] = '.'
-            if row['FAMI'] == 0:
-                row['FAMI'] = '.'
-            if row['OS'] == 0:
-                row['OS'] = '.'
+            for field in [
+                    'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A', 'Q_PERDA',
+                    'Q_CONSERTO', 'FAMI', 'OS']:
+                if row[field] == 0:
+                    row[field] = '.'
         context.update({
             'se_headers': (
                 'Estágio', 'Progr.', 'A Prod.', 'Em Prod.',
