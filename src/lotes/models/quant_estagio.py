@@ -40,7 +40,12 @@ def quant_estagio(cursor, estagio):
 def totais_estagios(cursor):
     sql = """
         SELECT
-          l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
+          l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO <= '99999'
+              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+            THEN 1 ELSE 0 END
+          ) LOTES_PA
         , sum(
             CASE WHEN l.PROCONF_GRUPO <= '99999'
             THEN l.QTDE_EM_PRODUCAO_PACOTE
@@ -49,10 +54,20 @@ def totais_estagios(cursor):
           ) QUANT_PA
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'A%'
+              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+            THEN 1 ELSE 0 END
+          ) LOTES_PG
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'A%'
             THEN l.QTDE_EM_PRODUCAO_PACOTE
             ELSE 0
             END
           ) QUANT_PG
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'B%'
+              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+            THEN 1 ELSE 0 END
+          ) LOTES_PB
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'B%'
             THEN l.QTDE_EM_PRODUCAO_PACOTE
@@ -61,10 +76,21 @@ def totais_estagios(cursor):
           ) QUANT_PB
         , sum(
             CASE WHEN l.PROCONF_GRUPO >= 'C0000'
+              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+            THEN 1 ELSE 0 END
+          ) LOTES_MD
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO >= 'C0000'
             THEN l.QTDE_EM_PRODUCAO_PACOTE
             ELSE 0
             END
           ) QUANT_MD
+        , sum(
+            CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE > 0
+            THEN 1
+            ELSE 0
+            END
+          ) LOTES
         , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
         FROM PCPC_040 l
         JOIN MQOP_005 e
