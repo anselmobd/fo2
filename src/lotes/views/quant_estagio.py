@@ -14,22 +14,31 @@ class QuantEstagio(View):
     template_name = 'lotes/quant_estagio.html'
     title_name = 'Quantidades por estágio'
 
-    def mount_context(self, cursor, estagio):
+    def mount_context(self, cursor, estagio=None):
         context = {'estagio': estagio}
 
-        # informações gerais
-        data = models.quant_estagio(cursor, estagio)
+        if estagio is None:
+            data = models.totais_estagios(cursor)
+        else:
+            data = models.quant_estagio(cursor, estagio)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem produtos no estágio',
             })
             return context
 
-        context.update({
-            'headers': ('REF', 'TAM', 'COR', 'QUANT'),
-            'fields': ('REF', 'TAM', 'COR', 'QUANT'),
-            'data': data,
-        })
+        if estagio is None:
+            context.update({
+                'headers': ('Estágio', 'Quantidade'),
+                'fields': ('ESTAGIO', 'QUANT'),
+                'data': data,
+            })
+        else:
+            context.update({
+                'headers': ('Produto', 'Tamanho', 'Cor', 'Quantidade'),
+                'fields': ('REF', 'TAM', 'COR', 'QUANT'),
+                'data': data,
+            })
 
         return context
 
@@ -40,6 +49,8 @@ class QuantEstagio(View):
             context = {'titulo': self.title_name}
             form = self.Form_class()
             context['form'] = form
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor))
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -48,8 +59,11 @@ class QuantEstagio(View):
         if 'estagio' in kwargs:
             form.data['estagio'] = kwargs['estagio']
         if form.is_valid():
+            print('valid')
             estagio = form.cleaned_data['estagio']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, estagio))
+        else:
+            print('invalid')
         context['form'] = form
         return render(request, self.template_name, context)

@@ -15,13 +15,17 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-<!-- {% if pedido %}
-  <h3>Pedido: {{ pedido }}</h3>
-{% endif %} -->
+{% if estagio %}
+  <br /><a href="{% url 'producao:quant_estagio' %}">Totais gerais dos estágios</a>
+  <h3>Estagio: {{ estagio }}</h3>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+  {% if not estagio %}
+    <h3>Totais gerais dos estágios</h3>
+  {% endif %}
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
