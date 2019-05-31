@@ -478,3 +478,10 @@ class ImprimeTagForm(forms.Form):
             raise forms.ValidationError(
                 "Informe uma quantidade maior que zero.")
         return quant
+
+
+class QuantEstagioForm(forms.Form):
+    estagio = forms.CharField(
+        label='Estágio', max_length=2,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
