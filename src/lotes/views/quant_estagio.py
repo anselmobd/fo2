@@ -28,10 +28,28 @@ class QuantEstagio(View):
             return context
 
         if estagio == '0':
+            total = data[0].copy()
+            total['ESTAGIO'] = 'Total:'
+            total['|STYLE'] = 'font-weight: bold;'
+            quant_fileds = [
+                'QUANT_PA', 'QUANT_PG', 'QUANT_PB', 'QUANT_MD', 'QUANT']
+            for field in quant_fileds:
+                total[field] = 0
+            for row in data:
+                for field in quant_fileds:
+                    total[field] += row[field]
+            data.append(total)
             context.update({
-                'headers': ('Estágio', 'Quantidade'),
-                'fields': ('ESTAGIO', 'QUANT'),
+                'headers': ('Estágio', 'PA', 'PG', 'PB',
+                            'MD*', 'Total'),
+                'fields': ('ESTAGIO', 'QUANT_PA', 'QUANT_PG', 'QUANT_PB',
+                           'QUANT_MD', 'QUANT'),
                 'data': data,
+                'style': {2: 'text-align: right;',
+                          3: 'text-align: right;',
+                          4: 'text-align: right;',
+                          5: 'text-align: right;',
+                          6: 'text-align: right;font-weight: bold;'},
             })
         else:
             context.update({
