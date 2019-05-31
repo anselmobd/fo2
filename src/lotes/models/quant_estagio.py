@@ -41,6 +41,30 @@ def totais_estagios(cursor):
     sql = """
         SELECT
           l.CODIGO_ESTAGIO ESTAGIO
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO <= '99999'
+            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            ELSE 0
+            END
+          ) QUANT_PA
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'A%'
+            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            ELSE 0
+            END
+          ) QUANT_PG
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'B%'
+            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            ELSE 0
+            END
+          ) QUANT_PB
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO >= 'C0000'
+            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            ELSE 0
+            END
+          ) QUANT_MD
         , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
         FROM PCPC_040 l
         GROUP BY
