@@ -483,5 +483,6 @@ class ImprimeTagForm(forms.Form):
 class QuantEstagioForm(forms.Form):
     estagio = forms.CharField(
         label='Estágio', max_length=2,
+        help_text='Informe 0 (zero) para visualizar os totais gerais',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
