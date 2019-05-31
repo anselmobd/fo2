@@ -817,6 +817,17 @@ class ConferenciaSimples(View):
         headers = ['Endereço', 'Lotes (caixas)', 'Qtd. peças']
         fields = ['local', 'qlotes', 'qtdsum']
 
+        total = data[0].copy()
+        total['local'] = 'Total:'
+        total['|STYLE'] = 'font-weight: bold;'
+        quant_fileds = ['qlotes', 'qtdsum']
+        for field in quant_fileds:
+            total[field] = 0
+        for row in data:
+            for field in quant_fileds:
+                total[field] += row[field]
+        data.append(total)
+
         context.update({
             'headers': headers,
             'fields': fields,
