@@ -4,7 +4,7 @@ from fo2.models import rows_to_dict_list
 def quant_estagio(cursor, estagio):
     sql = """
         SELECT
-          l.CODIGO_ESTAGIO COD_EST
+          l.CODIGO_ESTAGIO ESTAGIO
         , l.PROCONF_NIVEL99 NIVEL
         , l.PROCONF_GRUPO REF
         , l.PROCONF_SUBGRUPO TAM
@@ -34,4 +34,21 @@ def quant_estagio(cursor, estagio):
         , l.PROCONF_ITEM
     """
     cursor.execute(sql, [estagio])
+    return rows_to_dict_list(cursor)
+
+
+def totais_estagios(cursor):
+    sql = """
+        SELECT
+          l.CODIGO_ESTAGIO ESTAGIO
+        , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
+        FROM PCPC_040 l
+        GROUP BY
+          l.CODIGO_ESTAGIO
+        HAVING
+          sum(l.QTDE_EM_PRODUCAO_PACOTE) > 0
+        ORDER BY
+          l.CODIGO_ESTAGIO
+    """
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
