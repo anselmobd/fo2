@@ -15,7 +15,9 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-<br /><a href="{% url 'producao:quant_estagio__get' '0' %}">Totais gerais dos estágios</a>
+{% if not estagio or estagio != '0' %}
+  <br /><a href="{% url 'producao:quant_estagio__get' '0' %}">Totais gerais dos estágios</a>
+{% endif %}
 {% if estagio and estagio != '0' %}
   <h3>Estagio: {{ estagio }}</h3>
 {% endif %}
