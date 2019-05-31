@@ -32,7 +32,11 @@ class QuantEstagio(View):
             total['ESTAGIO'] = 'Total:'
             total['|STYLE'] = 'font-weight: bold;'
             quant_fileds = [
-                'QUANT_PA', 'QUANT_PG', 'QUANT_PB', 'QUANT_MD', 'QUANT']
+                'LOTES_PA', 'QUANT_PA',
+                'LOTES_PG', 'QUANT_PG',
+                'LOTES_PB', 'QUANT_PB',
+                'LOTES_MD', 'QUANT_MD',
+                'LOTES', 'QUANT']
             for field in quant_fileds:
                 total[field] = 0
             for row in data:
@@ -40,16 +44,27 @@ class QuantEstagio(View):
                     total[field] += row[field]
             data.append(total)
             context.update({
-                'headers': ('Estágio', 'PA', 'PG', 'PB',
-                            'MD*', 'Total'),
-                'fields': ('ESTAGIO', 'QUANT_PA', 'QUANT_PG', 'QUANT_PB',
-                           'QUANT_MD', 'QUANT'),
+                'headers': ('Estágio', 'Lotes PA', 'Peças PA',
+                            'Lotes PG', 'Peças PG',
+                            'Lotes PB', 'Peças PB',
+                            'Lotes MD*', 'Peças MD*',
+                            'Lotes*', 'Peças'),
+                'fields': ('ESTAGIO', 'LOTES_PA', 'QUANT_PA',
+                           'LOTES_PG', 'QUANT_PG',
+                           'LOTES_PB', 'QUANT_PB',
+                           'LOTES_MD', 'QUANT_MD',
+                           'LOTES', 'QUANT'),
                 'data': data,
                 'style': {2: 'text-align: right;',
                           3: 'text-align: right;',
                           4: 'text-align: right;',
                           5: 'text-align: right;',
-                          6: 'text-align: right;font-weight: bold;'},
+                          6: 'text-align: right;',
+                          7: 'text-align: right;',
+                          8: 'text-align: right;',
+                          9: 'text-align: right;',
+                          10: 'text-align: right; font-weight: bold;',
+                          11: 'text-align: right; font-weight: bold;'},
             })
         else:
             context.update({
