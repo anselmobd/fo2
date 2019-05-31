@@ -40,7 +40,7 @@ def quant_estagio(cursor, estagio):
 def totais_estagios(cursor):
     sql = """
         SELECT
-          l.CODIGO_ESTAGIO ESTAGIO
+          l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
         , sum(
             CASE WHEN l.PROCONF_GRUPO <= '99999'
             THEN l.QTDE_EM_PRODUCAO_PACOTE
@@ -67,8 +67,11 @@ def totais_estagios(cursor):
           ) QUANT_MD
         , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
         FROM PCPC_040 l
+        JOIN MQOP_005 e
+          ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         GROUP BY
           l.CODIGO_ESTAGIO
+        , e.DESCRICAO
         HAVING
           sum(l.QTDE_EM_PRODUCAO_PACOTE) > 0
         ORDER BY
