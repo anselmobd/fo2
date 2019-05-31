@@ -9,6 +9,12 @@ def quant_estagio(cursor, estagio):
         , l.PROCONF_GRUPO REF
         , l.PROCONF_SUBGRUPO TAM
         , l.PROCONF_ITEM COR
+        , sum(
+            CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE > 0
+            THEN 1
+            ELSE 0
+            END
+          ) LOTES
         , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
         FROM PCPC_040 l
         LEFT JOIN BASI_220 t

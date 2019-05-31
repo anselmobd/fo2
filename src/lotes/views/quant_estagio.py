@@ -65,10 +65,24 @@ class QuantEstagio(View):
                           11: 'text-align: right; font-weight: bold;'},
             })
         else:
+            total = data[0].copy()
+            total['REF'] = ''
+            total['TAM'] = ''
+            total['COR'] = 'Total:'
+            total['|STYLE'] = 'font-weight: bold;'
+            quant_fileds = ['LOTES', 'QUANT']
+            for field in quant_fileds:
+                total[field] = 0
+            for row in data:
+                for field in quant_fileds:
+                    total[field] += row[field]
+            data.append(total)
             context.update({
-                'headers': ('Produto', 'Tamanho', 'Cor', 'Quantidade'),
-                'fields': ('REF', 'TAM', 'COR', 'QUANT'),
+                'headers': ('Produto', 'Tamanho', 'Cor', 'Lotes', 'Peças'),
+                'fields': ('REF', 'TAM', 'COR', 'LOTES', 'QUANT'),
                 'data': data,
+                'style': {4: 'text-align: right;',
+                          5: 'text-align: right;'},
             })
 
         return context
