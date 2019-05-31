@@ -32,7 +32,7 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
         , o.ROTEIRO_PECA
         , CASE
           WHEN l.PROCONF_GRUPO <= '99999' THEN 3
-          WHEN l.PROCONF_GRUPO > 'A9999' THEN 1
+          WHEN l.PROCONF_GRUPO > 'B9999' THEN 1
           ELSE 2
           END TIPO_ORDEM
         , CURRENT_DATE - 100000 DATA_ENTRADA_CORTE
@@ -51,7 +51,7 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
         , o.ROTEIRO_PECA
         , CASE
           WHEN l.PROCONF_GRUPO <= '99999' THEN 3
-          WHEN l.PROCONF_GRUPO > 'A9999' THEN 1
+          WHEN l.PROCONF_GRUPO > 'B9999' THEN 1
           ELSE 2
           END TIPO_ORDEM
         , o.DATA_ENTRADA_CORTE
@@ -76,7 +76,7 @@ def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
           AND o.ALTERNATIVA_PECA = pp.ALTERNATIVA_PECA
           AND o.ROTEIRO_PECA = pp.ROTEIRO_PECA
           AND (  ( pp.TIPO_ORDEM = 3 AND l.PROCONF_GRUPO <= '99999')
-              OR ( pp.TIPO_ORDEM = 1 AND l.PROCONF_GRUPO > 'A9999')
+              OR ( pp.TIPO_ORDEM = 1 AND l.PROCONF_GRUPO > 'B9999')
               OR ( pp.TIPO_ORDEM = 2 AND l.PROCONF_GRUPO LIKE 'A%')
               )
           AND ( pp.DATA_ENTRADA_CORTE = (CURRENT_DATE - 100000)
@@ -134,7 +134,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
         , o.ROTEIRO_PECA
         , CASE
           WHEN l.PROCONF_GRUPO <= '99999' THEN 3
-          WHEN l.PROCONF_GRUPO > 'A9999' THEN 1
+          WHEN l.PROCONF_GRUPO > 'B9999' THEN 1
           ELSE 2
           END TIPO_ORDEM
         , DATA_ENTRADA_CORTE
@@ -160,7 +160,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
         , o.ROTEIRO_PECA
         , CASE
           WHEN l.PROCONF_GRUPO <= '99999' THEN 3
-          WHEN l.PROCONF_GRUPO > 'A9999' THEN 1
+          WHEN l.PROCONF_GRUPO > 'B9999' THEN 1
           ELSE 2
           END TIPO_ORDEM
         , o.DATA_ENTRADA_CORTE
@@ -180,7 +180,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
          AND o1.ALTERNATIVA_PECA = p1.ALTERNATIVA_PECA
          AND o1.ROTEIRO_PECA = p1.ROTEIRO_PECA
          AND (  ( p1.TIPO_ORDEM = 3 AND o1.REFERENCIA_PECA <= '99999')
-             OR ( p1.TIPO_ORDEM = 1 AND o1.REFERENCIA_PECA > 'A9999')
+             OR ( p1.TIPO_ORDEM = 1 AND o1.REFERENCIA_PECA > 'B9999')
              OR ( p1.TIPO_ORDEM = 2 AND o1.REFERENCIA_PECA LIKE 'A%')
              )
         GROUP BY
@@ -206,7 +206,7 @@ def an_dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
           AND o.ALTERNATIVA_PECA = pp.ALTERNATIVA_PECA
           AND o.ROTEIRO_PECA = pp.ROTEIRO_PECA
           AND (  ( pp.TIPO_ORDEM = 3 AND l.PROCONF_GRUPO <= '99999')
-              OR ( pp.TIPO_ORDEM = 1 AND l.PROCONF_GRUPO > 'A9999')
+              OR ( pp.TIPO_ORDEM = 1 AND l.PROCONF_GRUPO > 'B9999')
               OR ( pp.TIPO_ORDEM = 2 AND l.PROCONF_GRUPO LIKE 'A%')
               )
           AND l.SEQ_OPERACAO = (
