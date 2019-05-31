@@ -832,6 +832,8 @@ class ConferenciaSimples(View):
             'headers': headers,
             'fields': fields,
             'data': data,
+            'style': {2: 'text-align: right;',
+                      3: 'text-align: right;'},
         })
 
         return context

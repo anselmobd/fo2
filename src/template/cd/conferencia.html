@@ -17,8 +17,8 @@
     <a href="{% url 'cd:conferencia' %}">Mostrar conferência simples</a>
   {% endif %}
   <table>
-    {% include "layout/thead_generic.html" with data=headers only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data group=group only %}
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
   </table>
 {% endif %}
 {% endblock content %}
