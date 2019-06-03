@@ -28,6 +28,9 @@
   {% if estagio == '0' %}
     <h3>Totais gerais dos estágios</h3>
   {% endif %}
+  {% if ref %}
+    <h3>Referência: {{ ref }}</h3>
+  {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}

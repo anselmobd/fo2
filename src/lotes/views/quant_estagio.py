@@ -14,13 +14,16 @@ class QuantEstagio(View):
     template_name = 'lotes/quant_estagio.html'
     title_name = 'Quantidades por estágio'
 
-    def mount_context(self, cursor, estagio):
-        context = {'estagio': estagio}
+    def mount_context(self, cursor, estagio, ref):
+        context = {
+            'estagio': estagio,
+            'ref': ref,
+        }
 
         if estagio == '0':
             data = models.totais_estagios(cursor)
         else:
-            data = models.quant_estagio(cursor, estagio)
+            data = models.quant_estagio(cursor, estagio, ref)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem produtos no estágio',
@@ -103,7 +106,8 @@ class QuantEstagio(View):
             form.data['estagio'] = kwargs['estagio']
         if form.is_valid():
             estagio = form.cleaned_data['estagio']
+            ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, estagio))
+            context.update(self.mount_context(cursor, estagio, ref))
         context['form'] = form
         return render(request, self.template_name, context)

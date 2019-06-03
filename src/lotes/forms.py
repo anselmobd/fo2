@@ -486,3 +486,15 @@ class QuantEstagioForm(forms.Form):
         help_text='Informe 0 (zero) para visualizar os totais gerais',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+
+    ref = forms.CharField(
+        label='Referência', required=False, min_length=1, max_length=5,
+        help_text='(aceita filtro com "%")',
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
