@@ -1,7 +1,17 @@
 from fo2.models import rows_to_dict_list
 
 
-def quant_estagio(cursor, estagio):
+def quant_estagio(cursor, estagio, ref):
+    filtra_estagio = ''
+    if estagio != '':
+        filtra_estagio = """--
+            AND l.CODIGO_ESTAGIO = {} """.format(estagio)
+
+    filtra_ref = ''
+    if ref != '':
+        filtra_ref = """--
+            AND l.PROCONF_GRUPO LIKE '{}' """.format(ref)
+
     sql = """
         SELECT
           l.CODIGO_ESTAGIO ESTAGIO
@@ -22,7 +32,8 @@ def quant_estagio(cursor, estagio):
         WHERE 1=1
         --  AND l.PERIODO_PRODUCAO = 1921
         --  AND l.ORDEM_CONFECCAO = 01866
-          AND l.CODIGO_ESTAGIO = %s
+          {filtra_estagio} -- filtra_estagio
+          {filtra_ref} -- filtra_ref
         GROUP BY
           l.CODIGO_ESTAGIO
         , l.PROCONF_NIVEL99
@@ -38,8 +49,11 @@ def quant_estagio(cursor, estagio):
         , l.PROCONF_GRUPO
         , t.ORDEM_TAMANHO
         , l.PROCONF_ITEM
-    """
-    cursor.execute(sql, [estagio])
+    """.format(
+        filtra_ref=filtra_ref,
+        filtra_estagio=filtra_estagio,
+    )
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
