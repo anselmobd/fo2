@@ -46,7 +46,15 @@
   </table>
   <table>
     <tr>
-      <td style="vertical-align: top;" colspan="3">
+      <td style="vertical-align: top;">
+        <h3>Divulgação</h3>
+        31/05/2019 - <a target="_blank" href="{% url 'rh:divulga_atitudes_crise' %}">Atitudes</a> que um líder deve ter em momentos de crise.<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nesses momentos, a capacidade de superar os desafios e fortalecer a relação com as equipes é importantíssima!<br />
+      </td>
+      <td style="width: 5em;">
+        &nbsp;
+      </td>
+      <td style="vertical-align: top;">
         <h3>RH indica</h3>
         {% for link in links %}
           <a target="_blank" href="{{ link.link }}">{{ link.chamada }}</a><br/>

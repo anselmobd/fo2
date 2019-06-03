@@ -277,3 +277,8 @@ def v2018_dia_rosa_fotos(request):
 def v2018_dia_rosa_videos(request):
     context = {'titulo': 'Vídeos - Dia Rosa 2018'}
     return render(request, 'rh/2018_dia_rosa_videos.html', context)
+
+
+def divulga_atitudes_crise(request):
+    context = {'titulo': 'Atitudes que um líder deve ter em momentos de crise'}
+    return render(request, 'rh/divulga_atitudes_crise.html', context)
