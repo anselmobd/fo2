@@ -209,7 +209,6 @@ class InformativoView(LoginRequiredMixin, View):
 
 def pop(request, pop_assunto=None, id=None):
     assunto = PopAssunto.objects.get(slug=pop_assunto)
-    pprint(assunto.grupo_slug)
     if assunto.grupo_slug == '':
         titulo = 'POPs de {}'.format(assunto.nome)
     else:
