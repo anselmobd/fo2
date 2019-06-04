@@ -39,42 +39,42 @@ def busca_op(
     filtra_posicao = ""
     if posicao == 'p':
         filtra_posicao = """--
-            AND
+            AND EXISTS
             ( SELECT
-                sum(l.QTDE_EM_PRODUCAO_PACOTE) QTD
+                *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
-            ) IS NOT NULL -- > 0"""
+            )"""
     elif posicao == 'p63':
         filtra_posicao = """--
-            AND
+            AND EXISTS
             ( SELECT
-                sum(l.QTDE_EM_PRODUCAO_PACOTE) QTD
+                *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
                 AND l.CODIGO_ESTAGIO <> 63
-            ) IS NOT NULL -- > 0"""
+            )"""
     elif posicao == 'f':
         filtra_posicao = """--
-            AND
+            AND NOT EXISTS
             ( SELECT
-                sum(l.QTDE_EM_PRODUCAO_PACOTE) QTD
+                *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
-            ) IS NULL -- = 0"""
+            )"""
     elif posicao == 'f63':
         filtra_posicao = """--
-            AND
+            AND NOT EXISTS
             ( SELECT
-                sum(l.QTDE_EM_PRODUCAO_PACOTE) QTD
+                *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
                 AND l.CODIGO_ESTAGIO <> 63
-            ) IS NULL -- = 0"""
+            )"""
 
     filtra_situacao = ""
     if situacao == 'a':
