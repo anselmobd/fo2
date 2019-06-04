@@ -23,11 +23,10 @@
 {% endif %}
 {% if i_data %}
 {% url 'producao:componentes_de_op__get' op as comp_op %}
-{% with 'Produtos componentes da OP ' as text %}
-  {% include "layout/link.html" with link=comp_op text=text|add:op only %}
-{% endwith %}&nbsp;
+{% include "layout/link.html" with link=comp_op text='Produtos componentes da OP '|add:op only %}
+<br />
 {% url 'cd:historico__get' op as hist_op %}
-{% include "layout/link.html" with link=hist_op text='Histórico da OP no CD' only %}
+{% include "layout/link.html" with link=hist_op text='Histórico da OP '|add:op|add:' no CD' only %}
 <table>
   {% include "layout/html_thead.html" with data=i_headers only %}
   {% include "layout/html_tbody_group.html" with fields=i_fields data=i_data group=i_group only %}
