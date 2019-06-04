@@ -20,7 +20,9 @@
 {% elif lote %}
   <br/>
   <p>
-  Lote selecionado: <b>{{lote}}</b> ( <b>{{ nloted.NLOTE }}</b> de {{ nloted.TOTLOTES }} )
+  Lote selecionado: <b>{{lote}}</b> ( <b>{{ nloted.NLOTE }}</b> de {{ nloted.TOTLOTES }} )<br/>
+  {% url 'cd:historico_lote' lote as hist_lote %}
+  {% include "layout/link.html" with link=hist_lote text='Histórico do lote '|add:lote|add:' no CD' only %}
   </p>
   <table>
     {% include "layout/html_thead.html" with data=i_headers only %}
