@@ -866,7 +866,7 @@ class VisaoRuaDetalhe(View):
 
     def __init__(self):
         self.template_name = 'cd/visao_rua_detalhe.html'
-        self.title_name = 'Visão detelhada de rua do CD'
+        self.title_name = 'Visão detalhada de rua do CD'
 
     def mount_context(self, rua):
         context = {'rua': rua}
