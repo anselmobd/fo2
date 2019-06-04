@@ -1,7 +1,7 @@
 from fo2.models import rows_to_dict_list
 
 
-def quant_estagio(cursor, estagio, ref):
+def quant_estagio(cursor, estagio, ref, tipo):
     filtra_estagio = ''
     if estagio != '':
         filtra_estagio = """--
@@ -11,6 +11,21 @@ def quant_estagio(cursor, estagio, ref):
     if ref != '':
         filtra_ref = """--
             AND l.PROCONF_GRUPO LIKE '{}' """.format(ref)
+
+    filtro_tipo = ''
+    if tipo == 'a':
+        filtro_tipo = "AND l.PROCONF_GRUPO < 'A0000'"
+    elif tipo == 'g':
+        filtro_tipo = "AND l.PROCONF_GRUPO like 'A%'"
+    elif tipo == 'b':
+        filtro_tipo = "AND l.PROCONF_GRUPO like 'B%'"
+    elif tipo == 'p':
+        filtro_tipo = \
+            "AND (l.PROCONF_GRUPO like 'A%' OR l.PROCONF_GRUPO like 'B%')"
+    elif tipo == 'v':
+        filtro_tipo = "AND l.PROCONF_GRUPO < 'C0000'"
+    elif tipo == 'm':
+        filtro_tipo = "AND l.PROCONF_GRUPO >= 'C0000'"
 
     sql = """
         SELECT
@@ -34,6 +49,7 @@ def quant_estagio(cursor, estagio, ref):
         --  AND l.ORDEM_CONFECCAO = 01866
           {filtra_estagio} -- filtra_estagio
           {filtra_ref} -- filtra_ref
+          {filtro_tipo} -- filtro_tipo
         GROUP BY
           l.CODIGO_ESTAGIO
         , l.PROCONF_NIVEL99
@@ -52,6 +68,7 @@ def quant_estagio(cursor, estagio, ref):
     """.format(
         filtra_ref=filtra_ref,
         filtra_estagio=filtra_estagio,
+        filtro_tipo=filtro_tipo,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
