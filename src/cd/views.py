@@ -1773,14 +1773,19 @@ class Historico(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        if 'op' in kwargs and kwargs['op'] is not None:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        if 'op' in kwargs and kwargs['op'] is not None:
+            form.data['op'] = kwargs['op']
         if form.is_valid():
             op = form.cleaned_data['op']
             cursor = connection.cursor()

@@ -63,6 +63,9 @@ urlpatterns = [
     url(r'^historico/?$',
         views.Historico.as_view(), name='historico'),
 
+    url(r'^historico/(?P<op>[^/]+)?$',
+        views.Historico.as_view(), name='historico__get'),
+
     url(r'^historico_lote/(?P<lote>[^/]+)?$',
         views.HistoricoLote.as_view(), name='historico_lote'),
 ]
