@@ -887,6 +887,12 @@ class VisaoCd(View):
         for row in data:
             for field in quant_fileds:
                 total[field] += row[field]
+            row['qenderecos|TARGET'] = '_BLANK'
+            row['qenderecos|LINK'] = reverse(
+                'cd:visao_rua__get', args=[row['rua']])
+            row['qlotes|TARGET'] = '_BLANK'
+            row['qlotes|LINK'] = reverse(
+                'cd:visao_rua_detalhe__get', args=[row['rua']])
         data.append(total)
 
         context.update({
@@ -903,6 +909,119 @@ class VisaoCd(View):
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         data = self.mount_context()
+        context.update(data)
+        return render(request, self.template_name, context)
+
+
+class VisaoRua(View):
+
+    def __init__(self):
+        self.template_name = 'cd/visao_rua.html'
+        self.title_name = 'Visão geral de rua do CD'
+
+    def mount_context(self, rua):
+        context = {'simples': 's'}
+        locais_recs = lotes.models.Lote.objects.filter(
+            local__startswith=rua
+        ).exclude(
+            local__isnull=True
+        ).exclude(
+            local__exact=''
+        ).values('local').annotate(
+            qlotes=Count('lote'),
+            qtdsum=Sum('qtd')
+        ).order_by('local')
+        if len(locais_recs) == 0:
+            return context
+
+        data = list(locais_recs.values(
+            'local', 'qlotes', 'qtdsum'))
+
+        headers = ['Endereço', 'Lotes (caixas)', 'Qtd. peças']
+        fields = ['local', 'qlotes', 'qtdsum']
+
+        total = data[0].copy()
+        total['local'] = 'Total:'
+        total['|STYLE'] = 'font-weight: bold;'
+        quant_fileds = ['qlotes', 'qtdsum']
+        for field in quant_fileds:
+            total[field] = 0
+        for row in data:
+            for field in quant_fileds:
+                total[field] += row[field]
+        data.append(total)
+
+        context.update({
+            'headers': headers,
+            'fields': fields,
+            'data': data,
+            'style': {2: 'text-align: right;',
+                      3: 'text-align: right;'},
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        rua = kwargs['rua']
+        context = {'titulo': self.title_name}
+        data = self.mount_context(rua)
+        context.update(data)
+        return render(request, self.template_name, context)
+
+
+class VisaoRuaDetalhe(View):
+
+    def __init__(self):
+        self.template_name = 'cd/visao_rua_detalhe.html'
+        self.title_name = 'Visão detelhada de rua do CD'
+
+    def mount_context(self, rua):
+        context = {}
+        locais_recs = lotes.models.Lote.objects.filter(
+            local__startswith=rua
+        ).exclude(
+            local__isnull=True
+        ).exclude(
+            local__exact=''
+        ).values('local', 'op', 'referencia', 'cor', 'tamanho').annotate(
+            qlotes=Count('lote'),
+            qtdsum=Sum('qtd')
+        ).order_by('local', 'op', 'referencia', 'cor', 'ordem_tamanho')
+        if len(locais_recs) == 0:
+            return context
+
+        data = list(locais_recs.values(
+            'local', 'op', 'referencia', 'cor', 'tamanho', 'qlotes', 'qtdsum'))
+
+        group = ['local']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['qlotes', 'qtdsum'],
+            'count': [],
+            'descr': {'op': 'Totais:'}
+        })
+        group_rowspan(data, group)
+
+        headers = ['Endereço', 'OP', 'Referência', 'Cor', 'Tamanho',
+                   'Lotes', 'Qtd.']
+        fields = ['local', 'op', 'referencia', 'cor', 'tamanho',
+                  'qlotes', 'qtdsum']
+
+        context.update({
+            'headers': headers,
+            'fields': fields,
+            'group': group,
+            'data': data,
+            'style': {6: 'text-align: right;',
+                      7: 'text-align: right;'},
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        rua = kwargs['rua']
+        context = {'titulo': self.title_name}
+        data = self.mount_context(rua)
         context.update(data)
         return render(request, self.template_name, context)
 

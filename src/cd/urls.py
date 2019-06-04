@@ -32,6 +32,12 @@ urlpatterns = [
     url(r'^visao_cd/$',
         views.VisaoCd.as_view(), name='visao_cd'),
 
+    url(r'^visao_rua/(?P<rua>[^/]+)/$',
+        views.VisaoRua.as_view(), name='visao_rua__get'),
+
+    url(r'^visao_rua_detalhe/(?P<rua>[^/]+)/$',
+        views.VisaoRuaDetalhe.as_view(), name='visao_rua_detalhe__get'),
+
     url(r'^solicitacoes/(?P<id>[^/]+)?$',
         views.Solicitacoes.as_view(), name='solicitacoes'),
 
