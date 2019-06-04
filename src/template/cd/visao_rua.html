@@ -10,10 +10,10 @@
 {% endblock %}
 
 {% block content %}
+<a href="{% url 'cd:visao_cd' %}">Visão do CD</a><br />
+<a href="{% url 'cd:visao_rua_detalhe__get' rua %}">Visão detalhada da rua {{ rua }}</a><br />
 <h3>Rua {{ rua }}</h3>
 {% if data %}
-  <a href="{% url 'cd:visao_cd' %}">Visão do CD</a><br />
-  <a href="{% url 'cd:visao_rua_detalhe__get' rua %}">Visão detalhada da rua {{ rua }}</a><br />
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
