@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'cd:visao_cd' %}">Visão do CD</a><br />
-<a href="{% url 'cd:visao_rua__get' rua %}">Visão geral da rua {{ rua }}</a><br />
+<a href="{% url 'cd:visao_cd' %}">Visão do CD&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a><br />
+<a href="{% url 'cd:visao_rua__get' rua %}">Visão geral da rua {{ rua }}&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a><br />
 <h3>Rua {{ rua }}</h3>
 {% if data %}
   <table>
