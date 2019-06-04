@@ -396,6 +396,9 @@ class Estoque(View):
             row['pedido'] = [op_info for op_info in ops_info
                              if op_info['op'] == row['op']
                              ][0]['pedido']
+            if row['pedido'] != '-':
+                row['pedido|LINK'] = reverse(
+                    'producao:pedido__get', args=[row['pedido']])
             if row['qtd']:
                 if row['update_at'] is None:
                     row['update_at'] = row['create_at']
