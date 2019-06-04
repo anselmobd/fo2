@@ -830,6 +830,11 @@ class VisaoRua(View):
         data = list(locais_recs.values(
             'local', 'qlotes', 'qtdsum'))
 
+        for row in data:
+            row['local|TARGET'] = '_BLANK'
+            row['local|LINK'] = reverse(
+                'cd:estoque_filtro', args=['E', row['local']])
+
         headers = ['Endereço', 'Lotes (caixas)', 'Qtd. peças']
         fields = ['local', 'qlotes', 'qtdsum']
 
@@ -885,6 +890,11 @@ class VisaoRuaDetalhe(View):
 
         data = list(locais_recs.values(
             'local', 'op', 'referencia', 'cor', 'tamanho', 'qlotes', 'qtdsum'))
+
+        for row in data:
+            row['local|TARGET'] = '_BLANK'
+            row['local|LINK'] = reverse(
+                'cd:estoque_filtro', args=['E', row['local']])
 
         group = ['local']
         totalize_grouped_data(data, {
