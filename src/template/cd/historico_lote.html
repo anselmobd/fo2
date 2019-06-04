@@ -15,6 +15,10 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
+{% url 'producao:posicao__get' lote as detalhe_lote %}
+{% include "layout/link.html" with link=detalhe_lote text='Detalhes do lote '|add:lote only %}<br />
+{% url 'cd:historico__get' op as hist_op %}
+{% include "layout/link.html" with link=hist_op text='Histórico da OP '|add:op|add:' no CD' only %}
 {% if lote %}
   <h4>Lote: {{ lote }}</h4>
 {% endif %}
