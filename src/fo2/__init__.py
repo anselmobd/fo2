@@ -1,9 +1,13 @@
-__version__ = '0.1.146'
-__version__date__ = '29/05/2019'
+__version__ = '0.1.147'
+__version__date__ = '04/06/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.147 - 2019/06/04
+#   . Visualização de quantidades por estágio
+#   . Melhoria na visão de quantidades em ruas do CD
 #
 # - 0.1.146 - 2019/05/29
 #   . Estoque + quantidade de lotes selecionados
