@@ -896,7 +896,7 @@ class VisaoRuaDetalhe(View):
         group_rowspan(data, group)
 
         headers = ['Endereço', 'OP', 'Referência', 'Cor', 'Tamanho',
-                   'Lotes', 'Qtd.']
+                   'Lotes (caixas)', 'Qtd. peças']
         fields = ['local', 'op', 'referencia', 'cor', 'tamanho',
                   'qlotes', 'qtdsum']
 
