@@ -18,7 +18,7 @@
 {% if op %}
   <h4>OP: {{ op }}</h4>
   {% url 'producao:op__get' op as det_op %}
-  {% include "layout/link.html" with link=det_op text='Detalhes da OP' only %}
+  {% include "layout/link.html" with link=det_op text='Detalhes da OP '|add:op only %}
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
