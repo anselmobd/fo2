@@ -336,6 +336,8 @@ class BuscaOP(View):
             'ref': ref,
             'deposito': deposito,
             'tipo': tipo,
+            'situacao': situacao,
+            'posicao': posicao,
         }
 
         data = models.busca_op(

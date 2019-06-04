@@ -33,6 +33,24 @@
     {% endif %}
   </h4>
 {% endif %}
+{% if situacao %}
+  <h4>Situação:
+    {% if situacao == 't' %}Todas as OPs
+    {% elif situacao == 'a' %}Ativas
+    {% elif situacao == 'c' %}Canceladas
+    {% endif %}
+  </h4>
+{% endif %}
+{% if posicao %}
+  <h4>Posição:
+    {% if posicao == 't' %}Todas as OPs
+    {% elif posicao == 'p' %}Em produção
+    {% elif posicao == 'f' %}Finalizadas
+    {% elif posicao == 'p63' %}Em produção, exceto 63-CD
+    {% elif posicao == 'f63' %}Finalizadas, incluindo 63-CD
+    {% endif %}
+  </h4>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
