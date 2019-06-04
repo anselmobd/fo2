@@ -887,10 +887,8 @@ class VisaoCd(View):
         for row in data:
             for field in quant_fileds:
                 total[field] += row[field]
-            row['qenderecos|TARGET'] = '_BLANK'
             row['qenderecos|LINK'] = reverse(
                 'cd:visao_rua__get', args=[row['rua']])
-            row['qlotes|TARGET'] = '_BLANK'
             row['qlotes|LINK'] = reverse(
                 'cd:visao_rua_detalhe__get', args=[row['rua']])
         data.append(total)
@@ -920,7 +918,7 @@ class VisaoRua(View):
         self.title_name = 'Visão geral de rua do CD'
 
     def mount_context(self, rua):
-        context = {'simples': 's'}
+        context = {'rua': rua}
         locais_recs = lotes.models.Lote.objects.filter(
             local__startswith=rua
         ).exclude(
@@ -962,7 +960,7 @@ class VisaoRua(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        rua = kwargs['rua']
+        rua = kwargs['rua'].upper()
         context = {'titulo': self.title_name}
         data = self.mount_context(rua)
         context.update(data)
@@ -976,7 +974,7 @@ class VisaoRuaDetalhe(View):
         self.title_name = 'Visão detelhada de rua do CD'
 
     def mount_context(self, rua):
-        context = {}
+        context = {'rua': rua}
         locais_recs = lotes.models.Lote.objects.filter(
             local__startswith=rua
         ).exclude(
@@ -1019,7 +1017,7 @@ class VisaoRuaDetalhe(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        rua = kwargs['rua']
+        rua = kwargs['rua'].upper()
         context = {'titulo': self.title_name}
         data = self.mount_context(rua)
         context.update(data)

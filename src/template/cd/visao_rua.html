@@ -11,6 +11,8 @@
 
 {% block content %}
 {% if data %}
+  <a href="{% url 'cd:visao_cd' %}">Visão do CD</a><br />
+  <a href="{% url 'cd:visao_rua_detalhe__get' rua %}">Visão mais detalhada da rua {{ rua }}</a><br />
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
