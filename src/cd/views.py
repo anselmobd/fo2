@@ -1810,6 +1810,13 @@ class HistoricoLote(View):
         if len(data) == 0:
             context.update({'erro': 'Lote não encontrado ou nunca endereçado'})
             return context
+
+        lote_cd = lotes.models.Lote.objects.get(lote=lote)
+        op = str(lote_cd.op)
+        context.update({
+            'op': op,
+        })
+
         old_estagio = None
         old_usuario = None
         old_local = None
