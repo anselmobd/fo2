@@ -7,7 +7,11 @@
   <li><a href="{% url 'cd:estoque' %}">Estoque</a></li>
   <li><a href="{% url 'cd:grade_estoque' %}">Grades do estoque</a></li>
   <li><a href="{% url 'cd:inconsist' %}">Inconsistências Systêxtil</a></li>
-  <li><a href="{% url 'cd:conferencia' %}">Conferência</a></li>
+  <li>Conferência</li>
+  <ul>
+    <li><a href="{% url 'cd:visao_cd' %}">CD</a></li>
+    <li><a href="{% url 'cd:conferencia' %}">Simples</a></li>
+  </ul>
   <li><a href="{% url 'cd:solicitacoes' %}">Solicitações de lotes</a></li>
   <!-- <li><a href="{% url 'cd:mapa' %}">Mapa</a></li> -->
 </ul>
