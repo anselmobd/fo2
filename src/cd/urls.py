@@ -23,12 +23,6 @@ urlpatterns = [
         views.InconsistenciasDetalhe.as_view(),
         name='inconsist_detalhe_op'),
 
-    url(r'^conferencia/$',
-        views.ConferenciaSimples.as_view(), name='conferencia'),
-
-    url(r'^conferencia_detalhada/$',
-        views.Conferencia.as_view(), name='conferencia_detalhada'),
-
     url(r'^visao_cd/$',
         views.VisaoCd.as_view(), name='visao_cd'),
 
