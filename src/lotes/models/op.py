@@ -45,7 +45,7 @@ def busca_op(
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
-            ) > 0"""
+            ) IS NOT NULL -- > 0"""
     elif posicao == 'p63':
         filtra_posicao = """--
             AND
@@ -55,7 +55,7 @@ def busca_op(
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
                 AND l.CODIGO_ESTAGIO <> 63
-            ) > 0"""
+            ) IS NOT NULL -- > 0"""
     elif posicao == 'f':
         filtra_posicao = """--
             AND
@@ -64,7 +64,7 @@ def busca_op(
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
-            ) = 0"""
+            ) IS NULL -- = 0"""
     elif posicao == 'f63':
         filtra_posicao = """--
             AND
@@ -74,7 +74,7 @@ def busca_op(
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
                 AND l.CODIGO_ESTAGIO <> 63
-            ) = 0"""
+            ) IS NULL -- = 0"""
 
     filtra_situacao = ""
     if situacao == 'a':
@@ -234,6 +234,7 @@ def busca_op(
         filtra_situacao=filtra_situacao,
         filtra_posicao=filtra_posicao,
     )
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
