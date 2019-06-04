@@ -29,6 +29,9 @@ urlpatterns = [
     url(r'^conferencia_detalhada/$',
         views.Conferencia.as_view(), name='conferencia_detalhada'),
 
+    url(r'^visao_cd/$',
+        views.VisaoCd.as_view(), name='visao_cd'),
+
     url(r'^solicitacoes/(?P<id>[^/]+)?$',
         views.Solicitacoes.as_view(), name='solicitacoes'),
 
