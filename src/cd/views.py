@@ -1761,7 +1761,6 @@ class Historico(View):
                     row['endereco'] = 'SAIU!'
             if row['usuario'] is None:
                 row['usuario'] = '-'
-            row['lote|TARGET'] = '_BLANK'
             row['lote|LINK'] = reverse(
                 'cd:historico_lote', args=[row['lote']])
         context.update({
