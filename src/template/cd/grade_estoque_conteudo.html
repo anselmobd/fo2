@@ -75,19 +75,21 @@
               {% include "layout/tbody_generic.html" with fields=grade.disponivel.fields data=grade.disponivel.data group=grade.disponivel.group style=grade.disponivel.style only %}
             </table>
           </td>
-          <td>&nbsp;</td>
-          <td style="border-left: thin solid lightgrey;">&nbsp;</td>
-          <td style="vertical-align: top;">
-            {% if detalhe %}
-              <h4>Solicitações+Pedidos</h4>
-            {% else %}
-              <h4><a href="{% url 'cd:grade_estoque_detalhe' grade.ref 'detalhe' %}">Solicitações+Pedidos</a></h4>
-            {% endif%}
-            <table style="width: auto;">
-              {% include "layout/thead_generic.html" with data=grade.solped.headers style=grade.solped.style only %}
-              {% include "layout/tbody_generic.html" with fields=grade.solped.fields data=grade.solped.data group=grade.solped.group style=grade.solped.style only %}
-            </table>
-          </td>
+          {% if not detalhe %}
+            <td>&nbsp;</td>
+            <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+            <td style="vertical-align: top;">
+              {% if grade.link_detalhe %}
+                <h4><a href="{% url 'cd:grade_estoque_detalhe' grade.ref 'detalhe' %}">{{grade.solped_titulo}}</a></h4>
+              {% else%}
+                <h4>{{grade.solped_titulo}}</h4>
+              {% endif %}
+              <table style="width: auto;">
+                {% include "layout/thead_generic.html" with data=grade.solped.headers style=grade.solped.style only %}
+                {% include "layout/tbody_generic.html" with fields=grade.solped.fields data=grade.solped.data group=grade.solped.group style=grade.solped.style only %}
+              </table>
+            </td>
+          {% endif %}
           {% if grade.solicitacoes %}
             <td>&nbsp;</td>
             <td style="border-left: thin solid lightgrey;">&nbsp;</td>
