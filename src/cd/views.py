@@ -1590,13 +1590,28 @@ class Grade(View):
                         grade_ref.update({'tipo': row['grade_tipo']})
                         tipo_ant = row['grade_tipo']
 
+                    sum_pedido = models.sum_pedido(cursor_def, ref)
+                    total_pedido = sum_pedido[0]['qtd']
+                    if total_pedido is None:
+                        total_pedido = 0
                     solped_ref = models.grade_solicitacao(
                         cursor_def, ref, tipo='sp', grade_inventario=True)
                     if solped_ref['total'] != 0:
+                        if total_pedido == 0:
+                            link_detalhe = False
+                            solped_titulo = 'Solicitações'
+                        elif solped_ref['total'] == total_pedido:
+                            link_detalhe = False
+                            solped_titulo = 'Pedidos'
+                        else:
+                            link_detalhe = True
+                            solped_titulo = 'Solicitações+Pedidos'
                         dispon_ref = models.grade_solicitacao(
                             cursor_def, ref, tipo='i-sp',
                             grade_inventario=True)
                         grade_ref.update({
+                            'solped_titulo': solped_titulo,
+                            'link_detalhe': link_detalhe,
                             'solped': solped_ref,
                             'disponivel': dispon_ref,
                             })
