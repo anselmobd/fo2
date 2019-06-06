@@ -130,10 +130,11 @@ class Caixa(models.Model):
 
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
+        now = timezone.now()
         if self.id:
-            self.update_at = timezone.now()
+            self.update_at = now
         else:  # At create have no "id"
-            self.create_at = timezone.now()
+            self.create_at = now
         return super(Caixa, self).save(*args, **kwargs)
 
     class Meta:
@@ -196,13 +197,14 @@ class Lote(models.Model):
 
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
+        now = timezone.now()
         if self.id:
-            self.update_at = timezone.now()
+            self.update_at = now
             if self.local or self.__original_local:
                 if self.__original_local != self.local:
-                    self.local_at = timezone.now()
+                    self.local_at = now
         else:  # At create have no "id"
-            self.create_at = timezone.now()
+            self.create_at = now
         return super(Lote, self).save(*args, **kwargs)
 
     class Meta:
@@ -245,10 +247,11 @@ class SolicitaLote(models.Model):
     def save(self, *args, **kwargs):
         self.codigo = self.codigo and self.codigo.upper()
         ''' On create and update, get timestamps '''
-        self.update_at = timezone.now()
+        now = timezone.now()
+        self.update_at = now
         # At create have no "id"
         if not self.id:
-            self.create_at = timezone.now()
+            self.create_at = now
         super(SolicitaLote, self).save(*args, **kwargs)
 
     class Meta:
@@ -274,10 +277,11 @@ class SolicitaLoteQtd(models.Model):
 
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
-        self.update_at = timezone.now()
+        now = timezone.now()
+        self.update_at = now
         # At create have no "id"
         if not self.id:
-            self.create_at = timezone.now()
+            self.create_at = now
         super(SolicitaLoteQtd, self).save(*args, **kwargs)
 
     class Meta:
