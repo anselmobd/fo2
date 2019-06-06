@@ -775,6 +775,38 @@ def grade_solicitacao(
     return context_ref
 
 
+def sum_pedido(cursor, referencia=None):
+
+    if referencia is None:
+        filter_referencia = '--'
+    elif isinstance(referencia, str):
+        filter_referencia = "and l.referencia = '{}'".format(referencia)
+    else:
+        filter_referencia = "and l.referencia in ("
+        sep = ''
+        for ref in referencia:
+            filter_referencia += "{}'{}'".format(sep, ref)
+            sep = ', '
+        filter_referencia += ")"
+
+    sql = '''
+        SELECT
+          sum(l.qtd) qtd
+        from fo2_cd_lote l
+        join fo2_prod_op o
+          on o.op = l.op
+        where 1=1
+          {filter_referencia} -- filter_referencia
+          and l.local is not null
+          and l.local <> ''
+          and o.pedido <> 0
+    '''.format(
+        filter_referencia=filter_referencia,
+    )
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
+
+
 def historico(cursor, op):
     sql = '''
         SELECT
