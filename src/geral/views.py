@@ -468,6 +468,10 @@ def dict_estagios():
             'descr': 'Tinturaria',
             'deposito': '-',
         },
+        42: {
+            'descr': 'Estamparia',
+            'deposito': '-',
+        },
         45: {
             'descr': 'Transfer / TAG',
             'deposito': '231',
