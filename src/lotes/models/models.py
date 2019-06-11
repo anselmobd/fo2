@@ -291,6 +291,22 @@ class SolicitaLoteQtd(models.Model):
         null=True, blank=True,
         verbose_name='alterado em')
 
+    # Table Heap
+    origin_id = models.IntegerField(
+        default=0,
+        verbose_name='id de origem')
+    deleted = models.NullBooleanField(
+        default=False,
+        verbose_name='apagado')
+    version = models.IntegerField(
+        default=0,
+        verbose_name='versão')
+    when = models.DateTimeField(
+        verbose_name='quando')
+    unique_aux = models.IntegerField(
+        default=0,
+        verbose_name='campo auxiliar para unique_together')
+
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
         now = timezone.now()
