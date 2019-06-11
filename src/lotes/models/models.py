@@ -275,6 +275,20 @@ class SolicitaLote(models.Model):
 #         verbose_name_plural = "Posições de carga(NF)"
 
 
+class SolicitaLoteQtdActiveManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            SolicitaLoteQtdActiveManager,
+            self).get_queryset().filter(origin_id=0)
+
+
+class SolicitaLoteQtdInactiveManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            SolicitaLoteQtdInactiveManager,
+            self).get_queryset().exclude(origin_id=0)
+
+
 class SolicitaLoteQtd(models.Model):
     solicitacao = models.ForeignKey(
         SolicitaLote, on_delete=models.CASCADE, null=True, blank=True,
@@ -306,6 +320,10 @@ class SolicitaLoteQtd(models.Model):
     unique_aux = models.IntegerField(
         default=0,
         verbose_name='campo auxiliar para unique_together')
+
+    objects_all = models.Manager()
+    objects = SolicitaLoteQtdActiveManager()
+    objects_inactive = SolicitaLoteQtdInactiveManager()
 
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
@@ -367,7 +385,7 @@ class SolicitaLoteQtd(models.Model):
 
 class TableHeapManager(models.Manager):
     def get_queryset(self):
-        return super(MyModelManager, self).get_queryset().filter(origin_id=0)
+        return super(TableHeapManager, self).get_queryset().filter(origin_id=0)
 
 
 # Testada sem o "abstract = True" e funcionou bem
