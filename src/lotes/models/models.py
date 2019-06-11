@@ -321,18 +321,44 @@ class SolicitaLoteQtd(models.Model):
         default=0,
         verbose_name='campo auxiliar para unique_together')
 
-    objects_all = models.Manager()
+    # TableHeap - "objects" filter only active rows
     objects = SolicitaLoteQtdActiveManager()
     objects_inactive = SolicitaLoteQtdInactiveManager()
+    objects_all = models.Manager()
+
+    # TableHeap - heap constructor
+    def save_old(self, id, deleted=False):
+        try:
+            old = SolicitaLoteQtd.objects.get(id=id)
+            old.origin_id = old.id
+            old.unique_aux = old.version
+            old.id = None
+            old.deleted = deleted
+            old.save()
+        except Exception:
+            pass
 
     def save(self, *args, **kwargs):
-        ''' On create and update, get timestamps '''
-        now = timezone.now()
-        self.update_at = now
-        # At create have no "id"
+        # TableHeap start
+        if self.id:
+            self.save_old(self.id)
+        self.when = timezone.now()
+        if self.origin_id == 0:
+            self.version += 1
+        # TableHeap end
+
+        self.update_at = self.when
         if not self.id:
-            self.create_at = now
+            self.create_at = self.when
+
         super(SolicitaLoteQtd, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # TableHeap start
+        self.save_old(self.id, deleted=True)
+        # TableHeap end
+
+        super(SolicitaLoteQtd, self).delete(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_cd_solicita_lote_qtd"
