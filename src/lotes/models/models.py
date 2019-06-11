@@ -365,50 +365,7 @@ class SolicitaLoteQtd(models.Model):
         verbose_name = "Quantidades Solicitadas de lotes"
 
 
-# class ReservaLoteQtd(models.Model):
-#     solicitacao = models.ForeignKey(
-#         SolicitaLote, on_delete=models.CASCADE, null=True, blank=True,
-#         verbose_name='Solicitação')
-#     lote = models.ForeignKey(
-#         Lote, on_delete=models.CASCADE, null=True, blank=True,
-#         verbose_name='Lote')
-#     qtd = models.IntegerField(
-#         default=0, verbose_name='quantidade solicitada')
-#
-#     active = models.NullBooleanField(default=True)
-#     create_at = models.DateTimeField(
-#         null=True, blank=True,
-#         verbose_name='criado em')
-#     inactive_at = models.DateTimeField(
-#         null=True, blank=True,
-#         verbose_name='inativado em')
-#
-#     def save(self, *args, **kwargs):
-#         ''' On create and update, get timestamps '''
-#         if self.id:
-#             # old = deepcopy(self)
-#             old = ReservaLoteQtd.objects.get(id=self.id)
-#             old.id = None
-#             old.active = False
-#             old.save()
-#         now = timezone.now()
-#         if self.active:
-#             self.create_at = now
-#         else:
-#             self.inactive_at = now
-#         super(ReservaLoteQtd, self).save(*args, **kwargs)
-#
-#     def delete(self, *args, **kwargs):
-#         old = ReservaLoteQtd.objects.get(id=self.id)
-#         old.id = None
-#         old.active = False
-#         old.save()
-#         super(ReservaLoteQtd, self).delete(*args, **kwargs)
-#
-#     class Meta:
-#         db_table = "fo2_reserva_lote_qtd"
-#         verbose_name = "Quantidades reservadas de lotes"
-
+# Abaixo: estudos do TableHeap
 class TableHeapManager(models.Manager):
     def get_queryset(self):
         return super(TableHeapManager, self).get_queryset().filter(origin_id=0)
