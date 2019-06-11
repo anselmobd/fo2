@@ -1219,6 +1219,28 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'data': solicit_qtds,
         })
 
+        solicit_qtds_inat = \
+            lotes.models.SolicitaLoteQtd.objects_inactive.values(
+                'id', 'lote__op', 'lote__lote', 'lote__referencia',
+                'lote__cor', 'lote__tamanho', 'qtd', 'when'
+            ).annotate(
+                lote__local=Coalesce('lote__local', Value('-ausente-'))
+            ).filter(
+                solicitacao=solicitacao
+            ).order_by(
+                '-when'
+            )
+
+        context.update({
+            'inat_headers': ['Endereço', 'OP', 'Lote',
+                             'Referência', 'Cor', 'Tamanho',
+                             'Quant. Solicitada', 'Removido em'],
+            'inat_fields': ['lote__local', 'lote__op', 'lote__lote',
+                            'lote__referencia', 'lote__cor', 'lote__tamanho',
+                            'qtd', 'when'],
+            'inat_data': solicit_qtds_inat,
+        })
+
         por_endereco = lotes.models.SolicitaLoteQtd.objects.values(
             'lote__op', 'lote__lote', 'lote__qtd_produzir',
             'lote__referencia', 'lote__cor', 'lote__tamanho'
