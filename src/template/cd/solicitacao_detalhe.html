@@ -35,6 +35,11 @@
           {% include "layout/thead_generic.html" with data=headers only %}
           {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
         </table>
+        <h4>Lotes que estiveram nesta solicitação</h4>
+        <table>
+          {% include "layout/thead_generic.html" with data=inat_headers only %}
+          {% include "layout/tbody_generic.html" with fields=inat_fields data=inat_data only %}
+        </table>
       </div>
       <div id="menu1" class="tab-pane fade">
         <table>
