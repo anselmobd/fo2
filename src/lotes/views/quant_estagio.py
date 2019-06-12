@@ -28,10 +28,10 @@ class TotalEstagio(View):
 
         total_liberado = data[0].copy()
         total_liberado[
-            'ESTAGIO'] = 'Total em produção (liberado pelo PCP):'
+            'ESTAGIO'] = 'Total em produção (apenas após 3 - PCP - LIBERACAO):'
         total_liberado['|STYLE'] = 'font-weight: bold;'
         total_geral = data[0].copy()
-        total_geral['ESTAGIO'] = 'Total geral (incluindo programação):'
+        total_geral['ESTAGIO'] = 'Total geral (incluindo 3 - PCP - LIBERACAO):'
         quant_fields = [
             'LOTES_PA', 'QUANT_PA',
             'LOTES_PG', 'QUANT_PG',
@@ -47,6 +47,10 @@ class TotalEstagio(View):
             if row['CODIGO_ESTAGIO'] != 3:
                 for field in quant_fields:
                     total_liberado[field] += row[field]
+                    if field in ['LOTES', 'QUANT']:
+                        total_liberado['{}|STYLE'.format(field)] = \
+                            'color: darkred;'
+
         data.append(total_liberado)
         data.append(total_geral)
         context.update({
