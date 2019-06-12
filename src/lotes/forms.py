@@ -321,6 +321,12 @@ class BuscaOpForm(forms.Form):
         help_text='(aceita filtro com "%")',
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
+    tam = forms.CharField(
+        label='Tamanho', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+    cor = forms.CharField(
+        label='Cor', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
     deposito = forms.CharField(
         label='Depósito', required=False, max_length=3,
         widget=forms.TextInput(attrs={'type': 'string'}))
@@ -358,6 +364,20 @@ class BuscaOpForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+    def clean_tam(self):
+        tam = self.cleaned_data['tam'].upper()
+        data = self.data.copy()
+        data['tam'] = tam
+        self.data = data
+        return tam
+
+    def clean_cor(self):
+        cor = self.cleaned_data['cor'].upper()
+        data = self.data.copy()
+        data['cor'] = cor
+        self.data = data
+        return cor
 
 
 class ExpedicaoForm(forms.Form):
