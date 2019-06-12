@@ -14,15 +14,16 @@ class QuantEstagio(View):
     template_name = 'lotes/quant_estagio.html'
     title_name = 'Quantidades por estágio'
 
-    def mount_context(self, cursor, estagio, ref, tipo):
+    def mount_context(self, cursor, estagio, ref, tipo, tipo_roteiro):
         context = {
             'estagio': estagio,
             'ref': ref,
             'tipo': tipo,
+            'tipo_roteiro': tipo_roteiro,
         }
 
         if estagio == '0':
-            data = models.totais_estagios(cursor)
+            data = models.totais_estagios(cursor, tipo_roteiro)
         else:
             data = models.quant_estagio(cursor, estagio, ref, tipo)
         if len(data) == 0:
@@ -117,7 +118,9 @@ class QuantEstagio(View):
             estagio = form.cleaned_data['estagio']
             ref = form.cleaned_data['ref']
             tipo = form.cleaned_data['tipo']
+            tipo_roteiro = form.cleaned_data['tipo_roteiro']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, estagio, ref, tipo))
+            context.update(self.mount_context(
+                cursor, estagio, ref, tipo, tipo_roteiro))
         context['form'] = form
         return render(request, self.template_name, context)

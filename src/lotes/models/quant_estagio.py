@@ -77,7 +77,24 @@ def quant_estagio(cursor, estagio, ref, tipo):
     return rows_to_dict_list(cursor)
 
 
-def totais_estagios(cursor):
+def totais_estagios(cursor, tipo_roteiro):
+    filtro_tipo_roteiro = ''
+    if tipo_roteiro != 't':
+        if tipo_roteiro == 'p':
+            filtro_tipo_roteiro += 'AND NOT EXISTS'
+        else:
+            filtro_tipo_roteiro += 'AND EXISTS'
+        filtro_tipo_roteiro += '''
+          ( SELECT
+              ia.*
+            FROM BASI_050 ia -- insumos de alternativa
+            WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
+              AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+              AND ia.NIVEL_COMP = 1
+              AND ia.GRUPO_COMP <= 'B9999'
+          ) -- se tem componente que é PA, PG ou PB
+        '''
+
     sql = """
         SELECT
           l.CODIGO_ESTAGIO
@@ -139,6 +156,7 @@ def totais_estagios(cursor):
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         WHERE o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
+        {filtro_tipo_roteiro} -- filtro_tipo_roteiro
         GROUP BY
           l.CODIGO_ESTAGIO
         , e.DESCRICAO
@@ -146,6 +164,8 @@ def totais_estagios(cursor):
           sum(l.QTDE_EM_PRODUCAO_PACOTE) > 0
         ORDER BY
           l.CODIGO_ESTAGIO
-    """
+    """.format(
+        filtro_tipo_roteiro=filtro_tipo_roteiro
+    )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)

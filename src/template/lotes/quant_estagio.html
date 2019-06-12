@@ -43,6 +43,14 @@
       {% endif %}
     </h4>
   {% endif %}
+  {% if tipo_roteiro and estagio != '0' %}
+    <h4>Tipo de roteiro:
+      {% if tipo == 'p' %}De produção
+      {% elif tipo == 'e' %}De expedição
+      {% elif tipo == 't' %}Todos
+      {% endif %}
+    </h4>
+  {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
