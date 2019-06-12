@@ -48,10 +48,10 @@ class Migration(migrations.Migration):
             name='when',
             field=models.DateTimeField(blank=True, null=True, verbose_name='quando'),
         ),
-        migrations.RunPython(set_when, reverse_set_when),
-        migrations.AlterField(
-            model_name='solicitaloteqtd',
-            name='when',
-            field=models.DateTimeField(verbose_name='quando'),
-        ),
+        # migrations.RunPython(set_when, reverse_set_when),
+        # migrations.AlterField(
+        #     model_name='solicitaloteqtd',
+        #     name='when',
+        #     field=models.DateTimeField(verbose_name='quando'),
+        # ),
     ]
