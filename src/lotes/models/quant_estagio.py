@@ -42,9 +42,12 @@ def quant_estagio(cursor, estagio, ref, tipo):
           ) LOTES
         , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
         FROM PCPC_040 l
+        JOIN PCPC_020 o
+          ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE 1=1
+          AND o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
         --  AND l.PERIODO_PRODUCAO = 1921
         --  AND l.ORDEM_CONFECCAO = 01866
           {filtra_estagio} -- filtra_estagio
@@ -130,8 +133,11 @@ def totais_estagios(cursor):
           ) LOTES
         , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
         FROM PCPC_040 l
+        JOIN PCPC_020 o
+          ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+        WHERE o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
         GROUP BY
           l.CODIGO_ESTAGIO
         , e.DESCRICAO
