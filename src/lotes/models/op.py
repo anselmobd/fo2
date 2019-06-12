@@ -10,8 +10,8 @@ def op_inform(cursor, op):
 
 
 def busca_op(
-        cursor, op=None, ref=None, deposito=None, tipo=None, situacao=None,
-        posicao=None):
+        cursor, op=None, ref=None, tam=None, cor=None, deposito=None,
+        tipo=None, situacao=None, posicao=None):
     filtra_op = ""
     if op is not None and op != '':
         filtra_op = """
@@ -29,6 +29,30 @@ def busca_op(
             filtra_ref = """
                 AND o.REFERENCIA_PECA = '{}'
             """.format(ref)
+
+    filtra_tam = ""
+    if tam is not None and tam != '':
+        filtra_tam = """
+            AND EXISTS
+            ( SELECT
+                l.*
+              FROM PCPC_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND l.PROCONF_SUBGRUPO = '{}'
+            )
+        """.format(tam)
+
+    filtra_cor = ""
+    if cor is not None and cor != '':
+        filtra_cor = """
+            AND EXISTS
+            ( SELECT
+                l.*
+              FROM PCPC_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND l.PROCONF_ITEM = '{}'
+            )
+        """.format(cor)
 
     filtra_deposito = ""
     if deposito is not None and deposito != '':
@@ -220,6 +244,8 @@ def busca_op(
         WHERE 1=1
           {filtra_op} -- filtra_op
           {filtra_ref} -- filtra_ref
+          {filtra_tam} -- filtra_tam
+          {filtra_cor} -- filtra_cor
           {filtra_deposito} -- filtra_deposito
           {filtro_tipo} -- filtro_tipo
           {filtra_situacao} -- filtra_situacao
@@ -229,6 +255,8 @@ def busca_op(
     '''.format(
         filtra_op=filtra_op,
         filtra_ref=filtra_ref,
+        filtra_tam=filtra_tam,
+        filtra_cor=filtra_cor,
         filtra_deposito=filtra_deposito,
         filtro_tipo=filtro_tipo,
         filtra_situacao=filtra_situacao,
