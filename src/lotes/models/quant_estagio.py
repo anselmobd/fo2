@@ -80,7 +80,8 @@ def quant_estagio(cursor, estagio, ref, tipo):
 def totais_estagios(cursor):
     sql = """
         SELECT
-          l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+          l.CODIGO_ESTAGIO
+        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
         , sum(
             CASE WHEN l.PROCONF_GRUPO <= '99999'
               AND l.QTDE_EM_PRODUCAO_PACOTE > 0
