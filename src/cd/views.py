@@ -1166,7 +1166,10 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         self.title_name = 'Detalhes de solicitação'
 
     def mount_context(self, solicit_id, user):
-        context = {'user': user}
+        context = {
+            'solicit_id': solicit_id,
+            'user': user,
+        }
 
         try:
             solicitacao = lotes.models.SolicitaLote.objects.get(
@@ -1175,6 +1178,15 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             context['erro'] = \
                 'Id de solicitação inválido.'
             return context
+
+        solicit_ativa_recs = lotes.models.SolicitaLote.objects.filter(
+            usuario=user, ativa=True)
+        if len(solicit_ativa_recs) == 1:
+            solicit_ativa_cod = solicit_ativa_recs[0].codigo
+            solicit_ativa_id = str(solicit_ativa_recs[0].id)
+            if solicit_ativa_id != solicit_id:
+                context['solicit_ativa_cod'] = solicit_ativa_cod
+                context['solicit_ativa_id'] = solicit_ativa_id
 
         context['solicitacao'] = solicitacao
 
@@ -1316,6 +1328,8 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             slq_id = None
         solicit_id = kwargs['solicit_id']
 
+        user = request_user(request)
+
         if acao == 'd' and slq_id is not None:
             try:
                 solicit_qtds = lotes.models.SolicitaLoteQtd.objects.get(
@@ -1341,7 +1355,26 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             except lotes.models.SolicitaLoteQtd.DoesNotExist:
                 pass
 
-        user = request_user(request)
+        # move endereçados
+        if acao == 'move' and solicit_id is not None:
+            print('move')
+            try:
+                solicit_ativa = lotes.models.SolicitaLote.objects.get(
+                    usuario=user, ativa=True)
+                print('solicit_ativa', solicit_ativa.codigo)
+                try:
+                    for solicit_qtd in \
+                            lotes.models.SolicitaLoteQtd.objects.filter(
+                                solicitacao__id=solicit_id,
+                                lote__local__isnull=False):
+                        print('solicit_qtd', solicit_qtd.qtd)
+                        solicit_qtd.solicitacao = solicit_ativa
+                        solicit_qtd.save()
+                except Exception:
+                    pass
+            except lotes.models.SolicitaLote.DoesNotExist:
+                pass
+
         data = self.mount_context(solicit_id, user)
         context.update(data)
         return render(request, self.template_name, context)

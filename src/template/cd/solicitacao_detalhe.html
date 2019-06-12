@@ -13,43 +13,70 @@
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% else %}
-  <a href="{% url 'cd:solicitacoes' %}">Voltar para Solicitações</a>
+  <div class="row">
+    <div class="col-md-6">
+      <a href="{% url 'cd:solicitacoes' %}">Voltar para Solicitações</a>
+    </div>
+    <div class="col-md-6" align="right">
+      {% if solicit_ativa_cod %}
+        Solicitação ativa para o usuário: <a href="{% url 'cd:solicitacao_detalhe' solicit_ativa_id %}" target="_blank">{{solicit_ativa_cod}}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+      {% else %}
+        Esta é a solicitação ativa para o usuário
+      {% endif %}
+    </div>
+  </div>
   <h4>Solicitação: <b>{{ solicitacao.codigo }} ({{ solicitacao.descricao }})</b></h4>
 
-  {% if data %}
-    <ul class="nav nav-tabs" id="myTab">
-      <li class="active"><a data-toggle="tab" href="#home">Lotes em ordem de seleção</a></li>
-      <li><a data-toggle="tab" href="#menu1">Lotes agrupados por endereço</a></li>
-      <li><a data-toggle="tab" href="#menu2">Referências em grade</a></li>
-      <li><a data-toggle="tab" href="#menu3">Grade total</a></li>
-    </ul>
+  <ul class="nav nav-tabs" id="myTab">
+    <li class="active"><a data-toggle="tab" href="#home">Lotes em ordem de seleção</a></li>
+    <li><a data-toggle="tab" href="#menu1">Lotes agrupados por endereço</a></li>
+    <li><a data-toggle="tab" href="#menu2">Referências em grade</a></li>
+    <li><a data-toggle="tab" href="#menu3">Grade total</a></li>
+  </ul>
 
-    <div class="tab-content">
-      <div id="home" class="tab-pane fade in active">
-        <div style="text-align:right; margin-right:3em;"><a
-          href="{% url 'cd:solicitacao_detalhe__get2' solicitacao.id 'de' %}"
-          onclick="if(confirm('Confirma cancelamento?')){return true}else{return false};"
-          ><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span
-            > Cancela solicitação de lotes endereçados</a></div>
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+      {% if data %}
+        <div style="text-align:right; margin-right:3em;">
+          <a href="{% url 'cd:solicitacao_detalhe__get2' solicitacao.id 'de' %}"
+            onclick="if(confirm('Confirma cancelamento?')){return true}else{return false};"
+            ><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span
+              > Cancela solicitação de lotes endereçados</a>
+          {% if solicit_ativa_cod %}
+            &nbsp;<a href="{% url 'cd:solicitacao_detalhe__get2' solicitacao.id 'move' %}"
+              onclick="if(confirm('Confirma mover lotes?')){return true}else{return false};"
+              ><span class="glyphicon glyphicon-share" aria-hidden="true"></span
+                > Move lotes endereçados para a solicitação ativa</a>
+          {% endif %}
+        </div>
         <table>
           {% include "layout/thead_generic.html" with data=headers only %}
           {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
         </table>
-        {% if inat_data %}
-          <h4>Lotes que estiveram nesta solicitação</h4>
-          <table>
-            {% include "layout/thead_generic.html" with data=inat_headers only %}
-            {% include "layout/tbody_generic.html" with fields=inat_fields data=inat_data only %}
-          </table>
-        {% endif %}
-      </div>
-      <div id="menu1" class="tab-pane fade">
+      {% else %}
+        <h4>Nenhum lote nesta solicitação</h4>
+        <br />
+      {% endif %}
+      {% if inat_data %}
+        <h4>Lotes que estiveram nesta solicitação</h4>
+        <table>
+          {% include "layout/thead_generic.html" with data=inat_headers only %}
+          {% include "layout/tbody_generic.html" with fields=inat_fields data=inat_data only %}
+        </table>
+      {% endif %}
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      {% if e_data %}
         <table>
           {% include "layout/thead_generic.html" with data=e_headers only %}
           {% include "layout/tbody_generic.html" with fields=e_fields data=e_data safe=e_safe only %}
         </table>
-      </div>
-      <div id="menu2" class="tab-pane fade">
+      {% else %}
+        <h4>Nenhum lote nesta solicitação</h4>
+      {% endif %}
+    </div>
+    <div id="menu2" class="tab-pane fade">
+      {% if grades2 %}
         <!-- {% for grade in grades %}
           <table>
             {% include "layout/thead_generic.html" with data=grade.re_headers only %}
@@ -68,19 +95,23 @@
             {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data style=grade.style only %}
           </table>
         {% endfor %}
-      </div>
-      <div id="menu3" class="tab-pane fade">
+      {% else %}
+        <h4>Nenhum lote nesta solicitação</h4>
+      {% endif %}
+    </div>
+    <div id="menu3" class="tab-pane fade">
+      {% if gt.total != 0 %}
         <h4><b>Todas</b> as referências desta solicitação</h4>
         <table style="width: auto;">
           {% include "layout/thead_generic.html" with data=gt.headers style=gt.style only %}
           {% include "layout/tbody_generic.html" with fields=gt.fields data=gt.data style=gt.style only %}
         </table>
-      </div>
+      {% else %}
+        <h4>Nenhum lote nesta solicitação</h4>
+      {% endif %}
     </div>
+  </div>
 
-  {% else %}
-    <b>Vazia</b>
-  {% endif %}
 {% endif %}
 {% endblock %}
 
