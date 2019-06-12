@@ -32,9 +32,12 @@ class QuantEstagio(View):
             return context
 
         if estagio == '0':
-            total = data[0].copy()
-            total['ESTAGIO'] = 'Total:'
-            total['|STYLE'] = 'font-weight: bold;'
+            total_liberado = data[0].copy()
+            total_liberado[
+                'ESTAGIO'] = 'Total em produção (liberado pelo PCP):'
+            total_liberado['|STYLE'] = 'font-weight: bold;'
+            total_geral = data[0].copy()
+            total_geral['ESTAGIO'] = 'Total geral (incluindo programação):'
             quant_fields = [
                 'LOTES_PA', 'QUANT_PA',
                 'LOTES_PG', 'QUANT_PG',
@@ -42,11 +45,16 @@ class QuantEstagio(View):
                 'LOTES_MD', 'QUANT_MD',
                 'LOTES', 'QUANT']
             for field in quant_fields:
-                total[field] = 0
+                total_geral[field] = 0
+                total_liberado[field] = 0
             for row in data:
                 for field in quant_fields:
-                    total[field] += row[field]
-            data.append(total)
+                    total_geral[field] += row[field]
+                if row['CODIGO_ESTAGIO'] != 3:
+                    for field in quant_fields:
+                        total_liberado[field] += row[field]
+            data.append(total_liberado)
+            data.append(total_geral)
             context.update({
                 'headers': ('Estágio', 'Lotes PA', 'Lotes PG',
                             'Lotes PB', 'Lotes MD*', 'Lotes*',
