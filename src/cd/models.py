@@ -920,11 +920,11 @@ def solicita_lote(cursor):
         from fo2_cd_solicita_lote s
         left join fo2_cd_solicita_lote_qtd sq
           on sq.solicitacao_id = s.id
+          and sq.origin_id = 0
         left join fo2_cd_lote l
           on l.id = sq.lote_id
         left join auth_user u
           on u.id = s.usuario_id
-        where sq.origin_id = 0
         group by
           s.id
         , s.codigo
