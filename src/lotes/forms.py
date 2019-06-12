@@ -483,7 +483,7 @@ class ImprimeTagForm(forms.Form):
 class QuantEstagioForm(forms.Form):
     estagio = forms.CharField(
         label='Estágio', max_length=2,
-        help_text='Informe 0 (zero) para visualizar os totais gerais',
+        help_text='(Informe 0, zero, para visualizar os totais gerais)',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
@@ -502,6 +502,14 @@ class QuantEstagioForm(forms.Form):
                ]
     tipo = forms.ChoiceField(
         choices=CHOICES, required=False, initial='t')
+
+    CHOICES = [('p', 'De produção'),
+               ('e', 'De expedição'),
+               ('t', 'Todos'),
+               ]
+    tipo_roteiro = forms.ChoiceField(
+        label='Tipo de roteiro de OP',
+        choices=CHOICES, required=False, initial='p')
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
