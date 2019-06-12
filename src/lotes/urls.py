@@ -84,6 +84,9 @@ urlpatterns = [
     url(r'^quant_estagio/(?P<estagio>\d+)/$',
         views.QuantEstagio.as_view(), name='quant_estagio__get'),
 
+    url(r'^totais_estagio/$',
+        views.TotalEstagio.as_view(), name='totais_estagio'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),

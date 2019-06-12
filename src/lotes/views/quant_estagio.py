@@ -9,6 +9,90 @@ import lotes.forms as forms
 import lotes.models as models
 
 
+class TotalEstagio(View):
+    Form_class = forms.TotaisEstagioForm
+    template_name = 'lotes/total_estagio.html'
+    title_name = 'Quantidades por estágio'
+
+    def mount_context(self, cursor, tipo_roteiro):
+        context = {
+            'tipo_roteiro': tipo_roteiro,
+        }
+
+        data = models.totais_estagios(cursor, tipo_roteiro)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Sem quantidades',
+            })
+            return context
+
+        total_liberado = data[0].copy()
+        total_liberado[
+            'ESTAGIO'] = 'Total em produção (liberado pelo PCP):'
+        total_liberado['|STYLE'] = 'font-weight: bold;'
+        total_geral = data[0].copy()
+        total_geral['ESTAGIO'] = 'Total geral (incluindo programação):'
+        quant_fields = [
+            'LOTES_PA', 'QUANT_PA',
+            'LOTES_PG', 'QUANT_PG',
+            'LOTES_PB', 'QUANT_PB',
+            'LOTES_MD', 'QUANT_MD',
+            'LOTES', 'QUANT']
+        for field in quant_fields:
+            total_geral[field] = 0
+            total_liberado[field] = 0
+        for row in data:
+            for field in quant_fields:
+                total_geral[field] += row[field]
+            if row['CODIGO_ESTAGIO'] != 3:
+                for field in quant_fields:
+                    total_liberado[field] += row[field]
+        data.append(total_liberado)
+        data.append(total_geral)
+        context.update({
+            'headers': ('Estágio', 'Lotes PA', 'Lotes PG',
+                        'Lotes PB', 'Lotes MD*', 'Lotes*',
+                        'Peças PA', 'Peças PG', 'Peças PB',
+                        'Peças MD*', 'Peças'),
+            'fields': ('ESTAGIO', 'LOTES_PA', 'LOTES_PG',
+                       'LOTES_PB', 'LOTES_MD', 'LOTES',
+                       'QUANT_PA', 'QUANT_PG', 'QUANT_PB',
+                       'QUANT_MD', 'QUANT'),
+            'data': data,
+            'style': {2: 'text-align: right;',
+                      3: 'text-align: right;',
+                      4: 'text-align: right;',
+                      5: 'text-align: right;',
+                      6: 'text-align: right; font-weight: bold;',
+                      7: 'text-align: right;',
+                      8: 'text-align: right;',
+                      9: 'text-align: right;',
+                      10: 'text-align: right;',
+                      11: 'text-align: right; font-weight: bold;'},
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        tipo_roteiro = 'p'
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context(cursor, tipo_roteiro))
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            tipo_roteiro = form.cleaned_data['tipo_roteiro']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, tipo_roteiro))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
 class QuantEstagio(View):
     Form_class = forms.QuantEstagioForm
     template_name = 'lotes/quant_estagio.html'
