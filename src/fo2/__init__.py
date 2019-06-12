@@ -1,9 +1,14 @@
-__version__ = '0.1.147'
-__version__date__ = '04/06/2019'
+__version__ = '0.1.148'
+__version__date__ = '12/06/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.148 - 2019/06/12
+#   . Quantidades por estágio - melhoras
+#   . Solicitações - melhoras
+#   . Busca OP - melhoras
 #
 # - 0.1.147 - 2019/06/04
 #   . Visualização de quantidades por estágio
