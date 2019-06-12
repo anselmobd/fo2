@@ -148,6 +148,7 @@ def grade_solicitacao(
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
             where 1=1
+              and sq.origin_id = 0
               {filter_referencia} -- filter_referencia
               {filter_solicit_id} -- filter_solicit_id
             order by
@@ -174,6 +175,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 then l.qtd
                 else coalesce(
@@ -181,6 +183,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 end
               ) > 0
@@ -238,6 +241,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 then l.qtd
                 else coalesce(
@@ -245,6 +249,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 end
               ) > 0
@@ -277,6 +282,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   then l.qtd
                   else coalesce(
@@ -284,6 +290,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   end
                 end
@@ -307,6 +314,7 @@ def grade_solicitacao(
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
             where 1=1
+              and sq.origin_id = 0
               {filter_referencia} -- filter_referencia
               {filter_solicit_id} -- filter_solicit_id
             order by
@@ -331,6 +339,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 then l.qtd
                 else coalesce(
@@ -338,6 +347,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 end
               ) > 0
@@ -391,6 +401,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 then l.qtd
                 else coalesce(
@@ -398,6 +409,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 end
               ) > 0
@@ -428,6 +440,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   then l.qtd
                   else coalesce(
@@ -435,6 +448,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   end
                 end
@@ -464,6 +478,7 @@ def grade_solicitacao(
             join fo2_cd_solicita_lote_qtd sq
               on sq.lote_id = l.id
             where 1=1
+              and sq.origin_id = 0
               {filter_referencia} -- filter_referencia
               and l.local is not null
               and l.local <> ''
@@ -487,6 +502,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 then l.qtd
                 else coalesce(
@@ -494,6 +510,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 end
               ) qtd
@@ -513,6 +530,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 then l.qtd
                 else coalesce(
@@ -520,6 +538,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 end
               ) > 0
@@ -562,6 +581,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   then l.qtd
                   else coalesce(
@@ -569,6 +589,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   end
                 end
@@ -586,6 +607,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0) > 0
                   )
             group by
@@ -601,6 +623,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   then l.qtd
                   else coalesce(
@@ -608,6 +631,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   end
                 end
@@ -646,6 +670,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 then l.qtd
                 else coalesce(
@@ -653,6 +678,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 end
               ) qtd
@@ -672,6 +698,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 then l.qtd
                 else coalesce(
@@ -679,6 +706,7 @@ def grade_solicitacao(
                       sum(ss.qtd) qtd
                     from fo2_cd_solicita_lote_qtd ss
                     where ss.lote_id = l.id
+                      and sq.origin_id = 0
                   ), 0)
                 end
               ) > 0
@@ -701,6 +729,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   then l.qtd
                   else coalesce(
@@ -708,6 +737,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   end
                 end
@@ -733,6 +763,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   then l.qtd
                   else coalesce(
@@ -740,6 +771,7 @@ def grade_solicitacao(
                         sum(ss.qtd) qtd
                       from fo2_cd_solicita_lote_qtd ss
                       where ss.lote_id = l.id
+                        and sq.origin_id = 0
                     ), 0)
                   end
                 end
@@ -892,6 +924,7 @@ def solicita_lote(cursor):
           on l.id = sq.lote_id
         left join auth_user u
           on u.id = s.usuario_id
+        where sq.origin_id = 0
         group by
           s.id
         , s.codigo
