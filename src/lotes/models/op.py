@@ -124,6 +124,29 @@ def busca_op(
     sql = '''
         SELECT
           o.ORDEM_PRODUCAO OP
+        , ( SELECT
+              LISTAGG(t.ESTAGIO, ', ')
+                WITHIN GROUP (ORDER BY t.ESTAGIO) ESTAGIO
+            FROM
+            ( SELECT
+                op.ORDEM_PRODUCAO
+              , l.CODIGO_ESTAGIO ESTAGIO
+              FROM pcpc_020 op
+              JOIN PCPC_040 l
+                ON l.ORDEM_PRODUCAO = op.ORDEM_PRODUCAO
+              JOIN MQOP_005 e
+                ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+              WHERE (l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO) > 0
+              GROUP BY
+                op.ORDEM_PRODUCAO
+              , l.SEQUENCIA_ESTAGIO
+              , l.CODIGO_ESTAGIO
+              , e.DESCRICAO
+              ORDER BY
+                l.SEQUENCIA_ESTAGIO
+            ) t
+            WHERE t.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+          ) ESTAGIO
         , case
           when o.REFERENCIA_PECA <= '99999' then 'PA'
           when o.REFERENCIA_PECA <= 'B9999' then 'PG'

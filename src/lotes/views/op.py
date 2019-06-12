@@ -360,16 +360,18 @@ class BuscaOP(View):
                 row['DT_CORTE'] = ''
             else:
                 row['DT_CORTE'] = row['DT_CORTE'].date()
+            if row['ESTAGIO'] is None:
+                row['ESTAGIO'] = 'Finalizado*'
         context.update({
             'headers': ('OP', 'Situação', 'Cancelamento',
                         'Tipo', 'Referência',
-                        'Alt.', 'Roteiro',
+                        'Alt.', 'Roteiro', 'Estágio',
                         'Q. Lotes', 'Q. Itens',
                         'Depósito', 'Período',
                         'Data Digitação', 'Data Corte',),
             'fields': ('OP', 'SITUACAO', 'CANCELAMENTO',
                        'TIPO_REF', 'REF',
-                       'ALTERNATIVA', 'ROTEIRO',
+                       'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
                        'LOTES', 'QTD',
                        'DEPOSITO_CODIGO', 'PERIODO',
                        'DT_DIGITACAO', 'DT_CORTE'),
