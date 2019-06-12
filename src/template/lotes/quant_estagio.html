@@ -15,42 +15,29 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if not estagio or estagio != '0' %}
-  <br /><a href="{% url 'producao:quant_estagio__get' '0' %}">Totais gerais dos estágios</a>
-{% endif %}
-{% if estagio and estagio != '0' %}
+<br /><a href="{% url 'producao:totais_estagio' %}">Totais gerais dos estágios</a>
+{% if estagio %}
   <h4>Estagio: {{ estagio }}</h4>
+{% endif %}
+{% if ref %}
+  <h4>Referência: {{ ref }}</h4>
+{% endif %}
+{% if tipo and estagio != '0' %}
+  <h4>Tipo:
+    {% if tipo == 't' %}Todos
+    {% elif tipo == 'a' %}PA
+    {% elif tipo == 'g' %}PG
+    {% elif tipo == 'b' %}PB
+    {% elif tipo == 'p' %}PG/PB
+    {% elif tipo == 'v' %}PA/PG/PB
+    {% elif tipo == 'm' %}MD
+    {% endif %}
+  </h4>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-  {% if estagio == '0' %}
-    <h4>Totais gerais dos estágios</h4>
-  {% endif %}
-  {% if ref %}
-    <h4>Referência: {{ ref }}</h4>
-  {% endif %}
-  {% if tipo and estagio != '0' %}
-    <h4>Tipo:
-      {% if tipo == 't' %}Todos
-      {% elif tipo == 'a' %}PA
-      {% elif tipo == 'g' %}PG
-      {% elif tipo == 'b' %}PB
-      {% elif tipo == 'p' %}PG/PB
-      {% elif tipo == 'v' %}PA/PG/PB
-      {% elif tipo == 'm' %}MD
-      {% endif %}
-    </h4>
-  {% endif %}
-  {% if tipo_roteiro and estagio != '0' %}
-    <h4>Tipo de roteiro:
-      {% if tipo == 'p' %}De produção
-      {% elif tipo == 'e' %}De expedição
-      {% elif tipo == 't' %}Todos
-      {% endif %}
-    </h4>
-  {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
