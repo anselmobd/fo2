@@ -35,16 +35,16 @@ class QuantEstagio(View):
             total = data[0].copy()
             total['ESTAGIO'] = 'Total:'
             total['|STYLE'] = 'font-weight: bold;'
-            quant_fileds = [
+            quant_fields = [
                 'LOTES_PA', 'QUANT_PA',
                 'LOTES_PG', 'QUANT_PG',
                 'LOTES_PB', 'QUANT_PB',
                 'LOTES_MD', 'QUANT_MD',
                 'LOTES', 'QUANT']
-            for field in quant_fileds:
+            for field in quant_fields:
                 total[field] = 0
             for row in data:
-                for field in quant_fileds:
+                for field in quant_fields:
                     total[field] += row[field]
             data.append(total)
             context.update({
@@ -74,11 +74,11 @@ class QuantEstagio(View):
             total['TAM'] = ''
             total['COR'] = 'Total:'
             total['|STYLE'] = 'font-weight: bold;'
-            quant_fileds = ['LOTES', 'QUANT']
-            for field in quant_fileds:
+            quant_fields = ['LOTES', 'QUANT']
+            for field in quant_fields:
                 total[field] = 0
             for row in data:
-                for field in quant_fileds:
+                for field in quant_fields:
                     total[field] += row[field]
             data.append(total)
             context.update({
