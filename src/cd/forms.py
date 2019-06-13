@@ -4,8 +4,6 @@ from django import forms
 class LoteForm(forms.Form):
     endereco = forms.CharField(
         label='Endereço', min_length=2, max_length=4,
-        help_text='(Informe endereço, para posicionar o lote no CD, '
-                  'ou o "SAI" para tirar o lote do CD)',
         widget=forms.TextInput())
     lote = forms.CharField(
         label='Lote', max_length=9, min_length=9,
