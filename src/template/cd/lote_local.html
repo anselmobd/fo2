@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+<h3 class="visible-xs">Inventariar</h3>
 <form action="{% url 'cd:lote_local' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
