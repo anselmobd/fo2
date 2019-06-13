@@ -12,6 +12,7 @@
 {% block content %}
 <h3 class="visible-xs">Inventariar</h3>
 <form action="{% url 'cd:lote_local' %}" method="post">
+    <span class="hidden-xs">Informe endereço, para posicionar o lote no CD, ou o "SAI" para tirar o lote do CD.</span>
     {% csrf_token %}
     {{ form.as_p }}
     {% if confirma %}
