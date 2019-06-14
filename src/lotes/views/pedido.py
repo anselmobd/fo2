@@ -80,8 +80,20 @@ class Pedido(View):
                 'o_fields': ('ORDEM_PRODUCAO', 'TIPO', 'REFERENCIA_PECA',
                              'ORDEM_PRINCIPAL', 'QTD',
                              'DT_DIGITACAO', 'DT_CORTE'),
-
                 'o_data': o_data,
+            })
+
+            # NFs
+            nf_data = models.ped_nf(cursor, pedido)
+            for row in nf_data:
+                if row['SITUACAO'] == 1:
+                    row['SITUACAO'] = 'Ativa'
+                else:
+                    row['SITUACAO'] = 'Cancelada'
+            context.update({
+                'nf_headers': ('NF', 'Data', 'Situação', 'Valor'),
+                'nf_fields': ('NF', 'DATA', 'SITUACAO', 'VALOR'),
+                'nf_data': nf_data,
             })
 
             # Grade
