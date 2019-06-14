@@ -46,6 +46,13 @@
     {% include "layout/html_tbody_group.html" with fields=o_fields data=o_data group=o_group only %}
   </table>
 {% endif %}
+{% if nf_data %}
+<h3>NF do pedido</h3>
+  <table>
+    {% include "layout/thead_generic.html" with data=nf_headers only %}
+    {% include "layout/tbody_generic.html" with fields=nf_fields data=nf_data only %}
+  </table>
+{% endif %}
 {% if g_data %}
   <br /><a href="{% url 'contabil:infadprod' pedido %}">Lista itens do pedido&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></a>
   <h3>Grade de produtos do pedido</h3>
