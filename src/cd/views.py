@@ -207,6 +207,9 @@ class TrocaLocal(PermissionRequiredMixin, View):
         context = {'endereco_de': endereco_de,
                    'endereco_para': endereco_para}
 
+        if endereco_de[1] == '%':
+            context.update({'rua': endereco_de[0]})
+
         # count_lotes_de = lotes.models.Lote.objects.filter(
         #     local=endereco_de).count()
         count_lotes_de = self.get_lotes_no_local(endereco_de, count=True)
@@ -223,14 +226,12 @@ class TrocaLocal(PermissionRequiredMixin, View):
 
         q_lotes = 0
         if request.POST.get("troca"):
-            print('troca')
             context.update({'confirma': True})
             busca_endereco = endereco_de
             form.data['identificado_de'] = endereco_de
             form.data['identificado_para'] = endereco_para
 
         else:
-            print('confirma')
             if form.data['identificado_de'] != endereco_de or \
                     form.data['identificado_para'] != endereco_para:
                 context.update({

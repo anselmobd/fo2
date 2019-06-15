@@ -17,8 +17,13 @@
     {% if confirma %}
       {% if endereco_para == 'SAI' %}
         <h2>ATENÇÃO!</h2>
-        <h2>Tirando do CD <b>todos os lotes de um endereço!</b></h2>
-        <input type="submit" name="confirma" value="Confirma tirar todos esses lotes do CD"/>
+        {% if rua %}
+          <h2>Tirando do CD <b>todos os lotes da <span style="color: red">rua {{rua}}</span></b></h2>
+          <input type="submit" name="confirma" value="Confirma tirar do CD todos os lotes rua {{rua}}"/>
+        {% else %}
+          <h2>Tirando do CD <b>todos os lotes do endereço {{ endereco_de }}!</b></h2>
+          <input type="submit" name="confirma" value="Confirma tirar do CD todos esses lotes"/>
+        {% endif %}
       {% else %}
         <input type="submit" name="confirma" value="Confirma troca"/>
       {% endif %}
@@ -37,14 +42,22 @@
   <h3>{{ erro }}</h3>
 {% elif endereco_de %}
   {% if endereco_para == 'SAI' %}
-    <h4>Tirar do CD todos os lotes do endereço <b>{{ endereco_de }}</b></h4>
+    {% if rua %}
+      <h4>Tirar do CD todos os lotes da rua <b>{{ rua }}</b></h4>
+    {% else %}
+      <h4>Tirar do CD todos os lotes do endereço <b>{{ endereco_de }}</b></h4>
+    {% endif %}
   {% else %}
     <h4>Trocar endereço de lotes de <b>{{ endereco_de }}</b> para <b>{{ endereco_para }}</b></h4>
   {% endif %}
   {% if data %}
     {% if confirma %}
       <hr />
-      <h4>Endereço <b>antigo</b> (<b>{{ endereco_de }}</b>) contém
+      {% if rua %}
+        <h4><b>Rua {{ rua }}</b> contém
+      {% else %}
+        <h4>Endereço <b>antigo</b> (<b>{{ endereco_de }}</b>) contém
+      {% endif %}
     {% else %}
       {% if endereco_para == 'SAI' %}
         <h3>Retirada de lotes efetuada!</h3>
