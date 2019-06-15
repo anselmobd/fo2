@@ -36,28 +36,38 @@ class TrocaLocalForm(forms.Form):
         label='Endereço novo', min_length=2, max_length=4,
         widget=forms.TextInput())
 
-    def limpa_endereco(self, campo, sai=''):
+    def clean_endereco(self, campo):
         endereco = self.cleaned_data[campo].upper()
-        if endereco != sai:
-            if not endereco[0].isalpha():
-                raise forms.ValidationError(
-                    "Deve iniciar com uma letra.")
-            if not endereco[1:].isdigit():
-                raise forms.ValidationError(
-                    "Depois da letra inicial deve ter apenas números.")
         data = self.data.copy()
         data[campo] = endereco
         self.data = data
         return endereco
 
+    def valid_endereco(self, nome, endereco, sai=''):
+        if endereco != sai:
+            if not endereco[0].isalpha():
+                raise forms.ValidationError(
+                    "O endereço {} deve iniciar com uma letra.".format(nome))
+            if not (endereco[1:].isdigit() or endereco[1] == '%'):
+                raise forms.ValidationError(
+                    "No endereço {}, depois da letra inicial deve ter apenas "
+                    "números.".format(nome))
+
     def clean_endereco_de(self):
-        return self.limpa_endereco('endereco_de')
+        return self.clean_endereco('endereco_de')
 
     def clean_endereco_para(self):
-        return self.limpa_endereco('endereco_para', 'SAI')
+        return self.clean_endereco('endereco_para')
 
     def clean(self):
         cleaned_data = super(TrocaLocalForm, self).clean()
+        self.valid_endereco('antigo', cleaned_data['endereco_de'])
+        self.valid_endereco('novo', cleaned_data['endereco_para'], 'SAI')
+        if cleaned_data['endereco_de'][1] == "%" and \
+                cleaned_data['endereco_para'] != 'SAI':
+            raise forms.ValidationError(
+                "O endereço antigo só pode indicar uma rua interira se "
+                "endereço novo for 'SAI'.")
         if cleaned_data['endereco_de'] == cleaned_data['endereco_para']:
             raise forms.ValidationError(
                 "Os endereços devem ser diferentes.")
