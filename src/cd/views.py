@@ -191,19 +191,22 @@ class TrocaLocal(PermissionRequiredMixin, View):
                 local=endereco)
         if count:
             return lotes_no_local.count()
-        lotes_no_local = lotes_no_local.order_by(
-            'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
-            )
         if endereco[1] == '%':
             lotes_no_local = lotes_no_local.values(
                         'local', 'op', 'lote', 'qtd_produzir',
                         'referencia', 'cor', 'tamanho',
                         'local_at', 'local_usuario__username')
+            lotes_no_local = lotes_no_local.order_by(
+                'local', 'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
+                )
         else:
             lotes_no_local = lotes_no_local.values(
                         'op', 'lote', 'qtd_produzir',
                         'referencia', 'cor', 'tamanho',
                         'local_at', 'local_usuario__username')
+            lotes_no_local = lotes_no_local.order_by(
+                'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
+                )
         return lotes_no_local
 
     def mount_context(self, request, form):
