@@ -14,7 +14,13 @@
     {% csrf_token %}
     {{ form.as_p }}
     {% if confirma %}
-      <input type="submit" name="confirma" value="Confirma troca"/>
+      {% if endereco_para == 'SAI' %}
+        <h2>ATENÇÃO!</h2>
+        <h2>Tirando do CD <b>todos os lotes de um endereço!</b></h2>
+        <input type="submit" name="confirma" value="Confirma tirar todos esses lotes do CD"/>
+      {% else %}
+        <input type="submit" name="confirma" value="Confirma troca"/>
+      {% endif %}
     {% else %}
       <input type="submit" name="troca" value="Troca"/>
     {% endif %}
@@ -29,17 +35,27 @@
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% elif endereco_de %}
-  <h4>Trocar endereço de lotes de <b>{{ endereco_de }}</b> para <b>{{ endereco_para }}</b></h4>
+  {% if endereco_para == 'SAI' %}
+    <h4>Tirar do CD todos os lotes do endereço <b>{{ endereco_de }}</b></h4>
+  {% else %}
+    <h4>Trocar endereço de lotes de <b>{{ endereco_de }}</b> para <b>{{ endereco_para }}</b></h4>
+  {% endif %}
   {% if data %}
     {% if confirma %}
-      <br />
-      <h4>Endereço <b>antigo</b> (<b>{{ endereco_de }}</b>)
+      <hr />
+      <h4>Endereço <b>antigo</b> (<b>{{ endereco_de }}</b>) contém
     {% else %}
-      <h3>Troca de endereços efetuada!</h3>
-      <br />
-      <h4>Endereço <b>novo</b> (<b>{{ endereco_para }}</b>)
+      {% if endereco_para == 'SAI' %}
+        <h3>Retirada de lotes efetuada!</h3>
+        <hr />
+        <h4>Retirado{{ q_lotes|pluralize }}
+      {% else %}
+        <h3>Troca de endereços efetuada!</h3>
+        <hr />
+        <h4>Endereço <b>novo</b> (<b>{{ endereco_para }}</b>) contém
+      {% endif %}
     {% endif %}
-    contém <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h4>
+    <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h4>
     <table>
       {% include "layout/html_thead.html" with data=headers only %}
       {% include "layout/html_tbody.html" with fields=fields data=data only %}
