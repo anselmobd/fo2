@@ -1357,17 +1357,14 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
         # move endereçados
         if acao == 'move' and solicit_id is not None:
-            print('move')
             try:
                 solicit_ativa = lotes.models.SolicitaLote.objects.get(
                     usuario=user, ativa=True)
-                print('solicit_ativa', solicit_ativa.codigo)
                 try:
                     for solicit_qtd in \
                             lotes.models.SolicitaLoteQtd.objects.filter(
                                 solicitacao__id=solicit_id,
                                 lote__local__isnull=False):
-                        print('solicit_qtd', solicit_qtd.qtd)
                         solicit_qtd.solicitacao = solicit_ativa
                         solicit_qtd.save()
                 except Exception:
