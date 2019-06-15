@@ -43,9 +43,9 @@
 {% elif endereco_de %}
   {% if endereco_para == 'SAI' %}
     {% if rua %}
-      <h4>Tirar do CD todos os lotes da rua <b>{{ rua }}</b></h4>
+      <h4>Tirar do CD todos os lotes da <span style="color: red"><b>rua {{ rua }}</b></span></h4>
     {% else %}
-      <h4>Tirar do CD todos os lotes do endereço <b>{{ endereco_de }}</b></h4>
+      <h4>Tirar do CD todos os lotes do <b>endereço {{ endereco_de }}</b></h4>
     {% endif %}
   {% else %}
     <h4>Trocar endereço de lotes de <b>{{ endereco_de }}</b> para <b>{{ endereco_para }}</b></h4>
@@ -54,7 +54,7 @@
     {% if confirma %}
       <hr />
       {% if rua %}
-        <h4><b>Rua {{ rua }}</b> contém
+        <h4><span style="color: red"><b>Rua {{ rua }}</b></span> contém
       {% else %}
         <h4>Endereço <b>antigo</b> (<b>{{ endereco_de }}</b>) contém
       {% endif %}
