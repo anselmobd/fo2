@@ -235,6 +235,7 @@ class TrocaLocal(PermissionRequiredMixin, View):
                         'op', 'lote', 'qtd_produzir',
                         'referencia', 'cor', 'tamanho',
                         'local_at', 'local_usuario__username')
+            q_lotes = len(lotes_no_local)
 
         q_itens = 0
         for row in lotes_no_local:
