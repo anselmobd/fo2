@@ -208,7 +208,12 @@ class TrocaLocal(PermissionRequiredMixin, View):
                    'endereco_para': endereco_para}
 
         if endereco_de[1] == '%':
-            context.update({'rua': endereco_de[0]})
+            if has_permission(request, 'lotes.can_uninventorize_road'):
+                context.update({'rua': endereco_de[0]})
+            else:
+                context['erro'] = \
+                    'Usuário não tem direito de tirar do CD uma rua inteira.'
+                return context
 
         # count_lotes_de = lotes.models.Lote.objects.filter(
         #     local=endereco_de).count()
