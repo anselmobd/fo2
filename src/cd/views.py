@@ -194,10 +194,16 @@ class TrocaLocal(PermissionRequiredMixin, View):
         lotes_no_local = lotes_no_local.order_by(
             'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
             )
-        lotes_no_local = lotes_no_local.values(
-                    'op', 'lote', 'qtd_produzir',
-                    'referencia', 'cor', 'tamanho',
-                    'local_at', 'local_usuario__username')
+        if endereco[1] == '%':
+            lotes_no_local = lotes_no_local.values(
+                        'local', 'op', 'lote', 'qtd_produzir',
+                        'referencia', 'cor', 'tamanho',
+                        'local_at', 'local_usuario__username')
+        else:
+            lotes_no_local = lotes_no_local.values(
+                        'op', 'lote', 'qtd_produzir',
+                        'referencia', 'cor', 'tamanho',
+                        'local_at', 'local_usuario__username')
         return lotes_no_local
 
     def mount_context(self, request, form):
@@ -273,14 +279,26 @@ class TrocaLocal(PermissionRequiredMixin, View):
         context.update({
             'q_lotes': q_lotes,
             'q_itens': q_itens,
-            'headers': ('Referência', 'Tamanho', 'Cor', 'Quant',
-                        'OP', 'Lote', 'Em',
-                        'Por'),
-            'fields': ('referencia', 'tamanho', 'cor', 'qtd_produzir',
-                       'op', 'lote', 'local_at',
-                       'local_usuario__username'),
             'data': lotes_no_local,
             })
+        if endereco_de[1] == '%':
+            context.update({
+                'headers': ('Endereço', 'Referência', 'Tamanho', 'Cor',
+                            'Quant', 'OP', 'Lote', 'Em',
+                            'Por'),
+                'fields': ('local', 'referencia', 'tamanho', 'cor',
+                           'qtd_produzir', 'op', 'lote', 'local_at',
+                           'local_usuario__username'),
+                })
+        else:
+            context.update({
+                'headers': ('Referência', 'Tamanho', 'Cor', 'Quant',
+                            'OP', 'Lote', 'Em',
+                            'Por'),
+                'fields': ('referencia', 'tamanho', 'cor', 'qtd_produzir',
+                           'op', 'lote', 'local_at',
+                           'local_usuario__username'),
+                })
 
         return context
 
