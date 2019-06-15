@@ -203,8 +203,19 @@ class TrocaLocal(PermissionRequiredMixin, View):
         if request.POST.get("troca"):
             context.update({'confirma': True})
             busca_endereco = endereco_de
+            form.data['identificado_de'] = endereco_de
+            form.data['identificado_para'] = endereco_para
 
         else:
+            if form.data['identificado_de'] != endereco_de or \
+                    form.data['identificado_para'] != endereco_para:
+                context.update({
+                    'erro': 'Não altere os endereços na confirmação. '
+                            'Digite-os novamente.'})
+                form.data['endereco_de'] = None
+                form.data['endereco_para'] = None
+                return context
+
             if endereco_para == 'SAI':
                 lotes_no_local = lotes.models.Lote.objects.filter(
                     local=endereco_de).order_by(

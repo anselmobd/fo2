@@ -36,6 +36,13 @@ class TrocaLocalForm(forms.Form):
         label='Endereço novo', min_length=2, max_length=4,
         widget=forms.TextInput())
 
+    identificado_de = forms.CharField(
+        label='identificado de', required=False,
+        widget=forms.HiddenInput())
+    identificado_para = forms.CharField(
+        label='identificado para', required=False,
+        widget=forms.HiddenInput())
+
     def clean_endereco(self, campo):
         endereco = self.cleaned_data[campo].upper()
         data = self.data.copy()
