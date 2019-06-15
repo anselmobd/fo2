@@ -198,24 +198,28 @@ class TrocaLocal(PermissionRequiredMixin, View):
         context = {'endereco_de': endereco_de,
                    'endereco_para': endereco_para}
 
-        lotes_de = lotes.models.Lote.objects.filter(local=endereco_de)
-        if len(lotes_de) == 0:
+        count_lotes_de = lotes.models.Lote.objects.filter(
+            local=endereco_de).count()
+        if count_lotes_de == 0:
             context.update({'erro': 'Endereço antigo está vazio'})
             return context
 
-        lotes_para = lotes.models.Lote.objects.filter(local=endereco_para)
-        if len(lotes_para) != 0:
+        count_lotes_para = lotes.models.Lote.objects.filter(
+            local=endereco_para).count()
+        if count_lotes_para != 0:
             context.update({'erro': 'Endereço novo NÃO está vazio'})
             return context
 
         q_lotes = 0
         if request.POST.get("troca"):
+            print('troca')
             context.update({'confirma': True})
             busca_endereco = endereco_de
             form.data['identificado_de'] = endereco_de
             form.data['identificado_para'] = endereco_para
 
         else:
+            print('confirma')
             if form.data['identificado_de'] != endereco_de or \
                     form.data['identificado_para'] != endereco_para:
                 context.update({
