@@ -214,6 +214,7 @@ class Lote(models.Model):
         verbose_name = "lote"
         permissions = (("can_inventorize_lote", "Can inventorize lote"),
                        ("can_relocate_lote", "Can relocate lote"),
+                       ("can_uninventorize_road", "Can uninventorize road"),
                        )
 
 
