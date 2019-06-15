@@ -180,7 +180,7 @@ class TrocaLocal(PermissionRequiredMixin, View):
         self.permission_required = 'lotes.can_relocate_lote'
         self.Form_class = cd.forms.TrocaLocalForm
         self.template_name = 'cd/troca_local.html'
-        self.title_name = 'Trocal endereço'
+        self.title_name = 'Trocar endereço'
 
     def mount_context(self, request, form):
         endereco_de = form.cleaned_data['endereco_de']
@@ -199,32 +199,48 @@ class TrocaLocal(PermissionRequiredMixin, View):
             context.update({'erro': 'Endereço novo NÃO está vazio'})
             return context
 
+        q_lotes = 0
         if request.POST.get("troca"):
             context.update({'confirma': True})
             busca_endereco = endereco_de
 
         else:
+            if endereco_para == 'SAI':
+                lotes_no_local = lotes.models.Lote.objects.filter(
+                    local=endereco_de).order_by(
+                        'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
+                        ).values(
+                            'op', 'lote', 'qtd_produzir',
+                            'referencia', 'cor', 'tamanho',
+                            'local_at', 'local_usuario__username')
+                q_lotes = len(lotes_no_local)
+
             lotes_recs = lotes.models.Lote.objects.filter(local=endereco_de)
             for lote in lotes_recs:
-                lote.local = endereco_para
+                if endereco_para == 'SAI':
+                    lote.local = None
+                else:
+                    lote.local = endereco_para
                 lote.local_usuario = request.user
                 lote.save()
             form.data['endereco_de'] = None
             form.data['endereco_para'] = None
             busca_endereco = endereco_para
 
-        lotes_no_local = lotes.models.Lote.objects.filter(
-            local=busca_endereco).order_by(
-                'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
-                ).values(
-                    'op', 'lote', 'qtd_produzir',
-                    'referencia', 'cor', 'tamanho',
-                    'local_at', 'local_usuario__username')
+        if q_lotes == 0:
+            lotes_no_local = lotes.models.Lote.objects.filter(
+                local=busca_endereco).order_by(
+                    'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
+                    ).values(
+                        'op', 'lote', 'qtd_produzir',
+                        'referencia', 'cor', 'tamanho',
+                        'local_at', 'local_usuario__username')
+
         q_itens = 0
         for row in lotes_no_local:
             q_itens += row['qtd_produzir']
         context.update({
-            'q_lotes': len(lotes_no_local),
+            'q_lotes': q_lotes,
             'q_itens': q_itens,
             'headers': ('Referência', 'Tamanho', 'Cor', 'Quant',
                         'OP', 'Lote', 'Em',
