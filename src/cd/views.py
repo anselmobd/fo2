@@ -182,13 +182,15 @@ class TrocaLocal(PermissionRequiredMixin, View):
         self.template_name = 'cd/troca_local.html'
         self.title_name = 'Trocar endereço'
 
-    def get_lotes_no_local(self, endereco):
+    def get_lotes_no_local(self, endereco, count=False):
         if endereco[1] == '%':
             lotes_no_local = lotes.models.Lote.objects.filter(
                 local__startswith=endereco[0])
         else:
             lotes_no_local = lotes.models.Lote.objects.filter(
                 local=endereco)
+        if count:
+            return lotes_no_local.count()
         lotes_no_local = lotes_no_local.order_by(
             'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
             )
@@ -205,14 +207,16 @@ class TrocaLocal(PermissionRequiredMixin, View):
         context = {'endereco_de': endereco_de,
                    'endereco_para': endereco_para}
 
-        count_lotes_de = lotes.models.Lote.objects.filter(
-            local=endereco_de).count()
+        # count_lotes_de = lotes.models.Lote.objects.filter(
+        #     local=endereco_de).count()
+        count_lotes_de = self.get_lotes_no_local(endereco_de, count=True)
         if count_lotes_de == 0:
             context.update({'erro': 'Endereço antigo está vazio'})
             return context
 
-        count_lotes_para = lotes.models.Lote.objects.filter(
-            local=endereco_para).count()
+        # count_lotes_para = lotes.models.Lote.objects.filter(
+        #     local=endereco_para).count()
+        count_lotes_para = self.get_lotes_no_local(endereco_para, count=True)
         if count_lotes_para != 0:
             context.update({'erro': 'Endereço novo NÃO está vazio'})
             return context
