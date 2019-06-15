@@ -182,6 +182,15 @@ class TrocaLocal(PermissionRequiredMixin, View):
         self.template_name = 'cd/troca_local.html'
         self.title_name = 'Trocar endereço'
 
+    def get_lotes_no_local(self, endereco):
+        return lotes.models.Lote.objects.filter(
+            local=endereco).order_by(
+                'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
+                ).values(
+                    'op', 'lote', 'qtd_produzir',
+                    'referencia', 'cor', 'tamanho',
+                    'local_at', 'local_usuario__username')
+
     def mount_context(self, request, form):
         endereco_de = form.cleaned_data['endereco_de']
         endereco_para = form.cleaned_data['endereco_para']
@@ -217,13 +226,7 @@ class TrocaLocal(PermissionRequiredMixin, View):
                 return context
 
             if endereco_para == 'SAI':
-                lotes_no_local = lotes.models.Lote.objects.filter(
-                    local=endereco_de).order_by(
-                        'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
-                        ).values(
-                            'op', 'lote', 'qtd_produzir',
-                            'referencia', 'cor', 'tamanho',
-                            'local_at', 'local_usuario__username')
+                lotes_no_local = self.get_lotes_no_local(endereco_de)
                 q_lotes = len(lotes_no_local)
 
             lotes_recs = lotes.models.Lote.objects.filter(local=endereco_de)
@@ -239,13 +242,7 @@ class TrocaLocal(PermissionRequiredMixin, View):
             busca_endereco = endereco_para
 
         if q_lotes == 0:
-            lotes_no_local = lotes.models.Lote.objects.filter(
-                local=busca_endereco).order_by(
-                    'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
-                    ).values(
-                        'op', 'lote', 'qtd_produzir',
-                        'referencia', 'cor', 'tamanho',
-                        'local_at', 'local_usuario__username')
+            lotes_no_local = self.get_lotes_no_local(busca_endereco)
             q_lotes = len(lotes_no_local)
 
         q_itens = 0
