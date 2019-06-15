@@ -183,13 +183,20 @@ class TrocaLocal(PermissionRequiredMixin, View):
         self.title_name = 'Trocar endereço'
 
     def get_lotes_no_local(self, endereco):
-        return lotes.models.Lote.objects.filter(
-            local=endereco).order_by(
-                'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
-                ).values(
+        if endereco[1] == '%':
+            lotes_no_local = lotes.models.Lote.objects.filter(
+                local__startswith=endereco[0])
+        else:
+            lotes_no_local = lotes.models.Lote.objects.filter(
+                local=endereco)
+        lotes_no_local = lotes_no_local.order_by(
+            'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
+            )
+        lotes_no_local = lotes_no_local.values(
                     'op', 'lote', 'qtd_produzir',
                     'referencia', 'cor', 'tamanho',
                     'local_at', 'local_usuario__username')
+        return lotes_no_local
 
     def mount_context(self, request, form):
         endereco_de = form.cleaned_data['endereco_de']
