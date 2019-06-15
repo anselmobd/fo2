@@ -245,7 +245,12 @@ class TrocaLocal(PermissionRequiredMixin, View):
                 lotes_no_local = self.get_lotes_no_local(endereco_de)
                 q_lotes = len(lotes_no_local)
 
-            lotes_recs = lotes.models.Lote.objects.filter(local=endereco_de)
+            if endereco_de[1] == '%':
+                lotes_recs = lotes.models.Lote.objects.filter(
+                    local__startswith=endereco_de[0])
+            else:
+                lotes_recs = lotes.models.Lote.objects.filter(
+                    local=endereco_de)
             for lote in lotes_recs:
                 if endereco_para == 'SAI':
                     lote.local = None
