@@ -215,15 +215,11 @@ class TrocaLocal(PermissionRequiredMixin, View):
                     'Usuário não tem direito de tirar do CD uma rua inteira.'
                 return context
 
-        # count_lotes_de = lotes.models.Lote.objects.filter(
-        #     local=endereco_de).count()
         count_lotes_de = self.get_lotes_no_local(endereco_de, count=True)
         if count_lotes_de == 0:
             context.update({'erro': 'Endereço antigo está vazio'})
             return context
 
-        # count_lotes_para = lotes.models.Lote.objects.filter(
-        #     local=endereco_para).count()
         count_lotes_para = self.get_lotes_no_local(endereco_para, count=True)
         if count_lotes_para != 0:
             context.update({'erro': 'Endereço novo NÃO está vazio'})
