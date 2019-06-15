@@ -36,14 +36,15 @@ class TrocaLocalForm(forms.Form):
         label='Endereço novo', min_length=2, max_length=4,
         widget=forms.TextInput())
 
-    def limpa_endereco(self, campo):
+    def limpa_endereco(self, campo, sai=''):
         endereco = self.cleaned_data[campo].upper()
-        if not endereco[0].isalpha():
-            raise forms.ValidationError(
-                "Deve iniciar com uma letra.")
-        if not endereco[1:].isdigit():
-            raise forms.ValidationError(
-                "Depois da letra inicial deve ter apenas números.")
+        if endereco != sai:
+            if not endereco[0].isalpha():
+                raise forms.ValidationError(
+                    "Deve iniciar com uma letra.")
+            if not endereco[1:].isdigit():
+                raise forms.ValidationError(
+                    "Depois da letra inicial deve ter apenas números.")
         data = self.data.copy()
         data[campo] = endereco
         self.data = data
@@ -53,7 +54,7 @@ class TrocaLocalForm(forms.Form):
         return self.limpa_endereco('endereco_de')
 
     def clean_endereco_para(self):
-        return self.limpa_endereco('endereco_para')
+        return self.limpa_endereco('endereco_para', 'SAI')
 
     def clean(self):
         cleaned_data = super(TrocaLocalForm, self).clean()
