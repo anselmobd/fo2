@@ -94,9 +94,10 @@ class LotelLocal(PermissionRequiredMixin, View):
 
         if len(lote_sys) != 0:
             try:
-                lote_rec_estag = lotes.models.Lote.objects.filter(
-                    Q(estagio=63) | Q(estagio=66) |
-                    Q(estagio=999)).get(lote=lote)
+                lote_rec_estag = lotes.models.Lote.objects.get(lote=lote)
+                # lote_rec_estag = lotes.models.Lote.objects.filter(
+                #     Q(estagio=63) | Q(estagio=66) |
+                #     Q(estagio=999)).get(lote=lote)
             except lotes.models.Lote.DoesNotExist:
                 context.update({
                     'erroestagio': '63, 66 ou finalizado',
