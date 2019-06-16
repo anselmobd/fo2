@@ -1960,6 +1960,9 @@ class HistoricoLote(View):
             log = re.sub(
                 r'^(.*)<SimpleLazyObject: <User: ([^\s]*)>>(.*)$',
                 r'\1"\2"\3', log)
+            log = re.sub(
+                r'^(.*)<User: ([^\s]*)>(.*)$',
+                r'\1"\2"\3', log)
             dict_log = eval(log)
 
             if 'estagio' in dict_log:
