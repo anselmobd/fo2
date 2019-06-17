@@ -1958,7 +1958,7 @@ class HistoricoLote(View):
             log = row['log']
             log = log.replace("<UTC>", "utc")
             log = re.sub(
-                r'^(.*)<SimpleLazyObject: <User: ([^\s]*)>>(.*)$',
+                r'^(.*)<SimpleLazyObject: ([^\s]*)>(.*)$',
                 r'\1"\2"\3', log)
             log = re.sub(
                 r'^(.*)<User: ([^\s]*)>(.*)$',
