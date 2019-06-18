@@ -19,8 +19,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     # list_filter = ['ativa', 'natu_venda', 'saida',
     #                'entrega', 'confirmada',
     #                'faturamento', 'transp_nome', 'cod_status', 'uf']
-    search_fields = ['numero', 'dest_cnpj', 'dest_nome', 'natu_descr',
-                     'transp_nome', 'observacao']
+    search_fields = ['numero']
     ordering = ['-numero']
     fields = (('numero', 'ativa', 'nf_devolucao', 'posicao'),
               ('dest_cnpj', 'dest_nome', 'uf', 'transp_nome'),
