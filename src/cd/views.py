@@ -4,6 +4,7 @@ import datetime
 from datetime import timedelta
 from pytz import utc
 
+from django.db import IntegrityError
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connections, connection
@@ -1157,11 +1158,21 @@ class Solicitacoes(LoginRequiredMixin, View):
                 solicitacao = self.SL()
             else:
                 solicitacao = self.SL.objects.get(id=self.id)
-            solicitacao.usuario = request.user
-            solicitacao.codigo = codigo
-            solicitacao.descricao = descricao
-            solicitacao.ativa = ativa
-            solicitacao.save()
+
+            try:
+                solicitacao.usuario = request.user
+                solicitacao.codigo = codigo
+                solicitacao.descricao = descricao
+                solicitacao.ativa = ativa
+                solicitacao.save()
+            except IntegrityError as e:
+                if str(e) == 'UNIQUE constraint failed: ' \
+                        'fo2_cd_solicita_lote.codigo':
+                    context['msg_erro'] = 'Já existe uma solicitação ' \
+                        'com o código "{}".'.format(codigo)
+                else:
+                    context['msg_erro'] = 'Ocorreu algum erro ao gravar ' \
+                        'a solicitação.'
 
             context.update(self.lista())
         else:
