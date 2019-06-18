@@ -14,7 +14,7 @@ import lotes.models as models
 class TotalEstagio(View):
     Form_class = forms.TotaisEstagioForm
     template_name = 'lotes/total_estagio.html'
-    title_name = 'Quantidades por estágio'
+    title_name = 'Totais gerais dos estágios'
 
     def mount_context(self, cursor, tipo_roteiro, cliente):
         context = {
