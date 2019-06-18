@@ -588,6 +588,53 @@ def modelo_inform(cursor, modelo):
     return rows_to_dict_list(cursor)
 
 
+def busca_cliente_de_produto(cursor, cliente):
+    filtro = """--
+          AND (  r.CGC_CLIENTE_9 LIKE '%{palavra}%'
+              OR c.NOME_CLIENTE LIKE '%{palavra}%'
+              OR c.FANTASIA_CLIENTE LIKE '%{palavra}%'
+              )
+    """.format(palavra=cliente)
+    sql = """
+        SELECT
+          rr.CNPJ9
+        , rr.CNPJ4
+        , rr.CNPJ2
+        , rr.CLIENTE
+        FROM (
+        SELECT DISTINCT
+          count(*) conta
+        , r.CGC_CLIENTE_9 CNPJ9
+        , r.CGC_CLIENTE_4 CNPJ4
+        , r.CGC_CLIENTE_2 CNPJ2
+        , COALESCE(c.FANTASIA_CLIENTE, c.NOME_CLIENTE) CLIENTE
+        FROM BASI_030 r
+        LEFT JOIN PEDI_010 c
+          ON c.CGC_9 = r.CGC_CLIENTE_9
+         AND c.CGC_4 = r.CGC_CLIENTE_4
+         AND c.CGC_2 = r.CGC_CLIENTE_2
+        WHERE r.NIVEL_ESTRUTURA = 1
+          AND r.REFERENCIA <= '99999'
+          AND r.RESPONSAVEL IS NOT NULL
+          {filtro} -- filtro
+        GROUP BY
+          r.CGC_CLIENTE_9
+        , r.CGC_CLIENTE_4
+        , r.CGC_CLIENTE_2
+        , c.FANTASIA_CLIENTE
+        , c.NOME_CLIENTE
+        ORDER BY
+          1 DESC
+        ) rr
+        where rownum = 1
+    """.format(
+        filtro=filtro,
+        )
+    print(sql)
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
+
+
 def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa):
     filtro = ''
     for palavra in filtro_inteiro.split(' '):
