@@ -5,6 +5,8 @@ from django.db import connections
 from django.urls import reverse
 from django.views import View
 
+import produto.queries
+
 import lotes.forms as forms
 import lotes.models as models
 
@@ -14,12 +16,35 @@ class TotalEstagio(View):
     template_name = 'lotes/total_estagio.html'
     title_name = 'Quantidades por estágio'
 
-    def mount_context(self, cursor, tipo_roteiro):
+    def mount_context(self, cursor, tipo_roteiro, cliente):
         context = {
             'tipo_roteiro': tipo_roteiro,
         }
 
-        data = models.totais_estagios(cursor, tipo_roteiro)
+        if cliente:
+            data_c = produto.queries.busca_cliente_de_produto(cursor, cliente)
+            if len(data_c) == 1:
+                row = data_c[0]
+                cnpj9 = row['cnpj9']
+                cliente_full = '{}/{}-{} {}'.format(
+                    row['cnpj9'],
+                    row['cnpj4'],
+                    row['cnpj2'],
+                    row['cliente'],
+                )
+                context.update({
+                    'cliente': cliente,
+                    'cliente_full': cliente_full,
+                })
+            else:
+                context.update({
+                    'msg_erro': 'Cliente não encontrado',
+                })
+                return context
+        else:
+            cnpj9 = None
+
+        data = models.totais_estagios(cursor, tipo_roteiro, cnpj9)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem quantidades',
@@ -82,8 +107,9 @@ class TotalEstagio(View):
         form = self.Form_class()
         context['form'] = form
         tipo_roteiro = 'p'
+        cliente = ''
         cursor = connections['so'].cursor()
-        context.update(self.mount_context(cursor, tipo_roteiro))
+        context.update(self.mount_context(cursor, tipo_roteiro, cliente))
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -91,8 +117,9 @@ class TotalEstagio(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             tipo_roteiro = form.cleaned_data['tipo_roteiro']
+            cliente = form.cleaned_data['cliente']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, tipo_roteiro))
+            context.update(self.mount_context(cursor, tipo_roteiro, cliente))
         context['form'] = form
         return render(request, self.template_name, context)
 
