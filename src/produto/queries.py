@@ -630,7 +630,6 @@ def busca_cliente_de_produto(cursor, cliente):
     """.format(
         filtro=filtro,
         )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
 
