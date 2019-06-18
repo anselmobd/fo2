@@ -264,10 +264,16 @@ class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
                 nota_fiscal = NotaFiscal.objects.get(numero=nf)
 
                 num_action = alt_action[0].split('_')[1]
-                pos_carga_alt = PosicaoCargaAlteracao.objects.values().get(
-                    id=num_action)
+                try:
+                    pos_carga_alt = PosicaoCargaAlteracao.objects.values().get(
+                        id=num_action)
+                except PosicaoCargaAlteracao.DoesNotExist:
+                    pos_carga_alt = {'inicial_id': -1}
 
                 if nota_fiscal.posicao_id == pos_carga_alt['inicial_id']:
+                    self.context.update({
+                        'alerta_acao': True,
+                    })
                     if pos_carga_alt['efeito_id'] == 2:
                         nota_fiscal.saida = timezone.now()
                     elif pos_carga_alt['efeito_id'] == 3:

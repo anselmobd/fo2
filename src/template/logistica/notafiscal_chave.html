@@ -57,4 +57,11 @@
   </table>
   {% endif %}
 {% endif %}
+{% if alerta_acao %}
+  <script>
+    alert('Ação executada!');
+    var inp = document.getElementById('id_chave');
+    inp.value = '';
+  </script>
+{% endif %}
 {% endblock %}
