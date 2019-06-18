@@ -1154,24 +1154,27 @@ class Solicitacoes(LoginRequiredMixin, View):
                     for soli in outras_ativas:
                         soli.ativa = False
                         soli.save()
+            grava = True
             if self.id == 'add':
-                solicitacao = self.SL()
+                try:
+                    self.SL.objects.get(codigo=codigo.upper())
+                    context['msg_erro'] = 'Já existe uma solicitação ' \
+                        'com o código "{}".'.format(codigo)
+                    grava = False
+                except self.SL.DoesNotExist:
+                    solicitacao = self.SL()
             else:
                 solicitacao = self.SL.objects.get(id=self.id)
 
-            try:
-                solicitacao.usuario = request.user
-                solicitacao.codigo = codigo
-                solicitacao.descricao = descricao
-                solicitacao.ativa = ativa
-                solicitacao.save()
-            except IntegrityError as e:
-                if str(e) == 'UNIQUE constraint failed: ' \
-                        'fo2_cd_solicita_lote.codigo':
-                    context['msg_erro'] = 'Já existe uma solicitação ' \
-                        'com o código "{}".'.format(codigo)
-                else:
-                    context['msg_erro'] = 'Ocorreu algum erro ao gravar ' \
+            if grava:
+                try:
+                    solicitacao.usuario = request.user
+                    solicitacao.codigo = codigo
+                    solicitacao.descricao = descricao
+                    solicitacao.ativa = ativa
+                    solicitacao.save()
+                except IntegrityError as e:
+                    context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
                         'a solicitação. <{}>'.format(str(e))
 
             context.update(self.lista())
