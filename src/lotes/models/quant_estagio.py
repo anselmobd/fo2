@@ -77,7 +77,7 @@ def quant_estagio(cursor, estagio, ref, tipo):
     return rows_to_dict_list(cursor)
 
 
-def totais_estagios(cursor, tipo_roteiro):
+def totais_estagios(cursor, tipo_roteiro, cnpj9):
     filtro_tipo_roteiro = ''
     if tipo_roteiro != 't':
         if tipo_roteiro == 'p':

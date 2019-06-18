@@ -19,13 +19,16 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-  <h4>Totais gerais dos estágios</h4>
+  <h3>Totais gerais dos estágios</h3>
   <h4>Tipo de roteiro:
     {% if tipo_roteiro == 'p' %}De produção
     {% elif tipo_roteiro == 'e' %}De expedição
     {% elif tipo_roteiro == 't' %}Todos
     {% endif %}
   </h4>
+  {% if cliente %}
+    <h4>Cliente: {{ cliente }} - Produtos de: {{ cliente_full }}</h4>
+  {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}

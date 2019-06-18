@@ -509,6 +509,18 @@ class TotaisEstagioForm(forms.Form):
         label='Tipo de roteiro de OP',
         choices=CHOICES, required=False, initial='p')
 
+    cliente = forms.CharField(
+        label='Cliente', required=False,
+        help_text='Parte do nome ou início do CNPJ.',
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_cliente(self):
+        cliente = self.cleaned_data['cliente'].upper()
+        data = self.data.copy()
+        data['cliente'] = cliente
+        self.data = data
+        return cliente
+
 
 class QuantEstagioForm(forms.Form):
     estagio = forms.CharField(
