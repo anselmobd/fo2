@@ -510,7 +510,7 @@ class TotaisEstagioForm(forms.Form):
         choices=CHOICES, required=False, initial='p')
 
     cliente = forms.CharField(
-        label='Cliente', required=False,
+        label='Produtos do cliente', required=False,
         help_text='Parte do nome ou início do CNPJ.',
         widget=forms.TextInput(attrs={'type': 'string'}))
 

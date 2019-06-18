@@ -95,6 +95,11 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
           ) -- se tem componente que é PA, PG ou PB
         '''
 
+    filtro_cnpj9 = ''
+    if cnpj9 is not None:
+        filtro_cnpj9 = '''--
+            AND r.CGC_CLIENTE_9 = {}'''.format(cnpj9)
+
     sql = """
         SELECT
           l.CODIGO_ESTAGIO
@@ -153,10 +158,14 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
         FROM PCPC_040 l
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+        JOIN BASI_030 r
+          ON r.NIVEL_ESTRUTURA = 1
+         AND r.REFERENCIA = o.REFERENCIA_PECA
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         WHERE o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
         {filtro_tipo_roteiro} -- filtro_tipo_roteiro
+        {filtro_cnpj9} -- filtro_cnpj9
         GROUP BY
           l.CODIGO_ESTAGIO
         , e.DESCRICAO
@@ -165,7 +174,8 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
         ORDER BY
           l.CODIGO_ESTAGIO
     """.format(
-        filtro_tipo_roteiro=filtro_tipo_roteiro
+        filtro_tipo_roteiro=filtro_tipo_roteiro,
+        filtro_cnpj9=filtro_cnpj9,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)

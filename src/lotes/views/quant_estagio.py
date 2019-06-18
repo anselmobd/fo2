@@ -26,7 +26,7 @@ class TotalEstagio(View):
             if len(data_c) == 1:
                 row = data_c[0]
                 cnpj9 = row['cnpj9']
-                cliente_full = '{}/{}-{} {}'.format(
+                cliente_full = '{:08d}/{:04d}-{:02d} {}'.format(
                     row['cnpj9'],
                     row['cnpj4'],
                     row['cnpj2'],
