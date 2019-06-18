@@ -1172,7 +1172,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                         'com o código "{}".'.format(codigo)
                 else:
                     context['msg_erro'] = 'Ocorreu algum erro ao gravar ' \
-                        'a solicitação.'
+                        'a solicitação. <{}>'.format(str(e))
 
             context.update(self.lista())
         else:
