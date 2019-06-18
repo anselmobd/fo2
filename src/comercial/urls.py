@@ -12,4 +12,8 @@ urlpatterns = [
 
     url(r'^vendas_cor/$', views.VendasPorCor.as_view(), name='vendas_cor'),
 
+    url(r'^estoque_desejado/$',
+        views.estoque.EstoqueDesejado.as_view(),
+        name='estoque_desejado'),
+
 ]
