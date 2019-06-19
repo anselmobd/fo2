@@ -19,6 +19,7 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data_t %}
+  <br /><a href="{% url 'producao:quant_estagio' %}">Itens por estágio&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
   <h4>Tipo de roteiro:
     {% if tipo_roteiro == 'p' %}De produção
     {% elif tipo_roteiro == 'e' %}De expedição
