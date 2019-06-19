@@ -51,22 +51,25 @@ class TotalEstagio(View):
             })
             return context
 
-        headers = ['Estágio',
-                   'Lotes PA', 'Lotes PG', 'Lotes PB', 'Lotes MD', 'Lotes MP',
-                   'Lotes',
-                   'Itens PA', 'Itens PG', 'Itens PB', 'Itens MD', 'Itens MP',
-                   'Itens',
-                   'Peças PA', 'Peças PG', 'Peças PB', 'Peças MD', 'Peças MP',
-                   'Peças',
-                   ]
-        fields = ['ESTAGIO',
-                  'LOTES_PA', 'LOTES_PG', 'LOTES_PB', 'LOTES_MD', 'LOTES_MP',
-                  'LOTES',
-                  'QUANT_PA', 'QUANT_PG', 'QUANT_PB', 'QUANT_MD', 'QUANT_MP',
-                  'QUANT',
-                  'PECAS_PA', 'PECAS_PG', 'PECAS_PB', 'PECAS_MD', 'PECAS_MP',
-                  'PECAS',
-                  ]
+        def mount_dict(dic, pre, sep, pos):
+            for pr in pre:
+                for po in pos:
+                    dic.append(pr+(sep if po else '')+po)
+            return dic
+
+        pa_a_md = ['PA', 'PG', 'PB', 'MD']
+        headers = mount_dict(
+            ['Estágio'], ['Lotes', 'Itens', 'Peças'],
+            ' ', pa_a_md + ['MP', ''])
+        quant_fields = mount_dict(
+            [], ['LOTES', 'QUANT', 'PECAS'],
+            '_', pa_a_md + ['MP', ''])
+        fields = ['ESTAGIO'] + quant_fields
+
+        giro_lotes = mount_dict([], ['LOTES'], '_', pa_a_md)
+        giro_quant = mount_dict([], ['QUANT'], '_', pa_a_md)
+        giro_pecas = mount_dict([], ['PECAS'], '_', pa_a_md)
+
         style_r = 'text-align: right;'
         style_bl = 'border-left-style: solid; border-left-width: ' \
             'thin; border-color: lightgray;'
@@ -81,28 +84,6 @@ class TotalEstagio(View):
              13: style_total,
              19: style_total,
         })
-        quant_fields = [
-            'LOTES_PA', 'QUANT_PA', 'PECAS_PA',
-            'LOTES_PG', 'QUANT_PG', 'PECAS_PG',
-            'LOTES_PB', 'QUANT_PB', 'PECAS_PB',
-            'LOTES_MD', 'QUANT_MD', 'PECAS_MD',
-            'LOTES_MP', 'QUANT_MP', 'PECAS_MP',
-            'LOTES', 'QUANT', 'PECAS']
-        giro_lotes = [
-            'LOTES_PA',
-            'LOTES_PG',
-            'LOTES_PB',
-            'LOTES_MD']
-        giro_quant = [
-            'QUANT_PA',
-            'QUANT_PG',
-            'QUANT_PB',
-            'QUANT_MD']
-        giro_pecas = [
-            'PECAS_PA',
-            'PECAS_PG',
-            'PECAS_PB',
-            'PECAS_MD']
 
         estagio_programacao = [3]
         estagio_estoque = [57, 60, 63]
