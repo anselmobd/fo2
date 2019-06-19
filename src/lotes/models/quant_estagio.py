@@ -249,6 +249,18 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
             END
           ) LOTES
         , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
+        , sum(
+            l.QTDE_EM_PRODUCAO_PACOTE *
+            ( SELECT
+                CASE WHEN count(*) = 0 THEN 1
+                ELSE count(*) END
+              FROM BASI_050 ia -- insumos de alternativa
+              WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
+                AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+                AND ia.NIVEL_COMP = 1
+                AND ia.GRUPO_COMP NOT IN 'F%'
+            )
+          ) PECAS
         FROM PCPC_040 l
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
