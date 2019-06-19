@@ -139,15 +139,28 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
           ) QUANT_PB
         , sum(
             CASE WHEN l.PROCONF_GRUPO >= 'C0000'
+              AND l.PROCONF_GRUPO NOT LIKE 'F%'
               AND l.QTDE_EM_PRODUCAO_PACOTE > 0
             THEN 1 ELSE 0 END
           ) LOTES_MD
         , sum(
             CASE WHEN l.PROCONF_GRUPO >= 'C0000'
+              AND l.PROCONF_GRUPO NOT LIKE 'F%'
             THEN l.QTDE_EM_PRODUCAO_PACOTE
             ELSE 0
             END
           ) QUANT_MD
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'F%'
+              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+            THEN 1 ELSE 0 END
+          ) LOTES_MP
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'F%'
+            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            ELSE 0
+            END
+          ) QUANT_MP
         , sum(
             CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE > 0
             THEN 1

@@ -51,30 +51,43 @@ class TotalEstagio(View):
             })
             return context
 
-        headers = ('Estágio', 'Lotes PA', 'Lotes PG',
-                   'Lotes PB', 'Lotes MD*', 'Lotes*',
+        headers = ['Estágio', 'Lotes PA', 'Lotes PG',
+                   'Lotes PB', 'Lotes MD', 'Lotes MP', 'Lotes*',
                    'Itens PA', 'Itens PG', 'Itens PB',
-                   'Itens MD*', 'Itens')
-        fields = ('ESTAGIO', 'LOTES_PA', 'LOTES_PG',
-                  'LOTES_PB', 'LOTES_MD', 'LOTES',
+                   'Itens MD', 'Itens MP', 'Itens']
+        fields = ['ESTAGIO', 'LOTES_PA', 'LOTES_PG',
+                  'LOTES_PB', 'LOTES_MD', 'LOTES_MP', 'LOTES',
                   'QUANT_PA', 'QUANT_PG', 'QUANT_PB',
-                  'QUANT_MD', 'QUANT')
+                  'QUANT_MD', 'QUANT_MP', 'QUANT']
         style = {2: 'text-align: right;',
                  3: 'text-align: right;',
                  4: 'text-align: right;',
                  5: 'text-align: right;',
-                 6: 'text-align: right; font-weight: bold;',
-                 7: 'text-align: right;',
+                 6: 'text-align: right;',
+                 7: 'text-align: right; font-weight: bold;',
                  8: 'text-align: right;',
                  9: 'text-align: right;',
                  10: 'text-align: right;',
-                 11: 'text-align: right; font-weight: bold;'}
+                 11: 'text-align: right;',
+                 12: 'text-align: right;',
+                 13: 'text-align: right; font-weight: bold;'}
         quant_fields = [
             'LOTES_PA', 'QUANT_PA',
             'LOTES_PG', 'QUANT_PG',
             'LOTES_PB', 'QUANT_PB',
             'LOTES_MD', 'QUANT_MD',
+            'LOTES_MP', 'QUANT_MP',
             'LOTES', 'QUANT']
+        giro_lotes = [
+            'LOTES_PA',
+            'LOTES_PG',
+            'LOTES_PB',
+            'LOTES_MD']
+        giro_quant = [
+            'QUANT_PA',
+            'QUANT_PG',
+            'QUANT_PB',
+            'QUANT_MD']
 
         estagio_programacao = [3]
         estagio_estoque = [57, 60, 63]
@@ -114,7 +127,8 @@ class TotalEstagio(View):
                 if field in ['LOTES', 'QUANT']:
                     total_producao['{}|STYLE'.format(field)] = 'color: red;'
             for field in quant_fields:
-                total_giro[field] += row[field]
+                if field in giro_lotes+giro_quant:
+                    total_giro[field] += row[field]
                 if field in ['LOTES', 'QUANT']:
                     total_giro['{}|STYLE'.format(field)] = 'color: red;'
         data_d.append(total_producao)
@@ -138,7 +152,8 @@ class TotalEstagio(View):
                 if field in ['LOTES', 'QUANT']:
                     total_estoque['{}|STYLE'.format(field)] = 'color: red;'
             for field in quant_fields:
-                total_giro[field] += row[field]
+                if field in giro_lotes+giro_quant:
+                    total_giro[field] += row[field]
                 if field in ['LOTES', 'QUANT']:
                     total_giro['{}|STYLE'.format(field)] = 'color: red;'
         data_e.append(total_estoque)
@@ -179,8 +194,17 @@ class TotalEstagio(View):
             'style_t': style,
         })
 
+        for column in giro_lotes:
+            total_giro['LOTES'] += total_giro[column]
+        for column in giro_quant:
+            total_giro['QUANT'] += total_giro[column]
+        headers_g = headers.copy()
+        headers_g[fields.index('LOTES_MP')] = '-'
+        headers_g[fields.index('QUANT_MP')] = '-'
+        total_giro['LOTES_MP'] = '-'
+        total_giro['QUANT_MP'] = '-'
         context.update({
-            'headers_g': headers,
+            'headers_g': headers_g,
             'data_g': [total_giro],
             'fields_g': fields,
             'style_g': style,
