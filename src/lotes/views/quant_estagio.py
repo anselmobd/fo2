@@ -57,18 +57,18 @@ class TotalEstagio(View):
                     dic.append(pr+(sep if po else '')+po)
             return dic
 
-        pa_a_md = ['PA', 'PG', 'PB', 'MD']
+        produtos = ['PA', 'PG', 'PB']
         headers = mount_dict(
             ['Estágio'], ['Lotes', 'Itens', 'Peças'],
-            ' ', pa_a_md + ['MP', ''])
+            ' ', produtos + ['MD', 'MP', ''])
         quant_fields = mount_dict(
             [], ['LOTES', 'QUANT', 'PECAS'],
-            '_', pa_a_md + ['MP', ''])
+            '_', produtos + ['MD', 'MP', ''])
         fields = ['ESTAGIO'] + quant_fields
 
-        giro_lotes = mount_dict([], ['LOTES'], '_', pa_a_md)
-        giro_quant = mount_dict([], ['QUANT'], '_', pa_a_md)
-        giro_pecas = mount_dict([], ['PECAS'], '_', pa_a_md)
+        giro_lotes = mount_dict([], ['LOTES'], '_', produtos)
+        giro_quant = mount_dict([], ['QUANT'], '_', produtos)
+        giro_pecas = mount_dict([], ['PECAS'], '_', produtos)
 
         style_r = 'text-align: right;'
         style_bl = 'border-left-style: solid; border-left-width: ' \
@@ -166,9 +166,15 @@ class TotalEstagio(View):
         headers_g[fields.index('LOTES_MP')] = '-'
         headers_g[fields.index('QUANT_MP')] = '-'
         headers_g[fields.index('PECAS_MP')] = '-'
+        headers_g[fields.index('LOTES_MD')] = '-'
+        headers_g[fields.index('QUANT_MD')] = '-'
+        headers_g[fields.index('PECAS_MD')] = '-'
         total_giro['LOTES_MP'] = ' '
         total_giro['QUANT_MP'] = ' '
         total_giro['PECAS_MP'] = ' '
+        total_giro['LOTES_MD'] = ' '
+        total_giro['QUANT_MD'] = ' '
+        total_giro['PECAS_MD'] = ' '
         context.update({
             'headers_g': headers_g,
             'data_g': [total_giro],
