@@ -91,12 +91,27 @@ class TotalEstagio(View):
         estagio_nao_producao = \
             estagio_programacao + estagio_estoque + estagio_vendido
 
+        def red_columns(dict):
+            for field in ['LOTES', 'QUANT', 'PECAS']:
+                dict['{}|STYLE'.format(field)] = 'color: red;'
+
+        def init_total(titulo, dict):
+            total_dict = dict[0].copy()
+            total_dict['ESTAGIO'] = titulo
+            total_dict['|STYLE'] = 'font-weight: bold;'
+            for field in quant_fields:
+                total_dict[field] = 0
+            red_columns(total_dict)
+            return total_dict
+
+        def soma_fields(tot_dict, data, fields):
+            for row in data:
+                for field in fields:
+                    tot_dict[field] += row[field]
+
         data_p = [
             r for r in data if r['CODIGO_ESTAGIO'] in estagio_programacao]
-        for row in data_p:
-            for field in quant_fields:
-                if field in ['LOTES', 'QUANT', 'PECAS']:
-                    row['{}|STYLE'.format(field)] = 'color: red;'
+        red_columns(data_p[0])
         context.update({
             'headers_p': headers,
             'fields_p': fields,
@@ -104,29 +119,13 @@ class TotalEstagio(View):
             'style_p': style,
         })
 
-        total_giro = data[0].copy()
-        total_giro['ESTAGIO'] = 'Total em produção e em estoque'
-        total_giro['|STYLE'] = 'font-weight: bold;'
-        for field in quant_fields:
-            total_giro[field] = 0
+        total_giro = init_total('Total em produção e em estoque', data)
 
         data_d = [
             r for r in data if r['CODIGO_ESTAGIO'] not in estagio_nao_producao]
-        total_producao = data[0].copy()
-        total_producao['ESTAGIO'] = 'Total em produção'
-        total_producao['|STYLE'] = 'font-weight: bold;'
-        for field in quant_fields:
-            total_producao[field] = 0
-        for row in data_d:
-            for field in quant_fields:
-                total_producao[field] += row[field]
-                if field in ['LOTES', 'QUANT', 'PECAS']:
-                    total_producao['{}|STYLE'.format(field)] = 'color: red;'
-            for field in quant_fields:
-                if field in giro_lotes+giro_quant+giro_pecas:
-                    total_giro[field] += row[field]
-                if field in ['LOTES', 'QUANT', 'PECAS']:
-                    total_giro['{}|STYLE'.format(field)] = 'color: red;'
+        total_producao = init_total('Total em produção', data)
+        soma_fields(total_producao, data_d, quant_fields)
+        soma_fields(total_giro, data_d, giro_lotes+giro_quant+giro_pecas)
         data_d.append(total_producao)
         context.update({
             'headers_d': headers,
@@ -135,23 +134,10 @@ class TotalEstagio(View):
             'style_d': style,
         })
 
-        data_e = [
-            r for r in data if r['CODIGO_ESTAGIO'] in estagio_estoque]
-        total_estoque = data[0].copy()
-        total_estoque['ESTAGIO'] = 'Total em estoque'
-        total_estoque['|STYLE'] = 'font-weight: bold;'
-        for field in quant_fields:
-            total_estoque[field] = 0
-        for row in data_e:
-            for field in quant_fields:
-                total_estoque[field] += row[field]
-                if field in ['LOTES', 'QUANT', 'PECAS']:
-                    total_estoque['{}|STYLE'.format(field)] = 'color: red;'
-            for field in quant_fields:
-                if field in giro_lotes+giro_quant+giro_pecas:
-                    total_giro[field] += row[field]
-                if field in ['LOTES', 'QUANT', 'PECAS']:
-                    total_giro['{}|STYLE'.format(field)] = 'color: red;'
+        data_e = [r for r in data if r['CODIGO_ESTAGIO'] in estagio_estoque]
+        total_estoque = init_total('Total em estoque', data)
+        soma_fields(total_estoque, data_e, quant_fields)
+        soma_fields(total_giro, data_e, giro_lotes+giro_quant+giro_pecas)
         data_e.append(total_estoque)
         context.update({
             'headers_e': headers,
@@ -162,10 +148,7 @@ class TotalEstagio(View):
 
         data_v = [
             r for r in data if r['CODIGO_ESTAGIO'] in estagio_vendido]
-        for row in data_v:
-            for field in quant_fields:
-                if field in ['LOTES', 'QUANT', 'PECAS']:
-                    row['{}|STYLE'.format(field)] = 'color: red;'
+        red_columns(data_v[0])
         context.update({
             'headers_v': headers,
             'fields_v': fields,
@@ -173,16 +156,8 @@ class TotalEstagio(View):
             'style_v': style,
         })
 
-        total_geral = data[0].copy()
-        total_geral['ESTAGIO'] = 'Total geral'
-        total_geral['|STYLE'] = 'font-weight: bold;'
-        for field in quant_fields:
-            total_geral[field] = 0
-        for row in data:
-            for field in quant_fields:
-                total_geral[field] += row[field]
-                if field in ['LOTES', 'QUANT', 'PECAS']:
-                    total_geral['{}|STYLE'.format(field)] = 'color: red;'
+        total_geral = init_total('Total geral', data)
+        soma_fields(total_geral, data, quant_fields)
         context.update({
             'headers_t': headers,
             'data_t': [total_geral],
