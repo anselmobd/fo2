@@ -116,6 +116,22 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
             END
           ) QUANT_PA
         , sum(
+            CASE WHEN l.PROCONF_GRUPO <= '99999'
+            THEN
+              l.QTDE_EM_PRODUCAO_PACOTE *
+              ( SELECT
+                  CASE WHEN count(*) = 0 THEN 1
+                  ELSE count(*) END
+                FROM BASI_050 ia -- insumos de alternativa
+                WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
+                  AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+                  AND ia.NIVEL_COMP = 1
+                  AND ia.GRUPO_COMP NOT IN 'F%'
+              )
+            ELSE 0
+            END
+          ) PECAS_PA
+        , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'A%'
               AND l.QTDE_EM_PRODUCAO_PACOTE > 0
             THEN 1 ELSE 0 END
@@ -127,6 +143,22 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
             END
           ) QUANT_PG
         , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'A%'
+            THEN
+              l.QTDE_EM_PRODUCAO_PACOTE *
+              ( SELECT
+                  CASE WHEN count(*) = 0 THEN 1
+                  ELSE count(*) END
+                FROM BASI_050 ia -- insumos de alternativa
+                WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
+                  AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+                  AND ia.NIVEL_COMP = 1
+                  AND ia.GRUPO_COMP NOT IN 'F%'
+              )
+            ELSE 0
+            END
+          ) PECAS_PG
+        , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'B%'
               AND l.QTDE_EM_PRODUCAO_PACOTE > 0
             THEN 1 ELSE 0 END
@@ -137,6 +169,22 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
             ELSE 0
             END
           ) QUANT_PB
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'B%'
+            THEN
+              l.QTDE_EM_PRODUCAO_PACOTE *
+              ( SELECT
+                  CASE WHEN count(*) = 0 THEN 1
+                  ELSE count(*) END
+                FROM BASI_050 ia -- insumos de alternativa
+                WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
+                  AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+                  AND ia.NIVEL_COMP = 1
+                  AND ia.GRUPO_COMP NOT IN 'F%'
+              )
+            ELSE 0
+            END
+          ) PECAS_PB
         , sum(
             CASE WHEN l.PROCONF_GRUPO >= 'C0000'
               AND l.PROCONF_GRUPO NOT LIKE 'F%'
@@ -151,6 +199,23 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
             END
           ) QUANT_MD
         , sum(
+            CASE WHEN l.PROCONF_GRUPO >= 'C0000'
+              AND l.PROCONF_GRUPO NOT LIKE 'F%'
+            THEN
+              l.QTDE_EM_PRODUCAO_PACOTE *
+              ( SELECT
+                  CASE WHEN count(*) = 0 THEN 1
+                  ELSE count(*) END
+                FROM BASI_050 ia -- insumos de alternativa
+                WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
+                  AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+                  AND ia.NIVEL_COMP = 1
+                  AND ia.GRUPO_COMP NOT IN 'F%'
+              )
+            ELSE 0
+            END
+          ) PECAS_MD
+        , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'F%'
               AND l.QTDE_EM_PRODUCAO_PACOTE > 0
             THEN 1 ELSE 0 END
@@ -161,6 +226,22 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
             ELSE 0
             END
           ) QUANT_MP
+        , sum(
+            CASE WHEN l.PROCONF_GRUPO LIKE 'F%'
+            THEN
+              l.QTDE_EM_PRODUCAO_PACOTE *
+              ( SELECT
+                  CASE WHEN count(*) = 0 THEN 1
+                  ELSE count(*) END
+                FROM BASI_050 ia -- insumos de alternativa
+                WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
+                  AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+                  AND ia.NIVEL_COMP = 1
+                  AND ia.GRUPO_COMP NOT IN 'F%'
+              )
+            ELSE 0
+            END
+          ) PECAS_MP
         , sum(
             CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE > 0
             THEN 1
