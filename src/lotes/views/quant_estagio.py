@@ -69,29 +69,18 @@ class TotalEstagio(View):
                   ]
         style_r = 'text-align: right;'
         style_bl = 'border-left-style: solid; border-left-width: ' \
-            'thin; border-color: black;'
+            'thin; border-color: lightgray;'
         style_b = 'font-weight: bold;'
         style_number = style_r + style_bl
         style_total = style_number + style_b
-        style = {2: style_number,
-                 3: style_number,
-                 4: style_number,
-                 5: style_number,
-                 6: style_number,
-                 7: style_total,
-                 8: style_number,
-                 9: style_number,
-                 10: style_number,
-                 11: style_number,
-                 12: style_number,
-                 13: style_total,
-                 14: style_number,
-                 15: style_number,
-                 16: style_number,
-                 17: style_number,
-                 18: style_number,
-                 19: style_total,
-                 }
+        style = {}
+        for i in range(2, 20):
+            style[i] = style_number
+        style.update({
+             7: style_total,
+             13: style_total,
+             19: style_total,
+        })
         quant_fields = [
             'LOTES_PA', 'QUANT_PA', 'PECAS_PA',
             'LOTES_PG', 'QUANT_PG', 'PECAS_PG',
