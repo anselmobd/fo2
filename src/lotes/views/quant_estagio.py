@@ -85,6 +85,12 @@ class TotalEstagio(View):
              19: style_total,
         })
 
+        context.update({
+            'headers': headers,
+            'fields': fields,
+            'style': style,
+        })
+
         estagio_programacao = [3]
         estagio_estoque = [57, 60, 63]
         estagio_vendido = [66]
@@ -113,10 +119,7 @@ class TotalEstagio(View):
             r for r in data if r['CODIGO_ESTAGIO'] in estagio_programacao]
         red_columns(data_p[0])
         context.update({
-            'headers_p': headers,
-            'fields_p': fields,
             'data_p': data_p,
-            'style_p': style,
         })
 
         total_giro = init_total('Total em produção e em estoque', data)
@@ -128,10 +131,7 @@ class TotalEstagio(View):
         soma_fields(total_giro, data_d, giro_lotes+giro_quant+giro_pecas)
         data_d.append(total_producao)
         context.update({
-            'headers_d': headers,
-            'fields_d': fields,
             'data_d': data_d,
-            'style_d': style,
         })
 
         data_e = [r for r in data if r['CODIGO_ESTAGIO'] in estagio_estoque]
@@ -140,29 +140,20 @@ class TotalEstagio(View):
         soma_fields(total_giro, data_e, giro_lotes+giro_quant+giro_pecas)
         data_e.append(total_estoque)
         context.update({
-            'headers_e': headers,
-            'fields_e': fields,
             'data_e': data_e,
-            'style_e': style,
         })
 
         data_v = [
             r for r in data if r['CODIGO_ESTAGIO'] in estagio_vendido]
         red_columns(data_v[0])
         context.update({
-            'headers_v': headers,
-            'fields_v': fields,
             'data_v': data_v,
-            'style_v': style,
         })
 
         total_geral = init_total('Total geral', data)
         soma_fields(total_geral, data, quant_fields)
         context.update({
-            'headers_t': headers,
             'data_t': [total_geral],
-            'fields_t': fields,
-            'style_t': style,
         })
 
         for column in giro_lotes:
@@ -181,8 +172,6 @@ class TotalEstagio(View):
         context.update({
             'headers_g': headers_g,
             'data_g': [total_giro],
-            'fields_g': fields,
-            'style_g': style,
         })
 
         return context
