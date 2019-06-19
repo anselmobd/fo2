@@ -53,8 +53,8 @@ class TotalEstagio(View):
 
         headers = ('Estágio', 'Lotes PA', 'Lotes PG',
                    'Lotes PB', 'Lotes MD*', 'Lotes*',
-                   'Peças PA', 'Peças PG', 'Peças PB',
-                   'Peças MD*', 'Peças')
+                   'Itens PA', 'Itens PG', 'Itens PB',
+                   'Itens MD*', 'Itens')
         fields = ('ESTAGIO', 'LOTES_PA', 'LOTES_PG',
                   'LOTES_PB', 'LOTES_MD', 'LOTES',
                   'QUANT_PA', 'QUANT_PG', 'QUANT_PB',
@@ -242,7 +242,7 @@ class QuantEstagio(View):
                 total[field] += row[field]
         data.append(total)
         context.update({
-            'headers': ('Produto', 'Tamanho', 'Cor', 'Lotes', 'Peças'),
+            'headers': ('Produto', 'Tamanho', 'Cor', 'Lotes', 'Quantidade'),
             'fields': ('REF', 'TAM', 'COR', 'LOTES', 'QUANT'),
             'data': data,
             'style': {4: 'text-align: right;',
