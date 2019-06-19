@@ -18,7 +18,7 @@
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
-{% if data %}
+{% if data_t %}
   <h4>Tipo de roteiro:
     {% if tipo_roteiro == 'p' %}De produção
     {% elif tipo_roteiro == 'e' %}De expedição
@@ -29,8 +29,65 @@
     <h4>Produtos do cliente: ({{ cliente }}) {{ cliente_full }}</h4>
   {% endif %}
   <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+    {% if data_g %}
+      <thead>
+        <tr>
+          <td colspan="11"><h3 style='text-align: center'>Total em giro</h3></td>
+        </tr>
+      </thead>
+      {% include "layout/thead_generic.html" with data=headers_g style=style_g only %}
+      {% include "layout/tbody_generic.html" with fields=fields_g data=data_g style=style_g only %}
+      <thead>
+        <tr>
+          <td colspan="11"><hr /></td>
+        </tr>
+      </thead>
+    {% endif %}
+    {% if data_p %}
+      <thead>
+        <tr>
+          <td colspan="11"><h3 style='text-align: center'>Programação</h3></td>
+        </tr>
+      </thead>
+      {% include "layout/thead_generic.html" with data=headers_p style=style_p only %}
+      {% include "layout/tbody_generic.html" with fields=fields_p data=data_p style=style_p only %}
+    {% endif %}
+    {% if data_d %}
+      <thead>
+        <tr>
+          <td colspan="11"><h3 style='text-align: center'>Produção</h3></td>
+        </tr>
+      </thead>
+      {% include "layout/thead_generic.html" with data=headers_d style=style_d only %}
+      {% include "layout/tbody_generic.html" with fields=fields_d data=data_d style=style_d only %}
+    {% endif %}
+    {% if data_e %}
+      <thead>
+        <tr>
+          <td colspan="11"><h3 style='text-align: center'>Estoque</h3></td>
+        </tr>
+      </thead>
+      {% include "layout/thead_generic.html" with data=headers_e style=style_e only %}
+      {% include "layout/tbody_generic.html" with fields=fields_e data=data_e style=style_e only %}
+    {% endif %}
+    {% if data_v %}
+      <thead>
+        <tr>
+          <td colspan="11"><h3 style='text-align: center'>Vendido</h3></td>
+        </tr>
+      </thead>
+      {% include "layout/thead_generic.html" with data=headers_v style=style_v only %}
+      {% include "layout/tbody_generic.html" with fields=fields_v data=data_v style=style_v only %}
+    {% endif %}
+    {% if data_t %}
+      <thead>
+        <tr>
+          <td colspan="11"><h3 style='text-align: center'>Total geral</h3></td>
+        </tr>
+      </thead>
+      {% include "layout/thead_generic.html" with data=headers_t style=style_t only %}
+      {% include "layout/tbody_generic.html" with fields=fields_t data=data_t style=style_t only %}
+    {% endif %}
   </table>
 {% endif %}
 {% endblock %}
