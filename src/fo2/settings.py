@@ -58,13 +58,14 @@ INSTALLED_APPS = [
     # 'nested_inline',
     # Project
     'base',
+    'comercial',
     'contabil',
+    'geral',
+    'insumo',
     'logistica',
     'lotes',
-    'geral',
     'produto',
     'utils',
-    'insumo',
 ]
 
 MIDDLEWARE = [
