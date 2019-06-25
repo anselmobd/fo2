@@ -10,6 +10,7 @@ import produto.queries
 
 import comercial.forms as forms
 import comercial.models as models
+import comercial.queries as queries
 
 
 def index(request):
@@ -40,7 +41,7 @@ class FichaCliente(View):
         if form.is_valid():
             cnpj = form.cleaned_data['cnpj']
 
-            data = models.busca_clientes(cnpj)
+            data = queries.busca_clientes(cnpj)
             if len(data) == 0:
                 context['conteudo'] = 'nada'
 
@@ -64,7 +65,7 @@ class FichaCliente(View):
                     context['cnpj'] = cnpj
                 context['cliente'] = cliente
 
-                data = models.ficha_cliente(cnpj)
+                data = queries.ficha_cliente(cnpj)
                 if len(data) == 0:
                     context['conteudo'] = 'zerado'
                 else:
@@ -158,7 +159,8 @@ class VendasPorCor(O2BaseGetPostView):
         else:
             grades.append(self.get_grade(self.ref, nome='da referência'))
             grades.append(self.get_grade(
-                self.ref, codigo_colecao, cliente_cnpj9, nome='da coleção para o cliente'))
+                self.ref, codigo_colecao, cliente_cnpj9,
+                nome='da coleção para o cliente'))
         self.context.update({
             'grades': grades,
         })
@@ -171,7 +173,7 @@ class VendasPorCor(O2BaseGetPostView):
         zero_data_row = {p: 0 for p in self.periodos}
         total_data_row = zero_data_row.copy()
         for periodo in self.periodos:
-            data_periodo = models.get_vendas_cor(
+            data_periodo = queries.get_vendas_cor(
                 self.cursor, ref=ref, periodo=periodo, colecao=colecao,
                 cliente=cliente)
             for row in data_periodo:
