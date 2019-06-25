@@ -1,0 +1,5 @@
+- model: comercial.ModeloPassado
+  pk: 1
+  fields:
+    nome: Inicial
+    padrao: True
