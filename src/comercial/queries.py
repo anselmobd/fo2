@@ -96,7 +96,13 @@ def ficha_cliente(cnpj):
 
 
 def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
+    return get_vendas(
+        cursor, ref=ref, periodo=periodo, colecao=colecao, cliente=cliente,
+        por='cor')
 
+
+def get_vendas(
+        cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None):
     select_col = ''
     filtra_col = ''
     group_col = ''
@@ -136,6 +142,14 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
             ini_periodo = dec_months(ini_mes, 24)
         filtra_periodo = "  AND v.dt >= TO_DATE('{}', 'yyyy-mm-dd')".format(
             ini_periodo.strftime('%Y-%m-%d'))
+
+    select_por = ''
+    group_por = ''
+    order_por = ''
+    if por == 'cor':
+        select_por = ", v.COR"
+        group_por = ", v.COR"
+        order_por = ", v.COR"
 
     sql = """
         WITH vendido AS
@@ -198,7 +212,8 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
         --, v.MODELO
           {select_col} -- select_col
           {select_ref} -- select_ref
-          , v.COR
+        --, v.COR
+          {select_por} -- select_por
         FROM vendido v
         WHERE 1=1
         --  AND v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
@@ -214,26 +229,31 @@ def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
         --, v.MODELO
         {group_col} -- group_col
         {group_ref} -- group_ref
-        , v.COR
+        --, v.COR
+        {group_por} -- group_por
         ORDER BY
           1 DESC
         --, v.COLECAO
         --, v.MODELO
         {order_col} -- order_col
         {order_ref} -- order_ref
-        , v.COR
+        --, v.COR
+        {order_por} -- order_por
     """
     sql = sql.format(
         select_col=select_col,
         select_ref=select_ref,
+        select_por=select_por,
         filtra_cliente=filtra_cliente,
         filtra_col=filtra_col,
         filtra_ref=filtra_ref,
         filtra_periodo=filtra_periodo,
         group_col=group_col,
         group_ref=group_ref,
+        group_por=group_por,
         order_col=order_col,
         order_ref=order_ref,
+        order_por=order_por,
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
