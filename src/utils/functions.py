@@ -33,6 +33,8 @@ def dec_month(dt, day=None):
 def dec_months(dt, number, day=None):
     if day is None:
         day = dt.day
+    if number == 0:
+        return dt.replace(day=day)
     dt_return = dec_month(dt, day)
     if number == 1:
         return dt_return
