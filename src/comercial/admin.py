@@ -9,4 +9,10 @@ class ModeloPassadoAdmin(admin.ModelAdmin):
     fields = ['nome', 'padrao']
 
 
+class ModeloPassadoPeriodoAdmin(admin.ModelAdmin):
+    fields = ['modelo', 'ordem', 'meses', 'peso']
+    ordering = ['modelo__nome', 'ordem']
+
+
 intr_adm_site.register(ModeloPassado, ModeloPassadoAdmin)
+intr_adm_site.register(ModeloPassadoPeriodo, ModeloPassadoPeriodoAdmin)
