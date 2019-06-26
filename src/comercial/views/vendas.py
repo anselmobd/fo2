@@ -127,3 +127,12 @@ class VendasPorCor(VendasPor):
         self.title_name = 'Distribuição de vendas por cor'
         self.por = 'cor'
         self.por_name = 'Cor'
+
+
+class VendasPorTamanho(VendasPor):
+
+    def __init__(self, *args, **kwargs):
+        super(VendasPorTamanho, self).__init__(*args, **kwargs)
+        self.title_name = 'Distribuição de vendas por tamanho'
+        self.por = 'tam'
+        self.por_name = 'Tamanho'

@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'comercial:vendas_cor' %}" method="post">
+<form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
