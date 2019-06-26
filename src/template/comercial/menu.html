@@ -1,8 +1,11 @@
 <ul>
-  <li>Análise de vendas</li>
+  <li>Análises de vendas</li>
   <ul>
-    <li><a href="{% url 'comercial:vendas_cor' %}">Distribuição de vendas por cor</a></li>
-    <li><a href="{% url 'comercial:vendas_tamanho' %}">Distribuição de vendas por tamanho</a></li>
+    <li>Distribuição de vendas</li>
+    <ul>
+      <li><a href="{% url 'comercial:vendas_cor' %}">Por cor</a></li>
+      <li><a href="{% url 'comercial:vendas_tamanho' %}">Por tamanho</a></li>
+    </ul>
     <li><a href="{% url 'comercial:ponderacao' %}">Ponderação a aplicar</a></li>
     <li><a href="{% url 'comercial:estoque_desejado' %}">Estoque desejado</a></li>
   </ul>
