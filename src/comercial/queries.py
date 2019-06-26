@@ -144,6 +144,10 @@ def get_vendas(
         select_por = ", v.COR"
         group_por = ", v.COR"
         order_por = ", v.COR"
+    elif por == 'tam':
+        select_por = ", v.TAM"
+        group_por = ", v.TAM"
+        order_por = ", v.TAM"
 
     sql = """
         WITH vendido AS
