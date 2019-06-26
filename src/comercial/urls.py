@@ -10,7 +10,8 @@ urlpatterns = [
     url(r'^ficha_cliente/(?P<cnpj>\d+)/$', views.FichaCliente.as_view(),
         name='ficha_cliente__get'),
 
-    url(r'^vendas_cor/$', views.VendasPorCor.as_view(), name='vendas_cor'),
+    url(r'^vendas_cor/$', views.vendas.VendasPorCor.as_view(),
+        name='vendas_cor'),
 
     url(r'^estoque_desejado/$',
         views.estoque.EstoqueDesejado.as_view(),
