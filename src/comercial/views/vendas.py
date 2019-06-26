@@ -11,15 +11,16 @@ import comercial.forms as forms
 import comercial.queries as queries
 
 
-class VendasPorCor(O2BaseGetPostView):
+class VendasPor(O2BaseGetPostView):
+
     def __init__(self, *args, **kwargs):
-        super(VendasPorCor, self).__init__(*args, **kwargs)
+        super(VendasPor, self).__init__(*args, **kwargs)
         self.Form_class = forms.VendasPorCorForm
         self.template_name = 'comercial/vendas_cor.html'
-        self.title_name = 'Distribuição de vendas por cor'
         self.get_args = ['ref']
-        self.por = 'cor'
-        self.por_name = 'Cor'
+        self.title_name = '?'
+        self.por = '?'
+        self.por_name = '?'
 
     def mount_context(self):
         # cliente = self.form.cleaned_data['cliente']
@@ -117,3 +118,12 @@ class VendasPorCor(O2BaseGetPostView):
                 'data': data,
             })
         return grade
+
+
+class VendasPorCor(VendasPor):
+
+    def __init__(self, *args, **kwargs):
+        super(VendasPorCor, self).__init__(*args, **kwargs)
+        self.title_name = 'Distribuição de vendas por cor'
+        self.por = 'cor'
+        self.por_name = 'Cor'
