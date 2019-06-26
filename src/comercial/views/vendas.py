@@ -76,9 +76,9 @@ class VendasPorCor(O2BaseGetPostView):
         zero_data_row = {p: 0 for p in self.periodos}
         total_data_row = zero_data_row.copy()
         for periodo in self.periodos:
-            data_periodo = queries.get_vendas_cor(
+            data_periodo = queries.get_vendas(
                 self.cursor, ref=ref, periodo=periodo, colecao=colecao,
-                cliente=cliente)
+                cliente=cliente, por='cor')
             for row in data_periodo:
                 data_row = [dr for dr in data if dr['cor'] == row['cor']]
                 if len(data_row) == 0:

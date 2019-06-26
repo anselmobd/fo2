@@ -95,12 +95,6 @@ def ficha_cliente(cnpj):
     return rows_to_dict_list(cursor)
 
 
-def get_vendas_cor(cursor, ref=None, periodo=None, colecao=None, cliente=None):
-    return get_vendas(
-        cursor, ref=ref, periodo=periodo, colecao=colecao, cliente=cliente,
-        por='cor')
-
-
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None):
     select_col = ''
