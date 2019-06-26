@@ -69,6 +69,10 @@ class TotalEstagio(View):
         giro_lotes = mount_dict([], ['LOTES'], '_', produtos)
         giro_quant = mount_dict([], ['QUANT'], '_', produtos)
         giro_pecas = mount_dict([], ['PECAS'], '_', produtos)
+        nao_giro_lotes = mount_dict([], ['LOTES'], '_', ['MD', 'MP'])
+        nao_giro_quant = mount_dict([], ['QUANT'], '_', ['MD', 'MP'])
+        nao_giro_pecas = mount_dict([], ['PECAS'], '_', ['MD', 'MP'])
+        nao_giro_fields = nao_giro_lotes+nao_giro_quant+nao_giro_pecas
 
         style_r = 'text-align: right;'
         style_bl = 'border-left-style: solid; border-left-width: ' \
@@ -97,17 +101,18 @@ class TotalEstagio(View):
         estagio_nao_producao = \
             estagio_programacao + estagio_estoque + estagio_vendido
 
-        def red_columns(dict):
+        def red_columns(dicti):
             for field in ['LOTES', 'QUANT', 'PECAS']:
-                dict['{}|STYLE'.format(field)] = 'color: red;'
+                dicti['{}|STYLE'.format(field)] = 'color: red;'
 
-        def init_total(titulo, dict):
-            total_dict = dict[0].copy()
+        def init_total(titulo, dicti, subtotal=False):
+            total_dict = dicti[0].copy()
             total_dict['ESTAGIO'] = titulo
-            total_dict['|STYLE'] = 'font-weight: bold;'
             for field in quant_fields:
                 total_dict[field] = 0
-            red_columns(total_dict)
+            if not subtotal:
+                total_dict['|STYLE'] = 'font-weight: bold;'
+                red_columns(total_dict)
             return total_dict
 
         def soma_fields(tot_dict, data, fields):
@@ -122,22 +127,26 @@ class TotalEstagio(View):
             'data_p': data_p,
         })
 
-        total_giro = init_total('Total em produção e em estoque', data)
-
         data_d = [
             r for r in data if r['CODIGO_ESTAGIO'] not in estagio_nao_producao]
-        total_producao = init_total('Total em produção', data)
+        total_producao = init_total('Total em produção', data_d)
+        total_producao_giro = init_total(
+            'Total em produção (giro)', data_d, subtotal=True)
         soma_fields(total_producao, data_d, quant_fields)
-        soma_fields(total_giro, data_d, giro_lotes+giro_quant+giro_pecas)
+        soma_fields(
+            total_producao_giro, data_d, giro_lotes+giro_quant+giro_pecas)
         data_d.append(total_producao)
         context.update({
             'data_d': data_d,
         })
 
         data_e = [r for r in data if r['CODIGO_ESTAGIO'] in estagio_estoque]
-        total_estoque = init_total('Total em estoque', data)
+        total_estoque = init_total('Total em estoque', data_e)
+        total_estoque_giro = init_total(
+            'Total em estoque (giro)', data_e, subtotal=True)
         soma_fields(total_estoque, data_e, quant_fields)
-        soma_fields(total_giro, data_e, giro_lotes+giro_quant+giro_pecas)
+        soma_fields(
+            total_estoque_giro, data_e, giro_lotes+giro_quant+giro_pecas)
         data_e.append(total_estoque)
         context.update({
             'data_e': data_e,
@@ -156,28 +165,35 @@ class TotalEstagio(View):
             'data_t': [total_geral],
         })
 
-        for column in giro_lotes:
-            total_giro['LOTES'] += total_giro[column]
-        for column in giro_quant:
-            total_giro['QUANT'] += total_giro[column]
-        for column in giro_pecas:
-            total_giro['PECAS'] += total_giro[column]
+        def soma_row_columns(dicti, tot_field, fields):
+            for column in fields:
+                dicti[tot_field] += dicti[column]
+
+        def soma_os_3_totais(dicti):
+            soma_row_columns(dicti, 'LOTES', giro_lotes)
+            soma_row_columns(dicti, 'QUANT', giro_quant)
+            soma_row_columns(dicti, 'PECAS', giro_pecas)
+
+        soma_os_3_totais(total_producao_giro)
+        soma_os_3_totais(total_estoque_giro)
+
+        data_giro = []
+        data_giro.append(total_producao_giro)
+        data_giro.append(total_estoque_giro)
+        total_giro = init_total('Total em giro', data_giro)
+        soma_fields(total_giro, data_giro, quant_fields)
+        data_giro.append(total_giro)
+
         headers_g = headers.copy()
-        headers_g[fields.index('LOTES_MP')] = '-'
-        headers_g[fields.index('QUANT_MP')] = '-'
-        headers_g[fields.index('PECAS_MP')] = '-'
-        headers_g[fields.index('LOTES_MD')] = '-'
-        headers_g[fields.index('QUANT_MD')] = '-'
-        headers_g[fields.index('PECAS_MD')] = '-'
-        total_giro['LOTES_MP'] = ' '
-        total_giro['QUANT_MP'] = ' '
-        total_giro['PECAS_MP'] = ' '
-        total_giro['LOTES_MD'] = ' '
-        total_giro['QUANT_MD'] = ' '
-        total_giro['PECAS_MD'] = ' '
+        for field in nao_giro_fields:
+            headers_g[fields.index(field)] = '-'
+        for row in data_giro:
+            for field in nao_giro_fields:
+                row[field] = ' '
+
         context.update({
             'headers_g': headers_g,
-            'data_g': [total_giro],
+            'data_g': data_giro,
         })
 
         return context
