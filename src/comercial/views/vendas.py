@@ -18,6 +18,8 @@ class VendasPorCor(O2BaseGetPostView):
         self.template_name = 'comercial/vendas_cor.html'
         self.title_name = 'Distribuição de vendas por cor'
         self.get_args = ['ref']
+        self.por = 'cor'
+        self.por_name = 'Cor'
 
     def mount_context(self):
         # cliente = self.form.cleaned_data['cliente']
@@ -78,12 +80,12 @@ class VendasPorCor(O2BaseGetPostView):
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=ref, periodo=periodo, colecao=colecao,
-                cliente=cliente, por='cor')
+                cliente=cliente, por=self.por)
             for row in data_periodo:
-                data_row = [dr for dr in data if dr['cor'] == row['cor']]
+                data_row = [dr for dr in data if dr[self.por] == row[self.por]]
                 if len(data_row) == 0:
                     data.append({
-                        'cor': row['cor'],
+                        self.por: row[self.por],
                         **zero_data_row
                     })
                     data_row = data[len(data)-1]
@@ -104,8 +106,8 @@ class VendasPorCor(O2BaseGetPostView):
                     row['{}|DECIMALS'.format(periodo)] = 2
 
             grade.update({
-                'headers': ['Cor', *self.periodos_descr],
-                'fields': ['cor', *self.periodos],
+                'headers': [self.por_name, *self.periodos_descr],
+                'fields': [self.por, *self.periodos],
                 'style': {
                     2: 'text-align: right;',
                     3: 'text-align: right;',
