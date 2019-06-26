@@ -16,7 +16,7 @@ class VendasPor(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(VendasPor, self).__init__(*args, **kwargs)
         self.Form_class = forms.VendasPorCorForm
-        self.template_name = 'comercial/vendas_cor.html'
+        self.template_name = 'comercial/vendas_por.html'
         self.get_args = ['ref']
         self.title_name = '?'
         self.por = '?'
