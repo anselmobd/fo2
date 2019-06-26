@@ -1,6 +1,6 @@
 from django import forms
 
-from produto.forms import O2BaseForm, O2FieldRefForm, O2FieldCorForm
+from produto.forms import O2BaseForm, O2FieldRefForm
 
 
 class ClienteForm(forms.Form):
@@ -9,7 +9,7 @@ class ClienteForm(forms.Form):
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
 
 
-class VendasPorCorForm(
+class VendasPorForm(
         O2BaseForm,
         O2FieldRefForm):
 
@@ -19,7 +19,7 @@ class VendasPorCorForm(
     #     widget=forms.TextInput({'autofocus': 'autofocus'}))
 
     def __init__(self, *args, **kwargs):
-        super(VendasPorCorForm, self).__init__(*args, **kwargs)
+        super(VendasPorForm, self).__init__(*args, **kwargs)
         self.order_fields([
             # 'cnpj',
             'ref',
