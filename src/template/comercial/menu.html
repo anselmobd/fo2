@@ -1,6 +1,9 @@
 <ul>
-  <li><a href="{% url 'comercial:vendas_cor' %}">Distribuição de vendas por cor</a></li>
-  <li><a href="{% url 'comercial:estoque_desejado' %}">Estoque desejado</a></li>
+  <li>Análise de vendas</li>
+  <ul>
+    <li><a href="{% url 'comercial:vendas_cor' %}">Distribuição de vendas por cor</a></li>
+    <li><a href="{% url 'comercial:estoque_desejado' %}">Estoque desejado</a></li>
+  </ul>
   <li>Sistema Tussor (antigo)</li>
   <ul>
     <li><a href="{% url 'comercial:ficha_cliente' %}">Ficha de cliente (duplicatas)</a></li>
