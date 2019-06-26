@@ -19,6 +19,21 @@ class EstoqueDesejado(O2BaseGetView):
         self.title_name = 'Estoque desejado'
 
     def mount_context(self):
+        self.context.update({
+            'headers': (),
+            'fields': (),
+            'data': [],
+        })
+
+
+class Ponderacao(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(Ponderacao, self).__init__(*args, **kwargs)
+        self.template_name = 'comercial/ponderacao.html'
+        self.title_name = 'Ponderação a aplicar'
+
+    def mount_context(self):
         nfs = list(models.ModeloPassadoPeriodo.objects.filter(
             modelo_id=1).order_by('ordem').values())
         if len(nfs) == 0:

@@ -16,4 +16,8 @@ urlpatterns = [
         views.estoque.EstoqueDesejado.as_view(),
         name='estoque_desejado'),
 
+    url(r'^ponderacao/$',
+        views.estoque.Ponderacao.as_view(),
+        name='ponderacao'),
+
 ]
