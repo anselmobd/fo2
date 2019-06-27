@@ -120,7 +120,7 @@ def valor(
 
     filtro_zerados = ''
     if zerados == 's':
-        filtro_zerados = "OR e.qtde_estoque_atu != 0"
+        filtro_zerados = "OR e.qtde_estoque_atu = 0"
 
     filtro_negativos = ''
     if negativos == 's':
@@ -177,34 +177,13 @@ def valor(
         LEFT JOIN BASI_205 d
           ON d.CODIGO_DEPOSITO = e.DEPOSITO
         WHERE 1=1
-          -- AND e.CDITEM_NIVEL99 = 9
           {filtro_nivel} -- filtro_nivel
           AND (1=2
-            -- OR e.qtde_estoque_atu > 0
             {filtro_positivos} -- filtro_positivos
-            -- OR e.qtde_estoque_atu != 0
             {filtro_zerados} -- filtro_zerados
-            -- OR e.qtde_estoque_atu < 0
             {filtro_negativos} -- filtro_negativos
           )
           {filtro_preco_zerado} -- filtro_preco_zerado
-          -- AND 1 = (
-          --   CASE WHEN r.NIVEL_ESTRUTURA = 2 THEN
-          --     CASE WHEN e.DEPOSITO = 202 THEN 1
-          --     ELSE 0 END
-          --   WHEN r.NIVEL_ESTRUTURA = 9 THEN
-          --     CASE WHEN r.CONTA_ESTOQUE = 22 THEN
-          --       CASE WHEN e.DEPOSITO = 212 THEN 1
-          --       ELSE 0 END
-          --     ELSE
-          --       CASE WHEN e.DEPOSITO = 231 THEN 1
-          --       ELSE 0 END
-          --     END
-          --   ELSE -- i.NIVEL_ESTRUTURA = 1
-          --     CASE WHEN e.DEPOSITO in (101, 102) THEN 1
-          --     ELSE 0 END
-          --   END
-          -- )
           {filtro_deposito_compras} -- filtro_deposito_compras
         ORDER BY
           e.CDITEM_NIVEL99
