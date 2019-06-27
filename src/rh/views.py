@@ -60,6 +60,12 @@ def fotos_2019_05_24_bianca(request):
     return render(request, 'rh/fotos_2019_05_24_bianca.html', context)
 
 
+def fotos_2019_06_14_adriana_leo(request):
+    context = {'titulo': 'Funcionários Adriana Martins e Leonardo Andrade '
+                         'homenageados'}
+    return render(request, 'rh/fotos_2019_06_14_adriana_leo.html', context)
+
+
 def media_2019_04_09_dicas(request):
     context = {'titulo': 'Dicas de comportamento no ambiente de trabalho'}
     return render(request, 'rh/media_2019_04_09_dicas.html', context)
