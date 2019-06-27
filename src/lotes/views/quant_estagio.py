@@ -130,28 +130,32 @@ class TotalEstagio(View):
 
         data_d = [
             r for r in data if r['CODIGO_ESTAGIO'] not in estagio_nao_producao]
-        total_producao = init_total('Total em produção', data_d)
-        total_producao_giro = init_total(
-            'Total em produção (giro)', data_d, subtotal=True)
-        soma_fields(total_producao, data_d, quant_fields)
-        soma_fields(
-            total_producao_giro, data_d, giro_lotes+giro_quant+giro_pecas)
-        data_d.append(total_producao)
-        context.update({
-            'data_d': data_d,
-        })
+        total_producao_giro = None
+        if len(data_d) > 0:
+            total_producao = init_total('Total em produção', data_d)
+            total_producao_giro = init_total(
+                'Total em produção (giro)', data_d, subtotal=True)
+            soma_fields(total_producao, data_d, quant_fields)
+            soma_fields(
+                total_producao_giro, data_d, giro_lotes+giro_quant+giro_pecas)
+            data_d.append(total_producao)
+            context.update({
+                'data_d': data_d,
+            })
 
         data_e = [r for r in data if r['CODIGO_ESTAGIO'] in estagio_estoque]
-        total_estoque = init_total('Total em estoque', data_e)
-        total_estoque_giro = init_total(
-            'Total em estoque (giro)', data_e, subtotal=True)
-        soma_fields(total_estoque, data_e, quant_fields)
-        soma_fields(
-            total_estoque_giro, data_e, giro_lotes+giro_quant+giro_pecas)
-        data_e.append(total_estoque)
-        context.update({
-            'data_e': data_e,
-        })
+        total_estoque_giro = None
+        if len(data_e) > 0:
+            total_estoque = init_total('Total em estoque', data_e)
+            total_estoque_giro = init_total(
+                'Total em estoque (giro)', data_e, subtotal=True)
+            soma_fields(total_estoque, data_e, quant_fields)
+            soma_fields(
+                total_estoque_giro, data_e, giro_lotes+giro_quant+giro_pecas)
+            data_e.append(total_estoque)
+            context.update({
+                'data_e': data_e,
+            })
 
         data_v = [
             r for r in data if r['CODIGO_ESTAGIO'] in estagio_vendido]
@@ -176,27 +180,31 @@ class TotalEstagio(View):
             soma_row_columns(dicti, 'QUANT', giro_quant)
             soma_row_columns(dicti, 'PECAS', giro_pecas)
 
-        soma_os_3_totais(total_producao_giro)
-        soma_os_3_totais(total_estoque_giro)
-
         data_giro = []
-        data_giro.append(total_producao_giro)
-        data_giro.append(total_estoque_giro)
-        total_giro = init_total('Total em giro', data_giro)
-        soma_fields(total_giro, data_giro, quant_fields)
-        data_giro.append(total_giro)
+        if total_producao_giro is not None:
+            soma_os_3_totais(total_producao_giro)
+            data_giro.append(total_producao_giro)
+        if total_estoque_giro is not None:
+            soma_os_3_totais(total_estoque_giro)
+            data_giro.append(total_estoque_giro)
+        pprint(data_giro)
 
-        headers_g = headers.copy()
-        for field in nao_giro_fields:
-            headers_g[fields.index(field)] = '-'
-        for row in data_giro:
+        if len(data_giro) > 0:
+            total_giro = init_total('Total em giro', data_giro)
+            soma_fields(total_giro, data_giro, quant_fields)
+            data_giro.append(total_giro)
+
+            headers_g = headers.copy()
             for field in nao_giro_fields:
-                row[field] = ' '
+                headers_g[fields.index(field)] = '-'
+            for row in data_giro:
+                for field in nao_giro_fields:
+                    row[field] = ' '
 
-        context.update({
-            'headers_g': headers_g,
-            'data_g': data_giro,
-        })
+            context.update({
+                'headers_g': headers_g,
+                'data_g': data_giro,
+            })
 
         return context
 
