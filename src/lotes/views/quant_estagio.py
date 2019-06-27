@@ -187,7 +187,6 @@ class TotalEstagio(View):
         if total_estoque_giro is not None:
             soma_os_3_totais(total_estoque_giro)
             data_giro.append(total_estoque_giro)
-        pprint(data_giro)
 
         if len(data_giro) > 0:
             total_giro = init_total('Total em giro', data_giro)
