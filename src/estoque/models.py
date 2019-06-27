@@ -220,6 +220,5 @@ def valor(
         filtro_preco_zerado=filtro_preco_zerado,
         filtro_deposito_compras=filtro_deposito_compras,
     )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
