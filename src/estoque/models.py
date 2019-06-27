@@ -107,22 +107,26 @@ def por_deposito(
     return rows_to_dict_list_lower(cursor)
 
 
-def valor(cursor, nivel, positivos, zerados, negativos):
+def valor(cursor, nivel, positivos, zerados, negativos, preco_zerado):
     filtro_nivel = ''
     if nivel is not None:
         filtro_nivel = "AND e.CDITEM_NIVEL99 = {nivel}".format(nivel=nivel)
 
     filtro_positivos = ''
-    if positivos:
+    if positivos == 's':
         filtro_positivos = "OR e.qtde_estoque_atu > 0"
 
     filtro_zerados = ''
-    if zerados:
+    if zerados == 's':
         filtro_zerados = "OR e.qtde_estoque_atu != 0"
 
     filtro_negativos = ''
-    if negativos:
+    if negativos == 's':
         filtro_negativos = "OR e.qtde_estoque_atu < 0"
+
+    filtro_preco_zerado = ''
+    if preco_zerado == 'n':
+        filtro_preco_zerado = "AND rtc.PRECO_CUSTO_INFO != 0"
 
     sql = '''
         SELECT
@@ -159,6 +163,7 @@ def valor(cursor, nivel, positivos, zerados, negativos):
             -- OR e.qtde_estoque_atu < 0
             {filtro_negativos} -- filtro_negativos
           )
+          {filtro_preco_zerado} -- filtro_preco_zerado
           AND 1 = (
             CASE WHEN r.NIVEL_ESTRUTURA = 2 THEN
               CASE WHEN e.DEPOSITO = 202 THEN 1
@@ -187,6 +192,8 @@ def valor(cursor, nivel, positivos, zerados, negativos):
         filtro_positivos=filtro_positivos,
         filtro_zerados=filtro_zerados,
         filtro_negativos=filtro_negativos,
+        filtro_preco_zerado=filtro_preco_zerado,
     )
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
