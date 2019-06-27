@@ -17,7 +17,7 @@
 </form>
 {% if nivel == '2' %}
   <h4>Nível: 2 = Tecidos/malhas</h4>
-{% else %}
+{% elif nivel == '9' %}
   <h4>Nível: 9 = Demais materiais</h4>
 {% endif %}
 {% if positivos == 'n' %}
@@ -38,7 +38,7 @@
 {% endif %}
 {% if deposito_compras == 'a' %}
   <h4>Apenas os depósitos indicados pelo Compras</h4>
-{% else %}
+{% elif deposito_compras == 't' %}
   <h4>Todos os depósitos</h4>
 {% endif %}
 {% if erro %}
