@@ -84,3 +84,56 @@ class PorDeposito(View):
                 cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class ValorMp(View):
+    Form_class = forms.ValorForm
+    template_name = 'estoque/valor_mp.html'
+    title_name = 'Valor de estoque'
+
+    def mount_context(self, cursor, nivel, positivos, zerados, negativos):
+        context = {
+            'nivel': nivel,
+        }
+
+        data = models.valor(cursor, nivel, positivos, zerados, negativos)
+        if len(data) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
+
+        context.update({
+            'headers': ('Nível', 'Referência', 'Tamanho', 'Cor',
+                        'Conta estoque', 'Depósito',
+                        'Quantidade', 'Preço', 'Total'),
+            'fields': ('nivel', 'ref', 'tam', 'cor',
+                       'conta_estoque', 'deposito',
+                       'qtd', 'preco', 'total'),
+            'style': {
+                7: 'text-align: right;',
+                8: 'text-align: right;',
+                9: 'text-align: right;',
+            },
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            nivel = form.cleaned_data['nivel']
+            positivos = form.cleaned_data['positivos']
+            zerados = form.cleaned_data['zerados']
+            negativos = form.cleaned_data['negativos']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(
+                cursor, nivel, positivos, zerados, negativos))
+        context['form'] = form
+        return render(request, self.template_name, context)
