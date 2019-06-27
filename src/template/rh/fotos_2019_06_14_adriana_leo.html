@@ -1,0 +1,26 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<h4>A empresa Cuecas D'UOMO parabeniza a nossa Supervisora Adriana Martins e o Assistente de Produção Leonardo Andrade, por terem concluído o curso de Técnico em Logística.</h4>
+<h4>Temos orgulho de ter em nossa equipe profissionais como vocês, que sonham os nossos sonhos e se dedicaram durante 12 meses em uma jornada de estudos, obrigada pela dedicação e empenho, o esforço de vocês foi fundamental para que juntos os nossos objetivos sejam alcançados.</h4>
+<h4>Parabéns e Muito Sucesso!</h4>
+<p>
+  <a target="_blank" href="/media/rh/fotos/2019_06_14_adriana_leo/Adriana_e_Leo.jpg"><img src="/media/rh/fotos/2019_06_14_adriana_leo/thumb.Adriana_e_Leo.jpg"></a>
+  <a target="_blank" href="/media/rh/fotos/2019_06_14_adriana_leo/certificado_adriana_w780.jpg"><img src="/media/rh/fotos/2019_06_14_adriana_leo/thumb.certificado_adriana.jpg"></a>
+  <a target="_blank" href="/media/rh/fotos/2019_06_14_adriana_leo/certificado_leonardo_w780.jpg"><img src="/media/rh/fotos/2019_06_14_adriana_leo/thumb.certificado_leonardo.jpg"></a>
+</p>
+</center>
+{% endblock %}
