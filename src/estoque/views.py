@@ -94,7 +94,8 @@ class ValorMp(View):
     title_name = 'Valor de estoque'
 
     def mount_context(
-            self, cursor, nivel, positivos, zerados, negativos, preco_zerado):
+            self, cursor, nivel, positivos, zerados, negativos, preco_zerado,
+            deposito_compras):
         context = {
             'nivel': nivel,
             'positivos': positivos,
@@ -104,7 +105,8 @@ class ValorMp(View):
         }
 
         data = models.valor(
-            cursor, nivel, positivos, zerados, negativos, preco_zerado)
+            cursor, nivel, positivos, zerados, negativos, preco_zerado,
+            deposito_compras)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
@@ -153,8 +155,10 @@ class ValorMp(View):
             zerados = form.cleaned_data['zerados']
             negativos = form.cleaned_data['negativos']
             preco_zerado = form.cleaned_data['preco_zerado']
+            deposito_compras = form.cleaned_data['deposito_compras']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, nivel, positivos, zerados, negativos, preco_zerado))
+                cursor, nivel, positivos, zerados, negativos, preco_zerado,
+                deposito_compras))
         context['form'] = form
         return render(request, self.template_name, context)

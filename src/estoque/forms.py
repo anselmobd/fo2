@@ -105,3 +105,11 @@ class ValorForm(forms.Form):
     preco_zerado = forms.ChoiceField(
         label='Preço zerado',
         choices=CHOICES, initial='n')
+
+    CHOICES = [
+        ('a', 'Apenas os depósitos indicados pelo Compras'),
+        ('t', 'Todos os depósitos'),
+    ]
+    deposito_compras = forms.ChoiceField(
+        label='Quanto aos depósitos',
+        choices=CHOICES, initial='a')

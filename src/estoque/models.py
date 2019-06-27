@@ -107,7 +107,9 @@ def por_deposito(
     return rows_to_dict_list_lower(cursor)
 
 
-def valor(cursor, nivel, positivos, zerados, negativos, preco_zerado):
+def valor(
+        cursor, nivel, positivos, zerados, negativos, preco_zerado,
+        deposito_compras):
     filtro_nivel = ''
     if nivel is not None:
         filtro_nivel = "AND e.CDITEM_NIVEL99 = {nivel}".format(nivel=nivel)
@@ -127,6 +129,28 @@ def valor(cursor, nivel, positivos, zerados, negativos, preco_zerado):
     filtro_preco_zerado = ''
     if preco_zerado == 'n':
         filtro_preco_zerado = "AND rtc.PRECO_CUSTO_INFO != 0"
+
+    filtro_deposito_compras = ''
+    if deposito_compras == 'a':
+        filtro_deposito_compras = """
+            AND 1 = (
+              CASE WHEN r.NIVEL_ESTRUTURA = 2 THEN
+             CASE WHEN e.DEPOSITO = 202 THEN 1
+             ELSE 0 END
+              WHEN r.NIVEL_ESTRUTURA = 9 THEN
+             CASE WHEN r.CONTA_ESTOQUE = 22 THEN
+               CASE WHEN e.DEPOSITO = 212 THEN 1
+               ELSE 0 END
+             ELSE
+               CASE WHEN e.DEPOSITO = 231 THEN 1
+               ELSE 0 END
+             END
+              ELSE -- i.NIVEL_ESTRUTURA = 1
+             CASE WHEN e.DEPOSITO in (101, 102) THEN 1
+             ELSE 0 END
+              END
+            )
+        """
 
     sql = '''
         SELECT
@@ -164,23 +188,24 @@ def valor(cursor, nivel, positivos, zerados, negativos, preco_zerado):
             {filtro_negativos} -- filtro_negativos
           )
           {filtro_preco_zerado} -- filtro_preco_zerado
-          AND 1 = (
-            CASE WHEN r.NIVEL_ESTRUTURA = 2 THEN
-              CASE WHEN e.DEPOSITO = 202 THEN 1
-              ELSE 0 END
-            WHEN r.NIVEL_ESTRUTURA = 9 THEN
-              CASE WHEN r.CONTA_ESTOQUE = 22 THEN
-                CASE WHEN e.DEPOSITO = 212 THEN 1
-                ELSE 0 END
-              ELSE
-                CASE WHEN e.DEPOSITO = 231 THEN 1
-                ELSE 0 END
-              END
-            ELSE -- i.NIVEL_ESTRUTURA = 1
-              CASE WHEN e.DEPOSITO in (101, 102) THEN 1
-              ELSE 0 END
-            END
-          )
+          -- AND 1 = (
+          --   CASE WHEN r.NIVEL_ESTRUTURA = 2 THEN
+          --     CASE WHEN e.DEPOSITO = 202 THEN 1
+          --     ELSE 0 END
+          --   WHEN r.NIVEL_ESTRUTURA = 9 THEN
+          --     CASE WHEN r.CONTA_ESTOQUE = 22 THEN
+          --       CASE WHEN e.DEPOSITO = 212 THEN 1
+          --       ELSE 0 END
+          --     ELSE
+          --       CASE WHEN e.DEPOSITO = 231 THEN 1
+          --       ELSE 0 END
+          --     END
+          --   ELSE -- i.NIVEL_ESTRUTURA = 1
+          --     CASE WHEN e.DEPOSITO in (101, 102) THEN 1
+          --     ELSE 0 END
+          --   END
+          -- )
+          {filtro_deposito_compras} -- filtro_deposito_compras
         ORDER BY
           e.CDITEM_NIVEL99
         , e.cditem_grupo
@@ -193,6 +218,7 @@ def valor(cursor, nivel, positivos, zerados, negativos, preco_zerado):
         filtro_zerados=filtro_zerados,
         filtro_negativos=filtro_negativos,
         filtro_preco_zerado=filtro_preco_zerado,
+        filtro_deposito_compras=filtro_deposito_compras,
     )
     print(sql)
     cursor.execute(sql)
