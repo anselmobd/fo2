@@ -87,8 +87,8 @@ class ValorForm(forms.Form):
     #     widget=forms.TextInput(attrs={'type': 'number',
     #                            'autofocus': 'autofocus'}))
     CHOICES = [
-        ('2', '2 = Tecidos/malhas'),
-        ('9', '9 = Demais materiais'),
+        ('2', '2 - Tecidos/malhas'),
+        ('9', '9 - Demais materiais'),
     ]
     nivel = forms.ChoiceField(
         label='Nível',

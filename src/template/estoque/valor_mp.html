@@ -15,31 +15,47 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if nivel == '2' %}
-  <h4>Nível: 2 = Tecidos/malhas</h4>
-{% elif nivel == '9' %}
-  <h4>Nível: 9 = Demais materiais</h4>
-{% endif %}
-{% if positivos == 'n' %}
-  <h4>Não apresenta quantidades positivas</h4>
-{% endif %}
-{% if zerados == 'n' and negativos == 'n' %}
-  <h4>Não apresenta quantidades zeradas nem negativas</h4>
-{% else %}
-  {% if zerados == 'n' %}
-    <h4>Não apresenta quantidades zeradas</h4>
+{% if request.POST %}
+  <h4>Filtro:</h4>
+  <ul>
+  {% if nivel == '2' %}
+    <li>Nível: 2 - Tecidos/malhas</li>
+  {% else %}
+    <li>Nível: 9 - Demais materiais</li>
   {% endif %}
-  {% if negativos == 'n' %}
-    <h4>Não apresenta quantidades negativas</h4>
+  {% if positivos == 'n' %}
+    <li>Não apresenta quantidades positivas</li>
   {% endif %}
-{% endif %}
-{% if preco_zerado == 'n' %}
-  <h4>Não apresenta preços zerados</h4>
-{% endif %}
-{% if deposito_compras == 'a' %}
-  <h4>Apenas os depósitos indicados pelo Compras</h4>
-{% elif deposito_compras == 't' %}
-  <h4>Todos os depósitos</h4>
+  {% if zerados == 'n' and negativos == 'n' %}
+    <li>Não apresenta quantidades zeradas nem negativas</li>
+  {% else %}
+    {% if zerados == 'n' %}
+      <li>Não apresenta quantidades zeradas</li>
+    {% endif %}
+    {% if negativos == 'n' %}
+      <li>Não apresenta quantidades negativas</li>
+    {% endif %}
+  {% endif %}
+  {% if preco_zerado == 'n' %}
+    <li>Não apresenta preços zerados</li>
+  {% endif %}
+  {% if deposito_compras == 'a' %}
+    <li>Apenas os depósitos indicados pelo Compras:</li>
+    <ul>
+    {% if nivel == '2' %}
+      <li>Para insumos do nível 2: "202 - TECIDOS ESTOQUE"</li>
+    {% elif nivel == '9' %}
+      <li>Para insumos do nível 9:</li>
+      <ul>
+        <li>Da conta de estoque "22 - FIOS": "212 - FIO TECELAGEM ESTOQUE"</li>
+        <li>De outra conta de estoque: "231 - MAT PRIMA ESTOQUE"</li>
+      </ul>
+    {% endif %}
+    </ul>
+  {% elif deposito_compras == 't' %}
+    <li>Todos os depósitos</li>
+  {% endif %}
+  </ul>
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
