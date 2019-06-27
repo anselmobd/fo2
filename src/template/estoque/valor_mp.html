@@ -15,8 +15,10 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if nivel %}
-  <h4>Nível: {{ nivel }}</h4>
+{% if nivel == '2' %}
+  <h4>Nível: 2 = Tecidos/malhas</h4>
+{% else %}
+  <h4>Nível: 9 = Demais materiais</h4>
 {% endif %}
 {% if positivos == 'n' %}
   <h4>Não apresenta quantidades positivas</h4>

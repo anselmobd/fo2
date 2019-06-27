@@ -1,5 +1,5 @@
 from django import forms
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 
 import geral
 
@@ -71,21 +71,28 @@ class PorDepositoForm(forms.Form):
         return cor
 
 
-def validate_nivel_mp(value):
-    if value != 2 and value != 9:
-        raise ValidationError(
-            '%(value)s não é nível de MP',
-            params={'value': value},
-        )
+# def validate_nivel_mp(value):
+#     if value != 2 and value != 9:
+#         raise ValidationError(
+#             '%(value)s não é nível de MP',
+#             params={'value': value},
+#         )
 
 
 class ValorForm(forms.Form):
-    nivel = forms.IntegerField(
-        label='Nível', required=False,
-        help_text='2=Tecidos/malhas, 9=Demais materiais',
-        validators=[validate_nivel_mp],
-        widget=forms.TextInput(attrs={'type': 'number',
-                               'autofocus': 'autofocus'}))
+    # nivel = forms.IntegerField(
+    #     label='Nível', required=False,
+    #     help_text='2=Tecidos/malhas, 9=Demais materiais',
+    #     validators=[validate_nivel_mp],
+    #     widget=forms.TextInput(attrs={'type': 'number',
+    #                            'autofocus': 'autofocus'}))
+    CHOICES = [
+        ('2', '2 = Tecidos/malhas'),
+        ('9', '9 = Demais materiais'),
+    ]
+    nivel = forms.ChoiceField(
+        label='Nível',
+        choices=CHOICES, initial='a')
 
     CHOICES = [('s', 'Sim'),
                ('n', 'Não'),
