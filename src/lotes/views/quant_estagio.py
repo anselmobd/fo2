@@ -122,10 +122,11 @@ class TotalEstagio(View):
 
         data_p = [
             r for r in data if r['CODIGO_ESTAGIO'] in estagio_programacao]
-        red_columns(data_p[0])
-        context.update({
-            'data_p': data_p,
-        })
+        if len(data_p) > 0:
+            red_columns(data_p[0])
+            context.update({
+                'data_p': data_p,
+            })
 
         data_d = [
             r for r in data if r['CODIGO_ESTAGIO'] not in estagio_nao_producao]
@@ -154,10 +155,11 @@ class TotalEstagio(View):
 
         data_v = [
             r for r in data if r['CODIGO_ESTAGIO'] in estagio_vendido]
-        red_columns(data_v[0])
-        context.update({
-            'data_v': data_v,
-        })
+        if len(data_v) > 0:
+            red_columns(data_v[0])
+            context.update({
+                'data_v': data_v,
+            })
 
         total_geral = init_total('Total geral', data)
         soma_fields(total_geral, data, quant_fields)
