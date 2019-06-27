@@ -91,16 +91,17 @@ class ValorForm(forms.Form):
                ('n', 'Não'),
                ]
     positivos = forms.ChoiceField(
+        label='Quantidade positiva',
         choices=CHOICES, initial='s')
 
-    CHOICES = [('s', 'Sim'),
-               ('n', 'Não'),
-               ]
     zerados = forms.ChoiceField(
+        label='Quantidade zerada',
         choices=CHOICES, initial='n')
 
-    CHOICES = [('s', 'Sim'),
-               ('n', 'Não'),
-               ]
     negativos = forms.ChoiceField(
+        label='Quantidade negativa',
+        choices=CHOICES, initial='n')
+
+    preco_zerado = forms.ChoiceField(
+        label='Preço zerado',
         choices=CHOICES, initial='n')
