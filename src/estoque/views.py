@@ -102,6 +102,7 @@ class ValorMp(View):
             'zerados': zerados,
             'negativos': negativos,
             'preco_zerado': preco_zerado,
+            'deposito_compras': deposito_compras,
         }
 
         data = models.valor(

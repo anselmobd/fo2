@@ -18,6 +18,27 @@
 {% if nivel %}
   <h4>Nível: {{ nivel }}</h4>
 {% endif %}
+{% if positivos == 'n' %}
+  <h4>Não apresenta quantidades positivas</h4>
+{% endif %}
+{% if zerados == 'n' and negativos == 'n' %}
+  <h4>Não apresenta quantidades zeradas nem negativas</h4>
+{% else %}
+  {% if zerados == 'n' %}
+    <h4>Não apresenta quantidades zeradas</h4>
+  {% endif %}
+  {% if negativos == 'n' %}
+    <h4>Não apresenta quantidades negativas</h4>
+  {% endif %}
+{% endif %}
+{% if preco_zerado == 'n' %}
+  <h4>Não apresenta preços zerados</h4>
+{% endif %}
+{% if deposito_compras == 'a' %}
+  <h4>Apenas os depósitos indicados pelo Compras</h4>
+{% else %}
+  <h4>Todos os depósitos</h4>
+{% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% endif %}
