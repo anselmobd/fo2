@@ -101,7 +101,7 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito):
             AND r.CGC_CLIENTE_9 = {}'''.format(cnpj9)
 
     filtro_deposito = ''
-    if deposito is not None:
+    if deposito is not None and deposito != '':
         filtro_deposito = '''--
             AND o.DEPOSITO_ENTRADA = {}'''.format(deposito)
 
