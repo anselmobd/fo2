@@ -91,7 +91,6 @@ class EstoqueDesejado(O2BaseGetView):
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
                 colecao=None, cliente=None, por='cor', modelo=modref)
-            pprint(data_periodo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['cor'] == row['cor']),
@@ -122,7 +121,6 @@ class EstoqueDesejado(O2BaseGetView):
                 self.cursor, ref=None, periodo=periodo['range'],
                 colecao=None, cliente=None, por='tam', modelo=modref,
                 order_qtd=False)
-            pprint(data_periodo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['tam'] == row['tam']),
@@ -152,7 +150,6 @@ class EstoqueDesejado(O2BaseGetView):
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
                 colecao=None, cliente=None, por='ref', modelo=modref)
-            pprint(data_periodo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['ref'] == row['ref']),
