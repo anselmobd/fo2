@@ -256,6 +256,5 @@ def get_vendas(
         group_por=group_por,
         order=order,
     )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
