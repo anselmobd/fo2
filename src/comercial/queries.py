@@ -126,13 +126,14 @@ def get_vendas(
     ini_mes = hoje - timedelta(days=hoje.day-1)
     filtra_periodo = ''
     if periodo is not None:
-        if periodo == '3m+':
+        periodo_de = ''
+        if periodo == '3+':
             ini_periodo = dec_months(ini_mes, 3)
-        elif periodo == '6m+':
+        elif periodo == '6+':
             ini_periodo = dec_months(ini_mes, 6)
-        elif periodo == '12m+':
+        elif periodo == '12+':
             ini_periodo = dec_months(ini_mes, 12)
-        elif periodo == '24m+':
+        elif periodo == '24+':
             ini_periodo = dec_months(ini_mes, 24)
         filtra_periodo = "  AND v.dt >= TO_DATE('{}', 'yyyy-mm-dd')".format(
             ini_periodo.strftime('%Y-%m-%d'))
