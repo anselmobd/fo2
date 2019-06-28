@@ -96,7 +96,8 @@ def ficha_cliente(cnpj):
 
 
 def get_vendas(
-        cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None):
+        cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
+        modelo=None):
     select_col = ''
     filtra_col = ''
     group_col = ''
@@ -121,6 +122,13 @@ def get_vendas(
         filtra_ref = "AND v.REF = '{}'".format(ref)
         group_ref = ", v.REF"
         order_ref = ", v.REF"
+
+    filtra_modelo = ''
+    pre_filtra_modelo = ''
+    if modelo is not None:
+        filtra_modelo = "AND v.MODELO = '{}'".format(modelo)
+        pre_filtra_modelo = \
+            "AND inf.GRUPO_ESTRUTURA LIKE '%{}%'".format(modelo)
 
     hoje = datetime.now().date()
     ini_mes = hoje - timedelta(days=hoje.day-1)
@@ -201,6 +209,7 @@ def get_vendas(
               )
           AND nf.SITUACAO_NFISC = 1
           AND fe.DOCUMENTO IS NULL
+          {pre_filtra_modelo} -- pre_filtra_modelo
         ORDER BY
         --  nf.NATOP_NF_NAT_OPER DESC
         --,
@@ -222,6 +231,7 @@ def get_vendas(
         --  AND v.MODELO = '417'
           {filtra_cliente} -- filtra_cliente
           {filtra_col} -- filtra_col
+          {filtra_modelo} -- filtra_modelo
           {filtra_ref} -- filtra_ref
           {filtra_periodo} -- filtra_periodo
         GROUP BY
@@ -245,8 +255,10 @@ def get_vendas(
         select_col=select_col,
         select_ref=select_ref,
         select_por=select_por,
+        pre_filtra_modelo=pre_filtra_modelo,
         filtra_cliente=filtra_cliente,
         filtra_col=filtra_col,
+        filtra_modelo=filtra_modelo,
         filtra_ref=filtra_ref,
         filtra_periodo=filtra_periodo,
         group_col=group_col,
