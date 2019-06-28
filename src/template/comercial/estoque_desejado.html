@@ -16,6 +16,8 @@
     <h4>{{ msg_erro }}</h4>
   {% endif %}
   {% if modref %}
+    <a href="{% url 'comercial:estoque_desejado' %}">Voltar para a lista de modelos</a><br />
+    <a href="{% url 'comercial:ponderacao' %}" target="_blank">Visualiza ponderação aplicada</a>
     <h3>Modelo {{ modref }}</h3>
   {% else %}
     <h3>Selecione o modelo a detalhar</h3>
@@ -56,7 +58,7 @@
   {% endif %}
   {% if do_modelo %}
     {% if do_modelo.data %}
-      <h4>Médias mensais das quantidades faturadas nos períodos de ponderação</h4>
+      <h3>Médias mensais das quantidades faturadas nos períodos de ponderação</h3>
       <h4>Do modelo</h4>
       <table>
         {% include "layout/thead_generic.html" with data=do_modelo.headers style=do_modelo.style only %}
