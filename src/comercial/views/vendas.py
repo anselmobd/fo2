@@ -56,7 +56,7 @@ class VendasPor(O2BaseGetPostView):
             'cliente': cliente,
         })
 
-        self.periodos = ['3m+', '6m+', '12m+', '24m+']
+        self.periodos = ['3+', '6+', '12+', '24+']
         self.periodos_descr = ['3 meses', '6 meses', '1 ano', '2 anos']
 
         grades = []
