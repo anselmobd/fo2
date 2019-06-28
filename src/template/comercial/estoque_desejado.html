@@ -16,7 +16,7 @@
     <h4>{{ msg_erro }}</h4>
   {% endif %}
   {% if modref %}
-    <a href="{% url 'comercial:estoque_desejado' %}">Voltar para a lista de modelos</a><br />
+    <a href="{% url 'comercial:analise_vendas' %}">Voltar para a lista de modelos</a><br />
     <a href="{% url 'comercial:ponderacao' %}" target="_blank">Visualiza ponderação aplicada</a>
     <h3>Modelo {{ modref }}</h3>
   {% else %}

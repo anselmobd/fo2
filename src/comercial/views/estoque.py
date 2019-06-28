@@ -37,7 +37,7 @@ class EstoqueDesejado(O2BaseGetView):
                         'modelo': row['modelo'],
                         'modelo|TARGET': '_blank',
                         'modelo|LINK': reverse(
-                            'comercial:estoque_desejado__get',
+                            'comercial:analise_vendas__get',
                             args=[row['modelo']]),
                         **zero_data_row
                     }

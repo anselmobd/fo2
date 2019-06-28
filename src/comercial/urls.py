@@ -16,12 +16,12 @@ urlpatterns = [
     url(r'^vendas_tamanho/$', views.vendas.VendasPorTamanho.as_view(),
         name='vendas_tamanho'),
 
-    url(r'^estoque_desejado/$',
+    url(r'^analise_vendas/$',
         views.estoque.EstoqueDesejado.as_view(),
-        name='estoque_desejado'),
-    url(r'^estoque_desejado/(?P<modref>.+)/$',
+        name='analise_vendas'),
+    url(r'^analise_vendas/(?P<modref>.+)/$',
         views.estoque.EstoqueDesejado.as_view(),
-        name='estoque_desejado__get'),
+        name='analise_vendas__get'),
 
     url(r'^ponderacao/$',
         views.estoque.Ponderacao.as_view(),
