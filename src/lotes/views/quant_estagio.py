@@ -78,17 +78,17 @@ class TotalEstagio(View):
         style_r = 'text-align: right;'
         style_bl = 'border-left-style: solid; border-left-width: ' \
             'thin; border-color: lightgray;'
+        style_bl_sep = 'border-left-style: double; border-left-width: ' \
+            'thick; border-color: lightgray;'
         style_b = 'font-weight: bold;'
-        style_number = style_r + style_bl
-        style_total = style_number + style_b
         style = {}
         for i in range(2, 20):
-            style[i] = style_number
-        style.update({
-             7: style_total,
-             13: style_total,
-             19: style_total,
-        })
+            if i in [7, 13, 19]:
+                style[i] = style_r + style_b + style_bl
+            elif i in [8, 14]:
+                style[i] = style_r + style_bl_sep
+            else:
+                style[i] = style_r + style_bl
 
         context.update({
             'headers': headers,
