@@ -126,7 +126,7 @@ def get_vendas(
     ini_mes = hoje - timedelta(days=hoje.day-1)
     filtra_periodo = ''
     if periodo is not None:
-        periodo_list = periodo.split('+')
+        periodo_list = periodo.split(':')
         ini_periodo = dec_months(ini_mes, int(periodo_list[0]))
         filtra_periodo = "  AND v.dt >= TO_DATE('{}', 'yyyy-mm-dd')".format(
             ini_periodo.strftime('%Y-%m-%d'))

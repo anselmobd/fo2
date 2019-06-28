@@ -47,7 +47,7 @@ class EstoqueDesejado(O2BaseGetView):
         coluna = 2
         for row in data:
             periodos.append(
-                ['{}+{}'.format(n_mes+row['meses'], n_mes), row['meses']])
+                ['{}:{}'.format(n_mes+row['meses'], n_mes), row['meses']])
             mes_fim = mes.strftime("%m/%Y")
             mes = dec_months(mes, row['meses']-1)
             mes_ini = mes.strftime("%m/%Y")
