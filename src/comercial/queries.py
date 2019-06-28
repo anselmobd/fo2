@@ -162,7 +162,7 @@ def get_vendas(
         , inf.GRUPO_ESTRUTURA REF
         , TRIM(LEADING '0' FROM
                (REGEXP_REPLACE(inf.GRUPO_ESTRUTURA,
-                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\1'
+                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
                                ))) MODELO
         , inf.SUBGRU_ESTRUTURA TAM
         , inf.ITEM_ESTRUTURA COR
