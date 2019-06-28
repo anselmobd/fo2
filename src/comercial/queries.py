@@ -97,31 +97,37 @@ def ficha_cliente(cnpj):
 
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
-        modelo=None):
+        modelo=None, order_qtd=True):
+
+    if order_qtd:
+        order = '1 DESC'
+    else:
+        order = ''
+
+    def add_order(new_order):
+        nonlocal order
+        sep = "\n, " if order else ''
+        order += sep + new_order
+
     select_col = ''
     filtra_col = ''
     group_col = ''
-    order_col = ''
     if colecao is not None:
         ref = None
         select_col = ", v.COL"
         filtra_col = "AND v.COL = '{}'".format(colecao)
         group_col = ", v.COL"
-        order_col = ", v.COL"
+        add_order('v.COL')
 
     filtra_cliente = ''
     if cliente is not None:
         filtra_cliente = "AND v.CNPJ9 = '{}'".format(cliente)
 
-    select_ref = ''
     filtra_ref = ''
-    group_ref = ''
-    order_ref = ''
+    pre_filtra_ref = ''
     if ref is not None:
-        select_ref = ", v.REF"
         filtra_ref = "AND v.REF = '{}'".format(ref)
-        group_ref = ", v.REF"
-        order_ref = ", v.REF"
+        pre_filtra_ref = "AND inf.GRUPO_ESTRUTURA = '{}'".format(ref)
 
     filtra_modelo = ''
     pre_filtra_modelo = ''
@@ -146,19 +152,22 @@ def get_vendas(
 
     select_por = ''
     group_por = ''
-    order_por = ''
-    if por == 'cor':
-        select_por = ", v.COR"
-        group_por = ", v.COR"
-        order_por = ", v.COR"
-    elif por == 'tam':
-        select_por = ", v.TAM"
-        group_por = ", v.TAM"
-        order_por = ", v.TAM"
-    elif por == 'modelo':
+    if por == 'modelo':
         select_por = ", v.MODELO"
         group_por = ", v.MODELO"
-        order_por = ", v.MODELO"
+        add_order('v.MODELO')
+    elif por == 'ref':
+        select_por = ", v.REF"
+        group_por = ", v.REF"
+        add_order('v.REF')
+    elif por == 'cor':
+        select_por = ", v.COR"
+        group_por = ", v.COR"
+        add_order('v.COR')
+    elif por == 'tam':
+        select_por = ", v.TAM"
+        group_por = ", t.ORDEM_TAMANHO\n, v.TAM"
+        add_order('t.ORDEM_TAMANHO, v.TAM')
 
     sql = """
         WITH vendido AS
@@ -210,25 +219,17 @@ def get_vendas(
           AND nf.SITUACAO_NFISC = 1
           AND fe.DOCUMENTO IS NULL
           {pre_filtra_modelo} -- pre_filtra_modelo
-        ORDER BY
-        --  nf.NATOP_NF_NAT_OPER DESC
-        --,
-          nf.NUM_NOTA_FISCAL DESC
-        , inf.SEQ_ITEM_NFISC
+          {pre_filtra_ref} -- pre_filtra_ref
         )
         SELECT
           sum(v.qtd) qtd
-        --, v.COLECAO
-        --, v.MODELO
           {select_col} -- select_col
-          {select_ref} -- select_ref
-        --, v.COR
           {select_por} -- select_por
         FROM vendido v
+        LEFT JOIN BASI_220 t
+          ON t.TAMANHO_REF = v.TAM
         WHERE 1=1
-        --  AND v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
-        --  AND v.COL = 1
-        --  AND v.MODELO = '417'
+          -- AND v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
           {filtra_cliente} -- filtra_cliente
           {filtra_col} -- filtra_col
           {filtra_modelo} -- filtra_modelo
@@ -236,37 +237,25 @@ def get_vendas(
           {filtra_periodo} -- filtra_periodo
         GROUP BY
           1
-        --  v.COLECAO
-        --, v.MODELO
-        {group_col} -- group_col
-        {group_ref} -- group_ref
-        --, v.COR
-        {group_por} -- group_por
+          {group_col} -- group_col
+          {group_por} -- group_por
         ORDER BY
-          1 DESC
-        --, v.COLECAO
-        --, v.MODELO
-        {order_col} -- order_col
-        {order_ref} -- order_ref
-        --, v.COR
-        {order_por} -- order_por
+          {order} -- order
     """
     sql = sql.format(
         select_col=select_col,
-        select_ref=select_ref,
         select_por=select_por,
         pre_filtra_modelo=pre_filtra_modelo,
+        pre_filtra_ref=pre_filtra_ref,
         filtra_cliente=filtra_cliente,
         filtra_col=filtra_col,
         filtra_modelo=filtra_modelo,
         filtra_ref=filtra_ref,
         filtra_periodo=filtra_periodo,
         group_col=group_col,
-        group_ref=group_ref,
         group_por=group_por,
-        order_col=order_col,
-        order_ref=order_ref,
-        order_por=order_por,
+        order=order,
     )
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
