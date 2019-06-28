@@ -27,4 +27,31 @@
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
   {% endif %}
+  {% if por_cor %}
+    {% if por_cor.data %}
+      <h4>Por cor</h4>
+      <table>
+        {% include "layout/thead_generic.html" with data=por_cor.headers style=por_cor.style only %}
+        {% include "layout/tbody_generic.html" with fields=por_cor.fields data=por_cor.data style=por_cor.style only %}
+      </table>
+    {% endif %}
+  {% endif %}
+  {% if por_tam %}
+    {% if por_tam.data %}
+      <h4>Por tamanho</h4>
+      <table>
+        {% include "layout/thead_generic.html" with data=por_tam.headers style=por_tam.style only %}
+        {% include "layout/tbody_generic.html" with fields=por_tam.fields data=por_tam.data style=por_tam.style only %}
+      </table>
+    {% endif %}
+  {% endif %}
+  {% if por_ref %}
+    {% if por_ref.data %}
+      <h4>Por referência</h4>
+      <table>
+        {% include "layout/thead_generic.html" with data=por_ref.headers style=por_ref.style only %}
+        {% include "layout/tbody_generic.html" with fields=por_ref.fields data=por_ref.data style=por_ref.style only %}
+      </table>
+    {% endif %}
+  {% endif %}
 {% endblock %}

@@ -84,7 +84,96 @@ class EstoqueDesejado(O2BaseGetView):
             'style': self.style,
         })
 
+        # Por cor
+        data = []
+        zero_data_row = {p['range']: 0 for p in self.periodos}
+        for periodo in self.periodos:
+            data_periodo = queries.get_vendas(
+                self.cursor, ref=None, periodo=periodo['range'],
+                colecao=None, cliente=None, por='cor', modelo=modref)
+            pprint(data_periodo)
+            for row in data_periodo:
+                data_row = next(
+                    (dr for dr in data if dr['cor'] == row['cor']),
+                    False)
+                if not data_row:
+                    data_row = {
+                        'cor': row['cor'],
+                        'cor|LINK': reverse(
+                            'comercial:estoque_desejado__get',
+                            args=[row['cor']]),
+                        **zero_data_row
+                    }
+                    data.append(data_row)
+                data_row[periodo['range']] = round(
+                    row['qtd'] / periodo['meses'])
+        self.context['por_cor'] = {
+            'headers': ['Cor', *[p['descr'] for p in self.periodos]],
+            'fields': ['cor', *[p['range'] for p in self.periodos]],
+            'data': data,
+            'style': self.style,
+        }
 
+        # Por tamanho
+        data = []
+        zero_data_row = {p['range']: 0 for p in self.periodos}
+        for periodo in self.periodos:
+            data_periodo = queries.get_vendas(
+                self.cursor, ref=None, periodo=periodo['range'],
+                colecao=None, cliente=None, por='tam', modelo=modref,
+                order_qtd=False)
+            pprint(data_periodo)
+            for row in data_periodo:
+                data_row = next(
+                    (dr for dr in data if dr['tam'] == row['tam']),
+                    False)
+                if not data_row:
+                    data_row = {
+                        'tam': row['tam'],
+                        'tam|LINK': reverse(
+                            'comercial:estoque_desejado__get',
+                            args=[row['tam']]),
+                        **zero_data_row
+                    }
+                    data.append(data_row)
+                data_row[periodo['range']] = round(
+                    row['qtd'] / periodo['meses'])
+        self.context['por_tam'] = {
+            'headers': ['Tamanho', *[p['descr'] for p in self.periodos]],
+            'fields': ['tam', *[p['range'] for p in self.periodos]],
+            'data': data,
+            'style': self.style,
+        }
+
+        # Por referência
+        data = []
+        zero_data_row = {p['range']: 0 for p in self.periodos}
+        for periodo in self.periodos:
+            data_periodo = queries.get_vendas(
+                self.cursor, ref=None, periodo=periodo['range'],
+                colecao=None, cliente=None, por='ref', modelo=modref)
+            pprint(data_periodo)
+            for row in data_periodo:
+                data_row = next(
+                    (dr for dr in data if dr['ref'] == row['ref']),
+                    False)
+                if not data_row:
+                    data_row = {
+                        'ref': row['ref'],
+                        'ref|LINK': reverse(
+                            'comercial:estoque_desejado__get',
+                            args=[row['ref']]),
+                        **zero_data_row
+                    }
+                    data.append(data_row)
+                data_row[periodo['range']] = round(
+                    row['qtd'] / periodo['meses'])
+        self.context['por_ref'] = {
+            'headers': ['Referência', *[p['descr'] for p in self.periodos]],
+            'fields': ['ref', *[p['range'] for p in self.periodos]],
+            'data': data,
+            'style': self.style,
+        }
 
     def mount_context(self):
         modref = None
