@@ -1,6 +1,7 @@
 from pprint import pprint
 from datetime import datetime, timedelta
 
+from django.urls import reverse
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
@@ -20,60 +21,70 @@ class EstoqueDesejado(O2BaseGetView):
         self.title_name = 'Estoque desejado'
 
     def mount_context_inicial(self):
-        hoje = datetime.today()
-        mes = dec_month(hoje, 1)
-        n_mes = 0
-        periodos = []
-        periodos_descr = []
-        style = {}
-        coluna = 2
-        for row in self.data_nfs:
-            periodos.append(
-                ['{}:{}'.format(n_mes+row['meses'], n_mes), row['meses']])
-            mes_fim = mes.strftime("%m/%Y")
-            mes = dec_months(mes, row['meses']-1)
-            mes_ini = mes.strftime("%m/%Y")
-            mes = dec_month(mes)
-            if row['meses'] == 1:
-                periodos_descr.append(mes_ini)
-            else:
-                periodos_descr.append('{} - {}'.format(mes_fim, mes_ini))
-            n_mes += row['meses']
-            style[coluna] = 'text-align: right;'
-            coluna += 1
-
-        self.cursor = connections['so'].cursor()
-
         data = []
-        zero_data_row = {p[0]: 0 for p in periodos}
+        zero_data_row = {p['range']: 0 for p in self.periodos}
         total_data_row = zero_data_row.copy()
-        for periodo in periodos:
+        for periodo in self.periodos:
             data_periodo = queries.get_vendas(
-                self.cursor, ref=None, periodo=periodo[0], colecao=None,
-                cliente=None, por='modelo')
+                self.cursor, ref=None, periodo=periodo['range'],
+                colecao=None, cliente=None, por='modelo')
             for row in data_periodo:
-                data_row = [dr for dr in data if dr['modelo'] == row['modelo']]
-                if len(data_row) == 0:
-                    data.append({
+                data_row = next(
+                    (dr for dr in data if dr['modelo'] == row['modelo']),
+                    False)
+                if not data_row:
+                    data_row = {
                         'modelo': row['modelo'],
+                        'modelo|LINK': reverse(
+                            'comercial:estoque_desejado__get',
+                            args=[row['modelo']]),
                         **zero_data_row
-                    })
-                    data_row = data[len(data)-1]
-                else:
-                    data_row = data_row[0]
-                data_row[periodo[0]] = round(row['qtd'] / periodo[1])
-                total_data_row[periodo[0]] += row['qtd']
+                    }
+                    data.append(data_row)
+                data_row[periodo['range']] = round(
+                    row['qtd'] / periodo['meses'])
+                total_data_row[periodo['range']] += row['qtd']
         self.context.update({
-            'headers': ['Modelo', *periodos_descr],
-            'fields': ['modelo', *[p[0] for p in periodos]],
+            'headers': ['Modelo', *[p['descr'] for p in self.periodos]],
+            'fields': ['modelo', *[p['range'] for p in self.periodos]],
             'data': data,
-            'style': style,
+            'style': self.style,
         })
 
     def mount_context_modelo(self, modref):
         self.context.update({
             'modref': modref,
         })
+
+        data = []
+        zero_data_row = {p['range']: 0 for p in self.periodos}
+        for periodo in self.periodos:
+            data_periodo = queries.get_vendas(
+                self.cursor, ref=None, periodo=periodo['range'],
+                colecao=None, cliente=None, por='modelo', modelo=modref)
+            for row in data_periodo:
+                data_row = next(
+                    (dr for dr in data if dr['modelo'] == row['modelo']),
+                    False)
+                if not data_row:
+                    data_row = {
+                        'modelo': row['modelo'],
+                        'modelo|LINK': reverse(
+                            'comercial:estoque_desejado__get',
+                            args=[row['modelo']]),
+                        **zero_data_row
+                    }
+                    data.append(data_row)
+                data_row[periodo['range']] = round(
+                    row['qtd'] / periodo['meses'])
+        self.context.update({
+            'headers': ['Modelo', *[p['descr'] for p in self.periodos]],
+            'fields': ['modelo', *[p['range'] for p in self.periodos]],
+            'data': data,
+            'style': self.style,
+        })
+
+
 
     def mount_context(self):
         modref = None
@@ -87,8 +98,34 @@ class EstoqueDesejado(O2BaseGetView):
                 'msg_erro': 'Nenhum período definido',
             })
             return
-
         self.data_nfs = list(nfs)
+
+        self.periodos = []
+        n_mes = 0
+        hoje = datetime.today()
+        mes = dec_month(hoje, 1)
+        self.style = {}
+        for i, row in enumerate(self.data_nfs):
+            periodo = {
+                'range': '{}:{}'.format(n_mes+row['meses'], n_mes),
+                'meses': row['meses'],
+            }
+            n_mes += row['meses']
+
+            mes_fim = mes.strftime("%m/%Y")
+            mes = dec_months(mes, row['meses']-1)
+            mes_ini = mes.strftime("%m/%Y")
+            mes = dec_month(mes)
+            if row['meses'] == 1:
+                periodo['descr'] = mes_ini
+            else:
+                periodo['descr'] = '{} - {}'.format(mes_fim, mes_ini)
+
+            self.style[i+2] = 'text-align: right;'
+
+            self.periodos.append(periodo)
+
+        self.cursor = connections['so'].cursor()
 
         if modref is None:
             self.mount_context_inicial()

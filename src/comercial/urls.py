@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^estoque_desejado/$',
         views.estoque.EstoqueDesejado.as_view(),
         name='estoque_desejado'),
-    url(r'^estoque_desejado/(?P<modref>\d+)/$',
+    url(r'^estoque_desejado/(?P<modref>.+)/$',
         views.estoque.EstoqueDesejado.as_view(),
         name='estoque_desejado__get'),
 
