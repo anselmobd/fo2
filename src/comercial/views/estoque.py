@@ -17,7 +17,7 @@ class EstoqueDesejado(O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
         super(EstoqueDesejado, self).__init__(*args, **kwargs)
-        self.template_name = 'comercial/estoque_desejado.html'
+        self.template_name = 'comercial/analise_vendas.html'
         self.title_name = 'Estoque desejado'
 
     def mount_context_inicial(self):
