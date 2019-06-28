@@ -35,6 +35,7 @@ class EstoqueDesejado(O2BaseGetView):
                 if not data_row:
                     data_row = {
                         'modelo': row['modelo'],
+                        'modelo|TARGET': '_blank',
                         'modelo|LINK': reverse(
                             'comercial:estoque_desejado__get',
                             args=[row['modelo']]),
@@ -150,9 +151,6 @@ class EstoqueDesejado(O2BaseGetView):
                 if not data_row:
                     data_row = {
                         'modelo': row['modelo'],
-                        'modelo|LINK': reverse(
-                            'comercial:estoque_desejado__get',
-                            args=[row['modelo']]),
                         **zero_data_row
                     }
                     data.append(data_row)
@@ -180,9 +178,6 @@ class EstoqueDesejado(O2BaseGetView):
                 if not data_row:
                     data_row = {
                         'tam': row['tam'],
-                        'tam|LINK': reverse(
-                            'comercial:estoque_desejado__get',
-                            args=[row['tam']]),
                         **zero_data_row
                     }
                     data.append(data_row)
@@ -209,9 +204,6 @@ class EstoqueDesejado(O2BaseGetView):
                 if not data_row:
                     data_row = {
                         'cor': row['cor'],
-                        'cor|LINK': reverse(
-                            'comercial:estoque_desejado__get',
-                            args=[row['cor']]),
                         **zero_data_row
                     }
                     data.append(data_row)
@@ -238,9 +230,6 @@ class EstoqueDesejado(O2BaseGetView):
                 if not data_row:
                     data_row = {
                         'ref': row['ref'],
-                        'ref|LINK': reverse(
-                            'comercial:estoque_desejado__get',
-                            args=[row['ref']]),
                         **zero_data_row
                     }
                     data.append(data_row)
