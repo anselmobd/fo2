@@ -118,18 +118,18 @@ def get_vendas(
     if cliente is not None:
         filtra_cliente = "AND v.CNPJ9 = '{}'".format(cliente)
 
-    filtra_ref = ''
-    pre_filtra_ref = ''
-    if ref is not None:
-        filtra_ref = "AND v.REF = '{}'".format(ref)
-        pre_filtra_ref = "AND inf.GRUPO_ESTRUTURA = '{}'".format(ref)
-
     filtra_modelo = ''
     pre_filtra_modelo = ''
     if modelo is not None:
         filtra_modelo = "AND v.MODELO = '{}'".format(modelo)
         pre_filtra_modelo = \
             "AND inf.GRUPO_ESTRUTURA LIKE '%{}%'".format(modelo)
+
+    filtra_ref = ''
+    pre_filtra_ref = ''
+    if ref is not None:
+        filtra_ref = "AND v.REF = '{}'".format(ref)
+        pre_filtra_ref = "AND inf.GRUPO_ESTRUTURA = '{}'".format(ref)
 
     hoje = datetime.now().date()
     ini_mes = hoje - timedelta(days=hoje.day-1)
@@ -169,7 +169,7 @@ def get_vendas(
     elif por == 'tam':
         select_por = ", v.TAM"
         group_por = ", t.ORDEM_TAMANHO\n, v.TAM"
-        add_order('t.ORDEM_TAMANHO, v.TAM')
+        add_order("t.ORDEM_TAMANHO,\n v.TAM")
 
     sql = """
         WITH vendido AS
@@ -232,8 +232,8 @@ def get_vendas(
           ON t.TAMANHO_REF = v.TAM
         WHERE 1=1
           -- AND v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
-          {filtra_cliente} -- filtra_cliente
           {filtra_col} -- filtra_col
+          {filtra_cliente} -- filtra_cliente
           {filtra_modelo} -- filtra_modelo
           {filtra_ref} -- filtra_ref
           {filtra_periodo} -- filtra_periodo
@@ -244,12 +244,12 @@ def get_vendas(
           {order} -- order
     """
     sql = sql.format(
-        select_por=select_por,
         pre_filtra_modelo=pre_filtra_modelo,
         pre_filtra_ref=pre_filtra_ref,
         pre_filtra_periodo=pre_filtra_periodo,
-        filtra_cliente=filtra_cliente,
+        select_por=select_por,
         filtra_col=filtra_col,
+        filtra_cliente=filtra_cliente,
         filtra_modelo=filtra_modelo,
         filtra_ref=filtra_ref,
         filtra_periodo=filtra_periodo,
