@@ -514,6 +514,10 @@ class TotaisEstagioForm(forms.Form):
         help_text='Parte do nome ou início do CNPJ.',
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    deposito = forms.CharField(
+        label='Depósito', required=False, max_length=3,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
     def clean_cliente(self):
         cliente = self.cleaned_data['cliente'].upper()
         data = self.data.copy()

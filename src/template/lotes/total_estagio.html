@@ -29,6 +29,9 @@
   {% if cliente %}
     <h4>Produtos do cliente: ({{ cliente }}) {{ cliente_full }}</h4>
   {% endif %}
+  {% if deposito %}
+    <h4>OPs com depósito de entrada {{ deposito }}</h4>
+  {% endif %}
   <table>
     {% if data_g %}
       <thead>

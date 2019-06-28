@@ -16,9 +16,10 @@ class TotalEstagio(View):
     template_name = 'lotes/total_estagio.html'
     title_name = 'Totais gerais dos estágios'
 
-    def mount_context(self, cursor, tipo_roteiro, cliente):
+    def mount_context(self, cursor, tipo_roteiro, cliente, deposito):
         context = {
             'tipo_roteiro': tipo_roteiro,
+            'deposito': deposito,
         }
 
         if cliente:
@@ -44,7 +45,7 @@ class TotalEstagio(View):
         else:
             cnpj9 = None
 
-        data = models.totais_estagios(cursor, tipo_roteiro, cnpj9)
+        data = models.totais_estagios(cursor, tipo_roteiro, cnpj9, deposito)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem quantidades',
@@ -213,8 +214,10 @@ class TotalEstagio(View):
         context['form'] = form
         tipo_roteiro = 'p'
         cliente = ''
+        deposito = ''
         cursor = connections['so'].cursor()
-        context.update(self.mount_context(cursor, tipo_roteiro, cliente))
+        context.update(
+            self.mount_context(cursor, tipo_roteiro, cliente, deposito))
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -223,8 +226,10 @@ class TotalEstagio(View):
         if form.is_valid():
             tipo_roteiro = form.cleaned_data['tipo_roteiro']
             cliente = form.cleaned_data['cliente']
+            deposito = form.cleaned_data['deposito']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, tipo_roteiro, cliente))
+            context.update(self.mount_context(
+                cursor, tipo_roteiro, cliente, deposito))
         context['form'] = form
         return render(request, self.template_name, context)
 

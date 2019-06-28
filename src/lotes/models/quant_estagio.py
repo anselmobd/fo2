@@ -77,7 +77,7 @@ def quant_estagio(cursor, estagio, ref, tipo):
     return rows_to_dict_list(cursor)
 
 
-def totais_estagios(cursor, tipo_roteiro, cnpj9):
+def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito):
     filtro_tipo_roteiro = ''
     if tipo_roteiro != 't':
         if tipo_roteiro == 'p':
@@ -99,6 +99,11 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
     if cnpj9 is not None:
         filtro_cnpj9 = '''--
             AND r.CGC_CLIENTE_9 = {}'''.format(cnpj9)
+
+    filtro_deposito = ''
+    if deposito is not None:
+        filtro_deposito = '''--
+            AND o.DEPOSITO_ENTRADA = {}'''.format(deposito)
 
     sql = """
         SELECT
@@ -270,8 +275,9 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         WHERE o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
-        {filtro_tipo_roteiro} -- filtro_tipo_roteiro
-        {filtro_cnpj9} -- filtro_cnpj9
+          {filtro_tipo_roteiro} -- filtro_tipo_roteiro
+          {filtro_cnpj9} -- filtro_cnpj9
+          {filtro_deposito} -- filtro_deposito
         GROUP BY
           l.CODIGO_ESTAGIO
         , e.DESCRICAO
@@ -282,6 +288,7 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9):
     """.format(
         filtro_tipo_roteiro=filtro_tipo_roteiro,
         filtro_cnpj9=filtro_cnpj9,
+        filtro_deposito=filtro_deposito,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
