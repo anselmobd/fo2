@@ -109,15 +109,10 @@ def get_vendas(
         sep = "\n, " if order else ''
         order += sep + new_order
 
-    select_col = ''
     filtra_col = ''
-    group_col = ''
     if colecao is not None:
         ref = None
-        select_col = ", v.COL"
         filtra_col = "AND v.COL = '{}'".format(colecao)
-        group_col = ", v.COL"
-        add_order('v.COL')
 
     filtra_cliente = ''
     if cliente is not None:
@@ -139,15 +134,22 @@ def get_vendas(
     hoje = datetime.now().date()
     ini_mes = hoje - timedelta(days=hoje.day-1)
     filtra_periodo = ''
+    pre_filtra_periodo = ''
     if periodo is not None:
         periodo_list = periodo.split(':')
         ini_periodo = dec_months(ini_mes, int(periodo_list[0]))
         filtra_periodo = "  AND v.dt >= TO_DATE('{}', 'yyyy-mm-dd')".format(
             ini_periodo.strftime('%Y-%m-%d'))
+        pre_filtra_periodo = \
+            "  AND nf.DATA_EMISSAO >= TO_DATE('{}', 'yyyy-mm-dd')".format(
+                ini_periodo.strftime('%Y-%m-%d'))
         if periodo_list[1] != '':
             fim_periodo = dec_months(ini_mes, int(periodo_list[1]))
             filtra_periodo += \
                 "  AND v.dt < TO_DATE('{}', 'yyyy-mm-dd')".format(
+                    fim_periodo.strftime('%Y-%m-%d'))
+            pre_filtra_periodo += \
+                "  AND nf.DATA_EMISSAO < TO_DATE('{}', 'yyyy-mm-dd')".format(
                     fim_periodo.strftime('%Y-%m-%d'))
 
     select_por = ''
@@ -220,10 +222,10 @@ def get_vendas(
           AND fe.DOCUMENTO IS NULL
           {pre_filtra_modelo} -- pre_filtra_modelo
           {pre_filtra_ref} -- pre_filtra_ref
+          {pre_filtra_periodo} -- pre_filtra_periodo
         )
         SELECT
           sum(v.qtd) qtd
-          {select_col} -- select_col
           {select_por} -- select_por
         FROM vendido v
         LEFT JOIN BASI_220 t
@@ -237,22 +239,20 @@ def get_vendas(
           {filtra_periodo} -- filtra_periodo
         GROUP BY
           1
-          {group_col} -- group_col
           {group_por} -- group_por
         ORDER BY
           {order} -- order
     """
     sql = sql.format(
-        select_col=select_col,
         select_por=select_por,
         pre_filtra_modelo=pre_filtra_modelo,
         pre_filtra_ref=pre_filtra_ref,
+        pre_filtra_periodo=pre_filtra_periodo,
         filtra_cliente=filtra_cliente,
         filtra_col=filtra_col,
         filtra_modelo=filtra_modelo,
         filtra_ref=filtra_ref,
         filtra_periodo=filtra_periodo,
-        group_col=group_col,
         group_por=group_por,
         order=order,
     )
