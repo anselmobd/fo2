@@ -13,12 +13,12 @@ import comercial.models as models
 import comercial.queries as queries
 
 
-class EstoqueDesejado(O2BaseGetView):
+class AnaliseVendas(O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
-        super(EstoqueDesejado, self).__init__(*args, **kwargs)
+        super(AnaliseVendas, self).__init__(*args, **kwargs)
         self.template_name = 'comercial/analise_vendas.html'
-        self.title_name = 'Estoque desejado'
+        self.title_name = 'Análise de vendas'
 
     def mount_context_inicial(self):
         data = []
