@@ -9,6 +9,7 @@ from base.views import O2BaseGetView
 from utils.functions import dec_month, dec_months
 
 import comercial.models as models
+import comercial.queries as queries
 
 
 class EstoqueDesejado(O2BaseGetView):
@@ -19,10 +20,14 @@ class EstoqueDesejado(O2BaseGetView):
         self.title_name = 'Estoque desejado'
 
     def mount_context(self):
+        self.cursor = connections['so'].cursor()
+        data_rank = queries.get_vendas(
+            self.cursor, ref=None, periodo='12+', colecao=None,
+            cliente=None, por='modelo')
         self.context.update({
-            'headers': (),
-            'fields': (),
-            'data': [],
+            'headers': ('Quantidade', 'Modelo'),
+            'fields': ('qtd', 'modelo'),
+            'data': data_rank,
         })
 
 
