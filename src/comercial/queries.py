@@ -148,6 +148,10 @@ def get_vendas(
         select_por = ", v.TAM"
         group_por = ", v.TAM"
         order_por = ", v.TAM"
+    elif por == 'modelo':
+        select_por = ", v.MODELO"
+        group_por = ", v.MODELO"
+        order_por = ", v.MODELO"
 
     sql = """
         WITH vendido AS
