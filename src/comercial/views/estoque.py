@@ -19,25 +19,7 @@ class EstoqueDesejado(O2BaseGetView):
         self.template_name = 'comercial/estoque_desejado.html'
         self.title_name = 'Estoque desejado'
 
-    def mount_context(self):
-        nfs = list(models.ModeloPassadoPeriodo.objects.filter(
-            modelo_id=1).order_by('ordem').values())
-        if len(nfs) == 0:
-            self.context.update({
-                'msg_erro': 'Nenhum período definido',
-            })
-            return
-
-        data = list(nfs)
-
-        hoje = datetime.today()
-        mes = dec_month(hoje, 1)
-        for row in data:
-            row['mes_fim'] = mes.strftime("%m/%Y")
-            mes = dec_months(mes, row['meses']-1)
-            row['mes_ini'] = mes.strftime("%m/%Y")
-            mes = dec_month(mes)
-
+    def mount_context_inicial(self):
         hoje = datetime.today()
         mes = dec_month(hoje, 1)
         n_mes = 0
@@ -45,7 +27,7 @@ class EstoqueDesejado(O2BaseGetView):
         periodos_descr = []
         style = {}
         coluna = 2
-        for row in data:
+        for row in self.data_nfs:
             periodos.append(
                 ['{}:{}'.format(n_mes+row['meses'], n_mes), row['meses']])
             mes_fim = mes.strftime("%m/%Y")
@@ -87,6 +69,31 @@ class EstoqueDesejado(O2BaseGetView):
             'data': data,
             'style': style,
         })
+
+    def mount_context_modelo(self, modref):
+        self.context.update({
+            'modref': modref,
+        })
+
+    def mount_context(self):
+        modref = None
+        if 'modref' in self.kwargs:
+            modref = self.kwargs['modref']
+
+        nfs = list(models.ModeloPassadoPeriodo.objects.filter(
+            modelo_id=1).order_by('ordem').values())
+        if len(nfs) == 0:
+            self.context.update({
+                'msg_erro': 'Nenhum período definido',
+            })
+            return
+
+        self.data_nfs = list(nfs)
+
+        if modref is None:
+            self.mount_context_inicial()
+        else:
+            self.mount_context_modelo(modref)
 
 
 class Ponderacao(O2BaseGetView):

@@ -19,6 +19,9 @@ urlpatterns = [
     url(r'^estoque_desejado/$',
         views.estoque.EstoqueDesejado.as_view(),
         name='estoque_desejado'),
+    url(r'^estoque_desejado/(?P<modref>\d+)/$',
+        views.estoque.EstoqueDesejado.as_view(),
+        name='estoque_desejado__get'),
 
     url(r'^ponderacao/$',
         views.estoque.Ponderacao.as_view(),
