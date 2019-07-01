@@ -225,7 +225,10 @@ class AnaliseVendas(O2BaseGetView):
             if row['meses'] == 1:
                 periodo['descr'] = mes_ini
             else:
-                periodo['descr'] = '{} - {}'.format(mes_fim, mes_ini)
+                if mes_ini[-4:] == mes_fim[-4:]:
+                    periodo['descr'] = '{} - {}'.format(mes_fim[:2], mes_ini)
+                else:
+                    periodo['descr'] = '{} - {}'.format(mes_fim, mes_ini)
 
             self.style[i+2] = 'text-align: right;'
 
