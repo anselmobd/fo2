@@ -79,8 +79,6 @@ class AnaliseVendas(O2BaseGetView):
                     row['qtd'] / periodo['meses'])
                 data_row['qtd'] += round(
                     row['qtd'] * periodo['peso'] / self.tot_peso)
-        style = self.style
-        style[len(self.periodos)+2] = 'text-align: right;'
         self.context['modelo_ponderado'] = {
             'headers': ['Modelo', 'Quantidade ponderada',
                         *['{}({})'.format(
@@ -89,11 +87,13 @@ class AnaliseVendas(O2BaseGetView):
             'fields': ['modelo', 'qtd',
                        *[p['range'] for p in self.periodos]],
             'data': data,
-            'style': style,
+            'style': self.style_pond_meses,
         }
 
-        # quantidades ponderada do tamanho
+        # quantidades dos tamanhos
         data = []
+        zero_data_row = {p['range']: 0 for p in self.periodos}
+        zero_data_row['qtd'] = 0
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
@@ -106,17 +106,22 @@ class AnaliseVendas(O2BaseGetView):
                 if not data_row:
                     data_row = {
                         'tam': row['tam'],
-                        'qtd': 0
+                        **zero_data_row
                     }
                     data.append(data_row)
+                data_row[periodo['range']] = round(
+                    row['qtd'] / periodo['meses'])
                 data_row['qtd'] += round(
-                    row['qtd'] / periodo['meses'] *
-                    periodo['peso'] / self.tot_peso)
+                    row['qtd'] * periodo['peso'] / self.tot_peso)
         self.context['tamanho_ponderado'] = {
-            'headers': ['Tamanho', 'Quantidade ponderada'],
-            'fields': ['tam', 'qtd'],
+            'headers': ['Tamanho', 'Quantidade ponderada',
+                        *['{}({})'.format(
+                            p['descr'], p['peso']
+                        ) for p in self.periodos]],
+            'fields': ['tam', 'qtd',
+                       *[p['range'] for p in self.periodos]],
             'data': data,
-            'style': {2: 'text-align: right;'},
+            'style': self.style_pond_meses,
         }
 
         # quantidades ponderada da cor
@@ -146,33 +151,6 @@ class AnaliseVendas(O2BaseGetView):
         }
 
         # médias mensais
-
-        # Por tamanho
-        data = []
-        zero_data_row = {p['range']: 0 for p in self.periodos}
-        for periodo in self.periodos:
-            data_periodo = queries.get_vendas(
-                self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='tam', modelo=modref,
-                order_qtd=False)
-            for row in data_periodo:
-                data_row = next(
-                    (dr for dr in data if dr['tam'] == row['tam']),
-                    False)
-                if not data_row:
-                    data_row = {
-                        'tam': row['tam'],
-                        **zero_data_row
-                    }
-                    data.append(data_row)
-                data_row[periodo['range']] = round(
-                    row['qtd'] / periodo['meses'])
-        self.context['por_tam'] = {
-            'headers': ['Tamanho', *[p['descr'] for p in self.periodos]],
-            'fields': ['tam', *[p['range'] for p in self.periodos]],
-            'data': data,
-            'style': self.style,
-        }
 
         # Por cor
         data = []
@@ -268,6 +246,11 @@ class AnaliseVendas(O2BaseGetView):
             self.style[i+2] = 'text-align: right;'
 
             self.periodos.append(periodo)
+
+        self.style_pond_meses = {
+            ** self.style,
+            len(self.periodos)+2: 'text-align: right;',
+        }
 
         self.cursor = connections['so'].cursor()
 
