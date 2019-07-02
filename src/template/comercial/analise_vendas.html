@@ -63,7 +63,44 @@
         {% endif %}
       </div>
       <div id="param" class="tab-pane fade">
-        Parâmetros
+
+        <h4>Parâmetros para cálculo da grade de estoque ideal</h4>
+        {{ form.venda.label_tag }} {{ form.venda }} |
+        {{ form.multiplicador.label_tag }} {{ form.multiplicador }} |
+        <label>Estoque ideal: </label><label for="estoque_ideal">0</label>
+
+        {% if tam_form %}
+          <p>Grade de tamanhos</p>
+          {{ tam_form.as_p }}
+          <label>Quantidade total da grade: </label><label for="tot_grade_tamanho">0</label>
+        {% endif %}
+
+        {% if cor_form %}
+          <p>Distribuição das cores</p>
+          {{ cor_form.as_p }}
+        {% endif %}
+
+        <table id="my-table">
+          <thead>
+            <tr>
+              <th>Cor/Tamanho</th>
+              {% for tam in tamanho_ponderado.data %}
+                <th>{{ tam.tam }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for cor in cor_ponderada.data %}
+              <tr>
+                <td>{{ cor.cor }}</td>
+                {% for tam in tamanho_ponderado.data %}
+                  <td>-</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
       </div>
     </div>
   {% else %}
@@ -77,3 +114,39 @@
     {% endif %}
   {% endif %}
 {% endblock %}
+
+{% block javascript %}
+{% block javascript.pos %}
+<script>
+  // append row to the HTML table
+  function appendRow() {
+      var tbl = document.getElementById('my-table'), // table reference
+          row = tbl.insertRow(tbl.rows.length),      // append table row
+          i;
+      // insert table cells to the new row
+      for (i = 0; i < tbl.rows[0].cells.length; i++) {
+          createCell(row.insertCell(i), i, 'row');
+      }
+  }
+
+  // create DIV element and append to the table cell
+  function createCell(cell, text, style) {
+      var div = document.createElement('div'), // create DIV element
+          txt = document.createTextNode(text); // create text node
+      div.appendChild(txt);                    // append text node to the DIV
+      div.setAttribute('class', style);        // set DIV class attribute
+      div.setAttribute('className', style);    // set DIV class attribute for IE (?!)
+      cell.appendChild(div);                   // append DIV to the table cell
+  }
+
+  function get_grade_tamanho() {
+
+  }
+
+  function calc_estoque(venda_mensal, multiplicador, tamanhos) {
+    venda_mensal = document.getElementById('id_venda_mensal');
+  }
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}

@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
+from django import forms
 
 from base.views import O2BaseGetView
 from utils.functions import dec_month, dec_months
@@ -96,6 +97,7 @@ class AnaliseVendas(O2BaseGetView):
         zero_data_row = {p['range']: 0 for p in self.periodos}
         zero_data_row['qtd'] = 0
         zero_data_row['grade'] = 0
+        total_qtd = 0
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
@@ -113,10 +115,11 @@ class AnaliseVendas(O2BaseGetView):
                     data.append(data_row)
                 data_row[periodo['range']] = round(
                     row['qtd'] / periodo['meses'])
-                data_row['qtd'] += round(
-                    row['qtd'] * periodo['peso'] / self.tot_peso)
+                qtd = round(row['qtd'] * periodo['peso'] / self.tot_peso)
+                data_row['qtd'] += qtd
+                total_qtd += qtd
 
-        if len(data) == 1:
+        if len(data) == 1 or total_qtd == 0:
             self.context['tamanho_ponderado'] = {
                 'headers': ['Tamanho', 'Venda ponderada',
                             *['{}({})'.format(
@@ -199,12 +202,11 @@ class AnaliseVendas(O2BaseGetView):
                     data.append(data_row)
                 data_row[periodo['range']] = round(
                     row['qtd'] / periodo['meses'])
-                data_row['qtd'] += round(
-                    row['qtd'] * periodo['peso'] / self.tot_peso)
-                total_qtd += round(
-                    row['qtd'] * periodo['peso'] / self.tot_peso)
+                qtd = round(row['qtd'] * periodo['peso'] / self.tot_peso)
+                data_row['qtd'] += qtd
+                total_qtd += qtd
 
-        if len(data) == 1:
+        if len(data) == 1 or total_qtd == 0:
             self.context['cor_ponderada'] = {
                 'headers': ['Cor', 'Venda ponderada',
                             *['{}({})'.format(
@@ -269,6 +271,46 @@ class AnaliseVendas(O2BaseGetView):
             'data': data,
             'style': self.style_pond_meses,
         }
+
+        # Form
+        venda_mensal = self.context['modelo_ponderado']['data'][0]['qtd']
+        multiplicador = 2
+
+        meta_form = forms.Form()
+        meta_form.fields['venda'] = forms.IntegerField(
+            required=True, initial=venda_mensal,
+            label='Venda mensal')
+        meta_form.fields['multiplicador'] = forms.IntegerField(
+            required=True, initial=multiplicador,
+            label='Multiplicador')
+
+        self.context.update({
+            'form': meta_form,
+            'venda_mensal': venda_mensal,
+            'multiplicador': multiplicador,
+        })
+
+        if len(self.context['tamanho_ponderado']['data']) > 1:
+            tam_form = forms.Form()
+            for row in self.context['tamanho_ponderado']['data']:
+                field_name = 'tam_{}'.format(row['tam'])
+                tam_form.fields[field_name] = forms.IntegerField(
+                    required=True, initial=row['grade'],
+                    label=row['tam'])
+            self.context.update({
+                'tam_form': tam_form,
+            })
+
+        if len(self.context['cor_ponderada']['data']) > 1:
+            cor_form = forms.Form()
+            for row in self.context['cor_ponderada']['data']:
+                field_name = 'cor_{}'.format(row['cor'])
+                cor_form.fields[field_name] = forms.IntegerField(
+                    required=True, initial=row['distr'],
+                    label=row['cor'])
+            self.context.update({
+                'cor_form': cor_form,
+            })
 
     def mount_context(self):
         modref = None
