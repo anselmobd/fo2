@@ -116,57 +116,51 @@ class AnaliseVendas(O2BaseGetView):
                 data_row['qtd'] += round(
                     row['qtd'] * periodo['peso'] / self.tot_peso)
         qtds = [row['qtd'] for row in data]
-        qtds_total = sum(qtds)
-        pprint(qtds)
-        print(qtds_total)
 
-        def grade_minima(total, qtds, erro_otimo, max_erro):
+        def grade_minima(qtds, max_erro):
+            total = sum(qtds)
             max_value = 1
             while max_value <= 9:
                 grades = product(
                     range(max_value+1), repeat=len(qtds))
-                # pprint(list(grades))
+                best = {'grade': [], 'erro': 1}
                 for grade in grades:
                     if max(grade) < max_value:
                         continue
-                    pprint(grade)
                     tot_grade = sum(grade)
-                    conta_erros = 0
                     diff = 0
                     for i in range(len(qtds)):
                         qtd_grade = total / tot_grade * grade[i]
-                        print(qtd_grade)
                         diff += abs(qtd_grade - qtds[i])
-                        # diff = abs((qtd_grade / qtds[i]) - 1)
-                        # if diff > max_erro:
-                        #     print(i, qtd_grade, diff, 'max_erro')
-                        #     conta_erros += 1
-                        # else:
-                        #     print(i, qtd_grade, diff, 'OK')
-                        print(diff)
-                        if (diff / total) > max_erro:
-                            break
-                    # if conta_erros == 0:
-                    if (diff / total) <= max_erro:
-                        return(grade)
+                    if best['erro'] > (diff / total):
+                        best['erro'] = diff / total
+                        best['grade'] = grade
+                if best['erro'] <= max_erro:
+                    break
                 max_value += 1
+            return best['grade'], best['erro']
 
-        grade_tam = grade_minima(qtds_total, qtds, 0.05, 0.09)
-        pprint(grade_tam)
+        grade_tam, grade_erro = grade_minima(qtds, 0.05)
+
         for i in range(len(data)):
             if grade_tam is None:
                 data[i]['grade'] = 0
             else:
                 data[i]['grade'] = grade_tam[i]
         self.context['tamanho_ponderado'] = {
-            'headers': ['Tamanho', 'Grade', 'Venda ponderada',
+            'headers': ['Tamanho',
+                        'Grade (E:{:.0f}%)'.format(grade_erro * 100),
+                        'Venda ponderada',
                         *['{}({})'.format(
                             p['descr'], p['peso']
                         ) for p in self.periodos]],
             'fields': ['tam', 'grade', 'qtd',
                        *[p['range'] for p in self.periodos]],
             'data': data,
-            'style': self.style_pond_meses,
+            'style': {
+                ** self.style_pond_meses,
+                len(self.periodos)+3: 'text-align: right;',
+            }
         }
 
         # vendas por cor
@@ -205,7 +199,10 @@ class AnaliseVendas(O2BaseGetView):
             'fields': ['cor', 'distr', 'qtd',
                        *[p['range'] for p in self.periodos]],
             'data': data,
-            'style': self.style_pond_meses,
+            'style': {
+                ** self.style_pond_meses,
+                len(self.periodos)+3: 'text-align: right;',
+            }
         }
 
         # vendas por referência
