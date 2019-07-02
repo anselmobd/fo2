@@ -1,5 +1,6 @@
 from pprint import pprint
 from datetime import datetime, timedelta
+from itertools import combinations_with_replacement, permutations, product
 
 from django.urls import reverse
 from django.shortcuts import render
@@ -94,6 +95,7 @@ class AnaliseVendas(O2BaseGetView):
         data = []
         zero_data_row = {p['range']: 0 for p in self.periodos}
         zero_data_row['qtd'] = 0
+        zero_data_row['grade'] = 0
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
@@ -113,12 +115,55 @@ class AnaliseVendas(O2BaseGetView):
                     row['qtd'] / periodo['meses'])
                 data_row['qtd'] += round(
                     row['qtd'] * periodo['peso'] / self.tot_peso)
+        qtds = [row['qtd'] for row in data]
+        qtds_total = sum(qtds)
+        pprint(qtds)
+        print(qtds_total)
+
+        def grade_minima(total, qtds, erro_otimo, max_erro):
+            max_value = 1
+            while max_value <= 9:
+                grades = product(
+                    range(max_value+1), repeat=len(qtds))
+                # pprint(list(grades))
+                for grade in grades:
+                    if max(grade) < max_value:
+                        continue
+                    pprint(grade)
+                    tot_grade = sum(grade)
+                    conta_erros = 0
+                    diff = 0
+                    for i in range(len(qtds)):
+                        qtd_grade = total / tot_grade * grade[i]
+                        print(qtd_grade)
+                        diff += abs(qtd_grade - qtds[i])
+                        # diff = abs((qtd_grade / qtds[i]) - 1)
+                        # if diff > max_erro:
+                        #     print(i, qtd_grade, diff, 'max_erro')
+                        #     conta_erros += 1
+                        # else:
+                        #     print(i, qtd_grade, diff, 'OK')
+                        print(diff)
+                        if (diff / total) > max_erro:
+                            break
+                    # if conta_erros == 0:
+                    if (diff / total) <= max_erro:
+                        return(grade)
+                max_value += 1
+
+        grade_tam = grade_minima(qtds_total, qtds, 0.05, 0.09)
+        pprint(grade_tam)
+        for i in range(len(data)):
+            if grade_tam is None:
+                data[i]['grade'] = 0
+            else:
+                data[i]['grade'] = grade_tam[i]
         self.context['tamanho_ponderado'] = {
-            'headers': ['Tamanho', 'Venda ponderada',
+            'headers': ['Tamanho', 'Grade', 'Venda ponderada',
                         *['{}({})'.format(
                             p['descr'], p['peso']
                         ) for p in self.periodos]],
-            'fields': ['tam', 'qtd',
+            'fields': ['tam', 'grade', 'qtd',
                        *[p['range'] for p in self.periodos]],
             'data': data,
             'style': self.style_pond_meses,
@@ -128,6 +173,8 @@ class AnaliseVendas(O2BaseGetView):
         data = []
         zero_data_row = {p['range']: 0 for p in self.periodos}
         zero_data_row['qtd'] = 0
+        zero_data_row['distr'] = 0
+        total_qtd = 0
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
@@ -146,12 +193,16 @@ class AnaliseVendas(O2BaseGetView):
                     row['qtd'] / periodo['meses'])
                 data_row['qtd'] += round(
                     row['qtd'] * periodo['peso'] / self.tot_peso)
+                total_qtd += round(
+                    row['qtd'] * periodo['peso'] / self.tot_peso)
+        for row in data:
+            row['distr'] = round(row['qtd'] / total_qtd * 100)
         self.context['cor_ponderada'] = {
-            'headers': ['Cor', 'Venda ponderada',
+            'headers': ['Cor', 'Distribuição', 'Venda ponderada',
                         *['{}({})'.format(
                             p['descr'], p['peso']
                         ) for p in self.periodos]],
-            'fields': ['cor', 'qtd',
+            'fields': ['cor', 'distr', 'qtd',
                        *[p['range'] for p in self.periodos]],
             'data': data,
             'style': self.style_pond_meses,
