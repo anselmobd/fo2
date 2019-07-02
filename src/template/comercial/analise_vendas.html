@@ -67,20 +67,21 @@
         <h4>Parâmetros para cálculo da grade de estoque ideal</h4>
         {{ form.venda.label_tag }} {{ form.venda }} |
         {{ form.multiplicador.label_tag }} {{ form.multiplicador }} |
-        <label>Estoque ideal: </label><label for="estoque_ideal">0</label>
+        <label>Estoque ideal:</label> <span id="id_estoque_ideal">0</span> (Múltiplo da grade de tamanhos)
 
         {% if tam_form %}
           <p>Grade de tamanhos</p>
           {{ tam_form.as_p }}
-          <label>Quantidade total da grade: </label><label for="tot_grade_tamanho">0</label>
+          <label>Quantidade total da grade:</label> <span id="id_tot_grade_tamanhos">0</span>
         {% endif %}
 
         {% if cor_form %}
           <p>Distribuição das cores</p>
           {{ cor_form.as_p }}
+          <label>Quantidade total da distribuição:</label> <span id="id_tot_grade_cores">0</span>
         {% endif %}
 
-        <table id="my-table">
+        <table id="t_grade">
           <thead>
             <tr>
               <th>Cor/Tamanho</th>
@@ -94,7 +95,7 @@
               <tr>
                 <td>{{ cor.cor }}</td>
                 {% for tam in tamanho_ponderado.data %}
-                  <td>-</td>
+                  <td id="item_{{ tam.tam }}_{{ cor.cor }}">{{ tam.tam }}_{{ cor.cor }}</td>
                 {% endfor %}
               </tr>
             {% endfor %}
@@ -118,34 +119,84 @@
 {% block javascript %}
 {% block javascript.pos %}
 <script>
-  // append row to the HTML table
-  function appendRow() {
-      var tbl = document.getElementById('my-table'), // table reference
-          row = tbl.insertRow(tbl.rows.length),      // append table row
-          i;
-      // insert table cells to the new row
-      for (i = 0; i < tbl.rows[0].cells.length; i++) {
-          createCell(row.insertCell(i), i, 'row');
+
+  const tot_arr = arr => arr.reduce((a,b) => a + b, 0);
+
+  var grade_tamanhos = [
+    {% for tam in tamanho_ponderado.data %}
+      {% if forloop.counter != 1 %}, {% endif %}{{ tam.grade }}
+    {% endfor %}
+  ];
+  var tot_grade_tamanhos = 0;
+  var grade_cores = [
+    {% for cor in cor_ponderada.data %}
+      {% if forloop.counter != 1 %}, {% endif %}{{ cor.distr }}
+    {% endfor %}
+  ];
+  var tot_grade_cores = 0;
+
+  var venda_mensal = document.getElementById('id_venda').value;
+  var multiplicador = document.getElementById('id_multiplicador').value;
+  var estoque_ideal = 0;
+  var estoque_ideal_cores = [];
+
+  function calc_tot_grade_tamanho() {
+    var e_tot_grade_tamanhos = document.getElementById('id_tot_grade_tamanhos');
+    tot_grade_tamanhos = tot_arr(grade_tamanhos)
+    e_tot_grade_tamanhos.innerText = tot_grade_tamanhos;
+  }
+
+  calc_tot_grade_tamanho();
+
+  function calc_estoque() {
+    var e_estoque_ideal = document.getElementById('id_estoque_ideal');
+    estoque_ideal = venda_mensal * multiplicador;
+    resto = estoque_ideal % tot_grade_tamanhos;
+    if ( resto == 0 ) {
+      e_estoque_ideal.innerText = estoque_ideal;
+    } else {
+      e_estoque_ideal.innerText = estoque_ideal + tot_grade_tamanhos - resto;
+    }
+  }
+
+  calc_estoque();
+
+  function calc_tot_grade_cor() {
+    var e_tot_grade_cores = document.getElementById('id_tot_grade_cores');
+    tot_grade_cores = tot_arr(grade_cores);
+    e_tot_grade_cores.innerText = tot_grade_cores;
+
+    // estoque_ideal_cores = [];
+    // grade_cores.forEach(q => estoque_ideal_cores);
+  }
+
+  calc_tot_grade_cor();
+
+  function calc_grade() {
+    var table = document.getElementById('t_grade'),
+    rows = table.rows, rowcount = rows.length, r,
+    cells, cellcount, c, cell;
+    for( r=0; r<rowcount; r++) {
+      cells = rows[r].cells;
+      cellcount = cells.length;
+      for( c=0; c<cellcount; c++) {
+        cell = cells[c];
+        if ( cell.id.startsWith('item_') ) {
+          cell_id = cell.id.split('_');
+          cell.innerHTML = cell_id[2];
+        }
       }
+    }
   }
 
-  // create DIV element and append to the table cell
-  function createCell(cell, text, style) {
-      var div = document.createElement('div'), // create DIV element
-          txt = document.createTextNode(text); // create text node
-      div.appendChild(txt);                    // append text node to the DIV
-      div.setAttribute('class', style);        // set DIV class attribute
-      div.setAttribute('className', style);    // set DIV class attribute for IE (?!)
-      cell.appendChild(div);                   // append DIV to the table cell
+  function calc_tudo() {
+    calc_tot_grade_tamanho();
+    calc_estoque();
+    calc_tot_grade_cor();
+    calc_grade();
   }
 
-  function get_grade_tamanho() {
-
-  }
-
-  function calc_estoque(venda_mensal, multiplicador, tamanhos) {
-    venda_mensal = document.getElementById('id_venda_mensal');
-  }
+  calc_tudo();
 
 </script>
 {% endblock javascript.pos %}
