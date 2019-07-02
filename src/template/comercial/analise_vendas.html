@@ -19,6 +19,53 @@
     <a href="{% url 'comercial:analise_vendas' %}">Voltar para a lista de modelos</a><br />
     <a href="{% url 'comercial:ponderacao' %}" target="_blank">Visualiza ponderação aplicada</a>
     <h3>Modelo {{ modref }}</h3>
+    <ul class="nav nav-tabs" id="myTab">
+      <li class="active"><a data-toggle="tab" href="#vendas">Vendas</a></li>
+      <li><a data-toggle="tab" href="#param">Meta de estoque</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="vendas" class="tab-pane fade in active">
+        {% if modelo_ponderado %}
+          {% if modelo_ponderado.data %}
+            <h4>Vendas do modelo</h4>
+            <table>
+              {% include "layout/thead_generic.html" with data=modelo_ponderado.headers style=modelo_ponderado.style only %}
+              {% include "layout/tbody_generic.html" with fields=modelo_ponderado.fields data=modelo_ponderado.data style=modelo_ponderado.style only %}
+            </table>
+          {% endif %}
+        {% endif %}
+        {% if tamanho_ponderado %}
+          {% if tamanho_ponderado.data %}
+            <h4>Vendas por tamanho</h4>
+            <table>
+              {% include "layout/thead_generic.html" with data=tamanho_ponderado.headers style=tamanho_ponderado.style only %}
+              {% include "layout/tbody_generic.html" with fields=tamanho_ponderado.fields data=tamanho_ponderado.data style=tamanho_ponderado.style only %}
+            </table>
+          {% endif %}
+        {% endif %}
+        {% if cor_ponderada %}
+          {% if cor_ponderada.data %}
+            <h4>Vendas por cor</h4>
+            <table>
+              {% include "layout/thead_generic.html" with data=cor_ponderada.headers style=cor_ponderada.style only %}
+              {% include "layout/tbody_generic.html" with fields=cor_ponderada.fields data=cor_ponderada.data style=cor_ponderada.style only %}
+            </table>
+          {% endif %}
+        {% endif %}
+        {% if por_ref %}
+          {% if por_ref.data %}
+            <h4>Vendas por referência</h4>
+            <table>
+              {% include "layout/thead_generic.html" with data=por_ref.headers style=por_ref.style only %}
+              {% include "layout/tbody_generic.html" with fields=por_ref.fields data=por_ref.data style=por_ref.style only %}
+            </table>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div id="param" class="tab-pane fade">
+        Parâmetros
+      </div>
+    </div>
   {% else %}
     <h3>Selecione o modelo a detalhar</h3>
     <h4>Médias mensais das quantidades faturadas nos períodos de ponderação, por modelo</h4>
@@ -26,42 +73,6 @@
       <table>
         {% include "layout/thead_generic.html" with data=headers style=style only %}
         {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
-      </table>
-    {% endif %}
-  {% endif %}
-  {% if modelo_ponderado %}
-    {% if modelo_ponderado.data %}
-      <h4>Vendas do modelo</h4>
-      <table>
-        {% include "layout/thead_generic.html" with data=modelo_ponderado.headers style=modelo_ponderado.style only %}
-        {% include "layout/tbody_generic.html" with fields=modelo_ponderado.fields data=modelo_ponderado.data style=modelo_ponderado.style only %}
-      </table>
-    {% endif %}
-  {% endif %}
-  {% if tamanho_ponderado %}
-    {% if tamanho_ponderado.data %}
-      <h4>Vendas por tamanho</h4>
-      <table>
-        {% include "layout/thead_generic.html" with data=tamanho_ponderado.headers style=tamanho_ponderado.style only %}
-        {% include "layout/tbody_generic.html" with fields=tamanho_ponderado.fields data=tamanho_ponderado.data style=tamanho_ponderado.style only %}
-      </table>
-    {% endif %}
-  {% endif %}
-  {% if cor_ponderada %}
-    {% if cor_ponderada.data %}
-      <h4>Vendas por cor</h4>
-      <table>
-        {% include "layout/thead_generic.html" with data=cor_ponderada.headers style=cor_ponderada.style only %}
-        {% include "layout/tbody_generic.html" with fields=cor_ponderada.fields data=cor_ponderada.data style=cor_ponderada.style only %}
-      </table>
-    {% endif %}
-  {% endif %}
-  {% if por_ref %}
-    {% if por_ref.data %}
-      <h4>Vendas por referência</h4>
-      <table>
-        {% include "layout/thead_generic.html" with data=por_ref.headers style=por_ref.style only %}
-        {% include "layout/tbody_generic.html" with fields=por_ref.fields data=por_ref.data style=por_ref.style only %}
       </table>
     {% endif %}
   {% endif %}
