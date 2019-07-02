@@ -115,53 +115,67 @@ class AnaliseVendas(O2BaseGetView):
                     row['qtd'] / periodo['meses'])
                 data_row['qtd'] += round(
                     row['qtd'] * periodo['peso'] / self.tot_peso)
-        qtds = [row['qtd'] for row in data]
 
-        def grade_minima(qtds, max_erro):
-            total = sum(qtds)
-            max_value = 1
-            while max_value <= 9:
-                grades = product(
-                    range(max_value+1), repeat=len(qtds))
-                best = {'grade': [], 'erro': 1}
-                for grade in grades:
-                    if max(grade) < max_value:
-                        continue
-                    tot_grade = sum(grade)
-                    diff = 0
-                    for i in range(len(qtds)):
-                        qtd_grade = total / tot_grade * grade[i]
-                        diff += abs(qtd_grade - qtds[i])
-                    if best['erro'] > (diff / total):
-                        best['erro'] = diff / total
-                        best['grade'] = grade
-                if best['erro'] <= max_erro:
-                    break
-                max_value += 1
-            return best['grade'], best['erro']
-
-        grade_tam, grade_erro = grade_minima(qtds, 0.05)
-
-        for i in range(len(data)):
-            if grade_tam is None:
-                data[i]['grade'] = 0
-            else:
-                data[i]['grade'] = grade_tam[i]
-        self.context['tamanho_ponderado'] = {
-            'headers': ['Tamanho',
-                        'Grade (E:{:.0f}%)'.format(grade_erro * 100),
-                        'Venda ponderada',
-                        *['{}({})'.format(
-                            p['descr'], p['peso']
-                        ) for p in self.periodos]],
-            'fields': ['tam', 'grade', 'qtd',
-                       *[p['range'] for p in self.periodos]],
-            'data': data,
-            'style': {
-                ** self.style_pond_meses,
-                len(self.periodos)+3: 'text-align: right;',
+        if len(data) == 1:
+            self.context['tamanho_ponderado'] = {
+                'headers': ['Tamanho', 'Venda ponderada',
+                            *['{}({})'.format(
+                                p['descr'], p['peso']
+                            ) for p in self.periodos]],
+                'fields': ['tam', 'qtd',
+                           *[p['range'] for p in self.periodos]],
+                'data': data,
+                'style': self.style_pond_meses,
             }
-        }
+        else:
+            qtds = [row['qtd'] for row in data]
+
+            def grade_minima(qtds, max_erro):
+                total = sum(qtds)
+                max_value = 1
+                while max_value <= 9:
+                    grades = product(
+                        range(max_value+1), repeat=len(qtds))
+                    best = {'grade': [], 'erro': 1}
+                    for grade in grades:
+                        if max(grade) < max_value:
+                            continue
+                        tot_grade = sum(grade)
+                        diff = 0
+                        for i in range(len(qtds)):
+                            qtd_grade = total / tot_grade * grade[i]
+                            diff += abs(qtd_grade - qtds[i])
+                        if best['erro'] > (diff / total):
+                            best['erro'] = diff / total
+                            best['grade'] = grade
+                    if best['erro'] <= max_erro:
+                        break
+                    max_value += 1
+                return best['grade'], best['erro']
+
+            grade_tam, grade_erro = grade_minima(qtds, 0.05)
+
+            for i in range(len(data)):
+                if grade_tam is None:
+                    data[i]['grade'] = 0
+                else:
+                    data[i]['grade'] = grade_tam[i]
+
+            self.context['tamanho_ponderado'] = {
+                'headers': ['Tamanho',
+                            'Grade (E:{:.0f}%)'.format(grade_erro * 100),
+                            'Venda ponderada',
+                            *['{}({})'.format(
+                                p['descr'], p['peso']
+                            ) for p in self.periodos]],
+                'fields': ['tam', 'grade', 'qtd',
+                           *[p['range'] for p in self.periodos]],
+                'data': data,
+                'style': {
+                    ** self.style_pond_meses,
+                    len(self.periodos)+3: 'text-align: right;',
+                }
+            }
 
         # vendas por cor
         data = []
@@ -189,21 +203,41 @@ class AnaliseVendas(O2BaseGetView):
                     row['qtd'] * periodo['peso'] / self.tot_peso)
                 total_qtd += round(
                     row['qtd'] * periodo['peso'] / self.tot_peso)
-        for row in data:
-            row['distr'] = round(row['qtd'] / total_qtd * 100)
-        self.context['cor_ponderada'] = {
-            'headers': ['Cor', 'Distribuição', 'Venda ponderada',
-                        *['{}({})'.format(
-                            p['descr'], p['peso']
-                        ) for p in self.periodos]],
-            'fields': ['cor', 'distr', 'qtd',
-                       *[p['range'] for p in self.periodos]],
-            'data': data,
-            'style': {
-                ** self.style_pond_meses,
-                len(self.periodos)+3: 'text-align: right;',
+
+        if len(data) == 1:
+            self.context['cor_ponderada'] = {
+                'headers': ['Cor', 'Venda ponderada',
+                            *['{}({})'.format(
+                                p['descr'], p['peso']
+                            ) for p in self.periodos]],
+                'fields': ['cor', 'qtd',
+                           *[p['range'] for p in self.periodos]],
+                'data': data,
+                'style': self.style_pond_meses,
             }
-        }
+        else:
+            tot_distr = 0
+            max_distr_row = {'distr': 0}
+            for row in data:
+                row['distr'] = round(row['qtd'] / total_qtd * 100)
+                if max_distr_row['distr'] < row['distr']:
+                    max_distr_row = row
+                tot_distr += row['distr']
+            if tot_distr < 100:
+                max_distr_row['distr'] += (100 - tot_distr)
+            self.context['cor_ponderada'] = {
+                'headers': ['Cor', 'Distribuição', 'Venda ponderada',
+                            *['{}({})'.format(
+                                p['descr'], p['peso']
+                            ) for p in self.periodos]],
+                'fields': ['cor', 'distr', 'qtd',
+                           *[p['range'] for p in self.periodos]],
+                'data': data,
+                'style': {
+                    ** self.style_pond_meses,
+                    len(self.periodos)+3: 'text-align: right;',
+                }
+            }
 
         # vendas por referência
         data = []
