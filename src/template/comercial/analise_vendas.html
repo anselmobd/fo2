@@ -8,6 +8,15 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+
+.number {
+  text-align: right;
+}
+
+.total {
+  font-weight: bold;
+}
+
 </style>
 {% endblock %}
 
@@ -65,7 +74,6 @@
       <div id="param" class="tab-pane fade">
         {{ form.non_field_errors }}
         <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
-        <h4>Venda</h4>
         {{ form.venda.label_tag }} (Ponderado: {{form.venda.initial}}) {{ form.venda }} |
         {{ form.multiplicador.label_tag }} ({{form.multiplicador.initial}}) {{ form.multiplicador }}<br />
         <label>Meta de estoque</label>
@@ -90,7 +98,7 @@
               </div>
           {% endfor %}
 
-          <label>Quantidade total da grade:</label> <span id="id_tot_grade_tamanhos">0</span>
+          <label>Quantidade total do pack:</label> <span id="id_tot_grade_tamanhos">0</span>
         {% endif %}
 
       </td>
@@ -122,8 +130,9 @@
             <tr>
               <th>Cor/Tamanho</th>
               {% for tam in tamanho_ponderado.data %}
-                <th>{{ tam.tam }}</th>
+                <th class="number">{{ tam.tam }}</th>
               {% endfor %}
+              <th class="number total">Totais</th>
             </tr>
           </thead>
           <tbody>
@@ -131,10 +140,18 @@
               <tr>
                 <td>{{ cor.cor }}</td>
                 {% for tam in tamanho_ponderado.data %}
-                  <td id="item_{{ tam.tam }}_{{ cor.cor }}">{{ tam.tam }}_{{ cor.cor }}</td>
+                  <td id="item_{{ tam.tam }}_{{ cor.cor }}" class="number">0</td>
                 {% endfor %}
+                <td id="tot_cor_{{ cor.cor }}" class="number total">7</td>
               </tr>
             {% endfor %}
+            <tr>
+              <td class="total">Totais</td>
+              {% for tam in tamanho_ponderado.data %}
+                <td id="tot_tam_{{ tam.tam }}" class="number total">8</td>
+              {% endfor %}
+              <td id="tot_tam_cor" class="number total">8</td>
+            </tr>
           </tbody>
         </table>
 
@@ -288,10 +305,48 @@
         cell = cells[c];
         if ( cell.id.startsWith('item_') ) {
           cell_id = cell.id.split('_');
-          cell.innerHTML = grades_por_cor[cell_id[2]] * dict_tamanhos[cell_id[1]];
+          cod_cor = cell_id[2];
+          cod_tam = cell_id[1];
+          valor = grades_por_cor[cod_cor] * dict_tamanhos[cod_tam];
+          cell.innerHTML = valor;
         }
       }
     }
+
+    var total_tam = {};
+    for (cod_tam in dict_tamanhos) {
+      total_tam[cod_tam] = 0;
+    }
+    for (cod_cor in grades_por_cor) {
+      var e_cell;
+      console.log('cor ini for');
+      console.log(cod_cor);
+      var total_cor = 0;
+      for (cod_tam in dict_tamanhos) {
+        console.log(cod_tam);
+        console.log('item_'+cod_tam+'_'+cod_cor);
+        e_cell = document.getElementById('item_'+cod_tam+'_'+cod_cor);
+        console.log('cell');
+        console.log(e_cell.innerHTML);
+        valor = parseInt(e_cell.innerHTML);
+        console.log(valor);
+        total_cor = total_cor + valor;
+        total_tam[cod_tam] = total_tam[cod_tam] + valor;
+      }
+      console.log('cor');
+      console.log(cod_cor);
+      e_cell = document.getElementById('tot_cor_'+cod_cor);
+      e_cell.innerHTML = total_cor;
+    }
+    var total_tam_cor = 0;
+    for (cod_tam in dict_tamanhos) {
+      e_cell = document.getElementById('tot_tam_'+cod_tam);
+      e_cell.innerHTML = total_tam[cod_tam];
+      total_tam_cor = total_tam_cor + total_tam[cod_tam];
+    }
+    e_cell = document.getElementById('tot_tam_cor');
+    e_cell.innerHTML = total_tam_cor;
+
   }
 
   calc_grade();
