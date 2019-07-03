@@ -70,8 +70,11 @@
         {{ form.multiplicador.label_tag }} ({{form.multiplicador.initial}}) {{ form.multiplicador }}<br />
         <label>Estoque ideal - Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span><br />
         <label>Estoque ideal - Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span>; Equivale à <span id="id_qtd_grade_tamanhos">0</span> grades.<br />
-        <label>Estoque ideal - Considerando a distribuição de cores:</label> <span id="id_estoque_ideal_cor">0</span>; Equivale à <span id="id_qtd_grade_tam_cor">0</span> grades.
+        <label>Estoque ideal - Considerando a distribuição de cores:</label> <span id="id_estoque_ideal_cor" style="font-weight: bold; color: red;">0</span>; Equivale à <span id="id_qtd_grade_tam_cor">0</span> grades.
 
+        <table class="layout">
+          <tr>
+            <td style="vertical-align: top;">
         {% if tam_form %}
           <h4>Grade de tamanhos</h4>
           {% for field in tam_form %}
@@ -87,6 +90,11 @@
           <label>Quantidade total da grade:</label> <span id="id_tot_grade_tamanhos">0</span>
         {% endif %}
 
+      </td>
+      <td></td>
+      <td style="border-left: thin solid lightgrey;"></td>
+      <td style="vertical-align: top;">
+
         {% if cor_form %}
         <h4>Distribuição das cores</h4>
           {% for field in cor_form %}
@@ -100,6 +108,10 @@
           {% endfor %}
           <label>Quantidade total da distribuição:</label> <span id="id_tot_grade_cores">0</span>
         {% endif %}
+
+      </td>
+    </tr>
+  </table>
 
         <h4>Grade por cor e tamanho</h4>
         <table id="t_grade">
@@ -165,13 +177,53 @@
   };
   var tot_grade_cores = 0;
 
-  var venda_mensal = document.getElementById('id_venda').value;
-  var multiplicador = document.getElementById('id_multiplicador').value;
+  var venda_mensal = 0;
+  var multiplicador = 0;
   var estoque_ideal_cru = 0;
   var estoque_ideal_tam = 0;
   var estoque_ideal_cor = 0;
   var qtd_grade_tamanhos = 0;
   var grades_por_cor = {};
+
+  function fields_to_vars() {
+    var valor
+
+    valor = document.getElementById('id_venda').value;
+    if ( !isNaN(valor) ) {
+      if ( valor >= 0 ) {
+        venda_mensal = valor;
+      }
+    }
+
+    valor = document.getElementById('id_multiplicador').value;
+    if ( !isNaN(valor) ) {
+      if ( valor >= 0 ) {
+        multiplicador = valor;
+      }
+    }
+
+    for (key in dict_tamanhos) {
+      valor = document.getElementById('id_tam_'+key).value;
+      valor = parseInt(valor);
+      if ( !isNaN(valor) ) {
+        if ( valor >= 0 ) {
+          dict_tamanhos[key] = valor;
+        }
+      }
+    }
+
+    for (key in dict_cores) {
+      valor = document.getElementById('id_cor_'+key).value;
+      valor = parseInt(valor);
+      if ( !isNaN(valor) ) {
+        if ( valor >= 0 ) {
+          dict_cores[key] = valor;
+        }
+      }
+    }
+  }
+
+  fields_to_vars();
 
   function calc_tot_grade_tamanho() {
     var e_tot_grade_tamanhos = document.getElementById('id_tot_grade_tamanhos');
@@ -242,13 +294,34 @@
   calc_grade();
 
   function calc_tudo() {
+    fields_to_vars();
     calc_tot_grade_tamanho();
     calc_estoque();
     calc_tot_grade_cor();
     calc_grade();
   }
-  //
-  // calc_tudo();
+
+  $(document).ready(function() {
+    var inputbox = $("#{{form.multiplicador.id_for_label}}");
+    inputbox.on('change', calc_tudo);
+    inputbox.on('paste', calc_tudo);
+
+    var inputbox = $("#{{form.venda.id_for_label}}");
+    inputbox.on('change', calc_tudo);
+    inputbox.on('paste', calc_tudo);
+
+    for (key in dict_cores) {
+      var inputbox = $("#id_cor_"+key);
+      inputbox.on('change', calc_tudo);
+      inputbox.on('paste', calc_tudo);
+    }
+
+    for (key in dict_tamanhos) {
+      var inputbox = $("#id_tam_"+key);
+      inputbox.on('change', calc_tudo);
+      inputbox.on('paste', calc_tudo);
+    }
+  });
 
 </script>
 {% endblock javascript.pos %}
