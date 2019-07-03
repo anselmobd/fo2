@@ -63,24 +63,45 @@
         {% endif %}
       </div>
       <div id="param" class="tab-pane fade">
-
+        {{ form.non_field_errors }}
         <h4>Parâmetros para cálculo da grade de estoque ideal</h4>
-        {{ form.venda.label_tag }} {{ form.venda }} |
-        {{ form.multiplicador.label_tag }} {{ form.multiplicador }} |
-        <label>Estoque ideal:</label> <span id="id_estoque_ideal">0</span> (Múltiplo da grade de tamanhos)
+        <h4>Venda</h4>
+        {{ form.venda.label_tag }} (Ponderado: {{form.venda.initial}}) {{ form.venda }} |
+        {{ form.multiplicador.label_tag }} ({{form.multiplicador.initial}}) {{ form.multiplicador }}<br />
+        <label>Estoque ideal - Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span><br />
+        <label>Estoque ideal - Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span>; Equivale à <span id="id_qtd_grade_tamanhos">0</span> grades.<br />
+        <label>Estoque ideal - Considerando a distribuição de cores:</label> <span id="id_estoque_ideal_cor">0</span>; Equivale à <span id="id_qtd_grade_tam_cor">0</span> grades.
 
         {% if tam_form %}
-          <p>Grade de tamanhos</p>
-          {{ tam_form.as_p }}
+          <h4>Grade de tamanhos</h4>
+          {% for field in tam_form %}
+              <div class="fieldWrapper">
+                  {{ field.errors }}
+                  {{ field.label_tag }} ({{ field.initial }}) {{ field }}
+                  {% if field.help_text %}
+                  <p class="help">{{ field.help_text|safe }}</p>
+                  {% endif %}
+              </div>
+          {% endfor %}
+
           <label>Quantidade total da grade:</label> <span id="id_tot_grade_tamanhos">0</span>
         {% endif %}
 
         {% if cor_form %}
-          <p>Distribuição das cores</p>
-          {{ cor_form.as_p }}
+        <h4>Distribuição das cores</h4>
+          {% for field in cor_form %}
+              <div class="fieldWrapper">
+                  {{ field.errors }}
+                  {{ field.label_tag }} ({{ field.initial }}) {{ field }} => <span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> grades
+                  {% if field.help_text %}
+                  <p class="help">{{ field.help_text|safe }}</p>
+                  {% endif %}
+              </div>
+          {% endfor %}
           <label>Quantidade total da distribuição:</label> <span id="id_tot_grade_cores">0</span>
         {% endif %}
 
+        <h4>Grade por cor e tamanho</h4>
         <table id="t_grade">
           <thead>
             <tr>
@@ -118,56 +139,85 @@
 
 {% block javascript %}
 {% block javascript.pos %}
-<script>
+<script >
 
   const tot_arr = arr => arr.reduce((a,b) => a + b, 0);
 
-  var grade_tamanhos = [
+  function tot_dict(dic) {
+    var tot = 0;
+    for (key in dic) {
+      tot = tot + dic[key];
+    }
+    return tot;
+  }
+
+  var dict_tamanhos = {
     {% for tam in tamanho_ponderado.data %}
-      {% if forloop.counter != 1 %}, {% endif %}{{ tam.grade }}
+      {% if forloop.counter != 1 %}, {% endif %}"{{ tam.tam }}": {{ tam.grade }}
     {% endfor %}
-  ];
+  };
   var tot_grade_tamanhos = 0;
-  var grade_cores = [
+
+  var dict_cores = {
     {% for cor in cor_ponderada.data %}
-      {% if forloop.counter != 1 %}, {% endif %}{{ cor.distr }}
+      {% if forloop.counter != 1 %}, {% endif %}"{{ cor.cor }}": {{ cor.distr }}
     {% endfor %}
-  ];
+  };
   var tot_grade_cores = 0;
 
   var venda_mensal = document.getElementById('id_venda').value;
   var multiplicador = document.getElementById('id_multiplicador').value;
-  var estoque_ideal = 0;
-  var estoque_ideal_cores = [];
+  var estoque_ideal_cru = 0;
+  var estoque_ideal_tam = 0;
+  var estoque_ideal_cor = 0;
+  var qtd_grade_tamanhos = 0;
+  var grades_por_cor = {};
 
   function calc_tot_grade_tamanho() {
     var e_tot_grade_tamanhos = document.getElementById('id_tot_grade_tamanhos');
-    tot_grade_tamanhos = tot_arr(grade_tamanhos)
+    tot_grade_tamanhos = tot_dict(dict_tamanhos);
     e_tot_grade_tamanhos.innerText = tot_grade_tamanhos;
   }
 
   calc_tot_grade_tamanho();
 
   function calc_estoque() {
-    var e_estoque_ideal = document.getElementById('id_estoque_ideal');
-    estoque_ideal = venda_mensal * multiplicador;
-    resto = estoque_ideal % tot_grade_tamanhos;
+    var e_estoque_ideal_cru = document.getElementById('id_estoque_ideal_cru');
+    var e_estoque_ideal_tam = document.getElementById('id_estoque_ideal_tam');
+    var e_qtd_grade_tamanhos = document.getElementById('id_qtd_grade_tamanhos');
+    estoque_ideal_cru = venda_mensal * multiplicador;
+    resto = estoque_ideal_cru % tot_grade_tamanhos;
     if ( resto == 0 ) {
-      e_estoque_ideal.innerText = estoque_ideal;
+      estoque_ideal_tam = estoque_ideal_cru;
     } else {
-      e_estoque_ideal.innerText = estoque_ideal + tot_grade_tamanhos - resto;
+      estoque_ideal_tam = estoque_ideal_cru + tot_grade_tamanhos - resto;
     }
+    qtd_grade_tamanhos = estoque_ideal_tam / tot_grade_tamanhos;
+    e_estoque_ideal_cru.innerText = estoque_ideal_cru;
+    e_estoque_ideal_tam.innerText = estoque_ideal_tam;
+    e_qtd_grade_tamanhos.innerText = qtd_grade_tamanhos;
   }
 
   calc_estoque();
 
   function calc_tot_grade_cor() {
     var e_tot_grade_cores = document.getElementById('id_tot_grade_cores');
-    tot_grade_cores = tot_arr(grade_cores);
+    var e_estoque_ideal_cor = document.getElementById('id_estoque_ideal_cor');
+    var e_qtd_grade_tam_cor = document.getElementById('id_qtd_grade_tam_cor');
+    tot_grade_cores = tot_dict(dict_cores);
     e_tot_grade_cores.innerText = tot_grade_cores;
-
-    // estoque_ideal_cores = [];
-    // grade_cores.forEach(q => estoque_ideal_cores);
+    grades_por_cor = {};
+    tot_grades_por_cor = 0;
+    for (key in dict_cores) {
+      var e_grades_por_1_cor = document.getElementById('id_lotes_cor_'+key);
+      qtd_grades_cor = Math.round(qtd_grade_tamanhos / tot_grade_cores * dict_cores[key]);
+      grades_por_cor[key] = qtd_grades_cor;
+      tot_grades_por_cor = tot_grades_por_cor + qtd_grades_cor;
+      e_grades_por_1_cor.innerText = qtd_grades_cor;
+    }
+    estoque_ideal_cor = tot_grades_por_cor * tot_grade_tamanhos;
+    e_estoque_ideal_cor.innerText = estoque_ideal_cor;
+    e_qtd_grade_tam_cor.innerText = tot_grades_por_cor;
   }
 
   calc_tot_grade_cor();
@@ -183,11 +233,13 @@
         cell = cells[c];
         if ( cell.id.startsWith('item_') ) {
           cell_id = cell.id.split('_');
-          cell.innerHTML = cell_id[2];
+          cell.innerHTML = grades_por_cor[cell_id[2]] * dict_tamanhos[cell_id[1]];
         }
       }
     }
   }
+
+  calc_grade();
 
   function calc_tudo() {
     calc_tot_grade_tamanho();
@@ -195,8 +247,8 @@
     calc_tot_grade_cor();
     calc_grade();
   }
-
-  calc_tudo();
+  //
+  // calc_tudo();
 
 </script>
 {% endblock javascript.pos %}
