@@ -64,13 +64,13 @@
       </div>
       <div id="param" class="tab-pane fade">
         {{ form.non_field_errors }}
-        <h4>Parâmetros para cálculo da grade de estoque ideal</h4>
+        <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
         <h4>Venda</h4>
         {{ form.venda.label_tag }} (Ponderado: {{form.venda.initial}}) {{ form.venda }} |
         {{ form.multiplicador.label_tag }} ({{form.multiplicador.initial}}) {{ form.multiplicador }}<br />
-        <label>Estoque ideal - Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span><br />
-        <label>Estoque ideal - Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span>; Equivale à <span id="id_qtd_grade_tamanhos">0</span> grades.<br />
-        <label>Estoque ideal - Considerando a distribuição de cores:</label> <span id="id_estoque_ideal_cor" style="font-weight: bold; color: red;">0</span>; Equivale à <span id="id_qtd_grade_tam_cor">0</span> grades.
+        <label>Meta de estoque - Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span><br />
+        <label>Meta de estoque - Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span>; Equivale à <span id="id_qtd_grade_tamanhos">0</span> grades.<br />
+        <label>Meta de estoque - Considerando a distribuição de cores:</label> <span id="id_estoque_ideal_cor" style="font-weight: bold; color: red;">0</span>; Equivale à <span id="id_qtd_grade_tam_cor">0</span> grades.
 
         <table class="layout">
           <tr>
