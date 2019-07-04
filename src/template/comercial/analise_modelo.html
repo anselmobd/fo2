@@ -90,19 +90,25 @@
         {{ meta_form.venda.label_tag }}
         <span class="ponderado">(Ponderado: {{meta_form.venda.initial}})</span>
         {% if meta_venda_mensal %}
-          <span class="meta">(Última meta: {{ meta_venda_mensal }})</span>
+          <span class="meta">(Do comercial: {{ meta_venda_mensal }})</span>
         {% endif %}
         {{ meta_form.venda }}<br />
         {{ meta_form.multiplicador.label_tag }}
         ({{meta_form.multiplicador.initial}})
         {% if meta_multiplicador %}
           <span class="meta">({{ meta_multiplicador }})</span>
-        {% endif %}        {{ meta_form.multiplicador }}<br />
+        {% endif %}
+        {{ meta_form.multiplicador }}<br />
         <label>Meta de estoque</label>
         <ul>
           <li><label>Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span></li>
           <li><label>Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span> (<span id="id_qtd_grade_tamanhos">0</span> packs)</li>
-          <li><label>Considerando a distribuição de cores:</label> <span id="id_estoque_ideal_cor" style="font-weight: bold; color: red;">0</span> (<span id="id_qtd_grade_tam_cor">0</span> pack)</li>
+          <li><label>Meta de estoque (considerando a distribuição de cores):</label>
+            <span id="id_estoque_ideal_cor" class="ponderado" style="font-weight: bold;">0</span> (<span id="id_qtd_grade_tam_cor">0</span> pack)
+            {% if meta_meta_estoque %}
+              <span class="meta">({{ meta_meta_estoque }})</span>
+            {% endif %}
+          </li>
         </ul>
 
         <table class="layout">
