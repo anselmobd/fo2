@@ -24,15 +24,14 @@
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>
   {% endif %}
-  <a href="{% url 'comercial:analise_vendas' %}">Voltar para a lista de modelos</a><br />
-  <a href="{% url 'comercial:ponderacao' %}" target="_blank">Visualiza ponderação aplicada</a>
-  <h3>Modelo {{ modref }}</h3>
+  <a href="{% url 'comercial:analise_vendas' %}" target="_blank">Vendas por modelo</a>
+  <h4>Modelo {{ modref }}</h4>
   <ul class="nav nav-tabs" id="myTab">
-    <li class="active"><a data-toggle="tab" href="#vendas">Vendas</a></li>
-    <li><a data-toggle="tab" href="#param">Meta de estoque</a></li>
+    <li><a data-toggle="tab" href="#vendas">Vendas</a></li>
+    <li class="active"><a data-toggle="tab" href="#param">Meta de estoque</a></li>
   </ul>
   <div class="tab-content">
-    <div id="vendas" class="tab-pane fade in active">
+    <div id="vendas" class="tab-pane fade">
       {% if modelo_ponderado %}
         {% if modelo_ponderado.data %}
           <h4>Vendas do modelo</h4>
@@ -70,7 +69,7 @@
         {% endif %}
       {% endif %}
     </div>
-    <div id="param" class="tab-pane fade">
+    <div id="param" class="tab-pane fade in active">
       <form class="" action="{% url 'comercial:analise_vendas' %}" method="post">
         {% csrf_token %}
         {{ form.non_field_errors }}
