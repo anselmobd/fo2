@@ -15,7 +15,7 @@
   font-weight: bold;
 }
 .ponderado {
-  color: brown;
+  color: blue;
 }
 .meta {
   color: green;
@@ -104,7 +104,7 @@
           <li><label>Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span></li>
           <li><label>Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span> (<span id="id_qtd_grade_tamanhos">0</span> packs)</li>
           <li><label>Meta de estoque (considerando a distribuição de cores):</label>
-            <span id="id_estoque_ideal_cor" class="ponderado" style="font-weight: bold;">0</span> (<span id="id_qtd_grade_tam_cor">0</span> pack)
+            <span id="id_estoque_ideal_cor" style="color: red; font-weight: bold;">0</span> (<span id="id_qtd_grade_tam_cor">0</span> pack)
             {% if meta_meta_estoque %}
               <span class="meta">({{ meta_meta_estoque }})</span>
             {% endif %}
