@@ -1,5 +1,5 @@
 from pprint import pprint
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from itertools import combinations_with_replacement, permutations, product
 
 from django.urls import reverse
@@ -9,7 +9,7 @@ from django.views import View
 from django import forms
 
 from base.views import O2BaseGetView, O2BaseGetPostView
-from utils.functions import dec_month, dec_months
+from utils.functions import dec_month, dec_months, safe_cast
 
 import comercial.models as models
 import comercial.queries as queries
@@ -373,10 +373,57 @@ class AnaliseModelo(O2BaseGetPostView):
                 'cor_form': cor_form,
             })
 
+    def grava_meta(self):
+        modelo = safe_cast(self.request.POST['modelo'], str, '')
+        venda = safe_cast(self.request.POST['venda'], int, 0)
+        multiplicador = safe_cast(
+            self.request.POST['multiplicador'], float, 0)
+        tamanhos = {}
+        for vari in [key for key in self.request.POST
+                     if key.startswith('tam_')]:
+            tamanhos[vari[4:]] = safe_cast(self.request.POST[vari], int, 0)
+        cores = {}
+        for vari in [key for key in self.request.POST
+                     if key.startswith('cor_')]:
+            cores[vari[4:]] = safe_cast(self.request.POST[vari], int, 0)
+
+        try:
+            meta = models.MetaEstoque.objects.get(
+                modelo=modelo, data=date.today())
+        except models.MetaEstoque.DoesNotExist:
+            meta = models.MetaEstoque()
+        meta.modelo = modelo
+        meta.venda_mensal = venda
+        meta.multiplicador = multiplicador
+        meta.data = date.today()
+        meta.save()
+
+        for tamanho in tamanhos:
+            try:
+                meta_tamanho = models.MetaEstoqueTamanho.objects.get(
+                    meta=meta, tamanho=tamanho)
+            except models.MetaEstoqueTamanho.DoesNotExist:
+                meta_tamanho = models.MetaEstoqueTamanho()
+            meta_tamanho.meta = meta
+            meta_tamanho.tamanho = tamanho
+            meta_tamanho.quantidade = tamanhos[tamanho]
+            meta_tamanho.save()
+
+        for cor in cores:
+            try:
+                meta_cor = models.MetaEstoqueCor.objects.get(
+                    meta=meta, cor=cor)
+            except models.MetaEstoqueCor.DoesNotExist:
+                meta_cor = models.MetaEstoqueCor()
+            meta_cor.meta = meta
+            meta_cor.cor = cor
+            meta_cor.quantidade = cores[cor]
+            meta_cor.save()
+
     def mount_context(self):
         modelo = self.form.cleaned_data['modelo']
         if 'grava' in self.request.POST:
-            print('grava')
+            self.grava_meta()
 
         nfs = list(models.ModeloPassadoPeriodo.objects.filter(
             modelo_id=1).order_by('ordem').values())
