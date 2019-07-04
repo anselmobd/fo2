@@ -76,7 +76,8 @@
         {% endif %}
       </div>
       <div id="param" class="tab-pane fade">
-        <form class="" action="" method="post">
+        <form class="" action="{% url 'comercial:analise_vendas' %}" method="post">
+          {% csrf_token %}
           {{ form.non_field_errors }}
           <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
           {{ form.venda.label_tag }} <span class="ponderado">(Ponderado: {{form.venda.initial}})</span> {{ form.venda }} |
@@ -91,6 +92,7 @@
           <table class="layout">
             <tr>
               <td style="vertical-align: top;">
+
                 {% if tam_form %}
                   <h4>Grade de tamanhos (pack)</h4>
                   {% for field in tam_form %}
@@ -105,6 +107,7 @@
 
                   <label>Quantidade total do pack:</label> <span id="id_tot_grade_tamanhos">0</span>
                 {% endif %}
+
               </td>
               <td></td>
               <td style="border-left: thin solid lightgrey;"></td>
@@ -127,6 +130,8 @@
               </td>
             </tr>
           </table>
+
+          <input type="submit" value="Grava definição"/>
         </form>
 
         <h4>Grade por cor e tamanho</h4>
