@@ -172,6 +172,13 @@ class AnaliseModelo(O2BaseGetPostView):
                     row['qtd'] / periodo['meses'])
                 data_row['qtd'] += round(
                     row['qtd'] * periodo['peso'] / self.tot_peso)
+
+        if len(data) == 0:
+            self.context.update({
+                'msg_erro': 'Modelo não encontrado',
+            })
+            return
+
         self.context['modelo_ponderado'] = {
             'headers': ['Modelo', 'Venda ponderada',
                         *['{} (P:{})'.format(

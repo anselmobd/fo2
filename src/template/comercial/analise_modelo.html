@@ -26,11 +26,14 @@
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
   </form>
+  <a href="{% url 'comercial:analise_vendas' %}" target="_blank">Vendas por modelo</a>
+  {% if modelo %}
+    <h4>Modelo {{ modelo }}</h4>
+  {% endif %}
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>
   {% endif %}
-  <a href="{% url 'comercial:analise_vendas' %}" target="_blank">Vendas por modelo</a>
-  <h4>Modelo {{ modelo }}</h4>
+  {% if modelo_ponderado %}
   <ul class="nav nav-tabs" id="myTab">
     <li><a data-toggle="tab" href="#vendas">Vendas</a></li>
     <li class="active"><a data-toggle="tab" href="#param">Meta de estoque</a></li>
@@ -168,6 +171,7 @@
 
     </div>
   </div>
+  {% endif %}
 {% endblock %}
 
 {% block javascript %}
