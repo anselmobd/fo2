@@ -21,11 +21,16 @@
 {% endblock %}
 
 {% block content %}
+  <form action="{% url 'comercial:analise_modelo' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+  </form>
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>
   {% endif %}
   <a href="{% url 'comercial:analise_vendas' %}" target="_blank">Vendas por modelo</a>
-  <h4>Modelo {{ modref }}</h4>
+  <h4>Modelo {{ modelo }}</h4>
   <ul class="nav nav-tabs" id="myTab">
     <li><a data-toggle="tab" href="#vendas">Vendas</a></li>
     <li class="active"><a data-toggle="tab" href="#param">Meta de estoque</a></li>
@@ -70,12 +75,13 @@
       {% endif %}
     </div>
     <div id="param" class="tab-pane fade in active">
-      <form class="" action="{% url 'comercial:analise_vendas' %}" method="post">
+      <form class="" action="{% url 'comercial:analise_modelo' %}" method="post">
         {% csrf_token %}
-        {{ form.non_field_errors }}
+        {{ meta_form.non_field_errors }}
+        {{ meta_form.modelo }}
         <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
-        {{ form.venda.label_tag }} <span class="ponderado">(Ponderado: {{form.venda.initial}})</span> {{ form.venda }} |
-        {{ form.multiplicador.label_tag }} ({{form.multiplicador.initial}}) {{ form.multiplicador }}<br />
+        {{ meta_form.venda.label_tag }} <span class="ponderado">(Ponderado: {{meta_form.venda.initial}})</span> {{ meta_form.venda }} |
+        {{ meta_form.multiplicador.label_tag }} ({{meta_form.multiplicador.initial}}) {{ meta_form.multiplicador }}<br />
         <label>Meta de estoque</label>
         <ul>
           <li><label>Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span></li>
@@ -125,7 +131,7 @@
           </tr>
         </table>
 
-        <input type="submit" value="Grava definição"/>
+        <input type="submit" name="grava" value="Grava definição"/>
       </form>
 
       <h4>Grade por cor e tamanho</h4>
@@ -354,11 +360,11 @@
   }
 
   $(document).ready(function() {
-    var inputbox = $("#{{form.multiplicador.id_for_label}}");
+    var inputbox = $("#{{meta_form.multiplicador.id_for_label}}");
     inputbox.on('change', calc_tudo);
     inputbox.on('paste', calc_tudo);
 
-    var inputbox = $("#{{form.venda.id_for_label}}");
+    var inputbox = $("#{{meta_form.venda.id_for_label}}");
     inputbox.on('change', calc_tudo);
     inputbox.on('paste', calc_tudo);
 

@@ -8,11 +8,12 @@ from django.db import connections
 from django.views import View
 from django import forms
 
-from base.views import O2BaseGetView
+from base.views import O2BaseGetView, O2BaseGetPostView
 from utils.functions import dec_month, dec_months
 
 import comercial.models as models
 import comercial.queries as queries
+import comercial.forms as come_forms
 
 
 class AnaliseVendas(O2BaseGetView):
@@ -101,16 +102,18 @@ class AnaliseVendas(O2BaseGetView):
         self.mount_context_inicial()
 
 
-class AnaliseModelo(O2BaseGetView):
+class AnaliseModelo(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(AnaliseModelo, self).__init__(*args, **kwargs)
+        self.Form_class = come_forms.AnaliseModeloForm
         self.template_name = 'comercial/analise_modelo.html'
         self.title_name = 'Análise de modelo'
+        self.get_args = ['modelo']
 
-    def mount_context_modelo(self, modref):
+    def mount_context_modelo(self, modelo):
         self.context.update({
-            'modref': modref,
+            'modelo': modelo,
         })
 
         # vendas do modelo
@@ -120,7 +123,7 @@ class AnaliseModelo(O2BaseGetView):
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='modelo', modelo=modref)
+                colecao=None, cliente=None, por='modelo', modelo=modelo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['modelo'] == row['modelo']),
@@ -155,7 +158,7 @@ class AnaliseModelo(O2BaseGetView):
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='tam', modelo=modref,
+                colecao=None, cliente=None, por='tam', modelo=modelo,
                 order_qtd=False)
             for row in data_periodo:
                 data_row = next(
@@ -243,7 +246,7 @@ class AnaliseModelo(O2BaseGetView):
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='cor', modelo=modref)
+                colecao=None, cliente=None, por='cor', modelo=modelo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['cor'] == row['cor']),
@@ -302,7 +305,7 @@ class AnaliseModelo(O2BaseGetView):
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='ref', modelo=modref)
+                colecao=None, cliente=None, por='ref', modelo=modelo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['ref'] == row['ref']),
@@ -333,6 +336,8 @@ class AnaliseModelo(O2BaseGetView):
         multiplicador = 2
 
         meta_form = forms.Form()
+        meta_form.fields['modelo'] = forms.CharField(
+            initial=modelo, widget=forms.HiddenInput())
         meta_form.fields['venda'] = forms.IntegerField(
             required=True, initial=venda_mensal,
             label='Venda mensal')
@@ -341,7 +346,7 @@ class AnaliseModelo(O2BaseGetView):
             label='Multiplicador')
 
         self.context.update({
-            'form': meta_form,
+            'meta_form': meta_form,
             'venda_mensal': venda_mensal,
             'multiplicador': multiplicador,
         })
@@ -369,9 +374,9 @@ class AnaliseModelo(O2BaseGetView):
             })
 
     def mount_context(self):
-        modref = None
-        if 'modref' in self.kwargs:
-            modref = self.kwargs['modref']
+        modelo = self.form.cleaned_data['modelo']
+        if 'grava' in self.request.POST:
+            print('grava')
 
         nfs = list(models.ModeloPassadoPeriodo.objects.filter(
             modelo_id=1).order_by('ordem').values())
@@ -421,7 +426,7 @@ class AnaliseModelo(O2BaseGetView):
 
         self.cursor = connections['so'].cursor()
 
-        self.mount_context_modelo(modref)
+        self.mount_context_modelo(modelo)
 
 
 class Ponderacao(O2BaseGetView):

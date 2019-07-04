@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^analise_modelo/$',
         views.estoque.AnaliseModelo.as_view(),
         name='analise_modelo'),
-    url(r'^analise_modelo/(?P<modref>.+)/$',
+    url(r'^analise_modelo/(?P<modelo>.+)/$',
         views.estoque.AnaliseModelo.as_view(),
         name='analise_modelo__get'),
 
