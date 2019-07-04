@@ -70,6 +70,12 @@ class O2BaseForm(forms.Form):
                     attrs.pop('autofocus')
 
 
+class O2FieldModeloForm(forms.Form):
+    modelo = forms.CharField(
+        required=False,
+        widget=forms.NumberInput(attrs={'size': 4}))
+
+
 class O2FieldRefForm(forms.Form):
     ref = forms.CharField(
         label='Referência',
