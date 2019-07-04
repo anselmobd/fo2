@@ -16,3 +16,10 @@ class ModeloPassadoPeriodoAdmin(admin.ModelAdmin):
 
 intr_adm_site.register(ModeloPassado, ModeloPassadoAdmin)
 intr_adm_site.register(ModeloPassadoPeriodo, ModeloPassadoPeriodoAdmin)
+
+
+class MetaEstoqueAdmin(admin.ModelAdmin):
+    pass
+
+
+intr_adm_site.register(MetaEstoque, MetaEstoqueAdmin)
