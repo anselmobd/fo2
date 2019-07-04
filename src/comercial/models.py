@@ -54,3 +54,20 @@ class MetaEstoque(models.Model):
     class Meta:
         db_table = "fo2_meta_estoque"
         verbose_name = "Parametros para meta de estoque"
+
+
+class MetaEstoqueTamanho(models.Model):
+    meta = models.ForeignKey(
+        MetaEstoque, on_delete=models.CASCADE)
+    tamanho = models.CharField(max_length=3)
+    quantidade = models.IntegerField()
+
+    def __str__(self):
+        return '{} - {}'.format(
+            self.modelo,
+            self.data,
+        )
+
+    class Meta:
+        db_table = "fo2_meta_estoque_tamanho"
+        verbose_name = "Grade de tamanhos de meta de estoque"
