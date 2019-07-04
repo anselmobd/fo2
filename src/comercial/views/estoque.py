@@ -338,6 +338,8 @@ class AnaliseModelo(O2BaseGetPostView):
         meta_form = forms.Form()
         meta_form.fields['modelo'] = forms.CharField(
             initial=modelo, widget=forms.HiddenInput())
+        meta_form.fields['meta_estoque'] = forms.IntegerField(
+            initial=0, widget=forms.HiddenInput())
         meta_form.fields['venda'] = forms.IntegerField(
             required=True, initial=venda_mensal,
             label='Venda mensal')
@@ -378,10 +380,13 @@ class AnaliseModelo(O2BaseGetPostView):
         venda = safe_cast(self.request.POST['venda'], int, 0)
         multiplicador = safe_cast(
             self.request.POST['multiplicador'], float, 0)
+        meta_estoque = safe_cast(self.request.POST['meta_estoque'], int, 0)
+
         tamanhos = {}
         for vari in [key for key in self.request.POST
                      if key.startswith('tam_')]:
             tamanhos[vari[4:]] = safe_cast(self.request.POST[vari], int, 0)
+
         cores = {}
         for vari in [key for key in self.request.POST
                      if key.startswith('cor_')]:
@@ -396,6 +401,7 @@ class AnaliseModelo(O2BaseGetPostView):
         meta.venda_mensal = venda
         meta.multiplicador = multiplicador
         meta.data = date.today()
+        meta.meta_estoque = meta_estoque
         meta.save()
 
         for tamanho in tamanhos:
