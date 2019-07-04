@@ -63,9 +63,10 @@ class MetaEstoqueTamanho(models.Model):
     quantidade = models.IntegerField()
 
     def __str__(self):
-        return '{} - {}'.format(
-            self.modelo,
-            self.data,
+        return '{} - {} - {}'.format(
+            self.meta.modelo,
+            self.meta.data,
+            self.tamanho,
         )
 
     class Meta:
