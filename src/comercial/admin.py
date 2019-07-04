@@ -22,4 +22,9 @@ class MetaEstoqueAdmin(admin.ModelAdmin):
     pass
 
 
+class MetaEstoqueTamanhoAdmin(admin.ModelAdmin):
+    pass
+
+
 intr_adm_site.register(MetaEstoque, MetaEstoqueAdmin)
+intr_adm_site.register(MetaEstoqueTamanho, MetaEstoqueTamanhoAdmin)
