@@ -44,6 +44,8 @@ class MetaEstoque(models.Model):
     data = models.DateField()
     venda_mensal = models.IntegerField()
     multiplicador = models.FloatField()
+    meta_estoque = models.IntegerField(
+        default=0)
 
     def __str__(self):
         return '{} - {}'.format(
