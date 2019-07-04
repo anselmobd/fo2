@@ -1,6 +1,6 @@
 from django import forms
 
-from produto.forms import O2BaseForm, O2FieldRefForm
+from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
 
 
 class ClienteForm(forms.Form):
@@ -24,3 +24,9 @@ class VendasPorForm(
             # 'cnpj',
             'ref',
         ])
+
+
+class AnaliseModeloForm(
+        O2BaseForm,
+        O2FieldModeloForm):
+    pass
