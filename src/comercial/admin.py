@@ -19,12 +19,17 @@ intr_adm_site.register(ModeloPassadoPeriodo, ModeloPassadoPeriodoAdmin)
 
 
 class MetaEstoqueAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'venda_mensal', 'multiplicador']
 
 
 class MetaEstoqueTamanhoAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'quantidade']
+
+
+class MetaEstoqueCorAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'quantidade']
 
 
 intr_adm_site.register(MetaEstoque, MetaEstoqueAdmin)
 intr_adm_site.register(MetaEstoqueTamanho, MetaEstoqueTamanhoAdmin)
+intr_adm_site.register(MetaEstoqueCor, MetaEstoqueCorAdmin)
