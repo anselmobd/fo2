@@ -356,22 +356,13 @@
     }
     for (cod_cor in grades_por_cor) {
       var e_cell;
-      console.log('cor ini for');
-      console.log(cod_cor);
       var total_cor = 0;
       for (cod_tam in dict_tamanhos) {
-        console.log(cod_tam);
-        console.log('item_'+cod_tam+'_'+cod_cor);
         e_cell = document.getElementById('item_'+cod_tam+'_'+cod_cor);
-        console.log('cell');
-        console.log(e_cell.innerHTML);
         valor = parseInt(e_cell.innerHTML);
-        console.log(valor);
         total_cor = total_cor + valor;
         total_tam[cod_tam] = total_tam[cod_tam] + valor;
       }
-      console.log('cor');
-      console.log(cod_cor);
       e_cell = document.getElementById('tot_cor_'+cod_cor);
       e_cell.innerHTML = total_cor;
     }
