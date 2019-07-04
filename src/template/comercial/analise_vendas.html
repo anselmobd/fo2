@@ -76,57 +76,58 @@
         {% endif %}
       </div>
       <div id="param" class="tab-pane fade">
-        {{ form.non_field_errors }}
-        <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
-        {{ form.venda.label_tag }} <span class="ponderado">(Ponderado: {{form.venda.initial}})</span> {{ form.venda }} |
-        {{ form.multiplicador.label_tag }} ({{form.multiplicador.initial}}) {{ form.multiplicador }}<br />
-        <label>Meta de estoque</label>
-        <ul>
-          <li><label>Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span></li>
-          <li><label>Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span> (<span id="id_qtd_grade_tamanhos">0</span> packs)</li>
-          <li><label>Considerando a distribuição de cores:</label> <span id="id_estoque_ideal_cor" style="font-weight: bold; color: red;">0</span> (<span id="id_qtd_grade_tam_cor">0</span> pack)</li>
-        </ul>
+        <form class="" action="" method="post">
+          {{ form.non_field_errors }}
+          <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
+          {{ form.venda.label_tag }} <span class="ponderado">(Ponderado: {{form.venda.initial}})</span> {{ form.venda }} |
+          {{ form.multiplicador.label_tag }} ({{form.multiplicador.initial}}) {{ form.multiplicador }}<br />
+          <label>Meta de estoque</label>
+          <ul>
+            <li><label>Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span></li>
+            <li><label>Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span> (<span id="id_qtd_grade_tamanhos">0</span> packs)</li>
+            <li><label>Considerando a distribuição de cores:</label> <span id="id_estoque_ideal_cor" style="font-weight: bold; color: red;">0</span> (<span id="id_qtd_grade_tam_cor">0</span> pack)</li>
+          </ul>
 
-        <table class="layout">
-          <tr>
-            <td style="vertical-align: top;">
-        {% if tam_form %}
-          <h4>Grade de tamanhos (pack)</h4>
-          {% for field in tam_form %}
-              <div class="fieldWrapper">
-                  {{ field.errors }}
-                  {{ field.label_tag }} <span class="ponderado">({{ field.initial }})</span> {{ field }}
-                  {% if field.help_text %}
-                  <p class="help">{{ field.help_text|safe }}</p>
-                  {% endif %}
-              </div>
-          {% endfor %}
+          <table class="layout">
+            <tr>
+              <td style="vertical-align: top;">
+                {% if tam_form %}
+                  <h4>Grade de tamanhos (pack)</h4>
+                  {% for field in tam_form %}
+                      <div class="fieldWrapper">
+                          {{ field.errors }}
+                          {{ field.label_tag }} <span class="ponderado">({{ field.initial }})</span> {{ field }}
+                          {% if field.help_text %}
+                          <p class="help">{{ field.help_text|safe }}</p>
+                          {% endif %}
+                      </div>
+                  {% endfor %}
 
-          <label>Quantidade total do pack:</label> <span id="id_tot_grade_tamanhos">0</span>
-        {% endif %}
+                  <label>Quantidade total do pack:</label> <span id="id_tot_grade_tamanhos">0</span>
+                {% endif %}
+              </td>
+              <td></td>
+              <td style="border-left: thin solid lightgrey;"></td>
+              <td style="vertical-align: top;">
 
-      </td>
-      <td></td>
-      <td style="border-left: thin solid lightgrey;"></td>
-      <td style="vertical-align: top;">
+                {% if cor_form %}
+                <h4>Distribuição das cores</h4>
+                  {% for field in cor_form %}
+                      <div class="fieldWrapper">
+                          {{ field.errors }}
+                          {{ field.label_tag }} <span class="ponderado">({{ field.initial }})</span> {{ field }} (<span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> packs)
+                          {% if field.help_text %}
+                          <p class="help">{{ field.help_text|safe }}</p>
+                          {% endif %}
+                      </div>
+                  {% endfor %}
+                  <label>Quantidade total da distribuição:</label> <span id="id_tot_grade_cores">0</span>
+                {% endif %}
 
-        {% if cor_form %}
-        <h4>Distribuição das cores</h4>
-          {% for field in cor_form %}
-              <div class="fieldWrapper">
-                  {{ field.errors }}
-                  {{ field.label_tag }} <span class="ponderado">({{ field.initial }})</span> {{ field }} (<span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> packs)
-                  {% if field.help_text %}
-                  <p class="help">{{ field.help_text|safe }}</p>
-                  {% endif %}
-              </div>
-          {% endfor %}
-          <label>Quantidade total da distribuição:</label> <span id="id_tot_grade_cores">0</span>
-        {% endif %}
-
-      </td>
-    </tr>
-  </table>
+              </td>
+            </tr>
+          </table>
+        </form>
 
         <h4>Grade por cor e tamanho</h4>
         <table id="t_grade">
