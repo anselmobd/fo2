@@ -19,9 +19,13 @@ urlpatterns = [
     url(r'^analise_vendas/$',
         views.estoque.AnaliseVendas.as_view(),
         name='analise_vendas'),
-    url(r'^analise_vendas/(?P<modref>.+)/$',
-        views.estoque.AnaliseVendas.as_view(),
-        name='analise_vendas__get'),
+
+    url(r'^analise_modelo/$',
+        views.estoque.AnaliseModelo.as_view(),
+        name='analise_modelo'),
+    url(r'^analise_modelo/(?P<modref>.+)/$',
+        views.estoque.AnaliseModelo.as_view(),
+        name='analise_modelo__get'),
 
     url(r'^ponderacao/$',
         views.estoque.Ponderacao.as_view(),

@@ -6,8 +6,12 @@
       <li><a href="{% url 'comercial:vendas_cor' %}">Por cor</a></li>
       <li><a href="{% url 'comercial:vendas_tamanho' %}">Por tamanho</a></li>
     </ul>
-    <li><a href="{% url 'comercial:ponderacao' %}">Ponderação de vendas</a></li>
-    <li><a href="{% url 'comercial:analise_vendas' %}">Análise de vendas</a></li>
+    <li>Ponderação de vendas</li>
+    <ul>
+      <li><a href="{% url 'comercial:ponderacao' %}">Pesos por período</a></li>
+      <li><a href="{% url 'comercial:analise_vendas' %}">Vendas por modelo</a></li>
+      <li><a href="{% url 'comercial:analise_modelo' %}">Meta de estoque de modelo</a></li>
+    </ul>
   </ul>
   <li>Sistema Tussor (antigo)</li>
   <ul>

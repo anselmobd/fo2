@@ -39,7 +39,7 @@ class AnaliseVendas(O2BaseGetView):
                         'modelo': row['modelo'],
                         'modelo|TARGET': '_blank',
                         'modelo|LINK': reverse(
-                            'comercial:analise_vendas__get',
+                            'comercial:analise_modelo__get',
                             args=[row['modelo']]),
                         **zero_data_row
                     }
@@ -53,6 +53,60 @@ class AnaliseVendas(O2BaseGetView):
             'data': data,
             'style': self.style,
         })
+
+    def mount_context(self):
+        nfs = list(models.ModeloPassadoPeriodo.objects.filter(
+            modelo_id=1).order_by('ordem').values())
+        if len(nfs) == 0:
+            self.context.update({
+                'msg_erro': 'Nenhum período definido',
+            })
+            return
+        self.data_nfs = list(nfs)
+
+        self.periodos = []
+        self.tot_peso = 0
+        n_mes = 0
+        hoje = datetime.today()
+        mes = dec_month(hoje, 1)
+        self.style = {}
+        for i, row in enumerate(self.data_nfs):
+            periodo = {
+                'range': '{}:{}'.format(
+                    n_mes+row['meses'], n_mes),
+                'meses': row['meses'],
+                'peso': row['peso'],
+            }
+            n_mes += row['meses']
+            self.tot_peso += row['meses'] * row['peso']
+
+            mes_fim = mes.strftime("%m/%Y")
+            mes = dec_months(mes, row['meses']-1)
+            mes_ini = mes.strftime("%m/%Y")
+            mes = dec_month(mes)
+            if row['meses'] == 1:
+                periodo['descr'] = mes_ini
+            else:
+                if mes_ini[-4:] == mes_fim[-4:]:
+                    periodo['descr'] = '{} - {}'.format(mes_fim[:2], mes_ini)
+                else:
+                    periodo['descr'] = '{} - {}'.format(mes_fim, mes_ini)
+
+            self.style[i+2] = 'text-align: right;'
+
+            self.periodos.append(periodo)
+
+        self.cursor = connections['so'].cursor()
+
+        self.mount_context_inicial()
+
+
+class AnaliseModelo(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(AnaliseModelo, self).__init__(*args, **kwargs)
+        self.template_name = 'comercial/analise_modelo.html'
+        self.title_name = 'Análise de modelo'
 
     def mount_context_modelo(self, modref):
         self.context.update({
@@ -367,10 +421,7 @@ class AnaliseVendas(O2BaseGetView):
 
         self.cursor = connections['so'].cursor()
 
-        if modref is None:
-            self.mount_context_inicial()
-        else:
-            self.mount_context_modelo(modref)
+        self.mount_context_modelo(modref)
 
 
 class Ponderacao(O2BaseGetView):
