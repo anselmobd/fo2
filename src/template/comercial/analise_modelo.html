@@ -146,15 +146,15 @@
               {% for tam in tamanho_ponderado.data %}
                 <td id="item_{{ tam.tam }}_{{ cor.cor }}" class="number">0</td>
               {% endfor %}
-              <td id="tot_cor_{{ cor.cor }}" class="number total">7</td>
+              <td id="tot_cor_{{ cor.cor }}" class="number total">0</td>
             </tr>
           {% endfor %}
           <tr>
             <td class="total">Totais</td>
             {% for tam in tamanho_ponderado.data %}
-              <td id="tot_tam_{{ tam.tam }}" class="number total">8</td>
+              <td id="tot_tam_{{ tam.tam }}" class="number total">0</td>
             {% endfor %}
-            <td id="tot_tam_cor" class="number total">8</td>
+            <td id="tot_tam_cor" class="number total">0</td>
           </tr>
         </tbody>
       </table>
