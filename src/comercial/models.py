@@ -37,3 +37,20 @@ class ModeloPassadoPeriodo(models.Model):
         db_table = "fo2_mod_pass_periodo"
         verbose_name = "Período de modelo de análise do passado"
         verbose_name_plural = "Períodos de modelo de análise do passado"
+
+
+class MetaEstoque(models.Model):
+    modelo = models.CharField(max_length=5)
+    data = models.DateField()
+    venda_mensal = models.IntegerField()
+    multiplicador = models.FloatField()
+
+    def __str__(self):
+        return '{} - {}'.format(
+            self.modelo,
+            self.data,
+        )
+
+    class Meta:
+        db_table = "fo2_meta_estoque"
+        verbose_name = "Parametros para meta de estoque"
