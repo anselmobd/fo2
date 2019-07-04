@@ -416,6 +416,23 @@ class AnaliseModelo(O2BaseGetPostView):
                 'cor_form': cor_form,
             })
 
+        # última meta
+        meta = models.MetaEstoque.objects.filter(modelo=modelo)
+        meta = meta.annotate(antiga=Exists(
+            models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        meta = meta.filter(antiga=False)
+        meta = list(meta.values())
+        if len(meta) == 1:
+            meta = meta[0]
+            self.context.update({
+                'meta_venda_mensal': meta['venda_mensal'],
+                'meta_multiplicador': meta['multiplicador'],
+            })
+
     def grava_meta(self):
         modelo = safe_cast(self.request.POST['modelo'], str, '')
         venda = safe_cast(self.request.POST['venda'], int, 0)
