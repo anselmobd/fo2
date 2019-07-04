@@ -242,6 +242,7 @@
     var valor
 
     valor = document.getElementById('id_venda').value;
+    valor = parseInt(valor);
     if ( !isNaN(valor) ) {
       if ( valor >= 0 ) {
         venda_mensal = valor;
@@ -249,6 +250,7 @@
     }
 
     valor = document.getElementById('id_multiplicador').value;
+    valor = parseFloat(valor);
     if ( !isNaN(valor) ) {
       if ( valor >= 0 ) {
         multiplicador = valor;
