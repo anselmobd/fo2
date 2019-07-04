@@ -431,6 +431,7 @@ class AnaliseModelo(O2BaseGetPostView):
             self.context.update({
                 'meta_venda_mensal': meta['venda_mensal'],
                 'meta_multiplicador': meta['multiplicador'],
+                'meta_meta_estoque': meta['meta_estoque'],
             })
 
     def grava_meta(self):
