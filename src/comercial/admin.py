@@ -19,7 +19,7 @@ intr_adm_site.register(ModeloPassadoPeriodo, ModeloPassadoPeriodoAdmin)
 
 
 class MetaEstoqueAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'venda_mensal', 'multiplicador']
+    list_display = ['__str__', 'venda_mensal', 'multiplicador', 'meta_estoque']
 
 
 class MetaEstoqueTamanhoAdmin(admin.ModelAdmin):
