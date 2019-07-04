@@ -79,6 +79,7 @@
         {% csrf_token %}
         {{ meta_form.non_field_errors }}
         {{ meta_form.modelo }}
+        {{ meta_form.meta_estoque }}
         <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
         {{ meta_form.venda.label_tag }} <span class="ponderado">(Ponderado: {{meta_form.venda.initial}})</span> {{ meta_form.venda }} |
         {{ meta_form.multiplicador.label_tag }} ({{meta_form.multiplicador.initial}}) {{ meta_form.multiplicador }}<br />
@@ -275,6 +276,7 @@
   function calc_tot_grade_cor() {
     var e_tot_grade_cores = document.getElementById('id_tot_grade_cores');
     var e_estoque_ideal_cor = document.getElementById('id_estoque_ideal_cor');
+    var e_input_meta_estoque = document.getElementById('id_meta_estoque');
     var e_qtd_grade_tam_cor = document.getElementById('id_qtd_grade_tam_cor');
     tot_grade_cores = tot_dict(dict_cores);
     e_tot_grade_cores.innerText = tot_grade_cores;
@@ -289,6 +291,7 @@
     }
     estoque_ideal_cor = tot_grades_por_cor * tot_grade_tamanhos;
     e_estoque_ideal_cor.innerText = estoque_ideal_cor;
+    e_input_meta_estoque.value = estoque_ideal_cor;
     e_qtd_grade_tam_cor.innerText = tot_grades_por_cor;
   }
 
