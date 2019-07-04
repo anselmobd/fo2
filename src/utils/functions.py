@@ -111,3 +111,10 @@ def debug(message, level=None, depth=1):
 
 def line_tik():
     debug(int(round(time.time() * 1000))/1000, 1, depth=2)
+
+
+def safe_cast(val, to_type, default=None):
+    try:
+        return to_type(val)
+    except (ValueError, TypeError):
+        return default
