@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.db import connections
 from django.views import View
 from django import forms
+from django.db.models import Exists, OuterRef
 
 from base.views import O2BaseGetView, O2BaseGetPostView
 from utils.functions import dec_month, dec_months, safe_cast
@@ -25,8 +26,36 @@ class AnaliseVendas(O2BaseGetView):
 
     def mount_context_inicial(self):
         data = []
-        zero_data_row = {p['range']: 0 for p in self.periodos}
+        zero_data_row = {'meta': ' ', 'data': ' '}
+        zero_data_row.update({p['range']: 0 for p in self.periodos})
         total_data_row = zero_data_row.copy()
+
+        metas = models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        metas = metas.filter(meta_estoque__gt=0, antiga=False)
+        metas = metas.order_by('-meta_estoque').values()
+        for row in metas:
+            data_row = next(
+                (dr for dr in data if dr['modelo'] == row['modelo']),
+                False)
+            if not data_row:
+                data_row = {
+                    'modelo': row['modelo'],
+                    'modelo|TARGET': '_blank',
+                    'modelo|LINK': reverse(
+                        'comercial:analise_modelo__get',
+                        args=[row['modelo']]),
+                    **zero_data_row
+                }
+                data.append(data_row)
+            data_row['meta'] = row['meta_estoque']
+            data_row['data'] = row['data']
+
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
@@ -49,8 +78,10 @@ class AnaliseVendas(O2BaseGetView):
                     row['qtd'] / periodo['meses'])
                 total_data_row[periodo['range']] += row['qtd']
         self.context.update({
-            'headers': ['Modelo', *[p['descr'] for p in self.periodos]],
-            'fields': ['modelo', *[p['range'] for p in self.periodos]],
+            'headers': ['Modelo', 'Meta de estoque', 'Data da meta',
+                        *[p['descr'] for p in self.periodos]],
+            'fields': ['modelo', 'meta', 'data',
+                       *[p['range'] for p in self.periodos]],
             'data': data,
             'style': self.style,
         })
@@ -70,8 +101,11 @@ class AnaliseVendas(O2BaseGetView):
         n_mes = 0
         hoje = datetime.today()
         mes = dec_month(hoje, 1)
-        self.style = {}
-        for i, row in enumerate(self.data_nfs):
+        self.style = {
+            2: 'text-align: right;',
+            3: 'text-align: left;',
+        }
+        for row in self.data_nfs:
             periodo = {
                 'range': '{}:{}'.format(
                     n_mes+row['meses'], n_mes),
@@ -93,7 +127,7 @@ class AnaliseVendas(O2BaseGetView):
                 else:
                     periodo['descr'] = '{} - {}'.format(mes_fim, mes_ini)
 
-            self.style[i+2] = 'text-align: right;'
+            self.style[max(self.style.keys())+1] = 'text-align: right;'
 
             self.periodos.append(periodo)
 
