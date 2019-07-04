@@ -384,7 +384,7 @@ class AnaliseModelo(O2BaseGetPostView):
         meta_form.fields['venda'] = forms.IntegerField(
             required=True, initial=venda_mensal,
             label='Venda mensal')
-        meta_form.fields['multiplicador'] = forms.IntegerField(
+        meta_form.fields['multiplicador'] = forms.FloatField(
             required=True, initial=multiplicador,
             label='Multiplicador')
 
