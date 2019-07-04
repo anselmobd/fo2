@@ -17,6 +17,9 @@
 .ponderado {
   color: brown;
 }
+.meta {
+  color: green;
+}
 </style>
 {% endblock %}
 
@@ -84,8 +87,17 @@
         {{ meta_form.modelo }}
         {{ meta_form.meta_estoque }}
         <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
-        {{ meta_form.venda.label_tag }} <span class="ponderado">(Ponderado: {{meta_form.venda.initial}})</span> {{ meta_form.venda }} |
-        {{ meta_form.multiplicador.label_tag }} ({{meta_form.multiplicador.initial}}) {{ meta_form.multiplicador }}<br />
+        {{ meta_form.venda.label_tag }}
+        <span class="ponderado">(Ponderado: {{meta_form.venda.initial}})</span>
+        {% if meta_venda_mensal %}
+          <span class="meta">(Última meta: {{ meta_venda_mensal }})</span>
+        {% endif %}
+        {{ meta_form.venda }}<br />
+        {{ meta_form.multiplicador.label_tag }}
+        ({{meta_form.multiplicador.initial}})
+        {% if meta_multiplicador %}
+          <span class="meta">({{ meta_multiplicador }})</span>
+        {% endif %}        {{ meta_form.multiplicador }}<br />
         <label>Meta de estoque</label>
         <ul>
           <li><label>Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span></li>
