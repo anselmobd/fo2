@@ -17,6 +17,10 @@
   font-weight: bold;
 }
 
+.ponderado {
+  color: brown;
+}
+
 </style>
 {% endblock %}
 
@@ -74,7 +78,7 @@
       <div id="param" class="tab-pane fade">
         {{ form.non_field_errors }}
         <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
-        {{ form.venda.label_tag }} (Ponderado: {{form.venda.initial}}) {{ form.venda }} |
+        {{ form.venda.label_tag }} <span class="ponderado">(Ponderado: {{form.venda.initial}})</span> {{ form.venda }} |
         {{ form.multiplicador.label_tag }} ({{form.multiplicador.initial}}) {{ form.multiplicador }}<br />
         <label>Meta de estoque</label>
         <ul>
@@ -91,7 +95,7 @@
           {% for field in tam_form %}
               <div class="fieldWrapper">
                   {{ field.errors }}
-                  {{ field.label_tag }} ({{ field.initial }}) {{ field }}
+                  {{ field.label_tag }} <span class="ponderado">({{ field.initial }})</span> {{ field }}
                   {% if field.help_text %}
                   <p class="help">{{ field.help_text|safe }}</p>
                   {% endif %}
@@ -111,7 +115,7 @@
           {% for field in cor_form %}
               <div class="fieldWrapper">
                   {{ field.errors }}
-                  {{ field.label_tag }} ({{ field.initial }}) {{ field }} (<span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> packs)
+                  {{ field.label_tag }} <span class="ponderado">({{ field.initial }})</span> {{ field }} (<span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> packs)
                   {% if field.help_text %}
                   <p class="help">{{ field.help_text|safe }}</p>
                   {% endif %}
