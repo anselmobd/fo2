@@ -397,21 +397,25 @@
   $(document).ready(function() {
     var inputbox = $("#{{meta_form.multiplicador.id_for_label}}");
     inputbox.on('change', calc_tudo);
+    inputbox.on('keyup', calc_tudo);
     inputbox.on('paste', calc_tudo);
 
     var inputbox = $("#{{meta_form.venda.id_for_label}}");
     inputbox.on('change', calc_tudo);
+    inputbox.on('keyup', calc_tudo);
     inputbox.on('paste', calc_tudo);
 
     for (key in dict_cores) {
       var inputbox = $("#id_cor_"+key);
       inputbox.on('change', calc_tudo);
+      inputbox.on('keyup', calc_tudo);
       inputbox.on('paste', calc_tudo);
     }
 
     for (key in dict_tamanhos) {
       var inputbox = $("#id_tam_"+key);
       inputbox.on('change', calc_tudo);
+      inputbox.on('keyup', calc_tudo);
       inputbox.on('paste', calc_tudo);
     }
   });
