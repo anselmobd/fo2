@@ -425,13 +425,27 @@ class AnaliseModelo(O2BaseGetPostView):
             )
         ))
         meta = meta.filter(antiga=False)
-        meta = list(meta.values())
-        if len(meta) == 1:
-            meta = meta[0]
+        meta_list = list(meta.values())
+        if len(meta_list) == 1:
+            meta_list = meta_list[0]
+
+            meta_tamanhos = models.MetaEstoqueTamanho.objects.filter(meta=meta)
+            meta_grade_tamanhos = {}
+            for tamanho in meta_tamanhos:
+                meta_grade_tamanhos[
+                    'tam_{}'.format(tamanho.tamanho)] = tamanho.quantidade
+
+            meta_cores = models.MetaEstoqueCor.objects.filter(meta=meta)
+            meta_grade_cores = {}
+            for cor in meta_cores:
+                meta_grade_cores['cor_{}'.format(cor.cor)] = cor.quantidade
+
             self.context.update({
-                'meta_venda_mensal': meta['venda_mensal'],
-                'meta_multiplicador': meta['multiplicador'],
-                'meta_meta_estoque': meta['meta_estoque'],
+                'meta_venda_mensal': meta_list['venda_mensal'],
+                'meta_multiplicador': meta_list['multiplicador'],
+                'meta_meta_estoque': meta_list['meta_estoque'],
+                'meta_grade_tamanhos': meta_grade_tamanhos,
+                'meta_grade_cores': meta_grade_cores,
             })
 
     def grava_meta(self):

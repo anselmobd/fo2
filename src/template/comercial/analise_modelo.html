@@ -120,7 +120,12 @@
                 {% for field in tam_form %}
                     <div class="fieldWrapper">
                         {{ field.errors }}
-                        {{ field.label_tag }} <span class="ponderado">({{ field.initial }})</span> {{ field }}
+                        {{ field.label_tag }}
+                        <span class="ponderado">({{ field.initial }})</span>
+                        {% if meta_grade_tamanhos %}
+                          <span class="meta">({{ meta_grade_tamanhos|get_item:field.html_name }})</span>
+                        {% endif %}
+                        {{ field }}
                         {% if field.help_text %}
                         <p class="help">{{ field.help_text|safe }}</p>
                         {% endif %}
@@ -140,7 +145,12 @@
                 {% for field in cor_form %}
                     <div class="fieldWrapper">
                         {{ field.errors }}
-                        {{ field.label_tag }} <span class="ponderado">({{ field.initial }})</span> {{ field }} (<span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> packs)
+                        {{ field.label_tag }}
+                        <span class="ponderado">({{ field.initial }})</span>
+                        {% if meta_grade_cores %}
+                          <span class="meta">({{ meta_grade_cores|get_item:field.html_name }})</span>
+                        {% endif %}
+                        {{ field }} (<span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> packs)
                         {% if field.help_text %}
                         <p class="help">{{ field.help_text|safe }}</p>
                         {% endif %}
