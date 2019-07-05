@@ -727,5 +727,6 @@ class Metas(O2BaseGetView):
                 3: 'text-align: right;',
                 4: 'text-align: right;',
                 5: 'text-align: right;',
-            }
+            },
+            'total': metas_list[-1]['meta_estoque'],
         })
