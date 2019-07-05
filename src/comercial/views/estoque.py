@@ -635,13 +635,14 @@ class Metas(O2BaseGetView):
                 1: 'text-align: left;',
             }
             for tamanho in meta_tamanhos:
-                grade['headers'].append(tamanho.tamanho)
-                grade['fields'].append(tamanho.tamanho)
-                meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
-                tot_tam += tamanho.quantidade
-                qtd_por_tam[tamanho.tamanho] = 0
-                grade['style'][max(grade['style'].keys())+1] = \
-                    'text-align: right;'
+                if tamanho.quantidade != 0:
+                    grade['headers'].append(tamanho.tamanho)
+                    grade['fields'].append(tamanho.tamanho)
+                    meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
+                    tot_tam += tamanho.quantidade
+                    qtd_por_tam[tamanho.tamanho] = 0
+                    grade['style'][max(grade['style'].keys())+1] = \
+                        'text-align: right;'
             grade['style'][max(grade['style'].keys())+1] = \
                 'text-align: right; font-weight: bold;'
 
