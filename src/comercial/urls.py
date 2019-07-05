@@ -31,4 +31,7 @@ urlpatterns = [
         views.estoque.Ponderacao.as_view(),
         name='ponderacao'),
 
+    url(r'^metas/$',
+        views.estoque.Metas.as_view(),
+        name='metas'),
 ]
