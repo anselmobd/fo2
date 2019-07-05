@@ -8,9 +8,10 @@ from django.db import connections
 from django.views import View
 from django import forms
 from django.db.models import Exists, OuterRef
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from base.views import O2BaseGetView, O2BaseGetPostView
+from geral.functions import has_permission
 from utils.functions import dec_month, dec_months, safe_cast
 
 import comercial.models as models
@@ -137,11 +138,10 @@ class AnaliseVendas(O2BaseGetView):
         self.mount_context_inicial()
 
 
-class AnaliseModelo(PermissionRequiredMixin, O2BaseGetPostView):
+class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(AnaliseModelo, self).__init__(*args, **kwargs)
-        self.permission_required = 'comercial.can_define_goal'
         self.Form_class = come_forms.AnaliseModeloForm
         self.template_name = 'comercial/analise_modelo.html'
         self.title_name = 'Análise de modelo'
@@ -375,6 +375,11 @@ class AnaliseModelo(PermissionRequiredMixin, O2BaseGetPostView):
         }
 
         # Form
+        self.context.update({
+            'pode_gravar': has_permission(
+                self.request, 'comercial.can_define_goal'),
+        })
+
         venda_mensal = self.context['modelo_ponderado']['data'][0]['qtd']
         multiplicador = 2
 
