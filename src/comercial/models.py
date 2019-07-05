@@ -65,6 +65,7 @@ class MetaEstoqueTamanho(models.Model):
         MetaEstoque, on_delete=models.CASCADE)
     tamanho = models.CharField(max_length=3)
     quantidade = models.IntegerField()
+    ordem = models.IntegerField(default=0)
 
     def __str__(self):
         return '{} - {} - {}'.format(

@@ -23,7 +23,7 @@ class MetaEstoqueAdmin(admin.ModelAdmin):
 
 
 class MetaEstoqueTamanhoAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'quantidade']
+    list_display = ['__str__', 'quantidade', 'ordem']
 
 
 class MetaEstoqueCorAdmin(admin.ModelAdmin):
