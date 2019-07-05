@@ -10,7 +10,7 @@ class Colaborador(models.Model):
     obs = models.CharField(max_length=1000)
 
     class Meta:
-        db_table = "fo2_colaboradoor"
+        db_table = "fo2_colaborador"
         permissions = (
             ("can_generate_product_stages", "Can generate product stages"),
         )
