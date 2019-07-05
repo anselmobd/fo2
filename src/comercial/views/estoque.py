@@ -694,7 +694,8 @@ class Metas(O2BaseGetView):
             grade['fields'].append('total')
             tot_packs = meta.meta_estoque / tot_tam
 
-            meta_cores = models.MetaEstoqueCor.objects.filter(meta=meta)
+            meta_cores = models.MetaEstoqueCor.objects.filter(
+                meta=meta).order_by('cor')
             meta_grade_cores = {}
             tot_cor = 0
             for cor in meta_cores:
