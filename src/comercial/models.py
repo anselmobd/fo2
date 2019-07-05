@@ -56,6 +56,8 @@ class MetaEstoque(models.Model):
     class Meta:
         db_table = "fo2_meta_estoque"
         verbose_name = "Parametros para meta de estoque"
+        permissions = (("can_define_goal", "Can define goal"),
+                       )
 
 
 class MetaEstoqueTamanho(models.Model):
