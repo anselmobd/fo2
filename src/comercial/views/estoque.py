@@ -396,15 +396,13 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             required=True, initial=multiplicador,
             label='Multiplicador')
 
-        self.context.update({
-            'meta_form': meta_form,
-            'venda_mensal': venda_mensal,
-            'multiplicador': multiplicador,
-        })
-
-        if len(self.context['tamanho_ponderado']['data']) > 1:
+        if len(self.context['tamanho_ponderado']['data']) == 1:
+            str_tamanhos = self.context['tamanho_ponderado']['data']['tam']
+        else:
+            str_tamanhos = ''
             tam_form = forms.Form()
             for row in self.context['tamanho_ponderado']['data']:
+                str_tamanhos += '{} '.format(row['tam'])
                 field_name = 'tam_{}'.format(row['tam'])
                 tam_form.fields[field_name] = forms.IntegerField(
                     required=True, initial=row['grade'],
@@ -412,6 +410,9 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             self.context.update({
                 'tam_form': tam_form,
             })
+
+        meta_form.fields['str_tamanhos'] = forms.CharField(
+            initial=str_tamanhos, widget=forms.HiddenInput())
 
         if len(self.context['cor_ponderada']['data']) > 1:
             cor_form = forms.Form()
@@ -423,6 +424,12 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             self.context.update({
                 'cor_form': cor_form,
             })
+
+        self.context.update({
+            'meta_form': meta_form,
+            'venda_mensal': venda_mensal,
+            'multiplicador': multiplicador,
+        })
 
         # última meta
         meta = models.MetaEstoque.objects.filter(modelo=modelo)
@@ -464,6 +471,10 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         multiplicador = safe_cast(
             self.request.POST['multiplicador'], float, 0)
         meta_estoque = safe_cast(self.request.POST['meta_estoque'], int, 0)
+        str_tamanhos = safe_cast(self.request.POST['str_tamanhos'], str, '')
+
+        str_tamanhos = str_tamanhos.strip()
+        ordem_tamanhos = str_tamanhos.split(' ')
 
         tamanhos = {}
         for vari in [key for key in self.request.POST
@@ -496,6 +507,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             meta_tamanho.meta = meta
             meta_tamanho.tamanho = tamanho
             meta_tamanho.quantidade = tamanhos[tamanho]
+            meta_tamanho.ordem = ordem_tamanhos.index(tamanho)
             meta_tamanho.save()
 
         for cor in cores:
