@@ -595,3 +595,36 @@ class Ponderacao(O2BaseGetView):
             'fields': ('meses', 'mes_ini', 'mes_fim', 'peso'),
             'data': data,
         })
+
+
+class Metas(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(Metas, self).__init__(*args, **kwargs)
+        self.template_name = 'comercial/metas.html'
+        self.title_name = 'Visualiza meta de estoque'
+
+    def mount_context(self):
+        metas = models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        metas = metas.filter(meta_estoque__gt=0, antiga=False)
+        metas = metas.order_by('-meta_estoque').values()
+        metas = list(metas)
+        if len(metas) == 0:
+            self.context.update({
+                'msg_erro': 'Sem metas definidas',
+            })
+            return
+
+        self.context.update({
+            'headers': ['Modelo', 'Data', 'Venda mensal', 'Multiplicador',
+                        'Meta de estoque'],
+            'fields': ['modelo', 'data', 'venda_mensal', 'multiplicador',
+                       'meta_estoque'],
+            'data': metas,
+        })
