@@ -838,7 +838,7 @@ class VisaoCd(View):
         data = list(locais_recs.values(
             'rua', 'qenderecos', 'qlotes', 'qtdsum'))
 
-        headers = ['Rua', 'Endereços', 'Lotes (caixas)', 'Qtd. peças']
+        headers = ['Rua', 'Endereços', 'Lotes (caixas)', 'Qtd. itens']
         fields = ['rua', 'qenderecos', 'qlotes', 'qtdsum']
 
         total = data[0].copy()
@@ -903,7 +903,7 @@ class VisaoRua(View):
             row['local|LINK'] = reverse(
                 'cd:estoque_filtro', args=['E', row['local']])
 
-        headers = ['Endereço', 'Lotes (caixas)', 'Qtd. peças']
+        headers = ['Endereço', 'Lotes (caixas)', 'Qtd. itens']
         fields = ['local', 'qlotes', 'qtdsum']
 
         total = data[0].copy()
@@ -974,7 +974,7 @@ class VisaoRuaDetalhe(View):
         group_rowspan(data, group)
 
         headers = ['Endereço', 'OP', 'Referência', 'Cor', 'Tamanho',
-                   'Lotes (caixas)', 'Qtd. peças']
+                   'Lotes (caixas)', 'Qtd. itens']
         fields = ['local', 'op', 'referencia', 'cor', 'tamanho',
                   'qlotes', 'qtdsum']
 
