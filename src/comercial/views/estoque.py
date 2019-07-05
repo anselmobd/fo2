@@ -375,68 +375,6 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             'style': self.style_pond_meses,
         }
 
-        # Form
-        self.context.update({
-            'pode_gravar': has_permission(
-                self.request, 'comercial.can_define_goal'),
-        })
-
-        venda_mensal = self.context['modelo_ponderado']['data'][0]['qtd']
-        multiplicador = 2
-
-        meta_form = forms.Form()
-        meta_form.fields['modelo'] = forms.CharField(
-            initial=modelo, widget=forms.HiddenInput())
-        meta_form.fields['meta_estoque'] = forms.IntegerField(
-            initial=0, widget=forms.HiddenInput())
-        meta_form.fields['venda'] = forms.IntegerField(
-            required=True, initial=venda_mensal,
-            label='Venda mensal')
-        meta_form.fields['multiplicador'] = forms.FloatField(
-            required=True, initial=multiplicador,
-            label='Multiplicador')
-
-        str_tamanhos = ''
-        tam_form = forms.Form()
-        for row in self.context['tamanho_ponderado']['data']:
-            str_tamanhos += '{} '.format(row['tam'])
-            field_name = 'tam_{}'.format(row['tam'])
-            if len(self.context['tamanho_ponderado']['data']) == 1:
-                tam_form.fields[field_name] = forms.IntegerField(
-                    required=True, initial=1,
-                    label=row['tam'])
-            else:
-                tam_form.fields[field_name] = forms.IntegerField(
-                    required=True, initial=row['grade'],
-                    label=row['tam'])
-        self.context.update({
-            'tam_form': tam_form,
-        })
-
-        meta_form.fields['str_tamanhos'] = forms.CharField(
-            initial=str_tamanhos, widget=forms.HiddenInput())
-
-        cor_form = forms.Form()
-        for row in self.context['cor_ponderada']['data']:
-            field_name = 'cor_{}'.format(row['cor'])
-            if len(self.context['cor_ponderada']['data']) == 1:
-                cor_form.fields[field_name] = forms.IntegerField(
-                    required=True, initial=1,
-                    label=row['cor'])
-            else:
-                cor_form.fields[field_name] = forms.IntegerField(
-                    required=True, initial=row['distr'],
-                    label=row['cor'])
-        self.context.update({
-            'cor_form': cor_form,
-        })
-
-        self.context.update({
-            'meta_form': meta_form,
-            'venda_mensal': venda_mensal,
-            'multiplicador': multiplicador,
-        })
-
         # última meta
         meta = models.MetaEstoque.objects.filter(modelo=modelo)
         meta = meta.annotate(antiga=Exists(
@@ -447,7 +385,8 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         ))
         meta = meta.filter(antiga=False)
         meta_list = list(meta.values())
-        if len(meta_list) == 1:
+        tem_meta = len(meta_list) == 1
+        if tem_meta:
             meta_list = meta_list[0]
 
             meta_tamanhos = models.MetaEstoqueTamanho.objects.filter(meta=meta)
@@ -468,6 +407,90 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 'meta_grade_tamanhos': meta_grade_tamanhos,
                 'meta_grade_cores': meta_grade_cores,
             })
+
+        # Form
+        self.context.update({
+            'pode_gravar': has_permission(
+                self.request, 'comercial.can_define_goal'),
+        })
+
+        venda_mensal = self.context['modelo_ponderado']['data'][0]['qtd']
+        multiplicador = 2
+
+        meta_form = forms.Form()
+        meta_form.fields['modelo'] = forms.CharField(
+            initial=modelo, widget=forms.HiddenInput())
+        meta_form.fields['meta_estoque'] = forms.IntegerField(
+            initial=0, widget=forms.HiddenInput())
+
+        if tem_meta:
+            val_inicial = meta_list['venda_mensal']
+        else:
+            val_inicial = venda_mensal
+        meta_form.fields['venda'] = forms.IntegerField(
+            required=True, initial=val_inicial,
+            label='Venda mensal')
+
+        if tem_meta:
+            val_inicial = meta_list['multiplicador']
+        else:
+            val_inicial = multiplicador
+        meta_form.fields['multiplicador'] = forms.FloatField(
+            required=True, initial=val_inicial,
+            label='Multiplicador')
+
+        str_tamanhos = ''
+        pond_grade_tamanhos = {}
+        tam_form = forms.Form()
+        for row in self.context['tamanho_ponderado']['data']:
+            str_tamanhos += '{} '.format(row['tam'])
+            field_name = 'tam_{}'.format(row['tam'])
+            if len(self.context['tamanho_ponderado']['data']) == 1:
+                val_inicial = 1
+            else:
+                val_inicial = row['grade']
+            pond_grade_tamanhos[field_name] = val_inicial
+            if tem_meta:
+                if field_name in meta_grade_tamanhos:
+                    val_inicial = meta_grade_tamanhos[field_name]
+            tam_form.fields[field_name] = forms.IntegerField(
+                required=True, initial=val_inicial,
+                label=row['tam'])
+        self.context.update({
+            'tam_form': tam_form,
+        })
+
+        meta_form.fields['str_tamanhos'] = forms.CharField(
+            initial=str_tamanhos, widget=forms.HiddenInput())
+
+        pond_grade_cores = {}
+        cor_form = forms.Form()
+        for row in self.context['cor_ponderada']['data']:
+            field_name = 'cor_{}'.format(row['cor'])
+            if len(self.context['cor_ponderada']['data']) == 1:
+                val_inicial = 1
+            else:
+                val_inicial = row['distr']
+            pond_grade_cores[field_name] = val_inicial
+            if tem_meta:
+                if field_name in meta_grade_cores:
+                    val_inicial = meta_grade_cores[field_name]
+            cor_form.fields[field_name] = forms.IntegerField(
+                required=True, initial=val_inicial,
+                label=row['cor'])
+        self.context.update({
+            'cor_form': cor_form,
+        })
+
+        self.context.update({
+            'pond_venda_mensal': venda_mensal,
+            'pond_multiplicador': multiplicador,
+            'pond_grade_tamanhos': pond_grade_tamanhos,
+            'pond_grade_cores': pond_grade_cores,
+            'meta_form': meta_form,
+            'venda_mensal': venda_mensal,
+            'multiplicador': multiplicador,
+        })
 
     def grava_meta(self):
         if not has_permission(self.request, 'comercial.can_define_goal'):
