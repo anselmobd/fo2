@@ -414,16 +414,20 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         meta_form.fields['str_tamanhos'] = forms.CharField(
             initial=str_tamanhos, widget=forms.HiddenInput())
 
-        if len(self.context['cor_ponderada']['data']) > 1:
-            cor_form = forms.Form()
-            for row in self.context['cor_ponderada']['data']:
-                field_name = 'cor_{}'.format(row['cor'])
+        cor_form = forms.Form()
+        for row in self.context['cor_ponderada']['data']:
+            field_name = 'cor_{}'.format(row['cor'])
+            if len(self.context['cor_ponderada']['data']) == 1:
+                cor_form.fields[field_name] = forms.IntegerField(
+                    required=True, initial=1,
+                    label=row['cor'])
+            else:
                 cor_form.fields[field_name] = forms.IntegerField(
                     required=True, initial=row['distr'],
                     label=row['cor'])
-            self.context.update({
-                'cor_form': cor_form,
-            })
+        self.context.update({
+            'cor_form': cor_form,
+        })
 
         self.context.update({
             'meta_form': meta_form,
