@@ -95,13 +95,13 @@
         {{ meta_form.str_tamanhos }}
         <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
         {{ meta_form.venda.label_tag }}
-        <span class="ponderado">(Ponderado: {{meta_form.venda.initial}})</span>
+        <span class="ponderado">(Ponderado: {{pond_venda_mensal}})</span>
         {% if meta_venda_mensal %}
           <span class="meta">(Meta gravada: {{ meta_venda_mensal }})</span>
         {% endif %}
         {{ meta_form.venda }}<br />
         {{ meta_form.multiplicador.label_tag }}
-        ({{meta_form.multiplicador.initial}})
+        ({{pond_multiplicador}})
         {% if meta_multiplicador %}
           <span class="meta">({{ meta_multiplicador }})</span>
         {% endif %}
@@ -128,7 +128,7 @@
                     <div class="fieldWrapper">
                         {{ field.errors }}
                         {{ field.label_tag }}
-                        <span class="ponderado">({{ field.initial }})</span>
+                        <span class="ponderado">({{ pond_grade_tamanhos|get_item:field.html_name }})</span>
                         {% if meta_grade_tamanhos %}
                           <span class="meta">({{ meta_grade_tamanhos|get_item:field.html_name }})</span>
                         {% endif %}
@@ -153,7 +153,7 @@
                     <div class="fieldWrapper">
                         {{ field.errors }}
                         {{ field.label_tag }}
-                        <span class="ponderado">({{ field.initial }})</span>
+                        <span class="ponderado">({{ pond_grade_cores|get_item:field.html_name }})</span>
                         {% if meta_grade_cores %}
                           <span class="meta">({{ meta_grade_cores|get_item:field.html_name }})</span>
                         {% endif %}
