@@ -456,6 +456,8 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             })
 
     def grava_meta(self):
+        if not has_permission(self.request, 'comercial.can_define_goal'):
+            return
         modelo = safe_cast(self.request.POST['modelo'], str, '')
         venda = safe_cast(self.request.POST['venda'], int, 0)
         multiplicador = safe_cast(
