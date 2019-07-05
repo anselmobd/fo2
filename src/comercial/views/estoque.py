@@ -631,7 +631,7 @@ class Metas(O2BaseGetView):
                 data__gt=OuterRef('data')
             )
         ))
-        metas = metas.filter(meta_estoque__gt=0, antiga=False)
+        metas = metas.filter(antiga=False)
         metas = metas.order_by('-meta_estoque')
         if len(metas) == 0:
             self.context.update({
