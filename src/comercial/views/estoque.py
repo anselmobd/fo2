@@ -8,6 +8,7 @@ from django.db import connections
 from django.views import View
 from django import forms
 from django.db.models import Exists, OuterRef
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from base.views import O2BaseGetView, O2BaseGetPostView
 from utils.functions import dec_month, dec_months, safe_cast
@@ -136,10 +137,11 @@ class AnaliseVendas(O2BaseGetView):
         self.mount_context_inicial()
 
 
-class AnaliseModelo(O2BaseGetPostView):
+class AnaliseModelo(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(AnaliseModelo, self).__init__(*args, **kwargs)
+        self.permission_required = 'comercial.can_define_goal'
         self.Form_class = come_forms.AnaliseModeloForm
         self.template_name = 'comercial/analise_modelo.html'
         self.title_name = 'Análise de modelo'
