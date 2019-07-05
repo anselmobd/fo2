@@ -627,7 +627,8 @@ class Metas(O2BaseGetView):
 
             grade['headers'] = ['Cor/Tamanho']
             grade['fields'] = ['cor']
-            meta_tamanhos = models.MetaEstoqueTamanho.objects.filter(meta=meta)
+            meta_tamanhos = models.MetaEstoqueTamanho.objects.filter(
+                meta=meta).order_by('ordem')
             meta_grade_tamanhos = {}
             tot_tam = 0
             qtd_por_tam = {}
