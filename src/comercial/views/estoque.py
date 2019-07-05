@@ -40,7 +40,7 @@ class AnaliseVendas(O2BaseGetView):
                 data__gt=OuterRef('data')
             )
         ))
-        metas = metas.filter(meta_estoque__gt=0, antiga=False)
+        metas = metas.filter(antiga=False)
         metas = metas.order_by('-meta_estoque').values()
         for row in metas:
             data_row = next(
