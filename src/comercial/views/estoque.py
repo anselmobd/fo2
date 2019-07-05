@@ -396,20 +396,22 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             required=True, initial=multiplicador,
             label='Multiplicador')
 
-        if len(self.context['tamanho_ponderado']['data']) == 1:
-            str_tamanhos = self.context['tamanho_ponderado']['data']['tam']
-        else:
-            str_tamanhos = ''
-            tam_form = forms.Form()
-            for row in self.context['tamanho_ponderado']['data']:
-                str_tamanhos += '{} '.format(row['tam'])
-                field_name = 'tam_{}'.format(row['tam'])
+        str_tamanhos = ''
+        tam_form = forms.Form()
+        for row in self.context['tamanho_ponderado']['data']:
+            str_tamanhos += '{} '.format(row['tam'])
+            field_name = 'tam_{}'.format(row['tam'])
+            if len(self.context['tamanho_ponderado']['data']) == 1:
+                tam_form.fields[field_name] = forms.IntegerField(
+                    required=True, initial=1,
+                    label=row['tam'])
+            else:
                 tam_form.fields[field_name] = forms.IntegerField(
                     required=True, initial=row['grade'],
                     label=row['tam'])
-            self.context.update({
-                'tam_form': tam_form,
-            })
+        self.context.update({
+            'tam_form': tam_form,
+        })
 
         meta_form.fields['str_tamanhos'] = forms.CharField(
             initial=str_tamanhos, widget=forms.HiddenInput())
