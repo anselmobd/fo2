@@ -1,9 +1,12 @@
-__version__ = '0.1.148'
-__version__date__ = '12/06/2019'
+__version__ = '0.1.149'
+__version__date__ = '05/07/2019'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.1.149 - 2019/07/05
+#   . Definição de meta de estoque
 #
 # - 0.1.148 - 2019/06/12
 #   . Quantidades por estágio - melhoras
