@@ -149,7 +149,7 @@ class TotalEstagio(View):
         if len(data_e) > 0:
             total_estoque = init_total('Total em estoque', data_e)
             total_estoque_giro = init_total(
-                'Total em estoque (giro)', data_e, subtotal=True)
+                'Total em estoque', data_e, subtotal=True)
             soma_fields(total_estoque, data_e, quant_fields)
             soma_fields(
                 total_estoque_giro, data_e, giro_lotes+giro_quant+giro_pecas)
