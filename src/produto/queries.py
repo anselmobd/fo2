@@ -552,6 +552,8 @@ def modelo_inform(cursor, modelo):
         , r.CGC_CLIENTE_9 CNPJ9
         , r.CGC_CLIENTE_4 CNPJ4
         , r.CGC_CLIENTE_2 CNPJ2
+        , r.COLECAO CODIGO_COLECAO
+        , r.COLECAO || ' - ' || col.DESCR_COLECAO COLECAO
         , cl.NOME_CLIENTE NOME
         , COALESCE( r.RESPONSAVEL, ' ' ) STATUS
         FROM
@@ -582,6 +584,8 @@ def modelo_inform(cursor, modelo):
         JOIN basi_030 r
           ON r.REFERENCIA = re.REF
          AND r.NIVEL_ESTRUTURA = 1
+        JOIN BASI_140 col
+          ON col.COLECAO = r.COLECAO
         JOIN PEDI_010 cl
           ON cl.CGC_9 = r.CGC_CLIENTE_9
          and cl.CGC_4 = r.CGC_CLIENTE_4

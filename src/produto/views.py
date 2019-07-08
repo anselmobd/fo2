@@ -523,7 +523,7 @@ class Ref(View):
 class Modelo(View):
     Form_class = forms.ModeloForm
     template_name = 'produto/modelo.html'
-    title_name = 'Modelo (parte numérica da referência do PA)'
+    title_name = 'Modelo (número do PA)'
 
     def mount_context(self, cursor, modelo):
         context = {'modelo': modelo}
@@ -553,9 +553,11 @@ class Modelo(View):
                         row['CNPJ2'])
                     row['CLIENTE'] = '{} - {}'.format(cnpj, row['NOME'])
             context.update({
-                'headers': ('Tipo', 'Referência', 'Coleção cliente', 'Descrição',
+                'headers': ('Tipo', 'Referência', 'Descrição',
+                            'Coleção', 'Coleção cliente',
                             'Cliente', 'Status (Responsável)'),
-                'fields': ('TIPO', 'REF', 'COLECAO_CLIENTE', 'DESCR',
+                'fields': ('TIPO', 'REF', 'DESCR',
+                           'COLECAO', 'COLECAO_CLIENTE',
                            'CLIENTE', 'STATUS'),
                 'data': data,
                 'link': link,
