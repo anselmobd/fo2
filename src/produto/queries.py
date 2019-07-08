@@ -559,8 +559,11 @@ def modelo_inform(cursor, modelo):
         SELECT
           r.REFERENCIA REF
         FROM basi_030 r
-        WHERE regexp_replace(r.REFERENCIA, '[^0-9]', '')
-              IN ('{}', '0{}', '00{}')
+        -- WHERE regexp_replace(r.REFERENCIA, '[^0-9]', '')
+        --       IN ('[]', '0[]', '00[]')
+        WHERE TRIM(LEADING '0' FROM (
+                REGEXP_REPLACE(r.REFERENCIA, '[^0-9]', '')
+              )) = '{}'
           AND r.REFERENCIA < 'C0000'
           AND r.NIVEL_ESTRUTURA = 1
         UNION
@@ -569,8 +572,11 @@ def modelo_inform(cursor, modelo):
         FROM BASI_050 ec
         WHERE ec.NIVEL_ITEM = 1
           AND ec.NIVEL_COMP = 1
-          AND regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
-              IN ('{}', '0{}', '00{}')
+          -- AND regexp_replace(ec.GRUPO_ITEM, '[^0-9]', '')
+          --     IN ('[]', '0[]', '00[]')
+          AND TRIM(LEADING '0' FROM (
+                REGEXP_REPLACE(ec.GRUPO_ITEM, '[^0-9]', '')
+              )) = '{}'
           AND ec.GRUPO_ITEM < 'C0000'
         ) re
         JOIN basi_030 r
@@ -583,7 +589,7 @@ def modelo_inform(cursor, modelo):
         ORDER BY
           NLSSORT(re.REF,'NLS_SORT=BINARY_AI')
     """
-    sql = sql.format(modelo, modelo, modelo, modelo, modelo, modelo)
+    sql = sql.format(modelo, modelo)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 

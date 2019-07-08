@@ -528,7 +528,7 @@ class Modelo(View):
     def mount_context(self, cursor, modelo):
         context = {'modelo': modelo}
 
-        if len(modelo) not in (3, 4):
+        if len(modelo) not in (1, 4):
             context.update({
                 'msg_erro': 'Modelo inválido',
             })
@@ -553,7 +553,7 @@ class Modelo(View):
                         row['CNPJ2'])
                     row['CLIENTE'] = '{} - {}'.format(cnpj, row['NOME'])
             context.update({
-                'headers': ('Tipo', 'Referência', 'Coleção', 'Descrição',
+                'headers': ('Tipo', 'Referência', 'Coleção cliente', 'Descrição',
                             'Cliente', 'Status (Responsável)'),
                 'fields': ('TIPO', 'REF', 'COLECAO_CLIENTE', 'DESCR',
                            'CLIENTE', 'STATUS'),
