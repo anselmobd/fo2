@@ -15,7 +15,7 @@ from .models import Produto, S_Produto
 
 class ModeloForm(forms.Form):
     modelo = forms.CharField(
-        label='Modelo', max_length=4, min_length=3,
+        label='Modelo', max_length=4, min_length=1,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
