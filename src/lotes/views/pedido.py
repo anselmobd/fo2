@@ -73,12 +73,16 @@ class Pedido(View):
                     row['DT_CORTE'] = '-'
                 else:
                     row['DT_CORTE'] = row['DT_CORTE'].date()
+                if row['SITUACAO'] == 9:
+                    row['SITUACAO'] = 'Cancelada'
+                else:
+                    row['SITUACAO'] = 'Ativa'
             context.update({
-                'o_headers': ('OP', 'Tipo', 'Referência',
-                              'OP principal', 'Quantidade',
+                'o_headers': ('Stuação', 'OP', 'Tipo',
+                              'Referência', 'OP principal', 'Quantidade',
                               'Data Digitação', 'Data Corte'),
-                'o_fields': ('ORDEM_PRODUCAO', 'TIPO', 'REFERENCIA_PECA',
-                             'ORDEM_PRINCIPAL', 'QTD',
+                'o_fields': ('SITUACAO', 'ORDEM_PRODUCAO', 'TIPO',
+                             'REFERENCIA_PECA', 'ORDEM_PRINCIPAL', 'QTD',
                              'DT_DIGITACAO', 'DT_CORTE'),
                 'o_data': o_data,
             })
