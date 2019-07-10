@@ -1,3 +1,5 @@
+import logging
+
 from django.views.generic import TemplateView
 from django.contrib.auth import logout
 from django.shortcuts import redirect, render
@@ -7,6 +9,8 @@ from utils.functions import get_client_ip
 
 
 def index_view(request):
+    logger = logging.getLogger('fo2')
+    logger.info('index')
     return redirect('apoio_ao_erp')
 
 

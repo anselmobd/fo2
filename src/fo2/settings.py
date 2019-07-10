@@ -234,5 +234,22 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, "media")
 
 # Session limit
-
 SESSION_COOKIE_AGE = 8 * 60 * 60  # 8 horas
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'fo2file': {
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, "fo2debug.log"),
+        },
+    },
+    'loggers': {
+        'fo2': {
+            'handlers': ['fo2file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
