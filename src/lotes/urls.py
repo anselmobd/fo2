@@ -87,6 +87,9 @@ urlpatterns = [
     url(r'^totais_estagio/$',
         views.TotalEstagio.as_view(), name='totais_estagio'),
 
+    url(r'^lead_colecao/(?P<id>[^/]+)?$',
+        views.LeadColecao.as_view(), name='lead_colecao'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
