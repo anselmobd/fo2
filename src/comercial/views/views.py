@@ -72,9 +72,12 @@ class FichaCliente(View):
                     for row in data:
                         for field in row:
                             if field in formats:
-                                row[field] = \
-                                    ('{:'+formats[field]+'}').format(
-                                        row[field])
+                                if row[field].year == 1899:
+                                    row[field] = '-'
+                                else:
+                                    row[field] = \
+                                        ('{:'+formats[field]+'}').format(
+                                            row[field])
                     cliente = data[0]
                     context.update({
                         'headers': (
