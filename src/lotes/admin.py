@@ -3,7 +3,7 @@ from django.contrib import admin
 from fo2 import settings
 from fo2.admin import intr_adm_site
 from .models import Impresso, ImpressoraTermica, ModeloTermica, \
-    UsuarioImpresso, Lote
+    UsuarioImpresso, Lote, LeadColecao
 from .forms import ModeloTermicaForm
 
 
@@ -69,8 +69,14 @@ class LoteAdmin(admin.ModelAdmin):
     ]
 
 
+class LeadColecaoAdmin(admin.ModelAdmin):
+    list_display = ['colecao', 'lead']
+    ordering = ['colecao']
+
+
 intr_adm_site.register(Impresso, ImpressoAdmin)
 intr_adm_site.register(ImpressoraTermica, ImpressoraTermicaAdmin)
 intr_adm_site.register(ModeloTermica, ModeloTermicaAdmin)
 intr_adm_site.register(UsuarioImpresso, UsuarioImpressoAdmin)
 intr_adm_site.register(Lote, LoteAdmin)
+intr_adm_site.register(LeadColecao, LeadColecaoAdmin)

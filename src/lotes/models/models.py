@@ -433,3 +433,18 @@ class TableHeap(models.Model):
 #     class Meta:
 #         db_table = "fo2_codes"
 #         verbose_name = "Tabela herdando pilha de versões"
+
+
+class LeadColecao(models.Model):
+    colecao = models.IntegerField(
+        primary_key=True,
+        verbose_name='Coleção')
+    lead = models.IntegerField(
+        null=True, blank=True, default=0)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = "fo2_lot_lead_colecao"
+        verbose_name = "Lead de produção"
