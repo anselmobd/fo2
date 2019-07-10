@@ -4,8 +4,12 @@ from django.shortcuts import render
 from django.db import connections
 from django.urls import reverse
 from django.views import View
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
+from geral.functions import has_permission
 
 import produto.queries
+import produto.models
 
 import lotes.forms as forms
 import lotes.models as models
@@ -297,3 +301,161 @@ class QuantEstagio(View):
             context.update(self.mount_context(cursor, estagio, ref, tipo))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class LeadColecao(View):
+
+    def __init__(self):
+        self.Form_class = forms.LeadColecaoForm
+        self.template_name = 'lotes/lead_colecao.html'
+        self.title_name = 'Lead de produção por coleção'
+        self.id = None
+        self.context = {'titulo': self.title_name}
+
+    def lista(self):
+        try:
+            colecoes = produto.models.Colecao.objects.exclude(
+                colecao=0).order_by('colecao')
+        except produto.models.Colecao.DoesNotExist:
+            self.context.update({
+                'msg_erro': 'Coleções não encontradas',
+            })
+            return
+
+        try:
+            LC = models.LeadColecao.objects.all().order_by('colecao')
+        except models.LeadColecao.DoesNotExist:
+            self.context.update({
+                'msg_erro': 'Leads de coleções não encontradas',
+            })
+            return
+
+        lcs = {}
+        inter_col = colecoes.iterator()
+        inter_LC = LC.iterator()
+        walk = 'b'   # from, to, both
+        while True:
+            if walk in ['f', 'b']:
+                try:
+                    col = next(inter_col)
+                except StopIteration:
+                    col = None
+
+            if walk in ['t', 'b']:
+                try:
+                    lc = next(inter_LC)
+                except StopIteration:
+                    lc = None
+
+            if lc is None and col is None:
+                break
+
+            rec = {
+                'descr_colecao': '',
+                'lead': 0,
+            }
+            acao_definida = False
+
+            if lc is not None:
+                if col is None or col.colecao > lc.colecao:
+                    acao_definida = True
+                    rec['status'] = 'd'
+                    rec['colecao'] = lc.colecao
+                    walk = 't'
+
+            if not acao_definida:
+                rec['colecao'] = col.colecao
+                rec['descr_colecao'] = col.descr_colecao
+                if lc is None or col.colecao < lc.colecao:
+                    acao_definida = True
+                    rec['status'] = 'i'
+                    walk = 'f'
+
+            if not acao_definida:
+                rec['lead'] = lc.lead
+                rec['status'] = 'u'
+                walk = 'b'
+
+            lcs[rec['colecao']] = rec
+
+        data = []
+        for key in lcs:
+            if lcs[key]['status'] == 'd':
+                try:
+                    models.LeadColecao.objects.filter(colecao=key).delete()
+                except models.LeadColecao.DoesNotExist:
+                    self.context.update({
+                        'msg_erro': 'Erro apagando lead',
+                    })
+                    return
+                continue
+
+            if lcs[key]['status'] == 'i':
+                try:
+                    lc = models.LeadColecao()
+                    lc.colecao = key
+                    lc.lead = 0
+                    lc.save()
+                except Exception:
+                    self.context.update({
+                        'msg_erro': 'Erro salvando lead',
+                    })
+                    return
+            lcs[key].update({
+                'edit': ('<a title="Editar" '
+                         'href="{}">'
+                         '<span class="glyphicon glyphicon-pencil" '
+                         'aria-hidden="true"></span></a>'
+                         ).format(reverse(
+                            'producao:lead_colecao', args=[key])),
+            })
+            data.append(lcs[key])
+
+        headers = ['Coleção', 'Descrição', 'Lead (dias)']
+        fields = ['colecao', 'descr_colecao', 'lead']
+        if has_permission(self.request, 'lotes.change_leadcolecao'):
+            headers.insert(0, '')
+            fields.insert(0, 'edit')
+        self.context.update({
+            'headers': headers,
+            'fields': fields,
+            'data': data,
+            'safe': ['edit'],
+        })
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+
+        if self.id:
+            if has_permission(request, 'lotes.change_leadcolecao'):
+                try:
+                    lc = models.LeadColecao.objects.get(colecao=self.id)
+                except models.LeadColecao.DoesNotExist:
+                    self.context.update({
+                        'msg_erro': 'Lead não encontrado',
+                    })
+                    return render(request, self.template_name, self.context)
+
+                try:
+                    colecao = produto.models.Colecao.objects.get(
+                        colecao=self.id)
+                except produto.models.Colecao.DoesNotExist:
+                    self.context.update({
+                        'msg_erro': 'Coleção não encontrada',
+                    })
+                    return render(request, self.template_name, self.context)
+
+                self.context['id'] = self.id
+                self.context['descr_colecao'] = colecao.descr_colecao
+                self.context['form'] = self.Form_class(
+                    initial={'lead': lc.lead})
+            else:
+                self.id = None
+
+        if not self.id:
+            self.lista()
+
+        return render(request, self.template_name, self.context)

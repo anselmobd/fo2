@@ -554,3 +554,9 @@ class QuantEstagioForm(forms.Form):
         data['ref'] = ref
         self.data = data
         return ref
+
+
+class LeadColecaoForm(forms.Form):
+    lead = forms.IntegerField(
+        required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
