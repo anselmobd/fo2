@@ -264,6 +264,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'FO2L',
+        'KEY_PREFIX': 'FO2K',
         'TIMEOUT': 600,
         'OPTIONS': {
             'MAX_ENTRIES': 1000
