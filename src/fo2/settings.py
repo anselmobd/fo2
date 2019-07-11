@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'lotes',
     'produto',
     'utils',
+    'manutencao',
 ]
 
 MIDDLEWARE = [
