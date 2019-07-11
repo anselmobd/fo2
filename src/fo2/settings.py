@@ -70,6 +70,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Cache
+    'django.middleware.cache.UpdateCacheMiddleware',
+    # Others
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -80,6 +83,8 @@ MIDDLEWARE = [
     # Project
     'utils.middlewares.LoggedInUserMiddleware',
     'utils.middlewares.NeedToLoginOrLocalMiddleware',  # N2LOL
+    # Cache
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 N2LOL_REDIRECT = 'intranet'
@@ -254,3 +259,18 @@ LOGGING = {
         },
     },
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'FO2L',
+        'TIMEOUT': 600,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
+
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 600
+CACHE_MIDDLEWARE_KEY_PREFIX = 'FO2K'
