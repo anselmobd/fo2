@@ -99,9 +99,25 @@ def ficha_cliente(cnpj):
     return rows_to_dict_list(cursor)
 
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except Exception:
+        return False
+
+
 def make_key_cache():
     stack1 = inspect.stack()[1]
-    values = inspect.getargvalues(stack1.frame).locals.values()
+    argvalues = inspect.getargvalues(stack1.frame).locals.values()
+    values = []
+    for value in argvalues:
+        if value is None:
+            values.append(value)
+        elif isinstance(value, str):
+            values.append(value)
+        elif is_number(value):
+            values.append(value)
     braces = ['{}'] * len(values)
     key = '|'.join([stack1.filename, *braces])
     key = key.format(*values)
