@@ -881,6 +881,26 @@ def multiplas_colecoes(cursor):
     return rows_to_dict_list(cursor)
 
 
+def colecao_de_modelo(cursor, modelo):
+    sql = """
+        SELECT
+          r.COLECAO
+        FROM BASI_030 r -- item (ref+tam+cor)
+        WHERE r.NIVEL_ESTRUTURA = 1
+          AND r.REFERENCIA < 'C0000'
+          AND r.DESCR_REFERENCIA NOT LIKE '-%'
+          AND TRIM(LEADING '0' FROM (
+                REGEXP_REPLACE(r.REFERENCIA, '[^0-9]', ''))) = {}
+        GROUP BY
+          r.COLECAO
+    """.format(modelo)
+    cursor.execute(sql)
+    rows = rows_to_dict_list(cursor)
+    if len(rows) != 1:
+        return -1
+    return rows[0]['COLECAO']
+
+
 def gtin(cursor, ref=None, gtin=None):
     filtra_ref = ''
     if ref != '':
