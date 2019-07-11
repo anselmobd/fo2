@@ -481,7 +481,6 @@ class LeadColecao(View):
                 return render(
                     self.request, self.template_name, self.context)
 
-            print(lc)
             try:
                 lc.lead = lead
                 lc.save()
