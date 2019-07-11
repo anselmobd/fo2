@@ -1,6 +1,8 @@
 from pprint import pprint
 from datetime import datetime, timedelta
 
+from django.core.cache import cache
+
 from fo2.models import cursorF1, rows_to_dict_list, \
     rows_to_dict_list_lower
 
@@ -95,9 +97,21 @@ def ficha_cliente(cnpj):
     return rows_to_dict_list(cursor)
 
 
+def make_key_cache(name, *args):
+    name = name + ('_{}' * len(args))
+    return name.format(*args)
+
+
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
         modelo=None, order_qtd=True):
+
+    key_cache = make_key_cache(
+        'get_vendas', ref, periodo, colecao, cliente, por, modelo, order_qtd)
+
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        return cached_result
 
     if order_qtd:
         order = '1 DESC'
@@ -257,4 +271,7 @@ def get_vendas(
         order=order,
     )
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+
+    cached_result = rows_to_dict_list_lower(cursor)
+    cache.set(key_cache, cached_result)
+    return cached_result
