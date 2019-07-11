@@ -2,14 +2,18 @@ from pprint import pprint
 
 from django.shortcuts import render
 from django.db import connections
+from django.db.models import Exists, OuterRef
 from django.urls import reverse
 from django.views import View
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from geral.functions import has_permission
+from base.views import O2BaseGetView
+from utils.views import totalize_grouped_data
 
 import produto.queries
 import produto.models
+import comercial.models
 
 import lotes.forms as forms
 import lotes.models as models
@@ -492,3 +496,136 @@ class LeadColecao(View):
         else:
             self.context['form'] = form
         return render(self.request, self.template_name, self.context)
+
+
+class MetaGiro(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(MetaGiro, self).__init__(*args, **kwargs)
+        self.template_name = 'lotes/meta_giro.html'
+        self.title_name = 'Visualiza meta de giro'
+
+    def mount_context(self):
+        cursor = connections['so'].cursor()
+
+        metas = comercial.models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            comercial.models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        metas = metas.filter(antiga=False)
+        metas = metas.order_by('-venda_mensal')
+        if len(metas) == 0:
+            self.context.update({
+                'msg_erro': 'Sem metas definidas',
+            })
+            return
+
+        metas_list = list(metas.values())
+        for meta in metas_list:
+            colecao = produto.queries.colecao_de_modelo(cursor, meta['modelo'])
+            if colecao == -1:
+                lead = 0
+            else:
+                try:
+                    lc = models.LeadColecao.objects.get(colecao=colecao)
+                    lead = lc.lead
+                except models.LeadColecao.DoesNotExist:
+                    lead = 0
+
+            meta['lead'] = lead
+            meta['giro'] = round(meta['venda_mensal'] / 30 * meta['lead'])
+
+        for meta in metas:
+            grade = {}
+
+            grade['headers'] = ['Cor/Tamanho']
+            grade['fields'] = ['cor']
+            meta_tamanhos = comercial.models.MetaEstoqueTamanho.objects.filter(
+                meta=meta).order_by('ordem')
+            meta_grade_tamanhos = {}
+            tot_tam = 0
+            qtd_por_tam = {}
+            grade['style'] = {
+                1: 'text-align: left;',
+            }
+            for tamanho in meta_tamanhos:
+                if tamanho.quantidade != 0:
+                    grade['headers'].append(tamanho.tamanho)
+                    grade['fields'].append(tamanho.tamanho)
+                    meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
+                    tot_tam += tamanho.quantidade
+                    qtd_por_tam[tamanho.tamanho] = 0
+                    grade['style'][max(grade['style'].keys())+1] = \
+                        'text-align: right;'
+            grade['style'][max(grade['style'].keys())+1] = \
+                'text-align: right; font-weight: bold;'
+
+            qtd_por_tam['total'] = meta.venda_mensal
+
+            grade['headers'].append('Total')
+            grade['fields'].append('total')
+            tot_packs = meta.venda_mensal / tot_tam
+
+            meta_cores = comercial.models.MetaEstoqueCor.objects.filter(
+                meta=meta).order_by('cor')
+            meta_grade_cores = {}
+            tot_cor = 0
+            for cor in meta_cores:
+                meta_grade_cores[cor.cor] = cor.quantidade
+                tot_cor += cor.quantidade
+
+            grade['data'] = []
+            for meta_cor in meta_grade_cores:
+                if meta_grade_cores[meta_cor] != 0:
+                    linha = {
+                        'cor': meta_cor,
+                    }
+                    cor_packs = round(
+                        tot_packs / tot_cor * meta_grade_cores[meta_cor])
+                    for meta_tam in meta_grade_tamanhos:
+                        qtd_cor_tam = cor_packs * meta_grade_tamanhos[meta_tam]
+                        linha.update({
+                            meta_tam: round(qtd_cor_tam),
+                        })
+                        qtd_por_tam[meta_tam] += qtd_cor_tam
+                    linha['total'] = cor_packs * tot_tam
+                    grade['data'].append(linha)
+            grade['data'].append({
+                'cor': 'Total',
+                **qtd_por_tam,
+                '|STYLE': 'font-weight: bold;',
+            })
+
+            idx_meta = [idx for idx, item in enumerate(metas_list)
+                        if item['modelo'] == meta.modelo][0]
+            metas_list[idx_meta].update({
+                'grade': grade,
+            })
+
+        group = ['modelo']
+        totalize_grouped_data(metas_list, {
+            'group': group,
+            'flags': ['NO_TOT_1'],
+            'global_sum': ['giro'],
+            'sum': ['giro'],
+            'count': [],
+            'descr': {'modelo': 'Total:'},
+            'row_style': 'font-weight: bold;',
+        })
+
+        self.context.update({
+            'headers': ['Modelo', 'Data', 'Venda mensal', 'Lead',
+                        'Meta de giro'],
+            'fields': ['modelo', 'data', 'venda_mensal', 'lead',
+                       'giro'],
+            'data': metas_list,
+            'style': {
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+                5: 'text-align: right;',
+            },
+            'total': metas_list[-1]['giro'],
+        })
