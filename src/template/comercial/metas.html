@@ -27,7 +27,7 @@
           {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
         </table>
       </div>
-      <div id="grades" class="tab-pane fadein active">
+      <div id="grades" class="tab-pane fade in active">
         <h4 style="text-align: right;">Total geral: <span style="font-weight: bold;">{{total}}</span></h4>
         {% for row in data %}
           {% if row.grade %}
