@@ -1,3 +1,5 @@
+import inspect
+import hashlib
 from pprint import pprint
 from datetime import datetime, timedelta
 
@@ -97,20 +99,26 @@ def ficha_cliente(cnpj):
     return rows_to_dict_list(cursor)
 
 
-def make_key_cache(name, *args):
-    name = name + ('_{}' * len(args))
-    return name.format(*args)
+def make_key_cache():
+    stack1 = inspect.stack()[1]
+    values = inspect.getargvalues(stack1.frame).locals.values()
+    braces = ['{}'] * len(values)
+    key = '|'.join([stack1.filename, *braces])
+    key = key.format(*values)
+    key = hashlib.md5(key.encode('utf-8')).hexdigest()
+    key = '_'.join([stack1.function, key])
+    return key
 
 
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
         modelo=None, order_qtd=True):
 
-    key_cache = make_key_cache(
-        'get_vendas', ref, periodo, colecao, cliente, por, modelo, order_qtd)
+    key_cache = make_key_cache()
 
     cached_result = cache.get(key_cache)
     if cached_result is not None:
+        print('cached', key_cache)
         return cached_result
 
     if order_qtd:
@@ -274,4 +282,5 @@ def get_vendas(
 
     cached_result = rows_to_dict_list_lower(cursor)
     cache.set(key_cache, cached_result)
+    print('calculated', key_cache)
     return cached_result
