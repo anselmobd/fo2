@@ -515,7 +515,7 @@ class MetaGiro(O2BaseGetView):
                 data__gt=OuterRef('data')
             )
         ))
-        metas = metas.filter(antiga=False)
+        metas = metas.filter(antiga=False).exclude(multiplicador=0)
         metas = metas.order_by('-venda_mensal')
         if len(metas) == 0:
             self.context.update({
