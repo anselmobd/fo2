@@ -71,7 +71,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     # Cache
-    'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
     # Others
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -84,7 +84,7 @@ MIDDLEWARE = [
     'utils.middlewares.LoggedInUserMiddleware',
     'utils.middlewares.NeedToLoginOrLocalMiddleware',  # N2LOL
     # Cache
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 N2LOL_REDIRECT = 'intranet'
