@@ -443,7 +443,7 @@ class LeadColecao(models.Model):
         null=True, blank=True, default=0)
 
     def __str__(self):
-        return self.nome
+        return '{}-{}'.format(self.colecao, self.lead)
 
     class Meta:
         db_table = "fo2_lot_lead_colecao"

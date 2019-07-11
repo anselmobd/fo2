@@ -437,7 +437,8 @@ class LeadColecao(View):
                     self.context.update({
                         'msg_erro': 'Lead não encontrado',
                     })
-                    return render(request, self.template_name, self.context)
+                    return render(
+                        self.request, self.template_name, self.context)
 
                 try:
                     colecao = produto.models.Colecao.objects.get(
@@ -446,7 +447,8 @@ class LeadColecao(View):
                     self.context.update({
                         'msg_erro': 'Coleção não encontrada',
                     })
-                    return render(request, self.template_name, self.context)
+                    return render(
+                        self.request, self.template_name, self.context)
 
                 self.context['id'] = self.id
                 self.context['descr_colecao'] = colecao.descr_colecao
@@ -458,4 +460,36 @@ class LeadColecao(View):
         if not self.id:
             self.lista()
 
-        return render(request, self.template_name, self.context)
+        return render(self.request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        self.request = request
+
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+
+        form = self.Form_class(request.POST)
+        if self.id and form.is_valid():
+            lead = form.cleaned_data['lead']
+
+            try:
+                lc = models.LeadColecao.objects.get(colecao=self.id)
+            except models.LeadColecao.DoesNotExist:
+                self.context.update({
+                    'msg_erro': 'Lead não encontrado',
+                })
+                return render(
+                    self.request, self.template_name, self.context)
+
+            print(lc)
+            try:
+                lc.lead = lead
+                lc.save()
+            except IntegrityError as e:
+                context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
+                    'o lead. <{}>'.format(str(e))
+
+            self.lista()
+        else:
+            self.context['form'] = form
+        return render(self.request, self.template_name, self.context)

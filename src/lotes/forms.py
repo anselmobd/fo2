@@ -558,5 +558,5 @@ class QuantEstagioForm(forms.Form):
 
 class LeadColecaoForm(forms.Form):
     lead = forms.IntegerField(
-        required=False,
+        required=False, min_value=0, max_value=100,
         widget=forms.TextInput(attrs={'type': 'number'}))
