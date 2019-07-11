@@ -848,6 +848,7 @@ def multiplas_colecoes(cursor):
           FROM BASI_030 r -- item (ref+tam+cor)
           WHERE r.NIVEL_ESTRUTURA = 1
             AND r.REFERENCIA < 'C0000'
+            AND r.DESCR_REFERENCIA NOT LIKE '-%'
           GROUP BY
             TRIM(LEADING '0' FROM (
               REGEXP_REPLACE(r.REFERENCIA, '[^0-9]', '')))
