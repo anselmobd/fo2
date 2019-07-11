@@ -1,3 +1,11 @@
+from django.views import View
 from django.shortcuts import render
 
-# Create your views here.
+
+def index(request):
+    context = {}
+    return render(request, 'manutencao/index.html', context)
+
+
+class Maquinas(View):
+    pass

@@ -61,6 +61,8 @@ urlpatterns = [
 
     url(r'^estoque/', include('estoque.urls', namespace='estoque')),
 
+    url(r'^manutencao/', include('manutencao.urls', namespace='manutencao')),
+
     # Links para fora
 
     url(r'^systextil/', SystextilView.as_view(), name='systextil'),
