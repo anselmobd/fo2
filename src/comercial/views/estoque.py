@@ -9,6 +9,7 @@ from django.views import View
 from django import forms
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
 
 from base.views import O2BaseGetView, O2BaseGetPostView
 from geral.functions import has_permission
@@ -60,9 +61,14 @@ class AnaliseVendas(O2BaseGetView):
             data_row['data'] = row['data']
 
         for periodo in self.periodos:
-            data_periodo = queries.get_vendas(
-                self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='modelo')
+            key_cache = 'AnaliseVendas_modelo_{}'.format(periodo['range'])
+            data_periodo = cache.get(key_cache)
+            if data_periodo is None:
+                data_periodo = queries.get_vendas(
+                    self.cursor, ref=None, periodo=periodo['range'],
+                    colecao=None, cliente=None, por='modelo'
+                )
+                cache.set(key_cache, data_periodo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['modelo'] == row['modelo']),
