@@ -14,7 +14,7 @@ class TipoMaquina(models.Model):
         )
 
     def __str__(self):
-        return self.descricao
+        return self.nome
 
     class Meta:
         db_table = 'fo2_man_tipo_maquina'
