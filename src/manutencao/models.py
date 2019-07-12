@@ -103,7 +103,7 @@ class Atividade(models.Model):
         )
 
     def __str__(self):
-        return self.resumo
+        return '{}-{}'.format(self.id, self.resumo)
 
     class Meta:
         db_table = 'fo2_man_atividade'
