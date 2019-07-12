@@ -12,6 +12,7 @@ class TipoMaquinaAdmin(admin.ModelAdmin):
 
 class UnidadeTempoAdmin(admin.ModelAdmin):
     fields = ['codigo', 'nome']
+    readonly_fields = ['codigo', 'nome']
 
 
 intr_adm_site.register(TipoMaquina, TipoMaquinaAdmin)
