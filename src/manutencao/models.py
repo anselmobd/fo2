@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 class TipoMaquina(models.Model):
@@ -73,3 +74,18 @@ class Maquina(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
         super(Maquina, self).save(*args, **kwargs)
+
+
+class UsuarioTipoMaquina(models.Model):
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        verbose_name='usuário')
+    tipo_maquina = models.ForeignKey(
+        TipoMaquina, on_delete=models.CASCADE,
+        verbose_name='Tipo de máquina')
+
+    class Meta:
+        db_table = "fo2_man_user_tipo_maq"
+        verbose_name = "Usuário/Tipo de máquina"
+        verbose_name_plural = "Usuários/Tipos de máquinas"
+        unique_together = ("usuario", "tipo_maquina")
