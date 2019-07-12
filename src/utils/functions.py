@@ -5,7 +5,7 @@ import logging
 import inspect
 import hashlib
 
-from fo2.views import fo2logger
+fo2logger = logging.getLogger('fo2')
 
 
 def inc_month(dt, months):

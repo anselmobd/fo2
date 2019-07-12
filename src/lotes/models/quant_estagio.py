@@ -1,9 +1,8 @@
 from django.core.cache import cache
 
-from fo2.views import fo2logger
 from fo2.models import rows_to_dict_list
 
-from utils.functions import make_key_cache
+from utils.functions import make_key_cache, fo2logger
 
 
 def quant_estagio(cursor, estagio, ref, tipo):

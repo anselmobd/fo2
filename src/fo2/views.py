@@ -1,14 +1,9 @@
-import logging
-
 from django.views.generic import TemplateView
 from django.contrib.auth import logout
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 
-from utils.functions import get_client_ip
-
-
-fo2logger = logging.getLogger('fo2')
+from utils.functions import get_client_ip, fo2logger
 
 
 def index_view(request):
