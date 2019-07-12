@@ -4,7 +4,7 @@ from fo2.admin import intr_adm_site
 
 from .models import \
     TipoMaquina, UnidadeTempo, Maquina, UsuarioTipoMaquina, Atividade, \
-    AtividadeMetrica, Rotina
+    AtividadeMetrica, Rotina, RotinaPasso
 
 
 class TipoMaquinaAdmin(admin.ModelAdmin):
@@ -46,6 +46,10 @@ class RotinaAdmin(admin.ModelAdmin):
     list_display = ['tipo_maquina', 'nome']
 
 
+class RotinaPassoAdmin(admin.ModelAdmin):
+    list_display = ['rotina', 'ordem', 'atividade']
+
+
 intr_adm_site.register(TipoMaquina, TipoMaquinaAdmin)
 intr_adm_site.register(UnidadeTempo, UnidadeTempoAdmin)
 intr_adm_site.register(Maquina, MaquinaAdmin)
@@ -53,3 +57,4 @@ intr_adm_site.register(UsuarioTipoMaquina, UsuarioTipoMaquinaAdmin)
 intr_adm_site.register(Atividade, AtividadeAdmin)
 intr_adm_site.register(AtividadeMetrica, AtividadeMetricaAdmin)
 intr_adm_site.register(Rotina, RotinaAdmin)
+intr_adm_site.register(RotinaPasso, RotinaPassoAdmin)
