@@ -57,12 +57,13 @@ class Maquina(models.Model):
         on_delete=models.CASCADE)
     nome = models.CharField(
         db_index=True,
-        max_length=50,
-        )
+        max_length=50)
     slug = models.SlugField()
     descricao = models.CharField(
         "Descrição",
         max_length=250)
+    data_inicio = models.DateField(
+        "Data de início da rotina")
 
     def __str__(self):
         return self.nome
