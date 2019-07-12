@@ -1,0 +1,30 @@
+- model: manutencao.UnidadeTempo
+  pk: 1
+  fields:
+    codigo: d
+    nome: Dia
+- model: manutencao.UnidadeTempo
+  pk: 2
+  fields:
+    codigo: s
+    nome: Semana
+- model: manutencao.UnidadeTempo
+  pk: 3
+  fields:
+    codigo: m
+    nome: Mês
+- model: manutencao.UnidadeTempo
+  pk: 4
+  fields:
+    codigo: t
+    nome: Trimestre
+- model: manutencao.UnidadeTempo
+  pk: 5
+  fields:
+    codigo: e
+    nome: Semestre
+- model: manutencao.UnidadeTempo
+  pk: 6
+  fields:
+    codigo: a
+    nome: Ano
