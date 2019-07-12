@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from django.views.decorators.cache import cache_page
 
 from . import views
+
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -86,8 +86,7 @@ urlpatterns = [
         views.QuantEstagio.as_view(), name='quant_estagio__get'),
 
     url(r'^totais_estagio/$',
-        cache_page(60*10)(views.TotalEstagio.as_view()),
-        name='totais_estagio'),
+        views.TotalEstagio.as_view(), name='totais_estagio'),
 
     url(r'^lead_colecao/(?P<id>[^/]+)?$',
         views.LeadColecao.as_view(), name='lead_colecao'),
