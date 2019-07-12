@@ -1,24 +1,24 @@
 - model: manutencao.atividademetrica
   pk: 1
-  fields: {atividade: 14, ordem: 1, descricao: "[\xB0C]"}
+  fields: {atividade: 13, ordem: 1, descricao: "[\xB0C]"}
 - model: manutencao.atividademetrica
   pk: 2
-  fields: {atividade: 15, ordem: 1, descricao: "[\xB0C] Entrada"}
+  fields: {atividade: 14, ordem: 1, descricao: "[\xB0C] Entrada"}
 - model: manutencao.atividademetrica
   pk: 3
-  fields: {atividade: 15, ordem: 2, descricao: "[\xB0C] Saída"}
+  fields: {atividade: 14, ordem: 2, descricao: "[\xB0C] Saída"}
 - model: manutencao.atividademetrica
   pk: 4
-  fields: {atividade: 16, ordem: 1, descricao: "[M/S]"}
+  fields: {atividade: 15, ordem: 1, descricao: "[M/S]"}
 - model: manutencao.atividademetrica
   pk: 5
-  fields: {atividade: 17, ordem: 1, descricao: "[M/S]"}
+  fields: {atividade: 16, ordem: 1, descricao: "[M/S]"}
 - model: manutencao.atividademetrica
   pk: 6
-  fields: {atividade: 18, ordem: 1, descricao: "[Volts] R/S"}
+  fields: {atividade: 17, ordem: 1, descricao: "[Volts] R/S"}
 - model: manutencao.atividademetrica
   pk: 7
-  fields: {atividade: 19, ordem: 1, descricao: "[Ampere] R"}
+  fields: {atividade: 18, ordem: 1, descricao: "[Ampere] R"}
 - model: manutencao.atividademetrica
   pk: 8
-  fields: {atividade: 19, ordem: 2, descricao: "[Ampere] S"}
+  fields: {atividade: 18, ordem: 2, descricao: "[Ampere] S"}
