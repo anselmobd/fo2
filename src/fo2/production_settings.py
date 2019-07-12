@@ -37,12 +37,12 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",
-        "KEY_PREFIX": "FO2K"
+        "KEY_PREFIX": "FO2K",
         'TIMEOUT': 600,
         "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": "20cTt21PwZZ1MmoiIOZi4vLzhk3JSmMwua0SERib"
-                        "00Dtt3wAavSjhmzh03+GO+5OPFWRorvVaX8SQIBr"
+                        "00Dtt3wAavSjhmzh03+GO+5OPFWRorvVaX8SQIBr",
         },
     }
 }
