@@ -1,0 +1,9 @@
+- model: manutencao.rotina
+  pk: 1
+  fields: {tipo_maquina: 1, unidade_tempo: 3, qtd_tempo: 1, nome: Mensal}
+- model: manutencao.rotina
+  pk: 2
+  fields: {tipo_maquina: 1, unidade_tempo: 4, qtd_tempo: 1, nome: Trimestral}
+- model: manutencao.rotina
+  pk: 3
+  fields: {tipo_maquina: 1, unidade_tempo: 5, qtd_tempo: 1, nome: Semestral}
