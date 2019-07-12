@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('resumo', models.CharField(db_index=True, max_length=100)),
-                ('descricao', models.CharField(max_length=250, verbose_name='Descrição')),
+                ('descricao', models.CharField(max_length=400, verbose_name='Descrição')),
             ],
             options={
                 'verbose_name': 'Atividade',

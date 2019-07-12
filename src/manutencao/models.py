@@ -99,7 +99,7 @@ class Atividade(models.Model):
         )
     descricao = models.CharField(
         'Descrição',
-        max_length=250,
+        max_length=400,
         )
 
     def __str__(self):
