@@ -11,7 +11,7 @@ def load_tipo_maquina_from_fixture(apps, schema_editor):
 
 
 def delete_tipo_maquina(apps, schema_editor):
-    TipoMaquina = apps.get_model("manutancao", "TipoMaquina")
+    TipoMaquina = apps.get_model("manutencao", "TipoMaquina")
     TipoMaquina.objects.all().delete()
 
 
