@@ -1,0 +1,192 @@
+- model: manutencao.rotinapasso
+  pk: 1
+  fields: {rotina: 1, ordem: 1, atividade: 1}
+- model: manutencao.rotinapasso
+  pk: 2
+  fields: {rotina: 1, ordem: 2, atividade: 2}
+- model: manutencao.rotinapasso
+  pk: 3
+  fields: {rotina: 1, ordem: 3, atividade: 3}
+- model: manutencao.rotinapasso
+  pk: 4
+  fields: {rotina: 1, ordem: 4, atividade: 4}
+- model: manutencao.rotinapasso
+  pk: 5
+  fields: {rotina: 1, ordem: 5, atividade: 5}
+- model: manutencao.rotinapasso
+  pk: 6
+  fields: {rotina: 1, ordem: 6, atividade: 6}
+- model: manutencao.rotinapasso
+  pk: 7
+  fields: {rotina: 1, ordem: 7, atividade: 7}
+- model: manutencao.rotinapasso
+  pk: 8
+  fields: {rotina: 1, ordem: 8, atividade: 8}
+- model: manutencao.rotinapasso
+  pk: 9
+  fields: {rotina: 1, ordem: 9, atividade: 9}
+- model: manutencao.rotinapasso
+  pk: 10
+  fields: {rotina: 1, ordem: 10, atividade: 10}
+- model: manutencao.rotinapasso
+  pk: 11
+  fields: {rotina: 1, ordem: 11, atividade: 11}
+- model: manutencao.rotinapasso
+  pk: 12
+  fields: {rotina: 1, ordem: 12, atividade: 12}
+- model: manutencao.rotinapasso
+  pk: 13
+  fields: {rotina: 1, ordem: 13, atividade: 13}
+- model: manutencao.rotinapasso
+  pk: 14
+  fields: {rotina: 1, ordem: 14, atividade: 14}
+- model: manutencao.rotinapasso
+  pk: 15
+  fields: {rotina: 1, ordem: 15, atividade: 15}
+- model: manutencao.rotinapasso
+  pk: 16
+  fields: {rotina: 1, ordem: 16, atividade: 16}
+- model: manutencao.rotinapasso
+  pk: 17
+  fields: {rotina: 1, ordem: 17, atividade: 17}
+- model: manutencao.rotinapasso
+  pk: 18
+  fields: {rotina: 1, ordem: 18, atividade: 18}
+- model: manutencao.rotinapasso
+  pk: 19
+  fields: {rotina: 1, ordem: 19, atividade: 19}
+- model: manutencao.rotinapasso
+  pk: 20
+  fields: {rotina: 1, ordem: 20, atividade: 20}
+- model: manutencao.rotinapasso
+  pk: 21
+  fields: {rotina: 2, ordem: 1, atividade: 1}
+- model: manutencao.rotinapasso
+  pk: 22
+  fields: {rotina: 2, ordem: 2, atividade: 2}
+- model: manutencao.rotinapasso
+  pk: 23
+  fields: {rotina: 2, ordem: 3, atividade: 3}
+- model: manutencao.rotinapasso
+  pk: 24
+  fields: {rotina: 2, ordem: 4, atividade: 4}
+- model: manutencao.rotinapasso
+  pk: 25
+  fields: {rotina: 2, ordem: 5, atividade: 5}
+- model: manutencao.rotinapasso
+  pk: 26
+  fields: {rotina: 2, ordem: 6, atividade: 6}
+- model: manutencao.rotinapasso
+  pk: 27
+  fields: {rotina: 2, ordem: 7, atividade: 7}
+- model: manutencao.rotinapasso
+  pk: 28
+  fields: {rotina: 2, ordem: 8, atividade: 8}
+- model: manutencao.rotinapasso
+  pk: 29
+  fields: {rotina: 2, ordem: 9, atividade: 9}
+- model: manutencao.rotinapasso
+  pk: 30
+  fields: {rotina: 2, ordem: 10, atividade: 10}
+- model: manutencao.rotinapasso
+  pk: 31
+  fields: {rotina: 2, ordem: 11, atividade: 11}
+- model: manutencao.rotinapasso
+  pk: 32
+  fields: {rotina: 2, ordem: 12, atividade: 12}
+- model: manutencao.rotinapasso
+  pk: 33
+  fields: {rotina: 2, ordem: 13, atividade: 13}
+- model: manutencao.rotinapasso
+  pk: 34
+  fields: {rotina: 2, ordem: 14, atividade: 14}
+- model: manutencao.rotinapasso
+  pk: 35
+  fields: {rotina: 2, ordem: 15, atividade: 15}
+- model: manutencao.rotinapasso
+  pk: 36
+  fields: {rotina: 2, ordem: 16, atividade: 16}
+- model: manutencao.rotinapasso
+  pk: 37
+  fields: {rotina: 2, ordem: 17, atividade: 17}
+- model: manutencao.rotinapasso
+  pk: 38
+  fields: {rotina: 2, ordem: 18, atividade: 18}
+- model: manutencao.rotinapasso
+  pk: 39
+  fields: {rotina: 2, ordem: 19, atividade: 19}
+- model: manutencao.rotinapasso
+  pk: 40
+  fields: {rotina: 2, ordem: 20, atividade: 20}
+- model: manutencao.rotinapasso
+  pk: 41
+  fields: {rotina: 2, ordem: 21, atividade: 21}
+- model: manutencao.rotinapasso
+  pk: 42
+  fields: {rotina: 2, ordem: 22, atividade: 22}
+- model: manutencao.rotinapasso
+  pk: 43
+  fields: {rotina: 2, ordem: 23, atividade: 23}
+- model: manutencao.rotinapasso
+  pk: 44
+  fields: {rotina: 3, ordem: 1, atividade: 1}
+- model: manutencao.rotinapasso
+  pk: 45
+  fields: {rotina: 3, ordem: 2, atividade: 2}
+- model: manutencao.rotinapasso
+  pk: 46
+  fields: {rotina: 3, ordem: 3, atividade: 3}
+- model: manutencao.rotinapasso
+  pk: 47
+  fields: {rotina: 3, ordem: 4, atividade: 4}
+- model: manutencao.rotinapasso
+  pk: 48
+  fields: {rotina: 3, ordem: 5, atividade: 5}
+- model: manutencao.rotinapasso
+  pk: 49
+  fields: {rotina: 3, ordem: 6, atividade: 6}
+- model: manutencao.rotinapasso
+  pk: 50
+  fields: {rotina: 3, ordem: 7, atividade: 7}
+- model: manutencao.rotinapasso
+  pk: 51
+  fields: {rotina: 3, ordem: 8, atividade: 8}
+- model: manutencao.rotinapasso
+  pk: 52
+  fields: {rotina: 3, ordem: 9, atividade: 9}
+- model: manutencao.rotinapasso
+  pk: 53
+  fields: {rotina: 3, ordem: 10, atividade: 10}
+- model: manutencao.rotinapasso
+  pk: 54
+  fields: {rotina: 3, ordem: 11, atividade: 11}
+- model: manutencao.rotinapasso
+  pk: 55
+  fields: {rotina: 3, ordem: 12, atividade: 12}
+- model: manutencao.rotinapasso
+  pk: 56
+  fields: {rotina: 3, ordem: 13, atividade: 13}
+- model: manutencao.rotinapasso
+  pk: 57
+  fields: {rotina: 3, ordem: 14, atividade: 14}
+- model: manutencao.rotinapasso
+  pk: 58
+  fields: {rotina: 3, ordem: 15, atividade: 15}
+- model: manutencao.rotinapasso
+  pk: 59
+  fields: {rotina: 3, ordem: 16, atividade: 16}
+- model: manutencao.rotinapasso
+  pk: 60
+  fields: {rotina: 3, ordem: 17, atividade: 17}
+- model: manutencao.rotinapasso
+  pk: 61
+  fields: {rotina: 3, ordem: 18, atividade: 18}
+- model: manutencao.rotinapasso
+  pk: 62
+  fields: {rotina: 3, ordem: 19, atividade: 19}
+- model: manutencao.rotinapasso
+  pk: 63
+  fields: {rotina: 3, ordem: 20, atividade: 20}
+- model: manutencao.rotinapasso
+  pk: 64
+  fields: {rotina: 3, ordem: 21, atividade: 24}
