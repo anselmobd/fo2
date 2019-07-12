@@ -66,6 +66,12 @@ def fotos_2019_06_14_adriana_leo(request):
     return render(request, 'rh/fotos_2019_06_14_adriana_leo.html', context)
 
 
+def fotos_2019_07_12_brigadistas_2019(request):
+    context = {'titulo': 'Aos brigadistas 2019'}
+    return render(
+        request, 'rh/fotos_2019_07_12_brigadistas_2019.html', context)
+
+
 def media_2019_04_09_dicas(request):
     context = {'titulo': 'Dicas de comportamento no ambiente de trabalho'}
     return render(request, 'rh/media_2019_04_09_dicas.html', context)
