@@ -90,3 +90,21 @@ class UsuarioTipoMaquina(models.Model):
         verbose_name = "Usuário/Tipo de máquina"
         verbose_name_plural = "Usuários/Tipos de máquinas"
         unique_together = ("usuario", "tipo_maquina")
+
+
+class Atividade(models.Model):
+    resumo = models.CharField(
+        db_index=True,
+        max_length=100,
+        )
+    descricao = models.CharField(
+        'Descrição',
+        max_length=250,
+        )
+
+    def __str__(self):
+        return self.resumo
+
+    class Meta:
+        db_table = 'fo2_man_atividade'
+        verbose_name = 'Atividade'
