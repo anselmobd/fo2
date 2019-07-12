@@ -108,3 +108,24 @@ class Atividade(models.Model):
     class Meta:
         db_table = 'fo2_man_atividade'
         verbose_name = 'Atividade'
+
+
+class AtividadeMetrica(models.Model):
+    atividade = models.ForeignKey(
+        Atividade,
+        on_delete=models.CASCADE)
+    ordem = models.IntegerField(
+        default=0)
+    descricao = models.CharField(
+        'Descrição',
+        max_length=50,
+        )
+
+    def __str__(self):
+        return '{}: {} - {}'.format(
+            self.atividade.resumo, self.ordem, self.descricao)
+
+    class Meta:
+        db_table = 'fo2_man_atividade_metrica'
+        verbose_name = 'Metrica de atividade'
+        verbose_name_plural = "Metricas de atividades"
