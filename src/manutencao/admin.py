@@ -3,7 +3,8 @@ from django.contrib import admin
 from fo2.admin import intr_adm_site
 
 from .models import \
-    TipoMaquina, UnidadeTempo, Maquina, UsuarioTipoMaquina, Atividade
+    TipoMaquina, UnidadeTempo, Maquina, UsuarioTipoMaquina, Atividade, \
+    AtividadeMetrica
 
 
 class TipoMaquinaAdmin(admin.ModelAdmin):
@@ -35,8 +36,15 @@ class AtividadeAdmin(admin.ModelAdmin):
     fields = ['resumo', 'descricao']
 
 
+class AtividadeMetricaAdmin(admin.ModelAdmin):
+    list_display = ['atividade', 'ordem', 'descricao']
+    ordering = ['atividade', 'ordem']
+    fields = ['atividade', 'ordem', 'descricao']
+
+
 intr_adm_site.register(TipoMaquina, TipoMaquinaAdmin)
 intr_adm_site.register(UnidadeTempo, UnidadeTempoAdmin)
 intr_adm_site.register(Maquina, MaquinaAdmin)
 intr_adm_site.register(UsuarioTipoMaquina, UsuarioTipoMaquinaAdmin)
 intr_adm_site.register(Atividade, AtividadeAdmin)
+intr_adm_site.register(AtividadeMetrica, AtividadeMetricaAdmin)
