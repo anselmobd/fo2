@@ -3,11 +3,10 @@ from datetime import datetime, timedelta
 
 from django.core.cache import cache
 
-from fo2.views import fo2logger
 from fo2.models import cursorF1, rows_to_dict_list, \
     rows_to_dict_list_lower
 
-from utils.functions import dec_months, make_key_cache
+from utils.functions import dec_months, make_key_cache, fo2logger
 
 
 def busca_clientes(cnpj):
