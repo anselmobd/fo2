@@ -7,5 +7,5 @@ def index(request):
     return render(request, 'manutencao/index.html', context)
 
 
-class Maquinas(View):
+class Rotinas(View):
     pass
