@@ -1,16 +1,13 @@
-import logging
 from pprint import pprint
 from datetime import datetime, timedelta
 
 from django.core.cache import cache
 
+from fo2.views import fo2logger
 from fo2.models import cursorF1, rows_to_dict_list, \
     rows_to_dict_list_lower
 
 from utils.functions import dec_months, make_key_cache
-
-
-logger = logging.getLogger('fo2')
 
 
 def busca_clientes(cnpj):
@@ -109,7 +106,7 @@ def get_vendas(
 
     cached_result = cache.get(key_cache)
     if cached_result is not None:
-        logger.info('cached '+key_cache)
+        fo2logger.info('cached '+key_cache)
         return cached_result
 
     if order_qtd:
@@ -273,5 +270,5 @@ def get_vendas(
 
     cached_result = rows_to_dict_list_lower(cursor)
     cache.set(key_cache, cached_result)
-    logger.info('calculated '+key_cache)
+    fo2logger.info('calculated '+key_cache)
     return cached_result
