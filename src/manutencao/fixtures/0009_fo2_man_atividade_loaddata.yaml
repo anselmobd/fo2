@@ -1,0 +1,120 @@
+- model: manutencao.Atividade
+  pk: 1
+  fields:
+    resumo: Estado geral e acesso
+    descricao: Verificar estado geral e condições de acesso ao equipamento
+- model: manutencao.Atividade
+  pk: 2
+  fields:
+    resumo: Sistema de controle e proteção
+    descricao: Verificar atuação do sistema de controle e proteção
+- model: manutencao.Atividade
+  pk: 3
+  fields:
+    resumo: Limpar filtros e gabinete
+    descricao: Verificar e limpar filtros de ar e gabinete
+- model: manutencao.Atividade
+  pk: 4
+  fields:
+    resumo: Limpar as bandejas e drenos
+    descricao: Verificar e limpar as bandejas e desobstruir drenos
+- model: manutencao.Atividade
+  pk: 5
+  fields:
+    resumo: Eliminar ruídos e vibrações
+    descricao: Verificar e eliminar ruídos e vibrações anormais
+- model: manutencao.Atividade
+  pk: 6
+  fields:
+    resumo: Corrigir tampas e vedação
+    descricao: Verificar e corrigir tampas soltas e vedação do gabinete
+- model: manutencao.Atividade
+  pk: 7
+  fields:
+    resumo: Vazamentos no circuito frigorífico
+    descricao: Verificar eventuais vazamentos no circuito frigorífico
+- model: manutencao.Atividade
+  pk: 8
+  fields:
+    resumo: Condições da serpentina
+    descricao: Limpar e verificar condições gerais da serpentina
+- model: manutencao.Atividade
+  pk: 9
+  fields:
+    resumo: Sistema de expansão
+    descricao: Verificar atuação do sistema de expansão do refrigerante
+- model: manutencao.Atividade
+  pk: 10
+  fields:
+    resumo: Limpeza externa e operação
+    descricao: Realizar limpeza externa e promover testes de operação
+- model: manutencao.Atividade
+  pk: 11
+  fields:
+    resumo: Filtro secador ou elemento filtrante
+    descricao: Verificar condições do filtro secador ou elemento filtrante
+- model: manutencao.Atividade
+  pk: 13
+  fields:
+    resumo: Vibração nas tubulações frigorígenas
+    descricao: Verificar e corrigir vibração nas tubulações frigorígenas
+- model: manutencao.Atividade
+  pk: 14
+  fields:
+    resumo: Medir temperatura externa
+    descricao: Medir e registrar temperatura do ar no ambiente externo
+- model: manutencao.Atividade
+  pk: 15
+  fields:
+    resumo: Medir temperatura evaporador
+    descricao: Medir e registrar temperatura do ar do evaporador; entrada / saída
+- model: manutencao.Atividade
+  pk: 16
+  fields:
+    resumo: Medir vazão do evaporador
+    descricao: Medir e registrar vazão do ar do evaporador
+- model: manutencao.Atividade
+  pk: 17
+  fields:
+    resumo: Medir vazão do condensador
+    descricao: Medir e registrar vazão do ar do condensador
+- model: manutencao.Atividade
+  pk: 18
+  fields:
+    resumo: Medir tensão de alimentação
+    descricao: Medir e registrar tensão de alimentação
+- model: manutencao.Atividade
+  pk: 19
+  fields:
+    resumo: Medir corrente do compressor
+    descricao: Medir e registrar corrente do compressor
+- model: manutencao.Atividade
+  pk: 20
+  fields:
+    resumo: Condições do sistema elétrico e eletrônico
+    descricao: Verificar a instalação quanto as suas condições, existência de sujeira, danos e corrosão do sistema elétrico e eletrônico
+- model: manutencao.Atividade
+  pk: 21
+  fields:
+    resumo: Fixação do sistema elétrico e eletrônico
+    descricao: Verificar e corrigir o funcionamento e fixação dos componentes eletromecânicos (fusíveis, botoeiras, lampadas de sinalização, contatos de contatoras, capacitores), terminais, conexões, cabos, barramentos e sistemas de aterramento, reapertando do sistema elétrico e eletrônico
+- model: manutencao.Atividade
+  pk: 22
+  fields:
+    resumo: Carga de gás
+    descricao: Verificar carga de gás do sistema
+- model: manutencao.Atividade
+  pk: 23
+  fields:
+    resumo: Revestimento isolantes
+    descricao: Verificar e eliminar danos nos revestimento isolantes internos
+- model: manutencao.Atividade
+  pk: 24
+  fields:
+    resumo: Superaquecimento e reaperto
+    descricao: Verificar superaquecimento, aterramento e realizar reaperto dos terminais
+- model: manutencao.Atividade
+  pk: 25
+  fields:
+    resumo: Limpar sistema elétrico e eletrônico
+    descricao: Limpar os elementos e eliminar os pontos de corrosão do sistema elétrico e eletrônico
