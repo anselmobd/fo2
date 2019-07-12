@@ -1,0 +1,12 @@
+- model: manutencao.TipoMaquina
+  pk: 1
+  fields:
+    nome: Ar condicionado
+    slug: ar-condicionado
+    descricao: Conjunto de unidades condensadora e evaporadora
+- model: manutencao.TipoMaquina
+  pk: 2
+  fields:
+    nome: Elétrica
+    slug: eletrica
+    descricao: Quadros de energia
