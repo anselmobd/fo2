@@ -5,8 +5,7 @@ import logging
 import inspect
 import hashlib
 
-
-logger = logging.getLogger('fo2')
+from fo2.views import fo2logger
 
 
 def inc_month(dt, months):
@@ -148,7 +147,7 @@ def make_key_cache():
     braces = ['{}'] * len(values)
     key = '|'.join([stack1.filename, *braces])
     key = key.format(*values)
-    logger.info(key)
+    fo2logger.info(key)
     key = hashlib.md5(key.encode('utf-8')).hexdigest()
     key = '_'.join([stack1.function, key])
     return key
