@@ -16,8 +16,8 @@ class UnidadeTempoAdmin(admin.ModelAdmin):
 
 
 class MaquinaAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'descricao']
-    fields = ['tipo_maquina', 'nome', 'slug', 'descricao']
+    list_display = ['tipo_maquina', 'nome', 'descricao', 'data_inicio']
+    fields = ['tipo_maquina', 'nome', 'slug', 'descricao', 'data_inicio']
     readonly_fields = ['slug']
 
 
