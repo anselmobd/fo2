@@ -1,10 +1,10 @@
 import logging
-import inspect
-import hashlib
 from pprint import pprint
 from datetime import datetime, timedelta
 
 from django.core.cache import cache
+
+from utils.functions import make_key_cache
 
 from fo2.models import cursorF1, rows_to_dict_list, \
     rows_to_dict_list_lower
@@ -101,34 +101,6 @@ def ficha_cliente(cnpj):
     """
     cursor.execute(sql, [cnpj])
     return rows_to_dict_list(cursor)
-
-
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except Exception:
-        return False
-
-
-def make_key_cache():
-    stack1 = inspect.stack()[1]
-    argvalues = inspect.getargvalues(stack1.frame).locals.values()
-    values = []
-    for value in argvalues:
-        if value is None:
-            values.append(value)
-        elif isinstance(value, str):
-            values.append(value)
-        elif is_number(value):
-            values.append(value)
-    braces = ['{}'] * len(values)
-    key = '|'.join([stack1.filename, *braces])
-    key = key.format(*values)
-    logger.info(key)
-    key = hashlib.md5(key.encode('utf-8')).hexdigest()
-    key = '_'.join([stack1.function, key])
-    return key
 
 
 def get_vendas(
