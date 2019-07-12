@@ -1,3 +1,4 @@
+import logging
 import inspect
 import hashlib
 from pprint import pprint
@@ -9,6 +10,9 @@ from fo2.models import cursorF1, rows_to_dict_list, \
     rows_to_dict_list_lower
 
 from utils.functions import dec_months
+
+
+logger = logging.getLogger('fo2')
 
 
 def busca_clientes(cnpj):
@@ -121,6 +125,7 @@ def make_key_cache():
     braces = ['{}'] * len(values)
     key = '|'.join([stack1.filename, *braces])
     key = key.format(*values)
+    logger.info(key)
     key = hashlib.md5(key.encode('utf-8')).hexdigest()
     key = '_'.join([stack1.function, key])
     return key
@@ -134,7 +139,7 @@ def get_vendas(
 
     cached_result = cache.get(key_cache)
     if cached_result is not None:
-        print('cached', key_cache)
+        logger.info('cached '+key_cache)
         return cached_result
 
     if order_qtd:
@@ -298,5 +303,5 @@ def get_vendas(
 
     cached_result = rows_to_dict_list_lower(cursor)
     cache.set(key_cache, cached_result)
-    print('calculated', key_cache)
+    logger.info('calculated '+key_cache)
     return cached_result
