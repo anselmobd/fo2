@@ -1,4 +1,9 @@
+from django.core.cache import cache
+
+from fo2.views import fo2logger
 from fo2.models import rows_to_dict_list
+
+from utils.functions import make_key_cache
 
 
 def quant_estagio(cursor, estagio, ref, tipo):
@@ -78,6 +83,13 @@ def quant_estagio(cursor, estagio, ref, tipo):
 
 
 def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito):
+    key_cache = make_key_cache()
+
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     filtro_tipo_roteiro = ''
     if tipo_roteiro != 't':
         if tipo_roteiro == 'p':
@@ -291,4 +303,8 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito):
         filtro_deposito=filtro_deposito,
     )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+
+    cached_result = rows_to_dict_list(cursor)
+    cache.set(key_cache, cached_result)
+    fo2logger.info('calculated '+key_cache)
+    return cached_result
