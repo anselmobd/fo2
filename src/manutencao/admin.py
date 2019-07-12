@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
-from .models import TipoMaquina, UnidadeTempo, Maquina, UsuarioTipoMaquina
+from .models import \
+    TipoMaquina, UnidadeTempo, Maquina, UsuarioTipoMaquina, Atividade
 
 
 class TipoMaquinaAdmin(admin.ModelAdmin):
@@ -28,7 +29,14 @@ class UsuarioTipoMaquinaAdmin(admin.ModelAdmin):
     fields = ['usuario', 'tipo_maquina']
 
 
+class AtividadeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'resumo']
+    ordering = ['id']
+    fields = ['resumo', 'descricao']
+
+
 intr_adm_site.register(TipoMaquina, TipoMaquinaAdmin)
 intr_adm_site.register(UnidadeTempo, UnidadeTempoAdmin)
 intr_adm_site.register(Maquina, MaquinaAdmin)
 intr_adm_site.register(UsuarioTipoMaquina, UsuarioTipoMaquinaAdmin)
+intr_adm_site.register(Atividade, AtividadeAdmin)
