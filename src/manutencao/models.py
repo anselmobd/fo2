@@ -155,3 +155,23 @@ class Rotina(models.Model):
         db_table = 'fo2_man_rotina'
         verbose_name = 'Rotina de manutenção'
         verbose_name_plural = "Rotinas de manutenção"
+
+
+class RotinaPasso(models.Model):
+    rotina = models.ForeignKey(
+        Rotina,
+        on_delete=models.CASCADE)
+    ordem = models.IntegerField(
+        default=0)
+    atividade = models.ForeignKey(
+        Atividade,
+        on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} : {:02} : {}'.format(
+            self.rotina, self.ordem, self.atividade)
+
+    class Meta:
+        db_table = 'fo2_man_rotina_passo'
+        verbose_name = 'Passo de rotina'
+        verbose_name_plural = "Passos de rotinas"
