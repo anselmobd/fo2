@@ -8,9 +8,11 @@ from django.http import HttpResponse
 from utils.functions import get_client_ip
 
 
+fo2logger = logging.getLogger('fo2')
+
+
 def index_view(request):
-    logger = logging.getLogger('fo2')
-    logger.info('index')
+    fo2logger.info('index')
     return redirect('apoio_ao_erp')
 
 
