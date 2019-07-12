@@ -48,6 +48,7 @@ class RotinaAdmin(admin.ModelAdmin):
 
 class RotinaPassoAdmin(admin.ModelAdmin):
     list_display = ['rotina', 'ordem', 'atividade']
+    ordering = ['rotina', 'ordem']
 
 
 intr_adm_site.register(TipoMaquina, TipoMaquinaAdmin)
