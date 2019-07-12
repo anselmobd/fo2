@@ -47,3 +47,29 @@ class UnidadeTempo(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
         super(UnidadeTempo, self).save(*args, **kwargs)
+
+
+class Maquina(models.Model):
+    tipo_maquina = models.ForeignKey(
+        TipoMaquina,
+        verbose_name='Tipo de máquina',
+        on_delete=models.CASCADE)
+    nome = models.CharField(
+        db_index=True,
+        max_length=50,
+        )
+    slug = models.SlugField()
+    descricao = models.CharField(
+        "Descrição",
+        max_length=250)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = 'fo2_man_maquina'
+        verbose_name = 'Máquina'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(Maquina, self).save(*args, **kwargs)
