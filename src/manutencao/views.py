@@ -84,7 +84,6 @@ class Rotinas(O2BaseGetView):
             mes = {
                 'ini': dtini,
                 'fim': dtini + dias30 - dia1,
-                'fim_teste': dtini + dias30,
                 'nome': meses_nomes[i],
                 'r_headers': ('Máquina', 'Rotina', 'Data'),
                 'r_fields': ('maquina', 'rotina', 'data'),
@@ -100,44 +99,53 @@ class Rotinas(O2BaseGetView):
             if unid == 'm':
                 return 30
             if unid == 't':
-                return 91
+                return 90
             if unid == 'e':
-                return 182
+                return 180
             if unid == 'a':
-                return 365
+                return 360
             return 1
 
         tem_rotina = False
         for mes in meses:
             # pprint(mes)
             for maquina in mq:
+                # print('==== maquina', maquina)
+                diasini = (mes['ini'] - maquina.data_inicio).days
+                # print('diasini', diasini)
+                diasfim = (mes['fim'] - maquina.data_inicio).days
+                # print('diasfim', diasfim)
                 for rotina in rot:
-                    # print(maquina)
-                    # print(rotina)
-                    diasini = (mes['ini'] - maquina.data_inicio).days
-                    # print(diasini)
-                    diasfim = (mes['fim_teste'] - maquina.data_inicio).days
-                    # print(diasfim)
+                    # print('== rotina', rotina)
                     dias_periodo = unidade_tempo2dias(
                         rotina.frequencia.unidade_tempo.codigo
                         ) * rotina.frequencia.qtd_tempo
-                    # print(dias_periodo)
+                    # print('dias_periodo', dias_periodo)
                     periodos_ini = diasini // dias_periodo
-                    # print(periodos_ini)
+                    # print('periodos_ini', periodos_ini)
+                    modulo_ini = diasini % dias_periodo
+                    # print('modulo_ini', modulo_ini)
                     periodos_fim = diasfim // dias_periodo
-                    # print(periodos_fim)
-                    if periodos_fim > 0 and periodos_ini != periodos_fim:
+                    # print('periodos_fim', periodos_fim)
+                    executa = False
+                    if modulo_ini == 0:
+                        executa = True
+                        data = maquina.data_inicio + timedelta(
+                            days=periodos_ini*dias_periodo)
+                    if periodos_fim > 0 \
+                            and periodos_ini != periodos_fim:
+                        executa = True
+                        data = maquina.data_inicio + timedelta(
+                            days=periodos_fim*dias_periodo)
+                    if executa:
                         tem_rotina = True
                         mes['r_data'].append({
                             'maquina': maquina,
                             'rotina': rotina,
-                            'data': maquina.data_inicio + timedelta(
-                                days=periodos_fim*dias_periodo)
+                            'data': data
                         })
-                        # print('executar')
+                        # print('executar data', data)
                         break
-                    # else:
-                        # print('não executar')
 
         if tem_rotina:
             self.context.update({
