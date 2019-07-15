@@ -1,0 +1,21 @@
+- model: manutencao.periodo
+  pk: 1
+  fields: {nome: "Diário", unidade_tempo: 1, qtd_tempo: 1, ordem: 100}
+- model: manutencao.periodo
+  pk: 2
+  fields: {nome: "Semanal", unidade_tempo: 2, qtd_tempo: 1, ordem: 200}
+- model: manutencao.periodo
+  pk: 3
+  fields: {nome: Mensal, unidade_tempo: 3, qtd_tempo: 1, ordem: 300}
+- model: manutencao.periodo
+  pk: 4
+  fields: {nome: Bimestral, unidade_tempo: 3, qtd_tempo: 2, ordem: 400}
+- model: manutencao.periodo
+  pk: 5
+  fields: {nome: Trimestral, unidade_tempo: 4, qtd_tempo: 1, ordem: 500}
+- model: manutencao.periodo
+  pk: 6
+  fields: {nome: Semestral, unidade_tempo: 5, qtd_tempo: 1, ordem: 600}
+- model: manutencao.periodo
+  pk: 7
+  fields: {nome: Anual, unidade_tempo: 6, qtd_tempo: 1, ordem: 700}
