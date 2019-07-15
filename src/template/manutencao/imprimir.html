@@ -13,9 +13,13 @@ table {
 {% endblock %}
 
 {% block content %}
-<table >
-<tr>
-  <td>roteiro{{roteiro}}</td>
-</tr>
-</table>
+{%if data%}
+  <table >
+  {% for row in data %}
+    <tr>
+      <td>{{row.atividade__descricao}}</td>
+    </tr>
+  {% endfor %}
+  </table>
+{% endif %}
 {% endblock %}

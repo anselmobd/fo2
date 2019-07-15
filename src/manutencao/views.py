@@ -170,6 +170,46 @@ class Imprimir(O2BaseGetView):
         super(Imprimir, self).__init__(*args, **kwargs)
         self.template_name = 'manutencao/imprimir.html'
         self.get_args = ['roteiro', 'maquina', 'data']
+        self.get_args2contect = True
 
     def mount_context(self):
-        pass
+        if self.request.user.id is None:
+            return
+
+        if self.request.user.is_superuser:
+            utm = models.UsuarioTipoMaquina.objects.all()
+        else:
+            utm = models.UsuarioTipoMaquina.objects.filter(
+                usuario=self.request.user)
+        if len(utm) == 0:
+            return
+
+        mq = models.Maquina.objects.filter(tipo_maquina__in=utm.values(
+            'tipo_maquina__id'), id=self.kwargs['maquina'])
+        if len(mq) != 1:
+            return
+
+        rot = models.Rotina.objects.filter(tipo_maquina__in=utm.values(
+            'tipo_maquina__id'), id=self.kwargs['roteiro'])
+        if len(rot) != 1:
+            return
+
+        ativ = models.RotinaPasso.objects
+        ativ = ativ.filter(rotina__in=rot)
+        ativ = ativ.annotate(tem_medidas=Exists(
+            models.AtividadeMetrica.objects.filter(
+                atividade=OuterRef('atividade')
+            )))
+        ativ = ativ.order_by('ordem')
+        data = list(ativ.values(
+            'ordem',
+            'atividade__id',
+            'atividade__descricao',
+            'rotina__nome',
+            'rotina__frequencia__nome',
+            'tem_medidas',
+        ))
+
+        self.context.update({
+            'data': data,
+        })
