@@ -31,15 +31,25 @@
     </table>
   {% endif %}
   {% if meses %}
-    <h3>Rotinas a executar</h3>
-    {% for mes in meses %}
-      {% if mes.r_data %}
-        <h4>Período {{mes.nome}} ({{mes.ini}} até {{mes.fim}})</h4>
-        <table>
-          {% include "layout/thead_generic.html" with data=mes.r_headers style=mes.r_style only %}
-          {% include "layout/tbody_generic.html" with fields=mes.r_fields data=mes.r_data style=mes.r_style only %}
-        </table>
-      {% endif %}
-    {% endfor %}
+    <h3>Rotinas a executar por período</h3>
+    <ul class="nav nav-tabs" id="myTab">
+      {% for mes in meses %}
+        {% if mes.r_data %}
+          <li {% if mes.ativa %}class="active"{% endif %}><a data-toggle="tab" href="#{{mes.href}}">{{mes.nome}} ({{mes.ini}} até {{mes.fim}})</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <div class="tab-content">
+      {% for mes in meses %}
+        {% if mes.r_data %}
+          <div id="{{mes.href}}" class="tab-pane fade{% if mes.ativa %} in active{% endif %}">
+            <table>
+              {% include "layout/thead_generic.html" with data=mes.r_headers style=mes.r_style only %}
+              {% include "layout/tbody_generic.html" with fields=mes.r_fields data=mes.r_data style=mes.r_style only %}
+            </table>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
   {% endif %}
 {% endblock %}
