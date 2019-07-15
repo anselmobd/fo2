@@ -16,18 +16,30 @@
     <h4>{{ msg_erro }}</h4>
   {% endif %}
   {% if data %}
-    <h4>Rotinas cadastradas</h4>
+    <h3>Rotinas cadastradas</h3>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
   {% endif %}
-  {% if s_data %}
-    <h3>Atribuições de {{ user.first_name }}</h3>
-    <h4>Máquinas</h4>
+  {% if m_data %}
+    <h2>Atribuições de {{ user.first_name }}</h2>
+    <h3>Máquinas</h3>
     <table>
       {% include "layout/thead_generic.html" with data=m_headers style=m_style only %}
       {% include "layout/tbody_generic.html" with fields=m_fields data=m_data style=m_style only %}
     </table>
+  {% endif %}
+  {% if meses %}
+    <h3>Rotinas a executar</h3>
+    {% for mes in meses %}
+      {% if mes.r_data %}
+        <h4>Período {{mes.nome}} ({{mes.ini}} até {{mes.fim}})</h4>
+        <table>
+          {% include "layout/thead_generic.html" with data=mes.r_headers style=mes.r_style only %}
+          {% include "layout/tbody_generic.html" with fields=mes.r_fields data=mes.r_data style=mes.r_style only %}
+        </table>
+      {% endif %}
+    {% endfor %}
   {% endif %}
 {% endblock %}
