@@ -3,7 +3,7 @@ from django.contrib import admin
 from fo2.admin import intr_adm_site
 
 from .models import \
-    TipoMaquina, UnidadeTempo, Periodo, Maquina, UsuarioTipoMaquina, \
+    TipoMaquina, UnidadeTempo, Frequencia, Maquina, UsuarioTipoMaquina, \
     Atividade, AtividadeMetrica, Rotina, RotinaPasso
 
 
@@ -17,7 +17,7 @@ class UnidadeTempoAdmin(admin.ModelAdmin):
     readonly_fields = ['codigo', 'nome']
 
 
-class PeriodoAdmin(admin.ModelAdmin):
+class FrequenciaAdmin(admin.ModelAdmin):
     list_display = ['ordem', 'nome']
     ordering = ['ordem', 'nome']
 
@@ -48,7 +48,7 @@ class AtividadeMetricaAdmin(admin.ModelAdmin):
 
 
 class RotinaAdmin(admin.ModelAdmin):
-    list_display = ['tipo_maquina', 'periodo', 'nome']
+    list_display = ['tipo_maquina', 'frequencia', 'nome']
 
 
 class RotinaPassoAdmin(admin.ModelAdmin):
@@ -58,7 +58,7 @@ class RotinaPassoAdmin(admin.ModelAdmin):
 
 intr_adm_site.register(TipoMaquina, TipoMaquinaAdmin)
 intr_adm_site.register(UnidadeTempo, UnidadeTempoAdmin)
-intr_adm_site.register(Periodo, PeriodoAdmin)
+intr_adm_site.register(Frequencia, FrequenciaAdmin)
 intr_adm_site.register(Maquina, MaquinaAdmin)
 intr_adm_site.register(UsuarioTipoMaquina, UsuarioTipoMaquinaAdmin)
 intr_adm_site.register(Atividade, AtividadeAdmin)
