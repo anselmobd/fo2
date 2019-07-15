@@ -77,7 +77,9 @@ class Rotinas(O2BaseGetView):
         domingo = date.today()-timedelta(days=date.today().weekday()+1)
         tamanho_periodo = timedelta(days=7)
         dia1 = timedelta(days=1)
+        meses_href = ['anterior', 'atual', 'proximo']
         meses_nomes = ['Anterior', 'Atual', 'Próximo']
+        meses_ativa = [False, True, False]
         meses = []
         dtini = domingo - tamanho_periodo
         for i in range(3):
@@ -85,6 +87,8 @@ class Rotinas(O2BaseGetView):
                 'ini': dtini,
                 'fim': dtini + tamanho_periodo - dia1,
                 'nome': meses_nomes[i],
+                'ativa': meses_ativa[i],
+                'href': meses_href[i],
                 'r_headers': ('Máquina', 'Rotina', 'Data'),
                 'r_fields': ('maquina', 'rotina', 'data'),
                 'r_data': [],
