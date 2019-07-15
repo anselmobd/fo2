@@ -48,7 +48,7 @@ class AtividadeMetricaAdmin(admin.ModelAdmin):
 
 
 class RotinaAdmin(admin.ModelAdmin):
-    list_display = ['tipo_maquina', 'nome']
+    list_display = ['tipo_maquina', 'periodo', 'nome']
 
 
 class RotinaPassoAdmin(admin.ModelAdmin):
