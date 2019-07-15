@@ -34,21 +34,19 @@
     <h3>Rotinas a executar por período</h3>
     <ul class="nav nav-tabs" id="myTab">
       {% for mes in meses %}
-        {% if mes.r_data %}
-          <li {% if mes.ativa %}class="active"{% endif %}><a data-toggle="tab" href="#{{mes.href}}">{{mes.nome}} ({{mes.ini}} até {{mes.fim}})</a></li>
-        {% endif %}
+        <li {% if mes.ativa %}class="active"{% endif %}><a data-toggle="tab" href="#{{mes.href}}">{{mes.nome}} ({{mes.ini}} até {{mes.fim}})</a></li>
       {% endfor %}
     </ul>
     <div class="tab-content">
       {% for mes in meses %}
-        {% if mes.r_data %}
-          <div id="{{mes.href}}" class="tab-pane fade{% if mes.ativa %} in active{% endif %}">
+        <div id="{{mes.href}}" class="tab-pane fade{% if mes.ativa %} in active{% endif %}">
+          {% if mes.r_data %}
             <table>
               {% include "layout/thead_generic.html" with data=mes.r_headers style=mes.r_style only %}
               {% include "layout/tbody_generic.html" with fields=mes.r_fields data=mes.r_data style=mes.r_style only %}
             </table>
-          </div>
-        {% endif %}
+          {% endif %}
+        </div>
       {% endfor %}
     </div>
   {% endif %}
