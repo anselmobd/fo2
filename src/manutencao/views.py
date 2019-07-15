@@ -72,8 +72,8 @@ class Rotinas(O2BaseGetView):
                 'msg_erro': 'Nenhuma rotina cadastrada para o usuário atual',
             })
             return
-        pprint(rot.values())
-        pprint(mq.values())
+        # pprint(rot.values())
+        # pprint(mq.values())
         domingo = date.today()-timedelta(days=date.today().weekday()+1)
         dias30 = timedelta(days=30)
         dia1 = timedelta(days=1)
@@ -92,7 +92,7 @@ class Rotinas(O2BaseGetView):
             }
             meses.append(mes)
             dtini = dtini + dias30
-        print(meses)
+        # print(meses)
 
         def unidade_tempo2dias(unid):
             if unid == 's':
@@ -109,23 +109,23 @@ class Rotinas(O2BaseGetView):
 
         tem_rotina = False
         for mes in meses:
-            pprint(mes)
+            # pprint(mes)
             for maquina in mq:
                 for rotina in rot:
-                    print(maquina)
-                    print(rotina)
+                    # print(maquina)
+                    # print(rotina)
                     diasini = (mes['ini'] - maquina.data_inicio).days
-                    print(diasini)
+                    # print(diasini)
                     diasfim = (mes['fim_teste'] - maquina.data_inicio).days
-                    print(diasfim)
+                    # print(diasfim)
                     dias_periodo = unidade_tempo2dias(
                         rotina.frequencia.unidade_tempo.codigo
                         ) * rotina.frequencia.qtd_tempo
                     # print(dias_periodo)
                     periodos_ini = diasini // dias_periodo
-                    print(periodos_ini)
+                    # print(periodos_ini)
                     periodos_fim = diasfim // dias_periodo
-                    print(periodos_fim)
+                    # print(periodos_fim)
                     if periodos_fim > 0 and periodos_ini != periodos_fim:
                         tem_rotina = True
                         mes['r_data'].append({
@@ -134,10 +134,10 @@ class Rotinas(O2BaseGetView):
                             'data': maquina.data_inicio + timedelta(
                                 days=periodos_fim*dias_periodo)
                         })
-                        print('executar')
+                        # print('executar')
                         break
-                    else:
-                        print('não executar')
+                    # else:
+                        # print('não executar')
 
         if tem_rotina:
             self.context.update({
