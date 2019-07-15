@@ -18,7 +18,6 @@ class O2BaseCustomView(View):
 
         if self.get_args2contect:
             for arg in self.get_args:
-                print(arg)
                 arg_value = self.get_arg(arg)
                 self.context.update({arg: arg_value})
 
