@@ -31,11 +31,12 @@ class Rotinas(O2BaseGetView):
             })
             return
 
-        data = list(rotinas.values('tipo_maquina__nome', 'nome'))
+        data = list(rotinas.values(
+            'tipo_maquina__nome', 'frequencia__nome', 'nome'))
 
         self.context.update({
-            'headers': ('Tipo de máquina', 'Nome da rotina'),
-            'fields': ('tipo_maquina__nome', 'nome'),
+            'headers': ('Tipo de máquina', 'Frequência', 'Nome da rotina'),
+            'fields': ('tipo_maquina__nome', 'frequencia__nome', 'nome'),
             'data': data,
         })
 
@@ -112,7 +113,8 @@ class Rotinas(O2BaseGetView):
                 diasfim = (meses[i_mes]['fim'] - maquina.data_inicio).days
                 # print(diasfim)
                 dias_periodo = unidade_tempo2dias(
-                    rotina.unidade_tempo.codigo) * rotina.qtd_tempo
+                    rotina.frequencia.unidade_tempo.codigo
+                    ) * rotina.frequencia.qtd_tempo
                 # print(dias_periodo)
                 periodos_ini = diasini // dias_periodo
                 # print(periodos_ini)
