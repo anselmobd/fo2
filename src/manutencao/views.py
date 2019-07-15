@@ -67,7 +67,7 @@ class Rotinas(O2BaseGetView):
         })
 
         rot = models.Rotina.objects.filter(tipo_maquina__in=utm.values(
-            'tipo_maquina__id'))
+            'tipo_maquina__id')).order_by('-frequencia__ordem')
         if len(rot) == 0:
             self.context.update({
                 'msg_erro': 'Nenhuma rotina cadastrada para o usuário atual',
@@ -77,14 +77,19 @@ class Rotinas(O2BaseGetView):
         pprint(mq.values())
         domingo = date.today()-timedelta(days=date.today().weekday()+1)
         dias30 = timedelta(days=30)
+        dia1 = timedelta(days=1)
         meses_nomes = ['Anterior', 'Atual', 'Próximo']
         meses = []
-        dtini = domingo
+        dtini = domingo - dias30
         for i in range(3):
             mes = {
                 'ini': dtini,
-                'fim': dtini + dias30,
-                'nome': meses_nomes[i]
+                'fim': dtini + dias30 - dia1,
+                'fim_teste': dtini + dias30,
+                'nome': meses_nomes[i],
+                'r_headers': ('Máquina', 'Rotina', 'Data'),
+                'r_fields': ('maquina', 'rotina', 'data'),
+                'r_data': [],
             }
             meses.append(mes)
             dtini = dtini + dias30
@@ -103,36 +108,39 @@ class Rotinas(O2BaseGetView):
                 return 365
             return 1
 
-        i_mes = 1
-        for maquina in mq:
-            for rotina in rot:
-                print(maquina.nome)
-                print(rotina.nome)
-                diasini = (meses[i_mes]['ini'] - maquina.data_inicio).days
-                # print(diasini)
-                diasfim = (meses[i_mes]['fim'] - maquina.data_inicio).days
-                # print(diasfim)
-                dias_periodo = unidade_tempo2dias(
-                    rotina.frequencia.unidade_tempo.codigo
-                    ) * rotina.frequencia.qtd_tempo
-                # print(dias_periodo)
-                periodos_ini = diasini // dias_periodo
-                # print(periodos_ini)
-                periodos_fim = diasfim // dias_periodo
-                # print(periodos_fim)
-                if periodos_ini != periodos_fim:
-                    print('executar')
-                else:
-                    print('não executar')
+        tem_rotina = False
+        for mes in meses:
+            pprint(mes)
+            for maquina in mq:
+                for rotina in rot:
+                    print(maquina)
+                    print(rotina)
+                    diasini = (mes['ini'] - maquina.data_inicio).days
+                    print(diasini)
+                    diasfim = (mes['fim_teste'] - maquina.data_inicio).days
+                    print(diasfim)
+                    dias_periodo = unidade_tempo2dias(
+                        rotina.frequencia.unidade_tempo.codigo
+                        ) * rotina.frequencia.qtd_tempo
+                    # print(dias_periodo)
+                    periodos_ini = diasini // dias_periodo
+                    print(periodos_ini)
+                    periodos_fim = diasfim // dias_periodo
+                    print(periodos_fim)
+                    if periodos_fim > 0 and periodos_ini != periodos_fim:
+                        tem_rotina = True
+                        mes['r_data'].append({
+                            'maquina': maquina,
+                            'rotina': rotina,
+                            'data': maquina.data_inicio + timedelta(
+                                days=periodos_fim*dias_periodo)
+                        })
+                        print('executar')
+                        break
+                    else:
+                        print('não executar')
 
-        self.context.update({
-            't_headers': ('Tipo de máquina', 'Nome da rotina'),
-            't_fields': ('tipo_maquina__nome', 'nome'),
-            't_data': data,
-        })
-
-        self.context.update({
-            's_headers': ('Tipo de máquina', 'Nome da rotina'),
-            's_fields': ('tipo_maquina__nome', 'nome'),
-            's_data': data,
-        })
+        if tem_rotina:
+            self.context.update({
+                'meses': meses,
+            })
