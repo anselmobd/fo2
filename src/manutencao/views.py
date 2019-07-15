@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from django.views import View
 from django.shortcuts import render
 from django.db.models import Exists, OuterRef
+from django.urls import reverse
 
 from base.views import O2BaseGetView
 
@@ -152,7 +153,10 @@ class Rotinas(O2BaseGetView):
                             mes['r_data'].append({
                                 'maquina': maquina,
                                 'rotina': rotina,
-                                'data': data
+                                'data': data,
+                                'data|LINK': reverse(
+                                    'manutencao:imprimir',
+                                    args=[rotina.id, maquina.id, 1234])
                             })
                             # print('executar data', data)
 
@@ -190,7 +194,7 @@ class Imprimir(O2BaseGetView):
             return
 
         rot = models.Rotina.objects.filter(tipo_maquina__in=utm.values(
-            'tipo_maquina__id'), id=self.kwargs['roteiro'])
+            'tipo_maquina__id'), id=self.kwargs['rotina'])
         if len(rot) != 1:
             return
 
