@@ -23,24 +23,23 @@ class Rotinas(O2BaseGetView):
         self.title_name = 'Rotinas'
 
     def mount_context(self):
-        rotinas = models.Rotina.objects.all().order_by(
-            'tipo_maquina', 'nome')
-        if len(rotinas) == 0:
-            self.context.update({
-                'msg_erro': 'Nenhuma rotina cadastrada',
-            })
-            return
-
-        data = list(rotinas.values(
-            'tipo_maquina__nome', 'frequencia__nome', 'nome'))
-
-        self.context.update({
-            'headers': ('Tipo de máquina', 'Frequência', 'Nome da rotina'),
-            'fields': ('tipo_maquina__nome', 'frequencia__nome', 'nome'),
-            'data': data,
-        })
-
         if self.request.user.id is None:
+            rotinas = models.Rotina.objects.all().order_by(
+                'tipo_maquina', 'nome')
+            if len(rotinas) == 0:
+                self.context.update({
+                    'msg_erro': 'Nenhuma rotina cadastrada',
+                })
+                return
+
+            data = list(rotinas.values(
+                'tipo_maquina__nome', 'frequencia__nome', 'nome'))
+
+            self.context.update({
+                'headers': ('Tipo de máquina', 'Frequência', 'Nome da rotina'),
+                'fields': ('tipo_maquina__nome', 'frequencia__nome', 'nome'),
+                'data': data,
+            })
             return
 
         if self.request.user.is_superuser:
