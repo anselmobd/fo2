@@ -50,6 +50,28 @@ class UnidadeTempo(models.Model):
         super(UnidadeTempo, self).save(*args, **kwargs)
 
 
+class Periodo(models.Model):
+    nome = models.CharField(
+        max_length=50,
+        )
+    unidade_tempo = models.ForeignKey(
+        UnidadeTempo,
+        verbose_name='Unidade de tempo',
+        on_delete=models.CASCADE)
+    qtd_tempo = models.IntegerField(
+        'Quantidade de tempo',
+        default=1)
+    ordem = models.IntegerField(
+        default=0)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = 'fo2_man_periodo'
+        verbose_name = 'Período'
+
+
 class Maquina(models.Model):
     tipo_maquina = models.ForeignKey(
         TipoMaquina,
