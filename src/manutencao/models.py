@@ -158,6 +158,11 @@ class Rotina(models.Model):
         TipoMaquina,
         verbose_name='Tipo de máquina',
         on_delete=models.CASCADE)
+    periodo = models.ForeignKey(
+        Periodo,
+        default=1,
+        verbose_name='Período',
+        on_delete=models.CASCADE)
     unidade_tempo = models.ForeignKey(
         UnidadeTempo,
         verbose_name='Unidade de tempo',
