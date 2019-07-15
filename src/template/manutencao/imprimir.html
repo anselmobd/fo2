@@ -1,0 +1,21 @@
+{% extends 'layout/layout.html' %}
+
+{% block title.content %}Imprime roteiro de manutenção {% endblock title.content %}
+
+{% block stylesheet %}
+<style>
+table {
+  width:100%;
+  table-layout: fixed;
+  overflow-wrap: break-word;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<table >
+<tr>
+  <td>roteiro{{roteiro}}</td>
+</tr>
+</table>
+{% endblock %}

@@ -162,3 +162,14 @@ class Rotinas(O2BaseGetView):
             self.context.update({
                 'meses': meses,
             })
+
+
+class Imprimir(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(Imprimir, self).__init__(*args, **kwargs)
+        self.template_name = 'manutencao/imprimir.html'
+        self.get_args = ['roteiro', 'maquina', 'data']
+
+    def mount_context(self):
+        pass

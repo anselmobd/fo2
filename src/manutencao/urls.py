@@ -7,4 +7,7 @@ urlpatterns = [
 
     url(r'^rotinas/$',
         views.Rotinas.as_view(), name='rotinas'),
+
+    url(r'^imprimir/(?P<roteiro>\d+)/(?P<maquina>\d+)/(?P<data>\d+)/$',
+        views.Imprimir.as_view(), name='imprimir'),
 ]
