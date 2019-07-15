@@ -51,7 +51,7 @@ class Rotinas(O2BaseGetView):
             return
 
         mq = models.Maquina.objects.filter(tipo_maquina__in=utm.values(
-            'tipo_maquina__id'))
+            'tipo_maquina__id')).order_by('nome')
         if len(mq) == 0:
             return
 
