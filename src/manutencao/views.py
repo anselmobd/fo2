@@ -148,6 +148,8 @@ class Rotinas(O2BaseGetView):
                         break
 
         if tem_rotina:
+            for mes in meses:
+                mes['r_data'] = sorted(mes['r_data'], key=lambda i: i['data'])
             self.context.update({
                 'meses': meses,
             })
