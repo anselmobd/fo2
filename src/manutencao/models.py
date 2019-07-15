@@ -163,20 +163,13 @@ class Rotina(models.Model):
         default=1,
         verbose_name='Período',
         on_delete=models.CASCADE)
-    unidade_tempo = models.ForeignKey(
-        UnidadeTempo,
-        verbose_name='Unidade de tempo',
-        on_delete=models.CASCADE)
-    qtd_tempo = models.IntegerField(
-        'Quantidade de tempo',
-        default=1)
     nome = models.CharField(
         max_length=50,
         )
 
     def __str__(self):
-        return '{} - {}'.format(
-            self.tipo_maquina.nome, self.nome)
+        return '{} - {} - {}'.format(
+            self.tipo_maquina.nome, self.frequencia.nome, self.nome)
 
     class Meta:
         db_table = 'fo2_man_rotina'
