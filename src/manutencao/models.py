@@ -50,7 +50,7 @@ class UnidadeTempo(models.Model):
         super(UnidadeTempo, self).save(*args, **kwargs)
 
 
-class Periodo(models.Model):
+class Frequencia(models.Model):
     nome = models.CharField(
         max_length=50,
         )
@@ -68,8 +68,8 @@ class Periodo(models.Model):
         return self.nome
 
     class Meta:
-        db_table = 'fo2_man_periodo'
-        verbose_name = 'Período'
+        db_table = 'fo2_man_frequencia'
+        verbose_name = 'Frequência'
 
 
 class Maquina(models.Model):
@@ -158,8 +158,8 @@ class Rotina(models.Model):
         TipoMaquina,
         verbose_name='Tipo de máquina',
         on_delete=models.CASCADE)
-    periodo = models.ForeignKey(
-        Periodo,
+    frequencia = models.ForeignKey(
+        Frequencia,
         default=1,
         verbose_name='Período',
         on_delete=models.CASCADE)
@@ -200,5 +200,5 @@ class RotinaPasso(models.Model):
 
     class Meta:
         db_table = 'fo2_man_rotina_passo'
-        verbose_name = 'Passo de rotina'
-        verbose_name_plural = "Passos de rotinas"
+        verbose_name = 'Passo de rotina de manutenção'
+        verbose_name_plural = "Passos de rotinas de manutenção"
