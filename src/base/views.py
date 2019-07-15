@@ -10,7 +10,9 @@ class O2BaseCustomView(View):
     def init_self(self, request, kwargs):
         self.request = request
         self.kwargs = kwargs
-        self.context = {'titulo': self.title_name}
+        self.context = {}
+        if hasattr(self, 'title_name'):
+            self.context.update({'titulo': self.title_name})
 
     def get_arg(self, field):
         return self.kwargs[field] if field in self.kwargs else None
