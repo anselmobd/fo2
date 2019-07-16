@@ -1,0 +1,16 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/GoRCb82W5O0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</center>
+{% endblock %}

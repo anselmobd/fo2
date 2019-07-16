@@ -77,6 +77,11 @@ def media_2019_04_09_dicas(request):
     return render(request, 'rh/media_2019_04_09_dicas.html', context)
 
 
+def media_2019_07_16_sobre_amizade(request):
+    context = {'titulo': 'Poesia com Rapadura- Falando sobre amizade'}
+    return render(request, 'rh/media_2019_07_16_sobre_amizade.html', context)
+
+
 def index(request):
     pensamentos = []
     dicas = [
