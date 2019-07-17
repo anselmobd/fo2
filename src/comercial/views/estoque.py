@@ -755,3 +755,111 @@ class Metas(O2BaseGetView):
             },
             'total': metas_list[-1]['meta_estoque'],
         })
+
+
+def dias_uteis_mes():
+    hoje = date.today()
+    mes = hoje.month
+    dia1 = timedelta(days=1)
+
+    uteis_passados = 0
+    util_hoje = 0
+    uteis_total = 0
+    dia = hoje.replace(day=1)
+    while True:
+        if mes != dia.month:
+            break
+        dia = dia + dia1
+        dow = dia.weekday()
+        if dow > 0 and dow < 6:
+            if dia < hoje:
+                uteis_passados += 1
+            elif dia == hoje:
+                util_hoje += 1
+            uteis_total += 1
+    return uteis_total, uteis_passados, util_hoje
+
+
+class VerificaVenda(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(VerificaVenda, self).__init__(*args, **kwargs)
+        self.template_name = 'comercial/verifica_venda.html'
+        self.title_name = 'Verifica estimativa de venda'
+
+    def mount_context(self):
+        self.style = {
+            2: 'text-align: right;',
+            3: 'text-align: right;',
+            4: 'text-align: right;',
+        }
+
+        self.cursor = connections['so'].cursor()
+
+        data = []
+        zero_data_row = {'meta': ' ', 'estimada': 0, 'venda': 0}
+        total_data_row = {'meta': 0, 'estimada': 0, 'venda': 0}
+
+        metas = models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        metas = metas.filter(antiga=False)
+        metas = metas.exclude(multiplicador=0)
+        metas = metas.order_by('-meta_estoque').values()
+
+        for row in metas:
+            data_row = next(
+                (dr for dr in data if dr['modelo'] == row['modelo']),
+                False)
+            if not data_row:
+                data_row = {
+                    'modelo': row['modelo'],
+                    **zero_data_row
+                }
+                data.append(data_row)
+            data_row['meta'] = row['venda_mensal']
+            total_data_row['meta'] += row['venda_mensal']
+
+        data_periodo = queries.get_vendas(
+            self.cursor, ref=None, periodo='0:',
+            colecao=None, cliente=None, por='modelo'
+        )
+
+        u_tot, u_pass, u_today = dias_uteis_mes()
+        u_pass = u_pass + u_today
+
+        for row in data_periodo:
+            data_row = next(
+                (dr for dr in data if dr['modelo'] == row['modelo']),
+                False)
+            if not data_row:
+                data_row = {
+                    'modelo': row['modelo'],
+                    **zero_data_row
+                }
+                data.append(data_row)
+            data_row['venda'] = row['qtd']
+            total_data_row['venda'] += row['qtd']
+            data_row['estimada'] = round(row['qtd'] / u_pass * u_tot)
+            total_data_row['estimada'] += round(row['qtd'] / u_pass * u_tot)
+
+        data.insert(0, {
+            '|STYLE': 'font-weight: bold;',
+            'modelo': 'Total',
+            **total_data_row
+        })
+
+        self.context.update({
+            'headers': ['Modelo', 'Venda mensal indicada',
+                        'Venda estimada do mês', 'Venda efetiva'],
+            'fields': ['modelo', 'meta',
+                       'estimada', 'venda'],
+            'data': data,
+            'style': self.style,
+            'u_tot': u_tot,
+            'u_pass': u_pass,
+        })

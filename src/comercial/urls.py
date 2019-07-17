@@ -34,4 +34,8 @@ urlpatterns = [
     url(r'^metas/$',
         views.estoque.Metas.as_view(),
         name='metas'),
+
+    url(r'^verifica_venda/$',
+        views.estoque.VerificaVenda.as_view(),
+        name='verifica_venda'),
 ]
