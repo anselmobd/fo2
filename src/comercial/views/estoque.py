@@ -845,6 +845,11 @@ class VerificaVenda(O2BaseGetView):
             data_row['venda'] = row['qtd']
             total_data_row['venda'] += row['qtd']
             data_row['estimada'] = round(row['qtd'] / u_pass * u_tot)
+            if isinstance(data_row['meta'], int):
+                if data_row['estimada'] > data_row['meta'] * 1.1:
+                    data_row['estimada|STYLE'] = 'color: green;'
+                elif data_row['estimada'] < data_row['meta'] * 0.9:
+                    data_row['estimada|STYLE'] = 'color: red;'
             total_data_row['estimada'] += round(row['qtd'] / u_pass * u_tot)
 
         data.insert(0, {
