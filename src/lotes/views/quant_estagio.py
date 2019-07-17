@@ -523,9 +523,14 @@ class MetaGiro(O2BaseGetView):
             })
             return
 
-        metas_list = list(metas.values())
-        for meta in metas_list:
-            colecao = produto.queries.colecao_de_modelo(cursor, meta['modelo'])
+        metas_list = []
+        for meta in metas:
+            meta_dict = meta.__dict__
+            meta_dict['meta'] = meta
+            metas_list.append(meta_dict)
+
+            colecao = produto.queries.colecao_de_modelo(
+                cursor, meta_dict['modelo'])
             if colecao == -1:
                 lead = 0
             else:
@@ -535,14 +540,14 @@ class MetaGiro(O2BaseGetView):
                 except models.LeadColecao.DoesNotExist:
                     lead = 0
 
-            meta['lead'] = lead
-            meta['giro'] = round(meta['venda_mensal'] / 30 * meta['lead'])
+            meta_dict['lead'] = lead
+            meta_dict['giro'] = round(
+                meta_dict['venda_mensal'] / 30 * meta_dict['lead'])
 
-        for meta in metas:
             grade = {}
-
             grade['headers'] = ['Cor/Tamanho']
             grade['fields'] = ['cor']
+
             meta_tamanhos = comercial.models.MetaEstoqueTamanho.objects.filter(
                 meta=meta).order_by('ordem')
             meta_grade_tamanhos = {}
@@ -553,38 +558,42 @@ class MetaGiro(O2BaseGetView):
             }
             for tamanho in meta_tamanhos:
                 if tamanho.quantidade != 0:
-                    grade['headers'].append(tamanho.tamanho)
+                    grade['headers'].append(
+                        '{}({})'.format(tamanho.tamanho, tamanho.quantidade))
                     grade['fields'].append(tamanho.tamanho)
                     meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
                     tot_tam += tamanho.quantidade
                     qtd_por_tam[tamanho.tamanho] = 0
                     grade['style'][max(grade['style'].keys())+1] = \
                         'text-align: right;'
-            grade['style'][max(grade['style'].keys())+1] = \
-                'text-align: right; font-weight: bold;'
 
-            qtd_por_tam['total'] = meta.venda_mensal
+            meta_dict['giro']
+            resto = meta_dict['giro'] % tot_tam
+            if resto != 0:
+                meta_dict['giro'] = meta_dict['giro'] + tot_tam - resto
 
             grade['headers'].append('Total')
             grade['fields'].append('total')
-            tot_packs = meta.venda_mensal / tot_tam
+            grade['style'][max(grade['style'].keys())+1] = \
+                'text-align: right; font-weight: bold;'
+
+            tot_packs = meta_dict['giro'] / tot_tam
 
             meta_cores = comercial.models.MetaEstoqueCor.objects.filter(
                 meta=meta).order_by('cor')
-            meta_grade_cores = {}
             tot_cor = 0
             for cor in meta_cores:
-                meta_grade_cores[cor.cor] = cor.quantidade
                 tot_cor += cor.quantidade
 
             grade['data'] = []
-            for meta_cor in meta_grade_cores:
-                if meta_grade_cores[meta_cor] != 0:
+            meta_dict['giro'] = 0
+            for cor in meta_cores:
+                if cor.quantidade != 0:
                     linha = {
-                        'cor': meta_cor,
+                        'cor': '{}({})'.format(cor.cor, cor.quantidade),
                     }
                     cor_packs = round(
-                        tot_packs / tot_cor * meta_grade_cores[meta_cor])
+                        tot_packs / tot_cor * cor.quantidade)
                     for meta_tam in meta_grade_tamanhos:
                         qtd_cor_tam = cor_packs * meta_grade_tamanhos[meta_tam]
                         linha.update({
@@ -592,18 +601,16 @@ class MetaGiro(O2BaseGetView):
                         })
                         qtd_por_tam[meta_tam] += qtd_cor_tam
                     linha['total'] = cor_packs * tot_tam
+                    meta_dict['giro'] += linha['total']
                     grade['data'].append(linha)
             grade['data'].append({
                 'cor': 'Total',
                 **qtd_por_tam,
+                'total': meta_dict['giro'],
                 '|STYLE': 'font-weight: bold;',
             })
 
-            idx_meta = [idx for idx, item in enumerate(metas_list)
-                        if item['modelo'] == meta.modelo][0]
-            metas_list[idx_meta].update({
-                'grade': grade,
-            })
+            meta_dict['grade'] = grade
 
         group = ['modelo']
         totalize_grouped_data(metas_list, {
