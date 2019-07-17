@@ -1,5 +1,5 @@
 from pprint import pprint
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 
 from django.core.cache import cache
 
@@ -140,8 +140,8 @@ def get_vendas(
         filtra_ref = "AND v.REF = '{}'".format(ref)
         pre_filtra_ref = "AND inf.GRUPO_ESTRUTURA = '{}'".format(ref)
 
-    hoje = datetime.now().date()
-    ini_mes = hoje - timedelta(days=hoje.day-1)
+    hoje = date.today()
+    ini_mes = hoje.replace(day=1)
     filtra_periodo = ''
     pre_filtra_periodo = ''
     if periodo is not None:
