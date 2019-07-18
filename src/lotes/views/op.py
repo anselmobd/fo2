@@ -354,6 +354,7 @@ class BuscaOP(View):
 
         for row in data:
             row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+            row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
             if row['DT_CORTE'] is None:
@@ -368,13 +369,13 @@ class BuscaOP(View):
                         'Alt.', 'Roteiro', 'Estágio',
                         'Q. Lotes', 'Q. Itens',
                         'Depósito', 'Período',
-                        'Data Digitação', 'Data Corte',),
+                        'Data Digitação', 'Data Corte', 'OP relacionada'),
             'fields': ('OP', 'SITUACAO', 'CANCELAMENTO',
                        'TIPO_REF', 'REF',
                        'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
                        'LOTES', 'QTD',
                        'DEPOSITO_CODIGO', 'PERIODO',
-                       'DT_DIGITACAO', 'DT_CORTE'),
+                       'DT_DIGITACAO', 'DT_CORTE', 'OP_REL'),
             'data': data,
         })
 
