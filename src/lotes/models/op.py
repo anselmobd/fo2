@@ -22,11 +22,11 @@ def busca_op(
     filtra_ref = ""
     if ref is not None and ref != '':
         if '%' in ref:
-            filtra_ref = """
+            filtra_ref = """--
                 AND o.REFERENCIA_PECA like '{}'
             """.format(ref)
         else:
-            filtra_ref = """
+            filtra_ref = """--
                 AND o.REFERENCIA_PECA = '{}'
             """.format(ref)
 
