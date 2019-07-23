@@ -10,8 +10,8 @@ def op_inform(cursor, op):
 
 
 def busca_op(
-        cursor, op=None, ref=None, tam=None, cor=None, deposito=None,
-        tipo=None, situacao=None, posicao=None):
+        cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
+        deposito=None, tipo=None, situacao=None, posicao=None):
     filtra_op = ""
     if op is not None and op != '':
         filtra_op = """
@@ -29,6 +29,15 @@ def busca_op(
             filtra_ref = """--
                 AND o.REFERENCIA_PECA = '{}'
             """.format(ref)
+
+    filtra_modelo = ""
+    if modelo is not None and modelo != '':
+        filtra_modelo = """--
+            AND TRIM(LEADING '0' FROM
+                   (REGEXP_REPLACE(o.REFERENCIA_PECA,
+                                   '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                   ))) = '{}'
+        """.format(modelo)
 
     filtra_tam = ""
     if tam is not None and tam != '':
@@ -267,6 +276,7 @@ def busca_op(
         WHERE 1=1
           {filtra_op} -- filtra_op
           {filtra_ref} -- filtra_ref
+          {filtra_modelo} -- filtra_modelo
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
           {filtra_deposito} -- filtra_deposito
@@ -278,6 +288,7 @@ def busca_op(
     '''.format(
         filtra_op=filtra_op,
         filtra_ref=filtra_ref,
+        filtra_modelo=filtra_modelo,
         filtra_tam=filtra_tam,
         filtra_cor=filtra_cor,
         filtra_deposito=filtra_deposito,
