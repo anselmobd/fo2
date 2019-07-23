@@ -383,6 +383,13 @@ class BuscaOpForm(forms.Form):
         return cor
 
 
+class BuscaPedidoForm(forms.Form):
+    modelo = forms.CharField(
+        label='Modelo', max_length=4, min_length=1,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+
+
 class ExpedicaoForm(forms.Form):
     embarque_de = forms.DateField(
         label='Data do embarque: De', required=False,

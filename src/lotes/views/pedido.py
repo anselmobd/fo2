@@ -6,7 +6,7 @@ from django.db import connections
 from django.urls import reverse
 from django.views import View
 
-from utils.views import totalize_grouped_data
+from utils.views import totalize_grouped_data, totalize_data
 from fo2.template import group_rowspan
 
 import lotes.forms as forms
@@ -332,5 +332,61 @@ class Expedicao(View):
                 cursor, embarque_de, embarque_ate,
                 pedido_tussor, pedido_cliente, cliente,
                 deposito, detalhe))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class BuscaPedido(View):
+    Form_class = forms.BuscaPedidoForm
+    template_name = 'lotes/busca_pedido.html'
+    title_name = 'Busca Pedido'
+
+    def mount_context(self, cursor, modelo):
+        context = {
+            'modelo': modelo,
+        }
+
+        data = models.busca_pedido(cursor, modelo=modelo)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Pedidos não encontrados',
+            })
+            return context
+
+        for row in data:
+            if row['DATA'] is None:
+                row['DATA'] = ''
+            else:
+                row['DATA'] = row['DATA'].date()
+
+        totalize_data(data, {
+            'sum': ['QTD'],
+            'count': [],
+            'descr': {'REF': 'Total:'}})
+
+        context.update({
+            'headers': ('Nº do pedido', 'Data de embarque', 'Cliente',
+                        'Referência', 'Quantidade'),
+            'fields': ('PEDIDO', 'DATA', 'CLIENTE',
+                       'REF', 'QTD'),
+            'data': data,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            modelo = form.cleaned_data['modelo']
+            cursor = connections['so'].cursor()
+            context.update(
+                self.mount_context(cursor, modelo))
         context['form'] = form
         return render(request, self.template_name, context)
