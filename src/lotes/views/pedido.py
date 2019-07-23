@@ -370,6 +370,7 @@ class BuscaPedido(View):
             'fields': ('PEDIDO', 'DATA', 'CLIENTE',
                        'REF', 'QTD'),
             'data': data,
+            'style': {5: 'text-align: right;'},
         })
 
         return context
