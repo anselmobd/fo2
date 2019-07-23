@@ -495,16 +495,16 @@ def busca_pedido(cursor, modelo=None):
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
           AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_modelo} -- filtro_modelo
-          AND ped.DATA_ENTR_VENDA >= TO_DATE('2019-07-13', 'yyyy-mm-dd')
+          -- AND ped.DATA_ENTR_VENDA >= TO_DATE('2019-07-13', 'yyyy-mm-dd')
           AND ped.DATA_ENTR_VENDA <= TO_DATE('2019-09-23', 'yyyy-mm-dd')
         GROUP BY
-          ped.PEDIDO_VENDA
-        , ped.DATA_ENTR_VENDA
+          ped.DATA_ENTR_VENDA
+        , ped.PEDIDO_VENDA
         , c.FANTASIA_CLIENTE
         , i.CD_IT_PE_GRUPO
         ORDER BY
-          ped.PEDIDO_VENDA
-        , ped.DATA_ENTR_VENDA
+          ped.DATA_ENTR_VENDA
+        , ped.PEDIDO_VENDA
         , c.FANTASIA_CLIENTE
         , i.CD_IT_PE_GRUPO
     """.format(
