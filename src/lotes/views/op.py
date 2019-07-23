@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from fo2.template import group_rowspan
 
-from utils.views import totalize_grouped_data
+from utils.views import totalize_grouped_data, totalize_data
 from utils.classes import Perf
 from insumo.queries import insumos_de_produtos_em_dual
 from geral.functions import config_get_value
@@ -368,17 +368,23 @@ class BuscaOP(View):
                 row['DT_CORTE'] = row['DT_CORTE'].date()
             if row['ESTAGIO'] is None:
                 row['ESTAGIO'] = 'Finalizado*'
+
+        totalize_data(data, {
+            'sum': ['QTD', 'QTD_AP'],
+            'count': [],
+            'descr': {'LOTES': 'Totais:'}})
+
         context.update({
             'headers': ('OP', 'Situação', 'Cancelamento',
                         'Tipo', 'Referência',
                         'Alt.', 'Roteiro', 'Estágio',
-                        'Q. Lotes', 'Q. Itens',
+                        'Q. Lotes', 'Q. Itens', 'Q. a Prod.',
                         'Depósito', 'Período',
                         'Data Digitação', 'Data Corte', 'OP relacionada'),
             'fields': ('OP', 'SITUACAO', 'CANCELAMENTO',
                        'TIPO_REF', 'REF',
                        'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
-                       'LOTES', 'QTD',
+                       'LOTES', 'QTD', 'QTD_AP',
                        'DEPOSITO_CODIGO', 'PERIODO',
                        'DT_DIGITACAO', 'DT_CORTE', 'OP_REL'),
             'data': data,
