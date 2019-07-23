@@ -378,7 +378,7 @@ class BuscaOP(View):
             'headers': ('OP', 'Situação', 'Cancelamento',
                         'Tipo', 'Referência',
                         'Alt.', 'Roteiro', 'Estágio',
-                        'Q. Lotes', 'Q. Itens', 'Q. a Prod.',
+                        'Q. Lotes', 'Q. Itens', 'Q. em Prod.',
                         'Depósito', 'Período',
                         'Data Digitação', 'Data Corte', 'OP relacionada'),
             'fields': ('OP', 'SITUACAO', 'CANCELAMENTO',
