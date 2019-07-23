@@ -22,6 +22,7 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+  <h4>Ordenado por data de embarque</h4>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
