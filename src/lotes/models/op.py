@@ -230,6 +230,19 @@ def busca_op(
               )
           )
           , 0 ) QTD
+        , COALESCE(
+          ( SELECT
+              SUM( l.QTDE_A_PRODUZIR_PACOTE )
+            FROM pcpc_040 l
+            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+              AND l.SEQ_OPERACAO = (
+                SELECT
+                  MAX( ls.SEQ_OPERACAO )
+                FROM pcpc_040 ls
+                WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+              )
+          )
+          , 0 ) QTD_AP
         , o.DATA_PROGRAMACAO DT_DIGITACAO
         , o.DATA_ENTRADA_CORTE DT_CORTE
         , o.PERIODO_PRODUCAO PERIODO
