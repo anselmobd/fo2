@@ -22,6 +22,9 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+  {% if lead != 0 %}
+    <h4>Lead do modelo: {{ lead }}</h4>
+  {% endif %}
   <h4>Ordenado por data de embarque</h4>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
