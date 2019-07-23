@@ -476,7 +476,7 @@ def busca_pedido(cursor, modelo=None, lead=None):
                                      ))) = '{}' '''.format(modelo)
 
     filtro_lead = ''
-    if lead is None:
+    if lead is None or lead == 0:
         filtro_lead = '''--
             AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + 60
         '''
