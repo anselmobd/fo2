@@ -9,6 +9,8 @@ from django.views import View
 from utils.views import totalize_grouped_data, totalize_data
 from fo2.template import group_rowspan
 
+import produto.queries
+
 import lotes.forms as forms
 import lotes.models as models
 
@@ -346,7 +348,21 @@ class BuscaPedido(View):
             'modelo': modelo,
         }
 
-        data = models.busca_pedido(cursor, modelo=modelo)
+        colecao = produto.queries.colecao_de_modelo(cursor, modelo)
+        if colecao == -1:
+            lead = 0
+        else:
+            try:
+                lc = models.LeadColecao.objects.get(colecao=colecao)
+                lead = lc.lead
+            except models.LeadColecao.DoesNotExist:
+                lead = 0
+
+        context.update({
+            'lead': lead,
+        })
+
+        data = models.busca_pedido(cursor, modelo=modelo, lead=lead)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedidos não encontrados',
