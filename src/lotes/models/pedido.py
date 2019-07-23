@@ -464,3 +464,51 @@ def grade_expedicao(
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def busca_pedido(cursor, modelo=None):
+    filtro_modelo = ''
+    if modelo is not None:
+        filtro_modelo = '''--
+            AND TRIM(LEADING '0' FROM
+                     (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
+                                     '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                     ))) = '{}' '''.format(modelo)
+
+    sql = """
+        SELECT
+          ped.PEDIDO_VENDA PEDIDO
+        , ped.DATA_ENTR_VENDA DATA
+        , c.FANTASIA_CLIENTE CLIENTE
+        , i.CD_IT_PE_GRUPO REF
+        , sum(i.QTDE_PEDIDA) QTD
+        FROM PEDI_100 ped -- pedido de venda
+        LEFT JOIN FATU_050 f -- fatura
+          ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+        JOIN PEDI_110 i -- item de pedido de venda
+          ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
+        LEFT JOIN BASI_220 t -- tamanhos
+          ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
+        LEFT JOIN PEDI_010 c -- cliente
+          ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
+         AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+        WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+          AND f.NUM_NOTA_FISCAL IS NULL
+          {filtro_modelo} -- filtro_modelo
+          AND ped.DATA_ENTR_VENDA >= TO_DATE('2019-07-13', 'yyyy-mm-dd')
+          AND ped.DATA_ENTR_VENDA <= TO_DATE('2019-09-23', 'yyyy-mm-dd')
+        GROUP BY
+          ped.PEDIDO_VENDA
+        , ped.DATA_ENTR_VENDA
+        , c.FANTASIA_CLIENTE
+        , i.CD_IT_PE_GRUPO
+        ORDER BY
+          ped.PEDIDO_VENDA
+        , ped.DATA_ENTR_VENDA
+        , c.FANTASIA_CLIENTE
+        , i.CD_IT_PE_GRUPO
+    """.format(
+        filtro_modelo=filtro_modelo,
+    )
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)

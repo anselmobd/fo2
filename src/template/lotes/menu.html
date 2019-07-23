@@ -12,21 +12,22 @@
   <li><a href="{% url 'producao:pedido' %}">Pedido</a></li>
   <ul>
     <li><a href="{% url 'producao:expedicao' %}">Expedição</a></li>
+    <li><a href="{% url 'producao:busca_pedido' %}">Busca pedido</a></li>
   </ul>
   <li><a href="{% url 'producao:respons' %}">Responsável por estágio</a></li>
   <li><a href="{% url 'producao:distribuicao' %}">Distribuição Tecelagem</a></li>
   <li><a href="{% url 'producao:conserto' %}">Produtos em conserto</a></li>
   <li><a href="{% url 'producao:perda' %}">Perdas de produção</a></li>
-  <li><a href="{% url 'producao:totais_estagio' %}">Totais gerais dos estágios</a></li>
-  <li><a href="{% url 'producao:quant_estagio' %}">Quantidades por estágio</a></li>
-  <li><a href="{% url 'producao:lead_colecao' %}">Lead de produção por coleção</a></li>
-  <li><a href="{% url 'producao:meta_giro' %}">Visualiza meta de giro</a></li>
   <br />
   <li>Análise</li>
   <ul>
     <li><a href="{% url 'producao:an_dtcorte_alter' %}">Produção por data de corte e alternativa</a></li>
     <li><a href="{% url 'producao:an_periodo_alter' %}">Produção por período e alternativa</a></li>
     <li><a href="{% url 'producao:op_pendente' %}">Ordens pendentes por estágio</a></li>
+    <li><a href="{% url 'producao:totais_estagio' %}">Totais gerais dos estágios</a></li>
+    <li><a href="{% url 'producao:quant_estagio' %}">Quantidades por estágio</a></li>
+    <li><a href="{% url 'producao:lead_colecao' %}">Lead de produção por coleção</a></li>
+    <li><a href="{% url 'producao:meta_giro' %}">Visualiza meta de giro</a></li>
   </ul>
   <br />
   <li>Impressão</li>

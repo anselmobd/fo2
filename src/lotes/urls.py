@@ -94,6 +94,8 @@ urlpatterns = [
     url(r'^meta_giro/$',
         views.MetaGiro.as_view(), name='meta_giro'),
 
+    url(r'^busca_pedido/$', views.BuscaPedido.as_view(), name='busca_pedido'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
