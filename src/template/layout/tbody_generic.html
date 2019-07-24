@@ -15,7 +15,11 @@
       <td
     {% endif %}
     {% if not group or field not in group or row|get_item:'rowspan' != 0 %}
-      {% if id_key and field in id_key.keys %}{%with id_key|get_item:field as field_key%}class="{{field}}@{{row|get_item:field_key}}"{%endwith%}{% endif %}
+      {% with field|add:'|CLASS' as field_class %}
+        {% if row|get_item:field_class %}
+          class="{{ row|get_item:field_class }}"
+        {% endif %}
+      {% endwith %}
       style="{% spaceless %}
       {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
       {% endspaceless %}">{% spaceless %}
