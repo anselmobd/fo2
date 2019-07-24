@@ -6,6 +6,16 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+#myProgress {
+  width: 100%;
+  visibility: visible;
+  background-color: lightgray;
+}
+#myBar {
+  width: 1%;
+  height: 2px;
+  background-color: green;
+}
 </style>
 {% endblock %}
 
@@ -14,6 +24,9 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+  <div id="myProgress">
+    <div id="myBar"></div>
+  </div>
   <table id='produzir'>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style id_key=id_key only %}
@@ -29,34 +42,62 @@
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
   }
 
+  function unformatNumber(num) {
+    return num.replace(/\./g, '')
+  }
+
+  function moveBar(i, tot) {
+    var elem = document.getElementById("myBar");
+    let width = 0;
+    if (tot != 0) {
+      width = parseInt(i * 100 / tot);
+      if (tot == i) {
+        var prog = document.getElementById("myProgress");
+        prog.style.visibility = 'hidden';
+      }
+    }
+    elem.style.width = width + '%';
+
+  }
+
   $(document).ready(function() {
 
     var table = document.getElementById("produzir");
+    var all_total_op_total = document.querySelectorAll('.total_op__total');
+    var total_op_total = 0
+    var total_passos = 0
+    var count_passos = 0
+
     for ( let row of table.rows ) {
       for ( let cell of row.cells ) {
         if ( cell.classList.length != 0 ) {
           for ( let aclass of cell.classList ) {
-            class_split = aclass.split('@');
+            class_split = aclass.split('-');
             if (class_split.length != 0) {
               if (class_split[0] == 'total_op') {
-                console.log(class_split[1]);
+                total_passos += 1;
                 $.ajax({
                   type: 'GET',
                   url: '/lotes/ajax/op_producao_modelo/'+class_split[1]+'/',
                   data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
                   success : function(data) {
+                    count_passos += 1;
+                    moveBar(count_passos, total_passos);
                     if (data) {
                       if (data['result'] == 'OK') {
                         cell.innerHTML = formatNumber(data['total_op']);
+                        total_op_total += parseInt(data['total_op'])
+                        for (var i=0, len=all_total_op_total.length|0; i<len; i=i+1|0) {
+                          all_total_op_total[i].innerHTML = formatNumber(total_op_total);
+                        }
                       } else {
                         console.log('Erro: '+data['descricao_erro']);
                       }
                     } else {
-                      console.log('Não executado');
+                      console.log('Sem retorno');
                     }
                   }
                 });
-                console.log('fez ajax');
               }
             }
           }
