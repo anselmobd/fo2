@@ -603,6 +603,9 @@ class MetaGiro(O2BaseGetView):
                     linha['total'] = cor_packs * tot_tam
                     meta_dict['giro'] += linha['total']
                     grade['data'].append(linha)
+            if meta_dict['meta'].meta_giro != meta_dict['giro']:
+                meta_dict['meta'].meta_giro = meta_dict['giro']
+                meta_dict['meta'].save()
             grade['data'].append({
                 'cor': 'Total',
                 **qtd_por_tam,
