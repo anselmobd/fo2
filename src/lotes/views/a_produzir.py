@@ -46,19 +46,7 @@ class AProduzir(O2BaseGetView):
             data_row['meta_giro'] = row['meta_giro']
             data_row['meta_estoque'] = row['meta_estoque']
             data_row['meta'] = row['meta_giro'] + row['meta_estoque']
-
-            data_op = lotes.models.busca_op(
-                cursor, modelo=row['modelo'], tipo='v', tipo_alt='p',
-                situacao='a', posicao='p')
-            if len(data_op) == 0:
-                data_row['total_op'] = 0
-            else:
-                totalize_data(data_op, {
-                    'sum': ['QTD_AP'],
-                    'count': [],
-                    'descr': {'OP': 'T:'},
-                })
-                data_row['total_op'] = data_op[-1]['QTD_AP']
+            data_row['total_op'] = 0
 
         data = sorted(data, key=lambda i: -i['meta'])
 
