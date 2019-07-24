@@ -7,6 +7,7 @@ from utils.views import totalize_data
 from base.views import O2BaseGetView
 
 import comercial.models
+import lotes.models
 
 
 class AProduzir(O2BaseGetView):
@@ -17,7 +18,7 @@ class AProduzir(O2BaseGetView):
         self.title_name = 'A produzir por modelo'
 
     def mount_context(self):
-        self.cursor = connections['so'].cursor()
+        cursor = connections['so'].cursor()
 
         data = []
 
@@ -46,21 +47,38 @@ class AProduzir(O2BaseGetView):
             data_row['meta_estoque'] = row['meta_estoque']
             data_row['meta'] = row['meta_giro'] + row['meta_estoque']
 
+            data_op = lotes.models.busca_op(
+                cursor, modelo=row['modelo'], tipo='v', tipo_alt='p',
+                situacao='a', posicao='p')
+            if len(data_op) == 0:
+                data_row['total_op'] = 0
+            else:
+                totalize_data(data_op, {
+                    'sum': ['QTD_AP'],
+                    'count': [],
+                    'descr': {'OP': 'T:'},
+                })
+                data_row['total_op'] = data_op[-1]['QTD_AP']
+
         data = sorted(data, key=lambda i: -i['meta'])
 
         totalize_data(data, {
-            'sum': ['meta_giro', 'meta_estoque', 'meta'],
+            'sum': ['meta_giro', 'meta_estoque', 'meta', 'total_op'],
             'count': [],
-            'descr': {'modelo': 'Totais:'}})
+            'descr': {'modelo': 'Totais:'}
+        })
         data[-1]['|STYLE'] = 'font-weight: bold;'
 
         self.context.update({
-            'headers': ['Modelo', 'Meta de giro', 'Meta de estoque', 'Meta'],
-            'fields': ['modelo', 'meta_giro', 'meta_estoque', 'meta'],
+            'headers': ['Modelo', 'Meta de giro', 'Meta de estoque',
+                        'Meta total', 'OPs'],
+            'fields': ['modelo', 'meta_giro', 'meta_estoque',
+                       'meta', 'total_op'],
             'data': data,
             'style': {
                 2: 'text-align: right;',
                 3: 'text-align: right;',
                 4: 'text-align: right;',
+                5: 'text-align: right;',
             },
         })
