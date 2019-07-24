@@ -46,6 +46,8 @@ class MetaEstoque(models.Model):
     multiplicador = models.FloatField()
     meta_estoque = models.IntegerField(
         default=0)
+    meta_giro = models.IntegerField(
+        default=0)
 
     def __str__(self):
         return '{} - {}'.format(
