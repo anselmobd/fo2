@@ -31,7 +31,7 @@ class AProduzir(O2BaseGetView):
         metas = metas.filter(antiga=False)
         metas = metas.exclude(multiplicador=0)
         metas = metas.exclude(venda_mensal=0)
-        metas = metas.order_by('-meta_estoque').values()
+        metas = metas.values()
 
         for row in metas:
             data_row = next(
@@ -45,6 +45,8 @@ class AProduzir(O2BaseGetView):
             data_row['meta_giro'] = row['meta_giro']
             data_row['meta_estoque'] = row['meta_estoque']
             data_row['meta'] = row['meta_giro'] + row['meta_estoque']
+
+        data = sorted(data, key=lambda i: -i['meta'])
 
         totalize_data(data, {
             'sum': ['meta_giro', 'meta_estoque', 'meta'],
