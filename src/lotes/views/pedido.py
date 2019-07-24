@@ -365,7 +365,6 @@ class BuscaPedido(View):
             periodo = ''
         else:
             periodo = lead + 7
-        print(periodo)
 
         data = models.busca_pedido(
             cursor, modelo=modelo, periodo=':{}'.format(periodo))
