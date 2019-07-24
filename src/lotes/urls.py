@@ -96,6 +96,8 @@ urlpatterns = [
 
     url(r'^busca_pedido/$', views.BuscaPedido.as_view(), name='busca_pedido'),
 
+    url(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
