@@ -1,4 +1,8 @@
+from django.core.cache import cache
+
 from fo2.models import rows_to_dict_list, GradeQtd
+
+from utils.functions import make_key_cache, fo2logger
 
 from lotes.models import *
 from lotes.models.base import *
@@ -467,6 +471,13 @@ def grade_expedicao(
 
 
 def busca_pedido(cursor, modelo=None, periodo=None):
+    key_cache = make_key_cache()
+
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     filtro_modelo = ''
     if modelo is not None:
         filtro_modelo = '''--
@@ -523,4 +534,8 @@ def busca_pedido(cursor, modelo=None, periodo=None):
         filtra_periodo=filtra_periodo,
     )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+
+    cached_result = rows_to_dict_list(cursor)
+    cache.set(key_cache, cached_result, 60*30)
+    fo2logger.info('calculated '+key_cache)
+    return cached_result
