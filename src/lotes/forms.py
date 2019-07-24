@@ -322,7 +322,7 @@ class BuscaOpForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
     modelo = forms.CharField(
-        label='Modelo', max_length=4, min_length=1,
+        label='Modelo', max_length=4, min_length=1, required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
     tam = forms.CharField(
         label='Tamanho', required=False,
