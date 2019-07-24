@@ -50,28 +50,33 @@ class AProduzir(O2BaseGetView):
             data_row['meta'] = row['meta_giro'] + row['meta_estoque']
             data_row['total_op'] = 0
             data_row['total_op|CLASS'] = 'total_op-{}'.format(row['modelo'])
+            data_row['total_ped'] = 0
+            data_row['total_ped|CLASS'] = 'total_ped-{}'.format(row['modelo'])
 
         data = sorted(data, key=lambda i: -i['meta'])
 
         totalize_data(data, {
-            'sum': ['meta_giro', 'meta_estoque', 'meta', 'total_op'],
+            'sum': ['meta_giro', 'meta_estoque', 'meta', 'total_op',
+                    'total_ped'],
             'count': [],
             'descr': {'modelo': 'Totais:'}
         })
         data[-1]['|STYLE'] = 'font-weight: bold;'
         data[-1]['total_op|CLASS'] = 'total_op__total'
+        data[-1]['total_ped|CLASS'] = 'total_ped__total'
 
         self.context.update({
             'headers': ['Modelo', 'Meta de giro', 'Meta de estoque',
-                        'Meta total', 'OPs'],
+                        'Meta total', 'OPs', 'Pedidos'],
             'fields': ['modelo', 'meta_giro', 'meta_estoque',
-                       'meta', 'total_op'],
+                       'meta', 'total_op', 'total_ped'],
             'data': data,
             'style': {
                 2: 'text-align: right;',
                 3: 'text-align: right;',
                 4: 'text-align: right;',
                 5: 'text-align: right;',
+                6: 'text-align: right;',
             },
         })
 
