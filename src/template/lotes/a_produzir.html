@@ -65,6 +65,8 @@
     var table = document.getElementById("produzir");
     var all_total_op_total = document.querySelectorAll('.total_op__total');
     var total_op_total = 0
+    var all_total_ped_total = document.querySelectorAll('.total_ped__total');
+    var total_ped_total = 0
     var total_passos = 0
     var count_passos = 0
 
@@ -74,6 +76,7 @@
           for ( let aclass of cell.classList ) {
             class_split = aclass.split('-');
             if (class_split.length != 0) {
+
               if (class_split[0] == 'total_op') {
                 total_passos += 1;
                 $.ajax({
@@ -94,11 +97,38 @@
                         console.log('Erro: '+data['descricao_erro']);
                       }
                     } else {
-                      console.log('Sem retorno');
+                      console.log('Sem retorno de OP');
                     }
                   }
                 });
               }
+
+              if (class_split[0] == 'total_ped') {
+                total_passos += 1;
+                $.ajax({
+                  type: 'GET',
+                  url: '/lotes/ajax/pedido_lead_modelo/'+class_split[1]+'/',
+                  data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                  success : function(data) {
+                    count_passos += 1;
+                    moveBar(count_passos, total_passos);
+                    if (data) {
+                      if (data['result'] == 'OK') {
+                        cell.innerHTML = formatNumber(data['total_ped']);
+                        total_ped_total += parseInt(data['total_ped'])
+                        for (var i=0, len=all_total_ped_total.length|0; i<len; i=i+1|0) {
+                          all_total_ped_total[i].innerHTML = formatNumber(total_ped_total);
+                        }
+                      } else {
+                        console.log('Erro: '+data['descricao_erro']);
+                      }
+                    } else {
+                      console.log('Sem retorno de pedido');
+                    }
+                  }
+                });
+              }
+
             }
           }
         }
