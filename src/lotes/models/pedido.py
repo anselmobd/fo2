@@ -466,7 +466,7 @@ def grade_expedicao(
     return rows_to_dict_list(cursor)
 
 
-def busca_pedido(cursor, modelo=None, lead=None):
+def busca_pedido(cursor, modelo=None, periodo=None):
     filtro_modelo = ''
     if modelo is not None:
         filtro_modelo = '''--
@@ -475,15 +475,17 @@ def busca_pedido(cursor, modelo=None, lead=None):
                                      '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
                                      ))) = '{}' '''.format(modelo)
 
-    filtro_lead = ''
-    if lead is None or lead == 0:
-        filtro_lead = '''--
-            AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + 60
-        '''
-    else:
-        filtro_lead = '''--
-            AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {} + 7
-        '''.format(lead)
+    filtra_periodo = ''
+    if periodo is not None:
+        periodo_list = periodo.split(':')
+        if periodo_list[0] != '':
+            filtra_periodo += '''
+                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {}
+            '''.format(periodo_list[0])
+        if periodo_list[1] != '':
+            filtra_periodo += '''
+                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
+            '''.format(periodo_list[1])
 
     sql = """
         SELECT
@@ -505,7 +507,7 @@ def busca_pedido(cursor, modelo=None, lead=None):
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
           AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_modelo} -- filtro_modelo
-          {filtro_lead} -- filtro_lead
+          {filtra_periodo} -- filtra_periodo
         GROUP BY
           ped.DATA_ENTR_VENDA
         , ped.PEDIDO_VENDA
@@ -518,7 +520,7 @@ def busca_pedido(cursor, modelo=None, lead=None):
         , i.CD_IT_PE_GRUPO
     """.format(
         filtro_modelo=filtro_modelo,
-        filtro_lead=filtro_lead,
+        filtra_periodo=filtra_periodo,
     )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
