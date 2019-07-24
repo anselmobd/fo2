@@ -14,9 +14,58 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-  <table>
+  <table id='produzir'>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data style=style id_key=id_key only %}
   </table>
 {% endif %}
 {% endblock %}
+
+{% block javascript %}
+{% block javascript.pos %}
+<script >
+
+  function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+  }
+
+  $(document).ready(function() {
+
+    var table = document.getElementById("produzir");
+    for ( let row of table.rows ) {
+      for ( let cell of row.cells ) {
+        if ( cell.classList.length != 0 ) {
+          for ( let aclass of cell.classList ) {
+            class_split = aclass.split('@');
+            if (class_split.length != 0) {
+              if (class_split[0] == 'total_op') {
+                console.log(class_split[1]);
+                $.ajax({
+                  type: 'GET',
+                  url: '/lotes/ajax/op_producao_modelo/'+class_split[1]+'/',
+                  data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                  success : function(data) {
+                    if (data) {
+                      if (data['result'] == 'OK') {
+                        cell.innerHTML = formatNumber(data['total_op']);
+                      } else {
+                        console.log('Erro: '+data['descricao_erro']);
+                      }
+                    } else {
+                      console.log('Não executado');
+                    }
+                  }
+                });
+                console.log('fez ajax');
+              }
+            }
+          }
+        }
+      }
+    }
+
+  })
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}

@@ -70,6 +70,9 @@ class AProduzir(O2BaseGetView):
                 4: 'text-align: right;',
                 5: 'text-align: right;',
             },
+            'id_key': {
+                'total_op': 'modelo',
+            },
         })
 
 
