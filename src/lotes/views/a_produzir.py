@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.db import connections
 from django.db.models import Exists, OuterRef
+from django.http import JsonResponse
 
 from utils.views import totalize_data
 from base.views import O2BaseGetView
@@ -70,3 +71,36 @@ class AProduzir(O2BaseGetView):
                 5: 'text-align: right;',
             },
         })
+
+
+def op_producao_modelo(request, modelo):
+    cursor = connections['so'].cursor()
+    data = {}
+
+    try:
+        data_op = lotes.models.busca_op(
+            cursor, modelo=modelo, tipo='v', tipo_alt='p',
+            situacao='a', posicao='p')
+
+        if len(data_op) == 0:
+            total_op = 0
+        else:
+            totalize_data(data_op, {
+                'sum': ['QTD_AP'],
+                'count': [],
+                'descr': {'OP': 'T:'},
+            })
+            total_op = data_op[-1]['QTD_AP']
+
+    except lotes.models.SolicitaLote.DoesNotExist:
+        data.update({
+            'result': 'ERR',
+            'descricao_erro': 'Erro ao buscar OP',
+        })
+        return JsonResponse(data, safe=False)
+
+    data = {
+        'result': 'OK',
+        'total_op': total_op,
+    }
+    return JsonResponse(data, safe=False)
