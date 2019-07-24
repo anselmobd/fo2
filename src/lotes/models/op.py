@@ -35,7 +35,7 @@ def busca_op(
         filtra_modelo = """--
             AND TRIM(LEADING '0' FROM
                    (REGEXP_REPLACE(o.REFERENCIA_PECA,
-                                   '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                   '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
                                    ))) = '{}'
         """.format(modelo)
 
