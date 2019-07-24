@@ -48,6 +48,7 @@ class AProduzir(O2BaseGetView):
             data_row['meta_estoque'] = row['meta_estoque']
             data_row['meta'] = row['meta_giro'] + row['meta_estoque']
             data_row['total_op'] = 0
+            data_row['total_op|CLASS'] = 'total_op-{}'.format(row['modelo'])
 
         data = sorted(data, key=lambda i: -i['meta'])
 
@@ -57,6 +58,7 @@ class AProduzir(O2BaseGetView):
             'descr': {'modelo': 'Totais:'}
         })
         data[-1]['|STYLE'] = 'font-weight: bold;'
+        data[-1]['total_op|CLASS'] = 'total_op__total'
 
         self.context.update({
             'headers': ['Modelo', 'Meta de giro', 'Meta de estoque',
@@ -69,9 +71,6 @@ class AProduzir(O2BaseGetView):
                 3: 'text-align: right;',
                 4: 'text-align: right;',
                 5: 'text-align: right;',
-            },
-            'id_key': {
-                'total_op': 'modelo',
             },
         })
 
