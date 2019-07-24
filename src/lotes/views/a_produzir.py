@@ -41,10 +41,12 @@ class AProduzir(O2BaseGetView):
                     'modelo': row['modelo'],
                 }
                 data.append(data_row)
+            data_row['meta_giro'] = row['meta_giro']
             data_row['meta_estoque'] = row['meta_estoque']
+            data_row['meta'] = row['meta_giro'] + row['meta_estoque']
 
         self.context.update({
-            'headers': ['Modelo', 'Meta de estoque'],
-            'fields': ['modelo', 'meta_estoque'],
+            'headers': ['Modelo', 'Meta de giro', 'Meta de estoque', 'Meta'],
+            'fields': ['modelo', 'meta_giro', 'meta_estoque', 'meta'],
             'data': data,
         })
