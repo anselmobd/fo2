@@ -1,4 +1,5 @@
 from .analise import *
+from .a_produzir import *
 from .distribuicao import *
 from .imprime_lotes import *
 from .lote import *
