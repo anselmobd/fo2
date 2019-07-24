@@ -6,20 +6,21 @@
     <tr class="group">
   {% endif %}
   {% for field in fields %}
+
     {% if group and field in group %}
       {% if row|get_item:'rowspan' != 0 %}
-        <td rowspan="{{ row|get_item:'rowspan' }}" style="{% spaceless %}
-          {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
-          {% endspaceless %}">{% spaceless %}
-          {% include "layout/tbody_generic_td_content.html" with row=row field=field safe=safe only %}
-          {% endspaceless %}</td>
+        <td rowspan="{{ row|get_item:'rowspan' }}"
       {% endif %}
     {% else %}
-      <td style="{% spaceless %}
-        {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
-        {% endspaceless %}">{% spaceless %}
-        {% include "layout/tbody_generic_td_content.html" with row=row field=field safe=safe only %}
-        {% endspaceless %}</td>
+      <td
+    {% endif %}
+    {% if not group or field not in group or row|get_item:'rowspan' != 0 %}
+      {% if id_key and field in id_key.keys %}{%with id_key|get_item:field as field_key%}class="{{field}}@{{row|get_item:field_key}}"{%endwith%}{% endif %}
+      style="{% spaceless %}
+      {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
+      {% endspaceless %}">{% spaceless %}
+      {% include "layout/tbody_generic_td_content.html" with row=row field=field safe=safe only %}
+      {% endspaceless %}</td>
     {% endif %}
   {% endfor %}
   </tr>
