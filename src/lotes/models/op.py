@@ -11,7 +11,7 @@ def op_inform(cursor, op):
 
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
-        deposito=None, tipo=None, situacao=None, posicao=None):
+        deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None):
     filtra_op = ""
     if op is not None and op != '':
         filtra_op = """
@@ -129,6 +129,24 @@ def busca_op(
         filtro_tipo = "AND o.REFERENCIA_PECA < 'C0000'"
     elif tipo == 'm':
         filtro_tipo = "AND o.REFERENCIA_PECA >= 'C0000'"
+
+    filtro_tipo_alt = ''
+    if tipo_alt == 'e':
+        filtro_tipo = '''--
+            AND o.REFERENCIA_PECA < 'A0000'
+            AND (   ( o.ALTERNATIVA_PECA > 10 AND o.ALTERNATIVA_PECA < 50 )
+                OR  ( o.ALTERNATIVA_PECA > 60 AND o.ALTERNATIVA_PECA < 100 )
+                )
+        '''
+    elif tipo_alt == 'p':
+        filtro_tipo_alt = '''--
+            AND NOT (
+              o.REFERENCIA_PECA < 'A0000'
+              AND (   ( o.ALTERNATIVA_PECA > 10 AND o.ALTERNATIVA_PECA < 50 )
+                  OR  ( o.ALTERNATIVA_PECA > 60 AND o.ALTERNATIVA_PECA < 100 )
+                  )
+            )
+        '''
 
     sql = '''
         SELECT
@@ -294,6 +312,7 @@ def busca_op(
           {filtra_cor} -- filtra_cor
           {filtra_deposito} -- filtra_deposito
           {filtro_tipo} -- filtro_tipo
+          {filtro_tipo_alt} -- filtro_tipo_alt
           {filtra_situacao} -- filtra_situacao
           {filtra_posicao} -- filtra_posicao
         ORDER BY
@@ -306,9 +325,11 @@ def busca_op(
         filtra_cor=filtra_cor,
         filtra_deposito=filtra_deposito,
         filtro_tipo=filtro_tipo,
+        filtro_tipo_alt=filtro_tipo_alt,
         filtra_situacao=filtra_situacao,
         filtra_posicao=filtra_posicao,
     )
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
