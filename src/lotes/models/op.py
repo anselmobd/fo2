@@ -1,4 +1,8 @@
+from django.core.cache import cache
+
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower, GradeQtd
+
+from utils.functions import make_key_cache, fo2logger
 
 from lotes.models import *
 from lotes.models.base import *
@@ -12,6 +16,13 @@ def op_inform(cursor, op):
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None):
+    key_cache = make_key_cache()
+
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     filtra_op = ""
     if op is not None and op != '':
         filtra_op = """
@@ -330,7 +341,11 @@ def busca_op(
         filtra_posicao=filtra_posicao,
     )
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+
+    cached_result = rows_to_dict_list(cursor)
+    cache.set(key_cache, cached_result)
+    fo2logger.info('calculated '+key_cache)
+    return cached_result
 
 
 def posicao_op(cursor, op):
