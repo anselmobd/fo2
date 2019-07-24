@@ -9,6 +9,7 @@ from base.views import O2BaseGetView
 
 import comercial.models
 import lotes.models
+import produto.queries
 
 
 class AProduzir(O2BaseGetView):
@@ -94,7 +95,7 @@ def op_producao_modelo(request, modelo):
             })
             total_op = data_op[-1]['QTD_AP']
 
-    except lotes.models.SolicitaLote.DoesNotExist:
+    except Exception:
         data.update({
             'result': 'ERR',
             'descricao_erro': 'Erro ao buscar OP',
@@ -104,5 +105,51 @@ def op_producao_modelo(request, modelo):
     data = {
         'result': 'OK',
         'total_op': total_op,
+    }
+    return JsonResponse(data, safe=False)
+
+
+def pedido_lead_modelo(request, modelo):
+    cursor = connections['so'].cursor()
+    data = {}
+
+    try:
+        colecao = produto.queries.colecao_de_modelo(cursor, modelo)
+        if colecao == -1:
+            lead = 0
+        else:
+            try:
+                lc = lotes.models.LeadColecao.objects.get(colecao=colecao)
+                lead = lc.lead
+            except models.LeadColecao.DoesNotExist:
+                lead = 0
+
+        if lead == 0:
+            periodo = ''
+        else:
+            periodo = lead + 7
+
+        data_ped = lotes.models.busca_pedido(
+            cursor, modelo=modelo, periodo=':{}'.format(periodo))
+
+        if len(data_ped) == 0:
+            total_ped = 0
+        else:
+            totalize_data(data_ped, {
+                'sum': ['QTD'],
+                'count': [],
+                'descr': {'REF': 'T:'}})
+            total_ped = data_ped[-1]['QTD']
+
+    except Exception:
+        data.update({
+            'result': 'ERR',
+            'descricao_erro': 'Erro ao buscar Pedido',
+        })
+        return JsonResponse(data, safe=False)
+
+    data = {
+        'result': 'OK',
+        'total_ped': total_ped,
     }
     return JsonResponse(data, safe=False)

@@ -101,6 +101,9 @@ urlpatterns = [
     url(r'^ajax/op_producao_modelo/(?P<modelo>[^/]+)/$',
         views.op_producao_modelo, name='op_producao_modelo'),
 
+    url(r'^ajax/pedido_lead_modelo/(?P<modelo>[^/]+)/$',
+        views.pedido_lead_modelo, name='pedido_lead_modelo'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
