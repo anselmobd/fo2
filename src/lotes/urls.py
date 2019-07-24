@@ -98,7 +98,7 @@ urlpatterns = [
 
     url(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
 
-    url(r'^op_producao_modelo/(?P<modelo>[^/]+)/$',
+    url(r'^ajax/op_producao_modelo/(?P<modelo>[^/]+)/$',
         views.op_producao_modelo, name='op_producao_modelo'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
