@@ -361,8 +361,14 @@ class BuscaPedido(View):
         context.update({
             'lead': lead,
         })
+        if lead == 0:
+            periodo = ''
+        else:
+            periodo = lead + 7
+        print(periodo)
 
-        data = models.busca_pedido(cursor, modelo=modelo, lead=lead)
+        data = models.busca_pedido(
+            cursor, modelo=modelo, periodo=':{}'.format(periodo))
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedidos não encontrados',
@@ -381,6 +387,7 @@ class BuscaPedido(View):
             'descr': {'REF': 'Total:'}})
 
         context.update({
+            'periodo': periodo,
             'headers': ('Nº do pedido', 'Data de embarque', 'Cliente',
                         'Referência', 'Quantidade'),
             'fields': ('PEDIDO', 'DATA', 'CLIENTE',
@@ -388,6 +395,25 @@ class BuscaPedido(View):
             'data': data,
             'style': {5: 'text-align: right;'},
         })
+
+        if lead != 0:
+            data_pos = models.busca_pedido(
+                cursor, modelo=modelo, periodo='{}:'.format(periodo))
+            if len(data_pos) != 0:
+                for row in data_pos:
+                    if row['DATA'] is None:
+                        row['DATA'] = ''
+                    else:
+                        row['DATA'] = row['DATA'].date()
+
+                totalize_data(data_pos, {
+                    'sum': ['QTD'],
+                    'count': [],
+                    'descr': {'REF': 'Total:'}})
+
+                context.update({
+                    'data_pos': data_pos,
+                })
 
         return context
 
