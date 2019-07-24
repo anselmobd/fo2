@@ -3,6 +3,7 @@ from pprint import pprint
 from django.db import connections
 from django.db.models import Exists, OuterRef
 
+from utils.views import totalize_data
 from base.views import O2BaseGetView
 
 import comercial.models
@@ -45,8 +46,19 @@ class AProduzir(O2BaseGetView):
             data_row['meta_estoque'] = row['meta_estoque']
             data_row['meta'] = row['meta_giro'] + row['meta_estoque']
 
+        totalize_data(data, {
+            'sum': ['meta_giro', 'meta_estoque', 'meta'],
+            'count': [],
+            'descr': {'modelo': 'Totais:'}})
+        data[-1]['|STYLE'] = 'font-weight: bold;'
+
         self.context.update({
             'headers': ['Modelo', 'Meta de giro', 'Meta de estoque', 'Meta'],
             'fields': ['modelo', 'meta_giro', 'meta_estoque', 'meta'],
             'data': data,
+            'style': {
+                2: 'text-align: right;',
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+            },
         })
