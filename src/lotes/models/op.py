@@ -343,7 +343,7 @@ def busca_op(
     cursor.execute(sql)
 
     cached_result = rows_to_dict_list(cursor)
-    cache.set(key_cache, cached_result)
+    cache.set(key_cache, cached_result, 60*30)
     fo2logger.info('calculated '+key_cache)
     return cached_result
 
