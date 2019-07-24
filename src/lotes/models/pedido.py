@@ -472,7 +472,7 @@ def busca_pedido(cursor, modelo=None, periodo=None):
         filtro_modelo = '''--
             AND TRIM(LEADING '0' FROM
                      (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
-                                     '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
                                      ))) = '{}' '''.format(modelo)
 
     filtra_periodo = ''
