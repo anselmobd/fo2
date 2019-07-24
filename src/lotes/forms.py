@@ -345,6 +345,13 @@ class BuscaOpForm(forms.Form):
     tipo = forms.ChoiceField(
         choices=CHOICES, initial='t')
 
+    CHOICES = [('t', 'Todas'),
+               ('p', 'Alternativa de produção'),
+               ('e', 'Alternativa de expedição'),
+               ]
+    tipo_alt = forms.ChoiceField(
+        label='Tipo de alternativa', choices=CHOICES, initial='t')
+
     CHOICES = [('t', 'Todas as OPs'),
                ('a', 'Ativas'),
                ('c', 'Canceladas'),
