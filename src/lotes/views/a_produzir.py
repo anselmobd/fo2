@@ -5,11 +5,13 @@ from django.db.models import Exists, OuterRef
 from django.http import JsonResponse
 
 from utils.views import totalize_data
-from base.views import O2BaseGetView
+from base.views import O2BaseGetView, O2BaseGetPostView
 
 import comercial.models
-import lotes.models
+import comercial.forms
 import produto.queries
+
+import lotes.models
 
 
 class AProduzir(O2BaseGetView):
@@ -181,3 +183,13 @@ def pedido_lead_modelo(request, modelo):
         'total_ped': total_ped,
     })
     return JsonResponse(data, safe=False)
+
+
+class GradeProduzir(O2BaseGetPostView):
+
+    def __init__(self, *args, **kwargs):
+        super(GradeProduzir, self).__init__(*args, **kwargs)
+        self.Form_class = comercial.forms.AnaliseModeloForm
+        self.template_name = 'lotes/grade_produzir.html'
+        self.title_name = 'Grade de modelo a produzir'
+        self.get_args = ['modelo']
