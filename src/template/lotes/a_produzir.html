@@ -38,6 +38,8 @@
 {% block javascript.pos %}
 <script >
 
+  var a_produzir = {};
+
   function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
   }
@@ -59,7 +61,6 @@
     elem.style.width = width + '%';
 
   }
-
 
   function get_el(coluna, modelo) {
     // console.log('get_el', coluna, modelo);
@@ -117,19 +118,33 @@
     // console.log('calc_colunas', modelo);
     add_el_inner_int('op_menos_ped', modelo, valor);
     add_el_inner_int('op_menos_ped', 'total', valor);
-    add_el_inner_int('a_produzir', modelo, -valor);
-    add_el_inner_int('a_produzir', 'total', -valor);
+
+    if (!(modelo in a_produzir)) {
+      a_produzir[modelo] = get_el_inner_int('a_produzir', modelo, 0);
+    }
+    a_produzir[modelo] += -valor;
+    add_el_inner_int('a_produzir', 'total', -get_el_inner_int('a_produzir', modelo, 0));
+    add_el_inner_int('excesso', 'total', -get_el_inner_int('excesso', modelo, 0));
+    if (a_produzir[modelo] > 0) {
+      set_el_inner_format('a_produzir', modelo, a_produzir[modelo]);
+      add_el_inner_int('a_produzir', 'total', a_produzir[modelo]);
+      set_el_inner_format('excesso', modelo, 0);
+    } else {
+      set_el_inner_format('a_produzir', modelo, 0);
+      set_el_inner_format('excesso', modelo, -a_produzir[modelo]);
+      add_el_inner_int('excesso', 'total', -a_produzir[modelo]);
+    }
   }
 
   $(document).ready(function() {
 
     var table = document.getElementById("produzir");
     var el_total_op_total = get_el('total_op', 'total');
-    var total_op_total = 0
+    var total_op_total = 0;
     var el_total_ped_total = get_el('total_ped', 'total');
-    var total_ped_total = 0
-    var total_passos = 0
-    var count_passos = 0
+    var total_ped_total = 0;
+    var total_passos = 0;
+    var count_passos = 0;
 
     for ( let row of table.rows ) {
       for ( let cell of row.cells ) {
