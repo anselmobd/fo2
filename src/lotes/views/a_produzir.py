@@ -72,13 +72,8 @@ class AProduzir(O2BaseGetView):
             'count': [],
             'descr': {'modelo': 'Totais:'},
             'row_style': 'font-weight: bold;',
+            'class_suffix': '__total',
         })
-
-        data[-1]['total_op|CLASS'] = 'total_op__total'
-        data[-1]['total_ped|CLASS'] = 'total_ped__total'
-        data[-1]['op_menos_ped|CLASS'] = 'op_menos_ped__total'
-        data[-1]['a_produzir|CLASS'] = 'a_produzir__total'
-        data[-1]['excesso|CLASS'] = 'excesso__total'
 
         self.context.update({
             'headers': ['Modelo', 'Meta de giro (lead)', 'Meta de estoque',
