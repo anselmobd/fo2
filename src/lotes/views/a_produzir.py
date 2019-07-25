@@ -52,6 +52,12 @@ class AProduzir(O2BaseGetView):
             data_row['total_op|CLASS'] = 'total_op-{}'.format(row['modelo'])
             data_row['total_ped'] = 0
             data_row['total_ped|CLASS'] = 'total_ped-{}'.format(row['modelo'])
+            data_row['op_menos_ped'] = 0
+            data_row['op_menos_ped|CLASS'] = 'op_menos_ped-{}'.format(
+                row['modelo'])
+            data_row['a_produzir'] = 0
+            data_row['a_produzir|CLASS'] = 'a_produzir-{}'.format(
+                row['modelo'])
 
         data = sorted(data, key=lambda i: -i['meta'])
 
@@ -67,9 +73,11 @@ class AProduzir(O2BaseGetView):
 
         self.context.update({
             'headers': ['Modelo', 'Meta de giro', 'Meta de estoque',
-                        'Meta total', 'OPs', 'Pedidos'],
+                        'Meta total', 'OPs', 'Pedidos', 'OPs-Pedidos',
+                        'A produzir'],
             'fields': ['modelo', 'meta_giro', 'meta_estoque',
-                       'meta', 'total_op', 'total_ped'],
+                       'meta', 'total_op', 'total_ped', 'op_menos_ped',
+                       'a_produzir'],
             'data': data,
             'style': {
                 2: 'text-align: right;',
@@ -77,6 +85,8 @@ class AProduzir(O2BaseGetView):
                 4: 'text-align: right;',
                 5: 'text-align: right;',
                 6: 'text-align: right;',
+                7: 'text-align: right;',
+                8: 'text-align: right;',
             },
         })
 
