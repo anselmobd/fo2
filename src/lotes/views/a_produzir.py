@@ -83,7 +83,9 @@ class AProduzir(O2BaseGetView):
 
 def op_producao_modelo(request, modelo):
     cursor = connections['so'].cursor()
-    data = {}
+    data = {
+        'modelo': modelo,
+    }
 
     try:
         data_op = lotes.models.busca_op(
@@ -107,16 +109,18 @@ def op_producao_modelo(request, modelo):
         })
         return JsonResponse(data, safe=False)
 
-    data = {
+    data.update({
         'result': 'OK',
         'total_op': total_op,
-    }
+    })
     return JsonResponse(data, safe=False)
 
 
 def pedido_lead_modelo(request, modelo):
     cursor = connections['so'].cursor()
-    data = {}
+    data = {
+        'modelo': modelo,
+    }
 
     try:
         colecao = produto.queries.colecao_de_modelo(cursor, modelo)
@@ -153,8 +157,8 @@ def pedido_lead_modelo(request, modelo):
         })
         return JsonResponse(data, safe=False)
 
-    data = {
+    data.update({
         'result': 'OK',
         'total_ped': total_ped,
-    }
+    })
     return JsonResponse(data, safe=False)
