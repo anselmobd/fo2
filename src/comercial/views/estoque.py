@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from base.views import O2BaseGetView, O2BaseGetPostView
 from geral.functions import has_permission
-from utils.views import totalize_grouped_data
+from utils.views import totalize_data
 from utils.functions import dec_month, dec_months, safe_cast
 
 import comercial.models as models
@@ -731,11 +731,7 @@ class Metas(O2BaseGetView):
                 'grade': grade,
             })
 
-        group = ['modelo']
-        totalize_grouped_data(metas_list, {
-            'group': group,
-            'flags': ['NO_TOT_1'],
-            'global_sum': ['meta_estoque'],
+        totalize_data(metas_list, {
             'sum': ['meta_estoque'],
             'count': [],
             'descr': {'modelo': 'Total:'},
