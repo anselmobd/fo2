@@ -86,6 +86,9 @@ def totalize_data(data, config):
     for key in totrow:
         totrow[key] = ''
 
+    if 'row_style' in config:
+        totrow['|STYLE'] = config['row_style']
+
     sum = {key: 0 for key in config['sum']}
     for row in data:
         for key in sum:
