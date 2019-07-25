@@ -83,11 +83,17 @@ def word_slice(text, slice):
 
 def totalize_data(data, config):
     totrow = data[0].copy()
-    for key in totrow:
+    keys = [key for key in totrow.keys() if '|' not in key]
+    for key in keys:
         totrow[key] = ''
 
     if 'row_style' in config:
         totrow['|STYLE'] = config['row_style']
+
+    if 'class_suffix' in config:
+        class_suffix = config['class_suffix']
+        for key in keys:
+            totrow['{}|CLASS'.format(key)] = '{}{}'.format(key, class_suffix)
 
     sum = {key: 0 for key in config['sum']}
     for row in data:
