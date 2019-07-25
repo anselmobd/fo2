@@ -55,7 +55,7 @@ class AProduzir(O2BaseGetView):
             data_row['op_menos_ped'] = 0
             data_row['op_menos_ped|CLASS'] = 'op_menos_ped-{}'.format(
                 row['modelo'])
-            data_row['a_produzir'] = 0
+            data_row['a_produzir'] = data_row['meta']
             data_row['a_produzir|CLASS'] = 'a_produzir-{}'.format(
                 row['modelo'])
 
@@ -63,20 +63,24 @@ class AProduzir(O2BaseGetView):
 
         totalize_data(data, {
             'sum': ['meta_giro', 'meta_estoque', 'meta', 'total_op',
-                    'total_ped'],
+                    'total_ped', 'op_menos_ped', 'a_produzir'],
             'count': [],
             'descr': {'modelo': 'Totais:'}
         })
         data[-1]['|STYLE'] = 'font-weight: bold;'
         data[-1]['total_op|CLASS'] = 'total_op__total'
         data[-1]['total_ped|CLASS'] = 'total_ped__total'
+        data[-1]['op_menos_ped|CLASS'] = 'op_menos_ped__total'
+        data[-1]['a_produzir|CLASS'] = 'a_produzir__total'
 
         self.context.update({
-            'headers': ['Modelo', 'Meta de giro', 'Meta de estoque',
-                        'Meta total', 'OPs', 'Pedidos', 'OPs-Pedidos',
-                        'A produzir'],
+            'headers': ['Modelo', 'Meta de giro (lead)', 'Meta de estoque',
+                        'Total das metas (A)', 'Total das OPs',
+                        'Carteira de pedidos', 'OPs – Pedidos (B)',
+                        'A produzir (A-B)'],
             'fields': ['modelo', 'meta_giro', 'meta_estoque',
-                       'meta', 'total_op', 'total_ped', 'op_menos_ped',
+                       'meta', 'total_op',
+                       'total_ped', 'op_menos_ped',
                        'a_produzir'],
             'data': data,
             'style': {
