@@ -104,6 +104,9 @@ urlpatterns = [
     url(r'^ajax/pedido_lead_modelo/(?P<modelo>[^/]+)/$',
         views.pedido_lead_modelo, name='pedido_lead_modelo'),
 
+    url(r'^grade_produzir/$',
+        views.GradeProduzir.as_view(), name='grade_produzir'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
