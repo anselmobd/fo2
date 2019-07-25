@@ -31,6 +31,7 @@
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style id_key=id_key only %}
   </table>
+  <p>Obs.: Pedidos com data de embarque até: Hoje + <i>lead time</i> do produto + 7</p>
 {% endif %}
 {% endblock %}
 
