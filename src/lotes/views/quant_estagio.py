@@ -498,6 +498,79 @@ class LeadColecao(View):
         return render(self.request, self.template_name, self.context)
 
 
+def grade_meta_giro(meta, lead):
+    meta_giro = round(
+        meta.venda_mensal / 30 * lead)
+
+    grade = {}
+    grade['headers'] = ['Cor/Tamanho']
+    grade['fields'] = ['cor']
+
+    meta_tamanhos = comercial.models.MetaEstoqueTamanho.objects.filter(
+        meta=meta).order_by('ordem')
+    meta_grade_tamanhos = {}
+    tot_tam = 0
+    qtd_por_tam = {}
+    grade['style'] = {
+        1: 'text-align: left;',
+    }
+    for tamanho in meta_tamanhos:
+        if tamanho.quantidade != 0:
+            grade['headers'].append(
+                '{}({})'.format(tamanho.tamanho, tamanho.quantidade))
+            grade['fields'].append(tamanho.tamanho)
+            meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
+            tot_tam += tamanho.quantidade
+            qtd_por_tam[tamanho.tamanho] = 0
+            grade['style'][max(grade['style'].keys())+1] = \
+                'text-align: right;'
+
+    resto = meta_giro % tot_tam
+    if resto != 0:
+        meta_giro = meta_giro + tot_tam - resto
+
+    grade['headers'].append('Total')
+    grade['fields'].append('total')
+    grade['style'][max(grade['style'].keys())+1] = \
+        'text-align: right; font-weight: bold;'
+
+    tot_packs = meta_giro / tot_tam
+
+    meta_cores = comercial.models.MetaEstoqueCor.objects.filter(
+        meta=meta).order_by('cor')
+    tot_cor = 0
+    for cor in meta_cores:
+        tot_cor += cor.quantidade
+
+    grade['data'] = []
+    meta_giro = 0
+    for cor in meta_cores:
+        if cor.quantidade != 0:
+            linha = {
+                'cor': '{}({})'.format(cor.cor, cor.quantidade),
+            }
+            cor_packs = round(
+                tot_packs / tot_cor * cor.quantidade)
+            for meta_tam in meta_grade_tamanhos:
+                qtd_cor_tam = cor_packs * meta_grade_tamanhos[meta_tam]
+                linha.update({
+                    meta_tam: round(qtd_cor_tam),
+                })
+                qtd_por_tam[meta_tam] += qtd_cor_tam
+            linha['total'] = cor_packs * tot_tam
+            meta_giro += linha['total']
+            grade['data'].append(linha)
+
+    grade['meta_giro'] = meta_giro
+    grade['data'].append({
+        'cor': 'Total',
+        **qtd_por_tam,
+        'total': meta_giro,
+        '|STYLE': 'font-weight: bold;',
+    })
+    return grade
+
+
 class MetaGiro(O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
@@ -526,7 +599,6 @@ class MetaGiro(O2BaseGetView):
         metas_list = []
         for meta in metas:
             meta_dict = meta.__dict__
-            meta_dict['meta'] = meta
             metas_list.append(meta_dict)
 
             colecao = produto.queries.colecao_de_modelo(
@@ -540,77 +612,14 @@ class MetaGiro(O2BaseGetView):
                 except models.LeadColecao.DoesNotExist:
                     lead = 0
 
+            grade = grade_meta_giro(meta, lead)
+
             meta_dict['lead'] = lead
-            meta_dict['giro'] = round(
-                meta_dict['venda_mensal'] / 30 * meta_dict['lead'])
+            meta_dict['giro'] = grade['meta_giro']
 
-            grade = {}
-            grade['headers'] = ['Cor/Tamanho']
-            grade['fields'] = ['cor']
-
-            meta_tamanhos = comercial.models.MetaEstoqueTamanho.objects.filter(
-                meta=meta).order_by('ordem')
-            meta_grade_tamanhos = {}
-            tot_tam = 0
-            qtd_por_tam = {}
-            grade['style'] = {
-                1: 'text-align: left;',
-            }
-            for tamanho in meta_tamanhos:
-                if tamanho.quantidade != 0:
-                    grade['headers'].append(
-                        '{}({})'.format(tamanho.tamanho, tamanho.quantidade))
-                    grade['fields'].append(tamanho.tamanho)
-                    meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
-                    tot_tam += tamanho.quantidade
-                    qtd_por_tam[tamanho.tamanho] = 0
-                    grade['style'][max(grade['style'].keys())+1] = \
-                        'text-align: right;'
-
-            resto = meta_dict['giro'] % tot_tam
-            if resto != 0:
-                meta_dict['giro'] = meta_dict['giro'] + tot_tam - resto
-
-            grade['headers'].append('Total')
-            grade['fields'].append('total')
-            grade['style'][max(grade['style'].keys())+1] = \
-                'text-align: right; font-weight: bold;'
-
-            tot_packs = meta_dict['giro'] / tot_tam
-
-            meta_cores = comercial.models.MetaEstoqueCor.objects.filter(
-                meta=meta).order_by('cor')
-            tot_cor = 0
-            for cor in meta_cores:
-                tot_cor += cor.quantidade
-
-            grade['data'] = []
-            meta_dict['giro'] = 0
-            for cor in meta_cores:
-                if cor.quantidade != 0:
-                    linha = {
-                        'cor': '{}({})'.format(cor.cor, cor.quantidade),
-                    }
-                    cor_packs = round(
-                        tot_packs / tot_cor * cor.quantidade)
-                    for meta_tam in meta_grade_tamanhos:
-                        qtd_cor_tam = cor_packs * meta_grade_tamanhos[meta_tam]
-                        linha.update({
-                            meta_tam: round(qtd_cor_tam),
-                        })
-                        qtd_por_tam[meta_tam] += qtd_cor_tam
-                    linha['total'] = cor_packs * tot_tam
-                    meta_dict['giro'] += linha['total']
-                    grade['data'].append(linha)
-            if meta_dict['meta'].meta_giro != meta_dict['giro']:
-                meta_dict['meta'].meta_giro = meta_dict['giro']
-                meta_dict['meta'].save()
-            grade['data'].append({
-                'cor': 'Total',
-                **qtd_por_tam,
-                'total': meta_dict['giro'],
-                '|STYLE': 'font-weight: bold;',
-            })
+            if meta.meta_giro != meta_dict['giro']:
+                meta.meta_giro = meta_dict['giro']
+                meta.save()
 
             meta_dict['grade'] = grade
 
