@@ -35,4 +35,11 @@
     {% include "layout/tbody_generic.html" with fields=gmg.fields data=gmg.data style=gmg.style only %}
   </table>
 {% endif %}
+<h3>Grade total das metas (A)</h3>
+{% if gm %}
+  <table>
+    {% include "layout/thead_generic.html" with data=gm.headers style=gm.style only %}
+    {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
+  </table>
+{% endif %}
 {% endblock %}

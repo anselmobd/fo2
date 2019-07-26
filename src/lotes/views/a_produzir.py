@@ -11,6 +11,7 @@ import comercial.models
 from comercial.views.estoque import grade_meta_estoque
 import comercial.forms
 import produto.queries
+import produto.models
 
 import lotes.models
 from lotes.views.quant_estagio import grade_meta_giro
@@ -182,6 +183,92 @@ def pedido_lead_modelo(request, modelo):
     return JsonResponse(data, safe=False)
 
 
+def get_celula(grd, tam, cor):
+    result = 0
+    for linha in grd['data'][:-1]:
+        if linha['cor'] == cor:
+            if tam in linha:
+                result = linha[tam]
+            else:
+                result = 0
+            break
+    return result
+
+
+def soma_grades(g1, g2):
+    return opera_grades(g1, g2, '+')
+
+
+def subtrai_grades(g1, g2):
+    return opera_grades(g1, g2, '-')
+
+
+def opera_grades(g1, g2, operacao):
+    tamanhos1 = set(g1['headers'][1:-1])
+    tamanhos2 = set(g2['headers'][1:-1])
+    tamanhos = list(tamanhos1.union(tamanhos2))
+    s_tamanhos = produto.models.S_Tamanho.objects.all().values()
+    tamanhos = sorted(
+        tamanhos,
+        key=lambda tam: [
+            s_tam['ordem_tamanho']
+            for s_tam in s_tamanhos
+            if s_tam['tamanho_ref'] == tam
+        ])
+
+    cores1 = set([
+        linha['cor']
+        for linha in g1['data'][:-1]
+    ])
+    cores2 = set([
+        linha['cor']
+        for linha in g2['data'][:-1]
+    ])
+    cores = list(cores1.union(cores2))
+    cores = sorted(cores)
+
+    grade = {}
+    grade['fields'] = ['cor', *tamanhos, 'total']
+    grade['headers'] = ['Cor/Tamanho', *tamanhos, 'Total']
+    grade['style'] = {
+        i+2: 'text-align: right;'
+        for i, _ in enumerate(tamanhos)
+    }
+    grade['style'][len(tamanhos)+2] = 'text-align: right; font-weight: bold;'
+    grade['data'] = []
+    linha_zerada = {
+        tam: 0
+        for tam in tamanhos
+    }
+    linha_zerada.update({
+        'total': 0,
+    })
+    totais = linha_zerada.copy()
+
+    for cor in cores:
+        linha = linha_zerada.copy()
+        linha['cor'] = cor
+        total_linha = 0
+        for tam in tamanhos:
+            valor1 = get_celula(g1, tam, cor)
+            valor2 = get_celula(g2, tam, cor)
+            if operacao == '+':
+                valor = valor1 + valor2
+            else:
+                valor = valor1 - valor2
+            linha[tam] = valor
+            totais[tam] += valor
+            total_linha += valor
+        linha['total'] = total_linha
+        totais['total'] += total_linha
+        grade['data'].append(linha)
+
+    totais['cor'] = 'Total'
+    totais['|STYLE'] = 'font-weight: bold;'
+    grade['data'].append(totais)
+    return grade
+
+
 class GradeProduzir(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
@@ -214,15 +301,18 @@ class GradeProduzir(O2BaseGetPostView):
         else:
             meta = metas[0]
 
+        calcula_grade = False
         if meta is not None:
             if meta.meta_estoque == 0:
                 self.context.update({
                     'msg_meta_estoque': 'Modelo com meta de estoque zerada',
                 })
             else:
+                gme = grade_meta_estoque(meta)
                 self.context.update({
-                    'gme': grade_meta_estoque(meta),
+                    'gme': gme,
                 })
+                calcula_grade = True
 
             if meta.meta_giro == 0:
                 self.context.update({
@@ -241,6 +331,22 @@ class GradeProduzir(O2BaseGetPostView):
                     except lotes.models.LeadColecao.DoesNotExist:
                         lead = 0
 
+                gmg = grade_meta_giro(meta, lead, show_distrib=False)
                 self.context.update({
-                    'gmg': grade_meta_giro(meta, lead, show_distrib=False),
+                    'gmg': gmg,
                 })
+                calcula_grade = True
+
+        if not calcula_grade:
+            return
+
+        if meta.meta_estoque == 0:
+            gm = gmg
+        elif meta.meta_giro == 0:
+            gm = gme
+        else:
+            gm = soma_grades(gme, gmg)
+
+        self.context.update({
+            'gm': gm,
+        })
