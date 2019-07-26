@@ -3,19 +3,26 @@
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
 {% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
 {% block content %}
 <form action="{% url 'producao:grade_produzir' %}" method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
 </form>
-{% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
+{% if msg_meta_estoque %}
+  <h4>{{ msg_meta_estoque }}</h4>
 {% endif %}
-{% if data %}
+{% if gme %}
+  <h4>Grade de meta de estoque</h4>
   <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+    {% include "layout/thead_generic.html" with data=gme.headers style=gme.style only %}
+    {% include "layout/tbody_generic.html" with fields=gme.fields data=gme.data style=gme.style only %}
   </table>
 {% endif %}
 {% endblock %}
