@@ -29,4 +29,6 @@ class VendasPorForm(
 class AnaliseModeloForm(
         O2BaseForm,
         O2FieldModeloForm):
-    pass
+
+    class Meta:
+        autofocus_field = 'modelo'
