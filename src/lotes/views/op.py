@@ -166,7 +166,8 @@ class Op(View):
                 })
 
             # Grade
-            g_header, g_fields, g_data = models.op_sortimento(cursor, op)
+            g_header, g_fields, g_data = models.op_sortimento(
+                cursor, op=op)
             p.prt('op_sortimento 1ª')
 
             if len(g_data) != 0:
@@ -178,7 +179,7 @@ class Op(View):
 
             # Grade de perda
             gp_header, gp_fields, gp_data, total = models.op_sortimentos(
-                cursor, op, 'p')
+                cursor, op=op, tipo='p')
             p.prt('op_sortimentos perda')
 
             if total != 0:
@@ -190,7 +191,7 @@ class Op(View):
 
             # Grade de segunda qualidade
             gs_header, gs_fields, gs_data, total = models.op_sortimentos(
-                cursor, op, 's')
+                cursor, op=op, tipo='s')
             p.prt('op_sortimentos 2ª')
 
             if total != 0:
@@ -202,7 +203,7 @@ class Op(View):
 
             # Grade de conserto
             gc_header, gc_fields, gc_data, total = models.op_sortimentos(
-                cursor, op, 'c')
+                cursor, op=op, tipo='c')
             p.prt('op_sortimentos conserto')
 
             if total != 0:
