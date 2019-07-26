@@ -16,7 +16,7 @@
   <input type="submit" name="busca" value="Busca"/>
 </form>
 {% if modelo %}
-<h3>Grade de meta de estoque</h3>
+<h3>Meta de estoque</h3>
 {% if msg_meta_estoque %}
   <h4>{{ msg_meta_estoque }}</h4>
 {% endif %}
@@ -26,7 +26,7 @@
     {% include "layout/tbody_generic.html" with fields=gme.fields data=gme.data style=gme.style only %}
   </table>
 {% endif %}
-<h3>Grade de meta de giro (lead)</h3>
+<h3>Meta de giro (lead)</h3>
 {% if msg_meta_giro %}
   <h4>{{ msg_meta_giro }}</h4>
 {% endif %}
@@ -36,14 +36,14 @@
     {% include "layout/tbody_generic.html" with fields=gmg.fields data=gmg.data style=gmg.style only %}
   </table>
 {% endif %}
-<h3>Grade total das metas (A)</h3>
+<h3>Total das metas (A)</h3>
 {% if gm %}
   <table>
     {% include "layout/thead_generic.html" with data=gm.headers style=gm.style only %}
     {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
   </table>
 {% endif %}
-<h3>Grade total das OPs</h3>
+<h3>Total das OPs</h3>
 {% if gop %}
   <table>
     {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
