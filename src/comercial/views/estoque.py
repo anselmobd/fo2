@@ -640,6 +640,69 @@ class Ponderacao(O2BaseGetView):
         })
 
 
+def grade_meta_estoque(meta):
+    grade = {}
+
+    grade['headers'] = ['Cor/Tamanho']
+    grade['fields'] = ['cor']
+    meta_tamanhos = models.MetaEstoqueTamanho.objects.filter(
+        meta=meta).order_by('ordem')
+    meta_grade_tamanhos = {}
+    tot_tam = 0
+    qtd_por_tam = {}
+    grade['style'] = {
+        1: 'text-align: left;',
+    }
+    for tamanho in meta_tamanhos:
+        if tamanho.quantidade != 0:
+            grade['headers'].append(tamanho.tamanho)
+            grade['fields'].append(tamanho.tamanho)
+            meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
+            tot_tam += tamanho.quantidade
+            qtd_por_tam[tamanho.tamanho] = 0
+            grade['style'][max(grade['style'].keys())+1] = \
+                'text-align: right;'
+    grade['style'][max(grade['style'].keys())+1] = \
+        'text-align: right; font-weight: bold;'
+
+    qtd_por_tam['total'] = meta.meta_estoque
+
+    grade['headers'].append('Total')
+    grade['fields'].append('total')
+    tot_packs = meta.meta_estoque / tot_tam
+
+    meta_cores = models.MetaEstoqueCor.objects.filter(
+        meta=meta).order_by('cor')
+    meta_grade_cores = {}
+    tot_cor = 0
+    for cor in meta_cores:
+        meta_grade_cores[cor.cor] = cor.quantidade
+        tot_cor += cor.quantidade
+
+    grade['data'] = []
+    for meta_cor in meta_grade_cores:
+        if meta_grade_cores[meta_cor] != 0:
+            linha = {
+                'cor': meta_cor,
+            }
+            cor_packs = round(
+                tot_packs / tot_cor * meta_grade_cores[meta_cor])
+            for meta_tam in meta_grade_tamanhos:
+                qtd_cor_tam = cor_packs * meta_grade_tamanhos[meta_tam]
+                linha.update({
+                    meta_tam: round(qtd_cor_tam),
+                })
+                qtd_por_tam[meta_tam] += qtd_cor_tam
+            linha['total'] = cor_packs * tot_tam
+            grade['data'].append(linha)
+    grade['data'].append({
+        'cor': 'Total',
+        **qtd_por_tam,
+        '|STYLE': 'font-weight: bold;',
+    })
+    return grade
+
+
 class Metas(O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
@@ -665,65 +728,7 @@ class Metas(O2BaseGetView):
 
         metas_list = list(metas.values())
         for meta in metas:
-            grade = {}
-
-            grade['headers'] = ['Cor/Tamanho']
-            grade['fields'] = ['cor']
-            meta_tamanhos = models.MetaEstoqueTamanho.objects.filter(
-                meta=meta).order_by('ordem')
-            meta_grade_tamanhos = {}
-            tot_tam = 0
-            qtd_por_tam = {}
-            grade['style'] = {
-                1: 'text-align: left;',
-            }
-            for tamanho in meta_tamanhos:
-                if tamanho.quantidade != 0:
-                    grade['headers'].append(tamanho.tamanho)
-                    grade['fields'].append(tamanho.tamanho)
-                    meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
-                    tot_tam += tamanho.quantidade
-                    qtd_por_tam[tamanho.tamanho] = 0
-                    grade['style'][max(grade['style'].keys())+1] = \
-                        'text-align: right;'
-            grade['style'][max(grade['style'].keys())+1] = \
-                'text-align: right; font-weight: bold;'
-
-            qtd_por_tam['total'] = meta.meta_estoque
-
-            grade['headers'].append('Total')
-            grade['fields'].append('total')
-            tot_packs = meta.meta_estoque / tot_tam
-
-            meta_cores = models.MetaEstoqueCor.objects.filter(
-                meta=meta).order_by('cor')
-            meta_grade_cores = {}
-            tot_cor = 0
-            for cor in meta_cores:
-                meta_grade_cores[cor.cor] = cor.quantidade
-                tot_cor += cor.quantidade
-
-            grade['data'] = []
-            for meta_cor in meta_grade_cores:
-                if meta_grade_cores[meta_cor] != 0:
-                    linha = {
-                        'cor': meta_cor,
-                    }
-                    cor_packs = round(
-                        tot_packs / tot_cor * meta_grade_cores[meta_cor])
-                    for meta_tam in meta_grade_tamanhos:
-                        qtd_cor_tam = cor_packs * meta_grade_tamanhos[meta_tam]
-                        linha.update({
-                            meta_tam: round(qtd_cor_tam),
-                        })
-                        qtd_por_tam[meta_tam] += qtd_cor_tam
-                    linha['total'] = cor_packs * tot_tam
-                    grade['data'].append(linha)
-            grade['data'].append({
-                'cor': 'Total',
-                **qtd_por_tam,
-                '|STYLE': 'font-weight: bold;',
-            })
+            grade = grade_meta_estoque(meta)
 
             idx_meta = [idx for idx, item in enumerate(metas_list)
                         if item['modelo'] == meta.modelo][0]
