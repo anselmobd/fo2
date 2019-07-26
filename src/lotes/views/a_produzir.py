@@ -8,6 +8,7 @@ from utils.views import totalize_data
 from base.views import O2BaseGetView, O2BaseGetPostView
 
 import comercial.models
+from comercial.views.estoque import grade_meta_estoque
 import comercial.forms
 import produto.queries
 
@@ -189,3 +190,33 @@ class GradeProduzir(O2BaseGetPostView):
         self.template_name = 'lotes/grade_produzir.html'
         self.title_name = 'Grade de modelo a produzir'
         self.get_args = ['modelo']
+
+    def mount_context(self):
+        cursor = connections['so'].cursor()
+
+        modelo = self.form.cleaned_data['modelo']
+
+        metas = comercial.models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            comercial.models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        metas = metas.filter(antiga=False, modelo=modelo)
+        metas = metas.order_by('-meta_estoque')
+        if len(metas) == 0:
+            self.context.update({
+                'msg_meta_estoque': 'Modelo sem meta de estoque definida',
+            })
+            return
+        meta = metas[0]
+        if meta.meta_estoque == 0:
+            self.context.update({
+                'msg_meta_estoque': 'Modelo com meta de estoque zerada',
+            })
+            return
+
+        self.context.update({
+            'gme': grade_meta_estoque(meta),
+        })
