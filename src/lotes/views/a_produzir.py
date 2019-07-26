@@ -350,3 +350,15 @@ class GradeProduzir(O2BaseGetPostView):
         self.context.update({
             'gm': gm,
         })
+
+        g_header, g_fields, g_data, total = lotes.models.op_sortimentos(
+            cursor, op=15111, tipo='a', descr_sort=False)
+
+        if total != 0:
+            self.context.update({
+                'gop': {
+                    'headers': g_header,
+                    'fields': g_fields,
+                    'data': g_data,
+                }
+            })
