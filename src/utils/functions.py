@@ -5,7 +5,14 @@ import logging
 import inspect
 import hashlib
 
+
 fo2logger = logging.getLogger('fo2')
+
+
+def arg_def(kwargs, arg, default):
+    if arg in kwargs:
+        return kwargs[arg]
+    return default
 
 
 def inc_month(dt, months):
