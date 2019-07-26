@@ -77,11 +77,11 @@ class AProduzir(O2BaseGetView):
         })
 
         self.context.update({
-            'headers': ['Modelo', 'Meta de giro (lead)', 'Meta de estoque',
+            'headers': ['Modelo', 'Meta de estoque', 'Meta de giro (lead)',
                         'Total das metas (A)', 'Total das OPs',
                         'Carteira de pedidos', 'OPs – Pedidos (B)',
                         'A produzir (A-B)[+]', 'Excesso (A-B)[-]'],
-            'fields': ['modelo', 'meta_giro', 'meta_estoque',
+            'fields': ['modelo', 'meta_estoque', 'meta_giro',
                        'meta', 'total_op',
                        'total_ped', 'op_menos_ped',
                        'a_produzir', 'excesso'],
