@@ -651,6 +651,7 @@ def op_sortimentos(cursor, **kwargs):
     situacao = argdef('situacao', None)
     tipo_ref = argdef('tipo_ref', None)
     tipo_alt = argdef('tipo_alt', None)
+    total = argdef('total', None)
 
     filtra_op = ''
     if op is not None:
@@ -710,6 +711,12 @@ def op_sortimentos(cursor, **kwargs):
                 )
             '''
 
+    grade_args = {}
+    if total is not None:
+        grade_args = {
+            'total': total,
+        }
+
     # Grade de OP
     grade = GradeQtd(cursor)
 
@@ -717,6 +724,7 @@ def op_sortimentos(cursor, **kwargs):
     grade.col(
         id='TAMANHO',
         name='Tamanho',
+        **grade_args,
         sql=f'''
             SELECT DISTINCT
               lote.PROCONF_SUBGRUPO TAMANHO
@@ -785,6 +793,7 @@ def op_sortimentos(cursor, **kwargs):
         facade='DESCR',
         name='Cor',
         name_plural='Cores',
+        **grade_args,
         sql=sql
         )
 
