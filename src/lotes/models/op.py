@@ -711,6 +711,10 @@ def op_sortimentos(cursor, **kwargs):
                 )
             '''
 
+    filtro_especifico = ''
+    if tipo == 'a':  # Ainda não produzido / não finalizado
+        filtro_especifico = "AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))"
+
     grade_args = {}
     if total is not None:
         grade_args = {
@@ -735,6 +739,7 @@ def op_sortimentos(cursor, **kwargs):
             LEFT JOIN BASI_220 tam
               ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
             WHERE 1=1
+              {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
               {filtra_situacao} -- filtra_situacao
@@ -759,6 +764,7 @@ def op_sortimentos(cursor, **kwargs):
              AND p.GRUPO_ESTRUTURA = lote.PROCONF_GRUPO
              AND p.ITEM_ESTRUTURA = lote.PROCONF_ITEM
             WHERE 1=1
+              {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
               {filtra_situacao} -- filtra_situacao
@@ -778,6 +784,7 @@ def op_sortimentos(cursor, **kwargs):
             JOIN PCPC_020 o
               ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
             WHERE 1=1
+              {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
               {filtra_situacao} -- filtra_situacao
@@ -847,7 +854,7 @@ def op_sortimentos(cursor, **kwargs):
                 JOIN PCPC_020 o
                   ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
                 WHERE 1=1
-                  AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))
+                  {filtro_especifico} -- filtro_especifico
                   {filtra_op} -- filtra_op
                   {filtra_modelo} -- filtra_modelo
                   {filtra_situacao} -- filtra_situacao
