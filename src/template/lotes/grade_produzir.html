@@ -25,4 +25,14 @@
     {% include "layout/tbody_generic.html" with fields=gme.fields data=gme.data style=gme.style only %}
   </table>
 {% endif %}
+<h3>Grade de meta de giro (lead)</h3>
+{% if msg_meta_giro %}
+  <h4>{{ msg_meta_giro }}</h4>
+{% endif %}
+{% if gmg %}
+  <table>
+    {% include "layout/thead_generic.html" with data=gmg.headers style=gmg.style only %}
+    {% include "layout/tbody_generic.html" with fields=gmg.fields data=gmg.data style=gmg.style only %}
+  </table>
+{% endif %}
 {% endblock %}
