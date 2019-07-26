@@ -42,4 +42,13 @@
     {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
   </table>
 {% endif %}
+<h3>Grade total das OPs</h3>
+{% if gop %}
+  <table>
+    {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
+    {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
+  </table>
+{% else %}
+  <h4>Modelo sem OPs</h4>
+{% endif %}
 {% endblock %}
