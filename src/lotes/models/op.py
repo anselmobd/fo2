@@ -2,7 +2,7 @@ from django.core.cache import cache
 
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower, GradeQtd
 
-from utils.functions import make_key_cache, fo2logger
+from utils.functions import make_key_cache, fo2logger, arg_def
 
 from lotes.models import *
 from lotes.models.base import *
@@ -635,31 +635,39 @@ def op_movi_estagios(cursor, op):
     return rows_to_dict_list(cursor)
 
 
-def op_sortimento(cursor, op, **kwargs):
-    header, fields, data, total = op_sortimentos(cursor, op, 't', **kwargs)
+def op_sortimento(cursor, **kwargs):
+    header, fields, data, total = op_sortimentos(cursor, **kwargs)
     return header, fields, data
 
 
-def op_sortimentos(cursor, op, tipo, **kwargs):
-    descr_sort = True
-    if 'descr_sort' in kwargs:
-        descr_sort = kwargs['descr_sort']
+def op_sortimentos(cursor, **kwargs):
+    def argdef(arg, default):
+        return arg_def(kwargs, arg, default)
+
+    op = argdef('op', None)
+    tipo = argdef('tipo', 't')
+    descr_sort = argdef('descr_sort', True)
+
+    filtra_op = ''
+    if op is not None:
+        filtra_op = f'AND lote.ORDEM_PRODUCAO = {op}'
 
     # Grade de OP
-    grade = GradeQtd(cursor, [op])
+    grade = GradeQtd(cursor)
 
     # tamanhos
     grade.col(
         id='TAMANHO',
         name='Tamanho',
-        sql='''
+        sql=f'''
             SELECT DISTINCT
               lote.PROCONF_SUBGRUPO TAMANHO
             , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
             FROM PCPC_040 lote
             LEFT JOIN BASI_220 tam
               ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
-            WHERE lote.ORDEM_PRODUCAO = %s
+            WHERE 1=1
+              {filtra_op} -- filtra_op
             ORDER BY
               2
         '''
@@ -667,7 +675,7 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
 
     # cores
     if descr_sort:
-        sql = '''
+        sql = f'''
             SELECT
               lote.PROCONF_ITEM SORTIMENTO
             , lote.PROCONF_ITEM || ' - ' || max( p.DESCRICAO_15 ) DESCR
@@ -676,19 +684,21 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
               ON p.NIVEL_ESTRUTURA = 1
              AND p.GRUPO_ESTRUTURA = lote.PROCONF_GRUPO
              AND p.ITEM_ESTRUTURA = lote.PROCONF_ITEM
-            WHERE lote.ORDEM_PRODUCAO = %s
+            WHERE 1=1
+              {filtra_op} -- filtra_op
             GROUP BY
               lote.PROCONF_ITEM
             ORDER BY
               2
         '''
     else:
-        sql = '''
+        sql = f'''
             SELECT
               lote.PROCONF_ITEM SORTIMENTO
             , lote.PROCONF_ITEM DESCR
             FROM PCPC_040 lote
-            WHERE lote.ORDEM_PRODUCAO = %s
+            WHERE 1=1
+              {filtra_op} -- filtra_op
             GROUP BY
               lote.PROCONF_ITEM
             ORDER BY
@@ -706,7 +716,7 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
         # sortimento
         grade.value(
             id='QUANTIDADE',
-            sql='''
+            sql=f'''
                 SELECT
                   lote.PROCONF_SUBGRUPO TAMANHO
                 , lote.PROCONF_ITEM SORTIMENTO
@@ -714,7 +724,8 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
                 FROM PCPC_040 lote
                 LEFT JOIN BASI_220 tam
                   ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
-                WHERE lote.ORDEM_PRODUCAO = %s
+                WHERE 1=1
+                  {filtra_op} -- filtra_op
                   AND lote.SEQUENCIA_ESTAGIO
                       = COALESCE(
                           (
@@ -738,11 +749,66 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
             '''
             )
 
+    elif tipo == 'a':  # Ainda não produzido / não finalizado
+        grade.value(
+            id='QUANTIDADE',
+            sql=f'''
+                WITH opl AS
+                (
+                SELECT
+                  o.ORDEM_PRODUCAO
+                , max(lote.SEQ_OPERACAO) SEQ_OPERACAO
+                FROM pcpc_040 lote
+                JOIN PCPC_020 o
+                  ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+                WHERE 1=1
+                  {filtra_op} -- filtra_op
+                  -- AND (NOT (o.SITUACAO = 9))
+                  -- AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))
+                  -- AND o.REFERENCIA_PECA < 'C'
+                  -- AND NOT (
+                  --   o.REFERENCIA_PECA < 'A'
+                  --   AND (   ( o.ALTERNATIVA_PECA > 10
+                  --           AND o.ALTERNATIVA_PECA < 50 )
+                  --       OR  ( o.ALTERNATIVA_PECA > 60
+                  --           AND o.ALTERNATIVA_PECA < 100 )
+                  --       )
+                  --   )
+                  -- AND TRIM( LEADING '0' FROM
+                  --       REGEXP_REPLACE(
+                  --         o.REFERENCIA_PECA,
+                  --         '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$',
+                  --         '\\1'
+                  --       )
+                  --     ) = '617'
+                GROUP BY
+                  o.ORDEM_PRODUCAO
+                )
+                SELECT
+                  l.PROCONF_SUBGRUPO TAMANHO
+                , l.PROCONF_ITEM SORTIMENTO
+                , SUM( l.QTDE_A_PRODUZIR_PACOTE ) QUANTIDADE
+                FROM pcpc_040 l
+                JOIN opl
+                  ON opl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+                 AND opl.SEQ_OPERACAO = l.SEQ_OPERACAO
+                LEFT JOIN BASI_220 tam
+                  ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
+                GROUP BY
+                  tam.ORDEM_TAMANHO
+                , l.PROCONF_SUBGRUPO
+                , l.PROCONF_ITEM
+                ORDER BY
+                  tam.ORDEM_TAMANHO
+                , l.PROCONF_ITEM
+            '''
+            )
+
     elif tipo == 'p':  # Perda
         # sortimento
         grade.value(
             id='QUANTIDADE',
-            sql='''
+            sql=f'''
                 SELECT
                   lote.PROCONF_SUBGRUPO TAMANHO
                 , lote.PROCONF_ITEM SORTIMENTO
@@ -750,7 +816,8 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
                 FROM PCPC_040 lote
                 LEFT JOIN BASI_220 tam
                   ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
-                WHERE lote.ORDEM_PRODUCAO = %s
+                WHERE 1=1
+                  {filtra_op} -- filtra_op
                 GROUP BY
                   tam.ORDEM_TAMANHO
                 , lote.PROCONF_SUBGRUPO
@@ -765,7 +832,7 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
         # sortimento
         grade.value(
             id='QUANTIDADE',
-            sql='''
+            sql=f'''
                 SELECT
                   lote.PROCONF_SUBGRUPO TAMANHO
                 , lote.PROCONF_ITEM SORTIMENTO
@@ -773,7 +840,8 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
                 FROM PCPC_040 lote
                 LEFT JOIN BASI_220 tam
                   ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
-                WHERE lote.ORDEM_PRODUCAO = %s
+                WHERE 1=1
+                  {filtra_op} -- filtra_op
                 GROUP BY
                   tam.ORDEM_TAMANHO
                 , lote.PROCONF_SUBGRUPO
@@ -788,7 +856,7 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
         # sortimento
         grade.value(
             id='QUANTIDADE',
-            sql='''
+            sql=f'''
                 SELECT
                   lote.PROCONF_SUBGRUPO TAMANHO
                 , lote.PROCONF_ITEM SORTIMENTO
@@ -796,7 +864,8 @@ def op_sortimentos(cursor, op, tipo, **kwargs):
                 FROM PCPC_040 lote
                 LEFT JOIN BASI_220 tam
                   ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
-                WHERE lote.ORDEM_PRODUCAO = %s
+                WHERE 1=1
+                  {filtra_op} -- filtra_op
                   AND lote.SEQUENCIA_ESTAGIO
                       = COALESCE(
                           (
