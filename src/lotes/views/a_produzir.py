@@ -351,9 +351,10 @@ class GradeProduzir(O2BaseGetPostView):
             'gm': gm,
         })
 
-        g_header, g_fields, g_data, total = lotes.models.op_sortimentos(
-            cursor, tipo='a', descr_sort=False, modelo=modelo, situacao='a',
-            tipo_ref='v', tipo_alt='p', total='Total')
+        g_header, g_fields, g_data, g_style, total = \
+            lotes.models.op_sortimentos(
+                cursor, tipo='a', descr_sort=False, modelo=modelo,
+                situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
         if total != 0:
             self.context.update({
@@ -361,5 +362,6 @@ class GradeProduzir(O2BaseGetPostView):
                     'headers': g_header,
                     'fields': g_fields,
                     'data': g_data,
+                    'style': g_style,
                 }
             })
