@@ -635,12 +635,16 @@ def op_movi_estagios(cursor, op):
     return rows_to_dict_list(cursor)
 
 
-def op_sortimento(cursor, op):
-    header, fields, data, total = op_sortimentos(cursor, op, 't')
+def op_sortimento(cursor, op, **kwargs):
+    header, fields, data, total = op_sortimentos(cursor, op, 't', **kwargs)
     return header, fields, data
 
 
-def op_sortimentos(cursor, op, tipo):
+def op_sortimentos(cursor, op, tipo, **kwargs):
+    descr_sort = True
+    if 'descr_sort' in kwargs:
+        descr_sort = kwargs['descr_sort']
+
     # Grade de OP
     grade = GradeQtd(cursor, [op])
 
@@ -662,12 +666,8 @@ def op_sortimentos(cursor, op, tipo):
         )
 
     # cores
-    grade.row(
-        id='SORTIMENTO',
-        facade='DESCR',
-        name='Cor',
-        name_plural='Cores',
-        sql='''
+    if descr_sort:
+        sql = '''
             SELECT
               lote.PROCONF_ITEM SORTIMENTO
             , lote.PROCONF_ITEM || ' - ' || max( p.DESCRICAO_15 ) DESCR
@@ -682,6 +682,24 @@ def op_sortimentos(cursor, op, tipo):
             ORDER BY
               2
         '''
+    else:
+        sql = '''
+            SELECT
+              lote.PROCONF_ITEM SORTIMENTO
+            , lote.PROCONF_ITEM DESCR
+            FROM PCPC_040 lote
+            WHERE lote.ORDEM_PRODUCAO = %s
+            GROUP BY
+              lote.PROCONF_ITEM
+            ORDER BY
+              2
+        '''
+    grade.row(
+        id='SORTIMENTO',
+        facade='DESCR',
+        name='Cor',
+        name_plural='Cores',
+        sql=sql
         )
 
     if tipo == 't':  # Total a produzir
