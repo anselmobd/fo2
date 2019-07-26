@@ -143,7 +143,7 @@ def busca_op(
 
     filtro_tipo_alt = ''
     if tipo_alt == 'e':
-        filtro_tipo = '''--
+        filtro_tipo_alt = '''--
             AND o.REFERENCIA_PECA < 'A0000'
             AND (   ( o.ALTERNATIVA_PECA > 10 AND o.ALTERNATIVA_PECA < 50 )
                 OR  ( o.ALTERNATIVA_PECA > 60 AND o.ALTERNATIVA_PECA < 100 )
