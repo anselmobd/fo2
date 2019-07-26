@@ -567,7 +567,6 @@ class MetaGiro(O2BaseGetView):
                     grade['style'][max(grade['style'].keys())+1] = \
                         'text-align: right;'
 
-            meta_dict['giro']
             resto = meta_dict['giro'] % tot_tam
             if resto != 0:
                 meta_dict['giro'] = meta_dict['giro'] + tot_tam - resto
