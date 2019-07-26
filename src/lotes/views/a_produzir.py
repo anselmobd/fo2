@@ -282,6 +282,9 @@ class GradeProduzir(O2BaseGetPostView):
         cursor = connections['so'].cursor()
 
         modelo = self.form.cleaned_data['modelo']
+        self.context.update({
+            'modelo': modelo,
+        })
 
         metas = comercial.models.MetaEstoque.objects
         metas = metas.annotate(antiga=Exists(
