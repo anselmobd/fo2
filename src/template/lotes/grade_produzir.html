@@ -15,6 +15,7 @@
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
 </form>
+{% if modelo %}
 <h3>Grade de meta de estoque</h3>
 {% if msg_meta_estoque %}
   <h4>{{ msg_meta_estoque }}</h4>
@@ -50,5 +51,6 @@
   </table>
 {% else %}
   <h4>Modelo sem OPs</h4>
+{% endif %}
 {% endif %}
 {% endblock %}
