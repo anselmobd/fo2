@@ -15,11 +15,11 @@
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
 </form>
+<h3>Grade de meta de estoque</h3>
 {% if msg_meta_estoque %}
   <h4>{{ msg_meta_estoque }}</h4>
 {% endif %}
 {% if gme %}
-  <h4>Grade de meta de estoque</h4>
   <table>
     {% include "layout/thead_generic.html" with data=gme.headers style=gme.style only %}
     {% include "layout/tbody_generic.html" with fields=gme.fields data=gme.data style=gme.style only %}
