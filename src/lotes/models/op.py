@@ -649,6 +649,8 @@ def op_sortimentos(cursor, **kwargs):
     descr_sort = argdef('descr_sort', True)
     modelo = argdef('modelo', None)
     situacao = argdef('situacao', None)
+    tipo_ref = argdef('tipo_ref', None)
+    tipo_alt = argdef('tipo_alt', None)
 
     filtra_op = ''
     if op is not None:
@@ -673,6 +675,41 @@ def op_sortimentos(cursor, **kwargs):
         elif situacao == 'c':
             filtra_situacao = "AND o.SITUACAO = 9"
 
+    filtro_tipo_ref = ''
+    if tipo_ref is not None:
+        if tipo_ref == 'a':
+            filtro_tipo_ref = "AND o.REFERENCIA_PECA < 'A0000'"
+        elif tipo_ref == 'g':
+            filtro_tipo_ref = "AND o.REFERENCIA_PECA like 'A%'"
+        elif tipo_ref == 'b':
+            filtro_tipo_ref = "AND o.REFERENCIA_PECA like 'B%'"
+        elif tipo_ref == 'p':
+            filtro_tipo_ref = "AND (o.REFERENCIA_PECA like 'A%' OR " \
+                "o.REFERENCIA_PECA like 'B%')"
+        elif tipo_ref == 'v':
+            filtro_tipo_ref = "AND o.REFERENCIA_PECA < 'C0000'"
+        elif tipo_ref == 'm':
+            filtro_tipo_ref = "AND o.REFERENCIA_PECA >= 'C0000'"
+
+    filtro_tipo_alt = ''
+    if tipo_alt is not None:
+        if tipo_alt == 'e':
+            filtro_tipo_alt = '''--
+                AND o.REFERENCIA_PECA < 'A0000'
+                AND (  (o.ALTERNATIVA_PECA > 10 AND o.ALTERNATIVA_PECA < 50)
+                    OR (o.ALTERNATIVA_PECA > 60 AND o.ALTERNATIVA_PECA < 100)
+                    )
+            '''
+        elif tipo_alt == 'p':
+            filtro_tipo_alt = '''--
+                AND NOT (
+                  o.REFERENCIA_PECA < 'A0000'
+                  AND (  (o.ALTERNATIVA_PECA > 10 AND o.ALTERNATIVA_PECA < 50)
+                      OR (o.ALTERNATIVA_PECA > 60 AND o.ALTERNATIVA_PECA < 100)
+                      )
+                )
+            '''
+
     # Grade de OP
     grade = GradeQtd(cursor)
 
@@ -693,6 +730,8 @@ def op_sortimentos(cursor, **kwargs):
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
               {filtra_situacao} -- filtra_situacao
+              {filtro_tipo_ref} -- filtro_tipo_ref
+              {filtro_tipo_alt} -- filtro_tipo_alt
             ORDER BY
               2
         '''
@@ -715,6 +754,8 @@ def op_sortimentos(cursor, **kwargs):
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
               {filtra_situacao} -- filtra_situacao
+              {filtro_tipo_ref} -- filtro_tipo_ref
+              {filtro_tipo_alt} -- filtro_tipo_alt
             GROUP BY
               lote.PROCONF_ITEM
             ORDER BY
@@ -732,6 +773,8 @@ def op_sortimentos(cursor, **kwargs):
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
               {filtra_situacao} -- filtra_situacao
+              {filtro_tipo_ref} -- filtro_tipo_ref
+              {filtro_tipo_alt} -- filtro_tipo_alt
             GROUP BY
               lote.PROCONF_ITEM
             ORDER BY
@@ -795,19 +838,12 @@ def op_sortimentos(cursor, **kwargs):
                 JOIN PCPC_020 o
                   ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
                 WHERE 1=1
+                  AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))
                   {filtra_op} -- filtra_op
-                  {filtra_situacao} -- filtra_situacao
-                  -- AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))
-                  -- AND o.REFERENCIA_PECA < 'C'
-                  -- AND NOT (
-                  --   o.REFERENCIA_PECA < 'A'
-                  --   AND (   ( o.ALTERNATIVA_PECA > 10
-                  --           AND o.ALTERNATIVA_PECA < 50 )
-                  --       OR  ( o.ALTERNATIVA_PECA > 60
-                  --           AND o.ALTERNATIVA_PECA < 100 )
-                  --       )
-                  --   )
                   {filtra_modelo} -- filtra_modelo
+                  {filtra_situacao} -- filtra_situacao
+                  {filtro_tipo_ref} -- filtro_tipo_ref
+                  {filtro_tipo_alt} -- filtro_tipo_alt
                 GROUP BY
                   o.ORDEM_PRODUCAO
                 )

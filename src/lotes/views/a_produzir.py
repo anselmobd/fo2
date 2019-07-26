@@ -352,7 +352,8 @@ class GradeProduzir(O2BaseGetPostView):
         })
 
         g_header, g_fields, g_data, total = lotes.models.op_sortimentos(
-            cursor, tipo='a', descr_sort=False, modelo=modelo, situacao='a')
+            cursor, tipo='a', descr_sort=False, modelo=modelo, situacao='a',
+            tipo_ref='v', tipo_alt='p')
 
         if total != 0:
             self.context.update({
