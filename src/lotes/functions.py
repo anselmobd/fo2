@@ -11,6 +11,7 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
             ORDER BY le.SEQ_OPERACAO, le.ROWID
           ) SEQ_NEW
         , le.SEQUENCIA_ESTAGIO SEQ_OLD
+        , le.CODIGO_ESTAGIO EST
         , le.ROWID RID
         FROM pcpc_040 le
         WHERE le.PERIODO_PRODUCAO = %s
@@ -31,7 +32,11 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
     corrigido = False
     alt = ''
     sep = ''
+    ests = ''
+    sep_ests = ''
     for seq in seqs:
+        ests += '{}{}'.format(sep_ests, seq['est'])
+        sep_ests = ', '
         if seq['seq_new'] != seq['seq_old']:
             if exec:
                 cursor.execute(sql_setseq, [seq['seq_new'], seq['rid']])
@@ -39,4 +44,4 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
             sep = ', '
             corrigido = True
 
-    return corrigido, alt
+    return corrigido, alt, ests

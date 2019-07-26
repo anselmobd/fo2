@@ -764,8 +764,8 @@ class CorrigeSequenciamento(PermissionRequiredMixin, View):
 
         count_repair = 0
         for row in data:
-            ret, alt = functions.repair_sequencia_estagio(
-                    cursor, row['PERIODO'], row['OC'], exec)
+            ret, alt, ests = functions.repair_sequencia_estagio(
+                cursor, row['PERIODO'], row['OC'], exec)
             if ret:
                 if exec:
                     row['INFO'] = 'Reparado'
@@ -775,11 +775,12 @@ class CorrigeSequenciamento(PermissionRequiredMixin, View):
             else:
                 row['INFO'] = 'OK'
             row['ALT'] = alt
+            row['ESTS'] = ests
 
         self.context.update({
             'count_repair': count_repair,
-            'headers': ['Período', 'OC', 'Informação', 'Alteração'],
-            'fields': ['PERIODO', 'OC', 'INFO', 'ALT'],
+            'headers': ['Período', 'OC', 'Estágios', 'Informação', 'Alteração'],
+            'fields': ['PERIODO', 'OC', 'ESTS', 'INFO', 'ALT'],
             'data': data,
         })
 
