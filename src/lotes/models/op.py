@@ -647,10 +647,31 @@ def op_sortimentos(cursor, **kwargs):
     op = argdef('op', None)
     tipo = argdef('tipo', 't')
     descr_sort = argdef('descr_sort', True)
+    modelo = argdef('modelo', None)
+    situacao = argdef('situacao', None)
 
     filtra_op = ''
     if op is not None:
         filtra_op = f'AND lote.ORDEM_PRODUCAO = {op}'
+
+    filtra_modelo = ''
+    if modelo is not None:
+        filtra_modelo = f"""--
+            AND TRIM( LEADING '0' FROM
+                  REGEXP_REPLACE(
+                    o.REFERENCIA_PECA,
+                    '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$',
+                    '\\1'
+                  )
+                ) = '{modelo}'
+        """
+
+    filtra_situacao = ''
+    if situacao is not None:
+        if situacao == 'a':
+            filtra_situacao = "AND (NOT (o.SITUACAO = 9))"
+        elif situacao == 'c':
+            filtra_situacao = "AND o.SITUACAO = 9"
 
     # Grade de OP
     grade = GradeQtd(cursor)
@@ -664,10 +685,14 @@ def op_sortimentos(cursor, **kwargs):
               lote.PROCONF_SUBGRUPO TAMANHO
             , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
             FROM PCPC_040 lote
+            JOIN PCPC_020 o
+              ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
             LEFT JOIN BASI_220 tam
               ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
             WHERE 1=1
               {filtra_op} -- filtra_op
+              {filtra_modelo} -- filtra_modelo
+              {filtra_situacao} -- filtra_situacao
             ORDER BY
               2
         '''
@@ -680,12 +705,16 @@ def op_sortimentos(cursor, **kwargs):
               lote.PROCONF_ITEM SORTIMENTO
             , lote.PROCONF_ITEM || ' - ' || max( p.DESCRICAO_15 ) DESCR
             FROM PCPC_040 lote
+            JOIN PCPC_020 o
+              ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
             LEFT JOIN basi_010 p
               ON p.NIVEL_ESTRUTURA = 1
              AND p.GRUPO_ESTRUTURA = lote.PROCONF_GRUPO
              AND p.ITEM_ESTRUTURA = lote.PROCONF_ITEM
             WHERE 1=1
               {filtra_op} -- filtra_op
+              {filtra_modelo} -- filtra_modelo
+              {filtra_situacao} -- filtra_situacao
             GROUP BY
               lote.PROCONF_ITEM
             ORDER BY
@@ -697,8 +726,12 @@ def op_sortimentos(cursor, **kwargs):
               lote.PROCONF_ITEM SORTIMENTO
             , lote.PROCONF_ITEM DESCR
             FROM PCPC_040 lote
+            JOIN PCPC_020 o
+              ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
             WHERE 1=1
               {filtra_op} -- filtra_op
+              {filtra_modelo} -- filtra_modelo
+              {filtra_situacao} -- filtra_situacao
             GROUP BY
               lote.PROCONF_ITEM
             ORDER BY
@@ -763,7 +796,7 @@ def op_sortimentos(cursor, **kwargs):
                   ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
                 WHERE 1=1
                   {filtra_op} -- filtra_op
-                  -- AND (NOT (o.SITUACAO = 9))
+                  {filtra_situacao} -- filtra_situacao
                   -- AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))
                   -- AND o.REFERENCIA_PECA < 'C'
                   -- AND NOT (
@@ -774,13 +807,7 @@ def op_sortimentos(cursor, **kwargs):
                   --           AND o.ALTERNATIVA_PECA < 100 )
                   --       )
                   --   )
-                  -- AND TRIM( LEADING '0' FROM
-                  --       REGEXP_REPLACE(
-                  --         o.REFERENCIA_PECA,
-                  --         '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$',
-                  --         '\\1'
-                  --       )
-                  --     ) = '617'
+                  {filtra_modelo} -- filtra_modelo
                 GROUP BY
                   o.ORDEM_PRODUCAO
                 )
