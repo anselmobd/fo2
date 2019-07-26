@@ -36,7 +36,6 @@ class AProduzir(O2BaseGetView):
             )
         ))
         metas = metas.filter(antiga=False)
-        metas = metas.exclude(multiplicador=0)
         metas = metas.exclude(venda_mensal=0)
         metas = metas.values()
 
