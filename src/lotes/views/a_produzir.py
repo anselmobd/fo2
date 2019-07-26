@@ -242,5 +242,5 @@ class GradeProduzir(O2BaseGetPostView):
                         lead = 0
 
                 self.context.update({
-                    'gmg': grade_meta_giro(meta, lead),
+                    'gmg': grade_meta_giro(meta, lead, show_distrib=False),
                 })

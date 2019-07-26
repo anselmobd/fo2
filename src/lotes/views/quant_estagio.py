@@ -498,7 +498,7 @@ class LeadColecao(View):
         return render(self.request, self.template_name, self.context)
 
 
-def grade_meta_giro(meta, lead):
+def grade_meta_giro(meta, lead, show_distrib=True):
     meta_giro = round(
         meta.venda_mensal / 30 * lead)
 
@@ -516,8 +516,11 @@ def grade_meta_giro(meta, lead):
     }
     for tamanho in meta_tamanhos:
         if tamanho.quantidade != 0:
-            grade['headers'].append(
-                '{}({})'.format(tamanho.tamanho, tamanho.quantidade))
+            if show_distrib:
+                grade['headers'].append(
+                    '{}({})'.format(tamanho.tamanho, tamanho.quantidade))
+            else:
+                grade['headers'].append(tamanho.tamanho)
             grade['fields'].append(tamanho.tamanho)
             meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
             tot_tam += tamanho.quantidade
@@ -546,9 +549,14 @@ def grade_meta_giro(meta, lead):
     meta_giro = 0
     for cor in meta_cores:
         if cor.quantidade != 0:
-            linha = {
-                'cor': '{}({})'.format(cor.cor, cor.quantidade),
-            }
+            if show_distrib:
+                linha = {
+                    'cor': '{}({})'.format(cor.cor, cor.quantidade),
+                }
+            else:
+                linha = {
+                    'cor': cor.cor,
+                }
             cor_packs = round(
                 tot_packs / tot_cor * cor.quantidade)
             for meta_tam in meta_grade_tamanhos:
