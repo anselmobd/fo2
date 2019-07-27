@@ -655,19 +655,19 @@ def op_sortimentos(cursor, **kwargs):
 
     filtra_op = ''
     if op is not None:
-        filtra_op = f'AND lote.ORDEM_PRODUCAO = {op}'
+        filtra_op = 'AND lote.ORDEM_PRODUCAO = {}'.format(op)
 
     filtra_modelo = ''
     if modelo is not None:
-        filtra_modelo = f"""--
+        filtra_modelo = """--
             AND TRIM( LEADING '0' FROM
                   REGEXP_REPLACE(
                     o.REFERENCIA_PECA,
                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$',
                     '\\1'
                   )
-                ) = '{modelo}'
-        """
+                ) = '{}'
+        """.format(modelo)
 
     filtra_situacao = ''
     if situacao is not None:
@@ -729,7 +729,7 @@ def op_sortimentos(cursor, **kwargs):
         id='TAMANHO',
         name='Tamanho',
         **grade_args,
-        sql=f'''
+        sql='''
             SELECT DISTINCT
               lote.PROCONF_SUBGRUPO TAMANHO
             , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
@@ -747,12 +747,19 @@ def op_sortimentos(cursor, **kwargs):
               {filtro_tipo_alt} -- filtro_tipo_alt
             ORDER BY
               2
-        '''
+        '''.format(
+            filtro_especifico=filtro_especifico,
+            filtra_op=filtra_op,
+            filtra_modelo=filtra_modelo,
+            filtra_situacao=filtra_situacao,
+            filtro_tipo_ref=filtro_tipo_ref,
+            filtro_tipo_alt=filtro_tipo_alt,
         )
+    )
 
     # cores
     if descr_sort:
-        sql = f'''
+        sql = '''
             SELECT
               lote.PROCONF_ITEM SORTIMENTO
             , lote.PROCONF_ITEM || ' - ' || max( p.DESCRICAO_15 ) DESCR
@@ -774,9 +781,16 @@ def op_sortimentos(cursor, **kwargs):
               lote.PROCONF_ITEM
             ORDER BY
               2
-        '''
+        '''.format(
+            filtro_especifico=filtro_especifico,
+            filtra_op=filtra_op,
+            filtra_modelo=filtra_modelo,
+            filtra_situacao=filtra_situacao,
+            filtro_tipo_ref=filtro_tipo_ref,
+            filtro_tipo_alt=filtro_tipo_alt,
+        )
     else:
-        sql = f'''
+        sql = '''
             SELECT
               lote.PROCONF_ITEM SORTIMENTO
             , lote.PROCONF_ITEM DESCR
@@ -794,7 +808,14 @@ def op_sortimentos(cursor, **kwargs):
               lote.PROCONF_ITEM
             ORDER BY
               2
-        '''
+        '''.format(
+            filtro_especifico=filtro_especifico,
+            filtra_op=filtra_op,
+            filtra_modelo=filtra_modelo,
+            filtra_situacao=filtra_situacao,
+            filtro_tipo_ref=filtro_tipo_ref,
+            filtro_tipo_alt=filtro_tipo_alt,
+        )
     grade.row(
         id='SORTIMENTO',
         facade='DESCR',
@@ -808,7 +829,7 @@ def op_sortimentos(cursor, **kwargs):
         # sortimento
         grade.value(
             id='QUANTIDADE',
-            sql=f'''
+            sql='''
                 SELECT
                   lote.PROCONF_SUBGRUPO TAMANHO
                 , lote.PROCONF_ITEM SORTIMENTO
@@ -838,13 +859,15 @@ def op_sortimentos(cursor, **kwargs):
                 ORDER BY
                   tam.ORDEM_TAMANHO
                 , lote.PROCONF_ITEM
-            '''
+            '''.format(
+                filtra_op=filtra_op,
             )
+        )
 
     elif tipo == 'a':  # Ainda não produzido / não finalizado
         grade.value(
             id='QUANTIDADE',
-            sql=f'''
+            sql='''
                 WITH opl AS
                 (
                 SELECT
@@ -880,14 +903,21 @@ def op_sortimentos(cursor, **kwargs):
                 ORDER BY
                   tam.ORDEM_TAMANHO
                 , l.PROCONF_ITEM
-            '''
+            '''.format(
+                filtro_especifico=filtro_especifico,
+                filtra_op=filtra_op,
+                filtra_modelo=filtra_modelo,
+                filtra_situacao=filtra_situacao,
+                filtro_tipo_ref=filtro_tipo_ref,
+                filtro_tipo_alt=filtro_tipo_alt,
             )
+        )
 
     elif tipo == 'p':  # Perda
         # sortimento
         grade.value(
             id='QUANTIDADE',
-            sql=f'''
+            sql='''
                 SELECT
                   lote.PROCONF_SUBGRUPO TAMANHO
                 , lote.PROCONF_ITEM SORTIMENTO
@@ -904,14 +934,16 @@ def op_sortimentos(cursor, **kwargs):
                 ORDER BY
                   tam.ORDEM_TAMANHO
                 , lote.PROCONF_ITEM
-            '''
+            '''.format(
+                filtra_op=filtra_op,
             )
+        )
 
     elif tipo == 'c':  # Conserto
         # sortimento
         grade.value(
             id='QUANTIDADE',
-            sql=f'''
+            sql='''
                 SELECT
                   lote.PROCONF_SUBGRUPO TAMANHO
                 , lote.PROCONF_ITEM SORTIMENTO
@@ -928,14 +960,16 @@ def op_sortimentos(cursor, **kwargs):
                 ORDER BY
                   tam.ORDEM_TAMANHO
                 , lote.PROCONF_ITEM
-            '''
+            '''.format(
+                filtra_op=filtra_op,
             )
+        )
 
     elif tipo == 's':  # Segunda qualidade
         # sortimento
         grade.value(
             id='QUANTIDADE',
-            sql=f'''
+            sql='''
                 SELECT
                   lote.PROCONF_SUBGRUPO TAMANHO
                 , lote.PROCONF_ITEM SORTIMENTO
@@ -966,8 +1000,10 @@ def op_sortimentos(cursor, **kwargs):
                 ORDER BY
                   tam.ORDEM_TAMANHO
                 , lote.PROCONF_ITEM
-            '''
+            '''.format(
+                filtra_op=filtra_op,
             )
+        )
 
     fields = grade.table_data['fields']
     data = grade.table_data['data']
