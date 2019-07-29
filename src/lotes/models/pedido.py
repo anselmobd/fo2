@@ -126,9 +126,18 @@ def ped_nf(cursor, pedido):
     return rows_to_dict_list(cursor)
 
 
-def ped_sortimento(cursor, pedido):
+def ped_sortimento(cursor, **kwargs):
+    def argdef(arg, default):
+        return arg_def(kwargs, arg, default)
+
+    pedido = argdef('pedido', None)
+
+    filtra_pedido = ''
+    if pedido is not None:
+        filtra_pedido = 'AND i.PEDIDO_VENDA = {}'.format(pedido)
+
     # Grade de pedido
-    grade = GradeQtd(cursor, [pedido])
+    grade = GradeQtd(cursor)
 
     # tamanhos
     grade.col(
@@ -141,11 +150,14 @@ def ped_sortimento(cursor, pedido):
             FROM PEDI_110 i -- item de pedido de venda
             LEFT JOIN BASI_220 t -- tamanhos
               ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
-            WHERE i.PEDIDO_VENDA = %s
+            WHERE 1=1
+              {filtra_pedido} -- filtra_pedido
             ORDER BY
               t.ORDEM_TAMANHO
-        '''
+        '''.format(
+            filtra_pedido=filtra_pedido
         )
+    )
 
     # cores
     grade.row(
@@ -164,14 +176,17 @@ def ped_sortimento(cursor, pedido):
              AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
              AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
              AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
-            WHERE i.PEDIDO_VENDA = %s
+            WHERE 1=1
+              {filtra_pedido} -- filtra_pedido
             GROUP BY
               i.CD_IT_PE_GRUPO
             , i.CD_IT_PE_ITEM
             ORDER BY
               2
-        '''
+        '''.format(
+            filtra_pedido=filtra_pedido
         )
+    )
 
     # sortimento
     grade.value(
@@ -182,9 +197,12 @@ def ped_sortimento(cursor, pedido):
             , i.CD_IT_PE_SUBGRUPO TAMANHO
             , i.QTDE_PEDIDA QUANTIDADE
             FROM PEDI_110 i -- item de pedido de venda
-            WHERE i.PEDIDO_VENDA = %s
-        '''
+            WHERE 1=1
+              {filtra_pedido} -- filtra_pedido
+        '''.format(
+            filtra_pedido=filtra_pedido
         )
+    )
 
     return (grade.table_data['header'], grade.table_data['fields'],
             grade.table_data['data'])
