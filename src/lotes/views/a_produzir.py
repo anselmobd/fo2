@@ -395,8 +395,12 @@ class GradeProduzir(O2BaseGetPostView):
                 'gped': gped,
             })
 
-        gopp = subtrai_grades(gop, gped)
+        if total_op != 0 or total_ped != 0:
+            if total_ped == 0:
+                gopp = gop
+            else:
+                gopp = subtrai_grades(gop, gped)
 
-        self.context.update({
-            'gopp': gopp,
-        })
+            self.context.update({
+                'gopp': gopp,
+            })
