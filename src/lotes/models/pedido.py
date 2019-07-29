@@ -131,6 +131,8 @@ def ped_sortimento(cursor, **kwargs):
         return arg_def(kwargs, arg, default)
 
     pedido = argdef('pedido', None)
+    tipo_sort = argdef('tipo_sort', 'rc')
+    descr_sort = argdef('descr_sort', True)
     modelo = argdef('modelo', None)
     periodo = argdef('periodo', None)
 
