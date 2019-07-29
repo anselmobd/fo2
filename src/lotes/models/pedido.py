@@ -131,10 +131,32 @@ def ped_sortimento(cursor, **kwargs):
         return arg_def(kwargs, arg, default)
 
     pedido = argdef('pedido', None)
+    modelo = argdef('modelo', None)
+    periodo = argdef('periodo', None)
 
     filtra_pedido = ''
     if pedido is not None:
         filtra_pedido = 'AND i.PEDIDO_VENDA = {}'.format(pedido)
+
+    filtro_modelo = ''
+    if modelo is not None:
+        filtro_modelo = '''--
+            AND TRIM(LEADING '0' FROM
+                     (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
+                                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                     ))) = '{}' '''.format(modelo)
+
+    filtra_periodo = ''
+    if periodo is not None:
+        periodo_list = periodo.split(':')
+        if periodo_list[0] != '':
+            filtra_periodo += '''
+                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {}
+            '''.format(periodo_list[0])
+        if periodo_list[1] != '':
+            filtra_periodo += '''
+                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
+            '''.format(periodo_list[1])
 
     # Grade de pedido
     grade = GradeQtd(cursor)
