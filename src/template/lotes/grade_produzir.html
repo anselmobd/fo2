@@ -69,5 +69,12 @@
     {% include "layout/tbody_generic.html" with fields=gopp.fields data=gopp.data style=gopp.style only %}
   </table>
 {% endif %}
+{% if gap %}
+  <h3>A produzir (A-B)</h3>
+  <table>
+    {% include "layout/thead_generic.html" with data=gap.headers style=gap.style only %}
+    {% include "layout/tbody_generic.html" with fields=gap.fields data=gap.data style=gap.style only %}
+  </table>
+{% endif %}
 {% endif %}
 {% endblock %}

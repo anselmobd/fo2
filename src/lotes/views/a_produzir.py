@@ -345,6 +345,7 @@ class GradeProduzir(O2BaseGetPostView):
         if not calcula_grade:
             return
 
+        gm = None
         if meta.meta_estoque != 0 or meta.meta_giro != 0:
             if meta.meta_estoque == 0:
                 gm = gmg
@@ -395,6 +396,7 @@ class GradeProduzir(O2BaseGetPostView):
                 'gped': gped,
             })
 
+        gopp = None
         if total_op != 0 or total_ped != 0:
             if total_ped == 0:
                 gopp = gop
@@ -403,4 +405,16 @@ class GradeProduzir(O2BaseGetPostView):
 
             self.context.update({
                 'gopp': gopp,
+            })
+
+        if gopp is not None or gm is not None:
+            if gopp is None:
+                gap = gm
+            elif gm is None:
+                gap = gopp
+            else:
+                gap = subtrai_grades(gm, gopp)
+
+            self.context.update({
+                'gap': gap,
             })
