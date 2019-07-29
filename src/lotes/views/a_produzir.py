@@ -185,8 +185,9 @@ def pedido_lead_modelo(request, modelo):
 
 def get_celula(grd, tam, cor):
     result = 0
+    sortimento_field = grd['fields'][0]
     for linha in grd['data'][:-1]:
-        if linha['cor'] == cor:
+        if linha[sortimento_field] == cor:
             if tam in linha:
                 result = linha[tam]
             else:
@@ -216,19 +217,21 @@ def opera_grades(g1, g2, operacao):
             if s_tam['tamanho_ref'] == tam
         ])
 
+    sortimento_field1 = g1['fields'][0]
+    sortimento_field2 = g2['fields'][0]
     cores1 = set([
-        linha['cor']
+        linha[sortimento_field1]
         for linha in g1['data'][:-1]
     ])
     cores2 = set([
-        linha['cor']
+        linha[sortimento_field2]
         for linha in g2['data'][:-1]
     ])
     cores = list(cores1.union(cores2))
     cores = sorted(cores)
 
     grade = {}
-    grade['fields'] = ['cor', *tamanhos, 'total']
+    grade['fields'] = [sortimento_field1, *tamanhos, 'total']
     grade['headers'] = ['Cor/Tamanho', *tamanhos, 'Total']
     grade['style'] = {
         i+2: 'text-align: right;'
@@ -247,7 +250,7 @@ def opera_grades(g1, g2, operacao):
 
     for cor in cores:
         linha = linha_zerada.copy()
-        linha['cor'] = cor
+        linha[sortimento_field1] = cor
         total_linha = 0
         for tam in tamanhos:
             valor1 = get_celula(g1, tam, cor)
@@ -263,7 +266,7 @@ def opera_grades(g1, g2, operacao):
         totais['total'] += total_linha
         grade['data'].append(linha)
 
-    totais['cor'] = 'Total'
+    totais[sortimento_field1] = 'Total'
     totais['|STYLE'] = 'font-weight: bold;'
     grade['data'].append(totais)
     return grade
