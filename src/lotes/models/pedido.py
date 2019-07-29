@@ -183,10 +183,12 @@ def ped_sortimento(cursor, **kwargs):
               ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
+              {filtro_modelo} -- filtro_modelo
             ORDER BY
               t.ORDEM_TAMANHO
         '''.format(
-            filtra_pedido=filtra_pedido
+            filtra_pedido=filtra_pedido,
+            filtro_modelo=filtro_modelo,
         )
     )
 
@@ -218,6 +220,7 @@ def ped_sortimento(cursor, **kwargs):
     sql += '''
         WHERE 1=1
           {filtra_pedido} -- filtra_pedido
+          {filtro_modelo} -- filtro_modelo
         GROUP BY
           {sort_group} -- sort_group
         ORDER BY
@@ -225,6 +228,7 @@ def ped_sortimento(cursor, **kwargs):
         '''
     sql = sql.format(
         filtra_pedido=filtra_pedido,
+        filtro_modelo=filtro_modelo,
         sort_expression=sort_expression,
         sort_group=sort_group,
     )
@@ -247,11 +251,13 @@ def ped_sortimento(cursor, **kwargs):
             FROM PEDI_110 i -- item de pedido de venda
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
+              {filtro_modelo} -- filtro_modelo
             GROUP BY
               {sort_group} -- sort_group
             , i.CD_IT_PE_SUBGRUPO
         '''.format(
             filtra_pedido=filtra_pedido,
+            filtro_modelo=filtro_modelo,
             sort_expression=sort_expression,
             sort_group=sort_group,
         )
