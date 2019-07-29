@@ -135,6 +135,7 @@ def ped_sortimento(cursor, **kwargs):
     descr_sort = argdef('descr_sort', True)
     modelo = argdef('modelo', None)
     periodo = argdef('periodo', None)
+    cancelado = argdef('cancelado', 't')  # default todos os pedidos
 
     filtra_pedido = ''
     if pedido is not None:
@@ -167,6 +168,16 @@ def ped_sortimento(cursor, **kwargs):
                 AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
             '''.format(periodo_list[1])
 
+    filtro_cancelado = ''
+    if cancelado in ['n', 'a']:  # não cancelado ou ativo
+        filtro_cancelado = '''--
+            AND ped.STATUS_PEDIDO <> 5 -- não cancelado
+        '''
+    elif cancelado in ['c', 'i']:  # cancelado ou inativo
+        filtro_cancelado = '''--
+            AND ped.STATUS_PEDIDO = 5 -- cancelado
+        '''
+
     # Grade de pedido
     grade = GradeQtd(cursor)
 
@@ -179,16 +190,20 @@ def ped_sortimento(cursor, **kwargs):
               i.CD_IT_PE_SUBGRUPO TAMANHO
             , t.ORDEM_TAMANHO
             FROM PEDI_110 i -- item de pedido de venda
+            JOIN PEDI_100 ped -- pedido de venda
+              ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
             LEFT JOIN BASI_220 t -- tamanhos
               ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
               {filtro_modelo} -- filtro_modelo
+              {filtro_cancelado} -- filtro_cancelado
             ORDER BY
               t.ORDEM_TAMANHO
         '''.format(
             filtra_pedido=filtra_pedido,
             filtro_modelo=filtro_modelo,
+            filtro_cancelado=filtro_cancelado,
         )
     )
 
@@ -208,6 +223,8 @@ def ped_sortimento(cursor, **kwargs):
         '''
     sql += '''
         FROM PEDI_110 i -- item de pedido de venda
+        JOIN PEDI_100 ped -- pedido de venda
+          ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
     '''
     if descr_sort:
         sql += '''
@@ -221,6 +238,7 @@ def ped_sortimento(cursor, **kwargs):
         WHERE 1=1
           {filtra_pedido} -- filtra_pedido
           {filtro_modelo} -- filtro_modelo
+          {filtro_cancelado} -- filtro_cancelado
         GROUP BY
           {sort_group} -- sort_group
         ORDER BY
@@ -229,6 +247,7 @@ def ped_sortimento(cursor, **kwargs):
     sql = sql.format(
         filtra_pedido=filtra_pedido,
         filtro_modelo=filtro_modelo,
+        filtro_cancelado=filtro_cancelado,
         sort_expression=sort_expression,
         sort_group=sort_group,
     )
@@ -249,15 +268,19 @@ def ped_sortimento(cursor, **kwargs):
             , i.CD_IT_PE_SUBGRUPO TAMANHO
             , sum(i.QTDE_PEDIDA) QUANTIDADE
             FROM PEDI_110 i -- item de pedido de venda
+            JOIN PEDI_100 ped -- pedido de venda
+              ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
               {filtro_modelo} -- filtro_modelo
+              {filtro_cancelado} -- filtro_cancelado
             GROUP BY
               {sort_group} -- sort_group
             , i.CD_IT_PE_SUBGRUPO
         '''.format(
             filtra_pedido=filtra_pedido,
             filtro_modelo=filtro_modelo,
+            filtro_cancelado=filtro_cancelado,
             sort_expression=sort_expression,
             sort_group=sort_group,
         )
