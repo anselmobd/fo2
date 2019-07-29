@@ -182,32 +182,33 @@ def ped_sortimento(cursor, **kwargs):
     )
 
     # cores
+    sql = '''
+        SELECT
+          i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM SORTIMENTO
+        , i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM || ' - ' ||
+          max( rtc.DESCRICAO_15 ) DESCR
+        FROM PEDI_110 i -- item de pedido de venda
+        JOIN BASI_010 rtc -- item (ref+tam+cor)
+          on rtc.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
+         AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
+         AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
+         AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
+        WHERE 1=1
+          {filtra_pedido} -- filtra_pedido
+        GROUP BY
+          i.CD_IT_PE_GRUPO
+        , i.CD_IT_PE_ITEM
+        ORDER BY
+          2
+    '''.format(
+        filtra_pedido=filtra_pedido
+    )
     grade.row(
         id='SORTIMENTO',
         facade='DESCR',
         name='Produto-Cor',
         name_plural='Produtos-Cores',
-        sql='''
-            SELECT
-              i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM SORTIMENTO
-            , i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM || ' - ' ||
-              max( rtc.DESCRICAO_15 ) DESCR
-            FROM PEDI_110 i -- item de pedido de venda
-            JOIN BASI_010 rtc -- item (ref+tam+cor)
-              on rtc.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
-             AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
-             AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
-             AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
-            WHERE 1=1
-              {filtra_pedido} -- filtra_pedido
-            GROUP BY
-              i.CD_IT_PE_GRUPO
-            , i.CD_IT_PE_ITEM
-            ORDER BY
-              2
-        '''.format(
-            filtra_pedido=filtra_pedido
-        )
+        sql=sql
     )
 
     # sortimento
