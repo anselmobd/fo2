@@ -359,13 +359,14 @@ class GradeProduzir(O2BaseGetPostView):
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
         if total_op != 0:
+            gop = {
+                'headers': g_header,
+                'fields': g_fields,
+                'data': g_data,
+                'style': g_style,
+            }
             self.context.update({
-                'gop': {
-                    'headers': g_header,
-                    'fields': g_fields,
-                    'data': g_data,
-                    'style': g_style,
-                }
+                'gop': gop,
             })
 
         if lead == 0:
@@ -380,11 +381,12 @@ class GradeProduzir(O2BaseGetPostView):
                 periodo=':{}'.format(periodo))
 
         if total_ped != 0:
+            gped = {
+                'headers': gp_header,
+                'fields': gp_fields,
+                'data': gp_data,
+                'style': gp_style,
+            }
             self.context.update({
-                'gped': {
-                    'headers': gp_header,
-                    'fields': gp_fields,
-                    'data': gp_data,
-                    'style': gp_style,
-                }
+                'gped': gped,
             })
