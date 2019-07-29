@@ -300,45 +300,44 @@ class GradeProduzir(O2BaseGetPostView):
                 'msg_meta_estoque': 'Modelo sem meta de estoque definida',
                 'msg_meta_giro': 'Modelo sem meta de giro definida',
             })
-            meta = None
+            return
         else:
             meta = metas[0]
 
         calcula_grade = False
-        if meta is not None:
-            if meta.meta_estoque == 0:
-                self.context.update({
-                    'msg_meta_estoque': 'Modelo com meta de estoque zerada',
-                })
-            else:
-                gme = grade_meta_estoque(meta)
-                self.context.update({
-                    'gme': gme,
-                })
-                calcula_grade = True
+        if meta.meta_estoque == 0:
+            self.context.update({
+                'msg_meta_estoque': 'Modelo com meta de estoque zerada',
+            })
+        else:
+            gme = grade_meta_estoque(meta)
+            self.context.update({
+                'gme': gme,
+            })
+            calcula_grade = True
 
-            if meta.meta_giro == 0:
-                self.context.update({
-                    'msg_meta_giro': 'Modelo com meta de giro zerada',
-                })
+        if meta.meta_giro == 0:
+            self.context.update({
+                'msg_meta_giro': 'Modelo com meta de giro zerada',
+            })
+        else:
+            colecao = produto.queries.colecao_de_modelo(
+                cursor, meta.modelo)
+            if colecao == -1:
+                lead = 0
             else:
-                colecao = produto.queries.colecao_de_modelo(
-                    cursor, meta.modelo)
-                if colecao == -1:
+                try:
+                    lc = lotes.models.LeadColecao.objects.get(
+                        colecao=colecao)
+                    lead = lc.lead
+                except lotes.models.LeadColecao.DoesNotExist:
                     lead = 0
-                else:
-                    try:
-                        lc = lotes.models.LeadColecao.objects.get(
-                            colecao=colecao)
-                        lead = lc.lead
-                    except lotes.models.LeadColecao.DoesNotExist:
-                        lead = 0
 
-                gmg = grade_meta_giro(meta, lead, show_distrib=False)
-                self.context.update({
-                    'gmg': gmg,
-                })
-                calcula_grade = True
+            gmg = grade_meta_giro(meta, lead, show_distrib=False)
+            self.context.update({
+                'gmg': gmg,
+            })
+            calcula_grade = True
 
         if not calcula_grade:
             return
