@@ -187,14 +187,28 @@ def ped_sortimento(cursor, **kwargs):
     sql = '''
         SELECT
           i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM SORTIMENTO
-        , i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM || ' - ' ||
-          max( rtc.DESCRICAO_15 ) DESCR
+    '''
+    if descr_sort:
+        sql += '''
+            , i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM || ' - ' ||
+              max( rtc.DESCRICAO_15 ) DESCR
+        '''
+    else:
+        sql += '''
+            , i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM DESCR
+        '''
+    sql += '''
         FROM PEDI_110 i -- item de pedido de venda
-        JOIN BASI_010 rtc -- item (ref+tam+cor)
-          on rtc.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
-         AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
-         AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
-         AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
+    '''
+    if descr_sort:
+        sql += '''
+            JOIN BASI_010 rtc -- item (ref+tam+cor)
+              on rtc.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
+             AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
+             AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
+             AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
+        '''
+    sql += '''
         WHERE 1=1
           {filtra_pedido} -- filtra_pedido
         GROUP BY
