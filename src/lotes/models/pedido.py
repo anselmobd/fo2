@@ -136,6 +136,7 @@ def ped_sortimento(cursor, **kwargs):
     modelo = argdef('modelo', None)
     periodo = argdef('periodo', None)
     cancelado = argdef('cancelado', 't')  # default todos os pedidos
+    faturado = argdef('faturado', 't')  # default todos os pedidos
 
     filtra_pedido = ''
     if pedido is not None:
@@ -178,6 +179,16 @@ def ped_sortimento(cursor, **kwargs):
             AND ped.STATUS_PEDIDO = 5 -- cancelado
         '''
 
+    filtro_faturado = ''
+    if faturado == 'f':  # faturado
+        filtro_faturado = '''--
+            AND f.NUM_NOTA_FISCAL IS NOT NULL -- faturado
+        '''
+    elif faturado == 'n':  # não faturado
+        filtro_faturado = '''--
+            AND f.NUM_NOTA_FISCAL IS NULL -- não faturado
+        '''
+
     # Grade de pedido
     grade = GradeQtd(cursor)
 
@@ -192,18 +203,22 @@ def ped_sortimento(cursor, **kwargs):
             FROM PEDI_110 i -- item de pedido de venda
             JOIN PEDI_100 ped -- pedido de venda
               ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
+            LEFT JOIN FATU_050 f -- fatura
+              ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
             LEFT JOIN BASI_220 t -- tamanhos
               ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
               {filtro_modelo} -- filtro_modelo
               {filtro_cancelado} -- filtro_cancelado
+              {filtro_faturado} -- filtro_faturado
             ORDER BY
               t.ORDEM_TAMANHO
         '''.format(
             filtra_pedido=filtra_pedido,
             filtro_modelo=filtro_modelo,
             filtro_cancelado=filtro_cancelado,
+            filtro_faturado=filtro_faturado,
         )
     )
 
@@ -225,6 +240,8 @@ def ped_sortimento(cursor, **kwargs):
         FROM PEDI_110 i -- item de pedido de venda
         JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
+        LEFT JOIN FATU_050 f -- fatura
+          ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
     '''
     if descr_sort:
         sql += '''
@@ -239,6 +256,7 @@ def ped_sortimento(cursor, **kwargs):
           {filtra_pedido} -- filtra_pedido
           {filtro_modelo} -- filtro_modelo
           {filtro_cancelado} -- filtro_cancelado
+          {filtro_faturado} -- filtro_faturado
         GROUP BY
           {sort_group} -- sort_group
         ORDER BY
@@ -248,6 +266,7 @@ def ped_sortimento(cursor, **kwargs):
         filtra_pedido=filtra_pedido,
         filtro_modelo=filtro_modelo,
         filtro_cancelado=filtro_cancelado,
+        filtro_faturado=filtro_faturado,
         sort_expression=sort_expression,
         sort_group=sort_group,
     )
@@ -270,10 +289,13 @@ def ped_sortimento(cursor, **kwargs):
             FROM PEDI_110 i -- item de pedido de venda
             JOIN PEDI_100 ped -- pedido de venda
               ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
+            LEFT JOIN FATU_050 f -- fatura
+              ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
               {filtro_modelo} -- filtro_modelo
               {filtro_cancelado} -- filtro_cancelado
+              {filtro_faturado} -- filtro_faturado
             GROUP BY
               {sort_group} -- sort_group
             , i.CD_IT_PE_SUBGRUPO
@@ -281,6 +303,7 @@ def ped_sortimento(cursor, **kwargs):
             filtra_pedido=filtra_pedido,
             filtro_modelo=filtro_modelo,
             filtro_cancelado=filtro_cancelado,
+            filtro_faturado=filtro_faturado,
             sort_expression=sort_expression,
             sort_group=sort_group,
         )
