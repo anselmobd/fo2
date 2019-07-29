@@ -393,3 +393,9 @@ class GradeProduzir(O2BaseGetPostView):
             self.context.update({
                 'gped': gped,
             })
+
+        gopp = subtrai_grades(gop, gped)
+
+        self.context.update({
+            'gopp': gopp,
+        })
