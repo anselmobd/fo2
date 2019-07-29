@@ -353,12 +353,12 @@ class GradeProduzir(O2BaseGetPostView):
             'gm': gm,
         })
 
-        g_header, g_fields, g_data, g_style, total = \
+        g_header, g_fields, g_data, g_style, total_op = \
             lotes.models.op_sortimentos(
                 cursor, tipo='a', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
-        if total != 0:
+        if total_op != 0:
             self.context.update({
                 'gop': {
                     'headers': g_header,
@@ -373,13 +373,13 @@ class GradeProduzir(O2BaseGetPostView):
         else:
             periodo = lead + 7
 
-        gp_header, gp_fields, gp_data, gp_style, total = \
+        gp_header, gp_fields, gp_data, gp_style, total_ped = \
             lotes.models.ped_sortimento(
                 cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
                 cancelado='n', faturado='n', total='Total',
                 periodo=':{}'.format(periodo))
 
-        if total != 0:
+        if total_ped != 0:
             self.context.update({
                 'gped': {
                     'headers': gp_header,
