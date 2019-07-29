@@ -345,16 +345,17 @@ class GradeProduzir(O2BaseGetPostView):
         if not calcula_grade:
             return
 
-        if meta.meta_estoque == 0:
-            gm = gmg
-        elif meta.meta_giro == 0:
-            gm = gme
-        else:
-            gm = soma_grades(gme, gmg)
+        if meta.meta_estoque != 0 or meta.meta_giro != 0:
+            if meta.meta_estoque == 0:
+                gm = gmg
+            elif meta.meta_giro == 0:
+                gm = gme
+            else:
+                gm = soma_grades(gme, gmg)
 
-        self.context.update({
-            'gm': gm,
-        })
+            self.context.update({
+                'gm': gm,
+            })
 
         g_header, g_fields, g_data, g_style, total_op = \
             lotes.models.op_sortimentos(
