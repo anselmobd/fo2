@@ -222,6 +222,7 @@ def ped_sortimento(cursor, **kwargs):
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
               {filtro_modelo} -- filtro_modelo
+              {filtra_periodo} -- filtra_periodo
               {filtro_cancelado} -- filtro_cancelado
               {filtro_faturado} -- filtro_faturado
             ORDER BY
@@ -229,6 +230,7 @@ def ped_sortimento(cursor, **kwargs):
         '''.format(
             filtra_pedido=filtra_pedido,
             filtro_modelo=filtro_modelo,
+            filtra_periodo=filtra_periodo,
             filtro_cancelado=filtro_cancelado,
             filtro_faturado=filtro_faturado,
         )
@@ -267,6 +269,7 @@ def ped_sortimento(cursor, **kwargs):
         WHERE 1=1
           {filtra_pedido} -- filtra_pedido
           {filtro_modelo} -- filtro_modelo
+          {filtra_periodo} -- filtra_periodo
           {filtro_cancelado} -- filtro_cancelado
           {filtro_faturado} -- filtro_faturado
         GROUP BY
@@ -277,6 +280,7 @@ def ped_sortimento(cursor, **kwargs):
     sql = sql.format(
         filtra_pedido=filtra_pedido,
         filtro_modelo=filtro_modelo,
+        filtra_periodo=filtra_periodo,
         filtro_cancelado=filtro_cancelado,
         filtro_faturado=filtro_faturado,
         sort_expression=sort_expression,
@@ -307,6 +311,7 @@ def ped_sortimento(cursor, **kwargs):
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
               {filtro_modelo} -- filtro_modelo
+              {filtra_periodo} -- filtra_periodo
               {filtro_cancelado} -- filtro_cancelado
               {filtro_faturado} -- filtro_faturado
             GROUP BY
@@ -315,6 +320,7 @@ def ped_sortimento(cursor, **kwargs):
         '''.format(
             filtra_pedido=filtra_pedido,
             filtro_modelo=filtro_modelo,
+            filtra_periodo=filtra_periodo,
             filtro_cancelado=filtro_cancelado,
             filtro_faturado=filtro_faturado,
             sort_expression=sort_expression,
@@ -322,8 +328,6 @@ def ped_sortimento(cursor, **kwargs):
         )
     )
 
-    # return (grade.table_data['header'], grade.table_data['fields'],
-    #         grade.table_data['data'])
     fields = grade.table_data['fields']
     data = grade.table_data['data']
     if total is None:
