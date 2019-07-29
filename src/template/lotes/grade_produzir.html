@@ -37,8 +37,8 @@
     {% include "layout/tbody_generic.html" with fields=gmg.fields data=gmg.data style=gmg.style only %}
   </table>
 {% endif %}
-<h3>Total das metas (A)</h3>
 {% if gm %}
+  <h3>Total das metas (A)</h3>
   <table>
     {% include "layout/thead_generic.html" with data=gm.headers style=gm.style only %}
     {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
@@ -62,8 +62,8 @@
 {% else %}
   <h4>Modelo sem pedidos</h4>
 {% endif %}
-<h3>OPs – Pedidos (B)</h3>
 {% if gopp %}
+  <h3>OPs – Pedidos (B)</h3>
   <table>
     {% include "layout/thead_generic.html" with data=gopp.headers style=gopp.style only %}
     {% include "layout/tbody_generic.html" with fields=gopp.fields data=gopp.data style=gopp.style only %}
