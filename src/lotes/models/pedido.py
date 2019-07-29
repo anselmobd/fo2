@@ -145,9 +145,13 @@ def ped_sortimento(cursor, **kwargs):
     if tipo_sort == 'rc':
         sort_expression = "i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM"
         sort_group = "i.CD_IT_PE_GRUPO, i.CD_IT_PE_ITEM"
+        sort_name = 'Produto-Cor'
+        sort_name_plural = 'Produtos-Cores'
     else:  # if tipo_sort == 'c':
         sort_expression = "i.CD_IT_PE_ITEM"
         sort_group = "i.CD_IT_PE_ITEM"
+        sort_name = 'Cor'
+        sort_name_plural = 'Cores'
 
     filtro_modelo = ''
     if modelo is not None:
@@ -273,8 +277,8 @@ def ped_sortimento(cursor, **kwargs):
     grade.row(
         id='SORTIMENTO',
         facade='DESCR',
-        name='Produto-Cor',
-        name_plural='Produtos-Cores',
+        name=sort_name,
+        name_plural=sort_name_plural,
         sql=sql
     )
 
