@@ -367,3 +367,16 @@ class GradeProduzir(O2BaseGetPostView):
                     'style': g_style,
                 }
             })
+
+        gp_header, gp_fields, gp_data = lotes.models.ped_sortimento(
+            cursor, descr_sort=False, tipo_sort='c',
+            modelo='156', cancelado='n', faturado='n')
+
+        self.context.update({
+            'gped': {
+                'headers': gp_header,
+                'fields': gp_fields,
+                'data': gp_data,
+                # 'style': g_style,
+            }
+        })
