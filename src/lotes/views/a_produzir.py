@@ -368,10 +368,16 @@ class GradeProduzir(O2BaseGetPostView):
                 }
             })
 
+        if lead == 0:
+            periodo = ''
+        else:
+            periodo = lead + 7
+
         gp_header, gp_fields, gp_data, gp_style, total = \
             lotes.models.ped_sortimento(
                 cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
-                cancelado='n', faturado='n', total='Total')
+                cancelado='n', faturado='n', total='Total',
+                periodo=':{}'.format(periodo))
 
         if total != 0:
             self.context.update({
