@@ -52,5 +52,14 @@
 {% else %}
   <h4>Modelo sem OPs</h4>
 {% endif %}
+<h3>Total dos pedidos</h3>
+{% if gped %}
+  <table>
+    {% include "layout/thead_generic.html" with data=gped.headers style=gped.style only %}
+    {% include "layout/tbody_generic.html" with fields=gped.fields data=gped.data style=gped.style only %}
+  </table>
+{% else %}
+  <h4>Modelo sem pedidos</h4>
+{% endif %}
 {% endif %}
 {% endblock %}
