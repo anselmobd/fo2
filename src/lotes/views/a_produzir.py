@@ -316,23 +316,23 @@ class GradeProduzir(O2BaseGetPostView):
             })
             calcula_grade = True
 
+        colecao = produto.queries.colecao_de_modelo(
+            cursor, modelo)
+        if colecao == -1:
+            lead = 0
+        else:
+            try:
+                lc = lotes.models.LeadColecao.objects.get(
+                    colecao=colecao)
+                lead = lc.lead
+            except lotes.models.LeadColecao.DoesNotExist:
+                lead = 0
+
         if meta.meta_giro == 0:
             self.context.update({
                 'msg_meta_giro': 'Modelo com meta de giro zerada',
             })
         else:
-            colecao = produto.queries.colecao_de_modelo(
-                cursor, meta.modelo)
-            if colecao == -1:
-                lead = 0
-            else:
-                try:
-                    lc = lotes.models.LeadColecao.objects.get(
-                        colecao=colecao)
-                    lead = lc.lead
-                except lotes.models.LeadColecao.DoesNotExist:
-                    lead = 0
-
             gmg = grade_meta_giro(meta, lead, show_distrib=False)
             self.context.update({
                 'gmg': gmg,
