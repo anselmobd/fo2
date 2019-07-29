@@ -103,7 +103,8 @@ class Pedido(View):
             })
 
             # Grade
-            g_header, g_fields, g_data = models.ped_sortimento(cursor, pedido)
+            g_header, g_fields, g_data = models.ped_sortimento(
+                cursor, pedido=pedido)
             if len(g_data) != 0:
                 g_style = {}
                 for i in range(1, len(g_fields)):
