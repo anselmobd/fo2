@@ -137,6 +137,7 @@ def ped_sortimento(cursor, **kwargs):
     periodo = argdef('periodo', None)
     cancelado = argdef('cancelado', 't')  # default todos os pedidos
     faturado = argdef('faturado', 't')  # default todos os pedidos
+    total = argdef('total', None)
 
     filtra_pedido = ''
     if pedido is not None:
@@ -193,6 +194,12 @@ def ped_sortimento(cursor, **kwargs):
             AND f.NUM_NOTA_FISCAL IS NULL -- não faturado
         '''
 
+    grade_args = {}
+    if total is not None:
+        grade_args = {
+            'total': total,
+        }
+
     # Grade de pedido
     grade = GradeQtd(cursor)
 
@@ -200,6 +207,7 @@ def ped_sortimento(cursor, **kwargs):
     grade.col(
         id='TAMANHO',
         name='Tamanho',
+        **grade_args,
         sql='''
             SELECT DISTINCT
               i.CD_IT_PE_SUBGRUPO TAMANHO
@@ -279,6 +287,7 @@ def ped_sortimento(cursor, **kwargs):
         facade='DESCR',
         name=sort_name,
         name_plural=sort_name_plural,
+        **grade_args,
         sql=sql
     )
 
@@ -313,8 +322,34 @@ def ped_sortimento(cursor, **kwargs):
         )
     )
 
-    return (grade.table_data['header'], grade.table_data['fields'],
-            grade.table_data['data'])
+    # return (grade.table_data['header'], grade.table_data['fields'],
+    #         grade.table_data['data'])
+    fields = grade.table_data['fields']
+    data = grade.table_data['data']
+    if total is None:
+        result = (
+            grade.table_data['header'],
+            fields,
+            data,
+            grade.total,
+        )
+    else:
+        style = {}
+        right_style = 'text-align: right;'
+        bold_style = 'font-weight: bold;'
+        for i in range(2, len(fields)):
+            style[i] = right_style
+        style[len(fields)] = right_style + bold_style
+        data[-1]['|STYLE'] = bold_style
+
+        result = (
+            grade.table_data['header'],
+            fields,
+            data,
+            style,
+            grade.total,
+        )
+    return result
 
 
 def ped_expedicao(
