@@ -758,64 +758,50 @@ def op_sortimentos(cursor, **kwargs):
     )
 
     # cores
+    sql = '''
+        SELECT
+          lote.PROCONF_ITEM SORTIMENTO
+    '''
     if descr_sort:
-        sql = '''
-            SELECT
-              lote.PROCONF_ITEM SORTIMENTO
+        sql += '''
             , lote.PROCONF_ITEM || ' - ' || max( p.DESCRICAO_15 ) DESCR
-            FROM PCPC_040 lote
-            JOIN PCPC_020 o
-              ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+        '''
+    else:
+        sql += '''
+            , lote.PROCONF_ITEM DESCR
+        '''
+    sql += '''
+        FROM PCPC_040 lote
+        JOIN PCPC_020 o
+          ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+    '''
+    if descr_sort:
+        sql += '''
             LEFT JOIN basi_010 p
               ON p.NIVEL_ESTRUTURA = 1
              AND p.GRUPO_ESTRUTURA = lote.PROCONF_GRUPO
              AND p.ITEM_ESTRUTURA = lote.PROCONF_ITEM
-            WHERE 1=1
-              {filtro_especifico} -- filtro_especifico
-              {filtra_op} -- filtra_op
-              {filtra_modelo} -- filtra_modelo
-              {filtra_situacao} -- filtra_situacao
-              {filtro_tipo_ref} -- filtro_tipo_ref
-              {filtro_tipo_alt} -- filtro_tipo_alt
-            GROUP BY
-              lote.PROCONF_ITEM
-            ORDER BY
-              2
-        '''.format(
-            filtro_especifico=filtro_especifico,
-            filtra_op=filtra_op,
-            filtra_modelo=filtra_modelo,
-            filtra_situacao=filtra_situacao,
-            filtro_tipo_ref=filtro_tipo_ref,
-            filtro_tipo_alt=filtro_tipo_alt,
-        )
-    else:
-        sql = '''
-            SELECT
-              lote.PROCONF_ITEM SORTIMENTO
-            , lote.PROCONF_ITEM DESCR
-            FROM PCPC_040 lote
-            JOIN PCPC_020 o
-              ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
-            WHERE 1=1
-              {filtro_especifico} -- filtro_especifico
-              {filtra_op} -- filtra_op
-              {filtra_modelo} -- filtra_modelo
-              {filtra_situacao} -- filtra_situacao
-              {filtro_tipo_ref} -- filtro_tipo_ref
-              {filtro_tipo_alt} -- filtro_tipo_alt
-            GROUP BY
-              lote.PROCONF_ITEM
-            ORDER BY
-              2
-        '''.format(
-            filtro_especifico=filtro_especifico,
-            filtra_op=filtra_op,
-            filtra_modelo=filtra_modelo,
-            filtra_situacao=filtra_situacao,
-            filtro_tipo_ref=filtro_tipo_ref,
-            filtro_tipo_alt=filtro_tipo_alt,
-        )
+        '''
+    sql += '''
+        WHERE 1=1
+          {filtro_especifico} -- filtro_especifico
+          {filtra_op} -- filtra_op
+          {filtra_modelo} -- filtra_modelo
+          {filtra_situacao} -- filtra_situacao
+          {filtro_tipo_ref} -- filtro_tipo_ref
+          {filtro_tipo_alt} -- filtro_tipo_alt
+        GROUP BY
+          lote.PROCONF_ITEM
+        ORDER BY
+          2
+    '''.format(
+        filtro_especifico=filtro_especifico,
+        filtra_op=filtra_op,
+        filtra_modelo=filtra_modelo,
+        filtra_situacao=filtra_situacao,
+        filtro_tipo_ref=filtro_tipo_ref,
+        filtro_tipo_alt=filtro_tipo_alt,
+    )
     grade.row(
         id='SORTIMENTO',
         facade='DESCR',
