@@ -140,6 +140,13 @@ def ped_sortimento(cursor, **kwargs):
     if pedido is not None:
         filtra_pedido = 'AND i.PEDIDO_VENDA = {}'.format(pedido)
 
+    if tipo_sort == 'rc':
+        sort_expression = "i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM"
+        sort_group = "i.CD_IT_PE_GRUPO, i.CD_IT_PE_ITEM"
+    else:  # if tipo_sort == 'c':
+        sort_expression = "i.CD_IT_PE_ITEM"
+        sort_group = "i.CD_IT_PE_ITEM"
+
     filtro_modelo = ''
     if modelo is not None:
         filtro_modelo = '''--
@@ -186,16 +193,16 @@ def ped_sortimento(cursor, **kwargs):
     # cores
     sql = '''
         SELECT
-          i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM SORTIMENTO
+          {sort_expression} SORTIMENTO
     '''
     if descr_sort:
         sql += '''
-            , i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM || ' - ' ||
+            , {sort_expression} || ' - ' ||
               max( rtc.DESCRICAO_15 ) DESCR
         '''
     else:
         sql += '''
-            , i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM DESCR
+            , {sort_expression} DESCR
         '''
     sql += '''
         FROM PEDI_110 i -- item de pedido de venda
@@ -212,12 +219,14 @@ def ped_sortimento(cursor, **kwargs):
         WHERE 1=1
           {filtra_pedido} -- filtra_pedido
         GROUP BY
-          i.CD_IT_PE_GRUPO
-        , i.CD_IT_PE_ITEM
+          {sort_group} -- sort_group
         ORDER BY
           2
-    '''.format(
-        filtra_pedido=filtra_pedido
+        '''
+    sql = sql.format(
+        filtra_pedido=filtra_pedido,
+        sort_expression=sort_expression,
+        sort_group=sort_group,
     )
     grade.row(
         id='SORTIMENTO',
@@ -232,14 +241,19 @@ def ped_sortimento(cursor, **kwargs):
         id='QUANTIDADE',
         sql='''
             SELECT
-              i.CD_IT_PE_GRUPO || ' - ' || i.CD_IT_PE_ITEM SORTIMENTO
+              {sort_expression} SORTIMENTO
             , i.CD_IT_PE_SUBGRUPO TAMANHO
-            , i.QTDE_PEDIDA QUANTIDADE
+            , sum(i.QTDE_PEDIDA) QUANTIDADE
             FROM PEDI_110 i -- item de pedido de venda
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
+            GROUP BY
+              {sort_group} -- sort_group
+            , i.CD_IT_PE_SUBGRUPO
         '''.format(
-            filtra_pedido=filtra_pedido
+            filtra_pedido=filtra_pedido,
+            sort_expression=sort_expression,
+            sort_group=sort_group,
         )
     )
 
