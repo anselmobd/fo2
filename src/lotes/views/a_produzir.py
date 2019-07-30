@@ -422,14 +422,21 @@ class GradeProduzir(O2BaseGetPostView):
                 'gopp': gopp,
             })
 
+        gresult = None
         if gopp is not None or gm is not None:
             if gopp is None:
-                gap = gm
+                gresult = gm
             elif gm is None:
-                gap = gopp
+                gresult = gopp
             else:
-                gap = subtrai_grades(gm, gopp)
+                gresult = subtrai_grades(gm, gopp)
 
+        if gresult is not None:
+            gap = opera_grade(gresult, lambda x: x if x > 0 else 0)
             self.context.update({
                 'gap': gap,
+            })
+            gex = opera_grade(gresult, lambda x: x if x < 0 else 0)
+            self.context.update({
+                'gex': gex,
             })
