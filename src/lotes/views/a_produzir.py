@@ -436,7 +436,7 @@ class GradeProduzir(O2BaseGetPostView):
             self.context.update({
                 'gap': gap,
             })
-            gex = opera_grade(gresult, lambda x: x if x < 0 else 0)
+            gex = opera_grade(gresult, lambda x: -x if x < 0 else 0)
             self.context.update({
                 'gex': gex,
             })
