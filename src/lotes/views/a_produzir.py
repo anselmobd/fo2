@@ -1,4 +1,5 @@
 from pprint import pprint
+import copy
 
 from django.db import connections
 from django.db.models import Exists, OuterRef
@@ -269,6 +270,20 @@ def opera_grades(g1, g2, operacao):
     totais[sortimento_field1] = 'Total'
     totais['|STYLE'] = 'font-weight: bold;'
     grade['data'].append(totais)
+    return grade
+
+
+def opera_grade(grd, func):
+    grade = copy.deepcopy(grd)
+    lin_tot = grade['data'][-1]
+    col_tot = grade['fields'][-1]
+    for linha in grade['data'][:-1]:
+        for col in grade['fields'][1:-1]:
+            ori = linha[col]
+            linha[col] = func(linha[col])
+            lin_tot[col] += (linha[col] - ori)
+            linha[col_tot] += (linha[col] - ori)
+            lin_tot[col_tot] += (linha[col] - ori)
     return grade
 
 
