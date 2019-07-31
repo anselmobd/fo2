@@ -1328,6 +1328,12 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 '-when'
             )
 
+        for row in solicit_qtds_inat:
+            row['lote__lote|LINK'] = reverse(
+                'producao:posicao__get',
+                args=[row['lote__lote']])
+            row['lote__lote|TARGET'] = '_BLANK'
+
         context.update({
             'inat_headers': ['Endereço', 'OP', 'Lote',
                              'Referência', 'Cor', 'Tamanho',
