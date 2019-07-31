@@ -192,7 +192,9 @@ def busca_op(
           end TIPO_REF
         , CASE
           WHEN o.ORDEM_PRINCIPAL <> 0
-            OR ofi.ORDEM_PRODUCAO IS NOT NULL
+            OR LISTAGG(ofi.ORDEM_PRODUCAO, ', ')
+              WITHIN GROUP (ORDER BY ofi.ORDEM_PRODUCAO)
+                IS NOT NULL
             OR ome.ORDEM_PRODUCAO IS NOT NULL
             OR ose.ORDEM_PRODUCAO IS NOT NULL
           THEN 'Relacionada'
@@ -200,10 +202,14 @@ def busca_op(
           END TIPO_OP
         , CASE
           WHEN o.ORDEM_PRINCIPAL <> 0 THEN 'Filha de'
-          WHEN ofi.ORDEM_PRODUCAO IS NOT NULL THEN 'Mãe de'
+          WHEN LISTAGG(ofi.ORDEM_PRODUCAO, ', ')
+            WITHIN GROUP (ORDER BY ofi.ORDEM_PRODUCAO)
+              IS NOT NULL THEN 'Mãe de'
           ELSE 'Avulsa'
           END TIPO_FM_OP
-        , coalesce( ofi.ORDEM_PRODUCAO, o.ORDEM_PRINCIPAL ) OP_REL
+        , coalesce( LISTAGG(ofi.ORDEM_PRODUCAO, ', ')
+            WITHIN GROUP (ORDER BY ofi.ORDEM_PRODUCAO)
+              , CAST(o.ORDEM_PRINCIPAL AS varchar2(8)) ) OP_REL
         , o.SITUACAO ||
           CASE
           WHEN o.SITUACAO = 2 THEN '-Ordem conf. gerada'
@@ -326,6 +332,32 @@ def busca_op(
           {filtro_tipo_alt} -- filtro_tipo_alt
           {filtra_situacao} -- filtra_situacao
           {filtra_posicao} -- filtra_posicao
+        GROUP BY
+          o.ORDEM_PRODUCAO
+        , o.REFERENCIA_PECA
+        , o.ORDEM_PRINCIPAL
+        , ome.ORDEM_PRODUCAO
+        , ose.ORDEM_PRODUCAO
+        , o.SITUACAO
+        , o.COD_CANCELAMENTO
+        , c.DESCRICAO
+        , o.ALTERNATIVA_PECA
+        , o.ROTEIRO_PECA
+        , o.REFERENCIA_PECA
+        , o.DATA_PROGRAMACAO
+        , o.DATA_ENTRADA_CORTE
+        , o.PERIODO_PRODUCAO
+        , p.DATA_INI_PERIODO
+        , p.DATA_FIM_PERIODO
+        , o.DEPOSITO_ENTRADA
+        , o.DEPOSITO_ENTRADA
+        , d.DESCRICAO
+        , o.PEDIDO_VENDA
+        , ped.COD_PED_CLIENTE
+        , r.NUMERO_MOLDE
+        , r.DESCR_REFERENCIA
+        , o.OBSERVACAO
+        , o.OBSERVACAO2
         ORDER BY
            o.ORDEM_PRODUCAO DESC
     '''.format(
@@ -340,6 +372,7 @@ def busca_op(
         filtra_situacao=filtra_situacao,
         filtra_posicao=filtra_posicao,
     )
+    print(sql)
     cursor.execute(sql)
 
     cached_result = rows_to_dict_list(cursor)
