@@ -225,14 +225,9 @@ class Posicao(View):
         desreserva_lote = False
         solicit_id = None
         if len(slq) != 0:
-            user = request_user(self.request)
-            if user:
-                if has_permission(self.request, 'lotes.change_solicitalote'):
-                    solicit_recs = models.SolicitaLote.objects.filter(
-                        usuario=user, ativa=True)
-                    if len(solicit_recs) == 1:
-                        desreserva_lote = True
-                        solicit_id = solicit_recs[0].id
+            if has_permission(self.request, 'lotes.change_solicitalote'):
+                desreserva_lote = True
+                solicit_id = slq[0]['solicitacao_id']
 
         for row in slq:
             row['LINK'] = reverse(
