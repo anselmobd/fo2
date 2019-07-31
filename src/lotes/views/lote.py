@@ -7,6 +7,8 @@ from django.views import View
 
 from fo2.template import group_rowspan
 
+from geral.functions import request_user, has_permission
+
 from lotes.forms import LoteForm
 import lotes.models as models
 
@@ -15,6 +17,7 @@ class Posicao(View):
     Form_class = LoteForm
     template_name = 'lotes/posicao.html'
     title_name = 'Posição do lote'
+    request = {}
 
     def mount_context(self, cursor, periodo, ordem_confeccao, lote):
         context = {}
@@ -218,6 +221,19 @@ class Posicao(View):
             'solicitacao_id', 'solicitacao__codigo', 'solicitacao__descricao',
             'solicitacao__usuario__username', 'create_at', 'qtd')
         slq_link = ('solicitacao__codigo')
+
+        desreserva_lote = False
+        solicit_id = None
+        if len(slq) != 0:
+            user = request_user(self.request)
+            if user:
+                if has_permission(self.request, 'lotes.change_solicitalote'):
+                    solicit_recs = models.SolicitaLote.objects.filter(
+                        usuario=user, ativa=True)
+                    if len(solicit_recs) == 1:
+                        desreserva_lote = True
+                        solicit_id = solicit_recs[0].id
+
         for row in slq:
             row['LINK'] = reverse(
                 'cd:solicitacao_detalhe', args=[row['solicitacao_id']])
@@ -230,6 +246,8 @@ class Posicao(View):
                 'solicitacao__usuario__username', 'create_at', 'qtd'),
             'slq_data': slq,
             'slq_link': slq_link,
+            'desreserva_lote': desreserva_lote,
+            'solicit_id': solicit_id,
         })
 
         return context
@@ -244,6 +262,7 @@ class Posicao(View):
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'lote' in kwargs:

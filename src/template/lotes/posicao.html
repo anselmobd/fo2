@@ -81,6 +81,10 @@
   </table>
   {% if slq_data %}
     <h3>Solicitações</h3>
+    <div class="text-align:right;">
+      <a href="{% url 'cd:solicitacao_detalhe__get3' solicit_id 'dl' lote %}" target="_blank" onclick="if(confirm('Confirma cancelamento?')){return true}else{return false};"
+        >Cancela solicitação de toda quantidade disponível no lote <span id="booom" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></a>
+    </div>
     <table>
       {% include "layout/html_thead.html" with data=slq_headers only %}
       {% include "layout/html_tbody_link.html" with fields=slq_fields data=slq_data link=slq_link only %}
