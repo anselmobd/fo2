@@ -1355,7 +1355,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             if row['qtdsum'] == row['lote__qtd_produzir']:
                 row['inteira_parcial'] = 'Lote inteiro'
             else:
-                lote['inteira_parcial'] = 'Parcial'
+                row['inteira_parcial'] = 'Parcial'
             row['lote__lote|LINK'] = reverse(
                 'producao:posicao__get',
                 args=[row['lote__lote']])
