@@ -13,6 +13,9 @@
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% else %}
+  {% if acao_mensagem %}
+    <h4>{{ acao_mensagem }}</h4>
+  {% endif %}
   <div class="row">
     <div class="col-md-6">
       <a href="{% url 'cd:solicitacoes' %}">Voltar para Solicitações</a>
