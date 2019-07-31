@@ -357,12 +357,30 @@ class BuscaOP(View):
             })
             return context
 
+        safe = []
         for row in data:
             row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
             if row['OP_REL'] == '0':
                 row['OP_REL'] = '-'
             else:
-                row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
+                # row['OP_REL|SAVE'] = True
+                if 'OP_REL' not in safe:
+                    safe.append('OP_REL')
+                oprel_html = ''
+                oprel_sep = ''
+                for oprel in row['OP_REL'].split(','):
+                    oprel = oprel.strip()
+                    oprel_html += oprel_sep + '''
+                        <a href="{link}">{op}
+                        <span class="glyphicon glyphicon-link"
+                        aria-hidden="true"></span></a>
+                    '''.format(
+                        link=reverse(
+                            'producao:op__get', args=[oprel]),
+                        op=oprel
+                    )
+                    oprel_sep = '&nbsp;'
+                row['OP_REL'] = oprel_html
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
             if row['DT_CORTE'] is None:
@@ -391,6 +409,7 @@ class BuscaOP(View):
                        'DEPOSITO_CODIGO', 'PERIODO',
                        'DT_DIGITACAO', 'DT_CORTE', 'OP_REL'),
             'data': data,
+            'safe': safe,
         })
 
         return context
