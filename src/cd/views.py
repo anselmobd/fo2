@@ -1419,6 +1419,13 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
 
         user = request_user(request)
 
+        if acao is not None:
+            if not has_permission(request, 'lotes.change_solicitalote'):
+                context.update({
+                    'erro': 'Usuário não tem direito de alterar solicitações.'
+                })
+                return render(request, self.template_name, context)
+
         if acao == 'd' and slq_id is not None:
             try:
                 solicit_qtds = lotes.models.SolicitaLoteQtd.objects.get(
