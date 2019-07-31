@@ -1448,6 +1448,22 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             except lotes.models.SolicitaLoteQtd.DoesNotExist:
                 pass
 
+        # desreserva lote em todas as solicitações
+        if acao == 'dl' and slq_id is not None:
+            lote = slq_id
+            try:
+                solicit_qtds = lotes.models.SolicitaLoteQtd.objects.filter(
+                    lote__lote=lote)
+                solicit_qtds.delete()
+                context.update({
+                    'acao_mensagem':
+                        'Lote {} cacelado em todas as solicitações.'.format(
+                            lote
+                        )
+                })
+            except lotes.models.SolicitaLoteQtd.DoesNotExist:
+                pass
+
         # desreserva endereçados
         if acao == 'de' and solicit_id is not None:
             try:
