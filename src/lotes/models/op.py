@@ -372,7 +372,6 @@ def busca_op(
         filtra_situacao=filtra_situacao,
         filtra_posicao=filtra_posicao,
     )
-    print(sql)
     cursor.execute(sql)
 
     cached_result = rows_to_dict_list(cursor)
