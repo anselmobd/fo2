@@ -1292,6 +1292,10 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 ><span class="glyphicon glyphicon-remove"
                 aria-hidden="true"></span></a>
             '''.format(link=link)
+            row['lote__lote|LINK'] = reverse(
+                'producao:posicao__get',
+                args=[row['lote__lote']])
+            row['lote__lote|TARGET'] = '_BLANK'
         link = reverse(
             'cd:solicitacao_detalhe__get2',
             args=[solicitacao.id, 'l'])
@@ -1347,11 +1351,15 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'lote__tamanho', 'lote__lote'
         )
 
-        for lote in por_endereco:
-            if lote['qtdsum'] == lote['lote__qtd_produzir']:
-                lote['inteira_parcial'] = 'Lote inteiro'
+        for row in por_endereco:
+            if row['qtdsum'] == row['lote__qtd_produzir']:
+                row['inteira_parcial'] = 'Lote inteiro'
             else:
                 lote['inteira_parcial'] = 'Parcial'
+            row['lote__lote|LINK'] = reverse(
+                'producao:posicao__get',
+                args=[row['lote__lote']])
+            row['lote__lote|TARGET'] = '_BLANK'
 
         context.update({
             'e_headers': ['Endereço', 'OP', 'Lote',
