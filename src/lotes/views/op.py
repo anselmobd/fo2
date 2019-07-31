@@ -359,7 +359,7 @@ class BuscaOP(View):
 
         for row in data:
             row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
-            if row['OP_REL'] == 0:
+            if row['OP_REL'] == '0':
                 row['OP_REL'] = '-'
             else:
                 row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
