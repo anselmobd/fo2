@@ -1,5 +1,6 @@
 from pprint import pprint
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+
 
 from django.views import View
 from django.shortcuts import render
@@ -157,7 +158,7 @@ class Rotinas(O2BaseGetView):
                                 'data|TARGET': '_BLANK',
                                 'data|LINK': reverse(
                                     'manutencao:imprimir',
-                                    args=[rotina.id, maquina.id, 1234])
+                                    args=[rotina.id, maquina.id, data])
                             })
                             # print('executar data', data)
 
@@ -174,7 +175,7 @@ class Imprimir(O2BaseGetView):
     def __init__(self, *args, **kwargs):
         super(Imprimir, self).__init__(*args, **kwargs)
         self.template_name = 'manutencao/imprimir.html'
-        self.get_args = ['roteiro', 'maquina', 'data']
+        self.get_args = ['rotina', 'maquina', 'data']
         self.get_args2contect = True
 
     def mount_context(self):
@@ -189,15 +190,31 @@ class Imprimir(O2BaseGetView):
         if len(utm) == 0:
             return
 
+        dia = datetime.strptime(self.kwargs['data'], '%Y-%m-%d').date()
+
         mq = models.Maquina.objects.filter(tipo_maquina__in=utm.values(
             'tipo_maquina__id'), id=self.kwargs['maquina'])
         if len(mq) != 1:
             return
+        data_m = list(mq.values(
+            'tipo_maquina',
+            'nome',
+            'slug',
+            'descricao',
+            'data_inicio',
+        ))[0]
 
         rot = models.Rotina.objects.filter(tipo_maquina__in=utm.values(
             'tipo_maquina__id'), id=self.kwargs['rotina'])
         if len(rot) != 1:
             return
+        data_r = list(rot.values(
+            'tipo_maquina',
+            'tipo_maquina__nome',
+            'frequencia',
+            'frequencia__nome',
+            'nome',
+        ))[0]
 
         ativ = models.RotinaPasso.objects
         ativ = ativ.filter(rotina__in=rot)
@@ -216,5 +233,9 @@ class Imprimir(O2BaseGetView):
         ))
 
         self.context.update({
+            'data_m': data_m,
+            'data_r': data_r,
             'data': data,
+            'dia': dia,
         })
+        pprint(self.context)

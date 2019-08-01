@@ -1,25 +1,101 @@
 {% extends 'layout/layout.html' %}
+{% load static %}
 
 {% block title.content %}Imprime roteiro de manutenção {% endblock title.content %}
+
+{% block intranetheader %}{% endblock intranetheader %}
+
+{% block divheader %}{% endblock divheader %}
 
 {% block stylesheet %}
 <style>
 table {
-  width:100%;
-  table-layout: fixed;
-  overflow-wrap: break-word;
+  /* border-collapse: collapse; */
+  width: 100%;
+}
+thead, .thead {
+    font-weight: bold;
+}
+th, td {
+  text-align: left;
+  padding: 2px;
+}
+td {
+  border: black;
+  border-style: solid;
+  border-width: thin;
+}
+table:not(.layout) tbody tr:hover {
+  background-color: #DDD;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
 {% endblock %}
 
 {% block content %}
 {%if data%}
-  <table >
-  {% for row in data %}
-    <tr>
-      <td>{{row.atividade__descricao}}</td>
-    </tr>
-  {% endfor %}
+  <img class="center" src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
+  <table>
+    <thead>
+      <tr>
+        <td>Tipo</td>
+        <td>Máquina</td>
+        <td>Descrição</td>
+        <td>Frequência</td>
+        <td>Data</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{data_r.tipo_maquina__nome}}</td>
+        <td>{{data_m.nome}}</td>
+        <td>{{data_m.descricao}}</td>
+        <td>{{data_r.frequencia__nome}}</td>
+        <td>{{dia}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <thead>
+      <tr>
+        <td>#</td>
+        <td>Atividade</td>
+        <td>Confimidade</td>
+        <td width="25%">Ação corretiva</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in data %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{row.atividade__descricao}}</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table>
+    <tbody>
+      <tr class="thead">
+        <td width="25%">Nome do técnico</td>
+        <td>Observação</td>
+      </tr>
+      <tr>
+        <td>{{user.first_name}}</td>
+        <td rowspan="3">&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="thead">Rúbrica</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </tbody>
   </table>
 {% endif %}
 {% endblock %}
