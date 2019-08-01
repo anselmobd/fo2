@@ -92,18 +92,29 @@
     </thead>
     <tbody>
       {% for row in data %}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          {%if row.metricas%}
-            <td>{{row.atividade__descricao}}</td>
-            <td style="text-align: right;">{{row.metricas.0.descricao}}</td>
-            <td style="width: 5em;">&nbsp;</td>
-          {%else%}
+        {%if row.metricas%}
+          {% for metr in row.metricas %}
+            <tr>
+              {%if forloop.counter == 1%}
+                <td rowspan="{{row.metricas|length}}">{{row.ordem}}</td>
+                <td rowspan="{{row.metricas|length}}">{{row.atividade__descricao}}</td>
+              {%endif%}
+              <td style="text-align: right;">{{metr.descricao}}</td>
+              <td style="width: 5em;">&nbsp;</td>
+              {%if forloop.counter == 1%}
+                <td rowspan="{{row.metricas|length}}">&nbsp;</td>
+                <td rowspan="{{row.metricas|length}}">&nbsp;</td>
+              {%endif%}
+            </tr>
+          {% endfor %}
+        {%else%}
+          <tr>
+            <td>{{forloop.counter}}</td>
             <td colspan="3">{{row.atividade__descricao}}</td>
-          {%endif%}
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+        {%endif%}
       {% endfor %}
     </tbody>
   </table>

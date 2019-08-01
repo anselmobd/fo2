@@ -219,7 +219,10 @@ class Imprimir(O2BaseGetView):
             'tem_medidas',
         ))
 
+        ordem = 1
         for row in data:
+            row['ordem'] = ordem
+            ordem += 1
             metricas = models.AtividadeMetrica.objects.filter(
                 atividade__id=row['atividade__id']
             ).order_by('ordem').values()
