@@ -154,6 +154,7 @@ class Rotinas(O2BaseGetView):
                                 'maquina': maquina,
                                 'rotina': rotina,
                                 'data': data,
+                                'data|TARGET': '_BLANK',
                                 'data|LINK': reverse(
                                     'manutencao:imprimir',
                                     args=[rotina.id, maquina.id, 1234])
