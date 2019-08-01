@@ -232,10 +232,16 @@ class Imprimir(O2BaseGetView):
             'tem_medidas',
         ))
 
+        for row in data:
+            metricas = models.AtividadeMetrica.objects.filter(
+                atividade__id=row['atividade__id']
+            ).order_by('ordem').values()
+            row['metricas'] = metricas
+
         self.context.update({
             'data_m': data_m,
             'data_r': data_r,
             'data': data,
             'dia': dia,
+            'now': datetime.now(),
         })
-        pprint(self.context)
