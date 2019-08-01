@@ -10,6 +10,9 @@ urlpatterns = [
 
     url(r'^estagio/$', views.estagio, name='estagio'),
 
+    url(r'^periodo_confeccao/$',
+        views.periodo_confeccao, name='periodo_confeccao'),
+
     url(r'^painel/(?P<painel>[^/]*)/?$',
         views.PainelView.as_view(), name='painel'),
 
