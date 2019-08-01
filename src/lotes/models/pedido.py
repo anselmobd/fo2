@@ -198,6 +198,7 @@ def ped_sortimento(cursor, **kwargs):
     if total is not None:
         grade_args = {
             'total': total,
+            'forca_total': True,
         }
 
     # Grade de pedido
