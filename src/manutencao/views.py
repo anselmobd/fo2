@@ -74,8 +74,7 @@ class Rotinas(O2BaseGetView):
                 'msg_erro': 'Nenhuma rotina cadastrada para o usuário atual',
             })
             return
-        # pprint(rot.values())
-        # pprint(mq.values())
+
         domingo = date.today()-timedelta(days=date.today().weekday()+1)
         tamanho_periodo = timedelta(days=7)
         dia1 = timedelta(days=1)
@@ -97,7 +96,6 @@ class Rotinas(O2BaseGetView):
             }
             meses.append(mes)
             dtini = dtini + tamanho_periodo
-        # print(meses)
 
         def unidade_tempo2dias(unid):
             if unid == 's':
@@ -114,25 +112,16 @@ class Rotinas(O2BaseGetView):
 
         tem_rotina = False
         for mes in meses:
-            # pprint(mes)
             for maquina in mq:
-                # print('==== maquina', maquina)
                 diasini = (mes['ini'] - maquina.data_inicio).days
-                # print('diasini', diasini)
                 diasfim = (mes['fim'] - maquina.data_inicio).days
-                # print('diasfim', diasfim)
                 for rotina in rot:
-                    # print('== rotina', rotina)
                     dias_periodo = unidade_tempo2dias(
                         rotina.frequencia.unidade_tempo.codigo
                         ) * rotina.frequencia.qtd_tempo
-                    # print('dias_periodo', dias_periodo)
                     periodos_ini = diasini // dias_periodo
-                    # print('periodos_ini', periodos_ini)
                     modulo_ini = diasini % dias_periodo
-                    # print('modulo_ini', modulo_ini)
                     periodos_fim = diasfim // dias_periodo
-                    # print('periodos_fim', periodos_fim)
                     executa = False
                     if modulo_ini == 0 and periodos_ini > 0:
                         executa = True
@@ -144,7 +133,6 @@ class Rotinas(O2BaseGetView):
                         data = maquina.data_inicio + timedelta(
                             days=periodos_fim*dias_periodo)
                     if executa:
-                        # print('busca data', data)
                         tem_rotina = True
                         busca = [
                             m for m in mes['r_data']
@@ -160,7 +148,6 @@ class Rotinas(O2BaseGetView):
                                     'manutencao:imprimir',
                                     args=[rotina.id, maquina.id, data])
                             })
-                            # print('executar data', data)
 
         if tem_rotina:
             for mes in meses:
