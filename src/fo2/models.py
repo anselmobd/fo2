@@ -132,12 +132,14 @@ class GradeQtd(object):
             self.name = kwargs.get('name', '')
             self.name_plural = kwargs.get('name_plural', self.name+'s')
             self.total = kwargs.get('total', '')
+            self.forca_total = kwargs.get('forca_total', False)
             super(GradeQtd.DataDim, self).__init__(cursor, args, sql)
 
         def execute(self, sql):
             data_dim = super(GradeQtd.DataDim, self).execute(sql)
             self.niveis = len(data_dim)
-            if self.total == '' or self.niveis == 1:
+            if self.total == '' or \
+                    (self.niveis == 1 and not self.forca_total):
                 self.idx_total = -1
             else:
                 self.idx_total = len(data_dim)
