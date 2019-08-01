@@ -84,6 +84,34 @@ def estagio(request):
     return render(request, 'geral/tabela_geral.html', context)
 
 
+def periodo_confeccao(request):
+    cursor = connections['so'].cursor()
+    sql = '''
+        SELECT
+          p.PERIODO_PRODUCAO PERIODO
+        , p.DATA_INI_PERIODO INI
+        , p.DATA_FIM_PERIODO FIM
+        FROM PCPC_010 p
+        WHERE p.AREA_PERIODO = 1 -- confecção
+        ORDER BY
+          p.PERIODO_PRODUCAO
+    '''
+    cursor.execute(sql)
+    data = rows_to_dict_list(cursor)
+
+    for row in data:
+        row['INI'] = row['INI'].date()
+        row['FIM'] = row['FIM'].date()
+
+    context = {
+        'titulo': 'Períodos de confecção',
+        'headers': ('Período', 'Data de início', 'Data de fim'),
+        'fields': ('PERIODO', 'INI', 'FIM'),
+        'data': data,
+    }
+    return render(request, 'geral/tabela_geral.html', context)
+
+
 class PainelView(View):
 
     def get(self, request, *args, **kwargs):
