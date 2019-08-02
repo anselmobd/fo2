@@ -99,7 +99,7 @@ def ficha_cliente(cnpj):
 
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
-        modelo=None, order_qtd=True):
+        modelo=None, order_qtd=True, ultimos_dias=None):
 
     key_cache = make_key_cache()
 
@@ -160,6 +160,18 @@ def get_vendas(
             pre_filtra_periodo += \
                 "  AND nf.DATA_EMISSAO < TO_DATE('{}', 'yyyy-mm-dd')".format(
                     fim_periodo.strftime('%Y-%m-%d'))
+
+    filtra_ultimos_dias = ''
+    pre_filtra_ultimos_dias = ''
+    if ultimos_dias is not None:
+        filtra_ultimos_dias = \
+            "  AND v.dt >= ""TO_DATE('{}', 'yyyy-mm-dd') - {} + 1"
+        filtra_ultimos_dias = filtra_ultimos_dias.format(
+            hoje.strftime('%Y-%m-%d'), ultimos_dias)
+        pre_filtra_ultimos_dias = \
+            "  AND nf.DATA_EMISSAO >= TO_DATE('{}', 'yyyy-mm-dd') - {} + 1"
+        pre_filtra_ultimos_dias = pre_filtra_ultimos_dias.format(
+            hoje.strftime('%Y-%m-%d'), ultimos_dias)
 
     select_por = ''
     group_por = ''
@@ -232,6 +244,7 @@ def get_vendas(
           {pre_filtra_modelo} -- pre_filtra_modelo
           {pre_filtra_ref} -- pre_filtra_ref
           {pre_filtra_periodo} -- pre_filtra_periodo
+          {pre_filtra_ultimos_dias} -- pre_filtra_ultimos_dias
         )
         SELECT
           sum(v.qtd) qtd
@@ -245,7 +258,7 @@ def get_vendas(
           {filtra_cliente} -- filtra_cliente
           {filtra_modelo} -- filtra_modelo
           {filtra_ref} -- filtra_ref
-          {filtra_periodo} -- filtra_periodo
+          {filtra_ultimos_dias} -- filtra_ultimos_dias
         GROUP BY
           1
           {group_por} -- group_por
@@ -256,12 +269,14 @@ def get_vendas(
         pre_filtra_modelo=pre_filtra_modelo,
         pre_filtra_ref=pre_filtra_ref,
         pre_filtra_periodo=pre_filtra_periodo,
+        pre_filtra_ultimos_dias=pre_filtra_ultimos_dias,
         select_por=select_por,
         filtra_col=filtra_col,
         filtra_cliente=filtra_cliente,
         filtra_modelo=filtra_modelo,
         filtra_ref=filtra_ref,
         filtra_periodo=filtra_periodo,
+        filtra_ultimos_dias=filtra_ultimos_dias,
         group_por=group_por,
         order=order,
     )
