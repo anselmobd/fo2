@@ -832,6 +832,8 @@ class VerificaVenda(O2BaseGetView):
 
         u_tot, u_pass, u_today = dias_uteis_mes()
         u_pass = u_pass + u_today
+        if u_pass == 0:
+            u_pass = 1
 
         for row in data_periodo:
             data_row = next(
@@ -851,7 +853,7 @@ class VerificaVenda(O2BaseGetView):
                     data_row['estimada|STYLE'] = 'color: green;'
                 elif data_row['estimada'] < data_row['meta'] * 0.9:
                     data_row['estimada|STYLE'] = 'color: red;'
-            total_data_row['estimada'] += round(row['qtd'] / u_pass * u_tot)
+            total_data_row['estimada'] += data_row['estimada']
 
         data.insert(0, {
             '|STYLE': 'font-weight: bold;',
