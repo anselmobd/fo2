@@ -806,9 +806,9 @@ class VerificaVenda(O2BaseGetView):
         total_meta_row = total_data_row.copy()
         total_outros_row = total_data_row.copy()
 
-        total_data_row['modelo'] = 'Total geral'
-        total_meta_row['modelo'] = 'Total dos modelos com meta'
-        total_outros_row['modelo'] = 'Total dos modelos sem meta'
+        total_data_row['modelo'] = 'Totais de faturamento e estimativa'
+        total_meta_row['modelo'] = 'Totais dos modelos com meta'
+        total_outros_row['modelo'] = 'Totais dos modelos sem meta'
 
         data = [total_data_row]
         data_meta = []
