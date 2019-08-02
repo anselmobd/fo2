@@ -19,6 +19,11 @@
   <li><a href="{% url 'producao:conserto' %}">Produtos em conserto</a></li>
   <li><a href="{% url 'producao:perda' %}">Perdas de produção</a></li>
   <br />
+  <li>Definição</li>
+  <ul>
+    <li><a href="{% url 'producao:lead_colecao' %}">Parâmetros por coleção</a></li>
+  </ul>
+  <br />
   <li>Análise</li>
   <ul>
     <li><a href="{% url 'producao:an_dtcorte_alter' %}">Produção por data de corte e alternativa</a></li>
@@ -26,7 +31,6 @@
     <li><a href="{% url 'producao:op_pendente' %}">Ordens pendentes por estágio</a></li>
     <li><a href="{% url 'producao:totais_estagio' %}">Totais gerais dos estágios</a></li>
     <li><a href="{% url 'producao:quant_estagio' %}">Quantidades por estágio</a></li>
-    <li><a href="{% url 'producao:lead_colecao' %}">Lead de produção por coleção</a></li>
     <li><a href="{% url 'producao:meta_giro' %}">Visualiza meta de giro</a></li>
     <li><a href="{% url 'producao:a_produzir' %}">A produzir por modelo</a></li>
     <li><a href="{% url 'producao:grade_produzir' %}">Grade de modelo a produzir</a></li>
