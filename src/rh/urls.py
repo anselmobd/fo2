@@ -56,6 +56,10 @@ urlpatterns = [
         views.media_2019_07_16_sobre_amizade,
         name='media_2019_07_16_sobre_amizade'),
 
+    url(r'^media_2019_08_01_25_anos/$',
+        views.media_2019_08_01_25_anos,
+        name='media_2019_08_01_25_anos'),
+
     url(r'^divulga_atitudes_crise/$', views.divulga_atitudes_crise,
         name='divulga_atitudes_crise'),
 
