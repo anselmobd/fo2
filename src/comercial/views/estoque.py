@@ -794,11 +794,13 @@ class VerificaVenda(O2BaseGetView):
             3: 'text-align: right;',
             4: 'text-align: right;',
             5: 'text-align: right;',
+            6: 'text-align: right;',
+            7: 'text-align: right;',
         }
 
         cursor = connections['so'].cursor()
 
-        zero_data_row = {'meta': 0, 'estimada': 0, 'venda': 0}
+        zero_data_row = {'meta': 0, 'estimada': 0, 'venda': 0, 'venda30': 0}
 
         total_data_row = {
             '|STYLE': 'font-weight: bold;',
@@ -807,7 +809,8 @@ class VerificaVenda(O2BaseGetView):
         total_meta_row = total_data_row.copy()
         total_outros_row = total_data_row.copy()
 
-        total_data_row['modelo'] = 'Totais de faturamento e estimativa'
+        total_data_row['modelo'] = \
+            'Quantidades totais de faturamentos e estimativa'
         total_meta_row['modelo'] = 'Totais dos modelos com meta'
         total_outros_row['modelo'] = 'Totais dos modelos sem meta'
 
@@ -881,12 +884,43 @@ class VerificaVenda(O2BaseGetView):
             else:
                 total_outros_row['estimada'] += data_row['estimada']
 
+        data_periodo = queries.get_vendas(
+            cursor, ref=None, ultimos_dias=30,
+            colecao=None, cliente=None, por='modelo'
+        )
+
+        for row in data_periodo:
+            tem_meta = True
+            data_row = next(
+                (dr for dr in data_meta if dr['modelo'] == row['modelo']),
+                False)
+            if not data_row:
+                tem_meta = False
+                data_row = next(
+                    (dr for dr in data_outros
+                     if dr['modelo'] == row['modelo']),
+                    False)
+                if not data_row:
+                    data_row = {
+                        'modelo': row['modelo'],
+                        **zero_data_row
+                    }
+                    data_outros.append(data_row)
+
+            data_row['venda30'] = row['qtd']
+            total_data_row['venda30'] += row['qtd']
+            if tem_meta:
+                total_meta_row['venda30'] += row['qtd']
+            else:
+                total_outros_row['venda30'] += row['qtd']
+
         data_meta.append(total_meta_row)
         data_outros.append(total_outros_row)
 
         for data_row in data_meta:
             if data_row['meta'] == 0:
                 data_row['variacao'] = ' '
+                data_row['variacao30'] = ' '
             else:
                 data_row['variacao'] = round(
                     (data_row['estimada'] - data_row['meta']) /
@@ -903,20 +937,38 @@ class VerificaVenda(O2BaseGetView):
                 if data_row['variacao'] > 0:
                     data_row['variacao'] = '+{}'.format(data_row['variacao'])
 
+                data_row['variacao30'] = round(
+                    (data_row['venda30'] - data_row['meta']) /
+                    data_row['meta'] * 100
+                )
+
+                if data_row['variacao30'] > 10:
+                    data_row['venda30|STYLE'] = 'color: green;'
+                    data_row['variacao30|STYLE'] = 'color: green;'
+                elif data_row['variacao30'] < -10:
+                    data_row['venda30|STYLE'] = 'color: red;'
+                    data_row['variacao30|STYLE'] = 'color: red;'
+
+                if data_row['variacao30'] > 0:
+                    data_row['variacao30'] = '+{}'.format(
+                        data_row['variacao30'])
+
         self.context.update({
             't_headers': [' ',
                           'Estimativa de faturamento do mês',
-                          'Faturamento do mês'],
+                          'Faturamento do mês', 'Faturamento de 30 dias'],
             't_fields': ['modelo',
-                         'estimada', 'venda'],
+                         'estimada', 'venda', 'venda30'],
             't_data': data,
             't_style': style,
 
             'headers': ['Modelo', 'Venda mensal indicada',
                         'Estimativa de faturamento do mês', '%',
-                        'Faturamento do mês'],
+                        'Faturamento do mês',
+                        'Faturamento de 30 dias', '%'],
             'fields': ['modelo', 'meta',
-                       'estimada', 'variacao', 'venda'],
+                       'estimada', 'variacao', 'venda',
+                       'venda30', 'variacao30'],
             'data': data_meta,
             'style': style,
             'u_tot': u_tot,
@@ -924,9 +976,9 @@ class VerificaVenda(O2BaseGetView):
 
             'o_headers': ['Modelo',
                           'Estimativa de faturamento do mês',
-                          'Faturamento do mês'],
+                          'Faturamento do mês', 'Faturamento de 30 dias'],
             'o_fields': ['modelo',
-                         'estimada', 'venda'],
+                         'estimada', 'venda', 'venda30'],
             'o_data': data_outros,
             'o_style': style,
         })
