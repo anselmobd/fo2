@@ -82,6 +82,11 @@ def media_2019_07_16_sobre_amizade(request):
     return render(request, 'rh/media_2019_07_16_sobre_amizade.html', context)
 
 
+def media_2019_08_01_25_anos(request):
+    context = {'titulo': '25 anos de empresa de Rosângela e Denilson'}
+    return render(request, 'rh/media_2019_08_01_25_anos.html', context)
+
+
 def index(request):
     pensamentos = []
     dicas = [
