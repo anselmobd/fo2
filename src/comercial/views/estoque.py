@@ -789,13 +789,14 @@ class VerificaVenda(O2BaseGetView):
         self.title_name = 'Verifica estimativa de venda'
 
     def mount_context(self):
-        self.style = {
+        style = {
             2: 'text-align: right;',
             3: 'text-align: right;',
             4: 'text-align: right;',
+            5: 'text-align: right;',
         }
 
-        self.cursor = connections['so'].cursor()
+        cursor = connections['so'].cursor()
 
         zero_data_row = {'meta': 0, 'estimada': 0, 'venda': 0}
 
@@ -839,7 +840,7 @@ class VerificaVenda(O2BaseGetView):
             total_meta_row['meta'] += row['venda_mensal']
 
         data_periodo = queries.get_vendas(
-            self.cursor, ref=None, periodo='0:',
+            cursor, ref=None, periodo='0:',
             colecao=None, cliente=None, por='modelo'
         )
 
@@ -884,10 +885,23 @@ class VerificaVenda(O2BaseGetView):
         data_outros.append(total_outros_row)
 
         for data_row in data_meta:
-            if data_row['estimada'] > data_row['meta'] * 1.1:
-                data_row['estimada|STYLE'] = 'color: green;'
-            elif data_row['estimada'] < data_row['meta'] * 0.9:
-                data_row['estimada|STYLE'] = 'color: red;'
+            if data_row['meta'] == 0:
+                data_row['variacao'] = ' '
+            else:
+                data_row['variacao'] = round(
+                    (data_row['estimada'] - data_row['meta']) /
+                    data_row['meta'] * 100
+                )
+
+                if data_row['variacao'] > 10:
+                    data_row['estimada|STYLE'] = 'color: green;'
+                    data_row['variacao|STYLE'] = 'color: green;'
+                elif data_row['variacao'] < -10:
+                    data_row['estimada|STYLE'] = 'color: red;'
+                    data_row['variacao|STYLE'] = 'color: red;'
+
+                if data_row['variacao'] > 0:
+                    data_row['variacao'] = '+{}'.format(data_row['variacao'])
 
         self.context.update({
             't_headers': [' ',
@@ -896,15 +910,15 @@ class VerificaVenda(O2BaseGetView):
             't_fields': ['modelo',
                          'estimada', 'venda'],
             't_data': data,
-            't_style': self.style,
+            't_style': style,
 
             'headers': ['Modelo', 'Venda mensal indicada',
-                        'Estimativa de faturamento do mês',
+                        'Estimativa de faturamento do mês', '%',
                         'Faturamento do mês'],
             'fields': ['modelo', 'meta',
-                       'estimada', 'venda'],
+                       'estimada', 'variacao', 'venda'],
             'data': data_meta,
-            'style': self.style,
+            'style': style,
             'u_tot': u_tot,
             'u_pass': u_pass,
 
@@ -914,5 +928,5 @@ class VerificaVenda(O2BaseGetView):
             'o_fields': ['modelo',
                          'estimada', 'venda'],
             'o_data': data_outros,
-            'o_style': self.style,
+            'o_style': style,
         })
