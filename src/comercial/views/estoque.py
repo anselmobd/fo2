@@ -761,7 +761,7 @@ class Metas(O2BaseGetView):
 def dias_uteis_mes():
     hoje = date.today()
     mes = hoje.month
-    dia1 = timedelta(days=1)
+    um_dia = timedelta(days=1)
 
     uteis_passados = 0
     util_hoje = 0
@@ -770,14 +770,14 @@ def dias_uteis_mes():
     while True:
         if mes != dia.month:
             break
-        dia = dia + dia1
         dow = dia.weekday()
-        if dow > 0 and dow < 6:
+        if dow < 5:
+            uteis_total += 1
             if dia < hoje:
                 uteis_passados += 1
-            elif dia == hoje:
-                util_hoje += 1
-            uteis_total += 1
+            if dia == hoje:
+                util_hoje = 1
+        dia = dia + um_dia
     return uteis_total, uteis_passados, util_hoje
 
 
