@@ -823,7 +823,7 @@ class VerificaVenda(O2BaseGetView):
         ))
         metas = metas.filter(antiga=False)
         metas = metas.exclude(multiplicador=0)
-        metas = metas.order_by('-venda_mensal').values()
+        metas = metas.order_by('-venda_mensal', 'modelo').values()
 
         for row in metas:
             data_row = next(
