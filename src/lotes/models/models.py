@@ -444,6 +444,9 @@ class LeadColecao(models.Model):
     lm_tam = models.IntegerField(
         null=True, blank=True, default=0,
         verbose_name='Lote mínimo por tamanho')
+    lm_cor = models.IntegerField(
+        null=True, blank=True, default=0,
+        verbose_name='Lote mínimo por cor')
 
     def __str__(self):
         return '{}-{}'.format(self.colecao, self.lead)
