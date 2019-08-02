@@ -797,9 +797,22 @@ class VerificaVenda(O2BaseGetView):
 
         self.cursor = connections['so'].cursor()
 
-        data = []
-        zero_data_row = {'meta': ' ', 'estimada': 0, 'venda': 0}
-        total_data_row = {'meta': 0, 'estimada': 0, 'venda': 0}
+        zero_data_row = {'meta': 0, 'estimada': 0, 'venda': 0}
+
+        total_data_row = {
+            '|STYLE': 'font-weight: bold;',
+            **zero_data_row,
+        }
+        total_meta_row = total_data_row.copy()
+        total_outros_row = total_data_row.copy()
+
+        total_data_row['modelo'] = 'Total geral'
+        total_meta_row['modelo'] = 'Total dos modelos com meta'
+        total_outros_row['modelo'] = 'Total dos modelos sem meta'
+
+        data = [total_data_row]
+        data_meta = []
+        data_outros = []
 
         metas = models.MetaEstoque.objects
         metas = metas.annotate(antiga=Exists(
@@ -814,16 +827,16 @@ class VerificaVenda(O2BaseGetView):
 
         for row in metas:
             data_row = next(
-                (dr for dr in data if dr['modelo'] == row['modelo']),
+                (dr for dr in data_meta if dr['modelo'] == row['modelo']),
                 False)
             if not data_row:
                 data_row = {
                     'modelo': row['modelo'],
                     **zero_data_row
                 }
-                data.append(data_row)
+                data_meta.append(data_row)
             data_row['meta'] = row['venda_mensal']
-            total_data_row['meta'] += row['venda_mensal']
+            total_meta_row['meta'] += row['venda_mensal']
 
         data_periodo = queries.get_vendas(
             self.cursor, ref=None, periodo='0:',
@@ -836,38 +849,70 @@ class VerificaVenda(O2BaseGetView):
             u_pass = 1
 
         for row in data_periodo:
+            tem_meta = True
             data_row = next(
-                (dr for dr in data if dr['modelo'] == row['modelo']),
+                (dr for dr in data_meta if dr['modelo'] == row['modelo']),
                 False)
             if not data_row:
-                data_row = {
-                    'modelo': row['modelo'],
-                    **zero_data_row
-                }
-                data.append(data_row)
+                tem_meta = False
+                data_row = next(
+                    (dr for dr in data_outros
+                     if dr['modelo'] == row['modelo']),
+                    False)
+                if not data_row:
+                    data_row = {
+                        'modelo': row['modelo'],
+                        **zero_data_row
+                    }
+                    data_outros.append(data_row)
+
             data_row['venda'] = row['qtd']
             total_data_row['venda'] += row['qtd']
-            data_row['estimada'] = round(row['qtd'] / u_pass * u_tot)
-            if isinstance(data_row['meta'], int):
-                if data_row['estimada'] > data_row['meta'] * 1.1:
-                    data_row['estimada|STYLE'] = 'color: green;'
-                elif data_row['estimada'] < data_row['meta'] * 0.9:
-                    data_row['estimada|STYLE'] = 'color: red;'
-            total_data_row['estimada'] += data_row['estimada']
+            if tem_meta:
+                total_meta_row['venda'] += row['qtd']
+            else:
+                total_outros_row['venda'] += row['qtd']
 
-        data.insert(0, {
-            '|STYLE': 'font-weight: bold;',
-            'modelo': 'Total',
-            **total_data_row
-        })
+            data_row['estimada'] = round(row['qtd'] / u_pass * u_tot)
+            total_data_row['estimada'] += data_row['estimada']
+            if tem_meta:
+                total_meta_row['estimada'] += data_row['estimada']
+            else:
+                total_outros_row['estimada'] += data_row['estimada']
+
+        data_meta.append(total_meta_row)
+        data_outros.append(total_outros_row)
+
+        for data_row in data_meta:
+            if data_row['estimada'] > data_row['meta'] * 1.1:
+                data_row['estimada|STYLE'] = 'color: green;'
+            elif data_row['estimada'] < data_row['meta'] * 0.9:
+                data_row['estimada|STYLE'] = 'color: red;'
 
         self.context.update({
+            't_headers': [' ',
+                          'Estimativa de faturamento do mês',
+                          'Faturamento do mês'],
+            't_fields': ['modelo',
+                         'estimada', 'venda'],
+            't_data': data,
+            't_style': self.style,
+
             'headers': ['Modelo', 'Venda mensal indicada',
-                        'Venda estimada do mês', 'Venda efetiva'],
+                        'Estimativa de faturamento do mês',
+                        'Faturamento do mês'],
             'fields': ['modelo', 'meta',
                        'estimada', 'venda'],
-            'data': data,
+            'data': data_meta,
             'style': self.style,
             'u_tot': u_tot,
             'u_pass': u_pass,
+
+            'o_headers': ['Modelo',
+                          'Estimativa de faturamento do mês',
+                          'Faturamento do mês'],
+            'o_fields': ['modelo',
+                         'estimada', 'venda'],
+            'o_data': data_outros,
+            'o_style': self.style,
         })
