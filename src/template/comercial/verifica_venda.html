@@ -15,16 +15,42 @@
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>
   {% endif %}
-  <h4>Faturamento do mês (dias úteis: {{u_pass}} de {{u_tot}})</h4>
+  {% if t_data %}
+    <table>
+      {% include "layout/thead_generic.html" with data=t_headers style=t_style only %}
+      {% include "layout/tbody_generic.html" with fields=t_fields data=t_data style=t_style only %}
+    </table>
+  {% endif %}
   {% if data %}
+    <p>&nbsp;</p>
+    <h4>Modelos com meta</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
   {% endif %}
-  Obs.: Cor da venda estimada:
-  <ul>
-    <li><span style="color: green;">verde</span>: mais que 110% da venda indicada</li>
-    <li><span style="color: red;">vermelha</span>: menos que 90% da venda indicada</li>
-  </ul>
+  {% if o_data %}
+    <p>&nbsp;</p>
+    <h4>Modelos sem meta</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=o_headers style=o_style only %}
+      {% include "layout/tbody_generic.html" with fields=o_fields data=o_data style=o_style only %}
+    </table>
+  {% endif %}
+  {% if data %}
+    <p>&nbsp;</p>
+    <ul>
+      <li>Observações:</li>
+      <ul>
+        <li>Dias úteis do mês corrente até hoje: {{u_pass}} de {{u_tot}}</li>
+        <li>Faturamento do mês: Total faturado no mês corrente até agora</li>
+        <li>Estimativa de faturamento do mês: Faturamento do mês, dividido pelos dias uteis até hoje, multiplicado pelo total de dias uteis</li>
+      </ul>
+      <li>Legenda da cor do faturamento estimado:</li>
+      <ul>
+        <li><span style="color: green;">verde</span>: superior a venda indicada em mais de 10%</li>
+        <li><span style="color: red;">vermelha</span>: inferior a venda indicada em mais de 10%</li>
+      </ul>
+    </ul>
+  {% endif %}
 {% endblock %}
