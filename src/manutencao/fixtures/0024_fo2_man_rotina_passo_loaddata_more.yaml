@@ -1,0 +1,69 @@
+- model: manutencao.rotinapasso
+  pk: 65
+  fields: {rotina: 4, ordem: 1, atividade: 1}
+- model: manutencao.rotinapasso
+  pk: 66
+  fields: {rotina: 4, ordem: 2, atividade: 2}
+- model: manutencao.rotinapasso
+  pk: 67
+  fields: {rotina: 4, ordem: 3, atividade: 3}
+- model: manutencao.rotinapasso
+  pk: 68
+  fields: {rotina: 4, ordem: 4, atividade: 4}
+- model: manutencao.rotinapasso
+  pk: 69
+  fields: {rotina: 4, ordem: 5, atividade: 5}
+- model: manutencao.rotinapasso
+  pk: 70
+  fields: {rotina: 4, ordem: 6, atividade: 6}
+- model: manutencao.rotinapasso
+  pk: 71
+  fields: {rotina: 4, ordem: 7, atividade: 7}
+- model: manutencao.rotinapasso
+  pk: 72
+  fields: {rotina: 4, ordem: 8, atividade: 8}
+- model: manutencao.rotinapasso
+  pk: 73
+  fields: {rotina: 4, ordem: 9, atividade: 9}
+- model: manutencao.rotinapasso
+  pk: 74
+  fields: {rotina: 4, ordem: 10, atividade: 10}
+- model: manutencao.rotinapasso
+  pk: 75
+  fields: {rotina: 4, ordem: 11, atividade: 11}
+- model: manutencao.rotinapasso
+  pk: 76
+  fields: {rotina: 4, ordem: 12, atividade: 12}
+- model: manutencao.rotinapasso
+  pk: 77
+  fields: {rotina: 4, ordem: 13, atividade: 13}
+- model: manutencao.rotinapasso
+  pk: 78
+  fields: {rotina: 4, ordem: 14, atividade: 14}
+- model: manutencao.rotinapasso
+  pk: 79
+  fields: {rotina: 4, ordem: 15, atividade: 15}
+- model: manutencao.rotinapasso
+  pk: 80
+  fields: {rotina: 4, ordem: 16, atividade: 16}
+- model: manutencao.rotinapasso
+  pk: 81
+  fields: {rotina: 4, ordem: 17, atividade: 17}
+- model: manutencao.rotinapasso
+  pk: 82
+  fields: {rotina: 4, ordem: 18, atividade: 18}
+- model: manutencao.rotinapasso
+  pk: 83
+  fields: {rotina: 4, ordem: 19, atividade: 19}
+- model: manutencao.rotinapasso
+  pk: 84
+  fields: {rotina: 4, ordem: 20, atividade: 20}
+- model: manutencao.rotinapasso
+  pk: 85
+  fields: {rotina: 4, ordem: 21, atividade: 25}
+- model: manutencao.rotinapasso
+  pk: 86
+  fields: {rotina: 4, ordem: 22, atividade: 26}
+- model: manutencao.rotinapasso
+  pk: 87
+  fields: {rotina: 4, ordem: 23, atividade: 27}
