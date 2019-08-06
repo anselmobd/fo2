@@ -1,0 +1,15 @@
+- model: manutencao.Atividade
+  pk: 25
+  fields:
+    resumo: Corrosão e danos na pintura
+    descricao: Verificar e eliminar corrosão e danos na pintura de toda a estrutura
+- model: manutencao.Atividade
+  pk: 26
+  fields:
+    resumo: Vedação dos paineis de comando
+    descricao: Verificar e corrigir vedação dos paineis de comando
+- model: manutencao.Atividade
+  pk: 27
+  fields:
+    resumo: Limpar serpentina
+    descricao: Verificar e limpar serpentina com produto químico adequado
