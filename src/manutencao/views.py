@@ -207,7 +207,7 @@ class Imprimir(LoginRequiredMixin, O2BaseGetView):
         super(Imprimir, self).__init__(*args, **kwargs)
         self.template_name = 'manutencao/imprimir.html'
         self.get_args = ['rotina', 'maquina', 'data']
-        self.get_args2contect = True
+        self.get_args2context = True
 
     def mount_context(self):
         if self.request.user.id is None:
