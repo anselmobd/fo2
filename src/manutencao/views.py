@@ -17,6 +17,32 @@ def index(request):
     return render(request, 'manutencao/index.html', context)
 
 
+class Maquinas(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(Maquinas, self).__init__(*args, **kwargs)
+        self.template_name = 'manutencao/maquinas.html'
+        self.title_name = 'Máquinas'
+
+    def mount_context(self):
+        mq = models.Maquina.objects.all().order_by('nome')
+        if len(mq) == 0:
+            self.context.update({
+                'msg_erro': 'Nenhuma máquina cadastrada',
+            })
+            return
+
+        m_data = list(mq.values(
+            'tipo_maquina__nome', 'nome', 'descricao', 'data_inicio'))
+        self.context.update({
+            'm_headers': ('Tipo de máquina', 'Nome', 'Descrição',
+                          'Data de início'),
+            'm_fields': ('tipo_maquina__nome', 'nome', 'descricao',
+                         'data_inicio'),
+            'm_data': m_data,
+        })
+
+
 class Rotinas(O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
