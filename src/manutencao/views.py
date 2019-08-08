@@ -79,7 +79,7 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
 
     def mount_context(self):
         if self.request.user.is_superuser:
-            utm = models.UsuarioTipoMaquina.objects.all()
+            utm = models.UsuarioTipoMaquina.objects.all().distinct()
         else:
             utm = models.UsuarioTipoMaquina.objects.filter(
                 usuario=self.request.user)
