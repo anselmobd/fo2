@@ -26,6 +26,7 @@ class MaquinaAdmin(admin.ModelAdmin):
     list_display = ['tipo_maquina', 'nome', 'descricao', 'data_inicio']
     fields = ['tipo_maquina', 'nome', 'slug', 'descricao', 'data_inicio']
     readonly_fields = ['slug']
+    ordering = ['nome']
 
 
 class UsuarioTipoMaquinaAdmin(admin.ModelAdmin):
