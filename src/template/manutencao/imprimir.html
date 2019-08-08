@@ -67,7 +67,7 @@
           <td>Máquina</td>
           <td>Descrição</td>
           <td>Frequência</td>
-          <td>Data</td>
+          <td>Data agendada</td>
         </tr>
       </thead>
       <tbody>
@@ -121,22 +121,24 @@
   <table>
     <tbody>
       <tr class="thead">
-        <td width="25%">Nome do técnico</td>
+        <td colspan="2" width="25%">Nome do técnico</td>
         <td>Observação</td>
       </tr>
       <tr>
-        <td>{{user.first_name}}</td>
+        <td colspan="2">&nbsp;</td>
         <td rowspan="3">&nbsp;</td>
       </tr>
       <tr>
+        <td class="thead" width="12.5%">Data de execução</td>
         <td class="thead">Rúbrica</td>
       </tr>
       <tr>
+        <td>&nbsp;</td>
         <td>&nbsp;</td>
       </tr>
     </tbody>
   </table>
   <footer>
-    Impresso em {{now}}
+    Gerado em {{now}}
   </footer>{% endif %}
 {% endblock %}
