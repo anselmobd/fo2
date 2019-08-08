@@ -84,22 +84,26 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
             utm = models.UsuarioTipoMaquina.objects.filter(
                 usuario=self.request.user)
         if len(utm) == 0:
+            self.context.update({
+                'msg_erro': ('Nenhum tipo de máquina sob responsabilidade '
+                             'de "{}"').format(self.request.user.username),
+            })
             return
+
+        m_data = list(utm.values('tipo_maquina__nome'))
+        self.context.update({
+            'm_fields': ('tipo_maquina__nome', ),
+            'm_data': m_data,
+        })
 
         mq = models.Maquina.objects.filter(tipo_maquina__in=utm.values(
             'tipo_maquina__id')).order_by('nome')
         if len(mq) == 0:
+            self.context.update({
+                'msg_erro': ('Nenhuma  máquina sob responsabilidade '
+                             'de "{}"').format(self.request.user.username),
+            })
             return
-
-        m_data = list(mq.values(
-            'tipo_maquina__nome', 'nome', 'descricao', 'data_inicio'))
-        self.context.update({
-            'm_headers': ('Tipo de máquina', 'Nome', 'Descrição',
-                          'Data de início'),
-            'm_fields': ('tipo_maquina__nome', 'nome', 'descricao',
-                         'data_inicio'),
-            '_m_data': m_data,
-        })
 
         rot = models.Rotina.objects.filter(tipo_maquina__in=utm.values(
             'tipo_maquina__id')).order_by('-frequencia__ordem')

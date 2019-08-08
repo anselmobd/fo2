@@ -16,10 +16,8 @@
     <h4>{{ msg_erro }}</h4>
   {% endif %}
   {% if m_data %}
-    <h2>Atribuições de {{ user.first_name }}</h2>
-    <h3>Máquinas</h3>
+    <h3>Tipos de máquinas sob responsabilidade de {{ user.first_name }}</h3>
     <table>
-      {% include "layout/thead_generic.html" with data=m_headers style=m_style only %}
       {% include "layout/tbody_generic.html" with fields=m_fields data=m_data style=m_style only %}
     </table>
   {% endif %}
