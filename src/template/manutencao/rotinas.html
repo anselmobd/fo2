@@ -22,32 +22,4 @@
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
   {% endif %}
-  {% if m_data %}
-    <h2>Atribuições de {{ user.first_name }}</h2>
-    <h3>Máquinas</h3>
-    <table>
-      {% include "layout/thead_generic.html" with data=m_headers style=m_style only %}
-      {% include "layout/tbody_generic.html" with fields=m_fields data=m_data style=m_style only %}
-    </table>
-  {% endif %}
-  {% if meses %}
-    <h3>Rotinas a executar por período</h3>
-    <ul class="nav nav-tabs" id="myTab">
-      {% for mes in meses %}
-        <li {% if mes.ativa %}class="active"{% endif %}><a data-toggle="tab" href="#{{mes.href}}">{{mes.nome}} ({{mes.ini}} até {{mes.fim}})</a></li>
-      {% endfor %}
-    </ul>
-    <div class="tab-content">
-      {% for mes in meses %}
-        <div id="{{mes.href}}" class="tab-pane fade{% if mes.ativa %} in active{% endif %}">
-          {% if mes.r_data %}
-            <table>
-              {% include "layout/thead_generic.html" with data=mes.r_headers style=mes.r_style only %}
-              {% include "layout/tbody_generic.html" with fields=mes.r_fields data=mes.r_data style=mes.r_style only %}
-            </table>
-          {% endif %}
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
 {% endblock %}

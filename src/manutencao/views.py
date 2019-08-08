@@ -51,6 +51,32 @@ class Rotinas(O2BaseGetView):
         self.title_name = 'Rotinas'
 
     def mount_context(self):
+        rotinas = models.Rotina.objects.all().order_by(
+            'tipo_maquina', 'nome')
+        if len(rotinas) == 0:
+            self.context.update({
+                'msg_erro': 'Nenhuma rotina cadastrada',
+            })
+            return
+
+        data = list(rotinas.values(
+            'tipo_maquina__nome', 'frequencia__nome', 'nome'))
+
+        self.context.update({
+            'headers': ('Tipo de máquina', 'Frequência', 'Nome da rotina'),
+            'fields': ('tipo_maquina__nome', 'frequencia__nome', 'nome'),
+            'data': data,
+        })
+
+
+class Executar(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(Executar, self).__init__(*args, **kwargs)
+        self.template_name = 'manutencao/executar.html'
+        self.title_name = 'Executar'
+
+    def mount_context(self):
         if self.request.user.id is None:
             rotinas = models.Rotina.objects.all().order_by(
                 'tipo_maquina', 'nome')
@@ -90,7 +116,7 @@ class Rotinas(O2BaseGetView):
                           'Data de início'),
             'm_fields': ('tipo_maquina__nome', 'nome', 'descricao',
                          'data_inicio'),
-            'm_data': m_data,
+            '_m_data': m_data,
         })
 
         rot = models.Rotina.objects.filter(tipo_maquina__in=utm.values(
