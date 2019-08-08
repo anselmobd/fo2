@@ -6,6 +6,7 @@ from django.views import View
 from django.shortcuts import render
 from django.db.models import Exists, OuterRef
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from base.views import O2BaseGetView
 
@@ -69,7 +70,7 @@ class Rotinas(O2BaseGetView):
         })
 
 
-class Executar(O2BaseGetView):
+class Executar(LoginRequiredMixin, O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
         super(Executar, self).__init__(*args, **kwargs)
