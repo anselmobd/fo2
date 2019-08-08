@@ -8,6 +8,8 @@ from django.db.models import Exists, OuterRef
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from fo2.template import group_rowspan
+
 from base.views import O2BaseGetView
 
 import manutencao.models as models
@@ -128,9 +130,10 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
                 'nome': meses_nomes[i],
                 'ativa': meses_ativa[i],
                 'href': meses_href[i],
-                'r_headers': ('Máquina', 'Rotina', 'Data'),
-                'r_fields': ('maquina', 'rotina', 'data'),
+                'r_headers': ('Data', 'Máquina', 'Rotina', 'Imprimir'),
+                'r_fields': ('data', 'maquina', 'rotina', 'imprimir'),
                 'r_data': [],
+                'r_group': ['data']
             }
             meses.append(mes)
             dtini = dtini + tamanho_periodo
@@ -174,15 +177,16 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
                         tem_rotina = True
                         busca = [
                             m for m in mes['r_data']
-                            if m['maquina'] == maquina and m['data'] == data
+                            if m['maquina'] == maquina
                         ]
                         if len(busca) == 0:
                             mes['r_data'].append({
                                 'maquina': maquina,
                                 'rotina': rotina,
                                 'data': data,
-                                'data|TARGET': '_BLANK',
-                                'data|LINK': reverse(
+                                'imprimir': '',
+                                'imprimir|TARGET': '_BLANK',
+                                'imprimir|LINK': reverse(
                                     'manutencao:imprimir',
                                     args=[rotina.id, maquina.id, data])
                             })
@@ -190,6 +194,8 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
         if tem_rotina:
             for mes in meses:
                 mes['r_data'] = sorted(mes['r_data'], key=lambda i: i['data'])
+                group_rowspan(mes['r_data'], mes['r_group'])
+
             self.context.update({
                 'meses': meses,
             })
