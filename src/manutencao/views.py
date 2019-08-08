@@ -52,7 +52,7 @@ class Rotinas(O2BaseGetView):
 
     def mount_context(self):
         rotinas = models.Rotina.objects.all().order_by(
-            'tipo_maquina', 'nome')
+            'tipo_maquina', 'frequencia__ordem')
         if len(rotinas) == 0:
             self.context.update({
                 'msg_erro': 'Nenhuma rotina cadastrada',
