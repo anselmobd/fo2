@@ -6,7 +6,7 @@ class O2BaseCustomView(View):
 
     def __init__(self):
         self.get_args = []
-        self.get_args2contect = False
+        self.get_args2context = False
 
     def init_self(self, request, kwargs):
         self.request = request
@@ -16,7 +16,7 @@ class O2BaseCustomView(View):
         if hasattr(self, 'title_name'):
             self.context.update({'titulo': self.title_name})
 
-        if self.get_args2contect:
+        if self.get_args2context:
             for arg in self.get_args:
                 arg_value = self.get_arg(arg)
                 self.context.update({arg: arg_value})
