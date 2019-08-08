@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^rotinas/$',
         views.Rotinas.as_view(), name='rotinas'),
 
+    url(r'^rotina/(?P<id>\d+)/$',
+        views.Rotina.as_view(), name='rotina__get'),
+
     url(r'^executar/$',
         views.Executar.as_view(), name='executar'),
 

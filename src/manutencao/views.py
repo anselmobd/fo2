@@ -63,13 +63,58 @@ class Rotinas(O2BaseGetView):
             return
 
         data = list(rotinas.values(
-            'tipo_maquina__nome', 'frequencia__nome', 'nome'))
+            'id', 'tipo_maquina__nome', 'frequencia__nome', 'nome'))
+
+        for row in data:
+            row['nome|LINK'] = reverse(
+                'manutencao:rotina__get', args=[row['id']])
 
         self.context.update({
             'headers': ('Tipo de máquina', 'Frequência', 'Nome da rotina'),
             'fields': ('tipo_maquina__nome', 'frequencia__nome', 'nome'),
             'data': data,
         })
+
+
+class Rotina(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(Rotina, self).__init__(*args, **kwargs)
+        self.template_name = 'manutencao/rotina.html'
+        self.title_name = 'Rotina'
+        self.get_args = ['id']
+        self.get_args2context = True
+
+    def mount_context(self):
+        ativ = models.RotinaPasso.objects
+        ativ = ativ.filter(rotina__id=self.context['id'])
+        ativ = ativ.annotate(tem_medidas=Exists(
+            models.AtividadeMetrica.objects.filter(
+                atividade=OuterRef('atividade')
+            )))
+        ativ = ativ.order_by('ordem')
+        if len(ativ) != 0:
+            data = list(ativ.values(
+                'ordem',
+                'atividade__id',
+                'atividade__descricao',
+                'rotina__nome',
+                'rotina__frequencia__nome',
+                'rotina__tipo_maquina__nome',
+                'tem_medidas',
+            ))
+
+            self.context.update({
+                'rotina':
+                    ' "{} - {} - {}"'.format(
+                        data[0]['rotina__tipo_maquina__nome'],
+                        data[0]['rotina__frequencia__nome'],
+                        data[0]['rotina__nome'],
+                    ),
+                'headers': ['Ordem', 'Atividade'],
+                'fields': ['ordem', 'atividade__descricao'],
+                'data': data,
+            })
 
 
 class Executar(LoginRequiredMixin, O2BaseGetView):
