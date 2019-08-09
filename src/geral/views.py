@@ -1628,6 +1628,7 @@ class Configuracao(PermissionRequiredMixin, View):
         form = self.Form_class()
         values = self.get_values(request)
         form.fields["op_unidade"].initial = values['op_unidade']
+        form.fields["dias_alem_lead"].initial = values['dias_alem_lead']
         context['form'] = form
         return render(request, self.template_name, context)
 
@@ -1637,6 +1638,7 @@ class Configuracao(PermissionRequiredMixin, View):
         if form.is_valid():
             values = {}
             values['op_unidade'] = form.cleaned_data['op_unidade']
+            values['dias_alem_lead'] = form.cleaned_data['dias_alem_lead']
             if self.set_values(request, values):
                 context['msg'] = 'Valores salvos!'
             else:
