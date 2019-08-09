@@ -91,6 +91,9 @@ urlpatterns = [
     url(r'^lead_colecao/(?P<id>[^/]+)?$',
         views.LeadColecao.as_view(), name='lead_colecao'),
 
+    url(r'^lote_min_colecao/(?P<id>[^/]+)?$',
+        views.LoteMinColecao.as_view(), name='lote_min_colecao'),
+
     url(r'^meta_giro/$',
         views.MetaGiro.as_view(), name='meta_giro'),
 

@@ -577,3 +577,15 @@ class LeadColecaoForm(forms.Form):
     lead = forms.IntegerField(
         required=False, min_value=0, max_value=100,
         widget=forms.TextInput(attrs={'type': 'number'}))
+
+
+class LoteMinColecaoForm(forms.Form):
+    lm_tam = forms.IntegerField(
+        label='Lote mínimo por tamanho',
+        required=False, min_value=0, max_value=10000,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    lm_cor = forms.IntegerField(
+        label='Lote mínimo por cor',
+        required=False, min_value=0, max_value=10000,
+        widget=forms.TextInput(attrs={'type': 'number'}))
