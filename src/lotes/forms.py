@@ -589,3 +589,17 @@ class LoteMinColecaoForm(forms.Form):
         label='Lote mínimo por cor',
         required=False, min_value=0, max_value=10000,
         widget=forms.TextInput(attrs={'type': 'number'}))
+
+
+class RegrasLoteMinTamanhoForm(forms.Form):
+    min_para_lm = forms.IntegerField(
+        label='% mínimo para aplicação do lote mínimo por tamanho',
+        required=False, min_value=0, max_value=100,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    CHOICES = [('s', 'Sim'),
+               ('n', 'Não'),
+               ]
+    lm_cor_sozinha = forms.ChoiceField(
+        label='Aplica lote mínimo por cor quando único tamanho',
+        choices=CHOICES, required=False, initial='s')
