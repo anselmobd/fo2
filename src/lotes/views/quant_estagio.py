@@ -718,8 +718,6 @@ class RegrasLoteMinTamanho(View):
             })
             return
 
-        pprint(tamanhos)
-
         try:
             RLM = models.RegraLMTamanho.objects.all(
                 ).order_by('tamanho')
@@ -729,10 +727,7 @@ class RegrasLoteMinTamanho(View):
             })
             return
 
-        pprint(RLM)
-        return
-
-        rlms = {}
+        regras = {}
         inter_tam = tamanhos.iterator()
         inter_RLM = RLM.iterator()
         walk = 'b'   # from, to, both
@@ -766,7 +761,7 @@ class RegrasLoteMinTamanho(View):
                     walk = 't'
 
             if not acao_definida:
-                rec['tamanho'] = tam.tamanho
+                rec['tamanho'] = tam.tamanho_ref
                 rec['ordem_tamanho'] = tam.ordem_tamanho
                 if rlm is None or tam.tamanho_ref < rlm.tamanho:
                     acao_definida = True
@@ -815,12 +810,12 @@ class RegrasLoteMinTamanho(View):
                          ).format(reverse(
                             'producao:regras_lote_min_tamanho', args=[key])),
             })
-            data.append(rlms[key])
+            data.append(regras[key])
 
         headers = ['Tamanho', 'Ordem do tamanho',
                    'Mínimo para aplicação do lote mínimo',
                    'Aplica lote mínimo por cor quando único tamanho']
-        fields = ['colecao', 'ordem_tamanho',
+        fields = ['tamanho', 'ordem_tamanho',
                   'min_para_lm',
                   'lm_cor_sozinha']
         if has_permission(self.request, 'lotes.change_regralmtamanho'):
@@ -842,30 +837,29 @@ class RegrasLoteMinTamanho(View):
         if self.id:
             if has_permission(request, 'lotes.change_regralmtamanho'):
                 try:
-                    rlm = models.LeadColecao.objects.get(colecao=self.id)
-                except models.LeadColecao.DoesNotExist:
+                    rlm = models.RegraLMTamanho.objects.get(tamanho=self.id)
+                except models.RegraLMTamanho.DoesNotExist:
                     self.context.update({
-                        'msg_erro': 'Parâmetros de coleção não encontrados',
+                        'msg_erro': 'Regras de lote mínimo não encontradas',
                     })
                     return render(
                         self.request, self.template_name, self.context)
 
                 try:
-                    colecao = produto.models.Colecao.objects.get(
-                        colecao=self.id)
-                except produto.models.Colecao.DoesNotExist:
+                    tamanho = produto.models.S_Tamanho.objects.get(
+                        tamanho=self.id)
+                except produto.models.S_Tamanho.DoesNotExist:
                     self.context.update({
-                        'msg_erro': 'Coleção não encontrada',
+                        'msg_erro': 'Tamanho não encontrado',
                     })
                     return render(
                         self.request, self.template_name, self.context)
 
                 self.context['id'] = self.id
-                self.context['descr_colecao'] = colecao.descr_colecao
                 self.context['form'] = self.Form_class(
                     initial={
-                        'lm_tam': rlm.lm_tam,
-                        'lm_cor': rlm.lm_cor,
+                        'min_para_lm': rlm.min_para_lm,
+                        'lm_cor_sozinha': rlm.lm_cor_sozinha,
                     })
             else:
                 self.id = None
@@ -883,12 +877,12 @@ class RegrasLoteMinTamanho(View):
 
         form = self.Form_class(request.POST)
         if self.id and form.is_valid():
-            lm_tam = form.cleaned_data['lm_tam']
-            lm_cor = form.cleaned_data['lm_cor']
+            min_para_lm = form.cleaned_data['min_para_lm']
+            lm_cor_sozinha = form.cleaned_data['lm_cor_sozinha']
 
             try:
-                rlm = models.LeadColecao.objects.get(colecao=self.id)
-            except models.LeadColecao.DoesNotExist:
+                rlm = models.RegraLMTamanho.objects.get(tamanho=self.id)
+            except models.RegraLMTamanho.DoesNotExist:
                 self.context.update({
                     'msg_erro': 'Parâmetros de coleção não encontrados',
                 })
