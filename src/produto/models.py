@@ -27,7 +27,8 @@ class S_Tamanho(models.Model):
     descr_tamanho = models.CharField(
         max_length=10,
         verbose_name='Descrição')
-    ordem_tamanho = models.IntegerField()
+    ordem_tamanho = models.IntegerField(
+        verbose_name='Ordem do tamanho')
 
     def __str__(self):
         return self.descr_tamanho
