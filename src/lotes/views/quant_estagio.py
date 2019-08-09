@@ -753,43 +753,42 @@ class RegrasLoteMinTamanho(View):
                 break
 
             rec = {
-                'descr_colecao': '',
-                'lm_tam': 0,
-                'lm_cor': 0,
+                'min_para_lm': 0,
+                'lm_cor_sozinha': 's',
             }
             acao_definida = False
 
             if rlm is not None:
-                if tam is None or tam.colecao > rlm.colecao:
+                if tam is None or tam.ordem_tamanho > rlm.ordem_tamanho:
                     acao_definida = True
                     rec['status'] = 'd'
-                    rec['colecao'] = rlm.colecao
+                    rec['tamanho'] = rlm.tamanho
                     walk = 't'
 
             if not acao_definida:
-                rec['colecao'] = tam.colecao
-                rec['descr_colecao'] = tam.descr_colecao
-                if rlm is None or tam.colecao < rlm.colecao:
+                rec['tamanho'] = tam.tamanho
+                if rlm is None or tam.ordem_tamanho < rlm.ordem_tamanho:
                     acao_definida = True
                     rec['status'] = 'i'
                     walk = 'f'
 
             if not acao_definida:
-                rec['lm_tam'] = rlm.lm_tam
-                rec['lm_cor'] = rlm.lm_cor
+                rec['min_para_lm'] = rlm.min_para_lm
+                rec['lm_cor_sozinha'] = rlm.lm_cor_sozinha
                 rec['status'] = 'u'
                 walk = 'b'
 
-            regras[rec['colecao']] = rec
+            regras[rec['tamanho']] = rec
 
         data = []
         for key in regras:
             if regras[key]['status'] == 'd':
                 try:
-                    models.LeadColecao.objects.filter(colecao=key).delete()
-                except models.LeadColecao.DoesNotExist:
+                    models.RegraLeadTamanho.objects.filter(
+                        tamanho=key).delete()
+                except models.RegraLeadTamanho.DoesNotExist:
                     self.context.update({
-                        'msg_erro': 'Erro apagando parâmetros de coleção',
+                        'msg_erro': 'Erro apagando regras de lote mínimo',
                     })
                     return
                 continue
