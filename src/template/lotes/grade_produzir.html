@@ -54,6 +54,7 @@
   <h4>Modelo sem OPs</h4>
 {% endif %}
 <h3>Carteira de pedidos</h3>
+<p>Obs.: Pedidos com data de embarque até: Hoje + <i>lead time</i> do produto + {{ dias_alem_lead }}</p>
 {% if gped %}
   <table>
     {% include "layout/thead_generic.html" with data=gped.headers style=gped.style only %}
