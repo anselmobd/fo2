@@ -57,13 +57,20 @@ def has_permission(request, permission):
     return can
 
 
-def config_get_value(param_codigo, usuario=None):
+def coalesce(value, default=None):
+    if value is None:
+        return default
+    else:
+        return value
+
+
+def config_get_value(param_codigo, usuario=None, default=None):
     try:
         param = models.Parametro.objects.get(codigo=param_codigo)
     except models.Parametro.DoesNotExist:
-        return None
+        return default
 
-    result = None
+    result = default
     try:
         config = models.Config.objects.get(parametro=param, usuario=None)
         result = config.valor
@@ -71,7 +78,7 @@ def config_get_value(param_codigo, usuario=None):
         pass
 
     if usuario is None:
-        return result
+        return coalesce(result, default)
 
     if usuario.is_authenticated:
         try:
@@ -81,7 +88,7 @@ def config_get_value(param_codigo, usuario=None):
         except models.Config.DoesNotExist:
             pass
 
-    return result
+    return coalesce(result, default)
 
 
 def config_set_value(param_codigo, value, usuario=None):
