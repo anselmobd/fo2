@@ -721,9 +721,9 @@ class RegrasLoteMinTamanho(View):
         pprint(tamanhos)
 
         try:
-            RLM = models.RegraLeadTamanho.objects.all(
+            RLM = models.RegraLMTamanho.objects.all(
                 ).order_by('tamanho')
-        except models.RegraLeadTamanho.DoesNotExist:
+        except models.RegraLMTamanho.DoesNotExist:
             self.context.update({
                 'msg_erro': 'Regras de lote mínimo não encontrados',
             })
@@ -784,9 +784,9 @@ class RegrasLoteMinTamanho(View):
         for key in regras:
             if regras[key]['status'] == 'd':
                 try:
-                    models.RegraLeadTamanho.objects.filter(
+                    models.RegraLMTamanho.objects.filter(
                         tamanho=key).delete()
-                except models.RegraLeadTamanho.DoesNotExist:
+                except models.RegraLMTamanho.DoesNotExist:
                     self.context.update({
                         'msg_erro': 'Erro apagando regras de lote mínimo',
                     })

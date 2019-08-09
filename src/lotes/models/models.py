@@ -456,7 +456,7 @@ class LeadColecao(models.Model):
         verbose_name = "Lead de produção"
 
 
-class RegraLeadTamanho(models.Model):
+class RegraLMTamanho(models.Model):
     tamanho = models.CharField(
         primary_key=True,
         max_length=3,
