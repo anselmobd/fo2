@@ -478,5 +478,5 @@ class RegraLMTamanho(models.Model):
         return self.tamanho
 
     class Meta:
-        db_table = "fo2_lot_regra_lead_tamanho"
-        verbose_name = "Regra de Lead por tamanho"
+        db_table = "fo2_lot_regra_lm_tamanho"
+        verbose_name = "Regra de lote mínimo por tamanho"
