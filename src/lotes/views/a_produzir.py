@@ -79,7 +79,9 @@ class AProduzir(O2BaseGetView):
             'class_suffix': '__total',
         })
 
+        dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
+            'dias_alem_lead': dias_alem_lead,
             'headers': ['Modelo', 'Meta de estoque', 'Meta de giro (lead)',
                         'Total das metas (A)', 'Total das OPs',
                         'Carteira de pedidos', 'OPs – Pedidos (B)',
