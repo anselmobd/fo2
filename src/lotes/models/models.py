@@ -454,3 +454,29 @@ class LeadColecao(models.Model):
     class Meta:
         db_table = "fo2_lot_lead_colecao"
         verbose_name = "Lead de produção"
+
+
+class RegraLeadTamanho(models.Model):
+    tamanho = models.CharField(
+        primary_key=True,
+        max_length=3,
+        verbose_name='Tamanho')
+
+    ordem_tamanho = models.IntegerField(
+        null=True, blank=True, default=0,
+        verbose_name='Ordem do tamanho')
+
+    min_para_lm = models.IntegerField(
+        null=True, blank=True, default=0,
+        verbose_name='% mínimo para aplicação do lote mínimo por tamanho')
+
+    lm_cor_sozinha = models.CharField(
+        max_length=1, default='s',
+        verbose_name='Aplica lote mínimo por cor quando único tamanho')
+
+    def __str__(self):
+        return self.tamanho
+
+    class Meta:
+        db_table = "fo2_lot_regra_lead_tamanho"
+        verbose_name = "Regra de Lead por tamanho"
