@@ -732,24 +732,24 @@ class RegrasLoteMinTamanho(View):
         pprint(RLM)
         return
 
-        lcs = {}
-        inter_col = colecoes.iterator()
-        inter_LC = LC.iterator()
+        rlms = {}
+        inter_tam = tamanhos.iterator()
+        inter_RLM = RLM.iterator()
         walk = 'b'   # from, to, both
         while True:
             if walk in ['f', 'b']:
                 try:
-                    col = next(inter_col)
+                    tam = next(inter_tam)
                 except StopIteration:
-                    col = None
+                    tam = None
 
             if walk in ['t', 'b']:
                 try:
-                    lc = next(inter_LC)
+                    rlm = next(inter_RLM)
                 except StopIteration:
-                    lc = None
+                    rlm = None
 
-            if lc is None and col is None:
+            if rlm is None and tam is None:
                 break
 
             rec = {
@@ -759,24 +759,24 @@ class RegrasLoteMinTamanho(View):
             }
             acao_definida = False
 
-            if lc is not None:
-                if col is None or col.colecao > lc.colecao:
+            if rlm is not None:
+                if tam is None or tam.colecao > rlm.colecao:
                     acao_definida = True
                     rec['status'] = 'd'
-                    rec['colecao'] = lc.colecao
+                    rec['colecao'] = rlm.colecao
                     walk = 't'
 
             if not acao_definida:
-                rec['colecao'] = col.colecao
-                rec['descr_colecao'] = col.descr_colecao
-                if lc is None or col.colecao < lc.colecao:
+                rec['colecao'] = tam.colecao
+                rec['descr_colecao'] = tam.descr_colecao
+                if rlm is None or tam.colecao < rlm.colecao:
                     acao_definida = True
                     rec['status'] = 'i'
                     walk = 'f'
 
             if not acao_definida:
-                rec['lm_tam'] = lc.lm_tam
-                rec['lm_cor'] = lc.lm_cor
+                rec['lm_tam'] = rlm.lm_tam
+                rec['lm_cor'] = rlm.lm_cor
                 rec['status'] = 'u'
                 walk = 'b'
 
@@ -796,11 +796,11 @@ class RegrasLoteMinTamanho(View):
 
             if regras[key]['status'] == 'i':
                 try:
-                    lc = models.LeadColecao()
-                    lc.colecao = key
-                    lc.lm_tam = 0
-                    lc.lm_cor = 0
-                    lc.save()
+                    rlm = models.LeadColecao()
+                    rlm.colecao = key
+                    rlm.lm_tam = 0
+                    rlm.lm_cor = 0
+                    rlm.save()
                 except Exception:
                     self.context.update({
                         'msg_erro': 'Erro salvando lote mínimo',
@@ -814,7 +814,7 @@ class RegrasLoteMinTamanho(View):
                          ).format(reverse(
                             'producao:lote_min_colecao', args=[key])),
             })
-            data.append(lcs[key])
+            data.append(rlms[key])
 
         headers = ['Coleção', 'Descrição',
                    'Lote mínimo por tamanho', 'Lote mínimo por cor']
@@ -839,7 +839,7 @@ class RegrasLoteMinTamanho(View):
         if self.id:
             if has_permission(request, 'lotes.change_leadcolecao'):
                 try:
-                    lc = models.LeadColecao.objects.get(colecao=self.id)
+                    rlm = models.LeadColecao.objects.get(colecao=self.id)
                 except models.LeadColecao.DoesNotExist:
                     self.context.update({
                         'msg_erro': 'Parâmetros de coleção não encontrados',
@@ -861,8 +861,8 @@ class RegrasLoteMinTamanho(View):
                 self.context['descr_colecao'] = colecao.descr_colecao
                 self.context['form'] = self.Form_class(
                     initial={
-                        'lm_tam': lc.lm_tam,
-                        'lm_cor': lc.lm_cor,
+                        'lm_tam': rlm.lm_tam,
+                        'lm_cor': rlm.lm_cor,
                     })
             else:
                 self.id = None
@@ -884,7 +884,7 @@ class RegrasLoteMinTamanho(View):
             lm_cor = form.cleaned_data['lm_cor']
 
             try:
-                lc = models.LeadColecao.objects.get(colecao=self.id)
+                rlm = models.LeadColecao.objects.get(colecao=self.id)
             except models.LeadColecao.DoesNotExist:
                 self.context.update({
                     'msg_erro': 'Parâmetros de coleção não encontrados',
@@ -893,9 +893,9 @@ class RegrasLoteMinTamanho(View):
                     self.request, self.template_name, self.context)
 
             try:
-                lc.lm_tam = lm_tam
-                lc.lm_cor = lm_cor
-                lc.save()
+                rlm.lm_tam = lm_tam
+                rlm.lm_cor = lm_cor
+                rlm.save()
             except IntegrityError as e:
                 context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
                     'o lotes mínimos. <{}>'.format(str(e))
