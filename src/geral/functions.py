@@ -64,6 +64,18 @@ def coalesce(value, default=None):
         return value
 
 
+def config_get_typed_value(config):
+    type = config.parametro.tipo.codigo
+    if type == 'SN':
+        return config.valor
+    if type == 'I':
+        try:
+            return int(config.valor)
+        except Exception:
+            pass
+    return None
+
+
 def config_get_value(param_codigo, usuario=None, default=None):
     try:
         param = models.Parametro.objects.get(codigo=param_codigo)
@@ -73,7 +85,7 @@ def config_get_value(param_codigo, usuario=None, default=None):
     result = default
     try:
         config = models.Config.objects.get(parametro=param, usuario=None)
-        result = config.valor
+        result = config_get_typed_value(config)
     except models.Config.DoesNotExist:
         pass
 
@@ -84,7 +96,7 @@ def config_get_value(param_codigo, usuario=None, default=None):
         try:
             config = models.Config.objects.get(
                 parametro=param, usuario=usuario)
-            result = config.valor
+            result = config_get_typed_value(config)
         except models.Config.DoesNotExist:
             pass
 
