@@ -7,6 +7,7 @@ from django.http import JsonResponse
 
 from utils.views import totalize_data
 from base.views import O2BaseGetView, O2BaseGetPostView
+from geral.functions import config_get_value
 
 import comercial.models
 from comercial.views.estoque import grade_meta_estoque
@@ -141,6 +142,7 @@ def pedido_lead_modelo(request, modelo):
     data = {
         'modelo': modelo,
     }
+    dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
 
     try:
         colecao = produto.queries.colecao_de_modelo(cursor, modelo)
@@ -156,7 +158,7 @@ def pedido_lead_modelo(request, modelo):
         if lead == 0:
             periodo = ''
         else:
-            periodo = lead + 7
+            periodo = lead + dias_alem_lead
 
         data_ped = lotes.models.busca_pedido(
             cursor, modelo=modelo, periodo=':{}'.format(periodo))
@@ -389,10 +391,14 @@ class GradeProduzir(O2BaseGetPostView):
                 'gop': gop,
             })
 
+        dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
+        pprint(dias_alem_lead)
+        pprint(lead)
+
         if lead == 0:
             periodo = ''
         else:
-            periodo = lead + 7
+            periodo = lead + dias_alem_lead
 
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
             lotes.models.ped_sortimento(
