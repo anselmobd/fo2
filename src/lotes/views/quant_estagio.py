@@ -711,7 +711,7 @@ class RegrasLoteMinTamanho(View):
     def lista(self):
         try:
             tamanhos = produto.models.S_Tamanho.objects.all(
-                ).order_by('ordem_tamanho')
+                ).order_by('tamanho_ref')
         except produto.models.S_Tamanho.DoesNotExist:
             self.context.update({
                 'msg_erro': 'Tamanhos não encontrados',
@@ -759,7 +759,7 @@ class RegrasLoteMinTamanho(View):
             acao_definida = False
 
             if rlm is not None:
-                if tam is None or tam.ordem_tamanho > rlm.ordem_tamanho:
+                if tam is None or tam.tamanho_ref > rlm.tamanho:
                     acao_definida = True
                     rec['status'] = 'd'
                     rec['tamanho'] = rlm.tamanho
@@ -767,7 +767,8 @@ class RegrasLoteMinTamanho(View):
 
             if not acao_definida:
                 rec['tamanho'] = tam.tamanho
-                if rlm is None or tam.ordem_tamanho < rlm.ordem_tamanho:
+                rec['ordem_tamanho'] = tam.ordem_tamanho
+                if rlm is None or tam.tamanho_ref < rlm.tamanho:
                     acao_definida = True
                     rec['status'] = 'i'
                     walk = 'f'
@@ -795,14 +796,15 @@ class RegrasLoteMinTamanho(View):
 
             if regras[key]['status'] == 'i':
                 try:
-                    rlm = models.LeadColecao()
-                    rlm.colecao = key
-                    rlm.lm_tam = 0
-                    rlm.lm_cor = 0
+                    rlm = models.RegraLMTamanho()
+                    rlm.tamanho = key
+                    rlm.ordem_tamanho = regras[key]['ordem_tamanho']
+                    rlm.min_para_lm = regras[key]['min_para_lm']
+                    rlm.lm_cor_sozinha = regras[key]['lm_cor_sozinha']
                     rlm.save()
                 except Exception:
                     self.context.update({
-                        'msg_erro': 'Erro salvando lote mínimo',
+                        'msg_erro': 'Erro salvando regras de lote mínimo',
                     })
                     return
             regras[key].update({
@@ -811,15 +813,17 @@ class RegrasLoteMinTamanho(View):
                          '<span class="glyphicon glyphicon-pencil" '
                          'aria-hidden="true"></span></a>'
                          ).format(reverse(
-                            'producao:lote_min_colecao', args=[key])),
+                            'producao:regras_lote_min_tamanho', args=[key])),
             })
             data.append(rlms[key])
 
-        headers = ['Coleção', 'Descrição',
-                   'Lote mínimo por tamanho', 'Lote mínimo por cor']
-        fields = ['colecao', 'descr_colecao',
-                  'lm_tam', 'lm_cor']
-        if has_permission(self.request, 'lotes.change_leadcolecao'):
+        headers = ['Tamanho', 'Ordem do tamanho',
+                   'Mínimo para aplicação do lote mínimo',
+                   'Aplica lote mínimo por cor quando único tamanho']
+        fields = ['colecao', 'ordem_tamanho',
+                  'min_para_lm',
+                  'lm_cor_sozinha']
+        if has_permission(self.request, 'lotes.change_regralmtamanho'):
             headers.insert(0, '')
             fields.insert(0, 'edit')
         self.context.update({
@@ -836,7 +840,7 @@ class RegrasLoteMinTamanho(View):
             self.id = kwargs['id']
 
         if self.id:
-            if has_permission(request, 'lotes.change_leadcolecao'):
+            if has_permission(request, 'lotes.change_regralmtamanho'):
                 try:
                     rlm = models.LeadColecao.objects.get(colecao=self.id)
                 except models.LeadColecao.DoesNotExist:
