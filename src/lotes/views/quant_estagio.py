@@ -312,7 +312,7 @@ class LeadColecao(View):
     def __init__(self):
         self.Form_class = forms.LeadColecaoForm
         self.template_name = 'lotes/lead_colecao.html'
-        self.title_name = 'Parâmetros por coleção'
+        self.title_name = 'Lead por coleção'
         self.id = None
         self.context = {'titulo': self.title_name}
 
@@ -330,7 +330,7 @@ class LeadColecao(View):
             LC = models.LeadColecao.objects.all().order_by('colecao')
         except models.LeadColecao.DoesNotExist:
             self.context.update({
-                'msg_erro': 'Parâmetros de coleções não encontradas',
+                'msg_erro': 'Parâmetros de coleções não encontrados',
             })
             return
 
@@ -389,7 +389,7 @@ class LeadColecao(View):
                     models.LeadColecao.objects.filter(colecao=key).delete()
                 except models.LeadColecao.DoesNotExist:
                     self.context.update({
-                        'msg_erro': 'Erro apagando lead',
+                        'msg_erro': 'Erro apagando parâmetros de coleção',
                     })
                     return
                 continue
@@ -439,7 +439,7 @@ class LeadColecao(View):
                     lc = models.LeadColecao.objects.get(colecao=self.id)
                 except models.LeadColecao.DoesNotExist:
                     self.context.update({
-                        'msg_erro': 'Lead não encontrado',
+                        'msg_erro': 'Parâmetros de coleção não encontrados',
                     })
                     return render(
                         self.request, self.template_name, self.context)
@@ -480,7 +480,7 @@ class LeadColecao(View):
                 lc = models.LeadColecao.objects.get(colecao=self.id)
             except models.LeadColecao.DoesNotExist:
                 self.context.update({
-                    'msg_erro': 'Lead não encontrado',
+                    'msg_erro': 'Parâmetros de coleção não encontrados',
                 })
                 return render(
                     self.request, self.template_name, self.context)
