@@ -392,8 +392,6 @@ class GradeProduzir(O2BaseGetPostView):
             })
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
-        pprint(dias_alem_lead)
-        pprint(lead)
 
         if lead == 0:
             periodo = ''
