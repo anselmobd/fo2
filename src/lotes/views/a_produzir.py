@@ -477,24 +477,66 @@ class GradeProduzir(O2BaseGetPostView):
                 glm = copy.deepcopy(gap)
 
         if glm is not None:
-            pprint(glm)
+
             row_tot = glm['data'][-1]
+            tam_conf = {}
             for row_cor in glm['data'][:-1]:
-                print(row_cor)
                 tam_count = 0
-                tam_tot_ori = 0
                 tam_tot = 0
+                field_tot = glm['fields'][-1]
                 for tam in glm['fields'][1:-1]:
+                    if tam not in tam_conf:
+                        tam_conf[tam] = {
+                            'min_para_lm': 0,
+                            'lm_cor_sozinha': 's',
+                        }
+                        try:
+                            RLM = lotes.models.RegraLMTamanho.objects.get(
+                                tamanho=tam)
+                            tam_conf[tam] = {
+                                'min_para_lm': RLM.min_para_lm,
+                                'lm_cor_sozinha': RLM.lm_cor_sozinha,
+                            }
+                        except lotes.models.RegraLMTamanho.DoesNotExist:
+                            pass
+
+                    if lm_tam != 0 and row_cor[tam] != 0:
+                        lm_lim = round(
+                            lm_tam * tam_conf[tam]['min_para_lm'] / 100, 0)
+                        if row_cor[tam] < lm_tam:
+                            if row_cor[tam] >= lm_lim:
+                                row_tot[field_tot] += lm_tam - row_cor[tam]
+                                row_tot[tam] += lm_tam - row_cor[tam]
+                                row_cor[field_tot] += lm_tam - row_cor[tam]
+                                row_cor[tam] = lm_tam
+                            else:
+                                row_tot[field_tot] += -row_cor[tam]
+                                row_tot[tam] += -row_cor[tam]
+                                row_cor[field_tot] += -row_cor[tam]
+                                row_cor[tam] = 0
+                            row_cor['{}|STYLE'.format(tam)] = 'font-weight: bold; color: red'
+
                     if row_cor[tam] != 0:
                         tam_count += 1
-                    tam_tot_ori += row_cor[tam]
-                    if lm_tam != 0 and row_cor[tam] != 0 \
-                            and row_cor[tam] < lm_tam:
-                        row_cor[tam] = lm_tam
                     tam_tot += row_cor[tam]
-                print(tam_count)
-                print(tam_tot_ori)
-                print(tam_tot)
+
+                lm_cor_acresc = 0
+                if lm_cor != 0:
+                    if tam_tot < lm_cor:
+                        if tam_count > 1 or \
+                                tam_conf[tam]['lm_cor_sozinha'] == 's':
+                            lm_cor_acresc = lm_cor - tam_tot
+                if lm_cor_acresc != 0:
+                    for tam in glm['fields'][1:-1]:
+                        if row_cor[tam] > 0:
+                            acrescenta = round(
+                                lm_cor_acresc / tam_tot * row_cor[tam],
+                                0)
+                            row_tot[field_tot] += acrescenta
+                            row_tot[tam] += acrescenta
+                            row_cor[field_tot] += acrescenta
+                            row_cor[tam] += acrescenta
+                            row_cor['{}|STYLE'.format(tam)] = 'color: red'
             self.context.update({
                 'glm': glm,
             })
