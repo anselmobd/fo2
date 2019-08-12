@@ -462,6 +462,7 @@ class GradeProduzir(O2BaseGetPostView):
             else:
                 gresult = subtrai_grades(gm, gopp)
 
+        glm = None
         if gresult is not None:
             gap = opera_grade(gresult, lambda x: x if x > 0 else 0)
             self.context.update({
@@ -472,7 +473,6 @@ class GradeProduzir(O2BaseGetPostView):
                 'gex': gex,
             })
 
-            glm = None
             if lm_tam != 0 or lm_cor != 0:
                 glm = copy.deepcopy(gap)
 
