@@ -463,6 +463,8 @@ class GradeProduzir(O2BaseGetPostView):
                 gresult = subtrai_grades(gm, gopp)
 
         glm = None
+        glc = None
+
         if gresult is not None:
             gap = opera_grade(gresult, lambda x: x if x > 0 else 0)
             self.context.update({
@@ -481,8 +483,6 @@ class GradeProduzir(O2BaseGetPostView):
             row_tot = glm['data'][-1]
             tam_conf = {}
             for row_cor in glm['data'][:-1]:
-                tam_count = 0
-                tam_tot = 0
                 field_tot = glm['fields'][-1]
                 for tam in glm['fields'][1:-1]:
                     if tam not in tam_conf:
@@ -517,12 +517,26 @@ class GradeProduzir(O2BaseGetPostView):
                             row_cor['{}|STYLE'.format(tam)] = \
                                 'font-weight: bold; color: red'
 
+            if glm != gap:
+                self.context.update({
+                    'glm': glm,
+                })
+
+            glc = copy.deepcopy(glm)
+
+        if glc is not None:
+            row_tot = glc['data'][-1]
+            for row_cor in glc['data'][:-1]:
+                tam_count = 0
+                tam_tot = 0
+                field_tot = glc['fields'][-1]
+                for tam in glc['fields'][1:-1]:
                     if row_cor[tam] != 0:
                         tam_count += 1
                     tam_tot += row_cor[tam]
 
                 lm_cor_acresc = 0
-                if lm_cor != 0:
+                if tam_tot != 0 and lm_cor != 0:
                     if tam_tot < lm_cor:
                         if tam_count > 1 or \
                                 tam_conf[tam]['lm_cor_sozinha'] == 's':
@@ -530,7 +544,7 @@ class GradeProduzir(O2BaseGetPostView):
                 if lm_cor_acresc > 0:
                     tam_tot_final = 0
                     tam_ult = None
-                    for tam in glm['fields'][1:-1]:
+                    for tam in glc['fields'][1:-1]:
                         if row_cor[tam] > 0:
                             tam_ult = tam
                             acrescenta = round(
@@ -556,7 +570,7 @@ class GradeProduzir(O2BaseGetPostView):
                             row_cor[field_tot] += lm_cor_acresc
                             row_cor[tam] += lm_cor_acresc
 
-            if glm != gap:
+            if glc != glm:
                 self.context.update({
-                    'glm': glm,
+                    'glc': glc,
                 })
