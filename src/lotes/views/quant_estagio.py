@@ -1,6 +1,7 @@
 from pprint import pprint
+from operator import itemgetter
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import connections
 from django.db.models import Exists, OuterRef
 from django.urls import reverse
@@ -812,6 +813,8 @@ class RegrasLoteMinTamanho(View):
             })
             data.append(regras[key])
 
+        data = sorted(data, key=itemgetter('ordem_tamanho'))
+
         headers = ['Tamanho', 'Ordem do tamanho',
                    'Mínimo para aplicação do lote mínimo',
                    'Aplica lote mínimo por cor quando único tamanho']
@@ -900,7 +903,7 @@ class RegrasLoteMinTamanho(View):
             self.lista()
         else:
             self.context['form'] = form
-        return render(self.request, self.template_name, self.context)
+        return redirect('producao:regras_lote_min_tamanho')
 
 
 def grade_meta_giro(meta, lead, show_distrib=True):
