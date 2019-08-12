@@ -321,6 +321,15 @@ class GradeProduzir(O2BaseGetPostView):
             'colecao': row['COLECAO'],
         })
 
+        lm_tam = 0
+        lm_cor = 0
+        try:
+            LC = lotes.models.LeadColecao.objects.get(colecao=colecao)
+            lm_tam = LC.lm_tam
+            lm_cor = LC.lm_cor
+        except lotes.models.LeadColecao.DoesNotExist:
+            pass
+
         metas = comercial.models.MetaEstoque.objects
         metas = metas.annotate(antiga=Exists(
             comercial.models.MetaEstoque.objects.filter(
@@ -461,4 +470,31 @@ class GradeProduzir(O2BaseGetPostView):
             gex = opera_grade(gresult, lambda x: -x if x < 0 else 0)
             self.context.update({
                 'gex': gex,
+            })
+
+            glm = None
+            if lm_tam != 0 or lm_cor != 0:
+                glm = copy.deepcopy(gap)
+
+        if glm is not None:
+            pprint(glm)
+            row_tot = glm['data'][-1]
+            for row_cor in glm['data'][:-1]:
+                print(row_cor)
+                tam_count = 0
+                tam_tot_ori = 0
+                tam_tot = 0
+                for tam in glm['fields'][1:-1]:
+                    if row_cor[tam] != 0:
+                        tam_count += 1
+                    tam_tot_ori += row_cor[tam]
+                    if lm_tam != 0 and row_cor[tam] != 0 \
+                            and row_cor[tam] < lm_tam:
+                        row_cor[tam] = lm_tam
+                    tam_tot += row_cor[tam]
+                print(tam_count)
+                print(tam_tot_ori)
+                print(tam_tot)
+            self.context.update({
+                'glm': glm,
             })

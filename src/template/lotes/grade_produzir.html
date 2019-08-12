@@ -83,12 +83,20 @@
     {% include "layout/tbody_generic.html" with fields=gap.fields data=gap.data style=gap.style only %}
   </table>
 {% endif %}
+{% if glm %}
+  <h3>A produzir, considerando lote mínimo</h3>
+  <table>
+    {% include "layout/thead_generic.html" with data=glm.headers style=glm.style only %}
+    {% include "layout/tbody_generic.html" with fields=glm.fields data=glm.data style=glm.style only %}
+  </table>
+{% endif %}
 {% if gex %}
   <h3>Excesso (A-B)[-]</h3>
   <table>
     {% include "layout/thead_generic.html" with data=gex.headers style=gex.style only %}
     {% include "layout/tbody_generic.html" with fields=gex.fields data=gex.data style=gex.style only %}
   </table>
+{% endif %}
 {% endif %}
 {% endif %}
 {% endblock %}
