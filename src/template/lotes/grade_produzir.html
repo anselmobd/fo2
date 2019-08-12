@@ -151,12 +151,24 @@
         <thead>
           <tr>
             <th colspan="99">
-              <h3>A produzir, considerando lote mínimo</h3>
+              <h3>A produzir, considerando lote mínimo por tamanho</h3>
             </th>
           </tr>
         </thead>
         {% include "layout/thead_generic.html" with data=glm.headers style=glm.style only %}
         {% include "layout/tbody_generic.html" with fields=glm.fields data=glm.data style=glm.style only %}
+      {% endif %}
+
+      {% if glc %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h3>A produzir, considerando lote mínimo por cor</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=glc.headers style=glc.style only %}
+        {% include "layout/tbody_generic.html" with fields=glc.fields data=glc.data style=glc.style only %}
       {% endif %}
 
       </table>
