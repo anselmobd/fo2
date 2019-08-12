@@ -514,7 +514,8 @@ class GradeProduzir(O2BaseGetPostView):
                                 row_tot[tam] += -row_cor[tam]
                                 row_cor[field_tot] += -row_cor[tam]
                                 row_cor[tam] = 0
-                            row_cor['{}|STYLE'.format(tam)] = 'font-weight: bold; color: red'
+                            row_cor['{}|STYLE'.format(tam)] = \
+                                'font-weight: bold; color: red'
 
                     if row_cor[tam] != 0:
                         tam_count += 1
@@ -526,9 +527,12 @@ class GradeProduzir(O2BaseGetPostView):
                         if tam_count > 1 or \
                                 tam_conf[tam]['lm_cor_sozinha'] == 's':
                             lm_cor_acresc = lm_cor - tam_tot
-                if lm_cor_acresc != 0:
+                if lm_cor_acresc > 0:
+                    tam_tot_final = 0
+                    tam_ult = None
                     for tam in glm['fields'][1:-1]:
                         if row_cor[tam] > 0:
+                            tam_ult = tam
                             acrescenta = round(
                                 lm_cor_acresc / tam_tot * row_cor[tam],
                                 0)
@@ -537,6 +541,24 @@ class GradeProduzir(O2BaseGetPostView):
                             row_cor[field_tot] += acrescenta
                             row_cor[tam] += acrescenta
                             row_cor['{}|STYLE'.format(tam)] = 'color: red'
-            self.context.update({
-                'glm': glm,
-            })
+                            tam_tot_final += row_cor[tam]
+
+                    # em caso de distribuição do lm_cor por mais de uma cor
+                    # o arredondamento pode não formar lm_cor. Se total ainda
+                    # estiver abaico do lm_cor, acrescentar ao último tamanho
+                    # alterado
+                    lm_cor_acresc = lm_cor - tam_tot_final
+                    if lm_cor_acresc > 0:
+                        if tam_ult is not None:
+                            row_tot[field_tot] += lm_cor_acresc
+                            row_tot[tam] += lm_cor_acresc
+                            row_cor[field_tot] += lm_cor_acresc
+                            row_cor[tam] += lm_cor_acresc
+                            row_cor['{}|STYLE'.format(tam)] = 'color: red'
+
+
+
+            if glm != gap:
+                self.context.update({
+                    'glm': glm,
+                })
