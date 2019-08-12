@@ -540,7 +540,8 @@ class GradeProduzir(O2BaseGetPostView):
                             row_tot[tam] += acrescenta
                             row_cor[field_tot] += acrescenta
                             row_cor[tam] += acrescenta
-                            row_cor['{}|STYLE'.format(tam)] = 'color: red'
+                            row_cor['{}|STYLE'.format(tam)] = \
+                                'font-weight: bold; color: red'
                             tam_tot_final += row_cor[tam]
 
                     # em caso de distribuição do lm_cor por mais de uma cor
@@ -554,9 +555,6 @@ class GradeProduzir(O2BaseGetPostView):
                             row_tot[tam] += lm_cor_acresc
                             row_cor[field_tot] += lm_cor_acresc
                             row_cor[tam] += lm_cor_acresc
-                            row_cor['{}|STYLE'.format(tam)] = 'color: red'
-
-
 
             if glm != gap:
                 self.context.update({
