@@ -15,7 +15,7 @@
 {% endif %}
 {% if form %}
   <p><a title="Listar" href="{% url 'producao:regras_lote_min_tamanho' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
-  <h3>Edita lote mínimo da coleção: {{id}} - {{descr_colecao}}</h3>
+  <h3>Edita regras de lote mínimo do tamanho "{{id}}"</h3>
   <form action="{% url 'producao:regras_lote_min_tamanho' id %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}

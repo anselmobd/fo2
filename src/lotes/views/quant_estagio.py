@@ -847,7 +847,7 @@ class RegrasLoteMinTamanho(View):
 
                 try:
                     tamanho = produto.models.S_Tamanho.objects.get(
-                        tamanho=self.id)
+                        tamanho_ref=self.id)
                 except produto.models.S_Tamanho.DoesNotExist:
                     self.context.update({
                         'msg_erro': 'Tamanho não encontrado',
@@ -890,8 +890,8 @@ class RegrasLoteMinTamanho(View):
                     self.request, self.template_name, self.context)
 
             try:
-                rlm.lm_tam = lm_tam
-                rlm.lm_cor = lm_cor
+                rlm.min_para_lm = min_para_lm
+                rlm.lm_cor_sozinha = lm_cor_sozinha
                 rlm.save()
             except IntegrityError as e:
                 context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
