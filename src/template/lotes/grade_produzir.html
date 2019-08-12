@@ -16,87 +16,151 @@
   <input type="submit" name="busca" value="Busca"/>
 </form>
 {% if modelo %}
-<h3>Modelo: {{ modelo }}</h3>
-{% if msg_erro %}
-  <h4>{{ msg_erro }}</h4>
-{% else %}
-{% if colecao %}
-  <h4>Coleção: {{ colecao }}</h4>
-{% endif %}
-<h3>Meta de estoque</h3>
-{% if msg_meta_estoque %}
-  <h4>{{ msg_meta_estoque }}</h4>
-{% endif %}
-{% if gme %}
-  <table>
-    {% include "layout/thead_generic.html" with data=gme.headers style=gme.style only %}
-    {% include "layout/tbody_generic.html" with fields=gme.fields data=gme.data style=gme.style only %}
-  </table>
-{% endif %}
-<h3>Meta de giro (lead)</h3>
-{% if msg_meta_giro %}
-  <h4>{{ msg_meta_giro }}</h4>
-{% endif %}
-{% if gmg %}
-  <table>
-    {% include "layout/thead_generic.html" with data=gmg.headers style=gmg.style only %}
-    {% include "layout/tbody_generic.html" with fields=gmg.fields data=gmg.data style=gmg.style only %}
-  </table>
-{% endif %}
-{% if gm %}
-  <h3>Total das metas (A)</h3>
-  <table>
-    {% include "layout/thead_generic.html" with data=gm.headers style=gm.style only %}
-    {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
-  </table>
-{% endif %}
-<h3>Total das OPs</h3>
-{% if gop %}
-  <table>
-    {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
-    {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
-  </table>
-{% else %}
-  <h4>Modelo sem OPs</h4>
-{% endif %}
-<h3>Carteira de pedidos</h3>
-<p>Obs.: Pedidos com data de embarque até: Hoje + <i>lead time</i> do produto + {{ dias_alem_lead }}</p>
-{% if gped %}
-  <table>
-    {% include "layout/thead_generic.html" with data=gped.headers style=gped.style only %}
-    {% include "layout/tbody_generic.html" with fields=gped.fields data=gped.data style=gped.style only %}
-  </table>
-{% else %}
-  <h4>Modelo sem pedidos</h4>
-{% endif %}
-{% if gopp %}
-  <h3>OPs – Pedidos (B)</h3>
-  <table>
-    {% include "layout/thead_generic.html" with data=gopp.headers style=gopp.style only %}
-    {% include "layout/tbody_generic.html" with fields=gopp.fields data=gopp.data style=gopp.style only %}
-  </table>
-{% endif %}
-{% if gap %}
-  <h3>A produzir (A-B)[+]</h3>
-  <table>
-    {% include "layout/thead_generic.html" with data=gap.headers style=gap.style only %}
-    {% include "layout/tbody_generic.html" with fields=gap.fields data=gap.data style=gap.style only %}
-  </table>
-{% endif %}
-{% if glm %}
-  <h3>A produzir, considerando lote mínimo</h3>
-  <table>
-    {% include "layout/thead_generic.html" with data=glm.headers style=glm.style only %}
-    {% include "layout/tbody_generic.html" with fields=glm.fields data=glm.data style=glm.style only %}
-  </table>
-{% endif %}
-{% if gex %}
-  <h3>Excesso (A-B)[-]</h3>
-  <table>
-    {% include "layout/thead_generic.html" with data=gex.headers style=gex.style only %}
-    {% include "layout/tbody_generic.html" with fields=gex.fields data=gex.data style=gex.style only %}
-  </table>
-{% endif %}
-{% endif %}
+  <h3>Modelo: {{ modelo }}</h3>
+
+  {% if msg_erro %}
+    <h4>{{ msg_erro }}</h4>
+  {% else %}
+
+    {% if colecao %}
+      <h4>Coleção: {{ colecao }}</h4>
+    {% endif %}
+
+    <h3>Meta de estoque</h3>
+    {% if msg_meta_estoque %}
+      <h4>{{ msg_meta_estoque }}</h4>
+    {% else %}
+
+      <table>
+
+      {% if gme %}
+        {% include "layout/thead_generic.html" with data=gme.headers style=gme.style only %}
+        {% include "layout/tbody_generic.html" with fields=gme.fields data=gme.data style=gme.style only %}
+      {% endif %}
+      <thead>
+        <tr>
+          <th colspan="99">
+            <h3>Meta de giro (lead)</h3>
+          </th>
+        </tr>
+      </thead>
+      {% if msg_meta_giro %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h4>{{ msg_meta_giro }}</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
+      {% if gmg %}
+        {% include "layout/thead_generic.html" with data=gmg.headers style=gmg.style only %}
+        {% include "layout/tbody_generic.html" with fields=gmg.fields data=gmg.data style=gmg.style only %}
+      {% endif %}
+
+      {% if gm %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h3>Total das metas (A)</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=gm.headers style=gm.style only %}
+        {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
+      {% endif %}
+
+      <thead>
+        <tr>
+          <th colspan="99">
+            <h3>Total das OPs</h3>
+          </th>
+        </tr>
+      </thead>
+      {% if gop %}
+        {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
+        {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
+      {% else %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h4>Modelo sem OPs</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
+
+      <thead>
+        <tr>
+          <th colspan="99">
+            <h3>Carteira de pedidos</h3>
+            <p>Obs.: Pedidos com data de embarque até: Hoje + <i>lead time</i> do produto + {{ dias_alem_lead }}</p>
+          </th>
+        </tr>
+      </thead>
+      {% if gped %}
+        {% include "layout/thead_generic.html" with data=gped.headers style=gped.style only %}
+        {% include "layout/tbody_generic.html" with fields=gped.fields data=gped.data style=gped.style only %}
+      {% else %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h4>Modelo sem pedidos</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
+
+      {% if gopp %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h3>OPs – Pedidos (B)</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=gopp.headers style=gopp.style only %}
+        {% include "layout/tbody_generic.html" with fields=gopp.fields data=gopp.data style=gopp.style only %}
+      {% endif %}
+
+      {% if gap %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h3>A produzir (A-B)[+]</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=gap.headers style=gap.style only %}
+        {% include "layout/tbody_generic.html" with fields=gap.fields data=gap.data style=gap.style only %}
+      {% endif %}
+
+      {% if glm %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h3>A produzir, considerando lote mínimo</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=glm.headers style=glm.style only %}
+        {% include "layout/tbody_generic.html" with fields=glm.fields data=glm.data style=glm.style only %}
+      {% endif %}
+
+      {% if gex %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h3>Excesso (A-B)[-]</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=gex.headers style=gex.style only %}
+        {% include "layout/tbody_generic.html" with fields=gex.fields data=gex.data style=gex.style only %}
+      {% endif %}
+
+      </table>
+    {% endif %}
+  {% endif %}
 {% endif %}
 {% endblock %}
