@@ -123,6 +123,18 @@
         {% include "layout/tbody_generic.html" with fields=gopp.fields data=gopp.data style=gopp.style only %}
       {% endif %}
 
+      {% if gex %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h3>Excesso (A-B)[-]</h3>
+            </th>
+          </tr>
+        </thead>
+        {% include "layout/thead_generic.html" with data=gex.headers style=gex.style only %}
+        {% include "layout/tbody_generic.html" with fields=gex.fields data=gex.data style=gex.style only %}
+      {% endif %}
+
       {% if gap %}
         <thead>
           <tr>
@@ -145,18 +157,6 @@
         </thead>
         {% include "layout/thead_generic.html" with data=glm.headers style=glm.style only %}
         {% include "layout/tbody_generic.html" with fields=glm.fields data=glm.data style=glm.style only %}
-      {% endif %}
-
-      {% if gex %}
-        <thead>
-          <tr>
-            <th colspan="99">
-              <h3>Excesso (A-B)[-]</h3>
-            </th>
-          </tr>
-        </thead>
-        {% include "layout/thead_generic.html" with data=gex.headers style=gex.style only %}
-        {% include "layout/tbody_generic.html" with fields=gex.fields data=gex.data style=gex.style only %}
       {% endif %}
 
       </table>
