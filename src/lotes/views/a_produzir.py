@@ -308,6 +308,19 @@ class GradeProduzir(O2BaseGetPostView):
             'modelo': modelo,
         })
 
+        data = produto.queries.modelo_inform(cursor, modelo)
+        if len(data) == 0:
+            self.context.update({
+                'msg_erro': 'Modelo não encontrado',
+            })
+            return
+
+        row = data[0]
+        colecao = row['CODIGO_COLECAO']
+        self.context.update({
+            'colecao': row['COLECAO'],
+        })
+
         metas = comercial.models.MetaEstoque.objects
         metas = metas.annotate(antiga=Exists(
             comercial.models.MetaEstoque.objects.filter(
