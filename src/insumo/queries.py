@@ -858,12 +858,15 @@ def insumo_necessidade_semana(
               TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
                 SEMANA_NECESSIDADE
             , op.ORDEM_PRODUCAO
-            , sum( ia.CONSUMO *
-                   (
-                ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD
-                - lote.QTDE_PECAS_2A - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
-                   )
-                 ) QTD_INSUMO
+            , sum(
+                ia.CONSUMO
+              * ( lote.QTDE_A_PRODUZIR_PACOTE
+                - lote.QTDE_PECAS_PROD
+                - lote.QTDE_PECAS_2A
+                - lote.QTDE_PERDAS
+                - lote.QTDE_CONSERTO
+                )
+              ) QTD_INSUMO
             FROM BASI_030 ref -- referencia
             JOIN PCPC_020 op -- OP
               ON op.REFERENCIA_PECA = ref.REFERENCIA
