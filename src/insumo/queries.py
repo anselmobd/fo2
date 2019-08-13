@@ -1034,16 +1034,23 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
         , op.REFERENCIA_PECA REF
         , ref.DESCR_REFERENCIA DESCR
         , op.ORDEM_PRODUCAO OP
-        , trunc(sum(
-            ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
-            - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
-             ) ) QTD_PRODUTO
-        , sum( ia.CONSUMO *
-               (
-            ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
-            - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
-               )
-             ) QTD_INSUMO
+        , sum(
+            ( lote.QTDE_A_PRODUZIR_PACOTE
+            - lote.QTDE_PECAS_PROD
+            - lote.QTDE_PECAS_2A
+            - lote.QTDE_PERDAS
+            - lote.QTDE_CONSERTO
+            )
+          ) QTD_PRODUTO
+        , sum(
+            ia.CONSUMO
+          * ( lote.QTDE_A_PRODUZIR_PACOTE
+            - lote.QTDE_PECAS_PROD
+            - lote.QTDE_PECAS_2A
+            - lote.QTDE_PERDAS
+            - lote.QTDE_CONSERTO
+            )
+          ) QTD_INSUMO
         FROM BASI_030 ref -- referencia
         JOIN PCPC_020 op -- OP
           ON op.REFERENCIA_PECA = ref.REFERENCIA
