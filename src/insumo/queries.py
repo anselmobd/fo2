@@ -877,18 +877,20 @@ def insumo_necessidade_semana(
              AND (ia.ITEM_ITEM = lote.PROCONF_ITEM OR ia.ITEM_ITEM = '000000')
              AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
              AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
-            LEFT JOIN BASI_040 coc -- combinação cor
-              ON ia.ITEM_COMP = '000000'
-             AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
-             AND coc.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
-             AND coc.SEQUENCIA = ia.SEQUENCIA
-             AND coc.ITEM_ITEM = lote.PROCONF_ITEM
             LEFT JOIN BASI_040 cot -- combinação tamanho
               ON ia.SUB_COMP = '000'
              AND cot.GRUPO_ITEM = ia.GRUPO_ITEM
-             AND cot.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
-             AND cot.SEQUENCIA = ia.SEQUENCIA
              AND cot.SUB_ITEM = lote.PROCONF_SUBGRUPO
+             AND cot.ITEM_ITEM = ia.ITEM_ITEM
+             AND cot.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
+             AND cot.SEQUENCIA = ia.SEQUENCIA
+            LEFT JOIN BASI_040 coc -- combinação cor
+              ON ia.ITEM_COMP = '000000'
+             AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
+             AND coc.SUB_ITEM = ia.SUB_ITEM
+             AND coc.ITEM_ITEM = lote.PROCONF_ITEM
+             AND coc.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
+             AND coc.SEQUENCIA = ia.SEQUENCIA
             WHERE op.SITUACAO IN (2, 4) -- não cancelada
               AND lote.NUMERO_ORDEM = 0
               AND ia.NIVEL_COMP = {nivel}
