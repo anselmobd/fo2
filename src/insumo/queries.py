@@ -361,20 +361,24 @@ def necessidade(
           ON ia.NIVEL_ITEM = 1
          AND ia.NIVEL_COMP <> 1
          AND ia.GRUPO_ITEM = o.REFERENCIA_PECA
+         AND (ia.SUB_ITEM = l.PROCONF_SUBGRUPO OR ia.SUB_ITEM = '000')
+         AND (ia.ITEM_ITEM = l.PROCONF_ITEM OR ia.ITEM_ITEM = '000000')
          AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
          AND ia.ESTAGIO = l.CODIGO_ESTAGIO
-        LEFT JOIN BASI_040 coc -- combinação cor
-          ON ia.ITEM_COMP = '000000'
-         AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
-         AND coc.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
-         AND coc.SEQUENCIA = ia.SEQUENCIA
-         AND coc.ITEM_ITEM = l.PROCONF_ITEM
         LEFT JOIN BASI_040 cot -- combinação tamanho
           ON ia.SUB_COMP = '000'
          AND cot.GRUPO_ITEM = ia.GRUPO_ITEM
-         AND cot.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
-         AND cot.SEQUENCIA = ia.SEQUENCIA
          AND cot.SUB_ITEM = l.PROCONF_SUBGRUPO
+         AND cot.ITEM_ITEM = ia.ITEM_ITEM
+         AND cot.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
+         AND cot.SEQUENCIA = ia.SEQUENCIA
+        LEFT JOIN BASI_040 coc -- combinação cor
+          ON ia.ITEM_COMP = '000000'
+         AND coc.GRUPO_ITEM = ia.GRUPO_ITEM
+         AND coc.SUB_ITEM = ia.SUB_ITEM
+         AND coc.ITEM_ITEM = l.PROCONF_ITEM
+         AND coc.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
+         AND coc.SEQUENCIA = ia.SEQUENCIA
         JOIN basi_030 r -- referencia
           ON r.NIVEL_ESTRUTURA = ia.NIVEL_COMP
          AND r.REFERENCIA = ia.GRUPO_COMP
@@ -510,7 +514,6 @@ def necessidade(
         filtro_colecao=filtro_colecao,
         quais_insumos=quais_insumos)
     cursor.execute(sql)
-    # , [data_corte, data_corte, conta_estoque, conta_estoque])
     return rows_to_dict_list(cursor)
 
 
@@ -1124,7 +1127,6 @@ def previsao(cursor, periodo=None, dtini=None, nsem=None):
     except Exception:
         filtra_DATA_INI_PERIODO = ''
 
-
     # lista primeiro nível de necessidade da previsao
     sql = """
         WITH previsao AS (
@@ -1480,6 +1482,7 @@ def insumo_previsoes_semana_insumo(
             'DT_NECESSIDADE', 'NIVEL', 'REF', 'ALT', 'COR', 'ORD_TAM'))
 
     return insumo
+
 
 def insumos_cor_tamanho_usados(
         cursor, qtd_itens='0', nivel=None, uso=None, insumo=None):
