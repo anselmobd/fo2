@@ -1018,7 +1018,7 @@ class InconsistenciasDetalhe(View):
 
         ocs = []
         for lote in lotes_recs:
-            ocs.append(lote['lote'][4:].strip('0'))
+            ocs.append(lote['lote'][4:].lstrip('0'))
 
         headers = ['Estágio', 'Lote', 'Referência', 'Cor', 'Tamanho',
                    'Quantidade']
