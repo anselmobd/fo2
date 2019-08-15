@@ -15,7 +15,8 @@ def op_inform(cursor, op):
 
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
-        deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None):
+        deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
+        motivo=None):
     key_cache = make_key_cache()
 
     cached_result = cache.get(key_cache)
@@ -163,9 +164,16 @@ def busca_op(
             )
         '''
 
+    filtro_motivo = ''
+    if motivo == 'p':
+        filtro_motivo = "AND o.PEDIDO_VENDA <> 0"
+    elif motivo == 'e':
+        filtro_motivo = "AND o.PEDIDO_VENDA = 0"
+
     sql = '''
         SELECT
           o.ORDEM_PRODUCAO OP
+        , o.PEDIDO_VENDA PED
         , ( SELECT
               LISTAGG(t.ESTAGIO, ', ')
                 WITHIN GROUP (ORDER BY t.ESTAGIO) ESTAGIO
@@ -331,6 +339,7 @@ def busca_op(
          AND r.REFERENCIA = o.REFERENCIA_PECA
         WHERE 1=1
           {filtra_op} -- filtra_op
+          {filtro_motivo} -- filtro_motivo
           {filtra_ref} -- filtra_ref
           {filtra_modelo} -- filtra_modelo
           {filtra_tam} -- filtra_tam
@@ -370,6 +379,7 @@ def busca_op(
            o.ORDEM_PRODUCAO DESC
     '''.format(
         filtra_op=filtra_op,
+        filtro_motivo=filtro_motivo,
         filtra_ref=filtra_ref,
         filtra_modelo=filtra_modelo,
         filtra_tam=filtra_tam,

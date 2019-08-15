@@ -334,7 +334,7 @@ class BuscaOP(View):
 
     def mount_context(
             self, cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
-            situacao, posicao):
+            situacao, posicao, motivo):
         context = {
             'ref': ref,
             'modelo': modelo,
@@ -345,12 +345,13 @@ class BuscaOP(View):
             'tipo_alt': tipo_alt,
             'situacao': situacao,
             'posicao': posicao,
+            'motivo': motivo,
         }
 
         data = models.busca_op(
             cursor, ref=ref, modelo=modelo, tam=tam, cor=cor,
             deposito=deposito, tipo=tipo, tipo_alt=tipo_alt, situacao=situacao,
-            posicao=posicao)
+            posicao=posicao, motivo=motivo)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'OPs não encontradas',
@@ -396,13 +397,13 @@ class BuscaOP(View):
             'descr': {'LOTES': 'Totais:'}})
 
         context.update({
-            'headers': ('OP', 'Situação', 'Cancelamento',
+            'headers': ('OP', 'Situação', 'Pedido', 'Cancelamento',
                         'Tipo', 'Referência',
                         'Alt.', 'Roteiro', 'Estágio',
                         'Q. Lotes', 'Q. Itens', 'Q. em Prod.',
                         'Depósito', 'Período',
                         'Data Digitação', 'Data Corte', 'OP relacionada'),
-            'fields': ('OP', 'SITUACAO', 'CANCELAMENTO',
+            'fields': ('OP', 'SITUACAO', 'PED', 'CANCELAMENTO',
                        'TIPO_REF', 'REF',
                        'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
                        'LOTES', 'QTD', 'QTD_AP',
@@ -438,11 +439,12 @@ class BuscaOP(View):
             tipo_alt = form.cleaned_data['tipo_alt']
             situacao = form.cleaned_data['situacao']
             posicao = form.cleaned_data['posicao']
+            motivo = form.cleaned_data['motivo']
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context(
                     cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
-                    situacao, posicao))
+                    situacao, posicao, motivo))
         context['form'] = form
         return render(request, self.template_name, context)
 
