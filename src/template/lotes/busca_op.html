@@ -50,6 +50,14 @@
     {% endif %}
   </h4>
 {% endif %}
+{% if tipo_alt %}
+  <h4>Tipo de alternativa:
+    {% if   tipo_alt == 't' %}Todas
+    {% elif tipo_alt == 'p' %}Alternativa de produção
+    {% elif tipo_alt == 'e' %}Alternativa de expedição
+    {% endif %}
+  </h4>
+{% endif %}
 {% if posicao %}
   <h4>Posição:
     {% if posicao == 't' %}Todas as OPs
