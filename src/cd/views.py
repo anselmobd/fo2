@@ -632,7 +632,7 @@ class Inconsistencias(View):
                 ocs = ''
                 sep = ''
                 for lote in lotes_recs:
-                    ocs += sep + lote['lote'][4:].strip('0')
+                    ocs += sep + lote['lote'][4:].lstrip('0')
                     sep = ','
 
                 op_ocs = '( op.ORDEM_PRODUCAO = {} ' \
