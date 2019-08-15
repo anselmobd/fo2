@@ -390,6 +390,9 @@ class BuscaOP(View):
                 row['DT_CORTE'] = row['DT_CORTE'].date()
             if row['ESTAGIO'] is None:
                 row['ESTAGIO'] = 'Finalizado*'
+            if row['PED'] != 0:
+                row['PED|LINK'] = reverse(
+                    'producao:pedido__get', args=[row['PED']])
 
         totalize_data(data, {
             'sum': ['QTD', 'QTD_AP'],
