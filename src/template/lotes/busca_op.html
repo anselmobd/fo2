@@ -68,6 +68,14 @@
     {% endif %}
   </h4>
 {% endif %}
+{% if motivo %}
+  <h4>Motivo da OP:
+    {% if posicao == 't' %}Todas as OPs
+    {% elif posicao == 'p' %}OP de pedido
+    {% elif posicao == 'e' %}OP de estoque
+    {% endif %}
+  </h4>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
