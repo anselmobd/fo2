@@ -63,6 +63,7 @@ def busca_op(
         """.format(tam)
 
     filtra_cor = ""
+    filtra_qtd_cor = ""
     if cor is not None and cor != '':
         filtra_cor = """
             AND EXISTS
@@ -73,6 +74,7 @@ def busca_op(
                 AND l.PROCONF_ITEM = '{}'
             )
         """.format(cor)
+        filtra_qtd_cor = "AND l.PROCONF_ITEM = '{}'".format(cor)
 
     filtra_deposito = ""
     if deposito is not None and deposito != '':
@@ -257,6 +259,7 @@ def busca_op(
               SUM( l.QTDE_PECAS_PROG )
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+              {filtra_qtd_cor} -- filtra_qtd_cor
               AND l.SEQ_OPERACAO = (
                 SELECT
                   MAX( ls.SEQ_OPERACAO )
@@ -270,6 +273,7 @@ def busca_op(
               SUM( l.QTDE_A_PRODUZIR_PACOTE )
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+              {filtra_qtd_cor} -- filtra_qtd_cor
               AND l.SEQ_OPERACAO = (
                 SELECT
                   MAX( ls.SEQ_OPERACAO )
@@ -366,6 +370,7 @@ def busca_op(
         filtra_modelo=filtra_modelo,
         filtra_tam=filtra_tam,
         filtra_cor=filtra_cor,
+        filtra_qtd_cor=filtra_qtd_cor,
         filtra_deposito=filtra_deposito,
         filtro_tipo=filtro_tipo,
         filtro_tipo_alt=filtro_tipo_alt,
