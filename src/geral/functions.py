@@ -109,12 +109,23 @@ def config_set_value(param_codigo, value, usuario=None):
     except models.Parametro.DoesNotExist:
         return False
 
+    config = None
     try:
         config = models.Config.objects.get(parametro=param, usuario=usuario)
+    except models.Config.DoesNotExist as e:
+        pass
+
+    if config is None:
+        try:
+            config = models.Config.objects.get(parametro=param, usuario=None)
+        except models.Config.DoesNotExist as e:
+            pass
+
+    if config is None:
+        return False
+    else:
         if config.valor != value:
             config.valor = value
             config.save()
-    except Exception as e:
-        return False
 
     return True
