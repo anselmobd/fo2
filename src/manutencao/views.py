@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from fo2.template import group_rowspan
 
 from base.views import O2BaseGetView
+from utils.functions import dow_info
 
 import manutencao.models as models
 
@@ -175,10 +176,10 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
                 'nome': meses_nomes[i],
                 'ativa': meses_ativa[i],
                 'href': meses_href[i],
-                'r_headers': ('Data', 'Máquina', 'Rotina', 'Imprimir'),
-                'r_fields': ('data', 'maquina', 'rotina', 'imprimir'),
+                'r_headers': ('Data', 'Dia', 'Máquina', 'Rotina', 'Imprimir'),
+                'r_fields': ('data', 'down', 'maquina', 'rotina', 'imprimir'),
                 'r_data': [],
-                'r_group': ['data']
+                'r_group': ['data', 'down']
             }
             meses.append(mes)
             dtini = dtini + tamanho_periodo
@@ -229,6 +230,7 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
                                 'maquina': maquina,
                                 'rotina': rotina,
                                 'data': data,
+                                'down': dow_info(data, 'name'),
                                 'imprimir': '',
                                 'imprimir|TARGET': '_BLANK',
                                 'imprimir|LINK': reverse(
