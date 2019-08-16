@@ -185,9 +185,9 @@
 
    function reset() {
      if (valendo) {
-       // let elm = document.getElementById("timerlink");
-       // let newone = elm.cloneNode(true);
-       // elm.parentNode.replaceChild(newone, elm);
+       let elm = document.getElementById("timerlink");
+       let newone = elm.cloneNode(true);
+       elm.parentNode.replaceChild(newone, elm);
 
        last_user_action = 0;
        console.log("Reset");
