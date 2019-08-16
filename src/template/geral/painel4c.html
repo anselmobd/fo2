@@ -172,6 +172,8 @@
    //      }
    //  }, 1000);
 
+   var valendo = false;
+
    console.log("Start");
 
    var refresh_rate = 20; //<-- In seconds, change to your needs
@@ -182,12 +184,14 @@
 
 
    function reset() {
-     let elm = document.getElementById("timerlink");
-     let newone = elm.cloneNode(true);
-     elm.parentNode.replaceChild(newone, elm);
+     if (valendo) {
+       let elm = document.getElementById("timerlink");
+       let newone = elm.cloneNode(true);
+       elm.parentNode.replaceChild(newone, elm);
 
-     last_user_action = 0;
-     console.log("Reset");
+       last_user_action = 0;
+       console.log("Reset");
+     }
    }
 
    // function windowHasFocus() {
@@ -201,19 +205,15 @@
    // }
 
    function refreshCheck() {
-     // var focus = window.onfocus;
-     // if ((last_user_action >= refresh_rate && !has_focus && document.readyState == "complete") || lost_focus_count > focus_margin) {
-     if (last_user_action >= refresh_rate && document.readyState == "complete") {
-       window.location.reload(); // If this is called no reset is needed
-       // reset(); // We want to reset just to make sure the location reload is not called.
+     if (valendo) {
+       // var focus = window.onfocus;
+       // if ((last_user_action >= refresh_rate && !has_focus && document.readyState == "complete") || lost_focus_count > focus_margin) {
+       if (last_user_action >= refresh_rate && document.readyState == "complete") {
+         window.location.reload(); // If this is called no reset is needed
+         // reset(); // We want to reset just to make sure the location reload is not called.
+       }
      }
    }
-
-   setInterval(function () {
-     last_user_action++;
-     console.log(last_user_action);
-     refreshCheck();
-   }, 1000);
 
    // window.addEventListener("focus", windowHasFocus, false);
    // window.addEventListener("blur", windowLostFocus, false);
@@ -238,6 +238,14 @@
      pn_mr.scrollTop = 0;
      let pn_r = document.getElementById("id_PN_Right");
      pn_r.scrollTop = 0;
+
+     setInterval(function () {
+       last_user_action++;
+       console.log(last_user_action);
+       refreshCheck();
+     }, 1000);
+
+     valendo = true;
    }
 
   </script>
