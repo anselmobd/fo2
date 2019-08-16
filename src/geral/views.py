@@ -130,7 +130,7 @@ class PainelView(View):
             modulo['dados'] = InformacaoModulo.objects.filter(
                 painel_modulo__nome=modulo['modulo'],
                 habilitado=True
-            ).order_by('-data')[:100]
+            ).order_by('-data')[:200]
 
         context = {
             'titulo': painel[0].nome,
