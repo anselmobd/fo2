@@ -40,11 +40,13 @@
         color: snow;
         justify-content: right;
         animation-name: timer;
-        animation-duration: 30s;
+        animation-duration: 20s;
     }
     @keyframes timer {
         0%   {color: snow;}
-        100% {color: IndianRed;}
+        50%  {color: yellow;}
+        95%  {color: orange;}
+        100% {color: firebrick;}
     }
     hr {
       border: 1px dashed firebrick;
@@ -137,30 +139,114 @@
     }
   </style>
   <script>
-     var timerId;
-     var seconds=30;
-     var count=seconds;
+     // var timerId;
+     // var seconds=30;
+     // var count=seconds;
+     //
+     // resetCount = function() {
+     //   //  alert('on');
+     //   var count=seconds;
+     //
+     //   let elm = document.getElementById("timerlink");
+     //   let newone = elm.cloneNode(true);
+     //   elm.parentNode.replaceChild(newone, elm);
+     // }
+     //
+     // startTimer = function() {
+     //   var timerId = setInterval(function() {
+     //     var count = count - 1;
+     //     if (count<=0) {
+     //       location.reload(true);
+     //     }
+     //   },1000);
+     // }
 
-     resetCount = function() {
-       //  alert('on');
-       var count=seconds;
+   // var time = new Date().getTime();
+   //  $(document.body).bind("mousemove keypress", function () {
+   //      time = new Date().getTime();
+   //  });
+   //
+   //  setInterval(function() {
+   //      if (new Date().getTime() - time >= 30000) {
+   //          window.location.reload(true);
+   //      }
+   //  }, 1000);
 
-       let elm = document.getElementById("timerlink");
-       let newone = elm.cloneNode(true);
-       elm.parentNode.replaceChild(newone, elm);
+   console.log("Start");
+
+   var refresh_rate = 20; //<-- In seconds, change to your needs
+   var last_user_action = 0;
+   // var has_focus = false;
+   // var lost_focus_count = 0;
+   // var focus_margin = 30; // If we lose focus more then the margin we want to refresh
+
+
+   function reset() {
+     let elm = document.getElementById("timerlink");
+     let newone = elm.cloneNode(true);
+     elm.parentNode.replaceChild(newone, elm);
+
+     last_user_action = 0;
+     console.log("Reset");
+   }
+
+   // function windowHasFocus() {
+   //   has_focus = true;
+   // }
+   //
+   // function windowLostFocus() {
+   //   has_focus = false;
+   //   lost_focus_count++;
+   //   console.log(lost_focus_count + " <~ Lost Focus");
+   // }
+
+   function refreshCheck() {
+     // var focus = window.onfocus;
+     // if ((last_user_action >= refresh_rate && !has_focus && document.readyState == "complete") || lost_focus_count > focus_margin) {
+     if (last_user_action >= refresh_rate && document.readyState == "complete") {
+       window.location.reload(); // If this is called no reset is needed
+       // reset(); // We want to reset just to make sure the location reload is not called.
      }
+   }
 
-     startTimer = function() {
-       var timerId = setInterval(function() {
-         var count = count - 1;
-         if (count<=0) {
-           location.reload(true);
-         }
-       },1000);
-     }
+   setInterval(function () {
+     last_user_action++;
+     console.log(last_user_action);
+     refreshCheck();
+   }, 1000);
+
+   // window.addEventListener("focus", windowHasFocus, false);
+   // window.addEventListener("blur", windowLostFocus, false);
+   window.addEventListener("focus", reset, false);
+   window.addEventListener("blur", reset, false);
+   window.addEventListener("click", reset, false);
+   window.addEventListener("dblclick", reset, false);
+   window.addEventListener("mouseover", reset, false);
+   window.addEventListener("mousemove", reset, false);
+   window.addEventListener("keypress", reset, false);
+   window.addEventListener("keydown", reset, false);
+   window.addEventListener("scroll", reset, false);
+   document.addEventListener("touchMove", reset, false);
+   document.addEventListener("touchEnd", reset, false);
+
+   function resetScroll() {
+     let pn_l = document.getElementById("id_PN_Left");
+     pn_l.scrollTop = 0;
+     let pn_ml = document.getElementById("id_PN_MiddleLeft");
+     pn_ml.scrollTop = 0;
+     let pn_mr = document.getElementById("id_PN_MiddleRight");
+     pn_mr.scrollTop = 0;
+     let pn_r = document.getElementById("id_PN_Right");
+     pn_r.scrollTop = 0;
+   }
+
   </script>
 </head>
-<body onload="startTimer();" onmouseover="resetCount();" onmousemove="resetCount();" onclick="resetCount();" ondblclick="resetCount();" onkeydown="resetCount();" onscroll="resetCount();">
+<!-- <body onload="startTimer();" onmouseover="resetCount();"
+        onmousemove="resetCount();" onclick="resetCount();"
+        ondblclick="resetCount();" onkeydown="resetCount();"
+        onscroll="resetCount();"> -->
+<body onload="resetScroll();">
   <!-- <div id="aviso_rh" class="invisible">
     <h1><center><a href="/media/rh/Regulamento_interno.pdf" target="_blank">Clique aqui para ler o Regulamento interno da Tussor</a></center></h1>
   </div> -->
@@ -173,28 +259,28 @@
     <div class="PN_Right">{{ config.dados.3.modulo }}</div>
   </div>
   <div class="PN_Container">
-    <div class="PN_Left">
+    <div id="id_PN_Left" class="PN_Left">
       {% for dados in config.dados.0.dados %}
         {{ dados.data }} - {{ dados.usuario.first_name }}
         <h3>{{ dados.chamada }}</h3>
         <hr>
       {% endfor%}
     </div>
-    <div class="PN_MiddleLeft">
+    <div id="id_PN_MiddleLeft" class="PN_MiddleLeft">
       {% for dados in config.dados.1.dados %}
         {{ dados.data }} - {{ dados.usuario.first_name }}
         <h3>{{ dados.chamada }}</h3>
         <hr>
       {% endfor%}
     </div>
-    <div class="PN_MiddleRight">
+    <div id="id_PN_MiddleRight" class="PN_MiddleRight">
       {% for dados in config.dados.2.dados %}
         {{ dados.data }} - {{ dados.usuario.first_name }}
         <h3>{{ dados.chamada }}</h3>
         <hr>
       {% endfor%}
     </div>
-    <div class="PN_Right">
+    <div id="id_PN_Right" class="PN_Right">
       {% for dados in config.dados.3.dados %}
         {{ dados.data }} - {{ dados.usuario.first_name }}
         <h3>{{ dados.chamada }}</h3>
