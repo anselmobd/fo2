@@ -324,6 +324,6 @@ class Imprimir(LoginRequiredMixin, O2BaseGetView):
             'data_r': data_r,
             'data': data,
             'dia': dia,
-            'dow': dow_info(dia, 'name'),
+            'dow': dow_info(dia, 'name', True),
             'now': datetime.now(),
         })

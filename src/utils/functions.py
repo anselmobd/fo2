@@ -33,9 +33,12 @@ __dow_info = {
 }
 
 
-def dow_info(dt, info):
+def dow_info(dt, info, capitalize=False):
     dow = dt.weekday()
-    return __dow_info[dow][info]
+    result = __dow_info[dow][info]
+    if capitalize:
+        result = result.capitalize()
+    return result
 
 
 def inc_month(dt, months):
