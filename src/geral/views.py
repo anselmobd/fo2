@@ -1,5 +1,6 @@
 from pprint import pprint, pformat
 import yaml
+import datetime
 
 import django.forms
 from django.db import connections
@@ -124,13 +125,16 @@ class PainelView(View):
         if len(painel) == 0:
             return redirect('apoio_ao_erp')
 
+        ultimo_mes = datetime.date.today() - datetime.timedelta(days=61)
+
         layout = painel[0].layout
         config = yaml.load(layout)
         for modulo in config['dados']:
             modulo['dados'] = InformacaoModulo.objects.filter(
                 painel_modulo__nome=modulo['modulo'],
-                habilitado=True
-            ).order_by('-data')[:200]
+                habilitado=True,
+                data__gt=ultimo_mes,
+            ).order_by('-data')
 
         context = {
             'titulo': painel[0].nome,
