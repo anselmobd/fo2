@@ -209,7 +209,8 @@
        // var focus = window.onfocus;
        // if ((last_user_action >= refresh_rate && !has_focus && document.readyState == "complete") || lost_focus_count > focus_margin) {
        if (last_user_action >= refresh_rate && document.readyState == "complete") {
-         window.location.reload(); // If this is called no reset is needed
+         // window.location.reload(); // If this is called no reset is needed
+         location.reload(true);
          // reset(); // We want to reset just to make sure the location reload is not called.
        }
      }
