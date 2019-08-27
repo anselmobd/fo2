@@ -176,8 +176,10 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
                 'nome': meses_nomes[i],
                 'ativa': meses_ativa[i],
                 'href': meses_href[i],
-                'r_headers': ('Data', 'Dia', 'Máquina', 'Rotina', 'Imprimir'),
-                'r_fields': ('data', 'down', 'maquina', 'rotina', 'imprimir'),
+                'r_headers': ('Data', 'Dia', 'OS', 'Máquina', 'Rotina',
+                              'Imprimir'),
+                'r_fields': ('data', 'down', 'cria_os', 'maquina', 'rotina',
+                             'imprimir'),
                 'r_data': [],
                 'r_group': ['data', 'down']
             }
@@ -233,9 +235,16 @@ class Executar(LoginRequiredMixin, O2BaseGetView):
                                 'down': dow_info(data, 'name'),
                                 'imprimir': '',
                                 'imprimir|TARGET': '_BLANK',
+                                'imprimir|GLYPHICON': 'glyphicon-print',
                                 'imprimir|LINK': reverse(
                                     'manutencao:imprimir',
-                                    args=[rotina.id, maquina.id, data])
+                                    args=[rotina.id, maquina.id, data]),
+                                'cria_os': 'Cria',
+                                'cria_os|TARGET': '_BLANK',
+                                'cria_os|GLYPHICON': 'glyphicon-wrench',
+                                'cria_os|LINK': reverse(
+                                    'manutencao:cria_os',
+                                    args=[rotina.id, maquina.id, data]),
                             })
 
         if tem_rotina:
