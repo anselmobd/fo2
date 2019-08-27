@@ -195,3 +195,39 @@ class RotinaPasso(models.Model):
         db_table = 'fo2_man_rotina_passo'
         verbose_name = 'Passo de rotina de manutenção'
         verbose_name_plural = "Passos de rotinas de manutenção"
+
+
+class OS(models.Model):
+    numero = models.IntegerField(
+        default=0,
+        verbose_name='número')
+    maquina = models.ForeignKey(
+        Maquina,
+        on_delete=models.CASCADE,
+        verbose_name='máquina')
+    rotina = models.ForeignKey(
+        Rotina,
+        on_delete=models.CASCADE)
+    data_agendada = models.DateField(
+        "Data agendada")
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        verbose_name='usuário')
+
+    def __str__(self):
+        return '{} : {:02} : {}'.format(
+            self.rotina, self.ordem, self.atividade)
+
+    class Meta:
+        db_table = 'fo2_man_os'
+        verbose_name = 'OS de rotina de manutenção'
+        verbose_name_plural = "OSs de rotinas de manutenção"
+
+    def save(self, *args, **kwargs):
+        max_os = OS.objects.all().order_by('-numero').first()
+        if max_os is None:
+            numero = 1001
+        else:
+            numero = max_os.numero + 1
+        self.numero = numero
+        super(OS, self).save(*args, **kwargs)
