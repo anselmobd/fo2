@@ -19,4 +19,7 @@ urlpatterns = [
 
     url(r'^imprimir/(?P<rotina>\d+)/(?P<maquina>\d+)/(?P<data>.+)/$',
         views.Imprimir.as_view(), name='imprimir'),
+
+    url(r'^cria_os/(?P<rotina>\d+)/(?P<maquina>\d+)/(?P<data>.+)/$',
+        views.CriaOS.as_view(), name='cria_os'),
 ]

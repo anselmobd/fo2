@@ -410,6 +410,16 @@ class Imprimir(LoginRequiredMixin, O2BaseGetView):
         #     'dow': dow_info(dia, 'name', True),
         #     'now': datetime.now(),
         # })
+
+
+class CriaOS(LoginRequiredMixin, O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(CriaOS, self).__init__(*args, **kwargs)
+        self.template_name = 'manutencao/imprimir.html'
+        self.get_args = ['rotina', 'maquina', 'data']
+        self.get_args2context = True
+
     def mount_context(self):
         if self.request.user.id is None:
             return
@@ -428,56 +438,19 @@ class Imprimir(LoginRequiredMixin, O2BaseGetView):
             'tipo_maquina__id'), id=self.kwargs['maquina'])
         if len(mq) != 1:
             return
-        data_m = list(mq.values(
-            'tipo_maquina',
-            'nome',
-            'slug',
-            'descricao',
-            'data_inicio',
-        ))[0]
+        mq = mq[0]
 
         rot = models.Rotina.objects.filter(tipo_maquina__in=utm.values(
             'tipo_maquina__id'), id=self.kwargs['rotina'])
         if len(rot) != 1:
             return
-        data_r = list(rot.values(
-            'tipo_maquina',
-            'tipo_maquina__nome',
-            'frequencia',
-            'frequencia__nome',
-            'nome',
-        ))[0]
+        rot = rot[0]
 
-        ativ = models.RotinaPasso.objects
-        ativ = ativ.filter(rotina__in=rot)
-        ativ = ativ.annotate(tem_medidas=Exists(
-            models.AtividadeMetrica.objects.filter(
-                atividade=OuterRef('atividade')
-            )))
-        ativ = ativ.order_by('ordem')
-        data = list(ativ.values(
-            'ordem',
-            'atividade__id',
-            'atividade__descricao',
-            'rotina__nome',
-            'rotina__frequencia__nome',
-            'tem_medidas',
-        ))
+        os = models.OS()
+        os.maquina = mq
+        os.rotina = rot
+        os.data_agendada = dia
+        os.usuario = self.request.user
+        os.save()
 
-        ordem = 1
-        for row in data:
-            row['ordem'] = ordem
-            ordem += 1
-            metricas = models.AtividadeMetrica.objects.filter(
-                atividade__id=row['atividade__id']
-            ).order_by('ordem').values()
-            row['metricas'] = metricas
-
-        self.context.update({
-            'data_m': data_m,
-            'data_r': data_r,
-            'data': data,
-            'dia': dia,
-            'dow': dow_info(dia, 'name', True),
-            'now': datetime.now(),
-        })
+        imprimir_mount_context(self.request, self.kwargs, self.context)
