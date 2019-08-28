@@ -305,6 +305,15 @@ def imprimir_mount_context(request, kwargs, context):
         'nome',
     ))[0]
 
+    os = models.OS.objects.filter(
+        maquina=mq,
+        rotina=rot,
+        data_agendada=dia,
+    )
+    if len(os) != 1:
+        return
+    data_os = list(os.values())[0]
+
     ativ = models.RotinaPasso.objects
     ativ = ativ.filter(rotina__in=rot)
     ativ = ativ.annotate(tem_medidas=Exists(
@@ -333,6 +342,7 @@ def imprimir_mount_context(request, kwargs, context):
     context.update({
         'data_m': data_m,
         'data_r': data_r,
+        'data_os': data_os,
         'data': data,
         'dia': dia,
         'dow': dow_info(dia, 'name', True),
