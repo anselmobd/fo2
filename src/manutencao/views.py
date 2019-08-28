@@ -376,11 +376,18 @@ class CriaOS(LoginRequiredMixin, O2BaseGetView):
             return
         rot = rot[0]
 
-        os = models.OS()
-        os.maquina = mq
-        os.rotina = rot
-        os.data_agendada = dia
-        os.usuario = self.request.user
-        os.save()
+        try:
+            os = models.OS.objects.get(
+                maquina=mq,
+                rotina=rot,
+                data_agendada=dia,
+            )
+        except models.OS.DoesNotExist as e:
+            os = models.OS()
+            os.maquina = mq
+            os.rotina = rot
+            os.data_agendada = dia
+            os.usuario = self.request.user
+            os.save()
 
         imprimir_mount_context(self.request, self.kwargs, self.context)
