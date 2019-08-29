@@ -69,7 +69,7 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
                 OR ( %s is NOT NULL AND u.CODIGO_USUARIO = %s )
                 )
         """
-    if not todos:
+    if todos == 'a':
         sql += """
               AND u.CODIGO_USUARIO not in(1, 99001) -- DUOMO, Anselmo
               AND ( e.CODIGO_ESTAGIO < 7 OR

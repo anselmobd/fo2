@@ -10,18 +10,22 @@ from lotes.forms import ResponsPorEstagioForm
 import lotes.models as models
 
 
+def responsEdit(request):
+    return responsCustom(request, 'e')
+
+
 def responsTodos(request):
-    return responsCustom(request, True)
+    return responsCustom(request, 't')
 
 
 def respons(request):
-    return responsCustom(request, False)
+    return responsCustom(request, 'a')
 
 
 def responsCustom(request, todos):
     title_name = 'Responsável por estágio'
     context = {'titulo': title_name}
-    if todos:
+    if todos in ['t', 'e']:
         context.update({'todos': True})
     if request.method == 'POST':
         form = ResponsPorEstagioForm(request.POST)
