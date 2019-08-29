@@ -7,7 +7,9 @@ from lotes.models.base import *
 def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
     sql = """
         SELECT
-          s.CODIGO_ESTAGIO || ' - ' || s.DESCRICAO ESTAGIO
+          s.CODIGO_ESTAGIO
+        , s.CODIGO_ESTAGIO || ' - ' || s.DESCRICAO ESTAGIO
+        , s.CODIGO_USUARIO
         , CASE WHEN s.USUARIO IS NULL
           THEN '--SEM RESPONSAVEL--'
           ELSE s.USUARIO || ' ( ' || s.CODIGO_USUARIO || ' )'
