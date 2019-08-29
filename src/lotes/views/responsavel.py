@@ -50,8 +50,12 @@ def responsCustom(request, todos):
                     })
                 else:
                     context.update({
-                        'headers': ('Usuário', 'Estágio'),
-                        'fields': ('USUARIO', 'ESTAGIO'),
+                        'headers': ('Usuário Systêxtil ( matrícula )',
+                                    'Estágio',
+                                    'Baixa Lote', 'Estorna Lote',
+                                    'Cria OS', 'Cancela OS'),
+                        'fields': ('USUARIO', 'ESTAGIO',
+                                   'BL', 'EL', 'CO', 'AO'),
                         'data': data,
                     })
     else:
