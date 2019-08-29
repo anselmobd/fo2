@@ -99,3 +99,15 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
     cursor.execute(sql, (estagio, estagio,
                          usuario, usuario_num, usuario_num))
     return rows_to_dict_list(cursor)
+
+
+def responsavel_direitos(cursor, estagio, usuario_num):
+    sql = """
+        SELECT
+          r.TIPO_MOVIMENTO
+        FROM MQOP_006 r
+        WHERE r.CODIGO_ESTAGIO = %s
+          AND r.CODIGO_USUARIO = %s
+        """
+    cursor.execute(sql, (estagio, usuario_num))
+    return rows_to_dict_list(cursor)
