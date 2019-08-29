@@ -93,14 +93,12 @@ def altera_direito_estagio(request, id):
     }
     erro = False
     ids = id.split('_')
-    estagio = ids[2]
-    usuario = ids[2]
+    estagio = ids[0]
+    usuario = ids[1]
     coluna = ids[2]
-    pprint(ids)
 
     data_r = models.responsavel(
         cursor, 't', 'e', estagio, '', usuario)
-    pprint(data_r)
     if len(data_r) == 0:
         erro = True
 
@@ -111,35 +109,37 @@ def altera_direito_estagio(request, id):
 
         if coluna == 'CO':
             if state == 'X':
-                acao.add(['exclui', 3])
+                acao.append(['exclui', 3])
             else:
-                acao.add(['inclui', 3])
+                acao.append(['inclui', 3])
 
         elif coluna == 'AO':
             if state == 'X':
-                acao.add(['exclui', 4])
+                acao.append(['exclui', 4])
             else:
-                acao.add(['inclui', 4])
+                acao.append(['inclui', 4])
 
         elif coluna == 'BL':
             if state == 'X':
-                acao.add(['exclui', 1])
-                acao.add(['altera', 0, 2])
+                acao.append(['exclui', 1])
+                acao.append(['exclui', 2])
+                acao.append(['altera', 0, 2])
             else:
                 if row['EL'] == 'X':
-                    acao.add(['altera', 2, 0])
+                    acao.append(['altera', 2, 0])
                 else:
-                    acao.add(['inclui', 1])
+                    acao.append(['inclui', 1])
 
         elif coluna == 'EL':
             if state == 'X':
-                acao.add(['exclui', 2])
-                acao.add(['altera', 0, 1])
+                acao.append(['exclui', 2])
+                acao.append(['exclui', 1])
+                acao.append(['altera', 0, 1])
             else:
                 if row['BL'] == 'X':
-                    acao.add(['altera', 1, 0])
+                    acao.append(['altera', 1, 0])
                 else:
-                    acao.add(['inclui', 2])
+                    acao.append(['inclui', 2])
 
         result = True
         for passo in acao:
