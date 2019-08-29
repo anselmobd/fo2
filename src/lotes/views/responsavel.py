@@ -6,6 +6,8 @@ from django.views import View
 
 from fo2.models import rows_to_dict_list
 
+from geral.functions import has_permission
+
 from lotes.forms import ResponsPorEstagioForm
 import lotes.models as models
 
@@ -24,7 +26,19 @@ def respons(request):
 
 def responsCustom(request, todos):
     title_name = 'Responsável por estágio'
-    context = {'titulo': title_name}
+
+    pode_editar = False
+    if has_permission(request, 'lotes.can_edit_estagio_direito'):
+        pode_editar = True
+
+    context = {
+        'titulo': title_name,
+        'pode_editar': True,
+    }
+
+    if todos == 'e' and not pode_editar:
+        todos = 'a'
+
     if todos in ['t', 'e']:
         context.update({'todos': True})
     if request.method == 'POST':
