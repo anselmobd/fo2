@@ -28,18 +28,6 @@
   var link_change  = link.replace('{conteudo}', glyph_change);
 
   function ChangeFunction(id) {
-    // console.log(id);
-    span_el = document.querySelectorAll('#span_'+id);
-    for (var i=0, len=span_el.length|0; i<len; i=i+1|0) {
-      // console.log(span_el[i]);
-      if (span_el[i].outerHTML.indexOf('ban-circle') != -1) {
-        glyph_id = glyph_ok.replace(/\{id\}/g, id);
-      } else {
-        glyph_id = glyph_no.replace(/\{id\}/g, id);
-      }
-      span_el[i].outerHTML = glyph_id;
-    }
-
     $.ajax({
       type: 'GET',
       url: '/lotes/ajax/altera_direito_estagio/'+id+'/',
@@ -48,12 +36,17 @@
         if (data) {
           if (data['result'] == 'OK') {
             console.log('OK! '+data['state']);
-            // cell.innerHTML = formatNumber(data['total_ped']);
-            // int_total_ped = parseInt(data['total_ped']);
-            // total_ped_total += int_total_ped;
-            // el_total_ped_total.innerHTML = formatNumber(total_ped_total);
-            // // console.log('pedido_lead_modelo '+data['modelo']);
-            // calc_colunas(data['modelo'], -int_total_ped);
+
+            span_el = document.querySelectorAll('#span_'+id);
+            for (var i=0, len=span_el.length|0; i<len; i=i+1|0) {
+              if (span_el[i].outerHTML.indexOf('ban-circle') != -1) {
+                glyph_id = glyph_ok.replace(/\{id\}/g, id);
+              } else {
+                glyph_id = glyph_no.replace(/\{id\}/g, id);
+              }
+              span_el[i].outerHTML = glyph_id;
+            }
+
           } else {
             console.log('Erro: '+data['descricao_erro']);
           }
@@ -75,7 +68,6 @@
           all_el[i].id.endsWith('_AO'))
       {
         link_id = link_change.replace(/\{id\}/g, all_el[i].id);
-        // console.log(link_id);
         if (all_el[i].innerHTML.indexOf('X') != -1) {
           glyph_id = glyph_ok.replace(/\{id\}/g, all_el[i].id);
         } else {
