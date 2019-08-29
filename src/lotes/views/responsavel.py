@@ -28,16 +28,22 @@ def responsCustom(request, todos):
     title_name = 'Responsável por estágio'
 
     pode_editar = False
+    editar = False
     if has_permission(request, 'lotes.can_edit_estagio_direito'):
         pode_editar = True
 
+    if todos == 'e':
+        if pode_editar:
+            editar = True
+            pode_editar = False
+        else:
+            todos = 'a'
+
     context = {
         'titulo': title_name,
-        'pode_editar': True,
+        'pode_editar': pode_editar,
+        'editar': editar,
     }
-
-    if todos == 'e' and not pode_editar:
-        todos = 'a'
 
     if todos in ['t', 'e']:
         context.update({'todos': True})
