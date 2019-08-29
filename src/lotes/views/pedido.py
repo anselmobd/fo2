@@ -6,6 +6,7 @@ from django.db import connections
 from django.urls import reverse
 from django.views import View
 
+from geral.functions import config_get_value
 from utils.views import totalize_grouped_data, totalize_data
 from fo2.template import group_rowspan
 
@@ -363,12 +364,15 @@ class BuscaPedido(View):
             'lead': lead,
         })
         if lead == 0:
+            busca_periodo = ''
             periodo = ''
         else:
-            periodo = lead + 7
+            dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
+            busca_periodo = lead + dias_alem_lead
+            periodo = dias_alem_lead
 
         data = models.busca_pedido(
-            cursor, modelo=modelo, periodo=':{}'.format(periodo))
+            cursor, modelo=modelo, periodo=':{}'.format(busca_periodo))
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedidos não encontrados',
