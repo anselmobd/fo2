@@ -5,6 +5,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class LotesPermissions(models.Model):
+
+    class Meta:
+        managed = False
+        permissions = (
+            ("can_edit_estagio_direito", "Can edit direitos a estágios"),
+        )
+
+
 class Familia(models.Model):
     divisao_producao = models.IntegerField(primary_key=True)
     descricao = models.CharField(
