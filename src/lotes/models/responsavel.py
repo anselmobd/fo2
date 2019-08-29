@@ -111,3 +111,48 @@ def responsavel_direitos(cursor, estagio, usuario_num):
         """
     cursor.execute(sql, (estagio, usuario_num))
     return rows_to_dict_list(cursor)
+
+
+def responsavel_inclui_direitos(cursor, estagio, usuario_num, tipo_movimento):
+    sql = """
+        INSERT INTO SYSTEXTIL.MQOP_006
+        ( CODIGO_ESTAGIO, CODIGO_USUARIO, TIPO_MOVIMENTO,
+          FAMILIA_CELULA_PRODUCAO, FAMILIA_ESTAGIO)
+        VALUES(%s, %s, %s, 0, 0)
+        """
+    try:
+        cursor.execute(sql, (estagio, usuario_num, tipo_movimento))
+        return True
+    except Exception:
+        return False
+
+
+def responsavel_exclui_direitos(cursor, estagio, usuario_num, tipo_movimento):
+    sql = """
+        DELETE FROM SYSTEXTIL.MQOP_006
+        WHERE CODIGO_ESTAGIO=%s
+          AND CODIGO_USUARIO=%s
+          AND TIPO_MOVIMENTO=%s
+        """
+    try:
+        cursor.execute(sql, (estagio, usuario_num, tipo_movimento))
+        return True
+    except Exception:
+        return False
+
+
+def responsavel_altera_direitos(
+        cursor, estagio, usuario_num, tipo_movimento_de, tipo_movimento_para):
+    sql = """
+        UPDATE SYSTEXTIL.MQOP_006
+        SET TIPO_MOVIMENTO = %s
+        WHERE CODIGO_ESTAGIO=%s
+          AND CODIGO_USUARIO=%s
+          AND TIPO_MOVIMENTO=%s
+        """
+    try:
+        cursor.execute(sql, (
+            tipo_movimento_para, estagio, usuario_num, tipo_movimento_de))
+        return True
+    except Exception:
+        return False
