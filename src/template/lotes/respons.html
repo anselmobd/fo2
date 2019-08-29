@@ -9,6 +9,65 @@
 </style>
 {% endblock %}
 
+{% block javascript %}
+{% block javascript.pos %}
+<script >
+
+  var glyph = '<span {id_tag} class="glyphicon glyphicon-{tipo}" '+
+              'aria-hidden="true"></span>';
+  var glyph_id_tag = glyph.replace('{id_tag}', 'id="span_{id}"');
+  var glyph_no_id_tag = glyph.replace('{id_tag}', '');
+
+  var glyph_ok  = glyph_id_tag.replace('{tipo}', 'ok');
+  var glyph_no  = glyph_id_tag.replace('{tipo}', 'ban-circle');
+
+  var glyph_change  = glyph_no_id_tag.replace('{tipo}', 'refresh');
+
+  var link = '<a id="link_{id}" title="Change" href="#" ' +
+             'onclick="ChangeFunction(\'{id}\');return false;">{conteudo}</a>'
+  var link_change  = link.replace('{conteudo}', glyph_change);
+
+  function ChangeFunction(id) {
+    // console.log(id);
+    span_el = document.querySelectorAll('#span_'+id);
+    for (var i=0, len=span_el.length|0; i<len; i=i+1|0) {
+      // console.log(span_el[i]);
+      if (span_el[i].outerHTML.indexOf('ban-circle') != -1) {
+        glyph_id = glyph_ok.replace(/\{id\}/g, id);
+      } else {
+        glyph_id = glyph_no.replace(/\{id\}/g, id);
+      }
+      span_el[i].outerHTML = glyph_id;
+    }
+
+  }
+
+  $(document).ready(function() {
+    var all_el = document.querySelectorAll('td');
+    for (var i=0, len=all_el.length|0; i<len; i=i+1|0) {
+
+      if (all_el[i].id.endsWith('_BL') ||
+          all_el[i].id.endsWith('_EL') ||
+          all_el[i].id.endsWith('_CO') ||
+          all_el[i].id.endsWith('_AO'))
+      {
+        link_id = link_change.replace(/\{id\}/g, all_el[i].id);
+        // console.log(link_id);
+        if (all_el[i].innerHTML.indexOf('X') != -1) {
+          glyph_id = glyph_ok.replace(/\{id\}/g, all_el[i].id);
+        } else {
+          glyph_id = glyph_no.replace(/\{id\}/g, all_el[i].id);
+        }
+        all_el[i].innerHTML = glyph_id + link_id;
+      }
+
+    }
+  })
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}
+
 {% block content %}
 <form action="" method="post">
     {% csrf_token %}
@@ -27,7 +86,17 @@
 {% if data %}
 <table>
   {% include "layout/html_thead.html" with data=headers only %}
-  {% include "layout/html_tbody.html" with fields=fields data=data only %}
+  <tbody>
+  {% for row in data %}
+  <tr>
+  {% for field in fields %}
+  <td id="{{row.CODIGO_ESTAGIO}}_{{row.CODIGO_USUARIO|safe}}_{{field}}">
+    {{ row|get_item:field }}
+  </td>
+  {% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
 </table>
 {% endif %}
 {% endblock %}
