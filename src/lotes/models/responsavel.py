@@ -5,6 +5,26 @@ from lotes.models.base import *
 
 
 def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
+    filtro_estagio = ''
+    if estagio:
+        filtro_estagio = '''--
+            AND e.CODIGO_ESTAGIO = {}
+        '''.format(estagio)
+
+    filtro_usuario = ''
+    sep = ''
+    if usuario:
+        filtro_usuario = '''--
+            ( coalesce( u.USUARIO, '_' ) like '{}' )
+        '''.format(usuario)
+        sep = ' OR '
+    if usuario_num:
+        filtro_usuario += sep + '''--
+            ( u.CODIGO_USUARIO = {} )
+        '''.format(usuario_num)
+    if filtro_usuario:
+        filtro_usuario = 'AND ( {} )'.format(filtro_usuario)
+
     sql = """
         SELECT
           s.CODIGO_ESTAGIO
@@ -61,15 +81,34 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
           , u.USUARIO
           , u.CODIGO_USUARIO
           FROM MQOP_005 e
+          CROSS JOIN HDOC_030 u
+        """
+    if todos == 'e':
+        sql += """
           LEFT JOIN MQOP_006 r
+        """
+    else:
+        sql += """
+          JOIN MQOP_006 r
+        """
+    sql += """
             ON r.CODIGO_ESTAGIO = e.CODIGO_ESTAGIO
-          LEFT JOIN HDOC_030 u
-            ON u.CODIGO_USUARIO = r.CODIGO_USUARIO
+           AND r.CODIGO_USUARIO = u.CODIGO_USUARIO
+          --FROM MQOP_005 e
+          --LEFT JOIN MQOP_006 r
+        --    ON r.CODIGO_ESTAGIO = e.CODIGO_ESTAGIO
+          --LEFT JOIN HDOC_030 u
+        --    ON u.CODIGO_USUARIO = r.CODIGO_USUARIO
           WHERE e.CODIGO_ESTAGIO <> 0
-            AND ( %s is NULL OR e.CODIGO_ESTAGIO = %s )
-            AND ( ( coalesce( u.USUARIO, '_' ) like %s )
-                OR ( %s is NOT NULL AND u.CODIGO_USUARIO = %s )
-                )
+            AND u.ATIVO_INATIVO = 1
+            {filtro_estagio} -- filtro_estagio
+            {filtro_usuario} -- filtro_usuario
+            AND SUBSTR(u.USUARIO, 1, 3) != 'A__'
+            AND SUBSTR(u.USUARIO, 1, 8) != 'DEFAULT_'
+            --AND ( _s is NULL OR e.CODIGO_ESTAGIO = _s )
+            --AND ( ( coalesce( u.USUARIO, '_' ) like _s )
+            --    OR ( _s is NOT NULL AND u.CODIGO_USUARIO = _s )
+            --    )
         """
     if todos == 'a':
         sql += """
@@ -96,8 +135,11 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
     sql += """
         ) s
         """
-    cursor.execute(sql, (estagio, estagio,
-                         usuario, usuario_num, usuario_num))
+    sql = sql.format(
+        filtro_estagio=filtro_estagio,
+        filtro_usuario=filtro_usuario,
+    )
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
