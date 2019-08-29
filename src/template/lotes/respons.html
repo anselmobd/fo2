@@ -18,6 +18,9 @@
 {% if pode_editar %}
   <a href="{% url 'producao:edita_respons' %}">Edita direitos</a>
 {% endif %}
+{% if editar %}
+  editando</br>
+{% endif %}
 {% if todos %}
   <h4>(todos os usuários)</h4>
 {% endif %}
