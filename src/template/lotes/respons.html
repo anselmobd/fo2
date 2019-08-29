@@ -40,6 +40,29 @@
       span_el[i].outerHTML = glyph_id;
     }
 
+    $.ajax({
+      type: 'GET',
+      url: '/lotes/ajax/altera_direito_estagio/'+id+'/',
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        if (data) {
+          if (data['result'] == 'OK') {
+            console.log('OK! '+data['state']);
+            // cell.innerHTML = formatNumber(data['total_ped']);
+            // int_total_ped = parseInt(data['total_ped']);
+            // total_ped_total += int_total_ped;
+            // el_total_ped_total.innerHTML = formatNumber(total_ped_total);
+            // // console.log('pedido_lead_modelo '+data['modelo']);
+            // calc_colunas(data['modelo'], -int_total_ped);
+          } else {
+            console.log('Erro: '+data['descricao_erro']);
+          }
+        } else {
+          console.log('Sem retorno de pedido');
+        }
+      }
+    });
+
   }
 
   $(document).ready(function() {

@@ -1,8 +1,10 @@
 import re
+from pprint import pprint
 
 from django.shortcuts import render
 from django.db import connections
 from django.views import View
+from django.http import JsonResponse
 
 from fo2.models import rows_to_dict_list
 
@@ -82,3 +84,36 @@ def responsCustom(request, todos):
         form = ResponsPorEstagioForm()
     context['form'] = form
     return render(request, 'lotes/respons.html', context)
+
+
+def altera_direito_estagio(request, id):
+    cursor = connections['so'].cursor()
+    data = {
+        'id': id,
+    }
+    erro = False
+    ids = id.split('_')
+    pprint(ids)
+
+    data_r = models.responsavel(
+        cursor, 't', 'e', ids[0], '', ids[1])
+    pprint(data_r)
+    if len(data_r) == 0:
+        erro = True
+
+    if not erro:
+        row = data_r[0]
+        state = row[ids[2]]
+
+    if erro:
+        data.update({
+            'result': 'ERR',
+            'descricao_erro': 'Erro ao alterar direito',
+        })
+        return JsonResponse(data, safe=False)
+
+    data.update({
+        'result': 'OK',
+        'state': state,
+    })
+    return JsonResponse(data, safe=False)

@@ -16,6 +16,9 @@ urlpatterns = [
 
     url(r'^edita_respons/$', views.responsEdit, name='edita_respons'),
 
+    url(r'^ajax/altera_direito_estagio/(?P<id>[^/]+)/$',
+        views.altera_direito_estagio, name='altera_direito_estagio'),
+
     url(r'^busca_op/$', views.BuscaOP.as_view(), name='busca_op'),
     url(r'^busca_op/(?P<ref>.+)/$', views.BuscaOP.as_view(),
         name='busca_op__get'),
