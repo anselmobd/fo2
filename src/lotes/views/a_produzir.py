@@ -319,6 +319,7 @@ class GradeProduzir(O2BaseGetPostView):
         colecao = row['CODIGO_COLECAO']
         self.context.update({
             'colecao': row['COLECAO'],
+            'descr': row['DESCR'],
         })
 
         lm_tam = 0
