@@ -1,9 +1,11 @@
 from pprint import pprint
 from datetime import date, timedelta, datetime
-
+# from weasyprint import HTML
 
 from django.views import View
 from django.shortcuts import render
+# from django.http import HttpResponse
+# from django.template.loader import render_to_string
 from django.db.models import Exists, OuterRef
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -357,6 +359,13 @@ class Imprimir(LoginRequiredMixin, O2BaseGetView):
         self.template_name = 'manutencao/imprimir.html'
         self.get_args = ['rotina', 'maquina', 'data']
         self.get_args2context = True
+
+    # def my_render(self):
+    #     html_rendered = render_to_string(self.template_name, self.context)
+    #     html = HTML(string=html_rendered)
+    #     html.write_pdf('/tmp/example.pdf')
+    #     return HttpResponse(html_rendered)
+    #     # return render(self.request, self.template_name, self.context)
 
     def mount_context(self):
         imprimir_mount_context(self.request, self.kwargs, self.context)
