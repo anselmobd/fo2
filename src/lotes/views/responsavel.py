@@ -100,68 +100,73 @@ def altera_direito_estagio(request, id):
     data_r = models.responsavel(
         cursor, 't', 'e', estagio, '', usuario)
     if len(data_r) == 0:
-        erro = True
-
-    if not erro:
+        row = {
+            'CO': ' ',
+            'AO': ' ',
+            'BL': ' ',
+            'EL': ' ',
+        }
+    else:
         row = data_r[0]
-        state = row[coluna]
-        acao = []
 
-        if coluna == 'CO':
-            if state == 'X':
-                acao.append(['exclui', 3])
+    state = row[coluna]
+    acao = []
+
+    if coluna == 'CO':
+        if state == 'X':
+            acao.append(['exclui', 3])
+        else:
+            acao.append(['inclui', 3])
+
+    elif coluna == 'AO':
+        if state == 'X':
+            acao.append(['exclui', 4])
+        else:
+            acao.append(['inclui', 4])
+
+    elif coluna == 'BL':
+        if state == 'X':
+            acao.append(['exclui', 1])
+            acao.append(['exclui', 2])
+            acao.append(['altera', 0, 2])
+        else:
+            if row['EL'] == 'X':
+                acao.append(['altera', 2, 0])
             else:
-                acao.append(['inclui', 3])
+                acao.append(['inclui', 1])
 
-        elif coluna == 'AO':
-            if state == 'X':
-                acao.append(['exclui', 4])
+    elif coluna == 'EL':
+        if state == 'X':
+            acao.append(['exclui', 2])
+            acao.append(['exclui', 1])
+            acao.append(['altera', 0, 1])
+        else:
+            if row['BL'] == 'X':
+                acao.append(['altera', 1, 0])
             else:
-                acao.append(['inclui', 4])
+                acao.append(['inclui', 2])
 
-        elif coluna == 'BL':
-            if state == 'X':
-                acao.append(['exclui', 1])
-                acao.append(['exclui', 2])
-                acao.append(['altera', 0, 2])
-            else:
-                if row['EL'] == 'X':
-                    acao.append(['altera', 2, 0])
-                else:
-                    acao.append(['inclui', 1])
+    result = True
+    for passo in acao:
+        if result:
+            tipo_acao = passo[0]
+            if tipo_acao == 'inclui':
+                tipo_movimento = passo[1]
+                result = result and models.responsavel_inclui_direitos(
+                    cursor, estagio, usuario, tipo_movimento)
 
-        elif coluna == 'EL':
-            if state == 'X':
-                acao.append(['exclui', 2])
-                acao.append(['exclui', 1])
-                acao.append(['altera', 0, 1])
-            else:
-                if row['BL'] == 'X':
-                    acao.append(['altera', 1, 0])
-                else:
-                    acao.append(['inclui', 2])
+            elif tipo_acao == 'exclui':
+                tipo_movimento = passo[1]
+                result = result and models.responsavel_exclui_direitos(
+                    cursor, estagio, usuario, tipo_movimento)
 
-        result = True
-        for passo in acao:
-            if result:
-                tipo_acao = passo[0]
-                if tipo_acao == 'inclui':
-                    tipo_movimento = passo[1]
-                    result = result and models.responsavel_inclui_direitos(
-                        cursor, estagio, usuario, tipo_movimento)
-
-                elif tipo_acao == 'exclui':
-                    tipo_movimento = passo[1]
-                    result = result and models.responsavel_exclui_direitos(
-                        cursor, estagio, usuario, tipo_movimento)
-
-                elif tipo_acao == 'altera':
-                    tipo_movimento_de = passo[1]
-                    tipo_movimento_para = passo[2]
-                    result = result and models.responsavel_altera_direitos(
-                        cursor, estagio, usuario,
-                        tipo_movimento_de, tipo_movimento_para)
-        erro = not result
+            elif tipo_acao == 'altera':
+                tipo_movimento_de = passo[1]
+                tipo_movimento_para = passo[2]
+                result = result and models.responsavel_altera_direitos(
+                    cursor, estagio, usuario,
+                    tipo_movimento_de, tipo_movimento_para)
+    erro = not result
 
     if erro:
         data.update({
