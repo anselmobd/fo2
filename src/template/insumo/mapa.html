@@ -69,6 +69,19 @@
     <td></td>
     <td style="border-left: thin solid lightgrey;"></td>
     <td style="vertical-align: top;">
+      <h2>Adiantamentos de recebimentos</h2>
+      {% if data_adi %}
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_adi style=style_adi only %}
+          {% include "layout/tbody_generic.html" with fields=fields_adi data=data_adi style=style_adi only %}
+        </table>
+      {% else %}
+        <b>Nenhum</b>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
       <h2>Sugestões ideais</h2>
       {% if data_sug %}
         <table>
