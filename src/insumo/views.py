@@ -1074,12 +1074,6 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                         if row['DATA'] == receb_adi_destino:
                             row['RECEBIMENTO_ADIANTADO'] = \
                                 recebimento_adiantado
-                        # for row_adi in data_adi:
-                        #     if row_adi['SEMANA_DESTINO'] == \
-                        #             recebimento_adiantado and \
-                        #             row_adi['SEMANA_ORIGEM'] == row['DATA']:
-                        #         row['RECEBIMENTO_MOVIDO'] += \
-                        #             row_adi['QUANT']
 
                     row['ESTOQUE'] = estoque
                     estoque = estoque \
@@ -1227,6 +1221,9 @@ class MapaPorInsumo(View):
             'data_prev': data_prev,
         })
 
+        # Adiantamentos de recebimentos
+        data_adi = datas['data_adi']
+
         # Recebimentos
         data_irs = datas['data_irs']
 
@@ -1240,6 +1237,9 @@ class MapaPorInsumo(View):
             if row['SEMANA_ENTREGA'] < semana_hoje:
                 row['QTD_A_RECEBER|STYLE'] = \
                     'font-weight: bold; color: darkcyan;'
+            if row['SEMANA_ENTREGA'] in [r['SEMANA_ORIGEM'] for r in data_adi]:
+                row['QTD_A_RECEBER|STYLE'] = \
+                    'font-weight: bold; color: brown;'
 
         context.update({
             'headers_irs': ['Semana', 'Quantidade'],
@@ -1249,8 +1249,6 @@ class MapaPorInsumo(View):
         })
 
         # Adiantamentos de recebimentos
-        data_adi = datas['data_adi']
-
         max_digits = 0
         for row in data_adi:
             num_digits = str(row['QUANT'])[::-1].find('.')
@@ -1314,6 +1312,15 @@ class MapaPorInsumo(View):
 
             arrows = []
             for index, row in enumerate(data):
+                if row['RECEBIMENTO_MOVIDO'] != 0:
+                    row['RECEBIMENTO_ADIANTADO'] += \
+                        row['RECEBIMENTO'] - row['RECEBIMENTO_MOVIDO']
+                    row['RECEBIMENTO|STYLE'] = \
+                        'font-weight: bold; color: brown;'
+                    if row['RECEBIMENTO_ADIANTADO'] != 0:
+                        row['RECEBIMENTO_ADIANTADO|STYLE'] = \
+                            'font-weight: bold; color: brown;'
+
                 if row['ESTOQUE'] < estoque_minimo:
                     if index == 0:
                         row['ESTOQUE|STYLE'] = 'font-weight: bold; color: red;'
@@ -1358,13 +1365,13 @@ class MapaPorInsumo(View):
             for row_adi in data_adi:
                 arrows.append([
                     row_adi['ISEMANA_ORIGEM'], 4,
-                    row_adi['ISEMANA_DESTINO'], 6, 'darkcyan'])
+                    row_adi['ISEMANA_DESTINO'], 6, 'brown'])
 
             context.update({
                 'headers': ['Semana', 'Estoque Real',
                             'Necessidade', 'Necessidade passada',
                             'Recebimento', 'Recebimento atrasado',
-                            'Recebimento adiantado',
+                            'Recebimento movido',
                             'Compra sugerida', 'Compra atrasada',
                             'Recebimento sugerido'],
                 'fields': ['DATA', 'ESTOQUE',
