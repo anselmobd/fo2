@@ -910,6 +910,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
     })
 
     data_sug = []
+    data_adi = []
     # se tem alguma entrada ou saída
     if semana_fim is not None:
         # criando mapa de compras
@@ -941,6 +942,8 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                 'NECESSIDADE_PASSADA': necessidade_passada,
                 'RECEBIMENTO': recebimento,
                 'RECEBIMENTO_ATRASADO': recebimento_atrasado,
+                'RECEBIMENTO_MOVIDO': 0,
+                'RECEBIMENTO_ADIANTADO': 0,
                 'ESTOQUE': estoque,
                 'ESTOQUE_IDEAL': estoque,
                 'COMPRAR': 0,
@@ -959,6 +962,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         for row in data:
             # pega uma sugestão se estoque < mínimo
             sugestao_quatidade = 0
+            recebimento_adiantado = 0
             if row['ESTOQUE_IDEAL'] < estoque_minimo:
                 sugestao_quatidade = estoque_minimo - row['ESTOQUE_IDEAL']
                 if lote_multiplo != 0:
@@ -973,6 +977,32 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                 sugestao_comprar = segunda(
                     sugestao_receber +
                     datetime.timedelta(days=-dias_reposicao))
+
+                # adianta recebimentos que houver
+                receb_adi_destino = \
+                    row['DATA'] + datetime.timedelta(days=-7)
+                for row_rec in data:
+                    if row_rec['DATA'] < row['DATA']:
+                        continue
+                    recebimento_na_semana = \
+                        row_rec['RECEBIMENTO'] - row_rec['RECEBIMENTO_MOVIDO']
+                    if recebimento_na_semana > 0:
+                        recebimento_a_adiantar = min(
+                            sugestao_quatidade, recebimento_na_semana)
+                        data_adi.append({
+                            'SEMANA_ORIGEM': row_rec['DATA'],
+                            'SEMANA_DESTINO': receb_adi_destino,
+                            'QUANT': recebimento_a_adiantar,
+                        })
+                        sugestao_quatidade -= recebimento_a_adiantar
+                        recebimento_adiantado += recebimento_a_adiantar
+                        row_rec['RECEBIMENTO_MOVIDO'] += recebimento_a_adiantar
+                        if sugestao_quatidade == 0:
+                            break
+
+            # se essa linha do mapa gerou alguma sugestão de compra
+            # se sugestão não foi atendida por adiantemanto de recebimento
+            if sugestao_quatidade != 0:
                 data_sug.append({
                     'SEMANA_COMPRA': sugestao_comprar,
                     'SEMANA_RECEPCAO': sugestao_receber,
@@ -984,9 +1014,6 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                     sugestao_comprar_passado = semana_hoje
                 else:
                     sugestao_comprar_passado = None
-
-            # se essa linha do mapa gerou alguma sugestão de compra
-            if sugestao_quatidade != 0:
 
                 # se sugestão de compra chega ou passa da última data do
                 # mapa de compras, adicionar mais datas
@@ -1001,6 +1028,8 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                             'NECESSIDADE_PASSADA': 0,
                             'RECEBIMENTO': 0,
                             'RECEBIMENTO_ATRASADO': 0,
+                            'RECEBIMENTO_MOVIDO': 0,
+                            'RECEBIMENTO_ADIANTADO': 0,
                             'ESTOQUE': 0,
                             'ESTOQUE_IDEAL': 0,
                             'COMPRAR': 0,
@@ -1011,29 +1040,46 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                         })
                         semana += datetime.timedelta(days=7)
 
+            # se essa linha do mapa gerou alguma sugestão de compra ou
+            # adiantamento de recebimento
+            if sugestao_quatidade != 0 or recebimento_adiantado != 0:
+
                 # atualiza o mapa de compras com a sugestão calculada
                 # calcula "estoque" e "estoque ideal" (feito com as
                 # sugestões ideais)
                 estoque = qtd_estoque
                 estoque_ideal = qtd_estoque
                 for index, row in enumerate(data):
-                    if row['DATA'] == sugestao_comprar:
-                        row['COMPRAR'] += sugestao_quatidade
-                    if row['DATA'] == sugestao_comprar_passado:
-                        row['COMPRAR_PASSADO'] += sugestao_quatidade
-                    if index == 0:
-                        if row['DATA'] >= sugestao_receber:
-                            row['RECEBER'] += sugestao_quatidade
-                    else:
-                        if row['DATA'] == sugestao_receber:
-                            row['RECEBER'] += sugestao_quatidade
-                    if sugestao_receber_ideal < semana_hoje:
-                        if row['DATA'] == semana_hoje:
-                            row['RECEBER_IDEAL_ANTES'] += \
-                                sugestao_quatidade
-                    else:
-                        if row['DATA'] == sugestao_receber_ideal:
-                            row['RECEBER_IDEAL'] += sugestao_quatidade
+
+                    if sugestao_quatidade != 0:
+                        if row['DATA'] == sugestao_comprar:
+                            row['COMPRAR'] += sugestao_quatidade
+                        if row['DATA'] == sugestao_comprar_passado:
+                            row['COMPRAR_PASSADO'] += sugestao_quatidade
+                        if index == 0:
+                            if row['DATA'] >= sugestao_receber:
+                                row['RECEBER'] += sugestao_quatidade
+                        else:
+                            if row['DATA'] == sugestao_receber:
+                                row['RECEBER'] += sugestao_quatidade
+                        if sugestao_receber_ideal < semana_hoje:
+                            if row['DATA'] == semana_hoje:
+                                row['RECEBER_IDEAL_ANTES'] += \
+                                    sugestao_quatidade
+                        else:
+                            if row['DATA'] == sugestao_receber_ideal:
+                                row['RECEBER_IDEAL'] += sugestao_quatidade
+
+                    if recebimento_adiantado != 0:
+                        if row['DATA'] == receb_adi_destino:
+                            row['RECEBIMENTO_ADIANTADO'] = \
+                                recebimento_adiantado
+                        # for row_adi in data_adi:
+                        #     if row_adi['SEMANA_DESTINO'] == \
+                        #             recebimento_adiantado and \
+                        #             row_adi['SEMANA_ORIGEM'] == row['DATA']:
+                        #         row['RECEBIMENTO_MOVIDO'] += \
+                        #             row_adi['QUANT']
 
                     row['ESTOQUE'] = estoque
                     estoque = estoque \
@@ -1050,6 +1096,8 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                         - row['NECESSIDADE_PASSADA'] \
                         + row['RECEBIMENTO'] \
                         + row['RECEBIMENTO_ATRASADO'] \
+                        - row['RECEBIMENTO_MOVIDO'] \
+                        + row['RECEBIMENTO_ADIANTADO'] \
                         + row['RECEBER_IDEAL']
 
         datas.update({
@@ -1060,6 +1108,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         })
     datas.update({
         'data_sug': data_sug,
+        'data_adi': data_adi,
     })
     return datas
 
@@ -1199,6 +1248,24 @@ class MapaPorInsumo(View):
             'data_irs': data_irs,
         })
 
+        # Adiantamentos de recebimentos
+        data_adi = datas['data_adi']
+
+        max_digits = 0
+        for row in data_adi:
+            num_digits = str(row['QUANT'])[::-1].find('.')
+            max_digits = max(max_digits, num_digits)
+
+        for row in data_adi:
+            row['QUANT|DECIMALS'] = max_digits
+
+        context.update({
+            'headers_adi': ['De', 'Para', 'Quantidade'],
+            'fields_adi': ['SEMANA_ORIGEM', 'SEMANA_DESTINO', 'QUANT'],
+            'style_adi': {3: 'text-align: right;'},
+            'data_adi': data_adi,
+        })
+
         # se tem alguma entrada ou saída
         if len(datas['data_sug']) != 0:
 
@@ -1278,19 +1345,32 @@ class MapaPorInsumo(View):
                 isemana = index+1
                 if row['RECEBER'] > 0:
                     if isemana <= semanas:
-                        arrows.append([1, 7, isemana, 8, 7])
+                        arrows.append([1, 8, isemana, 9, 'darkmagenta'])
                     else:
-                        arrows.append([isemana-semanas, 6, isemana, 8, 0])
+                        arrows.append([isemana-semanas, 7, isemana, 9,
+                                       'steelblue'])
+                for row_adi in data_adi:
+                    if row_adi['SEMANA_ORIGEM'] == row['DATA']:
+                        row_adi['ISEMANA_ORIGEM'] = isemana
+                    if row_adi['SEMANA_DESTINO'] == row['DATA']:
+                        row_adi['ISEMANA_DESTINO'] = isemana
+
+            for row_adi in data_adi:
+                arrows.append([
+                    row_adi['ISEMANA_ORIGEM'], 4,
+                    row_adi['ISEMANA_DESTINO'], 6, 'darkcyan'])
 
             context.update({
                 'headers': ['Semana', 'Estoque Real',
                             'Necessidade', 'Necessidade passada',
                             'Recebimento', 'Recebimento atrasado',
+                            'Recebimento adiantado',
                             'Compra sugerida', 'Compra atrasada',
                             'Recebimento sugerido'],
                 'fields': ['DATA', 'ESTOQUE',
                            'NECESSIDADE', 'NECESSIDADE_PASSADA',
                            'RECEBIMENTO', 'RECEBIMENTO_ATRASADO',
+                           'RECEBIMENTO_ADIANTADO',
                            'COMPRAR', 'COMPRAR_PASSADO', 'RECEBER'],
                 'style': {2: 'text-align: right;',
                           3: 'text-align: right;',
@@ -1299,7 +1379,8 @@ class MapaPorInsumo(View):
                           6: 'text-align: right;',
                           7: 'text-align: right;',
                           8: 'text-align: right;',
-                          9: 'text-align: right;'},
+                          9: 'text-align: right;',
+                          10: 'text-align: right;'},
                 'data': data,
                 'arrows': arrows,
             })
