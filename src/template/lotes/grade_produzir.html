@@ -26,17 +26,29 @@
       <h4>Coleção: {{ colecao }}</h4>
     {% endif %}
 
-    <h3>Meta de estoque</h3>
-    {% if msg_meta_estoque %}
-      <h4>{{ msg_meta_estoque }}</h4>
-    {% else %}
+    <table>
 
-      <table>
-
+      <thead>
+        <tr>
+          <th colspan="99">
+            <h3>Meta de estoque</h3>
+          </th>
+        </tr>
+      </thead>
+      {% if msg_meta_estoque %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h4>{{ msg_meta_estoque }}</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
       {% if gme %}
         {% include "layout/thead_generic.html" with data=gme.headers style=gme.style only %}
         {% include "layout/tbody_generic.html" with fields=gme.fields data=gme.data style=gme.style only %}
       {% endif %}
+
       <thead>
         <tr>
           <th colspan="99">
@@ -171,8 +183,7 @@
         {% include "layout/tbody_generic.html" with fields=glc.fields data=glc.data style=glc.style only %}
       {% endif %}
 
-      </table>
-    {% endif %}
+    </table>
   {% endif %}
 {% endif %}
 {% endblock %}
