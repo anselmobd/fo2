@@ -108,7 +108,7 @@ var ctx = null;
 
 arrows = [];
 {% for arrow in arrows %}
-  arrows.push([{% for val in arrow %}{% if forloop.counter != 1 %}, {% endif %}{{ val }}{% endfor %}]);
+  arrows.push([{% for val in arrow %}{% if forloop.counter != 1 %}, {% endif %}'{{ val }}'{% endfor %}]);
 {% endfor %}
 
 // init canvas e context
@@ -154,13 +154,8 @@ function getCellCenter(table, row, column, position) {
 
 // draws an arrow on the document from the start to the end offsets
 function drawArrow(start, end, mark) {
-  if (mark) {
-    ctx.fillStyle = 'darkmagenta';
-    ctx.strokeStyle = 'darkmagenta';
-  } else {
-    ctx.fillStyle = 'steelblue';
-    ctx.strokeStyle = 'steelblue';
-  }
+  ctx.fillStyle = mark;
+  ctx.strokeStyle = mark;
 
   // draw line from start to end
   ctx.beginPath();
@@ -209,7 +204,7 @@ function doArrows() {
   clearCanvas();
   var i;
   for (i = 0; i < arrows.length; i++) {
-    drawArrowOnTable('#mapa_table', arrows[i][0], arrows[i][1], 'r', arrows[i][2], arrows[i][3], 'c', arrows[i][1]==arrows[i][4]);
+    drawArrowOnTable('#mapa_table', arrows[i][0], arrows[i][1], 'r', arrows[i][2], arrows[i][3], 'c', arrows[i][4]);
   }
 }
 
