@@ -295,6 +295,14 @@ def opera_grade(grd, func):
     return grade
 
 
+def update_gzerada(gzerada, gme):
+    gzerada_aux = zera_grade(gme)
+    if gzerada is None:
+        return gzerada_aux
+    else:
+        return soma_grades(gzerada, gzerada_aux)
+
+
 class GradeProduzir(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
@@ -353,17 +361,18 @@ class GradeProduzir(O2BaseGetPostView):
         else:
             meta = metas[0]
 
+        gzerada = None
+
         calcula_grade = False
+        gme = None
         if meta.meta_estoque == 0:
             self.context.update({
                 'msg_meta_estoque': 'Modelo com meta de estoque zerada',
             })
         else:
             gme = grade_meta_estoque(meta)
-            self.context.update({
-                'gme': gme,
-            })
             calcula_grade = True
+            gzerada = update_gzerada(gzerada, gme)
 
         colecao = produto.queries.colecao_de_modelo(
             cursor, modelo)
@@ -376,39 +385,25 @@ class GradeProduzir(O2BaseGetPostView):
                 lead = lc.lead
             except lotes.models.LeadColecao.DoesNotExist:
                 lead = 0
-
+        gmg = None
         if meta.meta_giro == 0:
             self.context.update({
                 'msg_meta_giro': 'Modelo com meta de giro zerada',
             })
         else:
             gmg = grade_meta_giro(meta, lead, show_distrib=False)
-            self.context.update({
-                'gmg': gmg,
-            })
             calcula_grade = True
+            gzerada = update_gzerada(gzerada, gmg)
 
         if not calcula_grade:
             return
-
-        gm = None
-        if meta.meta_estoque != 0 or meta.meta_giro != 0:
-            if meta.meta_estoque == 0:
-                gm = gmg
-            elif meta.meta_giro == 0:
-                gm = gme
-            else:
-                gm = soma_grades(gme, gmg)
-
-            self.context.update({
-                'gm': gm,
-            })
 
         g_header, g_fields, g_data, g_style, total_op = \
             lotes.models.op_sortimentos(
                 cursor, tipo='a', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
+        gop = None
         if total_op != 0:
             gop = {
                 'headers': g_header,
@@ -416,9 +411,7 @@ class GradeProduzir(O2BaseGetPostView):
                 'data': g_data,
                 'style': g_style,
             }
-            self.context.update({
-                'gop': gop,
-            })
+            gzerada = update_gzerada(gzerada, gop)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
@@ -436,6 +429,7 @@ class GradeProduzir(O2BaseGetPostView):
                 cancelado='n', faturado='n', total='Total',
                 periodo=':{}'.format(periodo))
 
+        gped = None
         if total_ped != 0:
             gped = {
                 'headers': gp_header,
@@ -443,8 +437,45 @@ class GradeProduzir(O2BaseGetPostView):
                 'data': gp_data,
                 'style': gp_style,
             }
+            gzerada = update_gzerada(gzerada, gped)
+
+        # Utiliza grade zerada para igualar cores e tamanhos das grades base
+        # dos cálculos
+        if gme is not None:
+            gme = soma_grades(gzerada, gme)
+            self.context.update({
+                'gme': gme,
+            })
+
+        if gmg is not None:
+            gmg = soma_grades(gzerada, gmg)
+            self.context.update({
+                'gmg': gmg,
+            })
+
+        if gop is not None:
+            gop = soma_grades(gzerada, gop)
+            self.context.update({
+                'gop': gop,
+            })
+
+        if gped is not None:
+            gped = soma_grades(gzerada, gped)
             self.context.update({
                 'gped': gped,
+            })
+
+        gm = None
+        if meta.meta_estoque != 0 or meta.meta_giro != 0:
+            if meta.meta_estoque == 0:
+                gm = gmg
+            elif meta.meta_giro == 0:
+                gm = gme
+            else:
+                gm = soma_grades(gme, gmg)
+
+            self.context.update({
+                'gm': gm,
             })
 
         gopp = None
