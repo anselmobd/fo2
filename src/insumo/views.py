@@ -982,7 +982,8 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                 receb_adi_destino = \
                     row['DATA'] + datetime.timedelta(days=-7)
                 for row_rec in data:
-                    if row_rec['DATA'] < row['DATA']:
+                    if row_rec['DATA'] < row['DATA'] or \
+                            row_rec['DATA'] <= semana_hoje:
                         continue
                     recebimento_na_semana = \
                         row_rec['RECEBIMENTO'] - row_rec['RECEBIMENTO_MOVIDO']
