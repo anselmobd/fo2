@@ -209,6 +209,10 @@ def subtrai_grades(g1, g2):
     return opera_grades(g1, g2, '-')
 
 
+def zera_grade(g1):
+    return opera_grades(g1, g1, '-')
+
+
 def opera_grades(g1, g2, operacao):
     tamanhos1 = set(g1['headers'][1:-1])
     tamanhos2 = set(g2['headers'][1:-1])
