@@ -1269,9 +1269,9 @@ class MapaPorInsumo(View):
         })
 
         # se tem alguma entrada ou saída
-        if len(datas['data_sug']) != 0:
+        data_sug = datas['data_sug']
+        if len(data_sug) != 0:
 
-            data_sug = datas['data_sug']
             estoque_minimo = datas['estoque_minimo']
             semana_recebimento = datas['semana_recebimento']
             semanas = datas['semanas']
