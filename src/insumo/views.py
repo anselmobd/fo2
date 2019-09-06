@@ -1948,6 +1948,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
 
         compra_atrasada = 0
         comprar = 0
+        dt_compra = None
         dt_chegada = None
 
         if len(datas['data_sug']) != 0:
@@ -1961,10 +1962,13 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
                     compra_atrasada += row['QUANT']
                 if row['SEMANA_COMPRA'] == dtsem:
                     comprar += row['QUANT']
+                    dt_compra = row['SEMANA_COMPRA']
                     dt_chegada = row['SEMANA_RECEPCAO']
             comprar = round(comprar)
             compra_atrasada = round(compra_atrasada)
 
+        if dt_compra is None:
+            dt_compra = '-'
         if dt_chegada is None:
             dt_chegada = '-'
 
@@ -1976,6 +1980,8 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
             'tam_order': tam.zfill(3),
             'compra_atrasada': compra_atrasada,
             'comprar': comprar,
+            'compra_total': compra_atrasada + comprar,
+            'dt_compra': dt_compra,
             'dt_chegada': dt_chegada,
         })
 
