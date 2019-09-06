@@ -988,8 +988,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
                 receb_adi_destino = \
                     row['DATA'] + datetime.timedelta(days=-7)
                 for row_rec in data:
-                    if row_rec['DATA'] < row['DATA'] or \
-                            row_rec['DATA'] <= semana_hoje:
+                    if row_rec['DATA'] < row['DATA']:
                         continue
                     recebimento_na_semana = \
                         row_rec['RECEBIMENTO'] - row_rec['RECEBIMENTO_MOVIDO']
@@ -1079,7 +1078,11 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
 
                     if recebimento_adiantado != 0:
                         if row['DATA'] == receb_adi_destino:
-                            row['RECEBIMENTO_ADIANTADO'] = \
+                            row['RECEBIMENTO_ADIANTADO'] += \
+                                recebimento_adiantado
+                        if row['DATA'] == semana_hoje and \
+                                row['DATA'] > receb_adi_destino:
+                            row['RECEBIMENTO_ATRASADO'] += \
                                 recebimento_adiantado
 
                     row['ESTOQUE'] = estoque
@@ -1268,13 +1271,13 @@ class MapaPorInsumo(View):
             'data_adi': data_adi,
         })
 
+        estoque_minimo = datas['estoque_minimo']
+        semana_recebimento = datas['semana_recebimento']
+        semanas = datas['semanas']
+
         # se tem alguma entrada ou saída
         data_sug = datas['data_sug']
         if len(data_sug) != 0:
-
-            estoque_minimo = datas['estoque_minimo']
-            semana_recebimento = datas['semana_recebimento']
-            semanas = datas['semanas']
 
             max_digits = 0
             for row in data_sug:
@@ -1298,7 +1301,8 @@ class MapaPorInsumo(View):
                 'data_sug': data_sug,
             })
 
-            data = datas['data']
+        data = datas['data']
+        if len(data) != 0:
 
             max_digits = 0
             for row in data:
@@ -1317,13 +1321,14 @@ class MapaPorInsumo(View):
             arrows = []
             for index, row in enumerate(data):
                 if row['RECEBIMENTO_MOVIDO'] != 0:
-                    row['RECEBIMENTO_ADIANTADO'] += \
-                        row['RECEBIMENTO'] - row['RECEBIMENTO_MOVIDO']
-                    row['RECEBIMENTO|STYLE'] = \
-                        'font-weight: bold; color: brown;'
-                    if row['RECEBIMENTO_ADIANTADO'] != 0:
-                        row['RECEBIMENTO_ADIANTADO|STYLE'] = \
+                    if row['RECEBIMENTO'] != row['RECEBIMENTO_MOVIDO']:
+                        row['RECEBIMENTO_ADIANTADO'] += \
+                            row['RECEBIMENTO'] - row['RECEBIMENTO_MOVIDO']
+                        row['RECEBIMENTO|STYLE'] = \
                             'font-weight: bold; color: brown;'
+                        if row['RECEBIMENTO_ADIANTADO'] != 0:
+                            row['RECEBIMENTO_ADIANTADO|STYLE'] = \
+                                'font-weight: bold; color: brown;'
 
                 if row['ESTOQUE'] < estoque_minimo:
                     if index == 0:
@@ -1367,9 +1372,14 @@ class MapaPorInsumo(View):
                         row_adi['ISEMANA_DESTINO'] = isemana
 
             for row_adi in data_adi:
-                arrows.append([
-                    row_adi['ISEMANA_ORIGEM'], 4,
-                    row_adi['ISEMANA_DESTINO'], 6, 'brown'])
+                if 'ISEMANA_DESTINO' in row_adi:
+                    arrows.append([
+                        row_adi['ISEMANA_ORIGEM'], 4,
+                        row_adi['ISEMANA_DESTINO'], 6, 'brown'])
+                else:
+                    arrows.append([
+                        row_adi['ISEMANA_ORIGEM'], 4,
+                        1, 5, 'brown'])
 
             context.update({
                 'headers': ['Semana', 'Estoque Real',
