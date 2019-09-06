@@ -367,6 +367,10 @@ class MapaPorSemanaNewForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
+    qtd_semanas = forms.CharField(
+        label='Quantidade de semanas', max_length=2, min_length=1,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
     qtd_itens = forms.CharField(
         label='Quantidade limite de itens processados abaixo',
         max_length=4, min_length=1, required=False,
@@ -417,6 +421,9 @@ class MapaPorSemanaNewForm(forms.Form):
 
     def clean_periodo(self):
         return self.clean__positive('periodo')
+
+    def clean_qtd_semanas(self):
+        return self.clean__positive('qtd_semanas')
 
     def clean_qtd_itens(self):
         if self.cleaned_data['qtd_itens'].zfill(1) == '0':
