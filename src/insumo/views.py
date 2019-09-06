@@ -1916,19 +1916,24 @@ class MapaPorSemanaNew(View):
 
 def mapa_sem_ref_new(request, item, dtini, qtdsem):
     template_name = 'insumo/mapa_sem_ref_new.html'
-    context = {}
+
+    nivel = item[0]
+    ref = item[2:7]
+    cor = item[8:14]
+    tam = item[15:18]
+    context = {
+        'qtdsem': int(qtdsem),
+    }
+
     if len(item) == 2:
         context['th'] = True
     else:
         cursor = connections['so'].cursor()
-        nivel = item[0]
-        ref = item[2:7]
-        cor = item[8:14]
-        tam = item[15:18]
 
         data = []
 
         datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
+
         if 'msg_erro' in datas:
             context.update({
                 'data': data,
@@ -1947,50 +1952,57 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         drow['REP_STR'] = '{}d.({}s.)'.format(drow['REPOSICAO'], semanas)
         drow['QUANT'] = round(drow['QUANT'])
 
-        compra_atrasada = 0
-        comprar = 0
-        dt_compra = None
-        dt_chegada = None
+        data_sug = datas['data_sug']
+        semana_hoje = datas['semana_hoje']
+        dtsem = datetime.datetime.strptime(dtini, '%Y%m%d').date()
 
-        if len(datas['data_sug']) != 0:
-            data_sug = datas['data_sug']
-            semana_hoje = segunda(datetime.date.today())
+        for i in range(int(qtdsem)):
+            compra_atrasada = 0
+            comprar = 0
+            dt_compra = None
+            dt_chegada = None
 
-            dtsem = datetime.datetime.strptime(dtini, '%Y%m%d').date()
+            if len(data_sug) != 0:
+                for row in data_sug:
+                    if dtsem == semana_hoje and \
+                            row['SEMANA_COMPRA'] < semana_hoje:
+                        compra_atrasada += row['QUANT']
+                    if row['SEMANA_COMPRA'] == dtsem:
+                        comprar += row['QUANT']
+                        dt_compra = row['SEMANA_COMPRA']
+                        dt_chegada = row['SEMANA_RECEPCAO']
+                comprar = round(comprar)
+                compra_atrasada = round(compra_atrasada)
 
-            for row in data_sug:
-                if row['SEMANA_COMPRA'] < semana_hoje:
-                    compra_atrasada += row['QUANT']
-                if row['SEMANA_COMPRA'] == dtsem:
-                    comprar += row['QUANT']
-                    dt_compra = row['SEMANA_COMPRA']
-                    dt_chegada = row['SEMANA_RECEPCAO']
-            comprar = round(comprar)
-            compra_atrasada = round(compra_atrasada)
+            if dt_compra is None:
+                dt_compra = '-'
+            if dt_chegada is None:
+                dt_chegada = '-'
 
-        if dt_compra is None:
-            dt_compra = '-'
-        if dt_chegada is None:
-            dt_chegada = '-'
+            row = drow.copy()
 
-        drow.update({
-            'nivel': nivel,
-            'ref': ref,
-            'cor': cor,
-            'tam': tam,
-            'tam_order': tam.zfill(3),
-            'compra_atrasada': compra_atrasada,
-            'comprar': comprar,
-            'compra_total': compra_atrasada + comprar,
-            'dt_compra': dt_compra,
-            'dt_chegada': dt_chegada,
+            row.update({
+                'nivel': nivel,
+                'ref': ref,
+                'cor': cor,
+                'tam': tam,
+                'tam_order': tam.zfill(3),
+                'i': i+1,
+                'compra_atrasada': compra_atrasada,
+                'comprar': comprar,
+                'compra_total': compra_atrasada + comprar,
+                'dt_compra': dt_compra,
+                'dt_chegada': dt_chegada,
+            })
+
+            data.append(row)
+
+            dtsem += datetime.timedelta(days=7)
+
+        context.update({
+            'data': data,
         })
 
-        data.append(drow)
-        pprint(data)
-        context = {
-            'data': data,
-        }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
 
