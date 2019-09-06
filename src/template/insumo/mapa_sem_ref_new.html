@@ -9,8 +9,8 @@
     <th style="text-align: right;">Múltiplo</th>
     <th style="text-align: right;">Estoque</th>
     <th>Unid.</th>
-    <th style="text-align: right;">Compra<br/>atrasada</th>
     <th style="text-align: right;">Compra<br/>sugerida</th>
+    <th style="text-align: right;">Compra<br/>atrasada</th>
     <th style="text-align: right;">Compra<br/>total</th>
     <th>Data<br/>compra</th>
     <th>Data<br/>chegada</th>
@@ -35,9 +35,9 @@
         <td style="text-align: right;">{{ row.LOTE_MULTIPLO }}</td>
         <td style="text-align: right;">{{ row.QUANT }}</td>
         <td>{{ row.UNID }}</td>
-        <td style="text-align: right;">{{ row.compra_atrasada }}</td>
         <td style="text-align: right;">{{ row.comprar }}</td>
-        <td style="text-align: right;">{{ row.compra_total }}</td>
+        <td style="text-align: right;">{{ row.compra_atrasada }}</td>
+        <td style="font-weight: bold; text-align: right;">{{ row.compra_total }}</td>
         <td>{{ row.dt_compra }}</td>
         <td>{{ row.dt_chegada }}</td>
       </tr>
