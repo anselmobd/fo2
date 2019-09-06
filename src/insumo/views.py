@@ -1878,6 +1878,7 @@ class MapaPorSemanaNew(View):
             context = {'titulo': self.title_name}
             form = self.Form_class()
             periodo = None
+            qtd_semanas = None
             if form.fields['periodo'].initial:
                 periodo = form.fields['periodo'].initial
             if form.fields['qtd_semanas'].initial:
