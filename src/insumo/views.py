@@ -1880,9 +1880,8 @@ class MapaPorSemanaNew(View):
             periodo = None
             if form.fields['periodo'].initial:
                 periodo = form.fields['periodo'].initial
-            qtd_semanas = None
-            # if form.fields['qtd_semanas'].initial:
-            #     qtd_semanas = form.fields['qtd_semanas'].initial
+            if form.fields['qtd_semanas'].initial:
+                qtd_semanas = form.fields['qtd_semanas'].initial
             cursor = connections['so'].cursor()
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
@@ -1896,8 +1895,7 @@ class MapaPorSemanaNew(View):
             form.data['periodo'] = kwargs['periodo']
         if form.is_valid():
             periodo = form.cleaned_data['periodo']
-            qtd_semanas = None
-            # qtd_semanas = form.cleaned_data['qtd_semanas']
+            qtd_semanas = form.cleaned_data['qtd_semanas']
             qtd_itens = form.cleaned_data['qtd_itens']
             nivel = form.cleaned_data['nivel']
             uso = form.cleaned_data['uso']
