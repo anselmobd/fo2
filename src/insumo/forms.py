@@ -368,7 +368,7 @@ class MapaPorSemanaNewForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
     qtd_semanas = forms.CharField(
-        label='Quantidade de semanas', max_length=2, min_length=1,
+        label='Quantidade de semanas', max_length=2, min_length=1, initial=1,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     qtd_itens = forms.CharField(
