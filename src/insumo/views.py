@@ -1913,7 +1913,7 @@ class MapaPorSemanaNew(View):
         return render(request, self.template_name, context)
 
 
-def mapa_sem_ref_new(request, item, dtini):
+def mapa_sem_ref_new(request, item, dtini, qtdsem):
     template_name = 'insumo/mapa_sem_ref_new.html'
     context = {}
     if len(item) == 2:
