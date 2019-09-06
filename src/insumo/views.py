@@ -1925,16 +1925,18 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         cor = item[8:14]
         tam = item[15:18]
 
+        data = []
+
         datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
         if 'msg_erro' in datas:
             context.update({
-                'data': [],
+                'data': data,
             })
             html = render_to_string(template_name, context)
             return HttpResponse(html)
 
-        data = datas['data_id']
-        drow = data[0]
+        data_id = datas['data_id']
+        drow = data_id[0]
 
         drow['REF'] = drow['REF'] + ' (' + drow['DESCR'] + ')'
         drow['COR'] = drow['COR'] + ' (' + drow['DESCR_COR'] + ')'
@@ -1966,8 +1968,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         if dt_chegada is None:
             dt_chegada = '-'
 
-        context = {
-            'data': data,
+        drow.update({
             'nivel': nivel,
             'ref': ref,
             'cor': cor,
@@ -1976,6 +1977,12 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
             'compra_atrasada': compra_atrasada,
             'comprar': comprar,
             'dt_chegada': dt_chegada,
+        })
+
+        data.append(drow)
+        pprint(data)
+        context = {
+            'data': data,
         }
     html = render_to_string(template_name, context)
     return HttpResponse(html)
