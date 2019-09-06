@@ -816,6 +816,12 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         semana_hoje +
         datetime.timedelta(days=dias_reposicao+7))
 
+    datas.update({
+        'estoque_minimo': estoque_minimo,
+        'semana_recebimento': semana_recebimento,
+        'semanas': semanas,
+    })
+
     # Necessidades
     data_ins = queries.insumo_necessidade_semana(
         cursor, nivel, ref, cor, tam)
@@ -1097,9 +1103,6 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
 
         datas.update({
             'data': data,
-            'estoque_minimo': estoque_minimo,
-            'semana_recebimento': semana_recebimento,
-            'semanas': semanas,
         })
     datas.update({
         'data_sug': data_sug,
