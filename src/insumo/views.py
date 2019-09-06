@@ -1957,6 +1957,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
 
         data_sug = datas['data_sug']
         semana_hoje = datas['semana_hoje']
+        semana_recebimento = datas['semana_recebimento']
         dtsem = datetime.datetime.strptime(dtini, '%Y%m%d').date()
 
         for i in range(int(qtdsem)):
@@ -1970,6 +1971,8 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
                     if dtsem == semana_hoje and \
                             row['SEMANA_COMPRA'] < semana_hoje:
                         compra_atrasada += row['QUANT']
+                        dt_compra = semana_hoje
+                        dt_chegada = semana_recebimento
                     if row['SEMANA_COMPRA'] == dtsem:
                         comprar += row['QUANT']
                         dt_compra = row['SEMANA_COMPRA']
