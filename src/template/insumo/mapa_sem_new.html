@@ -18,7 +18,6 @@ tbody#refs_tbody tr {
 
 {% block content %}
 
-<!-- <h3 style="color: red;">Em desenvolvimento...</h3> -->
 <form action="{% url 'insumo:mapa_por_semana' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -107,13 +106,11 @@ tbody#refs_tbody tr {
   }
 
   function spanSorted(parentEl) {
-    // console.log('spanSorted');
     var toSpan = parentEl.children;
     var cols = 10;
     var ultimo = toSpan.length - 1
     var iguais = -1;
     for (var i = ultimo; i >= 0; i--) {
-      // toSpan[i].children[0].show();
       for (var col = 0; col < cols; col++) {
         toSpan[i].children[col].rowSpan = null;
         toSpan[i].children[col].style.display = null;
@@ -122,16 +119,11 @@ tbody#refs_tbody tr {
     var id_ant = '!!!';
     var primeiro = true;
     for (var i = ultimo; i >= 0; i--) {
-      // console.log(i);
-      // console.log(toSpan[i].style.display);
       if (toSpan[i].style.display === '') {
         id_atu = toSpan[i].id.slice(0, -4);
-        console.log(toSpan[i].id);
         if (id_atu == id_ant) {
-          console.log('iguais');
           iguais += 1;
         } else {
-          console.log('diferentes');
           id_ant = id_atu;
           iguais = 1;
         }
@@ -172,12 +164,6 @@ tbody#refs_tbody tr {
         if (data) {
           aggregator.insertAdjacentHTML('beforeend', data);
 
-          // showHide($('.flag_comprar'), $("#chk_comprar").is(':checked'));
-          // showHide($('.flag_compra_atrasada'), $("#chk_compra_atrasada").is(':checked'));
-          // showHide($('.flag_zerado'), $("#chk_zerado").is(':checked'));
-          // showHideAll();
-          // sortByDisplayId(tBody);
-          // spanSorted(tBody);
           arrangeAll()
 
           $("#icount").text(iRefAjax+1);
@@ -202,10 +188,6 @@ tbody#refs_tbody tr {
     var bCompraAtrasada = $("#chk_compra_atrasada").is(':checked');
     var bZerado = $("#chk_zerado").is(':checked');
     var bTotMovido = $("#chk_tot_movido").is(':checked');
-    console.log('bComprar', bComprar);
-    console.log('bCompraAtrasada', bCompraAtrasada);
-    console.log('bZerado', bZerado);
-    console.log('bTotMovido', bTotMovido);
 
     var objs = document.getElementsByClassName("with_flags");
     if (objs) {
@@ -214,7 +196,6 @@ tbody#refs_tbody tr {
         var fCompraAtrasada = false;
         var fZerado = false;
         var fTotMovido = false;
-        console.log(el[1].classList);
         if (el[1].classList) {
           fComprar = el[1].classList.contains('flag_comprar');
           fCompraAtrasada = el[1].classList.contains('flag_compra_atrasada');
@@ -222,37 +203,19 @@ tbody#refs_tbody tr {
           fTotMovido = el[1].classList.contains('flag_tot_movido');
         }
 
-        console.log('bComprar', bComprar);
-        console.log('bCompraAtrasada', bCompraAtrasada);
-        console.log('bZerado', bZerado);
-        console.log('bTotMovido', bTotMovido);
-        console.log('bComprar && fComprar', bComprar && fComprar);
-        console.log('bCompraAtrasada && fCompraAtrasada', bCompraAtrasada && fCompraAtrasada);
-        console.log('bZerado && fZerado', bZerado && fZerado);
-        console.log('bTotMovido && fTotMovido', bTotMovido && fTotMovido);
         if (  (bComprar && fComprar)
             || (bCompraAtrasada && fCompraAtrasada)
             || (bZerado && fZerado)
             || (bTotMovido && fTotMovido)
            )
         {
-          console.log('show');
           el[1].style.display = '';
         } else {
-          console.log('hide');
           el[1].style.display = 'none';
         }
       });
     }
   }
-
-  // function showHide(el, onOff) {
-  //   if (onOff) {
-  //     el.show();
-  //   } else {
-  //     el.hide();
-  //   }
-  // }
 
   function arrangeAll() {
     showHideAll();
@@ -265,26 +228,14 @@ tbody#refs_tbody tr {
     $("#itotal").text(refs.length);
 
     $("#chk_comprar").on('change', function () {
-      // showHide($('.flag_comprar'), $(this).is(':checked'));
-      // showHideAll();
-      // sortByDisplayId(tBody);
-      // spanSorted(tBody);
       arrangeAll();
     });
 
     $("#chk_compra_atrasada").on('change', function () {
-      // showHide($('.flag_compra_atrasada'), $(this).is(':checked'));
-      // showHideAll();
-      // sortByDisplayId(tBody);
-      // spanSorted(tBody);
       arrangeAll();
     });
 
     $("#chk_zerado").on('change', function () {
-      // showHide($('.flag_zerado'), $(this).is(':checked'));
-      // showHideAll();
-      // sortByDisplayId(tBody);
-      // spanSorted(tBody);
       arrangeAll();
     });
 
