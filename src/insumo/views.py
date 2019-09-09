@@ -917,6 +917,12 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
 
     data_sug = []
     data_adi = []
+
+    # se não tem entrada ou saída mas o estoque está abaixo do mínimo, força
+    # uma semana_fim
+    if semana_fim is None:
+        semana_fim = semana_hoje
+
     # se tem alguma entrada ou saída
     if semana_fim is not None:
         # criando mapa de compras
