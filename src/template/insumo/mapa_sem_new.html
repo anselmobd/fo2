@@ -105,6 +105,51 @@ tbody#refs_tbody tr {
     }
   }
 
+  function spanSorted(parentEl) {
+    console.log('spanSorted');
+    var toSpan = parentEl.children;
+    var cols = 9;
+    var ultimo = toSpan.length - 1
+    var iguais = -1;
+    for (var i = ultimo; i >= 0; i--) {
+      // toSpan[i].children[0].show();
+      for (var col = 0; col < cols; col++) {
+        toSpan[i].children[col].rowSpan = null;
+        toSpan[i].children[col].style.display = null;
+      }
+    }
+    var id_ant = '!!!';
+    var primeiro = true;
+    for (var i = ultimo; i >= 0; i--) {
+      // console.log(i);
+      // console.log(toSpan[i].style.display);
+      if (toSpan[i].style.display === '') {
+        id_atu = toSpan[i].id.slice(0, -4);
+        console.log(toSpan[i].id);
+        if (id_atu == id_ant) {
+          console.log('iguais');
+          iguais += 1;
+        } else {
+          console.log('diferentes');
+          id_ant = id_atu;
+          iguais = 1;
+        }
+        // toSpan[i].children[0].show();
+        if (!primeiro) {
+          for (var col = 0; col < cols; col++) {
+            toSpan[i].children[col].rowSpan = iguais;
+          }
+          if (iguais > 1) {
+            for (var col = 0; col < cols; col++) {
+              toSpan[i+1].children[col].style.display = 'none';
+            }
+          }
+        }
+        primeiro = false;
+      }
+    }
+  }
+
   function doAjax1Ref(header) {
     if (header) {
       refer = 'th';
@@ -130,6 +175,7 @@ tbody#refs_tbody tr {
           showHide($('.flag_compra_atrasada'), $("#chk_compra_atrasada").is(':checked'));
           showHide($('.flag_zerado'), $("#chk_zerado").is(':checked'));
           sortByDisplayId(tBody);
+          spanSorted(tBody);
 
           $("#icount").text(iRefAjax+1);
         }
@@ -163,16 +209,19 @@ tbody#refs_tbody tr {
     $("#chk_comprar").on('change', function () {
       showHide($('.flag_comprar'), $(this).is(':checked'))
       sortByDisplayId(tBody);
+      spanSorted(tBody);
     });
 
     $("#chk_compra_atrasada").on('change', function () {
       showHide($('.flag_compra_atrasada'), $(this).is(':checked'))
       sortByDisplayId(tBody);
+      spanSorted(tBody);
     });
 
     $("#chk_zerado").on('change', function () {
       showHide($('.flag_zerado'), $(this).is(':checked'))
       sortByDisplayId(tBody);
+      spanSorted(tBody);
     });
 
   });
