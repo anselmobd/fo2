@@ -126,13 +126,10 @@ tbody#refs_tbody tr {
         if (data) {
           aggregator.insertAdjacentHTML('beforeend', data);
 
-          if ( tBody.rows.length > 0 ) {
-            var last_id = tBody.rows[tBody.rows.length-1].id;
-            showHide($('#'+last_id+'.flag_comprar'), $("#chk_comprar").is(':checked'));
-            showHide($('#'+last_id+'.flag_compra_atrasada'), $("#chk_compra_atrasada").is(':checked'));
-            showHide($('#'+last_id+'.flag_zerado'), $("#chk_zerado").is(':checked'));
-            sortByDisplayId(tBody);
-          }
+          showHide($('.flag_comprar'), $("#chk_comprar").is(':checked'));
+          showHide($('.flag_compra_atrasada'), $("#chk_compra_atrasada").is(':checked'));
+          showHide($('.flag_zerado'), $("#chk_zerado").is(':checked'));
+          sortByDisplayId(tBody);
 
           $("#icount").text(iRefAjax+1);
         }
