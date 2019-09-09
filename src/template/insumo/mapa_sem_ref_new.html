@@ -21,7 +21,7 @@
 {% else %}
   {% if data %}
     {% for row in data %}
-      <tr id="id_{{ row.nivel }}_{{ row.ref }}_{{ row.cor }}_{{ row.tam }}" class="key_ref _ref_{{ row.nivel }}{{ row.ref }}{{ row.cor }}{{ row.tam_order }}
+      <tr id="id_{{ row.nivel }}_{{ row.ref }}_{{ row.cor }}_{{ row.tam_order }}" class="key_ref _ref_{{ row.nivel }}{{ row.ref }}{{ row.cor }}{{ row.tam_order }}
         {% if row.comprar > 0 %}flag_comprar
         {% else %}
           {% if row.compra_atrasada > 0 %}flag_compra_atrasada
