@@ -32,6 +32,21 @@ def get_obj_attr(obj, attr):
 
 
 @register.filter
+def zfill(s, len):
+    s = str(s)
+    return s.zfill(len)
+
+
+@register.filter
+def num_zfill(s, len):
+    s = str(s)
+    if s.isdigit():
+        return s.zfill(len)
+    else:
+        return s
+
+
+@register.filter
 def transp_decimals(text):
     separa_zeros = re.compile("^(.*\,[^0]*)(0*)$")
     reg = separa_zeros.search(text)
