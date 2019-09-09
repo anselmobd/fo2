@@ -1301,7 +1301,9 @@ class MapaPorInsumo(View):
                 'data_sug': data_sug,
             })
 
-        data = datas['data']
+        data = []
+        if 'data' in datas:
+            data = datas['data']
         if len(data) != 0:
 
             max_digits = 0
