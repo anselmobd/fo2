@@ -10,7 +10,7 @@
     <th style="text-align: right;">Estoque</th>
     <th>Unid.</th>
     {% if qtdsem > 1 %}
-      <th>#</th>
+      <th>Semana</th>
     {% endif %}
     <th style="text-align: right;">Compra<br/>sugerida</th>
     <th style="text-align: right;">Compra<br/>atrasada</th>
@@ -39,7 +39,7 @@
         <td style="text-align: right;">{{ row.QUANT }}</td>
         <td>{{ row.UNID }}</td>
         {% if qtdsem > 1 %}
-          <td style="font-weight: bold;">{{ row.i }}</td>
+          <td style="font-weight: bold; text-align: center;">{{ row.i }}</td>
         {% endif %}
         <td style="text-align: right;">{{ row.comprar }}</td>
         <td style="text-align: right;">{{ row.compra_atrasada }}</td>
