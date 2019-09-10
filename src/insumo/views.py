@@ -1979,7 +1979,6 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         dtsem = datetime.datetime.strptime(dtini, '%Y%m%d').date()
 
         data_adi = datas['data_adi']
-        tot_movido = round(sum(item['QUANT'] for item in data_adi))
 
         for i in range(int(qtdsem)):
             compra_atrasada = 0
@@ -2000,6 +1999,11 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
                 comprar = round(comprar)
                 compra_atrasada = round(compra_atrasada)
 
+            movido = round(sum(
+                item['QUANT']
+                for item in data_adi
+                if item['SEMANA_DESTINO'] == dtsem))
+
             if dt_chegada is None:
                 dt_chegada = '-'
 
@@ -2017,7 +2021,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
                 'compra_total': compra_atrasada + comprar,
                 'dt_compra': dt_compra,
                 'dt_chegada': dt_chegada,
-                'tot_movido': tot_movido,
+                'movido': movido,
             })
 
             data.append(row)
