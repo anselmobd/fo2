@@ -1984,7 +1984,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         for i in range(int(qtdsem)):
             compra_atrasada = 0
             comprar = 0
-            dt_compra = None
+            dt_compra = dtsem
             dt_chegada = None
 
             if len(data_sug) != 0:
@@ -1996,13 +1996,10 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
                         dt_chegada = semana_recebimento
                     if row['SEMANA_COMPRA'] == dtsem:
                         comprar += row['QUANT']
-                        dt_compra = row['SEMANA_COMPRA']
                         dt_chegada = row['SEMANA_RECEPCAO']
                 comprar = round(comprar)
                 compra_atrasada = round(compra_atrasada)
 
-            if dt_compra is None:
-                dt_compra = '-'
             if dt_chegada is None:
                 dt_chegada = '-'
 
