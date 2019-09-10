@@ -9,10 +9,10 @@
     <th style="text-align: right;">Múltiplo</th>
     <th style="text-align: right;">Estoque</th>
     <th>Unid.</th>
-    <th>Receb.<br/>movidos</th>
     {% if qtdsem > 1 %}
       <th>Sem.</th>
     {% endif %}
+    <th>Receb.<br/>movidos</th>
     <th style="text-align: right;">Compra<br/>sugerida</th>
     <th style="text-align: right;">Compra<br/>atrasada</th>
     <th style="text-align: right;">Compra<br/>total</th>
@@ -24,13 +24,10 @@
     {% for row in data %}
       <tr id="id_{{ row.nivel }}_{{ row.ref }}_{{ row.cor }}_{{ row.tam_order }}_{{ row.i|zfill:3 }}" class="key_ref _ref_{{ row.nivel }}{{ row.ref }}{{ row.cor }}{{ row.tam_order }}
         with_flags
-        {% if row.comprar > 0 %}flag_comprar
-        {% else %}
-          {% if row.compra_atrasada > 0 %}flag_compra_atrasada
-          {% else %}flag_zerado
-          {% endif %}
-        {% endif %}
-        {% if row.tot_movido > 0 %}flag_tot_movido{% endif %}
+        {% if row.comprar > 0 %}flag_comprar{% endif %}
+        {% if row.compra_atrasada > 0 %}flag_compra_atrasada{% endif %}
+        {% if row.movido > 0 %}flag_movido{% endif %}
+        {% if row.comprar == 0 and row.compra_atrasada == 0 and row.movido == 0 %}flag_zerado{% endif %}
         ">
         <td>{{ row.nivel }}</td>
         <td><a href="{% url 'insumo:mapa' row.nivel row.ref row.cor row.tam %}" target="_blank">{{ row.REF }}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></td>
@@ -41,10 +38,10 @@
         <td style="text-align: right;">{{ row.LOTE_MULTIPLO }}</td>
         <td style="text-align: right;">{{ row.QUANT }}</td>
         <td>{{ row.UNID }}</td>
-        <td style="text-align: right;">{{ row.tot_movido }}</td>
         {% if qtdsem > 1 %}
           <td style="font-weight: bold; text-align: center;">{{ row.i }}</td>
         {% endif %}
+        <td style="text-align: right;">{{ row.movido }}</td>
         <td style="text-align: right;">{{ row.comprar }}</td>
         <td style="text-align: right;">{{ row.compra_atrasada }}</td>
         <td style="font-weight: bold; text-align: right;">{{ row.compra_total }}</td>

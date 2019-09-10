@@ -52,10 +52,10 @@ tbody#refs_tbody tr {
 {% endif %}
 {% if refs %}
   <p>Mostrar:
+    <input id="chk_movido" type="checkbox" checked> Recebimentos movidos |
     <input id="chk_comprar" type="checkbox" checked> Compra sugerida |
-    <input id="chk_compra_atrasada" type="checkbox" checked> Apenas Compra Atrasada |
-    <input id="chk_zerado" type="checkbox"> Sem Compra
-    <input id="chk_tot_movido" type="checkbox"> Com movimento de recebimentos
+    <input id="chk_compra_atrasada" type="checkbox" checked> Compra atrasada |
+    <input id="chk_zerado" type="checkbox"> Sem necessidades
   </p>
   <table>
     <thead id="refs_thead">
@@ -107,7 +107,7 @@ tbody#refs_tbody tr {
 
   function spanSorted(parentEl) {
     var toSpan = parentEl.children;
-    var cols = 10;
+    var cols = 9;
     var ultimo = toSpan.length - 1
     var iguais = -1;
     for (var i = ultimo; i >= 0; i--) {
@@ -187,7 +187,7 @@ tbody#refs_tbody tr {
     var bComprar = $("#chk_comprar").is(':checked');
     var bCompraAtrasada = $("#chk_compra_atrasada").is(':checked');
     var bZerado = $("#chk_zerado").is(':checked');
-    var bTotMovido = $("#chk_tot_movido").is(':checked');
+    var bMovido = $("#chk_movido").is(':checked');
 
     var objs = document.getElementsByClassName("with_flags");
     if (objs) {
@@ -195,18 +195,18 @@ tbody#refs_tbody tr {
         var fComprar = false;
         var fCompraAtrasada = false;
         var fZerado = false;
-        var fTotMovido = false;
+        var fMovido = false;
         if (el[1].classList) {
           fComprar = el[1].classList.contains('flag_comprar');
           fCompraAtrasada = el[1].classList.contains('flag_compra_atrasada');
           fZerado = el[1].classList.contains('flag_zerado');
-          fTotMovido = el[1].classList.contains('flag_tot_movido');
+          fMovido = el[1].classList.contains('flag_movido');
         }
 
         if (  (bComprar && fComprar)
             || (bCompraAtrasada && fCompraAtrasada)
             || (bZerado && fZerado)
-            || (bTotMovido && fTotMovido)
+            || (bMovido && fMovido)
            )
         {
           el[1].style.display = '';
@@ -239,7 +239,7 @@ tbody#refs_tbody tr {
       arrangeAll();
     });
 
-    $("#chk_tot_movido").on('change', function () {
+    $("#chk_movido").on('change', function () {
       arrangeAll();
     });
 
