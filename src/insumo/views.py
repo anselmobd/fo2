@@ -920,7 +920,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
 
     # se não tem entrada ou saída mas o estoque está abaixo do mínimo, força
     # uma semana_fim
-    if semana_fim is None:
+    if semana_fim is None and qtd_estoque < estoque_minimo:
         semana_fim = semana_hoje
 
     # se tem alguma entrada ou saída
