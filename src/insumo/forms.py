@@ -168,8 +168,12 @@ class NecessidadeForm(forms.Form):
     CHOICES = [('a', 'Apenas insumos de estágios não avançados dos lotes'),
                ('t', 'Todos os insumos das OPs')]
     quais = forms.ChoiceField(
-        label='Quais insumos',
-        choices=CHOICES, initial='a', widget=forms.RadioSelect())
+        label='Quais insumos', choices=CHOICES, initial='a')
+
+    CHOICES = [('a', 'Apenas insumos em estágios com depósito'),
+               ('t', 'Todos os insumos das OPs')]
+    nivel9dep = forms.ChoiceField(
+        label='Depósito de estágio', choices=CHOICES, initial='t')
 
     def clean_insumo(self):
         insumo = self.cleaned_data['insumo'].upper()
