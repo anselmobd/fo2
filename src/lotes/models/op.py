@@ -600,6 +600,7 @@ def op_estagios(cursor, op):
         , l.CODIGO_ESTAGIO COD_EST
         , cast( SUM( l.QTDE_PECAS_PROD ) / SUM( l.QTDE_PECAS_PROG ) * 100
                 AS NUMERIC(10,2) ) PERC
+        , SUM( l.QTDE_EM_PRODUCAO_PACOTE ) EMPROD
         , SUM( l.QTDE_PECAS_PROD ) PROD
         , SUM( l.QTDE_PECAS_2A ) Q2
         , SUM( l.QTDE_PERDAS ) PERDA

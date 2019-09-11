@@ -223,10 +223,11 @@ class Op(View):
                 'e_headers': ('Estágio', '% Produzido',
                               'Itens 1ª Qualidade', 'Itens 2ª Qualidade',
                               'Itens Perda', 'Itens Conserto',
-                              'Lotes no estágio'),
+                              'Lotes no estágio', 'Itens Em Produção'),
                 'e_fields': ('EST', 'PERC',
                              'PROD', 'Q2',
-                             'PERDA', 'CONSERTO', 'LOTES'),
+                             'PERDA', 'CONSERTO',
+                             'LOTES', 'EMPROD'),
                 'e_data': e_data,
                 'qtd_lotes_fim': qtd_lotes_fim,
             })
