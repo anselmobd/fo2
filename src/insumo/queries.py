@@ -1070,20 +1070,36 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
         , ref.DESCR_REFERENCIA DESCR
         , op.ORDEM_PRODUCAO OP
         , sum(
-            ( lote.QTDE_A_PRODUZIR_PACOTE
+            ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
             - lote.QTDE_PECAS_PROD
             - lote.QTDE_PECAS_2A
             - lote.QTDE_PERDAS
             - lote.QTDE_CONSERTO
+            - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
+                        lote.QTDE_PECAS_PROG
+                    AND e.CODIGO_DEPOSITO = 0
+              THEN
+                lote.QTDE_EM_PRODUCAO_PACOTE
+              ELSE
+                0
+              END
             )
           ) QTD_PRODUTO
         , sum(
             ia.CONSUMO
-          * ( lote.QTDE_A_PRODUZIR_PACOTE
+          * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
             - lote.QTDE_PECAS_PROD
             - lote.QTDE_PECAS_2A
             - lote.QTDE_PERDAS
             - lote.QTDE_CONSERTO
+            - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
+                        lote.QTDE_PECAS_PROG
+                    AND e.CODIGO_DEPOSITO = 0
+              THEN
+                lote.QTDE_EM_PRODUCAO_PACOTE
+              ELSE
+                0
+              END
             )
           ) QTD_INSUMO
         FROM BASI_030 ref -- referencia
@@ -1099,6 +1115,8 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
          AND (ia.ITEM_ITEM = lote.PROCONF_ITEM OR ia.ITEM_ITEM = '000000')
          AND ia.ALTERNATIVA_ITEM = op.ALTERNATIVA_PECA
          AND ia.ESTAGIO = lote.CODIGO_ESTAGIO
+        LEFT JOIN MQOP_005 e
+          ON e.CODIGO_ESTAGIO = ia.ESTAGIO
         LEFT JOIN BASI_040 cot -- combinação tamanho
           ON ia.SUB_COMP = '000'
          AND cot.GRUPO_ITEM = ia.GRUPO_ITEM
@@ -1115,6 +1133,12 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
          AND coc.SEQUENCIA = ia.SEQUENCIA
         WHERE op.SITUACAO IN (2, 4) -- não cancelada
           AND lote.NUMERO_ORDEM = 0
+          AND (  ia.NIVEL_COMP = 2
+              OR lote.QTDE_EM_PRODUCAO_PACOTE <> lote.QTDE_PECAS_PROG
+              OR ( lote.QTDE_EM_PRODUCAO_PACOTE = lote.QTDE_PECAS_PROG
+                 AND e.CODIGO_DEPOSITO <> 0
+                 )
+              )
           AND ia.NIVEL_COMP = {nivel}
           AND ia.GRUPO_COMP = '{ref}'
           AND CASE WHEN ia.ITEM_COMP = '000000'
@@ -1133,12 +1157,23 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
         , ref.DESCR_REFERENCIA
         , op.ORDEM_PRODUCAO
         HAVING
-          sum( ia.CONSUMO *
-               (
-            ( lote.QTDE_PECAS_PROG - lote.QTDE_PECAS_PROD - lote.QTDE_PECAS_2A
-            - lote.QTDE_PERDAS - lote.QTDE_CONSERTO )
-               )
-             ) > 0
+          sum(
+            ia.CONSUMO
+          * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
+            - lote.QTDE_PECAS_PROD
+            - lote.QTDE_PECAS_2A
+            - lote.QTDE_PERDAS
+            - lote.QTDE_CONSERTO
+            - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
+                        lote.QTDE_PECAS_PROG
+                    AND e.CODIGO_DEPOSITO = 0
+              THEN
+                lote.QTDE_EM_PRODUCAO_PACOTE
+              ELSE
+                0
+              END
+            )
+          ) > 0
         ORDER BY
           TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
         , op.REFERENCIA_PECA
