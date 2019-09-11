@@ -222,7 +222,7 @@ def necessidade(
         cursor, op, data_corte, data_corte_ate, periodo_corte,
         data_compra, data_compra_ate, periodo_compra,
         insumo, conta_estoque,
-        ref, conta_estoque_ref, colecao, quais, nivel9dep):
+        ref, conta_estoque_ref, colecao, quais):
     filtro_op = ''
     if op:
         filtro_op = \
@@ -315,17 +315,41 @@ def necessidade(
             "AND ref.COLECAO = '{colecao}'".format(
                 colecao=colecao.colecao)
 
-    filtro_nivel9dep = ''
-    if nivel9dep == 'a':
-        filtro_nivel9dep = """
-          AND (ia.NIVEL_COMP = 2 OR e.CODIGO_DEPOSITO <> 0)
-        """
-
+    filtro_insumos = ''
     quais_insumos = ''
     if quais == 'a':
         quais_insumos = """
-            ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
-            - l.QTDE_PERDAS - l.QTDE_CONSERTO )
+            ( l.QTDE_PECAS_PROG
+            - l.QTDE_PECAS_PROD
+            - l.QTDE_PECAS_2A
+            - l.QTDE_PERDAS
+            - l.QTDE_CONSERTO
+            )
+        """
+    elif quais == 'd':
+        filtro_insumos = """
+            AND (  ia.NIVEL_COMP = 2
+                OR l.QTDE_EM_PRODUCAO_PACOTE <> l.QTDE_PECAS_PROG
+                OR ( l.QTDE_EM_PRODUCAO_PACOTE = l.QTDE_PECAS_PROG
+                   AND e.CODIGO_DEPOSITO <> 0
+                   )
+                )
+        """
+        quais_insumos = """
+            ( l.QTDE_PECAS_PROG
+            - l.QTDE_PECAS_PROD
+            - l.QTDE_PECAS_2A
+            - l.QTDE_PERDAS
+            - l.QTDE_CONSERTO
+            - CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE <>
+                        l.QTDE_PECAS_PROG
+                    AND e.CODIGO_DEPOSITO = 0
+              THEN
+                l.QTDE_EM_PRODUCAO_PACOTE
+              ELSE
+                0
+              END
+            )
         """
     else:
         quais_insumos = """
@@ -416,7 +440,7 @@ def necessidade(
          AND ref.REFERENCIA = o.REFERENCIA_PECA
         WHERE o.SITUACAO IN (2, 4)
         --  AND (ia.NIVEL_COMP = 2 OR e.CODIGO_DEPOSITO <> 0)
-          {filtro_nivel9dep} -- filtro_nivel9dep
+          {filtro_insumos} -- filtro_insumos
         --  AND ( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD - l.QTDE_PECAS_2A
         --  - l.QTDE_PERDAS - l.QTDE_CONSERTO
         --  ) > 0
@@ -522,7 +546,7 @@ def necessidade(
         filtro_ref=filtro_ref,
         filtro_conta_estoque_ref=filtro_conta_estoque_ref,
         filtro_colecao=filtro_colecao,
-        filtro_nivel9dep=filtro_nivel9dep,
+        filtro_insumos=filtro_insumos,
         quais_insumos=quais_insumos)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)

@@ -165,15 +165,12 @@ class NecessidadeForm(forms.Form):
         queryset=Colecao.objects.exclude(colecao=0).order_by(
             'colecao'), empty_label="(Todas)")
 
-    CHOICES = [('a', 'Apenas insumos de estágios não avançados dos lotes'),
-               ('t', 'Todos os insumos das OPs')]
+    CHOICES = [('t', 'Todos os insumos das OPs'),
+               ('a', 'Apenas insumos de estágios não avançados dos lotes'),
+               ('d', 'Apenas insumos de estágios não avançados e em estágios '
+                     'com depósito')]
     quais = forms.ChoiceField(
-        label='Quais insumos', choices=CHOICES, initial='a')
-
-    CHOICES = [('a', 'Apenas insumos em estágios com depósito'),
-               ('t', 'Todos os insumos das OPs')]
-    nivel9dep = forms.ChoiceField(
-        label='Depósito de estágio', choices=CHOICES, initial='t')
+        label='Quais insumos', choices=CHOICES, initial='d')
 
     def clean_insumo(self):
         insumo = self.cleaned_data['insumo'].upper()
