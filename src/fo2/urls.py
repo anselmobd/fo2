@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from django.views.generic import RedirectView
 
 from .admin import intr_adm_site
-from .views import index_view, test_view, IntranetView, myip_view, \
+from .views import index_view, test_view, IntranetView, myip_view, meuip_view,\
     SystextilView, ApoioAoErpView, ack_view
 
 
@@ -70,6 +70,8 @@ urlpatterns = [
     # Links utilitários
 
     url(r'^myip/', myip_view, name='myip'),
+
+    url(r'^meuip/', meuip_view, name='meuip'),
 
     url(r'^ack$', ack_view, name='ack'),
 
