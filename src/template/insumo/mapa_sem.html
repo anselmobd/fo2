@@ -115,8 +115,8 @@ tbody#refs_tbody tr {
       aggregator = tBody;
     }
 
-    var link = '{% url 'insumo:mapa_por_sem_ref__get' '0.00000.000000.000' '20180723' '99' %}';
-    link = link.replace('99', nsem);
+    var link = '{% url 'insumo:mapa_por_sem_ref__get' '0.00000.000000.000' '20180723' '+-' %}';
+    link = link.replace('+-', nsem);
     link = link.replace('20180723', dtini);
     link = link.replace('0.00000.000000.000', refer);
     $.ajax({
