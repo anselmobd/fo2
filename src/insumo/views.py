@@ -1843,7 +1843,7 @@ class NecessidadesPrevisoes(View):
 class MapaPorSemanaNew(View):
     Form_class = MapaPorSemanaNewForm
     template_name = 'insumo/mapa_sem_new.html'
-    title_name = 'Mapa de compras por semana (Novo)'
+    title_name = 'Mapa de compras por semana'
 
     def mount_context_pre(self, cursor, periodo, qtd_semanas):
         if periodo is None:
