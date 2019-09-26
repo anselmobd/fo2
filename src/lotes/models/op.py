@@ -167,6 +167,32 @@ def busca_op(
     filtro_motivo = ''
     if motivo == 'p':
         filtro_motivo = "AND o.PEDIDO_VENDA <> 0"
+    elif motivo == 'f':
+        filtro_motivo = """--
+            AND o.PEDIDO_VENDA <> 0
+            AND f.SITUACAO_NFISC = 1
+            AND NOT EXISTS (
+              SELECT
+                fe.DOCUMENTO
+              FROM OBRF_010 fe -- nota fiscal de entrada/devolução
+              WHERE fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+                AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
+              )"""
+    elif motivo == 'n':
+        filtro_motivo = """--
+            AND o.PEDIDO_VENDA <> 0
+            AND ( f.SITUACAO_NFISC IS NULL
+                OR
+                  f.SITUACAO_NFISC <> 1
+                OR
+                  EXISTS (
+                    SELECT
+                      fe.DOCUMENTO
+                    FROM OBRF_010 fe -- nota fiscal de entrada/devolução
+                    WHERE fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+                      AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
+                  )
+                )"""
     elif motivo == 'e':
         filtro_motivo = "AND o.PEDIDO_VENDA = 0"
 
@@ -334,6 +360,8 @@ def busca_op(
           ON d.CODIGO_DEPOSITO = o.DEPOSITO_ENTRADA
         LEFT JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
+        LEFT JOIN FATU_050 f
+          ON f.PEDIDO_VENDA = o.PEDIDO_VENDA
         JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
