@@ -97,9 +97,17 @@ class Pedido(View):
                     row['SITUACAO'] = 'Ativa'
                 else:
                     row['SITUACAO'] = 'Cancelada'
+
+                if row['NF_DEVOLUCAO'] is None:
+                    row['NF_DEVOLUCAO'] = '-'
+                else:
+                    row['SITUACAO'] += '/Devolvida'
+
             context.update({
-                'nf_headers': ('NF', 'Data', 'Situação', 'Valor'),
-                'nf_fields': ('NF', 'DATA', 'SITUACAO', 'VALOR'),
+                'nf_headers': ('NF', 'Data', 'Situação', 'Valor',
+                               'NF Devolução'),
+                'nf_fields': ('NF', 'DATA', 'SITUACAO', 'VALOR',
+                              'NF_DEVOLUCAO'),
                 'nf_data': nf_data,
             })
 
