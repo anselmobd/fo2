@@ -361,7 +361,8 @@ def busca_op(
         LEFT JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
         LEFT JOIN FATU_050 f
-          ON f.PEDIDO_VENDA = o.PEDIDO_VENDA
+          ON o.PEDIDO_VENDA <> 0
+         AND f.PEDIDO_VENDA = o.PEDIDO_VENDA
         JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
