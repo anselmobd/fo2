@@ -20,7 +20,9 @@ DATABASES = {
         'NAME': 'xe',
         'USER': 'systextil',
         'PASSWORD': 'oracle',
-        'HOST': '192.168.1.93',
+        # 'HOST': '192.168.1.93',
+        # 'PORT': '1521',
+        'HOST': 'dboracle',
         'PORT': '1521',
     },
     'persona': {
