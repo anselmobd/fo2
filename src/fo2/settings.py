@@ -142,7 +142,7 @@ DATABASES = {
         'PASSWORD': 'oracle',
         # 'HOST': 'localhost',
         # 'PORT': '26521',
-        'HOST': 'dboracle',
+        'HOST': '192.168.1.28',
         'PORT': '1521',
     },
     'persona': {
