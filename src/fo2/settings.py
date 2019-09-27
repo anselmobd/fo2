@@ -140,8 +140,10 @@ DATABASES = {
         'NAME': 'xe',
         'USER': 'systextil',
         'PASSWORD': 'oracle',
-        'HOST': 'localhost',
-        'PORT': '26521',
+        # 'HOST': 'localhost',
+        # 'PORT': '26521',
+        'HOST': 'dboracle',
+        'PORT': '1521',
     },
     'persona': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
