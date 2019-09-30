@@ -82,6 +82,7 @@ tbody#refs_tbody tr {
   var tHead = document.getElementById('refs_thead');
   var tBody = document.getElementById('refs_tbody');
   var iRefAjax = -1;
+  var iErros = 0;
 
   function sortByDisplayId(parentEl) {
 
@@ -162,17 +163,35 @@ tbody#refs_tbody tr {
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success : function(data) {
         if (data) {
+          iErros = 0;
+
           aggregator.insertAdjacentHTML('beforeend', data);
 
           arrangeAll()
 
           $("#icount").text(iRefAjax+1);
-        }
-        iRefAjax++;
-        if (iRefAjax < refs.length) {
-          setTimeout(function(){ doAjax1Ref(false); }, 0);
+
+          iRefAjax++;
+          if (iRefAjax < refs.length) {
+            setTimeout(function(){ doAjax1Ref(false); }, 0);
+          } else {
+            $("#detotal").text('');
+          }
         } else {
-          $("#detotal").text('');
+          iErros++;
+          if (iErros > 10) {
+            alert('Muitos erros seguidos de acesso aos dados. Processo interrompido!');
+          } else {
+            setTimeout(function(){ doAjax1Ref(false); }, 0);
+          }
+        }
+      },
+      error : function() {
+        iErros++;
+        if (iErros > 10) {
+          alert('Muitos erros seguidos de acesso aos dados. Processo interrompido!');
+        } else {
+          setTimeout(function(){ doAjax1Ref(false); }, 0);
         }
       }
     });
