@@ -792,20 +792,24 @@ class MapaPorRefs(View):
         return render(request, self.template_name, context)
 
 
-def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
+def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
-    def return_result(key_cache, result):
-        cached_result = result
-        cache.set(key_cache, cached_result, timeout=60*60*9)
-        fo2logger.info('calculated '+key_cache)
-        return cached_result
+    def return_result(result):
+        if calc:
+            return result
+        else:
+            cached_result = result
+            cache.set(key_cache, cached_result, timeout=60*60*9)
+            fo2logger.info('calculated '+key_cache)
+            return cached_result
 
     key_cache = make_key_cache()
+    if not calc:
 
-    cached_result = cache.get(key_cache)
-    if cached_result is not None:
-        fo2logger.info('cached '+key_cache)
-        return cached_result
+        cached_result = cache.get(key_cache)
+        if cached_result is not None:
+            fo2logger.info('cached '+key_cache)
+            return cached_result
 
     datas = {}
 
@@ -815,7 +819,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         datas.update({
             'msg_erro': 'Item não encontrado!',
         })
-        return return_result(key_cache, datas)
+        return return_result(datas)
 
     for row in data_id:
         row['SEMANAS'] = math.ceil(row['REPOSICAO'] / 7)
@@ -1133,17 +1137,28 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         'data_sug': data_sug,
         'data_adi': data_adi,
     })
-    return return_result(key_cache, datas)
+    return return_result(datas)
 
 
 class MapaPorInsumo(View):
     template_name = 'insumo/mapa.html'
     title_name = 'Mapa de compras'
 
-    def mount_context(self, cursor, nivel, ref, cor, tam):
-        context = {}
+    def __init__(self, *args, **kwargs):
+        super(MapaPorInsumo, self).__init__(*args, **kwargs)
+        self.calc = False
 
-        datas = MapaPorInsumo_dados(cursor, nivel, ref, cor, tam)
+    def mount_context(self, cursor, nivel, ref, cor, tam):
+        context = {
+            'nivel': nivel,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+            'calc': self.calc,
+        }
+
+        datas = MapaPorInsumo_dados(
+            cursor, nivel, ref, cor, tam, calc=self.calc)
         if 'msg_erro' in datas:
             context.update({
                 'msg_erro': datas['msg_erro'],
@@ -1440,6 +1455,12 @@ class MapaPorInsumo(View):
                 cursor, kwargs['nivel'], kwargs['ref'],
                 kwargs['cor'], kwargs['tam']))
         return render(request, self.template_name, context)
+
+
+class MapaPorInsumoCalc(MapaPorInsumo):
+    def __init__(self, *args, **kwargs):
+        super(MapaPorInsumoCalc, self).__init__(*args, **kwargs)
+        self.calc = True
 
 
 class MapaNecessidadeDetalhe(View):
