@@ -795,17 +795,13 @@ class MapaPorRefs(View):
 def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
     def return_result(result):
-        if calc:
-            return result
-        else:
-            cached_result = result
-            cache.set(key_cache, cached_result, timeout=60*60*9)
-            fo2logger.info('calculated '+key_cache)
-            return cached_result
+        cached_result = result
+        cache.set(key_cache, cached_result, timeout=60*60*9)
+        fo2logger.info('calculated '+key_cache)
+        return cached_result
 
     key_cache = make_key_cache()
     if not calc:
-
         cached_result = cache.get(key_cache)
         if cached_result is not None:
             fo2logger.info('cached '+key_cache)
