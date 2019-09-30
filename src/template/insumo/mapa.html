@@ -14,6 +14,11 @@
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
+{% if not calc %}
+  <div style="text-align: right;">
+    <a href="{% url 'insumo:mapa_calc' nivel ref cor tam %}">Recalcular este item</a>
+  </div>
+{% endif %}
 {% if data_id %}
   <table>
     {% include "layout/thead_generic.html" with data=headers_id only %}

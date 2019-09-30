@@ -38,6 +38,10 @@ urlpatterns = [
     url(r'^mapa/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/(?P<tam>.{1,3})/$',
         views.MapaPorInsumo.as_view(),
         name='mapa'),
+    url(r'^mapa_calc/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
+        '(?P<tam>.{1,3})/$',
+        views.MapaPorInsumoCalc.as_view(),
+        name='mapa_calc'),
 
     url(r'^mapa_necessidade_detalhe/(?P<nivel>[29])/(?P<ref>.{5})/'
         '(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
