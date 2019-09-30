@@ -15,6 +15,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from django.template.loader import render_to_string
+from django.core.cache import cache
 
 from fo2 import settings
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
@@ -23,6 +24,7 @@ from fo2.template import group_rowspan
 from geral.models import Dispositivos, RoloBipado
 from utils.functions import segunda, max_not_None, min_not_None
 from utils.views import totalize_grouped_data
+from utils.functions import make_key_cache, fo2logger
 
 import insumo.queries as queries
 import insumo.models as models
@@ -791,6 +793,20 @@ class MapaPorRefs(View):
 
 
 def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
+
+    def return_result(key_cache, result):
+        cached_result = result
+        cache.set(key_cache, cached_result, timeout=60*60*9)
+        fo2logger.info('calculated '+key_cache)
+        return cached_result
+
+    key_cache = make_key_cache()
+
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     datas = {}
 
     data_id = queries.insumo_descr(cursor, nivel, ref, cor, tam)
@@ -799,7 +815,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         datas.update({
             'msg_erro': 'Item não encontrado!',
         })
-        return datas
+        return return_result(key_cache, datas)
 
     for row in data_id:
         row['SEMANAS'] = math.ceil(row['REPOSICAO'] / 7)
@@ -1117,7 +1133,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam):
         'data_sug': data_sug,
         'data_adi': data_adi,
     })
-    return datas
+    return return_result(key_cache, datas)
 
 
 class MapaPorInsumo(View):
