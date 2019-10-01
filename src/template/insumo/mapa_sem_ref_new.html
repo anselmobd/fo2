@@ -22,7 +22,7 @@
 {% else %}
   {% if data %}
     {% for row in data %}
-      <tr id="id_{{ row.nivel }}_{{ row.ref }}_{{ row.cor }}_{{ row.tam_order }}_{{ row.i|zfill:3 }}" class="key_ref _ref_{{ row.nivel }}{{ row.ref }}{{ row.cor }}{{ row.tam_order }}
+      <tr style="display: none;" id="id_{{ row.nivel }}_{{ row.ref }}_{{ row.cor }}_{{ row.tam_order }}_{{ row.i|zfill:3 }}" class="key_ref _ref_{{ row.nivel }}{{ row.ref }}{{ row.cor }}{{ row.tam_order }}
         with_flags
         {% if row.comprar > 0 %}flag_comprar{% endif %}
         {% if row.compra_atrasada > 0 %}flag_compra_atrasada{% endif %}
