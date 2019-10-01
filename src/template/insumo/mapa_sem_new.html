@@ -167,7 +167,9 @@ tbody#refs_tbody tr {
 
           aggregator.insertAdjacentHTML('beforeend', data);
 
-          arrangeAll()
+          if (Math.ceil(Math.random()*5) == 2) {
+            arrangeAll();
+          }
 
           $("#icount").text(iRefAjax+1);
 
@@ -175,6 +177,7 @@ tbody#refs_tbody tr {
           if (iRefAjax < refs.length) {
             setTimeout(function(){ doAjax1Ref(false); }, 0);
           } else {
+            arrangeAll();
             $("#detotal").text('');
           }
         } else {
@@ -222,6 +225,7 @@ tbody#refs_tbody tr {
           fMovido = el[1].classList.contains('flag_movido');
         }
 
+        el[1].style = '';
         if (  (bComprar && fComprar)
             || (bCompraAtrasada && fCompraAtrasada)
             || (bZerado && fZerado)
