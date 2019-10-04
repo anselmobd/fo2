@@ -116,6 +116,10 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.my_println('---')
         self.my_println('{}'.format(datetime.now()))
+
+        self.my_println('rotina a eliminar')
+        return
+
         self.verbosity = kwargs['verbosity']
 
         nivel = kwargs['nivel_ou_tipo']
