@@ -1969,6 +1969,19 @@ class MapaPorSemanaNew(View):
 
 
 def mapa_sem_ref_new(request, item, dtini, qtdsem):
+
+    def return_result(result):
+        cached_result = result
+        cache.set(key_cache, cached_result, timeout=60*60*9)
+        fo2logger.info('calculated '+key_cache)
+        return cached_result
+
+    key_cache = make_key_cache()
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     template_name = 'insumo/mapa_sem_ref_new.html'
 
     nivel = item[0]
@@ -2066,7 +2079,8 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         })
 
     html = render_to_string(template_name, context)
-    return HttpResponse(html)
+    result = HttpResponse(html)
+    return return_result(result)
 
 
 class MapaPorSemana(View):
