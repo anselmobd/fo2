@@ -6,9 +6,12 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
     # get new and old value to SEQUENCIA_ESTAGIO and ROWIDs
     sql_seq = '''
         SELECT
-          ROW_NUMBER() OVER (
-            PARTITION BY le.ORDEM_CONFECCAO
-            ORDER BY le.SEQ_OPERACAO, le.ROWID
+          ( SELECT
+              count(DISTINCT l.ESTAGIO_ANTERIOR)
+            FROM PCPC_040 l -- lote
+            WHERE l.ORDEM_PRODUCAO = le.ORDEM_PRODUCAO
+              AND l.ORDEM_CONFECCAO = le.ORDEM_CONFECCAO
+              AND l.SEQ_OPERACAO <= le.SEQ_OPERACAO
           ) SEQ_NEW
         , le.SEQUENCIA_ESTAGIO SEQ_OLD
         , le.CODIGO_ESTAGIO EST
