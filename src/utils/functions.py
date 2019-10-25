@@ -80,6 +80,29 @@ def dec_months(dt, number, day=None):
         return dec_months(dt_return, number-1, day)
 
 
+def dias_uteis_mes():
+    hoje = datetime.date.today()
+    mes = hoje.month
+    um_dia = datetime.timedelta(days=1)
+
+    uteis_passados = 0
+    util_hoje = 0
+    uteis_total = 0
+    dia = hoje.replace(day=1)
+    while True:
+        if mes != dia.month:
+            break
+        dow = dia.weekday()
+        if dow < 5:
+            uteis_total += 1
+            if dia < hoje:
+                uteis_passados += 1
+            if dia == hoje:
+                util_hoje = 1
+        dia = dia + um_dia
+    return uteis_total, uteis_passados, util_hoje
+
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:

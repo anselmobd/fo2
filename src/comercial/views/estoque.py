@@ -1,5 +1,5 @@
 from pprint import pprint
-from datetime import datetime, timedelta, date
+from datetime import datetime, date
 from itertools import combinations_with_replacement, permutations, product
 
 from django.urls import reverse
@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from base.views import O2BaseGetView, O2BaseGetPostView
 from geral.functions import has_permission
 from utils.views import totalize_data
-from utils.functions import dec_month, dec_months, safe_cast
+from utils.functions import dec_month, dec_months, safe_cast, dias_uteis_mes
 
 import comercial.models as models
 import comercial.queries as queries
@@ -756,29 +756,6 @@ class Metas(O2BaseGetView):
             },
             'total': metas_list[-1]['meta_estoque'],
         })
-
-
-def dias_uteis_mes():
-    hoje = date.today()
-    mes = hoje.month
-    um_dia = timedelta(days=1)
-
-    uteis_passados = 0
-    util_hoje = 0
-    uteis_total = 0
-    dia = hoje.replace(day=1)
-    while True:
-        if mes != dia.month:
-            break
-        dow = dia.weekday()
-        if dow < 5:
-            uteis_total += 1
-            if dia < hoje:
-                uteis_passados += 1
-            if dia == hoje:
-                util_hoje = 1
-        dia = dia + um_dia
-    return uteis_total, uteis_passados, util_hoje
 
 
 class VerificaVenda(O2BaseGetView):
