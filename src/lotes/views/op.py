@@ -31,7 +31,7 @@ class Op(View):
         context = {'op': op}
 
         # informações gerais
-        i_data = models.op_inform(cursor, op)
+        i_data = models.op_inform(cursor, op, cached=False)
         p.prt('op_inform')
 
         if len(i_data) == 0:
