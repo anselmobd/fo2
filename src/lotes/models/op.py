@@ -16,10 +16,13 @@ def op_inform(cursor, op):
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
-        motivo=None):
+        motivo=None, cached=True):
     key_cache = make_key_cache()
 
-    cached_result = cache.get(key_cache)
+    cached_result = None
+    if cached:
+        cached_result = cache.get(key_cache)
+
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)
         return cached_result
