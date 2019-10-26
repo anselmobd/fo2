@@ -8,9 +8,9 @@ from lotes.models import *
 from lotes.models.base import *
 
 
-def op_inform(cursor, op):
+def op_inform(cursor, op, cached=True):
     # informações gerais de 1 OP
-    return(busca_op(cursor, op=op))
+    return(busca_op(cursor, op=op, cached=cached))
 
 
 def busca_op(
