@@ -8,7 +8,7 @@ from lotes.models import *
 from lotes.models.base import *
 
 
-def op_inform(cursor, op, cached=True):
+def op_inform(cursor, op, cached=False):
     # informações gerais de 1 OP
     return(busca_op(cursor, op=op, cached=cached))
 
@@ -16,7 +16,7 @@ def op_inform(cursor, op, cached=True):
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
-        motivo=None, cached=True):
+        motivo=None, cached=False):
     key_cache = make_key_cache()
 
     cached_result = None
