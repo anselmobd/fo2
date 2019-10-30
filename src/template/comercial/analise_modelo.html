@@ -130,7 +130,13 @@
                         {{ field.label_tag }}
                         <span class="ponderado">({{ pond_grade_tamanhos|get_item:field.html_name }})</span>
                         {% if meta_grade_tamanhos %}
-                          <span class="meta">({{ meta_grade_tamanhos|get_item:field.html_name }})</span>
+                          <span class="meta">({% spaceless %}
+                            {% if field.html_name in meta_grade_tamanhos %}
+                              {{ meta_grade_tamanhos|get_item:field.html_name }}
+                            {% else %}
+                              0
+                            {% endif %}
+                            {% endspaceless %})</span>
                         {% endif %}
                         {{ field }}
                         {% if field.help_text %}
@@ -155,7 +161,13 @@
                         {{ field.label_tag }}
                         <span class="ponderado">({{ pond_grade_cores|get_item:field.html_name }})</span>
                         {% if meta_grade_cores %}
-                          <span class="meta">({{ meta_grade_cores|get_item:field.html_name }})</span>
+                          <span class="meta">({% spaceless %}
+                            {% if field.html_name in meta_grade_cores %}
+                              {{ meta_grade_cores|get_item:field.html_name }}
+                            {% else %}
+                              0
+                            {% endif %}
+                            {% endspaceless %})</span>
                         {% endif %}
                         {{ field }} (<span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> packs)
                         {% if field.help_text %}
