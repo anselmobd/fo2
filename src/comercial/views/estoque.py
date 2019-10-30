@@ -15,6 +15,8 @@ from geral.functions import has_permission
 from utils.views import totalize_data
 from utils.functions import dec_month, dec_months, safe_cast, dias_uteis_mes
 
+import produto.queries
+
 import comercial.models as models
 import comercial.queries as queries
 import comercial.forms as come_forms
@@ -154,6 +156,13 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             'modelo': modelo,
         })
 
+        refs = produto.queries.modelo_inform(self.cursor, modelo)
+        if len(refs) == 0:
+            self.context.update({
+                'msg_erro': 'Modelo não encontrado',
+            })
+            return
+
         # vendas do modelo
         data = []
         zero_data_row = {p['range']: 0 for p in self.periodos}
@@ -162,6 +171,8 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
                 colecao=None, cliente=None, por='modelo', modelo=modelo)
+            if len(data_periodo) == 0:
+                data_periodo = [{'modelo': modelo, 'qtd': 0}]
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['modelo'] == row['modelo']),
@@ -177,12 +188,6 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 data_row['qtd'] += round(
                     row['qtd'] * periodo['peso'] / self.tot_peso)
 
-        if len(data) == 0:
-            self.context.update({
-                'msg_erro': 'Modelo não encontrado',
-            })
-            return
-
         self.context['modelo_ponderado'] = {
             'headers': ['Modelo', 'Venda ponderada',
                         *['{} (P:{})'.format(
@@ -193,6 +198,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             'data': data,
             'style': self.style_pond_meses,
         }
+        venda_ponderada = data[0]['qtd']
 
         # vendas por tamanho
         data = []
@@ -201,10 +207,22 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         zero_data_row['grade'] = 0
         total_qtd = 0
         for periodo in self.periodos:
-            data_periodo = queries.get_vendas(
-                self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='tam', modelo=modelo,
-                order_qtd=False)
+            if venda_ponderada == 0:
+                data_tam = queries.get_modelo_dims(
+                    self.cursor,
+                    modelo=modelo,
+                    get='tam',
+                )
+                data_periodo = []
+                for row_tam in data_tam:
+                    data_periodo.append(
+                        {'tam': row_tam['TAM'], 'qtd': 0}
+                    )
+            else:
+                data_periodo = queries.get_vendas(
+                    self.cursor, ref=None, periodo=periodo['range'],
+                    colecao=None, cliente=None, por='tam', modelo=modelo,
+                    order_qtd=False)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['tam'] == row['tam']),
@@ -222,6 +240,9 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 total_qtd += qtd
 
         if len(data) == 1 or total_qtd == 0:
+            if total_qtd == 0:
+                for row in data:
+                    row['grade'] = 1
             self.context['tamanho_ponderado'] = {
                 'headers': ['Tamanho', 'Venda ponderada',
                             *['{} (P:{})'.format(
@@ -289,9 +310,21 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         zero_data_row['distr'] = 0
         total_qtd = 0
         for periodo in self.periodos:
-            data_periodo = queries.get_vendas(
-                self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='cor', modelo=modelo)
+            if venda_ponderada == 0:
+                data_tam = queries.get_modelo_dims(
+                    self.cursor,
+                    modelo=modelo,
+                    get='cor',
+                )
+                data_periodo = []
+                for row_tam in data_tam:
+                    data_periodo.append(
+                        {'cor': row_tam['COR'], 'qtd': 0}
+                    )
+            else:
+                data_periodo = queries.get_vendas(
+                    self.cursor, ref=None, periodo=periodo['range'],
+                    colecao=None, cliente=None, por='cor', modelo=modelo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['cor'] == row['cor']),
@@ -309,6 +342,9 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 total_qtd += qtd
 
         if len(data) == 1 or total_qtd == 0:
+            if total_qtd == 0:
+                for row in data:
+                    row['distr'] = 1
             self.context['cor_ponderada'] = {
                 'headers': ['Cor', 'Venda ponderada',
                             *['{} (P:{})'.format(
@@ -348,9 +384,21 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         zero_data_row = {p['range']: 0 for p in self.periodos}
         zero_data_row['qtd'] = 0
         for periodo in self.periodos:
-            data_periodo = queries.get_vendas(
-                self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='ref', modelo=modelo)
+            if venda_ponderada == 0:
+                data_tam = queries.get_modelo_dims(
+                    self.cursor,
+                    modelo=modelo,
+                    get='ref',
+                )
+                data_periodo = []
+                for row_tam in data_tam:
+                    data_periodo.append(
+                        {'ref': row_tam['REF'], 'qtd': 0}
+                    )
+            else:
+                data_periodo = queries.get_vendas(
+                    self.cursor, ref=None, periodo=periodo['range'],
+                    colecao=None, cliente=None, por='ref', modelo=modelo)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['ref'] == row['ref']),
