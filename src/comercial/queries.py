@@ -97,6 +97,78 @@ def ficha_cliente(cnpj):
     return rows_to_dict_list(cursor)
 
 
+def get_modelo_dims(cursor, modelo=None, get=None):
+    select_get = ''
+    group_get = ''
+    order_get = ''
+    if get == 'ref':
+        select_get = "e.REF"
+        group_get = "e.REF"
+        order_get = "e.REF"
+    elif get == 'cor':
+        select_get = "e.COR"
+        group_get = "e.COR"
+        order_get = "e.COR"
+    elif get == 'tam':
+        select_get = "t.ORDEM_TAMANHO\n, e.TAM"
+        group_get = "t.ORDEM_TAMANHO\n, e.TAM"
+        order_get = "t.ORDEM_TAMANHO\n, e.TAM"
+
+    filtra_modelo = ''
+    pre_filtra_modelo = ''
+    if modelo is not None:
+        filtra_modelo = "AND e.MODELO = '{}'".format(modelo)
+        pre_filtra_modelo = \
+            "AND i.GRUPO_ESTRUTURA LIKE '%{}%'".format(modelo)
+
+    sql = """
+        WITH refs AS (
+          SELECT
+            i.NIVEL_ESTRUTURA NIVEL
+          , i.GRUPO_ESTRUTURA REF
+          , TRIM(
+              LEADING '0' FROM (
+                REGEXP_REPLACE(
+                  REGEXP_REPLACE(
+                    i.GRUPO_ESTRUTURA
+                  , '^(.+[^a-zA-Z])[a-zA-Z]*$'
+                  , '\\1'
+                  )
+                , '^[a-zA-Z]([^a-zA-Z].+)*$'
+                , '\\1'
+                )
+              )
+            ) MODELO
+          , i.SUBGRU_ESTRUTURA TAM
+          , i.ITEM_ESTRUTURA COR
+          FROM BASI_010 i -- (ref+tam+cor)
+          WHERE i.NIVEL_ESTRUTURA = 1
+            AND i.GRUPO_ESTRUTURA < 'C' -- apenas PA, PG e PB
+            {pre_filtra_modelo} -- pre_filtra_modelo
+        )
+        SELECT
+          {select_get} -- select_get
+        FROM refs e
+        LEFT JOIN BASI_220 t
+          ON t.TAMANHO_REF = e.TAM
+        WHERE 1=1
+          {filtra_modelo} -- filtra_modelo
+        GROUP BY
+          {group_get} -- group_get
+        ORDER BY
+          {order_get} -- order_get
+    """
+    sql = sql.format(
+        pre_filtra_modelo=pre_filtra_modelo,
+        select_get=select_get,
+        filtra_modelo=filtra_modelo,
+        group_get=group_get,
+        order_get=order_get,
+    )
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
+
+
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
         modelo=None, order_qtd=True, ultimos_dias=None):
