@@ -454,6 +454,8 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             if tem_meta:
                 if field_name in meta_grade_tamanhos:
                     val_inicial = meta_grade_tamanhos[field_name]
+                else:
+                    val_inicial = 0
             tam_form.fields[field_name] = forms.IntegerField(
                 required=True, initial=val_inicial,
                 label=row['tam'])
@@ -476,6 +478,8 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             if tem_meta:
                 if field_name in meta_grade_cores:
                     val_inicial = meta_grade_cores[field_name]
+                else:
+                    val_inicial = 0
             cor_form.fields[field_name] = forms.IntegerField(
                 required=True, initial=val_inicial,
                 label=row['cor'])
