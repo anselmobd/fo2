@@ -172,6 +172,10 @@ def busca_op(
         filtro_motivo = "AND o.PEDIDO_VENDA = 0"
     elif motivo == 'p':
         filtro_motivo = "AND o.PEDIDO_VENDA <> 0"
+    elif motivo == 'n':
+        filtro_motivo = """--
+            AND o.PEDIDO_VENDA <> 0
+            AND f.NUM_NOTA_FISCAL IS NULL"""
     elif motivo == 'f':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
@@ -184,10 +188,6 @@ def busca_op(
               WHERE fe.NOTA_DEV = f.NUM_NOTA_FISCAL
                 AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
               )"""
-    elif motivo == 'n':
-        filtro_motivo = """--
-            AND o.PEDIDO_VENDA <> 0
-            AND f.SITUACAO_NFISC IS NULL"""
     elif motivo == 'c':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
@@ -196,7 +196,7 @@ def busca_op(
     elif motivo == 'd':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
-            AND f.SITUACAO_NFISC IS NOT NULL
+            AND f.NUM_NOTA_FISCAL IS NOT NULL
             AND f.SITUACAO_NFISC <> 2  -- cancelada
             AND EXISTS (
                     SELECT
@@ -208,7 +208,7 @@ def busca_op(
     elif motivo == 'a':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
-            AND ( f.SITUACAO_NFISC IS NULL
+            AND ( f.NUM_NOTA_FISCAL IS NULL
                 OR ( f.NUM_NOTA_FISCAL IS NOT NULL
                    AND f.SITUACAO_NFISC = 2  -- cancelada
                    )
