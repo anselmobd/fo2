@@ -351,7 +351,7 @@ class Expedicao(View):
 class BuscaPedido(View):
     Form_class = forms.BuscaPedidoForm
     template_name = 'lotes/busca_pedido.html'
-    title_name = 'Busca Pedido'
+    title_name = 'Busca pedido faturável'
 
     def mount_context(self, cursor, modelo):
         context = {
@@ -401,9 +401,9 @@ class BuscaPedido(View):
         context.update({
             'periodo': periodo,
             'headers': ('Nº do pedido', 'Data de embarque', 'Cliente',
-                        'Referência', 'Quantidade'),
+                        'Referência', 'Quantidade', 'Faturamento'),
             'fields': ('PEDIDO', 'DATA', 'CLIENTE',
-                       'REF', 'QTD'),
+                       'REF', 'QTD', 'FAT'),
             'data': data,
             'style': {5: 'text-align: right;'},
         })
