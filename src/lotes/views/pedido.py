@@ -410,7 +410,7 @@ class BuscaPedido(View):
 
         if lead != 0:
             data_pos = models.busca_pedido(
-                cursor, modelo=modelo, periodo='{}:'.format(periodo))
+                cursor, modelo=modelo, periodo='{}:'.format(busca_periodo))
             if len(data_pos) != 0:
                 for row in data_pos:
                     if row['DATA'] is None:
