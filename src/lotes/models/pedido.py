@@ -228,7 +228,8 @@ def ped_sortimento(cursor, **kwargs):
             LEFT JOIN FATU_050 f -- fatura
               ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
             LEFT JOIN FATU_050 fok -- fatura
-              ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+              ON ped.PEDIDO_VENDA <> 0
+             AND fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND fok.SITUACAO_NFISC <> 2  -- cancelada
             LEFT JOIN BASI_220 t -- tamanhos
               ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
@@ -272,7 +273,8 @@ def ped_sortimento(cursor, **kwargs):
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
         LEFT JOIN FATU_050 fok -- fatura
-          ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+          ON ped.PEDIDO_VENDA <> 0
+         AND fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
     '''
     if descr_sort:
@@ -329,7 +331,8 @@ def ped_sortimento(cursor, **kwargs):
             LEFT JOIN FATU_050 f -- fatura
               ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
             LEFT JOIN FATU_050 fok -- fatura
-              ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+              ON ped.PEDIDO_VENDA <> 0
+             AND fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND fok.SITUACAO_NFISC <> 2  -- cancelada
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
