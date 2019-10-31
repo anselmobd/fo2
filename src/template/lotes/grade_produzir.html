@@ -89,14 +89,14 @@
           </th>
         </tr>
       </thead>
-      {% if gop %}
-        {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
-        {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
+      {% if gopa %}
+        {% include "layout/thead_generic.html" with data=gopa.headers style=gopa.style only %}
+        {% include "layout/tbody_generic.html" with fields=gopa.fields data=gopa.data style=gopa.style only %}
       {% else %}
         <thead>
           <tr>
             <th colspan="99">
-              <h4>Modelo sem OPs</h4>
+              <h4>Modelo sem OPs em produção</h4>
             </th>
           </tr>
         </thead>
@@ -117,6 +117,26 @@
           <tr>
             <th colspan="99">
               <h4>Modelo sem OPs nessa situação</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
+
+      <thead>
+        <tr>
+          <th colspan="99">
+            <h3>Total em OPs</h3>
+          </th>
+        </tr>
+      </thead>
+      {% if gop %}
+        {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
+        {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
+      {% else %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h4>Modelo sem OPs</h4>
             </th>
           </tr>
         </thead>

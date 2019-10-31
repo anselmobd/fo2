@@ -398,20 +398,20 @@ class GradeProduzir(O2BaseGetPostView):
         if not calcula_grade:
             return
 
-        g_header, g_fields, g_data, g_style, total_op = \
+        g_header, g_fields, g_data, g_style, total_opa = \
             lotes.models.op_sortimentos(
                 cursor, tipo='a', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
-        gop = None
-        if total_op != 0:
-            gop = {
+        gopa = None
+        if total_opa != 0:
+            gopa = {
                 'headers': g_header,
                 'fields': g_fields,
                 'data': g_data,
                 'style': g_style,
             }
-            gzerada = update_gzerada(gzerada, gop)
+            gzerada = update_gzerada(gzerada, gopa)
 
         gf_header, gf_fields, gf_data, gf_style, total_opf = \
             lotes.models.op_sortimentos(
@@ -468,10 +468,10 @@ class GradeProduzir(O2BaseGetPostView):
                 'gmg': gmg,
             })
 
-        if gop is not None:
-            gop = soma_grades(gzerada, gop)
+        if gopa is not None:
+            gopa = soma_grades(gzerada, gopa)
             self.context.update({
-                'gop': gop,
+                'gopa': gopa,
             })
 
         if gopf is not None:
@@ -484,6 +484,25 @@ class GradeProduzir(O2BaseGetPostView):
             gped = soma_grades(gzerada, gped)
             self.context.update({
                 'gped': gped,
+            })
+
+        gop = None
+        total_op = 0
+        if gopf is None:
+            if gopa is not None:
+                gop = gopa
+                total_op = total_opa
+        else:
+            if gopa is None:
+                gop = gopf
+                total_op = total_opf
+            else:
+                gop = soma_grades(gopa, gopf)
+                total_op = total_opa + total_opf
+
+        if gop is not None:
+            self.context.update({
+                'gop': gop,
             })
 
         gm = None
