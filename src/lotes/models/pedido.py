@@ -137,6 +137,7 @@ def ped_sortimento(cursor, **kwargs):
     periodo = argdef('periodo', None)
     cancelado = argdef('cancelado', 't')  # default todos os pedidos
     faturado = argdef('faturado', 't')  # default todos os pedidos
+    faturavel = argdef('faturavel', 't')  # default todos os pedidos
     total = argdef('total', None)
 
     filtra_pedido = ''
@@ -194,6 +195,14 @@ def ped_sortimento(cursor, **kwargs):
             AND f.NUM_NOTA_FISCAL IS NULL -- não faturado
         '''
 
+    filtro_faturavel = ''
+    if faturavel == 'f':  # faturavel
+        filtro_faturavel = """--
+            AND fok.NUM_NOTA_FISCAL IS NULL"""
+    elif faturavel == 'n':  # não faturavel
+        filtro_faturavel = """--
+            AND fok.NUM_NOTA_FISCAL IS NOT NULL"""
+
     grade_args = {}
     if total is not None:
         grade_args = {
@@ -218,6 +227,9 @@ def ped_sortimento(cursor, **kwargs):
               ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
             LEFT JOIN FATU_050 f -- fatura
               ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+            LEFT JOIN FATU_050 fok -- fatura
+              ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+             AND fok.SITUACAO_NFISC <> 2  -- cancelada
             LEFT JOIN BASI_220 t -- tamanhos
               ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
             WHERE 1=1
@@ -226,6 +238,7 @@ def ped_sortimento(cursor, **kwargs):
               {filtra_periodo} -- filtra_periodo
               {filtro_cancelado} -- filtro_cancelado
               {filtro_faturado} -- filtro_faturado
+              {filtro_faturavel} -- filtro_faturavel
             ORDER BY
               t.ORDEM_TAMANHO
         '''.format(
@@ -234,6 +247,7 @@ def ped_sortimento(cursor, **kwargs):
             filtra_periodo=filtra_periodo,
             filtro_cancelado=filtro_cancelado,
             filtro_faturado=filtro_faturado,
+            filtro_faturavel=filtro_faturavel,
         )
     )
 
@@ -257,6 +271,9 @@ def ped_sortimento(cursor, **kwargs):
           ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+        LEFT JOIN FATU_050 fok -- fatura
+          ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         AND fok.SITUACAO_NFISC <> 2  -- cancelada
     '''
     if descr_sort:
         sql += '''
@@ -273,6 +290,7 @@ def ped_sortimento(cursor, **kwargs):
           {filtra_periodo} -- filtra_periodo
           {filtro_cancelado} -- filtro_cancelado
           {filtro_faturado} -- filtro_faturado
+          {filtro_faturavel} -- filtro_faturavel
         GROUP BY
           {sort_group} -- sort_group
         ORDER BY
@@ -284,6 +302,7 @@ def ped_sortimento(cursor, **kwargs):
         filtra_periodo=filtra_periodo,
         filtro_cancelado=filtro_cancelado,
         filtro_faturado=filtro_faturado,
+        filtro_faturavel=filtro_faturavel,
         sort_expression=sort_expression,
         sort_group=sort_group,
     )
@@ -309,12 +328,16 @@ def ped_sortimento(cursor, **kwargs):
               ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
             LEFT JOIN FATU_050 f -- fatura
               ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+            LEFT JOIN FATU_050 fok -- fatura
+              ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+             AND fok.SITUACAO_NFISC <> 2  -- cancelada
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
               {filtro_modelo} -- filtro_modelo
               {filtra_periodo} -- filtra_periodo
               {filtro_cancelado} -- filtro_cancelado
               {filtro_faturado} -- filtro_faturado
+              {filtro_faturavel} -- filtro_faturavel
             GROUP BY
               {sort_group} -- sort_group
             , i.CD_IT_PE_SUBGRUPO
@@ -324,6 +347,7 @@ def ped_sortimento(cursor, **kwargs):
             filtra_periodo=filtra_periodo,
             filtro_cancelado=filtro_cancelado,
             filtro_faturado=filtro_faturado,
+            filtro_faturavel=filtro_faturavel,
             sort_expression=sort_expression,
             sort_group=sort_group,
         )
