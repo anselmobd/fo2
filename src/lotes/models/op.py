@@ -383,6 +383,10 @@ def busca_op(
           ON d.CODIGO_DEPOSITO = o.DEPOSITO_ENTRADA
         LEFT JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
+        LEFT JOIN FATU_050 fok
+          ON o.PEDIDO_VENDA <> 0
+         AND fok.PEDIDO_VENDA = o.PEDIDO_VENDA
+         AND fok.SITUACAO_NFISC <> 2  -- cancelada
         LEFT JOIN FATU_050 f
           ON o.PEDIDO_VENDA <> 0
          AND f.PEDIDO_VENDA = o.PEDIDO_VENDA
