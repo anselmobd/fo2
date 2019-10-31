@@ -441,7 +441,7 @@ class GradeProduzir(O2BaseGetPostView):
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
             lotes.models.ped_sortimento(
                 cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
-                cancelado='n', faturado='n', total='Total',
+                cancelado='n', faturavel='f', total='Total',
                 periodo=':{}'.format(periodo))
 
         gped = None
