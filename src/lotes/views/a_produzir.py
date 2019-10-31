@@ -413,6 +413,21 @@ class GradeProduzir(O2BaseGetPostView):
             }
             gzerada = update_gzerada(gzerada, gop)
 
+        gf_header, gf_fields, gf_data, gf_style, total_opf = \
+            lotes.models.op_sortimentos(
+                cursor, tipo='fpnf', descr_sort=False, modelo=modelo,
+                situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+
+        gopf = None
+        if total_opf != 0:
+            gopf = {
+                'headers': gf_header,
+                'fields': gf_fields,
+                'data': gf_data,
+                'style': gf_style,
+            }
+            gzerada = update_gzerada(gzerada, gopf)
+
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
             'dias_alem_lead': dias_alem_lead,
@@ -457,6 +472,12 @@ class GradeProduzir(O2BaseGetPostView):
             gop = soma_grades(gzerada, gop)
             self.context.update({
                 'gop': gop,
+            })
+
+        if gopf is not None:
+            gopf = soma_grades(gzerada, gopf)
+            self.context.update({
+                'gopf': gopf,
             })
 
         if gped is not None:

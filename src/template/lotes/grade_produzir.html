@@ -85,7 +85,7 @@
       <thead>
         <tr>
           <th colspan="99">
-            <h3>Total das OPs</h3>
+            <h3>Total não finafizado em OPs</h3>
           </th>
         </tr>
       </thead>
@@ -97,6 +97,26 @@
           <tr>
             <th colspan="99">
               <h4>Modelo sem OPs</h4>
+            </th>
+          </tr>
+        </thead>
+      {% endif %}
+
+      <thead>
+        <tr>
+          <th colspan="99">
+            <h3>Total finafizado em OPs de pedidos não faturados</h3>
+          </th>
+        </tr>
+      </thead>
+      {% if gopf %}
+        {% include "layout/thead_generic.html" with data=gopf.headers style=gopf.style only %}
+        {% include "layout/tbody_generic.html" with fields=gopf.fields data=gopf.data style=gopf.style only %}
+      {% else %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h4>Modelo sem OPs nessa situação</h4>
             </th>
           </tr>
         </thead>
