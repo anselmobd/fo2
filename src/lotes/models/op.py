@@ -171,14 +171,19 @@ def busca_op(
     if motivo == 'e':
         filtro_motivo = "AND o.PEDIDO_VENDA = 0"
     elif motivo == 'p':
-        filtro_motivo = "AND o.PEDIDO_VENDA <> 0"
+        filtro_motivo = """--
+            AND o.PEDIDO_VENDA <> 0
+            AND ped.PEDIDO_VENDA IS NOT NULL
+        """
     elif motivo == 'n':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
+            AND ped.PEDIDO_VENDA IS NOT NULL
             AND f.NUM_NOTA_FISCAL IS NULL"""
     elif motivo == 'f':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
+            AND ped.PEDIDO_VENDA IS NOT NULL
             AND f.NUM_NOTA_FISCAL IS NOT NULL
             AND f.SITUACAO_NFISC <> 2  -- cancelada
             AND NOT EXISTS (
@@ -191,11 +196,13 @@ def busca_op(
     elif motivo == 'c':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
+            AND ped.PEDIDO_VENDA IS NOT NULL
             AND f.NUM_NOTA_FISCAL IS NOT NULL
             AND f.SITUACAO_NFISC = 2  -- cancelada"""
     elif motivo == 'd':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
+            AND ped.PEDIDO_VENDA IS NOT NULL
             AND f.NUM_NOTA_FISCAL IS NOT NULL
             AND f.SITUACAO_NFISC <> 2  -- cancelada
             AND EXISTS (
@@ -208,16 +215,13 @@ def busca_op(
     elif motivo == 'a':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
-            AND ( f.NUM_NOTA_FISCAL IS NULL
-                OR ( f.NUM_NOTA_FISCAL IS NOT NULL
-                   AND f.SITUACAO_NFISC = 2  -- cancelada
-                   )
-                )"""
+            AND ped.PEDIDO_VENDA IS NOT NULL
+            AND fok.NUM_NOTA_FISCAL IS NULL"""
     elif motivo == 'i':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
-            AND f.NUM_NOTA_FISCAL IS NOT NULL
-            AND f.SITUACAO_NFISC <> 2  -- cancelada"""
+            AND ped.PEDIDO_VENDA IS NOT NULL
+            AND fok.NUM_NOTA_FISCAL IS NOT NULL"""
 
     sql = '''
         SELECT
@@ -383,13 +387,12 @@ def busca_op(
           ON d.CODIGO_DEPOSITO = o.DEPOSITO_ENTRADA
         LEFT JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
+         AND ped.STATUS_PEDIDO <> 5 -- não cancelado
         LEFT JOIN FATU_050 fok
-          ON o.PEDIDO_VENDA <> 0
-         AND fok.PEDIDO_VENDA = o.PEDIDO_VENDA
+          ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
         LEFT JOIN FATU_050 f
-          ON o.PEDIDO_VENDA <> 0
-         AND f.PEDIDO_VENDA = o.PEDIDO_VENDA
+          ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
         JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
