@@ -369,10 +369,14 @@ class BuscaOpForm(forms.Form):
         label='Posição da produção', choices=CHOICES, initial='t')
 
     CHOICES = [('t', 'Todas as OPs'),
-               ('p', 'OP de pedido (qualquer)'),
-               ('f', 'OP de pedido já faturado'),
-               ('n', 'OP de pedido não faturado'),
                ('e', 'OP de estoque'),
+               ('p', 'OP de pedido (qualquer)'),
+               ('f', 'OP de pedido faturado'),
+               ('n', 'OP de pedido não faturado'),
+               ('c', 'OP de pedido cancelado'),
+               ('d', 'OP de pedido devolvido'),
+               ('a', 'OP de pedido ativo (não faturado ou cancelado)'),
+               ('i', 'OP de pedido encerrado (faturado ou devolvido)'),
                ]
     motivo = forms.ChoiceField(
         label='Motivo da OP', choices=CHOICES, initial='t')

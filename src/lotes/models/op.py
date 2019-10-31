@@ -168,12 +168,15 @@ def busca_op(
         '''
 
     filtro_motivo = ''
-    if motivo == 'p':
+    if motivo == 'e':
+        filtro_motivo = "AND o.PEDIDO_VENDA = 0"
+    elif motivo == 'p':
         filtro_motivo = "AND o.PEDIDO_VENDA <> 0"
     elif motivo == 'f':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
-            AND f.SITUACAO_NFISC = 1
+            AND f.NUM_NOTA_FISCAL IS NOT NULL
+            AND f.SITUACAO_NFISC <> 2  -- cancelada
             AND NOT EXISTS (
               SELECT
                 fe.DOCUMENTO
@@ -184,20 +187,37 @@ def busca_op(
     elif motivo == 'n':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
-            AND ( f.SITUACAO_NFISC IS NULL
-                OR
-                  f.SITUACAO_NFISC <> 1
-                OR
-                  EXISTS (
+            AND f.SITUACAO_NFISC IS NULL"""
+    elif motivo == 'c':
+        filtro_motivo = """--
+            AND o.PEDIDO_VENDA <> 0
+            AND f.NUM_NOTA_FISCAL IS NOT NULL
+            AND f.SITUACAO_NFISC = 2  -- cancelada"""
+    elif motivo == 'd':
+        filtro_motivo = """--
+            AND o.PEDIDO_VENDA <> 0
+            AND f.SITUACAO_NFISC IS NOT NULL
+            AND f.SITUACAO_NFISC <> 2  -- cancelada
+            AND EXISTS (
                     SELECT
                       fe.DOCUMENTO
                     FROM OBRF_010 fe -- nota fiscal de entrada/devolução
                     WHERE fe.NOTA_DEV = f.NUM_NOTA_FISCAL
                       AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
-                  )
+                  )"""
+    elif motivo == 'a':
+        filtro_motivo = """--
+            AND o.PEDIDO_VENDA <> 0
+            AND ( f.SITUACAO_NFISC IS NULL
+                OR ( f.NUM_NOTA_FISCAL IS NOT NULL
+                   AND f.SITUACAO_NFISC = 2  -- cancelada
+                   )
                 )"""
-    elif motivo == 'e':
-        filtro_motivo = "AND o.PEDIDO_VENDA = 0"
+    elif motivo == 'i':
+        filtro_motivo = """--
+            AND o.PEDIDO_VENDA <> 0
+            AND f.NUM_NOTA_FISCAL IS NOT NULL
+            AND f.SITUACAO_NFISC <> 2  -- cancelada"""
 
     sql = '''
         SELECT
