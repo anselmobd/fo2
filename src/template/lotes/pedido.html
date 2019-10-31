@@ -40,18 +40,20 @@
   </table>
 {% endif %}
 {% if o_data %}
-<h3>OP do pedido</h3>
+  <h3>OP do pedido</h3>
   <table>
     {% include "layout/html_thead.html" with data=o_headers only %}
     {% include "layout/html_tbody_group.html" with fields=o_fields data=o_data group=o_group only %}
   </table>
 {% endif %}
 {% if nf_data %}
-<h3>NF do pedido</h3>
+  <h3>NF do pedido</h3>
   <table>
     {% include "layout/thead_generic.html" with data=nf_headers only %}
     {% include "layout/tbody_generic.html" with fields=nf_fields data=nf_data only %}
   </table>
+{% else %}
+  <h3>Pedido não faturado</h3>
 {% endif %}
 {% if g_data %}
   <br /><a href="{% url 'contabil:infadprod' pedido %}">Lista itens do pedido&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></a>
