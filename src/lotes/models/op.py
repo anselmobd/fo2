@@ -985,6 +985,72 @@ def op_sortimentos(cursor, **kwargs):
             )
         )
 
+    elif tipo == 'fpnf':  # finalizado, de pedido, não faturado
+        sql = '''
+            WITH opl AS
+            (
+            SELECT
+              o.ORDEM_PRODUCAO
+            , max(lote.SEQ_OPERACAO) SEQ_OPERACAO
+            FROM pcpc_040 lote
+            JOIN PCPC_020 o
+              ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+            LEFT JOIN FATU_050 f
+              ON o.PEDIDO_VENDA <> 0
+             AND f.PEDIDO_VENDA = o.PEDIDO_VENDA
+            WHERE 1=1
+              {filtro_especifico} -- filtro_especifico
+              {filtra_op} -- filtra_op
+              {filtra_modelo} -- filtra_modelo
+              {filtra_situacao} -- filtra_situacao
+              {filtro_tipo_ref} -- filtro_tipo_ref
+              {filtro_tipo_alt} -- filtro_tipo_alt
+              AND o.PEDIDO_VENDA <> 0
+              AND ( f.SITUACAO_NFISC IS NULL
+                  OR
+                    f.SITUACAO_NFISC <> 1
+                  OR
+                    EXISTS (
+                      SELECT
+                        fe.DOCUMENTO
+                      FROM OBRF_010 fe -- nota fiscal de entrada/devolução
+                      WHERE fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+                        AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
+                    )
+                  )
+            GROUP BY
+              o.ORDEM_PRODUCAO
+            )
+            SELECT
+              l.PROCONF_SUBGRUPO TAMANHO
+            , l.PROCONF_ITEM SORTIMENTO
+            , SUM( l.QTDE_PECAS_PROD ) QUANTIDADE
+            FROM pcpc_040 l
+            JOIN opl
+              ON opl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+             AND opl.SEQ_OPERACAO = l.SEQ_OPERACAO
+            LEFT JOIN BASI_220 tam
+              ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
+            GROUP BY
+              tam.ORDEM_TAMANHO
+            , l.PROCONF_SUBGRUPO
+            , l.PROCONF_ITEM
+            ORDER BY
+              tam.ORDEM_TAMANHO
+            , l.PROCONF_ITEM
+        '''.format(
+            filtro_especifico=filtro_especifico,
+            filtra_op=filtra_op,
+            filtra_modelo=filtra_modelo,
+            filtra_situacao=filtra_situacao,
+            filtro_tipo_ref=filtro_tipo_ref,
+            filtro_tipo_alt=filtro_tipo_alt,
+        )
+        grade.value(
+            id='QUANTIDADE',
+            sql=sql,
+        )
+
     elif tipo == 'p':  # Perda
         # sortimento
         grade.value(
