@@ -390,6 +390,13 @@ class BuscaOpForm(forms.Form):
     quant_fin = forms.ChoiceField(
         label='Quantidade finalizada', choices=CHOICES, initial='t')
 
+    CHOICES = [('t', 'Todas as OPs'),
+               ('z', 'Zerada'),
+               ('n', 'Não zerada'),
+               ]
+    quant_emp = forms.ChoiceField(
+        label='Quantidade em produção', choices=CHOICES, initial='t')
+
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
         data = self.data.copy()
