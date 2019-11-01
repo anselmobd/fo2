@@ -343,7 +343,7 @@ class BuscaOpForm(forms.Form):
                ('m', 'MD'),
                ]
     tipo = forms.ChoiceField(
-        choices=CHOICES, initial='t')
+        label='Tipo de produto', choices=CHOICES, initial='t')
 
     CHOICES = [('t', 'Todas'),
                ('p', 'Alternativa de produção'),
