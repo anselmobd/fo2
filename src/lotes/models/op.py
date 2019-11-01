@@ -16,7 +16,7 @@ def op_inform(cursor, op, cached=False):
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
-        motivo=None, cached=False):
+        motivo=None, cached=False, quant_fin=None):
     key_cache = make_key_cache()
 
     cached_result = None
@@ -223,7 +223,16 @@ def busca_op(
             AND ped.PEDIDO_VENDA IS NOT NULL
             AND fok.NUM_NOTA_FISCAL IS NOT NULL"""
 
+    filtro_quant_fin = ''
+    if quant_fin == 'z':
+        filtro_quant_fin = "AND sele.QTD_F = 0"
+    elif quant_fin == 'n':
+        filtro_quant_fin = "AND sele.QTD_F <> 0"
+
     sql = '''
+        SELECT
+          sele.*
+        FROM (
         SELECT
           o.ORDEM_PRODUCAO OP
         , o.PEDIDO_VENDA PED
@@ -458,7 +467,10 @@ def busca_op(
         , o.OBSERVACAO
         , o.OBSERVACAO2
         ORDER BY
-           o.ORDEM_PRODUCAO DESC
+          o.ORDEM_PRODUCAO DESC
+        ) sele
+        where 1=1
+        {filtro_quant_fin} -- filtro_quant_fin
     '''.format(
         filtra_op=filtra_op,
         filtro_motivo=filtro_motivo,
@@ -473,6 +485,7 @@ def busca_op(
         filtro_tipo_alt=filtro_tipo_alt,
         filtra_situacao=filtra_situacao,
         filtra_posicao=filtra_posicao,
+        filtro_quant_fin=filtro_quant_fin,
     )
     cursor.execute(sql)
 
