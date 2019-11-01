@@ -341,27 +341,31 @@ def busca_op(
         , r.DESCR_REFERENCIA DESCR_REF
         , o.OBSERVACAO
         , o.OBSERVACAO2
-        , ( SELECT
-              coalesce( max( l.CODIGO_FAMILIA || '-' || div.DESCRICAO ), ' ' )
-            FROM pcpc_040 l
-            LEFT JOIN BASI_180 div
-              ON div.DIVISAO_PRODUCAO = l.CODIGO_FAMILIA
-            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-              AND l.CODIGO_FAMILIA > 1
-              AND l.CODIGO_FAMILIA < 1000
-          ) UNIDADE
+        , CASE WHEN div.DIVISAO_PRODUCAO IS NULL
+          THEN ' '
+          ELSE div.DIVISAO_PRODUCAO || '-' || div.DESCRICAO
+          END UNIDADE
         FROM PCPC_020 o
-        JOIN (
+        LEFT JOIN (
           SELECT
             l.ORDEM_PRODUCAO
           , MAX( l.SEQ_OPERACAO ) MAXSEQ
           , COUNT( DISTINCT l.ORDEM_CONFECCAO ) LOTES
+          , MAX(
+              CASE WHEN l.CODIGO_FAMILIA > 1 AND l.CODIGO_FAMILIA < 1000
+              THEN l.CODIGO_FAMILIA
+              ELSE 0
+              END
+            ) CODIGO_FAMILIA
           FROM pcpc_040 l
           GROUP BY
             l.ORDEM_PRODUCAO
           ) seq_op
           ON seq_op.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-        JOIN (
+        LEFT JOIN BASI_180 div
+          ON seq_op.CODIGO_FAMILIA <> 0
+         AND div.DIVISAO_PRODUCAO = seq_op.CODIGO_FAMILIA
+        LEFT JOIN (
           SELECT
             l.ORDEM_PRODUCAO
           , l.SEQ_OPERACAO
@@ -428,6 +432,8 @@ def busca_op(
           o.ORDEM_PRODUCAO
         , o.REFERENCIA_PECA
         , o.ORDEM_PRINCIPAL
+        , div.DIVISAO_PRODUCAO
+        , div.DESCRICAO
         , seq_op.LOTES
         , seq_l.QTD
         , seq_l.QTD_AP
