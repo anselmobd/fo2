@@ -82,6 +82,22 @@
     {% endif %}
   </h4>
 {% endif %}
+{% if quant_fin %}
+  <h4>Quantidade finalizada:
+    {% if quant_fin == 't' %}Todas as OPs
+    {% elif quant_fin == 'z' %}Zerada
+    {% elif quant_fin == 'n' %}Não zerada
+    {% endif %}
+  </h4>
+{% endif %}
+{% if quant_emp %}
+  <h4>Quantidade em produção:
+    {% if quant_emp == 't' %}Todas as OPs
+    {% elif quant_emp == 'z' %}Zerada
+    {% elif quant_emp == 'n' %}Não zerada
+    {% endif %}
+  </h4>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
