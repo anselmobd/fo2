@@ -354,7 +354,8 @@ class BuscaOP(View):
         data = models.busca_op(
             cursor, ref=ref, modelo=modelo, tam=tam, cor=cor,
             deposito=deposito, tipo=tipo, tipo_alt=tipo_alt, situacao=situacao,
-            posicao=posicao, motivo=motivo, quant_fin=quant_fin, quant_emp=quant_emp)
+            posicao=posicao, motivo=motivo, quant_fin=quant_fin,
+            quant_emp=quant_emp)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'OPs não encontradas',
