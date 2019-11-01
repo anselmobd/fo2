@@ -394,7 +394,6 @@ class BuscaOP(View):
             if row['PED'] != 0:
                 row['PED|LINK'] = reverse(
                     'producao:pedido__get', args=[row['PED']])
-            row['QTD_F'] = row['QTD'] - row['QTD_AP']
 
         totalize_data(data, {
             'sum': ['QTD', 'QTD_AP', 'QTD_F'],
