@@ -103,6 +103,17 @@ def dias_uteis_mes():
     return uteis_total, uteis_passados, util_hoje
 
 
+def shift_years(years, from_date=None):
+    if from_date is None:
+        from_date = datetime.datetime.now()
+    try:
+        return from_date.replace(year=from_date.year + years)
+    except ValueError:
+        # Must be 2/29!
+        return from_date.replace(month=2, day=28,
+                                 year=from_date.year + years)
+
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
