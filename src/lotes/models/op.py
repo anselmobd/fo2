@@ -329,51 +329,9 @@ def busca_op(
             FROM pcpc_040 l
             WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
           ) LOTES
-        , COALESCE(
-          ( SELECT
-              SUM( l.QTDE_PECAS_PROG )
-            FROM pcpc_040 l
-            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-              {filtra_qtd_tam} -- filtra_qtd_tam
-              {filtra_qtd_cor} -- filtra_qtd_cor
-              AND l.SEQ_OPERACAO = (
-                SELECT
-                  MAX( ls.SEQ_OPERACAO )
-                FROM pcpc_040 ls
-                WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-              )
-          )
-          , 0 ) QTD
-        , COALESCE(
-          ( SELECT
-              SUM( l.QTDE_A_PRODUZIR_PACOTE )
-            FROM pcpc_040 l
-            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-              {filtra_qtd_tam} -- filtra_qtd_tam
-              {filtra_qtd_cor} -- filtra_qtd_cor
-              AND l.SEQ_OPERACAO = (
-                SELECT
-                  MAX( ls.SEQ_OPERACAO )
-                FROM pcpc_040 ls
-                WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-              )
-          )
-          , 0 ) QTD_AP
-        , COALESCE(
-          ( SELECT
-              SUM( l.QTDE_PECAS_PROD )
-            FROM pcpc_040 l
-            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-              {filtra_qtd_tam} -- filtra_qtd_tam
-              {filtra_qtd_cor} -- filtra_qtd_cor
-              AND l.SEQ_OPERACAO = (
-                SELECT
-                  MAX( ls.SEQ_OPERACAO )
-                FROM pcpc_040 ls
-                WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-              )
-          )
-          , 0 ) QTD_F
+        , seq_l.QTD
+        , seq_l.QTD_AP
+        , seq_l.QTD_F
         , o.DATA_PROGRAMACAO DT_DIGITACAO
         , o.DATA_ENTRADA_CORTE DT_CORTE
         , o.PERIODO_PRODUCAO PERIODO
@@ -397,6 +355,32 @@ def busca_op(
               AND l.CODIGO_FAMILIA < 1000
           ) UNIDADE
         FROM PCPC_020 o
+        JOIN (
+          SELECT
+            l.ORDEM_PRODUCAO
+          , MAX( l.SEQ_OPERACAO ) MAXSEQ
+          FROM pcpc_040 l
+          GROUP BY
+            l.ORDEM_PRODUCAO
+          ) seq_op
+          ON seq_op.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+        JOIN (
+          SELECT
+            l.ORDEM_PRODUCAO
+          , l.SEQ_OPERACAO
+          , SUM( l.QTDE_PECAS_PROD ) QTD_F
+          , SUM( l.QTDE_A_PRODUZIR_PACOTE ) QTD_AP
+          , SUM( l.QTDE_PECAS_PROG ) QTD
+          FROM pcpc_040 l
+          WHERE 1=1
+            {filtra_qtd_tam} -- filtra_qtd_tam
+            {filtra_qtd_cor} -- filtra_qtd_cor
+          GROUP BY
+            l.ORDEM_PRODUCAO
+          , l.SEQ_OPERACAO
+          ) seq_l
+          ON seq_l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+         AND seq_l.SEQ_OPERACAO = seq_op.MAXSEQ
         JOIN PCPC_010 p
           ON p.AREA_PERIODO = 1
          AND p.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
@@ -447,6 +431,9 @@ def busca_op(
           o.ORDEM_PRODUCAO
         , o.REFERENCIA_PECA
         , o.ORDEM_PRINCIPAL
+        , seq_l.QTD
+        , seq_l.QTD_AP
+        , seq_l.QTD_F
         , ome.ORDEM_PRODUCAO
         , ose.ORDEM_PRODUCAO
         , o.SITUACAO
