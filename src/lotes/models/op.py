@@ -179,7 +179,9 @@ def busca_op(
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
             AND ped.PEDIDO_VENDA IS NOT NULL
-            AND f.NUM_NOTA_FISCAL IS NULL"""
+            AND fok.NUM_NOTA_FISCAL IS NULL
+            AND fcanc.NUM_NOTA_FISCAL IS NULL
+            """
     elif motivo == 'f':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
@@ -189,15 +191,14 @@ def busca_op(
               SELECT
                 fe.DOCUMENTO
               FROM OBRF_010 fe -- nota fiscal de entrada/devolução
-              WHERE fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+              WHERE fe.NOTA_DEV = fok.NUM_NOTA_FISCAL
                 AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
               )"""
     elif motivo == 'c':
         filtro_motivo = """--
             AND o.PEDIDO_VENDA <> 0
             AND ped.PEDIDO_VENDA IS NOT NULL
-            AND f.NUM_NOTA_FISCAL IS NOT NULL
-            AND f.SITUACAO_NFISC = 2  -- cancelada
+            AND fcanc.NUM_NOTA_FISCAL IS NOT NULL
             AND fok.NUM_NOTA_FISCAL IS NULL"""
     elif motivo == 'd':
         filtro_motivo = """--
@@ -208,7 +209,7 @@ def busca_op(
                     SELECT
                       fe.DOCUMENTO
                     FROM OBRF_010 fe -- nota fiscal de entrada/devolução
-                    WHERE fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+                    WHERE fe.NOTA_DEV = fok.NUM_NOTA_FISCAL
                       AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
                   )"""
     elif motivo == 'a':
@@ -405,8 +406,16 @@ def busca_op(
         LEFT JOIN FATU_050 fok
           ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
-        LEFT JOIN FATU_050 f
-          ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+        LEFT JOIN (
+           SELECT
+             fcanc1.PEDIDO_VENDA
+           , MAX(fcanc1.NUM_NOTA_FISCAL) NUM_NOTA_FISCAL
+           FROM FATU_050 fcanc1
+           WHERE fcanc1.SITUACAO_NFISC = 2  -- cancelada
+           GROUP BY
+             fcanc1.PEDIDO_VENDA
+         ) fcanc
+          ON fcanc.PEDIDO_VENDA = ped.PEDIDO_VENDA
         JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
