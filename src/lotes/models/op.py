@@ -16,7 +16,7 @@ def op_inform(cursor, op, cached=False):
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
-        motivo=None, cached=False, quant_fin=None):
+        motivo=None, cached=False, quant_fin=None, quant_emp=None):
     key_cache = make_key_cache()
 
     cached_result = None
@@ -228,6 +228,12 @@ def busca_op(
         filtro_quant_fin = "AND sele.QTD_F = 0"
     elif quant_fin == 'n':
         filtro_quant_fin = "AND sele.QTD_F <> 0"
+
+    filtro_quant_emp = ''
+    if quant_emp == 'z':
+        filtro_quant_emp = "AND sele.QTD_AP = 0"
+    elif quant_emp == 'n':
+        filtro_quant_emp = "AND sele.QTD_AP <> 0"
 
     sql = '''
         SELECT
@@ -471,6 +477,7 @@ def busca_op(
         ) sele
         where 1=1
         {filtro_quant_fin} -- filtro_quant_fin
+        {filtro_quant_emp} -- filtro_quant_emp
     '''.format(
         filtra_op=filtra_op,
         filtro_motivo=filtro_motivo,
@@ -486,6 +493,7 @@ def busca_op(
         filtra_situacao=filtra_situacao,
         filtra_posicao=filtra_posicao,
         filtro_quant_fin=filtro_quant_fin,
+        filtro_quant_emp=filtro_quant_emp,
     )
     cursor.execute(sql)
 
