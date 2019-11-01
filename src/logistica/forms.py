@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 from django import forms
 
+from utils.functions import shift_years
+
 from .models import *
 
 
@@ -96,7 +98,7 @@ class NotafiscalRelForm(forms.Form):
         data_de = self.cleaned_data['data_de']
         if data_de:
             if data_de.year < 100:
-                data_de = data_de.timedelta(years=2000)
+                data_de = shift_years(2000, data_de)
         return data_de
 
 
