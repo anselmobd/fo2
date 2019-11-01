@@ -30,10 +30,9 @@
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
 {% endif %}
-{% if tipo %}
+{% if tipo and tipo != 't' %}
   <h4>Tipo:
-    {% if tipo == 't' %}Todos
-    {% elif tipo == 'a' %}PA
+    {% if   tipo == 'a' %}PA
     {% elif tipo == 'g' %}PG
     {% elif tipo == 'b' %}PB
     {% elif tipo == 'p' %}PG/PB
@@ -42,36 +41,32 @@
     {% endif %}
   </h4>
 {% endif %}
-{% if situacao %}
+{% if situacao and situacao != 't' %}
   <h4>Situação:
-    {% if situacao == 't' %}Todas as OPs
-    {% elif situacao == 'a' %}Ativas
+    {% if   situacao == 'a' %}Ativas
     {% elif situacao == 'c' %}Canceladas
     {% endif %}
   </h4>
 {% endif %}
-{% if tipo_alt %}
+{% if tipo_alt and tipo_alt != 't' %}
   <h4>Tipo de alternativa:
-    {% if   tipo_alt == 't' %}Todas
-    {% elif tipo_alt == 'p' %}Alternativa de produção
+    {% if   tipo_alt == 'p' %}Alternativa de produção
     {% elif tipo_alt == 'e' %}Alternativa de expedição
     {% endif %}
   </h4>
 {% endif %}
-{% if posicao %}
+{% if posicao and posicao != 't' %}
   <h4>Posição:
-    {% if posicao == 't' %}Todas as OPs
-    {% elif posicao == 'p' %}Em produção
+    {% if   posicao == 'p' %}Em produção
     {% elif posicao == 'f' %}Finalizadas
     {% elif posicao == 'p63' %}Em produção, exceto 63-CD
     {% elif posicao == 'f63' %}Finalizadas, incluindo 63-CD
     {% endif %}
   </h4>
 {% endif %}
-{% if motivo %}
+{% if motivo and motivo != 't' %}
   <h4>Motivo da OP:
-    {% if motivo == 't' %}Todas as OPs
-    {% elif motivo == 'e' %}OP de estoque
+    {% if   motivo == 'e' %}OP de estoque
     {% elif motivo == 'p' %}OP de pedido
     {% elif motivo == 'n' %}OP de pedido não faturado
     {% elif motivo == 'f' %}OP de pedido faturado
@@ -82,18 +77,16 @@
     {% endif %}
   </h4>
 {% endif %}
-{% if quant_fin %}
+{% if quant_fin and quant_fin != 't' %}
   <h4>Quantidade finalizada:
-    {% if quant_fin == 't' %}Todas as OPs
-    {% elif quant_fin == 'z' %}Zerada
+    {% if   quant_fin == 'z' %}Zerada
     {% elif quant_fin == 'n' %}Não zerada
     {% endif %}
   </h4>
 {% endif %}
-{% if quant_emp %}
+{% if quant_emp and quant_emp != 't' %}
   <h4>Quantidade em produção:
-    {% if quant_emp == 't' %}Todas as OPs
-    {% elif quant_emp == 'z' %}Zerada
+    {% if   quant_emp == 'z' %}Zerada
     {% elif quant_emp == 'n' %}Não zerada
     {% endif %}
   </h4>
