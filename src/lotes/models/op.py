@@ -252,14 +252,11 @@ def busca_op(
               FROM pcpc_020 op
               JOIN PCPC_040 l
                 ON l.ORDEM_PRODUCAO = op.ORDEM_PRODUCAO
-              JOIN MQOP_005 e
-                ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
               WHERE (l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO) > 0
               GROUP BY
                 op.ORDEM_PRODUCAO
               , l.SEQUENCIA_ESTAGIO
               , l.CODIGO_ESTAGIO
-              , e.DESCRICAO
               ORDER BY
                 l.SEQUENCIA_ESTAGIO
             ) t
