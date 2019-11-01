@@ -347,6 +347,21 @@ def busca_op(
               )
           )
           , 0 ) QTD_AP
+        , COALESCE(
+          ( SELECT
+              SUM( l.QTDE_PECAS_PROD )
+            FROM pcpc_040 l
+            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+              {filtra_qtd_tam} -- filtra_qtd_tam
+              {filtra_qtd_cor} -- filtra_qtd_cor
+              AND l.SEQ_OPERACAO = (
+                SELECT
+                  MAX( ls.SEQ_OPERACAO )
+                FROM pcpc_040 ls
+                WHERE ls.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+              )
+          )
+          , 0 ) QTD_F
         , o.DATA_PROGRAMACAO DT_DIGITACAO
         , o.DATA_ENTRADA_CORTE DT_CORTE
         , o.PERIODO_PRODUCAO PERIODO
