@@ -324,11 +324,7 @@ def busca_op(
             )
           END
           , ' ' ) MODELO
-        , ( SELECT
-              COUNT( DISTINCT l.ORDEM_CONFECCAO )
-            FROM pcpc_040 l
-            WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-          ) LOTES
+        , seq_op.LOTES
         , seq_l.QTD
         , seq_l.QTD_AP
         , seq_l.QTD_F
@@ -359,6 +355,7 @@ def busca_op(
           SELECT
             l.ORDEM_PRODUCAO
           , MAX( l.SEQ_OPERACAO ) MAXSEQ
+          , COUNT( DISTINCT l.ORDEM_CONFECCAO ) LOTES
           FROM pcpc_040 l
           GROUP BY
             l.ORDEM_PRODUCAO
@@ -431,6 +428,7 @@ def busca_op(
           o.ORDEM_PRODUCAO
         , o.REFERENCIA_PECA
         , o.ORDEM_PRINCIPAL
+        , seq_op.LOTES
         , seq_l.QTD
         , seq_l.QTD_AP
         , seq_l.QTD_F
