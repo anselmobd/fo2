@@ -1037,9 +1037,12 @@ def op_sortimentos(cursor, **kwargs):
             FROM pcpc_040 lote
             JOIN PCPC_020 o
               ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
-            LEFT JOIN FATU_050 f
-              ON o.PEDIDO_VENDA <> 0
-             AND f.PEDIDO_VENDA = o.PEDIDO_VENDA
+            LEFT JOIN PEDI_100 ped -- pedido de venda
+              ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
+             AND ped.STATUS_PEDIDO <> 5 -- não cancelado
+            LEFT JOIN FATU_050 fok
+              ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+             AND fok.SITUACAO_NFISC <> 2  -- cancelada
             WHERE 1=1
               {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
@@ -1048,18 +1051,8 @@ def op_sortimentos(cursor, **kwargs):
               {filtro_tipo_ref} -- filtro_tipo_ref
               {filtro_tipo_alt} -- filtro_tipo_alt
               AND o.PEDIDO_VENDA <> 0
-              AND ( f.SITUACAO_NFISC IS NULL
-                  OR
-                    f.SITUACAO_NFISC <> 1
-                  OR
-                    EXISTS (
-                      SELECT
-                        fe.DOCUMENTO
-                      FROM OBRF_010 fe -- nota fiscal de entrada/devolução
-                      WHERE fe.NOTA_DEV = f.NUM_NOTA_FISCAL
-                        AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
-                    )
-                  )
+              AND ped.PEDIDO_VENDA IS NOT NULL
+              AND fok.NUM_NOTA_FISCAL IS NULL
             GROUP BY
               o.ORDEM_PRODUCAO
             )
@@ -1073,6 +1066,7 @@ def op_sortimentos(cursor, **kwargs):
              AND opl.SEQ_OPERACAO = l.SEQ_OPERACAO
             LEFT JOIN BASI_220 tam
               ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
+            WHERE l.QTDE_A_PRODUZIR_PACOTE = 0
             GROUP BY
               tam.ORDEM_TAMANHO
             , l.PROCONF_SUBGRUPO
