@@ -148,7 +148,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         super(AnaliseModelo, self).__init__(*args, **kwargs)
         self.Form_class = come_forms.AnaliseModeloForm
         self.template_name = 'comercial/analise_modelo.html'
-        self.title_name = 'Análise de modelo'
+        self.title_name = 'Define meta de estoque'
         self.get_args = ['modelo']
 
     def mount_context_modelo(self, modelo):
