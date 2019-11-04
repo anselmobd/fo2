@@ -249,22 +249,36 @@ def get_vendas(
     group_por = ''
     if por == 'modelo':
         select_por = ", v.MODELO"
+        # no filtro por modelo não busca modelos com qtd zerada, por EMISSAO
+        # apenas repete o valor, para, ao agrupar, não fazer diferença
+        select_item = ", '{}' MODELO".format(modelo)
+        select_global = select_por
         group_por = ", v.MODELO"
         add_order('v.MODELO')
     elif por == 'ref':
         select_por = ", v.REF"
+        select_item = ", v.GRUPO_ESTRUTURA REF"
+        select_global = select_por
         group_por = ", v.REF"
         add_order('v.REF')
     elif por == 'cor':
         select_por = ", v.COR"
+        select_item = ", v.ITEM_ESTRUTURA COR"
+        select_global = select_por
         group_por = ", v.COR"
         add_order('v.COR')
     elif por == 'tam':
-        select_por = ", v.TAM"
-        group_por = ", t.ORDEM_TAMANHO\n, v.TAM"
-        add_order("t.ORDEM_TAMANHO,\n v.TAM")
+        select_por = ", t.ORDEM_TAMANHO\n, v.TAM"
+        select_item = ", t.ORDEM_TAMANHO\n, v.SUBGRU_ESTRUTURA TAM"
+        select_global = ", v.ORDEM_TAMANHO\n, v.TAM"
+        group_por = ", v.ORDEM_TAMANHO\n, v.TAM"
+        add_order("v.ORDEM_TAMANHO\n, v.TAM")
 
     sql = """
+        SELECT
+          sum(v.qtd) qtd
+          {select_global} -- select_global
+        FROM (
         WITH vendido AS
         (
         SELECT
@@ -319,7 +333,7 @@ def get_vendas(
           {pre_filtra_ultimos_dias} -- pre_filtra_ultimos_dias
         )
         SELECT
-          sum(v.qtd) qtd
+          v.qtd
           {select_por} -- select_por
         FROM vendido v
         LEFT JOIN BASI_220 t
@@ -331,6 +345,26 @@ def get_vendas(
           {filtra_modelo} -- filtra_modelo
           {filtra_ref} -- filtra_ref
           {filtra_ultimos_dias} -- filtra_ultimos_dias
+        --
+        UNION
+        --
+        SELECT
+          0
+          {select_item} -- select_item
+        FROM BASI_010 v -- item (ref+tam+cor)
+        LEFT JOIN BASI_220 t
+          ON t.TAMANHO_REF = v.SUBGRU_ESTRUTURA
+        WHERE v.NIVEL_ESTRUTURA = 1
+          AND TRIM(
+                LEADING '0' FROM (
+                  REGEXP_REPLACE(
+                    v.GRUPO_ESTRUTURA
+                  , '^([^a-zA-Z]+)[a-zA-Z]*$'
+                  , '\\1'
+                  )
+                )
+              ) = '263'
+        ) v
         GROUP BY
           1
           {group_por} -- group_por
@@ -343,6 +377,8 @@ def get_vendas(
         pre_filtra_periodo=pre_filtra_periodo,
         pre_filtra_ultimos_dias=pre_filtra_ultimos_dias,
         select_por=select_por,
+        select_item=select_item,
+        select_global=select_global,
         filtra_col=filtra_col,
         filtra_cliente=filtra_cliente,
         filtra_modelo=filtra_modelo,
