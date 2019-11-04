@@ -327,7 +327,7 @@
     var e_estoque_ideal_cru = document.getElementById('id_estoque_ideal_cru');
     var e_estoque_ideal_tam = document.getElementById('id_estoque_ideal_tam');
     var e_qtd_grade_tamanhos = document.getElementById('id_qtd_grade_tamanhos');
-    estoque_ideal_cru = venda_mensal * multiplicador;
+    estoque_ideal_cru = Math.round(venda_mensal * multiplicador *100)/100;
     resto = estoque_ideal_cru % tot_grade_tamanhos;
     if ( resto == 0 ) {
       estoque_ideal_tam = estoque_ideal_cru;
@@ -335,9 +335,9 @@
       estoque_ideal_tam = estoque_ideal_cru + tot_grade_tamanhos - resto;
     }
     qtd_grade_tamanhos = estoque_ideal_tam / tot_grade_tamanhos;
-    e_estoque_ideal_cru.innerText = estoque_ideal_cru;
-    e_estoque_ideal_tam.innerText = estoque_ideal_tam;
-    e_qtd_grade_tamanhos.innerText = qtd_grade_tamanhos;
+    e_estoque_ideal_cru.innerText = Number(estoque_ideal_cru).toLocaleString('pt-BR');
+    e_estoque_ideal_tam.innerText = Number(estoque_ideal_tam).toLocaleString('pt-BR');
+    e_qtd_grade_tamanhos.innerText = Number(qtd_grade_tamanhos).toLocaleString('pt-BR');
   }
 
   calc_estoque();
@@ -356,12 +356,12 @@
       qtd_grades_cor = Math.round(qtd_grade_tamanhos / tot_grade_cores * dict_cores[key]);
       grades_por_cor[key] = qtd_grades_cor;
       tot_grades_por_cor = tot_grades_por_cor + qtd_grades_cor;
-      e_grades_por_1_cor.innerText = qtd_grades_cor;
+      e_grades_por_1_cor.innerText = Number(qtd_grades_cor).toLocaleString('pt-BR');
     }
     estoque_ideal_cor = tot_grades_por_cor * tot_grade_tamanhos;
-    e_estoque_ideal_cor.innerText = estoque_ideal_cor;
-    e_input_meta_estoque.value = estoque_ideal_cor;
-    e_qtd_grade_tam_cor.innerText = tot_grades_por_cor;
+    e_estoque_ideal_cor.innerText = Number(estoque_ideal_cor).toLocaleString('pt-BR');
+    e_input_meta_estoque.value = Number(estoque_ideal_cor).toLocaleString('pt-BR');
+    e_qtd_grade_tam_cor.innerText = Number(tot_grades_por_cor).toLocaleString('pt-BR');
   }
 
   calc_tot_grade_cor();
@@ -380,7 +380,7 @@
           cod_cor = cell_id[2];
           cod_tam = cell_id[1];
           valor = grades_por_cor[cod_cor] * dict_tamanhos[cod_tam];
-          cell.innerHTML = valor;
+          cell.innerHTML = Number(valor).toLocaleString('pt-BR');
         }
       }
     }
@@ -394,21 +394,21 @@
       var total_cor = 0;
       for (cod_tam in dict_tamanhos) {
         e_cell = document.getElementById('item_'+cod_tam+'_'+cod_cor);
-        valor = parseInt(e_cell.innerHTML);
+        valor = parseInt(e_cell.innerHTML.replace(/\./g, ""));
         total_cor = total_cor + valor;
         total_tam[cod_tam] = total_tam[cod_tam] + valor;
       }
       e_cell = document.getElementById('tot_cor_'+cod_cor);
-      e_cell.innerHTML = total_cor;
+      e_cell.innerHTML = Number(total_cor).toLocaleString('pt-BR');
     }
     var total_tam_cor = 0;
     for (cod_tam in dict_tamanhos) {
       e_cell = document.getElementById('tot_tam_'+cod_tam);
-      e_cell.innerHTML = total_tam[cod_tam];
+      e_cell.innerHTML = Number(total_tam[cod_tam]).toLocaleString('pt-BR');
       total_tam_cor = total_tam_cor + total_tam[cod_tam];
     }
     e_cell = document.getElementById('tot_tam_cor');
-    e_cell.innerHTML = total_tam_cor;
+    e_cell.innerHTML = Number(total_tam_cor).toLocaleString('pt-BR');
 
   }
 
