@@ -237,7 +237,37 @@ def busca_op(
 
     sql = '''
         SELECT
-          sele.*
+          sele.OP
+        , sele.PED
+        , sele.ESTAGIO
+        , sele.TIPO_REF
+        , sele.TIPO_OP
+        , sele.TIPO_FM_OP
+        , sele.OP_REL
+        , sele.SITUACAO
+        , sele.CANCELAMENTO
+        , sele.ALTERNATIVA
+        , sele.ROTEIRO
+        , sele."REF"
+        , sele.MODELO
+        , sele.LOTES
+        , COALESCE(sele.QTD, 0) QTD
+        , COALESCE(sele.QTD_AP, 0) QTD_AP
+        , COALESCE(sele.QTD_F, 0) QTD_F
+        , sele.DT_DIGITACAO
+        , sele.DT_CORTE
+        , sele.PERIODO
+        , sele.PERIODO_INI
+        , sele.PERIODO_FIM
+        , sele.DEPOSITO_CODIGO
+        , sele.DEPOSITO
+        , sele.PEDIDO
+        , sele.PED_CLIENTE
+        , sele.MOLDE
+        , sele.DESCR_REF
+        , sele.OBSERVACAO
+        , sele.OBSERVACAO2
+        , sele.UNIDADE
         FROM (
         SELECT
           o.ORDEM_PRODUCAO OP
