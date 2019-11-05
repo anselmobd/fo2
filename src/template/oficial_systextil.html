@@ -1,15 +1,27 @@
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="pt">
 <head>
   <title>Link para Systêxtil</title>
 </head>
 <body>
   <div style="text-align: center">
-    <p>Para executar o Systextil,<br />
-    abrir em nova aba (Control-click)<br />
-    um dos links abaixo:</p>
-    <p><a href="http://oficial.systextil.tussor.com.br:8080/systextil">Link oficial</a></p>
-    <p><a href="http://192.168.1.93:8080/systextil">Link alternativo</a></p>
+    <h3>Para executar o Systextil</h3>
+    <p>Abrir um dos links abaixo em nova aba (ou guia):<br />
+      &bullet; Clicando com o botão direito do mouse no link para aparecer um menu com opção de abrir o link em nova aba (ou guia); ou<br />
+      &bullet; Fazendo "Control-clique" no link (segura a tecla "Ctrl" e clica normalmente no link) para abrir o link em nova aba (ou guia).<br />
+    </p>
+    <div  style="font-size: x-large;">
+      <p><a href="http://oficial.systextil.tussor.com.br:8080/systextil">Link oficial</a></p>
+      <p><a href="http://192.168.1.93:8080/systextil">Link alternativo</a></p>
+    </div>
+    <hr>
+    <h3>Telas de ajuda</h3>
+    <p>Control-clique</p>
+    <img src="{% static "img/ctrl_left.png" %}" alt="chrome">
+    <p>Clicando com o botão direito no link no Firefox</p>
+    <img src="{% static "img/firefox.png" %}" alt="firefox">
+    <p>Clicando com o botão direito no link no Chrome</p>
+    <img src="{% static "img/chrome.png" %}" alt="chrome">
   </div>
 </body>
 </html>
