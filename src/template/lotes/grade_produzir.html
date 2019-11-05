@@ -82,57 +82,44 @@
         {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
       {% endif %}
 
-      <thead>
-        <tr>
-          <th colspan="99">
-            <h3>Total não finafizado em OPs</h3>
-          </th>
-        </tr>
-      </thead>
       {% if gopa %}
+        <thead>
+          <tr>
+            <th colspan="99">
+              <h3>Total em OPs em produção</h3>
+            </th>
+          </tr>
+        </thead>
         {% include "layout/thead_generic.html" with data=gopa.headers style=gopa.style only %}
         {% include "layout/tbody_generic.html" with fields=gopa.fields data=gopa.data style=gopa.style only %}
-      {% else %}
+      {% endif %}
+
+      {% if gopf %}
         <thead>
           <tr>
             <th colspan="99">
-              <h4>Modelo sem OPs em produção</h4>
+              <h3>Total em OPs finalizadas de pedidos empenhados</h3>
             </th>
           </tr>
         </thead>
-      {% endif %}
-
-      <thead>
-        <tr>
-          <th colspan="99">
-            <h3>Total em OPs finalizadas de pedidos empenhados</h3>
-          </th>
-        </tr>
-      </thead>
-      {% if gopf %}
         {% include "layout/thead_generic.html" with data=gopf.headers style=gopf.style only %}
         {% include "layout/tbody_generic.html" with fields=gopf.fields data=gopf.data style=gopf.style only %}
-      {% else %}
+      {% endif %}
+
+      {% if conta_grade_op == 0 or conta_grade_op == 2 %}
         <thead>
           <tr>
             <th colspan="99">
-              <h4>Modelo sem OPs nessa situação</h4>
+              <h3>Total em OPs</h3>
             </th>
           </tr>
         </thead>
       {% endif %}
-
-      <thead>
-        <tr>
-          <th colspan="99">
-            <h3>Total em OPs</h3>
-          </th>
-        </tr>
-      </thead>
-      {% if gop %}
+      {% if conta_grade_op == 2 %}
         {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
         {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
-      {% else %}
+      {% endif %}
+      {% if conta_grade_op == 0 %}
         <thead>
           <tr>
             <th colspan="99">

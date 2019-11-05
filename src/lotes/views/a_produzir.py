@@ -488,22 +488,26 @@ class GradeProduzir(O2BaseGetPostView):
 
         gop = None
         total_op = 0
+        conta_grade_op = 0
         if gopf is None:
             if gopa is not None:
+                conta_grade_op = 1
                 gop = gopa
                 total_op = total_opa
         else:
             if gopa is None:
+                conta_grade_op = 1
                 gop = gopf
                 total_op = total_opf
             else:
+                conta_grade_op = 2
                 gop = soma_grades(gopa, gopf)
                 total_op = total_opa + total_opf
 
-        if gop is not None:
-            self.context.update({
-                'gop': gop,
-            })
+        self.context.update({
+            'gop': gop,
+            'conta_grade_op': conta_grade_op,
+        })
 
         gm = None
         if meta.meta_estoque != 0 or meta.meta_giro != 0:
