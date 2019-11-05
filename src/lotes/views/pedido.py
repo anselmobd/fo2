@@ -380,7 +380,8 @@ class BuscaPedido(View):
             periodo = dias_alem_lead
 
         data = models.busca_pedido(
-            cursor, modelo=modelo, periodo=':{}'.format(busca_periodo))
+            cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
+            cached=False)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedidos não encontrados',

@@ -661,11 +661,11 @@ def grade_expedicao(
     return rows_to_dict_list(cursor)
 
 
-def busca_pedido(cursor, modelo=None, periodo=None):
+def busca_pedido(cursor, modelo=None, periodo=None, cached=True):
     key_cache = make_key_cache()
 
     cached_result = cache.get(key_cache)
-    if cached_result is not None:
+    if cached and cached_result is not None:
         fo2logger.info('cached '+key_cache)
         return cached_result
 
