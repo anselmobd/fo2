@@ -522,6 +522,8 @@ class GradeProduzir(O2BaseGetPostView):
         if total_op != 0 or total_ped != 0:
             if total_ped == 0:
                 gopp = gop
+            elif total_op == 0:
+                gopp = subtrai_grades(gzerada, gped)
             else:
                 gopp = subtrai_grades(gop, gped)
 
