@@ -914,8 +914,6 @@ def lead_de_modelo(cursor, modelo):
         try:
             lc = lotes.models.LeadColecao.objects.get(colecao=row['COLECAO'])
             lc_lead = lc.lead
-            if modelo == '526':
-                print(lc_lead)
         except models.LeadColecao.DoesNotExist:
             lc_lead = 0
             break
