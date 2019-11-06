@@ -1,3 +1,4 @@
+from django.db.models import Exists, OuterRef
 from django.db import models
 
 
@@ -60,6 +61,18 @@ class MetaEstoque(models.Model):
         verbose_name = "Parametros para meta de estoque"
         permissions = (("can_define_goal", "Can define goal"),
                        )
+
+
+def getMetaEstoqueAtual():
+    metas = MetaEstoque.objects
+    metas = metas.annotate(antiga=Exists(
+        MetaEstoque.objects.filter(
+            modelo=OuterRef('modelo'),
+            data__gt=OuterRef('data')
+        )
+    ))
+    metas = metas.filter(antiga=False)
+    return metas
 
 
 class MetaEstoqueTamanho(models.Model):
