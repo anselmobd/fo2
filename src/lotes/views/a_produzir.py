@@ -281,6 +281,14 @@ def opera_grades(g1, g2, operacao):
     return grade
 
 
+def grade_filtra_linhas_zeradas(grd):
+    grade = copy.deepcopy(grd)
+    for linha in grade['data'][:-1]:
+        if linha['Total'] == 0:
+            grade['data'].remove(linha)
+    return grade
+
+
 def opera_grade(grd, func):
     grade = copy.deepcopy(grd)
     lin_tot = grade['data'][-1]
@@ -426,6 +434,7 @@ class GradeProduzir(O2BaseGetPostView):
                 'data': gf_data,
                 'style': gf_style,
             }
+            gopf = grade_filtra_linhas_zeradas(gopf)
             gzerada = update_gzerada(gzerada, gopf)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
