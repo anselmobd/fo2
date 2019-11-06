@@ -489,6 +489,9 @@ class LeadColecao(View):
             try:
                 lc.lead = lead
                 lc.save()
+
+                calculaMetaGiroTodas()
+
             except IntegrityError as e:
                 context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
                     'o lead. <{}>'.format(str(e))
