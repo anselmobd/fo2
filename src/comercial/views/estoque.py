@@ -16,6 +16,7 @@ from utils.views import totalize_data
 from utils.functions import dec_month, dec_months, safe_cast, dias_uteis_mes
 
 import produto.queries
+import lotes.views
 
 import comercial.models as models
 import comercial.queries as queries
@@ -602,6 +603,11 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             meta_cor.cor = cor
             meta_cor.quantidade = cores[cor]
             meta_cor.save()
+
+        cursor = connections['so'].cursor()
+        metas = models.getMetaEstoqueAtual().filter(modelo=modelo)
+        if len(metas) != 0:
+            lotes.views.calculaMetaGiroMetas(cursor, metas)
 
     def mount_context(self):
         modelo = self.form.cleaned_data['modelo']
