@@ -987,6 +987,28 @@ def grade_meta_giro(meta, lead, show_distrib=True):
     return grade
 
 
+def calculaMetaGiroMetas(cursor, metas):
+    metas_list = []
+    for meta in metas:
+        meta_dict = meta.__dict__
+        metas_list.append(meta_dict)
+
+        lead = produto.queries.lead_de_modelo(
+            cursor, meta_dict['modelo'])
+
+        grade = grade_meta_giro(meta, lead)
+
+        meta_dict['lead'] = lead
+        meta_dict['giro'] = grade['meta_giro']
+
+        if meta.meta_giro != meta_dict['giro']:
+            meta.meta_giro = meta_dict['giro']
+            meta.save()
+
+        meta_dict['grade'] = grade
+    return metas_list
+
+
 class MetaGiro(O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
@@ -1005,24 +1027,7 @@ class MetaGiro(O2BaseGetView):
             })
             return
 
-        metas_list = []
-        for meta in metas:
-            meta_dict = meta.__dict__
-            metas_list.append(meta_dict)
-
-            lead = produto.queries.lead_de_modelo(
-                cursor, meta_dict['modelo'])
-
-            grade = grade_meta_giro(meta, lead)
-
-            meta_dict['lead'] = lead
-            meta_dict['giro'] = grade['meta_giro']
-
-            if meta.meta_giro != meta_dict['giro']:
-                meta.meta_giro = meta_dict['giro']
-                meta.save()
-
-            meta_dict['grade'] = grade
+        metas_list = calculaMetaGiro(cursor, metas)
 
         group = ['modelo']
         totalize_grouped_data(metas_list, {
