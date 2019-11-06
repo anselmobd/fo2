@@ -987,6 +987,14 @@ def grade_meta_giro(meta, lead, show_distrib=True):
     return grade
 
 
+def calculaMetaGiroTodas():
+    cursor = connections['so'].cursor()
+
+    metas = comercial.models.getMetaEstoqueAtual()
+    if len(metas) == 0:
+        calculaMetaGiroMetas(cursor, metas)
+
+
 def calculaMetaGiroMetas(cursor, metas):
     metas_list = []
     for meta in metas:
