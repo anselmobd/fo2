@@ -1017,16 +1017,8 @@ class MetaGiro(O2BaseGetView):
             meta_dict = meta.__dict__
             metas_list.append(meta_dict)
 
-            colecao = produto.queries.colecao_de_modelo(
+            lead = produto.queries.lead_de_modelo(
                 cursor, meta_dict['modelo'])
-            if colecao == -1:
-                lead = 0
-            else:
-                try:
-                    lc = models.LeadColecao.objects.get(colecao=colecao)
-                    lead = lc.lead
-                except models.LeadColecao.DoesNotExist:
-                    lead = 0
 
             grade = grade_meta_giro(meta, lead)
 
