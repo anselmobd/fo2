@@ -1027,7 +1027,7 @@ class MetaGiro(O2BaseGetView):
             })
             return
 
-        metas_list = calculaMetaGiro(cursor, metas)
+        metas_list = calculaMetaGiroMetas(cursor, metas)
 
         group = ['modelo']
         totalize_grouped_data(metas_list, {
