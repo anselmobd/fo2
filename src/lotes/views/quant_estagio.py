@@ -997,14 +997,7 @@ class MetaGiro(O2BaseGetView):
     def mount_context(self):
         cursor = connections['so'].cursor()
 
-        metas = comercial.models.MetaEstoque.objects
-        metas = metas.annotate(antiga=Exists(
-            comercial.models.MetaEstoque.objects.filter(
-                modelo=OuterRef('modelo'),
-                data__gt=OuterRef('data')
-            )
-        ))
-        metas = metas.filter(antiga=False)
+        metas = comercial.models.getMetaEstoqueAtual()
         metas = metas.order_by('-venda_mensal')
         if len(metas) == 0:
             self.context.update({
