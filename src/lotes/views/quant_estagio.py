@@ -992,7 +992,10 @@ def calculaMetaGiroTodas():
 
     metas = comercial.models.getMetaEstoqueAtual()
     if len(metas) == 0:
-        calculaMetaGiroMetas(cursor, metas)
+        return 0
+    else:
+        metas_list = calculaMetaGiroMetas(cursor, metas)
+        return len(metas_list)
 
 
 def calculaMetaGiroMetas(cursor, metas):
