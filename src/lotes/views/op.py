@@ -392,6 +392,10 @@ class BuscaOP(View):
                 row['DT_CORTE'] = ''
             else:
                 row['DT_CORTE'] = row['DT_CORTE'].date()
+            if row['DT_EMBARQUE'] is None:
+                row['DT_EMBARQUE'] = ''
+            else:
+                row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
             if row['ESTAGIO'] is None:
                 row['ESTAGIO'] = 'Finalizado*'
             if row['PED'] != 0:
@@ -410,14 +414,16 @@ class BuscaOP(View):
                         'Quant. Lotes', 'Quant. Itens',
                         'Quant. em Prod.', 'Quant. Finaliz.',
                         'Depósito', 'Período',
-                        'Data Digitação', 'Data Corte', 'OP relacionada'),
+                        'Data Digitação', 'Data Corte', 'Data Embarque',
+                        'OP relacionada'),
             'fields': ('OP', 'SITUACAO', 'PED', 'CANCELAMENTO',
                        'TIPO_REF', 'REF',
                        'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
                        'LOTES', 'QTD',
                        'QTD_AP', 'QTD_F',
                        'DEPOSITO_CODIGO', 'PERIODO',
-                       'DT_DIGITACAO', 'DT_CORTE', 'OP_REL'),
+                       'DT_DIGITACAO', 'DT_CORTE', 'DT_EMBARQUE',
+                       'OP_REL'),
             'data': data,
             'safe': safe,
             'style': {
