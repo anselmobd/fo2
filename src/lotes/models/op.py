@@ -264,6 +264,7 @@ def busca_op(
         , sele.PEDIDO
         , sele.PED_CLIENTE
         , sele.DT_EMBARQUE
+        , sele.STATUS_PEDIDO
         , sele.MOLDE
         , sele.DESCR_REF
         , sele.OBSERVACAO
@@ -369,6 +370,7 @@ def busca_op(
         , o.PEDIDO_VENDA PEDIDO
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PED_CLIENTE
         , COALESCE(ped.DATA_ENTR_VENDA, NULL) DT_EMBARQUE
+        , COALESCE(ped.STATUS_PEDIDO, NULL) STATUS_PEDIDO
         , COALESCE(r.NUMERO_MOLDE, '-') MOLDE
         , r.DESCR_REFERENCIA DESCR_REF
         , o.OBSERVACAO
@@ -431,7 +433,6 @@ def busca_op(
           ON d.CODIGO_DEPOSITO = o.DEPOSITO_ENTRADA
         LEFT JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
-         AND ped.STATUS_PEDIDO <> 5 -- não cancelado
         LEFT JOIN FATU_050 fok
           ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
@@ -489,6 +490,7 @@ def busca_op(
         , o.PEDIDO_VENDA
         , ped.COD_PED_CLIENTE
         , ped.DATA_ENTR_VENDA
+        , ped.STATUS_PEDIDO
         , r.NUMERO_MOLDE
         , r.DESCR_REFERENCIA
         , o.OBSERVACAO

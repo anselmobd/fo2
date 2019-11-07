@@ -396,6 +396,14 @@ class BuscaOP(View):
                 row['DT_EMBARQUE'] = '-'
             else:
                 row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
+            if row['STATUS_PEDIDO'] == 5:
+                row['STATUS_PEDIDO'] = 'Canc.'
+            elif row['STATUS_PEDIDO'] == 0:
+                row['STATUS_PEDIDO'] = 'Digit.'
+            elif row['STATUS_PEDIDO'] == 2:
+                row['STATUS_PEDIDO'] = 'Liber.'
+            else:
+                row['STATUS_PEDIDO'] = '-'
             if row['ESTAGIO'] is None:
                 row['ESTAGIO'] = 'Finalizado*'
             if row['PED'] == 0:
@@ -410,7 +418,8 @@ class BuscaOP(View):
             'descr': {'LOTES': 'Totais:'}})
 
         context.update({
-            'headers': ('OP', 'Situação', 'Pedido', 'Cancelamento',
+            'headers': ('OP', 'Situação', 'Cancel.',
+                        'Pedido', 'Status',
                         'Tipo', 'Referência',
                         'Alt.', 'Roteiro', 'Estágio',
                         'Quant. Lotes', 'Quant. Itens',
@@ -418,7 +427,8 @@ class BuscaOP(View):
                         'Depósito', 'Período',
                         'Data Digitação', 'Data Corte', 'Data Embarque',
                         'OP relacionada'),
-            'fields': ('OP', 'SITUACAO', 'PED', 'CANCELAMENTO',
+            'fields': ('OP', 'SITUACAO', 'CANCELAMENTO',
+                       'PED', 'STATUS_PEDIDO',
                        'TIPO_REF', 'REF',
                        'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
                        'LOTES', 'QTD',
@@ -826,8 +836,10 @@ class CorrigeSequenciamento(PermissionRequiredMixin, View):
 
         self.context.update({
             'count_repair': count_repair,
-            'headers': ['Período', 'OC', 'Estágios', 'Informação', 'Alteração'],
-            'fields': ['PERIODO', 'OC', 'ESTS', 'INFO', 'ALT'],
+            'headers': ['Período', 'OC', 'Estágios', 'Informação',
+                        'Alteração'],
+            'fields': ['PERIODO', 'OC', 'ESTS', 'INFO',
+                       'ALT'],
             'data': data,
         })
 
