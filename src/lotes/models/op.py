@@ -263,6 +263,7 @@ def busca_op(
         , sele.DEPOSITO
         , sele.PEDIDO
         , sele.PED_CLIENTE
+        , sele.DT_EMBARQUE
         , sele.MOLDE
         , sele.DESCR_REF
         , sele.OBSERVACAO
@@ -367,6 +368,7 @@ def busca_op(
         , o.DEPOSITO_ENTRADA || ' - ' || d.DESCRICAO DEPOSITO
         , o.PEDIDO_VENDA PEDIDO
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PED_CLIENTE
+        , COALESCE(ped.DATA_ENTR_VENDA, NULL) DT_EMBARQUE
         , COALESCE(r.NUMERO_MOLDE, '-') MOLDE
         , r.DESCR_REFERENCIA DESCR_REF
         , o.OBSERVACAO
@@ -486,6 +488,7 @@ def busca_op(
         , d.DESCRICAO
         , o.PEDIDO_VENDA
         , ped.COD_PED_CLIENTE
+        , ped.DATA_ENTR_VENDA
         , r.NUMERO_MOLDE
         , r.DESCR_REFERENCIA
         , o.OBSERVACAO
