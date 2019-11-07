@@ -389,16 +389,18 @@ class BuscaOP(View):
             row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
             row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
             if row['DT_CORTE'] is None:
-                row['DT_CORTE'] = ''
+                row['DT_CORTE'] = '-'
             else:
                 row['DT_CORTE'] = row['DT_CORTE'].date()
             if row['DT_EMBARQUE'] is None:
-                row['DT_EMBARQUE'] = ''
+                row['DT_EMBARQUE'] = '-'
             else:
                 row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
             if row['ESTAGIO'] is None:
                 row['ESTAGIO'] = 'Finalizado*'
-            if row['PED'] != 0:
+            if row['PED'] == 0:
+                row['PED'] = '-'
+            else:
                 row['PED|LINK'] = reverse(
                     'producao:pedido__get', args=[row['PED']])
 
