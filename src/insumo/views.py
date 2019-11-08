@@ -25,6 +25,7 @@ from geral.models import Dispositivos, RoloBipado
 from utils.functions import segunda, max_not_None, min_not_None
 from utils.views import totalize_grouped_data
 from utils.functions import make_key_cache, fo2logger
+from utils.cache import refkeys
 
 import insumo.queries as queries
 import insumo.models as models
@@ -798,6 +799,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         cached_result = result
         cache.set(key_cache, cached_result, timeout=60*60*9)
         fo2logger.info('calculated '+key_cache)
+        refkeys.add(ref, key_cache)
         return cached_result
 
     key_cache = make_key_cache()
@@ -1152,6 +1154,13 @@ class MapaPorInsumo(View):
             'tam': tam,
             'calc': self.calc,
         }
+
+        if self.calc:
+            dkeys = refkeys.dget(ref)
+            for key in dkeys:
+                cache.delete(key)
+                fo2logger.info('deleted cache {}'.format(key))
+            refkeys.delete(ref)
 
         datas = MapaPorInsumo_dados(
             cursor, nivel, ref, cor, tam, calc=self.calc)
@@ -1974,6 +1983,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         cached_result = result
         cache.set(key_cache, cached_result, timeout=60*60*9)
         fo2logger.info('calculated '+key_cache)
+        refkeys.add(ref, key_cache)
         return cached_result
 
     key_cache = make_key_cache()
