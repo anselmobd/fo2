@@ -213,6 +213,10 @@ def zera_grade(g1):
     return opera_grades(g1, g1, '-')
 
 
+def inverte_sinal_grade(g1):
+    return opera_grade(g1, lambda x: -x)
+
+
 def opera_grades(g1, g2, operacao):
     tamanhos1 = set(g1['headers'][1:-1])
     tamanhos2 = set(g2['headers'][1:-1])
