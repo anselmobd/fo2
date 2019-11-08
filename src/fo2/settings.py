@@ -269,7 +269,7 @@ CACHES = {
         'KEY_PREFIX': 'FO2K',
         'TIMEOUT': 600,
         'OPTIONS': {
-            'MAX_ENTRIES': 1000
+            'MAX_ENTRIES': 10000
         }
     }
 }
