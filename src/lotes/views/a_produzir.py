@@ -441,6 +441,24 @@ class GradeProduzir(O2BaseGetPostView):
             gopf = grade_filtra_linhas_zeradas(gopf)
             gzerada = update_gzerada(gzerada, gopf)
 
+        gpf_header, gpf_fields, gpf_data, gpf_style, total_oppf = \
+            lotes.models.op_sortimentos(
+                cursor, tipo='apf', descr_sort=False, modelo=modelo,
+                situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+
+        goppf = None
+        if total_oppf != 0:
+            goppf = {
+                'headers': gpf_header,
+                'fields': gpf_fields,
+                'data': gpf_data,
+                'style': gpf_style,
+            }
+            goppf = inverte_sinal_grade(goppf)
+            total_oppf = -total_oppf
+            goppf = grade_filtra_linhas_zeradas(goppf)
+            gzerada = update_gzerada(gzerada, goppf)
+
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
             'dias_alem_lead': dias_alem_lead,
@@ -493,6 +511,12 @@ class GradeProduzir(O2BaseGetPostView):
                 'gopf': gopf,
             })
 
+        if goppf is not None:
+            goppf = soma_grades(gzerada, goppf)
+            self.context.update({
+                'goppf': goppf,
+            })
+
         if gped is not None:
             gped = soma_grades(gzerada, gped)
             self.context.update({
@@ -516,6 +540,14 @@ class GradeProduzir(O2BaseGetPostView):
                 conta_grade_op = 2
                 gop = soma_grades(gopa, gopf)
                 total_op = total_opa + total_opf
+
+        if goppf is not None:
+            conta_grade_op += 1
+            if gop is None:
+                gop = goppf
+            else:
+                gop = soma_grades(gop, goppf)
+            total_op += total_oppf
 
         self.context.update({
             'gop': gop,
