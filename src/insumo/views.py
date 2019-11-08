@@ -799,13 +799,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         cached_result = result
         cache.set(key_cache, cached_result, timeout=60*60*9)
         fo2logger.info('calculated '+key_cache)
-
-        dkeys = refkeys.dget((ref, cor, tam))
-        for key in dkeys:
-            cache.delete(key)
-            fo2logger.info('deleted cache {}'.format(key))
-        refkeys.delete((ref, cor, tam))
-
+        refkeys.flush((ref, cor, tam))
         return cached_result
 
     key_cache = make_key_cache()

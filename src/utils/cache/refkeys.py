@@ -62,7 +62,17 @@ def remove(ref, key):
     dset(ref, dkeys, key_hash=key_hash)
 
 
-def delete(ref):
-    fo2logger.info('delete {}'.format(ref))
-    key_hash = hash(ref)
+def delete(ref, key_hash=None):
+    if key_hash is None:
+        key_hash = hash(ref)
     cache.delete(key_hash)
+
+
+def flush(ref):
+    fo2logger.info('flush {}'.format(ref))
+    key_hash = hash(ref)
+    dkeys = dget(ref, key_hash=key_hash)
+    for key in dkeys:
+        cache.delete(key)
+        fo2logger.info('deleted cache {}'.format(key))
+    delete(ref, key_hash=key_hash)
