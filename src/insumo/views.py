@@ -802,7 +802,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         refkeys.flush((ref, cor, tam))
         return cached_result
 
-    key_cache = make_key_cache()
+    key_cache = make_key_cache(ignore=['calc'])
     if not calc:
         cached_result = cache.get(key_cache)
         if cached_result is not None:
