@@ -5,6 +5,7 @@ import time
 import logging
 import inspect
 import hashlib
+from pprint import pprint
 
 
 fo2logger = logging.getLogger('fo2')
@@ -201,17 +202,17 @@ def is_number(s):
         return False
 
 
-def make_key_cache():
+def make_key_cache(ignore=[]):
     stack1 = inspect.stack()[1]
-    argvalues = inspect.getargvalues(stack1.frame).locals.values()
+    argvalues = inspect.getargvalues(stack1.frame).locals
     values = []
-    for value in argvalues:
-        if value is None:
-            values.append(value)
-        elif isinstance(value, str):
-            values.append(value)
-        elif is_number(value):
-            values.append(value)
+    for key in argvalues:
+        if key not in ignore:
+            value = argvalues[key]
+            if (value is None) \
+                    or isinstance(value, str) \
+                    or is_number(value):
+                values.append(value)
     braces = ['{}'] * len(values)
     key = '|'.join([stack1.filename, *braces])
     key = key.format(*values)
