@@ -9,6 +9,7 @@ _SECOND = 1
 _MINUTE = 60
 _HOUR = _MINUTE*60
 _DAY = _HOUR*24
+_DEFAULT_TIMEOUT = _DAY
 
 
 class Error(Exception):
@@ -35,15 +36,17 @@ def hash(entity=None, entkey=None):
     return entkey
 
 
-def put(keys, entity=None, entkey=None):
+def put(keys, entity=None, entkey=None, timeout=None):
     entkey = hash(entity, entkey)
-    cache.set(entkey, keys, timeout=60*60*9)
+    if timeout is None:
+        timeout = _DEFAULT_TIMEOUT
+    cache.set(entkey, keys, timeout=timeout)
 
 
-def dput(dkeys, entity=None, entkey=None):
+def dput(dkeys, entity=None, entkey=None, timeout=None):
     entkey = hash(entity, entkey)
     keys = '<|>'.join(dkeys)
-    put(keys, entkey=entkey)
+    put(keys, entkey=entkey, timeout=timeout)
 
 
 def get(entity=None, entkey=None):
@@ -60,7 +63,7 @@ def dget(entity=None, entkey=None):
     return dkeys
 
 
-def add(key, entity=None, entkey=None):
+def add(key, entity=None, entkey=None, timeout=None):
     entkey = hash(entity, entkey)
     fo2logger.info('add {} {} {}'.format(key, entity, entkey))
     keys = get(entkey=entkey)
@@ -68,7 +71,7 @@ def add(key, entity=None, entkey=None):
         keys = key
     else:
         keys = '<|>'.join([keys, key])
-    put(keys, entkey=entkey)
+    put(keys, entkey=entkey, timeout=timeout)
 
 
 def remove(key, entity=None, entkey=None):
