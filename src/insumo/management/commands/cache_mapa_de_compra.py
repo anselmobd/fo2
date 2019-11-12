@@ -17,6 +17,7 @@ from insumo.queries import insumos_cor_tamanho_usados, insumos_cor_tamanho
 class Command(BaseCommand):
     help = 'Guarda em cache o mapa de sugestão de compras por insumo.'
     _MAX_TASKS = sys.maxsize
+    _STEP_SKEEP = 0.5
     _cursor = None
 
     def my_println(self, text=''):
@@ -101,7 +102,7 @@ class Command(BaseCommand):
                         nivel, ref, cor, tam))
                     MapaPorInsumo_dados(
                           self.cursor, nivel, ref, cor, tam, calc=True)
-                    time.sleep(1)
+                    time.sleep(self._STEP_SKEEP)
                     count_task += 1
                     if count_task == self._MAX_TASKS:
                         self.my_println(
