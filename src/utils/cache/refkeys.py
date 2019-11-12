@@ -95,9 +95,12 @@ def delete(ref=None, key_hash=None):
     cache.delete(key_hash)
 
 
-def flush(ref):
-    fo2logger.info('flush {}'.format(ref))
-    key_hash = hash(ref)
+def flush(ref=None, key_hash=None):
+    if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
+        key_hash = hash(ref)
+    fo2logger.info('flush {} {}'.format(ref, key_hash))
     dkeys = dget(key_hash=key_hash)
     for key in dkeys:
         cache.delete(key)
