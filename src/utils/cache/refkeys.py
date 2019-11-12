@@ -23,8 +23,10 @@ def hash(ref):
     return key_hash
 
 
-def put(keys, ref, key_hash=None):
+def put(keys, ref=None, key_hash=None):
     if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
         key_hash = hash(ref)
     cache.set(key_hash, keys, timeout=60*60*9)
 
