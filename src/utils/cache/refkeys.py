@@ -5,6 +5,12 @@ from django.core.cache import cache
 from utils.functions import fo2logger
 
 
+_SECOND = 1
+_MINUTE = 60
+_HOUR = _MINUTE*60
+_DAY = _HOUR*24
+
+
 def hash(ref):
     key_seasoned = 'keys_ref_SAUCE_{}'.format(ref)
     key_hash = 'keys_ref_{}'.format(
