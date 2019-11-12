@@ -11,6 +11,11 @@ _HOUR = _MINUTE*60
 _DAY = _HOUR*24
 
 
+class Error(Exception):
+    """Base class for exceptions in this module."""
+    pass
+
+
 def hash(ref):
     key_seasoned = 'keys_ref_SAUCE_{}'.format(ref)
     key_hash = 'keys_ref_{}'.format(
