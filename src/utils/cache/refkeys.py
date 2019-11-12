@@ -31,8 +31,10 @@ def put(keys, ref=None, key_hash=None):
     cache.set(key_hash, keys, timeout=60*60*9)
 
 
-def dput(dkeys, ref, key_hash=None):
+def dput(dkeys, ref=None, key_hash=None):
     if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
         key_hash = hash(ref)
     keys = '<|>'.join(dkeys)
     put(keys, key_hash=key_hash)
@@ -72,7 +74,7 @@ def remove(key, ref):
         dkeys.remove(key)
     except ValueError:
         pass
-    dput(dkeys, ref, key_hash=key_hash)
+    dput(dkeys, key_hash=key_hash)
 
 
 def delete(ref, key_hash=None):
