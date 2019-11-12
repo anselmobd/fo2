@@ -799,7 +799,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         cached_result = result
         cache.set(key_cache, cached_result, timeout=60*60*9)
         fo2logger.info('calculated '+key_cache)
-        refkeys.flush((ref, cor, tam))
+        refkeys.flush((nivel, ref, cor, tam))
         return cached_result
 
     key_cache = make_key_cache(ignore=['calc'])
@@ -1976,7 +1976,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         cached_result = result
         cache.set(key_cache, cached_result, timeout=60*60*9)
         fo2logger.info('calculated '+key_cache)
-        refkeys.add((ref, cor, tam), key_cache)
+        refkeys.add((nivel, ref, cor, tam), key_cache)
         return cached_result
 
     key_cache = make_key_cache()
