@@ -16,6 +16,15 @@ class Error(Exception):
     pass
 
 
+class NoEntityError(Error):
+    """No entity nor entkey Exception."""
+
+    def __init__(self, *args, **kwargs):
+        if not (args or kwargs):
+            args = ('Entity and entkey undefined!', )
+        super().__init__(*args, **kwargs)
+
+
 def hash(entity):
     entkey_seasoned = 'entkey_SAUCE_{}'.format(entity)
     entkey = 'entkey_{}'.format(
