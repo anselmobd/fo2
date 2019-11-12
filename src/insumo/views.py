@@ -800,11 +800,11 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
     def return_result(result):
         cached_result = result
-        cache.set(key_cache, cached_result, timeout=__MAPA_COMPRAS_CACHE_LIFE)
-        fo2logger.info('calculated '+key_cache)
         old_cached_result = None
         if calc:
             old_cached_result = cache.get(key_cache)
+        cache.set(key_cache, cached_result, timeout=__MAPA_COMPRAS_CACHE_LIFE)
+        fo2logger.info('calculated '+key_cache)
         if cached_result != old_cached_result:
             refkeys.flush((nivel, ref, cor, tam))
         return cached_result
