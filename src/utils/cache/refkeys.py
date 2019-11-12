@@ -74,8 +74,11 @@ def add(key, ref=None, key_hash=None):
     put(keys, key_hash=key_hash)
 
 
-def remove(key, ref):
-    key_hash = hash(ref)
+def remove(key, ref=None, key_hash=None):
+    if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
+        key_hash = hash(ref)
     dkeys = dget(key_hash=key_hash)
     try:
         dkeys.remove(key)
