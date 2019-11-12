@@ -16,93 +16,93 @@ class Error(Exception):
     pass
 
 
-def hash(ref):
-    key_seasoned = 'keys_ref_SAUCE_{}'.format(ref)
-    key_hash = 'keys_ref_{}'.format(
-        hashlib.md5(key_seasoned.encode('utf-8')).hexdigest())
-    return key_hash
+def hash(entity):
+    entkey_seasoned = 'entkey_SAUCE_{}'.format(entity)
+    entkey = 'entkey_{}'.format(
+        hashlib.md5(entkey_seasoned.encode('utf-8')).hexdigest())
+    return entkey
 
 
-def put(keys, ref=None, key_hash=None):
-    if key_hash is None:
-        if ref is None:
-            raise Error('ref and key_hash undefined')
-        key_hash = hash(ref)
-    cache.set(key_hash, keys, timeout=60*60*9)
+def put(keys, entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise Error('entity and entkey undefined')
+        entkey = hash(entity)
+    cache.set(entkey, keys, timeout=60*60*9)
 
 
-def dput(dkeys, ref=None, key_hash=None):
-    if key_hash is None:
-        if ref is None:
-            raise Error('ref and key_hash undefined')
-        key_hash = hash(ref)
+def dput(dkeys, entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise Error('entity and entkey undefined')
+        entkey = hash(entity)
     keys = '<|>'.join(dkeys)
-    put(keys, key_hash=key_hash)
+    put(keys, entkey=entkey)
 
 
-def get(ref=None, key_hash=None):
-    if key_hash is None:
-        if ref is None:
-            raise Error('ref and key_hash undefined')
-        key_hash = hash(ref)
-    return cache.get(key_hash)
+def get(entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise Error('entity and entkey undefined')
+        entkey = hash(entity)
+    return cache.get(entkey)
 
 
-def dget(ref=None, key_hash=None):
-    if key_hash is None:
-        if ref is None:
-            raise Error('ref and key_hash undefined')
-        key_hash = hash(ref)
-    keys = get(key_hash=key_hash)
+def dget(entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise Error('entity and entkey undefined')
+        entkey = hash(entity)
+    keys = get(entkey=entkey)
     dkeys = []
     if keys is not None:
         dkeys = keys.split('<|>')
     return dkeys
 
 
-def add(key, ref=None, key_hash=None):
-    if key_hash is None:
-        if ref is None:
-            raise Error('ref and key_hash undefined')
-        key_hash = hash(ref)
-    fo2logger.info('add {} {} {}'.format(key, ref, key_hash))
-    keys = get(key_hash=key_hash)
+def add(key, entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise Error('entity and entkey undefined')
+        entkey = hash(entity)
+    fo2logger.info('add {} {} {}'.format(key, entity, entkey))
+    keys = get(entkey=entkey)
     if keys is None:
         keys = key
     else:
         keys = '<|>'.join([keys, key])
-    put(keys, key_hash=key_hash)
+    put(keys, entkey=entkey)
 
 
-def remove(key, ref=None, key_hash=None):
-    if key_hash is None:
-        if ref is None:
-            raise Error('ref and key_hash undefined')
-        key_hash = hash(ref)
-    dkeys = dget(key_hash=key_hash)
+def remove(key, entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise Error('entity and entkey undefined')
+        entkey = hash(entity)
+    dkeys = dget(entkey=entkey)
     try:
         dkeys.remove(key)
     except ValueError:
         pass
-    dput(dkeys, key_hash=key_hash)
+    dput(dkeys, entkey=entkey)
 
 
-def delete(ref=None, key_hash=None):
-    if key_hash is None:
-        if ref is None:
-            raise Error('ref and key_hash undefined')
-        key_hash = hash(ref)
-    cache.delete(key_hash)
+def delete(entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise Error('entity and entkey undefined')
+        entkey = hash(entity)
+    cache.delete(entkey)
 
 
-def flush(ref=None, key_hash=None):
-    if key_hash is None:
-        if ref is None:
-            raise Error('ref and key_hash undefined')
-        key_hash = hash(ref)
-    fo2logger.info('flush {} {}'.format(ref, key_hash))
-    dkeys = dget(key_hash=key_hash)
+def flush(entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise Error('entity and entkey undefined')
+        entkey = hash(entity)
+    fo2logger.info('flush {} {}'.format(entity, entkey))
+    dkeys = dget(entkey=entkey)
     for key in dkeys:
         cache.delete(key)
         fo2logger.info('deleted cache {}'.format(key))
-    delete(key_hash=key_hash)
+    delete(entkey=entkey)
