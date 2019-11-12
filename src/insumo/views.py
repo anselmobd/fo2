@@ -1980,7 +1980,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
         cached_result = result
         cache.set(key_cache, cached_result, timeout=refkeys._DAY*10)
         fo2logger.info('calculated '+key_cache)
-        refkeys.add(key_cache, (nivel, ref, cor, tam))
+        refkeys.add(key_cache, (nivel, ref, cor, tam), timeout=refkeys._DAY*10)
         return cached_result
 
     key_cache = make_key_cache()
