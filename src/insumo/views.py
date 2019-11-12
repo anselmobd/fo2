@@ -45,6 +45,9 @@ from .forms import \
     FiltroMpForm
 
 
+__MAPA_COMPRAS_CACHE_LIFE = 60*60*12
+
+
 def index(request):
     return render(request, 'insumo/index.html')
 
@@ -797,7 +800,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
     def return_result(result):
         cached_result = result
-        cache.set(key_cache, cached_result, timeout=60*60*9)
+        cache.set(key_cache, cached_result, timeout=__MAPA_COMPRAS_CACHE_LIFE)
         fo2logger.info('calculated '+key_cache)
         refkeys.flush((nivel, ref, cor, tam))
         return cached_result
@@ -1974,7 +1977,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
 
     def return_result(result):
         cached_result = result
-        cache.set(key_cache, cached_result, timeout=60*60*9)
+        cache.set(key_cache, cached_result, timeout=__MAPA_COMPRAS_CACHE_LIFE)
         fo2logger.info('calculated '+key_cache)
         refkeys.add((nivel, ref, cor, tam), key_cache)
         return cached_result
