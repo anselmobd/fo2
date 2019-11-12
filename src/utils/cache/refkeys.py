@@ -60,9 +60,12 @@ def dget(ref=None, key_hash=None):
     return dkeys
 
 
-def add(key, ref):
-    fo2logger.info('add {} {}'.format(ref, key))
-    key_hash = hash(ref)
+def add(key, ref=None, key_hash=None):
+    if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
+        key_hash = hash(ref)
+    fo2logger.info('add {} {} {}'.format(key, ref, key_hash))
     keys = get(key_hash=key_hash)
     if keys is None:
         keys = key
