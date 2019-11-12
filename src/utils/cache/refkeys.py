@@ -18,17 +18,17 @@ def hash(ref):
     return key_hash
 
 
-def put(ref, keys, key_hash=None):
+def put(keys, ref, key_hash=None):
     if key_hash is None:
         key_hash = hash(ref)
     cache.set(key_hash, keys, timeout=60*60*9)
 
 
-def dput(ref, dkeys, key_hash=None):
+def dput(dkeys, ref, key_hash=None):
     if key_hash is None:
         key_hash = hash(ref)
     keys = '<|>'.join(dkeys)
-    put(ref, keys, key_hash=key_hash)
+    put(keys, ref, key_hash=key_hash)
 
 
 def get(ref, key_hash=None):
@@ -47,7 +47,7 @@ def dget(ref, key_hash=None):
     return dkeys
 
 
-def add(ref, key):
+def add(key, ref):
     fo2logger.info('add {} {}'.format(ref, key))
     key_hash = hash(ref)
     keys = get(ref, key_hash=key_hash)
@@ -55,17 +55,17 @@ def add(ref, key):
         keys = key
     else:
         keys = '<|>'.join([keys, key])
-    put(ref, keys, key_hash=key_hash)
+    put(keys, ref, key_hash=key_hash)
 
 
-def remove(ref, key):
+def remove(key, ref):
     key_hash = hash(ref)
     dkeys = dget(ref, key_hash=key_hash)
     try:
         dkeys.remove(key)
     except ValueError:
         pass
-    dput(ref, dkeys, key_hash=key_hash)
+    dput(dkeys, ref, key_hash=key_hash)
 
 
 def delete(ref, key_hash=None):
