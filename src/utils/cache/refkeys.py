@@ -24,7 +24,7 @@ def put(ref, keys, key_hash=None):
     cache.set(key_hash, keys, timeout=60*60*9)
 
 
-def dset(ref, dkeys, key_hash=None):
+def dput(ref, dkeys, key_hash=None):
     if key_hash is None:
         key_hash = hash(ref)
     keys = '<|>'.join(dkeys)
@@ -65,7 +65,7 @@ def remove(ref, key):
         dkeys.remove(key)
     except ValueError:
         pass
-    dset(ref, dkeys, key_hash=key_hash)
+    dput(ref, dkeys, key_hash=key_hash)
 
 
 def delete(ref, key_hash=None):
