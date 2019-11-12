@@ -25,43 +25,34 @@ class NoEntityError(Error):
         super().__init__(*args, **kwargs)
 
 
-def hash(entity):
-    entkey_seasoned = 'entkey_SAUCE_{}'.format(entity)
-    entkey = 'entkey_{}'.format(
-        hashlib.md5(entkey_seasoned.encode('utf-8')).hexdigest())
+def hash(entity=None, entkey=None):
+    if entkey is None:
+        if entity is None:
+            raise NoEntityError()
+        entkey_seasoned = 'entkey_SAUCE_{}'.format(entity)
+        entkey = 'entkey_{}'.format(
+            hashlib.md5(entkey_seasoned.encode('utf-8')).hexdigest())
     return entkey
 
 
 def put(keys, entity=None, entkey=None):
-    if entkey is None:
-        if entity is None:
-            raise Error('entity and entkey undefined')
-        entkey = hash(entity)
+    entkey = hash(entity, entkey)
     cache.set(entkey, keys, timeout=60*60*9)
 
 
 def dput(dkeys, entity=None, entkey=None):
-    if entkey is None:
-        if entity is None:
-            raise Error('entity and entkey undefined')
-        entkey = hash(entity)
+    entkey = hash(entity, entkey)
     keys = '<|>'.join(dkeys)
     put(keys, entkey=entkey)
 
 
 def get(entity=None, entkey=None):
-    if entkey is None:
-        if entity is None:
-            raise Error('entity and entkey undefined')
-        entkey = hash(entity)
+    entkey = hash(entity, entkey)
     return cache.get(entkey)
 
 
 def dget(entity=None, entkey=None):
-    if entkey is None:
-        if entity is None:
-            raise Error('entity and entkey undefined')
-        entkey = hash(entity)
+    entkey = hash(entity, entkey)
     keys = get(entkey=entkey)
     dkeys = []
     if keys is not None:
@@ -70,10 +61,7 @@ def dget(entity=None, entkey=None):
 
 
 def add(key, entity=None, entkey=None):
-    if entkey is None:
-        if entity is None:
-            raise Error('entity and entkey undefined')
-        entkey = hash(entity)
+    entkey = hash(entity, entkey)
     fo2logger.info('add {} {} {}'.format(key, entity, entkey))
     keys = get(entkey=entkey)
     if keys is None:
@@ -84,10 +72,7 @@ def add(key, entity=None, entkey=None):
 
 
 def remove(key, entity=None, entkey=None):
-    if entkey is None:
-        if entity is None:
-            raise Error('entity and entkey undefined')
-        entkey = hash(entity)
+    entkey = hash(entity, entkey)
     dkeys = dget(entkey=entkey)
     try:
         dkeys.remove(key)
@@ -97,18 +82,12 @@ def remove(key, entity=None, entkey=None):
 
 
 def delete(entity=None, entkey=None):
-    if entkey is None:
-        if entity is None:
-            raise Error('entity and entkey undefined')
-        entkey = hash(entity)
+    entkey = hash(entity, entkey)
     cache.delete(entkey)
 
 
 def flush(entity=None, entkey=None):
-    if entkey is None:
-        if entity is None:
-            raise Error('entity and entkey undefined')
-        entkey = hash(entity)
+    entkey = hash(entity, entkey)
     fo2logger.info('flush {} {}'.format(entity, entkey))
     dkeys = dget(entkey=entkey)
     for key in dkeys:
