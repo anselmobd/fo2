@@ -40,8 +40,10 @@ def dput(dkeys, ref=None, key_hash=None):
     put(keys, key_hash=key_hash)
 
 
-def get(ref, key_hash=None):
+def get(ref=None, key_hash=None):
     if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
         key_hash = hash(ref)
     return cache.get(key_hash)
 
@@ -49,7 +51,7 @@ def get(ref, key_hash=None):
 def dget(ref, key_hash=None):
     if key_hash is None:
         key_hash = hash(ref)
-    keys = get(key_hash, key_hash=key_hash)
+    keys = get(key_hash=key_hash)
     dkeys = []
     if keys is not None:
         dkeys = keys.split('<|>')
@@ -59,7 +61,7 @@ def dget(ref, key_hash=None):
 def add(key, ref):
     fo2logger.info('add {} {}'.format(ref, key))
     key_hash = hash(ref)
-    keys = get(ref, key_hash=key_hash)
+    keys = get(key_hash=key_hash)
     if keys is None:
         keys = key
     else:
