@@ -23,8 +23,10 @@ def hash(ref):
     return key_hash
 
 
-def put(keys, ref, key_hash=None):
+def put(keys, ref=None, key_hash=None):
     if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
         key_hash = hash(ref)
     cache.set(key_hash, keys, timeout=60*60*9)
 
@@ -33,7 +35,7 @@ def dput(dkeys, ref, key_hash=None):
     if key_hash is None:
         key_hash = hash(ref)
     keys = '<|>'.join(dkeys)
-    put(keys, ref, key_hash=key_hash)
+    put(keys, key_hash=key_hash)
 
 
 def get(ref, key_hash=None):
@@ -60,7 +62,7 @@ def add(key, ref):
         keys = key
     else:
         keys = '<|>'.join([keys, key])
-    put(keys, ref, key_hash=key_hash)
+    put(keys, key_hash=key_hash)
 
 
 def remove(key, ref):
