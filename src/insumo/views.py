@@ -25,7 +25,7 @@ from geral.models import Dispositivos, RoloBipado
 from utils.functions import segunda, max_not_None, min_not_None
 from utils.views import totalize_grouped_data
 from utils.functions import make_key_cache, fo2logger
-from utils.cache import entkey
+from utils.cache import entkeys
 
 import insumo.queries as queries
 import insumo.models as models
@@ -800,10 +800,10 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         old_cached_result = None
         if calc:
             old_cached_result = cache.get(key_cache)
-        cache.set(key_cache, cached_result, timeout=entkey._HOUR*14)
+        cache.set(key_cache, cached_result, timeout=entkeys._HOUR*14)
         fo2logger.info('calculated '+key_cache)
         if cached_result != old_cached_result:
-            entkey.flush((nivel, ref, cor, tam))
+            entkeys.flush((nivel, ref, cor, tam))
         return cached_result
 
     key_cache = make_key_cache(ignore=['calc'])
@@ -1978,9 +1978,9 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
 
     def return_result(result):
         cached_result = result
-        cache.set(key_cache, cached_result, timeout=entkey._DAY*10)
+        cache.set(key_cache, cached_result, timeout=entkeys._DAY*10)
         fo2logger.info('calculated '+key_cache)
-        entkey.add(key_cache, (nivel, ref, cor, tam), timeout=entkey._DAY*10)
+        entkeys.add(key_cache, (nivel, ref, cor, tam), timeout=entkeys._DAY*10)
         return cached_result
 
     key_cache = make_key_cache()
