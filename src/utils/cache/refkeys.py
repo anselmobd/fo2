@@ -87,8 +87,10 @@ def remove(key, ref=None, key_hash=None):
     dput(dkeys, key_hash=key_hash)
 
 
-def delete(ref, key_hash=None):
+def delete(ref=None, key_hash=None):
     if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
         key_hash = hash(ref)
     cache.delete(key_hash)
 
@@ -100,4 +102,4 @@ def flush(ref):
     for key in dkeys:
         cache.delete(key)
         fo2logger.info('deleted cache {}'.format(key))
-    delete(ref, key_hash=key_hash)
+    delete(key_hash=key_hash)
