@@ -48,8 +48,10 @@ def get(ref=None, key_hash=None):
     return cache.get(key_hash)
 
 
-def dget(ref, key_hash=None):
+def dget(ref=None, key_hash=None):
     if key_hash is None:
+        if ref is None:
+            raise Error('ref and key_hash undefined')
         key_hash = hash(ref)
     keys = get(key_hash=key_hash)
     dkeys = []
@@ -71,7 +73,7 @@ def add(key, ref):
 
 def remove(key, ref):
     key_hash = hash(ref)
-    dkeys = dget(ref, key_hash=key_hash)
+    dkeys = dget(key_hash=key_hash)
     try:
         dkeys.remove(key)
     except ValueError:
@@ -88,7 +90,7 @@ def delete(ref, key_hash=None):
 def flush(ref):
     fo2logger.info('flush {}'.format(ref))
     key_hash = hash(ref)
-    dkeys = dget(ref, key_hash=key_hash)
+    dkeys = dget(key_hash=key_hash)
     for key in dkeys:
         cache.delete(key)
         fo2logger.info('deleted cache {}'.format(key))
