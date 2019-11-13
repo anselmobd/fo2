@@ -898,10 +898,7 @@ def insumo_necessidade_semana(
     """
     if new_calc:
         sql += """
-                  * CASE WHEN e.CODIGO_DEPOSITO = 0
-                    THEN 0
-                    ELSE lote.QTDE_A_PRODUZIR_PACOTE
-                    END
+                  * QTDE_A_PRODUZIR_PACOTE
         """
     else:
         sql += """
@@ -979,10 +976,7 @@ def insumo_necessidade_semana(
     """
     if new_calc:
         sql += """
-                  * CASE WHEN e.CODIGO_DEPOSITO = 0
-                    THEN 0
-                    ELSE lote.QTDE_A_PRODUZIR_PACOTE
-                    END
+                  * lote.QTDE_A_PRODUZIR_PACOTE
         """
     else:
         sql += """
