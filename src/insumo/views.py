@@ -851,6 +851,12 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
     for row in data_ins:
         row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
 
+    data_ins_old = queries.insumo_necessidade_semana(
+        cursor, nivel, ref, cor, tam, new_calc=False)
+
+    for row in data_ins_old:
+        row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
+
     # Previsões
     data_prev = queries.insumo_previsoes_semana_insumo(
         cursor, nivel, ref, cor, tam)
@@ -933,6 +939,7 @@ def MapaPorInsumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         'data_id': data_id,
         'semana_hoje': semana_hoje,
         'data_ins': data_ins,
+        'data_ins_old': data_ins_old,
         'data_prev': data_prev,
         'data_irs': data_irs,
     })
@@ -1209,11 +1216,18 @@ class MapaPorInsumo(View):
 
         # Necessidades
         data_ins = datas['data_ins']
+        data_ins_old = datas['data_ins_old']
 
         max_digits = 0
         for row in data_ins:
             num_digits = str(row['QTD_INSUMO'])[::-1].find('.')
             max_digits = max(max_digits, num_digits)
+
+        for row in data_ins_old:
+            row['SEMANA_NECESSIDADE|LINK'] = reverse(
+                'insumo:mapa_necessidade_detalhe',
+                args=[nivel, ref, cor, tam, row['SEMANA_NECESSIDADE']])
+            row['SEMANA_NECESSIDADE|TARGET'] = '_blank'
 
         for row in data_ins:
             row['SEMANA_NECESSIDADE|LINK'] = reverse(
@@ -1233,6 +1247,7 @@ class MapaPorInsumo(View):
             'fields_ins': ['SEMANA_NECESSIDADE', 'QTD_INSUMO'],
             'style_ins': {2: 'text-align: right;'},
             'data_ins': data_ins,
+            'data_ins_old': data_ins_old,
         })
 
         # Previsões
