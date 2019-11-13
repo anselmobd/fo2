@@ -369,7 +369,7 @@ class MapaPorSemanaNewForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
     qtd_semanas = forms.CharField(
-        label='Quantidade de semanas', max_length=2, min_length=1, initial=1,
+        label='Quantidade de semanas', max_length=2, min_length=1, initial=3,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     qtd_itens = forms.CharField(
@@ -405,7 +405,7 @@ class MapaPorSemanaNewForm(forms.Form):
             if periodo_atual else ''
 
         self.fields['periodo'].initial = periodo_default
-        self.fields['qtd_itens'].initial = 30
+        # self.fields['qtd_itens'].initial = 30
 
     def clean__positive(self, field_name):
         try:
