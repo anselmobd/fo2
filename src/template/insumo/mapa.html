@@ -45,7 +45,7 @@
         <b>Nenhuma</b>
       {% endif %}
       {% if data_ins_old %}
-        <b>Grade antiga abaixo</b>
+        <h4>Grade antiga abaixo</h4>
         <table>
           {% include "layout/thead_generic.html" with data=headers_ins style=style_ins only %}
           {% include "layout/tbody_generic.html" with fields=fields_ins data=data_ins_old style=style_ins only %}
