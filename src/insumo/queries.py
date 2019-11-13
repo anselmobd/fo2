@@ -870,7 +870,7 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
 
 
 def insumo_necessidade_semana(
-        cursor, nivel, ref, cor, tam, dtini=None, nsem=None):
+        cursor, nivel, ref, cor, tam, dtini=None, nsem=None, new_calc=True):
 
     try:
         filtra_DATA_ENTRADA_CORTE = \
@@ -895,20 +895,32 @@ def insumo_necessidade_semana(
             , op.ORDEM_PRODUCAO
             , sum(
                 ia.CONSUMO
-              * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
-                - lote.QTDE_PECAS_PROD
-                - lote.QTDE_PECAS_2A
-                - lote.QTDE_PERDAS
-                - lote.QTDE_CONSERTO
-                - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
-                            lote.QTDE_PECAS_PROG
-                        AND e.CODIGO_DEPOSITO = 0
-                  THEN
-                    lote.QTDE_EM_PRODUCAO_PACOTE
-                  ELSE
-                    0
-                  END
-                )
+    """
+    if new_calc:
+        sql += """
+                  * CASE WHEN e.CODIGO_DEPOSITO = 0
+                    THEN 0
+                    ELSE lote.QTDE_DISPONIVEL_BAIXA
+                    END
+        """
+    else:
+        sql += """
+                  * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
+                    - lote.QTDE_PECAS_PROD
+                    - lote.QTDE_PECAS_2A
+                    - lote.QTDE_PERDAS
+                    - lote.QTDE_CONSERTO
+                    - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
+                                lote.QTDE_PECAS_PROG
+                            AND e.CODIGO_DEPOSITO = 0
+                      THEN
+                        lote.QTDE_EM_PRODUCAO_PACOTE
+                      ELSE
+                        0
+                      END
+                    )
+        """
+    sql += """
               ) QTD_INSUMO
             FROM BASI_030 ref -- referencia
             JOIN PCPC_020 op -- OP
@@ -1023,6 +1035,7 @@ def insumo_necessidade_semana(
         tam=tam,
         filtra_DATA_ENTRADA_CORTE=filtra_DATA_ENTRADA_CORTE
     )
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
