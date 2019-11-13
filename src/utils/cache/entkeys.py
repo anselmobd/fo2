@@ -9,6 +9,7 @@ _SECOND = 1
 _MINUTE = 60
 _HOUR = _MINUTE*60
 _DAY = _HOUR*24
+
 _DEFAULT_TIMEOUT = _DAY
 
 
@@ -43,9 +44,9 @@ def put(keys, entity=None, entkey=None, timeout=None):
     cache.set(entkey, keys, timeout=timeout)
 
 
-def dput(dkeys, entity=None, entkey=None, timeout=None):
+def lput(lkeys, entity=None, entkey=None, timeout=None):
     entkey = hash(entity, entkey)
-    keys = '<|>'.join(dkeys)
+    keys = '<|>'.join(lkeys)
     put(keys, entkey=entkey, timeout=timeout)
 
 
@@ -54,13 +55,13 @@ def get(entity=None, entkey=None):
     return cache.get(entkey)
 
 
-def dget(entity=None, entkey=None):
+def lget(entity=None, entkey=None):
     entkey = hash(entity, entkey)
     keys = get(entkey=entkey)
-    dkeys = []
+    lkeys = []
     if keys is not None:
-        dkeys = keys.split('<|>')
-    return dkeys
+        lkeys = keys.split('<|>')
+    return lkeys
 
 
 def add(key, entity=None, entkey=None, timeout=None):
@@ -76,12 +77,12 @@ def add(key, entity=None, entkey=None, timeout=None):
 
 def remove(key, entity=None, entkey=None):
     entkey = hash(entity, entkey)
-    dkeys = dget(entkey=entkey)
+    lkeys = lget(entkey=entkey)
     try:
-        dkeys.remove(key)
+        lkeys.remove(key)
     except ValueError:
         pass
-    dput(dkeys, entkey=entkey)
+    lput(lkeys, entkey=entkey)
 
 
 def delete(entity=None, entkey=None):
@@ -92,8 +93,8 @@ def delete(entity=None, entkey=None):
 def flush(entity=None, entkey=None):
     entkey = hash(entity, entkey)
     fo2logger.info('flush {} {}'.format(entity, entkey))
-    dkeys = dget(entkey=entkey)
-    for key in dkeys:
+    lkeys = lget(entkey=entkey)
+    for key in lkeys:
         cache.delete(key)
         fo2logger.info('deleted cache {}'.format(key))
     delete(entkey=entkey)
