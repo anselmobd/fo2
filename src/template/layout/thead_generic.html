@@ -3,7 +3,7 @@
     <th {% spaceless %}style="{% spaceless %}
         {% include "layout/tbody_generic_style.html" with count=forloop.counter style=style only %}
         {% endspaceless %}"
-        {% endspaceless %}>{% spaceless %}
+        {% endspaceless %} class="{{thclass}}">{% spaceless %}
         {% if info|get_type == 'tuple' %}
           {{ info.0|safe }}
         {% else %}
