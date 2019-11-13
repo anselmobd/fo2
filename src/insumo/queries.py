@@ -1048,7 +1048,6 @@ def insumo_necessidade_semana(
         tam=tam,
         filtra_DATA_ENTRADA_CORTE=filtra_DATA_ENTRADA_CORTE
     )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
@@ -1115,7 +1114,8 @@ def insumo_recebimento_semana(
     return rows_to_dict_list(cursor)
 
 
-def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
+def insumo_necessidade_detalhe(
+        cursor, nivel, ref, cor, tam, semana, new_calc=True):
     sql = """
         SELECT
           TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw') SEMANA
@@ -1123,37 +1123,55 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
         , ref.DESCR_REFERENCIA DESCR
         , op.ORDEM_PRODUCAO OP
         , sum(
-            ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
-            - lote.QTDE_PECAS_PROD
-            - lote.QTDE_PECAS_2A
-            - lote.QTDE_PERDAS
-            - lote.QTDE_CONSERTO
-            - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
-                        lote.QTDE_PECAS_PROG
-                    AND e.CODIGO_DEPOSITO = 0
-              THEN
-                lote.QTDE_EM_PRODUCAO_PACOTE
-              ELSE
-                0
-              END
-            )
+    """
+    if new_calc:
+        sql += """--
+                lote.QTDE_A_PRODUZIR_PACOTE
+        """
+    else:
+        sql += """--
+                ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
+                - lote.QTDE_PECAS_PROD
+                - lote.QTDE_PECAS_2A
+                - lote.QTDE_PERDAS
+                - lote.QTDE_CONSERTO
+                - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
+                            lote.QTDE_PECAS_PROG
+                        AND e.CODIGO_DEPOSITO = 0
+                  THEN
+                    lote.QTDE_EM_PRODUCAO_PACOTE
+                  ELSE
+                    0
+                  END
+                )
+        """
+    sql += """--
           ) QTD_PRODUTO
         , sum(
             ia.CONSUMO
-          * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
-            - lote.QTDE_PECAS_PROD
-            - lote.QTDE_PECAS_2A
-            - lote.QTDE_PERDAS
-            - lote.QTDE_CONSERTO
-            - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
-                        lote.QTDE_PECAS_PROG
-                    AND e.CODIGO_DEPOSITO = 0
-              THEN
-                lote.QTDE_EM_PRODUCAO_PACOTE
-              ELSE
-                0
-              END
-            )
+    """
+    if new_calc:
+        sql += """--
+              * lote.QTDE_A_PRODUZIR_PACOTE
+        """
+    else:
+        sql += """--
+              * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
+                - lote.QTDE_PECAS_PROD
+                - lote.QTDE_PECAS_2A
+                - lote.QTDE_PERDAS
+                - lote.QTDE_CONSERTO
+                - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
+                            lote.QTDE_PECAS_PROG
+                        AND e.CODIGO_DEPOSITO = 0
+                  THEN
+                    lote.QTDE_EM_PRODUCAO_PACOTE
+                  ELSE
+                    0
+                  END
+                )
+        """
+    sql += """--
           ) QTD_INSUMO
         FROM BASI_030 ref -- referencia
         JOIN PCPC_020 op -- OP
@@ -1212,26 +1230,36 @@ def insumo_necessidade_detalhe(cursor, nivel, ref, cor, tam, semana):
         HAVING
           sum(
             ia.CONSUMO
-          * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
-            - lote.QTDE_PECAS_PROD
-            - lote.QTDE_PECAS_2A
-            - lote.QTDE_PERDAS
-            - lote.QTDE_CONSERTO
-            - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
-                        lote.QTDE_PECAS_PROG
-                    AND e.CODIGO_DEPOSITO = 0
-              THEN
-                lote.QTDE_EM_PRODUCAO_PACOTE
-              ELSE
-                0
-              END
-            )
+    """
+    if new_calc:
+        sql += """--
+              * lote.QTDE_A_PRODUZIR_PACOTE
+        """
+    else:
+        sql += """--
+              * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
+                - lote.QTDE_PECAS_PROD
+                - lote.QTDE_PECAS_2A
+                - lote.QTDE_PERDAS
+                - lote.QTDE_CONSERTO
+                - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
+                            lote.QTDE_PECAS_PROG
+                        AND e.CODIGO_DEPOSITO = 0
+                  THEN
+                    lote.QTDE_EM_PRODUCAO_PACOTE
+                  ELSE
+                    0
+                  END
+                )
+        """
+    sql += """--
           ) > 0
         ORDER BY
           TRUNC(coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) - 7, 'iw')
         , op.REFERENCIA_PECA
         , op.ORDEM_PRODUCAO
-    """.format(
+    """
+    sql = sql.format(
         nivel=nivel,
         ref=ref,
         cor=cor,
