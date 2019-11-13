@@ -900,7 +900,7 @@ def insumo_necessidade_semana(
         sql += """
                   * CASE WHEN e.CODIGO_DEPOSITO = 0
                     THEN 0
-                    ELSE lote.QTDE_DISPONIVEL_BAIXA
+                    ELSE lote.QTDE_A_PRODUZIR_PACOTE
                     END
         """
     else:
@@ -976,20 +976,32 @@ def insumo_necessidade_semana(
             HAVING
               sum(
                 ia.CONSUMO
-              * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
-                - lote.QTDE_PECAS_PROD
-                - lote.QTDE_PECAS_2A
-                - lote.QTDE_PERDAS
-                - lote.QTDE_CONSERTO
-                - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
-                            lote.QTDE_PECAS_PROG
-                        AND e.CODIGO_DEPOSITO = 0
-                  THEN
-                    lote.QTDE_EM_PRODUCAO_PACOTE
-                  ELSE
-                    0
-                  END
-                )
+    """
+    if new_calc:
+        sql += """
+                  * CASE WHEN e.CODIGO_DEPOSITO = 0
+                    THEN 0
+                    ELSE lote.QTDE_A_PRODUZIR_PACOTE
+                    END
+        """
+    else:
+        sql += """
+                  * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
+                    - lote.QTDE_PECAS_PROD
+                    - lote.QTDE_PECAS_2A
+                    - lote.QTDE_PERDAS
+                    - lote.QTDE_CONSERTO
+                    - CASE WHEN lote.QTDE_EM_PRODUCAO_PACOTE <>
+                                lote.QTDE_PECAS_PROG
+                            AND e.CODIGO_DEPOSITO = 0
+                      THEN
+                        lote.QTDE_EM_PRODUCAO_PACOTE
+                      ELSE
+                        0
+                      END
+                    )
+        """
+    sql += """
               ) > 0
             ORDER BY
               1, 2
@@ -1028,7 +1040,8 @@ def insumo_necessidade_semana(
           sum(n.QTD_INSUMO) - coalesce(sum(n.QTD_OS), 0) > 0
         ORDER BY
           n.SEMANA_NECESSIDADE
-    """.format(
+    """
+    sql = sql.format(
         nivel=nivel,
         ref=ref,
         cor=cor,
