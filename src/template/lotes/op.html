@@ -6,6 +6,18 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+
+thead th.sticky
+{
+  position: sticky;
+  top: 0px;
+  background-color: white;
+}
+
+.glyphicon {
+    position: static;
+}
+
 </style>
 {% endblock %}
 
@@ -153,14 +165,14 @@
 </table>
 <h3>Lotes ordenados por Estágio + OS + referência + cor + tamanho</h3>
 <table>
-  {% include "layout/html_thead.html" with data=headers only %}
-  {% include "layout/html_tbody_link.html" with fields=fields data=data link=link only %}
+  {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
+  {% include "layout/tbody_generic.html" with fields=fields data=data link=link only %}
 </table>
 <h3>Responsáveis e datas de movimentações de estágios</h3>
 {% if u_data %}
   <table>
-    {% include "layout/html_thead.html" with data=u_headers only %}
-    {% include "layout/html_tbody_link.html" with fields=u_fields data=u_data only %}
+    {% include "layout/thead_generic.html" with data=u_headers only %}
+    {% include "layout/tbody_generic.html" with fields=u_fields data=u_data only %}
   </table>
 {% else %}
   <b>Nenhuma movimentação</b>
