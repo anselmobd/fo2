@@ -47,6 +47,10 @@ urlpatterns = [
         '(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
         views.MapaNecessidadeDetalhe.as_view(),
         name='mapa_necessidade_detalhe'),
+    url(r'^mapa_necessidade_detalhe_old/(?P<nivel>[29])/(?P<ref>.{5})/'
+        '(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
+        views.MapaNecessidadeDetalheOld.as_view(),
+        name='mapa_necessidade_detalhe_old'),
 
     url(r'^previsao/$', views.Previsao.as_view(),
         name='previsao'),

@@ -1225,7 +1225,7 @@ class MapaPorInsumo(View):
 
         for row in data_ins_old:
             row['SEMANA_NECESSIDADE|LINK'] = reverse(
-                'insumo:mapa_necessidade_detalhe',
+                'insumo:mapa_necessidade_detalhe_old',
                 args=[nivel, ref, cor, tam, row['SEMANA_NECESSIDADE']])
             row['SEMANA_NECESSIDADE|TARGET'] = '_blank'
 
@@ -1484,6 +1484,10 @@ class MapaNecessidadeDetalhe(View):
     template_name = 'insumo/necessidade_detalhe.html'
     title_name = 'Detalhe de necessidade de insumo em uma semana'
 
+    def __init__(self, *args, **kwargs):
+        super(MapaNecessidadeDetalhe, self).__init__(*args, **kwargs)
+        self.new_calc = True
+
     def mount_context(self, cursor, nivel, ref, cor, tam, semana):
         context = {}
 
@@ -1510,7 +1514,7 @@ class MapaNecessidadeDetalhe(View):
 
         # detalhes da necessidade
         data = queries.insumo_necessidade_detalhe(
-            cursor, nivel, ref, cor, tam, semana)
+            cursor, nivel, ref, cor, tam, semana, new_calc=self.new_calc)
 
         if len(data) != 0:
             max_digits = 0
@@ -1563,6 +1567,12 @@ class MapaNecessidadeDetalhe(View):
                 cursor, kwargs['nivel'], kwargs['ref'],
                 kwargs['cor'], kwargs['tam'], kwargs['semana']))
         return render(request, self.template_name, context)
+
+
+class MapaNecessidadeDetalheOld(MapaNecessidadeDetalhe):
+    def __init__(self, *args, **kwargs):
+        super(MapaNecessidadeDetalheOld, self).__init__(*args, **kwargs)
+        self.new_calc = False
 
 
 def float16digits(qtd):
