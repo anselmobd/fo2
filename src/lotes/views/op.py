@@ -411,6 +411,8 @@ class BuscaOP(View):
             else:
                 row['PED|LINK'] = reverse(
                     'producao:pedido__get', args=[row['PED']])
+            if row['LOTES'] is None:
+                row['LOTES'] = '0'
 
         totalize_data(data, {
             'sum': ['QTD', 'QTD_AP', 'QTD_F'],
@@ -439,10 +441,12 @@ class BuscaOP(View):
             'data': data,
             'safe': safe,
             'style': {
-                10: 'text-align: right;',
                 11: 'text-align: right;',
                 12: 'text-align: right;',
                 13: 'text-align: right;',
+                14: 'text-align: right;',
+                15: 'text-align: center;',
+                16: 'text-align: center;',
             },
         })
 
