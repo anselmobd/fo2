@@ -59,7 +59,7 @@ def transp_decimals(text):
                 zeros = ','+zeros
             return ''.join([
                 inicio,
-                '<span style="opacity: 0.7;">',
+                '<span style="opacity: 0.7; position: static; z-index: -1;">',
                 zeros,
                 '</span>'])
     return text
