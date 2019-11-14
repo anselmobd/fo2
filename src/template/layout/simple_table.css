@@ -30,6 +30,7 @@ thead th
 thead th.sticky
 {
   position: sticky;
+  z-index: 10;
   top: 0px;
 }
 .glyphicon {
