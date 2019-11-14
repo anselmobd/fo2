@@ -27,3 +27,11 @@ thead th
 {
   background-image: linear-gradient(white, #f2f2f2);
 }
+thead th.sticky
+{
+  position: sticky;
+  top: 0px;
+}
+.glyphicon {
+    position: static;
+}
