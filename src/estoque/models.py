@@ -47,12 +47,21 @@ def por_deposito(
         select_fields = '''--
             , e.cditem_grupo
             , e.cditem_subgrupo
-            , e.cditem_item'''
+            , e.cditem_item
+            , e.deposito
+            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
         field_quantidade = ', e.qtde_estoque_atu qtd'
         group_fields = ''
-    else:  # if group == 'r':
+        order_by = '''--
+            , e.cditem_grupo
+            , e.cditem_subgrupo
+            , e.cditem_item
+            , e.deposito'''
+    elif group == 'r':
         select_fields = '''--
-            , e.cditem_grupo'''
+            , e.cditem_grupo
+            , e.deposito
+            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
         field_quantidade = '''--
             , sum(case when e.qtde_estoque_atu > 0
                   then e.qtde_estoque_atu else 0 end) qtd_positiva
@@ -64,6 +73,26 @@ def por_deposito(
             , e.cditem_grupo
             , e.deposito
             , d.DESCRICAO'''
+        order_by = '''--
+            , e.cditem_grupo
+            , e.deposito'''
+    elif group == 'tc':
+        select_fields = '''--
+            , e.cditem_subgrupo
+            , e.cditem_item'''
+        field_quantidade = '''--
+            , sum(case when e.qtde_estoque_atu > 0
+                  then e.qtde_estoque_atu else 0 end) qtd_positiva
+            , sum(case when e.qtde_estoque_atu < 0
+                  then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+        group_fields = '''--
+            GROUP BY
+              e.cditem_nivel99
+            , e.cditem_subgrupo
+            , e.cditem_item'''
+        order_by = '''--
+            , e.cditem_subgrupo
+            , e.cditem_item'''
 
     filtro_tipo = ''
     if tipo == 'a':
@@ -84,8 +113,6 @@ def por_deposito(
         SELECT
           e.cditem_nivel99
         {select_fields} -- select_fields
-        , e.deposito
-        , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR
         {field_quantidade} -- field_quantidade
         FROM ESTQ_040 e
         LEFT JOIN BASI_205 d
@@ -102,8 +129,7 @@ def por_deposito(
         {group_fields} -- group_fields
         ORDER BY
           e.CDITEM_NIVEL99
-        {select_fields} -- select_fields
-        , e.DEPOSITO
+        {order_by} -- order_by
     '''.format(
         select_fields=select_fields,
         field_quantidade=field_quantidade,
@@ -116,7 +142,9 @@ def por_deposito(
         filtro_zerados=filtro_zerados,
         filtro_tipo=filtro_tipo,
         group_fields=group_fields,
+        order_by=order_by,
     )
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
 

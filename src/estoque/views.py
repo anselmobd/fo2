@@ -39,10 +39,10 @@ class PorDeposito(View):
             context.update({
                 'modelo': modelo,
             })
-        if agrupamento == 'r':
-            group = 'r'
-        else:
+        if agrupamento == 'rct':
             group = ''
+        else:
+            group = agrupamento
         data = models.por_deposito(
             cursor, nivel, ref, tam, cor, deposito, zerados=False, group=group,
             tipo=tipo, modelo=modelo)
@@ -55,6 +55,15 @@ class PorDeposito(View):
                 'headers': ('Nível', 'Referência', 'Depósito',
                             'Quantidades Positivas', 'Quantidades Negativas'),
                 'fields': ('cditem_nivel99', 'cditem_grupo', 'dep_descr',
+                           'qtd_positiva', 'qtd_negativa'),
+                'style': {4: 'text-align: right;',
+                          5: 'text-align: right;'},
+            })
+        elif agrupamento == 'tc':
+            context.update({
+                'headers': ('Nível', 'Tamanho', 'Cor',
+                            'Quantidades Positivas', 'Quantidades Negativas'),
+                'fields': ('cditem_nivel99', 'cditem_subgrupo', 'cditem_item',
                            'qtd_positiva', 'qtd_negativa'),
                 'style': {4: 'text-align: right;',
                           5: 'text-align: right;'},

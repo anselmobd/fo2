@@ -34,8 +34,11 @@ class PorDepositoForm(forms.Form):
     deposito = forms.ChoiceField(
         label='Depósito', choices=CHOICES, initial='999')
 
-    CHOICES = [('rct', 'Referência/Tamanho/Cor/Depósito'),
-               ('r', 'Referência/Depósito')]
+    CHOICES = [
+        ('rct', 'Referência/Tamanho/Cor/Depósito'),
+        ('r', 'Referência/Depósito'),
+        ('tc', 'Tamanho/Cor'),
+    ]
     agrupamento = forms.ChoiceField(
         choices=CHOICES, initial='rct')
 
