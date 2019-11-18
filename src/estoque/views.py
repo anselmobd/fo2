@@ -210,11 +210,21 @@ class InventarioExpedicao(View):
     template_name = 'estoque/inventario_expedicao.html'
     title_name = 'Inventário p/ expedição'
 
-    def mount_context(
-            self, cursor, data_ini):
+    def mount_context(self, cursor, data_ini):
         context = {
             'data_ini': data_ini,
         }
+
+        data = models.refs_com_movimento(cursor, data_ini)
+        if len(data) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
+
+        context.update({
+            'headers': ['Referência'],
+            'fields': ['ref'],
+            'data': data,
+        })
 
         return context
 
@@ -230,7 +240,6 @@ class InventarioExpedicao(View):
         if form.is_valid():
             data_ini = form.cleaned_data['data_ini']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(
-                cursor, data_ini))
+            context.update(self.mount_context(cursor, data_ini))
         context['form'] = form
         return render(request, self.template_name, context)
