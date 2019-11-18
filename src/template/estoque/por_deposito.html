@@ -63,5 +63,10 @@
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
   </table>
+  {% if soma %}
+    <div style="text-align: right">
+      <b>Soma dos totais: {{ soma }}</b>
+    </div>
+  {% endif %}
 {% endif %}
 {% endblock %}

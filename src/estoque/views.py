@@ -2,7 +2,7 @@ from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
-from utils.views import totalize_grouped_data
+from utils.views import totalize_data, totalize_grouped_data
 
 from . import forms
 from . import models
@@ -51,6 +51,13 @@ class PorDeposito(View):
             return context
 
         if agrupamento == 'r':
+            totalize_data(data, {
+                'sum': ['qtd_positiva', 'qtd_negativa'],
+                'count': [],
+                'descr': {'dep_descr': 'Totais:'},
+                'row_style': 'font-weight: bold;',
+            })
+            soma = data[-1]['qtd_positiva'] + data[-1]['qtd_negativa']
             context.update({
                 'headers': ('Nível', 'Referência', 'Depósito',
                             'Quantidades Positivas', 'Quantidades Negativas'),
@@ -58,8 +65,16 @@ class PorDeposito(View):
                            'qtd_positiva', 'qtd_negativa'),
                 'style': {4: 'text-align: right;',
                           5: 'text-align: right;'},
+                'soma': soma,
             })
         elif agrupamento == 'tc':
+            totalize_data(data, {
+                'sum': ['qtd_positiva', 'qtd_negativa'],
+                'count': [],
+                'descr': {'cditem_item': 'Totais:'},
+                'row_style': 'font-weight: bold;',
+            })
+            soma = data[-1]['qtd_positiva'] + data[-1]['qtd_negativa']
             context.update({
                 'headers': ('Nível', 'Tamanho', 'Cor',
                             'Quantidades Positivas', 'Quantidades Negativas'),
@@ -67,8 +82,15 @@ class PorDeposito(View):
                            'qtd_positiva', 'qtd_negativa'),
                 'style': {4: 'text-align: right;',
                           5: 'text-align: right;'},
+                'soma': soma,
             })
         else:
+            totalize_data(data, {
+                'sum': ['qtd'],
+                'count': [],
+                'descr': {'dep_descr': 'Total:'},
+                'row_style': 'font-weight: bold;',
+            })
             context.update({
                 'headers': ('Nível', 'Referência', 'Tamanho',
                             'Cor', 'Depósito', 'Quantidade'),
