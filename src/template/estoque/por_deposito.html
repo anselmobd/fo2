@@ -30,30 +30,34 @@
 {% if cor %}
   <h4>Cor: {{ cor }}</h4>
 {% endif %}
-{% if deposito != '999' %}
-  <h4>Depósito: {{ deposito }}</h4>
+{% if deposito %}
+  {% if deposito != '999' %}
+    <h4>Depósito: {{ deposito }}</h4>
+  {% endif %}
 {% endif %}
 {% if agrupamento == 'r' %}
   <h4>Agrupado por referência e depósito</h4>
 {% elif agrupamento == 'tc' %}
   <h4>Agrupado por tamanho e cor</h4>
 {% endif %}
-{% if tipo != 't' %}
-  <h4>Tipo de produto:
-    {% if tipo == 'a' %}
-      PA
-    {% elif tipo == 'g' %}
-      PG
-    {% elif tipo == 'b' %}
-      PB
-    {% elif tipo == 'p' %}
-      /PG/PB
-    {% elif tipo == 'v' %}
-      PA/PG/PB
-    {% elif tipo == 'm' %}
-      MD
-    {% endif %}
-  </h4>
+{% if tipo %}
+  {% if tipo != 't' %}
+    <h4>Tipo de produto:
+      {% if tipo == 'a' %}
+        PA
+      {% elif tipo == 'g' %}
+        PG
+      {% elif tipo == 'b' %}
+        PB
+      {% elif tipo == 'p' %}
+        PG/PB
+      {% elif tipo == 'v' %}
+        PA/PG/PB
+      {% elif tipo == 'm' %}
+        MD
+      {% endif %}
+    </h4>
+  {% endif %}
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
