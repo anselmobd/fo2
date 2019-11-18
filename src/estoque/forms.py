@@ -127,6 +127,6 @@ class ValorForm(forms.Form):
 
 class InventarioExpedicaoForm(forms.Form):
     data_ini = forms.DateField(
-        label='Com movimento a partir da data:',
+        label='Referências com movimento a partir da data:',
         widget=forms.DateInput(attrs={'type': 'date',
                                'autofocus': 'autofocus'}))
