@@ -15,8 +15,8 @@ def index(request):
 
 class PorDeposito(View):
     Form_class = forms.PorDepositoForm
-    template_name = 'estoque/por_deposito.html'
-    title_name = 'Estoque'
+    template_name = 'estoque/posicao_estoque.html'
+    title_name = 'Posição de estoque'
 
     def mount_context(
             self, cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo):
@@ -43,7 +43,7 @@ class PorDeposito(View):
             group = ''
         else:
             group = agrupamento
-        data = models.por_deposito(
+        data = models.posicao_estoque(
             cursor, nivel, ref, tam, cor, deposito, zerados=False, group=group,
             tipo=tipo, modelo=modelo)
         if len(data) == 0:
