@@ -123,3 +123,10 @@ class ValorForm(forms.Form):
     deposito_compras = forms.ChoiceField(
         label='Quanto aos depósitos',
         choices=CHOICES, initial='a')
+
+
+class InventarioExpedicaoForm(forms.Form):
+    data_ini = forms.DateField(
+        label='Com movimento a partir da data:',
+        widget=forms.DateInput(attrs={'type': 'date',
+                               'autofocus': 'autofocus'}))
