@@ -12,7 +12,7 @@ class PorDepositoForm(forms.Form):
 
     ref = forms.CharField(
         label='Referência ou modelo',
-        required=False, min_length=1, max_length=5,
+        required=True, min_length=1, max_length=5,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     tam = forms.CharField(
