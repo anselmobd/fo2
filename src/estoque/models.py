@@ -3,7 +3,7 @@ from django.db import models
 from fo2.models import rows_to_dict_list_lower
 
 
-def por_deposito(
+def posicao_estoque(
         cursor, nivel, ref, tam, cor, deposito='999', zerados=True, group='',
         tipo='t', modelo=None):
     filtro_nivel = ''
