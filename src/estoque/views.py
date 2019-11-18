@@ -215,15 +215,35 @@ class InventarioExpedicao(View):
             'data_ini': data_ini,
         }
 
-        data = models.refs_com_movimento(cursor, data_ini)
-        if len(data) == 0:
+        refs = models.refs_com_movimento(cursor, data_ini)
+        if len(refs) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
+
+        deps = [231, 101, 102]
+        for ref in refs:
+            ref['deps'] = []
+            for dep in deps:
+                header, fields, data, style, total = \
+                    models.grade_estoque(
+                        cursor, ref['ref'], dep, data_ini=data_ini)
+                grade = None
+                if total != 0:
+                    grade = {
+                        'headers': header,
+                        'fields': fields,
+                        'data': data,
+                        'style': style,
+                    }
+                    ref['deps'].append({
+                        'dep': dep,
+                        'grade': grade,
+                    })
 
         context.update({
             'headers': ['Referência'],
             'fields': ['ref'],
-            'data': data,
+            'refs': refs,
         })
 
         return context

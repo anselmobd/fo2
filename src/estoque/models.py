@@ -1,6 +1,6 @@
 from django.db import models
 
-from fo2.models import rows_to_dict_list_lower
+from fo2.models import rows_to_dict_list_lower, GradeQtd
 
 
 def posicao_estoque(
@@ -270,3 +270,108 @@ def refs_com_movimento(cursor, data_ini=None):
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def grade_estoque(cursor, ref, dep, data_ini=None):
+
+    filtro_data_ini = ''
+    if data_ini is not None:
+        filtro_data_ini = (
+            "AND ee.DATA_MOVIMENTO >= "
+            "TO_DATE('{data_ini}', 'yyyy-mm-dd')".format(data_ini=data_ini)
+        )
+
+    # Grade de OP
+    grade = GradeQtd(cursor)
+
+    # tamanhos
+    grade.col(
+        id='TAMANHO',
+        name='Tamanho',
+        total='Total',
+        forca_total=True,
+        sql='''
+            SELECT DISTINCT
+              ee.SUBGRUPO_ESTRUTURA TAMANHO
+            , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
+            FROM ESTQ_300_ESTQ_310 ee -- mov.de estoque em aberto e fechado
+            LEFT JOIN BASI_220 tam
+              ON tam.TAMANHO_REF = ee.SUBGRUPO_ESTRUTURA
+            WHERE ee.NIVEL_ESTRUTURA = 1
+              AND ee.GRUPO_ESTRUTURA = '{ref}'
+              AND ee.CODIGO_DEPOSITO = {dep}
+              {filtro_data_ini} -- filtro_data_ini
+            ORDER BY
+              2
+        '''.format(
+            ref=ref,
+            dep=dep,
+            filtro_data_ini=filtro_data_ini,
+        )
+    )
+
+    # cores
+    grade.row(
+        id='SORTIMENTO',
+        name='Cor',
+        name_plural='Cores',
+        total='Total',
+        forca_total=True,
+        sql='''
+            SELECT DISTINCT
+              ee.ITEM_ESTRUTURA SORTIMENTO
+            FROM ESTQ_300_ESTQ_310 ee -- mov. de estoque em aberto e fechado
+            WHERE ee.NIVEL_ESTRUTURA = 1
+              AND ee.GRUPO_ESTRUTURA = '{ref}'
+              AND ee.CODIGO_DEPOSITO = {dep}
+              {filtro_data_ini} -- filtro_data_ini
+            ORDER BY
+              ee.ITEM_ESTRUTURA
+        '''.format(
+            ref=ref,
+            dep=dep,
+            filtro_data_ini=filtro_data_ini,
+        )
+    )
+
+    # sortimento
+    grade.value(
+        id='QUANTIDADE',
+        sql='''
+        SELECT
+          e.CDITEM_SUBGRUPO TAMANHO
+        , e.CDITEM_ITEM SORTIMENTO
+        , e.QTDE_ESTOQUE_ATU QUANTIDADE
+        FROM ESTQ_040 e
+        WHERE e.CDITEM_NIVEL99 = 1
+          AND e.CDITEM_GRUPO = '{ref}'
+          AND e.DEPOSITO = {dep}
+        ORDER BY
+          e.CDITEM_SUBGRUPO
+        , e.CDITEM_ITEM
+        '''.format(
+            ref=ref,
+            dep=dep,
+        )
+    )
+
+    fields = grade.table_data['fields']
+    data = grade.table_data['data']
+
+    style = {}
+    right_style = 'text-align: right;'
+    bold_style = 'font-weight: bold;'
+    for i in range(2, len(fields)):
+        style[i] = right_style
+    style[len(fields)] = right_style + bold_style
+    data[-1]['|STYLE'] = bold_style
+
+    result = (
+        grade.table_data['header'],
+        fields,
+        data,
+        style,
+        grade.total,
+    )
+
+    return result
