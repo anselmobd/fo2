@@ -35,6 +35,7 @@ class PorDeposito(View):
             })
         else:
             modelo = ref.lstrip("0")
+            ref = ''
             context.update({
                 'modelo': modelo,
             })
