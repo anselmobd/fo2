@@ -147,7 +147,6 @@ def por_deposito(
         group_fields=group_fields,
         order_by=order_by,
     )
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
 
