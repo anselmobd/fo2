@@ -34,8 +34,11 @@ def por_deposito(
     if cor != '':
         filtro_cor = "AND e.CDITEM_ITEM = '{cor}'".format(cor=cor)
 
-    filtro_deposito = ''
-    if deposito != '999':
+    if deposito == '999':
+        filtro_deposito = ''
+    elif deposito == '1001':
+        filtro_deposito = "AND e.DEPOSITO IN (231, 101, 102)"
+    else:
         filtro_deposito = "AND e.DEPOSITO = '{deposito}'".format(
             deposito=deposito)
 

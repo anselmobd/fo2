@@ -23,7 +23,11 @@ class PorDepositoForm(forms.Form):
         label='Cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
-    CHOICES = [('999', '--Todos--')]
+    CHOICES = [
+        ('999', '--Todos--'),
+        ('1001', '231, 101 e 102 - '
+                 'MAT PRIMA + PA ATACADO E VAREJO 1ª QUALI.'),
+    ]
     depositos = geral.queries.deposito()
     for deposito in depositos:
         if deposito['COD'] > 1:
