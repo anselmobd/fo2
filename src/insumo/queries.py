@@ -886,7 +886,7 @@ def insumo_necessidade_semana(
             ness.SEMANA_NECESSIDADE
           , ness.ORDEM_PRODUCAO
           , ness.QTD_INSUMO
-          , oss.NUMERO_ORDEM
+          , max( oss.NUMERO_ORDEM ) NUMERO_ORDEM
           , sum( nfs.QTDE_ESTRUTURA ) QTD_OS
           FROM (
             SELECT
@@ -897,11 +897,11 @@ def insumo_necessidade_semana(
                 ia.CONSUMO
     """
     if new_calc:
-        sql += """
+        sql += """--
                   * QTDE_A_PRODUZIR_PACOTE
         """
     else:
-        sql += """
+        sql += """--
                   * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
                     - lote.QTDE_PECAS_PROD
                     - lote.QTDE_PECAS_2A
@@ -917,7 +917,7 @@ def insumo_necessidade_semana(
                       END
                     )
         """
-    sql += """
+    sql += """--
               ) QTD_INSUMO
             FROM BASI_030 ref -- referencia
             JOIN PCPC_020 op -- OP
@@ -975,11 +975,11 @@ def insumo_necessidade_semana(
                 ia.CONSUMO
     """
     if new_calc:
-        sql += """
+        sql += """--
                   * lote.QTDE_A_PRODUZIR_PACOTE
         """
     else:
-        sql += """
+        sql += """--
                   * ( lote.QTDE_PECAS_PROG -- QTDE_A_PRODUZIR_PACOTE
                     - lote.QTDE_PECAS_PROD
                     - lote.QTDE_PECAS_2A
@@ -995,7 +995,7 @@ def insumo_necessidade_semana(
                       END
                     )
         """
-    sql += """
+    sql += """--
               ) > 0
             ORDER BY
               1, 2
@@ -1020,7 +1020,7 @@ def insumo_necessidade_semana(
             ness.SEMANA_NECESSIDADE
           , ness.ORDEM_PRODUCAO
           , ness.QTD_INSUMO
-          , oss.NUMERO_ORDEM
+        --  , oss.NUMERO_ORDEM
         --  ORDER BY
         --    1, 2, 3, 4
         )
