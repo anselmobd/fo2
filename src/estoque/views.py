@@ -16,7 +16,7 @@ def index(request):
 class PorDeposito(View):
     Form_class = forms.PorDepositoForm
     template_name = 'estoque/por_deposito.html'
-    title_name = 'Estoque por depósito'
+    title_name = 'Estoque'
 
     def mount_context(
             self, cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo):
