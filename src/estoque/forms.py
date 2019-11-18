@@ -11,7 +11,8 @@ class PorDepositoForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
     ref = forms.CharField(
-        label='Referência', max_length=5, required=False,
+        label='Referência ou modelo',
+        required=False, min_length=1, max_length=5,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     tam = forms.CharField(
@@ -19,7 +20,7 @@ class PorDepositoForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     cor = forms.CharField(
-        label='Cor', max_length=6, required=False,
+        label='Cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     CHOICES = [('999', '--Todos--')]
@@ -49,26 +50,21 @@ class PorDepositoForm(forms.Form):
     tipo = forms.ChoiceField(
         choices=CHOICES, initial='t')
 
-    def clean_ref(self):
-        ref = self.cleaned_data['ref'].upper()
+    def upper_clean(self, field_name):
+        field = self.cleaned_data[field_name].upper()
         data = self.data.copy()
-        data['ref'] = ref
+        data[field_name] = field
         self.data = data
-        return ref
+        return field
+
+    def clean_ref(self):
+        return self.upper_clean('ref')
 
     def clean_tam(self):
-        tam = self.cleaned_data['tam'].upper()
-        data = self.data.copy()
-        data['tam'] = tam
-        self.data = data
-        return tam
+        return self.upper_clean('tam')
 
     def clean_cor(self):
-        cor = self.cleaned_data['cor'].upper()
-        data = self.data.copy()
-        data['cor'] = cor
-        self.data = data
-        return cor
+        return self.upper_clean('cor')
 
 
 # def validate_nivel_mp(value):
