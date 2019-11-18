@@ -272,7 +272,7 @@ def refs_com_movimento(cursor, data_ini=None):
     return rows_to_dict_list_lower(cursor)
 
 
-def grade_estoque(cursor, ref, dep, data_ini=None):
+def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
 
     filtro_data_ini = ''
     if data_ini is not None:
@@ -281,16 +281,18 @@ def grade_estoque(cursor, ref, dep, data_ini=None):
             "TO_DATE('{data_ini}', 'yyyy-mm-dd')".format(data_ini=data_ini)
         )
 
+    if tipo_grade is None:
+        tipo_grade = {
+            't': 'c',  # tamanho como cadastrado
+            'c': 'e',  # cores com estoque
+        }
+
     # Grade de OP
     grade = GradeQtd(cursor)
 
     # tamanhos
-    grade.col(
-        id='TAMANHO',
-        name='Tamanho',
-        total='Total',
-        forca_total=True,
-        sql='''
+    if tipo_grade['t'] == 'm':  # com movimento
+        sql = '''
             SELECT DISTINCT
               ee.SUBGRUPO_ESTRUTURA TAMANHO
             , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
@@ -308,16 +310,52 @@ def grade_estoque(cursor, ref, dep, data_ini=None):
             dep=dep,
             filtro_data_ini=filtro_data_ini,
         )
+    elif tipo_grade['t'] == 'e':  # com estoque
+        sql = '''
+            SELECT DISTINCT
+              e.CDITEM_SUBGRUPO TAMANHO
+            , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
+            FROM ESTQ_040 e
+            LEFT JOIN BASI_220 tam
+              ON tam.TAMANHO_REF = e.CDITEM_SUBGRUPO
+            WHERE e.CDITEM_NIVEL99 = 1
+              AND e.CDITEM_GRUPO = '{ref}'
+              AND e.DEPOSITO = {dep}
+              AND e.QTDE_ESTOQUE_ATU <> 0
+            ORDER BY
+              2
+        '''.format(
+            ref=ref,
+            dep=dep,
+        )
+
+    elif tipo_grade['t'] == 'c':  # como cadastrado
+        sql = '''
+            SELECT
+              t.TAMANHO_REF TAMANHO
+            , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
+            FROM basi_020 t
+            LEFT JOIN BASI_220 tam
+              ON tam.TAMANHO_REF = t.TAMANHO_REF
+            WHERE t.BASI030_NIVEL030 = 1
+              AND t.BASI030_REFERENC = '{ref}'
+            ORDER BY
+              2
+        '''.format(
+            ref=ref,
+        )
+
+    grade.col(
+        id='TAMANHO',
+        name='Tamanho',
+        total='Total',
+        forca_total=True,
+        sql=sql,
     )
 
     # cores
-    grade.row(
-        id='SORTIMENTO',
-        name='Cor',
-        name_plural='Cores',
-        total='Total',
-        forca_total=True,
-        sql='''
+    if tipo_grade['c'] == 'm':  # com movimento
+        sql = '''
             SELECT DISTINCT
               ee.ITEM_ESTRUTURA SORTIMENTO
             FROM ESTQ_300_ESTQ_310 ee -- mov. de estoque em aberto e fechado
@@ -332,6 +370,29 @@ def grade_estoque(cursor, ref, dep, data_ini=None):
             dep=dep,
             filtro_data_ini=filtro_data_ini,
         )
+    elif tipo_grade['c'] == 'e':  # com estoque
+        sql = '''
+            SELECT DISTINCT
+              e.CDITEM_ITEM SORTIMENTO
+            FROM ESTQ_040 e
+            WHERE e.CDITEM_NIVEL99 = 1
+              AND e.CDITEM_GRUPO = '{ref}'
+              AND e.DEPOSITO = {dep}
+              AND e.QTDE_ESTOQUE_ATU <> 0
+            ORDER BY
+              e.CDITEM_ITEM
+        '''.format(
+            ref=ref,
+            dep=dep,
+        )
+
+    grade.row(
+        id='SORTIMENTO',
+        name='Cor',
+        name_plural='Cores',
+        total='Total',
+        forca_total=True,
+        sql=sql,
     )
 
     # sortimento
