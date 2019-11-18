@@ -5,7 +5,7 @@ from fo2.models import rows_to_dict_list_lower
 
 def por_deposito(
         cursor, nivel, ref, tam, cor, deposito='999', zerados=True, group='',
-        tipo='t'):
+        tipo='t', modelo=None):
     filtro_nivel = ''
     if nivel is not None:
         filtro_nivel = "AND e.CDITEM_NIVEL99 = {nivel}".format(nivel=nivel)

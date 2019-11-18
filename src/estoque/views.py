@@ -22,21 +22,29 @@ class PorDeposito(View):
             self, cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo):
         context = {
             'nivel': nivel,
-            'ref': ref,
             'tam': tam,
             'cor': cor,
             'deposito': deposito,
             'agrupamento': agrupamento,
             'tipo': tipo,
             }
-
+        modelo = None
+        if len(ref) % 5 == 0:
+            context.update({
+                'ref': ref,
+            })
+        else:
+            modelo = ref.lstrip("0")
+            context.update({
+                'modelo': modelo,
+            })
         if agrupamento == 'r':
             group = 'r'
         else:
             group = ''
         data = models.por_deposito(
             cursor, nivel, ref, tam, cor, deposito, zerados=False, group=group,
-            tipo=tipo)
+            tipo=tipo, modelo=modelo)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
