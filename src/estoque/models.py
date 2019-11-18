@@ -14,6 +14,18 @@ def por_deposito(
     if ref != '':
         filtro_ref = "AND e.CDITEM_GRUPO = '{ref}'".format(ref=ref)
 
+    filtro_modelo = ''
+    if modelo is not None:
+        filtro_modelo = """--
+            AND TRIM( LEADING '0' FROM
+                  REGEXP_REPLACE(
+                    e.CDITEM_GRUPO,
+                    '^[abAB]?([0123456789]+)[a-zA-Z]*$',
+                    '\\1'
+                  )
+                ) = '{}'
+        """.format(modelo)
+
     filtro_tam = ''
     if tam != '':
         filtro_tam = "AND e.CDITEM_SUBGRUPO = '{tam}'".format(tam=tam)
@@ -81,6 +93,7 @@ def por_deposito(
         WHERE 1=1
           {filtro_nivel} -- filtro_nivel
           {filtro_ref} -- filtro_ref
+          {filtro_modelo} -- filtro_modelo
           {filtro_tam} -- filtro_tam
           {filtro_cor} -- filtro_cor
           {filtro_deposito} -- filtro_deposito
@@ -96,6 +109,7 @@ def por_deposito(
         field_quantidade=field_quantidade,
         filtro_nivel=filtro_nivel,
         filtro_ref=filtro_ref,
+        filtro_modelo=filtro_modelo,
         filtro_tam=filtro_tam,
         filtro_cor=filtro_cor,
         filtro_deposito=filtro_deposito,
