@@ -203,3 +203,34 @@ class ValorMp(View):
                 deposito_compras))
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class InventarioExpedicao(View):
+    Form_class = forms.InventarioExpedicaoForm
+    template_name = 'estoque/inventario_expedicao.html'
+    title_name = 'Inventário p/ expedição'
+
+    def mount_context(
+            self, cursor, data_ini):
+        context = {
+            'data_ini': data_ini,
+        }
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            data_ini = form.cleaned_data['data_ini']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(
+                cursor, data_ini))
+        context['form'] = form
+        return render(request, self.template_name, context)
