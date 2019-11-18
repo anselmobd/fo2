@@ -20,7 +20,7 @@ def por_deposito(
             AND TRIM( LEADING '0' FROM
                   REGEXP_REPLACE(
                     e.CDITEM_GRUPO,
-                    '^[abAB]?([0123456789]+)[a-zA-Z]*$',
+                    '^[a-zA-Z]?([0123456789]+)[a-zA-Z]*$',
                     '\\1'
                   )
                 ) = '{}'
