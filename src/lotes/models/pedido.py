@@ -681,11 +681,11 @@ def busca_pedido(cursor, modelo=None, periodo=None, cached=True):
     if periodo is not None:
         periodo_list = periodo.split(':')
         if periodo_list[0] != '':
-            filtra_periodo += '''
+            filtra_periodo += '''--
                 AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {}
             '''.format(periodo_list[0])
         if periodo_list[1] != '':
-            filtra_periodo += '''
+            filtra_periodo += '''--
                 AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
             '''.format(periodo_list[1])
 
