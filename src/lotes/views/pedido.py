@@ -348,7 +348,7 @@ class Expedicao(View):
         return render(request, self.template_name, context)
 
 
-class BuscaPedido(View):
+class PedidoFaturavelModelo(View):
     Form_class = forms.BuscaPedidoForm
     template_name = 'lotes/busca_pedido.html'
     title_name = 'Pedido faturável por modelo'
