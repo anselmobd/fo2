@@ -377,6 +377,11 @@ class NotaFiscal(View):
                              'ITEM_ESTRUTURA', 'NARRATIVA', 'QTDE_ITEM_FATUR',
                              'VALOR_UNITARIO', 'VALOR_CONTABIL'],
                 'i_data': i_data,
+                'i_style': {
+                    7: 'text-align: right;',
+                    8: 'text-align: right;',
+                    9: 'text-align: right;',
+                },
             })
 
         return context
