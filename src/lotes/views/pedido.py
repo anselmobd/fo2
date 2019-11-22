@@ -394,24 +394,30 @@ class PedidoFaturavelModelo(View):
             row['PEDIDO|TARGET'] = '_blank'
             row['PEDIDO|LINK'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO']])
+            row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
             if row['DATA'] is None:
                 row['DATA'] = ''
             else:
                 row['DATA'] = row['DATA'].date()
 
         totalize_data(data, {
-            'sum': ['QTD'],
-            'count': [],
+            'sum': ['QTD_AFAT'],
             'descr': {'REF': 'Total:'}})
 
         context.update({
             'periodo': periodo,
             'headers': ('Nº do pedido', 'Data de embarque', 'Cliente',
-                        'Referência', 'Quantidade', 'Faturamento'),
+                        'Referência', 'Quant. pedida', 'Quant. faturada',
+                        'Quant. a faturar', 'Faturamento'),
             'fields': ('PEDIDO', 'DATA', 'CLIENTE',
-                       'REF', 'QTD', 'FAT'),
+                       'REF', 'QTD', 'QTD_FAT',
+                       'QTD_AFAT', 'FAT'),
             'data': data,
-            'style': {5: 'text-align: right;'},
+            'style': {
+                5: 'text-align: right;',
+                6: 'text-align: right;',
+                7: 'text-align: right;',
+            },
         })
 
         if lead != 0:
