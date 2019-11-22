@@ -738,6 +738,7 @@ def grade_meta_estoque(meta):
         tot_cor += cor.quantidade
 
     grade['data'] = []
+    meta_estoque = 0
     for meta_cor in meta_grade_cores:
         if meta_grade_cores[meta_cor] != 0:
             linha = {
@@ -752,7 +753,9 @@ def grade_meta_estoque(meta):
                 })
                 qtd_por_tam[meta_tam] += qtd_cor_tam
             linha['total'] = cor_packs * tot_tam
+            meta_estoque += linha['total']
             grade['data'].append(linha)
+    grade['meta_estoque'] = meta_estoque
     grade['data'].append({
         'cor': 'Total',
         **qtd_por_tam,
