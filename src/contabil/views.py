@@ -364,7 +364,10 @@ class NotaFiscal(View):
 
             # itens
             i_data = queries.nf_itens(cursor, nf)
+            max_digits = 0
             for row in i_data:
+                num_digits = str(row['QTDE_ITEM_FATUR'])[::-1].find('.')
+                max_digits = max(max_digits, num_digits)
                 row['VALOR_UNITARIO'] = \
                     row['VALOR_CONTABIL'] / row['QTDE_ITEM_FATUR']
 
@@ -375,6 +378,7 @@ class NotaFiscal(View):
             })
 
             for row in i_data:
+                row['QTDE_ITEM_FATUR|DECIMALS'] = max_digits
                 row['VALOR_UNITARIO|DECIMALS'] = 2
                 row['VALOR_CONTABIL|DECIMALS'] = 2
 
