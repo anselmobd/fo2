@@ -350,7 +350,7 @@ class Expedicao(View):
 
 class PedidoFaturavelModelo(View):
     Form_class = forms.BuscaPedidoForm
-    template_name = 'lotes/busca_pedido.html'
+    template_name = 'lotes/pedido_faturavel_modelo.html'
     title_name = 'Pedido faturável por modelo'
 
     def mount_context(self, cursor, modelo):
