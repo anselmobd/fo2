@@ -717,6 +717,7 @@ def busca_pedido(cursor, modelo=None, periodo=None, cached=True):
         , c.FANTASIA_CLIENTE CLIENTE
         , i.CD_IT_PE_GRUPO REF
         , sum(i.QTDE_PEDIDA) QTD
+        , sum(COALESCE(inf.QTDE_ITEM_FATUR, 0)) QTD_FAT
         , CASE WHEN ps.NFCANC IS NULL
           THEN 'Não faturado'
           ELSE 'Faturamento cancelado'
@@ -731,8 +732,17 @@ def busca_pedido(cursor, modelo=None, periodo=None, cached=True):
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+        LEFT JOIN fatu_060 inf -- item de nf de saída
+          ON inf.PEDIDO_VENDA = ps.PEDIDO_VENDA
+         AND inf.COD_CANCELAMENTO = 0
+         AND inf.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
+         AND inf.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
+         AND inf.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
+         AND inf.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
         WHERE 1=1
           {filtro_modelo} -- filtro_modelo
+        HAVING
+          sum(i.QTDE_PEDIDA) > sum(COALESCE(inf.QTDE_ITEM_FATUR, 0))
         GROUP BY
           ped.DATA_ENTR_VENDA
         , ped.PEDIDO_VENDA
