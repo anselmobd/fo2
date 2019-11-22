@@ -553,3 +553,27 @@ def reme_indu_nf(
         )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def nf_inform(cursor, nf):
+    sql = """
+        SELECT
+          f.*
+        FROM FATU_050 f -- fatura
+        WHERE f.NUM_NOTA_FISCAL = %s
+    """
+    cursor.execute(sql, [nf])
+    return rows_to_dict_list(cursor)
+
+
+def nf_itens(cursor, nf):
+    sql = """
+        SELECT
+          inf.*
+        FROM FATU_050 f -- fatura
+        JOIN fatu_060 inf -- item de nf de saída
+          ON inf.CH_IT_NF_NUM_NFIS = f.NUM_NOTA_FISCAL
+        WHERE f.NUM_NOTA_FISCAL = %s
+    """
+    cursor.execute(sql, [nf])
+    return rows_to_dict_list(cursor)

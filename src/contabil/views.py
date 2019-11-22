@@ -328,3 +328,60 @@ class RemessaIndustrNF(View):
 
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class NotaFiscal(View):
+    Form_class = forms.NotaFiscalForm
+    template_name = 'contabil/nota_fiscal.html'
+    title_name = 'Nota fiscal'
+
+    def mount_context(self, cursor, nf):
+        context = {'nf': nf}
+
+        # informações gerais
+        data = queries.nf_inform(cursor, nf)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nota fiscal não encontrada',
+            })
+        else:
+            for row in data:
+                row['DATA_EMISSAO'] = row['DATA_EMISSAO'].date()
+            context.update({
+                'headers': ['Número', 'Data de emissão'],
+                'fields': ['NUM_NOTA_FISCAL', 'DATA_EMISSAO'],
+                'data': data,
+            })
+
+            # itens
+            i_data = queries.nf_itens(cursor, nf)
+            context.update({
+                'i_headers': ['Nível', 'Referência',
+                              'Tamanho', 'Cor'],
+                'i_fields': ['NIVEL_ESTRUTURA', 'GRUPO_ESTRUTURA',
+                             'SUBGRU_ESTRUTURA', 'ITEM_ESTRUTURA'],
+                'i_data': i_data,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if 'nf' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if 'nf' in kwargs:
+            form.data['nf'] = kwargs['nf']
+        if form.is_valid():
+            nf = form.cleaned_data['nf']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, nf))
+        context['form'] = form
+        return render(request, self.template_name, context)
