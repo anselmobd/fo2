@@ -596,6 +596,7 @@ def nf_itens(cursor, nf):
         , i.ITEM_ESTRUTURA
         , i.QTDE_ITEM_FATUR
         , i.VALOR_CONTABIL
+        , i.PEDIDO_VENDA
         , rtc.NARRATIVA
         FROM FATU_050 f -- fatura de saída
         JOIN fatu_060 i -- item de nf de saída

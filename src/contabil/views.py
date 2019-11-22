@@ -366,6 +366,8 @@ class NotaFiscal(View):
             i_data = queries.nf_itens(cursor, nf)
             max_digits = 0
             for row in i_data:
+                if row['PEDIDO_VENDA'] == 0:
+                    row['PEDIDO_VENDA'] = '-'
                 num_digits = str(row['QTDE_ITEM_FATUR'])[::-1].find('.')
                 max_digits = max(max_digits, num_digits)
                 row['VALOR_UNITARIO'] = \
@@ -386,16 +388,19 @@ class NotaFiscal(View):
                 'i_headers': ['Seq.', 'Nível',
                               'Referência', 'Tamanho',
                               'Cor', 'Descrição', 'Quantidade',
-                              'Valor unitário', 'Valor total'],
+                              'Valor unitário', 'Valor total',
+                              'Pedido de venda'],
                 'i_fields': ['SEQ_ITEM_NFISC', 'NIVEL_ESTRUTURA',
                              'GRUPO_ESTRUTURA', 'SUBGRU_ESTRUTURA',
                              'ITEM_ESTRUTURA', 'NARRATIVA', 'QTDE_ITEM_FATUR',
-                             'VALOR_UNITARIO', 'VALOR_CONTABIL'],
+                             'VALOR_UNITARIO', 'VALOR_CONTABIL',
+                             'PEDIDO_VENDA'],
                 'i_data': i_data,
                 'i_style': {
                     7: 'text-align: right;',
                     8: 'text-align: right;',
                     9: 'text-align: right;',
+                    10: 'text-align: right;',
                 },
             })
 
