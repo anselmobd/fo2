@@ -368,6 +368,9 @@ class NotaFiscal(View):
             for row in i_data:
                 if row['PEDIDO_VENDA'] == 0:
                     row['PEDIDO_VENDA'] = '-'
+                else:
+                    row['PEDIDO_VENDA|LINK'] = reverse(
+                        'producao:pedido__get', args=[row['PEDIDO_VENDA']])
                 num_digits = str(row['QTDE_ITEM_FATUR'])[::-1].find('.')
                 max_digits = max(max_digits, num_digits)
                 row['VALOR_UNITARIO'] = \

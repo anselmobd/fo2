@@ -93,6 +93,8 @@ class Pedido(View):
             # NFs
             nf_data = models.ped_nf(cursor, pedido)
             for row in nf_data:
+                row['NF|LINK'] = reverse(
+                    'contabil:nota_fiscal__get', args=[row['NF']])
                 if row['SITUACAO'] == 1:
                     row['SITUACAO'] = 'Ativa'
                 else:
