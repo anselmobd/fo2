@@ -7,7 +7,7 @@ from django.db import connections
 from django.views import View
 
 from fo2.template import group_rowspan
-from utils.views import totalize_grouped_data
+from utils.views import totalize_grouped_data, totalize_data
 
 import contabil.forms as forms
 import contabil.queries as queries
@@ -367,6 +367,17 @@ class NotaFiscal(View):
             for row in i_data:
                 row['VALOR_UNITARIO'] = \
                     row['VALOR_CONTABIL'] / row['QTDE_ITEM_FATUR']
+
+            totalize_data(i_data, {
+                'sum': ['QTDE_ITEM_FATUR', 'VALOR_CONTABIL'],
+                'descr': {'NARRATIVA': 'Totais:'},
+                'row_style': 'font-weight: bold;',
+            })
+
+            for row in i_data:
+                row['VALOR_UNITARIO|DECIMALS'] = 2
+                row['VALOR_CONTABIL|DECIMALS'] = 2
+
             context.update({
                 'i_headers': ['Seq.', 'Nível',
                               'Referência', 'Tamanho',
