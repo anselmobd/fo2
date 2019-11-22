@@ -1,4 +1,4 @@
-{% extends 'lotes/index.html' %}
+{% extends 'contabil/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
 {% block header.content %}{{ titulo }} - <a href="{% url 'contabil:index' %}">{{ block.super }}</a>{% endblock header.content %}
@@ -28,6 +28,7 @@
   </table>
 {% endif %}
 {% if i_data %}
+  <h3>Itens da NF</h3>
   <table>
     {% include "layout/html_thead.html" with data=i_headers only %}
     {% include "layout/html_tbody.html" with fields=i_fields data=i_data only %}

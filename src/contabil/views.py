@@ -364,11 +364,18 @@ class NotaFiscal(View):
 
             # itens
             i_data = queries.nf_itens(cursor, nf)
+            for row in i_data:
+                row['VALOR_UNITARIO'] = \
+                    row['VALOR_CONTABIL'] / row['QTDE_ITEM_FATUR']
             context.update({
-                'i_headers': ['Nível', 'Referência',
-                              'Tamanho', 'Cor'],
-                'i_fields': ['NIVEL_ESTRUTURA', 'GRUPO_ESTRUTURA',
-                             'SUBGRU_ESTRUTURA', 'ITEM_ESTRUTURA'],
+                'i_headers': ['Seq.', 'Nível',
+                              'Referência', 'Tamanho',
+                              'Cor', 'Descrição', 'Quantidade',
+                              'Valor unitário', 'Valor total'],
+                'i_fields': ['SEQ_ITEM_NFISC', 'NIVEL_ESTRUTURA',
+                             'GRUPO_ESTRUTURA', 'SUBGRU_ESTRUTURA',
+                             'ITEM_ESTRUTURA', 'NARRATIVA', 'QTDE_ITEM_FATUR',
+                             'VALOR_UNITARIO', 'VALOR_CONTABIL'],
                 'i_data': i_data,
             })
 
