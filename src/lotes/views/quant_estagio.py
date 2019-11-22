@@ -10,14 +10,16 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from geral.functions import has_permission
 from base.views import O2BaseGetView
-from utils.views import totalize_grouped_data
+from utils.views import totalize_grouped_data, totalize_data
 
 import produto.queries
 import produto.models
 import comercial.models
+from comercial.views.estoque import grade_meta_estoque
 
 import lotes.forms as forms
 import lotes.models as models
+import lotes.views.a_produzir
 
 
 class TotalEstagio(View):
@@ -1066,4 +1068,55 @@ class MetaGiro(O2BaseGetView):
                 5: 'text-align: right;',
             },
             'total': metas_list[-1]['giro'],
+        })
+
+
+def calculaMetaTotalMetas(cursor, metas):
+    metas_list = []
+    total = 0
+    for meta in metas:
+        lead = produto.queries.lead_de_modelo(cursor, meta.modelo)
+        qtd = 0
+
+        ggrade = grade_meta_giro(meta, lead, show_distrib=False)
+        qtd += ggrade['meta_giro']
+
+        egrade = grade_meta_estoque(meta)
+        qtd += egrade['meta_estoque']
+
+        total += qtd
+
+        grade = lotes.views.a_produzir.soma_grades(ggrade, egrade)
+
+        metas_list.append({
+            'modelo': meta.modelo,
+            'qtd': qtd,
+            'grade': grade,
+        })
+    return metas_list, total
+
+
+class MetaTotal(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(MetaTotal, self).__init__(*args, **kwargs)
+        self.template_name = 'lotes/meta_total.html'
+        self.title_name = 'Visualiza total das metas'
+
+    def mount_context(self):
+        cursor = connections['so'].cursor()
+
+        metas = comercial.models.getMetaEstoqueAtual()
+        metas = metas.order_by('-venda_mensal')
+        if len(metas) == 0:
+            self.context.update({
+                'msg_erro': 'Sem metas definidas',
+            })
+            return
+
+        metas_list, total = calculaMetaTotalMetas(cursor, metas)
+
+        self.context.update({
+            'data': metas_list,
+            'total': total,
         })

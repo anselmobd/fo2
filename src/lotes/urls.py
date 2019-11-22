@@ -105,6 +105,9 @@ urlpatterns = [
     url(r'^meta_giro/$',
         views.MetaGiro.as_view(), name='meta_giro'),
 
+    url(r'^meta_total/$',
+        views.MetaTotal.as_view(), name='meta_total'),
+
     url(r'^pedido_faturavel_modelo/$',
         views.PedidoFaturavelModelo.as_view(), name='pedido_faturavel_modelo'),
 
