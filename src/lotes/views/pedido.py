@@ -417,6 +417,9 @@ class PedidoFaturavelModelo(View):
                 cursor, modelo=modelo, periodo='{}:'.format(busca_periodo))
             if len(data_pos) != 0:
                 for row in data_pos:
+                    row['PEDIDO|TARGET'] = '_blank'
+                    row['PEDIDO|LINK'] = reverse(
+                        'producao:pedido__get', args=[row['PEDIDO']])
                     if row['DATA'] is None:
                         row['DATA'] = ''
                     else:
