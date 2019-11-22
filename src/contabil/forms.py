@@ -99,3 +99,10 @@ class RemessaIndustrForm(RemessaIndustrNFForm):
                ]
     detalhe = forms.ChoiceField(
         label='Detalhe', choices=CHOICES, initial='C')
+
+
+class NotaFiscalForm(forms.Form):
+    nf = forms.CharField(
+        label='Nota fiscal',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
