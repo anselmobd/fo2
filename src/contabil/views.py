@@ -346,10 +346,19 @@ class NotaFiscal(View):
             })
         else:
             for row in data:
-                row['DATA_EMISSAO'] = row['DATA_EMISSAO'].date()
+                if row['SITUACAO'] == 1:
+                    row['SITUACAO'] = 'Ativa'
+                else:
+                    row['SITUACAO'] = 'Cancelada'
+                if row['NF_DEVOLUCAO'] is None:
+                    row['NF_DEVOLUCAO'] = '-'
+                else:
+                    row['SITUACAO'] += '/Devolvida'
             context.update({
-                'headers': ['Número', 'Data de emissão'],
-                'fields': ['NUM_NOTA_FISCAL', 'DATA_EMISSAO'],
+                'headers': ('Cliente', 'Data NFe', 'Situação', 'Valor',
+                            'NF Devolução'),
+                'fields': ('CLIENTE', 'DATA', 'SITUACAO', 'VALOR',
+                           'NF_DEVOLUCAO'),
                 'data': data,
             })
 
