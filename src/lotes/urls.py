@@ -106,7 +106,7 @@ urlpatterns = [
         views.MetaGiro.as_view(), name='meta_giro'),
 
     url(r'^pedido_faturavel_modelo/$',
-        views.BuscaPedido.as_view(), name='pedido_faturavel_modelo'),
+        views.PedidoFaturavelModelo.as_view(), name='pedido_faturavel_modelo'),
 
     url(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
 
