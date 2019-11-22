@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="/lotes/busca_pedido/" method="post">
+<form action="{% url 'producao:pedido_faturavel_modelo' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
