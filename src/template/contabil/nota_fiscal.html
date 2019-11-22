@@ -30,8 +30,8 @@
 {% if i_data %}
   <h3>Itens da NF</h3>
   <table>
-    {% include "layout/html_thead.html" with data=i_headers only %}
-    {% include "layout/html_tbody.html" with fields=i_fields data=i_data only %}
+    {% include "layout/thead_generic.html" with data=i_headers style=i_style only %}
+    {% include "layout/tbody_generic.html" with fields=i_fields data=i_data style=i_style only %}
   </table>
 {% endif %}
 {% endblock %}
