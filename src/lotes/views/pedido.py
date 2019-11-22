@@ -389,6 +389,9 @@ class BuscaPedido(View):
             return context
 
         for row in data:
+            row['PEDIDO|TARGET'] = '_blank'
+            row['PEDIDO|LINK'] = reverse(
+                'producao:pedido__get', args=[row['PEDIDO']])
             if row['DATA'] is None:
                 row['DATA'] = ''
             else:
