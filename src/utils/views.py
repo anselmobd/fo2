@@ -121,8 +121,9 @@ def totalize_data(data, config):
     for key in sum:
         totrow[key] = sum[key]
 
-    for key in config['count']:
-        totrow[key] = len(data)
+    if 'count' in config:
+        for key in config['count']:
+            totrow[key] = len(data)
 
     data.append(totrow)
 
