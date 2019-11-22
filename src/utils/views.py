@@ -115,8 +115,9 @@ def totalize_data(data, config):
         for key in sum:
             sum[key] += row[key]
 
-    for key in config['descr']:
-        totrow[key] = config['descr'][key]
+    if 'descr' in config:
+        for key in config['descr']:
+            totrow[key] = config['descr'][key]
 
     for key in sum:
         totrow[key] = sum[key]
