@@ -390,10 +390,12 @@ class PedidoFaturavelModelo(View):
             })
             return context
 
+        tot_qtd_fat = 0
         for row in data:
             row['PEDIDO|TARGET'] = '_blank'
             row['PEDIDO|LINK'] = reverse(
                 'producao:pedido__get', args=[row['PEDIDO']])
+            tot_qtd_fat += row['QTD_FAT']
             row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
             if row['DATA'] is None:
                 row['DATA'] = ''
@@ -404,20 +406,33 @@ class PedidoFaturavelModelo(View):
             'sum': ['QTD_AFAT'],
             'descr': {'REF': 'Total:'}})
 
-        context.update({
-            'periodo': periodo,
-            'headers': ('Nº do pedido', 'Data de embarque', 'Cliente',
-                        'Referência', 'Quant. pedida', 'Quant. faturada',
-                        'Quant. a faturar', 'Faturamento'),
-            'fields': ('PEDIDO', 'DATA', 'CLIENTE',
-                       'REF', 'QTD', 'QTD_FAT',
-                       'QTD_AFAT', 'FAT'),
-            'data': data,
-            'style': {
+        if tot_qtd_fat == 0:
+            headers = ['Nº do pedido', 'Data de embarque', 'Cliente',
+                       'Referência', 'Quant. pedida', 'Faturamento']
+            fields = ['PEDIDO', 'DATA', 'CLIENTE',
+                      'REF', 'QTD_AFAT', 'FAT']
+            style = {
+                5: 'text-align: right;',
+            }
+        else:
+            headers = ['Nº do pedido', 'Data de embarque', 'Cliente',
+                       'Referência', 'Quant. pedida', 'Quant. faturada',
+                       'Quant. a faturar', 'Faturamento']
+            fields = ['PEDIDO', 'DATA', 'CLIENTE',
+                      'REF', 'QTD', 'QTD_FAT',
+                      'QTD_AFAT', 'FAT']
+            style = {
                 5: 'text-align: right;',
                 6: 'text-align: right;',
                 7: 'text-align: right;',
-            },
+            }
+
+        context.update({
+            'periodo': periodo,
+            'headers': headers,
+            'fields': fields,
+            'data': data,
+            'style': style,
         })
 
         if lead != 0:
