@@ -70,11 +70,11 @@ def word_slice(text, slice):
 
     def adjust_cut(text, valor, limit=1):
         val = valor
-        while text[val-1] != ' ' and val > 1:
+        while val > 1 and text[val-1] != ' ':
             val -= 1
         if val <= limit:
             val = valor
-        while text[val] == ' ' and val < len(text):
+        while val < len(text) and text[val] == ' ':
             val += 1
         return val
 
