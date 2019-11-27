@@ -14,6 +14,7 @@ import produto.queries
 
 import lotes.forms as forms
 import lotes.models as models
+import lotes.queries as queries
 
 
 class Pedido(View):
@@ -114,7 +115,7 @@ class Pedido(View):
             })
 
             # Grade
-            g_header, g_fields, g_data, _ = models.ped_sortimento(
+            g_header, g_fields, g_data, _ = queries.pedido.sortimento(
                 cursor, pedido=pedido)
             if len(g_data) != 0:
                 g_style = {}

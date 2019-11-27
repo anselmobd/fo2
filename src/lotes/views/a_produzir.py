@@ -16,6 +16,7 @@ import produto.queries
 import produto.models
 
 import lotes.models
+import lotes.queries.pedido
 from lotes.views.quant_estagio import grade_meta_giro
 
 
@@ -470,7 +471,7 @@ class GradeProduzir(O2BaseGetPostView):
             periodo = lead + dias_alem_lead
 
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
-            lotes.models.ped_sortimento(
+            lotes.queries.pedido.sortimento(
                 cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
                 cancelado='n', faturavel='f', total='Total',
                 periodo=':{}'.format(periodo))
