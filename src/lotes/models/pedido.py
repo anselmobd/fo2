@@ -406,7 +406,7 @@ def grade_expedicao(
     return rows_to_dict_list(cursor)
 
 
-def busca_pedido(cursor, modelo=None, periodo=None, cached=True):
+def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
     key_cache = make_key_cache()
 
     cached_result = cache.get(key_cache)
