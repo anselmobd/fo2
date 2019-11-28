@@ -15,6 +15,7 @@ import produto.queries
 import lotes.forms as forms
 import lotes.models as models
 import lotes.queries as queries
+import lotes.queries.pedido
 
 
 class Pedido(View):
@@ -382,7 +383,7 @@ class PedidoFaturavelModelo(View):
             busca_periodo = lead + dias_alem_lead
             periodo = dias_alem_lead
 
-        data = models.pedido_faturavel_modelo(
+        data = lotes.queries.pedido.pedido_faturavel_modelo(
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
             cached=False)
         if len(data) == 0:
@@ -437,7 +438,7 @@ class PedidoFaturavelModelo(View):
         })
 
         if lead != 0:
-            data_pos = models.pedido_faturavel_modelo(
+            data_pos = lotes.queries.pedido.pedido_faturavel_modelo(
                 cursor, modelo=modelo, periodo='{}:'.format(busca_periodo))
             if len(data_pos) != 0:
                 for row in data_pos:

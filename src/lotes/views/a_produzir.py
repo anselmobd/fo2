@@ -163,7 +163,7 @@ def pedido_lead_modelo(request, modelo):
         else:
             periodo = lead + dias_alem_lead
 
-        data_ped = lotes.models.pedido_faturavel_modelo(
+        data_ped = lotes.queries.pedido.pedido_faturavel_modelo(
             cursor, modelo=modelo, periodo=':{}'.format(periodo))
 
         if len(data_ped) == 0:

@@ -1,0 +1,162 @@
+from django.core.cache import cache
+
+from fo2.models import rows_to_dict_list
+
+from utils.functions import make_key_cache, fo2logger
+
+import lotes.queries.pedido
+# from lotes.models import *
+# from lotes.models.base import *
+
+
+def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
+    key_cache = make_key_cache()
+
+    cached_result = cache.get(key_cache)
+    if cached and cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
+    filtro_modelo = ''
+    if modelo is not None:
+        filtro_modelo = '''--
+            AND TRIM(LEADING '0' FROM
+                     (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
+                                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                     ))) = '{}' '''.format(modelo)
+
+    filtra_periodo = ''
+    if periodo is not None:
+        periodo_list = periodo.split(':')
+        if periodo_list[0] != '':
+            filtra_periodo += '''--
+                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {}
+            '''.format(periodo_list[0])
+        if periodo_list[1] != '':
+            filtra_periodo += '''--
+                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
+            '''.format(periodo_list[1])
+
+    sql = """
+        SELECT
+          pref.PEDIDO
+        , pref.NIVEL
+        , pref.REF
+        , pref.FAT
+        , pref.QTD
+        , pref.QTD_FAT
+        , ped.DATA_ENTR_VENDA DATA
+        , c.FANTASIA_CLIENTE CLIENTE
+        FROM (
+          SELECT
+            pqs.PEDIDO
+          , pqs.NIVEL
+          , pqs.REF
+          , pqs.FAT
+          , sum(pqs.QTD) QTD
+          , sum(pqs.QTD_FAT) QTD_FAT
+          FROM (
+            SELECT
+              pq.PEDIDO
+            , pq.NIVEL
+            , pq.REF
+            , pq.TAM
+            , pq.COR
+            , pq.QTD
+            , pq.FAT
+            , sum(COALESCE(inf.QTDE_ITEM_FATUR, 0)) QTD_FAT
+            FROM (
+              SELECT
+                ps.PEDIDO
+              , i.CD_IT_PE_NIVEL99 NIVEL
+              , i.CD_IT_PE_GRUPO REF
+              , i.CD_IT_PE_SUBGRUPO TAM
+              , i.CD_IT_PE_ITEM COR
+              , sum(i.QTDE_PEDIDA) QTD
+              , CASE WHEN ps.NFCANC IS NULL
+                THEN 'Não faturado'
+                ELSE 'Faturamento cancelado'
+                END FAT
+              FROM (
+                SELECT
+                  ped.PEDIDO_VENDA PEDIDO
+        --        , max(fok.NUM_NOTA_FISCAL) NFOK
+                , max(fcanc.NUM_NOTA_FISCAL) NFCANC
+                FROM PEDI_100 ped -- pedido de venda
+                LEFT JOIN FATU_050 fok -- fatura
+                  ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
+                 AND fok.SITUACAO_NFISC <> 2  -- cancelada
+                LEFT JOIN FATU_050 fcanc -- fatura
+                  ON fcanc.PEDIDO_VENDA = ped.PEDIDO_VENDA
+                 AND fcanc.SITUACAO_NFISC = 2  -- cancelada
+                WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+                  AND fok.NUM_NOTA_FISCAL IS NULL
+                  -- AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + 148
+                  {filtra_periodo} -- filtra_periodo
+                GROUP BY
+                  ped.PEDIDO_VENDA
+              ) ps -- pedidos pré-filtrados
+              JOIN PEDI_110 i -- item de pedido de venda
+                ON i.PEDIDO_VENDA = ps.PEDIDO
+              WHERE 1=1
+                -- AND TRIM(
+                --   LEADING '0' FROM (
+                --     REGEXP_REPLACE(
+                --       i.CD_IT_PE_GRUPO
+                --     , '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$'
+                --     , '\1'
+                --     )
+                --   )
+                -- ) = '5156'  -- filtro_modelo
+                {filtro_modelo} -- filtro_modelo
+              GROUP BY
+                ps.PEDIDO
+              , i.CD_IT_PE_NIVEL99
+              , i.CD_IT_PE_GRUPO
+              , i.CD_IT_PE_SUBGRUPO
+              , i.CD_IT_PE_ITEM
+              , ps.NFCANC
+            ) pq -- itens de pedidos com qtd
+            LEFT JOIN fatu_060 inf -- item de nf de saída
+              ON inf.PEDIDO_VENDA = pq.PEDIDO
+             AND inf.COD_CANCELAMENTO = 0
+             AND inf.NIVEL_ESTRUTURA = pq.NIVEL
+             AND inf.GRUPO_ESTRUTURA = pq.REF
+             AND inf.SUBGRU_ESTRUTURA = pq.TAM
+             AND inf.ITEM_ESTRUTURA = pq.COR
+            GROUP BY
+              pq.PEDIDO
+            , pq.NIVEL
+            , pq.REF
+            , pq.TAM
+            , pq.COR
+            , pq.QTD
+            , pq.FAT
+          ) pqs -- itens de pedidos com qtd e qtd faturada
+          GROUP BY
+            pqs.PEDIDO
+          , pqs.NIVEL
+          , pqs.REF
+          , pqs.FAT
+        ) pref -- referencias de pedidos  com qtds
+        JOIN PEDI_100 ped -- pedido de venda
+          ON ped.PEDIDO_VENDA = pref.PEDIDO
+        LEFT JOIN PEDI_010 c -- cliente
+          ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
+         AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+        WHERE pref.QTD > pref.QTD_FAT
+        ORDER BY
+          ped.DATA_ENTR_VENDA
+        , pref.PEDIDO
+        , pref.NIVEL
+        , pref.REF
+    """.format(
+        filtro_modelo=filtro_modelo,
+        filtra_periodo=filtra_periodo,
+    )
+    cursor.execute(sql)
+
+    cached_result = rows_to_dict_list(cursor)
+    cache.set(key_cache, cached_result)
+    fo2logger.info('calculated '+key_cache)
+    return cached_result
