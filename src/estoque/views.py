@@ -278,17 +278,19 @@ class ReferenciasEstoque(View):
             'modelo': modelo,
         }
 
-        refs = models.referencias_estoque(cursor, tipo, modelo)
-        if len(refs) == 0:
+        data = models.referencias_estoque(cursor, tipo, modelo)
+        if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
 
+        for row in data:
+            row['qtd|LINK'] = 'a'
         context.update({
-            'headers': ['Referência', 'Quant. total'],
-            'fields': ['ref', 'qtd'],
-            'refs': refs,
+            'headers': ['Referência', 'Depósito', 'Quant. total'],
+            'fields': ['ref', 'deposito', 'qtd'],
+            'data': data,
             'style': {
-                2: 'text-align: right;',
+                3: 'text-align: right;',
             },
         })
 
