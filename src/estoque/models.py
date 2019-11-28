@@ -489,3 +489,7 @@ def estoque_deposito_ref(cursor, deposito, ref):
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def ajusta_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam, qtd):
+    return []

@@ -18,4 +18,8 @@ urlpatterns = [
 
     url(r'^edita_estoque/(?P<deposito>.+)/(?P<ref>.+)/$',
         views.EditaEstoque.as_view(), name='edita_estoque__get'),
+
+    url(r'^ajusta_estoque/(?P<deposito>.+)/(?P<ref>.+)/'
+        r'(?P<cor>.+)/(?P<tam>.+)/(?P<qtd>.+)/$',
+        views.AjustaEstoque.as_view(), name='ajusta_estoque__get'),
 ]
