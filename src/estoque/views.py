@@ -270,7 +270,7 @@ class InventarioExpedicao(View):
 class ReferenciasEstoque(View):
     Form_class = forms.ReferenciasEstoqueForm
     template_name = 'estoque/referencias_estoque.html'
-    title_name = 'Referencias com estoque'
+    title_name = 'Referências com estoque'
 
     def mount_context(self, cursor, tipo, modelo):
         context = {
@@ -309,4 +309,40 @@ class ReferenciasEstoque(View):
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, tipo, modelo))
         context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class EditaEstoque(View):
+    template_name = 'estoque/edita_estoque.html'
+    title_name = 'Edita estoque de Referência'
+
+    def mount_context(self, cursor, deposito, ref):
+        context = {
+            'deposito': deposito,
+            'ref': ref,
+        }
+
+        data = models.estoque_deposito_ref(cursor, deposito, ref)
+        if len(data) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
+
+        context.update({
+            'headers': ['Cor', 'Tamanho', 'Quant. total'],
+            'fields': ['cor', 'tam', 'qtd'],
+            'data': data,
+            'style': {
+                3: 'text-align: right;',
+            },
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        if 'deposito' in kwargs and 'ref' in kwargs:
+            deposito = kwargs['deposito']
+            ref = kwargs['ref']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, deposito, ref))
         return render(request, self.template_name, context)

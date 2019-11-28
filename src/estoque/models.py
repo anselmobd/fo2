@@ -464,3 +464,25 @@ def referencias_estoque(cursor, tipo, modelo):
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def estoque_deposito_ref(cursor, deposito, ref):
+    sql = '''
+        SELECT
+          e.CDITEM_ITEM COR
+        , e.CDITEM_SUBGRUPO TAM
+        , e.QTDE_ESTOQUE_ANT QTD
+        FROM ESTQ_040 e
+        WHERE 1=1
+          AND e.DEPOSITO = '{deposito}'
+          AND e.CDITEM_NIVEL99 = 1
+          AND e.CDITEM_GRUPO = '{ref}'
+        ORDER BY
+          e.CDITEM_ITEM
+        , e.CDITEM_SUBGRUPO
+    '''.format(
+        deposito=deposito,
+        ref=ref,
+    )
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
