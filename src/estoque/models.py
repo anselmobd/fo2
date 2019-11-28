@@ -450,6 +450,7 @@ def referencias_estoque(cursor, tipo, modelo):
     sql = '''
         SELECT DISTINCT
           e.CDITEM_GRUPO REF
+        , e.DEPOSITO
         , sum(e.QTDE_ESTOQUE_ANT) QTD
         FROM ESTQ_040 e
         WHERE e.CDITEM_NIVEL99 = 1
@@ -457,8 +458,10 @@ def referencias_estoque(cursor, tipo, modelo):
           AND e.QTDE_ESTOQUE_ANT <> 0
         GROUP BY
           e.CDITEM_GRUPO
+        , e.DEPOSITO
         ORDER BY
           e.CDITEM_GRUPO
+        , e.DEPOSITO
     '''.format(
         filtro_modelo=filtro_modelo,
     )
