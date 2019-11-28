@@ -284,9 +284,12 @@ class ReferenciasEstoque(View):
             return context
 
         context.update({
-            'headers': ['Referência'],
-            'fields': ['ref'],
+            'headers': ['Referência', 'Quant. total'],
+            'fields': ['ref', 'qtd'],
             'refs': refs,
+            'style': {
+                2: 'text-align: right;',
+            },
         })
 
         return context

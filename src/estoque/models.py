@@ -439,4 +439,28 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
 
 
 def referencias_estoque(cursor, tipo, modelo):
-    return [{'ref': '0118D'}]
+    filtro_modelo = ''
+    if modelo != '':
+        filtro_modelo = '''--
+            AND TRIM(LEADING '0' FROM
+                     (REGEXP_REPLACE(e.CDITEM_GRUPO,
+                                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                     ))) = '{}' '''.format(modelo)
+
+    sql = '''
+        SELECT DISTINCT
+          e.CDITEM_GRUPO REF
+        , sum(e.QTDE_ESTOQUE_ANT) QTD
+        FROM ESTQ_040 e
+        WHERE e.CDITEM_NIVEL99 = 1
+          {filtro_modelo} -- filtro_modelo
+          AND e.QTDE_ESTOQUE_ANT <> 0
+        GROUP BY
+          e.CDITEM_GRUPO
+        ORDER BY
+          e.CDITEM_GRUPO
+    '''.format(
+        filtro_modelo=filtro_modelo,
+    )
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
