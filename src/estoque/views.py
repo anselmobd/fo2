@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.db import connections
 from django.shortcuts import render
 from django.views import View
@@ -261,5 +263,47 @@ class InventarioExpedicao(View):
             data_ini = form.cleaned_data['data_ini']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, data_ini))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class ReferenciasEstoque(View):
+    Form_class = forms.ReferenciasEstoqueForm
+    template_name = 'estoque/referencias_estoque.html'
+    title_name = 'Referencias com estoque'
+
+    def mount_context(self, cursor, tipo, modelo):
+        context = {
+            'tipo': tipo,
+            'modelo': modelo,
+        }
+
+        refs = models.referencias_estoque(cursor, tipo, modelo)
+        if len(refs) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
+
+        context.update({
+            'headers': ['Referência'],
+            'fields': ['ref'],
+            'refs': refs,
+        })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            tipo = 'v'  # form.cleaned_data['tipo']
+            modelo = form.cleaned_data['modelo']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, tipo, modelo))
         context['form'] = form
         return render(request, self.template_name, context)

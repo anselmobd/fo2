@@ -436,3 +436,7 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
     )
 
     return result
+
+
+def referencias_estoque(cursor, tipo, modelo):
+    return [{'ref': '0118D'}]
