@@ -12,4 +12,7 @@ urlpatterns = [
 
     url(r'^inventario_expedicao/$', views.InventarioExpedicao.as_view(),
         name='inventario_expedicao'),
+
+    url(r'^referencias_estoque/$', views.ReferenciasEstoque.as_view(),
+        name='referencias_estoque'),
 ]

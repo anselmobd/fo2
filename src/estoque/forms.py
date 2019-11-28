@@ -1,6 +1,7 @@
 from django import forms
 # from django.core.exceptions import ValidationError
 
+from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
 import geral
 
 
@@ -130,3 +131,11 @@ class InventarioExpedicaoForm(forms.Form):
         label='Referências com movimento a partir da data:',
         widget=forms.DateInput(attrs={'type': 'date',
                                'autofocus': 'autofocus'}))
+
+
+class ReferenciasEstoqueForm(
+        O2BaseForm,
+        O2FieldModeloForm):
+
+    class Meta:
+        autofocus_field = 'modelo'
