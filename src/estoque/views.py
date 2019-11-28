@@ -271,7 +271,7 @@ class InventarioExpedicao(View):
 class ReferenciasEstoque(View):
     Form_class = forms.ReferenciasEstoqueForm
     template_name = 'estoque/referencias_estoque.html'
-    title_name = 'Referências com estoque'
+    title_name = 'Ajuste de estoque'
 
     def mount_context(self, cursor, tipo, modelo):
         context = {
@@ -320,7 +320,7 @@ class ReferenciasEstoque(View):
 
 class EditaEstoque(View):
     template_name = 'estoque/edita_estoque.html'
-    title_name = 'Edita estoque de Referência'
+    title_name = 'Ajuste de estoque'
 
     def mount_context(self, cursor, deposito, ref):
         context = {
