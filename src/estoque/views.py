@@ -3,6 +3,7 @@ from pprint import pprint
 from django.db import connections
 from django.shortcuts import render
 from django.views import View
+from django.urls import reverse
 
 from utils.views import totalize_data, totalize_grouped_data
 
@@ -284,7 +285,10 @@ class ReferenciasEstoque(View):
             return context
 
         for row in data:
-            row['qtd|LINK'] = 'a'
+            row['qtd|TARGET'] = '_blank'
+            row['qtd|LINK'] = reverse(
+                'estoque:edita_estoque__get', args=[
+                    row['deposito'], row['ref']])
         context.update({
             'headers': ['Referência', 'Depósito', 'Quant. total'],
             'fields': ['ref', 'deposito', 'qtd'],
