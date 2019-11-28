@@ -333,9 +333,14 @@ class EditaEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
+        for row in data:
+            row['zera'] = 'Zera'
+            row['zera|LINK'] = reverse(
+                'estoque:ajusta_estoque__get', args=[
+                    deposito, ref, row['cor'], row['tam'], 0])
         context.update({
-            'headers': ['Cor', 'Tamanho', 'Quant. total'],
-            'fields': ['cor', 'tam', 'qtd'],
+            'headers': ['Cor', 'Tamanho', 'Quant. total', 'Zera'],
+            'fields': ['cor', 'tam', 'qtd', 'zera'],
             'data': data,
             'style': {
                 3: 'text-align: right;',
@@ -351,4 +356,39 @@ class EditaEstoque(View):
             ref = kwargs['ref']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, deposito, ref))
+        return render(request, self.template_name, context)
+
+
+class AjustaEstoque(View):
+    template_name = 'estoque/ajusta_estoque.html'
+    title_name = 'Ajuste de estoque'
+
+    def mount_context(self, cursor, deposito, ref, cor, tam, qtd):
+        context = {
+            'deposito': deposito,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+            'qtd': qtd,
+        }
+
+        data = models.ajusta_estoque_dep_ref_cor_tam(
+            cursor, deposito, ref, cor, tam, qtd)
+        if len(data) == 0:
+            context.update({'erro': 'Estoque não atualizado'})
+            return context
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        if 'deposito' in kwargs and 'ref' in kwargs:
+            deposito = kwargs['deposito']
+            ref = kwargs['ref']
+            cor = kwargs['cor']
+            tam = kwargs['tam']
+            qtd = kwargs['qtd']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(
+                cursor, deposito, ref, cor, tam, qtd))
         return render(request, self.template_name, context)
