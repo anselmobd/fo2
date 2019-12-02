@@ -6,6 +6,7 @@ from django.views import View
 from django.urls import reverse
 
 from utils.views import totalize_data, totalize_grouped_data
+from geral.functions import has_permission
 
 from . import forms
 from . import models
@@ -320,7 +321,7 @@ class EditaEstoque(View):
     template_name = 'estoque/edita_estoque.html'
     title_name = 'Ajuste de estoque'
 
-    def mount_context(self, cursor, deposito, ref):
+    def mount_context(self, request, cursor, deposito, ref):
         context = {
             'deposito': deposito,
             'ref': ref,
@@ -331,17 +332,23 @@ class EditaEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        for row in data:
-            if row['qtd'] == 0:
-                row['zera'] = '-'
-            else:
-                row['zera'] = 'Zera'
-                row['zera|LINK'] = reverse(
-                    'estoque:ajusta_estoque__get', args=[
-                        deposito, ref, row['cor'], row['tam'], 0])
+        headers = ['Cor', 'Tamanho', 'Quant. total']
+        fields = ['cor', 'tam', 'qtd']
+
+        if has_permission(request, 'base.can_adjust_stock'):
+            headers.append('Zera')
+            fields.append('zera')
+            for row in data:
+                if row['qtd'] == 0:
+                    row['zera'] = '-'
+                else:
+                    row['zera'] = 'Zera'
+                    row['zera|LINK'] = reverse(
+                        'estoque:ajusta_estoque__get', args=[
+                            deposito, ref, row['cor'], row['tam'], 0])
         context.update({
-            'headers': ['Cor', 'Tamanho', 'Quant. total', 'Zera'],
-            'fields': ['cor', 'tam', 'qtd', 'zera'],
+            'headers': headers,
+            'fields': fields,
             'data': data,
             'style': {
                 3: 'text-align: right;',
@@ -356,7 +363,7 @@ class EditaEstoque(View):
             deposito = kwargs['deposito']
             ref = kwargs['ref']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, deposito, ref))
+            context.update(self.mount_context(request, cursor, deposito, ref))
         return render(request, self.template_name, context)
 
 
