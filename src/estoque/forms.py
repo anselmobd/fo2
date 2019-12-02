@@ -137,14 +137,14 @@ class ReferenciasEstoqueForm(
         O2BaseForm,
         O2FieldModeloForm):
 
-    CHOICES = [
-        ('t', 'Todas'),
-        ('m', 'Com movimentação'),
-        ('e', 'Com estoque'),
-    ]
-    filtra_ref = forms.ChoiceField(
-        label='Filtro de referências:',
-        choices=CHOICES, initial='e')
+    # CHOICES = [
+    #     ('t', 'Todas'),
+    #     ('m', 'Com movimentação'),
+    #     ('e', 'Com estoque'),
+    # ]
+    # filtra_ref = forms.ChoiceField(
+    #     label='Filtro de referências:',
+    #     choices=CHOICES, initial='e')
 
     class Meta:
         order_fields = ['filtra_ref', 'modelo']

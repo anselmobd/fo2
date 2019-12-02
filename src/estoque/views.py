@@ -273,29 +273,26 @@ class ReferenciasEstoque(View):
     template_name = 'estoque/referencias_estoque.html'
     title_name = 'Ajuste de estoque'
 
-    def mount_context(self, cursor, tipo, filtra_ref, modelo):
+    def mount_context(self, cursor, tipo, modelo):
         context = {
             'tipo': tipo,
             'modelo': modelo,
         }
 
-        data = models.referencias_estoque(cursor, tipo, filtra_ref, modelo)
+        data = models.referencia_deposito(cursor, tipo, modelo)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
 
         for row in data:
-            row['qtd|TARGET'] = '_blank'
-            row['qtd|LINK'] = reverse(
+            row['dep|TARGET'] = '_blank'
+            row['dep|LINK'] = reverse(
                 'estoque:edita_estoque__get', args=[
-                    row['deposito'], row['ref']])
+                    row['dep'], row['ref']])
         context.update({
-            'headers': ['Referência', 'Depósito', 'Quant. total'],
-            'fields': ['ref', 'deposito', 'qtd'],
+            'headers': ['Referência', 'Depósito'],
+            'fields': ['ref', 'dep'],
             'data': data,
-            'style': {
-                3: 'text-align: right;',
-            },
         })
 
         return context
@@ -311,11 +308,10 @@ class ReferenciasEstoque(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             tipo = 'v'  # form.cleaned_data['tipo']
-            filtra_ref = form.cleaned_data['filtra_ref']
             modelo = form.cleaned_data['modelo']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, tipo, filtra_ref, modelo))
+                cursor, tipo, modelo))
         context['form'] = form
         return render(request, self.template_name, context)
 
