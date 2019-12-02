@@ -268,9 +268,9 @@ class InventarioExpedicao(View):
         return render(request, self.template_name, context)
 
 
-class ReferenciasEstoque(View):
+class ReferenciaDeposito(View):
     Form_class = forms.ReferenciasEstoqueForm
-    template_name = 'estoque/referencias_estoque.html'
+    template_name = 'estoque/referencia_deposito.html'
     title_name = 'Ajuste de estoque'
 
     def mount_context(self, cursor, tipo, modelo):
