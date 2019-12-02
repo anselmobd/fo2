@@ -17,8 +17,8 @@
 {% if tam %}
   <h4>Tamanho: {{ tam }}</h4>
 {% endif %}
-{% if erro %}
-  <h4>{{ erro }}</h4>
+{% if mensagem %}
+  <h4>{{ mensagem }}</h4>
 {% endif %}
 <a href="{% url 'estoque:edita_estoque__get' deposito ref %}">Volta para tela de estoque de referência em depósito</a>
 {% endblock %}

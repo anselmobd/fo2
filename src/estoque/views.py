@@ -376,6 +376,7 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         self.title_name = 'Ajuste de estoque'
 
     def mount_context(self, cursor, deposito, ref, cor, tam, qtd):
+        qtd = int(qtd)
         context = {
             'deposito': deposito,
             'ref': ref,
@@ -387,9 +388,16 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         data = models.ajusta_estoque_dep_ref_cor_tam(
             cursor, deposito, ref, cor, tam, qtd)
         if len(data) == 0:
-            context.update({'erro': 'Estoque não atualizado'})
-            return context
+            mensagem = 'Estoque não atualizado'
+        else:
+            mensagem = \
+                "Feita a transação '{:03}' ({}) com a quantidade {}.".format(
+                    data[0]['trans'],
+                    data[0]['es'],
+                    data[0]['ajuste'],
+                )
 
+        context.update({'mensagem': mensagem})
         return context
 
     def get(self, request, *args, **kwargs):
