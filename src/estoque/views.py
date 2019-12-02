@@ -4,6 +4,7 @@ from django.db import connections
 from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from utils.views import totalize_data, totalize_grouped_data
 from geral.functions import has_permission
@@ -367,9 +368,12 @@ class EditaEstoque(View):
         return render(request, self.template_name, context)
 
 
-class AjustaEstoque(View):
-    template_name = 'estoque/ajusta_estoque.html'
-    title_name = 'Ajuste de estoque'
+class AjustaEstoque(PermissionRequiredMixin, View):
+
+    def __init__(self):
+        self.permission_required = 'base.can_adjust_stock'
+        self.template_name = 'estoque/ajusta_estoque.html'
+        self.title_name = 'Ajuste de estoque'
 
     def mount_context(self, cursor, deposito, ref, cor, tam, qtd):
         context = {
