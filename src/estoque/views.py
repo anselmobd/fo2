@@ -332,10 +332,13 @@ class EditaEstoque(View):
             return context
 
         for row in data:
-            row['zera'] = 'Zera'
-            row['zera|LINK'] = reverse(
-                'estoque:ajusta_estoque__get', args=[
-                    deposito, ref, row['cor'], row['tam'], 0])
+            if row['qtd'] == 0:
+                row['zera'] = '-'
+            else:
+                row['zera'] = 'Zera'
+                row['zera|LINK'] = reverse(
+                    'estoque:ajusta_estoque__get', args=[
+                        deposito, ref, row['cor'], row['tam'], 0])
         context.update({
             'headers': ['Cor', 'Tamanho', 'Quant. total', 'Zera'],
             'fields': ['cor', 'tam', 'qtd', 'zera'],
