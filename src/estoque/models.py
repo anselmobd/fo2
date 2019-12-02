@@ -486,11 +486,7 @@ def referencia_deposito(cursor, tipo, modelo):
          AND m.SUBGRUPO_ESTRUTURA = i.TAM
          AND m.ITEM_ESTRUTURA = i.COR
          AND m.CODIGO_DEPOSITO = i.DEP
-        WHERE 1=1
-        --  AND i.REF = '00001'
-          -- AND i.TAM = 'G'
-          -- AND i.COR = '0000CZ'
-          AND (  e.DEPOSITO IS NOT NULL
+        WHERE (  e.DEPOSITO IS NOT NULL
               OR m.CODIGO_DEPOSITO IS NOT NULL
               )
         ORDER BY
