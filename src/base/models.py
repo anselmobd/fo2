@@ -13,6 +13,7 @@ class Colaborador(models.Model):
         db_table = "fo2_colaborador"
         permissions = (
             ("can_generate_product_stages", "Can generate product stages"),
+            ("can_adjust_stock", "Can adjust stock"),
         )
 
 
