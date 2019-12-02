@@ -438,6 +438,70 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
     return result
 
 
+def referencia_deposito(cursor, tipo, modelo):
+    filtro_modelo = ''
+    if modelo != '':
+        filtro_modelo = '''--
+            AND
+              TRIM(
+                LEADING '0' FROM (
+                  REGEXP_REPLACE(
+                    rtc.GRUPO_ESTRUTURA,
+                    '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                    '\\1'
+                  )
+                )
+              ) = '{modelo}'
+        '''.format(
+            modelo=modelo,
+        )
+
+    sql = '''
+        SELECT DISTINCT
+          i.REF
+        , i.DEP
+        FROM (
+          SELECT
+            rtc.GRUPO_ESTRUTURA REF
+          , rtc.SUBGRU_ESTRUTURA TAM
+          , rtc.ITEM_ESTRUTURA COR
+          , d.CODIGO_DEPOSITO DEP
+          FROM BASI_010 rtc, BASI_205 d
+          WHERE 1=1
+            AND rtc.NIVEL_ESTRUTURA = 1
+            AND d.CODIGO_DEPOSITO IN (101, 102, 231)
+            AND rtc.GRUPO_ESTRUTURA < 'C0000'
+            {filtro_modelo} -- filtro_modelo
+        ) i
+        LEFT JOIN ESTQ_040 e
+          ON e.CDITEM_NIVEL99 = 1
+         AND e.CDITEM_GRUPO = i.REF
+         AND e.CDITEM_SUBGRUPO = i.TAM
+         AND e.CDITEM_ITEM = i.COR
+         AND e.DEPOSITO = i.DEP
+        LEFT JOIN ESTQ_300_ESTQ_310 m -- movimentação de estoque
+          ON m.NIVEL_ESTRUTURA = 1
+         AND m.GRUPO_ESTRUTURA = i.REF
+         AND m.SUBGRUPO_ESTRUTURA = i.TAM
+         AND m.ITEM_ESTRUTURA = i.COR
+         AND m.CODIGO_DEPOSITO = i.DEP
+        WHERE 1=1
+        --  AND i.REF = '00001'
+          -- AND i.TAM = 'G'
+          -- AND i.COR = '0000CZ'
+          AND (  e.DEPOSITO IS NOT NULL
+              OR m.CODIGO_DEPOSITO IS NOT NULL
+              )
+        ORDER BY
+          NLSSORT(i.REF,'NLS_SORT=BINARY_AI')
+        , i.DEP
+    '''.format(
+        filtro_modelo=filtro_modelo,
+    )
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
+
+
 def referencias_estoque(cursor, tipo, filtra_ref, modelo):
     if filtra_ref == 'e':  # com estoque
         campo_grupo = 'e.CDITEM_GRUPO'
