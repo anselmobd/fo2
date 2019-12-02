@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<h3>Busca referencias com estoque</h3>
+<h3>Busca referencias/depósitos com alguma movimentação</h3>
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -19,6 +19,7 @@
 {% if modelo %}
   <h4>Modelo: {{ modelo }}</h4>
 {% endif %}
+<h4>Depósitos: 101, 102 e 231</h4>
 {% if tipo %}
   {% if tipo != 't' %}
     <h4>Tipo de produto:
