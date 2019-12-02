@@ -479,6 +479,7 @@ def referencia_deposito(cursor, tipo, modelo):
          AND e.CDITEM_SUBGRUPO = i.TAM
          AND e.CDITEM_ITEM = i.COR
          AND e.DEPOSITO = i.DEP
+         AND e.QTDE_ESTOQUE_ATU <> 0
         LEFT JOIN ESTQ_300_ESTQ_310 m -- movimentação de estoque
           ON m.NIVEL_ESTRUTURA = 1
          AND m.GRUPO_ESTRUTURA = i.REF
