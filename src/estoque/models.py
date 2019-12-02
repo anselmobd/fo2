@@ -592,17 +592,36 @@ def referencias_estoque(cursor, tipo, filtra_ref, modelo):
 def estoque_deposito_ref(cursor, deposito, ref):
     sql = '''
         SELECT
-          e.CDITEM_ITEM COR
-        , e.CDITEM_SUBGRUPO TAM
-        , e.QTDE_ESTOQUE_ANT QTD
-        FROM ESTQ_040 e
-        WHERE 1=1
-          AND e.DEPOSITO = '{deposito}'
-          AND e.CDITEM_NIVEL99 = 1
-          AND e.CDITEM_GRUPO = '{ref}'
+          i.REF
+        , i.COR
+        , ta.ORDEM_TAMANHO
+        , i.TAM
+        , i.DEP
+        , COALESCE(e.QTDE_ESTOQUE_ATU, 0) QTD
+        FROM (
+          SELECT
+            rtc.GRUPO_ESTRUTURA REF
+          , rtc.SUBGRU_ESTRUTURA TAM
+          , rtc.ITEM_ESTRUTURA COR
+          , d.CODIGO_DEPOSITO DEP
+          FROM BASI_010 rtc, BASI_205 d
+          WHERE 1=1
+            AND rtc.NIVEL_ESTRUTURA = 1
+            AND d.CODIGO_DEPOSITO = '{deposito}'
+            AND rtc.GRUPO_ESTRUTURA = '{ref}'
+        ) i
+        LEFT JOIN BASI_220 ta
+          ON ta.TAMANHO_REF = i.TAM
+        LEFT JOIN ESTQ_040 e
+          ON e.CDITEM_NIVEL99 = 1
+         AND e.CDITEM_GRUPO = i.REF
+         AND e.CDITEM_SUBGRUPO = i.TAM
+         AND e.CDITEM_ITEM = i.COR
+         AND e.DEPOSITO = i.DEP
         ORDER BY
-          e.CDITEM_ITEM
-        , e.CDITEM_SUBGRUPO
+          NLSSORT(i.REF,'NLS_SORT=BINARY_AI')
+        , i.COR
+        , ta.ORDEM_TAMANHO
     '''.format(
         deposito=deposito,
         ref=ref,
