@@ -13,8 +13,8 @@ urlpatterns = [
     url(r'^inventario_expedicao/$', views.InventarioExpedicao.as_view(),
         name='inventario_expedicao'),
 
-    url(r'^referencias_estoque/$', views.ReferenciasEstoque.as_view(),
-        name='referencias_estoque'),
+    url(r'^referencia_deposito/$', views.ReferenciaDeposito.as_view(),
+        name='referencia_deposito'),
 
     url(r'^edita_estoque/(?P<deposito>.+)/(?P<ref>.+)/$',
         views.EditaEstoque.as_view(), name='edita_estoque__get'),
