@@ -18,7 +18,11 @@
   <h4>Tamanho: {{ tam }}</h4>
 {% endif %}
 {% if mensagem %}
-  <h4>{{ mensagem }}</h4>
+  <h3>{{ mensagem }}</h3>
 {% endif %}
+{% if trail %}
+  <h3><a href="{% url 'estoque:ajusta_estoque2__get' deposito ref cor tam qtd trail %}">Executa a transação!</a></h3>
+{% endif %}
+<p>&nbsp;</p>
 <a href="{% url 'estoque:edita_estoque__get' deposito ref %}">Volta para tela de estoque de referência em depósito</a>
 {% endblock %}

@@ -1,3 +1,5 @@
+import time
+import hashlib
 from pprint import pprint
 
 from django.db import connections
@@ -5,6 +7,7 @@ from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import redirect
 
 from utils.views import totalize_data, totalize_grouped_data
 from geral.functions import has_permission
@@ -372,7 +375,7 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/ajusta_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
-    def mount_context(self, cursor, deposito, ref, cor, tam, qtd):
+    def mount_context(self, cursor, deposito, ref, cor, tam, qtd, conf_hash):
         qtd = int(qtd)
         context = {
             'deposito': deposito,
@@ -382,13 +385,36 @@ class AjustaEstoque(PermissionRequiredMixin, View):
             'qtd': qtd,
         }
 
+        hash_cache = ';'.join(map(format, (
+            deposito,
+            ref,
+            cor,
+            tam,
+            qtd,
+            time.strftime('%y%m%d'),
+        )))
+        hash_object = hashlib.md5(hash_cache.encode())
+        trail = hash_object.hexdigest()
+        executa = conf_hash is not None
+        if executa:
+            if trail != conf_hash:
+                return redirect('apoio_ao_erp')
+
         data = models.ajusta_estoque_dep_ref_cor_tam(
-            cursor, deposito, ref, cor, tam, qtd)
+            cursor, deposito, ref, cor, tam, qtd, executa)
         if len(data) == 0:
             mensagem = 'Estoque não atualizado'
         else:
-            mensagem = \
-                "Feita a transação '{:03}' ({}) com a quantidade {}.".format(
+            if executa:
+                mensagem = \
+                    "Foi feita a transação '{:03}' ({}) com a quantidade {}."
+            else:
+                context.update({
+                    'trail': trail,
+                })
+                mensagem = \
+                    "Será feita a transação '{:03}' ({}) com a quantidade {}."
+            mensagem = mensagem.format(
                     data[0]['trans'],
                     data[0]['es'],
                     data[0]['ajuste'],
@@ -399,7 +425,11 @@ class AjustaEstoque(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        if 'deposito' in kwargs and 'ref' in kwargs:
+        if 'conf_hash' in kwargs:
+            conf_hash = kwargs['conf_hash']
+        else:
+            conf_hash = None
+        if 'qtd' in kwargs:
             deposito = kwargs['deposito']
             ref = kwargs['ref']
             cor = kwargs['cor']
@@ -407,5 +437,5 @@ class AjustaEstoque(PermissionRequiredMixin, View):
             qtd = kwargs['qtd']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, deposito, ref, cor, tam, qtd))
+                cursor, deposito, ref, cor, tam, qtd, conf_hash))
         return render(request, self.template_name, context)
