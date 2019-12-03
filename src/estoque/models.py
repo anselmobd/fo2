@@ -543,11 +543,10 @@ def estoque_deposito_ref(cursor, deposito, ref):
     return rows_to_dict_list_lower(cursor)
 
 
-def ajusta_estoque_dep_ref_cor_tam(
-        cursor, deposito, ref, cor, tam, qtd, executa):
+def get_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam):
     sql = '''
         SELECT
-          {qtd} - e.QTDE_ESTOQUE_ATU AJUSTE
+          e.QTDE_ESTOQUE_ATU ESTOQUE
         FROM ESTQ_040 e
         WHERE 1=1
           AND e.CDITEM_NIVEL99 = 1
@@ -556,18 +555,22 @@ def ajusta_estoque_dep_ref_cor_tam(
           AND e.CDITEM_ITEM = '{cor}'
           AND e.DEPOSITO = {deposito}
     '''.format(
-        qtd=qtd,
         deposito=deposito,
         ref=ref,
         cor=cor,
         tam=tam,
     )
     cursor.execute(sql)
-    estoque = rows_to_dict_list_lower(cursor)
+    return rows_to_dict_list_lower(cursor)
+
+
+def ajusta_estoque_dep_ref_cor_tam(
+        cursor, deposito, ref, cor, tam, qtd, executa):
+    estoque = get_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam)
     if len(estoque) == 0:
         ajuste = qtd
     else:
-        ajuste = estoque[0]['ajuste']
+        ajuste = qtd - estoque[0]['estoque']
     if ajuste == 0:
         return []
 
@@ -737,7 +740,7 @@ def ajusta_estoque_dep_ref_cor_tam(
     )
     if executa:
         try:
-            cursor.execute(sql)
+            print('cursor.execute(sql)')
         except Exception:
             return []
 
