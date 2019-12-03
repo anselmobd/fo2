@@ -564,19 +564,7 @@ def get_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam):
     return rows_to_dict_list_lower(cursor)
 
 
-def ajusta_estoque_dep_ref_cor_tam(
-        cursor, deposito, ref, cor, tam, qtd, executa):
-    estoque = get_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam)
-    if len(estoque) == 0:
-        ajuste = qtd
-    else:
-        ajuste = qtd - estoque[0]['estoque']
-    if ajuste == 0:
-        return []
-
-    sinal = 1 if ajuste > 0 else -1
-    ajuste *= sinal
-
+def get_preco_medio_ref_cor_tam(cursor, ref, cor, tam):
     sql = '''
         SELECT
           coalesce(rtc.PRECO_MEDIO, 0) PRECO_MEDIO
@@ -592,7 +580,24 @@ def ajusta_estoque_dep_ref_cor_tam(
         tam=tam,
     )
     cursor.execute(sql)
-    produto = rows_to_dict_list_lower(cursor)
+    return rows_to_dict_list_lower(cursor)
+
+
+def ajusta_estoque_dep_ref_cor_tam(
+        cursor, deposito, ref, cor, tam, qtd, executa):
+
+    estoque = get_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam)
+    if len(estoque) == 0:
+        ajuste = qtd
+    else:
+        ajuste = qtd - estoque[0]['estoque']
+    if ajuste == 0:
+        return []
+
+    sinal = 1 if ajuste > 0 else -1
+    ajuste *= sinal
+
+    produto = get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
     if len(produto) == 0:
         return []
     preco_medio = produto[0]['preco_medio']
