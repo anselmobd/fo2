@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect
 
 from utils.views import totalize_data, totalize_grouped_data
-from geral.functions import has_permission
+from geral.functions import request_user, has_permission
 
 from . import forms
 from . import models
@@ -375,7 +375,8 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/ajusta_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
-    def mount_context(self, cursor, deposito, ref, cor, tam, qtd, conf_hash):
+    def mount_context(
+            self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
         qtd = int(qtd)
         context = {
             'deposito': deposito,
@@ -385,20 +386,7 @@ class AjustaEstoque(PermissionRequiredMixin, View):
             'qtd': qtd,
         }
 
-        hash_cache = ';'.join(map(format, (
-            deposito,
-            ref,
-            cor,
-            tam,
-            qtd,
-            time.strftime('%y%m%d'),
-        )))
-        hash_object = hashlib.md5(hash_cache.encode())
-        trail = hash_object.hexdigest()
         executa = conf_hash is not None
-        if executa:
-            if trail != conf_hash:
-                return redirect('apoio_ao_erp')
 
         data = models.ajusta_estoque_dep_ref_cor_tam(
             cursor, deposito, ref, cor, tam, qtd, executa)
@@ -407,35 +395,54 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         else:
             if executa:
                 mensagem = \
-                    "Foi feita a transação '{:03}' ({}) com a quantidade {}."
+                    "Foi executada a transação '{:03}' ({}) " \
+                    "com a quantidade {}."
             else:
                 context.update({
                     'trail': trail,
                 })
                 mensagem = \
-                    "Será feita a transação '{:03}' ({}) com a quantidade {}."
+                    "Deve ser executada a transação '{:03}' ({}) " \
+                    "com a quantidade {}."
             mensagem = mensagem.format(
                     data[0]['trans'],
                     data[0]['es'],
                     data[0]['ajuste'],
                 )
 
-        context.update({'mensagem': mensagem})
+        context.update({
+            'mensagem': mensagem,
+        })
         return context
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        if 'conf_hash' in kwargs:
-            conf_hash = kwargs['conf_hash']
-        else:
-            conf_hash = None
         if 'qtd' in kwargs:
             deposito = kwargs['deposito']
             ref = kwargs['ref']
             cor = kwargs['cor']
             tam = kwargs['tam']
             qtd = kwargs['qtd']
+
+            hash_cache = ';'.join(map(format, (
+                deposito,
+                ref,
+                cor,
+                tam,
+                qtd,
+                time.strftime('%y%m%d'),
+                request_user(request),
+            )))
+            hash_object = hashlib.md5(hash_cache.encode())
+            trail = hash_object.hexdigest()
+
+            if 'conf_hash' in kwargs:
+                conf_hash = kwargs['conf_hash']
+                if trail != conf_hash:
+                    return redirect('apoio_ao_erp')
+            else:
+                conf_hash = None
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, deposito, ref, cor, tam, qtd, conf_hash))
+                cursor, deposito, ref, cor, tam, qtd, conf_hash, trail))
         return render(request, self.template_name, context)
