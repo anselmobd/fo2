@@ -737,7 +737,7 @@ def ajusta_estoque_dep_ref_cor_tam(
     )
     if executa:
         try:
-            print('cursor.execute(sql)')
+            cursor.execute(sql)
         except Exception:
             return []
 
