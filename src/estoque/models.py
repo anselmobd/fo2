@@ -441,7 +441,7 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
     return result
 
 
-def referencia_deposito(cursor, tipo, modelo):
+def referencia_deposito(cursor, modelo):
     filtro_modelo = ''
     if modelo != '':
         filtro_modelo = '''--
@@ -502,7 +502,7 @@ def referencia_deposito(cursor, tipo, modelo):
     return rows_to_dict_list_lower(cursor)
 
 
-def referencias_estoque(cursor, tipo, filtra_ref, modelo):
+def referencias_estoque(cursor, filtra_ref, modelo):
     if filtra_ref == 'e':  # com estoque
         campo_grupo = 'e.CDITEM_GRUPO'
     elif filtra_ref == 'm':  # com movimento

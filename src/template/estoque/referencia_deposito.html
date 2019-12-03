@@ -16,28 +16,10 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
+<h4>Depósitos: 101, 102 e 231</h4>
+<h4>Tipo de produto: PA/PG/PB</h4>
 {% if modelo %}
   <h4>Modelo: {{ modelo }}</h4>
-{% endif %}
-<h4>Depósitos: 101, 102 e 231</h4>
-{% if tipo %}
-  {% if tipo != 't' %}
-    <h4>Tipo de produto:
-      {% if tipo == 'a' %}
-        PA
-      {% elif tipo == 'g' %}
-        PG
-      {% elif tipo == 'b' %}
-        PB
-      {% elif tipo == 'p' %}
-        PG/PB
-      {% elif tipo == 'v' %}
-        PA/PG/PB
-      {% elif tipo == 'm' %}
-        MD
-      {% endif %}
-    </h4>
-  {% endif %}
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
