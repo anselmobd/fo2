@@ -375,8 +375,25 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/ajusta_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
-    def ajusta_estoque_dep_ref_cor_tam(
-            self, cursor, deposito, ref, cor, tam, qtd, executa):
+    def mount_context(
+            self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
+        qtd = int(qtd)
+        context = {
+            'deposito': deposito,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+            'qtd': qtd,
+        }
+        executa = conf_hash is not None
+
+        produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
+        if len(produto) == 0:
+            context.update({
+                'mensagem': 'Referência/Cor/Tamanho não encontrada',
+            })
+            return context
+        preco_medio = produto[0]['preco_medio']
 
         estoque = models.get_estoque_dep_ref_cor_tam(
             cursor, deposito, ref, cor, tam)
@@ -385,17 +402,12 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         else:
             ajuste = qtd - estoque[0]['estoque']
         if ajuste == 0:
-            return []
-
+            context.update({
+                'mensagem': 'O depósito já está com a quantidade desejada',
+            })
+            return context
         sinal = 1 if ajuste > 0 else -1
         ajuste *= sinal
-
-        produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
-        if len(produto) == 0:
-            return []
-        preco_medio = produto[0]['preco_medio']
-
-        num_doc = '702{}'.format(time.strftime('%y%m%d'))
 
         transacoes = {
             1: {
@@ -410,54 +422,27 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         trans = transacoes[sinal]['codigo']
         es = transacoes[sinal]['es']
 
-        result = False
+        num_doc = '702{}'.format(time.strftime('%y%m%d'))
+
         if executa:
-            result = models.insert_transacao_ajuste(
-                cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
-                preco_medio)
-        return [{
-            'executa': executa,
-            'ajuste': ajuste,
-            'trans': trans,
-            'es': es,
-            'inseriu': result,
-        }]
-
-    def mount_context(
-            self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
-        qtd = int(qtd)
-        context = {
-            'deposito': deposito,
-            'ref': ref,
-            'cor': cor,
-            'tam': tam,
-            'qtd': qtd,
-        }
-
-        executa = conf_hash is not None
-
-        data = self.ajusta_estoque_dep_ref_cor_tam(
-            cursor, deposito, ref, cor, tam, qtd, executa)
-        if len(data) == 0:
-            mensagem = 'Estoque não atualizado'
-        else:
-            if executa:
+            if models.insert_transacao_ajuste(
+                    cursor, deposito, ref, tam, cor, num_doc, trans, es,
+                    ajuste, preco_medio):
                 mensagem = \
                     "Foi executada a transação '{:03}' ({}) " \
                     "com a quantidade {}."
             else:
-                context.update({
-                    'trail': trail,
-                })
                 mensagem = \
-                    "Deve ser executada a transação '{:03}' ({}) " \
+                    "Erro ao executar a transação '{:03}' ({}) " \
                     "com a quantidade {}."
-            mensagem = mensagem.format(
-                    data[0]['trans'],
-                    data[0]['es'],
-                    data[0]['ajuste'],
-                )
-
+        else:
+            context.update({
+                'trail': trail,
+            })
+            mensagem = \
+                "Deve ser executada a transação '{:03}' ({}) " \
+                "com a quantidade {}."
+        mensagem = mensagem.format(trans, es, ajuste)
         context.update({
             'mensagem': mensagem,
         })
