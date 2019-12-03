@@ -614,7 +614,26 @@ def ajusta_estoque_dep_ref_cor_tam(
             'es': 'S',
         },
     }
+    trans = transacoes[sinal]['codigo']
+    es = transacoes[sinal]['es']
 
+    result = False
+    if executa:
+        result = insert_transacao_ajuste(
+            cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
+            preco_medio)
+    return [{
+        'executa': executa,
+        'ajuste': ajuste,
+        'trans': trans,
+        'es': es,
+        'inseriu': result,
+    }]
+
+
+def insert_transacao_ajuste(
+        cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
+        preco_medio):
     sql = '''
         INSERT INTO ESTQ_300 (
           CODIGO_DEPOSITO
@@ -737,21 +756,14 @@ def ajusta_estoque_dep_ref_cor_tam(
         tam=tam,
         cor=cor,
         num_doc=num_doc,
-        trans=transacoes[sinal]['codigo'],
-        es=transacoes[sinal]['es'],
+        trans=trans,
+        es=es,
         ajuste=ajuste,
         preco_medio=preco_medio,
         valor_total=ajuste*preco_medio,
     )
-    if executa:
-        try:
-            print('cursor.execute(sql)')
-        except Exception:
-            return []
-
-    return [{
-        'executa': executa,
-        'ajuste': ajuste,
-        'trans': transacoes[sinal]['codigo'],
-        'es': transacoes[sinal]['es'],
-    }]
+    try:
+        cursor.execute(sql)
+        return True
+    except Exception:
+        return False
