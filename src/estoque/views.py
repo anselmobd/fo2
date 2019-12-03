@@ -375,6 +375,54 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/ajusta_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
+    def ajusta_estoque_dep_ref_cor_tam(
+            self, cursor, deposito, ref, cor, tam, qtd, executa):
+
+        estoque = models.get_estoque_dep_ref_cor_tam(
+            cursor, deposito, ref, cor, tam)
+        if len(estoque) == 0:
+            ajuste = qtd
+        else:
+            ajuste = qtd - estoque[0]['estoque']
+        if ajuste == 0:
+            return []
+
+        sinal = 1 if ajuste > 0 else -1
+        ajuste *= sinal
+
+        produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
+        if len(produto) == 0:
+            return []
+        preco_medio = produto[0]['preco_medio']
+
+        num_doc = '702{}'.format(time.strftime('%y%m%d'))
+
+        transacoes = {
+            1: {
+                'codigo': 105,
+                'es': 'E',
+            },
+            -1: {
+                'codigo': 3,
+                'es': 'S',
+            },
+        }
+        trans = transacoes[sinal]['codigo']
+        es = transacoes[sinal]['es']
+
+        result = False
+        if executa:
+            result = models.insert_transacao_ajuste(
+                cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
+                preco_medio)
+        return [{
+            'executa': executa,
+            'ajuste': ajuste,
+            'trans': trans,
+            'es': es,
+            'inseriu': result,
+        }]
+
     def mount_context(
             self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
         qtd = int(qtd)
@@ -388,7 +436,7 @@ class AjustaEstoque(PermissionRequiredMixin, View):
 
         executa = conf_hash is not None
 
-        data = models.ajusta_estoque_dep_ref_cor_tam(
+        data = self.ajusta_estoque_dep_ref_cor_tam(
             cursor, deposito, ref, cor, tam, qtd, executa)
         if len(data) == 0:
             mensagem = 'Estoque não atualizado'
