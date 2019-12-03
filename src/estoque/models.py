@@ -583,54 +583,6 @@ def get_preco_medio_ref_cor_tam(cursor, ref, cor, tam):
     return rows_to_dict_list_lower(cursor)
 
 
-def ajusta_estoque_dep_ref_cor_tam(
-        cursor, deposito, ref, cor, tam, qtd, executa):
-
-    estoque = get_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam)
-    if len(estoque) == 0:
-        ajuste = qtd
-    else:
-        ajuste = qtd - estoque[0]['estoque']
-    if ajuste == 0:
-        return []
-
-    sinal = 1 if ajuste > 0 else -1
-    ajuste *= sinal
-
-    produto = get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
-    if len(produto) == 0:
-        return []
-    preco_medio = produto[0]['preco_medio']
-
-    num_doc = '702{}'.format(time.strftime('%y%m%d'))
-
-    transacoes = {
-        1: {
-            'codigo': 105,
-            'es': 'E',
-        },
-        -1: {
-            'codigo': 3,
-            'es': 'S',
-        },
-    }
-    trans = transacoes[sinal]['codigo']
-    es = transacoes[sinal]['es']
-
-    result = False
-    if executa:
-        result = insert_transacao_ajuste(
-            cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
-            preco_medio)
-    return [{
-        'executa': executa,
-        'ajuste': ajuste,
-        'trans': trans,
-        'es': es,
-        'inseriu': result,
-    }]
-
-
 def insert_transacao_ajuste(
         cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
         preco_medio):
