@@ -17,6 +17,12 @@
 {% if tam %}
   <h4>Tamanho: {{ tam }}</h4>
 {% endif %}
+{% if estoque %}
+  <h4>Estoque: {{ estoque }}</h4>
+{% endif %}
+{% if qtd is not None %}
+  <h4>Quantidade inventariada: {{ qtd }}</h4>
+{% endif %}
 {% if mensagem %}
   <h3>{{ mensagem }}</h3>
 {% endif %}
