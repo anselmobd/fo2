@@ -140,3 +140,10 @@ class ReferenciasEstoqueForm(
     class Meta:
         order_fields = ['filtra_ref', 'modelo']
         autofocus_field = 'modelo'
+
+
+class AjustaEstoqueForm(forms.Form):
+    qtd = forms.CharField(
+        label='Quantidade inventariada', max_length=6, min_length=1,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))

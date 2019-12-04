@@ -368,7 +368,7 @@ class EditaEstoque(View):
         return render(request, self.template_name, context)
 
 
-class AjustaEstoque(PermissionRequiredMixin, View):
+class ZeraEstoque(PermissionRequiredMixin, View):
 
     def __init__(self):
         self.permission_required = 'base.can_adjust_stock'
@@ -488,3 +488,168 @@ class AjustaEstoque(PermissionRequiredMixin, View):
             context.update(self.mount_context(
                 cursor, deposito, ref, cor, tam, qtd, conf_hash, trail))
         return render(request, self.template_name, context)
+
+
+class AjustaEstoque(PermissionRequiredMixin, View):
+
+    def __init__(self):
+        self.permission_required = 'base.can_adjust_stock'
+        self.Form_class = forms.AjustaEstoqueForm
+        self.template_name = 'estoque/ajusta_estoque.html'
+        self.title_name = 'Ajuste de estoque'
+
+    def pre_mount_context(self, **kwargs):
+        self.context = {'titulo': self.title_name}
+        form = self.Form_class()
+        self.context['form'] = form
+
+        if 'qtd' in kwargs:
+            self.deposito = kwargs['deposito']
+            self.ref = kwargs['ref']
+            self.cor = kwargs['cor']
+            self.tam = kwargs['tam']
+            self.qtd = kwargs['qtd']
+
+    def mount_context(
+            self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
+        try:
+            qtd = int(qtd)
+        except Exception:
+            qtd = None
+
+        executa = conf_hash is not None
+
+        produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
+        if len(produto) == 0:
+            context.update({
+                'mensagem': 'Referência/Cor/Tamanho não encontrada',
+            })
+            return context
+        preco_medio = produto[0]['preco_medio']
+
+        l_estoque = models.get_estoque_dep_ref_cor_tam(
+            cursor, deposito, ref, cor, tam)
+        if len(l_estoque) == 0:
+            estoque = 0
+        else:
+            estoque = l_estoque[0]['estoque']
+        ajuste = qtd - estoque
+        if ajuste == 0:
+            context.update({
+                'mensagem': 'O depósito já está com a quantidade desejada',
+            })
+            return context
+        sinal = 1 if ajuste > 0 else -1
+        ajuste *= sinal
+
+        context = {
+            'deposito': deposito,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+            'qtd': qtd,
+            'estoque': estoque,
+        }
+
+        transacoes = {
+            1: {
+                'codigo': 105,
+                'es': 'E',
+                'descr': 'Entrada por inventário',
+            },
+            -1: {
+                'codigo': 3,
+                'es': 'S',
+                'descr': 'Saída por inventário',
+            },
+        }
+        trans = transacoes[sinal]['codigo']
+        es = transacoes[sinal]['es']
+        descr = transacoes[sinal]['descr']
+
+        num_doc = '702{}'.format(time.strftime('%y%m%d'))
+
+        if executa:
+            if models.insert_transacao_ajuste(
+                    cursor, deposito, ref, tam, cor, num_doc, trans, es,
+                    ajuste, preco_medio):
+                context.update({
+                    'estoque': qtd,
+                })
+                mensagem = \
+                    "Foi executada a transação '{:03}' ({}) " \
+                    "com a quantidade {}."
+            else:
+                mensagem = \
+                    "Erro ao executar a transação '{:03}' ({}) " \
+                    "com a quantidade {}."
+        else:
+            context.update({
+                'trail': trail,
+            })
+            mensagem = \
+                "Deve ser executada a transação '{:03}' ({}) " \
+                "com a quantidade {}."
+        mensagem = mensagem.format(trans, descr, ajuste)
+        context.update({
+            'mensagem': mensagem,
+        })
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.pre_mount_context(**kwargs)
+
+        if 'qtd' in kwargs:
+            deposito = kwargs['deposito']
+            ref = kwargs['ref']
+            cor = kwargs['cor']
+            tam = kwargs['tam']
+            qtd = kwargs['qtd']
+            try:
+                qtd = int(qtd)
+            except Exception:
+                return self.post(request, *args, **kwargs)
+
+            hash_cache = ';'.join(map(format, (
+                deposito,
+                ref,
+                cor,
+                tam,
+                qtd,
+                time.strftime('%y%m%d'),
+                request_user(request),
+            )))
+            hash_object = hashlib.md5(hash_cache.encode())
+            trail = hash_object.hexdigest()
+
+            if 'conf_hash' in kwargs:
+                conf_hash = kwargs['conf_hash']
+                if trail != conf_hash:
+                    return redirect('apoio_ao_erp')
+            else:
+                conf_hash = None
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(
+                cursor, deposito, ref, cor, tam, qtd, conf_hash, trail))
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        self.pre_mount_context(**kwargs)
+        if 'qtd' in kwargs:
+            deposito = kwargs['deposito']
+            ref = kwargs['ref']
+            cor = kwargs['cor']
+            tam = kwargs['tam']
+            qtd = kwargs['qtd']
+        if form.is_valid():
+            modelo = form.cleaned_data['modelo']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, modelo))
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+        # <form action="" method="post">
+        #     {% csrf_token %}
+        #     {{ form.as_p }}
+        #     <input type="submit" value="Confirma"/>
+        # </form>
