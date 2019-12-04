@@ -434,6 +434,9 @@ class AjustaEstoque(PermissionRequiredMixin, View):
             if models.insert_transacao_ajuste(
                     cursor, deposito, ref, tam, cor, num_doc, trans, es,
                     ajuste, preco_medio):
+                context.update({
+                    'estoque': qtd,
+                })
                 mensagem = \
                     "Foi executada a transação '{:03}' ({}) " \
                     "com a quantidade {}."
