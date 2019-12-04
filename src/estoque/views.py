@@ -378,13 +378,6 @@ class AjustaEstoque(PermissionRequiredMixin, View):
     def mount_context(
             self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
         qtd = int(qtd)
-        context = {
-            'deposito': deposito,
-            'ref': ref,
-            'cor': cor,
-            'tam': tam,
-            'qtd': qtd,
-        }
         executa = conf_hash is not None
 
         produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
@@ -395,12 +388,13 @@ class AjustaEstoque(PermissionRequiredMixin, View):
             return context
         preco_medio = produto[0]['preco_medio']
 
-        estoque = models.get_estoque_dep_ref_cor_tam(
+        l_estoque = models.get_estoque_dep_ref_cor_tam(
             cursor, deposito, ref, cor, tam)
-        if len(estoque) == 0:
-            ajuste = qtd
+        if len(l_estoque) == 0:
+            estoque = 0
         else:
-            ajuste = qtd - estoque[0]['estoque']
+            estoque = l_estoque[0]['estoque']
+        ajuste = qtd - estoque
         if ajuste == 0:
             context.update({
                 'mensagem': 'O depósito já está com a quantidade desejada',
@@ -409,18 +403,30 @@ class AjustaEstoque(PermissionRequiredMixin, View):
         sinal = 1 if ajuste > 0 else -1
         ajuste *= sinal
 
+        context = {
+            'deposito': deposito,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+            'qtd': qtd,
+            'estoque': estoque,
+        }
+
         transacoes = {
             1: {
                 'codigo': 105,
                 'es': 'E',
+                'descr': 'Entrada por inventário',
             },
             -1: {
                 'codigo': 3,
                 'es': 'S',
+                'descr': 'Saída por inventário',
             },
         }
         trans = transacoes[sinal]['codigo']
         es = transacoes[sinal]['es']
+        descr = transacoes[sinal]['descr']
 
         num_doc = '702{}'.format(time.strftime('%y%m%d'))
 
@@ -442,7 +448,7 @@ class AjustaEstoque(PermissionRequiredMixin, View):
             mensagem = \
                 "Deve ser executada a transação '{:03}' ({}) " \
                 "com a quantidade {}."
-        mensagem = mensagem.format(trans, es, ajuste)
+        mensagem = mensagem.format(trans, descr, ajuste)
         context.update({
             'mensagem': mensagem,
         })
