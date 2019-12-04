@@ -11,7 +11,7 @@
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
 {% endif %}
-{% if estoque %}
+{% if estoque is not None %}
   <h4>Quantidade no estoque no Systêxtil: {{ estoque }}</h4>
 {% endif %}
 {% if qtd is not None %}
