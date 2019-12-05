@@ -17,7 +17,7 @@ class Oracle:
         self.username = 'systextil'
         self.password = DBPASS_ORACLE
         self.hostname = 'localhost'
-        self.port = 26521
+        self.port = 28521
         self.servicename = 'XE'
         self.schema = 'SYSTEXTIL'
 
