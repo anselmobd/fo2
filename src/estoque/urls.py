@@ -19,16 +19,19 @@ urlpatterns = [
     url(r'^edita_estoque/(?P<deposito>.+)/(?P<ref>.+)/$',
         views.EditaEstoque.as_view(), name='edita_estoque__get'),
 
-    url(r'^ajusta_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
-        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<qtd>0)/$',
-        views.ZeraEstoque.as_view(), name='ajusta_estoque__get'),
+    url(r'^zera_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
+        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/$',
+        views.ZeraEstoque.as_view(), name='zera_estoque__get'),
+    url(r'^zera_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
+        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<conf_hash>[^/]+)/$',
+        views.ZeraEstoque.as_view(), name='zera_estoque__get'),
 
     url(r'^ajusta_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
-        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<qtd>[^/]+)/$',
+        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/$',
         views.AjustaEstoque.as_view(), name='ajusta_estoque__get'),
 
-    url(r'^ajusta_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
-        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<qtd>[^/]+)/'
-        r'(?P<conf_hash>[^/]+)/$',
-        views.AjustaEstoque.as_view(), name='ajusta_estoque__get'),
+    # url(r'^ajusta_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
+    #     r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<qtd>[^/]+)/'
+    #     r'(?P<conf_hash>[^/]+)/$',
+    #     views.AjustaEstoque.as_view(), name='ajusta_estoque__get'),
 ]
