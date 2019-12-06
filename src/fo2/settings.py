@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 from . import __version__, __version__date__
 
-from .db_password import DBPASS, DBPASS_PERSONA
+from .db_password import DBPASS, DBPASS_PERSONA, DBPASS_F1
 
 
 PROJ_VERSION = __version__
@@ -145,7 +145,7 @@ DATABASES = {
         'HOST': '192.168.1.28',
         'PORT': '1521',
     },
-    'persona': {
+    'persona': {  # Nasajon
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': "nasajon_db",
         'USER': "nasajon_user",
@@ -153,28 +153,18 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '25434',
     },
-    # 'f1': {  # F1
-    #     'ENGINE': 'django.db.backends.firebird',
-    #     'NAME': '/dados/db/f1/f1.cdb',
-    #     'USER': 'sysdba',
-    #     'PASSWORD': '1firebir',
-    #     'HOST': '192.168.1.98',
-    #     'PORT': '3050',
-    #     'OPTIONS': {'charset': 'WIN1252'},
-    # },
+    'f1': {  # F1 e SCC
+        'ENGINE': 'firebird',
+        'NAME': '/dados/db/f1/f1.cdb',
+        'USER': 'sysdba',
+        'PASSWORD': DBPASS_F1,
+        'HOST': '192.168.1.98',
+        'PORT': '3050',
+        'OPTIONS': {'charset': 'WIN1252'},
+    },
 }
 
 DATABASE_ROUTERS = ['utils.router.Router', ]
-
-DB_F1 = {
-    'NAME': '/dados/db/f1/f1.cdb',
-    'USER': 'sysdba',
-    'PASSWORD': '1firebir',
-    'HOST': '192.168.1.98',
-    'PORT': '3050',
-    'CHARSET': 'WIN1252',
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
