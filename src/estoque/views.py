@@ -502,7 +502,7 @@ class ZeraEstoque(PermissionRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class AjustaEstoque(PermissionRequiredMixin, View):
+class EditaEstoque(PermissionRequiredMixin, View):
 
     def __init__(self):
         self.permission_required = 'base.can_adjust_stock'
