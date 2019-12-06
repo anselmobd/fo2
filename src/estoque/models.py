@@ -573,7 +573,10 @@ def get_preco_medio_ref_cor_tam(cursor, ref, cor, tam):
 
     sql = '''
         SELECT
-          coalesce(rtc.PRECO_MEDIO, 0) PRECO_MEDIO
+          rtc.GRUPO_ESTRUTURA REF
+        , rtc.SUBGRU_ESTRUTURA TAM
+        , rtc.ITEM_ESTRUTURA COR
+        , coalesce(rtc.PRECO_MEDIO, 0) PRECO_MEDIO
         FROM BASI_010 rtc
         WHERE 1=1
           AND rtc.NIVEL_ESTRUTURA = 1
