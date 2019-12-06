@@ -1,32 +1,35 @@
 from pprint import pprint
 from datetime import datetime, date, timedelta
 
+from django.db import connections
 from django.core.cache import cache
 
-from fo2.models import cursorF1, rows_to_dict_list, \
-    rows_to_dict_list_lower
+from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
 from utils.functions import dec_months, make_key_cache, fo2logger
 
 
 def busca_clientes(cnpj):
-    cursor = cursorF1()
+    cursor = connections['f1'].cursor()
     sql = """
         SELECT FIRST 10000
           c.C_CGC CNPJ
         , c.C_RSOC CLIENTE
         FROM DIS_CLI c
-        WHERE c.C_CGC STARTING WITH ?
-           OR c.C_RSOC CONTAINING ?
+        WHERE c.C_CGC STARTING WITH '{cgc}'
+           OR c.C_RSOC CONTAINING '{rsoc}'
         ORDER BY
           c.C_CGC
-    """
-    cursor.execute(sql, [cnpj[:14], cnpj])
+    """.format(
+        cgc=cnpj[:14],
+        rsoc=cnpj,
+    )
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
 def ficha_cliente(cnpj):
-    cursor = cursorF1()
+    cursor = connections['f1'].cursor()
     sql = """
         SELECT
           c.C_CGC CNPJ
@@ -86,14 +89,14 @@ def ficha_cliente(cnpj):
         FROM DIS_DUP d
         LEFT JOIN DIS_CLI c
           ON c.C_CGC = d.D_CGC
-        WHERE d.D_CGC = ?
+        WHERE d.D_CGC = '{cgc}'
           AND D.D_STAT >= '0' -- nao canceladas
           AND d.D_CODFIS IN ( '5101', '6101', '6107', '6109'
                             , '5124', '6124', '5125', '6125') -- cpof de venda
         ORDER BY
           d.D_DUPNUM
-    """
-    cursor.execute(sql, [cnpj])
+    """.format(cgc=cnpj)
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
