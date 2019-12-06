@@ -292,7 +292,7 @@ class ReferenciaDeposito(View):
         for row in data:
             row['dep|TARGET'] = '_blank'
             row['dep|LINK'] = reverse(
-                'estoque:edita_estoque__get', args=[
+                'estoque:mostra_estoque__get', args=[
                     row['dep'], row['ref']])
         context.update({
             'headers': ['Referência', 'Depósito'],
@@ -319,8 +319,8 @@ class ReferenciaDeposito(View):
         return render(request, self.template_name, context)
 
 
-class EditaEstoque(View):
-    template_name = 'estoque/edita_estoque.html'
+class MostraEstoque(View):
+    template_name = 'estoque/mostra_estoque.html'
     title_name = 'Ajuste de estoque'
 
     def mount_context(self, request, cursor, deposito, ref):
@@ -349,7 +349,7 @@ class EditaEstoque(View):
             for row in data:
                 row['edita'] = 'Edita'
                 row['edita|LINK'] = reverse(
-                    'estoque:ajusta_estoque__get', args=[
+                    'estoque:edita_estoque__get', args=[
                         deposito, ref, row['cor'], row['tam']])
                 if row['qtd'] == 0:
                     row['zera'] = '-'
