@@ -507,7 +507,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
     def __init__(self):
         self.permission_required = 'base.can_adjust_stock'
         self.Form_class = forms.AjustaEstoqueForm
-        self.template_name = 'estoque/ajusta_estoque.html'
+        self.template_name = 'estoque/edita_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
         self.transacoes = {
