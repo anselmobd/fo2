@@ -33,6 +33,15 @@ DATABASES = {
         'HOST': '192.168.1.96',
         'PORT': '5434',
     },
+    'f1': {  # F1 e SCC
+        'ENGINE': 'firebird',
+        'NAME': '/dados/db/f1/f1.cdb',
+        'USER': 'sysdba',
+        'PASSWORD': DBPASS_F1,
+        'HOST': '192.168.1.98',
+        'PORT': '3050',
+        'OPTIONS': {'charset': 'WIN1252'},
+    },
 }
 
 CACHES = {
