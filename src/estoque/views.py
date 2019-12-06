@@ -399,6 +399,7 @@ class ZeraEstoque(PermissionRequiredMixin, View):
 
     def mount_context(
             self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
+        context = {}
         executa = conf_hash is not None
 
         produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
