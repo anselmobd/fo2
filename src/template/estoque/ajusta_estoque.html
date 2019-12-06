@@ -23,7 +23,9 @@
 {% if trail %}
   <h3><a class="btn btn-primary" onclick="return confirma_gravar();" href="{% url 'estoque:zera_estoque__get' deposito ref cor tam trail %}">Executa a transação</a></h3>
 {% endif %}
-<a href="{% url 'estoque:edita_estoque__get' deposito ref %}">Volta para tela de estoque de referência em depósito</a>
+{% if deposito and ref %}
+  <a href="{% url 'estoque:edita_estoque__get' deposito ref %}">Volta para tela de estoque de referência em depósito</a>
+{% endif %}
 {% endblock %}
 
 {% block javascript %}

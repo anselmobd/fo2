@@ -384,9 +384,21 @@ class ZeraEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/ajusta_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
+        self.transacoes = {
+            1: {
+                'codigo': 105,
+                'es': 'E',
+                'descr': 'Entrada por inventário',
+            },
+            -1: {
+                'codigo': 3,
+                'es': 'S',
+                'descr': 'Saída por inventário',
+            },
+        }
+
     def mount_context(
             self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
-        qtd = int(qtd)
         executa = conf_hash is not None
 
         produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
@@ -421,21 +433,9 @@ class ZeraEstoque(PermissionRequiredMixin, View):
             'estoque': estoque,
         }
 
-        transacoes = {
-            1: {
-                'codigo': 105,
-                'es': 'E',
-                'descr': 'Entrada por inventário',
-            },
-            -1: {
-                'codigo': 3,
-                'es': 'S',
-                'descr': 'Saída por inventário',
-            },
-        }
-        trans = transacoes[sinal]['codigo']
-        es = transacoes[sinal]['es']
-        descr = transacoes[sinal]['descr']
+        trans = self.transacoes[sinal]['codigo']
+        es = self.transacoes[sinal]['es']
+        descr = self.transacoes[sinal]['descr']
 
         num_doc = '702{}'.format(time.strftime('%y%m%d'))
 
@@ -469,33 +469,36 @@ class ZeraEstoque(PermissionRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         if 'qtd' in kwargs:
-            deposito = kwargs['deposito']
-            ref = kwargs['ref']
-            cor = kwargs['cor']
-            tam = kwargs['tam']
-            qtd = kwargs['qtd']
+            qtd = int(kwargs['qtd'])
+        else:
+            qtd = 0
 
-            hash_cache = ';'.join(map(format, (
-                deposito,
-                ref,
-                cor,
-                tam,
-                qtd,
-                time.strftime('%y%m%d'),
-                request_user(request),
-            )))
-            hash_object = hashlib.md5(hash_cache.encode())
-            trail = hash_object.hexdigest()
+        deposito = kwargs['deposito']
+        ref = kwargs['ref']
+        cor = kwargs['cor']
+        tam = kwargs['tam']
 
-            if 'conf_hash' in kwargs:
-                conf_hash = kwargs['conf_hash']
-                if trail != conf_hash:
-                    return redirect('apoio_ao_erp')
-            else:
-                conf_hash = None
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context(
-                cursor, deposito, ref, cor, tam, qtd, conf_hash, trail))
+        hash_cache = ';'.join(map(format, (
+            deposito,
+            ref,
+            cor,
+            tam,
+            qtd,
+            time.strftime('%y%m%d'),
+            request_user(request),
+        )))
+        hash_object = hashlib.md5(hash_cache.encode())
+        trail = hash_object.hexdigest()
+
+        if 'conf_hash' in kwargs:
+            conf_hash = kwargs['conf_hash']
+            if trail != conf_hash:
+                return redirect('apoio_ao_erp')
+        else:
+            conf_hash = None
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context(
+            cursor, deposito, ref, cor, tam, qtd, conf_hash, trail))
         return render(request, self.template_name, context)
 
 
