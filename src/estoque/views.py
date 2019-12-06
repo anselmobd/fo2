@@ -381,7 +381,7 @@ class ZeraEstoque(PermissionRequiredMixin, View):
 
     def __init__(self):
         self.permission_required = 'base.can_adjust_stock'
-        self.template_name = 'estoque/ajusta_estoque.html'
+        self.template_name = 'estoque/zera_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
         self.transacoes = {
