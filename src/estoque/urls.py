@@ -26,9 +26,9 @@ urlpatterns = [
         r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<conf_hash>[^/]+)/$',
         views.ZeraEstoque.as_view(), name='zera_estoque__get'),
 
-    url(r'^ajusta_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
+    url(r'^edita_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
         r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/$',
-        views.AjustaEstoque.as_view(), name='ajusta_estoque__get'),
+        views.EditaEstoque.as_view(), name='edita_estoque__get'),
 
     # url(r'^ajusta_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
     #     r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<qtd>[^/]+)/'
