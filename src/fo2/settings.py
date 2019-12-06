@@ -140,10 +140,8 @@ DATABASES = {
         'NAME': 'xe',
         'USER': 'systextil',
         'PASSWORD': 'oracle',
-        # 'HOST': 'localhost',
-        # 'PORT': '26521',
-        'HOST': '192.168.1.28',
-        'PORT': '1521',
+        'HOST': 'localhost',
+        'PORT': '28521',
     },
     'persona': {  # Nasajon
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -158,8 +156,8 @@ DATABASES = {
         'NAME': '/dados/db/f1/f1.cdb',
         'USER': 'sysdba',
         'PASSWORD': DBPASS_F1,
-        'HOST': '192.168.1.98',
-        'PORT': '3050',
+        'HOST': 'localhost',
+        'PORT': '13050',
         'OPTIONS': {'charset': 'WIN1252'},
     },
 }
