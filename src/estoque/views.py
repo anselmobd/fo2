@@ -399,7 +399,12 @@ class ZeraEstoque(PermissionRequiredMixin, View):
 
     def mount_context(
             self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
-        context = {}
+        context = {
+            'deposito': deposito,
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
+        }
         executa = conf_hash is not None
 
         produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
@@ -425,14 +430,10 @@ class ZeraEstoque(PermissionRequiredMixin, View):
         sinal = 1 if ajuste > 0 else -1
         ajuste *= sinal
 
-        context = {
-            'deposito': deposito,
-            'ref': ref,
-            'cor': cor,
-            'tam': tam,
+        context.update({
             'qtd': qtd,
             'estoque': estoque,
-        }
+        })
 
         trans = self.transacoes[sinal]['codigo']
         es = self.transacoes[sinal]['es']
