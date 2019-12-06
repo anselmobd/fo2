@@ -4,7 +4,7 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'estoque:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
-<h3>Zera estoque de referência/cor/tamanho em depósito</h3>
+<h3>Edita estoque de referência/cor/tamanho em depósito</h3>
 {% if ref %}
   <h4>Item: 1.{{ ref }}.{{ tam }}.{{ cor }}</h4>
 {% endif %}
@@ -14,9 +14,9 @@
 {% if estoque is not None %}
   <h4>Quantidade no estoque no Systêxtil: {{ estoque }}</h4>
 {% endif %}
-<!-- {% if qtd is not None %}
+{% if qtd is not None %}
   <h3>Quantidade inventariada: {{ qtd }}</h3>
-{% endif %} -->
+{% endif %}
 {% if mensagem %}
   <h3>{{ mensagem }}</h3>
 {% endif %}
