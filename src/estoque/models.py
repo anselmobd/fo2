@@ -565,6 +565,12 @@ def get_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam):
 
 
 def get_preco_medio_ref_cor_tam(cursor, ref, cor, tam):
+    filtra_tam = ''
+    if tam != '000':
+        filtra_tam = """--
+            AND rtc.SUBGRU_ESTRUTURA = '{tam}'
+        """.format(tam=tam)
+
     sql = '''
         SELECT
           coalesce(rtc.PRECO_MEDIO, 0) PRECO_MEDIO
@@ -572,12 +578,12 @@ def get_preco_medio_ref_cor_tam(cursor, ref, cor, tam):
         WHERE 1=1
           AND rtc.NIVEL_ESTRUTURA = 1
           AND rtc.GRUPO_ESTRUTURA = '{ref}'
-          AND rtc.SUBGRU_ESTRUTURA = '{tam}'
+          {filtra_tam} -- filtra_tam
           AND rtc.ITEM_ESTRUTURA = '{cor}'
     '''.format(
         ref=ref,
         cor=cor,
-        tam=tam,
+        filtra_tam=filtra_tam,
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
