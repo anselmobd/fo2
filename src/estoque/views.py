@@ -525,22 +525,19 @@ class EditaEstoque(PermissionRequiredMixin, View):
             },
         }
 
-    def pre_mount_context(self, request, **kwargs):
+    def start(self):
         self.context = {'titulo': self.title_name}
         self.form = self.Form_class()
         self.cursor = connections['so'].cursor()
 
+    def pre_mount_context(self, request, qtd, **kwargs):
         self.request = request
 
         self.deposito = kwargs['deposito']
         self.ref = kwargs['ref']
         self.cor = kwargs['cor']
         self.tam = kwargs['tam']
-        # self.qtd = kwargs['qtd']
-        #
-        # # a possibilidade de ValueError Exception
-        # # é tratada por quem chama este método
-        # self.qtd = int(self.qtd)
+        self.qtd = qtd
 
         produto = models.get_preco_medio_ref_cor_tam(
             self.cursor, self.ref, self.cor, self.tam)
@@ -549,72 +546,74 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
         self.preco_medio = produto[0]['preco_medio']
 
-        # l_estoque = models.get_estoque_dep_ref_cor_tam(
-        #     self.cursor, self.deposito, self.ref, self.cor, self.tam)
-        # if len(l_estoque) == 0:
-        #     self.estoque = 0
-        # else:
-        #     self.estoque = l_estoque[0]['estoque']
-        #
-        # self.ajuste = self.qtd - self.estoque
-        # if self.ajuste == 0:
-        #     raise SuspiciousOperation('estoque ok')
-        #
-        # self.sinal = 1 if self.ajuste > 0 else -1
-        # self.ajuste *= self.sinal
-        #
-        # self.trans = self.transacoes[self.sinal]['codigo']
-        # self.es = self.transacoes[self.sinal]['es']
-        # self.descr = self.transacoes[self.sinal]['descr']
-        #
-        # hash_cache = ';'.join(map(format, (
-        #     self.deposito,
-        #     self.ref,
-        #     self.cor,
-        #     self.tam,
-        #     self.qtd,
-        #     time.strftime('%y%m%d'),
-        #     request_user(self.request),
-        #     self.request.session.session_key,
-        # )))
-        # hash_object = hashlib.md5(hash_cache.encode())
-        # self.trail = hash_object.hexdigest()
-        #
-        # if 'conf_hash' in kwargs:
-        #     self.conf_hash = kwargs['conf_hash']
-        #     if self.trail != self.conf_hash:
-        #         raise SuspiciousOperation('conf_hash')
-        # else:
-        #     self.conf_hash = None
-        # self.executa = self.conf_hash is not None
+        l_estoque = models.get_estoque_dep_ref_cor_tam(
+            self.cursor, self.deposito, self.ref, self.cor, self.tam)
+        if len(l_estoque) == 0:
+            self.estoque = 0
+        else:
+            self.estoque = l_estoque[0]['estoque']
 
         self.context.update({
             'deposito': self.deposito,
             'ref': self.ref,
             'cor': self.cor,
             'tam': self.tam,
-            # 'qtd': self.qtd,
-            # 'estoque': self.estoque,
+            'estoque': self.estoque,
+            'qtd': self.qtd,
         })
 
-    def get(self, request, *args, **kwargs):
-        try:
-            self.pre_mount_context(request, **kwargs)
-        except (SuspiciousOperation, ValueError) as e:
-            if isinstance(e, ValueError):
-                print('self.post(request, *args, **kwargs)')
-            else:
-                if e.args[0] == 'produto':
-                    self.context.update({
-                        'mensagem': 'Referência/Cor/Tamanho não encontrada',
-                    })
-                elif e.args[0] == 'estoque ok':
-                    self.context.update({
-                        'mensagem':
-                            'O depósito já está com a quantidade desejada',
-                    })
-                else:
-                    return redirect('apoio_ao_erp')
+        if self.qtd is not None:
+            self.ajuste = self.qtd - self.estoque
+            if self.ajuste == 0:
+                raise SuspiciousOperation('estoque ok')
 
-        # self.context.update(self.mount_context())
+            self.sinal = 1 if self.ajuste > 0 else -1
+            self.ajuste *= self.sinal
+
+            self.trans = self.transacoes[self.sinal]['codigo']
+            self.es = self.transacoes[self.sinal]['es']
+            self.descr = self.transacoes[self.sinal]['descr']
+
+            hash_cache = ';'.join(map(format, (
+                self.deposito,
+                self.ref,
+                self.cor,
+                self.tam,
+                self.qtd,
+                time.strftime('%y%m%d'),
+                request_user(self.request),
+                self.request.session.session_key,
+            )))
+            hash_object = hashlib.md5(hash_cache.encode())
+            self.trail = hash_object.hexdigest()
+
+            if 'conf_hash' in kwargs:
+                self.conf_hash = kwargs['conf_hash']
+                if self.trail != self.conf_hash:
+                    raise SuspiciousOperation('conf_hash')
+            else:
+                self.conf_hash = None
+            self.executa = self.conf_hash is not None
+
+    def mount_context(self, request, qtd, **kwargs):
+        try:
+            self.pre_mount_context(request, None, **kwargs)
+        except SuspiciousOperation as e:
+            if e.args[0] == 'produto':
+                self.context.update({
+                    'mensagem': 'Referência/Cor/Tamanho não encontrada',
+                })
+            elif e.args[0] == 'estoque ok':
+                self.context.update({
+                    'mensagem':
+                        'O depósito já está com a quantidade desejada',
+                })
+            else:
+                return False
+        return True
+
+    def get(self, request, *args, **kwargs):
+        self.start()
+        if not self.mount_context(request, None, **kwargs):
+            return redirect('apoio_ao_erp')
         return render(request, self.template_name, self.context)
