@@ -26,4 +26,11 @@
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
   </table>
 {% endif %}
+{% if t_data %}
+  <h3>Transações (feitas no Apoio) de referência em depósito</h3>
+  <table>
+    {% include "layout/thead_generic.html" with data=t_headers style=t_style only %}
+    {% include "layout/tbody_generic.html" with fields=t_fields data=t_data style=t_style only %}
+  </table>
+{% endif %}
 {% endblock %}

@@ -543,6 +543,33 @@ def estoque_deposito_ref(cursor, deposito, ref):
     return rows_to_dict_list_lower(cursor)
 
 
+def trans_fo2_deposito_ref(cursor, deposito, ref):
+    sql = '''
+        SELECT
+          t.DATA_INSERCAO HORA
+        , t.NUMERO_DOCUMENTO NUMDOC
+        , t.ITEM_ESTRUTURA COR
+        , t.SUBGRUPO_ESTRUTURA TAM
+        , t.CODIGO_TRANSACAO TRANS
+        , t.ENTRADA_SAIDA ES
+        , t.QUANTIDADE QTD
+        FROM ESTQ_300 t
+        WHERE t.CODIGO_DEPOSITO = '{deposito}'
+          AND t.NIVEL_ESTRUTURA = '1'
+          AND t.GRUPO_ESTRUTURA = '{ref}'
+          AND t.DATA_MOVIMENTO >= TIMESTAMP '2019-11-27 00:00:00'
+          AND t.NUMERO_DOCUMENTO > 702000000
+          AND t.NUMERO_DOCUMENTO < 702999999
+        ORDER BY
+          t.DATA_INSERCAO DESC
+    '''.format(
+        deposito=deposito,
+        ref=ref,
+    )
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
+
+
 def get_estoque_dep_ref_cor_tam(cursor, deposito, ref, cor, tam):
     sql = '''
         SELECT

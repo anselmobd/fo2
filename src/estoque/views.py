@@ -365,6 +365,16 @@ class MostraEstoque(View):
             'style': style,
         })
 
+        data = models.trans_fo2_deposito_ref(cursor, deposito, ref)
+        if len(data) != 0:
+            context.update({
+                't_headers': ['Data/hora', 'Documento', 'Cor', 'Tamanho',
+                              'Transação', 'E/S', 'Quantidade'],
+                't_fields': ['hora', 'numdoc', 'cor', 'tam',
+                             'trans', 'es', 'qtd'],
+                't_data': data,
+                't_style': {7: 'text-align: right;', },
+            })
         return context
 
     def get(self, request, *args, **kwargs):
