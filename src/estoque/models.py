@@ -1,4 +1,5 @@
 import time
+import datetime
 from pprint import pprint
 
 from django.db import models
@@ -543,7 +544,9 @@ def estoque_deposito_ref(cursor, deposito, ref):
     return rows_to_dict_list_lower(cursor)
 
 
-def trans_fo2_deposito_ref(cursor, deposito, ref, tipo='f'):
+def trans_fo2_deposito_ref(
+        cursor, deposito, ref, cor=None, tam=None,
+        tipo='f', data=None, hora=None):
     filtro_tipo = ''
     if tipo == 'f':  # fo2
         filtro_tipo = '''--
@@ -556,6 +559,23 @@ def trans_fo2_deposito_ref(cursor, deposito, ref, tipo='f'):
                 OR t.NUMERO_DOCUMENTO > 702999999
                 )
         '''
+
+    filtro_data = ''
+    if data is None:
+        filtro_data = '''--
+            AND t.DATA_MOVIMENTO >= TIMESTAMP '2019-11-27 00:00:00'
+        '''
+    else:
+        if hora is None:
+            data_hora = data
+        else:
+            data_hora = datetime.datetime.combine(data, hora)
+        filtro_data = '''--
+            AND t.DATA_INSERCAO >= TIMESTAMP '{}'
+        '''.format(
+            data_hora.strftime('%Y-%m-%d %H:%M:%S')
+        )
+
     sql = '''
         SELECT
           t.DATA_INSERCAO HORA
@@ -569,13 +589,14 @@ def trans_fo2_deposito_ref(cursor, deposito, ref, tipo='f'):
         WHERE t.CODIGO_DEPOSITO = '{deposito}'
           AND t.NIVEL_ESTRUTURA = '1'
           AND t.GRUPO_ESTRUTURA = '{ref}'
-          AND t.DATA_MOVIMENTO >= TIMESTAMP '2019-11-27 00:00:00'
+          {filtro_data} -- filtro_data
           {filtro_tipo} -- filtro_tipo
         ORDER BY
           t.DATA_INSERCAO DESC
     '''.format(
         deposito=deposito,
         ref=ref,
+        filtro_data=filtro_data,
         filtro_tipo=filtro_tipo,
     )
     cursor.execute(sql)
