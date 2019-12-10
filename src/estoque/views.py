@@ -517,7 +517,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
     def __init__(self):
         self.permission_required = 'base.can_adjust_stock'
-        self.Form_class = forms.AjustaEstoqueForm
+        self.Form_class = forms.EditaEstoqueForm
         self.template_name = 'estoque/edita_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
@@ -682,6 +682,8 @@ class EditaEstoque(PermissionRequiredMixin, View):
         if self.form.is_valid():
             qtd = self.form.cleaned_data['qtd']
             kwargs['qtd'] = qtd
+            data = self.form.cleaned_data['data']
+            hora = self.form.cleaned_data['hora']
             if not self.mount_context(request, **kwargs):
                 return redirect('apoio_ao_erp')
         self.context['form'] = self.form
