@@ -439,9 +439,8 @@ class ZeraEstoque(PermissionRequiredMixin, View):
         es = self.transacoes[sinal]['es']
         descr = self.transacoes[sinal]['descr']
 
-        num_doc = '702{}'.format(time.strftime('%y%m%d'))
-
         if executa:
+            num_doc = '702{}'.format(time.strftime('%y%m%d'))
             if models.insert_transacao_ajuste(
                     cursor, deposito, ref, tam, cor, num_doc, trans, es,
                     ajuste, preco_medio):
@@ -527,7 +526,6 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
     def start(self):
         self.context = {'titulo': self.title_name}
-        self.form = self.Form_class()
         self.cursor = connections['so'].cursor()
 
     def pre_mount_context(self, request, qtd, **kwargs):
@@ -562,6 +560,10 @@ class EditaEstoque(PermissionRequiredMixin, View):
             'qtd': self.qtd,
         })
 
+        try:
+            self.qtd = int(self.qtd)
+        except Exception:
+            self.qtd = None
         if self.qtd is not None:
             self.ajuste = self.qtd - self.estoque
             if self.ajuste == 0:
@@ -595,9 +597,45 @@ class EditaEstoque(PermissionRequiredMixin, View):
                 self.conf_hash = None
             self.executa = self.conf_hash is not None
 
+            if self.executa:
+                num_doc = '702{}'.format(time.strftime('%y%m%d'))
+                if models.insert_transacao_ajuste(
+                        self.cursor,
+                        self.deposito,
+                        self.ref,
+                        self.tam,
+                        self.cor,
+                        num_doc,
+                        self.trans,
+                        self.es,
+                        self.ajuste,
+                        self.preco_medio
+                        ):
+                    self.context.update({
+                        'estoque': self.qtd,
+                    })
+                    mensagem = \
+                        "Foi executada a transação '{:03}' ({}) " \
+                        "com a quantidade {}."
+                else:
+                    mensagem = \
+                        "Erro ao executar a transação '{:03}' ({}) " \
+                        "com a quantidade {}."
+            else:
+                self.context.update({
+                    'trail': self.trail,
+                })
+                mensagem = \
+                    "Deve ser executada a transação '{:03}' ({}) " \
+                    "com a quantidade {}."
+            mensagem = mensagem.format(self.trans, self.descr, self.ajuste)
+            self.context.update({
+                'mensagem': mensagem,
+            })
+
     def mount_context(self, request, qtd, **kwargs):
         try:
-            self.pre_mount_context(request, None, **kwargs)
+            self.pre_mount_context(request, qtd, **kwargs)
         except SuspiciousOperation as e:
             if e.args[0] == 'produto':
                 self.context.update({
@@ -614,6 +652,23 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.start()
+        if 'qtd' in kwargs:
+            return self.post(request, *args, **kwargs)
+        self.form = self.Form_class()
         if not self.mount_context(request, None, **kwargs):
             return redirect('apoio_ao_erp')
+        self.context['form'] = self.form
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        self.start()
+        self.form = self.Form_class(request.POST)
+        if 'qtd' in kwargs:
+            self.form.data['qtd'] = kwargs['qtd']
+            del(kwargs['qtd'])
+        if self.form.is_valid():
+            qtd = self.form.cleaned_data['qtd']
+            if not self.mount_context(request, qtd, **kwargs):
+                return redirect('apoio_ao_erp')
+        self.context['form'] = self.form
         return render(request, self.template_name, self.context)
