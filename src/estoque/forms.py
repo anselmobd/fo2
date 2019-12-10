@@ -151,5 +151,6 @@ class EditaEstoqueForm(forms.Form):
         label='Data do inventário', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
     hora = forms.TimeField(
-        label='Hora do inventário', required=False, initial='00:01',
+        label='Hora do inventário', required=False,
+        help_text='Hora não informada significa início do dia',
         widget=forms.TimeInput(attrs={'type': 'time'}))
