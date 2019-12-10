@@ -5,6 +5,19 @@
 
 {% block content %}
 <h3>Edita estoque de referência/cor/tamanho em depósito</h3>
+<p>
+  {% if anterior %}
+    <a href="{% url 'estoque:edita_estoque__get' deposito ref anterior.cor anterior.tam %}">Anterior {{ anterior.item }}</a>
+  {% else %}
+    Sem anterior
+  {% endif %}
+  -
+  {% if posterior %}
+    <a href="{% url 'estoque:edita_estoque__get' deposito ref posterior.cor posterior.tam %}">Posterior {{posterior.item}}</a>
+  {% else %}
+    Sem posterior
+  {% endif %}
+</p>
 {% if ref %}
   <h4>Item: 1.{{ ref }}.{{ tam }}.{{ cor }}</h4>
 {% endif %}

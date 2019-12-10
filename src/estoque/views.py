@@ -568,12 +568,36 @@ class EditaEstoque(PermissionRequiredMixin, View):
             tipo='s', data=self.data, hora=self.hora)
         self.movimento = 0
         if len(d_tot_movi) != 0:
-            pprint(d_tot_movi)
             for row in d_tot_movi:
                 if row['es'] == 'E':
                     self.movimento += row['qtd']
                 elif row['es'] == 'S':
                     self.movimento -= row['qtd']
+
+        anterior = {}
+        posterior = {}
+        get_prox = False
+        lista = models.estoque_deposito_ref(
+            self.cursor, self.deposito, self.ref)
+        for row in lista:
+            item = '{}.{}.{}.{}'.format(
+                1,
+                self.ref,
+                row['tam'],
+                row['cor'],
+            )
+            if get_prox:
+                posterior['item'] = item
+                posterior['cor'] = row['cor']
+                posterior['tam'] = row['tam']
+                break
+            else:
+                if self.cor == row['cor'] and self.tam == row['tam']:
+                    get_prox = True
+                else:
+                    anterior['item'] = item
+                    anterior['cor'] = row['cor']
+                    anterior['tam'] = row['tam']
 
         self.context.update({
             'deposito': self.deposito,
@@ -586,6 +610,8 @@ class EditaEstoque(PermissionRequiredMixin, View):
             'qtd': self.qtd,
             'data': self.data,
             'hora': self.hora,
+            'anterior': anterior,
+            'posterior': posterior,
         })
 
         try:
