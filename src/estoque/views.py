@@ -563,12 +563,26 @@ class EditaEstoque(PermissionRequiredMixin, View):
         else:
             self.estoque = l_estoque[0]['estoque']
 
+        d_tot_movi = models.trans_fo2_deposito_ref(
+            self.cursor, self.deposito, self.ref, self.cor, self.tam,
+            tipo='s', data=self.data, hora=self.hora)
+        self.movimento = 0
+        if len(d_tot_movi) != 0:
+            pprint(d_tot_movi)
+            for row in d_tot_movi:
+                if row['es'] == 'E':
+                    self.movimento += row['qtd']
+                elif row['es'] == 'S':
+                    self.movimento -= row['qtd']
+
         self.context.update({
             'deposito': self.deposito,
             'ref': self.ref,
             'cor': self.cor,
             'tam': self.tam,
             'estoque': self.estoque,
+            'movimento': self.movimento,
+            'movimento_neg': -self.movimento,
             'qtd': self.qtd,
             'data': self.data,
             'hora': self.hora,
@@ -579,7 +593,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         except Exception:
             self.qtd = None
         if self.qtd is not None:
-            self.ajuste = self.qtd - self.estoque
+            self.ajuste = self.qtd - self.estoque + self.movimento
             if self.ajuste == 0:
                 raise SuspiciousOperation('estoque ok')
 
