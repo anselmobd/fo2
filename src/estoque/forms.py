@@ -142,8 +142,14 @@ class ReferenciasEstoqueForm(
         autofocus_field = 'modelo'
 
 
-class AjustaEstoqueForm(forms.Form):
+class EditaEstoqueForm(forms.Form):
     qtd = forms.CharField(
         label='Quantidade inventariada', max_length=6, min_length=1,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+    data = forms.DateField(
+        label='Data do inventário', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+    hora = forms.TimeField(
+        label='Hora do inventário', required=False, initial='00:01',
+        widget=forms.TimeInput(attrs={'type': 'time'}))
