@@ -538,14 +538,14 @@ class EditaEstoque(PermissionRequiredMixin, View):
         self.context = {'titulo': self.title_name}
         self.cursor = connections['so'].cursor()
 
-    def pre_mount_context(self, request, qtd, **kwargs):
+    def pre_mount_context(self, request, **kwargs):
         self.request = request
 
         self.deposito = kwargs['deposito']
         self.ref = kwargs['ref']
         self.cor = kwargs['cor']
         self.tam = kwargs['tam']
-        self.qtd = qtd
+        self.qtd = kwargs['qtd']
 
         produto = models.get_preco_medio_ref_cor_tam(
             self.cursor, self.ref, self.cor, self.tam)
@@ -643,9 +643,9 @@ class EditaEstoque(PermissionRequiredMixin, View):
                 'mensagem': mensagem,
             })
 
-    def mount_context(self, request, qtd, **kwargs):
+    def mount_context(self, request, **kwargs):
         try:
-            self.pre_mount_context(request, qtd, **kwargs)
+            self.pre_mount_context(request, **kwargs)
         except SuspiciousOperation as e:
             if e.args[0] == 'produto':
                 self.context.update({
@@ -664,8 +664,10 @@ class EditaEstoque(PermissionRequiredMixin, View):
         self.start()
         if 'qtd' in kwargs:
             return self.post(request, *args, **kwargs)
+        else:
+            kwargs['qtd'] = None
         self.form = self.Form_class()
-        if not self.mount_context(request, None, **kwargs):
+        if not self.mount_context(request, **kwargs):
             return redirect('apoio_ao_erp')
         self.context['form'] = self.form
         return render(request, self.template_name, self.context)
@@ -675,10 +677,12 @@ class EditaEstoque(PermissionRequiredMixin, View):
         self.form = self.Form_class(request.POST)
         if 'qtd' in kwargs:
             self.form.data['qtd'] = kwargs['qtd']
-            del(kwargs['qtd'])
+        else:
+            kwargs['qtd'] = None
         if self.form.is_valid():
             qtd = self.form.cleaned_data['qtd']
-            if not self.mount_context(request, qtd, **kwargs):
+            kwargs['qtd'] = qtd
+            if not self.mount_context(request, **kwargs):
                 return redirect('apoio_ao_erp')
         self.context['form'] = self.form
         return render(request, self.template_name, self.context)
