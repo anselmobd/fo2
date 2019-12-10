@@ -547,6 +547,19 @@ def estoque_deposito_ref(cursor, deposito, ref):
 def trans_fo2_deposito_ref(
         cursor, deposito, ref, cor=None, tam=None,
         tipo='f', data=None, hora=None):
+
+    filtro_cor = ''
+    if cor is not None:
+        filtro_cor = '''--
+            AND t.ITEM_ESTRUTURA = '{}'
+        '''.format(cor)
+
+    filtro_tam = ''
+    if tam is not None:
+        filtro_tam = '''--
+            AND t.SUBGRUPO_ESTRUTURA = '{}'
+        '''.format(tam)
+
     filtro_tipo = ''
     if tipo == 'f':  # fo2
         filtro_tipo = '''--
@@ -589,6 +602,8 @@ def trans_fo2_deposito_ref(
         WHERE t.CODIGO_DEPOSITO = '{deposito}'
           AND t.NIVEL_ESTRUTURA = '1'
           AND t.GRUPO_ESTRUTURA = '{ref}'
+          {filtro_cor} -- filtro_cor
+          {filtro_tam} -- filtro_tam
           {filtro_data} -- filtro_data
           {filtro_tipo} -- filtro_tipo
         ORDER BY
@@ -596,6 +611,8 @@ def trans_fo2_deposito_ref(
     '''.format(
         deposito=deposito,
         ref=ref,
+        filtro_cor=filtro_cor,
+        filtro_tam=filtro_tam,
         filtro_data=filtro_data,
         filtro_tipo=filtro_tipo,
     )
