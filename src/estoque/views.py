@@ -546,6 +546,8 @@ class EditaEstoque(PermissionRequiredMixin, View):
         self.cor = kwargs['cor']
         self.tam = kwargs['tam']
         self.qtd = kwargs['qtd']
+        self.data = kwargs['data']
+        self.hora = kwargs['hora']
 
         produto = models.get_preco_medio_ref_cor_tam(
             self.cursor, self.ref, self.cor, self.tam)
@@ -568,6 +570,8 @@ class EditaEstoque(PermissionRequiredMixin, View):
             'tam': self.tam,
             'estoque': self.estoque,
             'qtd': self.qtd,
+            'data': self.data,
+            'hora': self.hora,
         })
 
         try:
@@ -666,6 +670,8 @@ class EditaEstoque(PermissionRequiredMixin, View):
             return self.post(request, *args, **kwargs)
         else:
             kwargs['qtd'] = None
+            kwargs['data'] = None
+            kwargs['hora'] = None
         self.form = self.Form_class()
         if not self.mount_context(request, **kwargs):
             return redirect('apoio_ao_erp')
@@ -679,11 +685,15 @@ class EditaEstoque(PermissionRequiredMixin, View):
             self.form.data['qtd'] = kwargs['qtd']
         else:
             kwargs['qtd'] = None
+            kwargs['data'] = None
+            kwargs['hora'] = None
         if self.form.is_valid():
             qtd = self.form.cleaned_data['qtd']
-            kwargs['qtd'] = qtd
             data = self.form.cleaned_data['data']
             hora = self.form.cleaned_data['hora']
+            kwargs['qtd'] = qtd
+            kwargs['data'] = data
+            kwargs['hora'] = hora
             if not self.mount_context(request, **kwargs):
                 return redirect('apoio_ao_erp')
         self.context['form'] = self.form

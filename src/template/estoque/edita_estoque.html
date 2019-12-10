@@ -22,6 +22,12 @@
 {% if qtd is not None %}
   <h3>Quantidade inventariada: {{ qtd }}</h3>
 {% endif %}
+{% if data is not None %}
+  <h3>Data do inventario: {{ data }}</h3>
+  {% if hora is not None %}
+    <h3>Hora do inventario: {{ hora }}</h3>
+  {% endif %}
+{% endif %}
 {% if mensagem %}
   <h3>{{ mensagem }}</h3>
 {% endif %}
