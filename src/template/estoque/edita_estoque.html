@@ -27,6 +27,10 @@
   {% if hora is not None %}
     <h3>Hora do inventario: {{ hora }}</h3>
   {% endif %}
+  {% if movimento %}
+    <h3>Movimento total após inventário:{% if movimento > 0 %}
+      Entrada de {{ movimento }} {% else %} Saída de {{ movimento_neg }} {% endif %} peças (exceto ajustes via Apoio)</h3>
+  {% endif %}
 {% endif %}
 {% if mensagem %}
   <h3>{{ mensagem }}</h3>
