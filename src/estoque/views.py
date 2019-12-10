@@ -334,14 +334,14 @@ class MostraEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        headers = ['Cor', 'Tamanho', 'Quant. total']
+        headers = ['Cor', 'Tamanho', 'Quantidade']
         fields = ['cor', 'tam', 'qtd']
         style = {
             3: 'text-align: right;',
         }
 
         if has_permission(request, 'base.can_adjust_stock'):
-            headers = ['Cor', 'Tamanho', 'Zera', 'Quant. total', 'Edita']
+            headers = ['Cor', 'Tamanho', 'Zera', 'Quantidade', 'Edita']
             fields = ['cor', 'tam', 'zera', 'qtd', 'edita']
             style = {
                 4: 'text-align: right;',
