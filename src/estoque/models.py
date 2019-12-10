@@ -543,7 +543,19 @@ def estoque_deposito_ref(cursor, deposito, ref):
     return rows_to_dict_list_lower(cursor)
 
 
-def trans_fo2_deposito_ref(cursor, deposito, ref):
+def trans_fo2_deposito_ref(cursor, deposito, ref, tipo='f'):
+    filtro_tipo = ''
+    if tipo == 'f':  # fo2
+        filtro_tipo = '''--
+            AND t.NUMERO_DOCUMENTO >= 702000000
+            AND t.NUMERO_DOCUMENTO <= 702999999
+        '''
+    elif tipo == 's':  # systextil
+        filtro_tipo = '''--
+            AND (  t.NUMERO_DOCUMENTO < 702000000
+                OR t.NUMERO_DOCUMENTO > 702999999
+                )
+        '''
     sql = '''
         SELECT
           t.DATA_INSERCAO HORA
@@ -558,13 +570,13 @@ def trans_fo2_deposito_ref(cursor, deposito, ref):
           AND t.NIVEL_ESTRUTURA = '1'
           AND t.GRUPO_ESTRUTURA = '{ref}'
           AND t.DATA_MOVIMENTO >= TIMESTAMP '2019-11-27 00:00:00'
-          AND t.NUMERO_DOCUMENTO > 702000000
-          AND t.NUMERO_DOCUMENTO < 702999999
+          {filtro_tipo} -- filtro_tipo
         ORDER BY
           t.DATA_INSERCAO DESC
     '''.format(
         deposito=deposito,
         ref=ref,
+        filtro_tipo=filtro_tipo,
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
