@@ -8,12 +8,20 @@
 <p>
   {% if anterior %}
     <a href="{% url 'estoque:edita_estoque__get' deposito ref anterior.cor anterior.tam %}">Anterior {{ anterior.item }}</a>
+    {% if qtd %}
+      -
+      <a href="{% url 'estoque:edita_estoque__get' deposito ref anterior.cor anterior.tam qtd %}">Qtd. {{ qtd }}</a>
+    {% endif %}
   {% else %}
     Sem anterior
   {% endif %}
-  -
+  ||
   {% if posterior %}
     <a href="{% url 'estoque:edita_estoque__get' deposito ref posterior.cor posterior.tam %}">Posterior {{posterior.item}}</a>
+    {% if qtd %}
+      -
+      <a href="{% url 'estoque:edita_estoque__get' deposito ref posterior.cor posterior.tam qtd %}">Qtd. {{ qtd }}</a>
+    {% endif %}
   {% else %}
     Sem posterior
   {% endif %}
