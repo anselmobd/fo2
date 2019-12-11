@@ -442,7 +442,7 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
     return result
 
 
-def referencia_deposito(cursor, modelo):
+def referencia_deposito(cursor, deposito, modelo):
     filtro_modelo = ''
     if modelo != '':
         filtro_modelo = '''--
@@ -460,6 +460,14 @@ def referencia_deposito(cursor, modelo):
             modelo=modelo,
         )
 
+    filtro_deposito = ''
+    if deposito is not None and deposito != '-':
+        filtro_deposito = '''--
+            AND d.CODIGO_DEPOSITO = '{deposito}'
+        '''.format(
+            deposito=deposito,
+        )
+
     sql = '''
         SELECT DISTINCT
           i.REF
@@ -475,6 +483,7 @@ def referencia_deposito(cursor, modelo):
             AND rtc.NIVEL_ESTRUTURA = 1
             AND d.CODIGO_DEPOSITO IN (101, 102, 231)
             AND rtc.GRUPO_ESTRUTURA < 'C0000'
+            {filtro_deposito} -- filtro_deposito
             {filtro_modelo} -- filtro_modelo
         ) i
         LEFT JOIN ESTQ_040 e
@@ -497,6 +506,7 @@ def referencia_deposito(cursor, modelo):
           NLSSORT(i.REF,'NLS_SORT=BINARY_AI')
         , i.DEP
     '''.format(
+        filtro_deposito=filtro_deposito,
         filtro_modelo=filtro_modelo,
     )
     cursor.execute(sql)
