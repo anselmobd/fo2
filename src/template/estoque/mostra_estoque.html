@@ -22,6 +22,12 @@
 {% if ref %}
   <h4>Referência: {{ ref }}</h4>
 {% endif %}
+{% if idata is not None %}
+  <h3>Data do inventario: {{ idata }}</h3>
+  {% if hora is not None %}
+    <h3>Hora do inventario: {{ hora }}</h3>
+  {% endif %}
+{% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% endif %}

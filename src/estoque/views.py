@@ -327,10 +327,12 @@ class MostraEstoque(View):
         self.template_name = 'estoque/mostra_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
-    def mount_context(self, request, cursor, deposito, ref, qtd, data, hora):
+    def mount_context(self, request, cursor, deposito, ref, qtd, idata, hora):
         context = {
             'deposito': deposito,
             'ref': ref,
+            'idata': idata,
+            'hora': hora,
         }
 
         data = models.estoque_deposito_ref(cursor, deposito, ref)
@@ -338,19 +340,55 @@ class MostraEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        headers = ['Cor', 'Tamanho', 'Quantidade']
-        fields = ['cor', 'tam', 'qtd']
-        style = {
-            3: 'text-align: right;',
-        }
-
-        if has_permission(request, 'base.can_adjust_stock'):
-            headers = ['Cor', 'Tamanho', 'Quantidade', 'Edita']
-            fields = ['cor', 'tam', 'qtd', 'edita']
+        if idata is None:
+            headers = ['Cor', 'Tamanho', 'Estoque']
+            fields = ['cor', 'tam', 'qtd']
             style = {
                 3: 'text-align: right;',
             }
+        else:
+            headers = ['Cor', 'Tamanho', 'Estoque na data',
+                       'Movimento', 'Estoque atual']
+            fields = ['cor', 'tam', 'qtd_inv',
+                      'movimento', 'qtd']
+            style = {
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+                5: 'text-align: right;',
+            }
+
+        for row in data:
+            movimento = 0
+            if idata is not None:
+                d_tot_movi = models.trans_fo2_deposito_ref(
+                    cursor, deposito, ref, row['cor'], row['tam'],
+                    tipo='s', data=idata, hora=hora)
+                if len(d_tot_movi) != 0:
+                    for d_row in d_tot_movi:
+                        if d_row['es'] == 'E':
+                            movimento += d_row['qtd']
+                        elif d_row['es'] == 'S':
+                            movimento -= d_row['qtd']
+            row['movimento'] = movimento
+            row['qtd_inv'] = row['qtd'] - movimento
+
+        if has_permission(request, 'base.can_adjust_stock'):
+            headers.append('Edita')
+            fields.append('edita')
             for row in data:
+                movimento = 0
+                if idata is not None:
+                    d_tot_movi = models.trans_fo2_deposito_ref(
+                        cursor, deposito, ref, row['cor'], row['tam'],
+                        tipo='s', data=idata, hora=hora)
+                    if len(d_tot_movi) != 0:
+                        for d_row in d_tot_movi:
+                            if d_row['es'] == 'E':
+                                movimento += d_row['qtd']
+                            elif d_row['es'] == 'S':
+                                movimento -= d_row['qtd']
+                row['movimento'] = movimento
+                row['qtd_inv'] = row['qtd'] - movimento
                 row['edita'] = 'Edita'
                 row['edita|LINK'] = reverse(
                     'estoque:edita_estoque__get', args=[
@@ -385,18 +423,20 @@ class MostraEstoque(View):
         context = {'titulo': self.title_name}
 
         get_data_inv = None
+        idata = None
         if 'ajuste_inv_data' in request.COOKIES:
             get_data_inv = request.COOKIES.get('ajuste_inv_data')
         if get_data_inv is None:
             self.form = self.Form_class()
         else:
             self.form = self.Form_class(initial={"data": get_data_inv})
+            idata = datetime.datetime.strptime(get_data_inv, '%Y-%m-%d').date()
 
         deposito = kwargs['deposito']
         ref = kwargs['ref']
         cursor = connections['so'].cursor()
         context.update(self.mount_context(
-            request, cursor, deposito, ref, None, None, None))
+            request, cursor, deposito, ref, None, idata, None))
 
         context['form'] = self.form
         return render(request, self.template_name, context)
