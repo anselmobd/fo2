@@ -116,7 +116,7 @@ class Pedido(View):
             })
 
             # Grade
-            g_header, g_fields, g_data, _ = queries.pedido.sortimento(
+            g_header, g_fields, g_data, g_total = queries.pedido.sortimento(
                 cursor, pedido=pedido)
             if len(g_data) != 0:
                 g_style = {}
@@ -131,6 +131,7 @@ class Pedido(View):
                     'g_fields': g_fields,
                     'g_data': g_data,
                     'g_style': g_style,
+                    'g_total': g_total,
                 })
 
         return context

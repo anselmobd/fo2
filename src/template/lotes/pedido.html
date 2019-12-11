@@ -62,5 +62,6 @@
     {% include "layout/thead_generic.html" with data=g_headers style=g_style only %}
     {% include "layout/tbody_generic.html" with fields=g_fields data=g_data style=g_style only %}
   </table>
+  <h4>Quantidade total: {{ g_total }}</h4>
 {% endif %}
 {% endblock %}
