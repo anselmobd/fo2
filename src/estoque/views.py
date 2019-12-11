@@ -564,16 +564,17 @@ class EditaEstoque(PermissionRequiredMixin, View):
         else:
             self.estoque = l_estoque[0]['estoque']
 
-        d_tot_movi = models.trans_fo2_deposito_ref(
-            self.cursor, self.deposito, self.ref, self.cor, self.tam,
-            tipo='s', data=self.data, hora=self.hora)
         self.movimento = 0
-        if len(d_tot_movi) != 0:
-            for row in d_tot_movi:
-                if row['es'] == 'E':
-                    self.movimento += row['qtd']
-                elif row['es'] == 'S':
-                    self.movimento -= row['qtd']
+        if self.data is not None:
+            d_tot_movi = models.trans_fo2_deposito_ref(
+                self.cursor, self.deposito, self.ref, self.cor, self.tam,
+                tipo='s', data=self.data, hora=self.hora)
+            if len(d_tot_movi) != 0:
+                for row in d_tot_movi:
+                    if row['es'] == 'E':
+                        self.movimento += row['qtd']
+                    elif row['es'] == 'S':
+                        self.movimento -= row['qtd']
 
         anterior = {}
         posterior = {}
