@@ -343,10 +343,10 @@ class MostraEstoque(View):
         }
 
         if has_permission(request, 'base.can_adjust_stock'):
-            headers = ['Cor', 'Tamanho', 'Zera', 'Quantidade', 'Edita']
-            fields = ['cor', 'tam', 'zera', 'qtd', 'edita']
+            headers = ['Cor', 'Tamanho', 'Quantidade', 'Edita']
+            fields = ['cor', 'tam', 'qtd', 'edita']
             style = {
-                4: 'text-align: right;',
+                3: 'text-align: right;',
             }
             for row in data:
                 row['edita'] = 'Edita'
