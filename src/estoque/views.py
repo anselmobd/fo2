@@ -582,9 +582,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         lista = models.estoque_deposito_ref(
             self.cursor, self.deposito, self.ref)
         for row in lista:
-            item = '{}.{}.{}.{}'.format(
-                1,
-                self.ref,
+            item = '{}.{}'.format(
                 row['tam'],
                 row['cor'],
             )
