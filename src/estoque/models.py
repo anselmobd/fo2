@@ -574,11 +574,7 @@ def trans_fo2_deposito_ref(
         '''
 
     filtro_data = ''
-    if data is None:
-        filtro_data = '''--
-            AND t.DATA_MOVIMENTO >= TIMESTAMP '2019-11-27 00:00:00'
-        '''
-    else:
+    if data is not None:
         if hora is None:
             data_hora = data
         else:
