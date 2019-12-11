@@ -137,8 +137,18 @@ class ReferenciasEstoqueForm(
         O2BaseForm,
         O2FieldModeloForm):
 
+    CHOICES = [
+        ('-', 'TODOS (101, 102, 231)'),
+        ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
+        ('102', '102-PA VAREJO PRIMEIRA QUALIDADE'),
+        ('231', '231-MAT PRIMA ESTOQUE'),
+    ]
+    deposito = forms.ChoiceField(
+        label='Depósito',
+        choices=CHOICES, initial='-')
+
     class Meta:
-        order_fields = ['filtra_ref', 'modelo']
+        order_fields = ['deposito', 'modelo']
         autofocus_field = 'modelo'
 
 
