@@ -322,10 +322,12 @@ class ReferenciaDeposito(View):
 
 
 class MostraEstoque(View):
-    template_name = 'estoque/mostra_estoque.html'
-    title_name = 'Ajuste de estoque'
+    def __init__(self):
+        self.Form_class = forms.MostraEstoqueForm
+        self.template_name = 'estoque/mostra_estoque.html'
+        self.title_name = 'Ajuste de estoque'
 
-    def mount_context(self, request, cursor, deposito, ref):
+    def mount_context(self, request, cursor, deposito, ref, qtd, data, hora):
         context = {
             'deposito': deposito,
             'ref': ref,
@@ -381,12 +383,48 @@ class MostraEstoque(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        if 'deposito' in kwargs and 'ref' in kwargs:
-            deposito = kwargs['deposito']
-            ref = kwargs['ref']
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context(request, cursor, deposito, ref))
+
+        get_data_inv = None
+        if 'ajuste_inv_data' in request.COOKIES:
+            get_data_inv = request.COOKIES.get('ajuste_inv_data')
+        if get_data_inv is None:
+            self.form = self.Form_class()
+        else:
+            self.form = self.Form_class(initial={"data": get_data_inv})
+
+        deposito = kwargs['deposito']
+        ref = kwargs['ref']
+        cursor = connections['so'].cursor()
+        context.update(self.mount_context(
+            request, cursor, deposito, ref, None, None, None))
+
+        context['form'] = self.form
         return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        self.form = self.Form_class(request.POST)
+
+        deposito = kwargs['deposito']
+        ref = kwargs['ref']
+
+        set_data_inv = None
+        if self.form.is_valid():
+            qtd = self.form.cleaned_data['qtd']
+            data = self.form.cleaned_data['data']
+            hora = self.form.cleaned_data['hora']
+            set_data_inv = data
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(
+                request, cursor, deposito, ref, qtd, data, hora))
+
+        context['form'] = self.form
+        response = render(request, self.template_name, context)
+        if set_data_inv is None:
+            response.delete_cookie('ajuste_inv_data')
+        else:
+            response.set_cookie('ajuste_inv_data', set_data_inv)
+        return response
 
 
 class ZeraEstoque(PermissionRequiredMixin, View):
