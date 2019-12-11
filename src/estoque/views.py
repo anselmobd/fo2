@@ -667,7 +667,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
                         self.preco_medio
                         ):
                     self.context.update({
-                        'estoque': self.qtd,
+                        'estoque': self.qtd + self.movimento,
                     })
                     mensagem = \
                         "Foi executada a transação '{:03}' ({}) " \
