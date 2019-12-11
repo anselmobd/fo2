@@ -62,6 +62,8 @@
         {% if movimento %}
           <h3>Movimento total após inventário:{% if movimento > 0 %}
             Entrada de {{ movimento }} {% else %} Saída de {{ movimento_neg }} {% endif %} peças (exceto ajustes via Apoio)</h3>
+        {% else %}
+        <h3>Nenhum movimento após inventário (exceto ajustes via Apoio)</h3>
         {% endif %}
       {% endif %}
       {% if mensagem %}
