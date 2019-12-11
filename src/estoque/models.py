@@ -527,7 +527,8 @@ def estoque_deposito_ref(cursor, deposito, ref):
         LEFT JOIN BASI_220 ta
           ON ta.TAMANHO_REF = i.TAM
         LEFT JOIN ESTQ_040 e
-          ON e.CDITEM_NIVEL99 = 1
+          ON e.LOTE_ACOMP = 0
+         AND e.CDITEM_NIVEL99 = 1
          AND e.CDITEM_GRUPO = i.REF
          AND e.CDITEM_SUBGRUPO = i.TAM
          AND e.CDITEM_ITEM = i.COR
