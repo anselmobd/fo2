@@ -104,6 +104,7 @@ def sortimento(cursor, **kwargs):
               ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
             LEFT JOIN FATU_050 f -- fatura
               ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+             AND f.SITUACAO_NFISC <> 2  -- cancelada
             LEFT JOIN FATU_050 fok -- fatura
               ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND fok.SITUACAO_NFISC <> 2  -- cancelada
@@ -148,6 +149,7 @@ def sortimento(cursor, **kwargs):
           ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+         AND f.SITUACAO_NFISC <> 2  -- cancelada
         LEFT JOIN FATU_050 fok -- fatura
           ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
@@ -205,6 +207,7 @@ def sortimento(cursor, **kwargs):
               ON ped.PEDIDO_VENDA = i.PEDIDO_VENDA
             LEFT JOIN FATU_050 f -- fatura
               ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
+             AND f.SITUACAO_NFISC <> 2  -- cancelada
             LEFT JOIN FATU_050 fok -- fatura
               ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND fok.SITUACAO_NFISC <> 2  -- cancelada
