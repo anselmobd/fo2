@@ -280,12 +280,12 @@ class ReferenciaDeposito(View):
     template_name = 'estoque/referencia_deposito.html'
     title_name = 'Ajuste de estoque'
 
-    def mount_context(self, cursor, modelo):
+    def mount_context(self, cursor, deposito, modelo):
         context = {
             'modelo': modelo,
         }
 
-        data = models.referencia_deposito(cursor, modelo)
+        data = models.referencia_deposito(cursor, deposito, modelo)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
@@ -313,9 +313,10 @@ class ReferenciaDeposito(View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
+            deposito = form.cleaned_data['deposito']
             modelo = form.cleaned_data['modelo']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, modelo))
+            context.update(self.mount_context(cursor, deposito, modelo))
         context['form'] = form
         return render(request, self.template_name, context)
 
