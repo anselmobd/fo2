@@ -1,3 +1,4 @@
+import datetime
 import time
 import hashlib
 from pprint import pprint
@@ -706,27 +707,39 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.start()
+
+        get_data_inv = None
+        if 'ajuste_inv_data' in request.COOKIES:
+            get_data_inv = request.COOKIES.get('ajuste_inv_data')
+        if get_data_inv is None:
+            self.form = self.Form_class()
+        else:
+            self.form = self.Form_class(initial={"data": get_data_inv})
+
         if 'qtd' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
             kwargs['qtd'] = None
             kwargs['data'] = None
             kwargs['hora'] = None
-        self.form = self.Form_class()
         if not self.mount_context(request, **kwargs):
             return redirect('apoio_ao_erp')
+
         self.context['form'] = self.form
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         self.start()
+
         self.form = self.Form_class(request.POST)
+
         if 'qtd' in kwargs:
             self.form.data['qtd'] = kwargs['qtd']
         else:
             kwargs['qtd'] = None
             kwargs['data'] = None
             kwargs['hora'] = None
+        set_data_inv = None
         if self.form.is_valid():
             qtd = self.form.cleaned_data['qtd']
             data = self.form.cleaned_data['data']
@@ -734,7 +747,12 @@ class EditaEstoque(PermissionRequiredMixin, View):
             kwargs['qtd'] = qtd
             kwargs['data'] = data
             kwargs['hora'] = hora
+            set_data_inv = data
             if not self.mount_context(request, **kwargs):
                 return redirect('apoio_ao_erp')
+
         self.context['form'] = self.form
-        return render(request, self.template_name, self.context)
+        response = render(request, self.template_name, self.context)
+        if set_data_inv is not None:
+            response.set_cookie('ajuste_inv_data', set_data_inv)
+        return response
