@@ -754,6 +754,8 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
         self.context['form'] = self.form
         response = render(request, self.template_name, self.context)
-        if set_data_inv is not None:
+        if set_data_inv is None:
+            response.delete_cookie('ajuste_inv_data')
+        else:
             response.set_cookie('ajuste_inv_data', set_data_inv)
         return response
