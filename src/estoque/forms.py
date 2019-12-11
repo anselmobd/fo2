@@ -164,3 +164,18 @@ class EditaEstoqueForm(forms.Form):
         label='Hora do inventário', required=False,
         help_text='Padrão: início do dia',
         widget=forms.TimeInput(attrs={'type': 'time'}))
+
+
+class MostraEstoqueForm(forms.Form):
+    qtd = forms.CharField(
+        label='Quantidade inventariada',
+        max_length=6, min_length=1, required=False,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    data = forms.DateField(
+        label='Data do inventário', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'))
+    hora = forms.TimeField(
+        label='Hora do inventário', required=False,
+        help_text='Padrão: início do dia',
+        widget=forms.TimeInput(attrs={'type': 'time'}))

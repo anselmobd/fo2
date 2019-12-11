@@ -11,6 +11,11 @@
 
 {% block content %}
 <h3>Estoque de referência em depósito</h3>
+<form action="{% url 'estoque:mostra_estoque__get' deposito ref %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Lista"/>
+</form>
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
 {% endif %}
@@ -27,7 +32,7 @@
   </table>
 {% endif %}
 {% if t_data %}
-  <h3>Transações (feitas no Apoio) de referência em depósito</h3>
+  <h3>Transações de ajuste de referência em depósito (feitas no Apoio)</h3>
   <table>
     {% include "layout/thead_generic.html" with data=t_headers style=t_style only %}
     {% include "layout/tbody_generic.html" with fields=t_fields data=t_data style=t_style only %}
