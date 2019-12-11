@@ -718,11 +718,14 @@ class EditaEstoque(PermissionRequiredMixin, View):
             self.form = self.Form_class(initial={"data": get_data_inv})
 
         if 'qtd' in kwargs:
+            if get_data_inv is not None:
+                kwargs['data'] = get_data_inv
             return self.post(request, *args, **kwargs)
         else:
             kwargs['qtd'] = None
             kwargs['data'] = None
             kwargs['hora'] = None
+
         if not self.mount_context(request, **kwargs):
             return redirect('apoio_ao_erp')
 
@@ -731,15 +734,13 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         self.start()
-
         self.form = self.Form_class(request.POST)
 
         if 'qtd' in kwargs:
             self.form.data['qtd'] = kwargs['qtd']
-        else:
-            kwargs['qtd'] = None
-            kwargs['data'] = None
-            kwargs['hora'] = None
+        if 'data' in kwargs:
+            self.form.data['data'] = kwargs['data']
+
         set_data_inv = None
         if self.form.is_valid():
             qtd = self.form.cleaned_data['qtd']
