@@ -124,7 +124,8 @@ class Pedido(View):
                     i_column = i + 1
                     g_style[i_column] = \
                         'border-left-style: solid;' \
-                        'border-left-width: thin;'
+                        'border-left-width: thin;' \
+                        'text-align: right;'
 
                 context.update({
                     'g_headers': g_header,
