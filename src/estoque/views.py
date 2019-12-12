@@ -328,9 +328,14 @@ class MostraEstoque(View):
         self.title_name = 'Ajuste de estoque'
 
     def mount_context(self, request, cursor, deposito, ref, qtd, idata, hora):
+        try:
+            qtd = int(qtd)
+        except Exception:
+            qtd = None
         context = {
             'deposito': deposito,
             'ref': ref,
+            'qtd': qtd,
             'idata': idata,
             'hora': hora,
         }
@@ -340,25 +345,30 @@ class MostraEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        if idata is None:
-            headers = ['Cor', 'Tamanho', 'Estoque']
-            fields = ['cor', 'tam', 'qtd']
-            style = {
-                3: 'text-align: right;',
-            }
-        else:
-            headers = ['Cor', 'Tamanho', 'Estoque na data',
-                       'Movimento', 'Estoque atual']
-            fields = ['cor', 'tam', 'qtd_inv',
-                      'movimento', 'qtd']
-            style = {
-                3: 'text-align: right;',
+        headers = ['Cor', 'Tamanho', 'Estoque']
+        fields = ['cor', 'tam', 'qtd']
+        style = {
+            3: 'text-align: right;',
+        }
+        if idata is not None:
+            headers = headers[:-1] + [
+                'Estoque na data', 'Movimento', 'Estoque atual']
+            fields = fields[:-1] + [
+                'qtd_inv', 'movimento', 'qtd']
+            style.update({
                 4: 'text-align: right;',
                 5: 'text-align: right;',
-            }
+            })
+            if qtd is not None:
+                headers.append('Ajuste recomendado')
+                fields.append('ajuste')
+                style.update({
+                    6: 'text-align: right;',
+                })
 
         for row in data:
             movimento = 0
+            ajuste = 0
             if idata is not None:
                 d_tot_movi = models.trans_fo2_deposito_ref(
                     cursor, deposito, ref, row['cor'], row['tam'],
@@ -369,8 +379,11 @@ class MostraEstoque(View):
                             movimento += d_row['qtd']
                         elif d_row['es'] == 'S':
                             movimento -= d_row['qtd']
+                if qtd is not None:
+                    ajuste = qtd - row['qtd'] + movimento
             row['movimento'] = movimento
             row['qtd_inv'] = row['qtd'] - movimento
+            row['ajuste'] = ajuste
 
         if has_permission(request, 'base.can_adjust_stock'):
             headers.append('Edita')
