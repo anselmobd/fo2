@@ -392,6 +392,7 @@ class MostraEstoque(View):
             row['qtd_inv'] = row['qtd'] - movimento
             row['ajuste'] = ajuste
 
+        edita_pos = 999
         self.table.cols('cor', 'tam')
         if idata is None:
             self.table.add('qtd')
@@ -399,9 +400,10 @@ class MostraEstoque(View):
             self.table.add('qtd_inv', 'movimento', 'qtd')
             if qtd is not None:
                 self.table.add('ajuste')
+                edita_pos = -1
 
         if has_permission(request, 'base.can_adjust_stock'):
-            self.table.add(-1, 'edita')
+            self.table.add(edita_pos, 'edita')
             for row in data:
                 movimento = 0
                 if idata is not None:
