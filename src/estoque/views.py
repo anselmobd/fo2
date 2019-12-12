@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.core.exceptions import SuspiciousOperation
 
-from utils.views import totalize_data, totalize_grouped_data
+from utils.views import totalize_data, totalize_grouped_data, TableHfs
 from geral.functions import request_user, has_permission
 
 from . import forms
@@ -322,10 +322,38 @@ class ReferenciaDeposito(View):
 
 
 class MostraEstoque(View):
+
     def __init__(self):
         self.Form_class = forms.MostraEstoqueForm
         self.template_name = 'estoque/mostra_estoque.html'
         self.title_name = 'Ajuste de estoque'
+        self.table = TableHfs({
+            'cor': {
+                'header': 'Cor',
+            },
+            'tam': {
+                'header': 'Tamanho',
+            },
+            'qtd': {
+                'header': 'Estoque atual',
+                'style': 'text-align: right;',
+            },
+            'qtd_inv': {
+                'header': 'Estoque na data',
+                'style': 'text-align: right;',
+            },
+            'movimento': {
+                'header': 'Movimento',
+                'style': 'text-align: right;',
+            },
+            'ajuste': {
+                'header': 'Ajuste pelo inventário',
+                'style': 'text-align: right;',
+            },
+            'edita': {
+                'header': 'Edita',
+            },
+        })
 
     def mount_context(self, request, cursor, deposito, ref, qtd, idata, hora):
         try:
@@ -344,27 +372,6 @@ class MostraEstoque(View):
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
-
-        headers = ['Cor', 'Tamanho', 'Estoque']
-        fields = ['cor', 'tam', 'qtd']
-        style = {
-            3: 'text-align: right;',
-        }
-        if idata is not None:
-            headers = headers[:-1] + [
-                'Estoque na data', 'Movimento', 'Estoque atual']
-            fields = fields[:-1] + [
-                'qtd_inv', 'movimento', 'qtd']
-            style.update({
-                4: 'text-align: right;',
-                5: 'text-align: right;',
-            })
-            if qtd is not None:
-                headers.append('Ajuste recomendado')
-                fields.append('ajuste')
-                style.update({
-                    6: 'text-align: right;',
-                })
 
         for row in data:
             movimento = 0
@@ -385,9 +392,16 @@ class MostraEstoque(View):
             row['qtd_inv'] = row['qtd'] - movimento
             row['ajuste'] = ajuste
 
+        self.table.cols('cor', 'tam')
+        if idata is None:
+            self.table.add('qtd')
+        else:
+            self.table.add('qtd_inv', 'movimento', 'qtd')
+            if qtd is not None:
+                self.table.add('ajuste')
+
         if has_permission(request, 'base.can_adjust_stock'):
-            headers.append('Edita')
-            fields.append('edita')
+            self.table.add(-1, 'edita')
             for row in data:
                 movimento = 0
                 if idata is not None:
@@ -413,6 +427,8 @@ class MostraEstoque(View):
                     row['zera|LINK'] = reverse(
                         'estoque:zera_estoque__get', args=[
                             deposito, ref, row['cor'], row['tam']])
+
+        headers, fields, style = self.table.hfs()
         context.update({
             'headers': headers,
             'fields': fields,
