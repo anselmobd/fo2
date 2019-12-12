@@ -202,3 +202,34 @@ def totalize_grouped_data(data, config):
             data.insert(len(data)-1, global_tot)
 
     del(data[len(data)-1])
+
+
+class TableHfs(object):
+
+    def __init__(self, definition):
+        super(TableHfs, self).__init__()
+        self.definition = definition
+
+    def cols(self, *cols):
+        self._cols = cols
+
+    def add(self, pos, *cols):
+        if isinstance(pos, int):
+            self._cols = self._cols[:pos] + cols + self._cols[pos:]
+        else:
+            self._cols += (pos,) + cols
+
+    def hfs(self, *cols):
+        if len(cols) == 0:
+            if len(self._cols) != 0:
+                cols = self._cols
+        headers = []
+        fields = []
+        styles = {}
+        for idx, col in enumerate(cols, 1):
+            if col in self.definition:
+                headers.append(self.definition[col].get('header', ''))
+                fields.append(col)
+                if 'style' in self.definition[col]:
+                    styles[idx] = self.definition[col]['style']
+        return headers, fields, styles
