@@ -23,6 +23,9 @@
   <h4>Referência: {{ ref }}</h4>
 {% endif %}
 {% if idata is not None %}
+  {% if qtd is not None %}
+    <h3>Quantidade inventariada: {{ qtd }}</h3>
+  {% endif %}
   <h3>Data do inventario: {{ idata }}</h3>
   {% if hora is not None %}
     <h3>Hora do inventario: {{ hora }}</h3>
