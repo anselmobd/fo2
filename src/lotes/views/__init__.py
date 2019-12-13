@@ -1,3 +1,4 @@
+from . import analises
 from .analise import *
 from .a_produzir import *
 from .distribuicao import *
