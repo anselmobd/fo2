@@ -123,7 +123,7 @@ class GradeProduzir(O2BaseGetPostView):
 
         e_header, e_fields, e_data, e_style, total_est = \
             estoque.models.grade_estoque(
-                cursor, '5156U', '101')
+                cursor, dep=('101', '102', '231'), modelo=modelo)
         gest = None
         if total_est != 0:
             gest = {
