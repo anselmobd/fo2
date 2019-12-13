@@ -449,13 +449,13 @@ class MostraEstoque(View):
                         )
                         row['executa'] = '''
                             <a title="Executa ajuste indicado pelo inventário"
+                             class="btn btn-primary"
+                             style="padding: 0px 12px;"
                              href="javascript:void(0);"
                              onclick="exec_ajuste(this,
                                 \'{dep}\', \'{ref}\', \'{cor}\', \'{tam}\',
                                 \'{ajuste}\', \'{trail}\');"
-                            >Ajusta<span
-                            class="glyphicon glyphicon-link"
-                            aria-hidden="true"></span></a>
+                            >Ajusta</a>
                         '''.format(
                             dep=deposito,
                             ref=ref,
