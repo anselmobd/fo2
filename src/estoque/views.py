@@ -14,6 +14,7 @@ from django.shortcuts import redirect
 from django.core.exceptions import SuspiciousOperation
 
 from utils.views import totalize_data, totalize_grouped_data, TableHfs
+from fo2.template import group_rowspan
 from geral.functions import request_user, has_permission
 
 from . import forms
@@ -293,13 +294,30 @@ class ReferenciaDeposito(View):
             return context
 
         for row in data:
-            row['dep|TARGET'] = '_blank'
-            row['dep|LINK'] = reverse(
+            row['ref|TARGET'] = '_blank'
+            row['ref|LINK'] = reverse(
                 'estoque:mostra_estoque__get', args=[
                     row['dep'], row['ref']])
+
+        group = ['dep']
+        tot_conf = {
+            'group': group,
+            'sum': ['estoque', 'falta', 'soma'],
+            'count': [],
+            'descr': {'ref': 'Totais:'},
+        }
+        if deposito == '-':
+            tot_conf.update({
+                'global_sum': ['estoque', 'falta', 'soma'],
+                'global_descr': {'ref': 'Totais gerais:'},
+            })
+        totalize_grouped_data(data, tot_conf)
+        group_rowspan(data, group)
+
         context.update({
             'headers': ['Depósito', 'Referência', 'Estoque', 'Falta', 'Soma'],
             'fields': ['dep', 'ref', 'estoque', 'falta', 'soma'],
+            'group': group,
             'data': data,
             'style': {
                 3: 'text-align: right;',
