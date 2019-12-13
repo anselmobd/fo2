@@ -875,7 +875,6 @@ def hash_trail(request, *fields):
         request.session.session_key,
     ]
     hash_cache = ';'.join(map(format, params))
-    print(hash_cache)
     hash_object = hashlib.md5(hash_cache.encode())
     return hash_object.hexdigest()
 
