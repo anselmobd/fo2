@@ -4,10 +4,6 @@ from fo2.models import rows_to_dict_list
 
 from utils.functions import make_key_cache, fo2logger
 
-import lotes.queries.pedido
-# from lotes.models import *
-# from lotes.models.base import *
-
 
 def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
     key_cache = make_key_cache()
