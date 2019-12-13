@@ -39,7 +39,7 @@ ALLOWED_HOSTS = [
     # production
     'intranet', 'intranet.tussor', 'intranet.tussor.com.br', '192.168.1.96',
     'intranet.cuecasduomo.com.br', 'intranet.cuecasduomo.com', '177.23.138.90',
-    '192.141.163.26',
+    '192.141.163.26', '192.141.163.25',
     # development
     '192.168.1.242', '192.168.1.225', 'localhost'
 ]
