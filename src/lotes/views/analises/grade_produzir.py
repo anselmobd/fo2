@@ -322,9 +322,9 @@ class GradeProduzir(O2BaseGetPostView):
                     for tam in glc['fields'][1:-1]:
                         if row_cor[tam] > 0:
                             tam_ult = tam
-                            acrescenta = round(
+                            acrescenta = int(round(
                                 lm_cor_acresc / tam_tot * row_cor[tam],
-                                0)
+                                0))
                             row_tot[field_tot] += acrescenta
                             row_tot[tam] += acrescenta
                             row_cor[field_tot] += acrescenta
