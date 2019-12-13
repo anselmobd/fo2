@@ -120,7 +120,11 @@ urlpatterns = [
         views.pedido_lead_modelo, name='pedido_lead_modelo'),
 
     url(r'^grade_produzir/$',
-        views.GradeProduzir.as_view(), name='grade_produzir'),
+        views.GradeProduzirOld.as_view(), name='grade_produzir'),
+
+    url(r'^analises/grade_produzir/$',
+        views.analises.GradeProduzir.as_view(),
+        name='analises_grade_produzir'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
