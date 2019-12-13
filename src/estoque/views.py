@@ -351,6 +351,9 @@ class MostraEstoque(View):
                 'header': 'Ajuste pelo inventário',
                 'style': 'text-align: right;',
             },
+            'executa': {
+                'header': 'Executa',
+            },
             'edita': {
                 'header': 'Edita',
             },
@@ -405,6 +408,8 @@ class MostraEstoque(View):
 
         if has_permission(request, 'base.can_adjust_stock'):
             self.table.add(edita_pos, 'edita')
+            if idata is not None and qtd is not None:
+                self.table.add('executa')
             for row in data:
                 movimento = 0
                 if idata is not None:
@@ -430,9 +435,38 @@ class MostraEstoque(View):
                     row['zera|LINK'] = reverse(
                         'estoque:zera_estoque__get', args=[
                             deposito, ref, row['cor'], row['tam']])
+                if idata is not None and qtd is not None:
+                    if row['ajuste'] == 0:
+                        row['executa'] = '-'
+                    else:
+                        trail = hash_trail(
+                            request,
+                            deposito,
+                            ref,
+                            row['cor'],
+                            row['tam'],
+                            row['ajuste'],
+                        )
+                        row['executa'] = '''
+                            <a title="Executa ajuste indicado pelo inventário"
+                             href="javascript:void(0);"
+                             onclick="exec_ajuste(this,
+                                \'{dep}\', \'{ref}\', \'{cor}\', \'{tam}\',
+                                \'{ajuste}\', \'{trail}\');"
+                            >Ajusta<span
+                            class="glyphicon glyphicon-link"
+                            aria-hidden="true"></span></a>
+                        '''.format(
+                            dep=deposito,
+                            ref=ref,
+                            cor=row['cor'],
+                            tam=row['tam'],
+                            ajuste=row['ajuste'],
+                            trail=trail)
 
         headers, fields, style = self.table.hfs()
         context.update({
+            'safe': ['executa'],
             'headers': headers,
             'fields': fields,
             'data': data,

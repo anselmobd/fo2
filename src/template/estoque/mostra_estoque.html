@@ -24,7 +24,7 @@
 {% endif %}
 {% if idata is not None %}
   {% if qtd is not None %}
-    <h3>Quantidade inventariada: {{ qtd }}</h3>
+    <h3>Quantidade inventariada: <span id="qtd_inv">{{ qtd }}</span></h3>
   {% endif %}
   <h3>Data do inventario: {{ idata }}</h3>
   {% if hora is not None %}
@@ -37,7 +37,7 @@
 {% if data %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data style=style safe=safe only %}
   </table>
 {% endif %}
 {% if t_data %}
@@ -48,3 +48,72 @@
   </table>
 {% endif %}
 {% endblock %}
+
+{% block javascript %}
+{% block javascript.pos %}
+<script >
+
+  function confirma_gravar() {
+    return true;
+    // opcao = prompt("Digite S para executar transação");
+    // if ( opcao == "" ) {
+    //   return false;
+    // }
+    // var pos = "sS".indexOf( opcao );
+    // if ( pos > -1 ) {
+    //   return true;
+    // }
+    // return false;
+  }
+
+  function exec_ajuste(
+      elem,
+      dep,
+      ref,
+      cor,
+      tam,
+      ajuste,
+      trail) {
+    url = '/estoque/executa_ajuste/'+dep+'/'+ref+'/'+cor+'/'+tam+'/'+ajuste+'/'+trail+'/';
+    $.ajax({
+      type: 'GET',
+      url: url,
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        if (data) {
+          if (data['result'] == 'OK') {
+            var qtd_inv = document.getElementById('qtd_inv');
+            elem.parentElement.parentElement.cells[2].innerHTML = qtd_inv.innerHTML;
+
+            var v_ajuste = parseInt(ajuste.replace(/\./g, ""));
+            var estoque = elem.parentElement.parentElement.cells[4];
+            var v_estoque = parseInt(estoque.innerHTML.replace(/\./g, ""));
+            elem.parentElement.parentElement.cells[4].innerHTML =
+              v_estoque + v_ajuste;
+
+            elem.parentElement.parentElement.cells[6].innerHTML = '0';
+
+            elem.parentElement.parentElement.cells[7].innerHTML = '-';
+          } else {
+            alert('Erro: '+data['descricao_erro']);
+          }
+        } else {
+          alert('Não executado');
+        }
+      }
+    });
+  }
+
+  // function link2ajax() {
+  //   var x = document.getElementsByClassName("exec_ajuste");
+  //   var i;
+  //   for (i = 0; i < x.length; i++) {
+  //     x[i].style.backgroundColor = "blue";
+  //   }
+  // }
+  //
+  // window.addEventListener("load", link2ajax, false);
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}
