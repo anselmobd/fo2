@@ -9,6 +9,7 @@ from django.views import View
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import redirect
 from django.core.exceptions import SuspiciousOperation
 
@@ -914,6 +915,7 @@ def hash_trail(request, *fields):
     return hash_object.hexdigest()
 
 
+@permission_required('base.can_adjust_stock')
 def executa_ajuste(request, **kwargs):
     data = {}
 
