@@ -6,6 +6,7 @@ from base.views import O2BaseGetPostView
 import comercial
 import produto
 import lotes
+import estoque
 from comercial.views.estoque import grade_meta_estoque
 from lotes.views.a_produzir import *
 
@@ -120,6 +121,19 @@ class GradeProduzir(O2BaseGetPostView):
             }
             gzerada = update_gzerada(gzerada, gop)
 
+        e_header, e_fields, e_data, e_style, total_est = \
+            estoque.models.grade_estoque(
+                cursor, '5156U', '101')
+        gest = None
+        if total_est != 0:
+            gest = {
+                'headers': e_header,
+                'fields': e_fields,
+                'data': e_data,
+                'style': e_style,
+            }
+            gzerada = update_gzerada(gzerada, gest)
+
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
             'dias_alem_lead': dias_alem_lead,
@@ -164,6 +178,12 @@ class GradeProduzir(O2BaseGetPostView):
             gop = soma_grades(gzerada, gop)
             self.context.update({
                 'gop': gop,
+            })
+
+        if gest is not None:
+            gest = soma_grades(gzerada, gest)
+            self.context.update({
+                'gest': gest,
             })
 
         if gped is not None:
