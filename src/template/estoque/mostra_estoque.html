@@ -42,6 +42,7 @@
 {% endif %}
 {% if t_data %}
   <h3>Transações de ajuste de referência em depósito (feitas no Apoio)</h3>
+  <h4 id='trans_recarregar' style='display: none;'>Recarregue a página para visualizar aqui as últimas transações inseridas!</h4>
   <table>
     {% include "layout/thead_generic.html" with data=t_headers style=t_style only %}
     {% include "layout/tbody_generic.html" with fields=t_fields data=t_data style=t_style only %}
@@ -94,6 +95,9 @@
             elem.parentElement.parentElement.cells[6].innerHTML = '0';
 
             elem.parentElement.parentElement.cells[7].innerHTML = '-';
+
+            var trans_recarregar = document.getElementById('trans_recarregar');
+            trans_recarregar.style.display = 'block';
           } else {
             alert('Erro: '+data['descricao_erro']);
           }
