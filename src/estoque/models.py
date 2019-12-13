@@ -278,6 +278,13 @@ def refs_com_movimento(cursor, data_ini=None):
 
 def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
 
+    teste_dep = ''
+    if type(dep) is tuple:
+        teste_dep = ','.join(map(lambda x: "'{}'".format(x), dep))
+        teste_dep = ' IN ({})'.format(teste_dep)
+    else:
+        teste_dep = " = '{dep}'".format(dep=dep)
+
     filtro_data_ini = ''
     if data_ini is not None:
         filtro_data_ini = (
@@ -305,13 +312,13 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
               ON tam.TAMANHO_REF = ee.SUBGRUPO_ESTRUTURA
             WHERE ee.NIVEL_ESTRUTURA = 1
               AND ee.GRUPO_ESTRUTURA = '{ref}'
-              AND ee.CODIGO_DEPOSITO = {dep}
+              AND ee.CODIGO_DEPOSITO {teste_dep}
               {filtro_data_ini} -- filtro_data_ini
             ORDER BY
               2
         '''.format(
             ref=ref,
-            dep=dep,
+            teste_dep=teste_dep,
             filtro_data_ini=filtro_data_ini,
         )
     elif tipo_grade['t'] == 'e':  # com estoque
@@ -324,18 +331,18 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
               ON tam.TAMANHO_REF = e.CDITEM_SUBGRUPO
             WHERE e.CDITEM_NIVEL99 = 1
               AND e.CDITEM_GRUPO = '{ref}'
-              AND e.DEPOSITO = {dep}
+              AND e.DEPOSITO {teste_dep}
               AND e.QTDE_ESTOQUE_ATU <> 0
             ORDER BY
               2
         '''.format(
             ref=ref,
-            dep=dep,
+            teste_dep=teste_dep,
         )
 
     elif tipo_grade['t'] == 'c':  # como cadastrado
         sql = '''
-            SELECT
+            SELECT DISTINCT
               t.TAMANHO_REF TAMANHO
             , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
             FROM basi_020 t
@@ -365,13 +372,13 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
             FROM ESTQ_300_ESTQ_310 ee -- mov. de estoque em aberto e fechado
             WHERE ee.NIVEL_ESTRUTURA = 1
               AND ee.GRUPO_ESTRUTURA = '{ref}'
-              AND ee.CODIGO_DEPOSITO = {dep}
+              AND ee.CODIGO_DEPOSITO {teste_dep}
               {filtro_data_ini} -- filtro_data_ini
             ORDER BY
               ee.ITEM_ESTRUTURA
         '''.format(
             ref=ref,
-            dep=dep,
+            teste_dep=teste_dep,
             filtro_data_ini=filtro_data_ini,
         )
     elif tipo_grade['c'] == 'e':  # com estoque
@@ -381,13 +388,13 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
             FROM ESTQ_040 e
             WHERE e.CDITEM_NIVEL99 = 1
               AND e.CDITEM_GRUPO = '{ref}'
-              AND e.DEPOSITO = {dep}
+              AND e.DEPOSITO {teste_dep}
               AND e.QTDE_ESTOQUE_ATU <> 0
             ORDER BY
               e.CDITEM_ITEM
         '''.format(
             ref=ref,
-            dep=dep,
+            teste_dep=teste_dep,
         )
 
     grade.row(
@@ -400,24 +407,30 @@ def grade_estoque(cursor, ref, dep, data_ini=None, tipo_grade=None):
     )
 
     # sortimento
-    grade.value(
-        id='QUANTIDADE',
-        sql='''
+    sql = '''
         SELECT
           e.CDITEM_SUBGRUPO TAMANHO
         , e.CDITEM_ITEM SORTIMENTO
-        , e.QTDE_ESTOQUE_ATU QUANTIDADE
+        , SUM(e.QTDE_ESTOQUE_ATU) QUANTIDADE
         FROM ESTQ_040 e
-        WHERE e.CDITEM_NIVEL99 = 1
+        WHERE e.LOTE_ACOMP = 0
+          AND e.CDITEM_NIVEL99 = 1
           AND e.CDITEM_GRUPO = '{ref}'
-          AND e.DEPOSITO = {dep}
+          AND e.DEPOSITO {teste_dep}
+        GROUP BY
+          e.CDITEM_SUBGRUPO
+        , e.CDITEM_ITEM
         ORDER BY
           e.CDITEM_SUBGRUPO
         , e.CDITEM_ITEM
-        '''.format(
-            ref=ref,
-            dep=dep,
-        )
+    '''.format(
+        ref=ref,
+        teste_dep=teste_dep,
+    )
+
+    grade.value(
+        id='QUANTIDADE',
+        sql=sql,
     )
 
     fields = grade.table_data['fields']
