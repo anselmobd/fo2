@@ -206,13 +206,23 @@ class GradeProduzir(O2BaseGetPostView):
             })
 
         gopp = None
-        if total_op != 0 or total_ped != 0:
+        if total_op != 0 or total_est != 0 or total_ped != 0:
             if total_ped == 0:
-                gopp = gop
+                if total_est == 0:
+                    gopp = gop
+                else:
+                    gopp = soma_grades(gop, gest)
             elif total_op == 0:
-                gopp = subtrai_grades(gzerada, gped)
+                if total_est == 0:
+                    gopp = subtrai_grades(gzerada, gped)
+                else:
+                    gopp = subtrai_grades(gest, gped)
             else:
-                gopp = subtrai_grades(gop, gped)
+                if total_est == 0:
+                    gopp = subtrai_grades(gop, gped)
+                else:
+                    gopp = soma_grades(gop, gest)
+                    gopp = subtrai_grades(gopp, gped)
 
             self.context.update({
                 'gopp': gopp,
