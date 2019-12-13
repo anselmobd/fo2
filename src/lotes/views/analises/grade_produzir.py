@@ -105,54 +105,20 @@ class GradeProduzir(O2BaseGetPostView):
         if not calcula_grade:
             return
 
-        g_header, g_fields, g_data, g_style, total_opa = \
+        g_header, g_fields, g_data, g_style, total_op = \
             lotes.models.op_sortimentos(
                 cursor, tipo='a', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
-        gopa = None
-        if total_opa != 0:
-            gopa = {
+        gop = None
+        if total_op != 0:
+            gop = {
                 'headers': g_header,
                 'fields': g_fields,
                 'data': g_data,
                 'style': g_style,
             }
-            gzerada = update_gzerada(gzerada, gopa)
-
-        gf_header, gf_fields, gf_data, gf_style, total_opf = \
-            lotes.models.op_sortimentos(
-                cursor, tipo='fpnf', descr_sort=False, modelo=modelo,
-                situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
-
-        gopf = None
-        if total_opf != 0:
-            gopf = {
-                'headers': gf_header,
-                'fields': gf_fields,
-                'data': gf_data,
-                'style': gf_style,
-            }
-            gopf = grade_filtra_linhas_zeradas(gopf)
-            gzerada = update_gzerada(gzerada, gopf)
-
-        gpf_header, gpf_fields, gpf_data, gpf_style, total_oppf = \
-            lotes.models.op_sortimentos(
-                cursor, tipo='apf', descr_sort=False, modelo=modelo,
-                situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
-
-        goppf = None
-        if total_oppf != 0:
-            goppf = {
-                'headers': gpf_header,
-                'fields': gpf_fields,
-                'data': gpf_data,
-                'style': gpf_style,
-            }
-            goppf = inverte_sinal_grade(goppf)
-            total_oppf = -total_oppf
-            goppf = grade_filtra_linhas_zeradas(goppf)
-            gzerada = update_gzerada(gzerada, goppf)
+            gzerada = update_gzerada(gzerada, gop)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
@@ -194,22 +160,10 @@ class GradeProduzir(O2BaseGetPostView):
                 'gmg': gmg,
             })
 
-        if gopa is not None:
-            gopa = soma_grades(gzerada, gopa)
+        if gop is not None:
+            gop = soma_grades(gzerada, gop)
             self.context.update({
-                'gopa': gopa,
-            })
-
-        if gopf is not None:
-            gopf = soma_grades(gzerada, gopf)
-            self.context.update({
-                'gopf': gopf,
-            })
-
-        if goppf is not None:
-            goppf = soma_grades(gzerada, goppf)
-            self.context.update({
-                'goppf': goppf,
+                'gop': gop,
             })
 
         if gped is not None:
@@ -217,37 +171,6 @@ class GradeProduzir(O2BaseGetPostView):
             self.context.update({
                 'gped': gped,
             })
-
-        gop = None
-        total_op = 0
-        conta_grade_op = 0
-        if gopf is None:
-            if gopa is not None:
-                conta_grade_op = 1
-                gop = gopa
-                total_op = total_opa
-        else:
-            if gopa is None:
-                conta_grade_op = 1
-                gop = gopf
-                total_op = total_opf
-            else:
-                conta_grade_op = 2
-                gop = soma_grades(gopa, gopf)
-                total_op = total_opa + total_opf
-
-        if goppf is not None:
-            conta_grade_op += 1
-            if gop is None:
-                gop = goppf
-            else:
-                gop = soma_grades(gop, goppf)
-            total_op += total_oppf
-
-        self.context.update({
-            'gop': gop,
-            'conta_grade_op': conta_grade_op,
-        })
 
         gm = None
         if meta.meta_estoque != 0 or meta.meta_giro != 0:

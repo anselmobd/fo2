@@ -82,7 +82,7 @@
         {% include "layout/tbody_generic.html" with fields=gm.fields data=gm.data style=gm.style only %}
       {% endif %}
 
-      {% if gopa %}
+      {% if gop %}
         <thead>
           <tr>
             <th colspan="99">
@@ -90,48 +90,9 @@
             </th>
           </tr>
         </thead>
-        {% include "layout/thead_generic.html" with data=gopa.headers style=gopa.style only %}
-        {% include "layout/tbody_generic.html" with fields=gopa.fields data=gopa.data style=gopa.style only %}
-      {% endif %}
-
-      {% if gopf %}
-        <thead>
-          <tr>
-            <th colspan="99">
-              <h3>Total em OPs finalizadas de pedidos empenhados</h3>
-            </th>
-          </tr>
-        </thead>
-        {% include "layout/thead_generic.html" with data=gopf.headers style=gopf.style only %}
-        {% include "layout/tbody_generic.html" with fields=gopf.fields data=gopf.data style=gopf.style only %}
-      {% endif %}
-
-      {% if goppf %}
-        <thead>
-          <tr>
-            <th colspan="99">
-              <h3>Total em OPs em produção de pedidos faturados</h3>
-            </th>
-          </tr>
-        </thead>
-        {% include "layout/thead_generic.html" with data=goppf.headers style=goppf.style only %}
-        {% include "layout/tbody_generic.html" with fields=goppf.fields data=goppf.data style=goppf.style only %}
-      {% endif %}
-
-      {% if conta_grade_op != 1 %}
-        <thead>
-          <tr>
-            <th colspan="99">
-              <h3>Total disponível em OPs</h3>
-            </th>
-          </tr>
-        </thead>
-      {% endif %}
-      {% if conta_grade_op > 1 %}
         {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
         {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
-      {% endif %}
-      {% if conta_grade_op == 0 %}
+      {% else %}
         <thead>
           <tr>
             <th colspan="99">
