@@ -868,6 +868,18 @@ class EditaEstoque(PermissionRequiredMixin, View):
         return response
 
 
+def hash_trail(request, *fields):
+    params = list(fields) + [
+        time.strftime('%y%m%d'),
+        request_user(request),
+        request.session.session_key,
+    ]
+    hash_cache = ';'.join(map(format, params))
+    print(hash_cache)
+    hash_object = hashlib.md5(hash_cache.encode())
+    return hash_object.hexdigest()
+
+
 def executa_ajuste(request, **kwargs):
     data = {}
 
@@ -912,23 +924,19 @@ def executa_ajuste(request, **kwargs):
     transacoes = TransacoesDeAjuste()
     trans, es, descr = transacoes.get(sinal)
 
-    hash_cache = ';'.join(map(format, (
+    trail_check = hash_trail(
+        request,
         dep,
         ref,
         cor,
         tam,
         ajuste,
-        time.strftime('%y%m%d'),
-        request_user(request),
-        request.session.session_key,
-    )))
-    hash_object = hashlib.md5(hash_cache.encode())
-    trail_check = hash_object.hexdigest()
+    )
     if trail != trail_check:
         data.update({
             'result': 'ERR',
             'descricao_erro': 'Trail hash inválido',
-            'trail_check': trail_check,
+            # 'trail_check': trail_check,
         })
         return JsonResponse(data, safe=False)
 
