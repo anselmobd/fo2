@@ -469,42 +469,66 @@ def referencia_deposito(cursor, deposito, modelo):
         )
 
     sql = '''
-        SELECT DISTINCT
-          i.REF
-        , i.DEP
+        SELECT
+          rd.REF
+        , rd.DEP
+        , sum(
+            CASE WHEN COALESCE(est.QTDE_ESTOQUE_ATU, 0) <= 0 THEN 0
+            ELSE COALESCE(est.QTDE_ESTOQUE_ATU, 0) END
+          ) ESTOQUE
+        , sum(
+            CASE WHEN COALESCE(est.QTDE_ESTOQUE_ATU, 0) >= 0 THEN 0
+            ELSE COALESCE(est.QTDE_ESTOQUE_ATU, 0) END
+          ) FALTA
+        , sum(coalesce(est.QTDE_ESTOQUE_ATU, 0)) SOMA
         FROM (
-          SELECT
-            rtc.GRUPO_ESTRUTURA REF
-          , rtc.SUBGRU_ESTRUTURA TAM
-          , rtc.ITEM_ESTRUTURA COR
-          , d.CODIGO_DEPOSITO DEP
-          FROM BASI_010 rtc, BASI_205 d
-          WHERE 1=1
-            AND rtc.NIVEL_ESTRUTURA = 1
-            AND d.CODIGO_DEPOSITO IN (101, 102, 231)
-            AND rtc.GRUPO_ESTRUTURA < 'C0000'
-            {filtro_deposito} -- filtro_deposito
-            {filtro_modelo} -- filtro_modelo
-        ) i
-        LEFT JOIN ESTQ_040 e
-          ON e.CDITEM_NIVEL99 = 1
-         AND e.CDITEM_GRUPO = i.REF
-         AND e.CDITEM_SUBGRUPO = i.TAM
-         AND e.CDITEM_ITEM = i.COR
-         AND e.DEPOSITO = i.DEP
-         AND e.QTDE_ESTOQUE_ATU <> 0
-        LEFT JOIN ESTQ_300_ESTQ_310 m -- movimentação de estoque
-          ON m.NIVEL_ESTRUTURA = 1
-         AND m.GRUPO_ESTRUTURA = i.REF
-         AND m.SUBGRUPO_ESTRUTURA = i.TAM
-         AND m.ITEM_ESTRUTURA = i.COR
-         AND m.CODIGO_DEPOSITO = i.DEP
-        WHERE (  e.DEPOSITO IS NOT NULL
-              OR m.CODIGO_DEPOSITO IS NOT NULL
-              )
+          SELECT DISTINCT
+            i.REF
+          , i.DEP
+          FROM (
+            SELECT
+              rtc.GRUPO_ESTRUTURA REF
+            , rtc.SUBGRU_ESTRUTURA TAM
+            , rtc.ITEM_ESTRUTURA COR
+            , d.CODIGO_DEPOSITO DEP
+            FROM BASI_010 rtc, BASI_205 d
+            WHERE 1=1
+              AND rtc.NIVEL_ESTRUTURA = 1
+              AND d.CODIGO_DEPOSITO IN (101, 102, 231)
+              AND rtc.GRUPO_ESTRUTURA < 'C0000'
+              {filtro_deposito} -- filtro_deposito
+              {filtro_modelo} -- filtro_modelo
+          ) i
+          LEFT JOIN ESTQ_040 e
+            ON e.LOTE_ACOMP = 0
+           AND e.CDITEM_NIVEL99 = 1
+           AND e.CDITEM_GRUPO = i.REF
+           AND e.CDITEM_SUBGRUPO = i.TAM
+           AND e.CDITEM_ITEM = i.COR
+           AND e.DEPOSITO = i.DEP
+           AND e.QTDE_ESTOQUE_ATU <> 0
+          LEFT JOIN ESTQ_300_ESTQ_310 m -- movimentação de estoque
+            ON m.NIVEL_ESTRUTURA = 1
+           AND m.GRUPO_ESTRUTURA = i.REF
+           AND m.SUBGRUPO_ESTRUTURA = i.TAM
+           AND m.ITEM_ESTRUTURA = i.COR
+           AND m.CODIGO_DEPOSITO = i.DEP
+          WHERE (  e.DEPOSITO IS NOT NULL
+                OR m.CODIGO_DEPOSITO IS NOT NULL
+                )
+        ) rd
+        LEFT JOIN ESTQ_040 est
+          ON est.LOTE_ACOMP = 0
+         AND est.CDITEM_NIVEL99 = 1
+         AND est.CDITEM_GRUPO = rd.REF
+         AND est.DEPOSITO = rd.DEP
+         AND est.QTDE_ESTOQUE_ATU <> 0
+        GROUP BY
+          rd.DEP
+        , rd.REF
         ORDER BY
-          NLSSORT(i.REF,'NLS_SORT=BINARY_AI')
-        , i.DEP
+          rd.DEP
+        , NLSSORT(rd.REF,'NLS_SORT=BINARY_AI')
     '''.format(
         filtro_deposito=filtro_deposito,
         filtro_modelo=filtro_modelo,
