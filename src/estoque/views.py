@@ -281,11 +281,13 @@ class InventarioExpedicao(View):
 class ReferenciaDeposito(View):
     Form_class = forms.ReferenciasEstoqueForm
     template_name = 'estoque/referencia_deposito.html'
-    title_name = 'Ajuste de estoque'
+    title_name = 'Por referência em depósito'
 
-    def mount_context(self, cursor, deposito, modelo):
+    def mount_context(self, request, cursor, deposito, modelo):
         context = {
             'modelo': modelo,
+            'permission': has_permission(
+                request, 'base.can_adjust_stock'),
         }
 
         data = models.referencia_deposito(cursor, deposito, modelo)
@@ -293,11 +295,12 @@ class ReferenciaDeposito(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        for row in data:
-            row['ref|TARGET'] = '_blank'
-            row['ref|LINK'] = reverse(
-                'estoque:mostra_estoque__get', args=[
-                    row['dep'], row['ref']])
+        if has_permission(request, 'base.can_adjust_stock'):
+            for row in data:
+                row['ref|TARGET'] = '_blank'
+                row['ref|LINK'] = reverse(
+                    'estoque:mostra_estoque__get', args=[
+                        row['dep'], row['ref']])
 
         group = ['dep']
         tot_conf = {
@@ -341,7 +344,8 @@ class ReferenciaDeposito(View):
             deposito = form.cleaned_data['deposito']
             modelo = form.cleaned_data['modelo']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, deposito, modelo))
+            context.update(self.mount_context(
+                request, cursor, deposito, modelo))
         context['form'] = form
         return render(request, self.template_name, context)
 
