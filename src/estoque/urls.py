@@ -35,4 +35,9 @@ urlpatterns = [
     url(r'^edita_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
         r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<qtd>[^/]+)/(?P<conf_hash>[^/]+)/$',
         views.EditaEstoque.as_view(), name='edita_estoque__get'),
+
+    url(r'^executa_ajuste/(?P<dep>[^/]+)/(?P<ref>[^/]+)/'
+        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<ajuste>[^/]+)/(?P<trail>[^/]+)/$',
+        views.executa_ajuste, name='executa_ajuste'),
+
 ]
