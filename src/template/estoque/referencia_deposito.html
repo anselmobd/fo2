@@ -25,6 +25,9 @@
   <h4>{{ erro }}</h4>
 {% endif %}
 {% if data %}
+  {% if permission %}
+  <h4>Clique no modelo para acessar tela de ajuste de estoque</h4>
+  {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
