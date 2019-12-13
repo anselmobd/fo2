@@ -528,18 +528,7 @@ class ZeraEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/zera_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
-        self.transacoes = {
-            1: {
-                'codigo': 105,
-                'es': 'E',
-                'descr': 'Entrada por inventário',
-            },
-            -1: {
-                'codigo': 3,
-                'es': 'S',
-                'descr': 'Saída por inventário',
-            },
-        }
+        self.transacoes = TransacoesDeAjuste()
 
     def mount_context(
             self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
@@ -579,9 +568,7 @@ class ZeraEstoque(PermissionRequiredMixin, View):
             'estoque': estoque,
         })
 
-        trans = self.transacoes[sinal]['codigo']
-        es = self.transacoes[sinal]['es']
-        descr = self.transacoes[sinal]['descr']
+        trans, es, descr = self.transacoes.get(sinal)
 
         if executa:
             num_doc = '702{}'.format(time.strftime('%y%m%d'))
