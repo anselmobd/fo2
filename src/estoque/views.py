@@ -298,9 +298,14 @@ class ReferenciaDeposito(View):
                 'estoque:mostra_estoque__get', args=[
                     row['dep'], row['ref']])
         context.update({
-            'headers': ['Referência', 'Depósito'],
-            'fields': ['ref', 'dep'],
+            'headers': ['Depósito', 'Referência', 'Estoque', 'Falta', 'Soma'],
+            'fields': ['dep', 'ref', 'estoque', 'falta', 'soma'],
             'data': data,
+            'style': {
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+                5: 'text-align: right;',
+            },
         })
 
         return context
