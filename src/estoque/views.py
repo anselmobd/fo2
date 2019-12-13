@@ -498,6 +498,29 @@ class MostraEstoque(View):
         return response
 
 
+class TransacoesDeAjuste():
+
+    def __init__(self):
+        self.transacoes = {
+            1: {
+                'codigo': 105,
+                'es': 'E',
+                'descr': 'Entrada por inventário',
+            },
+            -1: {
+                'codigo': 3,
+                'es': 'S',
+                'descr': 'Saída por inventário',
+            },
+        }
+
+    def get(self, sinal):
+        trans = self.transacoes[sinal]['codigo']
+        es = self.transacoes[sinal]['es']
+        descr = self.transacoes[sinal]['descr']
+        return trans, es, descr
+
+
 class ZeraEstoque(PermissionRequiredMixin, View):
 
     def __init__(self):
@@ -632,18 +655,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/edita_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
-        self.transacoes = {
-            1: {
-                'codigo': 105,
-                'es': 'E',
-                'descr': 'Entrada por inventário',
-            },
-            -1: {
-                'codigo': 3,
-                'es': 'S',
-                'descr': 'Saída por inventário',
-            },
-        }
+        self.transacoes = TransacoesDeAjuste()
 
     def start(self):
         self.context = {'titulo': self.title_name}
@@ -736,9 +748,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
             self.sinal = 1 if self.ajuste > 0 else -1
             self.ajuste *= self.sinal
 
-            self.trans = self.transacoes[self.sinal]['codigo']
-            self.es = self.transacoes[self.sinal]['es']
-            self.descr = self.transacoes[self.sinal]['descr']
+            self.trans, self.es, self.descr = self.transacoes.get(self.sinal)
 
             hash_cache = ';'.join(map(format, (
                 self.deposito,
