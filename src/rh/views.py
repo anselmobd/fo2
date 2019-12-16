@@ -228,9 +228,13 @@ def campanhas(request):
     return render(request, 'rh/campanhas.html', context)
 
 
-def datas(request):
-    context = {'titulo': 'Datas comemorativas'}
-    return render(request, 'rh/datas.html', context)
+def datas(request, data):
+    if data == 'lista':
+        context = {'titulo': 'Datas comemorativas'}
+        return render(request, 'rh/datas.html', context)
+    elif data == '2019-12-natal':
+        context = {'titulo': '2019 - Feliz Natal!'}
+        return render(request, 'rh/datas/2019-12-natal.html', context)
 
 
 def mensagens(request):
@@ -304,8 +308,3 @@ def v2018_dia_rosa_videos(request):
 def divulga_atitudes_crise(request):
     context = {'titulo': 'Atitudes que um líder deve ter em momentos de crise'}
     return render(request, 'rh/divulga_atitudes_crise.html', context)
-
-
-def datas_2019_12_natal(request):
-    context = {'titulo': '2019 - Feliz Natal!'}
-    return render(request, 'rh/datas/2019-12-natal.html', context)
