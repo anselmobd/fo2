@@ -304,3 +304,8 @@ def v2018_dia_rosa_videos(request):
 def divulga_atitudes_crise(request):
     context = {'titulo': 'Atitudes que um líder deve ter em momentos de crise'}
     return render(request, 'rh/divulga_atitudes_crise.html', context)
+
+
+def datas_2019_12_natal(request):
+    context = {'titulo': '2019 - Feliz Natal!'}
+    return render(request, 'rh/datas/2019-12-natal.html', context)
