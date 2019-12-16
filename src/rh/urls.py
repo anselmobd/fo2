@@ -7,7 +7,7 @@ urlpatterns = [
 
     url(r'^campanhas/$', views.campanhas, name='campanhas'),
 
-    url(r'^datas/$', views.datas, name='datas'),
+    url(r'^datas/(?P<data>.+)/$', views.datas, name='datas'),
 
     url(r'^mensagens/$', views.mensagens, name='mensagens'),
 
@@ -67,7 +67,4 @@ urlpatterns = [
         views.aniversariantes, name='aniversariantes_now'),
     url(r'^aniversariantes/(?P<ano>\d{4})/(?P<mes>\d{1,2})/?$',
         views.aniversariantes, name='aniversariantes'),
-
-    url(r'^datas_2019_12_natal/$', views.datas_2019_12_natal,
-        name='datas_2019_12_natal'),
 ]
