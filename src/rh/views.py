@@ -235,6 +235,9 @@ def datas(request, data):
     elif data == '2019-12-natal':
         context = {'titulo': '2019 - Feliz Natal!'}
         return render(request, 'rh/datas/2019-12-natal.html', context)
+    elif data == '2019-12-retrospectiva':
+        context = {'titulo': 'Retrospectiva 2019!'}
+        return render(request, 'rh/datas/2019-12-retrospectiva.html', context)
 
 
 def mensagens(request):
