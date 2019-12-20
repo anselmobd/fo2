@@ -483,7 +483,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                              href="javascript:void(0);"
                              onclick="exec_ajuste(this,
                                 \'{dep}\', \'{ref}\', \'{cor}\', \'{tam}\',
-                                \'{ajuste}\', \'{trail}\');"
+                                \'{ajuste}\', \'{trail}\', \'{link}\');"
                             >Ajusta</a>
                         '''.format(
                             dep=deposito,
@@ -491,7 +491,18 @@ class MostraEstoque(PermissionRequiredMixin, View):
                             cor=row['cor'],
                             tam=row['tam'],
                             ajuste=row['ajuste'],
-                            trail=trail)
+                            trail=trail,
+                            link=reverse(
+                                'estoque:executa_ajuste', args=[
+                                    deposito,
+                                    ref,
+                                    row['cor'],
+                                    row['tam'],
+                                    row['ajuste'],
+                                    trail,
+                                ]
+                            )
+                        )
 
         headers, fields, style = self.table.hfs()
         context.update({
