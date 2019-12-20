@@ -35,6 +35,16 @@
   <h4>{{ erro }}</h4>
 {% endif %}
 {% if data %}
+  {% if count_btn_executa > 0 %}
+    <div class="exec_all_ajuste" align="right">
+      <a title="Executa todos os ajustes indicados pelo inventário"
+         class="btn btn-primary"
+         style="padding: 0px 12px;"
+         href="javascript:void(0);"
+         onclick="clickAll();"
+      >Ajusta todos</a>
+    </div>
+  {% endif %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style safe=safe only %}
@@ -55,16 +65,15 @@
 <script >
 
   function confirma_gravar() {
-    return true;
-    // opcao = prompt("Digite S para executar transação");
-    // if ( opcao == "" ) {
-    //   return false;
-    // }
-    // var pos = "sS".indexOf( opcao );
-    // if ( pos > -1 ) {
-    //   return true;
-    // }
-    // return false;
+    opcao = prompt("Digite S para executar transação");
+    if ( opcao == "" ) {
+      return false;
+    }
+    var pos = "sS".indexOf( opcao );
+    if ( pos > -1 ) {
+      return true;
+    }
+    return false;
   }
 
   function exec_ajuste(
@@ -98,6 +107,12 @@
 
             var trans_recarregar = document.getElementById('trans_recarregar');
             trans_recarregar.style.display = 'block';
+
+            var x = document.getElementsByClassName("exec_ajuste");
+            if (x.length == 0) {
+              var xx = document.getElementsByClassName("exec_all_ajuste");
+              xx[0].outerHTML = '';
+            }
           } else {
             alert('Erro: '+data['descricao_erro']);
           }
@@ -108,14 +123,21 @@
     });
   }
 
-  // function link2ajax() {
-  //   var x = document.getElementsByClassName("exec_ajuste");
-  //   var i;
-  //   for (i = 0; i < x.length; i++) {
-  //     x[i].style.backgroundColor = "blue";
-  //   }
-  // }
-  //
+  function clickAll() {
+    if (! confirma_gravar()) {
+      return;
+    }
+    var x = document.getElementsByClassName("exec_ajuste");
+    var i;
+    for (i = 0; i < x.length; i++) {
+      x[i].style.backgroundColor = "darkred";
+      x[i].click();
+      // break;
+    }
+    var xx = document.getElementsByClassName("exec_all_ajuste");
+    xx[0].outerHTML = '';
+  }
+
   // window.addEventListener("load", link2ajax, false);
 
 </script>
