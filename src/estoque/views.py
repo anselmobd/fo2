@@ -382,6 +382,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             },
             'executa': {
                 'header': 'Executa',
+                'style': 'text-align: right;',
             },
             'edita': {
                 'header': 'Edita',
@@ -439,6 +440,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             self.table.add(edita_pos, 'edita')
             if idata is not None and qtd is not None:
                 self.table.add('executa')
+            count_btn_executa = 0
             for row in data:
                 movimento = 0
                 if idata is not None:
@@ -468,6 +470,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                     if row['ajuste'] == 0:
                         row['executa'] = '-'
                     else:
+                        count_btn_executa += 1
                         trail = hash_trail(
                             request,
                             deposito,
@@ -478,7 +481,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                         )
                         row['executa'] = '''
                             <a title="Executa ajuste indicado pelo inventário"
-                             class="btn btn-primary"
+                             class="btn btn-primary exec_ajuste"
                              style="padding: 0px 12px;"
                              href="javascript:void(0);"
                              onclick="exec_ajuste(this,
@@ -511,6 +514,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             'fields': fields,
             'data': data,
             'style': style,
+            'count_btn_executa': count_btn_executa,
         })
 
         data = models.trans_fo2_deposito_ref(cursor, deposito, ref)
