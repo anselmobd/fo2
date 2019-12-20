@@ -1,7 +1,10 @@
 from fo2.models import rows_to_dict_list_lower
 
 
-def busca_modelo(cursor, descricao):
+def busca_modelo(cursor, descricao=None):
+    if descricao is None:
+        descricao = ''
+
     filtro_descricao = ''
     if descricao != '':
         filtro_descricao = '''
