@@ -4,6 +4,7 @@ from functools import lru_cache
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
 import lotes.models
+from .busca_modelo import *
 
 
 def produtos_n1_basic(param):
