@@ -17,6 +17,7 @@ from django.core.exceptions import SuspiciousOperation
 from utils.views import totalize_data, totalize_grouped_data, TableHfs
 from fo2.template import group_rowspan
 from geral.functions import request_user, has_permission
+import produto.queries
 
 from . import forms
 from . import models
@@ -290,6 +291,29 @@ class ReferenciaDeposito(View):
             'permission': has_permission(
                 request, 'base.can_adjust_stock'),
         }
+        try:
+            imodelo = int(modelo)
+        except Exception:
+            imodelo = None
+        if imodelo is not None:
+            anterior = None
+            posterior = None
+            get_prox = False
+            lista = produto.queries.busca_modelo(cursor)
+            for row in lista:
+                item = row['modelo']
+                if get_prox:
+                    posterior = item
+                    break
+                else:
+                    if imodelo == item:
+                        get_prox = True
+                    else:
+                        anterior = item
+            context.update({
+                'anterior': anterior,
+                'posterior': posterior,
+            })
 
         data = models.referencia_deposito(cursor, deposito, modelo)
         if len(data) == 0:
