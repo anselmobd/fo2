@@ -1,5 +1,6 @@
 import datetime
 import time
+import re
 import hashlib
 from pprint import pprint
 
@@ -394,12 +395,33 @@ class MostraEstoque(PermissionRequiredMixin, View):
             qtd = int(qtd)
         except Exception:
             qtd = None
+
+        modelo = re.search(r"\d+", ref)[0].lstrip('0')
+
+        anterior = None
+        posterior = None
+        get_prox = False
+        lista = models.referencia_deposito(cursor, deposito, modelo)
+        for row in lista:
+            item = row['ref']
+            if get_prox:
+                posterior = item
+                break
+            else:
+                if ref == item:
+                    get_prox = True
+                else:
+                    anterior = item
+
         context = {
             'deposito': deposito,
             'ref': ref,
             'qtd': qtd,
             'idata': idata,
             'hora': hora,
+            'modelo': modelo,
+            'anterior': anterior,
+            'posterior': posterior,
         }
 
         data = models.estoque_deposito_ref(cursor, deposito, ref)

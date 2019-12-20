@@ -11,7 +11,7 @@
 
 {% block content %}
 <h3>Estoque de referência em depósito</h3>
-<form action="{% url 'estoque:mostra_estoque__get' deposito ref %}" method="post">
+<form id="form" action="{% url 'estoque:mostra_estoque__get' deposito ref %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Lista"/>
@@ -21,6 +21,29 @@
 {% endif %}
 {% if ref %}
   <h4>Referência: {{ ref }}</h4>
+{% endif %}
+{% if anterior or posterior %}
+  <p align="right">
+  {% if anterior %}
+  <a title="Referência anterior"
+     href="javascript:void(0);"
+     onclick="alterForm('{{ ref }}', '{{ anterior }}');"
+  >
+    Anterior: {{ anterior }}
+  </a>
+  {% endif %}
+  {% if anterior and posterior %}
+    -
+  {% endif %}
+  {% if posterior %}
+  <a title="Próxima referência"
+     href="javascript:void(0);"
+     onclick="alterForm('{{ ref }}', '{{ posterior }}');"
+  >
+    Posterior: {{ posterior }}
+  </a>
+  {% endif %}
+</p>
 {% endif %}
 {% if idata is not None %}
   {% if qtd is not None %}
@@ -139,6 +162,12 @@
   }
 
   // window.addEventListener("load", link2ajax, false);
+
+  function alterForm(ref, newref) {
+    var form = document.getElementById("form");
+    form.action = form.action.replace("/"+ref+"/", "/"+newref+"/");
+    form.submit();
+  }
 
 </script>
 {% endblock javascript.pos %}
