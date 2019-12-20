@@ -58,4 +58,6 @@ urlpatterns = [
     url(r'^custo_ref/(?P<ref>[^/]+)?/?$',
         views.CustoRef.as_view(), name='custo_ref'),
 
+    url(r'^busca_modelo/$', views.BuscaModelo.as_view(),
+        name='busca_modelo'),
 ]

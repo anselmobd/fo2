@@ -1396,3 +1396,44 @@ class CustoRef(O2BaseGetPostView):
         self.context.update({
             'grades': grades,
         })
+
+
+class BuscaModelo(View):
+    Form_class = forms.FiltroModeloForm
+    template_name = 'produto/busca_modelos.html'
+    title_name = 'Listagem de modelos'
+
+    def mount_context(self, cursor, descricao):
+        context = {'descricao': descricao}
+
+        data = queries.busca_modelo(cursor, descricao)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Nenhum modelo selecionado',
+            })
+        else:
+            headers = ['Modelo', 'Descrição']
+            fields = ['modelo', 'descr']
+            context.update({
+                'headers': headers,
+                'fields': fields,
+                'data': data,
+            })
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            descricao = form.cleaned_data['descricao']
+            cursor = connections['so'].cursor()
+            context.update(self.mount_context(cursor, descricao))
+        context['form'] = form
+        return render(request, self.template_name, context)

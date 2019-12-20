@@ -123,3 +123,17 @@ class CustoDetalhadoForm(
         ]
         required_fields = ['ref']
         autofocus_field = 'ref'
+
+
+class FiltroModeloForm(forms.Form):
+    descricao = forms.CharField(
+        label='Descrição', required=False,
+        widget=forms.TextInput(attrs={'type': 'string',
+                               'autofocus': 'autofocus'}))
+
+    def clean_descricao(self):
+        descricao = self.cleaned_data['descricao'].upper()
+        data = self.data.copy()
+        data['descricao'] = descricao
+        self.data = data
+        return descricao
