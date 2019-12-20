@@ -137,7 +137,9 @@
             elem.parentElement.parentElement.cells[7].innerHTML = '-';
 
             var trans_recarregar = document.getElementById('trans_recarregar');
-            trans_recarregar.style.display = 'block';
+            if (trans_recarregar != null) {
+              trans_recarregar.style.display = 'block';
+            }
 
             var x = document.getElementsByClassName("exec_ajuste");
             if (x.length == 0) {
@@ -163,10 +165,7 @@
     for (i = 0; i < x.length; i++) {
       x[i].style.backgroundColor = "darkred";
       x[i].click();
-      // break;
     }
-    var xx = document.getElementsByClassName("exec_all_ajuste");
-    xx[0].outerHTML = '';
   }
 
   // window.addEventListener("load", link2ajax, false);
