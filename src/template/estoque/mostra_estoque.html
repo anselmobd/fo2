@@ -11,7 +11,7 @@
 
 {% block content %}
 <h3>Estoque de referência em depósito</h3>
-<form id="form" action="{% url 'estoque:mostra_estoque__get' deposito ref %}" method="post">
+<form id="form" action="{% url 'estoque:mostra_estoque__get' deposito ref modelo %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Lista"/>
@@ -124,18 +124,23 @@
       success : function(data) {
         if (data) {
           if (data['result'] == 'OK') {
+            aux_col = {% if modelo == '-' %}
+                        0
+                      {% else %}
+                        1
+                      {% endif %};
             var qtd_inv = document.getElementById('qtd_inv');
-            elem.parentElement.parentElement.cells[2].innerHTML = qtd_inv.innerHTML;
+            elem.parentElement.parentElement.cells[2+aux_col].innerHTML = qtd_inv.innerHTML;
 
             var v_ajuste = parseInt(ajuste.replace(/\./g, ""));
-            var estoque = elem.parentElement.parentElement.cells[4];
+            var estoque = elem.parentElement.parentElement.cells[4+aux_col];
             var v_estoque = parseInt(estoque.innerHTML.replace(/\./g, ""));
-            elem.parentElement.parentElement.cells[4].innerHTML =
+            elem.parentElement.parentElement.cells[4+aux_col].innerHTML =
               v_estoque + v_ajuste;
 
-            elem.parentElement.parentElement.cells[6].innerHTML = '0';
+            elem.parentElement.parentElement.cells[6+aux_col].innerHTML = '0';
 
-            elem.parentElement.parentElement.cells[7].innerHTML = '-';
+            elem.parentElement.parentElement.cells[7+aux_col].innerHTML = '-';
 
             var trans_recarregar = document.getElementById('trans_recarregar');
             if (trans_recarregar != null) {
