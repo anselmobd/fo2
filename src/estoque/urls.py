@@ -16,7 +16,8 @@ urlpatterns = [
     url(r'^referencia_deposito/$', views.ReferenciaDeposito.as_view(),
         name='referencia_deposito'),
 
-    url(r'^mostra_estoque/(?P<deposito>.+)/(?P<ref>.+)/$',
+    url(r'^mostra_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'
+        r'(?P<modelo>[^/]+)?/?$',
         views.MostraEstoque.as_view(), name='mostra_estoque__get'),
 
     url(r'^zera_estoque/(?P<deposito>[^/]+)/(?P<ref>[^/]+)/'

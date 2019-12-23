@@ -383,6 +383,9 @@ class MostraEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/mostra_estoque.html'
         self.title_name = 'Ajuste de estoque'
         self.table = TableHfs({
+            'ref': {
+                'header': 'Referência',
+            },
             'cor': {
                 'header': 'Cor',
             },
@@ -414,28 +417,15 @@ class MostraEstoque(PermissionRequiredMixin, View):
             },
         })
 
-    def mount_context(self, request, cursor, deposito, ref, qtd, idata, hora):
+    def mount_context(
+            self, request, cursor, deposito, ref, qtd, idata, hora, modelo):
         try:
             qtd = int(qtd)
         except Exception:
             qtd = None
 
-        modelo = re.search(r"\d+", ref)[0].lstrip('0')
-
-        anterior = None
-        posterior = None
-        get_prox = False
-        lista = models.referencia_deposito(cursor, deposito, modelo)
-        for row in lista:
-            item = row['ref']
-            if get_prox:
-                posterior = item
-                break
-            else:
-                if ref == item:
-                    get_prox = True
-                else:
-                    anterior = item
+        if modelo is None:
+            modelo = '-'
 
         context = {
             'deposito': deposito,
@@ -444,11 +434,32 @@ class MostraEstoque(PermissionRequiredMixin, View):
             'idata': idata,
             'hora': hora,
             'modelo': modelo,
-            'anterior': anterior,
-            'posterior': posterior,
         }
 
-        data = models.estoque_deposito_ref(cursor, deposito, ref)
+        anterior = None
+        posterior = None
+        if modelo is None:
+            ref_modelo = re.search(r"\d+", ref)[0].lstrip('0')
+
+            get_prox = False
+            lista = models.referencia_deposito(cursor, deposito, ref_modelo)
+            for row in lista:
+                item = row['ref']
+                if get_prox:
+                    posterior = item
+                    break
+                else:
+                    if ref == item:
+                        get_prox = True
+                    else:
+                        anterior = item
+
+        context.update({
+            'anterior': anterior,
+            'posterior': posterior,
+        })
+
+        data = models.estoque_deposito_ref(cursor, deposito, ref, modelo)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
@@ -473,7 +484,10 @@ class MostraEstoque(PermissionRequiredMixin, View):
             row['ajuste'] = ajuste
 
         edita_pos = 999
-        self.table.cols('cor', 'tam')
+        if modelo == '-':
+            self.table.cols('cor', 'tam')
+        else:
+            self.table.cols('ref', 'cor', 'tam')
         if idata is None:
             self.table.add('qtd')
         else:
@@ -520,7 +534,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                         trail = hash_trail(
                             request,
                             deposito,
-                            ref,
+                            row['ref'],
                             row['cor'],
                             row['tam'],
                             row['ajuste'],
@@ -536,7 +550,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                             >Ajusta</a>
                         '''.format(
                             dep=deposito,
-                            ref=ref,
+                            ref=row['ref'],
                             cor=row['cor'],
                             tam=row['tam'],
                             ajuste=row['ajuste'],
@@ -544,7 +558,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                             link=reverse(
                                 'estoque:executa_ajuste', args=[
                                     deposito,
-                                    ref,
+                                    row['ref'],
                                     row['cor'],
                                     row['tam'],
                                     row['ajuste'],
@@ -590,9 +604,10 @@ class MostraEstoque(PermissionRequiredMixin, View):
 
         deposito = kwargs['deposito']
         ref = kwargs['ref']
+        modelo = kwargs['modelo']
         cursor = connections['so'].cursor()
         context.update(self.mount_context(
-            request, cursor, deposito, ref, None, idata, None))
+            request, cursor, deposito, ref, None, idata, None, modelo))
 
         context['form'] = self.form
         return render(request, self.template_name, context)
@@ -603,6 +618,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
 
         deposito = kwargs['deposito']
         ref = kwargs['ref']
+        modelo = kwargs['modelo']
 
         set_data_inv = None
         if self.form.is_valid():
@@ -612,7 +628,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             set_data_inv = data
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                request, cursor, deposito, ref, qtd, data, hora))
+                request, cursor, deposito, ref, qtd, data, hora, modelo))
 
         context['form'] = self.form
         response = render(request, self.template_name, context)
