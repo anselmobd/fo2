@@ -612,7 +612,7 @@ def referencia_deposito(cursor, deposito, modelo):
     return rows_to_dict_list_lower(cursor)
 
 
-def estoque_deposito_ref(cursor, deposito, ref, modelo):
+def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
     filtro_ref = ''
     if ref is not None and ref != '-':
         filtro_ref = '''--
