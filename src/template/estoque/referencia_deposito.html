@@ -34,11 +34,15 @@
     <td>
       {% if modelo %}
        <h4>Modelo:
-         <a title="Referência anterior"
-            href="{% url 'estoque:mostra_estoque__get' deposito '-' modelo %}"
-            target="_blank"
-         > {{ modelo }}
-         </a>
+           {% if deposito != '-' %}
+           <a title="Referência anterior"
+              href="{% url 'estoque:mostra_estoque__get' deposito '-' modelo %}"
+              target="_blank"
+           > {{ modelo }}
+           </a>
+           {% else %}
+             {{ modelo }}
+           {% endif %}
        </h4>
       {% endif %}
     </td>
