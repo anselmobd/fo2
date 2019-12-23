@@ -631,7 +631,7 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
                     LEADING '0' FROM (
                       REGEXP_REPLACE(
                         rtc.GRUPO_ESTRUTURA,
-                        '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                        '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
                         '\\1'
                       )
                     )
@@ -641,7 +641,7 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
                     LEADING '0' FROM (
                       REGEXP_REPLACE(
                         rtc.GRUPO_ESTRUTURA,
-                        '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                        '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
                         '\\1'
                       )
                     )
@@ -657,7 +657,7 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
                     LEADING '0' FROM (
                       REGEXP_REPLACE(
                         rtc.GRUPO_ESTRUTURA,
-                        '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                        '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
                         '\\1'
                       )
                     )
@@ -684,6 +684,11 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
           WHERE 1=1
             AND rtc.NIVEL_ESTRUTURA = 1
             AND d.CODIGO_DEPOSITO = '{deposito}'
+            AND rtc.GRUPO_ESTRUTURA < 'C0000'
+            AND REGEXP_LIKE (
+                  rtc.GRUPO_ESTRUTURA
+                , '^0?[abAB]?([0-9]+)[a-zA-Z]*$'
+                )
             {filtro_ref} -- filtro_ref
             {filtro_modelo} -- filtro_modelo
         ) i
