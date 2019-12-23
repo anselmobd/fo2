@@ -623,20 +623,48 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
 
     filtro_modelo = ''
     if modelo is not None and modelo != '-':
-        filtro_modelo = '''--
-            AND
-              TRIM(
-                LEADING '0' FROM (
-                  REGEXP_REPLACE(
-                    rtc.GRUPO_ESTRUTURA,
-                    '^[abAB]?([0-9]+)[a-zA-Z]*$',
-                    '\\1'
-                  )
-                )
-              ) = '{modelo}'
-        '''.format(
-            modelo=modelo,
-        )
+        if '-' in modelo:
+            modelos = modelo.split('-')
+            filtro_modelo = '''--
+                AND
+                  TRIM(
+                    LEADING '0' FROM (
+                      REGEXP_REPLACE(
+                        rtc.GRUPO_ESTRUTURA,
+                        '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                        '\\1'
+                      )
+                    )
+                  ) >= '{modelo_ini}'
+                AND
+                  TRIM(
+                    LEADING '0' FROM (
+                      REGEXP_REPLACE(
+                        rtc.GRUPO_ESTRUTURA,
+                        '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                        '\\1'
+                      )
+                    )
+                  ) <= '{modelo_fim}'
+            '''.format(
+                modelo_ini=modelos[0],
+                modelo_fim=modelos[1],
+            )
+        else:
+            filtro_modelo = '''--
+                AND
+                  TRIM(
+                    LEADING '0' FROM (
+                      REGEXP_REPLACE(
+                        rtc.GRUPO_ESTRUTURA,
+                        '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                        '\\1'
+                      )
+                    )
+                  ) = '{modelo}'
+            '''.format(
+                modelo=modelo,
+            )
 
     sql = '''
         SELECT
