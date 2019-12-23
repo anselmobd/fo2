@@ -287,6 +287,7 @@ class ReferenciaDeposito(View):
 
     def mount_context(self, request, cursor, deposito, modelo):
         context = {
+            'deposito': deposito,
             'modelo': modelo,
             'permission': has_permission(
                 request, 'base.can_adjust_stock'),
