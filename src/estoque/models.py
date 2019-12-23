@@ -672,7 +672,8 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
 
     sql = '''
         SELECT
-          i.REF
+          i.MODELO
+        , i.REF
         , i.COR
         , ta.ORDEM_TAMANHO
         , i.TAM
@@ -680,7 +681,18 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
         , COALESCE(e.QTDE_ESTOQUE_ATU, 0) QTD
         FROM (
           SELECT
-            rtc.GRUPO_ESTRUTURA REF
+            TO_NUMBER(
+              TRIM(
+                LEADING '0' FROM (
+                  REGEXP_REPLACE(
+                    rtc.GRUPO_ESTRUTURA,
+                    '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
+                    '\\1'
+                  )
+                )
+              )
+            ) MODELO
+          , rtc.GRUPO_ESTRUTURA REF
           , rtc.SUBGRU_ESTRUTURA TAM
           , rtc.ITEM_ESTRUTURA COR
           , d.CODIGO_DEPOSITO DEP
@@ -706,7 +718,8 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
          AND e.CDITEM_ITEM = i.COR
          AND e.DEPOSITO = i.DEP
         ORDER BY
-          NLSSORT(i.REF,'NLS_SORT=BINARY_AI')
+          i.MODELO
+        , NLSSORT(i.REF,'NLS_SORT=BINARY_AI')
         , i.COR
         , ta.ORDEM_TAMANHO
     '''.format(
