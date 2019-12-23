@@ -22,7 +22,13 @@
   <tr>
     <td>
       {% if modelo %}
-       <h4>Modelo: {{ modelo }}</h4>
+       <h4>Modelo:
+         <a title="Referência anterior"
+            href="{% url 'estoque:mostra_estoque__get' deposito '-' modelo %}"
+            target="_blank"
+         > {{ modelo }}
+         </a>
+       </h4>
       {% endif %}
     </td>
     <td>
