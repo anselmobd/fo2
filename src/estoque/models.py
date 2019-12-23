@@ -612,7 +612,32 @@ def referencia_deposito(cursor, deposito, modelo):
     return rows_to_dict_list_lower(cursor)
 
 
-def estoque_deposito_ref(cursor, deposito, ref):
+def estoque_deposito_ref(cursor, deposito, ref, modelo):
+    filtro_ref = ''
+    if ref is not None and ref != '-':
+        filtro_ref = '''--
+            AND rtc.GRUPO_ESTRUTURA = '{ref}'
+        '''.format(
+            ref=ref,
+        )
+
+    filtro_modelo = ''
+    if modelo is not None and modelo != '-':
+        filtro_modelo = '''--
+            AND
+              TRIM(
+                LEADING '0' FROM (
+                  REGEXP_REPLACE(
+                    rtc.GRUPO_ESTRUTURA,
+                    '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                    '\\1'
+                  )
+                )
+              ) = '{modelo}'
+        '''.format(
+            modelo=modelo,
+        )
+
     sql = '''
         SELECT
           i.REF
@@ -631,7 +656,8 @@ def estoque_deposito_ref(cursor, deposito, ref):
           WHERE 1=1
             AND rtc.NIVEL_ESTRUTURA = 1
             AND d.CODIGO_DEPOSITO = '{deposito}'
-            AND rtc.GRUPO_ESTRUTURA = '{ref}'
+            {filtro_ref} -- filtro_ref
+            {filtro_modelo} -- filtro_modelo
         ) i
         LEFT JOIN BASI_220 ta
           ON ta.TAMANHO_REF = i.TAM
@@ -648,7 +674,8 @@ def estoque_deposito_ref(cursor, deposito, ref):
         , ta.ORDEM_TAMANHO
     '''.format(
         deposito=deposito,
-        ref=ref,
+        filtro_ref=filtro_ref,
+        filtro_modelo=filtro_modelo,
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
