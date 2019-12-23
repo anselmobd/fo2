@@ -536,7 +536,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                 row['edita'] = 'Edita'
                 row['edita|LINK'] = reverse(
                     'estoque:edita_estoque__get', args=[
-                        deposito, ref, row['cor'], row['tam']])
+                        deposito, row['ref'], row['cor'], row['tam']])
                 if row['qtd'] == 0:
                     row['zera'] = '-'
                 else:
