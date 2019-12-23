@@ -455,22 +455,25 @@ class MostraEstoque(PermissionRequiredMixin, View):
                     else:
                         anterior = item
         else:
-            try:
-                imodelo = int(modelo)
-            except Exception:
-                imodelo = None
-            get_prox = False
-            lista = produto.queries.busca_modelo(cursor)
-            for row in lista:
-                item = row['modelo']
-                if get_prox:
-                    posterior = item
-                    break
-                else:
-                    if imodelo == item:
-                        get_prox = True
+            if '-' in modelo:
+                pass
+            else:
+                try:
+                    imodelo = int(modelo)
+                except Exception:
+                    imodelo = None
+                get_prox = False
+                lista = produto.queries.busca_modelo(cursor)
+                for row in lista:
+                    item = row['modelo']
+                    if get_prox:
+                        posterior = item
+                        break
                     else:
-                        anterior = item
+                        if imodelo == item:
+                            get_prox = True
+                        else:
+                            anterior = item
 
         context.update({
             'anterior': anterior,
