@@ -18,6 +18,17 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
+<h4>Depósito:
+  {% if deposito == '-' %}
+    TODOS (101, 102, 231)
+  {% elif deposito == '101' %}
+    101-PA ATACADO PRIMEIRA QUALIDADE
+  {% elif deposito == '102' %}
+    102-PA VAREJO PRIMEIRA QUALIDADE
+  {% elif deposito == '231' %}
+    231-MAT PRIMA ESTOQUE
+  {% endif %}
+</h4>
 <table>
   <tr>
     <td>
