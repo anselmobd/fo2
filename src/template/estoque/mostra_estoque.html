@@ -19,44 +19,57 @@
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
 {% endif %}
-{% if modelo and modelo != '-' %}
-  <h4>Modelo: {{ modelo }}</h4>
-{% else %}
-  <table>
-    <tr>
-      <td>
-        {% if ref and ref != '-' %}
-          <h4>Referência: {{ ref }}</h4>
-        {% endif %}
-      </td>
-      <td>
-        {% if anterior or posterior %}
-          <p align="right">
-          {% if anterior %}
+<table>
+  <tr>
+    <td>
+      {% if ref and ref != '-' %}
+        <h4>Referência: {{ ref }}</h4>
+      {% endif %}
+      {% if modelo and modelo != '-' %}
+        <h4>Modelo: {{ modelo }}</h4>
+      {% endif %}
+    </td>
+    <td>
+      {% if anterior or posterior %}
+        <p align="right">
+        {% if anterior %}
+          {% if ref and ref != '-' %}
             <a title="Referência anterior"
                href="javascript:void(0);"
                onclick="alterForm('{{ ref }}', '{{ anterior }}');"
             >
-              Anterior: {{ anterior }}
-            </a>
+          {% else %}
+            <a title="Modelo anterior"
+               href="javascript:void(0);"
+               onclick="alterForm('{{ modelo }}', '{{ anterior }}');"
+            >
           {% endif %}
-          {% if anterior and posterior %}
-            -
-          {% endif %}
-          {% if posterior %}
+            Anterior: {{ anterior }}
+          </a>
+        {% endif %}
+        {% if anterior and posterior %}
+          -
+        {% endif %}
+        {% if posterior %}
+          {% if ref and ref != '-' %}
             <a title="Próxima referência"
                href="javascript:void(0);"
                onclick="alterForm('{{ ref }}', '{{ posterior }}');"
             >
-              Posterior: {{ posterior }}
-            </a>
+          {% else %}
+            <a title="Próximo modelo"
+               href="javascript:void(0);"
+               onclick="alterForm('{{ modelo }}', '{{ posterior }}');"
+            >
           {% endif %}
-          </p>
+            Posterior: {{ posterior }}
+          </a>
         {% endif %}
-      </td>
-    </tr>
-  </table>
-{% endif %}
+        </p>
+      {% endif %}
+    </td>
+  </tr>
+</table>
 {% if idata is not None %}
   {% if qtd is not None %}
     <h3>Quantidade inventariada: <span id="qtd_inv">{{ qtd }}</span></h3>
@@ -182,6 +195,9 @@
 
   function alterForm(ref, newref) {
     var form = document.getElementById("form");
+    if (form.action.slice(-1) != "/") {
+      form.action = form.action + "/";
+    }
     form.action = form.action.replace("/"+ref+"/", "/"+newref+"/");
     form.submit();
   }
