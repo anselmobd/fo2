@@ -37,9 +37,9 @@
         {% if anterior %}
           <a title="Referência anterior"
              href="javascript:void(0);"
-             onclick="alterInputSubmit('{{ anterior }}');"
+             onclick="alterInputSubmit('{{ anterior|safe }}');"
           >
-            Anterior: {{ anterior }}
+            Anterior: {{ anterior|safe }}
           </a>
         {% endif %}
         {% if anterior and posterior %}
@@ -48,9 +48,9 @@
         {% if posterior %}
           <a title="Próxima referência"
              href="javascript:void(0);"
-             onclick="alterInputSubmit('{{ posterior }}');"
+             onclick="alterInputSubmit('{{ posterior|safe }}');"
           >
-            Posterior: {{ posterior }}
+            Posterior: {{ posterior|safe }}
           </a>
         {% endif %}
         </p>
