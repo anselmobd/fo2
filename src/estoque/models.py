@@ -627,25 +627,29 @@ def estoque_deposito_ref(cursor, deposito, ref, modelo=None):
             modelos = modelo.split('-')
             filtro_modelo = '''--
                 AND
-                  TRIM(
-                    LEADING '0' FROM (
-                      REGEXP_REPLACE(
-                        rtc.GRUPO_ESTRUTURA,
-                        '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
-                        '\\1'
+                  TO_NUMBER(
+                    TRIM(
+                      LEADING '0' FROM (
+                        REGEXP_REPLACE(
+                          rtc.GRUPO_ESTRUTURA,
+                          '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
+                          '\\1'
+                        )
                       )
                     )
-                  ) >= '{modelo_ini}'
+                  ) >= TO_NUMBER('{modelo_ini}')
                 AND
-                  TRIM(
-                    LEADING '0' FROM (
-                      REGEXP_REPLACE(
-                        rtc.GRUPO_ESTRUTURA,
-                        '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
-                        '\\1'
+                  TO_NUMBER(
+                    TRIM(
+                      LEADING '0' FROM (
+                        REGEXP_REPLACE(
+                          rtc.GRUPO_ESTRUTURA,
+                          '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
+                          '\\1'
+                        )
                       )
                     )
-                  ) <= '{modelo_fim}'
+                  ) <= TO_NUMBER('{modelo_fim}')
             '''.format(
                 modelo_ini=modelos[0],
                 modelo_fim=modelos[1],
