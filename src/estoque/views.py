@@ -438,7 +438,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
 
         anterior = None
         posterior = None
-        if modelo is None:
+        if modelo == '-':
             ref_modelo = re.search(r"\d+", ref)[0].lstrip('0')
 
             get_prox = False
