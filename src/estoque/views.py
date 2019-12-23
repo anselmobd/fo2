@@ -487,7 +487,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             ajuste = 0
             if idata is not None:
                 d_tot_movi = models.trans_fo2_deposito_ref(
-                    cursor, deposito, ref, row['cor'], row['tam'],
+                    cursor, deposito, row['ref'], row['cor'], row['tam'],
                     tipo='s', data=idata, hora=hora)
                 if len(d_tot_movi) != 0:
                     for d_row in d_tot_movi:
@@ -523,7 +523,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                 movimento = 0
                 if idata is not None:
                     d_tot_movi = models.trans_fo2_deposito_ref(
-                        cursor, deposito, ref, row['cor'], row['tam'],
+                        cursor, deposito, row['ref'], row['cor'], row['tam'],
                         tipo='s', data=idata, hora=hora)
                     if len(d_tot_movi) != 0:
                         for d_row in d_tot_movi:
@@ -543,7 +543,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                     row['zera'] = 'Zera'
                     row['zera|LINK'] = reverse(
                         'estoque:zera_estoque__get', args=[
-                            deposito, ref, row['cor'], row['tam']])
+                            deposito, row['ref'], row['cor'], row['tam']])
                 if idata is not None and qtd is not None:
                     if row['ajuste'] == 0:
                         row['executa'] = '-'
