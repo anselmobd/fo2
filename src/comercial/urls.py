@@ -7,7 +7,7 @@ urlpatterns = [
 
     url(r'^ficha_cliente/$', views.FichaCliente.as_view(),
         name='ficha_cliente'),
-    url(r'^ficha_cliente/(?P<cnpj>\d+)/$', views.FichaCliente.as_view(),
+    url(r'^ficha_cliente/(?P<cnpj>.+)/$', views.FichaCliente.as_view(),
         name='ficha_cliente__get'),
 
     url(r'^vendas_cor/$', views.vendas.VendasPorCor.as_view(),
