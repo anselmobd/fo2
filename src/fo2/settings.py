@@ -152,6 +152,8 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '25434',
     },
+}
+DATABASES_FDB = {
     'f1': {  # F1 e SCC
         'ENGINE': 'firebird',
         'NAME': '/dados/db/f1/f1.cdb',
@@ -160,6 +162,9 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '13050',
         'OPTIONS': {'charset': 'WIN1252'},
+        'TIME_ZONE': None,
+        'CONN_MAX_AGE': None,
+        'AUTOCOMMIT': None,
     },
 }
 
