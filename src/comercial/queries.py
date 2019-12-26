@@ -1,16 +1,20 @@
+from firebird.base import DatabaseWrapper
+
 from pprint import pprint
 from datetime import datetime, date, timedelta
 
 from django.db import connections
 from django.core.cache import cache
 
+from fo2 import settings
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
 from utils.functions import dec_months, make_key_cache, fo2logger
 
 
 def busca_clientes(cnpj):
-    cursor = connections['f1'].cursor()
+    conn = DatabaseWrapper(settings.DATABASES_FDB['f1'])
+    cursor = conn.cursor()
     sql = """
         SELECT FIRST 10000
           c.C_CGC CNPJ
@@ -29,7 +33,8 @@ def busca_clientes(cnpj):
 
 
 def ficha_cliente(cnpj):
-    cursor = connections['f1'].cursor()
+    conn = DatabaseWrapper(settings.DATABASES_FDB['f1'])
+    cursor = conn.cursor()
     sql = """
         SELECT
           c.C_CGC CNPJ
