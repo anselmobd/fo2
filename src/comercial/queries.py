@@ -5,8 +5,8 @@ from datetime import datetime, date, timedelta
 
 from django.db import connections
 from django.core.cache import cache
+from django.conf import settings
 
-from fo2 import settings
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
 from utils.functions import dec_months, make_key_cache, fo2logger
