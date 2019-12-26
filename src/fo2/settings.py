@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'produto',
     'utils',
     'manutencao',
+    'email_signature',
 ]
 
 MIDDLEWARE = [

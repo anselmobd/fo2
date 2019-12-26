@@ -1,0 +1,9 @@
+{% extends 'index.html' %}
+
+{% block title.content %}Assinatura de e-mail - {{ block.super }}{% endblock title.content %}
+
+{% block header.content %}Assinatura de e-mail - {{ block.super }}{% endblock header.content %}
+
+{% block content %}
+{% include 'email_signature/menu.html' %}
+{% endblock %}
