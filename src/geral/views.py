@@ -29,8 +29,7 @@ from geral.functions import config_get_value, config_set_value
 
 
 def index(request):
-    context = {}
-    return render(request, 'geral/index.html', context)
+    return render(request, 'geral/index.html')
 
 
 def deposito(request):

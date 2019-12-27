@@ -19,8 +19,7 @@ import manutencao.models as models
 
 
 def index(request):
-    context = {}
-    return render(request, 'manutencao/index.html', context)
+    return render(request, 'manutencao/index.html')
 
 
 class Maquinas(O2BaseGetView):

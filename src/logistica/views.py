@@ -23,8 +23,7 @@ from .forms import *
 
 
 def index(request):
-    context = {}
-    return render(request, 'logistica/index.html', context)
+    return render(request, 'logistica/index.html')
 
 
 class NotafiscalRel(View):

@@ -12,8 +12,7 @@ from lotes.tables import ImpressoraTermicaTable
 
 
 def index(request):
-    context = {}
-    return render(request, 'lotes/index.html', context)
+    return render(request, 'lotes/index.html')
 
 
 def impressoraTermica(request):
