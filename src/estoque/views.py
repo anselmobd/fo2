@@ -703,7 +703,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         self.data = kwargs['data']
         self.hora = kwargs['hora']
 
-        produto = models.get_preco_medio_ref_cor_tam(
+        produto = queries.get_preco_medio_ref_cor_tam(
             self.cursor, self.ref, self.cor, self.tam)
         if len(produto) == 0:
             raise SuspiciousOperation('produto')
@@ -952,7 +952,7 @@ def executa_ajuste(request, **kwargs):
 
     cursor = connections['so'].cursor()
 
-    produto = models.get_preco_medio_ref_cor_tam(
+    produto = queries.get_preco_medio_ref_cor_tam(
         cursor, ref, cor, tam)
     try:
         preco_medio = produto[0]['preco_medio']
