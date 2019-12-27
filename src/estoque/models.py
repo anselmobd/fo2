@@ -36,6 +36,7 @@ def grade_estoque(
         cursor, ref=None, dep=None, data_ini=None, tipo_grade=None,
         modelo=None):
 
+    filtro_modelo = ''
     filtro_modelo_mask = ''
     if modelo is not None:
         filtro_modelo_mask = '''--
