@@ -547,7 +547,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                         row['executa'] = '-'
                     else:
                         count_btn_executa += 1
-                        trail = hash_trail(
+                        trail = request_hash_trail(
                             request,
                             deposito,
                             row['ref'],
@@ -911,15 +911,19 @@ class EditaEstoque(PermissionRequiredMixin, View):
         return response
 
 
-def hash_trail(request, *fields):
+def hash_trail(*fields):
+    hash_cache = ';'.join(map(format, fields))
+    hash_object = hashlib.md5(hash_cache.encode())
+    return hash_object.hexdigest()
+
+
+def request_hash_trail(request, *fields):
     params = list(fields) + [
         time.strftime('%y%m%d'),
         request_user(request),
         request.session.session_key,
     ]
-    hash_cache = ';'.join(map(format, params))
-    hash_object = hashlib.md5(hash_cache.encode())
-    return hash_object.hexdigest()
+    return hash_trail(*params)
 
 
 @permission_required('base.can_adjust_stock')
@@ -967,7 +971,7 @@ def executa_ajuste(request, **kwargs):
     transacoes = TransacoesDeAjuste()
     trans, es, descr = transacoes.get(sinal)
 
-    trail_check = hash_trail(
+    trail_check = request_hash_trail(
         request,
         dep,
         ref,
