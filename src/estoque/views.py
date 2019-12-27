@@ -231,7 +231,7 @@ class RefsComMovimento(View):
             'data_ini': data_ini,
         }
 
-        refs = models.refs_com_movimento(cursor, data_ini)
+        refs = queries.refs_com_movimento(cursor, data_ini)
         if len(refs) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
