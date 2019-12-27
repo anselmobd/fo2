@@ -1,9 +1,13 @@
-__version__ = '0.1.149'
-__version__date__ = '05/07/2019'
+__version__ = '0.2.0'
+__version__date__ = '01/01/2020'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.2.0 - 2020/01/01
+#   . Muita coisa foi feita, principalmente com relação a compras de MP,
+#     metas de estoque e produção, e ajuste de estoque em depósitos
 #
 # - 0.1.149 - 2019/07/05
 #   . Definição de meta de estoque
