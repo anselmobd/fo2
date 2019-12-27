@@ -541,13 +541,6 @@ class MostraEstoque(PermissionRequiredMixin, View):
                 row['edita|LINK'] = reverse(
                     'estoque:edita_estoque__get', args=[
                         deposito, row['ref'], row['cor'], row['tam']])
-                if row['qtd'] == 0:
-                    row['zera'] = '-'
-                else:
-                    row['zera'] = 'Zera'
-                    row['zera|LINK'] = reverse(
-                        'estoque:zera_estoque__get', args=[
-                            deposito, row['ref'], row['cor'], row['tam']])
                 if idata is not None and qtd is not None:
                     if row['ajuste'] == 0:
                         row['executa'] = '-'
@@ -682,119 +675,6 @@ class TransacoesDeAjuste():
         es = self.transacoes[sinal]['es']
         descr = self.transacoes[sinal]['descr']
         return trans, es, descr
-
-
-class ZeraEstoque(PermissionRequiredMixin, View):
-
-    def __init__(self):
-        self.permission_required = 'base.can_adjust_stock'
-        self.template_name = 'estoque/zera_estoque.html'
-        self.title_name = 'Ajuste de estoque'
-
-        self.transacoes = TransacoesDeAjuste()
-
-    def mount_context(
-            self, cursor, deposito, ref, cor, tam, qtd, conf_hash, trail):
-        context = {
-            'deposito': deposito,
-            'ref': ref,
-            'cor': cor,
-            'tam': tam,
-        }
-        executa = conf_hash is not None
-
-        produto = models.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
-        if len(produto) == 0:
-            context.update({
-                'mensagem': 'Referência/Cor/Tamanho não encontrada',
-            })
-            return context
-        preco_medio = produto[0]['preco_medio']
-
-        l_estoque = models.get_estoque_dep_ref_cor_tam(
-            cursor, deposito, ref, cor, tam)
-        if len(l_estoque) == 0:
-            estoque = 0
-        else:
-            estoque = l_estoque[0]['estoque']
-        ajuste = qtd - estoque
-        if ajuste == 0:
-            context.update({
-                'mensagem': 'O depósito já está com a quantidade desejada',
-            })
-            return context
-        sinal = 1 if ajuste > 0 else -1
-        ajuste *= sinal
-
-        context.update({
-            'qtd': qtd,
-            'estoque': estoque,
-        })
-
-        trans, es, descr = self.transacoes.get(sinal)
-
-        if executa:
-            num_doc = '702{}'.format(time.strftime('%y%m%d'))
-            if models.insert_transacao_ajuste(
-                    cursor, deposito, ref, tam, cor, num_doc, trans, es,
-                    ajuste, preco_medio):
-                context.update({
-                    'estoque': qtd,
-                })
-                mensagem = \
-                    "Foi executada a transação '{:03}' ({}) " \
-                    "com a quantidade {}."
-            else:
-                mensagem = \
-                    "Erro ao executar a transação '{:03}' ({}) " \
-                    "com a quantidade {}."
-        else:
-            context.update({
-                'trail': trail,
-            })
-            mensagem = \
-                "Deve ser executada a transação '{:03}' ({}) " \
-                "com a quantidade {}."
-        mensagem = mensagem.format(trans, descr, ajuste)
-        context.update({
-            'mensagem': mensagem,
-        })
-        return context
-
-    def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        if 'qtd' in kwargs:
-            qtd = int(kwargs['qtd'])
-        else:
-            qtd = 0
-
-        deposito = kwargs['deposito']
-        ref = kwargs['ref']
-        cor = kwargs['cor']
-        tam = kwargs['tam']
-
-        hash_cache = ';'.join(map(format, (
-            deposito,
-            ref,
-            cor,
-            tam,
-            qtd,
-            time.strftime('%y%m%d'),
-            request_user(request),
-        )))
-        hash_object = hashlib.md5(hash_cache.encode())
-        trail = hash_object.hexdigest()
-
-        if 'conf_hash' in kwargs:
-            conf_hash = kwargs['conf_hash']
-            if trail != conf_hash:
-                return redirect('apoio_ao_erp')
-        else:
-            conf_hash = None
-        cursor = connections['so'].cursor()
-        context.update(self.mount_context(
-            cursor, deposito, ref, cor, tam, qtd, conf_hash, trail))
-        return render(request, self.template_name, context)
 
 
 class EditaEstoque(PermissionRequiredMixin, View):
