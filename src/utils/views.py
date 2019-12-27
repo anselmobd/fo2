@@ -209,10 +209,43 @@ def totalize_grouped_data(data, config):
 
 
 class TableHfs(object):
+    '''
+        formato do self.definition:
+        {
+            'field': {
+                'header': 'Header',
+                'style': 'text-align: right;',
+            },
+            ...
+        }
+    '''
 
-    def __init__(self, definition):
+    def __init__(self, definition, keys=None):
+        '''
+            se keys for uma lista de chaves como ['header', 'style']
+            a definition recebida estará no formato
+            {
+                'field': ['Header', 'text-align: right;'],
+                ...
+            }
+            e deverá ser convertida para o formato do self.definition
+        '''
         super(TableHfs, self).__init__()
-        self.definition = definition
+        if keys is None:
+            self.definition = definition
+        else:
+            self.definition = self.convert(definition, keys)
+        pprint(self.definition)
+
+    def convert(self, definition, keys):
+        result = {}
+        for col in definition:
+            def_col = {}
+            for i, key in enumerate(keys):
+                if i < len(definition[col]):
+                    def_col[key] = definition[col][i]
+            result[col] = def_col
+        return result
 
     def cols(self, *cols):
         self._cols = cols
