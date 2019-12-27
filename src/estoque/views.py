@@ -491,7 +491,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             movimento = 0
             ajuste = 0
             if idata is not None:
-                d_tot_movi = models.get_transfo2_deposito_ref(
+                d_tot_movi = queries.get_transfo2_deposito_ref(
                     cursor, deposito, row['ref'], row['cor'], row['tam'],
                     tipo='s', data=idata, hora=hora)
                 if len(d_tot_movi) != 0:
@@ -527,7 +527,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             for row in data:
                 movimento = 0
                 if idata is not None:
-                    d_tot_movi = models.get_transfo2_deposito_ref(
+                    d_tot_movi = queries.get_transfo2_deposito_ref(
                         cursor, deposito, row['ref'], row['cor'], row['tam'],
                         tipo='s', data=idata, hora=hora)
                     if len(d_tot_movi) != 0:
@@ -593,7 +593,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             'count_btn_executa': count_btn_executa,
         })
 
-        data = models.get_transfo2_deposito_ref(cursor, deposito, ref)
+        data = queries.get_transfo2_deposito_ref(cursor, deposito, ref)
         if len(data) != 0:
             context.update({
                 't_headers': ['Data/hora', 'Documento', 'Cor', 'Tamanho',
@@ -719,7 +719,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
         self.movimento = 0
         if self.data is not None:
-            d_tot_movi = models.get_transfo2_deposito_ref(
+            d_tot_movi = queries.get_transfo2_deposito_ref(
                 self.cursor, self.deposito, self.ref, self.cor, self.tam,
                 tipo='s', data=self.data, hora=self.hora)
             if len(d_tot_movi) != 0:
