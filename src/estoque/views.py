@@ -59,7 +59,7 @@ class PorDeposito(View):
             group = ''
         else:
             group = agrupamento
-        data = models.posicao_estoque(
+        data = queries.posicao_estoque(
             cursor, nivel, ref, tam, cor, deposito, zerados=False, group=group,
             tipo=tipo, modelo=modelo)
         if len(data) == 0:
