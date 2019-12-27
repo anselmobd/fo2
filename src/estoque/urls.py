@@ -31,7 +31,8 @@ urlpatterns = [
         views.EditaEstoque.as_view(), name='edita_estoque__get'),
 
     url(r'^executa_ajuste/(?P<dep>[^/]+)/(?P<ref>[^/]+)/'
-        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<ajuste>[^/]+)/(?P<trail>[^/]+)/$',
+        r'(?P<cor>[^/]+)/(?P<tam>[^/]+)/(?P<ajuste>[^/]+)/'
+        r'(?P<num_doc>[^/]+)/(?P<trail>[^/]+)/$',
         views.executa_ajuste, name='executa_ajuste'),
 
 ]
