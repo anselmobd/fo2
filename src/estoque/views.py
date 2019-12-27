@@ -385,39 +385,16 @@ class MostraEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/mostra_estoque.html'
         self.title_name = 'Ajuste de estoque'
         self.table = TableHfs({
-            'ref': {
-                'header': 'Referência',
-            },
-            'cor': {
-                'header': 'Cor',
-            },
-            'tam': {
-                'header': 'Tamanho',
-            },
-            'qtd': {
-                'header': 'Estoque atual',
-                'style': 'text-align: right;',
-            },
-            'qtd_inv': {
-                'header': 'Estoque na data',
-                'style': 'text-align: right;',
-            },
-            'movimento': {
-                'header': 'Movimento',
-                'style': 'text-align: right;',
-            },
-            'ajuste': {
-                'header': 'Ajuste pelo inventário',
-                'style': 'text-align: right;',
-            },
-            'executa': {
-                'header': 'Executa',
-                'style': 'text-align: right;',
-            },
-            'edita': {
-                'header': 'Edita',
-            },
-        })
+            'ref': ['Referência'],
+            'cor': ['Cor'],
+            'tam': ['Tamanho'],
+            'qtd': ['Estoque atual', 'text-align: right;'],
+            'qtd_inv': ['Estoque na data', 'text-align: right;'],
+            'movimento': ['Movimento', 'text-align: right;'],
+            'ajuste': ['Ajuste pelo inventário', 'text-align: right;'],
+            'executa': ['Executa', 'text-align: right;'],
+            'edita': ['Edita'],
+        }, ['header', 'style'])
 
     def mount_context(
             self, request, cursor, deposito, ref, qtd, idata, hora, modelo):
