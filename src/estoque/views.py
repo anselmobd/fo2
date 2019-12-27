@@ -799,7 +799,6 @@ class EditaEstoque(PermissionRequiredMixin, View):
             self.executa = self.conf_hash is not None
 
             if self.executa:
-                num_doc = '702{}'.format(time.strftime('%y%m%d'))
                 if queries.insert_transacao_ajuste(
                         self.cursor,
                         self.deposito,
