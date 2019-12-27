@@ -554,8 +554,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                              style="padding: 0px 12px;"
                              href="javascript:void(0);"
                              onclick="exec_ajuste(this,
-                                \'{dep}\', \'{ref}\', \'{cor}\', \'{tam}\',
-                                \'{ajuste}\', \'{trail}\', \'{link}\');"
+                                \'{ajuste}\', \'{link}\');"
                             >Ajusta</a>
                         '''.format(
                             dep=deposito,
