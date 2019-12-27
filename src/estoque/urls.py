@@ -10,8 +10,8 @@ urlpatterns = [
 
     url(r'^valor_mp/$', views.ValorMp.as_view(), name='valor_mp'),
 
-    url(r'^inventario_expedicao/$', views.InventarioExpedicao.as_view(),
-        name='inventario_expedicao'),
+    url(r'^refs_com_movimento/$', views.RefsComMovimento.as_view(),
+        name='refs_com_movimento'),
 
     url(r'^referencia_deposito/$', views.ReferenciaDeposito.as_view(),
         name='referencia_deposito'),
