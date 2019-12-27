@@ -221,10 +221,10 @@ class ValorMp(View):
         return render(request, self.template_name, context)
 
 
-class InventarioExpedicao(View):
+class RefsComMovimento(View):
     Form_class = forms.InventarioExpedicaoForm
-    template_name = 'estoque/inventario_expedicao.html'
-    title_name = 'Inventário p/ expedição'
+    template_name = 'estoque/refs_com_movimento.html'
+    title_name = 'Referências com movimento'
 
     def mount_context(self, cursor, data_ini):
         context = {
