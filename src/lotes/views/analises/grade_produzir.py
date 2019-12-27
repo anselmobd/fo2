@@ -122,7 +122,7 @@ class GradeProduzir(O2BaseGetPostView):
             gzerada = update_gzerada(gzerada, gop)
 
         e_header, e_fields, e_data, e_style, total_est = \
-            estoque.models.grade_estoque(
+            estoque.queries.grade_estoque(
                 cursor, dep=('101', '102', '231'), modelo=modelo)
         gest = None
         if total_est != 0:
