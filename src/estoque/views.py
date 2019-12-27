@@ -571,6 +571,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
                                     row['cor'],
                                     row['tam'],
                                     row['ajuste'],
+                                    num_doc,
                                     trail,
                                 ]
                             )
@@ -915,6 +916,7 @@ def executa_ajuste(request, **kwargs):
     cor = kwargs['cor']
     tam = kwargs['tam']
     ajuste = kwargs['ajuste']
+    num_doc = kwargs['num_doc']
     trail = kwargs['trail']
 
     if dep not in ['101', '102', '231']:
@@ -967,7 +969,6 @@ def executa_ajuste(request, **kwargs):
         })
         return JsonResponse(data, safe=False)
 
-    num_doc = '702{}'.format(time.strftime('%y%m%d'))
     quant = ajuste * sinal
     if queries.insert_transacao_ajuste(
             cursor,
