@@ -8,8 +8,7 @@ import comercial.queries as queries
 
 
 def index(request):
-    context = {}
-    return render(request, 'comercial/index.html', context)
+    return render(request, 'comercial/index.html')
 
 
 class FichaCliente(View):

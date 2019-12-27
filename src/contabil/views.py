@@ -14,8 +14,7 @@ import contabil.queries as queries
 
 
 def index(request):
-    context = {}
-    return render(request, 'contabil/index.html', context)
+    return render(request, 'contabil/index.html')
 
 
 class InfAdProd(View):

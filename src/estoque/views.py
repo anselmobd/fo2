@@ -26,8 +26,7 @@ from . import queries
 
 
 def index(request):
-    context = {}
-    return render(request, 'estoque/index.html', context)
+    return render(request, 'estoque/index.html')
 
 
 class PosicaoEstoque(View):

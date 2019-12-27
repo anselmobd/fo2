@@ -31,8 +31,7 @@ import cd.forms
 
 
 def index(request):
-    context = {}
-    return render(request, 'cd/index.html', context)
+    return render(request, 'cd/index.html')
 
 
 def teste_som(request):
