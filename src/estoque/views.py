@@ -481,7 +481,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             'posterior': posterior,
         })
 
-        data = models.estoque_deposito_ref_modelo(
+        data = queries.estoque_deposito_ref_modelo(
             cursor, deposito, ref, modelo)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
@@ -732,7 +732,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         anterior = {}
         posterior = {}
         get_prox = False
-        lista = models.estoque_deposito_ref_modelo(
+        lista = queries.estoque_deposito_ref_modelo(
             self.cursor, self.deposito, self.ref)
         for row in lista:
             item = '{}.{}'.format(
