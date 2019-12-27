@@ -55,10 +55,14 @@
         <h3>Quantidade inventariada: {{ qtd }}</h3>
       {% endif %}
       {% if data is not None %}
-        <h3>Data do inventario: {{ data }}</h3>
-        {% if hora is not None %}
-          <h3>Hora do inventario: {{ hora }}</h3>
+        <h3>Data/hora do inventário: {{ data }}
+        {% if hora is None %}
+          00:00
+        {% else %}
+          {{ hora }}
         {% endif %}
+        ({{ num_doc }})
+        </h3>
         {% if movimento %}
           <h3>Movimento total após inventário:{% if movimento > 0 %}
             Entrada de {{ movimento }} {% else %} Saída de {{ movimento_neg }} {% endif %} peças (exceto ajustes via Apoio)</h3>

@@ -742,6 +742,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
                     anterior['cor'] = row['cor']
                     anterior['tam'] = row['tam']
 
+        num_doc = transfo2_num_doc(self.data, self.hora)
         self.context.update({
             'deposito': self.deposito,
             'ref': self.ref,
@@ -753,6 +754,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
             'qtd': self.qtd,
             'data': self.data,
             'hora': self.hora,
+            'num_doc': num_doc,
             'anterior': anterior,
             'posterior': posterior,
         })
