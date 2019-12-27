@@ -804,7 +804,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
             if self.executa:
                 num_doc = '702{}'.format(time.strftime('%y%m%d'))
-                if models.insert_transacao_ajuste(
+                if queries.insert_transacao_ajuste(
                         self.cursor,
                         self.deposito,
                         self.ref,
@@ -985,7 +985,7 @@ def executa_ajuste(request, **kwargs):
 
     num_doc = '702{}'.format(time.strftime('%y%m%d'))
     quant = ajuste * sinal
-    if models.insert_transacao_ajuste(
+    if queries.insert_transacao_ajuste(
             cursor,
             dep,
             ref,

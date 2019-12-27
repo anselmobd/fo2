@@ -3,6 +3,7 @@ from .get_estoque_dep_ref_cor_tam import *
 from .get_preco_medio_ref_cor_tam import *
 from .get_transfo2_deposito_ref import *
 from .grade_estoque import *
+from .insert_transacao_ajuste import *
 from .posicao_estoque import *
 from .referencia_deposito import *
 from .refs_com_movimento import *
