@@ -387,8 +387,16 @@ def transfo2_num_doc(data, hora):
         origem_doc = datetime.datetime(2019, 11, 26, 23, 50)
         duration = dt_inventario - origem_doc
         duration_secs = duration.total_seconds()
-        minuto_10 = int(duration_secs / 60 / 10)
-    return '702{:06d}'.format(minuto_10)
+        dez_minutos = int(duration_secs / 60 / 10)
+    return '702{:06d}'.format(dez_minutos)
+
+
+def transfo2_num_doc_dt(num_doc):
+    origem_doc = datetime.datetime(2019, 11, 26, 23, 50)
+    dez_minutos = int(str(num_doc)[3:])
+    duration_secs = dez_minutos * 10 * 60
+    dt_inventario = origem_doc + datetime.timedelta(0, duration_secs)
+    return dt_inventario
 
 
 class MostraEstoque(PermissionRequiredMixin, View):
@@ -587,14 +595,21 @@ class MostraEstoque(PermissionRequiredMixin, View):
         })
 
         data = queries.get_transfo2_deposito_ref(cursor, deposito, ref)
+        for row in data:
+            if row['numdoc'] == 702000000:
+                row['dh_inv'] = '-'
+            else:
+                row['dh_inv'] = transfo2_num_doc_dt(row['numdoc'])
         if len(data) != 0:
             context.update({
-                't_headers': ['Data/hora', 'Documento', 'Cor', 'Tamanho',
-                              'Transação', 'E/S', 'Quantidade'],
-                't_fields': ['hora', 'numdoc', 'cor', 'tam',
-                             'trans', 'es', 'qtd'],
+                't_headers': ['Data/hora', 'Documento', 'Data/hora inventário',
+                              'Cor', 'Tamanho', 'Transação', 'E/S',
+                              'Quantidade'],
+                't_fields': ['hora', 'numdoc', 'dh_inv',
+                             'cor', 'tam', 'trans', 'es',
+                             'qtd'],
                 't_data': data,
-                't_style': {7: 'text-align: right;', },
+                't_style': {8: 'text-align: right;', },
             })
         return context
 
