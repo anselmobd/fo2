@@ -1,7 +1,11 @@
 import re
+import time
+import hashlib
 from pprint import pprint
 
 from django.template.defaulttags import register
+
+from geral.functions import request_user
 
 from utils.classes import GitVersion
 
@@ -233,3 +237,18 @@ class TableHfs(object):
                 if 'style' in self.definition[col]:
                     styles[idx] = self.definition[col]['style']
         return headers, fields, styles
+
+
+def hash_trail(*fields):
+    hash_cache = ';'.join(map(format, fields))
+    hash_object = hashlib.md5(hash_cache.encode())
+    return hash_object.hexdigest()
+
+
+def request_hash_trail(request, *fields):
+    params = list(fields) + [
+        time.strftime('%y%m%d'),
+        request_user(request),
+        request.session.session_key,
+    ]
+    return hash_trail(*params)
