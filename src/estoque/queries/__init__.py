@@ -1,3 +1,4 @@
+from .estoque_deposito_ref_modelo import *
 from .grade_estoque import *
 from .posicao_estoque import *
 from .referencia_deposito import *
