@@ -235,7 +235,6 @@ class TableHfs(object):
             self.definition = definition
         else:
             self.definition = self.convert(definition, keys)
-        pprint(self.definition)
 
     def convert(self, definition, keys):
         result = {}
