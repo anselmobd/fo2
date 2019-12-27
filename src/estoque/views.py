@@ -379,14 +379,15 @@ class ReferenciaDeposito(View):
 
 def transfo2_num_doc(data, hora):
     if data is None:
-        return None
-    if hora is None:
-        hora = datetime.time(0, 0)
-    dt_inventario = datetime.datetime.combine(data, hora)
-    origem_doc = datetime.datetime(2019, 11, 26, 23, 50)
-    duration = dt_inventario - origem_doc
-    duration_secs = duration.total_seconds()
-    minuto_10 = int(duration_secs / 60 / 10)
+        minuto_10 = 0
+    else:
+        if hora is None:
+            hora = datetime.time(0, 0)
+        dt_inventario = datetime.datetime.combine(data, hora)
+        origem_doc = datetime.datetime(2019, 11, 26, 23, 50)
+        duration = dt_inventario - origem_doc
+        duration_secs = duration.total_seconds()
+        minuto_10 = int(duration_secs / 60 / 10)
     return '702{:06d}'.format(minuto_10)
 
 
