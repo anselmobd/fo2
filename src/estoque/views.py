@@ -161,7 +161,7 @@ class ValorMp(View):
             'deposito_compras': deposito_compras,
         }
 
-        data = models.valor(
+        data = queries.valor_mp(
             cursor, nivel, positivos, zerados, negativos, preco_zerado,
             deposito_compras)
         if len(data) == 0:
