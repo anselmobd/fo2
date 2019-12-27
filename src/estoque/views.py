@@ -417,6 +417,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
         if modelo is None:
             modelo = '-'
 
+        num_doc = transfo2_num_doc(idata, hora)
         context = {
             'deposito': deposito,
             'ref': ref,
@@ -424,6 +425,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             'idata': idata,
             'hora': hora,
             'modelo': modelo,
+            'num_doc': num_doc,
         }
 
         anterior = None
