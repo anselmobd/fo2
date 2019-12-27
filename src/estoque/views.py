@@ -445,6 +445,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
 
             get_prox = False
             lista = models.referencia_deposito(cursor, deposito, ref_modelo)
+            lista = queries.referencia_deposito(cursor, deposito, ref_modelo)
             for row in lista:
                 item = row['ref']
                 if get_prox:
