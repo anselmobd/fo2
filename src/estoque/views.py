@@ -29,7 +29,7 @@ def index(request):
     return render(request, 'estoque/index.html', context)
 
 
-class PorDeposito(View):
+class PosicaoEstoque(View):
     Form_class = forms.PorDepositoForm
     template_name = 'estoque/posicao_estoque.html'
     title_name = 'Posição de estoque'

@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
 
-    url(r'^posicao_estoque/$', views.PorDeposito.as_view(),
+    url(r'^posicao_estoque/$', views.PosicaoEstoque.as_view(),
         name='posicao_estoque'),
 
     url(r'^valor_mp/$', views.ValorMp.as_view(), name='valor_mp'),
