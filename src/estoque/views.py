@@ -444,7 +444,6 @@ class MostraEstoque(PermissionRequiredMixin, View):
             ref_modelo = re.search(r"\d+", ref)[0].lstrip('0')
 
             get_prox = False
-            lista = models.referencia_deposito(cursor, deposito, ref_modelo)
             lista = queries.referencia_deposito(cursor, deposito, ref_modelo)
             for row in lista:
                 item = row['ref']
