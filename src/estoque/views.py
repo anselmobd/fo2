@@ -241,7 +241,7 @@ class RefsComMovimento(View):
             ref['deps'] = []
             for dep in deps:
                 header, fields, data, style, total = \
-                    models.grade_estoque(
+                    queries.grade_estoque(
                         cursor, ref['ref'], dep, data_ini=data_ini)
                 grade = None
                 if total != 0:
