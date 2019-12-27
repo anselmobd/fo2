@@ -7,7 +7,7 @@ from django.db import models
 from fo2.models import rows_to_dict_list_lower
 
 
-def trans_fo2_deposito_ref(
+def get_transfo2_deposito_ref(
         cursor, deposito, ref, cor=None, tam=None,
         tipo='f', data=None, hora=None):
 
