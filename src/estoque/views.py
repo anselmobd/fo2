@@ -710,7 +710,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
         self.preco_medio = produto[0]['preco_medio']
 
-        l_estoque = models.get_estoque_dep_ref_cor_tam(
+        l_estoque = queries.get_estoque_dep_ref_cor_tam(
             self.cursor, self.deposito, self.ref, self.cor, self.tam)
         if len(l_estoque) == 0:
             self.estoque = 0
