@@ -21,6 +21,7 @@ import produto.queries
 
 from . import forms
 from . import models
+from . import queries
 
 
 def index(request):
@@ -316,7 +317,7 @@ class ReferenciaDeposito(View):
                 'posterior': posterior,
             })
 
-        data = models.referencia_deposito(cursor, deposito, modelo)
+        data = queries.referencia_deposito(cursor, deposito, modelo)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
