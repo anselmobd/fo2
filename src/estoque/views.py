@@ -377,6 +377,17 @@ class ReferenciaDeposito(View):
         return render(request, self.template_name, context)
 
 
+def transfo2_num_doc(idata, hora):
+    if hora is None:
+        hora = datetime.time(0, 0)
+    dt_inventario = datetime.datetime.combine(idata, hora)
+    origem_doc = datetime.datetime(2019, 11, 26, 23, 50)
+    duration = dt_inventario - origem_doc
+    duration_secs = duration.total_seconds()
+    minuto_10 = int(duration_secs / 60 / 10)
+    return '702{:06d}'.format(minuto_10)
+
+
 class MostraEstoque(PermissionRequiredMixin, View):
 
     def __init__(self):
