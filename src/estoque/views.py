@@ -14,7 +14,8 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import redirect
 from django.core.exceptions import SuspiciousOperation
 
-from utils.views import totalize_data, totalize_grouped_data, TableHfs
+from utils.views import (
+    totalize_data, totalize_grouped_data, TableHfs, request_hash_trail)
 from fo2.template import group_rowspan
 from geral.functions import request_user, has_permission
 import produto.queries
@@ -909,21 +910,6 @@ class EditaEstoque(PermissionRequiredMixin, View):
         else:
             response.set_cookie('ajuste_inv_data', set_data_inv)
         return response
-
-
-def hash_trail(*fields):
-    hash_cache = ';'.join(map(format, fields))
-    hash_object = hashlib.md5(hash_cache.encode())
-    return hash_object.hexdigest()
-
-
-def request_hash_trail(request, *fields):
-    params = list(fields) + [
-        time.strftime('%y%m%d'),
-        request_user(request),
-        request.session.session_key,
-    ]
-    return hash_trail(*params)
 
 
 @permission_required('base.can_adjust_stock')
