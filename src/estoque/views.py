@@ -1016,3 +1016,36 @@ def executa_ajuste(request, **kwargs):
         })
 
     return JsonResponse(data, safe=False)
+
+
+def insert_transacao_inventario(
+    dep,
+    ref,
+    tam,
+    cor,
+    qtd,
+    data,
+    hora,
+):
+    '''
+        Recebe qtd, data e hora do inventário
+        Calcula ajuste necessário.
+        Devolve sucesso e mensagem.
+    '''
+    output = []
+
+    if dep not in ['101', '102', '231']:
+        return False, 'Depósito inválido'
+
+    cursor = connections['so'].cursor()
+
+    dt = datetime.datetime.strptime(data, '%Y-%m-%d').date()
+    output.append("data = {}".format(str(dt)))
+
+    tm = datetime.datetime.strptime(hora, '%Hh%M').time()
+    output.append("hora = {}".format(str(tm)))
+
+    num_doc = transfo2_num_doc(dt, tm)
+    output.append("num_doc = {}".format(num_doc))
+
+    return True, "\n".join(output)
