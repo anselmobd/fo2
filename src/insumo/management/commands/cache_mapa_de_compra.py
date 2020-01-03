@@ -49,7 +49,7 @@ class Command(BaseCommand):
         parser.add_argument('tamanho', help='1 a 3 caracteres', nargs='?')
         parser.add_argument(
             '-t', '--max-tasks', type=int, nargs='?',
-            help='Indica o número máximo de calculos que serão executado '
+            help='Indica o número máximo de cálculos que serão executado '
                  '(utilizado para testar a rotina)')
 
     @property
