@@ -3,7 +3,7 @@ import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 
-from estoque.views import executa_ajuste, transfo2_num_doc
+from estoque.views import insert_transacao_inventario
 
 
 class Command(BaseCommand):
@@ -21,8 +21,7 @@ class Command(BaseCommand):
         parser.add_argument('ref', help='5 caracteres')
         parser.add_argument('cor', help='6 caracteres')
         parser.add_argument('tam', help='1 a 3 caracteres')
-        parser.add_argument('qtd', type=int,
-                            help='Indica a quantidade transacionada')
+        parser.add_argument('qtd', type=int, help='quantidade inventariada')
         parser.add_argument('data', help='data do inventário (AAAA-MM-DD)')
         parser.add_argument('hora', help='hora do inventário (HHhMM)')
 
@@ -41,18 +40,23 @@ class Command(BaseCommand):
         self.my_println(
             '%s %s %s %s %s %s %s' % (dep, ref, cor, tam, qtd, data, hora))
 
-        dt = datetime.datetime.strptime(data, '%Y-%m-%d').date()
-        self.my_println(str(dt))
-        tm = datetime.datetime.strptime(hora, '%Hh%M').time()
-        self.my_println(str(tm))
-
-        num_doc = transfo2_num_doc(dt, tm)
-        self.my_println(num_doc)
-
         try:
-            pass
+            sucesso, mensagem = insert_transacao_inventario(
+                dep,
+                ref,
+                tam,
+                cor,
+                qtd,
+                data,
+                hora,
+            )
         except Exception as e:
+            sucesso = False
+            mensagem = '{}'.format(e)
+
+        if not sucesso:
             raise CommandError(
-                'Erro executando transação no Systêxtil "{}"'.format(e))
+                'Erro inserindo transsação de inventário no '
+                'Systêxtil [{}]'.format(mensagem))
 
         self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
