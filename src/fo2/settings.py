@@ -60,14 +60,15 @@ INSTALLED_APPS = [
     'base',
     'comercial',
     'contabil',
+    'email_signature',
+    'estoque',
     'geral',
     'insumo',
     'logistica',
     'lotes',
+    'manutencao',
     'produto',
     'utils',
-    'manutencao',
-    'email_signature',
 ]
 
 MIDDLEWARE = [
