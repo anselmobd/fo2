@@ -3,7 +3,7 @@ import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 
-from estoque.views import executa_ajuste
+from estoque.views import executa_ajuste, transfo2_num_doc
 
 
 class Command(BaseCommand):
@@ -40,6 +40,14 @@ class Command(BaseCommand):
 
         self.my_println(
             '%s %s %s %s %s %s %s' % (dep, ref, cor, tam, qtd, data, hora))
+
+        dt = datetime.datetime.strptime(data, '%Y-%m-%d').date()
+        self.my_println(str(dt))
+        tm = datetime.datetime.strptime(hora, '%Hh%M').time()
+        self.my_println(str(tm))
+
+        num_doc = transfo2_num_doc(dt, tm)
+        self.my_println(num_doc)
 
         try:
             pass
