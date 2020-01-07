@@ -1048,11 +1048,30 @@ def insert_transacao_inventario(
     except Exception:
         return False, 'Referência/Cor/Tamanho não encontrada', infos
 
+    estoque_list = queries.get_estoque_dep_ref_cor_tam(
+        cursor, dep, ref, cor, tam)
+    if len(estoque_list) == 0:
+        estoque = 0
+    else:
+        estoque = estoque_list[0]['estoque']
+    infos['estoque'] = estoque
+
     dt = datetime.datetime.strptime(data, '%Y-%m-%d').date()
     infos['data'] = dt
 
     tm = datetime.datetime.strptime(hora, '%Hh%M').time()
     infos['hora'] = tm
+
+    movimento = 0
+    movimento_list = queries.get_transfo2_deposito_ref(
+        cursor, dep, ref, cor, tam, tipo='s', data=dt, hora=tm)
+    if len(movimento_list) != 0:
+        for row in movimento_list:
+            if row['es'] == 'E':
+                movimento += row['qtd']
+            elif row['es'] == 'S':
+                movimento -= row['qtd']
+    infos['movimento'] = movimento
 
     num_doc = transfo2_num_doc(dt, tm)
     infos['num_doc'] = num_doc
