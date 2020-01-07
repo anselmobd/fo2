@@ -1089,5 +1089,17 @@ def ajuste_por_inventario(
 
     num_doc = transfo2_num_doc(dt, tm)
     infos['num_doc'] = num_doc
-
-    return True, 'Executado o ajuste por inventário no Systêxtil', infos
+    if queries.insert_transacao_ajuste(
+            cursor,
+            dep,
+            ref,
+            tam,
+            cor,
+            num_doc,
+            trans,
+            es,
+            ajuste,
+            preco_medio
+            ):
+        return True, 'Executado o ajuste por inventário no Systêxtil', infos
+    return False, 'Erro durante inserção da transação no Systêxtil', infos
