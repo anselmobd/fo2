@@ -1073,6 +1073,20 @@ def insert_transacao_inventario(
                 movimento -= row['qtd']
     infos['movimento'] = movimento
 
+    infos['qtd'] = qtd
+    ajuste = qtd - estoque + movimento
+    if ajuste == 0:
+        return True, 'Nada a fazer', infos
+
+    sinal = 1 if ajuste > 0 else -1
+    ajuste *= sinal
+    infos['ajuste'] = ajuste
+    transacoes = TransacoesDeAjuste()
+    trans, es, descr = transacoes.get(sinal)
+    infos['trans'] = trans
+    infos['es'] = es
+    infos['descr'] = descr
+
     num_doc = transfo2_num_doc(dt, tm)
     infos['num_doc'] = num_doc
 
