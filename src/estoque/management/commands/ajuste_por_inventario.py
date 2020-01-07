@@ -3,7 +3,7 @@ import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 
-from estoque.views import insert_transacao_inventario
+from estoque.views import ajuste_por_inventario
 
 
 class Command(BaseCommand):
