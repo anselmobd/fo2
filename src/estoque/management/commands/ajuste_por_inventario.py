@@ -22,7 +22,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('dep', help='101, 102 ou 231')
         parser.add_argument('ref', help='5 caracteres')
-        parser.add_argument('cor', help='6 caracteres')
+        parser.add_argument('cor', help='6 caracteres', nargs='?')
         parser.add_argument('tam', help='1 a 3 caracteres', nargs='?')
         parser.add_argument('qtd', type=int, help='quantidade inventariada')
         parser.add_argument('data', help='data do inventário (AAAA-MM-DD)')
@@ -42,17 +42,30 @@ class Command(BaseCommand):
 
         itens = []
 
-        if tam is None:
+        if cor is None or tam is None:
             cursor = connections['so'].cursor()
 
+        if cor is None:
+            cores_list = produto.queries.ref_cores(cursor, ref)
+            if len(cores_list) != 0:
+                cores = [row['COR'] for row in cores_list]
+        else:
+            cores = [cor]
+
+        if tam is None:
             tamanhos_list = produto.queries.ref_tamanhos(cursor, ref)
             if len(tamanhos_list) != 0:
-                for row in tamanhos_list:
-                    itens.append({
-                        'ref': ref,
-                        'cor': cor,
-                        'tam': row['TAM'],
-                    })
+                tamanhos = [row['TAM'] for row in tamanhos_list]
+        else:
+            tamanhos = [tam]
+
+        for cor_ in cores:
+            for tam_ in tamanhos:
+                itens.append({
+                    'ref': ref,
+                    'cor': cor_,
+                    'tam': tam_,
+                })
 
         if len(itens) == 0:
             itens.append({
