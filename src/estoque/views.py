@@ -1039,6 +1039,14 @@ def insert_transacao_inventario(
         return False, 'Depósito inválido', infos
 
     cursor = connections['so'].cursor()
+    infos['ref'] = ref
+    infos['tam'] = tam
+    infos['cor'] = cor
+    produto = queries.get_preco_medio_ref_cor_tam(cursor, ref, cor, tam)
+    try:
+        preco_medio = produto[0]['preco_medio']
+    except Exception:
+        return False, 'Referência/Cor/Tamanho não encontrada', infos
 
     dt = datetime.datetime.strptime(data, '%Y-%m-%d').date()
     infos['data'] = dt
