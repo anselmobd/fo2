@@ -1030,22 +1030,23 @@ def insert_transacao_inventario(
     '''
         Recebe qtd, data e hora do inventário
         Calcula ajuste necessário.
-        Devolve sucesso e mensagem.
+        Devolve sucesso, mensagem e mais informações.
     '''
-    output = []
+    infos = []
 
+    infos.append("dep = {}".format(dep))
     if dep not in ['101', '102', '231']:
-        return False, 'Depósito inválido'
+        return False, 'Depósito inválido', infos
 
     cursor = connections['so'].cursor()
 
     dt = datetime.datetime.strptime(data, '%Y-%m-%d').date()
-    output.append("data = {}".format(str(dt)))
+    infos.append("data = {}".format(str(dt)))
 
     tm = datetime.datetime.strptime(hora, '%Hh%M').time()
-    output.append("hora = {}".format(str(tm)))
+    infos.append("hora = {}".format(str(tm)))
 
     num_doc = transfo2_num_doc(dt, tm)
-    output.append("num_doc = {}".format(num_doc))
+    infos.append("num_doc = {}".format(num_doc))
 
-    return True, "\n".join(output)
+    return True, 'Inserido', infos
