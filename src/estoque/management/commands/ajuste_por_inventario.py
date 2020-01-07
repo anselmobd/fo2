@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 import produto.queries
 
 from estoque.views import ajuste_por_inventario
+import estoque.queries
 
 
 class Command(BaseCommand):
@@ -22,7 +23,9 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('dep', help='101, 102 ou 231')
-        parser.add_argument('ref', help='5 caracteres')
+        parser.add_argument(
+            'refmod',
+            help='5 caracteres de referência ou menos que 5 para modelo')
         parser.add_argument('cor', help='6 caracteres', nargs='?')
         parser.add_argument('tam', help='1 a 3 caracteres', nargs='?')
         parser.add_argument('qtd', type=int, help='quantidade inventariada')
@@ -36,7 +39,7 @@ class Command(BaseCommand):
         self.my_println('{}'.format(datetime.datetime.now()))
 
         dep = options['dep']
-        ref = options['ref']
+        refmod = options['refmod']
         cor = options['cor']
         tam = options['tam']
         qtd = options['qtd']
@@ -45,30 +48,43 @@ class Command(BaseCommand):
 
         itens = []
 
-        if cor is None or tam is None:
+        if refmod is None or cor is None or tam is None:
             cursor = connections['so'].cursor()
 
-        if cor is None:
-            cores_list = produto.queries.ref_cores(cursor, ref)
-            if len(cores_list) != 0:
-                cores = [row['COR'] for row in cores_list]
-        else:
-            cores = [cor]
-
-        if tam is None:
-            tamanhos_list = produto.queries.ref_tamanhos(cursor, ref)
-            if len(tamanhos_list) != 0:
-                tamanhos = [row['TAM'] for row in tamanhos_list]
-        else:
-            tamanhos = [tam]
-
-        for cor_ in cores:
-            for tam_ in tamanhos:
+        if len(refmod) != 5:
+            modelo = refmod
+            itens_list = estoque.queries.estoque_deposito_ref_modelo(
+                cursor, dep, modelo=modelo)
+            for row in itens_list:
                 itens.append({
-                    'ref': ref,
-                    'cor': cor_,
-                    'tam': tam_,
+                    'ref': row['ref'],
+                    'cor': row['cor'],
+                    'tam': row['tam'],
                 })
+        else:
+            ref = refmod
+
+            if cor is None:
+                cores_list = produto.queries.ref_cores(cursor, ref)
+                if len(cores_list) != 0:
+                    cores = [row['COR'] for row in cores_list]
+            else:
+                cores = [cor]
+
+            if tam is None:
+                tamanhos_list = produto.queries.ref_tamanhos(cursor, ref)
+                if len(tamanhos_list) != 0:
+                    tamanhos = [row['TAM'] for row in tamanhos_list]
+            else:
+                tamanhos = [tam]
+
+            for cor_ in cores:
+                for tam_ in tamanhos:
+                    itens.append({
+                        'ref': ref,
+                        'cor': cor_,
+                        'tam': tam_,
+                    })
 
         if len(itens) == 0:
             itens.append({
@@ -90,7 +106,6 @@ class Command(BaseCommand):
                 )
             )
             try:
-                # _ = 1/0
                 sucesso, mensagem, infos = ajuste_por_inventario(
                     dep,
                     item['ref'],
