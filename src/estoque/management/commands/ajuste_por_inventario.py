@@ -60,11 +60,9 @@ class Command(BaseCommand):
             if len(infos) != 0:
                 info_string = '\n{}'.format(pformat(infos))
             raise CommandError(
-                'Erro inserindo transação de inventário no '
-                'Systêxtil [{}]{}'.format(mensagem, info_string))
+                'Erro [{}]{}'.format(mensagem, info_string))
         self.my_println(
-            'Sucesso inserindo transação de inventário no '
-            'Systêxtil [{}]'.format(mensagem))
+            'Sucesso [{}]'.format(mensagem))
 
         self.my_println(pformat(infos))
 
