@@ -7,7 +7,7 @@ from estoque.views import insert_transacao_inventario
 
 
 class Command(BaseCommand):
-    help = 'Executa transação no Systêxtil'
+    help = 'Ajuste por inventário no Systêxtil'
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -41,7 +41,7 @@ class Command(BaseCommand):
             '{} {} {} {} {} {} {}'.format(dep, ref, cor, tam, qtd, data, hora))
 
         try:
-            sucesso, mensagem, infos = insert_transacao_inventario(
+            sucesso, mensagem, infos = ajuste_por_inventario(
                 dep,
                 ref,
                 tam,
