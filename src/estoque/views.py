@@ -1018,7 +1018,7 @@ def executa_ajuste(request, **kwargs):
     return JsonResponse(data, safe=False)
 
 
-def insert_transacao_inventario(
+def ajuste_por_inventario(
     dep,
     ref,
     tam,
