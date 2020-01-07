@@ -1,4 +1,4 @@
-from pprint import pprint
+from pprint import pprint, pformat
 import datetime
 
 from django.core.management.base import BaseCommand, CommandError
@@ -38,10 +38,10 @@ class Command(BaseCommand):
         hora = options['hora']
 
         self.my_println(
-            '%s %s %s %s %s %s %s' % (dep, ref, cor, tam, qtd, data, hora))
+            '{} {} {} {} {} {} {}'.format(dep, ref, cor, tam, qtd, data, hora))
 
         try:
-            sucesso, mensagem = insert_transacao_inventario(
+            sucesso, mensagem, infos = insert_transacao_inventario(
                 dep,
                 ref,
                 tam,
@@ -53,10 +53,20 @@ class Command(BaseCommand):
         except Exception as e:
             sucesso = False
             mensagem = '{}'.format(e)
+            infos = []
 
         if not sucesso:
+            info_string = ''
+            if len(infos) != 0:
+                info_string = '\n{}'.format(pformat(infos))
             raise CommandError(
-                'Erro inserindo transsação de inventário no '
-                'Systêxtil [{}]'.format(mensagem))
+                'Erro inserindo transação de inventário no '
+                'Systêxtil [{}]{}'.format(mensagem, info_string))
+        self.my_println(
+            'Sucesso inserindo transação de inventário no '
+            'Systêxtil [{}]'.format(mensagem))
+
+        for info in infos:
+            self.my_println(info)
 
         self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
