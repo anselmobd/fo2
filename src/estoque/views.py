@@ -379,7 +379,7 @@ class ReferenciaDeposito(View):
 
 def transfo2_num_doc(data, hora):
     if data is None:
-        minuto_10 = 0
+        duration_secs = 0
     else:
         if hora is None:
             hora = datetime.time(0, 0)
@@ -387,7 +387,7 @@ def transfo2_num_doc(data, hora):
         origem_doc = datetime.datetime(2019, 11, 26, 23, 50)
         duration = dt_inventario - origem_doc
         duration_secs = duration.total_seconds()
-        dez_minutos = int(duration_secs / 60 / 10)
+    dez_minutos = int(duration_secs / 60 / 10)
     return '702{:06d}'.format(dez_minutos)
 
 
