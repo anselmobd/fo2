@@ -1090,4 +1090,4 @@ def ajuste_por_inventario(
     num_doc = transfo2_num_doc(dt, tm)
     infos['num_doc'] = num_doc
 
-    return True, 'Inserido', infos
+    return True, 'Executado o ajuste por inventário no Systêxtil', infos
