@@ -1074,13 +1074,13 @@ def ajuste_por_inventario(
     infos['movimento'] = movimento
 
     infos['qtd'] = qtd
-    ajuste = qtd - estoque + movimento
-    if ajuste == 0:
-        return True, 'Nada a fazer', infos
-
+    ajuste = round(qtd - estoque + movimento)
     sinal = 1 if ajuste > 0 else -1
     ajuste *= sinal
     infos['ajuste'] = ajuste
+    if ajuste == 0:
+        return True, 'Nada a fazer', infos
+
     transacoes = TransacoesDeAjuste()
     trans, es, descr = transacoes.get(sinal)
     infos['trans'] = trans
