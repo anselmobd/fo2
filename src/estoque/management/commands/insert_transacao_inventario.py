@@ -66,7 +66,6 @@ class Command(BaseCommand):
             'Sucesso inserindo transação de inventário no '
             'Systêxtil [{}]'.format(mensagem))
 
-        for info in infos:
-            self.my_println(info)
+        self.my_println(pformat(infos))
 
         self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
