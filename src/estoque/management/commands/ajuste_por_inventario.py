@@ -12,12 +12,13 @@ from estoque.views import ajuste_por_inventario
 class Command(BaseCommand):
     help = 'Ajuste por inventário no Systêxtil'
 
-    def my_println(self, text=''):
-        self.my_print(text, ending='\n')
+    def my_println(self, text='', v=1):
+        self.my_print(text, ending='\n', v=v)
 
-    def my_print(self, text='', ending=''):
-        self.stdout.write(text, ending=ending)
-        self.stdout.flush()
+    def my_print(self, text='', ending='', v=1):
+        if v <= self.verbosity:
+            self.stdout.write(text, ending=ending)
+            self.stdout.flush()
 
     def add_arguments(self, parser):
         parser.add_argument('dep', help='101, 102 ou 231')
@@ -29,6 +30,8 @@ class Command(BaseCommand):
         parser.add_argument('hora', help='hora do inventário (HHhMM)')
 
     def handle(self, *args, **options):
+        self.verbosity = options['verbosity']
+
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
 
@@ -111,6 +114,6 @@ class Command(BaseCommand):
             self.my_println(
                 'Sucesso [{}]'.format(mensagem))
 
-            self.my_println(pformat(infos))
+            self.my_println(pformat(infos), v=2)
 
-            self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
+        self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
