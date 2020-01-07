@@ -1,7 +1,7 @@
 from fo2.models import rows_to_dict_list_lower
 
 
-def estoque_deposito_ref_modelo(cursor, deposito, ref, modelo=None):
+def estoque_deposito_ref_modelo(cursor, deposito, ref=None, modelo=None):
     filtro_ref = ''
     if ref is not None and ref != '-':
         filtro_ref = '''--
