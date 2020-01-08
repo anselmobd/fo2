@@ -26,8 +26,8 @@ class PorDepositoForm(forms.Form):
 
     CHOICES = [
         ('999', '--Todos--'),
-        ('1001', '231, 101 e 102 - '
-                 'MAT PRIMA + PA ATACADO E VAREJO 1ª QUALI.'),
+        ('A00', '231, 101 e 102 - '
+                'MAT PRIMA + PA ATACADO E VAREJO 1ª QUALI.'),
     ]
     depositos = geral.queries.deposito()
     for deposito in depositos:
