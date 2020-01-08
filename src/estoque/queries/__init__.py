@@ -1,6 +1,7 @@
 from .estoque_deposito_ref_modelo import *
 from .get_estoque_dep_ref_cor_tam import *
 from .get_preco_medio_ref_cor_tam import *
+from .get_transfo2 import *
 from .get_transfo2_deposito_ref import *
 from .grade_estoque import *
 from .insert_transacao_ajuste import *
