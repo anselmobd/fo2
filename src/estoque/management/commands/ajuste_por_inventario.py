@@ -39,8 +39,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
 
-        self.my_println('---')
-        self.my_println('{}'.format(datetime.datetime.now()))
+        self.my_println('---', v=2)
+        self.my_println('{}'.format(datetime.datetime.now()), v=2)
 
         dep = options['dep']
         refmod = options['refmod']
@@ -137,4 +137,4 @@ class Command(BaseCommand):
 
             self.my_println(pformat(infos), v=2)
 
-        self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
+        self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'), v=2)
