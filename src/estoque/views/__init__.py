@@ -26,6 +26,7 @@ from estoque import queries
 from estoque.classes import TransacoesDeAjuste
 from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
 
+from .estoque_na_data import *
 from .executa_ajuste import *
 from .edita_estoque import *
 from .mostra_estoque import *
@@ -37,7 +38,3 @@ from .valor_mp import *
 
 def index(request):
     return render(request, 'estoque/index.html')
-
-
-class EstoqueNaData(View):
-    pass
