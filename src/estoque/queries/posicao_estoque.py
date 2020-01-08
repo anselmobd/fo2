@@ -44,7 +44,7 @@ def posicao_estoque(
     if not zerados:
         filtro_zerados = "AND e.qtde_estoque_atu != 0"
 
-    if group == '':
+    if group in ['', 'rct']:
         select_fields = '''--
             , e.cditem_grupo
             , e.cditem_subgrupo
