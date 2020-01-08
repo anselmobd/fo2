@@ -55,13 +55,9 @@ class PosicaoEstoque(View):
             context.update({
                 'modelo': modelo,
             })
-        if agrupamento == 'rct':
-            group = ''
-        else:
-            group = agrupamento
         data = queries.posicao_estoque(
-            cursor, nivel, ref, tam, cor, deposito, zerados=False, group=group,
-            tipo=tipo, modelo=modelo)
+            cursor, nivel, ref, tam, cor, deposito, zerados=False,
+            group=agrupamento, tipo=tipo, modelo=modelo)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
