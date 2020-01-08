@@ -1102,7 +1102,6 @@ def ajuste_por_inventario(
             cor,
             tam,
         )
-        pprint(data)
         if len(data) != 0:
             return (
                 True,
