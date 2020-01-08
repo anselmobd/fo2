@@ -24,7 +24,7 @@ from estoque import forms
 from estoque import models
 from estoque import queries
 from estoque.classes import TransacoesDeAjuste
-from estoque.functions.base import transfo2_num_doc, transfo2_num_doc_dt
+from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
 
 
 def index(request):

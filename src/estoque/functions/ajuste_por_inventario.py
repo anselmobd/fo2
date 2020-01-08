@@ -5,7 +5,7 @@ from django.db import connections
 
 from estoque import queries
 from estoque.classes import TransacoesDeAjuste
-from estoque.functions.base import transfo2_num_doc
+from estoque.functions import transfo2_num_doc
 
 
 def ajuste_por_inventario(
