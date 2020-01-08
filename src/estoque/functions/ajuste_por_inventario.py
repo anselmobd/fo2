@@ -4,8 +4,8 @@ from pprint import pprint
 from django.db import connections
 
 from estoque import queries
-from estoque.functions.base import (
-    TransacoesDeAjuste, transfo2_num_doc)
+from estoque.classes import TransacoesDeAjuste
+from estoque.functions.base import transfo2_num_doc
 
 
 def ajuste_por_inventario(
