@@ -32,9 +32,9 @@ class Command(BaseCommand):
         parser.add_argument('data', help='data do inventário (AAAA-MM-DD)')
         parser.add_argument('hora', help='hora do inventário (HHhMM)')
         parser.add_argument(
-            '-u', '--unico',
+            '-f', '--force',
             action="store_true",
-            help='único ajuste do dia; se já houver ajuste, não faz nada')
+            help='força ajuste do dia, mesmo se já houver')
 
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
@@ -49,7 +49,7 @@ class Command(BaseCommand):
         qtd = options['qtd']
         data = options['data']
         hora = options['hora']
-        unico = options['unico']
+        force = options['force']
 
         itens = []
 
@@ -119,7 +119,7 @@ class Command(BaseCommand):
                     qtd,
                     data,
                     hora,
-                    unico,
+                    force,
                 )
             except Exception as e:
                 sucesso = False

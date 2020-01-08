@@ -1026,7 +1026,7 @@ def ajuste_por_inventario(
     qtd,
     data,
     hora,
-    unico=False,
+    force,
 ):
     '''
         Recebe qtd, data e hora do inventário
@@ -1091,9 +1091,9 @@ def ajuste_por_inventario(
     num_doc = transfo2_num_doc(dt, tm)
     infos['num_doc'] = num_doc
 
-    infos['unico'] = unico
+    infos['force'] = force
 
-    if unico:
+    if not force:
         data = queries.get_transfo2(
             cursor,
             dep,
