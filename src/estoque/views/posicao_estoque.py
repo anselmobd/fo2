@@ -1,8 +1,13 @@
 from pprint import pprint
 
+from django.db import connections
+from django.shortcuts import render
 from django.views import View
 
+from utils.views import totalize_data
+
 from estoque import forms
+from estoque import queries
 
 
 class PosicaoEstoque(View):
