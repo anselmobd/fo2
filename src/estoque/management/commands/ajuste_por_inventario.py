@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 import produto.queries
 
-from estoque.views import ajuste_por_inventario
+from estoque.functions import ajuste_por_inventario
 import estoque.queries
 
 
