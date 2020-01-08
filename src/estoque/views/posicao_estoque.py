@@ -1,5 +1,9 @@
 from pprint import pprint
 
+from django.views import View
+
+from estoque import forms
+
 
 class PosicaoEstoque(View):
     Form_class = forms.PorDepositoForm
