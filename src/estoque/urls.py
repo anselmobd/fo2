@@ -35,4 +35,7 @@ urlpatterns = [
         r'(?P<num_doc>[^/]+)/(?P<trail>[^/]+)/$',
         views.executa_ajuste, name='executa_ajuste'),
 
+    url(r'^estoque_na_data/$', views.EstoqueNaData.as_view(),
+        name='estoque_na_data'),
+
 ]

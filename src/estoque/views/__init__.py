@@ -29,6 +29,10 @@ def index(request):
     return render(request, 'estoque/index.html')
 
 
+class EstoqueNaData(View):
+    pass
+
+
 class PosicaoEstoque(View):
     Form_class = forms.PorDepositoForm
     template_name = 'estoque/posicao_estoque.html'
