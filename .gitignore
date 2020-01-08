@@ -21,8 +21,11 @@ script/db_password.py
 nohup.out
 ~*
 
-## Rascunho
+# Rascunho
 *-rascunho-*.*
+
+# Manutenções no banco de dados
+inventario/
 
 # Documentation
 kb/
