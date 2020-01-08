@@ -1026,6 +1026,7 @@ def ajuste_por_inventario(
     qtd,
     data,
     hora,
+    unico=False,
 ):
     '''
         Recebe qtd, data e hora do inventário
@@ -1089,6 +1090,25 @@ def ajuste_por_inventario(
 
     num_doc = transfo2_num_doc(dt, tm)
     infos['num_doc'] = num_doc
+
+    infos['unico'] = unico
+
+    if unico:
+        data = queries.get_transfo2(
+            cursor,
+            dep,
+            num_doc,
+            ref,
+            cor,
+            tam,
+        )
+        pprint(data)
+        if len(data) != 0:
+            return (
+                True,
+                'Já existe ajuste desse item nesse depósito com esse numdoc',
+                infos)
+
     if queries.insert_transacao_ajuste(
             cursor,
             dep,
