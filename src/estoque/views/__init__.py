@@ -20,9 +20,9 @@ from fo2.template import group_rowspan
 from geral.functions import request_user, has_permission
 import produto.queries
 
-from . import forms
-from . import models
-from . import queries
+from estoque import forms
+from estoque import models
+from estoque import queries
 
 
 def index(request):
