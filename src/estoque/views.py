@@ -79,6 +79,23 @@ class PosicaoEstoque(View):
                           5: 'text-align: right;'},
                 'soma': soma,
             })
+        elif agrupamento == 'd':
+            totalize_data(data, {
+                'sum': ['qtd_positiva', 'qtd_negativa'],
+                'count': [],
+                'descr': {'dep_descr': 'Totais:'},
+                'row_style': 'font-weight: bold;',
+            })
+            soma = data[-1]['qtd_positiva'] + data[-1]['qtd_negativa']
+            context.update({
+                'headers': ('Depósito',
+                            'Quantidades Positivas', 'Quantidades Negativas'),
+                'fields': ('dep_descr',
+                           'qtd_positiva', 'qtd_negativa'),
+                'style': {2: 'text-align: right;',
+                          3: 'text-align: right;'},
+                'soma': soma,
+            })
         elif agrupamento == 'tc':
             totalize_data(data, {
                 'sum': ['qtd_positiva', 'qtd_negativa'],

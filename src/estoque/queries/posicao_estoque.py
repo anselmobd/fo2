@@ -77,6 +77,22 @@ def posicao_estoque(
         order_by = '''--
             , e.cditem_grupo
             , e.deposito'''
+    elif group == 'd':
+        select_fields = '''--
+            , e.deposito
+            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
+        field_quantidade = '''--
+            , sum(case when e.qtde_estoque_atu > 0
+                  then e.qtde_estoque_atu else 0 end) qtd_positiva
+            , sum(case when e.qtde_estoque_atu < 0
+                  then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+        group_fields = '''--
+            GROUP BY
+              e.cditem_nivel99
+            , e.deposito
+            , d.DESCRICAO'''
+        order_by = '''--
+            , e.deposito'''
     elif group == 'tc':
         select_fields = '''--
             , e.cditem_subgrupo
