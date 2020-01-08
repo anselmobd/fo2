@@ -27,13 +27,13 @@ def get_transfo2(
     filtro_cor = ''
     if cor is not None:
         filtro_cor = '''--
-            AND t.ITEM_ESTRUTURA = '{}'
+            AND t.SUBGRUPO_ESTRUTURA = '{}'
         '''.format(cor)
 
     filtro_tam = ''
     if tam is not None:
         filtro_tam = '''--
-            AND t.SUBGRUPO_ESTRUTURA = '{}'
+            AND t.ITEM_ESTRUTURA = '{}'
         '''.format(tam)
 
     sql = '''
