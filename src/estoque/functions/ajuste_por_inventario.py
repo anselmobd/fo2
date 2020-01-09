@@ -71,6 +71,8 @@ def ajuste_por_inventario(
     ajuste *= sinal
     infos['ajuste'] = ajuste
 
+    infos['check'] = check
+
     if check:
         if ajuste == 0:
             return True, 'Estoque correto', infos
