@@ -57,7 +57,7 @@ def ajuste_por_inventario(
         if len(transacoes) == 0:
             return True, 'Sem transações', infos
         else:
-            deleted = queries.delete_transacao_ajuste(
+            deleted = queries.anula_apaga_transacao_ajuste(
                 cursor, dep, ref, tam, cor, num_doc)
             if deleted:
                 return (
