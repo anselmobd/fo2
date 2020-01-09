@@ -40,6 +40,15 @@ def ajuste_por_inventario(
     except Exception:
         return False, 'Referência/Cor/Tamanho não encontrada', infos
 
+    dt = datetime.datetime.strptime(data, '%Y-%m-%d').date()
+    infos['data'] = dt
+
+    tm = datetime.datetime.strptime(hora, '%Hh%M').time()
+    infos['hora'] = tm
+
+    num_doc = transfo2_num_doc(dt, tm)
+    infos['num_doc'] = num_doc
+
     estoque_list = queries.get_estoque_dep_ref_cor_tam(
         cursor, dep, ref, cor, tam)
     if len(estoque_list) == 0:
@@ -47,12 +56,6 @@ def ajuste_por_inventario(
     else:
         estoque = estoque_list[0]['estoque']
     infos['estoque'] = estoque
-
-    dt = datetime.datetime.strptime(data, '%Y-%m-%d').date()
-    infos['data'] = dt
-
-    tm = datetime.datetime.strptime(hora, '%Hh%M').time()
-    infos['hora'] = tm
 
     movimento = 0
     movimento_list = queries.get_transfo2_deposito_ref(
@@ -87,9 +90,6 @@ def ajuste_por_inventario(
     infos['trans'] = trans
     infos['es'] = es
     infos['descr'] = descr
-
-    num_doc = transfo2_num_doc(dt, tm)
-    infos['num_doc'] = num_doc
 
     infos['force'] = force
 
