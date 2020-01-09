@@ -12,12 +12,18 @@ def confronta_estoque_transacoes(
     sql = '''
         WITH filtro AS
         ( SELECT
-            {deposito} dep
-          , 1 nivel
-          , '{ref}' ref
-          , '{tam}' tam
-          , '{cor}' cor
-          FROM DUAL
+            e.deposito dep
+          , e.cditem_nivel99 nivel
+          , e.cditem_grupo ref
+          , e.cditem_subgrupo tam
+          , e.cditem_item cor
+          FROM estq_040 e
+          WHERE e.deposito =  {deposito}
+            AND e.cditem_nivel99 = 1
+            AND e.cditem_grupo = '{ref}'
+            AND e.cditem_subgrupo = '{tam}'
+            AND e.cditem_item = '{cor}'
+            AND e.lote_acomp = 0
         )
         SELECT
           filtro.dep
