@@ -38,4 +38,7 @@ urlpatterns = [
     url(r'^estoque_na_data/$', views.EstoqueNaData.as_view(),
         name='estoque_na_data'),
 
+    url(r'^recalcula_estoque/$', views.RecalculaEstoque.as_view(),
+        name='recalcula_estoque'),
+
 ]
