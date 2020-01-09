@@ -1,7 +1,7 @@
 from pprint import pprint
 
 
-def delete_transacao_ajuste(
+def anula_apaga_transacao_ajuste(
         cursor, deposito, ref, tam, cor, num_doc):
     sql = '''
         DELETE FROM ESTQ_300 t
