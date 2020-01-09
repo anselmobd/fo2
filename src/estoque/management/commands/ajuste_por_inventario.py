@@ -40,6 +40,12 @@ class Command(BaseCommand):
             action="store_true",
             help='checa se o inventário confirma o estoque')
 
+    def print_cmd_line(self, *cmd_line, v=1):
+            self.my_println(
+                '{} {} {} {} {} {} {}'.format(*cmd_line),
+                v=v,
+            )
+
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
 
@@ -104,17 +110,18 @@ class Command(BaseCommand):
             })
 
         for item in itens:
-            self.my_println(
-                '{} {} {} {} {} {} {}'.format(
-                    dep,
-                    item['ref'],
-                    item['tam'],
-                    item['cor'],
-                    qtd,
-                    data,
-                    hora,
+            cmd_line_tuple = (
+                dep,
+                item['ref'],
+                item['tam'],
+                item['cor'],
+                qtd,
+                data,
+                hora,
                 )
-            )
+
+            self.print_cmd_line(*cmd_line_tuple)
+
             try:
                 sucesso, mensagem, infos = ajuste_por_inventario(
                     dep,
@@ -130,6 +137,8 @@ class Command(BaseCommand):
                 if sucesso:
                     self.my_println('Sucesso [{}]'.format(mensagem))
                 else:
+                    if self.verbosity == 0:
+                        self.print_cmd_line(*cmd_line_tuple, v=0)
                     self.my_println('Erro [{}]'.format(mensagem), v=0)
                 self.my_println(pformat(infos), v=2)
             except Exception as e:
