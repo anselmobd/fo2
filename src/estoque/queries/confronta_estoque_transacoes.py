@@ -22,6 +22,29 @@ def confronta_estoque_transacoes(
             AND e.cditem_item = '{}'
             '''.format(cor)
 
+    filtro_ref = ''
+    if ref is not None and ref != '':
+        filtro_ref = '''--
+            AND e.cditem_grupo = '{}'
+            '''.format(ref)
+
+    filtro_modelo = ''
+    if modelo is not None and modelo != '':
+        filtro_modelo = '''--
+            AND
+              TRIM(
+                LEADING '0' FROM (
+                  REGEXP_REPLACE(
+                    rtc.cditem_grupo,
+                    '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
+                    '\\1'
+                  )
+                )
+              ) = '{}'
+        '''.format(
+            modelo,
+        )
+
     sql = '''
         WITH filtro AS
         ( SELECT
@@ -34,7 +57,8 @@ def confronta_estoque_transacoes(
           WHERE e.deposito =  {deposito}
             AND e.cditem_nivel99 = 1
             AND e.cditem_grupo < 'C0000'
-            AND e.cditem_grupo = '{ref}'
+            {filtro_ref} -- filtro_ref
+            {filtro_modelo} -- filtro_modelo
             {filtro_tam} -- filtro_tam
             {filtro_cor} -- filtro_cor
             AND e.lote_acomp = 0
@@ -121,7 +145,8 @@ def confronta_estoque_transacoes(
         FROM filtro
     '''.format(
         deposito=deposito,
-        ref=ref,
+        filtro_ref=filtro_ref,
+        filtro_modelo=filtro_modelo,
         filtro_tam=filtro_tam,
         filtro_cor=filtro_cor,
     )
