@@ -127,20 +127,12 @@ class Command(BaseCommand):
                     force,
                     check,
                 )
+                if sucesso:
+                    self.my_println('Sucesso [{}]'.format(mensagem))
+                else:
+                    self.my_println('Erro [{}]'.format(mensagem), v=0)
+                self.my_println(pformat(infos), v=2)
             except Exception as e:
-                sucesso = False
-                mensagem = '{}'.format(e)
-                infos = []
-
-            if not sucesso:
-                info_string = ''
-                if len(infos) != 0:
-                    info_string = '\n{}'.format(pformat(infos))
-                raise CommandError(
-                    'Erro [{}]{}'.format(mensagem, info_string))
-            self.my_println(
-                'Sucesso [{}]'.format(mensagem))
-
-            self.my_println(pformat(infos), v=2)
+                raise CommandError('Exceção [{}]'.format(mensagem))
 
         self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'), v=2)
