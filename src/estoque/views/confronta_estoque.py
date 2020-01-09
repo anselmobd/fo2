@@ -6,10 +6,10 @@ from estoque import forms
 from estoque import queries
 
 
-class RecalculaEstoque(View):
+class ConfrontaEstoque(View):
     Form_class = forms.RecalculaEstoqueForm
-    template_name = 'estoque/recalcula_estoque.html'
-    title_name = 'Recalcula estoque baseado nas transações'
+    template_name = 'estoque/confronta_estoque.html'
+    title_name = 'Confronta estoque e transações'
 
     def mount_context(self, cursor, ref, tam, cor, deposito):
         context = {
