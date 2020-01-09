@@ -33,6 +33,7 @@ def confronta_estoque_transacoes(
           FROM estq_040 e
           WHERE e.deposito =  {deposito}
             AND e.cditem_nivel99 = 1
+            AND e.cditem_grupo < 'C0000'
             AND e.cditem_grupo = '{ref}'
             {filtro_tam} -- filtro_tam
             {filtro_cor} -- filtro_cor
