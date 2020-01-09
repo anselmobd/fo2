@@ -155,6 +155,7 @@ def confronta_estoque_transacoes(
     data = rows_to_dict_list_lower(cursor)
 
     exec_ok = True
+    count = 0
     if corrige:
         for row in data:
             if row['stq'] != (row['qtd_old'] + row['qtd']):
@@ -180,5 +181,8 @@ def confronta_estoque_transacoes(
                 except Exception:
                     exec_ok = False
                     break
+                count += 1
+                if count == 1000:
+                    break
 
-    return data, exec_ok
+    return data, exec_ok, count

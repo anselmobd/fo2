@@ -20,11 +20,11 @@
 {% if botao == 'c' %}
   <h3>Corrigindo os estoques errados...
   {% if exec_ok %}
-    Todos corrigidos!
+    OK!
   {% else %}
     Ocorreu algum erro durante a correção!
   {% endif %}
-  Verifique novamente!</h3>
+  {{ count }} corrigidos!</h3>
 {% endif %}
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>

@@ -185,7 +185,7 @@ class MostraEstoqueForm(forms.Form):
 class RecalculaEstoqueForm(forms.Form):
     ref = forms.CharField(
         label='Referência ou modelo',
-        required=True, min_length=1, max_length=5,
+        required=False, min_length=1, max_length=5,
         widget=forms.TextInput(attrs={'type': 'string',
                                'autofocus': 'autofocus'}))
 
