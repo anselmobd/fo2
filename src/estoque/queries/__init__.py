@@ -8,4 +8,5 @@ from .insert_transacao_ajuste import *
 from .posicao_estoque import *
 from .referencia_deposito import *
 from .refs_com_movimento import *
+from .select_transacao_ajuste import *
 from .valor_mp import *
