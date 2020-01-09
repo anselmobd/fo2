@@ -190,7 +190,7 @@ class RecalculaEstoqueForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
     tam = forms.CharField(
-        label='Tamanho', required=True, min_length=1, max_length=3,
+        label='Tamanho', required=False, min_length=1, max_length=3,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     cor = forms.CharField(

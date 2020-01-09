@@ -4,11 +4,18 @@ from fo2.models import rows_to_dict_list_lower
 def confronta_estoque_transacoes(
         cursor,
         deposito,
-        tam,
         cor,
+        tam=None,
         modelo=None,
         ref=None,
         ):
+
+    filtro_tam = ''
+    if tam is None or tam != '':
+        filtro_tam = '''--
+            AND e.cditem_subgrupo = '{}'
+            '''.format(tam)
+
     sql = '''
         WITH filtro AS
         ( SELECT
@@ -21,7 +28,7 @@ def confronta_estoque_transacoes(
           WHERE e.deposito =  {deposito}
             AND e.cditem_nivel99 = 1
             AND e.cditem_grupo = '{ref}'
-            AND e.cditem_subgrupo = '{tam}'
+            {filtro_tam} -- filtro_tam
             AND e.cditem_item = '{cor}'
             AND e.lote_acomp = 0
         )
@@ -109,7 +116,7 @@ def confronta_estoque_transacoes(
         deposito=deposito,
         ref=ref,
         cor=cor,
-        tam=tam,
+        filtro_tam=filtro_tam,
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
