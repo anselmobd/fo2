@@ -1,13 +1,13 @@
-from pprint import pprint, pformat
 import datetime
+from pprint import pprint, pformat
 
-from django.db import connections
 from django.core.management.base import BaseCommand, CommandError
+from django.db import connections
 
 import produto.queries
 
-from estoque.functions import ajuste_por_inventario
 import estoque.queries
+from estoque.functions import ajuste_por_inventario
 
 
 class Command(BaseCommand):

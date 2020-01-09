@@ -1,8 +1,8 @@
 from django import forms
 # from django.core.exceptions import ValidationError
 
-from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
 import geral.queries
+from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
 
 
 class PorDepositoForm(forms.Form):

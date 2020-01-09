@@ -1,3 +1,4 @@
+from pprint import pprint
 
 
 def insert_transacao_ajuste(

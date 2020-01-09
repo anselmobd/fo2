@@ -8,17 +8,20 @@ from django.urls import reverse
 from django.views import View
 
 from geral.functions import (
+    has_permission,
     request_user,
-    has_permission)
+    )
 from utils.views import (
     request_hash_trail,
-    TableHfs)
+    TableHfs,
+    )
 
 from estoque import forms
 from estoque import queries
 from estoque.functions import (
     transfo2_num_doc,
-    transfo2_num_doc_dt)
+    transfo2_num_doc_dt,
+    )
 
 
 class MostraEstoque(PermissionRequiredMixin, View):
