@@ -194,7 +194,7 @@ class RecalculaEstoqueForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     cor = forms.CharField(
-        label='Cor', required=True, max_length=6,
+        label='Cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     CHOICES = [
