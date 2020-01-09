@@ -57,11 +57,21 @@ def ajuste_por_inventario(
         if len(transacoes) == 0:
             return True, 'Sem transações', infos
         else:
-            return (
-                True,
-                'Encontradas {} transações'.format(len(transsacoes)),
-                infos
-                )
+            deleted = queries.delete_transacao_ajuste(
+                cursor, dep, ref, tam, cor, num_doc)
+            if deleted:
+                return (
+                    True,
+                    'Apagadas {} transações'.format(len(transacoes)),
+                    infos
+                    )
+            else:
+                return (
+                    False,
+                    'Não foi possível apagadar {} transações'.format(
+                        len(transacoes)),
+                    infos
+                    )
 
     estoque_list = queries.get_estoque_dep_ref_cor_tam(
         cursor, dep, ref, cor, tam)
