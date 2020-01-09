@@ -3,6 +3,7 @@ from pprint import pprint
 
 def anula_apaga_transacao_ajuste(
         cursor, deposito, ref, tam, cor, num_doc):
+    # !!! anular será compensar na tabela de estoque a exclusão dessa transação
     sql = '''
         DELETE FROM ESTQ_300 t
         WHERE t.NIVEL_ESTRUTURA = 1
@@ -19,7 +20,7 @@ def anula_apaga_transacao_ajuste(
         num_doc=num_doc,
     )
     try:
-        cursor.execute(sql)
+        # cursor.execute(sql)
         return True
     except Exception:
         return False
