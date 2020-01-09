@@ -44,6 +44,10 @@ class Command(BaseCommand):
             '-j', '--jump',
             type=open,
             help='arquivo com ref cor tam que não devem ser afetados')
+        parser.add_argument(
+            '-d', '--delete',
+            type=open,
+            help='apaga inventários desse item nessa data/hora')
 
     def print_cmd_line(self, *cmd_line, v=1):
         msg = ' '.join(['{}']*len(cmd_line))
@@ -65,6 +69,7 @@ class Command(BaseCommand):
         force = options['force']
         check = options['check']
         jump = options['jump']
+        delete = options['delete']
 
         if jump:
             jump_itens = []
@@ -153,6 +158,7 @@ class Command(BaseCommand):
                     hora,
                     force,
                     check,
+                    delete,
                 )
                 if sucesso:
                     self.my_println('Sucesso [{}]'.format(mensagem))
