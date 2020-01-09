@@ -22,7 +22,7 @@ class ConfrontaEstoque(View):
             'botao': botao,
             }
         modelo = None
-        if len(ref) % 5 == 0:
+        if len(ref) == 5:
             context.update({
                 'ref': ref,
             })
@@ -32,7 +32,7 @@ class ConfrontaEstoque(View):
             context.update({
                 'modelo': modelo,
             })
-        data = queries.confronta_estoque_transacoes(
+        data, exec_ok = queries.confronta_estoque_transacoes(
             cursor,
             deposito=deposito,
             modelo=modelo,
@@ -63,6 +63,7 @@ class ConfrontaEstoque(View):
                 6: 'text-align: right;',
                 7: 'text-align: right;',
                 },
+            'exec_ok': exec_ok,
         })
 
         return context
@@ -81,7 +82,7 @@ class ConfrontaEstoque(View):
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
             deposito = form.cleaned_data['deposito']
-            botao = 'c' if 'corrige' in request.POST else 'b'
+            botao = 'c' if 'corrige' in request.POST else 'v'
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
                 cursor, ref, tam, cor, deposito, botao))
