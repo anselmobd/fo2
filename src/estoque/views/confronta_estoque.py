@@ -4,6 +4,8 @@ from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
+from geral.functions import has_permission
+
 from estoque import forms
 from estoque import queries
 
@@ -13,8 +15,11 @@ class ConfrontaEstoque(View):
     template_name = 'estoque/confronta_estoque.html'
     title_name = 'Confronta estoque e transações'
 
-    def mount_context(self, cursor, ref, tam, cor, deposito, botao):
-        context = {}
+    def mount_context(self, request, cursor, ref, tam, cor, deposito, botao):
+        context = {
+            'permission': has_permission(
+                request, 'base.can_adjust_stock'),
+        }
 
         if len(ref) == 0 and botao == 'v':
             context.update({'erro': 'Digite algo em Referência ou modelo'})
@@ -99,6 +104,6 @@ class ConfrontaEstoque(View):
             botao = 'c' if 'corrige' in request.POST else 'v'
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, ref, tam, cor, deposito, botao))
+                request, cursor, ref, tam, cor, deposito, botao))
         context['form'] = form
         return render(request, self.template_name, context)

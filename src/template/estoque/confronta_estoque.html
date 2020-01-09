@@ -14,8 +14,10 @@
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="verifique" value="Verifique"/>
-    <span style="margin-left: 16em"></span>
-    <input type="submit" name="corrige" value="Corrige"/>
+    {% if permission %}
+      <span style="margin-left: 16em"></span>
+      <input type="submit" name="corrige" value="Corrige"/>
+    {% endif %}
 </form>
 {% if botao == 'c' %}
   <h3>Corrigindo os estoques errados...
