@@ -52,9 +52,9 @@ def ajuste_por_inventario(
 
     infos['delete'] = delete
     if delete:
-        transsacoes = queries.select_transacao_ajuste(
+        transacoes = queries.select_transacao_ajuste(
             cursor, dep, ref, tam, cor, num_doc)
-        if len(transsacoes) == 0:
+        if len(transacoes) == 0:
             return True, 'Sem transações', infos
         else:
             return (
