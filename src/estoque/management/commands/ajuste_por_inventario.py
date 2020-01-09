@@ -1,4 +1,5 @@
 import datetime
+import re
 from pprint import pprint, pformat
 
 from django.core.management.base import BaseCommand, CommandError
@@ -39,6 +40,10 @@ class Command(BaseCommand):
             '-c', '--check',
             action="store_true",
             help='checa se o inventário confirma o estoque')
+        parser.add_argument(
+            '-j', '--jump',
+            type=open,
+            help='arquivo com ref cor tam que não devem ser afetados')
 
     def print_cmd_line(self, *cmd_line, v=1):
         msg = ' '.join(['{}']*len(cmd_line))
@@ -59,6 +64,14 @@ class Command(BaseCommand):
         hora = options['hora']
         force = options['force']
         check = options['check']
+        jump = options['jump']
+
+        if jump:
+            jump_itens = []
+            with jump as fp:
+                for line in fp:
+                    res = re.findall(r'\w+', line)
+                    jump_itens.append(res[:3])
 
         itens = []
 
@@ -108,6 +121,15 @@ class Command(BaseCommand):
             })
 
         for item in itens:
+            if jump:
+                jump_item = [
+                    item['ref'],
+                    item['cor'],
+                    item['tam'],
+                    ]
+                if jump_item in jump_itens:
+                    continue
+
             cmd_line_tuple = (
                 dep,
                 item['ref'],
