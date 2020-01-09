@@ -41,13 +41,18 @@ class ConfrontaEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
+        for row in data:
+            if row['stq'] == (row['qtd_old'] + row['qtd']):
+                row['status'] = 'OK'
+            else:
+                row['status'] = 'Errado'
         context.update({
             'headers': ('Depósito', 'Referência', 'Cor',
-                        'Tamanho', 'Quantidades fechada',
-                        'Quantidades aberta', 'Estoque'),
+                        'Tamanho', 'Trasações fechadas',
+                        'Trasações abertas', 'Estoque', 'Status'),
             'fields': ('dep', 'ref', 'cor',
                        'tam', 'qtd_old',
-                       'qtd', 'stq'),
+                       'qtd', 'stq', 'status'),
             'data': data,
             'style': {
                 5: 'text-align: right;',
