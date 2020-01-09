@@ -14,13 +14,20 @@ class ConfrontaEstoque(View):
     title_name = 'Confronta estoque e transações'
 
     def mount_context(self, cursor, ref, tam, cor, deposito, botao):
-        context = {
+        context = {}
+
+        if len(ref) == 0 and botao == 'v':
+            context.update({'erro': 'Digite algo em Referência ou modelo'})
+            return context
+
+        context.update({
             'nivel': 1,
             'tam': tam,
             'cor': cor,
             'deposito': deposito,
             'botao': botao,
-            }
+        })
+
         modelo = None
         if len(ref) == 5:
             context.update({
@@ -32,7 +39,7 @@ class ConfrontaEstoque(View):
             context.update({
                 'modelo': modelo,
             })
-        data, exec_ok = queries.confronta_estoque_transacoes(
+        data, exec_ok, count = queries.confronta_estoque_transacoes(
             cursor,
             deposito=deposito,
             modelo=modelo,
@@ -43,6 +50,14 @@ class ConfrontaEstoque(View):
             )
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
+            return context
+
+        context.update({
+            'exec_ok': exec_ok,
+            'count': count,
+        })
+
+        if len(ref) == 0 and botao == 'c':
             return context
 
         for row in data:
@@ -63,7 +78,6 @@ class ConfrontaEstoque(View):
                 6: 'text-align: right;',
                 7: 'text-align: right;',
                 },
-            'exec_ok': exec_ok,
         })
 
         return context
