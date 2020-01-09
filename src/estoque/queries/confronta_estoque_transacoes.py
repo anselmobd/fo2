@@ -35,7 +35,7 @@ def confronta_estoque_transacoes(
               TRIM(
                 LEADING '0' FROM (
                   REGEXP_REPLACE(
-                    rtc.cditem_grupo,
+                    e.cditem_grupo,
                     '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
                     '\\1'
                   )
