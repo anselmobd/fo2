@@ -16,7 +16,8 @@ def ajuste_por_inventario(
     qtd,
     data,
     hora,
-    force,
+    force=False,
+    check=False,
 ):
     '''
         Recebe qtd, data e hora do inventário
@@ -69,6 +70,13 @@ def ajuste_por_inventario(
     sinal = 1 if ajuste > 0 else -1
     ajuste *= sinal
     infos['ajuste'] = ajuste
+
+    if check:
+        if ajuste == 0:
+            return True, 'Estoque correto', infos
+        else:
+            return False, 'Estoque errado', infos
+
     if ajuste == 0:
         return True, 'Nada a fazer', infos
 
