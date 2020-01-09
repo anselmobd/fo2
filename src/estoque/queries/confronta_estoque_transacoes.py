@@ -17,7 +17,7 @@ def confronta_estoque_transacoes(
             '''.format(tam)
 
     filtro_cor = ''
-    if cor is None or cor != '':
+    if cor is not None and cor != '':
         filtro_cor = '''--
             AND e.cditem_item = '{}'
             '''.format(cor)
