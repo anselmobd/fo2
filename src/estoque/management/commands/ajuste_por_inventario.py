@@ -113,8 +113,8 @@ class Command(BaseCommand):
             cmd_line_tuple = (
                 dep,
                 item['ref'],
-                item['tam'],
                 item['cor'],
+                item['tam'],
                 qtd,
                 data,
                 hora,
