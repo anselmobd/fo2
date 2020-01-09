@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.db import connections
 from django.shortcuts import render
 from django.views import View
@@ -11,12 +13,13 @@ class ConfrontaEstoque(View):
     template_name = 'estoque/confronta_estoque.html'
     title_name = 'Confronta estoque e transações'
 
-    def mount_context(self, cursor, ref, tam, cor, deposito):
+    def mount_context(self, cursor, ref, tam, cor, deposito, botao):
         context = {
             'nivel': 1,
             'tam': tam,
             'cor': cor,
             'deposito': deposito,
+            'botao': botao,
             }
         modelo = None
         if len(ref) % 5 == 0:
@@ -36,6 +39,7 @@ class ConfrontaEstoque(View):
             ref=ref,
             tam=tam,
             cor=cor,
+            corrige=(botao == 'c'),
             )
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
@@ -77,8 +81,9 @@ class ConfrontaEstoque(View):
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
             deposito = form.cleaned_data['deposito']
+            botao = 'c' if 'corrige' in request.POST else 'b'
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, ref, tam, cor, deposito))
+                cursor, ref, tam, cor, deposito, botao))
         context['form'] = form
         return render(request, self.template_name, context)
