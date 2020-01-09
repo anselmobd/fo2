@@ -16,6 +16,8 @@ from utils.views import (
     TableHfs,
     )
 
+import produto.queries
+
 from estoque import forms
 from estoque import queries
 from estoque.functions import (
