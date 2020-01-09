@@ -46,7 +46,7 @@ class Command(BaseCommand):
             help='arquivo com ref cor tam que não devem ser afetados')
         parser.add_argument(
             '-d', '--delete',
-            type=open,
+            action="store_true",
             help='apaga inventários desse item nessa data/hora')
 
     def print_cmd_line(self, *cmd_line, v=1):
