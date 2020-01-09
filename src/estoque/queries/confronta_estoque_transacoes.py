@@ -152,4 +152,33 @@ def confronta_estoque_transacoes(
         filtro_cor=filtro_cor,
     )
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    data = rows_to_dict_list_lower(cursor)
+
+    exec_ok = True
+    if corrige:
+        for row in data:
+            if row['stq'] != (row['qtd_old'] + row['qtd']):
+                sql = '''
+                    UPDATE estq_040
+                    SET
+                      estq_040.qtde_estoque_atu = {est}
+                    WHERE estq_040.deposito = {deposito}
+                      AND estq_040.cditem_nivel99 = 1
+                      AND estq_040.cditem_grupo = '{ref}'
+                      AND estq_040.cditem_subgrupo = '{tam}'
+                      AND estq_040.cditem_item = '{cor}'
+                      AND estq_040.lote_acomp = 0
+                '''.format(
+                    deposito=row['dep'],
+                    ref=row['ref'],
+                    tam=row['tam'],
+                    cor=row['cor'],
+                    est=(row['qtd_old'] + row['qtd']),
+                    )
+                try:
+                    cursor.execute(sql)
+                except Exception:
+                    exec_ok = False
+                    break
+
+    return data, exec_ok
