@@ -35,6 +35,10 @@ class Command(BaseCommand):
             '-f', '--force',
             action="store_true",
             help='força ajuste do dia, mesmo se já houver')
+        parser.add_argument(
+            '-c', '--check',
+            action="store_true",
+            help='checa se o inventário confirma o estoque')
 
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
@@ -50,6 +54,7 @@ class Command(BaseCommand):
         data = options['data']
         hora = options['hora']
         force = options['force']
+        check = options['check']
 
         itens = []
 
@@ -120,6 +125,7 @@ class Command(BaseCommand):
                     data,
                     hora,
                     force,
+                    check,
                 )
             except Exception as e:
                 sucesso = False
