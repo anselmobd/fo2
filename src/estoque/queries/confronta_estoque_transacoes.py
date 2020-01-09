@@ -11,7 +11,7 @@ def confronta_estoque_transacoes(
         ):
 
     filtro_tam = ''
-    if tam is None or tam != '':
+    if tam is not None and tam != '':
         filtro_tam = '''--
             AND e.cditem_subgrupo = '{}'
             '''.format(tam)
