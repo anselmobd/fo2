@@ -18,6 +18,7 @@ def ajuste_por_inventario(
     hora,
     force=False,
     check=False,
+    delete=False,
 ):
     '''
         Recebe qtd, data e hora do inventário
@@ -48,6 +49,19 @@ def ajuste_por_inventario(
 
     num_doc = transfo2_num_doc(dt, tm)
     infos['num_doc'] = num_doc
+
+    infos['delete'] = delete
+    if delete:
+        transsacoes = queries.select_transacao_ajuste(
+            cursor, dep, ref, tam, cor, num_doc)
+        if len(transsacoes) == 0:
+            return True, 'Sem transações', infos
+        else:
+            return (
+                True,
+                'Encontradas {} transações'.format(len(transsacoes)),
+                infos
+                )
 
     estoque_list = queries.get_estoque_dep_ref_cor_tam(
         cursor, dep, ref, cor, tam)
