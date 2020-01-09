@@ -8,6 +8,7 @@ def confronta_estoque_transacoes(
         cor=None,
         modelo=None,
         ref=None,
+        corrige=False,
         ):
 
     filtro_tam = ''

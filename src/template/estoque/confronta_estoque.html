@@ -13,14 +13,18 @@
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Busca"/>
+    <input type="submit" name="busca" value="Busca"/> <span style="margin-left: 16em"></span>
+    <input type="submit" name="corrige" value="Corrige"/>
 </form>
+{% if botao == 'c' %}
+  <h3>Corrigindo os estoque errados!</h3>
+{% endif %}
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
 {% endif %}
 {% if nivel %}
   <h4>Tipo de produto: PA/PG/PB</h4>
-  <h4>Nível: 1</h4>
+  <h4>Nível: {{ nivel }}</h4>
 {% endif %}
 {% if ref %}
   <h4>Referência: {{ ref }}</h4>
