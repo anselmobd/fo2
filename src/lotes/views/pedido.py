@@ -441,7 +441,8 @@ class PedidoFaturavelModelo(View):
 
         if lead != 0:
             data_pos = lotes.queries.pedido.pedido_faturavel_modelo(
-                cursor, modelo=modelo, periodo='{}:'.format(busca_periodo))
+                cursor, modelo=modelo, periodo='{}:'.format(busca_periodo),
+                cached=False)
             if len(data_pos) != 0:
                 for row in data_pos:
                     row['PEDIDO|TARGET'] = '_blank'
