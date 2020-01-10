@@ -3,7 +3,29 @@ import datetime
 from fo2.models import rows_to_dict_list_lower
 
 
-def estoque_na_data(cursor, ref, tam, cor, data, hora, num_doc, deposito):
+def estoque_na_data(
+        cursor, ref, modelo, tam, cor, data, hora, num_doc, deposito):
+
+    filtro_ref = ''
+    if ref is not None and ref != '':
+        filtro_ref = "AND e.cditem_grupo = '{ref}'".format(ref=ref)
+
+    filtro_modelo = ''
+    if modelo is not None and modelo != '':
+        filtro_modelo = '''--
+            AND
+              TRIM(
+                LEADING '0' FROM (
+                  REGEXP_REPLACE(
+                    e.cditem_grupo,
+                    '^0?[abAB]?([0-9]+)[a-zA-Z]*$',
+                    '\\1'
+                  )
+                )
+              ) = '{modelo}'
+        '''.format(
+            modelo=modelo,
+        )
 
     filtro_tam = ''
     if tam is not None and tam != '':
@@ -41,7 +63,8 @@ def estoque_na_data(cursor, ref, tam, cor, data, hora, num_doc, deposito):
           WHERE e.deposito = {deposito}
             AND e.cditem_nivel99 = 1
             AND e.cditem_grupo < 'C0000'
-            AND e.cditem_grupo = '{ref}'
+            {filtro_ref} -- AND e.cditem_grupo = '5156U'
+            {filtro_modelo} -- filtro_modelo
             {filtro_tam} -- AND e.cditem_subgrupo = 'P'
             {filtro_cor} -- AND e.cditem_item = '0000BR'
             AND e.lote_acomp = 0
@@ -114,7 +137,8 @@ def estoque_na_data(cursor, ref, tam, cor, data, hora, num_doc, deposito):
         data_sql=data_sql,
         num_doc=num_doc,
         deposito=deposito,
-        ref=ref,
+        filtro_ref=filtro_ref,
+        filtro_modelo=filtro_modelo,
         filtro_tam=filtro_tam,
         filtro_cor=filtro_cor,
         )
