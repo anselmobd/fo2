@@ -3,7 +3,15 @@ import datetime
 from fo2.models import rows_to_dict_list_lower
 
 
-def estoque_na_data(cursor, num_doc, data=None, hora=None, deposito=None):
+def estoque_na_data(cursor, ref, tam, cor, data, hora, num_doc, deposito):
+
+    filtro_tam = ''
+    if tam is not None and tam != '':
+        filtro_tam = "AND e.cditem_subgrupo = '{tam}'".format(tam=tam)
+
+    filtro_cor = ''
+    if cor is not None and cor != '':
+        filtro_cor = "AND e.cditem_item = '{cor}'".format(cor=cor)
 
     data_sql = ''
     if data is not None:
@@ -33,9 +41,9 @@ def estoque_na_data(cursor, num_doc, data=None, hora=None, deposito=None):
           WHERE e.deposito = {deposito}
             AND e.cditem_nivel99 = 1
             AND e.cditem_grupo < 'C0000'
-            AND e.cditem_grupo = '5156U'
-        --    AND e.cditem_subgrupo = 'P'
-        --    AND e.cditem_item = '0000BR'
+            AND e.cditem_grupo = '{ref}'
+            {filtro_tam} -- AND e.cditem_subgrupo = 'P'
+            {filtro_cor} -- AND e.cditem_item = '0000BR'
             AND e.lote_acomp = 0
           ORDER BY
             e.cditem_grupo
@@ -106,6 +114,9 @@ def estoque_na_data(cursor, num_doc, data=None, hora=None, deposito=None):
         data_sql=data_sql,
         num_doc=num_doc,
         deposito=deposito,
+        ref=ref,
+        filtro_tam=filtro_tam,
+        filtro_cor=filtro_cor,
         )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
