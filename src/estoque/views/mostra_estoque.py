@@ -109,6 +109,17 @@ class MostraEstoque(PermissionRequiredMixin, View):
             'posterior': posterior,
         })
 
+        data = queries.get_transfo2(cursor, deposito)
+        if len(data) != 0:
+            ult_num_doc = data[0]['numdoc']
+            if int(num_doc) < ult_num_doc:
+                ult_dt = transfo2_num_doc_dt(ult_num_doc)
+                context.update(
+                    {'erro':
+                     'Data/Hora não pode ser anterior ao do último '
+                     'inventário ({}: {})'.format(ult_num_doc, ult_dt)})
+                return context
+
         data = queries.estoque_deposito_ref_modelo(
             cursor, deposito, ref, modelo)
         if len(data) == 0:
