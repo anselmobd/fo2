@@ -5,10 +5,15 @@ import time
 import logging
 import inspect
 import hashlib
-from pprint import pprint
+
+from django.conf import settings
 
 
 fo2logger = logging.getLogger('fo2')
+
+cache_local = (
+    settings.CACHES['default']['BACKEND'] ==
+    'django.core.cache.backends.locmem.LocMemCache')
 
 
 def arg_def(kwargs, arg, default):
@@ -220,3 +225,16 @@ def make_key_cache(ignore=[]):
     key = hashlib.md5(key.encode('utf-8')).hexdigest()
     key = '_'.join([stack1.function, key])
     return key
+
+
+def cache_ttl(cache, key):
+    if cache_local:
+        exp_dt = cache._expire_info.get('FO2K:1:'+key)
+        dt = datetime.datetime.fromtimestamp(exp_dt)
+        now = datetime.datetime.now()
+        ttl = dt - now
+        seconds = ttl.seconds
+    else:
+        seconds = cache.ttl(key)
+    fo2logger.info(seconds)
+    return seconds

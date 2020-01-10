@@ -4,7 +4,7 @@ from django.core.cache import cache
 
 from fo2.models import rows_to_dict_list
 
-from utils.functions import make_key_cache, fo2logger
+from utils.functions import make_key_cache, fo2logger, cache_ttl
 
 
 def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
