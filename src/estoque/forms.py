@@ -230,12 +230,12 @@ class EstoqueNaDataForm(forms.Form):
         widget=forms.TextInput(
             attrs={'type': 'string', 'autofocus': 'autofocus'}))
 
-    tam = forms.CharField(
-        label='Tamanho', required=False, min_length=1, max_length=3,
-        widget=forms.TextInput(attrs={'type': 'string'}))
-
     cor = forms.CharField(
         label='Cor', required=False, max_length=6,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    tam = forms.CharField(
+        label='Tamanho', required=False, min_length=1, max_length=3,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     data = forms.DateField(
@@ -268,8 +268,8 @@ class EstoqueNaDataForm(forms.Form):
     def clean_ref(self):
         return self.upper_clean('ref')
 
-    def clean_tam(self):
-        return self.upper_clean('tam')
-
     def clean_cor(self):
         return self.upper_clean('cor')
+
+    def clean_tam(self):
+        return self.upper_clean('tam')
