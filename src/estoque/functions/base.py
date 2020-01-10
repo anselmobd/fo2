@@ -13,6 +13,8 @@ def transfo2_num_doc(data, hora):
         duration = dt_inventario - origem_doc
         duration_secs = duration.total_seconds()
     dez_minutos = int(duration_secs / 60 / 10)
+    if dez_minutos < 0:
+        dez_minutos = 0
     return '702{:06d}'.format(dez_minutos)
 
 
