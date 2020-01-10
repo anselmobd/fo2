@@ -4,7 +4,10 @@ import time
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import SuspiciousOperation
 from django.db import connections
-from django.shortcuts import render
+from django.shortcuts import (
+    redirect,
+    render,
+    )
 from django.views import View
 
 from geral.functions import request_user
@@ -12,7 +15,10 @@ from geral.functions import request_user
 from estoque import forms
 from estoque import queries
 from estoque.classes import TransacoesDeAjuste
-from estoque.functions import transfo2_num_doc
+from estoque.functions import (
+    transfo2_num_doc,
+    transfo2_num_doc_dt,
+    )
 
 
 class EditaEstoque(PermissionRequiredMixin, View):
@@ -106,6 +112,16 @@ class EditaEstoque(PermissionRequiredMixin, View):
             'posterior': posterior,
         })
 
+        transfs = queries.get_transfo2(self.cursor, self.deposito)
+        if len(transfs) != 0:
+            ult_num_doc = transfs[0]['numdoc']
+            if int(num_doc) < ult_num_doc:
+                ult_dt = transfo2_num_doc_dt(ult_num_doc)
+                raise SuspiciousOperation(
+                    'data inventario',
+                    'Data/Hora não pode ser anterior ao do último '
+                    'inventário ({}: {})'.format(ult_num_doc, ult_dt))
+
         try:
             self.qtd = int(self.qtd)
         except Exception:
@@ -188,6 +204,10 @@ class EditaEstoque(PermissionRequiredMixin, View):
                 self.context.update({
                     'mensagem':
                         'O depósito já está com a quantidade desejada',
+                })
+            elif e.args[0] == 'data inventario':
+                self.context.update({
+                    'mensagem': e.args[1],
                 })
             else:
                 return False
