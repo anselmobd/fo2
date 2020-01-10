@@ -4,6 +4,8 @@ from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
+from utils.views import totalize_data
+
 from estoque import forms
 from estoque import queries
 from estoque.functions import transfo2_num_doc
@@ -50,15 +52,15 @@ class EstoqueNaData(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-            # totalize_data(data, {
-            #     'sum': ['qtd_positiva', 'qtd_negativa'],
-            #     'count': [],
-            #     'descr': {'dep_descr': 'Totais:'},
-            #     'row_style': 'font-weight: bold;',
-            # })
-
         for row in dados:
             row['stq_data'] = row['stq'] - row['trans'] - row['ajuste']
+
+        totalize_data(dados, {
+            'sum': ['stq_data', 'trans', 'ajuste', 'stq'],
+            'count': [],
+            'descr': {'tam': 'Totais:'},
+            'row_style': 'font-weight: bold;',
+            })
 
         context.update({
             'headers': ('Depósito', 'Referência', 'Cor', 'Tamanho',
@@ -72,7 +74,7 @@ class EstoqueNaData(View):
                 8: 'text-align: right;',
                 },
             'dados': dados,
-        })
+            })
 
         return context
 
