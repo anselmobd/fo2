@@ -224,11 +224,25 @@ class RecalculaEstoqueForm(forms.Form):
 
 
 class EstoqueNaDataForm(forms.Form):
+    ref = forms.CharField(
+        label='Referência ou modelo',
+        required=True, min_length=1, max_length=5,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'autofocus': 'autofocus'}))
+
+    tam = forms.CharField(
+        label='Tamanho', required=False, min_length=1, max_length=3,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    cor = forms.CharField(
+        label='Cor', required=False, max_length=6,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
     data = forms.DateField(
         label='Data', required=True,
         widget=forms.DateInput(
             format='%Y-%m-%d',
-            attrs={'type': 'date', 'autofocus': 'autofocus'}))
+            attrs={'type': 'date'}))
 
     hora = forms.TimeField(
         label='Hora', required=False,
@@ -243,3 +257,19 @@ class EstoqueNaDataForm(forms.Form):
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
         choices=CHOICES, initial='')
+
+    def upper_clean(self, field_name):
+        field = self.cleaned_data[field_name].upper()
+        data = self.data.copy()
+        data[field_name] = field
+        self.data = data
+        return field
+
+    def clean_ref(self):
+        return self.upper_clean('ref')
+
+    def clean_tam(self):
+        return self.upper_clean('tam')
+
+    def clean_cor(self):
+        return self.upper_clean('cor')
