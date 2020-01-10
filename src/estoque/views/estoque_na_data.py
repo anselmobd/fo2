@@ -18,13 +18,24 @@ class EstoqueNaData(View):
 
     def mount_context(self, cursor, ref, tam, cor, data, hora, deposito):
         context = {
-            'ref': ref,
             'cor': cor,
             'tam': tam,
             'data': data,
             'hora': hora,
             'deposito': deposito,
             }
+
+        modelo = None
+        if len(ref) % 5 == 0:
+            context.update({
+                'ref': ref,
+            })
+        else:
+            modelo = ref.lstrip("0")
+            ref = ''
+            context.update({
+                'modelo': modelo,
+            })
 
         if data < datetime.date(2018, 11, 1):
             context.update({'erro': 'Erro: Dara mínima = 01/11/2018'})
@@ -33,7 +44,7 @@ class EstoqueNaData(View):
         num_doc = transfo2_num_doc(data, hora)
 
         dados = queries.estoque_na_data(
-            cursor, ref, tam, cor, data, hora, num_doc, deposito)
+            cursor, ref, modelo, tam, cor, data, hora, num_doc, deposito)
 
         if len(dados) == 0:
             context.update({'erro': 'Nada selecionado'})
