@@ -3,7 +3,7 @@ import datetime
 from fo2.models import rows_to_dict_list_lower
 
 
-def estoque_na_data(cursor, data=None, hora=None, deposito=None):
+def estoque_na_data(cursor, num_doc, data=None, hora=None, deposito=None):
 
     data_sql = ''
     if data is not None:
@@ -26,7 +26,7 @@ def estoque_na_data(cursor, data=None, hora=None, deposito=None):
           , e.cditem_subgrupo tam
           , e.cditem_item cor
           , {data_sql} dt -- data do estoque
-          , 702000006 dtinv -- data do estoque em formato de numdoc de ajuste
+          , {num_doc} dtinv -- data do estoque em formato de numdoc de ajuste
           FROM estq_040 e
           LEFT JOIN BASI_220 ta
             ON ta.TAMANHO_REF = e.cditem_subgrupo
@@ -104,6 +104,7 @@ def estoque_na_data(cursor, data=None, hora=None, deposito=None):
         FROM filtro
     '''.format(
         data_sql=data_sql,
+        num_doc=num_doc,
         deposito=deposito,
         )
     cursor.execute(sql)
