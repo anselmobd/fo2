@@ -1,6 +1,7 @@
 from .anula_apaga_transacao_ajuste import *
 from .confronta_estoque_transacoes import *
 from .estoque_deposito_ref_modelo import *
+from .estoque_na_data import *
 from .get_estoque_dep_ref_cor_tam import *
 from .get_preco_medio_ref_cor_tam import *
 from .get_transfo2 import *

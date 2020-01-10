@@ -225,13 +225,13 @@ class RecalculaEstoqueForm(forms.Form):
 
 class EstoqueNaDataForm(forms.Form):
     data = forms.DateField(
-        label='Data do inventário', required=False,
+        label='Data', required=True,
         widget=forms.DateInput(
             format='%Y-%m-%d',
             attrs={'type': 'date', 'autofocus': 'autofocus'}))
 
     hora = forms.TimeField(
-        label='Hora do inventário', required=False,
+        label='Hora', required=False,
         help_text='Padrão: início do dia',
         widget=forms.TimeInput(attrs={'type': 'time'}))
 
