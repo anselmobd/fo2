@@ -16,8 +16,11 @@ class EstoqueNaData(View):
         self.template_name = 'estoque/estoque_na_data.html'
         self.title_name = 'Estoque na data'
 
-    def mount_context(self, cursor, data, hora, deposito):
+    def mount_context(self, cursor, ref, tam, cor, data, hora, deposito):
         context = {
+            'ref': ref,
+            'cor': cor,
+            'tam': tam,
             'data': data,
             'hora': hora,
             'deposito': deposito,
@@ -29,7 +32,8 @@ class EstoqueNaData(View):
 
         num_doc = transfo2_num_doc(data, hora)
 
-        dados = queries.estoque_na_data(cursor, num_doc, data, hora, deposito)
+        dados = queries.estoque_na_data(
+            cursor, ref, tam, cor, data, hora, num_doc, deposito)
 
         if len(dados) == 0:
             context.update({'erro': 'Nada selecionado'})
@@ -71,10 +75,15 @@ class EstoqueNaData(View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
+            ref = form.cleaned_data['ref']
+            cor = form.cleaned_data['cor']
+            tam = form.cleaned_data['tam']
             data = form.cleaned_data['data']
             hora = form.cleaned_data['hora']
             deposito = form.cleaned_data['deposito']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, data, hora, deposito))
+            context.update(
+                self.mount_context(
+                    cursor, ref, tam, cor, data, hora, deposito))
         context['form'] = form
         return render(request, self.template_name, context)
