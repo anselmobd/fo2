@@ -4,7 +4,7 @@ from fo2.models import rows_to_dict_list_lower
 
 
 def get_transfo2(
-        cursor, dep, numdoc, ref=None, cor=None, tam=None):
+        cursor, dep, numdoc=None, ref=None, cor=None, tam=None):
 
     filtro_dep = ''
     if dep is not None:
@@ -38,19 +38,24 @@ def get_transfo2(
 
     sql = '''
         SELECT
-          t.NIVEL_ESTRUTURA NIVEL
-        , t.CODIGO_DEPOSITO DEP
-        , t.GRUPO_ESTRUTURA REF
-        , t.SUBGRUPO_ESTRUTURA TAM
-        , t.ITEM_ESTRUTURA COR
+          t.CODIGO_DEPOSITO DEP
         , t.NUMERO_DOCUMENTO NUMDOC
+        , count(*)
         FROM ESTQ_300 t
         WHERE t.NIVEL_ESTRUTURA = 1
+          AND t.NUMERO_DOCUMENTO >= 702000000
+          AND t.NUMERO_DOCUMENTO <= 702999999
           {filtro_dep} -- filtro_dep
           {filtro_numdoc} -- filtro_numdoc
           {filtro_ref} -- filtro_ref
           {filtro_cor} -- filtro_cor
           {filtro_tam} -- filtro_tam
+        GROUP BY
+          t.CODIGO_DEPOSITO
+        , t.NUMERO_DOCUMENTO
+        ORDER BY
+          t.CODIGO_DEPOSITO
+        , t.NUMERO_DOCUMENTO DESC
     '''.format(
         filtro_dep=filtro_dep,
         filtro_numdoc=filtro_numdoc,
