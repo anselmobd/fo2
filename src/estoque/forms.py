@@ -221,3 +221,25 @@ class RecalculaEstoqueForm(forms.Form):
 
     def clean_cor(self):
         return self.upper_clean('cor')
+
+
+class EstoqueNaDataForm(forms.Form):
+    data = forms.DateField(
+        label='Data do inventário', required=False,
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={'type': 'date', 'autofocus': 'autofocus'}))
+
+    hora = forms.TimeField(
+        label='Hora do inventário', required=False,
+        help_text='Padrão: início do dia',
+        widget=forms.TimeInput(attrs={'type': 'time'}))
+
+    CHOICES = [
+        ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
+        ('102', '102-PA VAREJO PRIMEIRA QUALIDADE'),
+        ('231', '231-MAT PRIMA ESTOQUE'),
+    ]
+    deposito = forms.ChoiceField(
+        label='Depósito', required=True,
+        choices=CHOICES, initial='')
