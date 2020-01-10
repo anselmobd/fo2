@@ -1,9 +1,12 @@
+import datetime
+
 from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
 from estoque import forms
 from estoque import queries
+from estoque.functions import transfo2_num_doc
 
 
 class EstoqueNaData(View):
@@ -20,7 +23,9 @@ class EstoqueNaData(View):
             'deposito': deposito,
             }
 
-        dados = queries.estoque_na_data(cursor, data, hora, deposito)
+        num_doc = transfo2_num_doc(data, hora)
+
+        dados = queries.estoque_na_data(cursor, num_doc, data, hora, deposito)
 
         if len(dados) == 0:
             context.update({'erro': 'Nada selecionado'})
