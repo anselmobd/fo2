@@ -178,6 +178,7 @@ def confronta_estoque_transacoes(
                     )
                 try:
                     cursor.execute(sql)
+                    row['stq'] = row['qtd_old'] + row['qtd']
                 except Exception:
                     exec_ok = False
                     break
