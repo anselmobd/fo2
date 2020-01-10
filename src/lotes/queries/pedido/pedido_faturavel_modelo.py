@@ -13,8 +13,7 @@ def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
     cached_result = cache.get(key_cache)
     if cached and cached_result is not None:
         fo2logger.info('cached '+key_cache)
-        exp_dt = cache._expire_info.get('FO2K:1:'+key_cache)
-        fo2logger.info(datetime.datetime.fromtimestamp(exp_dt))
+        cache_ttl(cache, key_cache)
         return cached_result
 
     filtro_modelo = ''
