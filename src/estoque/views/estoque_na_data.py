@@ -20,10 +20,35 @@ class EstoqueNaData(View):
             'deposito': deposito,
             }
 
-        data = queries.estoque_na_data(cursor, data, hora, deposito)
-        if len(data) == 0:
+        dados = queries.estoque_na_data(cursor, data, hora, deposito)
+
+        if len(dados) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
+
+            # totalize_data(data, {
+            #     'sum': ['qtd_positiva', 'qtd_negativa'],
+            #     'count': [],
+            #     'descr': {'dep_descr': 'Totais:'},
+            #     'row_style': 'font-weight: bold;',
+            # })
+
+        for row in dados:
+            row['stq_data'] = row['stq'] - row['trans'] - row['ajuste']
+
+        context.update({
+            'headers': ('Depósito', 'Referência', 'Cor', 'Tamanho',
+                        'Estoque na data', 'Transações', 'Ajustes', 'Estoque'),
+            'fields': ('dep', 'ref', 'cor', 'tam',
+                       'stq_data', 'trans', 'ajuste', 'stq'),
+            'style': {
+                5: 'text-align: right;',
+                6: 'text-align: right;',
+                7: 'text-align: right;',
+                8: 'text-align: right;',
+                },
+            'dados': dados,
+        })
 
         return context
 
