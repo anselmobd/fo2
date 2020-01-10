@@ -23,6 +23,10 @@ class EstoqueNaData(View):
             'deposito': deposito,
             }
 
+        if data < datetime.date(2018, 11, 1):
+            context.update({'erro': 'Erro: Dara mínima = 01/11/2018'})
+            return context
+
         num_doc = transfo2_num_doc(data, hora)
 
         dados = queries.estoque_na_data(cursor, num_doc, data, hora, deposito)
