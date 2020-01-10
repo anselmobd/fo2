@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views import View
 
 from estoque import forms
+from estoque import queries
 
 
 class EstoqueNaData(View):
@@ -18,6 +19,11 @@ class EstoqueNaData(View):
             'hora': hora,
             'deposito': deposito,
             }
+
+        data = queries.estoque_na_data(cursor, data, hora, deposito)
+        if len(data) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
 
         return context
 
