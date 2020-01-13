@@ -119,6 +119,9 @@ urlpatterns = [
     url(r'^ajax/pedido_lead_modelo/(?P<modelo>[^/]+)/$',
         views.pedido_lead_modelo, name='pedido_lead_modelo'),
 
+    url(r'^ajax/estoque_depositos_modelo/(?P<modelo>[^/]+)/$',
+        views.estoque_depositos_modelo, name='estoque_depositos_modelo'),
+
     url(r'^grade_produzir/$',
         views.GradeProduzirOld.as_view(), name='grade_produzir'),
 
