@@ -18,7 +18,7 @@ def op_sortimentos(cursor, **kwargs):
           p - Perda
           c - Conserto
           s - Segunda qualidade
-          ae - estocada; "a", porém só estágios 57 e 63
+          acd - estocada; "a", porém só estágios 57 e 63
           ap - em produção; "a", porém estágios não 57 e 63
     descr_sort: False - Apenas código do sortimento (cor)
                 True - Descrição junto ao código do sortimento (cor)
@@ -110,6 +110,16 @@ def op_sortimentos(cursor, **kwargs):
     filtro_especifico = ''
     if tipo == 'a':  # Ainda não produzido / não finalizado
         filtro_especifico = "AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))"
+    elif tipo == 'acd':  # Ainda não produzido / lotes no CD
+        filtro_especifico = """--
+            AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0)) -- filtro_especifico
+            AND lote.CODIGO_ESTAGIO IN (57, 63) -- filtro_especifico
+            """
+    elif tipo == 'ap':  # Ainda não produzido / lotes em produção
+        filtro_especifico = """--
+            AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0)) -- filtro_especifico
+            AND lote.CODIGO_ESTAGIO NOT IN (57, 63) -- filtro_especifico
+            """
 
     grade_args = {}
     if total is not None:
@@ -271,6 +281,54 @@ def op_sortimentos(cursor, **kwargs):
               l.PROCONF_SUBGRUPO TAMANHO
             , l.PROCONF_ITEM SORTIMENTO
             , SUM( l.QTDE_A_PRODUZIR_PACOTE ) QUANTIDADE
+            FROM pcpc_040 l
+            JOIN opl
+              ON opl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+             AND opl.SEQ_OPERACAO = l.SEQ_OPERACAO
+            LEFT JOIN BASI_220 tam
+              ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
+            GROUP BY
+              tam.ORDEM_TAMANHO
+            , l.PROCONF_SUBGRUPO
+            , l.PROCONF_ITEM
+            ORDER BY
+              tam.ORDEM_TAMANHO
+            , l.PROCONF_ITEM
+        '''.format(
+            filtro_especifico=filtro_especifico,
+            filtra_op=filtra_op,
+            filtra_modelo=filtra_modelo,
+            filtra_situacao=filtra_situacao,
+            filtro_tipo_ref=filtro_tipo_ref,
+            filtro_tipo_alt=filtro_tipo_alt,
+        )
+        grade.value(
+            id='QUANTIDADE',
+            sql=sql
+        )
+
+    elif tipo in ('acd', 'ap'):  # Ainda não produzido/no CD, em produção
+        sql = '''
+            WITH opl AS
+            (
+            SELECT distinct
+              o.ORDEM_PRODUCAO
+            , lote.SEQ_OPERACAO
+            FROM pcpc_040 lote
+            JOIN PCPC_020 o
+              ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
+            WHERE 1=1
+              {filtro_especifico} -- filtro_especifico
+              {filtra_op} -- filtra_op
+              {filtra_modelo} -- filtra_modelo
+              {filtra_situacao} -- filtra_situacao
+              {filtro_tipo_ref} -- filtro_tipo_ref
+              {filtro_tipo_alt} -- filtro_tipo_alt
+            )
+            SELECT
+              l.PROCONF_SUBGRUPO TAMANHO
+            , l.PROCONF_ITEM SORTIMENTO
+            , SUM( l.QTDE_EM_PRODUCAO_PACOTE ) QUANTIDADE
             FROM pcpc_040 l
             JOIN opl
               ON opl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
