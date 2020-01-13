@@ -83,15 +83,28 @@
       {% endif %}
 
       {% if gop %}
-        <thead>
-          <tr>
-            <th colspan="99">
-              <h3>Total em OPs em produção</h3>
-            </th>
-          </tr>
-        </thead>
-        {% include "layout/thead_generic.html" with data=gop.headers style=gop.style only %}
-        {% include "layout/tbody_generic.html" with fields=gop.fields data=gop.data style=gop.style only %}
+        {% if goppr %}
+          <thead>
+            <tr>
+              <th colspan="99">
+                <h3>Total em OPs em produção (não no CD)</h3>
+              </th>
+            </tr>
+          </thead>
+          {% include "layout/thead_generic.html" with data=goppr.headers style=goppr.style only %}
+          {% include "layout/tbody_generic.html" with fields=goppr.fields data=goppr.data style=goppr.style only %}
+        {% endif %}
+        {% if gopcd %}
+          <thead>
+            <tr>
+              <th colspan="99">
+                <h3>Total em OPs em produção (no CD)</h3>
+              </th>
+            </tr>
+          </thead>
+          {% include "layout/thead_generic.html" with data=gopcd.headers style=gopcd.style only %}
+          {% include "layout/tbody_generic.html" with fields=gopcd.fields data=gopcd.data style=gopcd.style only %}
+        {% endif %}
       {% else %}
         <thead>
           <tr>

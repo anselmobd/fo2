@@ -106,20 +106,35 @@ class GradeProduzir(O2BaseGetPostView):
         if not calcula_grade:
             return
 
-        g_header, g_fields, g_data, g_style, total_op = \
+        gpr_header, gpr_fields, gpr_data, gpr_style, total_oppr = \
             lotes.queries.op.op_sortimentos(
-                cursor, tipo='a', descr_sort=False, modelo=modelo,
+                cursor, tipo='ap', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
-        gop = None
-        if total_op != 0:
-            gop = {
-                'headers': g_header,
-                'fields': g_fields,
-                'data': g_data,
-                'style': g_style,
+        goppr = None
+        if total_oppr != 0:
+            goppr = {
+                'headers': gpr_header,
+                'fields': gpr_fields,
+                'data': gpr_data,
+                'style': gpr_style,
             }
-            gzerada = update_gzerada(gzerada, gop)
+            gzerada = update_gzerada(gzerada, goppr)
+
+        gcd_header, gcd_fields, gcd_data, gcd_style, total_opcd = \
+            lotes.queries.op.op_sortimentos(
+                cursor, tipo='acd', descr_sort=False, modelo=modelo,
+                situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+
+        gopcd = None
+        if total_opcd != 0:
+            gopcd = {
+                'headers': gcd_header,
+                'fields': gcd_fields,
+                'data': gcd_data,
+                'style': gcd_style,
+            }
+            gzerada = update_gzerada(gzerada, gopcd)
 
         e_header, e_fields, e_data, e_style, total_est = \
             estoque.queries.grade_estoque(
@@ -178,10 +193,16 @@ class GradeProduzir(O2BaseGetPostView):
                 'gmg': gmg,
             })
 
-        if gop is not None:
-            gop = soma_grades(gzerada, gop)
+        if goppr is not None:
+            goppr = soma_grades(gzerada, goppr)
             self.context.update({
-                'gop': gop,
+                'goppr': goppr,
+            })
+
+        if gopcd is not None:
+            gopcd = soma_grades(gzerada, gopcd)
+            self.context.update({
+                'gopcd': gopcd,
             })
 
         if gest is not None:
@@ -207,6 +228,23 @@ class GradeProduzir(O2BaseGetPostView):
 
             self.context.update({
                 'gm': gm,
+            })
+
+        if total_opcd != 0 and total_oppr == 0:
+            gop = gopcd
+            total_op = total_opcd
+        elif total_opcd == 0 and total_oppr != 0:
+            gop = goppr
+            total_op = total_oppr
+        elif total_opcd != 0 and total_oppr != 0:
+            gop = soma_grades(goppr, gopcd)
+            total_op = total_oppr + total_opcd
+        else:
+            gop = None
+            total_op = 0
+        if gop is not None:
+            self.context.update({
+                'gop': gop,
             })
 
         gopp = None
