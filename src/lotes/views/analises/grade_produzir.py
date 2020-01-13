@@ -144,12 +144,16 @@ class GradeProduzir(O2BaseGetPostView):
         else:
             periodo = lead + dias_alem_lead
 
+        # gp_header, gp_fields, gp_data, gp_style, total_ped = \
+        #     lotes.queries.pedido.sortimento(
+        #         cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
+        #         cancelado='n', faturavel='f', total='Total',
+        #         periodo=':{}'.format(periodo))
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
-            lotes.queries.pedido.sortimento(
-                cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
-                cancelado='n', faturavel='f', total='Total',
-                periodo=':{}'.format(periodo))
-
+            lotes.queries.pedido.pedido_faturavel_modelo_sortimento(
+                cursor, modelo=modelo, periodo=':{}'.format(periodo),
+                cached=False
+            )
         gped = None
         if total_ped != 0:
             gped = {
