@@ -15,6 +15,7 @@ from utils.classes import Perf
 from insumo.queries import insumos_de_produtos_em_dual
 from geral.functions import config_get_value
 
+import lotes.queries.op
 import lotes.forms as forms
 import lotes.models as models
 import lotes.functions as functions
@@ -166,7 +167,7 @@ class Op(View):
                 })
 
             # Grade
-            g_header, g_fields, g_data = models.op_sortimento(
+            g_header, g_fields, g_data = lotes.queries.op.op_sortimento(
                 cursor, op=op)
             p.prt('op_sortimento 1ª')
 
@@ -178,8 +179,8 @@ class Op(View):
                 })
 
             # Grade de perda
-            gp_header, gp_fields, gp_data, total = models.op_sortimentos(
-                cursor, op=op, tipo='p')
+            gp_header, gp_fields, gp_data, total = \
+                lotes.queries.op.op_sortimentos(cursor, op=op, tipo='p')
             p.prt('op_sortimentos perda')
 
             if total != 0:
@@ -190,8 +191,8 @@ class Op(View):
                 })
 
             # Grade de segunda qualidade
-            gs_header, gs_fields, gs_data, total = models.op_sortimentos(
-                cursor, op=op, tipo='s')
+            gs_header, gs_fields, gs_data, total = \
+                lotes.queries.op.op_sortimentos(cursor, op=op, tipo='s')
             p.prt('op_sortimentos 2ª')
 
             if total != 0:
@@ -202,8 +203,8 @@ class Op(View):
                 })
 
             # Grade de conserto
-            gc_header, gc_fields, gc_data, total = models.op_sortimentos(
-                cursor, op=op, tipo='c')
+            gc_header, gc_fields, gc_data, total = \
+                lotes.queries.op.op_sortimentos(cursor, op=op, tipo='c')
             p.prt('op_sortimentos conserto')
 
             if total != 0:

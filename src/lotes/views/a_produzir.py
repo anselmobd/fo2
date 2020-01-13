@@ -16,6 +16,7 @@ import produto.queries
 import produto.models
 
 import lotes.models
+import lotes.queries.op
 import lotes.queries.pedido
 from lotes.views.quant_estagio import grade_meta_giro
 
@@ -412,7 +413,7 @@ class GradeProduzirOld(O2BaseGetPostView):
             return
 
         g_header, g_fields, g_data, g_style, total_opa = \
-            lotes.models.op_sortimentos(
+            lotes.queries.op.op_sortimentos(
                 cursor, tipo='a', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
@@ -427,7 +428,7 @@ class GradeProduzirOld(O2BaseGetPostView):
             gzerada = update_gzerada(gzerada, gopa)
 
         gf_header, gf_fields, gf_data, gf_style, total_opf = \
-            lotes.models.op_sortimentos(
+            lotes.queries.op.op_sortimentos(
                 cursor, tipo='fpnf', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
@@ -443,7 +444,7 @@ class GradeProduzirOld(O2BaseGetPostView):
             gzerada = update_gzerada(gzerada, gopf)
 
         gpf_header, gpf_fields, gpf_data, gpf_style, total_oppf = \
-            lotes.models.op_sortimentos(
+            lotes.queries.op.op_sortimentos(
                 cursor, tipo='apf', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
