@@ -17,7 +17,7 @@ from estoque import queries
 class ReferenciaDeposito(View):
     Form_class = forms.ReferenciasEstoqueForm
     template_name = 'estoque/referencia_deposito.html'
-    title_name = 'Por referência em depósito'
+    title_name = 'Por referência de modelo em depósito'
 
     def mount_context(self, request, cursor, deposito, modelo):
         context = {
