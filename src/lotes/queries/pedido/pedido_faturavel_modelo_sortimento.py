@@ -1,6 +1,8 @@
+from pprint import pprint
+
 from django.core.cache import cache
 
-from fo2.models import rows_to_dict_list
+from fo2.models import rows_to_dict_list_lower
 
 from utils.functions import make_key_cache, fo2logger
 
@@ -133,11 +135,69 @@ def pedido_faturavel_modelo_sortimento(
         filtra_periodo=filtra_periodo,
     )
     cursor.execute(sql)
+    result = rows_to_dict_list_lower(cursor)
 
-    # A partir dos dados captados, montar a
-    # grade = GradeQtd(cursor)
+    headers = ['Cores / Tamanhos']
+    fields = ['SORTIMENTO']
+    sortimento = {'Total': {}}
+    cores = []
+    total = 0
 
-    cached_result = rows_to_dict_list(cursor)
+    for row in result:
+        tam = row['tam']
+        cor = row['cor']
+        qtd = row['qtd']
+        if tam not in headers:
+            headers.append(tam)
+            fields.append(tam)
+        if cor not in cores:
+            cores.append(cor)
+
+        if cor not in sortimento:
+            sortimento[cor] = {}
+        if tam not in sortimento[cor]:
+            sortimento[cor][tam] = 0
+        if 'Total' not in sortimento[cor]:
+            sortimento[cor]['Total'] = 0
+        if tam not in sortimento['Total']:
+            sortimento['Total'][tam] = 0
+        if 'Total' not in sortimento['Total']:
+            sortimento['Total']['Total'] = 0
+
+        sortimento[cor][tam] += qtd
+        sortimento[cor]['Total'] += qtd
+        sortimento['Total'][tam] += qtd
+        sortimento['Total']['Total'] += qtd
+        total += qtd
+
+    headers.append('Total')
+    fields.append('Total')
+
+    dados = []
+    for cor in cores:
+        dict_cor = sortimento[cor]
+        dict_cor['SORTIMENTO'] = cor
+        dados.append(dict_cor)
+    dict_cor = sortimento['Total']
+    dict_cor['SORTIMENTO'] = 'Total'
+    dados.append(dict_cor)
+
+    style = {}
+    right_style = 'text-align: right;'
+    bold_style = 'font-weight: bold;'
+    for i in range(2, len(fields)):
+        style[i] = right_style
+    style[len(fields)] = right_style + bold_style
+    dados[-1]['|STYLE'] = bold_style
+
+    cached_result = (
+        headers,
+        fields,
+        dados,
+        style,
+        total,
+    )
+
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result
