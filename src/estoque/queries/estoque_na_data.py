@@ -47,6 +47,14 @@ def estoque_na_data(
             data_hora.strftime('%Y-%m-%d %H:%M:%S')
         )
 
+    filtro_deposito = ''
+    if deposito is not None and deposito != '':
+        if deposito == 'A00':
+            filtro_deposito = "AND e.deposito IN (101, 102, 231)"
+        else:
+            filtro_deposito = "AND e.deposito = '{deposito}'".format(
+                deposito=deposito)
+
     sql = '''
         WITH filtro AS
         ( SELECT
@@ -60,8 +68,8 @@ def estoque_na_data(
           FROM estq_040 e
           LEFT JOIN BASI_220 ta
             ON ta.TAMANHO_REF = e.cditem_subgrupo
-          WHERE e.deposito = {deposito}
-            AND e.cditem_nivel99 = 1
+          WHERE e.cditem_nivel99 = 1
+            {filtro_deposito} -- AND e.deposito = 101
             AND e.cditem_grupo < 'C0000'
             {filtro_ref} -- AND e.cditem_grupo = '5156U'
             {filtro_modelo} -- filtro_modelo
@@ -69,7 +77,8 @@ def estoque_na_data(
             {filtro_cor} -- AND e.cditem_item = '0000BR'
             AND e.lote_acomp = 0
           ORDER BY
-            e.cditem_grupo
+            e.deposito
+          , e.cditem_grupo
           , e.cditem_item
           , ta.ORDEM_TAMANHO
           , e.cditem_subgrupo
@@ -136,7 +145,7 @@ def estoque_na_data(
     '''.format(
         data_sql=data_sql,
         num_doc=num_doc,
-        deposito=deposito,
+        filtro_deposito=filtro_deposito,
         filtro_ref=filtro_ref,
         filtro_modelo=filtro_modelo,
         filtro_tam=filtro_tam,

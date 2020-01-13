@@ -250,6 +250,7 @@ class EstoqueNaDataForm(forms.Form):
         widget=forms.TimeInput(attrs={'type': 'time'}))
 
     CHOICES = [
+        ('A00', '101, 102 e 231'),
         ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
         ('102', '102-PA VAREJO PRIMEIRA QUALIDADE'),
         ('231', '231-MAT PRIMA ESTOQUE'),
