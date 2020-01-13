@@ -18,8 +18,8 @@ def op_sortimentos(cursor, **kwargs):
           p - Perda
           c - Conserto
           s - Segunda qualidade
-          acd - estocada; "a", porém só estágios 57 e 63
-          ap - em produção; "a", porém estágios não 57 e 63
+          acd - estocada; "a", no CD (estágios 57 e 63)
+          ap - em produção; "a", não no CD (estágios não 57 e 63)
     descr_sort: False - Apenas código do sortimento (cor)
                 True - Descrição junto ao código do sortimento (cor)
     modelo: Filtra PA, PB ou PG de determinado modelo_inform
