@@ -14,6 +14,13 @@ def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
         motivo=None, cached=False, quant_fin=None, quant_emp=None):
+    """
+    posicao: t - Todas as OPs
+             p - Em produção
+             f - Finalizadas
+             p63 - Em produção, exceto OPs apenas no 63-CD
+             f63 - Finalizadas, incluindo OPs apenas no 63-CD
+    """
     key_cache = make_key_cache()
 
     cached_result = None
