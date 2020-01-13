@@ -107,7 +107,7 @@ class GradeProduzir(O2BaseGetPostView):
             return
 
         g_header, g_fields, g_data, g_style, total_op = \
-            lotes.models.op_sortimentos(
+            lotes.queries.op.op_sortimentos(
                 cursor, tipo='a', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
