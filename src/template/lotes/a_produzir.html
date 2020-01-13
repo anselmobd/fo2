@@ -142,6 +142,8 @@
     var table = document.getElementById("produzir");
     var el_total_op_total = get_el('total_op', 'total');
     var total_op_total = 0;
+    var el_total_est_total = get_el('total_est', 'total');
+    var total_est_total = 0;
     var el_total_ped_total = get_el('total_ped', 'total');
     var total_ped_total = 0;
     var total_passos = 0;
@@ -176,6 +178,33 @@
                       }
                     } else {
                       console.log('Sem retorno de OP');
+                    }
+                  }
+                });
+              }
+
+              if (class_split[0] == 'total_est') {
+                total_passos += 1;
+                $.ajax({
+                  type: 'GET',
+                  url: '/lotes/ajax/estoque_depositos_modelo/'+class_split[1]+'/',
+                  data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                  success : function(data) {
+                    count_passos += 1;
+                    moveBar(count_passos, total_passos);
+                    if (data) {
+                      if (data['result'] == 'OK') {
+                        cell.innerHTML = formatNumber(data['total_est']);
+                        int_total_est = parseInt(data['total_est']);
+                        total_est_total += int_total_est;
+                        el_total_est_total.innerHTML = formatNumber(total_est_total);
+                        // console.log('pedido_lead_modelo '+data['modelo']);
+                        calc_colunas(data['modelo'], int_total_est);
+                      } else {
+                        console.log('Erro: '+data['descricao_erro']);
+                      }
+                    } else {
+                      console.log('Sem retorno de estoque');
                     }
                   }
                 });
