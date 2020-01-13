@@ -414,9 +414,10 @@ class BuscaOP(View):
                     'producao:pedido__get', args=[row['PED']])
             if row['LOTES'] is None:
                 row['LOTES'] = '0'
+            row['QTD_OUTROS'] = row['QTD_AP'] - row['QTD_CD']
 
         totalize_data(data, {
-            'sum': ['QTD', 'QTD_AP', 'QTD_F'],
+            'sum': ['QTD', 'QTD_AP', 'QTD_F', 'QTD_CD', 'QTD_OUTROS'],
             'count': [],
             'descr': {'LOTES': 'Totais:'}})
 
@@ -426,7 +427,8 @@ class BuscaOP(View):
                         'Tipo', 'Referência',
                         'Alt.', 'Roteiro', 'Estágio',
                         'Quant. Lotes', 'Quant. Itens',
-                        'Quant. em Prod.', 'Quant. Finaliz.',
+                        'Quant. CD', 'Quant. não CD',
+                        'Quant. a Prod.', 'Quant. Finaliz.',
                         'Depósito', 'Período',
                         'Data Digitação', 'Data Corte', 'Data Embarque',
                         'OP relacionada'),
@@ -435,6 +437,7 @@ class BuscaOP(View):
                        'TIPO_REF', 'REF',
                        'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
                        'LOTES', 'QTD',
+                       'QTD_CD', 'QTD_OUTROS',
                        'QTD_AP', 'QTD_F',
                        'DEPOSITO_CODIGO', 'PERIODO',
                        'DT_DIGITACAO', 'DT_CORTE', 'DT_EMBARQUE',
@@ -446,8 +449,10 @@ class BuscaOP(View):
                 12: 'text-align: right;',
                 13: 'text-align: right;',
                 14: 'text-align: right;',
-                15: 'text-align: center;',
-                16: 'text-align: center;',
+                15: 'text-align: right;',
+                16: 'text-align: right;',
+                17: 'text-align: center;',
+                18: 'text-align: center;',
             },
         })
 
