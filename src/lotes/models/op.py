@@ -820,6 +820,27 @@ def op_sortimento(cursor, **kwargs):
 
 
 def op_sortimentos(cursor, **kwargs):
+    '''
+    op: Apenas determinada OP
+    tipo: t - Todos os lotes
+          a - Ainda não produzido / não finalizado
+    descr_sort: False - Apenas código do sortimento (cor)
+                True - Descrição junto ao código do sortimento (cor)
+    modelo: Filtra PA, PB ou PG de determinado modelo_inform
+            None - QQ referência
+    situacao: c - OP cancelada
+              a - OP não cancelado (ativa)
+    tipo_ref: a - PA
+              g - PG
+              b - import pdb; pdb.set_trace()
+              p - PG ou PB
+              v - PA, PG ou PB
+              m - MD ou outros não "PA, PG ou PB"
+    tipo_alt: e - OP de expedição (PA com alternativa em (10, 50) ou (60, 100))
+              p - OP não de expedição
+    total: True - totaliza grade
+           False - não totaliza
+    '''
     def argdef(arg, default):
         return arg_def(kwargs, arg, default)
 
