@@ -34,7 +34,11 @@
   <h4>Hora: {{ hora }}</h4>
 {% endif %}
 {% if deposito %}
-  <h4>Depósito: {{ deposito }}</h4>
+  {% if deposito < '999' %}
+    <h4>Depósito: {{ deposito }}</h4>
+  {% elif deposito == 'A00' %}
+    <h4>Depósitos: 101, 102 e 231</h4>
+  {% endif %}
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
