@@ -32,7 +32,7 @@ class Op(View):
         context = {'op': op}
 
         # informações gerais
-        i_data = models.op_inform(cursor, op, cached=False)
+        i_data = lotes.queries.op.op_inform(cursor, op, cached=False)
         p.prt('op_inform')
 
         if len(i_data) == 0:
@@ -352,7 +352,7 @@ class BuscaOP(View):
             'quant_emp': quant_emp,
         }
 
-        data = models.busca_op(
+        data = lotes.queries.op.busca_op(
             cursor, ref=ref, modelo=modelo, tam=tam, cor=cor,
             deposito=deposito, tipo=tipo, tipo_alt=tipo_alt, situacao=situacao,
             posicao=posicao, motivo=motivo, quant_fin=quant_fin,
@@ -498,7 +498,7 @@ class ComponentesDeOp(View):
         context = {'op': op}
 
         # Lotes ordenados por OS + referência + estágio
-        ref_data = models.op_inform(cursor, op)
+        ref_data = lotes.queries.op.op_inform(cursor, op)
         if len(ref_data) == 0:
             context.update({
                 'msg_erro': 'OP não encontrada',

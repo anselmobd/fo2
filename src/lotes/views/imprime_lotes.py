@@ -19,6 +19,7 @@ from utils.classes import TermalPrint
 
 from lotes.forms import ImprimeLotesForm, ImprimePacote3LotesForm, \
     ImprimeTagForm
+import lotes.queries.op
 import lotes.models as models
 
 
@@ -117,13 +118,13 @@ class ImprimeLotes(LoginRequiredMixin, View):
         ref = l_data[0]['ref']
 
         # busca informação de OP mãe
-        opi_data = models.op_inform(cursor, op)
+        opi_data = lotes.queries.op.op_inform(cursor, op)
         opi_row = opi_data[0]
         op_mae = ''
         ref_mae = ''
         if opi_row['TIPO_FM_OP'] == 'Filha de':
             op_mae = opi_row['OP_REL']
-            opmaei_data = models.op_inform(cursor, op_mae)
+            opmaei_data = lotes.queries.op.op_inform(cursor, op_mae)
             opmaei_row = opmaei_data[0]
             ref_mae = opmaei_row['REF']
         for row in l_data:
@@ -510,13 +511,13 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             return context
 
         # busca informação de OP mãe
-        opi_data = models.op_inform(cursor, op)
+        opi_data = lotes.queries.op.op_inform(cursor, op)
         opi_row = opi_data[0]
         op_mae = ''
         ref_mae = ''
         if opi_row['TIPO_FM_OP'] == 'Filha de':
             op_mae = '{}'.format(opi_row['OP_REL'])
-            opmaei_data = models.op_inform(cursor, op_mae)
+            opmaei_data = lotes.queries.op.op_inform(cursor, op_mae)
             opmaei_row = opmaei_data[0]
             ref_mae = opmaei_row['REF']
         for row in l_data:
