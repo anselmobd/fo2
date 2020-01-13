@@ -257,6 +257,7 @@ def busca_op(
         , sele.LOTES
         , COALESCE(sele.QTD, 0) QTD
         , COALESCE(sele.QTD_AP, 0) QTD_AP
+        , COALESCE(sele.QTD_CD, 0) QTD_CD
         , COALESCE(sele.QTD_F, 0) QTD_F
         , sele.DT_DIGITACAO
         , sele.DT_CORTE
@@ -363,6 +364,7 @@ def busca_op(
         , seq_op.LOTES
         , seq_l.QTD
         , seq_l.QTD_AP
+        , lotes_cd.QTD_CD
         , seq_l.QTD_F
         , o.DATA_PROGRAMACAO DT_DIGITACAO
         , o.DATA_ENTRADA_CORTE DT_CORTE
@@ -420,6 +422,19 @@ def busca_op(
           ) seq_l
           ON seq_l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
          AND seq_l.SEQ_OPERACAO = seq_op.MAXSEQ
+        LEFT JOIN (
+          SELECT
+            l.ORDEM_PRODUCAO
+          , SUM( l.QTDE_EM_PRODUCAO_PACOTE ) QTD_CD
+          FROM pcpc_040 l
+          WHERE 1=1
+            AND l.CODIGO_ESTAGIO IN (57, 63)
+            {filtra_qtd_tam} -- filtra_qtd_tam
+            {filtra_qtd_cor} -- filtra_qtd_cor
+          GROUP BY
+            l.ORDEM_PRODUCAO
+          ) lotes_cd
+          ON lotes_cd.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
         JOIN PCPC_010 p
           ON p.AREA_PERIODO = 1
          AND p.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
@@ -474,6 +489,7 @@ def busca_op(
         , seq_op.LOTES
         , seq_l.QTD
         , seq_l.QTD_AP
+        , lotes_cd.QTD_CD
         , seq_l.QTD_F
         , ome.ORDEM_PRODUCAO
         , ose.ORDEM_PRODUCAO
