@@ -149,11 +149,11 @@ class ImprimeLotesForm(forms.Form):
     obs1 = forms.CharField(
         label='Observação 1', required=False,
         widget=forms.TextInput(
-            attrs={'type': 'string', 'style': 'width:20en'}))
+            attrs={'type': 'string', 'style': 'width:20em'}))
     obs2 = forms.CharField(
         label='Observação 2', required=False,
         widget=forms.TextInput(
-            attrs={'type': 'string', 'style': 'width:20en'}))
+            attrs={'type': 'string', 'style': 'width:30em'}))
 
     def clean_tam(self):
         tam = self.cleaned_data['tam'].upper()
