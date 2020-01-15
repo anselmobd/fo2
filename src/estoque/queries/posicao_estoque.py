@@ -44,7 +44,7 @@ def posicao_estoque(
     if not zerados:
         filtro_zerados = "AND e.qtde_estoque_atu != 0"
 
-    if group in ['', 'rct']:
+    if group in ['', 'rtcd']:
         select_fields = '''--
             , e.cditem_grupo
             , e.cditem_subgrupo
@@ -58,6 +58,21 @@ def posicao_estoque(
             , ta.ORDEM_TAMANHO
             , e.cditem_subgrupo
             , e.cditem_item
+            , e.deposito'''
+    elif group in ['', 'rctd']:
+        select_fields = '''--
+            , e.cditem_grupo
+            , e.cditem_subgrupo
+            , e.cditem_item
+            , e.deposito
+            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
+        field_quantidade = ', e.qtde_estoque_atu qtd'
+        group_fields = ''
+        order_by = '''--
+            , e.cditem_grupo
+            , e.cditem_item
+            , ta.ORDEM_TAMANHO
+            , e.cditem_subgrupo
             , e.deposito'''
     elif group == 'r':
         select_fields = '''--
