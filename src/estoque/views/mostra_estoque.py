@@ -41,7 +41,7 @@ class MostraEstoque(PermissionRequiredMixin, View):
             'qtd': ['Estoque atual', 'text-align: right;'],
             'qtd_inv': ['Estoque na data', 'text-align: right;'],
             'movimento': ['Movimento', 'text-align: right;'],
-            'ajuste': ['Ajuste pelo inventário', 'text-align: right;'],
+            'ajuste': ['Ajustar pelo inventário', 'text-align: right;'],
             'executa': ['Executa', 'text-align: right;'],
             'edita': ['Edita'],
         }, ['header', 'style'])
