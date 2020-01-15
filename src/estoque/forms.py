@@ -1,3 +1,4 @@
+from pprint import pprint
 from django import forms
 # from django.core.exceptions import ValidationError
 
@@ -29,12 +30,14 @@ class PorDepositoForm(forms.Form):
         ('A00', '101, 102 e 231- '
                 'PA ATACADO, PA VAREJO e MAT PRIMA'),
     ]
-    depositos = geral.queries.deposito()
-    for deposito in depositos:
+    principais = (101, 102, 231)
+    depositos_principais = geral.queries.deposito(only=principais)
+    depositos_outros = geral.queries.deposito(less=principais)
+    for deposito in depositos_principais + depositos_outros:
         if deposito['COD'] > 1:
             CHOICES.append((
                 deposito['COD'],
-                '{} - {}'.format(deposito['COD'], deposito['DESCR'])
+                f"{deposito['COD']} - {deposito['DESCR']}"
             ))
     deposito = forms.ChoiceField(
         label='Depósito', choices=CHOICES, initial='999')
