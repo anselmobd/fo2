@@ -111,7 +111,21 @@ class PosicaoEstoque(View):
                           5: 'text-align: right;'},
                 'soma': soma,
             })
-        else:
+        elif agrupamento == 'rctd':
+            totalize_data(data, {
+                'sum': ['qtd'],
+                'count': [],
+                'descr': {'dep_descr': 'Total:'},
+                'row_style': 'font-weight: bold;',
+            })
+            context.update({
+                'headers': ('Nível', 'Referência', 'Cor',
+                            'Tamanho', 'Depósito', 'Quantidade'),
+                'fields': ('cditem_nivel99', 'cditem_grupo', 'cditem_item',
+                           'cditem_subgrupo', 'dep_descr', 'qtd'),
+                'style': {6: 'text-align: right;'},
+            })
+        else:  # rtcd
             totalize_data(data, {
                 'sum': ['qtd'],
                 'count': [],
