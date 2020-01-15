@@ -211,14 +211,29 @@ def index(request):
         {'chamada': 'Escola do Trabalhador',
          'descricao':
             'O Ministério do Trabalho tem cursos '
-            'gratuitos em várias áreas, basta se '
+            'gratuitos em várias áreas,<br />basta se '
             'inscrever e fazer os cursos on line.',
          'link': 'http://escolatrabalho.gov.br/'},
+    ]
+    rota2020 = [
+        {'data': datetime.strptime('13/01/2020', '%d/%m/%Y').date(),
+         'chamada': 'Inovar é Transformar',
+         'link': '/media/rh/campanhas/2020/01/13/duomo-rota-sucesso-001.jpg'},
+        {'data': datetime.strptime('08/01/2020', '%d/%m/%Y').date(),
+         'chamada': 'Em 2020, vamos embarcar numa viagem rumo ao SUCESSO!',
+         'descricao':
+            'Nessa viagem, iremos carimbar o nosso passaporte com os<br />'
+            'carimbos da Inovação, Produtividade, Desenvolvimento,<br />'
+            'Experiência, Transformação, União e Excelência.<br />'
+            'Vai ser demais!<br />'
+            'Juntos vamos fazer essa incrível Rota do Sucesso!',
+         'link': '/media/rh/campanhas/2020/01/08/duomo-rota-sucesso-w650.jpg'},
     ]
     context = {
         'dicas': dicas,
         'links': links,
         'pensamentos': pensamentos,
+        'rota2020': rota2020,
         }
     return render(request, 'rh/index.html', context)
 
