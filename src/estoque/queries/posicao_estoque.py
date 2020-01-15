@@ -55,6 +55,7 @@ def posicao_estoque(
         group_fields = ''
         order_by = '''--
             , e.cditem_grupo
+            , ta.ORDEM_TAMANHO
             , e.cditem_subgrupo
             , e.cditem_item
             , e.deposito'''
@@ -105,9 +106,11 @@ def posicao_estoque(
         group_fields = '''--
             GROUP BY
               e.cditem_nivel99
+            , ta.ORDEM_TAMANHO
             , e.cditem_subgrupo
             , e.cditem_item'''
         order_by = '''--
+            , ta.ORDEM_TAMANHO
             , e.cditem_subgrupo
             , e.cditem_item'''
 
@@ -126,7 +129,7 @@ def posicao_estoque(
     elif tipo == 'm':
         filtro_tipo = "AND e.cditem_grupo >= 'C0000'"
 
-    sql = '''
+    sql = f'''
         SELECT
           e.cditem_nivel99
         {select_fields} -- select_fields
@@ -134,6 +137,8 @@ def posicao_estoque(
         FROM ESTQ_040 e
         LEFT JOIN BASI_205 d
           ON d.CODIGO_DEPOSITO = e.DEPOSITO
+        LEFT JOIN BASI_220 ta
+          ON ta.TAMANHO_REF = e.cditem_subgrupo
         WHERE 1=1
           {filtro_nivel} -- filtro_nivel
           {filtro_ref} -- filtro_ref
@@ -147,19 +152,6 @@ def posicao_estoque(
         ORDER BY
           e.CDITEM_NIVEL99
         {order_by} -- order_by
-    '''.format(
-        select_fields=select_fields,
-        field_quantidade=field_quantidade,
-        filtro_nivel=filtro_nivel,
-        filtro_ref=filtro_ref,
-        filtro_modelo=filtro_modelo,
-        filtro_tam=filtro_tam,
-        filtro_cor=filtro_cor,
-        filtro_deposito=filtro_deposito,
-        filtro_zerados=filtro_zerados,
-        filtro_tipo=filtro_tipo,
-        group_fields=group_fields,
-        order_by=order_by,
-    )
+    '''
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
