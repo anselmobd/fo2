@@ -113,6 +113,25 @@ def posicao_estoque(
             , ta.ORDEM_TAMANHO
             , e.cditem_subgrupo
             , e.cditem_item'''
+    elif group == 'ct':
+        select_fields = '''--
+            , e.cditem_subgrupo
+            , e.cditem_item'''
+        field_quantidade = '''--
+            , sum(case when e.qtde_estoque_atu > 0
+                  then e.qtde_estoque_atu else 0 end) qtd_positiva
+            , sum(case when e.qtde_estoque_atu < 0
+                  then e.qtde_estoque_atu else 0 end) qtd_negativa'''
+        group_fields = '''--
+            GROUP BY
+              e.cditem_nivel99
+            , e.cditem_item
+            , ta.ORDEM_TAMANHO
+            , e.cditem_subgrupo'''
+        order_by = '''--
+            , e.cditem_item
+            , ta.ORDEM_TAMANHO
+            , e.cditem_subgrupo'''
 
     filtro_tipo = ''
     if tipo == 'a':
