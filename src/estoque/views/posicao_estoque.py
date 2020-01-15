@@ -94,6 +94,23 @@ class PosicaoEstoque(View):
                           5: 'text-align: right;'},
                 'soma': soma,
             })
+        elif agrupamento == 'ct':
+            totalize_data(data, {
+                'sum': ['qtd_positiva', 'qtd_negativa'],
+                'count': [],
+                'descr': {'cditem_item': 'Totais:'},
+                'row_style': 'font-weight: bold;',
+            })
+            soma = data[-1]['qtd_positiva'] + data[-1]['qtd_negativa']
+            context.update({
+                'headers': ('Nível', 'Cor', 'Tamanho',
+                            'Quantidades Positivas', 'Quantidades Negativas'),
+                'fields': ('cditem_nivel99', 'cditem_item', 'cditem_subgrupo',
+                           'qtd_positiva', 'qtd_negativa'),
+                'style': {4: 'text-align: right;',
+                          5: 'text-align: right;'},
+                'soma': soma,
+            })
         else:
             totalize_data(data, {
                 'sum': ['qtd'],
