@@ -3,19 +3,24 @@ from django.db import connections
 from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
 
 
-def deposito(somente=None, *depositos):
-    filtra_depositos = ''
-    if somente is not None and depositos is not None:
-        if somente:
-            in_ = 'IN'
-        else:
-            in_ = 'NOT IN'
-        lista_depositos = ''
-        sep = ''
-        for deposito in depositos:
-                lista_depositos += f'{sep}{str(deposito)}'
-                sep = ', '
-        filtra_depositos = f'AND d.CODIGO_DEPOSITO {in_} ({lista_depositos})'
+def deposito(only=None, less=None):
+
+    def monta_filtro(in_, depositos):
+        filtro = ''
+        if depositos is not None:
+            lista_depositos = ''
+            sep = ''
+            for deposito in depositos:
+                    lista_depositos += f'{sep}{str(deposito)}'
+                    sep = ', '
+            filtro = (
+                f'AND d.CODIGO_DEPOSITO {in_} ({lista_depositos})')
+        return filtro
+
+    filtra_depositos = ' '.join([
+        monta_filtro('IN', only),
+        monta_filtro('NOT IN', less),
+    ])
 
     cursor = connections['so'].cursor()
     sql = f'''
