@@ -1,7 +1,6 @@
 import datetime
 import re
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
@@ -27,10 +26,9 @@ from estoque.functions import (
     )
 
 
-class MostraEstoque(PermissionRequiredMixin, View):
+class MostraEstoque(View):
 
     def __init__(self):
-        self.permission_required = 'base.can_adjust_stock'
         self.Form_class = forms.MostraEstoqueForm
         self.template_name = 'estoque/mostra_estoque.html'
         self.title_name = 'Ajuste de estoque'
@@ -159,11 +157,11 @@ class MostraEstoque(PermissionRequiredMixin, View):
                 self.table.add('ajuste')
                 edita_pos = -1
 
+        count_btn_executa = 0
         if has_permission(request, 'base.can_adjust_stock'):
             self.table.add(edita_pos, 'edita')
             if idata is not None and qtd is not None:
                 self.table.add('executa')
-            count_btn_executa = 0
             for row in data:
                 movimento = 0
                 if idata is not None:
