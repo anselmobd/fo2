@@ -53,7 +53,7 @@ def get_transfo2_deposito_ref(
         , t.CODIGO_TRANSACAO TRANS
         , t.ENTRADA_SAIDA ES
         , t.QUANTIDADE QTD
-        FROM ESTQ_300 t
+        FROM ESTQ_300_ESTQ_310 t
         WHERE t.CODIGO_DEPOSITO = '{deposito}'
           AND t.NIVEL_ESTRUTURA = '1'
           AND t.GRUPO_ESTRUTURA = '{ref}'
