@@ -14,6 +14,7 @@ from geral.functions import (
 from utils.views import (
     request_hash_trail,
     TableHfs,
+    totalize_data,
     )
 
 import produto.queries
@@ -223,6 +224,13 @@ class MostraEstoque(PermissionRequiredMixin, View):
                         )
 
         headers, fields, style = self.table.hfs()
+        totalize_data(data, {
+            'sum': ['qtd_inv', 'movimento', 'qtd'],
+            'count': [],
+            'descr': {'tam': 'Totais:'},
+            'row_style': 'font-weight: bold;',
+            })
+
         context.update({
             'safe': ['executa'],
             'headers': headers,
