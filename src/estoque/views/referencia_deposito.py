@@ -78,8 +78,10 @@ class ReferenciaDeposito(View):
         group_rowspan(data, group)
 
         context.update({
-            'headers': ['Depósito', 'Referência', 'Estoque', 'Falta', 'Soma'],
-            'fields': ['dep', 'ref', 'estoque', 'falta', 'soma'],
+            'headers': ['Depósito', 'Referência', 'Estoque positivo',
+                        'Estoque negativo', 'Soma'],
+            'fields': ['dep', 'ref', 'estoque',
+                       'falta', 'soma'],
             'group': group,
             'data': data,
             'style': {
