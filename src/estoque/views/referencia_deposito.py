@@ -5,7 +5,6 @@ from django.views import View
 
 from fo2.template import group_rowspan
 
-from geral.functions import has_permission
 from utils.views import totalize_grouped_data
 
 import produto.queries
@@ -23,8 +22,6 @@ class ReferenciaDeposito(View):
         context = {
             'deposito': deposito,
             'modelo': modelo,
-            'permission': has_permission(
-                request, 'base.can_adjust_stock'),
         }
         try:
             imodelo = int(modelo)
@@ -55,12 +52,11 @@ class ReferenciaDeposito(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        if has_permission(request, 'base.can_adjust_stock'):
-            for row in data:
-                row['ref|TARGET'] = '_blank'
-                row['ref|LINK'] = reverse(
-                    'estoque:mostra_estoque__get', args=[
-                        row['dep'], row['ref']])
+        for row in data:
+            row['ref|TARGET'] = '_blank'
+            row['ref|LINK'] = reverse(
+                'estoque:mostra_estoque__get', args=[
+                    row['dep'], row['ref']])
 
         group = ['dep']
         tot_conf = {
