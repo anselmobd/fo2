@@ -112,7 +112,7 @@ def estoque_na_data(
                 ) QTD
               FROM ESTQ_300_ESTQ_310 t
               WHERE t.CODIGO_DEPOSITO = filtro.dep
-                AND t.DATA_MOVIMENTO > filtro.dt
+                AND t.DATA_INSERCAO >= filtro.dt
                 AND (t.NUMERO_DOCUMENTO < 702000000
                     OR t.NUMERO_DOCUMENTO > 702999999
                     )
@@ -133,7 +133,8 @@ def estoque_na_data(
                 ) QTD
               FROM ESTQ_300_ESTQ_310 t
               WHERE t.CODIGO_DEPOSITO = filtro.dep
-                AND t.NUMERO_DOCUMENTO > filtro.dtinv
+                AND t.NUMERO_DOCUMENTO >= filtro.dtinv
+                AND t.NUMERO_DOCUMENTO >= 702000000
                 AND t.NUMERO_DOCUMENTO <= 702999999
                 AND t.NIVEL_ESTRUTURA = 1
                 AND t.GRUPO_ESTRUTURA = filtro.ref
