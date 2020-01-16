@@ -86,17 +86,18 @@ class ItemNoTempo(View):
                     row['tipo'] = 'Baixa da OC por pacote'
                 elif row['proc'] in ('pcpc_f230'):
                     row['tipo'] = 'Baixa da OP por estagio'
-
+            if row['cnpj_9'] == 0:
+                row['cliente'] = '.'
         context.update({
-            'headers': ('Data/hora', 'Usuáro', 'Tipo', 'Documento',
+            'headers': ('Data/hora', 'Usuáro', 'Tipo', 'Cliente', 'Documento',
                         'Entrada', 'Saída', 'Estoque'),
-            'fields': ('data', 'usuario', 'tipo', 'doc',
+            'fields': ('data', 'usuario', 'tipo', 'cliente', 'doc',
                        'qtd_e', 'qtd_s', 'estoque'),
             'style': {
-                4: 'text-align: right;',
                 5: 'text-align: right;',
                 6: 'text-align: right;',
                 7: 'text-align: right;',
+                8: 'text-align: right;',
                 },
             'dados': dados,
             })
