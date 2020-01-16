@@ -8,6 +8,7 @@ from .get_transfo2 import *
 from .get_transfo2_deposito_ref import *
 from .grade_estoque import *
 from .insert_transacao_ajuste import *
+from .item_no_tempo import *
 from .posicao_estoque import *
 from .referencia_deposito import *
 from .refs_com_movimento import *

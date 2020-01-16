@@ -279,3 +279,44 @@ class EstoqueNaDataForm(forms.Form):
 
     def clean_tam(self):
         return self.upper_clean('tam')
+
+
+class ItemNoTempoForm(forms.Form):
+    ref = forms.CharField(
+        label='Referência',
+        required=True, min_length=5, max_length=5,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'autofocus': 'autofocus'}))
+
+    cor = forms.CharField(
+        label='Cor', required=True, max_length=6,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    tam = forms.CharField(
+        label='Tamanho', required=True, min_length=1, max_length=3,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    CHOICES = [
+        ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
+        ('102', '102-PA VAREJO PRIMEIRA QUALIDADE'),
+        ('231', '231-MAT PRIMA ESTOQUE'),
+    ]
+    deposito = forms.ChoiceField(
+        label='Depósito', required=True,
+        choices=CHOICES, initial='')
+
+    def upper_clean(self, field_name):
+        field = self.cleaned_data[field_name].upper()
+        data = self.data.copy()
+        data[field_name] = field
+        self.data = data
+        return field
+
+    def clean_ref(self):
+        return self.upper_clean('ref')
+
+    def clean_cor(self):
+        return self.upper_clean('cor')
+
+    def clean_tam(self):
+        return self.upper_clean('tam')
