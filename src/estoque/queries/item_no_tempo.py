@@ -29,8 +29,12 @@ def item_no_tempo(
         , CASE WHEN t.ENTRADA_SAIDA = 'S' THEN
             -t.QUANTIDADE
           ELSE t.QUANTIDADE
-          END QTD
+          END QTD_SINAL
+        , t.ENTRADA_SAIDA ES
+        , t.QUANTIDADE QTD
         , t.NUMERO_DOCUMENTO DOC
+        , t.PROCESSO_SYSTEXTIL PROC
+        , t.USUARIO_SYSTEXTIL USUARIO
         FROM ESTQ_300_ESTQ_310 t
         WHERE t.NIVEL_ESTRUTURA = 1
           {filtro_deposito} -- AND t.CODIGO_DEPOSITO = 101
