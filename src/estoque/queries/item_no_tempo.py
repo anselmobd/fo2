@@ -35,7 +35,14 @@ def item_no_tempo(
         , t.NUMERO_DOCUMENTO DOC
         , t.PROCESSO_SYSTEXTIL PROC
         , t.USUARIO_SYSTEXTIL USUARIO
+        , t.CNPJ_9
+        , t.CNPJ_4
+        , t.CNPJ_2
+        , c.NOME_CLIENTE CLIENTE
         FROM ESTQ_300_ESTQ_310 t
+        JOIN PEDI_010 c -- cliente
+          ON c.CGC_9 = t.CNPJ_9
+         AND c.CGC_4 = t.CNPJ_4
         WHERE t.NIVEL_ESTRUTURA = 1
           {filtro_deposito} -- AND t.CODIGO_DEPOSITO = 101
           {filtro_ref} -- AND t.GRUPO_ESTRUTURA = '02156'
