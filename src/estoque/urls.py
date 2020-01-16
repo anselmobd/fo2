@@ -41,4 +41,7 @@ urlpatterns = [
     url(r'^confronta_estoque/$', views.ConfrontaEstoque.as_view(),
         name='confronta_estoque'),
 
+    url(r'^item_no_tempo/$', views.ItemNoTempo.as_view(),
+        name='item_no_tempo'),
+
 ]

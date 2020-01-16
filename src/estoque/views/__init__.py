@@ -3,6 +3,7 @@ from .estoque_na_data import *
 from .executa_ajuste import *
 from .edita_estoque import *
 from .index import *
+from .item_no_tempo import *
 from .mostra_estoque import *
 from .posicao_estoque import *
 from .referencia_deposito import *
