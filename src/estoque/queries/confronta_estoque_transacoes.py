@@ -90,9 +90,9 @@ def confronta_estoque_transacoes(
                        AND td.SUBGRUPO_ESTRUTURA = filtro.tam
                        AND td.ITEM_ESTRUTURA = filtro.cor
                     )
-                AND t.SEQUENCIA_INSERCAO =
+                AND t.SEQUENCIA_FICHA =
                     ( SELECT
-                        max(td.SEQUENCIA_INSERCAO)
+                        max(td.SEQUENCIA_FICHA)
                       FROM ESTQ_310 td
                       WHERE td.codigo_deposito = filtro.dep
                         AND td.NIVEL_ESTRUTURA = filtro.nivel
@@ -108,6 +108,46 @@ def confronta_estoque_transacoes(
                                AND td.GRUPO_ESTRUTURA = filtro.ref
                                AND td.SUBGRUPO_ESTRUTURA = filtro.tam
                                AND td.ITEM_ESTRUTURA = filtro.cor
+                            )
+                    )
+                AND t.SEQUENCIA_INSERCAO =
+                    ( SELECT
+                        max(t.SEQUENCIA_INSERCAO)
+                      FROM ESTQ_310 t
+                      WHERE t.CODIGO_DEPOSITO = filtro.dep
+                        AND t.NIVEL_ESTRUTURA = filtro.nivel
+                        AND t.GRUPO_ESTRUTURA = filtro.ref
+                        AND t.SUBGRUPO_ESTRUTURA = filtro.tam
+                        AND t.ITEM_ESTRUTURA = filtro.cor
+                        AND t.DATA_MOVIMENTO =
+                            ( SELECT
+                                max(td.DATA_MOVIMENTO)
+                              FROM ESTQ_310 td
+                              WHERE td.codigo_deposito = filtro.dep
+                               AND td.NIVEL_ESTRUTURA = filtro.nivel
+                               AND td.GRUPO_ESTRUTURA = filtro.ref
+                               AND td.SUBGRUPO_ESTRUTURA = filtro.tam
+                               AND td.ITEM_ESTRUTURA = filtro.cor
+                            )
+                        AND t.SEQUENCIA_FICHA =
+                            ( SELECT
+                                max(td.SEQUENCIA_FICHA)
+                              FROM ESTQ_310 td
+                              WHERE td.codigo_deposito = filtro.dep
+                                AND td.NIVEL_ESTRUTURA = filtro.nivel
+                                AND td.GRUPO_ESTRUTURA = filtro.ref
+                                AND td.SUBGRUPO_ESTRUTURA = filtro.tam
+                                AND td.ITEM_ESTRUTURA = filtro.cor
+                                AND td.DATA_MOVIMENTO =
+                                    ( SELECT
+                                        max(td.DATA_MOVIMENTO)
+                                      FROM ESTQ_310 td
+                                      WHERE td.codigo_deposito = filtro.dep
+                                       AND td.NIVEL_ESTRUTURA = filtro.nivel
+                                       AND td.GRUPO_ESTRUTURA = filtro.ref
+                                       AND td.SUBGRUPO_ESTRUTURA = filtro.tam
+                                       AND td.ITEM_ESTRUTURA = filtro.cor
+                                    )
                             )
                     )
             )
