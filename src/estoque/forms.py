@@ -282,19 +282,29 @@ class EstoqueNaDataForm(forms.Form):
 
 
 class ItemNoTempoForm(forms.Form):
+
+    string_upper_attrs = {
+        'type': 'string',
+        'style': 'text-transform:uppercase;',
+        }
+
+    autofocus_attrs = {
+        'autofocus': 'autofocus;',
+        }
+
     ref = forms.CharField(
         label='Referência',
         required=True, min_length=5, max_length=5,
-        widget=forms.TextInput(
-            attrs={'type': 'string', 'autofocus': 'autofocus'}))
+        widget=forms.TextInput(attrs={
+            **autofocus_attrs, **string_upper_attrs}))
 
     cor = forms.CharField(
         label='Cor', required=True, max_length=6,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput(attrs=string_upper_attrs))
 
     tam = forms.CharField(
         label='Tamanho', required=True, min_length=1, max_length=3,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput(attrs=string_upper_attrs))
 
     CHOICES = [
         ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
@@ -305,18 +315,11 @@ class ItemNoTempoForm(forms.Form):
         label='Depósito', required=True,
         choices=CHOICES, initial='')
 
-    def upper_clean(self, field_name):
-        field = self.cleaned_data[field_name].upper()
-        data = self.data.copy()
-        data[field_name] = field
-        self.data = data
-        return field
-
     def clean_ref(self):
-        return self.upper_clean('ref')
+        return self.cleaned_data['ref'].upper()
 
     def clean_cor(self):
-        return self.upper_clean('cor')
+        return self.cleaned_data['cor'].upper().zfill(6)
 
     def clean_tam(self):
-        return self.upper_clean('tam')
+        return self.cleaned_data['tam'].upper()
