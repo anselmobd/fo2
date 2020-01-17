@@ -113,6 +113,10 @@ class ItemNoTempo(View):
             if row['cnpj_9'] == 0:
                 row['cliente'] = '.'
 
+            if row['cliente'] != '.':
+                if row['fantasia'] is not None and row['fantasia'] != '':
+                    row['cliente'] = row['fantasia']
+
         self.context.update({
             'headers': ('Data/hora', 'Usuáro', 'Tipo de movimentação',
                         'Cliente', 'Documento', 'Pedido',
