@@ -7,7 +7,7 @@ from utils.functions import make_key_cache, fo2logger
 
 def quant_estagio(
         cursor, estagio=None, ref=None, tipo=None, cor=None, tam=None,
-        only=None, less=None):
+        only=None, less=None, group=None):
 
     def monta_filtro(in_, estagios):
         filtro = ''
@@ -48,6 +48,11 @@ def quant_estagio(
     if cor is not None and cor != '':
         filtro_cor = "AND l.PROCONF_ITEM = '{cor}'".format(cor=cor)
 
+    filtro_group = ''
+    if group is not None:
+        if group == 'o':
+            filtro_group = ", o.ORDEM_PRODUCAO"
+
     filtro_tipo = ''
     if tipo is not None:
         if tipo == 'a':
@@ -66,17 +71,18 @@ def quant_estagio(
 
     sql = f"""
         SELECT
-          l.PROCONF_NIVEL99 NIVEL
-        , l.PROCONF_GRUPO REF
-        , l.PROCONF_SUBGRUPO TAM
-        , l.PROCONF_ITEM COR
-        , sum(
+          sum(
             CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE > 0
             THEN 1
             ELSE 0
             END
           ) LOTES
         , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
+        {filtro_group} -- filtro_group
+        , l.PROCONF_NIVEL99 NIVEL
+        , l.PROCONF_GRUPO REF
+        , l.PROCONF_SUBGRUPO TAM
+        , l.PROCONF_ITEM COR
         FROM PCPC_040 l
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
@@ -94,6 +100,7 @@ def quant_estagio(
           {filtro_cor} -- filtro_cor
         GROUP BY
           l.PROCONF_NIVEL99
+        {filtro_group} -- filtro_group
         , l.PROCONF_GRUPO
         , t.ORDEM_TAMANHO
         , l.PROCONF_SUBGRUPO
@@ -102,6 +109,7 @@ def quant_estagio(
           sum(l.QTDE_EM_PRODUCAO_PACOTE) > 0
         ORDER BY
           l.PROCONF_NIVEL99
+        {filtro_group} -- filtro_group
         , l.PROCONF_GRUPO
         , t.ORDEM_TAMANHO
         , l.PROCONF_ITEM
