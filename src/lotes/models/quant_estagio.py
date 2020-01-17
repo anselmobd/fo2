@@ -52,6 +52,10 @@ def quant_estagio(
     if group is not None:
         if group == 'o':
             filtro_group = ", o.ORDEM_PRODUCAO"
+        elif group == 'op':
+            filtro_group = """--
+                , o.ORDEM_PRODUCAO
+                , o.PEDIDO_VENDA"""
 
     filtro_tipo = ''
     if tipo is not None:
