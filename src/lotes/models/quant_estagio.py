@@ -5,14 +5,34 @@ from fo2.models import rows_to_dict_list
 from utils.functions import make_key_cache, fo2logger
 
 
-def quant_estagio(cursor, estagio, ref, tipo, cor=None, tam=None):
+def quant_estagio(
+        cursor, estagio=None, ref=None, tipo=None, cor=None, tam=None,
+        only=None, less=None):
+
+    def monta_filtro(in_, estagios):
+        filtro = ''
+        if estagios is not None:
+            lista_estagios = ''
+            sep = ''
+            for estagio in estagios:
+                    lista_estagios += f'{sep}{str(estagio)}'
+                    sep = ', '
+            filtro = (
+                f'AND l.CODIGO_ESTAGIO {in_} ({lista_estagios})')
+        return filtro
+
+    filtra_estagios = ' '.join([
+        monta_filtro('IN', only),
+        monta_filtro('NOT IN', less),
+    ])
+
     filtra_estagio = ''
-    if estagio != '':
+    if estagio is not None and estagio != '':
         filtra_estagio = """--
             AND l.CODIGO_ESTAGIO = {} """.format(estagio)
 
     filtra_ref = ''
-    if ref != '':
+    if ref is not None and ref != '':
         if '%' in ref:
             filtra_ref = """--
                 AND l.PROCONF_GRUPO LIKE '{}' """.format(ref)
@@ -29,19 +49,20 @@ def quant_estagio(cursor, estagio, ref, tipo, cor=None, tam=None):
         filtro_cor = "AND l.PROCONF_ITEM = '{cor}'".format(cor=cor)
 
     filtro_tipo = ''
-    if tipo == 'a':
-        filtro_tipo = "AND l.PROCONF_GRUPO < 'A0000'"
-    elif tipo == 'g':
-        filtro_tipo = "AND l.PROCONF_GRUPO like 'A%'"
-    elif tipo == 'b':
-        filtro_tipo = "AND l.PROCONF_GRUPO like 'B%'"
-    elif tipo == 'p':
-        filtro_tipo = \
-            "AND (l.PROCONF_GRUPO like 'A%' OR l.PROCONF_GRUPO like 'B%')"
-    elif tipo == 'v':
-        filtro_tipo = "AND l.PROCONF_GRUPO < 'C0000'"
-    elif tipo == 'm':
-        filtro_tipo = "AND l.PROCONF_GRUPO >= 'C0000'"
+    if tipo is not None:
+        if tipo == 'a':
+            filtro_tipo = "AND l.PROCONF_GRUPO < 'A0000'"
+        elif tipo == 'g':
+            filtro_tipo = "AND l.PROCONF_GRUPO like 'A%'"
+        elif tipo == 'b':
+            filtro_tipo = "AND l.PROCONF_GRUPO like 'B%'"
+        elif tipo == 'p':
+            filtro_tipo = \
+                "AND (l.PROCONF_GRUPO like 'A%' OR l.PROCONF_GRUPO like 'B%')"
+        elif tipo == 'v':
+            filtro_tipo = "AND l.PROCONF_GRUPO < 'C0000'"
+        elif tipo == 'm':
+            filtro_tipo = "AND l.PROCONF_GRUPO >= 'C0000'"
 
     sql = f"""
         SELECT
@@ -66,6 +87,7 @@ def quant_estagio(cursor, estagio, ref, tipo, cor=None, tam=None):
         --  AND l.PERIODO_PRODUCAO = 1921
         --  AND l.ORDEM_CONFECCAO = 01866
           {filtra_estagio} -- filtra_estagio
+          {filtra_estagios} -- filtra_estagios
           {filtra_ref} -- filtra_ref
           {filtro_tipo} -- filtro_tipo
           {filtro_tam} -- filtro_tam
