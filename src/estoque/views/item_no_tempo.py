@@ -3,6 +3,7 @@ from pprint import pprint
 
 from django.db import connections
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from utils.views import totalize_data
@@ -65,12 +66,16 @@ class ItemNoTempo(View):
                 if row['proc'] in (
                         'fatu_f146',
                         'fatu_f194',
-                        'obrf_f015',
                         'obrf_f025',
                         'obrf_f055',
                         'obrf_f060',
                         ):
-                    row['tipo'] = 'Faturamento'
+                    row['tipo'] = 'Nota fiscal de saída'
+                    row['doc|TARGET'] = '_blank'
+                    row['doc|LINK'] = reverse(
+                        'contabil:nota_fiscal__get', args=[row['doc']])
+                elif row['proc'] in ('obrf_f015'):
+                    row['tipo'] = 'Nota fiscal de entrada'
                 elif row['proc'] in ('estq_f015'):
                     row['tipo'] = 'Movimentação de estoques'
                 elif row['proc'] in ('estq_f950'):
