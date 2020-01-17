@@ -72,9 +72,10 @@ class ItemNoTempo(View):
                         'obrf_f060',
                         ):
                     row['tipo'] = 'Nota fiscal de saída'
-                    tipo_doc = 'nf'
+                    tipo_doc = 'nfs'
                 elif row['proc'] in ('obrf_f015'):
                     row['tipo'] = 'Nota fiscal de entrada'
+                    tipo_doc = 'nfe'
                 elif row['proc'] in ('estq_f015'):
                     row['tipo'] = 'Movimentação de estoques'
                 elif row['proc'] in ('estq_f950'):
@@ -96,7 +97,7 @@ class ItemNoTempo(View):
             else:
                 row['doc|TARGET'] = '_blank'
 
-            if tipo_doc == 'nf':
+            if tipo_doc == 'nfs':
                 row['doc|LINK'] = reverse(
                     'contabil:nota_fiscal__get', args=[row['doc']])
             elif tipo_doc == 'op':
