@@ -8,6 +8,7 @@ from django.views import View
 
 from utils.views import totalize_data
 
+import lotes.models
 import lotes.queries.pedido
 
 from estoque import forms
@@ -143,40 +144,83 @@ class ItemNoTempo(View):
             **{f: self.context[f] for f in ['ref', 'cor', 'tam']}
             )
 
-        p_dados.insert(0, p_dados[0].copy())
-        for i, row in enumerate(p_dados):
-            if i == 0:
-                row['PEDIDO'] = ''
-                row['DATA'] = ''
-                row['CLIENTE'] = ''
-                row['FAT'] = ''
-                row['QTD_AFAT'] = ''
-                estoque_no_tempo = estoque
-            else:
-                row['PEDIDO|TARGET'] = '_blank'
-                row['PEDIDO|LINK'] = reverse(
-                    'producao:pedido__get', args=[row['PEDIDO']])
-                row['DATA'] = row['DATA'].date()
-                row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
-                estoque_no_tempo -= row['QTD_AFAT']
+        if len(p_dados) > 0:
+            p_dados.insert(0, p_dados[0].copy())
+            for i, row in enumerate(p_dados):
+                if i == 0:
+                    row['PEDIDO'] = ''
+                    row['DATA'] = ''
+                    row['CLIENTE'] = ''
+                    row['FAT'] = ''
+                    row['QTD_AFAT'] = ''
+                    estoque_no_tempo = estoque
+                else:
+                    row['PEDIDO|TARGET'] = '_blank'
+                    row['PEDIDO|LINK'] = reverse(
+                        'producao:pedido__get', args=[row['PEDIDO']])
+                    row['DATA'] = row['DATA'].date()
+                    row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
+                    estoque_no_tempo -= row['QTD_AFAT']
 
-            row['ESTOQUE'] = estoque_no_tempo
+                row['ESTOQUE'] = estoque_no_tempo
 
-        self.context.update({
-            'p_headers': [
-                'Nº do pedido', 'Data de embarque', 'Cliente',
-                'Faturamento', 'Quant. pedida', 'Estoque'],
-            'p_fields': [
-                'PEDIDO', 'DATA', 'CLIENTE',
-                'FAT', 'QTD_AFAT', 'ESTOQUE'],
-            'p_style': {
-                5: 'text-align: right;',
-                6: 'text-align: right;',
-                },
-            'p_dados': p_dados,
-            })
+            self.context.update({
+                'p_headers': [
+                    'Nº do pedido', 'Data de embarque', 'Cliente',
+                    'Faturamento', 'Quant. pedida', 'Estoque'],
+                'p_fields': [
+                    'PEDIDO', 'DATA', 'CLIENTE',
+                    'FAT', 'QTD_AFAT', 'ESTOQUE'],
+                'p_style': {
+                    5: 'text-align: right;',
+                    6: 'text-align: right;',
+                    },
+                'p_dados': p_dados,
+                })
 
-        return
+        oc_dados = lotes.models.quant_estagio(
+            cursor, only=[57, 63], group='o',
+            **{f: self.context[f] for f in ['ref', 'cor', 'tam']})
+
+        if len(oc_dados) > 0:
+
+            for row in oc_dados:
+                row['ORDEM_PRODUCAO|TARGET'] = '_blank'
+                row['ORDEM_PRODUCAO|LINK'] = reverse(
+                    'producao:op__get', args=[row['ORDEM_PRODUCAO']])
+
+            self.context.update({
+                'oc_headers': [
+                    'OP', 'Quantidade'],
+                'oc_fields': [
+                    'ORDEM_PRODUCAO', 'QUANT'],
+                'oc_style': {
+                    2: 'text-align: right;',
+                    },
+                'oc_dados': oc_dados,
+                })
+
+        op_dados = lotes.models.quant_estagio(
+            cursor, less=[57, 63], group='o',
+            **{f: self.context[f] for f in ['ref', 'cor', 'tam']})
+
+        if len(op_dados) > 0:
+
+            for row in op_dados:
+                row['ORDEM_PRODUCAO|TARGET'] = '_blank'
+                row['ORDEM_PRODUCAO|LINK'] = reverse(
+                    'producao:op__get', args=[row['ORDEM_PRODUCAO']])
+
+            self.context.update({
+                'op_headers': [
+                    'OP', 'Quantidade'],
+                'op_fields': [
+                    'ORDEM_PRODUCAO', 'QUANT'],
+                'op_style': {
+                    2: 'text-align: right;',
+                    },
+                'op_dados': op_dados,
+                })
 
     def cleanned_fields_to_context(self):
         for field in self.context['form'].fields:
