@@ -13,8 +13,12 @@ def quant_estagio(cursor, estagio, ref, tipo):
 
     filtra_ref = ''
     if ref != '':
-        filtra_ref = """--
-            AND l.PROCONF_GRUPO LIKE '{}' """.format(ref)
+        if '%' in ref:
+            filtra_ref = """--
+                AND l.PROCONF_GRUPO LIKE '{}' """.format(ref)
+        else:
+            filtra_ref = """--
+                AND l.PROCONF_GRUPO = '{}' """.format(ref)
 
     filtro_tipo = ''
     if tipo == 'a':
