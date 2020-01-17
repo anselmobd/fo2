@@ -60,4 +60,17 @@ urlpatterns = [
 
     url(r'^busca_modelo/$', views.BuscaModelo.as_view(),
         name='busca_modelo'),
+
+    url(r'^gtinrange/$', views.GtinRangeListView.as_view(),
+        name='gtinrange_changelist'),
+
+    url(r'^gtinrange/add/$', views.GtinRangeCreateView.as_view(),
+        name='gtinrange_add'),
+
+    url(r'^gtinrange/(?P<pk>[^/]+)/$', views.GtinRangeUpdateView.as_view(),
+        name='gtinrange_change'),
+
+    url(r'^gtinrange/del/(?P<pk>[^/]+)/$', views.GtinRangeDeleteView.as_view(),
+        name='gtinrange_delete'),
+
 ]

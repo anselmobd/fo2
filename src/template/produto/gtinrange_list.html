@@ -1,0 +1,16 @@
+{% extends 'produto/index.html' %}
+
+{% block title.content %}Range de GTIN - {{ block.super }}{% endblock title.content %}
+{% block header.content %}Range de GTIN - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block content %}
+  <h4>Listagem</h4>
+  <ul>
+  {% for gtinrange in gtinranges %}
+    <li>{{ gtinrange }} <a href="{% url 'produto:gtinrange_change' gtinrange.id %}">Edita</a></li>
+  {% empty %}
+    <li>Sem range de GTIN.</li>
+  {% endfor %}
+  </ul>
+  <a href="{% url 'produto:gtinrange_add' %}">Adiciona um range de GTIN</a>
+{% endblock %}

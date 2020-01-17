@@ -1,0 +1,16 @@
+{% extends 'produto/index.html' %}
+
+{% block title.content %}Range de GTIN - {{ block.super }}{% endblock title.content %}
+{% block header.content %}Range de GTIN - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block content %}
+  <a href="{% url 'produto:gtinrange_changelist' %}">Ir para listagem</a><br />
+  <form method="post" id="gtinrangeForm" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salva</button>
+  </form>
+  {% if gtinrange %}
+    <a href="{% url 'produto:gtinrange_delete' gtinrange.id %}">Exclui este range de GTIN</a>
+  {% endif %}
+{% endblock %}
