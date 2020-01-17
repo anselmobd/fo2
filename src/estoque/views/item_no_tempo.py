@@ -60,6 +60,7 @@ class ItemNoTempo(View):
                 row['qtd_s'] = f"({row['qtd']})"
 
             row['tipo'] = row['proc']
+            tipo_doc = ''
             if (row['doc'] // 1000000) == 702:
                 row['tipo'] = 'Ajuste por inventário'
             else:
@@ -71,9 +72,7 @@ class ItemNoTempo(View):
                         'obrf_f060',
                         ):
                     row['tipo'] = 'Nota fiscal de saída'
-                    row['doc|TARGET'] = '_blank'
-                    row['doc|LINK'] = reverse(
-                        'contabil:nota_fiscal__get', args=[row['doc']])
+                    tipo_doc = 'nf'
                 elif row['proc'] in ('obrf_f015'):
                     row['tipo'] = 'Nota fiscal de entrada'
                 elif row['proc'] in ('estq_f015'):
@@ -86,10 +85,23 @@ class ItemNoTempo(View):
                         'pcpc_f072',
                         ):
                     row['tipo'] = 'Baixa da OC por pacote'
+                    tipo_doc = 'op'
                 elif row['proc'] in ('pcpc_f230'):
                     row['tipo'] = 'Baixa da OP por estagio'
+                    tipo_doc = 'op'
+
+            if tipo_doc != '':
+                row['doc|TARGET'] = '_blank'
+            if tipo_doc == 'nf':
+                row['doc|LINK'] = reverse(
+                    'contabil:nota_fiscal__get', args=[row['doc']])
+            elif tipo_doc == 'op':
+                row['doc|LINK'] = reverse(
+                    'producao:op__get', args=[row['doc']])
+
             if row['cnpj_9'] == 0:
                 row['cliente'] = '.'
+
         self.context.update({
             'headers': ('Data/hora', 'Usuáro', 'Tipo', 'Cliente', 'Documento',
                         'Entrada', 'Saída', 'Estoque'),
