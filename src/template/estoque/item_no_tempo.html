@@ -30,18 +30,32 @@
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% endif %}
-<h3>Transações e estoque</h3>
 {% if dados %}
+  <h3>Transações e estoque</h3>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
   </table>
 {% endif %}
-<h3>Pedidos a faturar e estoque</h3>
 {% if p_dados %}
+  <h3>Pedidos a faturar e estoque</h3>
   <table>
     {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
     {% include "layout/tbody_generic.html" with fields=p_fields data=p_dados style=p_style only %}
+  </table>
+{% endif %}
+{% if oc_dados %}
+  <h3>OPs estocadas no CD</h3>
+  <table>
+    {% include "layout/thead_generic.html" with data=oc_headers style=oc_style only %}
+    {% include "layout/tbody_generic.html" with fields=oc_fields data=oc_dados style=oc_style only %}
+  </table>
+{% endif %}
+{% if op_dados %}
+  <h3>OPs em produção</h3>
+  <table>
+    {% include "layout/thead_generic.html" with data=op_headers style=op_style only %}
+    {% include "layout/tbody_generic.html" with fields=op_fields data=op_dados style=op_style only %}
   </table>
 {% endif %}
 {% endblock %}
