@@ -35,9 +35,18 @@ def item_no_tempo(
         , t.NUMERO_DOCUMENTO DOC
         , t.PROCESSO_SYSTEXTIL PROC
         , t.USUARIO_SYSTEXTIL USUARIO
-        , CASE WHEN t.NUMERO_NF = 0
+        , CASE WHEN t.CNPJ_9 = 0
             THEN ped.PEDIDO_VENDA
-            ELSE f.PEDIDO_VENDA
+            ELSE
+              CASE WHEN f.PEDIDO_VENDA IS NULL
+                THEN
+                  ( SELECT
+                      min(inf.PEDIDO_VENDA)
+                    FROM fatu_060 inf -- item de nf de saída
+                    WHERE inf.CH_IT_NF_NUM_NFIS = f.NUM_NOTA_FISCAL
+                  )
+                ELSE f.PEDIDO_VENDA
+              END
           END PED
         , CASE WHEN cp.CGC_9 IS NULL
             THEN t.CNPJ_9
@@ -61,8 +70,8 @@ def item_no_tempo(
           END FANTASIA
         FROM ESTQ_300_ESTQ_310 t
         LEFT JOIN FATU_050 f -- fatura
-          ON t.NUMERO_NF <> 0
-         AND f.NUM_NOTA_FISCAL = t.NUMERO_NF
+          ON t.CNPJ_9 <> 0
+         AND f.NUM_NOTA_FISCAL = t.NUMERO_DOCUMENTO
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = t.CNPJ_9
          AND c.CGC_4 = t.CNPJ_4
