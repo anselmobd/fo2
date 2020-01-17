@@ -23,10 +23,11 @@ class ItemNoTempo(View):
         self.context = {'titulo': 'Item no tempo'}
 
     def mount_context(self):
-        dados = queries.item_no_tempo(
-            self.cursor,
-            *(self.context[f] for f in ['ref', 'tam', 'cor', 'deposito']))
+        cursor = connections['so'].cursor()
 
+        dados = queries.item_no_tempo(
+            cursor, *(self.context[f] for f in [
+                'ref', 'tam', 'cor', 'deposito']))
         if len(dados) == 0:
             self.context.update({'erro': 'Nada selecionado'})
             return
@@ -39,8 +40,8 @@ class ItemNoTempo(View):
             dados, key=lambda i: i['data'], reverse=True)
 
         estoque_list = queries.get_estoque_dep_ref_cor_tam(
-            self.cursor,
-            *(self.context[f] for f in ['deposito', 'ref', 'cor', 'tam']))
+            cursor, *(self.context[f] for f in [
+                'deposito', 'ref', 'cor', 'tam']))
         if len(estoque_list) > 0:
             estoque = estoque_list[0]['estoque']
         else:
@@ -113,6 +114,5 @@ class ItemNoTempo(View):
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
             self.context['form'] = self.Form_class(self.context)
-            self.cursor = connections['so'].cursor()
             self.mount_context()
         return render(request, self.template_name, self.context)
