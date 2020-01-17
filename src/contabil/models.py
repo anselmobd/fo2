@@ -2,6 +2,7 @@ from django.db import models
 
 
 class EstoqueManual(models.Model):
+    '''Utilizado para gerar SPED de estoque de produtos confeccionados'''
     data = models.DateField(
         db_index=True)
     referencia = models.CharField(
