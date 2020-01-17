@@ -7,7 +7,9 @@ from fo2.models import rows_to_dict_list
 from utils.functions import make_key_cache, fo2logger, cache_ttl
 
 
-def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
+def pedido_faturavel_modelo(
+        cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
+        cached=True):
     key_cache = make_key_cache()
 
     cached_result = cache.get(key_cache)
@@ -24,6 +26,18 @@ def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
                                      '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
                                      ))) = '{}' '''.format(modelo)
 
+    filtro_ref = ''
+    if ref is not None and ref != '':
+        filtro_ref = "AND i.CD_IT_PE_GRUPO = '{ref}'".format(ref=ref)
+
+    filtro_tam = ''
+    if tam is not None and tam != '':
+        filtro_tam = "AND i.CD_IT_PE_SUBGRUPO = '{tam}'".format(tam=tam)
+
+    filtro_cor = ''
+    if cor is not None and cor != '':
+        filtro_cor = "AND i.CD_IT_PE_ITEM = '{cor}'".format(cor=cor)
+
     filtra_periodo = ''
     if periodo is not None:
         periodo_list = periodo.split(':')
@@ -36,7 +50,7 @@ def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
                 AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
             '''.format(periodo_list[1])
 
-    sql = """
+    sql = f"""
         SELECT
           pref.PEDIDO
         , pref.NIVEL
@@ -92,6 +106,9 @@ def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
                   AND fok.NUM_NOTA_FISCAL IS NULL
                   -- AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + 148
                   {filtra_periodo} -- filtra_periodo
+                  {filtro_ref} -- filtro_ref
+                  {filtro_tam} -- filtro_tam
+                  {filtro_cor} -- filtro_cor
                 GROUP BY
                   ped.PEDIDO_VENDA
               ) ps -- pedidos pré-filtrados
@@ -149,10 +166,8 @@ def pedido_faturavel_modelo(cursor, modelo=None, periodo=None, cached=True):
         , pref.PEDIDO
         , pref.NIVEL
         , pref.REF
-    """.format(
-        filtro_modelo=filtro_modelo,
-        filtra_periodo=filtra_periodo,
-    )
+    """
+
     cursor.execute(sql)
 
     cached_result = rows_to_dict_list(cursor)
