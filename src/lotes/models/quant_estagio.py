@@ -5,7 +5,7 @@ from fo2.models import rows_to_dict_list
 from utils.functions import make_key_cache, fo2logger
 
 
-def quant_estagio(cursor, estagio, ref, tipo):
+def quant_estagio(cursor, estagio, ref, tipo, cor=None, tam=None):
     filtra_estagio = ''
     if estagio != '':
         filtra_estagio = """--
@@ -19,6 +19,14 @@ def quant_estagio(cursor, estagio, ref, tipo):
         else:
             filtra_ref = """--
                 AND l.PROCONF_GRUPO = '{}' """.format(ref)
+
+    filtro_tam = ''
+    if tam is not None and tam != '':
+        filtro_tam = "AND l.PROCONF_SUBGRUPO = '{tam}'".format(tam=tam)
+
+    filtro_cor = ''
+    if cor is not None and cor != '':
+        filtro_cor = "AND l.PROCONF_ITEM = '{cor}'".format(cor=cor)
 
     filtro_tipo = ''
     if tipo == 'a':
@@ -60,6 +68,8 @@ def quant_estagio(cursor, estagio, ref, tipo):
           {filtra_estagio} -- filtra_estagio
           {filtra_ref} -- filtra_ref
           {filtro_tipo} -- filtro_tipo
+          {filtro_tam} -- filtro_tam
+          {filtro_cor} -- filtro_cor
         GROUP BY
           l.PROCONF_NIVEL99
         , l.PROCONF_GRUPO
