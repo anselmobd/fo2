@@ -35,14 +35,34 @@ def item_no_tempo(
         , t.NUMERO_DOCUMENTO DOC
         , t.PROCESSO_SYSTEXTIL PROC
         , t.USUARIO_SYSTEXTIL USUARIO
-        , t.CNPJ_9
-        , t.CNPJ_4
-        , t.CNPJ_2
-        , c.NOME_CLIENTE CLIENTE
+        , CASE WHEN cp.CGC_9 IS NULL
+            THEN t.CNPJ_9
+            ELSE cp.CGC_9
+          END CNPJ_9
+        , CASE WHEN cp.CGC_4 IS NULL
+            THEN t.CNPJ_4
+            ELSE cp.CGC_4
+          END CNPJ_4
+        , CASE WHEN cp.CGC_2 IS NULL
+            THEN t.CNPJ_2
+            ELSE cp.CGC_2
+          END CNPJ_2
+        , CASE WHEN cp.NOME_CLIENTE IS NULL
+            THEN c.NOME_CLIENTE
+            ELSE cp.NOME_CLIENTE
+          END CLIENTE
         FROM ESTQ_300_ESTQ_310 t
-        JOIN PEDI_010 c -- cliente
+        LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = t.CNPJ_9
          AND c.CGC_4 = t.CNPJ_4
+        LEFT JOIN PCPC_020 op -- OP
+          ON t.CNPJ_9 = 0
+         AND op.ORDEM_PRODUCAO = t.NUMERO_DOCUMENTO
+        LEFT JOIN PEDI_100 ped -- pedido de venda
+          ON ped.PEDIDO_VENDA = op.PEDIDO_VENDA
+        LEFT JOIN PEDI_010 cp -- cliente
+          ON cp.CGC_9 = ped.CLI_PED_CGC_CLI9
+         AND cp.CGC_4 = ped.CLI_PED_CGC_CLI4
         WHERE t.NIVEL_ESTRUTURA = 1
           {filtro_deposito} -- AND t.CODIGO_DEPOSITO = 101
           {filtro_ref} -- AND t.GRUPO_ESTRUTURA = '02156'
