@@ -30,10 +30,18 @@
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% endif %}
+<h3>Transações e estoque</h3>
 {% if dados %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
+  </table>
+{% endif %}
+<h3>Pedidos a faturar e estoque</h3>
+{% if p_dados %}
+  <table>
+    {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
+    {% include "layout/tbody_generic.html" with fields=p_fields data=p_dados style=p_style only %}
   </table>
 {% endif %}
 {% endblock %}
