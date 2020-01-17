@@ -1,4 +1,5 @@
 import datetime
+from pprint import pprint
 
 from django.db import connections
 from django.shortcuts import render
@@ -19,22 +20,16 @@ class ItemNoTempo(View):
     def __init__(self):
         self.Form_class = forms.ItemNoTempoForm
         self.template_name = 'estoque/item_no_tempo.html'
-        self.title_name = 'Item no tempo'
+        self.context = {'titulo': 'Item no tempo'}
 
-    def mount_context(self, cursor, ref, tam, cor, deposito):
-        context = {
-            'ref': ref,
-            'cor': cor,
-            'tam': tam,
-            'deposito': deposito,
-            }
-
+    def mount_context(self):
         dados = queries.item_no_tempo(
-            cursor, ref, tam, cor, deposito)
+            self.cursor,
+            *(self.context[f] for f in ['ref', 'tam', 'cor', 'deposito']))
 
         if len(dados) == 0:
-            context.update({'erro': 'Nada selecionado'})
-            return context
+            self.context.update({'erro': 'Nada selecionado'})
+            return
 
         for row in dados:
             if (row['doc'] // 1000000) == 702:
@@ -44,7 +39,8 @@ class ItemNoTempo(View):
             dados, key=lambda i: i['data'], reverse=True)
 
         estoque_list = queries.get_estoque_dep_ref_cor_tam(
-            cursor, deposito, ref, cor, tam)
+            self.cursor,
+            *(self.context[f] for f in ['deposito', 'ref', 'cor', 'tam']))
         if len(estoque_list) > 0:
             estoque = estoque_list[0]['estoque']
         else:
@@ -88,7 +84,7 @@ class ItemNoTempo(View):
                     row['tipo'] = 'Baixa da OP por estagio'
             if row['cnpj_9'] == 0:
                 row['cliente'] = '.'
-        context.update({
+        self.context.update({
             'headers': ('Data/hora', 'Usuáro', 'Tipo', 'Cliente', 'Documento',
                         'Entrada', 'Saída', 'Estoque'),
             'fields': ('data', 'usuario', 'tipo', 'cliente', 'doc',
@@ -102,24 +98,21 @@ class ItemNoTempo(View):
             'dados': dados,
             })
 
-        return context
+        return
+
+    def cleanned_fields_to_context(self):
+        for field in self.context['form'].fields:
+            self.context[field] = self.context['form'].cleaned_data[field]
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = self.Form_class()
+        return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        if form.is_valid():
-            ref = form.cleaned_data['ref']
-            cor = form.cleaned_data['cor']
-            tam = form.cleaned_data['tam']
-            deposito = form.cleaned_data['deposito']
-            cursor = connections['so'].cursor()
-            context.update(
-                self.mount_context(cursor, ref, tam, cor, deposito))
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = self.Form_class(request.POST)
+        if self.context['form'].is_valid():
+            self.cleanned_fields_to_context()
+            self.context['form'] = self.Form_class(self.context)
+            self.cursor = connections['so'].cursor()
+            self.mount_context()
+        return render(request, self.template_name, self.context)
