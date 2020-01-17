@@ -106,9 +106,6 @@ def pedido_faturavel_modelo(
                   AND fok.NUM_NOTA_FISCAL IS NULL
                   -- AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + 148
                   {filtra_periodo} -- filtra_periodo
-                  {filtro_ref} -- filtro_ref
-                  {filtro_tam} -- filtro_tam
-                  {filtro_cor} -- filtro_cor
                 GROUP BY
                   ped.PEDIDO_VENDA
               ) ps -- pedidos pré-filtrados
@@ -125,6 +122,9 @@ def pedido_faturavel_modelo(
                 --   )
                 -- ) = '5156'  -- filtro_modelo
                 {filtro_modelo} -- filtro_modelo
+                {filtro_ref} -- filtro_ref
+                {filtro_tam} -- filtro_tam
+                {filtro_cor} -- filtro_cor
               GROUP BY
                 ps.PEDIDO
               , i.CD_IT_PE_NIVEL99
