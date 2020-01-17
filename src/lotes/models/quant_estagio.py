@@ -31,10 +31,9 @@ def quant_estagio(cursor, estagio, ref, tipo):
     elif tipo == 'm':
         filtro_tipo = "AND l.PROCONF_GRUPO >= 'C0000'"
 
-    sql = """
+    sql = f"""
         SELECT
-          l.CODIGO_ESTAGIO ESTAGIO
-        , l.PROCONF_NIVEL99 NIVEL
+          l.PROCONF_NIVEL99 NIVEL
         , l.PROCONF_GRUPO REF
         , l.PROCONF_SUBGRUPO TAM
         , l.PROCONF_ITEM COR
@@ -58,8 +57,7 @@ def quant_estagio(cursor, estagio, ref, tipo):
           {filtra_ref} -- filtra_ref
           {filtro_tipo} -- filtro_tipo
         GROUP BY
-          l.CODIGO_ESTAGIO
-        , l.PROCONF_NIVEL99
+          l.PROCONF_NIVEL99
         , l.PROCONF_GRUPO
         , t.ORDEM_TAMANHO
         , l.PROCONF_SUBGRUPO
@@ -67,16 +65,11 @@ def quant_estagio(cursor, estagio, ref, tipo):
         HAVING
           sum(l.QTDE_EM_PRODUCAO_PACOTE) > 0
         ORDER BY
-          l.CODIGO_ESTAGIO
-        , l.PROCONF_NIVEL99
+          l.PROCONF_NIVEL99
         , l.PROCONF_GRUPO
         , t.ORDEM_TAMANHO
         , l.PROCONF_ITEM
-    """.format(
-        filtra_ref=filtra_ref,
-        filtra_estagio=filtra_estagio,
-        filtro_tipo=filtro_tipo,
-    )
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
