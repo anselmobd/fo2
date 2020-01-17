@@ -179,7 +179,7 @@ class ItemNoTempo(View):
                 })
 
         oc_dados = lotes.models.quant_estagio(
-            cursor, only=[57, 63], group='o',
+            cursor, only=[57, 63], group='op',
             **{f: self.context[f] for f in ['ref', 'cor', 'tam']})
 
         if len(oc_dados) > 0:
@@ -188,20 +188,30 @@ class ItemNoTempo(View):
                 row['ORDEM_PRODUCAO|TARGET'] = '_blank'
                 row['ORDEM_PRODUCAO|LINK'] = reverse(
                     'producao:op__get', args=[row['ORDEM_PRODUCAO']])
+                if row['PEDIDO_VENDA'] == 0:
+                    row['PEDIDO_VENDA'] = '.'
+                else:
+                    row['PEDIDO_VENDA|TARGET'] = '_blank'
+                    row['PEDIDO_VENDA|LINK'] = reverse(
+                        'producao:pedido__get', args=[row['PEDIDO_VENDA']])
+
+            totalize_data(oc_dados, {
+                'sum': ['QUANT'],
+                'descr': {'PEDIDO_VENDA': 'Total:'}})
 
             self.context.update({
                 'oc_headers': [
-                    'OP', 'Quantidade'],
+                    'OP', 'Pedido', 'Quantidade'],
                 'oc_fields': [
-                    'ORDEM_PRODUCAO', 'QUANT'],
+                    'ORDEM_PRODUCAO', 'PEDIDO_VENDA', 'QUANT'],
                 'oc_style': {
-                    2: 'text-align: right;',
+                    3: 'text-align: right;',
                     },
                 'oc_dados': oc_dados,
                 })
 
         op_dados = lotes.models.quant_estagio(
-            cursor, less=[57, 63], group='o',
+            cursor, less=[57, 63], group='op',
             **{f: self.context[f] for f in ['ref', 'cor', 'tam']})
 
         if len(op_dados) > 0:
@@ -210,14 +220,24 @@ class ItemNoTempo(View):
                 row['ORDEM_PRODUCAO|TARGET'] = '_blank'
                 row['ORDEM_PRODUCAO|LINK'] = reverse(
                     'producao:op__get', args=[row['ORDEM_PRODUCAO']])
+                if row['PEDIDO_VENDA'] == 0:
+                    row['PEDIDO_VENDA'] = '.'
+                else:
+                    row['PEDIDO_VENDA|TARGET'] = '_blank'
+                    row['PEDIDO_VENDA|LINK'] = reverse(
+                        'producao:pedido__get', args=[row['PEDIDO_VENDA']])
+
+            totalize_data(op_dados, {
+                'sum': ['QUANT'],
+                'descr': {'PEDIDO_VENDA': 'Total:'}})
 
             self.context.update({
                 'op_headers': [
-                    'OP', 'Quantidade'],
+                    'OP', 'Pedido', 'Quantidade'],
                 'op_fields': [
-                    'ORDEM_PRODUCAO', 'QUANT'],
+                    'ORDEM_PRODUCAO', 'PEDIDO_VENDA', 'QUANT'],
                 'op_style': {
-                    2: 'text-align: right;',
+                    3: 'text-align: right;',
                     },
                 'op_dados': op_dados,
                 })
