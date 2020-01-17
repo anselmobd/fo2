@@ -130,6 +130,7 @@ class ItemNoTempo(View):
                 6: 'text-align: right;',
                 7: 'text-align: right;',
                 8: 'text-align: right;',
+                9: 'text-align: right;',
                 },
             'dados': dados,
             })
