@@ -90,8 +90,12 @@ class ItemNoTempo(View):
                     row['tipo'] = 'Baixa da OP por estagio'
                     tipo_doc = 'op'
 
-            if tipo_doc != '':
+            if tipo_doc == '':
+                row['ped'] = '.'
+                row['cliente'] = '.'
+            else:
                 row['doc|TARGET'] = '_blank'
+
             if tipo_doc == 'nf':
                 row['doc|LINK'] = reverse(
                     'contabil:nota_fiscal__get', args=[row['doc']])
@@ -99,13 +103,22 @@ class ItemNoTempo(View):
                 row['doc|LINK'] = reverse(
                     'producao:op__get', args=[row['doc']])
 
+            if row['ped'] is None:
+                row['ped'] = '.'
+            if row['ped'] != '.':
+                row['ped|TARGET'] = '_blank'
+                row['ped|LINK'] = reverse(
+                    'producao:pedido__get', args=[row['ped']])
+
             if row['cnpj_9'] == 0:
                 row['cliente'] = '.'
 
         self.context.update({
-            'headers': ('Data/hora', 'Usuáro', 'Tipo', 'Cliente', 'Documento',
+            'headers': ('Data/hora', 'Usuáro', 'Tipo de movimentação',
+                        'Cliente', 'Documento', 'Pedido',
                         'Entrada', 'Saída', 'Estoque'),
-            'fields': ('data', 'usuario', 'tipo', 'cliente', 'doc',
+            'fields': ('data', 'usuario', 'tipo',
+                       'cliente', 'doc', 'ped',
                        'qtd_e', 'qtd_s', 'estoque'),
             'style': {
                 5: 'text-align: right;',

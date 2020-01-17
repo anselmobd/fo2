@@ -35,6 +35,7 @@ def item_no_tempo(
         , t.NUMERO_DOCUMENTO DOC
         , t.PROCESSO_SYSTEXTIL PROC
         , t.USUARIO_SYSTEXTIL USUARIO
+        , ped.PEDIDO_VENDA PED
         , CASE WHEN cp.CGC_9 IS NULL
             THEN t.CNPJ_9
             ELSE cp.CGC_9
