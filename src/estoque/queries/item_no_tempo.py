@@ -52,6 +52,10 @@ def item_no_tempo(
             THEN c.NOME_CLIENTE
             ELSE cp.NOME_CLIENTE
           END CLIENTE
+        , CASE WHEN cp.FANTASIA_CLIENTE IS NULL
+            THEN c.FANTASIA_CLIENTE
+            ELSE cp.FANTASIA_CLIENTE
+          END FANTASIA
         FROM ESTQ_300_ESTQ_310 t
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = t.CNPJ_9
