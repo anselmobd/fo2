@@ -8,6 +8,8 @@ from django.views import View
 
 from utils.views import totalize_data
 
+import lotes.queries.pedido
+
 from estoque import forms
 from estoque import queries
 from estoque.functions import (
@@ -48,9 +50,10 @@ class ItemNoTempo(View):
         else:
             estoque = 0
 
+        estoque_no_tempo = estoque
         for row in dados:
-            row['estoque'] = estoque
-            estoque -= row['qtd_sinal']
+            row['estoque'] = estoque_no_tempo
+            estoque_no_tempo -= row['qtd_sinal']
 
             if row['es'] == 'E':
                 row['qtd_e'] = row['qtd']
@@ -133,6 +136,44 @@ class ItemNoTempo(View):
                 9: 'text-align: right;',
                 },
             'dados': dados,
+            })
+
+        p_dados = lotes.queries.pedido.pedido_faturavel_modelo(
+            cursor, cached=False,
+            **{f: self.context[f] for f in ['ref', 'cor', 'tam']}
+            )
+
+        p_dados.insert(0, p_dados[0].copy())
+        for i, row in enumerate(p_dados):
+            if i == 0:
+                row['PEDIDO'] = ''
+                row['DATA'] = ''
+                row['CLIENTE'] = ''
+                row['FAT'] = ''
+                row['QTD_AFAT'] = ''
+                estoque_no_tempo = estoque
+            else:
+                row['PEDIDO|TARGET'] = '_blank'
+                row['PEDIDO|LINK'] = reverse(
+                    'producao:pedido__get', args=[row['PEDIDO']])
+                row['DATA'] = row['DATA'].date()
+                row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
+                estoque_no_tempo -= row['QTD_AFAT']
+
+            row['ESTOQUE'] = estoque_no_tempo
+
+        self.context.update({
+            'p_headers': [
+                'Nº do pedido', 'Data de embarque', 'Cliente',
+                'Faturamento', 'Quant. pedida', 'Estoque'],
+            'p_fields': [
+                'PEDIDO', 'DATA', 'CLIENTE',
+                'FAT', 'QTD_AFAT', 'ESTOQUE'],
+            'p_style': {
+                5: 'text-align: right;',
+                6: 'text-align: right;',
+                },
+            'p_dados': p_dados,
             })
 
         return
