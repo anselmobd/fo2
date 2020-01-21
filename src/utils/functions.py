@@ -238,3 +238,14 @@ def cache_ttl(cache, key):
         seconds = cache.ttl(key)
     fo2logger.info(seconds)
     return seconds
+
+
+def untuple_keys(dict_):
+    result = {}
+    for key in dict_:
+        if isinstance(key, tuple):
+            for sub_key in key:
+                result[sub_key] = dict_[key]
+        else:
+            result[key] = dict_[key]
+    return result
