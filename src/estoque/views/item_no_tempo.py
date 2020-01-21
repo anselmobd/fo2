@@ -29,6 +29,10 @@ class ItemNoTempo(View):
     def mount_context(self):
         cursor = connections['so'].cursor()
 
+        self.context.update({
+            'item': '{ref}.{tam}.{cor}'.format(**self.context)
+        })
+
         dados = queries.item_no_tempo(
             cursor, *(self.context[f] for f in [
                 'ref', 'tam', 'cor', 'deposito']))
