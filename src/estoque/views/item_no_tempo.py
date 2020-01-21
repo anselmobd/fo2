@@ -145,7 +145,8 @@ class ItemNoTempo(View):
 
         p_dados = lotes.queries.pedido.pedido_faturavel_modelo(
             cursor, cached=False,
-            **{f: self.context[f] for f in ['ref', 'cor', 'tam', 'deposito']}
+            **{f: self.context[f] for f in [
+                'ref', 'cor', 'tam', 'deposito']}
             )
 
         if len(p_dados) > 0:
@@ -184,7 +185,8 @@ class ItemNoTempo(View):
 
         oc_dados = lotes.models.quant_estagio(
             cursor, only=[57, 63], group='op',
-            **{f: self.context[f] for f in ['ref', 'cor', 'tam']})
+            **{f: self.context[f] for f in [
+                'ref', 'cor', 'tam', 'deposito']})
 
         if len(oc_dados) > 0:
 
@@ -216,7 +218,8 @@ class ItemNoTempo(View):
 
         op_dados = lotes.models.quant_estagio(
             cursor, less=[57, 63], group='op',
-            **{f: self.context[f] for f in ['ref', 'cor', 'tam']})
+            **{f: self.context[f] for f in [
+                'ref', 'cor', 'tam', 'deposito']})
 
         if len(op_dados) > 0:
 

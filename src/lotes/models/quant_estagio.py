@@ -7,7 +7,7 @@ from utils.functions import make_key_cache, fo2logger
 
 def quant_estagio(
         cursor, estagio=None, ref=None, tipo=None, cor=None, tam=None,
-        only=None, less=None, group=None):
+        only=None, less=None, group=None, deposito=None):
 
     def monta_filtro(in_, estagios):
         filtro = ''
@@ -47,6 +47,10 @@ def quant_estagio(
     filtro_cor = ''
     if cor is not None and cor != '':
         filtro_cor = "AND l.PROCONF_ITEM = '{cor}'".format(cor=cor)
+
+    filtro_deposito = ''
+    if deposito is not None:
+        filtro_deposito = f"AND o.DEPOSITO_ENTRADA = {deposito}"
 
     filtro_group = ''
     if group is not None:
@@ -94,6 +98,7 @@ def quant_estagio(
           ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE 1=1
           AND o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
+          {filtro_deposito} -- filtro_deposito
         --  AND l.PERIODO_PRODUCAO = 1921
         --  AND l.ORDEM_CONFECCAO = 01866
           {filtra_estagio} -- filtra_estagio
