@@ -141,7 +141,7 @@ class ItemNoTempo(View):
 
         p_dados = lotes.queries.pedido.pedido_faturavel_modelo(
             cursor, cached=False,
-            **{f: self.context[f] for f in ['ref', 'cor', 'tam']}
+            **{f: self.context[f] for f in ['ref', 'cor', 'tam', 'deposito']}
             )
 
         if len(p_dados) > 0:
