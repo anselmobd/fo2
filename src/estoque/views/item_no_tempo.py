@@ -47,6 +47,25 @@ class ItemNoTempo(View):
         dados = sorted(
             dados, key=lambda i: i['data'], reverse=True)
 
+        dados_limpo = []
+        row_key_anterior = []
+        for row in dados:
+            row_key = row.copy()
+            del(row_key['data'])
+            del(row_key['qtd'])
+            del(row_key['qtd_sinal'])
+            if row_key == row_key_anterior:
+                dados_limpo[-1]['dt_ini'] = row['data']
+                dados_limpo[-1]['conta'] += 1
+                dados_limpo[-1]['qtd'] += row['qtd']
+                dados_limpo[-1]['qtd_sinal'] += row['qtd_sinal']
+            else:
+                row['dt_ini'] = row['data']
+                row['conta'] = 1
+                dados_limpo.append(row)
+            row_key_anterior = row_key
+        dados = dados_limpo
+
         estoque_list = queries.get_estoque_dep_ref_cor_tam(
             cursor, *(self.context[f] for f in [
                 'deposito', 'ref', 'cor', 'tam']))
@@ -126,19 +145,29 @@ class ItemNoTempo(View):
                 if row['fantasia'] is not None and row['fantasia'] != '':
                     row['cliente'] = row['fantasia']
 
+            if row['data'] != row['dt_ini']:
+                dt_ini = row['dt_ini'].strftime('%d/%m/%Y %H:%M:%S')
+                if row['data'].date() == row['dt_ini'].date():
+                    dt_fim_hora = row['data'].strftime('%H:%M:%S')
+                    row['data'] = f"{dt_ini} - {dt_fim_hora}"
+                else:
+                    dt_fim = row['data'].strftime('%d/%m/%Y %H:%M:%S')
+                    row['data'] = f"{dt_ini} - {dt_fim}"
+
         self.context.update({
             'headers': ('Data/hora', 'Usuáro', 'Tipo de movimentação',
-                        'Cliente', 'Documento', 'Pedido',
+                        'Cliente', 'Documento', 'Pedido', 'Nº Trans.',
                         'Entrada', 'Saída', 'Estoque'),
             'fields': ('data', 'usuario', 'tipo',
-                       'cliente', 'doc', 'ped',
+                       'cliente', 'doc', 'ped', 'conta',
                        'qtd_e', 'qtd_s', 'estoque'),
             'style': {
                 5: 'text-align: right;',
                 6: 'text-align: right;',
-                7: 'text-align: right;',
+                7: 'text-align: center;',
                 8: 'text-align: right;',
                 9: 'text-align: right;',
+                10: 'text-align: right;',
                 },
             'dados': dados,
             })
