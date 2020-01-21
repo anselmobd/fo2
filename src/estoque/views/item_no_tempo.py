@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views import View
 
 from utils.views import totalize_data
+from utils.functions import untuple_keys
 
 import lotes.models
 import lotes.queries.pedido
@@ -161,14 +162,9 @@ class ItemNoTempo(View):
             'fields': ('data', 'usuario', 'tipo',
                        'cliente', 'doc', 'ped', 'conta',
                        'qtd_e', 'qtd_s', 'estoque'),
-            'style': {
-                5: 'text-align: right;',
-                6: 'text-align: right;',
+            'style': untuple_keys({
                 7: 'text-align: center;',
-                8: 'text-align: right;',
-                9: 'text-align: right;',
-                10: 'text-align: right;',
-                },
+                (5, 6, 8, 9, 10): 'text-align: right;'}),
             'dados': dados,
             })
 
