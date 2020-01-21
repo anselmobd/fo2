@@ -34,9 +34,20 @@ class ItemNoTempo(View):
             'item': '{ref}.{tam}.{cor}'.format(**self.context)
         })
 
+        if self.context['periodo'] == '0':
+            apartirde = None
+        else:
+            periodo = int(self.context['periodo'])
+            delta = datetime.timedelta(days=-periodo*31)
+            apartirde = datetime.date.today()+delta
+        self.context.update({
+            'apartirde': apartirde
+        })
+
         dados = queries.item_no_tempo(
             cursor, *(self.context[f] for f in [
-                'ref', 'tam', 'cor', 'deposito']))
+                'ref', 'tam', 'cor', 'deposito', 'apartirde']))
+
         if len(dados) == 0:
             self.context.update({'erro': 'Nada selecionado'})
             return

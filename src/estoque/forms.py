@@ -315,6 +315,16 @@ class ItemNoTempoForm(forms.Form):
         label='Depósito', required=True,
         choices=CHOICES, initial='')
 
+    CHOICES = [
+        ('1', '1 Mês'),
+        ('3', '3 Meses'),
+        ('6', '6 Meses'),
+        ('0', 'Todo o histórico disponível'),
+    ]
+    periodo = forms.ChoiceField(
+        label='Período', required=True,
+        choices=CHOICES, initial='3')
+
     def clean_ref(self):
         return self.cleaned_data['ref'].upper()
 

@@ -4,7 +4,7 @@ from fo2.models import rows_to_dict_list_lower
 
 
 def item_no_tempo(
-        cursor, ref, tam, cor, deposito):
+        cursor, ref, tam, cor, deposito, apartirde):
 
     filtro_ref = ''
     if ref is not None and ref != '':
@@ -22,6 +22,11 @@ def item_no_tempo(
     if deposito is not None and deposito != '':
         filtro_deposito = "AND t.CODIGO_DEPOSITO = '{deposito}'".format(
             deposito=deposito)
+
+    filtro_apartirde = ''
+    if apartirde is not None:
+        str_apartirde = apartirde.strftime("TIMESTAMP '%Y-%m-%d 00:00:00'")
+        filtro_apartirde = f"AND t.DATA_INSERCAO > {str_apartirde}"
 
     sql = f'''
         SELECT
@@ -88,6 +93,7 @@ def item_no_tempo(
           {filtro_ref} -- AND t.GRUPO_ESTRUTURA = '02156'
           {filtro_tam} -- AND t.SUBGRUPO_ESTRUTURA = 'P'
           {filtro_cor} -- AND t.ITEM_ESTRUTURA = '0000BR'
+          {filtro_apartirde} -- filtro_apartirde
         ORDER BY
           t.DATA_INSERCAO DESC
     '''
