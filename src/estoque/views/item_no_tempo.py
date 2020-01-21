@@ -174,11 +174,12 @@ class ItemNoTempo(View):
                 'ref', 'cor', 'tam', 'deposito']}
             )
 
+        qtd_ped = 0
         if len(p_dados) > 0:
             p_dados.insert(0, p_dados[0].copy())
             for i, row in enumerate(p_dados):
                 if i == 0:
-                    row['PEDIDO'] = ''
+                    row['PEDIDO'] = 'Estoque atual'
                     row['DATA'] = ''
                     row['CLIENTE'] = ''
                     row['FAT'] = ''
@@ -190,6 +191,7 @@ class ItemNoTempo(View):
                         'producao:pedido__get', args=[row['PEDIDO']])
                     row['DATA'] = row['DATA'].date()
                     row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
+                    qtd_ped += row['QTD_AFAT']
                     estoque_no_tempo -= row['QTD_AFAT']
 
                 row['ESTOQUE'] = estoque_no_tempo
@@ -213,9 +215,11 @@ class ItemNoTempo(View):
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']})
 
+        qtd_op_cd = 0
         if len(oc_dados) > 0:
 
             for row in oc_dados:
+                qtd_op_cd += row['QUANT']
                 row['ORDEM_PRODUCAO|TARGET'] = '_blank'
                 row['ORDEM_PRODUCAO|LINK'] = reverse(
                     'producao:op__get', args=[row['ORDEM_PRODUCAO']])
@@ -246,9 +250,11 @@ class ItemNoTempo(View):
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']})
 
+        qtd_op_prod = 0
         if len(op_dados) > 0:
 
             for row in op_dados:
+                qtd_op_prod += row['QUANT']
                 row['ORDEM_PRODUCAO|TARGET'] = '_blank'
                 row['ORDEM_PRODUCAO|LINK'] = reverse(
                     'producao:op__get', args=[row['ORDEM_PRODUCAO']])
@@ -273,6 +279,10 @@ class ItemNoTempo(View):
                     },
                 'op_dados': op_dados,
                 })
+
+        self.context.update({
+            'estoque_futuro': estoque - qtd_ped + qtd_op_cd + qtd_op_prod
+            })
 
     def cleanned_fields_to_context(self):
         for field in self.context['form'].fields:

@@ -61,4 +61,7 @@
     {% include "layout/tbody_generic.html" with fields=op_fields data=op_dados style=op_style only %}
   </table>
 {% endif %}
+{% if oc_dados or op_dados %}
+  <h4 style="text-align: right">Estoque futuro: {{ estoque_futuro }}</h4>
+{% endif %}
 {% endblock %}
