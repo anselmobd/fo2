@@ -9,7 +9,7 @@ from utils.functions import make_key_cache, fo2logger, cache_ttl
 
 def pedido_faturavel_modelo(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
-        cached=True):
+        cached=True, deposito=None):
     key_cache = make_key_cache()
 
     cached_result = cache.get(key_cache)
@@ -37,6 +37,11 @@ def pedido_faturavel_modelo(
     filtro_cor = ''
     if cor is not None and cor != '':
         filtro_cor = "AND i.CD_IT_PE_ITEM = '{cor}'".format(cor=cor)
+
+    filtro_deposito = ''
+    if deposito is not None and cor != '':
+        filtro_deposito = "AND i.CODIGO_DEPOSITO = '{deposito}'".format(
+            deposito=deposito)
 
     filtra_periodo = ''
     if periodo is not None:
@@ -112,19 +117,11 @@ def pedido_faturavel_modelo(
               JOIN PEDI_110 i -- item de pedido de venda
                 ON i.PEDIDO_VENDA = ps.PEDIDO
               WHERE 1=1
-                -- AND TRIM(
-                --   LEADING '0' FROM (
-                --     REGEXP_REPLACE(
-                --       i.CD_IT_PE_GRUPO
-                --     , '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$'
-                --     , '\1'
-                --     )
-                --   )
-                -- ) = '5156'  -- filtro_modelo
                 {filtro_modelo} -- filtro_modelo
                 {filtro_ref} -- filtro_ref
                 {filtro_tam} -- filtro_tam
                 {filtro_cor} -- filtro_cor
+                {filtro_deposito} -- filtro_deposito
               GROUP BY
                 ps.PEDIDO
               , i.CD_IT_PE_NIVEL99
