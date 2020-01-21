@@ -15,14 +15,8 @@
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
 </form>
-{% if ref %}
-  <h4>Referência: {{ ref }}</h4>
-{% endif %}
-{% if tam %}
-  <h4>Tamanho: {{ tam }}</h4>
-{% endif %}
-{% if cor %}
-  <h4>Cor: {{ cor }}</h4>
+{% if item %}
+  <h4>Item: {{ item }}</h4>
 {% endif %}
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
@@ -38,6 +32,9 @@
   </table>
 {% endif %}
 {% if p_dados %}
+  {% if item %}
+    <h4>Item: {{ item }}</h4>
+  {% endif %}
   <h3>Pedidos a faturar e estoque</h3>
   <table>
     {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
@@ -45,6 +42,9 @@
   </table>
 {% endif %}
 {% if oc_dados %}
+  {% if item %}
+    <h4>Item: {{ item }}</h4>
+  {% endif %}
   <h3>OPs estocadas no CD</h3>
   <table>
     {% include "layout/thead_generic.html" with data=oc_headers style=oc_style only %}
@@ -52,6 +52,9 @@
   </table>
 {% endif %}
 {% if op_dados %}
+  {% if item %}
+    <h4>Item: {{ item }}</h4>
+  {% endif %}
   <h3>OPs em produção</h3>
   <table>
     {% include "layout/thead_generic.html" with data=op_headers style=op_style only %}
