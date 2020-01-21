@@ -20,40 +20,39 @@ def pedido_faturavel_modelo(
 
     filtro_modelo = ''
     if modelo is not None:
-        filtro_modelo = '''--
+        filtro_modelo = f'''--
             AND TRIM(LEADING '0' FROM
                      (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
                                      '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                                     ))) = '{}' '''.format(modelo)
+                                     ))) = '{modelo}' '''
 
     filtro_ref = ''
     if ref is not None and ref != '':
-        filtro_ref = "AND i.CD_IT_PE_GRUPO = '{ref}'".format(ref=ref)
+        filtro_ref = f"AND i.CD_IT_PE_GRUPO = '{ref}'"
 
     filtro_tam = ''
     if tam is not None and tam != '':
-        filtro_tam = "AND i.CD_IT_PE_SUBGRUPO = '{tam}'".format(tam=tam)
+        filtro_tam = f"AND i.CD_IT_PE_SUBGRUPO = '{tam}'"
 
     filtro_cor = ''
     if cor is not None and cor != '':
-        filtro_cor = "AND i.CD_IT_PE_ITEM = '{cor}'".format(cor=cor)
+        filtro_cor = f"AND i.CD_IT_PE_ITEM = '{cor}'"
 
     filtro_deposito = ''
     if deposito is not None and cor != '':
-        filtro_deposito = "AND i.CODIGO_DEPOSITO = '{deposito}'".format(
-            deposito=deposito)
+        filtro_deposito = f"AND i.CODIGO_DEPOSITO = '{deposito}'"
 
     filtra_periodo = ''
     if periodo is not None:
         periodo_list = periodo.split(':')
         if periodo_list[0] != '':
-            filtra_periodo += '''--
-                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {}
-            '''.format(periodo_list[0])
+            filtra_periodo += f'''--
+                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {periodo_list[0]}
+            '''
         if periodo_list[1] != '':
-            filtra_periodo += '''--
-                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
-            '''.format(periodo_list[1])
+            filtra_periodo += f'''--
+                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {periodo_list[1]}
+            '''
 
     sql = f"""
         SELECT
