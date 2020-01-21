@@ -156,7 +156,7 @@ class ItemNoTempo(View):
                     row['data'] = f"{dt_ini} - {dt_fim}"
 
         self.context.update({
-            'headers': ('Data/hora', 'Usuáro', 'Tipo de movimentação',
+            'headers': ('Data/hora', 'Usuário', 'Tipo de movimentação',
                         'Cliente', 'Documento', 'Pedido', 'Nº Trans.',
                         'Entrada', 'Saída', 'Estoque'),
             'fields': ('data', 'usuario', 'tipo',
