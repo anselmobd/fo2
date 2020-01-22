@@ -9,6 +9,8 @@ from utils.functions import inc_month
 import rh.models
 import rh.queries
 
+from .sugestao import *
+
 
 def limpa_data_futura(lista, campo):
     for item in lista:
