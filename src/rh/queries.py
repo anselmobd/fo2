@@ -26,3 +26,22 @@ def aniversariantes(cursor, mes):
     """
     cursor.execute(sql, [mes])
     return rows_to_dict_list_lower(cursor)
+
+
+def trabalhadores(cursor):
+    sql = """
+        select
+          t.codigo
+        , t.nome
+        , t.datanascimento
+        , t.cpf
+        --, t.*
+        FROM persona.trabalhadores t
+        where t.datarescisao is null
+          and ( t.vinculo = '10'
+              or t.vinculo = '55' )
+        order by
+          t.codigo
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
