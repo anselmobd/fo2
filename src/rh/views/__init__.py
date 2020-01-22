@@ -277,11 +277,11 @@ def aniversariantes(request, *args, **kwargs):
         intmes = int(kwargs['mes'])
         intano = int(kwargs['ano'])
     else:
-        now = datetime.now()
+        now = datetime.datetime.now()
         intano = now.year
         intmes = now.month
     mes = '{:02}'.format(intmes)
-    datames = datetime(intano, intmes, 1)
+    datames = datetime.datetime(intano, intmes, 1)
 
     aniversariantes = [
         ['27/08', 'Arnaldo Silva da Costa', 'Logística'],
