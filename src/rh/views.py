@@ -216,6 +216,9 @@ def index(request):
          'link': 'http://escolatrabalho.gov.br/'},
     ]
     rota2020 = [
+        {'data': datetime.strptime('22/01/2020', '%d/%m/%Y').date(),
+         'chamada': 'Transformar juntos',
+         'link': '/rh/campanhas/2020-01-22'},
         {'data': datetime.strptime('13/01/2020', '%d/%m/%Y').date(),
          'chamada': 'Inovar é Transformar',
          'link': '/media/rh/campanhas/2020/01/13/duomo-rota-sucesso-001.jpg'},
@@ -238,9 +241,12 @@ def index(request):
     return render(request, 'rh/index.html', context)
 
 
-def campanhas(request):
-    context = {'titulo': 'Campanhas'}
-    return render(request, 'rh/campanhas.html', context)
+def campanhas(request, id):
+    if id is None:
+        context = {'titulo': 'Campanhas'}
+        return render(request, 'rh/campanhas.html', context)
+    elif id == '2020-01-22':
+        return render(request, 'rh/campanhas/2020-01-22-RS-IT.html', {})
 
 
 def datas(request, data):
