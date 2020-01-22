@@ -1,10 +1,13 @@
+import datetime
 from pprint import pprint
-from datetime import datetime
 
 from django.db import connections
 from django.shortcuts import render
 
-from utils.functions import inc_month
+from utils.functions import (
+    inc_month,
+    strdmy2date,
+    )
 
 import rh.models
 import rh.queries
@@ -14,7 +17,7 @@ from .sugestao import *
 
 def limpa_data_futura(lista, campo):
     for item in lista:
-        if item[campo] > datetime.now().date():
+        if item[campo] > datetime.datetime.now().date():
             item[campo] = None
 
 
@@ -94,117 +97,117 @@ def index(request):
     pensamentos = []
     dicas = [
       {
-        'data': datetime.strptime('07/11/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('07/11/2018'),
         'chamada': 'Inspire Pessoas',
         'link': '/media/rh/dicas/2018-11-07_inspire_pessoas.jpg',
       },
       {
-        'data': datetime.strptime('22/10/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('22/10/2018'),
         'chamada': 'Se colocar no lugar do outro',
         'link': '/media/rh/dicas/2018-10-22_no_lugar_do_outro.jpg',
       },
       {
-        'data': datetime.strptime('09/10/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('09/10/2018'),
         'chamada': 'Sem coroa',
         'link': '/media/rh/dicas/2018-10-09_lider.png',
       },
       {
-        'data': datetime.strptime('02/10/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('02/10/2018'),
         'chamada': 'Alta performance com suas equipes',
         'link': '/media/rh/dica_2018-10-02_alta_performance_equipe.jpg',
       },
       {
-        'data': datetime.strptime('18/09/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('18/09/2018'),
         'chamada': 'Pessoas de sucesso',
         'link': '/media/rh/dica_2018-09-18_pessoas-de-sucesso.png',
       },
       {
-        'data': datetime.strptime('05/09/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('05/09/2018'),
         'chamada': 'Concentre-se e desconecte-se!',
         'link': '/media/rh/2018-09-Desconecte.pdf',
       },
       {
-        'data': datetime.strptime('04/09/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('04/09/2018'),
         'chamada': 'Farmácia interna',
         'link': '/media/rh/Dica-da-Semana-2018-09-04-farmacia_interna.jpg',
       },
       {
-        'data': datetime.strptime('13/08/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('13/08/2018'),
         'chamada': 'Inspire pessoas',
         'link': '/media/rh/Dica-da-Semana-2018-08-13.jpg',
       },
       {
-        'data': datetime.strptime('06/08/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('06/08/2018'),
         'chamada': 'No lugar do outro',
         'link': '/media/rh/Dica-da-Semana-2018-08-06.jpg',
       },
       {
-        'data': datetime.strptime('30/07/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('30/07/2018'),
         'chamada': 'Desenvolvimento da equipe',
         'link': '/media/rh/dica_2018-07-30_desenvolvimento_da_equipe.png',
       },
       {
-        'data': datetime.strptime('25/06/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('25/06/2018'),
         'chamada': 'Mudança',
         'link': '/media/rh/Dica-da-Semana-2018-06-25.jpg',
       },
       {
-        'data': datetime.strptime('11/06/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('11/06/2018'),
         'chamada': 'Pequenas Gentilezas',
         'link': '/media/rh/Dica-da-Semana-2018-06-11.jpg',
       },
       {
-        'data': datetime.strptime('14/05/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('14/05/2018'),
         'chamada': 'Arrisca',
         'link': '/media/rh/DUOMO-2018-05-14-Pensamento.jpg',
       },
       {
-        'data': datetime.strptime('04/05/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('04/05/2018'),
         'chamada': 'Custa R$ 0,00',
         'link': '/media/rh/DUOMO-2018-05-04-Dica.jpg',
       },
       {
-        'data': datetime.strptime('23/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('23/02/2018'),
         'chamada': '3 dicas essenciais',
         'link': '/media/rh/DUOMO-23-02-Dica-da-Semana.jpg',
       },
       {
-        'data': datetime.strptime('22/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('22/02/2018'),
         'chamada': 'Haja com confiança e seja confiável',
         'link': '/media/rh/DUOMO-22-02-Dica-da-Semana.jpg',
       },
       {
-        'data': datetime.strptime('21/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('21/02/2018'),
         'chamada': 'Seja proativo',
         'link': '/media/rh/DUOMO-21-02-Dica-da-Semana.jpg',
       },
       {
-        'data': datetime.strptime('20/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('20/02/2018'),
         'chamada': 'Melhore a comunicação',
         'link': '/media/rh/DUOMO-20-02-Dica-da-Semana.jpg',
       },
       {
-        'data': datetime.strptime('19/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('19/02/2018'),
         'chamada': 'Como administrar conflitos',
         'link': '/media/rh/DUOMO-19-02-Dica-da-Semana.jpg',
       },
       {
-        'data': datetime.strptime('07/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('07/02/2018'),
         'chamada': 'Movidos pela motivação',
         'link': '/media/rh/DUOMO-07-02-Dica-da-Semana.jpg',
       },
       {
-        'data': datetime.strptime('06/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('06/02/2018'),
         'chamada': 'Evolução das alas',
         'link': '/media/rh/DUOMO-06-02-Dica-da-Semana.jpg',
       },
       {
-        'data': datetime.strptime('05/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('05/02/2018'),
         'chamada': 'O quesito da harmonia',
         'link': '/media/rh/DUOMO-05-02-Dica-da-Semana.jpg',
       },
       {
-        'data': datetime.strptime('02/02/2018', '%d/%m/%Y').date(),
+        'data': strdmy2date('02/02/2018'),
         'chamada': 'A arte de se reinventar',
         'link': '/media/rh/DUOMO-02-02-Dica-da-Semana.jpg',
       },
@@ -219,13 +222,13 @@ def index(request):
          'link': 'http://escolatrabalho.gov.br/'},
     ]
     rota2020 = [
-        {'data': datetime.strptime('22/01/2020', '%d/%m/%Y').date(),
+        {'data': strdmy2date('22/01/2020'),
          'chamada': 'Transformar juntos',
          'link': '/rh/campanhas/2020-01-22'},
-        {'data': datetime.strptime('13/01/2020', '%d/%m/%Y').date(),
+        {'data': strdmy2date('13/01/2020'),
          'chamada': 'Inovar é Transformar',
          'link': '/media/rh/campanhas/2020/01/13/duomo-rota-sucesso-001.jpg'},
-        {'data': datetime.strptime('08/01/2020', '%d/%m/%Y').date(),
+        {'data': strdmy2date('08/01/2020'),
          'chamada': 'Em 2020, vamos embarcar numa viagem rumo ao SUCESSO!',
          'descricao':
             'Nessa viagem, iremos carimbar o nosso passaporte com os<br />'
