@@ -7,6 +7,7 @@ from django.shortcuts import render
 from utils.functions import inc_month
 
 import rh.models
+import rh.queries
 
 
 def limpa_data_futura(lista, campo):
@@ -290,7 +291,7 @@ def aniversariantes(request, *args, **kwargs):
     intmespos = posteriosmes.month
 
     pcursor = connections['persona'].cursor()
-    data = rh.models.aniversariantes(pcursor, intmes)
+    data = rh.queries.aniversariantes(pcursor, intmes)
 
     aniver_db = []
     for row in data:
