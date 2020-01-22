@@ -1,9 +1,13 @@
-__version__ = '0.2.0'
-__version__date__ = '01/01/2020'
+__version__ = '0.2.1'
+__version__date__ = '22/01/2020'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.2.1 - 2020/01/22
+#   . Item no tempo
+#   . Diversas outras tela e alterações
 #
 # - 0.2.0 - 2020/01/01
 #   . Muita coisa foi feita, principalmente com relação a compras de MP,
