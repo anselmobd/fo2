@@ -49,60 +49,31 @@
       <div class="noprint">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-xs-4">
+          <div class="col-xs-4 col-sm-2 hidden-xs hidden-sm hidden-md">
+            <div align="center">
+              <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
+            </div>
+          </div>
+          <div class="col-xs-4 col-sm-2 visible-xs visible-sm visible-md" align="center">
+            <b style="background:#c00c1d;color:white;">&nbsp;D'UOMO&nbsp;</b>
+          </div>
+          <div class="col-xs-4 col-sm-2">
             <small>
-              <a href="{% url 'intranet' %}">Intranet<span class="hidden-xs"> Tussor</span></a><span class="hidden-xs noprint"> | <a href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"> em ação!</a><br />
+              <a href="{% url 'intranet' %}">Intranet<span class="hidden-xs hidden-sm hidden-md"> Tussor</span></a><span class="hidden-xs hidden-sm hidden-md noprint"> | <a href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"> em ação!</a><br />
               <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a> | <a target="_blank" href="{% url 'systextil' %}"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></span>
               <!-- <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a> | <a href="http://192.168.1.93:8080/systextil/"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></span> -->
             </small>
           </div>
-          <div class="col-xs-2 hidden-xs">
-            <div style="width: 24em;" align="center">
-              <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
-
-              <!-- <span class="noprint"
-              ><h4><a target="_blank" href="/media/rh/datas_comemorativas/2019-08-11-dia-dos-pais/w638.png"
-                ><img src="/media/rh/datas_comemorativas/2019-08-11-dia-dos-pais/h50.png" alt="Dia dos pais" height="22" width="22"
-                  >&nbsp;Dia dos pais!</a
-                    ></h4></span> -->
-
-              <!-- <span class="noprint"
-              ><h4><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"
-                >&nbsp;<a target="_blank" href="{% url 'rh:media_2019_08_01_25_anos' %}"
-                  >25 anos de Rosângela e Denilson</a
-                    ></h4></span> -->
-
-              <!-- <span class="noprint"
-              ><h4><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"
-                >&nbsp;<a target="_blank" href="{% url 'rh:datas' 'lista' %}"
-                  >Dia do amigo</a
-                    > - <a target="_blank" href="/media/rh/datas_comemorativas/2019-07-20-dia-do-amigo/Trabalhar_em_Equipe/w750.jpg"
-                      >Trabalhar em equipe</a
-                        ></h4></span> -->
-
-              <!-- <span class="noprint"
-              ><h4><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"
-                >&nbsp;<a target="_blank" href="{% url 'rh:media_2019_07_16_sobre_amizade' %}"
-                  >Falando sobre amizade</a
-                    ></h4></span> -->
-
-              <!-- <span class="noprint"
-              ><h4><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"
-                >&nbsp;<a target="_blank" href="{% url 'rh:fotos_2019_07_12_brigadistas_2019' %}"
-                  >Aos brigadistas 2019</a
-                    ></h4></span> -->
-
-            </div>
+          <div class="col-sm-6 hidden-xs" align="right">
+            {% block advice %}
+            {% endblock %}
           </div>
-          <div class="col-xs-3 visible-xs" align="center">
-            <b style="background:#c00c1d;color:white;">&nbsp;D'UOMO&nbsp;</b>
-          </div>
-          <div class="col-xs-6 hidden-xs" align="right">
+          <div class="col-xs-4 col-sm-2 hidden-xs hidden-sm hidden-md" align="right">
             <small>
               {% if request.user.is_authenticated %}{{ request.user.username }} - <a href="{% url 'encerrar' %}">Encerrar sessão</a>{% else %}<a href="{% url 'login' %}?next=/">Identificar-se</a>{% endif %}
             </small>
           </div>
-          <div class="col-xs-5 visible-xs" align="right">
+          <div class="col-xs-4 col-sm-2 visible-xs visible-sm visible-md" align="right">
             <small>
               {% if request.user.is_authenticated %}{{ request.user.username }} <a href="{% url 'encerrar' %}">Logout</a>{% else %}<a href="{% url 'login' %}?next=/">Login</a>{% endif %}
             </small>
@@ -110,8 +81,6 @@
         </div>
       </div>
     </div>
-      {% endblock %}
-      {% block advice %}
       {% endblock %}
       {% block divheader %}
       <div class="hidden-xs noprint fo2 page-header">
@@ -123,8 +92,8 @@
       {% endblock %}
       {% block content %}
       {% endblock %}
+      <hr>
       <div style="width: 100%; text-align: right; font-size: smaller; color: gray;" title="Versão">
-        <hr>
         Versão {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})
         <a name="versao"></a>
         <span style='display:none' id='greasymonkeyverify' title='script monkey verify'>
