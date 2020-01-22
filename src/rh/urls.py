@@ -5,7 +5,8 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
 
-    url(r'^campanhas/$', views.campanhas, name='campanhas'),
+    url(r'^campanhas/(?P<id>.+)?/?$',
+        views.campanhas, name='campanhas'),
 
     url(r'^datas/(?P<data>.+)/$', views.datas, name='datas'),
 
