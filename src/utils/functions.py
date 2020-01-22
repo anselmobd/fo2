@@ -249,3 +249,7 @@ def untuple_keys(dict_):
         else:
             result[key] = dict_[key]
     return result
+
+
+def strdmy2date(text):
+    return datetime.datetime.strptime(text, '%d/%m/%Y').date()
