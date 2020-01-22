@@ -1,0 +1,112 @@
+{% load static %}
+
+{% block content %}
+<center>
+  <table>
+    <tr>
+      <td style="vertical-align: top; padding-top: 2em;">
+        <a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_100.jpg' %}" alt="RH em ação!"></a>
+      </td>
+      <td style="width: 2em;">
+        &nbsp;
+      </td>
+      <td>
+        <h2><a href="{% url 'rh:aniversariantes_now' %}">Aniversariantes
+          <img src="/media/rh/baloes_h50_icone.jpg" title="aniversariantes"></a></h2>
+        <h2>
+          <a href="{% url 'rh:datas' 'lista' %}">Datas comemorativas
+            <img                                         src="/media/rh/datas_comemorativas/2019-12-retrospectiva/h50.jpg" title="Retrospectiva 2019!"
+            ><img style="opacity: 0.90;max-width: 45px;" src="/media/rh/datas_comemorativas/2019-12-natal/h50.jpg" title="Feliz Natal!"
+            ><img style="opacity: 0.78;max-width: 39px;" src="/media/rh/datas_comemorativas/2019-11-dia-da-gentileza/h50.jpg" title="Dia da gentileza"
+            ><img style="opacity: 0.64;max-width: 32px;" src="/media/rh/datas_comemorativas/2019-08-11-dia-dos-pais/h50.png" title="Dia dos pais"
+            ><img style="opacity: 0.44;max-width: 22px;" src="/media/rh/datas_comemorativas/2019-07-20-dia-do-amigo/h50.jpg" title="Dia do amigo"
+            ></a>
+        </h2>
+        <h2>
+          <a href="{% url 'rh:campanhas' %}">Campanhas
+            <img                                         src="/media/rh/campanhas/2020/01/08/duomo-rota-sucesso-h50.jpg" title="Rota do Sucesso 2020"
+            ><img style="opacity: 0.90;max-width: 45px;" src="/media/rh/campanhas/2019/2019-11/Novembro_Azul_2019_h50.jpg" title="Novembro Azul 2019"
+            ><img style="opacity: 0.78;max-width: 39px;" src="/media/rh/campanhas/2019/2019-10/Outubro_Rosa_2019_h50.jpg" title="Outubro Rosa 2019"
+            ><img style="opacity: 0.64;max-width: 32px;" src="/media/rh/campanhas/2018-11-01_novembro-azul_h50.jpg" title="Novembro Azul"
+            ><img style="opacity: 0.44;max-width: 22px;" src="/media/rh/campanhas/2018-10-05_outubro-rosa_h50_icone.jpg" title="Outubro Rosa 2018"
+            ></a>
+        </h2>
+        <h2>
+          <a href="{% url 'rh:mensagens' %}">Mensagens
+            <img                                         src="/media/rh/mensagem_2018-09-19_primavera_h50.jpg" title="Primavera"
+            ></a>
+        </h2>
+      </td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td style="vertical-align: top;">
+        <h3>Divulgação</h3>
+        04/10/2019 - <a target="_blank" href="/media/rh/divulgacao/2019/2019-10/holeriteonline.pdf">Informativo sobre holerite on-line</a><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Em busca de sempre oferecer o que há de melhor em forma de<br />
+        gestão e práticas RH, o contracheque dos colaboradores da Tussor<br />
+        passará a ser disponibilizado de forma eletrônica.<br />
+        <br />
+        31/05/2019 - <a target="_blank" href="{% url 'rh:divulga_atitudes_crise' %}">Atitudes</a> que um líder deve ter em momentos de crise.<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nesses momentos, a capacidade de superar os desafios e fortalecer<br />
+        a relação com as equipes é importantíssima!<br />
+      </td>
+      <td style="width: 5em;">
+        &nbsp;
+      </td>
+      <td style="vertical-align: top;">
+        <h3>Rota do Sucesso 2020</h3>
+        {% for dica in rota2020 %}
+          {% if dica.data  %}
+            {{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
+            {% if dica.descricao  %}
+              <div style="padding-left: 2em;">{{ dica.descricao|safe }}</div>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        <br />
+        <h3>RH indica</h3>
+        {% for link in links %}
+          <a target="_blank" href="{{ link.link }}">{{ link.chamada }}</a><br/>
+          <div style="padding-left: 2em;">{{ link.descricao|safe }}</div>
+        {% endfor %}
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+        <h3>Dicas e Pensamentos</h3>
+        {% for dica in dicas %}
+          {% if dica.data  %}
+            {{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
+          {% endif %}
+        {% endfor %}
+      </td>
+      <td style="width: 5em;">
+        &nbsp;
+      </td>
+      <td style="vertical-align: top;">
+        <h3>Fotos e Vídeos</h3>
+        01/08/2019 - 25 anos de empresa de Rosângela e Denilson: <a target="_blank" href="{% url 'rh:media_2019_08_01_25_anos' %}">Fotos e vídeo</a><br/>
+        16/07/2019 - <a target="_blank" href="{% url 'rh:media_2019_07_16_sobre_amizade' %}">Vídeo</a> Poesia com Rapadura - Falando sobre amizade<br/>
+        12/07/2019 - Brigadistas 2019 - <a target="_blank" href="{% url 'rh:fotos_2019_07_12_brigadistas_2019' %}">Foto</a><br/>
+        14/06/2019 - Funcionários Adriana Martins e Leonardo Andrade homenageados - <a target="_blank" href="{% url 'rh:fotos_2019_06_14_adriana_leo' %}">Fotos</a><br/>
+        24/05/2019 - Funcionária Bianca Vasques homenageada - <a target="_blank" href="{% url 'rh:fotos_2019_05_24_bianca' %}">Fotos</a><br/>
+        09/04/2019 - <a target="_blank" href="{% url 'rh:media_2019_04_09_dicas' %}">Vídeos</a> de dicas de comportamento<br/>
+        01/04/2019 - 1º Café com RH de 2019<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_2019_04_01_1o_cafe' %}">fotos</a> desse dia<br/>
+        03/2019 - Funcionária Lorena homenageada - <a target="_blank" href="{% url 'rh:fotos_2019_03_lorena' %}">Fotos</a><br/>
+        17/10/2018 - Dia Rosa 2018<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:2018_dia_rosa_fotos' %}">fotos</a> e <a target="_blank" href="{% url 'rh:2018_dia_rosa_videos' %}">vídeos</a> desse dia<br/>
+        20/7/2018 - Dia do amigo - <a target="_blank" href="{% url 'rh:20180720_dia_do_amigo' %}">Fotos</a><br/>
+        14/6/2018 - Homenagem a Thiago e Silvio<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_homenagem20180614' %}">fotos</a> da homenagem<br/>
+        2/6/2018 - Formação de brigadistas 2018<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_brigadista2018' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos_brigadista2018' %}">vídeos</a> do treinamento<br/>
+        14/5 a 18/5/2018 - <a target="_blank" href="/media/rh/DUOMO-SIPAT2018_w600.jpg">SIPAT 2018</a><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos' %}">vídeos</a> do evento</a><br/>
+      </td>
+    </tr>
+  </table>
+</center>
+{% endblock %}
