@@ -6,8 +6,7 @@ from django.conf.urls.static import static
 from django.views.generic import RedirectView
 
 from .admin import intr_adm_site
-from .views import index_view, test_view, IntranetView, myip_view, meuip_view,\
-    SystextilView, ApoioAoErpView, ack_view
+import .views as views
 
 
 admin.site.site_header = "Apoio ao ERP - Administração"
@@ -15,14 +14,14 @@ admin.site.site_title = "Apoio Admin"
 admin.site.index_title = "Cadastros"
 
 urlpatterns = [
-    url(r'^$', index_view, name='index'),
+    url(r'^$', views.index_view, name='index'),
 
     url(r'^favicon\.ico$',
         RedirectView.as_view(url='/static/favicon.ico')),
 
-    url(r'^apoio_ao_erp/', ApoioAoErpView.as_view(), name='apoio_ao_erp'),
+    url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(), name='apoio_ao_erp'),
 
-    url(r'^intranet/', IntranetView.as_view(), name='intranet'),
+    url(r'^intranet/', views.IntranetView.as_view(), name='intranet'),
 
     # Autenticação
 
@@ -68,18 +67,18 @@ urlpatterns = [
 
     # Links para fora
 
-    url(r'^systextil/', SystextilView.as_view(), name='systextil'),
+    url(r'^systextil/', views.SystextilView.as_view(), name='systextil'),
 
     # Links utilitários
 
-    url(r'^myip/', myip_view, name='myip'),
+    url(r'^myip/', views.myip_view, name='myip'),
 
-    url(r'^meuip/', meuip_view, name='meuip'),
+    url(r'^meuip/', views.meuip_view, name='meuip'),
 
-    url(r'^ack$', ack_view, name='ack'),
+    url(r'^ack$', views.ack_view, name='ack'),
 
     # Acesso a teste.html para testes de html e css
 
-    url(r'^t$', test_view, name='test'),
+    url(r'^t$', views.test_view, name='test'),
 
   ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
