@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from fo2.models import rows_to_dict_list_lower
 
 
@@ -28,8 +30,12 @@ def aniversariantes(cursor, mes):
     return rows_to_dict_list_lower(cursor)
 
 
-def trabalhadores(cursor):
-    sql = """
+def trabalhadores(cursor, codigo=None):
+    filtra_codigo = ''
+    if codigo is not None:
+        filtra_codigo = f"AND t.codigo = '{codigo}'"
+
+    sql = f"""
         select
           t.codigo
         , t.nome
@@ -40,6 +46,7 @@ def trabalhadores(cursor):
         where t.datarescisao is null
           and ( t.vinculo = '10'
               or t.vinculo = '55' )
+          {filtra_codigo} -- filtra_codigo
         order by
           t.codigo
     """
