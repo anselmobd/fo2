@@ -90,6 +90,10 @@ def media_2019_08_01_25_anos(request):
     return render(request, 'rh/media_2019_08_01_25_anos.html', context)
 
 
+def principal(request):
+    return render(request, 'rh/principal.html')
+
+
 def index(request):
     pensamentos = []
     dicas = [
