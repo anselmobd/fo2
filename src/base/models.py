@@ -7,10 +7,21 @@ from django.contrib.auth.models import User
 
 class Colaborador(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    matricula = models.CharField(
+        max_length=5, unique=True, default='00000',
+        verbose_name='matrícula')
+    nome = models.CharField(
+        null=True, blank=True, max_length=100)
+    nascimento = models.DateField(
+        null=True, blank=True)
+    cpf = models.CharField(
+        max_length=11, unique=True, default=0,
+        verbose_name='CPF')
     obs = models.CharField(max_length=1000)
 
     class Meta:
         db_table = "fo2_colaborador"
+        verbose_name_plural = 'Colaboradores'
         permissions = (
             ("can_generate_product_stages", "Can generate product stages"),
             ("can_adjust_stock", "Can adjust stock"),

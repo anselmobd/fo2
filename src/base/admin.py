@@ -22,7 +22,7 @@ class TamanhoAdmin(admin.ModelAdmin):
 
 
 class ColaboradorAdmin(admin.ModelAdmin):
-    fields = ["user", "obs"]
+    fields = ["user", "matricula", "nome", "nascimento", "cpf", "obs"]
 
 
 intr_adm_site.register(TipoImagem, TipoImagemAdmin)
