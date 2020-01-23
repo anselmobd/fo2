@@ -5,6 +5,8 @@ from django.http import HttpResponse
 
 from utils.functions import get_client_ip, fo2logger
 
+from .cria_usuario import *
+
 
 def index_view(request):
     fo2logger.info('index')
@@ -38,7 +40,3 @@ def ack_view(request):
 
 class SystextilView(TemplateView):
     template_name = "oficial_systextil.html"
-
-
-class CriaUsuario(TemplateView):
-    template_name = "index.html"
