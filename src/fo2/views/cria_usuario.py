@@ -7,7 +7,7 @@ from django.views import View
 
 from fo2.forms import *
 
-import rh.queries
+import persona.queries
 
 
 class CriaUsuario(View):
@@ -22,7 +22,7 @@ class CriaUsuario(View):
         pcursor = connections['persona'].cursor()
 
         if 'busca' in self.context:
-            data = rh.queries.trabalhadores(
+            data = persona.queries.trabalhadores(
                 pcursor,
                 **{f: self.context[f] for f in ['codigo']})
             if len(data) != 1:
