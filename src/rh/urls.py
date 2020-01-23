@@ -66,8 +66,4 @@ urlpatterns = [
     url(r'^divulga_atitudes_crise/$', views.divulga_atitudes_crise,
         name='divulga_atitudes_crise'),
 
-    url(r'^aniversariantes/$',
-        views.aniversariantes, name='aniversariantes_now'),
-    url(r'^aniversariantes/(?P<ano>\d{4})/(?P<mes>\d{1,2})/?$',
-        views.aniversariantes, name='aniversariantes'),
 ]

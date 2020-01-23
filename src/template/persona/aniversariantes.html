@@ -1,4 +1,4 @@
-{% extends 'rh/principal.html' %}
+{% extends 'persona/index.html' %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
 {% block header.content %}<center><img src="/media/rh/baloes_h50_icone.jpg" title="baloes">Aniversariantes de {{ datames|date:'F \d\e Y' }}<img src="/media/rh/baloes_h50_icone.jpg" title="baloes"></center>{% endblock header.content %}
@@ -15,12 +15,12 @@
     <tr>
       <td>
         {% if intmesant %}
-          <a href="{% url 'rh:aniversariantes' intanoant intmesant %}">< Mês anterior</a>
+          <a href="{% url 'persona:aniversariantes' intanoant intmesant %}">< Mês anterior</a>
         {% endif %}
       </td>
       <td style="text-align:right">
         {% if intmespos %}
-          <a href="{% url 'rh:aniversariantes' intanopos intmespos %}">Mês posterior ></a>
+          <a href="{% url 'persona:aniversariantes' intanopos intmespos %}">Mês posterior ></a>
         {% endif %}
       </td>
     </tr>

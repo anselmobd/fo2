@@ -8,7 +8,6 @@ from utils.functions import strdmy2date
 
 import rh.models
 
-from .aniversariantes import *
 from .sugestao import *
 
 

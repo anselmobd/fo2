@@ -58,4 +58,4 @@ def aniversariantes(request, *args, **kwargs):
         'intanopos': posteriosmes.year,
         'aniversariantes': aniver_db,
         }
-    return render(request, 'rh/aniversariantes.html', context)
+    return render(request, 'persona/aniversariantes.html', context)
