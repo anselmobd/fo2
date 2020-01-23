@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
 
+    url(r'^principal$', views.principal, name='principal'),
+
     url(r'^campanhas/(?P<id>.+)?/?$',
         views.campanhas, name='campanhas'),
 
