@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
-from .models import TipoImagem, Imagem, Tamanho
+from .models import TipoImagem, Imagem, Tamanho, Colaborador
 
 
 class TipoImagemAdmin(admin.ModelAdmin):
@@ -21,6 +21,11 @@ class TamanhoAdmin(admin.ModelAdmin):
     ordering = ["ordem"]
 
 
+class ColaboradorAdmin(admin.ModelAdmin):
+    fields = ["user", "obs"]
+
+
 intr_adm_site.register(TipoImagem, TipoImagemAdmin)
 intr_adm_site.register(Imagem, ImagemAdmin)
 intr_adm_site.register(Tamanho, TamanhoAdmin)
+intr_adm_site.register(Colaborador, ColaboradorAdmin)
