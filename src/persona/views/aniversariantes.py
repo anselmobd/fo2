@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from utils.functions import inc_month
 
-import rh.queries
+import persona.queries as queries
 
 
 def aniversariantes(request, *args, **kwargs):
@@ -32,7 +32,7 @@ def aniversariantes(request, *args, **kwargs):
     intmespos = posteriosmes.month
 
     pcursor = connections['persona'].cursor()
-    data = rh.queries.aniversariantes(pcursor, intmes)
+    data = queries.aniversariantes(pcursor, intmes)
 
     aniver_db = []
     for row in data:
