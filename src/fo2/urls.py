@@ -31,8 +31,6 @@ urlpatterns = [
 
     url(r'^encerrar/', auth_views.logout, {'next_page': '/'}, name='encerrar'),
 
-    url(r'^cria_usuario/', views.CriaUsuario.as_view(), name='cria_usuario'),
-
     # Administração
 
     url(r'^rootadm/', admin.site.urls),
