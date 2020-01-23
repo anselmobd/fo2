@@ -47,7 +47,8 @@
     <div class="container-fluid">
       {% block intranetheader %}
       <div class="noprint">
-      <div class="container-fluid">
+      <div class="container-fluid"
+           style="background-image: linear-gradient(white,#f1f1f1);">
         <div class="row">
           <div class="col-xs-4 col-sm-2 hidden-xs hidden-sm hidden-md">
             <div align="center">
@@ -68,19 +69,21 @@
             {% block advice %}
             {% endblock %}
           </div>
-          <div class="col-xs-4 col-sm-2 hidden-xs hidden-sm hidden-md" align="right">
-            <small>
+          <div class="col-xs-4 col-sm-2 hidden-xs hidden-sm hidden-md"
+               style="text-align: right;">
+            <span style="font-size: smaller;">
               {% if request.user.is_authenticated %}{{ request.user.username }} - <a href="{% url 'encerrar' %}">Encerrar sessão</a>{% else %}<a href="{% url 'login' %}?next=/">Identificar-se</a>{% endif %}
-            </small>
+            </span>
           </div>
-          <div class="col-xs-4 col-sm-2 visible-xs visible-sm visible-md" align="right">
-            <small>
+          <div class="col-xs-4 col-sm-2 visible-xs visible-sm visible-md"
+               style="text-align: right;">
+            <span style="font-size: smaller;">
               {% if request.user.is_authenticated %}{{ request.user.username }} <a href="{% url 'encerrar' %}">Logout</a>{% else %}<a href="{% url 'login' %}?next=/">Login</a>{% endif %}
-            </small>
+            </span>
           </div>
         </div>
       </div>
-    </div>
+      </div>
       {% endblock %}
       {% block divheader %}
       <div class="hidden-xs noprint fo2 page-header">
