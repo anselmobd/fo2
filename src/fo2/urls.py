@@ -68,6 +68,9 @@ urlpatterns = [
     url(r'^email_signature/', include('email_signature.urls',
         namespace='email_signature')),
 
+    url(r'^persona/', include('persona.urls',
+        namespace='persona')),
+
     # Links para fora
 
     url(r'^systextil/', views.SystextilView.as_view(), name='systextil'),
