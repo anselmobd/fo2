@@ -38,3 +38,7 @@ def ack_view(request):
 
 class SystextilView(TemplateView):
     template_name = "oficial_systextil.html"
+
+
+class CriaUsuario(TemplateView):
+    template_name = "index.html"
