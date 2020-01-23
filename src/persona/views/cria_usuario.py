@@ -5,16 +5,15 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from fo2.forms import *
-
-import persona.queries
+import persona.forms as forms
+import persona.queries as queries
 
 
 class CriaUsuario(View):
 
     def __init__(self):
-        self.Form_class = CriaUsuarioForm
-        self.template_name = 'cria_usuario.html'
+        self.Form_class = forms.CriaUsuarioForm
+        self.template_name = 'persona/cria_usuario.html'
         self.context = {'titulo': 'Criar usuário'}
 
     def mount_context(self):
@@ -22,7 +21,7 @@ class CriaUsuario(View):
         pcursor = connections['persona'].cursor()
 
         if 'busca' in self.context:
-            data = persona.queries.trabalhadores(
+            data = queries.trabalhadores(
                 pcursor,
                 **{f: self.context[f] for f in ['codigo']})
             if len(data) != 1:
