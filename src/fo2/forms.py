@@ -13,7 +13,10 @@ class CriaUsuarioForm(forms.Form):
         }
 
     codigo = forms.CharField(
-        label='Código',
-        required=True, min_length=1, max_length=5,
+        label='Código (matrícula)',
+        required=True, max_length=5,
         widget=forms.TextInput(attrs={
             **autofocus_attrs, **number_attrs}))
+
+    def clean_codigo(self):
+        return self.cleaned_data['codigo'].upper().zfill(5)
