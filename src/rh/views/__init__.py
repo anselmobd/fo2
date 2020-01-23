@@ -4,14 +4,11 @@ from pprint import pprint
 from django.db import connections
 from django.shortcuts import render
 
-from utils.functions import (
-    inc_month,
-    strdmy2date,
-    )
+from utils.functions import strdmy2date
 
 import rh.models
-import rh.queries
 
+from .aniversariantes import *
 from .sugestao import *
 
 
@@ -270,59 +267,6 @@ def datas(request, data):
 def mensagens(request):
     context = {'titulo': 'Mensagens'}
     return render(request, 'rh/mensagens.html', context)
-
-
-def aniversariantes(request, *args, **kwargs):
-    if 'mes' in kwargs:
-        intmes = int(kwargs['mes'])
-        intano = int(kwargs['ano'])
-    else:
-        now = datetime.datetime.now()
-        intano = now.year
-        intmes = now.month
-    mes = '{:02}'.format(intmes)
-    datames = datetime.datetime(intano, intmes, 1)
-
-    aniversariantes = [
-        ['27/08', 'Arnaldo Silva da Costa', 'Logística'],
-        ['03/10', 'Anselmo Blanco Dominguez', 'TI'],
-        ['17/02', 'Antonio Ricardo Maganhães Moraes', 'Diretor'],
-    ]
-
-    anteriormes = inc_month(datames, -1)
-    intmesant = anteriormes.month
-
-    posteriosmes = inc_month(datames, 1)
-    intmespos = posteriosmes.month
-
-    pcursor = connections['persona'].cursor()
-    data = rh.queries.aniversariantes(pcursor, intmes)
-
-    aniver_db = []
-    for row in data:
-        aniver_db.append(
-           ['{:02d}/{:02d}'.format(int(row['dia']), int(row['mes'])),
-            row['nome'], row['setor']],
-        )
-
-    insere_pessoa = [
-        pessoa for pessoa in aniversariantes if pessoa[0][-2:] == mes]
-
-    for pessoa in insere_pessoa:
-        for i, row in enumerate(aniver_db):
-            if row[0] >= pessoa[0] and row[1] > pessoa[1]:
-                aniver_db.insert(i, pessoa)
-                break
-
-    context = {
-        'datames': datames,
-        'intmesant': intmesant,
-        'intanoant': anteriormes.year,
-        'intmespos': intmespos,
-        'intanopos': posteriosmes.year,
-        'aniversariantes': aniver_db,
-        }
-    return render(request, 'rh/aniversariantes.html', context)
 
 
 def v2018_dia_rosa_fotos(request):
