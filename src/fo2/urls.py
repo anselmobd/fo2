@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from django.views.generic import RedirectView
 
 from .admin import intr_adm_site
-import .views as views
+import fo2.views as views
 
 
 admin.site.site_header = "Apoio ao ERP - Administração"
@@ -19,7 +19,8 @@ urlpatterns = [
     url(r'^favicon\.ico$',
         RedirectView.as_view(url='/static/favicon.ico')),
 
-    url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(), name='apoio_ao_erp'),
+    url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(),
+        name='apoio_ao_erp'),
 
     url(r'^intranet/', views.IntranetView.as_view(), name='intranet'),
 
