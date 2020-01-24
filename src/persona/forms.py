@@ -22,6 +22,10 @@ class CriaUsuarioForm(forms.Form):
         label='CPF', required=False, max_length=11,
         widget=forms.HiddenInput())
 
+    nascimento = forms.DateField(
+        label='Data de nascimento', required=False,
+        widget=forms.HiddenInput())
+
     def clean_codigo(self):
         return self.cleaned_data['codigo'].zfill(5)
 

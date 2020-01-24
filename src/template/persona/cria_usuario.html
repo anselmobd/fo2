@@ -26,20 +26,29 @@
       {% endif %}
   </form>
   {% if codigo %}
-    <h4>Código digitado: {{ codigo }}</h4>
+    <h4>Digitado:</h4>
+    <ul>
+  {% endif %}
+  {% if codigo %}
+    <li>Código: {{ codigo }}</li>
   {% endif %}
   {% if cpf %}
-    <h4>CPF digitado: {{ cpf }}</h4>
+    <li>CPF: {{ cpf }}</li>
+  {% endif %}
+  {% if nascimento %}
+    <li>Data de nascimento: {{ nascimento }}</li>
+  {% endif %}
+  {% if codigo %}
+    </ul>
   {% endif %}
   {% if erro %}
     <h4>{{ erro }}</h4>
   {% else %}
     {% if trabalhador %}
-      <h4>Trabalhador</h4>
+      <h4>Trabalhador no RH</h4>
       <ul>
         <li>Código: {{ trabalhador.codigo }}</li>
-        <li>Nome: {{ trabalhador.nome }}</li>
-        <li>CPF!!!!!: {{ trabalhador.cpf }}</li>
+        <li>Último sobrenome: {{ ultimo_sobrenome }}</li>
       </ul>
     {% endif %}
     {% if cria %}

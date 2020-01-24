@@ -67,12 +67,17 @@ class CriaUsuario(View):
         trabalhador = data[0]
         self.context.update({
             'trabalhador': trabalhador,
+            'ultimo_sobrenome': trabalhador['nome'].title().split()[-1],
         })
 
         if 'verifica' in self.context:
-            if trabalhador['cpf'] != self.context['cpf']:
+            cpf_ok = trabalhador['cpf'] == self.context['cpf']
+            nascimento_ok = (
+                trabalhador['nascimento'] == self.context['nascimento'])
+            if not cpf_ok or not nascimento_ok:
                 self.context.update({
-                    'erro': 'CPF informado não compatível com o cadastrado.',
+                    'erro': 'Dados informados não compatíveis com o '
+                            'cadastrado.',
                 })
                 self.erro = True
                 return
@@ -141,8 +146,13 @@ class CriaUsuario(View):
             if 'busca' in self.context:
                 self.context['form'].fields['codigo'].widget = (
                     forms.HiddenInput())
-                self.context['form'].fields['cpf'].widget = forms.TextInput(
-                    attrs={'type': 'number', 'autofocus': 'autofocus'})
+                self.context['form'].fields['cpf'].widget = (
+                    forms.TextInput(
+                        attrs={'type': 'number', 'autofocus': 'autofocus'}))
+                self.context['form'].fields['nascimento'].widget = (
+                    forms.DateInput(
+                        attrs={'type': 'date', 'autofocus': 'autofocus'}))
+
             if 'verifica' in self.context:
                 self.context['form'].fields['codigo'].widget = (
                     forms.HiddenInput())
