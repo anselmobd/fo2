@@ -43,7 +43,6 @@ class CriaUsuario(View):
 
         try:
             matricula_em_sobrenome = f"({self.context['codigo'].lstrip('0')})"
-            print(matricula_em_sobrenome)
             usuario = User.objects.get(
                 last_name__contains=matricula_em_sobrenome)
             self.context.update({
@@ -71,16 +70,12 @@ class CriaUsuario(View):
         })
 
         if 'verifica' in self.context:
-            print('verifica')
             if trabalhador['cpf'] != self.context['cpf']:
-                print('diferente')
                 self.context.update({
                     'erro': 'CPF informado não compatível com o cadastrado.',
                 })
                 self.erro = True
                 return
-            else:
-                print('igual')
 
         if 'cria' in self.context:
             nomes = trabalhador['nome'].title().split()
