@@ -44,7 +44,7 @@
     {% endblock %}
   </header>
   <main>
-    <div class="container-fluid">
+    <div class="fullwidth">
       {% block intranetheader %}
       <div class="noprint">
       <div class="container-fluid"
@@ -91,15 +91,19 @@
       </div>
       {% endblock %}
       {% block divheader %}
+      <div class="container-fluid">
       <div class="hidden-xs noprint fo2 page-header">
         {% block header %}
           {% block header.pre %}<h2>{% endblock header.pre %}{% block header.content %}
           {% endblock header.content %}{% block header.pos %}</h2>{% endblock header.pos %}
         {% endblock %}
       </div>
+      </div>
       {% endblock %}
+      <div class="container-fluid">
       {% block content %}
       {% endblock %}
+      </div>
       <hr>
       <div style="width: 100%; text-align: right; font-size: smaller; color: gray;" title="Versão">
         Versão {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})
@@ -152,6 +156,6 @@
     }
 
   </script>
-  {% block footer_space %}<p>&nbsp;</p>{% endblock %}
+  {% block footer_space %}{% endblock %}
 </body>
 </html>
