@@ -1,9 +1,12 @@
-__version__ = '0.2.1'
-__version__date__ = '22/01/2020'
+__version__ = '0.2.2'
+__version__date__ = '24/01/2020'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.2.2 - 2020/01/24
+#   . Cria conta
 #
 # - 0.2.1 - 2020/01/22
 #   . Item no tempo
