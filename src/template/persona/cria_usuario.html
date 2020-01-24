@@ -10,15 +10,41 @@
 {% endblock %}
 
 {% block content %}
-  <form action="" method="post">
+  <form action="{% url 'persona:cria_usuario' %}" method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" name="busca" value="Busca"/>
+      {% if erro or cria %}
+        <a href="{% url 'persona:cria_usuario' %}">Reinicia</a>
+      {% else %}
+        {% if busca %}
+          <input type="submit" name="verifica" value="Verifica"/>
+        {% elif verifica %}
+          <input type="submit" name="cria" value="Cria usuário"/>
+        {% else %}
+          <input type="submit" name="busca" value="Busca"/>
+        {% endif %}
+      {% endif %}
   </form>
+  {% if codigo %}
+    <h4>Código digitado: {{ codigo }}</h4>
+  {% endif %}
+  {% if cpf %}
+    <h4>CPF digitado: {{ cpf }}</h4>
+  {% endif %}
   {% if erro %}
     <h4>{{ erro }}</h4>
-  {% endif %}
-  {% if trabalhador %}
-    <h4>Nome: {{ trabalhador.nome }}</h4>
+  {% else %}
+    {% if trabalhador %}
+      <h4>Trabalhador</h4>
+      <ul>
+        <li>Código: {{ trabalhador.codigo }}</li>
+        <li>Nome: {{ trabalhador.nome }}</li>
+        <li>CPF!!!!!: {{ trabalhador.cpf }}</li>
+      </ul>
+    {% endif %}
+    {% if cria %}
+      <h3>Usuário criado!</h3>
+      <h4>Usuário: {{ login }}</h4>
+    {% endif %}
   {% endif %}
 {% endblock %}
