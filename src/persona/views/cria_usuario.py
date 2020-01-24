@@ -1,3 +1,5 @@
+import datetime
+import time
 from pprint import pprint
 
 from django import forms
@@ -81,8 +83,23 @@ class CriaUsuario(View):
                 print('igual')
 
         if 'cria' in self.context:
+            nomes = trabalhador['nome'].title().split()
+            first_name = nomes[0]
+            last_name = ' '.join(nomes[1:])
+            password = (
+                f"{self.context['cpf'][:4]}"
+                f"{first_name[0].lower()}"
+                f"{str(round(time.time() * 1000))[-3:]}"
+                )
+            usuario = User.objects.create_user(
+                username=self.context['codigo'],
+                first_name=first_name,
+                last_name=last_name,
+                password=password)
+
             self.context.update({
-                'login': 'login',
+                'login': self.context['codigo'],
+                'password': password,
             })
             self.sucesso = True
 
