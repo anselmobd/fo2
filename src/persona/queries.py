@@ -39,7 +39,7 @@ def trabalhadores(cursor, codigo=None):
         select
           t.codigo
         , t.nome
-        , t.datanascimento
+        , t.datanascimento nascimento
         , t.cpf
         --, t.*
         FROM persona.trabalhadores t
