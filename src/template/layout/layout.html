@@ -59,13 +59,11 @@
             <div align="center">
               <img src="{% static "img/DUOMO_micro.png"  height="20" width="88" %}" alt="D'UOMO">
             </div>
-            <!-- <b style="background:#c00c1d;color:white;">&nbsp;D'UOMO&nbsp;</b> -->
           </div>
           <div class="col-xs-4 col-sm-2">
             <small>
               <a href="{% url 'intranet' %}">Intranet<span class="hidden-xs hidden-sm hidden-md"> Tussor</span></a><span class="hidden-xs hidden-sm hidden-md noprint"> | <a href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"> em ação!</a><br />
               <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a> | <a target="_blank" href="{% url 'systextil' %}"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></span>
-              <!-- <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a> | <a href="http://192.168.1.93:8080/systextil/"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></span> -->
             </small>
           </div>
           <div class="col-sm-6 hidden-xs" align="right">
@@ -129,15 +127,10 @@
       </div>
     </div>
   </main>
-  {% block footer %}{% endblock %}
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> -->
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <!-- <script src="js/bootstrap.min.js"></script> -->
-  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
-  {% block javascript %}{% endblock %}
+  {% block footer %}
+  {% endblock %}
+  {% block javascript %}
+  {% endblock %}
   <script>
     var FIREFOX = /Firefox/i.test(navigator.userAgent);
 
