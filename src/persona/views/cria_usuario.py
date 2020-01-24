@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django import forms
+from django.contrib.auth.models import User
 from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
@@ -26,14 +27,32 @@ class CriaUsuario(View):
         pcursor = connections['persona'].cursor()
 
         try:
-            base.models.Colaborador.objects.get(
+            usuario = base.models.Colaborador.objects.get(
                 matricula=self.context['codigo'])
-        except base.models.Colaborador.DoesNotExist:
             self.context.update({
-                'erro': 'Usuário com essa matrícula já cadastrado',
+                'erro': 'Usuário com essa matrícula já cadastrado como '
+                        'colaborador',
+                'login': usuario.user,
             })
             self.erro = True
             return
+        except base.models.Colaborador.DoesNotExist:
+            pass
+
+        try:
+            matricula_em_sobrenome = f"({self.context['codigo'].lstrip('0')})"
+            print(matricula_em_sobrenome)
+            usuario = User.objects.get(
+                last_name__contains=matricula_em_sobrenome)
+            self.context.update({
+                'erro': 'Usuário com essa matrícula já cadastrado como '
+                        'usuário',
+                'login': usuario.username,
+            })
+            self.erro = True
+            return
+        except User.DoesNotExist:
+            pass
 
         data = queries.trabalhadores(
             pcursor,

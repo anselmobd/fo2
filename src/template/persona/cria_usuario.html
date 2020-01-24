@@ -44,7 +44,9 @@
     {% endif %}
     {% if cria %}
       <h3>Usuário criado!</h3>
-      <h4>Usuário: {{ login }}</h4>
     {% endif %}
+  {% endif %}
+  {% if login %}
+    <h4>Usuário: {{ login }}</h4>
   {% endif %}
 {% endblock %}
