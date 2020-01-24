@@ -21,7 +21,7 @@ class Colaborador(models.Model):
         null=True, blank=True, max_length=1000)
 
     def __str__(self):
-        return self.nome
+        return f"{self.user} ({self.matricula}) {self.nome}"
 
     class Meta:
         db_table = "fo2_colaborador"
