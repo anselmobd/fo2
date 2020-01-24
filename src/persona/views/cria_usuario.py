@@ -78,7 +78,9 @@ class CriaUsuario(View):
                 return
 
         if 'cria' in self.context:
-            nomes = trabalhador['nome'].title().split()
+            matricula = self.context['codigo']
+            nome_completo = trabalhador['nome'].title()
+            nomes = nome_completo.split()
             first_name = nomes[0]
             last_name = ' '.join(nomes[1:])
             password = (
@@ -87,10 +89,18 @@ class CriaUsuario(View):
                 f"{str(round(time.time() * 1000))[-3:]}"
                 )
             usuario = User.objects.create_user(
-                username=self.context['codigo'],
+                username=matricula,
                 first_name=first_name,
                 last_name=last_name,
                 password=password)
+
+            colab = base.models.Colaborador()
+            colab.user = usuario
+            colab.matricula = matricula
+            colab.nome = nome_completo
+            colab.nascimento = trabalhador['nascimento']
+            colab.cpf = self.context['cpf']
+            colab.save()
 
             self.context.update({
                 'login': self.context['codigo'],
