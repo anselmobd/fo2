@@ -103,7 +103,7 @@ class CriaUsuario(View):
             colab.user = usuario
             colab.matricula = matricula
             colab.nome = nome_completo
-            colab.nascimento = trabalhador['nascimento']
+            colab.nascimento = self.context['nascimento']
             colab.cpf = self.context['cpf']
             colab.save()
 
