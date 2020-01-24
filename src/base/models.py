@@ -17,7 +17,11 @@ class Colaborador(models.Model):
     cpf = models.CharField(
         max_length=11, unique=True, default=0,
         verbose_name='CPF')
-    obs = models.CharField(max_length=1000)
+    obs = models.CharField(
+        null=True, blank=True, max_length=1000)
+
+    def __str__(self):
+        return self.nome
 
     class Meta:
         db_table = "fo2_colaborador"
