@@ -46,36 +46,11 @@
       {% endblock %}
     </div>
   </main>
-  {% block footer %}{% endblock %}
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> -->
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <!-- <script src="js/bootstrap.min.js"></script> -->
-  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
-  {% block javascript %}{% endblock %}
-  <script>
-    var FIREFOX = /Firefox/i.test(navigator.userAgent);
-
-    if (FIREFOX) {
-      var monkey = document.getElementById("greasymonkeyverify");
-    } else {
-      var monkey = document.getElementById("tampermonkeyverify");
-    }
-    monkey.style.display="inline";
-
-    function s_show() {
-      monkey.getElementsByClassName('icon')[0].style.display="none";
-      monkey.getElementsByClassName('content')[0].style.display="inline";
-    }
-
-    function s_hide() {
-      monkey.getElementsByClassName('icon')[0].style.display="inline";
-      monkey.getElementsByClassName('content')[0].style.display="none";
-    }
-
-  </script>
-  {% block footer_space %}<p>&nbsp;</p>{% endblock %}
+  {% block footer %}
+  {% endblock %}
+  {% block javascript %}
+  {% endblock %}
+  {% block footer_space %}
+  {% endblock %}
 </body>
 </html>
