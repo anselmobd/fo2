@@ -6,7 +6,7 @@ from django.db import connections
 from django.views import View
 from django.http import JsonResponse
 
-from fo2.models import rows_to_dict_list
+from utils.models import rows_to_dict_list
 
 from geral.functions import has_permission
 

@@ -14,7 +14,7 @@ from django.db.models import When, F, Q
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from fo2.models import rows_to_dict_list
+from utils.models import rows_to_dict_list
 from base.views import O2BaseGetPostView, O2BaseGetView
 
 from .models import *

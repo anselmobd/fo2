@@ -1,4 +1,4 @@
-from fo2.models import rows_to_dict_list_lower
+from utils.models import rows_to_dict_list_lower
 
 
 def get_preco_medio_ref_cor_tam(cursor, ref, cor, tam):

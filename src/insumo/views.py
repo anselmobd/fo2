@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from django.core.cache import cache
 
 from fo2 import settings
-from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.models import rows_to_dict_list, rows_to_dict_list_lower
 from fo2.template import group_rowspan
 
 from geral.models import Dispositivos, RoloBipado

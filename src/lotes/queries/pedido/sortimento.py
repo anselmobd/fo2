@@ -1,4 +1,4 @@
-from fo2.models import GradeQtd
+from utils.models import GradeQtd
 
 from utils.functions import arg_def
 

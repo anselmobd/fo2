@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views import View
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from fo2.models import rows_to_dict_list
+from utils.models import rows_to_dict_list
 from fo2.template import group_rowspan
 
 from utils.forms import FiltroForm

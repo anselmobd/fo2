@@ -1,7 +1,7 @@
 from django.db import connections
 from functools import lru_cache
 
-from fo2.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.models import rows_to_dict_list, rows_to_dict_list_lower
 
 from .busca_modelo import *
 from .colecoes_de_modelo import *
