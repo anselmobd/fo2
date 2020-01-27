@@ -3,9 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from fo2.template import group_rowspan
-
-from utils.views import totalize_grouped_data
+from utils.views import totalize_grouped_data, group_rowspan
 
 import produto.queries
 

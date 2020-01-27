@@ -5,8 +5,7 @@ from django.shortcuts import render
 from django.db import connections
 from django.views import View
 
-from utils.views import totalize_grouped_data
-from fo2.template import group_rowspan
+from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms import DistribuicaoForm
 import lotes.models as models

@@ -18,14 +18,13 @@ from django.template.loader import render_to_string
 from django.core.cache import cache
 
 from fo2 import settings
-from utils.models import rows_to_dict_list, rows_to_dict_list_lower
-from fo2.template import group_rowspan
 
 from geral.models import Dispositivos, RoloBipado
-from utils.functions import segunda, max_not_None, min_not_None
-from utils.views import totalize_grouped_data
-from utils.functions import make_key_cache, fo2logger
 from utils.cache import entkeys
+from utils.functions import \
+    segunda, max_not_None, min_not_None, make_key_cache, fo2logger
+from utils.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.views import totalize_grouped_data, group_rowspan
 
 import insumo.queries as queries
 import insumo.models as models
