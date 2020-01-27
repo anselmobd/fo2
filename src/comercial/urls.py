@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
+
 urlpatterns = [
     url(r'^$', views.index, name='index'),
 
@@ -10,10 +11,10 @@ urlpatterns = [
     url(r'^ficha_cliente/(?P<cnpj>.+)/$', views.FichaCliente.as_view(),
         name='ficha_cliente__get'),
 
-    url(r'^vendas_cor/$', views.vendas.VendasPorCor.as_view(),
+    url(r'^vendas_cor/$', views.VendasPorCor.as_view(),
         name='vendas_cor'),
 
-    url(r'^vendas_tamanho/$', views.vendas.VendasPorTamanho.as_view(),
+    url(r'^vendas_tamanho/$', views.VendasPorTamanho.as_view(),
         name='vendas_tamanho'),
 
     url(r'^analise_vendas/$',
