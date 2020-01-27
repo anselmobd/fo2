@@ -1,5 +1,5 @@
-from pprint import pprint
 from datetime import date, timedelta, datetime
+from pprint import pprint
 # from weasyprint import HTML
 
 from django.views import View
@@ -10,10 +10,9 @@ from django.db.models import Exists, OuterRef
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from fo2.template import group_rowspan
-
 from base.views import O2BaseGetView
 from utils.functions import dow_info
+from utils.views import group_rowspan
 
 import manutencao.models as models
 

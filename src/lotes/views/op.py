@@ -2,23 +2,21 @@ import copy
 import time
 from pprint import pprint
 
-from django.shortcuts import render
 from django.db import connections
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
-from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from fo2.template import group_rowspan
-
-from utils.views import totalize_grouped_data, totalize_data
-from utils.classes import Perf
 from insumo.queries import insumos_de_produtos_em_dual
 from geral.functions import config_get_value
+from utils.classes import Perf
+from utils.views import totalize_grouped_data, totalize_data, group_rowspan
 
-import lotes.queries.op
 import lotes.forms as forms
-import lotes.models as models
 import lotes.functions as functions
+import lotes.models as models
+import lotes.queries.op
 
 
 class Op(View):

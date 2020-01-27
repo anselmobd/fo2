@@ -6,8 +6,7 @@ from django.urls import reverse
 from django.db import connections
 from django.views import View
 
-from fo2.template import group_rowspan
-from utils.views import totalize_grouped_data, totalize_data
+from utils.views import totalize_grouped_data, totalize_data, group_rowspan
 
 import contabil.forms as forms
 import contabil.queries as queries

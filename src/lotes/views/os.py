@@ -3,7 +3,7 @@ from django.db import connections
 from django.urls import reverse
 from django.views import View
 
-from fo2.template import group_rowspan
+from utils.views import group_rowspan
 
 from lotes.forms import OsForm
 import lotes.models as models

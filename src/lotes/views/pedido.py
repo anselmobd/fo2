@@ -7,8 +7,7 @@ from django.urls import reverse
 from django.views import View
 
 from geral.functions import config_get_value
-from utils.views import totalize_grouped_data, totalize_data
-from fo2.template import group_rowspan
+from utils.views import totalize_grouped_data, totalize_data, group_rowspan
 
 import produto.queries
 

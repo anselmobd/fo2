@@ -5,12 +5,11 @@ from django.db import connections
 from django.urls import reverse
 from django.views import View
 
-from fo2.template import group_rowspan
-
 from geral.functions import request_user, has_permission
+from utils.views import group_rowspan
 
-from lotes.forms import LoteForm
 import lotes.models as models
+from lotes.forms import LoteForm
 
 
 class Posicao(View):
