@@ -1,3 +1,3 @@
 from .views import *
-from . import estoque
-from . import vendas
+from .vendas import *
+from .estoque import *
