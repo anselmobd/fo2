@@ -4,7 +4,7 @@ import datetime
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 
-from fo2.models import rows_to_dict_list_lower
+from utils.models import rows_to_dict_list_lower
 import lotes.models as models
 
 

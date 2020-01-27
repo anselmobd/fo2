@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.db import models
 
-from fo2.models import rows_to_dict_list_lower, GradeQtd
+from utils.models import rows_to_dict_list_lower, GradeQtd
 
 
 def inconsistencias_detalhe(cursor, op, ocs, est63=False):

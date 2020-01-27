@@ -1,4 +1,4 @@
-from fo2.models import rows_to_dict_list
+from utils.models import rows_to_dict_list
 
 from lotes.models import *
 

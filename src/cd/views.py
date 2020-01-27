@@ -19,7 +19,7 @@ from django.http import JsonResponse
 from django.utils.functional import SimpleLazyObject
 from django.contrib.auth.models import User
 
-from fo2.models import rows_to_dict_list_lower, GradeQtd
+from utils.models import rows_to_dict_list_lower, GradeQtd
 from fo2.template import group_rowspan
 
 from utils.views import totalize_grouped_data

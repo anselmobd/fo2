@@ -1,4 +1,4 @@
-from fo2.models import rows_to_dict_list, GradeQtd
+from utils.models import rows_to_dict_list, GradeQtd
 
 from lotes.models import *
 from lotes.models.base import *

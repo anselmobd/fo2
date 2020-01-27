@@ -2,7 +2,7 @@ import datetime
 
 from django.core.cache import cache
 
-from fo2.models import rows_to_dict_list
+from utils.models import rows_to_dict_list
 
 from utils.functions import make_key_cache, fo2logger, cache_ttl
 
