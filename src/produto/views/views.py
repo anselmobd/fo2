@@ -22,8 +22,6 @@ from base.views import O2BaseGetPostView
 import produto.forms as forms
 import produto.queries as queries
 
-from .gtin_range import *
-
 
 def index(request):
     return render(request, 'produto/index.html')
