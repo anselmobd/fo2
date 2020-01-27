@@ -220,6 +220,10 @@ def index(request):
          'link': 'http://escolatrabalho.gov.br/'},
     ]
     rota2020 = [
+        {'data': strdmy2date('27/01/2020'),
+         'chamada': 'Qualidade e Produtividade',
+         'link': '/media/rh/campanhas/2020/'
+                 '01/27/qualidade_e_produtividade.pdf'},
         {'data': strdmy2date('22/01/2020'),
          'chamada': 'Transformar juntos',
          'link': '/rh/campanhas/2020-01-22'},
