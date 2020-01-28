@@ -34,6 +34,9 @@ kb
 # Secret configuration
 etc/secret_key.txt
 
+# PyCharm
+.idea/
+
 ####
 
 # Byte-compiled / optimized / DLL files
