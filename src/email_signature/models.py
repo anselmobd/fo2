@@ -49,3 +49,5 @@ class Account(models.Model):
     class Meta:
         db_table = "fo2_emsign_account"
         verbose_name = "Conta"
+        permissions = (("can_edit_mail_signature", "Can edit mail signature"),
+                       )
