@@ -1,3 +1,5 @@
-<!-- <ul>
-  <li><a href="{% url 'email_signature:accounts' %}">Contas</a></li>
-</ul> -->
+{% if perms.email_signature.can_edit_mail_signature %}
+  <ul>
+    <li><a href="{% url 'email_signature:accounts' %}">Contas</a></li>
+  </ul>
+{% endif %}
