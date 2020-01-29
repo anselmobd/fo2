@@ -8,49 +8,53 @@
       <li><a href="{% url 'geral:gera_fluxo_dot' %}">Gera fluxo ".dot"</a></li>
     {% endif %}
   {% endif %}
-</ul>
-{% if request.user.is_authenticated %}
-  <br />
-  <li><a href="{% url 'geral:configuracao' %}">Configuração</a></li>
-{% endif %}
-{% if list_geral_paineis %}
-  <br />
-  <li>Paineis</li>
-  <ul>
-    {% for painel in list_geral_paineis %}
-    <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
-    {% endfor %}
-  </ul>
-{% endif %}
-{% if list_geral_modulos %}
-  <br />
-  <li>Manutenção de informativo</li>
-  <ul>
-    {% for modulo in list_geral_modulos %}
-      <li><a href="/geral/informativo/{{ modulo.slug }}/">{{ modulo.nome }}</a></li>
-    {% endfor %}
-  </ul>
-{% endif %}
 
-{% if list_geral_pop_assuntos %}
-  {% if 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}
+  {% if request.user.is_authenticated %}
     <br />
-    <li>Procedimentos (POPs)</li>
+    <li>Configuração</li>
     <ul>
-      {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}
-        <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
+      <li><a href="{% url 'geral:configuracao' %}">Edita</a></li>
+    </ul>
+  {% endif %}
+  {% if list_geral_paineis %}
+    <br />
+    <li>Paineis</li>
+    <ul>
+      {% for painel in list_geral_paineis %}
+      <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
       {% endfor %}
     </ul>
   {% endif %}
-  {% for grupo in 'pop_assuntos_grupos'|list_geral %}
+  {% if list_geral_modulos %}
     <br />
-    <li>{{grupo.grupo}}</li>
+    <li>Manutenção de informativo</li>
     <ul>
-      {% with 'grupo_slug=='|add:grupo.grupo_slug__min as filtro %}
-        {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:filtro %}
+      {% for modulo in list_geral_modulos %}
+        <li><a href="/geral/informativo/{{ modulo.slug }}/">{{ modulo.nome }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if list_geral_pop_assuntos %}
+    {% if 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}
+      <br />
+      <li>Procedimentos (POPs)</li>
+      <ul>
+        {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}
           <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
         {% endfor %}
-      {% endwith %}
-    </ul>
-  {% endfor %}
-{% endif %}
+      </ul>
+    {% endif %}
+    {% for grupo in 'pop_assuntos_grupos'|list_geral %}
+      <br />
+      <li>{{grupo.grupo}}</li>
+      <ul>
+        {% with 'grupo_slug=='|add:grupo.grupo_slug__min as filtro %}
+          {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:filtro %}
+            <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
+          {% endfor %}
+        {% endwith %}
+      </ul>
+    {% endfor %}
+  {% endif %}
+</ul>
