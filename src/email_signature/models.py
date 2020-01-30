@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Account(models.Model):
@@ -38,12 +39,16 @@ class Account(models.Model):
         null=True, blank=True,
         verbose_name='alterado em')
 
+    def __str__(self):
+        return self.codigo
+
     def save(self, *args, **kwargs):
         ''' On create, get timestamps '''
+        now = timezone.now()
         if self.id:
             self.update_at = now
         else:  # At create have no "id"
-            self.create_at = timezone.now()
+            self.create_at = now
         super(Account, self).save(*args, **kwargs)
 
     class Meta:
