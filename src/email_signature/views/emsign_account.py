@@ -1,7 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
-from produto.models import Account
+from email_signature.models import Account
 
 
 class AccountListView(ListView):
