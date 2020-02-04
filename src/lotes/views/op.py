@@ -77,17 +77,21 @@ class Op(View):
             if val_parm == 'S':
                 i_headers = (
                     'Situação', 'Cancelamento', 'Unidade', 'Pedido',
-                    'Pedido do cliente', 'Relacionamento com OPs')
+                    'Pedido do cliente', 'Relacionamento com OPs',
+                    'Prioridade')
                 i_fields = (
                     'SITUACAO', 'CANCELAMENTO', 'UNIDADE', 'PEDIDO',
-                    'PED_CLIENTE', 'TIPO_OP')
+                    'PED_CLIENTE', 'TIPO_OP',
+                    'PRIORIDADE')
             else:
                 i_headers = (
                     'Situação', 'Cancelamento', 'Pedido',
-                    'Pedido do cliente', 'Relacionamento com OPs')
+                    'Pedido do cliente', 'Relacionamento com OPs',
+                    'Prioridade')
                 i_fields = (
                     'SITUACAO', 'CANCELAMENTO', 'PEDIDO',
-                    'PED_CLIENTE', 'TIPO_OP')
+                    'PED_CLIENTE', 'TIPO_OP',
+                    'PRIORIDADE')
             context.update({
                 'i_headers': i_headers,
                 'i_fields': i_fields,

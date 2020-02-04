@@ -267,6 +267,7 @@ def busca_op(
         , sele.DEPOSITO_CODIGO
         , sele.DEPOSITO
         , sele.PEDIDO
+        , sele.PRIORIDADE
         , sele.PED_CLIENTE
         , sele.DT_EMBARQUE
         , sele.STATUS_PEDIDO
@@ -374,6 +375,7 @@ def busca_op(
         , o.DEPOSITO_ENTRADA DEPOSITO_CODIGO
         , o.DEPOSITO_ENTRADA || ' - ' || d.DESCRICAO DEPOSITO
         , o.PEDIDO_VENDA PEDIDO
+        , o.PRIORIDADE_PRODU PRIORIDADE
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PED_CLIENTE
         , COALESCE(ped.DATA_ENTR_VENDA, NULL) DT_EMBARQUE
         , COALESCE(ped.STATUS_PEDIDO, NULL) STATUS_PEDIDO
@@ -508,6 +510,7 @@ def busca_op(
         , o.DEPOSITO_ENTRADA
         , d.DESCRICAO
         , o.PEDIDO_VENDA
+        , o.PRIORIDADE_PRODU
         , ped.COD_PED_CLIENTE
         , ped.DATA_ENTR_VENDA
         , ped.STATUS_PEDIDO
