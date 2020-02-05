@@ -6,7 +6,7 @@ from email_signature.models import Account
 
 class AccountListView(ListView):
     model = Account
-    context_object_name = 'emsign_accounts'
+    context_object_name = 'accounts'
 
 
 class AccountCreateView(CreateView):
