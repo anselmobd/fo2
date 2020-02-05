@@ -19,9 +19,15 @@ def get_template():
         pass
 
 
-def show_template(request):
+def get_template_file():
     template = get_template()
-    if template is None:
+    if template is not None:
+        return f'email_signature/{template}.html'
+
+
+def show_template(request):
+    template_file = get_template_file()
+    if template_file is None:
         return redirect('apoio_ao_erp')
 
     context = {
@@ -31,4 +37,4 @@ def show_template(request):
         'num_1': '(21) 99999-1111',
         'num_2': '(21) 99999-2222',
     }
-    return render(request, f'email_signature/{template}.html', context)
+    return render(request, template_file, context)
