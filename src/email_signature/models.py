@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 
 class Account(models.Model):
@@ -75,4 +76,4 @@ class Layout(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
-        super(Painel, self).save(*args, **kwargs)
+        super(Layout, self).save(*args, **kwargs)
