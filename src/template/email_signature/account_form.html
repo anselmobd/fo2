@@ -14,3 +14,13 @@
     <a href="{% url 'email_signature:account_delete' account.id %}">Exclui esta conta</a>
   {% endif %}
 {% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
+
+    window.onload = function() {
+      $("#id_codigo").focus();
+    }
+
+  </script>
+{% endblock %}
