@@ -6,7 +6,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 
     url(r'^account/$', views.AccountListView.as_view(),
-        name='account_changelist'),
+        name='account_list'),
 
     url(r'^account/add/$', views.AccountCreateView.as_view(),
         name='account_add'),
