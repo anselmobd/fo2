@@ -1,7 +1,7 @@
 {% extends 'email_signature/index.html' %}
 
-{% block title.content %}Range de GTIN - {{ block.super }}{% endblock title.content %}
-{% block header.content %}Range de GTIN - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block title.content %}Contas - {{ block.super }}{% endblock title.content %}
+{% block header.content %}Contas - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
   <h4>Listagem</h4>
@@ -9,8 +9,8 @@
   {% for emsign_account in emsign_accounts %}
     <li>{{ emsign_account }} <a href="{% url 'email_signature:account_change' emsign_account.id %}">Edita</a></li>
   {% empty %}
-    <li>Sem range de GTIN.</li>
+    <li>Nenhum conta.</li>
   {% endfor %}
   </ul>
-  <a href="{% url 'email_signature:account_add' %}">Adiciona um range de GTIN</a>
+  <a href="{% url 'email_signature:account_add' %}">Adiciona uma conta</a>
 {% endblock %}
