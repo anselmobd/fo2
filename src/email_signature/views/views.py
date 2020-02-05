@@ -11,11 +11,17 @@ def index(request):
     return render(request, 'email_signature/index.html')
 
 
-def show_template(request):
+def get_template():
     try:
-        template = models.Layout.objects.filter(
+        return models.Layout.objects.filter(
             habilitado=True).first().template
     except Exception:
+        pass
+
+
+def show_template(request):
+    template = get_template()
+    if template is None:
         return redirect('apoio_ao_erp')
 
     context = {
