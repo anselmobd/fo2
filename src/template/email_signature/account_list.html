@@ -6,8 +6,8 @@
 {% block content %}
   <h4>Listagem</h4>
   <ul>
-  {% for emsign_account in emsign_accounts %}
-    <li>{{ emsign_account }} <a href="{% url 'email_signature:account_change' emsign_account.id %}">Edita</a></li>
+  {% for account in accounts %}
+    <li>{{ account }} <a href="{% url 'email_signature:account_change' account.id %}">Edita</a></li>
   {% empty %}
     <li>Nenhum conta.</li>
   {% endfor %}
