@@ -1,0 +1,8 @@
+{% extends 'email_signature/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block content %}
+  <h4>Geradas</h4>
+{% endblock %}

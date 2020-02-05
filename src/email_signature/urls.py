@@ -20,4 +20,7 @@ urlpatterns = [
 
     url(r'^show_template$', views.show_template, name='show_template'),
 
+    url(r'^gerar_assinaturas$', views.GerarAssinaturas.as_view(),
+        name='gerar_assinaturas'),
+
 ]
