@@ -1,2 +1,2 @@
-from .emsign_account import *
+from .account import *
 from .views import *
