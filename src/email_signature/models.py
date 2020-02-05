@@ -76,4 +76,12 @@ class Layout(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
+        if self.habilitado:
+            outros_habilitados = Layout.objects.filter(
+                habilitado=True
+            ).exclude(id=self.id)
+            if len(outros_habilitados) != 0:
+                for layout in outros_habilitados:
+                    layout.habilitado = False
+                    layout.save()
         super(Layout, self).save(*args, **kwargs)
