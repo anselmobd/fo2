@@ -4,7 +4,7 @@
 {% block header.content %}Range de GTIN - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
-  <a href="{% url 'email_signature:account_changelist' %}">Ir para listagem</a>
+  <a href="{% url 'email_signature:account_list' %}">Ir para listagem</a>
   <form action="" method="post">{% csrf_token %}
     <p>Confirma excluir o Range de GTIN "{{ object }}"?</p>
     <input type="submit" value="Confirma" />
