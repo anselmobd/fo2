@@ -18,4 +18,6 @@ urlpatterns = [
         views.AccountDeleteView.as_view(),
         name='account_delete'),
 
+    url(r'^show_template$', views.show_template, name='show_template'),
+
 ]
