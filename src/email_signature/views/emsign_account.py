@@ -13,16 +13,16 @@ class AccountCreateView(CreateView):
     model = Account
     fields = ('codigo', 'nome', 'setor', 'email', 'tipo_num_1', 'num_1',
               'tipo_num_2', 'num_2', 'dir_servidor', 'dir_local')
-    success_url = reverse_lazy('email_signature:emsign_account_changelist')
+    success_url = reverse_lazy('email_signature:account_changelist')
 
 
 class AccountUpdateView(UpdateView):
     model = Account
     fields = ('codigo', 'nome', 'setor', 'email', 'tipo_num_1', 'num_1',
               'tipo_num_2', 'num_2', 'dir_servidor', 'dir_local')
-    success_url = reverse_lazy('email_signature:emsign_account_changelist')
+    success_url = reverse_lazy('email_signature:account_changelist')
 
 
 class AccountDeleteView(DeleteView):
     model = Account
-    success_url = reverse_lazy('email_signature:emsign_account_changelist')
+    success_url = reverse_lazy('email_signature:account_changelist')

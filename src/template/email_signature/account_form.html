@@ -4,13 +4,13 @@
 {% block header.content %}Range de GTIN - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
-  <a href="{% url 'email_signature:emsign_account_changelist' %}">Ir para listagem</a><br />
+  <a href="{% url 'email_signature:account_changelist' %}">Ir para listagem</a><br />
   <form method="post" id="emsign_accountForm" novalidate>
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Salva</button>
   </form>
   {% if emsign_account %}
-    <a href="{% url 'email_signature:emsign_account_delete' emsign_account.id %}">Exclui este range de GTIN</a>
+    <a href="{% url 'email_signature:account_delete' emsign_account.id %}">Exclui este range de GTIN</a>
   {% endif %}
 {% endblock %}
