@@ -57,7 +57,7 @@ class TipoImagem(models.Model):
 
 
 def upload_to(instance, filename):
-    filename_base, filename_ext = os.path.splitext(filename)
+    _, filename_ext = os.path.splitext(filename)
     return "upload/imagens/{tipo_imagem}/{filename}{extension}".format(
         tipo_imagem=instance.tipo_imagem.slug,
         filename=instance.slug,
