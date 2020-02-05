@@ -56,3 +56,23 @@ class Account(models.Model):
         verbose_name = "Conta"
         permissions = (("can_edit_mail_signature", "Can edit mail signature"),
                        )
+
+
+class Layout(models.Model):
+    nome = models.CharField(
+        max_length=64)
+    slug = models.SlugField()
+    template = models.CharField(
+        max_length=64)
+    habilitado = models.NullBooleanField(
+        default=False)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = "fo2_emsign_layout"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(Painel, self).save(*args, **kwargs)
