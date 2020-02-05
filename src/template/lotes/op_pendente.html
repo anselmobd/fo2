@@ -43,6 +43,17 @@
 {% if colecao %}
   <h4>Coleção: {{ colecao }}</h4>
 {% endif %}
+{% if tipo and tipo != 't' %}
+  <h4>Tipo:
+    {% if   tipo == 'a' %}PA
+    {% elif tipo == 'g' %}PG
+    {% elif tipo == 'b' %}PB
+    {% elif tipo == 'p' %}PG/PB
+    {% elif tipo == 'v' %}PA/PG/PB
+    {% elif tipo == 'm' %}MD
+    {% endif %}
+  </h4>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}

@@ -252,6 +252,17 @@ class OpPendenteForm(forms.Form):
     situacao = forms.ChoiceField(
         label='Situação', choices=CHOICES, initial='0')
 
+    CHOICES = [('t', 'Todos'),
+               ('a', 'PA'),
+               ('g', 'PG'),
+               ('b', 'PB'),
+               ('p', 'PG/PB'),
+               ('v', 'PA/PG/PB'),
+               ('m', 'MD'),
+               ]
+    tipo = forms.ChoiceField(
+        label='Tipo de produto', choices=CHOICES, initial='t')
+
     def clean_periodo(self, periodo, default):
         try:
             i_periodo = int(float(periodo))
