@@ -5,4 +5,15 @@
 
 {% block content %}
   <h4>Geradas</h4>
+  <ul>
+  {% for item in lista %}
+    <li>{{item.conta}}
+      {% if item.erro %}
+        - {{ item.erro }}
+      {% else %}
+        - OK
+      {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
 {% endblock %}
