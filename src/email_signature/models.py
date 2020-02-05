@@ -76,6 +76,7 @@ class Layout(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
+        super(Layout, self).save(*args, **kwargs)
         if self.habilitado:
             outros_habilitados = Layout.objects.filter(
                 habilitado=True
@@ -84,4 +85,3 @@ class Layout(models.Model):
                 for layout in outros_habilitados:
                     layout.habilitado = False
                     layout.save()
-        super(Layout, self).save(*args, **kwargs)
