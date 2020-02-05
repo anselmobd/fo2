@@ -9,5 +9,5 @@
     <p>Confirma excluir a conta "{{ object }}"?</p>
     <input type="submit" value="Confirma" />
   </form>
-  <a href="{% url 'email_signature:account_change' emsign_account.id %}">Volta para edição</a>
+  <a href="{% url 'email_signature:account_change' account.id %}">Volta para edição</a>
 {% endblock %}

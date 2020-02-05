@@ -10,7 +10,7 @@
     {{ form.as_p }}
     <button type="submit">Salva</button>
   </form>
-  {% if emsign_account %}
-    <a href="{% url 'email_signature:account_delete' emsign_account.id %}">Exclui esta conta</a>
+  {% if account %}
+    <a href="{% url 'email_signature:account_delete' account.id %}">Exclui esta conta</a>
   {% endif %}
 {% endblock %}
