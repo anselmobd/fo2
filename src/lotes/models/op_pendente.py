@@ -5,8 +5,25 @@ from lotes.models.base import *
 
 
 def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
-                colecao, situacao):
-    # Ordens pendentes por estágio
+                colecao, situacao, tipo):
+
+    filtro_tipo = ''
+    if tipo == 'a':
+        filtro_tipo = "AND l.PROCONF_GRUPO < 'A0000'"
+    elif tipo == 'g':
+        filtro_tipo = ("AND l.PROCONF_GRUPO >= 'A0000' "
+                       "AND l.PROCONF_GRUPO < 'B0000'")
+    elif tipo == 'b':
+        filtro_tipo = ("AND l.PROCONF_GRUPO >= 'B0000' "
+                       "AND l.PROCONF_GRUPO < 'C0000'")
+    elif tipo == 'p':
+        filtro_tipo = ("AND l.PROCONF_GRUPO >= 'A0000' "
+                       "AND l.PROCONF_GRUPO < 'C0000'")
+    elif tipo == 'v':
+        filtro_tipo = "AND l.PROCONF_GRUPO < 'C0000'"
+    elif tipo == 'm':
+        filtro_tipo = "AND l.PROCONF_GRUPO >= 'C0000'"
+
     sql = """
         SELECT
           pend.*
@@ -71,6 +88,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
           AND ( %s is NULL or o.DATA_ENTRADA_CORTE >= %s )
           AND ( %s is NULL or o.DATA_ENTRADA_CORTE <= %s )
           AND ( %s is NULL or o.SITUACAO = %s )
+          {filtro_tipo} -- filtro_tipo
         GROUP BY
           e.CODIGO_ESTAGIO
         , e.DESCRICAO
@@ -92,7 +110,9 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
         , l.PROCONF_GRUPO
         , l.ORDEM_PRODUCAO
         ) pend
-    """
+    """.format(
+        filtro_tipo=filtro_tipo
+    )
     cursor.execute(sql, (colecao, colecao, estagio, estagio,
                    periodo_de, periodo_ate,
                    data_de, data_de, data_ate, data_ate,
