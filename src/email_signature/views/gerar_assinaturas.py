@@ -63,7 +63,7 @@ class GerarAssinaturas(View):
 
     def executa_comando_scp(self, comando):
         if settings.SSH_IDENTITY_FILE:
-            ssh_call = ["scp", "-P", "922"
+            ssh_call = ["scp", "-P", "922",
                         "-i", settings.SSH_IDENTITY_FILE]
         else:
             ssh_call = ["scp", "-P", "922"]
