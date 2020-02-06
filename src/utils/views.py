@@ -1,10 +1,12 @@
+import base64
+import hashlib
 import re
 import time
-import hashlib
 from pprint import pprint
 
 from django.template.defaulttags import register
 
+import base.models
 from geral.functions import request_user
 
 from utils.classes import GitVersion
@@ -98,6 +100,26 @@ def word_slice(text, slice):
         fim = adjust_cut(text,  fim)
 
     return text[inicio:fim]
+
+
+def image_to_data_url(filename):
+    ext = filename.split('.')[-1]
+    prefix = f'data:image/{ext};base64,'
+    with open(filename, 'rb') as f:
+        img = f.read()
+    return prefix + base64.b64encode(img).decode('utf-8')
+
+
+@register.simple_tag
+def data_url_image(tipo, imagem):
+    try:
+        imagem = base.models.Imagem.objects.get(
+            tipo_imagem__slug=tipo,
+            slug=imagem,
+        )
+        return image_to_data_url(imagem.imagem.path)
+    except base.models.Imagem.DoesNotExist:
+        return ''
 
 
 def totalize_data(data, config):
