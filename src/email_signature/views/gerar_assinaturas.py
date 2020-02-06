@@ -136,7 +136,7 @@ class GerarAssinaturas(View):
             self.apagar_assinatura_local()
 
             self.context['lista'].append(dict(
-                conta=conta.codigo,
+                conta=conta.email,
                 erro=erro,
             ))
 
