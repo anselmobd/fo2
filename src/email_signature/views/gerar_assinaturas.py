@@ -1,4 +1,5 @@
 import os
+import subprocess
 from pprint import pprint
 
 from django.shortcuts import render
@@ -15,7 +16,7 @@ class GerarAssinaturas(View):
         self.template_name = 'email_signature/gerar_assinaturas.html'
         self.context = {'titulo': 'Gerar assinaturas'}
 
-    def gerar_assinatura(self, conta):
+    def gerar_assinatura_local(self, conta):
         context = {
             'nome': conta.nome,
             'setor': conta.setor,
@@ -25,12 +26,89 @@ class GerarAssinaturas(View):
         }
         try:
             assinatura = render_to_string(self.template_file, context)
-            # arquivo = os.path.join(conta.dir_servidor, conta.arquivo)
-            arquivo = os.path.join('.', conta.arquivo)
+            arquivo = os.path.join('.', 'index_.html')
             with open(arquivo, 'w') as index:
                 index.write(assinatura)
         except Exception:
             return 'Erro'
+
+    def apagar_assinatura_local(self):
+        arquivo = os.path.join('.', 'index_.html')
+        os.remove(arquivo)
+
+    def decode_rstrip(self, lines):
+        output = []
+        for line in lines:
+            output.append(line.decode().rstrip())
+        return output
+
+    def executa_comando(self, comando):
+        ssh = subprocess.Popen(comando, shell=False, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        result = self.decode_rstrip(ssh.stdout.readlines())
+        error = self.decode_rstrip(ssh.stderr.readlines())
+        streamdata = ssh.communicate()[0]
+        returncode = ssh.returncode
+        return returncode, result, error
+
+    def executa_comando_ssh(self, comando):
+        return self.executa_comando(
+            ["ssh", "-p 922", "root@192.168.1.100"] +
+            comando)
+
+    def scape_dirname(self, dirname):
+        result = []
+        for caractere in dirname:
+            is_alfanum = caractere.isalnum()
+            is_simbolo = caractere in '/._-'
+            is_valido = is_alfanum or is_simbolo
+            if not is_valido:
+                caractere = f'\{caractere}'
+            result.append(caractere)
+        return ''.join(result)
+
+    def enviar_assinatura(self, conta):
+        exitcode, result, error = self.executa_comando_ssh(["hostname"])
+        if exitcode != 0:
+            return 'Sem acesso ao servidor'
+        if result[0] != 'servidor':
+            return 'Configuração de servidor errada'
+
+        dir_servidor = self.scape_dirname(conta.dir_servidor)
+
+        exitcode, result, error = self.executa_comando_ssh(
+            [f"stat -c '%A %U %G' '{dir_servidor}/'"])
+        if exitcode != 0:
+            return 'Erro acessando diretório'
+        if result[0] != 'drwxrwxrwx nobody nogroup':
+            return 'Diretório com direitos não esperados'
+
+        arquivo = self.scape_dirname(conta.arquivo)
+
+        exitcode, result, error = self.executa_comando(
+            ["scp", "-P 922", "index_.html",
+             f"root@192.168.1.100:{dir_servidor}/{arquivo}"])
+        if exitcode != 0:
+            return 'Erro copiando arquivo'
+
+        stat_index = os.stat("index_.html")
+
+        exitcode, result, error = self.executa_comando_ssh(
+            [f"stat -c '%s' '{dir_servidor}/{arquivo}'"])
+        if exitcode != 0:
+            return 'Erro verificando o arquivo'
+        if result[0] != str(stat_index.st_size):
+            return 'Arquivo com tamanho errado'
+
+        exitcode, result, error = self.executa_comando_ssh(
+            [f"chmod 777 '{dir_servidor}/{arquivo}'"])
+        if exitcode != 0:
+            return 'Erro acertando permissões'
+
+        exitcode, result, error = self.executa_comando_ssh(
+            [f"chown nobody:nogroup '{dir_servidor}/{arquivo}'"])
+        if exitcode != 0:
+            return 'Erro acertando dono e grupo'
 
     def mount_context(self):
         self.template_file = get_template_file()
@@ -38,12 +116,16 @@ class GerarAssinaturas(View):
         contas = models.Account.objects.all()
         self.context['lista'] = []
         for conta in contas:
-            erro = self.gerar_assinatura(conta)
+
+            erro = self.gerar_assinatura_local(conta)
+            if erro is None:
+                erro = self.enviar_assinatura(conta)
+            self.apagar_assinatura_local()
+
             self.context['lista'].append(dict(
                 conta=conta.codigo,
                 erro=erro,
             ))
-            return
 
     def get(self, request, *args, **kwargs):
         self.mount_context()
