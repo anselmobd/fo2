@@ -35,7 +35,7 @@ class Account(models.Model):
         verbose_name='alterado em')
 
     def __str__(self):
-        return self.codigo
+        return f'{self.email} - {self.nome} ({self.setor})'
 
     def save(self, *args, **kwargs):
         ''' On create, get timestamps '''
