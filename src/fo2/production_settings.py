@@ -62,3 +62,5 @@ CACHES = {
         },
     }
 }
+
+SSH_IDENTITY_FILE = '/home/fo2_production/.ssh/id_rsa_tussor'
