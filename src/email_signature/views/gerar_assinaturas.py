@@ -61,6 +61,14 @@ class GerarAssinaturas(View):
             ssh_call = ["ssh", "-p", "922", "root@192.168.1.100"]
         return self.executa_comando(ssh_call + comando)
 
+    def executa_comando_scp(self, comando):
+        if settings.SSH_IDENTITY_FILE:
+            ssh_call = ["scp", "-P", "922"
+                        "-i", settings.SSH_IDENTITY_FILE]
+        else:
+            ssh_call = ["scp", "-P", "922"]
+        return self.executa_comando(ssh_call + comando)
+
     def scape_dirname(self, dirname):
         result = []
         for caractere in dirname:
@@ -90,8 +98,8 @@ class GerarAssinaturas(View):
 
         arquivo = self.scape_dirname(conta.arquivo)
 
-        exitcode, result, error = self.executa_comando(
-            ["scp", "-P 922", "index_.html",
+        exitcode, result, error = self.executa_comando_scp(
+            ["index_.html",
              f"root@192.168.1.100:{dir_servidor}/{arquivo}"])
         if exitcode != 0:
             return 'Erro copiando arquivo'
