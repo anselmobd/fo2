@@ -2,6 +2,7 @@ import os
 import subprocess
 from pprint import pprint
 
+from django.conf import settings
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views import View
@@ -52,9 +53,12 @@ class GerarAssinaturas(View):
         return returncode, result, error
 
     def executa_comando_ssh(self, comando):
-        return self.executa_comando(
-            ["ssh", "-p 922", "root@192.168.1.100"] +
-            comando)
+        if settings.SSH_IDENTITY_FILE:
+            id_file_parm = f'-i {settings.SSH_IDENTITY_FILE}'
+            ssh_call = ["ssh", "-p 922", id_file_parm, "root@192.168.1.100"]
+        else:
+            ssh_call = ["ssh", "-p 922", "root@192.168.1.100"]
+        return self.executa_comando(ssh_call + comando)
 
     def scape_dirname(self, dirname):
         result = []
