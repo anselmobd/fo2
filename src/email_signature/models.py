@@ -12,8 +12,8 @@ class Account(models.Model):
     setor = models.CharField(
         null=True, blank=True,
         max_length=100)
-    email = models.CharField(
-        null=True, blank=True,
+    email = models.EmailField(
+        null=True, blank=True, unique=True,
         max_length=100, verbose_name='e-mail')
     num_1 = models.CharField(
         null=True, blank=True,
