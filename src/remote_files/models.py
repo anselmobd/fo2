@@ -27,11 +27,11 @@ class Diretorio(models.Model):
     descricao = models.CharField(max_length=200, verbose_name='descrição')
     caminho = models.CharField(max_length=300)
     file_perm = models.IntegerField(verbose_name='permissões (octal)')
-    file_usuer = models.CharField(max_length=50, verbose_name='usuário')
+    file_user = models.CharField(max_length=50, verbose_name='usuário')
     file_group = models.CharField(max_length=50, verbose_name='grupo')
 
     def __str__(self):
-        return f'({self.servidor.descricao}) {self.descricao} - {self.caminho}'
+        return f'{self.servidor.descricao} / {self.descricao}'
 
     class Meta:
         db_table = 'fo2_rfile_folder'
