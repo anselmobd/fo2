@@ -32,6 +32,16 @@
   {% if deposito %}
     <h4>OPs com depósito de entrada {{ deposito }}</h4>
   {% endif %}
+  {% if data_de or data_ate %}
+    <h4>Data de corte:
+    {% if data_de %}
+      De: {{ data_de }}
+    {% endif %}
+    {% if data_ate %}
+      Até: {{ data_ate }}
+    {% endif %}
+    </h4>
+  {% endif %}
   <table>
     {% if data_g %}
       <thead>
