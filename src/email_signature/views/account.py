@@ -9,7 +9,7 @@ from email_signature.models import Account
 
 
 _fields = ('email', 'nome', 'setor', 'ddd_1', 'num_1', 'ddd_2', 'num_2',
-           'dir_servidor')
+           'diretorio', 'subdiretorio')
 
 
 class AccountListView(PermissionRequiredMixin, ListView):
