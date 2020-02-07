@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.core.cache import cache
 
 from utils.models import rows_to_dict_list
@@ -127,7 +129,7 @@ def quant_estagio(
     return rows_to_dict_list(cursor)
 
 
-def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito):
+def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
     key_cache = make_key_cache()
 
     cached_result = cache.get(key_cache)
@@ -161,6 +163,16 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito):
     if deposito is not None and deposito != '':
         filtro_deposito = '''--
             AND o.DEPOSITO_ENTRADA = {}'''.format(deposito)
+
+    filtro_data_de = ''
+    if data_de is not None and data_de != '':
+        filtro_data_de = ''' --
+            AND o.DATA_ENTRADA_CORTE >= '{}' '''.format(data_de)
+
+    filtro_data_ate = ''
+    if data_ate is not None and data_ate != '':
+        filtro_data_ate = ''' --
+            AND o.DATA_ENTRADA_CORTE <= '{}' '''.format(data_ate)
 
     sql = """
         SELECT
@@ -335,6 +347,8 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito):
           {filtro_tipo_roteiro} -- filtro_tipo_roteiro
           {filtro_cnpj9} -- filtro_cnpj9
           {filtro_deposito} -- filtro_deposito
+          {filtro_data_de} -- filtro_data_de
+          {filtro_data_ate} -- filtro_data_ate
         GROUP BY
           l.CODIGO_ESTAGIO
         , e.DESCRICAO
@@ -346,6 +360,8 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito):
         filtro_tipo_roteiro=filtro_tipo_roteiro,
         filtro_cnpj9=filtro_cnpj9,
         filtro_deposito=filtro_deposito,
+        filtro_data_de=filtro_data_de,
+        filtro_data_ate=filtro_data_ate,
     )
     cursor.execute(sql)
 

@@ -15,10 +15,13 @@ class TotalEstagio(View):
     template_name = 'lotes/total_estagio.html'
     title_name = 'Totais gerais dos estágios'
 
-    def mount_context(self, cursor, tipo_roteiro, cliente, deposito):
+    def mount_context(
+            self, cursor, tipo_roteiro, cliente, deposito, data_de, data_ate):
         context = {
             'tipo_roteiro': tipo_roteiro,
             'deposito': deposito,
+            'data_de': data_de,
+            'data_ate': data_ate,
         }
 
         if cliente:
@@ -44,7 +47,8 @@ class TotalEstagio(View):
         else:
             cnpj9 = None
 
-        data = models.totais_estagios(cursor, tipo_roteiro, cnpj9, deposito)
+        data = models.totais_estagios(
+            cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem quantidades',
@@ -214,9 +218,12 @@ class TotalEstagio(View):
         tipo_roteiro = 'p'
         cliente = ''
         deposito = ''
+        data_de = ''
+        data_ate = ''
         cursor = connections['so'].cursor()
         context.update(
-            self.mount_context(cursor, tipo_roteiro, cliente, deposito))
+            self.mount_context(
+                cursor, tipo_roteiro, cliente, deposito, data_de, data_ate))
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -226,8 +233,10 @@ class TotalEstagio(View):
             tipo_roteiro = form.cleaned_data['tipo_roteiro']
             cliente = form.cleaned_data['cliente']
             deposito = form.cleaned_data['deposito']
+            data_de = form.cleaned_data['data_de']
+            data_ate = form.cleaned_data['data_ate']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, tipo_roteiro, cliente, deposito))
+                cursor, tipo_roteiro, cliente, deposito, data_de, data_ate))
         context['form'] = form
         return render(request, self.template_name, context)
