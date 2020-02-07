@@ -4,6 +4,10 @@ from django.urls import reverse_lazy
 from email_signature.models import Account
 
 
+_fields = ('email', 'nome', 'setor', 'ddd_1', 'num_1', 'ddd_2', 'num_2',
+           'dir_servidor')
+
+
 class AccountListView(ListView):
     model = Account
     context_object_name = 'accounts'
@@ -11,13 +15,13 @@ class AccountListView(ListView):
 
 class AccountCreateView(CreateView):
     model = Account
-    fields = ('email', 'nome', 'setor', 'num_1', 'num_2', 'dir_servidor')
+    fields = _fields
     success_url = reverse_lazy('email_signature:account_list')
 
 
 class AccountUpdateView(UpdateView):
     model = Account
-    fields = ('email', 'nome', 'setor', 'num_1', 'num_2', 'dir_servidor')
+    fields = _fields
     success_url = reverse_lazy('email_signature:account_list')
 
 
