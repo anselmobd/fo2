@@ -22,9 +22,6 @@ class Account(models.Model):
     dir_servidor = models.CharField(
         null=True, blank=True,
         max_length=200, verbose_name='diretório no servidor')
-    arquivo = models.CharField(
-        null=True, blank=True,
-        max_length=50)
     create_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='Criada em')
