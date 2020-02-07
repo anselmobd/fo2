@@ -97,7 +97,8 @@ class GerarAssinaturas(View):
         if result[0] != 'drwxrwxrwx nobody nogroup':
             return 'Diretório com direitos não esperados'
 
-        arquivo = self.scape_dirname(conta.arquivo)
+        usuario = self.scape_dirname(conta.email.split('@')[0])
+        arquivo = f'assinatura_{usuario}.html'
         arquivo_path = os.path.join(dir_servidor, arquivo)
 
         exitcode, result, error = self.executa_comando_scp(
