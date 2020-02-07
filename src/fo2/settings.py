@@ -277,8 +277,3 @@ CACHES = {
 INTERNAL_IPS = (
     '127.0.0.1',
 )
-
-# Caminho completo do arquivo de identidade a ser utilizado em chamadas ao
-# ssh e scp, por exemplo, na rotina de gerar assinaturas de e-mail.
-# Se vazio o parâmetro "-i" do ssh não é utilizado, funcionando com o default.
-SSH_IDENTITY_FILE = ''
