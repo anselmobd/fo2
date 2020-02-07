@@ -6,15 +6,14 @@ import remote_files.models
 
 
 class Account(models.Model):
+    email = models.EmailField(
+        unique=True,
+        max_length=100, verbose_name='e-mail')
     nome = models.CharField(
-        null=True, blank=True,
         max_length=100)
     setor = models.CharField(
         null=True, blank=True,
         max_length=100)
-    email = models.EmailField(
-        null=True, blank=True, unique=True,
-        max_length=100, verbose_name='e-mail')
     ddd_1 = models.IntegerField(
         default=21, verbose_name='DDD 1')
     num_1 = models.CharField(
@@ -28,7 +27,6 @@ class Account(models.Model):
     diretorio = models.ForeignKey(
         remote_files.models.Diretorio, on_delete=models.PROTECT)
     subdiretorio = models.CharField(
-        null=True, blank=True,
         max_length=200, verbose_name='sub-diretório de assinatura')
     create_at = models.DateTimeField(
         null=True, blank=True,
