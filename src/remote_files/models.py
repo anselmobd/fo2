@@ -3,15 +3,13 @@ from django.db import models
 
 class Servidor(models.Model):
     descricao = models.CharField(
-        unique=True, max_length=200,
-        verbose_name='descrição',
-        )
-    hostname = models.CharField(
-        unique=True, max_length=50,
-        )
-    ip4 = models.CharField(
-        unique=True, max_length=15,
-        )
+        unique=True, max_length=200, verbose_name='descrição')
+    hostname = models.CharField(unique=True, max_length=50)
+    ip4 = models.CharField(unique=True, max_length=15)
+    key_file = models.ImageField(
+        null=True, blank=True,
+        upload_to="upload/remote_files/servidor",
+        verbose_name='Chave pública')
 
     def __str__(self):
         return self.descricao
