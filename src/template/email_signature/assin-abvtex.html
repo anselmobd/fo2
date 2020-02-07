@@ -18,11 +18,11 @@
       <b><span style="font-size:12px;color:#666666;">+55 (21) 2178-4848</span></b>
       <br/>
       {% if num_1 %}
-        <b><span style="font-size:12px;color:#666666;">+55 {{ num_1 }}</span></b>
+        <b><span style="font-size:12px;color:#666666;">+55 {% if ddd_1 %}({{ ddd_1 }}) {% endif %}{{ num_1 }}</span></b>
         <br/>
       {% endif %}
       {% if num_2 %}
-        <b><span style="font-size:12px;color:#666666;">+55 {{ num_2 }}</span></b>
+        <b><span style="font-size:12px;color:#666666;">+55 {% if ddd_2 %}({{ ddd_2 }}) {% endif %}{{ num_2 }}</span></b>
         <br/>
       {% endif %}
       <a style="font-size:12px;color:#666666;" href="mailto:{{ email }}">{{ email }}</a>
