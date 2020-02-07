@@ -13,9 +13,13 @@ class Account(models.Model):
     email = models.EmailField(
         null=True, blank=True, unique=True,
         max_length=100, verbose_name='e-mail')
+    ddd_1 = models.IntegerField(
+        default=21, verbose_name='DDD 1')
     num_1 = models.CharField(
         null=True, blank=True,
         max_length=20, verbose_name='número 1')
+    ddd_2 = models.IntegerField(
+        default=21, verbose_name='DDD 2')
     num_2 = models.CharField(
         null=True, blank=True,
         max_length=20, verbose_name='número 2')
