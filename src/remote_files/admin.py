@@ -9,7 +9,7 @@ class ServidorAdmin(admin.ModelAdmin):
     list_display = ['descricao', 'hostname', 'ip4']
     search_fields = ['descricao', 'hostname', 'ip4']
     ordering = ['descricao']
-    fields = ['descricao', 'hostname', 'ip4']
+    fields = ['descricao', 'hostname', 'ip4', 'user', 'key_file']
 
 
 class DiretorioAdmin(admin.ModelAdmin):
