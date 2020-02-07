@@ -98,29 +98,30 @@ class GerarAssinaturas(View):
             return 'Diretório com direitos não esperados'
 
         arquivo = self.scape_dirname(conta.arquivo)
+        arquivo_path = os.path.join(dir_servidor, arquivo)
 
         exitcode, result, error = self.executa_comando_scp(
             [self.temp_file,
-             f"root@192.168.1.100:{dir_servidor}/{arquivo}"])
+             f"root@192.168.1.100:{arquivo_path}"])
         if exitcode != 0:
             return 'Erro copiando arquivo'
 
         stat_index = os.stat(self.temp_file)
 
         exitcode, result, error = self.executa_comando_ssh(
-            [f"stat -c '%s' '{dir_servidor}/{arquivo}'"])
+            [f"stat -c '%s' '{arquivo_path}'"])
         if exitcode != 0:
             return 'Erro verificando o arquivo'
         if result[0] != str(stat_index.st_size):
             return 'Arquivo com tamanho errado'
 
         exitcode, result, error = self.executa_comando_ssh(
-            [f"chmod 777 '{dir_servidor}/{arquivo}'"])
+            [f"chmod 777 '{arquivo_path}'"])
         if exitcode != 0:
             return 'Erro acertando permissões'
 
         exitcode, result, error = self.executa_comando_ssh(
-            [f"chown nobody:nogroup '{dir_servidor}/{arquivo}'"])
+            [f"chown nobody:nogroup '{arquivo_path}'"])
         if exitcode != 0:
             return 'Erro acertando dono e grupo'
 
