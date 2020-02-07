@@ -16,6 +16,7 @@ class GerarAssinaturas(View):
     def __init__(self):
         self.template_name = 'email_signature/gerar_assinaturas.html'
         self.context = {'titulo': 'Gerar assinaturas'}
+        self.temp_file = '_temp_assinatura_file_.html'
 
     def gerar_assinatura_local(self, conta):
         context = {
@@ -27,14 +28,14 @@ class GerarAssinaturas(View):
         }
         try:
             assinatura = render_to_string(self.template_file, context)
-            arquivo = os.path.join('.', 'index_.html')
+            arquivo = os.path.join('.', self.temp_file)
             with open(arquivo, 'w') as index:
                 index.write(assinatura)
         except Exception:
             return 'Erro'
 
     def apagar_assinatura_local(self):
-        arquivo = os.path.join('.', 'index_.html')
+        arquivo = os.path.join('.', self.temp_file)
         os.remove(arquivo)
 
     def decode_rstrip(self, lines):
@@ -99,12 +100,12 @@ class GerarAssinaturas(View):
         arquivo = self.scape_dirname(conta.arquivo)
 
         exitcode, result, error = self.executa_comando_scp(
-            ["index_.html",
+            [self.temp_file,
              f"root@192.168.1.100:{dir_servidor}/{arquivo}"])
         if exitcode != 0:
             return 'Erro copiando arquivo'
 
-        stat_index = os.stat("index_.html")
+        stat_index = os.stat(self.temp_file)
 
         exitcode, result, error = self.executa_comando_ssh(
             [f"stat -c '%s' '{dir_servidor}/{arquivo}'"])
