@@ -216,6 +216,7 @@ def make_key_cache(ignore=[]):
             value = argvalues[key]
             if (value is None) \
                     or isinstance(value, str) \
+                    or isinstance(value, datetime.date) \
                     or is_number(value):
                 values.append(value)
     braces = ['{}'] * len(values)
