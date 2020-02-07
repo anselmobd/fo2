@@ -11,15 +11,13 @@ class AccountListView(ListView):
 
 class AccountCreateView(CreateView):
     model = Account
-    fields = ('email', 'nome', 'setor', 'num_1',
-              'num_2', 'dir_servidor', 'arquivo')
+    fields = ('email', 'nome', 'setor', 'num_1', 'num_2', 'dir_servidor')
     success_url = reverse_lazy('email_signature:account_list')
 
 
 class AccountUpdateView(UpdateView):
     model = Account
-    fields = ('email', 'nome', 'setor', 'num_1',
-              'num_2', 'dir_servidor', 'arquivo')
+    fields = ('email', 'nome', 'setor', 'num_1', 'num_2', 'dir_servidor')
     success_url = reverse_lazy('email_signature:account_list')
 
 
