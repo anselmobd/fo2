@@ -6,6 +6,7 @@ class Servidor(models.Model):
         unique=True, max_length=200, verbose_name='descrição')
     hostname = models.CharField(unique=True, max_length=50)
     ip4 = models.CharField(unique=True, max_length=15)
+    port = models.IntegerField(default=22, verbose_name='porta ssh')
     user = models.CharField(
         max_length=50, default=None, verbose_name='usuário')
     key_file = models.FileField(
