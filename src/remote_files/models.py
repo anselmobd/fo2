@@ -6,7 +6,9 @@ class Servidor(models.Model):
         unique=True, max_length=200, verbose_name='descrição')
     hostname = models.CharField(unique=True, max_length=50)
     ip4 = models.CharField(unique=True, max_length=15)
-    key_file = models.ImageField(
+    user = models.CharField(
+        max_length=50, default=None, verbose_name='usuário')
+    key_file = models.FileField(
         null=True, blank=True,
         upload_to="upload/remote_files/servidor",
         verbose_name='Chave pública')
