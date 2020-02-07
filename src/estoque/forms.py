@@ -306,11 +306,16 @@ class ItemNoTempoForm(forms.Form):
         label='Tamanho', required=True, min_length=1, max_length=3,
         widget=forms.TextInput(attrs=string_upper_attrs))
 
-    CHOICES = [
-        ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
-        ('102', '102-PA VAREJO PRIMEIRA QUALIDADE'),
-        ('231', '231-MAT PRIMA ESTOQUE'),
-    ]
+    CHOICES = []
+    principais = (101, 102, 231)
+    depositos_principais = geral.queries.deposito(only=principais)
+    depositos_outros = geral.queries.deposito(less=principais)
+    for deposito in depositos_principais + depositos_outros:
+        if deposito['COD'] > 1:
+            CHOICES.append((
+                deposito['COD'],
+                f"{deposito['COD']} - {deposito['DESCR']}"
+            ))
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
         choices=CHOICES, initial='')
