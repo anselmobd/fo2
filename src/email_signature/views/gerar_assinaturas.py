@@ -23,7 +23,9 @@ class GerarAssinaturas(View):
             'nome': conta.nome,
             'setor': conta.setor,
             'email': conta.email,
+            'ddd_1': conta.ddd_1,
             'num_1': conta.num_1,
+            'ddd_2': conta.ddd_2,
             'num_2': conta.num_2,
         }
         try:

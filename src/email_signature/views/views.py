@@ -34,7 +34,9 @@ def show_template(request):
         'nome': 'Nome do funcionário',
         'setor': 'Setor',
         'email': 'funcionario@cuecasduomo.com.br',
-        'num_1': '(21) 99999-1111',
-        'num_2': '(21) 99999-2222',
+        'ddd_1': 21,
+        'num_1': '99999-1111',
+        'ddd_2': 21,
+        'num_2': '99999-2222',
     }
     return render(request, template_file, context)
