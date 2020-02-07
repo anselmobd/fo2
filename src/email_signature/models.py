@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 
+import remote_files.models
+
 
 class Account(models.Model):
     nome = models.CharField(
@@ -23,6 +25,8 @@ class Account(models.Model):
     num_2 = models.CharField(
         null=True, blank=True,
         max_length=20, verbose_name='número 2')
+    diretorio = models.ForeignKey(
+        remote_files.models.Diretorio, on_delete=models.PROTECT)
     subdiretorio = models.CharField(
         null=True, blank=True,
         max_length=200, verbose_name='sub-diretório de assinatura')
