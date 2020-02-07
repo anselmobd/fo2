@@ -575,6 +575,14 @@ class TotaisEstagioForm(forms.Form):
         label='Depósito', required=False, max_length=3,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    data_de = forms.DateField(
+        label='Data do Corte/Gargalo: De', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    data_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
     def clean_cliente(self):
         cliente = self.cleaned_data['cliente'].upper()
         data = self.data.copy()
