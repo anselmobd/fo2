@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'manutencao',
     'produto',
     'utils',
+    'remote_files',
 ]
 
 MIDDLEWARE = [
