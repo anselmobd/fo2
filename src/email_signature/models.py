@@ -23,9 +23,9 @@ class Account(models.Model):
     num_2 = models.CharField(
         null=True, blank=True,
         max_length=20, verbose_name='número 2')
-    dir_servidor = models.CharField(
+    subdiretorio = models.CharField(
         null=True, blank=True,
-        max_length=200, verbose_name='diretório no servidor')
+        max_length=200, verbose_name='sub-diretório de assinatura')
     create_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='Criada em')
