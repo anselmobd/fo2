@@ -1,13 +1,70 @@
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html class="no-js">
 <head>
   <meta charset="utf-8">
   <title>Painel de meta de faturamento</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--Chart.js-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js" integrity="sha256-N4u5BjTLNwmGul6RgLoESPNqDFVUibVuOYhP4gJgrew=" crossorigin="anonymous"></script>
+
   <!-- JQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Bootstrap -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- Base CSS -->
+  <link href="{% static "css/base.css" %}" rel="stylesheet">
+
+  <style media="screen">
+    .p_header {
+      width: 100%;
+      text-align: center;
+      background-image: linear-gradient(white, #f2f2f2);
+    }
+  </style>
 </head>
 <body>
-Painel de meta de faturamento
+  <div class="fullwidth">
+    <div class="p_header">
+      <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
+      <h1>
+        Painel de meta de faturamento
+      </h1>
+    </div>
+  </div>
+  <div class="container-fluid"
+       style="background-image: linear-gradient(white,#f1f1f1);">
+    <div class="row">
+      <div class="col-xs-1">
+        Mês<br>
+        Meta<br>
+        Faturado<br>
+        Resultado
+      </div>
+      <div class="col-xs-11">
+        <div class="container-fluid">
+          <div class="row">
+            {% for mes in meses %}
+              <div class="col-xs-1">
+                {{mes.mes}}<br>
+                {{mes.meta}}<br>
+                {{mes.faturado}}<br>
+                0
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
