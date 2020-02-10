@@ -30,39 +30,56 @@
       text-align: center;
       background-image: linear-gradient(white, #f2f2f2);
     }
+    p::first-line {
+      font-weight: bold;
+    }
+    .valores {
+      text-align: right;
+    }
   </style>
 </head>
 <body>
   <div class="fullwidth">
     <div class="p_header">
       <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
-      <h1>
+      <h2>
         Painel de meta de faturamento
-      </h1>
+      </h2>
     </div>
   </div>
-  <div class="container-fluid"
-       style="background-image: linear-gradient(white,#f1f1f1);">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-xs-1">
-        Mês<br>
-        Meta<br>
-        Faturado<br>
-        Resultado
+        <p>
+          Mês<br>
+          Meta<br>
+          Faturado<br>
+          Resultado
+        </p>
       </div>
-      <div class="col-xs-11">
+      <div class="col-xs-10">
         <div class="container-fluid">
           <div class="row">
             {% for mes in meses %}
-              <div class="col-xs-1">
-                {{mes.mes}}<br>
-                {{mes.meta}}<br>
-                {{mes.faturado}}<br>
-                0
+              <div class="col-xs-1 valores">
+                <p>
+                  {{mes.mes|date:"m/Y"}}<br>
+                  {{mes.meta}}<br>
+                  {{mes.faturado}}<br>
+                  {{mes.resultado}}
+                </p>
               </div>
             {% endfor %}
           </div>
         </div>
+      </div>
+      <div class="col-xs-1 valores">
+        <p>
+          Totais<br>
+          {{total.meta}}<br>
+          {{total.faturado}}<br>
+          {{total.resultado}}
+        </p>
       </div>
     </div>
   </div>
