@@ -102,6 +102,11 @@ def word_slice(text, slice):
     return text[inicio:fim]
 
 
+@register.filter
+def subtract(value, arg):
+    return value - arg
+
+
 def image_to_data_url(filename):
     ext = filename.split('.')[-1]
     prefix = f'data:image/{ext};base64,'
