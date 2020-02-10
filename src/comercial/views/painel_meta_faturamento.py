@@ -17,8 +17,9 @@ class PainelMetaFaturamento(View):
 
     def mount_context(self):
         cursor = connections['so'].cursor()
-        ano_atual = datetime.date.today().year
-        mes_atual = datetime.date.today().month
+        hoje = datetime.date.today()
+        ano_atual = hoje.year
+        mes_atual = hoje.month
 
         metas = comercial.models.MetaFaturamento.objects.filter(
             data__year=ano_atual)
