@@ -58,9 +58,11 @@
     }
     .v_separador {
       border-left-style: solid;
+      border-left-color: black;
     }
     .base_separador {
       border-bottom-style: solid;
+      border-bottom-color: black;
     }
     #bottom{
       position: fixed;
@@ -97,14 +99,24 @@
             <td>&nbsp;</td>
             <td class="v_separador">&nbsp;</td>
             <td>
-              {%if mes.meta > mes.faturado%}
+              {%if mes.meta == mes.faturado%}
+                Exato
+              {%elif mes.meta > mes.faturado%}
                 Falta
               {%else%}
                 Superou
               {%endif%}
             </td>
           </tr>
-          <tr class="base_separador">
+          <tr class="base_separador
+            {%if mes.meta == mes.faturado%}
+              neutro
+            {%elif mes.meta > mes.faturado%}
+              negativo
+            {%else%}
+              positivo
+            {%endif%}
+            ">
             <td>{{mes.meta}}</td>
             <td>&nbsp;</td>
             <td class="v_separador">&nbsp;</td>
@@ -115,9 +127,9 @@
             <td>&nbsp;</td>
             <td class="v_separador">&nbsp;</td>
             <td>
-              {%if mes.meta > mes.faturado%}
+              {%if mes.meta >= mes.faturado%}
+                {{mes.meta|subtract:mes.faturado}}
               {%else%}
-              {{mes.meta|subtract:mes.faturado}}
                 {{mes.faturado|subtract:mes.meta}}
               {%endif%}
             </td>
