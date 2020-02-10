@@ -110,3 +110,20 @@ class MetaEstoqueCor(models.Model):
     class Meta:
         db_table = "fo2_meta_estoque_cor"
         verbose_name = "Grade de cores de meta de estoque"
+
+
+class MetaFaturamento(models.Model):
+    data = models.DateField()
+    faturamento = models.DecimalField(
+        decimal_places=2, max_digits=10, default=0)
+
+    def __str__(self):
+        return '{} - R$ {:.2}'.format(
+            self.data,
+            self.faturamento,
+        )
+
+    class Meta:
+        db_table = "fo2_meta_faturamento"
+        verbose_name = "Meta de faturamento"
+        permissions = (("can_define_revenues", "Can define revenues"),)
