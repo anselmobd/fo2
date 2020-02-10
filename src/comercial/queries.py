@@ -412,7 +412,25 @@ def faturamento_por_mes_no_ano(cursor, ano):
           to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
         , sum(f.BASE_ICMS) VALOR
         FROM FATU_050 f
+        JOIN PEDI_080 n
+          ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
+         AND n.ESTADO_NATOPER = f.NATOP_NF_EST_OPER
+        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
+          ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+         AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
         WHERE 1=1
+          -- de venda
+          AND ( f.NATOP_NF_NAT_OPER IN (1, 2)
+              OR
+                ( n.DIVISAO_NATUR = 8
+                AND n.COD_NATUREZA IN ('6.11', '5.11')
+                )
+              )
+          -- ativa
+          AND f.SITUACAO_NFISC = 1
+          -- não devolvida
+          AND fe.DOCUMENTO IS NULL
+          -- do ano
           AND f.DATA_AUTORIZACAO_NFE >=
               TIMESTAMP '{ano}-01-01 00:00:00.000'
           AND f.DATA_AUTORIZACAO_NFE <
