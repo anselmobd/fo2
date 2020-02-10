@@ -14,8 +14,22 @@ class PainelMetaFaturamento(View):
     def mount_context(self):
         cursor = connections['so'].cursor()
 
+        meses = [
+            {'mes': '01/2020',
+             'meta': 12345,
+             'faturado': 13455,
+             },
+            {'mes': '02/2020',
+             'meta': 12345,
+             'faturado': 13455,
+             },
+            {'mes': '03/2020',
+             'meta': 12345,
+             'faturado': 13455,
+             },
+        ]
         self.context.update({
-            'a': '',
+            'meses': meses,
         })
 
     def get(self, request, *args, **kwargs):
