@@ -18,6 +18,7 @@ class PainelMetaFaturamento(View):
     def mount_context(self):
         cursor = connections['so'].cursor()
         ano_atual = datetime.date.today().year
+        mes_atual = datetime.date.today().month
 
         metas = comercial.models.MetaFaturamento.objects.filter(
             data__year=ano_atual)
@@ -25,10 +26,7 @@ class PainelMetaFaturamento(View):
         faturados = comercial.queries.faturamento_por_mes_no_ano(
             cursor, ano_atual)
         for faturado in faturados:
-            faturado['mes'] = datetime.date(
-                ano_atual,
-                int(faturado['mes'][:2]),
-                1)
+            faturado['mes'] = int(faturado['mes'][:2])
         faturados_dict = {
             f['mes']: int(f['valor']/1000) for f in faturados
         }
@@ -37,20 +35,21 @@ class PainelMetaFaturamento(View):
         total = {
             'meta': 0,
             'faturado': 0,
-            'resultado': 0,
         }
         for meta in metas:
             mes = dict(mes=meta.data, meta=int(meta.faturamento))
-            mes['faturado'] = faturados_dict.get(mes['mes'], 0)
-            mes['resultado'] = mes['faturado'] - mes['meta']
+            mes['imes'] = mes['mes'].month
+            mes['faturado'] = faturados_dict.get(mes['imes'], 0)
+            mes['percentual'] = int(mes['faturado'] / mes['meta'] * 100)
             meses.append(mes)
             total['meta'] += mes['meta']
             total['faturado'] += mes['faturado']
-            total['resultado'] += mes['resultado']
+        total['percentual'] = int(total['faturado'] / total['meta'] * 100)
 
         self.context.update({
             'meses': meses,
             'total': total,
+            'mes_atual': mes_atual,
         })
 
     def get(self, request, *args, **kwargs):
