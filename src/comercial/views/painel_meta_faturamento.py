@@ -38,7 +38,7 @@ class PainelMetaFaturamento(View):
             'faturado': 0,
         }
         for meta in metas:
-            mes = dict(mes=meta.data, meta=int(meta.faturamento))
+            mes = dict(mes=meta.data, meta=meta.faturamento)
             mes['imes'] = mes['mes'].month
             mes['faturado'] = faturados_dict.get(mes['imes'], 0)
             mes['percentual'] = int(mes['faturado'] / mes['meta'] * 100)
