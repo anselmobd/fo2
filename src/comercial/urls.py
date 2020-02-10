@@ -39,4 +39,9 @@ urlpatterns = [
     url(r'^verifica_venda/$',
         views.estoque.VerificaVenda.as_view(),
         name='verifica_venda'),
+
+    url(r'^painel_meta_faturamento/$',
+        views.PainelMetaFaturamento.as_view(),
+        name='painel_meta_faturamento'),
+
 ]
