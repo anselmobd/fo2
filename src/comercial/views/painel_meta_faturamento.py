@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views import View
 
 import comercial.models
+import comercial.queries
 
 
 class PainelMetaFaturamento(View):
@@ -16,9 +17,21 @@ class PainelMetaFaturamento(View):
 
     def mount_context(self):
         cursor = connections['so'].cursor()
+        ano_atual = datetime.date.today().year
 
         metas = comercial.models.MetaFaturamento.objects.filter(
-            data__year=datetime.date.today().year)
+            data__year=ano_atual)
+
+        faturados = comercial.queries.faturamento_por_mes_no_ano(
+            cursor, ano_atual)
+        for faturado in faturados:
+            faturado['mes'] = datetime.date(
+                ano_atual,
+                int(faturado['mes'][:2]),
+                1)
+        faturados_dict = {
+            f['mes']: int(f['valor']/1000) for f in faturados
+        }
 
         meses = []
         total = {
@@ -27,11 +40,13 @@ class PainelMetaFaturamento(View):
             'resultado': 0,
         }
         for meta in metas:
-            mes = dict(mes=meta.data, meta=meta.faturamento)
-            mes['faturado'] = 0
-            mes['resultado'] = 0
+            mes = dict(mes=meta.data, meta=int(meta.faturamento))
+            mes['faturado'] = faturados_dict.get(mes['mes'], 0)
+            mes['resultado'] = mes['faturado'] - mes['meta']
             meses.append(mes)
-            total['meta'] += meta.faturamento
+            total['meta'] += mes['meta']
+            total['faturado'] += mes['faturado']
+            total['resultado'] += mes['resultado']
 
         self.context.update({
             'meses': meses,
