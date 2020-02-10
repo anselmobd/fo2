@@ -27,8 +27,13 @@
   <style media="screen">
     .p_header {
       width: 100%;
-      text-align: center;
       background-image: linear-gradient(white, #f2f2f2);
+    }
+    .p_titulo {
+      text-align: center;
+    }
+    .p_titulo h2{
+      margin-top: 0px;
     }
     .mes {
       width: 100%;
@@ -70,17 +75,79 @@
       width:100%;
       bottom:0;
     }
+    a.timer {
+      font-size: xx-small; 
+      color: snow;
+      justify-content: right;
+      animation-name: timer;
+      animation-duration: 30s;
+    }
+    @keyframes timer {
+      0%   {color: #0088ff;}
+      95%  {color: lightgray;}
+      100% {color: white;}
+    }
 </style>
+<script>
+
+ var valendo = false;
+ var refresh_rate = 30; //<-- In seconds, change to your needs
+ var last_user_action = 0;
+
+ function reset() {
+   if (valendo) {
+     let elm = document.getElementById("timerlink");
+     let newone = elm.cloneNode(true);
+     elm.parentNode.replaceChild(newone, elm);
+     last_user_action = 0;
+   }
+ }
+
+ function refreshCheck() {
+   if (valendo) {
+     if (last_user_action >= refresh_rate && document.readyState == "complete") {
+       location.reload(true);
+     }
+   }
+ }
+
+ window.addEventListener("focus", reset, false);
+ window.addEventListener("blur", reset, false);
+ window.addEventListener("click", reset, false);
+ window.addEventListener("dblclick", reset, false);
+ window.addEventListener("mouseover", reset, false);
+ window.addEventListener("mousemove", reset, false);
+ window.addEventListener("keypress", reset, false);
+ window.addEventListener("keydown", reset, false);
+ window.addEventListener("scroll", reset, false);
+ document.addEventListener("touchMove", reset, false);
+ document.addEventListener("touchEnd", reset, false);
+
+ function resetScroll() {
+   setInterval(function () {
+     last_user_action++;
+     refreshCheck();
+   }, 1000);
+
+   valendo = true;
+ }
+
+</script>
 </head>
-<body>
-  <div class="fullwidth">
-    <div class="p_header">
-      <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
-      <h2>
-        Painel de meta de faturamento
-      </h2>
+<body onload="resetScroll();">
+    <div class="p_header container-fluid">
+      <div class="col-xs-3">
+        <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
+      </div>
+      <div class="col-xs-6 p_titulo">
+        <h2>
+          Painel de meta de faturamento
+        </h2>
+      </div>
+      <div class="col-xs-3 valores">
+        <a id="timerlink" class="timer" href=".">Recarrega</a>
+      </div>
     </div>
-  </div>
   <div class="mes">
     {% for mes in meses %}
       {% if mes.imes == mes_atual %}
