@@ -1,8 +1,11 @@
 from pprint import pprint
+import datetime
 
 from django.db import connections
 from django.shortcuts import render
 from django.views import View
+
+import comercial.models
 
 
 class PainelMetaFaturamento(View):
@@ -14,22 +17,25 @@ class PainelMetaFaturamento(View):
     def mount_context(self):
         cursor = connections['so'].cursor()
 
-        meses = [
-            {'mes': '01/2020',
-             'meta': 12345,
-             'faturado': 13455,
-             },
-            {'mes': '02/2020',
-             'meta': 12345,
-             'faturado': 13455,
-             },
-            {'mes': '03/2020',
-             'meta': 12345,
-             'faturado': 13455,
-             },
-        ]
+        metas = comercial.models.MetaFaturamento.objects.filter(
+            data__year=datetime.date.today().year)
+
+        meses = []
+        total = {
+            'meta': 0,
+            'faturado': 0,
+            'resultado': 0,
+        }
+        for meta in metas:
+            mes = dict(mes=meta.data, meta=meta.faturamento)
+            mes['faturado'] = 0
+            mes['resultado'] = 0
+            meses.append(mes)
+            total['meta'] += meta.faturamento
+
         self.context.update({
             'meses': meses,
+            'total': total,
         })
 
     def get(self, request, *args, **kwargs):
