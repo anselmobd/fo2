@@ -402,3 +402,25 @@ def get_vendas(
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result
+
+
+def faturamento_por_mes_no_ano(cursor, ano):
+    ano = str(ano)
+    prox_ano = str(int(ano) + 1)
+    sql = f"""
+        SELECT
+          to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
+        , sum(f.BASE_ICMS) VALOR
+        FROM FATU_050 f
+        WHERE 1=1
+          AND f.DATA_AUTORIZACAO_NFE >=
+              TIMESTAMP '{ano}-01-01 00:00:00.000'
+          AND f.DATA_AUTORIZACAO_NFE <
+              TIMESTAMP '{prox_ano}-01-01 00:00:00.000'
+        GROUP BY
+          to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+        ORDER BY
+          to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
