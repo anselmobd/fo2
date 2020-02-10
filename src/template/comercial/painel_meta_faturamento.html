@@ -30,13 +30,39 @@
       text-align: center;
       background-image: linear-gradient(white, #f2f2f2);
     }
+    .mes {
+      width: 100%;
+      text-align: center;
+    }
     p::first-line {
       font-weight: bold;
     }
     .valores {
       text-align: right;
     }
-  </style>
+    .positivo {
+      color: green;
+    }
+    .neutro {
+      color: black;
+    }
+    .negativo {
+      color: red;
+    }
+    .resultados_mes {
+      font-size: xxx-large;
+    }
+    table.center {
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .v_separador {
+      border-left-style: solid;
+    }
+    .base_separador {
+      border-bottom-style: solid;
+    }
+</style>
 </head>
 <body>
   <div class="fullwidth">
@@ -47,6 +73,56 @@
       </h2>
     </div>
   </div>
+  <div class="mes">
+    {% for mes in meses %}
+      {% if mes.imes == mes_atual %}
+        <table class="resultados_mes center">
+          <tr class="base_separador">
+            <td colspan="10">Fevereiro</td>
+          </tr>
+          <tr>
+            <td>Meta</td>
+            <td>&nbsp;</td>
+            <td class="v_separador">&nbsp;</td>
+            <td>Faturado</td>
+            <td>&nbsp;</td>
+            <td class="v_separador">&nbsp;</td>
+            <td>Performance</td>
+            <td>&nbsp;</td>
+            <td class="v_separador">&nbsp;</td>
+            <td>
+              {%if mes.meta > mes.faturado%}
+                Falta
+              {%else%}
+                Superou
+              {%endif%}
+            </td>
+          </tr>
+          <tr class="base_separador">
+            <td>{{mes.meta}}</td>
+            <td>&nbsp;</td>
+            <td class="v_separador">&nbsp;</td>
+            <td>{{mes.faturado}}</td>
+            <td>&nbsp;</td>
+            <td class="v_separador">&nbsp;</td>
+            <td>{{mes.percentual}}%</td>
+            <td>&nbsp;</td>
+            <td class="v_separador">&nbsp;</td>
+            <td>
+              {%if mes.meta > mes.faturado%}
+                {{mes.meta|subtract:mes.faturado}}
+              {%else%}
+                {{mes.faturado|subtract:mes.meta}}
+              {%endif%}
+            </td>
+          </tr>
+        </table>
+        <!-- <h3>Meta: {{ mes.meta }}</h3>
+        <h3>Faturado: {{mes.faturado}}</h3>
+        <h3>Performance: {{mes.percentual}}%</h3> -->
+      {% endif %}
+    {% endfor %}
+  </div>
   <div class="container-fluid">
     <div class="row">
       <div class="col-xs-1">
@@ -54,7 +130,7 @@
           Mês<br>
           Meta<br>
           Faturado<br>
-          Resultado
+          Performance
         </p>
       </div>
       <div class="col-xs-10">
@@ -65,8 +141,22 @@
                 <p>
                   {{mes.mes|date:"M"}}<br>
                   {{mes.meta}}<br>
-                  {{mes.faturado}}<br>
-                  {{mes.resultado}}
+                  <span class="valores
+                    {% if mes.percentual == 100 or mes.imes >= mes_atual %}
+                      neutro
+                    {% elif mes.percentual < 100 %}
+                      negativo
+                    {% else %}
+                      positivo
+                    {% endif %}
+                    ">
+                    {{mes.faturado}}<br>
+                    {% if mes.imes <= mes_atual %}
+                      {{mes.percentual}}%
+                    {% else %}
+                      -
+                    {% endif %}
+                  </span>
                 </p>
               </div>
             {% endfor %}
@@ -78,7 +168,7 @@
           Totais<br>
           {{total.meta}}<br>
           {{total.faturado}}<br>
-          {{total.resultado}}
+          {{total.percentual}}%
         </p>
       </div>
     </div>
