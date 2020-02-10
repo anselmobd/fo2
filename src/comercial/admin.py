@@ -33,3 +33,10 @@ class MetaEstoqueCorAdmin(admin.ModelAdmin):
 intr_adm_site.register(MetaEstoque, MetaEstoqueAdmin)
 intr_adm_site.register(MetaEstoqueTamanho, MetaEstoqueTamanhoAdmin)
 intr_adm_site.register(MetaEstoqueCor, MetaEstoqueCorAdmin)
+
+
+class MetaFaturamentoAdmin(admin.ModelAdmin):
+    list_display = ['data', 'faturamento']
+
+
+intr_adm_site.register(MetaFaturamento, MetaFaturamentoAdmin)
