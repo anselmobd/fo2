@@ -12,8 +12,6 @@ urlpatterns = [
 
     url(r'^datas/(?P<data>.+)/$', views.datas, name='datas'),
 
-    url(r'^mensagens/$', views.mensagens, name='mensagens'),
-
     url(r'^fotos/$', views.fotos, name='fotos'),
 
     url(r'^videos/$', views.videos, name='videos'),
