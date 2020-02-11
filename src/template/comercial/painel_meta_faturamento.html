@@ -217,54 +217,8 @@
   </div> -->
   <div id="bottom" class="container-fluid">
     <div class="row">
-      <div class="col-xs-1">
-        <p>
-          Mês<br>
-          Planejado<br>
-          Meta<br>
-          Faturado<br>
-          Performance
-        </p>
-      </div>
-      <div class="col-xs-10">
-        <div class="container-fluid">
-          <div class="row">
-            {% for mes in meses %}
-              <div class="col-xs-1 valores">
-                <p>
-                  {{mes.mes|date:"M"}}<br>
-                  {{mes.planejado}}<br>
-                  {{mes.meta}}<br>
-                  <span class="valores
-                    {% if mes.percentual == 100 or mes.imes >= mes_atual %}
-                      neutro
-                    {% elif mes.percentual < 100 %}
-                      negativo
-                    {% else %}
-                      positivo
-                    {% endif %}
-                    ">
-                    {{mes.faturado}}<br>
-                    {% if mes.imes <= mes_atual %}
-                      {{mes.percentual}}%
-                    {% else %}
-                      -
-                    {% endif %}
-                  </span>
-                </p>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-1 valores">
-        <p>
-          Totais<br>
-          {{total.planejado}}<br>
-          <br>
-          {{total.faturado}}<br>
-          {{total.percentual}}%
-        </p>
+      <div class="col-xs-12">
+        &nbsp;
       </div>
     </div>
   </div>
