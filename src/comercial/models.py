@@ -117,7 +117,7 @@ class MetaFaturamento(models.Model):
     faturamento = models.IntegerField(default=0)
 
     def __str__(self):
-        return '{} - R$ {:.2}'.format(
+        return '{} - R$ {}'.format(
             self.data,
             self.faturamento,
         )
