@@ -5,6 +5,7 @@ from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
+from utils.models import queryset_to_dict_list_lower
 from utils.functions import dias_mes_data
 
 import lotes.queries.pedido as l_q_p
@@ -80,9 +81,17 @@ class PainelMetaFaturamento(View):
         mes['perc_total'] = round(
             mes['total'] / mes['meta'] * 100, 1)
 
+        pendencias = comercial.models.PendenciaFaturamento.objects.filter(
+            mes__year=ano_atual, mes__month=mes_atual, ).order_by('ordem')
+        pends = queryset_to_dict_list_lower(pendencias)
+        for pend in pends:
+            if pend['obs'] is None:
+                pend['obs'] = ''
+
         self.context.update({
             'mes': mes,
             'hoje': hoje,
+            'pends': pends,
         })
 
     def get(self, request, *args, **kwargs):
