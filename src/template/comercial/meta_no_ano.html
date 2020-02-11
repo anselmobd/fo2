@@ -1,0 +1,78 @@
+{% extends 'comercial/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'comercial:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% load l10n %}
+{% load humanize %}
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+p::first-line {
+  font-weight: bold;
+}
+.valores {
+  text-align: right;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+  {% if msg_erro %}
+    <h4>{{ msg_erro }}</h4>
+  {% else %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-1">
+          <p>
+            Mês<br>
+            Planejado<br>
+            Meta<br>
+            Faturado<br>
+            Performance
+          </p>
+        </div>
+        <div class="col-xs-10">
+          <div class="container-fluid">
+            <div class="row">
+              {% for mes in meses %}
+                <div class="col-xs-1 valores">
+                  <p>
+                    {{mes.mes|date:"M"}}<br>
+                    {{mes.planejado}}<br>
+                    {{mes.meta}}<br>
+                    <span class="valores
+                      {% if mes.percentual == 100 or mes.imes >= mes_atual %}
+                        neutro
+                      {% elif mes.percentual < 100 %}
+                        negativo
+                      {% else %}
+                        positivo
+                      {% endif %}
+                      ">
+                      {{mes.faturado}}<br>
+                      {% if mes.imes <= mes_atual %}
+                        {{mes.percentual}}%
+                      {% else %}
+                        -
+                      {% endif %}
+                    </span>
+                  </p>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-1 valores">
+          <p>
+            Totais<br>
+            {{total.planejado}}<br>
+            <br>
+            {{total.faturado}}<br>
+            {{total.percentual}}%
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
