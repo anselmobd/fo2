@@ -44,4 +44,8 @@ urlpatterns = [
         views.PainelMetaFaturamento.as_view(),
         name='painel_meta_faturamento'),
 
+    url(r'^meta_no_ano/$',
+        views.MetaNoAno.as_view(),
+        name='meta_no_ano'),
+
 ]
