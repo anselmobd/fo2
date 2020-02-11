@@ -78,7 +78,7 @@
         <h3>Dicas e Pensamentos</h3>
         {% for dica in dicas %}
           {% if dica.data  %}
-            {{ dica.data }} - <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
+            <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
           {% endif %}
         {% endfor %}
       </td>
