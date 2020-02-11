@@ -220,6 +220,7 @@
       <div class="col-xs-1">
         <p>
           Mês<br>
+          Planejado<br>
           Meta<br>
           Faturado<br>
           Performance
@@ -232,6 +233,7 @@
               <div class="col-xs-1 valores">
                 <p>
                   {{mes.mes|date:"M"}}<br>
+                  {{mes.planejado}}<br>
                   {{mes.meta}}<br>
                   <span class="valores
                     {% if mes.percentual == 100 or mes.imes >= mes_atual %}
@@ -258,7 +260,8 @@
       <div class="col-xs-1 valores">
         <p>
           Totais<br>
-          {{total.meta}}<br>
+          {{total.planejado}}<br>
+          <br>
           {{total.faturado}}<br>
           {{total.percentual}}%
         </p>
