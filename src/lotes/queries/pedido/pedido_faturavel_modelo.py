@@ -111,6 +111,7 @@ def pedido_faturavel_modelo(
                   ON fcanc.PEDIDO_VENDA = ped.PEDIDO_VENDA
                  AND fcanc.SITUACAO_NFISC = 2  -- cancelada
                 WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+                  AND ped.SITUACAO_VENDA = 0 -- pedido liberado
                   AND fok.NUM_NOTA_FISCAL IS NULL
                   -- AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + 148
                   {filtra_periodo} -- filtra_periodo
