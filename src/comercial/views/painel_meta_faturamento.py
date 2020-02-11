@@ -34,18 +34,36 @@ class PainelMetaFaturamento(View):
 
         meses = []
         total = {
-            'meta': 0,
+            'planejado': 0,
             'faturado': 0,
         }
+        compensar = 0
+        planejado_restante = 0
         for meta in metas:
-            mes = dict(mes=meta.data, meta=meta.faturamento)
+            mes = dict(mes=meta.data, planejado=meta.faturamento)
             mes['imes'] = mes['mes'].month
             mes['faturado'] = faturados_dict.get(mes['imes'], 0)
-            mes['percentual'] = int(mes['faturado'] / mes['meta'] * 100)
+            if mes['imes'] < mes_atual:
+                compensar += mes['planejado'] - mes['faturado']
+            else:
+                planejado_restante += mes['planejado']
             meses.append(mes)
-            total['meta'] += mes['meta']
+            total['planejado'] += mes['planejado']
             total['faturado'] += mes['faturado']
-        total['percentual'] = int(total['faturado'] / total['meta'] * 100)
+
+        for mes in meses:
+            if mes['imes'] < mes_atual or compensar < 0:
+                mes['meta'] = mes['planejado']
+            else:
+                mes['meta'] = int(
+                    mes['planejado'] + (
+                        compensar / planejado_restante * mes['planejado']
+                    )
+                )
+            mes['percentual'] = (
+                int(mes['faturado'] / mes['meta'] * 100))
+
+        total['percentual'] = int(total['faturado'] / total['planejado'] * 100)
 
         self.context.update({
             'meses': meses,
