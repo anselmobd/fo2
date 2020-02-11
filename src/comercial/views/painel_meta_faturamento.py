@@ -5,8 +5,9 @@ from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
-from utils.models import queryset_to_dict_list_lower
 from utils.functions import dias_mes_data
+from utils.models import queryset_to_dict_list_lower
+from utils.views import totalize_data
 
 import lotes.queries.pedido as l_q_p
 import comercial.models
@@ -84,9 +85,18 @@ class PainelMetaFaturamento(View):
         pendencias = comercial.models.PendenciaFaturamento.objects.filter(
             mes__year=ano_atual, mes__month=mes_atual, ).order_by('ordem')
         pends = queryset_to_dict_list_lower(pendencias)
-        for pend in pends:
-            if pend['obs'] is None:
-                pend['obs'] = ''
+        if len(pends) != 0:
+            for pend in pends:
+                pend['total'] = False
+                if pend['obs'] is None:
+                    pend['obs'] = ''
+
+            totalize_data(pends, {
+                'sum': ['valor'],
+                'count': [],
+                'descr': {'pendencia': 'Total:'},
+            })
+            pends[-1]['total'] = True
 
         self.context.update({
             'mes': mes,
