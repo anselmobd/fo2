@@ -39,7 +39,7 @@
       width: 100%;
       text-align: center;
     }
-    p::first-line {
+    thead {
       font-weight: bold;
     }
     .valores {
@@ -70,6 +70,15 @@
     .v_separador {
       border-left-style: solid;
       border-left-color: black;
+    }
+    .vfina_separador {
+      border-left-style: solid;
+      border-left-color: black;
+      border-left-width: thin;
+    }
+    #pendencias td {
+      padding-left: 5px;
+      padding-right: 5px;
     }
     .base_separador {
       border-bottom-style: solid;
@@ -253,7 +262,34 @@
   <div id="bottom" class="container-fluid">
     <div class="row">
       <div class="col-xs-12">
-        &nbsp;
+        {%if pends%}
+          <table id="pendencias">
+            <thead>
+              <tr>
+                <td>Cliente</td>
+                <td class="vfina_separador">Pendência</td>
+                <td class="vfina_separador valores">Valor</td>
+                <td class="vfina_separador">Entrega</td>
+                <td class="vfina_separador">Responsável</td>
+                <td class="vfina_separador">Observação</td>
+              </tr>
+            </thead>
+            {%for pendencia in pends%}
+              <tbody>
+                <tr>
+                  <td>{{pendencia.cliente}}</td>
+                  <td class="vfina_separador">{{pendencia.pendencia}}</td>
+                  <td class="vfina_separador valores">{{pendencia.valor}}</td>
+                  <td class="vfina_separador">{{pendencia.entrega}}</td>
+                  <td class="vfina_separador">{{pendencia.responsavel}}</td>
+                  <td class="vfina_separador">{{pendencia.obs}}</td>
+                </tr>
+              </tbody>
+            {%endfor%}
+          </table>
+        {%else%}
+          &nbsp;
+        {%endif%}
       </div>
     </div>
   </div>
