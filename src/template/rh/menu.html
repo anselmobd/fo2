@@ -42,6 +42,7 @@
   <table>
     <tr>
       <td style="vertical-align: top;">
+
         <h3>Divulgação</h3>
         04/10/2019 - <a target="_blank" href="/media/rh/divulgacao/2019/2019-10/holeriteonline.pdf">Informativo sobre holerite on-line</a><br />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Em busca de sempre oferecer o que há de melhor em forma de<br />
@@ -51,11 +52,20 @@
         31/05/2019 - <a target="_blank" href="{% url 'rh:divulga_atitudes_crise' %}">Atitudes</a> que um líder deve ter em momentos de crise.<br />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nesses momentos, a capacidade de superar os desafios e fortalecer<br />
         a relação com as equipes é importantíssima!<br />
+
+        <h3>Dicas e Pensamentos</h3>
+        {% for dica in dicas %}
+          {% if dica.data  %}
+            <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
+          {% endif %}
+        {% endfor %}
+
       </td>
       <td style="width: 5em;">
         &nbsp;
       </td>
       <td style="vertical-align: top;">
+
         <h3>Rota do Sucesso 2020</h3>
         {% for dica in rota2020 %}
           {% if dica.data  %}
@@ -65,27 +75,13 @@
             {% endif %}
           {% endif %}
         {% endfor %}
-        <br />
+
         <h3>RH indica</h3>
         {% for link in links %}
           <a target="_blank" href="{{ link.link }}">{{ link.chamada }}</a><br/>
           <div style="padding-left: 2em;">{{ link.descricao|safe }}</div>
         {% endfor %}
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-        <h3>Dicas e Pensamentos</h3>
-        {% for dica in dicas %}
-          {% if dica.data  %}
-            <a target="_blank" href="{{ dica.link }}">{{ dica.chamada }}</a><br/>
-          {% endif %}
-        {% endfor %}
-      </td>
-      <td style="width: 5em;">
-        &nbsp;
-      </td>
-      <td style="vertical-align: top;">
+
         <h3>Fotos e Vídeos</h3>
         01/08/2019 - 25 anos de empresa de Rosângela e Denilson: <a target="_blank" href="{% url 'rh:media_2019_08_01_25_anos' %}">Fotos e vídeo</a><br/>
         16/07/2019 - <a target="_blank" href="{% url 'rh:media_2019_07_16_sobre_amizade' %}">Vídeo</a> Poesia com Rapadura - Falando sobre amizade<br/>
@@ -105,6 +101,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos_brigadista2018' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos_brigadista2018' %}">vídeos</a> do treinamento<br/>
         14/5 a 18/5/2018 - <a target="_blank" href="/media/rh/DUOMO-SIPAT2018_w600.jpg">SIPAT 2018</a><br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:fotos' %}">fotos</a> e <a target="_blank" href="{% url 'rh:videos' %}">vídeos</a> do evento</a><br/>
+
       </td>
     </tr>
   </table>
