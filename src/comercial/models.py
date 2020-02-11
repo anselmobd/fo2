@@ -126,3 +126,22 @@ class MetaFaturamento(models.Model):
         db_table = "fo2_meta_faturamento"
         verbose_name = "Meta de faturamento"
         permissions = (("can_define_revenues", "Can define revenues"),)
+
+
+class PendenciaFaturamento(models.Model):
+    mes = models.DateField(verbose_name='mês')
+    ordem = models.IntegerField(default=1)
+    cliente = models.CharField(max_length=50)
+    pendencia = models.CharField(max_length=500, verbose_name='pendência')
+    valor = models.DecimalField(max_digits=12, decimal_places=2)
+    entrega = models.CharField(max_length=50)
+    responsavel = models.CharField(max_length=50, verbose_name='responsável')
+    obs = models.CharField(
+        null=True, blank=True, max_length=50, verbose_name='observação')
+
+    def __str__(self):
+        return f'{self.cliente} - {self.entrega}'
+
+    class Meta:
+        db_table = "fo2_pendencia_faturamento"
+        verbose_name = "Pendência de faturamento"
