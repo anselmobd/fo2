@@ -274,11 +274,6 @@ def datas(request, data):
         return render(request, 'rh/datas/2019-12-retrospectiva.html', context)
 
 
-def mensagens(request):
-    context = {'titulo': 'Mensagens'}
-    return render(request, 'rh/mensagens.html', context)
-
-
 def v2018_dia_rosa_fotos(request):
     context = {'titulo': 'Fotos - Dia Rosa 2018'}
     return render(request, 'rh/2018_dia_rosa_fotos.html', context)
