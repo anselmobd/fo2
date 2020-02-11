@@ -149,68 +149,92 @@
       </div>
     </div>
   <div class="mes">
-    {% for mes in meses %}
-      {% if mes.imes == mes_atual %}
-        <table class="resultados_mes center">
-          <tr class="base_separador">
-            <td colspan="12">{{hoje|date:"d/F"}}</td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>Meta</td>
-            <td>&nbsp;</td>
-            <td class="v_separador">&nbsp;</td>
-            <td>Faturado</td>
-            <td>&nbsp;</td>
-            <td class="v_separador">&nbsp;</td>
-            <td>Performance</td>
-            <td>&nbsp;</td>
-            <td class="v_separador">&nbsp;</td>
-            <td>
-              {%if mes.meta == mes.faturado%}
-                Exato
-              {%elif mes.meta > mes.faturado%}
-                Falta
-              {%else%}
-                Superou
-              {%endif%}
-            </td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="base_separador
-            {%if mes.meta == mes.faturado%}
-              neutro
-            {%elif mes.meta > mes.faturado%}
-              negativo
-            {%else%}
-              positivo
-            {%endif%}
-            ">
-            <td>&nbsp;</td>
-            <td>{{mes.meta}}</td>
-            <td>&nbsp;</td>
-            <td class="v_separador">&nbsp;</td>
-            <td>{{mes.faturado}}</td>
-            <td>&nbsp;</td>
-            <td class="v_separador">&nbsp;</td>
-            <td>{{mes.percentual}}%</td>
-            <td>&nbsp;</td>
-            <td class="v_separador">&nbsp;</td>
-            <td>
-              {%if mes.meta >= mes.faturado%}
-                {{mes.meta|subtract:mes.faturado}}
-              {%else%}
-                {{mes.faturado|subtract:mes.meta}}
-              {%endif%}
-            </td>
-            <td>&nbsp;</td>
-          </tr>
-        </table>
-        <!-- <h3>Meta: {{ mes.meta }}</h3>
-        <h3>Faturado: {{mes.faturado}}</h3>
-        <h3>Performance: {{mes.percentual}}%</h3> -->
-      {% endif %}
-    {% endfor %}
+    <table class="resultados_mes center">
+      <tr class="base_separador">
+        <td colspan="15">{{hoje|date:"d/F"}}</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>Meta</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>Faturado</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>Pedidos</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>Total</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>
+          {%if mes.meta == mes.total%}
+            Exato
+          {%elif mes.meta > mes.total%}
+            Falta
+          {%else%}
+            Superou
+          {%endif%}
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr class="
+        {%if mes.meta == mes.total%}
+          neutro
+        {%elif mes.meta > mes.total%}
+          negativo
+        {%else%}
+          positivo
+        {%endif%}
+        ">
+        <td>&nbsp;</td>
+        <td>{{mes.meta}}</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>{{mes.faturado}}</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>{{mes.pedidos}}</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>{{mes.total}}</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>
+          {%if mes.meta >= mes.total%}
+            {{mes.meta|subtract:mes.total}}
+          {%else%}
+            {{mes.total|subtract:mes.meta}}
+          {%endif%}
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr class="base_separador
+        {%if mes.meta == mes.total%}
+          neutro
+        {%elif mes.meta > mes.total%}
+          negativo
+        {%else%}
+          positivo
+        {%endif%}
+        ">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>{{mes.percentual}}%</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>{{mes.perc_pedidos}}%</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>{{mes.perc_total}}%</td>
+        <td>&nbsp;</td>
+        <td class="v_separador">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
   </div>
   <!-- <div>
     < canvas id="estagioChart" height="30"></canvas>
