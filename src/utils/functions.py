@@ -48,7 +48,7 @@ def dow_info(dt, info, capitalize=False):
     return result
 
 
-def inc_month(dt, months):
+def inc_month(dt, months=1):
     newmonth = (((dt.month - 1) + months) % 12) + 1
     newyear = dt.year + (((dt.month - 1) + months) // 12)
     newday = dt.day
@@ -59,6 +59,12 @@ def inc_month(dt, months):
         except ValueError:
             newday -= 1
     return newdt
+
+
+def dias_mes_data(dt):
+    prox_mes = inc_month(dt)
+    ult_dia = prox_mes - datetime.timedelta(days=prox_mes.day)
+    return ult_dia.day
 
 
 def dec_month(dt, day=None):
