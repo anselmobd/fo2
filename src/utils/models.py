@@ -1,4 +1,5 @@
 import fdb
+from pprint import pprint
 
 from django.db import models
 
@@ -11,6 +12,16 @@ def rows_to_dict_list(cursor):
 def rows_to_dict_list_lower(cursor):
     columns = [i[0].lower() for i in cursor.description]
     return [dict(zip(columns, row)) for row in cursor]
+
+
+def queryset_to_dict_list_lower(qs):
+    result = []
+    for obj in qs:
+        result.append({
+            name.lower(): obj.__dict__[name] for name in obj.__dict__
+            if name[0] != '_'
+        })
+    return result
 
 
 def dict_list_to_lower(data):
