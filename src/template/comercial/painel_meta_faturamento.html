@@ -42,6 +42,10 @@
     thead {
       font-weight: bold;
     }
+    .total {
+      font-weight: bold;
+      color: red;
+    }
     .valores {
       text-align: right;
     }
@@ -276,9 +280,9 @@
             </thead>
             {%for pendencia in pends%}
               <tbody>
-                <tr>
+                <tr {%if pendencia.total %}class="total"{%endif%}>
                   <td>{{pendencia.cliente}}</td>
-                  <td class="vfina_separador">{{pendencia.pendencia}}</td>
+                  <td class="vfina_separador{%if pendencia.total %} direita{%endif%}">{{pendencia.pendencia}}</td>
                   <td class="vfina_separador valores">{{pendencia.valor}}</td>
                   <td class="vfina_separador">{{pendencia.entrega}}</td>
                   <td class="vfina_separador">{{pendencia.responsavel}}</td>
