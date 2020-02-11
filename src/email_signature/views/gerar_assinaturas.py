@@ -22,7 +22,7 @@ class GerarAssinaturas(View):
     def gerar_assinatura_local(self, conta):
         context = {
             'nome': conta.nome,
-            'setor': conta.setor,
+            'setor': '' if conta.setor is None else conta.setor,
             'email': conta.email,
             'ddd_1': conta.ddd_1,
             'num_1': conta.num_1,
