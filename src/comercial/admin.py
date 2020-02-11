@@ -40,4 +40,12 @@ class MetaFaturamentoAdmin(admin.ModelAdmin):
     ordering = ['-data']
 
 
+class PendenciaFaturamentoAdmin(admin.ModelAdmin):
+    list_display = ['mes', 'ordem', 'cliente', 'entrega']
+    ordering = ['mes', 'ordem']
+    # 'mes', 'ordem', 'cliente', 'pendencia', 'valor', 'entrega',
+    # 'responsavel', 'obs',
+
+
 intr_adm_site.register(MetaFaturamento, MetaFaturamentoAdmin)
+intr_adm_site.register(PendenciaFaturamento, PendenciaFaturamentoAdmin)
