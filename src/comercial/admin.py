@@ -37,6 +37,7 @@ intr_adm_site.register(MetaEstoqueCor, MetaEstoqueCorAdmin)
 
 class MetaFaturamentoAdmin(admin.ModelAdmin):
     list_display = ['data', 'faturamento']
+    ordering = ['-data']
 
 
 intr_adm_site.register(MetaFaturamento, MetaFaturamentoAdmin)
