@@ -69,6 +69,7 @@ class PainelMetaFaturamento(View):
             'meses': meses,
             'total': total,
             'mes_atual': mes_atual,
+            'hoje': hoje,
         })
 
     def get(self, request, *args, **kwargs):
