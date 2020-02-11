@@ -45,6 +45,12 @@
     .valores {
       text-align: right;
     }
+    .direita {
+      text-align: right;
+    }
+    .esquerda {
+      text-align: left;
+    }
     .positivo {
       color: green;
     }
@@ -74,6 +80,9 @@
       background-image: linear-gradient(#f2f2f2, white);
       width:100%;
       bottom:0;
+    }
+    .detalhe {
+      font-size: small;
     }
     a.timer {
       font-size: xx-small;
@@ -140,9 +149,7 @@
         <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
       </div>
       <div class="col-xs-6 p_titulo">
-        <h2>
-          Painel de Meta de Faturamento
-        </h2>
+        &nbsp;
       </div>
       <div class="col-xs-3 valores">
         <a id="timerlink" class="timer" href=".">Recarrega</a>
@@ -151,7 +158,7 @@
   <div class="mes">
     <table class="resultados_mes center">
       <tr class="base_separador">
-        <td colspan="15">{{hoje|date:"d/F"}}</td>
+        <td colspan="15">Meta de Bônus de {{hoje|date:"F"}}</td>
       </tr>
       <tr>
         <td>&nbsp;</td>
@@ -233,6 +240,10 @@
         <td class="v_separador">&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
+      </tr>
+      <tr class="detalhe">
+        <td class="esquerda" colspan="8">Valores em milhares de reais</td>
+        <td class="direita" colspan="7">{{hoje}}</td>
       </tr>
     </table>
   </div>
