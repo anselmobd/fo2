@@ -61,6 +61,7 @@ def pedido_faturavel_modelo(
         , pref.REF
         , pref.FAT
         , pref.QTD
+        , pref.PRECO
         , pref.QTD_FAT
         , ped.DATA_ENTR_VENDA DATA
         , c.FANTASIA_CLIENTE CLIENTE
@@ -71,6 +72,7 @@ def pedido_faturavel_modelo(
           , pqs.REF
           , pqs.FAT
           , sum(pqs.QTD) QTD
+          , sum(pqs.PRECO) PRECO
           , sum(pqs.QTD_FAT) QTD_FAT
           FROM (
             SELECT
@@ -80,6 +82,7 @@ def pedido_faturavel_modelo(
             , pq.TAM
             , pq.COR
             , pq.QTD
+            , pq.PRECO
             , pq.FAT
             , sum(COALESCE(inf.QTDE_ITEM_FATUR, 0)) QTD_FAT
             FROM (
@@ -90,6 +93,7 @@ def pedido_faturavel_modelo(
               , i.CD_IT_PE_SUBGRUPO TAM
               , i.CD_IT_PE_ITEM COR
               , sum(i.QTDE_PEDIDA) QTD
+              , sum(i.QTDE_PEDIDA*i.VALOR_UNITARIO) PRECO
               , CASE WHEN ps.NFCANC IS NULL
                 THEN 'Não faturado'
                 ELSE 'Faturamento cancelado'
@@ -143,6 +147,7 @@ def pedido_faturavel_modelo(
             , pq.TAM
             , pq.COR
             , pq.QTD
+            , pq.PRECO
             , pq.FAT
           ) pqs -- itens de pedidos com qtd e qtd faturada
           GROUP BY
