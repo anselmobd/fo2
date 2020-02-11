@@ -153,9 +153,10 @@
       {% if mes.imes == mes_atual %}
         <table class="resultados_mes center">
           <tr class="base_separador">
-            <td colspan="10">{{mes.mes|date:"F"}}</td>
+            <td colspan="12">{{mes.mes|date:"F"}}</td>
           </tr>
           <tr>
+            <td>&nbsp;</td>
             <td>Meta</td>
             <td>&nbsp;</td>
             <td class="v_separador">&nbsp;</td>
@@ -174,6 +175,7 @@
                 Superou
               {%endif%}
             </td>
+            <td>&nbsp;</td>
           </tr>
           <tr class="base_separador
             {%if mes.meta == mes.faturado%}
@@ -184,6 +186,7 @@
               positivo
             {%endif%}
             ">
+            <td>&nbsp;</td>
             <td>{{mes.meta}}</td>
             <td>&nbsp;</td>
             <td class="v_separador">&nbsp;</td>
@@ -200,6 +203,7 @@
                 {{mes.faturado|subtract:mes.meta}}
               {%endif%}
             </td>
+            <td>&nbsp;</td>
           </tr>
         </table>
         <!-- <h3>Meta: {{ mes.meta }}</h3>
