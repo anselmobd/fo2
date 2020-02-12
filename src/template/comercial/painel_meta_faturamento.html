@@ -167,8 +167,9 @@
       <div class="col-xs-6 p_titulo">
         &nbsp;
       </div>
-      <div class="col-xs-3 valores">
-        <a id="timerlink" class="timer" href=".">Recarrega</a>
+      <div class="col-xs-3 direita">
+        <a id="timerlink" class="timer" href=".">Recarrega</a><br>
+        {{hoje}}
       </div>
     </div>
   <div class="mes">
@@ -257,10 +258,10 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
       </tr>
-      <tr class="detalhe">
+      <!-- <tr class="detalhe">
         <td class="esquerda" colspan="8">Valores em milhares de reais</td>
         <td class="direita" colspan="7">{{hoje}}</td>
-      </tr>
+      </tr> -->
     </table>
   </div>
   <!-- <div>
@@ -288,7 +289,7 @@
                   <td class="vfina_separador{%if pendencia.total %} direita{%endif%}">{{pendencia.pendencia}}</td>
                   <td class="vfina_separador valores">{{pendencia.valor}}</td>
                   <td class="vfina_separador">{{pendencia.entrega}}</td>
-                  <td class="vfina_separador">{{pendencia.responsavel}}</td>
+                  <td class="vfina_separador total">{{pendencia.responsavel}}</td>
                   <td class="vfina_separador">{{pendencia.obs}}</td>
                 </tr>
               {%endfor%}
