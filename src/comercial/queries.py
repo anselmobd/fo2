@@ -405,6 +405,12 @@ def get_vendas(
 
 
 def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
+    '''
+        tipo:
+            total - totaliza por mês
+            cliente - totaliza por cliente
+            detalhe - mostra por nota
+    '''
     ano = str(ano)
     if mes is None:
         prox_ano = str(int(ano) + 1)
@@ -427,6 +433,11 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
     if tipo == 'total':
         sql += """
               to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
+            , sum(f.BASE_ICMS) VALOR
+        """
+    elif tipo == 'cliente':
+        sql += """
+              c.NOME_CLIENTE CLIENTE
             , sum(f.BASE_ICMS) VALOR
         """
     else:
@@ -464,6 +475,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
               OR (n.COD_NATUREZA = '6.11' and n.DIVISAO_NATUR = 8)
               OR (n.COD_NATUREZA = '6.25' and n.DIVISAO_NATUR = 1)
               )
+          -- nota própria aceita pela sefaz
+          -- AND f.COD_STATUS = '100'
           -- emitida
           AND f.SITUACAO_NFISC = 1
           -- não devolvida
@@ -481,6 +494,13 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
             ORDER BY
               to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
         """
+    elif tipo == 'cliente':
+        sql += """
+            GROUP BY
+              c.NOME_CLIENTE
+            ORDER BY
+              c.NOME_CLIENTE
+        """
     else:
         sql += """
             ORDER BY
@@ -491,6 +511,12 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
 
 
 def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
+    '''
+        tipo:
+            total - totaliza por mês
+            cliente - totaliza por cliente
+            detalhe - mostra por nota
+    '''
     ano = str(ano)
     if mes is None:
         prox_ano = str(int(ano) + 1)

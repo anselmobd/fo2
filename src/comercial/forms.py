@@ -39,4 +39,12 @@ class FaturamentoParaMetaForm(forms.Form):
     ano = forms.IntegerField(
         required=False, initial=ano_atual,
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
+
     mes = forms.IntegerField(required=False, initial=mes_atual)
+
+    CHOICES = [
+        ('C', 'Por cliente'),
+        ('N', 'Por nota'),
+        ]
+    apresentacao = forms.ChoiceField(
+        choices=CHOICES, initial='C', label='Apresentação')

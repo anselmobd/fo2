@@ -29,6 +29,11 @@ class FaturamentoParaMeta(O2BaseGetPostView):
 
         ano = self.form.cleaned_data['ano']
         mes = self.form.cleaned_data['mes']
+        apresentacao = self.form.cleaned_data['apresentacao']
+        if apresentacao == 'C':
+            tipo = 'cliente'
+        else:
+            tipo = 'detalhe'
 
         if ano is None or mes is None:
             hoje = datetime.date.today()
@@ -44,23 +49,34 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         })
 
         faturados = comercial.queries.faturamento_para_meta(
-            cursor, ano_atual, mes_atual, tipo='detalhe')
+            cursor, ano_atual, mes_atual, tipo=tipo)
 
         totalize_data(faturados, {
             'sum': ['valor'],
-            'descr': {'data': 'Total:'},
+            'descr': {'cliente': 'Total:'},
             'row_style': 'font-weight: bold;',
         })
 
         for faturado in faturados:
             faturado['valor|DECIMALS'] = 2
-            faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
+            if apresentacao == 'N':
+                faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
 
-        self.context.update({
-            'headers': ['Nota', 'Data', 'CFOP', 'Cliente', 'Valor', ],
-            'fields': ['nf', 'data', 'cfop', 'cliente', 'valor', ],
-            'data': faturados,
-            'style': {
-                5: 'text-align: right;',
-            },
-        })
+        if apresentacao == 'N':
+            self.context.update({
+                'headers': ['Nota', 'Data', 'CFOP', 'Cliente', 'Valor', ],
+                'fields': ['nf', 'data', 'cfop', 'cliente', 'valor', ],
+                'data': faturados,
+                'style': {
+                    5: 'text-align: right;',
+                },
+            })
+        else:
+            self.context.update({
+                'headers': ['Cliente', 'Valor', ],
+                'fields': ['cliente', 'valor', ],
+                'data': faturados,
+                'style': {
+                    2: 'text-align: right;',
+                },
+            })
