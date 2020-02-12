@@ -38,6 +38,14 @@ class MetaNoAno(O2BaseGetView):
             f['mes']: int(f['valor']/1000) for f in faturados
         }
 
+        devolvidos = comercial.queries.devolucao_para_meta(
+            cursor, ano_atual)
+        for devolvido in devolvidos:
+            devolvido['mes'] = int(devolvido['mes'][:2])
+        devolvidos_dict = {
+            f['mes']: int(f['valor']/1000) for f in devolvidos
+        }
+
         meses = []
         total = {
             'planejado': 0,
@@ -48,7 +56,10 @@ class MetaNoAno(O2BaseGetView):
         for meta in metas:
             mes = dict(mes=meta.data, planejado=meta.faturamento)
             mes['imes'] = mes['mes'].month
-            mes['faturado'] = faturados_dict.get(mes['imes'], 0)
+            mes['faturado'] = (
+                faturados_dict.get(mes['imes'], 0) -
+                devolvidos_dict.get(mes['imes'], 0)
+                )
             if mes['imes'] < mes_atual:
                 compensar += mes['planejado'] - mes['faturado']
             else:
