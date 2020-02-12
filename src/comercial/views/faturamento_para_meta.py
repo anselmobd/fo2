@@ -56,10 +56,10 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             faturado['valor|DECIMALS'] = 2
 
         self.context.update({
-            'headers': ['Nota', 'Data', 'Valor', ],
-            'fields': ['nf', 'data', 'valor', ],
+            'headers': ['Nota', 'Data', 'Cliente', 'Valor', ],
+            'fields': ['nf', 'data', 'cliente', 'valor', ],
             'data': faturados,
             'style': {
-                3: 'text-align: right;',
+                4: 'text-align: right;',
             },
         })

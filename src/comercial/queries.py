@@ -434,12 +434,20 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
               f.NUM_NOTA_FISCAL NF
             , f.DATA_AUTORIZACAO_NFE DATA
             , f.BASE_ICMS VALOR
+            , c.NOME_CLIENTE
+              || ' (' || lpad(c.CGC_9, 8, '0')
+              || '/' || lpad(c.CGC_4, 4, '0')
+              || '-' || lpad(c.CGC_2, 2, '0')
+              || ')' CLIENTE
         """
     sql += f"""
         FROM FATU_050 f
         JOIN PEDI_080 n
           ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
          AND n.ESTADO_NATOPER = f.NATOP_NF_EST_OPER
+        LEFT JOIN PEDI_010 c -- cliente
+          ON c.CGC_9 = f.CGC_9
+         AND c.CGC_4 = f.CGC_4
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
