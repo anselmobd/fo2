@@ -464,6 +464,9 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
+        LEFT JOIN FATU_070 dupl
+          ON dupl.NUM_DUPLICATA = f.NUM_NOTA_FISCAL
+         AND dupl.SEQ_DUPLICATAS = 1
         WHERE 1=1
           -- filtro de venda baseado em view do Jorge e do antigo filtro
           AND ( 1=2
@@ -479,6 +482,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
           -- AND f.COD_STATUS = '100'
           -- emitida
           AND f.SITUACAO_NFISC = 1
+          -- gerou duplicata
+          AND dupl.NUM_DUPLICATA IS NOT NULL
           -- não devolvida
           AND fe.DOCUMENTO IS NULL
           -- do ano
