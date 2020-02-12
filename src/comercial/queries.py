@@ -512,14 +512,14 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
     """
     if tipo == 'total':
         sql += """
-              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
-            , sum(f.BASE_ICMS) VALOR
+              to_char(fe.DATA_TRANSACAO, 'MM/YYYY') MES
+            , sum(fe.BASE_ICMS) VALOR
         """
     else:
         sql += """
-              f.NUM_NOTA_FISCAL NF
-            , f.DATA_AUTORIZACAO_NFE DATA
-            , f.BASE_ICMS VALOR
+              fe.DOCUMENTO NF
+            , fe.DATA_TRANSACAO DATA
+            , fe.BASE_ICMS VALOR
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
@@ -529,16 +529,14 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
             , n.DIVISAO_NATUR DIV
         """
     sql += f"""
-        FROM FATU_050 f
+        FROM OBRF_010 fe
         JOIN PEDI_080 n
-          ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
-         AND n.ESTADO_NATOPER = f.NATOP_NF_EST_OPER
+          ON n.NATUR_OPERACAO = fe.NATOPER_NAT_OPER
+         AND n.ESTADO_NATOPER = fe.NATOPER_EST_OPER
         LEFT JOIN PEDI_010 c -- cliente
-          ON c.CGC_9 = f.CGC_9
-         AND c.CGC_4 = f.CGC_4
-        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
-          ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
-         AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
+          ON c.CGC_9 = fe.CGC_CLI_FOR_9
+         AND c.CGC_4 = fe.CGC_CLI_FOR_4
+        --WHERE fe.DOCUMENTO = 208240
         WHERE 1=1
           -- filtro de venda baseado em view do Jorge e do antigo filtro
           AND ( 1=2
@@ -546,27 +544,22 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
               OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 3)
               )
-          -- emitida
-          AND f.SITUACAO_NFISC = 1
-          -- não devolvida
-          AND fe.DOCUMENTO IS NULL
-          -- do ano
-          AND f.DATA_AUTORIZACAO_NFE >=
-              TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
-          AND f.DATA_AUTORIZACAO_NFE <
-              TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
+          AND fe.DATA_TRANSACAO >=
+              DATE '{ano}-{mes}-01'
+          AND fe.DATA_TRANSACAO <
+              DATE '{prox_ano}-{prox_mes}-01'
     """
     if tipo == 'total':
         sql += """
             GROUP BY
-              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+              to_char(fe.DATA_TRANSACAO, 'MM/YYYY')
             ORDER BY
-              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+              to_char(fe.DATA_TRANSACAO, 'MM/YYYY')
         """
     else:
         sql += """
             ORDER BY
-              f.NUM_NOTA_FISCAL
+              fe.DOCUMENTO
         """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
