@@ -32,3 +32,10 @@ class AnaliseModeloForm(
 
     class Meta:
         autofocus_field = 'modelo'
+
+
+class FaturamentoParaMetaForm(forms.Form):
+    ano = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
+    mes = forms.IntegerField(required=False)
