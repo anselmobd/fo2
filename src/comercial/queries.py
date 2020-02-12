@@ -404,9 +404,23 @@ def get_vendas(
     return cached_result
 
 
-def faturamento_por_mes_no_ano(cursor, ano):
+def faturamento_para_meta(cursor, ano, mes=None):
     ano = str(ano)
-    prox_ano = str(int(ano) + 1)
+    if mes is None:
+        prox_ano = str(int(ano) + 1)
+        mes = '01'
+        prox_mes = '01'
+    else:
+        mes = int(mes)
+        if mes = 12:
+            prox_mes = 1
+            prox_ano = str(int(ano) + 1)
+        else:
+            prox_mes = mes + 1
+            prox_ano = ano
+        mes = f"{mes:02}"
+        prox_mes = f"{prox_mes:02}"
+
     sql = f"""
         SELECT
           to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
@@ -444,9 +458,9 @@ def faturamento_por_mes_no_ano(cursor, ano):
           AND fe.DOCUMENTO IS NULL
           -- do ano
           AND f.DATA_AUTORIZACAO_NFE >=
-              TIMESTAMP '{ano}-01-01 00:00:00.000'
+              TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
           AND f.DATA_AUTORIZACAO_NFE <
-              TIMESTAMP '{prox_ano}-01-01 00:00:00.000'
+              TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
         GROUP BY
           to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
         ORDER BY
