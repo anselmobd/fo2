@@ -77,10 +77,11 @@ class MetaNoAno(O2BaseGetView):
                     compensar / planejado_restante * mes['planejado']
                 )
                 mes['meta'] = mes['planejado'] + mes['compensado']
-            mes['percentual'] = (
-                int(mes['faturado'] / mes['meta'] * 100))
+            mes['percentual'] = round(
+                mes['faturado'] / mes['meta'] * 100, 1)
 
-        total['percentual'] = int(total['faturado'] / total['planejado'] * 100)
+        total['percentual'] = round(
+            total['faturado'] / total['planejado'] * 100, 1)
 
         self.context.update({
             'meses': meses,
