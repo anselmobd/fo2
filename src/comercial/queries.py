@@ -404,7 +404,7 @@ def get_vendas(
     return cached_result
 
 
-def faturamento_para_meta(cursor, ano, mes=None):
+def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
     ano = str(ano)
     if mes is None:
         prox_ano = str(int(ano) + 1)
@@ -412,7 +412,7 @@ def faturamento_para_meta(cursor, ano, mes=None):
         prox_mes = '01'
     else:
         mes = int(mes)
-        if mes = 12:
+        if mes == 12:
             prox_mes = 1
             prox_ano = str(int(ano) + 1)
         else:
@@ -421,10 +421,21 @@ def faturamento_para_meta(cursor, ano, mes=None):
         mes = f"{mes:02}"
         prox_mes = f"{prox_mes:02}"
 
-    sql = f"""
+    sql = """
         SELECT
-          to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
-        , sum(f.BASE_ICMS) VALOR
+    """
+    if tipo == 'total':
+        sql += """
+              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
+            , sum(f.BASE_ICMS) VALOR
+        """
+    else:
+        sql += """
+              f.NUM_NOTA_FISCAL NF
+            , f.DATA_AUTORIZACAO_NFE DATA
+            , f.BASE_ICMS VALOR
+        """
+    sql += f"""
         FROM FATU_050 f
         JOIN PEDI_080 n
           ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
@@ -461,10 +472,18 @@ def faturamento_para_meta(cursor, ano, mes=None):
               TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
           AND f.DATA_AUTORIZACAO_NFE <
               TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
-        GROUP BY
-          to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
-        ORDER BY
-          to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
     """
+    if tipo == 'total':
+        sql += """
+            GROUP BY
+              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+            ORDER BY
+              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+        """
+    else:
+        sql += """
+            ORDER BY
+              f.NUM_NOTA_FISCAL
+        """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
