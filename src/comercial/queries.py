@@ -404,7 +404,7 @@ def get_vendas(
     return cached_result
 
 
-def faturamento_para_meta(cursor, ano, mes=None, tipo='total', saient='s'):
+def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
     ano = str(ano)
     if mes is None:
         prox_ano = str(int(ano) + 1)
@@ -442,7 +442,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', saient='s'):
             , n.COD_NATUREZA NAT
             , n.DIVISAO_NATUR DIV
         """
-    sql += """
+    sql += f"""
         FROM FATU_050 f
         JOIN PEDI_080 n
           ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
@@ -456,15 +456,6 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', saient='s'):
         WHERE 1=1
           -- filtro de venda baseado em view do Jorge e do antigo filtro
           AND ( 1=2
-        """
-    if saient in ('e', 'a'):
-        sql += """
-              OR (n.COD_NATUREZA = '1.20' and n.DIVISAO_NATUR = 1)
-              OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 1)
-              OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 3)
-        """
-    if saient in ('s', 'a'):
-        sql += """
               OR (n.COD_NATUREZA = '5.10' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '5.11' and n.DIVISAO_NATUR = 8)
               OR (n.COD_NATUREZA = '5.94' and n.DIVISAO_NATUR = 9)
@@ -472,8 +463,88 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', saient='s'):
               OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 9)
               OR (n.COD_NATUREZA = '6.11' and n.DIVISAO_NATUR = 8)
               OR (n.COD_NATUREZA = '6.25' and n.DIVISAO_NATUR = 1)
+              )
+          -- emitida
+          AND f.SITUACAO_NFISC = 1
+          -- não devolvida
+          AND fe.DOCUMENTO IS NULL
+          -- do ano
+          AND f.DATA_AUTORIZACAO_NFE >=
+              TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
+          AND f.DATA_AUTORIZACAO_NFE <
+              TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
+    """
+    if tipo == 'total':
+        sql += """
+            GROUP BY
+              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+            ORDER BY
+              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+        """
+    else:
+        sql += """
+            ORDER BY
+              f.NUM_NOTA_FISCAL
+        """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
+
+
+def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
+    ano = str(ano)
+    if mes is None:
+        prox_ano = str(int(ano) + 1)
+        mes = '01'
+        prox_mes = '01'
+    else:
+        mes = int(mes)
+        if mes == 12:
+            prox_mes = 1
+            prox_ano = str(int(ano) + 1)
+        else:
+            prox_mes = mes + 1
+            prox_ano = ano
+        mes = f"{mes:02}"
+        prox_mes = f"{prox_mes:02}"
+
+    sql = """
+        SELECT
+    """
+    if tipo == 'total':
+        sql += """
+              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
+            , sum(f.BASE_ICMS) VALOR
+        """
+    else:
+        sql += """
+              f.NUM_NOTA_FISCAL NF
+            , f.DATA_AUTORIZACAO_NFE DATA
+            , f.BASE_ICMS VALOR
+            , c.NOME_CLIENTE
+              || ' (' || lpad(c.CGC_9, 8, '0')
+              || '/' || lpad(c.CGC_4, 4, '0')
+              || '-' || lpad(c.CGC_2, 2, '0')
+              || ')' CLIENTE
+            , n.COD_NATUREZA NAT
+            , n.DIVISAO_NATUR DIV
         """
     sql += f"""
+        FROM FATU_050 f
+        JOIN PEDI_080 n
+          ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
+         AND n.ESTADO_NATOPER = f.NATOP_NF_EST_OPER
+        LEFT JOIN PEDI_010 c -- cliente
+          ON c.CGC_9 = f.CGC_9
+         AND c.CGC_4 = f.CGC_4
+        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
+          ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+         AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
+        WHERE 1=1
+          -- filtro de venda baseado em view do Jorge e do antigo filtro
+          AND ( 1=2
+              OR (n.COD_NATUREZA = '1.20' and n.DIVISAO_NATUR = 1)
+              OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 1)
+              OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 3)
               )
           -- emitida
           AND f.SITUACAO_NFISC = 1
