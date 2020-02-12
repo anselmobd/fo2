@@ -404,7 +404,7 @@ def get_vendas(
     return cached_result
 
 
-def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
+def faturamento_para_meta(cursor, ano, mes=None, tipo='total', saient='s'):
     ano = str(ano)
     if mes is None:
         prox_ano = str(int(ano) + 1)
@@ -442,7 +442,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
             , n.COD_NATUREZA NAT
             , n.DIVISAO_NATUR DIV
         """
-    sql += f"""
+    sql += """
         FROM FATU_050 f
         JOIN PEDI_080 n
           ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
@@ -456,9 +456,15 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
         WHERE 1=1
           -- filtro de venda baseado em view do Jorge e do antigo filtro
           AND ( 1=2
+        """
+    if saient in ('e', 'a'):
+        sql += """
               OR (n.COD_NATUREZA = '1.20' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 3)
+        """
+    if saient in ('s', 'a'):
+        sql += """
               OR (n.COD_NATUREZA = '5.10' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '5.11' and n.DIVISAO_NATUR = 8)
               OR (n.COD_NATUREZA = '5.94' and n.DIVISAO_NATUR = 9)
@@ -466,6 +472,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
               OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 9)
               OR (n.COD_NATUREZA = '6.11' and n.DIVISAO_NATUR = 8)
               OR (n.COD_NATUREZA = '6.25' and n.DIVISAO_NATUR = 1)
+        """
+    sql += f"""
               )
           -- emitida
           AND f.SITUACAO_NFISC = 1
