@@ -14,6 +14,12 @@ p::first-line {
 .valores {
   text-align: right;
 }
+.positivo {
+  color: green;
+}
+.negativo {
+  color: red;
+}
 </style>
 {% endblock %}
 
@@ -27,9 +33,11 @@ p::first-line {
           <p>
             Mês<br>
             Planejado<br>
+            Compensado<br>
             Meta<br>
             Faturado<br>
-            Performance
+            Performance<br>
+            Compensar
           </p>
         </div>
         <div class="col-xs-10">
@@ -40,6 +48,7 @@ p::first-line {
                   <p>
                     {{mes.mes|date:"M"}}<br>
                     {{mes.planejado}}<br>
+                    {{mes.compensado}}<br>
                     {{mes.meta}}<br>
                     <span class="valores
                       {% if mes.percentual == 100 or mes.imes >= mes_atual %}
@@ -55,6 +64,11 @@ p::first-line {
                         {{mes.percentual}}%
                       {% else %}
                         -
+                      {% endif %}<br>
+                      {% if mes.imes < mes_atual %}
+                        {{mes.acompensar}}
+                      {% else %}
+                        -
                       {% endif %}
                     </span>
                   </p>
@@ -67,6 +81,7 @@ p::first-line {
           <p>
             Totais<br>
             {{total.planejado}}<br>
+            <br>
             <br>
             {{total.faturado}}<br>
             {{total.percentual}}%
