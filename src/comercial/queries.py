@@ -469,6 +469,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
           AND ( 1=2
               OR (n.COD_NATUREZA = '5.10' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '5.11' and n.DIVISAO_NATUR = 8)
+              -- OUTRA SAÍDA DE MERCADORIA
               OR (n.COD_NATUREZA = '5.94' and n.DIVISAO_NATUR = 9)
               OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 9)
@@ -479,8 +480,9 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
           -- AND f.COD_STATUS = '100'
           -- emitida
           AND f.SITUACAO_NFISC = 1
-          -- gerou duplicata
+          -- gerou duplicata e banco não é 000
           AND dupl.NUM_DUPLICATA IS NOT NULL
+          AND dupl.PORTADOR_DUPLIC <> '000'
           -- do ano
           AND f.DATA_AUTORIZACAO_NFE >=
               TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
