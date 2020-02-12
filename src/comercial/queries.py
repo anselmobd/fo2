@@ -513,13 +513,13 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
     if tipo == 'total':
         sql += """
               to_char(fe.DATA_TRANSACAO, 'MM/YYYY') MES
-            , sum(fe.VALOR_ITENS) VALOR
+            , sum(fe.VALOR_ITENS - fe.VALOR_DESCONTO) VALOR
         """
     else:
         sql += """
               fe.DOCUMENTO NF
             , fe.DATA_TRANSACAO DATA
-            , fe.VALOR_ITENS VALOR
+            , fe.VALOR_ITENS - fe.VALOR_DESCONTO VALOR
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
