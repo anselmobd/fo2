@@ -420,13 +420,25 @@ def faturamento_por_mes_no_ano(cursor, ano):
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
         WHERE 1=1
           -- de venda
-          AND ( f.NATOP_NF_NAT_OPER IN (1, 2)
-              OR
-                ( n.DIVISAO_NATUR = 8
-                AND n.COD_NATUREZA IN ('6.11', '5.11')
-                )
-              )
+          -- 1 = 5101 e 6101
+          -- AND ( f.NATOP_NF_NAT_OPER IN (1, 2)
+          --     OR
+          --       ( n.DIVISAO_NATUR = 8
+          --       AND n.COD_NATUREZA IN ('6.11', '5.11')
+          --       )
+          --     )
           -- ativa
+          -- filtro de venda baseado em view do Jorge
+          AND ( 1=2
+              OR (n.COD_NATUREZA = '1.20' and n.DIVISAO_NATUR = 1)
+              OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 1)
+              OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 3)
+              OR (n.COD_NATUREZA = '5.10' and n.DIVISAO_NATUR = 1)
+              OR (n.COD_NATUREZA = '5.94' and n.DIVISAO_NATUR = 9)
+              OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 1)
+              OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 9)
+              )
+          -- emitida
           AND f.SITUACAO_NFISC = 1
           -- não devolvida
           AND fe.DOCUMENTO IS NULL
