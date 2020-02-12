@@ -48,4 +48,8 @@ urlpatterns = [
         views.MetaNoAno.as_view(),
         name='meta_no_ano'),
 
+    url(r'^faturamento_para_meta/$',
+        views.FaturamentoParaMeta.as_view(),
+        name='faturamento_para_meta'),
+
 ]

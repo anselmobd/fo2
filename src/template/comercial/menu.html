@@ -24,6 +24,7 @@
     {% if perms.comercial.change_metafaturamento %}
       <li><a href="/intradm/comercial/metafaturamento/" target="_blank">Digitação de metas mensais</a></li>
     {% endif %}
+    <li><a href="{% url 'comercial:faturamento_para_meta' %}">Faturamento para meta</a></li>
     <li><a href="{% url 'comercial:meta_no_ano' %}">Meta no ano</a></li>
     {% if perms.comercial.change_pendenciafaturamento %}
       <li><a href="/intradm/comercial/pendenciafaturamento/" target="_blank">Pendências do faturamento</a></li>
