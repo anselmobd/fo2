@@ -1,6 +1,7 @@
 from django import forms
 
 from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
+from utils.functions import mes_atual, ano_atual
 
 
 class ClienteForm(forms.Form):
@@ -36,6 +37,6 @@ class AnaliseModeloForm(
 
 class FaturamentoParaMetaForm(forms.Form):
     ano = forms.IntegerField(
-        required=False,
+        required=False, initial=ano_atual,
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
-    mes = forms.IntegerField(required=False)
+    mes = forms.IntegerField(required=False, initial=mes_atual)
