@@ -480,9 +480,12 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
           -- AND f.COD_STATUS = '100'
           -- emitida
           AND f.SITUACAO_NFISC = 1
-          -- gerou duplicata e banco não é 000
+          -- gerou duplicata
           AND dupl.NUM_DUPLICATA IS NOT NULL
-          AND dupl.PORTADOR_DUPLIC <> '000'
+          -- caso especial:  se CFOP 5949, banco não pode ser 000
+          AND ( NOT (n.COD_NATUREZA = '5.94' and n.DIVISAO_NATUR = 9)
+              OR dupl.PORTADOR_DUPLIC <> '000'
+              )
           -- do ano
           AND f.DATA_AUTORIZACAO_NFE >=
               TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
