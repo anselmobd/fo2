@@ -513,13 +513,13 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
     if tipo == 'total':
         sql += """
               to_char(fe.DATA_TRANSACAO, 'MM/YYYY') MES
-            , sum(fe.BASE_ICMS) VALOR
+            , sum(fe.VALOR_ITENS) VALOR
         """
     else:
         sql += """
               fe.DOCUMENTO NF
             , fe.DATA_TRANSACAO DATA
-            , fe.BASE_ICMS VALOR
+            , fe.VALOR_ITENS VALOR
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
@@ -543,6 +543,11 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
               OR (n.COD_NATUREZA = '1.20' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 3)
+              )
+                 -- nota de terceiros
+          AND (  fe.COD_STATUS = ' '
+                 -- nota própria aceita pela sefaz
+              OR fe.COD_STATUS = '100'
               )
           AND fe.DATA_TRANSACAO >=
               DATE '{ano}-{mes}-01'
