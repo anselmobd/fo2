@@ -260,3 +260,18 @@ def untuple_keys(dict_):
 
 def strdmy2date(text):
     return datetime.datetime.strptime(text, '%d/%m/%Y').date()
+
+
+def ano_atual():
+    hoje = datetime.date.today()
+    return hoje.year
+
+
+def mes_atual():
+    hoje = datetime.date.today()
+    return hoje.month
+
+
+def dia_atual():
+    hoje = datetime.date.today()
+    return hoje.day
