@@ -22,7 +22,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         super(FaturamentoParaMeta, self).__init__(*args, **kwargs)
         self.Form_class = comercial.forms.FaturamentoParaMetaForm
         self.template_name = 'comercial/faturamento_para_meta.html'
-        self.title_name = 'Faturamento no nês'
+        self.title_name = 'Faturamento no mês'
 
     def mount_context(self):
         cursor = connections['so'].cursor()
