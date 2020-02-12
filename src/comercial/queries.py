@@ -461,9 +461,6 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = f.CGC_9
          AND c.CGC_4 = f.CGC_4
-        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
-          ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
-         AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
         LEFT JOIN FATU_070 dupl
           ON dupl.NUM_DUPLICATA = f.NUM_NOTA_FISCAL
          AND dupl.SEQ_DUPLICATAS = 1
@@ -484,8 +481,6 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
           AND f.SITUACAO_NFISC = 1
           -- gerou duplicata
           AND dupl.NUM_DUPLICATA IS NOT NULL
-          -- não devolvida
-          AND fe.DOCUMENTO IS NULL
           -- do ano
           AND f.DATA_AUTORIZACAO_NFE >=
               TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
