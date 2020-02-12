@@ -541,6 +541,11 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
               to_char(fe.DATA_TRANSACAO, 'MM/YYYY') MES
             , sum(fe.VALOR_ITENS - fe.VALOR_DESCONTO) VALOR
         """
+    elif tipo == 'cliente':
+        sql += """
+              c.NOME_CLIENTE CLIENTE
+            , sum(fe.VALOR_ITENS - fe.VALOR_DESCONTO) VALOR
+        """
     else:
         sql += """
               fe.DOCUMENTO NF
@@ -586,6 +591,13 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
               to_char(fe.DATA_TRANSACAO, 'MM/YYYY')
             ORDER BY
               to_char(fe.DATA_TRANSACAO, 'MM/YYYY')
+        """
+    elif tipo == 'cliente':
+        sql += """
+            GROUP BY
+              c.NOME_CLIENTE
+            ORDER BY
+              c.NOME_CLIENTE
         """
     else:
         sql += """
