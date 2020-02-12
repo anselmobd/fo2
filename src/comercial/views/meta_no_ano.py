@@ -30,7 +30,7 @@ class MetaNoAno(O2BaseGetView):
             })
             return
 
-        faturados = comercial.queries.faturamento_por_mes_no_ano(
+        faturados = comercial.queries.faturamento_para_meta(
             cursor, ano_atual)
         for faturado in faturados:
             faturado['mes'] = int(faturado['mes'][:2])
