@@ -462,6 +462,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
               OR (n.COD_NATUREZA = '5.94' and n.DIVISAO_NATUR = 9)
               OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 1)
               OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 9)
+              OR (n.COD_NATUREZA = '6.25' and n.DIVISAO_NATUR = 1)
               )
           -- emitida
           AND f.SITUACAO_NFISC = 1
