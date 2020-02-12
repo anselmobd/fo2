@@ -31,7 +31,7 @@ class PainelMetaFaturamento(View):
         metas = comercial.models.MetaFaturamento.objects.filter(
             data__year=ano_atual)
 
-        faturados = comercial.queries.faturamento_por_mes_no_ano(
+        faturados = comercial.queries.faturamento_para_meta(
             cursor, ano_atual)
         for faturado in faturados:
             faturado['mes'] = int(faturado['mes'][:2])
