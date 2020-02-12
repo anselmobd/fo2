@@ -22,7 +22,7 @@ class PainelMetaFaturamento(View):
 
     def mount_context(self):
         cursor = connections['so'].cursor()
-        hoje = datetime.date.today()
+        hoje = datetime.datetime.now()
         ano_atual = hoje.year
         mes_atual = hoje.month
         dia_atual = hoje.day
