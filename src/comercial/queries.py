@@ -439,6 +439,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
               || '/' || lpad(c.CGC_4, 4, '0')
               || '-' || lpad(c.CGC_2, 2, '0')
               || ')' CLIENTE
+            , n.COD_NATUREZA NAT
+            , n.DIVISAO_NATUR DIV
         """
     sql += f"""
         FROM FATU_050 f
