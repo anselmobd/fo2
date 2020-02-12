@@ -10,6 +10,7 @@ from utils.models import queryset_to_dict_list_lower
 from utils.views import totalize_data
 
 import lotes.queries.pedido as l_q_p
+
 import comercial.models
 import comercial.queries
 
