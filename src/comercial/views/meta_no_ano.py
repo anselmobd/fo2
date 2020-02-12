@@ -23,7 +23,7 @@ class MetaNoAno(O2BaseGetView):
         mes_atual = hoje.month
 
         metas = comercial.models.MetaFaturamento.objects.filter(
-            data__year=ano_atual)
+            data__year=ano_atual).order_by('data')
         if len(metas) == 0:
             self.context.update({
                 'msg_erro': 'Nenhuma meta definida para o ano',
