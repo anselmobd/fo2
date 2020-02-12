@@ -52,4 +52,8 @@ urlpatterns = [
         views.FaturamentoParaMeta.as_view(),
         name='faturamento_para_meta'),
 
+    url(r'^devolucao_para_meta/$',
+        views.DevolucaoParaMeta.as_view(),
+        name='devolucao_para_meta'),
+
 ]
