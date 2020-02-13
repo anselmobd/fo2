@@ -547,26 +547,29 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
             , n.DIVISAO_NATUR DIV
         """
     sql += f"""
-        FROM OBRF_010 fe
-        JOIN PEDI_080 n
+        FROM OBRF_010 fe -- capa de nota de entrada
+        JOIN PEDI_080 n -- natureza de operação
           ON n.NATUR_OPERACAO = fe.NATOPER_NAT_OPER
          AND n.ESTADO_NATOPER = fe.NATOPER_EST_OPER
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = fe.CGC_CLI_FOR_9
          AND c.CGC_4 = fe.CGC_CLI_FOR_4
         --WHERE fe.DOCUMENTO = 208240
+        JOIN ESTQ_005 tre -- transações de estoque
+          ON tre.CODIGO_TRANSACAO = fe.CODIGO_TRANSACAO
         WHERE 1=1
-          -- filtro de venda baseado em view do Jorge e do antigo filtro
-          AND ( 1=2
-              OR (n.COD_NATUREZA = '1.20' and n.DIVISAO_NATUR = 1)
-              OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 1)
-              OR (n.COD_NATUREZA = '2.20' and n.DIVISAO_NATUR = 3)
-              )
-                 -- nota de terceiros
-          AND (  fe.COD_STATUS = ' '
-                 -- nota própria aceita pela sefaz
-              OR fe.COD_STATUS = '100'
-              )
+          -- filtro de devolvidos baseado na view Faturados_X_Devolvidos
+          -- filtrando faturamento_Sim_Nao = "Sim" e por data
+          -- situacao
+          --   1 (nota própria não cancelada)
+          --   2 (nota própria cancelada)
+          --   4 (nota de terceiros)
+          AND fe.SITUACAO_ENTRADA <> 2
+          -- transação de estoque de Devolução
+          AND tre.TIPO_TRANSACAO = 'D'
+          -- não é nota de conhecimento
+          AND fe.TIPO_CONHECIMENTO <> 1
+          -- filtra data
           AND fe.DATA_TRANSACAO >=
               DATE '{ano}-{mes}-01'
           AND fe.DATA_TRANSACAO <
