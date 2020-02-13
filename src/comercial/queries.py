@@ -432,7 +432,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
     """
     if tipo == 'total':
         sql += """
-              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY') MES
+              to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
             , sum(f.BASE_ICMS) VALOR
         """
     elif tipo == 'cliente':
@@ -443,7 +443,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
     else:
         sql += """
               f.NUM_NOTA_FISCAL NF
-            , f.DATA_AUTORIZACAO_NFE DATA
+            , f.DATA_EMISSAO DATA
             , f.BASE_ICMS VALOR
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
@@ -461,43 +461,25 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = f.CGC_9
          AND c.CGC_4 = f.CGC_4
-        LEFT JOIN FATU_070 dupl
-          ON dupl.NUM_DUPLICATA = f.NUM_NOTA_FISCAL
-         AND dupl.SEQ_DUPLICATAS = 1
         WHERE 1=1
-          -- filtro de venda baseado em view do Jorge e do antigo filtro
-          AND ( 1=2
-              OR (n.COD_NATUREZA = '5.10' and n.DIVISAO_NATUR = 1)
-              OR (n.COD_NATUREZA = '5.11' and n.DIVISAO_NATUR = 8)
-              -- OUTRA SAÍDA DE MERCADORIA
-              OR (n.COD_NATUREZA = '5.94' and n.DIVISAO_NATUR = 9)
-              OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 1)
-              OR (n.COD_NATUREZA = '6.10' and n.DIVISAO_NATUR = 9)
-              OR (n.COD_NATUREZA = '6.11' and n.DIVISAO_NATUR = 8)
-              OR (n.COD_NATUREZA = '6.25' and n.DIVISAO_NATUR = 1)
-              )
-          -- nota própria aceita pela sefaz
-          -- AND f.COD_STATUS = '100'
-          -- emitida
-          AND f.SITUACAO_NFISC = 1
-          -- gerou duplicata
-          AND dupl.NUM_DUPLICATA IS NOT NULL
-          -- caso especial:  se CFOP 5949, banco não pode ser 000
-          AND ( NOT (n.COD_NATUREZA = '5.94' and n.DIVISAO_NATUR = 9)
-              OR dupl.PORTADOR_DUPLIC <> '000'
-              )
-          -- do ano
-          AND f.DATA_AUTORIZACAO_NFE >=
+          -- filtro de faturamento baseado na view Faturados_X_Devolvidos
+          -- filtrando faturamento_Sim_Nao = "Sim" e por data
+          -- não cancelada
+          AND f.COD_CANC_NFISC = 0
+          -- utilizou natureza configurada como faturamento
+          AND n.faturamento = 1
+          -- filtra data
+          AND f.DATA_EMISSAO >=
               TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
-          AND f.DATA_AUTORIZACAO_NFE <
+          AND f.DATA_EMISSAO <
               TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
     """
     if tipo == 'total':
         sql += """
             GROUP BY
-              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+              to_char(f.DATA_EMISSAO, 'MM/YYYY')
             ORDER BY
-              to_char(f.DATA_AUTORIZACAO_NFE, 'MM/YYYY')
+              to_char(f.DATA_EMISSAO, 'MM/YYYY')
         """
     elif tipo == 'cliente':
         sql += """
