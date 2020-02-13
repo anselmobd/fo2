@@ -105,7 +105,7 @@
       color: snow;
       justify-content: right;
       animation-name: timer;
-      animation-duration: 30s;
+      animation-duration: 60s;
     }
     @keyframes timer {
       0%   {color: #0088ff;}
@@ -116,7 +116,7 @@
 <script>
 
  var valendo = false;
- var refresh_rate = 30; //<-- In seconds, change to your needs
+ var refresh_rate = 60; //<-- In seconds, change to your needs
  var last_user_action = 0;
 
  function reset() {
@@ -169,7 +169,7 @@
       </div>
       <div class="col-xs-3 direita">
         <a id="timerlink" class="timer" href=".">Recarrega</a><br>
-        {{hoje}}
+        {{hoje|date:"d/m/yy H:i"}}
       </div>
     </div>
   <div class="mes">
