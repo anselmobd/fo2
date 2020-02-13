@@ -36,6 +36,11 @@ class ImprimeLotes(LoginRequiredMixin, View):
         oc_inicial_val = oc_inicial or 0
         oc_final_val = oc_final or 99999
 
+        seq_est = models.base.get_seq_est_op(cursor, op)
+        dict_est_seq = {se['est']: se['seq'] for se in seq_est}
+        dict_est_seq[9999] = 9999  # Finalizado
+        tem_est6 = 6 in dict_est_seq
+
         # Lotes ordenados por OC
         l_data = models.get_imprime_lotes(
             cursor, op, tam, cor, order, oc_inicial_val, oc_final_val,
@@ -53,6 +58,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             l_data = []
             return context
 
+        lote_ate_est6 = 0
         pula_lote = ultimo != ''
         data = []
         for row in l_data:
@@ -71,6 +77,10 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 row['prim'] = ''
             if row['divisao'] is None:
                 row['descricao_divisao'] = ''
+            if tem_est6:
+                if dict_est_seq[row['est_num']] <= dict_est_seq[6]:
+                    lote_ate_est6 += 1
+                    continue
             if pula_lote:
                 pula_lote = row['lote'] != ultimo
             else:
@@ -100,6 +110,9 @@ class ImprimeLotes(LoginRequiredMixin, View):
                                 row['qtd'], row['qtdtot'])
                             data.append(row)
 
+        context.update({
+            'lote_ate_est6': lote_ate_est6,
+        })
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nehum lote selecionado',
