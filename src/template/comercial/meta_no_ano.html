@@ -17,6 +17,9 @@ p::first-line {
 .positivo {
   color: green;
 }
+.neutro {
+  color: black;
+}
 .negativo {
   color: red;
 }
@@ -36,6 +39,7 @@ p::first-line {
             Compensado<br>
             Meta<br>
             Faturado<br>
+            Pedido<br>
             Performance<br>
             Compensar
           </p>
@@ -51,7 +55,7 @@ p::first-line {
                     {{mes.compensado}}<br>
                     {{mes.meta}}<br>
                     <span class="valores
-                      {% if mes.percentual == 100 or mes.imes >= mes_atual %}
+                      {% if mes.percentual == 100 or mes.imes > mes_atual %}
                         neutro
                       {% elif mes.percentual < 100 %}
                         negativo
@@ -59,16 +63,25 @@ p::first-line {
                         positivo
                       {% endif %}
                       ">
-                      {{mes.faturado}}<br>
+                      {% if mes.faturado > 0 %}
+                        {{mes.faturado}}
+                      {% else %}
+                        .
+                      {% endif %}<br>
+                      {% if mes.pedido > 0 %}
+                        {{mes.pedido}}
+                      {% else %}
+                        .
+                      {% endif %}<br>
                       {% if mes.imes <= mes_atual %}
                         {{mes.percentual}}%
                       {% else %}
-                        -
+                        .
                       {% endif %}<br>
                       {% if mes.imes < mes_atual %}
                         {{mes.acompensar}}
                       {% else %}
-                        -
+                        .
                       {% endif %}
                     </span>
                   </p>
@@ -84,6 +97,7 @@ p::first-line {
             <br>
             <br>
             {{total.faturado}}<br>
+            <br>
             {{total.percentual}}%
           </p>
         </div>
