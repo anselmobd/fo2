@@ -22,5 +22,7 @@ urlpatterns = [
 
     url(r'^gerar_assinaturas$', views.GerarAssinaturas.as_view(),
         name='gerar_assinaturas'),
+    url(r'^gerar_assinaturas/(?P<id>[^/]+)/$',
+        views.GerarAssinaturas.as_view(), name='gerar_assinaturas'),
 
 ]

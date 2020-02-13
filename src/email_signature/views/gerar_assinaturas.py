@@ -152,11 +152,19 @@ class GerarAssinaturas(View):
         if exitcode != 0:
             return 'Erro acertando dono e grupo'
 
-    def mount_context(self):
+    def mount_context(self, **kwargs):
         self.template_file = get_template_file()
 
-        contas = models.Account.objects.all()
+        self.id = None
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+
+        if self.id is None:
+            contas = models.Account.objects.all()
+        else:
+            contas = models.Account.objects.filter(id=self.id)
         self.context['lista'] = []
+
         for conta in contas:
 
             erro = self.gerar_assinatura_local(conta)
@@ -170,5 +178,5 @@ class GerarAssinaturas(View):
             ))
 
     def get(self, request, *args, **kwargs):
-        self.mount_context()
+        self.mount_context(**kwargs)
         return render(request, self.template_name, self.context)
