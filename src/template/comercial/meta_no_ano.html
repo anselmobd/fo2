@@ -41,6 +41,7 @@ p::first-line {
             Faturado<br>
             Pedido<br>
             Performance<br>
+            Saldo<br>
             Compensar
           </p>
         </div>
@@ -75,6 +76,11 @@ p::first-line {
                       {% endif %}<br>
                       {% if mes.imes <= mes_atual %}
                         {{mes.percentual}}%
+                      {% else %}
+                        .
+                      {% endif %}<br>
+                      {% if mes.imes == mes_atual %}
+                        {{mes.saldo}}
                       {% else %}
                         .
                       {% endif %}<br>
