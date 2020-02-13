@@ -4,6 +4,9 @@ import datetime
 from django.db import connections
 
 from base.views import O2BaseGetView
+from utils.functions import dias_mes_data
+
+import lotes.queries.pedido as l_q_p
 
 import comercial.models
 import comercial.queries
@@ -21,6 +24,8 @@ class MetaNoAno(O2BaseGetView):
         hoje = datetime.date.today()
         ano_atual = hoje.year
         mes_atual = hoje.month
+        dia_atual = hoje.day
+        dias_mes = dias_mes_data(hoje)
 
         metas = comercial.models.MetaFaturamento.objects.filter(
             data__year=ano_atual).order_by('data')
@@ -45,6 +50,13 @@ class MetaNoAno(O2BaseGetView):
         devolvidos_dict = {
             f['mes']: int(f['valor']/1000) for f in devolvidos
         }
+
+        pedidos = l_q_p.pedido_faturavel_modelo(
+            cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}')
+        total_pedido = 0
+        for pedido in pedidos:
+            total_pedido += pedido['PRECO']
+        total_pedido = int(total_pedido/1000)
 
         meses = []
         total = {
@@ -77,8 +89,12 @@ class MetaNoAno(O2BaseGetView):
                     compensar / planejado_restante * mes['planejado']
                 )
                 mes['meta'] = mes['planejado'] + mes['compensado']
+            if mes['imes'] == mes_atual:
+                mes['pedido'] = total_pedido
+            else:
+                mes['pedido'] = 0
             mes['percentual'] = round(
-                mes['faturado'] / mes['meta'] * 100, 1)
+                (mes['faturado'] + mes['pedido']) / mes['meta'] * 100, 1)
 
         total['percentual'] = round(
             total['faturado'] / total['planejado'] * 100, 1)
