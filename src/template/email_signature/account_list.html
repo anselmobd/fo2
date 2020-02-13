@@ -7,7 +7,7 @@
   <h4>Listagem</h4>
   <ul>
   {% for account in accounts %}
-    <li>{{ account }} <a href="{% url 'email_signature:account_change' account.id %}">Edita</a></li>
+    <li>{{ account }} <a href="{% url 'email_signature:account_change' account.id %}">Edita</a> |  <a href="{% url 'email_signature:gerar_assinaturas' account.id %}">Gera</a></li>
   {% empty %}
     <li>Nenhum conta.</li>
   {% endfor %}
