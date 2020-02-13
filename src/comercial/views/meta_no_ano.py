@@ -73,7 +73,7 @@ class MetaNoAno(O2BaseGetView):
                 devolvidos_dict.get(mes['imes'], 0)
                 )
             if mes['imes'] < mes_atual:
-                mes['acompensar'] = -(mes['planejado'] - mes['faturado'])
+                mes['acompensar'] = mes['faturado'] - mes['planejado']
                 compensar += mes['planejado'] - mes['faturado']
             else:
                 planejado_restante += mes['planejado']
@@ -89,10 +89,15 @@ class MetaNoAno(O2BaseGetView):
                     compensar / planejado_restante * mes['planejado']
                 )
                 mes['meta'] = mes['planejado'] + mes['compensado']
+
             if mes['imes'] == mes_atual:
                 mes['pedido'] = total_pedido
             else:
                 mes['pedido'] = 0
+
+            if mes['imes'] == mes_atual:
+                mes['saldo'] = mes['faturado'] + mes['pedido'] - mes['meta']
+
             mes['percentual'] = round(
                 (mes['faturado'] + mes['pedido']) / mes['meta'] * 100, 1)
 
