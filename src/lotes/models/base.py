@@ -1,4 +1,4 @@
-from utils.models import rows_to_dict_list
+from utils.models import rows_to_dict_list, rows_to_dict_list_lower
 
 from lotes.models import *
 
@@ -366,4 +366,4 @@ def get_seq_est_op(cursor, op):
         , l.CODIGO_ESTAGIO
     """
     cursor.execute(sql, [op])
-    return rows_to_dict_list(cursor)
+    return rows_to_dict_list_lower(cursor)
