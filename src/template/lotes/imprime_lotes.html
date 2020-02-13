@@ -16,6 +16,9 @@
   <input type="submit" value="Pesquisa" name="search"/>
   <input type="submit" value="Imprime" name="print"/>
 </form>
+{% if lote_ate_est6 %}
+  <h4>{{lote_ate_est6}} Lote{{ lote_ate_est6|pluralize }} anteriores ou no estágio 6.</h4>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% else %}
