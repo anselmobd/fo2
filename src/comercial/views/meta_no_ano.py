@@ -62,6 +62,7 @@ class MetaNoAno(O2BaseGetView):
         total = {
             'planejado': 0,
             'faturado': 0,
+            'acompensar': 0,
         }
         compensar = 0
         planejado_restante = 0
@@ -74,6 +75,7 @@ class MetaNoAno(O2BaseGetView):
                 )
             if mes['imes'] < mes_atual:
                 mes['acompensar'] = mes['faturado'] - mes['planejado']
+                total['acompensar'] += mes['acompensar']
                 compensar += mes['planejado'] - mes['faturado']
             else:
                 planejado_restante += mes['planejado']

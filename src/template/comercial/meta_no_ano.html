@@ -53,7 +53,11 @@ p::first-line {
                   <p>
                     {{mes.mes|date:"M"}}<br>
                     {{mes.planejado}}<br>
-                    {{mes.compensado}}<br>
+                    {% if mes.compensado %}
+                      {{mes.compensado}}
+                    {% else %}
+                      .
+                    {% endif %}<br>
                     {{mes.meta}}<br>
                     <span class="valores
                       {% if mes.percentual == 100 or mes.imes > mes_atual %}
@@ -104,7 +108,9 @@ p::first-line {
             <br>
             {{total.faturado}}<br>
             <br>
-            {{total.percentual}}%
+            {{total.percentual}}%<br>
+            <br>
+            {{total.acompensar}}
           </p>
         </div>
       </div>
