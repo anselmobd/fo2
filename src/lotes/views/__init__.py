@@ -3,6 +3,8 @@ from .analise import *
 from .a_produzir import *
 from .distribuicao import *
 from .imprime_lotes import *
+from .imprime_pacote_3_lotes import *
+from .imprime_tag import *
 from .lote import *
 from .op_caixa import *
 from .op_pendente import *
