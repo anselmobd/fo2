@@ -245,6 +245,9 @@ class SolicitaLote(models.Model):
     descricao = models.CharField(
         max_length=200, null=True, blank=True,
         verbose_name='descrição')
+    data = models.DateField(
+        null=True, blank=True,
+        verbose_name='Data do embarque')
     usuario = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True,
         verbose_name='usuário')
@@ -255,9 +258,6 @@ class SolicitaLote(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
-    # data = models.DateField(
-    #     null=True, blank=True,
-    #     verbose_name='Data do embarque')
 
     def save(self, *args, **kwargs):
         self.codigo = self.codigo and self.codigo.upper()
