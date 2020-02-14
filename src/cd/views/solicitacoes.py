@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from geral.functions import has_permission
+
 import lotes.models
 
 import cd.forms
