@@ -899,7 +899,7 @@ def historico_lote(cursor, lote):
     return rows_to_dict_list_lower(cursor)
 
 
-def solicita_lote(cursor, filtro=None):
+def solicita_lote(cursor, filtro=None, data=None):
     filtra_cod_descr = ''
     if filtro is not None:
         for el in filtro.strip().split():
@@ -909,6 +909,11 @@ def solicita_lote(cursor, filtro=None):
                     OR u.username LIKE '%{el}%'
                     )
             '''
+    filtra_data = ''
+    if data is not None:
+        filtra_data = f'''--
+            AND s.data = '{data}'
+        '''
     sql = f'''
         select
           s.id
@@ -937,6 +942,7 @@ def solicita_lote(cursor, filtro=None):
           on u.id = s.usuario_id
         where 1=1
           {filtra_cod_descr} -- filtra_cod_descr
+          {filtra_data} -- filtra_data
         group by
           s.id
         , s.codigo
