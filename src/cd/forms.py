@@ -187,6 +187,13 @@ class SolicitacaoForm(forms.Form):
         label='Ativa para o usuário', required=False)
 
 
+class FiltraSolicitacaoForm(forms.Form):
+    filtro = forms.CharField(
+        max_length=20, min_length=1, required=False,
+        help_text='(Filtra palavras em campos texto)',
+        widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
+
+
 class AskLoteForm(forms.Form):
     lote = forms.CharField(
         label='Lote', max_length=9, min_length=9,

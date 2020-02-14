@@ -18,12 +18,13 @@ class Solicitacoes(LoginRequiredMixin, View):
 
     def __init__(self):
         self.Form_class = cd.forms.SolicitacaoForm
+        self.Filter_class = cd.forms.FiltraSolicitacaoForm
         self.template_name = 'cd/solicitacoes.html'
         self.title_name = 'Solicitações de lotes'
         self.SL = lotes.models.SolicitaLote
         self.id = None
 
-    def lista(self):
+    def lista(self, filtro):
         fields = ('codigo', 'ativa', 'descricao',
                   'usuario__username', 'update_at',
                   'total_qtd', 'total_no_cd')
@@ -33,7 +34,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         headers = dict(zip(fields, descriptions))
 
         cursor_def = connection.cursor()
-        data = models.solicita_lote(cursor_def)
+        data = models.solicita_lote(cursor_def, filtro)
         for row in data:
             row['codigo|LINK'] = reverse(
                 'cd:solicitacao_detalhe', args=[row['id']])
@@ -76,6 +77,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                     self.id = None
 
         if not self.id:
+            context['filter'] = self.Filter_class()
             context.update(self.lista())
 
         return render(request, self.template_name, context)
@@ -85,6 +87,16 @@ class Solicitacoes(LoginRequiredMixin, View):
 
         if 'id' in kwargs:
             self.id = kwargs['id']
+
+        if self.id is None:
+            filter = self.Filter_class(request.POST)
+            if filter.is_valid():
+                filtro = filter.cleaned_data['filtro']
+            else:
+                filtro = None
+            context['filter'] = filter
+            context.update(self.lista(filtro))
+            return render(request, self.template_name, context)
 
         form = self.Form_class(request.POST)
         if form.is_valid():
