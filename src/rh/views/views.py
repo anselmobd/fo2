@@ -277,6 +277,9 @@ def datas(request, data):
     elif data == '2019-12-retrospectiva':
         context = {'titulo': 'Retrospectiva 2019!'}
         return render(request, 'rh/datas/2019-12-retrospectiva.html', context)
+    elif data == '2020-02-carnaval':
+        context = {'titulo': 'Carnaval 2020!'}
+        return render(request, 'rh/datas/2020-02-carnaval.html', context)
 
 
 def v2018_dia_rosa_fotos(request):
