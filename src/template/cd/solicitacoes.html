@@ -39,13 +39,13 @@ thead th
   </form>
 {% else %}
   <p><a title="Inserir" href="{% url 'cd:solicitacoes' 'add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a></p>
-{% endif %}
-{% if data %}
   <form action="{% url 'cd:solicitacoes' %}" method="post">
     {% csrf_token %}
     {{ filter.as_p }}
     <input type="submit" value="Busca"/>
   </form>
+{% endif %}
+{% if data %}
   <table>
     <thead>
       <tr>
