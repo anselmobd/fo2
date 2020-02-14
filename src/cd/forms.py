@@ -183,6 +183,9 @@ class SolicitacaoForm(forms.Form):
     descricao = forms.CharField(
         label='Descrição', required=False,
         widget=forms.TextInput(attrs={'size': 60}))
+    data = forms.DateField(
+        label='Data do embarque', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
     ativa = forms.BooleanField(
         label='Ativa para o usuário', required=False)
 
