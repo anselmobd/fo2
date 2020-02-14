@@ -13,6 +13,7 @@ import lotes.queries.pedido as l_q_p
 
 import comercial.models
 import comercial.queries
+from comercial.views.meta_no_ano import dados_meta_no_ano
 
 
 class PainelMetaFaturamento(View):
@@ -26,73 +27,16 @@ class PainelMetaFaturamento(View):
         hoje = datetime.datetime.now()
         ano_atual = hoje.year
         mes_atual = hoje.month
-        dia_atual = hoje.day
-        dias_mes = dias_mes_data(hoje)
 
-        metas = comercial.models.MetaFaturamento.objects.filter(
-            data__year=ano_atual)
-
-        faturados = comercial.queries.faturamento_para_meta(
-            cursor, ano_atual)
-        for faturado in faturados:
-            faturado['mes'] = int(faturado['mes'][:2])
-        faturados_dict = {
-            f['mes']: int(f['valor']/1000) for f in faturados
-        }
-
-        devolvidos = comercial.queries.devolucao_para_meta(
-            cursor, ano_atual)
-        for devolvido in devolvidos:
-            devolvido['mes'] = int(devolvido['mes'][:2])
-        devolvidos_dict = {
-            f['mes']: int(f['valor']/1000) for f in devolvidos
-        }
-
-        pedidos = l_q_p.pedido_faturavel_modelo(
-            cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}')
-        total_pedido = 0
-        for pedido in pedidos:
-            total_pedido += pedido['PRECO']
-        total_pedido = int(total_pedido/1000)
-
-        meses = []
-        compensar = 0
-        planejado_restante = 0
-        for meta in metas:
-            mes = dict(mes=meta.data, planejado=meta.faturamento)
-            mes['imes'] = mes['mes'].month
-            mes['faturado'] = (
-                faturados_dict.get(mes['imes'], 0) -
-                devolvidos_dict.get(mes['imes'], 0)
-                )
-            if mes['imes'] < mes_atual:
-                compensar += mes['planejado'] - mes['faturado']
-            else:
-                planejado_restante += mes['planejado']
-            meses.append(mes)
-
-        for mes in meses:
-            if mes['imes'] < mes_atual or compensar < 0:
-                mes['meta'] = mes['planejado']
-            else:
-                mes['meta'] = int(
-                    mes['planejado'] + (
-                        compensar / planejado_restante * mes['planejado']
-                    )
-                )
-            mes['percentual'] = round(
-                mes['faturado'] / mes['meta'] * 100, 1)
+        meses, _ = dados_meta_no_ano(cursor, hoje)
 
         mes = [mes for mes in meses
                if mes['imes'] == mes_atual][0]
-
-        mes['pedidos'] = total_pedido
-        mes['perc_pedidos'] = round(
-            mes['pedidos'] / mes['meta'] * 100, 1)
-
-        mes['total'] = mes['faturado'] + mes['pedidos']
-        mes['perc_total'] = round(
-            mes['total'] / mes['meta'] * 100, 1)
+        mes['perc_faturado'] = round(
+            mes['faturado'] / mes['meta'] * 100, 1)
+        mes['perc_pedido'] = round(
+            mes['pedido'] / mes['meta'] * 100, 1)
+        mes['total'] = mes['faturado'] + mes['pedido']
 
         pendencias = comercial.models.PendenciaFaturamento.objects.filter(
             mes__year=ano_atual, mes__month=mes_atual, ).order_by('ordem')
