@@ -25,10 +25,10 @@ class Solicitacoes(LoginRequiredMixin, View):
         self.id = None
 
     def lista(self, filtro=None):
-        fields = ('codigo', 'ativa', 'descricao',
+        fields = ('codigo', 'ativa', 'descricao', 'data',
                   'usuario__username', 'update_at',
                   'total_qtd', 'total_no_cd')
-        descriptions = ('Código', 'Ativa para o usuário', 'Descrição',
+        descriptions = ('Código', 'Ativa para o usuário', 'Descrição', 'Data',
                         'Usuário', 'Última alteração', 'Qtd. total',
                         'Qtd. do CD')
         headers = dict(zip(fields, descriptions))
@@ -36,6 +36,8 @@ class Solicitacoes(LoginRequiredMixin, View):
         cursor_def = connection.cursor()
         data = models.solicita_lote(cursor_def, filtro)
         for row in data:
+            if row['data'] is None:
+                row['data'] = ''
             row['codigo|LINK'] = reverse(
                 'cd:solicitacao_detalhe', args=[row['id']])
         context = {
@@ -70,6 +72,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                         context['form'] = self.Form_class(
                             initial={'codigo': row.codigo,
                                      'descricao': row.descricao,
+                                     'data': row.data,
                                      'ativa': row.ativa})
                 else:
                     context['msg_erro'] = \
@@ -102,6 +105,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         if form.is_valid():
             codigo = form.cleaned_data['codigo']
             descricao = form.cleaned_data['descricao']
+            data = form.cleaned_data['data']
             ativa = form.cleaned_data['ativa']
             if ativa:
                 outras_ativas = self.SL.objects.filter(
@@ -131,6 +135,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                     solicitacao.usuario = request.user
                     solicitacao.codigo = codigo
                     solicitacao.descricao = descricao
+                    solicitacao.data = data
                     solicitacao.ativa = ativa
                     solicitacao.save()
                 except IntegrityError as e:
