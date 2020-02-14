@@ -142,6 +142,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                     context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
                         'a solicitação. <{}>'.format(str(e))
 
+            context['filter'] = self.Filter_class()
             context.update(self.lista())
         else:
             self.context['form'] = form
