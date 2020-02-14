@@ -904,9 +904,9 @@ def solicita_lote(cursor, filtro=None, data=None):
     if filtro is not None:
         for el in filtro.strip().split():
             filtra_cod_descr += f'''--
-                AND ( s.codigo LIKE '%{el}%'
-                    OR s.descricao LIKE '%{el}%'
-                    OR u.username LIKE '%{el}%'
+                AND ( upper(s.codigo) LIKE '%{el.upper()}%'
+                    OR upper(s.descricao) LIKE '%{el.upper()}%'
+                    OR upper(u.username) LIKE '%{el.upper()}%'
                     )
             '''
     filtra_data = ''
