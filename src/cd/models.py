@@ -914,6 +914,7 @@ def solicita_lote(cursor, filtro=None):
           s.id
         , s.codigo
         , s.descricao
+        , s.data
         , s.ativa
         , s.create_at
         , s.update_at
