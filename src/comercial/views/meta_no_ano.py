@@ -40,7 +40,7 @@ class MetaNoAno(O2BaseGetView):
         for faturado in faturados:
             faturado['mes'] = int(faturado['mes'][:2])
         faturados_dict = {
-            f['mes']: int(f['valor']/1000) for f in faturados
+            f['mes']: int(round(f['valor']/1000)) for f in faturados
         }
 
         devolvidos = comercial.queries.devolucao_para_meta(
@@ -48,7 +48,7 @@ class MetaNoAno(O2BaseGetView):
         for devolvido in devolvidos:
             devolvido['mes'] = int(devolvido['mes'][:2])
         devolvidos_dict = {
-            f['mes']: int(f['valor']/1000) for f in devolvidos
+            f['mes']: int(round(f['valor']/1000)) for f in devolvidos
         }
 
         pedidos = l_q_p.pedido_faturavel_modelo(
@@ -56,16 +56,19 @@ class MetaNoAno(O2BaseGetView):
         total_pedido = 0
         for pedido in pedidos:
             total_pedido += pedido['PRECO']
-        total_pedido = int(total_pedido/1000)
+        total_pedido = int(round(total_pedido/1000))
 
         meses = []
         total = {
             'planejado': 0,
             'faturado': 0,
             'acompensar': 0,
+            'compensado': 0,
         }
+
         compensar = 0
-        planejado_restante = 0
+        # planejado_restante = 0
+        meses_restantes = 0
         for meta in metas:
             mes = dict(mes=meta.data, planejado=meta.faturamento)
             mes['imes'] = mes['mes'].month
@@ -77,26 +80,55 @@ class MetaNoAno(O2BaseGetView):
                 mes['acompensar'] = mes['faturado'] - mes['planejado']
                 total['acompensar'] += mes['acompensar']
                 compensar += mes['planejado'] - mes['faturado']
+                vari_teste = 0
             else:
-                planejado_restante += mes['planejado']
+                # planejado_restante += mes['planejado']
+                meses_restantes += 1
+            if mes['imes'] == mes_atual:
+                mes['pedido'] = total_pedido
+            else:
+                mes['pedido'] = 0
             meses.append(mes)
             total['planejado'] += mes['planejado']
             total['faturado'] += mes['faturado']
 
         for mes in meses:
-            if mes['imes'] < mes_atual or compensar < 0:
+            if mes['imes'] < mes_atual:
                 mes['meta'] = mes['planejado']
             else:
-                mes['compensado'] = int(
-                    compensar / planejado_restante * mes['planejado']
-                )
+                # mes['compensado'] = int(round(
+                #     compensar / planejado_restante * mes['planejado']
+                # ))
+                mes['compensado'] = int(round(compensar / meses_restantes))
+                total['compensado'] += mes['compensado']
                 mes['meta'] = mes['planejado'] + mes['compensado']
 
-            if mes['imes'] == mes_atual:
-                mes['pedido'] = total_pedido
-            else:
-                mes['pedido'] = 0
+        if compensar != total['compensado']:
+            diferenca = compensar - total['compensado']
+            passo = int(diferenca / abs(diferenca))
 
+            list_qtds = sorted(
+                list({m['planejado'] for m in meses}), reverse=(passo > 0))
+            dict_qtds = {}
+            for mes in meses:
+                qtd = mes['planejado']
+                if qtd not in dict_qtds:
+                    dict_qtds[qtd] = []
+                dict_qtds[qtd].append(mes['imes'])
+
+            while passo != 0:
+                for qtd in list_qtds:
+                    for mes_qtd in dict_qtds[qtd]:
+                        for mes in meses:
+                            if mes['imes'] == mes_qtd and 'compensado' in mes:
+                                mes['compensado'] += passo
+                                total['compensado'] += passo
+                                mes['meta'] += passo
+                                diferenca -= passo
+                                if diferenca == 0:
+                                    passo = 0
+
+        for mes in meses:
             if mes['imes'] == mes_atual:
                 mes['saldo'] = mes['faturado'] + mes['pedido'] - mes['meta']
 
