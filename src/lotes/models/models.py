@@ -255,6 +255,9 @@ class SolicitaLote(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
+    # data = models.DateField(
+    #     null=True, blank=True,
+    #     verbose_name='Data do embarque')
 
     def save(self, *args, **kwargs):
         self.codigo = self.codigo and self.codigo.upper()

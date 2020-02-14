@@ -24,7 +24,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         self.SL = lotes.models.SolicitaLote
         self.id = None
 
-    def lista(self, filtro):
+    def lista(self, filtro=None):
         fields = ('codigo', 'ativa', 'descricao',
                   'usuario__username', 'update_at',
                   'total_qtd', 'total_no_cd')
