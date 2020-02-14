@@ -899,8 +899,17 @@ def historico_lote(cursor, lote):
     return rows_to_dict_list_lower(cursor)
 
 
-def solicita_lote(cursor):
-    sql = '''
+def solicita_lote(cursor, filtro=None):
+    filtra_cod_descr = ''
+    if filtro is not None:
+        for el in filtro.strip().split():
+            filtra_cod_descr += f'''--
+                AND ( s.codigo LIKE '%{el}%'
+                    OR s.descricao LIKE '%{el}%'
+                    OR u.username LIKE '%{el}%'
+                    )
+            '''
+    sql = f'''
         select
           s.id
         , s.codigo
@@ -925,6 +934,8 @@ def solicita_lote(cursor):
           on l.id = sq.lote_id
         left join auth_user u
           on u.id = s.usuario_id
+        where 1=1
+          {filtra_cod_descr} -- filtra_cod_descr
         group by
           s.id
         , s.codigo
