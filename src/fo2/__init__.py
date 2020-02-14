@@ -1,9 +1,13 @@
-__version__ = '0.2.2'
-__version__date__ = '24/01/2020'
+__version__ = '0.2.3'
+__version__date__ = '14/02/2020'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.2.3 - 2020/02/14
+#   . Painel de metas
+#   . vários outras alterações
 #
 # - 0.2.2 - 2020/01/24
 #   . Cria conta
