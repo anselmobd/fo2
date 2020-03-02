@@ -28,6 +28,13 @@
   <h4>{{ erro }}</h4>
 {% endif %}
 {% if dados %}
+  <h4>Agrupa transações:
+  {% if agrupa == 'S' %}
+    Sim
+  {% else %}
+    Não
+  {% endif %}
+  </h4>
   <h3>Transações e estoque</h3>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
