@@ -146,7 +146,7 @@ class ItemNoTempo(View):
                 row['doc|LINK'] = reverse(
                     'producao:op__get', args=[row['doc']])
 
-            if row['ped'] is None:
+            if row['ped'] is None or row['ped'] == 0:
                 row['ped'] = '.'
             if row['ped'] != '.':
                 row['ped|TARGET'] = '_blank'
