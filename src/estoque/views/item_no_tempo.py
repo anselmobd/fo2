@@ -124,7 +124,10 @@ class ItemNoTempo(View):
                         'pcpc_f046',
                         'pcpc_f072',
                         ):
-                    row['tipo'] = 'Baixa da OC por pacote'
+                    if row['es'] == 'E':
+                        row['tipo'] = 'Baixa da OC por pacote'
+                    else:
+                        row['tipo'] = 'Estorno da OC por pacote'
                     tipo_doc = 'op'
                 elif row['proc'] in ('pcpc_f230'):
                     row['tipo'] = 'Baixa da OP por estagio'
