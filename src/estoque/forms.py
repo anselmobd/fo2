@@ -330,6 +330,14 @@ class ItemNoTempoForm(forms.Form):
         label='Período', required=True,
         choices=CHOICES, initial='3')
 
+    CHOICES = [
+        ('S', 'Sim'),
+        ('N', 'Não'),
+    ]
+    agrupa = forms.ChoiceField(
+        label='Agrupa transações', required=True,
+        choices=CHOICES, initial='S')
+
     def clean_ref(self):
         return self.cleaned_data['ref'].upper()
 

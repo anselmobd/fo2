@@ -66,7 +66,7 @@ class ItemNoTempo(View):
             del(row_key['data'])
             del(row_key['qtd'])
             del(row_key['qtd_sinal'])
-            if row_key == row_key_anterior:
+            if self.context['agrupa'] == 'S' and row_key == row_key_anterior:
                 dados_limpo[-1]['dt_ini'] = row['data']
                 dados_limpo[-1]['conta'] += 1
                 dados_limpo[-1]['qtd'] += row['qtd']
@@ -169,16 +169,28 @@ class ItemNoTempo(View):
                     dt_fim = row['data'].strftime('%d/%m/%Y %H:%M:%S')
                     row['data'] = f"{dt_ini} - {dt_fim}"
 
+        headers = ['Data/hora', 'Usuário', 'Tipo de movimentação',
+                   'Cliente', 'Documento', 'Pedido']
+        if self.context['agrupa'] == 'S':
+            headers += ['Nº Trans.']
+        headers += ['Entrada', 'Saída', 'Estoque']
+
+        fields = ['data', 'usuario', 'tipo',
+                  'cliente', 'doc', 'ped']
+        if self.context['agrupa'] == 'S':
+            fields += ['conta']
+        fields += ['qtd_e', 'qtd_s', 'estoque']
+
+        if self.context['agrupa'] == 'S':
+            style = {7: 'text-align: center;',
+                     (5, 6, 8, 9, 10): 'text-align: right;'}
+        else:
+            style = {(5, 6, 7, 8, 9): 'text-align: right;'}
+
         self.context.update({
-            'headers': ('Data/hora', 'Usuário', 'Tipo de movimentação',
-                        'Cliente', 'Documento', 'Pedido', 'Nº Trans.',
-                        'Entrada', 'Saída', 'Estoque'),
-            'fields': ('data', 'usuario', 'tipo',
-                       'cliente', 'doc', 'ped', 'conta',
-                       'qtd_e', 'qtd_s', 'estoque'),
-            'style': untuple_keys({
-                7: 'text-align: center;',
-                (5, 6, 8, 9, 10): 'text-align: right;'}),
+            'headers': headers,
+            'fields': fields,
+            'style': untuple_keys(style),
             'dados': dados,
             })
 
