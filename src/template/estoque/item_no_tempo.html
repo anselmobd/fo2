@@ -48,7 +48,7 @@
   {% if item %}
     <h4>Item: {{ item }}</h4>
   {% endif %}
-  <h3>OPs estocadas no CD</h3>
+  <h3>OPs estocadas no CD (total nos estágios 57 e 63)</h3>
   <table>
     {% include "layout/thead_generic.html" with data=oc_headers style=oc_style only %}
     {% include "layout/tbody_generic.html" with fields=oc_fields data=oc_dados style=oc_style only %}
@@ -58,7 +58,7 @@
   {% if item %}
     <h4>Item: {{ item }}</h4>
   {% endif %}
-  <h3>OPs em produção</h3>
+  <h3>OPs em produção (total nos estágios diferentes de 57 e 63)</h3>
   <table>
     {% include "layout/thead_generic.html" with data=op_headers style=op_style only %}
     {% include "layout/tbody_generic.html" with fields=op_fields data=op_dados style=op_style only %}
