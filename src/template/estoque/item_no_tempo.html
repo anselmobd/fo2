@@ -76,4 +76,7 @@
 {% if oc_dados or op_dados %}
   <h4 style="text-align: right">Estoque futuro: {{ estoque_futuro }}</h4>
 {% endif %}
+<p>
+  (Executado em {% now "d/m/Y h:i" %})
+</p>
 {% endblock %}
