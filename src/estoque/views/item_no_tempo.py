@@ -55,6 +55,11 @@ class ItemNoTempo(View):
         for row in dados:
             if (row['doc'] // 1000000) == 702:
                 row['data'] = transfo2_num_doc_dt(row['doc'])
+                if row['data'].date() < apartirde:
+                    row['data'] = None
+
+        dados = [row for row in dados
+                 if row['data'] is not None]
 
         dados = sorted(
             dados, key=lambda i: i['data'], reverse=True)
