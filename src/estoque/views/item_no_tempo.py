@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.views import View
 
 from utils.views import totalize_data
-from utils.functions import untuple_keys
+from utils.functions import untuple_keys_concat
 
 import lotes.models
 import lotes.queries.pedido
@@ -183,14 +183,18 @@ class ItemNoTempo(View):
 
         if self.context['agrupa'] == 'S':
             style = {7: 'text-align: center;',
+                     8: 'color: green;',
+                     9: 'color: brown;',
                      (5, 6, 8, 9, 10): 'text-align: right;'}
         else:
-            style = {(5, 6, 7, 8, 9): 'text-align: right;'}
+            style = {7: 'color: green;',
+                     8: 'color: brown;',
+                     (5, 6, 7, 8, 9): 'text-align: right;'}
 
         self.context.update({
             'headers': headers,
             'fields': fields,
-            'style': untuple_keys(style),
+            'style': untuple_keys_concat(style),
             'dados': dados,
             })
 
