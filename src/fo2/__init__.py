@@ -1,9 +1,13 @@
-__version__ = '0.2.3'
-__version__date__ = '14/02/2020'
+__version__ = '0.2.4'
+__version__date__ = '03/03/2020'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.2.4 - 2020/03/03
+#   . correção da rotina de ajuste que não trabalhava corretamente com a hora
+#   . melhorias no item_no_tempo
 #
 # - 0.2.3 - 2020/02/14
 #   . Painel de metas
