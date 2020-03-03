@@ -47,7 +47,6 @@ class ItemNoTempo(View):
         estoque_list = queries.get_estoque_dep_ref_cor_tam(
             cursor, *(self.context[f] for f in [
                 'deposito', 'ref', 'cor', 'tam']))
-        pprint(estoque_list)
         if len(estoque_list) > 0:
             estoque = estoque_list[0]['estoque']
         else:
