@@ -1,10 +1,25 @@
 from pprint import pprint
 
+from django.contrib.auth.models import User
+
+from base.models import Colaborador, S_Usuario
+
 
 def insert_transacao_ajuste(
         cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
-        preco_medio):
-    sql = '''
+        preco_medio, usuario, ip):
+
+    try:
+        colab = Colaborador.objects.get(user=usuario)
+    except Exception as e:
+        return False
+
+    try:
+        s_user = S_Usuario.objects.get(codigo_usuario=colab.matricula)
+    except Exception as e:
+        return False
+
+    sql = f'''
         INSERT INTO ESTQ_300 (
           CODIGO_DEPOSITO
         , NIVEL_ESTRUTURA
@@ -92,12 +107,12 @@ def insert_transacao_ajuste(
         , 0  -- NUMERO_MAQUINA
         , NULL  -- ORDEM_SERVICO
         , 0  -- CONTABILIZADO
-        , 'ANSELMO_SIS'  -- USUARIO_SYSTEXTIL
-        , 'estq_f950'  -- PROCESSO_SYSTEXTIL
+        , '{s_user.usuario}'  -- USUARIO_SYSTEXTIL
+        , '_'  -- PROCESSO_SYSTEXTIL
         , sysdate  -- TIMESTAMP '2019-11-28 12:00:00.000000'  -- DATA_INSERCAO
-        , 'ANSELMO_SIS'  -- USUARIO_REDE
-        , '192.168.1.242'  -- MAQUINA_REDE
-        , 'estq_f950'  -- APLICATIVO
+        , '{s_user.usuario}'  -- USUARIO_REDE
+        , '{ip}'  -- MAQUINA_REDE
+        , 'fo2_apoio'  -- APLICATIVO
         , 'ESTQ_300'  -- TABELA_ORIGEM
         , 0  -- FLAG_ELIMINA
         , 0  -- VALOR_MOVIMENTO_UNITARIO_PROJ
@@ -107,7 +122,7 @@ def insert_transacao_ajuste(
         , 0  -- VALOR_MOVTO_UNIT_ESTIMADO
         , 0  -- PRECO_MEDIO_UNIT_ESTIMADO
         , 0  -- SALDO_FINANCEIRO_ESTIMADO
-        , {valor_total}  -- VALOR_TOTAL
+        , {ajuste*preco_medio}  -- VALOR_TOTAL
         , 0  -- PROJETO
         , 0  -- SUBPROJETO
         , 0  -- SERVICO
@@ -120,18 +135,7 @@ def insert_transacao_ajuste(
         , NULL  -- TIPO_ORDEM
         , NULL  -- TIPO_SPED_TRANSACAO
         )
-    '''.format(
-        deposito=deposito,
-        ref=ref,
-        tam=tam,
-        cor=cor,
-        num_doc=num_doc,
-        trans=trans,
-        es=es,
-        ajuste=ajuste,
-        preco_medio=preco_medio,
-        valor_total=ajuste*preco_medio,
-    )
+    '''
     try:
         cursor.execute(sql)
         return True
