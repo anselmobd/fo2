@@ -328,11 +328,24 @@ class ItemNoTempo(View):
             self.context[field] = self.context['form'].cleaned_data[field]
 
     def get(self, request, *args, **kwargs):
+        if 'deposito' in kwargs:
+            return self.post(request, *args, **kwargs)
         self.context['form'] = self.Form_class()
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        self.context['form'] = self.Form_class(request.POST)
+        if 'deposito' in kwargs:
+            initial = {
+                "ref": kwargs['ref'],
+                "cor": kwargs['cor'],
+                "tam": kwargs['tam'],
+                "deposito": kwargs['deposito'],
+                "periodo": '6',
+                "agrupa": 'S',
+            }
+            self.context['form'] = self.Form_class(initial)
+        else:
+            self.context['form'] = self.Form_class(request.POST)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
             self.context['form'] = self.Form_class(self.context)
