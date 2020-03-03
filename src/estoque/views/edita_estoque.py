@@ -205,6 +205,11 @@ class EditaEstoque(PermissionRequiredMixin, View):
                     'mensagem':
                         'O depósito já está com a quantidade desejada',
                 })
+            elif e.args[0] == 'conf_hash':
+                self.context.update({
+                    'mensagem':
+                        'Hash informado inválido',
+                })
             elif e.args[0] == 'data inventario':
                 self.context.update({
                     'mensagem': e.args[1],
