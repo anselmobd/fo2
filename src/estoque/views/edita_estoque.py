@@ -1,5 +1,6 @@
 import hashlib
 import time
+from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import SuspiciousOperation
@@ -224,14 +225,23 @@ class EditaEstoque(PermissionRequiredMixin, View):
         get_data_inv = None
         if 'ajuste_inv_data' in request.COOKIES:
             get_data_inv = request.COOKIES.get('ajuste_inv_data')
-        if get_data_inv is None:
-            self.form = self.Form_class()
-        else:
-            self.form = self.Form_class(initial={"data": get_data_inv})
+
+        get_hora_inv = None
+        if 'ajuste_inv_hora' in request.COOKIES:
+            get_hora_inv = request.COOKIES.get('ajuste_inv_hora')
+
+        initial = {}
+        if get_data_inv is not None:
+            initial.update({"data": get_data_inv})
+        if get_hora_inv is not None:
+            initial.update({"hora": get_hora_inv})
+        self.form = self.Form_class(initial=initial)
 
         if 'qtd' in kwargs:
             if get_data_inv is not None:
                 kwargs['data'] = get_data_inv
+            if get_hora_inv is not None:
+                kwargs['hora'] = get_hora_inv
             return self.post(request, *args, **kwargs)
         else:
             kwargs['qtd'] = None
@@ -252,8 +262,11 @@ class EditaEstoque(PermissionRequiredMixin, View):
             self.form.data['qtd'] = kwargs['qtd']
         if 'data' in kwargs:
             self.form.data['data'] = kwargs['data']
+        if 'hora' in kwargs:
+            self.form.data['hora'] = kwargs['hora']
 
         set_data_inv = None
+        set_hora_inv = None
         if self.form.is_valid():
             qtd = self.form.cleaned_data['qtd']
             data = self.form.cleaned_data['data']
@@ -262,6 +275,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
             kwargs['data'] = data
             kwargs['hora'] = hora
             set_data_inv = data
+            set_hora_inv = hora
             if not self.mount_context(request, **kwargs):
                 return redirect('apoio_ao_erp')
 
@@ -271,4 +285,8 @@ class EditaEstoque(PermissionRequiredMixin, View):
             response.delete_cookie('ajuste_inv_data')
         else:
             response.set_cookie('ajuste_inv_data', set_data_inv)
+        if set_hora_inv is None:
+            response.delete_cookie('ajuste_inv_hora')
+        else:
+            response.set_cookie('ajuste_inv_hora', set_hora_inv)
         return response
