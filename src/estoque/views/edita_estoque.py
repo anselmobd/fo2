@@ -114,7 +114,9 @@ class EditaEstoque(PermissionRequiredMixin, View):
             'posterior': posterior,
         })
 
-        transfs = queries.get_transfo2(self.cursor, self.deposito)
+        transfs = queries.get_transfo2(
+            self.cursor, self.deposito,
+            ref=self.ref, cor=self.cor, tam=self.tam)
         if len(transfs) != 0:
             ult_num_doc = transfs[0]['numdoc']
             if int(num_doc) < ult_num_doc:
