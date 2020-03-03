@@ -43,6 +43,7 @@ class MostraEstoque(View):
             'ajuste': ['Ajustar pelo inventário', 'text-align: right;'],
             'executa': ['Executa', 'text-align: right;'],
             'edita': ['Edita'],
+            'item_no_tempo': ['No tempo', 'text-align: right;'],
         }, ['header', 'style'])
 
     def mount_context(
@@ -145,6 +146,12 @@ class MostraEstoque(View):
             row['movimento'] = movimento
             row['qtd_inv'] = row['qtd'] - movimento
             row['ajuste'] = ajuste
+            row['item_no_tempo'] = ''
+            row['item_no_tempo|GLYPHICON'] = 'glyphicon-time'
+            row['item_no_tempo|TARGET'] = '_BLANK'
+            row['item_no_tempo|LINK'] = reverse(
+                'estoque:item_no_tempo__get', args=[
+                    row['ref'], row['cor'], row['tam'], deposito])
 
         if modelo == '-':
             self.table.cols('cor', 'tam')
@@ -160,6 +167,10 @@ class MostraEstoque(View):
         count_btn_executa = 0
         if has_permission(request, 'base.can_adjust_stock'):
             self.table.add('edita')
+
+        self.table.add('item_no_tempo')
+
+        if has_permission(request, 'base.can_adjust_stock'):
             if idata is not None and qtd is not None:
                 self.table.add('executa')
             for row in data:
