@@ -44,6 +44,19 @@ class ItemNoTempo(View):
             'apartirde': apartirde
         })
 
+        estoque_list = queries.get_estoque_dep_ref_cor_tam(
+            cursor, *(self.context[f] for f in [
+                'deposito', 'ref', 'cor', 'tam']))
+        pprint(estoque_list)
+        if len(estoque_list) > 0:
+            estoque = estoque_list[0]['estoque']
+        else:
+            estoque = 0
+
+        self.context.update({
+            'estoque': estoque,
+            })
+
         dados = queries.item_no_tempo(
             cursor, *(self.context[f] for f in [
                 'ref', 'tam', 'cor', 'deposito', 'apartirde']))
@@ -82,14 +95,6 @@ class ItemNoTempo(View):
                 dados_limpo.append(row)
             row_key_anterior = row_key
         dados = dados_limpo
-
-        estoque_list = queries.get_estoque_dep_ref_cor_tam(
-            cursor, *(self.context[f] for f in [
-                'deposito', 'ref', 'cor', 'tam']))
-        if len(estoque_list) > 0:
-            estoque = estoque_list[0]['estoque']
-        else:
-            estoque = 0
 
         estoque_no_tempo = estoque
         for row in dados:
