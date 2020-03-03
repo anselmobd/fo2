@@ -61,10 +61,6 @@ class ItemNoTempo(View):
             cursor, *(self.context[f] for f in [
                 'ref', 'tam', 'cor', 'deposito', 'apartirde']))
 
-        if len(dados) == 0:
-            self.context.update({'erro': 'Nada selecionado'})
-            return
-
         for row in dados:
             if (row['doc'] // 1000000) == 702:
                 row['data'] = transfo2_num_doc_dt(row['doc'])
@@ -73,6 +69,9 @@ class ItemNoTempo(View):
 
         dados = [row for row in dados
                  if row['data'] is not None]
+
+        if len(dados) == 0:
+            self.context.update({'erro': 'Nenhuma transação'})
 
         dados = sorted(
             dados, key=lambda i: i['data'], reverse=True)
