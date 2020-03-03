@@ -96,7 +96,7 @@ class ItemNoTempo(View):
                 row['qtd_s'] = '.'
             else:
                 row['qtd_e'] = '.'
-                row['qtd_s'] = f"({row['qtd']})"
+                row['qtd_s'] = row['qtd']
 
             row['tipo'] = row['proc']
             tipo_doc = ''
