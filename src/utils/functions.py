@@ -258,6 +258,25 @@ def untuple_keys(dict_):
     return result
 
 
+def untuple_keys_concat(dict_):
+
+    def val_concat(result, key, value):
+        if key in result:
+            result[key] = f"{result[key]}{value}"
+        else:
+            result[key] = value
+        return result
+
+    result = {}
+    for key in dict_:
+        if isinstance(key, tuple):
+            for sub_key in key:
+                result = val_concat(result, sub_key, dict_[key])
+        else:
+            result = val_concat(result, key, dict_[key])
+    return result
+
+
 def strdmy2date(text):
     return datetime.datetime.strptime(text, '%d/%m/%Y').date()
 
