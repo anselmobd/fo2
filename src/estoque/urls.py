@@ -43,5 +43,8 @@ urlpatterns = [
 
     url(r'^item_no_tempo/$', views.ItemNoTempo.as_view(),
         name='item_no_tempo'),
+    url(r'^item_no_tempo/(?P<ref>[^/]+)/(?P<cor>[^/]+)/'
+        r'(?P<tam>[^/]+)/(?P<deposito>[^/]+)/$',
+        views.ItemNoTempo.as_view(), name='item_no_tempo__get'),
 
 ]
