@@ -19,8 +19,6 @@
 </div>
 {% if item %}
   <h4>Item: {{ item }}</h4>
-{% endif %}
-{% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
   <h4>Estoque: {{ estoque }}</h4>
 {% endif %}
@@ -74,10 +72,10 @@
     {% include "layout/tbody_generic.html" with fields=op_fields data=op_dados style=op_style only %}
   </table>
 {% endif %}
-{% if oc_dados or op_dados %}
+{% if p_dados or oc_dados or op_dados %}
   <h4 style="text-align: right">Estoque futuro: {{ estoque_futuro }}</h4>
 {% endif %}
-<p>
-  (Executado em {% now "d/m/Y h:i" %})
-</p>
+{% if item %}
+  <p>(Executado em {% now "d/m/Y h:i" %})</p>
+{% endif %}
 {% endblock %}
