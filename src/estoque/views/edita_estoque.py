@@ -12,6 +12,7 @@ from django.shortcuts import (
 from django.views import View
 
 from geral.functions import request_user
+from utils.functions import get_client_ip
 
 from estoque import forms
 from estoque import queries
@@ -169,7 +170,9 @@ class EditaEstoque(PermissionRequiredMixin, View):
                         self.trans,
                         self.es,
                         self.ajuste,
-                        self.preco_medio
+                        self.preco_medio,
+                        self.request.user,
+                        get_client_ip(self.request)
                         ):
                     self.context.update({
                         'estoque': self.qtd + self.movimento,
