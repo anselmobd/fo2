@@ -106,30 +106,32 @@
       {% block content %}
       {% endblock %}
       </div>
-      <hr style="margin-top: 10px; margin-bottom: 5px;">
-      <div style="width: 100%; text-align: right; font-size: smaller; color: gray;" title="Versão">
-        Versão {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})
-        <a name="versao"></a>
-        <span style='display:none' id='greasymonkeyverify' title='script monkey verify'>
-          <span style='font-size: 0.5em;' class='icon'>
-            <a href='#versao' onclick='javascript:s_show();'>
-              <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-            </a>
+      <div class="noprint">
+        <hr style="margin-top: 10px; margin-bottom: 5px;">
+        <div style="width: 100%; text-align: right; font-size: smaller; color: gray;" title="Versão">
+          Versão {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})
+          <a name="versao"></a>
+          <span style='display:none' id='greasymonkeyverify' title='script monkey verify'>
+            <span style='font-size: 0.5em;' class='icon'>
+              <a href='#versao' onclick='javascript:s_show();'>
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+              </a>
+            </span>
+            <span style='display:none' class='content'><br />
+              (<a href='#versao' onclick='javascript:s_hide();'>TI</a>: Instalar o <a href="https://addons.mozilla.org/pt-BR/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> e o script <a href="http://intranet/Tussor_Intranet.user.js" target="_blank">"Tussor_Intranet"</a>)
+            </span>
           </span>
-          <span style='display:none' class='content'><br />
-            (<a href='#versao' onclick='javascript:s_hide();'>TI</a>: Instalar o <a href="https://addons.mozilla.org/pt-BR/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> e o script <a href="http://intranet/Tussor_Intranet.user.js" target="_blank">"Tussor_Intranet"</a>)
+          <span style='display:none' id='tampermonkeyverify' title='script monkey verify'>
+            <span style='font-size: 0.5em;' class='icon'>
+              <a href='#versao' onclick='javascript:s_show();'>
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+              </a>
+            </span>
+            <span style='display:none' class='content'><br />
+              (<a href='#versao' onclick='javascript:s_hide();'>TI</a>: Instalar o <a href="https://chrome.google.com/webstore/search/Tampermonkey?hl=pt-BR" target="_blank">Tampermonkey</a> e o script <a href="http://intranet/Tussor_Fo2_Intranet.user.js" target="_blank">"Tussor_Fo2_Intranet"</a>)
+            </span>
           </span>
-        </span>
-        <span style='display:none' id='tampermonkeyverify' title='script monkey verify'>
-          <span style='font-size: 0.5em;' class='icon'>
-            <a href='#versao' onclick='javascript:s_show();'>
-              <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-            </a>
-          </span>
-          <span style='display:none' class='content'><br />
-            (<a href='#versao' onclick='javascript:s_hide();'>TI</a>: Instalar o <a href="https://chrome.google.com/webstore/search/Tampermonkey?hl=pt-BR" target="_blank">Tampermonkey</a> e o script <a href="http://intranet/Tussor_Fo2_Intranet.user.js" target="_blank">"Tussor_Fo2_Intranet"</a>)
-          </span>
-        </span>
+        </div>
       </div>
     </div>
   </main>
