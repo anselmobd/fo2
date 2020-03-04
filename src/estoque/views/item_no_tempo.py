@@ -196,23 +196,24 @@ class ItemNoTempo(View):
                    'Cliente', 'Documento', 'Pedido']
         if self.context['agrupa'] == 'S':
             headers += ['Nº Trans.']
-        headers += ['Entrada', 'Saída', 'Estoque']
+        headers += ['Trans.', 'Entrada', 'Saída', 'Estoque']
 
         fields = ['data', 'usuario', 'proc', 'tipo',
                   'cliente', 'doc', 'ped']
         if self.context['agrupa'] == 'S':
             fields += ['conta']
-        fields += ['qtd_e', 'qtd_s', 'estoque']
+        fields += ['trans', 'qtd_e', 'qtd_s', 'estoque']
 
         if self.context['agrupa'] == 'S':
+            style = {(8, 9): 'text-align: center;',
+                     10: 'color: green;',
+                     11: 'color: brown;',
+                     (6, 7, 10, 11, 12): 'text-align: right;'}
+        else:
             style = {8: 'text-align: center;',
                      9: 'color: green;',
                      10: 'color: brown;',
                      (6, 7, 9, 10, 11): 'text-align: right;'}
-        else:
-            style = {8: 'color: green;',
-                     9: 'color: brown;',
-                     (6, 7, 8, 9, 10): 'text-align: right;'}
 
         self.context.update({
             'headers': headers,
