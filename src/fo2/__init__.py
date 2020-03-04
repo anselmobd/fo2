@@ -1,9 +1,12 @@
-__version__ = '0.2.4'
-__version__date__ = '03/03/2020'
+__version__ = '0.2.5'
+__version__date__ = '04/03/2020'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.2.5 - 2020/03/04
+#   . melhorias no item_no_tempo e na rotina de ajuste
 #
 # - 0.2.4 - 2020/03/03
 #   . correção da rotina de ajuste que não trabalhava corretamente com a hora
