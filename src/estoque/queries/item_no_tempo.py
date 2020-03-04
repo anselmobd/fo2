@@ -40,6 +40,7 @@ def item_no_tempo(
         , t.NUMERO_DOCUMENTO DOC
         , t.PROCESSO_SYSTEXTIL PROC
         , t.CODIGO_TRANSACAO TRANS
+        , tr.DESCRICAO TRANS_DESCR
         , t.USUARIO_SYSTEXTIL USUARIO
         , CASE WHEN t.CNPJ_9 = 0
             THEN ped.PEDIDO_VENDA
@@ -75,6 +76,8 @@ def item_no_tempo(
             ELSE cp.FANTASIA_CLIENTE
           END FANTASIA
         FROM ESTQ_300_ESTQ_310 t
+        LEFT JOIN ESTQ_005 tr -- transacao
+          ON tr.CODIGO_TRANSACAO = t.CODIGO_TRANSACAO
         LEFT JOIN FATU_050 f -- fatura
           ON t.CNPJ_9 <> 0
          AND f.NUM_NOTA_FISCAL = t.NUMERO_DOCUMENTO
