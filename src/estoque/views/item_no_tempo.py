@@ -110,6 +110,7 @@ class ItemNoTempo(View):
             tipo_doc = ''
             if (row['doc'] // 1000000) == 702:
                 row['tipo'] = 'Ajuste por inventário'
+                row['proc'] = '_'
             else:
                 if row['proc'] in (
                         'fatu_f146',
@@ -177,27 +178,27 @@ class ItemNoTempo(View):
                     dt_fim = row['data'].strftime('%d/%m/%Y %H:%M:%S')
                     row['data'] = f"{dt_ini} - {dt_fim}"
 
-        headers = ['Data/hora', 'Usuário', 'Tipo de movimentação',
+        headers = ['Data/hora', 'Usuário', 'Tela', 'Tipo de movimentação',
                    'Cliente', 'Documento', 'Pedido']
         if self.context['agrupa'] == 'S':
             headers += ['Nº Trans.']
         headers += ['Entrada', 'Saída', 'Estoque']
 
-        fields = ['data', 'usuario', 'tipo',
+        fields = ['data', 'usuario', 'proc', 'tipo',
                   'cliente', 'doc', 'ped']
         if self.context['agrupa'] == 'S':
             fields += ['conta']
         fields += ['qtd_e', 'qtd_s', 'estoque']
 
         if self.context['agrupa'] == 'S':
-            style = {7: 'text-align: center;',
-                     8: 'color: green;',
-                     9: 'color: brown;',
-                     (5, 6, 8, 9, 10): 'text-align: right;'}
+            style = {8: 'text-align: center;',
+                     9: 'color: green;',
+                     10: 'color: brown;',
+                     (6, 7, 9, 10, 11): 'text-align: right;'}
         else:
-            style = {7: 'color: green;',
-                     8: 'color: brown;',
-                     (5, 6, 7, 8, 9): 'text-align: right;'}
+            style = {8: 'color: green;',
+                     9: 'color: brown;',
+                     (6, 7, 8, 9, 10): 'text-align: right;'}
 
         self.context.update({
             'headers': headers,
