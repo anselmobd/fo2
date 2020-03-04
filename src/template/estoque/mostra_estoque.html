@@ -133,6 +133,9 @@
       elem,
       ajuste,
       url) {
+    if (! confirma_gravar()) {
+      return;
+    }
     $.ajax({
       type: 'GET',
       url: url,
