@@ -112,17 +112,23 @@ class ItemNoTempo(View):
                 row['tipo'] = 'Ajuste por inventário'
                 row['proc'] = '_'
             else:
-                if row['proc'] in (
-                        'fatu_f146',
-                        'fatu_f194',
-                        'obrf_f025',
-                        'obrf_f055',
-                        'obrf_f060',
-                        ):
-                    row['tipo'] = 'Nota fiscal de saída'
+                if row['proc'] in ('fatu_f146'):
+                    row['tipo'] = 'Cancelamento de NF de saída'
+                    tipo_doc = 'nfs'
+                elif row['proc'] in ('fatu_f194'):
+                    row['tipo'] = 'Faturamento de pedido'
                     tipo_doc = 'nfs'
                 elif row['proc'] in ('obrf_f015'):
-                    row['tipo'] = 'Nota fiscal de entrada'
+                    row['tipo'] = 'Itens de NF de terceiros de entrada'
+                    tipo_doc = 'nfe'
+                elif row['proc'] in ('obrf_f025'):
+                    row['tipo'] = 'Item de NF de saída'
+                    tipo_doc = 'nfs'
+                elif row['proc'] in ('obrf_f055'):
+                    row['tipo'] = 'Item NF própria de entrada'
+                    tipo_doc = 'nfe'
+                elif row['proc'] in ('obrf_f060'):
+                    row['tipo'] = 'Cancelamento de NF própria de entrada'
                     tipo_doc = 'nfe'
                 elif row['proc'] in ('estq_f015'):
                     row['tipo'] = 'Movimentação de estoques'
