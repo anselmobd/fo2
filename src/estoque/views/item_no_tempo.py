@@ -112,7 +112,11 @@ class ItemNoTempo(View):
                 row['tipo'] = 'Ajuste por inventário'
                 row['proc'] = '_'
             else:
-                if row['proc'] in ('fatu_f146'):
+                if row['proc'] in ('estq_f015'):
+                    row['tipo'] = 'Movimentação de estoques'
+                elif row['proc'] in ('estq_f950'):
+                    row['tipo'] = 'Acerto de estoques'
+                elif row['proc'] in ('fatu_f146'):
                     row['tipo'] = 'Cancelamento de NF de saída'
                     tipo_doc = 'nfs'
                 elif row['proc'] in ('fatu_f194'):
@@ -130,27 +134,17 @@ class ItemNoTempo(View):
                 elif row['proc'] in ('obrf_f060'):
                     row['tipo'] = 'Cancelamento de NF própria de entrada'
                     tipo_doc = 'nfe'
-                elif row['proc'] in ('estq_f015'):
-                    row['tipo'] = 'Movimentação de estoques'
-                elif row['proc'] in ('estq_f950'):
-                    row['tipo'] = 'Acerto de estoques'
+                elif row['proc'] in ('obrf_f484'):
+                    row['tipo'] = 'Baixa da OC por pacote'
+                    tipo_doc = 'op'
                 elif row['proc'] in ('pcpc_f045'):
-                    if row['es'] == 'E':
-                        row['tipo'] = 'Baixa de produção de OC'
-                    else:
-                        row['tipo'] = 'Estorno de produção de OC'
+                    row['tipo'] = 'Produção de OC'
                     tipo_doc = 'op'
                 elif row['proc'] in ('pcpc_f046'):
                     row['tipo'] = 'Estorno de Estágio da OP (Pacote)'
                     tipo_doc = 'op'
-                elif row['proc'] in (
-                        'obrf_f484',
-                        'pcpc_f072',
-                        ):
-                    if row['es'] == 'E':
-                        row['tipo'] = 'Baixa da OC por pacote'
-                    else:
-                        row['tipo'] = 'Estorno da OC por pacote'
+                elif row['proc'] in ('pcpc_f072'):
+                    row['tipo'] = 'Baixa/Estorno da OC'
                     tipo_doc = 'op'
                 elif row['proc'] in ('pcpc_f230'):
                     row['tipo'] = 'Baixa da OP por estagio'
