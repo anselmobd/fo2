@@ -194,27 +194,26 @@ class ItemNoTempo(View):
                     row['data'] = f"{dt_ini} - {dt_fim}"
 
         headers = ['Data/hora', 'Usuário', 'Tela', 'Tipo de movimentação',
-                   'Cliente', 'Documento', 'Pedido']
+                   'Trans.', 'Descrição', 'Cliente', 'Documento', 'Pedido']
         if self.context['agrupa'] == 'S':
             headers += ['Nº Trans.']
-        headers += ['Trans.', 'Entrada', 'Saída', 'Estoque']
+        headers += ['Entrada', 'Saída', 'Estoque']
 
         fields = ['data', 'usuario', 'proc', 'tipo',
-                  'cliente', 'doc', 'ped']
+                  'trans', 'trans_descr', 'cliente', 'doc', 'ped']
         if self.context['agrupa'] == 'S':
             fields += ['conta']
-        fields += ['trans', 'qtd_e', 'qtd_s', 'estoque']
+        fields += ['qtd_e', 'qtd_s', 'estoque']
 
         if self.context['agrupa'] == 'S':
-            style = {(8, 9): 'text-align: center;',
-                     10: 'color: green;',
-                     11: 'color: brown;',
-                     (6, 7, 10, 11, 12): 'text-align: right;'}
+            style = {10: 'text-align: center;',
+                     11: 'color: green;',
+                     12: 'color: brown;',
+                     (7, 8, 11, 12, 13): 'text-align: right;'}
         else:
-            style = {8: 'text-align: center;',
-                     9: 'color: green;',
-                     10: 'color: brown;',
-                     (6, 7, 9, 10, 11): 'text-align: right;'}
+            style = {10: 'color: green;',
+                     12: 'color: brown;',
+                     (7, 8, 10, 11, 12): 'text-align: right;'}
 
         self.context.update({
             'headers': headers,
