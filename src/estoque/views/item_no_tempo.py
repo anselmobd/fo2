@@ -156,7 +156,7 @@ class ItemNoTempo(View):
                     row['tipo'] = 'Baixa da OP por estagio'
                     tipo_doc = 'op'
 
-            row['trans|HOVER'] = row['trans_descr']
+            row['trans_descr'] = row['trans_descr'].capitalize()
             if tipo_doc == '':
                 row['ped'] = '.'
                 row['cliente'] = '.'
