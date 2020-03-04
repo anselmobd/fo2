@@ -128,14 +128,14 @@ class ItemNoTempo(View):
                     row['tipo'] = 'Movimentação de estoques'
                 elif row['proc'] in ('estq_f950'):
                     row['tipo'] = 'Acerto de estoques'
-                elif row['proc'] in ('pcpc_f046'):
-                    row['tipo'] = 'Estorno de Estágio da OP (Pacote)'
-                    tipo_doc = 'op'
                 elif row['proc'] in ('pcpc_f045'):
                     if row['es'] == 'E':
                         row['tipo'] = 'Baixa de produção de OC'
                     else:
                         row['tipo'] = 'Estorno de produção de OC'
+                    tipo_doc = 'op'
+                elif row['proc'] in ('pcpc_f046'):
+                    row['tipo'] = 'Estorno de Estágio da OP (Pacote)'
                     tipo_doc = 'op'
                 elif row['proc'] in (
                         'obrf_f484',
