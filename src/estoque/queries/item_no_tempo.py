@@ -39,6 +39,7 @@ def item_no_tempo(
         , t.QUANTIDADE QTD
         , t.NUMERO_DOCUMENTO DOC
         , t.PROCESSO_SYSTEXTIL PROC
+        , t.CODIGO_TRANSACAO TRANS
         , t.USUARIO_SYSTEXTIL USUARIO
         , CASE WHEN t.CNPJ_9 = 0
             THEN ped.PEDIDO_VENDA
