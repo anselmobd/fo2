@@ -27,9 +27,6 @@ from geral.functions import request_user, has_permission
 import cd.models as models
 import cd.forms
 
-from .solicitacao_detalhe import *
-from .solicitacoes import *
-
 
 def index(request):
     return render(request, 'cd/index.html')
