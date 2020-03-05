@@ -53,6 +53,7 @@ class LotelLocal(PermissionRequiredMixin, View):
         periodo = lote[:4]
         ordem_confeccao = lote[-5:]
         identificado = form.cleaned_data['identificado']
+        end_conf = form.cleaned_data['end_conf']
 
         if endereco == 'SAI':
             endereco = None
@@ -104,6 +105,11 @@ class LotelLocal(PermissionRequiredMixin, View):
         if identificado:
             form.data['identificado'] = None
             form.data['lote'] = None
+            if endereco != end_conf:
+                context.update({
+                    'erro': 'Não altere o endereço após a identificação.'})
+                return context
+
             if lote != identificado:
                 context.update({
                     'erro': 'A confirmação é bipando o mesmo lote. '
@@ -120,6 +126,7 @@ class LotelLocal(PermissionRequiredMixin, View):
             if lote_rec.local != endereco:
                 context['confirma'] = True
                 form.data['identificado'] = form.data['lote']
+                form.data['end_conf'] = form.data['endereco']
             form.data['lote'] = None
 
         if not endereco:
