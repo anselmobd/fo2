@@ -9,8 +9,11 @@ class LoteForm(forms.Form):
         label='Lote', max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+    end_conf = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput())
     identificado = forms.CharField(
-        label='identificado', required=False,
+        required=False,
         widget=forms.HiddenInput())
 
     def clean_endereco(self):
