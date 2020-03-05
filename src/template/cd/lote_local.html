@@ -82,6 +82,8 @@
     var snd = new Audio("/media/number/"+n+".mp3");
     snd.play();
   }
-  stn({{ q_lotes }});
+  {% if q_lotes %}
+    stn({{ q_lotes }});
+  {% endif %}
 </script>
 {% endblock content %}
