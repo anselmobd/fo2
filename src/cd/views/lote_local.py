@@ -28,6 +28,9 @@ class LotelLocal(PermissionRequiredMixin, View):
         identificado = form.cleaned_data['identificado']
         end_conf = form.cleaned_data['end_conf']
 
+        if end_conf == 'SAI':
+            end_conf = None
+
         if endereco == 'SAI':
             endereco = None
 
