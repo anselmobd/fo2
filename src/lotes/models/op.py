@@ -123,6 +123,7 @@ def op_relacionamentos(cursor, op):
             o.ORDEM_PRODUCAO OP
           , o.ORDEM_PRINCIPAL
           , o.ORDEM_MESTRE
+          , o.COD_CANCELAMENTO
           FROM PCPC_020 o
           WHERE o.ORDEM_PRODUCAO  = %s
         )
@@ -131,6 +132,7 @@ def op_relacionamentos(cursor, op):
         , 10
         , CAST('é Mãe de' AS varchar2(50)) REL
         , coalesce(ofi.ORDEM_PRODUCAO, 0) OP_REL
+        , ofi.COD_CANCELAMENTO CANC
         FROM ordemp o
         JOIN PCPC_020 ofi
           ON ofi.ORDEM_PRINCIPAL = o.OP
@@ -142,6 +144,7 @@ def op_relacionamentos(cursor, op):
         , 15
         , CAST('é Avó de' AS varchar2(50)) REL
         , coalesce(one.ORDEM_PRODUCAO, 0) OP_REL
+        , ofi.COD_CANCELAMENTO CANC
         FROM ordemp o
         JOIN PCPC_020 ofi
           ON ofi.ORDEM_PRINCIPAL = o.OP
@@ -155,6 +158,7 @@ def op_relacionamentos(cursor, op):
         , 20
         , CAST('é Filha de' AS varchar2(50)) REL
         , o.ORDEM_PRINCIPAL OP_REL
+        , o.COD_CANCELAMENTO CANC
         FROM ordemp o
         WHERE o.ORDEM_PRINCIPAL <> 0
         --
@@ -165,6 +169,7 @@ def op_relacionamentos(cursor, op):
         , 25
         , CAST('é Neta de' AS varchar2(50)) REL
         , one.ORDEM_PRINCIPAL OP_REL
+        , one.COD_CANCELAMENTO CANC
         FROM ordemp o
         JOIN PCPC_020 one
           ON one.ORDEM_PRODUCAO = o.ORDEM_PRINCIPAL
@@ -178,6 +183,7 @@ def op_relacionamentos(cursor, op):
         , 30
         , CAST('é Mestra de' AS varchar2(50)) REL
         , ose.ORDEM_PRODUCAO OP_REL
+        , ose.COD_CANCELAMENTO CANC
         FROM ordemp o
         JOIN PCPC_020 ose
           ON ose.ORDEM_MESTRE = o.OP
@@ -189,6 +195,7 @@ def op_relacionamentos(cursor, op):
         , 40
         , CAST('é Seguidora de' AS varchar2(50)) REL
         , o.ORDEM_MESTRE OP_REL
+        , o.COD_CANCELAMENTO CANC
         FROM ordemp o
         WHERE o.ORDEM_MESTRE <> 0
         --
