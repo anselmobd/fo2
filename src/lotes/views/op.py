@@ -160,11 +160,15 @@ class Op(View):
 
             for row in r_data:
                 row['OP_REL|LINK'] = '/lotes/op/{}'.format(row['OP_REL'])
+                if row['CANC'] == 0:
+                    row['CANC'] = 'Ativa'
+                else:
+                    row['CANC'] = 'Cancelada'
             if len(r_data) != 0:
                 context.update({
                     'r_headers': ('OP', 'Tipo de relacionamento',
-                                  'OP relacionada'),
-                    'r_fields': ('OP', 'REL', 'OP_REL'),
+                                  'OP relacionada', 'Situação'),
+                    'r_fields': ('OP', 'REL', 'OP_REL', 'CANC'),
                     'r_data': r_data,
                 })
 
