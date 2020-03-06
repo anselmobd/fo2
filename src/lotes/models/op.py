@@ -116,94 +116,100 @@ def posicao_op(cursor, op):
 
 
 def op_relacionamentos(cursor, op):
-    sql = '''
+    sql = f'''
         WITH ordemp AS
         (
           SELECT
-            o.ORDEM_PRODUCAO OP
+            o.ORDEM_PRODUCAO
           , o.ORDEM_PRINCIPAL
           , o.ORDEM_MESTRE
           , o.COD_CANCELAMENTO
           FROM PCPC_020 o
-          WHERE o.ORDEM_PRODUCAO  = %s
+          WHERE o.ORDEM_PRODUCAO  = {op}
         )
         SELECT
-          o.OP
-        , 10
+          o.ORDEM_PRODUCAO OP
+        , 1
         , CAST('é Mãe de' AS varchar2(50)) REL
         , coalesce(ofi.ORDEM_PRODUCAO, 0) OP_REL
         , ofi.COD_CANCELAMENTO CANC
         FROM ordemp o
         JOIN PCPC_020 ofi
-          ON ofi.ORDEM_PRINCIPAL = o.OP
+          ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
         --
         UNION
         --
         SELECT
-          o.OP
-        , 15
+          o.ORDEM_PRODUCAO OP
+        , 2
         , CAST('é Avó de' AS varchar2(50)) REL
         , coalesce(one.ORDEM_PRODUCAO, 0) OP_REL
-        , ofi.COD_CANCELAMENTO CANC
+        , one.COD_CANCELAMENTO CANC
         FROM ordemp o
         JOIN PCPC_020 ofi
-          ON ofi.ORDEM_PRINCIPAL = o.OP
+          ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
         JOIN PCPC_020 one
           ON one.ORDEM_PRINCIPAL = ofi.ORDEM_PRODUCAO
         --
         UNION
         --
         SELECT
-          o.OP
-        , 20
+          o.ORDEM_PRODUCAO OP
+        , 3
         , CAST('é Filha de' AS varchar2(50)) REL
-        , o.ORDEM_PRINCIPAL OP_REL
-        , o.COD_CANCELAMENTO CANC
+        , omae.ORDEM_PRODUCAO OP_REL
+        , omae.COD_CANCELAMENTO CANC
         FROM ordemp o
+        JOIN PCPC_020 omae
+          ON omae.ORDEM_PRODUCAO = o.ORDEM_PRINCIPAL
         WHERE o.ORDEM_PRINCIPAL <> 0
         --
         UNION
         --
         SELECT
-          o.OP
-        , 25
+          o.ORDEM_PRODUCAO OP
+        , 4
         , CAST('é Neta de' AS varchar2(50)) REL
-        , one.ORDEM_PRINCIPAL OP_REL
-        , one.COD_CANCELAMENTO CANC
+        , oavo.ORDEM_PRODUCAO OP_REL
+        , oavo.COD_CANCELAMENTO CANC
         FROM ordemp o
-        JOIN PCPC_020 one
-          ON one.ORDEM_PRODUCAO = o.ORDEM_PRINCIPAL
+        JOIN PCPC_020 omae
+          ON omae.ORDEM_PRODUCAO = o.ORDEM_PRINCIPAL
+        JOIN PCPC_020 oavo
+          ON oavo.ORDEM_PRODUCAO = omae.ORDEM_PRINCIPAL
         WHERE o.ORDEM_PRINCIPAL <> 0
-          AND one.ORDEM_PRINCIPAL <> 0
+          AND omae.ORDEM_PRINCIPAL <> 0
         --
         UNION
         --
         SELECT
-          o.OP
-        , 30
+          o.ORDEM_PRODUCAO OP
+        , 5
         , CAST('é Mestra de' AS varchar2(50)) REL
         , ose.ORDEM_PRODUCAO OP_REL
         , ose.COD_CANCELAMENTO CANC
         FROM ordemp o
         JOIN PCPC_020 ose
-          ON ose.ORDEM_MESTRE = o.OP
+          ON ose.ORDEM_MESTRE = o.ORDEM_PRODUCAO
         --
         UNION
         --
         SELECT
-          o.OP
-        , 40
+          o.ORDEM_PRODUCAO OP
+        , 6
         , CAST('é Seguidora de' AS varchar2(50)) REL
-        , o.ORDEM_MESTRE OP_REL
-        , o.COD_CANCELAMENTO CANC
+        , ome.ORDEM_PRODUCAO OP_REL
+        , ome.COD_CANCELAMENTO CANC
         FROM ordemp o
+        JOIN PCPC_020 ome
+          ON ome.ORDEM_PRODUCAO = o.ORDEM_MESTRE
         WHERE o.ORDEM_MESTRE <> 0
         --
         ORDER BY
-          1
-        , 2
+          2
+        , 1
     '''
-    cursor.execute(sql, [op])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
