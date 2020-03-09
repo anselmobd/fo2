@@ -126,8 +126,8 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'lote__op', 'lote__lote', 'lote__qtd_produzir',
             'lote__referencia', 'lote__cor', 'lote__tamanho'
         ).annotate(
-            lote__local=Coalesce('lote__local', Value('-ausente-')),
             lote_ordem=Coalesce('lote__local', Value('0000')),
+            lote__local=Coalesce('lote__local', Value('-Ausente-')),
             qtdsum=Sum('qtd')
         ).filter(
             solicitacao=solicitacao
