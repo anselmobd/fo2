@@ -68,7 +68,10 @@ class LotelLocal(PermissionRequiredMixin, View):
             })
 
         if len(lote_sys) != 0:
-            estagios_aceitos = [63, 66]
+            if endereco is None:  # SAI
+                estagios_aceitos = [63, 66, 999]
+            else:  # endereça
+                estagios_aceitos = [63, 66]
             if lote_rec.estagio not in estagios_aceitos:
                 def e999(e):
                     return 'finalizado' if e == 999 else e
