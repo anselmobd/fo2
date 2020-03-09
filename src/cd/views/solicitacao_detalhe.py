@@ -53,7 +53,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'id', 'lote__op', 'lote__lote', 'lote__referencia',
             'lote__cor', 'lote__tamanho', 'qtd', 'update_at'
         ).annotate(
-            lote__local=Coalesce('lote__local', Value(' -ausente-'))
+            lote__local=Coalesce('lote__local', Value('-ausente-'))
         ).filter(
             solicitacao=solicitacao
         ).order_by(
@@ -99,7 +99,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 'id', 'lote__op', 'lote__lote', 'lote__referencia',
                 'lote__cor', 'lote__tamanho', 'qtd', 'when'
             ).annotate(
-                lote__local=Coalesce('lote__local', Value(' -ausente-'))
+                lote__local=Coalesce('lote__local', Value('-ausente-'))
             ).filter(
                 solicitacao=solicitacao
             ).order_by(
@@ -126,12 +126,13 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'lote__op', 'lote__lote', 'lote__qtd_produzir',
             'lote__referencia', 'lote__cor', 'lote__tamanho'
         ).annotate(
-            lote__local=Coalesce('lote__local', Value(' -ausente-')),
+            lote__local=Coalesce('lote__local', Value('-ausente-')),
+            lote_ordem=Coalesce('lote__local', Value('0000')),
             qtdsum=Sum('qtd')
         ).filter(
             solicitacao=solicitacao
         ).order_by(
-            'lote__local', 'lote__op', 'lote__referencia', 'lote__cor',
+            'lote_ordem', 'lote__op', 'lote__referencia', 'lote__cor',
             'lote__tamanho', 'lote__lote'
         )
 
