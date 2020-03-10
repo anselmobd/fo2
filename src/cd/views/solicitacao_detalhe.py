@@ -61,15 +61,12 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         )
 
         for row in solicit_qtds:
-            link = reverse(
+            row['delete'] = ''
+            row['delete|HOVER'] = 'Exclui lote'
+            row['delete|LINK'] = reverse(
                 'cd:solicitacao_detalhe__get3',
                 args=[solicitacao.id, 'd', row['id']])
-            row['delete'] = '''
-                <a title="Exclui lote"
-                href="{link}"
-                ><span class="glyphicon glyphicon-remove"
-                aria-hidden="true"></span></a>
-            '''.format(link=link)
+            row['delete|GLYPHICON'] = 'glyphicon-remove'
             row['lote__lote|LINK'] = reverse(
                 'producao:posicao__get',
                 args=[row['lote__lote']])
@@ -85,7 +82,6 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         '''.format(link=link)
 
         context.update({
-            'safe': ['delete'],
             'headers': ['Endereço', 'OP', 'Lote', 'Referência',
                         'Cor', 'Tamanho', 'Quant. Solicitada', 'Em', (limpa,)],
             'fields': ['lote__local', 'lote__op', 'lote__lote',
