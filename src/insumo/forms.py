@@ -10,7 +10,9 @@ from base.forms import \
     O2BaseForm, \
     O2FieldFiltroForm
 
-from insumo.models import ContaEstoque, Periodo, TipoContaEstoque
+from systextil.models import ContaEstoque
+
+from insumo.models import Periodo, TipoContaEstoque
 
 
 class FiltroMpForm(
