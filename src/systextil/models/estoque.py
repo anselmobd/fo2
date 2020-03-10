@@ -1,5 +1,7 @@
 from django.db import models
 
+from systextil.models.base import HDoc001
+
 
 class ContaEstoque(models.Model):
     conta_estoque = models.IntegerField(
@@ -17,3 +19,23 @@ class ContaEstoque(models.Model):
         app_label = 'systextil'
         db_table = "BASI_150"
         verbose_name = "Conta de estoque"
+
+
+class TipoContaEstoqueManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            TipoContaEstoqueManager, self).get_queryset().filter(tipo=420)
+
+
+class TipoContaEstoque(HDoc001):
+    objects = TipoContaEstoqueManager()
+
+    def __str__(self):
+        return '{}-{}'.format(self.codigo, self.descricao)
+
+    class Meta:
+        proxy = True
+        managed = False
+        app_label = 'systextil'
+        db_table = "HDOC_001"
+        verbose_name = "Tipo de conta de estoque"
