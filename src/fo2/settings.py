@@ -67,9 +67,11 @@ INSTALLED_APPS = [
     'logistica',
     'lotes',
     'manutencao',
+    'nasajon',
     'produto',
-    'utils',
     'remote_files',
+    'systextil',
+    'utils',
 ]
 
 MIDDLEWARE = [
