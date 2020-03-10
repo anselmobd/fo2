@@ -93,7 +93,7 @@ class RemessaIndustrNFForm(RemessaIndustrBaseForm):
         label='Detalhamento', choices=CHOICES, initial='N')
 
 
-class RemessaIndustrForm(RemessaIndustrNFForm):
+class RemessaIndustrForm(RemessaIndustrBaseForm):
     CHOICES = [('C', 'Apenas por cor'),
                ('T', 'Por cor e tamanho'),
                ]
