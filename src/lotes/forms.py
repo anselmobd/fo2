@@ -3,9 +3,7 @@ from datetime import datetime, timedelta
 from django import forms
 
 from produto.models import ProdutoItem
-from systextil.models import Colecao
-
-from .models import Familia
+from systextil.models import Colecao, Familia
 
 
 class LoteForm(forms.Form):
