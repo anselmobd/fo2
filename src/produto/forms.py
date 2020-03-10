@@ -10,7 +10,9 @@ from base.forms import \
     O2FieldGtinForm, \
     O2FieldFiltroForm
 
-from .models import Produto, S_Produto
+from systextil.models import Produto as S_Produto
+
+from .models import Produto
 
 
 class ModeloForm(forms.Form):
