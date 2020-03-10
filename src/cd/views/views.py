@@ -24,7 +24,7 @@ from utils.views import totalize_grouped_data, group_rowspan
 import lotes.models
 from geral.functions import request_user, has_permission
 
-import cd.models as models
+import cd.queries as queries
 import cd.forms
 
 
@@ -887,7 +887,7 @@ class InconsistenciasDetalhe(View):
                    'Quantidade']
         fields = ['est', 'lote', 'ref', 'cor', 'tam', 'qtd']
 
-        data = models.inconsistencias_detalhe(cursor, op, ocs)
+        data = queries.inconsistencias_detalhe(cursor, op, ocs)
 
         for row in data:
             if row['seq'] == 99:
@@ -903,7 +903,7 @@ class InconsistenciasDetalhe(View):
             'data': data,
         })
 
-        data63 = models.inconsistencias_detalhe(cursor, op, ocs, est63=True)
+        data63 = queries.inconsistencias_detalhe(cursor, op, ocs, est63=True)
 
         for row in data63:
             if row['qtd'] == 0:
@@ -1236,7 +1236,7 @@ class Grade(View):
                 for row in mod_referencias_todos:
                     ref = row['referencia']
 
-                    invent_ref = models.grade_solicitacao(
+                    invent_ref = queries.grade_solicitacao(
                         cursor_def, ref, tipo='i', grade_inventario=True)
                     grade_ref = {
                         'ref': ref,
@@ -1251,11 +1251,11 @@ class Grade(View):
                         grade_ref.update({'tipo': row['grade_tipo']})
                         tipo_ant = row['grade_tipo']
 
-                    sum_pedido = models.sum_pedido(cursor_def, ref)
+                    sum_pedido = queries.sum_pedido(cursor_def, ref)
                     total_pedido = sum_pedido[0]['qtd']
                     if total_pedido is None:
                         total_pedido = 0
-                    solped_ref = models.grade_solicitacao(
+                    solped_ref = queries.grade_solicitacao(
                         cursor_def, ref, tipo='sp', grade_inventario=True)
                     if solped_ref['total'] != 0:
                         if total_pedido == 0:
@@ -1267,7 +1267,7 @@ class Grade(View):
                         else:
                             link_detalhe = True
                             solped_titulo = 'Solicitações+Pedidos'
-                        dispon_ref = models.grade_solicitacao(
+                        dispon_ref = queries.grade_solicitacao(
                             cursor_def, ref, tipo='i-sp',
                             grade_inventario=True)
                         grade_ref.update({
@@ -1277,14 +1277,14 @@ class Grade(View):
                             'disponivel': dispon_ref,
                             })
                         if detalhe:
-                            solic_ref = models.grade_solicitacao(
+                            solic_ref = queries.grade_solicitacao(
                                 cursor_def, ref, tipo='s',
                                 grade_inventario=True)
                             if solic_ref['total'] != 0:
                                 grade_ref.update({
                                     'solicitacoes': solic_ref,
                                     })
-                            pedido_ref = models.grade_solicitacao(
+                            pedido_ref = queries.grade_solicitacao(
                                 cursor_def, ref, tipo='p',
                                 grade_inventario=True)
                             if pedido_ref['total'] != 0:
@@ -1304,7 +1304,7 @@ class Grade(View):
                             if row['grade_tipo'] == 'PA/PG']
 
                 if len(refs) > totaliza_mais_que:
-                    dispon_modelo = models.grade_solicitacao(
+                    dispon_modelo = queries.grade_solicitacao(
                         cursor_def, refs, tipo='i-sp')
                     if dispon_modelo['total'] != 0:
 
@@ -1335,7 +1335,7 @@ class Grade(View):
             if totais:
                 refs = [row['referencia'] for row in referencias
                         if row['grade_tipo'] == 'PA/PG']
-                dispon_sel_modelo = models.grade_solicitacao(
+                dispon_sel_modelo = queries.grade_solicitacao(
                     cursor_def, refs, tipo='i-sp')
 
                 for i in range(1, len(dispon_sel_modelo['fields'])):
@@ -1406,7 +1406,7 @@ class Historico(View):
             'op': op,
             }
 
-        data = models.historico(cursor, op)
+        data = queries.historico(cursor, op)
         if len(data) == 0:
             context.update({'erro': 'Sem lotes ativos'})
             return context
@@ -1426,7 +1426,7 @@ class Historico(View):
             'data': data,
         })
 
-        data = models.historico_detalhe(cursor, op)
+        data = queries.historico_detalhe(cursor, op)
         for row in data:
             if row['dt'] is None:
                 row['dt'] = 'Nunca inventariado'
@@ -1481,7 +1481,7 @@ class HistoricoLote(View):
             'lote': lote,
             }
 
-        data = models.historico_lote(cursor, lote)
+        data = queries.historico_lote(cursor, lote)
         if len(data) == 0:
             context.update({'erro': 'Lote não encontrado ou nunca endereçado'})
             return context
