@@ -46,6 +46,22 @@ class RemessaIndustrBaseForm(forms.Form):
     retorno = forms.ChoiceField(
         label='Retorno', choices=CHOICES, initial='T')
 
+    data_ret_de = forms.DateField(
+        label='NF Retorno - Data inicial', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    data_ret_ate = forms.DateField(
+        label='NF Retorno - Data final', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    nf_ret = forms.CharField(
+        label='NF Retorno', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    nf = forms.CharField(
+        label='NF Remessa', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
     def clean_faccao(self):
         faccao = self.cleaned_data['faccao'].upper()
         data = self.data.copy()
@@ -69,22 +85,6 @@ class RemessaIndustrNFForm(RemessaIndustrBaseForm):
                ]
     situacao = forms.ChoiceField(
         label='Situação', choices=CHOICES, initial='A')
-
-    data_ret_de = forms.DateField(
-        label='NF Retorno - Data inicial', required=False,
-        widget=forms.DateInput(attrs={'type': 'date'}))
-
-    data_ret_ate = forms.DateField(
-        label='NF Retorno - Data final', required=False,
-        widget=forms.DateInput(attrs={'type': 'date'}))
-
-    nf_ret = forms.CharField(
-        label='NF Retorno', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))
-
-    nf = forms.CharField(
-        label='NF Remessa', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))
 
     CHOICES = [('I', 'Por item de NF de remessa'),
                ('N', 'Por NF de remessa'),
