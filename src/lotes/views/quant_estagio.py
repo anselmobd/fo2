@@ -1,20 +1,21 @@
-from pprint import pprint
 from operator import itemgetter
+from pprint import pprint
 
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import connections
 from django.db.models import Exists, OuterRef
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from geral.functions import has_permission
 from base.views import O2BaseGetView
+from geral.functions import has_permission
 from utils.views import totalize_grouped_data, totalize_data
 
-import produto.queries
-import produto.models
 import comercial.models
+import produto.models
+import produto.queries
+import systextil.models
 from comercial.views.estoque import grade_meta_estoque
 
 import lotes.forms as forms
@@ -98,9 +99,9 @@ class LeadColecao(View):
 
     def lista(self):
         try:
-            colecoes = produto.models.Colecao.objects.exclude(
+            colecoes = systextil.models.Colecao.objects.exclude(
                 colecao=0).order_by('colecao')
-        except produto.models.Colecao.DoesNotExist:
+        except systextil.models.Colecao.DoesNotExist:
             self.context.update({
                 'msg_erro': 'Coleções não encontradas',
             })
@@ -225,9 +226,9 @@ class LeadColecao(View):
                         self.request, self.template_name, self.context)
 
                 try:
-                    colecao = produto.models.Colecao.objects.get(
+                    colecao = systextil.models.Colecao.objects.get(
                         colecao=self.id)
-                except produto.models.Colecao.DoesNotExist:
+                except systextil.models.Colecao.DoesNotExist:
                     self.context.update({
                         'msg_erro': 'Coleção não encontrada',
                     })
@@ -292,9 +293,9 @@ class LoteMinColecao(View):
 
     def lista(self):
         try:
-            colecoes = produto.models.Colecao.objects.exclude(
+            colecoes = systextil.models.Colecao.objects.exclude(
                 colecao=0).order_by('colecao')
-        except produto.models.Colecao.DoesNotExist:
+        except systextil.models.Colecao.DoesNotExist:
             self.context.update({
                 'msg_erro': 'Coleções não encontradas',
             })
@@ -424,9 +425,9 @@ class LoteMinColecao(View):
                         self.request, self.template_name, self.context)
 
                 try:
-                    colecao = produto.models.Colecao.objects.get(
+                    colecao = systextil.models.Colecao.objects.get(
                         colecao=self.id)
-                except produto.models.Colecao.DoesNotExist:
+                except systextil.models.Colecao.DoesNotExist:
                     self.context.update({
                         'msg_erro': 'Coleção não encontrada',
                     })
