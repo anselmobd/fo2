@@ -16,7 +16,7 @@ from geral.functions import (
 import lotes.models
 from produto.functions import papg_modelo
 
-import cd.models as models
+import cd.queries as queries
 
 
 class SolicitacaoDetalhe(LoginRequiredMixin, View):
@@ -242,7 +242,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         grades2 = []
         for referencia in referencias:
             # Grade de solicitação
-            context_ref = models.grade_solicitacao(
+            context_ref = queries.grade_solicitacao(
                 cursor_def, referencia['lote__referencia'],
                 solicit_id=solicit_id)
             context_ref.update({
@@ -255,7 +255,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'grades2': grades2,
         })
 
-        grade_total = models.grade_solicitacao(
+        grade_total = queries.grade_solicitacao(
             cursor_def, solicit_id=solicit_id)
         grade_total.update({
             'style': {i: 'text-align: right;'

@@ -1,7 +1,5 @@
 from pprint import pprint
 
-from django.db import models
-
 from utils.models import rows_to_dict_list_lower, GradeQtd
 
 

@@ -11,7 +11,7 @@ from geral.functions import has_permission
 import lotes.models
 
 import cd.forms
-import cd.models as models
+import cd.queries as queries
 
 
 class Solicitacoes(LoginRequiredMixin, View):
@@ -34,7 +34,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         headers = dict(zip(fields, descriptions))
 
         cursor_def = connection.cursor()
-        data = models.solicita_lote(cursor_def, filtro, data)
+        data = queries.solicita_lote(cursor_def, filtro, data)
         for row in data:
             if row['data'] is None:
                 row['data'] = ''
