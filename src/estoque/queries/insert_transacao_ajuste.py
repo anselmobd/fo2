@@ -2,7 +2,8 @@ from pprint import pprint
 
 from django.contrib.auth.models import User
 
-from base.models import Colaborador, S_Usuario
+from base.models import Colaborador
+from systextil.models import Usuario as S_Usuario
 
 
 def insert_transacao_ajuste(
