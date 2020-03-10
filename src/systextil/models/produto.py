@@ -49,3 +49,24 @@ class Produto(models.Model):
         app_label = 'systextil'
         db_table = "BASI_030"
         verbose_name = "Produto (Systêxtil)"
+
+
+class Tamanho(models.Model):
+    tamanho_ref = models.CharField(
+        primary_key=True,
+        max_length=3,
+        verbose_name='Código')
+    descr_tamanho = models.CharField(
+        max_length=10,
+        verbose_name='Descrição')
+    ordem_tamanho = models.IntegerField(
+        verbose_name='Ordem do tamanho')
+
+    def __str__(self):
+        return self.descr_tamanho
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "BASI_220"
+        verbose_name = "Tamanho (Systêxtil)"

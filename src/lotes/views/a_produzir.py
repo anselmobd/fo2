@@ -14,6 +14,7 @@ from comercial.views.estoque import grade_meta_estoque
 import comercial.forms
 import produto.queries
 import produto.models
+import systextil.models
 import estoque.queries
 
 import lotes.models
@@ -255,7 +256,7 @@ def opera_grades(g1, g2, operacao):
     tamanhos1 = set(g1['headers'][1:-1])
     tamanhos2 = set(g2['headers'][1:-1])
     tamanhos = list(tamanhos1.union(tamanhos2))
-    s_tamanhos = produto.models.S_Tamanho.objects.all().values()
+    s_tamanhos = systextil.models.Tamanho.objects.all().values()
     tamanhos = sorted(
         tamanhos,
         key=lambda tam: [
