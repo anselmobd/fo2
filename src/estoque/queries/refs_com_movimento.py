@@ -1,4 +1,4 @@
-from utils.models import rows_to_dict_list_lower
+from utils.functions.models import rows_to_dict_list_lower
 
 
 def refs_com_movimento(cursor, data_ini=None):

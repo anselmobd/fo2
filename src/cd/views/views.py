@@ -19,7 +19,7 @@ from django.http import JsonResponse
 from django.utils.functional import SimpleLazyObject
 from django.contrib.auth.models import User
 
-from utils.models import rows_to_dict_list_lower, GradeQtd
+from utils.functions.models import rows_to_dict_list_lower, GradeQtd
 from utils.views import totalize_grouped_data, group_rowspan
 import lotes.models
 from geral.functions import request_user, has_permission

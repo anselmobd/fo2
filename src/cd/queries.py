@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.models import rows_to_dict_list_lower, GradeQtd
+from utils.functions.models import rows_to_dict_list_lower, GradeQtd
 
 
 def inconsistencias_detalhe(cursor, op, ocs, est63=False):

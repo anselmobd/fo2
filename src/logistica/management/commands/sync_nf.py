@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 from django.utils import timezone
 
-from utils.models import rows_to_dict_list
+from utils.functions.models import rows_to_dict_list
 import logistica.models as models
 
 

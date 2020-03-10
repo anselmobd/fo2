@@ -14,7 +14,7 @@ from base.views import O2BaseGetPostView
 from geral.functions import has_permission
 from geral.views import dict_colecao_fluxos, get_roteiros_de_fluxo
 from utils.forms import FiltroForm
-from utils.models import rows_to_dict_list
+from utils.functions.models import rows_to_dict_list
 from utils.views import group_rowspan
 
 import produto.forms as forms

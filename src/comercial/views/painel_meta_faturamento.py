@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views import View
 
 from utils.functions import dias_mes_data
-from utils.models import queryset_to_dict_list_lower
+from utils.functions.models import queryset_to_dict_list_lower
 from utils.views import totalize_data
 
 import lotes.queries.pedido as l_q_p

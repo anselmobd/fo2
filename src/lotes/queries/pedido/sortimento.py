@@ -1,4 +1,4 @@
-from utils.models import GradeQtd
+from utils.functions.models import GradeQtd
 
 from utils.functions import arg_def
 

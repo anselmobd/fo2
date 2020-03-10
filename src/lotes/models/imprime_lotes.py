@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.models import rows_to_dict_list_lower, dict_list_to_lower
+from utils.functions.models import rows_to_dict_list_lower, dict_list_to_lower
 
 from lotes.models.base import *
 
