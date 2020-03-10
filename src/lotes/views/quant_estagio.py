@@ -494,9 +494,9 @@ class RegrasLoteMinTamanho(View):
 
     def lista(self):
         try:
-            tamanhos = produto.models.S_Tamanho.objects.all(
+            tamanhos = systextil.models.Tamanho.objects.all(
                 ).order_by('tamanho_ref')
-        except produto.models.S_Tamanho.DoesNotExist:
+        except systextil.models.Tamanho.DoesNotExist:
             self.context.update({
                 'msg_erro': 'Tamanhos não encontrados',
             })
@@ -632,9 +632,9 @@ class RegrasLoteMinTamanho(View):
                         self.request, self.template_name, self.context)
 
                 try:
-                    tamanho = produto.models.S_Tamanho.objects.get(
+                    tamanho = systextil.models.Tamanho.objects.get(
                         tamanho_ref=self.id)
-                except produto.models.S_Tamanho.DoesNotExist:
+                except systextil.models.Tamanho.DoesNotExist:
                     self.context.update({
                         'msg_erro': 'Tamanho não encontrado',
                     })
