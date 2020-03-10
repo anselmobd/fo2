@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django_tables2 import RequestConfig
 
-from utils.models import rows_to_dict_list
+from utils.functions.models import rows_to_dict_list
 
 import lotes.models as models
 import lotes.forms as forms

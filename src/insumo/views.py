@@ -24,7 +24,7 @@ from geral.models import Dispositivos, RoloBipado
 from utils.cache import entkeys
 from utils.functions import \
     segunda, max_not_None, min_not_None, make_key_cache, fo2logger
-from utils.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 from utils.views import totalize_grouped_data, group_rowspan
 
 import insumo.queries as queries

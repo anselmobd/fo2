@@ -1,4 +1,4 @@
-from utils.models import rows_to_dict_list
+from utils.functions.models import rows_to_dict_list
 
 from lotes.models import *
 from lotes.models.base import *

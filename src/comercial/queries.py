@@ -7,7 +7,7 @@ from django.db import connections
 from django.core.cache import cache
 from django.conf import settings
 
-from utils.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 
 from utils.functions import dec_months, make_key_cache, fo2logger
 

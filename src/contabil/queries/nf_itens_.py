@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.models import rows_to_dict_list
+from utils.functions.models import rows_to_dict_list
 
 
 def nf_itens(cursor, nf):
