@@ -1,23 +1,10 @@
-import datetime
 from pprint import pprint
 
 from django.db import connections
 from django.shortcuts import render
-from django.urls import reverse
 from django.views import View
 
-from utils.views import totalize_data
-from utils.functions import untuple_keys
-
-import lotes.models
-import lotes.queries.pedido
-
 from estoque import forms
-from estoque import queries
-from estoque.functions import (
-    transfo2_num_doc,
-    transfo2_num_doc_dt,
-    )
 
 
 class Sugestao(View):
