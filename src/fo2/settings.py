@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'logistica',
     'lotes',
     'manutencao',
-    'nasajon',
+    'persona',
     'produto',
     'remote_files',
     'systextil',
