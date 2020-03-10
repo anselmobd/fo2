@@ -91,6 +91,7 @@ class HDoc001(models.Model):
         primary_key=True,
         verbose_name='Código')
     descricao = models.CharField(
+        max_length=60,
         verbose_name='Descrição')
 
     def __str__(self):
