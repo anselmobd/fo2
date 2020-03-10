@@ -5,7 +5,7 @@ from django.utils import timezone
 from django import forms
 
 from fo2 import settings
-from produto.models import Colecao
+from systextil.models import Colecao
 from base.forms import \
     O2BaseForm, \
     O2FieldFiltroForm

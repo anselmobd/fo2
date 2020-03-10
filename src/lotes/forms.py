@@ -2,7 +2,9 @@ from datetime import datetime, timedelta
 
 from django import forms
 
-from produto.models import Colecao, ProdutoItem
+from produto.models import ProdutoItem
+from systextil.models import Colecao
+
 from .models import Familia
 
 
