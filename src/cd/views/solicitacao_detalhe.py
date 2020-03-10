@@ -14,6 +14,7 @@ from geral.functions import (
     )
 
 import lotes.models
+from produto.functions import papg_modelo
 
 import cd.models as models
 
@@ -150,6 +151,87 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                          'lote__referencia', 'lote__cor', 'lote__tamanho',
                          'qtdsum', 'inteira_parcial'],
             'e_data': por_endereco,
+        })
+
+        para_cx = lotes.models.SolicitaLoteQtd.objects.values(
+            'lote__op', 'lote__lote', 'lote__qtd_produzir',
+            'lote__estagio', 'lote__referencia',
+            'lote__cor', 'lote__tamanho', 'lote__ordem_tamanho'
+        ).annotate(
+            lote_ordem=Coalesce('lote__local', Value('0000')),
+            lote__local=Coalesce('lote__local', Value('-Ausente-')),
+            qtdsum=Sum('qtd')
+        ).filter(
+            solicitacao=solicitacao
+        )
+
+        for row in para_cx:
+            row['modelo'] = papg_modelo(row['lote__referencia'])
+            row['modelo_order'] = int(row['modelo'])
+            if row['qtdsum'] == row['lote__qtd_produzir']:
+                row['inteira_parcial'] = 'Lote inteiro'
+            else:
+                row['inteira_parcial'] = 'Parcial'
+            row['lote__lote|LINK'] = reverse(
+                'producao:posicao__get',
+                args=[row['lote__lote']])
+            row['lote__lote|TARGET'] = '_BLANK'
+            if row['lote__estagio'] == 999:
+                row['estagio'] = 'Finalizado'
+            else:
+                row['estagio'] = row['lote__estagio']
+            can_transf = row['inteira_parcial'] == 'Parcial'
+            can_transf = can_transf or (
+                row['lote_ordem'] == '0000'
+                and row['inteira_parcial'] == 'Lote inteiro')
+            can_transf = can_transf and row['lote__estagio'] == 999
+            row['transf_order'] = 1
+            row['transf'] = ''
+            if can_transf:
+                row['transf_order'] = 0
+                row['transf|HOVER'] = 'Transfere lote para caixinha'
+                row['transf|LINK'] = '#'
+                row['transf|GLYPHICON'] = 'glyphicon-log-in'
+
+        para_cx = sorted(
+            para_cx, key=lambda i: (
+                i['transf_order'],
+                i['modelo_order'],
+                i['lote__cor'],
+                i['lote__ordem_tamanho'],
+                i['lote__referencia'],
+                i['lote__lote'],
+                ))
+
+        context.update({
+            'cx_headers': [
+                'Modelo',
+                'Cor',
+                'Tamanho',
+                'Quant. Solicitada',
+                'Referência',
+                'Transfere',
+                'OP',
+                'Lote',
+                'Solicitação',
+                'Endereço',
+                'Estágio',
+            ],
+            'cx_fields': [
+                'modelo',
+                'lote__cor',
+                'lote__tamanho',
+                'qtdsum',
+                'lote__referencia',
+                'transf',
+                'lote__op',
+                'lote__lote',
+                'inteira_parcial',
+                'lote__local',
+                'estagio',
+            ],
+            'cx_style': {},
+            'cx_data': para_cx,
         })
 
         referencias = lotes.models.SolicitaLoteQtd.objects.filter(

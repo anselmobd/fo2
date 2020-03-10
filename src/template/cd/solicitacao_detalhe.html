@@ -31,8 +31,9 @@
   <h4>Solicitação: <b>{{ solicitacao.codigo }} ({{ solicitacao.descricao }})</b></h4>
 
   <ul class="nav nav-tabs" id="myTab">
-    <li class="active"><a data-toggle="tab" href="#home">Lotes em ordem de seleção</a></li>
-    <li><a data-toggle="tab" href="#menu1">Lotes agrupados por endereço</a></li>
+    <li class="active"><a data-toggle="tab" href="#home">Em ordem de seleção</a></li>
+    <li><a data-toggle="tab" href="#menu1">Agrupados por endereço</a></li>
+    <li><a data-toggle="tab" href="#lotes_cx">Para caixinha</a></li>
     <li><a data-toggle="tab" href="#menu2">Referências em grade</a></li>
     <li><a data-toggle="tab" href="#menu3">Grade total</a></li>
   </ul>
@@ -73,6 +74,16 @@
         <table>
           {% include "layout/thead_generic.html" with data=e_headers only %}
           {% include "layout/tbody_generic.html" with fields=e_fields data=e_data safe=e_safe only %}
+        </table>
+      {% else %}
+        <h4>Nenhum lote nesta solicitação</h4>
+      {% endif %}
+    </div>
+    <div id="lotes_cx" class="tab-pane fade">
+      {% if cx_data %}
+        <table>
+          {% include "layout/thead_generic.html" with data=cx_headers style=cx_style only %}
+          {% include "layout/tbody_generic.html" with fields=cx_fields data=cx_data style=cx_style safe=cx_safe only %}
         </table>
       {% else %}
         <h4>Nenhum lote nesta solicitação</h4>
