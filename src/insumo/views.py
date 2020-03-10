@@ -19,6 +19,7 @@ from django.core.cache import cache
 
 from fo2 import settings
 
+import systextil.models
 from geral.models import Dispositivos, RoloBipado
 from utils.cache import entkeys
 from utils.functions import \
@@ -1914,7 +1915,7 @@ class MapaPorSemanaNew(View):
 
         if qtd_semanas is None:
             qtd_semanas = 1
-        periodo_atual = models.Periodo.confeccao.filter(
+        periodo_atual = systextil.models.Periodo.confeccao.filter(
             periodo_producao=periodo
         ).values()
         periodo_ini = 0
@@ -2125,7 +2126,7 @@ class MapaPorSemana(View):
 
         if qtd_semanas is None:
             qtd_semanas = 1
-        periodo_atual = models.Periodo.confeccao.filter(
+        periodo_atual = systextil.models.Periodo.confeccao.filter(
             periodo_producao=periodo
         ).values()
         periodo_ini = 0
@@ -2369,7 +2370,7 @@ class MapaSemanal(View):
         if periodo is None:
             return {}
 
-        periodo_atual = models.Periodo.confeccao.filter(
+        periodo_atual = systextil.models.Periodo.confeccao.filter(
             periodo_producao=periodo
         ).values()
         self.periodo_ini = 0
