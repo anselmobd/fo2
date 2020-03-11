@@ -6,3 +6,4 @@ from .solicitacao_detalhe import *
 from .solicitacoes import *
 from .troca_local import *
 from .views import *
+from .visao_cd import *
