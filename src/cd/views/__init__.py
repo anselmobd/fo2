@@ -1,4 +1,5 @@
 from .estoque import *
+from .inconsist import *
 from .lote_local import *
 from .solicitacao_detalhe import *
 from .solicitacoes import *
