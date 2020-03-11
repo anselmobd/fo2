@@ -7,3 +7,4 @@ from .solicitacoes import *
 from .troca_local import *
 from .views import *
 from .visao_cd import *
+from .visao_rua import *
