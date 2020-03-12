@@ -225,6 +225,9 @@ def index(request):
          'link': 'http://escolatrabalho.gov.br/'},
     ]
     rota2020 = [
+        {'data': strdmy2date('12/03/2020'),
+         'chamada': 'Reuniões Produtivas',
+         'link': '/rh/campanhas/2020-03-12'},
         {'data': strdmy2date('11/02/2020'),
          'chamada': 'Premiação 2020',
          'link': '/rh/campanhas/2020-02-11'},
@@ -262,9 +265,12 @@ def campanhas(request, id):
         context = {'titulo': 'Campanhas'}
         return render(request, 'rh/campanhas.html', context)
     elif id == '2020-01-22':
-        return render(request, 'rh/campanhas/2020-01-22-RS-IT.html', {})
+        return render(request, 'rh/campanhas/2020-01-22-RS-IT.html')
     elif id == '2020-02-11':
-        return render(request, 'rh/campanhas/2020-02-11-premiacao.html', {})
+        return render(request, 'rh/campanhas/2020-02-11-premiacao.html')
+    elif id == '2020-03-12':
+        return render(
+            request, 'rh/campanhas/2020-03-12-reunioes-produtivas.html')
 
 
 def datas(request, data):
