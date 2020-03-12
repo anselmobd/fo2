@@ -1,5 +1,6 @@
 from .endereco_lote import *
 from .estoque import *
+from .grade_estoque import *
 from .inconsist import *
 from .inconsist_detalhe import *
 from .lote_local import *
