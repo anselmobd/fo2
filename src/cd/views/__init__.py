@@ -1,3 +1,4 @@
+from .endereco_lote import *
 from .estoque import *
 from .inconsist import *
 from .inconsist_detalhe import *
