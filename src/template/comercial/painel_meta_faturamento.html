@@ -181,9 +181,6 @@
 </script>
 </head>
 <body onload="resetScroll();">
-  <div class="overlay" id="cartaz_div">
-    <img class="cartaz" src="/media/rh/meta/2020/02/resultado.png" alt="2020-02-meta">
-  </div>
     <div class="p_header container-fluid">
       <div class="col-xs-3">
         <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
@@ -318,9 +315,12 @@
       </div>
     </div>
   </div>
+  <div class="overlay" id="cartaz_div">
+    <img class="cartaz" src="/media/rh/meta/2020/02/resultado.png" alt="2020-02-meta">
+  </div>
   <script>
-    let nrandom = Math.floor(Math.random()*3);
-    if (nrandom == 1) {
+    let nrandom = Math.floor(Math.random()*5);
+    if (nrandom == 0) {
       var elemento = document.getElementById('cartaz_div');
       elemento.style.visibility='visible';
     }
