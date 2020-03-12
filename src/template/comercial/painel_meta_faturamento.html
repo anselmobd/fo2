@@ -319,10 +319,14 @@
     <img class="cartaz" src="/media/rh/meta/2020/02/resultado.png" alt="2020-02-meta">
   </div>
   <script>
-    let nrandom = Math.floor(Math.random()*5);
-    if (nrandom == 0) {
-      var elemento = document.getElementById('cartaz_div');
-      elemento.style.visibility='visible';
+    var varDate = new Date('03/16/2020'); // 16/03/2020 segunda
+    var today = new Date();
+    if (today >= varDate) {
+      let nrandom = Math.floor(Math.random()*5);
+      if (nrandom == 0) {
+        var elemento = document.getElementById('cartaz_div');
+        elemento.style.visibility='visible';
+      }
     }
   </script>
 </body>
