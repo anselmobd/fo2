@@ -8,5 +8,4 @@ def index(request):
 
 
 def teste_som(request):
-    context = {}
-    return render(request, 'cd/teste_som.html', context)
+    return render(request, 'cd/teste_som.html')
