@@ -13,25 +13,25 @@ def confronta_estoque_transacoes(
 
     filtro_tam = ''
     if tam is not None and tam != '':
-        filtro_tam = '''--
-            AND e.cditem_subgrupo = '{}'
-            '''.format(tam)
+        filtro_tam = f'''--
+            AND e.cditem_subgrupo = '{tam}'
+            '''
 
     filtro_cor = ''
     if cor is not None and cor != '':
-        filtro_cor = '''--
-            AND e.cditem_item = '{}'
-            '''.format(cor)
+        filtro_cor = f'''--
+            AND e.cditem_item = '{cor}'
+            '''
 
     filtro_ref = ''
     if ref is not None and ref != '':
-        filtro_ref = '''--
-            AND e.cditem_grupo = '{}'
-            '''.format(ref)
+        filtro_ref = f'''--
+            AND e.cditem_grupo = '{ref}'
+            '''
 
     filtro_modelo = ''
     if modelo is not None and modelo != '':
-        filtro_modelo = '''--
+        filtro_modelo = f'''--
             AND
               TRIM(
                 LEADING '0' FROM (
@@ -41,12 +41,10 @@ def confronta_estoque_transacoes(
                     '\\1'
                   )
                 )
-              ) = '{}'
-        '''.format(
-            modelo,
-        )
+              ) = '{modelo}'
+        '''
 
-    sql = '''
+    sql = f'''
         WITH filtro AS
         ( SELECT
             e.deposito dep
@@ -184,13 +182,7 @@ def confronta_estoque_transacoes(
           , 0
           ) STQ
         FROM filtro
-    '''.format(
-        deposito=deposito,
-        filtro_ref=filtro_ref,
-        filtro_modelo=filtro_modelo,
-        filtro_tam=filtro_tam,
-        filtro_cor=filtro_cor,
-    )
+    '''
     cursor.execute(sql)
     data = rows_to_dict_list_lower(cursor)
 
