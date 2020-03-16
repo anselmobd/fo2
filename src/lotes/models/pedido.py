@@ -56,6 +56,7 @@ def ped_inform(cursor, pedido):
         LEFT JOIN PEDI_010 c
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE ped.PEDIDO_VENDA = %s
     """
     cursor.execute(sql, [pedido])
@@ -242,7 +243,9 @@ def ped_expedicao(
           ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
-         AND c.CGC_4 = ped.CLI_PED_CGC_CLI4"""
+         AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
+    """
     if detalhe == 'p':
         sql += """ --
             LEFT JOIN conta_gtin cg
@@ -376,6 +379,7 @@ def grade_expedicao(
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
           AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_embarque_de} -- filtro_embarque_de
