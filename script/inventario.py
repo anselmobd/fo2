@@ -410,144 +410,169 @@ class Inventario:
         return sql
 
     def get_quant_systextil_sql(self, nivel, ref):
-        fitro_nivel = "AND e.NIVEL_ESTRUTURA = {}".format(nivel)
+        fitro_nivel = "AND i.NIVEL_ESTRUTURA = {}".format(nivel)
 
-        fitro_ref = "AND e.GRUPO_ESTRUTURA = '{}'".format(ref)
+        fitro_ref = "AND i.GRUPO_ESTRUTURA = '{}'".format(ref)
 
         fitro_data = '''--
-            AND e.DATA_MOVIMENTO < TO_DATE('{ano}-{mes}-01','YYYY-MM-DD')
+            AND tr.DATA_MOVIMENTO < TO_DATE('{ano}-{mes}-01','YYYY-MM-DD')
         '''.format(ano=self.ano, mes=self.mes)
 
-        sql = """
+        sql = f"""
             SELECT
-              e.NIVEL_ESTRUTURA NIVEL
-            , e.GRUPO_ESTRUTURA REF
+              s.NIVEL
+            , s.REF
             , r.DESCR_REFERENCIA REF_DESCR
             , r.UNIDADE_MEDIDA REF_UNID
             , um.UNID_MED_TRIB UNIDADE
             , '01' TIPO_ITEM
             , r.CLASSIFIC_FISCAL NCM
             , 0 ALIQ_ICMS
-            , e.SUBGRUPO_ESTRUTURA TAM
+            , s.TAM
             , t.DESCR_TAM_REFER TAM_DESCR
-            , e.ITEM_ESTRUTURA COR
+            , s.COR
             , i.DESCRICAO_15 COR_DESCR
             , i.PRECO_CUSTO_INFO PRECO_INFORMADO
-            , sum(e.saldo_fisico) QTD
-            , sum(e.saldo_financeiro)
-              / sum(e.saldo_fisico) PRECO
-            FROM estq_310 e
-            JOIN (
+            --, s.DATA_BUSCA
+            --, e.saldo_financeiro
+            --, e.saldo_fisico
+            , CASE WHEN s.DATA_BUSCA IS NULL
+              THEN s.QTD_STQ
+              ELSE e.saldo_fisico
+              END QTD
+            , CASE WHEN s.DATA_BUSCA IS NULL
+                     OR e.saldo_financeiro = 0
+              THEN i.PRECO_CUSTO_INFO
+              ELSE
+                e.saldo_financeiro
+                / e.saldo_fisico
+              END PRECO
+            FROM (
               SELECT
-                e.NIVEL_ESTRUTURA
-              , e.GRUPO_ESTRUTURA
-              , e.SUBGRUPO_ESTRUTURA
-              , e.ITEM_ESTRUTURA
-              , e.CODIGO_DEPOSITO
-              , edt.DATA_BUSCA
-              , max(e.SEQUENCIA_FICHA) SEQUENCIA_BUSCA
-              FROM estq_310 e
-              JOIN (
-                SELECT
-                  e.NIVEL_ESTRUTURA
-                , e.GRUPO_ESTRUTURA
-                , e.SUBGRUPO_ESTRUTURA
-                , e.ITEM_ESTRUTURA
-                , e.CODIGO_DEPOSITO
-                , max(e.DATA_MOVIMENTO) DATA_BUSCA
-                FROM estq_310 e
+                r.NIVEL
+              , r.REF
+              , r.TAM
+              , r.COR
+              , r.CONTA_STQ
+              , r.DEP
+              , r.QTD_STQ
+              , r.DATA_BUSCA
+              , CASE WHEN r.DATA_BUSCA IS NULL
+                THEN NULL
+                ELSE
+                ( SELECT
+                    max(tr.SEQUENCIA_FICHA)
+                  FROM ESTQ_300_ESTQ_310 tr
+                  WHERE tr.NIVEL_ESTRUTURA = r.NIVEL
+                    AND tr.GRUPO_ESTRUTURA = r.REF
+                    AND tr.SUBGRUPO_ESTRUTURA = r.TAM
+                    AND tr.ITEM_ESTRUTURA = r.COR
+                    AND tr.DATA_MOVIMENTO = r.DATA_BUSCA
+                )
+                END SEQ_BUSCA
+              FROM
+              ( SELECT
+                  i.NIVEL_ESTRUTURA NIVEL
+                , i.GRUPO_ESTRUTURA REF
+                , i.SUBGRU_ESTRUTURA TAM
+                , i.ITEM_ESTRUTURA COR
+                , r.CONTA_ESTOQUE CONTA_STQ
+                , d.CODIGO_DEPOSITO DEP
+                , e.QTDE_ESTOQUE_ATU QTD_STQ
+                , ( SELECT
+                      max(tr.DATA_MOVIMENTO)
+                    FROM ESTQ_300_ESTQ_310 tr
+                    WHERE tr.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
+                      AND tr.GRUPO_ESTRUTURA = i.GRUPO_ESTRUTURA
+                      AND tr.SUBGRUPO_ESTRUTURA = i.SUBGRU_ESTRUTURA
+                      AND tr.ITEM_ESTRUTURA = i.ITEM_ESTRUTURA
+                      -- AND tr.DATA_MOVIMENTO
+                      --   < TO_DATE('2019-12-01','YYYY-MM-DD')
+                      {fitro_data} -- fitro_data
+                    ) DATA_BUSCA
+                FROM BASI_010 i
+                JOIN BASI_205 d ON 1=1
                 JOIN BASI_030 r
-                  ON r.NIVEL_ESTRUTURA = e.NIVEL_ESTRUTURA
-                 AND r.REFERENCIA = e.GRUPO_ESTRUTURA
+                  ON r.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
+                 AND r.REFERENCIA = i.GRUPO_ESTRUTURA
+                JOIN ESTQ_040 e
+                  ON e.CDITEM_NIVEL99 = i.NIVEL_ESTRUTURA
+                 AND e.CDITEM_GRUPO = i.GRUPO_ESTRUTURA
+                 AND e.CDITEM_SUBGRUPO = i.SUBGRU_ESTRUTURA
+                 AND e.CDITEM_ITEM = i.ITEM_ESTRUTURA
+                 AND e.LOTE_ACOMP = 0
+                 AND e.DEPOSITO = d.CODIGO_DEPOSITO
                 WHERE 1=1
+                  -- AND i.NIVEL_ESTRUTURA = 9 -- fitro_nivel
                   {fitro_nivel} -- fitro_nivel
+                  -- AND i.GRUPO_ESTRUTURA LIKE 'CA08%' -- fitro_ref
                   {fitro_ref} -- fitro_ref
                   -- AND e.DATA_MOVIMENTO < TO_DATE('2019-01-01','YYYY-MM-DD')
-                  {fitro_data} -- fitro_data
                   AND 1 = (
-                    CASE WHEN e.NIVEL_ESTRUTURA = 2 THEN
-                      CASE WHEN e.CODIGO_DEPOSITO = 202 THEN 1 ELSE 0 END
-                    WHEN e.NIVEL_ESTRUTURA = 9 THEN
+                    CASE WHEN i.NIVEL_ESTRUTURA = 2 THEN
+                      CASE WHEN d.CODIGO_DEPOSITO = 202 THEN 1 ELSE 0 END
+                    WHEN i.NIVEL_ESTRUTURA = 9 THEN
                       CASE WHEN r.CONTA_ESTOQUE = 22 THEN
-                        CASE WHEN e.CODIGO_DEPOSITO = 212 THEN 1 ELSE 0 END
+                        CASE WHEN d.CODIGO_DEPOSITO = 212 THEN 1 ELSE 0 END
                       ELSE
-                        CASE WHEN e.CODIGO_DEPOSITO = 231 THEN 1 ELSE 0 END
+                        CASE WHEN d.CODIGO_DEPOSITO = 231 THEN 1 ELSE 0 END
                       END
-                    ELSE -- i.NIVEL_ESTRUTURA = 1
-                      CASE WHEN e.CODIGO_DEPOSITO in (101, 102) THEN 1
+                    WHEN i.NIVEL_ESTRUTURA = 1 THEN
+                      CASE WHEN d.CODIGO_DEPOSITO in (101, 102) THEN 1
                       ELSE 0 END
+                    ELSE -- i.NIVEL_ESTRUTURA errado
+                      0
                     END
                   )
-                GROUP BY
-                  e.NIVEL_ESTRUTURA
-                , e.GRUPO_ESTRUTURA
-                , e.SUBGRUPO_ESTRUTURA
-                , e.ITEM_ESTRUTURA
-                , e.CODIGO_DEPOSITO
-              ) edt
-                ON edt.codigo_deposito    = e.codigo_deposito
-               and edt.nivel_estrutura    = e.nivel_estrutura
-               and edt.grupo_estrutura    = e.grupo_estrutura
-               and edt.subgrupo_estrutura = e.subgrupo_estrutura
-               and edt.item_estrutura     = e.item_estrutura
-               and edt.data_busca         = e.data_movimento
-              group by
-                e.codigo_deposito
-              , e.nivel_estrutura
-              , e.grupo_estrutura
-              , e.subgrupo_estrutura
-              , e.item_estrutura
-              , edt.data_busca
-            ) eseq
-              ON eseq.codigo_deposito    = e.codigo_deposito
-             and eseq.nivel_estrutura    = e.nivel_estrutura
-             and eseq.grupo_estrutura    = e.grupo_estrutura
-             and eseq.subgrupo_estrutura = e.subgrupo_estrutura
-             and eseq.item_estrutura     = e.item_estrutura
-             and eseq.data_busca         = e.data_movimento
-             and eseq.SEQUENCIA_BUSCA    = e.SEQUENCIA_FICHA
+                ORDER BY
+                  i.NIVEL_ESTRUTURA
+                , i.GRUPO_ESTRUTURA
+                , i.SUBGRU_ESTRUTURA
+                , i.ITEM_ESTRUTURA
+                , d.CODIGO_DEPOSITO
+              ) r
+            ) s
+            LEFT JOIN estq_310 e
+              ON e.codigo_deposito    = s.dep
+             and e.nivel_estrutura    = s.nivel
+             and e.grupo_estrutura    = s.ref
+             and e.subgrupo_estrutura = s.tam
+             and e.item_estrutura     = s.cor
+             and e.DATA_MOVIMENTO     = s.DATA_BUSCA
+             and e.SEQUENCIA_FICHA    = s.SEQ_BUSCA
             JOIN basi_030 r
-              ON r.NIVEL_ESTRUTURA = e.NIVEL_ESTRUTURA
-             AND r.REFERENCIA = e.GRUPO_ESTRUTURA
+              ON r.NIVEL_ESTRUTURA = s.nivel
+             AND r.REFERENCIA = s.ref
              AND r.DESCR_REFERENCIA NOT LIKE '-%'
             JOIN basi_200 um
               ON um.unidade_medida = r.UNIDADE_MEDIDA
             JOIN basi_020 t
-              ON t.BASI030_NIVEL030 = e.NIVEL_ESTRUTURA
-             AND t.BASI030_REFERENC = e.GRUPO_ESTRUTURA
-             AND t.TAMANHO_REF = e.SUBGRUPO_ESTRUTURA
+              ON t.BASI030_NIVEL030 = s.nivel
+             AND t.BASI030_REFERENC = s.ref
+             AND t.TAMANHO_REF = s.tam
              AND t.DESCR_TAM_REFER NOT LIKE '-%'
             JOIN basi_010 i
-              ON i.NIVEL_ESTRUTURA = e.NIVEL_ESTRUTURA
-             AND i.GRUPO_ESTRUTURA = e.GRUPO_ESTRUTURA
-             AND i.SUBGRU_ESTRUTURA = e.SUBGRUPO_ESTRUTURA
-             AND i.ITEM_ESTRUTURA = e.ITEM_ESTRUTURA
+              ON i.NIVEL_ESTRUTURA = s.nivel
+             AND i.GRUPO_ESTRUTURA = s.ref
+             AND i.SUBGRU_ESTRUTURA = s.tam
+             AND i.ITEM_ESTRUTURA = s.cor
              AND i.DESCRICAO_15 NOT LIKE '-%'
             WHERE 1=1
-              AND e.saldo_fisico >= 1
-              AND e.saldo_financeiro > 0
-            GROUP BY
-              e.NIVEL_ESTRUTURA
-            , e.GRUPO_ESTRUTURA
-            , r.DESCR_REFERENCIA
-            , r.UNIDADE_MEDIDA
-            , um.UNID_MED_TRIB
-            , r.CLASSIFIC_FISCAL
-            , e.SUBGRUPO_ESTRUTURA
-            , t.DESCR_TAM_REFER
-            , e.ITEM_ESTRUTURA
-            , i.DESCRICAO_15
-            , i.PRECO_CUSTO_INFO
+              AND ( ( s.DATA_BUSCA IS NULL
+                    AND s.QTD_STQ >= 1
+                    )
+                  OR
+                    ( s.DATA_BUSCA IS NOT NULL
+                    AND e.saldo_fisico >= 1
+            --        AND e.saldo_financeiro > 0
+                    )
+                  )
             ORDER BY
               e.NIVEL_ESTRUTURA
             , e.GRUPO_ESTRUTURA
             , e.SUBGRUPO_ESTRUTURA
             , e.ITEM_ESTRUTURA
-        """.format(
-            fitro_nivel=fitro_nivel,
-            fitro_ref=fitro_ref,
-            fitro_data=fitro_data,
-        )
+        """
         return sql
 
     def print_ref(self, nivel, ref):
