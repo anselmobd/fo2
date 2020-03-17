@@ -321,7 +321,8 @@
   <script>
     var varDate = new Date('03/16/2020'); // 16/03/2020 segunda
     var today = new Date();
-    if (today >= varDate) {
+    today.setHours(0, 0, 0, 0);
+    if (today == varDate) {
       let nrandom = Math.floor(Math.random()*5);
       if (nrandom == 0) {
         var elemento = document.getElementById('cartaz_div');
