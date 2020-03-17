@@ -10,6 +10,9 @@ urlpatterns = [
     url(r'^campanhas/(?P<id>.+)?/?$',
         views.campanhas, name='campanhas'),
 
+    url(r'^eventos/(?P<id>.+)?/?$',
+        views.eventos, name='eventos'),
+
     url(r'^datas/(?P<data>.+)/$', views.datas, name='datas'),
 
     url(r'^fotos/$', views.fotos, name='fotos'),
