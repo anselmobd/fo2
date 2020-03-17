@@ -363,15 +363,7 @@ class PedidoFaturavelModelo(View):
             'modelo': modelo,
         }
 
-        colecao = produto.queries.colecao_de_modelo(cursor, modelo)
-        if colecao == -1:
-            lead = 0
-        else:
-            try:
-                lc = models.LeadColecao.objects.get(colecao=colecao)
-                lead = lc.lead
-            except models.LeadColecao.DoesNotExist:
-                lead = 0
+        lead = produto.queries.lead_de_modelo(cursor, modelo)
 
         context.update({
             'lead': lead,

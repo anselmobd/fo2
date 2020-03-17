@@ -82,17 +82,7 @@ class GradeProduzir(O2BaseGetPostView):
             calcula_grade = True
             gzerada = update_gzerada(gzerada, gme)
 
-        colecao = produto.queries.colecao_de_modelo(
-            cursor, modelo)
-        if colecao == -1:
-            lead = 0
-        else:
-            try:
-                lc = lotes.models.LeadColecao.objects.get(
-                    colecao=colecao)
-                lead = lc.lead
-            except lotes.models.LeadColecao.DoesNotExist:
-                lead = 0
+        lead = produto.queries.lead_de_modelo(cursor, modelo)
         gmg = None
         if meta.meta_giro == 0:
             self.context.update({
