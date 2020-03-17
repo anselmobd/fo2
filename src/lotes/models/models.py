@@ -450,6 +450,7 @@ class LeadColecao(models.Model):
     class Meta:
         db_table = "fo2_lot_lead_colecao"
         verbose_name = "Lead de produção"
+        verbose_name_plural = "Leads de produção"
 
 
 class RegraLMTamanho(models.Model):
