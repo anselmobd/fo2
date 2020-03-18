@@ -26,20 +26,9 @@ class PorDepositoForm(forms.Form):
         label='Cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
-    CHOICES = [
-        ('999', '--Todos--'),
-        ('A00', '101, 102 e 231- '
-                'PA ATACADO, PA VAREJO e MAT PRIMA'),
-    ]
-    principais = (101, 102, 231)
-    depositos_principais = geral.queries.deposito(only=principais)
-    depositos_outros = geral.queries.deposito(less=principais)
-    for deposito in depositos_principais + depositos_outros:
-        if deposito['COD'] > 1:
-            CHOICES.append((
-                deposito['COD'],
-                f"{deposito['COD']} - {deposito['DESCR']}"
-            ))
+    CHOICES = geral.functions.depositos_choices(
+        cod_todos='999', descr_todos='--Todos--', cod_only='A00',
+        only=(101, 102, 122, 231), rest=True)
     deposito = forms.ChoiceField(
         label='Depósito', choices=CHOICES, initial='999')
 
