@@ -132,7 +132,7 @@ def config_set_value(param_codigo, value, usuario=None):
     return True
 
 
-def depositos_choices(cod_todos=None, only=None, less=None):
+def depositos_choices(cod_todos=None, only=None, less=None, rest=None):
     CHOICES = []
     codigos = (101, 102, 122, 231)
 
@@ -146,6 +146,10 @@ def depositos_choices(cod_todos=None, only=None, less=None):
     depositos_only = []
     if only is not None:
         depositos_only = geral.queries.deposito(only=only)
+
+    if rest is not None:
+        if rest:
+            less = only
 
     depositos_less = []
     if less is not None:
