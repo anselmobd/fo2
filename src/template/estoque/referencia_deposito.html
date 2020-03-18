@@ -11,7 +11,7 @@
 
 {% block content %}
 <h3>Busca referencias/depósitos com alguma movimentação</h3>
-<h4>Depósitos: 101, 102 e 231</h4>
+<h4>Depósitos: {{str_depositos}}</h4>
 <h4>Tipo de produto: PA/PG/PB</h4>
 <form id="form" action="" method="post">
     {% csrf_token %}
