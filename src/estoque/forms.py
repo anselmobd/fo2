@@ -3,6 +3,7 @@ from django import forms
 # from django.core.exceptions import ValidationError
 
 import geral.queries
+import geral.functions
 from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
 
 
@@ -143,22 +144,8 @@ class ReferenciasEstoqueForm(
         O2BaseForm,
         O2FieldModeloForm):
 
-    CHOICES = []
-    codigos = (101, 102, 122, 231)
-    todos = [
-        {'COD': '-',
-         'DESCR': f"TODOS ({', '.join(map(str, codigos))})",
-         }]
-    depositos = geral.queries.deposito(only=codigos)
-    for deposito in todos + depositos:
-        if deposito['COD'] == '-':
-            descr = deposito['DESCR']
-        else:
-            descr = f"{deposito['COD']} - {deposito['DESCR']}"
-        CHOICES.append((
-            deposito['COD'],
-            descr
-        ))
+    CHOICES = geral.functions.depositos_choices(
+        cod_todos='-', only=(101, 102, 122, 231))
     deposito = forms.ChoiceField(
         label='Depósito',
         choices=CHOICES, initial='-')
