@@ -11,7 +11,7 @@ from estoque import queries
 
 
 class ConfrontaEstoque(View):
-    Form_class = forms.RecalculaEstoqueForm
+    Form_class = forms.ConfrontaEstoqueForm
     template_name = 'estoque/confronta_estoque.html'
     title_name = 'Confronta estoque e transações'
 
