@@ -6,6 +6,7 @@ from django.db.models import Min
 
 import geral.models as models
 import geral.queries
+import utils.functions.strings
 from .models import Painel, PainelModulo, PopAssunto
 
 
@@ -132,15 +133,31 @@ def config_set_value(param_codigo, value, usuario=None):
     return True
 
 
-def depositos_choices(cod_todos=None, only=None, less=None, rest=None):
+def depositos_choices(
+        cod_todos=None, descr_todos=None, cod_only=None,
+        only=None, less=None, rest=None):
     CHOICES = []
     codigos = (101, 102, 122, 231)
 
     todos = []
-    if cod_todos is not None and only is not None:
-        todos = [
-            {'COD': cod_todos,
-             'DESCR': f"TODOS ({', '.join(map(str, only))})",
+    if cod_todos is not None:
+        if descr_todos is None and only is not None:
+            todos = [
+                {'COD': cod_todos,
+                 'DESCR': f"TODOS ({', '.join(map(str, only))})",
+                 }]
+        else:
+            todos = [
+                {'COD': cod_todos,
+                 'DESCR': descr_todos,
+                 }]
+
+    grupo = []
+    if cod_only is not None and only is not None:
+        descr = utils.functions.strings.join((', ', ' e '), map(str, only))
+        grupo = [
+            {'COD': cod_only,
+             'DESCR': descr,
              }]
 
     depositos_only = []
@@ -155,8 +172,8 @@ def depositos_choices(cod_todos=None, only=None, less=None, rest=None):
     if less is not None:
         depositos_less = geral.queries.deposito(less=less)
 
-    for deposito in (todos + depositos_only + depositos_less):
-        if deposito['COD'] == cod_todos:
+    for deposito in (todos + grupo + depositos_only + depositos_less):
+        if deposito['COD'] in (cod_todos, cod_only):
             descr = deposito['DESCR']
         else:
             descr = f"{deposito['COD']} - {deposito['DESCR']}"
