@@ -143,12 +143,22 @@ class ReferenciasEstoqueForm(
         O2BaseForm,
         O2FieldModeloForm):
 
-    CHOICES = [
-        ('-', 'TODOS (101, 102, 231)'),
-        ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
-        ('102', '102-PA VAREJO PRIMEIRA QUALIDADE'),
-        ('231', '231-MAT PRIMA ESTOQUE'),
-    ]
+    CHOICES = []
+    codigos = (101, 102, 122, 231)
+    todos = [
+        {'COD': '-',
+         'DESCR': f"TODOS ({', '.join(map(str, codigos))})",
+         }]
+    depositos = geral.queries.deposito(only=codigos)
+    for deposito in todos + depositos:
+        if deposito['COD'] == '-':
+            descr = deposito['DESCR']
+        else:
+            descr = f"{deposito['COD']} - {deposito['DESCR']}"
+        CHOICES.append((
+            deposito['COD'],
+            descr
+        ))
     deposito = forms.ChoiceField(
         label='Depósito',
         choices=CHOICES, initial='-')
