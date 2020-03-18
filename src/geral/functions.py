@@ -139,7 +139,7 @@ def depositos_choices(cod_todos=None, only=None, less=None, rest=None):
     todos = []
     if cod_todos is not None and only is not None:
         todos = [
-            {'COD': '-',
+            {'COD': cod_todos,
              'DESCR': f"TODOS ({', '.join(map(str, only))})",
              }]
 
