@@ -18,11 +18,10 @@ class ReferenciaDeposito(View):
 
     def __init__(self, *args, **kwargs):
         super(ReferenciaDeposito).__init__(*args, **kwargs)
-        Form_class = forms.ReferenciasEstoqueForm
-        template_name = 'estoque/referencia_deposito.html'
-        title_name = 'Em depósito'
+        self.Form_class = forms.ReferenciasEstoqueForm
+        self.template_name = 'estoque/referencia_deposito.html'
         self.context = {
-            'titulo': self.title_name,
+            'titulo': 'Em depósito',
             'str_depositos': self.str_depositos(),
         }
 
