@@ -173,7 +173,7 @@ class MostraEstoqueForm(forms.Form):
         widget=forms.TimeInput(attrs={'type': 'time'}))
 
 
-class RecalculaEstoqueForm(forms.Form):
+class ConfrontaEstoqueForm(forms.Form):
     ref = forms.CharField(
         label='Referência ou modelo',
         required=False, min_length=1, max_length=5,
