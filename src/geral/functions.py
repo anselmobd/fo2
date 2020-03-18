@@ -156,7 +156,7 @@ def depositos_choices(cod_todos=None, only=None, less=None):
             descr = deposito['DESCR']
         else:
             descr = f"{deposito['COD']} - {deposito['DESCR']}"
-            if deposito['COD'] == 0:
+            if deposito['COD'] <= 1:
                 continue
         CHOICES.append((
             deposito['COD'],
