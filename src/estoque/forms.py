@@ -188,11 +188,7 @@ class RecalculaEstoqueForm(forms.Form):
         label='Cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
-    CHOICES = [
-        ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
-        ('102', '102-PA VAREJO PRIMEIRA QUALIDADE'),
-        ('231', '231-MAT PRIMA ESTOQUE'),
-    ]
+    CHOICES = geral.functions.depositos_choices(only=(101, 102, 122, 231))
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
         choices=CHOICES, initial='')
