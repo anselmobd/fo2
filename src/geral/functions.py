@@ -4,8 +4,9 @@ from django.urls import reverse
 from django.template.defaulttags import register
 from django.db.models import Min
 
-from .models import Painel, PainelModulo, PopAssunto
 import geral.models as models
+import geral.queries
+from .models import Painel, PainelModulo, PopAssunto
 
 
 # http://kkabardi.me/post/dynamic-menu-navigation-django/
@@ -129,3 +130,37 @@ def config_set_value(param_codigo, value, usuario=None):
             config.save()
 
     return True
+
+
+def depositos_choices(cod_todos=None, only=None, less=None):
+    CHOICES = []
+    codigos = (101, 102, 122, 231)
+
+    todos = []
+    if cod_todos is not None and only is not None:
+        todos = [
+            {'COD': '-',
+             'DESCR': f"TODOS ({', '.join(map(str, only))})",
+             }]
+
+    depositos_only = []
+    if only is not None:
+        depositos_only = geral.queries.deposito(only=only)
+
+    depositos_less = []
+    if less is not None:
+        depositos_less = geral.queries.deposito(less=less)
+
+    for deposito in (todos + depositos_only + depositos_less):
+        if deposito['COD'] == cod_todos:
+            descr = deposito['DESCR']
+        else:
+            descr = f"{deposito['COD']} - {deposito['DESCR']}"
+            if deposito['COD'] == 0:
+                continue
+        CHOICES.append((
+            deposito['COD'],
+            descr
+        ))
+
+    return CHOICES
