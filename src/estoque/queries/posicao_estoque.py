@@ -35,7 +35,7 @@ def posicao_estoque(
     if deposito == '999':
         filtro_deposito = ''
     elif deposito == 'A00':
-        filtro_deposito = "AND e.DEPOSITO IN (231, 101, 102)"
+        filtro_deposito = "AND e.DEPOSITO IN (101, 102, 122, 231)"
     else:
         filtro_deposito = "AND e.DEPOSITO = '{deposito}'".format(
             deposito=deposito)
