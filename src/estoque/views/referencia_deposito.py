@@ -15,9 +15,16 @@ from estoque import queries
 
 
 class ReferenciaDeposito(View):
-    Form_class = forms.ReferenciasEstoqueForm
-    template_name = 'estoque/referencia_deposito.html'
-    title_name = 'Em depósito'
+
+    def __init__(self, *args, **kwargs):
+        super(ReferenciaDeposito).__init__(*args, **kwargs)
+        Form_class = forms.ReferenciasEstoqueForm
+        template_name = 'estoque/referencia_deposito.html'
+        title_name = 'Em depósito'
+        self.context = {
+            'titulo': self.title_name,
+            'str_depositos': self.str_depositos(),
+        }
 
     def mount_context(self, request, cursor, deposito, modelo):
         context = {
@@ -96,25 +103,17 @@ class ReferenciaDeposito(View):
         return texto
 
     def get(self, request, *args, **kwargs):
-        context = {
-            'titulo': self.title_name,
-            'str_depositos': self.str_depositos(),
-        }
         form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        context = {
-            'titulo': self.title_name,
-            'str_depositos': self.str_depositos(),
-        }
         form = self.Form_class(request.POST)
         if form.is_valid():
             deposito = form.cleaned_data['deposito']
             modelo = form.cleaned_data['modelo']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(
+            self.context.update(self.mount_context(
                 request, cursor, deposito, modelo))
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
