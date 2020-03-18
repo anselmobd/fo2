@@ -1,8 +1,11 @@
+from pprint import pprint
+
 from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+import utils.functions.str
 from utils.views import totalize_grouped_data, group_rowspan
 
 import produto.queries
@@ -87,14 +90,25 @@ class ReferenciaDeposito(View):
 
         return context
 
+    def str_depositos(seft):
+        texto = utils.functions.str.join(
+            (', ', ' e '), (101, 102, 122, 231))
+        return texto
+
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
+        context = {
+            'titulo': self.title_name,
+            'str_depositos': self.str_depositos(),
+        }
         form = self.Form_class()
         context['form'] = form
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
+        context = {
+            'titulo': self.title_name,
+            'str_depositos': self.str_depositos(),
+        }
         form = self.Form_class(request.POST)
         if form.is_valid():
             deposito = form.cleaned_data['deposito']
