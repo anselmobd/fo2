@@ -4,6 +4,9 @@ from django.db import models
 
 
 class TipoMovStq(models.Model):
+    codigo = models.CharField(
+        max_length=100, unique=True, default="-",
+        verbose_name='Código')
     descricao = models.CharField(
         max_length=100,
         verbose_name='Descrição')
