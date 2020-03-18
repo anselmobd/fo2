@@ -1,7 +1,13 @@
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def referencia_deposito(cursor, deposito, modelo):
+def referencia_deposito(cursor, deposito, modelo, todos=True):
+    filtro_todos = ''
+    if not todos:  # apenas aqueles que tem alguma quantidade
+        filtro_todos = ''' --
+            AND (sel.ESTOQUE <> 0 OR sel.FALTA <> 0)
+        '''
+
     filtro_modelo = ''
     if modelo != '':
         filtro_modelo = '''--
@@ -28,6 +34,9 @@ def referencia_deposito(cursor, deposito, modelo):
         )
 
     sql = '''
+        SELECT
+          sel.*
+        FROM (
         SELECT
           rd.REF
         , rd.DEP
@@ -88,9 +97,13 @@ def referencia_deposito(cursor, deposito, modelo):
         ORDER BY
           rd.DEP
         , NLSSORT(rd.REF,'NLS_SORT=BINARY_AI')
+        ) sel
+        WHERE 1=1
+          {filtro_todos} -- filtro_todos
     '''.format(
         filtro_deposito=filtro_deposito,
         filtro_modelo=filtro_modelo,
+        filtro_todos=filtro_todos,
     )
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
