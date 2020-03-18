@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-import utils.functions.str
+import utils.functions.strings
 from utils.views import totalize_grouped_data, group_rowspan
 
 import produto.queries
@@ -97,7 +97,7 @@ class ReferenciaDeposito(View):
         return context
 
     def str_depositos(seft):
-        texto = utils.functions.str.join(
+        texto = utils.functions.strings.join(
             (', ', ' e '), (101, 102, 122, 231))
         return texto
 
