@@ -1,7 +1,7 @@
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def referencia_deposito(cursor, deposito='A00', modelo, todos=True):
+def referencia_deposito(cursor, deposito, modelo, todos=True):
     filtro_todos = ''
     if not todos:  # apenas aqueles que tem alguma quantidade
         filtro_todos = ''' --
