@@ -1,7 +1,7 @@
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def referencia_deposito(cursor, deposito, modelo, todos=True):
+def referencia_deposito(cursor, deposito='A00', modelo, todos=True):
     filtro_todos = ''
     if not todos:  # apenas aqueles que tem alguma quantidade
         filtro_todos = ''' --
@@ -26,12 +26,12 @@ def referencia_deposito(cursor, deposito, modelo, todos=True):
         )
 
     filtro_deposito = ''
-    if deposito is not None and deposito != '-':
-        filtro_deposito = '''--
-            AND d.CODIGO_DEPOSITO = '{deposito}'
-        '''.format(
-            deposito=deposito,
-        )
+    if deposito is not None and deposito != '':
+        if deposito == 'A00':
+            filtro_deposito = "AND d.CODIGO_DEPOSITO IN (101, 102, 122, 231)"
+        else:
+            filtro_deposito = "AND d.CODIGO_DEPOSITO = '{deposito}'".format(
+                deposito=deposito)
 
     sql = '''
         SELECT
@@ -62,7 +62,6 @@ def referencia_deposito(cursor, deposito, modelo, todos=True):
             FROM BASI_010 rtc, BASI_205 d
             WHERE 1=1
               AND rtc.NIVEL_ESTRUTURA = 1
-              AND d.CODIGO_DEPOSITO IN (101, 102, 231)
               AND rtc.GRUPO_ESTRUTURA < 'C0000'
               {filtro_deposito} -- filtro_deposito
               {filtro_modelo} -- filtro_modelo
