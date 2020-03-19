@@ -54,7 +54,7 @@ class ReferenciaDeposito(View):
                 'posterior': posterior,
             })
 
-        data = queries.referencia_deposito(cursor, deposito, modelo)
+        data = queries.referencia_deposito(cursor, modelo, deposito=deposito)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
