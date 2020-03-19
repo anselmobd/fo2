@@ -50,7 +50,7 @@ def estoque_na_data(
     filtro_deposito = ''
     if deposito is not None and deposito != '':
         if deposito == 'A00':
-            filtro_deposito = "AND e.deposito IN (101, 102, 231)"
+            filtro_deposito = "AND e.deposito IN (101, 102, 122, 231)"
         else:
             filtro_deposito = "AND e.deposito = '{deposito}'".format(
                 deposito=deposito)
