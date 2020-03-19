@@ -134,7 +134,7 @@ class ReferenciasEstoqueForm(
         O2FieldModeloForm):
 
     CHOICES = geral.functions.depositos_choices(
-        cod_todos='-', only=(101, 102, 122, 231))
+        cod_todos='A00', only=(101, 102, 122, 231))
     deposito = forms.ChoiceField(
         label='Depósito',
         choices=CHOICES, initial='-')
