@@ -236,12 +236,8 @@ class EstoqueNaDataForm(forms.Form):
         help_text='Padrão: início do dia',
         widget=forms.TimeInput(attrs={'type': 'time'}))
 
-    CHOICES = [
-        ('A00', '101, 102 e 231'),
-        ('101', '101-PA ATACADO PRIMEIRA QUALIDADE'),
-        ('102', '102-PA VAREJO PRIMEIRA QUALIDADE'),
-        ('231', '231-MAT PRIMA ESTOQUE'),
-    ]
+    CHOICES = geral.functions.depositos_choices(
+        cod_only='A00', only=(101, 102, 122, 231))
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
         choices=CHOICES, initial='')
