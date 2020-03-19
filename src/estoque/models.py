@@ -3,6 +3,15 @@ from pprint import pprint
 from django.db import models
 
 
+class MetaPermissions(models.Model):
+
+    class Meta:
+        managed = False
+        permissions = (
+            ("can_transferencia", "Pode fazer transferência entre depósitos"),
+        )
+
+
 class TipoMovStq(models.Model):
     codigo = models.CharField(
         max_length=100, unique=True, default="-",
