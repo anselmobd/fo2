@@ -8,4 +8,5 @@ from .mostra_estoque import *
 from .posicao_estoque import *
 from .referencia_deposito import *
 from .refs_com_movimento import *
+from .transferencia import *
 from .valor_mp import *
