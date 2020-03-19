@@ -47,4 +47,7 @@ urlpatterns = [
         r'(?P<tam>[^/]+)/(?P<deposito>[^/]+)/$',
         views.ItemNoTempo.as_view(), name='item_no_tempo__get'),
 
+    url(r'^transferencia/$', views.ConfrontaEstoque.as_view(),
+        name='transferencia'),
+
 ]
