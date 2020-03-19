@@ -73,7 +73,7 @@ class MostraEstoque(View):
             ref_modelo = re.search(r"\d+", ref)[0].lstrip('0')
 
             get_prox = False
-            lista = queries.referencia_deposito(cursor, deposito, ref_modelo)
+            lista = queries.referencia_deposito(cursor, ref_modelo, deposito=deposito)
             for row in lista:
                 item = row['ref']
                 if get_prox:
