@@ -3,7 +3,7 @@ from pprint import pprint
 from django.db import models
 
 
-class MetaPermissions(models.Model):
+class EstoquePermissions(models.Model):
 
     class Meta:
         managed = False
