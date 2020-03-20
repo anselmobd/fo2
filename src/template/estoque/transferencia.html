@@ -15,24 +15,13 @@
     {{ form.as_p }}
     <input type="submit" name="verifique" value="Verifique"/>
 </form>
-{% if deposito %}
-  <h4>Depósito: {{ deposito }}</h4>
-{% endif %}
+<h4>Tipo de produto: PA/PG/PB</h4>
 {% if nivel %}
-  <h4>Tipo de produto: PA/PG/PB</h4>
-  <h4>Nível: {{ nivel }}</h4>
-{% endif %}
-{% if ref %}
-  <h4>Referência: {{ ref }}</h4>
-{% endif %}
-{% if modelo %}
-  <h4>Modelo: {{ modelo }}</h4>
-{% endif %}
-{% if tam %}
-  <h4>Tamanho: {{ tam }}</h4>
-{% endif %}
-{% if cor %}
-  <h4>Cor: {{ cor }}</h4>
+  {% for field in form %}
+  <h4>
+    {{field.label}}: {{field.value}}
+  </h4>
+  {% endfor %}
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
