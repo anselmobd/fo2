@@ -1,0 +1,14 @@
+{% for input in form %}
+<h{{h}}>
+  {{input.label}}:
+  {% if input.field.widget.input_type == 'select' %}
+    {% for choice in input.field.choices %}
+      {% if choice.0|safe == input.value|safe %}
+        {{choice.1}}
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    {{input.value}}
+  {% endif %}
+</h{{h}}>
+{% endfor %}
