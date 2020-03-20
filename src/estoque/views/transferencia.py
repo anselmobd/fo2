@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views import View
 
 from geral.functions import has_permission
+from utils.functions.views import cleanned_fields_to_context
 
 from estoque import forms
 from estoque import queries
@@ -15,6 +16,8 @@ class Transferencia(View):
     Form_class = forms.TransferenciaForm
     template_name = 'estoque/transferencia.html'
     title_name = 'Transferência entre depósitos'
+
+    cleanned_fields_to_context = cleanned_fields_to_context
 
     def __init__(self):
         self.context = {'titulo': self.title_name}
@@ -46,6 +49,8 @@ class Transferencia(View):
     def post(self, request, *args, **kwargs):
         form = self.Form_class(request.POST)
         if form.is_valid():
+            self.cleanned_fields_to_context()
+            self.context['form'] = self.Form_class(self.context)
             nivel = form.cleaned_data['nivel']
             ref = form.cleaned_data['ref']
             tam = form.cleaned_data['tam']
