@@ -22,44 +22,23 @@ class Transferencia(View):
     def __init__(self):
         self.context = {'titulo': self.title_name}
 
-    def mount_context(
-            self, cursor, nivel, ref, tam, cor,
-            deposito_origem, deposito_destino):
+    def mount_context(self):
+        cursor = connections['so'].cursor()
 
-        if len(ref) == 0:
+        if self.context['ref'] == 0:
             self.context.update({'erro': 'Digite algo em Referência'})
             return
-
-        self.context.update({
-            'nivel': nivel,
-            'ref': ref,
-            'tam': tam,
-            'cor': cor,
-            'deposito_origem': deposito_origem,
-            'deposito_destino': deposito_destino,
-        })
 
         return
 
     def get(self, request, *args, **kwargs):
-        form = self.Form_class()
-        self.context['form'] = form
+        self.context['form'] = self.Form_class()
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        form = self.Form_class(request.POST)
-        if form.is_valid():
+        self.context['form'] = self.Form_class(request.POST)
+        if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
             self.context['form'] = self.Form_class(self.context)
-            nivel = form.cleaned_data['nivel']
-            ref = form.cleaned_data['ref']
-            tam = form.cleaned_data['tam']
-            cor = form.cleaned_data['cor']
-            deposito_origem = form.cleaned_data['deposito_origem']
-            deposito_destino = form.cleaned_data['deposito_destino']
-            cursor = connections['so'].cursor()
-            self.mount_context(
-                cursor, nivel, ref, tam, cor,
-                deposito_origem, deposito_destino)
-        self.context['form'] = form
+            self.mount_context()
         return render(request, self.template_name, self.context)
