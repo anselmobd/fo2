@@ -23,12 +23,14 @@ from estoque.functions import (
 
 class ItemNoTempo(View):
 
+    Form_class = forms.ItemNoTempoForm
+    template_name = 'estoque/item_no_tempo.html'
+    title_name = 'Item no tempo'
+
     cleanned_fields_to_context = cleanned_fields_to_context
 
     def __init__(self):
-        self.Form_class = forms.ItemNoTempoForm
-        self.template_name = 'estoque/item_no_tempo.html'
-        self.context = {'titulo': 'Item no tempo'}
+        self.context = {'titulo': self.title_name}
 
     def mount_context(self):
         cursor = connections['so'].cursor()
