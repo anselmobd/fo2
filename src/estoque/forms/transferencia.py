@@ -42,6 +42,10 @@ class TransferenciaForm(forms.Form):
         label='Tamanho', required=True, min_length=1, max_length=3,
         widget=forms.TextInput(attrs=string_upper_attrs))
 
+    qtd = forms.IntegerField(
+        label='Quantidade',
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
     CHOICES = geral.functions.depositos_choices(only=(101, 102, 122, 231))
 
     deposito_origem = forms.ChoiceField(
@@ -60,3 +64,10 @@ class TransferenciaForm(forms.Form):
 
     def clean_tam(self):
         return self.cleaned_data['tam'].upper()
+
+    def clean_qtd(self):
+        qtd = self.cleaned_data['qtd']
+        if qtd < 1 or qtd > 200:
+            raise forms.ValidationError(
+                    "Quantidade deve ser de 1 a 200.")
+        return qtd
