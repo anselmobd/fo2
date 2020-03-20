@@ -15,7 +15,9 @@ class Transferencia(View):
     template_name = 'estoque/transferencia.html'
     title_name = 'Transferência entre depósitos'
 
-    def mount_context(self, request, cursor, ref, tam, cor, deposito):
+    def mount_context(
+            self, request, cursor, nivel, ref, tam, cor,
+            deposito_origem, deposito_destino):
         context = {}
 
         if len(ref) == 0:
@@ -23,11 +25,12 @@ class Transferencia(View):
             return context
 
         context.update({
-            'nivel': 1,
+            'nivel': nivel,
+            'ref': ref,
             'tam': tam,
             'cor': cor,
-            'deposito': deposito,
-            'botao': botao,
+            'deposito_origem': deposito_origem,
+            'deposito_destino': deposito_destino,
         })
 
         return context
@@ -42,12 +45,15 @@ class Transferencia(View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
+            nivel = form.cleaned_data['nivel']
             ref = form.cleaned_data['ref']
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
-            deposito = form.cleaned_data['deposito']
+            deposito_origem = form.cleaned_data['deposito_origem']
+            deposito_destino = form.cleaned_data['deposito_destino']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                request, cursor, ref, tam, cor, deposito))
+                request, cursor, nivel, ref, tam, cor,
+                deposito_origem, deposito_destino))
         context['form'] = form
         return render(request, self.template_name, context)
