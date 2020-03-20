@@ -23,7 +23,7 @@ class Transferencia(View):
         self.context = {'titulo': self.title_name}
 
     def mount_context(
-            self, request, cursor, nivel, ref, tam, cor,
+            self, cursor, nivel, ref, tam, cor,
             deposito_origem, deposito_destino):
 
         if len(ref) == 0:
@@ -59,7 +59,7 @@ class Transferencia(View):
             deposito_destino = form.cleaned_data['deposito_destino']
             cursor = connections['so'].cursor()
             self.mount_context(
-                request, cursor, nivel, ref, tam, cor,
+                cursor, nivel, ref, tam, cor,
                 deposito_origem, deposito_destino)
         self.context['form'] = form
         return render(request, self.template_name, self.context)
