@@ -8,6 +8,7 @@ from django.views import View
 
 from utils.views import totalize_data
 from utils.functions import untuple_keys_concat
+from utils.functions.views import cleanned_fields_to_context
 
 import lotes.models
 import lotes.queries.pedido
@@ -21,6 +22,8 @@ from estoque.functions import (
 
 
 class ItemNoTempo(View):
+
+    cleanned_fields_to_context = cleanned_fields_to_context
 
     def __init__(self):
         self.Form_class = forms.ItemNoTempoForm
@@ -331,10 +334,6 @@ class ItemNoTempo(View):
         self.context.update({
             'estoque_futuro': estoque - qtd_ped + qtd_op_cd + qtd_op_prod
             })
-
-    def cleanned_fields_to_context(self):
-        for field in self.context['form'].fields:
-            self.context[field] = self.context['form'].cleaned_data[field]
 
     def get(self, request, *args, **kwargs):
         if 'deposito' in kwargs:
