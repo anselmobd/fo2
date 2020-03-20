@@ -11,20 +11,23 @@ from estoque import queries
 
 
 class Transferencia(View):
+
     Form_class = forms.TransferenciaForm
     template_name = 'estoque/transferencia.html'
     title_name = 'Transferência entre depósitos'
 
+    def __init__(self):
+        self.context = {'titulo': self.title_name}
+
     def mount_context(
             self, request, cursor, nivel, ref, tam, cor,
             deposito_origem, deposito_destino):
-        context = {}
 
         if len(ref) == 0:
-            context.update({'erro': 'Digite algo em Referência'})
-            return context
+            self.context.update({'erro': 'Digite algo em Referência'})
+            return
 
-        context.update({
+        self.context.update({
             'nivel': nivel,
             'ref': ref,
             'tam': tam,
@@ -33,16 +36,14 @@ class Transferencia(View):
             'deposito_destino': deposito_destino,
         })
 
-        return context
+        return
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
         form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
             nivel = form.cleaned_data['nivel']
@@ -52,8 +53,8 @@ class Transferencia(View):
             deposito_origem = form.cleaned_data['deposito_origem']
             deposito_destino = form.cleaned_data['deposito_destino']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(
+            self.mount_context(
                 request, cursor, nivel, ref, tam, cor,
-                deposito_origem, deposito_destino))
-        context['form'] = form
-        return render(request, self.template_name, context)
+                deposito_origem, deposito_destino)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
