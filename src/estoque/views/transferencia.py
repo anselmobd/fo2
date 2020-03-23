@@ -25,8 +25,12 @@ class Transferencia(View):
     def mount_context(self):
         cursor = connections['so'].cursor()
 
-        if self.context['ref'] == 0:
-            self.context.update({'erro': 'Digite algo em Referência'})
+        produto = queries.get_preco_medio_niv_ref_cor_tam(
+            cursor, *(self.context[f] for f in [
+                'nivel', 'ref', 'cor', 'tam']))
+        pprint(produto)
+        if len(produto) == 0:
+            self.context.update({'erro': 'Erro: Item não encontrado'})
             return
 
         return
