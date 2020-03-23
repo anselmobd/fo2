@@ -23,10 +23,10 @@ class Transferencia(View):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        self.cursor = connections['so'].cursor()
 
         produto = queries.get_preco_medio_niv_ref_cor_tam(
-            cursor, *(self.context[f] for f in [
+            self.cursor, *(self.context[f] for f in [
                 'nivel', 'ref', 'cor', 'tam']))
         pprint(produto)
         if len(produto) == 0:
