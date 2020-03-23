@@ -22,6 +22,15 @@ class Transferencia(View):
     def __init__(self):
         self.context = {'titulo': self.title_name}
 
+    def get_estoque(self, deposito_field):
+        l_estoque = queries.get_estoque_dep_niv_ref_cor_tam(
+            self.cursor, *(self.context[f] for f in [
+                deposito_field, 'nivel', 'ref', 'cor', 'tam']))
+        if len(l_estoque) == 0:
+            return 0
+        else:
+            return l_estoque[0]['estoque']
+
     def mount_context(self):
         self.cursor = connections['so'].cursor()
 
@@ -32,6 +41,11 @@ class Transferencia(View):
         if len(produto) == 0:
             self.context.update({'erro': 'Erro: Item não encontrado'})
             return
+
+        self.context.update({'estoque_origem': self.get_estoque(
+            'deposito_origem')})
+        self.context.update({'estoque_destino': self.get_estoque(
+            'deposito_destino')})
 
         return
 
