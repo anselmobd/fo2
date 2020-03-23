@@ -42,10 +42,14 @@ class Transferencia(View):
             self.context.update({'erro': 'Erro: Item não encontrado'})
             return
 
-        self.context.update({'estoque_origem': self.get_estoque(
-            'deposito_origem')})
-        self.context.update({'estoque_destino': self.get_estoque(
-            'deposito_destino')})
+        estoque_origem = self.get_estoque('deposito_origem')
+        estoque_destino = self.get_estoque('deposito_destino')
+        self.context.update({'estoque_origem': estoque_origem})
+        self.context.update({'estoque_destino': estoque_destino})
+        self.context.update(
+            {'novo_estoque_origem': estoque_origem - self.context['qtd']})
+        self.context.update(
+            {'novo_estoque_destino': estoque_destino + self.context['qtd']})
 
         return
 
