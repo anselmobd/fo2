@@ -50,11 +50,11 @@ class TransferenciaForm(forms.Form):
 
     deposito_origem = forms.ChoiceField(
         label='Depósito de origem', required=True,
-        choices=CHOICES, initial='')
+        choices=CHOICES, initial='231')
 
     deposito_destino = forms.ChoiceField(
         label='Depósito de destino', required=True,
-        choices=CHOICES, initial='')
+        choices=CHOICES, initial='122')
 
     def clean_ref(self):
         return self.cleaned_data['ref'].upper().zfill(5)
