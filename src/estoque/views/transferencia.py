@@ -11,6 +11,26 @@ from estoque import forms
 from estoque import queries
 
 
+class Transfere():
+
+    def __init__(
+            self, nivel, ref, tam, cor, qtd,
+            deposito_origem, deposito_destino):
+        self.nivel = nivel
+        self.ref = ref
+        self.tam = tam
+        self.cor = cor
+        self.qtd = qtd
+        self.deposito_origem = deposito_origem
+        self.deposito_destino = deposito_destino
+        self.item = f'{nivel}.{ref}.{tam}.{cor}'
+        if self.deposito_origem == self.deposito_destino:
+            raise ValueError('Depósitos devem ser diferentes')
+
+    def exec(self):
+        pass
+
+
 class Transferencia(View):
 
     Form_class = forms.TransferenciaForm
