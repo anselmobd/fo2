@@ -59,7 +59,11 @@ class Transferencia(View):
                 'nivel', 'ref', 'cor', 'tam']))
         pprint(produto)
         if len(produto) == 0:
-            self.context.update({'erro': 'Erro: Item não encontrado'})
+            self.context.update({'erro': 'Item não encontrado.'})
+            return
+
+        if self.context['deposito_origem'] == self.context['deposito_destino']:
+            self.context.update({'erro': 'Depósitos devem ser diferentes.'})
             return
 
         estoque_origem = self.get_estoque('deposito_origem')
@@ -71,7 +75,24 @@ class Transferencia(View):
         self.context.update(
             {'novo_estoque_destino': estoque_destino + self.context['qtd']})
 
-        return
+        if 'executa' in self.request.POST:
+            print('executa')
+            try:
+                transf = Transfere(
+                    **{f: self.context[f] for f in [
+                        'nivel', 'ref', 'tam', 'cor', 'qtd',
+                        'deposito_origem', 'deposito_destino']}
+                )
+                transf.exec()
+            except Exception as e:
+                pprint(e)
+                self.context.update({
+                    'erro': f'Não foi possível executar a transferência ({e}).'
+                })
+                return
+            self.context.update({
+                'sucesso': 'Transferência executada.'
+            })
 
     def get(self, request, *args, **kwargs):
         self.context['form'] = self.Form_class()
@@ -82,5 +103,6 @@ class Transferencia(View):
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
             self.context['form'] = self.Form_class(self.context)
+            self.request = request
             self.mount_context()
         return render(request, self.template_name, self.context)
