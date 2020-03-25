@@ -3,9 +3,9 @@ from pprint import pprint
 
 from django.db import connections
 
+import estoque.functions
 from estoque import queries
 from estoque.classes import TransacoesDeAjuste
-from estoque.functions.base import transfo2_num_doc
 
 
 def ajuste_por_inventario(
@@ -47,7 +47,7 @@ def ajuste_por_inventario(
     tm = datetime.datetime.strptime(hora, '%Hh%M').time()
     infos['hora'] = tm
 
-    num_doc = transfo2_num_doc(dt, tm)
+    num_doc = estoque.functions.transfo2_num_doc(dt, tm)
     infos['num_doc'] = num_doc
 
     infos['delete'] = delete
