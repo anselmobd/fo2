@@ -56,14 +56,19 @@ class Transfere():
         else:
             return l_estoque[0]['estoque']
 
-    def valid_transacao(self, codigo, descricao):
+    def valid_transacao(self, codigo, ent_sai, descricao):
         try:
             tipo_trans = systextil.models.TipoTransacao.objects.get(
                 codigo_transacao=codigo)
         except systextil.models.TipoTransacao.DoesNotExist as e:
             raise ValueError(
-                f'Transação de {descricao} "{codigo}" inválida '
-                'no tipo de movimento de estoque "TRANSF"')
+                f'Não encontrada transação de {descricao} '
+                f'"{codigo}" do tipo de movimento de estoque "TRANSF".')
+        if tipo_trans.entrada_saida not in ent_sai:
+            raise ValueError(
+                f'Transação de {descricao} "{codigo}" '
+                'do tipo de movimento de estoque "TRANSF" é do '
+                'tipo da operação errado.')
 
     def valid_configuracao(self):
         try:
@@ -72,8 +77,8 @@ class Transfere():
             raise ValueError(
                 'Tipo de movimento de estoque "TRANSF" não cadastrado.')
 
-        self.valid_transacao(tip_mov.trans_saida, 'saída')
-        self.valid_transacao(tip_mov.trans_entrada, 'entrada')
+        self.valid_transacao(tip_mov.trans_saida, 'ST', 'saída')
+        self.valid_transacao(tip_mov.trans_entrada, 'E', 'entrada')
 
     def exec(self):
         self.valid_configuracao()
