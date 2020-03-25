@@ -6,8 +6,8 @@ from base.models import Colaborador
 from systextil.models import Usuario as S_Usuario
 
 
-def insert_transacao_ajuste(
-        cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
+def insert_transacao(
+        cursor, deposito, nivel, ref, tam, cor, num_doc, trans, es, qtd,
         preco_medio, usuario, ip):
 
     try:
@@ -80,7 +80,7 @@ def insert_transacao_ajuste(
         , TIPO_SPED_TRANSACAO
         ) VALUES (
           {deposito}  -- CODIGO_DEPOSITO
-        , '1'  -- NIVEL_ESTRUTURA
+        , '{nivel}'  -- NIVEL_ESTRUTURA
         , '{ref}'  -- GRUPO_ESTRUTURA
         , '{tam}'  -- SUBGRUPO_ESTRUTURA
         , '{cor}'  -- ITEM_ESTRUTURA
@@ -97,7 +97,7 @@ def insert_transacao_ajuste(
         , {trans}  -- CODIGO_TRANSACAO
         , '{es}'  -- ENTRADA_SAIDA
         , 0  -- CENTRO_CUSTO
-        , {ajuste}  -- QUANTIDADE
+        , {qtd}  -- QUANTIDADE
         , 0  -- SALDO_FISICO
         , {preco_medio}  -- VALOR_MOVIMENTO_UNITARIO
         , 0  -- 2  -- VALOR_CONTABIL_UNITARIO
@@ -123,7 +123,7 @@ def insert_transacao_ajuste(
         , 0  -- VALOR_MOVTO_UNIT_ESTIMADO
         , 0  -- PRECO_MEDIO_UNIT_ESTIMADO
         , 0  -- SALDO_FINANCEIRO_ESTIMADO
-        , {ajuste*preco_medio}  -- VALOR_TOTAL
+        , {qtd*preco_medio}  -- VALOR_TOTAL
         , 0  -- PROJETO
         , 0  -- SUBPROJETO
         , 0  -- SERVICO
@@ -142,3 +142,12 @@ def insert_transacao_ajuste(
         return True
     except Exception:
         return False
+
+
+def insert_transacao_ajuste(
+        cursor, deposito, ref, tam, cor, num_doc, trans, es, ajuste,
+        preco_medio, usuario, ip):
+
+    return insert_transacao(
+        cursor, deposito, 1, ref, tam, cor, num_doc, trans, es, ajuste,
+        preco_medio, usuario, ip)
