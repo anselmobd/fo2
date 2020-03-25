@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from estoque import queries
+from estoque import models
 
 
 class Transfere():
@@ -53,6 +54,14 @@ class Transfere():
         else:
             return l_estoque[0]['estoque']
 
+    def valid_configuracao(self):
+        try:
+            tip_mov = models.TipoMovStq.objects.get(codigo='TRANSF')
+        except models.TipoMovStq.DoesNotExist as e:
+            raise ValueError(
+                'Tipo de movimento de estoque "TRANSF" não cadastrado')
+
+
     def exec(self):
-        raise ValueError('SQL erro')
-        pass
+        self.valid_configuracao()
+        print(tip_mov.trans_entrada)
