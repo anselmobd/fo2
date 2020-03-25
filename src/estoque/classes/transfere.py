@@ -56,6 +56,15 @@ class Transfere():
         else:
             return l_estoque[0]['estoque']
 
+    def valid_transacao(self, codigo, descricao):
+        try:
+            tipo_trans = systextil.models.TipoTransacao.objects.get(
+                codigo_transacao=codigo)
+        except systextil.models.TipoTransacao.DoesNotExist as e:
+            raise ValueError(
+                f'Transação de {descricao} "{codigo}" inválida '
+                'no tipo de movimento de estoque "TRANSF"')
+
     def valid_configuracao(self):
         try:
             tip_mov = models.TipoMovStq.objects.get(codigo='TRANSF')
@@ -68,9 +77,16 @@ class Transfere():
                 codigo_transacao=tip_mov.trans_saida)
         except systextil.models.TipoTransacao.DoesNotExist as e:
             raise ValueError(
-                'Transação de saída inválida no tipo de movimento de '
-                'estoque "TRANSF"')
+                f'Transação de saída "{tip_mov.trans_saida}" inválida '
+                'no tipo de movimento de estoque "TRANSF"')
+
+        try:
+            tipo_trans = systextil.models.TipoTransacao.objects.get(
+                codigo_transacao=tip_mov.trans_entrada)
+        except systextil.models.TipoTransacao.DoesNotExist as e:
+            raise ValueError(
+                f'Transação de entrada "{tip_mov.trans_entrada}" inválida '
+                'no tipo de movimento de estoque "TRANSF"')
 
     def exec(self):
         self.valid_configuracao()
-        print(tip_mov.trans_entrada)
