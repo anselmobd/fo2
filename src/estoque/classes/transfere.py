@@ -67,11 +67,14 @@ class Transfere():
             raise ValueError(
                 f'Não encontrada transação de {descricao} '
                 f'"{codigo}" do tipo de movimento de estoque "TRANSF".')
+
         if tipo_trans.entrada_saida not in ent_sai:
             raise ValueError(
                 f'Transação de {descricao} "{codigo}" '
                 'do tipo de movimento de estoque "TRANSF" é do '
                 'tipo da operação errado.')
+
+        return tipo_trans.entrada_saida
 
     def valid_configuracao(self):
         try:
@@ -80,8 +83,13 @@ class Transfere():
             raise ValueError(
                 'Tipo de movimento de estoque "TRANSF" não cadastrado.')
 
-        self.valid_transacao(tip_mov.trans_saida, 'ST', 'saída')
-        self.valid_transacao(tip_mov.trans_entrada, 'E', 'entrada')
+        self.trans_saida = tip_mov.trans_saida
+        self.trans_entrada = tip_mov.trans_entrada
+
+        self.trans_saida_e_s = self.valid_transacao(
+            tip_mov.trans_saida, 'ST', 'saída')
+        self.trans_entrada_e_s = self.valid_transacao(
+            tip_mov.trans_entrada, 'E', 'entrada')
 
     def exec(self):
         pass
