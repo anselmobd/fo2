@@ -1,5 +1,7 @@
 from pprint import pprint
 
+import systextil.models
+
 from estoque import queries
 from estoque import models
 
@@ -61,6 +63,13 @@ class Transfere():
             raise ValueError(
                 'Tipo de movimento de estoque "TRANSF" não cadastrado')
 
+        try:
+            tipo_trans = systextil.models.TipoTransacao.objects.get(
+                codigo_transacao=tip_mov.trans_saida)
+        except systextil.models.TipoTransacao.DoesNotExist as e:
+            raise ValueError(
+                'Transação de saída inválida no tipo de movimento de '
+                'estoque "TRANSF"')
 
     def exec(self):
         self.valid_configuracao()
