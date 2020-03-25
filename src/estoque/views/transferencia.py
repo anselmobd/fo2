@@ -62,6 +62,7 @@ class Transfere():
             return l_estoque[0]['estoque']
 
     def exec(self):
+        raise ValueError('SQL erro')
         pass
 
 
@@ -88,7 +89,8 @@ class Transferencia(View):
             )
         except Exception as e:
             self.context.update({
-                'erro': f'Transferência inválida ({e}).'
+                'erro_input': True,
+                'erro_msg': e,
             })
             return
 
@@ -104,11 +106,12 @@ class Transferencia(View):
                 transf.exec()
             except Exception as e:
                 self.context.update({
-                    'erro_exec': e,
+                    'erro_exec': True,
+                    'erro_msg': e,
                 })
                 return
             self.context.update({
-                'sucesso': 'Transferência executada.'
+                'sucesso_msg': 'Transferência executada.'
             })
 
     def get(self, request, *args, **kwargs):
