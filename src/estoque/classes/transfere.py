@@ -11,6 +11,8 @@ class Transfere():
     def __init__(
             self, cursor, nivel, ref, tam, cor, qtd,
             deposito_origem, deposito_destino):
+        self.can_exec = False
+
         self.cursor = cursor
         self.nivel = nivel
         self.ref = ref
@@ -26,6 +28,7 @@ class Transfere():
         self.valid_configuracao()
 
         self.calc_vars()
+        self.can_exec = True
 
     def initial_vars(self):
         self.item = f'{self.nivel}.{self.ref}.{self.tam}.{self.cor}'
@@ -100,6 +103,10 @@ class Transfere():
             self.trans_entrada, 'E', 'entrada')
 
     def exec(self):
+        if not self.can_exec:
+            raise ValueError(
+                'Execução impedida por algum erro de inicialização.')
+
         return
         if not queries.insert_transacao_ajuste(
                 self.cursor,
