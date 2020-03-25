@@ -7,7 +7,7 @@ from django.views import View
 from utils.functions.views import cleanned_fields_to_context
 
 from estoque import forms
-from estoque import functions
+from estoque import classes
 
 
 class Transferencia(View):
@@ -25,7 +25,7 @@ class Transferencia(View):
         self.cursor = connections['so'].cursor()
 
         try:
-            transf = functions.Transfere(
+            transf = classes.Transfere(
                 self.cursor,
                 *(self.context[f] for f in [
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
