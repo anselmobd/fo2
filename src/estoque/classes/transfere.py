@@ -45,7 +45,7 @@ class Transfere():
 
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
-            raise ValueError('Depósitos devem ser diferentes')
+            raise ValueError('Depósitos devem ser diferentes.')
 
     def get_estoque(self, deposito_field):
         l_estoque = queries.get_estoque_dep_niv_ref_cor_tam(
@@ -70,7 +70,7 @@ class Transfere():
             tip_mov = models.TipoMovStq.objects.get(codigo='TRANSF')
         except models.TipoMovStq.DoesNotExist as e:
             raise ValueError(
-                'Tipo de movimento de estoque "TRANSF" não cadastrado')
+                'Tipo de movimento de estoque "TRANSF" não cadastrado.')
 
         self.valid_transacao(tip_mov.trans_saida, 'saída')
         self.valid_transacao(tip_mov.trans_entrada, 'entrada')
