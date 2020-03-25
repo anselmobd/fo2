@@ -48,9 +48,13 @@ class TipoTransacao(models.Model):
     descricao = models.CharField(
         max_length=20,
         verbose_name='Descrição')
+    entrada_saida = models.CharField(
+        max_length=1,
+        verbose_name='Entrada/Saída')
 
     def __str__(self):
-        return '{} - {}'.format(self.codigo_transacao, self.descricao)
+        return (f'{self.codigo_transacao} ({self.entrada_saida}) - '
+                f'{self.descricao}')
 
     class Meta:
         managed = False
