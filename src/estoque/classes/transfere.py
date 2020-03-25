@@ -36,6 +36,14 @@ class Transfere():
         self.novo_estoque_origem = self.estoque_origem - self.qtd
         self.novo_estoque_destino = self.estoque_destino + self.qtd
 
+        produto = queries.get_preco_medio_niv_ref_cor_tam(
+            self.cursor, self.nivel, self.ref, self.cor, self.tam)
+        try:
+            self.preco_medio = produto[0]['preco_medio']
+        except Exception:
+            raise ValueError(
+                f'Não encontrado o preço médio do item {self.item}.')
+
     def valid_entries(self):
         self.valid_item()
         self.valid_deps()
