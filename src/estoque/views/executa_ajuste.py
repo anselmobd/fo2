@@ -4,8 +4,8 @@ from django.http import JsonResponse
 
 from utils.views import request_hash_trail
 
+import estoque.classes
 from estoque import queries
-from estoque.classes import TransacoesDeAjuste
 
 
 @permission_required('base.can_adjust_stock')
@@ -51,7 +51,7 @@ def executa_ajuste(request, **kwargs):
         return JsonResponse(data, safe=False)
 
     sinal = 1 if ajuste > 0 else -1
-    transacoes = TransacoesDeAjuste()
+    transacoes = estoque.classes.TransacoesDeAjuste()
     trans, es, descr = transacoes.get(sinal)
 
     trail_check = request_hash_trail(

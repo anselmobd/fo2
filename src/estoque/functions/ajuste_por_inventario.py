@@ -3,9 +3,9 @@ from pprint import pprint
 
 from django.db import connections
 
+import estoque.classes
 import estoque.functions
 from estoque import queries
-from estoque.classes import TransacoesDeAjuste
 
 
 def ajuste_por_inventario(
@@ -109,7 +109,7 @@ def ajuste_por_inventario(
     if ajuste == 0:
         return True, 'Nada a fazer', infos
 
-    transacoes = TransacoesDeAjuste()
+    transacoes = estoque.classes.TransacoesDeAjuste()
     trans, es, descr = transacoes.get(sinal)
     infos['trans'] = trans
     infos['es'] = es

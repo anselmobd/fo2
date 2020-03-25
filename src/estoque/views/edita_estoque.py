@@ -14,9 +14,9 @@ from django.views import View
 from geral.functions import request_user
 from utils.functions import get_client_ip
 
+import estoque.classes
 from estoque import forms
 from estoque import queries
-from estoque.classes import TransacoesDeAjuste
 from estoque.functions import (
     transfo2_num_doc,
     transfo2_num_doc_dt,
@@ -31,7 +31,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         self.template_name = 'estoque/edita_estoque.html'
         self.title_name = 'Ajuste de estoque'
 
-        self.transacoes = TransacoesDeAjuste()
+        self.transacoes = estoque.classes.TransacoesDeAjuste()
 
     def start(self):
         self.context = {'titulo': self.title_name}
