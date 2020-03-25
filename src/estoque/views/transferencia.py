@@ -90,7 +90,6 @@ class Transferencia(View):
             self.context.update({
                 'erro': f'Transferência inválida ({e}).'
             })
-            raise
             return
 
         self.context.update({
@@ -105,7 +104,7 @@ class Transferencia(View):
                 transf.exec()
             except Exception as e:
                 self.context.update({
-                    'erro': f'Não foi possível executar a transferência ({e}).'
+                    'erro_exec': e,
                 })
                 return
             self.context.update({

@@ -7,7 +7,7 @@
 <style>
 {% include 'layout/simple_table.css' %}
 .qtd_old {
-  {% if request.POST.executa and not erro %}
+  {% if request.POST.executa and not erro_exec  %}
     color: darkgray;
     font-style: italic;
   {% else %}
@@ -16,7 +16,7 @@
   {% endif %}
 }
 .qtd_new {
-  {% if request.POST.executa and not erro %}
+  {% if request.POST.executa and not erro_exec %}
     color: darkblue;
     font-weight: bold;
   {% else %}
@@ -51,6 +51,9 @@
   {% if erro %}
     <h4 class="bad">Erro: {{ erro }}</h4>
   {% endif %}
+  {% if erro_exec %}
+    <h4 class="bad">Erro de execução: {{ erro_exec }}</h4>
+  {% endif %}
   {% if sucesso %}
     <h4 class="ok">Sucesso: {{ sucesso }}</h4>
   {% endif %}
@@ -64,17 +67,17 @@
       {% endif %}
       <h4>Estoque no depósito de origem:
         <span class='qtd_old'>{{ estoque_origem }}
-        {% if request.POST.analisa %}(atual){% endif %}</span>
+        {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
         <span class='arrow'>&rarr;</span>
         <span class='qtd_new'>{{ novo_estoque_origem }}
-        {% if not request.POST.analisa %}(atual){% endif %}</span>
+        {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
       </h4>
       <h4>Estoque no depósito de destino:
         <span class='qtd_old'>{{ estoque_destino }}
-        {% if request.POST.analisa %}(atual){% endif %}</span>
+        {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
         <span class='arrow'>&rarr;</span>
         <span class='qtd_new'>{{ novo_estoque_destino }}
-        {% if not request.POST.analisa %}(atual){% endif %}</span>
+        {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
       </h4>
     {% endif %}
   {% endif %}
