@@ -39,3 +39,21 @@ class TipoContaEstoque(HDoc001):
         app_label = 'systextil'
         db_table = "HDOC_001"
         verbose_name = "Tipo de conta de estoque"
+
+
+class TipoTransacao(models.Model):
+    codigo_transacao = models.IntegerField(
+        primary_key=True,
+        verbose_name='Código da transação')
+    descricao = models.CharField(
+        max_length=20,
+        verbose_name='Descrição')
+
+    def __str__(self):
+        return '{} - {}'.format(self.codigo_transacao, self.descricao)
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "ESTQ_005"
+        verbose_name = "Código de transação de estoque"
