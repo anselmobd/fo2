@@ -72,21 +72,8 @@ class Transfere():
             raise ValueError(
                 'Tipo de movimento de estoque "TRANSF" não cadastrado')
 
-        try:
-            tipo_trans = systextil.models.TipoTransacao.objects.get(
-                codigo_transacao=tip_mov.trans_saida)
-        except systextil.models.TipoTransacao.DoesNotExist as e:
-            raise ValueError(
-                f'Transação de saída "{tip_mov.trans_saida}" inválida '
-                'no tipo de movimento de estoque "TRANSF"')
-
-        try:
-            tipo_trans = systextil.models.TipoTransacao.objects.get(
-                codigo_transacao=tip_mov.trans_entrada)
-        except systextil.models.TipoTransacao.DoesNotExist as e:
-            raise ValueError(
-                f'Transação de entrada "{tip_mov.trans_entrada}" inválida '
-                'no tipo de movimento de estoque "TRANSF"')
+        self.valid_transacao(tip_mov.trans_saida, 'saída')
+        self.valid_transacao(tip_mov.trans_entrada, 'entrada')
 
     def exec(self):
         self.valid_configuracao()
