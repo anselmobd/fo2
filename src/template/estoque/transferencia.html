@@ -56,14 +56,27 @@
   {% endif %}
   {% if request.POST.analisa or request.POST.executa %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
-    {% if request.POST.analisa or erro %}
-      <h4>Movimentações a fazer.</h4>
-    {% else %}
-      <h4>Movimentações feitas!</h4>
+    {% if not erro %}
+      {% if request.POST.analisa %}
+        <h4>Movimentações a fazer.</h4>
+      {% else %}
+        <h4>Movimentações feitas!</h4>
+      {% endif %}
+      <h4>Estoque no depósito de origem:
+        <span class='qtd_old'>{{ estoque_origem }}
+        {% if request.POST.analisa %}(atual){% endif %}</span>
+        <span class='arrow'>&rarr;</span>
+        <span class='qtd_new'>{{ novo_estoque_origem }}
+        {% if not request.POST.analisa %}(atual){% endif %}</span>
+      </h4>
+      <h4>Estoque no depósito de destino:
+        <span class='qtd_old'>{{ estoque_destino }}
+        {% if request.POST.analisa %}(atual){% endif %}</span>
+        <span class='arrow'>&rarr;</span>
+        <span class='qtd_new'>{{ novo_estoque_destino }}
+        {% if not request.POST.analisa %}(atual){% endif %}</span>
+      </h4>
     {% endif %}
-    <h4>Estoque no depósito de origem: <span class='qtd_old'>{{ estoque_origem }}</span> <span class='arrow'>&rarr;</span> <span class='qtd_new'>{{ novo_estoque_origem }}</span></h4>
-    <h4>Estoque no depósito de destino: <span class='qtd_old'>{{ estoque_destino }}</span> <span class='arrow'>&rarr;</span> <span class='qtd_new'>{{ novo_estoque_destino }}</span></h4>
-    <h4><span class='qtd_atual'>(Quantidade atual)</span></h4>
   {% endif %}
   {% if request.POST.analisa and not erro %}
     <input class="btn btn-primary" type="submit" name="executa" value="Executa"/>
