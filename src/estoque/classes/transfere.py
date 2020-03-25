@@ -87,9 +87,24 @@ class Transfere():
         self.trans_entrada = tip_mov.trans_entrada
 
         self.trans_saida_e_s = self.valid_transacao(
-            tip_mov.trans_saida, 'ST', 'saída')
+            self.trans_saida, 'ST', 'saída')
         self.trans_entrada_e_s = self.valid_transacao(
-            tip_mov.trans_entrada, 'E', 'entrada')
+            self.trans_entrada, 'E', 'entrada')
 
     def exec(self):
-        pass
+        return
+        if not queries.insert_transacao_ajuste(
+                self.cursor,
+                self.deposito_origem,
+                self.nivel,
+                self.ref,
+                self.tam,
+                self.cor,
+                '1',  # self.num_doc,
+                self.trans_saida,
+                self.trans_saida_e_s,
+                self.qtd,
+                1,  # self.preco_medio
+                ):
+            raise ValueError(
+                'Erro ao inserir transação de saída.')
