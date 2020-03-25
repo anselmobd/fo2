@@ -21,7 +21,10 @@ class Transfere():
         self.deposito_destino = deposito_destino
 
         self.initial_vars()
+
         self.valid_entries()
+        self.valid_configuracao()
+
         self.calc_vars()
 
     def initial_vars(self):
@@ -81,4 +84,4 @@ class Transfere():
         self.valid_transacao(tip_mov.trans_entrada, 'E', 'entrada')
 
     def exec(self):
-        self.valid_configuracao()
+        pass
