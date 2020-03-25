@@ -119,7 +119,7 @@ class Transfere():
                 self.trans_saida,
                 self.trans_saida_e_s,
                 self.qtd,
-                1,  # self.preco_medio
+                self.preco_medio
                 ):
             raise ValueError(
                 'Erro ao inserir transação de saída.')
