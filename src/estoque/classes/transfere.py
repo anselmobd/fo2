@@ -1,6 +1,6 @@
 from pprint import pprint
 
-import systextil.models
+import systextil.models as sys_mod
 
 from estoque import queries
 from estoque import models
@@ -72,9 +72,9 @@ class Transfere():
 
     def valid_transacao(self, codigo, ent_sai, descricao):
         try:
-            tipo_trans = systextil.models.TipoTransacao.objects.get(
+            tipo_trans = sys_mod.TipoTransacao.objects.get(
                 codigo_transacao=codigo)
-        except systextil.models.TipoTransacao.DoesNotExist as e:
+        except sys_mod.TipoTransacao.DoesNotExist as e:
             raise ValueError(
                 f'Não encontrada transação de {descricao} '
                 f'"{codigo}" do tipo de movimento de estoque "TRANSF".')
