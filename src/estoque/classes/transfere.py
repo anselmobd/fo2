@@ -5,14 +5,11 @@ from django.db import connections
 import systextil.models as sys_mod
 import systextil.queries as sys_que
 
+import produto.functions as pro_fun
 import produto.models as pro_mod
 
 from estoque import queries
 from estoque import models
-
-
-def item_str(nivel, ref, tam, cor):
-    return f'{nivel}.{ref}.{tam}.{cor}'
 
 
 class objs_produto():
@@ -29,7 +26,7 @@ class objs_produto():
         s_produtos = sys_que.item(
             self.cursor, self.nivel, self.ref, self.tam, self.cor)
         if len(s_produtos) == 0:
-            item = item_str(self.nivel, self.ref, self.tam, self.cor)
+            item = pro_fun.item_str(self.nivel, self.ref, self.tam, self.cor)
             raise ValueError(f'Item {item} não encontrado.')
         s_produto = s_produtos[0]
 
@@ -64,7 +61,7 @@ class Transfere():
         self.deposito_origem = deposito_origem
         self.deposito_destino = deposito_destino
 
-        self.item = item_str(self.nivel, self.ref, self.tam, self.cor)
+        self.item = pro_fun.item_str(self.nivel, self.ref, self.tam, self.cor)
 
         self.valid_entries()
         self.valid_configuracao()
