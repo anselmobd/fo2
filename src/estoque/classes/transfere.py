@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.db import connections
+
 import systextil.models as sys_mod
 import systextil.queries as sys_que
 
@@ -7,6 +9,36 @@ import produto.models as pro_mod
 
 from estoque import queries
 from estoque import models
+
+
+class objs_produto():
+
+    def __init__(self, nivel, ref, tam, cor):
+        self.nivel = nivel
+        self.ref = ref
+        self.tam = tam
+        self.cor = cor
+
+        self.cursor = connections['so'].cursor()
+
+    def produto(self):
+        s_produtos = sys_que.item(
+            self.cursor, self.nivel, self.ref, self.tam, self.cor)
+        s_produto = s_produtos[0]
+
+        try:
+            produto = pro_mod.Produto.objects.get(referencia=self.ref)
+        except pro_mod.Produto.DoesNotExist as e:
+            produto = None
+
+        if produto is None:
+            produto = pro_mod.Produto(
+                referencia=self.ref,
+                descricao=s_produto['descr'],
+            )
+            produto.save()
+
+        return produto
 
 
 class Transfere():
@@ -60,21 +92,9 @@ class Transfere():
         if len(produto) == 0:
             raise ValueError(f'Item {self.item} não encontrado.')
 
-        s_produtos = sys_que.item(
-            self.cursor, self.nivel, self.ref, self.tam, self.cor)
-        s_produto = s_produtos[0]
+        produto = objs_produto(self.nivel, self.ref, self.tam, self.cor)
 
-        try:
-            produto = pro_mod.Produto.objects.get(referencia=self.ref)
-        except pro_mod.Produto.DoesNotExist as e:
-            produto = None
-
-        if produto is None:
-            produto = pro_mod.Produto(
-                referencia=self.ref,
-                descricao=s_produto['descr'],
-            )
-            produto.save()
+        print(produto.produto().descricao)
 
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
