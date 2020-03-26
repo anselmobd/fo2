@@ -1,6 +1,7 @@
 from pprint import pprint
 
 import systextil.models as sys_mod
+import systextil.queries as sys_que
 
 import produto.models as pro_mod
 
@@ -59,13 +60,20 @@ class Transfere():
         if len(produto) == 0:
             raise ValueError(f'Item {self.item} não encontrado.')
 
+        s_produtos = sys_que.item(
+            self.cursor, self.nivel, self.ref, self.tam, self.cor)
+        s_produto = s_produtos[0]
+
         try:
             produto = pro_mod.Produto.objects.get(referencia=self.ref)
         except pro_mod.Produto.DoesNotExist as e:
             produto = None
 
         if produto is None:
-            produto = pro_mod.Produto(referencia=self.ref)
+            produto = pro_mod.Produto(
+                referencia=self.ref,
+                descricao=s_produto['descr'],
+            )
             produto.save()
 
     def valid_deps(self):
