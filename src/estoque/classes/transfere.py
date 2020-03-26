@@ -64,16 +64,13 @@ class Transfere():
         self.deposito_origem = deposito_origem
         self.deposito_destino = deposito_destino
 
-        self.initial_vars()
+        self.item = item_str(self.nivel, self.ref, self.tam, self.cor)
 
         self.valid_entries()
         self.valid_configuracao()
 
         self.calc_vars()
         self.can_exec = True
-
-    def initial_vars(self):
-        self.item = f'{self.nivel}.{self.ref}.{self.tam}.{self.cor}'
 
     def calc_vars(self):
         self.estoque_origem = self.get_estoque(self.deposito_origem)
