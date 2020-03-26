@@ -11,6 +11,10 @@ from estoque import queries
 from estoque import models
 
 
+def item_str(nivel, ref, tam, cor):
+    return f'{nivel}.{ref}.{tam}.{cor}'
+
+
 class objs_produto():
 
     def __init__(self, nivel, ref, tam, cor):
@@ -24,6 +28,9 @@ class objs_produto():
     def produto(self):
         s_produtos = sys_que.item(
             self.cursor, self.nivel, self.ref, self.tam, self.cor)
+        if len(s_produtos) == 0:
+            item = item_str(self.nivel, self.ref, self.tam, self.cor)
+            raise ValueError(f'Item {item} não encontrado.')
         s_produto = s_produtos[0]
 
         try:
