@@ -2,6 +2,8 @@ from pprint import pprint
 
 import systextil.models as sys_mod
 
+import produto.models as pro_mod
+
 from estoque import queries
 from estoque import models
 
@@ -56,6 +58,15 @@ class Transfere():
             self.cursor, self.nivel, self.ref, self.cor, self.tam)
         if len(produto) == 0:
             raise ValueError(f'Item {self.item} não encontrado.')
+
+        try:
+            produto = pro_mod.Produto.objects.get(referencia=self.ref)
+        except pro_mod.Produto.DoesNotExist as e:
+            produto = None
+
+        if produto is None:
+            produto = pro_mod.Produto(referencia=self.ref)
+            produto.save()
 
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
