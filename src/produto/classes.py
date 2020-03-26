@@ -16,26 +16,29 @@ class objs_produto():
         self.tam = tam
         self.cor = cor
 
+        self.item = pro_fun.item_str(self.nivel, self.ref, self.tam, self.cor)
         self.cursor = connections['so'].cursor()
 
-    def produto(self):
+        self.valid_entries()
+
+    def valid_entries(self):
         s_produtos = sys_que.item(
             self.cursor, self.nivel, self.ref, self.tam, self.cor)
         if len(s_produtos) == 0:
-            item = pro_fun.item_str(self.nivel, self.ref, self.tam, self.cor)
-            raise ValueError(f'Item {item} não encontrado.')
+            raise ValueError(f'Item {self.item} não encontrado.')
         s_produto = s_produtos[0]
 
         try:
-            produto = pro_mod.Produto.objects.get(referencia=self.ref)
+            self.produto = pro_mod.Produto.objects.get(referencia=self.ref)
         except pro_mod.Produto.DoesNotExist as e:
-            produto = None
+            self.produto = None
 
-        if produto is None:
-            produto = pro_mod.Produto(
+        if self.produto is None:
+            self.produto = pro_mod.Produto(
                 referencia=self.ref,
                 descricao=s_produto['descr'],
             )
-            produto.save()
+            self.produto.save()
 
-        return produto
+    def get_produto(self):
+        return self.produto
