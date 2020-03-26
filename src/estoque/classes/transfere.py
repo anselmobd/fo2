@@ -94,14 +94,9 @@ class Transfere():
         self.valid_deps()
 
     def valid_item(self):
-        produto = queries.get_preco_medio_niv_ref_cor_tam(
-            self.cursor, self.nivel, self.ref, self.cor, self.tam)
-        if len(produto) == 0:
-            raise ValueError(f'Item {self.item} não encontrado.')
+        objs_prod = objs_produto(self.nivel, self.ref, self.tam, self.cor)
 
-        produto = objs_produto(self.nivel, self.ref, self.tam, self.cor)
-
-        print(produto.produto().descricao)
+        self.produto = objs_prod.produto()
 
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
