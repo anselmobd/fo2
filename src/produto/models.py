@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from base.models import ImagemTag, Tamanho
@@ -36,9 +37,16 @@ class Composicao(models.Model):
         verbose_name_plural = "Composições"
 
 
+def validate_produto_nivel(value):
+    if value in [1, 2, 9]:
+        return value
+    else:
+        raise ValidationError("Nível deve ser 1, 2 ou 9")
+
+
 class Produto(models.Model):
     nivel = models.IntegerField(
-        db_index=True,
+        db_index=True, validators=[validate_produto_nivel],
         verbose_name='Nível')
     referencia = models.CharField(
         db_index=True, max_length=5,
