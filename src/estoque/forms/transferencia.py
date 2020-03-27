@@ -31,20 +31,22 @@ class TransferenciaForm(forms.Form):
     ref = forms.CharField(
         label='Referência', required=True, min_length=1, max_length=5,
         widget=forms.TextInput(attrs={
+            'size': 5,
             **autofocus_attrs, **string_upper_attrs, **placeholder_00}))
 
     cor = forms.CharField(
         label='Cor', required=True, min_length=1, max_length=6,
         widget=forms.TextInput(attrs={
-            **string_upper_attrs, **placeholder_00}))
+            'size': 6, **string_upper_attrs, **placeholder_00}))
 
     tam = forms.CharField(
         label='Tamanho', required=True, min_length=1, max_length=3,
-        widget=forms.TextInput(attrs=string_upper_attrs))
+        widget=forms.TextInput(attrs={
+            'size': 3, **string_upper_attrs}))
 
     qtd = forms.IntegerField(
         label='Quantidade',
-        widget=forms.TextInput(attrs={'type': 'number'}))
+        widget=forms.TextInput(attrs={'size': 6, 'type': 'number'}))
 
     CHOICES = geral.functions.depositos_choices(only=(101, 102, 122, 231))
 
