@@ -37,6 +37,9 @@ class Composicao(models.Model):
 
 
 class Produto(models.Model):
+    nivel = models.IntegerField(
+        db_index=True,
+        verbose_name='Nível')
     referencia = models.CharField(
         db_index=True, max_length=5,
         verbose_name='Referência')
