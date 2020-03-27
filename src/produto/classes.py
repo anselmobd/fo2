@@ -36,12 +36,16 @@ class objs_produto():
 
     def set_produto(self):
         try:
-            self.produto = pro_mod.Produto.objects.get(referencia=self.ref)
+            self.produto = pro_mod.Produto.objects.get(
+                nivel=self.nivel,
+                referencia=self.ref,
+            )
         except pro_mod.Produto.DoesNotExist as e:
             self.produto = None
 
         if self.produto is None:
             self.produto = pro_mod.Produto(
+                nivel=self.nivel,
                 referencia=self.ref,
                 descricao=self.s_produto['descr'],
             )
