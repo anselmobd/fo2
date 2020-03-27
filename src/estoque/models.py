@@ -1,5 +1,7 @@
+import datetime
 from pprint import pprint
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -33,3 +35,33 @@ class TipoMovStq(models.Model):
         db_table = "fo2_est_tipo_mov"
         verbose_name = "Tipo de movimento de estoque"
         verbose_name_plural = "Tipos de movimentos de estoque"
+
+
+class DocMovStq(models.Model):
+    numero = models.IntegerField(
+        default=0,
+        verbose_name='Número de documento')
+    descricao = models.CharField(
+        max_length=100,
+        verbose_name='Descrição')
+    data = models.DateField()
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='usuário')
+
+    @property
+    def num_doc(self):
+        return self.id + 802000000
+
+    def __str__(self):
+        return f'{self.num_doc} - {self.descricao}'
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.data = datetime.date.today()
+        super(DocMovStq, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_est_doc_mov"
+        verbose_name = "Documento de movimento de estoque"
+        verbose_name_plural = "Documentos de movimentos de estoque"
