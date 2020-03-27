@@ -21,6 +21,8 @@ class objs_produto():
 
         self.valid_entries()
 
+        self.set_produto()
+
     def valid_entries(self):
         s_produtos = sys_que.item(
             self.cursor, self.nivel, self.ref, self.tam, self.cor)
@@ -28,6 +30,7 @@ class objs_produto():
             raise ValueError(f'Item {self.item} não encontrado.')
         s_produto = s_produtos[0]
 
+    def set_produto(self):
         try:
             self.produto = pro_mod.Produto.objects.get(referencia=self.ref)
         except pro_mod.Produto.DoesNotExist as e:
