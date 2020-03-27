@@ -6,6 +6,7 @@ from utils.views import totalize_data, group_rowspan
 
 from lotes.forms import OpPendenteForm
 import lotes.models as models
+import lotes.queries as queries
 
 
 class OpPendente(View):
@@ -19,7 +20,7 @@ class OpPendente(View):
             filtra_colecao = colecao.colecao
         else:
             filtra_colecao = None
-        data = models.op_pendente(
+        data = queries.op.op_pendente(
             cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
             filtra_colecao, situacao, tipo)
         context = {}
