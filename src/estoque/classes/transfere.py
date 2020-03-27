@@ -25,7 +25,8 @@ class Transfere():
         self.deposito_origem = deposito_origem
         self.deposito_destino = deposito_destino
 
-        self.str_item = pro_fun.item_str(self.nivel, self.ref, self.tam, self.cor)
+        self.str_item = pro_fun.item_str(
+            self.nivel, self.ref, self.tam, self.cor)
 
         self.valid_entries()
         self.valid_configuracao()
