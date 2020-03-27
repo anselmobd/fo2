@@ -55,7 +55,7 @@ class Transfere():
         objs_prod = pro_cla.objs_produto(
             self.nivel, self.ref, self.tam, self.cor)
 
-        self.produto = objs_prod.get_produto()
+        self.produto = objs_prod.produto
 
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
