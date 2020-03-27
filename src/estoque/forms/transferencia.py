@@ -4,6 +4,8 @@ from django import forms
 
 import geral.functions
 
+import estoque.models
+
 
 class TransferenciaForm(forms.Form):
     string_upper_attrs = {
@@ -57,6 +59,38 @@ class TransferenciaForm(forms.Form):
     deposito_destino = forms.ChoiceField(
         label='Depósito de destino', required=True,
         choices=CHOICES, initial='122')
+
+    num_doc = forms.ChoiceField(
+        label='Número de documento', required=False,
+        choices=[], initial=0)
+
+    descricao = forms.CharField(
+        label='Descrição do documento', required=False,
+        widget=forms.TextInput(attrs={'size': 50}))
+
+    def __init__(self, *args, **kwargs):
+        super(TransferenciaForm, self).__init__(*args, **kwargs)
+
+        novo = [
+            {'numero': 0,
+             'descricao': "Cria novo número de documento",
+             }]
+        obj_docs = estoque.models.DocMovStq.objects.all()
+        docs = []
+        for doc in obj_docs:
+            docs.append({
+                'numero': doc.num_doc,
+                'descricao': str(doc),
+            })
+
+        CHOICES = []
+        for num in (novo + docs):
+            CHOICES.append((
+                num['numero'],
+                num['descricao'],
+            ))
+
+        self.fields['num_doc'].choices = CHOICES
 
     def clean_ref(self):
         return self.cleaned_data['ref'].upper().zfill(5)
