@@ -25,6 +25,7 @@ class objs_produto():
         self.set_produto_cor()
         self.set_tamanho()
         self.set_produto_tam()
+        self.set_produto_item()
 
     def valid_entries(self):
         s_produtos = sys_que.item(
@@ -89,3 +90,21 @@ class objs_produto():
                 descricao=self.s_produto['descr_tam'],
             )
             self.produto_tam.save()
+
+    def set_produto_item(self):
+        try:
+            self.produto_item = pro_mod.ProdutoItem.objects.get(
+                produto=self.produto,
+                cor=self.produto_cor,
+                tamanho=self.produto_tam,
+            )
+        except pro_mod.ProdutoItem.DoesNotExist as e:
+            self.produto_item = None
+
+        if self.produto_item is None:
+            self.produto_item = pro_mod.ProdutoItem(
+                produto=self.produto,
+                cor=self.produto_cor,
+                tamanho=self.produto_tam,
+            )
+            self.produto_item.save()
