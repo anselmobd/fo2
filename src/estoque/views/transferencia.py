@@ -59,14 +59,16 @@ class Transferencia(View):
             })
 
     def get(self, request, *args, **kwargs):
-        self.context['form'] = self.Form_class()
+        self.context['form'] = self.Form_class(user=request.user)
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        self.context['form'] = self.Form_class(request.POST)
+        self.request = request
+        self.context['form'] = self.Form_class(
+            request.POST, user=self.request.user)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
-            self.context['form'] = self.Form_class(self.context)
-            self.request = request
+            self.context['form'] = self.Form_class(
+                self.context, user=self.request.user)
             self.mount_context()
         return render(request, self.template_name, self.context)
