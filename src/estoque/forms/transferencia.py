@@ -68,14 +68,15 @@ class TransferenciaForm(forms.Form):
         label='Descrição do documento', required=False,
         widget=forms.TextInput(attrs={'size': 50}))
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super(TransferenciaForm, self).__init__(*args, **kwargs)
 
         novo = [
             {'numero': 0,
              'descricao': "Cria novo número de documento",
              }]
-        obj_docs = estoque.models.DocMovStq.objects.all()
+        obj_docs = estoque.models.DocMovStq.objects.filter(
+            usuario=user)
         docs = []
         for doc in obj_docs:
             docs.append({
