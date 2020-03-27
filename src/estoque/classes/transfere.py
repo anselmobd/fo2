@@ -25,7 +25,7 @@ class Transfere():
         self.deposito_origem = deposito_origem
         self.deposito_destino = deposito_destino
 
-        self.item = pro_fun.item_str(self.nivel, self.ref, self.tam, self.cor)
+        self.str_item = pro_fun.item_str(self.nivel, self.ref, self.tam, self.cor)
 
         self.valid_entries()
         self.valid_configuracao()
@@ -45,7 +45,7 @@ class Transfere():
             self.preco_medio = produto[0]['preco_medio']
         except Exception:
             raise ValueError(
-                f'Não encontrado o preço médio do item {self.item}.')
+                f'Não encontrado o preço médio do item {self.str_item}.')
 
     def valid_entries(self):
         self.valid_item()
@@ -55,7 +55,7 @@ class Transfere():
         objs_prod = pro_cla.objs_produto(
             self.nivel, self.ref, self.tam, self.cor)
 
-        self.produto = objs_prod.produto
+        self.item = objs_prod.produto_item
 
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
