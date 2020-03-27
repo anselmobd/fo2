@@ -23,6 +23,7 @@ class objs_produto():
 
         self.set_produto()
         self.set_produto_cor()
+        self.set_tamanho()
 
     def valid_entries(self):
         s_produtos = sys_que.item(
@@ -58,3 +59,17 @@ class objs_produto():
                 descricao=self.s_produto['descr_cor'],
             )
             self.produto_cor.save()
+
+    def set_tamanho(self):
+        try:
+            self.tamanho = pro_mod.Tamanho.objects.get(
+                nome=self.tam)
+        except pro_mod.Tamanho.DoesNotExist as e:
+            self.tamanho = None
+
+        if self.tamanho is None:
+            self.tamanho = pro_mod.Tamanho(
+                nome=self.tam,
+                ordem=self.s_produto['ordem_tam'],
+            )
+            self.tamanho.save()
