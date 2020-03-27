@@ -108,7 +108,8 @@ class ProdutoCor(models.Model):
 
     def __str__(self):
         ativa = '' if self.ativa else '--'
-        return '{}({}) {}'.format(ativa, self.produto, self.cor)
+        return (f'{ativa}({self.produto.nivel_referencia}) '
+                f'{self.cor} - {self.descricao}')
 
     class Meta:
         db_table = "fo2_produto_cor"
