@@ -21,6 +21,9 @@ class objs_produto():
 
         self.valid_entries()
 
+        self.set_vars()
+
+    def set_vars(self):
         self.set_produto()
         self.set_produto_cor()
         self.set_tamanho()
