@@ -72,6 +72,11 @@ class Produto(models.Model):
     unidade = models.CharField(
         max_length=2, default='')
 
+    @property
+    def nivel_referencia(self):
+        ativo = '' if self.ativo else '--'
+        return f'{ativo}{self.nivel}.{self.referencia}'
+
     def __str__(self):
         ativo = '' if self.ativo else '--'
         return f'{ativo}{self.nivel}.{self.referencia} - {self.descricao}'
