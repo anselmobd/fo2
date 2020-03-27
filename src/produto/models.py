@@ -74,7 +74,7 @@ class Produto(models.Model):
 
     def __str__(self):
         ativo = '' if self.ativo else '--'
-        return '{}{}'.format(ativo, self.referencia)
+        return f'{ativo}{self.nivel}.{self.referencia} - {self.descricao}'
 
     class Meta:
         db_table = "fo2_produto"
