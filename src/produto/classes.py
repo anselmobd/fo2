@@ -58,9 +58,3 @@ class objs_produto():
                 descricao=self.s_produto['descr_cor'],
             )
             self.produto_cor.save()
-
-    def get_produto(self):
-        return self.produto
-
-    def get_produto_cor(self):
-        return self.produto_cor
