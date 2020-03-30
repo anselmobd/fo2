@@ -76,14 +76,19 @@ class TransferenciaForm(forms.Form):
         self.mount_num_doc_choices()
 
     def mount_num_doc_choices(self):
+        self.num_doc_recente = 0
         novo = [
             {'numero': 0,
              'descricao': "Cria novo número de documento",
              }]
         obj_docs = estoque.models.DocMovStq.objects.filter(
             usuario=self.user, data=datetime.date.today())
+        # .order_by(
+                '-id')
         docs = []
         for doc in obj_docs:
+            if self.num_doc_recente == 0:
+                self.num_doc_recente = doc.num_doc
             docs.append({
                 'numero': doc.num_doc,
                 'descricao': str(doc),
@@ -97,6 +102,7 @@ class TransferenciaForm(forms.Form):
             ))
 
         self.fields['num_doc'].choices = CHOICES
+        self.fields['num_doc'].initial = self.num_doc_recente
 
     def clean_ref(self):
         return self.cleaned_data['ref'].upper().zfill(5)
