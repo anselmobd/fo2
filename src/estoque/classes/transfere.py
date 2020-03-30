@@ -72,6 +72,10 @@ class Transfere():
 
     def valid_num_doc(self):
         if self.num_doc == '0':
+            if self.descricao.strip() == '':
+                raise ValueError(
+                    'Não é possível criar um número de documento sem uma '
+                    'descrição.')
             self.num_doc = self.cria_num_doc()
         obj_docs = models.DocMovStq.objects.filter(
             num_doc=self.num_doc)
