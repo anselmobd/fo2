@@ -2,6 +2,8 @@ from pprint import pprint
 
 import systextil.models as sys_mod
 
+from utils.functions import get_client_ip
+
 import produto.functions as pro_fun
 import produto.classes as pro_cla
 
@@ -15,7 +17,7 @@ class Transfere():
     def __init__(
             self, cursor, nivel, ref, tam, cor, qtd,
             deposito_origem, deposito_destino,
-            num_doc, descricao, user):
+            num_doc, descricao, request):
         self.can_exec = False
 
         self.cursor = cursor
@@ -28,7 +30,7 @@ class Transfere():
         self.deposito_destino = deposito_destino
         self.num_doc = num_doc
         self.descricao = descricao
-        self.user = user
+        self.request = request
 
         self.valid_entries()
         self.valid_configuracao()
@@ -74,7 +76,7 @@ class Transfere():
 
     def valid_num_doc(self):
         obj_doc_mov_stq = classes.ObjDocMovStq(
-            self.num_doc, self.descricao, self.user)
+            self.num_doc, self.descricao, self.request.user)
         self.num_doc = obj_doc_mov_stq.num_doc
         self.doc_mov_stq = obj_doc_mov_stq.doc_mov_stq
 
@@ -137,8 +139,8 @@ class Transfere():
                 self.trans_saida_e_s,
                 self.qtd,
                 self.preco_medio,
-                self.user,
-                # self.ip,
+                self.request.user,
+                get_client_ip(self.request)
                 ):
             raise ValueError(
                 'Erro ao inserir transação de saída.')
