@@ -82,8 +82,7 @@ class TransferenciaForm(forms.Form):
              'descricao': "Cria novo número de documento",
              }]
         obj_docs = estoque.models.DocMovStq.objects.filter(
-            usuario=self.user, data=datetime.date.today())
-        # .order_by(
+            usuario=self.user, data=datetime.date.today()).order_by(
                 '-id')
         docs = []
         for doc in obj_docs:
