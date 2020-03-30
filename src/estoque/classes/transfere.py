@@ -83,7 +83,7 @@ class Transfere():
             descricao=self.descricao
         )
         obj_docs.save()
-        return obj_docs.num_doc
+        return obj_docs.get_num_doc
 
     def get_estoque(self, deposito_field):
         l_estoque = queries.get_estoque_dep_niv_ref_cor_tam(
