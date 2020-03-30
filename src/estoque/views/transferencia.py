@@ -29,7 +29,8 @@ class Transferencia(View):
                 self.cursor,
                 *(self.context[f] for f in [
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
-                    'deposito_origem', 'deposito_destino'])
+                    'deposito_origem', 'deposito_destino',
+                    'num_doc', 'descricao'])
             )
         except Exception as e:
             self.context.update({
