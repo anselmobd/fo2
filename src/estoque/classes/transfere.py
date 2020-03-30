@@ -50,6 +50,7 @@ class Transfere():
 
     def valid_entries(self):
         self.valid_item()
+        self.valid_quant()
         self.valid_deps()
 
     def valid_item(self):
@@ -58,6 +59,11 @@ class Transfere():
 
         self.str_item = objs_prod.str_item
         self.produto_item = objs_prod.produto_item
+
+    def valid_quant(self):
+        if self.qtd <= 0:
+            raise ValueError(
+                'Quantidade deve ser maior que zero.')
 
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
