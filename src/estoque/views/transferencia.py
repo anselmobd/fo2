@@ -31,7 +31,7 @@ class Transferencia(View):
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
                     'deposito_origem', 'deposito_destino',
                     'num_doc', 'descricao']),
-                self.request.user
+                self.request
             )
         except Exception as e:
             self.context.update({
