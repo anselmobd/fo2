@@ -71,10 +71,19 @@ class Transfere():
             raise ValueError('Depósitos devem ser diferentes.')
 
     def valid_num_doc(self):
+        if self.num_doc == '0':
+            self.num_doc = self.cria_num_doc()
         obj_docs = models.DocMovStq.objects.filter(
             num_doc=self.num_doc)
         if len(obj_docs) != 1:
             raise ValueError('Número de documento não encontrado.')
+
+    def cria_num_doc(self):
+        obj_docs = models.DocMovStq(
+            descricao=self.descricao
+        )
+        obj_docs.save()
+        return obj_docs.num_doc
 
     def get_estoque(self, deposito_field):
         l_estoque = queries.get_estoque_dep_niv_ref_cor_tam(
