@@ -25,9 +25,6 @@ class Transfere():
         self.deposito_origem = deposito_origem
         self.deposito_destino = deposito_destino
 
-        self.str_item = pro_fun.item_str(
-            self.nivel, self.ref, self.tam, self.cor)
-
         self.valid_entries()
         self.valid_configuracao()
 
@@ -56,6 +53,7 @@ class Transfere():
         objs_prod = pro_cla.objs_produto(
             self.nivel, self.ref, self.tam, self.cor)
 
+        self.str_item = objs_prod.str_item
         self.item = objs_prod.produto_item
 
     def valid_deps(self):
