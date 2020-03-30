@@ -45,6 +45,7 @@ class Transferencia(View):
             'estoque_destino': transf.estoque_destino,
             'novo_estoque_origem': transf.novo_estoque_origem,
             'novo_estoque_destino': transf.novo_estoque_destino,
+            'num_doc': transf.num_doc,
         })
 
         if 'executa' in self.request.POST:
@@ -70,7 +71,7 @@ class Transferencia(View):
             request.POST, user=self.request.user)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
+            self.mount_context()
             self.context['form'] = self.Form_class(
                 self.context, user=self.request.user)
-            self.mount_context()
         return render(request, self.template_name, self.context)
