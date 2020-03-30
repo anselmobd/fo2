@@ -132,11 +132,13 @@ class Transfere():
                 self.ref,
                 self.tam,
                 self.cor,
-                '1',  # self.num_doc,
+                self.num_doc,
                 self.trans_saida,
                 self.trans_saida_e_s,
                 self.qtd,
-                self.preco_medio
+                self.preco_medio,
+                self.user,
+                # self.ip,
                 ):
             raise ValueError(
                 'Erro ao inserir transação de saída.')
