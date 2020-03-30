@@ -11,12 +11,12 @@ class TipoMovStqAdmin(admin.ModelAdmin):
 
 class DocMovStqAdmin(admin.ModelAdmin):
 
-    def get_num_doc(self, obj):
+    def num_doc(self, obj):
         return obj.num_doc
 
-    get_num_doc.short_description = 'Número de documento'
+    num_doc.short_description = 'Número de documento'
 
-    list_display = ["get_num_doc", "descricao"]
+    list_display = ["num_doc", "descricao"]
 
 
 intr_adm_site.register(TipoMovStq, TipoMovStqAdmin)
