@@ -116,5 +116,5 @@ class TransferenciaForm(forms.Form):
         qtd = self.cleaned_data['qtd']
         if qtd <= 0:
             raise forms.ValidationError(
-                    "Quantidade deve positiva, diferente de zero.")
+                    "Quantidade deve ser maior que zero.")
         return qtd
