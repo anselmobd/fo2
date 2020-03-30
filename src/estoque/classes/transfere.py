@@ -79,13 +79,14 @@ class Transfere():
                     'descrição.')
             self.num_doc = self.cria_num_doc()
         obj_docs = models.DocMovStq.objects.filter(
-            num_doc=self.num_doc)
+            num_doc=self.num_doc, usuario=self.user)
         if len(obj_docs) != 1:
             raise ValueError('Número de documento não encontrado.')
 
     def cria_num_doc(self):
         obj_docs = models.DocMovStq(
-            descricao=self.descricao
+            descricao=self.descricao,
+            usuario=self.user,
         )
         obj_docs.save()
         return obj_docs.get_num_doc
