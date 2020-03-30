@@ -56,7 +56,7 @@ class Transfere():
         self.valid_num_doc()
 
     def valid_item(self):
-        objs_prod = pro_cla.objs_produto(
+        objs_prod = pro_cla.ObjsProduto(
             self.nivel, self.ref, self.tam, self.cor)
 
         self.str_item = objs_prod.str_item

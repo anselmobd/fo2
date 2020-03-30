@@ -8,7 +8,7 @@ import produto.functions as pro_fun
 import produto.models as pro_mod
 
 
-class objs_produto():
+class ObjsProduto():
 
     def __init__(self, nivel, ref, tam, cor):
         self.nivel = nivel
