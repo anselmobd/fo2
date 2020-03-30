@@ -5,8 +5,9 @@ import systextil.models as sys_mod
 import produto.functions as pro_fun
 import produto.classes as pro_cla
 
-from estoque import queries
+from estoque import classes
 from estoque import models
+from estoque import queries
 
 
 class Transfere():
@@ -72,24 +73,10 @@ class Transfere():
             raise ValueError('Depósitos devem ser diferentes.')
 
     def valid_num_doc(self):
-        if self.num_doc == '0':
-            if self.descricao.strip() == '':
-                raise ValueError(
-                    'Não é possível criar um número de documento sem uma '
-                    'descrição.')
-            self.num_doc = self.cria_num_doc()
-        obj_docs = models.DocMovStq.objects.filter(
-            num_doc=self.num_doc, usuario=self.user)
-        if len(obj_docs) != 1:
-            raise ValueError('Número de documento não encontrado.')
-
-    def cria_num_doc(self):
-        obj_docs = models.DocMovStq(
-            descricao=self.descricao,
-            usuario=self.user,
-        )
-        obj_docs.save()
-        return obj_docs.get_num_doc
+        obj_doc_mov_stq = classes.ObjDocMovStq(
+            self.num_doc, self.descricao, self.user)
+        self.num_doc = obj_doc_mov_stq.num_doc
+        self.doc_mov_stq = obj_doc_mov_stq.doc_mov_stq
 
     def get_estoque(self, deposito_field):
         l_estoque = queries.get_estoque_dep_niv_ref_cor_tam(
