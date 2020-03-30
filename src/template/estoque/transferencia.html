@@ -90,3 +90,21 @@
   {% endif %}
 </form>
 {% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
+
+    var n_d = document.getElementById('id_num_doc');
+    var descr = document.getElementById('id_descricao');
+
+    function descricao_disabled() {
+      descr.disabled = (n_d.value != '0');
+    }
+
+    window.onload = function() {
+      descricao_disabled();
+      n_d.addEventListener('change', descricao_disabled);
+    }
+
+  </script>
+{% endblock %}
