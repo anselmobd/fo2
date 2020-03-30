@@ -14,7 +14,7 @@ class Transfere():
     def __init__(
             self, cursor, nivel, ref, tam, cor, qtd,
             deposito_origem, deposito_destino,
-            num_doc, descricao):
+            num_doc, descricao, user):
         self.can_exec = False
 
         self.cursor = cursor
@@ -27,6 +27,7 @@ class Transfere():
         self.deposito_destino = deposito_destino
         self.num_doc = num_doc
         self.descricao = descricao
+        self.user = user
 
         self.valid_entries()
         self.valid_configuracao()
