@@ -52,6 +52,7 @@ class Transfere():
         self.valid_item()
         self.valid_quant()
         self.valid_deps()
+        self.valid_num_doc()
 
     def valid_item(self):
         objs_prod = pro_cla.objs_produto(
@@ -68,6 +69,12 @@ class Transfere():
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
             raise ValueError('Depósitos devem ser diferentes.')
+
+    def valid_num_doc(self):
+        obj_docs = models.DocMovStq.objects.filter(
+            num_doc=self.num_doc)
+        if len(obj_docs) != 1:
+            raise ValueError('Número de documento não encontrado.')
 
     def get_estoque(self, deposito_field):
         l_estoque = queries.get_estoque_dep_niv_ref_cor_tam(
