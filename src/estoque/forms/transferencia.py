@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 
 from django import forms
@@ -80,7 +81,7 @@ class TransferenciaForm(forms.Form):
              'descricao': "Cria novo número de documento",
              }]
         obj_docs = estoque.models.DocMovStq.objects.filter(
-            usuario=self.user)
+            usuario=self.user, data=datetime.date.today())
         docs = []
         for doc in obj_docs:
             docs.append({
