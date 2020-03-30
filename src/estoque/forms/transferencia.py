@@ -71,12 +71,16 @@ class TransferenciaForm(forms.Form):
     def __init__(self, *args, user=None, **kwargs):
         super(TransferenciaForm, self).__init__(*args, **kwargs)
 
+        self.user = user
+        self.mount_num_doc_choices()
+
+    def mount_num_doc_choices(self):
         novo = [
             {'numero': 0,
              'descricao': "Cria novo número de documento",
              }]
         obj_docs = estoque.models.DocMovStq.objects.filter(
-            usuario=user)
+            usuario=self.user)
         docs = []
         for doc in obj_docs:
             docs.append({
