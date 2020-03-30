@@ -57,7 +57,7 @@ class Transfere():
             self.nivel, self.ref, self.tam, self.cor)
 
         self.str_item = objs_prod.str_item
-        self.item = objs_prod.produto_item
+        self.produto_item = objs_prod.produto_item
 
     def valid_deps(self):
         if self.deposito_origem == self.deposito_destino:
