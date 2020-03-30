@@ -59,6 +59,10 @@ class DocMovStq(models.Model):
 
     objects = DocMovStqManager()
 
+    @property
+    def get_num_doc(self):
+        return self.id + _doc_mov_stq_start_range
+
     def __str__(self):
         return f'{self.num_doc} - {self.descricao}'
 
