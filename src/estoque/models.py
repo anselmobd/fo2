@@ -38,9 +38,6 @@ class TipoMovStq(models.Model):
 
 
 class DocMovStq(models.Model):
-    numero = models.IntegerField(
-        default=0,
-        verbose_name='Número de documento')
     descricao = models.CharField(
         max_length=100,
         verbose_name='Descrição')
