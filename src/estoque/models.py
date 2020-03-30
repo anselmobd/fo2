@@ -37,6 +37,17 @@ class TipoMovStq(models.Model):
         verbose_name_plural = "Tipos de movimentos de estoque"
 
 
+_doc_mov_stq_start_range = 802000000
+
+
+class DocMovStqManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            DocMovStqManager,
+            self).get_queryset().annotate(
+                num_doc=models.F('id') + _doc_mov_stq_start_range).all()
+
+
 class DocMovStq(models.Model):
     descricao = models.CharField(
         max_length=100,
@@ -46,9 +57,7 @@ class DocMovStq(models.Model):
         User, on_delete=models.CASCADE, null=True, blank=True,
         verbose_name='usuário')
 
-    @property
-    def num_doc(self):
-        return self.id + 802000000
+    objects = DocMovStqManager()
 
     def __str__(self):
         return f'{self.num_doc} - {self.descricao}'
