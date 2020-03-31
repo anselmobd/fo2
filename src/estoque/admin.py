@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
-from .models import TipoMovStq, DocMovStq
+from .models import TipoMovStq, DocMovStq, MovStq
 
 
 class TipoMovStqAdmin(admin.ModelAdmin):
@@ -19,5 +19,10 @@ class DocMovStqAdmin(admin.ModelAdmin):
     list_display = ["num_doc", "descricao"]
 
 
+class MovStqAdmin(admin.ModelAdmin):
+    pass
+
+
 intr_adm_site.register(TipoMovStq, TipoMovStqAdmin)
 intr_adm_site.register(DocMovStq, DocMovStqAdmin)
+intr_adm_site.register(MovStq, MovStqAdmin)
