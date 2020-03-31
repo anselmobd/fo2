@@ -4,6 +4,8 @@ from pprint import pprint
 from django.contrib.auth.models import User
 from django.db import models
 
+from produto.models import ProdutoItem
+
 
 class EstoquePermissions(models.Model):
 
@@ -75,3 +77,29 @@ class DocMovStq(models.Model):
         db_table = "fo2_est_doc_mov"
         verbose_name = "Documento de movimento de estoque"
         verbose_name_plural = "Documentos de movimentos de estoque"
+
+
+class MovStq(models.Model):
+    item = models.ForeignKey(
+        ProdutoItem, on_delete=models.PROTECT)
+    quantidade = models.IntegerField(
+        default=0)
+    deposito_origem = models.IntegerField(
+        verbose_name='Depósito de origem')
+    deposito_destino = models.IntegerField(
+        verbose_name='Depósito de destino')
+    documento = models.ForeignKey(
+        DocMovStq, on_delete=models.PROTECT,
+        verbose_name='Documento de movimento de estoque')
+    usuario = models.ForeignKey(
+        User, on_delete=models.PROTECT,
+        verbose_name='usuário')
+
+    def __str__(self):
+        return (f'{self.documento.get_num_doc}, {self.item} '
+                f'{self.deposito_origem}->{self.deposito_destino}')
+
+    class Meta:
+        db_table = "fo2_est_mov"
+        verbose_name = "Movimento de estoque"
+        verbose_name_plural = "Movimentos de estoque"
