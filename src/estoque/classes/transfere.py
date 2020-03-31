@@ -104,7 +104,10 @@ class Transfere():
                 'do tipo de movimento de estoque "TRANSF" é do '
                 'tipo da operação errado.')
 
-        return tipo_trans.entrada_saida
+        if tipo_trans.entrada_saida == 'T':
+            return 'S'
+        else:
+            return tipo_trans.entrada_saida
 
     def valid_configuracao(self):
         try:
