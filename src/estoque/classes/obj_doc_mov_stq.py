@@ -2,6 +2,9 @@ from pprint import pprint
 
 from django.db import connections
 
+from base.models import Colaborador
+from systextil.models import Usuario as S_Usuario
+
 from estoque import models
 
 
@@ -15,6 +18,7 @@ class ObjDocMovStq():
         self.cursor = connections['so'].cursor()
 
         self.valid_entries()
+        self.valid_user()
 
     def valid_entries(self):
         if self.num_doc == '0':
@@ -35,3 +39,17 @@ class ObjDocMovStq():
         )
         obj_docs.save()
         return obj_docs.get_num_doc
+
+    def valid_user(self):
+        try:
+            colab = Colaborador.objects.get(user=self.user)
+        except Colaborador.DoesNotExist as e:
+            raise ValueError(
+                'Não é possível utilizar um usuário que não está cadastrado '
+                'como colaborador.')
+
+        try:
+            s_user = S_Usuario.objects.get(codigo_usuario=colab.matricula)
+        except S_Usuario.DoesNotExist as e:
+            raise ValueError(
+                'Não é possível utilizar um colaborador sem matrícula válida.')
