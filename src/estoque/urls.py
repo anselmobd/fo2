@@ -50,4 +50,7 @@ urlpatterns = [
     url(r'^transferencia/$', views.Transferencia.as_view(),
         name='transferencia'),
 
+    url(r'^lista_movs/$', views.ListaMovimentos.as_view(),
+        name='lista_movs'),
+
 ]
