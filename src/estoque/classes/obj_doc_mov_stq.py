@@ -29,10 +29,12 @@ class ObjDocMovStq():
             self.valid_user()
 
     def valid_num_doc(self):
-        self.doc_mov_stq = models.DocMovStq.objects.filter(
+        docs_mov_stq = models.DocMovStq.objects.filter(
             num_doc=self.num_doc, usuario=self.user)
-        if len(self.doc_mov_stq) != 1:
+        if len(docs_mov_stq) == 0:
             raise ValueError('Número de documento não encontrado.')
+        else:
+            self.doc_mov_stq = docs_mov_stq[0]
 
     def cria_num_doc(self):
         self.valid_descricao()
