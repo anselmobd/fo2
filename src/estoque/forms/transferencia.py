@@ -55,7 +55,7 @@ class TransferenciaForm(forms.Form):
 
     deposito_origem = forms.ChoiceField(
         label='Depósito de origem', required=True,
-        choices=CHOICES, initial='231')
+        choices=CHOICES, initial='102')
 
     deposito_destino = forms.ChoiceField(
         label='Depósito de destino', required=True,
