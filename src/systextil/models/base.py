@@ -21,6 +21,13 @@ class HDoc001(models.Model):
         verbose_name = "Tabela auxiliar HDOC_001"
 
 
+class UsuarioManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            UsuarioManager,
+            self).get_queryset().filter(ativo_inativo=1)
+
+
 class Usuario(models.Model):
     usuario = models.CharField(
         primary_key=True,
@@ -28,6 +35,10 @@ class Usuario(models.Model):
         verbose_name='Usuário')
     codigo_usuario = models.IntegerField(
         verbose_name='Código do Usuário')
+    ativo_inativo = models.IntegerField(
+        verbose_name='Ativo ou inativo')
+
+    objects = UsuarioManager()
 
     def __str__(self):
         return f'{self.usuario} ({self.codigo_usuario})'
