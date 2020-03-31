@@ -129,20 +129,28 @@ class Transfere():
             raise ValueError(
                 'Execução impedida por algum erro de inicialização.')
 
+        self.insert(
+            'saída',
+            self.deposito_origem,
+            self.trans_saida,
+            self.trans_saida_e_s,
+            )
+
+    def insert(self, descr, dep, trans, e_s):
         if not queries.insert_transacao(
                 self.cursor,
-                self.deposito_origem,
+                dep,
                 self.nivel,
                 self.ref,
                 self.tam,
                 self.cor,
                 self.num_doc,
-                self.trans_saida,
-                self.trans_saida_e_s,
+                trans,
+                e_s,
                 self.qtd,
                 self.preco_medio,
                 self.request.user,
                 get_client_ip(self.request)
                 ):
             raise ValueError(
-                'Erro ao inserir transação de saída.')
+                f'Erro ao inserir transação de {descr}.')
