@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import connections
 from django.shortcuts import render
 from django.views import View
@@ -10,7 +11,7 @@ from estoque import forms
 from estoque import classes
 
 
-class Transferencia(View):
+class Transferencia(PermissionRequiredMixin, View):
 
     Form_class = forms.TransferenciaForm
     template_name = 'estoque/transferencia.html'
@@ -19,6 +20,7 @@ class Transferencia(View):
     cleanned_fields_to_context = cleanned_fields_to_context
 
     def __init__(self):
+        self.permission_required = 'estoque.can_transferencia'
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
