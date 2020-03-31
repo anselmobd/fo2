@@ -63,4 +63,5 @@ class ObjDocMovStq():
             s_user = S_Usuario.objects.get(codigo_usuario=colab.matricula)
         except S_Usuario.DoesNotExist as e:
             raise ValueError(
-                'Não é possível utilizar um colaborador sem matrícula válida.')
+                'Não é possível utilizar um colaborador sem matrícula válida '
+                'ou inativo.')
