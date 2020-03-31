@@ -136,6 +136,13 @@ class Transfere():
             self.trans_saida_e_s,
             )
 
+        self.insert(
+            'entrada',
+            self.deposito_destino,
+            self.trans_entrada,
+            self.trans_entrada_e_s,
+            )
+
     def insert(self, descr, dep, trans, e_s):
         if not queries.insert_transacao(
                 self.cursor,
