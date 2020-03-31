@@ -54,7 +54,7 @@ class DocMovStq(models.Model):
         verbose_name='Descrição')
     data = models.DateField()
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True,
+        User, on_delete=models.CASCADE,
         verbose_name='usuário')
 
     objects = DocMovStqManager()
