@@ -4,9 +4,10 @@
   <li><a href="{% url 'estoque:referencia_deposito' %}">Em depósito</a></li>
   <li><a href="{% url 'estoque:estoque_na_data' %}">Estoque na data (PA/PB/PG)</a></li>
   <li><a href="{% url 'estoque:item_no_tempo' %}">Item no tempo</a></li>
-  {% if perms.estoque.can_transferencia %}
+  <li>Movimentações</li>
+  <ul>
     <li><a href="{% url 'estoque:transferencia' %}">Transferência entre depósitos</a></li>
-  {% endif %}
+  </ul>
   <li>Manutenções</li>
   <ul>
     <li><a href="{% url 'estoque:refs_com_movimento' %}">Referências com movimento</a></li>
