@@ -143,6 +143,16 @@ class Transfere():
             self.trans_entrada_e_s,
             )
 
+        mov_stq = models.MovStq(
+            item=self.produto_item,
+            quantidade=self.qtd,
+            deposito_origem=self.deposito_origem,
+            deposito_destino=self.deposito_destino,
+            documento=self.doc_mov_stq,
+            usuario=self.request.user,
+        )
+        mov_stq.save()
+
     def insert(self, descr, dep, trans, e_s):
         if not queries.insert_transacao(
                 self.cursor,
