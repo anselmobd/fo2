@@ -7,6 +7,7 @@ import geral.functions
 from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
 
 from .item_no_tempo import *
+from .lista_movs import *
 from .transferencia import *
 
 
