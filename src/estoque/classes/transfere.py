@@ -129,8 +129,7 @@ class Transfere():
             raise ValueError(
                 'Execução impedida por algum erro de inicialização.')
 
-        return
-        if not queries.insert_transacao_ajuste(
+        if not queries.insert_transacao(
                 self.cursor,
                 self.deposito_origem,
                 self.nivel,
