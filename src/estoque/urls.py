@@ -52,6 +52,9 @@ urlpatterns = [
 
     url(r'^lista_movs/$', views.ListaMovimentos.as_view(),
         name='lista_movs'),
+    url(r'^lista_movs/(?P<num_doc>[^/]+)/$',
+        views.ListaMovimentos.as_view(),
+        name='lista_movs__get'),
 
     url(r'^lista_docs_mov/$', views.ListaDocsMovimentacao.as_view(),
         name='lista_docs_mov'),
