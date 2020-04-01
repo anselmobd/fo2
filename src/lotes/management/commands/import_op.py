@@ -11,7 +11,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Syncronizing OPs'
-    __MAX_TASKS = 100
+    __MAX_TASKS = 1000
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -38,6 +38,7 @@ class Command(BaseCommand):
               when o.SITUACAO = 9 then 9 -- != 0 equivalia a "cancelada"
               else 0 -- == 0 equivalia a "não cancelada"
               end cancelada
+            , o.DEPOSITO_ENTRADA deposito
             FROM PCPC_020 o -- OP capa
             ORDER BY
               o.ORDEM_PRODUCAO
@@ -53,6 +54,7 @@ class Command(BaseCommand):
             , o.pedido
             , o.varejo
             , o.cancelada
+            , o.deposito
             from fo2_prod_op o
             order by
               o.op
@@ -74,6 +76,9 @@ class Command(BaseCommand):
         if op.cancelada != (row['cancelada'] != 0):
             alter = True
             op.cancelada = (row['cancelada'] != 0)
+        if op.deposito != row['deposito']:
+            alter = True
+            op.deposito = row['deposito']
         return alter
 
     def inclui(self, row):
@@ -128,6 +133,8 @@ class Command(BaseCommand):
             igual = (row_s['varejo'] == 1) == row_f['varejo']
         if igual:
             igual = (row_s['cancelada'] != 0) == row_f['cancelada']
+        if igual:
+            igual = row_s['deposito'] == row_f['deposito']
         return igual
 
     def handle(self, *args, **options):
