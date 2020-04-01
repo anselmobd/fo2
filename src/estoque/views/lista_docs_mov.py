@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.db import connections
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from utils.functions.views import (
@@ -34,6 +35,10 @@ class ListaDocsMovimentacao(View):
 
         fields = ['num_doc', 'descricao', 'data', 'usuario__username']
         dados = dados.values(*fields)
+
+        for row in dados:
+            row['num_doc|LINK'] = reverse(
+                'estoque:lista_movs__get', args=[row['num_doc']])
 
         headers = ['Documento', 'Descrição', 'Data', 'Usuário']
         self.context.update({
