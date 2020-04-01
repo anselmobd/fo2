@@ -143,6 +143,7 @@ class Op(models.Model):
     pedido = models.IntegerField()
     varejo = models.BooleanField(default=False)
     cancelada = models.BooleanField(default=False)
+    deposito = models.IntegerField(default=-1)
 
     class Meta:
         db_table = "fo2_prod_op"
