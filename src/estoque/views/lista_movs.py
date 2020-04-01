@@ -17,7 +17,7 @@ class ListaMovimentos(View):
 
     Form_class = forms.ListaMovimentosForm
     template_name = 'estoque/lista_movs.html'
-    title_name = 'Lista de movimentações de estoque'
+    title_name = 'Movimentações de um documento'
 
     cleanned_fields_to_context = cleanned_fields_to_context
     context_to_form_post = context_to_form_post
