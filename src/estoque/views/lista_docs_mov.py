@@ -16,7 +16,7 @@ from estoque import models
 class ListaDocsMovimentacao(View):
 
     Form_class = forms.ListaDocsMovimentacaoForm
-    template_name = 'estoque/lista_movs.html'
+    template_name = 'estoque/lista_docs_mov.html'
     title_name = 'Documentos de movimentações'
 
     cleanned_fields_to_context = cleanned_fields_to_context
