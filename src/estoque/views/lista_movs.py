@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.db import connections
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from utils.functions.views import (
@@ -56,6 +57,24 @@ class ListaMovimentos(View):
             'usuario__username',
         ]
         dados = dados.values(*fields)
+
+        for row in dados:
+            row['deposito_origem|GLYPHICON'] = 'glyphicon-time'
+            row['deposito_origem|TARGET'] = '_BLANK'
+            row['deposito_origem|LINK'] = reverse(
+                'estoque:item_no_tempo__get', args=[
+                    row['item__produto__referencia'],
+                    row['item__cor__cor'],
+                    row['item__tamanho__tamanho__nome'],
+                    row['deposito_origem']])
+            row['deposito_destino|GLYPHICON'] = 'glyphicon-time'
+            row['deposito_destino|TARGET'] = '_BLANK'
+            row['deposito_destino|LINK'] = reverse(
+                'estoque:item_no_tempo__get', args=[
+                    row['item__produto__referencia'],
+                    row['item__cor__cor'],
+                    row['item__tamanho__tamanho__nome'],
+                    row['deposito_destino']])
 
         headers = [
             'Nível',
