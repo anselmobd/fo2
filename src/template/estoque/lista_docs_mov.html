@@ -14,12 +14,6 @@
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
-  {% if erro_msg %}
-    <h4 class="bad">Erro: {{ erro_msg }}</h4>
-  {% endif %}
-  {% if sucesso_msg %}
-    <h4 class="ok">Sucesso: {{ sucesso_msg }}</h4>
-  {% endif %}
 </form>
 {% if request.POST.busca %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
