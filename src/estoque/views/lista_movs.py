@@ -10,6 +10,7 @@ from utils.functions.views import (
     )
 
 from estoque import forms
+from estoque import models
 
 
 class ListaMovimentos(View):
@@ -26,6 +27,23 @@ class ListaMovimentos(View):
 
     def mount_context(self):
         self.cursor = connections['so'].cursor()
+
+        dados = models.DocMovStq.objects
+        if self.context['data']:
+            dados = dados.filter(data=self.context['data'])
+
+        fields = ['num_doc', 'descricao', 'data', 'usuario__username']
+        dados = dados.values(*fields)
+        pprint(dados)
+        for row in dados:
+            pprint(row)
+
+        headers = ['Documento', 'Descrição', 'Data', 'Usuário']
+        self.context.update({
+            'headers': headers,
+            'fields': fields,
+            'dados': dados,
+            })
 
     def get(self, request, *args, **kwargs):
         self.context['form'] = self.Form_class()
