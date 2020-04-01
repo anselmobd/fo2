@@ -17,7 +17,7 @@ class Transfere():
     def __init__(
             self, cursor, nivel, ref, tam, cor, qtd,
             deposito_origem, deposito_destino,
-            num_doc, descricao, request):
+            num_doc, descricao, request, cria_num_doc=True):
         self.can_exec = False
 
         self.cursor = cursor
@@ -31,6 +31,7 @@ class Transfere():
         self.num_doc = num_doc
         self.descricao = descricao
         self.request = request
+        self.cria_num_doc = cria_num_doc
 
         self.valid_entries()
         self.valid_configuracao()
@@ -76,9 +77,11 @@ class Transfere():
 
     def valid_num_doc(self):
         obj_doc_mov_stq = classes.ObjDocMovStq(
-            self.num_doc, self.descricao, self.request.user)
-        self.num_doc = obj_doc_mov_stq.num_doc
-        self.doc_mov_stq = obj_doc_mov_stq.doc_mov_stq
+            self.num_doc, self.descricao, self.request.user,
+            cria=self.cria_num_doc)
+        if obj_doc_mov_stq.num_doc != '0':
+            self.num_doc = obj_doc_mov_stq.num_doc
+            self.doc_mov_stq = obj_doc_mov_stq.doc_mov_stq
 
     def get_estoque(self, deposito_field):
         l_estoque = queries.get_estoque_dep_niv_ref_cor_tam(
