@@ -6,6 +6,9 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+.bad {
+  color: darkred;
+}
 </style>
 {% endblock %}
 
@@ -14,13 +17,10 @@
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
-  {% if erro_msg %}
-    <h4 class="bad">Erro: {{ erro_msg }}</h4>
-  {% endif %}
-  {% if sucesso_msg %}
-    <h4 class="ok">Sucesso: {{ sucesso_msg }}</h4>
-  {% endif %}
 </form>
+{% if erro_msg %}
+  <h4 class="bad">Erro: {{ erro_msg }}</h4>
+{% endif %}
 {% if request.POST.busca %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
   {% if dados %}
@@ -28,8 +28,6 @@
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
     </table>
-  {% else %}
-    <h4>Nenhum movimento encontrado</h4>
   {% endif %}
 {% endif %}
 {% endblock %}
