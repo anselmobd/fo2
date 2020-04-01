@@ -28,17 +28,45 @@ class ListaMovimentos(View):
     def mount_context(self):
         self.cursor = connections['so'].cursor()
 
-        dados = models.DocMovStq.objects
-        if self.context['data']:
-            dados = dados.filter(data=self.context['data'])
+        try:
+            documento = models.DocMovStq.objects.get(
+                num_doc=self.context['num_doc'])
+        except models.DocMovStq.DoesNotExist:
+            self.context.update({
+                'erro_msg': 'Documento não encontrado'
+            })
+            return
 
-        fields = ['num_doc', 'descricao', 'data', 'usuario__username']
+        dados = models.MovStq.objects.filter(
+            documento=documento)
+        if len(dados) == 0:
+            self.context.update({
+                'erro_msg': 'Nenhum movimento encontrado'
+            })
+            return
+
+        fields = [
+            'item__produto__nivel',
+            'item__produto__referencia',
+            'item__cor__cor',
+            'item__tamanho__tamanho__nome',
+            'quantidade',
+            'deposito_origem',
+            'deposito_destino',
+            'usuario__username',
+        ]
         dados = dados.values(*fields)
-        pprint(dados)
-        for row in dados:
-            pprint(row)
 
-        headers = ['Documento', 'Descrição', 'Data', 'Usuário']
+        headers = [
+            'Nível',
+            'Referência',
+            'Cor',
+            'Tamanho',
+            'Quantidade',
+            'Dep. origem',
+            'Dep. destino',
+            'Usuário',
+        ]
         self.context.update({
             'headers': headers,
             'fields': fields,
