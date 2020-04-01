@@ -33,7 +33,8 @@ class Transferencia(PermissionRequiredMixin, View):
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
                     'deposito_origem', 'deposito_destino',
                     'num_doc', 'descricao']),
-                self.request
+                self.request,
+                cria_num_doc=('executa' in self.request.POST)
             )
         except Exception as e:
             self.context.update({
