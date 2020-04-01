@@ -19,8 +19,6 @@ class ObjDocMovStq():
 
         self.get_num_doc()
 
-        self.valid_user()
-
     def get_num_doc(self):
         if self.num_doc == '0':
             self.cria_num_doc()
