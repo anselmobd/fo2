@@ -10,10 +10,11 @@ from estoque import models
 
 class ObjDocMovStq():
 
-    def __init__(self, num_doc, descricao, user):
+    def __init__(self, num_doc, descricao, user, cria=True):
         self.num_doc = num_doc
         self.descricao = descricao
         self.user = user
+        self.cria = cria
 
         self.cursor = connections['so'].cursor()
 
@@ -21,7 +22,8 @@ class ObjDocMovStq():
 
     def get_num_doc(self):
         if self.num_doc == '0':
-            self.cria_num_doc()
+            if self.cria:
+                self.cria_num_doc()
         else:
             self.valid_num_doc()
             self.valid_user()
