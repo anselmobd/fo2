@@ -34,9 +34,6 @@ class ListaDocsMovimentacao(View):
 
         fields = ['num_doc', 'descricao', 'data', 'usuario__username']
         dados = dados.values(*fields)
-        pprint(dados)
-        for row in dados:
-            pprint(row)
 
         headers = ['Documento', 'Descrição', 'Data', 'Usuário']
         self.context.update({
