@@ -3,6 +3,12 @@
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
 {% block header.content %}{{ titulo }} - <a href="{% url 'estoque:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
 {% block content %}
 <form action="{% url 'estoque:lista_movs' %}" method="post">
   {% csrf_token %}
