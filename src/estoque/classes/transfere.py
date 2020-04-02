@@ -95,7 +95,7 @@ class Transfere():
 
     def valid_transacao(self, codigo, ent_sai, descricao):
         try:
-            tipo_trans = sys_mod.TipoTransacao.objects.get(
+            tipo_trans = sys_mod.TipoTransacao.validos.get(
                 codigo_transacao=codigo)
         except sys_mod.TipoTransacao.DoesNotExist as e:
             raise ValueError(
