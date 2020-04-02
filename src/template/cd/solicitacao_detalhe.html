@@ -6,10 +6,60 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+#pop_back {
+  display:none;
+  z-index:100;
+  opacity: 0.5;
+
+  width: 100%;
+  height: 100%;
+  margin: 0em;
+  left: 0em;
+  top: 0em;
+  background: black;
+  position: fixed;
+}
+#pop {
+  display:none;
+  z-index:110;
+  opacity: 1;
+
+  width: 22em;
+  height: 23em;
+  background-color: #fff;
+
+  position: fixed;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  margin: auto;
+  border:5px solid #ddd;
+  padding:3px;
+}
+#pop p {
+  margin: 0px;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<div id="all_content">
+<div id="pop_back">
+</div>
+<div id="pop" tabindex="1">
+  <a class="pop" href="javascript:close_transfere();"><span class="glyphicon glyphicon-remove" style="font-size: 1.5em" aria-hidden="true"></span></a>
+  <div style="text-align:center;">
+    <h4>Transferência entre depósitos</h4>
+    <p>Referência: <b><span id="cod_ref"></span></b></p>
+    <p>Cor: <b><span id="cod_cor"></span></b></p>
+    <p>Tamanho: <b><span id="cod_tam"></span></b></p>
+    <p>Quantidade: <b><span id="cod_qtd"></span></b></p>
+    <p>Depósito: <b><span id="cod_dep"></span></b></p>
+
+  </div>
+</div>
 {% if erro %}
   <h3>{{ erro }}</h3>
 {% else %}
@@ -127,6 +177,7 @@
   </div>
 
 {% endif %}
+</div>
 {% endblock %}
 
 {% block javascript %}
@@ -140,5 +191,33 @@ $(document).ready(function(){
         $('#myTab a[href="' + activeTab + '"]').tab('show');
     }
 });
+
+  function transfere(ref, cor, tam, qtd, dep) {
+    console.log('transfere');
+    document.getElementById("cod_ref").innerHTML = ref;
+    document.getElementById("cod_cor").innerHTML = cor;
+    document.getElementById("cod_tam").innerHTML = tam;
+    document.getElementById("cod_qtd").innerHTML = qtd;
+    document.getElementById("cod_dep").innerHTML = dep;
+
+    document.getElementById('pop_back').style.display='block';
+    document.getElementById('pop').style.display='block';
+
+    document.getElementById("pop").focus();
+  }
+
+  function close_transfere() {
+    console.log('close_transfere');
+    document.getElementById('pop_back').style.display='none';
+    document.getElementById('pop').style.display='none';
+  }
+
+  function page_keys(e) {
+    console.log('keys_transferir');
+    if (e.keyCode == 27) {
+      // close_transfere();
+      console.log('oi');
+    }
+  }
 </script>
 {% endblock %}

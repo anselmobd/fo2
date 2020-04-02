@@ -190,7 +190,14 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             if can_transf:
                 row['transf_order'] = 0
                 row['transf|HOVER'] = 'Transfere lote para caixinha'
-                row['transf|LINK'] = '#'
+                row['transf|LINK'] = (
+                    "javascript:transfere("
+                    f"  '{row['lote__referencia']}'"
+                    f", '{row['lote__cor']}'"
+                    f", '{row['lote__tamanho']}'"
+                    f", '{row['qtdsum']}'"
+                    f", '{row['lote__tamanho']}'"
+                    ")")
                 row['transf|GLYPHICON'] = 'glyphicon-log-in'
 
         para_cx = sorted(
