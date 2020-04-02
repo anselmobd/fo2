@@ -196,6 +196,7 @@ class Lote(models.Model):
     def save(self, *args, **kwargs):
         ''' On create and update, get timestamps '''
         now = timezone.now()
+
         if self.id:
             self.update_at = now
             if self.local or self.__original_local:
@@ -203,6 +204,16 @@ class Lote(models.Model):
                     self.local_at = now
         else:  # At create have no "id"
             self.create_at = now
+
+        if self.op_obj is None:
+            op = None
+            try:
+                op = Op.objects.get(op=self.op)
+            except Exception:
+                pass
+            if op is not None:
+                self.op_obj = op
+
         return super(Lote, self).save(*args, **kwargs)
 
     class Meta:
