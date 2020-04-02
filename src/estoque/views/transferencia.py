@@ -42,7 +42,7 @@ class Transferencia(PermissionRequiredMixin, View):
 
         try:
             transf = classes.Transfere(
-                self.cursor, self.kwargs['tipo'],
+                self.cursor, self.tip_mov,
                 *(self.context[f] for f in [
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
                     'deposito_origem', 'deposito_destino',
