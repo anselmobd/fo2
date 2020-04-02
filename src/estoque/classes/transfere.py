@@ -15,12 +15,13 @@ from estoque import queries
 class Transfere():
 
     def __init__(
-            self, cursor, nivel, ref, tam, cor, qtd,
+            self, cursor, tipo, nivel, ref, tam, cor, qtd,
             deposito_origem, deposito_destino,
             num_doc, descricao, request, cria_num_doc=True):
         self.can_exec = False
 
         self.cursor = cursor
+        self.tipo = tipo
         self.nivel = nivel
         self.ref = ref
         self.tam = tam
@@ -99,12 +100,12 @@ class Transfere():
         except sys_mod.TipoTransacao.DoesNotExist as e:
             raise ValueError(
                 f'Não encontrada transação de {descricao} '
-                f'"{codigo}" do tipo de movimento de estoque "TRANSF".')
+                f'"{codigo}" do tipo de movimento de estoque "{self.tipo}".')
 
         if tipo_trans.entrada_saida not in ent_sai:
             raise ValueError(
                 f'Transação de {descricao} "{codigo}" '
-                'do tipo de movimento de estoque "TRANSF" é do '
+                f'do tipo de movimento de estoque "{self.tipo}" é do '
                 'tipo da operação errado.')
 
         if tipo_trans.entrada_saida == 'T':
@@ -114,10 +115,10 @@ class Transfere():
 
     def valid_configuracao(self):
         try:
-            tip_mov = models.TipoMovStq.objects.get(codigo='TRANSF')
+            tip_mov = models.TipoMovStq.objects.get(codigo=self.tipo)
         except models.TipoMovStq.DoesNotExist as e:
             raise ValueError(
-                'Tipo de movimento de estoque "TRANSF" não cadastrado.')
+                f'Tipo de movimento de estoque "{self.tipo}" não cadastrado.')
 
         self.trans_saida = tip_mov.trans_saida
         self.trans_entrada = tip_mov.trans_entrada
