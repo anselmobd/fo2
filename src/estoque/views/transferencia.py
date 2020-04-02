@@ -7,8 +7,9 @@ from django.views import View
 
 from utils.functions.views import cleanned_fields_to_context
 
-from estoque import forms
 from estoque import classes
+from estoque import forms
+from estoque import models
 
 
 class Transferencia(PermissionRequiredMixin, View):
@@ -27,8 +28,19 @@ class Transferencia(PermissionRequiredMixin, View):
         self.cursor = connections['so'].cursor()
 
         try:
+            tip_mov = models.TipoMovStq.objects.get(codigo=self.kwargs['tipo'])
+        except models.TipoMovStq.DoesNotExist as e:
+            self.context.update({
+                'erro_input': True,
+                'erro_msg':
+                    f'Tipo de movimento de estoque "{self.kwargs["tipo"]}" '
+                    'não cadastrado.',
+            })
+            return
+
+        try:
             transf = classes.Transfere(
-                self.cursor, self.tipo,
+                self.cursor, self.kwargs['tipo'],
                 *(self.context[f] for f in [
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
                     'deposito_origem', 'deposito_destino',
@@ -69,7 +81,7 @@ class Transferencia(PermissionRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        self.tipo = kwargs['tipo']
+        self.kwargs = kwargs
         self.request = request
         self.context['form'] = self.Form_class(
             request.POST, user=self.request.user)
