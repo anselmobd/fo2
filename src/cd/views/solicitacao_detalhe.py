@@ -200,6 +200,8 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                     f", '{row['lote__op_obj__deposito']}'"
                     ")")
                 row['transf|GLYPHICON'] = 'glyphicon-log-in'
+            row['lote__op|LINK'] = reverse(
+                'producao:op__get', args=[row['lote__op']])
 
         para_cx = sorted(
             para_cx, key=lambda i: (
