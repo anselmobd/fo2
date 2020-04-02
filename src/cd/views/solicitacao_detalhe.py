@@ -156,7 +156,8 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         para_cx = lotes.models.SolicitaLoteQtd.objects.values(
             'lote__op', 'lote__lote', 'lote__qtd_produzir',
             'lote__estagio', 'lote__referencia',
-            'lote__cor', 'lote__tamanho', 'lote__ordem_tamanho'
+            'lote__cor', 'lote__tamanho', 'lote__ordem_tamanho',
+            'lote__op_obj__deposito'
         ).annotate(
             lote_ordem=Coalesce('lote__local', Value('0000')),
             lote__local=Coalesce('lote__local', Value('-Ausente-')),
@@ -196,7 +197,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                     f", '{row['lote__cor']}'"
                     f", '{row['lote__tamanho']}'"
                     f", '{row['qtdsum']}'"
-                    f", '{row['lote__tamanho']}'"
+                    f", '{row['lote__op_obj__deposito']}'"
                     ")")
                 row['transf|GLYPHICON'] = 'glyphicon-log-in'
 
