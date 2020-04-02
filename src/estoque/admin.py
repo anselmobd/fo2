@@ -6,7 +6,7 @@ from .models import TipoMovStq, DocMovStq, MovStq
 
 
 class TipoMovStqAdmin(admin.ModelAdmin):
-    list_display = ["codigo", "descricao"]
+    list_display = ["codigo", "descricao", "trans_saida", "trans_entrada"]
 
 
 class DocMovStqAdmin(admin.ModelAdmin):
