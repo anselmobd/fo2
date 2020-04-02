@@ -38,6 +38,14 @@ class ListaMovimentos(View):
             })
             return
 
+        self.context.update({
+            'infos': {
+                'Data': documento.data,
+                'Descrição': documento.descricao,
+                'Usuário': documento.usuario.username,
+            }
+        })
+
         dados = models.MovStq.objects.filter(
             documento=documento)
         if len(dados) == 0:
