@@ -156,6 +156,8 @@ class Lote(models.Model):
         db_index=True, max_length=20, verbose_name='lote')
     op = models.IntegerField(
         db_index=True, null=True, blank=True, verbose_name='OP')
+    op_obj = models.ForeignKey(
+        Op, null=True, default=None, on_delete=models.PROTECT)
     referencia = models.CharField(
         db_index=True, max_length=5, verbose_name='Referência')
     tamanho = models.CharField(
