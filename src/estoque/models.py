@@ -18,17 +18,17 @@ class EstoquePermissions(models.Model):
 
 class TipoMovStq(models.Model):
     codigo = models.CharField(
-        max_length=100, unique=True, default="-",
-        verbose_name='Código')
+        'Código',
+        max_length=100, unique=True, default="-")
     descricao = models.CharField(
-        max_length=100,
-        verbose_name='Descrição')
+        'Descrição',
+        max_length=100)
     trans_saida = models.IntegerField(
-        default=0,
-        verbose_name='Transação de saída')
+        'Transação de saída',
+        default=0)
     trans_entrada = models.IntegerField(
-        default=0,
-        verbose_name='Transação de entrada')
+        'Transação de entrada',
+        default=0)
 
     def __str__(self):
         return self.descricao
@@ -52,11 +52,11 @@ class DocMovStqManager(models.Manager):
 
 class DocMovStq(models.Model):
     descricao = models.CharField(
-        max_length=100,
-        verbose_name='Descrição')
+        'Descrição',
+        max_length=100)
     data = models.DateField()
     usuario = models.ForeignKey(
-        User, on_delete=models.PROTECT,
+        User, models.PROTECT,
         verbose_name='usuário')
 
     objects = DocMovStqManager()
@@ -81,18 +81,18 @@ class DocMovStq(models.Model):
 
 class MovStq(models.Model):
     item = models.ForeignKey(
-        ProdutoItem, on_delete=models.PROTECT)
+        ProdutoItem, models.PROTECT)
     quantidade = models.IntegerField(
         default=0)
     deposito_origem = models.IntegerField(
-        verbose_name='Depósito de origem')
+        'Depósito de origem')
     deposito_destino = models.IntegerField(
-        verbose_name='Depósito de destino')
+        'Depósito de destino')
     documento = models.ForeignKey(
-        DocMovStq, on_delete=models.PROTECT,
+        DocMovStq, models.PROTECT,
         verbose_name='Documento de movimento de estoque')
     usuario = models.ForeignKey(
-        User, on_delete=models.PROTECT,
+        User, models.PROTECT,
         verbose_name='usuário')
 
     def __str__(self):
