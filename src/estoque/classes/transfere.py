@@ -55,10 +55,19 @@ class Transfere():
                 f'Não encontrado o preço médio do item {self.str_item}.')
 
     def valid_entries(self):
+        self.valid_tipo()
         self.valid_item()
         self.valid_quant()
         self.valid_deps()
         self.valid_num_doc()
+
+    def valid_tipo(self):
+        try:
+            self.tip_mov = models.TipoMovStq.objects.get(codigo=self.tipo)
+        except models.TipoMovStq.DoesNotExist as e:
+            raise ValueError(
+                f'Tipo de movimento de estoque "{self.tipo}" '
+                'não cadastrado.')
 
     def valid_item(self):
         objs_prod = pro_cla.ObjsProduto(
@@ -114,14 +123,8 @@ class Transfere():
             return tipo_trans.entrada_saida
 
     def valid_configuracao(self):
-        try:
-            tip_mov = models.TipoMovStq.objects.get(codigo=self.tipo)
-        except models.TipoMovStq.DoesNotExist as e:
-            raise ValueError(
-                f'Tipo de movimento de estoque "{self.tipo}" não cadastrado.')
-
-        self.trans_saida = tip_mov.trans_saida
-        self.trans_entrada = tip_mov.trans_entrada
+        self.trans_saida = self.tip_mov.trans_saida
+        self.trans_entrada = self.tip_mov.trans_entrada
 
         self.trans_saida_e_s = self.valid_transacao(
             self.trans_saida, 'ST', 'saída')
