@@ -28,7 +28,7 @@ class Transferencia(PermissionRequiredMixin, View):
 
         try:
             transf = classes.Transfere(
-                self.cursor,
+                self.cursor, self.tipo,
                 *(self.context[f] for f in [
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
                     'deposito_origem', 'deposito_destino',
@@ -69,6 +69,7 @@ class Transferencia(PermissionRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
+        self.tipo = kwargs['tipo']
         self.request = request
         self.context['form'] = self.Form_class(
             request.POST, user=self.request.user)

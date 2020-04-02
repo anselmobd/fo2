@@ -47,7 +47,7 @@ urlpatterns = [
         r'(?P<tam>[^/]+)/(?P<deposito>[^/]+)/$',
         views.ItemNoTempo.as_view(), name='item_no_tempo__get'),
 
-    url(r'^transferencia/$', views.Transferencia.as_view(),
+    url(r'^transferencia/(?P<tipo>.+)/$', views.Transferencia.as_view(),
         name='transferencia'),
 
     url(r'^lista_movs/$', views.ListaMovimentos.as_view(),
