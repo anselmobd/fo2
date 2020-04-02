@@ -84,8 +84,6 @@ class Transferencia(PermissionRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        self.kwargs = kwargs
-        self.request = request
         self.context['form'] = self.Form_class(
             request.POST, user=self.request.user)
         if self.context['form'].is_valid():
