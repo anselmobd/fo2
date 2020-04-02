@@ -41,7 +41,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'estoque:transferencia' 'transf' %}" method="post">
+<form action="" method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" name="analisa" value="Analisa"/>
