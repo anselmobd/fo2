@@ -116,6 +116,10 @@ class ItemNoTempo(View):
             if (row['doc'] // 1000000) == 702:
                 row['tipo'] = 'Ajuste por inventário'
                 row['proc'] = '_'
+            elif (row['doc'] // 1000000) == 802:
+                row['tipo'] = 'Transferência entre depósitos'
+                row['proc'] = '_'
+                tipo_doc = '802'
             else:
                 if row['proc'] in ('estq_f015'):
                     row['tipo'] = 'Movimentação de estoques'
@@ -168,6 +172,9 @@ class ItemNoTempo(View):
             elif tipo_doc == 'op':
                 row['doc|LINK'] = reverse(
                     'producao:op__get', args=[row['doc']])
+            elif tipo_doc == '802':
+                row['doc|LINK'] = reverse(
+                    'estoque:lista_movs__get', args=[row['doc']])
 
             if row['ped'] is None or row['ped'] == 0:
                 row['ped'] = '.'
