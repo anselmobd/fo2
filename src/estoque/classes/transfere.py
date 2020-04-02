@@ -62,12 +62,15 @@ class Transfere():
         self.valid_num_doc()
 
     def valid_tipo(self):
-        try:
-            self.tip_mov = models.TipoMovStq.objects.get(codigo=self.tipo)
-        except models.TipoMovStq.DoesNotExist as e:
-            raise ValueError(
-                f'Tipo de movimento de estoque "{self.tipo}" '
-                'não cadastrado.')
+        if isinstance(self.tipo, models.TipoMovStq):
+            self.tip_mov = self.tipo
+        else:
+            try:
+                self.tip_mov = models.TipoMovStq.objects.get(codigo=self.tipo)
+            except models.TipoMovStq.DoesNotExist as e:
+                raise ValueError(
+                    f'Tipo de movimento de estoque "{self.tipo}" '
+                    'não cadastrado.')
 
     def valid_item(self):
         objs_prod = pro_cla.ObjsProduto(
