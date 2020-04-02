@@ -41,6 +41,12 @@ class TipoContaEstoque(HDoc001):
         verbose_name = "Tipo de conta de estoque"
 
 
+class TipoTransacaoManager(models.Manager):
+    def get_queryset(self):
+        return super(TipoTransacaoManager, self).get_queryset().exclude(
+            codigo_transacao=0)
+
+
 class TipoTransacao(models.Model):
     codigo_transacao = models.IntegerField(
         primary_key=True,
@@ -51,6 +57,8 @@ class TipoTransacao(models.Model):
     entrada_saida = models.CharField(
         max_length=1,
         verbose_name='Entrada/Saída')
+
+    validos = TipoTransacaoManager()
 
     def __str__(self):
         return (f'{self.codigo_transacao} ({self.entrada_saida}) - '
