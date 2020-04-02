@@ -23,6 +23,9 @@
 {% endif %}
 {% if post %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+  {% for info in infos %}
+    <h5>{{info}}: {{infos|get_item:info}}</h5>
+  {% endfor %}
   {% if dados %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
