@@ -79,6 +79,7 @@ class Transfere():
             self.nova_ref = self.ref
             self.novo_tam = self.tam
             self.nova_cor = self.cor
+            self.produto_novo_item = None
 
         self.valid_num_doc()
 
@@ -218,6 +219,7 @@ class Transfere():
             quantidade=self.qtd,
             deposito_origem=self.deposito_origem,
             deposito_destino=self.deposito_destino,
+            novo_item=self.produto_novo_item,
             documento=self.doc_mov_stq,
             usuario=self.request.user,
         )
