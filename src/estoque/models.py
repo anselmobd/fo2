@@ -29,6 +29,9 @@ class TipoMovStq(models.Model):
     trans_entrada = models.IntegerField(
         'Transação de entrada',
         default=0)
+    menu = models.BooleanField(
+        'Aparece no menu',
+        default=False)
 
     def __str__(self):
         return self.descricao
