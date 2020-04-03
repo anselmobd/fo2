@@ -34,7 +34,7 @@ class ListaDocsMovimentacao(View):
             dados = dados.filter(data=self.context['data'])
 
         fields = ['num_doc', 'descricao', 'data', 'usuario__username']
-        dados = dados.values(*fields)
+        dados = dados.order_by('-num_doc').values(*fields)
 
         for row in dados:
             row['num_doc|LINK'] = reverse(
