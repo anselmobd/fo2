@@ -61,6 +61,22 @@ class TransferenciaForm(forms.Form):
         label='Depósito de destino', required=True,
         choices=CHOICES, initial='122')
 
+    nova_ref = forms.CharField(
+        label='Nova referência', min_length=1, max_length=5,
+        widget=forms.TextInput(attrs={
+            'size': 5,
+            **autofocus_attrs, **string_upper_attrs, **placeholder_00}))
+
+    nova_cor = forms.CharField(
+        label='Nova cor', min_length=1, max_length=6,
+        widget=forms.TextInput(attrs={
+            'size': 6, **string_upper_attrs, **placeholder_00}))
+
+    novo_tam = forms.CharField(
+        label='Novo tamanho', min_length=1, max_length=3,
+        widget=forms.TextInput(attrs={
+            'size': 3, **string_upper_attrs}))
+
     num_doc = forms.ChoiceField(
         label='Número de documento', required=False,
         choices=[], initial=0)
@@ -88,6 +104,10 @@ class TransferenciaForm(forms.Form):
             self.hidden_field(self.fields['deposito_destino'])
         if self.tipo_mov.trans_saida == 0:
             self.hidden_field(self.fields['deposito_origem'])
+        if not self.tipo_mov.renomeia:
+            self.hidden_field(self.fields['nova_ref'])
+            self.hidden_field(self.fields['nova_cor'])
+            self.hidden_field(self.fields['novo_tam'])
 
     def mount_num_doc_choices(self):
         self.num_doc_recente = 0
