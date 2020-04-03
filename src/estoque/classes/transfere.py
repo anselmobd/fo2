@@ -72,8 +72,14 @@ class Transfere():
         self.valid_item()
         self.valid_quant()
         self.valid_deps()
+
         if self.tip_mov.renomeia:
             self.valid_novo_item()
+        else:
+            self.nova_ref = self.ref
+            self.novo_tam = self.tam
+            self.nova_cor = self.cor
+
         self.valid_num_doc()
 
     def valid_tipo(self):
@@ -218,13 +224,22 @@ class Transfere():
         mov_stq.save()
 
     def insert(self, descr, dep, trans, e_s):
+        if descr == 'entrada':
+            ref = self.nova_ref
+            tam = self.novo_tam
+            cor = self.nova_cor
+        else:
+            ref = self.ref
+            tam = self.tam
+            cor = self.cor
+
         if not queries.insert_transacao(
                 self.cursor,
                 dep,
                 self.nivel,
-                self.ref,
-                self.tam,
-                self.cor,
+                ref,
+                tam,
+                cor,
                 self.num_doc,
                 trans,
                 e_s,
