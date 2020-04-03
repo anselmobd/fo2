@@ -53,6 +53,7 @@ class Transferencia(PermissionRequiredMixin, View):
                 *(self.context[f] for f in [
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
                     'deposito_origem', 'deposito_destino',
+                    'nova_ref', 'novo_tam', 'nova_cor',
                     'num_doc', 'descricao']),
                 self.request,
                 cria_num_doc=('executa' in self.request.POST)
