@@ -32,6 +32,8 @@ class TipoMovStq(models.Model):
     menu = models.BooleanField(
         'Aparece no menu',
         default=False)
+    ordem = models.IntegerField(
+        default=0)
 
     def __str__(self):
         return self.descricao
