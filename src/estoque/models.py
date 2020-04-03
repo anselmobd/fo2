@@ -81,7 +81,7 @@ class DocMovStq(models.Model):
 
 class MovStq(models.Model):
     tipo_mov = models.ForeignKey(
-        TipoMovStq, models.PROTECT, default=None,
+        TipoMovStq, models.PROTECT,
         verbose_name='Tipo de movimento')
     item = models.ForeignKey(
         ProdutoItem, models.PROTECT)
