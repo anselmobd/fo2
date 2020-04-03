@@ -20,7 +20,7 @@ class DocMovStqAdmin(admin.ModelAdmin):
 
 
 class MovStqAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["tipo_mov", "__str__"]
 
 
 intr_adm_site.register(TipoMovStq, TipoMovStqAdmin)
