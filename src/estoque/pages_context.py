@@ -10,5 +10,6 @@ def get_estoque_movimentos(context):
     if context.environ['PATH_INFO'] in [
             reverse('apoio_ao_erp'),
             reverse('estoque:index')]:
-        movimentos = estoque.models.TipoMovStq.objects.filter(menu=True)
+        movimentos = estoque.models.TipoMovStq.objects.filter(
+            menu=True).order_by('ordem')
     return {'estoque_movimentos': movimentos}
