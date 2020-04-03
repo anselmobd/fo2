@@ -10,6 +10,8 @@ from utils.functions.views import (
     context_to_form_post,
     )
 
+import produto.functions as pro_fun
+
 from estoque import forms
 from estoque import models
 
@@ -72,14 +74,22 @@ class ListaMovimentos(View):
         dados = dados.values(*fields)
 
         for row in dados:
+            row['str_item'] = pro_fun.item_str(
+                row['item__produto__nivel'],
+                row['item__produto__referencia'],
+                row['item__cor__cor'],
+                row['item__tamanho__tamanho__nome']
+            )
+
             if row['novo_item__produto__nivel'] is None:
-                row['novo_item__produto__nivel'] = '='
-            if row['novo_item__produto__referencia'] is None:
-                row['novo_item__produto__referencia'] = '='
-            if row['novo_item__cor__cor'] is None:
-                row['novo_item__cor__cor'] = '='
-            if row['novo_item__tamanho__tamanho__nome'] is None:
-                row['novo_item__tamanho__tamanho__nome'] = '='
+                row['str_novo_item'] = '='
+            else:
+                row['str_novo_item'] = pro_fun.item_str(
+                    row['novo_item__produto__nivel'],
+                    row['novo_item__produto__referencia'],
+                    row['novo_item__cor__cor'],
+                    row['novo_item__tamanho__tamanho__nome']
+                )
 
             if row['deposito_origem'] == 0:
                 row['deposito_origem'] = '-'
@@ -107,18 +117,21 @@ class ListaMovimentos(View):
 
         headers = [
             'Tipo de Movimento',
-            'Nível',
-            'Referência',
-            'Cor',
-            'Tamanho',
+            'Item',
             'Quantidade',
             'Dep. origem',
             'Dep. destino',
-            'Nível',
-            'Referência',
-            'Cor',
-            'Tamanho',
+            'Novo item',
             'Usuário',
+        ]
+        fields = [
+            'tipo_mov__descricao',
+            'str_item',
+            'quantidade',
+            'deposito_origem',
+            'deposito_destino',
+            'str_novo_item',
+            'usuario__username',
         ]
         self.context.update({
             'headers': headers,
