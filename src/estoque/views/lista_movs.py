@@ -55,6 +55,7 @@ class ListaMovimentos(View):
             return
 
         fields = [
+            'tipo_mov__descricao',
             'item__produto__nivel',
             'item__produto__referencia',
             'item__cor__cor',
@@ -85,6 +86,7 @@ class ListaMovimentos(View):
                     row['deposito_destino']])
 
         headers = [
+            'Tipo de Movimento',
             'Nível',
             'Referência',
             'Cor',
