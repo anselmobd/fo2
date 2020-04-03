@@ -63,11 +63,24 @@ class ListaMovimentos(View):
             'quantidade',
             'deposito_origem',
             'deposito_destino',
+            'novo_item__produto__nivel',
+            'novo_item__produto__referencia',
+            'novo_item__cor__cor',
+            'novo_item__tamanho__tamanho__nome',
             'usuario__username',
         ]
         dados = dados.values(*fields)
 
         for row in dados:
+            if row['novo_item__produto__nivel'] is None:
+                row['novo_item__produto__nivel'] = '='
+            if row['novo_item__produto__referencia'] is None:
+                row['novo_item__produto__referencia'] = '='
+            if row['novo_item__cor__cor'] is None:
+                row['novo_item__cor__cor'] = '='
+            if row['novo_item__tamanho__tamanho__nome'] is None:
+                row['novo_item__tamanho__tamanho__nome'] = '='
+
             if row['deposito_origem'] == 0:
                 row['deposito_origem'] = '-'
             else:
@@ -101,6 +114,10 @@ class ListaMovimentos(View):
             'Quantidade',
             'Dep. origem',
             'Dep. destino',
+            'Nível',
+            'Referência',
+            'Cor',
+            'Tamanho',
             'Usuário',
         ]
         self.context.update({
