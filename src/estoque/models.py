@@ -34,6 +34,9 @@ class TipoMovStq(models.Model):
         default=False)
     ordem = models.IntegerField(
         default=0)
+    renomeia = models.BooleanField(
+        'Renomeia',
+        default=False)
 
     def __str__(self):
         return self.descricao
