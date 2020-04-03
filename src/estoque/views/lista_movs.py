@@ -68,22 +68,29 @@ class ListaMovimentos(View):
         dados = dados.values(*fields)
 
         for row in dados:
-            row['deposito_origem|GLYPHICON'] = 'glyphicon-time'
-            row['deposito_origem|TARGET'] = '_BLANK'
-            row['deposito_origem|LINK'] = reverse(
-                'estoque:item_no_tempo__get', args=[
-                    row['item__produto__referencia'],
-                    row['item__cor__cor'],
-                    row['item__tamanho__tamanho__nome'],
-                    row['deposito_origem']])
-            row['deposito_destino|GLYPHICON'] = 'glyphicon-time'
-            row['deposito_destino|TARGET'] = '_BLANK'
-            row['deposito_destino|LINK'] = reverse(
-                'estoque:item_no_tempo__get', args=[
-                    row['item__produto__referencia'],
-                    row['item__cor__cor'],
-                    row['item__tamanho__tamanho__nome'],
-                    row['deposito_destino']])
+            if row['deposito_origem'] == 0:
+                row['deposito_origem'] = '-'
+            else:
+                row['deposito_origem|GLYPHICON'] = 'glyphicon-time'
+                row['deposito_origem|TARGET'] = '_BLANK'
+                row['deposito_origem|LINK'] = reverse(
+                    'estoque:item_no_tempo__get', args=[
+                        row['item__produto__referencia'],
+                        row['item__cor__cor'],
+                        row['item__tamanho__tamanho__nome'],
+                        row['deposito_origem']])
+
+            if row['deposito_destino'] == 0:
+                row['deposito_destino'] = '-'
+            else:
+                row['deposito_destino|GLYPHICON'] = 'glyphicon-time'
+                row['deposito_destino|TARGET'] = '_BLANK'
+                row['deposito_destino|LINK'] = reverse(
+                    'estoque:item_no_tempo__get', args=[
+                        row['item__produto__referencia'],
+                        row['item__cor__cor'],
+                        row['item__tamanho__tamanho__nome'],
+                        row['deposito_destino']])
 
         headers = [
             'Tipo de Movimento',
