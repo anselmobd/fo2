@@ -164,5 +164,5 @@ class TransferenciaForm(forms.Form):
             return ''
         return cleaned.upper().zfill(6)
 
-    def clean_nova_tam(self):
-        return self.cleaned_data['nova_tam'].upper()
+    def clean_novo_tam(self):
+        return self.cleaned_data['novo_tam'].upper()
