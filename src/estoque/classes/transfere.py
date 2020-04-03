@@ -35,7 +35,6 @@ class Transfere():
         self.cria_num_doc = cria_num_doc
 
         self.valid_entries()
-        self.valid_configuracao()
 
         self.calc_vars()
         self.can_exec = True
@@ -56,6 +55,7 @@ class Transfere():
 
     def valid_entries(self):
         self.valid_tipo()
+        self.valid_configuracao()
         self.valid_item()
         self.valid_quant()
         self.valid_deps()
