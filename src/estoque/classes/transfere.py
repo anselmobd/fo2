@@ -43,10 +43,16 @@ class Transfere():
         if self.tem_trans_saida:
             self.estoque_origem = self.get_estoque(self.deposito_origem)
             self.novo_estoque_origem = self.estoque_origem - self.qtd
+        else:
+            self.estoque_origem = 0
+            self.novo_estoque_origem = 0
 
         if self.tem_trans_entrada:
             self.estoque_destino = self.get_estoque(self.deposito_destino)
             self.novo_estoque_destino = self.estoque_destino + self.qtd
+        else:
+            self.estoque_destino = 0
+            self.novo_estoque_destino = 0
 
         produto = queries.get_preco_medio_niv_ref_cor_tam(
             self.cursor, self.nivel, self.ref, self.cor, self.tam)
