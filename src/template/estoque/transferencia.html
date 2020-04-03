@@ -69,20 +69,24 @@
       {% else %}
         <h4>Movimentações feitas!</h4>
       {% endif %}
-      <h4>Estoque no depósito de origem:
-        <span class='qtd_old'>{{ estoque_origem }}
-        {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
-        <span class='arrow'>&rarr;</span>
-        <span class='qtd_new'>{{ novo_estoque_origem }}
-        {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
-      </h4>
-      <h4>Estoque no depósito de destino:
-        <span class='qtd_old'>{{ estoque_destino }}
-        {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
-        <span class='arrow'>&rarr;</span>
-        <span class='qtd_new'>{{ novo_estoque_destino }}
-        {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
-      </h4>
+      {% if mov_origem %}
+        <h4>Estoque no depósito de origem:
+          <span class='qtd_old'>{{ estoque_origem }}
+          {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
+          <span class='arrow'>&rarr;</span>
+          <span class='qtd_new'>{{ novo_estoque_origem }}
+          {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
+        </h4>
+      {% endif %}
+      {% if mov_destino %}
+        <h4>Estoque no depósito de destino:
+          <span class='qtd_old'>{{ estoque_destino }}
+          {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
+          <span class='arrow'>&rarr;</span>
+          <span class='qtd_new'>{{ novo_estoque_destino }}
+          {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
+        </h4>
+      {% endif %}
     {% endif %}
   {% endif %}
   {% if request.POST.analisa and not erro_input %}
