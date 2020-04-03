@@ -62,18 +62,17 @@ class TransferenciaForm(forms.Form):
         choices=CHOICES, initial='122')
 
     nova_ref = forms.CharField(
-        label='Nova referência', min_length=1, max_length=5,
+        label='Nova referência', required=False, max_length=5,
         widget=forms.TextInput(attrs={
-            'size': 5,
-            **autofocus_attrs, **string_upper_attrs, **placeholder_00}))
+            'size': 5, **string_upper_attrs, **placeholder_00}))
 
     nova_cor = forms.CharField(
-        label='Nova cor', min_length=1, max_length=6,
+        label='Nova cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={
             'size': 6, **string_upper_attrs, **placeholder_00}))
 
     novo_tam = forms.CharField(
-        label='Novo tamanho', min_length=1, max_length=3,
+        label='Novo tamanho', required=False, max_length=3,
         widget=forms.TextInput(attrs={
             'size': 3, **string_upper_attrs}))
 
@@ -152,3 +151,18 @@ class TransferenciaForm(forms.Form):
             raise forms.ValidationError(
                     "Quantidade deve ser maior que zero.")
         return qtd
+
+    def clean_nova_ref(self):
+        cleaned = self.cleaned_data['nova_ref']
+        if len(cleaned) == 0:
+            return ''
+        return cleaned.upper().zfill(5)
+
+    def clean_nova_cor(self):
+        cleaned = self.cleaned_data['nova_cor']
+        if len(cleaned) == 0:
+            return ''
+        return cleaned.upper().zfill(6)
+
+    def clean_nova_tam(self):
+        return self.cleaned_data['nova_tam'].upper()
