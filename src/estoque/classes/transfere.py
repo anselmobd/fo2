@@ -113,6 +113,16 @@ class Transfere():
         if (len(self.nova_ref) + len(self.novo_tam) +
                 len(self.nova_cor)) == 0:
             raise ValueError('Algum novo código deve ser indicado.')
+        diferencas = 0
+        if len(self.nova_ref) != 0 and self.nova_ref != self.ref:
+            diferencas += 1
+        if len(self.novo_tam) != 0 and self.novo_tam != self.tam:
+            diferencas += 1
+        if len(self.nova_cor) != 0 and self.nova_cor != self.cor:
+            diferencas += 1
+        if diferencas == 0:
+            raise ValueError('Alguma alteração de código (referência, cor ou '
+                             'tamanho) deve ser indicada.')
 
     def valid_num_doc(self):
         obj_doc_mov_stq = classes.ObjDocMovStq(
