@@ -6,7 +6,9 @@ from .models import TipoMovStq, DocMovStq, MovStq
 
 
 class TipoMovStqAdmin(admin.ModelAdmin):
-    list_display = ["codigo", "descricao", "trans_saida", "trans_entrada"]
+    list_display = [
+        "codigo", "descricao", "trans_saida", "trans_entrada", "menu", "ordem"]
+    ordering = ["ordem"]
 
 
 class DocMovStqAdmin(admin.ModelAdmin):
