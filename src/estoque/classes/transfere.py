@@ -127,12 +127,18 @@ class Transfere():
 
     def valid_configuracao(self):
         self.trans_saida = self.tip_mov.trans_saida
-        self.trans_entrada = self.tip_mov.trans_entrada
+        self.tem_trans_saida = self.trans_saida != 0
 
-        self.trans_saida_e_s = self.valid_transacao(
-            self.trans_saida, 'ST', 'saída')
-        self.trans_entrada_e_s = self.valid_transacao(
-            self.trans_entrada, 'E', 'entrada')
+        self.trans_entrada = self.tip_mov.trans_entrada
+        self.tem_trans_entrada = self.trans_entrada != 0
+
+        if self.tem_trans_saida:
+            self.trans_saida_e_s = self.valid_transacao(
+                self.trans_saida, 'ST', 'saída')
+
+        if self.tem_trans_entrada:
+            self.trans_entrada_e_s = self.valid_transacao(
+                self.trans_entrada, 'E', 'entrada')
 
     def exec(self):
         if not self.can_exec:
