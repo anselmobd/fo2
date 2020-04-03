@@ -99,6 +99,8 @@ class MovStq(models.Model):
         'Depósito de origem')
     deposito_destino = models.IntegerField(
         'Depósito de destino')
+    novo_item = models.ForeignKey(
+        ProdutoItem, models.PROTECT, related_name='movstqdest', null=True)
     documento = models.ForeignKey(
         DocMovStq, models.PROTECT,
         verbose_name='Documento de movimento de estoque')
