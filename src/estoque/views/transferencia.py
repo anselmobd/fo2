@@ -82,7 +82,7 @@ class Transferencia(PermissionRequiredMixin, View):
                 })
                 return
             self.context.update({
-                'sucesso_msg': 'Transferência executada.'
+                'sucesso_msg': f"{self.context['titulo']} executada."
             })
 
     def get(self, request, *args, **kwargs):
