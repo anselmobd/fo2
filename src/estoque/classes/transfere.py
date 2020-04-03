@@ -85,6 +85,12 @@ class Transfere():
                 'Quantidade deve ser maior que zero.')
 
     def valid_deps(self):
+        if not self.tem_trans_saida:
+            self.deposito_origem = 0
+
+        if not self.tem_trans_entrada:
+            self.deposito_destino = 0
+
         if self.deposito_origem == self.deposito_destino:
             raise ValueError('Depósitos devem ser diferentes.')
 
