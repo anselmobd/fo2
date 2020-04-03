@@ -16,7 +16,7 @@ class Transferencia(PermissionRequiredMixin, View):
 
     Form_class = forms.TransferenciaForm
     template_name = 'estoque/transferencia.html'
-    title_name = 'Transferência entre depósitos'
+    title_name = 'Movimentações'
 
     cleanned_fields_to_context = cleanned_fields_to_context
 
@@ -24,7 +24,7 @@ class Transferencia(PermissionRequiredMixin, View):
         self.permission_required = 'estoque.can_transferencia'
         self.context = {'titulo': self.title_name}
 
-    def valid_get_tipo(self):
+    def valid_tipo(self):
         try:
             tip_mov = models.TipoMovStq.objects.get(codigo=self.kwargs['tipo'])
         except models.TipoMovStq.DoesNotExist as e:
@@ -36,6 +36,13 @@ class Transferencia(PermissionRequiredMixin, View):
             })
             return
         return tip_mov
+
+    def get_tipo(self):
+        self.tip_mov = self.valid_tipo()
+        if self.tip_mov:
+            self.context.update({
+                'titulo': self.tip_mov.descricao,
+            })
 
     def mount_context(self):
         self.cursor = connections['so'].cursor()
@@ -80,7 +87,7 @@ class Transferencia(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.context['form'] = self.Form_class(user=request.user)
-        self.valid_get_tipo()
+        self.get_tipo()
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
@@ -88,7 +95,7 @@ class Transferencia(PermissionRequiredMixin, View):
             request.POST, user=self.request.user)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
-            self.tip_mov = self.valid_get_tipo()
+            self.get_tipo()
             if self.tip_mov:
                 self.mount_context()
             self.context['form'] = self.Form_class(
