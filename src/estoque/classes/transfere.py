@@ -171,6 +171,7 @@ class Transfere():
                 )
 
         mov_stq = models.MovStq(
+            tipo_mov=self.tip_mov,
             item=self.produto_item,
             quantidade=self.qtd,
             deposito_origem=self.deposito_origem,
