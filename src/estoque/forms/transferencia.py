@@ -69,11 +69,25 @@ class TransferenciaForm(forms.Form):
         label='Descrição do documento', required=False,
         widget=forms.TextInput(attrs={'size': 50}))
 
-    def __init__(self, *args, user=None, **kwargs):
+    def __init__(self, *args, user=None, tipo_mov=None, **kwargs):
         super(TransferenciaForm, self).__init__(*args, **kwargs)
 
         self.user = user
+        self.tipo_mov = tipo_mov
+
         self.mount_num_doc_choices()
+        self.hidden_fields()
+
+    def hidden_field(self, field):
+        field.required = False
+        field.initial = None
+        field.widget = forms.HiddenInput()
+
+    def hidden_fields(self):
+        if self.tipo_mov.trans_entrada == 0:
+            self.hidden_field(self.fields['deposito_destino'])
+        if self.tipo_mov.trans_saida == 0:
+            self.hidden_field(self.fields['deposito_origem'])
 
     def mount_num_doc_choices(self):
         self.num_doc_recente = 0

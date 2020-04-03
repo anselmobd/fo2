@@ -87,17 +87,18 @@ class Transferencia(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.get_tipo()
-        self.context['form'] = self.Form_class(user=request.user)
+        self.context['form'] = self.Form_class(
+            user=request.user, tipo_mov=self.tip_mov)
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         self.get_tipo()
         self.context['form'] = self.Form_class(
-            request.POST, user=self.request.user)
+            request.POST, user=self.request.user, tipo_mov=self.tip_mov)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
             if self.tip_mov:
                 self.mount_context()
             self.context['form'] = self.Form_class(
-                self.context, user=self.request.user)
+                self.context, user=self.request.user, tipo_mov=self.tip_mov)
         return render(request, self.template_name, self.context)
