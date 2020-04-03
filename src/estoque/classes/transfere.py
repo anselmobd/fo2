@@ -127,6 +127,12 @@ class Transfere():
             raise ValueError('Alguma alteração de código (referência, cor ou '
                              'tamanho) deve ser indicada.')
 
+        objs_novo_prod = pro_cla.ObjsProduto(
+            self.nivel, self.nova_ref, self.novo_tam, self.nova_cor)
+
+        self.str_novo_item = objs_novo_prod.str_item
+        self.produto_novo_item = objs_novo_prod.produto_item
+
     def valid_num_doc(self):
         obj_doc_mov_stq = classes.ObjDocMovStq(
             self.num_doc, self.descricao, self.request.user,
