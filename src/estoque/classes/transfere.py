@@ -154,19 +154,21 @@ class Transfere():
             raise ValueError(
                 'Execução impedida por algum erro de inicialização.')
 
-        self.insert(
-            'saída',
-            self.deposito_origem,
-            self.trans_saida,
-            self.trans_saida_e_s,
-            )
+        if self.tem_trans_saida:
+            self.insert(
+                'saída',
+                self.deposito_origem,
+                self.trans_saida,
+                self.trans_saida_e_s,
+                )
 
-        self.insert(
-            'entrada',
-            self.deposito_destino,
-            self.trans_entrada,
-            self.trans_entrada_e_s,
-            )
+        if self.tem_trans_entrada:
+            self.insert(
+                'entrada',
+                self.deposito_destino,
+                self.trans_entrada,
+                self.trans_entrada_e_s,
+                )
 
         mov_stq = models.MovStq(
             item=self.produto_item,
