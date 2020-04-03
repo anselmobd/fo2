@@ -72,6 +72,8 @@ class Transfere():
         self.valid_item()
         self.valid_quant()
         self.valid_deps()
+        if self.tip_mov.renomeia:
+            self.valid_novo_item()
         self.valid_num_doc()
 
     def valid_tipo(self):
@@ -106,6 +108,11 @@ class Transfere():
 
         if self.deposito_origem == self.deposito_destino:
             raise ValueError('Depósitos devem ser diferentes.')
+
+    def valid_novo_item(self):
+        if (len(self.nova_ref) + len(self.novo_tam) +
+                len(self.nova_cor)) == 0:
+            raise ValueError('Algum novo código deve ser indicado.')
 
     def valid_num_doc(self):
         obj_doc_mov_stq = classes.ObjDocMovStq(
