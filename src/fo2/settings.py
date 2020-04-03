@@ -118,6 +118,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django_settings_export.settings_export',
                 'geral.functions.get_list_geral_paineis',
+                'estoque.pages_context.get_estoque_movimentos',
             ],
         },
     },
