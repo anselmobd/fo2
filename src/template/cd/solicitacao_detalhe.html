@@ -59,6 +59,10 @@
     <p>Depósito da OP do lote (origem): <b><span id="cod_dep"></span></b></p>
     <p>Depósito da caixinha (destino): <b>122</b></p>
     <p>Descrição: <b>Abastecimento das caixinhas</b></p>
+    <p>&nbsp;</p>
+    <p>Nova referência: <input name="nova_ref" minlength="5" id="id_nova_ref" type="text" size="5"></p>
+    <p>&nbsp;</p>
+    <p><input name="btn_transferir" id="btn_transferir" type="submit" value="Transferir" onclick="transferir();"></p>
   </div>
 </div>
 {% if erro %}
@@ -193,24 +197,31 @@ $(document).ready(function(){
     }
 });
 
-  function transfere(ref, cor, tam, qtd, dep) {
+  function transfere(ref, cor, tam, qtd, dep, nova_ref) {
     console.log('transfere');
     document.getElementById("cod_ref").innerHTML = ref;
     document.getElementById("cod_cor").innerHTML = cor;
     document.getElementById("cod_tam").innerHTML = tam;
     document.getElementById("cod_qtd").innerHTML = qtd;
     document.getElementById("cod_dep").innerHTML = dep;
+    document.getElementById('id_nova_ref').value = nova_ref;
 
     document.getElementById('pop_back').style.display='block';
     document.getElementById('pop').style.display='block';
 
-    document.getElementById("pop").focus();
+    document.getElementById('id_nova_ref').focus();
   }
 
   function close_transfere() {
     console.log('close_transfere');
     document.getElementById('pop_back').style.display='none';
     document.getElementById('pop').style.display='none';
+  }
+
+  function transferir() {
+    console.log('transferir');
+    var nova_ref = document.getElementById("id_nova_ref").value;
+    console.log(nova_ref);
   }
 
   function page_keys(e) {

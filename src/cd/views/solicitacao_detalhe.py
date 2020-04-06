@@ -198,6 +198,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                     f", '{row['lote__tamanho']}'"
                     f", '{row['qtdsum']}'"
                     f", '{row['lote__op_obj__deposito']}'"
+                    f", '{row['modelo'].zfill(5)}'"
                     ")")
                 row['transf|GLYPHICON'] = 'glyphicon-log-in'
             row['lote__op|LINK'] = reverse(
