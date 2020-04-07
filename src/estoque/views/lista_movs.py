@@ -70,6 +70,7 @@ class ListaMovimentos(View):
             'novo_item__cor__cor',
             'novo_item__tamanho__tamanho__nome',
             'usuario__username',
+            'hora',
         ]
         dados = dados.values(*fields)
 
@@ -123,6 +124,7 @@ class ListaMovimentos(View):
             'Dep. destino',
             'Novo item',
             'Usuário',
+            'Hora',
         ]
         fields = [
             'tipo_mov__descricao',
@@ -132,6 +134,7 @@ class ListaMovimentos(View):
             'deposito_destino',
             'str_novo_item',
             'usuario__username',
+            'hora',
         ]
         self.context.update({
             'headers': headers,
