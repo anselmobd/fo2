@@ -107,6 +107,8 @@ class MovStq(models.Model):
     usuario = models.ForeignKey(
         User, models.PROTECT,
         verbose_name='usuário')
+    hora = models.DateTimeField(
+        null=True, auto_now=True)
 
     def __str__(self):
         return (f'{self.documento.get_num_doc}, {self.item} '
