@@ -2,8 +2,38 @@
 <html>
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+  var metaChar = false;
+  var exampleKey = 16;
+
+  function keyEvent(event) {
+    console.log("keyEvent");
+    var key = event.keyCode || event.which;
+    var keychar = String.fromCharCode(key);
+    if (key == exampleKey) {
+      metaChar = true;
+    }
+    if (key != exampleKey) {
+      if (metaChar) {
+        console.log("Combination of metaKey + " + keychar);
+        metaChar = false;
+      } else {
+        console.log("Key pressed " + key);
+      }
+    }
+  }
+
+  function metaKeyUp(event) {
+    console.log("metaKeyUp");
+    var key = event.keyCode || event.which;
+
+    if (key == exampleKey) {
+      metaChar = false;
+    }
+  }
+  </script>
 </head>
-<body>
+<body onkeydown="keyEvent(event)" onkeyup="metaKeyUp(event)">
 <style>
 </style>
 
