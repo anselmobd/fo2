@@ -107,6 +107,9 @@ class MovStq(models.Model):
     usuario = models.ForeignKey(
         User, models.PROTECT,
         verbose_name='usuário')
+    obs = models.CharField(
+        'Observação', default='',
+        max_length=100)
     hora = models.DateTimeField(
         null=True, auto_now_add=True)
 
