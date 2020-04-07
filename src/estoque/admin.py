@@ -24,6 +24,7 @@ class DocMovStqAdmin(admin.ModelAdmin):
 
 class MovStqAdmin(admin.ModelAdmin):
     list_display = ["tipo_mov", "__str__"]
+    readonly_fields = ['hora']
 
 
 intr_adm_site.register(TipoMovStq, TipoMovStqAdmin)
