@@ -21,8 +21,11 @@ class Movimenta(PermissionRequiredMixin, View):
         except Exception as e:
             raise ValueError('Quantidade deve ser numérica')
 
-        if self.data['num_doc'] == '-':
-            self.data['num_doc'] = None
+        try:
+            self.data['num_doc'] = int(self.data['num_doc'])
+        except Exception as e:
+            raise ValueError('Número de documento deve ser numérico')
+
         if self.data['descricao'] == '-':
             self.data['descricao'] = None
         self.data['cria_num_doc'] = \
