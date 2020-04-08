@@ -59,6 +59,9 @@ class Movimenta(PermissionRequiredMixin, View):
                 erro = True
                 descricao_erro = str(e)
 
+            self.data.update({
+                'num_doc': transf.num_doc,
+            })
         if erro:
             self.data.update({
                 'result': 'ERR',
