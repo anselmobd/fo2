@@ -280,3 +280,8 @@ CACHES = {
 INTERNAL_IPS = (
     '127.0.0.1',
 )
+
+MIKROTIK = {
+    'user': 'anselmo',
+    'key_file': '/home/anselmo/.ssh/id_rsa',
+}

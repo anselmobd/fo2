@@ -34,6 +34,7 @@ DATABASES = {
         'PORT': '5434',
     },
 }
+
 DATABASES_FDB = {
     'f1': {  # F1 e SCC
         'ENGINE': 'firebird',
@@ -61,4 +62,9 @@ CACHES = {
                         "00Dtt3wAavSjhmzh03+GO+5OPFWRorvVaX8SQIBr",
         },
     }
+}
+
+MIKROTIK = {
+    'user': 'apoioerp',
+    'key_file': '/home/fo2_production/.ssh/id_rsa_tussor',
 }
