@@ -39,6 +39,7 @@ class Movimenta(PermissionRequiredMixin, View):
             try:
                 transf = classes.Transfere(
                     cursor,
+                    request,
                     self.data['tip_mov'],
                     self.data['nivel'],
                     self.data['ref'],
@@ -52,7 +53,6 @@ class Movimenta(PermissionRequiredMixin, View):
                     self.data['nova_cor'],
                     self.data['num_doc'],
                     self.data['descricao'],
-                    request,
                     self.data['cria_num_doc'],
                 )
             except Exception as e:
