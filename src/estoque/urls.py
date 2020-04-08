@@ -59,7 +59,23 @@ urlpatterns = [
     url(r'^lista_docs_mov/$', views.ListaDocsMovimentacao.as_view(),
         name='lista_docs_mov'),
 
-    url(r'^ajax/movimenta/(?P<tipo>.+)/$', views.Movimenta.as_view(),
+    url((r'^ajax/movimenta/'
+         r'(?P<tip_mov>.+)/'
+         r'(?P<nivel>.+)/'
+         r'(?P<ref>.+)/'
+         r'(?P<tam>.+)/'
+         r'(?P<cor>.+)/'
+         r'(?P<qtd>.+)/'
+         r'(?P<deposito_origem>.+)/'
+         r'(?P<deposito_destino>.+)/'
+         r'(?P<nova_ref>.+)/'
+         r'(?P<novo_tam>.+)/'
+         r'(?P<nova_cor>.+)/'
+         r'(?P<num_doc>.+)/'
+         r'(?P<descricao>.+)/'
+         r'(?P<cria_num_doc>.+)/'
+         r'$'),
+        views.Movimenta.as_view(),
         name='movimenta'),
 
 ]
