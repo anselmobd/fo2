@@ -49,13 +49,12 @@ class Transferencia(PermissionRequiredMixin, View):
 
         try:
             transf = classes.Transfere(
-                self.cursor, self.tip_mov,
+                self.cursor, self.request, self.tip_mov,
                 *(self.context[f] for f in [
                     'nivel', 'ref', 'tam', 'cor', 'qtd',
                     'deposito_origem', 'deposito_destino',
                     'nova_ref', 'novo_tam', 'nova_cor',
                     'num_doc', 'descricao']),
-                self.request,
                 cria_num_doc=('executa' in self.request.POST)
             )
         except Exception as e:

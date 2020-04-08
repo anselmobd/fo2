@@ -15,10 +15,11 @@ from estoque import queries
 class Transfere():
 
     def __init__(
-            self, cursor, tipo, nivel, ref, tam, cor, qtd,
+            self, cursor, request,
+            tipo, nivel, ref, tam, cor, qtd,
             deposito_origem, deposito_destino,
             nova_ref, novo_tam, nova_cor,
-            num_doc, descricao, request, cria_num_doc=True):
+            num_doc, descricao, cria_num_doc=True):
         self.can_exec = False
 
         self.cursor = cursor
