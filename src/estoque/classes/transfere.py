@@ -113,7 +113,8 @@ class Transfere():
         if not self.tem_trans_entrada:
             self.deposito_destino = 0
 
-        if self.deposito_origem == self.deposito_destino:
+        if not self.tip_mov.renomeia and \
+                self.deposito_origem == self.deposito_destino:
             raise ValueError('Depósitos devem ser diferentes.')
 
     def valid_novo_item(self):
