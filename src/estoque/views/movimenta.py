@@ -23,8 +23,9 @@ class Movimenta(PermissionRequiredMixin, View):
 
         if self.data['descricao'] == '-':
             self.data['descricao'] = None
-        self.data['cria_num_doc'] = \
-            self.data['cria_num_doc'].upper() == 'S'
+        self.data['executa'] = \
+            self.data['executa'].upper() == 'S'
+        self.data['cria_num_doc'] = self.data['executa']
 
     def init_transfere(self):
         self.transf = classes.Transfere(

@@ -73,7 +73,7 @@ urlpatterns = [
          r'(?P<nova_cor>.+)/'
          r'(?P<num_doc>.+)/'
          r'(?P<descricao>.+)/'
-         r'(?P<cria_num_doc>.+)/'
+         r'(?P<executa>.+)/'
          r'$'),
         views.Movimenta.as_view(),
         name='movimenta'),
