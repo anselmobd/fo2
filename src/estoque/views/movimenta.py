@@ -40,20 +40,11 @@ class Movimenta(PermissionRequiredMixin, View):
                 transf = classes.Transfere(
                     cursor,
                     request,
-                    self.data['tip_mov'],
-                    self.data['nivel'],
-                    self.data['ref'],
-                    self.data['tam'],
-                    self.data['cor'],
-                    self.data['quantidade'],
-                    self.data['deposito_origem'],
-                    self.data['deposito_destino'],
-                    self.data['nova_ref'],
-                    self.data['novo_tam'],
-                    self.data['nova_cor'],
-                    self.data['num_doc'],
-                    self.data['descricao'],
-                    self.data['cria_num_doc'],
+                    *(self.data[f] for f in [
+                        'tip_mov', 'nivel', 'ref', 'tam', 'cor', 'qtd',
+                        'deposito_origem', 'deposito_destino',
+                        'nova_ref', 'novo_tam', 'nova_cor',
+                        'num_doc', 'descricao', 'cria_num_doc']),
                 )
             except Exception as e:
                 erro = True
