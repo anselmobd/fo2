@@ -59,4 +59,7 @@ urlpatterns = [
     url(r'^lista_docs_mov/$', views.ListaDocsMovimentacao.as_view(),
         name='lista_docs_mov'),
 
+    url(r'^ajax/movimenta/(?P<tipo>.+)/$', views.Movimenta.as_view(),
+        name='movimenta'),
+
 ]

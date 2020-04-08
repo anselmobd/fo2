@@ -7,6 +7,7 @@ from .item_no_tempo import *
 from .lista_docs_mov import *
 from .lista_movs import *
 from .mostra_estoque import *
+from .movimenta import *
 from .posicao_estoque import *
 from .referencia_deposito import *
 from .refs_com_movimento import *
