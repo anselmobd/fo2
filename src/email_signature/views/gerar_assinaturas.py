@@ -91,6 +91,7 @@ class GerarAssinaturas(View):
         diretorio = conta.diretorio
         servidor = diretorio.servidor
 
+        self.transf['hostname'] = servidor.hostname
         self.transf['port'] = str(servidor.port)
         self.transf['user@server'] = f"{servidor.user}@{servidor.ip4}"
         self.transf['key_file'] = servidor.key_file.path
@@ -115,7 +116,7 @@ class GerarAssinaturas(View):
         exitcode, result, error = self.executa_comando_ssh(["hostname"])
         if exitcode != 0:
             return 'Sem acesso ao servidor'
-        if result[0] != 'servidor':
+        if result[0] != self.transf['hostname']:
             return 'Configuração de servidor errada'
 
         exitcode, result, error = self.executa_comando_ssh(
