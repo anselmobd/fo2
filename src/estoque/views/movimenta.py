@@ -28,6 +28,10 @@ class Movimenta(PermissionRequiredMixin, View):
         self.data['executa'] = \
             self.data['executa'].upper() in 'TS'
 
+        self.data.update({
+            'status': 'inicializado',
+        })
+
     def init_transfere(self):
         self.transf = classes.Transfere(
             self.cursor,
@@ -39,14 +43,26 @@ class Movimenta(PermissionRequiredMixin, View):
                 'num_doc', 'descricao', 'cria_num_doc']),
         )
 
+        self.data.update({
+            'status': 'analisado',
+        })
+
     def exec_transfere(self):
         if self.data['executa']:
             self.transf.exec()
+
+            self.data.update({
+                'status': 'executado',
+            })
 
     def get(self, request, **kwargs):
         self.request = request
         self.data = kwargs
         self.cursor = connections['so'].cursor()
+
+        self.data.update({
+            'status': 'requisitado',
+        })
 
         try:
             self.trata_input()
