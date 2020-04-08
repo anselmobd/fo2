@@ -39,6 +39,10 @@ class Movimenta(PermissionRequiredMixin, View):
                 'num_doc', 'descricao', 'cria_num_doc']),
         )
 
+    def exec_transfere(self):
+        if self.data['executa']:
+            self.transf.exec()
+
     def get(self, request, **kwargs):
         self.request = request
         self.data = kwargs
@@ -47,6 +51,7 @@ class Movimenta(PermissionRequiredMixin, View):
         try:
             self.trata_input()
             self.init_transfere()
+            self.exec_transfere()
         except Exception as e:
             self.data.update({
                 'result': 'ERR',
