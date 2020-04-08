@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 
 from utils.functions import get_client_ip, fo2logger
+from utils.functions.ssh import router_add_ip_to_apoio_auth
 
 
 def index_view(request):
@@ -38,3 +39,6 @@ def ack_view(request):
 
 class SystextilView(TemplateView):
     template_name = "oficial_systextil.html"
+
+    def __init__(self):
+        router_add_ip_to_apoio_auth()
