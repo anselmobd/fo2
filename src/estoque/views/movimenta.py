@@ -15,89 +15,58 @@ class Movimenta(PermissionRequiredMixin, View):
     def __init__(self):
         self.permission_required = 'estoque.can_transferencia'
 
-    def get(
-            self,
-            request,
-            tip_mov,
-            nivel,
-            ref,
-            tam,
-            cor,
-            quantidade,
-            deposito_origem,
-            deposito_destino,
-            nova_ref,
-            novo_tam,
-            nova_cor,
-            num_doc,
-            descricao,
-            cria_num_doc,
-            ):
+    def get(self, request, **kwargs):
 
-        data = {
-            'tip_mov': tip_mov,
-            'nivel': nivel,
-            'ref': ref,
-            'tam': tam,
-            'cor': cor,
-            'quantidade': quantidade,
-            'deposito_origem': deposito_origem,
-            'deposito_destino': deposito_destino,
-            'nova_ref': nova_ref,
-            'novo_tam': novo_tam,
-            'nova_cor': nova_cor,
-            'num_doc': num_doc,
-            'descricao': descricao,
-            'cria_num_doc': cria_num_doc,
-        }
+        self.data = kwargs
 
         cursor = connections['so'].cursor()
         erro = False
 
         try:
-            quantidade = int(quantidade)
+            self.data['quantidade'] = int(self.data['quantidade'])
         except Exception as e:
             erro = True
             descricao_erro = 'Quantidade deve ser numérica'
 
         if not erro:
-            if num_doc == '-':
-                num_doc = None
-            if descricao == '-':
-                descricao = None
-            cria_num_doc = cria_num_doc.upper() == 'S'
+            if self.data['num_doc'] == '-':
+                self.data['num_doc'] = None
+            if self.data['descricao'] == '-':
+                self.data['descricao'] = None
+            self.data['cria_num_doc'] = \
+                self.data['cria_num_doc'].upper() == 'S'
 
             try:
                 transf = classes.Transfere(
                     cursor,
-                    tip_mov,
-                    nivel,
-                    ref,
-                    tam,
-                    cor,
-                    quantidade,
-                    deposito_origem,
-                    deposito_destino,
-                    nova_ref,
-                    novo_tam,
-                    nova_cor,
-                    num_doc,
-                    descricao,
+                    self.data['tip_mov'],
+                    self.data['nivel'],
+                    self.data['ref'],
+                    self.data['tam'],
+                    self.data['cor'],
+                    self.data['quantidade'],
+                    self.data['deposito_origem'],
+                    self.data['deposito_destino'],
+                    self.data['nova_ref'],
+                    self.data['novo_tam'],
+                    self.data['nova_cor'],
+                    self.data['num_doc'],
+                    self.data['descricao'],
                     request,
-                    cria_num_doc,
+                    self.data['cria_num_doc'],
                 )
             except Exception as e:
                 erro = True
                 descricao_erro = str(e)
 
         if erro:
-            data.update({
+            self.data.update({
                 'result': 'ERR',
                 'descricao_erro': descricao_erro,
             })
-            return JsonResponse(data, safe=False)
+            return JsonResponse(self.data, safe=False)
 
-        data.update({
+        self.data.update({
             'result': 'OK',
         })
-        return JsonResponse(data, safe=False)
+        return JsonResponse(self.data, safe=False)
