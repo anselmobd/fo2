@@ -65,8 +65,7 @@ class Movimenta(PermissionRequiredMixin, View):
                 num_doc = None
             if descricao == '-':
                 descricao = None
-            if cria_num_doc == '-':
-                cria_num_doc = False
+            cria_num_doc = cria_num_doc.upper() == 'S'
 
             try:
                 transf = classes.Transfere(
