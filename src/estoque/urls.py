@@ -65,7 +65,7 @@ urlpatterns = [
          r'(?P<ref>.+)/'
          r'(?P<tam>.+)/'
          r'(?P<cor>.+)/'
-         r'(?P<qtd>.+)/'
+         r'(?P<quantidade>.+)/'
          r'(?P<deposito_origem>.+)/'
          r'(?P<deposito_destino>.+)/'
          r'(?P<nova_ref>.+)/'

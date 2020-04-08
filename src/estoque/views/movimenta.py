@@ -23,7 +23,7 @@ class Movimenta(PermissionRequiredMixin, View):
             ref,
             tam,
             cor,
-            qtd,
+            quantidade,
             deposito_origem,
             deposito_destino,
             nova_ref,
@@ -33,14 +33,6 @@ class Movimenta(PermissionRequiredMixin, View):
             descricao,
             cria_num_doc,
             ):
-        cursor = connections['so'].cursor()
-
-        if num_doc == '-':
-            num_doc = None
-        if descricao == '-':
-            descricao = None
-        if cria_num_doc == '-':
-            cria_num_doc = False
 
         data = {
             'tip_mov': tip_mov,
@@ -48,7 +40,7 @@ class Movimenta(PermissionRequiredMixin, View):
             'ref': ref,
             'tam': tam,
             'cor': cor,
-            'qtd': qtd,
+            'quantidade': quantidade,
             'deposito_origem': deposito_origem,
             'deposito_destino': deposito_destino,
             'nova_ref': nova_ref,
@@ -59,31 +51,52 @@ class Movimenta(PermissionRequiredMixin, View):
             'cria_num_doc': cria_num_doc,
         }
 
-        # try:
-        #     transf = classes.Transfere(
-        #         cursor,
-        #         tip_mov,
-        #         nivel,
-        #         ref,
-        #         tam,
-        #         cor,
-        #         qtd,
-        #         deposito_origem,
-        #         deposito_destino,
-        #         nova_ref,
-        #         novo_tam,
-        #         nova_cor,
-        #         num_doc,
-        #         descricao,
-        #         request,
-        #         cria_num_doc,
-        #     )
-        # except Exception as e:
-        #     data.update({
-        #         'result': 'ERR',
-        #         'descricao_erro': e,
-        #     })
-        #     return JsonResponse(data, safe=False)
+        cursor = connections['so'].cursor()
+        erro = False
+
+        try:
+            quantidade = int(quantidade)
+        except Exception as e:
+            erro = True
+            descricao_erro = 'Quantidade deve ser numérica'
+
+        if not erro:
+            if num_doc == '-':
+                num_doc = None
+            if descricao == '-':
+                descricao = None
+            if cria_num_doc == '-':
+                cria_num_doc = False
+
+            try:
+                transf = classes.Transfere(
+                    cursor,
+                    tip_mov,
+                    nivel,
+                    ref,
+                    tam,
+                    cor,
+                    quantidade,
+                    deposito_origem,
+                    deposito_destino,
+                    nova_ref,
+                    novo_tam,
+                    nova_cor,
+                    num_doc,
+                    descricao,
+                    request,
+                    cria_num_doc,
+                )
+            except Exception as e:
+                erro = True
+                descricao_erro = str(e)
+
+        if erro:
+            data.update({
+                'result': 'ERR',
+                'descricao_erro': descricao_erro,
+            })
+            return JsonResponse(data, safe=False)
 
         data.update({
             'result': 'OK',
