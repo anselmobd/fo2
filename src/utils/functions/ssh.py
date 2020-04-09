@@ -75,18 +75,23 @@ def returncode_etc_to_data(returncode, result, error):
 def router_list_ips():
     returncode, result, error = base_router_list_ips()
 
-    data = {
-        'returncode': returncode,
-        'result': result,
-        'error': error,
-    }
+    data = returncode_etc_to_data(returncode, result, error)
+
+    action_error = False
+    if executa_comando_nivel_ok(data) == 2:
+        if len(result) == 0:
+            action_error = True
+
+    data.update({
+        'action': (
+            'ERROR' if action_error else 'OK'),
+    })
 
     return data
 
 
 def router_add_ip_to_list(ip_list, ip):
-    returncode, result, error = base_router_add_ip_to_list(
-        ip_list, ip)
+    returncode, result, error = base_router_add_ip_to_list(ip_list, ip)
 
     data = returncode_etc_to_data(returncode, result, error)
 
