@@ -72,6 +72,9 @@ urlpatterns = [
 
     url(r'^systextil/', views.SystextilView.as_view(), name='systextil'),
 
+    url(r'^ajax/router_ip_to_apoio_auth/',
+        views.router_ip_to_apoio_auth, name='router_ip_to_apoio_auth'),
+
     # Links utilitários
 
     url(r'^myip/', views.myip_view, name='myip'),

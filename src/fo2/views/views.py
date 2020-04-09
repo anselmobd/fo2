@@ -1,10 +1,10 @@
 from django.views.generic import TemplateView
 from django.contrib.auth import logout
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from utils.functions import get_client_ip, fo2logger
-from utils.functions.ssh import router_add_ip_to_apoio_auth
+from utils.functions.ssh import router_add_ip_apoio_auth
 
 
 def index_view(request):
@@ -40,5 +40,7 @@ def ack_view(request):
 class SystextilView(TemplateView):
     template_name = "oficial_systextil.html"
 
-    def __init__(self):
-        router_add_ip_to_apoio_auth()
+
+def router_ip_to_apoio_auth(request):
+    result = router_add_ip_apoio_auth(get_client_ip(request))
+    return JsonResponse(result, safe=False)
