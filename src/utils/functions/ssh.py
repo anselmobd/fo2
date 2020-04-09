@@ -194,12 +194,17 @@ def router_add_ip_apoio_auth(ip):
     ips = get_ip_entries_from_data(data, ip)
 
     if len(ips) == 0:
+        # print('add', 'apoio_auth')
         data = router_add_ip_to_list('apoio_auth', ip)
     elif len(ips) == 1:
+        # print('add', [li for li in listas if li != ips[0]['list']][0])
         data = router_add_ip_to_list(
             [li for li in listas if li != ips[0]['list']][0], ip)
     elif len(ips) == 2:
         idx = 0 if ips[0]['timeout'] < ips[1]['timeout'] else 1
-        print('delete', ips[idx]['line'])
+        # print('del', ips[idx]['line'])
+        data = router_remove_ip_from_list(ips[idx]['line'])
+        # print('add', ips[idx]['list'])
+        data = router_add_ip_to_list(ips[idx]['list'], ip)
 
     return data
