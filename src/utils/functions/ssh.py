@@ -54,6 +54,12 @@ def base_router_list_ips():
         "/ip firewall address-list print terse")
 
 
+def base_router_remove_ip_from_list(line):
+    return executa_comando_ssh_exec(
+        f"/ip firewall address-list remove {line}"
+    )
+
+
 def returncode_etc_to_data(returncode, result, error):
     data = {
         'returncode': returncode,
@@ -81,6 +87,24 @@ def router_list_ips():
     action_error = False
     if executa_comando_nivel_ok(data) == 2:
         if len(result) == 0:
+            action_error = True
+
+    data.update({
+        'action': (
+            'ERROR' if action_error else 'OK'),
+    })
+
+    return data
+
+
+def router_remove_ip_from_list(line):
+    returncode, result, error = base_router_remove_ip_from_list(line)
+
+    data = returncode_etc_to_data(returncode, result, error)
+
+    action_error = False
+    if executa_comando_nivel_ok(data) == 2:
+        if len(result) != 0:
             action_error = True
 
     data.update({
