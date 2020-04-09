@@ -45,7 +45,7 @@ def executa_comando_ssh_exec(exec):
 def base_router_add_ip_to_list(ip_list, ip):
     return executa_comando_ssh_exec(
         f"/ip firewall address-list add list={ip_list} "
-        f"address={ip}/32 timeout=01:10:30"
+        f"address={ip}/32 timeout=02:00:00"
     )
 
 
