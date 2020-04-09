@@ -78,8 +78,8 @@ class ListaMovimentos(View):
             row['str_item'] = pro_fun.item_str(
                 row['item__produto__nivel'],
                 row['item__produto__referencia'],
-                row['item__cor__cor'],
                 row['item__tamanho__tamanho__nome']
+                row['item__cor__cor'],
             )
 
             if row['novo_item__produto__nivel'] is None:
@@ -88,8 +88,8 @@ class ListaMovimentos(View):
                 row['str_novo_item'] = pro_fun.item_str(
                     row['novo_item__produto__nivel'],
                     row['novo_item__produto__referencia'],
-                    row['novo_item__cor__cor'],
                     row['novo_item__tamanho__tamanho__nome']
+                    row['novo_item__cor__cor'],
                 )
 
             if row['deposito_origem'] == 0:
