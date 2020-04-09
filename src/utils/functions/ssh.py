@@ -1,3 +1,4 @@
+import re
 import subprocess
 from pprint import pprint
 
@@ -44,7 +45,7 @@ def executa_comando_ssh_exec(exec):
 def base_router_add_ip_to_list(ip_list, ip):
     return executa_comando_ssh_exec(
         f"/ip firewall address-list add list={ip_list} "
-        f"address={ip}/32 timeout=00:01:00"
+        f"address={ip}/32 timeout=01:10:30"
     )
 
 
@@ -122,11 +123,59 @@ def executa_comando_nivel_ok(data):
     return result
 
 
-def router_add_ip_apoio_auth(ip):
+def timeout_to_secs(timeout):
+    partes = timeout.split('h')
+    if len(partes) == 1:
+        hora = 0
+        resto = partes[0]
+    else:
+        hora = int(partes[0])
+        resto = partes[1]
+    partes = resto.split('m')
+    if len(partes) == 1:
+        minuto = 0
+        resto = partes[0]
+    else:
+        minuto = int(partes[0])
+        resto = partes[1]
+    parte = resto.strip('s')
+    segundo = int(parte)
+    return hora*60*60+minuto*60+segundo
 
-    data = router_add_ip_to_list('apoio_auth', ip)
+
+def get_ip_entries_from_data(data, ip):
+    ips = []
+    pattern = re.compile(
+        r'^ ?([0-9]+?) .*list=([^ ]+?) .*address=([^ ]+?) .*timeout=(.+?)$')
+    for linha in data['result']:
+        find = re.findall(pattern, linha)
+        if len(find) > 0:
+            matches = find[0]
+            if len(matches) == 4:
+                if matches[2] == ip:
+                    ips.append({
+                        'line': matches[0],
+                        'list': matches[1],
+                        'timeout': timeout_to_secs(matches[3]),
+                    })
+    return ips
+
+
+def router_add_ip_apoio_auth(ip):
+    listas = ['apoio_auth', 'apoio_auth_redun']
+    data = router_list_ips()
     if executa_comando_nivel_ok(data) != 3:
-        data = router_list_ips()
-        # data = router_add_ip_to_list('apoio_auth_redun', ip)
+        return data
+
+    ips = get_ip_entries_from_data(data, ip)
+
+    if len(ips) == 0:
+        data = router_add_ip_to_list('apoio_auth', ip)
+    elif len(ips) == 1:
+        data = router_add_ip_to_list(
+            [li for li in listas if li != ips[0]['list']][0], ip)
+    elif len(ips) == 2:
+        idx = 0 if ips[0]['timeout'] < ips[1]['timeout'] else 1
+        print('delete', ips[idx]['line'])
 
     return data
