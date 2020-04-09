@@ -110,7 +110,7 @@
   <small><a href="{% url 'intranet' %}">Intranet Tussor</a> | <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></small>
   <div style="text-align: center">
     <h3>Para executar o Systêxtil</h3>
-    <p>Abrir um dos links abaixo em nova aba (ou guia):<br />
+    <p>Abrir um dos links abaixo em nova aba (ou guia):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<a href="#porque">Porque?</a>}<br />
       &bullet; Clicando com o botão direito do mouse no link para aparecer um menu com opção de abrir o link em nova aba (ou guia); ou<br />
       &bullet; Fazendo "Control-clique" no link (segura a tecla "Ctrl" e clica normalmente no link) para abrir o link em nova aba (ou guia).<br />
     </p>
@@ -143,5 +143,24 @@
     <p>Clicando com o botão direito no link no Chrome</p>
     <img src="{% static "img/chrome.png" %}" alt="chrome">
   </div>
+  <hr>
+  <p id="porque" class="text-align: justify;">Originalmente,
+    o link para o "SystêxtilERP",
+    encontrado nas páginas da intranet da Tussor,
+    abria automaticamente uma nova aba no paginador,
+    com a tela de identificação do sistema Systêxtil.
+    Esse é um recurso básico para qualquer página da internet,
+    porém parou de funcionar especificamente para esse link.
+    Não foi possível entender o que causou o problema.
+    Provavelmente, foi causado por alguma atualização,
+    do sistema Sistêxtil,
+    ou dos paginadores homologados (Chrome e Firefox),
+    ou dos sistemas operacionais que utilizamos.
+    Precisávamos de uma solução.
+    A criação desta página com essas instruções foi, na época,
+    a única solução que atendia a todas as variações de cenário na Tussor:
+    2 sistemas operacionais, em várias versões,
+    e 2 paginadores homologados em várias versões.
+  </p>
 </body>
 </html>
