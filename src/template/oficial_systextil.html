@@ -2,6 +2,109 @@
 <html lang="pt">
 <head>
   <title>Link para Systêxtil</title>
+  <style>
+  .links {
+    display: block;
+  }
+
+  .loading-base {
+    display: none;
+  }
+
+  .loading {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3em;
+    background: #fff;
+    text-align: center;
+    z-index: 9999;
+  }
+
+  .loading-text {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+  }
+  .loading-text span {
+    display: inline-block;
+    margin: 0 1px;
+    color: #000;
+    font-family: 'Quattrocento Sans', sans-serif;
+  }
+  .loading-text span:nth-child(1) {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    -webkit-animation: blur-text 1.5s 0s infinite linear alternate;
+            animation: blur-text 1.5s 0s infinite linear alternate;
+  }
+  .loading-text span:nth-child(2) {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    -webkit-animation: blur-text 1.5s 0.2s infinite linear alternate;
+            animation: blur-text 1.5s 0.2s infinite linear alternate;
+  }
+  .loading-text span:nth-child(3) {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    -webkit-animation: blur-text 1.5s 0.4s infinite linear alternate;
+            animation: blur-text 1.5s 0.4s infinite linear alternate;
+  }
+  .loading-text span:nth-child(4) {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    -webkit-animation: blur-text 1.5s 0.6s infinite linear alternate;
+            animation: blur-text 1.5s 0.6s infinite linear alternate;
+  }
+  .loading-text span:nth-child(5) {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    -webkit-animation: blur-text 1.5s 0.8s infinite linear alternate;
+            animation: blur-text 1.5s 0.8s infinite linear alternate;
+  }
+  .loading-text span:nth-child(6) {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    -webkit-animation: blur-text 1.5s 1s infinite linear alternate;
+            animation: blur-text 1.5s 1s infinite linear alternate;
+  }
+  .loading-text span:nth-child(7) {
+    -webkit-filter: blur(0px);
+            filter: blur(0px);
+    -webkit-animation: blur-text 1.5s 1.2s infinite linear alternate;
+            animation: blur-text 1.5s 1.2s infinite linear alternate;
+  }
+
+  @-webkit-keyframes blur-text {
+    0% {
+      -webkit-filter: blur(0px);
+              filter: blur(0px);
+    }
+    100% {
+      -webkit-filter: blur(4px);
+              filter: blur(4px);
+    }
+  }
+
+  @keyframes blur-text {
+    0% {
+      -webkit-filter: blur(0px);
+              filter: blur(0px);
+    }
+    100% {
+      -webkit-filter: blur(4px);
+              filter: blur(4px);
+    }
+  }
+	</style>
 </head>
 <body>
   <small><a href="{% url 'intranet' %}">Intranet Tussor</a> | <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></small>
@@ -11,7 +114,23 @@
       &bullet; Clicando com o botão direito do mouse no link para aparecer um menu com opção de abrir o link em nova aba (ou guia); ou<br />
       &bullet; Fazendo "Control-clique" no link (segura a tecla "Ctrl" e clica normalmente no link) para abrir o link em nova aba (ou guia).<br />
     </p>
-    <div  style="font-size: x-large;">
+    <p>
+    <div class="loading-base">
+      <div class="loading">
+      	<div class="loading-text">
+      		<span class="loading-text-words">L</span>
+      		<span class="loading-text-words">O</span>
+      		<span class="loading-text-words">A</span>
+      		<span class="loading-text-words">D</span>
+      		<span class="loading-text-words">I</span>
+      		<span class="loading-text-words">N</span>
+      		<span class="loading-text-words">G</span>
+      	</div>
+      </div>
+      <p>&nbsp;</p>
+    </div>
+    </p>
+    <div class="links" style="font-size: x-large;">
       <p><a href="http://oficial.systextil.tussor.com.br:8080/systextil">Link oficial</a></p>
       <p><a href="http://192.168.1.93:8080/systextil">Link alternativo</a></p>
     </div>
