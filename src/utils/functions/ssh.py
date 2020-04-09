@@ -54,10 +54,14 @@ def router_list_ips():
 
 
 def router_add_ip_to_list(ip_list, ip):
-    data = {}
-
     returncode, result, error = base_router_add_ip_to_list(
         ip_list, ip)
+
+    data = {
+        'returncode': returncode,
+        'result': result,
+        'error': error,
+    }
 
     data.update({
         'access': 'OK' if returncode == 0 else 'ERROR',
@@ -81,11 +85,6 @@ def router_add_ip_to_list(ip_list, ip):
                     'ERROR' if action_error else 'OK'),
             })
 
-    data.update({
-        'returncode': returncode,
-        'result': result,
-        'error': error,
-    })
     return data
 
 
