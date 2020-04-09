@@ -48,9 +48,21 @@ def base_router_add_ip_to_list(ip_list, ip):
     )
 
 
-def router_list_ips():
-    returncode, result, error = executa_comando_ssh_exec(
+def base_router_list_ips():
+    return executa_comando_ssh_exec(
         "/ip firewall address-list print")
+
+
+def router_list_ips():
+    returncode, result, error = base_router_list_ips()
+
+    data = {
+        'returncode': returncode,
+        'result': result,
+        'error': error,
+    }
+
+    return data
 
 
 def router_add_ip_to_list(ip_list, ip):
@@ -103,6 +115,7 @@ def router_add_ip_apoio_auth(ip):
 
     data = router_add_ip_to_list('apoio_auth', ip)
     if executa_comando_nivel_ok(data) != 3:
-        data = router_add_ip_to_list('apoio_auth_redun', ip)
+        data = router_list_ips()
+        # data = router_add_ip_to_list('apoio_auth_redun', ip)
 
     return data
