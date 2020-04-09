@@ -31,17 +31,74 @@ def executa_comando_ssh(user, server, port, key_file, comando):
     return executa_comando(ssh_call)
 
 
-def router_add_ip_to_list(ip_list, ip):
+def executa_comando_ssh_exec(exec):
     return executa_comando_ssh(
         settings.MIKROTIK['user'],
         '192.168.1.99',
         '22',
         settings.MIKROTIK['key_file'],
-        f"/ip firewall address-list add list={ip_list} "
-        f"address={ip}/32 timeout=00:00:11"
+        exec,
     )
 
 
-def router_add_ip_to_apoio_auth():
-    returncode, result, error = router_add_ip_to_list('apoio_auth', '8.7.6.5')
-    pprint([returncode, result, error])
+def base_router_add_ip_to_list(ip_list, ip):
+    return executa_comando_ssh_exec(
+        f"/ip firewall address-list add list={ip_list} "
+        f"address={ip}/32 timeout=00:01:00"
+    )
+
+
+def router_list_ips():
+    returncode, result, error = executa_comando_ssh_exec(
+        "/ip firewall address-list print")
+
+
+def router_add_ip_to_list(ip_list, ip):
+    data = {}
+
+    returncode, result, error = base_router_add_ip_to_list(
+        ip_list, ip)
+
+    data.update({
+        'access': 'OK' if returncode == 0 else 'ERROR',
+    })
+    if returncode == 0:
+
+        data.update({
+            'command': 'OK' if len(error) == 0 else 'ERROR',
+        })
+        if len(error) == 0:
+
+            action_error = False
+            if len(result) != 0:
+                action_error = (
+                    result[0].startswith('failure') or
+                    result[0].startswith('bad command')
+                )
+
+            data.update({
+                'action': (
+                    'ERROR' if action_error else 'OK'),
+            })
+
+    data.update({
+        'returncode': returncode,
+        'result': result,
+        'error': error,
+    })
+    return data
+
+
+def router_add_ip_apoio_auth(ip):
+
+    def ok(data):
+        if data['access'] == 'OK':
+            if data['command'] == 'OK':
+                return data['action'] == 'OK'
+        return False
+
+    data = router_add_ip_to_list('apoio_auth', ip)
+    if not ok(data):
+        data = router_add_ip_to_list('apoio_auth_redun', ip)
+
+    return data
