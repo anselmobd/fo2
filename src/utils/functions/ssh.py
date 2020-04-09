@@ -50,7 +50,7 @@ def base_router_add_ip_to_list(ip_list, ip):
 
 def base_router_list_ips():
     return executa_comando_ssh_exec(
-        "/ip firewall address-list print")
+        "/ip firewall address-list print terse")
 
 
 def returncode_etc_to_data(returncode, result, error):
