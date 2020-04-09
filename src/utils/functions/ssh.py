@@ -102,11 +102,11 @@ def router_add_ip_to_list(ip_list, ip):
 
 def executa_comando_nivel_ok(data):
     result = 0
-    if data['access'] == 'OK':
+    if 'access' in data and data['access'] == 'OK':
         result += 1
-        if data['command'] == 'OK':
+        if 'command' in data and data['command'] == 'OK':
             result += 1
-            if data['action'] == 'OK':
+            if 'action' in data and data['action'] == 'OK':
                 result += 1
     return result
 
