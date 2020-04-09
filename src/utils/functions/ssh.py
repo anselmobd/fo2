@@ -53,6 +53,25 @@ def base_router_list_ips():
         "/ip firewall address-list print")
 
 
+def returncode_etc_to_data(returncode, result, error):
+    data = {
+        'returncode': returncode,
+        'result': result,
+        'error': error,
+    }
+
+    data.update({
+        'access': 'OK' if returncode == 0 else 'ERROR',
+    })
+    if returncode == 0:
+
+        data.update({
+            'command': 'OK' if len(error) == 0 else 'ERROR',
+        })
+
+    return data
+
+
 def router_list_ips():
     returncode, result, error = base_router_list_ips()
 
@@ -69,33 +88,20 @@ def router_add_ip_to_list(ip_list, ip):
     returncode, result, error = base_router_add_ip_to_list(
         ip_list, ip)
 
-    data = {
-        'returncode': returncode,
-        'result': result,
-        'error': error,
-    }
+    data = returncode_etc_to_data(returncode, result, error)
+
+    action_error = False
+    if executa_comando_nivel_ok(data) == 2:
+        if len(result) != 0:
+            action_error = (
+                result[0].startswith('failure') or
+                result[0].startswith('bad command')
+            )
 
     data.update({
-        'access': 'OK' if returncode == 0 else 'ERROR',
+        'action': (
+            'ERROR' if action_error else 'OK'),
     })
-    if returncode == 0:
-
-        data.update({
-            'command': 'OK' if len(error) == 0 else 'ERROR',
-        })
-        if len(error) == 0:
-
-            action_error = False
-            if len(result) != 0:
-                action_error = (
-                    result[0].startswith('failure') or
-                    result[0].startswith('bad command')
-                )
-
-            data.update({
-                'action': (
-                    'ERROR' if action_error else 'OK'),
-            })
 
     return data
 
