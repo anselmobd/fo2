@@ -88,16 +88,21 @@ def router_add_ip_to_list(ip_list, ip):
     return data
 
 
+def executa_comando_nivel_ok(data):
+    result = 0
+    if data['access'] == 'OK':
+        result += 1
+        if data['command'] == 'OK':
+            result += 1
+            if data['action'] == 'OK':
+                result += 1
+    return result
+
+
 def router_add_ip_apoio_auth(ip):
 
-    def ok(data):
-        if data['access'] == 'OK':
-            if data['command'] == 'OK':
-                return data['action'] == 'OK'
-        return False
-
     data = router_add_ip_to_list('apoio_auth', ip)
-    if not ok(data):
+    if executa_comando_nivel_ok(data) != 3:
         data = router_add_ip_to_list('apoio_auth_redun', ip)
 
     return data
