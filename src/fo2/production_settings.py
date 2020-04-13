@@ -27,7 +27,7 @@ DATABASES = {
     },
     'persona': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "nasajon_db",
+        'NAME': "nasajon_db3",
         'USER': "nasajon_user",
         'PASSWORD': DBPASS_PERSONA,
         'HOST': '192.168.1.96',
