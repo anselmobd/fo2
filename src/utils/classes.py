@@ -61,6 +61,36 @@ class LoggedInUser(SingletonBaseMeta):
         return user is not None
 
 
+class NotAcessoInternoException(Exception):
+    def __init__(self, val='Não foi verificado de o acesso é interno'):
+        self.val = val
+        super(NotAcessoInternoException, self).__init__()
+
+    def __str__(self):
+        return self.val
+
+
+class AcessoInterno(SingletonBaseMeta):
+
+    interno = None
+
+    def set_interno(self, interno):
+        self.interno = interno
+
+    @property
+    def current_interno(self):
+        '''
+            Return interno if defined or raise Exception
+        '''
+        if self.interno is None:
+            raise NotAcessoInternoException()
+        return self.interno
+
+    @property
+    def have_interno(self):
+        return interno is not None
+
+
 class GitVersion(SingletonBaseMeta):
 
     git_version = None
