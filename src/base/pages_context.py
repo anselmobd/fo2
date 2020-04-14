@@ -18,5 +18,4 @@ def get_origem_do_ip(context):
         'base_ip_externo': ip_externo,
         'base_ip_de_acesso': ip_de_acesso,
     }
-    pprint(context)
     return context
