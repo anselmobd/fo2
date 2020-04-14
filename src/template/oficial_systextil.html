@@ -190,7 +190,9 @@
     {% endif %}
     <div id="id_links" class="links" style="font-size: x-large;">
       <p><a href="http://oficial.systextil.tussor.com.br:8080/systextil">Link oficial</a></p>
-      <p><a href="http://192.168.1.93:8080/systextil">Link alternativo</a></p>
+      {% if not externo %}
+        <p><a href="http://192.168.1.93:8080/systextil">Link alternativo</a></p>
+      {% endif %}
     </div>
     <hr>
     <h3>Telas de ajuda</h3>
