@@ -120,10 +120,10 @@
           if ('action' in response && response.action === 'OK') {
             showLinks();
           } else {
-            showErros(response.returncode);
+            showErros();
           }
         } else {
-          showErros(9);
+          showErros();
         }
         hideLoading();
       }
@@ -140,9 +140,7 @@
     }
 
 
-    function showErros(num_erro) {
-      var span_codigo = document.getElementById("id_codigo");
-      span_codigo.innerHTML = num_erro;
+    function showErros() {
       var div_erros = document.getElementById("id_erros");
       div_erros.style.display = 'block';
     }
@@ -187,7 +185,7 @@
       </p>
     </div>
     <div id="id_erros" class="erros" style="font-size: x-large;">
-      <p>Erro no carregamento [código: <span id="id_codigo"></span>]!</p>
+      <p>Erro no carregamento!</p>
     </div>
     {% endif %}
     <div id="id_links" class="links" style="font-size: x-large;">
