@@ -39,7 +39,7 @@ def ack_view(request):
 
 class SystextilView(View):
     def get(self, request, *args, **kwargs):
-        context = {}
+        context = {'interno': True}
         return render(request, "oficial_systextil.html", context)
 
 

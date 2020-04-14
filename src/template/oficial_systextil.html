@@ -2,13 +2,14 @@
 <html lang="pt">
 <head>
   <title>Link para Systêxtil</title>
+  {% if not interno %}
   <style>
   .links {
-    display: block;
+    display: none;
   }
 
   .loading-base {
-    display: none;
+    display: block;
   }
 
   .loading {
@@ -105,15 +106,17 @@
     }
   }
 	</style>
+  {% endif %}
 </head>
 <body>
   <small><a href="{% url 'intranet' %}">Intranet Tussor</a> | <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></small>
   <div style="text-align: center">
-    <h3>Para executar o Systêxtil</h3>
+    <h3>{{interno}}Para executar o Systêxtil</h3>
     <p>Abrir um dos links abaixo em nova aba (ou guia):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<a href="#porque">Porque?</a>}<br />
       &bullet; Clicando com o botão direito do mouse no link para aparecer um menu com opção de abrir o link em nova aba (ou guia); ou<br />
       &bullet; Fazendo "Control-clique" no link (segura a tecla "Ctrl" e clica normalmente no link) para abrir o link em nova aba (ou guia).<br />
     </p>
+    {% if not interno %}
     <p>
     <div class="loading-base">
       <div class="loading">
@@ -130,6 +133,7 @@
       <p>&nbsp;</p>
     </div>
     </p>
+    {% endif %}
     <div class="links" style="font-size: x-large;">
       <p><a href="http://oficial.systextil.tussor.com.br:8080/systextil">Link oficial</a></p>
       <p><a href="http://192.168.1.93:8080/systextil">Link alternativo</a></p>
