@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.contrib.auth import logout
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse
@@ -37,8 +37,10 @@ def ack_view(request):
     return HttpResponse("Ack")
 
 
-class SystextilView(TemplateView):
-    template_name = "oficial_systextil.html"
+class SystextilView(View):
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return render(request, "oficial_systextil.html", context)
 
 
 def router_ip_to_apoio_auth(request):
