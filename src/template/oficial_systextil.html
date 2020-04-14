@@ -2,8 +2,12 @@
 <html lang="pt">
 <head>
   <title>Link para Systêxtil</title>
-  {% if not interno %}
+  {% if externo %}
   <style>
+  .erros {
+    display: none;
+  }
+
   .links {
     display: none;
   }
@@ -106,19 +110,68 @@
     }
   }
 	</style>
+
+  <script type="text/javascript">
+
+    function alertContents() {
+      if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.status === 200) {
+          var response = JSON.parse(httpRequest.responseText);
+          if ('action' in response && response.action === 'OK') {
+            showLinks();
+          } else {
+            showErros(response.returncode);
+          }
+        } else {
+          showErros(9);
+        }
+        hideLoading();
+      }
+    }
+
+    function hideLoading() {
+      var div_loading = document.getElementById("id_loading");
+      div_loading.style.display = 'none';
+    }
+
+    function showLinks() {
+      var div_links = document.getElementById("id_links");
+      div_links.style.display = 'block';
+    }
+
+
+    function showErros(num_erro) {
+      var span_codigo = document.getElementById("id_codigo");
+      span_codigo.innerHTML = num_erro;
+      var div_erros = document.getElementById("id_erros");
+      div_erros.style.display = 'block';
+    }
+
+    function ip_auth() {
+      httpRequest = new XMLHttpRequest();
+      httpRequest.onreadystatechange = alertContents;
+      httpRequest.open('GET', '/ajax/router_ip_to_apoio_auth/');
+      httpRequest.send();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      ip_auth();
+    });
+
+  </script>
   {% endif %}
 </head>
 <body>
   <small><a href="{% url 'intranet' %}">Intranet Tussor</a> | <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></small>
   <div style="text-align: center">
-    <h3>{{interno}}Para executar o Systêxtil</h3>
+    <h3>Para executar o Systêxtil</h3>
     <p>Abrir um dos links abaixo em nova aba (ou guia):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<a href="#porque">Porque?</a>}<br />
       &bullet; Clicando com o botão direito do mouse no link para aparecer um menu com opção de abrir o link em nova aba (ou guia); ou<br />
       &bullet; Fazendo "Control-clique" no link (segura a tecla "Ctrl" e clica normalmente no link) para abrir o link em nova aba (ou guia).<br />
     </p>
-    {% if not interno %}
-    <p>
-    <div class="loading-base">
+    {% if externo %}
+    <div id="id_loading" class="loading-base">
+      <p>
       <div class="loading">
       	<div class="loading-text">
       		<span class="loading-text-words">L</span>
@@ -131,10 +184,13 @@
       	</div>
       </div>
       <p>&nbsp;</p>
+      </p>
     </div>
-    </p>
+    <div id="id_erros" class="erros" style="font-size: x-large;">
+      <p>Erro no carregamento [código: <span id="id_codigo"></span>]!</p>
+    </div>
     {% endif %}
-    <div class="links" style="font-size: x-large;">
+    <div id="id_links" class="links" style="font-size: x-large;">
       <p><a href="http://oficial.systextil.tussor.com.br:8080/systextil">Link oficial</a></p>
       <p><a href="http://192.168.1.93:8080/systextil">Link alternativo</a></p>
     </div>
