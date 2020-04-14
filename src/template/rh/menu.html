@@ -11,8 +11,10 @@
         &nbsp;
       </td>
       <td>
+        {% if request.user.is_authenticated or ip_interno %}
         <h2><a href="{% url 'persona:aniversariantes_now' %}">Aniversariantes
           <img src="/media/rh/baloes_h50_icone.jpg" title="aniversariantes"></a></h2>
+        {% endif %}
         <h2>
           <a href="{% url 'rh:datas' 'lista' %}">Datas comemorativas
             <img                                         src="/media/rh/datas_comemorativas/2020/03/04-mulher/h50.jpg" title="Dia da mulher - 2020"
