@@ -6,14 +6,14 @@
   <li><a href="{% url 'estoque:item_no_tempo' %}">Item no tempo</a></li>
   <li>Movimentações</li>
   <ul>
-    <li><a href="{% url 'estoque:lista_docs_mov' %}">Documentos de movimentações</a></li>
-    <li><a href="{% url 'estoque:lista_movs' %}">Movimentações de um documento</a></li>
     {% if estoque_movimentos %}
       {% for mov in estoque_movimentos %}
         <li><a href="{% url 'estoque:transferencia' mov.codigo %}">{{mov.descricao}}</a></li>
       {% endfor %}
     {% endif %}
   </ul>
+  <li><a href="{% url 'estoque:lista_docs_mov' %}">Documentos de movimentações</a></li>
+  <li><a href="{% url 'estoque:lista_movs' %}">Movimentações de um documento</a></li>
   <li>Manutenções</li>
   <ul>
     <li><a href="{% url 'estoque:refs_com_movimento' %}">Referências com movimento</a></li>
