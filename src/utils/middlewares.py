@@ -13,7 +13,7 @@ try:
 except ImportError:
     MiddlewareMixin = object
 
-from .classes import LoggedInUser
+from .classes import LoggedInUser, AcessoInterno
 
 
 class LoggedInUserMiddleware(MiddlewareMixin):
@@ -35,16 +35,18 @@ class NeedToLoginOrLocalMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.user.is_authenticated:
-            return self.get_response(request)
-
-        # user_ip = request.META['REMOTE_ADDR']
         user_ip = get_client_ip(request)
         authenticated_by_ip = False
         for ip in settings.N2LOL_ALLOWED_IP_BLOCKS:
             authenticated_by_ip = \
                 authenticated_by_ip or \
                 (re.compile(ip).match(user_ip) is not None)
+
+        acesso_interno = AcessoInterno()
+        acesso_interno.set_interno(authenticated_by_ip)
+
+        if request.user.is_authenticated:
+            return self.get_response(request)
 
         if authenticated_by_ip:
             return self.get_response(request)
