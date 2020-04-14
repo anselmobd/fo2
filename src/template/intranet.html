@@ -17,8 +17,11 @@
         <li>Recursos Humanos</li>
         <ul>
           <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
+          {% if request.user.is_authenticated or base_ip_interno %}
           <li><a href="{% url 'dp:index' %}">Informações internas</a></li>
+          {% endif %}
         </ul>
+        {% if request.user.is_authenticated or base_ip_interno %}
         <br />
         <li>ERP</li>
         <ul>
@@ -34,6 +37,7 @@
           </ul>
           <li><a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></li>
         </ul>
+        {% endif %}
       </ul>
     </td>
     <td>&nbsp;</td>
