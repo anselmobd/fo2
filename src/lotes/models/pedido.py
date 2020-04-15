@@ -130,7 +130,8 @@ def ped_nf(cursor, pedido):
 def ped_expedicao(
         cursor, embarque_de='', embarque_ate='',
         pedido_tussor='', pedido_cliente='',
-        cliente='', deposito='-', detalhe='r'):
+        cliente='', deposito='-', detalhe='r',
+        emissao_de=None, emissao_ate=None):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -141,6 +142,16 @@ def ped_expedicao(
     if embarque_ate is not None:
         filtro_embarque_ate = ''' --
             AND ped.DATA_ENTR_VENDA <= '{}' '''.format(embarque_ate)
+
+    filtro_emissao_de = ''
+    if emissao_de is not None and emissao_de != '':
+        filtro_emissao_de = ''' --
+            AND ped.DATA_EMIS_VENDA >= '{}' '''.format(emissao_de)
+
+    filtro_emissao_ate = ''
+    if emissao_ate is not None and emissao_ate != '':
+        filtro_emissao_ate = ''' --
+            AND ped.DATA_EMIS_VENDA <= '{}' '''.format(emissao_ate)
 
     filtro_pedido_tussor = ''
     if pedido_tussor != '':
@@ -257,6 +268,8 @@ def ped_expedicao(
           AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_embarque_de} -- filtro_embarque_de
           {filtro_embarque_ate} -- filtro_embarque_ate
+          {filtro_emissao_de} -- filtro_emissao_de
+          {filtro_emissao_ate} -- filtro_emissao_ate
           {filtro_pedido_tussor} -- filtro_pedido_tussor
           {filtro_pedido_cliente} -- filtro_pedido_cliente
           {filtro_cliente} -- filtro_cliente
@@ -297,6 +310,8 @@ def ped_expedicao(
     sql = sql.format(
         filtro_embarque_de=filtro_embarque_de,
         filtro_embarque_ate=filtro_embarque_ate,
+        filtro_emissao_de=filtro_emissao_de,
+        filtro_emissao_ate=filtro_emissao_ate,
         filtro_pedido_tussor=filtro_pedido_tussor,
         filtro_pedido_cliente=filtro_pedido_cliente,
         filtro_cliente=filtro_cliente,
