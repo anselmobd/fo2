@@ -46,14 +46,22 @@ class Transfere():
 
     def calc_vars(self):
         if self.tem_trans_saida:
-            self.estoque_origem = self.get_estoque(self.deposito_origem)
+            self.estoque_origem = self.get_estoque(
+                self.deposito_origem, self.nivel, self.ref, self.cor, self.tam)
             self.novo_estoque_origem = self.estoque_origem - self.qtd
         else:
             self.estoque_origem = 0
             self.novo_estoque_origem = 0
 
         if self.tem_trans_entrada:
-            self.estoque_destino = self.get_estoque(self.deposito_destino)
+            if self.tip_mov.renomeia:
+                self.estoque_destino = self.get_estoque(
+                    self.deposito_destino, self.nivel,
+                    self.nova_ref, self.nova_cor, self.novo_tam)
+            else:
+                self.estoque_destino = self.get_estoque(
+                    self.deposito_destino, self.nivel,
+                    self.ref, self.cor, self.tam)
             self.novo_estoque_destino = self.estoque_destino + self.qtd
         else:
             self.estoque_destino = 0
@@ -150,10 +158,9 @@ class Transfere():
             self.num_doc = obj_doc_mov_stq.num_doc
             self.doc_mov_stq = obj_doc_mov_stq.doc_mov_stq
 
-    def get_estoque(self, deposito_field):
+    def get_estoque(self, deposito_field, nivel, ref, cor, tam):
         l_estoque = queries.get_estoque_dep_niv_ref_cor_tam(
-            self.cursor, deposito_field,
-            self.nivel, self.ref, self.cor, self.tam)
+            self.cursor, deposito_field, nivel, ref, cor, tam)
         if len(l_estoque) == 0:
             return 0
         else:
