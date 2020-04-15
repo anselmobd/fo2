@@ -25,6 +25,13 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         self.template_name = 'cd/solicitacao_detalhe.html'
         self.title_name = 'Detalhes de solicitação'
 
+    def link_endereco(self, row):
+        if row['lote__local'] != '-Ausente-':
+            row['lote__local|LINK'] = reverse(
+                'cd:estoque_filtro',
+                args=['E', row['lote__local']])
+            row['lote__local|TARGET'] = '_BLANK'
+
     def mount_context(self, solicit_id, user):
         context = {
             'solicit_id': solicit_id,
@@ -54,7 +61,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             'id', 'lote__op', 'lote__lote', 'lote__referencia',
             'lote__cor', 'lote__tamanho', 'qtd', 'update_at'
         ).annotate(
-            lote__local=Coalesce('lote__local', Value('-ausente-'))
+            lote__local=Coalesce('lote__local', Value('-Ausente-'))
         ).filter(
             solicitacao=solicitacao
         ).order_by(
@@ -72,6 +79,8 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 'producao:posicao__get',
                 args=[row['lote__lote']])
             row['lote__lote|TARGET'] = '_BLANK'
+            self.link_endereco(row)
+
         link = reverse(
             'cd:solicitacao_detalhe__get2',
             args=[solicitacao.id, 'l'])
@@ -142,6 +151,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 'producao:posicao__get',
                 args=[row['lote__lote']])
             row['lote__lote|TARGET'] = '_BLANK'
+            self.link_endereco(row)
 
         context.update({
             'e_headers': ['Endereço', 'OP', 'Lote',
@@ -203,6 +213,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 row['transf|GLYPHICON'] = 'glyphicon-log-in'
             row['lote__op|LINK'] = reverse(
                 'producao:op__get', args=[row['lote__op']])
+            self.link_endereco(row)
 
         para_cx = sorted(
             para_cx, key=lambda i: (
