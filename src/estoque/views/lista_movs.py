@@ -86,20 +86,12 @@ class ListaMovimentos(View):
             if row['novo_item__produto__nivel'] is None:
                 row['str_novo_item'] = '='
             else:
-                if row['tipo_mov__renomeia']:
-                    row['str_novo_item'] = pro_fun.item_str(
-                        row['novo_item__produto__nivel'],
-                        row['novo_item__produto__referencia'],
-                        row['novo_item__tamanho__tamanho__nome'],
-                        row['novo_item__cor__cor'],
-                    )
-                else:
-                    row['str_novo_item'] = pro_fun.item_str(
-                        row['item__produto__nivel'],
-                        row['item__produto__referencia'],
-                        row['item__tamanho__tamanho__nome'],
-                        row['item__cor__cor'],
-                    )
+                row['str_novo_item'] = pro_fun.item_str(
+                    row['novo_item__produto__nivel'],
+                    row['novo_item__produto__referencia'],
+                    row['novo_item__tamanho__tamanho__nome'],
+                    row['novo_item__cor__cor'],
+                )
 
             if row['deposito_origem'] == 0:
                 row['deposito_origem'] = '-'
