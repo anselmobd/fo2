@@ -5,6 +5,7 @@ from pytz import utc
 
 from django.db import connection
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 import lotes.models
@@ -86,6 +87,16 @@ class HistoricoLote(View):
                     row['local_usuario'] = '='
 
             row['n_info'] = n_info
+
+        for idx in reversed(range(len(data))):
+            if data[idx]['local'] == 'SAIU!':
+                break
+            if data[idx]['local'] not in ['-', '=']:
+                data[idx]['local|LINK'] = reverse(
+                    'cd:estoque_filtro',
+                    args=['E', data[idx]['local']])
+                data[idx]['local|TARGET'] = '_BLANK'
+                break
 
         context.update({
             'headers': ('Data', 'Estágio', 'Local', 'Usuário'),
