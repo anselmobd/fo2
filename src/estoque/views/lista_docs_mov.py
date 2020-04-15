@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django.db import connections
+from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -32,6 +33,12 @@ class ListaDocsMovimentacao(View):
         dados = models.DocMovStq.objects
         if self.context['data']:
             dados = dados.filter(data=self.context['data'])
+        if self.context['descricao_usuario']:
+            for chunk in self.context['descricao_usuario'].split():
+                dados = dados.filter(
+                    Q(descricao__icontains=chunk) |
+                    Q(usuario__username__icontains=chunk)
+                    )
 
         fields = ['num_doc', 'descricao', 'data', 'usuario__username']
         dados = dados.order_by('-num_doc').values(*fields)
