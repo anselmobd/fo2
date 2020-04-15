@@ -110,12 +110,20 @@ class ListaMovimentos(View):
             else:
                 row['deposito_destino|GLYPHICON'] = 'glyphicon-time'
                 row['deposito_destino|TARGET'] = '_BLANK'
-                row['deposito_destino|LINK'] = reverse(
-                    'estoque:item_no_tempo__get', args=[
-                        row['novo_item__produto__referencia'],
-                        row['novo_item__cor__cor'],
-                        row['novo_item__tamanho__tamanho__nome'],
-                        row['deposito_destino']])
+                if row['tipo_mov__renomeia']:
+                    row['deposito_destino|LINK'] = reverse(
+                        'estoque:item_no_tempo__get', args=[
+                            row['novo_item__produto__referencia'],
+                            row['novo_item__cor__cor'],
+                            row['novo_item__tamanho__tamanho__nome'],
+                            row['deposito_destino']])
+                else:
+                    row['deposito_destino|LINK'] = reverse(
+                        'estoque:item_no_tempo__get', args=[
+                            row['item__produto__referencia'],
+                            row['item__cor__cor'],
+                            row['item__tamanho__tamanho__nome'],
+                            row['deposito_destino']])
 
         headers = [
             'Tipo de Movimento',
