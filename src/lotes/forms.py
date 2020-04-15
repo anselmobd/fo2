@@ -442,7 +442,16 @@ class ExpedicaoForm(forms.Form):
         label='Data do embarque: De', required=False,
         widget=forms.DateInput(attrs={'type': 'date',
                                'autofocus': 'autofocus'}))
+
     embarque_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    emissao_de = forms.DateField(
+        label='Data da emissão: De', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    emissao_ate = forms.DateField(
         label='Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 

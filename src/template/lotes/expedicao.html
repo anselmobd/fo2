@@ -29,6 +29,20 @@
   {% endif %}
   </h4>
 {% endif %}
+{% if emissao_de or emissao_ate %}
+  <h4>Data de emissão:
+  {% if emissao_de == emissao_ate %}
+    {{ emissao_de }}
+  {% else %}
+    {% if emissao_de %}
+      a partir de {{ emissao_de }}
+    {% endif %}
+    {% if emissao_ate %}
+      até {{ emissao_ate }}
+    {% endif %}
+  {% endif %}
+  </h4>
+{% endif %}
 {% if pedido_tussor %}
   <h4>Pedido na Tussor {{ pedido_tussor }}</h4>
 {% endif %}

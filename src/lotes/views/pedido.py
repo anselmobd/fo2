@@ -165,11 +165,14 @@ class Expedicao(View):
 
     def mount_context(
             self, cursor, embarque_de, embarque_ate,
+            emissao_de, emissao_ate,
             pedido_tussor, pedido_cliente, cliente,
             deposito, detalhe):
         context = {
             'embarque_de': embarque_de,
             'embarque_ate': embarque_ate,
+            'emissao_de': emissao_de,
+            'emissao_ate': emissao_ate,
             'pedido_tussor': pedido_tussor,
             'pedido_cliente': pedido_cliente,
             'cliente': cliente,
@@ -182,6 +185,8 @@ class Expedicao(View):
                 cursor,
                 embarque_de=embarque_de,
                 embarque_ate=embarque_ate,
+                emissao_de=emissao_de,
+                emissao_ate=emissao_ate,
                 pedido_tussor=pedido_tussor,
                 pedido_cliente=pedido_cliente,
                 cliente=cliente,
@@ -241,6 +246,8 @@ class Expedicao(View):
             cursor,
             embarque_de=embarque_de,
             embarque_ate=embarque_ate,
+            emissao_de=emissao_de,
+            emissao_ate=emissao_ate,
             pedido_tussor=pedido_tussor,
             pedido_cliente=pedido_cliente,
             cliente=cliente,
@@ -339,6 +346,8 @@ class Expedicao(View):
         if form.is_valid():
             embarque_de = form.cleaned_data['embarque_de']
             embarque_ate = form.cleaned_data['embarque_ate']
+            emissao_de = form.cleaned_data['emissao_de']
+            emissao_ate = form.cleaned_data['emissao_ate']
             pedido_tussor = form.cleaned_data['pedido_tussor']
             pedido_cliente = form.cleaned_data['pedido_cliente']
             cliente = form.cleaned_data['cliente']
@@ -347,6 +356,7 @@ class Expedicao(View):
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
                 cursor, embarque_de, embarque_ate,
+                emissao_de, emissao_ate,
                 pedido_tussor, pedido_cliente, cliente,
                 deposito, detalhe))
         context['form'] = form
