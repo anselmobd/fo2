@@ -10,6 +10,7 @@ from utils.classes import TermalPrint
 
 from lotes.forms import ImprimePacote3LotesForm
 import lotes.queries.op
+import lotes.queries.lote
 import lotes.models as models
 
 
@@ -22,7 +23,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
     def sync_lotes(self, cursor, op):
         print('\n--- sync_lotes\n')
         referencia = None
-        data_lotes_syst = models.op_lotes(cursor, op)
+        data_lotes_syst = lotes.queries.lote.op_lotes(cursor, op)
         lotes_syst_dict = {}
         for row in data_lotes_syst:
             row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])

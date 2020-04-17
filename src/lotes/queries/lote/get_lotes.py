@@ -1,6 +1,11 @@
 from utils.functions.models import rows_to_dict_list
 
 
+def op_lotes(cursor, op):
+    # Lotes ordenados por OS + referência + estágio
+    return get_lotes(cursor, op=op, order='e')
+
+
 def os_lotes(cursor, os):
     # Lotes ordenados por OS + referência + estágio
     return get_lotes(cursor, os=os)

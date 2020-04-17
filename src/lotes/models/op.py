@@ -308,11 +308,6 @@ def op_movi_estagios(cursor, op):
     return rows_to_dict_list(cursor)
 
 
-def op_lotes(cursor, op):
-    # Lotes ordenados por OS + referência + estágio
-    return lotes.queries.lote.get_lotes(cursor, op=op, order='e')
-
-
 def op_ref_estagio(cursor, op):
     # Totais por referência + estágio
     sql = '''
