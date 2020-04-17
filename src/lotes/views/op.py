@@ -693,7 +693,7 @@ class OpPerda(View):
             'detalhe': detalhe,
         }
         # Peças em perda
-        data = models.op_perda(cursor, data_de, data_ate, detalhe)
+        data = lotes.queries.op.op_perda(cursor, data_de, data_ate, detalhe)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma perda de produção encontrada',
