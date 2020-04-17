@@ -145,7 +145,7 @@ class Op(View):
                 })
 
             # posição de OP
-            p_data = models.posicao_op(cursor, op)
+            p_data = lotes.queries.op.posicao_op(cursor, op)
             p.prt('posicao_op')
             if len(p_data) != 0:
                 context.update({
