@@ -1,4 +1,5 @@
 from .busca_op import *
+from .busca_ops_info import *
 from .get_seq_est_op import *
 from .op_conserto import *
 from .op_os_ref import *

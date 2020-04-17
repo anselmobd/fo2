@@ -9,6 +9,7 @@ from django.views import View
 from django.urls import reverse
 
 import lotes.models
+import lotes.queries.op
 from geral.functions import request_user
 
 import cd.forms
@@ -137,7 +138,7 @@ class Estoque(View):
             ops = set()
             for row in data:
                 ops.add(row['op'])
-            ops_info = lotes.models.busca_ops_info(cursor, ops)
+            ops_info = lotes.queries.op.busca_ops_info(cursor, ops)
             for row in ops_info:
                 if row['pedido'] == 0:
                     row['pedido'] = '-'
