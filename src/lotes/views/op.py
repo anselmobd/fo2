@@ -535,7 +535,7 @@ class ComponentesDeOp(View):
         })
 
         # tam, cor e quantidade de produto de OP
-        data = models.op_tam_cor_qtd(cursor, op)
+        data = lotes.queries.op.op_tam_cor_qtd(cursor, op)
         for row in data:
             row['NIVEL'] = '1'
             row['REF'] = ref_row['REF']
