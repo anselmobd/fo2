@@ -1,11 +1,16 @@
 from django.core.cache import cache
 
-from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower, GradeQtd
+from utils.functions.models import (
+    GradeQtd,
+    rows_to_dict_list,
+    rows_to_dict_list_lower,
+)
 
 from utils.functions import make_key_cache, fo2logger, arg_def
 
 from lotes.models import *
 from lotes.models.base import *
+from lotes.queries.os import *
 
 
 def posicao_op(cursor, op):
