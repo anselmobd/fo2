@@ -6,6 +6,11 @@ def os_inform(cursor, os):
     return get_os(cursor, os=os)
 
 
+def op_get_os(cursor, op):
+    # Informações sobre OS
+    return get_os(cursor, op=op)
+
+
 def get_os(cursor, os='', op='', periodo='', oc=''):
     # Informações sobre OS
 
