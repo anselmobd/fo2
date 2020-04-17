@@ -72,7 +72,7 @@ class Os(View):
             })
 
         # Itens para nota de OS
-        i_data = models.os_itens(cursor, os)
+        i_data = queries.os.os_itens(cursor, os)
         for row in i_data:
             rowlinks = {}
             if row['NIVEL'] is '1':
