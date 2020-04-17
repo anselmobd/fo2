@@ -241,7 +241,7 @@ class Op(View):
             })
 
             # Totais por referência + estágio
-            t_data = models.op_ref_estagio(cursor, op)
+            t_data = lotes.queries.op.op_ref_estagio(cursor, op)
             p.prt('op_ref_estagio')
 
             context.update({
