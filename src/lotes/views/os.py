@@ -64,7 +64,7 @@ class Os(View):
                 })
 
         # Grade
-        g_header, g_fields, g_data = models.os_sortimento(cursor, os)
+        g_header, g_fields, g_data = lotes.queries.os.os_sortimento(cursor, os)
         if len(g_data) != 0:
             context.update({
                 'g_headers': g_header,
