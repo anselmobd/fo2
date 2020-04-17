@@ -1,5 +1,6 @@
 from .busca_op import *
 from .get_seq_est_op import *
+from .op_conserto import *
 from .op_os_ref import *
 from .op_estagios import *
 from .op_movi_estagios import *

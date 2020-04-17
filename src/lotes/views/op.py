@@ -655,7 +655,7 @@ class OpConserto(View):
         context = {}
 
         # Peças no conserto
-        data = models.op_conserto(cursor)
+        data = lotes.queries.op.op_conserto(cursor)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma peça em conserto',
