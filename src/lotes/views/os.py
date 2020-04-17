@@ -46,7 +46,7 @@ class Os(View):
             })
 
             # Totais por OP
-            o_data = models.os_op(cursor, os)
+            o_data = lotes.queries.os.os_op(cursor, os)
             if len(o_data) != 0:
                 for row in o_data:
                     row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
