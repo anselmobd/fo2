@@ -1,11 +1,4 @@
-from django.core.cache import cache
-
-from utils.functions.models import rows_to_dict_list, GradeQtd
-
-from utils.functions import make_key_cache, fo2logger
-
-from lotes.models import *
-from lotes.models.base import *
+from utils.functions.models import rows_to_dict_list
 
 
 def ped_inform(cursor, pedido):

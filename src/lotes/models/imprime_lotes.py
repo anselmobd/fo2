@@ -2,15 +2,15 @@ from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower, dict_list_to_lower
 
-from lotes.models.base import *
+import lotes.queries as queries
 
 
 def get_imprime_lotes(cursor, op='', tam='', cor='', order='',
                       oc_ini='', oc_fim='', pula=None, qtd_lotes=None):
     # get dados de lotes
-    data = get_lotes(cursor, op=op, tam=tam, cor=cor, order=order,
-                     oc_ini=oc_ini, oc_fim=oc_fim,
-                     pula=pula, qtd_lotes=qtd_lotes)
+    data = queries.lote.get_lotes(
+        cursor, op=op, tam=tam, cor=cor, order=order,
+        oc_ini=oc_ini, oc_fim=oc_fim, pula=pula, qtd_lotes=qtd_lotes)
     data = dict_list_to_lower(data)
     return data
 

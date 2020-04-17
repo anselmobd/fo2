@@ -3,7 +3,6 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list
 
 from lotes.models import *
-from lotes.models.base import *
 from lotes.queries.os import *
 
 

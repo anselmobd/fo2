@@ -1,8 +1,5 @@
 from utils.functions.models import rows_to_dict_list
 
-from lotes.models import *
-from lotes.models.base import *
-
 
 def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
                 colecao, situacao, tipo):

@@ -1,8 +1,5 @@
 from utils.functions.models import rows_to_dict_list
 
-from lotes.models import *
-from lotes.models.base import *
-
 
 def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
     filtro_estagio = ''

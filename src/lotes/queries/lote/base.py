@@ -1,6 +1,4 @@
-from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
-
-from lotes.models import *
+from utils.functions.models import rows_to_dict_list
 
 
 def get_lotes(cursor, op='', os='', tam='', cor='', order='',

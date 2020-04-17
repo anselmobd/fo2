@@ -1,8 +1,5 @@
 from utils.functions.models import rows_to_dict_list
 
-from lotes.models import *
-from lotes.models.base import *
-
 
 def distribuicao(cursor, estagio, data_de, data_ate, familia):
     sql = '''
