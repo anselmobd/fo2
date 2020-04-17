@@ -8,6 +8,7 @@ from utils.views import group_rowspan
 
 from lotes.forms import AnPeriodoAlterForm, AnDtCorteAlterForm
 import lotes.models as models
+import lotes.queries as queries
 
 
 class AnPeriodoAlter(View):
@@ -21,7 +22,7 @@ class AnPeriodoAlter(View):
         if periodo_ate is None:
             periodo_ate = periodo_de
 
-        data = models.an_periodo_alter_qtd(
+        data = queries.analise.an_periodo_alter_qtd(
             cursor, periodo_de, periodo_ate, alternativa)
         if len(data) == 0:
             context.update({
@@ -97,7 +98,7 @@ class AnDtCorteAlter(View):
         if data_ate is None:
             data_ate = data_de
 
-        data = models.an_dtcorte_alter_qtd(
+        data = queries.analise.an_dtcorte_alter_qtd(
             cursor, data_de, data_ate, alternativa)
         if len(data) == 0:
             context.update({
