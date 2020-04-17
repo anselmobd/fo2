@@ -278,7 +278,7 @@ class Op(View):
                 })
 
             # Totais por OS + referência
-            o_data = models.op_os_ref(cursor, op)
+            o_data = lotes.queries.op.op_os_ref(cursor, op)
             p.prt('op_os_ref')
 
             o_link = ('OS')
