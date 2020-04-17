@@ -1,16 +1,10 @@
-from django.core.cache import cache
-
 from utils.functions.models import (
-    GradeQtd,
     rows_to_dict_list,
     rows_to_dict_list_lower,
 )
 
-from utils.functions import make_key_cache, fo2logger, arg_def
-
-from lotes.models import *
-from lotes.models.base import *
-from lotes.queries.os import *
+import lotes.queries.lote
+import lotes.queries.os
 
 
 def posicao_op(cursor, op):
@@ -316,7 +310,7 @@ def op_movi_estagios(cursor, op):
 
 def op_lotes(cursor, op):
     # Lotes ordenados por OS + referência + estágio
-    return get_lotes(cursor, op=op, order='e')
+    return lotes.queries.lote.get_lotes(cursor, op=op, order='e')
 
 
 def op_ref_estagio(cursor, op):
@@ -387,7 +381,7 @@ def op_ref_estagio(cursor, op):
 
 def op_get_os(cursor, op):
     # Informações sobre OS
-    return get_os(cursor, op=op)
+    return lotes.queries.os.get_os(cursor, op=op)
 
 
 def op_os_ref(cursor, op):

@@ -1,8 +1,6 @@
 from utils.functions.models import rows_to_dict_list, GradeQtd
 
-from lotes.models import *
-from lotes.models.base import *
-from lotes.queries.os import *
+import lotes.queries as queries
 
 
 def os_op(cursor, os):
@@ -40,7 +38,7 @@ def os_op(cursor, os):
 
 def os_lotes(cursor, os):
     # Lotes ordenados por OS + referência + estágio
-    return get_lotes(cursor, os=os)
+    return queries.lote.get_lotes(cursor, os=os)
 
 
 def os_sortimento(cursor, os):
