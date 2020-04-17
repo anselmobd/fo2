@@ -16,8 +16,9 @@ from utils.views import totalize_grouped_data, totalize_data, group_rowspan
 import lotes.forms as forms
 import lotes.functions as functions
 import lotes.models as models
-import lotes.queries.op
 import lotes.queries.lote
+import lotes.queries.op
+import lotes.queries.os
 
 
 class Op(View):
@@ -252,7 +253,7 @@ class Op(View):
             })
 
             # OSs da OP
-            os_data = models.op_get_os(cursor, op)
+            os_data = lotes.queries.os.op_get_os(cursor, op)
             p.prt('op_get_os')
 
             if len(os_data) != 0:

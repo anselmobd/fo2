@@ -7,11 +7,6 @@ import lotes.queries.lote
 import lotes.queries.os
 
 
-def op_get_os(cursor, op):
-    # Informações sobre OS
-    return lotes.queries.os.get_os(cursor, op=op)
-
-
 def op_tam_cor_qtd(cursor, op):
     sql = """
         SELECT
