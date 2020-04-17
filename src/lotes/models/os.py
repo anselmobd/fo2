@@ -36,11 +36,6 @@ def os_op(cursor, os):
     return rows_to_dict_list(cursor)
 
 
-def os_lotes(cursor, os):
-    # Lotes ordenados por OS + referência + estágio
-    return queries.lote.get_lotes(cursor, os=os)
-
-
 def os_sortimento(cursor, os):
     # Grade de OS
     grade = GradeQtd(cursor, [os])

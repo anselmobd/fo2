@@ -7,7 +7,8 @@ from utils.views import group_rowspan
 
 from lotes.forms import OsForm
 import lotes.models as models
-import lotes.queries as queries
+import lotes.queries.lote
+import lotes.queries.os
 
 
 class Os(View):
@@ -19,7 +20,7 @@ class Os(View):
         context = {'os': os}
 
         # A ser produzido
-        data = queries.os.os_inform(cursor, os)
+        data = lotes.queries.os.os_inform(cursor, os)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'OS vazia',
@@ -72,7 +73,7 @@ class Os(View):
             })
 
         # Itens para nota de OS
-        i_data = queries.os.os_itens(cursor, os)
+        i_data = lotes.queries.os.os_itens(cursor, os)
         for row in i_data:
             rowlinks = {}
             if row['NIVEL'] is '1':
@@ -122,7 +123,7 @@ class Os(View):
         })
 
         # Lotes ordenados por OS + referência + estágio
-        l_data = models.os_lotes(cursor, os)
+        l_data = lotes.queries.lote.os_lotes(cursor, os)
         if len(l_data) != 0:
             l_link = ('LOTE')
             for row in l_data:
