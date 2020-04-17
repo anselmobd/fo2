@@ -1,1 +1,1 @@
-from .base import *
+from .get_lotes import *
