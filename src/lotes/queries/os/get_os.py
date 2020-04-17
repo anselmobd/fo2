@@ -1,6 +1,11 @@
 from utils.functions.models import rows_to_dict_list
 
 
+def os_inform(cursor, os):
+    # Informações sobre OS
+    return get_os(cursor, os=os)
+
+
 def get_os(cursor, os='', op='', periodo='', oc=''):
     # Informações sobre OS
 

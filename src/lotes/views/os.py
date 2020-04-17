@@ -7,6 +7,7 @@ from utils.views import group_rowspan
 
 from lotes.forms import OsForm
 import lotes.models as models
+import lotes.queries as queries
 
 
 class Os(View):
@@ -18,7 +19,7 @@ class Os(View):
         context = {'os': os}
 
         # A ser produzido
-        data = models.os_inform(cursor, os)
+        data = queries.os.os_inform(cursor, os)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'OS vazia',
