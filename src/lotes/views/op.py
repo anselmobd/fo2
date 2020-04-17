@@ -17,6 +17,7 @@ import lotes.forms as forms
 import lotes.functions as functions
 import lotes.models as models
 import lotes.queries.op
+import lotes.queries.lote
 
 
 class Op(View):
@@ -40,7 +41,7 @@ class Op(View):
         else:
 
             # Lotes ordenados por OS + referência + estágio
-            data = models.op_lotes(cursor, op)
+            data = lotes.queries.lote.op_lotes(cursor, op)
             p.prt('op_lotes')
 
             link = ('LOTE')
