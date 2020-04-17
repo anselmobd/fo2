@@ -195,7 +195,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 do_print = False
 
         if do_print:
-            e_data = models.op_estagios(cursor, op)
+            e_data = lotes.queries.op.op_estagios(cursor, op)
             estagios = []
             for e_row in e_data:
                 estagios.append(e_row['EST'])

@@ -222,7 +222,7 @@ class Op(View):
                 })
 
             # Estágios
-            e_data = models.op_estagios(cursor, op)
+            e_data = lotes.queries.op.op_estagios(cursor, op)
             p.prt('op_estagios')
 
             for row in e_data:
