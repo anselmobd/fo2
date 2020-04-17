@@ -1,10 +1,4 @@
-from utils.functions.models import (
-    rows_to_dict_list,
-    rows_to_dict_list_lower,
-)
-
-import lotes.queries.lote
-import lotes.queries.os
+from utils.functions.models import rows_to_dict_list_lower
 
 
 def busca_ops_info(cursor, ops):
