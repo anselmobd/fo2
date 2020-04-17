@@ -5,11 +5,6 @@ from lotes.models.base import *
 from lotes.queries.os import *
 
 
-def os_inform(cursor, os):
-    # Informações sobre OS
-    return get_os(cursor, os=os)
-
-
 def os_op(cursor, os):
     # Totais por OP
     sql = """
