@@ -156,7 +156,7 @@ class Op(View):
                 })
 
             # relacionamentos entre OPs
-            r_data = models.op_relacionamentos(cursor, op)
+            r_data = lotes.queries.op.op_relacionamentos(cursor, op)
             p.prt('op_relacionamentos')
 
             for row in r_data:
