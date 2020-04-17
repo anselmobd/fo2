@@ -296,7 +296,7 @@ class Op(View):
             })
 
             # Detalhamento de movimentações de estágios
-            u_data = models.op_movi_estagios(cursor, op)
+            u_data = lotes.queries.op.op_movi_estagios(cursor, op)
             p.prt('op_movi_estagios')
 
             for row in u_data:
