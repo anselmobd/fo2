@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
+from .op import *
+
 
 class LotesPermissions(models.Model):
 
@@ -135,20 +137,6 @@ class Caixa(models.Model):
     class Meta:
         db_table = "fo2_cd_caixa"
         verbose_name = "caixa"
-
-
-class Op(models.Model):
-    op = models.IntegerField(
-        verbose_name='OP')
-    pedido = models.IntegerField()
-    varejo = models.BooleanField(default=False)
-    cancelada = models.BooleanField(default=False)
-    deposito = models.IntegerField(default=-1)
-
-    class Meta:
-        db_table = "fo2_prod_op"
-        permissions = (("can_repair_seq_op", "Can repair sequence OP"),
-                       )
 
 
 class Lote(models.Model):
