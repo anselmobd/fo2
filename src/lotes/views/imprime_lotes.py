@@ -12,6 +12,7 @@ from utils.classes import TermalPrint
 from lotes.forms import ImprimeLotesForm
 import lotes.queries.op
 import lotes.models as models
+import lotes.queries as queries
 
 
 class ImprimeLotes(LoginRequiredMixin, View):
@@ -36,7 +37,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         oc_inicial_val = oc_inicial or 0
         oc_final_val = oc_final or 99999
 
-        seq_est = models.base.get_seq_est_op(cursor, op)
+        seq_est = queries.op.get_seq_est_op(cursor, op)
         dict_est_seq = {se['est']: se['seq'] for se in seq_est}
         dict_est_seq[9999] = 9999  # Finalizado
         tem_est6 = 6 in dict_est_seq
