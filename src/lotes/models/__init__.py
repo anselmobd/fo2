@@ -1,4 +1,3 @@
-from .analise import *
 from .distribuicao import *
 from .imprime_lotes import *
 from .lote import *
