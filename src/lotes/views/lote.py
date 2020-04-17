@@ -10,6 +10,7 @@ from utils.views import group_rowspan
 
 import lotes.models as models
 import lotes.queries as queries
+import lotes.queries.lote
 from lotes.forms import LoteForm
 
 
@@ -118,7 +119,8 @@ class Posicao(View):
             'se_data': data,
         })
 
-        # data = models.posicao_historico(cursor, periodo, ordem_confeccao)
+        # data = lotes.queries.lote.posicao_historico(
+        #     cursor, periodo, ordem_confeccao)
         # hh_headers = ['Data', 'Turno', 'Família', 'Estágio']
         # hh_fields = ['DT', 'TURNO', 'FAMILIA', 'EST']
         # for row in data:
@@ -172,7 +174,8 @@ class Posicao(View):
         #     'hh_data': data,
         # })
 
-        data = models.posicao_historico(cursor, periodo, ordem_confeccao)
+        data = lotes.queries.lote.posicao_historico(
+            cursor, periodo, ordem_confeccao)
         for row in data:
             row['PRG|HOVER'] = row['PRG_DESCR']
             if row['FAMILIA'] == 0:
