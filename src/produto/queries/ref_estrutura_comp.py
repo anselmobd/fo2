@@ -31,7 +31,12 @@ def ref_estrutura_comp(cursor, ref, alt):
           THEN
             CASE WHEN e.ITEM_COMP = '000000'
             THEN '= ='
-            ELSE e.ITEM_COMP
+            ELSE e.ITEM_COMP ||
+              CASE WHEN ritem.DESCRICAO_15 is not null
+                    AND e.ITEM_COMP <> ritem.DESCRICAO_15
+              THEN ' (' || ritem.DESCRICAO_15 || ')'
+              ELSE ''
+              END
             END
           ELSE
             CASE WHEN
@@ -79,6 +84,11 @@ def ref_estrutura_comp(cursor, ref, alt):
         LEFT JOIN basi_030 r
           ON r.NIVEL_ESTRUTURA = e.NIVEL_COMP
          AND r.REFERENCIA = e.GRUPO_COMP
+        LEFT JOIN BASI_010 ritem
+          ON ritem.NIVEL_ESTRUTURA = e.NIVEL_COMP
+         AND ritem.GRUPO_ESTRUTURA = e.GRUPO_COMP
+         AND ritem.SUBGRU_ESTRUTURA = e.SUB_COMP
+         AND ritem.ITEM_ESTRUTURA = e.ITEM_COMP
         LEFT JOIN BASI_040 cocv -- combinação cor - verifica se todos iguais
           ON e.ITEM_COMP = '000000'
          AND cocv.SUB_ITEM = '000'
