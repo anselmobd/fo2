@@ -82,6 +82,9 @@ class Ref(View):
 
         # Tamanhos
         t_data = queries.ref_tamanhos(cursor, nivel, ref)
+        for row in t_data:
+            if row['COMPL'] is None:
+                row['COMPL'] = '-'
         if len(t_data) != 0:
             context.update({
                 't_headers': ('Tamanho', 'Descrição', 'Complemento'),
