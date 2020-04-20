@@ -29,7 +29,7 @@ from utils.views import totalize_grouped_data, group_rowspan
 
 import insumo.queries as queries
 import insumo.models as models
-from .forms import \
+from insumo.forms import \
     EstoqueForm, \
     MapaRefsForm, \
     NecessidadeForm, \
