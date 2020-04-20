@@ -33,6 +33,7 @@ def ref_estrutura_comp(cursor, ref, alt):
             THEN '= ='
             ELSE e.ITEM_COMP ||
               CASE WHEN ritem.DESCRICAO_15 is not null
+                    AND ritem.DESCRICAO_15 <> '.'
                     AND e.ITEM_COMP <> ritem.DESCRICAO_15
               THEN ' (' || ritem.DESCRICAO_15 || ')'
               ELSE ''
