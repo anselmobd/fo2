@@ -150,6 +150,7 @@ class GradeQtd(object):
         self._cursor = cursor
         self.args = args
         self.total = 0
+        self._table_data = None
 
     def row(self, **kwargs):
         if 'sql' in kwargs:
@@ -173,23 +174,22 @@ class GradeQtd(object):
         if 'sql' in kwargs:
             self._value = self.DataDim(
                 self._cursor, self.args, **kwargs)
-            self.do_table_data()
             return self._value.data
         return None
 
     def do_table_data(self):
-        self.table_data = {
+        self._table_data = {
             'header': [],
             'fields': [],
             'data': [],
         }
         if len(self._col.data) != 0 and len(self._row.data) != 0:
-            self.table_data['header'] = \
+            self._table_data['header'] = \
                 ['{} / {}'.format(self._row.name, self._col.name)]
-            self.table_data['fields'] = [self._row.id_field]
+            self._table_data['fields'] = [self._row.id_field]
             for col in self._col.data:
-                self.table_data['header'].append(col[self._col.facade_field])
-                self.table_data['fields'].append(col[self._col.id_field])
+                self._table_data['header'].append(col[self._col.facade_field])
+                self._table_data['fields'].append(col[self._col.id_field])
 
             row_tots = {}
             if self._col.idx_total != -1:
@@ -205,10 +205,10 @@ class GradeQtd(object):
                 self._col.idx_total += 1
 
             for i_row, row in enumerate(self._row.data):
-                for i_field, field in enumerate(self.table_data['fields']):
+                for i_field, field in enumerate(self._table_data['fields']):
                     if i_field == 0:
-                        self.table_data['data'].append({})
-                        self.table_data['data'][i_row][field] = \
+                        self._table_data['data'].append({})
+                        self._table_data['data'][i_row][field] = \
                             row[self._row.facade_field]
                     else:
                         tot_row = i_row == self._row.idx_total
@@ -226,7 +226,7 @@ class GradeQtd(object):
                             else:
                                 value = 0
 
-                            self.table_data['data'][i_row][field] = value
+                            self._table_data['data'][i_row][field] = value
                             self.total += value
                             if i_row in row_tots:
                                 row_tots[i_row] += value
@@ -234,14 +234,24 @@ class GradeQtd(object):
                                 col_tots[i_field] += value
 
                         if tot_row and not tot_col:
-                            self.table_data['data'][i_row][field] = \
+                            self._table_data['data'][i_row][field] = \
                                 col_tots[i_field]
 
                         if not tot_row and tot_col:
-                            self.table_data['data'][i_row][field] = \
+                            self._table_data['data'][i_row][field] = \
                                 row_tots[i_row]
 
                         if tot_row and tot_col:
-                            self.table_data['data'][i_row][field] = self.total
+                            self._table_data['data'][i_row][field] = self.total
 
-        return self.table_data
+        return self._table_data
+
+    @property
+    def table_data(self):
+        if self._table_data is None:
+            return self.do_table_data()
+        return self._table_data
+
+    @table_data.setter
+    def table_data(self, value):
+        self._table_data = value
