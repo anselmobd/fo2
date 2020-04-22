@@ -576,19 +576,11 @@ def op_sortimentos(cursor, **kwargs):
             grade.total,
         )
     else:
-        style = {}
-        right_style = 'text-align: right;'
-        bold_style = 'font-weight: bold;'
-        for i in range(2, len(fields)):
-            style[i] = right_style
-        style[len(fields)] = right_style + bold_style
-        data[-1]['|STYLE'] = bold_style
-
         result = (
             grade.table_data['header'],
             fields,
             data,
-            style,
+            grade.table_data['style'],
             grade.total,
         )
 
