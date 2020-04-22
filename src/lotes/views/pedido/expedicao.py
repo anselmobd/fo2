@@ -9,6 +9,7 @@ from utils.views import totalize_grouped_data, group_rowspan
 
 import lotes.forms as forms
 import lotes.models as models
+import lotes.queries as queries
 
 
 class Expedicao(View):
@@ -34,7 +35,7 @@ class Expedicao(View):
         }
 
         if detalhe == 'g':
-            data = models.grade_expedicao(
+            data = queries.pedido.grade_expedicao(
                 cursor,
                 embarque_de=embarque_de,
                 embarque_ate=embarque_ate,
