@@ -1,7 +1,7 @@
 from utils.functions.models import rows_to_dict_list
 
 from lotes.models import *
-from lotes.models.base import *
+from lotes.models.models import *
 
 
 def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):

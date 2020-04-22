@@ -1,7 +1,7 @@
 from utils.functions.models import rows_to_dict_list
 
 from lotes.models import *
-from lotes.models.base import *
+from lotes.models.models import *
 
 
 def an_dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
