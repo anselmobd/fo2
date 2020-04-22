@@ -16,7 +16,7 @@ class GradeProduzir(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(GradeProduzir, self).__init__(*args, **kwargs)
         self.Form_class = comercial.forms.AnaliseModeloForm
-        self.template_name = 'lotes/analises/grade_produzir.html'
+        self.template_name = 'lotes/analise/grade_produzir.html'
         self.title_name = 'Grade de modelo a produzir (estoque)'
         self.get_args = ['modelo']
 

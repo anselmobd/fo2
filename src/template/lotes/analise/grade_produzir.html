@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'producao:analises_grade_produzir' %}" method="post">
+<form action="{% url 'producao:analise_grade_produzir' %}" method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>

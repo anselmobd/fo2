@@ -91,7 +91,7 @@ urlpatterns = [
         views.QuantEstagio.as_view(), name='quant_estagio__get'),
 
     url(r'^totais_estagio/$',
-        views.analises.TotalEstagio.as_view(), name='totais_estagio'),
+        views.analise.TotalEstagio.as_view(), name='totais_estagio'),
 
     url(r'^lead_colecao/(?P<id>[^/]+)?$',
         views.LeadColecao.as_view(), name='lead_colecao'),
@@ -125,9 +125,9 @@ urlpatterns = [
     url(r'^grade_produzir/$',
         views.GradeProduzirOld.as_view(), name='grade_produzir'),
 
-    url(r'^analises/grade_produzir/$',
-        views.analises.GradeProduzir.as_view(),
-        name='analises_grade_produzir'),
+    url(r'^analise/grade_produzir/$',
+        views.analise.GradeProduzir.as_view(),
+        name='analise_grade_produzir'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
