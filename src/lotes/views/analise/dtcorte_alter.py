@@ -13,7 +13,7 @@ import lotes.queries as queries
 
 class AnDtCorteAlter(View):
     Form_class = AnDtCorteAlterForm
-    template_name = 'lotes/an_dtcorte_alter.html'
+    template_name = 'lotes/analise/dtcorte_alter.html'
     title_name = 'Por data de corte e alternativa'
 
     def mount_context(self, cursor, data_de, data_ate, alternativa):
