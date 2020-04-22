@@ -34,7 +34,7 @@ def lead_de_modelo(cursor, modelo):
         try:
             lc = lotes.models.LeadColecao.objects.get(colecao=row['COLECAO'])
             lc_lead = lc.lead
-        except models.LeadColecao.DoesNotExist:
+        except lotes.models.LeadColecao.DoesNotExist:
             lc_lead = 0
             break
         if lead == 0:
