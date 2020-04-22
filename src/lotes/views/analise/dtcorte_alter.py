@@ -6,13 +6,13 @@ from django.views import View
 
 from utils.views import group_rowspan
 
-from lotes.forms import AnPeriodoAlterForm, AnDtCorteAlterForm
+import lotes.forms as forms
 import lotes.models as models
 import lotes.queries as queries
 
 
 class DtCorteAlter(View):
-    Form_class = AnDtCorteAlterForm
+    Form_class = forms.DtCorteAlterForm
     template_name = 'lotes/analise/dtcorte_alter.html'
     title_name = 'Por data de corte e alternativa'
 
