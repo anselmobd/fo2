@@ -223,14 +223,7 @@ def grade_estoque(
 
     fields = grade.table_data['fields']
     data = grade.table_data['data']
-
-    style = {}
-    right_style = 'text-align: right;'
-    bold_style = 'font-weight: bold;'
-    for i in range(2, len(fields)):
-        style[i] = right_style
-    style[len(fields)] = right_style + bold_style
-    data[-1]['|STYLE'] = bold_style
+    style = grade.table_data['style']
 
     result = (
         grade.table_data['header'],
