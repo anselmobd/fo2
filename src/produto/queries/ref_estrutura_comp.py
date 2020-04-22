@@ -27,6 +27,14 @@ def ref_estrutura_comp(cursor, ref, alt):
         , e.GRUPO_COMP REF
         , r.DESCR_REFERENCIA DESCR
         , e.SUB_COMP TAM
+        , e.SUB_COMP ||
+          CASE WHEN rsub.DESCR_TAM_REFER is not null
+                AND rsub.DESCR_TAM_REFER <> 'UNICO'
+                AND e.SUB_COMP <> rsub.DESCR_TAM_REFER
+          THEN ' [' || rsub.DESCR_TAM_REFER || ']'
+          ELSE ''
+          END
+          TAM_DESCR
         , CASE WHEN cocv.SUB_ITEM IS NULL
           THEN
             CASE WHEN e.ITEM_COMP = '000000'
@@ -90,6 +98,10 @@ def ref_estrutura_comp(cursor, ref, alt):
          AND ritem.GRUPO_ESTRUTURA = e.GRUPO_COMP
          AND ritem.SUBGRU_ESTRUTURA = e.SUB_COMP
          AND ritem.ITEM_ESTRUTURA = e.ITEM_COMP
+        LEFT JOIN BASI_020 rsub
+          ON rsub.BASI030_NIVEL030 = e.NIVEL_COMP
+         AND rsub.BASI030_REFERENC = e.GRUPO_COMP
+         AND rsub.TAMANHO_REF = e.SUB_COMP
         LEFT JOIN BASI_040 cocv -- combinação cor - verifica se todos iguais
           ON e.ITEM_COMP = '000000'
          AND cocv.SUB_ITEM = '000'

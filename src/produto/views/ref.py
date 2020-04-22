@@ -240,9 +240,9 @@ class Ref(View):
                                  'Descrição', 'Tamanho', 'Cor',
                                  'Alternativa', 'Consumo', 'Estágio']
                     e_fields = ['SEQUENCIA', 'NIVEL', 'REF',
-                                'DESCR', 'TAM', 'COR',
+                                'DESCR', 'TAM_DESCR', 'COR',
                                 'ALTERN', 'CONSUMO', 'ESTAGIO']
-                    e_group = ['SEQUENCIA', 'NIVEL', 'REF', 'DESCR', 'TAM',
+                    e_group = ['SEQUENCIA', 'NIVEL', 'REF', 'DESCR', 'TAM_DESCR',
                                'ALTERN', 'CONSUMO', 'ESTAGIO']
 
                     if dif_000000 != 0:
