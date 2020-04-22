@@ -695,13 +695,17 @@ def grade_solicitacao(
 
     fields = grade.table_data['fields']
     data = grade.table_data['data']
+
     style = {}
     right_style = 'text-align: right;'
     bold_style = 'font-weight: bold;'
-    for i in range(2, len(fields)):
+    for i in range(2, len(fields)+1):
         style[i] = right_style
-    style[len(fields)] = right_style + bold_style
-    data[-1]['|STYLE'] = bold_style
+
+    if grade.table_data['row_tot']:
+        style[len(fields)] = style[len(fields)] + bold_style
+    if grade.table_data['col_tot']:
+        data[-1]['|STYLE'] = bold_style
 
     context_ref = {
         'referencia': referencia,
