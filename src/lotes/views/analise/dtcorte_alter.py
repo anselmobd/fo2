@@ -22,7 +22,7 @@ class AnDtCorteAlter(View):
         if data_ate is None:
             data_ate = data_de
 
-        data = queries.analise.an_dtcorte_alter_qtd(
+        data = queries.analise.dtcorte_alter_qtd(
             cursor, data_de, data_ate, alternativa)
         if len(data) == 0:
             context.update({
