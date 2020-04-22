@@ -41,9 +41,9 @@ urlpatterns = [
         name='analise_periodo_alter__get'),
 
     url(r'^analise/dtcorte_alter/$',
-        views.analise.AnDtCorteAlter.as_view(), name='analise_dtcorte_alter'),
+        views.analise.DtCorteAlter.as_view(), name='analise_dtcorte_alter'),
     url(r'^analise/dtcorte_alter/(?P<data>\d+)/$',
-        views.analise.AnDtCorteAlter.as_view(),
+        views.analise.DtCorteAlter.as_view(),
         name='analise_dtcorte_alter__get'),
 
     url(r'^op_pendente/$', views.OpPendente.as_view(), name='op_pendente'),

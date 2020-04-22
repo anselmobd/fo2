@@ -11,7 +11,7 @@ import lotes.models as models
 import lotes.queries as queries
 
 
-class AnDtCorteAlter(View):
+class DtCorteAlter(View):
     Form_class = AnDtCorteAlterForm
     template_name = 'lotes/analise/dtcorte_alter.html'
     title_name = 'Por data de corte e alternativa'
