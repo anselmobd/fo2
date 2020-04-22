@@ -27,7 +27,7 @@ class OsForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
-class AnPeriodoAlterForm(forms.Form):
+class PeriodoAlterForm(forms.Form):
     periodo_de = forms.CharField(
         label='Período: De',
         widget=forms.TextInput(attrs={'type': 'number',
@@ -56,7 +56,7 @@ class AnPeriodoAlterForm(forms.Form):
         return self.clean_periodo(self.cleaned_data['periodo_ate'])
 
 
-class AnDtCorteAlterForm(forms.Form):
+class DtCorteAlterForm(forms.Form):
     data_de = forms.DateField(
         label='Data do Corte/Gargalo: De',
         widget=forms.DateInput(attrs={'type': 'date',

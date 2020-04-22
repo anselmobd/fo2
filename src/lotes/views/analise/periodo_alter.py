@@ -9,7 +9,7 @@ import lotes.queries as queries
 
 
 class PeriodoAlter(View):
-    Form_class = forms.AnPeriodoAlterForm
+    Form_class = forms.PeriodoAlterForm
     template_name = 'lotes/analise/periodo_alter.html'
     title_name = 'Por período e alternativa'
 
