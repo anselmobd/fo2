@@ -40,10 +40,11 @@ urlpatterns = [
         views.analise.PeriodoAlter.as_view(),
         name='analise_periodo_alter__get'),
 
-    url(r'^an_dtcorte_alter/$',
-        views.AnDtCorteAlter.as_view(), name='an_dtcorte_alter'),
-    url(r'^an_dtcorte_alter/(?P<data>\d+)/$',
-        views.AnDtCorteAlter.as_view(), name='an_dtcorte_alter__get'),
+    url(r'^analise/dtcorte_alter/$',
+        views.analise.AnDtCorteAlter.as_view(), name='analise_dtcorte_alter'),
+    url(r'^analise/dtcorte_alter/(?P<data>\d+)/$',
+        views.analise.AnDtCorteAlter.as_view(),
+        name='analise_dtcorte_alter__get'),
 
     url(r'^op_pendente/$', views.OpPendente.as_view(), name='op_pendente'),
     url(r'^op_pendente/(?P<estagio>.+)/$', views.OpPendente.as_view(),
