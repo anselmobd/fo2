@@ -4,7 +4,7 @@ from lotes.models import *
 from lotes.models.models import *
 
 
-def an_dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
+def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
     # Produção por data de corte/gargalo e alternativa
     sql = """
         SELECT
