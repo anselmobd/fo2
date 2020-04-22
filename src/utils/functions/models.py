@@ -182,6 +182,8 @@ class GradeQtd(object):
             'header': [],
             'fields': [],
             'data': [],
+            'row_tot': False,
+            'col_tot': False,
         }
         if len(self._col.data) != 0 and len(self._row.data) != 0:
             self._table_data['header'] = \
@@ -193,11 +195,13 @@ class GradeQtd(object):
 
             row_tots = {}
             if self._col.idx_total != -1:
+                self._table_data['row_tot'] = True
                 for i in range(0, self._row.niveis):
                     row_tots[i] = 0
 
             col_tots = {}
             if self._row.idx_total != -1:
+                self._table_data['col_tot'] = True
                 for i in range(0, self._col.niveis):
                     col_tots[i+1] = 0
 
