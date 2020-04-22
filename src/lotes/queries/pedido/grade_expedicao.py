@@ -9,50 +9,50 @@ def grade_expedicao(
 
     filtro_embarque_de = ''
     if embarque_de is not None:
-        filtro_embarque_de = '''--
-            AND ped.DATA_ENTR_VENDA >= '{}' '''.format(embarque_de)
+        filtro_embarque_de = f'''--
+            AND ped.DATA_ENTR_VENDA >= '{embarque_de}' '''
 
     filtro_embarque_ate = ''
     if embarque_ate is not None:
-        filtro_embarque_ate = '''--
-            AND ped.DATA_ENTR_VENDA <= '{}' '''.format(embarque_ate)
+        filtro_embarque_ate = f'''--
+            AND ped.DATA_ENTR_VENDA <= '{embarque_ate}' '''
 
     filtro_emissao_de = ''
     if emissao_de is not None and emissao_de != '':
-        filtro_emissao_de = ''' --
-            AND ped.DATA_EMIS_VENDA >= '{}' '''.format(emissao_de)
+        filtro_emissao_de = f''' --
+            AND ped.DATA_EMIS_VENDA >= '{emissao_de}' '''
 
     filtro_emissao_ate = ''
     if emissao_ate is not None and emissao_ate != '':
-        filtro_emissao_ate = ''' --
-            AND ped.DATA_EMIS_VENDA <= '{}' '''.format(emissao_ate)
+        filtro_emissao_ate = f''' --
+            AND ped.DATA_EMIS_VENDA <= '{emissao_ate}' '''
 
     filtro_pedido_tussor = ''
     if pedido_tussor != '':
-        filtro_pedido_tussor = '''--
-            AND ped.PEDIDO_VENDA = '{}' '''.format(pedido_tussor)
+        filtro_pedido_tussor = f'''--
+            AND ped.PEDIDO_VENDA = '{pedido_tussor}' '''
 
     filtro_pedido_cliente = ''
     if pedido_cliente != '':
-        filtro_pedido_cliente = '''--
-            AND ped.COD_PED_CLIENTE = '{}' '''.format(pedido_cliente)
+        filtro_pedido_cliente = f'''--
+            AND ped.COD_PED_CLIENTE = '{pedido_cliente}' '''
 
     filtro_cliente = ''
     if cliente != '':
-        filtro_cliente = '''--
+        filtro_cliente = f'''--
             AND c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
               || '-' || lpad(c.CGC_2, 2, '0')
-              || ')' like '%{}%' '''.format(cliente)
+              || ')' like '%{cliente}%' '''
 
     filtro_deposito = ''
     if deposito != '-':
-        filtro_deposito = '''--
-            AND i.CODIGO_DEPOSITO = '{}'
-            '''.format(deposito)
+        filtro_deposito = f'''--
+            AND i.CODIGO_DEPOSITO = '{deposito}'
+            '''
 
-    sql = """
+    sql = f"""
         SELECT
           i.CD_IT_PE_GRUPO REF
         , i.CD_IT_PE_ITEM COR
@@ -89,15 +89,5 @@ def grade_expedicao(
         , t.ORDEM_TAMANHO
         , i.CD_IT_PE_ITEM
     """
-    sql = sql.format(
-        filtro_embarque_de=filtro_embarque_de,
-        filtro_embarque_ate=filtro_embarque_ate,
-        filtro_emissao_de=filtro_emissao_de,
-        filtro_emissao_ate=filtro_emissao_ate,
-        filtro_pedido_tussor=filtro_pedido_tussor,
-        filtro_pedido_cliente=filtro_pedido_cliente,
-        filtro_cliente=filtro_cliente,
-        filtro_deposito=filtro_deposito,
-    )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
