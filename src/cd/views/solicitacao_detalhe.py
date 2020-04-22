@@ -269,10 +269,6 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             context_ref = queries.grade_solicitacao(
                 cursor_def, referencia['lote__referencia'],
                 solicit_id=solicit_id)
-            context_ref.update({
-                'style': {i: 'text-align: right;'
-                          for i in range(2, len(context_ref['fields'])+1)},
-            })
             grades2.append(context_ref)
 
         context.update({
