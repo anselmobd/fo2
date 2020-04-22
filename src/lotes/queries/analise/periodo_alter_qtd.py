@@ -4,7 +4,7 @@ from lotes.models import *
 from lotes.models.models import *
 
 
-def an_periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
+def periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
     # Produção por periodo e alternativa
     sql = """
         SELECT

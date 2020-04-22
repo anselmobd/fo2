@@ -34,10 +34,11 @@ urlpatterns = [
     url(r'^os/$', views.Os.as_view(), name='os'),
     url(r'^os/(?P<os>\d+)/$', views.Os.as_view(), name='os__get'),
 
-    url(r'^an_periodo_alter/$',
-        views.AnPeriodoAlter.as_view(), name='an_periodo_alter'),
-    url(r'^an_periodo_alter/(?P<periodo>\d+)/$',
-        views.AnPeriodoAlter.as_view(), name='an_periodo_alter__get'),
+    url(r'^analise/periodo_alter/$',
+        views.analise.PeriodoAlter.as_view(), name='analise_periodo_alter'),
+    url(r'^analise/periodo_alter/(?P<periodo>\d+)/$',
+        views.analise.PeriodoAlter.as_view(),
+        name='analise_periodo_alter__get'),
 
     url(r'^an_dtcorte_alter/$',
         views.AnDtCorteAlter.as_view(), name='an_dtcorte_alter'),

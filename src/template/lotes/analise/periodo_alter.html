@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="/lotes/an_periodo_alter/" method="post">
+<form action="{% url 'producao:analise_periodo_alter' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
