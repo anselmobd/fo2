@@ -1,4 +1,4 @@
-from . import analises
+from . import analise
 from .analise import *
 from .a_produzir import *
 from .distribuicao import *
