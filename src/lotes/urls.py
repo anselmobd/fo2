@@ -63,7 +63,7 @@ urlpatterns = [
     url(r'^pedido/(?P<pedido>\d+)/$', views.Pedido.as_view(),
         name='pedido__get'),
 
-    url(r'^expedicao/$', views.Expedicao.as_view(), name='expedicao'),
+    url(r'^expedicao/$', views.pedido.Expedicao.as_view(), name='expedicao'),
 
     url(r'^op_caixa/$', views.OpCaixa.as_view(), name='op_caixa'),
     url(r'^op_caixa/(?P<op>\d+)/$',
