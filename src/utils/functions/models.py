@@ -184,7 +184,11 @@ class GradeQtd(object):
             'data': [],
             'row_tot': False,
             'col_tot': False,
+            'style': {},
         }
+        right_style = 'text-align: right;'
+        bold_style = 'font-weight: bold;'
+
         if len(self._col.data) != 0 and len(self._row.data) != 0:
             self._table_data['header'] = \
                 ['{} / {}'.format(self._row.name, self._col.name)]
@@ -247,6 +251,17 @@ class GradeQtd(object):
 
                         if tot_row and tot_col:
                             self._table_data['data'][i_row][field] = self.total
+
+            len_fields = len(self._table_data['fields'])
+            for i in range(2, len_fields+1):
+                self._table_data['style'][i] = right_style
+
+            if row_tots != {}:
+                self._table_data['style'][len_fields] = (
+                    self._table_data['style'][len_fields] + bold_style)
+
+            if col_tots != {}:
+                self._table_data['data'][-1]['|STYLE'] = bold_style
 
         return self._table_data
 
