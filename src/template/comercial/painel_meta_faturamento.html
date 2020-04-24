@@ -316,16 +316,16 @@
     </div>
   </div>
   <div class="overlay" id="cartaz_div">
-    <img class="cartaz" src="/media/rh/meta/2020/02/resultado.png" alt="2020-02-meta">
+    <img class="cartaz" src="/media/rh/meta/2020/03/resultado.jpg" alt="2020-03-meta">
   </div>
   <script>
-    var varDate = new Date('03/16/2020'); // 16/03/2020 segunda
+    var varDate = new Date('04/25/2020');
     var today = new Date();
     today.setHours(0, 0, 0, 0);
-    if (today == varDate) {
+    if (today.getTime() == varDate.getTime()) {
       let nrandom = Math.floor(Math.random()*5);
       if (nrandom == 0) {
-        var elemento = document.getElementById('cartaz_div');
+        let elemento = document.getElementById('cartaz_div');
         elemento.style.visibility='visible';
       }
     }
