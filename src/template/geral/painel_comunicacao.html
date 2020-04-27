@@ -1,0 +1,158 @@
+{% load static %}<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Painel</title>
+
+  <!--Chart.js-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js" integrity="sha256-N4u5BjTLNwmGul6RgLoESPNqDFVUibVuOYhP4gJgrew=" crossorigin="anonymous"></script>
+
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Bootstrap -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- Base CSS -->
+  <link href="{% static "css/base.css" %}" rel="stylesheet">
+
+  <style media="screen">
+
+    .p_header {
+      width: 100%;
+      background-image: linear-gradient(white, #f2f2f2);
+    }
+    .p_titulo {
+      text-align: center;
+    }
+    .p_titulo h2{
+      margin-top: 0px;
+    }
+    .direita {
+      text-align: right;
+    }
+    .esquerda {
+      text-align: left;
+    }
+    a.timer {
+      font-size: xx-small;
+      color: snow;
+      justify-content: right;
+      animation-name: timer;
+      animation-duration: 60s;
+    }
+    @keyframes timer {
+      0%   {color: #0088ff;}
+      95%  {color: lightgray;}
+      100% {color: white;}
+    }
+
+    .overlay {
+      visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* background: url("/media/rh/meta/2020/02/resultado.png") repeat; */
+      background-color: rgba(255,255,255,0.8);
+    }
+    .cartaz {
+      /* position: absolute; */
+      /* text-align: center; */
+      position: absolute;
+      margin: auto;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 100%;
+    }
+
+</style>
+<script>
+
+ var valendo = false;
+ var refresh_rate = 3; //<-- In seconds, change to your needs
+ var last_user_action = 0;
+
+ function reset() {
+   if (valendo) {
+     let elm = document.getElementById("timerlink");
+     let newone = elm.cloneNode(true);
+     elm.parentNode.replaceChild(newone, elm);
+     last_user_action = 0;
+   }
+ }
+
+ function refreshCheck() {
+   if (valendo) {
+     if (last_user_action >= refresh_rate && document.readyState == "complete") {
+       location.reload(true);
+     }
+   }
+ }
+
+ window.addEventListener("focus", reset, false);
+ window.addEventListener("blur", reset, false);
+ window.addEventListener("click", reset, false);
+ window.addEventListener("dblclick", reset, false);
+ window.addEventListener("mouseover", reset, false);
+ window.addEventListener("mousemove", reset, false);
+ window.addEventListener("keypress", reset, false);
+ window.addEventListener("keydown", reset, false);
+ window.addEventListener("scroll", reset, false);
+ document.addEventListener("touchMove", reset, false);
+ document.addEventListener("touchEnd", reset, false);
+
+ function resetScroll() {
+   setInterval(function () {
+     last_user_action++;
+     refreshCheck();
+   }, 1000);
+
+   valendo = true;
+ }
+
+ var varDate = new Date('04/27/2020');
+ var today = new Date();
+ today.setHours(0, 0, 0, 0);
+ if (today.getTime() == varDate.getTime()) {
+   let nrandom = Math.floor(Math.random()*5);
+   if (nrandom == 0) {
+     let elemento = document.getElementById('cartaz_div');
+     elemento.style.visibility='visible';
+   }
+ }
+
+</script>
+</head>
+<body onload="resetScroll();">
+  <div class="p_header container-fluid">
+    <div class="col-xs-3">
+      <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
+    </div>
+    <div class="col-xs-6 p_titulo">
+      &nbsp;
+    </div>
+    <div class="col-xs-3 direita">
+      <a id="timerlink" class="timer" href=".">Recarrega</a><br>
+      {{hoje|date:"d/m/yy H:i"}}
+    </div>
+  </div>
+  <div id="id_base">
+  </div>
+
+  <div class="overlay" id="cartaz_div">
+    <img class="cartaz" src="/media/rh/meta/2020/03/resultado.jpg" alt="2020-03-meta">
+  </div>
+</body>
+</html>
