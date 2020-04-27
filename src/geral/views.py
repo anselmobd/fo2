@@ -124,9 +124,15 @@ class PainelView(View):
 
         layout = painel[0].layout
         config = yaml.load(layout)
-        for modulo in config['dados']:
-            modulo['dados'] = InformacaoModulo.objects.filter(
-                painel_modulo__nome=modulo['modulo'],
+        for dado in config['dados']:
+            try:
+                modulo = PainelModulo.objects.get(slug=dado['modulo'])
+            except Exception:
+                return redirect('apoio_ao_erp')
+
+            dado['modulo_nome'] = modulo.nome
+            dado['dados'] = InformacaoModulo.objects.filter(
+                painel_modulo__slug=dado['modulo'],
                 habilitado=True,
                 data__gt=ultimo_mes,
             ).order_by('-data')
