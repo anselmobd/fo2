@@ -1,4 +1,5 @@
 import datetime
+import pytz
 import yaml
 from pprint import pprint, pformat
 
@@ -11,6 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils import timezone
 from django.views import View
 
 import geral.models as models
@@ -24,10 +26,6 @@ import produto.queries
 
 from .models import Painel, PainelModulo, InformacaoModulo, \
                     UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
-import geral.models as models
-import geral.forms as forms
-import geral.queries as queries
-from geral.functions import config_get_value, config_set_value
 
 
 def index(request):
@@ -122,7 +120,7 @@ class PainelView(View):
         if len(painel) == 0:
             return redirect('apoio_ao_erp')
 
-        ultimo_mes = datetime.date.today() - datetime.timedelta(days=61)
+        ultimo_mes = timezone.now() - datetime.timedelta(days=61)
 
         layout = painel[0].layout
         config = yaml.load(layout)
