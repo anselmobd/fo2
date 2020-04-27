@@ -1,11 +1,11 @@
-from pprint import pprint, pformat
-import yaml
 import datetime
+import yaml
+from pprint import pprint, pformat
 
 import django.forms
-from django.db import connections
 from django.contrib.auth.mixins \
     import PermissionRequiredMixin, LoginRequiredMixin
+from django.db import connections
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
@@ -13,10 +13,12 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
 
+import geral.models as models
+import geral.forms as forms
+import geral.queries as queries
 from base.views import O2BaseGetPostView
-
+from geral.functions import config_get_value, config_set_value
 from utils.functions.models import rows_to_dict_list
-# from utils.classes import LoggedInUser
 
 import produto.queries
 
@@ -115,10 +117,6 @@ def periodo_confeccao(request):
 class PainelView(View):
 
     def get(self, request, *args, **kwargs):
-        # if 'painel' in kwargs:
-        #     if len(kwargs['painel']) == 0:
-        #         return redirect('apoio_ao_erp')
-
         cursor = connections['so'].cursor()
         painel = Painel.objects.filter(slug=kwargs['painel'])
         if len(painel) == 0:
