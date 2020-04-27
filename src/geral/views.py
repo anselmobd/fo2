@@ -116,7 +116,7 @@ class PainelView(View):
 
     def get(self, request, *args, **kwargs):
         cursor = connections['so'].cursor()
-        painel = Painel.objects.filter(slug=kwargs['painel'])
+        painel = Painel.objects.filter(slug=kwargs['painel'], habilitado=True)
         if len(painel) == 0:
             return redirect('apoio_ao_erp')
 
