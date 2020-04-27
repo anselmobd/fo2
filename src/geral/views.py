@@ -115,9 +115,9 @@ def periodo_confeccao(request):
 class PainelView(View):
 
     def get(self, request, *args, **kwargs):
-        if 'painel' in kwargs:
-            if len(kwargs['painel']) == 0:
-                return redirect('apoio_ao_erp')
+        # if 'painel' in kwargs:
+        #     if len(kwargs['painel']) == 0:
+        #         return redirect('apoio_ao_erp')
 
         cursor = connections['so'].cursor()
         painel = Painel.objects.filter(slug=kwargs['painel'])
