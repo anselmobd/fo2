@@ -98,7 +98,10 @@ class PainelModulo(models.Model):
         null=True, blank=True,
         max_length=64)
     slug = models.SlugField()
-    TIPOS_DE_MODULOS = (('I', 'Informativo'),)
+    TIPOS_DE_MODULOS = (
+        ('I', 'Informativo'),
+        ('C', 'URL de cartaz em imagem'),
+    )
     tipo = models.CharField(
         max_length=1, choices=TIPOS_DE_MODULOS,
         default='I')
