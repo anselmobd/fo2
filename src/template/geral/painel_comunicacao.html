@@ -80,58 +80,56 @@
 </style>
 <script>
 
- var valendo = false;
- var refresh_rate = 3; //<-- In seconds, change to your needs
- var last_user_action = 0;
+  var valendo = false;
+  var refresh_rate = 60; //<-- In seconds, change to your needs
+  var last_user_action = 0;
 
- function reset() {
-   if (valendo) {
-     let elm = document.getElementById("timerlink");
-     let newone = elm.cloneNode(true);
-     elm.parentNode.replaceChild(newone, elm);
-     last_user_action = 0;
-   }
- }
+  function reset() {
+    if (valendo) {
+      let elm = document.getElementById("timerlink");
+      let newone = elm.cloneNode(true);
+      elm.parentNode.replaceChild(newone, elm);
+      last_user_action = 0;
+    }
+  }
 
- function refreshCheck() {
-   if (valendo) {
-     if (last_user_action >= refresh_rate && document.readyState == "complete") {
-       location.reload(true);
-     }
-   }
- }
+  function refreshCheck() {
+    if (valendo) {
+      if (last_user_action >= refresh_rate && document.readyState == "complete") {
+        location.reload(true);
+      }
+    }
+  }
 
- window.addEventListener("focus", reset, false);
- window.addEventListener("blur", reset, false);
- window.addEventListener("click", reset, false);
- window.addEventListener("dblclick", reset, false);
- window.addEventListener("mouseover", reset, false);
- window.addEventListener("mousemove", reset, false);
- window.addEventListener("keypress", reset, false);
- window.addEventListener("keydown", reset, false);
- window.addEventListener("scroll", reset, false);
- document.addEventListener("touchMove", reset, false);
- document.addEventListener("touchEnd", reset, false);
+  window.addEventListener("focus", reset, false);
+  window.addEventListener("blur", reset, false);
+  window.addEventListener("click", reset, false);
+  window.addEventListener("dblclick", reset, false);
+  window.addEventListener("mouseover", reset, false);
+  window.addEventListener("mousemove", reset, false);
+  window.addEventListener("keypress", reset, false);
+  window.addEventListener("keydown", reset, false);
+  window.addEventListener("scroll", reset, false);
+  document.addEventListener("touchMove", reset, false);
+  document.addEventListener("touchEnd", reset, false);
 
- function resetScroll() {
-   setInterval(function () {
-     last_user_action++;
-     refreshCheck();
-   }, 1000);
+  function showDiv() {
+    let nrandom = Math.floor(Math.random()*{{config.dados|length}});
+    let id_random = 'cartaz_div_'+nrandom;
+    let elemento = document.getElementById(id_random);
+    elemento.style.visibility='visible';
+  }
 
-   valendo = true;
- }
+  function resetScroll() {
+    setInterval(function () {
+      last_user_action++;
+      refreshCheck();
+    }, 1000);
 
- var varDate = new Date('04/27/2020');
- var today = new Date();
- today.setHours(0, 0, 0, 0);
- if (today.getTime() == varDate.getTime()) {
-   let nrandom = Math.floor(Math.random()*5);
-   if (nrandom == 0) {
-     let elemento = document.getElementById('cartaz_div');
-     elemento.style.visibility='visible';
-   }
- }
+    showDiv();
+
+    valendo = true;
+  }
 
 </script>
 </head>
@@ -151,8 +149,10 @@
   <div id="id_base">
   </div>
 
-  <div class="overlay" id="cartaz_div">
-    <img class="cartaz" src="/media/rh/meta/2020/03/resultado.jpg" alt="2020-03-meta">
+  {% for dado in config.dados %}
+  <div class="overlay" id="cartaz_div_{{ forloop.counter0 }}">
+    <img class="cartaz" src="{{ dado.src }}">
   </div>
+  {% endfor %}
 </body>
 </html>
