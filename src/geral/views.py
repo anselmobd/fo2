@@ -130,12 +130,13 @@ class PainelView(View):
             except Exception:
                 return redirect('apoio_ao_erp')
 
-            dado['modulo_nome'] = modulo.nome
-            dado['dados'] = InformacaoModulo.objects.filter(
-                painel_modulo__slug=dado['modulo'],
-                habilitado=True,
-                data__gt=ultimo_mes,
-            ).order_by('-data')
+            if modulo.tipo == 'I':
+                dado['modulo_nome'] = modulo.nome
+                dado['dados'] = InformacaoModulo.objects.filter(
+                    painel_modulo__slug=dado['modulo'],
+                    habilitado=True,
+                    data__gt=ultimo_mes,
+                ).order_by('-data')
 
         context = {
             'titulo': painel[0].nome,
