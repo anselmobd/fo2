@@ -566,9 +566,9 @@ def dict_fluxo(id):
         # específicos
         # 'rascunho': '#Rascunho#',
         'rascunho': '',
-        'versao_num': '19.01',
-        'versao_data': '05/04/2019',
-        'versao_sufixo': '20190405',
+        'versao_num': '20.01',
+        'versao_data': '29/04/2020',
+        'versao_sufixo': '20200429',
         'id': id,
         'fluxo_num': fluxo_num,
     }
@@ -1154,7 +1154,7 @@ def dict_fluxo(id):
             }
         },
         'pa_enc_de_pg': {
-            'cabecalho': 'PA - 9999<b><u>A</u></b><br /><br />'
+            'cabecalho': 'PA - 99999<br /><br />'
                          'Individual Encabidado',
             'insumos': {
                 18: [
@@ -1352,15 +1352,12 @@ def dict_fluxo(id):
     fluxo_aux = {
         'produto': 'SUNGA - SHORT',
         'tem_mp': True,
-        'pg': False,
-        'pa_emb_de_pg': False,
-        'pa_enc_de_pg': False,
     }
     aux_blocos = [
-        'md_p_pb', 'md_p_pg', 'pb', 'pa_de_md', 'pa_enc_de_pb',
+        'pg', 'pa_emb_de_pg', 'pa_enc_de_pg',
     ]
     for aux_bloco in aux_blocos:
-        if fluxo_config['1p'][aux_bloco]:
+        if fluxo_config[5][aux_bloco]:
             fluxo_aux[aux_bloco] = {
                 'ests': [e if e != 18 else 19
                          for e in fluxo_config['1p'][aux_bloco]['ests']],
@@ -1372,6 +1369,13 @@ def dict_fluxo(id):
                 },
             }
     fluxo_config['51p'] = update_dict(fluxo_config['1p'], fluxo_aux)
+
+    fluxo_config['51p']['pa_emb_de_pg']['cabecalho'] = (
+        'PA - 9999<b><u>A</u></b><br /><br />'
+        'Individual Embalado')
+    fluxo_config['51p']['pa_enc_de_pg']['cabecalho'] = (
+        'PA - 99999<br /><br />'
+        'Individual Encabidado')
 
     fluxo_config[52] = {
         'base': 'cueca',
