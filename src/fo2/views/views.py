@@ -1,7 +1,13 @@
-from django.views.generic import TemplateView, View
+from pprint import pprint
+
 from django.contrib.auth import logout
-from django.shortcuts import redirect, render
+from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.utils import timezone
+from django.views.generic import TemplateView, View
+
+from base.models import Colaborador
 
 from utils.classes import AcessoInterno
 from utils.functions import get_client_ip, fo2logger
@@ -20,6 +26,12 @@ def test_view(request):
 
 class ApoioAoErpView(TemplateView):
     template_name = "index.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ApoioAoErpView, self).get_context_data(*args, **kwargs)
+        context['logged_count'] = Colaborador.objects.filter(
+            logged=True).count()
+        return context
 
 
 class IntranetView(TemplateView):
