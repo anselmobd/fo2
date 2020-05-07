@@ -19,6 +19,8 @@ class Colaborador(models.Model):
         verbose_name='CPF')
     obs = models.CharField(
         null=True, blank=True, max_length=1000)
+    logged = models.BooleanField(
+        default=False)
 
     def __str__(self):
         return f"{self.user} ({self.matricula}) {self.nome}"
