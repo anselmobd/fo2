@@ -8,10 +8,16 @@ from .models import Colaborador
 def login_user(sender, user, request, **kwargs):
     try:
         colab = Colaborador.objects.get(user__username=user.username)
-        colab.logged = True
-        colab.save()
     except Colaborador.DoesNotExist:
-        pass
+        colab = Colaborador(
+            user=user,
+            matricula=702000000+user.id,
+            cpf=702000000+user.id,
+        )
+        colab.save()
+
+    colab.logged = True
+    colab.save()
 
 
 @receiver(user_logged_out)
