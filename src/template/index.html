@@ -102,7 +102,6 @@
   >&nbsp;<a target="_blank" href="/media/rh/campanhas/2019/2019-10/Outubro_Rosa_2019_w650.jpg"
     >Um toque de amor pela vida!</a
       > | Importante: <a target="_blank" href="/media/rh/divulgacao/2019/2019-10/holeriteonline.pdf">Informativo sobre holerite on-line</a></center></h4></div> -->
-
 {% endblock %}
 
 {% block content %}
@@ -169,6 +168,9 @@
               <li><a href="/rootadm/password_change/?next=/">Alterar senha</a></li>
             {% else %}
               <li><a href="{% url 'login' %}?next=/">Identificar-se (Login)</a></li>
+            {% endif %}
+            {% if logged_count != 0 %}
+              <li>{{logged_count}} logado{{ logged_count|pluralize }}</li>
             {% endif %}
           </ul>
           <li>Administração</li>
