@@ -3,7 +3,8 @@ from pprint import pprint
 from utils.classes import AcessoInterno
 
 
-def get_origem_do_ip(context):
+
+def get_origem_do_ip(request):
     acesso_interno = AcessoInterno()
     try:
         ip_interno = acesso_interno.current_interno
