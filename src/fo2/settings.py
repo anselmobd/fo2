@@ -119,7 +119,7 @@ TEMPLATES = [
                 'django_settings_export.settings_export',
                 'geral.functions.get_list_geral_paineis',
                 'estoque.pages_context.get_estoque_movimentos',
-                'base.pages_context.get_origem_do_ip',
+                'base.pages_context.main',
             ],
         },
     },

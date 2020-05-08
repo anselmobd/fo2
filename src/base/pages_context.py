@@ -28,3 +28,10 @@ def get_logged_n(request):
         'logged_n': Colaborador.objects.filter(logged=True).count(),
     }
     return context
+
+
+def main(request):
+    context = {}
+    context.update(get_origem_do_ip(request))
+    context.update(get_logged_n(request))
+    return context
