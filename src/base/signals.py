@@ -11,8 +11,8 @@ def login_user(sender, user, request, **kwargs):
     except Colaborador.DoesNotExist:
         colab = Colaborador(
             user=user,
-            matricula=702000000+user.id,
-            cpf=702000000+user.id,
+            matricula=72000+user.id,
+            cpf=72000+user.id,
         )
         colab.save()
 
