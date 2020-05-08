@@ -1,8 +1,21 @@
 from pprint import pprint
 
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+
 from utils.classes import AcessoInterno
 
 from base.models import Colaborador
+
+
+def get_current_users():
+    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    user_id_list = []
+    for session in active_sessions:
+        data = session.get_decoded()
+        user_id_list.append(data.get('_auth_user_id', None))
+    return User.objects.filter(id__in=user_id_list)
 
 
 def get_origem_do_ip(request):
@@ -24,8 +37,9 @@ def get_origem_do_ip(request):
 
 
 def get_logged_count(request):
+    queryset = get_current_users()
     context = {
-        'logged_count': Colaborador.objects.filter(logged=True).count(),
+        'logged_count': queryset.count(),
     }
     return context
 
