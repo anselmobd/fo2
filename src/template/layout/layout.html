@@ -79,7 +79,7 @@
                style="text-align: right;">
             <span style="font-size: smaller;">
               {% if request.user.is_authenticated %}{{ request.user.username }} - <a href="{% url 'encerrar' %}">Encerrar</a>{% else %}<a href="{% url 'login' %}?next=/">Identificar-se</a>{% endif %}
-              <img src="{% static "img/people.svg" %}" alt="people" height="20">{{logged_n}}
+              <img src="{% static "img/people.svg" %}" alt="people" height="20">{{logged_count}}
               {% if base_ip_interno %}
                 <br />
                 {% if not request.user.is_authenticated %}<a href="{% url 'persona:cria_usuario' %}?next=/">Criar conta</a>{% endif %}
