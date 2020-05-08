@@ -23,9 +23,9 @@ def get_origem_do_ip(request):
     return context
 
 
-def get_logged_n(request):
+def get_logged_count(request):
     context = {
-        'logged_n': Colaborador.objects.filter(logged=True).count(),
+        'logged_count': Colaborador.objects.filter(logged=True).count(),
     }
     return context
 
@@ -33,5 +33,5 @@ def get_logged_n(request):
 def main(request):
     context = {}
     context.update(get_origem_do_ip(request))
-    context.update(get_logged_n(request))
+    context.update(get_logged_count(request))
     return context
