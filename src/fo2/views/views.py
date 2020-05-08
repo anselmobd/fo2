@@ -27,11 +27,12 @@ def test_view(request):
 class ApoioAoErpView(TemplateView):
     template_name = "index.html"
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(ApoioAoErpView, self).get_context_data(*args, **kwargs)
-        context['logged_count'] = Colaborador.objects.filter(
-            logged=True).count()
-        return context
+    # def get_context_data(self, *args, **kwargs):
+    #     context = super(ApoioAoErpView, self).get_context_data(
+    #         *args, **kwargs)
+    #     context['logged_count'] = Colaborador.objects.filter(
+    #         logged=True).count()
+    #     return context
 
 
 class IntranetView(TemplateView):
