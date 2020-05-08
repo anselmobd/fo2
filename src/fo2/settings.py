@@ -244,6 +244,9 @@ MEDIA_ROOT = os.path.join(ROOT_DIR, "media")
 # Session limit
 SESSION_COOKIE_AGE = 8 * 60 * 60  # 8 horas
 
+# testar
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
