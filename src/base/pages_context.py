@@ -2,6 +2,7 @@ from pprint import pprint
 
 from utils.classes import AcessoInterno
 
+from base.models import Colaborador
 
 
 def get_origem_do_ip(request):
@@ -18,5 +19,12 @@ def get_origem_do_ip(request):
         'base_ip_interno': ip_interno,
         'base_ip_externo': ip_externo,
         'base_ip_de_acesso': ip_de_acesso,
+    }
+    return context
+
+
+def get_logged_n(request):
+    context = {
+        'logged_n': Colaborador.objects.filter(logged=True).count(),
     }
     return context
