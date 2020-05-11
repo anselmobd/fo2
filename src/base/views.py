@@ -78,3 +78,14 @@ class O2BaseGetView(O2BaseCustomView):
 
 def index(request):
     return render(request, 'base/index.html')
+
+
+class Usuarios(O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(Usuarios, self).__init__(*args, **kwargs)
+        self.template_name = 'base/usuarios.html'
+        self.title_name = 'Usuários conectados'
+
+    def mount_context(self):
+        pass
