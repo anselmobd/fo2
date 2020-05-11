@@ -1,5 +1,11 @@
+from pprint import pprint
+
 from django.shortcuts import render
 from django.views import View
+
+from utils.functions.models import queryset_to_dict_list_lower
+
+from base.pages_context import get_current_users
 
 
 class O2BaseCustomView(View):
@@ -88,4 +94,18 @@ class Usuarios(O2BaseGetView):
         self.title_name = 'Usuários conectados'
 
     def mount_context(self):
-        pass
+        queryset = get_current_users()
+
+        data = queryset_to_dict_list_lower(queryset.filter(ip_interno=True))
+        self.context.update({
+            'headers': ['Nome', 'Último login'],
+            'fields': ['nome', 'quando'],
+            'data': data,
+        })
+
+        r_data = queryset_to_dict_list_lower(queryset.filter(ip_interno=False))
+        self.context.update({
+            'r_headers': ['Nome', 'Último login'],
+            'r_fields': ['nome', 'quando'],
+            'r_data': r_data,
+        })
