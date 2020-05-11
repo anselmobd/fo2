@@ -23,6 +23,8 @@ class Colaborador(models.Model):
         default=False)
     quando = models.DateTimeField(
         null=True, blank=True)
+    ip_interno = models.BooleanField(
+        default=False)
 
     def __str__(self):
         return f"{self.user} ({self.matricula}) {self.nome}"
