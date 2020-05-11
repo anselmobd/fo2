@@ -21,7 +21,7 @@
   {% endif %}
   {% if data %}
     <h4><img src="{% static "img/people-local.svg" %}" alt="people" height="30">
-      Conectados internamente à Tussor</h4>
+      Conectados internamente</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
@@ -29,7 +29,7 @@
   {% endif %}
   {% if r_data %}
     <h4><img src="{% static "img/people-remote.svg" %}" alt="people" height="30">
-      Conectados remotamente à Tussor</h4>
+      Conectados remotamente</h4>
     <table>
       {% include "layout/thead_generic.html" with data=r_headers style=r_style only %}
       {% include "layout/tbody_generic.html" with fields=r_fields data=r_data style=r_style only %}
