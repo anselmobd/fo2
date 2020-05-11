@@ -74,3 +74,7 @@ class O2BaseGetView(O2BaseCustomView):
         self.init_self(request, kwargs)
 
         return self.render_mount()
+
+
+def index(request):
+    return render(request, 'base/index.html')

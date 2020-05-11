@@ -1,0 +1,9 @@
+{% extends 'index.html' %}
+
+{% block title.content %}Base - {{ block.super }}{% endblock title.content %}
+
+{% block header.content %}Base - {{ block.super }}{% endblock header.content %}
+
+{% block content %}
+{% include 'base/menu.html' %}
+{% endblock %}

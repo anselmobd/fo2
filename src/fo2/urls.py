@@ -68,6 +68,8 @@ urlpatterns = [
 
     url(r'^persona/', include('persona.urls', namespace='persona')),
 
+    url(r'^base/', include('base.urls', namespace='base')),
+
     # Links para fora
 
     url(r'^systextil/', views.SystextilView.as_view(), name='systextil'),
