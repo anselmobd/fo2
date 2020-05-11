@@ -242,7 +242,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, "media")
 
 # Session limit
-SESSION_COOKIE_AGE = 8 * 60 * 60  # 8 horas
+SESSION_COOKIE_AGE = 10 * 60 * 60  # 10 horas
 
 # testar
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
