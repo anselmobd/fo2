@@ -62,7 +62,7 @@ class LoggedInUser(SingletonBaseMeta):
 
 
 class NotAcessoInternoException(Exception):
-    def __init__(self, val='Não foi verificado de o acesso é interno'):
+    def __init__(self, val='Não foi verificado se o acesso é interno'):
         self.val = val
         super(NotAcessoInternoException, self).__init__()
 
