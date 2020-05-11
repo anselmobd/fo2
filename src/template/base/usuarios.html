@@ -1,4 +1,5 @@
 {% extends 'comercial/index.html' %}
+{% load static %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
 {% block header.content %}{{ titulo }} - <a href="{% url 'base:index' %}">{{ block.super }}</a>{% endblock header.content %}
@@ -19,14 +20,16 @@
     <h4>Nenhum usuário conectado no momento</h4>
   {% endif %}
   {% if data %}
-    <h4>Usuários conectados internamente à Tussor</h4>
+    <h4><img src="{% static "img/people-local.svg" %}" alt="people" height="30">
+      Conectados internamente à Tussor</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
   {% endif %}
   {% if r_data %}
-    <h4>Usuários conectados remotamente à Tussor</h4>
+    <h4><img src="{% static "img/people-remote.svg" %}" alt="people" height="30">
+      Conectados remotamente à Tussor</h4>
     <table>
       {% include "layout/thead_generic.html" with data=r_headers style=r_style only %}
       {% include "layout/tbody_generic.html" with fields=r_fields data=r_data style=r_style only %}
