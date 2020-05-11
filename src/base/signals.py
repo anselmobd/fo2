@@ -2,6 +2,8 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.utils import timezone
 
+from utils.classes import AcessoInterno
+
 from .models import Colaborador
 
 
@@ -20,6 +22,13 @@ def login_user(sender, user, request, **kwargs):
     try:
         colab.logged = True
         colab.quando = timezone.now()
+
+        acesso_interno = AcessoInterno()
+        try:
+            colab.ip_interno = acesso_interno.current_interno
+        except Exception:
+            pass
+
         colab.save()
     except Exception:
         pass
