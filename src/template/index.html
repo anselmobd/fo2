@@ -174,7 +174,7 @@
               <li><a href="{% url 'login' %}?next=/">Identificar-se (Login)</a></li>
             {% endif %}
             {% if logged_count != 0 %}
-              <li>{{logged_count}} logado{{ logged_count|pluralize }}</li>
+              <li><a href="{% url 'base:usuarios' %}?next=/">{{logged_count}} logado{{ logged_count|pluralize }}</a></li>
             {% endif %}
           </ul>
           <li>Administração</li>
