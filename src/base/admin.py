@@ -2,7 +2,13 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
-from .models import TipoImagem, Imagem, Tamanho, Colaborador
+from .models import (
+    Colaborador,
+    Imagem,
+    Requisicao,
+    Tamanho,
+    TipoImagem,
+)
 
 
 class TipoImagemAdmin(admin.ModelAdmin):
@@ -28,7 +34,15 @@ class ColaboradorAdmin(admin.ModelAdmin):
     ]
 
 
+class RequisicaoAdmin(admin.ModelAdmin):
+    fields = [
+        "colaborador", "request_method", "path_info", "http_accept",
+        "quando", "ip"
+    ]
+
+
 intr_adm_site.register(TipoImagem, TipoImagemAdmin)
 intr_adm_site.register(Imagem, ImagemAdmin)
 intr_adm_site.register(Tamanho, TamanhoAdmin)
 intr_adm_site.register(Colaborador, ColaboradorAdmin)
+intr_adm_site.register(Requisicao, RequisicaoAdmin)
