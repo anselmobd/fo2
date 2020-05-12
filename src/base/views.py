@@ -5,7 +5,7 @@ from django.views import View
 
 from utils.functions.models import queryset_to_dict_list_lower
 
-from base.pages_context import get_current_users
+from base.pages_context import get_current_users_requisicao
 
 
 class O2BaseCustomView(View):
@@ -94,18 +94,18 @@ class Usuarios(O2BaseGetView):
         self.title_name = 'Usuários conectados'
 
     def mount_context(self):
-        queryset = get_current_users()
+        queryset = get_current_users_requisicao()
 
         data = queryset_to_dict_list_lower(queryset.filter(ip_interno=True))
         self.context.update({
-            'headers': ['Nome', 'Último login'],
-            'fields': ['nome', 'quando'],
+            'headers': ['Nome', 'Último login', 'Última ação'],
+            'fields': ['nome', 'quando', 'ult_acao'],
             'data': data,
         })
 
         r_data = queryset_to_dict_list_lower(queryset.filter(ip_interno=False))
         self.context.update({
-            'r_headers': ['Nome', 'Último login'],
-            'r_fields': ['nome', 'quando'],
+            'r_headers': ['Nome', 'Último login', 'Última ação'],
+            'r_fields': ['nome', 'quando', 'ult_acao'],
             'r_data': r_data,
         })
