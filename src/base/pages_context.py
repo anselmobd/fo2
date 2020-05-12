@@ -1,10 +1,10 @@
 from pprint import pprint
 
 from django.contrib.sessions.models import Session
+from django.db.models import Max
 from django.utils import timezone
 
 from utils.classes import AcessoInterno
-
 from base.models import Colaborador
 
 
@@ -15,6 +15,11 @@ def get_current_users():
         data = session.get_decoded()
         user_id_list.append(data.get('_auth_user_id', None))
     return Colaborador.objects.filter(user__id__in=user_id_list)
+
+
+def get_current_users_requisicao():
+    return get_current_users().annotate(
+            ult_acao=Max('requisicao__quando'))
 
 
 def get_origem_do_ip(request):
