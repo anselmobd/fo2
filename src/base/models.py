@@ -52,7 +52,7 @@ class Requisicao(models.Model):
         max_length=47, verbose_name='IP')
 
     def __str__(self):
-        return f"{self.colaborador} - {self.quando}"
+        return f"{self.colaborador.user.username} - {self.quando}"
 
     class Meta:
         db_table = "fo2_requisicao"
