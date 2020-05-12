@@ -1,10 +1,48 @@
+from http.cookies import SimpleCookie
+from pprint import pprint
+
 from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.contrib.sessions.models import Session
+from django.core.signals import request_started
 from django.dispatch import receiver
 from django.utils import timezone
 
 from utils.classes import AcessoInterno
 
-from .models import Colaborador
+from .models import Colaborador, Requisicao
+
+
+@receiver(request_started)
+def request_start(sender, environ, **kwargs):
+    cookies = SimpleCookie()
+    cookies.load(environ['HTTP_COOKIE'])
+    try:
+        sessionid = cookies['sessionid'].value
+    except Exception:
+        return
+
+    try:
+        session = Session.objects.get(session_key=sessionid)
+    except Session.DoesNotExist:
+        return
+
+    data = session.get_decoded()
+    user_id = data.get('_auth_user_id', None)
+
+    try:
+        colab = Colaborador.objects.get(user__id=user_id)
+    except Colaborador.DoesNotExist:
+        return
+
+    req = Requisicao(
+        colaborador=colab,
+        request_method=environ['REQUEST_METHOD'],
+        path_info=environ['PATH_INFO'],
+        http_accept=environ['HTTP_ACCEPT'],
+        quando=timezone.now(),
+        ip=environ['REMOTE_ADDR'],
+    )
+    req.save()
 
 
 @receiver(user_logged_in)
