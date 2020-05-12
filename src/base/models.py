@@ -38,6 +38,35 @@ class Colaborador(models.Model):
         )
 
 
+class Requisicao(models.Model):
+    colaborador = models.OneToOneField(Colaborador, on_delete=models.PROTECT)
+    request_method = models.CharField(
+        max_length=10, verbose_name='Tipo de requisição')
+    path_info = models.CharField(
+        max_length=254, verbose_name='Endereço')
+    http_accept = models.CharField(
+        max_length=254, verbose_name='HTTP Accept')
+    quando = models.DateTimeField(
+        null=True, blank=True)
+    ip = models.CharField(
+        max_length=47, verbose_name='IP')
+
+    def __str__(self):
+        return f"{self.colaborador} - {self.quando}"
+
+    class Meta:
+        db_table = "fo2_requisicao"
+        verbose_name = 'Requisição'
+        verbose_name_plural = 'Requisições'
+
+    def save(self, *args, **kwargs):
+        self.request_method = self.request_method[:10]
+        self.path_info = self.path_info[:254]
+        self.http_accept = self.http_accept[:254]
+        self.ip = self.ip[:47]
+        super(Requisicao, self).save(*args, **kwargs)
+
+
 class TipoImagem(models.Model):
     nome = models.CharField(
         db_index=True,
