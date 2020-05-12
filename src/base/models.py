@@ -39,7 +39,7 @@ class Colaborador(models.Model):
 
 
 class Requisicao(models.Model):
-    colaborador = models.OneToOneField(Colaborador, on_delete=models.PROTECT)
+    colaborador = models.ForeignKey(Colaborador, on_delete=models.PROTECT)
     request_method = models.CharField(
         max_length=10, verbose_name='Tipo de requisição')
     path_info = models.CharField(
