@@ -35,6 +35,7 @@ class ColaboradorAdmin(admin.ModelAdmin):
 
 
 class RequisicaoAdmin(admin.ModelAdmin):
+    list_display = ["colaborador", "quando", "path_info"]
     fields = [
         "colaborador", "request_method", "path_info", "http_accept",
         "quando", "ip"
