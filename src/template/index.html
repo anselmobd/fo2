@@ -129,6 +129,12 @@
         <br />
         <li><a href="{% url 'produto:index' %}">Produtos</a></li>
         {% include 'produto/menu.html' %}
+        <br />
+        <li><a href="{% url 'contabil:index' %}">Contabilidade</a></li>
+        {% include 'contabil/menu.html' %}
+        <br />
+        <li><a href="{% url 'logistica:index' %}">Logistica</a></li>
+        {% include 'logistica/menu.html' %}
       </ul>
     </td>
     <td>&nbsp;</td>
@@ -154,14 +160,8 @@
         <li><a href="{% url 'estoque:index' %}">Estoque Systêxtil</a></li>
         {% include 'estoque/menu.html' %}
         <br />
-        <li><a href="{% url 'contabil:index' %}">Contabilidade</a></li>
-        {% include 'contabil/menu.html' %}
-        <br />
         <li><a href="{% url 'comercial:index' %}">Comercial</a></li>
         {% include 'comercial/menu.html' %}
-        <br />
-        <li><a href="{% url 'logistica:index' %}">Logistica</a></li>
-        {% include 'logistica/menu.html' %}
         <br />
         <li>Intranet</li>
         <ul>
