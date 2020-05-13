@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
 
@@ -86,10 +87,11 @@ def index(request):
     return render(request, 'base/index.html')
 
 
-class Usuarios(O2BaseGetView):
+class Usuarios(PermissionRequiredMixin, O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
         super(Usuarios, self).__init__(*args, **kwargs)
+        self.permission_required = 'base.can_visualize_usage_log'
         self.template_name = 'base/usuarios.html'
         self.title_name = 'Usuários conectados'
 
