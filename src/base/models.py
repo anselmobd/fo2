@@ -58,6 +58,9 @@ class Requisicao(models.Model):
         db_table = "fo2_requisicao"
         verbose_name = 'Requisição'
         verbose_name_plural = 'Requisições'
+        permissions = (
+            ("can_visualize_usage_log", "Can visualize usage log"),
+        )
 
     def save(self, *args, **kwargs):
         self.request_method = self.request_method[:10]
