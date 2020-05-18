@@ -49,6 +49,8 @@ class InfAdProd(View):
             })
 
             for row in data:
+                row['REF|LINK'] = reverse(
+                    'produto:ref__get', args=[row['REF']])
                 row['VALOR|DECIMALS'] = 2
                 row['VALOR_TOTAL|DECIMALS'] = 2
             row = data[0]
