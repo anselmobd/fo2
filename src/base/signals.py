@@ -14,6 +14,9 @@ from .models import Colaborador, Requisicao
 
 @receiver(request_started)
 def request_start(sender, environ, **kwargs):
+    if 'HTTP_COOKIE' not in environ:
+        return
+
     cookies = SimpleCookie()
     cookies.load(environ['HTTP_COOKIE'])
     try:
