@@ -154,6 +154,7 @@ def depositos_choices(
     grupo = []
     if cod_only is not None and only is not None:
         descr = utils.functions.strings.join((', ', ' e '), map(str, only))
+        descr = f'({descr})'
         grupo = [
             {'COD': cod_only,
              'DESCR': descr,
