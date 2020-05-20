@@ -1,6 +1,7 @@
 from django.db import connections
 from django.db.models import Exists, OuterRef
 
+from base.forms import ModeloForm
 from base.views import O2BaseGetPostView
 
 import comercial
@@ -15,7 +16,7 @@ class GradeProduzir(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradeProduzir, self).__init__(*args, **kwargs)
-        self.Form_class = comercial.forms.AnaliseModeloForm
+        self.Form_class = ModeloForm
         self.template_name = 'lotes/analise/grade_produzir.html'
         self.title_name = 'Grade de modelo a produzir (estoque)'
         self.get_args = ['modelo']

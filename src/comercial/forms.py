@@ -27,14 +27,6 @@ class VendasPorForm(
         ])
 
 
-class AnaliseModeloForm(
-        O2BaseForm,
-        O2FieldModeloForm):
-
-    class Meta:
-        autofocus_field = 'modelo'
-
-
 class FaturamentoParaMetaForm(forms.Form):
     ano = forms.IntegerField(
         required=False, initial=ano_atual,
