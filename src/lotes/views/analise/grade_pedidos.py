@@ -1,6 +1,6 @@
 from django.db import connections
 
-from base.forms import ModeloForm
+from base.forms import DepositoForm
 from base.views import O2BaseGetPostView
 
 import produto
@@ -10,22 +10,22 @@ class GradePedidos(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradePedidos, self).__init__(*args, **kwargs)
-        self.Form_class = ModeloForm
+        self.Form_class = DepositoForm
         self.template_name = 'lotes/analise/grade_pedidos.html'
         self.title_name = 'Grade de pedidos a embarcar'
-        self.get_args = ['modelo']
+        self.get_args = ['deposito']
 
     def mount_context(self):
         cursor = connections['so'].cursor()
 
-        modelo = self.form.cleaned_data['modelo']
+        deposito = self.form.cleaned_data['deposito']
         self.context.update({
-            'modelo': modelo,
+            'deposito': deposito,
         })
 
-        data = produto.queries.modelo_inform(cursor, modelo)
+        data = [1]
         if len(data) == 0:
             self.context.update({
-                'msg_erro': 'Modelo não encontrado',
+                'msg_erro': 'Depósito não encontrado',
             })
             return

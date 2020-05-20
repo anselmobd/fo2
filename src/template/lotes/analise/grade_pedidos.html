@@ -15,8 +15,8 @@
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
 </form>
-{% if modelo %}
-  <h3>Modelo: {{ modelo }} - {{ descr }}</h3>
+{% if deposito %}
+  <h3>Depósito: {{ deposito }}</h3>
 
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>
