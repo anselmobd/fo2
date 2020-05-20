@@ -54,3 +54,9 @@ class O2FieldFiltroForm(forms.Form):
 
     def clean_filtro(self):
         return O2BaseForm.upper(self, 'filtro')
+
+
+class O2FieldDepositoForm(forms.Form):
+    deposito = forms.CharField(
+        label='Depósito', required=False,
+        widget=forms.NumberInput(attrs={'size': 3}))
