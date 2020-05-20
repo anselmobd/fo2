@@ -137,7 +137,6 @@ def depositos_choices(
         cod_todos=None, descr_todos=None, cod_only=None,
         only=None, less=None, rest=None):
     CHOICES = []
-    codigos = (101, 102, 122, 231)
 
     todos = []
     if cod_todos is not None:
