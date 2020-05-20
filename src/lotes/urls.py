@@ -131,6 +131,10 @@ urlpatterns = [
         views.analise.GradeProduzir.as_view(),
         name='analise_grade_produzir'),
 
+    url(r'^analise/grade_pedidos/$',
+        views.analise.GradePedidos.as_view(),
+        name='analise_grade_pedidos'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
