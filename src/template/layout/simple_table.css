@@ -23,7 +23,7 @@ th.group, tr.group {
 table:not(.layout) tbody tr:hover {
   background-color: #DDD;
 }
-thead th
+thead:not(.layout) th
 {
   background-image: linear-gradient(white, #DDD);
 }
