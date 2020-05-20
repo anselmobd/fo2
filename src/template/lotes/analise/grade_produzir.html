@@ -28,7 +28,7 @@
 
     <table>
 
-      <thead>
+      <thead class="layout">
         <tr>
           <th colspan="99">
             <h3>Meta de estoque</h3>
@@ -49,7 +49,7 @@
         {% include "layout/tbody_generic.html" with fields=gme.fields data=gme.data style=gme.style only %}
       {% endif %}
 
-      <thead>
+      <thead class="layout">
         <tr>
           <th colspan="99">
             <h3>Meta de giro (lead)</h3>
@@ -71,7 +71,7 @@
       {% endif %}
 
       {% if gm %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h3>Total das metas (A)</h3>
@@ -84,7 +84,7 @@
 
       {% if gop %}
         {% if goppr %}
-          <thead>
+          <thead class="layout">
             <tr>
               <th colspan="99">
                 <h3>Total em OPs em produção (não no CD)</h3>
@@ -95,7 +95,7 @@
           {% include "layout/tbody_generic.html" with fields=goppr.fields data=goppr.data style=goppr.style only %}
         {% endif %}
         {% if gopcd %}
-          <thead>
+          <thead class="layout">
             <tr>
               <th colspan="99">
                 <h3>Total em OPs em produção (no CD)</h3>
@@ -106,7 +106,7 @@
           {% include "layout/tbody_generic.html" with fields=gopcd.fields data=gopcd.data style=gopcd.style only %}
         {% endif %}
       {% else %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h4>Modelo sem disponibilidade em OPs</h4>
@@ -116,7 +116,7 @@
       {% endif %}
 
       {% if gest %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h3>Saldo de estoque em expedição</h3>
@@ -126,7 +126,7 @@
         {% include "layout/thead_generic.html" with data=gest.headers style=gest.style only %}
         {% include "layout/tbody_generic.html" with fields=gest.fields data=gest.data style=gest.style only %}
       {% else %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h4>Modelo sem saldo de estoque em expedição</h4>
@@ -135,7 +135,7 @@
         </thead>
       {% endif %}
 
-      <thead>
+      <thead class="layout">
         <tr>
           <th colspan="99">
             <h3>Carteira de pedidos</h3>
@@ -147,7 +147,7 @@
         {% include "layout/thead_generic.html" with data=gped.headers style=gped.style only %}
         {% include "layout/tbody_generic.html" with fields=gped.fields data=gped.data style=gped.style only %}
       {% else %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h4>Modelo sem pedidos</h4>
@@ -157,7 +157,7 @@
       {% endif %}
 
       {% if gopp %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h3>OPs + Expedição – Pedidos (B)</h3>
@@ -169,7 +169,7 @@
       {% endif %}
 
       {% if gex %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h3>Excesso (A-B)[-]</h3>
@@ -181,7 +181,7 @@
       {% endif %}
 
       {% if gap %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h3>A produzir (A-B)[+]</h3>
@@ -193,7 +193,7 @@
       {% endif %}
 
       {% if glm %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h3>A produzir, considerando lote mínimo por tamanho</h3>
@@ -205,7 +205,7 @@
       {% endif %}
 
       {% if glc %}
-        <thead>
+        <thead class="layout">
           <tr>
             <th colspan="99">
               <h3>A produzir, considerando lote mínimo por cor</h3>
