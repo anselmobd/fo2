@@ -1,0 +1,29 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'producao:analise_grade_pedidos' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" name="busca" value="Busca"/>
+</form>
+{% if modelo %}
+  <h3>Modelo: {{ modelo }} - {{ descr }}</h3>
+
+  {% if msg_erro %}
+    <h4>{{ msg_erro }}</h4>
+  {% else %}
+
+    OK
+
+  {% endif %}
+{% endif %}
+{% endblock %}

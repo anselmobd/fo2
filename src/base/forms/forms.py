@@ -1,4 +1,12 @@
 from pprint import pprint
-import re
 
-from django import forms
+from base.forms import custom
+from base.forms import fields
+
+
+class ModeloForm(
+        custom.O2BaseForm,
+        fields.O2FieldModeloForm):
+
+    class Meta:
+        autofocus_field = 'modelo'
