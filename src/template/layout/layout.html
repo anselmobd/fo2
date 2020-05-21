@@ -16,6 +16,9 @@
   {% block ga %}
     {% include "layout/snippets/ga.html" %}
   {% endblock ga %}
+
+  {% block head.loaders %}
+
   <!--Chart.js-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js" integrity="sha256-N4u5BjTLNwmGul6RgLoESPNqDFVUibVuOYhP4gJgrew=" crossorigin="anonymous"></script>
 
@@ -34,6 +37,8 @@
 
   <!-- Base CSS -->
   <link href="{% static "css/base.css" %}" rel="stylesheet">
+
+  {% endblock %}
 
   {% block stylesheet %}{% endblock %}
 
