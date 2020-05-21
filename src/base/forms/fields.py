@@ -2,6 +2,8 @@ from pprint import pprint
 
 from django import forms
 
+from base.forms import O2BaseForm
+
 
 class O2FieldModeloForm(forms.Form):
     modelo = forms.CharField(
