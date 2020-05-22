@@ -2,9 +2,8 @@ from pprint import pprint
 
 from django.db import connections
 
+from base.forms.main import DepositoForm
 from base.views import O2BaseGetPostView
-
-from lotes.forms.analise import DepositoForm
 
 
 class GradePedidos(O2BaseGetPostView):
