@@ -9,14 +9,12 @@ def MountForm(*args, **kwargs):
         kwargs: são atributos da subclasse Meta do form
     '''
     classes = {
-        'deposito': {
-            'class': fields.O2FieldDepositoForm,
-        }
+        'deposito': fields.O2FieldDepositoForm,
     }
 
     superclasses = custom.O2BaseForm,
     for field in args:
-        superclasses += classes[field]['class'],
+        superclasses += classes[field],
 
     Meta = type('MountedMeta', (object, ), kwargs)
 
