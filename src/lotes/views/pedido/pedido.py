@@ -5,13 +5,14 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-import lotes.forms as forms
+from base.forms.main import PedidoForm
+
 import lotes.models as models
 import lotes.queries as queries
 
 
 class Pedido(View):
-    Form_class = forms.PedidoForm
+    Form_class = PedidoForm
     template_name = 'lotes/pedido.html'
     title_name = 'Pedido'
 

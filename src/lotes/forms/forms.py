@@ -2,8 +2,6 @@ from datetime import datetime, timedelta
 
 from django import forms
 
-from base.forms.mounts import MountForm
-
 from produto.models import ProdutoItem
 from systextil.models import Colecao, Familia
 
@@ -285,12 +283,6 @@ class OpPendenteForm(forms.Form):
             return ''
         else:
             return self.cleaned_data['situacao']
-
-
-PedidoForm = MountForm(
-    'pedido',
-    autofocus_field='pedido'
-)
 
 
 class ModeloTermicaForm(forms.ModelForm):
