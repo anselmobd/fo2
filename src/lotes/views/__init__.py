@@ -5,12 +5,12 @@ from .distribuicao import *
 from .imprime_lotes import *
 from .imprime_pacote_3_lotes import *
 from .imprime_tag import *
-from .lote import *
 from .op_caixa import *
 from .op_pendente import *
 from .op import *
 from .os import *
 from .pedido_ import *
+from .posicao import *
 from .quant_estagio import *
 from .responsavel import *
 from .views import *
