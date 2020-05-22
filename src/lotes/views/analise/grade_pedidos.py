@@ -2,8 +2,9 @@ from pprint import pprint
 
 from django.db import connections
 
-from base.forms import MountModeloForm
 from base.views import O2BaseGetPostView
+
+from lotes.forms.analise import MountModeloForm
 
 
 class GradePedidos(O2BaseGetPostView):
