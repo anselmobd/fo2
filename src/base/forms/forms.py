@@ -12,14 +12,6 @@ class ModeloForm(
         autofocus_field = 'modelo'
 
 
-class DepositoForm(
-        custom.O2BaseForm,
-        fields.O2FieldDepositoForm):
-
-    class Meta:
-        autofocus_field = 'deposito'
-
-
 def MountForm(*args, **kwargs):
     classes = {
         'deposito': {
