@@ -1,3 +1,5 @@
+from django import forms
+
 from base.forms import custom
 from base.forms import fields
 
@@ -10,7 +12,7 @@ def MountForm(*args, **kwargs):
     '''
     classes = {
         'deposito': fields.O2FieldDepositoForm,
-        'pedido': fields.O2FieldPedidoForm,
+        'pedido': MountIntegerFieldForm('pedido'),
     }
 
     superclasses = custom.O2BaseForm,
@@ -24,3 +26,16 @@ def MountForm(*args, **kwargs):
         superclasses,
         {'Meta': Meta, }
     )
+
+
+def MountTypeFieldForm(type_field, field):
+    field_form = type_field()
+    return type(
+        "MountedTypeFieldForm",
+        (forms.Form, ),
+        {field: field_form, }
+    )
+
+
+def MountIntegerFieldForm(field):
+    return MountTypeFieldForm(forms.IntegerField, field)
