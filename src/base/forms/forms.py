@@ -12,6 +12,13 @@ class ModeloForm(
         autofocus_field = 'modelo'
 
 
+def MountModeloForm():
+    return MountForm(
+        'deposito',
+        autofocus_field='deposito'
+    )
+
+
 def MountForm(*args, **kwargs):
     '''
         args: são os inputs do form
