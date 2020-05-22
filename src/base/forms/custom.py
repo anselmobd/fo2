@@ -11,12 +11,15 @@ class O2BaseForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if hasattr(self, 'Meta'):
-            self.order_fields(getattr(self.Meta, 'order_fields', None))
+        self.process_meta(getattr(self, 'Meta', None))
 
-            self.required_fields(getattr(self.Meta, 'required_fields', None))
+    @method_idle_on_none
+    def process_meta(self, meta):
+        self.order_fields(getattr(meta, 'order_fields', None))
 
-            self.autofocus_field(getattr(self.Meta, 'autofocus_field', None))
+        self.required_fields(getattr(meta, 'required_fields', None))
+
+        self.autofocus_field(getattr(meta, 'autofocus_field', None))
 
     def saver(self, field_name, field):
         data = self.data.copy()
