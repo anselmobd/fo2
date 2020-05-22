@@ -13,6 +13,11 @@ class ModeloForm(
 
 
 def MountForm(*args, **kwargs):
+    '''
+        args: são os inputs do form
+            - string: referência a uma classe em classes (abaixo)
+        kwargs: são atributos da subclasse Meta do form
+    '''
     classes = {
         'deposito': {
             'class': fields.O2FieldDepositoForm,
