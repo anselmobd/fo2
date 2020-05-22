@@ -1,18 +1,16 @@
 from pprint import pprint
-import copy
 
-from django.shortcuts import render
 from django.db import connections
+from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
 from geral.functions import config_get_value
-from utils.views import totalize_grouped_data, totalize_data, group_rowspan
+from utils.views import totalize_data
 
 import produto.queries
 
 import lotes.forms as forms
-import lotes.models as models
 import lotes.queries as queries
 
 
