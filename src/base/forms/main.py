@@ -1,12 +1,10 @@
 from pprint import pprint
 
-from base.forms import custom
-from base.forms import fields
+from base.forms.mounts import MountForm
 
 
-class ModeloForm(
-        custom.O2BaseForm,
-        fields.O2FieldModeloForm):
+ModeloForm = MountForm(
+    'modelo',
+    autofocus_field='modelo'
+)
 
-    class Meta:
-        autofocus_field = 'modelo'
