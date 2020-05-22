@@ -10,6 +10,7 @@ def MountForm(*args, **kwargs):
     '''
     classes = {
         'deposito': fields.O2FieldDepositoForm,
+        'pedido': fields.O2FieldPedidoForm,
     }
 
     superclasses = custom.O2BaseForm,
