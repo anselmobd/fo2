@@ -12,6 +12,7 @@ def MountForm(*args, **kwargs):
     '''
     classes = {
         'deposito': fields.O2FieldDepositoForm,
+        'modelo': fields.O2FieldModeloForm,
         'pedido': MountIntegerFieldForm('pedido'),
     }
 
