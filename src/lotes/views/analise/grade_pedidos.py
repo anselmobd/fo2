@@ -4,14 +4,14 @@ from django.db import connections
 
 from base.views import O2BaseGetPostView
 
-from lotes.forms.analise import MountModeloForm
+from lotes.forms.analise import DepositoForm
 
 
 class GradePedidos(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradePedidos, self).__init__(*args, **kwargs)
-        self.Form_class = MountModeloForm()
+        self.Form_class = DepositoForm
         self.template_name = 'lotes/analise/grade_pedidos.html'
         self.title_name = 'Grade de pedidos a embarcar'
         self.get_args = ['deposito']
