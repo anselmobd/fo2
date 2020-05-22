@@ -8,3 +8,7 @@ ModeloForm = MountForm(
     autofocus_field='modelo'
 )
 
+PedidoForm = MountForm(
+    'pedido',
+    autofocus_field='pedido'
+)
