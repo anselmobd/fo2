@@ -3,6 +3,8 @@ import re
 
 from django import forms
 
+from utils.decorators import method_idle_on_none
+
 
 class O2BaseForm(forms.Form):
 
@@ -10,15 +12,11 @@ class O2BaseForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         if hasattr(self, 'Meta'):
+            self.order_fields(getattr(self.Meta, 'order_fields', None))
 
-            if hasattr(self.Meta, 'order_fields'):
-                self.order_fields(self.Meta.order_fields)
+            self.required_fields(getattr(self.Meta, 'required_fields', None))
 
-            if hasattr(self.Meta, 'required_fields'):
-                self.required_fields(self.Meta.required_fields)
-
-            if hasattr(self.Meta, 'autofocus_field'):
-                self.autofocus_field(self.Meta.autofocus_field)
+            self.autofocus_field(getattr(self.Meta, 'autofocus_field', None))
 
     def saver(self, field_name, field):
         data = self.data.copy()
@@ -55,10 +53,12 @@ class O2BaseForm(forms.Form):
             field = self.cleanner_pad_field(field, length)
         return self.saver(field_name, field)
 
+    @method_idle_on_none
     def required_fields(self, fields):
         for field in fields:
             self.fields[field].required = True
 
+    @method_idle_on_none
     def autofocus_field(self, field):
         fields = list(self.fields)
         for a_field in fields:
