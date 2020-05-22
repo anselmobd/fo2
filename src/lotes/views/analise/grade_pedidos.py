@@ -1,9 +1,9 @@
+from pprint import pprint
+
 from django.db import connections
 
 from base.forms import DepositoForm
 from base.views import O2BaseGetPostView
-
-import produto
 
 
 class GradePedidos(O2BaseGetPostView):
