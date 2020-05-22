@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.db import connections
 
-from base.forms import MountForm
+from base.forms import MountModeloForm
 from base.views import O2BaseGetPostView
 
 
@@ -10,10 +10,7 @@ class GradePedidos(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradePedidos, self).__init__(*args, **kwargs)
-        self.Form_class = MountForm(
-            'deposito',
-            autofocus_field='deposito'
-        )
+        self.Form_class = MountModeloForm()
         self.template_name = 'lotes/analise/grade_pedidos.html'
         self.title_name = 'Grade de pedidos a embarcar'
         self.get_args = ['deposito']
