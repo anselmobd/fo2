@@ -62,3 +62,7 @@ class O2FieldDepositoForm(forms.Form):
     deposito = forms.CharField(
         label='Depósito', required=False,
         widget=forms.NumberInput(attrs={'size': 3}))
+
+
+class O2FieldPedidoForm(forms.Form):
+    pedido = forms.IntegerField(label='Pedido')
