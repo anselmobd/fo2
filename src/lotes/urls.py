@@ -59,8 +59,8 @@ urlpatterns = [
     url(r'^impressora_termica/$',
         views.impressoraTermica, name='impressora_termica'),
 
-    url(r'^pedido/$', views.Pedido.as_view(), name='pedido'),
-    url(r'^pedido/(?P<pedido>\d+)/$', views.Pedido.as_view(),
+    url(r'^pedido/$', views.pedido.Pedido.as_view(), name='pedido'),
+    url(r'^pedido/(?P<pedido>\d+)/$', views.pedido.Pedido.as_view(),
         name='pedido__get'),
 
     url(r'^expedicao/$', views.pedido.Expedicao.as_view(), name='expedicao'),
