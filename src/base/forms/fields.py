@@ -3,6 +3,7 @@ from pprint import pprint
 from django import forms
 
 from base.forms import O2BaseForm
+from base.forms import mount_fields
 
 
 class O2FieldModeloForm(forms.Form):
@@ -62,3 +63,7 @@ class O2FieldDepositoForm(forms.Form):
     deposito = forms.CharField(
         label='Depósito', required=False,
         widget=forms.NumberInput(attrs={'size': 3}))
+
+
+O2FieldPedidoForm = mount_fields.MountIntegerFieldForm(
+    'pedido', widget_attrs={'size': 6})
