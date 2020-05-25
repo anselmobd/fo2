@@ -1,4 +1,4 @@
-from django import forms
+from pprint import pprint
 
 from base.forms import custom
 from base.forms import fields
@@ -10,15 +10,16 @@ def MountForm(*args, **kwargs):
             - string: referência a uma classe em classes (abaixo)
         kwargs: são atributos da subclasse Meta do form
     '''
-    classes = {
+
+    field_classes = {
         'deposito': fields.O2FieldDepositoForm,
         'modelo': fields.O2FieldModeloForm,
-        'pedido': MountIntegerFieldForm('pedido'),
+        'pedido': fields.O2FieldPedidoForm,
     }
 
     superclasses = custom.O2BaseForm,
     for field in args:
-        superclasses += classes[field],
+        superclasses += field_classes[field],
 
     Meta = type('MountedMeta', (object, ), kwargs)
 
@@ -27,16 +28,3 @@ def MountForm(*args, **kwargs):
         superclasses,
         {'Meta': Meta, }
     )
-
-
-def MountTypeFieldForm(type_field, field):
-    field_form = type_field()
-    return type(
-        "MountedTypeFieldForm",
-        (forms.Form, ),
-        {field: field_form, }
-    )
-
-
-def MountIntegerFieldForm(field):
-    return MountTypeFieldForm(forms.IntegerField, field)
