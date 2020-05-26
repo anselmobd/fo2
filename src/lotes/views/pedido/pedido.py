@@ -109,13 +109,12 @@ class Pedido(View):
             })
 
             # Grade
-            g_header, g_fields, g_data, g_total = queries.pedido.sortimento(
-                cursor, pedido=pedido)
+            g_header, g_fields, g_data, g_style, g_total = \
+                queries.pedido.sortimento(cursor, pedido=pedido, total='Total')
             if len(g_data) != 0:
-                g_style = {}
                 for i in range(1, len(g_fields)):
                     i_column = i + 1
-                    g_style[i_column] = \
+                    g_style[i_column] = g_style[i_column] + \
                         'border-left-style: solid;' \
                         'border-left-width: thin;' \
                         'text-align: right;'
