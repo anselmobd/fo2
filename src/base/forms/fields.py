@@ -70,4 +70,10 @@ class O2FieldDepositoForm(forms.Form):
 
 
 O2FieldPedidoForm = mount_fields.MountIntegerFieldForm(
-    'pedido', widget_attrs={'size': 6})
+    'pedido',
+    attrs={
+        'min_value': 1,
+        'max_value': 999999,
+    },
+    widget_attrs={'size': 6},
+)
