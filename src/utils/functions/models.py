@@ -84,8 +84,9 @@ class ExecSql(object):
     """
     def __init__(self, cursor, *arguments, args=None, sql='', **kwargs):
         self._cursor = cursor
-        self.args = []
-        if len(arguments) != 0:
+        if len(arguments) == 0:
+            self.args = []
+        else:
             self.args = arguments
         if args is not None:
             self.args.append(args)
