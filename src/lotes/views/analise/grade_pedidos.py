@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.db import connections
 
-from base.forms.main import DepositoForm
+from base.forms.forms2 import DepositoForm2
 from base.views import O2BaseGetPostView
 
 
@@ -10,7 +10,7 @@ class GradePedidos(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradePedidos, self).__init__(*args, **kwargs)
-        self.Form_class = DepositoForm
+        self.Form_class = DepositoForm2
         self.template_name = 'lotes/analise/grade_pedidos.html'
         self.title_name = 'Grade de pedidos a embarcar'
         self.get_args = ['deposito']

@@ -6,7 +6,7 @@ from django.db.models import Exists, OuterRef
 from django.http import JsonResponse
 
 from utils.views import totalize_data
-from base.forms import ModeloForm
+from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetView, O2BaseGetPostView
 from geral.functions import config_get_value
 
@@ -346,7 +346,7 @@ class GradeProduzirOld(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(GradeProduzirOld, self).__init__(*args, **kwargs)
-        self.Form_class = ModeloForm
+        self.Form_class = ModeloForm2
         self.template_name = 'lotes/grade_produzir.html'
         self.title_name = 'Grade de modelo a produzir'
         self.get_args = ['modelo']
