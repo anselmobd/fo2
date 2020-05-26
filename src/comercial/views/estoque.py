@@ -10,7 +10,7 @@ from django import forms
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from base.forms import ModeloForm
+from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetView, O2BaseGetPostView
 from geral.functions import has_permission
 from utils.views import totalize_data
@@ -147,7 +147,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(AnaliseModelo, self).__init__(*args, **kwargs)
-        self.Form_class = ModeloForm
+        self.Form_class = ModeloForm2
         self.template_name = 'comercial/analise_modelo.html'
         self.title_name = 'Define meta de estoque'
         self.get_args = ['modelo']

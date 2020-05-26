@@ -4,7 +4,8 @@ from django import forms
 
 import geral.queries
 import geral.functions
-from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
+from base.forms import O2BaseForm, O2FieldRefForm
+from base.forms.fields2 import O2FieldModeloForm2
 
 
 class PorDepositoForm(forms.Form):
@@ -131,7 +132,7 @@ class InventarioExpedicaoForm(forms.Form):
 
 class ReferenciasEstoqueForm(
         O2BaseForm,
-        O2FieldModeloForm):
+        O2FieldModeloForm2):
 
     CHOICES = geral.functions.depositos_choices(
         cod_todos='A00', only=(101, 102, 122, 231))
