@@ -9,7 +9,7 @@ def referencia_deposito(cursor, modelo, todos=True, deposito='A00'):
         '''
 
     filtro_modelo = ''
-    if modelo != '':
+    if modelo != '' and modelo is not None:
         filtro_modelo = '''--
             AND
               TRIM(
