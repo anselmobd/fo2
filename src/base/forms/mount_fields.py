@@ -7,7 +7,7 @@ def MountTypeFieldForm(
         field, attrs=None, widget_attrs=None,
         type_field=forms.CharField, widget=None):
 
-    kwargs = {}
+    kwargs = {'required': False}
     if attrs is not None:
         kwargs.update(attrs)
     if widget is not None:
