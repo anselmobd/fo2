@@ -453,8 +453,7 @@ class ExpedicaoForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     pedido_cliente = forms.CharField(
-        label='Pedido no cliente', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))
+        label='Pedido no cliente', required=False)
 
     cliente = forms.CharField(
         label='Cliente', required=False,
