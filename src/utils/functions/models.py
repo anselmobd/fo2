@@ -1,4 +1,3 @@
-import fdb
 from pprint import pprint
 
 
