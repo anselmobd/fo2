@@ -6,10 +6,14 @@ from base.forms import O2BaseForm
 from base.forms import mount_fields
 
 
-class O2FieldModeloForm(forms.Form):
-    modelo = forms.CharField(
-        required=False,
-        widget=forms.NumberInput(attrs={'size': 4}))
+O2FieldModeloForm = mount_fields.MountIntegerFieldForm(
+    'modelo',
+    attrs={
+        'min_value': 1,
+        'max_value': 9999,
+    },
+    widget_attrs={'size': 4},
+)
 
 
 class O2FieldRefForm(forms.Form):
