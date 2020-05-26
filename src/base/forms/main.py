@@ -10,7 +10,8 @@ DepositoForm = MountForm(
 
 ModeloForm = MountForm(
     'modelo',
-    autofocus_field='modelo'
+    autofocus_field='modelo',
+    required_fields=['modelo'],
 )
 
 PedidoForm = MountForm(
