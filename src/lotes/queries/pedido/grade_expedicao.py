@@ -35,7 +35,7 @@ def grade_expedicao(
     filtro_pedido_cliente = ''
     if pedido_cliente != '':
         filtro_pedido_cliente = f'''--
-            AND ped.COD_PED_CLIENTE = '{pedido_cliente}' '''
+            AND ped.COD_PED_CLIENTE like '%{pedido_cliente}%' '''
 
     filtro_cliente = ''
     if cliente != '':
