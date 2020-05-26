@@ -9,7 +9,7 @@ def MountTypeFieldForm(
 
     kwargs = {}
     if attrs is not None:
-        kwargs['attrs'] = attrs
+        kwargs.update(attrs)
     if widget is not None:
         kwargs['widget'] = widget()
 
