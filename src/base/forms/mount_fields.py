@@ -3,9 +3,21 @@ from pprint import pprint
 from django import forms
 
 
-def MountTypeFieldForm(type_field, field, attrs, widget_attrs):
-    field_form = type_field(attrs)
-    field_form.widget.attrs = widget_attrs
+def MountTypeFieldForm(
+        field, attrs=None, widget_attrs=None,
+        type_field=forms.CharField, widget=None):
+
+    kwargs = {}
+    if attrs is not None:
+        kwargs['attrs'] = attrs
+    if widget is not None:
+        kwargs['widget'] = widget()
+
+    field_form = type_field(**kwargs)
+
+    if widget_attrs is not None:
+        field_form.widget.attrs = widget_attrs
+
     return type(
         "MountedTypeFieldForm",
         (forms.Form, ),
@@ -13,5 +25,5 @@ def MountTypeFieldForm(type_field, field, attrs, widget_attrs):
     )
 
 
-def MountIntegerFieldForm(field, attrs={}, widget_attrs={}):
-    return MountTypeFieldForm(forms.IntegerField, field, attrs, widget_attrs)
+def MountIntegerFieldForm(field, **kwargs):
+    return MountTypeFieldForm(field, **kwargs, type_field=forms.IntegerField)
