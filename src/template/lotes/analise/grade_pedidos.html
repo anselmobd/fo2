@@ -15,7 +15,7 @@
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
 </form>
-{% if deposito %}
+{% if deposito is not None %}
   <h3>Depósito: {{ deposito }}</h3>
 
   {% if msg_erro %}
