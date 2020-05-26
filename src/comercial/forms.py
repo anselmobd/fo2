@@ -1,6 +1,6 @@
 from django import forms
 
-from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
+from base.forms import O2BaseForm, O2FieldRefForm
 from utils.functions import mes_atual, ano_atual
 
 
