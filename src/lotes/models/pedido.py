@@ -154,7 +154,7 @@ def ped_expedicao(
     filtro_pedido_cliente = ''
     if pedido_cliente != '':
         filtro_pedido_cliente = ''' --
-            AND ped.COD_PED_CLIENTE = '{}' '''.format(pedido_cliente)
+            AND ped.COD_PED_CLIENTE like '%{}%' '''.format(pedido_cliente)
 
     filtro_cliente = ''
     if cliente != '':
