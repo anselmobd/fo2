@@ -21,3 +21,13 @@ O2FieldPedidoForm2 = mount_fields.MountIntegerFieldForm(
     },
     widget_attrs={'size': 6},
 )
+
+O2FieldDepositoForm2 = mount_fields.MountIntegerFieldForm(
+    'deposito',
+    attrs={
+        'label': 'Depósito',
+        'min_value': 0,
+        'max_value': 999,
+    },
+    widget_attrs={'size': 3},
+)

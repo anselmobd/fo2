@@ -2,7 +2,6 @@ from pprint import pprint
 
 from base.forms import (
     custom,
-    fields,
     fields2,
 )
 
@@ -15,7 +14,7 @@ def MountForm(*args, **kwargs):
     '''
 
     field_classes = {
-        'deposito': fields.O2FieldDepositoForm,
+        'deposito': fields2.O2FieldDepositoForm2,
         'modelo': fields2.O2FieldModeloForm2,
         'pedido': fields2.O2FieldPedidoForm2,
     }
