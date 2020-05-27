@@ -4,18 +4,18 @@ from django import forms
 
 
 def MountTypeFieldForm(
-        field, attrs=None, widget_attrs=None,
+        field, attrs=None, widget_attrs={},
         type_field=forms.CharField, widget=None):
 
     kwargs = {'required': False}
     if attrs is not None:
         kwargs.update(attrs)
     if widget is not None:
-        kwargs['widget'] = widget()
+        kwargs['widget'] = widget(widget_attrs)
 
     field_form = type_field(**kwargs)
 
-    if widget_attrs is not None:
+    if widget is None:
         field_form.widget.attrs = widget_attrs
 
     return type(
