@@ -3,7 +3,12 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def pedido_faturavel_sortimento(cursor, data_de, data_ate):
+def pedido_faturavel_sortimento(cursor, deposito, data_de, data_ate):
+
+    filtro_deposito = ''
+    if deposito is not None and data_de != '':
+        filtro_deposito = f''' --
+            AND i.CODIGO_DEPOSITO = {deposito} '''
 
     filtro_data_de = ''
     if data_de is not None and data_de != '':
@@ -58,6 +63,8 @@ def pedido_faturavel_sortimento(cursor, data_de, data_ate):
           FROM ped_faturas pf -- pedidos e suas faturas
           JOIN PEDI_110 i -- item de pedido de venda
             ON i.PEDIDO_VENDA = pf.PEDIDO
+          WHERE 1=1
+            {filtro_deposito} -- filtro_deposito
           GROUP BY
             pf.PEDIDO
           , pf.NFOK
