@@ -26,9 +26,9 @@ class GradePedidos(O2BaseGetPostView):
             'deposito': deposito,
         })
 
-        data = pedido_faturavel_sortimento(cursor, None, None)
+        data = pedido_faturavel_sortimento(cursor, deposito, None, None)
         if len(data) == 0:
             self.context.update({
-                'msg_erro': 'Depósito não encontrado',
+                'msg_erro': 'Pedidos não encontrados',
             })
             return
