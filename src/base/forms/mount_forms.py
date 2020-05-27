@@ -19,9 +19,16 @@ def MountForm(*args, **kwargs):
         'pedido': fields2.O2FieldPedidoForm2,
     }
 
+    if 'fields' in kwargs:
+        fields = kwargs['fields']
+        del(kwargs['fields'])
+    else:
+        fields = {field: {} for field in args}
+
     superclasses = custom.O2BaseForm,
-    for field in args:
-        superclasses += field_classes[field],
+    for field in fields:
+        if fields[field] == {}:
+            superclasses += field_classes[field],
 
     Meta = type('MountedMeta', (object, ), kwargs)
 
