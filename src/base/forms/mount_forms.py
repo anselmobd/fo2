@@ -3,6 +3,7 @@ from pprint import pprint
 from base.forms import (
     custom,
     fields2,
+    mount_fields,
 )
 
 
@@ -26,8 +27,19 @@ def MountForm(*args, **kwargs):
 
     superclasses = custom.O2BaseForm,
     for field in fields:
-        if fields[field] == {}:
-            superclasses += field_classes[field],
+        field_conf = fields[field]
+        if field_conf == {}:
+            field_class = field_classes[field]
+        else:
+            attrs = {}
+            if 'label' in field_conf:
+                attrs.update({'label': field_conf['label']})
+            if field_conf['type'] == 'date':
+                field_class = mount_fields.MountDateFieldForm(
+                    field,
+                    attrs=attrs,
+                )
+        superclasses += field_class,
 
     Meta = type('MountedMeta', (object, ), kwargs)
 
