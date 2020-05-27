@@ -20,8 +20,7 @@ def MountForm(*args, **kwargs):
     }
 
     if 'fields' in kwargs:
-        fields = kwargs['fields']
-        del(kwargs['fields'])
+        fields = kwargs.pop('fields')
     else:
         fields = {field: {} for field in args}
 
