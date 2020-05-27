@@ -258,11 +258,11 @@ def untuple_keys(dict_):
     return result
 
 
-def untuple_keys_concat(dict_):
+def untuple_keys_concat(dict_, sep=""):
 
-    def val_concat(result, key, value):
+    def val_concat(result, key, value, sep):
         if key in result:
-            result[key] = f"{result[key]}{value}"
+            result[key] = f"{result[key]}{sep}{value}"
         else:
             result[key] = value
         return result
@@ -271,9 +271,9 @@ def untuple_keys_concat(dict_):
     for key in dict_:
         if isinstance(key, tuple):
             for sub_key in key:
-                result = val_concat(result, sub_key, dict_[key])
+                result = val_concat(result, sub_key, dict_[key], sep)
         else:
-            result = val_concat(result, key, dict_[key])
+            result = val_concat(result, key, dict_[key], sep)
     return result
 
 
