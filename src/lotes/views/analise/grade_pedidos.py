@@ -5,6 +5,9 @@ from django.db import connections
 from base.forms.forms2 import DepositoForm2
 from base.views import O2BaseGetPostView
 
+from lotes.queries.pedido.pedido_faturavel_sortimento \
+    import pedido_faturavel_sortimento
+
 
 class GradePedidos(O2BaseGetPostView):
 
@@ -23,7 +26,7 @@ class GradePedidos(O2BaseGetPostView):
             'deposito': deposito,
         })
 
-        data = [1]
+        data = pedido_faturavel_sortimento(cursor, None, None)
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Depósito não encontrado',
