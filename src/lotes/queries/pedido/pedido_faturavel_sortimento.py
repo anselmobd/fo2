@@ -136,9 +136,30 @@ def pedido_faturavel_sortimento(cursor, deposito, data_de, data_ate):
           HAVING
             pq.QTD - pq.QTD_FAT + sum(COALESCE(inf.QUANTIDADE, 0)) > 0
         )
+        , it_qtd AS -- itens de qtd final
+        (
+          SELECT
+            pq.REF
+          , pq.COR
+          , pq.TAM
+          , sum(pq.QTD_FINAL) QTD
+          FROM it_ped_qtd_final pq -- itens de pedidos com qtd e qtd fat e dev
+          LEFT JOIN BASI_220 t -- tamanhos
+            ON t.TAMANHO_REF = pq.TAM
+          GROUP BY
+            pq.REF
+          , pq.COR
+          , t.ORDEM_TAMANHO
+          , pq.TAM
+          ORDER BY
+            pq.REF
+          , pq.COR
+          , t.ORDEM_TAMANHO
+          , pq.TAM
+        )
         SELECT
           ped.*
-        FROM it_ped_qtd_final ped
+        FROM it_qtd ped
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
