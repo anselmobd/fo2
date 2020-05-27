@@ -20,3 +20,13 @@ PedidoForm2 = MountForm(
     autofocus_field='pedido',
     required_fields=['pedido'],
 )
+
+DepositoDatasForm2 = MountForm(
+    fields={
+        'deposito': {},
+        'data_de': {'field': 'data'},
+        'data_ate': {'field': 'data'},
+    },
+    autofocus_field='deposito',
+    required_fields=['deposito'],
+)
