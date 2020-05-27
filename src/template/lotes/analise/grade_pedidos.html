@@ -17,6 +17,16 @@
 </form>
 {% if deposito is not None %}
   <h3>Depósito: {{ deposito }}</h3>
+  {% if data_de or data_ate %}
+    <h3>Data de embarque -
+      {% if data_de %}
+        De: {{ data_de }}
+      {% endif %}
+      {% if data_ate %}
+        Até: {{ data_ate }}
+      {% endif %}
+    </h3>
+  {% endif %}
 
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>

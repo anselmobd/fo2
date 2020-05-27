@@ -22,11 +22,15 @@ class GradePedidos(O2BaseGetPostView):
         cursor = connections['so'].cursor()
 
         deposito = self.form.cleaned_data['deposito']
+        data_de = self.form.cleaned_data['data_de']
+        data_ate = self.form.cleaned_data['data_ate']
         self.context.update({
             'deposito': deposito,
+            'data_de': data_de,
+            'data_ate': data_ate,
         })
 
-        data = pedido_faturavel_sortimento(cursor, deposito, None, None)
+        data = pedido_faturavel_sortimento(cursor, deposito, data_de, data_ate)
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Pedidos não encontrados',
