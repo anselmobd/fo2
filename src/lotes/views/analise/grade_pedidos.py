@@ -4,6 +4,7 @@ from django.db import connections
 
 from base.forms.forms2 import DepositoDatasForm2
 from base.views import O2BaseGetPostView
+from utils.views import totalize_data
 
 from lotes.queries.pedido.pedido_faturavel_sortimento \
     import pedido_faturavel_sortimento
@@ -36,6 +37,12 @@ class GradePedidos(O2BaseGetPostView):
                 'msg_erro': 'Pedidos não encontrados',
             })
             return
+
+        totalize_data(data, {
+            'sum': ['qtd'],
+            'descr': {'tam': 'Total:'},
+            'row_style': 'font-weight: bold;',
+        })
 
         self.context.update({
             'headers': ['Referência', 'Cor', 'Tamanho', 'Quantidade'],
