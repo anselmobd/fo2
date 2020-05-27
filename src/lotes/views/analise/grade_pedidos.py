@@ -32,3 +32,12 @@ class GradePedidos(O2BaseGetPostView):
                 'msg_erro': 'Pedidos não encontrados',
             })
             return
+
+        self.context.update({
+            'headers': ['Referência', 'Cor', 'Tamanho', 'Quantidade'],
+            'fields': ['ref', 'cor', 'tam', 'qtd'],
+            'data': data,
+            'style': {
+                4: 'text-align: right;',
+            },
+        })
