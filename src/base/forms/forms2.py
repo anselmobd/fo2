@@ -23,9 +23,13 @@ PedidoForm2 = MountForm(
 
 DepositoDatasForm2 = MountForm(
     fields=[
-        {'deposito': {}},
-        {'data_de': {'type': 'date', 'label': 'Data de embarque - De:'}},
-        {'data_ate': {'type': 'date', 'label': 'Até:'}},
+        {'name': 'deposito'},
+        {'name': 'data_de',
+         'type': 'date',
+         'label': 'Data de embarque - De:'},
+        {'name': 'data_ate',
+         'type': 'date',
+         'label': 'Até:'},
     ],
     autofocus_field='deposito',
     required_fields=['deposito'],
