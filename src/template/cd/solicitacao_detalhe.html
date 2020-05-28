@@ -60,7 +60,7 @@
     <p>Depósito da caixinha (destino): <b>122</b></p>
     <p>Descrição: <b>Abastecimento das caixinhas</b></p>
     <p>&nbsp;</p>
-    <p>Nova referência: <input name="nova_ref" minlength="5" id="id_nova_ref" type="text" size="5"></p>
+    <p>Nova referência: <input name="nova_ref" minlength="5" id="id_nova_ref" type="text" size="5" onkeyup="myKeyEvent(event)"></p>
     <p>&nbsp;</p>
     <p><input name="btn_transferir" id="btn_transferir" type="submit" value="Transferir" onclick="transferir();"></p>
   </div>
@@ -224,12 +224,12 @@ $(document).ready(function(){
     console.log(nova_ref);
   }
 
-  function page_keys(e) {
-    console.log('keys_transferir');
-    if (e.keyCode == 27) {
-      // close_transfere();
-      console.log('oi');
+  function myKeyEvent(event) {
+    var x = event.keyCode;
+    if (x == 27) {  // 27 is the ESC key
+      close_transfere();
     }
   }
+
 </script>
 {% endblock %}
