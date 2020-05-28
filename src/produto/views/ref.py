@@ -109,8 +109,8 @@ class Ref(View):
             t_data = queries.ref_tamanhos(cursor, ref)
             if len(t_data) != 0:
                 context.update({
-                    't_headers': ('Tamanho', 'Descrição'),
-                    't_fields': ('TAM', 'DESCR'),
+                    't_headers': ('Tamanho', 'Descrição', 'Peças no lote'),
+                    't_fields': ('TAM', 'DESCR', 'LOTE_PECAS'),
                     't_data': t_data,
                 })
 

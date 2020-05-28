@@ -305,6 +305,7 @@ def prod_tamanhos(cursor, nivel, grupo):
         , t.DESCR_TAM_REFER DESCR
         , tam.ORDEM_TAMANHO ORD
         , t.DESC_TAM_FICHA COMPL
+        , t.LOTE_FABR_PECAS LOTE_PECAS
         FROM basi_020 t
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = t.TAMANHO_REF
