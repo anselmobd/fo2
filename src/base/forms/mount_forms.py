@@ -23,20 +23,22 @@ def MountForm(*args, **kwargs):
     if 'fields' in kwargs:
         fields = kwargs.pop('fields')
     else:
-        fields = {field: {} for field in args}
+        fields = [{field: {}} for field in args]
 
     superclasses = custom.O2BaseForm,
     for field in fields:
-        field_conf = fields[field]
+        field_name = list(field.keys())[0]
+
+        field_conf = field[field_name]
         if field_conf == {}:
-            field_class = field_classes[field]
+            field_class = field_classes[field_name]
         else:
             attrs = {}
             if 'label' in field_conf:
                 attrs.update({'label': field_conf['label']})
             if field_conf['type'] == 'date':
                 field_class = mount_fields.MountDateFieldForm(
-                    field,
+                    field_name,
                     attrs=attrs,
                 )
         superclasses += field_class,
