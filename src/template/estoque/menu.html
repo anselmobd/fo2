@@ -4,7 +4,7 @@
   <li><a href="{% url 'estoque:referencia_deposito' %}">Em depósito</a></li>
   <li><a href="{% url 'estoque:estoque_na_data' %}">Estoque na data (PA/PB/PG)</a></li>
   <li><a href="{% url 'estoque:item_no_tempo' %}">Item no tempo</a></li>
-  <li>Movimentações</li>
+  <li>Movimentações/Transações</li>
   <ul>
     {% if estoque_movimentos %}
       {% for mov in estoque_movimentos %}
