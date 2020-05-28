@@ -26,8 +26,11 @@ def MountForm(*args, **kwargs):
         fields = [{field: {}} for field in args]
 
     superclasses = custom.O2BaseForm,
+    kwargs['order_fields'] = []
+
     for field in fields:
         field_name = list(field.keys())[0]
+        kwargs['order_fields'].append(field_name)
 
         field_conf = field[field_name]
         if field_conf == {}:

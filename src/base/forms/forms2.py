@@ -22,7 +22,6 @@ PedidoForm2 = MountForm(
 )
 
 DepositoDatasForm2 = MountForm(
-    order_fields=['deposito', 'data_de', 'data_ate'],
     fields=[
         {'deposito': {}},
         {'data_de': {'type': 'date', 'label': 'Data de embarque - De:'}},
