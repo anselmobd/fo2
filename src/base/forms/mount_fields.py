@@ -4,7 +4,7 @@ from django import forms
 
 
 def MountTypeFieldForm(
-        field, attrs=None, widget_attrs={},
+        name, attrs=None, widget_attrs={},
         type_field=forms.CharField, widget=None):
 
     kwargs = {'required': False}
@@ -21,21 +21,21 @@ def MountTypeFieldForm(
     return type(
         "MountedTypeFieldForm",
         (forms.Form, ),
-        {field: field_form, }
+        {name: field_form, }
     )
 
 
-def MountIntegerFieldForm(field, **kwargs):
-    return MountTypeFieldForm(field, **kwargs, type_field=forms.IntegerField)
+def MountIntegerFieldForm(name, **kwargs):
+    return MountTypeFieldForm(name, **kwargs, type_field=forms.IntegerField)
 
 
-def MountDateFieldForm(field, **kwargs):
+def MountDateFieldForm(name, **kwargs):
     return MountTypeFieldForm(
-        field, **kwargs, type_field=forms.DateField,
+        name, **kwargs, type_field=forms.DateField,
         widget=forms.DateInput, widget_attrs={'type': 'date'})
 
 
-def MountNumberFieldForm(field, attrs={}, widget_attrs={}):
+def MountNumberFieldForm(name, attrs={}, widget_attrs={}):
     return MountTypeFieldForm(
-        field, **kwargs, type_field=forms.CharField,
+        name, **kwargs, type_field=forms.CharField,
         widget=forms.NumberInput)
