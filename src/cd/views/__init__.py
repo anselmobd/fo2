@@ -7,6 +7,7 @@ from .inconsist import *
 from .inconsist_detalhe import *
 from .lote_local import *
 from .mapa import *
+from .rearrumar import *
 from .solicita import *
 from .solicitacao_detalhe import *
 from .solicitacoes import *
