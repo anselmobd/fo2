@@ -1,0 +1,35 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+  <h4 class="visible-xs">{{ titulo }}</h4>
+  <form action="{% url 'cd:lote_local' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="tira" value="Tira da estante"/>
+  </form>
+  {% block javascript %}
+    <script>
+      var inp = document.getElementById('id_local');
+      inp.select();
+    </script>
+  {% endblock javascript %}
+  {% if erro %}
+    <h3>{{ erro }}</h3>
+  {% else %}
+      {% if local %}
+        <h3>Local: {{ local }}</b></h3>
+      {% endif %}
+      {% if rua %}
+        <h3>Rua: {{ rua }}</b></h3>
+      {% endif %}
+  {% endif %}
+{% endblock content %}
