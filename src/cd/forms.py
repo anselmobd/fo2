@@ -219,8 +219,10 @@ class FiltraSolicitacaoForm(forms.Form):
 class AskLoteForm(forms.Form):
     lote = forms.CharField(
         label='Lote', max_length=9, min_length=9,
-        widget=forms.TextInput(attrs={'type': 'number',
-                               'autofocus': 'autofocus'}))
+        widget=forms.TextInput(
+            attrs={'type': 'number', 'autofocus': 'autofocus', 'size': 9}
+        )
+    )
 
 
 class AskReferenciaForm(forms.Form):
