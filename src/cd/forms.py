@@ -3,8 +3,8 @@ from django import forms
 
 class RearrumarForm(forms.Form):
     CHOICES = [
-        ('RAB', 'Rua A B'),
-        ('RCD', 'Rua C D'),
+        ('RAB', 'Rua das estantes A e B'),
+        ('RCD', 'Rua das estantes C e D'),
     ]
     rua = forms.ChoiceField(
         choices=CHOICES, initial='RAB')
