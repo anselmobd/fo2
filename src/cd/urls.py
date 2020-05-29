@@ -68,4 +68,7 @@ urlpatterns = [
 
     url(r'^historico_lote/(?P<lote>[^/]+)?$',
         views.HistoricoLote.as_view(), name='historico_lote'),
+
+    url(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
+
 ]
