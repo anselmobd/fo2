@@ -68,7 +68,7 @@ class EnderecoLote(View):
         return render(request, self.template_name, context)
 
 
-def ajax_endereco_lote(request, lote):
+def dict_endereco_lote(lote):
     data = {
         'lote': lote,
     }
@@ -106,5 +106,11 @@ def ajax_endereco_lote(request, lote):
             'error_level': 1,
             'msg': 'Lote não encontrado',
         })
+
+    return data
+
+
+def ajax_endereco_lote(request, lote):
+    data = dict_endereco_lote(lote)
 
     return JsonResponse(data, safe=False)
