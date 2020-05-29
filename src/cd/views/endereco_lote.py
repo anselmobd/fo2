@@ -18,32 +18,17 @@ class EnderecoLote(View):
 
     def mount_context(self, request, form):
         lote = form.cleaned_data['lote']
-
         context = {'lote': lote}
 
-        try:
-            lote_rec = lotes.models.Lote.objects.get(lote=lote)
-        except lotes.models.Lote.DoesNotExist:
+        response = dict_endereco_lote(lote)
+        error_level = response.pop('error_level')
+
+        if error_level == 1:
             context.update({'erro': 'Lote não encontrado'})
-            return context
-
-        if lote_rec.local is None or lote_rec.local == '':
-            local = 'Não endereçado'
-            lotes_no_local = -1
+        elif error_level == 2:
+            context.update({'erro': 'Não endereçado'})
         else:
-            local = lote_rec.local
-            lotes_no_local = len(lotes.models.Lote.objects.filter(
-                local=lote_rec.local))
-
-        context.update({
-            'op': lote_rec.op,
-            'referencia': lote_rec.referencia,
-            'cor': lote_rec.cor,
-            'tamanho': lote_rec.tamanho,
-            'qtd_produzir': lote_rec.qtd_produzir,
-            'local': local,
-            'q_lotes': lotes_no_local,
-            })
+            context.update(response)
 
         return context
 
