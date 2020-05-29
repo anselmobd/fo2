@@ -1,6 +1,19 @@
 from django import forms
 
 
+class RearrumarForm(forms.Form):
+    CHOICES = [
+        ('RAB', 'Rua A B'),
+        ('RCD', 'Rua C D'),
+    ]
+    rua = forms.ChoiceField(
+        choices=CHOICES, initial='RAB')
+
+    local = forms.CharField(
+        min_length=2, max_length=9,
+        widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
+
+
 class LoteForm(forms.Form):
     endereco = forms.CharField(
         label='Endereço', min_length=2, max_length=4,
