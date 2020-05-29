@@ -99,7 +99,7 @@ N2LOL_ALLOWED_URLS = [
     '^/rh/.*$',
     '^/media/rh/.*$',
     '^/ack$',
-    '^/meuip$',
+    '^/meuip/$',
 ]
 N2LOL_ALLOWED_IP_BLOCKS = ['^192\.168\.1\..+$', '^127\.0\.0\.1$']
 
