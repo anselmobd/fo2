@@ -1,6 +1,8 @@
 <ul>
   <li><a href="{% url 'cd:lote_local' %}">Inventariar / Endereçar</a></li>
-  <li><a href="{% url 'cd:rearrumar' %}">Rearrumar pallet</a></li>
+  {% if debug %}
+    <li><a href="{% url 'cd:rearrumar' %}">Rearrumar pallet</a></li>
+  {% endif %}
   <li><a href="{% url 'cd:troca_local' %}">Troca de endereço de pallet</a></li>
   <li><a href="{% url 'cd:endereco_lote' %}">Verifica endereço de lote</a></li>
   <li><a href="{% url 'cd:historico' %}">Histórico de OP</a></li>
