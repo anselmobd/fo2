@@ -55,6 +55,9 @@ urlpatterns = [
     url(r'^endereco_lote/(?P<lote>[^/]+)?$', views.EnderecoLote.as_view(),
         name='endereco_lote'),
 
+    url(r'^endereco_lote/ajax/(?P<lote>[^/]+)/$',
+        views.ajax_endereco_lote, name='endereco_lote__ajax'),
+
     url(r'^grade_estoque/(?P<referencia>[^/]+)/(?P<detalhe>[^/]+)?/?$',
         views.Grade.as_view(), name='grade_estoque_detalhe'),
     url(r'^grade_estoque/(?P<referencia>[^/]+)?/?$',
@@ -70,8 +73,5 @@ urlpatterns = [
         views.HistoricoLote.as_view(), name='historico_lote'),
 
     url(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
-
-    url(r'^ajax/endereco_lote/(?P<lote>[^/]+)/$',
-        views.ajax_endereco_lote, name='ajax_endereco_lote'),
 
 ]
