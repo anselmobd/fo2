@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 
@@ -65,3 +66,45 @@ class EnderecoLote(View):
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+def ajax_endereco_lote(request, lote):
+    data = {
+        'lote': lote,
+    }
+
+    try:
+        lote_rec = lotes.models.Lote.objects.get(lote=lote)
+
+        data.update({
+            'op': lote_rec.op,
+            'referencia': lote_rec.referencia,
+            'cor': lote_rec.cor,
+            'tamanho': lote_rec.tamanho,
+            'qtd_produzir': lote_rec.qtd_produzir,
+        })
+
+        if lote_rec.local is None or lote_rec.local == '':
+            data.update({
+                'error_level': 2,
+                'msg': 'Lote não endereçado',
+            })
+        else:
+            local = lote_rec.local
+            lotes_no_local = len(lotes.models.Lote.objects.filter(
+                local=lote_rec.local))
+
+            data.update({
+                'error_level': 0,
+                'local': local,
+                'q_lotes': lotes_no_local,
+                'msg': f'OK',
+            })
+
+    except lotes.models.Lote.DoesNotExist:
+        data.update({
+            'error_level': 1,
+            'msg': 'Lote não encontrado',
+        })
+
+    return JsonResponse(data, safe=False)

@@ -71,4 +71,7 @@ urlpatterns = [
 
     url(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
 
+    url(r'^ajax/endereco_lote/(?P<lote>[^/]+)/$',
+        views.ajax_endereco_lote, name='ajax_endereco_lote'),
+
 ]
