@@ -16,18 +16,34 @@ class Rearrumar(PermissionRequiredMixin, View):
         self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = cd.forms.RearrumarForm
         self.template_name = 'cd/rearrumar.html'
-        self.title_name = 'Rearrumar palete'
+        self.title_name = 'Rearrumar pallet na rua'
 
     def mount_context(self, request, form):
         cursor = connections['so'].cursor()
 
-        local = form.cleaned_data['local']
-        rua = form.cleaned_data['rua']
+        rua = form.cleaned_data['rua'].upper()
+        endereco = form.cleaned_data['endereco']
 
         context = {
-            'local': local,
+            'endereco': endereco,
             'rua': rua,
         }
+
+        lotes_no_local = lotes.models.Lote.objects.filter(
+            local=endereco).count()
+
+        if lotes_no_local == 0:
+            context['erro'] = \
+                f'O endereço "{endereco}" está vazio.'
+            return context
+
+        if request.POST.get("confirma"):
+            lotes_recs = lotes.models.Lote.objects.filter(
+                local=endereco)
+            for lote in lotes_recs:
+                lote.local = rua
+                lote.local_usuario = request.user
+                lote.save()
 
         return context
 
