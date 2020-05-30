@@ -20,6 +20,20 @@ class RearrumarForm(forms.Form):
             widget=forms.TextInput(
                 attrs={'autofocus': 'autofocus', 'size': 9}))
 
+    def clean_endereco(self):
+        endereco = self.cleaned_data['endereco'].upper()
+        data = self.data.copy()
+        data['endereco'] = endereco
+        self.data = data
+        if endereco != "SAI":
+            if not endereco[0].isalpha():
+                raise forms.ValidationError(
+                    "Deve iniciar com uma letra.")
+            if not endereco[1:].isdigit():
+                raise forms.ValidationError(
+                    "Depois da letra inicial deve ter apenas números.")
+        return endereco
+
 
 class LoteForm(forms.Form):
     endereco = forms.CharField(
