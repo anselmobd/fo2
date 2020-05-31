@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django import forms
 from django.db import connections
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
@@ -23,27 +24,37 @@ class Rearrumar(PermissionRequiredMixin, View):
 
         rua = form.cleaned_data['rua'].upper()
         endereco = form.cleaned_data['endereco']
-
-        context = {
-            'endereco': endereco,
-            'rua': rua,
-        }
-
-        lotes_no_local = lotes.models.Lote.objects.filter(
-            local=endereco).count()
-
-        if lotes_no_local == 0:
-            context['erro'] = \
-                f'O endereço "{endereco}" está vazio.'
-            return context
+        valid_rua = form.cleaned_data['valid_rua']
+        valid_endereco = form.cleaned_data['valid_endereco']
 
         if request.POST.get("confirma"):
-            lotes_recs = lotes.models.Lote.objects.filter(
-                local=endereco)
-            for lote in lotes_recs:
-                lote.local = rua
-                lote.local_usuario = request.user
-                lote.save()
+            if rua != valid_rua:
+                form.add_error(
+                    'rua', "Rua não pode ser alterada na confirmação"
+                )
+            if endereco != valid_endereco:
+                form.add_error(
+                    'endereco', "Endereco não pode ser alterado na confirmação"
+                )
+
+            if form.is_valid():
+                lotes_recs = lotes.models.Lote.objects.filter(
+                    local=endereco)
+                for lote in lotes_recs:
+                    lote.local = rua
+                    lote.local_usuario = request.user
+                    lote.save()
+
+                form.data['valid_rua'] = ''
+
+        else:  # request.POST.get("tira"):
+            form.data['valid_rua'] = rua
+            form.data['valid_endereco'] = endereco
+
+        context = {
+            'rua': rua,
+            'endereco': endereco,
+        }
 
         return context
 
