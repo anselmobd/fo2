@@ -11,10 +11,14 @@
 
 {% block content %}
   <h4 class="visible-xs">{{ titulo }}</h4>
-  <form action="{% url 'cd:rearrumar' %}" method="post">
+    <form action="{% url 'cd:rearrumar' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="tira" value="Tira da estante"/>
+    {% if form.is_valid and form.endereco.value %}
+      <input type="submit" name="confirma" value="Confirma retirada da estante"/>
+    {% else %}
+      <input type="submit" name="tira" value="Tira da estante"/>
+    {% endif %}
   </form>
   {% block javascript %}
     <script>
@@ -22,15 +26,15 @@
       inp.select();
     </script>
   {% endblock javascript %}
-  {% if erro %}
-    <h3>{{ erro }}</h3>
-  {% else %}
-    {% if rua %}
-      <h3>Rua: {{ rua }}</b></h3>
+  {% if form.is_valid %}
+    {% if form.endereco.value %}
+      <h3>Retirar pallet no endereço <b>{{ form.endereco.value }}</b>
+        para a rua <b>{{ form.rua.value }}?</b></h3>
+    {% else %}
+      {% if form.valid_endereco.value %}
+        <h3>Retirado o pallet no endereço <b>{{ form.valid_endereco.value }}</b>
+          para a rua <b>{{ form.valid_rua.value }}.</b></h3>
+      {% endif %}
     {% endif %}
-    {% if endereco %}
-      <h3>Endereço: {{ endereco }}</b></h3>
-    {% endif %}
-    Feito!
   {% endif %}
 {% endblock content %}
