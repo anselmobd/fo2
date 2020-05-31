@@ -1,5 +1,7 @@
 from django import forms
 
+import lotes.models
+
 
 class RearrumarForm(forms.Form):
 
@@ -32,13 +34,21 @@ class RearrumarForm(forms.Form):
         data = self.data.copy()
         data['endereco'] = endereco
         self.data = data
-        if endereco != "SAI":
-            if not endereco[0].isalpha():
-                raise forms.ValidationError(
-                    "Deve iniciar com uma letra.")
-            if not endereco[1:].isdigit():
-                raise forms.ValidationError(
-                    "Depois da letra inicial deve ter apenas números.")
+
+        if not endereco[0].isalpha():
+            raise forms.ValidationError(
+                "Deve iniciar com uma letra.")
+
+        if not endereco[1:].isdigit():
+            raise forms.ValidationError(
+                "Depois da letra inicial deve ter apenas números.")
+
+        lotes_no_local = lotes.models.Lote.objects.filter(
+            local=endereco).count()
+        if lotes_no_local == 0:
+            raise forms.ValidationError(
+                f'O endereço "{endereco}" está vazio.')
+
         return endereco
 
 
