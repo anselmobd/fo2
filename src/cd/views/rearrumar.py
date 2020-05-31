@@ -45,18 +45,11 @@ class Rearrumar(PermissionRequiredMixin, View):
                     lote.local_usuario = request.user
                     lote.save()
 
-                form.data['valid_rua'] = ''
+                form.data['endereco'] = ''
 
         else:  # request.POST.get("tira"):
             form.data['valid_rua'] = rua
             form.data['valid_endereco'] = endereco
-
-        context = {
-            'rua': rua,
-            'endereco': endereco,
-        }
-
-        return context
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
@@ -68,7 +61,6 @@ class Rearrumar(PermissionRequiredMixin, View):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
-            data = self.mount_context(request, form)
-            context.update(data)
+            self.mount_context(request, form)
         context['form'] = form
         return render(request, self.template_name, context)
