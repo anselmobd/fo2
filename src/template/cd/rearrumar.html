@@ -36,5 +36,12 @@
           para a rua <b>{{ form.valid_rua.value }}.</b></h3>
       {% endif %}
     {% endif %}
+    {% if data %}
+      <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h4>
+      <table>
+        {% include "layout/html_thead.html" with data=headers only %}
+        {% include "layout/html_tbody.html" with fields=fields data=data only %}
+      </table>
+    {% endif %}
   {% endif %}
 {% endblock content %}
