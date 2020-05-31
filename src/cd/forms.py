@@ -173,7 +173,7 @@ class EstoqueForm(forms.Form):
 
     def clean_endereco(self):
         endereco = self.cleaned_data['endereco'].upper()
-        if endereco:
+        if endereco and endereco not in ['RAB', 'RC', 'RDE', 'RFG']:
             if not endereco[0].isalpha():
                 raise forms.ValidationError(
                     "Deve iniciar com uma letra.")
