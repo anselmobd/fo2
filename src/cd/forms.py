@@ -15,10 +15,17 @@ class RearrumarForm(forms.Form):
             choices=CHOICES,
             initial='RAB',
         )
+
         self.fields['endereco'] = forms.CharField(
             label='Endereço (Lote)', min_length=2, max_length=9,
             widget=forms.TextInput(
                 attrs={'autofocus': 'autofocus', 'size': 9}))
+
+        self.fields['valid_rua'] = forms.CharField(
+            required=False, widget=forms.HiddenInput())
+
+        self.fields['valid_endereco'] = forms.CharField(
+            required=False, widget=forms.HiddenInput())
 
     def clean_endereco(self):
         endereco = self.cleaned_data['endereco'].upper()
