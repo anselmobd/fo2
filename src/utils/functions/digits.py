@@ -18,4 +18,4 @@ def fo2_digit_with(inteiro):
 
 
 def fo2_digit_valid(texto):
-    return texto == fo2_digit_with(texto[:-2])
+    return fo2_digit_calc(texto[:-2]) == texto[-2:]
