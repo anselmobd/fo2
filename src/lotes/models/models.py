@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
+from utils.functions.digits import *
+
 from .op import *
 
 
@@ -244,6 +246,10 @@ class SolicitaLote(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
+
+    @property
+    def numero(self):
+        return f"#{fo2_digit_with(self.id)}"
 
     def save(self, *args, **kwargs):
         self.codigo = self.codigo and self.codigo.upper()
