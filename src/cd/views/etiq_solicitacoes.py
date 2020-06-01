@@ -1,6 +1,8 @@
 from pprint import pprint
 
 from django.db import connection
+from django.db.models import F, Sum, Value
+from django.db.models.functions import Coalesce
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -29,43 +31,54 @@ class EtiquetasSolicitacoes(View):
             context.update({'erro': 'Número inválido'})
             return context
 
-        data = queries.historico(cursor, op)
-        if len(data) == 0:
-            context.update({'erro': 'Sem lotes ativos'})
+        try:
+            solicitacao = lotes.models.SolicitaLote.objects.get(id=numero[:-2])
+        except lotes.models.SolicitaLote.DoesNotExist:
+            context.update({'erro': 'Solicitação não existe'})
             return context
-        for row in data:
-            if row['dt'] is None:
-                row['dt'] = 'Nunca inventariado'
-            if row['endereco'] is None:
-                if row['usuario'] is None:
-                    row['endereco'] = '-'
-                else:
-                    row['endereco'] = 'SAIU!'
-            if row['usuario'] is None:
-                row['usuario'] = '-'
-        context.update({
-            'headers': ('Data', 'Qtd. de lotes', 'Endereço', 'Usuário'),
-            'fields': ('dt', 'qtd', 'endereco', 'usuario'),
-            'data': data,
-        })
 
-        data = queries.historico_detalhe(cursor, op)
+        data = lotes.models.SolicitaLoteQtd.objects.values(
+            'lote__op', 'lote__lote', 'lote__qtd_produzir',
+            'lote__referencia', 'lote__cor', 'lote__tamanho'
+        ).annotate(
+            lote_ordem=Coalesce('lote__local', Value('0000')),
+            lote__local=Coalesce('lote__local', Value('-Ausente-')),
+            qtdsum=Sum('qtd')
+        ).filter(
+            solicitacao=solicitacao,
+        ).exclude(
+            lote__qtd_produzir=F('qtdsum'),
+        ).order_by(
+            'lote_ordem', 'lote__op', 'lote__referencia', 'lote__cor',
+            'lote__tamanho', 'lote__lote'
+        )
+
+        if len(data) == 0:
+            context.update({'erro': 'Sem lotes parciais'})
+            return context
+
         for row in data:
-            if row['dt'] is None:
-                row['dt'] = 'Nunca inventariado'
-            if row['endereco'] is None:
-                if row['usuario'] is None:
-                    row['endereco'] = '-'
-                else:
-                    row['endereco'] = 'SAIU!'
-            if row['usuario'] is None:
-                row['usuario'] = '-'
-            row['lote|LINK'] = reverse(
-                'cd:historico_lote', args=[row['lote']])
+            if row['qtdsum'] == row['lote__qtd_produzir']:
+                row['inteira_parcial'] = 'Lote inteiro'
+            else:
+                row['inteira_parcial'] = 'Parcial'
+            row['lote__lote|LINK'] = reverse(
+                'producao:posicao__get',
+                args=[row['lote__lote']])
+            row['lote__lote|TARGET'] = '_BLANK'
+
         context.update({
-            'd_headers': ('Lote', 'Última data', 'Endereço', 'Usuário'),
-            'd_fields': ('lote', 'dt', 'endereco', 'usuario'),
-            'd_data': data,
+            'headers': [
+                'Endereço', 'OP', 'Lote',
+                'Referência', 'Cor', 'Tamanho',
+                'Quant. original', 'Quant. Solicitada', 'Solicitação'
+            ],
+            'fields': [
+                'lote__local', 'lote__op', 'lote__lote',
+                'lote__referencia', 'lote__cor', 'lote__tamanho',
+                'lote__qtd_produzir', 'qtdsum', 'inteira_parcial'
+            ],
+            'data': data,
         })
 
         return context
