@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views import View
 
 from geral.functions import has_permission
+from utils.functions.digits import *
 
 import lotes.models
 
@@ -25,17 +26,20 @@ class Solicitacoes(LoginRequiredMixin, View):
         self.id = None
 
     def lista(self, filtro=None, data=None):
-        fields = ('codigo', 'ativa', 'descricao', 'data',
-                  'usuario__username', 'update_at',
-                  'total_qtd', 'total_no_cd')
-        descriptions = ('Código', 'Ativa para o usuário', 'Descrição', 'Data',
-                        'Usuário', 'Última alteração', 'Qtd. total',
-                        'Qtd. do CD')
+        fields = (
+            'num', 'codigo', 'ativa', 'descricao', 'data',
+            'usuario__username', 'update_at', 'total_qtd', 'total_no_cd'
+        )
+        descriptions = (
+            '#', 'Código', 'Ativa para o usuário', 'Descrição', 'Data',
+            'Usuário', 'Última alteração', 'Qtd. total', 'Qtd. do CD'
+        )
         headers = dict(zip(fields, descriptions))
 
         cursor_def = connection.cursor()
         data = queries.solicita_lote(cursor_def, filtro, data)
         for row in data:
+            row['num'] = fo2_digit_with(row['id'])
             if row['data'] is None:
                 row['data'] = ''
             row['codigo|LINK'] = reverse(
