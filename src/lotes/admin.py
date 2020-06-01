@@ -8,10 +8,10 @@ from .forms import ModeloTermicaForm
 
 
 class ImpressoAdmin(admin.ModelAdmin):
-    list_display = ['nome']
-    search_fields = ['nome']
-    ordering = ['nome']
-    fields = ['nome']
+    list_display = ['nome', 'slug']
+    search_fields = ['nome', 'slug']
+    fields = ['nome', 'slug']
+    readonly_fields = ['slug']
 
 
 class ImpressoraTermicaAdmin(admin.ModelAdmin):

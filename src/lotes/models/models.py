@@ -3,6 +3,7 @@ from pprint import pprint
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 from utils.functions.digits import *
 
@@ -22,6 +23,7 @@ class Impresso(models.Model):
     nome = models.CharField(
         max_length=100, null=True, blank=True,
         verbose_name='Nome')
+    slug = models.SlugField()
 
     def __str__(self):
         return self.nome
@@ -29,6 +31,10 @@ class Impresso(models.Model):
     class Meta:
         db_table = "fo2_lot_impresso"
         verbose_name = "Impresso"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(Impresso, self).save(*args, **kwargs)
 
 
 class ModeloTermica(models.Model):
