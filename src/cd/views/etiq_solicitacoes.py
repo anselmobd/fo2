@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from utils.functions.digits import *
+
 import lotes.models
 
 import cd.queries as queries
@@ -18,10 +20,14 @@ class EtiquetasSolicitacoes(View):
         self.template_name = 'cd/etiq_solicitacoes.html'
         self.title_name = 'Etiquetas de solicitações'
 
-    def mount_context(self, cursor, op):
+    def mount_context(self, cursor, numero):
         context = {
-            'op': op,
+            'numero': numero,
             }
+
+        if not fo2_digit_valid(numero):
+            context.update({'erro': 'Número inválido'})
+            return context
 
         data = queries.historico(cursor, op)
         if len(data) == 0:
@@ -65,22 +71,17 @@ class EtiquetasSolicitacoes(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'op' in kwargs and kwargs['op'] is not None:
-            return self.post(request, *args, **kwargs)
-        else:
-            context = {'titulo': self.title_name}
-            form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'op' in kwargs and kwargs['op'] is not None:
-            form.data['op'] = kwargs['op']
         if form.is_valid():
-            op = form.cleaned_data['op']
+            numero = form.cleaned_data['numero']
             cursor = connection.cursor()
-            context.update(self.mount_context(cursor, op))
+            context.update(self.mount_context(cursor, numero))
         context['form'] = form
         return render(request, self.template_name, context)
