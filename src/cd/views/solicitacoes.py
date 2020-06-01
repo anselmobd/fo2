@@ -27,11 +27,11 @@ class Solicitacoes(LoginRequiredMixin, View):
 
     def lista(self, filtro=None, data=None):
         fields = (
-            'num', 'codigo', 'ativa', 'descricao', 'data',
+            'numero', 'codigo', 'ativa', 'descricao', 'data',
             'usuario__username', 'update_at', 'total_qtd', 'total_no_cd'
         )
         descriptions = (
-            '#', 'Código', 'Ativa para o usuário', 'Descrição', 'Data',
+            '#número', 'Código', 'Ativa para o usuário', 'Descrição', 'Data',
             'Usuário', 'Última alteração', 'Qtd. total', 'Qtd. do CD'
         )
         headers = dict(zip(fields, descriptions))
@@ -39,7 +39,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         cursor_def = connection.cursor()
         data = queries.solicita_lote(cursor_def, filtro, data)
         for row in data:
-            row['num'] = fo2_digit_with(row['id'])
+            row['numero'] = f"#{fo2_digit_with(row['id'])}"
             if row['data'] is None:
                 row['data'] = ''
             row['codigo|LINK'] = reverse(
