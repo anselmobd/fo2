@@ -15,3 +15,7 @@ def fo2_digit_with(inteiro):
     if isinstance(inteiro, int):
         inteiro = str(inteiro)
     return f'{inteiro}{fo2_digit_calc(inteiro)}'
+
+
+def fo2_digit_valid(texto):
+    return texto == fo2_digit_with(texto[:-2])
