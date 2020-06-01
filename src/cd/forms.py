@@ -291,3 +291,10 @@ class ALoteForm(forms.Form):
         label='Lote', max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+
+
+class EtiquetasSolicitacoesForm(forms.Form):
+    numero = forms.CharField(
+        label='Número de solicitação', required=True,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))

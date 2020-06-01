@@ -74,4 +74,7 @@ urlpatterns = [
 
     url(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
 
+    url(r'^etiq_solicitacoes/?$',
+        views.EtiquetasSolicitacoes.as_view(), name='etiq_solicitacoes'),
+
 ]
