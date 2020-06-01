@@ -249,7 +249,7 @@ class SolicitaLote(models.Model):
 
     @property
     def numero(self):
-        return f"#{fo2_digit_with(self.id)}"
+        return fo2_digit_with(self.id)
 
     def save(self, *args, **kwargs):
         self.codigo = self.codigo and self.codigo.upper()
