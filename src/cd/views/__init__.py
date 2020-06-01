@@ -1,5 +1,6 @@
 from .endereco_lote import *
 from .estoque import *
+from .etiq_solicitacoes import *
 from .grade_estoque import *
 from .historico import *
 from .historico_lote import *
