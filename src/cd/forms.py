@@ -313,9 +313,6 @@ class EtiquetasSolicitacoesForm(forms.Form):
         self.fields['buscado_numero'] = forms.CharField(
             required=False, widget=forms.HiddenInput())
 
-        self.fields['impresso_numero'] = forms.CharField(
-            required=False, widget=forms.HiddenInput())
-
     def clean_numero(self):
         numero = self.cleaned_data.get('numero', '')
 
