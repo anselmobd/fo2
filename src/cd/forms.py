@@ -310,6 +310,12 @@ class EtiquetasSolicitacoesForm(forms.Form):
                        'size': '7',
                        'autofocus': 'autofocus'}))
 
+        self.fields['buscado_numero'] = forms.CharField(
+            required=False, widget=forms.HiddenInput())
+
+        self.fields['impresso_numero'] = forms.CharField(
+            required=False, widget=forms.HiddenInput())
+
     def clean_numero(self):
         numero = self.cleaned_data['numero']
         if not fo2_digit_valid(numero):

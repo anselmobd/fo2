@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import connection
 from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
@@ -15,14 +16,14 @@ import cd.queries as queries
 import cd.forms
 
 
-class EtiquetasSolicitacoes(View):
+class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
 
     def __init__(self):
+        self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = cd.forms.EtiquetasSolicitacoesForm
         self.template_name = 'cd/etiq_solicitacoes.html'
-        self.title_name = 'Etiquetas de solicitações'
         self.context = {
-            'titulo': self.title_name,
+            'titulo': 'Etiquetas de solicitações',
             'passo': 1,
         }
 
@@ -30,12 +31,11 @@ class EtiquetasSolicitacoes(View):
         cursor = connection.cursor()
 
         numero = form.cleaned_data['numero']
+        buscado_numero = form.cleaned_data['buscado_numero']
+        impresso_numero = form.cleaned_data['impresso_numero']
 
         self.context.update({
             'numero': numero,
-            # por padrão, se chegou aqui é porque fez uma
-            # busca (passo 1) válida
-            'passo': 2,
         })
 
         solicitacao = lotes.models.SolicitaLote.objects.get(id=numero[:-2])
@@ -98,6 +98,12 @@ class EtiquetasSolicitacoes(View):
             self.context.update({
                 'msg': 'Impressão marcada como confirmada',
                 'passo': 1,
+            })
+
+        else:  # request.POST.get("tira"):
+            # form.data['buscado_numero'] = numero
+            self.context.update({
+                'passo': 2,
             })
 
     def get(self, request, *args, **kwargs):
