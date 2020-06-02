@@ -21,11 +21,22 @@ class EtiquetasSolicitacoes(View):
         self.Form_class = cd.forms.EtiquetasSolicitacoesForm
         self.template_name = 'cd/etiq_solicitacoes.html'
         self.title_name = 'Etiquetas de solicitações'
+        self.context = {
+            'titulo': self.title_name,
+            'passo': 1,
+        }
 
-    def mount_context(self, cursor, numero):
-        context = {
+    def mount_context(self, request, form):
+        cursor = connection.cursor()
+
+        numero = form.cleaned_data['numero']
+
+        self.context.update({
             'numero': numero,
-            }
+            # por padrão, se chegou aqui é porque fez uma
+            # busca (passo 1) válida
+            'passo': 2,
+        })
 
         solicitacao = lotes.models.SolicitaLote.objects.get(id=numero[:-2])
 
@@ -51,7 +62,7 @@ class EtiquetasSolicitacoes(View):
                 args=[row['lote__lote']])
             row['lote__lote|TARGET'] = '_BLANK'
 
-        context.update({
+        self.context.update({
             'headers': [
                 'Endereço', 'OP', 'Lote',
                 'Referência', 'Cor', 'Tamanho',
@@ -65,20 +76,38 @@ class EtiquetasSolicitacoes(View):
             'data': data,
         })
 
-        return context
+        pprint(request.POST)
+        if request.POST.get("volta_para_busca"):
+            self.context.update({
+                'passo': 1,
+            })
+
+        elif request.POST.get("volta_para_imprime"):
+            self.context.update({
+                'passo': 2,
+            })
+
+        elif request.POST.get("imprime"):
+            self.context.update({
+                'msg': 'Enviado para a impressora',
+                'passo': 3,
+            })
+
+        elif request.POST.get("confirma"):
+            # form.data['numero'] = ''  # não sei porque não está permitindo
+            self.context.update({
+                'msg': 'Impressão marcada como confirmada',
+                'passo': 1,
+            })
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
         form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
-            numero = form.cleaned_data['numero']
-            cursor = connection.cursor()
-            context.update(self.mount_context(cursor, numero))
-        context['form'] = form
-        return render(request, self.template_name, context)
+            self.mount_context(request, form)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
