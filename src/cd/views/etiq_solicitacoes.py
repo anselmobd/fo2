@@ -46,10 +46,6 @@ class EtiquetasSolicitacoes(View):
         )
 
         for row in data:
-            if row['qtdsum'] == row['lote__qtd_produzir']:
-                row['inteira_parcial'] = 'Lote inteiro'
-            else:
-                row['inteira_parcial'] = 'Parcial'
             row['lote__lote|LINK'] = reverse(
                 'producao:posicao__get',
                 args=[row['lote__lote']])
@@ -59,12 +55,12 @@ class EtiquetasSolicitacoes(View):
             'headers': [
                 'Endereço', 'OP', 'Lote',
                 'Referência', 'Cor', 'Tamanho',
-                'Quant. original', 'Quant. Solicitada', 'Solicitação'
+                'Quant. original', 'Quant. Solicitada'
             ],
             'fields': [
                 'lote__local', 'lote__op', 'lote__lote',
                 'lote__referencia', 'lote__cor', 'lote__tamanho',
-                'lote__qtd_produzir', 'qtdsum', 'inteira_parcial'
+                'lote__qtd_produzir', 'qtdsum'
             ],
             'data': data,
         })
