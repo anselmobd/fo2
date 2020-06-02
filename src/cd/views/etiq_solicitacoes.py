@@ -33,7 +33,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
     def marca_impresso(self, numero):
         return True
 
-    def mount_context(self, request, form):
+    def mount_context(self, form):
         cursor = connection.cursor()
 
         numero = form.cleaned_data['numero']
@@ -81,17 +81,17 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             'data': data,
         })
 
-        if request.POST.get("volta_para_busca"):
+        if self.request.POST.get("volta_para_busca"):
             self.context.update({
                 'passo': 1,
             })
 
-        elif request.POST.get("volta_para_imprime"):
+        elif self.request.POST.get("volta_para_imprime"):
             self.context.update({
                 'passo': 2,
             })
 
-        elif request.POST.get("imprime"):
+        elif self.request.POST.get("imprime"):
             if buscado_numero == numero:
                 if self.imprime(data):
                     form.data['impresso_numero'] = numero
@@ -114,7 +114,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
                     'numero', "Número não pode ser alterado no passo 2"
                 )
 
-        elif request.POST.get("confirma"):
+        elif self.request.POST.get("confirma"):
             if buscado_numero == numero:
                 if self.marca_impresso(numero):
                     form.data['numero'] = ''
@@ -137,21 +137,23 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
                     'numero', "Número não pode ser alterado no passo 3"
                 )
 
-        else:  # request.POST.get("busca"):
+        else:  # self.request.POST.get("busca"):
             form.data['buscado_numero'] = numero
             self.context.update({
                 'passo': 2,
             })
 
     def get(self, request, *args, **kwargs):
+        self.request = request
         form = self.Form_class()
         self.context['form'] = form
-        return render(request, self.template_name, self.context)
+        return render(self.request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        mutable_request_post = request.POST.copy()
+        self.request = request
+        mutable_request_post = self.request.POST.copy()
         form = self.Form_class(mutable_request_post)
         if form.is_valid():
-            self.mount_context(request, form)
+            self.mount_context(form)
         self.context['form'] = form
-        return render(request, self.template_name, self.context)
+        return render(self.request, self.template_name, self.context)
