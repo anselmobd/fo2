@@ -3,7 +3,12 @@ from stdnum.iso7064 import mod_11_10
 
 def fo2_digit_calc(inteiro):
     if isinstance(inteiro, str):
-        inteiro = int(inteiro)
+        try:
+            inteiro = int_(inteiro)
+        except Exception:
+            inteiro = 0
+    if inteiro < 0:
+        inteiro = 0
     salt1 = str(3*inteiro)
     digit1 = mod_11_10.calc_check_digit(salt1)
     salt2 = str(5*(inteiro*10+int(digit1)))
