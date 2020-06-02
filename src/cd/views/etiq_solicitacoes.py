@@ -27,12 +27,17 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             'passo': 1,
         }
 
+    def imprime(self, data):
+        return True
+
+    def marca_impresso(self, numero):
+        return True
+
     def mount_context(self, request, form):
         cursor = connection.cursor()
 
         numero = form.cleaned_data['numero']
         buscado_numero = form.cleaned_data['buscado_numero']
-        impresso_numero = form.cleaned_data['impresso_numero']
 
         self.context.update({
             'numero': numero,
@@ -87,17 +92,50 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             })
 
         elif request.POST.get("imprime"):
-            self.context.update({
-                'msg': 'Enviado para a impressora',
-                'passo': 3,
-            })
+            if buscado_numero == numero:
+                if self.imprime(data):
+                    form.data['impresso_numero'] = numero
+                    self.context.update({
+                        'msg': 'Enviado para a impressora',
+                        'passo': 3,
+                    })
+                else:
+                    self.context.update({
+                        'msg': 'Erro ao enviar para a impressora',
+                        'passo': 2,
+                    })
+            else:
+                form.data['numero'] = ''
+                self.context.update({
+                    'numero': None,
+                    'passo': 1,
+                })
+                form.add_error(
+                    'numero', "Número não pode ser alterado no passo 2"
+                )
 
         elif request.POST.get("confirma"):
-            form.data['numero'] = ''
-            self.context.update({
-                'msg': 'Impressão marcada como confirmada',
-                'passo': 1,
-            })
+            if buscado_numero == numero:
+                if self.marca_impresso(numero):
+                    form.data['numero'] = ''
+                    self.context.update({
+                        'msg': 'Impressão marcada como confirmada',
+                        'passo': 1,
+                    })
+                else:
+                    self.context.update({
+                        'msg': 'Erro ao marcar impressão como confirmada',
+                        'passo': 3,
+                    })
+            else:
+                form.data['numero'] = ''
+                self.context.update({
+                    'numero': None,
+                    'passo': 1,
+                })
+                form.add_error(
+                    'numero', "Número não pode ser alterado no passo 3"
+                )
 
         else:  # request.POST.get("busca"):
             form.data['buscado_numero'] = numero
