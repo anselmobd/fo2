@@ -1,4 +1,6 @@
 from django import forms
+from django.db.models import F, Sum, Value
+from django.db.models.functions import Coalesce
 
 from utils.functions.digits import *
 
@@ -315,5 +317,18 @@ class EtiquetasSolicitacoesForm(forms.Form):
                 id=numero[:-2])
         except lotes.models.SolicitaLote.DoesNotExist:
             raise forms.ValidationError("Solicitação não existe")
+
+        parciais = lotes.models.SolicitaLoteQtd.objects.annotate(
+            lote_ordem=Coalesce('lote__local', Value('0000')),
+            lote__local=Coalesce('lote__local', Value('-Ausente-')),
+            qtdsum=Sum('qtd')
+        ).filter(
+            solicitacao=solicitacao,
+        ).exclude(
+            lote__qtd_produzir=F('qtdsum'),
+        )
+
+        if len(parciais) == 0:
+            raise forms.ValidationError("Sem lotes parciais")
 
         return numero
