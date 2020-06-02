@@ -27,10 +27,15 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             'passo': 1,
         }
 
-    def imprime(self, solicitacao, data):
+    def imprime(self, data):
         return True
 
-    def marca_impresso(self, numero):
+    def marca_impresso(self, solicitacao):
+        solicitacao_prt = lotes.models.SolicitaLotePrinted(
+            solicitacao=solicitacao,
+            printed_by=self.request.user
+        )
+        solicitacao_prt.save()
         return True
 
     def mount_context(self, form):
@@ -93,7 +98,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
 
         elif self.request.POST.get("imprime"):
             if buscado_numero == numero:
-                if self.imprime(solicitacao, data):
+                if self.imprime(data):
                     form.data['impresso_numero'] = numero
                     self.context.update({
                         'msg': 'Enviado para a impressora',
@@ -116,7 +121,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
 
         elif self.request.POST.get("confirma"):
             if buscado_numero == numero:
-                if self.marca_impresso(numero):
+                if self.marca_impresso(solicitacao):
                     form.data['numero'] = ''
                     self.context.update({
                         'msg': 'Impressão marcada como confirmada',
