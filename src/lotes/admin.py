@@ -2,8 +2,16 @@ from django.contrib import admin
 
 from fo2 import settings
 from fo2.admin import intr_adm_site
-from .models import Impresso, ImpressoraTermica, ModeloTermica, \
-    UsuarioImpresso, Lote, LeadColecao, SolicitaLote
+from .models import (
+    Impresso,
+    ImpressoraTermica,
+    Lote,
+    LeadColecao,
+    ModeloTermica,
+    SolicitaLote,
+    SolicitaLotePrinted,
+    UsuarioImpresso,
+)
 from .forms import ModeloTermicaForm
 
 
@@ -91,3 +99,11 @@ class SolicitaLoteAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(SolicitaLote, SolicitaLoteAdmin)
+
+
+class SolicitaLotePrintedAdmin(admin.ModelAdmin):
+    list_display = ['solicitacao', 'printed_at', 'printed_by']
+    ordering = ['-printed_at']
+
+
+intr_adm_site.register(SolicitaLotePrinted, SolicitaLotePrintedAdmin)
