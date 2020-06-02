@@ -27,10 +27,6 @@ class EtiquetasSolicitacoes(View):
             'numero': numero,
             }
 
-        if not fo2_digit_valid(numero):
-            context.update({'erro': 'Número inválido'})
-            return context
-
         try:
             solicitacao = lotes.models.SolicitaLote.objects.get(id=numero[:-2])
         except lotes.models.SolicitaLote.DoesNotExist:
