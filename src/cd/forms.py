@@ -23,7 +23,7 @@ class RearrumarForm(forms.Form):
         )
 
         self.fields['endereco'] = forms.CharField(
-            label='Endereço (Lote)', min_length=2, max_length=9,
+            label='Endereço', min_length=2, max_length=9,
             widget=forms.TextInput(
                 attrs={'autofocus': 'autofocus', 'size': 9}))
 
