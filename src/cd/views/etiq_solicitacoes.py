@@ -45,10 +45,6 @@ class EtiquetasSolicitacoes(View):
             'lote__tamanho', 'lote__lote'
         )
 
-        if len(data) == 0:
-            context.update({'erro': 'Sem lotes parciais'})
-            return context
-
         for row in data:
             if row['qtdsum'] == row['lote__qtd_produzir']:
                 row['inteira_parcial'] = 'Lote inteiro'
