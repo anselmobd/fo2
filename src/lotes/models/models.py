@@ -252,6 +252,7 @@ class SolicitaLote(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
+    can_print = models.BooleanField(default=True)
 
     @property
     def numero(self):
