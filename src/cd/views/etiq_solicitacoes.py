@@ -31,12 +31,15 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
         return True
 
     def marca_impresso(self, solicitacao):
-        solicitacao_prt = lotes.models.SolicitaLotePrinted(
-            solicitacao=solicitacao,
-            printed_by=self.request.user
-        )
-        solicitacao_prt.save()
-        return True
+        try:
+            solicitacao_prt = lotes.models.SolicitaLotePrinted(
+                solicitacao=solicitacao,
+                printed_by=self.request.user
+            )
+            solicitacao_prt.save()
+            return True
+        except Exception:
+            return False
 
     def mount_context(self, form):
         cursor = connection.cursor()
