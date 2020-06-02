@@ -376,6 +376,30 @@ class SolicitaLoteQtd(models.Model):
         verbose_name = "Quantidades Solicitadas de lotes"
 
 
+class SolicitaLotePrinted(models.Model):
+    solicitacao = models.ForeignKey(
+        SolicitaLote, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='Solicitação')
+    printed_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='etiquetas impressas em')
+    printed_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name='etiquetas impressas por')
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.printed_at = self.when
+        super(SolicitaLotePrinted, self).save(*args, **kwargs)
+        solicitacao.can_print = False
+        solicitacao.save()
+
+    class Meta:
+        db_table = "fo2_cd_solicita_lote_prt"
+        verbose_name = "Impressão de solicitação de lotes"
+        verbose_name_plural = "Impressões de solicitações de lotes"
+
+
 # Abaixo: estudos do TableHeap
 class TableHeapManager(models.Manager):
     def get_queryset(self):
