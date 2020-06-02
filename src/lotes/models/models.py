@@ -392,10 +392,10 @@ class SolicitaLotePrinted(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.printed_at = self.when
+            self.printed_at = timezone.now()
         super(SolicitaLotePrinted, self).save(*args, **kwargs)
-        solicitacao.can_print = False
-        solicitacao.save()
+        self.solicitacao.can_print = False
+        self.solicitacao.save()
 
     class Meta:
         db_table = "fo2_cd_solicita_lote_prt"
