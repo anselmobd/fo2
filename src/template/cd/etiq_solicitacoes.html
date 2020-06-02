@@ -22,7 +22,7 @@
   <h3>{{ erro }}</h3>
 {% endif %}
 {% if data %}
-  <h3>Lotes parciais</h3>
+  <h3>{{ data|length }} requisiç{{ data|length|pluralize:"ão,ões" }} parcia{{ data|length|pluralize:"l,is" }}</h3>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
