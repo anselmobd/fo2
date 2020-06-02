@@ -76,7 +76,6 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             'data': data,
         })
 
-        pprint(request.POST)
         if request.POST.get("volta_para_busca"):
             self.context.update({
                 'passo': 1,
