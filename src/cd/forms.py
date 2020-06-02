@@ -296,5 +296,9 @@ class ALoteForm(forms.Form):
 class EtiquetasSolicitacoesForm(forms.Form):
     numero = forms.CharField(
         label='Número de solicitação', required=True,
-        widget=forms.TextInput(attrs={'type': 'number',
-                               'autofocus': 'autofocus'}))
+        widget=forms.TextInput(
+            attrs={'type': 'number',
+                   'min': '1',
+                   'max': '9999999',
+                   'size': '7',
+                   'autofocus': 'autofocus'}))
