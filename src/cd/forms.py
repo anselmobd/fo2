@@ -317,7 +317,8 @@ class EtiquetasSolicitacoesForm(forms.Form):
             required=False, widget=forms.HiddenInput())
 
     def clean_numero(self):
-        numero = self.cleaned_data['numero']
+        numero = self.cleaned_data.get('numero', '')
+
         if not fo2_digit_valid(numero):
             raise forms.ValidationError("Número inválido")
 
