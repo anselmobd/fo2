@@ -260,6 +260,9 @@ class SolicitaLote(models.Model):
     def numero(self):
         return fo2_digit_with(self.id)
 
+    def __str__(self):
+        return f"#{self.numero}: {self.codigo} ({self.descricao})"
+
     def save(self, *args, **kwargs):
         self.codigo = self.codigo and self.codigo.upper()
         ''' On create and update, get timestamps '''
