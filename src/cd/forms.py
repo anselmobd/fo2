@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django import forms
 from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
@@ -332,7 +334,10 @@ class EtiquetasSolicitacoesForm(forms.Form):
             if not solicitacao.can_print:
                 raise forms.ValidationError("Etiquetas já foram impressas")
 
-        parciais = lotes.models.SolicitaLoteQtd.objects.annotate(
+        parciais = lotes.models.SolicitaLoteQtd.objects.values(
+            'lote__op', 'lote__lote', 'lote__qtd_produzir',
+            'lote__referencia', 'lote__cor', 'lote__tamanho'
+        ).annotate(
             lote_ordem=Coalesce('lote__local', Value('0000')),
             lote__local=Coalesce('lote__local', Value('-Ausente-')),
             qtdsum=Sum('qtd')
