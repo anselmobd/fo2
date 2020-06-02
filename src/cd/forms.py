@@ -1,5 +1,6 @@
 from django import forms
 
+from utils.functions.digits import *
 import lotes.models
 
 
@@ -302,3 +303,9 @@ class EtiquetasSolicitacoesForm(forms.Form):
                    'max': '9999999',
                    'size': '7',
                    'autofocus': 'autofocus'}))
+
+    def clean_numero(self):
+        numero = self.cleaned_data['numero']
+        if not fo2_digit_valid(numero):
+            raise forms.ValidationError(
+                "Número inválido")
