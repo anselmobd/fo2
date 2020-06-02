@@ -325,6 +325,13 @@ class EtiquetasSolicitacoesForm(forms.Form):
         except lotes.models.SolicitaLote.DoesNotExist:
             raise forms.ValidationError("Solicitação não existe")
 
+        solicitacao_prt = lotes.models.SolicitaLotePrinted.objects.filter(
+            solicitacao=solicitacao
+        )
+        if len(solicitacao_prt) != 0:
+            if not solicitacao.can_print:
+                raise forms.ValidationError("Etiquetas já foram impressas")
+
         parciais = lotes.models.SolicitaLoteQtd.objects.annotate(
             lote_ordem=Coalesce('lote__local', Value('0000')),
             lote__local=Coalesce('lote__local', Value('-Ausente-')),
