@@ -4,7 +4,7 @@ from stdnum.iso7064 import mod_11_10
 def fo2_digit_calc(inteiro):
     if isinstance(inteiro, str):
         try:
-            inteiro = int_(inteiro)
+            inteiro = int(inteiro)
         except Exception:
             inteiro = 0
     if inteiro < 0:
