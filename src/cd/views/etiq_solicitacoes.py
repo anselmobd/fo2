@@ -94,14 +94,14 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             })
 
         elif request.POST.get("confirma"):
-            # form.data['numero'] = ''  # não sei porque não está permitindo
+            form.data['numero'] = ''
             self.context.update({
                 'msg': 'Impressão marcada como confirmada',
                 'passo': 1,
             })
 
-        else:  # request.POST.get("tira"):
-            # form.data['buscado_numero'] = numero
+        else:  # request.POST.get("busca"):
+            form.data['buscado_numero'] = numero
             self.context.update({
                 'passo': 2,
             })
@@ -112,7 +112,8 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        form = self.Form_class(request.POST)
+        mutable_request_post = request.POST.copy()
+        form = self.Form_class(mutable_request_post)
         if form.is_valid():
             self.mount_context(request, form)
         self.context['form'] = form
