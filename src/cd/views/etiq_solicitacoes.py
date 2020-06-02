@@ -27,7 +27,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             'passo': 1,
         }
 
-    def imprime(self, data):
+    def imprime(self, solicitacao, data):
         return True
 
     def marca_impresso(self, numero):
@@ -93,7 +93,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
 
         elif self.request.POST.get("imprime"):
             if buscado_numero == numero:
-                if self.imprime(data):
+                if self.imprime(solicitacao, data):
                     form.data['impresso_numero'] = numero
                     self.context.update({
                         'msg': 'Enviado para a impressora',
