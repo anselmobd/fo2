@@ -1,6 +1,7 @@
 from django import forms
 
 from utils.functions.digits import *
+
 import lotes.models
 
 
@@ -307,5 +308,12 @@ class EtiquetasSolicitacoesForm(forms.Form):
     def clean_numero(self):
         numero = self.cleaned_data['numero']
         if not fo2_digit_valid(numero):
-            raise forms.ValidationError(
-                "Número inválido")
+            raise forms.ValidationError("Número inválido")
+
+        try:
+            solicitacao = lotes.models.SolicitaLote.objects.get(
+                id=numero[:-2])
+        except lotes.models.SolicitaLote.DoesNotExist:
+            raise forms.ValidationError("Solicitação não existe")
+
+        return numero

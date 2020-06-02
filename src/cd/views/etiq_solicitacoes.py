@@ -27,11 +27,7 @@ class EtiquetasSolicitacoes(View):
             'numero': numero,
             }
 
-        try:
-            solicitacao = lotes.models.SolicitaLote.objects.get(id=numero[:-2])
-        except lotes.models.SolicitaLote.DoesNotExist:
-            context.update({'erro': 'Solicitação não existe'})
-            return context
+        solicitacao = lotes.models.SolicitaLote.objects.get(id=numero[:-2])
 
         data = lotes.models.SolicitaLoteQtd.objects.values(
             'lote__op', 'lote__lote', 'lote__qtd_produzir',
