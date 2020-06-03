@@ -56,6 +56,9 @@ class GradePedidos(O2BaseGetPostView):
         p_data = pedido_faturavel_sortimento(
             cursor, deposito, data_de, data_ate, retorno='p')
 
+        for row in p_data:
+            row['data'] = row['data'].date()
+
         totalize_data(p_data, {
             'sum': ['qtd'],
             'descr': {'pedido': 'Total:'},
@@ -63,10 +66,10 @@ class GradePedidos(O2BaseGetPostView):
         })
 
         self.context.update({
-            'p_headers': ['Pedido', 'Quantidade'],
-            'p_fields': ['pedido', 'qtd'],
+            'p_headers': ['Data de embarque', 'Pedido', 'Quantidade'],
+            'p_fields': ['data', 'pedido', 'qtd'],
             'p_data': p_data,
             'p_style': {
-                2: 'text-align: right;',
+                3: 'text-align: right;',
             },
         })
