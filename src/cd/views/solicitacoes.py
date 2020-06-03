@@ -73,7 +73,9 @@ class Solicitacoes(LoginRequiredMixin, View):
                             initial={'codigo': row.codigo,
                                      'descricao': row.descricao,
                                      'data': row.data,
-                                     'ativa': row.ativa})
+                                     'ativa': row.ativa,
+                                     'can_print': row.can_print,
+                                     })
                 else:
                     context['msg_erro'] = \
                         'Usuário não tem direito de alterar solicitações.'
@@ -109,6 +111,7 @@ class Solicitacoes(LoginRequiredMixin, View):
             descricao = form.cleaned_data['descricao']
             data = form.cleaned_data['data']
             ativa = form.cleaned_data['ativa']
+            can_print = form.cleaned_data['can_print']
             if ativa:
                 outras_ativas = self.SL.objects.filter(
                     usuario=request.user,
@@ -139,6 +142,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                     solicitacao.descricao = descricao
                     solicitacao.data = data
                     solicitacao.ativa = ativa
+                    solicitacao.can_print = can_print
                     solicitacao.save()
                 except IntegrityError as e:
                     context['msg_erro'] = 'Ocorreu um erro ao gravar ' \

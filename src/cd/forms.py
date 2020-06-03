@@ -248,6 +248,8 @@ class SolicitacaoForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}))
     ativa = forms.BooleanField(
         label='Ativa para o usuário', required=False)
+    can_print = forms.BooleanField(
+        label='Pode imprimir', required=False)
 
 
 class FiltraSolicitacaoForm(forms.Form):
