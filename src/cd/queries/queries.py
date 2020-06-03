@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from utils.functions.digits import *
 from utils.functions.models import rows_to_dict_list_lower
 
 
@@ -185,16 +186,7 @@ def historico_lote(cursor, lote):
     return rows_to_dict_list_lower(cursor)
 
 
-def solicita_lote(cursor, filtro=None, data=None):
-    filtra_cod_descr = ''
-    if filtro is not None:
-        for el in filtro.strip().split():
-            filtra_cod_descr += f'''--
-                AND ( upper(s.codigo) LIKE '%{el.upper()}%'
-                    OR upper(s.descricao) LIKE '%{el.upper()}%'
-                    OR upper(u.username) LIKE '%{el.upper()}%'
-                    )
-            '''
+def lista_solicita_lote(cursor, filtro=None, data=None):
     filtra_data = ''
     if data is not None:
         filtra_data = f'''--
@@ -227,7 +219,6 @@ def solicita_lote(cursor, filtro=None, data=None):
         left join auth_user u
           on u.id = s.usuario_id
         where 1=1
-          {filtra_cod_descr} -- filtra_cod_descr
           {filtra_data} -- filtra_data
         group by
           s.id
@@ -242,4 +233,28 @@ def solicita_lote(cursor, filtro=None, data=None):
           s.update_at desc
     '''
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    data = rows_to_dict_list_lower(cursor)
+
+    for row in data:
+        row['numero'] = f"#{fo2_digit_with(row['id'])}"
+
+    def do_filt(row):
+        return (
+            filtro.lower() in row['codigo'].lower() or
+            filtro.lower() in row['descricao'].lower() or
+            filtro.lower() in row['usuario__username'].lower() or
+            filtro.lower() in row['numero'].lower()
+        )
+
+    if filtro is None:
+        data_filtered = data.copy()
+    else:
+        data_filtered = filter(do_filt, data)
+
+    data_final = []
+    for row in data_filtered:
+        if row['data'] is None:
+            row['data'] = ''
+        data_final.append(row)
+
+    return data_final
