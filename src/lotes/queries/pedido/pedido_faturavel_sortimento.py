@@ -170,13 +170,18 @@ def pedido_faturavel_sortimento(
             , it_qtd AS -- itens de qtd final
             (
               SELECT
-                pq.PEDIDO
+                ped.DATA_ENTR_VENDA DATA
+              , pq.PEDIDO
               , sum(pq.QTD_FINAL) QTD
               FROM it_ped_qtd_final pq -- itens de ped com qtd e qtd fat e dev
+              JOIN PEDI_100 ped -- pedido de venda
+                ON ped.PEDIDO_VENDA = pq.PEDIDO
               GROUP BY
-                pq.PEDIDO
+                ped.DATA_ENTR_VENDA
+              , pq.PEDIDO
               ORDER BY
-                pq.PEDIDO
+                ped.DATA_ENTR_VENDA
+              , pq.PEDIDO
             )
             SELECT
               ped.*
