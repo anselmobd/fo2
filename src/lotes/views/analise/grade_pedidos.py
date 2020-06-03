@@ -52,3 +52,21 @@ class GradePedidos(O2BaseGetPostView):
                 4: 'text-align: right;',
             },
         })
+
+        p_data = pedido_faturavel_sortimento(
+            cursor, deposito, data_de, data_ate, retorno='p')
+
+        totalize_data(p_data, {
+            'sum': ['qtd'],
+            'descr': {'pedido': 'Total:'},
+            'row_style': 'font-weight: bold;',
+        })
+
+        self.context.update({
+            'p_headers': ['Pedido', 'Quantidade'],
+            'p_fields': ['pedido', 'qtd'],
+            'p_data': p_data,
+            'p_style': {
+                2: 'text-align: right;',
+            },
+        })

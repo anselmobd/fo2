@@ -36,9 +36,16 @@
     <h4>{{ msg_erro }}</h4>
   {% else %}
 
+    <h4>Produtos</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+    </table>
+
+    <h4>Pedidos</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
+      {% include "layout/tbody_generic.html" with fields=p_fields data=p_data style=p_style only %}
     </table>
 
   {% endif %}
