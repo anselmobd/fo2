@@ -10,6 +10,7 @@ from produto.models import ProdutoItem
 class EstoquePermissions(models.Model):
 
     class Meta:
+        verbose_name = 'Permissões de estoque'
         managed = False
         permissions = (
             ("can_transferencia", "Pode fazer transferência entre depósitos"),
