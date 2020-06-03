@@ -19,7 +19,7 @@ import cd.forms
 class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
 
     def __init__(self):
-        self.permission_required = 'lotes.can_inventorize_lote'
+        self.permission_required = 'lotes.can_print__solicitacao_parciais'
         self.Form_class = cd.forms.EtiquetasSolicitacoesForm
         self.template_name = 'cd/etiq_solicitacoes.html'
         self.context = {
