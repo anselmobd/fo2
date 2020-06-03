@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django.db import connections
+from django.urls import reverse
 
 from base.forms.forms2 import DepositoDatasForm2
 from base.views import O2BaseGetPostView
@@ -58,6 +59,9 @@ class GradePedidos(O2BaseGetPostView):
 
         for row in p_data:
             row['data'] = row['data'].date()
+            row['pedido|LINK'] = reverse(
+                'producao:pedido__get', args=[row['pedido']])
+            row['pedido|TARGET'] = '_BLANK'
 
         totalize_data(p_data, {
             'sum': ['qtd'],
