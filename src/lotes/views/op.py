@@ -66,8 +66,8 @@ class Op(View):
                 if row['PEDIDO'] == 0:
                     row['PEDIDO'] = ''
                 else:
-                    row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
-                        row['PEDIDO'])
+                    row['PEDIDO|LINK'] = reverse(
+                        'producao:pedido__get', args=[row['PEDIDO']])
             val_parm = config_get_value('OP-UNIDADE', request.user)
             if val_parm is None:
                 val_parm = 'S'

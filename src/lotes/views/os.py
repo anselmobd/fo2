@@ -53,8 +53,8 @@ class Os(View):
                     if row['PEDIDO'] == 0:
                         row['PEDIDO'] = ''
                     else:
-                        row['PEDIDO|LINK'] = '/lotes/pedido/{}'.format(
-                            row['PEDIDO'])
+                        row['PEDIDO|LINK'] = reverse(
+                            'producao:pedido__get', args=[row['PEDIDO']])
                 context.update({
                     'o_headers': ('OP', 'Lotes', 'Quant.', 'Pedido',
                                   'Pedido do cliente'),
