@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from utils.classes import TermalPrint
 from utils.functions.digits import *
 
 import lotes.models
@@ -28,6 +29,34 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
         }
 
     def imprime(self, data):
+        try:
+            impresso = lotes.models.Impresso.objects.get(
+                slug='etiqueta-de-solicitacao')
+        except lotes.models.Impresso.DoesNotExist:
+            self.context.update({
+                'msg': 'Impresso etiqueta-de-solicitacao não cadastrado',
+            })
+            return False
+
+        try:
+            usuario_impresso = lotes.models.UsuarioImpresso.objects.get(
+                usuario=self.request.user, impresso=impresso)
+        except lotes.models.UsuarioImpresso.DoesNotExist:
+            self.context.update({
+                'msg': 'Impresso não cadastrado para o usuário',
+            })
+            return False
+
+        teg = TermalPrint(usuario_impresso.impressora_termica.nome)
+        teg.template(usuario_impresso.modelo.gabarito, '\r\n')
+        teg.printer_start()
+        try:
+            for row in data:
+                teg.context(row)
+                teg.printer_send()
+        finally:
+            teg.printer_end()
+
         return True
 
     def marca_impresso(self, solicitacao):
@@ -109,7 +138,6 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
                     })
                 else:
                     self.context.update({
-                        'msg': 'Erro ao enviar para a impressora',
                         'passo': 2,
                     })
             else:
