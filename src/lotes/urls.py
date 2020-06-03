@@ -136,6 +136,9 @@ urlpatterns = [
         views.analise.GradePedidos.as_view(),
         name='analise_grade_pedidos'),
 
+    url(r'^conserto_lote/ajax/(?P<lote>[^/]+)/$',
+        views.lote.ajax_conserto_lote, name='conserto_lote__ajax'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
