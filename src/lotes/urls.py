@@ -129,14 +129,13 @@ urlpatterns = [
         views.GradeProduzirOld.as_view(), name='grade_produzir'),
 
     url(r'^analise/grade_produzir/$',
-        views.analise.GradeProduzir.as_view(),
-        name='analise_grade_produzir'),
+        views.analise.GradeProduzir.as_view(), name='analise_grade_produzir'),
 
     url(r'^analise/grade_pedidos/$',
-        views.analise.GradePedidos.as_view(),
-        name='analise_grade_pedidos'),
+        views.analise.GradePedidos.as_view(), name='analise_grade_pedidos'),
 
-    url(r'^conserto_lote/ajax/(?P<lote>[^/]+)/$',
+    url(r'^conserto_lote/ajax/(?P<lote>[^/]+)/(?P<estagio>[^/]+)/'
+        r'(?P<in_out>[^/]+)/$',
         views.lote.ajax_conserto_lote, name='conserto_lote__ajax'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
