@@ -289,6 +289,7 @@ def posicao_so_estagios(cursor, periodo, ordem_confeccao):
         , l.QTDE_PECAS_PROG Q_P
         , l.QTDE_A_PRODUZIR_PACOTE Q_AP
         , l.QTDE_EM_PRODUCAO_PACOTE Q_EP
+        , l.QTDE_DISPONIVEL_BAIXA Q_DB
         , l.QTDE_PECAS_PROD Q_PROD
         , l.QTDE_PECAS_2A Q_2A
         , l.QTDE_PERDAS Q_PERDA
