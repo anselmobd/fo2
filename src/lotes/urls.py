@@ -135,7 +135,7 @@ urlpatterns = [
         views.analise.GradePedidos.as_view(), name='analise_grade_pedidos'),
 
     url(r'^conserto_lote/ajax/(?P<lote>[^/]+)/(?P<estagio>[^/]+)/'
-        r'(?P<in_out>[^/]+)/$',
+        r'(?P<in_out>[^/]+)/(?P<qtd_a_mover>[^/]+)?/?$',
         views.lote.ajax_conserto_lote, name='conserto_lote__ajax'),
 
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
