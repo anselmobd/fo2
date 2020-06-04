@@ -44,6 +44,15 @@ def dict_conserto_lote(request, lote, estagio, in_out):
         })
         return data
 
+    if not user.has_perm('lotes.can_inventorize_lote'):
+        data.update({
+            'error_level': 14,
+            'msg': 'Usuário sem direito de inventariar lote',
+        })
+        return data
+
+    return data
+
     if not lote.isnumeric():
         data.update({
             'error_level': 21,
