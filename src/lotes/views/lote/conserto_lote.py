@@ -54,8 +54,8 @@ def dict_conserto_lote(request, lote, estagio, in_out):
         if row is None:
             data.update({
                 'error_level': 1,
-                'msg': f'Lote {lote} no estágio {estagio} com quantidade a '
-                       'mover, não encontrado',
+                'msg': f'Lote {lote} no estágio {estagio} não encontrado ou '
+                       'sem quantidade a mover',
             })
             return data
 
@@ -103,7 +103,8 @@ def dict_conserto_lote(request, lote, estagio, in_out):
               , NUMERO_DOCUMENTO, CODIGO_DEPOSITO, CODIGO_FAMILIA
               , CODIGO_INTERVALO, EXECUTA_TRIGGER
               , CURRENT_TIMESTAMP DATA_INSERCAO
-              , PROCESSO_SYSTEXTIL, NUMERO_VOLUME, NR_OPERADORES
+              , '?' PROCESSO_SYSTEXTIL
+              , NUMERO_VOLUME, NR_OPERADORES
               , ATZ_PODE_PRODUZIR, ATZ_EM_PROD, ATZ_A_PROD
               , EFICIENCIA_INFORMADA
               , '?' USUARIO_SYSTEXTIL
@@ -131,12 +132,14 @@ def dict_conserto_lote(request, lote, estagio, in_out):
 
         sql = f"""
             UPDATE PCPC_045 ml
-            SET ml.USUARIO_SYSTEXTIL = (
-              SELECT
-                u.USUARIO
-              FROM HDOC_030 u
-              WHERE u.CODIGO_USUARIO = ml.CODIGO_USUARIO
-            )
+            SET
+              ml.USUARIO_SYSTEXTIL = (
+                SELECT
+                  u.USUARIO
+                FROM HDOC_030 u
+                WHERE u.CODIGO_USUARIO = ml.CODIGO_USUARIO
+              )
+            , ml.PROCESSO_SYSTEXTIL = '-'
             WHERE
             ( ml.PCPC040_PERCONF
             , ml.PCPC040_ORDCONF
@@ -154,7 +157,8 @@ def dict_conserto_lote(request, lote, estagio, in_out):
               WHERE PCPC040_PERCONF = {lote[:4]}
                 AND PCPC040_ORDCONF = {lote[4:]}
                 AND PCPC040_ESTCONF = {estagio}
-                AND ml.USUARIO_SYSTEXTIL != u.USUARIO
+                -- AND ml.USUARIO_SYSTEXTIL != u.USUARIO
+                AND ml.DATA_PRODUCAO = TO_DATE(CURRENT_DATE)
             )
         """
 
