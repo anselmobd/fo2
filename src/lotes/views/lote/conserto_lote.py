@@ -3,6 +3,10 @@ from pprint import pprint
 from django.db import connections
 from django.http import JsonResponse
 
+from base.models import Colaborador
+from geral.functions import request_user
+from systextil.models import Usuario
+
 
 def dict_conserto_lote(request, lote, estagio, in_out):
     data = {
@@ -11,23 +15,52 @@ def dict_conserto_lote(request, lote, estagio, in_out):
         'in_out': in_out,
     }
 
-    if not lote.isnumeric():
+    user = request_user(request)
+    if user is None:
         data.update({
             'error_level': 11,
+            'msg': 'É necessário estar logado na intranet',
+        })
+        return data
+
+    try:
+        colab = Colaborador.objects.get(user=user)
+    except Colaborador.DoesNotExist:
+        data.update({
+            'error_level': 12,
+            'msg': 'É necessário estar configurada a tabela de colaborador',
+        })
+        return data
+
+    try:
+        usuario = Usuario.objects.get(
+            usuario=colab.user.username.upper(),
+            codigo_usuario=colab.matricula,
+        )
+    except Usuario.DoesNotExist:
+        data.update({
+            'error_level': 13,
+            'msg': 'Usuário do systextil não encontrado',
+        })
+        return data
+
+    if not lote.isnumeric():
+        data.update({
+            'error_level': 21,
             'msg': 'Parâmetro lote com valor inválido',
         })
         return data
 
     if estagio != '63':
         data.update({
-            'error_level': 12,
+            'error_level': 22,
             'msg': 'Esta rotina só deve ser utilizada para o estágio 63',
         })
         return data
 
     if in_out not in ['in', 'out']:
         data.update({
-            'error_level': 13,
+            'error_level': 23,
             'msg': 'Parâmetro in_out com valor inválido',
         })
         return data
@@ -69,8 +102,6 @@ def dict_conserto_lote(request, lote, estagio, in_out):
         else:
             qtd = -qtd
 
-        codigo_usuario = 99001
-
         sql = f"""
             INSERT INTO SYSTEXTIL.PCPC_045
             ( PCPC040_PERCONF, PCPC040_ORDCONF, PCPC040_ESTCONF, SEQUENCIA
@@ -98,7 +129,7 @@ def dict_conserto_lote(request, lote, estagio, in_out):
               , {qtd} QTDE_CONSERTO
               , TURNO_PRODUCAO, TIPO_ENTRADA_ORD, NOTA_ENTR_ORDEM
               , SERIE_NF_ENT_ORD, SEQ_NF_ENTR_ORD, ORDEM_PRODUCAO
-              , {codigo_usuario} CODIGO_USUARIO
+              , {colab.matricula} CODIGO_USUARIO
               , 0 QTDE_PERDAS
               , NUMERO_DOCUMENTO, CODIGO_DEPOSITO, CODIGO_FAMILIA
               , CODIGO_INTERVALO, EXECUTA_TRIGGER
