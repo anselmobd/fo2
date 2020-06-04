@@ -51,8 +51,6 @@ def dict_conserto_lote(request, lote, estagio, in_out):
         })
         return data
 
-    return data
-
     if not lote.isnumeric():
         data.update({
             'error_level': 21,
