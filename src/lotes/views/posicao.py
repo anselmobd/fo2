@@ -103,17 +103,17 @@ class Posicao(View):
             if q_programada is None:
                 q_programada = row['Q_P']
             for field in [
-                    'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A', 'Q_PERDA',
+                    'Q_AP', 'Q_EP', 'Q_DB', 'Q_PROD', 'Q_2A', 'Q_PERDA',
                     'Q_CONSERTO', 'FAMI', 'OS']:
                 if row[field] == 0:
                     row[field] = '.'
         context.update({
             'se_headers': (
-                'Estágio', 'Progr.', 'A Prod.', 'Em Prod.',
+                'Estágio', 'Progr.', 'A Prod.', 'Em Prod.', 'Disp. Baixa',
                 'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Conserto',
                 'Família', 'OS'),
             'se_fields': (
-                'EST', 'Q_P', 'Q_AP', 'Q_EP',
+                'EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_DB',
                 'Q_PROD', 'Q_2A', 'Q_PERDA', 'Q_CONSERTO',
                 'FAMI', 'OS'),
             'se_data': data,
