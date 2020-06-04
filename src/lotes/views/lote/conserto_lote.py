@@ -200,7 +200,7 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
                 FROM HDOC_030 u
                 WHERE u.CODIGO_USUARIO = ml.CODIGO_USUARIO
               )
-            , ml.PROCESSO_SYSTEXTIL = '-'
+            --, ml.PROCESSO_SYSTEXTIL = '-'
             WHERE
             ( ml.PCPC040_PERCONF
             , ml.PCPC040_ORDCONF
@@ -218,7 +218,7 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
               WHERE PCPC040_PERCONF = {lote[:4]}
                 AND PCPC040_ORDCONF = {lote[4:]}
                 AND PCPC040_ESTCONF = {estagio}
-                -- AND ml.USUARIO_SYSTEXTIL != u.USUARIO
+                AND ml.USUARIO_SYSTEXTIL != u.USUARIO
                 AND ml.DATA_PRODUCAO = TO_DATE(CURRENT_DATE)
             )
         """
