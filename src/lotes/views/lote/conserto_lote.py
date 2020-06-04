@@ -8,12 +8,16 @@ from geral.functions import request_user
 from systextil.models import Usuario
 
 
-def dict_conserto_lote(request, lote, estagio, in_out):
+def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
     data = {
         'lote': lote,
         'estagio': estagio,
         'in_out': in_out,
+        'qtd_a_mover': qtd_a_mover,
     }
+
+    if qtd_a_mover is None:
+        qtd_a_mover = 0
 
     user = request_user(request)
     if user is None:
@@ -72,6 +76,15 @@ def dict_conserto_lote(request, lote, estagio, in_out):
         })
         return data
 
+    if qtd_a_mover.isnumeric():
+        qtd_a_mover = int(qtd_a_mover)
+    else:
+        data.update({
+            'error_level': 24,
+            'msg': 'Quantidade a mover com valor inválido',
+        })
+        return data
+
     with connections['so'].cursor() as cursor:
 
         if in_out == 'in':
@@ -99,15 +112,25 @@ def dict_conserto_lote(request, lote, estagio, in_out):
             })
             return data
 
-        qtd = row[0]
+        qtd_disponivel = row[0]
         data.update({
-            'qtd': qtd,
+            'qtd_disponivel': qtd_disponivel,
         })
 
+        if qtd_a_mover == 0:
+            qtd_a_mover = qtd_disponivel
+
+        if qtd_a_mover > qtd_disponivel:
+            data.update({
+                'error_level': 2,
+                'msg': f'Quantidade a mover não disponível',
+            })
+            return data
+
         if in_out == 'in':
-            qtd = qtd
+            qtd_a_mover = qtd_a_mover
         else:
-            qtd = -qtd
+            qtd_a_mover = -qtd_a_mover
 
         sql = f"""
             INSERT INTO SYSTEXTIL.PCPC_045
@@ -133,7 +156,7 @@ def dict_conserto_lote(request, lote, estagio, in_out):
               , CURRENT_TIMESTAMP HORA_PRODUCAO
               , 0 QTDE_PRODUZIDA
               , 0 QTDE_PECAS_2A
-              , {qtd} QTDE_CONSERTO
+              , {qtd_a_mover} QTDE_CONSERTO
               , TURNO_PRODUCAO, TIPO_ENTRADA_ORD, NOTA_ENTR_ORDEM
               , SERIE_NF_ENT_ORD, SEQ_NF_ENTR_ORD, ORDEM_PRODUCAO
               , {colab.matricula} CODIGO_USUARIO
@@ -163,7 +186,7 @@ def dict_conserto_lote(request, lote, estagio, in_out):
             cursor.execute(sql)
         except Exception:
             data.update({
-                'error_level': 2,
+                'error_level': 3,
                 'msg': 'Erro ao mover a quantidade',
             })
             return data
@@ -204,7 +227,7 @@ def dict_conserto_lote(request, lote, estagio, in_out):
             cursor.execute(sql)
         except Exception:
             data.update({
-                'error_level': 3,
+                'error_level': 4,
                 'msg': 'Erro ao ajustar nome do usuário',
             })
             return data
@@ -216,7 +239,7 @@ def dict_conserto_lote(request, lote, estagio, in_out):
     return data
 
 
-def ajax_conserto_lote(request, lote, estagio, in_out):
-    data = dict_conserto_lote(request, lote, estagio, in_out)
+def ajax_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
+    data = dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover)
 
     return JsonResponse(data, safe=False)
