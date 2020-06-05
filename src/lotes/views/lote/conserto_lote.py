@@ -17,7 +17,7 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
     }
 
     if qtd_a_mover is None:
-        qtd_a_mover = 0
+        qtd_a_mover = '0'
 
     user = request_user(request)
     if user is None:
