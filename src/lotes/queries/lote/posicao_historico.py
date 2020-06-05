@@ -14,12 +14,13 @@ def posicao_historico(cursor, periodo, ordem_confeccao):
         , h.QTDE_CONSERTO Q_C
         , h.QTDE_PERDAS Q_P
         , coalesce(u.USUARIO, ' ') USU
-        , coalesce(h.PROCESSO_SYSTEXTIL, ' ') PRG
+        , coalesce(p.CODIGO_PROGRAMA, ' ') PRG
         , coalesce(p.DESCRICAO, ' ') PRG_DESCR
         FROM PCPC_045 h
         LEFT JOIN HDOC_036 p
           ON p.CODIGO_PROGRAMA = h.PROCESSO_SYSTEXTIL
          AND p.LOCALE = 'pt_BR'
+         AND SUBSTR(h.USUARIO_SYSTEXTIL,0,1) != '*'
         LEFT JOIN HDOC_030 u
           ON u.CODIGO_USUARIO = h.CODIGO_USUARIO
         WHERE h.PCPC040_PERCONF = %s
