@@ -194,7 +194,7 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
         sql = f"""
             UPDATE PCPC_045 ml
             SET
-              ml.USUARIO_SYSTEXTIL = (
+              ml.USUARIO_SYSTEXTIL = '*' || (
                 SELECT
                   u.USUARIO
                 FROM HDOC_030 u
