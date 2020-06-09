@@ -98,14 +98,16 @@ class Usuarios(PermissionRequiredMixin, O2BaseGetView):
     def mount_context(self):
         queryset = get_current_users_requisicao()
 
-        data = queryset_to_dict_list_lower(queryset.filter(ip_interno=True))
+        data = queryset_to_dict_list_lower(
+            queryset.filter(ip_interno=True).order_by('nome'))
         self.context.update({
             'headers': ['Nome', 'Último login', 'Última ação'],
             'fields': ['nome', 'quando', 'ult_acao'],
             'data': data,
         })
 
-        r_data = queryset_to_dict_list_lower(queryset.filter(ip_interno=False))
+        r_data = queryset_to_dict_list_lower(
+            queryset.filter(ip_interno=False).order_by('nome'))
         self.context.update({
             'r_headers': ['Nome', 'Último login', 'Última ação'],
             'r_fields': ['nome', 'quando', 'ult_acao'],
