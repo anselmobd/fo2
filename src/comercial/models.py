@@ -116,6 +116,7 @@ class MetaFaturamento(models.Model):
     data = models.DateField()
     faturamento = models.IntegerField(default=0)
     ativa = models.BooleanField(default=True)
+    ajuste = models.IntegerField(default=0)
 
     def __str__(self):
         return '{} - R$ {}'.format(
