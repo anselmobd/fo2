@@ -60,7 +60,7 @@ p::first-line {
                     {% endif %}<br>
                     {{mes.meta}}<br>
                     <span class="valores
-                      {% if mes.percentual == 100 or mes.imes > mes_atual %}
+                      {% if mes.percentual == 100 or mes.imes > mes_atual or mes.planejado == 0 %}
                         neutro
                       {% elif mes.percentual < 100 %}
                         negativo
@@ -78,7 +78,7 @@ p::first-line {
                       {% else %}
                         .
                       {% endif %}<br>
-                      {% if mes.imes <= mes_atual %}
+                      {% if mes.imes <= mes_atual and mes.planejado != 0 %}
                         {{mes.percentual}}%
                       {% else %}
                         .
