@@ -58,22 +58,22 @@ def dados_meta_no_ano(cursor, hoje):
     }
 
     compensar = 0
-    # planejado_restante = 0
     meses_restantes = 0
     for meta in metas:
-        mes = dict(mes=meta.data, planejado=meta.faturamento)
+        mes = dict(mes=meta.data)
+        mes['planejado'] = meta.faturamento
+        mes['ajuste'] = meta.ajuste
         mes['imes'] = mes['mes'].month
         mes['faturado'] = (
             faturados_dict.get(mes['imes'], 0) -
             devolvidos_dict.get(mes['imes'], 0)
             )
         if mes['imes'] < mes_atual:
-            mes['acompensar'] = mes['faturado'] - mes['planejado']
+            mes['acompensar'] = (
+                mes['faturado'] - mes['planejado'] - mes['ajuste'])
             total['acompensar'] += mes['acompensar']
-            compensar += mes['planejado'] - mes['faturado']
-            vari_teste = 0
+            compensar += mes['planejado'] - mes['faturado'] + mes['ajuste']
         else:
-            # planejado_restante += mes['planejado']
             meses_restantes += 1
         if mes['imes'] == mes_atual:
             mes['pedido'] = total_pedido
@@ -83,17 +83,19 @@ def dados_meta_no_ano(cursor, hoje):
         total['planejado'] += mes['planejado']
         total['faturado'] += mes['faturado']
 
+    pprint(meses)
+    pprint(total)
+
     for mes in meses:
         if mes['imes'] < mes_atual:
             mes['meta'] = mes['planejado']
         else:
-            # mes['compensado'] = int(round(
-            #     compensar / planejado_restante * mes['planejado']
-            # ))
             mes['compensado'] = int(round(compensar / meses_restantes))
             total['compensado'] += mes['compensado']
             mes['meta'] = mes['planejado'] + mes['compensado']
 
+    pprint(meses)
+    print('aqui')
     if compensar != total['compensado']:
         diferenca = compensar - total['compensado']
         passo = int(diferenca / abs(diferenca))
@@ -119,12 +121,17 @@ def dados_meta_no_ano(cursor, hoje):
                             if diferenca == 0:
                                 passo = 0
 
+    print('aqui 2')
+
     for mes in meses:
         if mes['imes'] == mes_atual:
             mes['saldo'] = mes['faturado'] + mes['pedido'] - mes['meta']
 
-        mes['percentual'] = round(
-            (mes['faturado'] + mes['pedido']) / mes['meta'] * 100, 1)
+        if mes['meta'] == 0:
+            mes['percentual'] = 0
+        else:
+            mes['percentual'] = round(
+                (mes['faturado'] + mes['pedido']) / mes['meta'] * 100, 1)
 
     total['percentual'] = round(
         total['faturado'] / total['planejado'] * 100, 1)
