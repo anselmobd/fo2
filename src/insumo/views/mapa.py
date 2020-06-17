@@ -77,8 +77,10 @@ class MapaPorInsumo(View):
 
         max_digits = 0
         for row in data_ins:
-            num_digits = str(row['QTD_INSUMO'])[::-1].find('.')
-            max_digits = max(max_digits, num_digits)
+            max_digits = max(
+                max_digits,
+                str(row['QTD_INSUMO'])[::-1].find('.')
+            )
 
         for row in data_ins_old:
             row['SEMANA_NECESSIDADE|LINK'] = reverse(
@@ -112,8 +114,10 @@ class MapaPorInsumo(View):
 
         max_digits = 0
         for row in data_prev:
-            num_digits = str(row['QTD'])[::-1].find('.')
-            max_digits = max(max_digits, num_digits)
+            max_digits = max(
+                max_digits,
+                str(row['QTD'])[::-1].find('.')
+            )
 
         previsao_alterada = False
         for row in data_prev:
@@ -147,8 +151,10 @@ class MapaPorInsumo(View):
 
         max_digits = 0
         for row in data_irs:
-            num_digits = str(row['QTD_A_RECEBER'])[::-1].find('.')
-            max_digits = max(max_digits, num_digits)
+            max_digits = max(
+                max_digits,
+                str(row['QTD_A_RECEBER'])[::-1].find('.')
+            )
 
         for row in data_irs:
             row['QTD_A_RECEBER|DECIMALS'] = max_digits
@@ -169,8 +175,10 @@ class MapaPorInsumo(View):
         # Adiantamentos de recebimentos
         max_digits = 0
         for row in data_adi:
-            num_digits = str(row['QUANT'])[::-1].find('.')
-            max_digits = max(max_digits, num_digits)
+            max_digits = max(
+                max_digits,
+                str(row['QUANT'])[::-1].find('.')
+            )
 
         for row in data_adi:
             row['QUANT|DECIMALS'] = max_digits
@@ -192,8 +200,10 @@ class MapaPorInsumo(View):
 
             max_digits = 0
             for row in data_sug:
-                num_digits = str(row['QUANT'])[::-1].find('.')
-                max_digits = max(max_digits, num_digits)
+                max_digits = max(
+                    max_digits,
+                    str(row['QUANT'])[::-1].find('.')
+                )
 
             for row in data_sug:
                 row['QUANT|DECIMALS'] = max_digits
@@ -219,7 +229,8 @@ class MapaPorInsumo(View):
 
             max_digits = 0
             for row in data:
-                num_digits = max(
+                max_digits = max(
+                    max_digits,
                     str(row['ESTOQUE'])[::-1].find('.'),
                     str(row['NECESSIDADE'])[::-1].find('.'),
                     str(row['NECESSIDADE_PASSADA'])[::-1].find('.'),
@@ -228,8 +239,7 @@ class MapaPorInsumo(View):
                     str(row['COMPRAR'])[::-1].find('.'),
                     str(row['COMPRAR_PASSADO'])[::-1].find('.'),
                     str(row['RECEBER'])[::-1].find('.'),
-                    )
-                max_digits = max(max_digits, num_digits)
+                )
 
             arrows = []
             for index, row in enumerate(data):
