@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from utils.functions.numbers import num_digits
+
 import insumo.functions
 
 
@@ -79,7 +81,7 @@ class MapaPorInsumo(View):
         for row in data_ins:
             max_digits = max(
                 max_digits,
-                str(row['QTD_INSUMO'])[::-1].find('.')
+                num_digits(row['QTD_INSUMO'])
             )
 
         for row in data_ins_old:
@@ -116,7 +118,7 @@ class MapaPorInsumo(View):
         for row in data_prev:
             max_digits = max(
                 max_digits,
-                str(row['QTD'])[::-1].find('.')
+                num_digits(row['QTD'])
             )
 
         previsao_alterada = False
@@ -153,7 +155,7 @@ class MapaPorInsumo(View):
         for row in data_irs:
             max_digits = max(
                 max_digits,
-                str(row['QTD_A_RECEBER'])[::-1].find('.')
+                num_digits(row['QTD_A_RECEBER'])
             )
 
         for row in data_irs:
@@ -177,7 +179,7 @@ class MapaPorInsumo(View):
         for row in data_adi:
             max_digits = max(
                 max_digits,
-                str(row['QUANT'])[::-1].find('.')
+                num_digits(row['QUANT'])
             )
 
         for row in data_adi:
@@ -202,7 +204,7 @@ class MapaPorInsumo(View):
             for row in data_sug:
                 max_digits = max(
                     max_digits,
-                    str(row['QUANT'])[::-1].find('.')
+                    num_digits(row['QUANT'])
                 )
 
             for row in data_sug:
@@ -231,14 +233,14 @@ class MapaPorInsumo(View):
             for row in data:
                 max_digits = max(
                     max_digits,
-                    str(row['ESTOQUE'])[::-1].find('.'),
-                    str(row['NECESSIDADE'])[::-1].find('.'),
-                    str(row['NECESSIDADE_PASSADA'])[::-1].find('.'),
-                    str(row['RECEBIMENTO'])[::-1].find('.'),
-                    str(row['RECEBIMENTO_ATRASADO'])[::-1].find('.'),
-                    str(row['COMPRAR'])[::-1].find('.'),
-                    str(row['COMPRAR_PASSADO'])[::-1].find('.'),
-                    str(row['RECEBER'])[::-1].find('.'),
+                    num_digits(row['ESTOQUE']),
+                    num_digits(row['NECESSIDADE']),
+                    num_digits(row['NECESSIDADE_PASSADA']),
+                    num_digits(row['RECEBIMENTO']),
+                    num_digits(row['RECEBIMENTO_ATRASADO']),
+                    num_digits(row['COMPRAR']),
+                    num_digits(row['COMPRAR_PASSADO']),
+                    num_digits(row['RECEBER']),
                 )
 
             arrows = []
