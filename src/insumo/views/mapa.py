@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from insumo.views.views import MapaPorInsumo_dados
+import insumo.functions
 
 
 class MapaPorInsumo(View):
@@ -23,7 +23,7 @@ class MapaPorInsumo(View):
             'calc': self.calc,
         }
 
-        datas = MapaPorInsumo_dados(
+        datas = insumo.functions.mapa_por_insumo_dados(
             cursor, nivel, ref, cor, tam, calc=self.calc)
         if 'msg_erro' in datas:
             context.update({
