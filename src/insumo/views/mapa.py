@@ -233,14 +233,16 @@ class MapaPorInsumo(View):
             for row in data:
                 max_digits = max(
                     max_digits,
-                    num_digits(row['ESTOQUE']),
-                    num_digits(row['NECESSIDADE']),
-                    num_digits(row['NECESSIDADE_PASSADA']),
-                    num_digits(row['RECEBIMENTO']),
-                    num_digits(row['RECEBIMENTO_ATRASADO']),
-                    num_digits(row['COMPRAR']),
-                    num_digits(row['COMPRAR_PASSADO']),
-                    num_digits(row['RECEBER']),
+                    num_digits(
+                        row['ESTOQUE'] +
+                        row['NECESSIDADE'] +
+                        row['NECESSIDADE_PASSADA'] +
+                        row['RECEBIMENTO'] +
+                        row['RECEBIMENTO_ATRASADO'] +
+                        row['COMPRAR'] +
+                        row['COMPRAR_PASSADO'] +
+                        row['RECEBER']
+                    ),
                 )
 
             arrows = []
