@@ -2,6 +2,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from base.views import O2BaseGetPostView
 
+from logistica.queries import get_nf_pela_chave
+
 
 class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
 
