@@ -17,9 +17,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from utils.functions.models import rows_to_dict_list
 from base.views import O2BaseGetPostView, O2BaseGetView
 
-from .models import *
-from .queries import get_nf_pela_chave, get_chave_pela_nf
-from .forms import *
+from logistica.models import *
+from logistica.queries import get_nf_pela_chave, get_chave_pela_nf
+from logistica.forms import *
 
 
 def index(request):
