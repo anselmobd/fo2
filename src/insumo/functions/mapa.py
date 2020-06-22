@@ -73,12 +73,6 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
     for row in data_ins:
         row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
 
-    data_ins_old = queries.insumo_necessidade_semana(
-        cursor, nivel, ref, cor, tam, new_calc=False)
-
-    for row in data_ins_old:
-        row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
-
     # Previsões
     data_prev = queries.insumo_previsoes_semana_insumo(
         cursor, nivel, ref, cor, tam)
@@ -161,7 +155,6 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         'data_id': data_id,
         'semana_hoje': semana_hoje,
         'data_ins': data_ins,
-        'data_ins_old': data_ins_old,
         'data_prev': data_prev,
         'data_irs': data_irs,
     })

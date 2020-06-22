@@ -75,7 +75,6 @@ class MapaPorInsumo(View):
 
         # Necessidades
         data_ins = datas['data_ins']
-        data_ins_old = datas['data_ins_old']
 
         max_digits = 0
         for row in data_ins:
@@ -83,12 +82,6 @@ class MapaPorInsumo(View):
                 max_digits,
                 num_digits(row['QTD_INSUMO'])
             )
-
-        for row in data_ins_old:
-            row['SEMANA_NECESSIDADE|LINK'] = reverse(
-                'insumo:mapa_necessidade_detalhe_old',
-                args=[nivel, ref, cor, tam, row['SEMANA_NECESSIDADE']])
-            row['SEMANA_NECESSIDADE|TARGET'] = '_blank'
 
         for row in data_ins:
             row['SEMANA_NECESSIDADE|LINK'] = reverse(
@@ -108,7 +101,6 @@ class MapaPorInsumo(View):
             'fields_ins': ['SEMANA_NECESSIDADE', 'QTD_INSUMO'],
             'style_ins': {2: 'text-align: right;'},
             'data_ins': data_ins,
-            'data_ins_old': data_ins_old,
         })
 
         # Previsões
