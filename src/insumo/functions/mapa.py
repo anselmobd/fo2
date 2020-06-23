@@ -1,6 +1,7 @@
 import datetime
 import math
 from operator import itemgetter
+from pprint import pprint
 
 from django.core.cache import cache
 
@@ -45,16 +46,13 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         })
         return return_result(datas)
 
-    for row in data_id:
-        row['SEMANAS'] = math.ceil(row['REPOSICAO'] / 7)
-
-    semana_hoje = segunda(datetime.date.today())
-
-    semanas = data_id[0]['SEMANAS']
     qtd_estoque = data_id[0]['QUANT']
     estoque_minimo = data_id[0]['STQ_MIN']
     dias_reposicao = data_id[0]['REPOSICAO']
     lote_multiplo = data_id[0]['LOTE_MULTIPLO']
+
+    semanas = math.ceil(dias_reposicao / 7)
+    semana_hoje = segunda(datetime.date.today())
 
     semana_recebimento = segunda(
         semana_hoje +
