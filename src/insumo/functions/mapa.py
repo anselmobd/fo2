@@ -293,55 +293,55 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
                 # sugestões ideais)
                 estoque = qtd_estoque
                 estoque_ideal = qtd_estoque
-                for index, row in enumerate(data):
+                for row_recalc in data:
 
                     if sugestao_quatidade != 0:
-                        if row['DATA'] == sugestao_comprar:
-                            row['COMPRAR'] += sugestao_quatidade
-                        if row['DATA'] == sugestao_comprar_passado:
-                            row['COMPRAR_PASSADO'] += sugestao_quatidade
-                        if index == 0:
-                            if row['DATA'] >= sugestao_receber:
-                                row['RECEBER'] += sugestao_quatidade
+                        if row_recalc['DATA'] == sugestao_comprar:
+                            row_recalc['COMPRAR'] += sugestao_quatidade
+                        if row_recalc['DATA'] == sugestao_comprar_passado:
+                            row_recalc['COMPRAR_PASSADO'] += sugestao_quatidade
+                        if row_recalc['DATA'] == semana_hoje:
+                            if row_recalc['DATA'] >= sugestao_receber:
+                                row_recalc['RECEBER'] += sugestao_quatidade
                         else:
-                            if row['DATA'] == sugestao_receber:
-                                row['RECEBER'] += sugestao_quatidade
+                            if row_recalc['DATA'] == sugestao_receber:
+                                row_recalc['RECEBER'] += sugestao_quatidade
                         if sugestao_receber_ideal < semana_hoje:
-                            if row['DATA'] == semana_hoje:
-                                row['RECEBER_IDEAL_ANTES'] += \
+                            if row_recalc['DATA'] == semana_hoje:
+                                row_recalc['RECEBER_IDEAL_ANTES'] += \
                                     sugestao_quatidade
                         else:
-                            if row['DATA'] == sugestao_receber_ideal:
-                                row['RECEBER_IDEAL'] += sugestao_quatidade
+                            if row_recalc['DATA'] == sugestao_receber_ideal:
+                                row_recalc['RECEBER_IDEAL'] += \
+                                    sugestao_quatidade
 
                     if recebimento_adiantado != 0:
-                        if row['DATA'] == receb_adianta_dt_destino:
-                            row['RECEBIMENTO_ADIANTADO'] += \
+                        if row_recalc['DATA'] == receb_adianta_dt_destino:
+                            row_recalc['RECEBIMENTO_ADIANTADO'] += \
                                 recebimento_adiantado
-                        if row['DATA'] == semana_hoje and \
-                                row['DATA'] > receb_adianta_dt_destino:
-                            row['RECEBIMENTO_ATRASADO'] += \
+                        if row_recalc['DATA'] == semana_hoje and \
+                                row_recalc['DATA'] > receb_adianta_dt_destino:
+                            row_recalc['RECEBIMENTO_ATRASADO'] += \
                                 recebimento_adiantado
 
-                    row['ESTOQUE'] = estoque
+                    row_recalc['ESTOQUE'] = estoque
                     estoque = estoque \
-                        - row['NECESSIDADE'] \
-                        - row['NECESSIDADE_PASSADA'] \
-                        + row['RECEBIMENTO'] \
-                        + row['RECEBIMENTO_ATRASADO']
+                        - row_recalc['NECESSIDADE'] \
+                        - row_recalc['NECESSIDADE_PASSADA'] \
+                        + row_recalc['RECEBIMENTO'] \
+                        + row_recalc['RECEBIMENTO_ATRASADO']
 
-                    row['ESTOQUE_IDEAL'] = \
-                        row['RECEBER_IDEAL_ANTES'] + estoque_ideal
-                    estoque_ideal = row['RECEBER_IDEAL_ANTES'] \
+                    row_recalc['ESTOQUE_IDEAL'] = \
+                        row_recalc['RECEBER_IDEAL_ANTES'] + estoque_ideal
+                    estoque_ideal = row_recalc['RECEBER_IDEAL_ANTES'] \
                         + estoque_ideal \
-                        - row['NECESSIDADE'] \
-                        - row['NECESSIDADE_PASSADA'] \
-                        + row['RECEBIMENTO'] \
-                        + row['RECEBIMENTO_ATRASADO'] \
-                        - row['RECEBIMENTO_MOVIDO'] \
-                        + row['RECEBIMENTO_ADIANTADO'] \
-                        + row['RECEBER_IDEAL']
-
+                        - row_recalc['NECESSIDADE'] \
+                        - row_recalc['NECESSIDADE_PASSADA'] \
+                        + row_recalc['RECEBIMENTO'] \
+                        + row_recalc['RECEBIMENTO_ATRASADO'] \
+                        - row_recalc['RECEBIMENTO_MOVIDO'] \
+                        + row_recalc['RECEBIMENTO_ADIANTADO'] \
+                        + row_recalc['RECEBER_IDEAL']
         datas.update({
             'data': data,
         })
