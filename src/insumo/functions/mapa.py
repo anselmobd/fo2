@@ -166,31 +166,18 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
     if semana_fim is None and qtd_estoque < estoque_minimo:
         semana_fim = semana_hoje
 
-    # se tem alguma entrada ou saída
+    # se tem alguma entrada ou saída ou o estoque está abaixo do mínimo
     if semana_fim is not None:
         # criando mapa de compras
         semana_fim += datetime.timedelta(days=7)
 
         data = []
         estoque = qtd_estoque
+        necessidade_passada = necessidades_passadas
+        recebimento_atrasado = recebimentos_atrasados
         while semana <= semana_fim:
-            if semana in recebimentos:
-                recebimento = recebimentos[semana]
-            else:
-                recebimento = 0
-
-            if semana in necessidades:
-                necessidade = necessidades[semana]
-            else:
-                necessidade = 0
-
-            if semana == semana_hoje:
-                necessidade_passada = necessidades_passadas
-                recebimento_atrasado = recebimentos_atrasados
-            else:
-                necessidade_passada = 0
-                recebimento_atrasado = 0
-
+            recebimento = recebimentos.get(semana, 0)
+            necessidade = necessidades.get(semana, 0)
             data.append({
                 'DATA': semana,
                 'NECESSIDADE': necessidade,
@@ -212,6 +199,9 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
                 + recebimento + recebimento_atrasado
 
             semana += datetime.timedelta(days=7)
+            necessidade_passada = 0
+            recebimento_atrasado = 0
+
 
         # percorre o mapa de compras para montar sugestões de compra
         for row in data:
