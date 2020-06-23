@@ -159,7 +159,7 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
     })
 
     data_sug = []
-    data_adi = []
+    data_adiantamentos = []
 
     # se não tem entrada ou saída mas o estoque está abaixo do mínimo, força
     # uma semana_fim
@@ -202,7 +202,6 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
             necessidade_passada = 0
             recebimento_atrasado = 0
 
-
         # percorre o mapa de compras para montar sugestões de compra
         for row in data:
             # pega uma sugestão se estoque < mínimo
@@ -224,7 +223,7 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
                     datetime.timedelta(days=-dias_reposicao))
 
                 # adianta recebimentos que houver
-                receb_adi_destino = \
+                receb_adianta_dt_destino = \
                     row['DATA'] + datetime.timedelta(days=-7)
                 for row_rec in data:
                     if row_rec['DATA'] < row['DATA']:
@@ -234,9 +233,9 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
                     if recebimento_na_semana > 0:
                         recebimento_a_adiantar = min(
                             sugestao_quatidade, recebimento_na_semana)
-                        data_adi.append({
+                        data_adiantamentos.append({
                             'SEMANA_ORIGEM': row_rec['DATA'],
-                            'SEMANA_DESTINO': receb_adi_destino,
+                            'SEMANA_DESTINO': receb_adianta_dt_destino,
                             'QUANT': recebimento_a_adiantar,
                         })
                         sugestao_quatidade -= recebimento_a_adiantar
@@ -316,11 +315,11 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
                                 row['RECEBER_IDEAL'] += sugestao_quatidade
 
                     if recebimento_adiantado != 0:
-                        if row['DATA'] == receb_adi_destino:
+                        if row['DATA'] == receb_adianta_dt_destino:
                             row['RECEBIMENTO_ADIANTADO'] += \
                                 recebimento_adiantado
                         if row['DATA'] == semana_hoje and \
-                                row['DATA'] > receb_adi_destino:
+                                row['DATA'] > receb_adianta_dt_destino:
                             row['RECEBIMENTO_ATRASADO'] += \
                                 recebimento_adiantado
 
@@ -348,6 +347,6 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         })
     datas.update({
         'data_sug': data_sug,
-        'data_adi': data_adi,
+        'data_adi': data_adiantamentos,
     })
     return return_result(datas)
