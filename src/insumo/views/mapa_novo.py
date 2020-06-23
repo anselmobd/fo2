@@ -13,7 +13,7 @@ class MapaNovoPorInsumo(View):
     title_name = 'Mapa de compras'
 
     def __init__(self, *args, **kwargs):
-        super(MapaPorInsumo, self).__init__(*args, **kwargs)
+        super(MapaNovoPorInsumo, self).__init__(*args, **kwargs)
         self.calc = True
 
     def mount_context(self, cursor, nivel, ref, cor, tam):
@@ -337,7 +337,7 @@ class MapaNovoPorInsumo(View):
         return render(request, self.template_name, context)
 
 
-class MapaNovoPorInsumoCalc(MapaPorInsumo):
+class MapaNovoPorInsumoCalc(MapaNovoPorInsumo):
     def __init__(self, *args, **kwargs):
         super(MapaNovoPorInsumoCalc, self).__init__(*args, **kwargs)
         self.calc = True
