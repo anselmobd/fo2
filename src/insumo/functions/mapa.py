@@ -46,12 +46,13 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
         })
         return return_result(datas)
 
+    dias_reposicao = data_id[0]['REPOSICAO']
+    data_id[0]['SEMANAS'] = math.ceil(dias_reposicao / 7)
+
     qtd_estoque = data_id[0]['QUANT']
     estoque_minimo = data_id[0]['STQ_MIN']
-    dias_reposicao = data_id[0]['REPOSICAO']
     lote_multiplo = data_id[0]['LOTE_MULTIPLO']
 
-    semanas = math.ceil(dias_reposicao / 7)
     semana_hoje = segunda(datetime.date.today())
 
     semana_recebimento = segunda(
@@ -61,7 +62,7 @@ def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
     datas.update({
         'estoque_minimo': estoque_minimo,
         'semana_recebimento': semana_recebimento,
-        'semanas': semanas,
+        'semanas': data_id[0]['SEMANAS'],
     })
 
     # Necessidades
