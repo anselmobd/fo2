@@ -39,24 +39,25 @@ urlpatterns = [
         views.MapaPorInsumo.as_view(),
         name='mapa'),
     url(r'^mapa_calc/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
-        '(?P<tam>.{1,3})/$',
+        r'(?P<tam>.{1,3})/$',
         views.MapaPorInsumoCalc.as_view(),
         name='mapa_calc'),
 
-    url(r'^mapa_novo/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/(?P<tam>.{1,3})/$',
+    url(r'^mapa_novo/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
+        r'(?P<tam>.{1,3})/$',
         views.MapaNovoPorInsumo.as_view(),
         name='mapa_novo'),
     url(r'^mapa_novo_calc/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
-        '(?P<tam>.{1,3})/$',
+        r'(?P<tam>.{1,3})/$',
         views.MapaNovoPorInsumoCalc.as_view(),
         name='mapa_novo_calc'),
 
     url(r'^mapa_necessidade_detalhe/(?P<nivel>[29])/(?P<ref>.{5})/'
-        '(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
+        r'(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
         views.MapaNecessidadeDetalhe.as_view(),
         name='mapa_necessidade_detalhe'),
     url(r'^mapa_necessidade_detalhe_old/(?P<nivel>[29])/(?P<ref>.{5})/'
-        '(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
+        r'(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
         views.MapaNecessidadeDetalheOld.as_view(),
         name='mapa_necessidade_detalhe_old'),
 
@@ -76,7 +77,7 @@ urlpatterns = [
         views.MapaPorSemana.as_view(),
         name='mapa_por_sem__get'),
     url(r'^mapa_por_sem_ref/(?P<item>(?:.{2}|\d\..{5}\..{6}\..{1,3}))/'
-        '(?P<dtini>\d{8})/(?P<nsem>\d{1,2})/$',
+        r'(?P<dtini>\d{8})/(?P<nsem>\d{1,2})/$',
         views.mapa_sem_ref,
         name='mapa_por_sem_ref__get'),
 
@@ -86,7 +87,7 @@ urlpatterns = [
         views.MapaPorSemanaNew.as_view(),
         name='mapa_por_semana__get'),
     url(r'^mapa_por_semana_ref/(?P<item>(?:.{2}|\d\..{5}\..{6}\..{1,3}))/'
-        '(?P<dtini>\d{8})/(?P<qtdsem>(?:\d{1,2}|--))/$',
+        r'(?P<dtini>\d{8})/(?P<qtdsem>(?:\d{1,2}|--))/$',
         views.mapa_sem_ref_new,
         name='mapa_por_semana_ref__get'),
 
