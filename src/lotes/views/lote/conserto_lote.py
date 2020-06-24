@@ -129,7 +129,7 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
 
         if qtd_a_mover > qtd_disponivel:
             data.update({
-                'error_level': 2,
+                'error_level': 3,
                 'msg': f'Quantidade a mover não disponível',
             })
             return data
@@ -193,7 +193,7 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
             cursor.execute(sql)
         except Exception:
             data.update({
-                'error_level': 3,
+                'error_level': 31,
                 'msg': 'Erro ao mover a quantidade',
             })
             return data
@@ -234,7 +234,7 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
             cursor.execute(sql)
         except Exception:
             data.update({
-                'error_level': 4,
+                'error_level': 32,
                 'msg': 'Erro ao ajustar nome do usuário',
             })
             return data
