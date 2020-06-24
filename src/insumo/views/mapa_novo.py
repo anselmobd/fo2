@@ -239,15 +239,6 @@ class MapaNovoPorInsumo(View):
 
             arrows = []
             for index, row in enumerate(data):
-                # if row['RECEBIMENTO_MOVIDO'] != 0:
-                #     if row['RECEBIMENTO'] != row['RECEBIMENTO_MOVIDO']:
-                #         row['RECEBIMENTO_ADIANTADO'] += \
-                #             row['RECEBIMENTO'] - row['RECEBIMENTO_MOVIDO']
-                #         row['RECEBIMENTO|STYLE'] = \
-                #             'font-weight: bold; color: brown;'
-                #         if row['RECEBIMENTO_ADIANTADO'] != 0:
-                #             row['RECEBIMENTO_ADIANTADO|STYLE'] = \
-                #                 'font-weight: bold; color: brown;'
 
                 if row['RECEBIMENTO_MOVIDO'] != 0:
                     row['RECEBIMENTO_MOVIDO|STYLE'] = \
