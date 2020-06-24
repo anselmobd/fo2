@@ -10,7 +10,7 @@ from django.db import connections
 from django.core.management.base import BaseCommand, CommandError
 
 import insumo.models as models
-from insumo.functions import mapa_por_insumo_dados
+from insumo.functions import mapa_por_insumo_dados, new_mapa_por_insumo_dados
 from insumo.queries import insumos_cor_tamanho_usados, insumos_cor_tamanho
 
 
@@ -102,6 +102,10 @@ class Command(BaseCommand):
                         nivel, ref, cor, tam))
                     mapa_por_insumo_dados(
                           self.cursor, nivel, ref, cor, tam, calc=True)
+                    self.my_println('{}.{}.{}.{} new'.format(
+                        nivel, ref, cor, tam))
+                    new_mapa_por_insumo_dados(
+                          self.cursor, nivel, ref, cor, tam, calc=True)
                     time.sleep(self._STEP_SLEEP)
                     count_task += 1
                     if count_task == self._MAX_TASKS:
@@ -115,7 +119,11 @@ class Command(BaseCommand):
                 self.valid_1A(cor, 6, 'Cor')
                 self.valid_1A(tam, '1,3', 'Tamanho')
 
+                self.my_println('old')
                 mapa_por_insumo_dados(
+                    self.cursor, nivel, ref, cor, tam, calc=True)
+                self.my_println('new')
+                new_mapa_por_insumo_dados(
                     self.cursor, nivel, ref, cor, tam, calc=True)
 
         except Exception as e:
