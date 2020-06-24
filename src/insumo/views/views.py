@@ -1118,7 +1118,8 @@ class MapaPorSemanaNew(View):
         return context
 
     def mount_context(
-            self, cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo):
+            self, cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo,
+            versao):
         cursor = connections['so'].cursor()
         data = queries.insumos_cor_tamanho_usados(
             cursor, qtd_itens, nivel, uso, insumo)
@@ -1133,6 +1134,7 @@ class MapaPorSemanaNew(View):
             'nivel': nivel,
             'uso': uso,
             'insumo': insumo,
+            'versao': versao,
         }
 
         return context
@@ -1167,6 +1169,7 @@ class MapaPorSemanaNew(View):
             nivel = form.cleaned_data['nivel']
             uso = form.cleaned_data['uso']
             insumo = form.cleaned_data['insumo']
+            versao = form.cleaned_data['versao']
 
             insumo = ' '.join(insumo.strip().upper().split())
             form.data['insumo'] = insumo
@@ -1175,7 +1178,8 @@ class MapaPorSemanaNew(View):
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
             context.update(self.mount_context(
-                cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo))
+                cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo,
+                versao))
         context['form'] = form
         return render(request, self.template_name, context)
 
