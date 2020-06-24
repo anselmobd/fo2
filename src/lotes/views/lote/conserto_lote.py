@@ -9,6 +9,7 @@ from systextil.models import Usuario
 
 
 def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
+    in_out = in_out.lower()
     data = {
         'lote': lote,
         'estagio': estagio,
