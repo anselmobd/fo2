@@ -1207,6 +1207,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem, versao='A'):
     tam = item[15:18]
     context = {
         'qtdsem': int(qtdsem),
+        'versao': versao,
     }
 
     if len(item) == 2:
