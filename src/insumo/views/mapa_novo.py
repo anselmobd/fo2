@@ -239,15 +239,26 @@ class MapaNovoPorInsumo(View):
 
             arrows = []
             for index, row in enumerate(data):
+                # if row['RECEBIMENTO_MOVIDO'] != 0:
+                #     if row['RECEBIMENTO'] != row['RECEBIMENTO_MOVIDO']:
+                #         row['RECEBIMENTO_ADIANTADO'] += \
+                #             row['RECEBIMENTO'] - row['RECEBIMENTO_MOVIDO']
+                #         row['RECEBIMENTO|STYLE'] = \
+                #             'font-weight: bold; color: brown;'
+                #         if row['RECEBIMENTO_ADIANTADO'] != 0:
+                #             row['RECEBIMENTO_ADIANTADO|STYLE'] = \
+                #                 'font-weight: bold; color: brown;'
+
                 if row['RECEBIMENTO_MOVIDO'] != 0:
-                    if row['RECEBIMENTO'] != row['RECEBIMENTO_MOVIDO']:
-                        row['RECEBIMENTO_ADIANTADO'] += \
-                            row['RECEBIMENTO'] - row['RECEBIMENTO_MOVIDO']
-                        row['RECEBIMENTO|STYLE'] = \
-                            'font-weight: bold; color: brown;'
-                        if row['RECEBIMENTO_ADIANTADO'] != 0:
-                            row['RECEBIMENTO_ADIANTADO|STYLE'] = \
-                                'font-weight: bold; color: brown;'
+                    row['RECEBIMENTO_MOVIDO|STYLE'] = \
+                        'font-weight: bold; color: brown;'
+
+                movidos_no_dia = [row_adi for row_adi in data_adi
+                                  if row_adi['SEMANA_ORIGEM'] == row['DATA']]
+
+                if len(movidos_no_dia) != 0:
+                    row['RECEBIMENTO|STYLE'] = \
+                        'font-weight: bold; color: brown;'
 
                 if row['ESTOQUE'] < estoque_minimo:
                     if index == 0:
@@ -310,7 +321,7 @@ class MapaNovoPorInsumo(View):
                 'fields': ['DATA', 'ESTOQUE',
                            'NECESSIDADE', 'NECESSIDADE_PASSADA',
                            'RECEBIMENTO', 'RECEBIMENTO_ATRASADO',
-                           'RECEBIMENTO_ADIANTADO',
+                           'RECEBIMENTO_MOVIDO',
                            'COMPRAR', 'COMPRAR_PASSADO', 'RECEBER'],
                 'style': {2: 'text-align: right;',
                           3: 'text-align: right;',
