@@ -1180,7 +1180,11 @@ class MapaPorSemanaNew(View):
         return render(request, self.template_name, context)
 
 
-def mapa_sem_ref_new(request, item, dtini, qtdsem):
+def mapa_novo_sem_ref_new(request, item, dtini, qtdsem):
+    return mapa_sem_ref_new(request, item, dtini, qtdsem, 'N')
+
+
+def mapa_sem_ref_new(request, item, dtini, qtdsem, versao='A'):
 
     def return_result(result):
         cached_result = result
@@ -1212,8 +1216,12 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem):
 
         data = []
 
-        datas = insumo.functions.mapa_por_insumo_dados(
-            cursor, nivel, ref, cor, tam)
+        if versao == 'A':
+            datas = insumo.functions.mapa_por_insumo_dados(
+                cursor, nivel, ref, cor, tam)
+        else:
+            datas = insumo.functions.new_mapa_por_insumo_dados(
+                cursor, nivel, ref, cor, tam)
 
         if 'msg_erro' in datas:
             context.update({
