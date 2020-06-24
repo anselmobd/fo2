@@ -100,7 +100,6 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
             WHERE l.PERIODO_PRODUCAO = {lote[:4]}
               AND l.ORDEM_CONFECCAO = {lote[4:]}
               AND l.CODIGO_ESTAGIO = {estagio}
-              AND {qtd_var} > 0
         """
 
         cursor.execute(sql)
@@ -108,8 +107,15 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
         if row is None:
             data.update({
                 'error_level': 1,
-                'msg': f'Lote {lote} no estágio {estagio} não encontrado ou '
-                       'sem quantidade a mover',
+                'msg': f'Lote {lote} sem estágio {estagio}',
+            })
+            return data
+
+        if row[0] <= 0:
+            data.update({
+                'error_level': 2,
+                'msg': f'Lote {lote} sem quantidade a mover no '
+                       f'estágio {estagio}',
             })
             return data
 
