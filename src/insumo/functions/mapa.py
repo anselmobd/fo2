@@ -373,10 +373,12 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
             return cached_result
 
     datas = {}
+    print_debug_level = 0
 
     data_id = queries.insumo_descr(cursor, nivel, ref, cor, tam)
-    # print('data_id')
-    # pprint(data_id)
+    if print_debug_level >= 3:
+        print('data_id')
+        pprint(data_id)
 
     if len(data_id) == 0:
         datas.update({
@@ -409,8 +411,9 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
     for row in data_ins:
         row['SEMANA_NECESSIDADE'] = row['SEMANA_NECESSIDADE'].date()
-    # print('data_ins')
-    # pprint(data_ins)
+    if print_debug_level >= 3:
+        print('data_ins')
+        pprint(data_ins)
 
     # Previsões
     data_prev = queries.insumo_previsoes_semana_insumo(
@@ -419,8 +422,9 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
     for row in data_prev:
         row['DT_NECESSIDADE'] = row['DT_NECESSIDADE'].date()
         row['QTD_ORIGINAL'] = row['QTD']
-    # print('data_prev')
-    # pprint(data_prev)
+    if print_debug_level >= 3:
+        print('data_prev')
+        pprint(data_prev)
 
     # Descontando das necessidades previstas as necessidades reais
     prev_idx = len(data_prev) - 1
@@ -437,33 +441,38 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
                     break
                 else:
                     prev_idx -= 1
-    # print('data_prev descontada')
-    # pprint(data_prev)
+    if print_debug_level >= 3:
+        print('data_prev descontada')
+        pprint(data_prev)
 
     # Recebimentos
     data_irs = queries.insumo_recebimento_semana(
         cursor, nivel, ref, cor, tam)
-    # print('data_irs')
-    # pprint(data_irs)
+    if print_debug_level >= 3:
+        print('data_irs')
+        pprint(data_irs)
 
     # Dicionários por semana (sem passado)
     data_ness = [{
         'DT': x['SEMANA_NECESSIDADE'],
         'QTD': x['QTD_INSUMO']
         } for x in data_ins]
-    # print('data_ness 1 data_ins')
-    # pprint(data_ness)
+    if print_debug_level >= 2:
+        print('data_ness 1 data_ins')
+        pprint(data_ness)
 
     data_ness.extend([{
         'DT': x['DT_NECESSIDADE'],
         'QTD': x['QTD']
         } for x in data_prev])
-    # print('data_ness 2 data_prev')
-    # pprint(data_ness)
+    if print_debug_level >= 2:
+        print('data_ness 2 data_prev')
+        pprint(data_ness)
 
     data_ness = sorted(data_ness, key=itemgetter('DT'))
-    # print('data_ness 3 sorted')
-    # pprint(data_ness)
+    if print_debug_level >= 2:
+        print('data_ness 3 sorted')
+        pprint(data_ness)
 
     necessidades = {}
     necessidades_passadas = 0
@@ -478,10 +487,11 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
             else:
                 necessidades[row['DT']] = row['QTD']
             ult_necessidade = row['DT']
-    # print('necessidades')
-    # pprint(necessidades)
-    # print('necessidades_passadas', necessidades_passadas)
-    # print('ult_necessidade', ult_necessidade)
+    if print_debug_level >= 2:
+        print('necessidades')
+        pprint(necessidades)
+        print('necessidades_passadas', necessidades_passadas)
+        print('ult_necessidade', ult_necessidade)
 
     recebimentos = {}
     pri_recebimento = None
@@ -501,19 +511,21 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
             if pri_recebimento is None:
                 pri_recebimento = semana
             ult_recebimento = semana
-    # print('recebimentos')
-    # pprint(recebimentos)
-    # print('pri_recebimento', pri_recebimento)
-    # print('ult_recebimento', ult_recebimento)
-    # print('recebimentos_atrasados', recebimentos_atrasados)
+    if print_debug_level >= 2:
+        print('recebimentos')
+        pprint(recebimentos)
+        print('pri_recebimento', pri_recebimento)
+        print('ult_recebimento', ult_recebimento)
+        print('recebimentos_atrasados', recebimentos_atrasados)
 
     semana = semana_hoje
 
     semana_fim = max_not_None(
         ult_recebimento,
         ult_necessidade)
-    # print('semana', semana)
-    # print('semana_fim', semana_fim)
+    if print_debug_level >= 2:
+        print('semana', semana)
+        print('semana_fim', semana_fim)
 
     datas.update({
         'data_id': data_id,
@@ -560,22 +572,25 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
         recalc_estoque(data, qtd_estoque)
 
-        print('data inicializada')
-        print_data(data)
+        if print_debug_level >= 1:
+            print('data inicializada')
+            print_data(data)
 
         # percorre o mapa de compras para montar sugestões de compra
         for index_principal in range(len(data)):
             row = data[index_principal]
-            print('row inicio')
-            pprint(row['DATA'])
+            if print_debug_level >= 1:
+                print('row inicio')
+                pprint(row['DATA'])
 
             # pega uma sugestão se estoque < mínimo
             sugestao_quatidade = 0
             total_receb_descontado = 0
             estoque_final_semana = calc_estoque_final_semana(row)
             if estoque_final_semana < estoque_minimo:
-                print('estoque_final_semana abaixo do estoque mínimo',
-                      estoque_minimo)
+                if print_debug_level >= 1:
+                    print('estoque_final_semana abaixo do estoque mínimo',
+                          estoque_minimo)
                 sugestao_quatidade = estoque_minimo - estoque_final_semana
                 if lote_multiplo != 0:
                     qtd_quebrada = sugestao_quatidade % lote_multiplo
@@ -588,10 +603,11 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
                     sugestao_semana_recepcao +
                     datetime.timedelta(days=-dias_reposicao))
 
-                print('sugestao_quatidade', sugestao_quatidade)
-                print('sugestao_semana_comprar', sugestao_semana_comprar)
-                print('sugestao_semana_recepcao', sugestao_semana_recepcao)
-                print('total_receb_descontado', total_receb_descontado)
+                if print_debug_level >= 1:
+                    print('sugestao_quatidade', sugestao_quatidade)
+                    print('sugestao_semana_comprar', sugestao_semana_comprar)
+                    print('sugestao_semana_recepcao', sugestao_semana_recepcao)
+                    print('total_receb_descontado', total_receb_descontado)
 
                 # adianta recebimentos que houver
                 for row_rec in data:
@@ -605,8 +621,9 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
                             'SEMANA_DESTINO': sugestao_semana_recepcao,
                             'QUANT': recebimento_a_descontar,
                         })
-                        print('data_receb_descontados')
-                        pprint(data_receb_descontados[-1])
+                        if print_debug_level >= 1:
+                            print('data_receb_descontados')
+                            pprint(data_receb_descontados[-1])
                         sugestao_quatidade -= recebimento_a_descontar
                         total_receb_descontado += recebimento_a_descontar
 
@@ -623,19 +640,22 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
                         if sugestao_quatidade == 0:
                             break
-                print('sugestao_quatidade 2', sugestao_quatidade)
-                print('total_receb_descontado 2', total_receb_descontado)
+                if print_debug_level >= 1:
+                    print('sugestao_quatidade 2', sugestao_quatidade)
+                    print('total_receb_descontado 2', total_receb_descontado)
 
             # se essa linha do mapa gerou alguma sugestão de compra
             # se sugestão não foi atendida por adiantemanto de recebimento
             if sugestao_quatidade != 0:
-                print('sugestao_quatidade não ZERO')
+                if print_debug_level >= 1:
+                    print('sugestao_quatidade não ZERO')
                 data_sug.append({
                     'SEMANA_COMPRA': sugestao_semana_comprar,
                     'SEMANA_RECEPCAO': sugestao_semana_recepcao,
                     'QUANT': sugestao_quatidade,
                 })
-                pprint(data_sug[-1])
+                if print_debug_level >= 1:
+                    pprint(data_sug[-1])
 
                 # se sugestão de compra chega ou passa da última data do
                 # mapa de compras, adicionar mais datas
@@ -677,8 +697,9 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
             if sugestao_quatidade != 0 or total_receb_descontado != 0:
                 recalc_estoque(data, qtd_estoque)
 
-            print('data atualizada')
-            print_data(data)
+            if print_debug_level >= 1:
+                print('data atualizada')
+                print_data(data)
 
             # if index_principal == 3:
             #     break
