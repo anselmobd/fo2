@@ -10,7 +10,7 @@ import lotes.models
 import cd.forms
 
 
-class LotelLocal(PermissionRequiredMixin, View):
+class LoteLocal(PermissionRequiredMixin, View):
 
     def __init__(self):
         self.permission_required = 'lotes.can_inventorize_lote'

@@ -7,7 +7,7 @@ urlpatterns = [
 
     url(r'^s/$', views.teste_som, name='teste_som'),
 
-    url(r'^lote_local/$', views.LotelLocal.as_view(), name='lote_local'),
+    url(r'^lote_local/$', views.LoteLocal.as_view(), name='lote_local'),
 
     url(r'^estoque/(?P<ordem>.)/(?P<filtro>.+)/$',
         views.Estoque.as_view(), name='estoque_filtro'),
