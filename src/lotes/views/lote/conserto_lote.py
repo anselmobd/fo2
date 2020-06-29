@@ -84,12 +84,20 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
         })
         return data
 
-    if qtd_a_mover.isnumeric():
-        qtd_a_mover = int(qtd_a_mover)
-    else:
+    if isinstance(qtd_a_mover, str):
+        if qtd_a_mover.isnumeric():
+            qtd_a_mover = int(qtd_a_mover)
+        else:
+            data.update({
+                'error_level': 24,
+                'msg': 'Quantidade a mover com valor inválido',
+            })
+            return data
+
+    if qtd_a_mover < 0:
         data.update({
-            'error_level': 24,
-            'msg': 'Quantidade a mover com valor inválido',
+            'error_level': 26,
+            'msg': 'Quantidade a mover com valor negativo',
         })
         return data
 
