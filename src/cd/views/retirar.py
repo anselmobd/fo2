@@ -68,7 +68,7 @@ class Retirar(PermissionRequiredMixin, View):
                         f'Erro ao "retirar {lote_rec.qtd} peças do '
                         f'concerto": {level} - "{erro}"',
                 })
-                if level not in [2]:
+                if level not in [1, 2]:
                     return context
 
             lote_rec.local = None
