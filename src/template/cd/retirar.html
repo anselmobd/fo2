@@ -52,6 +52,9 @@
       {% endif %}
     {% endif %}
   {% endif %}
+  {% if concerto_erro %}
+    <h3>{{ concerto_erro }}</h3>
+  {% endif %}
   {% if data %}
     <hr>
     <h3>Endereço <b>{{ local }}</b> {% if identificado %}ainda {% endif %}contém <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h3>
