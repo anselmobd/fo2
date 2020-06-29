@@ -88,6 +88,21 @@ class LoteForm(forms.Form):
         return endereco
 
 
+class RetirarForm(forms.Form):
+    lote = forms.CharField(
+        label='Lote', max_length=9, min_length=9,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+
+    identificado = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput())
+
+    def clean(self):
+        data = self.data.copy()
+        self.data = data
+
+
 class TrocaLocalForm(forms.Form):
     endereco_de = forms.CharField(
         label='Endereço antigo', min_length=2, max_length=4,
