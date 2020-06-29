@@ -44,7 +44,7 @@ class Retirar(PermissionRequiredMixin, View):
             'referencia': lote_rec.referencia,
             'cor': lote_rec.cor,
             'tamanho': lote_rec.tamanho,
-            'qtd_produzir': lote_rec.qtd_produzir,
+            'qtd': lote_rec.qtd,
             'local': lote_rec.local,
             })
 
@@ -58,7 +58,7 @@ class Retirar(PermissionRequiredMixin, View):
                 return context
 
             data = dict_conserto_lote(
-                request, lote, '63', 'out', lote_rec.qtd_produzir)
+                request, lote, '63', 'out', lote_rec.qtd)
 
             if data['error_level'] > 0:
                 level = data['error_level']
@@ -89,13 +89,13 @@ class Retirar(PermissionRequiredMixin, View):
             local=endereco).order_by(
                 '-local_at'
                 ).values(
-                    'op', 'lote', 'qtd_produzir',
+                    'op', 'lote', 'qtd',
                     'referencia', 'cor', 'tamanho',
                     'local_at', 'local_usuario__username')
         if lotes_no_local:
             q_itens = 0
             for row in lotes_no_local:
-                q_itens += row['qtd_produzir']
+                q_itens += row['qtd']
             context.update({
                 'q_lotes': len(lotes_no_local),
                 'q_itens': q_itens,
@@ -103,7 +103,7 @@ class Retirar(PermissionRequiredMixin, View):
                             'Lote', 'Quant.',
                             'Ref.', 'Cor', 'Tam.', 'OP'),
                 'fields': ('local_at', 'local_usuario__username',
-                           'lote', 'qtd_produzir',
+                           'lote', 'qtd',
                            'referencia', 'cor', 'tamanho', 'op'),
                 'data': lotes_no_local,
                 })
