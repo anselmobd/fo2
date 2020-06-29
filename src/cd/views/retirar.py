@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views import View
 
 import lotes.models
+from lotes.views.lote.conserto_lote import dict_conserto_lote
 
 import cd.forms
 
@@ -55,6 +56,19 @@ class Retirar(PermissionRequiredMixin, View):
                     'erro': 'A confirmação é bipando o mesmo lote. '
                             'Identifique o lote novamente.'})
                 return context
+
+            data = dict_conserto_lote(
+                request, lote, '63', 'out', lote_rec.qtd_produzir)
+
+            if data['error_level'] > 0:
+                level = data['error_level']
+                erro = data['msg']
+                context.update({
+                    'concerto_erro':
+                        f'Erro ao "retirar do concerto": {level} - "{erro}"',
+                })
+                if level not in [2]:
+                    return context
 
             lote_rec.local = None
             lote_rec.local_usuario = request.user
