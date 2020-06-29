@@ -16,7 +16,7 @@ class Retirar(PermissionRequiredMixin, View):
         self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = cd.forms.RetirarForm
         self.template_name = 'cd/retirar.html'
-        self.title_name = 'Retirar lote'
+        self.title_name = 'Retirar lote inteiro'
 
     def mount_context(self, request, form):
         cursor = connections['so'].cursor()
