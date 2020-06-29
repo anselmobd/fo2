@@ -39,6 +39,7 @@ class Retirar(PermissionRequiredMixin, View):
         endereco = lote_rec.local
         context.update({
             'op': lote_rec.op,
+            'lote_referencia': lote_rec.lote,
             'referencia': lote_rec.referencia,
             'cor': lote_rec.cor,
             'tamanho': lote_rec.tamanho,
