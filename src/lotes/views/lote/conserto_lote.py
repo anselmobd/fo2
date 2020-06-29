@@ -63,6 +63,13 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
         })
         return data
 
+    if not estagio.isnumeric():
+        data.update({
+            'error_level': 25,
+            'msg': 'Parâmetro estágio com valor inválido',
+        })
+        return data
+
     if estagio != '63':
         data.update({
             'error_level': 22,
