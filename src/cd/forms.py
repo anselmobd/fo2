@@ -103,6 +103,53 @@ class RetirarForm(forms.Form):
         self.data = data
 
 
+class RetirarParcialForm(forms.Form):
+    lote = forms.CharField(
+        label='Lote', max_length=9, min_length=9,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+
+    quant = forms.IntegerField(
+        label='Qtd. peças', min_value=1,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+    identificado = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput())
+
+    def clean_lote(self):
+        lote = self.cleaned_data.get('lote', '')
+
+        try:
+            self.lote_record = lotes.models.Lote.objects.get(lote=lote)
+        except lotes.models.Lote.DoesNotExist:
+            raise forms.ValidationError("Lote não encontrado")
+
+        return lote
+
+    def clean(self):
+        cleaned_data = super(RetirarParcialForm, self).clean()
+        quant = cleaned_data.get('quant', '')
+
+        if self.lote_record is not None:
+            if quant == self.lote_record.qtd:
+                self.add_error(
+                    'quant',
+                    "Quantidade igual à disponível. "
+                    "Faça uma retirada de lote inteiro"
+                )
+
+            if quant > self.lote_record.qtd:
+                self.add_error(
+                    "quant",
+                    "Quantidade maior que a disponível"
+                )
+
+        # copiado para não ser immutable
+        data = self.data.copy()
+        self.data = data
+
+
 class TrocaLocalForm(forms.Form):
     endereco_de = forms.CharField(
         label='Endereço antigo', min_length=2, max_length=4,
