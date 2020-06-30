@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.views import View
 
 from geral.functions import request_user, has_permission
+from utils.functions import untuple_keys_concat
 from utils.views import group_rowspan
 
 import lotes.models as models
@@ -195,6 +196,9 @@ class Posicao(View):
                 'USU', 'PRG'),
             'h_data': data,
             'h_safe': ['EST'],
+            'h_style': untuple_keys_concat({
+                (6, 7, 8, 9): 'text-align: right;',
+            }),
         })
 
         # data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
