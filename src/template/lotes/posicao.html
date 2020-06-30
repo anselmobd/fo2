@@ -71,7 +71,7 @@
   {% if h_data %}
     <table>
       {% include "layout/thead_generic.html" with data=h_headers only %}
-      {% include "layout/tbody_generic.html" with fields=h_fields data=h_data only %}
+      {% include "layout/tbody_generic.html" with fields=h_fields data=h_data safe=h_safe only %}
     </table>
   {% endif %}
   <br />
