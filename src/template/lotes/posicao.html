@@ -86,8 +86,8 @@
         >Cancela solicitação de toda quantidade disponível no lote <span id="booom" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></a>
     </div>
     <table>
-      {% include "layout/html_thead.html" with data=slq_headers only %}
-      {% include "layout/html_tbody_link.html" with fields=slq_fields data=slq_data link=slq_link only %}
+      {% include "layout/thead_generic.html" with data=slq_headers style=slq_style only %}
+      {% include "layout/tbody_generic.html" with fields=slq_fields data=slq_data link=slq_link style=slq_style only %}
     </table>
   {% endif %}
 {% endif %}

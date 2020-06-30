@@ -228,7 +228,7 @@ class Posicao(View):
             ).order_by('-create_at').values(
             'solicitacao_id', 'solicitacao__codigo', 'solicitacao__descricao',
             'solicitacao__usuario__username', 'create_at', 'qtd')
-        slq_link = ('solicitacao__codigo')
+        slq_link = ('solicitacao__codigo',)
 
         desreserva_lote = False
         solicit_id = None
@@ -249,6 +249,7 @@ class Posicao(View):
                 'solicitacao__usuario__username', 'create_at', 'qtd'),
             'slq_data': slq,
             'slq_link': slq_link,
+            'slq_style': {5: 'text-align: right;'},
             'desreserva_lote': desreserva_lote,
             'solicit_id': solicit_id,
         })
