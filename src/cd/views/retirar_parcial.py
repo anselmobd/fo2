@@ -26,16 +26,13 @@ class RetirarParcial(PermissionRequiredMixin, View):
         lote = form.cleaned_data['lote']
         periodo = lote[:4]
         ordem_confeccao = lote[-5:]
+        quant_retirar = form.cleaned_data['quant']
         identificado = form.cleaned_data['identificado']
 
         lote_sys = lotes.models.posicao_get_item(
             cursor, periodo, ordem_confeccao)
 
-        try:
-            lote_rec = lotes.models.Lote.objects.get(lote=lote)
-        except lotes.models.Lote.DoesNotExist:
-            context.update({'erro': 'Lote não encontrado'})
-            return context
+        lote_rec = lotes.models.Lote.objects.get(lote=lote)
 
         endereco = lote_rec.local
         context.update({
@@ -46,6 +43,7 @@ class RetirarParcial(PermissionRequiredMixin, View):
             'tamanho': lote_rec.tamanho,
             'qtd': lote_rec.qtd,
             'local': lote_rec.local,
+            'quant_retirar': quant_retirar,
             })
 
         if identificado:
@@ -58,22 +56,23 @@ class RetirarParcial(PermissionRequiredMixin, View):
                 return context
 
             data = dict_conserto_lote(
-                request, lote, '63', 'out', lote_rec.qtd)
+                request, lote, '63', 'out', quant_retirar)
 
             if data['error_level'] > 0:
                 level = data['error_level']
                 erro = data['msg']
                 context.update({
                     'concerto_erro':
-                        f'Erro ao "retirar {lote_rec.qtd} peças do '
+                        f'Erro ao "retirar {quant_retirar} peças do '
                         f'concerto": {level} - "{erro}"',
                 })
                 if level not in [1, 2]:
                     return context
 
-            lote_rec.local = None
-            lote_rec.local_usuario = request.user
-            lote_rec.save()
+            # retirada parcial não tira o lote do endereço
+            # lote_rec.local = None
+            # lote_rec.local_usuario = request.user
+            # lote_rec.save()
 
             context['identificado'] = identificado
         else:
