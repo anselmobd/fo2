@@ -137,19 +137,14 @@ class LoteLocal(PermissionRequiredMixin, View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'lote' in kwargs:
-            return self.post(request, *args, **kwargs)
-        else:
-            context = {'titulo': self.title_name}
-            form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'lote' in kwargs:
-            form.data['lote'] = kwargs['lote']
         if form.is_valid():
             data = self.mount_context(request, form)
             context.update(data)
