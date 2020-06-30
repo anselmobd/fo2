@@ -10,6 +10,7 @@ from .lote_local import *
 from .mapa import *
 from .rearrumar import *
 from .retirar import *
+from .retirar_parcial import *
 from .solicita import *
 from .solicitacao_detalhe import *
 from .solicitacoes import *
