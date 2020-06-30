@@ -59,8 +59,8 @@
   {% endif %}
   <br />
   <table>
-    {% include "layout/html_thead.html" with data=se_headers only %}
-    {% include "layout/html_tbody_group.html" with fields=se_fields data=se_data only %}
+    {% include "layout/thead_generic.html" with data=se_headers style=se_style only %}
+    {% include "layout/tbody_generic.html" with fields=se_fields data=se_data style=se_style only %}
   </table>
   <br />
   <table>

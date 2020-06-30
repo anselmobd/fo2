@@ -118,6 +118,10 @@ class Posicao(View):
                 'Q_PROD', 'Q_2A', 'Q_PERDA', 'Q_CONSERTO',
                 'FAMI', 'OS'),
             'se_data': data,
+            'se_style': untuple_keys_concat({
+                (2, 3, 4, 5, 6, 7, 8, 9): 'text-align: right;',
+                (10, 11): 'text-align: center;',
+            }),
         })
 
         # data = lotes.queries.lote.posicao_historico(
@@ -198,6 +202,7 @@ class Posicao(View):
             'h_safe': ['EST'],
             'h_style': untuple_keys_concat({
                 (6, 7, 8, 9): 'text-align: right;',
+                (2, 3, 4): 'text-align: center;',
             }),
         })
 
