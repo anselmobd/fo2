@@ -178,16 +178,9 @@ class Posicao(View):
             cursor, periodo, ordem_confeccao)
         for row in data:
             row['PRG|HOVER'] = row['PRG_DESCR']
-            if row['FAMILIA'] == 0:
-                row['FAMILIA'] = '.'
-            if row['Q_P1'] == 0:
-                row['Q_P1'] = '.'
-            if row['Q_P2'] == 0:
-                row['Q_P2'] = '.'
-            if row['Q_P'] == 0:
-                row['Q_P'] = '.'
-            if row['Q_C'] == 0:
-                row['Q_C'] = '.'
+            for field in ['FAMILIA', 'Q_P1', 'Q_P2', 'Q_P', 'Q_C']:
+                if row[field] == 0:
+                    row[field] = '.'
             row['DT_PROD'] = row['DT_PROD'].date()
         context.update({
             'h_headers': (
