@@ -65,8 +65,9 @@ class Retirar(PermissionRequiredMixin, View):
                 erro = data['msg']
                 context.update({
                     'concerto_erro':
-                        f'Erro ao "retirar {lote_rec.qtd} peças do '
-                        f'concerto": {level} - "{erro}"',
+                        f'Erro ao retirar {lote_rec.qtd} '
+                        f'peça{"s" if lote_rec.qtd > 1 else ""} do '
+                        f'concerto: {level} - "{erro}"',
                 })
                 if level not in [1, 2]:
                     return context
