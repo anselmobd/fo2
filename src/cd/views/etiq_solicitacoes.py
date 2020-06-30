@@ -82,6 +82,11 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
 
         solicitacao = lotes.models.SolicitaLote.objects.get(id=numero[:-2])
 
+        self.context.update({
+            'codigo': solicitacao.codigo,
+            'nome': solicitacao.descricao,
+        })
+
         data = lotes.models.SolicitaLoteQtd.objects.values(
             'lote__op', 'lote__lote', 'lote__qtd_produzir',
             'lote__referencia', 'lote__cor', 'lote__tamanho'
