@@ -76,6 +76,9 @@ urlpatterns = [
 
     url(r'^retirar/$', views.Retirar.as_view(), name='retirar'),
 
+    url(r'^retirar_parcial/$',
+        views.RetirarParcial.as_view(), name='retirar_parcial'),
+
     url(r'^etiq_solicitacoes/?$',
         views.EtiquetasSolicitacoes.as_view(), name='etiq_solicitacoes'),
 
