@@ -67,8 +67,10 @@ class RetirarParcial(PermissionRequiredMixin, View):
                         f'peça{"s" if quant_retirar > 1 else ""} do '
                         f'concerto: {level} - "{erro}"',
                 })
-                if level not in [1, 2]:
-                    return context
+                # como o lote não será realmente retirado,
+                # não precisa esse teste
+                # if level not in [1, 2]:
+                #     return context
 
             # retirada parcial não tira o lote do endereço
             # lote_rec.local = None
