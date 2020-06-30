@@ -128,10 +128,10 @@ class RetirarParcialForm(forms.Form):
         return lote
 
     def clean(self):
-        cleaned_data = super(RetirarParcialForm, self).clean()
-        quant = cleaned_data.get('quant', '')
+        if not self.errors:
+            cleaned_data = super().clean()
+            quant = cleaned_data.get('quant', 0)
 
-        if self.lote_record is not None:
             if quant == self.lote_record.qtd:
                 self.add_error(
                     'quant',
