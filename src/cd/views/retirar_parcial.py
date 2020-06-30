@@ -15,7 +15,7 @@ class RetirarParcial(PermissionRequiredMixin, View):
 
     def __init__(self):
         self.permission_required = 'lotes.can_inventorize_lote'
-        self.Form_class = cd.forms.RetirarForm
+        self.Form_class = cd.forms.RetirarParcialForm
         self.template_name = 'cd/retirar_parcial.html'
         self.title_name = 'Retirar lote parcial'
 
