@@ -63,8 +63,9 @@ class RetirarParcial(PermissionRequiredMixin, View):
                 erro = data['msg']
                 context.update({
                     'concerto_erro':
-                        f'Erro ao "retirar {quant_retirar} peças do '
-                        f'concerto": {level} - "{erro}"',
+                        f'Erro ao retirar {quant_retirar} '
+                        f'peça{"s" if quant_retirar > 1 else ""} do '
+                        f'concerto: {level} - "{erro}"',
                 })
                 if level not in [1, 2]:
                     return context
