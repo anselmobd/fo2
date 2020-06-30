@@ -182,6 +182,8 @@ class Posicao(View):
                 if row[field] == 0:
                     row[field] = '.'
             row['DT_PROD'] = row['DT_PROD'].date()
+            row['EST'] = (f"{'&middot;&nbsp;'*estagios.index(row['EST'])}"
+                          f"{row['EST']}")
         context.update({
             'h_headers': (
                 'Data Bipagem', 'Data Produção', 'Turno', 'Família', 'Estágio',
@@ -192,6 +194,7 @@ class Posicao(View):
                 'Q_P1', 'Q_P2', 'Q_P', 'Q_C',
                 'USU', 'PRG'),
             'h_data': data,
+            'h_safe': ['EST'],
         })
 
         # data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
