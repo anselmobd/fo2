@@ -9,3 +9,7 @@ def index(request):
 
 def teste_som(request):
     return render(request, 'cd/teste_som.html')
+
+
+def movimentacao(request):
+    return render(request, 'cd/movimentacao.html')
