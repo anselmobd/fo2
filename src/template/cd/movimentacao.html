@@ -6,20 +6,71 @@
 
   <style>
 
-  .block {
+  .column {
+    float: left;
+    width: 50%;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  img#logo {
+    width: 80%;
+    height: auto;
+  }
+
+  button {
+    margin-bottom: 2vw;
+    border-radius: 2vw;
     display: block;
     width: 100%;
     border: none;
     background-color: #60ADFF;
-    padding: 14px 28px;
-    font-size: 16px;
+    padding: 2vw;
+    font-size: 6vw;
     cursor: pointer;
     text-align: center;
+  }
+
+  .back {
+    background-color: #FF5A5A;
   }
 
   </style>
 </head>
 <body>
-  <button type="button" class="block">Block Button</button>
+  <div class="row">
+    <div class="column"><a href="{% url 'index' %}"><img id="logo" src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO"></a></div>
+    <div class="column">
+      <form class="" action="{% url 'cd:index' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="back">&larrb; CD</button>
+      </form>
+    </div>
+  </div>
+  <form class="" action="{% url 'cd:lote_local' %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="block">Inventariar / Endereçar</button>
+  </form>
+  <form class="" action="{% url 'cd:rearrumar' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Rearrumar pallet</button>
+  </form>
+  <form class="" action="{% url 'cd:retirar' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Retirar lote inteiro</button>
+  </form>
+  <form class="" action="{% url 'cd:retirar_parcial' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Retirar lote parcial</button>
+  </form>
+  <form class="" action="{% url 'cd:troca_local' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Troca de endereço de pallet</button>
+  </form>
 </body>
 </html>
