@@ -319,11 +319,11 @@
     <img class="cartaz" src="/media/rh/meta/2020/06/resultado.jpg" alt="2020-06-meta">
   </div>
   <script>
-    var varDate = new Date('07/01/2020');
+    var varDate = new Date('07/02/2020');
     var today = new Date();
     today.setHours(0, 0, 0, 0);
     if (today.getTime() == varDate.getTime()) {
-      let nrandom = Math.floor(Math.random()*3);
+      let nrandom = Math.floor(Math.random()*5);
       if (nrandom == 1) {
         let elemento = document.getElementById('cartaz_div');
         elemento.style.visibility='visible';
