@@ -4,11 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
+
   <style>
 
-  .column {
+  .columnl {
     float: left;
-    width: 50%;
+    width: 40%;
+  }
+
+  .columnr {
+    float: left;
+    width: 60%;
   }
 
   /* Clear floats after the columns */
@@ -44,33 +51,18 @@
 </head>
 <body>
   <div class="row">
-    <div class="column"><a href="{% url 'index' %}"><img id="logo" src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO"></a></div>
-    <div class="column">
-      <form class="" action="{% url 'cd:index' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="back">&larrb; CD</button>
-      </form>
+    <div class="columnl">
+      <a href="{% url 'index' %}"><img id="logo" src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO"></a>
+    </div>
+    <div class="columnr">
+      <button class="back" onclick="location.href='{% url 'cd:index' %}';">CD - Movimentação</button>
     </div>
   </div>
-  <form class="" action="{% url 'cd:lote_local' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="block">Inventariar / Endereçar</button>
-  </form>
-  <form class="" action="{% url 'cd:rearrumar' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Rearrumar pallet</button>
-  </form>
-  <form class="" action="{% url 'cd:retirar' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Retirar lote inteiro</button>
-  </form>
-  <form class="" action="{% url 'cd:retirar_parcial' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Retirar lote parcial</button>
-  </form>
-  <form class="" action="{% url 'cd:troca_local' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Troca de endereço de pallet</button>
-  </form>
+  <button onclick="location.href='{% url 'cd:lote_local' %}';">Inventariar / Endereçar</button>
+  <button onclick="location.href='{% url 'cd:rearrumar' %}';">Rearrumar pallet</button>
+  <button onclick="location.href='{% url 'cd:retirar' %}';">Retirar lote inteiro</button>
+  <button onclick="location.href='{% url 'cd:retirar_parcial' %}';">Retirar lote parcial</button>
+  <button onclick="location.href='{% url 'cd:troca_local' %}';">Troca de endereço de pallet</button>
+  <hr>
 </body>
 </html>
