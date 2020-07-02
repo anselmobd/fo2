@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<h4 class="visible-xs">Inventariar</h4>
+<h4 class="visible-xs">{{ titulo }}</h4>
 <form action="{% url 'cd:retirar_parcial' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
