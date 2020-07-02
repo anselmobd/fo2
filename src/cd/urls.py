@@ -75,6 +75,7 @@ urlpatterns = [
     url(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
 
     url(r'^retirar/$', views.Retirar.as_view(), name='retirar'),
+    url(r'^retirar/m/$', views.RetirarMobile.as_view(), name='retirar_m'),
 
     url(r'^retirar_parcial/$',
         views.RetirarParcial.as_view(), name='retirar_parcial'),

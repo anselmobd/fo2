@@ -13,10 +13,14 @@ import cd.forms
 
 class Retirar(PermissionRequiredMixin, View):
 
-    def __init__(self):
+    def __init__(self, mobile=False):
+        self.mobile = mobile
         self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = cd.forms.RetirarForm
-        self.template_name = 'cd/retirar.html'
+        if self.mobile:
+            self.template_name = 'cd/retirar_m.html'
+        else:
+            self.template_name = 'cd/retirar.html'
         self.title_name = 'Retirar lote inteiro'
 
     def mount_context(self, request, form):
@@ -126,3 +130,9 @@ class Retirar(PermissionRequiredMixin, View):
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class RetirarMobile(Retirar):
+
+    def __init__(self, mobile=True):
+        super(RetirarMobile, self).__init__(mobile=mobile)
