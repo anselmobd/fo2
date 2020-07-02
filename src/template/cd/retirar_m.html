@@ -1,38 +1,32 @@
-{% extends 'cd/index.html' %}
-
-{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
-{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
-
-{% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
-{% endblock %}
+{% extends 'cd/layout_m.html' %}
 
 {% block content %}
-<h4 class="visible-xs">{{ titulo }}</h4>
-<form action="{% url 'cd:retirar' %}" method="post">
+<div class="row">
+  <div class="leftcol50">
+    <p>
+      {{ titulo }}
+    </p>
+  </div>
+  <div class="rightcol50">
+    <button class="back" onclick="location.href='{% url 'cd:movimentacao' %}';">Movimentação</button>
+  </div>
+</div>
+<hr>
+<form action="{% url 'cd:retirar_m' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     {% if confirma %}
-      <h3>Lote identificado: <b>{{ lote }}</b></h3>
-      <h3>Retirar lote do CD?</h3>
+      <p>Retirar lote <b>{{ lote }}</b>?</p>
       <input type="submit" name="confirma" value="Confirma"/>
     {% else %}
-      M<input type="submit" name="retira" value="Retira"/>
+      <input type="submit" name="retira" value="Retira"/>
     {% endif %}
 </form>
-{% block javascript %}
-<script>
-  var inp = document.getElementById('id_lote');
-  inp.select();
-</script>
-{% endblock javascript %}
 {% if erro %}
-  <h3>{{ erro }}</h3>
+  <p class="erro">{{ erro }}</p>
 {% else %}
   {% if identificado %}
-    <h3>Lote <b>{{ identificado }}</b> retirado do <b>CD</b></h3>
+    <h3>Lote <b>{{ identificado }}</b> retirado!</h3>
   {% elif lote %}
     {% if not local %}
       <h3>O lote <b>{{ lote }}</b> não está no <b>CD</b>.</h3>
@@ -64,7 +58,13 @@
     </table>
   {% endif %}
 {% endif %}
+{% endblock content %}
+
+{% block javascript %}
 <script>
+  var inp = document.getElementById('id_lote');
+  inp.select();
+
   function stn(n) {
     var snd = new Audio("/media/number/"+n+".mp3");
     snd.play();
@@ -73,4 +73,4 @@
     stn({{ q_lotes }});
   {% endif %}
 </script>
-{% endblock content %}
+{% endblock javascript %}
