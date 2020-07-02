@@ -91,7 +91,7 @@ class LoteForm(forms.Form):
 class RetirarForm(forms.Form):
     lote = forms.CharField(
         label='Lote', max_length=9, min_length=9,
-        widget=forms.TextInput(attrs={'type': 'number',
+        widget=forms.TextInput(attrs={'type': 'number', 'size': 9,
                                'autofocus': 'autofocus'}))
 
     identificado = forms.CharField(
