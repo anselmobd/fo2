@@ -1,0 +1,112 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
+
+  <style>
+  * {
+    font-size: 6vw;
+    color: #444;
+    font-family: Verdana, Arial;
+  }
+  body {
+    background-color: #fafafa;
+  }
+  .leftcol {
+    float: left;
+  }
+  .leftcol50 {
+    float: left;
+    width: 50%;
+  }
+  .centercol {
+    text-align: center;
+  }
+  .rightcol {
+    float: right;
+  }
+  .rightcol50 {
+    float: right;
+    width: 50%;
+  }
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  hr {
+    margin: 1vw 0;
+    border: 0 1px 0 0;
+    color: lightgray;
+  }
+  img#logo {
+    height: 6vw;
+    width: auto;
+    padding: 2vw 0;
+  }
+  p {
+    margin: 0;
+    padding: 2vw 0;
+  }
+  button {
+    border-radius: 2vw;
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: #42a5f5;
+    padding: 2vw;
+    font-size: 6vw;
+    cursor: pointer;
+    text-align: center;
+  }
+  .hspace {
+    height: 2vw;
+  }
+  .back {
+    background-color: #26c6da;
+  }
+  .login {
+    background-color: #66bb6a;
+  }
+  .logout {
+    background-color: #d32f2f;
+  }
+  .header_text {
+    font-size: 4vw;
+  }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <div class="leftcol">
+      <a href="{% url 'index' %}"><img id="logo" src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO"></a>
+    </div>
+    <div class="rightcol">
+      {% if request.user.is_authenticated %}
+        <button class="logout" onclick="location.href='{% url 'encerrar' %}?next={% url 'cd:movimentacao' %}';">
+          <svg xmlns="http://www.w3.org/2000/svg" width="6vw" height="6vw" viewBox="0 0 48 48"><path d="M29.17 16L24 21.17 18.83 16 16 18.83 21.17 24 16 29.17 18.83 32 24 26.83 29.17 32 32 29.17 26.83 24 32 18.83 29.17 16zM24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16 16-7.18 16-16 16z"/></svg>
+        </button>
+      {% else %}
+        <button class="login" onclick="location.href='{% url 'login' %}?next={% url 'cd:movimentacao' %}';">
+          <svg xmlns="http://www.w3.org/2000/svg" width="6vw" height="6vw" viewBox="0 0 48 48"><path d="M24 11.8c2.32 0 4.2 1.88 4.2 4.2s-1.88 4.2-4.2 4.2-4.2-1.88-4.2-4.2 1.88-4.2 4.2-4.2m0 18c5.95 0 12.2 2.91 12.2 4.2v2.2H11.8V34c0-1.29 6.25-4.2 12.2-4.2M24 8c-4.42 0-8 3.58-8 8 0 4.41 3.58 8 8 8s8-3.59 8-8c0-4.42-3.58-8-8-8zm0 18c-5.33 0-16 2.67-16 8v6h32v-6c0-5.33-10.67-8-16-8z"/></svg>
+        </button>
+      {% endif %}
+    </div>
+    {% if request.user.is_authenticated %}
+    <div class="centercol">
+      <p class="header_text">
+        {{ request.user.username }}
+      </p>
+    </div>
+    {% endif %}
+  </div>
+  <hr>
+  {% block content %}
+  {% endblock %}
+  <hr>
+</body>
+</html>
