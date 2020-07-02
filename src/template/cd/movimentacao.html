@@ -7,31 +7,44 @@
   <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
 
   <style>
-
-  .columnl {
-    float: left;
-    width: 40%;
+  * {
+    font-size: 6vw;
+    color: #444;
+    font-family: Verdana, Arial;
   }
-
-  .columnr {
+  .leftcol {
     float: left;
-    width: 60%;
   }
-
+  .leftcol50 {
+    float: left;
+    width: 50%;
+  }
+  .centercol {
+    text-align: center;
+  }
+  .rightcol {
+    float: right;
+  }
+  .rightcol50 {
+    float: right;
+    width: 50%;
+  }
   /* Clear floats after the columns */
   .row:after {
     content: "";
     display: table;
     clear: both;
   }
-
+  hr {
+    margin: 1vw 0;
+    border: 0 1px 0 0;
+  }
   img#logo {
-    width: 80%;
+    /* width: 80%; */
+    width: 30vw;
     height: auto;
   }
-
   button {
-    margin-bottom: 2vw;
     border-radius: 2vw;
     display: block;
     width: 100%;
@@ -42,26 +55,68 @@
     cursor: pointer;
     text-align: center;
   }
-
-  .back {
-    background-color: #FF5A5A;
+  .hspace {
+    height: 2vw;
   }
-
+  .back {
+    background-color: #69FDFD;
+  }
+  .login {
+    background-color: #9EFF96;
+  }
+  .logout {
+    background-color: #FF2626;
+  }
   </style>
 </head>
 <body>
   <div class="row">
-    <div class="columnl">
+    <div class="leftcol">
       <a href="{% url 'index' %}"><img id="logo" src="{% static "img/DUOMO_small.png" %}" alt="D'UOMO"></a>
     </div>
-    <div class="columnr">
-      <button class="back" onclick="location.href='{% url 'cd:index' %}';">CD - Movimentação</button>
+    <div class="rightcol">
+      {% if request.user.is_authenticated %}
+        <button class="logout" onclick="location.href='{% url 'encerrar' %}';">
+          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-door-closed" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2zm1 0v13h8V2H4z"/>
+            <path d="M7 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+            <path fill-rule="evenodd" d="M1 15.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+        </button>
+      {% else %}
+        <button class="login" onclick="location.href='{% url 'login' %}';">
+          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-door-open" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M1 15.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5zM11.5 2H11V1h.5A1.5 1.5 0 0 1 13 2.5V15h-1V2.5a.5.5 0 0 0-.5-.5z"/>
+            <path fill-rule="evenodd" d="M10.828.122A.5.5 0 0 1 11 .5V15h-1V1.077l-6 .857V15H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117z"/>
+            <path d="M8 9c0 .552.224 1 .5 1s.5-.448.5-1-.224-1-.5-1-.5.448-.5 1z"/>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+    {% if request.user.is_authenticated %}
+    <div class="centercol">
+      {{ request.user.username }}
+    </div>
+    {% endif %}
+  </div>
+  <hr>
+  <div class="row">
+    <div class="leftcol50">
+      Movimentação
+    </div>
+    <div class="rightcol50">
+      <button class="back" onclick="location.href='{% url 'cd:index' %}';">CD</button>
     </div>
   </div>
+  <div class="hspace"></div>
   <button onclick="location.href='{% url 'cd:lote_local' %}';">Inventariar / Endereçar</button>
+  <div class="hspace"></div>
   <button onclick="location.href='{% url 'cd:rearrumar' %}';">Rearrumar pallet</button>
+  <div class="hspace"></div>
   <button onclick="location.href='{% url 'cd:retirar' %}';">Retirar lote inteiro</button>
+  <div class="hspace"></div>
   <button onclick="location.href='{% url 'cd:retirar_parcial' %}';">Retirar lote parcial</button>
+  <div class="hspace"></div>
   <button onclick="location.href='{% url 'cd:troca_local' %}';">Troca de endereço de pallet</button>
   <hr>
 </body>
