@@ -10,3 +10,11 @@ def join(sep, lista):
             result = sep[0].join(str_lista[:-1])
             result += sep[1] + str_lista[-1]
             return result
+
+
+def only_digits(text):
+    num_text = []
+    for char in text:
+        if char.isdigit():
+            num_text.append(char)
+    return ''.join(num_text)
