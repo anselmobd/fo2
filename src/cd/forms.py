@@ -98,6 +98,16 @@ class RetirarForm(forms.Form):
         required=False,
         widget=forms.HiddenInput())
 
+    def clean_lote(self):
+        lote = self.cleaned_data.get('lote', '')
+
+        try:
+            self.lote_record = lotes.models.Lote.objects.get(lote=lote)
+        except lotes.models.Lote.DoesNotExist:
+            raise forms.ValidationError("Lote não encontrado")
+
+        return lote
+
     def clean(self):
         data = self.data.copy()
         self.data = data
