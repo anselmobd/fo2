@@ -79,6 +79,14 @@ table {
   var inp = document.getElementById('id_lote');
   inp.select();
 
+  // accept only digits and enter
+  inp.addEventListener("keypress", function (evt) {
+    // console.log(evt.which)
+    if ((evt.which < 48 || evt.which > 57) && evt.which != 13) {
+      evt.preventDefault();
+    }
+  });
+
   {% if data %}
   var lista_fecha = document.getElementById("lista_fecha");
   lista_fecha.style.display = "none";
