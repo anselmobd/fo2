@@ -103,12 +103,9 @@ table {
   }
   {% endif %}
 
-  function stn(n) {
-    var snd = new Audio("/media/number/"+n+".mp3");
-    snd.play();
-  }
   {% if q_lotes %}
-    stn({{ q_lotes }});
+    var snd = new Audio("/media/number/"+{{ q_lotes }}+".mp3");
+    snd.play();
   {% endif %}
 
 </script>
