@@ -5,6 +5,7 @@ from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
 
 from utils.functions.digits import *
+from utils.functions.strings import only_digits
 
 import lotes.models
 
@@ -99,7 +100,7 @@ class RetirarForm(forms.Form):
         widget=forms.HiddenInput())
 
     def clean_lote(self):
-        lote = self.cleaned_data.get('lote', '')
+        lote = only_digits(self.cleaned_data.get('lote', ''))
 
         try:
             self.lote_record = lotes.models.Lote.objects.get(lote=lote)
