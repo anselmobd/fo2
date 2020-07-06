@@ -51,7 +51,7 @@ class TransferenciaForm(forms.Form):
         label='Quantidade',
         widget=forms.TextInput(attrs={'size': 6, 'type': 'number'}))
 
-    CHOICES = geral.functions.depositos_choices(only=(101, 102, 122, 231))
+    CHOICES = geral.functions.depositos_choices(only=(101, 102, 103, 122, 231))
 
     deposito_origem = forms.ChoiceField(
         label='Depósito de origem', required=True,
