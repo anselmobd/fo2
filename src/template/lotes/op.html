@@ -10,170 +10,172 @@
 {% endblock %}
 
 {% block content %}
-<form action="/lotes/op/" method="post">
+  <form action="/lotes/op/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
-</form>
-{% if op %}
-  <h3>OP {{ op }}</h3>
-{% endif %}
-{% if msg_erro %}
-<h3>{{ msg_erro }}</h3>
-{% endif %}
-{% if i_data %}
-{% url 'producao:componentes_de_op__get' op as comp_op %}
-{% include "layout/link.html" with link=comp_op text='Produtos componentes da OP '|add:op only %}
-<br />
-{% url 'cd:historico__get' op as hist_op %}
-{% include "layout/link.html" with link=hist_op text='Histórico da OP '|add:op|add:' no CD' only %}
-<table>
-  {% include "layout/html_thead.html" with data=i_headers only %}
-  {% include "layout/html_tbody_group.html" with fields=i_fields data=i_data group=i_group only %}
-</table>
-{% if op_unidade and op_unidade == 'S'%}
-<table class="layout">
-  <tr>
-    <td style="vertical-align: top;">
-      {% if p_data %}
-        <table>
-          {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
-          {% include "layout/tbody_generic.html" with fields=p_fields data=p_data link=p_link style=p_style only %}
-        </table>
-      {% endif %}
-    </td>
-    <td></td>
-    <td style="border-left: thin solid lightgrey;"></td>
-    <td style="vertical-align: top;">
-    {% endif %}
-      {% if r_data %}
-        <table>
-          {% include "layout/html_thead.html" with data=r_headers only %}
-          {% include "layout/html_tbody_group.html" with fields=r_fields data=r_data only %}
-        </table>
-      {% endif %}
+  </form>
+  {% if op %}
+    <h3>OP {{ op }}</h3>
+  {% endif %}
+  {% if msg_erro %}
+    <h3>{{ msg_erro }}</h3>
+  {% endif %}
+  {% if i_data %}
+    {% url 'producao:componentes_de_op__get' op as comp_op %}
+    {% include "layout/link.html" with link=comp_op text='Produtos componentes da OP '|add:op only %}
+    <br />
+    {% url 'cd:historico__get' op as hist_op %}
+    {% include "layout/link.html" with link=hist_op text='Histórico da OP '|add:op|add:' no CD' only %}
+    <table>
+      {% include "layout/html_thead.html" with data=i_headers only %}
+      {% include "layout/html_tbody_group.html" with fields=i_fields data=i_data group=i_group only %}
+    </table>
     {% if op_unidade and op_unidade == 'S'%}
-    </td>
-  </tr>
-</table>
-{% endif %}
-<table>
-  {% include "layout/html_thead.html" with data=i2_headers only %}
-  {% include "layout/html_tbody_group.html" with fields=i2_fields data=i2_data group=i2_group only %}
-</table>
-<table>
-  {% include "layout/html_thead.html" with data=i3_headers only %}
-  {% include "layout/html_tbody.html" with fields=i3_fields data=i3_data only %}
-</table>
-{% if i4_data %}
-  <table>
-    {% include "layout/html_thead.html" with data=i4_headers only %}
-    {% include "layout/html_tbody.html" with fields=i4_fields data=i4_data only %}
-  </table>
-{% endif %}
-{% endif %}
-{% if data %}
-<table class="layout">
-  <tr>
-    <td style="vertical-align: top;">
-      {% if g_data %}
-        <h3>Grades: Original a produzir</h3>
-        <table>
-          {% include "layout/html_thead.html" with data=g_headers only %}
-          {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
-        </table>
+      <table class="layout">
+        <tr>
+          <td style="vertical-align: top;">
+            {% if p_data %}
+              <table>
+                {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
+                {% include "layout/tbody_generic.html" with fields=p_fields data=p_data link=p_link style=p_style only %}
+              </table>
+            {% endif %}
+      {% if r_data %}
+          </td>
+        <td></td>
+        <td style="border-left: thin solid lightgrey;"></td>
+        <td style="vertical-align: top;">
       {% endif %}
-    </td>
-    <td></td>
-    <td style="border-left: thin solid lightgrey;"></td>
-    <td style="vertical-align: top;">
-      <h3>2ª qualidade</h3>
-      {% if gs_data %}
-        <table>
-          {% include "layout/html_thead.html" with data=gs_headers only %}
-          {% include "layout/html_tbody.html" with fields=gs_fields data=gs_data only %}
-        </table>
-      {% else %}
-        <b>Vazia</b>
-      {% endif %}
-    </td>
-    <td></td>
-    <td style="border-left: thin solid lightgrey;"></td>
-    <td style="vertical-align: top;">
-      <h3>Perdas</h3>
-      {% if gp_data %}
-        <table>
-          {% include "layout/html_thead.html" with data=gp_headers only %}
-          {% include "layout/html_tbody.html" with fields=gp_fields data=gp_data only %}
-        </table>
-      {% else %}
-        <b>Vazia</b>
-      {% endif %}
-    </td>
-    <td></td>
-    <td style="border-left: thin solid lightgrey;"></td>
-    <td style="vertical-align: top;">
-      <h3>Conserto</h3>
-      {% if gc_data %}
-        <table>
-          {% include "layout/html_thead.html" with data=gc_headers only %}
-          {% include "layout/html_tbody.html" with fields=gc_fields data=gc_data only %}
-        </table>
-      {% else %}
-        <b>Vazia</b>
-      {% endif %}
-    </td>
-  </tr>
-</table>
-<h3 style="page-break-before: always;">Estágios</h3>
-<div>
-  <canvas id="estagioChart" height="30"></canvas>
-</div>
-<br />
-<table>
-  {% include "layout/html_thead.html" with data=e_headers only %}
-  {% include "layout/html_tbody.html" with fields=e_fields data=e_data only %}
-</table>
-{% if os_data %}
-  <h3>OSs da OP</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=os_headers only %}
-    {% include "layout/html_tbody_link.html" with fields=os_fields data=os_data link=os_link only %}
-  </table>
-{% endif %}
-<h3>Totais por referência + estágio</h3>
-<table>
-  {% include "layout/html_thead.html" with data=t_headers only %}
-  {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
-</table>
-<h3>Totais por OS + referência</h3>
-<table>
-  {% include "layout/html_thead.html" with data=o_headers only %}
-  {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
-</table>
-<h3>Lotes ordenados por Estágio + OS + referência + cor + tamanho</h3>
-<table>
-  {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
-  {% include "layout/html_tbody_link.html" with fields=fields data=data link=link only %}
-</table>
-<h3>Responsáveis e datas de movimentações de estágios</h3>
-{% if u_data %}
-  <table>
-    {% include "layout/thead_generic.html" with data=u_headers only %}
-    {% include "layout/tbody_generic.html" with fields=u_fields data=u_data only %}
-  </table>
-{% else %}
-  <b>Nenhuma movimentação</b>
-{% endif %}
-{% endif %}
+    {% endif %}
+    {% if r_data %}
+      <table>
+        {% include "layout/html_thead.html" with data=r_headers only %}
+        {% include "layout/html_tbody_group.html" with fields=r_fields data=r_data only %}
+      </table>
+    {% endif %}
+    {% if op_unidade and op_unidade == 'S'%}
+          </td>
+        </tr>
+      </table>
+    {% endif %}
+    <table>
+      {% include "layout/html_thead.html" with data=i2_headers only %}
+      {% include "layout/html_tbody_group.html" with fields=i2_fields data=i2_data group=i2_group only %}
+    </table>
+    <table>
+      {% include "layout/html_thead.html" with data=i3_headers only %}
+      {% include "layout/html_tbody.html" with fields=i3_fields data=i3_data only %}
+    </table>
+    {% if i4_data %}
+      <table>
+        {% include "layout/html_thead.html" with data=i4_headers only %}
+        {% include "layout/html_tbody.html" with fields=i4_fields data=i4_data only %}
+      </table>
+    {% endif %}
+  {% endif %}
+  {% if data %}
+    <table class="layout">
+      <tr>
+        <td style="vertical-align: top;">
+          {% if g_data %}
+            <h3>Grades: Original a produzir</h3>
+            <table>
+              {% include "layout/html_thead.html" with data=g_headers only %}
+              {% include "layout/html_tbody.html" with fields=g_fields data=g_data only %}
+            </table>
+          {% endif %}
+        </td>
+        <td></td>
+        <td style="border-left: thin solid lightgrey;"></td>
+        <td style="vertical-align: top;">
+          <h3>2ª qualidade</h3>
+          {% if gs_data %}
+            <table>
+              {% include "layout/html_thead.html" with data=gs_headers only %}
+              {% include "layout/html_tbody.html" with fields=gs_fields data=gs_data only %}
+            </table>
+          {% else %}
+            <b>Vazia</b>
+          {% endif %}
+        </td>
+        <td></td>
+        <td style="border-left: thin solid lightgrey;"></td>
+        <td style="vertical-align: top;">
+          <h3>Perdas</h3>
+          {% if gp_data %}
+            <table>
+              {% include "layout/html_thead.html" with data=gp_headers only %}
+              {% include "layout/html_tbody.html" with fields=gp_fields data=gp_data only %}
+            </table>
+          {% else %}
+            <b>Vazia</b>
+          {% endif %}
+        </td>
+        <td></td>
+        <td style="border-left: thin solid lightgrey;"></td>
+        <td style="vertical-align: top;">
+          <h3>Conserto</h3>
+          {% if gc_data %}
+            <table>
+              {% include "layout/html_thead.html" with data=gc_headers only %}
+              {% include "layout/html_tbody.html" with fields=gc_fields data=gc_data only %}
+            </table>
+          {% else %}
+            <b>Vazia</b>
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+    <h3 style="page-break-before: always;">Estágios</h3>
+    <div>
+      <canvas id="estagioChart" height="30"></canvas>
+    </div>
+    <br />
+    <table>
+      {% include "layout/html_thead.html" with data=e_headers only %}
+      {% include "layout/html_tbody.html" with fields=e_fields data=e_data only %}
+    </table>
+    {% if os_data %}
+      <h3>OSs da OP</h3>
+      <table>
+        {% include "layout/html_thead.html" with data=os_headers only %}
+        {% include "layout/html_tbody_link.html" with fields=os_fields data=os_data link=os_link only %}
+      </table>
+    {% endif %}
+    <h3>Totais por referência + estágio</h3>
+    <table>
+      {% include "layout/html_thead.html" with data=t_headers only %}
+      {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
+    </table>
+    <h3>Totais por OS + referência</h3>
+    <table>
+      {% include "layout/html_thead.html" with data=o_headers only %}
+      {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
+    </table>
+    <h3>Lotes ordenados por Estágio + OS + referência + cor + tamanho</h3>
+    <table>
+      {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
+      {% include "layout/html_tbody_link.html" with fields=fields data=data link=link only %}
+    </table>
+    <h3>Responsáveis e datas de movimentações de estágios</h3>
+    {% if u_data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=u_headers only %}
+        {% include "layout/tbody_generic.html" with fields=u_fields data=u_data only %}
+      </table>
+    {% else %}
+      <b>Nenhuma movimentação</b>
+    {% endif %}
+  {% endif %}
 {% endblock %}
 
 {% block javascript %}
-<script>
-var ctx = document.getElementById("estagioChart").getContext('2d');
-var estagioChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
+  <script>
+    var ctx = document.getElementById("estagioChart").getContext('2d');
+    var estagioChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
         labels: [
           {% for est in e_data %}
           "{{ est|get_item:'COD_EST' }}",
@@ -181,53 +183,53 @@ var estagioChart = new Chart(ctx, {
           "FIM"
         ],
         datasets: [{
-            label: '# Lotes no estágio',
-            data: [
-              {% for est in e_data %}
-              "{{ est|get_item:'LOTES' }}",
-              {% endfor %}
-              {{ qtd_lotes_fim }}
-            ],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
+          label: '# Lotes no estágio',
+          data: [
+            {% for est in e_data %}
+            "{{ est|get_item:'LOTES' }}",
+            {% endfor %}
+            {{ qtd_lotes_fim }}
+          ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
         }]
-    },
-    options: {
+      },
+      options: {
         scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
+          yAxes: [{
+            ticks: {
+              beginAtZero:true
+            }
+          }]
         }
-    }
-});
-</script>
+      }
+    });
+  </script>
 {% endblock %}
