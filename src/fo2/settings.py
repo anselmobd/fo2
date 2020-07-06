@@ -153,11 +153,11 @@ DATABASES = {
     },
     'persona': {  # Nasajon
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "nasajon_db3",
-        'USER': "nasajon_user",
+        'NAME': "nasajon_db3_20200617_163619",
+        'USER': "postgres",
         'PASSWORD': DBPASS_PERSONA,
         'HOST': 'localhost',
-        'PORT': '25434',
+        'PORT': '25432',
     },
 }
 DATABASES_FDB = {
