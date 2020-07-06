@@ -27,11 +27,11 @@ DATABASES = {
     },
     'persona': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "nasajon_db3",
-        'USER': "nasajon_user",
+        'NAME': "nasajon_db3_20200617_163619",
+        'USER': "postgres",
         'PASSWORD': DBPASS_PERSONA,
         'HOST': '192.168.1.96',
-        'PORT': '5434',
+        'PORT': '5432',
     },
 }
 
