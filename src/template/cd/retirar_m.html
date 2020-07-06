@@ -87,6 +87,17 @@ table {
     }
   });
 
+  inp.addEventListener('paste', function(event) {
+    var pasted = event.clipboardData.getData('text');
+    event.preventDefault();
+    var limpo = pasted.replace(/\D/g, '');
+    if (inp.type == "text") {
+      inp.setRangeText(limpo);
+    } else {
+      inp.value = limpo;
+    }
+  });
+
   {% if data %}
     var lista_fecha = document.getElementById("lista_fecha");
     lista_fecha.style.display = "none";
