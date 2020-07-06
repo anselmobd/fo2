@@ -88,27 +88,24 @@ table {
   });
 
   {% if data %}
-  var lista_fecha = document.getElementById("lista_fecha");
-  lista_fecha.style.display = "none";
-  var lista_abre = document.getElementById("lista_abre");
-  lista_abre.style.display = "block";
-  var lista_table = document.getElementById("lista_table");
-  lista_table.style.display = "none";
+    var lista_fecha = document.getElementById("lista_fecha");
+    lista_fecha.style.display = "none";
+    var lista_abre = document.getElementById("lista_abre");
+    lista_abre.style.display = "block";
+    var lista_table = document.getElementById("lista_table");
+    lista_table.style.display = "none";
 
-  function showHideLista() {
-    console.log('->showHideLista')
-    if (lista_table.style.display === "none") {
-      console.log('é none')
-      lista_table.style.display = "block";
-      lista_fecha.style.display = "block";
-      lista_abre.style.display = "none";
-    } else {
-      console.log('é block')
-      lista_table.style.display = "none";
-      lista_fecha.style.display = "none";
-      lista_abre.style.display = "block";
+    function showHideLista() {
+      if (lista_table.style.display === "none") {
+        lista_table.style.display = "block";
+        lista_fecha.style.display = "block";
+        lista_abre.style.display = "none";
+      } else {
+        lista_table.style.display = "none";
+        lista_fecha.style.display = "none";
+        lista_abre.style.display = "block";
+      }
     }
-  }
   {% endif %}
 
   {% if q_lotes %}
