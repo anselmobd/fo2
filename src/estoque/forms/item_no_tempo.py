@@ -31,7 +31,7 @@ class ItemNoTempoForm(forms.Form):
         widget=forms.TextInput(attrs=string_upper_attrs))
 
     CHOICES = geral.functions.depositos_choices(
-        only=(101, 102, 122, 231), rest=True)
+        only=(101, 102, 103, 122, 231), rest=True)
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
         choices=CHOICES, initial='')

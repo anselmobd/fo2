@@ -29,7 +29,7 @@ class PorDepositoForm(forms.Form):
 
     CHOICES = geral.functions.depositos_choices(
         cod_todos='999', descr_todos='--Todos--', cod_only='A00',
-        only=(101, 102, 122, 231), rest=True)
+        only=(101, 102, 103, 122, 231), rest=True)
     deposito = forms.ChoiceField(
         label='Depósito', choices=CHOICES, initial='999')
 
@@ -135,7 +135,7 @@ class ReferenciasEstoqueForm(
         O2FieldModeloForm2):
 
     CHOICES = geral.functions.depositos_choices(
-        cod_todos='A00', only=(101, 102, 122, 231))
+        cod_todos='A00', only=(101, 102, 103, 122, 231))
     deposito = forms.ChoiceField(
         label='Depósito',
         choices=CHOICES, initial='-')
@@ -189,7 +189,7 @@ class ConfrontaEstoqueForm(forms.Form):
         label='Cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
-    CHOICES = geral.functions.depositos_choices(only=(101, 102, 122, 231))
+    CHOICES = geral.functions.depositos_choices(only=(101, 102, 103, 122, 231))
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
         choices=CHOICES, initial='')
@@ -238,7 +238,7 @@ class EstoqueNaDataForm(forms.Form):
         widget=forms.TimeInput(attrs={'type': 'time'}))
 
     CHOICES = geral.functions.depositos_choices(
-        cod_only='A00', only=(101, 102, 122, 231))
+        cod_only='A00', only=(101, 102, 103, 122, 231))
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
         choices=CHOICES, initial='')
