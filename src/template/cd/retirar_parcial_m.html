@@ -36,7 +36,7 @@ table {
   <p class="erro">{{ erro }}</p>
 {% else %}
   {% if identificado %}
-    <p>Quant. <b>{{ quant }}</b> do lote <b>{{ identificado }}</b> retirada!</p>
+    <p>Quant. <b>{{ quant_retirar }}</b> do lote <b>{{ identificado }}</b> retirada!</p>
   {% elif lote %}
     {% if not local %}
       <p class="erro">O lote <b>{{ lote }}</b> não está no <b>CD</b>.</p>
