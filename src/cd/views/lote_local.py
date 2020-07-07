@@ -8,6 +8,7 @@ from django.views import View
 import lotes.models
 
 import cd.forms
+import cd.views.gerais
 
 
 class LoteLocal(PermissionRequiredMixin, View):
@@ -111,28 +112,7 @@ class LoteLocal(PermissionRequiredMixin, View):
         if not endereco:
             return context
 
-        lotes_no_local = lotes.models.Lote.objects.filter(
-            local=endereco).order_by(
-                '-local_at'
-                ).values(
-                    'op', 'lote', 'qtd_produzir',
-                    'referencia', 'cor', 'tamanho',
-                    'local_at', 'local_usuario__username')
-        if lotes_no_local:
-            q_itens = 0
-            for row in lotes_no_local:
-                q_itens += row['qtd_produzir']
-            context.update({
-                'q_lotes': len(lotes_no_local),
-                'q_itens': q_itens,
-                'headers': ('Bipado em', 'Bipado por',
-                            'Lote', 'Quant.',
-                            'Ref.', 'Cor', 'Tam.', 'OP'),
-                'fields': ('local_at', 'local_usuario__username',
-                           'lote', 'qtd_produzir',
-                           'referencia', 'cor', 'tamanho', 'op'),
-                'data': lotes_no_local,
-                })
+        context.update(cd.views.gerais.lista_lotes_em(endereco))
 
         return context
 
