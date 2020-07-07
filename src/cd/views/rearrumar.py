@@ -8,6 +8,7 @@ from django.views import View
 import lotes.models
 
 import cd.forms
+import cd.views.gerais
 
 
 class Rearrumar(PermissionRequiredMixin, View):
@@ -39,30 +40,7 @@ class Rearrumar(PermissionRequiredMixin, View):
             if not form.is_valid():
                 return context
 
-        data = lotes.models.Lote.objects.filter(
-            local=endereco
-        ).values(
-            'op', 'lote', 'qtd_produzir',
-            'referencia', 'cor', 'tamanho',
-            'local_at', 'local_usuario__username'
-        ).order_by('referencia', 'cor', 'ordem_tamanho', 'op', 'lote')
-
-        q_lotes = len(data)
-        q_itens = 0
-        for row in data:
-            q_itens += row['qtd_produzir']
-
-        context.update({
-            'q_lotes': q_lotes,
-            'q_itens': q_itens,
-            'headers': (
-                'Referência', 'Tamanho', 'Cor', 'Quant',
-                'OP', 'Lote', 'Em', 'Por'),
-            'fields': (
-                'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'op', 'lote', 'local_at', 'local_usuario__username'),
-            'data': data,
-        })
+        context.update(cd.views.gerais.lista_lotes_em(endereco))
 
         if request.POST.get("confirma"):
             lotes_recs = lotes.models.Lote.objects.filter(
