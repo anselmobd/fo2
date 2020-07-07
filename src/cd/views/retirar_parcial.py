@@ -9,6 +9,7 @@ import lotes.models
 from lotes.views.lote.conserto_lote import dict_conserto_lote
 
 import cd.forms
+import cd.views.gerais
 
 
 class RetirarParcial(PermissionRequiredMixin, View):
@@ -91,32 +92,7 @@ class RetirarParcial(PermissionRequiredMixin, View):
         if not endereco:
             return context
 
-        lotes_no_local = lotes.models.Lote.objects.filter(
-            local=endereco).order_by(
-                '-local_at'
-                ).values(
-                    'op', 'lote', 'qtd_produzir', 'qtd', 'conserto',
-                    'referencia', 'cor', 'tamanho',
-                    'local_at', 'local_usuario__username')
-        if lotes_no_local:
-            q_itens = 0
-            q_itens_end = 0
-            for row in lotes_no_local:
-                row['livre'] = row['qtd'] - row['conserto']
-                q_itens += row['qtd']
-                q_itens_end += row['conserto']
-            context.update({
-                'q_lotes': len(lotes_no_local),
-                'q_itens': q_itens,
-                'q_itens_end': q_itens_end,
-                'headers': ('Bipado em', 'Bipado por',
-                            'Lote', 'Q.Ori.', 'Q.Está.', 'Q.Livre', 'Q.End.',
-                            'Ref.', 'Cor', 'Tam.', 'OP'),
-                'fields': ('local_at', 'local_usuario__username',
-                           'lote', 'qtd_produzir', 'qtd', 'livre', 'conserto',
-                           'referencia', 'cor', 'tamanho', 'op'),
-                'data': lotes_no_local,
-                })
+        context.update(cd.views.gerais.lista_lotes_em(endereco))
 
         return context
 
