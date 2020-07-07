@@ -26,7 +26,7 @@
   <h3>{{ erro }}</h3>
 {% else %}
   {% if identificado %}
-    <h3>Lote <b>{{ identificado }}</b> retirado do <b>CD</b></h3>
+    <h3>Quant. <b>{{ quant }}</b> do lote <b>{{ identificado }}</b> retirada do <b>CD</b></h3>
   {% elif lote %}
     {% if not local %}
       <h3>O lote <b>{{ lote }}</b> não está no <b>CD</b>.</h3>
