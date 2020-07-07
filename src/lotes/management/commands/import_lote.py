@@ -43,6 +43,7 @@ class Command(BaseCommand):
                 + lo.QTDE_PECAS_PROG * 2
                 + lo.QTDE_EM_PRODUCAO_PACOTE * 3
                 + lo.QTDE_PECAS_PROD * 5
+                + lo.QTDE_CONSERTO * 7
                 )
               * (1 + lo.CODIGO_ESTAGIO)
               * (1 + mod(lo.ORDEM_CONFECCAO, 111))
@@ -112,6 +113,8 @@ class Command(BaseCommand):
               ELSE l.CODIGO_ESTAGIO END ESTAGIO
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN lf.QTDE_PECAS_PROD
               ELSE l.QTDE_EM_PRODUCAO_PACOTE END QTD
+            , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 0
+              ELSE l.QTDE_CONSERTO END CONSERTO
             FROM
             (
               SELECT
@@ -130,6 +133,7 @@ class Command(BaseCommand):
                   + le.QTDE_PECAS_PROG * 2
                   + le.QTDE_EM_PRODUCAO_PACOTE * 3
                   + le.QTDE_PECAS_PROD * 5
+                  + lo.QTDE_CONSERTO * 7
                   )
                 * (1 + le.CODIGO_ESTAGIO)
                 * (1 + mod(le.ORDEM_CONFECCAO, 111))
@@ -205,6 +209,10 @@ class Command(BaseCommand):
             alter = True
             lote.qtd = row['qtd']
             # self.stdout.write('qtd {}'.format(lote.qtd))
+        if lote.conserto != row['conserto']:
+            alter = True
+            lote.conserto = row['conserto']
+            # self.stdout.write('conserto {}'.format(lote.conserto))
         if lote.qtd_produzir != row['qtd_produzir']:
             alter = True
             lote.qtd_produzir = row['qtd_produzir']
