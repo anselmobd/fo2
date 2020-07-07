@@ -247,7 +247,7 @@ class OpPendenteForm(forms.Form):
             'colecao'), empty_label="(Todas)")
 
     CHOICES = [('-', 'Ambas (2 e 4)'),
-               ('2', '2 - Ordem cofecção gerada'),
+               ('2', '2 - Ordem confecção gerada'),
                ('4', '4 - Ordens em produção')]
     situacao = forms.ChoiceField(
         label='Situação', choices=CHOICES, initial='0')

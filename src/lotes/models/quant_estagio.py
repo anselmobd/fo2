@@ -99,7 +99,7 @@ def quant_estagio(
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE 1=1
-          AND o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
+          AND o.SITUACAO in (4, 2) -- Ordens em produção, Ordem confec. gerada
           {filtro_deposito} -- filtro_deposito
         --  AND l.PERIODO_PRODUCAO = 1921
         --  AND l.ORDEM_CONFECCAO = 01866
@@ -343,7 +343,7 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
          AND r.REFERENCIA = o.REFERENCIA_PECA
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-        WHERE o.SITUACAO in (4, 2) -- Ordens em produção, Ordem cofec. gerada
+        WHERE o.SITUACAO in (4, 2) -- Ordens em produção, Ordem confec. gerada
           {filtro_tipo_roteiro} -- filtro_tipo_roteiro
           {filtro_cnpj9} -- filtro_cnpj9
           {filtro_deposito} -- filtro_deposito
