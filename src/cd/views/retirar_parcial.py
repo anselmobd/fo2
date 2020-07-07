@@ -20,9 +20,10 @@ class RetirarParcial(PermissionRequiredMixin, View):
         self.Form_class = cd.forms.RetirarParcialForm
         if self.mobile:
             self.template_name = 'cd/retirar_parcial_m.html'
+            self.title_name = 'Retirar parcial'
         else:
             self.template_name = 'cd/retirar_parcial.html'
-        self.title_name = 'Retirar lote parcial'
+            self.title_name = 'Retirar lote parcial'
 
     def mount_context(self, request, form):
         cursor = connections['so'].cursor()

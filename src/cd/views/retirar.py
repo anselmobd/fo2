@@ -20,9 +20,10 @@ class Retirar(PermissionRequiredMixin, View):
         self.Form_class = cd.forms.RetirarForm
         if self.mobile:
             self.template_name = 'cd/retirar_m.html'
+            self.title_name = 'Retirar lote'
         else:
             self.template_name = 'cd/retirar.html'
-        self.title_name = 'Retirar lote inteiro'
+            self.title_name = 'Retirar lote inteiro'
 
     def mount_context(self, request, form):
         cursor = connections['so'].cursor()
