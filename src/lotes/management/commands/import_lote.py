@@ -96,7 +96,7 @@ class Command(BaseCommand):
 
     def get_lotes_op(self, op):
         cursor = connections['so'].cursor()
-        sql = '''
+        sql = f'''
             SELECT
               lote.OP
             , lote.PERIODO
@@ -137,7 +137,7 @@ class Command(BaseCommand):
               FROM PCPC_040 le -- lote estágio
               LEFT JOIN BASI_220 t
                 ON t.TAMANHO_REF = le.PROCONF_SUBGRUPO
-              WHERE le.ORDEM_PRODUCAO = %s
+              WHERE le.ORDEM_PRODUCAO = '{op}'
             --    AND le.ORDEM_CONFECCAO = 22
                 AND le.QTDE_PECAS_PROG IS NOT NULL
                 AND le.QTDE_PECAS_PROG <> 0
@@ -168,7 +168,7 @@ class Command(BaseCommand):
                     AND lf.SEQUENCIA_ESTAGIO = lote.ULTIMA_SEQ_ESTAGIO)
                  )
         '''
-        cursor.execute(sql, [op])
+        cursor.execute(sql)
         return rows_to_dict_list_lower(cursor)
 
     def set_lote(self, lote, row):
