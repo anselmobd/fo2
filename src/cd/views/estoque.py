@@ -81,49 +81,55 @@ class Estoque(View):
             headers = [
                 'Em', 'Por', 'Endereço', 'Lote',
                 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.', 'OP', 'Pedido',
-                'Estágio', 'Alter.', 'Qtd.']
+                'Estágio', 'Alter.', 'Qtd.', 'Q.Livre', 'Q.End.']
             fields = [
                 'local_at', 'local_usuario__username', 'local', 'lote',
                 'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op', 'pedido',
-                'estagio', 'qtd_dif', 'qtd']
+                'estagio', 'qtd_dif', 'qtd', 'livre', 'conserto']
         elif ordem == 'O':  # OP Referência Cor Tamanho Endereço Lote
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
             headers = [
                 'OP', 'Pedido', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
-                'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'Lote', 'Em',
+                'Estágio', 'Alter.', 'Qtd.', 'Q.Livre',
+                'Q.End.', 'Endereço', 'Lote', 'Em',
                 'Por']
             fields = [
                 'op', 'pedido', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd_dif', 'qtd', 'local', 'lote', 'local_at',
+                'estagio', 'qtd_dif', 'qtd', 'livre',
+                'conserto', 'local', 'lote', 'local_at',
                 'local_usuario__username']
         elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
             data_rec = data_rec.order_by(
                 'referencia', 'cor', 'ordem_tamanho', 'local', 'op', 'lote')
             headers = [
                 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
-                'Estágio', 'Alter.', 'Qtd.', 'Endereço', 'OP', 'Pedido',
+                'Estágio', 'Alter.', 'Qtd.', 'Q.Livre',
+                'Q.End.', 'Endereço', 'OP', 'Pedido',
                 'Lote', 'Em', 'Por']
             fields = [
                 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd_dif', 'qtd', 'local', 'op', 'pedido',
+                'estagio', 'qtd_dif', 'qtd', 'livre',
+                'conserto', 'local', 'op', 'pedido',
                 'lote', 'local_at', 'local_usuario__username']
         else:  # E: Endereço OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
             headers = [
                 'Endereço', 'OP', 'Pedido', 'Referência', 'Tamanho', 'Cor',
-                'Qtd.Ori.', 'Estágio', 'Alter.', 'Qtd.', 'Lote',
-                'Em', 'Por']
+                'Qtd.Ori.', 'Estágio', 'Alter.', 'Qtd.', 'Q.Livre',
+                'Q.End.', 'Lote', 'Em', 'Por']
             fields = [
                 'local', 'op', 'pedido', 'referencia', 'tamanho', 'cor',
-                'qtd_produzir', 'estagio', 'qtd_dif', 'qtd', 'lote',
-                'local_at', 'local_usuario__username']
+                'qtd_produzir', 'estagio', 'qtd_dif', 'qtd', 'livre',
+                'conserto', 'lote', 'local_at', 'local_usuario__username']
 
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
             'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio',
-            'create_at', 'update_at')
+            'create_at', 'update_at', 'conserto')
+        for row in data:
+            row['livre'] = row['qtd'] - row['conserto']
 
         quant_lotes = len(data)
         paginator = Paginator(data, linhas_pagina)
