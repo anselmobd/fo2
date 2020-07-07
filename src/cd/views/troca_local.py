@@ -123,18 +123,18 @@ class TrocaLocal(PermissionRequiredMixin, View):
         if endereco_de[1] == '%':
             context.update({
                 'headers': ('Endereço', 'Referência', 'Tamanho', 'Cor',
-                            'Quant', 'OP', 'Lote', 'Em',
+                            'OP', 'Lote', 'Em',
                             'Por'),
                 'fields': ('local', 'referencia', 'tamanho', 'cor',
-                           'qtd_produzir', 'op', 'lote', 'local_at',
+                           'op', 'lote', 'local_at',
                            'local_usuario__username'),
                 })
         else:
             context.update({
-                'headers': ('Referência', 'Tamanho', 'Cor', 'Quant',
+                'headers': ('Referência', 'Tamanho', 'Cor',
                             'OP', 'Lote', 'Em',
                             'Por'),
-                'fields': ('referencia', 'tamanho', 'cor', 'qtd_produzir',
+                'fields': ('referencia', 'tamanho', 'cor',
                            'op', 'lote', 'local_at',
                            'local_usuario__username'),
                 })

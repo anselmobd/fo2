@@ -69,7 +69,7 @@
         <h4>Endereço <b>novo</b> (<b>{{ endereco_para }}</b>) contém
       {% endif %}
     {% endif %}
-    <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h4>
+    <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}.</h4>
     <table>
       {% include "layout/html_thead.html" with data=headers only %}
       {% include "layout/html_tbody.html" with fields=fields data=data only %}
