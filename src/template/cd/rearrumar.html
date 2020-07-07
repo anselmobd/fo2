@@ -37,7 +37,11 @@
       {% endif %}
     {% endif %}
     {% if data %}
-      <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h4>
+      <h3>End. <b>{{ form.endereco.value }}</b>: <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }} com <b>{{ q_itens }}</b> peça{{ q_itens_end|pluralize }}
+        {% if q_itens != q_itens_end %}
+          no estágio, sendo <b>{{ q_itens_end }}</b> endereçada{{ q_itens_end|pluralize }}
+        {% endif %}
+      </h3>
       <table>
         {% include "layout/html_thead.html" with data=headers only %}
         {% include "layout/html_tbody.html" with fields=fields data=data only %}
