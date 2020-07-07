@@ -26,7 +26,8 @@ table {
     {% csrf_token %}
     {{ form.as_p }}
     {% if confirma %}
-      <p>Retirar <b>{{ quant_retirar }} peça{{ quant_retirar|pluralize }}</b> do lote?</p>
+      <p>Lote identificado: <b>{{ lote }}</b></p>
+      <p>Retirar <b>{{ quant_retirar }}</b> peça{{ quant_retirar|pluralize }} de <b>{{ local }}</b>?</p>
       <input type="submit" name="confirma" value="Confirma"/>
     {% else %}
       <input type="submit" name="retira" value="Retira"/>

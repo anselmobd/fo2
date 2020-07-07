@@ -16,7 +16,7 @@
     {{ form.as_p }}
     {% if confirma %}
       <h3>Lote identificado: <b>{{ lote }}</b></h3>
-      <h3>Retirar <b>{{ quant_retirar }} peça{{ quant_retirar|pluralize }}</b> do lote no CD?</h3>
+      <h3>Retirar <b>{{ quant_retirar }}</b> peça{{ quant_retirar|pluralize }} do endereço <b>{{ local }}</b>?</h3>
       <input type="submit" name="confirma" value="Confirma"/>
     {% else %}
       <input type="submit" name="retira" value="Retira"/>
