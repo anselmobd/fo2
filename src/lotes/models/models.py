@@ -170,6 +170,8 @@ class Lote(models.Model):
         db_index=True, default=0)
     qtd = models.IntegerField(
         default=0, verbose_name='quantidade em produçao ou produzida')
+    conserto = models.IntegerField(
+        default=0, verbose_name='quantidade em conserto')
     create_at = models.DateTimeField(
         db_index=True, null=True, blank=True, verbose_name='criado em')
     update_at = models.DateTimeField(
