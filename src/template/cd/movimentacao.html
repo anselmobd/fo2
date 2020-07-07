@@ -8,18 +8,18 @@
     </p>
   </div>
   <div class="rightcol50">
-    <button class="back" onclick="location.href='{% url 'cd:index' %}';">CD</button>
+    <a class="botao back" href="{% url 'cd:index' %}">CD</a>
   </div>
 </div>
 <hr>
 <div class="hspace"></div>
-<button onclick="location.href='{% url 'cd:lote_local' %}';">Inventariar / Endereçar</button>
+<a class="botao regular" href="{% url 'cd:lote_local' %}">Inventariar / Endereçar</a>
 <div class="hspace"></div>
-<button onclick="location.href='{% url 'cd:rearrumar' %}';">Rearrumar pallet</button>
+<a class="botao regular" href="{% url 'cd:rearrumar' %}">Rearrumar pallet</a>
 <div class="hspace"></div>
-<button onclick="location.href='{% url 'cd:retirar_m' %}';">Retirar lote inteiro</button>
+<a class="botao regular" href="{% url 'cd:retirar_m' %}">Retirar lote inteiro</a>
 <div class="hspace"></div>
-<button onclick="location.href='{% url 'cd:retirar_parcial_m' %}';">Retirar lote parcial</button>
+<a class="botao regular" href="{% url 'cd:retirar_parcial_m' %}">Retirar lote parcial</a>
 <div class="hspace"></div>
-<button onclick="location.href='{% url 'cd:troca_local' %}';">Troca de endereço de pallet</button>
+<a class="botao regular" href="{% url 'cd:troca_local' %}">Troca de endereço de pallet</a>
 {% endblock %}
