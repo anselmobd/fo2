@@ -13,10 +13,14 @@ import cd.forms
 
 class RetirarParcial(PermissionRequiredMixin, View):
 
-    def __init__(self):
+    def __init__(self, mobile=False):
+        self.mobile = mobile
         self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = cd.forms.RetirarParcialForm
-        self.template_name = 'cd/retirar_parcial.html'
+        if self.mobile:
+            self.template_name = 'cd/retirar_parcial_m.html'
+        else:
+            self.template_name = 'cd/retirar_parcial.html'
         self.title_name = 'Retirar lote parcial'
 
     def mount_context(self, request, form):
@@ -127,3 +131,9 @@ class RetirarParcial(PermissionRequiredMixin, View):
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class RetirarParcialMobile(RetirarParcial):
+
+    def __init__(self, mobile=True):
+        super(RetirarParcialMobile, self).__init__(mobile=mobile)
