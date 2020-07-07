@@ -133,7 +133,7 @@ class Command(BaseCommand):
                   + le.QTDE_PECAS_PROG * 2
                   + le.QTDE_EM_PRODUCAO_PACOTE * 3
                   + le.QTDE_PECAS_PROD * 5
-                  + lo.QTDE_CONSERTO * 7
+                  + le.QTDE_CONSERTO * 7
                   )
                 * (1 + le.CODIGO_ESTAGIO)
                 * (1 + mod(le.ORDEM_CONFECCAO, 111))
