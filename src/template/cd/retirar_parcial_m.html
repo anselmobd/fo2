@@ -1,0 +1,94 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<h4 class="visible-xs">{{ titulo }}</h4>
+<form action="{% url 'cd:retirar_parcial' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if confirma %}
+      <h3>Lote identificado: <b>{{ lote }}</b></h3>
+      <h3>Retirar <b>{{ quant_retirar }} peça{{ quant_retirar|pluralize }}</b> do lote no CD?</h3>
+      <input type="submit" name="confirma" value="Confirma"/>
+    {% else %}
+      <input type="submit" name="retira" value="Retira"/>
+    {% endif %}
+</form>
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% else %}
+  {% if identificado %}
+    <h3>Lote <b>{{ identificado }}</b> retirado do <b>CD</b></h3>
+  {% elif lote %}
+    {% if not local %}
+      <h3>O lote <b>{{ lote }}</b> não está no <b>CD</b>.</h3>
+    {% endif %}
+  {% endif %}
+  {% if referencia %}
+    {% if not lote and not identificado %}
+      <h3>Lote: <b>{{ lote_referencia }}</b></h3>
+    {% endif %}
+    <h3>Item: <b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></h3>
+    <h3>Qtd.: <b>{{ qtd }}</b>&nbsp;&nbsp;&nbsp;&nbsp;OP: <b>{{ op }}</b></h3>
+    {% if local %}
+      {% if identificado %}
+        <h3>Local de retirada: <b>{{ local }}</b></h3>
+        <h3>Qtd. retirada: <b>{{ quant_retirar }}</b></h3>
+      {% else %}
+        <h3>Local: <b>{{ local }}</b></h3>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  {% if concerto_erro %}
+    <h3>{{ concerto_erro }}</h3>
+  {% endif %}
+  {% if data %}
+    <hr>
+    <h3>Endereço <b>{{ local }}</b> {% if identificado %}ainda {% endif %}contém <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}, com um total de <b>{{ q_itens }}</b> peça{{ q_itens|pluralize }}.</h3>
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock content %}
+
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_lote');
+  inp.select();
+
+  // accept only digits and enter
+  inp.addEventListener("keypress", function (evt) {
+    // console.log(evt.which)
+    if ((evt.which < 48 || evt.which > 57) && evt.which != 13) {
+      evt.preventDefault();
+    }
+  });
+
+  inp.addEventListener('paste', function(event) {
+    var pasted = event.clipboardData.getData('text');
+    event.preventDefault();
+    var limpo = pasted.replace(/\D/g, '');
+    if (inp.type == "text") {
+      inp.setRangeText(limpo);
+    } else {
+      inp.value = limpo;
+    }
+  });
+
+  {% if q_lotes %}
+    var snd = new Audio("/media/number/"+{{ q_lotes }}+".mp3");
+    snd.play();
+  {% endif %}
+
+</script>
+{% endblock javascript %}

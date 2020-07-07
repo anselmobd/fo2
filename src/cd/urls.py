@@ -79,6 +79,8 @@ urlpatterns = [
 
     url(r'^retirar_parcial/$',
         views.RetirarParcial.as_view(), name='retirar_parcial'),
+    url(r'^retirar_parcial/m/$',
+        views.RetirarParcialMobile.as_view(), name='retirar_parcial_m'),
 
     url(r'^movimentacao/$', views.movimentacao, name='movimentacao'),
 
