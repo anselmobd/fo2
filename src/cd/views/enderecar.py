@@ -57,9 +57,11 @@ class Enderecar(PermissionRequiredMixin, View):
 
         estagios_aceitos = [63]
         if lote_rec.estagio not in estagios_aceitos:
+            def e999(e):
+                return 'finalizado' if e == 999 else e
             context.update({
-                'erroestagio': estagios_aceitos,
-                'estagio': lote_rec.estagio,
+                'erroestagio': map(e999, estagios_aceitos),
+                'estagio': e999(lote_rec.estagio),
                 })
             return context
 
