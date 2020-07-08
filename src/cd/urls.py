@@ -87,4 +87,6 @@ urlpatterns = [
     url(r'^etiq_solicitacoes/?$',
         views.EtiquetasSolicitacoes.as_view(), name='etiq_solicitacoes'),
 
+    url(r'^enderecar/$', views.Enderecar.as_view(), name='enderecar'),
+
 ]
