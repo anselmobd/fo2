@@ -1,3 +1,4 @@
+from .enderecar import *
 from .endereco_lote import *
 from .estoque import *
 from .etiq_solicitacoes import *

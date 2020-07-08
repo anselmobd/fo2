@@ -1,0 +1,92 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<h4 class="visible-xs">{{ titulo }}</h4>
+<form action="{% url 'cd:enderecar' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if confirma %}
+      {% if local %}
+        {% if local != endereco%}
+          <h3>Lote identificado: <b>{{ lote }}</b></h3>
+          <h3><b>Endereço atual: {{ local }}</b></h3>
+          {% if endereco %}
+            <h3><b>Trocar</b> para endereço <b>{{ endereco }}</b>?</h3>
+          {% else %}
+            <h3><b>Tirar</b> o lote do <b>CD</b>?</h3>
+          {% endif %}
+        {% endif %}
+      {% else %}
+        <h3>Lote identificado: <b>{{ lote }}</b></h3>
+        <h3>Colocar no endereço <b>{{ endereco }}</b>?</h3>
+      {% endif %}
+      <input type="submit" name="confirma" value="Confirma"/>
+    {% else %}
+      <input type="submit" name="identifica" value="Identifica"/>
+    {% endif %}
+</form>
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_lote');
+  inp.select();
+</script>
+{% endblock javascript %}
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% else %}
+  {% if identificado %}
+    {% if endereco %}
+      <h3>Lote <b>{{ identificado }}</b> colocado no endereço <b>{{ endereco }}</b></h3>
+    {% else %}
+      <h3>Lote <b>{{ identificado }}</b> retirado do <b>CD</b></h3>
+    {% endif %}
+  {% elif lote %}
+    {% if local == endereco %}
+      {% if local %}
+        <h3>Endereço <b>{{ local }}</b> já é o atual.</h3>
+      {% else %}
+        <h3>O lote não está no <b>CD</b>.</h3>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  {% if erroestagio %}
+    <h3>Não é possível inventariar esse lote!</h3>
+    <h3>Estágio{{ erroestagio|length|pluralize }} aceito{{ erroestagio|length|pluralize }}: {{ erroestagio|join:", " }}</h3>
+    <h3>Estágio do lote: {{ estagio|upper }}</h3>
+  {% endif %}
+  {% if referencia %}
+    <h3>Item: <b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></h3>
+    <h3>Qtd.: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;&nbsp;&nbsp;OP: <b>{{ op }}</b></h3>
+  {% endif %}
+  {% if data %}
+    <hr>
+    <h3>End. <b>{{ local }}</b>: <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }} com <b>{{ q_itens }}</b> peça{{ q_itens_end|pluralize }}
+      {% if q_itens != q_itens_end %}
+        no estágio, sendo <b>{{ q_itens_end }}</b> endereçada{{ q_itens_end|pluralize }}
+      {% endif %}
+    </h3>
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+<script>
+  function stn(n) {
+    var snd = new Audio("/media/number/"+n+".mp3");
+    snd.play();
+  }
+  {% if q_lotes %}
+    stn({{ q_lotes }});
+  {% endif %}
+</script>
+{% endblock content %}
