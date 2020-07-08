@@ -291,7 +291,7 @@ class TrocaEnderecoForm(forms.Form):
         return self.clean_endereco('endereco_para')
 
     def clean(self):
-        cleaned_data = super(TrocaLocalForm, self).clean()
+        cleaned_data = super(TrocaEnderecoForm, self).clean()
         self.valid_endereco('antigo', cleaned_data['endereco_de'])
         self.valid_endereco('novo', cleaned_data['endereco_para'])
         if cleaned_data['endereco_de'] == cleaned_data['endereco_para']:
