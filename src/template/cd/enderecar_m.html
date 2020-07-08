@@ -27,10 +27,12 @@ table {
     {{ form.as_p }}
     {% if confirma %}
       {% if local %}
+        <p>Lote identificado: <b>{{ lote }}</b></p>
+        <p>Endereço atual: <b>{{ local }}</b></p>
         {% if local != endereco%}
-          <p>Lote identificado: <b>{{ lote }}</b></p>
-          <p><b>Endereço atual: {{ local }}</b></p>
           <p><b>Trocar</b> para <b>{{ endereco }}</b>?</p>
+        {% else %}
+          <p><b>Endereçar</b> qtd. livre <b>{{ qtd_livre }}</b>?</p>
         {% endif %}
       {% else %}
         <p>Lote identificado: <b>{{ lote }}</b></p>
@@ -45,7 +47,11 @@ table {
   <p class="erro">{{ erro }}</p>
 {% else %}
   {% if identificado %}
-    <p>Lote <b>{{ identificado }}</b> colocado no endereço <b>{{ endereco }}</b></p>
+    {% if local == endereco %}
+      <p>Q. livre do lote <b>{{ identificado }}</b> colocada no endereço <b>{{ endereco }}</b></p>
+    {% else %}
+      <p>Lote <b>{{ identificado }}</b> colocado no endereço <b>{{ endereco }}</b></p>
+    {% endif %}
   {% elif lote %}
     {% if local == endereco %}
       <p>Endereço <b>{{ local }}</b> já é o atual.</p>
@@ -57,8 +63,8 @@ table {
     <p>Estágio do lote: {{ estagio|upper }}</p>
   {% endif %}
   {% if referencia %}
-    <p><b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></p>
-    <p>Q: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;OP: <b>{{ op }}</b></p>
+    <p><b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b>&nbsp;&nbsp;OP: <b>{{ op }}</b></p>
+    <p>Q. orig.: <b>{{ qtd_produzir }}</b>&nbsp;&nbsp;Q. livre: <b>{{ qtd_livre }}</b></p>
   {% endif %}
   {% if data %}
     <hr>
