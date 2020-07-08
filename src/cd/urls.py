@@ -73,6 +73,8 @@ urlpatterns = [
         views.HistoricoLote.as_view(), name='historico_lote'),
 
     url(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
+    url(r'^rearrumar/m/$',
+        views.RearrumarMobile.as_view(), name='rearrumar_m'),
 
     url(r'^retirar/$', views.Retirar.as_view(), name='retirar'),
     url(r'^retirar/m/$', views.RetirarMobile.as_view(), name='retirar_m'),

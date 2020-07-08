@@ -13,10 +13,14 @@ import cd.views.gerais
 
 class Rearrumar(PermissionRequiredMixin, View):
 
-    def __init__(self):
+    def __init__(self, mobile=False):
+        self.mobile = mobile
         self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = cd.forms.RearrumarForm
-        self.template_name = 'cd/rearrumar.html'
+        if self.mobile:
+            self.template_name = 'cd/rearrumar.html'
+        else:
+            self.template_name = 'cd/rearrumar.html'
         self.title_name = 'Rearrumar pallet na rua'
 
     def mount_context(self, request, form):
@@ -72,3 +76,9 @@ class Rearrumar(PermissionRequiredMixin, View):
             context.update(data)
         context['form'] = form
         return render(request, self.template_name, context)
+
+
+class RearrumarMobile(Rearrumar):
+
+    def __init__(self, mobile=True):
+        super(RearrumarMobile, self).__init__(mobile=mobile)
