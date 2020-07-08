@@ -1,0 +1,79 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<h3 class="visible-xs">Trocar endereço</h3>
+<form action="{% url 'cd:troca_local' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if confirma %}
+      {% if endereco_para == 'SAI' %}
+        <h2>ATENÇÃO!</h2>
+        {% if rua %}
+          <h2>Tirando do CD <b>todos os lotes da <span style="color: red">rua {{rua}}</span></b></h2>
+          <input type="submit" name="confirma" value="Confirma tirar do CD todos os lotes rua {{rua}}"/>
+        {% else %}
+          <h2>Tirando do CD <b>todos os lotes do endereço {{ endereco_de }}!</b></h2>
+          <input type="submit" name="confirma" value="Confirma tirar do CD todos esses lotes"/>
+        {% endif %}
+      {% else %}
+        <input type="submit" name="confirma" value="Confirma troca"/>
+      {% endif %}
+    {% else %}
+      <input type="submit" name="troca" value="Troca"/>
+    {% endif %}
+</form>
+<br/>
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_endereco_de');
+  inp.select();
+</script>
+{% endblock javascript %}
+{% if erro %}
+  <h3>{{ erro }}</h3>
+{% elif endereco_de %}
+  {% if endereco_para == 'SAI' %}
+    {% if rua %}
+      <h4>Tirar do CD todos os lotes da <span style="color: red"><b>rua {{ rua }}</b></span></h4>
+    {% else %}
+      <h4>Tirar do CD todos os lotes do <b>endereço {{ endereco_de }}</b></h4>
+    {% endif %}
+  {% else %}
+    <h4>Trocar endereço de lotes de <b>{{ endereco_de }}</b> para <b>{{ endereco_para }}</b></h4>
+  {% endif %}
+  {% if data %}
+    {% if confirma %}
+      <hr />
+      {% if rua %}
+        <h4><span style="color: red"><b>Rua {{ rua }}</b></span> contém
+      {% else %}
+        <h4>Endereço <b>antigo</b> (<b>{{ endereco_de }}</b>) contém
+      {% endif %}
+    {% else %}
+      {% if endereco_para == 'SAI' %}
+        <h3>Retirada de lotes efetuada!</h3>
+        <hr />
+        <h4>Retirado{{ q_lotes|pluralize }}
+      {% else %}
+        <h3>Troca de endereços efetuada!</h3>
+        <hr />
+        <h4>Endereço <b>novo</b> (<b>{{ endereco_para }}</b>) contém
+      {% endif %}
+    {% endif %}
+    <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}.</h4>
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock content %}
