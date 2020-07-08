@@ -15,10 +15,10 @@ class RearrumarForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         CHOICES = [
-            ('RAB', 'Rua das estantes A e B'),
-            ('RC', 'Rua da estante C'),
-            ('RDE', 'Rua das estantes D e E'),
-            ('RFG', 'Rua das estantes F e G'),
+            ('RAB', 'Rua AB (das estantes A e B)'),
+            ('RC', 'Rua C (da estante C)'),
+            ('RDE', 'Rua DE (das estantes D e E)'),
+            ('RFG', 'Rua FG (das estantes F e G)'),
         ]
         self.fields['rua'] = forms.ChoiceField(
             choices=CHOICES,
