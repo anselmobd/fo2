@@ -15,6 +15,7 @@ from .retirar_parcial import *
 from .solicita import *
 from .solicitacao_detalhe import *
 from .solicitacoes import *
+from .troca_endereco import *
 from .troca_local import *
 from .views import *
 from .visao_cd import *
