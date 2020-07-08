@@ -15,7 +15,7 @@ class TrocaEndereco(PermissionRequiredMixin, View):
     def __init__(self, mobile=False):
         self.mobile = mobile
         self.permission_required = 'lotes.can_relocate_lote'
-        self.Form_class = cd.forms.TrocaLocalForm
+        self.Form_class = cd.forms.TrocaEnderecoForm
         if self.mobile:
             self.template_name = 'cd/troca_endereco_m.html'
         else:
@@ -23,30 +23,19 @@ class TrocaEndereco(PermissionRequiredMixin, View):
         self.title_name = 'Trocar endereço'
 
     def get_lotes_no_local(self, endereco, count=False):
-        if endereco[1] == '%':
-            lotes_no_local = lotes.models.Lote.objects.filter(
-                local__startswith=endereco[0])
-        else:
-            lotes_no_local = lotes.models.Lote.objects.filter(
-                local=endereco)
+        lotes_no_local = lotes.models.Lote.objects.filter(
+            local=endereco)
+
         if count:
             return lotes_no_local.count()
-        if endereco[1] == '%':
-            lotes_no_local = lotes_no_local.values(
-                        'local', 'op', 'lote', 'qtd_produzir',
-                        'referencia', 'cor', 'tamanho',
-                        'local_at', 'local_usuario__username')
-            lotes_no_local = lotes_no_local.order_by(
-                'local', 'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
-                )
-        else:
-            lotes_no_local = lotes_no_local.values(
-                        'op', 'lote', 'qtd_produzir',
-                        'referencia', 'cor', 'tamanho',
-                        'local_at', 'local_usuario__username')
-            lotes_no_local = lotes_no_local.order_by(
-                'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
-                )
+
+        lotes_no_local = lotes_no_local.values(
+                    'op', 'lote', 'qtd_produzir',
+                    'referencia', 'cor', 'tamanho',
+                    'local_at', 'local_usuario__username')
+        lotes_no_local = lotes_no_local.order_by(
+            'referencia', 'cor', 'ordem_tamanho', 'op', 'lote'
+            )
         return lotes_no_local
 
     def mount_context(self, request, form):
@@ -55,14 +44,6 @@ class TrocaEndereco(PermissionRequiredMixin, View):
 
         context = {'endereco_de': endereco_de,
                    'endereco_para': endereco_para}
-
-        if endereco_de[1] == '%':
-            if has_permission(request, 'lotes.can_uninventorize_road'):
-                context.update({'rua': endereco_de[0]})
-            else:
-                context['erro'] = \
-                    'Usuário não tem direito de tirar do CD uma rua inteira.'
-                return context
 
         count_lotes_de = self.get_lotes_no_local(endereco_de, count=True)
         if count_lotes_de == 0:
@@ -74,7 +55,6 @@ class TrocaEndereco(PermissionRequiredMixin, View):
             context.update({'erro': 'Endereço novo NÃO está vazio'})
             return context
 
-        q_lotes = 0
         if request.POST.get("troca"):
             context.update({'confirma': True})
             busca_endereco = endereco_de
@@ -91,30 +71,19 @@ class TrocaEndereco(PermissionRequiredMixin, View):
                 form.data['endereco_para'] = None
                 return context
 
-            if endereco_para == 'SAI':
-                lotes_no_local = self.get_lotes_no_local(endereco_de)
-                q_lotes = len(lotes_no_local)
+            lotes_recs = lotes.models.Lote.objects.filter(
+                local=endereco_de)
 
-            if endereco_de[1] == '%':
-                lotes_recs = lotes.models.Lote.objects.filter(
-                    local__startswith=endereco_de[0])
-            else:
-                lotes_recs = lotes.models.Lote.objects.filter(
-                    local=endereco_de)
             for lote in lotes_recs:
-                if endereco_para == 'SAI':
-                    lote.local = None
-                else:
-                    lote.local = endereco_para
+                lote.local = endereco_para
                 lote.local_usuario = request.user
                 lote.save()
             form.data['endereco_de'] = None
             form.data['endereco_para'] = None
             busca_endereco = endereco_para
 
-        if q_lotes == 0:
-            lotes_no_local = self.get_lotes_no_local(busca_endereco)
-            q_lotes = len(lotes_no_local)
+        lotes_no_local = self.get_lotes_no_local(busca_endereco)
+        q_lotes = len(lotes_no_local)
 
         q_itens = 0
         for row in lotes_no_local:
@@ -124,24 +93,14 @@ class TrocaEndereco(PermissionRequiredMixin, View):
             'q_itens': q_itens,
             'data': lotes_no_local,
             })
-        if endereco_de[1] == '%':
-            context.update({
-                'headers': ('Endereço', 'Referência', 'Tamanho', 'Cor',
-                            'OP', 'Lote', 'Em',
-                            'Por'),
-                'fields': ('local', 'referencia', 'tamanho', 'cor',
-                           'op', 'lote', 'local_at',
-                           'local_usuario__username'),
-                })
-        else:
-            context.update({
-                'headers': ('Referência', 'Tamanho', 'Cor',
-                            'OP', 'Lote', 'Em',
-                            'Por'),
-                'fields': ('referencia', 'tamanho', 'cor',
-                           'op', 'lote', 'local_at',
-                           'local_usuario__username'),
-                })
+        context.update({
+            'headers': ('Referência', 'Tamanho', 'Cor',
+                        'OP', 'Lote', 'Em',
+                        'Por'),
+            'fields': ('referencia', 'tamanho', 'cor',
+                       'op', 'lote', 'local_at',
+                       'local_usuario__username'),
+            })
 
         return context
 
