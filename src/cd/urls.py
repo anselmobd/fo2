@@ -88,5 +88,6 @@ urlpatterns = [
         views.EtiquetasSolicitacoes.as_view(), name='etiq_solicitacoes'),
 
     url(r'^enderecar/$', views.Enderecar.as_view(), name='enderecar'),
+    url(r'^enderecar/m/$', views.EnderecarMobile.as_view(), name='enderecar_m'),
 
 ]
