@@ -19,11 +19,7 @@
         {% if local != endereco%}
           <h3>Lote identificado: <b>{{ lote }}</b></h3>
           <h3><b>Endereço atual: {{ local }}</b></h3>
-          {% if endereco %}
-            <h3><b>Trocar</b> para endereço <b>{{ endereco }}</b>?</h3>
-          {% else %}
-            <h3><b>Tirar</b> o lote do <b>CD</b>?</h3>
-          {% endif %}
+          <h3><b>Trocar</b> para endereço <b>{{ endereco }}</b>?</h3>
         {% endif %}
       {% else %}
         <h3>Lote identificado: <b>{{ lote }}</b></h3>
@@ -44,18 +40,10 @@
   <h3>{{ erro }}</h3>
 {% else %}
   {% if identificado %}
-    {% if endereco %}
-      <h3>Lote <b>{{ identificado }}</b> colocado no endereço <b>{{ endereco }}</b></h3>
-    {% else %}
-      <h3>Lote <b>{{ identificado }}</b> retirado do <b>CD</b></h3>
-    {% endif %}
+    <h3>Lote <b>{{ identificado }}</b> colocado no endereço <b>{{ endereco }}</b></h3>
   {% elif lote %}
     {% if local == endereco %}
-      {% if local %}
-        <h3>Endereço <b>{{ local }}</b> já é o atual.</h3>
-      {% else %}
-        <h3>O lote não está no <b>CD</b>.</h3>
-      {% endif %}
+      <h3>Endereço <b>{{ local }}</b> já é o atual.</h3>
     {% endif %}
   {% endif %}
   {% if erroestagio %}
