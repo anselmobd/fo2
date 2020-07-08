@@ -40,6 +40,7 @@ class Enderecar(PermissionRequiredMixin, View):
             cursor, periodo, ordem_confeccao)
 
         lote_rec = lotes.models.Lote.objects.get(lote=lote)
+        qtd_livre = lote_rec.qtd - lote_rec.conserto
 
         if lote_rec.referencia >= 'C0000':
             context.update({
@@ -53,6 +54,7 @@ class Enderecar(PermissionRequiredMixin, View):
             'tamanho': lote_rec.tamanho,
             'qtd_produzir': lote_rec.qtd_produzir,
             'local': lote_rec.local,
+            'qtd_livre': qtd_livre,
             })
 
         estagios_aceitos = [63]
@@ -79,6 +81,25 @@ class Enderecar(PermissionRequiredMixin, View):
                             'Identifique o lote novamente.'})
                 return context
 
+            data = dict_conserto_lote(
+                request, lote, '63', 'in', qtd_livre)
+
+            level = 0
+            if data['error_level'] > 0:
+                level = data['error_level']
+                erro = data['msg']
+                context.update({
+                    'concerto_erro':
+                        f'Erro ao inserir {qtd_livre} '
+                        f'peça{"s" if qtd_livre > 1 else ""} no '
+                        f'concerto: {level} - "{erro}"',
+                })
+                if level not in [1, 2, 3]:
+                    return context
+
+            if level == 0:
+                context['qtd_livre'] = 0
+                lote_rec.conserto += qtd_livre
             lote_rec.local = endereco
             lote_rec.local_usuario = request.user
             lote_rec.save()
@@ -86,7 +107,7 @@ class Enderecar(PermissionRequiredMixin, View):
             context['identificado'] = identificado
         else:
             context['lote'] = lote
-            if lote_rec.local != endereco:
+            if lote_rec.local != endereco or qtd_livre != 0:
                 context['confirma'] = True
                 form.data['identificado'] = form.data['lote']
                 form.data['end_conf'] = form.data['endereco']
