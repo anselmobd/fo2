@@ -22,52 +22,29 @@ table {
   </div>
 </div>
 <hr>
-<form action="{% url 'cd:retirar_parcial_m' %}" method="post">
+<form action="{% url 'cd:troca_endereco_m' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     {% if confirma %}
-      <p>Lote identificado: <b>{{ lote }}</b></p>
-      <p>Retirar <b>{{ quant_retirar }}</b> peça{{ quant_retirar|pluralize }} de <b>{{ local }}</b>?</p>
-      <input type="submit" name="confirma" value="Confirma"/>
+      <input type="submit" name="confirma" value="Confirma troca"/>
     {% else %}
-      <input type="submit" name="retira" value="Retira"/>
+      <input type="submit" name="troca" value="Troca"/>
     {% endif %}
 </form>
 {% if erro %}
   <p class="erro">{{ erro }}</p>
-{% else %}
-  {% if identificado %}
-    <p>Quant. <b>{{ quant_retirar }}</b> do lote <b>{{ identificado }}</b> retirada!</p>
-  {% elif lote %}
-    {% if not local %}
-      <p class="erro">O lote <b>{{ lote }}</b> não está no <b>CD</b>.</p>
-    {% endif %}
-  {% endif %}
-  {% if referencia %}
-    {% if not lote and not identificado %}
-      <p>Lote: <b>{{ lote_referencia }}</b></p>
-    {% endif %}
-    <p><b>1.{{ referencia }}.{{ tamanho }}.{{ cor }}</b></p>
-    <p>Q: <b>{{ qtd }}</b>&nbsp;&nbsp;OP: <b>{{ op }}</b></p>
-    {% if local %}
-      {% if identificado %}
-        <p>Retirado de: <b>{{ local }}</b></p>
-        <p>Qtd. retirada: <b>{{ quant_retirar }}</b></p>
-      {% else %}
-        <p>Local: <b>{{ local }}</b></p>
-      {% endif %}
-    {% endif %}
-  {% endif %}
-  {% if concerto_erro %}
-    <p class="erro">{{ concerto_erro }}</p>
-  {% endif %}
+{% elif endereco_de %}
+  <p>Trocar endereço de lotes de <b>{{ endereco_de }}</b> para <b>{{ endereco_para }}</b></p>
   {% if data %}
-    <hr>
-    <p>End. <b>{{ local }}</b>: <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }} com <b>{{ q_itens }}</b> peça{{ q_itens_end|pluralize }}
-      {% if q_itens != q_itens_end %}
-        no estágio, sendo <b>{{ q_itens_end }}</b> endereçada{{ q_itens_end|pluralize }}
-      {% endif %}
-    </p>
+    {% if confirma %}
+      <hr />
+      <p>Endereço <b>antigo</b> (<b>{{ endereco_de }}</b>) contém
+    {% else %}
+      <p>Troca de endereços efetuada!</p>
+      <hr />
+      <p>Endereço <b>novo</b> (<b>{{ endereco_para }}</b>) contém
+    {% endif %}
+    <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }}.</p>
     <button class="back link" onclick="javascript:showHideLista();">
       <svg id="lista_fecha" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"><path d="M14.83 30.83L24 21.66l9.17 9.17L36 28 24 16 12 28z"/></svg>
       <svg id="lista_abre" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"><path d="M14.83 16.42L24 25.59l9.17-9.17L36 19.25l-12 12-12-12z"/></svg>
@@ -82,7 +59,7 @@ table {
 
 {% block javascript %}
 <script>
-  var inp = document.getElementById('id_lote');
+  var inp = document.getElementById('id_endereco_de');
   inp.select();
 
   {% if data %}
