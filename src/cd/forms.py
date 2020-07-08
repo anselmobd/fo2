@@ -253,6 +253,53 @@ class TrocaLocalForm(forms.Form):
         return cleaned_data
 
 
+class TrocaEnderecoForm(forms.Form):
+    endereco_de = forms.CharField(
+        label='Endereço antigo', min_length=2, max_length=4,
+        widget=forms.TextInput(attrs={'size': 4}))
+    endereco_para = forms.CharField(
+        label='Endereço novo', min_length=2, max_length=4,
+        widget=forms.TextInput(attrs={'size': 4}))
+
+    identificado_de = forms.CharField(
+        label='identificado de', required=False,
+        widget=forms.HiddenInput())
+    identificado_para = forms.CharField(
+        label='identificado para', required=False,
+        widget=forms.HiddenInput())
+
+    def clean_endereco(self, campo):
+        endereco = self.cleaned_data[campo].upper()
+        data = self.data.copy()
+        data[campo] = endereco
+        self.data = data
+        return endereco
+
+    def valid_endereco(self, nome, endereco):
+        if not endereco[0].isalpha():
+            raise forms.ValidationError(
+                "O endereço {} deve iniciar com uma letra.".format(nome))
+        if not endereco[1:].isdigit():
+            raise forms.ValidationError(
+                "No endereço {}, depois da letra inicial deve ter apenas "
+                "números.".format(nome))
+
+    def clean_endereco_de(self):
+        return self.clean_endereco('endereco_de')
+
+    def clean_endereco_para(self):
+        return self.clean_endereco('endereco_para')
+
+    def clean(self):
+        cleaned_data = super(TrocaLocalForm, self).clean()
+        self.valid_endereco('antigo', cleaned_data['endereco_de'])
+        self.valid_endereco('novo', cleaned_data['endereco_para'])
+        if cleaned_data['endereco_de'] == cleaned_data['endereco_para']:
+            raise forms.ValidationError(
+                "Os endereços devem ser diferentes.")
+        return cleaned_data
+
+
 class EstoqueForm(forms.Form):
     endereco = forms.CharField(
         label='Endereço', required=False, min_length=2, max_length=4,
