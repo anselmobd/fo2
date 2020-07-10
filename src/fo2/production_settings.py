@@ -47,6 +47,7 @@ DATABASES_FDB = {
         'TIME_ZONE': None,
         'CONN_MAX_AGE': None,
         'AUTOCOMMIT': None,
+        'DIALECT': 3,
     },
 }
 
