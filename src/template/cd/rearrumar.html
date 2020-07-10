@@ -36,16 +36,5 @@
           para a rua <b>{{ form.valid_rua.value }}.</b></h3>
       {% endif %}
     {% endif %}
-    {% if data %}
-      <h3>End. <b>{{ form.endereco.value }}</b>: <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }} com <b>{{ q_itens }}</b> peça{{ q_itens_end|pluralize }}
-        {% if q_itens != q_itens_end %}
-          no estágio, sendo <b>{{ q_itens_end }}</b> endereçada{{ q_itens_end|pluralize }}
-        {% endif %}
-      </h3>
-      <table>
-        {% include "layout/html_thead.html" with data=headers only %}
-        {% include "layout/html_tbody.html" with fields=fields data=data only %}
-      </table>
-    {% endif %}
   {% endif %}
 {% endblock content %}
