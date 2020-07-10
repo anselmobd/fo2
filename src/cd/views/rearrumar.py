@@ -19,9 +19,10 @@ class Rearrumar(PermissionRequiredMixin, View):
         self.Form_class = cd.forms.RearrumarForm
         if self.mobile:
             self.template_name = 'cd/rearrumar_m.html'
+            self.title_name = 'Rearrumar pallet'
         else:
             self.template_name = 'cd/rearrumar.html'
-        self.title_name = 'Rearrumar pallet na rua'
+            self.title_name = 'Rearrumar pallet na rua'
 
     def mount_context(self, request, form):
         cursor = connections['so'].cursor()
