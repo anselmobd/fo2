@@ -1,0 +1,94 @@
+{% extends 'cd/layout_m.html' %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+table {
+  display: none;
+  font-size: 2vw;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="leftcol50">
+    <p>
+      {{ titulo }}
+    </p>
+  </div>
+  <div class="rightcol50">
+    <a class="botao back" href="{% url 'cd:movimentacao' %}">Movimentação</a>
+  </div>
+</div>
+<hr>
+<form action="{% url 'cd:rearrumar_m' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if form.is_valid and form.endereco.value %}
+    <input type="submit" name="confirma" value="Confirma retirada da estante"/>
+  {% else %}
+    <input type="submit" name="tira" value="Tira da estante"/>
+  {% endif %}
+</form>
+{% if form.is_valid %}
+  {% if form.endereco.value %}
+    <p>Retirar pallet no endereço <b>{{ form.endereco.value }}</b>
+      para a rua <b>{{ form.rua.value }}?</b></p>
+  {% else %}
+    {% if form.valid_endereco.value %}
+      <p>Retirado o pallet no endereço <b>{{ form.valid_endereco.value }}</b>
+        para a rua <b>{{ form.valid_rua.value }}.</b></p>
+    {% endif %}
+  {% endif %}
+  {% if data %}
+    <p>End. <b>{{ form.endereco.value }}</b>: <b>{{ q_lotes }}</b> lote{{ q_lotes|pluralize }} com <b>{{ q_itens }}</b> peça{{ q_itens_end|pluralize }}
+      {% if q_itens != q_itens_end %}
+        no estágio, sendo <b>{{ q_itens_end }}</b> endereçada{{ q_itens_end|pluralize }}
+      {% endif %}
+    </p>
+    <button class="back link" onclick="javascript:showHideLista();">
+      <svg id="lista_fecha" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"><path d="M14.83 30.83L24 21.66l9.17 9.17L36 28 24 16 12 28z"/></svg>
+      <svg id="lista_abre" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"><path d="M14.83 16.42L24 25.59l9.17-9.17L36 19.25l-12 12-12-12z"/></svg>
+    </button>
+    <table id="lista_table">
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock content %}
+
+{% block javascript %}
+<script>
+  var inp = document.getElementById('id_endereco_de');
+  inp.select();
+
+  {% if data %}
+    var lista_fecha = document.getElementById("lista_fecha");
+    lista_fecha.style.display = "none";
+    var lista_abre = document.getElementById("lista_abre");
+    lista_abre.style.display = "block";
+    var lista_table = document.getElementById("lista_table");
+    lista_table.style.display = "none";
+
+    function showHideLista() {
+      if (lista_table.style.display === "none") {
+        lista_table.style.display = "block";
+        lista_fecha.style.display = "block";
+        lista_abre.style.display = "none";
+      } else {
+        lista_table.style.display = "none";
+        lista_fecha.style.display = "none";
+        lista_abre.style.display = "block";
+      }
+    }
+  {% endif %}
+
+  {% if q_lotes %}
+    var snd = new Audio("/media/number/"+{{ q_lotes }}+".mp3");
+    snd.play();
+  {% endif %}
+
+</script>
+{% endblock javascript %}

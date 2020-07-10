@@ -18,7 +18,7 @@ class Rearrumar(PermissionRequiredMixin, View):
         self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = cd.forms.RearrumarForm
         if self.mobile:
-            self.template_name = 'cd/rearrumar.html'
+            self.template_name = 'cd/rearrumar_m.html'
         else:
             self.template_name = 'cd/rearrumar.html'
         self.title_name = 'Rearrumar pallet na rua'
