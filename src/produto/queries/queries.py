@@ -172,8 +172,19 @@ def produtos_n1_basic(param):
 
 
 def ref_inform(cursor, ref):
-    # Totais por OP
-    sql = """
+    if isinstance(ref, tuple):
+        refs = map(repr, ref)
+        refs_join = ', '.join(refs)
+    else:
+        refs_join = repr(ref)
+
+    sql = f"""
+        WITH referencias AS
+        ( SELECT
+            sr.*
+          FROM basi_030 sr
+          WHERE sr.REFERENCIA IN ({refs_join})
+        )
         SELECT
           r.REFERENCIA REF
         , CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
@@ -227,7 +238,7 @@ def ref_inform(cursor, ref):
           END
           , ' ' ) MODELO
           , r.NUMERO_MOLDE
-        FROM basi_030 r
+        FROM referencias r
         JOIN BASI_150 ce
           ON ce.CONTA_ESTOQUE = r.CONTA_ESTOQUE
         JOIN BASI_120 lin
@@ -243,9 +254,8 @@ def ref_inform(cursor, ref):
         LEFT JOIN PEDI_010 cl
           ON cl.CGC_9 = r.CGC_CLIENTE_9
          and cl.CGC_4 = r.CGC_CLIENTE_4
-        WHERE r.REFERENCIA = %s
     """
-    cursor.execute(sql, [ref])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
