@@ -304,7 +304,7 @@ span.spanlink:hover {
     {% endif %}
 
     <table>
-      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/thead_generic.html" with data=headers safe=safe only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data safe=safe only %}
     </table>
 
