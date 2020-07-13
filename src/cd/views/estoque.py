@@ -152,6 +152,9 @@ class Estoque(View):
                 ops.add(row['op'])
                 ref_list.add(row['referencia'])
 
+            ref_data = produto.queries.ref_inform(cursor, tuple(ref_list))
+            ref_dict = {r['REF']: r for r in ref_data}
+
             ops_info = lotes.queries.op.busca_ops_info(cursor, ops)
             for row in ops_info:
                 if row['pedido'] == 0:
@@ -168,7 +171,9 @@ class Estoque(View):
 
         headers.append('Solicitar')
         fields.append('solicita')
+
         for row in data:
+            row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
             row['livre'] = row['qtd'] - row['conserto']
             row['pedido'] = [op_info for op_info in ops_info
                              if op_info['op'] == row['op']
@@ -236,12 +241,6 @@ class Estoque(View):
                 row['qtd_dif'] = ''
             else:
                 row['qtd_dif'] = '*'
-
-        ref_data = produto.queries.ref_inform(cursor, tuple(ref_list))
-        ref_dict = {r['REF']: r for r in ref_data}
-
-        for row in data:
-            row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
 
         context.update({
             'safe': ['solicita'],
