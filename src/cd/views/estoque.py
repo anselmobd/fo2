@@ -11,6 +11,7 @@ from django.urls import reverse
 import lotes.models
 import lotes.queries.op
 from geral.functions import request_user
+import produto.queries
 
 import cd.forms
 
@@ -76,11 +77,17 @@ class Estoque(View):
             data_rec = data_rec.filter(local_at__gte=data_de)
             data_rec = data_rec.filter(local_at__lte=data_ate)
 
+        title_ref = (
+            'Referência<span '
+            'style="font-size: 50%;vertical-align: super;" '
+            'class="glyphicon glyphicon-comment" '
+            'aria-hidden="true"></span>'
+        )
         if ordem == 'B':  # Hora de bipagem
             data_rec = data_rec.order_by('-local_at')
             headers = [
                 'Em', 'Por', 'Endereço', 'Lote',
-                'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.', 'OP', 'Pedido',
+                (title_ref, ), 'Tamanho', 'Cor', 'Qtd.Ori.', 'OP', 'Pedido',
                 'Estágio', 'Alter.', 'Qtd.', 'Q.Livre', 'Q.End.']
             fields = [
                 'local_at', 'local_usuario__username', 'local', 'lote',
@@ -90,7 +97,7 @@ class Estoque(View):
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
             headers = [
-                'OP', 'Pedido', 'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
+                'OP', 'Pedido', (title_ref, ), 'Tamanho', 'Cor', 'Qtd.Ori.',
                 'Estágio', 'Alter.', 'Qtd.', 'Q.Livre',
                 'Q.End.', 'Endereço', 'Lote', 'Em',
                 'Por']
@@ -103,7 +110,7 @@ class Estoque(View):
             data_rec = data_rec.order_by(
                 'referencia', 'cor', 'ordem_tamanho', 'local', 'op', 'lote')
             headers = [
-                'Referência', 'Tamanho', 'Cor', 'Qtd.Ori.',
+                (title_ref, ), 'Tamanho', 'Cor', 'Qtd.Ori.',
                 'Estágio', 'Alter.', 'Qtd.', 'Q.Livre',
                 'Q.End.', 'Endereço', 'OP', 'Pedido',
                 'Lote', 'Em', 'Por']
@@ -116,7 +123,7 @@ class Estoque(View):
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
             headers = [
-                'Endereço', 'OP', 'Pedido', 'Referência', 'Tamanho', 'Cor',
+                'Endereço', 'OP', 'Pedido', (title_ref, ), 'Tamanho', 'Cor',
                 'Qtd.Ori.', 'Estágio', 'Alter.', 'Qtd.', 'Q.Livre',
                 'Q.End.', 'Lote', 'Em', 'Por']
             fields = [
@@ -160,7 +167,10 @@ class Estoque(View):
 
         headers.append('Solicitar')
         fields.append('solicita')
+        ref_list = []
         for row in data:
+            if row['referencia'] not in ref_list:
+                ref_list.append(row['referencia'])
             row['pedido'] = [op_info for op_info in ops_info
                              if op_info['op'] == row['op']
                              ][0]['pedido']
@@ -227,6 +237,13 @@ class Estoque(View):
                 row['qtd_dif'] = ''
             else:
                 row['qtd_dif'] = '*'
+
+        ref_data = produto.queries.ref_inform(cursor, tuple(ref_list))
+        ref_dict = {r['REF']: r for r in ref_data}
+
+        for row in data:
+            row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
+
         context.update({
             'safe': ['solicita'],
             'headers': headers,
