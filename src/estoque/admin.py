@@ -23,8 +23,23 @@ class DocMovStqAdmin(admin.ModelAdmin):
 
 
 class MovStqAdmin(admin.ModelAdmin):
-    list_display = ["tipo_mov", "__str__"]
+    list_display = ["tipo_mov", "__str__", "usuario"]
     readonly_fields = ['hora']
+    search_fields = [
+        'deposito_destino',
+        'deposito_origem',
+        'documento__descricao',
+        'documento__id',
+        'item__produto__referencia',
+        'item__tamanho__tamanho__nome',
+        'item__cor__cor',
+        'novo_item__produto__referencia',
+        'novo_item__tamanho__tamanho__nome',
+        'novo_item__cor__cor',
+        'obs',
+        'quantidade',
+        'usuario__username',
+    ]
 
 
 intr_adm_site.register(TipoMovStq, TipoMovStqAdmin)
