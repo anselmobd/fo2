@@ -135,8 +135,6 @@ class Estoque(View):
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
             'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio',
             'create_at', 'update_at', 'conserto')
-        for row in data:
-            row['livre'] = row['qtd'] - row['conserto']
 
         quant_lotes = len(data)
         paginator = Paginator(data, linhas_pagina)
@@ -171,6 +169,7 @@ class Estoque(View):
         for row in data:
             if row['referencia'] not in ref_list:
                 ref_list.append(row['referencia'])
+            row['livre'] = row['qtd'] - row['conserto']
             row['pedido'] = [op_info for op_info in ops_info
                              if op_info['op'] == row['op']
                              ][0]['pedido']
