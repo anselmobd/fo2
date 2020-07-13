@@ -6,6 +6,33 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+.strikediag { /* não utilizada, mas mantida para guardar */
+  background: linear-gradient(
+    to left top,
+    transparent 47.75%,
+    currentColor 49.5%,
+    currentColor 50.5%,
+    transparent 52.25%
+  );
+}
+.strikethrough {
+  position: relative;
+}
+.strikethrough:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 0.125em solid;
+  border-color: dimgray;
+
+  -webkit-transform:rotate(-45deg);
+  -moz-transform:rotate(-45deg);
+  -ms-transform:rotate(-45deg);
+  -o-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+}
 span.spanlink {
   cursor:pointer;
   color:#337ab7;
@@ -261,16 +288,16 @@ span.spanlink:hover {
           <span class="spanlink" onclick="setPageAndSubmit(1)">&nbsp;&#8810;&nbsp;</span>
           <span class="spanlink" onclick="setPageAndSubmit({{ data.previous_page_number }})">&nbsp;<&nbsp;</span>
         {% else %}
-          <span>&nbsp;&#8814;&nbsp;</span>
-          <span>&nbsp;&#8814;&nbsp;</span>
+          <span class="strikethrough">&nbsp;&#8810;&nbsp;</span>
+          <span class="strikethrough">&nbsp;<&nbsp;</span>
         {% endif %}
           <span>Página {{ data.number }} de {{ data.paginator.num_pages }}</span>
         {% if data.has_next %}
           <span class="spanlink" onclick="setPageAndSubmit({{ data.next_page_number }})">&nbsp;>&nbsp;</span>
           <span class="spanlink" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">&nbsp;&#8811;&nbsp;</span>
         {% else %}
-          <span>&nbsp;&#8815;&nbsp;</span>
-          <span>&nbsp;&#8815;&nbsp;</span>
+          <span class="strikethrough">&nbsp;>&nbsp;</span>
+          <span class="strikethrough">&nbsp;&#8811;&nbsp;</span>
         {% endif %}
         <small>({{linhas_pagina}} lotes por página)</small>
       </div>
@@ -288,16 +315,16 @@ span.spanlink:hover {
           <span class="spanlink" onclick="setPageAndSubmit(1)">&nbsp;&#8810;&nbsp;</span>
           <span class="spanlink" onclick="setPageAndSubmit({{ data.previous_page_number }})">&nbsp;<&nbsp;</span>
         {% else %}
-          <span>&nbsp;&#8814;&nbsp;</span>
-          <span>&nbsp;&#8814;&nbsp;</span>
+          <span class="strikethrough">&nbsp;&#8810;&nbsp;</span>
+          <span class="strikethrough">&nbsp;<&nbsp;</span>
         {% endif %}
           <span>Página {{ data.number }} de {{ data.paginator.num_pages }}</span>
         {% if data.has_next %}
           <span class="spanlink" onclick="setPageAndSubmit({{ data.next_page_number }})">&nbsp;>&nbsp;</span>
           <span class="spanlink" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">&nbsp;&#8811;&nbsp;</span>
         {% else %}
-          <span>&nbsp;&#8815;&nbsp;</span>
-          <span>&nbsp;&#8815;&nbsp;</span>
+          <span class="strikethrough">&nbsp;>&nbsp;</span>
+          <span class="strikethrough">&nbsp;&#8811;&nbsp;</span>
         {% endif %}
       </div>
     {% endif %}
