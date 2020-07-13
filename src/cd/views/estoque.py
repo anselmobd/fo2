@@ -147,8 +147,11 @@ class Estoque(View):
 
         if len(data) != 0:
             ops = set()
+            ref_list = set()
             for row in data:
                 ops.add(row['op'])
+                ref_list.add(row['referencia'])
+
             ops_info = lotes.queries.op.busca_ops_info(cursor, ops)
             for row in ops_info:
                 if row['pedido'] == 0:
@@ -165,10 +168,7 @@ class Estoque(View):
 
         headers.append('Solicitar')
         fields.append('solicita')
-        ref_list = []
         for row in data:
-            if row['referencia'] not in ref_list:
-                ref_list.append(row['referencia'])
             row['livre'] = row['qtd'] - row['conserto']
             row['pedido'] = [op_info for op_info in ops_info
                              if op_info['op'] == row['op']
