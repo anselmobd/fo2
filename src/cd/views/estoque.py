@@ -156,9 +156,7 @@ class Estoque(View):
             ref_dict = {r['REF']: r for r in ref_data}
 
             ops_info = lotes.queries.op.busca_ops_info(cursor, ops)
-            for row in ops_info:
-                if row['pedido'] == 0:
-                    row['pedido'] = '-'
+            ops_dict = {o['op']: o for o in ops_info}
 
         solicit_cod = None
         solicit_recs = lotes.models.SolicitaLote.objects.filter(
@@ -175,10 +173,10 @@ class Estoque(View):
         for row in data:
             row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
             row['livre'] = row['qtd'] - row['conserto']
-            row['pedido'] = [op_info for op_info in ops_info
-                             if op_info['op'] == row['op']
-                             ][0]['pedido']
-            if row['pedido'] != '-':
+            row['pedido'] = ops_dict[row['op']]['pedido']
+            if row['pedido'] == 0:
+                row['pedido'] = '-'
+            else:
                 row['pedido|LINK'] = reverse(
                     'producao:pedido__get', args=[row['pedido']])
             if row['qtd']:
