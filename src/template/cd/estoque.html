@@ -252,7 +252,7 @@ span.spanlink:hover {
         showHideMyFilter();
       }
     </script>
-    <h4>{{quant_lotes}} lotes</h4>
+    <h4>{{quant_lotes}} lote{{ quant_lotes|pluralize }}</h4>
 
     {% if data.paginator.num_pages != 1 %}
       <div class="mypagination">
