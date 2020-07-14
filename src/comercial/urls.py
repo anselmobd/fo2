@@ -22,10 +22,10 @@ urlpatterns = [
         name='analise_vendas'),
 
     url(r'^analise_modelo/$',
-        views.estoque.AnaliseModelo.as_view(),
+        views.AnaliseModelo.as_view(),
         name='analise_modelo'),
     url(r'^analise_modelo/(?P<modelo>.+)/$',
-        views.estoque.AnaliseModelo.as_view(),
+        views.AnaliseModelo.as_view(),
         name='analise_modelo__get'),
 
     url(r'^ponderacao/$',
