@@ -15,19 +15,16 @@ from utils.functions import dec_months, make_key_cache, fo2logger
 def busca_clientes(cnpj):
     conn = DatabaseWrapper(settings.DATABASES_FDB['f1'])
     cursor = conn.cursor()
-    sql = """
+    sql = f"""
         SELECT FIRST 10000
           c.C_CGC CNPJ
         , c.C_RSOC CLIENTE
         FROM DIS_CLI c
-        WHERE c.C_CGC STARTING WITH '{cgc}'
-           OR c.C_RSOC CONTAINING '{rsoc}'
+        WHERE c.C_CGC STARTING WITH '{cnpj[:14]}'
+           OR c.C_RSOC CONTAINING '{cnpj}'
         ORDER BY
           c.C_CGC
-    """.format(
-        cgc=cnpj[:14],
-        rsoc=cnpj,
-    )
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
@@ -35,7 +32,7 @@ def busca_clientes(cnpj):
 def ficha_cliente(cnpj):
     conn = DatabaseWrapper(settings.DATABASES_FDB['f1'])
     cursor = conn.cursor()
-    sql = """
+    sql = f"""
         SELECT
           c.C_CGC CNPJ
         , c.C_RSOC CLIENTE
@@ -94,13 +91,13 @@ def ficha_cliente(cnpj):
         FROM DIS_DUP d
         LEFT JOIN DIS_CLI c
           ON c.C_CGC = d.D_CGC
-        WHERE d.D_CGC = '{cgc}'
+        WHERE d.D_CGC = '{cnpj}'
           AND D.D_STAT >= '0' -- nao canceladas
           AND d.D_CODFIS IN ( '5101', '6101', '6107', '6109'
                             , '5124', '6124', '5125', '6125') -- cpof de venda
         ORDER BY
           d.D_DUPNUM
-    """.format(cgc=cnpj)
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
@@ -129,7 +126,7 @@ def get_modelo_dims(cursor, modelo=None, get=None):
         pre_filtra_modelo = \
             "AND i.GRUPO_ESTRUTURA LIKE '%{}%'".format(modelo)
 
-    sql = """
+    sql = f"""
         WITH refs AS (
           SELECT
             i.NIVEL_ESTRUTURA NIVEL
@@ -166,13 +163,6 @@ def get_modelo_dims(cursor, modelo=None, get=None):
         ORDER BY
           {order_get} -- order_get
     """
-    sql = sql.format(
-        pre_filtra_modelo=pre_filtra_modelo,
-        select_get=select_get,
-        filtra_modelo=filtra_modelo,
-        group_get=group_get,
-        order_get=order_get,
-    )
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
@@ -282,7 +272,7 @@ def get_vendas(
         group_por = ", v.ORDEM_TAMANHO\n, v.TAM"
         add_order("v.ORDEM_TAMANHO\n, v.TAM")
 
-    sql = """
+    sql = f"""
         SELECT
           sum(v.qtd) qtd
           {select_global} -- select_global
@@ -379,23 +369,6 @@ def get_vendas(
         ORDER BY
           {order} -- order
     """
-    sql = sql.format(
-        pre_filtra_modelo=pre_filtra_modelo,
-        pre_filtra_ref=pre_filtra_ref,
-        pre_filtra_periodo=pre_filtra_periodo,
-        pre_filtra_ultimos_dias=pre_filtra_ultimos_dias,
-        select_por=select_por,
-        select_item=select_item,
-        select_global=select_global,
-        filtra_col=filtra_col,
-        filtra_cliente=filtra_cliente,
-        filtra_modelo=filtra_modelo,
-        filtra_ref=filtra_ref,
-        filtra_periodo=filtra_periodo,
-        filtra_ultimos_dias=filtra_ultimos_dias,
-        group_por=group_por,
-        order=order,
-    )
     cursor.execute(sql)
 
     cached_result = rows_to_dict_list_lower(cursor)
