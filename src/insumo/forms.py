@@ -393,9 +393,10 @@ class MapaPorSemanaNewForm(forms.Form):
         min_length=2, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
-    CHOICES = [('A', 'Antiga'),
-               ('N', 'Nova')]
-    versao = forms.ChoiceField(label='Versão', choices=CHOICES, initial='U')
+    # CHOICES = [('A', 'Antiga'),
+    #            ('N', 'Nova')]
+    # versao = forms.ChoiceField(label='Versão', choices=CHOICES, initial='U')
+    versao = forms.CharField(initial='N', widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
         super(MapaPorSemanaNewForm, self).__init__(*args, **kwargs)
