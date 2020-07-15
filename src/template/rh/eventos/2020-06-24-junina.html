@@ -1,0 +1,38 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>{{ titulo }}</h1>
+<center>
+<h3>Não é apenas um agradinho para o funcionário é reconhecer o desempenho e o amor pelo trabalho que ele realiza na empresa.
+</h3>
+<h3>
+E torcer para que novas e boas oportunidades aconteçam!
+</h3>
+<h3>
+#somosagentesdeumnovociclo #juntosvamossairdessa
+</h3>
+<p>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_01.jpg"><img src="/media/rh/eventos/2020/06/24/thumb.junina_01.jpg"></a>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_02.jpg"><img src="/media/rh/eventos/2020/06/24/thumb.junina_02.jpg"></a>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_03.jpg"><img src="/media/rh/eventos/2020/06/24/thumb.junina_03.jpg"></a>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_04.jpg"><img src="/media/rh/eventos/2020/06/24/thumb.junina_04.jpg"></a>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_05.jpg"><img src="/media/rh/eventos/2020/06/24/thumb.junina_05.jpg"></a>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_06.jpg"><img src="/media/rh/eventos/2020/06/24/thumb.junina_06.jpg"></a>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_07.jpg"><img src="/media/rh/eventos/2020/06/24/thumb.junina_07.jpg"></a>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_08.png"><img src="/media/rh/eventos/2020/06/24/thumb.junina_08.png"></a>
+<a target="_blank" href="/media/rh/eventos/2020/06/24/junina_09.png"><img src="/media/rh/eventos/2020/06/24/thumb.junina_09.png"></a>
+</p>
+</center>
+{% endblock %}

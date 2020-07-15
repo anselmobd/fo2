@@ -277,6 +277,9 @@ def eventos(request, id):
     if id == '2020-03-17':
         context = {'titulo': 'Fotos - SIPAT 2020'}
         return render(request, 'rh/eventos/2020-03-17-sipat.html', context)
+    elif id == '2020-06-24':
+        context = {'titulo': 'Festa junina 2020!'}
+        return render(request, 'rh/eventos/2020-06-24-junina.html', context)
 
 
 def datas(request, data):

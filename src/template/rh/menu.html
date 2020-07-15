@@ -17,8 +17,8 @@
         {% endif %}
         <h2>
           <a href="{% url 'rh:datas' 'lista' %}">Datas comemorativas
-            <img                                         src="/media/rh/datas_comemorativas/2020/07/15/dia-do-homem_h50.jpg" title="Dia do Homem - 2020"
-            ><img style="opacity: 0.90;max-width: 45px;" src="/media/rh/datas_comemorativas/2020/07/13/dia-do-amigo_h50.jpg" title="Dia do Amigo - 2020"
+            <img                                         src="/media/rh/datas_comemorativas/2020/07/15/dia-do-homem_h50.jpg" title="Dia do homem - 2020"
+            ><img style="opacity: 0.90;max-width: 45px;" src="/media/rh/datas_comemorativas/2020/07/13/dia-do-amigo_h50.jpg" title="Dia do amigo - 2020"
             ><img style="opacity: 0.78;max-width: 39px;" src="/media/rh/datas_comemorativas/2020/05/08/dia-das-maes_h50.jpg" title="Dia das mães - 2020"
             ><img style="opacity: 0.64;max-width: 32px;" src="/media/rh/datas_comemorativas/2020/04/29/dia_trabalhador_h50.jpg" title="Dia do trabalhador - 2020"
             ><img style="opacity: 0.44;max-width: 22px;" src="/media/rh/datas_comemorativas/2020/03/04-mulher/h50.jpg" title="Dia da mulher - 2020"
@@ -80,7 +80,8 @@
         {% endfor %}
 
         <h3>Fotos e Vídeos</h3>
-        09/03 a 13/03/2018 - <a target="_blank" href="/media/rh/campanhas/2020/03/02/sipat_2020_w700.jpg">SIPAT 2020</a><br/>
+        24/06/2020 - <a target="_blank" href="{% url 'rh:eventos' '2020-06-24' %}">Festa junina 2020</a><br/>
+        09/03 a 13/03/2020 - <a target="_blank" href="/media/rh/campanhas/2020/03/02/sipat_2020_w700.jpg">SIPAT 2020</a><br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Veja <a target="_blank" href="{% url 'rh:eventos' '2020-03-17' %}">fotos</a> do encerramento do evento</a><br/>
         01/08/2019 - 25 anos de empresa de Rosângela e Denilson: <a target="_blank" href="{% url 'rh:media_2019_08_01_25_anos' %}">Fotos e vídeo</a><br/>
         16/07/2019 - <a target="_blank" href="{% url 'rh:media_2019_07_16_sobre_amizade' %}">Vídeo</a> Poesia com Rapadura - Falando sobre amizade<br/>
