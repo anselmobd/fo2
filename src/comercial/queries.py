@@ -198,12 +198,23 @@ def get_vendas(
         filtra_cliente = "AND v.CNPJ9 = '{}'".format(cliente)
 
     filtra_modelo = ''
+    filtra_modelo_select_item = ''
     pre_filtra_modelo = ''
     if modelo is not None:
         filtra_modelo = "AND v.MODELO = '{}'".format(modelo)
         pre_filtra_modelo = \
             "AND inf.GRUPO_ESTRUTURA LIKE '%{}%'".format(modelo)
-
+        filtra_modelo_select_item = f""" --
+          AND TRIM(
+                LEADING '0' FROM (
+                  REGEXP_REPLACE(
+                    v.GRUPO_ESTRUTURA
+                  , '^([^a-zA-Z]+)[a-zA-Z]*$'
+                  , '\\1'
+                  )
+                )
+              ) = '{modelo}'
+        """
     filtra_ref = ''
     pre_filtra_ref = ''
     if ref is not None:
@@ -353,15 +364,7 @@ def get_vendas(
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = v.SUBGRU_ESTRUTURA
         WHERE v.NIVEL_ESTRUTURA = 1
-          AND TRIM(
-                LEADING '0' FROM (
-                  REGEXP_REPLACE(
-                    v.GRUPO_ESTRUTURA
-                  , '^([^a-zA-Z]+)[a-zA-Z]*$'
-                  , '\\1'
-                  )
-                )
-              ) = '263'
+          {filtra_modelo_select_item} -- filtra_modelo_select_item
         ) v
         GROUP BY
           1
