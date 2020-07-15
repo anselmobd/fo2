@@ -104,6 +104,7 @@ intr_adm_site.register(PopAssunto, PopAssuntoAdmin)
 class UsuarioPopAssuntoAdmin(admin.ModelAdmin):
     list_display = ['usuario', 'assunto']
     fields = ['usuario', 'assunto']
+    list_filter = ['assunto', 'usuario']
 
 
 intr_adm_site.register(UsuarioPopAssunto, UsuarioPopAssuntoAdmin)
