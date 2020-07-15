@@ -133,7 +133,6 @@ span.spanlink:hover {
       if (valida) {
         var lote = document.getElementById("lote_solicitado").innerHTML;
         var solict_id = document.getElementById("id_solicitado").value;
-        var url = '/cd/solicita/'+lote+'/'+qtd_solici+'/';
         $.ajax({
           type: 'GET',
           url: '/cd/solicita/'+solict_id+'/'+lote+'/'+qtd_solici+'/',
