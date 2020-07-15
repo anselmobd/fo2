@@ -104,6 +104,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
         )
 
         for row in data:
+            row['numero'] = numero
             row['lote__lote|LINK'] = reverse(
                 'producao:posicao__get',
                 args=[row['lote__lote']])
