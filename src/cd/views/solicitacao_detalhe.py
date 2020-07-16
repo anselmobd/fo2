@@ -196,6 +196,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 row['lote_ordem'] == '0000'
                 and row['inteira_parcial'] == 'Lote inteiro')
             can_transf = can_transf and row['lote__estagio'] == 999
+            can_transf = can_transf and row['lote__op_obj__deposito'] != 0
             row['transf_order'] = 1
             row['transf'] = ''
             if can_transf:
