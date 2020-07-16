@@ -73,17 +73,20 @@ def lista_solicita_lote(cursor, filtro=None, data=None):
     return data
 
 
-def search_in_row_fields(search, row, *fields):
+def search_in_dict_fields(search, row, *fields, **params):
+    ignore_case = params.get('ignore_case', True)
     for part in search.split():
         for field in fields:
-            if part.lower() in row[field].lower():
+            pattern = part.lower() if ignore_case else part
+            value = row[field].lower() if ignore_case else row[field]
+            if pattern in value:
                 return True
     return False
 
 
-def filtered_date_fields(search, data, *fields):
+def filtered_date_fields(search, data, *fields, **params):
     result = []
     for row in data:
-        if search_in_row_fields(search, row, *fields):
+        if search_in_dict_fields(search, row, *fields, **params):
             result.append(row)
     return result
