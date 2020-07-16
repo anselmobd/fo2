@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from utils.functions.data import filtered_data_fields
 from utils.functions.digits import *
 from utils.functions.models import rows_to_dict_list_lower
 
@@ -57,7 +58,7 @@ def lista_solicita_lote(cursor, filtro=None, data=None):
         row['numero'] = f"#{fo2_digit_with(row['id'])}"
 
     if filtro:
-        data = filtered_date_fields(
+        data = filtered_data_fields(
             filtro,
             data,
             'numero',
@@ -71,22 +72,3 @@ def lista_solicita_lote(cursor, filtro=None, data=None):
             row['data'] = ''
 
     return data
-
-
-def search_in_dict_fields(search, row, *fields, **params):
-    ignore_case = params.get('ignore_case', True)
-    for part in search.split():
-        for field in fields:
-            pattern = part.lower() if ignore_case else part
-            value = row[field].lower() if ignore_case else row[field]
-            if pattern in value:
-                return True
-    return False
-
-
-def filtered_date_fields(search, data, *fields, **params):
-    result = []
-    for row in data:
-        if search_in_dict_fields(search, row, *fields, **params):
-            result.append(row)
-    return result
