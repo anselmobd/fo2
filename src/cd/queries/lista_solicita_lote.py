@@ -56,23 +56,34 @@ def lista_solicita_lote(cursor, filtro=None, data=None):
     for row in data:
         row['numero'] = f"#{fo2_digit_with(row['id'])}"
 
-    def do_filt(row):
-        return (
-            filtro.lower() in row['codigo'].lower() or
-            filtro.lower() in row['descricao'].lower() or
-            filtro.lower() in row['usuario__username'].lower() or
-            filtro.lower() in row['numero'].lower()
+    if filtro:
+        data = filtered_date_fields(
+            filtro,
+            data,
+            'numero',
+            'codigo',
+            'descricao',
+            'usuario__username',
         )
 
-    if filtro is None:
-        data_filtered = data.copy()
-    else:
-        data_filtered = filter(do_filt, data)
-
-    data_final = []
-    for row in data_filtered:
+    for row in data:
         if row['data'] is None:
             row['data'] = ''
-        data_final.append(row)
 
-    return data_final
+    return data
+
+
+def search_in_row_fields(search, row, *fields):
+    for part in search.split():
+        for field in fields:
+            if part.lower() in row[field].lower():
+                return True
+    return False
+
+
+def filtered_date_fields(search, data, *fields):
+    result = []
+    for row in data:
+        if search_in_row_fields(search, row, *fields):
+            result.append(row)
+    return result
