@@ -9,6 +9,12 @@ from systextil.models import Usuario
 
 
 def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
+    return dict_conserto_lote_custom(
+        lote, estagio, in_out, qtd_a_mover, request=request)
+
+
+def dict_conserto_lote_custom(
+        lote, estagio, in_out, qtd_a_mover, request=None):
     in_out = in_out.lower()
     data = {
         'lote': lote,
@@ -20,13 +26,14 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
     if qtd_a_mover is None:
         qtd_a_mover = '0'
 
-    user = request_user(request)
-    if user is None:
-        data.update({
-            'error_level': 11,
-            'msg': 'É necessário estar logado na intranet',
-        })
-        return data
+    if request is not None:
+        user = request_user(request)
+        if user is None:
+            data.update({
+                'error_level': 11,
+                'msg': 'É necessário estar logado na intranet',
+            })
+            return data
 
     try:
         colab = Colaborador.objects.get(user=user)
