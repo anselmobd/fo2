@@ -219,7 +219,7 @@ class Estoque(View):
                         ref=row['referencia'],
                         cor=row['cor'],
                         tam=row['tamanho'],
-                        qtd_resta=row['qtd'] - slq_qtd,
+                        qtd_resta=row['qtd'] + row['conserto'] - slq_qtd,
                         solicit_cod=solicit_cod,
                         solicit_id=solicit_id,
                         qtd_limite=row['qtd'])
