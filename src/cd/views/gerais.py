@@ -17,7 +17,7 @@ def lista_lotes_em(endereco):
         q_itens_end = 0
         for row in lotes_no_local:
             row['qtd_est'] = row['qtd'] + row['conserto']
-            q_itens += row['qtd']
+            q_itens += row['qtd'] + row['conserto']
             q_itens_end += row['conserto']
         context.update({
             'q_lotes': len(lotes_no_local),
