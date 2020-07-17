@@ -92,7 +92,7 @@ class Estoque(View):
             fields = [
                 'local_at', 'local_usuario__username', 'local', 'lote',
                 'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op', 'pedido',
-                'estagio', 'qtd_dif', 'qtd', 'livre', 'conserto']
+                'estagio', 'qtd_dif', 'qtd_est', 'qtd', 'conserto']
         elif ordem == 'O':  # OP Referência Cor Tamanho Endereço Lote
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
@@ -103,7 +103,7 @@ class Estoque(View):
                 'Por']
             fields = [
                 'op', 'pedido', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd_dif', 'qtd', 'livre',
+                'estagio', 'qtd_dif', 'qtd_est', 'qtd',
                 'conserto', 'local', 'lote', 'local_at',
                 'local_usuario__username']
         elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
@@ -116,7 +116,7 @@ class Estoque(View):
                 'Lote', 'Em', 'Por']
             fields = [
                 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd_dif', 'qtd', 'livre',
+                'estagio', 'qtd_dif', 'qtd_est', 'qtd',
                 'conserto', 'local', 'op', 'pedido',
                 'lote', 'local_at', 'local_usuario__username']
         else:  # E: Endereço OP Referência Cor Tamanho Lote
@@ -128,7 +128,7 @@ class Estoque(View):
                 'Q.End.', 'Lote', 'Em', 'Por']
             fields = [
                 'local', 'op', 'pedido', 'referencia', 'tamanho', 'cor',
-                'qtd_produzir', 'estagio', 'qtd_dif', 'qtd', 'livre',
+                'qtd_produzir', 'estagio', 'qtd_dif', 'qtd_est', 'qtd',
                 'conserto', 'lote', 'local_at', 'local_usuario__username']
 
         data = data_rec.values(
@@ -172,7 +172,7 @@ class Estoque(View):
 
         for row in data:
             row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
-            row['livre'] = row['qtd'] - row['conserto']
+            row['qtd_est'] = row['qtd'] + row['conserto']
             row['pedido'] = ops_dict[row['op']]['pedido']
             if row['pedido'] == 0:
                 row['pedido'] = '-'
