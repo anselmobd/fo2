@@ -179,7 +179,7 @@ class Estoque(View):
             else:
                 row['pedido|LINK'] = reverse(
                     'producao:pedido__get', args=[row['pedido']])
-            if row['qtd']:
+            if row['qtd_est']:
                 if row['update_at'] is None:
                     row['update_at'] = row['create_at']
                 slq = lotes.models.SolicitaLoteQtd.objects.filter(
@@ -190,7 +190,7 @@ class Estoque(View):
                     if slq['qtd__sum']:
                         slq_qtd = slq['qtd__sum']
 
-                if solicit_cod and (row['qtd'] - slq_qtd) > 0:
+                if solicit_cod and (row['qtd_est'] - slq_qtd) > 0:
                     row['solicita'] = '''
                         <a title="Solicitação parcial de lote"
                          href="javascript:void(0);"
@@ -219,12 +219,12 @@ class Estoque(View):
                         ref=row['referencia'],
                         cor=row['cor'],
                         tam=row['tamanho'],
-                        qtd_resta=row['qtd'] + row['conserto'] - slq_qtd,
+                        qtd_resta=row['qtd_est'] - slq_qtd,
                         solicit_cod=solicit_cod,
                         solicit_id=solicit_id,
-                        qtd_limite=row['qtd'])
+                        qtd_limite=row['qtd_est'])
                 else:
-                    row['solicita'] = row['qtd'] - slq_qtd
+                    row['solicita'] = row['qtd_est'] - slq_qtd
             else:
                 row['solicita'] = '0'
             row['op|LINK'] = reverse(
@@ -235,7 +235,7 @@ class Estoque(View):
                 'cd:estoque_filtro', args=['E', row['local']])
             if row['estagio'] == 999:
                 row['estagio'] = 'Finalizado'
-            if row['qtd'] == row['qtd_produzir']:
+            if row['qtd_est'] == row['qtd_produzir']:
                 row['qtd_dif'] = ''
             else:
                 row['qtd_dif'] = '*'
