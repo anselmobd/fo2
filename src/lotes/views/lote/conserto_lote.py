@@ -193,34 +193,55 @@ def dict_conserto_lote_custom(
               *
             FROM (
               SELECT
-                PCPC040_PERCONF, PCPC040_ORDCONF, PCPC040_ESTCONF
-              , SEQUENCIA + 1 SEQUENCIA
+                l.PERIODO_PRODUCAO PCPC040_PERCONF
+              , l.ORDEM_CONFECCAO PCPC040_ORDCONF
+              , l.CODIGO_ESTAGIO PCPC040_ESTCONF
+              , COALESCE( ml.SEQUENCIA + 1, 0 ) SEQUENCIA
               , TO_DATE(CURRENT_DATE) DATA_PRODUCAO
               , CURRENT_TIMESTAMP HORA_PRODUCAO
               , 0 QTDE_PRODUZIDA
               , 0 QTDE_PECAS_2A
-              , {qtd_a_mover} QTDE_CONSERTO
-              , TURNO_PRODUCAO, TIPO_ENTRADA_ORD, NOTA_ENTR_ORDEM
-              , SERIE_NF_ENT_ORD, SEQ_NF_ENTR_ORD, ORDEM_PRODUCAO
+              , {qtd_a_mover}  QTDE_CONSERTO
+              , COALESCE( ml.TURNO_PRODUCAO, 1 ) TURNO_PRODUCAO
+              , COALESCE( ml.TIPO_ENTRADA_ORD, 0 ) TIPO_ENTRADA_ORD
+              , COALESCE( ml.NOTA_ENTR_ORDEM, 0 ) NOTA_ENTR_ORDEM
+              , ml.SERIE_NF_ENT_ORD
+              , COALESCE( ml.SEQ_NF_ENTR_ORD, 0 ) SEQ_NF_ENTR_ORD
+              , l.ORDEM_PRODUCAO ORDEM_PRODUCAO
               , {colab.matricula} CODIGO_USUARIO
               , 0 QTDE_PERDAS
-              , NUMERO_DOCUMENTO, CODIGO_DEPOSITO, CODIGO_FAMILIA
-              , CODIGO_INTERVALO, EXECUTA_TRIGGER
+              , COALESCE( ml.NUMERO_DOCUMENTO, 0) NUMERO_DOCUMENTO
+              , COALESCE( ml.CODIGO_DEPOSITO, 0) CODIGO_DEPOSITO
+              , COALESCE( ml.CODIGO_FAMILIA, 0) CODIGO_FAMILIA
+              , COALESCE( ml.CODIGO_INTERVALO, 0) CODIGO_INTERVALO
+              , COALESCE( ml.EXECUTA_TRIGGER, 3) EXECUTA_TRIGGER
               , CURRENT_TIMESTAMP DATA_INSERCAO
               , '?' PROCESSO_SYSTEXTIL
-              , NUMERO_VOLUME, NR_OPERADORES
-              , ATZ_PODE_PRODUZIR, ATZ_EM_PROD, ATZ_A_PROD
-              , EFICIENCIA_INFORMADA
+              , COALESCE( ml.NUMERO_VOLUME, 0) NUMERO_VOLUME
+              , COALESCE( ml.NR_OPERADORES, 0) NR_OPERADORES
+              , COALESCE( ml.ATZ_PODE_PRODUZIR, 0) ATZ_PODE_PRODUZIR
+              , COALESCE( ml.ATZ_EM_PROD, 0) ATZ_EM_PROD
+              , COALESCE( ml.ATZ_A_PROD, 0) ATZ_A_PROD
+              , COALESCE( ml.EFICIENCIA_INFORMADA, 0) EFICIENCIA_INFORMADA
               , '?' USUARIO_SYSTEXTIL
-              , CODIGO_OCORRENCIA, COD_OCORRENCIA_ESTORNO, SOLICITACAO_CONSERTO
-              , NUMERO_SOLICITACAO, NUMERO_ORDEM, MINUTOS_PECA
-              , NR_OPERADORES_INFORMADO, EFICIENCIA
-              FROM SYSTEXTIL.PCPC_045
-              WHERE PCPC040_PERCONF = {lote[:4]}
-                AND PCPC040_ORDCONF = {lote[4:]}
-                AND PCPC040_ESTCONF = {estagio}
+              , COALESCE( ml.CODIGO_OCORRENCIA, 0) CODIGO_OCORRENCIA
+              , COALESCE( ml.COD_OCORRENCIA_ESTORNO, 0) COD_OCORRENCIA_ESTORNO
+              , COALESCE( ml.SOLICITACAO_CONSERTO, 0) SOLICITACAO_CONSERTO
+              , COALESCE( ml.NUMERO_SOLICITACAO, 0) NUMERO_SOLICITACAO
+              , COALESCE( ml.NUMERO_ORDEM, 0) NUMERO_ORDEM
+              , COALESCE( ml.MINUTOS_PECA, 0) MINUTOS_PECA
+              , ml.NR_OPERADORES_INFORMADO
+              , ml.EFICIENCIA
+              FROM PCPC_040 l
+              LEFT JOIN SYSTEXTIL.PCPC_045 ml
+                ON ml.PCPC040_PERCONF = l.PERIODO_PRODUCAO
+               AND ml.PCPC040_ORDCONF = l.ORDEM_CONFECCAO
+               AND ml.PCPC040_ESTCONF = l.CODIGO_ESTAGIO
+              WHERE l.PERIODO_PRODUCAO = {lote[:4]}
+                AND l.ORDEM_CONFECCAO = {lote[4:]}
+                AND l.CODIGO_ESTAGIO = {estagio}
               ORDER BY
-                SEQUENCIA DESC
+                ml.SEQUENCIA DESC
             )
             WHERE rownum = 1
         """
