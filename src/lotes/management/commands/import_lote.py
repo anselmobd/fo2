@@ -1,5 +1,6 @@
 import sys
 import datetime
+from pprint import pprint
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
@@ -44,6 +45,7 @@ class Command(BaseCommand):
                 + lo.QTDE_EM_PRODUCAO_PACOTE * 3
                 + lo.QTDE_PECAS_PROD * 5
                 + lo.QTDE_CONSERTO * 7
+                + lo.QTDE_DISPONIVEL_BAIXA * 11
                 )
               * (1 + lo.CODIGO_ESTAGIO)
               * (1 + mod(lo.ORDEM_CONFECCAO, 111))
@@ -52,6 +54,8 @@ class Command(BaseCommand):
             JOIN PCPC_020 op -- OP capa
               ON op.ordem_producao = lo.ORDEM_PRODUCAO
             WHERE op.SITUACAO <> 9 -- op.COD_CANCELAMENTO = 0
+              AND lo.QTDE_PECAS_PROG IS NOT NULL
+              AND lo.QTDE_PECAS_PROG  <> 0
         '''
         if self.oponly is not None:
             sql += '''--
@@ -107,12 +111,11 @@ class Command(BaseCommand):
             , lote.ORD_TAM
             , lote.COR
             , lote.QTD_PRODUZIR
-            --, lote.ULTIMO_ESTAGIO
             , lote.TRAIL
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 999
               ELSE l.CODIGO_ESTAGIO END ESTAGIO
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN lf.QTDE_PECAS_PROD
-              ELSE l.QTDE_EM_PRODUCAO_PACOTE END QTD
+              ELSE l.QTDE_DISPONIVEL_BAIXA END QTD
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 0
               ELSE l.QTDE_CONSERTO END CONSERTO
             FROM
@@ -134,6 +137,7 @@ class Command(BaseCommand):
                   + le.QTDE_EM_PRODUCAO_PACOTE * 3
                   + le.QTDE_PECAS_PROD * 5
                   + le.QTDE_CONSERTO * 7
+                  + le.QTDE_DISPONIVEL_BAIXA * 11
                   )
                 * (1 + le.CODIGO_ESTAGIO)
                 * (1 + mod(le.ORDEM_CONFECCAO, 111))
@@ -161,7 +165,7 @@ class Command(BaseCommand):
             LEFT JOIN PCPC_040 l -- lote estágio
               ON l.ORDEM_PRODUCAO = lote.OP
              AND l.ORDEM_CONFECCAO = lote.OC
-             AND l.QTDE_EM_PRODUCAO_PACOTE <> 0
+             AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) <> 0
             LEFT JOIN PCPC_040 lf -- lote estágio
               ON l.ORDEM_CONFECCAO IS NULL
              AND lf.ORDEM_PRODUCAO = lote.OP
