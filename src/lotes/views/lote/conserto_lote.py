@@ -27,6 +27,8 @@ def dict_conserto_lote_custom(
     if qtd_a_mover is None:
         qtd_a_mover = '0'
 
+    user = None
+
     if username is not None:
         try:
             user = User.objects.get(username=username)
