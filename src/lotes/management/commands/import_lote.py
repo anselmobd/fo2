@@ -44,7 +44,7 @@ class Command(BaseCommand):
                 + lo.QTDE_PECAS_PROG * 2
                 + lo.QTDE_EM_PRODUCAO_PACOTE * 3
                 + lo.QTDE_PECAS_PROD * 5
-                + lo.QTDE_CONSERTO * 7
+                + lo.QTDE_CONSERTO * 13
                 + lo.QTDE_DISPONIVEL_BAIXA * 11
                 )
               * (1 + lo.CODIGO_ESTAGIO)
@@ -136,7 +136,7 @@ class Command(BaseCommand):
                   + le.QTDE_PECAS_PROG * 2
                   + le.QTDE_EM_PRODUCAO_PACOTE * 3
                   + le.QTDE_PECAS_PROD * 5
-                  + le.QTDE_CONSERTO * 7
+                  + le.QTDE_CONSERTO * 13
                   + le.QTDE_DISPONIVEL_BAIXA * 11
                   )
                 * (1 + le.CODIGO_ESTAGIO)
