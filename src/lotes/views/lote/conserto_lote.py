@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.contrib.auth.models import User
 from django.db import connections
 from django.http import JsonResponse
 
@@ -14,7 +15,7 @@ def dict_conserto_lote(request, lote, estagio, in_out, qtd_a_mover):
 
 
 def dict_conserto_lote_custom(
-        lote, estagio, in_out, qtd_a_mover, request=None, user=None):
+        lote, estagio, in_out, qtd_a_mover, request=None, username=None):
     in_out = in_out.lower()
     data = {
         'lote': lote,
@@ -26,13 +27,20 @@ def dict_conserto_lote_custom(
     if qtd_a_mover is None:
         qtd_a_mover = '0'
 
-    if request is None:
-        missing_user = 'É necessário informar o usuário'
-    else:
-        missing_user = 'É necessário estar logado na intranet'
+    if username is not None:
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = None
+
+    if request is not None:
         user = request_user(request)
 
     if user is None:
+        if request is None:
+            missing_user = 'É necessário informar o nome do usuário'
+        else:
+            missing_user = 'É necessário estar logado na intranet'
         data.update({
             'error_level': 11,
             'msg': missing_user,
