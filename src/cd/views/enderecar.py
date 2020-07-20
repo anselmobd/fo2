@@ -81,13 +81,13 @@ class Enderecar(PermissionRequiredMixin, View):
                             'Identifique o lote novamente.'})
                 return context
 
+            level = 999
             if lote_rec.conserto == 0:
                 # se lote não tem quantidade endereçada,
                 # então endereça (coloca qtd total em conserto)
                 data = dict_conserto_lote(
                     request, lote, '63', 'in', qtd_livre)
 
-                level = 0
                 if data['error_level'] > 0:
                     level = data['error_level']
                     erro = data['msg']
