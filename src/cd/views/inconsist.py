@@ -83,7 +83,8 @@ class Inconsistencias(View):
                 , le.SEQUENCIA_ESTAGIO SEQ
                 , le.CODIGO_ESTAGIO EST
                 , le63.SEQUENCIA_ESTAGIO SEQ63
-                , sum(le.QTDE_EM_PRODUCAO_PACOTE) QTD
+                -- , sum(le.QTDE_EM_PRODUCAO_PACOTE) QTD
+                , sum(le.QTDE_DISPONIVEL_BAIXA + le.QTDE_CONSERTO) QTD
                 FROM PCPC_020 op -- OP capa
                 LEFT JOIN PCPC_040 le63 -- lote estágio 63
                   ON le63.ordem_producao = op.ORDEM_PRODUCAO
@@ -92,7 +93,10 @@ class Inconsistencias(View):
                   ON le.ordem_producao = op.ORDEM_PRODUCAO
                  AND le.PERIODO_PRODUCAO = le63.PERIODO_PRODUCAO
                  AND le.ORDEM_CONFECCAO = le63.ORDEM_CONFECCAO
-                 AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+                 -- AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+                 AND le.QTDE_PECAS_PROG IS NOT NULL
+                 AND le.QTDE_PECAS_PROG <> 0
+                 AND (le.QTDE_DISPONIVEL_BAIXA + le.QTDE_CONSERTO) <> 0
                 WHERE 1=1
                   -- AND op.SITUACAO <> 9 -- op.COD_CANCELAMENTO = 0
                   AND ({filtro})
