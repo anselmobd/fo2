@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 
 def index(request):
@@ -13,3 +13,7 @@ def teste_som(request):
 
 def movimentacao(request):
     return render(request, 'cd/movimentacao.html')
+
+
+def menu_desligado(request):
+    return redirect('apoio_ao_erp')
