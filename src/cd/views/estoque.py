@@ -92,7 +92,7 @@ class Estoque(View):
             fields = [
                 'local_at', 'local_usuario__username', 'local', 'lote',
                 'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op', 'pedido',
-                'estagio', 'qtd_dif', 'qtd_est', 'qtd', 'conserto']
+                'estagio', 'qtd_dif', 'qtd', 'qtd_livre', 'conserto']
         elif ordem == 'O':  # OP Referência Cor Tamanho Endereço Lote
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
@@ -103,7 +103,7 @@ class Estoque(View):
                 'Por']
             fields = [
                 'op', 'pedido', 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd_dif', 'qtd_est', 'qtd',
+                'estagio', 'qtd_dif', 'qtd', 'qtd_livre',
                 'conserto', 'local', 'lote', 'local_at',
                 'local_usuario__username']
         elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
@@ -116,7 +116,7 @@ class Estoque(View):
                 'Lote', 'Em', 'Por']
             fields = [
                 'referencia', 'tamanho', 'cor', 'qtd_produzir',
-                'estagio', 'qtd_dif', 'qtd_est', 'qtd',
+                'estagio', 'qtd_dif', 'qtd', 'qtd_livre',
                 'conserto', 'local', 'op', 'pedido',
                 'lote', 'local_at', 'local_usuario__username']
         else:  # E: Endereço OP Referência Cor Tamanho Lote
@@ -128,7 +128,7 @@ class Estoque(View):
                 'Q.End.', 'Lote', 'Em', 'Por']
             fields = [
                 'local', 'op', 'pedido', 'referencia', 'tamanho', 'cor',
-                'qtd_produzir', 'estagio', 'qtd_dif', 'qtd_est', 'qtd',
+                'qtd_produzir', 'estagio', 'qtd_dif', 'qtd', 'qtd_livre',
                 'conserto', 'lote', 'local_at', 'local_usuario__username']
 
         data = data_rec.values(
@@ -172,14 +172,14 @@ class Estoque(View):
 
         for row in data:
             row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
-            row['qtd_est'] = row['qtd'] + row['conserto']
+            row['qtd_livre'] = row['qtd'] - row['conserto']
             row['pedido'] = ops_dict[row['op']]['pedido']
             if row['pedido'] == 0:
                 row['pedido'] = '-'
             else:
                 row['pedido|LINK'] = reverse(
                     'producao:pedido__get', args=[row['pedido']])
-            if row['qtd_est']:
+            if row['qtd']:
                 if row['update_at'] is None:
                     row['update_at'] = row['create_at']
                 slq = lotes.models.SolicitaLoteQtd.objects.filter(
@@ -190,7 +190,7 @@ class Estoque(View):
                     if slq['qtd__sum']:
                         slq_qtd = slq['qtd__sum']
 
-                if solicit_cod and (row['qtd_est'] - slq_qtd) > 0:
+                if solicit_cod and (row['qtd'] - slq_qtd) > 0:
                     row['solicita'] = '''
                         <a title="Solicitação parcial de lote"
                          href="javascript:void(0);"
@@ -219,12 +219,12 @@ class Estoque(View):
                         ref=row['referencia'],
                         cor=row['cor'],
                         tam=row['tamanho'],
-                        qtd_resta=row['qtd_est'] - slq_qtd,
+                        qtd_resta=row['qtd'] - slq_qtd,
                         solicit_cod=solicit_cod,
                         solicit_id=solicit_id,
-                        qtd_limite=row['qtd_est'])
+                        qtd_limite=row['qtd'])
                 else:
-                    row['solicita'] = row['qtd_est'] - slq_qtd
+                    row['solicita'] = row['qtd'] - slq_qtd
             else:
                 row['solicita'] = '0'
             row['op|LINK'] = reverse(
@@ -235,7 +235,7 @@ class Estoque(View):
                 'cd:estoque_filtro', args=['E', row['local']])
             if row['estagio'] == 999:
                 row['estagio'] = 'Finalizado'
-            if row['qtd_est'] == row['qtd_produzir']:
+            if row['qtd'] == row['qtd_produzir']:
                 row['qtd_dif'] = ''
             else:
                 row['qtd_dif'] = '*'
