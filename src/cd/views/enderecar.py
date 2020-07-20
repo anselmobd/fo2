@@ -14,14 +14,10 @@ import cd.views.gerais
 
 class Enderecar(PermissionRequiredMixin, View):
 
-    def __init__(self, mobile=False):
-        self.mobile = mobile
+    def __init__(self):
         self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = cd.forms.EnderecarForm
-        if self.mobile:
-            self.template_name = 'cd/enderecar_m.html'
-        else:
-            self.template_name = 'cd/enderecar.html'
+        self.template_name = 'cd/enderecar.html'
         self.title_name = 'Endereçar'
 
     def mount_context(self, request, form):
@@ -139,5 +135,6 @@ class Enderecar(PermissionRequiredMixin, View):
 
 class EnderecarMobile(Enderecar):
 
-    def __init__(self, mobile=True):
-        super(EnderecarMobile, self).__init__(mobile=mobile)
+    def __init__(self):
+        super(EnderecarMobile, self).__init__()
+        self.template_name = 'cd/enderecar_m.html'
