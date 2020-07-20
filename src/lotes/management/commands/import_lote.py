@@ -44,8 +44,8 @@ class Command(BaseCommand):
                 + lo.QTDE_PECAS_PROG * 2
                 + lo.QTDE_EM_PRODUCAO_PACOTE * 3
                 + lo.QTDE_PECAS_PROD * 5
-                + lo.QTDE_CONSERTO * 13
-                + lo.QTDE_DISPONIVEL_BAIXA * 11
+                + lo.QTDE_DISPONIVEL_BAIXA * 7
+                + lo.QTDE_CONSERTO * 11
                 )
               * (1 + lo.CODIGO_ESTAGIO)
               * (1 + mod(lo.ORDEM_CONFECCAO, 111))
@@ -115,7 +115,7 @@ class Command(BaseCommand):
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 999
               ELSE l.CODIGO_ESTAGIO END ESTAGIO
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN lf.QTDE_PECAS_PROD
-              ELSE l.QTDE_DISPONIVEL_BAIXA END QTD
+              ELSE l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO END QTD
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 0
               ELSE l.QTDE_CONSERTO END CONSERTO
             FROM
@@ -136,8 +136,8 @@ class Command(BaseCommand):
                   + le.QTDE_PECAS_PROG * 2
                   + le.QTDE_EM_PRODUCAO_PACOTE * 3
                   + le.QTDE_PECAS_PROD * 5
-                  + le.QTDE_CONSERTO * 13
-                  + le.QTDE_DISPONIVEL_BAIXA * 11
+                  + le.QTDE_DISPONIVEL_BAIXA * 7
+                  + le.QTDE_CONSERTO * 11
                   )
                 * (1 + le.CODIGO_ESTAGIO)
                 * (1 + mod(le.ORDEM_CONFECCAO, 111))
