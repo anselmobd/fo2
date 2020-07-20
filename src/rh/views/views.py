@@ -280,6 +280,10 @@ def eventos(request, id):
     elif id == '2020-06-24':
         context = {'titulo': 'Festa junina 2020!'}
         return render(request, 'rh/eventos/2020-06-24-junina.html', context)
+    elif id == '2020-07-20':
+        context = {'titulo': 'Dia do amigo 2020!'}
+        return render(
+            request, 'rh/eventos/2020-07-20-dia-do-amigo.html', context)
 
 
 def datas(request, data):
