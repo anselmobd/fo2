@@ -1,0 +1,73 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+  <h1>{{ titulo }}</h1>
+  <a href="/media/rh/datas_comemorativas/2020/07/13/dia-do-amigo.jpg" target="_blank">
+    <img src="/media/rh/datas_comemorativas/2020/07/13/dia-do-amigo_w200.jpg" alt="">
+  </a>
+  <h3>Amizade: Uma bem para a vida toda</h3>
+
+  <hr/>
+  <h2>Fotos</h2>
+  <p>
+    <a target="_blank" href="/media/rh/eventos/2020/07/20/adriana.jpg"><img src="/media/rh/eventos/2020/07/20/thumb.adriana.jpg"></a>
+    <a target="_blank" href="/media/rh/eventos/2020/07/20/alessanda.jpg"><img src="/media/rh/eventos/2020/07/20/thumb.alessanda.jpg"></a>
+    <a target="_blank" href="/media/rh/eventos/2020/07/20/aline.jpg"><img src="/media/rh/eventos/2020/07/20/thumb.aline.jpg"></a>
+    <a target="_blank" href="/media/rh/eventos/2020/07/20/jeane.jpg"><img src="/media/rh/eventos/2020/07/20/thumb.jeane.jpg"></a>
+    <a target="_blank" href="/media/rh/eventos/2020/07/20/maristela.jpg"><img src="/media/rh/eventos/2020/07/20/thumb.maristela.jpg"></a>
+    <a target="_blank" href="/media/rh/eventos/2020/07/20/qualidade.jpg"><img src="/media/rh/eventos/2020/07/20/thumb.qualidade.jpg"></a>
+    <a target="_blank" href="/media/rh/eventos/2020/07/20/rosane.jpg"><img src="/media/rh/eventos/2020/07/20/thumb.rosane.jpg"></a>
+    <a target="_blank" href="/media/rh/eventos/2020/07/20/tatiana.jpg"><img src="/media/rh/eventos/2020/07/20/thumb.tatiana.jpg"></a>
+  </p>
+
+  <hr/>
+  <h2>Vídeos</h2>
+  <h3>Adriana</h3>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/0_aKDnWI0us" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <p>&nbsp;</p>
+  <h3>Aline</h3>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/01ct-rrcKTg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <p>&nbsp;</p>
+  <h3>Kênia</h3>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/k_zaVctPjo8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <p>&nbsp;</p>
+  <h3>Luciana</h3>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/V1KkwEot3gg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+  <hr/>
+  <h2>Cartazes</h2>
+  <table>
+    <tr>
+      <td>
+        <a target="_blank" href="/media/rh/eventos/2020/07/20/cartaz-grupo-01.pdf">Grupo 1<br/><img src="/media/rh/eventos/2020/07/20/thumb.cartaz-grupo-01.jpg"></a>
+      </td>
+      <td>
+        <a target="_blank" href="/media/rh/eventos/2020/07/20/cartaz-grupo-02.pdf">Grupo 2<br/><img src="/media/rh/eventos/2020/07/20/thumb.cartaz-grupo-02.jpg"></a>
+      </td>
+      <td>
+        <a target="_blank" href="/media/rh/eventos/2020/07/20/cartaz-amanda.pdf">Amanda<br/><img src="/media/rh/eventos/2020/07/20/thumb.cartaz-amanda.jpg"></a>
+      </td>
+      <td>
+        <a target="_blank" href="/media/rh/eventos/2020/07/20/cartaz-jeane.pdf">Jeane<br/><img src="/media/rh/eventos/2020/07/20/thumb.cartaz-jeane.jpg"></a>
+      </td>
+      <td>
+        <a target="_blank" href="/media/rh/eventos/2020/07/20/cartaz-kenia.pdf">Kênia<br/><img src="/media/rh/eventos/2020/07/20/thumb.cartaz-kenia.jpg"></a>
+      </td>
+    </tr>
+  </table>
+
+</center>
+{% endblock %}
