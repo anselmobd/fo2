@@ -7,13 +7,15 @@ urlpatterns = [
 
     url(r'^s/$', views.teste_som, name='teste_som'),
 
-    url(r'^lote_local/$', views.LoteLocal.as_view(), name='lote_local'),
+    url(r'^lote_local/$', views.menu_desligado, name='lote_local'),
+    url(r'^lote_local_/$', views.LoteLocal.as_view(), name='lote_local_'),
 
     url(r'^estoque/(?P<ordem>.)/(?P<filtro>.+)/$',
         views.Estoque.as_view(), name='estoque_filtro'),
     url(r'^estoque/$', views.Estoque.as_view(), name='estoque'),
 
-    url(r'^troca_local/$', views.TrocaLocal.as_view(), name='troca_local'),
+    url(r'^troca_local/$', views.menu_desligado, name='troca_local'),
+    url(r'^troca_local_/$', views.TrocaLocal.as_view(), name='troca_local_'),
 
     url(r'^inconsist/(?P<ordem>.-?)/(?P<opini>-?\d+)/$',
         views.Inconsistencias.as_view(), name='inconsist_opini'),
