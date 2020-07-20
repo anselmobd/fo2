@@ -48,9 +48,14 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
             , le.PROCONF_SUBGRUPO TAM
             , le.PROCONF_ITEM COR
             , le.CODIGO_ESTAGIO EST
-            , le.QTDE_EM_PRODUCAO_PACOTE QTD
+            -- , le.QTDE_EM_PRODUCAO_PACOTE QTD
+            , le.QTDE_DISPONIVEL_BAIXA + le.QTDE_CONSERTO QTD
             FROM PCPC_040 le -- lote estágio atual
-            WHERE le.QTDE_EM_PRODUCAO_PACOTE <> 0
+            --WHERE le.QTDE_EM_PRODUCAO_PACOTE <> 0
+            WHERE 1=1
+              AND le.QTDE_PECAS_PROG IS NOT NULL
+              AND le.QTDE_PECAS_PROG <> 0
+              AND (le.QTDE_DISPONIVEL_BAIXA + le.QTDE_CONSERTO) <> 0
               AND le.ORDEM_PRODUCAO = {op}
               AND le.ORDEM_CONFECCAO IN (
               {ocs}
@@ -67,7 +72,10 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
             , 0 EST
             , le.QTDE_PECAS_PROD QTD
             FROM PCPC_040 le -- lote estágio atual
-            WHERE le.QTDE_EM_PRODUCAO_PACOTE = 0
+            --WHERE le.QTDE_EM_PRODUCAO_PACOTE = 0
+            WHERE le.QTDE_PECAS_PROG IS NOT NULL
+              AND le.QTDE_PECAS_PROG <> 0
+              AND le.QTDE_PECAS_PROD <> 0
               AND le.ORDEM_PRODUCAO = {op}
               AND le.ORDEM_CONFECCAO IN (
               {ocs}
