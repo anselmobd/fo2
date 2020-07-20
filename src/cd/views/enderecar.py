@@ -40,7 +40,7 @@ class Enderecar(PermissionRequiredMixin, View):
             cursor, periodo, ordem_confeccao)
 
         lote_rec = lotes.models.Lote.objects.get(lote=lote)
-        qtd_livre = lote_rec.qtd
+        qtd_livre = lote_rec.qtd - lote_rec.conserto
 
         if lote_rec.referencia >= 'C0000':
             context.update({
