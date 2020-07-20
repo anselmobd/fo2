@@ -55,6 +55,7 @@ class Enderecar(PermissionRequiredMixin, View):
             'qtd_produzir': lote_rec.qtd_produzir,
             'local': lote_rec.local,
             'qtd_livre': qtd_livre,
+            'conserto': lote_rec.conserto,
             })
 
         estagios_aceitos = [63]
