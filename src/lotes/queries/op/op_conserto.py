@@ -12,6 +12,7 @@ def op_conserto(cursor):
         FROM PCPC_040 lote
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
+        WHERE lote.CODIGO_ESTAGIO <> 63
         GROUP BY
           lote.PROCONF_GRUPO
         , lote.PROCONF_ITEM
