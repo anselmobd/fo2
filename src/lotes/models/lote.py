@@ -121,7 +121,8 @@ def posicao2_lote(cursor, periodo, ordem_confeccao):
         SELECT
           3000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , l.QTDE_CONSERTO QTD
-        , 'EM CONSERTO' TIPO
+        , CASE WHEN l.CODIGO_ESTAGIO = 63 THEN 'ENDEREÇADO'
+          ELSE 'EM CONSERTO' END TIPO
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
         FROM lotes sel
         JOIN PCPC_040 l
