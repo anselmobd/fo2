@@ -72,6 +72,26 @@ def posicao_op(cursor, op):
         SELECT
           3000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
         , sum(l.QTDE_CONSERTO) QTD
+        , 'ENDEREÇADO' TIPO
+        , l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
+        FROM ops o
+        JOIN PCPC_040 l
+          ON l.ORDEM_PRODUCAO = o.op
+        JOIN MQOP_005 e
+          ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+        WHERE l.QTDE_CONSERTO > 0
+          AND l.CODIGO_ESTAGIO = 63
+        GROUP BY
+          l.SEQUENCIA_ESTAGIO
+        , l.CODIGO_ESTAGIO
+        , e.DESCRICAO
+        --
+        UNION
+        --
+        --
+        SELECT
+          3000 + l.SEQUENCIA_ESTAGIO SEQUENCIA
+        , sum(l.QTDE_CONSERTO) QTD
         , 'EM CONSERTO' TIPO
         , l.CODIGO_ESTAGIO || '-' || e.DESCRICAO ESTAGIO
         FROM ops o
@@ -80,6 +100,7 @@ def posicao_op(cursor, op):
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         WHERE l.QTDE_CONSERTO > 0
+          AND l.CODIGO_ESTAGIO <> 63
         GROUP BY
           l.SEQUENCIA_ESTAGIO
         , l.CODIGO_ESTAGIO
