@@ -61,7 +61,7 @@ def posicao_estoque(
             , e.cditem_item
             , e.deposito
             , e.lote_acomp'''
-    elif group in ['', 'rctd']:
+    elif group == 'rctd':
         select_fields = '''--
             , e.cditem_grupo
             , e.cditem_subgrupo
