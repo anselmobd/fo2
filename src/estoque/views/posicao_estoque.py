@@ -132,12 +132,32 @@ class PosicaoEstoque(View):
                 'descr': {'dep_descr': 'Total:'},
                 'row_style': 'font-weight: bold;',
             })
+            lote_acomp_0 = True
+            for row in data:
+                if row['lote_acomp'] != 0:
+                    lote_acomp_0 = False
+            if lote_acomp_0:
+                context.update({
+                    'headers': ('Nível', 'Referência',
+                                'Tamanho', 'Cor',
+                                'Depósito', 'Quantidade'),
+                    'fields': ('cditem_nivel99', 'cditem_grupo',
+                               'cditem_subgrupo', 'cditem_item',
+                               'dep_descr', 'qtd'),
+                })
+            else:
+                context.update({
+                    'headers': ('Nível', 'Referência',
+                                'Tamanho', 'Cor', 'Depósito',
+                                'Lote do produto', 'Quantidade'),
+                    'fields': ('cditem_nivel99', 'cditem_grupo',
+                               'cditem_subgrupo', 'cditem_item', 'dep_descr',
+                               'lote_acomp', 'qtd'),
+                    'style': {7: 'text-align: right;'},
+                })
+            data[-1]['lote_acomp'] = ''
             context.update({
-                'headers': ('Nível', 'Referência', 'Tamanho',
-                            'Cor', 'Depósito', 'Quantidade'),
-                'fields': ('cditem_nivel99', 'cditem_grupo', 'cditem_subgrupo',
-                           'cditem_item', 'dep_descr', 'qtd'),
-                'style': {6: 'text-align: right;'},
+                'style': {7: 'text-align: right;'},
             })
         context.update({
             'data': data,
