@@ -50,7 +50,8 @@ def posicao_estoque(
             , e.cditem_subgrupo
             , e.cditem_item
             , e.deposito
-            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
+            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR
+            , e.lote_acomp'''
         field_quantidade = ', e.qtde_estoque_atu qtd'
         group_fields = ''
         order_by = '''--
@@ -58,14 +59,16 @@ def posicao_estoque(
             , ta.ORDEM_TAMANHO
             , e.cditem_subgrupo
             , e.cditem_item
-            , e.deposito'''
+            , e.deposito
+            , e.lote_acomp'''
     elif group in ['', 'rctd']:
         select_fields = '''--
             , e.cditem_grupo
             , e.cditem_subgrupo
             , e.cditem_item
             , e.deposito
-            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
+            , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR
+            , e.lote_acomp'''
         field_quantidade = ', e.qtde_estoque_atu qtd'
         group_fields = ''
         order_by = '''--
@@ -73,7 +76,8 @@ def posicao_estoque(
             , e.cditem_item
             , ta.ORDEM_TAMANHO
             , e.cditem_subgrupo
-            , e.deposito'''
+            , e.deposito
+            , e.lote_acomp'''
     elif group == 'r':
         select_fields = '''--
             , e.cditem_grupo
@@ -187,5 +191,6 @@ def posicao_estoque(
           e.CDITEM_NIVEL99
         {order_by} -- order_by
     '''
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
