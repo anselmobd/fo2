@@ -11,7 +11,8 @@ def op_sortimento(cursor, **kwargs):
 def op_sortimentos(cursor, **kwargs):
     '''
     op: Apenas determinada OP
-    tipo: t - Todos os lotes
+        >None - Todas
+    tipo:>t - Todos os lotes
           a - Ainda não produzido / não finalizado
           fpnf - finalizado, de pedido, não faturado
           apf - a produzir, de pedido faturado
@@ -21,21 +22,24 @@ def op_sortimentos(cursor, **kwargs):
           acd - estocada; "a", no CD (estágios 57 e 63)
           ap - em produção; "a", não no CD (estágios não 57 e 63)
     descr_sort: False - Apenas código do sortimento (cor)
-                True - Descrição junto ao código do sortimento (cor)
+               >True - Descrição junto ao código do sortimento (cor)
     modelo: Filtra PA, PB ou PG de determinado modelo_inform
-            None - QQ referência
-    situacao: c - OP cancelada
+           >None - QQ referência
+    situacao:>None - Todas
+              c - OP cancelada
               a - OP não cancelado (ativa)
-    tipo_ref: a - PA
+    tipo_ref:>None - Todas
+              a - PA
               g - PG
               b - import pdb; pdb.set_trace()
               p - PG ou PB
               v - PA, PG ou PB
               m - MD ou outros não "PA, PG ou PB"
-    tipo_alt: e - OP de expedição (PA com alternativa em (10, 50) ou (60, 100))
+    tipo_alt:>None - Todas
+              e - OP de expedição (PA com alternativa em (10, 50) ou (60, 100))
               p - OP não de expedição
     total: True - totaliza grade
-           False - não totaliza
+          >None, False - não totaliza
     '''
     def argdef(arg, default):
         return arg_def(kwargs, arg, default)
