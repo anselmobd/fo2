@@ -9,7 +9,8 @@ def op_estagios(cursor, op):
         , l.CODIGO_ESTAGIO COD_EST
         , cast( SUM( l.QTDE_PECAS_PROD ) / SUM( l.QTDE_PECAS_PROG ) * 100
                 AS NUMERIC(10,2) ) PERC
-        , SUM( l.QTDE_EM_PRODUCAO_PACOTE ) EMPROD
+        -- , SUM( l.QTDE_EM_PRODUCAO_PACOTE ) EMPROD
+        , SUM( l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO ) EMPROD
         , SUM( l.QTDE_PECAS_PROD ) PROD
         , SUM( l.QTDE_PECAS_2A ) Q2
         , SUM( l.QTDE_PERDAS ) PERDA
@@ -25,6 +26,12 @@ def op_estagios(cursor, op):
             ELSE 0
             END
           ) ENDERECADO
+        , SUM(
+            CASE WHEN l.CODIGO_ESTAGIO = 63
+            THEN l.QTDE_DISPONIVEL_BAIXA
+            ELSE 0
+            END
+          ) DESENDERECADO
         , SUM(
           CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE <> 0 THEN 1 ELSE 0 END
           ) LOTES
