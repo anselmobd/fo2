@@ -13,7 +13,18 @@ def op_estagios(cursor, op):
         , SUM( l.QTDE_PECAS_PROD ) PROD
         , SUM( l.QTDE_PECAS_2A ) Q2
         , SUM( l.QTDE_PERDAS ) PERDA
-        , SUM( l.QTDE_CONSERTO ) CONSERTO
+        , SUM(
+            CASE WHEN l.CODIGO_ESTAGIO = 63
+            THEN 0
+            ELSE l.QTDE_CONSERTO
+            END
+          ) CONSERTO
+        , SUM(
+            CASE WHEN l.CODIGO_ESTAGIO = 63
+            THEN l.QTDE_CONSERTO
+            ELSE 0
+            END
+          ) ENDERECADO
         , SUM(
           CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE <> 0 THEN 1 ELSE 0 END
           ) LOTES
