@@ -82,12 +82,12 @@ def quant_estagio(
     sql = f"""
         SELECT
           sum(
-            CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE > 0
+            CASE WHEN (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
             THEN 1
             ELSE 0
             END
           ) LOTES
-        , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
+        , sum((l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)) QUANT
         {filtro_group} -- filtro_group
         , l.PROCONF_NIVEL99 NIVEL
         , l.PROCONF_GRUPO REF
@@ -117,7 +117,7 @@ def quant_estagio(
         , l.PROCONF_SUBGRUPO
         , l.PROCONF_ITEM
         HAVING
-          sum(l.QTDE_EM_PRODUCAO_PACOTE) > 0
+          sum((l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)) > 0
         ORDER BY
           l.PROCONF_NIVEL99
         {filtro_group} -- filtro_group
@@ -180,19 +180,19 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
         , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
         , sum(
             CASE WHEN l.PROCONF_GRUPO <= '99999'
-              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+              AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
             THEN 1 ELSE 0 END
           ) LOTES_PA
         , sum(
             CASE WHEN l.PROCONF_GRUPO <= '99999'
-            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            THEN (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)
             ELSE 0
             END
           ) QUANT_PA
         , sum(
             CASE WHEN l.PROCONF_GRUPO <= '99999'
             THEN
-              l.QTDE_EM_PRODUCAO_PACOTE *
+              (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) *
               ( SELECT
                   CASE WHEN count(*) = 0 THEN 1
                   ELSE count(*) END
@@ -207,19 +207,19 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
           ) PECAS_PA
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'A%'
-              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+              AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
             THEN 1 ELSE 0 END
           ) LOTES_PG
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'A%'
-            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            THEN (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)
             ELSE 0
             END
           ) QUANT_PG
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'A%'
             THEN
-              l.QTDE_EM_PRODUCAO_PACOTE *
+              (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) *
               ( SELECT
                   CASE WHEN count(*) = 0 THEN 1
                   ELSE count(*) END
@@ -234,19 +234,19 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
           ) PECAS_PG
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'B%'
-              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+              AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
             THEN 1 ELSE 0 END
           ) LOTES_PB
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'B%'
-            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            THEN (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)
             ELSE 0
             END
           ) QUANT_PB
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'B%'
             THEN
-              l.QTDE_EM_PRODUCAO_PACOTE *
+              (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) *
               ( SELECT
                   CASE WHEN count(*) = 0 THEN 1
                   ELSE count(*) END
@@ -262,13 +262,13 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
         , sum(
             CASE WHEN l.PROCONF_GRUPO >= 'C0000'
               AND l.PROCONF_GRUPO NOT LIKE 'F%'
-              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+              AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
             THEN 1 ELSE 0 END
           ) LOTES_MD
         , sum(
             CASE WHEN l.PROCONF_GRUPO >= 'C0000'
               AND l.PROCONF_GRUPO NOT LIKE 'F%'
-            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            THEN (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)
             ELSE 0
             END
           ) QUANT_MD
@@ -276,7 +276,7 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
             CASE WHEN l.PROCONF_GRUPO >= 'C0000'
               AND l.PROCONF_GRUPO NOT LIKE 'F%'
             THEN
-              l.QTDE_EM_PRODUCAO_PACOTE *
+              (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) *
               ( SELECT
                   CASE WHEN count(*) = 0 THEN 1
                   ELSE count(*) END
@@ -291,19 +291,19 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
           ) PECAS_MD
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'F%'
-              AND l.QTDE_EM_PRODUCAO_PACOTE > 0
+              AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
             THEN 1 ELSE 0 END
           ) LOTES_MP
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'F%'
-            THEN l.QTDE_EM_PRODUCAO_PACOTE
+            THEN (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)
             ELSE 0
             END
           ) QUANT_MP
         , sum(
             CASE WHEN l.PROCONF_GRUPO LIKE 'F%'
             THEN
-              l.QTDE_EM_PRODUCAO_PACOTE *
+              (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) *
               ( SELECT
                   CASE WHEN count(*) = 0 THEN 1
                   ELSE count(*) END
@@ -317,14 +317,14 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
             END
           ) PECAS_MP
         , sum(
-            CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE > 0
+            CASE WHEN (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
             THEN 1
             ELSE 0
             END
           ) LOTES
-        , sum(l.QTDE_EM_PRODUCAO_PACOTE) QUANT
+        , sum((l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)) QUANT
         , sum(
-            l.QTDE_EM_PRODUCAO_PACOTE *
+            (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) *
             ( SELECT
                 CASE WHEN count(*) = 0 THEN 1
                 ELSE count(*) END
@@ -353,7 +353,7 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
           l.CODIGO_ESTAGIO
         , e.DESCRICAO
         HAVING
-          sum(l.QTDE_EM_PRODUCAO_PACOTE) > 0
+          sum((l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)) > 0
         ORDER BY
           l.CODIGO_ESTAGIO
     """.format(
