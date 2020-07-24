@@ -226,18 +226,32 @@ class Op(View):
             e_data = lotes.queries.op.op_estagios(cursor, op)
             p.prt('op_estagios')
 
+            tem_63 = False
             for row in e_data:
                 qtd_lotes_fim -= row['LOTES']
+                tem_63 = tem_63 or row['COD_EST'] == 63
+
+            headers_63 = []
+            fields_63 = []
+            if tem_63:
+                headers_63 = ['Itens Endereçados', 'Itens Livres']
+                fields_63 = ['ENDERECADO', 'DESENDERECADO']
+
             context.update({
-                'e_headers': ('Estágio', '% Produzido',
-                              'Itens 1ª Qualidade', 'Itens 2ª Qualidade',
-                              'Itens Perda', 'Itens Conserto',
-                              'Itens Endereçados',
-                              'Itens Em Produção', 'Lotes no estágio'),
-                'e_fields': ('EST', 'PERC',
-                             'PROD', 'Q2',
-                             'PERDA', 'CONSERTO', 'ENDERECADO',
-                             'EMPROD', 'LOTES'),
+                'e_headers': [
+                    'Estágio', '% Produzido',
+                    'Itens 1ª Qualidade', 'Itens 2ª Qualidade',
+                    'Itens Perda', 'Itens Conserto'
+                ] + headers_63 + [
+                    'Itens Em Produção', 'Lotes no estágio'
+                ],
+                'e_fields': [
+                    'EST', 'PERC',
+                    'PROD', 'Q2',
+                    'PERDA', 'CONSERTO',
+                ] + fields_63 + [
+                    'EMPROD', 'LOTES'
+                ],
                 'e_data': e_data,
                 'qtd_lotes_fim': qtd_lotes_fim,
             })
