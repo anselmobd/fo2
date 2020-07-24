@@ -33,7 +33,9 @@ def op_estagios(cursor, op):
             END
           ) DESENDERECADO
         , SUM(
-          CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE <> 0 THEN 1 ELSE 0 END
+          -- CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE <> 0
+          CASE WHEN l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO <> 0
+          THEN 1 ELSE 0 END
           ) LOTES
         FROM pcpc_040 l
         JOIN MQOP_005 e
