@@ -513,6 +513,7 @@ def op_sortimentos(cursor, **kwargs):
                 LEFT JOIN BASI_220 tam
                   ON tam.TAMANHO_REF = lote.PROCONF_SUBGRUPO
                 WHERE 1=1
+                  AND lote.CODIGO_ESTAGIO <> 63
                   {filtra_op} -- filtra_op
                 GROUP BY
                   tam.ORDEM_TAMANHO
