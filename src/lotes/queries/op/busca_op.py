@@ -290,13 +290,21 @@ def busca_op(
               FROM pcpc_020 op
               JOIN PCPC_040 l
                 ON l.ORDEM_PRODUCAO = op.ORDEM_PRODUCAO
-              WHERE (l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO) > 0
+              -- WHERE (l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO) > 0
+              WHERE ( ( l.CODIGO_ESTAGIO <> 63
+                      AND (l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO) > 0
+                      )
+                    OR
+                      ( l.CODIGO_ESTAGIO = 63
+                      AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
+                      )
+                    )
               GROUP BY
                 op.ORDEM_PRODUCAO
               , l.SEQUENCIA_ESTAGIO
               , l.CODIGO_ESTAGIO
-              ORDER BY
-                l.SEQUENCIA_ESTAGIO
+              --ORDER BY
+              --  l.SEQUENCIA_ESTAGIO
             ) t
             WHERE t.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
           ) ESTAGIO
