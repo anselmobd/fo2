@@ -188,7 +188,8 @@ class Op(View):
 
             # Grade de perda
             gp_header, gp_fields, gp_data, total = \
-                lotes.queries.op.op_sortimentos(cursor, op=op, tipo='p')
+                lotes.queries.op.op_sortimentos(
+                    cursor, op=op, tipo='p', descr_sort=False)
             p.prt('op_sortimentos perda')
 
             if total != 0:
@@ -200,7 +201,8 @@ class Op(View):
 
             # Grade de segunda qualidade
             gs_header, gs_fields, gs_data, total = \
-                lotes.queries.op.op_sortimentos(cursor, op=op, tipo='s')
+                lotes.queries.op.op_sortimentos(
+                    cursor, op=op, tipo='s', descr_sort=False)
             p.prt('op_sortimentos 2ª')
 
             if total != 0:
@@ -212,7 +214,8 @@ class Op(View):
 
             # Grade de conserto
             gc_header, gc_fields, gc_data, total = \
-                lotes.queries.op.op_sortimentos(cursor, op=op, tipo='c')
+                lotes.queries.op.op_sortimentos(
+                    cursor, op=op, tipo='c', descr_sort=False)
             p.prt('op_sortimentos conserto')
 
             if total != 0:
