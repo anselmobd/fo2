@@ -25,7 +25,8 @@ def op_ref_estagio(cursor, op):
                   ON ed.CODIGO_ESTAGIO = le.CODIGO_ESTAGIO
                 WHERE le.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
                   AND le.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO
-                  AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+                  --AND le.QTDE_EM_PRODUCAO_PACOTE <> 0
+                  AND le.QTDE_DISPONIVEL_BAIXA + le.QTDE_CONSERTO <> 0
               )
             , 'FINALIZADO'
             ) EST
