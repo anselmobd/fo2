@@ -372,7 +372,7 @@ def busca_op(
           , ' ' ) MODELO
         , seq_op.LOTES
         , seq_l.QTD
-        , seq_l.QTD_AP
+        , lotes_ap.QTD_AP
         , lotes_cd.QTD_CD
         , seq_l.QTD_F
         , o.DATA_PROGRAMACAO DT_DIGITACAO
@@ -420,7 +420,7 @@ def busca_op(
             l.ORDEM_PRODUCAO
           , l.SEQ_OPERACAO
           , SUM( l.QTDE_PECAS_PROD ) QTD_F
-          , SUM( l.QTDE_A_PRODUZIR_PACOTE ) QTD_AP
+          -- , SUM( l.QTDE_A_PRODUZIR_PACOTE ) QTD_AP
           , SUM( l.QTDE_PECAS_PROG ) QTD
           FROM pcpc_040 l
           WHERE 1=1
@@ -432,6 +432,18 @@ def busca_op(
           ) seq_l
           ON seq_l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
          AND seq_l.SEQ_OPERACAO = seq_op.MAXSEQ
+        LEFT JOIN (
+          SELECT
+            l.ORDEM_PRODUCAO
+          , SUM( l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO ) QTD_AP
+          FROM pcpc_040 l
+          WHERE 1=1
+            {filtra_qtd_tam} -- filtra_qtd_tam
+            {filtra_qtd_cor} -- filtra_qtd_cor
+          GROUP BY
+            l.ORDEM_PRODUCAO
+          ) lotes_ap
+          ON lotes_ap.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
         LEFT JOIN (
           SELECT
             l.ORDEM_PRODUCAO
@@ -498,7 +510,7 @@ def busca_op(
         , div.DESCRICAO
         , seq_op.LOTES
         , seq_l.QTD
-        , seq_l.QTD_AP
+        , lotes_ap.QTD_AP
         , lotes_cd.QTD_CD
         , seq_l.QTD_F
         , ome.ORDEM_PRODUCAO
