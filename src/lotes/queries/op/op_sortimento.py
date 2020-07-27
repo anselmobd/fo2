@@ -116,12 +116,16 @@ def op_sortimentos(cursor, **kwargs):
         filtro_especifico = "AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))"
     elif tipo == 'acd':  # Ainda não produzido / lotes no CD
         filtro_especifico = """--
-            AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0)) -- filtro_especifico
+            -- AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0))
+            -- filtro_especifico
+            AND (NOT (lote.QTDE_DISPONIVEL_BAIXA + lote.QTDE_CONSERTO = 0))
             AND lote.CODIGO_ESTAGIO IN (57, 63) -- filtro_especifico
             """
     elif tipo == 'ap':  # Ainda não produzido / lotes em produção
         filtro_especifico = """--
-            AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0)) -- filtro_especifico
+            -- AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0))
+            -- filtro_especifico
+            AND (NOT (lote.QTDE_DISPONIVEL_BAIXA + lote.QTDE_CONSERTO = 0))
             AND lote.CODIGO_ESTAGIO NOT IN (57, 63) -- filtro_especifico
             """
 
@@ -332,7 +336,8 @@ def op_sortimentos(cursor, **kwargs):
             SELECT
               l.PROCONF_SUBGRUPO TAMANHO
             , l.PROCONF_ITEM SORTIMENTO
-            , SUM( l.QTDE_EM_PRODUCAO_PACOTE ) QUANTIDADE
+            -- , SUM( l.QTDE_EM_PRODUCAO_PACOTE ) QUANTIDADE
+            , SUM( l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO ) QUANTIDADE
             FROM pcpc_040 l
             JOIN opl
               ON opl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
