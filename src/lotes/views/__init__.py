@@ -1,5 +1,6 @@
 from . import analise
 from . import lote
+from . import ord_prod
 from . import pedido
 from .a_produzir import *
 from .distribuicao import *

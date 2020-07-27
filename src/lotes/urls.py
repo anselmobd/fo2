@@ -19,8 +19,8 @@ urlpatterns = [
     url(r'^ajax/altera_direito_estagio/(?P<id>[^/]+)/$',
         views.altera_direito_estagio, name='altera_direito_estagio'),
 
-    url(r'^busca_op/$', views.BuscaOP.as_view(), name='busca_op'),
-    url(r'^busca_op/(?P<ref>.+)/$', views.BuscaOP.as_view(),
+    url(r'^busca_op/$', views.ord_prod.BuscaOP.as_view(), name='busca_op'),
+    url(r'^busca_op/(?P<ref>.+)/$', views.ord_prod.BuscaOP.as_view(),
         name='busca_op__get'),
 
     url(r'^op/$', views.Op.as_view(), name='op'),
