@@ -435,7 +435,7 @@ def busca_op(
         LEFT JOIN (
           SELECT
             l.ORDEM_PRODUCAO
-          , SUM( l.QTDE_EM_PRODUCAO_PACOTE ) QTD_CD
+          , SUM( l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO ) QTD_CD
           FROM pcpc_040 l
           WHERE 1=1
             AND l.CODIGO_ESTAGIO IN (57, 63)
