@@ -1,9 +1,13 @@
-__version__ = '0.2.5'
-__version__date__ = '04/03/2020'
+__version__ = '0.2.6'
+__version__date__ = '27/07/2020'
 
 # histórico
 #
 # - ?.?.??? - 20??/??/??
+#
+# - 0.2.6 - 2020/07/27
+#   . utilizando conserto como indicação de quantidade endereçada no estágio 63
+#   . vários outras alterações
 #
 # - 0.2.5 - 2020/03/04
 #   . melhorias no item_no_tempo e na rotina de ajuste
