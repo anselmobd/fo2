@@ -100,8 +100,7 @@ def busca_op(
                 *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-                -- AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
-                AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
+                AND (l.QTDE_DISPONIVEL_BAIXA > 0 OR l.QTDE_CONSERTO > 0)
             )"""
     elif posicao == 'p63':
         filtra_posicao = """--
@@ -110,8 +109,7 @@ def busca_op(
                 *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-                -- AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
-                AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
+                AND (l.QTDE_DISPONIVEL_BAIXA > 0 OR l.QTDE_CONSERTO > 0)
                 AND l.CODIGO_ESTAGIO <> 63
             )"""
     elif posicao == 'f':
@@ -121,8 +119,7 @@ def busca_op(
                 *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-                -- AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
-                AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
+                AND (l.QTDE_DISPONIVEL_BAIXA > 0 OR l.QTDE_CONSERTO > 0)
             )"""
     elif posicao == 'f63':
         filtra_posicao = """--
@@ -131,8 +128,7 @@ def busca_op(
                 *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-                -- AND (l.QTDE_EM_PRODUCAO_PACOTE) > 0
-                AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
+                AND (l.QTDE_DISPONIVEL_BAIXA > 0 OR l.QTDE_CONSERTO > 0)
                 AND l.CODIGO_ESTAGIO <> 63
             )"""
 
