@@ -272,7 +272,6 @@ def op_sortimentos(cursor, **kwargs):
             (
             SELECT
               o.ORDEM_PRODUCAO
-            , max(lote.SEQ_OPERACAO) SEQ_OPERACAO
             FROM pcpc_040 lote
             JOIN PCPC_020 o
               ON o.ORDEM_PRODUCAO = lote.ORDEM_PRODUCAO
@@ -289,11 +288,10 @@ def op_sortimentos(cursor, **kwargs):
             SELECT
               l.PROCONF_SUBGRUPO TAMANHO
             , l.PROCONF_ITEM SORTIMENTO
-            , SUM( l.QTDE_A_PRODUZIR_PACOTE ) QUANTIDADE
+            , SUM( l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO ) QUANTIDADE
             FROM pcpc_040 l
             JOIN opl
               ON opl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-             AND opl.SEQ_OPERACAO = l.SEQ_OPERACAO
             LEFT JOIN BASI_220 tam
               ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
             GROUP BY
