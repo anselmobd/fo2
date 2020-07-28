@@ -113,7 +113,8 @@ def op_sortimentos(cursor, **kwargs):
 
     filtro_especifico = ''
     if tipo == 'a':  # Ainda não produzido / não finalizado
-        filtro_especifico = "AND (NOT (lote.QTDE_A_PRODUZIR_PACOTE = 0))"
+        filtro_especifico = \
+            "AND (lote.QTDE_DISPONIVEL_BAIXA > 0 OR lote.QTDE_CONSERTO > 0)"
     elif tipo == 'acd':  # Ainda não produzido / lotes no CD
         filtro_especifico = """--
             -- AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0))
