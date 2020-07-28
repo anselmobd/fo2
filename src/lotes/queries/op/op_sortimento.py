@@ -117,16 +117,12 @@ def op_sortimentos(cursor, **kwargs):
             "AND (lote.QTDE_DISPONIVEL_BAIXA > 0 OR lote.QTDE_CONSERTO > 0)"
     elif tipo == 'acd':  # Ainda não produzido / lotes no CD
         filtro_especifico = """--
-            -- AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0))
-            -- filtro_especifico
-            AND (NOT (lote.QTDE_DISPONIVEL_BAIXA + lote.QTDE_CONSERTO = 0))
+            AND (lote.QTDE_DISPONIVEL_BAIXA > 0 OR lote.QTDE_CONSERTO > 0)
             AND lote.CODIGO_ESTAGIO IN (57, 63) -- filtro_especifico
             """
     elif tipo == 'ap':  # Ainda não produzido / lotes em produção
         filtro_especifico = """--
-            -- AND (NOT (lote.QTDE_EM_PRODUCAO_PACOTE = 0))
-            -- filtro_especifico
-            AND (NOT (lote.QTDE_DISPONIVEL_BAIXA + lote.QTDE_CONSERTO = 0))
+            AND (lote.QTDE_DISPONIVEL_BAIXA > 0 OR lote.QTDE_CONSERTO > 0)
             AND lote.CODIGO_ESTAGIO NOT IN (57, 63) -- filtro_especifico
             """
 
