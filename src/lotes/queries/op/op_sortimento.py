@@ -223,7 +223,7 @@ def op_sortimentos(cursor, **kwargs):
         sql=sql
         )
 
-    if tipo == 't':  # Total a produzir
+    if tipo == 't':  # Total a produzir / programado
         # sortimento
         grade.value(
             id='QUANTIDADE',
