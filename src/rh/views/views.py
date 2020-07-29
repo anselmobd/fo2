@@ -273,6 +273,13 @@ def campanhas(request, id):
             request, 'rh/campanhas/2020-03-12-reunioes-produtivas.html')
 
 
+def comunicados(request, id):
+    if id == '2020-07-29':
+        context = {'titulo': 'Tecelagem - Pagamentos'}
+        return render(
+            request, 'rh/comunicados/2020-07-29-pagamentos.html', context)
+
+
 def eventos(request, id):
     if id == '2020-03-17':
         context = {'titulo': 'Fotos - SIPAT 2020'}
