@@ -13,6 +13,9 @@ urlpatterns = [
     url(r'^eventos/(?P<id>.+)?/?$',
         views.eventos, name='eventos'),
 
+    url(r'^comunicados/(?P<id>.+)?/?$',
+        views.comunicados, name='comunicados'),
+
     url(r'^datas/(?P<data>.+)/$', views.datas, name='datas'),
 
     url(r'^fotos/$', views.fotos, name='fotos'),

@@ -1,0 +1,35 @@
+{% extends 'rh/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}<a href="{% url 'rh:index' %}">{{ block.super }}</a><br/><center>{{ titulo }}</center>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+img {
+  padding: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<center>
+  <h1>{{ titulo }}</h1>
+  <hr/>
+  <table >
+    <tr>
+      <td style="text-align: center">
+        <h2>Julho</h2>
+        <iframe width="330" height="615" src="https://www.youtube.com/embed/cu8mLEfcrcM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </td>
+      <td style="width: 100px">
+        &nbsp;
+      </td>
+      <td style="text-align: center">
+        <h2>Agosto</h2>
+        <iframe width="330" height="615" src="https://www.youtube.com/embed/ucDU2DnV7qU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </td>
+    </tr>
+  </table>
+
+</center>
+{% endblock %}
