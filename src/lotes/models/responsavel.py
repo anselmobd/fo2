@@ -95,7 +95,7 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
           --LEFT JOIN MQOP_006 r
         --    ON r.CODIGO_ESTAGIO = e.CODIGO_ESTAGIO
           --LEFT JOIN HDOC_030 u
-        --    ON u.EMRPESA = 1
+        --    ON u.EMPRESA = 1
         --   AND u.CODIGO_USUARIO = r.CODIGO_USUARIO
           WHERE e.CODIGO_ESTAGIO <> 0
             AND u.ATIVO_INATIVO = 1

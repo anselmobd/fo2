@@ -262,7 +262,7 @@ def dict_conserto_lote_custom(
                 SELECT
                   u.USUARIO
                 FROM HDOC_030 u
-                WHERE u.EMRPESA = 1
+                WHERE u.EMPRESA = 1
                   AND u.CODIGO_USUARIO = ml.CODIGO_USUARIO
               )
             --, ml.PROCESSO_SYSTEXTIL = '-'
@@ -279,7 +279,7 @@ def dict_conserto_lote_custom(
               , ml.SEQUENCIA
               FROM PCPC_045 ml
               JOIN HDOC_030 u
-                ON u.EMRPESA = 1
+                ON u.EMPRESA = 1
                AND u.CODIGO_USUARIO = ml.CODIGO_USUARIO
               WHERE PCPC040_PERCONF = {lote[:4]}
                 AND PCPC040_ORDCONF = {lote[4:]}
