@@ -24,7 +24,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         self.SL = lotes.models.SolicitaLote
         self.id = None
 
-    def lista(self, filtro=None, data=None):
+    def lista(self, filtro=None, data=None, ref=None):
         fields = (
             'numero', 'codigo', 'ativa', 'descricao',
             'data', 'usuario__username', 'update_at',
@@ -38,7 +38,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         headers = dict(zip(fields, descriptions))
 
         cursor_def = connection.cursor()
-        data = queries.lista_solicita_lote(cursor_def, filtro, data)
+        data = queries.lista_solicita_lote(cursor_def, filtro, data, ref)
         for row in data:
             row['codigo|LINK'] = reverse(
                 'cd:solicitacao_detalhe', args=[row['id']])
@@ -46,6 +46,7 @@ class Solicitacoes(LoginRequiredMixin, View):
             'headers': headers,
             'fields': fields,
             'data': data,
+            'ref': ref,
         }
         return context
 
@@ -100,11 +101,13 @@ class Solicitacoes(LoginRequiredMixin, View):
             if filter.is_valid():
                 filtro = filter.cleaned_data['filtro']
                 data = filter.cleaned_data['data']
+                ref = filter.cleaned_data['ref']
             else:
                 filtro = None
                 data = None
+                ref = None
             context['filter'] = filter
-            context.update(self.lista(filtro, data))
+            context.update(self.lista(filtro, data, ref))
             return render(request, self.template_name, context)
 
         form = self.Form_class(request.POST)

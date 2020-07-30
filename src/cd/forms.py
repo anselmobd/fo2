@@ -419,6 +419,17 @@ class FiltraSolicitacaoForm(forms.Form):
     data = forms.DateField(
         label='Data do embarque', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
+    ref = forms.CharField(
+        label='Referência', required=False, max_length=5,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'size': 5}))
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
 
 
 class AskLoteForm(forms.Form):
