@@ -5,11 +5,24 @@ from utils.functions.digits import *
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def lista_solicita_lote(cursor, filtro=None, data=None):
+def lista_solicita_lote(cursor, filtro=None, data=None, ref=None):
     filtra_data = ''
     if data is not None:
         filtra_data = f'''--
             AND s.data = '{data}'
+        '''
+    filtra_ref = ''
+    if ref is not None and ref != '':
+        filtra_ref = f'''--
+            AND s.id in (
+              select distinct
+                sq.solicitacao_id
+              from fo2_cd_solicita_lote_qtd sq
+              left join fo2_cd_lote l
+                on l.id = sq.lote_id
+              where
+                l.referencia = '{ref}'
+            )
         '''
     sql = f'''
         select
@@ -39,6 +52,7 @@ def lista_solicita_lote(cursor, filtro=None, data=None):
           on u.id = s.usuario_id
         where 1=1
           {filtra_data} -- filtra_data
+          {filtra_ref} -- filtra_ref
         group by
           s.id
         , s.codigo
