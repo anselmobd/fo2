@@ -25,7 +25,7 @@ class UsuarioManager(models.Manager):
     def get_queryset(self):
         return super(
             UsuarioManager,
-            self).get_queryset().filter(ativo_inativo=1)
+            self).get_queryset().filter(empresa=1, ativo_inativo=1)
 
 
 class Usuario(models.Model):
@@ -33,6 +33,7 @@ class Usuario(models.Model):
         primary_key=True,
         max_length=15,
         verbose_name='Usuário')
+    empresa = models.IntegerField()
     codigo_usuario = models.IntegerField(
         verbose_name='Código do Usuário')
     ativo_inativo = models.IntegerField(
@@ -41,7 +42,7 @@ class Usuario(models.Model):
     objects = UsuarioManager()
 
     def __str__(self):
-        return f'{self.usuario} ({self.codigo_usuario})'
+        return f'{self.usuario} ({self.codigo_usuario}@{self.empresa})'
 
     class Meta:
         managed = False
