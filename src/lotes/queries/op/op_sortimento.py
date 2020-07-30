@@ -349,7 +349,7 @@ def op_sortimentos(cursor, **kwargs):
             FROM pcpc_040 l
             JOIN opl
               ON opl.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-             AND opl.QTD_A_PROD = 0
+             AND opl.QTD_A_PROD = 0 -- OP finalizada
             LEFT JOIN BASI_220 tam
               ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
             GROUP BY
