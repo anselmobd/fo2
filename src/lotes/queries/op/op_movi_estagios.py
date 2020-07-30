@@ -43,7 +43,8 @@ def op_movi_estagios(cursor, op):
          --AND u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
          --  u.QTDE_PERDAS + u.QTDE_CONSERTO <> 0
         LEFT JOIN HDOC_030 uu
-          ON uu.CODIGO_USUARIO = u.CODIGO_USUARIO
+          ON uu.EMRPESA = 1
+         AND uu.CODIGO_USUARIO = u.CODIGO_USUARIO
         GROUP BY
           ll.SEQ_OPERACAO
         , ll.EST
