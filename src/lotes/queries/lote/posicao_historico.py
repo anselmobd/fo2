@@ -22,7 +22,8 @@ def posicao_historico(cursor, periodo, ordem_confeccao):
          AND p.LOCALE = 'pt_BR'
          AND SUBSTR(h.USUARIO_SYSTEXTIL,0,1) != '*'
         LEFT JOIN HDOC_030 u
-          ON u.CODIGO_USUARIO = h.CODIGO_USUARIO
+          ON u.EMRPESA = 1
+         AND u.CODIGO_USUARIO = h.CODIGO_USUARIO
         WHERE h.PCPC040_PERCONF = %s
           AND h.PCPC040_ORDCONF = %s
         ORDER BY

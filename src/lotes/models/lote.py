@@ -266,7 +266,8 @@ def posicao_estagios(cursor, periodo, ordem_confeccao):
           ON p.CODIGO_PROGRAMA = d.PROCESSO_SYSTEXTIL
          AND p.LOCALE = 'pt_BR'
         LEFT JOIN HDOC_030 u
-          ON u.CODIGO_USUARIO = d.CODIGO_USUARIO
+          ON u.EMRPESA = 1
+         AND u.CODIGO_USUARIO = d.CODIGO_USUARIO
         WHERE l.PERIODO_PRODUCAO = %s
           AND l.ORDEM_CONFECCAO = %s
         ORDER BY
