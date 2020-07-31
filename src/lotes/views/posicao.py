@@ -202,7 +202,7 @@ class Posicao(View):
             'h_headers': (
                 'Data Bipagem', 'Data Produção', 'Turno', 'Família', 'Estágio',
                 'Prod. 1ª', 'Prod. 2ª', 'Perda',
-                '', 'Conserto / Endereçado',
+                '', 'Cons./End.',
                 'Usuário', 'Programa'),
             'h_fields': (
                 'DT', 'DT_PROD', 'TURNO', 'FAMILIA', 'EST',
