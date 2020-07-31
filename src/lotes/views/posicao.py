@@ -111,7 +111,7 @@ class Posicao(View):
         context.update({
             'se_headers': (
                 'Estágio', 'Progr.', 'A Prod.', 'Em Prod.', 'Disp. Baixa',
-                'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Conserto',
+                'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Cons./End.',
                 'Família', 'OS'),
             'se_fields': (
                 'EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_DB',
