@@ -183,20 +183,31 @@ class Posicao(View):
             cursor, periodo, ordem_confeccao)
         for row in data:
             row['PRG|HOVER'] = row['PRG_DESCR']
-            for field in ['FAMILIA', 'Q_P1', 'Q_P2', 'Q_P', 'Q_C']:
+            if row['Q_C'] == 0:
+                row['Q_C'] = ''
+                row['C_OU_E'] = '.'
+            else:
+                if row['EST'] == 63:
+                    row['C_OU_E'] = 'endereçado'
+                else:
+                    row['C_OU_E'] = 'em conserto'
+            for field in ['FAMILIA', 'Q_P1', 'Q_P2', 'Q_P']:
                 if row[field] == 0:
                     row[field] = '.'
             row['DT_PROD'] = row['DT_PROD'].date()
             row['EST'] = (f"{'&middot;&nbsp;'*estagios.index(row['EST'])}"
                           f"{row['EST']}")
+
         context.update({
             'h_headers': (
                 'Data Bipagem', 'Data Produção', 'Turno', 'Família', 'Estágio',
-                'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Conserto',
+                'Prod. 1ª', 'Prod. 2ª', 'Perda',
+                '', 'Conserto / Endereçado',
                 'Usuário', 'Programa'),
             'h_fields': (
                 'DT', 'DT_PROD', 'TURNO', 'FAMILIA', 'EST',
-                'Q_P1', 'Q_P2', 'Q_P', 'Q_C',
+                'Q_P1', 'Q_P2', 'Q_P',
+                'Q_C', 'C_OU_E',
                 'USU', 'PRG'),
             'h_data': data,
             'h_safe': ['EST'],
