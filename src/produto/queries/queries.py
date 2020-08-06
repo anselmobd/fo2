@@ -1126,28 +1126,33 @@ def por_cliente(cursor, cliente=None):
 
 
 @lru_cache(maxsize=128)
-def ref_custo(cursor, ref, tam, cor, alt):
+def ref_custo(cursor, nivel, ref, tam, cor, alt):
+    filtra_nivel = ''
+    if nivel != '':
+        filtra_nivel = f'''--
+          AND i.NIVEL_ESTRUTURA = '{nivel}' '''
+
     filtra_ref = ''
     if ref != '':
-        filtra_ref = '''--
-          AND i.GRUPO_ESTRUTURA = '{}' '''.format(ref)
+        filtra_ref = f'''--
+          AND i.GRUPO_ESTRUTURA = '{ref}' '''
 
     filtra_tam = ''
     if tam != '':
-        filtra_tam = '''--
-          AND i.SUBGRU_ESTRUTURA = '{}' '''.format(tam)
+        filtra_tam = f'''--
+          AND i.SUBGRU_ESTRUTURA = '{tam}' '''
 
     filtra_cor = ''
     if cor != '':
-        filtra_cor = '''--
-          AND i.ITEM_ESTRUTURA = '{}' '''.format(cor)
+        filtra_cor = f'''--
+          AND i.ITEM_ESTRUTURA = '{cor}' '''
 
     filtra_alt = ''
     if alt != '':
-        filtra_alt = '''--
-          AND e.ALTERNATIVA_ITEM = '{}' '''.format(alt)
+        filtra_alt = f'''--
+          AND e.ALTERNATIVA_ITEM = '{alt}' '''
 
-    sql = """
+    sql = f"""
         SELECT
           e.SEQUENCIA SEQ
         , e.NIVEL_COMP NIVEL
@@ -1198,19 +1203,15 @@ def ref_custo(cursor, ref, tam, cor, alt):
               THEN coc.ITEM_COMP
               ELSE e.ITEM_COMP
               END
-        WHERE i.NIVEL_ESTRUTURA = 1
+        WHERE 1 = 1
+          {filtra_nivel} -- filtra_nivel
           {filtra_ref} -- filtra_ref
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
           {filtra_alt} -- filtra_alt
         ORDER BY
           e.SEQUENCIA
-    """.format(
-        filtra_ref=filtra_ref,
-        filtra_tam=filtra_tam,
-        filtra_cor=filtra_cor,
-        filtra_alt=filtra_alt,
-    )
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
@@ -1271,7 +1272,7 @@ class CustoItem:
                 'ALT': alt, 'CONSUMO': 1, 'PRECO': 0, 'CUSTO': 0,
                 }]
         else:
-            custo = ref_custo(cursor, ref, tam, cor, alt)
+            custo = ref_custo(cursor, 1, ref, tam, cor, alt)
 
         total_custo = 0
         for comp in custo:
