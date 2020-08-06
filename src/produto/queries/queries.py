@@ -1216,35 +1216,37 @@ def ref_custo(cursor, ref, tam, cor, alt):
 
 
 @lru_cache(maxsize=32)
-def item_narrativa(cursor, ref, tam, cor):
+def item_narrativa(cursor, nivel, ref, tam, cor):
+    filtra_nivel = ''
+    if nivel != '':
+        filtra_nivel = f'''--
+          AND i.NIVEL_ESTRUTURA = '{nivel}' '''
+
     filtra_ref = ''
     if ref != '':
-        filtra_ref = '''--
-          AND i.GRUPO_ESTRUTURA = '{}' '''.format(ref)
+        filtra_ref = f'''--
+          AND i.GRUPO_ESTRUTURA = '{ref}' '''
 
     filtra_tam = ''
     if tam != '':
-        filtra_tam = '''--
-          AND i.SUBGRU_ESTRUTURA = '{}' '''.format(tam)
+        filtra_tam = f'''--
+          AND i.SUBGRU_ESTRUTURA = '{tam}' '''
 
     filtra_cor = ''
     if cor != '':
-        filtra_cor = '''--
-          AND i.ITEM_ESTRUTURA = '{}' '''.format(cor)
+        filtra_cor = f'''--
+          AND i.ITEM_ESTRUTURA = '{cor}' '''
 
-    sql = """
+    sql = f"""
         SELECT
           i.NARRATIVA
         FROM BASI_010 i
-        WHERE i.NIVEL_ESTRUTURA = 1
+        WHERE 1 = 1
+          {filtra_nivel} -- filtra_nivel
           {filtra_ref} -- filtra_ref
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
-    """.format(
-        filtra_ref=filtra_ref,
-        filtra_tam=filtra_tam,
-        filtra_cor=filtra_cor,
-    )
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
@@ -1261,7 +1263,7 @@ class CustoItem:
     def componentes_e_custo(
             self, cursor, estrut_nivel, ref, tam, cor, alt):
         if estrut_nivel == 0:
-            narrativa = item_narrativa(cursor, ref, tam, cor)
+            narrativa = item_narrativa(cursor, 1, ref, tam, cor)
             custo = [{
                 'ESTRUT_NIVEL': 0, 'SEQ': '',
                 'NIVEL': '1', 'REF': ref, 'TAM': tam, 'COR': cor,
