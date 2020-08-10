@@ -969,7 +969,7 @@ class CustoRef(O2BaseGetPostView):
             for cor in cores:
                 for tam in tamanhos:
                     data = queries.CustoItem(
-                        cursor, ref, tam, cor, alt).get_data()
+                        cursor, '1', ref, tam, cor, alt).get_data()
                     alt_data.append({
                         'COR': cor,
                         'TAM': tam,
