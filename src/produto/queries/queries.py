@@ -1212,8 +1212,6 @@ def ref_custo(cursor, nivel, ref, tam, cor, alt):
         ORDER BY
           e.SEQUENCIA
     """
-    if ref == 'TP010':
-        print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
