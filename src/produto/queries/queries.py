@@ -1177,7 +1177,7 @@ class CustoItem:
             self, cursor, estrut_nivel, nivel, ref, tam, cor, alt):
         if estrut_nivel == 0:
             narrativa = item_narrativa(cursor, nivel, ref, tam, cor)
-            custo = [{
+            componentes = [{
                 'ESTRUT_NIVEL': 0, 'SEQ': '',
                 'NIVEL': nivel, 'REF': ref, 'TAM': tam, 'COR': cor,
                 'DESCR': narrativa[0]['NARRATIVA'],
@@ -1186,11 +1186,11 @@ class CustoItem:
         else:
             # custo = produto.queries.ref_custo(
             #     cursor, nivel, ref, tam, cor, alt)
-            custo = produto.queries.item_comps_custo(
+            componentes = produto.queries.item_comps_custo(
                 cursor, nivel, ref, tam, cor, alt)
 
         total_custo = 0
-        for comp in custo:
+        for comp in componentes:
             comp['ESTRUT_NIVEL'] = estrut_nivel
             self.data.append(comp)
             if comp['NIVEL'] in ['1', '2', '5']:
