@@ -105,12 +105,9 @@ class Custo(O2BaseGetPostView):
             if row['ESTRUT_NIVEL'] != 0:
                 row['|STYLE'] = 'padding-left: {}em;'.format(
                     row['ESTRUT_NIVEL']*ident)
-            row['CONSUMO|STYLE'] = 'padding-right: {}em;'.format(
-                (max_estrut_nivel+1-row['ESTRUT_NIVEL'])*ident)
-            row['PRECO|STYLE'] = 'padding-right: {}em;'.format(
-                (max_estrut_nivel+1-row['ESTRUT_NIVEL'])*ident)
-            row['CUSTO|STYLE'] = 'padding-right: {}em;'.format(
-                (max_estrut_nivel+1-row['ESTRUT_NIVEL'])*ident)
+            padding = (max_estrut_nivel + 1 - row['ESTRUT_NIVEL']) * ident
+            for field in ['CONSUMO', 'PRECO', 'CUSTO']:
+                row[f'{field}|STYLE'] = f'padding-right: {padding}em;'
 
         self.context.update({
             'cor': cor,
