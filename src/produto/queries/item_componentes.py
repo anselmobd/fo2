@@ -1,4 +1,5 @@
 from pprint import pprint
+from functools import lru_cache
 
 from utils.functions.models import rows_to_dict_list
 
@@ -12,13 +13,14 @@ def item_comps_custo(cursor, nivel, ref, tam, cor, alt):
         row['TAM'] = row['CTAM_B']
         row['COR'] = row['CCOR_B']
         row['ALT'] = row['CALT']
-        row['CONSUMO'] = row['CCONSUMO']
+        row['CONSUMO'] = row['CCONSUMO_B']
         row['PRECO'] = row['CPRECO']
-        row['CUSTO'] = row['CCONSUMO'] * row['CPRECO']
         row['DESCR'] = row['CDESCR']
+        row['CUSTO'] = row['CCUSTO0']
     return data
 
 
+@lru_cache(maxsize=128)
 def item_comps(cursor, nivel, ref, tam, cor, alt):
     sql = f"""
         WITH filtro AS
@@ -170,13 +172,32 @@ def item_comps(cursor, nivel, ref, tam, cor, alt):
          AND c.ALT = b.ALTERNATIVA_ITEM
          AND c.CSEQ = b.SEQUENCIA
         )
+        , comb_consumo AS
+        (
+        SELECT
+          c.*
+        , CASE WHEN c.CCONSUMO = 0
+          THEN b.CONSUMO
+          ELSE c.CCONSUMO
+          END CCONSUMO_B
+        FROM BASI_040 b
+        RIGHT JOIN comb_tam c
+          ON c.NIV = b.NIVEL_ITEM
+         AND c.REF = b.GRUPO_ITEM
+         AND ( c.CCONSUMO = 0
+             AND c.ACOR = b.ITEM_ITEM
+             AND c.TAM = b.SUB_ITEM
+             )
+         AND c.ALT = b.ALTERNATIVA_ITEM
+         AND c.CSEQ = b.SEQUENCIA
+        )
         , estrutura AS
         (
         SELECT
           c.*
         , i.PRECO_CUSTO_INFO CPRECO
         , i.NARRATIVA CDESCR
-        FROM comb_tam c
+        FROM comb_consumo c
         JOIN BASI_010 i
           ON i.NIVEL_ESTRUTURA = c.CNIV
          AND i.GRUPO_ESTRUTURA = c.CREF
@@ -185,6 +206,18 @@ def item_comps(cursor, nivel, ref, tam, cor, alt):
         )
         SELECT
           a.*
+        , CASE WHEN a.TCALC = 0
+          THEN a.CCONSUMO_B * a.CPRECO
+          ELSE 0
+          END CCUSTO0
+        , CASE WHEN a.TCALC = 1
+          THEN a.CCONSUMO_B * a.CPRECO
+          ELSE 0
+          END CCUSTO1
+        , CASE WHEN a.TCALC = 2
+          THEN a.CCONSUMO_B * a.CPRECO
+          ELSE 0
+          END CCUSTO2
         FROM estrutura a
         ORDER BY
           a.NIV
