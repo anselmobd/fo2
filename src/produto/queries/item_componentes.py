@@ -39,7 +39,6 @@ def item_comps(cursor, nivel, ref, tam, cor, alt):
         , e.SUB_ITEM ATAM
         , e.ITEM_ITEM ACOR
         , e.ALTERNATIVA_ITEM ALT
-        , e.TIPO_CALCULO TCALC
         FROM BASI_050 e
         JOIN filtro f
           ON f.NIV = e.NIVEL_ITEM
@@ -124,6 +123,7 @@ def item_comps(cursor, nivel, ref, tam, cor, alt):
         , e.ITEM_COMP CCOR
         , e.ALTERNATIVA_COMP CALT
         , e.CONSUMO CCONSUMO
+        , e.TIPO_CALCULO TCALC
         FROM BASI_050 e
         JOIN alt_filtrada a
           ON a.NIV = e.NIVEL_ITEM
