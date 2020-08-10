@@ -1186,24 +1186,31 @@ class CustoItem:
                 'ALT': alt, 'CONSUMO': consumo, 'PRECO': '', 'CUSTO': '',
                 }]
         else:
-            # custo = produto.queries.ref_custo(
-            #     cursor, nivel, ref, tam, cor, alt)
             componentes = produto.queries.item_comps_custo(
                 cursor, nivel, ref, tam, cor, alt)
 
         total_custo = 0
+        total_custok = 0
+        total_custol = 0
         for comp in componentes:
             comp['ESTRUT_NIVEL'] = estrut_nivel
             self.data.append(comp)
             if comp['NIVEL'] in ['1', '2', '5']:
-                sub_custo = self.componentes_e_custo(
+                sub_custo, sub_custok, sub_custol = self.componentes_e_custo(
                     cursor, estrut_nivel+1,
                     comp['NIVEL'], comp['REF'],
-                    comp['TAM'], comp['COR'], comp['ALT'])
+                    comp['TAM'], comp['COR'], comp['ALT'],
+                    comp['CONSUMO'])
                 comp['PRECO'] = sub_custo
+                comp['PRECOK'] = sub_custok
+                comp['PRECOL'] = sub_custol
                 comp['CUSTO'] = comp['CONSUMO'] * comp['PRECO']
+                comp['CUSTOK'] = comp['CONSUMO'] * comp['PRECOK']
+                comp['CUSTOL'] = comp['CONSUMO'] * comp['PRECOL']
             total_custo += comp['CUSTO']
-        return total_custo
+            total_custok += comp['CUSTOK']
+            total_custol += comp['CUSTOL']
+        return total_custo, total_custok, total_custol
 
     def get_data(self):
         self.componentes_e_custo(
