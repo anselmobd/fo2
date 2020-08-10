@@ -100,12 +100,12 @@ class Custo(O2BaseGetPostView):
             row['CONSUMO|DECIMALS'] = max_digits_consumo
             row['PRECO|DECIMALS'] = max_digits_preco
             row['CUSTO|DECIMALS'] = 3
+            pad_left = row['ESTRUT_NIVEL'] * ident
             if row['ESTRUT_NIVEL'] != 0:
-                pad_left = row['ESTRUT_NIVEL'] * ident
                 row['|STYLE'] = f'padding-left: {pad_left}em;'
-                pad_right = ((max_estrut_nivel + 1) * ident) - pad_left
-                for field in ['CONSUMO', 'PRECO', 'CUSTO']:
-                    row[f'{field}|STYLE'] = f'padding-right: {pad_right}em;'
+            pad_right = ((max_estrut_nivel + 1) * ident) - pad_left
+            for field in ['CONSUMO', 'PRECO', 'CUSTO']:
+                row[f'{field}|STYLE'] = f'padding-right: {pad_right}em;'
 
         self.context.update({
             'cor': cor,
