@@ -1190,27 +1190,23 @@ class CustoItem:
                 cursor, nivel, ref, tam, cor, alt)
 
         total_custo = 0
-        total_custok = 0
-        total_custol = 0
         for comp in componentes:
             comp['ESTRUT_NIVEL'] = estrut_nivel
             self.data.append(comp)
             if comp['NIVEL'] in ['1', '2', '5']:
-                sub_custo, sub_custok, sub_custol = self.componentes_e_custo(
+                sub_custo = self.componentes_e_custo(
                     cursor, estrut_nivel+1,
                     comp['NIVEL'], comp['REF'],
                     comp['TAM'], comp['COR'], comp['ALT'],
                     comp['CONSUMO'])
                 comp['PRECO'] = sub_custo
-                comp['PRECOK'] = sub_custok
-                comp['PRECOL'] = sub_custol
                 comp['CUSTO'] = comp['CONSUMO'] * comp['PRECO']
-                comp['CUSTOK'] = comp['CONSUMO'] * comp['PRECOK']
-                comp['CUSTOL'] = comp['CONSUMO'] * comp['PRECOL']
+                if comp['TCALC'] > 0:  # tipo 1 = Kg
+                    comp['CUSTO'] *= consumo
+                if comp['TCALC'] > 1:  # tipo 2 = litro
+                    comp['CUSTO'] *= 15
             total_custo += comp['CUSTO']
-            total_custok += comp['CUSTOK']
-            total_custol += comp['CUSTOL']
-        return total_custo, total_custok, total_custol
+        return total_custo
 
     def get_data(self):
         self.componentes_e_custo(
