@@ -103,7 +103,7 @@ class Custo(O2BaseGetPostView):
             if row['ESTRUT_NIVEL'] != 0:
                 pad_left = row['ESTRUT_NIVEL'] * ident
                 row['|STYLE'] = f'padding-left: {pad_left}em;'
-                pad_right = (max_estrut_nivel + 1) * ident - pad_left
+                pad_right = ((max_estrut_nivel + 1) * ident) - pad_left
                 for field in ['CONSUMO', 'PRECO', 'CUSTO']:
                     row[f'{field}|STYLE'] = f'padding-right: {pad_right}em;'
 
