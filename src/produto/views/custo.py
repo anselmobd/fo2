@@ -81,7 +81,7 @@ class Custo(O2BaseGetPostView):
                     'erro': 'Alternativa não existe nessa referência'})
                 return
 
-        data = queries.CustoItem(cursor, ref, tam, cor, alt).get_data()
+        data = queries.CustoItem(cursor, '1', ref, tam, cor, alt).get_data()
 
         data[0]['|STYLE'] = 'font-weight: bold;'
         data[0]['CONSUMO'] = ''
