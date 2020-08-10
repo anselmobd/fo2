@@ -84,8 +84,6 @@ class Custo(O2BaseGetPostView):
         data = queries.CustoItem(cursor, '1', ref, tam, cor, alt).get_data()
 
         data[0]['|STYLE'] = 'font-weight: bold;'
-        data[0]['CONSUMO'] = ''
-        data[0]['PRECO'] = ''
 
         max_estrut_nivel = 0
         max_digits_consumo = 0
