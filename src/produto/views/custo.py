@@ -103,11 +103,11 @@ class Custo(O2BaseGetPostView):
             row['PRECO|DECIMALS'] = max_digits_preco
             row['CUSTO|DECIMALS'] = 3
             if row['ESTRUT_NIVEL'] != 0:
-                row['|STYLE'] = 'padding-left: {}em;'.format(
-                    row['ESTRUT_NIVEL']*ident)
-            padding = (max_estrut_nivel + 1 - row['ESTRUT_NIVEL']) * ident
-            for field in ['CONSUMO', 'PRECO', 'CUSTO']:
-                row[f'{field}|STYLE'] = f'padding-right: {padding}em;'
+                pad_left = row['ESTRUT_NIVEL'] * ident
+                row['|STYLE'] = f'padding-left: {pad_left}em;'
+                pad_right = (max_estrut_nivel + 1) * ident - pad_left
+                for field in ['CONSUMO', 'PRECO', 'CUSTO']:
+                    row[f'{field}|STYLE'] = f'padding-right: {pad_right}em;'
 
         self.context.update({
             'cor': cor,
