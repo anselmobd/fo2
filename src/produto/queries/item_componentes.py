@@ -16,7 +16,9 @@ def item_comps_custo(cursor, nivel, ref, tam, cor, alt):
         row['CONSUMO'] = row['CCONSUMO_B']
         row['PRECO'] = row['CPRECO']
         row['DESCR'] = row['CDESCR']
-        row['CUSTO'] = row['CCUSTO0']
+        row['CUSTO'] = row['CCUSTOD']
+        row['CUSTOK'] = row['CCUSTOK']
+        row['CUSTOL'] = row['CCUSTOL']
     return data
 
 
@@ -209,15 +211,15 @@ def item_comps(cursor, nivel, ref, tam, cor, alt):
         , CASE WHEN a.TCALC = 0
           THEN a.CCONSUMO_B * a.CPRECO
           ELSE 0
-          END CCUSTO0
+          END CCUSTOD
         , CASE WHEN a.TCALC = 1
           THEN a.CCONSUMO_B * a.CPRECO
           ELSE 0
-          END CCUSTO1
+          END CCUSTOK
         , CASE WHEN a.TCALC = 2
           THEN a.CCONSUMO_B * a.CPRECO
           ELSE 0
-          END CCUSTO2
+          END CCUSTOL
         FROM estrutura a
         ORDER BY
           a.NIV
