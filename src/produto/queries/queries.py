@@ -3,6 +3,8 @@ from functools import lru_cache
 
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 
+from produto.queries.item_componentes import item_comps_custo
+
 
 def produtos_n1_basic(param):
     tipo = param[0:2]
@@ -1273,7 +1275,8 @@ class CustoItem:
                 'ALT': alt, 'CONSUMO': 1, 'PRECO': 0, 'CUSTO': 0,
                 }]
         else:
-            custo = ref_custo(cursor, nivel, ref, tam, cor, alt)
+            # custo = ref_custo(cursor, nivel, ref, tam, cor, alt)
+            custo = item_comps_custo(cursor, nivel, ref, tam, cor, alt)
 
         total_custo = 0
         for comp in custo:
