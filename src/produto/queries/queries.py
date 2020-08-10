@@ -1164,7 +1164,7 @@ def item_narrativa(cursor, nivel, ref, tam, cor):
 
 
 class CustoItem:
-    def __init__(self, cursor, nivel, ref, tam, cor, alt):
+    def __init__(self, cursor, nivel, ref, tam, cor, alt, consumo=1):
         self.data = []
         self.cursor = cursor
         self.nivel = nivel
@@ -1172,16 +1172,18 @@ class CustoItem:
         self.tam = tam
         self.cor = cor
         self.alt = alt
+        self.consumo = consumo
 
     def componentes_e_custo(
-            self, cursor, estrut_nivel, nivel, ref, tam, cor, alt):
+            self, cursor, estrut_nivel, nivel, ref, tam, cor, alt,
+            consumo):
         if estrut_nivel == 0:
             narrativa = item_narrativa(cursor, nivel, ref, tam, cor)
             componentes = [{
                 'ESTRUT_NIVEL': 0, 'SEQ': '',
                 'NIVEL': nivel, 'REF': ref, 'TAM': tam, 'COR': cor,
                 'DESCR': narrativa[0]['NARRATIVA'],
-                'ALT': alt, 'CONSUMO': 1, 'PRECO': 0, 'CUSTO': 0,
+                'ALT': alt, 'CONSUMO': consumo, 'PRECO': '', 'CUSTO': '',
                 }]
         else:
             # custo = produto.queries.ref_custo(
@@ -1206,6 +1208,5 @@ class CustoItem:
     def get_data(self):
         self.componentes_e_custo(
             self.cursor, 0,
-            self.nivel, self.ref,
-            self.tam, self.cor, self.alt)
+            self.nivel, self.ref, self.tam, self.cor, self.alt, self.consumo)
         return self.data
