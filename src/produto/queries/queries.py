@@ -1205,7 +1205,6 @@ class CustoItem:
             if comp['TCALC'] > 0:  # tipo 1 = Kg
                 comp['CUSTO'] *= 1  # consumo_pai
             if comp['TCALC'] > 1:  # tipo 2 = litro
-                print(comp['REF'])
                 comp['CUSTO'] *= 15
             total_custo += comp['CUSTO']
         return total_custo
