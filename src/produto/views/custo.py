@@ -88,18 +88,20 @@ class Custo(O2BaseGetPostView):
         max_estrut_nivel = 0
         max_digits_consumo = 0
         max_digits_preco = 0
+        max_digits_custo = 0
         for row in data:
             max_estrut_nivel = max(max_estrut_nivel, row['ESTRUT_NIVEL'])
             num_digits_consumo = str(row['CONSUMO'])[::-1].find('.')
             max_digits_consumo = max(max_digits_consumo, num_digits_consumo)
-            if row['NIVEL'] != '1':
-                num_digits_preco = str(row['PRECO'])[::-1].find('.')
-                max_digits_preco = max(max_digits_preco, num_digits_preco)
+            num_digits_preco = str(row['PRECO'])[::-1].find('.')
+            max_digits_preco = max(max_digits_preco, num_digits_preco)
+            num_digits_custo = str(row['CUSTO'])[::-1].find('.')
+            max_digits_custo = max(max_digits_custo, num_digits_custo)
         ident = 1
         for row in data:
             row['CONSUMO|DECIMALS'] = max_digits_consumo
             row['PRECO|DECIMALS'] = max_digits_preco
-            row['CUSTO|DECIMALS'] = 3
+            row['CUSTO|DECIMALS'] = max_digits_custo
             pad_left = row['ESTRUT_NIVEL'] * ident
             if row['ESTRUT_NIVEL'] != 0:
                 row['|STYLE'] = f'padding-left: {pad_left}em;'
