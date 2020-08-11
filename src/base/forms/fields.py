@@ -5,6 +5,16 @@ from django import forms
 from base.forms import O2BaseForm
 
 
+class O2FieldNivelForm(forms.Form):
+    nivel = forms.CharField(
+        label='Nível',
+        required=False,
+        widget=forms.TextInput(attrs={'type': 'number', 'size': 1}))
+
+    def clean_nivel(self):
+        return O2BaseForm.cleanner(self, 'nivel')
+
+
 class O2FieldRefForm(forms.Form):
     ref = forms.CharField(
         label='Referência',
