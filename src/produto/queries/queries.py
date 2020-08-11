@@ -1184,7 +1184,7 @@ class CustoItem:
                 'NIVEL': nivel, 'REF': ref, 'TAM': tam, 'COR': cor,
                 'DESCR': narrativa[0]['NARRATIVA'],
                 'ALT': alt, 'CONSUMO': consumo, 'PRECO': '', 'CUSTO': '',
-                'TCALC': 0,
+                'TCALC': 0, 'RBANHO': 0,
                 }]
         else:
             componentes = produto.queries.item_comps_custo(
@@ -1194,18 +1194,17 @@ class CustoItem:
         for comp in componentes:
             self.data.append(comp)
             comp['ESTRUT_NIVEL'] = estrut_nivel
-            sub_custo = self.componentes_e_custo(
-                cursor, estrut_nivel+1,
-                comp['NIVEL'], comp['REF'],
-                comp['TAM'], comp['COR'], comp['ALT'],
-                comp['CONSUMO'], consumo)
-            if sub_custo > 0:
-                comp['PRECO'] = sub_custo
+            if comp['NIVEL'] != 9:
+                sub_custo = self.componentes_e_custo(
+                    cursor, estrut_nivel+1,
+                    comp['NIVEL'], comp['REF'],
+                    comp['TAM'], comp['COR'], comp['ALT'],
+                    comp['CONSUMO'], consumo)
+                if sub_custo > 0:
+                    comp['PRECO'] = sub_custo
+            if comp['TCALC'] == 2:  # g/l
+                comp['CONSUMO'] *= comp['RBANHO']
             comp['CUSTO'] = comp['CONSUMO'] * comp['PRECO']
-            if comp['TCALC'] > 0:  # tipo 1 = Kg
-                comp['CUSTO'] *= 1  # consumo_pai
-            if comp['TCALC'] > 1:  # tipo 2 = litro
-                comp['CUSTO'] *= 15
             total_custo += comp['CUSTO']
         return total_custo
 
