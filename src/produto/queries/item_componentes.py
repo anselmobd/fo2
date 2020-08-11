@@ -40,6 +40,7 @@ def item_comps(cursor, nivel, ref, tam, cor, alt):
         , e.SUB_ITEM ATAM
         , e.ITEM_ITEM ACOR
         , e.ALTERNATIVA_ITEM ALT
+        , e.RELACAO_BANHO RBANHO
         FROM BASI_050 e
         JOIN filtro f
           ON f.NIV = e.NIVEL_ITEM
