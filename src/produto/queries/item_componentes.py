@@ -16,7 +16,6 @@ def item_comps_custo(cursor, nivel, ref, tam, cor, alt):
         row['CONSUMO'] = row['CCONSUMO_B']
         row['PRECO'] = row['CPRECO']
         row['DESCR'] = row['CDESCR']
-        row['CUSTO'] = row['CCUSTO']
     return data
 
 
@@ -197,7 +196,6 @@ def item_comps(cursor, nivel, ref, tam, cor, alt):
           c.*
         , i.PRECO_CUSTO_INFO CPRECO
         , i.NARRATIVA CDESCR
-        , a.CCONSUMO_B * a.CPRECO CCUSTO
         FROM comb_consumo c
         JOIN BASI_010 i
           ON i.NIVEL_ESTRUTURA = c.CNIV
