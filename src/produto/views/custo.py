@@ -15,9 +15,10 @@ class Custo(O2BaseGetPostView):
         self.Form_class = forms.CustoDetalhadoForm
         self.template_name = 'produto/custo.html'
         self.title_name = 'Custo de item'
-        self.get_args = ['ref', 'tamanho', 'cor', 'alternativa']
+        self.get_args = ['nivel', 'ref', 'tamanho', 'cor', 'alternativa']
 
     def mount_context(self):
+        nivel = self.form.cleaned_data['nivel']
         ref = self.form.cleaned_data['ref']
         tamanho = self.form.cleaned_data['tamanho']
         cor = self.form.cleaned_data['cor']
@@ -81,7 +82,7 @@ class Custo(O2BaseGetPostView):
                     'erro': 'Alternativa não existe nessa referência'})
                 return
 
-        data = queries.CustoItem(cursor, '1', ref, tam, cor, alt).get_data()
+        data = queries.CustoItem(cursor, nivel, ref, tam, cor, alt).get_data()
 
         if not data:
             self.context.update({
