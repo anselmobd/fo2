@@ -107,4 +107,23 @@ urlpatterns = [
     url(r'^roloinfo/$', views.Rolo.as_view(), name='rolo'),
     url(r'^roloinfo/(?P<rolo>[29]?\.?.{5})/$', views.Rolo.as_view(),
         name='rolo__get'),
+
+    url(r'^mapa_compras_semana/$', views.MapaComprasSemana.as_view(),
+        name='mapa_compras_semana'),
+
+    url(r'^mapa_compras_semana_ref/(?P<item>(?:.{2}|\d\..{5}\..{6}\..{1,3}))/'
+        r'(?P<dtini>\d{8})/(?P<qtdsem>(?:\d{1,2}|--))/$',
+        views.mapa_compras_semana_ref,
+        name='mapa_compras_semana_ref__get'),
+
+    url(r'^mapa_compras/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
+        r'(?P<tam>.{1,3})/$',
+        views.MapaCompras.as_view(),
+        name='mapa_compras'),
+    url(r'^mapa_compras_calc/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
+        r'(?P<tam>.{1,3})/$',
+        views.MapaComprasCalc.as_view(),
+        name='mapa_compras_calc'),
+
+
 ]

@@ -1,0 +1,279 @@
+{% extends 'insumo/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'insumo:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+
+tbody#refs_tbody tr {
+  border-bottom-width: 1px;
+  border-bottom-style: dotted;
+  border-bottom-color: lightgray;
+}
+
+thead th
+{
+  position: sticky;
+  top: 0px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'insumo:mapa_compras_semana' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if refs %}
+<h4>Insumos calculados: <span id="icount">0</span><span id="detotal"> / <span id="itotal">...</span></span></h4>
+{% endif %}
+{% if periodo_ini %}
+  <h4>Periodo: {{ periodo|safe }} (segunda{{ qtd_semanas|pluralize }}-feira{{ qtd_semanas|pluralize }}: {{ periodo_ini }}{% if periodo_ini != periodo_fim %} - {{ periodo_fim }}{% endif %})</h4>
+{% endif %}
+{% if qtd_itens %}
+  <h4>Quantidade limite de itens processados: {{ qtd_itens }}</h4>
+{% endif %}
+{% if nivel == '2' %}
+  <h4>Nível 2 - em rolos</h4>
+{% endif %}
+{% if nivel == '9' %}
+  <h4>Nível 9 - demais insumos</h4>
+{% endif %}
+{% if uso == 'U' %}
+  <h4>Utilizados em alguma estrutura de produto</h4>
+{% endif %}
+{% if uso == 'N' %}
+  <h4>Não utilizados em nenhum estrutura de produto</h4>
+{% endif %}
+{% if insumo %}
+  <h4>Filtro do insumo: {{ insumo }}</h4>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if refs %}
+  <p>Mostrar:
+    <input id="chk_movido" type="checkbox" checked> Recebimentos movidos |
+    <input id="chk_comprar" type="checkbox" checked> Compra sugerida |
+    <input id="chk_compra_atrasada" type="checkbox" checked> Compra atrasada |
+    <input id="chk_zerado" type="checkbox"> Sem necessidades
+  </p>
+  <table>
+    <thead id="refs_thead">
+    </thead>
+    <tbody id="refs_tbody">
+    </tbody>
+  </table>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+{% if refs %}
+<script type="text/javascript">
+
+  var refs = [
+    {% for ref in refs %}
+      {% if forloop.counter > 1 %}, {% endif %}'{{ ref }}'
+    {% endfor %}
+  ];
+  var dtini = {{ periodo_ini_int|safe }};
+  var nsem = {{ qtd_semanas }};
+
+  var tHead = document.getElementById('refs_thead');
+  var tBody = document.getElementById('refs_tbody');
+  var iRefAjax = -1;
+  var iErros = 0;
+
+  function sortByDisplayId(parentEl) {
+
+    function displayId(el) {
+      var prekey = '';
+      if (el.style.display == 'none') {
+        prekey = 'Z';
+      }
+      return prekey+el.id;
+    }
+
+    var toSort = parentEl.children;
+    toSort = Array.prototype.slice.call(toSort, 0);
+    toSort.sort(function(a, b) {
+      akey = displayId(a);
+      bkey = displayId(b);
+      return akey.localeCompare(bkey)
+    });
+    for (var i = 0, l = toSort.length; i < l; i++) {
+        toSort[i].parentNode.appendChild(toSort[i]);
+    }
+  }
+
+  function spanSorted(parentEl) {
+    var toSpan = parentEl.children;
+    var cols = 9;
+    var ultimo = toSpan.length - 1
+    var iguais = -1;
+    for (var i = ultimo; i >= 0; i--) {
+      for (var col = 0; col < cols; col++) {
+        toSpan[i].children[col].rowSpan = null;
+        toSpan[i].children[col].style.display = null;
+      }
+    }
+    var id_ant = '!!!';
+    var primeiro = true;
+    for (var i = ultimo; i >= 0; i--) {
+      if (toSpan[i].style.display === '') {
+        id_atu = toSpan[i].id.slice(0, -4);
+        if (id_atu == id_ant) {
+          iguais += 1;
+        } else {
+          id_ant = id_atu;
+          iguais = 1;
+        }
+        // toSpan[i].children[0].show();
+        if (!primeiro) {
+          for (var col = 0; col < cols; col++) {
+            toSpan[i].children[col].rowSpan = iguais;
+          }
+          if (iguais > 1) {
+            for (var col = 0; col < cols; col++) {
+              toSpan[i+1].children[col].style.display = 'none';
+            }
+          }
+        }
+        primeiro = false;
+      }
+    }
+  }
+
+  function doAjax1Ref(header) {
+    if (header) {
+      refer = 'th';
+      aggregator = tHead;
+    } else {
+      refer = refs[iRefAjax];
+      aggregator = tBody;
+    }
+
+    var link = '{% url 'insumo:mapa_compras_semana_ref__get' '0.00000.000000.000' '20180723' '--' %}';
+    link = link.replace('--', {{qtd_semanas}});
+    link = link.replace('20180723', dtini);
+    link = link.replace('0.00000.000000.000', refer);
+    $.ajax({
+      type: 'GET',
+      url: link,
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        if (data) {
+          iErros = 0;
+
+          aggregator.insertAdjacentHTML('beforeend', data);
+
+          if (Math.ceil(Math.random()*iRefAjax/10) == 1) {
+            arrangeAll();
+          }
+
+          $("#icount").text(iRefAjax+1);
+
+          iRefAjax++;
+          if (iRefAjax < refs.length) {
+            setTimeout(function(){ doAjax1Ref(false); }, 0);
+          } else {
+            arrangeAll();
+            $("#detotal").text('');
+          }
+        } else {
+          iErros++;
+          if (iErros > 10) {
+            alert('Muitos erros seguidos de acesso aos dados. Processo interrompido!');
+          } else {
+            setTimeout(function(){ doAjax1Ref(false); }, 0);
+          }
+        }
+      },
+      error : function() {
+        iErros++;
+        if (iErros > 10) {
+          alert('Muitos erros seguidos de acesso aos dados. Processo interrompido!');
+        } else {
+          setTimeout(function(){ doAjax1Ref(false); }, 0);
+        }
+      }
+    });
+
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function(){ doAjax1Ref(true); }, 0);
+  }, false);
+
+  function showHideAll() {
+    var bComprar = $("#chk_comprar").is(':checked');
+    var bCompraAtrasada = $("#chk_compra_atrasada").is(':checked');
+    var bZerado = $("#chk_zerado").is(':checked');
+    var bMovido = $("#chk_movido").is(':checked');
+
+    var objs = document.getElementsByClassName("with_flags");
+    if (objs) {
+      Object.entries(objs).map(( el ) => {
+        var fComprar = false;
+        var fCompraAtrasada = false;
+        var fZerado = false;
+        var fMovido = false;
+        if (el[1].classList) {
+          fComprar = el[1].classList.contains('flag_comprar');
+          fCompraAtrasada = el[1].classList.contains('flag_compra_atrasada');
+          fZerado = el[1].classList.contains('flag_zerado');
+          fMovido = el[1].classList.contains('flag_movido');
+        }
+
+        el[1].style = '';
+        if (  (bComprar && fComprar)
+            || (bCompraAtrasada && fCompraAtrasada)
+            || (bZerado && fZerado)
+            || (bMovido && fMovido)
+           )
+        {
+          el[1].style.display = '';
+        } else {
+          el[1].style.display = 'none';
+        }
+      });
+    }
+  }
+
+  function arrangeAll() {
+    showHideAll();
+    sortByDisplayId(tBody);
+    spanSorted(tBody);
+  }
+
+  $( document ).ready(function() {
+
+    $("#itotal").text(refs.length);
+
+    $("#chk_comprar").on('change', function () {
+      arrangeAll();
+    });
+
+    $("#chk_compra_atrasada").on('change', function () {
+      arrangeAll();
+    });
+
+    $("#chk_zerado").on('change', function () {
+      arrangeAll();
+    });
+
+    $("#chk_movido").on('change', function () {
+      arrangeAll();
+    });
+
+  });
+
+</script>
+{% endif %}
+{% endblock %}
