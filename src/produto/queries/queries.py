@@ -408,8 +408,12 @@ def ref_1roteiro(cursor, ref, alternativa, roteiro, tamanho, cor):
 
 
 def ref_estruturas(cursor, ref):
+    return nivel_ref_estruturas(cursor, 1, ref)
+
+
+def nivel_ref_estruturas(cursor, nivel, ref):
     # Totais por OP
-    sql = """
+    sql = f"""
         SELECT DISTINCT
           ia.ALTERNATIVA_ITEM ALTERNATIVA
         , ia.SUB_ITEM TAM
@@ -419,13 +423,13 @@ def ref_estruturas(cursor, ref):
           ( SELECT
               LISTAGG(COALESCE(ec.GRUPO_COMP, ''), ', ')
               WITHIN GROUP (ORDER BY ec.ALTERNATIVA_ITEM) REF
-            FROM BASI_050 ec -- componente de nivel 1
+            FROM BASI_050 ec -- componente de mesmo nivel
             WHERE ec.NIVEL_ITEM = ia.NIVEL_ITEM
               AND ec.GRUPO_ITEM = ia.GRUPO_ITEM
               AND ec.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
               AND ec.SUB_ITEM = ia.SUB_ITEM
               AND ec.ITEM_ITEM = ia.ITEM_ITEM
-              AND ec.NIVEL_COMP = 1
+              AND ec.NIVEL_COMP = ia.NIVEL_ITEM
           ), '-') REF
         FROM BASI_050 ia -- insumos de alternativa
         -- específico
@@ -437,14 +441,14 @@ def ref_estruturas(cursor, ref):
         LEFT JOIN BASI_070 alg -- cadastro de altern. de estrutura e de roteiro
           ON alg.ROTEIRO = 0 -- seleciona cadastro de alternativas de estrutura
          AND alg.ALTERNATIVA = ia.ALTERNATIVA_ITEM
-        WHERE ia.NIVEL_ITEM = 1
-          AND ia.GRUPO_ITEM = %s
+        WHERE ia.NIVEL_ITEM = {nivel}
+          AND ia.GRUPO_ITEM = '{ref}'
         ORDER BY
           ia.ALTERNATIVA_ITEM
         , ia.SUB_ITEM
         , ia.ITEM_ITEM
     """
-    cursor.execute(sql, [ref])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
