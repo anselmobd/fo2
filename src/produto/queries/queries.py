@@ -256,7 +256,7 @@ def nivel_ref_inform(cursor, nivel, ref):
         LEFT JOIN BASI_290 ac
           ON ac.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
          AND ac.ARTIGO = r.ARTIGO
-        JOIN BASI_240 cf
+        LEFT JOIN BASI_240 cf
           ON cf.CLASSIFIC_FISCAL = r.CLASSIFIC_FISCAL
         LEFT JOIN PEDI_010 cl
           ON cl.CGC_9 = r.CGC_CLIENTE_9
