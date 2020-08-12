@@ -60,7 +60,8 @@ class CustoRef(O2BaseGetPostView):
                         'DET|TARGET': '_BLANK',
                         'DET|GLYPHICON': 'glyphicon-th-list',
                         'DET|LINK': reverse(
-                            'produto:custo__get', args=[ref, tam, cor, alt]),
+                            'produto:custo__get',
+                            args=[1, ref, tam, cor, alt]),
                     })
             grades.append({
                 'alt': alt,
