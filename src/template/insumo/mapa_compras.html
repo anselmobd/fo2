@@ -1,0 +1,226 @@
+{% extends 'insumo/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'insumo:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- <h1 style="color: brown;">Em desenvolvimento!</h1> -->
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if not calc %}
+  <div style="text-align: right;">
+    <a href="{% url 'insumo:mapa_compras_calc' nivel ref cor tam %}">Recalcular este item</a>
+  </div>
+{% endif %}
+{% if data_id %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers_id only %}
+    {% include "layout/tbody_generic.html" with fields=fields_id data=data_id only %}
+  </table>
+{% endif %}
+{% if data %}
+  <h2>Mapa de compras</h2>
+  <table id="mapa_table">
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+  </table>
+{% endif %}
+<table class="layout">
+  <tr>
+    <td style="vertical-align: top;">
+      <h2>Necessidades semanais</h2>
+      {% if data_ins %}
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_ins style=style_ins only %}
+          {% include "layout/tbody_generic.html" with fields=fields_ins data=data_ins style=style_ins only %}
+        </table>
+      {% else %}
+        <b>Nenhuma</b>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
+      <h2>Necessidades das previsões</h2>
+      {% if data_prev %}
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_prev style=style_prev only %}
+          {% include "layout/tbody_generic.html" with fields=fields_prev data=data_prev style=style_prev only %}
+        </table>
+      {% else %}
+        <b>Nenhuma</b>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
+      <h2>Recebimentos semanais</h2>
+      {% if data_irs %}
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_irs style=style_irs only %}
+          {% include "layout/tbody_generic.html" with fields=fields_irs data=data_irs style=style_irs only %}
+        </table>
+      {% else %}
+        <b>Nenhum</b>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
+      <h2>Movimentos de recebimentos</h2>
+      {% if data_adi %}
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_adi style=style_adi only %}
+          {% include "layout/tbody_generic.html" with fields=fields_adi data=data_adi style=style_adi only %}
+        </table>
+      {% else %}
+        <b>Nenhum</b>
+      {% endif %}
+    </td>
+    <td></td>
+    <td style="border-left: thin solid lightgrey;"></td>
+    <td style="vertical-align: top;">
+      <h2>Sugestões ideais</h2>
+      {% if data_sug %}
+        <table>
+          {% include "layout/thead_generic.html" with data=headers_sug style=style_sug only %}
+          {% include "layout/tbody_generic.html" with fields=fields_sug data=data_sug style=style_sug only %}
+        </table>
+      {% else %}
+        <b>Nenhuma</b>
+      {% endif %}
+    </td>
+  </tr>
+</table>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+
+// baseado em
+// https://stackoverflow.com/questions/48310081/how-to-draw-arrow-in-html-table-across-cells
+
+// create vars canvas e context
+var canvas = null;
+var ctx = null;
+
+arrows = [];
+{% for arrow in arrows %}
+  arrows.push([{% for val in arrow %}{% if forloop.counter != 1 %}, {% endif %}'{{ val }}'{% endfor %}]);
+{% endfor %}
+
+// init canvas e context
+function iniCanvas() {
+  canvas = document.createElement('canvas');
+  canvas.width = $('body').innerWidth();
+  canvas.height = $('body').innerHeight();
+  $(canvas).css('position', 'absolute');
+  $(canvas).css('pointer-events', 'none');
+  $(canvas).css('top', '0');
+  $(canvas).css('left', '0');
+  $(canvas).css('opacity', '0.85');
+  $('body').append(canvas);
+  ctx = canvas.getContext('2d');
+}
+
+// gets the center of a table cell relative to the document
+function getCellCenter(table, row, column, position) {
+  var tableRow = $(table).find('tr')[row];
+  var tableCell = $(tableRow).find('td')[column];
+
+  var offset = $(tableCell).offset();
+  var width = $(tableCell).innerWidth();
+  var height = $(tableCell).innerHeight();
+
+  if (position == 'c') {
+    return {
+      x: offset.left + width / 2,
+      y: offset.top + height / 2
+    }
+  } else if (position == 'r') {
+    return {
+      x: offset.left + width,
+      y: offset.top + height / 2
+    }
+  } else if (position == 'l') {
+    return {
+      x: offset.left,
+      y: offset.top + height / 2
+    }
+  }
+}
+
+// draws an arrow on the document from the start to the end offsets
+function drawArrow(start, end, mark) {
+  ctx.fillStyle = mark;
+  ctx.strokeStyle = mark;
+
+  // draw line from start to end
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  ctx.lineTo(end.x, end.y);
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // draw circle at beginning of line
+  ctx.beginPath();
+  ctx.arc(start.x, start.y, 4, 0, Math.PI * 2, true);
+  ctx.fill();
+
+  // draw pointer at end of line (needs rotation)
+  ctx.beginPath();
+  var angle = Math.atan2(end.y - start.y, end.x - start.x);
+  ctx.translate(end.x, end.y);
+  ctx.rotate(angle);
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-10, -7);
+  ctx.lineTo(-10, 7);
+  ctx.lineTo(0, 0);
+  ctx.fill();
+
+  // reset canvas context
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+// finds the center of the start and end cells, and then calls drawArrow
+function drawArrowOnTable(table, startRow, startColumn, startPos,
+                                 endRow, endColumn, endPos, mark) {
+  drawArrow(
+    getCellCenter($(table), startRow, startColumn, startPos),
+    getCellCenter($(table), endRow, endColumn, endPos),
+    mark
+  );
+}
+
+function clearCanvas() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  canvas.width = $('body').innerWidth();
+  canvas.height = $('body').innerHeight();
+}
+
+function doArrows() {
+  clearCanvas();
+  var i;
+  for (i = 0; i < arrows.length; i++) {
+    drawArrowOnTable('#mapa_table', arrows[i][0], arrows[i][1], 'r', arrows[i][2], arrows[i][3], 'c', arrows[i][4]);
+  }
+}
+
+$(window).resize(function(){
+  doArrows();
+});
+
+$(document).ready(function(){
+  iniCanvas();
+  doArrows();
+});
+
+</script>
+{% endblock %}
