@@ -32,12 +32,13 @@ class Custo(O2BaseGetPostView):
 
         cursor = connections['so'].cursor()
 
-        info = queries.ref_inform(cursor, ref)
+        info = queries.nivel_ref_inform(cursor, nivel, ref)
         if len(info) == 0:
             self.context.update({'erro': 'Referência não encontrada'})
             return
 
-        alternativas = queries.ref_estruturas(cursor, ref)
+        alternativas = queries.nivel_ref_estruturas(cursor, nivel, ref)
+        pprint(alternativas)
         alternativa0 = alternativas[0]
         if cor == '':
             if alternativa0['COR'] == '000000':
