@@ -107,7 +107,7 @@ def reme_indu_nf(
         , nf.DATA_EMISSAO DT
         , fe.DOCUMENTO NF_DEVOLUCAO
         , cind.FANTASIA_CLIENTE FACCAO'''
-    if detalhe == 'I':
+    if detalhe in ['I', '1']:
         sql += '''
             , inf.SEQ_ITEM_NFISC SEQ
             , inf.NIVEL_ESTRUTURA NIVEL
@@ -120,7 +120,7 @@ def reme_indu_nf(
         , min(l.ORDEM_PRODUCAO) OP
         , nfec.DOCUMENTO NF_RET
         , nfec.DATA_EMISSAO DT_RET'''
-    if detalhe == 'I':
+    if detalhe in ['I', '1']:
         sql += '''
             , sum(nfei.QUANTIDADE) QTD_RET'''
     sql += '''
@@ -176,20 +176,28 @@ def reme_indu_nf(
           {situacao_filter} -- situacao_filter
           {dt_entrada_filter} -- dt_entrada_filter
           {nf_entrada_filter} -- nf_entrada_filter
+    '''
+    if detalhe == '1':
+        sql += ''' --
+            AND inf.NIVEL_ESTRUTURA = 1
+        '''
+    sql += ''' --
         GROUP BY
           nf.NUM_NOTA_FISCAL
         , nf.SITUACAO_NFISC
         , nf.DATA_EMISSAO
         , fe.DOCUMENTO
-        , cind.FANTASIA_CLIENTE'''
-    if detalhe == 'I':
-        sql += '''
+        , cind.FANTASIA_CLIENTE
+    '''
+    if detalhe in ['I', '1']:
+        sql += ''' --
             , inf.SEQ_ITEM_NFISC
             , inf.NIVEL_ESTRUTURA
             , inf.GRUPO_ESTRUTURA
             , inf.SUBGRU_ESTRUTURA
-            , inf.ITEM_ESTRUTURA'''
-    sql += '''
+            , inf.ITEM_ESTRUTURA
+        '''
+    sql += ''' --
         , nfec.DOCUMENTO
         , nfec.DATA_EMISSAO
         )
@@ -214,7 +222,7 @@ def reme_indu_nf(
           {cliente_filter} -- cliente_filter
         ORDER BY
           r.NF'''
-    if detalhe == 'I':
+    if detalhe in ['I', '1']:
         sql += '''
             , r.SEQ'''
     sql += '''
