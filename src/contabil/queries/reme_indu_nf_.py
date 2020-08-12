@@ -98,10 +98,6 @@ def reme_indu_nf(
     elif retorno == 'C':
         retorno_filter = "AND nfec.DOCUMENTO is NOT NULL"
 
-    '''
-    if detalhe == 'I':
-    sql = '''
-
     sql = '''
         WITH remessa AS
         (
