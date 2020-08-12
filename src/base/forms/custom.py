@@ -21,6 +21,8 @@ class O2BaseForm(forms.Form):
 
         self.autofocus_field(getattr(meta, 'autofocus_field', None))
 
+        self.initial_values(getattr(meta, 'initial_values', None))
+
     def saver(self, field_name, field):
         data = self.data.copy()
         data[field_name] = field
@@ -71,3 +73,8 @@ class O2BaseForm(forms.Form):
             else:
                 if 'autofocus' in attrs:
                     attrs.pop('autofocus')
+
+    @method_idle_on_none
+    def initial_values(self, initials):
+        for initial in initials:
+            self.fields[initial].initial = initials[initial]
