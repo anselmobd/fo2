@@ -42,12 +42,12 @@ class Custo(O2BaseGetPostView):
         alternativa0 = alternativas[0]
         if cor == '':
             if alternativa0['COR'] == '000000':
-                cores = queries.ref_cores(cursor, ref)
+                cores = queries.prod_cores(cursor, nivel, ref)
                 cor = cores[0]['COR']
             else:
                 cor = alternativa0['COR']
         else:
-            cores = queries.ref_cores(cursor, ref)
+            cores = queries.prod_cores(cursor, nivel, ref)
             if cor not in [c['COR'] for c in cores]:
                 self.context.update({
                     'erro': 'Cor não existe nessa referência'})
@@ -55,12 +55,12 @@ class Custo(O2BaseGetPostView):
 
         if tamanho == '':
             if alternativa0['TAM'] == '000':
-                tamanhos = queries.ref_tamanhos(cursor, ref)
+                tamanhos = queries.prod_tamanhos(cursor, nivel, ref)
                 tam = tamanhos[0]['TAM']
             else:
                 tam = alternativa0['TAM']
         else:
-            tamanhos = queries.ref_tamanhos(cursor, ref)
+            tamanhos = queries.prod_tamanhos(cursor, nivel, ref)
             if tamanho in [t['TAM'] for t in tamanhos]:
                 tam = tamanho
             else:
