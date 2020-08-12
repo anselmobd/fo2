@@ -1179,6 +1179,8 @@ class CustoItem:
             consumo, consumo_pai):
         if estrut_nivel == 0:
             narrativa = item_narrativa(cursor, nivel, ref, tam, cor)
+            if not narrativa:
+                return []
             componentes = [{
                 'ESTRUT_NIVEL': 0, 'SEQ': '',
                 'NIVEL': nivel, 'REF': ref, 'TAM': tam, 'COR': cor,
