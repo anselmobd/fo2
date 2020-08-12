@@ -174,6 +174,10 @@ def produtos_n1_basic(param):
 
 
 def ref_inform(cursor, ref):
+    return nivel_ref_inform(cursor, 1, ref)
+
+
+def nivel_ref_inform(cursor, nivel, ref):
     if isinstance(ref, tuple):
         refs = map(repr, ref)
         refs_join = ', '.join(refs)
@@ -185,7 +189,8 @@ def ref_inform(cursor, ref):
         ( SELECT
             sr.*
           FROM basi_030 sr
-          WHERE sr.REFERENCIA IN ({refs_join})
+          WHERE sr.NIVEL_ESTRUTURA = {nivel}
+            AND sr.REFERENCIA IN ({refs_join})
         )
         SELECT
           r.REFERENCIA REF
@@ -243,13 +248,13 @@ def ref_inform(cursor, ref):
         FROM referencias r
         JOIN BASI_150 ce
           ON ce.CONTA_ESTOQUE = r.CONTA_ESTOQUE
-        JOIN BASI_120 lin
-          ON lin.NIVEL_ESTRUTURA = 1
+        LEFT JOIN BASI_120 lin
+          ON lin.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
          AND lin.LINHA_PRODUTO = r.LINHA_PRODUTO
         JOIN BASI_140 col
           ON col.COLECAO = r.COLECAO
-        JOIN BASI_290 ac
-          ON ac.NIVEL_ESTRUTURA = 1
+        LEFT JOIN BASI_290 ac
+          ON ac.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
          AND ac.ARTIGO = r.ARTIGO
         JOIN BASI_240 cf
           ON cf.CLASSIFIC_FISCAL = r.CLASSIFIC_FISCAL
