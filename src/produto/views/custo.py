@@ -1,4 +1,4 @@
-from pprint import pprint, pformat
+from pprint import pprint
 
 from django.db import connections
 
@@ -38,7 +38,6 @@ class Custo(O2BaseGetPostView):
             return
 
         alternativas = queries.nivel_ref_estruturas(cursor, nivel, ref)
-        pprint(alternativas)
         alternativa0 = alternativas[0]
         if cor == '':
             if alternativa0['COR'] == '000000':
