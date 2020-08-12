@@ -53,7 +53,7 @@ urlpatterns = [
 
     url(r'^custo/$',
         views.Custo.as_view(), name='custo'),
-    url(r'^custo/(?P<ref>.+)/(?P<tamanho>.+)/(?P<cor>.+)/'
+    url(r'^custo/(?P<nivel>.+)/(?P<ref>.+)/(?P<tamanho>.+)/(?P<cor>.+)/'
         r'(?P<alternativa>.+)/$',
         views.Custo.as_view(), name='custo__get'),
 
