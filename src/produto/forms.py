@@ -4,6 +4,7 @@ from django import forms
 
 from base.forms import \
     O2BaseForm, \
+    O2FieldNivelForm, \
     O2FieldRefForm, \
     O2FieldTamanhoForm, \
     O2FieldCorForm, \
@@ -108,6 +109,7 @@ class ReferenciaForm(
 
 class CustoDetalhadoForm(
         O2BaseForm,
+        O2FieldNivelForm,
         O2FieldRefForm,
         O2FieldTamanhoForm,
         O2FieldCorForm):
@@ -118,6 +120,7 @@ class CustoDetalhadoForm(
 
     class Meta:
         order_fields = [
+            'nivel',
             'ref',
             'tamanho',
             'cor',
@@ -125,6 +128,9 @@ class CustoDetalhadoForm(
         ]
         required_fields = ['ref']
         autofocus_field = 'ref'
+        initial_values = {
+            'nivel': 1,
+        }
 
 
 class FiltroModeloForm(forms.Form):
