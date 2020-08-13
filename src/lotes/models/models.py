@@ -206,13 +206,10 @@ class Lote(models.Model):
             self.create_at = now
 
         if self.op_obj is None:
-            op = None
             try:
-                op = Op.objects.get(op=self.op)
+                self.op_obj = Op.objects.get(op=self.op)
             except Exception:
                 pass
-            if op is not None:
-                self.op_obj = op
 
         return super(Lote, self).save(*args, **kwargs)
 
