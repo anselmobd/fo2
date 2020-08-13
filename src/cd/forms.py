@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django import forms
+from django.db import connections
 from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
 
@@ -120,10 +121,18 @@ class EnderecarForm(forms.Form):
     def clean_lote(self):
         lote = only_digits(self.cleaned_data.get('lote', ''))
 
+        cursor = connections['so'].cursor()
+        periodo = lote[:4]
+        ordem_confeccao = lote[-5:]
+        lote_sys = lotes.models.posicao_get_item(
+            cursor, periodo, ordem_confeccao)
+        if len(lote_sys) == 0:
+            raise forms.ValidationError("Lote não encontrado no Systêxtil")
+
         try:
             self.lote_record = lotes.models.Lote.objects.get(lote=lote)
         except lotes.models.Lote.DoesNotExist:
-            raise forms.ValidationError("Lote não encontrado")
+            raise forms.ValidationError("Lote não encontrado no Apoio")
 
         return lote
 
