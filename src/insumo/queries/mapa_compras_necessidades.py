@@ -199,7 +199,7 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
     cursor.execute(sql)
 
     cached_result = rows_to_dict_list(cursor)
-    cache.set(key_cache, cached_result, timeout=entkeys._MINUTE)
+    cache.set(key_cache, cached_result, timeout=entkeys._MINUTE * 3)
     fo2logger.info('calculated '+key_cache)
     return cached_result
 
