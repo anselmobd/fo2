@@ -8,6 +8,10 @@ from fo2 import settings
 from systextil.models import Colecao
 from base.forms import \
     O2BaseForm, \
+    O2FieldNivelForm, \
+    O2FieldRefForm, \
+    O2FieldTamanhoForm, \
+    O2FieldCorForm, \
     O2FieldFiltroForm
 
 from systextil.models import ContaEstoque, Periodo, TipoContaEstoque
@@ -200,6 +204,27 @@ class NecessidadeForm(forms.Form):
 
     def clean_periodo_compra(self):
         return self.clean_periodo(self.cleaned_data['periodo_compra'])
+
+
+class MapaComprasNecessidadesForm(
+        O2BaseForm,
+        O2FieldNivelForm,
+        O2FieldRefForm,
+        O2FieldTamanhoForm,
+        O2FieldCorForm):
+
+    class Meta:
+        order_fields = [
+            'nivel',
+            'ref',
+            'tamanho',
+            'cor',
+        ]
+        required_fields = ['ref']
+        autofocus_field = 'ref'
+        initial_values = {
+            'nivel': 1,
+        }
 
 
 class ReceberForm(forms.Form):
