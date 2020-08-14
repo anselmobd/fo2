@@ -4,7 +4,7 @@ from utils.functions.models import rows_to_dict_list
 
 
 def mapa_compras_necessidades(
-        cursor, nivel, ref, cor, tam, dtini=None, nsem=None):
+        cursor, nivel, ref, cor, tam, dtini=None, nsem=None, colunas='m'):
 
     passa_filtro_DATA_ENTRADA_CORTE = ''
     usa_filtro_DATA_ENTRADA_CORTE = ''
@@ -205,15 +205,24 @@ def mapa_compras_necessidades(
         , a.OS
         , a.CSEQ
         )
-        SELECT
-          a.SEM SEMANA_NECESSIDADE
-        , sum(a.CCONSUMO_B * a.QTD) QTD_INSUMO
-        FROM filtrado a
-        GROUP BY
-          a.SEM
-        ORDER BY
-          a.SEM
     """
+    if colunas == 'm':
+        sql += f"""
+            SELECT
+              a.SEM SEMANA_NECESSIDADE
+            , sum(a.CCONSUMO_B * a.QTD) QTD_INSUMO
+            FROM filtrado a
+            GROUP BY
+              a.SEM
+            ORDER BY
+              a.SEM
+        """
+    elif colunas == 't':
+        sql += f"""
+            SELECT
+              a.*
+            FROM filtrado a
+        """
 
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
