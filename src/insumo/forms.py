@@ -213,15 +213,28 @@ class MapaComprasNecessidadesForm(
         O2FieldTamanhoForm,
         O2FieldCorForm):
 
+    CHOICES = [
+        ('m', 'Como no mapa de compras'),
+        ('t', 'Todas as colunas'),
+    ]
+    colunas = forms.ChoiceField(
+        choices=CHOICES, initial='m')
+
     class Meta:
         order_fields = [
             'nivel',
             'ref',
             'tamanho',
             'cor',
+            'colunas',
         ]
-        required_fields = ['ref']
-        autofocus_field = 'ref'
+        required_fields = [
+            'nivel',
+            'ref',
+            'tamanho',
+            'cor',
+        ]
+        autofocus_field = 'nivel'
         initial_values = {
             'nivel': 1,
         }
