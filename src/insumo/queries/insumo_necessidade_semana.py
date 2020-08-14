@@ -7,10 +7,10 @@ def insumo_necessidade_semana(
         cursor, nivel, ref, cor, tam, dtini=None, nsem=None, new_calc=True):
 
     try:
-        filtra_DATA_ENTRADA_CORTE = \
-            "AND coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) <= " \
-            "(TO_DATE('{dtini}','YYYYMMDD')+6+7*{nsem}+7)".format(
-                dtini=dtini, nsem=int(nsem)-1)
+        filtra_DATA_ENTRADA_CORTE = f"""--
+            AND coalesce(op.DATA_ENTRADA_CORTE, SYSDATE) <=
+            (TO_DATE('{dtini}','YYYYMMDD')+6+7*{int(nsem)-1}+7)
+        """
     except Exception:
         filtra_DATA_ENTRADA_CORTE = ''
 
@@ -51,7 +51,7 @@ def insumo_necessidade_semana(
                       END
                     )
         """
-    sql += """--
+    sql += f"""--
               ) QTD_INSUMO
             FROM BASI_030 ref -- referencia
             JOIN PCPC_020 op -- OP
@@ -129,7 +129,7 @@ def insumo_necessidade_semana(
                       END
                     )
         """
-    sql += """--
+    sql += f"""--
               ) > 0
             ORDER BY
               1, 2
@@ -169,12 +169,6 @@ def insumo_necessidade_semana(
         ORDER BY
           n.SEMANA_NECESSIDADE
     """
-    sql = sql.format(
-        nivel=nivel,
-        ref=ref,
-        cor=cor,
-        tam=tam,
-        filtra_DATA_ENTRADA_CORTE=filtra_DATA_ENTRADA_CORTE
-    )
+
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
