@@ -40,7 +40,7 @@ class MapaComprasNecessidades(O2BaseGetPostView):
 
         cursor = connections['so'].cursor()
 
-        data = queries.mapa_compras_necessidades(
+        data = queries.mapa_compras_necessidades_especificas(
             cursor, nivel, ref, cor, tamanho, colunas=colunas)
 
         if len(data) == 0:
