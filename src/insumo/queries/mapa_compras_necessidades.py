@@ -1,10 +1,22 @@
 from pprint import pprint
 
+from django.core.cache import cache
+
+from utils.cache import entkeys
+from utils.functions import make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list
 
 
 def mapa_compras_necessidades(
         cursor, nivel, ref, cor, tam, dtini=None, nsem=None, colunas='m'):
+
+    key_cache = make_key_cache()
+
+    cached_result = cache.get(key_cache)
+
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
 
     passa_filtro_DATA_ENTRADA_CORTE = ''
     usa_filtro_DATA_ENTRADA_CORTE = ''
@@ -225,4 +237,8 @@ def mapa_compras_necessidades(
         """
 
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+
+    cached_result = rows_to_dict_list(cursor)
+    cache.set(key_cache, cached_result, timeout=entkeys._MINUTE)
+    fo2logger.info('calculated '+key_cache)
+    return cached_result
