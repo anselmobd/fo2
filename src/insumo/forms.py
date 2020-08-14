@@ -217,8 +217,7 @@ class MapaComprasNecessidadesForm(
         ('m', 'Como no mapa de compras'),
         ('t', 'Todas as colunas'),
     ]
-    colunas = forms.ChoiceField(
-        choices=CHOICES, initial='m')
+    colunas = forms.ChoiceField(choices=CHOICES)
 
     class Meta:
         order_fields = [
@@ -236,7 +235,8 @@ class MapaComprasNecessidadesForm(
         ]
         autofocus_field = 'nivel'
         initial_values = {
-            'nivel': 1,
+            'nivel': 9,
+            'colunas': 'm',
         }
 
 
