@@ -89,7 +89,7 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
     })
 
     # Necessidades
-    data_ins = queries.insumo_necessidade_semana(
+    data_ins = queries.mapa_compras_necessidades(
         cursor, nivel, ref, cor, tam)
 
     for row in data_ins:
