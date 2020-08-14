@@ -222,8 +222,11 @@ class TermalPrint:
 
 
 class Perf:
-    def __init__(self, on=True):
+    def __init__(self, on=True, id=None):
+        self._id = None
+
         self.on() if on else self.off()
+        self.id = id
 
     def on(self):
         self.active = True
@@ -239,12 +242,21 @@ class Perf:
 
     def prt(self, descr):
         if self.active:
-            print('{:6.3f} {:6.3f} {}'.format(
+            print('{:6.3f} {:6.3f} {}:{}'.format(
                 time.perf_counter()-self.last,
                 time.perf_counter()-self.inicio,
-                descr
-                ))
+                self.id,
+                descr,
+            ))
             self.last = time.perf_counter()
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, value):
+        self._id = '' if value is None else value
 
 
 class LowerCaseValidator(object):
