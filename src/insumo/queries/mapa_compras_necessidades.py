@@ -206,6 +206,11 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
 
 def mapa_compras_necessidades_especificas(
         cursor, nivel, ref, cor, tam, dtini=None, nsem=None, colunas='m'):
+    '''
+    colunas
+        m: Como no mapa de compras
+        t: Todas as colunas
+    '''
 
     dados_gerais = mapa_compras_necessidades_gerais(cursor, dtini, nsem)
 
@@ -217,12 +222,22 @@ def mapa_compras_necessidades_especificas(
         and dado['CCOR_B'] == cor
     ]
 
-    if colunas == 'm':
-        for row in dados:
-            row['SEMANA_NECESSIDADE'] = row['SEM']
-            row['QTD_INSUMO'] = row['CCONSUMO_B'] * row['QTD']
+    if colunas == 't':
+        return dados
 
-    return dados
+    # if colunas == 'm'
+    result_dict = {}
+    for row in dados:
+        sem = row['SEM']
+        qtd = row['CCONSUMO_B'] * row['QTD']
+        try:
+            result_dict[sem] += qtd
+        except Exception:
+            result_dict[sem] = qtd
+    result = [{'SEMANA_NECESSIDADE': sem,
+               'QTD_INSUMO': result_dict[sem]}
+              for sem in sorted(result_dict.keys())]
+    return result
 
 
 def mapa_compras_necessidades(
