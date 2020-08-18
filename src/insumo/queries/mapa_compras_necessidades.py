@@ -3,11 +3,14 @@ from pprint import pprint
 from django.core.cache import cache
 
 from utils.cache import entkeys
+from utils.classes import Perf
 from utils.functions import make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list
 
 
 def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
+    p = Perf(id='mcng')
+    p.prt('mapa_compras_necessidades_gerais')
 
     key_cache = make_key_cache()
 
@@ -15,7 +18,9 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
 
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)
+        p.prt('cached')
         return cached_result
+    p.prt('calculating')
 
     passa_filtro_DATA_ENTRADA_CORTE = ''
     usa_filtro_DATA_ENTRADA_CORTE = ''
@@ -201,6 +206,7 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
     cached_result = rows_to_dict_list(cursor)
     cache.set(key_cache, cached_result, timeout=entkeys._MINUTE * 3)
     fo2logger.info('calculated '+key_cache)
+    p.prt('calculated')
     return cached_result
 
 
