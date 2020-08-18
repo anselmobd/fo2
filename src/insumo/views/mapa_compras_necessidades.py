@@ -54,6 +54,9 @@ class MapaComprasNecessidades(O2BaseGetPostView):
                 'semana_field': 'SEMANA_NECESSIDADE',
                 'headers': ['Semana', 'Quantidade'],
                 'fields': ['SEMANA_NECESSIDADE', 'QTD_INSUMO'],
+                'style': {
+                    2: 'text-align: right;',
+                }
             },
             't': {
                 'semana_field': 'SEM',
@@ -64,7 +67,8 @@ class MapaComprasNecessidades(O2BaseGetPostView):
                     'C.Seq.', 'C.Nív.', 'C.Ref.', 'C.Tam.', 'C.Cor',
                     'C.Alt.', 'C.Consumo', 'T.Calc.',
                     'Cor', 'Tam', 'Consumo',
-                    'Necess.', 'TemAlt.'],
+                    'Necess.', 'TemAlt.'
+                ],
                 'fields': [
                     'SEM', 'OP', 'ALT', 'NIV', 'REF', 'LTAM', 'LCOR',
                     'EST', 'OS', 'QTD',
@@ -72,7 +76,18 @@ class MapaComprasNecessidades(O2BaseGetPostView):
                     'CSEQ', 'CNIV', 'CREF', 'CTAM', 'CCOR',
                     'CALT', 'CCONSUMO', 'TCALC',
                     'CCOR_B', 'CTAM_B', 'CCONSUMO_B',
-                    'NESS', 'TEMALT'],
+                    'NESS', 'TEMALT'
+                ],
+                'style': {
+                    3: 'text-align: center;',
+                    4: 'text-align: center;',
+                    6: 'text-align: center;',
+                    8: 'text-align: center;',
+                    10: 'text-align: right;',
+                    20: 'text-align: right;',
+                    24: 'text-align: right;',
+                    25: 'text-align: right;',
+                }
             },
         }
 
@@ -85,6 +100,7 @@ class MapaComprasNecessidades(O2BaseGetPostView):
         self.context.update({
             'headers': conf[colunas]['headers'],
             'fields': conf[colunas]['fields'],
+            'style': conf[colunas]['style'],
             'data': data,
         })
 
