@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views import View
 
 from base.views import O2BaseGetPostView
+from utils.views import totalize_data
 
 import insumo.queries as queries
 import insumo.forms as forms
@@ -94,8 +95,30 @@ class MapaComprasNecessidades(O2BaseGetPostView):
         semana_field = conf[colunas]['semana_field']
         for row in data:
             row[semana_field] = row[semana_field].date()
-            if colunas == 't':
+
+        if colunas == 't':
+            for row in data:
                 row['NESS'] = row['CCONSUMO_B'] * row['QTD']
+
+            max_digits_ness = 0
+            max_digits_cons = 0
+            for row in data:
+                num_digits_ness = str(row['NESS'])[::-1].find('.')
+                max_digits_ness = max(max_digits_ness, num_digits_ness)
+                num_digits_cons = str(row['CCONSUMO_B'])[::-1].find('.')
+                max_digits_cons = max(max_digits_cons, num_digits_cons)
+
+            for row in data:
+                row['NESS|DECIMALS'] = max_digits_ness
+                row['CCONSUMO|DECIMALS'] = max_digits_cons
+                row['CCONSUMO_B|DECIMALS'] = max_digits_cons
+
+        totalize_data(data, {
+            'sum': ['NESS', ],
+            'count': [],
+            'descr': {semana_field: 'Totais:'},
+            'row_style': 'font-weight: bold;',
+        })
 
         self.context.update({
             'headers': conf[colunas]['headers'],
@@ -103,6 +126,5 @@ class MapaComprasNecessidades(O2BaseGetPostView):
             'style': conf[colunas]['style'],
             'data': data,
         })
-
 
         return self.context
