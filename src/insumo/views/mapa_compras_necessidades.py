@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.views import View
 
 from base.views import O2BaseGetPostView
-from utils.views import totalize_data
+from utils.views import totalize_grouped_data, totalize_data, group_rowspan
 
 import insumo.queries as queries
 import insumo.forms as forms
@@ -98,9 +98,30 @@ class MapaComprasNecessidades(O2BaseGetPostView):
         for row in data:
             row[semana_field] = row[semana_field].date()
 
-        if colunas == 't':
+        if colunas == 'm':
+            group = []
+            totalize_data(data, {
+                'sum': ['QTD_INSUMO', ],
+                'count': [],
+                'descr': {semana_field: 'Totais:'},
+                'row_style': 'font-weight: bold;',
+            })
+
+        elif colunas == 't':
             for row in data:
                 row['QTD_INSUMO'] = row['CCONSUMO_B'] * row['QTD']
+
+            group = [semana_field]
+            totalize_grouped_data(data, {
+                'group': group,
+                'sum': ['QTD_INSUMO'],
+                'count': [],
+                'descr': {semana_field: 'Total:'},
+                'global_sum': ['QTD_INSUMO'],
+                'global_descr': {semana_field: 'Total geral:'},
+                'row_style': 'font-weight: bold;',
+            })
+            group_rowspan(data, group)
 
             max_digits_qtd = 0
             max_digits_cons = 0
@@ -115,17 +136,11 @@ class MapaComprasNecessidades(O2BaseGetPostView):
                 row['CCONSUMO|DECIMALS'] = max_digits_cons
                 row['CCONSUMO_B|DECIMALS'] = max_digits_cons
 
-        totalize_data(data, {
-            'sum': ['QTD_INSUMO', ],
-            'count': [],
-            'descr': {semana_field: 'Totais:'},
-            'row_style': 'font-weight: bold;',
-        })
-
         self.context.update({
             'headers': conf[colunas]['headers'],
             'fields': conf[colunas]['fields'],
             'style': conf[colunas]['style'],
+            'group': group,
             'data': data,
         })
 
