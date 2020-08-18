@@ -148,7 +148,7 @@ def op_producao_modelo(request, modelo):
     try:
         data_op = lotes.queries.op.busca_op(
             cursor, modelo=modelo, tipo='v', tipo_alt='p',
-            situacao='a', posicao='p')
+            situacao='a', posicao='p', cached=True)
 
         if len(data_op) == 0:
             total_op = 0
