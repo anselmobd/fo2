@@ -4,13 +4,23 @@ from django.core.cache import cache
 
 from utils.functions.models import rows_to_dict_list
 
-from utils.functions import make_key_cache, fo2logger, cache_ttl
+from utils.functions import (
+    cache_ttl,
+    fo2logger,
+    make_key_cache,
+    my_make_key_cache,
+)
 
 
 def pedido_faturavel_modelo(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
         cached=True, deposito=None):
-    key_cache = make_key_cache()
+
+    # key_cache = make_key_cache()
+    key_cache = my_make_key_cache(
+        'pedido_faturavel_modelo',
+        modelo, ref, cor, tam, periodo, deposito
+    )
 
     cached_result = cache.get(key_cache)
     if cached and cached_result is not None:
