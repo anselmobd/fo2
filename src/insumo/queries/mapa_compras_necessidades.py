@@ -74,7 +74,7 @@ def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
                     niveln.append(novoinsumo)
 
     result = nivel1 + niveln
-    cache.set(key_cache, result, timeout=entkeys._MINUTE * 1)
+    cache.set(key_cache, result, timeout=entkeys._MINUTE * 2)
     fo2logger.info('calculated '+key_cache)
     p.prt('calculated')
     return result
