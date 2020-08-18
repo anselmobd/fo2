@@ -2,7 +2,7 @@ from django.core.cache import cache
 
 from utils.functions.models import rows_to_dict_list
 
-from utils.functions import make_key_cache, fo2logger
+from utils.functions import make_key_cache, fo2logger, my_make_key_cache
 
 
 def op_inform(cursor, op, cached=False):
@@ -21,7 +21,13 @@ def busca_op(
              p63 - Em produção, exceto OPs apenas no 63-CD
              f63 - Finalizadas, incluindo OPs apenas no 63-CD
     """
-    key_cache = make_key_cache()
+    # key_cache = make_key_cache()
+    key_cache = my_make_key_cache(
+        'busca_op',
+        op, ref, modelo, tam, cor,
+        deposito, tipo, tipo_alt, situacao, posicao,
+        motivo, quant_fin, quant_emp,
+    )
 
     cached_result = None
     if cached:
