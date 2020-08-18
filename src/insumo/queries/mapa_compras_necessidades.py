@@ -1,5 +1,5 @@
 from functools import reduce
-from operator import mul
+from operator import itemgetter, mul
 from pprint import pprint
 
 from django.core.cache import cache
@@ -310,10 +310,22 @@ def mapa_compras_necessidades_especificas(
     ]
 
     if colunas == 't':
+        p.prt('ordenar')
+        dados = sorted(dados, key=itemgetter(
+            'SEM',
+            'OP',
+            'ALT',
+            'NIV',
+            'REF',
+            'LTAM',
+            'LCOR',
+            'EST',
+        ))
         p.prt('fim')
         return dados
 
     # if colunas == 'm'
+    p.prt('montar result')
     result_dict = {}
     for row in dados:
         sem = row['SEM']
