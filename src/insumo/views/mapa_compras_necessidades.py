@@ -19,7 +19,7 @@ class MapaComprasNecessidades(O2BaseGetPostView):
         self.Form_class = forms.MapaComprasNecessidadesForm
         self.template_name = 'insumo/mapa_compras_necessidades.html'
         self.title_name = 'Necessidade (mapa)'
-        self.get_args = ['nivel', 'ref', 'tamanho', 'cor']
+        self.get_args = ['nivel', 'ref', 'tamanho', 'cor', 'colunas']
 
     def mount_context(self):
         nivel = self.form.cleaned_data['nivel']
@@ -59,24 +59,28 @@ class MapaComprasNecessidades(O2BaseGetPostView):
                 'semana_field': 'SEM',
                 'headers': [
                     'Semana', 'OP', 'Alt.', 'Nível', 'Ref.', 'L.Tam.', 'L.Cor',
-                    'Est.', 'OS', 'QTD',
+                    'Est.', 'OS', 'Qtd.',
                     'A.Tam.', 'A.Cor', 'Banho',
                     'C.Seq.', 'C.Nív.', 'C.Ref.', 'C.Tam.', 'C.Cor',
                     'C.Alt.', 'C.Consumo', 'T.Calc.',
-                    'Cor', 'Tam', 'Consumo', 'TemAlt.'],
+                    'Cor', 'Tam', 'Consumo',
+                    'Necess.', 'TemAlt.'],
                 'fields': [
                     'SEM', 'OP', 'ALT', 'NIV', 'REF', 'LTAM', 'LCOR',
                     'EST', 'OS', 'QTD',
                     'ATAM', 'ACOR', 'RBANHO',
                     'CSEQ', 'CNIV', 'CREF', 'CTAM', 'CCOR',
                     'CALT', 'CCONSUMO', 'TCALC',
-                    'CCOR_B', 'CTAM_B', 'CCONSUMO_B', 'TEMALT'],
+                    'CCOR_B', 'CTAM_B', 'CCONSUMO_B',
+                    'NESS', 'TEMALT'],
             },
         }
 
         semana_field = conf[colunas]['semana_field']
         for row in data:
             row[semana_field] = row[semana_field].date()
+            if colunas == 't':
+                row['NESS'] = row['CCONSUMO_B'] * row['QTD']
 
         self.context.update({
             'headers': conf[colunas]['headers'],
