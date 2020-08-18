@@ -1,6 +1,8 @@
+from functools import lru_cache
 from stdnum.iso7064 import mod_11_10
 
 
+@lru_cache(maxsize=128)
 def fo2_digit_calc(inteiro):
     if isinstance(inteiro, str):
         try:
@@ -16,11 +18,13 @@ def fo2_digit_calc(inteiro):
     return f"{digit1}{digit2}"
 
 
+@lru_cache(maxsize=128)
 def fo2_digit_with(inteiro):
     if isinstance(inteiro, int):
         inteiro = str(inteiro)
     return f'{inteiro}{fo2_digit_calc(inteiro)}'
 
 
+@lru_cache(maxsize=128)
 def fo2_digit_valid(texto):
     return fo2_digit_calc(texto[:-2]) == texto[-2:]
