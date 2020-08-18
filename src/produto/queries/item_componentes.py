@@ -1,6 +1,9 @@
 from pprint import pprint
-from functools import lru_cache
 
+from django.core.cache import cache
+
+from utils.cache import entkeys
+from utils.functions import make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list
 
 
@@ -19,8 +22,14 @@ def item_comps_custo(cursor, nivel, ref, tam, cor, alt):
     return data
 
 
-@lru_cache(maxsize=128)
 def item_comps(cursor, nivel, ref, tam, cor, alt):
+
+    key_cache = make_key_cache()
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     sql = f"""
         WITH filtro AS
         (
@@ -218,4 +227,8 @@ def item_comps(cursor, nivel, ref, tam, cor, alt):
         , a.CSEQ
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    result = rows_to_dict_list(cursor)
+
+    cache.set(key_cache, result, timeout=entkeys._MINUTE * 5)
+    fo2logger.info('calculated '+key_cache)
+    return result
