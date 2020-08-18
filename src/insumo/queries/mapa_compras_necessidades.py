@@ -327,7 +327,7 @@ def mapa_compras_necessidades_especificas(
 def mapa_compras_necessidades(
         cursor, nivel, ref, cor, tam, dtini=None, nsem=None, colunas='m'):
 
-    key_cache = make_key_cache()
+    key_cache = make_key_cache(ignore=['cursor'])
 
     cached_result = cache.get(key_cache)
 
