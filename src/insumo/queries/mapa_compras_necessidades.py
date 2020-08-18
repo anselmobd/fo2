@@ -8,6 +8,17 @@ from utils.functions import make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list
 
 
+def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
+    p = Perf(id='mcngm')
+    p.prt('mapa_compras_necess_gerais_multi')
+
+    nivel1 = mapa_compras_necessidades_gerais(cursor, dtini, nsem)
+
+    for insumo in nivel1:
+        if insumo['TEMALT']:
+            pass
+
+
 def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
     p = Perf(id='mcng')
     p.prt('mapa_compras_necessidades_gerais')
@@ -218,7 +229,7 @@ def mapa_compras_necessidades_especificas(
         t: Todas as colunas
     '''
 
-    dados_gerais = mapa_compras_necessidades_gerais(cursor, dtini, nsem)
+    dados_gerais = mapa_compras_necess_gerais_multi(cursor, dtini, nsem)
 
     dados = [
         dado for dado in dados_gerais
