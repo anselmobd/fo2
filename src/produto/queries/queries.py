@@ -1,6 +1,9 @@
 from django.db import connections
-from functools import lru_cache
 
+from django.core.cache import cache
+
+from utils.cache import entkeys
+from utils.functions import make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 
 import produto.queries
@@ -1136,8 +1139,14 @@ def por_cliente(cursor, cliente=None):
     return rows_to_dict_list(cursor)
 
 
-@lru_cache(maxsize=32)
 def item_narrativa(cursor, nivel, ref, tam, cor):
+
+    key_cache = make_key_cache()
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     filtra_nivel = ''
     if nivel != '':
         filtra_nivel = f'''--
@@ -1169,7 +1178,11 @@ def item_narrativa(cursor, nivel, ref, tam, cor):
           {filtra_cor} -- filtra_cor
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    result = rows_to_dict_list(cursor)
+
+    cache.set(key_cache, result, timeout=entkeys._MINUTE * 5)
+    fo2logger.info('calculated '+key_cache)
+    return result
 
 
 class CustoItem:
