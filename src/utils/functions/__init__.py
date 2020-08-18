@@ -213,6 +213,22 @@ def is_number(s):
         return False
 
 
+def my_make_key_cache(*args):
+    values = []
+    for value in args[1:]:
+        if (value is None) \
+                or isinstance(value, str) \
+                or isinstance(value, datetime.date) \
+                or is_number(value):
+            values.append(value)
+    braces = ['{}'] * len(values)
+    key = '|'.join(braces)
+    key = key.format(*values)
+    fo2logger.info(key)
+    key = '_'.join([args[0], key])
+    return key
+
+
 def make_key_cache(ignore=[], obey=[]):
     stack1 = inspect.stack()[1]
     argvalues = inspect.getargvalues(stack1.frame).locals
