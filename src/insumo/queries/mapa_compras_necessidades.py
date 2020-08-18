@@ -1,3 +1,5 @@
+from functools import reduce
+from operator import mul
 from pprint import pprint
 
 from django.core.cache import cache
@@ -6,6 +8,8 @@ from utils.cache import entkeys
 from utils.classes import Perf
 from utils.functions import make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list
+
+import produto.queries
 
 
 def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
@@ -24,11 +28,52 @@ def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
 
     nivel1 = mapa_compras_necessidades_gerais(cursor, dtini, nsem)
 
+    niveln = []
     for insumo in nivel1:
         if insumo['TEMALT']:
-            pass
+            subdata = produto.queries.CustoItem(
+                cursor, insumo['CNIV'], insumo['CREF'],
+                insumo['CTAM_B'], insumo['CCOR_B'],
+                insumo['CALT']).get_data()
+            consumo = {}
+            for row in subdata:
+                estrut_nivel = int(row['ESTRUT_NIVEL'])
+                consumo[estrut_nivel] = row['CONSUMO'] * (
+                    row['RBANHO'] if row['TCALC'] == 2 else 1)
 
-    result = nivel1
+                if estrut_nivel > 0:
+                    consumo_final = reduce(
+                        mul, list(consumo.values())[:estrut_nivel+1], 1)
+                    novoinsumo = {
+                        'SEM': insumo['SEM'],
+                        'OP': insumo['OP'],
+                        'ALT': insumo['ALT'],
+                        'NIV': insumo['NIV'],
+                        'REF': insumo['REF'],
+                        'LTAM': insumo['LTAM'],
+                        'LCOR': insumo['LCOR'],
+                        'EST': insumo['EST'],
+                        'OS': insumo['OS'],
+                        'QTD': insumo['QTD'],
+                        'ATAM': insumo['ATAM'],
+                        'ACOR': insumo['ACOR'],
+                        'RBANHO': insumo['RBANHO'],
+                        'CSEQ': row['SEQ'],
+                        'CNIV': row['NIVEL'],
+                        'CREF': row['REF'],
+                        'CTAM': row['TAM'],
+                        'CCOR': row['COR'],
+                        'CALT': row['ALT'],
+                        'CCONSUMO': insumo['CCONSUMO_B'] * consumo_final,
+                        'TCALC': row['TCALC'],
+                        'CCOR_B': row['COR'],
+                        'CTAM_B': row['TAM'],
+                        'CCONSUMO_B': insumo['CCONSUMO_B'] * consumo_final,
+                        'TEMALT': row['TEMALT'],
+                    }
+                    niveln.append(novoinsumo)
+
+    result = nivel1 + niveln
     cache.set(key_cache, result, timeout=entkeys._MINUTE * 1)
     fo2logger.info('calculated '+key_cache)
     p.prt('calculated')
