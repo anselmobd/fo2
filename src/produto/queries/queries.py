@@ -1195,15 +1195,18 @@ class CustoItem:
                 'NIVEL': nivel, 'REF': ref, 'TAM': tam, 'COR': cor,
                 'DESCR': narrativa[0]['NARRATIVA'],
                 'ALT': alt, 'CONSUMO': consumo, 'PRECO': '', 'CUSTO': '',
-                'TCALC': 0, 'RBANHO': 0,
+                'TCALC': 0, 'RBANHO': 0, 'TEMALT': 0,
                 }]
         else:
             componentes = produto.queries.item_comps_custo(
                 cursor, nivel, ref, tam, cor, alt)
 
         total_custo = 0
+        if componentes and self.data:
+            self.data[-1]['TEMALT'] = 1
         for comp in componentes:
             self.data.append(comp)
+            comp['TEMALT'] = 0
             comp['ESTRUT_NIVEL'] = estrut_nivel
             if comp['NIVEL'] != 9:
                 sub_custo = self.componentes_e_custo(
