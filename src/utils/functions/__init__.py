@@ -225,6 +225,7 @@ def my_make_key_cache(*args):
     key = '|'.join(braces)
     key = key.format(*values)
     fo2logger.info(key)
+    key = hashlib.md5(key.encode('utf-8')).hexdigest()
     key = '_'.join([args[0], key])
     return key
 
