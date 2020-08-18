@@ -34,6 +34,7 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
          AND parm.GRUPO_ESTRUTURA = ic.GRUPO_ESTRUTURA
          AND parm.SUBGRU_ESTRUTURA = ic.SUBGRU_ESTRUTURA
          AND parm.ITEM_ESTRUTURA = ic.ITEM_ESTRUTURA
+         AND parm.CODIGO_EMPRESA = 1
         LEFT JOIN ESTQ_040 e -- estoque por depósito
           ON e.CDITEM_NIVEL99 = ic.NIVEL_ESTRUTURA
          AND e.CDITEM_GRUPO = ic.GRUPO_ESTRUTURA
