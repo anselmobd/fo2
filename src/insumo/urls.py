@@ -129,7 +129,7 @@ urlpatterns = [
         views.MapaComprasNecessidades.as_view(),
         name='mapa_compras_necessidades'),
     url(r'^mapa_compras_necessidades/(?P<nivel>[29])/(?P<ref>.{5})/'
-        r'(?P<cor>.{6})/(?P<tam>.{1,3})/$',
+        r'(?P<cor>.{6})/(?P<tamanho>.{1,3})/(?P<colunas>.)/$',
         views.MapaComprasNecessidades.as_view(),
         name='mapa_compras_necessidades__get'),
 
