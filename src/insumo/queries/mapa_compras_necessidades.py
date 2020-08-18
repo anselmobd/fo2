@@ -12,11 +12,27 @@ def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
     p = Perf(id='mcngm')
     p.prt('mapa_compras_necess_gerais_multi')
 
+    key_cache = make_key_cache()
+
+    cached_result = cache.get(key_cache)
+
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        p.prt('cached')
+        return cached_result
+    p.prt('calculating')
+
     nivel1 = mapa_compras_necessidades_gerais(cursor, dtini, nsem)
 
     for insumo in nivel1:
         if insumo['TEMALT']:
             pass
+
+    result = nivel1
+    cache.set(key_cache, result, timeout=entkeys._MINUTE * 1)
+    fo2logger.info('calculated '+key_cache)
+    p.prt('calculated')
+    return result
 
 
 def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
