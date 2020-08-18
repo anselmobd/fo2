@@ -77,7 +77,7 @@ class MapaComprasNecessidades(O2BaseGetPostView):
                     'CSEQ', 'CNIV', 'CREF', 'CTAM', 'CCOR',
                     'CALT', 'CCONSUMO', 'TCALC',
                     'CCOR_B', 'CTAM_B', 'CCONSUMO_B',
-                    'NESS', 'TEMALT'
+                    'QTD_INSUMO', 'TEMALT'
                 ],
                 'style': {
                     3: 'text-align: center;',
@@ -100,23 +100,23 @@ class MapaComprasNecessidades(O2BaseGetPostView):
 
         if colunas == 't':
             for row in data:
-                row['NESS'] = row['CCONSUMO_B'] * row['QTD']
+                row['QTD_INSUMO'] = row['CCONSUMO_B'] * row['QTD']
 
-            max_digits_ness = 0
+            max_digits_qtd = 0
             max_digits_cons = 0
             for row in data:
-                num_digits_ness = str(row['NESS'])[::-1].find('.')
-                max_digits_ness = max(max_digits_ness, num_digits_ness)
+                num_digits_qtd = str(row['QTD_INSUMO'])[::-1].find('.')
+                max_digits_qtd = max(max_digits_qtd, num_digits_qtd)
                 num_digits_cons = str(row['CCONSUMO_B'])[::-1].find('.')
                 max_digits_cons = max(max_digits_cons, num_digits_cons)
 
             for row in data:
-                row['NESS|DECIMALS'] = max_digits_ness
+                row['QTD_INSUMO|DECIMALS'] = max_digits_qtd
                 row['CCONSUMO|DECIMALS'] = max_digits_cons
                 row['CCONSUMO_B|DECIMALS'] = max_digits_cons
 
         totalize_data(data, {
-            'sum': ['NESS', ],
+            'sum': ['QTD_INSUMO', ],
             'count': [],
             'descr': {semana_field: 'Totais:'},
             'row_style': 'font-weight: bold;',
