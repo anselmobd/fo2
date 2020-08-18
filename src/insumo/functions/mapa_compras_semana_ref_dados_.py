@@ -6,6 +6,7 @@ from pprint import pprint
 from django.core.cache import cache
 
 from utils.cache import entkeys
+from utils.classes import Perf
 from utils.functions import (
     fo2logger,
     make_key_cache,
@@ -48,16 +49,22 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
             entkeys.flush((nivel, ref, cor, tam))
         return cached_result
 
+    p = Perf(id='mcsrd')
+    p.prt('mapa_compras_semana_ref_dados')
+
     key_cache = make_key_cache(ignore=['calc'])
     if not calc:
         cached_result = cache.get(key_cache)
         if cached_result is not None:
             fo2logger.info('cached '+key_cache)
+            p.prt('cached')
             return cached_result
+    p.prt('calculating')
 
     datas = {}
     print_debug_level = 0
 
+    p.prt('insumo_descr')
     data_id = queries.insumo_descr(cursor, nivel, ref, cor, tam)
     if print_debug_level >= 3:
         print('data_id')
@@ -88,6 +95,7 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
         'semanas': data_id[0]['SEMANAS'],
     })
 
+    p.prt('mapa_compras_necessidades_especificas')
     # Necessidades
     data_ins = queries.mapa_compras_necessidades_especificas(
         cursor, nivel, ref, cor, tam)
@@ -98,6 +106,7 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
         print('data_ins')
         pprint(data_ins)
 
+    p.prt('insumo_previsoes_semana_insumo')
     # Previsões
     data_prev = queries.insumo_previsoes_semana_insumo(
         cursor, nivel, ref, cor, tam)
@@ -128,6 +137,7 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
         print('data_prev descontada')
         pprint(data_prev)
 
+    p.prt('insumo_recebimento_semana')
     # Recebimentos
     data_irs = queries.insumo_recebimento_semana(
         cursor, nivel, ref, cor, tam)
@@ -176,6 +186,7 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
         print('necessidades_passadas', necessidades_passadas)
         print('ult_necessidade', ult_necessidade)
 
+    p.prt('for row in data_irs')
     recebimentos = {}
     pri_recebimento = None
     ult_recebimento = None
@@ -226,6 +237,7 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
     if semana_fim is None and qtd_estoque < estoque_minimo:
         semana_fim = semana_hoje
 
+    p.prt('if semana_fim is not None')
     # se tem alguma entrada ou saída ou o estoque está abaixo do mínimo
     if semana_fim is not None:
         # criando mapa de compras
@@ -395,4 +407,5 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
         'data_sug': data_sug,
         'data_adi': data_receb_descontados,
     })
+    p.prt('calculated')
     return return_result(datas)
