@@ -290,6 +290,9 @@ def mapa_compras_necessidades_especificas(
         t: Todas as colunas
     '''
 
+    p = Perf(id='mcne')
+    p.prt('mapa_compras_necessidades_especificas')
+
     dados_gerais = mapa_compras_necess_gerais_multi(cursor, dtini, nsem)
 
     dados = [
@@ -301,6 +304,7 @@ def mapa_compras_necessidades_especificas(
     ]
 
     if colunas == 't':
+        p.prt('fim')
         return dados
 
     # if colunas == 'm'
@@ -315,6 +319,8 @@ def mapa_compras_necessidades_especificas(
     result = [{'SEMANA_NECESSIDADE': sem,
                'QTD_INSUMO': result_dict[sem]}
               for sem in sorted(result_dict.keys())]
+
+    p.prt('fim')
     return result
 
 
