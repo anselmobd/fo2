@@ -85,7 +85,9 @@ class MapaComprasNecessidades(O2BaseGetPostView):
                     6: 'text-align: center;',
                     8: 'text-align: center;',
                     10: 'text-align: right;',
+                    11: 'text-align: center;',
                     20: 'text-align: right;',
+                    23: 'text-align: center;',
                     24: 'text-align: right;',
                     25: 'text-align: right;',
                 }
