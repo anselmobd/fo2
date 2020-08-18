@@ -213,10 +213,10 @@ def is_number(s):
         return False
 
 
-def make_key_cache(ignore=[]):
+def make_key_cache(ignore=[], obey=[]):
     stack1 = inspect.stack()[1]
     argvalues = inspect.getargvalues(stack1.frame).locals
-    values = []
+    values = obey
     for key in argvalues:
         if key not in ignore:
             value = argvalues[key]
