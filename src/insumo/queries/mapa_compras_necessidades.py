@@ -6,7 +6,7 @@ from django.core.cache import cache
 
 from utils.cache import entkeys
 from utils.classes import Perf
-from utils.functions import make_key_cache, fo2logger
+from utils.functions import make_key_cache, fo2logger, my_make_key_cache
 from utils.functions.models import rows_to_dict_list
 
 import produto.queries
@@ -16,7 +16,10 @@ def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
     p = Perf(id='mcngm')
     p.prt('mapa_compras_necess_gerais_multi')
 
-    key_cache = make_key_cache()
+    # key_cache = make_key_cache(ignore=['cursor'])
+    key_cache = my_make_key_cache(
+        'mapa_compras_necess_gerais_multi', dtini, nsem,
+    )
 
     cached_result = cache.get(key_cache)
 
@@ -84,7 +87,10 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
     p = Perf(id='mcng')
     p.prt('mapa_compras_necessidades_gerais')
 
-    key_cache = make_key_cache()
+    # key_cache = make_key_cache(ignore=['cursor'])
+    key_cache = my_make_key_cache(
+        'mapa_compras_necessidades_gerais', dtini, nsem,
+    )
 
     cached_result = cache.get(key_cache)
 
