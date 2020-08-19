@@ -56,7 +56,8 @@ class CustoItem:
             if comp['TCALC'] == 2:  # g/l
                 comp['CONSUMO'] *= comp['RBANHO']
             comp['CUSTO'] = comp['CONSUMO'] * comp['PRECO']
-            total_custo += comp['CUSTO']
+            total_custo += 0 if isinstance(
+                comp['CUSTO'], str) else comp['CUSTO']
         return total_custo
 
     def get_data(self):
