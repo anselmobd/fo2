@@ -110,6 +110,8 @@ class MapaComprasNecessidades(O2BaseGetPostView):
         elif colunas == 't':
             for row in data:
                 row['QTD_INSUMO'] = row['CCONSUMO_B'] * row['QTD']
+                row['OP|LINK'] = reverse('producao:op__get', args=[row['OP']])
+                row['OP|GLYPHICON'] = '_'
 
             group = [semana_field]
             totalize_grouped_data(data, {
