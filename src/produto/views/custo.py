@@ -24,9 +24,8 @@ class Custo(O2BaseGetPostView):
         cor = self.form.cleaned_data['cor']
         alternativa = self.form.cleaned_data['alternativa']
 
-        if ref == '':
-            return
         self.context.update({
+            'nivel': nivel,
             'ref': ref,
             })
 
