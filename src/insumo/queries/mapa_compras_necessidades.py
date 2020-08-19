@@ -31,22 +31,51 @@ def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
 
     nivel1 = mapa_compras_necessidades_gerais(cursor, dtini, nsem)
 
+    debug = 9  # 1
     niveln = []
     for insumo in nivel1:
         if insumo['TEMALT']:
+
+            if debug == 1:
+                item = '.'.join([
+                    insumo['CNIV'], insumo['CREF'],
+                    insumo['CTAM_B'], insumo['CCOR_B']])
+                pprint(item)
+                if item == '2.TP010.TIN.0000MA':
+                    pprint(insumo)
+                    debug = 2
+
             subdata = produto.queries.CustoItem(
                 cursor, insumo['CNIV'], insumo['CREF'],
                 insumo['CTAM_B'], insumo['CCOR_B'],
                 insumo['CALT']).get_data()
+
             consumo = {}
             for row in subdata:
                 estrut_nivel = int(row['ESTRUT_NIVEL'])
                 consumo[estrut_nivel] = row['CONSUMO'] * (
                     row['RBANHO'] if row['TCALC'] == 2 else 1)
 
+                if debug == 2:
+                    componente = '.'.join([
+                        row['NIVEL'], row['REF'],
+                        row['TAM'], row['COR']])
+                    pprint(componente)
+                    if componente == '9.CO003.UNI.000003':
+                        pprint(row)
+                        pprint(consumo)
+                        debug = 3
+
                 if estrut_nivel > 0:
                     consumo_final = reduce(
                         mul, list(consumo.values())[:estrut_nivel+1], 1)
+
+                    if debug == 3:
+                        print('consumo_final', consumo_final)
+                        print('CCONSUMO_B',
+                              insumo['CCONSUMO_B'] * consumo_final)
+                        debug = 4
+
                     novoinsumo = {
                         'SEM': insumo['SEM'],
                         'OP': insumo['OP'],
