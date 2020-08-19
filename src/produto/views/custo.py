@@ -38,6 +38,10 @@ class Custo(O2BaseGetPostView):
             return
 
         alternativas = queries.nivel_ref_estruturas(cursor, nivel, ref)
+        if len(alternativas) == 0:
+            self.context.update({'erro': 'Referência sem estrutura'})
+            return
+
         alternativa0 = alternativas[0]
         if cor == '':
             if alternativa0['COR'] == '000000':
