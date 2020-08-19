@@ -84,9 +84,6 @@ class MapaCompras(View):
             )
 
         for row in data_ins:
-            row['SEMANA_NECESSIDADE|LINK'] = reverse(
-                'insumo:mapa_necessidade_detalhe',
-                args=[nivel, ref, cor, tam, row['SEMANA_NECESSIDADE']])
             row['SEMANA_NECESSIDADE|TARGET'] = '_blank'
             row['QTD_INSUMO|DECIMALS'] = max_digits
             if row['SEMANA_NECESSIDADE'] < semana_hoje:
@@ -97,6 +94,9 @@ class MapaCompras(View):
                     'font-weight: bold; font-style: italic;'
 
         context.update({
+            'header_link_ins': reverse(
+                'insumo:mapa_compras_necessidades__get',
+                args=[nivel, ref, cor, tam, 't']),
             'headers_ins': ['Semana', 'Quantidade'],
             'fields_ins': ['SEMANA_NECESSIDADE', 'QTD_INSUMO'],
             'style_ins': {2: 'text-align: right;'},
