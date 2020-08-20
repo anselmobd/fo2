@@ -1,5 +1,6 @@
 from django.db import connections
 from django.db.models import Exists, OuterRef
+from django.urls import reverse
 
 from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView
@@ -161,7 +162,13 @@ class GradeProduzir(O2BaseGetPostView):
                 cached=False
             )
         gped = None
+        print(reverse(
+            'producao:pedido_faturavel_modelo__get', args=[modelo]))
         if total_ped != 0:
+            self.context.update({
+                'gped_header_link': reverse(
+                    'producao:pedido_faturavel_modelo__get', args=[modelo]),
+            })
             gped = {
                 'headers': gp_header,
                 'fields': gp_fields,
