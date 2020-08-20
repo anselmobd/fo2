@@ -117,14 +117,19 @@ class PedidoFaturavelModelo(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        if 'modelo' in kwargs:
+            return self.post(request, *args, **kwargs)
+        else:
+            context = {'titulo': self.title_name}
+            form = self.Form_class()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        if 'modelo' in kwargs:
+            form.data['modelo'] = kwargs['modelo']
         if form.is_valid():
             modelo = form.cleaned_data['modelo']
             cursor = connections['so'].cursor()

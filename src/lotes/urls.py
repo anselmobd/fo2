@@ -113,6 +113,9 @@ urlpatterns = [
     url(r'^pedido_faturavel_modelo/$',
         views.pedido.PedidoFaturavelModelo.as_view(),
         name='pedido_faturavel_modelo'),
+    url(r'^pedido_faturavel_modelo/(?P<modelo>[^/]+)/$',
+        views.pedido.PedidoFaturavelModelo.as_view(),
+        name='pedido_faturavel_modelo__get'),
 
     url(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
 
