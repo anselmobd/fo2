@@ -138,7 +138,11 @@
       <thead class="layout">
         <tr>
           <th colspan="99">
-            <h3>Carteira de pedidos</h3>
+            {% if gped %}
+              <h3><a href="{{gped_header_link}}" target="_blank">Carteira de pedidos<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></h3>
+            {% else %}
+              <h3>Carteira de pedidos</h3>
+            {% endif %}
             <p>Obs.: Pedidos com data de embarque até: Hoje + <i>lead time</i> do produto + {{ dias_alem_lead }}</p>
           </th>
         </tr>
