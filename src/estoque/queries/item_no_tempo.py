@@ -29,6 +29,8 @@ def item_no_tempo(
         filtro_apartirde = f"AND t.DATA_INSERCAO > {str_apartirde}"
 
     sql = f'''
+        WITH query AS
+        (
         SELECT
           t.DATA_INSERCAO DATA
         , CASE WHEN t.ENTRADA_SAIDA = 'S' THEN
@@ -98,8 +100,25 @@ def item_no_tempo(
           {filtro_tam} -- AND t.SUBGRUPO_ESTRUTURA = 'P'
           {filtro_cor} -- AND t.ITEM_ESTRUTURA = '0000BR'
           {filtro_apartirde} -- filtro_apartirde
+        )
+        SELECT
+          q.*
+        , ped.STATUS_PEDIDO STAT_PED
+        , CASE ped.STATUS_PEDIDO
+          WHEN 0 THEN '0-Digitado'
+          WHEN 1 THEN '1-Financeiro'
+          WHEN 2 THEN '2-Liberado Financeiro'
+          WHEN 3 THEN '3-Faturamento'
+          WHEN 4 THEN '4-A cancelar'
+          WHEN 5 THEN '5-Cancelado'
+          WHEN 9 THEN '9-Aberto na web'
+          ELSE ''
+          END DESCR_STAT_PED
+        FROM query q
+        LEFT JOIN PEDI_100 ped -- pedido de venda
+          ON ped.PEDIDO_VENDA = q.PED
         ORDER BY
-          t.DATA_INSERCAO DESC
+          q.DATA DESC
     '''
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)

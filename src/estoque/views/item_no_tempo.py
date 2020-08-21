@@ -182,6 +182,8 @@ class ItemNoTempo(View):
                 row['ped|TARGET'] = '_blank'
                 row['ped|LINK'] = reverse(
                     'producao:pedido__get', args=[row['ped']])
+                if row['stat_ped'] != 0:
+                    row['ped'] = f"{row['ped']}'{row['stat_ped']}"
 
             if row['cnpj_9'] == 0:
                 row['cliente'] = '.'
