@@ -218,7 +218,7 @@ class ItemNoTempo(View):
                      (7, 8, 11, 12, 13): 'text-align: right;'}
         else:
             style = {10: 'color: green;',
-                     12: 'color: brown;',
+                     11: 'color: brown;',
                      (7, 8, 10, 11, 12): 'text-align: right;'}
 
         self.context.update({
