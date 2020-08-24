@@ -11,8 +11,8 @@ import produto.queries as queries
 
 
 class GtinDefine(View):
-    Form_class = forms.GtinForm
-    template_name = 'produto/gtin.html'
+    Form_class = forms.GtinPesquisaForm
+    template_name = 'produto/gtin/pesquisa.html'
     title_name = 'GTIN (EAN13)'
 
     def mount_context(self, cursor, ref, gtin):
