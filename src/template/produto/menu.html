@@ -10,7 +10,7 @@
   <ul>
     <li><a href="{% url 'produto:busca_modelo' %}">Busca</a></li>
   </ul>
-  <li>GTIN</li>
+  <li>GTIN (EAN13)</li>
   <ul>
     <li><a href="{% url 'produto:gtin_pesquisa' %}">Pesquisa</a></li>
     {% if request.user.is_authenticated %}
