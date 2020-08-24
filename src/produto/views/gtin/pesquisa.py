@@ -1,33 +1,18 @@
-import re
 import urllib
-from pprint import pprint, pformat
+from pprint import pprint
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import connections
-from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
-from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
-
-from base.views import O2BaseGetPostView
-from geral.functions import has_permission
-from geral.views import dict_colecao_fluxos, get_roteiros_de_fluxo
-from utils.forms import FiltroForm
-from utils.functions.models import rows_to_dict_list
-from utils.views import group_rowspan
 
 import produto.forms as forms
 import produto.queries as queries
 
 
-class GtinDefine(View):
-    pass
-
-
 class GtinPesquisa(View):
-    Form_class = forms.GtinForm
-    template_name = 'produto/gtin.html'
+    Form_class = forms.GtinPesquisaForm
+    template_name = 'produto/gtin/gtin.html'
     title_name = 'GTIN (EAN13)'
 
     def mount_context(self, cursor, ref, gtin):
