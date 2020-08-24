@@ -13,7 +13,11 @@
 <form action="{% url 'produto:gtin_define' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Busca"/>
+    {% if tipo == 'busca' %}
+      <input type="submit" name="busca" value="Busca"/>
+    {% else %}
+      <input type="submit" name="define" value="Define"/>
+    {% endif %}
 </form>
 {% if ref %}
   <h4>Referência: {{ ref }}</h4>
