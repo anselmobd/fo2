@@ -34,7 +34,7 @@ class InfAdProd(View):
                     row['COUNT_GTIN'] = 'Único'
                 else:
                     row['COUNT_GTIN|LINK'] = '{}?{}'.format(
-                        reverse('produto:gtin'),
+                        reverse('produto:gtin_pesquisa'),
                         urllib.parse.urlencode({
                             'gtin': row['GTIN'],
                         }))
