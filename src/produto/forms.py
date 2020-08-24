@@ -41,7 +41,7 @@ class FiltroRefForm(
         autofocus_field = 'filtro'
 
 
-class GtinForm(
+class GtinPesquisaForm(
         O2BaseForm,
         O2FieldRefForm,
         O2FieldGtinForm):
