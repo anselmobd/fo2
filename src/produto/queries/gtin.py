@@ -5,25 +5,29 @@ from utils.functions.models import rows_to_dict_list
 
 def gtin(cursor, ref=None, tam=None, cor=None, gtin=None):
     filtra_ref = ''
-    if ref != '':
-        filtra_ref = f'''--
-          AND rtc.GRUPO_ESTRUTURA = '{ref}' '''
+    if ref is not None and ref != '':
+        filtra_ref = f''' --
+            AND rtc.GRUPO_ESTRUTURA = '{ref}'
+        '''
 
     filtra_tam = ''
     if tam is not None and tam != '':
-        filtra_tam = f'''--
-          AND rtc.SUBGRU_ESTRUTURA = '{tam}' '''
+        filtra_tam = f''' --
+            AND rtc.SUBGRU_ESTRUTURA = '{tam}'
+        '''
 
     filtra_cor = ''
     if cor is not None and cor != '':
-        filtra_cor = f'''--
-          AND rtc.ITEM_ESTRUTURA = '{cor}' '''
+        filtra_cor = f''' --
+            AND rtc.ITEM_ESTRUTURA = '{cor}'
+        '''
 
     filtra_gtin = ''
-    if gtin != '':
-        filtra_gtin = f'''--
-          AND ( rtc.CODIGO_BARRAS IS NOT NULL
-              AND rtc.CODIGO_BARRAS = '{gtin}' ) '''
+    if gtin is not None and gtin != '':
+        filtra_gtin = f''' --
+            AND ( rtc.CODIGO_BARRAS IS NOT NULL
+                AND rtc.CODIGO_BARRAS = '{gtin}' )
+        '''
 
     sql = f"""
         SELECT
