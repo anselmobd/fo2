@@ -800,11 +800,21 @@ def multiplas_colecoes(cursor):
     return rows_to_dict_list(cursor)
 
 
-def gtin(cursor, ref=None, gtin=None):
+def gtin(cursor, ref=None, tam=None, cor=None, gtin=None):
     filtra_ref = ''
     if ref != '':
         filtra_ref = '''--
           AND rtc.GRUPO_ESTRUTURA = '{}' '''.format(ref)
+
+    filtra_tam = ''
+    if tam is not None and tam != '':
+        filtra_tam = '''--
+          AND rtc.SUBGRU_ESTRUTURA = '{}' '''.format(tam)
+
+    filtra_cor = ''
+    if cor is not None and cor != '':
+        filtra_cor = '''--
+          AND rtc.ITEM_ESTRUTURA = '{}' '''.format(cor)
 
     filtra_gtin = ''
     if gtin != '':
@@ -832,6 +842,8 @@ def gtin(cursor, ref=None, gtin=None):
           ON t.TAMANHO_REF = rtc.SUBGRU_ESTRUTURA
         WHERE rtc.NIVEL_ESTRUTURA = 1
           {filtra_ref} -- filtra_ref
+          {filtra_tam} -- filtra_tam
+          {filtra_cor} -- filtra_cor
           {filtra_gtin} -- filtra_gtin
         ORDER BY
           rtc.GRUPO_ESTRUTURA
@@ -840,6 +852,8 @@ def gtin(cursor, ref=None, gtin=None):
         , rtc.SUBGRU_ESTRUTURA
     """.format(
         filtra_ref=filtra_ref,
+        filtra_tam=filtra_tam,
+        filtra_cor=filtra_cor,
         filtra_gtin=filtra_gtin,
     )
     cursor.execute(sql)
