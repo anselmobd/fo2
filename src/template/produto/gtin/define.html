@@ -10,27 +10,18 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'produto:gtin_pesquisa' %}" method="post">
+<form action="{% url 'produto:gtin_define' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
 {% if ref %}
   <h4>Referência: {{ ref }}</h4>
-{% endif %}
-{% if gtin %}
+  <h4>Tamanho: {{ tamanho }}</h4>
+  <h4>Cor: {{ cor }}</h4>
   <h4>GTIN: {{ gtin }}</h4>
-  {% if qtd_repetido > 1 %}
-    Ocorrências: <b>{{qtd_repetido}}</b>
-  {% endif %}
 {% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
-{% endif %}
-{% if data %}
-  <table>
-    {% include "layout/thead_generic.html" with data=headers only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data only %}
-  </table>
 {% endif %}
 {% endblock %}
