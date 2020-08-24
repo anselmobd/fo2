@@ -13,93 +13,40 @@ import produto.queries as queries
 class GtinDefine(View):
     Form_class = forms.GtinDefineForm
     template_name = 'produto/gtin/define.html'
-    title_name = 'GTIN (EAN13)'
+    title_name = 'Define GTIN'
 
-    def mount_context(self, cursor, ref, gtin):
+    def mount_context(self, cursor, ref, tamanho, cor):
         context = {
             'ref': ref,
-            'gtin': gtin,
+            'tamanho': tamanho,
+            'cor': cor,
             }
 
-        data = queries.gtin(cursor, ref=ref, gtin=gtin)
+        data = queries.gtin(cursor, ref=ref, tam=tamanho, cor=cor)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        for row in data:
-            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
-            row['REF|TARGET'] = '_blank'
-            row['BAR'] = ''
-            row['BAR|GLYPHICON'] = 'glyphicon-barcode'
-            row['BAR|LINK'] = '{}?{}'.format(
-                reverse('produto:gtin_pesquisa'),
-                urllib.parse.urlencode({
-                    'ref': row['REF'],
-                }))
-            if row['GTIN'] == 'SEM GTIN':
-                row['QTD'] = ''
-            else:
-                if row['QTD'] == 1:
-                    row['QTD'] = 'Único'
-                else:
-                    row['QTD|LINK'] = '{}?{}'.format(
-                        reverse('produto:gtin_pesquisa'),
-                        urllib.parse.urlencode({
-                            'gtin': row['GTIN'],
-                        }))
-
-        headers = ['Referência', 'GTINs']
-        fields = ['REF', 'BAR']
-        if ref and not gtin:
-            headers = []
-            fields = []
-        headers.append('Cor')
-        fields.append('COR')
-        headers.append('Tamanho')
-        fields.append('TAM')
-
-        if gtin and not ref:
-            context.update({
-                'qtd_repetido': data[0]['QTD']
-            })
-        else:
-            headers.append('GTIN')
-            fields.append('GTIN')
-            headers.append('')
-            fields.append('QTD')
-
         context.update({
-            'headers': headers,
-            'fields': fields,
-            'data': data,
+            'gtin': data[0]['GTIN'],
         })
 
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'gtin' in request.GET:
-            kwargs['gtin'] = request.GET['gtin']
-            return self.post(request, *args, **kwargs)
-        elif 'ref' in request.GET:
-            kwargs['ref'] = request.GET['ref']
-            return self.post(request, *args, **kwargs)
-        else:
-            context = {'titulo': self.title_name}
-            form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        if 'ref' in kwargs:
-            form.data['ref'] = kwargs['ref']
-        if 'gtin' in kwargs:
-            form.data['gtin'] = kwargs['gtin']
         if form.is_valid():
             ref = form.cleaned_data['ref']
-            gtin = form.cleaned_data['gtin']
+            tamanho = form.cleaned_data['tamanho']
+            cor = form.cleaned_data['cor']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, ref, gtin))
+            context.update(self.mount_context(cursor, ref, tamanho, cor))
         context['form'] = form
         return render(request, self.template_name, context)
