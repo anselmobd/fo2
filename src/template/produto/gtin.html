@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'produto:gtin' %}" method="post">
+<form action="{% url 'produto:gtin_pesquisa' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
