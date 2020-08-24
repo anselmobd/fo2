@@ -10,7 +10,13 @@
   <ul>
     <li><a href="{% url 'produto:busca_modelo' %}">Busca</a></li>
   </ul>
+  <li>GTIN</li>
+  <ul>
     <li><a href="{% url 'produto:gtin_pesquisa' %}">Pesquisa</a></li>
+    {% if request.user.is_authenticated %}
+      <li><a href="{% url 'produto:gtin_define' %}">Define</a></li>
+    {% endif %}
+  </ul>
   <li><a href="{% url 'produto:info_xml' %}">Informações p/ NFe XML</a></li>
   <li><a href="{% url 'produto:por_cliente' %}">Por cliente</a></li>
   <li><a href="{% url 'produto:custo' %}">Custo de item</a></li>
