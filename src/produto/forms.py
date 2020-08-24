@@ -54,10 +54,19 @@ class GtinPesquisaForm(
 class GtinDefineForm(
         O2BaseForm,
         O2FieldRefForm,
+        O2FieldTamanhoForm,
+        O2FieldCorForm):
+
+    class Meta:
+        order_fields = ['ref', 'tamanho', 'cor']
+        autofocus_field = 'ref'
+
+
+class GtinDefineBarrasForm(
+        O2BaseForm,
         O2FieldGtinForm):
 
     class Meta:
-        order_fields = ['ref', 'gtin']
         autofocus_field = 'ref'
 
 
