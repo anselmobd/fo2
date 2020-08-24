@@ -51,6 +51,16 @@ class GtinPesquisaForm(
         autofocus_field = 'ref'
 
 
+class GtinDefineForm(
+        O2BaseForm,
+        O2FieldRefForm,
+        O2FieldGtinForm):
+
+    class Meta:
+        order_fields = ['ref', 'gtin']
+        autofocus_field = 'ref'
+
+
 class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
