@@ -67,7 +67,7 @@ class GtinDefineBarrasForm(
         O2FieldGtinForm):
 
     class Meta:
-        autofocus_field = 'ref'
+        autofocus_field = 'gtin'
 
 
 class ProdutoForm(forms.ModelForm):
