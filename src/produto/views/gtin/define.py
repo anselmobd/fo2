@@ -130,7 +130,7 @@ class GtinDefine(View):
                             None)
                         if index is not None:
                             index += 1
-                            if index == len(t_data) - 1:
+                            if index == len(t_data):
                                 index = 0
                             tamanho = t_data[index]['TAM']
                     form = self.Form_class(initial={
