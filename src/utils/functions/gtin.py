@@ -13,6 +13,10 @@ def calc_check_digit(number):
 
 
 def gtin13_valid(numbers):
-    if len(numbers) != 13:
+    return gtin_valid(numbers)
+
+
+def gtin_valid(numbers, tipo=13):
+    if len(numbers) != tipo:
         return False
-    return numbers[12] == calc_check_digit(numbers[:12])
+    return numbers[-1] == calc_check_digit(numbers[:-1])
