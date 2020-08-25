@@ -10,3 +10,9 @@ def calc_check_digit(number):
     """
     return str((10 - sum((3, 1)[i % 2] * int(n)
                 for i, n in enumerate(reversed(number)))) % 10)
+
+
+def gtin13_valid(numbers):
+    if len(numbers) != 13:
+        return False
+    return numbers[12] == calc_check_digit(numbers[:12])
