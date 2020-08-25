@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.db.utils import DatabaseError
+
 from utils.functions.models import rows_to_dict_list
 
 
@@ -61,3 +63,47 @@ def gtin(cursor, ref=None, tam=None, cor=None, gtin=None):
 
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def set_gtin(cursor, niv, ref, tam, cor, gtin):
+
+    sql_select = f"""
+        SELECT
+          rtc.CODIGO_BARRAS GTIN
+        FROM BASI_010 rtc -- item (ref+tam+cor)
+        WHERE rtc.NIVEL_ESTRUTURA = '{niv}'
+          AND rtc.GRUPO_ESTRUTURA = '{ref}'
+          AND rtc.SUBGRU_ESTRUTURA = '{tam}'
+          AND rtc.ITEM_ESTRUTURA = '{cor}'
+    """
+    try:
+        cursor.execute(sql_select)
+        data = rows_to_dict_list(cursor)
+        if len(data) != 1:
+            return 'Item não único'
+        if data[0]['GTIN'] == gtin+'9':
+            return None
+    except DatabaseError as error:
+        return error
+
+    sql_update = f"""
+        UPDATE BASI_010 rtc -- item (ref+tam+cor)
+        SET
+          rtc.CODIGO_BARRAS = {gtin}
+        WHERE rtc.NIVEL_ESTRUTURA = '{niv}'
+          AND rtc.GRUPO_ESTRUTURA = '{ref}'
+          AND rtc.SUBGRU_ESTRUTURA = '{tam}'
+          AND rtc.ITEM_ESTRUTURA = '{cor}'
+    """
+    try:
+        cursor.execute(sql_update)
+    except DatabaseError as error:
+        return error
+
+    try:
+        cursor.execute(sql_select)
+        data = rows_to_dict_list(cursor)
+        if data[0]['GTIN'] != gtin:
+            return 'GTIN não atualizado'
+    except DatabaseError as error:
+        return error
