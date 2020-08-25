@@ -16,7 +16,8 @@ class ObjsProduto():
         self.tam = tam
         self.cor = cor
 
-        self.str_item = pro_fun.item_str(self.nivel, self.ref, self.tam, self.cor)
+        self.str_item = pro_fun.item_str(
+            self.nivel, self.ref, self.tam, self.cor)
         self.cursor = connections['so'].cursor()
 
         self.valid_entries()
