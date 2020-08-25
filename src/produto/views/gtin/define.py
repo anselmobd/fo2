@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from utils.functions.gtin import gtin13_valid
+
 import produto.forms as forms
 import produto.queries as queries
 
@@ -44,9 +46,16 @@ class GtinDefine(View):
                 'gtin': gtin,
             })
 
-            if gtin.startswith('123'):
+            if not gtin13_valid(gtin):
                 context.update({'erro': 'GTIN inválido'})
                 return context
+
+            result = queries.set_gtin(cursor, '1', ref, tamanho, cor, gtin)
+            if result:
+                context.update({'erro': f'Erro ao atualizar GTIN [{result}]'})
+                return context
+            else:
+                context.update({'msg': 'GTIN atualizada'})
 
         return context
 

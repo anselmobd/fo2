@@ -25,6 +25,9 @@
   <h4>Cor: {{ cor }}</h4>
   <h4>GTIN: {{ gtin }}</h4>
 {% endif %}
+{% if msg %}
+  <h4>{{ msg }}</h4>
+{% endif %}
 {% if erro %}
   <h4>{{ erro }}</h4>
 {% endif %}
