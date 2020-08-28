@@ -14,3 +14,6 @@ def campanhas(request, id):
     elif id == '2020-03-12':
         return render(
             request, 'rh/campanhas/2020-03-12-reunioes-produtivas.html')
+    elif id == '2020-09-01':
+        return render(
+            request, 'rh/campanhas/2020-09-01-setembro-amarelo.html')
