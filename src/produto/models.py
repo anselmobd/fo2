@@ -4,6 +4,32 @@ from django.db import models
 from base.models import ImagemTag, Tamanho
 
 
+# class GtinLog(models.Model):
+#     colaborador = models.ForeignKey(Colaborador, on_delete=models.PROTECT)
+#     produto = models.ForeignKey(
+#         Produto, on_delete=models.CASCADE,
+#         verbose_name='Referência')
+#     cor = models.ForeignKey(
+#         ProdutoCor, on_delete=models.CASCADE)
+#     tamanho = models.ForeignKey(
+#         ProdutoTamanho, on_delete=models.CASCADE)
+#     gtin = models.CharField(
+#         max_length=13, null=True, blank=True,
+#         verbose_name='GTIN no XML')
+#
+#     def __str__(self):
+#         return f"{self.colaborador.user.username} - {self.quando} - {self}"
+#         return f"{self.user} ({self.matricula}) {self.nome}"
+#
+#     class Meta:
+#         db_table = "fo2_colaborador"
+#         verbose_name_plural = 'Colaboradores'
+#         permissions = (
+#             ("can_generate_product_stages", "Can generate product stages"),
+#             ("can_adjust_stock", "Can adjust stock"),
+#         )
+
+
 class GtinRange(models.Model):
     ordem = models.IntegerField(
         unique=True,

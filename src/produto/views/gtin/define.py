@@ -2,6 +2,7 @@ import urllib
 from pprint import pprint
 
 from django.db import connections
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -12,11 +13,14 @@ import produto.forms as forms
 import produto.queries as queries
 
 
-class GtinDefine(View):
-    Form_class = forms.GtinDefineForm
-    Form_class_barras = forms.GtinDefineBarrasForm
-    template_name = 'produto/gtin/define.html'
-    title_name = 'Define GTIN'
+class GtinDefine(PermissionRequiredMixin, View):
+
+    def __init__(self):
+        self.permission_required = 'lotes.can_inventorize_lote'
+        self.Form_class = forms.GtinDefineForm
+        self.Form_class_barras = forms.GtinDefineBarrasForm
+        self.template_name = 'produto/gtin/define.html'
+        self.title_name = 'Define GTIN'
 
     def mount_context(self, cursor, tipo, ref, tamanho, cor, gtin):
         context = {
