@@ -260,19 +260,6 @@ def index(request):
     return render(request, 'rh/index.html', context)
 
 
-def campanhas(request, id):
-    if id is None:
-        context = {'titulo': 'Campanhas'}
-        return render(request, 'rh/campanhas.html', context)
-    elif id == '2020-01-22':
-        return render(request, 'rh/campanhas/2020-01-22-RS-IT.html')
-    elif id == '2020-02-11':
-        return render(request, 'rh/campanhas/2020-02-11-premiacao.html')
-    elif id == '2020-03-12':
-        return render(
-            request, 'rh/campanhas/2020-03-12-reunioes-produtivas.html')
-
-
 def comunicados(request, id):
     if id == '2020-07-29':
         context = {'titulo': 'Tecelagem - Pagamentos'}
