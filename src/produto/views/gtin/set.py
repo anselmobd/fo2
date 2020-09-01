@@ -9,6 +9,7 @@ from django.views import View
 
 from utils.functions.gtin import gtin13_valid
 
+import produto.classes as classes
 import produto.forms as forms
 import produto.queries as queries
 
@@ -68,6 +69,9 @@ class SetGtinDefine(PermissionRequiredMixin, View):
                     return context
             else:
                 context.update({'msg': f'GTIN atualizado'})
+
+                objs_prod = classes.ObjsProduto(
+                    nivel, ref, tamanho, cor, new_gtin)
 
         return context
 
