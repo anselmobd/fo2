@@ -10,6 +10,7 @@ from django.utils import timezone
 from utils.classes import AcessoInterno
 
 from .models import Colaborador, Requisicao
+from .queries.models import get_create_colaborador_by_user
 
 
 @receiver(request_started)
@@ -50,15 +51,7 @@ def request_start(sender, environ, **kwargs):
 
 @receiver(user_logged_in)
 def login_user(sender, user, request, **kwargs):
-    try:
-        colab = Colaborador.objects.get(user__username=user.username)
-    except Colaborador.DoesNotExist:
-        colab = Colaborador(
-            user=user,
-            matricula=72000+user.id,
-            cpf=72000+user.id,
-        )
-        colab.save()
+    colab = get_create_colaborador_by_user(user)
 
     try:
         colab.logged = True
