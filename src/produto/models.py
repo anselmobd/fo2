@@ -1,33 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from base.models import ImagemTag, Tamanho
-
-
-# class GtinLog(models.Model):
-#     colaborador = models.ForeignKey(Colaborador, on_delete=models.PROTECT)
-#     produto = models.ForeignKey(
-#         Produto, on_delete=models.CASCADE,
-#         verbose_name='Referência')
-#     cor = models.ForeignKey(
-#         ProdutoCor, on_delete=models.CASCADE)
-#     tamanho = models.ForeignKey(
-#         ProdutoTamanho, on_delete=models.CASCADE)
-#     gtin = models.CharField(
-#         max_length=13, null=True, blank=True,
-#         verbose_name='GTIN no XML')
-#
-#     def __str__(self):
-#         return f"{self.colaborador.user.username} - {self.quando} - {self}"
-#         return f"{self.user} ({self.matricula}) {self.nome}"
-#
-#     class Meta:
-#         db_table = "fo2_colaborador"
-#         verbose_name_plural = 'Colaboradores'
-#         permissions = (
-#             ("can_generate_product_stages", "Can generate product stages"),
-#             ("can_adjust_stock", "Can adjust stock"),
-#         )
+from base.models import (
+    Colaborador,
+    ImagemTag,
+    Tamanho,
+)
 
 
 class GtinRange(models.Model):
@@ -212,3 +190,30 @@ class ComposicaoLinha(models.Model):
         db_table = "fo2_composicao_linha"
         verbose_name = "Linha da Composição"
         verbose_name_plural = "Linhas da Composição"
+
+
+class GtinLog(models.Model):
+    colaborador = models.ForeignKey(Colaborador, on_delete=models.PROTECT)
+    quando = models.DateTimeField(
+        null=True, blank=True)
+    produto = models.ForeignKey(
+        Produto, on_delete=models.CASCADE,
+        verbose_name='Referência')
+    cor = models.ForeignKey(
+        ProdutoCor, on_delete=models.CASCADE)
+    tamanho = models.ForeignKey(
+        ProdutoTamanho, on_delete=models.CASCADE)
+    gtin = models.CharField(
+        max_length=13, null=True, blank=True,
+        verbose_name='GTIN no XML')
+
+    def __str__(self):
+        return (f"1.{self.produto}.{self.tamanho}.{self.cor} - {self.gtin} - "
+                f"{self.quando} - {self.colaborador.user.username}")
+
+    class Meta:
+        db_table = "fo2_prod_gtin_log"
+        verbose_name_plural = 'GTIN Log'
+        permissions = (
+            ("can_set_gtin", "Can set GTIN"),
+        )
