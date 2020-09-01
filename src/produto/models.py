@@ -218,3 +218,6 @@ class GtinLog(models.Model):
         permissions = (
             ("can_set_gtin", "Can set GTIN"),
         )
+
+    def save(self, *args, **kwargs):
+        self.quando = timezone.now()
