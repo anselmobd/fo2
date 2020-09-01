@@ -4,18 +4,21 @@ from django.db import connections
 
 import systextil.queries as sys_que
 
+from base.queries.models import get_create_colaborador_by_user
+
 import produto.functions as pro_fun
 import produto.models as pro_mod
 
 
 class ObjsProduto():
 
-    def __init__(self, nivel, ref, tam, cor, gtin=None):
+    def __init__(self, nivel, ref, tam, cor, gtin=None, usuario=None):
         self.nivel = nivel
         self.ref = ref
         self.tam = tam
         self.cor = cor
         self.gtin = gtin
+        self.usuario = usuario
 
         self.str_item = pro_fun.item_str(
             self.nivel, self.ref, self.tam, self.cor)
@@ -27,6 +30,8 @@ class ObjsProduto():
 
         self.set_fields()
 
+        self.set_logs()
+
     def set_vars(self):
         self.set_produto()
         self.set_produto_cor()
@@ -36,6 +41,9 @@ class ObjsProduto():
 
     def set_fields(self):
         self.set_produto_item_gtin()
+
+    def set_logs(self):
+        self.set_gtin_log()
 
     def valid_entries(self):
         s_produtos = sys_que.item(
@@ -127,3 +135,16 @@ class ObjsProduto():
         if self.gtin and self.produto_item.gtin != self.gtin:
             self.produto_item.gtin = self.gtin
             self.produto_item.save()
+
+    def set_gtin_log(self):
+        print('set_gtin_log')
+        if self.gtin and self.usuario:
+            print('set_gtin_log if')
+            self.gtin_log = pro_mod.GtinLog(
+                colaborador=get_create_colaborador_by_user(self.usuario),
+                produto=self.produto,
+                cor=self.produto_cor,
+                tamanho=self.produto_tam,
+                gtin=self.gtin,
+            )
+            self.gtin_log.save()
