@@ -5,7 +5,7 @@ from fo2.admin import intr_adm_site
 
 from .models import GtinRange, \
     Produto, ProdutoCor, ProdutoTamanho, ProdutoItem, \
-    Composicao, ComposicaoLinha
+    Composicao, ComposicaoLinha, GtinLog
 from .forms import ProdutoForm
 
 
@@ -54,6 +54,10 @@ class ComposicaoLinhaAdmin(admin.ModelAdmin):
     ordering = ['composicao', 'ordem']
 
 
+class GtinLogAdmin(admin.ModelAdmin):
+    pass
+
+
 intr_adm_site.register(GtinRange, GtinRangeAdmin)
 intr_adm_site.register(Produto, ProdutoAdmin)
 intr_adm_site.register(ProdutoCor, ProdutoCorAdmin)
@@ -61,3 +65,4 @@ intr_adm_site.register(ProdutoTamanho, ProdutoTamanhoAdmin)
 intr_adm_site.register(ProdutoItem, ProdutoItemAdmin)
 intr_adm_site.register(Composicao, ComposicaoAdmin)
 intr_adm_site.register(ComposicaoLinha, ComposicaoLinhaAdmin)
+intr_adm_site.register(GtinLog, GtinLogAdmin)
