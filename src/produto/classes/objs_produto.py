@@ -25,12 +25,17 @@ class ObjsProduto():
 
         self.set_vars()
 
+        self.set_fields()
+
     def set_vars(self):
         self.set_produto()
         self.set_produto_cor()
         self.set_tamanho()
         self.set_produto_tam()
         self.set_produto_item()
+
+    def set_fields(self):
+        self.set_produto_item_gtin()
 
     def valid_entries(self):
         s_produtos = sys_que.item(
@@ -118,6 +123,7 @@ class ObjsProduto():
             )
             self.produto_item.save()
 
+    def set_produto_item_gtin(self):
         if self.gtin and self.produto_item.gtin != self.gtin:
             self.produto_item.gtin = self.gtin
             self.produto_item.save()
