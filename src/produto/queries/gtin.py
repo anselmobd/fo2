@@ -80,11 +80,11 @@ def set_gtin(cursor, niv, ref, tam, cor, gtin):
         cursor.execute(sql_select)
         data = rows_to_dict_list(cursor)
         if len(data) != 1:
-            return 'Item não único'
-        if data[0]['GTIN'] == gtin+'9':
-            return None
+            return -1, 'Item não único'
+        if data[0]['GTIN'] == gtin:
+            return 1, None
     except DatabaseError as error:
-        return error
+        return -2, error
 
     sql_update = f"""
         UPDATE BASI_010 rtc -- item (ref+tam+cor)
@@ -98,12 +98,14 @@ def set_gtin(cursor, niv, ref, tam, cor, gtin):
     try:
         cursor.execute(sql_update)
     except DatabaseError as error:
-        return error
+        return -3, error
 
     try:
         cursor.execute(sql_select)
         data = rows_to_dict_list(cursor)
         if data[0]['GTIN'] != gtin:
-            return 'GTIN não atualizado'
+            return -4, 'GTIN não atualizado'
     except DatabaseError as error:
-        return error
+        return -5, error
+
+    return 0, None
