@@ -71,11 +71,12 @@ class SetGtinDefine(PermissionRequiredMixin, View):
                 context.update({'msg': f'GTIN atualizado'})
 
                 objs_prod = classes.ObjsProduto(
-                    nivel, ref, tamanho, cor, new_gtin)
+                    nivel, ref, tamanho, cor, new_gtin, self.request.user)
 
         return context
 
     def get(self, request, *args, **kwargs):
+        self.request = request
         context = {'titulo': self.title_name}
         nivel = kwargs['nivel']
         ref = kwargs['ref']
@@ -91,6 +92,7 @@ class SetGtinDefine(PermissionRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         context = {'titulo': self.title_name}
         nivel = kwargs['nivel']
         ref = kwargs['ref']
