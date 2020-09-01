@@ -54,12 +54,18 @@ class GtinDefine(PermissionRequiredMixin, View):
                 context.update({'erro': 'GTIN inválido'})
                 return context
 
-            result = queries.set_gtin(cursor, '1', ref, tamanho, cor, gtin)
-            if result:
-                context.update({'erro': f'Erro ao atualizar GTIN [{result}]'})
-                return context
+            error, error_msg = queries.set_gtin(
+                cursor, '1', ref, tamanho, cor, gtin)
+            if error:
+                if error > 0:
+                    context.update({'msg': f'GTIN não alterado'})
+                    return context
+                else:
+                    context.update(
+                        {'erro': f'Erro ao atualizar GTIN [{result}]'})
+                    return context
             else:
-                context.update({'msg': 'GTIN atualizada'})
+                context.update({'msg': f'GTIN atualizado para {gtin}'})
 
         return context
 
