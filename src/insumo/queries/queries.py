@@ -135,11 +135,19 @@ def ref_usado_em(cursor, nivel, ref):
     # Informações básicas
     sql = """
         SELECT DISTINCT
-          CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
-          WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
-          WHEN r.REFERENCIA like 'Z%' THEN 'MP'
-          ELSE 'MD'
+          CASE WHEN e.NIVEL_ITEM = 1 THEN
+            CASE WHEN r.REFERENCIA <= '99999' THEN 'PA'
+            WHEN r.REFERENCIA like 'A%' or r.REFERENCIA like 'B%' THEN 'PG'
+            WHEN r.REFERENCIA like 'Z%' THEN 'MP'
+            ELSE 'MD'
+            END
+          WHEN e.NIVEL_ITEM = 5 THEN 'RE'
+          ELSE 'MP'
           END TIPO
+        , e.NIVEL_ITEM NIVEL
+        , e.GRUPO_ITEM REF
+        , e.SUB_ITEM TAM
+        , e.ITEM_ITEM COR
         , e.GRUPO_ITEM REF
         , r.DESCR_REFERENCIA DESCR
         , e.ALTERNATIVA_ITEM ALTERNATIVA
@@ -151,8 +159,13 @@ def ref_usado_em(cursor, nivel, ref):
          AND r.REFERENCIA = e.GRUPO_ITEM
         LEFT JOIN MQOP_005 es
           ON es.CODIGO_ESTAGIO = e.ESTAGIO
-        WHERE r.RESPONSAVEL IS NOT NULL
-          AND e.NIVEL_ITEM = 1
+        WHERE 1=1
+          AND (
+            ( e.NIVEL_ITEM = 1
+            AND r.RESPONSAVEL IS NOT NULL
+            )
+          OR e.NIVEL_ITEM <> 1
+          )
           AND e.NIVEL_COMP = {}
           AND e.GRUPO_COMP = '{}'
         ORDER BY
