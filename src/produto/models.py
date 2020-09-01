@@ -1,11 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-
 from base.models import (
     Colaborador,
     ImagemTag,
     Tamanho,
 )
+from django.utils import timezone
 
 
 class GtinRange(models.Model):
@@ -221,3 +221,4 @@ class GtinLog(models.Model):
 
     def save(self, *args, **kwargs):
         self.quando = timezone.now()
+        super(GtinLog, self).save(*args, **kwargs)
