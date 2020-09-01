@@ -1,7 +1,6 @@
 from pprint import pprint
 
 from django.db import connections
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
 
@@ -11,10 +10,9 @@ import produto.forms as forms
 import produto.queries as queries
 
 
-class RefGtinDefine(PermissionRequiredMixin, View):
+class RefGtinDefine(View):
 
     def __init__(self):
-        self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = forms.GtinDefineForm
         self.template_name = 'produto/gtin/ref.html'
         self.title_name = 'Busca GTIN'
