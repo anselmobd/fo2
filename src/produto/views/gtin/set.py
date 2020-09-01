@@ -16,7 +16,7 @@ import produto.queries as queries
 class SetGtinDefine(PermissionRequiredMixin, View):
 
     def __init__(self):
-        self.permission_required = 'lotes.can_inventorize_lote'
+        self.permission_required = 'produto.can_set_gtin'
         self.Form_class = forms.GtinDefineBarrasForm
         self.template_name = 'produto/gtin/set.html'
         self.title_name = 'Define GTIN'
