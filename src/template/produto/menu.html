@@ -14,7 +14,7 @@
   <ul>
     <li><a href="{% url 'produto:gtin_pesquisa' %}">Pesquisa</a></li>
     {% if request.user.is_authenticated %}
-      <li><a href="{% url 'produto:gtin_ref' %}">Define</a></li>
+      <li><a href="{% url 'produto:gtin_ref' %}">Busca/Define</a></li>
     {% endif %}
   </ul>
   <li><a href="{% url 'produto:info_xml' %}">Informações p/ NFe XML</a></li>
