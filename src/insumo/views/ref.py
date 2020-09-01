@@ -107,12 +107,17 @@ class Ref(View):
         u_data = queries.ref_usado_em(cursor, nivel, ref)
         u_link = ('REF')
         for row in u_data:
-            row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
+            if row['NIVEL'] == '1':
+                row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
+            if row['NIVEL'] == '5':
+                row['ESTAGIO'] = '-'
         if len(u_data) != 0:
             context.update({
-                'u_headers': ('Tipo', 'Referência', 'Descrição',
+                'u_headers': ('Tipo', 'Nível', 'Referência', 'Descrição',
+                              'Tamanho', 'Cor',
                               'Alternativa', 'Consumo', 'Estágio'),
-                'u_fields': ('TIPO', 'REF', 'DESCR',
+                'u_fields': ('TIPO', 'NIVEL', 'REF', 'DESCR',
+                             'TAM', 'COR',
                              'ALTERNATIVA', 'CONSUMO', 'ESTAGIO'),
                 'u_data': u_data,
                 'u_link': u_link,
