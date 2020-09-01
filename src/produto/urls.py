@@ -16,6 +16,8 @@ urlpatterns = [
         views.GtinPesquisa.as_view(), name='gtin_pesquisa'),
     url(r'^gtin/define/$',
         views.GtinDefine.as_view(), name='gtin_define'),
+    url(r'^gtin/ref/$',
+        views.RefGtinDefine.as_view(), name='gtin_ref'),
 
     url(r'^info_xml/$', views.InfoXml.as_view(), name='info_xml'),
     url(r'^info_xml/(?P<ref>.+)/$',
