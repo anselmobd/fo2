@@ -21,7 +21,7 @@
     <h4>Cor: {{ cor }}</h4>
     <h4>GTIN: {{ gtin }}
     {% if not erro %}
-      - <a href="{% url 'produto:gtin_set' '1' ref tamanho cor %}"><span class="glyphicon glyphicon-barcode"></span> Altera</a>
+      - <a href="{% url 'produto:gtin_set' '1' ref tamanho cor %}"><span class="glyphicon glyphicon-barcode"></span> Define GTIN</a>
     {% endif %}</h4>
   {% endif %}
   {% if erro %}
