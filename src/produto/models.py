@@ -208,7 +208,8 @@ class GtinLog(models.Model):
         verbose_name='GTIN no XML')
 
     def __str__(self):
-        return (f"1.{self.produto}.{self.tamanho}.{self.cor} - {self.gtin} - "
+        return (f"1.{self.produto.referencia}."
+                f"{self.tamanho.tamanho.nome}.{self.cor.cor} - {self.gtin} - "
                 f"{self.quando} - {self.colaborador.user.username}")
 
     class Meta:
