@@ -178,7 +178,6 @@ class RefGtinDefine(PermissionRequiredMixin, View):
             return context
 
         data = queries.gtin(cursor, ref=ref, tam=tamanho, cor=cor)
-        pprint(data)
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
@@ -205,6 +204,98 @@ class RefGtinDefine(PermissionRequiredMixin, View):
 
             cursor = connections['so'].cursor()
             context.update(self.mount_context(cursor, ref, tamanho, cor))
+
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+class SetGtinDefine(PermissionRequiredMixin, View):
+
+    def __init__(self):
+        self.permission_required = 'lotes.can_inventorize_lote'
+        self.Form_class = forms.GtinDefineBarrasForm
+        self.template_name = 'produto/gtin/set.html'
+        self.title_name = 'Define GTIN'
+
+    def mount_context(self, cursor, nivel, ref, tamanho, cor, new_gtin):
+        context = {
+            'nivel': nivel,
+            'ref': ref,
+            'tamanho': tamanho,
+            'cor': cor,
+            'new_gtin': new_gtin,
+            }
+
+        data = queries.gtin(cursor, ref=ref, tam=tamanho, cor=cor)
+        if len(data) == 0:
+            context.update({'erro': 'Nada selecionado'})
+            return context
+
+        context.update({
+            'gtin': data[0]['GTIN'],
+        })
+
+        t_data = queries.ref_tamanhos(cursor, ref)
+        if len(t_data) != 0:
+            index = next(
+                (index for (index, d) in enumerate(t_data)
+                 if d["TAM"] == tamanho),
+                None)
+            if index is not None:
+                index += 1
+                if index == len(t_data):
+                    index = 0
+                context['prox_tamanho'] = t_data[index]['TAM']
+
+        if new_gtin:
+            if not gtin13_valid(new_gtin):
+                context.update({'erro': 'Novo GTIN inválido'})
+                return context
+
+            error, error_msg = queries.set_gtin(
+                cursor, '1', ref, tamanho, cor, new_gtin)
+            if error:
+                if error > 0:
+                    context.update({'msg': f'GTIN não alterado'})
+                    return context
+                else:
+                    context.update(
+                        {'erro': f'Erro ao atualizar GTIN [{result}]'})
+                    return context
+            else:
+                context.update({'msg': f'GTIN atualizado'})
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        nivel = kwargs['nivel']
+        ref = kwargs['ref']
+        tamanho = kwargs['tamanho']
+        cor = kwargs['cor']
+
+        form = self.Form_class()
+        context['form'] = form
+
+        cursor = connections['so'].cursor()
+        context.update(
+            self.mount_context(cursor, nivel, ref, tamanho, cor, ''))
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {'titulo': self.title_name}
+        nivel = kwargs['nivel']
+        ref = kwargs['ref']
+        tamanho = kwargs['tamanho']
+        cor = kwargs['cor']
+
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            new_gtin = form.cleaned_data['gtin']
+
+            cursor = connections['so'].cursor()
+            context.update(
+                self.mount_context(cursor, nivel, ref, tamanho, cor, new_gtin))
 
         context['form'] = form
         return render(request, self.template_name, context)
