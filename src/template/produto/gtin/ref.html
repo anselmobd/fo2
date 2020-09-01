@@ -10,21 +10,21 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'produto:gtin_ref' %}" method="post">
+  <form action="{% url 'produto:gtin_ref' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
-</form>
-{% if ref %}
-  <h4>Referência: {{ ref }}</h4>
-  <h4>Tamanho: {{ tamanho }}</h4>
-  <h4>Cor: {{ cor }}</h4>
-  <h4>GTIN: {{ gtin }}
-  {% if not erro %}
-    - <a href="{% url 'produto:gtin_set' '1' ref tamanho cor %}"><span class="glyphicon glyphicon-barcode"></span> Altera</a>
-  {% endif %}</h4>
-{% endif %}
-{% if erro %}
-  <h4>{{ erro }}</h4>
-{% endif %}
+  </form>
+  {% if ref %}
+    <h4>Referência: {{ ref }}</h4>
+    <h4>Tamanho: {{ tamanho }}</h4>
+    <h4>Cor: {{ cor }}</h4>
+    <h4>GTIN: {{ gtin }}
+    {% if not erro %}
+      - <a href="{% url 'produto:gtin_set' '1' ref tamanho cor %}"><span class="glyphicon glyphicon-barcode"></span> Altera</a>
+    {% endif %}</h4>
+  {% endif %}
+  {% if erro %}
+    <h4>{{ erro }}</h4>
+  {% endif %}
 {% endblock %}
