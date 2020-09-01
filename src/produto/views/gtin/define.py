@@ -162,7 +162,7 @@ class RefGtinDefine(PermissionRequiredMixin, View):
         self.permission_required = 'lotes.can_inventorize_lote'
         self.Form_class = forms.GtinDefineForm
         self.template_name = 'produto/gtin/ref.html'
-        self.title_name = 'Define GTIN'
+        self.title_name = 'Busca GTIN'
 
     def mount_context(self, cursor, ref, tamanho, cor):
         context = {
