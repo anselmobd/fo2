@@ -15,14 +15,15 @@
   <h4>Tamanho: {{ tamanho }}</h4>
   <h4>Cor: {{ cor }}</h4>
   <h4>GTIN: {{ gtin }}</h4>
-  {% if prox_tamanho %}
-    <a href="{% url 'produto:gtin_set' '1' ref prox_tamanho cor %}"><span class="glyphicon glyphicon-barcode"></span> Tamanho {{prox_tamanho}}</a>
-  {% endif %}
   <form action="{% url 'produto:gtin_set' '1' ref tamanho cor %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="define" value="Define"/>
   </form>
+  {% if prox_tamanho %}
+    <p><a href="{% url 'produto:gtin_set' '1' ref prox_tamanho cor %}"><span class="glyphicon glyphicon-search"></span> Busca tamanho {{prox_tamanho}}</a></p>
+  {% endif %}
+  <p><a href="{% url 'produto:gtin_ref' %}"><span class="glyphicon glyphicon-search"></span> Busca outra referência ou cor</a></p>
   {% if new_gtin %}
     <h4>Novo GTIN: {{ new_gtin }}</h4>
   {% endif %}
