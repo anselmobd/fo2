@@ -10,11 +10,12 @@ import produto.models as pro_mod
 
 class ObjsProduto():
 
-    def __init__(self, nivel, ref, tam, cor):
+    def __init__(self, nivel, ref, tam, cor, gtin=None):
         self.nivel = nivel
         self.ref = ref
         self.tam = tam
         self.cor = cor
+        self.gtin = gtin
 
         self.str_item = pro_fun.item_str(
             self.nivel, self.ref, self.tam, self.cor)
@@ -115,4 +116,8 @@ class ObjsProduto():
                 cor=self.produto_cor,
                 tamanho=self.produto_tam,
             )
+            self.produto_item.save()
+
+        if self.gtin and self.produto_item.gtin != self.gtin:
+            self.produto_item.gtin = self.gtin
             self.produto_item.save()
