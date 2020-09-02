@@ -17,3 +17,7 @@ def campanhas(request, id):
     elif id == '2020-09-01':
         return render(
             request, 'rh/campanhas/2020-09-01-setembro-amarelo.html')
+    elif id == '2020-09-01-calend':
+        return render(
+            request,
+            '/media/rh/campanhas/2020/09/01/Setembro-Amarelo-calendario.pdf')
