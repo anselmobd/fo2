@@ -27,9 +27,9 @@ def insumo_descr(cursor, nivel, ref, cor, tam):
              AND i.GRUPO_ESTRUTURA = p.GRUPO_ESTRUTURA
              AND i.SUBGRU_ESTRUTURA = p.SUBGRU_ESTRUTURA
              AND i.ITEM_ESTRUTURA = p.ITEM_ESTRUTURA
-            WHERE ( p.ESTOQUE_MINIMO > 0
-                  OR p.CODIGO_EMPRESA = 1
-                  )
+            -- WHERE ( p.ESTOQUE_MINIMO > 0
+            --       OR p.CODIGO_EMPRESA = 1
+            --       )
             ORDER BY
               p.ESTOQUE_MINIMO DESC
           ) p1
