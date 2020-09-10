@@ -16,7 +16,7 @@ import produto.queries
 
 
 def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
-    p = Perf(id='mcngm')
+    p = Perf(id='mcngm', on=False)
     p.prt('mapa_compras_necess_gerais_multi')
 
     # key_cache = make_key_cache(ignore=['cursor'])
@@ -116,7 +116,7 @@ def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
 
 
 def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
-    p = Perf(id='mcng')
+    p = Perf(id='mcng', on=False)
     p.prt('mapa_compras_necessidades_gerais')
 
     # key_cache = make_key_cache(ignore=['cursor'])
@@ -328,7 +328,7 @@ def mapa_compras_necessidades_especificas(
         t: Todas as colunas
     '''
 
-    p = Perf(id='mcne')
+    p = Perf(id='mcne', on=False)
     p.prt('mapa_compras_necessidades_especificas')
 
     dados_gerais = mapa_compras_necess_gerais_multi(cursor, dtini, nsem)
