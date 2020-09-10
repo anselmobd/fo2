@@ -230,7 +230,7 @@ def my_make_key_cache(*args):
     return key
 
 
-def make_key_cache(ignore=[], obey=[]):
+def make_key_cache_OFF(ignore=[], obey=[]):
     stack1 = inspect.stack()[1]
     argvalues = inspect.getargvalues(stack1.frame).locals
     values = obey.copy()
