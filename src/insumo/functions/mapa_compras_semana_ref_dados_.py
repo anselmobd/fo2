@@ -49,7 +49,7 @@ def mapa_compras_semana_ref_dados(cursor, nivel, ref, cor, tam, calc=False):
             entkeys.flush((nivel, ref, cor, tam))
         return cached_result
 
-    p = Perf(id='mcsrd')
+    p = Perf(id='mcsrd', on=False)
     p.prt('mapa_compras_semana_ref_dados')
 
     # key_cache = make_key_cache(ignore=['calc'])
