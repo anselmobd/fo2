@@ -8,8 +8,8 @@ from django.core.cache import cache
 from utils.cache import entkeys
 from utils.functions import (
     fo2logger,
-    make_key_cache,
     max_not_None,
+    my_make_key_cache,
     segunda,
 )
 
@@ -31,7 +31,9 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
             entkeys.flush((nivel, ref, cor, tam))
         return cached_result
 
-    key_cache = make_key_cache(ignore=['calc'])
+    # key_cache = make_key_cache(ignore=['calc'])
+    key_cache = my_make_key_cache(
+        'new_mapa_por_insumo_dados', nivel, ref, cor, tam)
     if not calc:
         cached_result = cache.get(key_cache)
         if cached_result is not None:

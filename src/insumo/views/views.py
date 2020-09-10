@@ -22,8 +22,13 @@ from fo2 import settings
 import systextil.models
 from geral.models import Dispositivos, RoloBipado
 from utils.cache import entkeys
-from utils.functions import \
-    segunda, max_not_None, min_not_None, make_key_cache, fo2logger
+from utils.functions import (
+    fo2logger,
+    max_not_None,
+    min_not_None,
+    my_make_key_cache,
+    segunda,
+)
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 from utils.views import totalize_grouped_data, group_rowspan
 
@@ -1197,7 +1202,9 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem, versao='A'):
         entkeys.add(key_cache, (nivel, ref, cor, tam), timeout=entkeys._DAY*10)
         return cached_result
 
-    key_cache = make_key_cache()
+    # key_cache = make_key_cache()
+    key_cache = my_make_key_cache(
+        'mapa_sem_ref_new', item, dtini, qtdsem, versao)
     cached_result = cache.get(key_cache)
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)
