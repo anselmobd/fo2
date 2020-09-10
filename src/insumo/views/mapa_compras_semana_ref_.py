@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from django.core.cache import cache
 
 from utils.cache import entkeys
-from utils.functions import make_key_cache, fo2logger
+from utils.functions import my_make_key_cache, fo2logger
 
 import insumo.functions
 
@@ -22,7 +22,9 @@ def mapa_compras_semana_ref(request, item, dtini, qtdsem):
         entkeys.add(key_cache, (nivel, ref, cor, tam), timeout=entkeys._DAY*10)
         return cached_result
 
-    key_cache = make_key_cache()
+    # key_cache = make_key_cache()
+    key_cache = my_make_key_cache(
+        'mapa_compras_semana_ref', item, dtini, qtdsem)
     cached_result = cache.get(key_cache)
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)
