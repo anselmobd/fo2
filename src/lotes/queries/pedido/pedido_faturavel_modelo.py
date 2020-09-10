@@ -7,7 +7,6 @@ from utils.functions.models import rows_to_dict_list
 from utils.functions import (
     cache_ttl,
     fo2logger,
-    make_key_cache,
     my_make_key_cache,
 )
 

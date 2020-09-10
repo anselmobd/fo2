@@ -2,7 +2,7 @@ from django.core.cache import cache
 
 from utils.functions.models import rows_to_dict_list
 
-from utils.functions import make_key_cache, fo2logger, my_make_key_cache
+from utils.functions import fo2logger, my_make_key_cache
 
 
 def op_inform(cursor, op, cached=False):
