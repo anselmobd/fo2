@@ -3,13 +3,15 @@ from pprint import pprint
 from django.core.cache import cache
 
 from utils.cache import entkeys
-from utils.functions import make_key_cache, fo2logger
+from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list
 
 
 def ref_custo(cursor, nivel, ref, tam, cor, alt):
 
-    key_cache = make_key_cache()
+    # key_cache = make_key_cache()
+    key_cache = my_make_key_cache(
+        'ref_custo', nivel, ref, tam, cor, alt)
     cached_result = cache.get(key_cache)
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)

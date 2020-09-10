@@ -3,7 +3,7 @@ from pprint import pprint
 from django.core.cache import cache
 
 from utils.cache import entkeys
-from utils.functions import make_key_cache, fo2logger
+from utils.functions import my_make_key_cache, fo2logger
 
 import produto.queries
 
@@ -61,16 +61,19 @@ class CustoItem:
         return total_custo
 
     def get_data(self):
-        key_cache = make_key_cache(
-            obey=[
-                self.nivel,
-                self.ref,
-                self.tam,
-                self.cor,
-                self.alt,
-                self.consumo,
-            ]
-        )
+        # key_cache = make_key_cache(
+        #     obey=[
+        #         self.nivel,
+        #         self.ref,
+        #         self.tam,
+        #         self.cor,
+        #         self.alt,
+        #         self.consumo,
+        #     ]
+        # )
+        key_cache = my_make_key_cache(
+            'CustoItem', self.nivel, self.ref, self.tam, self.cor, self.alt,
+            self.consumo)
         cached_result = cache.get(key_cache)
         if cached_result is not None:
             fo2logger.info('cached '+key_cache)

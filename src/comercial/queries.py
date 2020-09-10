@@ -9,7 +9,7 @@ from django.conf import settings
 
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 
-from utils.functions import dec_months, make_key_cache, fo2logger
+from utils.functions import dec_months, my_make_key_cache, fo2logger
 
 
 def busca_clientes(cnpj):
@@ -171,7 +171,10 @@ def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
         modelo=None, order_qtd=True, ultimos_dias=None):
 
-    key_cache = make_key_cache()
+    # key_cache = make_key_cache()
+    key_cache = my_make_key_cache(
+        'get_vendas', ref, periodo, colecao, cliente, por, modelo, order_qtd,
+        ultimos_dias)
 
     cached_result = cache.get(key_cache)
     if cached_result is not None:
