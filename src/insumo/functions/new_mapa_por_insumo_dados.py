@@ -14,6 +14,7 @@ from utils.functions import (
 )
 
 import insumo.queries as queries
+from insumo.functions.mapa import *
 
 
 def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
