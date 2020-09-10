@@ -18,7 +18,7 @@ import insumo.queries as queries
 
 def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
-    fo2logger.info('view mapa_por_insumo_dados')
+    fo2logger.info('function mapa_por_insumo_dados')
 
     def return_result(result):
         cached_result = result
