@@ -245,7 +245,7 @@ def make_key_cache(ignore=[], obey=[]):
     braces = ['{}'] * len(values)
     key = '|'.join([stack1.filename, *braces])
     key = key.format(*values)
-    fo2logger.info(key)
+    fo2logger.info(key[:200]+('...' if key[200:] else ''))
     key = hashlib.md5(key.encode('utf-8')).hexdigest()
     key = '_'.join([stack1.function, key])
     return key
