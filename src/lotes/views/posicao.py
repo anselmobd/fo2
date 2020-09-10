@@ -7,6 +7,7 @@ from django.views import View
 
 from geral.functions import request_user, has_permission
 from utils.functions import untuple_keys_concat
+from utils.functions.digits import *
 from utils.views import group_rowspan
 
 import lotes.models as models
@@ -239,7 +240,6 @@ class Posicao(View):
             ).order_by('-create_at').values(
             'solicitacao_id', 'solicitacao__codigo', 'solicitacao__descricao',
             'solicitacao__usuario__username', 'create_at', 'qtd')
-        slq_link = ('solicitacao__codigo',)
 
         desreserva_lote = False
         solicit_id = None
@@ -249,17 +249,18 @@ class Posicao(View):
                 solicit_id = slq[0]['solicitacao_id']
 
         for row in slq:
-            row['LINK'] = reverse(
+            row['numero'] = f"#{fo2_digit_with(row['solicitacao_id'])}"
+            row['solicitacao__codigo|TARGET'] = '_blank'
+            row['solicitacao__codigo|LINK'] = reverse(
                 'cd:solicitacao_detalhe', args=[row['solicitacao_id']])
         context.update({
             'slq_headers': (
-                'Solicidação', 'Descrição',
+                '#', 'Solicidação', 'Descrição',
                 'Usuário', 'Data', 'Quantidade'),
             'slq_fields': (
-                'solicitacao__codigo', 'solicitacao__descricao',
+                'numero', 'solicitacao__codigo', 'solicitacao__descricao',
                 'solicitacao__usuario__username', 'create_at', 'qtd'),
             'slq_data': slq,
-            'slq_link': slq_link,
             'slq_style': {5: 'text-align: right;'},
             'desreserva_lote': desreserva_lote,
             'solicit_id': solicit_id,
