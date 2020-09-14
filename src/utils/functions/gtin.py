@@ -8,8 +8,11 @@ def calc_check_digit(number):
     From:
       https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/ean.py
     """
-    return str((10 - sum((3, 1)[i % 2] * int(n)
-                for i, n in enumerate(reversed(number)))) % 10)
+    try:
+        return str((10 - sum((3, 1)[i % 2] * int(n)
+                    for i, n in enumerate(reversed(number)))) % 10)
+    except Exception as e:
+        return False
 
 
 def gtin13_valid(numbers):
