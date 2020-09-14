@@ -45,7 +45,7 @@ class O2FieldGtinForm(forms.Form):
         label='GTIN', max_length=13, min_length=13, required=False,
         widget=forms.TextInput(attrs={'size': 13}))
 
-    def clean_cor(self):
+    def clean_gtin(self):
         return O2BaseForm.cleanner(self, 'gtin')
 
 
