@@ -94,7 +94,7 @@ def mapa_compras_semana_ref(request, item, dtini, qtdsem):
                 comprar = round(comprar)
                 compra_atrasada = round(compra_atrasada)
 
-            movido = round(sum(
+            movido = math.ceil(sum(
                 item['QUANT']
                 for item in data_adi
                 if item['SEMANA_DESTINO'] == dtsem))
