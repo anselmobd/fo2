@@ -59,6 +59,7 @@ class GtinDefineForm(
 
     class Meta:
         order_fields = ['ref', 'tamanho', 'cor']
+        required_fields = ['ref']
         autofocus_field = 'ref'
 
 
