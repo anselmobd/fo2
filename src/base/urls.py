@@ -7,4 +7,6 @@ urlpatterns = [
 
     url(r'^usuarios/$', views.Usuarios.as_view(), name='usuarios'),
 
+    url(r'^testa_db/$', views.TestaDB.as_view(), name='testa_db'),
+
 ]

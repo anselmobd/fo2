@@ -113,3 +113,15 @@ class Usuarios(PermissionRequiredMixin, O2BaseGetView):
             'r_fields': ['nome', 'quando', 'ult_acao'],
             'r_data': r_data,
         })
+
+
+class TestaDB(PermissionRequiredMixin, O2BaseGetView):
+
+    def __init__(self, *args, **kwargs):
+        super(TestaDB, self).__init__(*args, **kwargs)
+        self.permission_required = 'base.can_visualize_usage_log'
+        self.template_name = 'base/testa_db.html'
+        self.title_name = 'Testa Databases'
+
+    def mount_context(self):
+        pass

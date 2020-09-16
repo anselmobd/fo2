@@ -1,0 +1,24 @@
+{% extends 'base/index.html' %}
+{% load static %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'base:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% load l10n %}
+{% load humanize %}
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+  {% if msg_erro %}
+    <h4>{{ msg_erro }}</h4>
+  {% endif %}
+  {% if not data %}
+    <h4>"No data"</h4>
+  {% else %}
+    <h4>"Data"</h4>
+  {% endif %}
+{% endblock %}
