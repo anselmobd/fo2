@@ -13,7 +13,7 @@ from utils.functions import dec_months, my_make_key_cache, fo2logger
 
 
 def busca_clientes(cnpj):
-    conn = DatabaseWrapper(settings.DATABASES_FDB['f1'])
+    conn = DatabaseWrapper(settings.DATABASES_EXTRAS['f1'])
     cursor = conn.cursor()
     sql = f"""
         SELECT FIRST 10000
@@ -30,7 +30,7 @@ def busca_clientes(cnpj):
 
 
 def ficha_cliente(cnpj):
-    conn = DatabaseWrapper(settings.DATABASES_FDB['f1'])
+    conn = DatabaseWrapper(settings.DATABASES_EXTRAS['f1'])
     cursor = conn.cursor()
     sql = f"""
         SELECT
