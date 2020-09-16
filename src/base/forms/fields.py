@@ -46,7 +46,7 @@ class O2FieldGtinForm(forms.Form):
         widget=forms.TextInput(attrs={'size': 13}))
 
     def clean_gtin(self):
-        return O2BaseForm.cleanner(self, 'gtin')
+        return O2BaseForm.cleanner(self, 'gtin', field_type='n')
 
 
 class O2FieldFiltroForm(forms.Form):
