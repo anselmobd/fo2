@@ -35,15 +35,20 @@ class O2BaseForm(forms.Form):
             field = field.upper()
         return self.saver(field_name, field)
 
-    def cleanner_field(self, field):
+    def cleanner_field(self, field, field_type='an'):
         field = field.upper()
-        field = re.search('[A-Z0-9]+', field).group(0)
+        field_type_re = '[A-Z0-9]'
+        if field_type == 'a':
+            field_type_re = '[A-Z]'
+        elif field_type == 'n':
+            field_type_re = '[0-9]'
+        field = re.search(f'{field_type_re}+', field).group(0)
         return field
 
-    def cleanner(self, field_name):
+    def cleanner(self, field_name, field_type='an'):
         field = self.cleaned_data[field_name]
         if field != '':
-            field = self.cleanner_field(field)
+            field = self.cleanner_field(field, field_type=field_type)
         return self.saver(field_name, field)
 
     def cleanner_pad_field(self, field, length):
