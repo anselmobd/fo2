@@ -18,6 +18,7 @@ from .db_password import (
     DBPASS_SO,
     DBPASS_PERSONA,
     DBPASS_F1,
+    DBPASS_SH,
 )
 
 
@@ -180,11 +181,11 @@ DATABASES_EXTRAS = {
         'AUTOCOMMIT': None,
         'DIALECT': 3,
     },
-    'systextil_homologacao': {  # Systextil homologação
+    'sh': {  # Systextil homologação
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'xe',
+        'NAME': 'DBSYSTEX',
         'USER': 'systextil',
-        'PASSWORD': 'oracle',
+        'PASSWORD': DBPASS_SH,
         'HOST': 'tussordb.ct1ld03gbnas.sa-east-1.rds.amazonaws.com',
         'PORT': '1521',
     },
