@@ -125,67 +125,43 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
         self.template_name = 'base/testa_db.html'
         self.title_name = 'Testa Databases'
 
+    def acessa_oracle_db(self, databases, db_id):
+        try:
+            db_dict = databases[db_id]
+
+            dsn_tns = cx_Oracle.makedsn(
+                db_dict['HOST'],
+                db_dict['PORT'],
+                service_name=db_dict['NAME'],
+            )
+
+            conn = cx_Oracle.connect(
+                user=db_dict['USER'],
+                password=db_dict['PASSWORD'],
+                dsn=dsn_tns
+            )
+
+            conn.close()
+
+            return True, f'Banco "{db_id}" acessível'
+        except Exception as e:
+            return False, f'Erro ao acessar banco "{db_id}" [{e}]'
+
     def mount_context(self):
         msgs_ok = []
         msgs_erro = []
 
-        try:
-            databases = settings.DATABASES
-            db_id = 'so'
+        result, msg = self.acessa_oracle_db(settings.DATABASES, 'so')
+        if result:
+            msgs_ok.append(msg)
+        else:
+            msgs_erro.append(msg)
 
-            db_dict = databases[db_id]
-
-            dsn_tns = cx_Oracle.makedsn(
-                db_dict['HOST'],
-                db_dict['PORT'],
-                service_name=db_dict['NAME'],
-            )
-
-            conn = cx_Oracle.connect(
-                user=db_dict['USER'],
-                password=db_dict['PASSWORD'],
-                dsn=dsn_tns
-            )
-
-            msgs_ok.append(
-                f'Banco "{db_id}" conectado'
-            )
-
-            conn.close()
-
-        except Exception as e:
-            msgs_erro.append(
-                f'Erro ao conectar banco "{db_id}" [{e}]'
-            )
-
-        try:
-            databases = settings.DATABASES_EXTRAS
-            db_id = 'sh'
-
-            db_dict = databases[db_id]
-
-            dsn_tns = cx_Oracle.makedsn(
-                db_dict['HOST'],
-                db_dict['PORT'],
-                service_name=db_dict['NAME'],
-            )
-
-            conn = cx_Oracle.connect(
-                user=db_dict['USER'],
-                password=db_dict['PASSWORD'],
-                dsn=dsn_tns
-            )
-
-            msgs_ok.append(
-                f'Banco "{db_id}" conectado'
-            )
-
-            conn.close()
-
-        except Exception as e:
-            msgs_erro.append(
-                f'Erro ao conectar banco "{db_id}" [{e}]'
-            )
+        result, msg = self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sh')
+        if result:
+            msgs_ok.append(msg)
+        else:
+            msgs_erro.append(msg)
 
         self.context.update({
             'msgs_ok': msgs_ok,
