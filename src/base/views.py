@@ -143,27 +143,17 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
 
             conn.close()
 
-            return True, f'Banco "{db_id}" acessível'
+            self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
+
         except Exception as e:
-            return False, f'Erro ao acessar banco "{db_id}" [{e}]'
+            self.context['msgs_erro'].append(
+                f'Erro ao acessar banco "{db_id}" [{e}]')
 
     def mount_context(self):
-        msgs_ok = []
-        msgs_erro = []
-
-        result, msg = self.acessa_oracle_db(settings.DATABASES, 'so')
-        if result:
-            msgs_ok.append(msg)
-        else:
-            msgs_erro.append(msg)
-
-        result, msg = self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sh')
-        if result:
-            msgs_ok.append(msg)
-        else:
-            msgs_erro.append(msg)
-
         self.context.update({
-            'msgs_ok': msgs_ok,
-            'msgs_erro': msgs_erro,
+            'msgs_ok': [],
+            'msgs_erro': [],
         })
+
+        self.acessa_oracle_db(settings.DATABASES, 'so')
+        self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sh')
