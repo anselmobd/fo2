@@ -224,6 +224,8 @@
             <li><a href="/intradm/" target="_blank">Configurações e Dados</a></li>
             <li><a href="/rootadm/" target="_blank">Usuários</a></li>
           </ul>
+          <li><a href="{% url 'base:index' %}">Base</a></li>
+          {% include 'base/menu.html' %}
         </ul>
         {% if perms.email_signature.can_edit_mail_signature %}
           <br />
