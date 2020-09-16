@@ -13,7 +13,12 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 from . import __version__, __version__date__
 
-from .db_password import DBPASS, DBPASS_PERSONA, DBPASS_F1
+from .db_password import (
+    DBPASS,
+    DBPASS_SO,
+    DBPASS_PERSONA,
+    DBPASS_F1,
+)
 
 
 PROJ_VERSION = __version__
@@ -148,7 +153,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'xe',
         'USER': 'systextil',
-        'PASSWORD': 'oracle',
+        'PASSWORD': DBPASS_SO,
         'HOST': 'localhost',
         'PORT': '28521',
     },
