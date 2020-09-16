@@ -13,14 +13,15 @@
 {% endblock %}
 
 {% block content %}
-  {% if msg_erro %}
-    <h4>{{ msg_erro }}</h4>
-  {% else %}
-    <h4>Tudo OK</h4>
+  {% if msgs_ok %}
+    {% for msg in msgs_ok %}
+      <h4>{{ msg }}</h4>
+    {% endfor %}
   {% endif %}
-  {% if not data %}
-    <!-- <h4>"No data"</h4> -->
-  {% else %}
-    <!-- <h4>"Data"</h4> -->
+  {% if msgs_erro %}
+    <h3>Erros</h3>
+    {% for msg in msgs_erro %}
+      <h4>{{ msg }}</h4>
+    {% endfor %}
   {% endif %}
 {% endblock %}
