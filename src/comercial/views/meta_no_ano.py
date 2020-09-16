@@ -88,8 +88,8 @@ def dados_meta_no_ano(cursor, hoje):
         total['planejado'] += mes['planejado']
         total['faturado'] += mes['faturado']
 
-    pprint(meses)
-    pprint(total)
+    # pprint(meses)
+    # pprint(total)
 
     for mes in meses:
         if mes['imes'] < mes_atual:
@@ -99,8 +99,8 @@ def dados_meta_no_ano(cursor, hoje):
             total['compensado'] += mes['compensado']
             mes['meta'] = mes['planejado'] + mes['compensado']
 
-    pprint(meses)
-    print('aqui')
+    # pprint(meses)
+    # print('aqui')
     if compensar != total['compensado']:
         diferenca = compensar - total['compensado']
         passo = int(diferenca / abs(diferenca))
@@ -126,7 +126,7 @@ def dados_meta_no_ano(cursor, hoje):
                             if diferenca == 0:
                                 passo = 0
 
-    print('aqui 2')
+    # print('aqui 2')
 
     for mes in meses:
         if mes['imes'] == mes_atual:
