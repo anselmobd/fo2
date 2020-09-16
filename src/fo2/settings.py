@@ -161,7 +161,7 @@ DATABASES = {
         'PORT': '25432',
     },
 }
-DATABASES_FDB = {
+DATABASES_EXTRAS = {
     'f1': {  # F1 e SCC
         'ENGINE': 'firebird',
         'NAME': '/dados/db/f1/f1.cdb',
