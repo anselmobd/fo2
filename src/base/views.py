@@ -123,7 +123,11 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
         super(TestaDB, self).__init__(*args, **kwargs)
         self.permission_required = 'base.can_visualize_usage_log'
         self.template_name = 'base/testa_db.html'
+<<<<<<< HEAD
         self.title_name = 'Testa banco de dados'
+=======
+        self.title_name = 'Testa Banco de dados'
+>>>>>>> c7b9561e047492717d9df4c82fbc22ef370389f3
 
     def acessa_oracle_db(self, databases, db_id):
         try:
