@@ -180,6 +180,14 @@ DATABASES_EXTRAS = {
         'AUTOCOMMIT': None,
         'DIALECT': 3,
     },
+    'systextil_homologacao': {  # Systextil homologação
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'xe',
+        'USER': 'systextil',
+        'PASSWORD': 'oracle',
+        'HOST': 'tussordb.ct1ld03gbnas.sa-east-1.rds.amazonaws.com',
+        'PORT': '1521',
+    },
 }
 
 DATABASE_ROUTERS = ['utils.router.Router', ]
