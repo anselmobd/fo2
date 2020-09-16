@@ -15,10 +15,12 @@
 {% block content %}
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>
+  {% else %}
+    <h4>Tudo OK</h4>
   {% endif %}
   {% if not data %}
-    <h4>"No data"</h4>
+    <!-- <h4>"No data"</h4> -->
   {% else %}
-    <h4>"Data"</h4>
+    <!-- <h4>"Data"</h4> -->
   {% endif %}
 {% endblock %}
