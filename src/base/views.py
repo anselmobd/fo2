@@ -128,9 +128,8 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
     def mount_context(self):
         msgs_ok = []
         msgs_erro = []
+
         try:
-            # databases = settings.DATABASES_EXTRAS
-            # db_id = 'systextil_homologacao'
             databases = settings.DATABASES
             db_id = 'so'
 
@@ -152,12 +151,43 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
                 f'Banco "{db_id}" conectado'
             )
 
+            conn.close()
+
         except Exception as e:
             msgs_erro.append(
                 f'Erro ao conectar banco "{db_id}" [{e}]'
             )
+
+        try:
+            databases = settings.DATABASES_EXTRAS
+            db_id = 'sh'
+
+            db_dict = databases[db_id]
+
+            dsn_tns = cx_Oracle.makedsn(
+                db_dict['HOST'],
+                db_dict['PORT'],
+                service_name=db_dict['NAME'],
+            )
+
+            conn = cx_Oracle.connect(
+                user=db_dict['USER'],
+                password=db_dict['PASSWORD'],
+                dsn=dsn_tns
+            )
+
+            msgs_ok.append(
+                f'Banco "{db_id}" conectado'
+            )
+
+            conn.close()
+
+        except Exception as e:
+            msgs_erro.append(
+                f'Erro ao conectar banco "{db_id}" [{e}]'
+            )
+
         self.context.update({
             'msgs_ok': msgs_ok,
             'msgs_erro': msgs_erro,
         })
-
