@@ -1,5 +1,7 @@
+import cx_Oracle
 from pprint import pprint
 
+from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
@@ -124,4 +126,23 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
         self.title_name = 'Testa Databases'
 
     def mount_context(self):
-        pass
+        try:
+            db_dict = settings.DATABASES['so']
+
+            dsn_tns = cx_Oracle.makedsn(
+                db_dict['HOST'],
+                db_dict['PORT'],
+                service_name=db_dict['NAME'],
+            )
+
+            conn = cx_Oracle.connect(
+                user=db_dict['USER'],
+                password=db_dict['PASSWORD'],
+                dsn=dsn_tns
+            )
+
+        except Exception as e:
+            self.context.update({
+                'msg_erro': 'Erro ao conectar banco systextil_homologacao '
+                            f'[{e}]'
+            })
