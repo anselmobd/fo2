@@ -2,7 +2,13 @@
 
 from .settings import *
 
-from .db_password import DBPASS, DBPASS_PERSONA
+from .db_password import (
+    DBPASS,
+    DBPASS_SO,
+    DBPASS_PERSONA,
+    DBPASS_F1,
+    DBPASS_SH,
+)
 
 DEBUG = False
 
@@ -19,9 +25,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'xe',
         'USER': 'systextil',
-        'PASSWORD': 'oracle',
-        # 'HOST': '192.168.1.93',
-        # 'PORT': '1521',
+        'PASSWORD': DBPASS_SO,
         'HOST': '192.168.1.28',
         'PORT': '1521',
     },
@@ -48,6 +52,14 @@ DATABASES_EXTRAS = {
         'CONN_MAX_AGE': None,
         'AUTOCOMMIT': None,
         'DIALECT': 3,
+    },
+    'sh': {  # Systextil homologação
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'DBSYSTEX',
+        'USER': 'systextil',
+        'PASSWORD': DBPASS_SH,
+        'HOST': 'tussordb.ct1ld03gbnas.sa-east-1.rds.amazonaws.com',
+        'PORT': '1521',
     },
 }
 
