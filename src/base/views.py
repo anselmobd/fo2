@@ -1,4 +1,5 @@
 import cx_Oracle
+from firebird.base import DatabaseWrapper
 from pprint import pprint
 
 from django.conf import settings
@@ -125,6 +126,20 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
         self.template_name = 'base/testa_db.html'
         self.title_name = 'Testa banco de dados'
 
+    def acessa_fdb_db(self, databases, db_id):
+        try:
+            db_dict = databases[db_id]
+
+            conn = DatabaseWrapper(db_dict)
+
+            conn.close()
+
+            self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
+
+        except Exception as e:
+            self.context['msgs_erro'].append(
+                f'Erro ao acessar banco "{db_id}" [{e}]')
+
     def acessa_oracle_db(self, databases, db_id):
         try:
             db_dict = databases[db_id]
@@ -157,3 +172,4 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
 
         self.acessa_oracle_db(settings.DATABASES, 'so')
         self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sh')
+        self.acessa_fdb_db(settings.DATABASES_EXTRAS, 'f1')
