@@ -174,7 +174,7 @@ DATABASES_EXTRAS = {
         'USER': 'sysdba',
         'PASSWORD': DBPASS_F1,
         'HOST': 'localhost',
-        'PORT': '13050',
+        'PORT': 13050,
         'OPTIONS': {'charset': 'WIN1252'},
         'TIME_ZONE': None,
         'CONN_MAX_AGE': None,

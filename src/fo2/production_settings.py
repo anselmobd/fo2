@@ -46,7 +46,7 @@ DATABASES_EXTRAS = {
         'USER': 'sysdba',
         'PASSWORD': DBPASS_F1,
         'HOST': '192.168.1.98',
-        'PORT': '3050',
+        'PORT': 3050,
         'OPTIONS': {'charset': 'WIN1252'},
         'TIME_ZONE': None,
         'CONN_MAX_AGE': None,
