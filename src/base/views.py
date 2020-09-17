@@ -132,6 +132,8 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
 
             conn = DatabaseWrapper(db_dict)
 
+            cursor = conn.cursor()
+
             conn.close()
 
             self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
@@ -155,6 +157,8 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
                 password=db_dict['PASSWORD'],
                 dsn=dsn_tns
             )
+
+            cursor = conn.cursor()
 
             conn.close()
 
