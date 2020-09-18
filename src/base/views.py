@@ -2,6 +2,7 @@ import cx_Oracle
 # import firebirdsql
 import fdb
 # from firebird.base import DatabaseWrapper
+import time
 from pprint import pprint
 
 from django.conf import settings
@@ -203,4 +204,5 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
         while (
                 not self.acessa_fdb_db(settings.DATABASES_EXTRAS, 'f1')
                 and count < 21):
+            time.sleep(0.5)
             count += 1
