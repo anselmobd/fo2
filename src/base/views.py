@@ -156,10 +156,12 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
             conn.close()
 
             self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
+            return True
 
         except Exception as e:
             self.context['msgs_erro'].append(
                 f'Erro ao acessar banco "{db_id}" [{e}]')
+            return False
 
     def acessa_oracle_db(self, databases, db_id):
         try:
@@ -182,10 +184,12 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
             conn.close()
 
             self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
+            return True
 
         except Exception as e:
             self.context['msgs_erro'].append(
                 f'Erro ao acessar banco "{db_id}" [{e}]')
+            return False
 
     def mount_context(self):
         self.context.update({
@@ -195,4 +199,8 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
 
         self.acessa_oracle_db(settings.DATABASES, 'so')
         self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sh')
-        self.acessa_fdb_db(settings.DATABASES_EXTRAS, 'f1')
+        count = 1
+        while (
+                not self.acessa_fdb_db(settings.DATABASES_EXTRAS, 'f1')
+                and count < 21):
+            count += 1
