@@ -159,7 +159,8 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
             return True, None
 
         except Exception as e:
-            return False, e.copy()
+            error = e.copy()
+            return False, error
 
     def acessa_fdb_db(self, databases, db_id):
         count = 0
