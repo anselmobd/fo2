@@ -1,6 +1,6 @@
 import cx_Oracle
-import firebirdsql
-# import fdb
+# import firebirdsql
+import fdb
 # from firebird.base import DatabaseWrapper
 from pprint import pprint
 
@@ -133,23 +133,23 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
             db_dict = databases[db_id]
 
             # conn = DatabaseWrapper(db_dict)
-            # conn = fdb.connect(
-            #     host=db_dict['HOST'],
-            #     port=db_dict['PORT'],
-            #     database=db_dict['NAME'],
-            #     user=db_dict['USER'],
-            #     password=db_dict['PASSWORD'],
-            #     sql_dialect=db_dict['DIALECT'],
-            #     charset=db_dict['OPTIONS']['charset'],
-            # )
-            conn = firebirdsql.connect(
+            conn = fdb.connect(
                 host=db_dict['HOST'],
                 port=db_dict['PORT'],
                 database=db_dict['NAME'],
                 user=db_dict['USER'],
                 password=db_dict['PASSWORD'],
+                sql_dialect=db_dict['DIALECT'],
                 charset=db_dict['OPTIONS']['charset'],
             )
+            # conn = firebirdsql.connect(
+            #     host=db_dict['HOST'],
+            #     port=db_dict['PORT'],
+            #     database=db_dict['NAME'],
+            #     user=db_dict['USER'],
+            #     password=db_dict['PASSWORD'],
+            #     charset=db_dict['OPTIONS']['charset'],
+            # )
 
             cursor = conn.cursor()
 
