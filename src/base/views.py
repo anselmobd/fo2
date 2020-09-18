@@ -163,16 +163,16 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
 
     def acessa_fdb_db(self, databases, db_id):
         count = 0
-        while count < 21:
+
+        while count < 20:
             result, error = self.conecta_fdb_db(databases, db_id)
             if result:
+                self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
                 break
-            time.sleep(0.5)
             count += 1
-        if result:
-            self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
+            time.sleep(0.5)
 
-        else:
+        if count != 0:
             self.context['msgs_erro'].append(
                 f'({count} Erro ao acessar banco "{db_id}" [{error}]')
 
