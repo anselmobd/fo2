@@ -159,7 +159,7 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
             return True, None
 
         except Exception as e:
-            return False, e
+            return False, e.copy()
 
     def acessa_fdb_db(self, databases, db_id):
         count = 0
@@ -174,7 +174,7 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
 
         if count != 0:
             self.context['msgs_erro'].append(
-                f'({count} Erro ao acessar banco "{db_id}" [{error}]')
+                f'({count}) Erro ao acessar banco "{db_id}" [{error}]')
 
     def acessa_oracle_db(self, databases, db_id):
         try:
