@@ -129,7 +129,7 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
         self.template_name = 'base/testa_db.html'
         self.title_name = 'Testa banco de dados'
 
-    def acessa_fdb_db(self, databases, db_id):
+    def conecta_fdb_db(self, databases, db_id):
         try:
             db_dict = databases[db_id]
 
@@ -156,13 +156,25 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
 
             conn.close()
 
-            self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
-            return True
+            return True, None
 
         except Exception as e:
+            return False, e
+
+    def acessa_fdb_db(self, databases, db_id):
+        count = 0
+        while count < 21:
+            result, error = self.conecta_fdb_db(databases, db_id)
+            if result:
+                break
+            time.sleep(0.5)
+            count += 1
+        if result:
+            self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
+
+        else:
             self.context['msgs_erro'].append(
-                f'Erro ao acessar banco "{db_id}" [{e}]')
-            return False
+                f'({count} Erro ao acessar banco "{db_id}" [{error}]')
 
     def acessa_oracle_db(self, databases, db_id):
         try:
@@ -200,9 +212,4 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
 
         self.acessa_oracle_db(settings.DATABASES, 'so')
         self.acessa_oracle_db(settings.DATABASES_EXTRAS, 'sh')
-        count = 1
-        while (
-                not self.acessa_fdb_db(settings.DATABASES_EXTRAS, 'f1')
-                and count < 21):
-            time.sleep(0.5)
-            count += 1
+        self.acessa_fdb_db(settings.DATABASES_EXTRAS, 'f1')
