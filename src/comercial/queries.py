@@ -1,7 +1,5 @@
-import time
-import fdb
 from datetime import datetime, date, timedelta
-from firebird.base import DatabaseWrapper
+# from firebird.base import DatabaseWrapper
 from pprint import pprint
 
 from django.db import connections
@@ -9,42 +7,8 @@ from django.core.cache import cache
 from django.conf import settings
 
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
-
+from utils.functions.data import connect_fdb
 from utils.functions import dec_months, my_make_key_cache, fo2logger
-
-
-def connect_fdb(databases, db_id, erros=[]):
-
-    def connect(databases, db_id):
-        try:
-            db_dict = databases[db_id]
-
-            conn = fdb.connect(
-                host=db_dict['HOST'],
-                port=db_dict['PORT'],
-                database=db_dict['NAME'],
-                user=db_dict['USER'],
-                password=db_dict['PASSWORD'],
-                sql_dialect=db_dict['DIALECT'],
-                charset=db_dict['OPTIONS']['charset'],
-            )
-            return True, conn
-
-        except Exception as e:
-            return False, e
-
-    count = 0
-
-    while count < 20:
-        result, conn = connect(databases, db_id)
-        if result:
-            return conn
-        else:
-            erros.append(conn)
-        count += 1
-        time.sleep(0.5)
-
-    return None
 
 
 def busca_clientes(cnpj):
