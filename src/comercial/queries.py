@@ -71,7 +71,13 @@ def busca_clientes(cnpj):
 
 
 def ficha_cliente(cnpj):
-    conn = DatabaseWrapper(settings.DATABASES_EXTRAS['f1'])
+    # conn = DatabaseWrapper(settings.DATABASES_EXTRAS['f1'])
+    erros = []
+    conn = connect_fdb(settings.DATABASES_EXTRAS, 'f1', erros)
+    if not conn:
+        pprint(erros)
+        return []
+
     cursor = conn.cursor()
     sql = f"""
         SELECT
