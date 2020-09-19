@@ -129,11 +129,10 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
         self.template_name = 'base/testa_db.html'
         self.title_name = 'Testa banco de dados'
 
-    def conecta_fdb_db(self, databases, db_id):
+    def connect_fdb(self, databases, db_id, return_error=False):
         try:
             db_dict = databases[db_id]
 
-            # conn = DatabaseWrapper(db_dict)
             conn = fdb.connect(
                 host=db_dict['HOST'],
                 port=db_dict['PORT'],
@@ -143,23 +142,26 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
                 sql_dialect=db_dict['DIALECT'],
                 charset=db_dict['OPTIONS']['charset'],
             )
-            # conn = firebirdsql.connect(
-            #     host=db_dict['HOST'],
-            #     port=db_dict['PORT'],
-            #     database=db_dict['NAME'],
-            #     user=db_dict['USER'],
-            #     password=db_dict['PASSWORD'],
-            #     charset=db_dict['OPTIONS']['charset'],
-            # )
-
-            cursor = conn.cursor()
-
-            conn.close()
-
-            return True, None
+            return conn
 
         except Exception as e:
-            return False, e
+            if return_error:
+                return e
+            else:
+                raise e
+
+    def conecta_fdb_db(self, databases, db_id):
+        conn = self.connect_fdb(databases, db_id, return_error=True)
+
+        if isinstance(conn, Exception):
+            return False, conn
+        else:
+            try:
+                cursor = conn.cursor()
+                conn.close()
+                return True, None
+            except Exception as e:
+                return False, e
 
     def acessa_fdb_db(self, databases, db_id):
         count = 0
