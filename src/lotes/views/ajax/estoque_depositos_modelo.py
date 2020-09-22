@@ -3,22 +3,20 @@ from pprint import pprint
 from django.db import connections
 from django.http import JsonResponse
 
-import estoque.queries
+from systextil.queries.deposito.total_modelo import total_modelo_deposito
 
 
 def estoque_depositos_modelo(request, modelo):
-    print('estoque_depositos_modelo')
     cursor = connections['so'].cursor()
     data = {
         'modelo': modelo,
     }
 
     try:
-        _, _, _, _, total_est = \
-            estoque.queries.grade_estoque(
-                cursor, dep=('101', '102', '231'), modelo=modelo)
-
-    except Exception:
+        total_est = total_modelo_deposito(
+            cursor, modelo, ('101', '102', '103', '122', '231')
+        )
+    except Exception as e:
         data.update({
             'result': 'ERR',
             'descricao_erro': 'Erro ao buscar estoque nos depósitos',
