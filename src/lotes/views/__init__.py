@@ -2,6 +2,7 @@ from . import analise
 from . import lote
 from . import ord_prod
 from . import pedido
+from .ajax import *
 from .a_produzir import *
 from .distribuicao import *
 from .imprime_lotes import *
