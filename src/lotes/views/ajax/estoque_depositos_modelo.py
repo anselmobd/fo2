@@ -16,15 +16,15 @@ def estoque_depositos_modelo(request, modelo):
         total_est = total_modelo_deposito(
             cursor, modelo, ('101', '102', '103', '122', '231')
         )
+        data.update({
+            'result': 'OK',
+            'total_est': total_est,
+        })
+
     except Exception as e:
         data.update({
             'result': 'ERR',
             'descricao_erro': 'Erro ao buscar estoque nos depósitos',
         })
-        return JsonResponse(data, safe=False)
 
-    data.update({
-        'result': 'OK',
-        'total_est': total_est,
-    })
     return JsonResponse(data, safe=False)
