@@ -51,15 +51,13 @@ class TransferenciaForm(forms.Form):
         label='Quantidade',
         widget=forms.TextInput(attrs={'size': 6, 'type': 'number'}))
 
-    CHOICES = geral.functions.depositos_choices(only=(101, 102, 103, 122, 231))
-
     deposito_origem = forms.ChoiceField(
         label='Depósito de origem', required=True,
-        choices=CHOICES, initial='102')
+        initial='102')
 
     deposito_destino = forms.ChoiceField(
         label='Depósito de destino', required=True,
-        choices=CHOICES, initial='122')
+        initial='122')
 
     nova_ref = forms.CharField(
         label='Nova referência', required=False, max_length=5,
@@ -90,8 +88,15 @@ class TransferenciaForm(forms.Form):
         self.user = user
         self.tipo_mov = tipo_mov
 
+        self.mount_choices()
         self.mount_num_doc_choices()
         self.hidden_fields()
+
+    def mount_choices(self):
+        CHOICES = geral.functions.depositos_choices(
+            only=(101, 102, 103, 122, 231))
+        setattr(self.fields['deposito_origem'], 'choices', CHOICES)
+        setattr(self.fields['deposito_destino'], 'choices', CHOICES)
 
     def hidden_field(self, field):
         field.required = False
