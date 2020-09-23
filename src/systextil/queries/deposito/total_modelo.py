@@ -2,6 +2,7 @@ from pprint import pprint
 
 from utils.functions.models import (
     GradeQtd,
+    rows_to_key_dict,
     rows_to_dict_list_lower,
 )
 
@@ -38,6 +39,33 @@ def sql_filtra_deposito(field, deposito, conector='AND'):
         return f"{conector} {field} IN ({lista})"
     else:
         return f"{conector} {field} = '{dep}'"
+
+
+def totais_modelos_depositos(cursor, deposito):
+
+    filtro_deposito = sql_filtra_deposito(
+        'e.DEPOSITO',
+        deposito,
+    )
+
+    calc_modelo = sql_calc_modelo('e.CDITEM_GRUPO')
+
+    sql = f'''
+        SELECT
+          {calc_modelo} MODELO
+        , SUM(e.QTDE_ESTOQUE_ATU) QUANTIDADE
+        FROM ESTQ_040 e
+        WHERE 1=1 -- e.LOTE_ACOMP = 0
+          AND e.CDITEM_NIVEL99 = 1
+          {filtro_deposito} -- filtro_deposito
+        GROUP BY
+          {calc_modelo}
+        ORDER BY
+          1
+    '''
+
+    cursor.execute(sql)
+    return rows_to_key_dict(cursor, 'MODELO')
 
 
 def total_modelo_deposito(cursor, modelo, deposito):
