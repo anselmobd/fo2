@@ -3,7 +3,7 @@ from pprint import pprint
 from django.db import connections
 from django.http import JsonResponse
 
-from systextil.queries.deposito.total_modelo import total_modelo_deposito
+from systextil.queries.deposito.total_modelo import totais_modelos_depositos
 
 
 def estoque_depositos_modelo(request, modelo):
@@ -13,9 +13,9 @@ def estoque_depositos_modelo(request, modelo):
     }
 
     try:
-        total_est = total_modelo_deposito(
-            cursor, modelo, ('101', '102', '103', '122', '231')
-        )
+        totais = totais_modelos_depositos(
+            cursor, ('101', '102', '103', '122', '231'))
+        total_est = totais[modelo]
         data.update({
             'result': 'OK',
             'total_est': total_est,
