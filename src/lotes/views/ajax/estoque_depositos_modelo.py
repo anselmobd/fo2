@@ -15,7 +15,10 @@ def estoque_depositos_modelo(request, modelo):
     try:
         totais = totais_modelos_depositos(
             cursor, ('101', '102', '103', '122', '231'))
-        total_est = totais[modelo]
+        try:
+            total_est = totais[modelo]
+        except KeyError:
+            total_est = 0
         data.update({
             'result': 'OK',
             'total_est': total_est,
