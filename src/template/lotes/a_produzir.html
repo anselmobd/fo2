@@ -16,6 +16,9 @@
   height: 2px;
   background-color: green;
 }
+.ok {
+  color: darkgreen;
+}
 </style>
 {% endblock %}
 
@@ -168,6 +171,7 @@
                     if (data) {
                       if (data['result'] == 'OK') {
                         cell.innerHTML = formatNumber(data['total_op']);
+                        cell.classList.add('ok');
                         int_total_op = parseInt(data['total_op']);
                         total_op_total += int_total_op;
                         el_total_op_total.innerHTML = formatNumber(total_op_total);
@@ -195,6 +199,7 @@
                     if (data) {
                       if (data['result'] == 'OK') {
                         cell.innerHTML = formatNumber(data['total_est']);
+                        cell.classList.add('ok');
                         int_total_est = parseInt(data['total_est']);
                         total_est_total += int_total_est;
                         el_total_est_total.innerHTML = formatNumber(total_est_total);
@@ -222,6 +227,7 @@
                     if (data) {
                       if (data['result'] == 'OK') {
                         cell.innerHTML = formatNumber(data['total_ped']);
+                        cell.classList.add('ok');
                         int_total_ped = parseInt(data['total_ped']);
                         total_ped_total += int_total_ped;
                         el_total_ped_total.innerHTML = formatNumber(total_ped_total);
