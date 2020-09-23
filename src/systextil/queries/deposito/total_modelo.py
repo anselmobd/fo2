@@ -1,5 +1,8 @@
 from pprint import pprint
 
+from django.core.cache import cache
+
+from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models import (
     GradeQtd,
     rows_to_key_dict,
@@ -43,6 +46,14 @@ def sql_filtra_deposito(field, deposito, conector='AND'):
 
 def totais_modelos_depositos(cursor, deposito):
 
+    key_cache = my_make_key_cache(
+        'get_vendas', deposito)
+
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     filtro_deposito = sql_filtra_deposito(
         'e.DEPOSITO',
         deposito,
@@ -65,7 +76,11 @@ def totais_modelos_depositos(cursor, deposito):
     '''
 
     cursor.execute(sql)
-    return rows_to_key_dict(cursor, 'MODELO')
+    cached_result = rows_to_key_dict(cursor, 'MODELO')
+
+    cache.set(key_cache, cached_result)
+    fo2logger.info('calculated '+key_cache)
+    return cached_result
 
 
 def total_modelo_deposito(cursor, modelo, deposito):
