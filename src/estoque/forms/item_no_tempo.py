@@ -30,11 +30,9 @@ class ItemNoTempoForm(forms.Form):
         label='Tamanho', required=True, min_length=1, max_length=3,
         widget=forms.TextInput(attrs=string_upper_attrs))
 
-    CHOICES = geral.functions.depositos_choices(
-        only=(101, 102, 103, 122, 231), rest=True)
     deposito = forms.ChoiceField(
         label='Depósito', required=True,
-        choices=CHOICES, initial='')
+        initial='')
 
     CHOICES = [
         ('1', '1 Mês'),
@@ -53,6 +51,15 @@ class ItemNoTempoForm(forms.Form):
     agrupa = forms.ChoiceField(
         label='Agrupa transações', required=True,
         choices=CHOICES, initial='S')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mount_choices()
+
+    def mount_choices(self):
+        CHOICES = geral.functions.depositos_choices(
+            only=(101, 102, 103, 122, 231), rest=True)
+        setattr(self.fields['deposito'], 'choices', CHOICES)
 
     def clean_ref(self):
         return self.cleaned_data['ref'].upper()
