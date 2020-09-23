@@ -63,6 +63,5 @@ def total_modelo_deposito(cursor, modelo, deposito):
     '''
 
     cursor.execute(sql)
-    dados = rows_to_dict_list_lower(cursor)
-    row = dados[0]
-    return row['quantidade']
+    row = cursor.fetchone()
+    return row[0]
