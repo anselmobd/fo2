@@ -27,11 +27,8 @@ class PorDepositoForm(forms.Form):
         label='Cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
-    CHOICES = geral.functions.depositos_choices(
-        cod_todos='999', descr_todos='--Todos--', cod_only='A00',
-        only=(101, 102, 103, 122, 231), rest=True)
     deposito = forms.ChoiceField(
-        label='Depósito', choices=CHOICES, initial='999')
+        label='Depósito', initial='999')
 
     CHOICES = [
         ('rtcd', 'Referência/Tamanho/Cor/Depósito'),
@@ -54,6 +51,16 @@ class PorDepositoForm(forms.Form):
                ]
     tipo = forms.ChoiceField(
         choices=CHOICES, initial='t')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mount_choices()
+
+    def mount_choices(self):
+        CHOICES = geral.functions.depositos_choices(
+            cod_todos='999', descr_todos='--Todos--', cod_only='A00',
+            only=(101, 102, 103, 122, 231), rest=True)
+        setattr(self.fields['deposito'], 'choices', CHOICES)
 
     def upper_clean(self, field_name):
         field = self.cleaned_data[field_name].upper()
@@ -134,11 +141,17 @@ class ReferenciasEstoqueForm(
         O2BaseForm,
         O2FieldModeloForm2):
 
-    CHOICES = geral.functions.depositos_choices(
-        cod_todos='A00', only=(101, 102, 103, 122, 231))
     deposito = forms.ChoiceField(
-        label='Depósito',
-        choices=CHOICES, initial='-')
+        label='Depósito', initial='-')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mount_choices()
+
+    def mount_choices(self):
+        CHOICES = geral.functions.depositos_choices(
+            cod_todos='A00', only=(101, 102, 103, 122, 231))
+        setattr(self.fields['deposito'], 'choices', CHOICES)
 
     class Meta:
         order_fields = ['deposito', 'modelo']
@@ -189,10 +202,17 @@ class ConfrontaEstoqueForm(forms.Form):
         label='Cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
-    CHOICES = geral.functions.depositos_choices(only=(101, 102, 103, 122, 231))
     deposito = forms.ChoiceField(
-        label='Depósito', required=True,
-        choices=CHOICES, initial='')
+        label='Depósito', required=True, initial='')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mount_choices()
+
+    def mount_choices(self):
+        CHOICES = geral.functions.depositos_choices(
+            only=(101, 102, 103, 122, 231))
+        setattr(self.fields['deposito'], 'choices', CHOICES)
 
     def upper_clean(self, field_name):
         field = self.cleaned_data[field_name].upper()
@@ -237,11 +257,17 @@ class EstoqueNaDataForm(forms.Form):
         help_text='Padrão: início do dia',
         widget=forms.TimeInput(attrs={'type': 'time'}))
 
-    CHOICES = geral.functions.depositos_choices(
-        cod_only='A00', only=(101, 102, 103, 122, 231))
     deposito = forms.ChoiceField(
-        label='Depósito', required=True,
-        choices=CHOICES, initial='')
+        label='Depósito', required=True, initial='')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mount_choices()
+
+    def mount_choices(self):
+        CHOICES = geral.functions.depositos_choices(
+            cod_only='A00', only=(101, 102, 103, 122, 231))
+        setattr(self.fields['deposito'], 'choices', CHOICES)
 
     def upper_clean(self, field_name):
         field = self.cleaned_data[field_name].upper()
