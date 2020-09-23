@@ -214,13 +214,24 @@ def is_number(s):
 
 
 def my_make_key_cache(*args):
-    values = []
-    for value in args[1:]:
+
+    def add_value(values, value):
         if (value is None) \
                 or isinstance(value, str) \
                 or isinstance(value, datetime.date) \
                 or is_number(value):
             values.append(value)
+
+    values = []
+    for value in args[1:]:
+        if isinstance(value, str):
+            add_value(values, value)
+        try:
+            for subvalue in iter(value):
+                add_value(values, subvalue)
+        except TypeError:
+            add_value(values, value)
+
     braces = ['{}'] * len(values)
     key = '|'.join(braces)
     key = key.format(*values)
