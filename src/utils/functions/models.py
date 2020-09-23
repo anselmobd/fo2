@@ -1,6 +1,36 @@
 from pprint import pprint
 
 
+def rows_to_key_dict(cursor, keys):
+
+    def fkeys(row, keys):
+        return tuple((key, row[key]) for key in keys)
+
+    def fvalue(row, keys):
+        return row[keys[0]]
+
+    def fdict(row, keys):
+        return {key: row[key] for key in keys}
+
+    if isinstance(keys, tuple):
+        fkey = fkeys
+    else:
+        keys = (keys, )
+        fkey = fvalue
+
+    columns = [i[0] for i in cursor.description]
+    no_keys = tuple(column for column in columns if column not in keys)
+
+    if len(no_keys) == 1:
+        fvalue = fvalue
+    else:
+        fvalue = fdict
+
+    return {fkey(values, keys): fvalue(values, no_keys)
+            for values in [dict(zip(columns, row))
+                           for row in cursor]}
+
+
 def rows_to_dict_list(cursor):
     columns = [i[0] for i in cursor.description]
     return [dict(zip(columns, row)) for row in cursor]
