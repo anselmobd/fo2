@@ -654,7 +654,7 @@ class RegrasLoteMinTamanhoForm(forms.Form):
         choices=CHOICES, required=False, initial='s')
 
 
-class ProduzirModeloGradeForm(forms.ModelForm):
+class ProduzirModeloGradeForm(forms.Form):
     CHOICES = [('s', 'Sim'),
                ('n', 'Não'),
                ]
