@@ -1,0 +1,256 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+#myProgress {
+  width: 100%;
+  visibility: visible;
+  background-color: lightgray;
+}
+#myBar {
+  width: 1%;
+  height: 2px;
+  background-color: green;
+}
+.ok {
+  color: darkgreen;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <div id="myProgress">
+    <div id="myBar"></div>
+  </div>
+  <table id='produzir'>
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data style=style id_key=id_key only %}
+  </table>
+  <p>Obs.: Pedidos com data de embarque até: Hoje + <i>lead time</i> do produto + {{ dias_alem_lead }}</p>
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+{% block javascript.pos %}
+<script >
+
+  var a_produzir = {};
+
+  function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+  }
+
+  function unformatNumber(num) {
+    return num.replace(/\./g, '')
+  }
+
+  function moveBar(i, tot) {
+    var elem = document.getElementById("myBar");
+    let width = 0;
+    if (tot != 0) {
+      width = parseInt(i * 100 / tot);
+      if (tot == i) {
+        var prog = document.getElementById("myProgress");
+        prog.style.visibility = 'hidden';
+      }
+    }
+    elem.style.width = width + '%';
+
+  }
+
+  function get_el(coluna, modelo) {
+    // console.log('get_el', coluna, modelo);
+    if (modelo == 'total') {
+      sufixo = '__total'
+    } else {
+      sufixo = '-'+modelo
+    }
+    var all_el = document.querySelectorAll('.'+coluna+sufixo);
+    for (var i=0, len=all_el.length|0; i<len; i=i+1|0) {
+      return all_el[i];
+    }
+  }
+
+  function set_el_inner(coluna, modelo, inner) {
+    // console.log('set_el_inner', coluna, modelo, inner);
+    let el = get_el(coluna, modelo);
+    if (el) {
+      el.innerHTML = inner;
+    }
+  }
+
+  function set_el_inner_format(coluna, modelo, inner) {
+    // console.log('set_el_inner_format', coluna, modelo, inner);
+    set_el_inner(coluna, modelo, formatNumber(inner));
+  }
+
+  function get_el_inner(coluna, modelo, def) {
+    // console.log('get_el_inner', coluna, modelo, def);
+    let el = get_el(coluna, modelo);
+    if (el) {
+      return el.innerHTML;
+    }
+    return def;
+  }
+
+  function get_el_inner_int(coluna, modelo, def) {
+    // console.log('clean_el_inner', coluna, modelo, def);
+    let inner = get_el_inner(coluna, modelo, def);
+    if (inner) {
+      inner = unformatNumber(inner);
+      return parseInt(inner);
+    }
+    return def;
+  }
+
+  function add_el_inner_int(coluna, modelo, addi) {
+    // console.log('add_el_inner_int', coluna, modelo, addi);
+    let inner = get_el_inner_int(coluna, modelo, 0);
+    inner += addi;
+    set_el_inner_format(coluna, modelo, inner);
+  }
+
+  function calc_colunas(modelo, valor) {
+    // console.log('calc_colunas', modelo);
+    add_el_inner_int('op_menos_ped', modelo, valor);
+    add_el_inner_int('op_menos_ped', 'total', valor);
+
+    if (!(modelo in a_produzir)) {
+      a_produzir[modelo] = get_el_inner_int('a_produzir', modelo, 0);
+    }
+    a_produzir[modelo] += -valor;
+    add_el_inner_int('a_produzir', 'total', -get_el_inner_int('a_produzir', modelo, 0));
+    add_el_inner_int('excesso', 'total', -get_el_inner_int('excesso', modelo, 0));
+    if (a_produzir[modelo] > 0) {
+      set_el_inner_format('a_produzir', modelo, a_produzir[modelo]);
+      add_el_inner_int('a_produzir', 'total', a_produzir[modelo]);
+      set_el_inner_format('excesso', modelo, 0);
+    } else {
+      set_el_inner_format('a_produzir', modelo, 0);
+      set_el_inner_format('excesso', modelo, -a_produzir[modelo]);
+      add_el_inner_int('excesso', 'total', -a_produzir[modelo]);
+    }
+  }
+
+  $(document).ready(function() {
+
+    var table = document.getElementById("produzir");
+    var el_total_op_total = get_el('total_op', 'total');
+    var total_op_total = 0;
+    var el_total_est_total = get_el('total_est', 'total');
+    var total_est_total = 0;
+    var el_total_ped_total = get_el('total_ped', 'total');
+    var total_ped_total = 0;
+    var total_passos = 0;
+    var count_passos = 0;
+
+    for ( let row of table.rows ) {
+      for ( let cell of row.cells ) {
+        if ( cell.classList.length != 0 ) {
+          for ( let aclass of cell.classList ) {
+            class_split = aclass.split('-');
+            if (class_split.length != 0) {
+
+              if (class_split[0] == 'total_op') {
+                total_passos += 1;
+                $.ajax({
+                  type: 'GET',
+                  url: '/lotes/ajax/op_producao_modelo/'+class_split[1]+'/',
+                  data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                  success : function(data) {
+                    count_passos += 1;
+                    moveBar(count_passos, total_passos);
+                    if (data) {
+                      if (data['result'] == 'OK') {
+                        cell.innerHTML = formatNumber(data['total_op']);
+                        cell.classList.add('ok');
+                        int_total_op = parseInt(data['total_op']);
+                        total_op_total += int_total_op;
+                        el_total_op_total.innerHTML = formatNumber(total_op_total);
+                        // console.log('op_producao_modelo '+data['modelo']);
+                        calc_colunas(data['modelo'], int_total_op);
+                      } else {
+                        console.log('Erro: '+data['descricao_erro']);
+                      }
+                    } else {
+                      console.log('Sem retorno de OP');
+                    }
+                  }
+                });
+              }
+
+              if (class_split[0] == 'total_est') {
+                total_passos += 1;
+                $.ajax({
+                  type: 'GET',
+                  url: '/lotes/ajax/estoque_depositos_modelo/'+class_split[1]+'/',
+                  data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                  success : function(data) {
+                    count_passos += 1;
+                    moveBar(count_passos, total_passos);
+                    if (data) {
+                      if (data['result'] == 'OK') {
+                        cell.innerHTML = formatNumber(data['total_est']);
+                        cell.classList.add('ok');
+                        int_total_est = parseInt(data['total_est']);
+                        total_est_total += int_total_est;
+                        el_total_est_total.innerHTML = formatNumber(total_est_total);
+                        // console.log('pedido_lead_modelo '+data['modelo']);
+                        calc_colunas(data['modelo'], int_total_est);
+                      } else {
+                        console.log('Erro: '+data['descricao_erro']);
+                      }
+                    } else {
+                      console.log('Sem retorno de estoque');
+                    }
+                  }
+                });
+              }
+
+              if (class_split[0] == 'total_ped') {
+                total_passos += 1;
+                $.ajax({
+                  type: 'GET',
+                  url: '/lotes/ajax/pedido_lead_modelo/'+class_split[1]+'/',
+                  data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                  success : function(data) {
+                    count_passos += 1;
+                    moveBar(count_passos, total_passos);
+                    if (data) {
+                      if (data['result'] == 'OK') {
+                        cell.innerHTML = formatNumber(data['total_ped']);
+                        cell.classList.add('ok');
+                        int_total_ped = parseInt(data['total_ped']);
+                        total_ped_total += int_total_ped;
+                        el_total_ped_total.innerHTML = formatNumber(total_ped_total);
+                        // console.log('pedido_lead_modelo '+data['modelo']);
+                        calc_colunas(data['modelo'], -int_total_ped);
+                      } else {
+                        console.log('Erro: '+data['descricao_erro']);
+                      }
+                    } else {
+                      console.log('Sem retorno de pedido');
+                    }
+                  }
+                });
+              }
+
+            }
+          }
+        }
+      }
+    }
+
+  })
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}

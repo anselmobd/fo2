@@ -119,6 +119,10 @@ urlpatterns = [
 
     url(r'^a_produzir/$', views.AProduzir.as_view(), name='a_produzir'),
 
+    url(r'^analise/produzir_modelo_grade/$',
+        views.analise.ProduzirModeloGrade.as_view(),
+        name='produzir_modelo_grade'),
+
     url(r'^ajax/op_producao_modelo/(?P<modelo>[^/]+)/$',
         views.op_producao_modelo, name='op_producao_modelo'),
 
