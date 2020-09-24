@@ -1,9 +1,22 @@
+from pprint import pprint
+
+from django.core.cache import cache
+
+from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list
 
 import lotes.models
 
 
 def colecoes_de_modelo(cursor, modelo):
+    key_cache = my_make_key_cache(
+        'colecoes_de_modelo', modelo)
+
+    cached_result = cache.get(key_cache)
+    if cached_result is not None:
+        fo2logger.info('cached '+key_cache)
+        return cached_result
+
     sql = """
         SELECT
           r.COLECAO
@@ -17,7 +30,11 @@ def colecoes_de_modelo(cursor, modelo):
           r.COLECAO
     """.format(modelo)
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    result = rows_to_dict_list(cursor)
+
+    cache.set(key_cache, result)
+    fo2logger.info('calculated '+key_cache)
+    return result
 
 
 def colecao_de_modelo(cursor, modelo):
