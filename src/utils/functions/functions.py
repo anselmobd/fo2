@@ -271,7 +271,7 @@ def cache_ttl(cache, key):
         seconds = ttl.seconds
     else:
         seconds = cache.ttl(key)
-    fo2logger.info(seconds)
+    fo2logger.info(f'cache expira em {seconds} segundos')
     return seconds
 
 
