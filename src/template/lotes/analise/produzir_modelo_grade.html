@@ -23,6 +23,12 @@
 {% endblock %}
 
 {% block content %}
+<form action="{% url 'producao:produzir_modelo_grade' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" name="busca" value="Busca"/>
+</form>
+<p>Obs.: Em desenvolvimento! Ainda não considera grade.</p>
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
@@ -187,7 +193,7 @@
                 });
               }
 
-              if (class_split[0] == 'total_est') {
+              if (class_split[0] == 'total_est' && '{{deposito}}' == 's') {
                 total_passos += 1;
                 $.ajax({
                   type: 'GET',

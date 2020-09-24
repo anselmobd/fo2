@@ -12,16 +12,21 @@ import comercial.models
 import lotes.forms
 
 
-class ProduzirModeloGrade(O2BaseGetView):
+class ProduzirModeloGrade(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(ProduzirModeloGrade, self).__init__(*args, **kwargs)
-        # self.Form_class = lotes.forms.ProduzirModeloGradeForm
+        self.Form_class = lotes.forms.ProduzirModeloGradeForm
         self.template_name = 'lotes/analise/produzir_modelo_grade.html'
         self.title_name = 'Aproduzir - Por modelo - Totais com grade'
 
     def mount_context(self):
         cursor = connections['so'].cursor()
+
+        deposito = self.form.cleaned_data['deposito']
+        self.context.update({
+            'deposito': deposito,
+        })
 
         data = []
 
@@ -66,10 +71,33 @@ class ProduzirModeloGrade(O2BaseGetView):
 
         data = sorted(data, key=lambda i: -i['meta'])
 
+        sum = [
+            'meta_giro', 'meta_estoque', 'meta',
+            'total_op', 'total_ped',
+            'op_menos_ped', 'a_produzir', 'excesso'
+        ]
+        headers = [
+            'Modelo', 'Meta de estoque', 'Meta de giro (lead)',
+            'Total das metas(A)', 'Total das OPs',
+            'Carteira de pedidos',
+            'OPs–Pedidos(B)', 'A produzir(A-B)[+]',
+            'Excesso(A-B)[-]'
+        ]
+        fields = [
+            'modelo', 'meta_estoque', 'meta_giro',
+            'meta', 'total_op',
+            'total_ped',
+            'op_menos_ped', 'a_produzir',
+            'excesso'
+        ]
+        if deposito == 's':
+            sum.insert(4, 'total_est')
+            headers.insert(5, 'Total nos depósitos')
+            headers[7] = 'OPs+Depósitos–Pedidos(B)'
+            fields.insert(5, 'total_est')
+
         totalize_data(data, {
-            'sum': ['meta_giro', 'meta_estoque', 'meta',
-                    'total_op', 'total_est', 'total_ped',
-                    'op_menos_ped', 'a_produzir', 'excesso'],
+            'sum': sum,
             'count': [],
             'descr': {'modelo': 'Totais:'},
             'row_style': 'font-weight: bold;',
@@ -79,16 +107,8 @@ class ProduzirModeloGrade(O2BaseGetView):
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
             'dias_alem_lead': dias_alem_lead,
-            'headers': ['Modelo', 'Meta de estoque', 'Meta de giro (lead)',
-                        'Total das metas(A)', 'Total das OPs',
-                        'Total nos depósitos', 'Carteira de pedidos',
-                        'OPs+Depósitos–Pedidos(B)', 'A produzir(A-B)[+]',
-                        'Excesso(A-B)[-]'],
-            'fields': ['modelo', 'meta_estoque', 'meta_giro',
-                       'meta', 'total_op',
-                       'total_est', 'total_ped',
-                       'op_menos_ped', 'a_produzir',
-                       'excesso'],
+            'headers': headers,
+            'fields': fields,
             'data': data,
             'style': {
                 2: 'text-align: right;',
