@@ -652,3 +652,12 @@ class RegrasLoteMinTamanhoForm(forms.Form):
     lm_cor_sozinha = forms.ChoiceField(
         label='Aplica lote mínimo por cor quando único tamanho',
         choices=CHOICES, required=False, initial='s')
+
+
+class ProduzirModeloGradeForm(forms.ModelForm):
+    CHOICES = [('s', 'Sim'),
+               ('n', 'Não'),
+               ]
+    deposito = forms.ChoiceField(
+        label='Considera depósito',
+        choices=CHOICES, required=False, initial='s')
