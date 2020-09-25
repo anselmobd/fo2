@@ -32,6 +32,7 @@
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
+<p style="width: 100%; text-align: right;"><a style="display: none" id="recalcula" href="javascript:calc_all()">Recalcula</a></p>
 {% if data %}
   <div id="myProgress">
     <div id="myBar"></div>
@@ -50,6 +51,19 @@
 
   var a_produzir = {};
 
+  var total_passos;
+  var count_passos;
+  var count_passos_erros;
+
+  var recalcula_link = document.getElementById("recalcula");
+  var elem = document.getElementById("myBar");
+  var prog = document.getElementById("myProgress");
+
+  var table = document.getElementById("produzir");
+  var el_total_op_total = get_el('total_op', 'total');
+  var el_total_est_total = get_el('total_est', 'total');
+  var el_total_ped_total = get_el('total_ped', 'total');
+
   function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
   }
@@ -59,12 +73,10 @@
   }
 
   function moveBar(i, tot) {
-    var elem = document.getElementById("myBar");
     let width = 0;
     if (tot != 0) {
       width = parseInt(i * 100 / tot);
       if (tot == i) {
-        var prog = document.getElementById("myProgress");
         prog.style.visibility = 'hidden';
       }
     }
@@ -79,8 +91,8 @@
     } else {
       sufixo = '-'+modelo
     }
-    var all_el = document.querySelectorAll('.'+coluna+sufixo);
-    for (var i=0, len=all_el.length|0; i<len; i=i+1|0) {
+    let all_el = document.querySelectorAll('.'+coluna+sufixo);
+    for (let i=0, len=all_el.length|0; i<len; i=i+1|0) {
       return all_el[i];
     }
   }
@@ -146,27 +158,68 @@
     }
   }
 
-  $(document).ready(function() {
+  function show_hidde_recalcula_link() {
+    console.log("show_hidde_recalcula_link");
+    console.log('total_passos', total_passos);
+    console.log(count_passos);
+    console.log(count_passos_erros);
+    if (total_passos == count_passos + count_passos_erros) {
+      recalcula_link.style.display = 'block';
+    } else {
+      recalcula_link.style.display = 'none';
+    }
+  }
 
-    var table = document.getElementById("produzir");
+  function initCalc() {
+    elem.style.width = '0%';
+    prog.style.visibility = 'visible';
+
+    count_passos = 0;
+    count_passos_erros = 0;
+
+    el_total_ped_total.innerHTML = "0";
+    el_total_est_total.innerHTML = "0";
+    el_total_ped_total.innerHTML = "0";
+    set_el_inner('op_menos_ped', 'total', '0');
+    set_el_inner('a_produzir', 'total', '0');
+    set_el_inner('excesso', 'total', '0');
+
+
+    for ( let row of table.rows ) {
+      for ( let cell of row.cells ) {
+        if (cell.classList.contains("ok")) {
+          cell.classList.remove("ok");
+        }
+        if ( cell.classList.length != 0 ) {
+          for ( let aclass of cell.classList ) {
+            class_split = aclass.split('-');
+            if (class_split.length == 2) {
+              cell.innerHTML = "0";
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function calc_all() {
+    initCalc();
+
     var el_total_op_total = get_el('total_op', 'total');
     var total_op_total = 0;
     var el_total_est_total = get_el('total_est', 'total');
     var total_est_total = 0;
     var el_total_ped_total = get_el('total_ped', 'total');
     var total_ped_total = 0;
-    var total_passos = 0;
-    var count_passos = 0;
 
     for ( let row of table.rows ) {
       for ( let cell of row.cells ) {
         if ( cell.classList.length != 0 ) {
           for ( let aclass of cell.classList ) {
             class_split = aclass.split('-');
-            if (class_split.length != 0) {
+            if (class_split.length > 1) {
 
               if (class_split[0] == 'total_op') {
-                total_passos += 1;
                 $.ajax({
                   type: 'GET',
                   url: '/lotes/ajax/op_producao_modelo/'+class_split[1]+'/',
@@ -189,12 +242,17 @@
                     } else {
                       console.log('Sem retorno de OP');
                     }
+                  },
+                  error : function(data) {
+                    count_passos_erros += 1;
+                  },
+                  complete: function(data) {
+                    show_hidde_recalcula_link();
                   }
                 });
               }
 
               if (class_split[0] == 'total_est' && '{{deposito}}' == 's') {
-                total_passos += 1;
                 $.ajax({
                   type: 'GET',
                   url: '/lotes/ajax/estoque_depositos_modelo/'+class_split[1]+'/',
@@ -217,12 +275,17 @@
                     } else {
                       console.log('Sem retorno de estoque');
                     }
+                  },
+                  error : function(data) {
+                    count_passos_erros += 1;
+                  },
+                  complete: function(data) {
+                    show_hidde_recalcula_link();
                   }
                 });
               }
 
               if (class_split[0] == 'total_ped') {
-                total_passos += 1;
                 $.ajax({
                   type: 'GET',
                   url: '/lotes/ajax/pedido_lead_modelo/'+class_split[1]+'/',
@@ -245,6 +308,12 @@
                     } else {
                       console.log('Sem retorno de pedido');
                     }
+                  },
+                  error : function(data) {
+                    count_passos_erros += 1;
+                  },
+                  complete: function(data) {
+                    show_hidde_recalcula_link();
                   }
                 });
               }
@@ -255,6 +324,19 @@
       }
     }
 
+  } // function calc_all()
+
+  $(document).ready(function() {
+    if ( table ) {
+      total_passos = table.rows.length - 2;
+      if ('{{deposito}}' == 's') {
+        total_passos *= 3;
+      } else {
+        total_passos *= 2;
+      }
+      console.log(total_passos);
+      calc_all()
+    }
   })
 
 </script>
