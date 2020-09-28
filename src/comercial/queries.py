@@ -588,3 +588,17 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
         """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def get_tabela_preco(cursor, col, mes, seq):
+    sql = f"""
+        SELECT
+          t.*
+        FROM pedi_090 t
+        WHERE 1=1
+          AND t.COL_TABELA_PRECO = {col}
+          AND t.MES_TABELA_PRECO = {mes}
+          AND t.SEQ_TABELA_PRECO = {seq}
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
