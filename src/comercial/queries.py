@@ -488,7 +488,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
     return rows_to_dict_list_lower(cursor)
 
 
-def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
+def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
     '''
         tipo:
             total - totaliza por mês
@@ -549,6 +549,7 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total'):
         JOIN ESTQ_005 tre -- transações de estoque
           ON tre.CODIGO_TRANSACAO = fe.CODIGO_TRANSACAO
         WHERE 1=1
+          AND fe.LOCAL_ENTREGA = {empresa}
           -- filtro de devolvidos baseado na view Faturados_X_Devolvidos
           -- filtrando faturamento_Sim_Nao = "Sim" e por data
           -- situacao
