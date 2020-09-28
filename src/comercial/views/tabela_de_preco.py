@@ -58,6 +58,24 @@ class TabelaDePreco(View):
             'data': data,
         })
 
+        i_data = queries.itens_tabela_preco(cursor, *codigo_tabela_ints)
+        pprint(i_data)
+        if len(i_data) == 0:
+            context.update({'erro': 'Tabela vazia'})
+            return context
+
+        context.update({
+            'i_headers': [
+                'Referência',
+                'Valor',
+            ],
+            'i_fields': [
+                'grupo_estrutura',
+                'val_tabela_preco'
+            ],
+            'i_data': i_data,
+        })
+
         return context
 
     def get(self, request, *args, **kwargs):
