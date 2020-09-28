@@ -33,9 +33,7 @@ class TabelaDePreco(View):
         tabela = "{:02d}.{:02d}.{:02d}".format(*codigo_tabela_ints)
         context = {'tabela': tabela}
 
-        pprint(codigo_tabela_ints)
         data = queries.get_tabela_preco(cursor, *codigo_tabela_ints)
-        pprint(data)
         if len(data) == 0:
             context.update({'erro': 'Tabela não encontrada'})
             return context
@@ -59,7 +57,6 @@ class TabelaDePreco(View):
         })
 
         i_data = queries.itens_tabela_preco(cursor, *codigo_tabela_ints)
-        pprint(i_data)
         if len(i_data) == 0:
             context.update({'erro': 'Tabela vazia'})
             return context
@@ -67,10 +64,12 @@ class TabelaDePreco(View):
         context.update({
             'i_headers': [
                 'Referência',
+                'Descrição',
                 'Valor',
             ],
             'i_fields': [
                 'grupo_estrutura',
+                'descr_referencia',
                 'val_tabela_preco'
             ],
             'i_data': i_data,

@@ -608,8 +608,12 @@ def get_tabela_preco(cursor, col, mes, seq):
 def itens_tabela_preco(cursor, col, mes, seq):
     sql = f"""
         SELECT
-          ti.*
+          r.DESCR_REFERENCIA
+        , ti.*
         FROM pedi_095 ti
+        JOIN basi_030 r
+          ON r.NIVEL_ESTRUTURA = ti.NIVEL_ESTRUTURA
+         AND r.REFERENCIA = ti.GRUPO_ESTRUTURA
         WHERE ti.TAB_COL_TAB = {col}
           AND ti.TAB_MES_TAB = {mes}
           AND ti.TAB_SEQ_TAB = {seq}
