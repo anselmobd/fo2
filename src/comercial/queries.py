@@ -596,6 +596,7 @@ def get_tabela_preco(cursor, col, mes, seq):
           t.*
         FROM pedi_090 t
         WHERE 1=1
+          AND t.NIVEL_ESTRUTURA = 1
           AND t.COL_TABELA_PRECO = {col}
           AND t.MES_TABELA_PRECO = {mes}
           AND t.SEQ_TABELA_PRECO = {seq}
