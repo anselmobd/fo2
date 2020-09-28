@@ -13,7 +13,7 @@ from utils.functions import (
 
 def pedido_faturavel_modelo(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
-        cached=True, deposito=None):
+        cached=True, deposito=None, empresa=1):
 
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
@@ -119,7 +119,9 @@ def pedido_faturavel_modelo(
                 LEFT JOIN FATU_050 fcanc -- fatura
                   ON fcanc.PEDIDO_VENDA = ped.PEDIDO_VENDA
                  AND fcanc.SITUACAO_NFISC = 2  -- cancelada
-                WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+                WHERE 1=1
+                  AND ped.CODIGO_EMPRESA = {empresa}
+                  AND ped.STATUS_PEDIDO <> 5 -- não cancelado
                   AND ped.SITUACAO_VENDA = 0 -- pedido liberado
                   AND fok.NUM_NOTA_FISCAL IS NULL
                   -- AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + 148
