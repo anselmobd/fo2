@@ -602,3 +602,16 @@ def get_tabela_preco(cursor, col, mes, seq):
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def itens_tabela_preco(cursor, col, mes, seq):
+    sql = f"""
+        SELECT
+          ti.*
+        FROM pedi_095 ti
+        WHERE ti.TAB_COL_TAB = {col}
+          AND ti.TAB_MES_TAB = {mes}
+          AND ti.TAB_SEQ_TAB = {seq}
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
