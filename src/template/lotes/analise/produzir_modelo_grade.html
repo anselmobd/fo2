@@ -158,8 +158,8 @@
     }
   }
 
-  function show_hidde_recalcula_link() {
-    console.log("show_hidde_recalcula_link");
+  function show_hide_recalcula_link() {
+    console.log("show_hide_recalcula_link");
     console.log('total_passos', total_passos);
     console.log(count_passos);
     console.log(count_passos_erros);
@@ -193,7 +193,7 @@
         if ( cell.classList.length != 0 ) {
           for ( let aclass of cell.classList ) {
             class_split = aclass.split('-');
-            if (class_split.length == 2) {
+            if (class_split.length > 1) {
               cell.innerHTML = "0";
             }
           }
@@ -247,7 +247,7 @@
                     count_passos_erros += 1;
                   },
                   complete: function(data) {
-                    show_hidde_recalcula_link();
+                    show_hide_recalcula_link();
                   }
                 });
               }
@@ -280,7 +280,7 @@
                     count_passos_erros += 1;
                   },
                   complete: function(data) {
-                    show_hidde_recalcula_link();
+                    show_hide_recalcula_link();
                   }
                 });
               }
@@ -313,7 +313,7 @@
                     count_passos_erros += 1;
                   },
                   complete: function(data) {
-                    show_hidde_recalcula_link();
+                    show_hide_recalcula_link();
                   }
                 });
               }
