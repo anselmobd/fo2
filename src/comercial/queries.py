@@ -394,7 +394,7 @@ def get_vendas(
     return cached_result
 
 
-def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
+def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
     '''
         tipo:
             total - totaliza por mês
@@ -452,6 +452,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total'):
           ON c.CGC_9 = f.CGC_9
          AND c.CGC_4 = f.CGC_4
         WHERE 1=1
+          AND f.CODIGO_EMPRESA = {empresa}
           -- filtro de faturamento baseado na view Faturados_X_Devolvidos
           -- filtrando faturamento_Sim_Nao = "Sim" e por data
           -- não cancelada
