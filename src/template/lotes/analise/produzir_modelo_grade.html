@@ -255,7 +255,7 @@
               if (class_split[0] == 'total_est' && '{{deposito}}' == 's') {
                 $.ajax({
                   type: 'GET',
-                  url: '/lotes/ajax/estoque_depositos_modelo/'+class_split[1]+'/',
+                  url: '/lotes/ajax/estoque_depositos_modelo/'+class_split[1]+'/m/',
                   data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
                   success : function(data) {
                     count_passos += 1;
