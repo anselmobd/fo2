@@ -44,7 +44,7 @@ def sql_filtra_deposito(field, deposito, conector='AND'):
         return f"{conector} {field} = '{deposito}'"
 
 
-def totais_modelos_depositos(cursor, deposito):
+def totais_modelos_depositos(cursor, deposito, modelos=None):
 
     key_cache = my_make_key_cache(
         'get_vendas', deposito)
