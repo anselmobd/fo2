@@ -44,6 +44,16 @@ def sql_filtra_deposito(field, deposito, conector='AND'):
         return f"{conector} {field} = '{deposito}'"
 
 
+def sql_filtra_modelo(field, modelo, conector='AND'):
+    if modelo is None or modelo == '':
+        return ''
+    if type(modelo) is list:
+        lista = ", ".join([f"'{d}'" for d in map(str, modelo)])
+        return f"{conector} {field} IN ({lista})"
+    else:
+        return f"{conector} {field} = '{modelo}'"
+
+
 def totais_modelos_depositos(cursor, deposito, modelos=None):
 
     key_cache = my_make_key_cache(
@@ -61,6 +71,11 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
 
     calc_modelo = sql_calc_modelo('e.CDITEM_GRUPO')
 
+    filtro_modelo = sql_filtra_modelo(
+        f'{calc_modelo}',
+        modelos,
+    )
+
     sql = f'''
         SELECT
           {calc_modelo} MODELO
@@ -69,6 +84,7 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
         WHERE 1=1 -- e.LOTE_ACOMP = 0
           AND e.CDITEM_NIVEL99 = 1
           {filtro_deposito} -- filtro_deposito
+          {filtro_modelo} -- filtro_modelo
         GROUP BY
           {calc_modelo}
         ORDER BY
