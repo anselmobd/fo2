@@ -1,7 +1,9 @@
+import time
 from pprint import pprint
 
 from django.core.cache import cache
 
+from utils.cache import entkeys
 from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models import (
     GradeQtd,
@@ -59,10 +61,18 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
     key_cache = my_make_key_cache(
         'get_vendas', deposito)
 
-    cached_result = cache.get(key_cache)
-    if cached_result is not None:
-        fo2logger.info('cached '+key_cache)
-        return cached_result
+    while True:
+        cached_result = cache.get(key_cache)
+        if cached_result is not None:
+            fo2logger.info('cached '+key_cache)
+            return cached_result
+
+        if cache.get(f"{key_cache}_calc_"):
+            time.sleep(0.1)
+        else:
+            break
+
+    cache.set(f"{key_cache}_calc_", "c", timeout=entkeys._SECOND * 5)
 
     filtro_deposito = sql_filtra_deposito(
         'e.DEPOSITO',
