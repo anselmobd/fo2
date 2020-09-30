@@ -41,7 +41,7 @@ def sql_filtra_deposito(field, deposito, conector='AND'):
         lista = ", ".join(map(str, deposito))
         return f"{conector} {field} IN ({lista})"
     else:
-        return f"{conector} {field} = '{dep}'"
+        return f"{conector} {field} = '{deposito}'"
 
 
 def totais_modelos_depositos(cursor, deposito):
