@@ -27,10 +27,9 @@ def estoque_depositos_modelo(request, modelo, filtra=''):
             metas = metas.filter(antiga=False)
             metas = metas.exclude(venda_mensal=0)
             metas = metas.values('modelo')
-            modelos = tuple(m['modelo'] for m in metas)
+            modelos = [m['modelo'] for m in metas]
         else:
             modelos = None
-        pprint(modelos)
         totais = totais_modelos_depositos(
             cursor, ('101', '102', '103', '122', '231'), modelos)
         try:
