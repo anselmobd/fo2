@@ -34,7 +34,6 @@ def post_save_tracking(sender, instance, **kwargs):
                 old = original[k]
                 new = getattr(instance, k)
                 if k == 'id' or new != old:
-                    altered[k] = new
                     if new is not None and old is not None and \
                             (isinstance(old, str) or isinstance(new, str)):
                         old_s = old.splitlines(keepends=True)
@@ -47,6 +46,10 @@ def post_save_tracking(sender, instance, **kwargs):
                         # the "+10" is to compensate the ".__delta__"
                         if (len(lindiff)+10) < len(new):
                             altered[k+'.__delta__'] = lindiff
+                        else:
+                            altered[k] = new
+                    else:
+                        altered[k] = new
             # print('{} altered = {}'.format(sender.__name__, altered))
             rt = RecordTracking()
             rt.user = user
