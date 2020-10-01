@@ -8,6 +8,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from geral.functions import rec_trac_log_to_dict
+
 import lotes.models
 
 import cd.queries as queries
@@ -42,15 +44,7 @@ class HistoricoLote(View):
         old_local = None
         for row in data:
             n_info = 0
-            log = row['log']
-            log = log.replace("<UTC>", "utc")
-            log = re.sub(
-                r'^(.*)<SimpleLazyObject: <User: ([^\s]*)>>(.*)$',
-                r'\1"\2"\3', log)
-            log = re.sub(
-                r'^(.*)<User: ([^\s]*)>(.*)$',
-                r'\1"\2"\3', log)
-            dict_log = eval(log)
+            dict_log = rec_trac_log_to_dict(row['log'])
 
             if 'estagio' in dict_log:
                 row['estagio'] = dict_log['estagio']
