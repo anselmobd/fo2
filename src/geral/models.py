@@ -18,6 +18,10 @@ class RecordTracking(models.Model):
         db_index=True, verbose_name='Id do registro')
     iud = models.CharField(
         max_length=1, verbose_name='Ação')
+    # versão 1
+    # rt.log = dict_object
+    log_version = models.SmallIntegerField(
+        verbose_name='Versão do log', default=1)
     log = models.CharField(
         max_length=65535, verbose_name='Log')
 
