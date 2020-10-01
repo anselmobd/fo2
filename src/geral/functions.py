@@ -190,16 +190,18 @@ def depositos_choices(
     return CHOICES
 
 
-def rec_trac_log_to_dict(log):
-    log = log.replace("<UTC>", "utc")
-    log = re.sub(
-        r'^(.*)<DstTzInfo \'America/Sao_Paulo\' -03-1 day, 21:00:00 STD>(.*)$',
-        r'\1utc\2', log)
-    log = re.sub(
-        r'^(.*)<SimpleLazyObject: <User: ([^\s]*)>>(.*)$',
-        r'\1"\2"\3', log)
-    log = re.sub(
-        r'^(.*)<User: ([^\s]*)>(.*)$',
-        r'\1"\2"\3', log)
-    dic = eval(log)
+def rec_trac_log_to_dict(log, log_version=1):
+    if log_version == 1:
+        log = log.replace("<UTC>", "utc")
+        log = re.sub(
+            r'^(.*)<DstTzInfo \'America/Sao_Paulo\' -03-1 day, '
+            r'21:00:00 STD>(.*)$',
+            r'\1utc\2', log)
+        log = re.sub(
+            r'^(.*)<SimpleLazyObject: <User: ([^\s]*)>>(.*)$',
+            r'\1"\2"\3', log)
+        log = re.sub(
+            r'^(.*)<User: ([^\s]*)>(.*)$',
+            r'\1"\2"\3', log)
+        dic = eval(log)
     return dic
