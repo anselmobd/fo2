@@ -44,7 +44,7 @@ class HistoricoLote(View):
         old_local = None
         for row in data:
             n_info = 0
-            dict_log = rec_trac_log_to_dict(row['log'])
+            dict_log = rec_trac_log_to_dict(row['log'], row['log_version'])
 
             if 'estagio' in dict_log:
                 row['estagio'] = dict_log['estagio']
