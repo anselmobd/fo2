@@ -84,21 +84,14 @@ class Solicitacoes(LoginRequiredMixin, View):
                             table='SolicitaLote',
                             record_id=self.id).values(
                             'log', 'log_version').order_by(
-                            '-time'
+                            'time'
                             )
                         records = [
                             rec_trac_log_to_dict(
                                 rec['log'], rec['log_version'])
                             for rec in list(rec_trac)
                         ]
-                        empty_rec = {
-                            'codigo': '',
-                            'ativa': '',
-                            'descricao': '',
-                            'data': '',
-                            'usuario__username': '',
-                            'update_at': '',
-                        }
+                        row = {}
                         hdata = []
                         for rec in records:
                             if rec.get('usuario', None):
@@ -107,9 +100,16 @@ class Solicitacoes(LoginRequiredMixin, View):
                                 else:
                                     rec['usuario__username'] = \
                                         rec['usuario'].username
-                            row = empty_rec.copy()
                             row.update(rec)
-                            hdata.append(row)
+                            hdata.append(row.copy())
+                        hdata.reverse()
+                        for row in hdata:
+                            if row['codigo'] is None:
+                                row['codigo'] = ''
+                            if row['descricao'] is None:
+                                row['descricao'] = ''
+                            if row['data'] is None:
+                                row['data'] = '-'
                         hfields = (
                             'codigo', 'ativa', 'descricao',
                             'data', 'usuario__username', 'update_at',
