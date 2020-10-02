@@ -58,7 +58,7 @@ def post_save_tracking(sender, instance, **kwargs):
             rt.record_id = altered['id']
             rt.iud = 'u'
             rt.log_version = 2
-            rt.log = dict_to_rec_trac_log(altered, 2)
+            rt.log = dict_to_rec_trac_log(altered, table=sender.__name__)
             rt.save()
             # print('rt.user = {}'.format(rt.user))
         else:
