@@ -6,7 +6,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from geral.functions import has_permission
+from geral.functions import has_permission, rec_trac_log_to_dict
+from geral.models import RecordTracking
 
 import lotes.models
 
@@ -79,6 +80,44 @@ class Solicitacoes(LoginRequiredMixin, View):
                                      'ativa': row.ativa,
                                      'can_print': row.can_print,
                                      })
+                        rec_trac = RecordTracking.objects.filter(
+                            table='SolicitaLote',
+                            record_id=self.id).values(
+                            'log', 'log_version').order_by(
+                            '-time'
+                            )
+                        records = [
+                            rec_trac_log_to_dict(
+                                rec['log'], rec['log_version'])
+                            for rec in list(rec_trac)
+                        ]
+                        empty_rec = {
+                            'codigo': '',
+                            'ativa': '',
+                            'descricao': '',
+                            'data': '',
+                            'usuario__username': '',
+                            'update_at': '',
+                        }
+                        hdata = []
+                        for rec in records:
+                            row = empty_rec.copy()
+                            row.update(rec)
+                            hdata.append(row)
+                        hfields = (
+                            'codigo', 'ativa', 'descricao',
+                            'data', 'usuario__username', 'update_at',
+                        )
+                        hheaders = (
+                            'Código', 'Ativa para o usuário', 'Descrição',
+                            'Data do embarque', 'Usuário',
+                            'Última alteração',
+                        )
+                        context.update({
+                            'hheaders': hheaders,
+                            'hfields': hfields,
+                            'hdata': hdata,
+                        })
                 else:
                     context['msg_erro'] = \
                         'Usuário não tem direito de alterar solicitações.'

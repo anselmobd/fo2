@@ -21,7 +21,7 @@ thead th
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if form %}
-<p><a title="Listar" href="{% url 'cd:solicitacoes' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
+  <p><a title="Listar" href="{% url 'cd:solicitacoes' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
   {% if id %}
     <h2>Edita Solicitação</h2>
     <form action="{% url 'cd:solicitacoes' id %}" method="post">
@@ -37,6 +37,13 @@ thead th
     <input type="submit" value="Adiciona"/>
   {% endif %}
   </form>
+  {% if hdata %}
+    <h4>Histórico</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=hheaders only %}
+      {% include "layout/tbody_generic.html" with fields=hfields data=hdata only %}
+    </table>
+  {% endif %}
 {% else %}
   <p><a title="Inserir" href="{% url 'cd:solicitacoes' 'add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a></p>
   <form action="{% url 'cd:solicitacoes' %}" method="post">
