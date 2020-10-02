@@ -1,5 +1,6 @@
 import datetime
 import re
+import yaml
 from pprint import pprint
 from pytz import utc
 
@@ -204,4 +205,6 @@ def rec_trac_log_to_dict(log, log_version=1):
             r'^(.*)<User: ([^\s]*)>(.*)$',
             r'\1"\2"\3', log)
         dic = eval(log)
+    elif log_version == 2:
+        dic = yaml.load(log)
     return dic
