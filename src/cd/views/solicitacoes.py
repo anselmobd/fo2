@@ -101,6 +101,12 @@ class Solicitacoes(LoginRequiredMixin, View):
                         }
                         hdata = []
                         for rec in records:
+                            if rec.get('usuario', None):
+                                if isinstance(rec['usuario'], str):
+                                    rec['usuario__username'] = rec['usuario']
+                                else:
+                                    rec['usuario__username'] = \
+                                        rec['usuario'].username
                             row = empty_rec.copy()
                             row.update(rec)
                             hdata.append(row)
