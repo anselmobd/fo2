@@ -51,6 +51,58 @@ class Solicitacoes(LoginRequiredMixin, View):
         }
         return context
 
+    def monta_hdata(self):
+        rec_trac = RecordTracking.objects.filter(
+            table='SolicitaLote',
+            record_id=self.id).values(
+            'log', 'log_version').order_by(
+            'time'
+            )
+        records = [
+            rec_trac_log_to_dict(
+                rec['log'], rec['log_version'])
+            for rec in list(rec_trac)
+        ]
+        row = {
+            'codigo': '',
+            'descricao': '',
+            'data': '',
+            'ativa': '',
+            'can_print': '',
+        }
+        hdata = []
+        for rec in records:
+            if rec.get('usuario', None):
+                if isinstance(rec['usuario'], str):
+                    rec['usuario__username'] = rec['usuario']
+                else:
+                    rec['usuario__username'] = \
+                        rec['usuario'].username
+            row.update(rec)
+            hdata.append(row.copy())
+        hdata.reverse()
+        for row in hdata:
+            if row['codigo'] is None:
+                row['codigo'] = ''
+            if row['descricao'] is None:
+                row['descricao'] = ''
+            if row['data'] is None:
+                row['data'] = '-'
+        hfields = (
+            'codigo', 'ativa', 'descricao',
+            'data', 'usuario__username', 'update_at',
+        )
+        hheaders = (
+            'Código', 'Ativa para o usuário', 'Descrição',
+            'Data do embarque', 'Usuário',
+            'Última alteração',
+        )
+        return {
+            'hheaders': hheaders,
+            'hfields': hfields,
+            'hdata': hdata,
+        }
+
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
 
@@ -80,50 +132,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                                      'ativa': row.ativa,
                                      'can_print': row.can_print,
                                      })
-                        rec_trac = RecordTracking.objects.filter(
-                            table='SolicitaLote',
-                            record_id=self.id).values(
-                            'log', 'log_version').order_by(
-                            'time'
-                            )
-                        records = [
-                            rec_trac_log_to_dict(
-                                rec['log'], rec['log_version'])
-                            for rec in list(rec_trac)
-                        ]
-                        row = {}
-                        hdata = []
-                        for rec in records:
-                            if rec.get('usuario', None):
-                                if isinstance(rec['usuario'], str):
-                                    rec['usuario__username'] = rec['usuario']
-                                else:
-                                    rec['usuario__username'] = \
-                                        rec['usuario'].username
-                            row.update(rec)
-                            hdata.append(row.copy())
-                        hdata.reverse()
-                        for row in hdata:
-                            if row['codigo'] is None:
-                                row['codigo'] = ''
-                            if row['descricao'] is None:
-                                row['descricao'] = ''
-                            if row['data'] is None:
-                                row['data'] = '-'
-                        hfields = (
-                            'codigo', 'ativa', 'descricao',
-                            'data', 'usuario__username', 'update_at',
-                        )
-                        hheaders = (
-                            'Código', 'Ativa para o usuário', 'Descrição',
-                            'Data do embarque', 'Usuário',
-                            'Última alteração',
-                        )
-                        context.update({
-                            'hheaders': hheaders,
-                            'hfields': hfields,
-                            'hdata': hdata,
-                        })
+                        context.update(self.monta_hdata())
                 else:
                     context['msg_erro'] = \
                         'Usuário não tem direito de alterar solicitações.'
