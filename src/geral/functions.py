@@ -208,3 +208,12 @@ def rec_trac_log_to_dict(log, log_version=1):
     elif log_version == 2:
         dic = yaml.load(log)
     return dic
+
+
+def dict_to_rec_trac_log(dic, log_version=1):
+    if log_version == 1:
+        return dic
+    elif log_version == 2:
+        for key in dic:
+            pass
+        return yaml.dump(dic)
