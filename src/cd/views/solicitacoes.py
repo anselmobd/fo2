@@ -132,7 +132,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                                      'ativa': row.ativa,
                                      'can_print': row.can_print,
                                      })
-                        context.update(self.monta_hdata())
+                        # context.update(self.monta_hdata())
                 else:
                     context['msg_erro'] = \
                         'Usuário não tem direito de alterar solicitações.'
