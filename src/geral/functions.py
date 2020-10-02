@@ -220,7 +220,8 @@ def rec_trac_log_to_dict(log, log_version=1):
 def dict_to_rec_trac_log(dic, log_version=1, table=None):
     if table:
         table_dict = {
-            'Lote': 2
+            'Lote': 2,
+            'SolicitaLote': 2,
         }
         log_version = table_dict[table]
 
