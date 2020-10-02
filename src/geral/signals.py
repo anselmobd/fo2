@@ -3,7 +3,7 @@ import difflib
 
 from utils.classes import LoggedInUser
 from geral.models import RecordTracking
-from geral.functions import dict_to_rec_trac_log
+from geral.functions import dict_to_rec_trac_log, log_version_by_table
 
 
 def post_init_tracking(sender, instance, **kwargs):
@@ -57,8 +57,8 @@ def post_save_tracking(sender, instance, **kwargs):
             rt.table = sender.__name__
             rt.record_id = altered['id']
             rt.iud = 'u'
-            rt.log_version = 2
-            rt.log = dict_to_rec_trac_log(altered, table=sender.__name__)
+            rt.log_version = log_version_by_table(sender.__name__)
+            rt.log = dict_to_rec_trac_log(altered, rt.log_version)
             rt.save()
             # print('rt.user = {}'.format(rt.user))
         else:
