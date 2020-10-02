@@ -681,7 +681,7 @@ class CorrigeSequenciamento(PermissionRequiredMixin, View):
 
         cursor = connections['so'].cursor()
 
-        data = models.base.get_lotes(cursor, op=op, order='o')
+        data = lotes.queries.lote.get_lotes(cursor, op=op, order='o')
         if len(data) == 0:
             self.context.update({
                 'msg_erro': 'Sem lotes',
