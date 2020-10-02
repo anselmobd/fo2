@@ -222,7 +222,7 @@ def log_version_by_table(table):
         'Lote': 2,
         'SolicitaLote': 2,
     }
-    return table_dict[table]
+    return table_dict.get(table, 1)
 
 
 def dict_to_rec_trac_log(dic, log_version=1):
