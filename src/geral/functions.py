@@ -4,13 +4,17 @@ import yaml
 from pprint import pprint
 from pytz import utc
 
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.template.defaulttags import register
 from django.db.models import Min
 
+import utils.functions.strings
+
+from lotes.classes import YamlUser
+
 import geral.models as models
 import geral.queries
-import utils.functions.strings
 from .models import Painel, PainelModulo, PopAssunto
 
 
@@ -207,6 +211,9 @@ def rec_trac_log_to_dict(log, log_version=1):
         dic = eval(log)
     elif log_version == 2:
         dic = yaml.load(log)
+        for key in dic:
+            if isinstance(dic[key], YamlUser):
+                dic[key] = dic[key].object_instance
     return dic
 
 
@@ -221,5 +228,6 @@ def dict_to_rec_trac_log(dic, log_version=1, table=None):
         return dic
     elif log_version == 2:
         for key in dic:
-            pass
+            if isinstance(dic[key], User):
+                dic[key] = YamlUser(dic[key])
         return yaml.dump(dic)
