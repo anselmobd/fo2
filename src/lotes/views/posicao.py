@@ -86,7 +86,8 @@ class Posicao(View):
                 'os_link': os_link,
             })
 
-        i_data = models.posicao_get_item(cursor, periodo, ordem_confeccao)
+        i_data = queries.lote.posicao_get_item(
+            cursor, periodo, ordem_confeccao)
         i_link = ('REF')
         for row in i_data:
             row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
