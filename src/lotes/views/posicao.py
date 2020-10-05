@@ -288,7 +288,7 @@ class Posicao(View):
             periodo = lote[:4]
             ordem_confeccao = lote[-5:]
             cursor = connections['so'].cursor()
-            data = models.existe_lote(cursor, periodo, ordem_confeccao)
+            data = queries.lote.existe_lote(cursor, periodo, ordem_confeccao)
             if len(data) == 0:
                 context['erro'] = '.'
             else:
