@@ -25,7 +25,7 @@ class Posicao(View):
     def mount_context(self, cursor, periodo, ordem_confeccao, lote):
         context = {}
 
-        data = models.posicao2_lote(cursor, periodo, ordem_confeccao)
+        data = models.posicoes_lote(cursor, periodo, ordem_confeccao)
         if len(data) != 0:
             context.update({
                 'p_headers': ('Posição', 'Quantidade', 'Estágio'),

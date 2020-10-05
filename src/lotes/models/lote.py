@@ -6,7 +6,7 @@ from lotes.models import *
 from lotes.queries.os import *
 
 
-def posicao2_lote(cursor, periodo, ordem_confeccao):
+def posicoes_lote(cursor, periodo, ordem_confeccao):
     sql = '''
         WITH lotes AS (
         SELECT
