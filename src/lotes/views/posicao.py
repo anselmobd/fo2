@@ -43,7 +43,7 @@ class Posicao(View):
                 'l_data': oc_data,
             })
 
-        op_data = models.posicao_get_op(cursor, periodo, ordem_confeccao)
+        op_data = queries.lote.posicao_get_op(cursor, periodo, ordem_confeccao)
         if len(op_data) != 0:
             link = ('OP')
             for row in op_data:
