@@ -4,7 +4,6 @@ from utils.functions.models import rows_to_dict_list
 
 
 def existe_lote(cursor, periodo, ordem_confeccao):
-    print('existe_lote')
     sql = '''
         SELECT DISTINCT
           l.PERIODO_PRODUCAO
