@@ -64,7 +64,8 @@ class Posicao(View):
             'nloted': nloted,
         })
 
-        os_data = models.posicao_get_os(cursor, periodo, ordem_confeccao)
+        os_data = queries.os.get_os(
+            cursor, periodo=periodo, oc=ordem_confeccao)
         if len(os_data) != 0:
             os_link = ('OS')
             for row in os_data:

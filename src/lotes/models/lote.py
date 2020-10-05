@@ -6,11 +6,6 @@ from lotes.models import *
 from lotes.queries.os import *
 
 
-def posicao_get_os(cursor, periodo, oc):
-    # Informações sobre OS
-    return get_os(cursor, periodo=periodo, oc=oc)
-
-
 def posicao_get_op(cursor, periodo, ordem_confeccao):
     sql = '''
         SELECT
