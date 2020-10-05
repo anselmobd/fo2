@@ -210,7 +210,7 @@ def rec_trac_log_to_dict(log, log_version=1):
             r'\1"\2"\3', log)
         dic = eval(log)
     elif log_version == 2:
-        dic = yaml.load(log)
+        dic = yaml.load(log, Loader=yaml.Loader)
         for key in dic:
             if isinstance(dic[key], YamlUser):
                 dic[key] = dic[key].object_instance
