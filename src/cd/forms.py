@@ -9,6 +9,7 @@ from utils.functions.digits import *
 from utils.functions.strings import only_digits
 
 import lotes.models
+import lotes.queries.lote
 
 
 class RearrumarForm(forms.Form):
@@ -124,7 +125,7 @@ class EnderecarForm(forms.Form):
         cursor = connections['so'].cursor()
         periodo = lote[:4]
         ordem_confeccao = lote[-5:]
-        lote_sys = lotes.models.posicao_get_item(
+        lote_sys = lotes.queries.lote.existe_lote(
             cursor, periodo, ordem_confeccao)
         if len(lote_sys) == 0:
             raise forms.ValidationError("Lote não encontrado no Systêxtil")
