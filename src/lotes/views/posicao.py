@@ -34,7 +34,8 @@ class Posicao(View):
                 'p_data': data,
             })
 
-        oc_data = models.posicao_periodo_oc(cursor, periodo, ordem_confeccao)
+        oc_data = queries.lote.posicao_periodo_oc(
+            cursor, periodo, ordem_confeccao)
         if len(oc_data) != 0:
             context.update({
                 'l_headers': ('Período', 'Incício', 'Fim', 'OC'),

@@ -6,21 +6,6 @@ from lotes.models import *
 from lotes.queries.os import *
 
 
-def posicao_periodo_oc(cursor, periodo, ordem_confeccao):
-    sql = '''
-        SELECT
-          p.PERIODO_PRODUCAO PERIODO
-        , TO_CHAR(p.DATA_INI_PERIODO, 'DD/MM/YYYY') INI
-        , TO_CHAR(p.DATA_FIM_PERIODO - 1, 'DD/MM/YYYY') FIM
-        , %s OC
-        FROM PCPC_010 p
-        WHERE p.AREA_PERIODO = 1
-          AND p.PERIODO_PRODUCAO = %s
-    '''
-    cursor.execute(sql, [ordem_confeccao, periodo])
-    return rows_to_dict_list(cursor)
-
-
 def posicao_get_os(cursor, periodo, oc):
     # Informações sobre OS
     return get_os(cursor, periodo=periodo, oc=oc)
