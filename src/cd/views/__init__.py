@@ -7,7 +7,6 @@ from .historico import *
 from .historico_lote import *
 from .inconsist import *
 from .inconsist_detalhe import *
-from .lote_local import *
 from .mapa import *
 from .rearrumar import *
 from .retirar import *
