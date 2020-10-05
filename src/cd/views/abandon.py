@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views import View
 
 import lotes.models
+import lotes.queries
 
 import cd.forms
 import cd.views.gerais
@@ -37,7 +38,7 @@ class LoteLocal(PermissionRequiredMixin, View):
 
         context = {'endereco': endereco}
 
-        lote_sys = lotes.models.posicao_get_item(
+        lote_sys = lotes.queries.lote.posicao_get_item(
             cursor, periodo, ordem_confeccao)
         if len(lote_sys) == 0:
             if endereco is not None:

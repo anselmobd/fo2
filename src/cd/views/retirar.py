@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views import View
 
 import lotes.models
+import lotes.queries
 from lotes.views.lote.conserto_lote import dict_conserto_lote
 
 import cd.forms
@@ -34,7 +35,7 @@ class Retirar(PermissionRequiredMixin, View):
         ordem_confeccao = lote[-5:]
         identificado = form.cleaned_data['identificado']
 
-        lote_sys = lotes.models.posicao_get_item(
+        lote_sys = lotes.queries.lote.posicao_get_item(
             cursor, periodo, ordem_confeccao)
 
         try:
