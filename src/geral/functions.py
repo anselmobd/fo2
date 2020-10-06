@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.template.defaulttags import register
 from django.db.models import Min
+from django.utils.timezone import utc
 
 import utils.functions.strings
 
@@ -214,6 +215,8 @@ def rec_trac_log_to_dict(log, log_version=1):
         for key in dic:
             if isinstance(dic[key], YamlUser):
                 dic[key] = dic[key].object_instance
+            if isinstance(dic[key], datetime.datetime):
+                dic[key] = dic[key].replace(tzinfo=utc)
     return dic
 
 
