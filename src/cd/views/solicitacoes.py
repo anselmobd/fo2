@@ -128,11 +128,13 @@ class Solicitacoes(LoginRequiredMixin, View):
                         self.id = None
                     else:
                         row = data[0]
+                        dia = row.data.strftime(
+                            "%Y-%m-%d") if row.data else None
                         context['id'] = self.id
                         context['form'] = self.Form_class(
                             initial={'codigo': row.codigo,
                                      'descricao': row.descricao,
-                                     'data': row.data,
+                                     'data': dia,
                                      'ativa': row.ativa,
                                      'can_print': row.can_print,
                                      })
