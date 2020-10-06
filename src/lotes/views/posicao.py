@@ -221,23 +221,6 @@ class Posicao(View):
             }),
         })
 
-        # data = models.posicao_estagios(cursor, periodo, ordem_confeccao)
-        # group = ('EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A', 'Q_PERDA',
-        #          'Q_CONSERTO', 'FAMI', 'OS')
-        # group_rowspan(data, group)
-        # context.update({
-        #     'e_headers': (
-        #         'Estágio', 'Progr.', 'A Prod.', 'Em Prod.', 'Prod.', '2a.',
-        #         'Perda', 'Conserto', 'Família', 'OS', 'Usuário', 'Data',
-        #         'Programa'),
-        #     'e_fields': (
-        #         'EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_PROD', 'Q_2A',
-        #         'Q_PERDA', 'Q_CONSERTO', 'FAMI', 'OS', 'USU', 'DT',
-        #         'PRG'),
-        #     'e_group': group,
-        #     'e_data': data,
-        # })
-
         slq = models.SolicitaLoteQtd.objects.filter(
             lote__lote=lote,
             ).order_by('-create_at').values(
