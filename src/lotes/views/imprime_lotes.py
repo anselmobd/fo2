@@ -43,7 +43,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
         tem_est6 = 6 in dict_est_seq
 
         # Lotes ordenados por OC
-        l_data = models.get_imprime_lotes(
+        l_data = queries.lote.get_imprime_lotes(
             cursor, op, tam, cor, order, oc_inicial_val, oc_final_val,
             pula, qtd_lotes)
         if len(l_data) == 0:
