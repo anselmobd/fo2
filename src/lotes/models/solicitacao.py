@@ -32,6 +32,9 @@ class SolicitaLote(models.Model):
     can_print = models.BooleanField(
         default=True,
         verbose_name='Pode imprimir')
+    coleta = models.BooleanField(
+        default=False,
+        verbose_name='Pode coletar')
 
     @property
     def numero(self):
