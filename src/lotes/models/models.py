@@ -4,17 +4,6 @@ from django.utils import timezone
 from django.db import models
 
 
-class LotesPermissions(models.Model):
-
-    class Meta:
-        managed = False
-        permissions = (
-            ("can_edit_estagio_direito", "Can edit direitos a estágios"),
-            ("can_print__solicitacao_parciais",
-             "Pode imprimir etiquetas de solicitações parciais"),
-        )
-
-
 # Abaixo: estudos do TableHeap
 class TableHeapManager(models.Manager):
     def get_queryset(self):
