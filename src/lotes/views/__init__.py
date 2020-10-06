@@ -14,5 +14,4 @@ from .op import *
 from .os import *
 from .posicao import *
 from .quant_estagio import *
-from .responsavel import *
 from .views import *
