@@ -67,8 +67,10 @@ class Solicitacoes(LoginRequiredMixin, View):
             'codigo': '',
             'descricao': '',
             'data': '',
-            'ativa': '',
-            'can_print': '',
+            'ativa': False,
+            'can_print': False,
+            'coleta': False,
+            'update_at': '',
         }
         hdata = []
         for rec in records:
@@ -88,14 +90,16 @@ class Solicitacoes(LoginRequiredMixin, View):
                 row['descricao'] = ''
             if row['data'] is None:
                 row['data'] = '-'
+            row['ativa'] = 'Sim' if row['ativa'] else 'Não'
+            row['can_print'] = 'Sim' if row['can_print'] else 'Não'
+            row['coleta'] = 'Sim' if row['coleta'] else 'Não'
         hfields = (
-            'codigo', 'ativa', 'descricao',
-            'data', 'usuario__username', 'update_at',
+            'codigo', 'descricao', 'data', 'usuario__username',
+            'ativa', 'can_print', 'coleta', 'update_at',
         )
         hheaders = (
-            'Código', 'Ativa para o usuário', 'Descrição',
-            'Data do embarque', 'Usuário',
-            'Última alteração',
+            'Código', 'Descrição', 'Data do embarque', 'Usuário',
+            'Ativa', 'Imprime', 'Coleta', 'Última alteração',
         )
         return {
             'hheaders': hheaders,
