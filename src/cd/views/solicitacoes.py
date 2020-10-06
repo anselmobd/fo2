@@ -28,13 +28,13 @@ class Solicitacoes(LoginRequiredMixin, View):
     def lista(self, filtro=None, data=None, ref=None):
         fields = (
             'numero', 'codigo', 'ativa', 'descricao',
-            'data', 'usuario__username', 'update_at',
-            'total_qtd', 'total_no_cd'
+            'data', 'usuario__username', 'can_print', 'coleta',
+            'update_at', 'total_qtd', 'total_no_cd'
         )
         descriptions = (
             '#número', 'Código', 'Ativa para o usuário', 'Descrição',
-            'Data do embarque', 'Usuário', 'Última alteração',
-            'Qtd. total', 'Qtd. do CD'
+            'Data do embarque', 'Usuário', 'Imprime', 'Coleta',
+            'Última alteração', 'Qtd. total', 'Qtd. do CD'
         )
         headers = dict(zip(fields, descriptions))
 
