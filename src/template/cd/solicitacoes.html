@@ -89,19 +89,19 @@ thead th
                 {% if row.ativa %}
                   <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
                 {% else %}
-                  <span class="glyphicon glyphicon-remove-circle" style="color: darkgray" aria-hidden="true"></span>
+                  <span class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
                 {% endif %}
               {% elif field == 'can_print' %}
                 {% if row.can_print %}
                   <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
                 {% else %}
-                  <span class="glyphicon glyphicon-remove-circle" style="color: darkgray" aria-hidden="true"></span>
+                  <span class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
                 {% endif %}
               {% elif field == 'coleta' %}
                 {% if row.coleta %}
                   <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
                 {% else %}
-                  <span class="glyphicon glyphicon-remove-circle" style="color: darkgray" aria-hidden="true"></span>
+                  <span class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
                 {% endif %}
               {% else %}
                 {% with field|add:'|LINK' as field_link %}
