@@ -32,7 +32,7 @@ class Solicitacoes(LoginRequiredMixin, View):
             'update_at', 'total_qtd', 'total_no_cd'
         )
         descriptions = (
-            '#número', 'Código', 'Ativa para o usuário', 'Descrição',
+            '#número', 'Código', 'Ativa', 'Descrição',
             'Data do embarque', 'Usuário', 'Imprime', 'Coleta',
             'Última alteração', 'Qtd. total', 'Qtd. do CD'
         )
