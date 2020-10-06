@@ -96,7 +96,7 @@ class Expedicao(View):
             })
             return context
 
-        data = models.ped_expedicao(
+        data = queries.pedido.ped_expedicao(
             cursor,
             embarque_de=embarque_de,
             embarque_ate=embarque_ate,
