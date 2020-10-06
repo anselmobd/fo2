@@ -1,4 +1,4 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import rows_to_dict_list, dict_list_to_lower
 
 
 def op_lotes(cursor, op):
@@ -9,6 +9,16 @@ def op_lotes(cursor, op):
 def os_lotes(cursor, os):
     # Lotes ordenados por OS + referência + estágio
     return get_lotes(cursor, os=os)
+
+
+def get_imprime_lotes(cursor, op='', tam='', cor='', order='',
+                      oc_ini='', oc_fim='', pula=None, qtd_lotes=None):
+    # get dados de lotes
+    data = get_lotes(
+        cursor, op=op, tam=tam, cor=cor, order=order,
+        oc_ini=oc_ini, oc_fim=oc_fim, pula=pula, qtd_lotes=qtd_lotes)
+    data = dict_list_to_lower(data)
+    return data
 
 
 def get_lotes(cursor, op='', os='', tam='', cor='', order='',
