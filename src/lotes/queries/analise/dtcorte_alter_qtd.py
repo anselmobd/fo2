@@ -1,8 +1,5 @@
 from utils.functions.models import rows_to_dict_list
 
-from lotes.models import *
-from lotes.models.models import *
-
 
 def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
     # Produção por data de corte/gargalo e alternativa
