@@ -15,19 +15,6 @@ def get_imprime_lotes(cursor, op='', tam='', cor='', order='',
     return data
 
 
-def get_ref_colecao(cursor, ref):
-    sql = '''
-        SELECT
-          r.COLECAO
-        FROM BASI_030 r
-        WHERE r.NIVEL_ESTRUTURA = 1
-          AND r.REFERENCIA = %s
-    '''
-    cursor.execute(sql, [ref])
-    data = rows_to_dict_list_lower(cursor)
-    return data
-
-
 def get_imprime_caixas_op_3lotes(cursor, op):
     sql = '''
         WITH Table_qtd_lotes
