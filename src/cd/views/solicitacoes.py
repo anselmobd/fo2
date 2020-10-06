@@ -83,6 +83,14 @@ class Solicitacoes(LoginRequiredMixin, View):
             row.update(rec)
             hdata.append(row.copy())
         hdata.reverse()
+        icon_on = (
+            '<span class="glyphicon glyphicon-ok-circle" '
+            'style="color: green" aria-hidden="true"></span>'
+        )
+        icon_off = (
+            '<span class="glyphicon glyphicon-remove-circle" '
+            'style="color: darkgray" aria-hidden="true"></span>'
+        )
         for row in hdata:
             if row['codigo'] is None:
                 row['codigo'] = ''
@@ -90,9 +98,9 @@ class Solicitacoes(LoginRequiredMixin, View):
                 row['descricao'] = ''
             if row['data'] is None:
                 row['data'] = '-'
-            row['ativa'] = 'Sim' if row['ativa'] else 'Não'
-            row['can_print'] = 'Sim' if row['can_print'] else 'Não'
-            row['coleta'] = 'Sim' if row['coleta'] else 'Não'
+            row['ativa'] = icon_on if row['ativa'] else icon_off
+            row['can_print'] = icon_on if row['can_print'] else icon_off
+            row['coleta'] = icon_on if row['coleta'] else icon_off
         hfields = (
             'codigo', 'descricao', 'data', 'usuario__username',
             'ativa', 'can_print', 'coleta', 'update_at',
@@ -104,6 +112,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         return {
             'hheaders': hheaders,
             'hfields': hfields,
+            'hsafe': ['ativa', 'can_print', 'coleta'],
             'hdata': hdata,
         }
 
