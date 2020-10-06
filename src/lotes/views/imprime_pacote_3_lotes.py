@@ -163,7 +163,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
         context = {}
 
         # Pacotes de 3 Lotes
-        l_data = models.get_imprime_caixas_op_3lotes(cursor, op)
+        l_data = models.caixas_op_3lotes(cursor, op)
 
         if len(l_data) == 0:
             context.update({

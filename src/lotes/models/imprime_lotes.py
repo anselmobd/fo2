@@ -5,7 +5,7 @@ from utils.functions.models import rows_to_dict_list_lower, dict_list_to_lower
 import lotes.queries as queries
 
 
-def get_imprime_caixas_op_3lotes(cursor, op):
+def caixas_op_3lotes(cursor, op):
     sql = '''
         WITH Table_qtd_lotes
         AS (
