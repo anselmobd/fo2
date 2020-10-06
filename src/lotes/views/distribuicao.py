@@ -8,7 +8,7 @@ from django.views import View
 from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms import DistribuicaoForm
-import lotes.models as models
+import lotes.queries.producao
 
 
 class Distribuicao(View):
@@ -30,7 +30,7 @@ class Distribuicao(View):
             'familia': familia,
             }
 
-        data = models.distribuicao(
+        data = lotes.queries.producao.distribuicao(
             cursor, estagio, data_de, data_ate, familia_divisao)
 
         group = ['DATA', 'FAMILIA']
