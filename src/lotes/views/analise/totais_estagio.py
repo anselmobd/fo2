@@ -8,6 +8,7 @@ import produto.queries
 
 import lotes.forms as forms
 import lotes.models as models
+import lotes.queries as queries
 
 
 class TotalEstagio(View):
@@ -47,7 +48,7 @@ class TotalEstagio(View):
         else:
             cnpj9 = None
 
-        data = models.totais_estagios(
+        data = queries.analise.totais_estagios(
             cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate)
         if len(data) == 0:
             context.update({
