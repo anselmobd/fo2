@@ -3,7 +3,7 @@ from pprint import pprint
 from django.db import connections
 from django.http import JsonResponse
 
-import lotes.models as models
+import lotes.queries as queries
 
 
 def altera_direito_estagio(request, id):
@@ -17,7 +17,7 @@ def altera_direito_estagio(request, id):
     usuario = ids[1]
     coluna = ids[2]
 
-    data_r = models.responsavel(
+    data_r = queries.responsavel(
         cursor, 't', 'e', estagio, '', usuario)
     if len(data_r) == 0:
         row = {
@@ -72,18 +72,18 @@ def altera_direito_estagio(request, id):
             tipo_acao = passo[0]
             if tipo_acao == 'inclui':
                 tipo_movimento = passo[1]
-                result = result and models.responsavel_inclui_direitos(
+                result = result and queries.responsavel_inclui_direitos(
                     cursor, estagio, usuario, tipo_movimento)
 
             elif tipo_acao == 'exclui':
                 tipo_movimento = passo[1]
-                result = result and models.responsavel_exclui_direitos(
+                result = result and queries.responsavel_exclui_direitos(
                     cursor, estagio, usuario, tipo_movimento)
 
             elif tipo_acao == 'altera':
                 tipo_movimento_de = passo[1]
                 tipo_movimento_para = passo[2]
-                result = result and models.responsavel_altera_direitos(
+                result = result and queries.responsavel_altera_direitos(
                     cursor, estagio, usuario,
                     tipo_movimento_de, tipo_movimento_para)
     erro = not result
