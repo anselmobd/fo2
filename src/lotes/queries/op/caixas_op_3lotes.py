@@ -1,8 +1,6 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower, dict_list_to_lower
-
-import lotes.queries as queries
+from utils.functions.models import rows_to_dict_list_lower
 
 
 def caixas_op_3lotes(cursor, op):
