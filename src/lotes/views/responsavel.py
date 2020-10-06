@@ -14,19 +14,19 @@ from lotes.forms import ResponsPorEstagioForm
 import lotes.models as models
 
 
-def responsEdit(request):
-    return responsCustom(request, 'e')
+def respons_edit(request):
+    return respons_custom(request, 'e')
 
 
-def responsTodos(request):
-    return responsCustom(request, 't')
+def respons_todos(request):
+    return respons_custom(request, 't')
 
 
 def respons(request):
-    return responsCustom(request, 'a')
+    return respons_custom(request, 'a')
 
 
-def responsCustom(request, todos):
+def respons_custom(request, todos):
     title_name = 'Responsável por estágio'
 
     pode_editar = False
