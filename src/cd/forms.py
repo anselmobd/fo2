@@ -419,6 +419,8 @@ class SolicitacaoForm(forms.Form):
         label='Ativa para o usuário', required=False)
     can_print = forms.BooleanField(
         label='Pode imprimir', required=False)
+    coleta = forms.BooleanField(
+        label='Pode coletar', required=False)
 
 
 class FiltraSolicitacaoForm(forms.Form):
