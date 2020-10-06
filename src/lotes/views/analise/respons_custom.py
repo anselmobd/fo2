@@ -7,7 +7,7 @@ from django.db import connections
 from geral.functions import has_permission
 
 from lotes.forms import ResponsPorEstagioForm
-import lotes.models as models
+import lotes.queries as queries
 
 
 def respons_edit(request):
@@ -53,7 +53,7 @@ def respons_custom(request, todos):
             usuario_num = re.sub("\D", "", form.cleaned_data['usuario'])
             ordem = form.cleaned_data['ordem']
             cursor = connections['so'].cursor()
-            data = models.responsavel(
+            data = queries.responsavel(
                 cursor, todos, ordem, estagio, usuario, usuario_num)
             if len(data) != 0:
                 if ordem == 'e':
