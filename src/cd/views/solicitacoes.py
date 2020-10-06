@@ -89,7 +89,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         )
         icon_off = (
             '<span class="glyphicon glyphicon-remove-circle" '
-            'style="color: darkgray" aria-hidden="true"></span>'
+            'style="color: darkred" aria-hidden="true"></span>'
         )
         for row in hdata:
             if row['codigo'] is None:
