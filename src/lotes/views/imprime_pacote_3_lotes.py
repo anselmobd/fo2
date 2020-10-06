@@ -81,40 +81,40 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             print(lote.caixa)
             # if lote.caixa is not None:
 
-    def verifica_lotes0(self, cursor, op, ref):
-        print('\n--- verifica_lotes\n')
-        lotes_sem_caixa = models.Lote.objects.select_related().filter(
-            op=op, caixa=None).order_by('cor', 'ordem_tamanho', 'lote')
-        print('lotes sem caixa = {}'.format(len(lotes_sem_caixa)))
-
-        if lotes_sem_caixa:
-            self.encaixotar_lotes(cursor, op, ref, lotes_sem_caixa)
-
-    def encaixotar_lotes(self, cursor, op, ref, lotes_sem_caixa):
-        print('ref = {}'.format(ref))
-        data_colecao = models.get_ref_colecao(cursor, ref)
-        if data_colecao[0]['colecao'] == 5:
-            lotes_por_caixa = 2
-        else:
-            lotes_por_caixa = 3
-        print('lotes por caixa = {}'.format(lotes_por_caixa))
-
-        for row in lotes_sem_caixa:
-            print('{}-{}-{}-{}-{} sem caixa'.format(
-                row.op,
-                row.lote,
-                row.referencia,
-                row.tamanho,
-                row.cor))
-            caixa = self.selectiona_caixa(
-                row.op,
-                row.tamanho,
-                row.cor,
-                lotes_por_caixa)
-            if caixa is not None:
-                lote = models.Lote.objects.get(pk=row.id)
-                lote.caixa = caixa
-                lote.save()
+    # def verifica_lotes0(self, cursor, op, ref):
+    #     print('\n--- verifica_lotes\n')
+    #     lotes_sem_caixa = models.Lote.objects.select_related().filter(
+    #         op=op, caixa=None).order_by('cor', 'ordem_tamanho', 'lote')
+    #     print('lotes sem caixa = {}'.format(len(lotes_sem_caixa)))
+    #
+    #     if lotes_sem_caixa:
+    #         self.encaixotar_lotes(cursor, op, ref, lotes_sem_caixa)
+    #
+    # def encaixotar_lotes(self, cursor, op, ref, lotes_sem_caixa):
+    #     print('ref = {}'.format(ref))
+    #     data_colecao = produto.queries.get_ref_colecao(cursor, ref)
+    #     if data_colecao[0]['colecao'] == 5:
+    #         lotes_por_caixa = 2
+    #     else:
+    #         lotes_por_caixa = 3
+    #     print('lotes por caixa = {}'.format(lotes_por_caixa))
+    #
+    #     for row in lotes_sem_caixa:
+    #         print('{}-{}-{}-{}-{} sem caixa'.format(
+    #             row.op,
+    #             row.lote,
+    #             row.referencia,
+    #             row.tamanho,
+    #             row.cor))
+    #         caixa = self.selectiona_caixa(
+    #             row.op,
+    #             row.tamanho,
+    #             row.cor,
+    #             lotes_por_caixa)
+    #         if caixa is not None:
+    #             lote = models.Lote.objects.get(pk=row.id)
+    #             lote.caixa = caixa
+    #             lote.save()
 
     def cria_caixa(self, op):
         # print('--- --- --- cria_caixa')
