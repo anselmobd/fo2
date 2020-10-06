@@ -55,7 +55,7 @@ class Pedido(View):
             })
 
             # OPs
-            o_data = models.ped_op(cursor, pedido)
+            o_data = queries.pedido.ped_op(cursor, pedido)
             for row in o_data:
                 row['ORDEM_PRODUCAO|LINK'] = '/lotes/op/{}'.format(
                     row['ORDEM_PRODUCAO'])
