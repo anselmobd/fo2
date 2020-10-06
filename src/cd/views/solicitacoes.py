@@ -80,17 +80,26 @@ class Solicitacoes(LoginRequiredMixin, View):
                 else:
                     rec['usuario__username'] = \
                         rec['usuario'].username
+            rowold = row.copy()
             row.update(rec)
-            hdata.append(row.copy())
+            row_styles = {}
+            for field in row:
+                if row.get(field, '') == rowold.get(field, ''):
+                    row_styles[f'{field}|STYLE'] = "color: gray"
+            rowdata = row.copy()
+            rowdata.update(row_styles)
+            hdata.append(rowdata)
         hdata.reverse()
         icon_on = (
             '<span class="glyphicon glyphicon-ok-circle" '
-            'style="color: green" aria-hidden="true"></span>'
+            'aria-hidden="true"></span>'
         )
+        style_on = 'color: lightgreen'
         icon_off = (
             '<span class="glyphicon glyphicon-remove-circle" '
-            'style="color: darkred" aria-hidden="true"></span>'
+            'aria-hidden="true"></span>'
         )
+        style_off = 'color: red'
         for row in hdata:
             if row['codigo'] is None:
                 row['codigo'] = ''
@@ -98,8 +107,15 @@ class Solicitacoes(LoginRequiredMixin, View):
                 row['descricao'] = ''
             if row['data'] is None:
                 row['data'] = '-'
+            if 'ativa|STYLE' not in row:
+                row['ativa|STYLE'] = style_on if row['ativa'] else style_off
             row['ativa'] = icon_on if row['ativa'] else icon_off
+            if 'can_print|STYLE' not in row:
+                row['can_print|STYLE'] = \
+                    style_on if row['can_print'] else style_off
             row['can_print'] = icon_on if row['can_print'] else icon_off
+            if 'coleta|STYLE' not in row:
+                row['coleta|STYLE'] = style_on if row['coleta'] else style_off
             row['coleta'] = icon_on if row['coleta'] else icon_off
         hfields = (
             'codigo', 'descricao', 'data', 'usuario__username',
