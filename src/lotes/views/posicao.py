@@ -100,7 +100,8 @@ class Posicao(View):
             'i_link': i_link,
         })
 
-        data = models.posicao_so_estagios(cursor, periodo, ordem_confeccao)
+        data = queries.lote.posicao_so_estagios(
+            cursor, periodo, ordem_confeccao)
         estagios = []
         q_programada = None
         for row in data:

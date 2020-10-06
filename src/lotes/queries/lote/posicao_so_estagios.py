@@ -2,9 +2,6 @@ from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list
 
-from lotes.models import *
-from lotes.queries.os import *
-
 
 def posicao_so_estagios(cursor, periodo, ordem_confeccao):
     sql = '''
