@@ -91,6 +91,18 @@ thead th
                 {% else %}
                   <span class="glyphicon glyphicon-remove-circle" style="color: darkgray" aria-hidden="true"></span>
                 {% endif %}
+              {% elif field == 'can_print' %}
+                {% if row.can_print %}
+                  <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
+                {% else %}
+                  <span class="glyphicon glyphicon-remove-circle" style="color: darkgray" aria-hidden="true"></span>
+                {% endif %}
+              {% elif field == 'coleta' %}
+                {% if row.coleta %}
+                  <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
+                {% else %}
+                  <span class="glyphicon glyphicon-remove-circle" style="color: darkgray" aria-hidden="true"></span>
+                {% endif %}
               {% else %}
                 {% if row|get_item:field %}
                   {% with field|add:'|LINK' as field_link %}
