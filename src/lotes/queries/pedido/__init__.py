@@ -1,4 +1,5 @@
 from .grade_expedicao import *
+from .ped_dep_qtd import *
 from .ped_expedicao import *
 from .ped_inform import *
 from .ped_nf import *
