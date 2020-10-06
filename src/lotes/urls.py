@@ -12,9 +12,9 @@ urlpatterns = [
 
     url(r'^respons/$', views.respons, name='respons'),
 
-    url(r'^responsavel/$', views.responsTodos, name='respons_todos'),
+    url(r'^respons_todos/$', views.respons_todos, name='respons_todos'),
 
-    url(r'^edita_respons/$', views.responsEdit, name='edita_respons'),
+    url(r'^edita_respons/$', views.respons_edit, name='edita_respons'),
 
     url(r'^ajax/altera_direito_estagio/(?P<id>[^/]+)/$',
         views.altera_direito_estagio, name='altera_direito_estagio'),
