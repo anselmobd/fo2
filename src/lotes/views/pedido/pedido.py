@@ -47,7 +47,7 @@ class Pedido(View):
             })
 
             # Depósitos
-            d_data = models.ped_dep_qtd(cursor, pedido)
+            d_data = queries.pedido.ped_dep_qtd(cursor, pedido)
             context.update({
                 'd_headers': ('Depósito', 'Quantidade'),
                 'd_fields': ('DEPOSITO', 'QTD'),
