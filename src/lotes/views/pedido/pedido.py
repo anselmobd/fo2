@@ -20,7 +20,7 @@ class Pedido(View):
         context = {'pedido': pedido}
 
         # informações gerais
-        data = models.ped_inform(cursor, pedido)
+        data = queries.pedido.ped_inform(cursor, pedido)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
