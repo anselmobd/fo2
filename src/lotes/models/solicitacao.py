@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 from utils.functions.digits import fo2_digit_with
 
-from lotes.models import Lote
+from lotes.models.op import Lote
 
 
 class SolicitaLote(models.Model):
