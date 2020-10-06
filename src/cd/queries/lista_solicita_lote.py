@@ -37,13 +37,13 @@ def lista_solicita_lote(cursor, filtro=None, data=None, ref=None):
         , s.can_print
         , s.coleta
         , u.username usuario__username
-        , sum(sq.qtd) total_qtd
-        , sum(
+        , coalesce(sum(sq.qtd), 0) total_qtd
+        , coalesce(sum(
             case when l.local is null
             then 0
             else sq.qtd
             end
-          ) total_no_cd
+          ), 0) total_no_cd
         from fo2_cd_solicita_lote s
         left join fo2_cd_solicita_lote_qtd sq
           on sq.solicitacao_id = s.id
