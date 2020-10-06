@@ -12,6 +12,7 @@ from utils.functions.views import cleanned_fields_to_context
 
 import lotes.models
 import lotes.queries.pedido
+import lotes.queries.analise
 
 from estoque import forms
 from estoque import queries
@@ -272,7 +273,7 @@ class ItemNoTempo(View):
                 'p_dados': p_dados,
                 })
 
-        oc_dados = lotes.models.quant_estagio(
+        oc_dados = lotes.queries.analise.quant_estagio(
             cursor, only=[57, 63], group='op',
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']})
@@ -307,7 +308,7 @@ class ItemNoTempo(View):
                 'oc_dados': oc_dados,
                 })
 
-        op_dados = lotes.models.quant_estagio(
+        op_dados = lotes.queries.analise.quant_estagio(
             cursor, less=[57, 63], group='op',
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']})

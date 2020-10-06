@@ -20,6 +20,7 @@ from comercial.views.estoque import grade_meta_estoque
 
 import lotes.forms as forms
 import lotes.models as models
+import lotes.queries as queries
 import lotes.views.a_produzir
 
 
@@ -35,7 +36,7 @@ class QuantEstagio(View):
             'tipo': tipo,
         }
 
-        data = models.quant_estagio(cursor, estagio, ref, tipo)
+        data = queries.analise.quant_estagio(cursor, estagio, ref, tipo)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem produtos no estágio',
