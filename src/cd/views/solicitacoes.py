@@ -137,6 +137,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                                      'data': dia,
                                      'ativa': row.ativa,
                                      'can_print': row.can_print,
+                                     'coleta': row.coleta,
                                      })
                         context.update(self.monta_hdata())
                 else:
@@ -177,6 +178,7 @@ class Solicitacoes(LoginRequiredMixin, View):
             data = form.cleaned_data['data']
             ativa = form.cleaned_data['ativa']
             can_print = form.cleaned_data['can_print']
+            coleta = form.cleaned_data['coleta']
             if ativa:
                 outras_ativas = self.SL.objects.filter(
                     usuario=request.user,
@@ -208,6 +210,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                     solicitacao.data = data
                     solicitacao.ativa = ativa
                     solicitacao.can_print = can_print
+                    solicitacao.coleta = coleta
                     solicitacao.save()
                 except IntegrityError as e:
                     context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
