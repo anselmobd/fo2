@@ -1,4 +1,3 @@
-from .imprime_lotes import *
 from .models import *
 from .op import *
 from .pedido import *
