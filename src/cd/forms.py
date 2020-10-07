@@ -496,6 +496,11 @@ class EtiquetasSolicitacoesForm(forms.Form):
                        'size': '7',
                        'autofocus': 'autofocus'}))
 
+        self.fields['selecao'] = forms.CharField(
+            label='Seleção de etiquetas a imprimir', required=False,
+            max_length=20,
+            help_text="'' ou '20' ou '-5' ou '10-' ou '5-10' ou '5-10, 15'")
+
         self.fields['buscado_numero'] = forms.CharField(
             required=False, widget=forms.HiddenInput())
 
