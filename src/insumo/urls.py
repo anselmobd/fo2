@@ -133,4 +133,8 @@ urlpatterns = [
         views.MapaComprasNecessidades.as_view(),
         name='mapa_compras_necessidades__get'),
 
+    url(r'^mapa_compras_necessidade_detalhe/(?P<nivel>[29])/(?P<ref>.{5})/'
+        r'(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
+        views.MapaComprasNecessidadeDetalhe.as_view(),
+        name='mapa_compras_necessidade_detalhe'),
 ]
