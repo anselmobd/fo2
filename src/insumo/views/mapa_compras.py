@@ -84,6 +84,9 @@ class MapaCompras(View):
             )
 
         for row in data_ins:
+            row['SEMANA_NECESSIDADE|LINK'] = reverse(
+                'insumo:mapa_compras_necessidade_detalhe',
+                args=[nivel, ref, cor, tam, row['SEMANA_NECESSIDADE']])
             row['SEMANA_NECESSIDADE|TARGET'] = '_blank'
             row['QTD_INSUMO|DECIMALS'] = max_digits
             if row['SEMANA_NECESSIDADE'] < semana_hoje:
