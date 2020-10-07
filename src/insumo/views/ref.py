@@ -29,6 +29,11 @@ class Ref(View):
                 ref = item
         else:
             nivel = item[0]
+            if nivel not in ('2', '9'):
+                context.update({
+                    'msg_erro': 'Nível inválido',
+                })
+                return context
             ref = item[-5:]
             data = queries.item_count_nivel(cursor, ref, nivel)
             row = data[0]
