@@ -80,12 +80,9 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
         if len(intervals) == 0:
             return data
 
-        pprint(intervals)
         selecionadas = set()
         for interval in intervals:
-            pprint(interval)
             limits = [i.strip() for i in interval.split('-')]
-            pprint(limits)
             ini = limits[0]
             try:
                 fim = limits[1]
@@ -95,7 +92,6 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             fim = int(fim) if fim != '' else len(data)
             for num in range(ini, fim+1):
                 selecionadas.add(num)
-            pprint(selecionadas)
         return [d for n, d in enumerate(data) if n+1 in selecionadas]
 
     def mount_context(self, form):
@@ -175,7 +171,6 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
                         'passo': 2,
                     })
                 if data_selecao:
-                    pprint(data_selecao)
                     if self.imprime(data_selecao):
                         form.data['impresso_numero'] = numero
                         self.context.update({
