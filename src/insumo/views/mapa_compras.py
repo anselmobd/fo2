@@ -152,6 +152,8 @@ class MapaCompras(View):
 
         for row in data_irs:
             row['QTD_A_RECEBER|DECIMALS'] = max_digits
+            plural = 's' if ',' in row['PEDIDO'] else ''
+            row['QTD_A_RECEBER|HOVER'] = f"Pedido{plural} {row['PEDIDO']}"
             if row['SEMANA_ENTREGA'] < semana_hoje:
                 row['QTD_A_RECEBER|STYLE'] = \
                     'font-weight: bold; color: darkcyan;'
