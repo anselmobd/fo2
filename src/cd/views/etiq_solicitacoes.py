@@ -70,11 +70,40 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
         except Exception:
             return False
 
+    def seleciona(self, data, selecao):
+        intervals = [
+            v.strip()
+            for v in selecao.split(',')
+            if v.strip() not in ('', '-')
+        ]
+
+        if len(intervals) == 0:
+            return data
+
+        pprint(intervals)
+        selecionadas = set()
+        for interval in intervals:
+            pprint(interval)
+            limits = [i.strip() for i in interval.split('-')]
+            pprint(limits)
+            ini = limits[0]
+            try:
+                fim = limits[1]
+            except Exception:
+                fim = ini
+            ini = int(ini) if ini != '' else 1
+            fim = int(fim) if fim != '' else len(data)
+            for num in range(ini, fim+1):
+                selecionadas.add(num)
+            pprint(selecionadas)
+        return [d for n, d in enumerate(data) if n+1 in selecionadas]
+
     def mount_context(self, form):
         cursor = connection.cursor()
 
         numero = form.cleaned_data['numero']
         buscado_numero = form.cleaned_data['buscado_numero']
+        selecao = form.cleaned_data['selecao']
 
         self.context.update({
             'numero': numero,
@@ -103,7 +132,8 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
             'lote__tamanho', 'lote__lote'
         )
 
-        for row in data:
+        for n, row in enumerate(data):
+            row['n'] = n + 1
             row['numero'] = numero
             row['lote__lote|LINK'] = reverse(
                 'producao:posicao__get',
@@ -112,12 +142,12 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
 
         self.context.update({
             'headers': [
-                'Endereço', 'OP', 'Lote',
+                'Nº', 'Endereço', 'OP', 'Lote',
                 'Referência', 'Cor', 'Tamanho',
                 'Quant. original', 'Quant. Solicitada'
             ],
             'fields': [
-                'lote__local', 'lote__op', 'lote__lote',
+                'n', 'lote__local', 'lote__op', 'lote__lote',
                 'lote__referencia', 'lote__cor', 'lote__tamanho',
                 'lote__qtd_produzir', 'qtdsum'
             ],
@@ -136,14 +166,29 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
 
         elif self.request.POST.get("imprime"):
             if buscado_numero == numero:
-                if self.imprime(data):
-                    form.data['impresso_numero'] = numero
+                data_selecao = []
+                try:
+                    data_selecao = self.seleciona(data, selecao)
+                except Exception as e:
                     self.context.update({
-                        'msg': 'Enviado para a impressora',
-                        'passo': 3,
+                        'msg': 'Seleção para impressão inválida',
+                        'passo': 2,
                     })
+                if data_selecao:
+                    pprint(data_selecao)
+                    if self.imprime(data_selecao):
+                        form.data['impresso_numero'] = numero
+                        self.context.update({
+                            'msg': 'Enviado para a impressora',
+                            'passo': 3,
+                        })
+                    else:
+                        self.context.update({
+                            'passo': 2,
+                        })
                 else:
                     self.context.update({
+                        'msg': 'Nada selecionado',
                         'passo': 2,
                     })
             else:
