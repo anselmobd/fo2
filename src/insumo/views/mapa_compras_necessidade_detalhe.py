@@ -1,3 +1,4 @@
+from operator import itemgetter
 from pprint import pprint
 
 from django.db import connections
@@ -6,6 +7,8 @@ from django.views import View
 from django.urls import reverse
 
 from utils.views import totalize_grouped_data, group_rowspan
+
+import produto.queries
 
 import insumo.queries as queries
 
@@ -43,8 +46,52 @@ class MapaComprasNecessidadeDetalhe(View):
         })
 
         # detalhes da necessidade
-        data = queries.insumo_necessidade_detalhe(
-            cursor, nivel, ref, cor, tam, semana, new_calc=self.new_calc)
+        data = queries.mapa_compras_necessidades_especificas(
+            cursor, nivel, ref, cor, tam, colunas='t')
+        data_sem = [
+            r for r in data
+            if r['SEM'].strftime('%Y-%m-%d') == semana
+        ]
+
+        data_dict = {}
+        refs = set()
+        for row in data_sem:
+            refs.add(row['REF'])
+            semana = row['SEM']
+            key = (row['REF'], row['OP'])
+            if key not in data_dict:
+                data_dict[key] = {
+                    'QTD_INSUMO': 0,
+                    'QTD_PRODUTO': 0,
+                }
+            rbanho = 1 if row['RBANHO'] == 0 else row['RBANHO']
+            data_dict[key]['QTD_INSUMO'] += (
+                row['CCONSUMO_B'] * row['QTD'] * rbanho)
+            data_dict[key]['QTD_PRODUTO'] += row['QTD']
+
+        ref_informs = produto.queries.nivel_ref_inform(cursor, 1, tuple(refs))
+
+        descrs = {}
+        for inform in ref_informs:
+            descrs[inform['REF']] = inform['DESCR']
+
+        data = []
+        for key in data_dict:
+            value = data_dict[key]
+            data.append({
+                'DESCR': descrs[key[0]],
+                'OP': key[1],
+                'QTD_INSUMO': value['QTD_INSUMO'],
+                'QTD_PRODUTO': value['QTD_PRODUTO'],
+                'REF': key[0],
+                'SEMANA': semana,
+            })
+
+        data = sorted(data, key=itemgetter('REF', 'OP'))
+
+        # detalhes da necessidade
+        # data = queries.insumo_necessidade_detalhe(
+        #     cursor, nivel, ref, cor, tam, semana, new_calc=self.new_calc)
 
         if len(data) != 0:
             max_digits = 0
