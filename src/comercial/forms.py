@@ -42,10 +42,13 @@ class FaturamentoParaMetaForm(forms.Form):
         choices=CHOICES, initial='C', label='Apresentação')
 
 
-class TabalaDePrecoForm(forms.Form):
+class TabelaDePrecoForm(forms.Form):
     tabela = forms.CharField(
-        widget=forms.TextInput(attrs={'type': 'string',
-                               'autofocus': 'autofocus'}))
+        required=False,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'autofocus': 'autofocus'}
+        )
+    )
 
     def clean_tabela(self):
         tabela = self.cleaned_data['tabela'].upper()
