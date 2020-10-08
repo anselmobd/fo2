@@ -590,16 +590,25 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
     return rows_to_dict_list_lower(cursor)
 
 
-def get_tabela_preco(cursor, col, mes, seq):
+def get_tabela_preco(cursor, col=None, mes=None, seq=None):
+    filtra_col = ''
+    if col is not None:
+        filtra_col = f"AND t.COL_TABELA_PRECO = '{col}'"
+    filtra_mes = ''
+    if mes is not None:
+        filtra_mes = f"AND t.MES_TABELA_PRECO = '{mes}'"
+    filtra_seq = ''
+    if seq is not None:
+        filtra_seq = f"AND t.SEQ_TABELA_PRECO = '{seq}'"
     sql = f"""
         SELECT
           t.*
         FROM pedi_090 t
         WHERE 1=1
           AND t.NIVEL_ESTRUTURA = 1
-          AND t.COL_TABELA_PRECO = {col}
-          AND t.MES_TABELA_PRECO = {mes}
-          AND t.SEQ_TABELA_PRECO = {seq}
+          {filtra_col} -- filtra_col
+          {filtra_mes} -- filtra_mes
+          {filtra_seq} -- filtra_seq
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
