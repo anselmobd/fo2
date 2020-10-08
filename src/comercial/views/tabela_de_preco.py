@@ -28,11 +28,11 @@ class TabelaDePreco(View):
                 return context
 
             for row in data:
-                row['tabela'] = '.'.join([
-                    str(row['col_tabela_preco']),
-                    str(row['mes_tabela_preco']),
-                    str(row['seq_tabela_preco']),
-                ])
+                row['tabela'] = "{:02d}.{:02d}.{:02d}".format(
+                    row['col_tabela_preco'],
+                    row['mes_tabela_preco'],
+                    row['seq_tabela_preco'],
+                )
                 row['data_ini_tabela'] = row['data_ini_tabela'].date()
                 row['data_fim_tabela'] = row['data_fim_tabela'].date()
 
