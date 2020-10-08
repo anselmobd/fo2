@@ -21,6 +21,36 @@ class TabelaDePreco(View):
                 'erro': 'Código inválido. '
                         '3 números inteiros separados por ".".'
             })
+
+            data = queries.get_tabela_preco(cursor)
+            if len(data) == 0:
+                context.update({'erro': 'Sem tabelas de preço'})
+                return context
+
+            for row in data:
+                row['tabela'] = '.'.join([
+                    str(row['col_tabela_preco']),
+                    str(row['mes_tabela_preco']),
+                    str(row['seq_tabela_preco']),
+                ])
+                row['data_ini_tabela'] = row['data_ini_tabela'].date()
+                row['data_fim_tabela'] = row['data_fim_tabela'].date()
+
+            context.update({
+                'headers': [
+                    'Tabela',
+                    'Descrição',
+                    'Início',
+                    'Fim',
+                ],
+                'fields': [
+                    'tabela',
+                    'descricao',
+                    'data_ini_tabela',
+                    'data_fim_tabela',
+                ],
+                'data': data,
+            })
             return context
 
         for subcodigo_tabela in codigo_tabela_chunks:
