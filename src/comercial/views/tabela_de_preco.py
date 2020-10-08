@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.db import connections
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 import comercial.forms as forms
@@ -32,6 +33,10 @@ class TabelaDePreco(View):
                     row['col_tabela_preco'],
                     row['mes_tabela_preco'],
                     row['seq_tabela_preco'],
+                )
+                row['tabela|LINK'] = reverse(
+                    'comercial:tabela_de_preco__get',
+                    args=[row['tabela']]
                 )
                 row['data_ini_tabela'] = row['data_ini_tabela'].date()
                 row['data_fim_tabela'] = row['data_fim_tabela'].date()
