@@ -9,7 +9,7 @@ import comercial.queries as queries
 
 
 class TabelaDePreco(View):
-    Form_class = forms.TabalaDePrecoForm
+    Form_class = forms.TabelaDePrecoForm
     template_name = 'comercial/tabela_de_preco.html'
     title_name = 'Tabela de preços'
 
