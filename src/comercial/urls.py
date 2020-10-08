@@ -59,5 +59,8 @@ urlpatterns = [
     url(r'^tabela_de_preco/$',
         views.TabelaDePreco.as_view(),
         name='tabela_de_preco'),
+    url(r'^tabela_de_preco/(?P<tabela>.+)/$',
+        views.TabelaDePreco.as_view(),
+        name='tabela_de_preco__get'),
 
 ]
