@@ -417,6 +417,8 @@ class SolicitacaoForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}))
     ativa = forms.BooleanField(
         label='Ativa para o usuário', required=False)
+    concluida = forms.BooleanField(
+        label='Solicitação concluída', required=False)
     can_print = forms.BooleanField(
         label='Pode imprimir', required=False)
     coleta = forms.BooleanField(
