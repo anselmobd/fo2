@@ -8,6 +8,7 @@ from django.views import View
 
 from geral.functions import has_permission, rec_trac_log_to_dict
 from geral.models import RecordTracking
+from utils.functions import untuple_keys_concat
 
 import lotes.models
 
@@ -130,10 +131,14 @@ class Solicitacoes(LoginRequiredMixin, View):
             'Código', 'Descrição', 'Data do embarque', 'Usuário',
             'Ativa', 'Concluída', 'Imprime', 'Coleta CD', 'Última alteração',
         )
+        hstyle = untuple_keys_concat({
+            (5, 6, 7, 8): 'text-align: center;',
+        })
         return {
             'hheaders': hheaders,
             'hfields': hfields,
             'hsafe': ['ativa', 'concluida', 'can_print', 'coleta'],
+            'hstyle': hstyle,
             'hdata': hdata,
         }
 
