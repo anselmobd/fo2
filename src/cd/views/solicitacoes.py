@@ -28,12 +28,12 @@ class Solicitacoes(LoginRequiredMixin, View):
     def lista(self, filtro=None, data=None, ref=None):
         fields = (
             'numero', 'codigo', 'ativa', 'descricao',
-            'data', 'usuario__username', 'can_print', 'coleta',
+            'data', 'usuario__username', 'concluida', 'can_print', 'coleta',
             'update_at', 'total_qtd', 'total_no_cd'
         )
         descriptions = (
             '#número', 'Código', 'Ativa', 'Descrição',
-            'Data do embarque', 'Usuário', 'Imprime', 'Coleta CD',
+            'Data do embarque', 'Usuário', 'Concluída', 'Imprime', 'Coleta CD',
             'Última alteração', 'Qtd. total', 'Qtd. do CD'
         )
         headers = dict(zip(fields, descriptions))
@@ -68,6 +68,7 @@ class Solicitacoes(LoginRequiredMixin, View):
             'descricao': '',
             'data': '',
             'ativa': False,
+            'concluida': False,
             'can_print': False,
             'coleta': False,
             'update_at': '',
@@ -110,6 +111,10 @@ class Solicitacoes(LoginRequiredMixin, View):
             if 'ativa|STYLE' not in row:
                 row['ativa|STYLE'] = style_on if row['ativa'] else style_off
             row['ativa'] = icon_on if row['ativa'] else icon_off
+            if 'concluida|STYLE' not in row:
+                row['concluida|STYLE'] = \
+                    style_on if row['concluida'] else style_off
+            row['concluida'] = icon_on if row['concluida'] else icon_off
             if 'can_print|STYLE' not in row:
                 row['can_print|STYLE'] = \
                     style_on if row['can_print'] else style_off
@@ -119,16 +124,16 @@ class Solicitacoes(LoginRequiredMixin, View):
             row['coleta'] = icon_on if row['coleta'] else icon_off
         hfields = (
             'codigo', 'descricao', 'data', 'usuario__username',
-            'ativa', 'can_print', 'coleta', 'update_at',
+            'ativa', 'concluida', 'can_print', 'coleta', 'update_at',
         )
         hheaders = (
             'Código', 'Descrição', 'Data do embarque', 'Usuário',
-            'Ativa', 'Imprime', 'Coleta CD', 'Última alteração',
+            'Ativa', 'Concluída', 'Imprime', 'Coleta CD', 'Última alteração',
         )
         return {
             'hheaders': hheaders,
             'hfields': hfields,
-            'hsafe': ['ativa', 'can_print', 'coleta'],
+            'hsafe': ['ativa', 'concluida', 'can_print', 'coleta'],
             'hdata': hdata,
         }
 
@@ -161,6 +166,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                                      'descricao': row.descricao,
                                      'data': dia,
                                      'ativa': row.ativa,
+                                     'concluida': row.concluida,
                                      'can_print': row.can_print,
                                      'coleta': row.coleta,
                                      })
@@ -202,6 +208,7 @@ class Solicitacoes(LoginRequiredMixin, View):
             descricao = form.cleaned_data['descricao']
             data = form.cleaned_data['data']
             ativa = form.cleaned_data['ativa']
+            concluida = form.cleaned_data['concluida']
             can_print = form.cleaned_data['can_print']
             coleta = form.cleaned_data['coleta']
             if ativa:
@@ -234,6 +241,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                     solicitacao.descricao = descricao
                     solicitacao.data = data
                     solicitacao.ativa = ativa
+                    solicitacao.concluida = concluida
                     solicitacao.can_print = can_print
                     solicitacao.coleta = coleta
                     solicitacao.save()
