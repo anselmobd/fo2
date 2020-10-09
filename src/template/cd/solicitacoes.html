@@ -65,6 +65,8 @@ thead th
         {% for field in fields %}
           {% if field == 'total_qtd' or field == 'total_no_cd' %}
             <th style="text-align: right;">
+          {% elif field == 'ativa' or field == 'concluida' or field == 'can_print' or field == 'coleta' %}
+            <th style="text-align: center;">
           {% else %}
             <th>
           {% endif %}
@@ -82,6 +84,8 @@ thead th
           {% for field in fields %}
               {% if field == 'total_qtd' or field == 'total_no_cd' %}
                 <td style="text-align: right;">
+              {% elif field == 'ativa' or field == 'concluida' or field == 'can_print' or field == 'coleta' %}
+                <td style="text-align: center;">
               {% else %}
                 <td>
               {% endif %}
