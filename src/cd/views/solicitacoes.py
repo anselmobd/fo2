@@ -33,7 +33,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         )
         descriptions = (
             '#número', 'Código', 'Ativa', 'Descrição',
-            'Data do embarque', 'Usuário', 'Imprime', 'Coleta',
+            'Data do embarque', 'Usuário', 'Imprime', 'Coleta CD',
             'Última alteração', 'Qtd. total', 'Qtd. do CD'
         )
         headers = dict(zip(fields, descriptions))
@@ -123,7 +123,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         )
         hheaders = (
             'Código', 'Descrição', 'Data do embarque', 'Usuário',
-            'Ativa', 'Imprime', 'Coleta', 'Última alteração',
+            'Ativa', 'Imprime', 'Coleta CD', 'Última alteração',
         )
         return {
             'hheaders': hheaders,
