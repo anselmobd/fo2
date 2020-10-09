@@ -29,7 +29,7 @@ class SolicitaLote(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
-    conluida = models.BooleanField(
+    concluida = models.BooleanField(
         default=False,
         verbose_name='Solicitação concluída')
     can_print = models.BooleanField(
