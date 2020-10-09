@@ -40,8 +40,8 @@ thead th
   {% if hdata %}
     <h4>Histórico</h4>
     <table>
-      {% include "layout/thead_generic.html" with data=hheaders only %}
-      {% include "layout/tbody_generic.html" with fields=hfields data=hdata safe=hsafe only %}
+      {% include "layout/thead_generic.html" with data=hheaders style=hstyle only %}
+      {% include "layout/tbody_generic.html" with fields=hfields data=hdata safe=hsafe style=hstyle only %}
     </table>
   {% endif %}
 {% else %}
