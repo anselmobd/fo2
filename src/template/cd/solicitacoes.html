@@ -91,6 +91,12 @@ thead th
                 {% else %}
                   <span class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
                 {% endif %}
+              {% elif field == 'concluida' %}
+                {% if row.concluida %}
+                  <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
+                {% else %}
+                  <span class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
+                {% endif %}
               {% elif field == 'can_print' %}
                 {% if row.can_print %}
                   <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
