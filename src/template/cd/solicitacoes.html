@@ -119,6 +119,11 @@ thead th
                 {% else %}
                   <span class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
                 {% endif %}
+                {% if row.concluida %}
+                  {% if change_solicita or libera_coleta %}
+                    <a id="link_3_99001_EL" title="Change" href="#" onclick="ChangeFunction('3_99001_EL???');return false;"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+                  {% endif %}
+                {% endif %}
               {% else %}
                 {% with field|add:'|LINK' as field_link %}
                   {% if row|get_item:field_link %}
