@@ -192,6 +192,10 @@ class Solicitacoes(LoginRequiredMixin, View):
                                 not has_permission(
                                     request,
                                     'lotes.can_reabrir_solicitacao_completada')
+                            context['form'].fields['coleta'].disabled = \
+                                not has_permission(
+                                    request,
+                                    'lotes.libera_coleta_de_solicitacao')
 
                         context.update(self.monta_hdata())
                 else:
