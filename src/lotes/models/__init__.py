@@ -16,4 +16,6 @@ class LotesPermissions(models.Model):
              "Pode imprimir etiquetas de solicitações parciais"),
             ("can_reabrir_solicitacao_completada",
              "Pode reabrir solicitação marada como completa"),
+            ("libera_coleta_de_solicitacao",
+             "Libera coleta de solicitação"),
         )
