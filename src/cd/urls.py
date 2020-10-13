@@ -34,6 +34,10 @@ urlpatterns = [
     url(r'^solicitacoes/(?P<id>[^/]+)?$',
         views.Solicitacoes.as_view(), name='solicitacoes'),
 
+    url(r'^libera_coleta_de_solicitacao/(?P<id>[^/]+)?$',
+        views.libera_coleta_de_solicitacao,
+        name='libera_coleta_de_solicitacao'),
+
     url(r'^solicitacao_detalhe/(?P<solicit_id>[^/]+)'
         '/(?P<acao>[^/]+)/(?P<id>[^/]+)$',
         views.SolicitacaoDetalhe.as_view(),
