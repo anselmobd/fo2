@@ -150,7 +150,11 @@ class Solicitacoes(View):
                 form.fields[field].disabled = not onoff
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
+        context = {
+            'titulo': self.title_name,
+            'change_solicita': has_permission(
+                request, 'lotes.change_solicitalote'),
+        }
 
         if 'id' in kwargs:
             self.id = kwargs['id']
@@ -210,7 +214,11 @@ class Solicitacoes(View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
+        context = {
+            'titulo': self.title_name,
+            'change_solicita': has_permission(
+                request, 'lotes.change_solicitalote'),
+        }
 
         if 'id' in kwargs:
             self.id = kwargs['id']
