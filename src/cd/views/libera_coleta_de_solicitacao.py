@@ -4,10 +4,11 @@ from django.db import connections
 from django.http import JsonResponse
 
 
-def libera_coleta_de_solicitacao(request, id):
-    id = id[:-2]
+def libera_coleta_de_solicitacao(request, num):
+    id = num[:-2]
 
     data = {
+        'num': num,
         'id': id,
     }
     erro = False
