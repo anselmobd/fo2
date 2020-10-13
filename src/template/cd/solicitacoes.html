@@ -45,7 +45,7 @@ thead th
     </table>
   {% endif %}
 {% else %}
-  {% if change_solicita %}
+  {% if add_solicita %}
     <p><a title="Inserir" href="{% url 'cd:solicitacoes' 'add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a></p>
   {% endif %}
   <form action="{% url 'cd:solicitacoes' %}" method="post">
