@@ -149,7 +149,7 @@ class Solicitacoes(View):
             else:
                 form.fields[field].disabled = not onoff
 
-    def ini_context(self):
+    def ini_context(self, request):
         return {
             'titulo': self.title_name,
             'add_solicita': has_permission(
@@ -161,7 +161,7 @@ class Solicitacoes(View):
         }
 
     def get(self, request, *args, **kwargs):
-        context = self.ini_context()
+        context = self.ini_context(request)
 
         if 'id' in kwargs:
             self.id = kwargs['id']
@@ -221,7 +221,7 @@ class Solicitacoes(View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = self.ini_context()
+        context = self.ini_context(request)
 
         if 'id' in kwargs:
             self.id = kwargs['id']
