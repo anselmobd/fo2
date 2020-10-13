@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.http import JsonResponse
 
+from geral.functions import has_permission
 from utils.functions.digits import fo2_digit_valid
 
 from lotes.models import SolicitaLote
@@ -37,16 +38,26 @@ def libera_coleta_de_solicitacao(request, num):
         })
         return JsonResponse(data, safe=False)
 
-    # sl.coleta = not sl.coleta
+    if not has_permission(request, 'lotes.libera_coleta_de_solicitacao'):
+        data.update({
+            'result': 'ERR',
+            'descricao_erro': f'Usuário {request.user.username} sem '
+                              'permissão para liberar coleta',
+        })
+        return JsonResponse(data, safe=False)
 
-    # data.update({
-    #     'result': 'ERR',
-    #     'descricao_erro': 'Erro ao alterar liberação de coleta',
-    # })
-    # return JsonResponse(data, safe=False)
+    try:
+        sl.coleta = not sl.coleta
+        sl.usuario = request.user
+        sl.save()
+    except Exception as e:
+        data.update({
+            'result': 'ERR',
+            'descricao_erro': f'Erro ao alterar liberação de coleta: {e}',
+        })
+        return JsonResponse(data, safe=False)
 
     data.update({
         'result': 'OK',
-        'state': 'state',
     })
     return JsonResponse(data, safe=False)
