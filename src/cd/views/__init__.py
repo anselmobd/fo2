@@ -7,6 +7,7 @@ from .historico import *
 from .historico_lote import *
 from .inconsist import *
 from .inconsist_detalhe import *
+from .libera_coleta_de_solicitacao import *
 from .mapa import *
 from .rearrumar import *
 from .retirar import *
