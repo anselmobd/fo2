@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^solicitacoes/(?P<id>[^/]+)?$',
         views.Solicitacoes.as_view(), name='solicitacoes'),
 
-    url(r'^ajax/libera_coleta_de_solicitacao/(?P<num>[^/]+)?$',
+    url(r'^ajax/libera_coleta_de_solicitacao/(?P<num>[^/]+)/$',
         views.libera_coleta_de_solicitacao,
         name='libera_coleta_de_solicitacao'),
 
