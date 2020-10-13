@@ -266,15 +266,33 @@ class Solicitacoes(LoginRequiredMixin, View):
 
             if grava:
                 try:
-                    solicitacao.usuario = request.user
-                    solicitacao.codigo = codigo
-                    solicitacao.descricao = descricao
-                    solicitacao.data = data
-                    solicitacao.ativa = ativa
-                    solicitacao.concluida = concluida
-                    solicitacao.can_print = can_print
-                    solicitacao.coleta = coleta
-                    solicitacao.save()
+                    diferente = False
+                    if solicitacao.usuario != request.user:
+                        diferente = True
+                        solicitacao.usuario = request.user
+                    if solicitacao.codigo != codigo:
+                        diferente = True
+                        solicitacao.codigo = codigo
+                    if solicitacao.descricao != descricao:
+                        diferente = True
+                        solicitacao.descricao = descricao
+                    if solicitacao.data != data:
+                        diferente = True
+                        solicitacao.data = data
+                    if solicitacao.ativa != ativa:
+                        diferente = True
+                        solicitacao.ativa = ativa
+                    if solicitacao.concluida != concluida:
+                        diferente = True
+                        solicitacao.concluida = concluida
+                    if solicitacao.can_print != can_print:
+                        diferente = True
+                        solicitacao.can_print = can_print
+                    if solicitacao.coleta != coleta:
+                        diferente = True
+                        solicitacao.coleta = coleta
+                    if diferente:
+                        solicitacao.save()
                 except IntegrityError as e:
                     context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
                         'a solicitação. <{}>'.format(str(e))
