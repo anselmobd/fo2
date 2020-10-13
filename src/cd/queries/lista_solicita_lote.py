@@ -72,7 +72,8 @@ def lista_solicita_lote(cursor, filtro=None, data=None, ref=None):
     data = rows_to_dict_list_lower(cursor)
 
     for row in data:
-        row['numero'] = f"#{fo2_digit_with(row['id'])}"
+        row['num'] = fo2_digit_with(row['id'])
+        row['numero'] = f"#{row['num']}"
 
     if filtro:
         data = filtered_data_fields(
