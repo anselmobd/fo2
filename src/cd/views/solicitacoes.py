@@ -187,6 +187,12 @@ class Solicitacoes(LoginRequiredMixin, View):
                             ['can_print', 'coleta'],
                             not row.concluida,
                         )
+                        if row.concluida:
+                            context['form'].fields['concluida'].disabled = \
+                                not has_permission(
+                                    request,
+                                    'lotes.can_reabrir_solicitacao_completada')
+
                         context.update(self.monta_hdata())
                 else:
                     context['msg_erro'] = \
