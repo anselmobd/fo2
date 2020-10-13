@@ -34,6 +34,7 @@ def lista_solicita_lote(cursor, filtro=None, data=None, ref=None):
         , s.create_at
         , s.update_at
         , s.usuario_id
+        , s.concluida
         , s.can_print
         , s.coleta
         , u.username usuario__username
