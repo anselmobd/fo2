@@ -120,7 +120,7 @@ thead th
                   <span id="span_{{row.num}}" class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
                 {% endif %}
                 {% if row.concluida %}
-                  {% if change_solicita or libera_coleta %}
+                  {% if libera_coleta %}
                     <a title="Altera liberação de coleta"
                       onclick="javascript:return ChangeFunction('{{row.num}}');"
                       ><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
