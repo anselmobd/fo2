@@ -142,6 +142,13 @@ class Solicitacoes(LoginRequiredMixin, View):
             'hdata': hdata,
         }
 
+    def disable_fields(self, form, fields, onoff):
+        for field in form.fields:
+            if field in fields:
+                form.fields[field].disabled = onoff
+            else:
+                form.fields[field].disabled = not onoff
+
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
 
@@ -175,6 +182,11 @@ class Solicitacoes(LoginRequiredMixin, View):
                                      'can_print': row.can_print,
                                      'coleta': row.coleta,
                                      })
+                        self.disable_fields(
+                            context['form'],
+                            ['can_print', 'coleta'],
+                            not row.concluida,
+                        )
                         context.update(self.monta_hdata())
                 else:
                     context['msg_erro'] = \
