@@ -16,7 +16,7 @@ import cd.forms
 import cd.queries as queries
 
 
-class Solicitacoes(LoginRequiredMixin, View):
+class Solicitacoes(View):
 
     def __init__(self):
         self.Form_class = cd.forms.SolicitacaoForm
