@@ -247,11 +247,11 @@ class Solicitacoes(LoginRequiredMixin, View):
             codigo = form.cleaned_data['codigo']
             descricao = form.cleaned_data['descricao']
             data = form.cleaned_data['data']
-            if form.cleaned_data['concluida']:
+            concluida = form.cleaned_data['concluida']
+            if concluida:
                 ativa = False
             else:
                 ativa = form.cleaned_data['ativa']
-            concluida = form.cleaned_data['concluida']
             can_print = form.cleaned_data['can_print']
             coleta = form.cleaned_data['coleta']
             if ativa:
