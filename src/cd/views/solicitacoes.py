@@ -177,49 +177,46 @@ class Solicitacoes(LoginRequiredMixin, View):
                         'Usuário não tem direito de criar solicitações.'
                     self.id = None
             else:
-                if has_permission(request, 'lotes.change_solicitalote'):
-                    data = self.SL.objects.filter(id=self.id)
-                    if len(data) == 0:
-                        self.id = None
-                    else:
-                        row = data[0]
-                        dia = row.data.strftime(
-                            "%Y-%m-%d") if row.data else None
-                        context['id'] = self.id
-                        context['form'] = self.Form_class(
-                            initial={'codigo': row.codigo,
-                                     'descricao': row.descricao,
-                                     'data': dia,
-                                     'ativa': row.ativa,
-                                     'concluida': row.concluida,
-                                     'can_print': row.can_print,
-                                     'coleta': row.coleta,
-                                     })
-
-                        if row.concluida:
-                            self.hidden_field(context['form'], 'codigo')
-                            self.hidden_field(context['form'], 'descricao')
-                            self.hidden_field(context['form'], 'data')
-                            self.hidden_field(context['form'], 'ativa')
-                            context.update({
-                                'echo_codigo': row.codigo,
-                                'echo_descricao': row.descricao,
-                                'echo_data': row.data,
-                                'echo_ativa': row.ativa,
-                            })
-                            if not context['reabre']:
-                                self.hidden_field(context['form'], 'concluida')
-                            if not context['libera_coleta']:
-                                self.hidden_field(context['form'], 'coleta')
-                        else:
-                            self.hidden_field(context['form'], 'can_print')
-                            self.hidden_field(context['form'], 'coleta')
-
-                        context.update(self.monta_hdata())
-                else:
-                    context['msg_erro'] = \
-                        'Usuário não tem direito de alterar solicitações.'
+                data = self.SL.objects.filter(id=self.id)
+                if len(data) == 0:
                     self.id = None
+                else:
+                    row = data[0]
+                    dia = row.data.strftime(
+                        "%Y-%m-%d") if row.data else None
+                    context['id'] = self.id
+                    context['form'] = self.Form_class(
+                        initial={'codigo': row.codigo,
+                                 'descricao': row.descricao,
+                                 'data': dia,
+                                 'ativa': row.ativa,
+                                 'concluida': row.concluida,
+                                 'can_print': row.can_print,
+                                 'coleta': row.coleta,
+                                 })
+
+                    if row.concluida or not context['change_solicita']:
+                        context.update({
+                            'echo_codigo': row.codigo,
+                            'echo_descricao': row.descricao,
+                            'echo_data': row.data,
+                            'echo_ativa': row.ativa,
+                        })
+
+                    if row.concluida:
+                        self.hidden_field(context['form'], 'codigo')
+                        self.hidden_field(context['form'], 'descricao')
+                        self.hidden_field(context['form'], 'data')
+                        self.hidden_field(context['form'], 'ativa')
+                        if not context['reabre']:
+                            self.hidden_field(context['form'], 'concluida')
+                        if not context['libera_coleta']:
+                            self.hidden_field(context['form'], 'coleta')
+                    else:
+                        self.hidden_field(context['form'], 'can_print')
+                        self.hidden_field(context['form'], 'coleta')
+
+                    context.update(self.monta_hdata())
 
         if not self.id:
             context['filter'] = self.Filter_class()
