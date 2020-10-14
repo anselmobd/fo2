@@ -17,7 +17,8 @@ def posicao_get_item(cursor, periodo, ordem_confeccao):
         , l.PROCONF_ITEM COR
         , case
           when l.PROCONF_GRUPO <= '99999' then 'PA'
-          when l.PROCONF_GRUPO <= 'A9999' then 'PG'
+          when l.PROCONF_GRUPO < 'B0000' then 'PG'
+          when l.PROCONF_GRUPO < 'C0000' then 'PB'
           else 'MD'
           end TIPO
         FROM PCPC_040 l
