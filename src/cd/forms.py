@@ -152,7 +152,7 @@ class RetirarForm(forms.Form):
         lote = only_digits(self.cleaned_data.get('lote', ''))
 
         try:
-            self.lote_record = lotes.models.Lote.objects.get(lote=lote)
+            self.lote_object = lotes.models.Lote.objects.get(lote=lote)
         except lotes.models.Lote.DoesNotExist:
             raise forms.ValidationError("Lote não encontrado")
 

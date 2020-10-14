@@ -5,8 +5,6 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
 
-import lotes.models
-import lotes.queries
 from lotes.views.lote.conserto_lote import dict_conserto_lote
 
 import cd.forms
@@ -35,7 +33,7 @@ class Retirar(PermissionRequiredMixin, View):
         ordem_confeccao = lote[-5:]
         identificado = form.cleaned_data['identificado']
 
-        lote_rec = form.lote_record
+        lote_rec = form.lote_object
 
         endereco = lote_rec.local
         context.update({
