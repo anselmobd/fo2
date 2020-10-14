@@ -30,6 +30,24 @@ thead th
     <form action="{% url 'cd:solicitacoes' 'add' %}" method="post">
   {% endif %}
   {% csrf_token %}
+  {% if echo_codigo is not None %}
+    <p>Código: {{echo_codigo}}</p>
+  {% endif %}
+  {% if echo_descricao is not None %}
+    <p>Descrição: {{echo_descricao}}</p>
+  {% endif %}
+  {% if echo_data is not None %}
+    <p>Data do embarque: {{echo_data}}</p>
+  {% endif %}
+  {% if echo_ativa is not None %}
+    <p>Ativa para o usuário:
+      {% if echo_ativa %}
+        <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
+      {% else %}
+        <span class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
+      {% endif %}
+    </p>
+  {% endif %}
   {{ form.as_p }}
   {% if id %}
     <input type="submit" value="Grava"/>

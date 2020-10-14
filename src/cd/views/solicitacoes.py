@@ -201,6 +201,12 @@ class Solicitacoes(LoginRequiredMixin, View):
                             self.hidden_field(context['form'], 'descricao')
                             self.hidden_field(context['form'], 'data')
                             self.hidden_field(context['form'], 'ativa')
+                            context.update({
+                                'echo_codigo': row.codigo,
+                                'echo_descricao': row.descricao,
+                                'echo_data': row.data,
+                                'echo_ativa': row.ativa,
+                            })
                             if not context['reabre']:
                                 self.hidden_field(context['form'], 'concluida')
                             if not context['libera_coleta']:
