@@ -255,10 +255,12 @@ class Solicitacoes(LoginRequiredMixin, View):
             concluida = form.cleaned_data['concluida']
             if concluida:
                 ativa = False
+                can_print = form.cleaned_data['can_print']
+                coleta = form.cleaned_data['coleta']
             else:
                 ativa = form.cleaned_data['ativa']
-            can_print = form.cleaned_data['can_print']
-            coleta = form.cleaned_data['coleta']
+                can_print = False
+                coleta = False
             if ativa:
                 outras_ativas = self.SL.objects.filter(
                     usuario=request.user,
