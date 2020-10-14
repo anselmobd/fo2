@@ -156,6 +156,30 @@ class RetirarForm(forms.Form):
         except lotes.models.Lote.DoesNotExist:
             raise forms.ValidationError("Lote não encontrado")
 
+        slqs = lotes.models.SolicitaLoteQtd.objects.filter(
+            lote=self.lote_object
+        ).values(
+            'lote__lote',
+            'solicitacao__coleta',
+            'lote__qtd_produzir',
+        ).annotate(
+            qtdsum=Sum('qtd')
+        )
+
+        if len(slqs) == 0:
+            raise forms.ValidationError(
+                "Lote não consta em nenhuma solicitação")
+
+        slq = slqs[0]
+
+        if slq['qtdsum'] != slq['lote__qtd_produzir']:
+            raise forms.ValidationError(
+                "Solicitação não é de lote inteiro")
+
+        if not slq['solicitacao__coleta']:
+            raise forms.ValidationError(
+                "Coleta no CD não liberada")
+
         return lote
 
     def clean(self):
