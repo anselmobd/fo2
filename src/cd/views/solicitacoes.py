@@ -169,6 +169,9 @@ class Solicitacoes(LoginRequiredMixin, View):
             if self.id == 'add':
                 if has_permission(request, 'lotes.add_solicitalote'):
                     context['form'] = self.Form_class()
+                    self.hidden_field(context['form'], 'concluida')
+                    self.hidden_field(context['form'], 'can_print')
+                    self.hidden_field(context['form'], 'coleta')
                 else:
                     context['msg_erro'] = \
                         'Usuário não tem direito de criar solicitações.'
