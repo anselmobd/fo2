@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import connection, IntegrityError
 from django.shortcuts import render
@@ -142,12 +143,8 @@ class Solicitacoes(LoginRequiredMixin, View):
             'hdata': hdata,
         }
 
-    def disable_fields(self, form, fields, onoff):
-        for field in form.fields:
-            if field in fields:
-                form.fields[field].disabled = onoff
-            else:
-                form.fields[field].disabled = not onoff
+    def hidden_field(self, form, field):
+        form.fields[field].widget = forms.HiddenInput()
 
     def ini_context(self, request):
         return {
@@ -195,20 +192,19 @@ class Solicitacoes(LoginRequiredMixin, View):
                                      'can_print': row.can_print,
                                      'coleta': row.coleta,
                                      })
-                        self.disable_fields(
-                            context['form'],
-                            ['can_print', 'coleta'],
-                            not row.concluida,
-                        )
+
                         if row.concluida:
-                            context['form'].fields['concluida'].disabled = \
-                                not has_permission(
-                                    request,
-                                    'lotes.can_reabrir_solicitacao_completada')
-                            context['form'].fields['coleta'].disabled = \
-                                not has_permission(
-                                    request,
-                                    'lotes.libera_coleta_de_solicitacao')
+                            self.hidden_field(context['form'], 'codigo')
+                            self.hidden_field(context['form'], 'descricao')
+                            self.hidden_field(context['form'], 'data')
+                            self.hidden_field(context['form'], 'ativa')
+                            if not context['reabre']:
+                                self.hidden_field(context['form'], 'concluida')
+                            if not context['libera_coleta']:
+                                self.hidden_field(context['form'], 'coleta')
+                        else:
+                            self.hidden_field(context['form'], 'can_print')
+                            self.hidden_field(context['form'], 'coleta')
 
                         context.update(self.monta_hdata())
                 else:
