@@ -156,6 +156,12 @@ class RetirarForm(forms.Form):
         except lotes.models.Lote.DoesNotExist:
             raise forms.ValidationError("Lote não encontrado")
 
+        try:
+            self.op_object = lotes.models.Op.objects.get(
+                op=self.lote_object.op)
+        except lotes.models.Op.DoesNotExist:
+            raise forms.ValidationError("OP do lote não encontrada")
+
         slqs = lotes.models.SolicitaLoteQtd.objects.filter(
             lote=self.lote_object
         ).values(
@@ -167,6 +173,8 @@ class RetirarForm(forms.Form):
         )
 
         if len(slqs) == 0:
+            if self.op_object.pedido != 0:
+                    return lote
             raise forms.ValidationError(
                 "Lote não consta em nenhuma solicitação")
 
