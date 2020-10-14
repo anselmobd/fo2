@@ -35,11 +35,7 @@ class Retirar(PermissionRequiredMixin, View):
         ordem_confeccao = lote[-5:]
         identificado = form.cleaned_data['identificado']
 
-        try:
-            lote_rec = lotes.models.Lote.objects.get(lote=lote)
-        except lotes.models.Lote.DoesNotExist:
-            context.update({'erro': 'Lote não encontrado'})
-            return context
+        lote_rec = form.lote_record
 
         endereco = lote_rec.local
         context.update({
