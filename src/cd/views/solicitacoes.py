@@ -158,6 +158,8 @@ class Solicitacoes(LoginRequiredMixin, View):
                 request, 'lotes.change_solicitalote'),
             'libera_coleta': has_permission(
                 request, 'lotes.libera_coleta_de_solicitacao'),
+            'reabre': has_permission(
+                request, 'lotes.can_reabrir_solicitacao_completada'),
         }
 
     def get(self, request, *args, **kwargs):
