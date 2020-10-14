@@ -77,9 +77,13 @@
     </div>
     <div class="col-md-6" align="right">
       {% if solicit_ativa_cod %}
-        Solicitação ativa para o usuário: <a href="{% url 'cd:solicitacao_detalhe' solicit_ativa_id %}" target="_blank">{{solicit_ativa_cod}}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+        {% if solicit_ativa_cod == '=' %}
+          Esta é a solicitação ativa para o usuário
+        {% else %}
+          Solicitação ativa para o usuário: <a href="{% url 'cd:solicitacao_detalhe' solicit_ativa_id %}" target="_blank">{{solicit_ativa_cod}}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+        {% endif %}
       {% else %}
-        Esta é a solicitação ativa para o usuário
+        Não há solicitação ativa para o usuário
       {% endif %}
     </div>
   </div>

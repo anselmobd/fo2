@@ -54,6 +54,8 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
             if solicit_ativa_id != solicit_id:
                 context['solicit_ativa_cod'] = solicit_ativa_cod
                 context['solicit_ativa_id'] = solicit_ativa_id
+            else:
+                context['solicit_ativa_cod'] = '='
 
         context['solicitacao'] = solicitacao
 
