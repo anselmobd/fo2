@@ -1,7 +1,7 @@
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import connection
+from django.db import connection, IntegrityError
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -313,5 +313,5 @@ class Solicitacoes(LoginRequiredMixin, View):
             context['filter'] = self.Filter_class()
             context.update(self.lista())
         else:
-            self.context['form'] = form
+            context['form'] = form
         return render(request, self.template_name, context)
