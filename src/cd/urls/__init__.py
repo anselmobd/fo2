@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import include, url
 
 import cd.views as views
 
@@ -53,8 +53,6 @@ urlpatterns = [
         '(?P<lote>[^/]+)/(?P<qtd>[^/]+)/$',
         views.solicita_lote, name='solicita_lote'),
 
-    url(r'^mapa/$', views.Mapa.as_view(), name='mapa'),
-
     url(r'^endereco_lote/(?P<lote>[^/]+)?$', views.EnderecoLote.as_view(),
         name='endereco_lote'),
 
@@ -100,5 +98,7 @@ urlpatterns = [
         views.TrocaEndereco.as_view(), name='troca_endereco'),
     url(r'^troca_endereco/m/$',
         views.TrocaEnderecoMobile.as_view(), name='troca_endereco_m'),
+
+    url(r'^mapa/', include('cd.urls.mapa', namespace='mapa')),
 
 ]
