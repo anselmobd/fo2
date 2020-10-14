@@ -35,9 +35,6 @@ class Retirar(PermissionRequiredMixin, View):
         ordem_confeccao = lote[-5:]
         identificado = form.cleaned_data['identificado']
 
-        lote_sys = lotes.queries.lote.posicao_get_item(
-            cursor, periodo, ordem_confeccao)
-
         try:
             lote_rec = lotes.models.Lote.objects.get(lote=lote)
         except lotes.models.Lote.DoesNotExist:

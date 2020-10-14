@@ -33,9 +33,6 @@ class Enderecar(PermissionRequiredMixin, View):
 
         context = {'endereco': endereco}
 
-        lote_sys = lotes.queries.lote.posicao_get_item(
-            cursor, periodo, ordem_confeccao)
-
         lote_rec = lotes.models.Lote.objects.get(lote=lote)
         qtd_livre = lote_rec.qtd - lote_rec.conserto
 
