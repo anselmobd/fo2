@@ -193,6 +193,20 @@ class Command(BaseCommand):
         except Exception as e:
             return False
 
+    def existe_col(self, cursor, table, column):
+        try:
+            sql = f'''
+                select
+                    column_name
+                from user_tab_cols
+                where table_name = '{table}'
+                  and column_name = '{column}'
+            '''
+            data = list(cursor.execute(sql))
+            return data[0][0] == column
+        except Exception as e:
+            return False
+
     def verifica_seq(self):
         cursor_vs = connections['so'].cursor()
         return self.existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
