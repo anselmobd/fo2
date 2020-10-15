@@ -40,15 +40,16 @@ class Command(BaseCommand):
             SELECT
               lo.ORDEM_PRODUCAO op
             , sum(
-                ( 1
-                + lo.QTDE_PECAS_PROG * 2
-                + lo.QTDE_EM_PRODUCAO_PACOTE * 3
-                + lo.QTDE_PECAS_PROD * 5
-                + lo.QTDE_DISPONIVEL_BAIXA * 7
-                + lo.QTDE_CONSERTO * 11
+                (
+                  (lo.QTDE_PECAS_PROG + 1) * 2
+                + (lo.QTDE_EM_PRODUCAO_PACOTE + 1) * 3
+                + (lo.QTDE_PECAS_PROD + 1) * 5
+                + (lo.QTDE_DISPONIVEL_BAIXA + 1) * 7
+                + (lo.QTDE_CONSERTO + 1) * 11
+                + (lo.CODIGO_ESTAGIO + 1) * 13
+                + (op.ORDEM_PRODUCAO + 1)
                 )
-              * (1 + lo.CODIGO_ESTAGIO)
-              * (1 + mod(lo.ORDEM_CONFECCAO, 111))
+                * (lo.ORDEM_CONFECCAO + 1)
               ) trail
             FROM PCPC_040 lo -- lote estágio
             JOIN PCPC_020 op -- OP capa
