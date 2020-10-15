@@ -166,7 +166,7 @@ class RetirarForm(forms.Form):
             lote=self.lote_object
         ).values(
             'solicitacao__coleta',
-            'lote__conserto',
+            'lote__qtd',
         ).annotate(
             qtdsum=Sum('qtd')
         )
@@ -178,9 +178,9 @@ class RetirarForm(forms.Form):
                 "Lote não consta em nenhuma solicitação")
 
         slq = slqs[0]
-        if slq['qtdsum'] != slq['lote__conserto']:
+        if slq['qtdsum'] != slq['lote__qtd']:
             raise forms.ValidationError(
-                "Solicitação não é de total endereçado")
+                "Solicitação não é de total disponível")
 
         if not slq['solicitacao__coleta']:
             raise forms.ValidationError(
