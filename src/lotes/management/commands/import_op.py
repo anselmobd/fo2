@@ -198,10 +198,11 @@ class Command(BaseCommand):
         return self.existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
     def verificacoes(self):
-        if self.verifica_seq():
-            self.my_println('Banco tem sequência')
-        else:
-            self.my_println('Banco não tem sequência')
+        self.my_println(
+            'Banco tem sequência'
+            if self.verifica_seq()
+            else 'Banco não tem sequência'
+        )
 
     def handle(self, *args, **options):
         self.my_println('---')
