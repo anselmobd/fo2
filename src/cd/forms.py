@@ -458,7 +458,6 @@ class SolicitacaoForm(forms.Form):
 class FiltraSolicitacaoForm(forms.Form):
     filtro = forms.CharField(
         max_length=20, min_length=1, required=False,
-        help_text='(Filtra palavras em campos texto)',
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     data = forms.DateField(
         label='Data do embarque', required=False,
