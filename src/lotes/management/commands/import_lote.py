@@ -47,9 +47,9 @@ class Command(BaseCommand):
                 + (lo.QTDE_DISPONIVEL_BAIXA + 1) * 7
                 + (lo.QTDE_CONSERTO + 1) * 11
                 + (lo.CODIGO_ESTAGIO + 1) * 13
-                + (op.ORDEM_PRODUCAO + 1)
+                + (MOD(op.ORDEM_PRODUCAO, 1000) + 1)
                 )
-                * (lo.ORDEM_CONFECCAO + 1)
+                * (MOD(lo.ORDEM_CONFECCAO, 1000) + 1)
               ) trail
             FROM PCPC_040 lo -- lote estágio
             JOIN PCPC_020 op -- OP capa
@@ -133,15 +133,16 @@ class Command(BaseCommand):
               , max(le.CODIGO_ESTAGIO) ULTIMO_ESTAGIO
               , max(le.SEQUENCIA_ESTAGIO) ULTIMA_SEQ_ESTAGIO
               , sum(
-                  ( 1
-                  + le.QTDE_PECAS_PROG * 2
-                  + le.QTDE_EM_PRODUCAO_PACOTE * 3
-                  + le.QTDE_PECAS_PROD * 5
-                  + le.QTDE_DISPONIVEL_BAIXA * 7
-                  + le.QTDE_CONSERTO * 11
+                  (
+                    (lo.QTDE_PECAS_PROG + 1) * 2
+                  + (lo.QTDE_EM_PRODUCAO_PACOTE + 1) * 3
+                  + (lo.QTDE_PECAS_PROD + 1) * 5
+                  + (lo.QTDE_DISPONIVEL_BAIXA + 1) * 7
+                  + (lo.QTDE_CONSERTO + 1) * 11
+                  + (lo.CODIGO_ESTAGIO + 1) * 13
+                  + (MOD(op.ORDEM_PRODUCAO, 1000) + 1)
                   )
-                * (1 + le.CODIGO_ESTAGIO)
-                * (1 + mod(le.ORDEM_CONFECCAO, 111))
+                  * (MOD(lo.ORDEM_CONFECCAO, 1000) + 1)
                 ) trail
               FROM PCPC_040 le -- lote estágio
               LEFT JOIN BASI_220 t
