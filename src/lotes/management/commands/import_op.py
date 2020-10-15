@@ -190,10 +190,35 @@ class Command(BaseCommand):
                     self.atualiza_op.append(row_s)
                     count_task += 1
 
+    def verifica_seq(self):
+        try:
+            cursor_vs = connections['so'].cursor()
+            sql = '''
+                SELECT
+                  s.*
+                FROM ALL_SEQUENCES s
+                WHERE 1=1
+                  AND s.SEQUENCE_OWNER = 'SYSTEXTIL'
+                  AND s.SEQUENCE_NAME = 'FO2_TUSSOR'
+            '''
+            cursor_vs.execute(sql)
+            data_vs = self.data_cursor(self.iter_cursor(cursor_vs))
+            return data_vs[0]['sequence_name'] == 'FO2_TUSSOR'
+        except Exception as e:
+            return False
+
+    def verificacoes(self):
+        if self.verifica_seq():
+            self.my_println('Utiliza sequência')
+        else:
+            self.my_println('Não utiliza sequência')
+
     def handle(self, *args, **options):
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
         try:
+
+            self.verificacoes()
 
             # pega OPs no Systêxtil
             ics = self.get_ops_s()
