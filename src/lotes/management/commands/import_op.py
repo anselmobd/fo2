@@ -211,11 +211,20 @@ class Command(BaseCommand):
         cursor_vs = connections['so'].cursor()
         return self.existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
+    def verifica_column(self):
+        cursor_vs = connections['so'].cursor()
+        return self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SEQ')
+
     def verificacoes(self):
         self.my_println(
             'Banco tem sequência'
             if self.verifica_seq()
             else 'Banco não tem sequência'
+        )
+        self.my_println(
+            'Tabela tem coluna'
+            if self.verifica_column()
+            else 'Tabela não tem coluna'
         )
 
     def handle(self, *args, **options):
