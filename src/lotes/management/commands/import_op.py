@@ -178,22 +178,24 @@ class Command(BaseCommand):
                     self.atualiza_op.append(row_s)
                     count_task += 1
 
-    def verifica_seq(self):
+    def existe_seq(self, cursor, owner, name):
         try:
-            cursor_vs = connections['so'].cursor()
-            sql = '''
+            sql = f'''
                 SELECT
-                  s.*
+                  s.SEQUENCE_NAME
                 FROM ALL_SEQUENCES s
                 WHERE 1=1
-                  AND s.SEQUENCE_OWNER = 'SYSTEXTIL'
-                  AND s.SEQUENCE_NAME = 'FO2_TUSSOR'
+                  AND s.SEQUENCE_OWNER = '{owner}'
+                  AND s.SEQUENCE_NAME = '{name}'
             '''
-            cursor_vs.execute(sql)
-            data_vs = self.data_cursor(self.iter_cursor(cursor_vs))
-            return data_vs[0]['sequence_name'] == 'FO2_TUSSOR'
+            data = list(cursor.execute(sql))
+            return data[0][0] == name
         except Exception as e:
             return False
+
+    def verifica_seq(self):
+        cursor_vs = connections['so'].cursor()
+        return self.existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
     def verificacoes(self):
         if self.verifica_seq():
