@@ -60,20 +60,8 @@ class Command(BaseCommand):
         return self.iter_cursor(cursor_s)
 
     def get_ops_f(self):
-        cursor_f = connection.cursor()
-        sql = '''
-            SELECT
-              o.op
-            , o.pedido
-            , o.varejo
-            , o.cancelada
-            , o.deposito
-            from fo2_prod_op o
-            order by
-              o.op
-        '''
-        cursor_f.execute(sql)
-        return self.iter_cursor(cursor_f)
+        ops_f = models.Op.objects.all()
+        return iter(ops_f.order_by('op').values())
 
     def set_op(self, op, row):
         alter = False
