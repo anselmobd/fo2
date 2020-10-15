@@ -209,9 +209,9 @@ class Command(BaseCommand):
 
     def verificacoes(self):
         if self.verifica_seq():
-            self.my_println('Utiliza sequência')
+            self.my_println('Banco tem sequência')
         else:
-            self.my_println('Não utiliza sequência')
+            self.my_println('Banco não tem sequência')
 
     def handle(self, *args, **options):
         self.my_println('---')
