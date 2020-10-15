@@ -33,6 +33,12 @@ class Command(BaseCommand):
             dict_row = dict(zip(columns, row))
             yield dict_row
 
+    def data_cursor(self, iter):
+        data = []
+        for row in iter:
+            data.append(row)
+        return data
+
     def get_ops_s(self):
         cursor_s = connections['so'].cursor()
         sql = '''
