@@ -197,8 +197,7 @@ class Command(BaseCommand):
                 SELECT
                   s.SEQUENCE_NAME
                 FROM ALL_SEQUENCES s
-                WHERE 1=1
-                  AND s.SEQUENCE_OWNER = '{owner}'
+                WHERE s.SEQUENCE_OWNER = '{owner}'
                   AND s.SEQUENCE_NAME = '{name}'
             '''
             data = list(cursor.execute(sql))
