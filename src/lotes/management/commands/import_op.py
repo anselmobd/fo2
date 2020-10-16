@@ -224,6 +224,21 @@ class Command(BaseCommand):
         except Exception as e:
             return False
 
+    def existe_table(self, cursor, owner, name):
+        try:
+            sql = f'''
+                SELECT
+                  t.TABLE_NAME
+                FROM ALL_TABLES t
+                WHERE 1=1
+                  AND t.OWNER = '{owner}'
+                  AND t.TABLE_NAME = '{name}'
+            '''
+            data = list(cursor.execute(sql))
+            return data[0][0] == name
+        except Exception as e:
+            return False
+
     def existe_trigger(self, cursor, owner, name, table):
         try:
             sql = f'''
@@ -259,6 +274,10 @@ class Command(BaseCommand):
         cursor_vs = connections['so'].cursor()
         return self.existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
+    def verifica_table(self):
+        cursor_vs = connections['so'].cursor()
+        return self.existe_table(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR_SYNC_DEL')
+
     def verifica_column(self):
         cursor_vs = connections['so'].cursor()
         return (
@@ -280,6 +299,19 @@ class Command(BaseCommand):
             'Banco tem sequência'
             if self.verifica_seq()
             else 'Banco não tem sequência'
+        )
+
+        # CREATE TABLE SYSTEXTIL.FO2_TUSSOR_SYNC_DEL (
+        #   TABELA VARCHAR2(100),
+        #   SYNC_ID INTEGER,
+        #   QUANDO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        # )
+        # TABLESPACE SYSTEXTIL_DADOS;
+
+        self.my_println(
+            'Banco tem tabela de deleção'
+            if self.verifica_table()
+            else 'Banco não tem tabela de deleção'
         )
 
         # ALTER TABLE SYSTEXTIL.PCPC_020 ADD FO2_TUSSOR_ID INTEGER;
