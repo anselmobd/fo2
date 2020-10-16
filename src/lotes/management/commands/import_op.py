@@ -39,7 +39,7 @@ class Command(BaseCommand):
             data.append(row)
         return data
 
-    def get_ops_s(self):
+    def get_ops_s(self, last_f_seq=None):
         cursor_s = connections['so'].cursor()
         sql = '''
             SELECT
@@ -60,6 +60,12 @@ class Command(BaseCommand):
             '''
         sql += ''' --
             FROM PCPC_020 o -- OP capa
+            '''
+        if last_f_seq is not None:
+            sql += f''' --
+                WHERE o.FO2_TUSSOR_SYNC > {last_f_seq}
+            '''
+        sql += ''' --
             ORDER BY
               o.ORDEM_PRODUCAO
         '''
