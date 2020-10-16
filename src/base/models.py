@@ -165,3 +165,14 @@ class SyncDelTable(models.Model):
         db_table = "fo2_sync_del_table"
         verbose_name = "Sincronização de deleção - Tabela"
 
+
+class SyncDel(models.Model):
+    tabela = models.ForeignKey(SyncDelTable, on_delete=models.PROTECT)
+    sync_id = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.tabela}#{self.sync_id}'
+
+    class Meta:
+        db_table = "fo2_sync_del"
+        verbose_name = "Sincronização de deleção"
