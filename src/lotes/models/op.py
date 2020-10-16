@@ -12,6 +12,7 @@ class Op(models.Model):
     varejo = models.BooleanField(default=False)
     cancelada = models.BooleanField(default=False)
     deposito = models.IntegerField(default=-1)
+    sync_id = models.IntegerField(default=-1)
     sync = models.IntegerField(default=-1)
 
     class Meta:
