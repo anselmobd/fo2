@@ -55,6 +55,7 @@ class Command(BaseCommand):
         '''
         if self.tem_col_sync:
             sql += ''' --
+                , o.FO2_TUSSOR_ID sync_id
                 , o.FO2_TUSSOR_SYNC sync
             '''
         sql += ''' --
@@ -90,6 +91,9 @@ class Command(BaseCommand):
             if op.sync != row['sync']:
                 alter = True
                 op.sync = row['sync']
+            if op.sync_id != row['sync_id']:
+                alter = True
+                op.sync_id = row['sync_id']
         return alter
 
     def inclui(self, row):
@@ -146,9 +150,11 @@ class Command(BaseCommand):
             igual = (row_s['cancelada'] != 0) == row_f['cancelada']
         if igual:
             igual = row_s['deposito'] == row_f['deposito']
-        if igual:
-            if self.tem_col_sync:
+        if self.tem_col_sync:
+            if igual:
                 igual = row_s['sync'] == row_f['sync']
+            if igual:
+                igual = row_s['sync_id'] == row_f['sync_id']
         return igual
 
     def get_tasks(self, ics, icf):
@@ -242,7 +248,11 @@ class Command(BaseCommand):
 
     def verifica_column(self):
         cursor_vs = connections['so'].cursor()
-        return self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SYNC')
+        return (
+            self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SYNC')
+            and
+            self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_ID')
+        )
 
     def verifica_trigger(self):
         cursor_vs = connections['so'].cursor()
@@ -259,6 +269,7 @@ class Command(BaseCommand):
             else 'Banco não tem sequência'
         )
 
+        # ALTER TABLE SYSTEXTIL.PCPC_020 ADD FO2_TUSSOR_ID INTEGER;
         # ALTER TABLE SYSTEXTIL.PCPC_020 ADD FO2_TUSSOR_SYNC INTEGER;
         # COMMIT;
 
@@ -267,11 +278,17 @@ class Command(BaseCommand):
         # WHERE FO2_TUSSOR_SYNC IS NULL;
         # COMMIT;
 
+        # UPDATE SYSTEXTIL.PCPC_020
+        # SET FO2_TUSSOR_ID = FO2_TUSSOR_SYNC
+        # WHERE FO2_TUSSOR_ID IS NULL
+        #   AND FO2_TUSSOR_SYNC IS NOT NULL;
+        # COMMIT;
+
         self.tem_col_sync = self.verifica_column()
         self.my_println(
-            'Tabela tem coluna'
+            'Tabela tem colunas'
             if self.tem_col_sync
-            else 'Tabela não tem coluna'
+            else 'Tabela não tem colunas'
         )
 
         # CREATE OR REPLACE TRIGGER SYSTEXTIL.TUSSOR_TR_PCPC_020_SYNC
