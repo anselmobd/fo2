@@ -213,14 +213,26 @@ class Command(BaseCommand):
 
     def verifica_column(self):
         cursor_vs = connections['so'].cursor()
-        return self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SEQ')
+        return self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SYNC')
 
     def verificacoes(self):
+        # CREATE SEQUENCE SYSTEXTIL.FO2_TUSSOR INCREMENT BY 1 MINVALUE 1
+        # NOCYCLE CACHE 1000 NOORDER;
+        # COMMIT;
         self.my_println(
             'Banco tem sequência'
             if self.verifica_seq()
             else 'Banco não tem sequência'
         )
+
+        # ALTER TABLE SYSTEXTIL.PCPC_020 ADD FO2_TUSSOR_SYNC INTEGER;
+        # COMMIT;
+
+        # UPDATE SYSTEXTIL.PCPC_020
+        # SET FO2_TUSSOR_SYNC = SYSTEXTIL.FO2_TUSSOR.nextval
+        # WHERE FO2_TUSSOR_SYNC IS NULL;
+        # COMMIT;
+
         self.my_println(
             'Tabela tem coluna'
             if self.verifica_column()
