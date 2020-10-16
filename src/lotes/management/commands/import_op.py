@@ -285,10 +285,11 @@ class Command(BaseCommand):
         #   :new.FO2_TUSSOR_SYNC := v_sync;
         # END TUSSOR_TR_PCPC_020_SYNC;
 
+        self.tem_trigger = self.verifica_trigger()
         self.my_println(
-            'Banco tem trigger'
-            if self.verifica_trigger()
-            else 'Banco não tem trigger'
+            'Tabela tem trigger'
+            if self.tem_trigger
+            else 'Tabela não tem trigger'
         )
 
     def handle(self, *args, **options):
