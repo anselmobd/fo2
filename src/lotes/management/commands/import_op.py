@@ -205,6 +205,22 @@ class Command(BaseCommand):
         except Exception as e:
             return False
 
+    def existe_trigger(self, cursor, owner, name, table):
+        try:
+            sql = f'''
+                SELECT
+                  t.TRIGGER_NAME
+                FROM ALL_TRIGGERS t
+                WHERE 1=1
+                  AND t.OWNER = '{owner}'
+                  AND t.TRIGGER_NAME = '{name}'
+                  AND t.TABLE_NAME = '{table}'
+            '''
+            data = list(cursor.execute(sql))
+            return data[0][0] == name
+        except Exception as e:
+            return False
+
     def existe_col(self, cursor, table, column):
         try:
             sql = f'''
@@ -226,6 +242,11 @@ class Command(BaseCommand):
     def verifica_column(self):
         cursor_vs = connections['so'].cursor()
         return self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SYNC')
+
+    def verifica_trigger(self):
+        cursor_vs = connections['so'].cursor()
+        return self.existe_trigger(
+            cursor_vs, 'SYSTEXTIL', 'TUSSOR_TR_PCPC_020_SYNC', 'PCPC_020')
 
     def verificacoes(self):
         # CREATE SEQUENCE SYSTEXTIL.FO2_TUSSOR INCREMENT BY 1 MINVALUE 1
@@ -250,6 +271,23 @@ class Command(BaseCommand):
             'Tabela tem coluna'
             if self.tem_col_sync
             else 'Tabela não tem coluna'
+        )
+
+        # CREATE OR REPLACE TRIGGER SYSTEXTIL.TUSSOR_TR_PCPC_020_SYNC
+        #   BEFORE INSERT OR UPDATE
+        #   ON SYSTEXTIL.PCPC_020
+        #   FOR EACH ROW
+        # DECLARE
+        #   v_sync SYSTEXTIL.PCPC_020.FO2_TUSSOR_SYNC%TYPE;
+        # BEGIN
+        #   SELECT SYSTEXTIL.FO2_TUSSOR.nextval INTO v_sync FROM DUAL;
+        #   :new.FO2_TUSSOR_SYNC := v_sync;
+        # END TUSSOR_TR_PCPC_020_SYNC;
+
+        self.my_println(
+            'Banco tem trigger'
+            if self.verifica_trigger()
+            else 'Banco não tem trigger'
         )
 
     def handle(self, *args, **options):
