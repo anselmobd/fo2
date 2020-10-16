@@ -70,6 +70,13 @@ class Command(BaseCommand):
         ops_f = models.Op.objects.all()
         return iter(ops_f.order_by('op').values())
 
+    def get_last_f_seq(self):
+        try:
+            return models.Op.objects.all().order_by('-sync').values(
+                'sync')[0]['sync']
+        except Exception as e:
+            return -1
+
     def set_op(self, op, row):
         alter = False
         if op.op != row['op']:
@@ -318,6 +325,10 @@ class Command(BaseCommand):
 
             # pega OPs no Systêxtil
             ics = self.get_ops_s()
+            if self.tem_trigger:
+                self.last_f_seq = self.get_last_f_seq()
+                self.my_print('last_f_seq ')
+                self.my_pprintln(self.last_f_seq)
 
             # pega OPs no Fo2
             icf = self.get_ops_f()
