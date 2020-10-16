@@ -329,17 +329,27 @@ class Command(BaseCommand):
 
             self.verificacoes()
 
-            # pega OPs no Systêxtil
-            ics = self.get_ops_s()
             if self.tem_trigger:
                 self.last_f_seq = self.get_last_f_seq()
                 self.my_print('last_f_seq ')
                 self.my_pprintln(self.last_f_seq)
 
-            # pega OPs no Fo2
-            icf = self.get_ops_f()
+                # pega OPs no Systêxtil
+                ics = self.get_ops_s(self.last_f_seq)
 
-            self.get_tasks(ics, icf)
+                data = self.data_cursor(ics)
+                self.my_pprintln(data)
+
+                self.init_tasks()
+
+            else:
+                # pega OPs no Systêxtil
+                ics = self.get_ops_s()
+
+                # pega OPs no Fo2
+                icf = self.get_ops_f()
+
+                self.get_tasks(ics, icf)
 
             self.exec_tasks()
 
