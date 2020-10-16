@@ -215,6 +215,7 @@ class Command(BaseCommand):
                   AND t.OWNER = '{owner}'
                   AND t.TRIGGER_NAME = '{name}'
                   AND t.TABLE_NAME = '{table}'
+                  AND t.STATUS = 'ENABLED'
             '''
             data = list(cursor.execute(sql))
             return data[0][0] == name
