@@ -153,3 +153,15 @@ class Tamanho(models.Model):
     class Meta:
         db_table = "fo2_tamanho"
         verbose_name = "Tamanho"
+
+
+class SyncDelTable(models.Model):
+    nome = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = "fo2_sync_del_table"
+        verbose_name = "Sincronização de deleção - Tabela"
+
