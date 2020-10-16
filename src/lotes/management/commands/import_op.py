@@ -361,7 +361,7 @@ class Command(BaseCommand):
 
             self.verificacoes()
 
-            if self.tem_trigger:
+            if self.tem_trigger and 1 == 2:
                 self.last_f_seq = self.get_last_f_seq()
                 self.my_print('last_f_seq ')
                 self.my_pprintln(self.last_f_seq)
