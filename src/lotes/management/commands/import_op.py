@@ -52,6 +52,12 @@ class Command(BaseCommand):
               else 0 -- == 0 equivalia a "não cancelada"
               end cancelada
             , o.DEPOSITO_ENTRADA deposito
+        '''
+        if self.tem_col_sync:
+            sql += ''' --
+                , o.FO2_TUSSOR_SYNC sync
+            '''
+        sql += ''' --
             FROM PCPC_020 o -- OP capa
             ORDER BY
               o.ORDEM_PRODUCAO
@@ -80,6 +86,10 @@ class Command(BaseCommand):
         if op.deposito != row['deposito']:
             alter = True
             op.deposito = row['deposito']
+        if self.tem_col_sync:
+            if op.sync != row['sync']:
+                alter = True
+                op.sync = row['sync']
         return alter
 
     def inclui(self, row):
@@ -136,6 +146,9 @@ class Command(BaseCommand):
             igual = (row_s['cancelada'] != 0) == row_f['cancelada']
         if igual:
             igual = row_s['deposito'] == row_f['deposito']
+        if igual:
+            if self.tem_col_sync:
+                igual = row_s['sync'] == row_f['sync']
         return igual
 
     def get_tasks(self, ics, icf):
@@ -233,9 +246,10 @@ class Command(BaseCommand):
         # WHERE FO2_TUSSOR_SYNC IS NULL;
         # COMMIT;
 
+        self.tem_col_sync = self.verifica_column()
         self.my_println(
             'Tabela tem coluna'
-            if self.verifica_column()
+            if self.tem_col_sync
             else 'Tabela não tem coluna'
         )
 
