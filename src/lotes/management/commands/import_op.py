@@ -74,7 +74,7 @@ class Command(BaseCommand):
         cursor_s.execute(sql)
         return self.iter_cursor(cursor_s)
 
-    def get_ops_s_del(self, last_id):
+    def get_ops_s_del(self, tabela, last_id):
         cursor_s = connections['so'].cursor()
         sql = f'''
             SELECT
@@ -82,7 +82,7 @@ class Command(BaseCommand):
             , d.TABELA
             , d.SYNC_ID
             FROM SYSTEXTIL.FO2_TUSSOR_SYNC_DEL d
-            WHERE d.TABELA = 'PCPC_020'
+            WHERE d.TABELA = '{tabela}'
               AND d.ID > {last_id}
             ORDER BY
               d.SYNC_ID
@@ -470,7 +470,7 @@ class Command(BaseCommand):
                 data = self.data_cursor(ics)
                 self.my_pprintln(data)
 
-                icsd = self.get_ops_s_del(self.last_sync_del)
+                icsd = self.get_ops_s_del('PCPC_020', self.last_sync_del)
 
                 # datad = self.data_cursor(icsd)
                 # self.my_pprintln(datad)
