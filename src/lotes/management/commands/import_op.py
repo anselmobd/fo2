@@ -5,7 +5,9 @@ from pprint import pprint, pformat
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection, connections
 
+import base.models
 from utils.functions.models import rows_to_dict_list_lower
+
 import lotes.models as models
 
 
@@ -39,7 +41,7 @@ class Command(BaseCommand):
             data.append(row)
         return data
 
-    def get_ops_s(self, last_f_seq=None):
+    def get_ops_s(self, last_sync=None):
         cursor_s = connections['so'].cursor()
         sql = '''
             SELECT
@@ -61,9 +63,9 @@ class Command(BaseCommand):
         sql += ''' --
             FROM PCPC_020 o -- OP capa
             '''
-        if last_f_seq is not None:
+        if last_sync is not None:
             sql += f''' --
-                WHERE o.FO2_TUSSOR_SYNC > {last_f_seq}
+                WHERE o.FO2_TUSSOR_SYNC > {last_sync}
             '''
         sql += ''' --
             ORDER BY
@@ -76,12 +78,20 @@ class Command(BaseCommand):
         ops_f = models.Op.objects.all()
         return iter(ops_f.order_by('op').values())
 
-    def get_last_f_seq(self):
+    def get_last_sync_ids(self):
         try:
-            return models.Op.objects.all().order_by('-sync').values(
+            last_sync = models.Op.objects.all().order_by('-sync').values(
                 'sync')[0]['sync']
         except Exception as e:
-            return -1
+            last_sync = -1
+
+        try:
+            last_sync_del = base.models.SyncDelTable.objects.all().order_by(
+                '-id').values('id')[0]['id']
+        except Exception as e:
+            last_sync_del = -1
+
+        return last_sync, last_sync_del
 
     def set_op(self, op, row):
         alter = False
@@ -336,6 +346,12 @@ class Command(BaseCommand):
         # ALTER TABLE SYSTEXTIL.PCPC_020 ADD FO2_TUSSOR_ID INTEGER;
         # ALTER TABLE SYSTEXTIL.PCPC_020 ADD FO2_TUSSOR_SYNC INTEGER;
         # COMMIT;
+        # COMMENT ON COLUMN SYSTEXTIL.PCPC_020.FO2_TUSSOR_SYNC IS
+        # 'Campo específico da Tussor: flag de alteração';
+        # COMMENT ON COLUMN SYSTEXTIL.PCPC_020.FO2_TUSSOR_ID IS
+        # 'Campo específico da Tussor: id imutável';
+
+        # após a criação das triggers, acerta os registros anteriores à trigger
 
         # UPDATE SYSTEXTIL.PCPC_020
         # SET FO2_TUSSOR_SYNC = SYSTEXTIL.FO2_TUSSOR.nextval
@@ -374,6 +390,8 @@ class Command(BaseCommand):
         #   SELECT SYSTEXTIL.FO2_TUSSOR.nextval INTO v_sync FROM DUAL;
         #   IF INSERTING THEN
         #     :new.FO2_TUSSOR_ID := v_sync;
+        #   ELSE
+        #     :new.FO2_TUSSOR_ID := :old.FO2_TUSSOR_ID;
         #   END IF;
         #   :new.FO2_TUSSOR_SYNC := v_sync;
         # END TUSSOR_TR_PCPC_020_SYNC
@@ -401,13 +419,15 @@ class Command(BaseCommand):
 
             self.verificacoes()
 
-            if self.tem_trigger and 1 == 2:
-                self.last_f_seq = self.get_last_f_seq()
-                self.my_print('last_f_seq ')
-                self.my_pprintln(self.last_f_seq)
+            if self.tem_trigger and 1 == 1:
+                self.last_sync, self.last_sync_del = self.get_last_sync_ids()
+                self.my_pprintln(
+                    f'last_sync {self.last_sync} '
+                    f'last_sync_del {self.last_sync_del}'
+                )
 
                 # pega OPs no Systêxtil
-                ics = self.get_ops_s(self.last_f_seq)
+                ics = self.get_ops_s(self.last_sync)
 
                 data = self.data_cursor(ics)
                 self.my_pprintln(data)
