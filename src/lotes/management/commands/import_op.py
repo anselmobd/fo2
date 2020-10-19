@@ -74,6 +74,22 @@ class Command(BaseCommand):
         cursor_s.execute(sql)
         return self.iter_cursor(cursor_s)
 
+    def get_ops_s_del(self, last_id):
+        cursor_s = connections['so'].cursor()
+        sql = f'''
+            SELECT
+              d.ID
+            , d.TABELA
+            , d.SYNC_ID
+            FROM SYSTEXTIL.FO2_TUSSOR_SYNC_DEL d
+            WHERE d.TABELA = 'PCPC_020'
+              AND d.ID > {last_id}
+            ORDER BY
+              d.SYNC_ID
+        '''
+        cursor_s.execute(sql)
+        return self.iter_cursor(cursor_s)
+
     def get_ops_f(self):
         ops_f = models.Op.objects.all()
         return iter(ops_f.order_by('op').values())
@@ -147,10 +163,22 @@ class Command(BaseCommand):
             self.my_println('OP {} não encontrada em Fo2'.format(op))
             return
 
+    def exclui_sync_id(self, sync_id):
+        self.my_println(f'Excluindo OP por sync_id {sync_id}')
+        try:
+            op = models.Op.objects.get(sync_id=sync_id)
+            op.delete()
+            self.my_println(f'Excluida OP {op}')
+            base.models.SyncDel()
+        except models.Op.DoesNotExist:
+            self.my_println(f'OP com sync_id {sync_id} não encontrada em Fo2')
+            return
+
     def init_tasks(self):
         self.inclui_op = []
         self.atualiza_op = []
         self.exclui_op = []
+        self.exclui_op_sync_id = []
 
     def exec_tasks(self):
         if len(self.inclui_op) != 0:
@@ -164,6 +192,10 @@ class Command(BaseCommand):
         if len(self.exclui_op) != 0:
             for op in self.exclui_op:
                 self.exclui(op)
+
+        if len(self.exclui_op_sync_id) != 0:
+            for sync_id in self.exclui_op_sync_id:
+                self.exclui_sync_id(sync_id)
 
     def iguais(self, row_s, row_f):
         igual = row_s['pedido'] == row_f['pedido']
@@ -179,6 +211,12 @@ class Command(BaseCommand):
             if igual:
                 igual = row_s['sync_id'] == row_f['sync_id']
         return igual
+
+    def get_tasks_sync(self, ics, icsd):
+        self.init_tasks()
+
+        for row in icsd:
+            self.exclui_op_sync_id.append(row['sync_id'])
 
     def get_tasks(self, ics, icf):
         op_s = -1
@@ -419,7 +457,7 @@ class Command(BaseCommand):
 
             self.verificacoes()
 
-            if self.tem_trigger and 1 == 1:
+            if self.tem_trigger and 1 == 2:
                 self.last_sync, self.last_sync_del = self.get_last_sync_ids()
                 self.my_pprintln(
                     f'last_sync {self.last_sync} '
@@ -432,7 +470,12 @@ class Command(BaseCommand):
                 data = self.data_cursor(ics)
                 self.my_pprintln(data)
 
-                self.init_tasks()
+                icsd = self.get_ops_s_del(self.last_sync_del)
+
+                # datad = self.data_cursor(icsd)
+                # self.my_pprintln(datad)
+
+                self.get_tasks_sync(ics, icsd)
 
             else:
                 # pega OPs no Systêxtil
