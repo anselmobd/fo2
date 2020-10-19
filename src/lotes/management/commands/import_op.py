@@ -274,7 +274,7 @@ class Command(BaseCommand):
         cursor_vs = connections['so'].cursor()
         return self.existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
-    def verifica_table(self):
+    def verifica_del_table(self):
         cursor_vs = connections['so'].cursor()
         return self.existe_table(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR_SYNC_DEL')
 
@@ -288,13 +288,26 @@ class Command(BaseCommand):
 
     def verifica_trigger(self):
         cursor_vs = connections['so'].cursor()
-        return self.existe_trigger(
-            cursor_vs, 'SYSTEXTIL', 'TUSSOR_TR_PCPC_020_SYNC', 'PCPC_020')
+        return (
+            self.existe_trigger(
+                cursor_vs, 'SYSTEXTIL',
+                'FO2_TUSSOR_SYNC_DEL_TR', 'FO2_TUSSOR_SYNC_DEL')
+            and
+            self.existe_trigger(
+                cursor_vs, 'SYSTEXTIL',
+                'TUSSOR_TR_PCPC_020_SYNC', 'PCPC_020')
+            and
+            self.existe_trigger(
+                cursor_vs, 'SYSTEXTIL',
+                'TUSSOR_TR_PCPC_020_SYNC_DEL', 'PCPC_020')
+        )
 
     def verificacoes(self):
+
         # CREATE SEQUENCE SYSTEXTIL.FO2_TUSSOR INCREMENT BY 1 MINVALUE 1
         # NOCYCLE CACHE 1000 NOORDER;
         # COMMIT;
+
         self.my_println(
             'Banco tem sequência'
             if self.verifica_seq()
@@ -302,15 +315,21 @@ class Command(BaseCommand):
         )
 
         # CREATE TABLE SYSTEXTIL.FO2_TUSSOR_SYNC_DEL (
-        #   TABELA VARCHAR2(100),
-        #   SYNC_ID INTEGER,
+        #   ID INTEGER NOT NULL,
+        #   TABELA VARCHAR2(100) NOT NULL,
+        #   SYNC_ID INTEGER NOT NULL,
         #   QUANDO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         # )
         # TABLESPACE SYSTEXTIL_DADOS;
+        # COMMIT;
+
+        # ALTER TABLE SYSTEXTIL.FO2_TUSSOR_SYNC_DEL ADD (
+        #   CONSTRAINT FO2_TUSSOR_SYNC_DEL_PK PRIMARY KEY (ID));
+        # COMMIT;
 
         self.my_println(
             'Banco tem tabela de deleção'
-            if self.verifica_table()
+            if self.verifica_del_table()
             else 'Banco não tem tabela de deleção'
         )
 
@@ -336,6 +355,15 @@ class Command(BaseCommand):
             else 'Tabela não tem colunas'
         )
 
+        # CREATE OR REPLACE TRIGGER SYSTEXTIL.FO2_TUSSOR_SYNC_DEL_TR
+        # BEFORE INSERT ON SYSTEXTIL.FO2_TUSSOR_SYNC_DEL
+        # FOR EACH ROW
+        # BEGIN
+        #   SELECT SYSTEXTIL.FO2_TUSSOR.NEXTVAL
+        #   INTO   :new.id
+        #   FROM   dual;
+        # END FO2_TUSSOR_SYNC_DEL_TR;
+
         # CREATE OR REPLACE TRIGGER SYSTEXTIL.TUSSOR_TR_PCPC_020_SYNC
         #   BEFORE INSERT OR UPDATE
         #   ON SYSTEXTIL.PCPC_020
@@ -344,14 +372,26 @@ class Command(BaseCommand):
         #   v_sync SYSTEXTIL.PCPC_020.FO2_TUSSOR_SYNC%TYPE;
         # BEGIN
         #   SELECT SYSTEXTIL.FO2_TUSSOR.nextval INTO v_sync FROM DUAL;
+        #   IF INSERTING THEN
+        #     :new.FO2_TUSSOR_ID := v_sync;
+        #   END IF;
         #   :new.FO2_TUSSOR_SYNC := v_sync;
-        # END TUSSOR_TR_PCPC_020_SYNC;
+        # END TUSSOR_TR_PCPC_020_SYNC
+
+        # CREATE OR REPLACE TRIGGER SYSTEXTIL.TUSSOR_TR_PCPC_020_SYNC_DEL
+        #   AFTER DELETE
+        #   ON SYSTEXTIL.PCPC_020
+        #   FOR EACH ROW
+        # BEGIN
+        #   INSERT INTO FO2_TUSSOR_SYNC_DEL (TABELA, SYNC_ID)
+        #   VALUES ('PCPC_020', :old.FO2_TUSSOR_ID);
+        # END TUSSOR_TR_PCPC_020_SYNC_DEL;
 
         self.tem_trigger = self.verifica_trigger()
         self.my_println(
-            'Tabela tem trigger'
+            'Tabelas tem triggers'
             if self.tem_trigger
-            else 'Tabela não tem trigger'
+            else 'Tabelas não tem triggers'
         )
 
     def handle(self, *args, **options):
