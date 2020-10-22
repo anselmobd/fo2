@@ -10,6 +10,7 @@ from django.views import View
 from geral.functions import has_permission, rec_trac_log_to_dict
 from geral.models import RecordTracking
 from utils.functions import untuple_keys_concat
+from utils.functions.digits import fo2_digit_with
 
 import lotes.models
 
@@ -195,6 +196,9 @@ class Solicitacoes(LoginRequiredMixin, View):
                                  'coleta': row.coleta,
                                  })
 
+                    context.update({
+                        'echo_numero': f'#{fo2_digit_with(row.id)}',
+                    })
                     if row.concluida or not context['change_solicita']:
                         context.update({
                             'echo_codigo': row.codigo,
