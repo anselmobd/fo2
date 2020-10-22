@@ -198,6 +198,7 @@ class Solicitacoes(LoginRequiredMixin, View):
 
                     context.update({
                         'echo_numero': f'#{fo2_digit_with(row.id)}',
+                        'echo_id': row.id,
                     })
                     if row.concluida or not context['change_solicita']:
                         context.update({

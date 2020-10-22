@@ -34,7 +34,11 @@ thead th
   {% csrf_token %}
   {% if id %}
     {% if echo_numero is not None %}
-      <p>Número: {{echo_numero}}</p>
+      <p>Número: {{echo_numero}}
+        <a href="{% url 'cd:solicitacao_detalhe' id %}{{echo_numero}}" target="_BLANK">
+          Detalhes<span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        </a>
+      </p>
     {% endif %}
     {% if echo_codigo is not None %}
       <p>Código: {{echo_codigo}}</p>
