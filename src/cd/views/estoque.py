@@ -8,9 +8,11 @@ from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
 
+from geral.functions import request_user
+from utils.functions.digits import fo2_digit_with
+
 import lotes.models
 import lotes.queries.op
-from geral.functions import request_user
 import produto.queries
 
 import cd.forms
@@ -93,6 +95,7 @@ class Estoque(View):
                 'local_at', 'local_usuario__username', 'local', 'lote',
                 'referencia', 'tamanho', 'cor', 'qtd_produzir', 'op', 'pedido',
                 'estagio', 'qtd_dif', 'qtd', 'qtd_livre', 'conserto']
+            safe = []
         elif ordem == 'O':  # OP Referência Cor Tamanho Endereço Lote
             data_rec = data_rec.order_by(
                 'op', 'referencia', 'cor', 'ordem_tamanho', 'local', 'lote')
@@ -106,6 +109,7 @@ class Estoque(View):
                 'estagio', 'qtd_dif', 'qtd', 'qtd_livre',
                 'conserto', 'local', 'lote', 'local_at',
                 'local_usuario__username']
+            safe = []
         elif ordem == 'R':  # Referência Cor Tamanho Endereço OP Lote
             data_rec = data_rec.order_by(
                 'referencia', 'cor', 'ordem_tamanho', 'local', 'op', 'lote')
@@ -119,22 +123,27 @@ class Estoque(View):
                 'estagio', 'qtd_dif', 'qtd', 'qtd_livre',
                 'conserto', 'local', 'op', 'pedido',
                 'lote', 'local_at', 'local_usuario__username']
+            safe = []
         else:  # E: Endereço OP Referência Cor Tamanho Lote
             data_rec = data_rec.order_by(
                 'local', 'op', 'referencia', 'cor', 'ordem_tamanho', 'lote')
             headers = [
                 'Endereço', 'OP', 'Pedido', (title_ref, ), 'Tamanho', 'Cor',
                 'Qtd.Ori.', 'Estágio', 'Alter.', 'Qtd.', 'Q.Livre',
-                'Q.End.', 'Lote', 'Em', 'Por']
+                'Q.End.', 'Lote', 'Em', 'Por',
+                'Solicitações']
             fields = [
                 'local', 'op', 'pedido', 'referencia', 'tamanho', 'cor',
                 'qtd_produzir', 'estagio', 'qtd_dif', 'qtd', 'qtd_livre',
-                'conserto', 'lote', 'local_at', 'local_usuario__username']
+                'conserto', 'lote', 'local_at', 'local_usuario__username',
+                'solicitacoes']
+            safe = ['solicitacoes']
 
         data = data_rec.values(
             'local', 'local_at', 'local_usuario__username', 'op', 'lote',
             'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio',
-            'create_at', 'update_at', 'conserto')
+            'create_at', 'update_at', 'conserto',
+            'solicitaloteqtd__solicitacao__id')
 
         quant_lotes = len(data)
         paginator = Paginator(data, linhas_pagina)
@@ -151,6 +160,37 @@ class Estoque(View):
             for row in data:
                 ops.add(row['op'])
                 ref_list.add(row['referencia'])
+
+            if ordem == 'E':
+                row_anterior = {
+                    'lote': '0',
+                }
+                new_data = []
+                for row in data:
+                    solicit_id = \
+                        row['solicitaloteqtd__solicitacao__id']
+                    if solicit_id is None:
+                        row['solicitacoes'] = ''
+                        new_data.append(row)
+                    else:
+                        solicit_num = fo2_digit_with(solicit_id)
+                        solicit_num_link = reverse(
+                            'cd:solicitacoes', args=[solicit_id])
+                        solicit_html = (
+                            f'<a href="{solicit_num_link}" '
+                            f'target="_BLANK">#{solicit_num}</a>'
+                        )
+                        if row['lote'] == row_anterior['lote']:
+                            solicitacoes = new_data[-1]['solicitacoes']
+                            new_data[-1]['solicitacoes'] = ', '.join([
+                                solicitacoes,
+                                solicit_html
+                            ])
+                        else:
+                            row['solicitacoes'] = solicit_html
+                            new_data.append(row)
+                    row_anterior = row
+                data = new_data
 
             ref_data = produto.queries.ref_inform(cursor, tuple(ref_list))
             ref_dict = {r['REF']: r for r in ref_data}
@@ -169,6 +209,7 @@ class Estoque(View):
 
         headers.append('Solicitar')
         fields.append('solicita')
+        safe.append('solicita')
 
         for row in data:
             row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
@@ -241,7 +282,7 @@ class Estoque(View):
                 row['qtd_dif'] = '*'
 
         context.update({
-            'safe': ['solicita'],
+            'safe': safe,
             'headers': headers,
             'fields': fields,
             'data': data,
