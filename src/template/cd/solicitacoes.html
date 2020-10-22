@@ -33,6 +33,9 @@ thead th
   {% endif %}
   {% csrf_token %}
   {% if id %}
+    {% if echo_numero is not None %}
+      <p>Número: {{echo_numero}}</p>
+    {% endif %}
     {% if echo_codigo is not None %}
       <p>Código: {{echo_codigo}}</p>
     {% endif %}
