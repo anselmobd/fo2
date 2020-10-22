@@ -35,7 +35,7 @@ thead th
   {% if id %}
     {% if echo_numero is not None %}
       <p>Número: {{echo_numero}}
-        <a href="{% url 'cd:solicitacao_detalhe' id %}{{echo_numero}}" target="_BLANK">
+        <a href="{% url 'cd:solicitacao_detalhe' id %}" target="_BLANK">
           Detalhes<span class="glyphicon glyphicon-link" aria-hidden="true"></span>
         </a>
       </p>
