@@ -180,8 +180,7 @@ class Estoque(View):
                         else None
                     )
                     if solicit_id is None:
-                        row['solicitacoes'] = ''
-                        new_data.append(row)
+                        solicit_html = ''
                     else:
                         solicit_num = fo2_digit_with(solicit_id)
                         solicit_num_link = reverse(
@@ -190,15 +189,16 @@ class Estoque(View):
                             f'<a href="{solicit_num_link}" '
                             f'target="_BLANK">#{solicit_num}</a>'
                         )
-                        if row['lote'] == row_anterior['lote']:
+                    if row['lote'] == row_anterior['lote']:
+                        if solicit_html != '':
                             solicitacoes = new_data[-1]['solicitacoes']
                             new_data[-1]['solicitacoes'] = ', '.join([
                                 solicitacoes,
                                 solicit_html
                             ])
-                        else:
-                            row['solicitacoes'] = solicit_html
-                            new_data.append(row)
+                    else:
+                        row['solicitacoes'] = solicit_html
+                        new_data.append(row)
                     row_anterior = row
                 data = new_data
 
