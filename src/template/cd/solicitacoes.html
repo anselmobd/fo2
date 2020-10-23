@@ -60,6 +60,15 @@ thead th
         </p>
       {% endif %}
     {% endif %}
+    {% if echo_coleta is not None %}
+      <p>Pode coletar no CD:
+        {% if echo_coleta %}
+          <span class="glyphicon glyphicon-ok-circle" style="color: green" aria-hidden="true"></span>
+        {% else %}
+          <span class="glyphicon glyphicon-remove-circle" style="color: darkred" aria-hidden="true"></span>
+        {% endif %}
+      </p>
+    {% endif %}
   {% endif %}
   {% if id %}
     {% if change_solicita %}
