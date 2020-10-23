@@ -192,10 +192,13 @@ class Estoque(View):
                     if row['lote'] == row_anterior['lote']:
                         if solicit_html != '':
                             solicitacoes = new_data[-1]['solicitacoes']
-                            new_data[-1]['solicitacoes'] = ', '.join([
-                                solicitacoes,
-                                solicit_html
-                            ])
+                            if solicitacoes == '':
+                                new_data[-1]['solicitacoes'] = solicit_html
+                            else:
+                                new_data[-1]['solicitacoes'] = ', '.join([
+                                    solicitacoes,
+                                    solicit_html
+                                ])
                     else:
                         row['solicitacoes'] = solicit_html
                         new_data.append(row)
