@@ -139,11 +139,17 @@ class Estoque(View):
                 'solicitacoes']
             safe = ['solicitacoes']
 
-        data = data_rec.values(
-            'local', 'local_at', 'local_usuario__username', 'op', 'lote',
-            'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd', 'estagio',
-            'create_at', 'update_at', 'conserto',
-            'solicitaloteqtd__solicitacao__id')
+        if ordem == 'E':
+            data = data_rec.values(
+                'local', 'local_at', 'local_usuario__username', 'op', 'lote',
+                'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd',
+                'estagio', 'create_at', 'update_at', 'conserto',
+                'solicitaloteqtd__solicitacao__id')
+        else:
+            data = data_rec.values(
+                'local', 'local_at', 'local_usuario__username', 'op', 'lote',
+                'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd',
+                'estagio', 'create_at', 'update_at', 'conserto')
 
         quant_lotes = len(data)
         paginator = Paginator(data, linhas_pagina)
