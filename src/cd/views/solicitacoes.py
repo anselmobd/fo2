@@ -208,6 +208,11 @@ class Solicitacoes(LoginRequiredMixin, View):
                             'echo_ativa': row.ativa,
                         })
 
+                    if row.concluida and not context['libera_coleta']:
+                        context.update({
+                            'echo_coleta': row.coleta,
+                        })
+
                     if row.concluida:
                         self.hidden_field(context['form'], 'codigo')
                         self.hidden_field(context['form'], 'descricao')
