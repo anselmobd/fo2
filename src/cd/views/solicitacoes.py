@@ -207,7 +207,10 @@ class Solicitacoes(LoginRequiredMixin, View):
                             'echo_data': row.data,
                             'echo_ativa': row.ativa,
                         })
-
+                    if row.concluida and not context['reabre']:
+                        context.update({
+                            'echo_concluida': row.concluida,
+                        })
                     if row.concluida and not context['libera_coleta']:
                         context.update({
                             'echo_coleta': row.coleta,
