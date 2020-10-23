@@ -144,7 +144,8 @@ class Estoque(View):
                 'local', 'local_at', 'local_usuario__username', 'op', 'lote',
                 'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd',
                 'estagio', 'create_at', 'update_at', 'conserto',
-                'solicitaloteqtd__solicitacao__id')
+                'solicitaloteqtd__solicitacao__id',
+                'solicitaloteqtd__origin_id')
         else:
             data = data_rec.values(
                 'local', 'local_at', 'local_usuario__username', 'op', 'lote',
@@ -173,8 +174,11 @@ class Estoque(View):
                 }
                 new_data = []
                 for row in data:
-                    solicit_id = \
+                    solicit_id = (
                         row['solicitaloteqtd__solicitacao__id']
+                        if row['solicitaloteqtd__origin_id'] == 0
+                        else None
+                    )
                     if solicit_id is None:
                         row['solicitacoes'] = ''
                         new_data.append(row)
