@@ -90,8 +90,11 @@ class Command(BaseCommand):
         cursor_s.execute(sql)
         return self.iter_cursor(cursor_s)
 
-    def get_ops_f(self):
-        ops_f = models.Op.objects.all()
+    def get_ops_f(self, ops=None):
+        if ops is None:
+            ops_f = models.Op.objects.all()
+        else:
+            ops_f = models.Op.objects.filter(op__in=ops)
         return iter(ops_f.order_by('op').values())
 
     def get_last_sync_ids(self):
@@ -150,7 +153,6 @@ class Command(BaseCommand):
             self.my_println('OP {} não encontrada em Fo2'.format(op))
             return
         if self.set_op(op, row):
-            # self.stdout.write('save')
             op.save()
 
     def exclui(self, op):
@@ -168,7 +170,6 @@ class Command(BaseCommand):
         try:
             op = models.Op.objects.get(sync_id=sync_id)
             op.delete()
-            self.my_println(f'Excluida OP {op}')
         except models.Op.DoesNotExist:
             self.my_println(f'OP com sync_id {sync_id} não encontrada em Fo2')
 
@@ -205,7 +206,6 @@ class Command(BaseCommand):
 
         if len(self.exclui_op_sync_id) != 0:
             for sync_id in self.exclui_op_sync_id:
-                self.my_println(f'exclui_op_sync_id {sync_id}')
                 self.exclui_sync_id(sync_id)
 
     def iguais(self, row_s, row_f):
@@ -223,10 +223,45 @@ class Command(BaseCommand):
                 igual = row_s['sync_id'] == row_f['sync_id']
         return igual
 
-    def get_tasks_sync(self, ics, icsd):
+    def get_tasks_sync(self, ics, icf, icsd):
+        op_s = -1
+        op_f = -1
         self.init_tasks()
+        count_task = 0
+        while count_task < self.__MAX_TASKS:
+
+            if op_s != sys.maxsize and (op_s < 0 or op_s <= op_f):
+                try:
+                    row_s = next(ics)
+                    getop_s = row_s['op']
+                except StopIteration:
+                    getop_s = sys.maxsize
+
+            if op_f != sys.maxsize and (op_f < 0 or op_f <= op_s):
+                try:
+                    row_f = next(icf)
+                    getop_f = row_f['op']
+                except StopIteration:
+                    getop_f = sys.maxsize
+
+            op_s = getop_s
+            op_f = getop_f
+
+            if op_s == sys.maxsize and op_f == sys.maxsize:
+                break
+
+            if op_s < op_f:
+                self.my_println('Incluir OP {} no Fo2'.format(op_s))
+                self.inclui_op.append(row_s)
+                count_task += 1
+            else:
+                if not self.iguais(row_s, row_f):
+                    self.my_println('Atualizar OP {} no Fo2'.format(op_f))
+                    self.atualiza_op.append(row_s)
+                    count_task += 1
 
         for row in icsd:
+            self.my_println(f'OP com sync_id {sync_id} não mais ativa')
             self.exclui_op_sync_id.append(row['sync_id'])
 
     def get_tasks(self, ics, icf):
@@ -468,24 +503,27 @@ class Command(BaseCommand):
 
             self.verificacoes()
 
-            if self.tem_trigger and 1 == 2:
+            if self.tem_trigger:
                 self.last_sync, self.last_sync_del = self.get_last_sync_ids()
-                self.my_pprintln(
-                    f'last_sync {self.last_sync} '
-                    f'last_sync_del {self.last_sync_del}'
-                )
 
                 # pega OPs no Systêxtil
                 ics = self.get_ops_s(self.last_sync)
 
-                data = self.data_cursor(ics)
-                self.my_pprintln(data)
+                ops = []
+                for row in ics:
+                    # self.my_pprintln(row)
+                    print(row['op'])
+                    ops.append(row['op'])
 
+                ics = self.get_ops_s(self.last_sync)
+
+                # pega deleções de OPs no Fo2
                 icsd = self.get_ops_s_del('PCPC_020', self.last_sync_del)
-                # datad = self.data_cursor(icsd)
-                # self.my_pprintln(datad)
 
-                self.get_tasks_sync(ics, icsd)
+                # pega OPs no Fo2
+                icf = self.get_ops_f(ops)
+
+                self.get_tasks_sync(ics, icf, icsd)
 
             else:
                 # pega OPs no Systêxtil
