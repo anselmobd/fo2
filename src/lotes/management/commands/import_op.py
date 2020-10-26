@@ -261,7 +261,7 @@ class Command(BaseCommand):
                     count_task += 1
 
         for row in icsd:
-            self.my_println(f'OP com sync_id {sync_id} não mais ativa')
+            self.my_println(f"OP com sync_id {row['sync_id']} não mais ativa")
             self.exclui_op_sync_id.append(row['sync_id'])
 
     def get_tasks(self, ics, icf):
@@ -511,8 +511,6 @@ class Command(BaseCommand):
 
                 ops = []
                 for row in ics:
-                    # self.my_pprintln(row)
-                    print(row['op'])
                     ops.append(row['op'])
 
                 ics = self.get_ops_s(self.last_sync)
