@@ -402,11 +402,13 @@ class Command(BaseCommand):
         # NOCYCLE CACHE 1000 NOORDER;
         # COMMIT;
 
-        self.my_println(
-            'Banco tem sequência'
-            if self.verifica_seq()
-            else 'Banco não tem sequência'
-        )
+        aux_bool = self.verifica_seq()
+        if self.verbosity > 1:
+            self.my_println(
+                'Banco tem sequência'
+                if aux_bool
+                else 'Banco não tem sequência'
+            )
 
         # CREATE TABLE SYSTEXTIL.FO2_TUSSOR_SYNC_DEL (
         #   ID INTEGER NOT NULL,
@@ -421,11 +423,13 @@ class Command(BaseCommand):
         #   CONSTRAINT FO2_TUSSOR_SYNC_DEL_PK PRIMARY KEY (ID));
         # COMMIT;
 
-        self.my_println(
-            'Banco tem tabela de deleção'
-            if self.verifica_del_table()
-            else 'Banco não tem tabela de deleção'
-        )
+        aux_bool = self.verifica_del_table()
+        if self.verbosity > 1:
+            self.my_println(
+                'Banco tem tabela de deleção'
+                if aux_bool
+                else 'Banco não tem tabela de deleção'
+            )
 
         # ALTER TABLE SYSTEXTIL.PCPC_020 ADD FO2_TUSSOR_ID INTEGER;
         # ALTER TABLE SYSTEXTIL.PCPC_020 ADD FO2_TUSSOR_SYNC INTEGER;
@@ -449,11 +453,12 @@ class Command(BaseCommand):
         # COMMIT;
 
         self.tem_col_sync = self.verifica_column()
-        self.my_println(
-            'Tabela tem colunas'
-            if self.tem_col_sync
-            else 'Tabela não tem colunas'
-        )
+        if self.verbosity > 1:
+            self.my_println(
+                'Tabela tem colunas'
+                if self.tem_col_sync
+                else 'Tabela não tem colunas'
+            )
 
         # CREATE OR REPLACE TRIGGER SYSTEXTIL.FO2_TUSSOR_SYNC_DEL_TR
         # BEFORE INSERT ON SYSTEXTIL.FO2_TUSSOR_SYNC_DEL
@@ -497,6 +502,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        self.verbosity = options['verbosity']
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
         try:
