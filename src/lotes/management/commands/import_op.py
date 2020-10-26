@@ -83,7 +83,7 @@ class Command(BaseCommand):
             , d.SYNC_ID
             FROM SYSTEXTIL.FO2_TUSSOR_SYNC_DEL d
             WHERE d.TABELA = '{tabela}'
-              AND d.ID > {last_id}
+              AND d.SYNC_ID > {last_id}
             ORDER BY
               d.SYNC_ID
         '''
@@ -102,8 +102,8 @@ class Command(BaseCommand):
             last_sync = -1
 
         try:
-            last_sync_del = base.models.SyncDelTable.objects.all().order_by(
-                '-id').values('id')[0]['id']
+            last_sync_del = base.models.SyncDel.objects.all().order_by(
+                '-sync_id').values('sync_id')[0]['sync_id']
         except Exception as e:
             last_sync_del = -1
 
@@ -169,10 +169,20 @@ class Command(BaseCommand):
             op = models.Op.objects.get(sync_id=sync_id)
             op.delete()
             self.my_println(f'Excluida OP {op}')
-            base.models.SyncDel()
         except models.Op.DoesNotExist:
             self.my_println(f'OP com sync_id {sync_id} não encontrada em Fo2')
-            return
+
+        try:
+            table = base.models.SyncDelTable.objects.get(nome='PCPC_020')
+        except base.models.SyncDelTable.DoesNotExist:
+            table = base.models.SyncDelTable.objects.create(
+                nome='PCPC_020',
+            )
+
+        base.models.SyncDel.objects.create(
+            tabela=table,
+            sync_id=sync_id,
+        )
 
     def init_tasks(self):
         self.inclui_op = []
@@ -195,6 +205,7 @@ class Command(BaseCommand):
 
         if len(self.exclui_op_sync_id) != 0:
             for sync_id in self.exclui_op_sync_id:
+                self.my_println(f'exclui_op_sync_id {sync_id}')
                 self.exclui_sync_id(sync_id)
 
     def iguais(self, row_s, row_f):
@@ -471,7 +482,6 @@ class Command(BaseCommand):
                 self.my_pprintln(data)
 
                 icsd = self.get_ops_s_del('PCPC_020', self.last_sync_del)
-
                 # datad = self.data_cursor(icsd)
                 # self.my_pprintln(datad)
 
