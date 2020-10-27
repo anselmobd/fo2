@@ -333,23 +333,23 @@ class Command(BaseCommand):
         except Exception as e:
             return False
 
-    def existe_trigger_sql(self, cursor, owner, name, table):
+    def existe_trigger_sql(self, cursor, owner, table, trigger):
         return f'''
             SELECT
               t.TRIGGER_NAME
             FROM ALL_TRIGGERS t
             WHERE 1=1
               AND t.OWNER = '{owner}'
-              AND t.TRIGGER_NAME = '{name}'
+              AND t.TRIGGER_NAME = '{trigger}'
               AND t.TABLE_NAME = '{table}'
               AND t.STATUS = 'ENABLED'
         '''
 
-    def existe_trigger(self, cursor, owner, name, table):
+    def existe_trigger(self, cursor, owner, table, trigger):
         try:
-            sql = self.existe_trigger_sql(cursor, owner, name, table)
+            sql = self.existe_trigger_sql(cursor, owner, table, trigger)
             data = list(cursor.execute(sql))
-            return data[0][0] == name
+            return data[0][0] == trigger
         except Exception as e:
             return False
 
@@ -357,7 +357,7 @@ class Command(BaseCommand):
         sql_list = []
         for table_trigger in tables_triggers:
             sql = self.existe_trigger_sql(
-                cursor, owner, table_trigger[1], table_trigger[0])
+                cursor, owner, table_trigger[0], table_trigger[1])
             sql_list = ['\n UNION \n'.join(sql_list+[sql])]
         sql_union = sql_list[0]
 
