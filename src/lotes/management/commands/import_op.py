@@ -353,6 +353,20 @@ class Command(BaseCommand):
         except Exception as e:
             return False
 
+    def existem_triggers(self, cursor, owner, tables_triggers):
+        sql_list = []
+        for table_trigger in tables_triggers:
+            sql = self.existe_trigger_sql(
+                cursor, owner, table_trigger[1], table_trigger[0])
+            sql_list = ['\n UNION \n'.join(sql_list+[sql])]
+        sql_union = sql_list[0]
+
+        try:
+            data = list(cursor.execute(sql_union))
+            return len(data) == len(tables_triggers)
+        except Exception as e:
+            return False
+
     def existe_col(self, cursor, table, column):
         try:
             sql = f'''
