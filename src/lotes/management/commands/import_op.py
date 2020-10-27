@@ -333,18 +333,21 @@ class Command(BaseCommand):
         except Exception as e:
             return False
 
+    def existe_trigger_sql(self, cursor, owner, name, table):
+        return f'''
+            SELECT
+              t.TRIGGER_NAME
+            FROM ALL_TRIGGERS t
+            WHERE 1=1
+              AND t.OWNER = '{owner}'
+              AND t.TRIGGER_NAME = '{name}'
+              AND t.TABLE_NAME = '{table}'
+              AND t.STATUS = 'ENABLED'
+        '''
+
     def existe_trigger(self, cursor, owner, name, table):
         try:
-            sql = f'''
-                SELECT
-                  t.TRIGGER_NAME
-                FROM ALL_TRIGGERS t
-                WHERE 1=1
-                  AND t.OWNER = '{owner}'
-                  AND t.TRIGGER_NAME = '{name}'
-                  AND t.TABLE_NAME = '{table}'
-                  AND t.STATUS = 'ENABLED'
-            '''
+            sql = self.existe_trigger_sql(cursor, owner, name, table)
             data = list(cursor.execute(sql))
             return data[0][0] == name
         except Exception as e:
