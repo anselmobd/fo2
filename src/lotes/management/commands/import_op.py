@@ -399,18 +399,13 @@ class Command(BaseCommand):
 
     def verifica_trigger(self):
         cursor_vs = connections['so'].cursor()
-        return (
-            self.existe_trigger(
-                cursor_vs, 'SYSTEXTIL',
-                'FO2_TUSSOR_SYNC_DEL_TR', 'FO2_TUSSOR_SYNC_DEL')
-            and
-            self.existe_trigger(
-                cursor_vs, 'SYSTEXTIL',
-                'TUSSOR_TR_PCPC_020_SYNC', 'PCPC_020')
-            and
-            self.existe_trigger(
-                cursor_vs, 'SYSTEXTIL',
-                'TUSSOR_TR_PCPC_020_SYNC_DEL', 'PCPC_020')
+        return self.existem_triggers(
+            cursor_vs, 'SYSTEXTIL',
+            [
+                ('FO2_TUSSOR_SYNC_DEL', 'FO2_TUSSOR_SYNC_DEL_TR'),
+                ('PCPC_020', 'TUSSOR_TR_PCPC_020_SYNC'),
+                ('PCPC_020', 'TUSSOR_TR_PCPC_020_SYNC_DEL'),
+            ]
         )
 
     def verificacoes(self):
