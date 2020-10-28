@@ -6,7 +6,6 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import connection, connections
 
 import base.models
-from fo2.settings import DEBUG
 from utils.functions.models import rows_to_dict_list_lower
 
 import lotes.models as models
@@ -178,10 +177,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
-
-        if DEBUG:
-            self.my_println('Só roda em produção')
-            return
 
         try:
             data, hora = self.get_last_basi_010_data_hora()
