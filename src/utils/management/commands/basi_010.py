@@ -79,7 +79,7 @@ class Command(BaseCommand):
     def insert_basi_010(self, row):
         cursor_f = connections['default'].cursor()
         sql = f'''
-            INSERT INTO "HIST_010"
+            INSERT INTO systextil_logs.hist_010
             ( area_producao
             , ordem_producao
             , periodo_producao
@@ -173,13 +173,16 @@ class Command(BaseCommand):
             WHERE h.DATA_OCORR < %s
               AND h.HORA_OCORR < %s
         '''
-        self.my_println('delete')
         cursor_s.execute(sql, [data, hora])
 
     def handle(self, *args, **options):
-        self.verbosity = options['verbosity']
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
+
+        if DEBUG:
+            self.my_println('Só roda em produção')
+            return
+
         try:
             data, hora = self.get_last_basi_010_data_hora()
             self.my_println(f"data {data}")
@@ -195,8 +198,7 @@ class Command(BaseCommand):
                 self.insert_basi_010(row)
             self.my_println(f"{count} registros copiados")
 
-            if not DEBUG:
-                self.del_basi_010(data, hora)
+            self.del_basi_010(data, hora)
 
         except Exception as e:
             raise e
