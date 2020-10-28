@@ -247,7 +247,7 @@ class GradeProduzirOld(O2BaseGetPostView):
         super(GradeProduzirOld, self).__init__(*args, **kwargs)
         self.Form_class = ModeloForm2
         self.template_name = 'lotes/grade_produzir.html'
-        self.title_name = 'Grade de modelo a produzir'
+        self.title_name = 'A produzir, por grade, situação de OP'
         self.get_args = ['modelo']
 
     def mount_context(self):

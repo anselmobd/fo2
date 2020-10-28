@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+<h4>Considerando "Saldo em depósitos (estoque em expedição)"</h4>
 <form action="{% url 'producao:analise_grade_produzir' %}" method="post">
   {% csrf_token %}
   {{ form.as_p }}
@@ -119,7 +120,7 @@
         <thead class="layout">
           <tr>
             <th colspan="99">
-              <h3>Saldo de estoque em expedição</h3>
+              <h3>Saldo em depósitos (estoque em expedição)</h3>
             </th>
           </tr>
         </thead>
@@ -129,7 +130,7 @@
         <thead class="layout">
           <tr>
             <th colspan="99">
-              <h4>Modelo sem saldo de estoque em expedição</h4>
+              <h4>Modelo sem saldo em depósitos (estoque em expedição)</h4>
             </th>
           </tr>
         </thead>

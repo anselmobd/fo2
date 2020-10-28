@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+<h4>Considerando totais em "OPs finalizadas de pedidos empenhados" e "OPs em produção de pedidos faturados"</h4>
 <form action="{% url 'producao:grade_produzir' %}" method="post">
   {% csrf_token %}
   {{ form.as_p }}
