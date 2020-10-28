@@ -122,6 +122,50 @@ class Command(BaseCommand):
         '''
         cursor_f.execute(sql)
 
+    def none_0(self, valor):
+        return 0 if valor is None else valor
+
+    def none_str_empty(self, valor):
+        return '' if valor is None else valor
+
+    def n_none_0(self, row, campos):
+        for campo in campos:
+            row[campo] = self.none_0(row[campo])
+
+    def n_none_str_empty(self, row, campos):
+        for campo in campos:
+            row[campo] = self.none_str_empty(row[campo])
+
+    def trata_none(self, row):
+        self.n_none_0(
+            row,
+            [
+                'area_producao',
+                'ordem_producao',
+                'periodo_producao',
+                'ordem_confeccao',
+                'tipo_historico',
+                'tipo_ordem',
+                'codigo_empresa',
+                'codigo_estagio'
+            ]
+        )
+        self.n_none_str_empty(
+            row,
+            [
+                'descricao_historico',
+                'tipo_ocorr',
+                'data_ocorr',
+                'hora_ocorr',
+                'usuario_rede',
+                'maquina_rede',
+                'aplicacao',
+                'nome_programa',
+                'usuario_sistema',
+                'grupo_maquina'
+            ]
+        )
+
     def del_basi_010(self, data, hora):
         cursor_s = connections['so'].cursor()
         sql = '''
@@ -130,7 +174,7 @@ class Command(BaseCommand):
               AND h.HORA_OCORR < %s
         '''
         self.my_println('delete')
-        # cursor_s.execute(sql, [data, hora])
+        cursor_s.execute(sql, [data, hora])
 
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
@@ -143,11 +187,13 @@ class Command(BaseCommand):
 
             ics = self.get_basi_010(data, hora)
 
+            count = 0
             for row in ics:
+                count += 1
+                self.trata_none(row)
                 self.my_print(".")
                 self.insert_basi_010(row)
-                break
-            self.my_println("")
+            self.my_println(f"{count} registros copiados")
 
             if not DEBUG:
                 self.del_basi_010(data, hora)
