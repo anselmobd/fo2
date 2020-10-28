@@ -12,7 +12,7 @@ import lotes.models as models
 
 
 class Command(BaseCommand):
-    help = 'Move BASI_010 do banco do systextil para o banco da intranet'
+    help = 'Move HIST_010 do banco do systextil para o banco da intranet'
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -40,7 +40,7 @@ class Command(BaseCommand):
             data.append(row)
         return data
 
-    def get_last_basi_010_data_hora(self):
+    def get_last_hist_010_data_hora(self):
         cursor_s = connections['so'].cursor()
         sql = '''
             SELECT
@@ -62,7 +62,7 @@ class Command(BaseCommand):
         else:
             return data_s[0]
 
-    def get_basi_010(self, data, hora):
+    def get_hist_010(self, data, hora):
         cursor_s = connections['so'].cursor()
         sql = '''
             SELECT
@@ -74,7 +74,7 @@ class Command(BaseCommand):
         cursor_s.execute(sql, [data, hora])
         return self.iter_cursor(cursor_s)
 
-    def insert_basi_010(self, row):
+    def insert_hist_010(self, row):
         cursor_f = connections['default'].cursor()
         sql = f'''
             INSERT INTO systextil_logs.hist_010
@@ -164,7 +164,7 @@ class Command(BaseCommand):
             ]
         )
 
-    def del_basi_010(self, data, hora):
+    def del_hist_010(self, data, hora):
         cursor_s = connections['so'].cursor()
         sql = '''
             DELETE FROM HIST_010 h
@@ -178,24 +178,24 @@ class Command(BaseCommand):
         self.my_println('{}'.format(datetime.datetime.now()))
 
         try:
-            data, hora = self.get_last_basi_010_data_hora()
+            data, hora = self.get_last_hist_010_data_hora()
             self.my_println(f"data {data}")
             self.my_println(f"hora {hora}")
 
-            ics = self.get_basi_010(data, hora)
+            ics = self.get_hist_010(data, hora)
 
             count = 0
             for row in ics:
                 count += 1
                 self.trata_none(row)
                 self.my_print(".")
-                self.insert_basi_010(row)
+                self.insert_hist_010(row)
             self.my_println(f"{count} registros copiados")
 
-            self.del_basi_010(data, hora)
+            self.del_hist_010(data, hora)
 
         except Exception as e:
             raise e
-            raise CommandError('Erro movendo BASI_010 "{}"'.format(e))
+            raise CommandError('Erro movendo HIST_010 "{}"'.format(e))
 
         self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
