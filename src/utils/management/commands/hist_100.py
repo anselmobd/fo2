@@ -164,7 +164,7 @@ class Command(BaseCommand):
         return "''".join(valor.split("'"))
 
     def none_str_empty(self, valor):
-        return '' if valor is None else quote_str(valor)
+        return '' if valor is None else self.quote_str(valor)
 
     def none_null(self, valor):
         return 'NULL' if valor is None else f"'{valor}'"
