@@ -118,7 +118,7 @@ class Command(BaseCommand):
             ( '{row["tabela"]}'
             , {row["sequencia"]}
             , '{row["operacao"]}'
-            , '{row["data_ocorr"]}'
+            , {row["data_ocorr"]}
             , '{row["usuario"]}'
             , '{row["usuario_rede"]}'
             , '{row["maquina_rede"]}'
@@ -132,13 +132,13 @@ class Command(BaseCommand):
             , {row["num08"]}
             , {row["num09"]}
             , {row["num10"]}
-            , '{row["dat01"]}'
-            , '{row["dat02"]}'
-            , '{row["dat03"]}'
-            , '{row["dat04"]}'
-            , '{row["dat05"]}'
-            , '{row["dat06"]}'
-            , '{row["dat07"]}'
+            , {row["dat01"]}
+            , {row["dat02"]}
+            , {row["dat03"]}
+            , {row["dat04"]}
+            , {row["dat05"]}
+            , {row["dat06"]}
+            , {row["dat07"]}
             , '{row["str01"]}'
             , '{row["str02"]}'
             , '{row["str03"]}'
@@ -163,6 +163,9 @@ class Command(BaseCommand):
     def none_str_empty(self, valor):
         return '' if valor is None else valor
 
+    def none_null(self, valor):
+        return 'NULL' if valor is None else f"'{valor}'"
+
     def n_none_0(self, row, campos):
         for campo in campos:
             row[campo] = self.none_0(row[campo])
@@ -170,6 +173,10 @@ class Command(BaseCommand):
     def n_none_str_empty(self, row, campos):
         for campo in campos:
             row[campo] = self.none_str_empty(row[campo])
+
+    def n_none_null(self, row, campos):
+        for campo in campos:
+            row[campo] = self.none_null(row[campo])
 
     def trata_none(self, row):
         self.n_none_0(
@@ -194,17 +201,9 @@ class Command(BaseCommand):
             [
                 'tabela',
                 'operacao',
-                'data_ocorr',
                 'usuario',
                 'usuario_rede',
                 'maquina_rede',
-                'dat01',
-                'dat02',
-                'dat03',
-                'dat04',
-                'dat05',
-                'dat06',
-                'dat07',
                 'str01',
                 'str02',
                 'str03',
@@ -218,6 +217,19 @@ class Command(BaseCommand):
                 'long01',
                 'aplicacao',
                 'programa',
+            ]
+        )
+        self.n_none_null(
+            row,
+            [
+                'data_ocorr',
+                'dat01',
+                'dat02',
+                'dat03',
+                'dat04',
+                'dat05',
+                'dat06',
+                'dat07',
             ]
         )
 
