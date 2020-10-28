@@ -160,8 +160,11 @@ class Command(BaseCommand):
     def none_0(self, valor):
         return 0 if valor is None else valor
 
+    def quote_str(self, valor):
+        return "''".join(valor.split("'"))
+
     def none_str_empty(self, valor):
-        return '' if valor is None else valor
+        return '' if valor is None else quote_str(valor)
 
     def none_null(self, valor):
         return 'NULL' if valor is None else f"'{valor}'"
