@@ -265,7 +265,6 @@ class Command(BaseCommand):
             self.del_hist_100(data)
 
         except Exception as e:
-            raise e
             raise CommandError('Erro movendo HIST_100 "{}"'.format(e))
 
         self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
