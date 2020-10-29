@@ -249,27 +249,81 @@ class Command(BaseCommand):
         '''
         cursor_s.execute(sql, [data])
 
-    def existe_table(self, cursor, owner, name):
+    def existe_s_table(self, cursor, owner, name):
         try:
             sql = f'''
                 SELECT
-                  t.TABLE_NAME
+                  upper(t.TABLE_NAME)
                 FROM ALL_TABLES t
                 WHERE 1=1
-                  AND t.OWNER = '{owner}'
-                  AND t.TABLE_NAME = '{name}'
+                  AND upper(t.OWNER) = '{owner.upper()}'
+                  AND upper(t.TABLE_NAME) = '{name.upper()}'
             '''
             data = list(cursor.execute(sql))
-            return data[0][0] == name
+            return data[0][0] == name.upper()
+        except Exception as e:
+            return False
+
+    def existe_l_table(self, cursor, name):
+        try:
+            sql = f'''
+                SELECT
+                  name
+                FROM sqlite_master
+                WHERE type='table'
+                  AND upper(name) = upper('{name.upper()}')
+            '''
+            data = list(cursor.execute(sql))
+            return data[0][0] == name.upper()
+        except Exception as e:
+            return False
+
+    def existe_f_table(self, cursor, schema, name):
+        try:
+            sql = f'''
+                SELECT EXISTS (
+                  select table_name
+                  FROM information_schema.tables
+                  WHERE 1=1
+                    AND upper(table_schema = upper('{schema}')
+                    AND upper(table_name)   = upper('{name}')
+                )
+            '''
+            data = list(cursor.execute(sql))
+            return data[0][0]
         except Exception as e:
             return False
 
     def verifica_s_tabela(self, tabela):
-        cursor_vs = connections['so'].cursor()
-        return self.existe_table(cursor_vs, 'SYSTEXTIL', tabela)
+        cursor = connections['so'].cursor()
+        existe = self.existe_s_table(cursor, 'SYSTEXTIL', tabela)
+        if existe:
+            self.my_println('systextil tem tabela')
+        else:
+            self.my_println('systextil não tem tabela')
+        return existe
+
+    def verifica_l_tabela(self, tabela):
+        cursor = connections['default'].cursor()
+        existe = self.existe_l_table(cursor, tabela)
+        if existe:
+            self.my_println('sqlite tem tabela')
+        else:
+            self.my_println('sqlite não tem tabela')
+        return existe
+
+    def verifica_f_tabela(self, tabela):
+        cursor = connections['default'].cursor()
+        existe = self.existe_f_table(cursor, 'systextil_logs', tabela)
+        if existe:
+            self.my_println('postgre tem tabela')
+        else:
+            self.my_println('postgre não tem tabela')
+        return existe
 
     def verificacoes(self):
-        return self.verifica_s_tabela(self.tabela)
+        return self.verifica_s_tabela(self.tabela) \
+            and self.verifica_l_tabela(self.tabela)
 
     def handle(self, *args, **options):
         self.my_println('---')
@@ -279,13 +333,11 @@ class Command(BaseCommand):
 
         try:
 
-            if self.verificacoes():
-                self.my_println('tem tabela')
-                raise SystemExit(1)
-            else:
-                self.my_println('não tem tabela')
+            if not self.verificacoes():
                 raise CommandError(
-                    f'Tabela "{self.tabela}" não encontrada no systextil')
+                    f'Tabela "{self.tabela}" não encontrada')
+
+            raise SystemExit(1)
 
             data = self.get_last_table_data()
             self.my_println(f"data {data}")
