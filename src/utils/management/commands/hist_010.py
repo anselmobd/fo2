@@ -184,13 +184,14 @@ class Command(BaseCommand):
 
             ics = self.get_hist_010(data, hora)
 
-            def divisores():
+            def gen_divisores():
                 for i in [5, 10, 50, 100]:
                     yield i
                 while True:
                     yield i
 
             count = 0
+            divisores = gen_divisores()
             divisor = next(divisores)
             for row in ics:
                 count += 1
