@@ -355,9 +355,9 @@ class Command(BaseCommand):
 
     def existem_triggers(self, cursor, owner, tables_triggers):
         sql_list = []
-        for table_trigger in tables_triggers:
+        for table, trigger in tables_triggers:
             sql = self.existe_trigger_sql(
-                cursor, owner, table_trigger[0], table_trigger[1])
+                cursor, owner, table, trigger)
             sql_list = ['\n UNION \n'.join(sql_list+[sql])]
         sql_union = sql_list[0]
 
