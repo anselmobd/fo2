@@ -199,10 +199,10 @@ class Command(BaseCommand):
                 self.trata_none(row)
                 self.insert_hist_010(row)
 
-                if (count - ult_count) == seq_numerica[0]:
+                if (count - ult_count) == pulos_count[0]:
                     ult_count = count
-                    if seq_numerica[1:]:
-                        seq_numerica.pop(0)
+                    if pulos_count[1:]:
+                        pulos_count.pop(0)
                     self.my_print(str(count))
                 else:
                     self.my_print(".")
