@@ -12,12 +12,12 @@ import lotes.models as models
 
 
 class Command(BaseCommand):
-    help = 'Move table do banco do systextil para o banco da intranet'
+    help = 'Move tabela do banco do systextil para o banco da intranet'
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'table', nargs=1,
-            help='Indica uma tabela específica a ser tratada')
+            'tabela',
+            help='Indica uma tabela específica a ser movida')
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -249,11 +249,44 @@ class Command(BaseCommand):
         '''
         cursor_s.execute(sql, [data])
 
+    def existe_table(self, cursor, owner, name):
+        try:
+            sql = f'''
+                SELECT
+                  t.TABLE_NAME
+                FROM ALL_TABLES t
+                WHERE 1=1
+                  AND t.OWNER = '{owner}'
+                  AND t.TABLE_NAME = '{name}'
+            '''
+            data = list(cursor.execute(sql))
+            return data[0][0] == name
+        except Exception as e:
+            return False
+
+    def verifica_s_tabela(self, tabela):
+        cursor_vs = connections['so'].cursor()
+        return self.existe_table(cursor_vs, 'SYSTEXTIL', tabela)
+
+    def verificacoes(self):
+        return self.verifica_s_tabela(self.tabela)
+
     def handle(self, *args, **options):
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
 
+        self.tabela = options['tabela']
+
         try:
+
+            if self.verificacoes():
+                self.my_println('tem tabela')
+                raise SystemExit(1)
+            else:
+                self.my_println('não tem tabela')
+                raise CommandError(
+                    f'Tabela "{self.tabela}" não encontrada no systextil')
+
             data = self.get_last_table_data()
             self.my_println(f"data {data}")
 
