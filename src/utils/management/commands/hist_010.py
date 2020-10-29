@@ -184,13 +184,31 @@ class Command(BaseCommand):
 
             ics = self.get_hist_010(data, hora)
 
+            seq_numerica = {
+                0: 5,
+                5: 10,
+                10: 50,
+                50: 100,
+                100: 100,
+            }
+            seq_idx = 0
+            flag_numero = 0
+
             count = 0
             for row in ics:
                 count += 1
                 self.trata_none(row)
-                self.my_print(".")
                 self.insert_hist_010(row)
-            self.my_println(f"{count} registros copiados")
+
+                flag_numero += 1
+                if flag_numero == seq_numerica[seq_idx]:
+                    seq_idx = flag_numero
+                    flag_numero = 0
+                    self.my_print(str(count))
+                else:
+                    self.my_print(".")
+
+            self.my_println(f" {count} registros copiados")
 
             self.del_hist_010(data, hora)
 
