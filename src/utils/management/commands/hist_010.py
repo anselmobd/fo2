@@ -184,7 +184,7 @@ class Command(BaseCommand):
 
             ics = self.get_hist_010(data, hora)
 
-            def divisores:
+            def divisores():
                 for i in [5, 10, 50, 100]:
                     yield i
                 while True:
