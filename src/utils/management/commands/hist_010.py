@@ -184,25 +184,21 @@ class Command(BaseCommand):
 
             ics = self.get_hist_010(data, hora)
 
-            pulos_count = [
-                5,
-                5,
-                40,
-                50,
-                100,
-            ]
-            ult_count = 0
+            def divisores:
+                for i in [5, 10, 50, 100]:
+                    yield i
+                while True:
+                    yield i
 
             count = 0
+            divisor = next(divisores)
             for row in ics:
                 count += 1
                 self.trata_none(row)
                 self.insert_hist_010(row)
 
-                if (count - ult_count) == pulos_count[0]:
-                    ult_count = count
-                    if pulos_count[1:]:
-                        pulos_count.pop(0)
+                if (count % divisor) == 0:
+                    divisor = next(divisores)
                     self.my_print(str(count))
                 else:
                     self.my_print(".")
