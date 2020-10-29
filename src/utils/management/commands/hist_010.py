@@ -184,14 +184,14 @@ class Command(BaseCommand):
 
             ics = self.get_hist_010(data, hora)
 
-            def gen_divisores():
-                for i in [5, 10, 50, 100]:
+            def generator_list_echo(mylist):
+                for i in mylist:
                     yield i
                 while True:
                     yield i
 
             count = 0
-            divisores = gen_divisores()
+            divisores = generator_list_echo([5, 10, 50, 100])
             divisor = next(divisores)
             for row in ics:
                 count += 1
