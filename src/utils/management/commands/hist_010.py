@@ -191,7 +191,7 @@ class Command(BaseCommand):
                     yield i
 
             count = 0
-            divisores = generator_list_echo([5, 10, 50, 100])
+            divisores = generator_list_echo([5, 10, 20, 50, 100])
             divisor = next(divisores)
             for row in ics:
                 count += 1
