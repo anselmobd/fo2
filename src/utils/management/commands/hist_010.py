@@ -184,15 +184,14 @@ class Command(BaseCommand):
 
             ics = self.get_hist_010(data, hora)
 
-            seq_numerica = {
-                0: 5,
-                5: 10,
-                10: 50,
-                50: 100,
-                100: 100,
-            }
-            seq_idx = 0
-            flag_numero = 0
+            pulos_count = [
+                5,
+                5,
+                40,
+                50,
+                100,
+            ]
+            ult_count = 0
 
             count = 0
             for row in ics:
@@ -200,10 +199,10 @@ class Command(BaseCommand):
                 self.trata_none(row)
                 self.insert_hist_010(row)
 
-                flag_numero += 1
-                if flag_numero == seq_numerica[seq_idx]:
-                    seq_idx = flag_numero
-                    flag_numero = 0
+                if (count - ult_count) == seq_numerica[0]:
+                    ult_count = count
+                    if seq_numerica[1:]:
+                        seq_numerica.pop(0)
                     self.my_print(str(count))
                 else:
                     self.my_print(".")
