@@ -13,6 +13,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Move HIST_100 do banco do systextil para o banco da intranet'
+    __MAX_TASKS = 1000
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -260,6 +261,8 @@ class Command(BaseCommand):
                 self.trata_none(row)
                 self.my_print(".")
                 self.insert_hist_100(row)
+                if count >= self.__MAX_TASKS:
+                    break
             self.my_println(f"{count} registros copiados")
 
             self.del_hist_100(data)
