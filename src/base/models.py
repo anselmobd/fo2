@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 
 
 class Colaborador(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
+        verbose_name='usuário')
     matricula = models.CharField(
         max_length=5, unique=True, default='00000',
         verbose_name='matrícula')
