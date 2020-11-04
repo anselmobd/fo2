@@ -56,7 +56,7 @@ class Command(BaseCommand):
                 ORDER BY
                   h.DATA_OCORR DESC
               ) hh
-              WHERE rownum <= 100
+              WHERE rownum <= 10
               ORDER BY
                 hh.DATA_OCORR
             ) hhh
