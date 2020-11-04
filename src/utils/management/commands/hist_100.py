@@ -45,14 +45,21 @@ class Command(BaseCommand):
         cursor_s = connections['so'].cursor()
         sql = '''
             SELECT
-              hh.*
+              hhh.*
             FROM
             ( SELECT
-                h.DATA_OCORR
-              FROM HIST_100 h
+                hh.*
+              FROM
+              ( SELECT DISTINCT
+                  h.DATA_OCORR
+                FROM HIST_100 h
+                ORDER BY
+                  h.DATA_OCORR DESC
+              ) hh
+              WHERE rownum <= 10
               ORDER BY
-                h.DATA_OCORR DESC
-            ) hh
+                hh.DATA_OCORR
+            ) hhh
             WHERE rownum = 1
         '''
         data_s = list(cursor_s.execute(sql))
