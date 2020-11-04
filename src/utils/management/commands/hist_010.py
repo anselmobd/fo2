@@ -41,38 +41,42 @@ class Command(BaseCommand):
             data.append(row)
         return data
 
-    def get_last_hist_010_data_hora(self):
+    def get_last_hist_010_data(self):
         cursor_s = connections['so'].cursor()
         sql = '''
             SELECT
-              hh.*
+              hhh.*
             FROM
             ( SELECT
-                h.DATA_OCORR
-              , h.HORA_OCORR
-              FROM HIST_010 h
+                hh.*
+              FROM
+              ( SELECT DISTINCT
+                  h.DATA_OCORR
+                FROM HIST_010 h
+                ORDER BY
+                  h.DATA_OCORR DESC
+              ) hh
+              WHERE rownum <= 100
               ORDER BY
-                h.DATA_OCORR DESC
-              , h.HORA_OCORR DESC
-            ) hh
+                hh.DATA_OCORR
+            ) hhh
             WHERE rownum = 1
         '''
         data_s = list(cursor_s.execute(sql))
         if len(data_s) == 0:
-            return None, None
+            return None
         else:
-            return data_s[0]
+            return data_s[0][0]
 
-    def get_hist_010(self, data, hora):
+    def get_hist_010(self, data):
         cursor_s = connections['so'].cursor()
         sql = '''
             SELECT
               h.*
             FROM HIST_010 h
             WHERE h.DATA_OCORR < %s
-              AND h.HORA_OCORR < %s
         '''
-        cursor_s.execute(sql, [data, hora])
+        cursor_s.execute(sql, [data])
         return self.iter_cursor(cursor_s)
 
     def insert_hist_010(self, row):
@@ -165,25 +169,23 @@ class Command(BaseCommand):
             ]
         )
 
-    def del_hist_010(self, data, hora):
+    def del_hist_010(self, data):
         cursor_s = connections['so'].cursor()
         sql = '''
             DELETE FROM HIST_010 h
             WHERE h.DATA_OCORR < %s
-              AND h.HORA_OCORR < %s
         '''
-        cursor_s.execute(sql, [data, hora])
+        cursor_s.execute(sql, [data])
 
     def handle(self, *args, **options):
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
 
         try:
-            data, hora = self.get_last_hist_010_data_hora()
+            data = self.get_last_hist_010_data()
             self.my_println(f"data {data}")
-            self.my_println(f"hora {hora}")
 
-            ics = self.get_hist_010(data, hora)
+            ics = self.get_hist_010(data)
 
             def generator_list_echo(mylist):
                 for i in mylist:
@@ -209,7 +211,7 @@ class Command(BaseCommand):
 
             self.my_println(f" {count} registros copiados")
 
-            self.del_hist_010(data, hora)
+            self.del_hist_010(data)
 
         except Exception as e:
             raise CommandError('Erro movendo HIST_010 "{}"'.format(e))
