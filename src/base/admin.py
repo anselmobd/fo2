@@ -32,6 +32,12 @@ class ColaboradorAdmin(admin.ModelAdmin):
         "user", "matricula", "nome", "nascimento", "cpf", "obs",
         "logged", "quando", "ip_interno"
     ]
+    list_display = [
+        "user", "matricula", "nome", "cpf", "obs",
+    ]
+    search_fields = [
+        "user__username", "matricula", "nome", "cpf", "obs",
+    ]
 
 
 class RequisicaoAdmin(admin.ModelAdmin):
