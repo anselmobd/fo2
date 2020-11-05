@@ -204,12 +204,13 @@ class Command(BaseCommand):
                 if (count % divisor) == 0:
                     divisor = next(divisores)
                     self.my_print(str(count))
-                else:
-                    self.my_print(".")
+                    self.my_print(' ')
+                # else:
+                #     self.my_print(".")
                 if count >= self.__MAX_TASKS:
                     break
 
-            self.my_println(f" {count} registros copiados")
+            self.my_println(f"{count} registros copiados")
 
             self.del_hist_010(data)
 
