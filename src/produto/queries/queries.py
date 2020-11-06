@@ -369,6 +369,7 @@ def ref_roteiros(cursor, ref):
         LEFT JOIN BASI_070 alg -- cadastro de altern. de estrutura e de roteiro
           ON alg.ROTEIRO = 0 -- seleciona cadastro de alternativas de estrutura
          AND alg.ALTERNATIVA = r.NUMERO_ALTERNATI
+         AND alg.DESCRICAO IS NOT NULL
         WHERE r.NIVEL_ESTRUTURA = 1
           AND r.GRUPO_ESTRUTURA = %s
         ORDER BY
