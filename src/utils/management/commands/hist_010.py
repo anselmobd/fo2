@@ -175,7 +175,7 @@ class Command(BaseCommand):
         cursor_s = connections['so'].cursor()
         sql = '''
             DELETE FROM HIST_010 h
-            WHERE h.DATA_OCORR < %s
+            WHERE h.DATA_OCORR <= %s
         '''
         cursor_s.execute(sql, [data])
 
@@ -198,8 +198,16 @@ class Command(BaseCommand):
             count = 0
             divisores = generator_list_echo([5, 10, 20, 50, 100])
             divisor = next(divisores)
+            ult_data_ocorr = None
+            can_break = False
             for row in ics:
                 count += 1
+                if (ult_data_ocorr is None or
+                        ult_data_ocorr != row['data_ocorr']):
+                    if can_break:
+                        break
+                    ult_data_ocorr = row['data_ocorr']
+
                 self.trata_none(row)
                 self.insert_hist_010(row)
 
@@ -207,14 +215,13 @@ class Command(BaseCommand):
                     divisor = next(divisores)
                     self.my_print(str(count))
                     self.my_print(' ')
-                # else:
-                #     self.my_print(".")
                 if count >= self.__MAX_TASKS:
-                    break
+                    can_break = True
 
             self.my_println(f"{count} registros copiados")
 
-            self.del_hist_010(data)
+            if ult_data_ocorr is not None:
+                self.del_hist_010(ult_data_ocorr)
 
         except Exception as e:
             raise CommandError('Erro movendo HIST_010 "{}"'.format(e))
