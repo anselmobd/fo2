@@ -75,6 +75,8 @@ class Command(BaseCommand):
               h.*
             FROM HIST_010 h
             WHERE h.DATA_OCORR < %s
+            ORDER BY
+              h.DATA_OCORR
         '''
         cursor_s.execute(sql, [data])
         return self.iter_cursor(cursor_s)
