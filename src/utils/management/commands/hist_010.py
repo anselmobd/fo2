@@ -221,6 +221,7 @@ class Command(BaseCommand):
             self.my_println(f"{count} registros copiados")
 
             if ult_data_ocorr is not None:
+                self.my_println(f"ult_data_ocorr {ult_data_ocorr}")
                 self.del_hist_010(ult_data_ocorr)
 
         except Exception as e:
