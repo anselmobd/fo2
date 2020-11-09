@@ -71,10 +71,9 @@ class Op(View):
             val_parm = config_get_value('OP-UNIDADE', request.user)
             if val_parm is None:
                 val_parm = 'S'
-            else:
-                context.update({
-                    'op_unidade': val_parm,
-                })
+            context.update({
+                'op_unidade': val_parm,
+            })
 
             if val_parm == 'S':
                 i_headers = (
