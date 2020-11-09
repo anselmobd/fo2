@@ -31,31 +31,31 @@
       {% include "layout/html_thead.html" with data=i_headers only %}
       {% include "layout/html_tbody_group.html" with fields=i_fields data=i_data group=i_group only %}
     </table>
-    {% if op_unidade and op_unidade == 'S'%}
+    {% if op_unidade and op_unidade == 'S' %}
       <table class="layout">
         <tr>
+        {% if p_data %}
           <td style="vertical-align: top;">
-            {% if p_data %}
-              <table>
-                {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
-                {% include "layout/tbody_generic.html" with fields=p_fields data=p_data link=p_link style=p_style only %}
-              </table>
-            {% endif %}
-      {% if r_data %}
+            <table>
+              {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
+              {% include "layout/tbody_generic.html" with fields=p_fields data=p_data link=p_link style=p_style only %}
+            </table>
           </td>
-        <td></td>
-        <td style="border-left: thin solid lightgrey;"></td>
-        <td style="vertical-align: top;">
-      {% endif %}
+        {% endif %}
+        {% if p_data and r_data %}
+          <td></td>
+          <td style="border-left: thin solid lightgrey;"></td>
+        {% endif %}
     {% endif %}
     {% if r_data %}
-      <table>
-        {% include "layout/html_thead.html" with data=r_headers only %}
-        {% include "layout/html_tbody_group.html" with fields=r_fields data=r_data only %}
-      </table>
+      <td style="vertical-align: top;">
+        <table>
+          {% include "layout/html_thead.html" with data=r_headers only %}
+          {% include "layout/html_tbody_group.html" with fields=r_fields data=r_data only %}
+        </table>
+      </td>
     {% endif %}
-    {% if op_unidade and op_unidade == 'S'%}
-          </td>
+    {% if op_unidade and op_unidade == 'S' %}
         </tr>
       </table>
     {% endif %}
