@@ -67,7 +67,7 @@ class Retirar(PermissionRequiredMixin, View):
                         f'peça{"s" if lote_rec.qtd > 1 else ""} do '
                         f'concerto: {level} - "{erro}"',
                 })
-                if level not in [1, 2]:
+                if str(level) not in ['1', '2']:
                     return context
 
             lote_rec.local = None
