@@ -152,15 +152,6 @@ class Estoque(View):
                 'referencia', 'tamanho', 'cor', 'qtd_produzir', 'qtd',
                 'estagio', 'create_at', 'update_at', 'conserto')
 
-        quant_lotes = len(data)
-        paginator = Paginator(data, linhas_pagina)
-        try:
-            data = paginator.page(page)
-        except PageNotAnInteger:
-            data = paginator.page(1)
-        except EmptyPage:
-            data = paginator.page(paginator.num_pages)
-
         if len(data) != 0:
             ops = set()
             ref_list = set()
@@ -223,6 +214,15 @@ class Estoque(View):
         headers.append('Solicitar')
         fields.append('solicita')
         safe.append('solicita')
+
+        quant_lotes = len(data)
+        paginator = Paginator(data, linhas_pagina)
+        try:
+            data = paginator.page(page)
+        except PageNotAnInteger:
+            data = paginator.page(1)
+        except EmptyPage:
+            data = paginator.page(paginator.num_pages)
 
         for row in data:
             row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
