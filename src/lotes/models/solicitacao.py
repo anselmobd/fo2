@@ -194,6 +194,9 @@ class EnderecoDisponivel(models.Model):
         unique=True, max_length=4,
         verbose_name='Início do endereço')
 
+    def __str__(self):
+        return self.inicio
+
     class Meta:
         db_table = "fo2_cd_endereco_disponivel"
         verbose_name = "Endereço disponível"
