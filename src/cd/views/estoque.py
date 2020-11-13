@@ -25,6 +25,12 @@ class Estoque(View):
         self.template_name = 'cd/estoque.html'
         self.title_name = 'Estoque'
 
+    def esta_disp(self, end):
+        for regra in self.end_disp:
+            if end.startswith(regra['inicio']):
+                return True
+        return False
+
     def mount_context(self, form, user):
         cursor = connections['so'].cursor()
         linhas_pagina = 100
@@ -224,6 +230,8 @@ class Estoque(View):
         except EmptyPage:
             data = paginator.page(paginator.num_pages)
 
+        self.end_disp = list(lotes.models.EnderecoDisponivel.objects.all().values())
+
         for row in data:
             row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
             row['qtd_livre'] = row['qtd'] - row['conserto']
@@ -244,7 +252,9 @@ class Estoque(View):
                     if slq['qtd__sum']:
                         slq_qtd = slq['qtd__sum']
 
-                if solicit_cod and (row['qtd'] - slq_qtd) > 0:
+                if solicit_cod and \
+                        self.esta_disp(row['local']) and \
+                        (row['qtd'] - slq_qtd) > 0:
                     row['solicita'] = '''
                         <a title="Solicitação parcial de lote"
                          href="javascript:void(0);"
