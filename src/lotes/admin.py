@@ -11,6 +11,7 @@ from .models import (
     SolicitaLote,
     SolicitaLotePrinted,
     UsuarioImpresso,
+    EnderecoDisponivel,
 )
 from .forms import ModeloTermicaForm
 
@@ -107,3 +108,10 @@ class SolicitaLotePrintedAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(SolicitaLotePrinted, SolicitaLotePrintedAdmin)
+
+
+class EnderecoDisponivelAdmin(admin.ModelAdmin):
+    pass
+
+
+intr_adm_site.register(EnderecoDisponivel, EnderecoDisponivelAdmin)
