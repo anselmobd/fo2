@@ -187,3 +187,14 @@ class SolicitaLotePrinted(models.Model):
         db_table = "fo2_cd_solicita_lote_prt"
         verbose_name = "Impressão de solicitação de lotes"
         verbose_name_plural = "Impressões de solicitações de lotes"
+
+
+class EnderecoDispovivel(models.Model):
+    inicio = models.CharField(
+        unique=True, max_length=4,
+        verbose_name='Início do endereço')
+
+    class Meta:
+        db_table = "fo2_cd_endereco_disponivel"
+        verbose_name = "Endereço disponível"
+        verbose_name_plural = "Endereços disponível"
