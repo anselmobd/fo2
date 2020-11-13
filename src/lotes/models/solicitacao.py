@@ -189,7 +189,7 @@ class SolicitaLotePrinted(models.Model):
         verbose_name_plural = "Impressões de solicitações de lotes"
 
 
-class EnderecoDispovivel(models.Model):
+class EnderecoDisponivel(models.Model):
     inicio = models.CharField(
         unique=True, max_length=4,
         verbose_name='Início do endereço')
