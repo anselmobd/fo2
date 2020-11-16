@@ -19,9 +19,11 @@ class PedidoFaturavelModelo(View):
     template_name = 'lotes/pedido_faturavel_modelo.html'
     title_name = 'Pedido faturável por modelo'
 
-    def mount_context(self, cursor, modelo):
+    def mount_context(self, cursor, modelo, tam, cor):
         context = {
             'modelo': modelo,
+            'tam': tam,
+            'cor': cor,
         }
 
         lead = produto.queries.lead_de_modelo(cursor, modelo)
@@ -39,7 +41,7 @@ class PedidoFaturavelModelo(View):
 
         data = queries.pedido.pedido_faturavel_modelo(
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
-            cached=False)
+            cached=False, tam=tam, cor=cor)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedidos não encontrados',
@@ -132,8 +134,10 @@ class PedidoFaturavelModelo(View):
             form.data['modelo'] = kwargs['modelo']
         if form.is_valid():
             modelo = form.cleaned_data['modelo']
+            tam = form.cleaned_data['tam']
+            cor = form.cleaned_data['cor']
             cursor = connections['so'].cursor()
             context.update(
-                self.mount_context(cursor, modelo))
+                self.mount_context(cursor, modelo, tam, cor))
         context['form'] = form
         return render(request, self.template_name, context)

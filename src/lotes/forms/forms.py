@@ -429,6 +429,27 @@ class BuscaPedidoForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
+    tam = forms.CharField(
+        label='Tamanho', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    cor = forms.CharField(
+        label='Cor', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_tam(self):
+        tam = self.cleaned_data['tam'].upper()
+        data = self.data.copy()
+        data['tam'] = tam
+        self.data = data
+        return tam
+
+    def clean_cor(self):
+        cor = self.cleaned_data['cor'].upper()
+        data = self.data.copy()
+        data['cor'] = cor
+        self.data = data
+        return cor
 
 class ExpedicaoForm(forms.Form):
     embarque_de = forms.DateField(
