@@ -423,18 +423,18 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
     if tipo == 'total':
         sql += """
               to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
-            , sum(f.BASE_ICMS) VALOR
+            , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
         """
     elif tipo == 'cliente':
         sql += """
               c.NOME_CLIENTE CLIENTE
-            , sum(f.BASE_ICMS) VALOR
+            , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
         """
     else:
         sql += """
               f.NUM_NOTA_FISCAL NF
             , f.DATA_EMISSAO DATA
-            , f.BASE_ICMS VALOR
+            , fi.VALOR_FATURADO +  fi.RATEIO_DESPESA VALOR
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
@@ -445,6 +445,12 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
         """
     sql += f"""
         FROM FATU_050 f
+        JOIN fatu_060 fi
+          ON fi.ch_it_nf_cd_empr = f.codigo_empresa
+         and fi.ch_it_nf_num_nfis = f.num_nota_fiscal
+         and fi.ch_it_nf_ser_nfis = f.serie_nota_fisc
+        JOIN estq_005 t
+          ON t.CODIGO_TRANSACAO = fi.TRANSACAO
         JOIN PEDI_080 n
           ON n.NATUR_OPERACAO = f.NATOP_NF_NAT_OPER
          AND n.ESTADO_NATOPER = f.NATOP_NF_EST_OPER
@@ -453,7 +459,11 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
          AND c.CGC_4 = f.CGC_4
         WHERE 1=1
           AND f.CODIGO_EMPRESA = {empresa}
-          AND f.NATOP_NF_NAT_OPER IN (1, 2, 900, 903, 908)
+          -- ou o faturamento tem uma transação de venda
+          -- ou é o caso especial de remessa de residuo
+          AND ( t.TIPO_TRANSACAO = 'V'
+              OR f.NATOP_NF_NAT_OPER = 900
+              )
           -- filtro de faturamento baseado na view Faturados_X_Devolvidos
           -- filtrando faturamento_Sim_Nao = "Sim" e por data
           -- não cancelada
