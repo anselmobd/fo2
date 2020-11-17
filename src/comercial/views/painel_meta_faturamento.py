@@ -13,7 +13,6 @@ import lotes.queries.pedido as l_q_p
 
 import comercial.models
 import comercial.queries
-from comercial.views.meta_no_ano import dados_meta_no_ano
 
 
 class PainelMetaFaturamento(View):
@@ -28,7 +27,7 @@ class PainelMetaFaturamento(View):
         ano_atual = hoje.year
         mes_atual = hoje.month
 
-        meses, _ = dados_meta_no_ano(cursor, hoje)
+        meses, _ = comercial.queries.dados_meta_no_ano(cursor, hoje)
 
         mes = [mes for mes in meses
                if mes['imes'] == mes_atual][0]
