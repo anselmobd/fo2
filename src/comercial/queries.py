@@ -434,7 +434,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
         sql += """
               f.NUM_NOTA_FISCAL NF
             , f.DATA_EMISSAO DATA
-            , fi.VALOR_FATURADO +  fi.RATEIO_DESPESA VALOR
+            , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
@@ -492,6 +492,15 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
         """
     else:
         sql += """
+            GROUP BY
+              f.NUM_NOTA_FISCAL
+            , f.DATA_EMISSAO
+            , c.NOME_CLIENTE
+            , c.CGC_9
+            , c.CGC_4
+            , c.CGC_2
+            , n.COD_NATUREZA
+            , n.DIVISAO_NATUR
             ORDER BY
               f.NUM_NOTA_FISCAL
         """
