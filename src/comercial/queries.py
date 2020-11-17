@@ -453,6 +453,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
          AND c.CGC_4 = f.CGC_4
         WHERE 1=1
           AND f.CODIGO_EMPRESA = {empresa}
+          AND f.NATOP_NF_NAT_OPER IN (1, 2, 900, 903, 908)
           -- filtro de faturamento baseado na view Faturados_X_Devolvidos
           -- filtrando faturamento_Sim_Nao = "Sim" e por data
           -- não cancelada
