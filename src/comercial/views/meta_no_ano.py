@@ -43,7 +43,7 @@ def dados_meta_no_ano(cursor, hoje):
     }
 
     pedidos = l_q_p.pedido_faturavel_modelo(
-        cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}')
+        cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}', nat_oper=(1, 2))
     total_pedido = 0
     for pedido in pedidos:
         total_pedido += pedido['PRECO']
