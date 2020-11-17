@@ -59,7 +59,7 @@ def sql_filtra_modelo(field, modelo, conector='AND'):
 def totais_modelos_depositos(cursor, deposito, modelos=None):
 
     key_cache = my_make_key_cache(
-        'get_vendas', deposito)
+        'totais_modelos_depositos', deposito)
 
     while True:
         cached_result = cache.get(key_cache)
