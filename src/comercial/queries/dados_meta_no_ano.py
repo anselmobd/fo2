@@ -1,11 +1,54 @@
+import time
 from pprint import pprint
 
-from utils.functions import dias_mes_data
+from django.core.cache import cache
+
+from utils.cache import entkeys
+from utils.functions import (
+    dias_mes_data,
+    fo2logger,
+    my_make_key_cache,
+)
 
 import lotes.queries.pedido as l_q_p
 
 import comercial.models
 import comercial.queries
+
+
+def ddados_meta_no_ano(cursor, hoje):
+
+    key_cache = my_make_key_cache(
+        'ddados_meta_no_ano', hoje)
+
+    fo2logger.info('antes do while')
+    while True:
+        fo2logger.info('dentro do while')
+        if cache.get(f"{key_cache}_calc_"):
+            fo2logger.info('is _calc_ '+key_cache)
+            time.sleep(0.2)
+        else:
+            fo2logger.info('not _calc_ '+key_cache)
+            cached_result = cache.get(key_cache)
+            if cached_result is None:
+                fo2logger.info('set _calc_ '+key_cache)
+                cache.set(
+                    f"{key_cache}_calc_", "c", timeout=entkeys._SECOND * 10)
+                break
+            else:
+                fo2logger.info('cached '+key_cache)
+                return cached_result
+
+    fo2logger.info('depois do while')
+
+    # simulando a demora em processar
+    time.sleep(8)
+
+    cached_result = 'M!', 'T!'
+    cache.set(key_cache, cached_result)
+    fo2logger.info('calculated '+key_cache)
+    return cached_result
+
 
 
 def dados_meta_no_ano(cursor, hoje):

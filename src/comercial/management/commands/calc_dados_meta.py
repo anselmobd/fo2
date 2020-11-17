@@ -32,7 +32,9 @@ class Command(BaseCommand):
             cursor = connections['so'].cursor()
             hoje = datetime.date.today()
 
-            meses, total = comercial.queries.dados_meta_no_ano(cursor, hoje)
+            meses, total = comercial.queries.ddados_meta_no_ano(cursor, hoje)
+            self.my_pprintln(meses)
+            self.my_pprintln(total)
 
         except Exception as e:
             raise CommandError(
