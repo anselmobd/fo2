@@ -13,7 +13,7 @@ from utils.functions import (
 
 def pedido_faturavel_modelo(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
-        cached=True, deposito=None, empresa=1):
+        cached=True, deposito=None, empresa=1, nat_oper=None):
 
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
@@ -62,6 +62,19 @@ def pedido_faturavel_modelo(
             filtra_periodo += f'''--
                 AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {periodo_list[1]}
             '''
+
+    # (1, 2) = venda
+    # (4, 8) = amostra / bonificação
+    filtra_nat_oper = ''
+    if nat_oper is not None:
+        filtra_nat_oper = '''--
+            AND ped.NATOP_PV_NAT_OPER IN (
+        '''
+        sep = ''
+        for natu in nat_oper:
+            filtra_nat_oper += f'{sep}{natu}'
+            sep = ', '
+        filtra_nat_oper += f')'
 
     sql = f"""
         SELECT
@@ -123,6 +136,7 @@ def pedido_faturavel_modelo(
                   AND ped.CODIGO_EMPRESA = {empresa}
                   AND ped.STATUS_PEDIDO <> 5 -- não cancelado
                   AND ped.SITUACAO_VENDA = 0 -- pedido liberado
+                  {filtra_nat_oper} -- filtra_nat_oper
                   AND fok.NUM_NOTA_FISCAL IS NULL
                   -- AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + 148
                   {filtra_periodo} -- filtra_periodo
