@@ -1,3 +1,4 @@
+import datetime
 import time
 from pprint import pprint
 
@@ -18,8 +19,12 @@ import comercial.queries
 
 def ddados_meta_no_ano(cursor, hoje):
 
+    now = datetime.datetime.now()
+    # nova key a cada 10 minutos
+    key_variation = int((now.hour * 60 + now.minute) / 10)
+
     key_cache = my_make_key_cache(
-        'ddados_meta_no_ano', hoje)
+        'ddados_meta_no_ano', hoje, key_variation)
 
     fo2logger.info('antes do while')
     while True:
