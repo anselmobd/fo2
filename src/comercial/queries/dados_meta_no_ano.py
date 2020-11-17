@@ -29,7 +29,8 @@ def ddados_meta_no_ano(cursor, hoje):
     fo2logger.info('antes do while')
     while True:
         fo2logger.info('dentro do while')
-        if cache.get(f"{key_cache}_calc_"):
+        calc_cache = cache.get(f"{key_cache}_calc_", "n")
+        if calc_cache == 's':
             fo2logger.info('is _calc_ '+key_cache)
             time.sleep(0.2)
         else:
@@ -38,7 +39,7 @@ def ddados_meta_no_ano(cursor, hoje):
             if cached_result is None:
                 fo2logger.info('set _calc_ '+key_cache)
                 cache.set(
-                    f"{key_cache}_calc_", "c", timeout=entkeys._SECOND * 10)
+                    f"{key_cache}_calc_", "s", timeout=entkeys._SECOND * 10)
                 break
             else:
                 fo2logger.info('cached '+key_cache)
@@ -51,9 +52,9 @@ def ddados_meta_no_ano(cursor, hoje):
 
     cached_result = 'M!', 'T!'
     cache.set(key_cache, cached_result)
+    cache.set(f"{key_cache}_calc_", "n")
     fo2logger.info('calculated '+key_cache)
     return cached_result
-
 
 
 def dados_meta_no_ano(cursor, hoje):
