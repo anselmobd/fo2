@@ -75,10 +75,8 @@ def caching_function(
 
         if minutes_key_variation is not None:
             my_make_key_cache_args.append(key_variation)
-        pprint(my_make_key_cache_args)
 
         key_cache = my_make_key_cache(*my_make_key_cache_args)
-        print('key_cache', key_cache)
 
         fo2logger.info('antes do while')
 
