@@ -114,7 +114,7 @@ def caching_function(
     return wrapper
 
 
-
+@caching_function(key_cache_fields=['hoje'], minutes_key_variation=10)
 def dados_meta_no_ano(hoje):
     cursor = connections['so'].cursor()
 
