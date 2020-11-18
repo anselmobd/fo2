@@ -2,7 +2,6 @@ import datetime
 from pprint import pprint, pformat
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
 
 import comercial.queries
 
@@ -29,10 +28,8 @@ class Command(BaseCommand):
         self.my_println('{}'.format(datetime.datetime.now()))
 
         try:
-            cursor = connections['so'].cursor()
             hoje = datetime.date.today()
-
-            meses, total = comercial.queries.ddados_meta_no_ano(cursor, hoje)
+            meses, total = comercial.queries.cache_ddados_meta_no_ano(hoje)
             self.my_pprintln(meses)
             self.my_pprintln(total)
 

@@ -3,6 +3,7 @@ import time
 from pprint import pprint
 
 from django.core.cache import cache
+from django.db import connections
 
 from utils.cache import entkeys
 from utils.functions import (
@@ -57,7 +58,9 @@ def ddados_meta_no_ano(cursor, hoje):
     return cached_result
 
 
-def dados_meta_no_ano(cursor, hoje):
+def dados_meta_no_ano(hoje):
+    cursor = connections['so'].cursor()
+
     ano_atual = hoje.year
     mes_atual = hoje.month
     dia_atual = hoje.day
