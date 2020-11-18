@@ -1,7 +1,6 @@
 from pprint import pprint
 import datetime
 
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
@@ -22,12 +21,11 @@ class PainelMetaFaturamento(View):
         self.context = {}
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
         hoje = datetime.datetime.now()
         ano_atual = hoje.year
         mes_atual = hoje.month
 
-        meses, _ = comercial.queries.dados_meta_no_ano(cursor, hoje)
+        meses, _ = comercial.queries.dados_meta_no_ano(hoje)
 
         mes = [mes for mes in meses
                if mes['imes'] == mes_atual][0]
