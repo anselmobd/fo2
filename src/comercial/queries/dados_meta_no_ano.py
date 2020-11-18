@@ -1,5 +1,7 @@
 import datetime
 import time
+from functools import wraps, partial
+from inspect import signature
 from pprint import pprint
 
 from django.core.cache import cache
@@ -18,11 +20,155 @@ import comercial.models
 import comercial.queries
 
 
-def ddados_meta_no_ano(cursor, hoje):
+def decorando(func=None, *, message=None):
+    if func is None:
+        return partial(decorando, message=message)
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if message is not None:
+            print(message)
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def caching_function(
+        func=None, *,
+        key_cache_fields=[],
+        max_run_delay=20,
+        minutes_key_variation=None):
+    if func is None:
+        return partial(
+            caching_function,
+            key_cache_fields=key_cache_fields,
+            max_run_delay=max_run_delay,
+            minutes_key_variation=minutes_key_variation,
+        )
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if minutes_key_variation is not None:
+            # nova key a cada x minutos
+            now = datetime.datetime.now()
+            key_variation = int(
+                (now.hour * 60 + now.minute) / minutes_key_variation)
+
+        my_make_key_cache_args = [func.__name__]
+
+        sig = signature(func)
+        func_params = list(sig.parameters.keys())
+        for field in key_cache_fields:
+            field_index = func_params.index(field)
+            try:
+                value = args[field_index]
+            except IndexError:
+                value = kwargs[field]
+            my_make_key_cache_args.append(value)
+
+        if minutes_key_variation is not None:
+            my_make_key_cache_args.append(key_variation)
+        pprint(my_make_key_cache_args)
+
+        key_cache = my_make_key_cache(*my_make_key_cache_args)
+        print('key_cache', key_cache)
+
+        fo2logger.info('antes do while')
+
+        while True:
+            fo2logger.info('dentro do while')
+            calc_cache = cache.get(f"{key_cache}_calc_", "n")
+            if calc_cache == 's':
+                fo2logger.info('is _calc_ '+key_cache)
+                time.sleep(0.2)
+            else:
+                fo2logger.info('not _calc_ '+key_cache)
+                cached_result = cache.get(key_cache)
+                if cached_result is None:
+                    fo2logger.info('set _calc_ '+key_cache)
+                    cache.set(
+                        f"{key_cache}_calc_", "s",
+                        timeout=entkeys._SECOND * max_run_delay)
+                    break
+                else:
+                    fo2logger.info('cached '+key_cache)
+                    return cached_result
+
+        fo2logger.info('depois do while')
+
+        cached_result = func(*args, **kwargs)
+
+        cache.set(key_cache, cached_result)
+        cache.set(f"{key_cache}_calc_", "n")
+        fo2logger.info('calculated '+key_cache)
+
+        return cached_result
+
+    return wrapper
+
+
+@caching_function(key_cache_fields=['hoje'], minutes_key_variation=1)
+def caching_dados_meta_no_ano(hoje):
+    cursor = connections['so'].cursor()
+
+    # simulando a demora em processar
+    time.sleep(5)
+
+    return 'M!!', 'T!!'
+
+
+def ddados_meta_no_ano(hoje):
+    cursor = connections['so'].cursor()
+
+    # simulando a demora em processar
+    time.sleep(8)
+
+    return 'M!', 'T!'
+
+
+def cache_ddados_meta_no_ano(hoje, key_cache_fields=['hoje']):
+    # print('cache_ddados_meta_no_ano')
+    # pprint(cache_ddados_meta_no_ano.__code__)
+    # # help(cache_ddados_meta_no_ano.__code__)
+    # print('co_argcount')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_argcount)
+    # print('co_cellvars')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_cellvars)
+    # print('co_code')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_code)
+    # print('co_consts')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_consts)
+    # print('co_filename')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_filename)
+    # print('co_firstlineno')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_firstlineno)
+    # print('co_flags')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_flags)
+    # print('co_freevars')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_freevars)
+    # print('co_kwonlyargcount')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_kwonlyargcount)
+    # print('co_lnotab')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_lnotab)
+    # print('co_name')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_name)
+    # print('co_names')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_names)
+    # print('co_nlocals')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_nlocals)
+    # print('co_stacksize')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_stacksize)
+    # print('co_varnames')
+    # pprint(cache_ddados_meta_no_ano.__code__.co_varnames)
 
     now = datetime.datetime.now()
     # nova key a cada 10 minutos
     key_variation = int((now.hour * 60 + now.minute) / 10)
+
+    my_make_key_cache_args = ['ddados_meta_no_ano']
+    for field in key_cache_fields:
+        my_make_key_cache_args.append(locals()[field])
+    my_make_key_cache_args.append(key_variation)
+    pprint(my_make_key_cache_args)
 
     key_cache = my_make_key_cache(
         'ddados_meta_no_ano', hoje, key_variation)
@@ -48,10 +194,8 @@ def ddados_meta_no_ano(cursor, hoje):
 
     fo2logger.info('depois do while')
 
-    # simulando a demora em processar
-    time.sleep(8)
+    cached_result = ddados_meta_no_ano(hoje)
 
-    cached_result = 'M!', 'T!'
     cache.set(key_cache, cached_result)
     cache.set(f"{key_cache}_calc_", "n")
     fo2logger.info('calculated '+key_cache)
