@@ -25,7 +25,7 @@ class PainelMetaFaturamento(View):
         ano_atual = hoje.year
         mes_atual = hoje.month
 
-        meses, _ = comercial.queries.dados_meta_no_ano(hoje)
+        meses, _ = comercial.queries.dados_meta_no_ano(hoje.date())
 
         mes = [mes for mes in meses
                if mes['imes'] == mes_atual][0]
