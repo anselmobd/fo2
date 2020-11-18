@@ -1,8 +1,6 @@
 from pprint import pprint
 import datetime
 
-from django.db import connections
-
 from base.views import O2BaseGetView
 
 import comercial.queries
@@ -16,11 +14,10 @@ class MetaNoAno(O2BaseGetView):
         self.title_name = 'Meta do ano'
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
         hoje = datetime.date.today()
         mes_atual = hoje.month
 
-        meses, total = comercial.queries.dados_meta_no_ano(cursor, hoje)
+        meses, total = comercial.queries.dados_meta_no_ano(hoje)
 
         self.context.update({
             'meses': meses,
