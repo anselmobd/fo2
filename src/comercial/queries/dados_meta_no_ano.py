@@ -20,15 +20,23 @@ import comercial.models
 import comercial.queries
 
 
-def decorando(func=None, *, message=None):
+# padrão de decorator
+def padrao_decorator(func=None, *, message=None):
     if func is None:
-        return partial(decorando, message=message)
+        return partial(padrao_decorator, message=message)
 
     @wraps(func)
     def wrapper(*args, **kwargs):
         if message is not None:
             print(message)
-        return func(*args, **kwargs)
+
+        result = func(*args, **kwargs)
+
+        if message is not None:
+            print(message)
+
+        return result
+
     return wrapper
 
 
