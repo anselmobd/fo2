@@ -23,7 +23,7 @@ def historico(pedido):
           and h.tabela = 'PEDI_100'
           and h.num01 = {pedido}
         order by
-          h.sequencia
+          h.sequencia desc
     """
     cursor.execute(sql)
     fo2logger.info(sql)
