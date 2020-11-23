@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db import connection
 
 from utils.functions.models import rows_to_dict_list
-from utils.functions import fo2logger
 
 
 def historico(pedido):
@@ -26,7 +25,4 @@ def historico(pedido):
           h.sequencia desc
     """
     cursor.execute(sql)
-    fo2logger.info(sql)
-    data = rows_to_dict_list(cursor)
-    fo2logger.info(data)
-    return data
+    return rows_to_dict_list(cursor)

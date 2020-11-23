@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+<h4>A partir de 04/11/2020</h4>
 <form action="{% url 'producao:pedido_historico' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
