@@ -1,8 +1,7 @@
 from pprint import pprint
 
+from django.conf import settings
 from django.db import connection
-
-from fo2.settings import DEBUG, DATABASES
 
 from utils.functions.models import rows_to_dict_list
 from utils.functions import fo2logger
@@ -11,7 +10,7 @@ from utils.functions import fo2logger
 def historico(pedido):
     cursor = connection.cursor()
     esquema = "" if (
-        DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
+        settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
     ) else "systextil_logs."
     sql = f"""
         select 
