@@ -2,14 +2,17 @@ from pprint import pprint
 
 from django.db import connection
 
-from fo2.settings import DEBUG
+from fo2.settings import DEBUG, DATABASES
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions import fo2logger
 
 
 def historico(pedido):
     cursor = connection.cursor()
-    esquema = "" if DEBUG else "systextil_logs."
+    esquema = "" if (
+        DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
+    ) else "systextil_logs."
     sql = f"""
         select 
           h.data_ocorr
@@ -24,4 +27,7 @@ def historico(pedido):
           h.sequencia
     """
     cursor.execute(sql)
-    return rows_to_dict_list(cursor)
+    fo2logger.info(sql)
+    data = rows_to_dict_list(cursor)
+    fo2logger.info(data)
+    return data
