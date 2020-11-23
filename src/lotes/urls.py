@@ -149,6 +149,10 @@ urlpatterns = [
         r'(?P<in_out>[^/]+)/(?P<qtd_a_mover>[^/]+)?/?$',
         views.lote.ajax_conserto_lote, name='conserto_lote__ajax'),
 
+    url(r'^pedido/historico$', views.pedido.Historico.as_view(), name='pedido_historico'),
+    url(r'^pedido/historico/(?P<pedido>\d+)/$', views.pedido.Historico.as_view(),
+        name='pedido_historico__get'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     url(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
