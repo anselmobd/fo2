@@ -4,10 +4,16 @@
   {% endif %}
 {% endwith %}
 
+{% if field in pre %}
+  <pre>
+{% endif %}
 {% if field in safe %}
   {{ row|get_item:field|safe }}
 {% else %}
   {% include "layout/html_tbody_fieldlink.html" with row=row field=field only %}
+{% endif %}
+{% if field in pre %}
+  </pre>
 {% endif %}
 
 {% with field|add:'|HOVER' as field_hover %}

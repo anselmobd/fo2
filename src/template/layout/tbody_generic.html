@@ -23,7 +23,7 @@
       style="{% spaceless %}
       {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
       {% endspaceless %}">{% spaceless %}
-      {% include "layout/tbody_generic_td_content.html" with row=row field=field safe=safe only %}
+      {% include "layout/tbody_generic_td_content.html" with row=row field=field safe=safe pre=pre only %}
       {% endspaceless %}</td>
     {% endif %}
   {% endfor %}
