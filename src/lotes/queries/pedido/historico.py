@@ -1,17 +1,27 @@
 from pprint import pprint
 
+from django.db import connection
+
+from fo2.settings import DEBUG
+
 from utils.functions.models import rows_to_dict_list
 
 
-def ped_inform(cursor, pedido):
-    sql = """
+def historico(pedido):
+    cursor = connection.cursor()
+    esquema = "" if DEBUG else "systextil_logs."
+    sql = f"""
         select 
-          *
-        from systextil_logs.hist_100 h
+          h.data_ocorr
+        , h.usuario
+        , h.maquina_rede
+        , h.long01
+        from {esquema}hist_100 h
         where h.programa = 'pedi_f130'
-          and h.num01 = %s
+          and h.tabela = 'PEDI_100'
+          and h.num01 = {pedido}
         order by
           h.sequencia
     """
-    cursor.execute(sql, [pedido])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)

@@ -1,6 +1,5 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -16,10 +15,10 @@ class Historico(View):
     template_name = 'lotes/historico.html'
     title_name = 'Histórico de pedido'
 
-    def mount_context(self, cursor, pedido):
+    def mount_context(self, pedido):
         context = {'pedido': pedido}
 
-        data = queries.pedido.historico(cursor, pedido)
+        data = queries.pedido.historico(pedido)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
@@ -27,10 +26,10 @@ class Historico(View):
         return context
 
         context.update({
-            'headers': ('Data de emissão', 'Data de embarque',
-                        'Cliente', 'Código do pedido no cliente'),
-            'fields': ('DT_EMISSAO', 'DT_EMBARQUE',
-                        'CLIENTE', 'PEDIDO_CLIENTE'),
+            'headers': ('Data', 'Usuário',
+                        'Máquina', 'Descrição'),
+            'fields': ('data_ocorr', 'usuario',
+                        'maquina_rede', 'long01'),
             'data': data,
         })
         return context
@@ -51,7 +50,6 @@ class Historico(View):
             form.data['pedido'] = kwargs['pedido']
         if form.is_valid():
             pedido = form.cleaned_data['pedido']
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, pedido))
+            context.update(self.mount_context(pedido))
         context['form'] = form
         return render(request, self.template_name, context)
