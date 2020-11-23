@@ -23,7 +23,7 @@ class Historico(View):
             context.update({
                 'msg_erro': 'Pedido não encontrado',
             })
-        return context
+            return context
 
         context.update({
             'headers': ('Data', 'Usuário',
