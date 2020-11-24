@@ -73,7 +73,7 @@ class SolicitaLotePedido(models.Model):
         return fo2_digit_with(self.solicitacao.id)
 
     def __str__(self):
-        return f"#{self.solicitacao_numero}/{self.pedido})"
+        return f"#{self.solicitacao_numero}/{self.pedido}"
 
     class Meta:
         db_table = "fo2_cd_solicita_lote_pedido"
