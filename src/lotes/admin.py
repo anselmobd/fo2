@@ -9,6 +9,7 @@ from .models import (
     LeadColecao,
     ModeloTermica,
     SolicitaLote,
+    SolicitaLotePedido,
     SolicitaLotePrinted,
     UsuarioImpresso,
     EnderecoDisponivel,
@@ -100,6 +101,12 @@ class SolicitaLoteAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(SolicitaLote, SolicitaLoteAdmin)
+
+class SolicitaLotePedidoAdmin(admin.ModelAdmin):
+    ordering = ['-solicitacao', 'pedido']
+
+
+intr_adm_site.register(SolicitaLotePedido, SolicitaLotePedidoAdmin)
 
 
 class SolicitaLotePrintedAdmin(admin.ModelAdmin):
