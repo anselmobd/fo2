@@ -61,6 +61,24 @@ class SolicitaLote(models.Model):
         verbose_name = "Solicitação de lote"
 
 
+class SolicitaLotePedido(models.Model):
+    solicitacao = models.ForeignKey(
+        SolicitaLote, on_delete=models.PROTECT,
+        verbose_name='Solicitação')
+
+    pedido = models.IntegerField()
+
+    @property
+    def solicitacao_numero(self):
+        return fo2_digit_with(self.solicitacao.id)
+
+    def __str__(self):
+        return f"#{self.solicitacao_numero}/{self.pedido})"
+
+    class Meta:
+        db_table = "fo2_cd_solicita_lote_pedido"
+        verbose_name = "Pedido de solicitação de lote"
+
 # class EstadoSolicitacao(models.Model):
 #     nome = models.CharField(
 #         max_length=20,
