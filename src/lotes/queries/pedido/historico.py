@@ -19,7 +19,7 @@ def historico(pedido):
         , h.long01
         from {esquema}hist_100 h
         where h.programa = 'pedi_f130'
-          and h.tabela = 'PEDI_100'
+          -- and h.tabela = 'PEDI_100'
           and h.num01 = {pedido}
         order by
           h.sequencia desc
