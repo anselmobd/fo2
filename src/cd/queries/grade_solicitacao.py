@@ -23,6 +23,8 @@ def grade_solicitacao(
 
     # Grade de solicitação
     grade = GradeQtd(cursor)
+    if tipo == '1s':
+        grade_complementar = GradeQtd(cursor)
 
     if referencia is None:
         filter_referencia = '--'
@@ -212,6 +214,13 @@ def grade_solicitacao(
         total='Total',
         sql=sql
         )
+    if tipo == '1s':
+        grade_complementar.col(
+            id='tamanho',
+            name='Tamanho',
+            total='Total',
+            sql=sql
+            )
 
     # cores
     if not grade_inventario and tipo == '1s':
@@ -371,6 +380,14 @@ def grade_solicitacao(
         total='Total',
         sql=sql
         )
+    if tipo == '1s':
+        grade_complementar.row(
+            id='cor',
+            name='Cor',
+            name_plural='Cores',
+            total='Total',
+            sql=sql
+            )
 
     # sortimento
     if tipo == '1s':
@@ -381,6 +398,30 @@ def grade_solicitacao(
             , sum(case when l.qtd < coalesce(sq.qtd, 0)
                   then l.qtd
                   else coalesce(sq.qtd, 0)
+                  end) qtd
+            from fo2_cd_lote l
+            join fo2_cd_solicita_lote_qtd sq
+              on sq.lote_id = l.id
+            where 1=1
+              and sq.origin_id = 0
+              {filter_referencia} -- filter_referencia
+              and l.local is not null
+              and l.local <> ''
+              {filter_solicit_id} -- filter_solicit_id
+            group by
+              l.tamanho
+            , l.cor
+            order by
+              l.tamanho
+            , l.cor
+        '''.format(**filtros)
+        sql_complementar = '''
+            SELECT
+              l.tamanho
+            , l.cor
+            , sum(case when l.qtd < coalesce(sq.qtd, 0)
+                  then coalesce(sq.qtd, 0) - l.qtd
+                  else 0
                   end) qtd
             from fo2_cd_lote l
             join fo2_cd_solicita_lote_qtd sq
@@ -693,6 +734,17 @@ def grade_solicitacao(
         sql=sql
         )
 
+    if tipo == '1s':
+        grade_complementar.value(
+            id='qtd',
+            sql=sql_complementar
+            )
+        data_complementar = grade_complementar.table_data['data']
+        total_complementar = grade_complementar.total
+    else:
+        data_complementar = None
+        total_complementar = 0
+
     fields = grade.table_data['fields']
     data = grade.table_data['data']
     style = grade.table_data['style']
@@ -704,6 +756,8 @@ def grade_solicitacao(
         'data': data,
         'style': style,
         'total': grade.total,
+        'data_complementar': data_complementar,
+        'total_complementar': total_complementar,
     }
 
     return context_ref
