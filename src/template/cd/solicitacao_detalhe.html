@@ -169,6 +169,13 @@
             {% include "layout/thead_generic.html" with data=grade.headers style=grade.style only %}
             {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data style=grade.style only %}
           </table>
+          {% if grade.total_complementar != 0 %}
+          <h4><b>Faltando</b></h4>
+          <table style="width: auto;">
+            {% include "layout/thead_generic.html" with data=grade.headers style=grade.style only %}
+            {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data_complementar style=grade.style only %}
+          </table>
+          {% endif %}
         {% endfor %}
       {% else %}
         <h4>Nenhum lote nesta solicitação</h4>
