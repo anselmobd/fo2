@@ -10,8 +10,10 @@ from utils.functions.models import rows_to_dict_list_lower
 
 import lotes.models as models
 from lotes.functions import (
+    oracle_existe_col,
     oracle_existe_seq,
     oracle_existe_table,
+    oracle_existem_triggers,
 )
 
 
@@ -308,54 +310,6 @@ class Command(BaseCommand):
                     self.atualiza_op.append(row_s)
                     count_task += 1
 
-    def existe_trigger_sql(self, cursor, owner, table, trigger):
-        return f'''
-            SELECT
-              t.TRIGGER_NAME
-            FROM ALL_TRIGGERS t
-            WHERE 1=1
-              AND t.OWNER = '{owner}'
-              AND t.TRIGGER_NAME = '{trigger}'
-              AND t.TABLE_NAME = '{table}'
-              AND t.STATUS = 'ENABLED'
-        '''
-
-    def existe_trigger(self, cursor, owner, table, trigger):
-        try:
-            sql = self.existe_trigger_sql(cursor, owner, table, trigger)
-            data = list(cursor.execute(sql))
-            return data[0][0] == trigger
-        except Exception as e:
-            return False
-
-    def existem_triggers(self, cursor, owner, tables_triggers):
-        sql_list = []
-        for table, trigger in tables_triggers:
-            sql = self.existe_trigger_sql(
-                cursor, owner, table, trigger)
-            sql_list = ['\n UNION \n'.join(sql_list+[sql])]
-        sql_union = sql_list[0]
-
-        try:
-            data = list(cursor.execute(sql_union))
-            return len(data) == len(tables_triggers)
-        except Exception as e:
-            return False
-
-    def existe_col(self, cursor, table, column):
-        try:
-            sql = f'''
-                select
-                    column_name
-                from user_tab_cols
-                where table_name = '{table}'
-                  and column_name = '{column}'
-            '''
-            data = list(cursor.execute(sql))
-            return data[0][0] == column
-        except Exception as e:
-            return False
-
     def verifica_seq(self):
         cursor_vs = connections['so'].cursor()
         return oracle_existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
@@ -367,14 +321,14 @@ class Command(BaseCommand):
     def verifica_column(self):
         cursor_vs = connections['so'].cursor()
         return (
-            self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SYNC')
+            oracle_existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SYNC')
             and
-            self.existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_ID')
+            oracle_existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_ID')
         )
 
     def verifica_trigger(self):
         cursor_vs = connections['so'].cursor()
-        return self.existem_triggers(
+        return oracle_existem_triggers(
             cursor_vs, 'SYSTEXTIL',
             [
                 ('FO2_TUSSOR_SYNC_DEL', 'FO2_TUSSOR_SYNC_DEL_TR'),
