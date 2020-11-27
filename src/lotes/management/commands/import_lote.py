@@ -8,7 +8,12 @@ from django.db import connections
 from utils.functions.models import rows_to_dict_list_lower
 
 import lotes.models as models
-from lotes.functions import oracle_existe_seq
+from lotes.functions import (
+    oracle_existe_col,
+    oracle_existe_seq,
+    oracle_existe_table,
+    oracle_existem_triggers,
+)
 
 
 class Command(BaseCommand):
@@ -341,6 +346,18 @@ class Command(BaseCommand):
         cursor_vs = connections['so'].cursor()
         return oracle_existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
+    def verifica_del_table(self):
+        cursor_vs = connections['so'].cursor()
+        return oracle_existe_table(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR_SYNC_DEL')
+
+    def verifica_column(self):
+        cursor_vs = connections['so'].cursor()
+        return (
+            oracle_existe_col(cursor_vs, 'PCPC_040', 'FO2_TUSSOR_SYNC')
+            and
+            oracle_existe_col(cursor_vs, 'PCPC_040', 'FO2_TUSSOR_ID')
+        )
+
     def verificacoes(self):
 
         # CREATE SEQUENCE SYSTEXTIL.FO2_TUSSOR INCREMENT BY 1 MINVALUE 1
@@ -353,6 +370,46 @@ class Command(BaseCommand):
                 'Banco tem sequência'
                 if aux_bool
                 else 'Banco não tem sequência'
+            )
+
+        # CREATE TABLE SYSTEXTIL.FO2_TUSSOR_SYNC_DEL (
+        #   ID INTEGER NOT NULL,
+        #   TABELA VARCHAR2(100) NOT NULL,
+        #   SYNC_ID INTEGER NOT NULL,
+        #   QUANDO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        # )
+        # TABLESPACE SYSTEXTIL_DADOS;
+        # COMMIT;
+
+        # ALTER TABLE SYSTEXTIL.FO2_TUSSOR_SYNC_DEL ADD (
+        #   CONSTRAINT FO2_TUSSOR_SYNC_DEL_PK PRIMARY KEY (ID));
+        # COMMIT;
+
+        aux_bool = self.verifica_del_table()
+        if self.verbosity > 1:
+            self.my_println(
+                'Banco tem tabela de deleção'
+                if aux_bool
+                else 'Banco não tem tabela de deleção'
+            )
+
+        # ALTER TABLE SYSTEXTIL.PCPC_040 ADD FO2_TUSSOR_ID INTEGER;
+        # ALTER TABLE SYSTEXTIL.PCPC_040 ADD FO2_TUSSOR_SYNC INTEGER;
+        # COMMIT;
+
+        # após a criação das triggers, acerta os registros anteriores à trigger
+
+        # UPDATE SYSTEXTIL.PCPC_040
+        # SET FO2_TUSSOR_ID = FO2_TUSSOR_SYNC
+        # WHERE FO2_TUSSOR_ID IS NULL
+        # COMMIT;
+
+        self.tem_col_sync = self.verifica_column()
+        if self.verbosity > 1:
+            self.my_println(
+                'Tabela tem colunas'
+                if self.tem_col_sync
+                else 'Tabela não tem colunas'
             )
 
     def handle(self, *args, **options):
