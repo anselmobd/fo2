@@ -255,6 +255,13 @@ class Command(BaseCommand):
             alter = True
             lote.trail = row['trail']
             # self.stdout.write('trail {}'.format(lote.trail))
+        if self.tem_col_sync:
+            if lote.sync != row['sync']:
+                alter = True
+                lote.sync = row['sync']
+            if lote.sync_id != row['sync_id']:
+                alter = True
+                lote.sync_id = row['sync_id']
         return alter
 
     def inclui(self, op):
