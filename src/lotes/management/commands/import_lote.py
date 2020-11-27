@@ -335,7 +335,40 @@ class Command(BaseCommand):
             for op in self.exclui_op:
                 self.exclui(op)
 
+    def existe_seq(self, cursor, owner, name):
+        try:
+            sql = f'''
+                SELECT
+                  s.SEQUENCE_NAME
+                FROM ALL_SEQUENCES s
+                WHERE s.SEQUENCE_OWNER = '{owner}'
+                  AND s.SEQUENCE_NAME = '{name}'
+            '''
+            data = list(cursor.execute(sql))
+            return data[0][0] == name
+        except Exception as e:
+            return False
+
+    def verifica_seq(self):
+        cursor_vs = connections['so'].cursor()
+        return self.existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOwR')
+
+    def verificacoes(self):
+
+        # CREATE SEQUENCE SYSTEXTIL.FO2_TUSSOR INCREMENT BY 1 MINVALUE 1
+        # NOCYCLE CACHE 1000 NOORDER;
+        # COMMIT;
+
+        aux_bool = self.verifica_seq()
+        if self.verbosity > 1:
+            self.my_println(
+                'Banco tem sequência'
+                if aux_bool
+                else 'Banco não tem sequência'
+            )
+
     def handle(self, *args, **options):
+        self.verbosity = options['verbosity']
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
 
@@ -343,6 +376,8 @@ class Command(BaseCommand):
         self.opini = options['opini']
 
         try:
+
+            self.verificacoes()
 
             # pega no Systêxtil a lista OPs com um valor de teste de quantidade
             ics = self.get_ops_trail_s()
