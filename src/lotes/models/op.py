@@ -93,6 +93,8 @@ class Lote(models.Model):
     caixa = models.ForeignKey(
         Caixa, null=True, default=None, on_delete=models.CASCADE)
     trail = models.IntegerField(default=0)
+    sync_id = models.IntegerField(default=-1)
+    sync = models.IntegerField(default=-1)
 
     __original_local = None
 
