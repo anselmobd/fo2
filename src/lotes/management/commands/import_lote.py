@@ -1,6 +1,6 @@
 import sys
 import datetime
-from pprint import pprint
+from pprint import pprint, pformat
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
@@ -33,6 +33,13 @@ class Command(BaseCommand):
 
     def my_print(self, text='', ending=''):
         self.stdout.write(text, ending=ending)
+        self.stdout.flush()
+
+    def my_pprintln(self, object):
+        self.my_pprint(object, ending='\n')
+
+    def my_pprint(self, object, ending=''):
+        self.stdout.write(pformat(object), ending=ending)
         self.stdout.flush()
 
     def iter_cursor(self, cursor):
