@@ -48,3 +48,18 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
             corrigido = True
 
     return corrigido, alt, ests
+
+
+def oracle_existe_seq(cursor, owner, name):
+    try:
+        sql = f'''
+            SELECT
+              s.SEQUENCE_NAME
+            FROM ALL_SEQUENCES s
+            WHERE s.SEQUENCE_OWNER = '{owner}'
+              AND s.SEQUENCE_NAME = '{name}'
+        '''
+        data = list(cursor.execute(sql))
+        return data[0][0] == name
+    except Exception as e:
+        return False

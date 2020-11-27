@@ -9,6 +9,7 @@ import base.models
 from utils.functions.models import rows_to_dict_list_lower
 
 import lotes.models as models
+from lotes.functions import oracle_existe_seq
 
 
 class Command(BaseCommand):
@@ -304,20 +305,6 @@ class Command(BaseCommand):
                     self.atualiza_op.append(row_s)
                     count_task += 1
 
-    def existe_seq(self, cursor, owner, name):
-        try:
-            sql = f'''
-                SELECT
-                  s.SEQUENCE_NAME
-                FROM ALL_SEQUENCES s
-                WHERE s.SEQUENCE_OWNER = '{owner}'
-                  AND s.SEQUENCE_NAME = '{name}'
-            '''
-            data = list(cursor.execute(sql))
-            return data[0][0] == name
-        except Exception as e:
-            return False
-
     def existe_table(self, cursor, owner, name):
         try:
             sql = f'''
@@ -383,7 +370,7 @@ class Command(BaseCommand):
 
     def verifica_seq(self):
         cursor_vs = connections['so'].cursor()
-        return self.existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
+        return oracle_existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
     def verifica_del_table(self):
         cursor_vs = connections['so'].cursor()
