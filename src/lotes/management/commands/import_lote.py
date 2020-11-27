@@ -133,6 +133,13 @@ class Command(BaseCommand):
               ELSE l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO END QTD
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 0
               ELSE l.QTDE_CONSERTO END CONSERTO
+        '''
+        if self.tem_col_sync:
+            sql += ''' --
+                , lote.sync_id
+                , lote.sync
+            '''
+        sql += ''' --
             FROM
             (
               SELECT
@@ -158,6 +165,13 @@ class Command(BaseCommand):
                   )
                   * (MOD(le.ORDEM_CONFECCAO, 1000) + 1)
                 ) trail
+        '''
+        if self.tem_col_sync:
+            sql += ''' --
+                , max(le.FO2_TUSSOR_ID) sync_id
+                , max(le.FO2_TUSSOR_SYNC) sync
+            '''
+        sql += f''' --
               FROM PCPC_040 le -- lote estágio
               LEFT JOIN BASI_220 t
                 ON t.TAMANHO_REF = le.PROCONF_SUBGRUPO
