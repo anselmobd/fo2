@@ -61,5 +61,21 @@ def oracle_existe_seq(cursor, owner, name):
         '''
         data = list(cursor.execute(sql))
         return data[0][0] == name
-    except Exception as e:
+    except Exception:
+        return False
+
+
+def oracle_existe_table(cursor, owner, name):
+    try:
+        sql = f'''
+            SELECT
+              t.TABLE_NAME
+            FROM ALL_TABLES t
+            WHERE 1=1
+              AND t.OWNER = '{owner}'
+              AND t.TABLE_NAME = '{name}'
+        '''
+        data = list(cursor.execute(sql))
+        return data[0][0] == name
+    except Exception:
         return False
