@@ -358,6 +358,17 @@ class Command(BaseCommand):
             oracle_existe_col(cursor_vs, 'PCPC_040', 'FO2_TUSSOR_ID')
         )
 
+    def verifica_trigger(self):
+        cursor_vs = connections['so'].cursor()
+        return oracle_existem_triggers(
+            cursor_vs, 'SYSTEXTIL',
+            [
+                ('FO2_TUSSOR_SYNC_DEL', 'FO2_TUSSOR_SYNC_DEL_TR'),
+                ('PCPC_040', 'TUSSOR_TR_PCPC_040_SYNC'),
+                ('PCPC_040', 'TUSSOR_TR_PCPC_040_SYNC_DEL'),
+            ]
+        )
+
     def verificacoes(self):
 
         # CREATE SEQUENCE SYSTEXTIL.FO2_TUSSOR INCREMENT BY 1 MINVALUE 1
@@ -411,6 +422,47 @@ class Command(BaseCommand):
                 if self.tem_col_sync
                 else 'Tabela não tem colunas'
             )
+
+        # CREATE OR REPLACE TRIGGER SYSTEXTIL.FO2_TUSSOR_SYNC_DEL_TR 
+        # BEFORE INSERT ON SYSTEXTIL.FO2_TUSSOR_SYNC_DEL 
+        # FOR EACH ROW
+        # BEGIN
+        #   SELECT SYSTEXTIL.FO2_TUSSOR.NEXTVAL
+        #   INTO   :new.id
+        #   FROM   dual;
+        # END FO2_TUSSOR_SYNC_DEL_TR;
+
+        # CREATE OR REPLACE TRIGGER SYSTEXTIL.TUSSOR_TR_PCPC_040_SYNC
+        #   BEFORE INSERT OR UPDATE 
+        #   ON SYSTEXTIL.PCPC_040
+        #   FOR EACH ROW
+        # DECLARE
+        #   v_sync SYSTEXTIL.PCPC_040.FO2_TUSSOR_SYNC%TYPE;
+        # BEGIN
+        #   SELECT SYSTEXTIL.FO2_TUSSOR.nextval INTO v_sync FROM DUAL;
+        #   IF INSERTING OR :old.FO2_TUSSOR_ID IS NULL THEN
+        #     :new.FO2_TUSSOR_ID := v_sync;
+        #   ELSE
+        #     :new.FO2_TUSSOR_ID := :old.FO2_TUSSOR_ID;
+        #   END IF;
+        #   :new.FO2_TUSSOR_SYNC := v_sync;
+        # END TUSSOR_TR_PCPC_040_SYNC
+
+        # CREATE OR REPLACE TRIGGER SYSTEXTIL.TUSSOR_TR_PCPC_040_SYNC_DEL
+        #   AFTER DELETE 
+        #   ON SYSTEXTIL.PCPC_040
+        #   FOR EACH ROW
+        # BEGIN
+        #   INSERT INTO FO2_TUSSOR_SYNC_DEL (TABELA, SYNC_ID)
+        #   VALUES ('PCPC_040', :old.FO2_TUSSOR_ID);
+        # END TUSSOR_TR_PCPC_040_SYNC_DEL
+
+        self.tem_trigger = self.verifica_trigger()
+        self.my_println(
+            'Tabelas tem triggers'
+            if self.tem_trigger
+            else 'Tabelas não tem triggers'
+        )
 
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
