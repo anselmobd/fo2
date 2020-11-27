@@ -9,7 +9,10 @@ import base.models
 from utils.functions.models import rows_to_dict_list_lower
 
 import lotes.models as models
-from lotes.functions import oracle_existe_seq
+from lotes.functions import (
+    oracle_existe_seq,
+    oracle_existe_table,
+)
 
 
 class Command(BaseCommand):
@@ -305,21 +308,6 @@ class Command(BaseCommand):
                     self.atualiza_op.append(row_s)
                     count_task += 1
 
-    def existe_table(self, cursor, owner, name):
-        try:
-            sql = f'''
-                SELECT
-                  t.TABLE_NAME
-                FROM ALL_TABLES t
-                WHERE 1=1
-                  AND t.OWNER = '{owner}'
-                  AND t.TABLE_NAME = '{name}'
-            '''
-            data = list(cursor.execute(sql))
-            return data[0][0] == name
-        except Exception as e:
-            return False
-
     def existe_trigger_sql(self, cursor, owner, table, trigger):
         return f'''
             SELECT
@@ -374,7 +362,7 @@ class Command(BaseCommand):
 
     def verifica_del_table(self):
         cursor_vs = connections['so'].cursor()
-        return self.existe_table(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR_SYNC_DEL')
+        return oracle_existe_table(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR_SYNC_DEL')
 
     def verifica_column(self):
         cursor_vs = connections['so'].cursor()
