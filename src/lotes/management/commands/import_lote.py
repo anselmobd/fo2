@@ -53,18 +53,27 @@ class Command(BaseCommand):
         sql = '''
             SELECT
               lo.ORDEM_PRODUCAO op
-            , sum(
-                (
-                  (lo.QTDE_PECAS_PROG + 1) * 2
-                + (lo.QTDE_EM_PRODUCAO_PACOTE + 1) * 3
-                + (lo.QTDE_PECAS_PROD + 1) * 5
-                + (lo.QTDE_DISPONIVEL_BAIXA + 1) * 7
-                + (lo.QTDE_CONSERTO + 1) * 11
-                + (lo.CODIGO_ESTAGIO + 1) * 13
-                + (MOD(op.ORDEM_PRODUCAO, 1000) + 1)
-                )
-                * (MOD(lo.ORDEM_CONFECCAO, 1000) + 1)
-              ) trail
+        '''
+        if self.tem_trigger:
+            sql += ''' --
+                , max(lo.FO2_TUSSOR_SYNC) trail
+            '''
+        else:
+            sql += ''' --
+                , sum(
+                    (
+                      (lo.QTDE_PECAS_PROG + 1) * 2
+                    + (lo.QTDE_EM_PRODUCAO_PACOTE + 1) * 3
+                    + (lo.QTDE_PECAS_PROD + 1) * 5
+                    + (lo.QTDE_DISPONIVEL_BAIXA + 1) * 7
+                    + (lo.QTDE_CONSERTO + 1) * 11
+                    + (lo.CODIGO_ESTAGIO + 1) * 13
+                    + (MOD(op.ORDEM_PRODUCAO, 1000) + 1)
+                    )
+                    * (MOD(lo.ORDEM_CONFECCAO, 1000) + 1)
+                  ) trail
+            '''
+        sql += ''' --
             FROM PCPC_040 lo -- lote estágio
             JOIN PCPC_020 op -- OP capa
               ON op.ordem_producao = lo.ORDEM_PRODUCAO
@@ -94,7 +103,16 @@ class Command(BaseCommand):
         sql = '''
             SELECT
               le.op
-            , sum( le.trail ) trail
+        '''
+        if self.tem_trigger:
+            sql += ''' --
+                , max(le.sync) trail
+            '''
+        else:
+            sql += ''' --
+                , sum( le.trail ) trail
+            '''
+        sql += ''' --
             FROM fo2_cd_lote le
         '''
         if self.oponly is not None:
@@ -153,6 +171,13 @@ class Command(BaseCommand):
               , le.QTDE_PECAS_PROG QTD_PRODUZIR
               , max(le.CODIGO_ESTAGIO) ULTIMO_ESTAGIO
               , max(le.SEQUENCIA_ESTAGIO) ULTIMA_SEQ_ESTAGIO
+        '''
+        if self.tem_trigger:
+            sql += ''' --
+                , 0 trail
+            '''
+        else:
+            sql += ''' --
               , sum(
                   (
                     (le.QTDE_PECAS_PROG + 1) * 2
@@ -165,7 +190,7 @@ class Command(BaseCommand):
                   )
                   * (MOD(le.ORDEM_CONFECCAO, 1000) + 1)
                 ) trail
-        '''
+            '''
         if self.tem_col_sync:
             sql += ''' --
                 , max(le.FO2_TUSSOR_ID) sync_id
@@ -251,10 +276,11 @@ class Command(BaseCommand):
             alter = True
             lote.qtd_produzir = row['qtd_produzir']
             # self.stdout.write('qtd_produzir {}'.format(lote.qtd_produzir))
-        if lote.trail != row['trail']:
-            alter = True
-            lote.trail = row['trail']
-            # self.stdout.write('trail {}'.format(lote.trail))
+        if not self.tem_trigger:
+            if lote.trail != row['trail']:
+                alter = True
+                lote.trail = row['trail']
+                # self.stdout.write('trail {}'.format(lote.trail))
         if self.tem_col_sync:
             if lote.sync != row['sync']:
                 alter = True
