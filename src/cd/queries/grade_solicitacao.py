@@ -2,6 +2,7 @@ from pprint import pprint
 
 from utils.functions.models import GradeQtd
 
+import lotes.models
 
 # referencia: None = grade total (da solicitação)
 #             string = filtra uma referência
@@ -21,6 +22,21 @@ def grade_solicitacao(
         cursor, referencia=None, solicit_id=None, tipo='1s',
         grade_inventario=False):
 
+    end_disp = list(lotes.models.EnderecoDisponivel.objects.all().values())
+
+    filter_local = """--
+        and l.local is not null
+        and l.local <> ''
+    """
+    if len(end_disp) != 0:
+        filter_end = """--
+            AND l.local ~ '("""
+        filter_sep = ""
+        for regra in end_disp:
+            filter_end += f"{filter_sep}{regra['inicio']}"
+            filter_sep = "|"
+        filter_local += filter_end + """).*'
+        """
     # Grade de solicitação
     grade = GradeQtd(cursor)
     if tipo == '1s':
@@ -46,6 +62,7 @@ def grade_solicitacao(
     filtros = {
         'filter_solicit_id': filter_solicit_id,
         'filter_referencia': filter_referencia,
+        'filter_local': filter_local,
     }
 
     # tamanhos
@@ -72,8 +89,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.tamanho
             , l.ordem_tamanho
@@ -110,8 +126,7 @@ def grade_solicitacao(
               on o.op = l.op
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
               and o.pedido <> 0
             order by
               l.ordem_tamanho
@@ -124,8 +139,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
               and l.qtd > 0
             order by
               l.ordem_tamanho
@@ -138,8 +152,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.tamanho
             , l.ordem_tamanho
@@ -176,8 +189,7 @@ def grade_solicitacao(
               on o.op = l.op
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.tamanho
             , l.ordem_tamanho
@@ -244,8 +256,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.cor
             having
@@ -280,8 +291,7 @@ def grade_solicitacao(
               on o.op = l.op
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
               and o.pedido <> 0
             order by
               l.cor
@@ -293,8 +303,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
               and l.qtd > 0
             order by
               l.cor
@@ -306,8 +315,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.cor
             having
@@ -342,8 +350,7 @@ def grade_solicitacao(
               on o.op = l.op
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.cor
             having
@@ -405,8 +412,7 @@ def grade_solicitacao(
             where 1=1
               and sq.origin_id = 0
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
               {filter_solicit_id} -- filter_solicit_id
             group by
               l.tamanho
@@ -429,8 +435,7 @@ def grade_solicitacao(
             where 1=1
               and sq.origin_id = 0
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
               {filter_solicit_id} -- filter_solicit_id
             group by
               l.tamanho
@@ -466,8 +471,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.tamanho
             , l.cor
@@ -506,8 +510,7 @@ def grade_solicitacao(
               on o.op = l.op
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
               and o.pedido <> 0
             group by
               l.tamanho
@@ -548,8 +551,7 @@ def grade_solicitacao(
               on o.op = l.op
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
               and ( o.pedido <> 0
                   or coalesce(
                     ( select
@@ -598,8 +600,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.tamanho
             , l.cor
@@ -634,8 +635,7 @@ def grade_solicitacao(
             from fo2_cd_lote l
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.tamanho
             , l.cor
@@ -696,8 +696,7 @@ def grade_solicitacao(
               on o.op = l.op
             where 1=1
               {filter_referencia} -- filter_referencia
-              and l.local is not null
-              and l.local <> ''
+              {filter_local} -- filter_local
             group by
               l.tamanho
             , l.cor
