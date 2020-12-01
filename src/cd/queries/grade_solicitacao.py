@@ -59,15 +59,9 @@ def grade_solicitacao(
     else:
         filter_solicit_id = 'and sq.solicitacao_id = {}'.format(solicit_id)
 
-    filtros = {
-        'filter_solicit_id': filter_solicit_id,
-        'filter_referencia': filter_referencia,
-        'filter_local': filter_local,
-    }
-
     # tamanhos
     if not grade_inventario and tipo == '1s':
-        sql = '''
+        sql = f'''
             SELECT distinct
               l.tamanho
             , l.ordem_tamanho
@@ -80,9 +74,9 @@ def grade_solicitacao(
               {filter_solicit_id} -- filter_solicit_id
             order by
               l.ordem_tamanho
-        '''.format(**filtros)
+        '''
     elif not grade_inventario and tipo == 's':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.ordem_tamanho
@@ -115,9 +109,9 @@ def grade_solicitacao(
               ) > 0
             order by
               l.ordem_tamanho
-        '''.format(**filtros)
+        '''
     elif not grade_inventario and tipo == 'p':
-        sql = '''
+        sql = f'''
             SELECT distinct
               l.tamanho
             , l.ordem_tamanho
@@ -130,9 +124,9 @@ def grade_solicitacao(
               and o.pedido <> 0
             order by
               l.ordem_tamanho
-        '''.format(**filtros)
+        '''
     elif grade_inventario or tipo == 'i':
-        sql = '''
+        sql = f'''
             SELECT distinct
               l.tamanho
             , l.ordem_tamanho
@@ -143,9 +137,9 @@ def grade_solicitacao(
               and l.qtd > 0
             order by
               l.ordem_tamanho
-        '''.format(**filtros)
+        '''
     elif not grade_inventario and tipo == 'i-s':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.ordem_tamanho
@@ -178,9 +172,9 @@ def grade_solicitacao(
               ) > 0
             order by
               l.ordem_tamanho
-        '''.format(**filtros)
+        '''
     elif not grade_inventario and tipo == 'i-sp':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.ordem_tamanho
@@ -219,7 +213,7 @@ def grade_solicitacao(
               ) > 0
             order by
               l.ordem_tamanho
-        '''.format(**filtros)
+        '''
     grade.col(
         id='tamanho',
         name='Tamanho',
@@ -236,7 +230,7 @@ def grade_solicitacao(
 
     # cores
     if not grade_inventario and tipo == '1s':
-        sql = '''
+        sql = f'''
             SELECT distinct
               l.cor
             from fo2_cd_lote l
@@ -248,9 +242,9 @@ def grade_solicitacao(
               {filter_solicit_id} -- filter_solicit_id
             order by
               l.cor
-        '''.format(**filtros)
+        '''
     elif not grade_inventario and tipo == 's':
-        sql = '''
+        sql = f'''
             SELECT
               l.cor
             from fo2_cd_lote l
@@ -281,9 +275,9 @@ def grade_solicitacao(
               ) > 0
             order by
               l.cor
-        '''.format(**filtros)
+        '''
     elif not grade_inventario and tipo == 'p':
-        sql = '''
+        sql = f'''
             SELECT distinct
               l.cor
             from fo2_cd_lote l
@@ -295,9 +289,9 @@ def grade_solicitacao(
               and o.pedido <> 0
             order by
               l.cor
-        '''.format(**filtros)
+        '''
     elif grade_inventario or tipo == 'i':
-        sql = '''
+        sql = f'''
             SELECT distinct
               l.cor
             from fo2_cd_lote l
@@ -307,9 +301,9 @@ def grade_solicitacao(
               and l.qtd > 0
             order by
               l.cor
-        '''.format(**filtros)
+        '''
     elif not grade_inventario and tipo == 'i-s':
-        sql = '''
+        sql = f'''
             SELECT
               l.cor
             from fo2_cd_lote l
@@ -340,9 +334,9 @@ def grade_solicitacao(
               ) > 0
             order by
               l.cor
-        '''.format(**filtros)
+        '''
     elif not grade_inventario and tipo == 'i-sp':
-        sql = '''
+        sql = f'''
             SELECT
               l.cor
             from fo2_cd_lote l
@@ -379,7 +373,7 @@ def grade_solicitacao(
               ) > 0
             order by
               l.cor
-        '''.format(**filtros)
+        '''
     grade.row(
         id='cor',
         name='Cor',
@@ -398,7 +392,7 @@ def grade_solicitacao(
 
     # sortimento
     if tipo == '1s':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.cor
@@ -420,8 +414,8 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''.format(**filtros)
-        sql_complementar = '''
+        '''
+        sql_complementar = f'''
             SELECT
               l.tamanho
             , l.cor
@@ -443,9 +437,9 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''.format(**filtros)
+        '''
     elif tipo == 's':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.cor
@@ -498,9 +492,9 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''.format(**filtros)
+        '''
     elif tipo == 'p':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.cor
@@ -518,9 +512,9 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''.format(**filtros)
+        '''
     elif tipo == 'sp':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.cor
@@ -590,9 +584,9 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''.format(**filtros)
+        '''
     elif tipo == 'i':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.cor
@@ -607,9 +601,9 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''.format(**filtros)
+        '''
     elif tipo == 'i-s':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.cor
@@ -662,9 +656,9 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''.format(**filtros)
+        '''
     elif tipo == 'i-sp':
-        sql = '''
+        sql = f'''
             SELECT
               l.tamanho
             , l.cor
@@ -727,7 +721,7 @@ def grade_solicitacao(
             order by
               l.tamanho
             , l.cor
-        '''.format(**filtros)
+        '''
     grade.value(
         id='qtd',
         sql=sql
