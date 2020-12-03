@@ -95,6 +95,11 @@ def index(request):
     pensamentos = []
     dicas = [
       {
+        'data': strdmy2date('02/12/2020'),
+        'chamada': 'Utilize a máscara corretamente',
+        'link': '/media/rh/dicas/2020/12/02-mascara.png',
+      },
+      {
         'data': strdmy2date('10/02/2020'),
         'chamada': 'Zap com moderação',
         'link': '/media/rh/dicas/2020/02/10-whatsapp.jpg',
