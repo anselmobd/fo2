@@ -12,9 +12,9 @@ def fo2_digit_calc(inteiro):
     if inteiro < 0:
         inteiro = 0
     salt1 = str(3*inteiro)
-    digit1 = mod_11_10.calc_check_digit(salt1)
+    digit1 = mod_11_10.gtin_check_digit(salt1)
     salt2 = str(5*(inteiro*10+int(digit1)))
-    digit2 = mod_11_10.calc_check_digit(salt2)
+    digit2 = mod_11_10.gtin_check_digit(salt2)
     return f"{digit1}{digit2}"
 
 

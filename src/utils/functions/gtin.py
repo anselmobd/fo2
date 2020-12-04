@@ -1,7 +1,7 @@
 from pprint import pprint
 
 
-def calc_check_digit(number):
+def gtin_check_digit(number):
     """Calculate the EAN check digit for 13-digit numbers. The number passed
     should not have the check bit included.
     ---
@@ -27,4 +27,4 @@ def gtin13_valid(numbers):
 def gtin_valid(numbers, tipo=13):
     if len(numbers) != tipo:
         return False
-    return numbers[-1] == calc_check_digit(numbers[:-1])
+    return numbers[-1] == gtin_check_digit(numbers[:-1])
