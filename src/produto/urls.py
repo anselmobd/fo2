@@ -18,6 +18,8 @@ urlpatterns = [
         views.RefGtinDefine.as_view(), name='gtin_ref'),
     url(r'^gtin/set/(?P<nivel>.+)/(?P<ref>.+)/(?P<tamanho>.+)/(?P<cor>.+)/$',
         views.SetGtinDefine.as_view(), name='gtin_set'),
+    url(r'^gtin/set_next/(?P<nivel>.+)/(?P<ref>.+)/(?P<tamanho>.+)/(?P<cor>.+)/(?P<old_gtin>.+)/$',
+        views.SetGtinDefine.as_view(), name='gtin_set_next'),
     url(r'^gtin/log/$',
         views.GtinLog.as_view(), name='gtin_log'),
 
