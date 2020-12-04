@@ -48,8 +48,10 @@ class SetGtinDefine(PermissionRequiredMixin, View):
                 None)
             if index is not None:
                 index += 1
+                context['do_next'] = True
                 if index == len(t_data):
                     index = 0
+                    context['do_next'] = False
                 context['prox_tamanho'] = t_data[index]['TAM']
 
         if new_gtin:
@@ -82,8 +84,15 @@ class SetGtinDefine(PermissionRequiredMixin, View):
         ref = kwargs['ref']
         tamanho = kwargs['tamanho']
         cor = kwargs['cor']
+        old_gtin = kwargs.get('old_gtin', None)
 
-        form = self.Form_class()
+        if old_gtin is None:
+            form = self.Form_class()
+        else:
+            old_gtin = str(int(old_gtin[:-1])+1)
+            form = self.Form_class({
+                'gtin': old_gtin,
+            })
         context['form'] = form
 
         cursor = connections['so'].cursor()
