@@ -3,6 +3,7 @@ from pprint import pprint
 from django import forms
 
 from base.forms import O2BaseForm
+from utils.functions.gtin import gtin_check_digit
 
 
 class O2FieldNivelForm(forms.Form):
@@ -42,11 +43,14 @@ class O2FieldCorForm(forms.Form):
 
 class O2FieldGtinForm(forms.Form):
     gtin = forms.CharField(
-        label='GTIN', max_length=13, min_length=13, required=False,
+        label='GTIN', max_length=13, min_length=12, required=False,
         widget=forms.TextInput(attrs={'size': 13}))
 
     def clean_gtin(self):
-        return O2BaseForm.cleanner(self, 'gtin', field_type='n')
+        gtin = O2BaseForm.cleanner(self, 'gtin', field_type='n')
+        if len(gtin) == 12:
+            gtin += gtin_check_digit(gtin)
+        return gtin
 
 
 class O2FieldFiltroForm(forms.Form):
