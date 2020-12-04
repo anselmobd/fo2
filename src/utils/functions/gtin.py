@@ -9,8 +9,13 @@ def calc_check_digit(number):
       https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/ean.py
     """
     try:
-        return str((10 - sum((3, 1)[i % 2] * int(n)
-                    for i, n in enumerate(reversed(number)))) % 10)
+        return str(
+            (10 - sum(
+                    (3, 1)[i % 2] * int(n)
+                    for i, n in enumerate(reversed(number))
+                )
+            ) % 10
+        )
     except Exception as e:
         return False
 
