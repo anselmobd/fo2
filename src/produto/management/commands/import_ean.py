@@ -6,7 +6,7 @@ from dbfread import DBF
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 
-from utils.functions.gtin import calc_check_digit
+from utils.functions.gtin import gtin_check_digit
 
 
 class Command(BaseCommand):
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                     if bar['B_PROD'] == ref_tussor and bar['B_COR'] != '':
                         # pprint(bar)
                         ean = ean_range[bar['B_RANGE']] + \
-                            bar['B_CODBAR'] + calc_check_digit(
+                            bar['B_CODBAR'] + gtin_check_digit(
                                 ean_range[bar['B_RANGE']]+bar['B_CODBAR'])
                         ref_bars.append({
                             'cor': '0000'+bar['B_COR'],
