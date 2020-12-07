@@ -36,7 +36,8 @@ class Account(models.Model):
         verbose_name='alterado em')
 
     def __str__(self):
-        return f'{self.email} - {self.nome} ({self.setor})'
+        setor = '' if self.setor is None else f' ({self.setor})'
+        return f'{self.email} - {self.nome}{setor}'
 
     def save(self, *args, **kwargs):
         ''' On create, get timestamps '''
