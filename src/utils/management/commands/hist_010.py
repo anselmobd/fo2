@@ -93,7 +93,7 @@ class Command(BaseCommand):
             , descricao_historico
             , tipo_ocorr
             , data_ocorr
-            , hora_ocorr
+            -- , hora_ocorr
             , usuario_rede
             , maquina_rede
             , aplicacao
@@ -113,7 +113,7 @@ class Command(BaseCommand):
             , '{row["descricao_historico"]}'
             , '{row["tipo_ocorr"]}'
             , '{row["data_ocorr"]}'
-            , '{row["hora_ocorr"]}'
+            -- , '{row["hora_ocorr"]}'
             , '{row["usuario_rede"]}'
             , '{row["maquina_rede"]}'
             , '{row["aplicacao"]}'
@@ -161,7 +161,7 @@ class Command(BaseCommand):
                 'descricao_historico',
                 'tipo_ocorr',
                 'data_ocorr',
-                'hora_ocorr',
+                # 'hora_ocorr',
                 'usuario_rede',
                 'maquina_rede',
                 'aplicacao',
