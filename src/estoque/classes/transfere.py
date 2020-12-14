@@ -92,7 +92,11 @@ class Transfere():
 
         if self.tip_mov.unidade != '1':
             if self.nova_cor == self.cor:
-                raise ValueError('Em montagem e desmontagem as cores nunca são iguais.')
+                raise ValueError('Em montagem e desmontagem as indicações de cor não podem ser iguais.')
+
+        if self.tip_mov.unidade != '1':
+            if self.nova_ref == self.ref:
+                raise ValueError('Em montagem e desmontagem as referencias não podem ser iguais.')
 
         self.novo_item_igual = (
             self.nova_ref == self.ref and
