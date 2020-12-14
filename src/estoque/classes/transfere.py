@@ -215,6 +215,9 @@ class Transfere():
         if self.tem_trans_saida:
             self.insert(
                 'saída',
+                self.ref,
+                self.tam,
+                self.cor,
                 self.deposito_origem,
                 self.trans_saida,
                 self.trans_saida_e_s,
@@ -223,6 +226,9 @@ class Transfere():
         if self.tem_trans_entrada:
             self.insert(
                 'entrada',
+                self.nova_ref,
+                self.novo_tam,
+                self.nova_cor,
                 self.deposito_destino,
                 self.trans_entrada,
                 self.trans_entrada_e_s,
@@ -240,16 +246,7 @@ class Transfere():
         )
         mov_stq.save()
 
-    def insert(self, descr, dep, trans, e_s):
-        if descr == 'entrada':
-            ref = self.nova_ref
-            tam = self.novo_tam
-            cor = self.nova_cor
-        else:
-            ref = self.ref
-            tam = self.tam
-            cor = self.cor
-
+    def insert(self, descr, ref, tam, cor, dep, trans, e_s):
         if not queries.insert_transacao(
                 self.cursor,
                 dep,
