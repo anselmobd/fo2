@@ -18,6 +18,7 @@ class ObjsProduto():
         self.tam = tam
         self.cor = cor
         self.gtin = gtin
+        self.gtin_change = False
         self.usuario = usuario
 
         self.str_item = pro_fun.item_str(
@@ -40,10 +41,12 @@ class ObjsProduto():
         self.set_produto_item()
 
     def set_fields(self):
-        self.set_produto_item_gtin()
+        if self.gtin:
+            self.set_produto_item_gtin()
 
     def set_logs(self):
-        self.set_gtin_log()
+        if self.gtin_change:
+            self.set_gtin_log()
 
     def valid_entries(self):
         s_produtos = sys_que.item(
@@ -132,14 +135,13 @@ class ObjsProduto():
             self.produto_item.save()
 
     def set_produto_item_gtin(self):
-        if self.gtin and self.produto_item.gtin != self.gtin:
+        self.gtin_change = self.produto_item.gtin != self.gtin
+        if self.gtin_change:
             self.produto_item.gtin = self.gtin
             self.produto_item.save()
 
     def set_gtin_log(self):
-        print('set_gtin_log')
-        if self.gtin and self.usuario:
-            print('set_gtin_log if')
+        if self.usuario:
             self.gtin_log = pro_mod.GtinLog(
                 colaborador=get_create_colaborador_by_user(self.usuario),
                 produto=self.produto,
