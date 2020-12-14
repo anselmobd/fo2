@@ -104,14 +104,36 @@ class ListaMovimentos(View):
             if row['deposito_origem'] == 0:
                 row['deposito_origem'] = '-'
             else:
-                row['deposito_origem|GLYPHICON'] = 'glyphicon-time'
-                row['deposito_origem|TARGET'] = '_BLANK'
-                row['deposito_origem|LINK'] = reverse(
+                deposito = row['deposito_origem']
+                link = reverse(
                     'estoque:item_no_tempo__get', args=[
                         row['item__produto__referencia'],
                         row['item__cor__cor'],
                         row['item__tamanho__tamanho__nome'],
-                        row['deposito_origem']])
+                        deposito
+                    ]
+                )
+                row['deposito_origem'] = f'''
+                    <a href="{link}" target="_blank">{deposito}<span
+                    class="glyphicon glyphicon-time" aria-hidden="true"></span></a>
+                '''
+                if row['tipo_mov__unidade'] == 'M':
+                    for item in row['itens_extras'].split():
+                        codes = item.split('.')
+                        pprint(codes)
+                        link = reverse(
+                            'estoque:item_no_tempo__get', args=[
+                                codes[1],
+                                codes[3],
+                                codes[2],
+                                deposito
+                            ]
+                        )
+                        print(link)
+                        row['deposito_origem'] += br + f'''
+                            <a href="{link}" target="_blank">{deposito}<span
+                            class="glyphicon glyphicon-time" aria-hidden="true"></span></a>
+                        '''
 
             if row['deposito_destino'] == 0:
                 row['deposito_destino'] = '-'
@@ -155,6 +177,7 @@ class ListaMovimentos(View):
         ]
         safe = [
             'str_item',
+            'deposito_origem',
             'str_novo_item',
         ]
         self.context.update({
