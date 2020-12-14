@@ -29,7 +29,7 @@
   {% if dados %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=dados style=style safe=safe only %}
     </table>
   {% endif %}
 {% endif %}
