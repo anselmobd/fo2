@@ -61,7 +61,7 @@ class ObjsProduto():
                 nivel=self.nivel,
                 referencia=self.ref,
             )
-        except pro_mod.Produto.DoesNotExist as e:
+        except pro_mod.Produto.DoesNotExist:
             self.produto = None
 
         if self.produto is None:
@@ -76,7 +76,7 @@ class ObjsProduto():
         try:
             self.produto_cor = pro_mod.ProdutoCor.objects.get(
                 produto=self.produto, cor=self.cor)
-        except pro_mod.ProdutoCor.DoesNotExist as e:
+        except pro_mod.ProdutoCor.DoesNotExist:
             self.produto_cor = None
 
         if self.produto_cor is None:
@@ -91,7 +91,7 @@ class ObjsProduto():
         try:
             self.tamanho = pro_mod.Tamanho.objects.get(
                 nome=self.tam)
-        except pro_mod.Tamanho.DoesNotExist as e:
+        except pro_mod.Tamanho.DoesNotExist:
             self.tamanho = None
 
         if self.tamanho is None:
@@ -105,7 +105,7 @@ class ObjsProduto():
         try:
             self.produto_tam = pro_mod.ProdutoTamanho.objects.get(
                 produto=self.produto, tamanho=self.tamanho)
-        except pro_mod.ProdutoTamanho.DoesNotExist as e:
+        except pro_mod.ProdutoTamanho.DoesNotExist:
             self.produto_tam = None
 
         if self.produto_tam is None:
@@ -123,7 +123,7 @@ class ObjsProduto():
                 cor=self.produto_cor,
                 tamanho=self.produto_tam,
             )
-        except pro_mod.ProdutoItem.DoesNotExist as e:
+        except pro_mod.ProdutoItem.DoesNotExist:
             self.produto_item = None
 
         if self.produto_item is None:
