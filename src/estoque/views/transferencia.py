@@ -52,9 +52,11 @@ class Transferencia(PermissionRequiredMixin, View):
             transf = classes.Transfere(
                 self.cursor, self.request, self.tip_mov,
                 *(self.context[f] for f in [
-                    'nivel', 'ref', 'tam', 'cor', 'qtd',
-                    'deposito_origem', 'deposito_destino',
-                    'nova_ref', 'novo_tam', 'nova_cor',
+                    'nivel', 'ref', 'tam',
+                    'cores' if self.context['cores'] else 'cor',
+                    'qtd', 'deposito_origem', 'deposito_destino',
+                    'nova_ref', 'novo_tam',
+                    'novas_cores' if self.context['novas_cores'] else 'nova_cor',
                     'num_doc', 'descricao']),
             )
         except Exception as e:
