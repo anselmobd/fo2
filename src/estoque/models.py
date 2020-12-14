@@ -38,6 +38,13 @@ class TipoMovStq(models.Model):
     renomeia = models.BooleanField(
         'Renomeia',
         default=False)
+    CHOICES = (
+        ('1', '1 para 1'),
+        ('M', 'Monta Kit'),
+        ('D', 'Desmonta Kit'),
+    )
+    unidade = models.CharField(
+        max_length=1, choices = CHOICES, default='1')
 
     def __str__(self):
         return self.descricao

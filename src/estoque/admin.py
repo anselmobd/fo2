@@ -8,7 +8,7 @@ from .models import TipoMovStq, DocMovStq, MovStq
 class TipoMovStqAdmin(admin.ModelAdmin):
     list_display = [
         "codigo", "descricao", "trans_saida", "trans_entrada", "menu", "ordem",
-        "renomeia"]
+        "renomeia", "unidade"]
     ordering = ["ordem"]
 
 
