@@ -1,16 +1,18 @@
 {% for input in form %}
-  {% if input.value %}
-    <h{{h}}>
-      {{input.label}}:
-      {% if input.field.widget.input_type == 'select' %}
-        {% for choice in input.field.choices %}
-          {% if choice.0|safe == input.value|safe %}
-            {{choice.1}}
-          {% endif %}
-        {% endfor %}
-      {% else %}
-        {{input.value}}
-      {% endif %}
-    </h{{h}}>
+  {% if input.field.widget.input_type != 'hidden' %}
+    {% if input.value %}
+      <h{{h}}>
+        {{input.label}}:
+        {% if input.field.widget.input_type == 'select' %}
+          {% for choice in input.field.choices %}
+            {% if choice.0|safe == input.value|safe %}
+              {{choice.1}}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {{input.value}}
+        {% endif %}
+      </h{{h}}>
+    {% endif %}
   {% endif %}
 {% endfor %}
