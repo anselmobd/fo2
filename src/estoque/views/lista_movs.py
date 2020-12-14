@@ -120,7 +120,6 @@ class ListaMovimentos(View):
                 if row['tipo_mov__unidade'] == 'M':
                     for item in row['itens_extras'].split():
                         codes = item.split('.')
-                        pprint(codes)
                         link = reverse(
                             'estoque:item_no_tempo__get', args=[
                                 codes[1],
@@ -129,7 +128,6 @@ class ListaMovimentos(View):
                                 deposito
                             ]
                         )
-                        print(link)
                         row['deposito_origem'] += br + f'''
                             <a href="{link}" target="_blank">{deposito}<span
                             class="glyphicon glyphicon-time" aria-hidden="true"></span></a>
@@ -141,19 +139,49 @@ class ListaMovimentos(View):
                 row['deposito_destino|GLYPHICON'] = 'glyphicon-time'
                 row['deposito_destino|TARGET'] = '_BLANK'
                 if row['tipo_mov__renomeia']:
-                    row['deposito_destino|LINK'] = reverse(
+                    deposito = row['deposito_destino']
+                    link = reverse(
                         'estoque:item_no_tempo__get', args=[
                             row['novo_item__produto__referencia'],
                             row['novo_item__cor__cor'],
                             row['novo_item__tamanho__tamanho__nome'],
-                            row['deposito_destino']])
+                            deposito
+                        ]
+                    )
+                    row['deposito_destino'] = f'''
+                        <a href="{link}" target="_blank">{deposito}<span
+                        class="glyphicon glyphicon-time" aria-hidden="true"></span></a>
+                    '''
+                    if row['tipo_mov__unidade'] == 'D':
+                        for item in row['itens_extras'].split():
+                            codes = item.split('.')
+                            link = reverse(
+                                'estoque:item_no_tempo__get', args=[
+                                    codes[1],
+                                    codes[3],
+                                    codes[2],
+                                    deposito
+                                ]
+                            )
+                            row['deposito_destino'] += br + f'''
+                                <a href="{link}" target="_blank">{deposito}<span
+                                class="glyphicon glyphicon-time" aria-hidden="true"></span></a>
+                            '''
+
                 else:
-                    row['deposito_destino|LINK'] = reverse(
+                    deposito = row['deposito_destino']
+                    link = reverse(
                         'estoque:item_no_tempo__get', args=[
                             row['item__produto__referencia'],
                             row['item__cor__cor'],
                             row['item__tamanho__tamanho__nome'],
-                            row['deposito_destino']])
+                            deposito
+                        ]
+                    )
+                    row['deposito_destino'] = f'''
+                        <a href="{link}" target="_blank">{deposito}<span
+                        class="glyphicon glyphicon-time" aria-hidden="true"></span></a>
+                    '''
 
         headers = [
             'Tipo de Movimento',
@@ -178,6 +206,7 @@ class ListaMovimentos(View):
         safe = [
             'str_item',
             'deposito_origem',
+            'deposito_destino',
             'str_novo_item',
         ]
         self.context.update({
