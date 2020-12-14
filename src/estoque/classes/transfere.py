@@ -16,9 +16,9 @@ class Transfere():
 
     def __init__(
             self, cursor, request,
-            tipo, nivel, ref, tam, cor, qtd,
+            tipo, nivel, ref, tam, cor, cores, qtd,
             deposito_origem, deposito_destino,
-            nova_ref, novo_tam, nova_cor,
+            nova_ref, novo_tam, nova_cor, novas_cores,
             num_doc, descricao, cria_num_doc=True):
         self.can_exec = False
 
@@ -28,12 +28,14 @@ class Transfere():
         self.ref = ref
         self.tam = tam
         self.cor = cor
+        self.cores = cores
         self.qtd = qtd
         self.deposito_origem = deposito_origem
         self.deposito_destino = deposito_destino
         self.nova_ref = nova_ref
         self.novo_tam = novo_tam
         self.nova_cor = nova_cor
+        self.novas_cores = novas_cores
         self.num_doc = num_doc
         self.descricao = descricao
         self.request = request
@@ -98,7 +100,7 @@ class Transfere():
         else:
             try:
                 self.tip_mov = models.TipoMovStq.objects.get(codigo=self.tipo)
-            except models.TipoMovStq.DoesNotExist as e:
+            except models.TipoMovStq.DoesNotExist:
                 raise ValueError(
                     f'Tipo de movimento de estoque "{self.tipo}" '
                     'não cadastrado.')
@@ -170,7 +172,7 @@ class Transfere():
         try:
             tipo_trans = sys_mod.TipoTransacao.validos.get(
                 codigo_transacao=codigo)
-        except sys_mod.TipoTransacao.DoesNotExist as e:
+        except sys_mod.TipoTransacao.DoesNotExist:
             raise ValueError(
                 f'Não encontrada transação de {descricao} '
                 f'"{codigo}" do tipo de movimento de estoque "{self.tipo}".')
