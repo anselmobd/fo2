@@ -90,6 +90,10 @@ class Transfere():
         if len(self.nova_cor) == 0:
             self.nova_cor = self.cor
 
+        if self.tip_mov.unidade != '1':
+            if self.nova_cor == self.cor:
+                raise ValueError('Em montagem e desmontagem as cores nunca são iguais.')
+
         self.novo_item_igual = (
             self.nova_ref == self.ref and
             self.novo_tam == self.tam and
