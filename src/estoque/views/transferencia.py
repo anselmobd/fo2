@@ -41,6 +41,7 @@ class Transferencia(PermissionRequiredMixin, View):
         self.tip_mov = self.valid_tipo()
         if self.tip_mov:
             self.context.update({
+                'tipo': self.tip_mov.codigo,
                 'titulo': self.tip_mov.descricao,
             })
 
