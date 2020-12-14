@@ -90,6 +90,8 @@ class Transferencia(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.get_tipo()
+        if not self.tip_mov:
+            return render(request, self.template_name, self.context)
         self.context['form'] = self.Form_class(
             user=request.user, tipo_mov=self.tip_mov)
         return render(request, self.template_name, self.context)
