@@ -77,6 +77,7 @@ class ListaMovimentos(View):
         ]
         dados = dados.values(*fields)
 
+        br = '<br />'
         for row in dados:
             row['str_item'] = pro_fun.item_str(
                 row['item__produto__nivel'],
@@ -85,7 +86,7 @@ class ListaMovimentos(View):
                 row['item__cor__cor'],
             )
             if row['tipo_mov__unidade'] == 'M':
-                row['str_item'] += '<br />' + row['itens_extras']
+                row['str_item'] += br + row['itens_extras']
 
             if row['novo_item__produto__nivel'] is None:
                 row['str_novo_item'] = '='
@@ -97,7 +98,7 @@ class ListaMovimentos(View):
                     row['novo_item__cor__cor'],
                 )
             if row['tipo_mov__unidade'] == 'D':
-                row['str_novo_item'] += '<br />' + row['itens_extras']
+                row['str_novo_item'] += br + row['itens_extras']
 
 
             if row['deposito_origem'] == 0:
