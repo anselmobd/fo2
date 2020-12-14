@@ -48,7 +48,7 @@ class Transfere():
         self.valid_entries()
         self.calc_itens()
 
-        self.calc_vars()
+        self.calc_preco_medio()
         self.can_exec = True
 
     def calc_itens_lista(self, tem_trans, deposito, sinal, item_lista):
@@ -67,10 +67,11 @@ class Transfere():
         self.calc_itens_lista(
             self.tem_trans_entrada, self.deposito_destino, +1, self.itens_entrada)
         
-    def calc_vars(self):
-        produto = queries.get_preco_medio_niv_ref_cor_tam(
-            self.cursor, self.nivel, self.ref, self.cor, self.tam)
+    def calc_preco_medio(self):
         try:
+            item = self.itens_saida[0]
+            produto = queries.get_preco_medio_niv_ref_cor_tam(
+                self.cursor, self.nivel, item['ref'], item['cor'], item['tam'])
             self.preco_medio = produto[0]['preco_medio']
         except Exception:
             raise ValueError(
