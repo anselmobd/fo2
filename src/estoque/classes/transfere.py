@@ -39,17 +39,28 @@ class Transfere():
         self.request = request
         self.cria_num_doc = cria_num_doc
 
-        self.cores = self.cor.split()
-        self.itens = []
-
-        self.novas_cores = self.nova_cor.split()
-        self.novos_itens = []
-
         self.valid_entries()
+        self.calc_itens()
 
         self.calc_vars()
         self.can_exec = True
 
+    def calc_itens_lista(self, tem_trans, deposito, sinal, item_lista):
+        for item in item_lista:
+            if tem_trans:
+                item['estoque_inicio'] = self.get_estoque(
+                    deposito, self.nivel, item['ref'], item['cor'], item['tam'])
+                item['estoque_fim'] = item['estoque_inicio'] + (self.qtd * sinal)
+            else:
+                item['estoque_inicio'] = 0
+                item['estoque_fim'] = 0
+
+    def calc_itens(self):
+        self.calc_itens_lista(
+            self.tem_trans_saida, self.deposito_origem, -1, self.itens_saida)
+        self.calc_itens_lista(
+            self.tem_trans_entrada, self.deposito_destino, +1, self.itens_entrada)
+        
     def calc_vars(self):
         if self.tem_trans_saida:
             self.estoque_origem = self.get_estoque(
@@ -99,14 +110,46 @@ class Transfere():
                 raise ValueError('Alguma alteração de código (referência, cor ou '
                                 'tamanho) deve ser indicada.')
 
+    def monta_itens_saida_entrada(self, item_lista, ref, cor, tam):
+        cores = cor.split()
+        for cor in cores:
+            item_lista.append({
+                'ref': ref,
+                'cor': cor,
+                'tam': tam,
+            })
+
+    def monta_itens_listas(self):
+        self.itens_saida = []
+        self.monta_itens_saida_entrada(self.itens_saida, self.ref, self.cor, self.tam)
+
+        self.itens_entrada = []
+        self.monta_itens_saida_entrada(
+                self.itens_entrada, self.nova_ref, self.nova_cor, self.novo_tam)
+
+    def valid_itens_lista(self, item_lista):
+        for item in item_lista:
+            objs_prod = pro_cla.ObjsProduto(
+                self.nivel, item['ref'], item['tam'], item['cor'])
+            item.update({
+                'str_item': objs_prod.str_item,
+                'produto_item': objs_prod.produto_item,
+            })
+
+    def valid_itens(self):
+        self.valid_itens_lista(self.itens_saida)
+        self.valid_itens_lista(self.itens_entrada)
+
     def valid_entries(self):
         self.valid_tipo()
         self.valid_configuracao()
-        self.valid_item_destino()
-
-        self.valid_item()
         self.valid_quant()
         self.valid_deps()
+        self.valid_item_destino()
+        self.monta_itens_listas()
+        self.valid_itens()
+
+        self.valid_item()
 
         if self.novo_item_igual:
             self.produto_novo_item = None
