@@ -16,9 +16,9 @@ class Transfere():
 
     def __init__(
             self, cursor, request,
-            tipo, nivel, ref, tam, cor, cores, qtd,
+            tipo, nivel, ref, tam, cor, qtd,
             deposito_origem, deposito_destino,
-            nova_ref, novo_tam, nova_cor, novas_cores,
+            nova_ref, novo_tam, nova_cor,
             num_doc, descricao, cria_num_doc=True):
         self.can_exec = False
 
@@ -28,18 +28,22 @@ class Transfere():
         self.ref = ref
         self.tam = tam
         self.cor = cor
-        self.cores = cores
         self.qtd = qtd
         self.deposito_origem = deposito_origem
         self.deposito_destino = deposito_destino
         self.nova_ref = nova_ref
         self.novo_tam = novo_tam
         self.nova_cor = nova_cor
-        self.novas_cores = novas_cores
         self.num_doc = num_doc
         self.descricao = descricao
         self.request = request
         self.cria_num_doc = cria_num_doc
+
+        self.cores = self.cor.split()
+        self.itens = []
+
+        self.novas_cores = self.nova_cor.split()
+        self.novos_itens = []
 
         self.valid_entries()
 
