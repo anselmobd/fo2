@@ -22,6 +22,10 @@ class TransferenciaForm(forms.Form):
         'placeholder': '0...',
         }
 
+    placeholder_00_00 = {
+        'placeholder': '0... 0... ...',
+        }
+
     CHOICES = [
         ('1', '1 - Produtos confeccionados'),
         ('2', '2 - Tecidos acabados'),
@@ -41,6 +45,11 @@ class TransferenciaForm(forms.Form):
         label='Cor', required=True, min_length=1, max_length=6,
         widget=forms.TextInput(attrs={
             'size': 6, **string_upper_attrs, **placeholder_00}))
+
+    cores = forms.CharField(
+        label='Cores', required=True, min_length=1,
+        widget=forms.TextInput(attrs={
+            **string_upper_attrs, **placeholder_00_00}))
 
     tam = forms.CharField(
         label='Tamanho', required=True, min_length=1, max_length=3,
@@ -68,6 +77,11 @@ class TransferenciaForm(forms.Form):
         label='Nova cor', required=False, max_length=6,
         widget=forms.TextInput(attrs={
             'size': 6, **string_upper_attrs, **placeholder_00}))
+
+    novas_cores = forms.CharField(
+        label='Novas cores', required=True, min_length=1,
+        widget=forms.TextInput(attrs={
+            **string_upper_attrs, **placeholder_00_00}))
 
     novo_tam = forms.CharField(
         label='Novo tamanho', required=False, max_length=3,
@@ -112,6 +126,14 @@ class TransferenciaForm(forms.Form):
             self.hidden_field(self.fields['nova_ref'])
             self.hidden_field(self.fields['nova_cor'])
             self.hidden_field(self.fields['novo_tam'])
+        if self.tipo_mov.unidade in ['D'] :
+            self.hidden_field(self.fields['nova_cor'])
+        if self.tipo_mov.unidade in ['1', 'D'] :
+            self.hidden_field(self.fields['cores'])
+        if self.tipo_mov.unidade in ['M'] :
+            self.hidden_field(self.fields['cor'])
+        if self.tipo_mov.unidade in ['1', 'M'] :
+            self.hidden_field(self.fields['novas_cores'])
 
     def mount_num_doc_choices(self):
         self.num_doc_recente = 0
@@ -146,6 +168,29 @@ class TransferenciaForm(forms.Form):
 
     def clean_cor(self):
         return self.cleaned_data['cor'].upper().zfill(6)
+
+    def clean_ncores(self, field):
+        try:
+            sep_chars = ",.;-_+"
+            cores = self.cleaned_data[field].translate(
+                "".maketrans(sep_chars, " "*len(sep_chars)))
+
+            cleaned = ''
+            sep = ''
+            cores = cores.split()
+            for cor in cores:
+                if cor:
+                    cleaned += sep + cor.upper().zfill(6)
+                    sep = ' '
+        except Exception:
+            cleaned = None
+        return cleaned
+
+    def clean_cores(self):
+        return self.clean_ncores('cores')
+
+    def clean_novas_cores(self):
+        return self.clean_ncores('novas_cores')
 
     def clean_tam(self):
         return self.cleaned_data['tam'].upper()
