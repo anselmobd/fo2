@@ -60,14 +60,8 @@ class Transfere():
             self.novo_estoque_origem = 0
 
         if self.tem_trans_entrada:
-            if self.tip_mov.renomeia:
-                self.estoque_destino = self.get_estoque(
-                    self.deposito_destino, self.nivel,
-                    self.nova_ref, self.nova_cor, self.novo_tam)
-            else:
-                self.estoque_destino = self.get_estoque(
-                    self.deposito_destino, self.nivel,
-                    self.ref, self.cor, self.tam)
+            self.estoque_destino = self.get_estoque(
+                self.deposito_destino, self.nivel, self.nova_ref, self.nova_cor, self.novo_tam)
             self.novo_estoque_destino = self.estoque_destino + self.qtd
         else:
             self.estoque_destino = 0
@@ -81,20 +75,43 @@ class Transfere():
             raise ValueError(
                 f'Não encontrado o preço médio do item {self.str_item}.')
 
+    def valid_item_destino(self):
+        if self.tip_mov.renomeia:
+            if (len(self.nova_ref) + len(self.novo_tam) +
+                    len(self.nova_cor)) == 0:
+                raise ValueError('Algum novo código deve ser indicado.')
+
+        if len(self.nova_ref) == 0:
+            self.nova_ref = self.ref
+        if len(self.novo_tam) == 0:
+            self.novo_tam = self.tam
+        if len(self.nova_cor) == 0:
+            self.nova_cor = self.cor
+
+        self.novo_item_igual = (
+            self.nova_ref == self.ref and
+            self.novo_tam == self.tam and
+            self.nova_cor == self.cor
+        )
+
+        if self.tip_mov.renomeia:
+            if self.novo_item_igual:
+                raise ValueError('Alguma alteração de código (referência, cor ou '
+                                'tamanho) deve ser indicada.')
+
     def valid_entries(self):
         self.valid_tipo()
         self.valid_configuracao()
+        self.valid_item_destino()
+
         self.valid_item()
         self.valid_quant()
         self.valid_deps()
 
-        if self.tip_mov.renomeia:
-            self.valid_novo_item()
-        else:
-            self.nova_ref = self.ref
-            self.novo_tam = self.tam
-            self.nova_cor = self.cor
+        if self.novo_item_igual:
             self.produto_novo_item = None
+        else:
+            self.valid_novo_item()
 
         self.valid_num_doc()
 
@@ -133,23 +150,6 @@ class Transfere():
             raise ValueError('Depósitos devem ser diferentes.')
 
     def valid_novo_item(self):
-        if (len(self.nova_ref) + len(self.novo_tam) +
-                len(self.nova_cor)) == 0:
-            raise ValueError('Algum novo código deve ser indicado.')
-
-        if len(self.nova_ref) == 0:
-            self.nova_ref = self.ref
-        if len(self.novo_tam) == 0:
-            self.novo_tam = self.tam
-        if len(self.nova_cor) == 0:
-            self.nova_cor = self.cor
-
-        if (self.nova_ref == self.ref and
-                self.novo_tam == self.tam and
-                self.nova_cor == self.cor):
-            raise ValueError('Alguma alteração de código (referência, cor ou '
-                             'tamanho) deve ser indicada.')
-
         objs_novo_prod = pro_cla.ObjsProduto(
             self.nivel, self.nova_ref, self.novo_tam, self.nova_cor)
 
