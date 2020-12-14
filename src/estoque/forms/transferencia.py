@@ -169,28 +169,36 @@ class TransferenciaForm(forms.Form):
     def clean_cor(self):
         return self.cleaned_data['cor'].upper().zfill(6)
 
-    def clean_ncores(self, field):
-        try:
-            sep_chars = ",.;-_+"
-            cores = self.cleaned_data[field].translate(
-                "".maketrans(sep_chars, " "*len(sep_chars)))
+    def clean_ncores(self, field, descr):
+        field_input = self.fields[field]
+        cleaned = None
+        if field_input.required:
+            ncores = 0
+            try:
+                sep_chars = ",.;-_+"
+                cores = self.cleaned_data[field].translate(
+                    "".maketrans(sep_chars, " "*len(sep_chars)))
 
-            cleaned = ''
-            sep = ''
-            cores = cores.split()
-            for cor in cores:
-                if cor:
-                    cleaned += sep + cor.upper().zfill(6)
-                    sep = ' '
-        except Exception:
-            cleaned = None
+                cleaned = ''
+                sep = ''
+                cores = cores.split()
+                for cor in cores:
+                    if cor:
+                        ncores += 1
+                        cleaned += sep + cor.upper().zfill(6)
+                        sep = ' '
+            except Exception:
+                cleaned = None
+            if ncores < 2:
+                raise forms.ValidationError(
+                        f"{descr} deve conter pelo menos 2 cores.")
         return cleaned
 
     def clean_cores(self):
-        return self.clean_ncores('cores')
+        return self.clean_ncores('cores', 'Cores')
 
     def clean_novas_cores(self):
-        return self.clean_ncores('novas_cores')
+        return self.clean_ncores('novas_cores', 'Novas cores')
 
     def clean_tam(self):
         return self.cleaned_data['tam'].upper()
