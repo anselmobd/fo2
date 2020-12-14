@@ -46,7 +46,7 @@
   {{ form.as_p }}
   <input type="submit" name="analisa" value="Analisa"/>
   {% if request.POST.analisa or request.POST.executa %}
-    <a class="btn btn-primary" href="{% url 'estoque:transferencia' 'transf' %}">Limpa</a>
+    <a class="btn btn-primary" href="{% url 'estoque:transferencia' tipo %}">Limpa</a>
   {% endif %}
   {% if erro_msg %}
     <h4 class="bad">
