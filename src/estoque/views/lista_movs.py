@@ -59,6 +59,7 @@ class ListaMovimentos(View):
         fields = [
             'tipo_mov__descricao',
             'tipo_mov__renomeia',
+            'tipo_mov__unidade',
             'item__produto__nivel',
             'item__produto__referencia',
             'item__cor__cor',
@@ -72,6 +73,7 @@ class ListaMovimentos(View):
             'novo_item__tamanho__tamanho__nome',
             'usuario__username',
             'hora',
+            'itens_extras',
         ]
         dados = dados.values(*fields)
 
@@ -82,6 +84,8 @@ class ListaMovimentos(View):
                 row['item__tamanho__tamanho__nome'],
                 row['item__cor__cor'],
             )
+            if row['tipo_mov__unidade'] == 'M':
+                row['str_item'] += '<br />' + row['itens_extras']
 
             if row['novo_item__produto__nivel'] is None:
                 row['str_novo_item'] = '='
@@ -92,6 +96,9 @@ class ListaMovimentos(View):
                     row['novo_item__tamanho__tamanho__nome'],
                     row['novo_item__cor__cor'],
                 )
+            if row['tipo_mov__unidade'] == 'D':
+                row['str_novo_item'] += '<br />' + row['itens_extras']
+
 
             if row['deposito_origem'] == 0:
                 row['deposito_origem'] = '-'
@@ -145,10 +152,14 @@ class ListaMovimentos(View):
             'usuario__username',
             'hora',
         ]
+        safe = [
+            'str_item',
+        ]
         self.context.update({
             'headers': headers,
             'fields': fields,
             'dados': dados,
+            'safe': safe,
             })
 
     def get(self, request, *args, **kwargs):
