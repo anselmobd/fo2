@@ -69,10 +69,8 @@ class Transferencia(PermissionRequiredMixin, View):
         self.context.update({
             'mov_origem': self.tip_mov.trans_saida != 0,
             'mov_destino': self.tip_mov.trans_entrada != 0,
-            'estoque_origem': transf.estoque_origem,
-            'estoque_destino': transf.estoque_destino,
-            'novo_estoque_origem': transf.novo_estoque_origem,
-            'novo_estoque_destino': transf.novo_estoque_destino,
+            'itens_saida': transf.itens_saida,
+            'itens_entrada': transf.itens_entrada,
             'num_doc': transf.num_doc,
         })
 

@@ -72,22 +72,28 @@
         <h4>Movimentações feitas!</h4>
       {% endif %}
       {% if mov_origem %}
-        <h4>Estoque no depósito de origem:
-          <span class='qtd_old'>{{ estoque_origem }}
-          {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
-          <span class='arrow'>&rarr;</span>
-          <span class='qtd_new'>{{ novo_estoque_origem }}
-          {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
-        </h4>
+        {% for item in itens_saida %}
+          <p>
+            Estoque de {{ item.str_item }} no depósito de origem: 
+            <span class='qtd_old'>{{ item.estoque_inicio }}
+            {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
+            <span class='arrow'>&rarr;</span>
+            <span class='qtd_new'>{{ item.estoque_fim }}
+            {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
+          </p>
+        {% endfor %}
       {% endif %}
       {% if mov_destino %}
-        <h4>Estoque no depósito de destino:
-          <span class='qtd_old'>{{ estoque_destino }}
-          {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
-          <span class='arrow'>&rarr;</span>
-          <span class='qtd_new'>{{ novo_estoque_destino }}
-          {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
-        </h4>
+        {% for item in itens_entrada %}
+          <p>
+            Estoque de {{ item.str_item }} no depósito de destino: 
+            <span class='qtd_old'>{{ item.estoque_inicio }}
+            {% if request.POST.analisa or erro_exec %}(atual){% endif %}</span>
+            <span class='arrow'>&rarr;</span>
+            <span class='qtd_new'>{{ item.estoque_fim }}
+            {% if not request.POST.analisa and not erro_exec %}(atual){% endif %}</span>
+          </p>
+        {% endfor %}
       {% endif %}
     {% endif %}
   {% endif %}

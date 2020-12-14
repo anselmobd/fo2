@@ -43,6 +43,7 @@ class Transfere():
         self.produto_novo_item = None
         self.itens_extras = ''
         self.itens_extras_sep = ''
+        self.str_item = ''
 
         self.valid_entries()
         self.calc_itens()
@@ -67,22 +68,6 @@ class Transfere():
             self.tem_trans_entrada, self.deposito_destino, +1, self.itens_entrada)
         
     def calc_vars(self):
-        if self.tem_trans_saida:
-            self.estoque_origem = self.get_estoque(
-                self.deposito_origem, self.nivel, self.ref, self.cor, self.tam)
-            self.novo_estoque_origem = self.estoque_origem - self.qtd
-        else:
-            self.estoque_origem = 0
-            self.novo_estoque_origem = 0
-
-        if self.tem_trans_entrada:
-            self.estoque_destino = self.get_estoque(
-                self.deposito_destino, self.nivel, self.nova_ref, self.nova_cor, self.novo_tam)
-            self.novo_estoque_destino = self.estoque_destino + self.qtd
-        else:
-            self.estoque_destino = 0
-            self.novo_estoque_destino = 0
-
         produto = queries.get_preco_medio_niv_ref_cor_tam(
             self.cursor, self.nivel, self.ref, self.cor, self.tam)
         try:
@@ -143,6 +128,7 @@ class Transfere():
             })
             if produto_item is None:
                 produto_item = objs_prod.produto_item
+                self.str_item = objs_prod.str_item
             else:
                 self.itens_extras += self.itens_extras_sep + objs_prod.str_item
                 self.itens_extras_sep = ' '
