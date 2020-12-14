@@ -117,10 +117,16 @@ class Transfere():
     def monta_itens_listas(self):
         self.itens_saida = []
         self.monta_itens_saida_entrada(self.itens_saida, self.ref, self.cor, self.tam)
+        if self.tip_mov.unidade != 'M':
+            if len(self.itens_saida) > 1:
+                raise ValueError('Apenas em montagem é possível tem mais de uma cor.')
 
         self.itens_entrada = []
         self.monta_itens_saida_entrada(
                 self.itens_entrada, self.nova_ref, self.nova_cor, self.novo_tam)
+        if self.tip_mov.unidade != 'D':
+            if len(self.itens_entrada) > 1:
+                raise ValueError('Apenas em desmontagem é possível tem mais de uma nova cor.')
 
     def valid_itens_lista(self, item_lista):
         produto_item = None
