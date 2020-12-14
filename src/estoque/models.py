@@ -120,6 +120,8 @@ class MovStq(models.Model):
         max_length=100)
     hora = models.DateTimeField(
         null=True, auto_now_add=True)
+    itens_extras = models.CharField(
+        default='', max_length=200)
 
     def __str__(self):
         return (f'{self.documento.get_num_doc}, {self.item} '
