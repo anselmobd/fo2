@@ -154,6 +154,7 @@ class ListaMovimentos(View):
         ]
         safe = [
             'str_item',
+            'str_novo_item',
         ]
         self.context.update({
             'headers': headers,
