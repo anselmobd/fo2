@@ -39,6 +39,11 @@ class Transfere():
         self.request = request
         self.cria_num_doc = cria_num_doc
 
+        self.produto_item = None
+        self.produto_novo_item = None
+        self.itens_extras = ''
+        self.itens_extras_sep = ''
+
         self.valid_entries()
         self.calc_itens()
 
@@ -128,6 +133,7 @@ class Transfere():
                 self.itens_entrada, self.nova_ref, self.nova_cor, self.novo_tam)
 
     def valid_itens_lista(self, item_lista):
+        produto_item = None
         for item in item_lista:
             objs_prod = pro_cla.ObjsProduto(
                 self.nivel, item['ref'], item['tam'], item['cor'])
@@ -135,10 +141,25 @@ class Transfere():
                 'str_item': objs_prod.str_item,
                 'produto_item': objs_prod.produto_item,
             })
+            if produto_item is None:
+                produto_item = objs_prod.produto_item
+            else:
+                self.itens_extras += self.itens_extras_sep + objs_prod.str_item
+                self.itens_extras_sep = ' '
+
+        return produto_item
 
     def valid_itens(self):
-        self.valid_itens_lista(self.itens_saida)
-        self.valid_itens_lista(self.itens_entrada)
+        produto_item = self.valid_itens_lista(self.itens_saida)
+        if self.produto_item is None:
+            self.produto_item = produto_item
+
+        produto_item = self.valid_itens_lista(self.itens_entrada)
+        if self.produto_item is None:
+            self.produto_item = produto_item
+        else:
+            self.produto_novo_item = produto_item
+
 
     def valid_entries(self):
         self.valid_tipo()
@@ -148,14 +169,6 @@ class Transfere():
         self.valid_item_destino()
         self.monta_itens_listas()
         self.valid_itens()
-
-        self.valid_item()
-
-        if self.novo_item_igual:
-            self.produto_novo_item = None
-        else:
-            self.valid_novo_item()
-
         self.valid_num_doc()
 
     def valid_tipo(self):
@@ -168,13 +181,6 @@ class Transfere():
                 raise ValueError(
                     f'Tipo de movimento de estoque "{self.tipo}" '
                     'não cadastrado.')
-
-    def valid_item(self):
-        objs_prod = pro_cla.ObjsProduto(
-            self.nivel, self.ref, self.tam, self.cor)
-
-        self.str_item = objs_prod.str_item
-        self.produto_item = objs_prod.produto_item
 
     def valid_quant(self):
         if self.qtd <= 0:
@@ -191,13 +197,6 @@ class Transfere():
         if not self.tip_mov.renomeia and \
                 self.deposito_origem == self.deposito_destino:
             raise ValueError('Depósitos devem ser diferentes.')
-
-    def valid_novo_item(self):
-        objs_novo_prod = pro_cla.ObjsProduto(
-            self.nivel, self.nova_ref, self.novo_tam, self.nova_cor)
-
-        self.str_novo_item = objs_novo_prod.str_item
-        self.produto_novo_item = objs_novo_prod.produto_item
 
     def valid_num_doc(self):
         obj_doc_mov_stq = classes.ObjDocMovStq(
@@ -256,22 +255,18 @@ class Transfere():
                 'Execução impedida por algum erro de inicialização.')
 
         if self.tem_trans_saida:
-            self.insert(
+            self.insert_lista(
                 'saída',
-                self.ref,
-                self.tam,
-                self.cor,
+                self.itens_saida,
                 self.deposito_origem,
                 self.trans_saida,
                 self.trans_saida_e_s,
                 )
 
         if self.tem_trans_entrada:
-            self.insert(
+            self.insert_lista(
                 'entrada',
-                self.nova_ref,
-                self.novo_tam,
-                self.nova_cor,
+                self.itens_entrada,
                 self.deposito_destino,
                 self.trans_entrada,
                 self.trans_entrada_e_s,
@@ -286,8 +281,21 @@ class Transfere():
             novo_item=self.produto_novo_item,
             documento=self.doc_mov_stq,
             usuario=self.request.user,
+            itens_extras=self.itens_extras,
         )
         mov_stq.save()
+
+    def insert_lista(self, descr, item_lista, dep, trans, e_s):
+        for item in item_lista:
+            self.insert(
+                descr,
+                item['ref'],
+                item['tam'],
+                item['cor'],
+                dep,
+                trans,
+                e_s,
+            )
 
     def insert(self, descr, ref, tam, cor, dep, trans, e_s):
         if not queries.insert_transacao(
