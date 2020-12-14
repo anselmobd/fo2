@@ -44,7 +44,9 @@
 <form action="" method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <input type="submit" name="analisa" value="Analisa"/>
+  {% if form %}
+    <input type="submit" name="analisa" value="Analisa"/>
+  {% endif %}
   {% if request.POST.analisa or request.POST.executa %}
     <a class="btn btn-primary" href="{% url 'estoque:transferencia' tipo %}">Limpa</a>
   {% endif %}
