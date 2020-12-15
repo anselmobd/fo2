@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connections
 from django.shortcuts import render, redirect
 from django.views import View
@@ -14,7 +15,10 @@ class Rolo(View):
     title_name = 'Rolo'
 
     def mount_context(
-            self, cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf):
+            self, cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf, page):
+
+        linhas_pagina = 50
+
         rolo_estoque_dict = {
             0: 'Em produção',
             1: 'Em estoque',
@@ -54,10 +58,19 @@ class Rolo(View):
             'est_aloc_descr': '' if est_aloc == '' else est_aloc_dict[est_aloc],
             'est_conf': est_conf,
             'est_conf_descr': '' if est_conf == '' else est_conf_dict[est_conf],
+            'linhas_pagina': linhas_pagina,
+            'paginas_vizinhas': 5,
         }
 
         data = insumo.queries.rolo_inform(
             cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf)
+        paginator = Paginator(data, linhas_pagina)
+        try:
+            data = paginator.page(page)
+        except PageNotAnInteger:
+            data = paginator.page(1)
+        except EmptyPage:
+            data = paginator.page(paginator.num_pages)
 
         for row in data:
             row['dt_entr'] = row['dt_entr'].date()
@@ -114,8 +127,9 @@ class Rolo(View):
             est_res = form.cleaned_data['est_res']
             est_aloc = form.cleaned_data['est_aloc']
             est_conf = form.cleaned_data['est_conf']
+            page = form.cleaned_data['page']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf))
+                cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf, page))
         context['form'] = form
         return render(request, self.template_name, context)
