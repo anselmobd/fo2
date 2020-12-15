@@ -1511,15 +1511,7 @@ class Rolo(View):
     template_name = 'insumo/rolo.html'
     title_name = 'Rolo'
 
-    def mount_context(self, cursor, rolo, ref, op):
-        context = {
-            'rolo': rolo,
-            'ref': ref,
-            'op': op,
-        }
-
-        data = queries.rolo_inform(cursor, rolo, ref, op)
-
+    def mount_context(self, cursor, rolo, sit, ref, op):
         rolo_estoque_dict = {
             0: 'Em produção',
             1: 'Em estoque',
@@ -1530,6 +1522,16 @@ class Rolo(View):
             7: 'Relacionado a ordem de serviço',
             8: 'Rolo com nota emitida em processo de cancelamento',
         }
+
+        context = {
+            'rolo': rolo,
+            'sit': sit,
+            'sit_descr': '' if sit == '' else rolo_estoque_dict[int(sit)],
+            'ref': ref,
+            'op': op,
+        }
+
+        data = queries.rolo_inform(cursor, rolo, sit, ref, op)
 
         for row in data:
             row['dt_entr'] = row['dt_entr'].date()
@@ -1576,10 +1578,11 @@ class Rolo(View):
             form.data['rolo'] = kwargs['rolo']
         if form.is_valid():
             rolo = form.cleaned_data['rolo']
+            sit = form.cleaned_data['sit']
             ref = form.cleaned_data['ref']
             op = form.cleaned_data['op']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, rolo, ref, op))
+            context.update(self.mount_context(cursor, rolo, sit, ref, op))
         context['form'] = form
         return render(request, self.template_name, context)
 

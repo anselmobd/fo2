@@ -1585,12 +1585,18 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
     return rows_to_dict_list_lower(cursor)
 
 
-def rolo_inform(cursor, rolo=None, ref=None, op=None):
+def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None):
 
     filtro_rolo = ''
     if rolo is not None and rolo != '':
       filtro_rolo = f"""--
           AND ro.CODIGO_ROLO = {rolo}
+      """
+
+    filtro_sit = ''
+    if sit is not None and sit != '':
+      filtro_sit = f"""--
+          AND ro.ROLO_ESTOQUE = {sit}
       """
 
     filtro_ref = ''
@@ -1627,6 +1633,7 @@ def rolo_inform(cursor, rolo=None, ref=None, op=None):
           ON rc.CODIGO_ROLO = ro.CODIGO_ROLO
         WHERE 1=1
           {filtro_rolo} -- filtro_rolo
+          {filtro_sit} -- filtro_sit
           {filtro_ref} -- filtro_ref
           {filtro_op} -- filtro_op
         ORDER BY
