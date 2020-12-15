@@ -107,6 +107,20 @@ class RoloForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
+    CHOICES = [
+        ('', 'Todas'),
+        ('0', '0-Em produção'),
+        ('1', '1-Em estoque'),
+        ('2', '2-Faturado ou fora do estoque'),
+        ('3', '3-Relacionado a pedido'),
+        ('4', '4-Em trânsito'),
+        ('5', '5-Coletado'),
+        ('7', '7-Relacionado a ordem de serviço'),
+        ('8', '8-Rolo com nota emitida em processo de cancelamento'),
+    ]
+    sit = forms.ChoiceField(
+        label='Situação', choices=CHOICES, initial='', required=False)
+
     ref = forms.CharField(
         label='Referência (nível 2)', max_length=5, required=False,
         widget=forms.TextInput(
