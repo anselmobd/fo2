@@ -1585,7 +1585,9 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
     return rows_to_dict_list_lower(cursor)
 
 
-def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None, est_res=None):
+def rolo_inform(
+        cursor, rolo=None, sit=None,  ref=None, op=None,
+        est_res=None, est_aloc=None, est_conf=None):
 
     filtro_rolo = ''
     if rolo is not None and rolo != '':
@@ -1613,13 +1615,35 @@ def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None, est_res=None):
 
     filtro_est_res = ''
     if est_res is not None:
-      if est_res == 'R':
+      if est_res == 'S':
         filtro_est_res = f"""--
             AND re.ORDEM_PRODUCAO IS NOT NULL
         """
       elif est_res == 'N':
         filtro_est_res = f"""--
             AND re.ORDEM_PRODUCAO IS NULL
+        """
+
+    filtro_est_aloc = ''
+    if est_aloc is not None:
+      if est_aloc == 'S':
+        filtro_est_aloc = f"""--
+            AND rc.ROLO_CONFIRMADO IS NOT NULL
+        """
+      elif est_aloc == 'N':
+        filtro_est_aloc = f"""--
+            AND rc.ROLO_CONFIRMADO IS NULL
+        """
+
+    filtro_est_conf = ''
+    if est_conf is not None:
+      if est_conf == 'S':
+        filtro_est_conf = f"""--
+            AND rc.DATA_HORA_CONF IS NOT NULL
+        """
+      elif est_conf == 'N':
+        filtro_est_conf = f"""--
+            AND rc.DATA_HORA_CONF IS NULL
         """
 
     sql = f"""
@@ -1631,10 +1655,11 @@ def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None, est_res=None):
         , ro.PANOACAB_ITEM cor
         , ro.ROLO_ESTOQUE sit
         , ro.DATA_ENTRADA dt_entr
-        , re.ORDEM_PRODUCAO OP
+        , re.ORDEM_PRODUCAO op
         , re.DATA_RESERVA dt_reserva
         , re.USUARIO_RESERVA u_reserva 
         , rc.ROLO_CONFIRMADO conf
+        , rc.ORDEM_PRODUCAO op_aloc
         , rc.DATA_HORA_CONF dh_conf
         , rc.USUARIO u_conf
         FROM PCPT_020 ro -- cadastro de rolos
@@ -1648,6 +1673,8 @@ def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None, est_res=None):
           {filtro_ref} -- filtro_ref
           {filtro_op} -- filtro_op
           {filtro_est_res} -- filtro_est_res
+          {filtro_est_aloc} -- filtro_est_aloc
+          {filtro_est_conf} -- filtro_est_conf
         ORDER BY
           ro.DATA_ENTRADA DESC
     """

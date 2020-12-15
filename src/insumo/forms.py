@@ -108,7 +108,7 @@ class RoloForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
     choices_sit = [
-        ('', 'Todas'),
+        ('', '(não filtra)'),
         ('0', '0-Em produção'),
         ('1', '1-Em estoque'),
         ('2', '2-Faturado ou fora do estoque'),
@@ -131,12 +131,28 @@ class RoloForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     choices_est_res = [
-        ('', 'Todos'),
-        ('R', 'Reservado'),
+        ('', '(não filtra)'),
+        ('S', 'Reservado'),
         ('N', 'Não reservado'),
     ]
     est_res = forms.ChoiceField(
         label='Estado da reserva', choices=choices_est_res, initial='', required=False)
+
+    choices_est_aloc = [
+        ('', '(não filtra)'),
+        ('S', 'Alocado'),
+        ('N', 'Não alocado'),
+    ]
+    est_aloc = forms.ChoiceField(
+        label='Estado da alocação', choices=choices_est_aloc, initial='', required=False)
+
+    choices_est_conf = [
+        ('', '(não filtra)'),
+        ('S', 'Confirmado'),
+        ('N', 'Não confirmado'),
+    ]
+    est_conf = forms.ChoiceField(
+        label='Estado da confirmação', choices=choices_est_conf, initial='', required=False)
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
