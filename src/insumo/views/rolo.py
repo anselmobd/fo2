@@ -17,7 +17,7 @@ class Rolo(View):
     def mount_context(
             self, cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf, page):
 
-        linhas_pagina = 50
+        linhas_pagina = 100
 
         rolo_estoque_dict = {
             0: 'Em produção',
