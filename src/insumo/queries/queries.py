@@ -1620,7 +1620,6 @@ def rolo_inform(cursor, rolo=None, ref=None, op=None):
         , rc.ROLO_CONFIRMADO conf
         , rc.DATA_HORA_CONF dh_conf
         , rc.USUARIO u_conf
-        , rc.*
         FROM PCPT_020 ro -- cadastro de rolos
         LEFT JOIN TMRP_141 re -- reserva de rolo para OP
           ON re.CODIGO_ROLO = ro.CODIGO_ROLO

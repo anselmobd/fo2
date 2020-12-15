@@ -1532,15 +1532,29 @@ class Rolo(View):
         }
 
         for row in data:
+            row['dt_entr'] = row['dt_entr'].date()
             row['sit'] = rolo_estoque_dict[row['sit']]
             if row['op'] == None:
                 row['op'] = '-'
+                row['dt_reserva'] = '-'
+                row['u_reserva'] = '-'
+            else:
+                row['dt_reserva'] = row['dt_reserva'].date()
+            if row['conf'] == None:
+                row['conf'] = '-'
+            if row['dh_conf'] == None:
+                row['u_conf'] = '-'
+                row['dh_conf'] = '-'
 
         context.update({
-            'headers': ('Rolo', 'Nível', 'Referência',
-                        'Cor', 'Tamanho', 'Situação', 'OP'),
-            'fields': ('rolo', 'nivel', 'ref',
-                       'cor', 'tam', 'sit', 'op'),
+            'headers': ('Rolo', 'Entrada', 'Nível', 'Referência',
+                        'Cor', 'Tamanho', 'Situação',
+                        'OP', 'Usuário', 'Reserva',
+                        'Confirmado', 'Usuário', 'Quando'),
+            'fields': ('rolo', 'dt_entr', 'nivel', 'ref',
+                       'cor', 'tam', 'sit',
+                       'op', 'u_reserva', 'dt_reserva',
+                       'conf', 'u_conf', 'dh_conf'),
             'data': data,
         })
 
