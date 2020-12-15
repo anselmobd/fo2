@@ -103,14 +103,18 @@ class BipaRoloForm(forms.Form):
 
 class RoloForm(forms.Form):
     rolo = forms.CharField(
-        label='Rolo', max_length=9, min_length=1, required=False,
+        label='Rolo', max_length=7, required=False,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
     ref = forms.CharField(
-        label='Referência (nível 2)', required=False, max_length=5,
+        label='Referência (nível 2)', max_length=5, required=False,
         widget=forms.TextInput(
             attrs={'type': 'string', 'size': 5}))
+
+    op = forms.CharField(
+        label='OP', max_length=7, required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
