@@ -1549,8 +1549,7 @@ class Rolo(View):
                 row['u_reserva'] = '-'
             else:
                 row['dt_reserva'] = row['dt_reserva'].date()
-            if row['conf'] == None:
-                row['conf'] = '-'
+            row['conf'] = 'N' if row['conf'] == None else 'S'
             if row['dh_conf'] == None:
                 row['u_conf'] = '-'
                 row['dh_conf'] = '-'
@@ -1558,12 +1557,12 @@ class Rolo(View):
         context.update({
             'headers': ('Rolo', 'Entrada', 'Nível', 'Referência',
                         'Cor', 'Tamanho', 'Situação',
-                        'OP', 'Usuário', 'Reserva',
-                        'Confirmado', 'Usuário', 'Quando'),
+                        'Reservado', 'OP', 'Usuário',
+                        'Alocado', 'Confirmado', 'Usuário'),
             'fields': ('rolo', 'dt_entr', 'nivel', 'ref',
                        'cor', 'tam', 'sit',
-                       'op', 'u_reserva', 'dt_reserva',
-                       'conf', 'u_conf', 'dh_conf'),
+                       'dt_reserva', 'op', 'u_reserva',
+                       'conf', 'dh_conf', 'u_conf'),
             'data': data,
         })
 
