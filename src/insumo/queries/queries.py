@@ -1586,7 +1586,7 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
 
 
 def rolo_inform(
-        cursor, rolo=None, sit=None,  ref=None, op=None,
+        cursor, rolo=None, sit=None, ref=None, cor=None, op=None,
         est_res=None, est_aloc=None, est_conf=None):
 
     filtro_rolo = ''
@@ -1605,6 +1605,12 @@ def rolo_inform(
     if ref is not None and ref != '':
       filtro_ref = f"""--
           AND ro.PANOACAB_GRUPO = '{ref}'
+      """
+
+    filtro_cor = ''
+    if cor is not None and cor != '':
+      filtro_cor = f"""--
+          AND ro.PANOACAB_ITEM = '{cor}'
       """
 
     filtro_op = ''
@@ -1671,6 +1677,7 @@ def rolo_inform(
           {filtro_rolo} -- filtro_rolo
           {filtro_sit} -- filtro_sit
           {filtro_ref} -- filtro_ref
+          {filtro_cor} -- filtro_cor
           {filtro_op} -- filtro_op
           {filtro_est_res} -- filtro_est_res
           {filtro_est_aloc} -- filtro_est_aloc
