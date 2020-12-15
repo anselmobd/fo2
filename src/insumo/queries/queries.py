@@ -1622,6 +1622,9 @@ def rolo_inform(cursor, rolo=None, ref=None):
           ON rc.CODIGO_ROLO = ro.CODIGO_ROLO
         WHERE 1=1
           {filtro_rolo} -- filtro_rolo
+          {filtro_ref} -- filtro_ref
+        ORDER BY
+          ro.DATA_ENTRADA DESC
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
