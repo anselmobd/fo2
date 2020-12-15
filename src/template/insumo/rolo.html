@@ -30,6 +30,12 @@
 {% if est_res %}
   <h2>Estado da reserva: {{ est_res_descr }}</h2>
 {% endif %}
+{% if est_aloc %}
+  <h2>Estado da alocação: {{ est_aloc_descr }}</h2>
+{% endif %}
+{% if est_conf %}
+  <h2>Estado da confirmação: {{ est_conf_descr }}</h2>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}

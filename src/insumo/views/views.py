@@ -1511,7 +1511,8 @@ class Rolo(View):
     template_name = 'insumo/rolo.html'
     title_name = 'Rolo'
 
-    def mount_context(self, cursor, rolo, sit, ref, op, est_res):
+    def mount_context(
+            self, cursor, rolo, sit, ref, op, est_res, est_aloc, est_conf):
         rolo_estoque_dict = {
             0: 'Em produção',
             1: 'Em estoque',
@@ -1524,8 +1525,18 @@ class Rolo(View):
         }
 
         est_res_dict = {
-            'R': 'Reservado',
+            'S': 'Reservado',
             'N': 'Não reservado',
+        }
+
+        est_aloc_dict = {
+            'S': 'Alocado',
+            'N': 'Não alocado',
+        }
+
+        est_conf_dict = {
+            'S': 'Confirmado',
+            'N': 'Não confirmado',
         }
 
         context = {
@@ -1536,9 +1547,14 @@ class Rolo(View):
             'op': op,
             'est_res': est_res,
             'est_res_descr': '' if est_res == '' else est_res_dict[est_res],
+            'est_aloc': est_aloc,
+            'est_aloc_descr': '' if est_aloc == '' else est_aloc_dict[est_aloc],
+            'est_conf': est_conf,
+            'est_conf_descr': '' if est_conf == '' else est_conf_dict[est_conf],
         }
 
-        data = queries.rolo_inform(cursor, rolo, sit, ref, op, est_res)
+        data = queries.rolo_inform(
+            cursor, rolo, sit, ref, op, est_res, est_aloc, est_conf)
 
         for row in data:
             row['dt_entr'] = row['dt_entr'].date()
@@ -1549,7 +1565,11 @@ class Rolo(View):
                 row['u_reserva'] = '-'
             else:
                 row['dt_reserva'] = row['dt_reserva'].date()
-            row['conf'] = 'N' if row['conf'] == None else 'S'
+            if row['conf'] == None:
+                row['conf'] = 'N'
+                row['op_aloc'] = '-'
+            else:
+                row['conf'] = 'S'
             if row['dh_conf'] == None:
                 row['u_conf'] = '-'
                 row['dh_conf'] = '-'
@@ -1558,11 +1578,11 @@ class Rolo(View):
             'headers': ('Rolo', 'Entrada', 'Nível', 'Referência',
                         'Cor', 'Tamanho', 'Situação',
                         'Reservado', 'OP', 'Usuário',
-                        'Alocado', 'Confirmado', 'Usuário'),
+                        'Alocado', 'OP', 'Confirmado', 'Usuário'),
             'fields': ('rolo', 'dt_entr', 'nivel', 'ref',
                        'cor', 'tam', 'sit',
                        'dt_reserva', 'op', 'u_reserva',
-                       'conf', 'dh_conf', 'u_conf'),
+                       'conf', 'op_aloc', 'dh_conf', 'u_conf'),
             'data': data,
         })
 
@@ -1588,8 +1608,11 @@ class Rolo(View):
             ref = form.cleaned_data['ref']
             op = form.cleaned_data['op']
             est_res = form.cleaned_data['est_res']
+            est_aloc = form.cleaned_data['est_aloc']
+            est_conf = form.cleaned_data['est_conf']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, rolo, sit, ref, op, est_res))
+            context.update(self.mount_context(
+                cursor, rolo, sit, ref, op, est_res, est_aloc, est_conf))
         context['form'] = form
         return render(request, self.template_name, context)
 
