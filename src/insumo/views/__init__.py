@@ -6,4 +6,5 @@ from .mapa_compras import *
 from .mapa_novo import *
 from .mapa import *
 from .ref import *
+from .rolo import *
 from .views import *
