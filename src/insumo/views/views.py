@@ -1511,10 +1511,13 @@ class Rolo(View):
     template_name = 'insumo/rolo.html'
     title_name = 'Rolo'
 
-    def mount_context(self, cursor, rolo):
-        context = {'rolo': rolo}
+    def mount_context(self, cursor, rolo, ref):
+        context = {
+            'rolo': rolo,
+            'ref': ref,
+        }
 
-        data = queries.rolo_inform(cursor, rolo)
+        data = queries.rolo_inform(cursor, rolo, ref)
 
         rolo_estoque_dict = {
             0: '0 (Em produção)',
@@ -1558,8 +1561,9 @@ class Rolo(View):
             form.data['rolo'] = kwargs['rolo']
         if form.is_valid():
             rolo = form.cleaned_data['rolo']
+            ref = form.cleaned_data['ref']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, rolo))
+            context.update(self.mount_context(cursor, rolo, ref))
         context['form'] = form
         return render(request, self.template_name, context)
 
