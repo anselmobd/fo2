@@ -1684,6 +1684,7 @@ def rolo_inform(
           {filtro_est_conf} -- filtro_est_conf
         ORDER BY
           ro.DATA_ENTRADA DESC
+        , ro.CODIGO_ROLO DESC
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
