@@ -1586,19 +1586,36 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
 
 
 def rolo_inform(cursor, rolo):
-    sql = """
+
+    filtro_rolo = ''
+    if rolo is not None and rolo != '':
+      filtro_rolo = f"""
+          AND ro.CODIGO_ROLO = {rolo}
+      """
+
+    sql = f"""
         SELECT
-          ro.CODIGO_ROLO
-        , ro.PANOACAB_NIVEL99
-        , ro.PANOACAB_GRUPO
-        , ro.PANOACAB_SUBGRUPO
-        , ro.PANOACAB_ITEM
-        , ro.ROLO_ESTOQUE
-        , COALESCE(re.ORDEM_PRODUCAO, 0) ORDEM_PRODUCAO
+          ro.CODIGO_ROLO rolo
+        , ro.PANOACAB_NIVEL99 nivel
+        , ro.PANOACAB_GRUPO ref
+        , ro.PANOACAB_SUBGRUPO tam
+        , ro.PANOACAB_ITEM cor
+        , ro.ROLO_ESTOQUE sit
+        , ro.DATA_ENTRADA dt_entr
+        , re.ORDEM_PRODUCAO OP
+        , re.DATA_RESERVA dt_reserva
+        , re.USUARIO_RESERVA u_reserva 
+        , rc.ROLO_CONFIRMADO conf
+        , rc.DATA_HORA_CONF dh_conf
+        , rc.USUARIO u_conf
+        , rc.*
         FROM PCPT_020 ro -- cadastro de rolos
         LEFT JOIN TMRP_141 re -- reserva de rolo para OP
           ON re.CODIGO_ROLO = ro.CODIGO_ROLO
-        WHERE ro.CODIGO_ROLO = %s
+        LEFT JOIN PCPT_025 rc
+          ON rc.CODIGO_ROLO = ro.CODIGO_ROLO
+        WHERE 1=1
+          {filtro_rolo} -- filtro_rolo
     """
-    cursor.execute(sql, [rolo])
+    cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
