@@ -107,7 +107,7 @@ class RoloForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
-    CHOICES = [
+    choices_sit = [
         ('', 'Todas'),
         ('0', '0-Em produção'),
         ('1', '1-Em estoque'),
@@ -119,7 +119,7 @@ class RoloForm(forms.Form):
         ('8', '8-Rolo com nota emitida em processo de cancelamento'),
     ]
     sit = forms.ChoiceField(
-        label='Situação', choices=CHOICES, initial='', required=False)
+        label='Situação', choices=choices_sit, initial='', required=False)
 
     ref = forms.CharField(
         label='Referência (nível 2)', max_length=5, required=False,
@@ -129,6 +129,14 @@ class RoloForm(forms.Form):
     op = forms.CharField(
         label='OP', max_length=7, required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
+
+    choices_est_res = [
+        ('', 'Todos'),
+        ('R', 'Reservado'),
+        ('N', 'Não reservado'),
+    ]
+    est_res = forms.ChoiceField(
+        label='Estado da reserva', choices=choices_est_res, initial='', required=False)
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()

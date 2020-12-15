@@ -1585,7 +1585,7 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
     return rows_to_dict_list_lower(cursor)
 
 
-def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None):
+def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None, est_res=None):
 
     filtro_rolo = ''
     if rolo is not None and rolo != '':
@@ -1610,6 +1610,17 @@ def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None):
       filtro_op = f"""--
           AND re.ORDEM_PRODUCAO = '{op}'
       """
+
+    filtro_est_res = ''
+    if est_res is not None:
+      if est_res == 'R':
+        filtro_est_res = f"""--
+            AND re.ORDEM_PRODUCAO IS NOT NULL
+        """
+      elif est_res == 'N':
+        filtro_est_res = f"""--
+            AND re.ORDEM_PRODUCAO IS NULL
+        """
 
     sql = f"""
         SELECT
@@ -1636,6 +1647,7 @@ def rolo_inform(cursor, rolo=None, sit=None,  ref=None, op=None):
           {filtro_sit} -- filtro_sit
           {filtro_ref} -- filtro_ref
           {filtro_op} -- filtro_op
+          {filtro_est_res} -- filtro_est_res
         ORDER BY
           ro.DATA_ENTRADA DESC
     """

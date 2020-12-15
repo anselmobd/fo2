@@ -27,6 +27,9 @@
 {% if op %}
   <h2>OP: {{ op }}</h2>
 {% endif %}
+{% if est_res %}
+  <h2>Estado da reserva: {{ est_res_descr }}</h2>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
