@@ -1526,16 +1526,17 @@ class Rolo(View):
             7: '7 (Relacionado a ordem de serviço)',
             8: '8 (Rolo com nota emitida em processo de cancelamento)',
         }
+
         for row in data:
-            row['rolo_estoque'] = rolo_estoque_dict[row['rolo_estoque']]
+            row['sit'] = rolo_estoque_dict[row['sit']]
+            if row['op'] == None:
+                row['op'] = '-'
 
         context.update({
             'headers': ('Rolo', 'Nível', 'Referência',
-                        'Cor', 'Tamanho', 'Situação',
-                        'OP'),
-            'fields': ('codigo_rolo', 'panoacab_nivel99', 'panoacab_grupo',
-                       'panoacab_item', 'panoacab_subgrupo', 'rolo_estoque',
-                       'ordem_producao'),
+                        'Cor', 'Tamanho', 'Situação', 'OP'),
+            'fields': ('rolo', 'nivel', 'ref',
+                       'cor', 'tam', 'sit', 'op'),
             'data': data,
         })
 
