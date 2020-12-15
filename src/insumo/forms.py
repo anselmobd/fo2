@@ -173,6 +173,27 @@ class RoloForm(forms.Form):
         self.data = data
         return cor
 
+    def clean(self):
+        clean_form = super(RoloForm, self).clean()
+
+        if not any(
+            clean_form.get(x, '')
+            for x in (
+                'rolo',
+                'sit',
+                'ref',
+                'cor',
+                'op',
+                'est_res',
+                'est_aloc',
+                'est_conf',
+            )
+        ):
+            list_msg = ['Ao menos um destes campos deve ser preenchido']
+            self._errors['rolo'] = self.error_class(list_msg)
+
+        return clean_form
+
 
 class NecessidadeForm(forms.Form):
     op = forms.CharField(
