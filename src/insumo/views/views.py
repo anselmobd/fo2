@@ -1521,19 +1521,19 @@ class Rolo(View):
         data = queries.rolo_inform(cursor, rolo, ref, op)
 
         rolo_estoque_dict = {
-            0: '0 (Em produção)',
-            1: '1 (Em estoque)',
-            2: '2 (Faturado ou fora do estoque)',
-            3: '3 (Relacionado a pedido)',
-            4: '4 (Em trânsito)',
-            5: '5 (Coletado)',
-            7: '7 (Relacionado a ordem de serviço)',
-            8: '8 (Rolo com nota emitida em processo de cancelamento)',
+            0: 'Em produção',
+            1: 'Em estoque',
+            2: 'Faturado ou fora do estoque',
+            3: 'Relacionado a pedido',
+            4: 'Em trânsito',
+            5: 'Coletado',
+            7: 'Relacionado a ordem de serviço',
+            8: 'Rolo com nota emitida em processo de cancelamento',
         }
 
         for row in data:
             row['dt_entr'] = row['dt_entr'].date()
-            row['sit'] = rolo_estoque_dict[row['sit']]
+            row['sit|HOVER'] = rolo_estoque_dict[row['sit']]
             if row['op'] == None:
                 row['op'] = '-'
                 row['dt_reserva'] = '-'
