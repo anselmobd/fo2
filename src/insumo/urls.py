@@ -104,8 +104,8 @@ urlpatterns = [
         views.MapaSemanal.as_view(),
         name='mapa_semanal__get'),
 
-    url(r'^roloinfo/$', views.Rolo.as_view(), name='rolo'),
-    url(r'^roloinfo/(?P<rolo>[29]?\.?.{5})/$', views.Rolo.as_view(),
+    url(r'^rolo/$', views.Rolo.as_view(), name='rolo'),
+    url(r'^rolo/(?P<rolo>[29]?\.?.{5})/$', views.Rolo.as_view(),
         name='rolo__get'),
 
     url(r'^mapa_compras_semana/$', views.MapaComprasSemana.as_view(),
