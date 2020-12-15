@@ -159,6 +159,9 @@ class RoloForm(forms.Form):
     est_conf = forms.ChoiceField(
         label='Estado da confirmação', choices=choices_est_conf, initial='', required=False)
 
+    page = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())
+
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
         data = self.data.copy()

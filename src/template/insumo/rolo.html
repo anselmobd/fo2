@@ -6,11 +6,26 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
+li a.ativo {
+  cursor:pointer;
+}
+span.glyphicon {
+  top: 0px;
+}
 </style>
 {% endblock %}
 
+{% block javascript %}
+  <script type="text/javascript">
+    function setPageAndSubmit(page) {
+      document.getElementById('id_page').value = page;
+      document.formName.submit();
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
-<form action="{% url 'insumo:rolo' %}" method="post">
+<form action="{% url 'insumo:rolo' %}" method="post" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
@@ -43,6 +58,44 @@
   <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
+
+  {% if data.paginator.num_pages != 1 %}
+    <br /><small>({{linhas_pagina}} rolos por página; {{ data.paginator.num_pages }} páginas)</small><br />
+    <ul class="pagination">
+      {% if data.has_previous %}
+        <li class="page-item"><a nohref onclick="setPageAndSubmit(1);"><span class="glyphicon glyphicon-step-backward"></span></a></li>
+        <li class="page-item"><a nohref onclick="setPageAndSubmit({{ data.previous_page_number }});"><span class="glyphicon glyphicon-triangle-left"></span></a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="glyphicon glyphicon-step-backward"></span></li>
+        <li class="page-item disabled"><span class="glyphicon glyphicon-triangle-left"></span></li>
+      {% endif %}
+      {% if data.has_next %}
+        <li class="page-item"><a nohref onclick="setPageAndSubmit({{ data.next_page_number }});"><span class="glyphicon glyphicon-triangle-right"></span></a></li>
+        <li class="page-item"><a nohref onclick="setPageAndSubmit({{ data.paginator.num_pages }});"><span class="glyphicon glyphicon-step-forward"></span></a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="glyphicon glyphicon-triangle-right"></span></li>
+        <li class="page-item disabled"><span class="glyphicon glyphicon-step-forward"></span></li>
+      {% endif %}
+    </ul>
+    <ul class="pagination">
+      {% with pag_neib=paginas_vizinhas|stringformat:"i" %}
+      {% with pag_neibn="-"|add:pag_neib %}
+      {% for i in data.paginator.page_range %}
+        {% if i >= data.number|add:pag_neibn %}
+          {% if i <= data.number|add:pag_neib %}
+            {% if data.number == i %}
+              <li class="page-item active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li class="page-item"><a href="#" onclick="setPageAndSubmit({{ i }})">{{ i }}</a></li>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      {% endwith %}
+      {% endwith %}
+    </ul>
+  {% endif %}
+
   <table>
     {% include "layout/thead_generic.html" with data=headers only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data only %}
