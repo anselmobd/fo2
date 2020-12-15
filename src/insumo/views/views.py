@@ -1512,7 +1512,7 @@ class Rolo(View):
     title_name = 'Rolo'
 
     def mount_context(
-            self, cursor, rolo, sit, ref, op, est_res, est_aloc, est_conf):
+            self, cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf):
         rolo_estoque_dict = {
             0: 'Em produção',
             1: 'Em estoque',
@@ -1544,6 +1544,7 @@ class Rolo(View):
             'sit': sit,
             'sit_descr': '' if sit == '' else rolo_estoque_dict[int(sit)],
             'ref': ref,
+            'cor': cor,
             'op': op,
             'est_res': est_res,
             'est_res_descr': '' if est_res == '' else est_res_dict[est_res],
@@ -1554,7 +1555,7 @@ class Rolo(View):
         }
 
         data = queries.rolo_inform(
-            cursor, rolo, sit, ref, op, est_res, est_aloc, est_conf)
+            cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf)
 
         for row in data:
             row['dt_entr'] = row['dt_entr'].date()
@@ -1606,13 +1607,14 @@ class Rolo(View):
             rolo = form.cleaned_data['rolo']
             sit = form.cleaned_data['sit']
             ref = form.cleaned_data['ref']
+            cor = form.cleaned_data['cor']
             op = form.cleaned_data['op']
             est_res = form.cleaned_data['est_res']
             est_aloc = form.cleaned_data['est_aloc']
             est_conf = form.cleaned_data['est_conf']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, rolo, sit, ref, op, est_res, est_aloc, est_conf))
+                cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf))
         context['form'] = form
         return render(request, self.template_name, context)
 
