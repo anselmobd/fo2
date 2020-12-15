@@ -1585,12 +1585,18 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
     return rows_to_dict_list_lower(cursor)
 
 
-def rolo_inform(cursor, rolo):
+def rolo_inform(cursor, rolo=None, ref=None):
 
     filtro_rolo = ''
     if rolo is not None and rolo != '':
       filtro_rolo = f"""
           AND ro.CODIGO_ROLO = {rolo}
+      """
+
+    filtro_ref = ''
+    if ref is not None and ref != '':
+      filtro_ref = f"""
+          AND ro.PANOACAB_GRUPO = '{ref}'
       """
 
     sql = f"""
