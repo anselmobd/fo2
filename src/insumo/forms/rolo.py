@@ -37,6 +37,14 @@ class RoloForm(forms.Form):
         label='OP', max_length=7, required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
+    reserva_de = forms.DateField(
+        label='Data da reserva: De', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    reserva_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
     choices_est_res = [
         ('', '(não filtra)'),
         ('S', 'Reservado'),
@@ -89,6 +97,8 @@ class RoloForm(forms.Form):
                 'ref',
                 'cor',
                 'op',
+                'reserva_de',
+                'reserva_ate',
                 'est_res',
                 'est_aloc',
                 'est_conf',
