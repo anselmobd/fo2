@@ -66,14 +66,19 @@ class Rolo(View):
 
         data = insumo.queries.rolo_inform(
             cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf)
-        paginator = Paginator(data, linhas_pagina)
 
-        if len(data) == 0:
+        quant_rolos = len(data)
+        if quant_rolos == 0:
             context.update({
                 'msg_erro': 'Nenhum rolo encontrado.'
             })
             return context
 
+        context.update({
+            'quant_rolos': quant_rolos,
+        })
+
+        paginator = Paginator(data, linhas_pagina)
         try:
             data = paginator.page(page)
         except PageNotAnInteger:
