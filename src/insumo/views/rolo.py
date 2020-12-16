@@ -15,7 +15,7 @@ class Rolo(View):
     title_name = 'Rolo'
 
     def mount_context(
-            self, cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf, page):
+            self, cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page):
 
         linhas_pagina = 100
 
@@ -52,6 +52,8 @@ class Rolo(View):
             'ref': ref,
             'cor': cor,
             'op': op,
+            'reserva_de': reserva_de,
+            'reserva_ate': reserva_ate,
             'est_res': est_res,
             'est_res_descr': '' if est_res == '' else est_res_dict[est_res],
             'est_aloc': est_aloc,
@@ -63,7 +65,7 @@ class Rolo(View):
         }
 
         data = insumo.queries.rolo_inform(
-            cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf)
+            cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf)
         paginator = Paginator(data, linhas_pagina)
 
         if len(data) == 0:
@@ -131,12 +133,14 @@ class Rolo(View):
             ref = form.cleaned_data['ref']
             cor = form.cleaned_data['cor']
             op = form.cleaned_data['op']
+            reserva_de = form.cleaned_data['reserva_de']
+            reserva_ate = form.cleaned_data['reserva_ate']
             est_res = form.cleaned_data['est_res']
             est_aloc = form.cleaned_data['est_aloc']
             est_conf = form.cleaned_data['est_conf']
             page = form.cleaned_data['page']
             cursor = connections['so'].cursor()
             context.update(self.mount_context(
-                cursor, rolo, sit, ref, cor, op, est_res, est_aloc, est_conf, page))
+                cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page))
         context['form'] = form
         return render(request, self.template_name, context)

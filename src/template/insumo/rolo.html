@@ -45,6 +45,20 @@ span.glyphicon {
 {% if op %}
   <h4>OP: {{ op }}</h4>
 {% endif %}
+{% if reserva_de or reserva_ate %}
+  <h4>Data da reserva:
+  {% if reserva_de == reserva_ate %}
+    {{ reserva_de }}</h4>
+  {% else %}
+    {% if reserva_de %}
+      De: {{ reserva_de }}
+    {% endif %}
+    {% if reserva_ate %}
+      Até: {{ reserva_ate }}
+    {% endif %}
+    </h4>
+  {% endif %}
+{% endif %}
 {% if est_res %}
   <h4>Estado da reserva: {{ est_res_descr }}</h4>
 {% endif %}

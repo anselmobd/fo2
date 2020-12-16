@@ -1587,7 +1587,8 @@ def compras_periodo_insumo(cursor, nivel, ref, cor, tam):
 
 def rolo_inform(
         cursor, rolo=None, sit=None, ref=None, cor=None, op=None,
-        est_res=None, est_aloc=None, est_conf=None):
+        reserva_de=None, reserva_ate=None, est_res=None,
+        est_aloc=None, est_conf=None):
 
     filtro_rolo = ''
     if rolo is not None and rolo != '':
@@ -1618,6 +1619,20 @@ def rolo_inform(
       filtro_op = f"""--
           AND re.ORDEM_PRODUCAO = '{op}'
       """
+
+    filtro_reserva_de = ''
+    if reserva_de:
+        est_res = 'S'
+        filtro_reserva_de = f"""--
+            AND re.DATA_RESERVA >= '{reserva_de}'
+        """
+
+    filtro_reserva_ate = ''
+    if reserva_ate:
+        est_res = 'S'
+        filtro_reserva_ate = f"""--
+            AND re.DATA_RESERVA <= '{reserva_ate}'
+        """
 
     filtro_est_res = ''
     if est_res is not None:
@@ -1679,6 +1694,8 @@ def rolo_inform(
           {filtro_ref} -- filtro_ref
           {filtro_cor} -- filtro_cor
           {filtro_op} -- filtro_op
+          {filtro_reserva_de} -- filtro_reserva_de
+          {filtro_reserva_ate} -- filtro_reserva_ate
           {filtro_est_res} -- filtro_est_res
           {filtro_est_aloc} -- filtro_est_aloc
           {filtro_est_conf} -- filtro_est_conf
