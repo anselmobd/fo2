@@ -73,6 +73,7 @@ span.glyphicon {
 {% endif %}
 {% if data %}
 
+  <h4>{{ quant_rolos }} rolo{{ quant_rolos|pluralize }} encontrado{{ quant_rolos|pluralize }}</h4>
   {% if data.paginator.num_pages != 1 %}
     <br /><small>({{linhas_pagina}} rolos por página; {{ data.paginator.num_pages }} páginas)</small><br />
     <ul class="pagination">
