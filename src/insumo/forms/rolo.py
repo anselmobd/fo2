@@ -107,4 +107,14 @@ class RoloForm(forms.Form):
             list_msg = ['Ao menos um destes campos deve ser preenchido']
             self._errors['rolo'] = self.error_class(list_msg)
 
+        if ( any(
+            clean_form.get(x, '')
+            for x in (
+                'reserva_de',
+                'reserva_ate',
+            )) and clean_form.get('est_res', '') != 'S'
+        ):
+            list_msg = ['Ao filtrar por data de reserva, tem que exigir que esteja reservado.']
+            self._errors['est_res'] = self.error_class(list_msg)
+
         return clean_form
