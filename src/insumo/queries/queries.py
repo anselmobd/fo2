@@ -1387,9 +1387,9 @@ def insumos_cor_tamanho_usados(
         ref = ''
         nivel = ''
 
-        so_ref = re.compile("^[A-Z0-9]{5}$")
-        nivelref = re.compile("^\d[A-Z0-9]{5}$")
-        nivel_ref = re.compile("^\d[\. -][A-Z0-9]{5}$")
+        so_ref = re.compile(r"^[A-Z0-9]{5}$")
+        nivelref = re.compile(r"^\d[A-Z0-9]{5}$")
+        nivel_ref = re.compile(r"^\d[\. -][A-Z0-9]{5}$")
         if so_ref.match(insumo):
             ref = insumo
         elif nivelref.match(insumo) or nivel_ref.match(insumo):
@@ -1483,9 +1483,9 @@ def insumos_cor_tamanho(
         ref = ''
         nivel = ''
 
-        so_ref = re.compile("^[A-Z0-9]{5}$")
-        nivelref = re.compile("^\d[A-Z0-9]{5}$")
-        nivel_ref = re.compile("^\d[\. -][A-Z0-9]{5}$")
+        so_ref = re.compile(r"^[A-Z0-9]{5}$")
+        nivelref = re.compile(r"^\d[A-Z0-9]{5}$")
+        nivel_ref = re.compile(r"^\d[\. -][A-Z0-9]{5}$")
         if so_ref.match(insumo):
             ref = insumo
         elif nivelref.match(insumo) or nivel_ref.match(insumo):
