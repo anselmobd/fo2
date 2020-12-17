@@ -218,4 +218,4 @@ class EnderecoDisponivel(models.Model):
     class Meta:
         db_table = "fo2_cd_endereco_disponivel"
         verbose_name = "Endereço disponível"
-        verbose_name_plural = "Endereços disponível"
+        verbose_name_plural = "Endereços disponíveis"
