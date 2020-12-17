@@ -176,7 +176,14 @@ class RetirarForm(forms.Form):
 
         if len(slqs) == 0:
             if self.op_object.pedido != 0:
-                    return lote
+                return lote
+
+            rua = self.lote_object.local[0]
+            try:
+                lotes.models.EnderecoDisponivel.objects.get(inicio=rua) 
+            except lotes.models.EnderecoDisponivel.DoesNotExist:
+                return lote
+
             raise forms.ValidationError(
                 "Lote não consta em nenhuma solicitação")
 
