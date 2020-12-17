@@ -156,7 +156,7 @@ class RetirarForm(forms.Form):
         except lotes.models.Lote.DoesNotExist:
             raise forms.ValidationError("Lote não encontrado")
 
-        if lote.local is None:
+        if self.lote_object.local is None:
             raise forms.ValidationError("Lote não endereçado")
 
         try:
