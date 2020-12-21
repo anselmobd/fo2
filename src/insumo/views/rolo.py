@@ -104,9 +104,15 @@ class Rolo(View):
                 row['u_conf'] = '-'
                 row['dh_conf'] = '-'
 
+        title_sit = (
+            'Situação<span '
+            'style="font-size: 50%;vertical-align: super;" '
+            'class="glyphicon glyphicon-comment" '
+            'aria-hidden="true"></span>'
+        )
         context.update({
             'headers': ('Rolo', 'Entrada', 'Nível', 'Referência',
-                        'Cor', 'Tamanho', 'Situação',
+                        'Cor', 'Tamanho', (title_sit, ),
                         'Reservado', 'OP', 'Usuário',
                         'Alocado', 'OP', 'Confirmado', 'Usuário'),
             'fields': ('rolo', 'dt_entr', 'nivel', 'ref',
