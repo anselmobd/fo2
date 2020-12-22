@@ -109,7 +109,7 @@ N2LOL_ALLOWED_URLS = [
     '^/ack$',
     '^/meuip/$',
 ]
-N2LOL_ALLOWED_IP_BLOCKS = ['^192\.168\.1\..+$', '^127\.0\.0\.1$']
+N2LOL_ALLOWED_IP_BLOCKS = [r'^192\.168\.1\..+$', r'^127\.0\.0\.1$']
 
 ROOT_URLCONF = 'fo2.urls'
 
