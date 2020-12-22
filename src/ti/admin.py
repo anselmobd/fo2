@@ -43,7 +43,7 @@ intr_adm_site.register(ti.models.Interface, InterfaceAdmin)
 
 class EquipmentInterfaceAdmin(admin.ModelAdmin):
     list_display = ['equipment', 'interface']
-    search_fields = ['equipment_name', 'interface_name']
+    search_fields = ['equipment__name', 'interface__name']
     ordering = ['equipment', 'interface']
 
 intr_adm_site.register(ti.models.EquipmentInterface, EquipmentInterfaceAdmin)
