@@ -120,7 +120,7 @@ class DhcpConfig(models.Model):
         verbose_name='Equipamento primário', related_name='primary_dhcp',
     )
     secondary_equipment = models.ForeignKey(
-        Equipment, on_delete=models.PROTECT, blank=False, null=False,
+        Equipment, on_delete=models.PROTECT, blank=True, null=True,
         verbose_name='Equipamento secundário', related_name='secondary_dhcp',
     )
 
