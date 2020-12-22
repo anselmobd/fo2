@@ -21,3 +21,12 @@ class EquipamentoAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 intr_adm_site.register(ti.models.Equipamento, EquipamentoAdmin)
+
+
+class TipoInterfaceAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    search_fields = ['name', 'slug']
+    ordering = ['slug']
+    readonly_fields = ['slug']
+
+intr_adm_site.register(ti.models.TipoInterface, TipoInterfaceAdmin)

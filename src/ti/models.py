@@ -44,3 +44,20 @@ class Equipamento(models.Model):
         db_table = "fo2_ti_equipamento"
 
 
+class TipoInterface(models.Model):
+    name = models.CharField(
+        'Nome', max_length=30, blank=False, null=False
+    )
+    slug = models.SlugField()
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(TipoInterface, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ti_tipo_interface"
+        verbose_name = "Tipo de interface"
+        verbose_name_plural = "Tipos de interfaces"
