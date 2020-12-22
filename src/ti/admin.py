@@ -31,6 +31,7 @@ class InterfaceTypeAdmin(admin.ModelAdmin):
 
 intr_adm_site.register(ti.models.InterfaceType, InterfaceTypeAdmin)
 
+
 class InterfaceAdmin(admin.ModelAdmin):
     list_display = ['type', 'name', 'slug', 'mac_adress', 'ip']
     search_fields = ['type__name', 'type__slug', 'name', 'slug', 'mac_adress', 'ip']
@@ -38,3 +39,11 @@ class InterfaceAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 intr_adm_site.register(ti.models.Interface, InterfaceAdmin)
+
+
+class EquipmentInterfaceAdmin(admin.ModelAdmin):
+    list_display = ['equipment', 'interface']
+    search_fields = ['equipment_name', 'interface_name']
+    ordering = ['equipment', 'interface']
+
+intr_adm_site.register(ti.models.EquipmentInterface, EquipmentInterfaceAdmin)
