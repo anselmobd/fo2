@@ -30,7 +30,7 @@ class Equipment(models.Model):
         'Nome', max_length=50, blank=False, null=False,
     )
     slug = models.SlugField()
-    ip_principal = models.GenericIPAddressField(
+    primary_ip = models.GenericIPAddressField(
         'IP Principal', blank=True, null=True,
     )
 
@@ -39,7 +39,7 @@ class Equipment(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(Equipamento, self).save(*args, **kwargs)
+        super(Equipment, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_ti_equipment"
