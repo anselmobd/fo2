@@ -2,7 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
-class TipoEquipamento(models.Model):
+class EquipmentType(models.Model):
     name = models.CharField(
         'Nome', max_length=30, blank=False, null=False
     )
@@ -13,7 +13,7 @@ class TipoEquipamento(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(TipoEquipamento, self).save(*args, **kwargs)
+        super(EquipmentType, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_ti_equipment_type"
@@ -23,7 +23,7 @@ class TipoEquipamento(models.Model):
 
 class Equipment(models.Model):
     type = models.ForeignKey(
-        TipoEquipamento, on_delete=models.PROTECT, blank=False, null=False,
+        EquipmentType, on_delete=models.PROTECT, blank=False, null=False,
         verbose_name='Tipo'
     )
     name = models.CharField(
