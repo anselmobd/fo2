@@ -16,7 +16,7 @@ class TipoEquipamento(models.Model):
         super(TipoEquipamento, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = "fo2_ti_tipo_equipamento"
+        db_table = "fo2_ti_equipment_type"
         verbose_name = "Tipo de equipamento"
         verbose_name_plural = "Tipos de equipamentos"
 
