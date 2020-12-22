@@ -46,7 +46,7 @@ class Equipment(models.Model):
         verbose_name = "Equipamento"
 
 
-class TipoInterface(models.Model):
+class InterfaceType(models.Model):
     name = models.CharField(
         'Nome', max_length=30, blank=False, null=False
     )
@@ -57,7 +57,7 @@ class TipoInterface(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(TipoInterface, self).save(*args, **kwargs)
+        super(InterfaceType, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_ti_interface_type"
@@ -67,7 +67,7 @@ class TipoInterface(models.Model):
 
 class Interface(models.Model):
     type = models.ForeignKey(
-        TipoInterface, on_delete=models.PROTECT, blank=False, null=False,
+        InterfaceType, on_delete=models.PROTECT, blank=False, null=False,
         verbose_name='Tipo'
     )
     name = models.CharField(
