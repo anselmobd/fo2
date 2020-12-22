@@ -108,3 +108,27 @@ class EquipmentInterface(models.Model):
         db_table = "fo2_ti_equipment_interface"
         verbose_name = "Interface de equipamento"
         verbose_name_plural = "Interfaces de equipamentos"
+
+
+class DhcpConfig(models.Model):
+    name = models.CharField(
+        'Nome', max_length=50, blank=False, null=False
+    )
+    slug = models.SlugField()
+    primary_equipment = models.ForeignKey(
+        Equipment, on_delete=models.PROTECT, blank=False, null=False,
+        verbose_name='Equipamento primário', related_name='primary_dhcp',
+    )
+    secondary_equipment = models.ForeignKey(
+        Equipment, on_delete=models.PROTECT, blank=False, null=False,
+        verbose_name='Equipamento secundário', related_name='secondary_dhcp',
+    )
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(DhcpConfig, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ti_dhcp_config"
+        verbose_name = "Configuração DHCP"
+        verbose_name_plural = "Configurações DHCP"

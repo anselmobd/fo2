@@ -47,3 +47,12 @@ class EquipmentInterfaceAdmin(admin.ModelAdmin):
     ordering = ['equipment', 'interface']
 
 intr_adm_site.register(ti.models.EquipmentInterface, EquipmentInterfaceAdmin)
+
+
+class DhcpConfigAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'primary_equipment', 'secondary_equipment']
+    search_fields = ['name', 'slug', 'primary_equipment__name', 'secondary_equipment__name']
+    ordering = ['slug']
+    readonly_fields = ['slug']
+
+intr_adm_site.register(ti.models.DhcpConfig, DhcpConfigAdmin)
