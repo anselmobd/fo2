@@ -60,7 +60,7 @@ class TipoInterface(models.Model):
         super(TipoInterface, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = "fo2_ti_tipo_interface"
+        db_table = "fo2_ti_interface_type"
         verbose_name = "Tipo de interface"
         verbose_name_plural = "Tipos de interfaces"
 
