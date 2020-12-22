@@ -43,6 +43,7 @@ class Equipment(models.Model):
 
     class Meta:
         db_table = "fo2_ti_equipment"
+        verbose_name = "Equipamento"
 
 
 class TipoInterface(models.Model):
