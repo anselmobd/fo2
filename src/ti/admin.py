@@ -33,8 +33,8 @@ intr_adm_site.register(ti.models.InterfaceType, InterfaceTypeAdmin)
 
 
 class InterfaceAdmin(admin.ModelAdmin):
-    list_display = ['type', 'name', 'slug', 'mac_adress', 'ip']
-    search_fields = ['type__name', 'type__slug', 'name', 'slug', 'mac_adress', 'ip']
+    list_display = ['type', 'name', 'slug', 'mac_adress', 'fixed_ip']
+    search_fields = ['type__name', 'type__slug', 'name', 'slug', 'mac_adress', 'fixed_ip']
     ordering = ['type', 'slug']
     readonly_fields = ['slug']
 
