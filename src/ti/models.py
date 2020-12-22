@@ -29,8 +29,8 @@ class Equipamento(models.Model):
         'Nome', max_length=50, blank=False, null=False,
     )
     slug = models.SlugField()
-    ip = models.GenericIPAddressField(
-        'IP', blank=True, null=True,
+    ip_principal = models.GenericIPAddressField(
+        'IP Principal', blank=True, null=True,
     )
 
     def __str__(self):
