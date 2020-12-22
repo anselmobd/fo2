@@ -77,7 +77,7 @@ class Interface(models.Model):
     mac_adress = models.CharField(
         'Endereço MAC', max_length=17, blank=True, null=True,
     )
-    ip = models.GenericIPAddressField(
+    fixed_ip = models.GenericIPAddressField(
         'IP', blank=True, null=True,
     )
 
