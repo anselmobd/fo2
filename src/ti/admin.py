@@ -15,9 +15,9 @@ intr_adm_site.register(ti.models.TipoEquipamento, TipoEquipamentoAdmin)
 
 
 class EquipamentoAdmin(admin.ModelAdmin):
-    list_display = ['tipo', 'name', 'slug', 'ip_principal']
-    search_fields = ['tipo__name', 'tipo__slug', 'name', 'slug', 'ip_principal']
-    ordering = ['tipo', 'slug']
+    list_display = ['type', 'name', 'slug', 'ip_principal']
+    search_fields = ['type__name', 'type__slug', 'name', 'slug', 'ip_principal']
+    ordering = ['type', 'slug']
     readonly_fields = ['slug']
 
 intr_adm_site.register(ti.models.Equipamento, EquipamentoAdmin)
