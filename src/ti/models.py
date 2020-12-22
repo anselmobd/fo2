@@ -22,8 +22,8 @@ class TipoEquipamento(models.Model):
 
 
 class Equipamento(models.Model):
-    tipo = models.ForeignKey(
-        TipoEquipamento, on_delete=models.PROTECT, blank=False, null=False
+    type = models.ForeignKey(
+        TipoEquipamento, on_delete=models.PROTECT, blank=False, null=False,
     )
     name = models.CharField(
         'Nome', max_length=50, blank=False, null=False,
