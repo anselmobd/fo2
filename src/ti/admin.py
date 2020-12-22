@@ -23,13 +23,13 @@ class EquipmentAdmin(admin.ModelAdmin):
 intr_adm_site.register(ti.models.Equipment, EquipmentAdmin)
 
 
-class TipoInterfaceAdmin(admin.ModelAdmin):
+class InterfaceTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     search_fields = ['name', 'slug']
     ordering = ['slug']
     readonly_fields = ['slug']
 
-intr_adm_site.register(ti.models.TipoInterface, TipoInterfaceAdmin)
+intr_adm_site.register(ti.models.InterfaceType, InterfaceTypeAdmin)
 
 class InterfaceAdmin(admin.ModelAdmin):
     list_display = ['type', 'name', 'slug', 'mac_adress', 'ip']
