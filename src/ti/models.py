@@ -24,6 +24,7 @@ class TipoEquipamento(models.Model):
 class Equipamento(models.Model):
     type = models.ForeignKey(
         TipoEquipamento, on_delete=models.PROTECT, blank=False, null=False,
+        verbose_name='Tipo'
     )
     name = models.CharField(
         'Nome', max_length=50, blank=False, null=False,
