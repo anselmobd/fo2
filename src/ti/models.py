@@ -95,7 +95,7 @@ class Interface(models.Model):
 class EquipmentInterface(models.Model):
     equipment = models.ForeignKey(
         Equipment, on_delete=models.PROTECT, blank=False, null=False,
-        verbose_name='Equipmento'
+        verbose_name='Equipamento'
     )
     interface = models.ForeignKey(
         Interface, on_delete=models.PROTECT, blank=False, null=False,
