@@ -30,3 +30,11 @@ class TipoInterfaceAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 intr_adm_site.register(ti.models.TipoInterface, TipoInterfaceAdmin)
+
+class InterfaceAdmin(admin.ModelAdmin):
+    list_display = ['type', 'name', 'slug', 'mac_adress', 'ip']
+    search_fields = ['type__name', 'type__slug', 'name', 'slug', 'mac_adress', 'ip']
+    ordering = ['type', 'slug']
+    readonly_fields = ['slug']
+
+intr_adm_site.register(ti.models.Interface, InterfaceAdmin)
