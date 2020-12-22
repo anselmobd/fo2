@@ -14,13 +14,13 @@ class TipoEquipamentoAdmin(admin.ModelAdmin):
 intr_adm_site.register(ti.models.TipoEquipamento, TipoEquipamentoAdmin)
 
 
-class EquipamentoAdmin(admin.ModelAdmin):
+class EquipmentAdmin(admin.ModelAdmin):
     list_display = ['type', 'name', 'slug', 'ip_principal']
     search_fields = ['type__name', 'type__slug', 'name', 'slug', 'ip_principal']
     ordering = ['type', 'slug']
     readonly_fields = ['slug']
 
-intr_adm_site.register(ti.models.Equipamento, EquipamentoAdmin)
+intr_adm_site.register(ti.models.Equipment, EquipmentAdmin)
 
 
 class TipoInterfaceAdmin(admin.ModelAdmin):

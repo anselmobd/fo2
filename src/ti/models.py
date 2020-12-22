@@ -21,7 +21,7 @@ class TipoEquipamento(models.Model):
         verbose_name_plural = "Tipos de equipamentos"
 
 
-class Equipamento(models.Model):
+class Equipment(models.Model):
     type = models.ForeignKey(
         TipoEquipamento, on_delete=models.PROTECT, blank=False, null=False,
         verbose_name='Tipo'
