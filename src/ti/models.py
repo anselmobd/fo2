@@ -35,7 +35,7 @@ class Equipamento(models.Model):
     )
 
     def __str__(self):
-        return f"{self.tipo.name} - {self.name}"
+        return f"{self.type.name} - {self.name}"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -66,7 +66,8 @@ class TipoInterface(models.Model):
 
 class Interface(models.Model):
     type = models.ForeignKey(
-        TipoInterface, on_delete=models.PROTECT, blank=False, null=False
+        TipoInterface, on_delete=models.PROTECT, blank=False, null=False,
+        verbose_name='Tipo'
     )
     name = models.CharField(
         'Nome', max_length=50, blank=False, null=False,
