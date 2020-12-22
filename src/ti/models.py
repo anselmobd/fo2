@@ -42,7 +42,7 @@ class Equipamento(models.Model):
         super(Equipamento, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = "fo2_ti_equipamento"
+        db_table = "fo2_ti_equipment"
 
 
 class TipoInterface(models.Model):
