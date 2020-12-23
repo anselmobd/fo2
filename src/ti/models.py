@@ -96,24 +96,6 @@ class Interface(models.Model):
         db_table = "fo2_ti_interface"
 
 
-class EquipmentInterface(models.Model):
-    equipment = models.ForeignKey(
-        Equipment, on_delete=models.PROTECT, blank=False, null=False,
-        verbose_name='Equipamento'
-    )
-    interface = models.ForeignKey(
-        Interface, on_delete=models.PROTECT, blank=False, null=False,
-    )
-
-    def __str__(self):
-        return f"{self.equipment.name} - {self.interface.name}"
-
-    class Meta:
-        db_table = "fo2_ti_equipment_interface"
-        verbose_name = "Interface de equipamento"
-        verbose_name_plural = "Interfaces de equipamentos"
-
-
 class DhcpConfig(models.Model):
     name = models.CharField(
         'Nome', max_length=50, blank=False, null=False

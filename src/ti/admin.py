@@ -41,14 +41,6 @@ class InterfaceAdmin(admin.ModelAdmin):
 intr_adm_site.register(ti.models.Interface, InterfaceAdmin)
 
 
-class EquipmentInterfaceAdmin(admin.ModelAdmin):
-    list_display = ['equipment', 'interface']
-    search_fields = ['equipment__name', 'interface__name']
-    ordering = ['equipment', 'interface']
-
-intr_adm_site.register(ti.models.EquipmentInterface, EquipmentInterfaceAdmin)
-
-
 class DhcpConfigAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'primary_equipment', 'secondary_equipment']
     search_fields = ['name', 'slug', 'primary_equipment__name', 'secondary_equipment__name']
