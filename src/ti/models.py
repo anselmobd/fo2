@@ -86,7 +86,8 @@ class Interface(models.Model):
     )
 
     def __str__(self):
-        return f"{self.equipment.name} - {self.type.name} - {self.name}"
+        equip_name = f'{self.equipment.name} - ' if self.equipment else ''
+        return f"{equip_name}{self.type.name} - {self.name}"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
