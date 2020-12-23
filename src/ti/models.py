@@ -70,6 +70,10 @@ class Interface(models.Model):
         InterfaceType, on_delete=models.PROTECT, blank=False, null=False,
         verbose_name='Tipo'
     )
+    equipment = models.ForeignKey(
+        Equipment, on_delete=models.PROTECT, blank=True, null=True,
+        verbose_name='Equipamento'
+    )
     name = models.CharField(
         'Nome', max_length=50, blank=False, null=False,
     )
@@ -82,7 +86,7 @@ class Interface(models.Model):
     )
 
     def __str__(self):
-        return f"{self.type.name} - {self.name}"
+        return f"{self.equipment.name} - {self.type.name} - {self.name}"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
