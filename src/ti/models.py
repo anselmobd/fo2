@@ -96,8 +96,10 @@ class Interface(models.Model):
     """
         Cadastro de interface
         Obs.:
-            - equipment não é obrigatório pois pode ser, por exemplo um 
+            - 'equipment': não é obrigatório pois pode ser, por exemplo um 
                 adaptador de rede via USB
+            - 'dhcp_config': quando presente é base para gerar entrada de
+                configuração DHCP com o MAC e o IP da interface
     """
     type = models.ForeignKey(
         InterfaceType, on_delete=models.PROTECT, blank=False, null=False,
@@ -116,6 +118,10 @@ class Interface(models.Model):
     )
     fixed_ip = models.GenericIPAddressField(
         'IP', blank=True, null=True,
+    )
+    dhcp_config = models.ForeignKey(
+        DhcpConfig, on_delete=models.PROTECT, blank=True, null=True,
+        verbose_name='Configuração de DHCP'
     )
 
     def __str__(self):
