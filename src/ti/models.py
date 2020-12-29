@@ -65,6 +65,33 @@ class InterfaceType(models.Model):
         verbose_name_plural = "Tipos de interfaces"
 
 
+class DhcpConfig(models.Model):
+    name = models.CharField(
+        'Nome', max_length=50, blank=False, null=False
+    )
+    slug = models.SlugField()
+    primary_equipment = models.ForeignKey(
+        Equipment, on_delete=models.PROTECT, blank=False, null=False,
+        verbose_name='Equipamento primário', related_name='primary_dhcp',
+    )
+    secondary_equipment = models.ForeignKey(
+        Equipment, on_delete=models.PROTECT, blank=True, null=True,
+        verbose_name='Equipamento secundário', related_name='secondary_dhcp',
+    )
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(DhcpConfig, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ti_dhcp_config"
+        verbose_name = "Configuração DHCP"
+        verbose_name_plural = "Configurações DHCP"
+
+
 class Interface(models.Model):
     """
         Cadastro de interface
@@ -101,27 +128,3 @@ class Interface(models.Model):
 
     class Meta:
         db_table = "fo2_ti_interface"
-
-
-class DhcpConfig(models.Model):
-    name = models.CharField(
-        'Nome', max_length=50, blank=False, null=False
-    )
-    slug = models.SlugField()
-    primary_equipment = models.ForeignKey(
-        Equipment, on_delete=models.PROTECT, blank=False, null=False,
-        verbose_name='Equipamento primário', related_name='primary_dhcp',
-    )
-    secondary_equipment = models.ForeignKey(
-        Equipment, on_delete=models.PROTECT, blank=True, null=True,
-        verbose_name='Equipamento secundário', related_name='secondary_dhcp',
-    )
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(DhcpConfig, self).save(*args, **kwargs)
-
-    class Meta:
-        db_table = "fo2_ti_dhcp_config"
-        verbose_name = "Configuração DHCP"
-        verbose_name_plural = "Configurações DHCP"
