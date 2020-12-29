@@ -66,6 +66,12 @@ class InterfaceType(models.Model):
 
 
 class Interface(models.Model):
+    """
+        Cadastro de interface
+        Obs.:
+            - equipment não é obrigatório pois pode ser, por exemplo um 
+                adaptador de rede via USB
+    """
     type = models.ForeignKey(
         InterfaceType, on_delete=models.PROTECT, blank=False, null=False,
         verbose_name='Tipo'
