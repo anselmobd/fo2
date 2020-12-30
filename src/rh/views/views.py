@@ -313,6 +313,10 @@ def datas(request, data):
         context = {'titulo': 'Dia dos Pais 2020!'}
         return render(
             request, 'rh/datas/2020-08-09-dia-dos-pais.html', context)
+    elif data == '2021':
+        context = {'titulo': 'Feliz 2021!'}
+        return render(
+            request, 'rh/datas/2021-virada.html', context)
 
 
 def v2018_dia_rosa_fotos(request):
