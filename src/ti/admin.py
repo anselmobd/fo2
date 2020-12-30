@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
+import ti.forms
 import ti.models
 
 
@@ -42,6 +43,7 @@ intr_adm_site.register(ti.models.Interface, InterfaceAdmin)
 
 
 class DhcpConfigAdmin(admin.ModelAdmin):
+    form = ti.forms.DhcpConfigForm
     list_display = ['name', 'slug', 'primary_equipment', 'secondary_equipment']
     search_fields = ['name', 'slug', 'primary_equipment__name', 'secondary_equipment__name']
     ordering = ['slug']
