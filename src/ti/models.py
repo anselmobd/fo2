@@ -78,6 +78,14 @@ class DhcpConfig(models.Model):
         Equipment, on_delete=models.PROTECT, blank=True, null=True,
         verbose_name='Equipamento secundário', related_name='secondary_dhcp',
     )
+    primary_template = models.CharField(
+        max_length=65535, blank=True, null=True,
+        verbose_name='Gabarito para o servidor primário (ou único)'
+    )
+    secondary_template = models.CharField(
+        max_length=65535, blank=True, null=True,
+        verbose_name='Gabarito para o servidor secundário'
+    )
 
     def __str__(self):
         return self.name
