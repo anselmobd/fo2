@@ -1,0 +1,69 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'producao:imprime_ob1' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Pesquisa" name="search"/>
+  <input type="submit" value="Imprime" name="print"/>
+</form>
+{% if lote_ate_est6 %}
+  <h4>{{lote_ate_est6}} Lote{{ lote_ate_est6|pluralize }} anteriores ou no estágio 6.</h4>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% else %}
+  {% if data %}
+    {% if estagio %}
+      <h4>Atenção: Impressão de Cartela de Complemento</h4>
+      <h4>Estágio de quebra de lote: {{ estagio }}</h4>
+    {% endif %}
+    <h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
+    Impressão: {{ cod_impresso }}<br />
+    Lotes ordenados por {{ ordem }}<br />
+    OP: {{ op }}&nbsp;&nbsp;
+    Referência: {{ ref }}<br />
+    {% if op_mae %}
+      OP Mãe: {{ op_mae }}&nbsp;&nbsp;
+      Referência Mãe: {{ ref_mae }}<br />
+    {% endif %}
+    {% if cor or tam or ultimo or pula or qtd_lotes or oc_inicial or oc_final %}
+      <h4>Filtro:</h4>
+      {% if tam %}
+        Tamanho: {{ tam }}<br />
+      {% endif %}
+      {% if cor %}
+        Cor: {{ cor }}<br />
+      {% endif %}
+      {% if oc_inicial %}
+        Iniciando pela OC {{ oc_inicial }}<br />
+      {% endif %}
+      {% if oc_final %}
+        Finalizando pela OC {{ oc_final }}<br />
+      {% endif %}
+      {% if pula %}
+        Pula {{ pula }} lote{{ pula|pluralize }}<br />
+      {% endif %}
+      {% if qtd_lotes %}
+        Seleciona {{ qtd_lotes }} lote{{ qtd_lotes|pluralize }}<br />
+      {% endif %}
+      {% if ultimo %}
+        Depois do lote {{ ultimo }}<br />
+      {% endif %}
+    {% endif %}
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock %}
