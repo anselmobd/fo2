@@ -27,17 +27,20 @@ class ImprimeOb1(LoginRequiredMixin, View):
         caixa_inicial_val = caixa_inicial or 0
         caixa_final_val = caixa_final or 99999
 
-        data = queries.ob.get_ob(
-            cursor, os, caixa_inicial_val, caixa_final_val)
-        if len(data) == 0:
+        o_data = queries.ob.get_ob(cursor, os)
+        if len(o_data) == 0:
             context.update({
                 'msg_erro': 'Nehuma OB selecionada',
             })
             return context
 
-        for row in data:
+        data = []
+        for row in o_data:
             row['os'] = os
-            row['caixa'] = row['observacao'].split('.')[1]
+            row['caixa'] = int(row['observacao'].split('.')[1])
+            if caixa_inicial_val <= row['caixa']:
+                if row['caixa'] <= caixa_final_val:
+                    data.append(row)
 
         context.update({
             'count': len(data),
