@@ -54,6 +54,9 @@ urlpatterns = [
     url(r'^imprime_lotes/$',
         views.ImprimeLotes.as_view(), name='imprime_lotes'),
 
+    url(r'^imprime_ob1/$',
+        views.ImprimeOb1.as_view(), name='imprime_ob1'),
+
     url(r'^imprime_pacote3lotes/$',
         views.ImprimePacote3Lotes.as_view(), name='imprime_pacote3lotes'),
 

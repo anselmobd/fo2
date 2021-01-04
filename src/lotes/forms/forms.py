@@ -682,3 +682,16 @@ class ProduzirModeloGradeForm(forms.Form):
     deposito = forms.ChoiceField(
         label='Considera depósito',
         choices=CHOICES, required=False, initial='s')
+
+
+class ImprimeOb1Form(forms.Form):
+    os = forms.CharField(
+        label='OS',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    caixa_inicial = forms.IntegerField(
+        label='Caixa inicial', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    caixa_final = forms.IntegerField(
+        label='Caixa final', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
