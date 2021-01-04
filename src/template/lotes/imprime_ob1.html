@@ -16,54 +16,23 @@
   <input type="submit" value="Pesquisa" name="search"/>
   <input type="submit" value="Imprime" name="print"/>
 </form>
-{% if lote_ate_est6 %}
-  <h4>{{lote_ate_est6}} Lote{{ lote_ate_est6|pluralize }} anteriores ou no estágio 6.</h4>
+{% if os %}
+  OS: {{ os }}<br />
+{% endif %}
+{% if caixa_inicial %}
+  Iniciando pela caixa {{ caixa_inicial }}<br />
+{% endif %}
+{% if caixa_final %}
+  Finalizando pela caixa {{ caixa_final }}<br />
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
-{% else %}
-  {% if data %}
-    {% if estagio %}
-      <h4>Atenção: Impressão de Cartela de Complemento</h4>
-      <h4>Estágio de quebra de lote: {{ estagio }}</h4>
-    {% endif %}
-    <h3>{{ count }} lote{{ count|pluralize }} selecionado{{ count|pluralize }} para impressão</h3>
-    Impressão: {{ cod_impresso }}<br />
-    Lotes ordenados por {{ ordem }}<br />
-    OP: {{ op }}&nbsp;&nbsp;
-    Referência: {{ ref }}<br />
-    {% if op_mae %}
-      OP Mãe: {{ op_mae }}&nbsp;&nbsp;
-      Referência Mãe: {{ ref_mae }}<br />
-    {% endif %}
-    {% if cor or tam or ultimo or pula or qtd_lotes or oc_inicial or oc_final %}
-      <h4>Filtro:</h4>
-      {% if tam %}
-        Tamanho: {{ tam }}<br />
-      {% endif %}
-      {% if cor %}
-        Cor: {{ cor }}<br />
-      {% endif %}
-      {% if oc_inicial %}
-        Iniciando pela OC {{ oc_inicial }}<br />
-      {% endif %}
-      {% if oc_final %}
-        Finalizando pela OC {{ oc_final }}<br />
-      {% endif %}
-      {% if pula %}
-        Pula {{ pula }} lote{{ pula|pluralize }}<br />
-      {% endif %}
-      {% if qtd_lotes %}
-        Seleciona {{ qtd_lotes }} lote{{ qtd_lotes|pluralize }}<br />
-      {% endif %}
-      {% if ultimo %}
-        Depois do lote {{ ultimo }}<br />
-      {% endif %}
-    {% endif %}
-    <table>
-      {% include "layout/html_thead.html" with data=headers only %}
-      {% include "layout/html_tbody.html" with fields=fields data=data only %}
-    </table>
-  {% endif %}
+{% endif %}
+{% if data %}
+  <h3>{{ count }} caixa{{ count|pluralize }} selecionada{{ count|pluralize }} para impressão</h3>
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody.html" with fields=fields data=data only %}
+  </table>
 {% endif %}
 {% endblock %}
