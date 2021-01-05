@@ -58,7 +58,8 @@ class ImprimeOb1(LoginRequiredMixin, View):
         for row in o_data:
             row['op'] = op
             row['os'] = os
-            row['caixa'] = int(row['observacao'].split('.')[1])
+            obs_aux = row['observacao'].split('.')[1]
+            row['caixa'] = int(obs_aux.split()[0])
             if caixa_inicial_val <= row['caixa']:
                 if row['caixa'] <= caixa_final_val:
                     data.append(row)
