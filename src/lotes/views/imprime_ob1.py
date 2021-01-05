@@ -11,6 +11,7 @@ from utils.classes import TermalPrint
 
 from lotes.forms import ImprimeOb1Form
 import lotes.queries.ob
+import lotes.queries.os
 import lotes.models as models
 import lotes.queries as queries
 
@@ -31,6 +32,21 @@ class ImprimeOb1(LoginRequiredMixin, View):
         caixa_inicial_val = caixa_inicial or 0
         caixa_final_val = caixa_final or 99999
 
+        op_data = lotes.queries.os.os_op(cursor, os)
+        if len(op_data) == 0:
+            context.update({
+                'msg_erro': 'Nehuma OP relaconada a OS',
+            })
+            return context
+
+        if len(op_data) > 1:
+            context.update({
+                'msg_erro': 'Mais de 1 OP relaconada a OS',
+            })
+            return context
+
+        op = op_data[0]['OP']
+
         o_data = queries.ob.get_ob(cursor, os)
         if len(o_data) == 0:
             context.update({
@@ -40,6 +56,7 @@ class ImprimeOb1(LoginRequiredMixin, View):
 
         data = []
         for row in o_data:
+            row['op'] = op
             row['os'] = os
             row['caixa'] = int(row['observacao'].split('.')[1])
             if caixa_inicial_val <= row['caixa']:
@@ -48,8 +65,8 @@ class ImprimeOb1(LoginRequiredMixin, View):
 
         context.update({
             'count': len(data),
-            'headers': ('OS', 'Caixa', 'OB'),
-            'fields': ('os', 'caixa', 'ob'),
+            'headers': ('OP', 'OS', 'Caixa', 'OB'),
+            'fields': ('op', 'os', 'caixa', 'ob'),
             'data': data,
         })
 
