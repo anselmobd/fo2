@@ -17,6 +17,7 @@
   <input type="submit" value="Imprime" name="print"/>
 </form>
 {% if os %}
+  <h4>Filtro</h4>
   OS: {{ os }}<br />
 {% endif %}
 {% if caixa_inicial %}
@@ -26,10 +27,10 @@
   Caixa final: {{ caixa_final }}<br />
 {% endif %}
 {% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
+  <h4>{{ msg_erro }}</h4>
 {% endif %}
 {% if data %}
-  <h3>{{ count }} caixa{{ count|pluralize }} selecionada{{ count|pluralize }} para impressão</h3>
+  <h4>{{ count }} caixa{{ count|pluralize }} selecionada{{ count|pluralize }} para impressão</h4>
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=data only %}
