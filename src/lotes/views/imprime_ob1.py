@@ -22,7 +22,11 @@ class ImprimeOb1(LoginRequiredMixin, View):
     title_name = 'Imprime etiqueta de OB1'
 
     def mount_context_and_print(self, cursor, os, caixa_inicial, caixa_final, do_print):
-        context = {}
+        context = {
+            'os': os,
+            'caixa_inicial': caixa_inicial,
+            'caixa_final': caixa_final,
+        }
 
         caixa_inicial_val = caixa_inicial or 0
         caixa_final_val = caixa_final or 99999
@@ -44,11 +48,8 @@ class ImprimeOb1(LoginRequiredMixin, View):
 
         context.update({
             'count': len(data),
-            'os': os,
-            'caixa_inicial': caixa_inicial,
-            'caixa_final': caixa_final,
-            'headers': ('OS', 'Caixa'),
-            'fields': ('os', 'caixa'),
+            'headers': ('OS', 'Caixa', 'OB'),
+            'fields': ('os', 'caixa', 'ob'),
             'data': data,
         })
 
