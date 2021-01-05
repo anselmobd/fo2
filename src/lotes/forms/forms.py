@@ -685,7 +685,7 @@ class ProduzirModeloGradeForm(forms.Form):
 
 
 class ImprimeOb1Form(forms.Form):
-    os = forms.CharField(
+    os = forms.IntegerField(
         label='OS',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
