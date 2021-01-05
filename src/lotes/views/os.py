@@ -50,8 +50,10 @@ class Os(View):
             if len(o_data) != 0:
                 for row in o_data:
                     row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
+                    if row['PED_CLIENTE'] is None:
+                        row['PED_CLIENTE'] = '-'
                     if row['PEDIDO'] == 0:
-                        row['PEDIDO'] = ''
+                        row['PEDIDO'] = '-'
                     else:
                         row['PEDIDO|LINK'] = reverse(
                             'producao:pedido__get', args=[row['PEDIDO']])
