@@ -1,7 +1,8 @@
 from fo2.urls import *
 
 
-urlpatterns = clean_urlpatterns(urlpatterns, '^$')
+# para não acumular alterações, trabalha sempre em uma cópia nova
+urlpatterns = urlpatterns.copy()
 
 urlpatterns.append(
     url(r'^$', views.index_tussor_view, name='index'),
