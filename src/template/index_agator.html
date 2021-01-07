@@ -1,0 +1,69 @@
+{% extends 'layout/layout_agator.html' %}
+{% load static %}
+
+{% block title.content %}Apoio ao ERP {% endblock title.content %}
+
+{% block header.content %}Apoio ao ERP{% endblock header.content %}
+
+{% block advice %}
+
+<div class="noprint">
+
+  <!-- <h4><center>
+    <a target="_blank" href="{% url 'rh:datas' '2021' %}"
+      >Feliz 2021!&nbsp;<img src="/media/rh/datas_comemorativas/2021/01-virada/DUOMO-2021_h50.jpg" height="28" width="28"
+        >&nbsp;Um ano para Sorrir!</a>
+    </center></h4> -->
+
+</div>
+
+{% endblock %}
+
+{% block content %}
+<table>
+  <tr>
+    <td style="vertical-align: top;">
+      <ul>
+        <li><a href="{% url 'producao:index' %}">Produção</a></li>
+        {% include 'lotes/menu.html' with emrpesa=agator only %}
+      </ul>
+    </td>
+    <td>&nbsp;</td>
+    <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+    <td style="vertical-align: top;">
+      <ul>
+        <li><a href="{% url 'geral:index' %}">Cadastros gerais</a></li>
+        {% include 'geral/menu.html' with emrpesa=agator only %}
+      </ul>
+    </td>
+    <td>&nbsp;</td>
+    <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+    <td style="vertical-align: top;">
+      <ul>
+        <li>Intranet</li>
+        <ul>
+          <li>Usuário{% if request.user.is_authenticated %} ( {{ request.user.username }} ){% endif %}</li>
+            <ul>
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'encerrar' %}">Encerrar sessão</a></li>
+              <li><a href="/rootadm/password_change/?next=/">Alterar senha</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}?next=/">Identificar-se (Login)</a></li>
+            {% endif %}
+            {% if logged_count != 0 %}
+              <li><a href="{% url 'base:usuarios' %}?next=/">{{logged_count}} logado{{ logged_count|pluralize }}</a></li>
+            {% endif %}
+          </ul>
+          <li>Administração</li>
+          <ul>
+            <li><a href="/intradm/" target="_blank">Configurações e Dados</a></li>
+            <li><a href="/rootadm/" target="_blank">Usuários</a></li>
+          </ul>
+          <li><a href="{% url 'base:index' %}">Base</a></li>
+          {% include 'base/menu.html' %}
+        </ul>
+      </ul>
+    </td>
+  </tr>
+</table>
+{% endblock %}

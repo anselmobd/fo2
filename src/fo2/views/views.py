@@ -21,7 +21,7 @@ def index_tussor_view(request):
 
 def index_agator_view(request):
     fo2logger.info('index')
-    return HttpResponse("Agator")
+    return redirect('apoio_ao_erp')
 
 
 def test_view(request):
@@ -38,6 +38,10 @@ class ApoioAoErpView(TemplateView):
     #     context['logged_count'] = Colaborador.objects.filter(
     #         logged=True).count()
     #     return context
+
+
+class ApoioAoErpAgatorView(TemplateView):
+    template_name = "index_agator.html"
 
 
 class IntranetTussorView(TemplateView):
