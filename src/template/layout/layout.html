@@ -67,7 +67,7 @@
           </div>
           <div class="col-xs-3 col-sm-3">
             <small>
-              <span class="hidden-xs hidden-sm noprint"><a href="{% url 'intranet' %}">Intranet<span class="hidden-xs hidden-sm hidden-md noprint"> Tussor</span></a></span>
+              <span class="hidden-xs hidden-sm noprint"><a href="{% url 'intranet' %}">Intranet<span class="hidden-xs hidden-sm hidden-md noprint"></span></a></span>
               <span class="hidden-xs hidden-sm noprint">| <a href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"><span class="hidden-xs hidden-sm hidden-md noprint"> em ação!</span></a></span>
               {% if request.user.is_authenticated or base_ip_interno %}
                 <span class="hidden-xs hidden-sm noprint">|<span class="hidden-xs hidden-sm hidden-md noprint"><br /></span></span>
