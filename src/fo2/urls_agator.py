@@ -5,8 +5,6 @@ from fo2.urls import *
 urlpatterns = urlpatterns.copy()
 
 urlpatterns += [
-    url(r'^$', views.index_agator_view, name='index'),
-
     url(r'^apoio_ao_erp/', views.ApoioAoErpAgatorView.as_view(),
         name='apoio_ao_erp'),
 
