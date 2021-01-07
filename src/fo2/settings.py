@@ -85,6 +85,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'fo2.virtualhostmiddleware.VirtualHostMiddleware',
     # Cache
     # 'django.middleware.cache.UpdateCacheMiddleware',
     # Others
