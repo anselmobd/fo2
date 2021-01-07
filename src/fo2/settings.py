@@ -113,7 +113,7 @@ N2LOL_ALLOWED_URLS = [
 ]
 N2LOL_ALLOWED_IP_BLOCKS = [r'^192\.168\.1\..+$', r'^127\.0\.0\.1$']
 
-ROOT_URLCONF = 'fo2.urls'
+ROOT_URLCONF = 'fo2.urls_tussor'
 
 TEMPLATES = [
     {

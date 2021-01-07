@@ -1,3 +1,5 @@
+import re
+
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -24,7 +26,7 @@ def clean_urlpatterns(urlpatterns, pat):
 
 
 urlpatterns = [
-    url(r'^$', views.index_view, name='index'),
+    # url(r'^$', views.index_view, name='index'),
 
     url(r'^favicon\.ico$',
         RedirectView.as_view(url='/static/favicon.ico')),
