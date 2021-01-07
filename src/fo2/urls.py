@@ -22,8 +22,8 @@ urlpatterns = [
     url(r'^favicon\.ico$',
         RedirectView.as_view(url='/static/favicon.ico')),
 
-    url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(),
-        name='apoio_ao_erp'),
+    # url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(),
+    #     name='apoio_ao_erp'),
 
     # url(r'^intranet/', views.IntranetView.as_view(), name='intranet'),
 
