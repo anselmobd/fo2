@@ -1,38 +1,40 @@
 <ul>
   <li><a href="{% url 'geral:deposito' %}">Depósitos</a></li>
-  <li><a href="{% url 'geral:estagio' %}">Estágios</a></li>
-  <li><a href="{% url 'geral:unidade' %}">Unidades / Divisões</a></li>
-  <li><a href="{% url 'geral:periodo_confeccao' %}">Períodos de confecção</a></li>
-  {% if request.user.is_authenticated %}
-    {% if request.user.is_superuser %}
-      <li><a href="{% url 'geral:gera_fluxo_dot' %}">Gera fluxo ".dot"</a></li>
+  {% if empresa == 'tussor' %}
+    <li><a href="{% url 'geral:estagio' %}">Estágios</a></li>
+    <li><a href="{% url 'geral:unidade' %}">Unidades / Divisões</a></li>
+    <li><a href="{% url 'geral:periodo_confeccao' %}">Períodos de confecção</a></li>
+    {% if request.user.is_authenticated %}
+      {% if request.user.is_superuser %}
+        <li><a href="{% url 'geral:gera_fluxo_dot' %}">Gera fluxo ".dot"</a></li>
+      {% endif %}
     {% endif %}
-  {% endif %}
 
-  {% if request.user.is_authenticated %}
-    <br />
-    <li>Configuração</li>
-    <ul>
-      <li><a href="{% url 'geral:configuracao' %}">Edita</a></li>
-    </ul>
-  {% endif %}
-  {% if list_geral_paineis %}
-    <br />
-    <li>Paineis</li>
-    <ul>
-      {% for painel in list_geral_paineis %}
-      <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  {% if list_geral_modulos %}
-    <br />
-    <li>Manutenção de informativo</li>
-    <ul>
-      {% for modulo in list_geral_modulos %}
-        <li><a href="/geral/informativo/{{ modulo.slug }}/">{{ modulo.nome }}</a></li>
-      {% endfor %}
-    </ul>
+    {% if request.user.is_authenticated %}
+      <br />
+      <li>Configuração</li>
+      <ul>
+        <li><a href="{% url 'geral:configuracao' %}">Edita</a></li>
+      </ul>
+    {% endif %}
+    {% if list_geral_paineis %}
+      <br />
+      <li>Paineis</li>
+      <ul>
+        {% for painel in list_geral_paineis %}
+        <li><a href="/geral/painel/{{ painel.slug }}/" target="_blank">{{ painel.nome }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if list_geral_modulos %}
+      <br />
+      <li>Manutenção de informativo</li>
+      <ul>
+        {% for modulo in list_geral_modulos %}
+          <li><a href="/geral/informativo/{{ modulo.slug }}/">{{ modulo.nome }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
   {% endif %}
 
   {% if list_geral_pop_assuntos %}
@@ -40,8 +42,16 @@
       <br />
       <li>Procedimentos (POPs)</li>
       <ul>
-        {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}
-          <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
+        {% for pop_assunto in 'pop_assuntos'|list_geral_filtro:'grupo_slug==' %}  
+          {% if empresa == 'tussor' %}
+            {% if pop_assunto.nome != 'Agator' %}
+              <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
+            {% endif %}
+          {% elif empresa == 'agator' %}
+            {% if pop_assunto.nome == 'Agator' %}
+              <li><a href="{% url 'geral:pop' pop_assunto.slug %}">{{ pop_assunto.nome }}</a></li>
+            {% endif %}
+          {% endif %}
         {% endfor %}
       </ul>
     {% endif %}
