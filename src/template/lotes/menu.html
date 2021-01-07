@@ -1,4 +1,5 @@
 <ul>
+  {% if empresa == 'tussor' %}
   <li><a href="{% url 'producao:posicao' %}">Lote</a></li>
   <li><a href="{% url 'producao:op' %}">OP</a></li>
   <ul>
@@ -55,13 +56,17 @@
     <li><a href="{% url 'producao:analise_grade_pedidos' %}">Grade de pedidos a embarcar</a></li>
   </ul>
   <br />
+  {% endif %}
   <li>Impressão</li>
   <ul>
-    <li><a href="{% url 'producao:imprime_lotes' %}">Cartela de lote</a></li>
-    <li><a href="{% url 'producao:imprime_pacote3lotes' %}">Etiqueta de caixa de <i>n</i> lotes</a></li>
-    <li><a href="{% url 'producao:imprime_tag' %}">TAG</a></li>
-    <li><a href="{% url 'producao:imprime_ob1' %}">OB1</a></li>
-    <!-- {% if request.user.is_authenticated %}
+    {% if empresa == 'tussor' %}
+      <li><a href="{% url 'producao:imprime_lotes' %}">Cartela de lote</a></li>
+      <li><a href="{% url 'producao:imprime_pacote3lotes' %}">Etiqueta de caixa de <i>n</i> lotes</a></li>
+      <li><a href="{% url 'producao:imprime_tag' %}">TAG</a></li>
+    {% elif empresa == 'agator' %}
+      <li><a href="{% url 'producao:imprime_ob1' %}">OB1</a></li>
+    {% endif %}
+      <!-- {% if request.user.is_authenticated %}
       <li>Tabelas de configuração</li>
       <ul>
         <li><a href="{% url 'producao:impressora_termica' %}">Impressora térmica</a></li>
