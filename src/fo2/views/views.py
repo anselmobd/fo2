@@ -14,9 +14,14 @@ from utils.functions import get_client_ip, fo2logger
 from utils.functions.ssh import router_add_ip_apoio_auth
 
 
-def index_view(request):
+def index_tussor_view(request):
     fo2logger.info('index')
     return redirect('apoio_ao_erp')
+
+
+def index_agator_view(request):
+    fo2logger.info('index')
+    return HttpResponse("Agator")
 
 
 def test_view(request):
