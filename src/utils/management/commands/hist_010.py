@@ -13,7 +13,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Move HIST_010 do banco do systextil para o banco da intranet'
-    __MAX_TASKS = 50000
+    __MAX_TASKS = 100000
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
