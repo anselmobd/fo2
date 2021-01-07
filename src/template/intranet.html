@@ -53,6 +53,13 @@
           <li><a href="https://www.instagram.com/cuecasduomo/" target="_blank">Página no Instagram</a></li>
           <li><a href="http://www.cuecasduomo.net.br/" target="_blank">Página institucional (e antigo catálogo)</a></li>
         </ul>
+        {% if request.user.is_authenticated or base_ip_interno %}
+          <br/>
+          <li>Páginas de empresas parceiras</li>
+          <ul>
+            <li><a href="http://intranet.agator.com.br:88" target="_blank">Intranet Agator</a></li>
+          </ul>
+        {% endif %}
       </ul>
     </td>
     <td>&nbsp;</td>
