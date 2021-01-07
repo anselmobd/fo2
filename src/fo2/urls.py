@@ -16,15 +16,6 @@ admin.site.site_title = "Apoio Admin"
 admin.site.index_title = "Cadastros"
 
 
-def clean_urlpatterns(urlpatterns, pat):
-    regex = re.compile(pat)
-    new_urlpatterns = []
-    for urlpat in urlpatterns:
-        if urlpat.regex != regex:
-            new_urlpatterns.append(urlpat)
-    return new_urlpatterns
-
-
 urlpatterns = [
     # url(r'^$', views.index_view, name='index'),
 
