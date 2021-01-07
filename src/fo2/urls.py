@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(),
         name='apoio_ao_erp'),
 
-    url(r'^intranet/', views.IntranetView.as_view(), name='intranet'),
+    # url(r'^intranet/', views.IntranetView.as_view(), name='intranet'),
 
     # Autenticação
 

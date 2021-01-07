@@ -40,8 +40,12 @@ class ApoioAoErpView(TemplateView):
     #     return context
 
 
-class IntranetView(TemplateView):
+class IntranetTussorView(TemplateView):
     template_name = "intranet.html"
+
+
+class IntranetAgatorView(TemplateView):
+    template_name = "intranet_agator.html"
 
 
 def myip_view(request):

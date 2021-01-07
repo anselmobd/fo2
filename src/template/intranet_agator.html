@@ -1,0 +1,111 @@
+{% extends 'layout/layout.html' %}
+{% load static %}
+
+{% block title.content %}Intranet {% endblock title.content %}
+
+{% block header.content %}Intranet Tussor{% endblock header.content %}
+
+{% block advice %}
+  <!-- <center><big>Confira as <b>Dicas</b> em <a href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH"> em ação!</a></big></center> -->
+{% endblock %}
+
+{% block content %}
+AGATOR
+<table>
+  <tr>
+    <td style="vertical-align: top;">
+      <ul>
+        <li>Recursos Humanos</li>
+        <ul>
+          <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
+          {% if request.user.is_authenticated or base_ip_interno %}
+          <li><a href="{% url 'dp:index' %}">Informações internas</a></li>
+          {% endif %}
+        </ul>
+        {% if request.user.is_authenticated or base_ip_interno %}
+        <br />
+        <li>ERP</li>
+        <ul>
+          <li><a href="{% url 'systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></li>
+          <ul>
+            <li><a href="https://systextil.movidesk.com/" target="_blank">Área do cliente (Ticket)</a></li>
+            <li><a href="http://intersys.com.br/cliente/" target="_blank">Antiga página de SS</a></li>
+            <li><a href="https://suporte.infraworld.com.br/" target="_blank">InfraWorld</a></li>
+            <li>Base de conhecimento Systêxtil</li>
+            <ul>
+              <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/overview" target="_blank">Pesquise</a></li>
+              <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/pages/6202151" target="_blank">Bugs corrigidos</a></li>
+              <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/pages/296976389" target="_blank"> Solução de Problemas e Dúvidas</a></li>
+            </ul>
+          </ul>
+          <li><a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></li>
+        </ul>
+        {% endif %}
+      </ul>
+    </td>
+    <td>&nbsp;</td>
+    <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+    <td style="vertical-align: top;">
+      <ul>
+        <li>Páginas da cuecas D'UOMO na web</li>
+        <ul>
+          <!-- <li><a href="https://www.cuecasduomo.com.br/" target="_blank">Loja on-line</a></li> -->
+          <li><a href="https://pt-br.facebook.com/cuecasduomo" target="_blank">Página no Facebook</a></li>
+          <li><a href="https://www.instagram.com/cuecasduomo/" target="_blank">Página no Instagram</a></li>
+          <li><a href="http://www.cuecasduomo.net.br/" target="_blank">Página institucional (e antigo catálogo)</a></li>
+        </ul>
+      </ul>
+    </td>
+    <td>&nbsp;</td>
+    <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+    <td style="vertical-align: top;">
+      <ul>
+        <li>Outros sites de interesse para o trabalho da Tussor</li>
+        <ul>
+          <li><a href="https://www.gs1.org/services/check-digit-calculator" target="_blank">Calcula dígito verificador de (EAN) GTIN</a></li>
+          <li><a href="http://www.receita.fazenda.gov.br/PessoaJuridica/CNPJ/cnpjreva/Cnpjreva_Solicitacao.asp" target="_blank">CNPJ - Consulta de Situação Cadastral</a></li>
+          <li><a href="http://www.sintegra.gov.br/" target="_blank">Sintegra</a></li>
+          <li><a href="https://www.sefaz.rs.gov.br/nfe/nfe-val.aspx" target="_blank">Validador de XML de NF-e</a></li>
+          <li><a href="https://www.fsist.com.br/converter-xml-nfe-para-danfe" target="_blank">XML para DANFE/DACTE</a></li>
+        </ul>
+      </ul>
+    </td>
+    <td>&nbsp;</td>
+    <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+    <td style="vertical-align: top;">
+      <ul>
+        <li>Verificação de estado de serviços utilizados</li>
+        <ul>
+          <li>Serviços do governo</li>
+          <ul>
+            <li><a href="http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx" target="_blank">NF-e - Disponibilidade do portal de NF-e da SEFAZ</a></li>
+          </ul>
+          <li>Servidor de e-mail</li>
+          <ul>
+            <li><a href="https://status.zoho.com/" target="_blank">Disponibilidade dos serviços do servidor Zoho</a></li>
+          </ul>
+          <li>Link da internet</li>
+          <ul>
+            <li>Testes de velocidade</li>
+            <ul>
+              <li><a href="https://www.nperf.com/pt/" target="_blank">nPerf</a></li>
+              <li><a href="https://speedsmart.net" target="_blank">SpeedSmart</a></li>
+            </ul>
+            <li>Outros testes</li>
+            <ul>
+              <li><a href="https://pingtool.org/" target="_blank">PingTool.org</a></li>
+            </ul>
+            <li>Monitoramento</li>
+            <ul>
+              <li><a href="https://uptimerobot.com/" target="_blank">Uptime Robot</a></li>
+              <ul>
+                <li><a href="https://monitor.tussor.com.br/" target="_blank">Monitor Tussor</a></li>
+              </ul>
+            </ul>
+          </ul>
+        </ul>
+      </ul>
+    </td>
+  </tr>
+</table>
+{% endblock %}
