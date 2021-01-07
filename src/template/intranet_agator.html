@@ -46,6 +46,13 @@
           <li><a href="https://www.sefaz.rs.gov.br/nfe/nfe-val.aspx" target="_blank">Validador de XML de NF-e</a></li>
           <li><a href="https://www.fsist.com.br/converter-xml-nfe-para-danfe" target="_blank">XML para DANFE/DACTE</a></li>
         </ul>
+        {% if request.user.is_authenticated or base_ip_interno %}
+          <br/>
+          <li>Páginas de empresas parceiras</li>
+          <ul>
+            <li><a href="http://intranet.tussor.com.br:88" target="_blank">Intranet Tussor</a></li>
+          </ul>
+        {% endif %}
       </ul>
     </td>
     <td>&nbsp;</td>
