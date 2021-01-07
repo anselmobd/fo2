@@ -192,7 +192,7 @@
     <td style="vertical-align: top;">
       <ul>
         <li><a href="{% url 'producao:index' %}">Produção</a></li>
-        {% include 'lotes/menu.html' with empresa='tussor' only %}
+        {% include 'lotes/menu.html' with empresa='tussor' %}
         <br />
         <li><a href="{% url 'manutencao:index' %}">Manutenção</a></li>
         {% include 'manutencao/menu.html' %}
@@ -223,7 +223,7 @@
         {% include 'cd/menu.html' %}
         <br />
         <li><a href="{% url 'geral:index' %}">Cadastros gerais</a></li>
-        {% include 'geral/menu.html' with empresa='tussor' only %}
+        {% include 'geral/menu.html' with empresa='tussor' %}
       </ul>
     </td>
     <td>&nbsp;</td>
