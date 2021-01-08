@@ -7,7 +7,7 @@ urlpatterns = urlpatterns.copy()
 urlpatterns += [
 
     url(r'^favicon\.ico$',
-        RedirectView.as_view(url='/static/favicon.ico')),
+        RedirectView.as_view(url='/static/favicon_tussor.ico')),
 
     url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(),
         name='apoio_ao_erp'),
