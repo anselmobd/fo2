@@ -5,8 +5,15 @@ from fo2.urls import *
 urlpatterns = urlpatterns.copy()
 
 urlpatterns += [
+
     url(r'^apoio_ao_erp/', views.ApoioAoErpAgatorView.as_view(),
         name='apoio_ao_erp'),
 
     url(r'^intranet/', views.IntranetAgatorView.as_view(), name='intranet'),
+
+    # Autenticação
+
+    url(r'^accounts/login/$',
+        auth_views.login, {'template_name': 'login_agator.html'}, name='login'),
+
 ]
