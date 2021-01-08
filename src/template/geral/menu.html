@@ -1,6 +1,6 @@
 <ul>
-  <li><a href="{% url 'geral:deposito' %}">Depósitos</a></li>
   {% if empresa == 'tussor' %}
+    <li><a href="{% url 'geral:deposito' %}">Depósitos</a></li>
     <li><a href="{% url 'geral:estagio' %}">Estágios</a></li>
     <li><a href="{% url 'geral:unidade' %}">Unidades / Divisões</a></li>
     <li><a href="{% url 'geral:periodo_confeccao' %}">Períodos de confecção</a></li>
