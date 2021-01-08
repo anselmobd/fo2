@@ -5,5 +5,5 @@
 {% block header.content %}Produção - {{ block.super }}{% endblock header.content %}
 
 {% block content %}
-{% include 'lotes/menu.html' %}
+{% include 'lotes/menu.html' with empresa='tussor' %}
 {% endblock %}
