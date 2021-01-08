@@ -19,8 +19,8 @@ admin.site.index_title = "Cadastros"
 urlpatterns = [
     url(r'^$', views.index_view, name='index'),
 
-    url(r'^favicon\.ico$',
-        RedirectView.as_view(url='/static/favicon.ico')),
+    # url(r'^favicon\.ico$',
+    #     RedirectView.as_view(url='/static/favicon.ico')),
 
     # url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(),
     #     name='apoio_ao_erp'),
