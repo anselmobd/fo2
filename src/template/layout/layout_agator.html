@@ -84,7 +84,6 @@
                style="text-align: right;">
             <span style="font-size: smaller;">
               {% if request.user.is_authenticated %}{{ request.user.username }} - <a href="{% url 'encerrar' %}">Encerrar</a>{% else %}<a href="{% url 'login' %}?next=/">Identificar-se</a>{% endif %}
-              <a href="{% url 'base:usuarios' %}"><img title="Lista usuários logados" src="{% static "img/people.svg" %}" alt="people" height="20">{{logged_count}}</a>
             </span>
           </div>
           <div class="col-xs-6 col-sm-2 visible-xs visible-sm visible-md"
