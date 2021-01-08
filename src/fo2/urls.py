@@ -29,8 +29,8 @@ urlpatterns = [
 
     # Autenticação
 
-    url(r'^accounts/login/$',
-        auth_views.login, {'template_name': 'login.html'}, name='login'),
+    # url(r'^accounts/login/$',
+    #     auth_views.login, {'template_name': 'login.html'}, name='login'),
 
     url(r'^encerrar/', auth_views.logout, {'next_page': '/'}, name='encerrar'),
 

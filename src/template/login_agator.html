@@ -1,0 +1,28 @@
+{% extends 'layout/layout_agator.html' %}
+{% load static %}
+
+{% block title.content %}Intranet {% endblock title.content %}
+
+{% block header.content %}Intranet{% endblock header.content %}
+
+{% block content %}
+<center>
+<h2>Login</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Login</button>
+</form>
+</center>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  $("input#id_username").on('change keyup paste', function () {
+    $(this).val($(this).val().toLowerCase());
+  });
+  $("input#id_password").on('change keyup paste', function () {
+    $(this).val($(this).val().toLowerCase());
+  });
+</script>
+{% endblock %}
