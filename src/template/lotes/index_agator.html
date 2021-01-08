@@ -1,0 +1,9 @@
+{% extends 'index_agator.html' %}
+
+{% block title.content %}Produção - {{ block.super }}{% endblock title.content %}
+
+{% block header.content %}Produção - {{ block.super }}{% endblock header.content %}
+
+{% block content %}
+{% include 'lotes/menu.html' with empresa='agator' %}
+{% endblock %}
