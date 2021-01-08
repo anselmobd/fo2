@@ -60,6 +60,12 @@ def request_user(request):
     return user
 
 
+def get_empresa(request):
+    if 'agator' in request.get_host():
+        return 'agator'
+    return 'tussor'
+
+
 def has_permission(request, permission):
     can = False
     user = request_user(request)
