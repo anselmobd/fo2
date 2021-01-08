@@ -45,8 +45,7 @@
 </head>
 <body>
   <header>
-    {% block pageheader %}
-    {% endblock %}
+    {% block pageheader %}{% endblock %}
   </header>
   <main>
     <div class="fullwidth">
@@ -78,8 +77,7 @@
             </small>
           </div>
           <div class="col-sm-5 hidden-xs" align="right">
-            {% block advice %}
-            {% endblock %}
+            {% block advice %}{% endblock %}
           </div>
           <div class="col-sm-2 hidden-xs hidden-sm hidden-md"
                style="text-align: right;">
@@ -113,12 +111,11 @@
       </div>
       {% endblock %}
       <div class="container-fluid">
-      {% block content %}
-      {% endblock %}
+      {% block content %}{% endblock %}
       </div>
       <div class="container-fluid noprint">
         <hr style="margin-top: 0px; margin-bottom: 5px;">
-        <div style="width: 100%; text-align: right; font-size: smaller; color: gray;" title="Versão">
+        <!-- <div style="width: 100%; text-align: right; font-size: smaller; color: gray;" title="Versão">
           Versão {{ settings.PROJ_VERSION }} ({{ settings.PROJ_VERSION_DATE }})
           <a name="versao"></a>
           <span style='display:none' id='greasymonkeyverify' title='script monkey verify'>
@@ -141,33 +138,31 @@
               (<a href='#versao' onclick='javascript:s_hide();'>TI</a>: Instalar o <a href="https://chrome.google.com/webstore/search/Tampermonkey?hl=pt-BR" target="_blank">Tampermonkey</a> e o script <a href="http://intranet/Tussor_Fo2_Intranet.user.js" target="_blank">"Tussor_Fo2_Intranet"</a>)
             </span>
           </span>
-        </div>
+        </div> -->
       </div>
     </div>
   </main>
-  {% block footer %}
-  {% endblock %}
-  {% block javascript %}
-  {% endblock %}
+  {% block footer %}{% endblock %}
+  {% block javascript %}{% endblock %}
   <script>
-    var FIREFOX = /Firefox/i.test(navigator.userAgent);
+    // var FIREFOX = /Firefox/i.test(navigator.userAgent);
 
-    if (FIREFOX) {
-      var monkey = document.getElementById("greasymonkeyverify");
-    } else {
-      var monkey = document.getElementById("tampermonkeyverify");
-    }
-    monkey.style.display="inline";
+    // if (FIREFOX) {
+    //   var monkey = document.getElementById("greasymonkeyverify");
+    // } else {
+    //   var monkey = document.getElementById("tampermonkeyverify");
+    // }
+    // monkey.style.display="inline";
 
-    function s_show() {
-      monkey.getElementsByClassName('icon')[0].style.display="none";
-      monkey.getElementsByClassName('content')[0].style.display="inline";
-    }
+    // function s_show() {
+    //   monkey.getElementsByClassName('icon')[0].style.display="none";
+    //   monkey.getElementsByClassName('content')[0].style.display="inline";
+    // }
 
-    function s_hide() {
-      monkey.getElementsByClassName('icon')[0].style.display="inline";
-      monkey.getElementsByClassName('content')[0].style.display="none";
-    }
+    // function s_hide() {
+    //   monkey.getElementsByClassName('icon')[0].style.display="inline";
+    //   monkey.getElementsByClassName('content')[0].style.display="none";
+    // }
 
   </script>
   {% block footer_space %}{% endblock %}
