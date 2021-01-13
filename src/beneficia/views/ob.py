@@ -27,17 +27,20 @@ class Ob(View):
     def mount_context(self):
         self.cursor = connections['so'].cursor()
 
-        # self.context.update({
-        #     'sucesso_msg': f"{self.context['ob']} encontrada."
-        # })
-
     def get(self, request, *args, **kwargs):
+        if 'ob' in kwargs:
+            return self.post(request, *args, **kwargs)
         self.context['form'] = self.Form_class()
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         self.request = request
-        self.context['form'] = self.Form_class(request.POST)
+        if 'ob' in kwargs:
+            self.context['post'] = True
+            self.context['form'] = self.Form_class(kwargs)
+        else:
+            self.context['post'] = 'busca' in self.request.POST
+            self.context['form'] = self.Form_class(self.request.POST)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
             self.mount_context()
