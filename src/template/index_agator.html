@@ -24,6 +24,14 @@
   <tr>
     <td style="vertical-align: top;">
       <ul>
+        <li><a href="{% url 'beneficia:index' %}">Beneficiamento</a></li>
+        {% include 'beneficia/menu.html' %}
+      </ul>
+    </td>
+    <td>&nbsp;</td>
+    <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+    <td style="vertical-align: top;">
+      <ul>
         <li><a href="{% url 'producao:index' %}">Produção</a></li>
         {% include 'lotes/menu.html' with empresa='agator' %}
       </ul>
