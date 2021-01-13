@@ -40,38 +40,38 @@ urlpatterns = [
 
     url(r'^intradm/', intr_adm_site.urls),
 
-    # Outras Apps
+    # Apps
 
-    url(r'^lotes/', include('lotes.urls', namespace='producao')),
-
-    url(r'^produto/', include('produto.urls', namespace='produto')),
-
-    url(r'^insumo/', include('insumo.urls', namespace='insumo')),
-
-    url(r'^geral/', include('geral.urls', namespace='geral')),
-
-    url(r'^contabil/', include('contabil.urls', namespace='contabil')),
-
-    url(r'^comercial/', include('comercial.urls', namespace='comercial')),
-
-    url(r'^logistica/', include('logistica.urls', namespace='logistica')),
-
-    url(r'^rh/', include('rh.urls', namespace='rh')),
-
-    url(r'^dp/', include('dp.urls', namespace='dp')),
+    url(r'^base/', include('base.urls', namespace='base')),
 
     url(r'^cd/', include('cd.urls', namespace='cd')),
 
-    url(r'^estoque/', include('estoque.urls', namespace='estoque')),
+    url(r'^comercial/', include('comercial.urls', namespace='comercial')),
 
-    url(r'^manutencao/', include('manutencao.urls', namespace='manutencao')),
+    url(r'^contabil/', include('contabil.urls', namespace='contabil')),
+
+    url(r'^dp/', include('dp.urls', namespace='dp')),
 
     url(r'^email_signature/', include('email_signature.urls',
         namespace='email_signature')),
 
+    url(r'^estoque/', include('estoque.urls', namespace='estoque')),
+
+    url(r'^geral/', include('geral.urls', namespace='geral')),
+
+    url(r'^insumo/', include('insumo.urls', namespace='insumo')),
+
+    url(r'^logistica/', include('logistica.urls', namespace='logistica')),
+
+    url(r'^lotes/', include('lotes.urls', namespace='producao')),
+
+    url(r'^manutencao/', include('manutencao.urls', namespace='manutencao')),
+
     url(r'^persona/', include('persona.urls', namespace='persona')),
 
-    url(r'^base/', include('base.urls', namespace='base')),
+    url(r'^produto/', include('produto.urls', namespace='produto')),
+
+    url(r'^rh/', include('rh.urls', namespace='rh')),
 
     # Links para fora
 
