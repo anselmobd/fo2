@@ -13,18 +13,30 @@
   <form action="{% url 'beneficia:ob' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Busca"/>
+    <input type="submit" name="busca" value="Busca"/>
   </form>
-  {% if ob %}
-    <h3>OB {{ ob }}</h3>
+  {% if erro_msg %}
+    <h4 class="bad">
+      {% if erro_input %}
+        Erro nos dados:
+      {% else %}
+        Erro de execução:
+      {% endif %}
+      {{ erro_msg }}
+    </h4>
   {% endif %}
-  {% if msg_erro %}
-    <h3>{{ msg_erro }}</h3>
+  {% if sucesso_msg %}
+    <h4 class="ok">Sucesso: {{ sucesso_msg }}</h4>
   {% endif %}
-  {% if data %}
-    <table>
-      {% include "layout/html_thead.html" with data=headers only %}
-      {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
-    </table>
+  {% if request.POST.busca %}
+    {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+    {% if dados %}
+      <table>
+        {% include "layout/thead_generic.html" with data=headers style=style only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
+      </table>
+    {% else %}
+      <h4>Nenhum dado encontrado</h4>
+    {% endif %}
   {% endif %}
 {% endblock %}
