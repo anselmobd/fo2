@@ -10,6 +10,7 @@ from utils.functions.views import (
 )
 
 import beneficia.forms
+import beneficia.queries
 
 
 class Ob(View):
@@ -26,6 +27,19 @@ class Ob(View):
 
     def mount_context(self):
         self.cursor = connections['so'].cursor()
+
+        dados = beneficia.queries.busca_ob(self.cursor, self.context['ob'])
+        if len(dados) == 0:
+            return
+
+        for row in dados:
+            row['maq'] = f"{row['grup_maq']} {row['sub_maq']}"
+
+        self.context.update({
+            'headers': ('Período', 'Equipamento'),
+            'fields': ('periodo', 'maq'),
+            'dados': dados,
+        })
 
     def get(self, request, *args, **kwargs):
         if 'ob' in kwargs:
