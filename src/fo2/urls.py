@@ -44,6 +44,8 @@ urlpatterns = [
 
     url(r'^base/', include('base.urls', namespace='base')),
 
+    url(r'^beneficia/', include('beneficia.urls', namespace='beneficia')),
+
     url(r'^cd/', include('cd.urls', namespace='cd')),
 
     url(r'^comercial/', include('comercial.urls', namespace='comercial')),
