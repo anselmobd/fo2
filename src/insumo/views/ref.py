@@ -118,10 +118,12 @@ class Ref(View):
                 row['ESTAGIO'] = '-'
         if len(u_data) != 0:
             context.update({
-                'u_headers': ('Tipo', 'Nível', 'Referência', 'Descrição',
+                'u_headers': ('Tamanho', 'Cor',
+                              'Tipo', 'Nível', 'Referência', 'Descrição',
                               'Tamanho', 'Cor',
                               'Alternativa', 'Consumo', 'Estágio'),
-                'u_fields': ('TIPO', 'NIVEL', 'REF', 'DESCR',
+                'u_fields': ('TAM_COMP', 'COR_COMP',
+                             'TIPO', 'NIVEL', 'REF', 'DESCR',
                              'TAM', 'COR',
                              'ALTERNATIVA', 'CONSUMO', 'ESTAGIO'),
                 'u_data': u_data,
