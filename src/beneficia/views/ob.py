@@ -56,6 +56,23 @@ class Ob(View):
             'dados': dados,
         })
 
+        est_dados = beneficia.queries.ob_estagios(self.cursor, self.context['ob'])
+        self.context.update({
+            'est_headers': (
+                'Sequência',
+                'Estágio',
+                'Início',
+                'Término',
+            ),
+            'est_fields': (
+                'seq',
+                'est',
+                'ini',
+                'fim',
+            ),
+            'est_dados': est_dados,
+        })
+
     def get(self, request, *args, **kwargs):
         if 'ob' in kwargs:
             return self.post(request, *args, **kwargs)

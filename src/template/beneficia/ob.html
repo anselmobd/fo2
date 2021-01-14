@@ -31,5 +31,14 @@
   {% else %}
     <h4>OB não encontrada</h4>
   {% endif %}
+  {% if est_dados %}
+    <h4>Estágios</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=est_headers style=est_style only %}
+      {% include "layout/tbody_generic.html" with fields=est_fields data=est_dados style=est_style safe=est_safe only %}
+    </table>
+  {% else %}
+    <h4>OB sem estágios</h4>
+  {% endif %}
 {% endif %}
 {% endblock %}
