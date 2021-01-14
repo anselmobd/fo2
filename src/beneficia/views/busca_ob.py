@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.db import connections
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from utils.functions.views import (
@@ -35,6 +36,12 @@ class BuscaOb(View):
         )
         if len(dados) == 0:
             return
+
+        for row in dados:
+            row['ob|LINK'] = reverse(
+                'beneficia:ob__get',
+                args=[row['ob']],
+            )
 
         self.context.update({
             'headers': (
