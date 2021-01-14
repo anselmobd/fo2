@@ -23,6 +23,12 @@ def busca_ob(cursor, ob=None, periodo=None):
         , b.GRUPO_MAQUINA GRUP_MAQ
         , b.SUBGRUPO_MAQUINA SUB_MAQ 
         , b.NUMERO_MAQUINA NUM_MAQ
+        , b.SITUACAO_ORDEM COD_SIT
+        , CASE
+            WHEN b.SITUACAO_ORDEM = 0 THEN 'A Emitir'
+            WHEN b.SITUACAO_ORDEM = 1 THEN 'Emitida'
+            ELSE '-'
+          END DESCR_SIT
         , b.COD_CANCELAMENTO COD_CANC
         , b.DT_CANCELAMENTO DT_CANC
         , canc.DESCRICAO DESCR_CANC 
