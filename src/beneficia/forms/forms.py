@@ -27,3 +27,11 @@ class BuscaObForm(forms.Form):
         label='Observação', required=False,
         widget=forms.TextInput()
     )
+    ot = forms.CharField(
+        label='OT', required=False,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+            }
+        )
+    )
