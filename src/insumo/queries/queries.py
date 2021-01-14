@@ -144,6 +144,8 @@ def ref_usado_em(cursor, nivel, ref):
           WHEN e.NIVEL_ITEM = 5 THEN 'RE'
           ELSE 'MP'
           END TIPO
+        , e.SUB_COMP TAM_COMP
+        , e.ITEM_COMP COR_COMP
         , e.NIVEL_ITEM NIVEL
         , e.GRUPO_ITEM REF
         , e.SUB_ITEM TAM
@@ -169,7 +171,9 @@ def ref_usado_em(cursor, nivel, ref):
           AND e.NIVEL_COMP = {}
           AND e.GRUPO_COMP = '{}'
         ORDER BY
-          NLSSORT(e.GRUPO_ITEM,'NLS_SORT=BINARY_AI')
+          e.SUB_COMP
+        , e.ITEM_COMP
+        , NLSSORT(e.GRUPO_ITEM,'NLS_SORT=BINARY_AI')
         , e.ALTERNATIVA_ITEM
     """
     sql = sql.format(nivel, ref)
