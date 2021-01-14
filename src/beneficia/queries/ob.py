@@ -25,8 +25,11 @@ def busca_ob(cursor, ob=None, periodo=None):
         , b.NUMERO_MAQUINA NUM_MAQ
         , b.COD_CANCELAMENTO COD_CANC
         , b.DT_CANCELAMENTO DT_CANC
+        , canc.DESCRICAO DESCR_CANC 
         , b.ORDEM_TINGIMENTO OT
         FROM PCPB_010 b
+        LEFT JOIN PCPT_050 canc
+          ON canc.COD_CANCELAMENTO = b.COD_CANCELAMENTO 
         WHERE 1=1
           {filtra_ob} -- filtra_ob
           {filtra_periodo} -- filtra_periodo
