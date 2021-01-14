@@ -23,7 +23,10 @@ def busca_ob(cursor, ob=None, periodo=None):
         , b.GRUPO_MAQUINA GRUP_MAQ
         , b.SUBGRUPO_MAQUINA SUB_MAQ 
         , b.NUMERO_MAQUINA NUM_MAQ
+        , b.QTDE_ROLOS_PROG ROLOS
+        , b.QTDE_QUILOS_PROG QUILOS
         , b.SITUACAO_ORDEM COD_SIT
+        , b.OBSERVACAO OBS
         , CASE
             WHEN b.SITUACAO_ORDEM = 0 THEN 'A Emitir'
             WHEN b.SITUACAO_ORDEM = 1 THEN 'Emitida'
@@ -48,6 +51,8 @@ def busca_ob(cursor, ob=None, periodo=None):
 
     for row in dados:
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
+        if row['obs'] is None:
+            row['obs'] = ''
         row['sit'] = f"{row['cod_sit']}-{row['descr_sit']}"
         if row['dt_canc'] is None:
             row['canc'] = '-'
