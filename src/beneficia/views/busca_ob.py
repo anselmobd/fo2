@@ -37,10 +37,14 @@ class BuscaOb(View):
 
         for row in dados:
             row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
+            if row['dt_canc'] is None:
+                row['canc'] = '-'
+            else:
+                row['canc'] = f"{row['cod_canc']:03} {row['dt_canc'].date()}"
 
         self.context.update({
-            'headers': ('OB', 'Período', 'Equipamento', 'OT'),
-            'fields': ('ob', 'periodo', 'maq', 'ot'),
+            'headers': ('OB', 'Cancelamento', 'Período', 'Equipamento', 'OT'),
+            'fields': ('ob', 'canc', 'periodo', 'maq', 'ot'),
             'dados': dados,
         })
 

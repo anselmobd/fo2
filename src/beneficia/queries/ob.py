@@ -23,6 +23,8 @@ def busca_ob(cursor, ob=None, periodo=None):
         , b.GRUPO_MAQUINA GRUP_MAQ
         , b.SUBGRUPO_MAQUINA SUB_MAQ 
         , b.NUMERO_MAQUINA NUM_MAQ
+        , b.COD_CANCELAMENTO COD_CANC
+        , b.DT_CANCELAMENTO DT_CANC
         , b.ORDEM_TINGIMENTO OT
         FROM PCPB_010 b
         WHERE 1=1
