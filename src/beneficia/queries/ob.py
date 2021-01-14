@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
@@ -73,5 +74,42 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None):
             row['canc'] = '-'
         else:
             row['canc'] = f"{row['dt_canc'].date()} {row['cod_canc']:03}-{row['descr_canc']}"
+
+    return dados
+
+
+def ob_estagios(cursor, ob=None):
+
+    filtra_ob = ""
+    if ob is not None and ob != '':
+        filtra_ob = f"""--
+            AND bt.ORDEM_PRODUCAO = {ob}
+        """
+
+    sql = f'''
+        SELECT 
+          bt.SEQ_OPERACAO SEQ
+        , bt.CODIGO_ESTAGIO EST
+        , bt.DATA_INICIO DT_INI
+        , bt.HORA_INICIO H_INI
+        , bt.DATA_TERMINO DT_FIM
+        , bt.HORA_TERMINO H_FIM
+        FROM pcpb_015 bt
+        WHERE 1=1
+          {filtra_ob} -- filtra_ob
+    '''
+
+    cursor.execute(sql)
+    dados = rows_to_dict_list_lower(cursor)
+
+    for row in dados:
+        row['ini'] = datetime.datetime.combine(
+            row['dt_ini'].date(),
+            row['h_ini'].time(),
+        )
+        row['fim'] = datetime.datetime.combine(
+            row['dt_fim'].date(),
+            row['h_fim'].time(),
+        )
 
     return dados
