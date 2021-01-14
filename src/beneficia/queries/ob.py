@@ -27,6 +27,8 @@ def busca_ob(cursor, ob=None, periodo=None):
         WHERE 1=1
           {filtra_ob} -- filtra_ob
           {filtra_periodo} -- filtra_periodo
+        ORDER BY
+          b.ORDEM_PRODUCAO
     '''
 
     cursor.execute(sql)
