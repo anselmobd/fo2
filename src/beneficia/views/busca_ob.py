@@ -30,7 +30,8 @@ class BuscaOb(View):
 
         dados = beneficia.queries.busca_ob(
             self.cursor,
-            periodo=self.context['periodo']
+            periodo=self.context['periodo'],
+            obs=self.context['obs'],
         )
         if len(dados) == 0:
             return
