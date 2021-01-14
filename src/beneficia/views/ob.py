@@ -36,8 +36,8 @@ class Ob(View):
             row['maq'] = f"{row['grup_maq']} {row['sub_maq']}"
 
         self.context.update({
-            'headers': ('Período', 'Equipamento'),
-            'fields': ('periodo', 'maq'),
+            'headers': ('Período', 'Equipamento', 'OT'),
+            'fields': ('periodo', 'maq', 'ot'),
             'dados': dados,
         })
 
