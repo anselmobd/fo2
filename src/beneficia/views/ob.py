@@ -33,8 +33,8 @@ class Ob(View):
             return
 
         self.context.update({
-            'headers': ('Cancelamento', 'Período', 'Equipamento', 'OT'),
-            'fields': ('canc', 'periodo', 'maq', 'ot'),
+            'headers': ('Situação', 'Cancelamento', 'Período', 'Equipamento', 'OT'),
+            'fields': ('sit', 'canc', 'periodo', 'maq', 'ot'),
             'dados': dados,
         })
 
