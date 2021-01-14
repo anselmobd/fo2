@@ -33,6 +33,7 @@ class BuscaOb(View):
             self.cursor,
             periodo=self.context['periodo'],
             obs=self.context['obs'],
+            ot=self.context['ot'],
         )
         if len(dados) == 0:
             return
