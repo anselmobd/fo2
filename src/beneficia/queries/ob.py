@@ -44,4 +44,14 @@ def busca_ob(cursor, ob=None, periodo=None):
     '''
 
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    dados = rows_to_dict_list_lower(cursor)
+
+    for row in dados:
+        row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
+        row['sit'] = f"{row['cod_sit']}-{row['descr_sit']}"
+        if row['dt_canc'] is None:
+            row['canc'] = '-'
+        else:
+            row['canc'] = f"{row['dt_canc'].date()} {row['cod_canc']:03}-{row['descr_canc']}"
+
+    return dados
