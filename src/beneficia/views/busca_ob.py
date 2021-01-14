@@ -36,8 +36,8 @@ class BuscaOb(View):
             return
 
         self.context.update({
-            'headers': ('OB', 'Cancelamento', 'Período', 'Equipamento', 'OT'),
-            'fields': ('ob', 'canc', 'periodo', 'maq', 'ot'),
+            'headers': ('OB', 'Situação', 'Cancelamento', 'Período', 'Equipamento', 'OT'),
+            'fields': ('ob', 'sit', 'canc', 'periodo', 'maq', 'ot'),
             'dados': dados,
         })
 
