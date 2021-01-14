@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def busca_ob(cursor, ob=None, periodo=None):
+def busca_ob(cursor, ob=None, periodo=None, obs=None):
     filtra_ob = ""
     if ob is not None and ob != '':
         filtra_ob = f"""--
@@ -14,6 +14,12 @@ def busca_ob(cursor, ob=None, periodo=None):
     if periodo is not None and periodo != '':
         filtra_periodo = f"""--
             AND b.PERIODO_PRODUCAO = {periodo}
+        """
+
+    filtra_obs = ""
+    if obs is not None and obs != '':
+        filtra_obs = f"""--
+            AND b.OBSERVACAO LIKE '%{obs}%'
         """
 
     sql = f'''
@@ -42,6 +48,7 @@ def busca_ob(cursor, ob=None, periodo=None):
         WHERE 1=1
           {filtra_ob} -- filtra_ob
           {filtra_periodo} -- filtra_periodo
+          {filtra_obs} -- filtra_obs
         ORDER BY
           b.ORDEM_PRODUCAO
     '''
