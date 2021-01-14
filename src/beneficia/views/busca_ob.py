@@ -36,7 +36,7 @@ class BuscaOb(View):
             return
 
         for row in dados:
-            row['maq'] = f"{row['grup_maq']} {row['sub_maq']}"
+            row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
 
         self.context.update({
             'headers': ('OB', 'Período', 'Equipamento', 'OT'),
