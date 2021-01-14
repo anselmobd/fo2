@@ -10,6 +10,6 @@ class ObForm(forms.Form):
 
 class BuscaObForm(forms.Form):
     periodo = forms.CharField(
-        label='Período',
+        label='Período', required=False,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
