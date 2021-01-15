@@ -62,6 +62,12 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None, ref=None):
         , b.DT_CANCELAMENTO DT_CANC
         , canc.DESCRICAO DESCR_CANC 
         , b.ORDEM_TINGIMENTO OT
+        , ( SELECT
+              t.PANO_SBG_GRUPO
+            FROM pcpb_020 t
+            WHERE t.ORDEM_PRODUCAO = b.ORDEM_PRODUCAO
+              AND rownum = 1
+          ) REF
         FROM PCPB_010 b
         LEFT JOIN PCPT_050 canc
           ON canc.COD_CANCELAMENTO = b.COD_CANCELAMENTO 
@@ -87,6 +93,9 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None, ref=None):
             row['canc'] = '-'
         else:
             row['canc'] = f"{row['dt_canc'].date()} {row['cod_canc']:03}-{row['descr_canc']}"
+        if row['ref'] is None:
+            row['ref'] = ''
+
 
     return dados
 
