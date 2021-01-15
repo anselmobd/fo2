@@ -25,7 +25,8 @@ class BuscaObForm(forms.Form):
     )
     obs = forms.CharField(
         label='Observação', required=False,
-        widget=forms.TextInput()
+        widget=forms.TextInput(),
+        help_text='(parte)'
     )
     ot = forms.CharField(
         label='OT', required=False,
