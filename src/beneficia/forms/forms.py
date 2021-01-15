@@ -19,6 +19,7 @@ class BuscaObForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'type': 'number',
+                'size': 4,
                 'autofocus': 'autofocus'
             }
         )
@@ -33,10 +34,18 @@ class BuscaObForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'type': 'number',
+                'size': 5,
             }
         )
     )
     ref = forms.CharField(
         label='Referencia a produzir', required=False,
-        widget=forms.TextInput()
+        widget=forms.TextInput(attrs={'size': 5})
     )
+
+    def clean_ref(self):
+        ref = self.cleaned_data['ref'].upper()
+        data = self.data.copy()
+        data['ref'] = ref
+        self.data = data
+        return ref
