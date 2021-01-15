@@ -4,7 +4,7 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None):
+def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None, ref=None):
 
     filtra_ob = ""
     if ob is not None and ob != '':
@@ -28,6 +28,18 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None):
     if ot is not None and ot != '':
         filtra_ot = f"""--
             AND b.ORDEM_TINGIMENTO = {ot}
+        """
+
+    filtra_ref = ""
+    if ref is not None and ref != '':
+        filtra_ref = f"""--
+            AND EXISTS (
+                SELECT DISTINCT 
+                t.ORDEM_PRODUCAO
+                FROM pcpb_020 t
+                WHERE t.ORDEM_PRODUCAO = b.ORDEM_PRODUCAO
+                AND t.PANO_SBG_GRUPO = '{ref}'
+            )
         """
 
     sql = f'''
@@ -58,6 +70,7 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None):
           {filtra_periodo} -- filtra_periodo
           {filtra_obs} -- filtra_obs
           {filtra_ot} -- filtra_ot
+          {filtra_ref} -- filtra_ref
         ORDER BY
           b.ORDEM_PRODUCAO
     '''
