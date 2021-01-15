@@ -36,3 +36,7 @@ class BuscaObForm(forms.Form):
             }
         )
     )
+    ref = forms.CharField(
+        label='Referencia a produzir', required=False,
+        widget=forms.TextInput()
+    )

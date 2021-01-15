@@ -34,6 +34,7 @@ class BuscaOb(View):
             periodo=self.context['periodo'],
             obs=self.context['obs'],
             ot=self.context['ot'],
+            ref=self.context['ref'],
         )
         if len(dados) == 0:
             return
