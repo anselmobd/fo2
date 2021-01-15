@@ -32,6 +32,7 @@
     <h4>OB não encontrada</h4>
   {% endif %}
   {% if est_dados %}
+    <br/>
     <h4>Estágios</h4>
     <table>
       {% include "layout/thead_generic.html" with data=est_headers style=est_style only %}
@@ -39,6 +40,16 @@
     </table>
   {% else %}
     <h4>OB sem estágios</h4>
+  {% endif %}
+  {% if tec_dados %}
+    <br/>
+    <h4>Tecidos a produzir</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=tec_headers style=tec_style only %}
+      {% include "layout/tbody_generic.html" with fields=tec_fields data=tec_dados style=tec_style safe=tec_safe only %}
+    </table>
+  {% else %}
+    <h4>OB sem tecidos a produzir</h4>
   {% endif %}
 {% endif %}
 {% endblock %}

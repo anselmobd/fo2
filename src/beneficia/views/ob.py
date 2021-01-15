@@ -73,6 +73,39 @@ class Ob(View):
             'est_dados': est_dados,
         })
 
+        tec_dados = beneficia.queries.ob_tecidos(self.cursor, self.context['ob'])
+        self.context.update({
+            'tec_headers': [
+                'Nível',
+                'Ref,',
+                'Tam.',
+                'Cor',
+                'Alt.',
+                'Rot.',
+                'Rolos prog.',
+                'Quilos prog.',
+                'Rolos real',
+                'Quilos real',
+                'Rolos prod.',
+                'Quilos prod.',
+            ],
+            'tec_fields': [
+                'nivel',
+                'ref',
+                'tam',
+                'cor',
+                'alt',
+                'rot',
+                'rolos_prog',
+                'quilos_prog',
+                'rolos_real',
+                'quilos_real',
+                'rolos_prod',
+                'quilos_prod',
+            ],
+            'tec_dados': tec_dados,
+        })
+
     def get(self, request, *args, **kwargs):
         if 'ob' in kwargs:
             return self.post(request, *args, **kwargs)
