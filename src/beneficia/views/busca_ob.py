@@ -46,7 +46,7 @@ class BuscaOb(View):
             )
 
         self.context.update({
-            'headers': (
+            'headers': [
                 'OB',
                 'Período',
                 'Equipamento',
@@ -55,9 +55,10 @@ class BuscaOb(View):
                 'Obs.',
                 'Situação',
                 'Cancelamento',
-                'OT'
-            ),
-            'fields': (
+                'Referência',
+                'OT',
+            ],
+            'fields': [
                 'ob',
                 'periodo',
                 'maq',
@@ -66,8 +67,9 @@ class BuscaOb(View):
                 'obs',
                 'sit',
                 'canc',
-                'ot'
-            ),
+                'ref',
+                'ot',
+            ],
             'dados': dados,
         })
 
