@@ -316,9 +316,14 @@ def pop(request, pop_assunto=None, id=None):
             'fields': ['descricao'],
         })
     if get_empresa(request) == 'agator':
-        return render(request, 'geral/pop_agator.html', context)
+        context.update({
+            'extends_html': 'geral/index_agator.html',
+        })
     else:
-        return render(request, 'geral/pop.html', context)
+        context.update({
+            'extends_html': 'geral/index.html'
+        })
+    return render(request, 'geral/pop.html', context)
 
 
 def update_dict(original, adding):
