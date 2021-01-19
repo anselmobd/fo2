@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list
 
 
-def ped_inform(cursor, pedido):
+def ped_inform(cursor, pedido, empresa=1):
     # Informações sobre Pedido
     sql = """
         SELECT
@@ -53,6 +53,7 @@ def ped_inform(cursor, pedido):
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE ped.PEDIDO_VENDA = %s
+          AND ped.CODIGO_EMPRESA = %s
     """
-    cursor.execute(sql, [pedido])
+    cursor.execute(sql, [pedido, empresa])
     return rows_to_dict_list(cursor)
