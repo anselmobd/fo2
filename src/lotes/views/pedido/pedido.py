@@ -15,22 +15,32 @@ import lotes.queries as queries
 class Pedido(View):
     Form_class = PedidoForm2
     title_name = 'Pedido'
+    template_name = 'lotes/pedido.html'
 
-    def set_template_name(self, request):
+    def set_context(self, request):
+        self.context = {
+            'titulo': self.title_name,
+        }
         if get_empresa(request) == 'agator':
             self.empresa = 2
-            self.template_name = 'lotes/pedido_agator.html'
+            self.context.update({
+                'extends_html': 'lotes/index_agator.html',
+            })
         else:
             self.empresa = 1
-            self.template_name = 'lotes/pedido.html'
+            self.context.update({
+                'extends_html': 'lotes/index.html'
+            })
 
     def mount_context(self, cursor, pedido):
-        context = {'pedido': pedido}
+        self.context.update({
+            'pedido': pedido,
+        })
 
         # informações gerais
         data = queries.pedido.ped_inform(cursor, pedido, empresa=self.empresa)
         if len(data) == 0:
-            context.update({
+            self.context.update({
                 'msg_erro': 'Pedido não encontrado',
             })
         else:
@@ -39,14 +49,14 @@ class Pedido(View):
                 row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
                 if row['OBSERVACAO'] is None:
                     row['OBSERVACAO'] = '-'
-            context.update({
+            self.context.update({
                 'headers': ('Data de emissão', 'Data de embarque',
                             'Cliente', 'Código do pedido no cliente'),
                 'fields': ('DT_EMISSAO', 'DT_EMBARQUE',
                            'CLIENTE', 'PEDIDO_CLIENTE'),
                 'data': data,
             })
-            context.update({
+            self.context.update({
                 'headers2': ('Status do pedido', 'Situação da venda',
                              'Observação'),
                 'fields2': ('STATUS_PEDIDO', 'SITUACAO_VENDA',
@@ -56,7 +66,7 @@ class Pedido(View):
 
             # Depósitos
             d_data = queries.pedido.ped_dep_qtd(cursor, pedido)
-            context.update({
+            self.context.update({
                 'd_headers': ('Depósito', 'Quantidade'),
                 'd_fields': ('DEPOSITO', 'QTD'),
                 'd_data': d_data,
@@ -83,7 +93,7 @@ class Pedido(View):
                     row['SITUACAO'] = 'Cancelada'
                 else:
                     row['SITUACAO'] = 'Ativa'
-            context.update({
+            self.context.update({
                 'o_headers': ('Stuação', 'OP', 'Tipo',
                               'Referência', 'OP principal', 'Quantidade',
                               'Data Digitação', 'Data Corte'),
@@ -108,7 +118,7 @@ class Pedido(View):
                 else:
                     row['SITUACAO'] += '/Devolvida'
 
-            context.update({
+            self.context.update({
                 'nf_headers': ('NF', 'Data', 'Situação', 'Valor',
                                'NF Devolução'),
                 'nf_fields': ('NF', 'DATA', 'SITUACAO', 'VALOR',
@@ -127,7 +137,7 @@ class Pedido(View):
                         'border-left-width: thin;' \
                         'text-align: right;'
 
-                context.update({
+                self.context.update({
                     'g_headers': g_header,
                     'g_fields': g_fields,
                     'g_data': g_data,
@@ -135,27 +145,24 @@ class Pedido(View):
                     'g_total': g_total,
                 })
 
-        return context
 
     def get(self, request, *args, **kwargs):
-        self.set_template_name(request)
+        self.set_context(request)
         if 'pedido' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
-            context = {'titulo': self.title_name}
             form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
+            self.context['form'] = form
+            return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        self.set_template_name(request)
-        context = {'titulo': self.title_name}
+        self.set_context(request)
         form = self.Form_class(request.POST)
         if 'pedido' in kwargs:
             form.data['pedido'] = kwargs['pedido']
         if form.is_valid():
             pedido = form.cleaned_data['pedido']
             cursor = connections['so'].cursor()
-            context.update(self.mount_context(cursor, pedido))
-        context['form'] = form
-        return render(request, self.template_name, context)
+            self.mount_context(cursor, pedido)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
