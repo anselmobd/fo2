@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list
 
 
-def infadprod_por_pedido(cursor, pedido):
+def infadprod_por_pedido(cursor, pedido, empresa=1):
     sql = '''
         SELECT
           p.PEDIDO_VENDA PEDIDO
@@ -51,6 +51,7 @@ def infadprod_por_pedido(cursor, pedido):
         LEFT JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
         WHERE p.PEDIDO_VENDA = %s
+          AND p.CODIGO_EMPRESA = %s
         ORDER BY
           p.PEDIDO_VENDA
         , p.CLI_PED_CGC_CLI9
@@ -61,5 +62,5 @@ def infadprod_por_pedido(cursor, pedido):
         , t.ORDEM_TAMANHO
         , i.CD_IT_PE_SUBGRUPO
     '''
-    cursor.execute(sql, [pedido])
+    cursor.execute(sql, [pedido, empresa])
     return rows_to_dict_list(cursor)
