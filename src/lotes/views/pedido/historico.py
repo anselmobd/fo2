@@ -2,6 +2,7 @@ import datetime
 from pprint import pprint
 
 from django.conf import settings
+from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -20,10 +21,18 @@ class Historico(View):
     def mount_context(self, pedido):
         context = {'pedido': pedido}
 
-        data = queries.pedido.historico(pedido)
+        cursor = connections['so'].cursor()
+        data = queries.pedido.ped_inform(cursor, pedido)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
+            })
+            return context
+
+        data = queries.pedido.historico(pedido)
+        if len(data) == 0:
+            context.update({
+                'msg_erro': 'Histórico não encontrado',
             })
             return context
 
