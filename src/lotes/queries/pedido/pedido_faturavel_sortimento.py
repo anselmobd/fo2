@@ -4,7 +4,7 @@ from utils.functions.models import rows_to_dict_list_lower
 
 
 def pedido_faturavel_sortimento(
-        cursor, deposito, data_de, data_ate, retorno='r'):
+        cursor, deposito, data_de, data_ate, retorno='r', empresa=1):
 
     filtro_deposito = ''
     if deposito is not None and data_de != '':
@@ -32,6 +32,7 @@ def pedido_faturavel_sortimento(
             -- AND ped.DATA_ENTR_VENDA >= TO_DATE('2019-02-25','YYYY-MM-DD')
             {filtro_data_ate} -- filtro_data_ate
             -- AND ped.DATA_ENTR_VENDA <= TO_DATE('2020-03-29','YYYY-MM-DD')
+            AND ped.CODIGO_EMPRESA = {empresa}
           GROUP BY
             ped.PEDIDO_VENDA
         )
@@ -96,7 +97,7 @@ def pedido_faturavel_sortimento(
             FROM it_qtd ped
         """
     elif retorno == 'p':
-        sql += """
+        sql += f"""
             , it_qtd AS -- itens de qtd final
             (
               SELECT
@@ -106,6 +107,7 @@ def pedido_faturavel_sortimento(
               FROM it_ped_qtd pq -- itens de ped com qtd e qtd fat e dev
               JOIN PEDI_100 ped -- pedido de venda
                 ON ped.PEDIDO_VENDA = pq.PEDIDO
+              WHERE ped.CODIGO_EMPRESA = {empresa}
               GROUP BY
                 ped.DATA_ENTR_VENDA
               , pq.PEDIDO
