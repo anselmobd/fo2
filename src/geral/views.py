@@ -19,7 +19,6 @@ import geral.models as models
 import geral.forms as forms
 import geral.queries as queries
 from geral.functions import get_empresa
-from geral.functions import get_empresa
 from base.views import O2BaseGetPostView
 from geral.functions import config_get_value, config_set_value
 from utils.functions.models import rows_to_dict_list

@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.views import View
 
 from base.forms.forms2 import PedidoForm2
+from geral.functions import get_empresa
 
 import lotes.models as models
 import lotes.queries as queries
@@ -13,14 +14,21 @@ import lotes.queries as queries
 
 class Pedido(View):
     Form_class = PedidoForm2
-    template_name = 'lotes/pedido.html'
     title_name = 'Pedido'
+
+    def set_template_name(self, request):
+        if get_empresa(request) == 'agator':
+            self.empresa = 2
+            self.template_name = 'lotes/pedido_agator.html'
+        else:
+            self.empresa = 1
+            self.template_name = 'lotes/pedido.html'
 
     def mount_context(self, cursor, pedido):
         context = {'pedido': pedido}
 
         # informações gerais
-        data = queries.pedido.ped_inform(cursor, pedido)
+        data = queries.pedido.ped_inform(cursor, pedido, empresa=self.empresa)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
@@ -130,6 +138,7 @@ class Pedido(View):
         return context
 
     def get(self, request, *args, **kwargs):
+        self.set_template_name(request)
         if 'pedido' in kwargs:
             return self.post(request, *args, **kwargs)
         else:
@@ -139,6 +148,7 @@ class Pedido(View):
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.set_template_name(request)
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'pedido' in kwargs:
