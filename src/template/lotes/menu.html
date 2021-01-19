@@ -1,61 +1,63 @@
 <ul>
   {% if empresa == 'tussor' %}
-  <li><a href="{% url 'producao:posicao' %}">Lote</a></li>
-  <li><a href="{% url 'producao:op' %}">OP</a></li>
-  <ul>
-    <li><a href="{% url 'producao:busca_op' %}">Busca OP</a></li>
-    <li><a href="{% url 'producao:op_caixa' %}">Lista caixas de OP</a></li>
-    <li><a href="{% url 'producao:componentes_de_op' %}">Produtos componentes de OP</a></li>
-    <li><a href="{% url 'producao:lista_lotes' %}">Lista lotes de OP</a></li>
-    <li><a href="{% url 'producao:corrige_sequenciamento' %}">Corrige sequenciamento de OP</a></li>
-  </ul>
-  <li><a href="{% url 'producao:os' %}">OS</a></li>
+    <li><a href="{% url 'producao:posicao' %}">Lote</a></li>
+    <li><a href="{% url 'producao:op' %}">OP</a></li>
+    <ul>
+      <li><a href="{% url 'producao:busca_op' %}">Busca OP</a></li>
+      <li><a href="{% url 'producao:op_caixa' %}">Lista caixas de OP</a></li>
+      <li><a href="{% url 'producao:componentes_de_op' %}">Produtos componentes de OP</a></li>
+      <li><a href="{% url 'producao:lista_lotes' %}">Lista lotes de OP</a></li>
+      <li><a href="{% url 'producao:corrige_sequenciamento' %}">Corrige sequenciamento de OP</a></li>
+    </ul>
+    <li><a href="{% url 'producao:os' %}">OS</a></li>
+  {% endif %}
   <li><a href="{% url 'producao:pedido' %}">Pedido</a></li>
-  <ul>
-    <li><a href="{% url 'producao:expedicao' %}">Expedição</a></li>
-    <li><a href="{% url 'producao:pedido_faturavel_modelo' %}">Pedido faturável por modelo</a></li>
-    <li><a href="{% url 'producao:pedido_historico' %}">Histórico</a></li>
-  </ul>
-  <li><a href="{% url 'producao:respons' %}">Responsável por estágio</a></li>
-  <li><a href="{% url 'producao:distribuicao' %}">Distribuição Tecelagem</a></li>
-  <li><a href="{% url 'producao:conserto' %}">Produtos em conserto</a></li>
-  <li><a href="{% url 'producao:perda' %}">Perdas de produção</a></li>
-  <br />
-  <li>Parâmetros</li>
-  <ul>
-    <li><a href="{% url 'producao:lead_colecao' %}">Lead por coleção</a></li>
-    <li><a href="{% url 'producao:lote_min_colecao' %}">Lote mínimo por coleção</a></li>
-    <li><a href="{% url 'producao:regras_lote_min_tamanho' %}">Lote mínimo por tamanho</a></li>
-  </ul>
-  <br />
-  <li>Análise</li>
-  <ul>
-    <li>Produção por</li>
+  {% if empresa == 'tussor' %}
     <ul>
-      <li><a href="{% url 'producao:analise_dtcorte_alter' %}">Data de corte e alternativa</a></li>
-      <li><a href="{% url 'producao:analise_periodo_alter' %}">Período e alternativa</a></li>
+      <li><a href="{% url 'producao:expedicao' %}">Expedição</a></li>
+      <li><a href="{% url 'producao:pedido_faturavel_modelo' %}">Pedido faturável por modelo</a></li>
+      <li><a href="{% url 'producao:pedido_historico' %}">Histórico</a></li>
     </ul>
-    <li><a href="{% url 'producao:op_pendente' %}">Ordens pendentes por estágio</a></li>
-    <li><a href="{% url 'producao:totais_estagio' %}">Totais gerais dos estágios</a></li>
-    <li><a href="{% url 'producao:quant_estagio' %}">Quantidades por estágio</a></li>
-    <li><a href="{% url 'producao:meta_giro' %}">Visualiza meta de giro</a></li>
-    <li><a href="{% url 'producao:meta_total' %}">Visualiza total das metas</a></li>
-    <li>A produzir</li>
+    <li><a href="{% url 'producao:respons' %}">Responsável por estágio</a></li>
+    <li><a href="{% url 'producao:distribuicao' %}">Distribuição Tecelagem</a></li>
+    <li><a href="{% url 'producao:conserto' %}">Produtos em conserto</a></li>
+    <li><a href="{% url 'producao:perda' %}">Perdas de produção</a></li>
+    <br />
+    <li>Parâmetros</li>
     <ul>
-      <li>Por modelo</li>
-      <ul>
-        <li><a href="{% url 'producao:a_produzir' %}">Totais sem grade</a></li>
-        <li><a href="{% url 'producao:produzir_modelo_grade' %}">Totais com grade</a></li>
-      </ul>
-      <li>Por grade de modelo</li>
-      <ul>
-        <li><a href="{% url 'producao:grade_produzir' %}">Situação de OPs</a></li>
-        <li><a href="{% url 'producao:analise_grade_produzir' %}">Depósitos</a></li>
-      </ul>
+      <li><a href="{% url 'producao:lead_colecao' %}">Lead por coleção</a></li>
+      <li><a href="{% url 'producao:lote_min_colecao' %}">Lote mínimo por coleção</a></li>
+      <li><a href="{% url 'producao:regras_lote_min_tamanho' %}">Lote mínimo por tamanho</a></li>
     </ul>
-    <li><a href="{% url 'producao:analise_grade_pedidos' %}">Grade de pedidos a embarcar</a></li>
-  </ul>
-  <br />
+    <br />
+    <li>Análise</li>
+    <ul>
+      <li>Produção por</li>
+      <ul>
+        <li><a href="{% url 'producao:analise_dtcorte_alter' %}">Data de corte e alternativa</a></li>
+        <li><a href="{% url 'producao:analise_periodo_alter' %}">Período e alternativa</a></li>
+      </ul>
+      <li><a href="{% url 'producao:op_pendente' %}">Ordens pendentes por estágio</a></li>
+      <li><a href="{% url 'producao:totais_estagio' %}">Totais gerais dos estágios</a></li>
+      <li><a href="{% url 'producao:quant_estagio' %}">Quantidades por estágio</a></li>
+      <li><a href="{% url 'producao:meta_giro' %}">Visualiza meta de giro</a></li>
+      <li><a href="{% url 'producao:meta_total' %}">Visualiza total das metas</a></li>
+      <li>A produzir</li>
+      <ul>
+        <li>Por modelo</li>
+        <ul>
+          <li><a href="{% url 'producao:a_produzir' %}">Totais sem grade</a></li>
+          <li><a href="{% url 'producao:produzir_modelo_grade' %}">Totais com grade</a></li>
+        </ul>
+        <li>Por grade de modelo</li>
+        <ul>
+          <li><a href="{% url 'producao:grade_produzir' %}">Situação de OPs</a></li>
+          <li><a href="{% url 'producao:analise_grade_produzir' %}">Depósitos</a></li>
+        </ul>
+      </ul>
+      <li><a href="{% url 'producao:analise_grade_pedidos' %}">Grade de pedidos a embarcar</a></li>
+    </ul>
+    <br />
   {% endif %}
   <li>Impressão</li>
   <ul>
