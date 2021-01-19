@@ -5,7 +5,7 @@ def grade_expedicao(
         cursor, embarque_de='', embarque_ate='',
         pedido_tussor='', pedido_cliente='',
         cliente='', deposito='-',
-        emissao_de=None, emissao_ate=None):
+        emissao_de=None, emissao_ate=None, empresa=1):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -70,6 +70,7 @@ def grade_expedicao(
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+          AND ped.CODIGO_EMPRESA = {empresa}
           AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_embarque_de} -- filtro_embarque_de
           {filtro_embarque_ate} -- filtro_embarque_ate

@@ -5,7 +5,7 @@ def ped_expedicao(
         cursor, embarque_de='', embarque_ate='',
         pedido_tussor='', pedido_cliente='',
         cliente='', deposito='-', detalhe='r',
-        emissao_de=None, emissao_ate=None):
+        emissao_de=None, emissao_ate=None, empresa=1):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -54,7 +54,7 @@ def ped_expedicao(
 
     sql = ""
     if detalhe == 'p':
-        sql += """ --
+        sql += f""" --
             WITH conta_gtin AS
             (
             SELECT
@@ -89,6 +89,7 @@ def ped_expedicao(
              AND rtc.GRUPO_ESTRUTURA = i.CD_IT_PE_GRUPO
              AND rtc.SUBGRU_ESTRUTURA = i.CD_IT_PE_SUBGRUPO
              AND rtc.ITEM_ESTRUTURA = i.CD_IT_PE_ITEM
+            WHERE p.CODIGO_EMPRESA = {empresa}
             GROUP BY
               p.PEDIDO_VENDA
             )"""
@@ -137,8 +138,9 @@ def ped_expedicao(
               ON cg.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND cg.MIN_GTIN = 1
              AND cg.MAX_GTIN = 1"""
-    sql += """
+    sql += f"""
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+          AND ped.CODIGO_EMPRESA = {empresa}
           AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_embarque_de} -- filtro_embarque_de
           {filtro_embarque_ate} -- filtro_embarque_ate
@@ -181,15 +183,6 @@ def ped_expedicao(
         sql += """ --
             , i.CD_IT_PE_ITEM
             , t.ORDEM_TAMANHO"""
-    sql = sql.format(
-        filtro_embarque_de=filtro_embarque_de,
-        filtro_embarque_ate=filtro_embarque_ate,
-        filtro_emissao_de=filtro_emissao_de,
-        filtro_emissao_ate=filtro_emissao_ate,
-        filtro_pedido_tussor=filtro_pedido_tussor,
-        filtro_pedido_cliente=filtro_pedido_cliente,
-        filtro_cliente=filtro_cliente,
-        filtro_deposito=filtro_deposito,
-    )
+
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
