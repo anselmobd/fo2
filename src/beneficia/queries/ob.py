@@ -21,7 +21,7 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None, ref=None):
     filtra_obs = ""
     if obs is not None and obs != '':
         filtra_obs = f"""--
-            AND b.OBSERVACAO LIKE '%{obs}%'
+            AND UPPER(b.OBSERVACAO) LIKE UPPER('%{obs}%')
         """
 
     filtra_ot = ""
