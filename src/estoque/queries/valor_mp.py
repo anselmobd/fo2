@@ -58,7 +58,7 @@ def valor_mp(
         , rtc.PRECO_CUSTO_INFO PRECO
         , e.qtde_estoque_atu * rtc.PRECO_CUSTO_INFO TOTAL
         , COALESCE(parm.ESTOQUE_MINIMO, 0) ESTOQUE_MINIMO
-        , parm.TEMPO_REPOSICAO LEAD
+        , parm.TEMPO_REPOSICAO
         FROM ESTQ_040 e
         JOIN BASI_030 r
           ON r.NIVEL_ESTRUTURA = e.cditem_nivel99
