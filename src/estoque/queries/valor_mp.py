@@ -57,6 +57,8 @@ def valor_mp(
         , e.qtde_estoque_atu QTD
         , rtc.PRECO_CUSTO_INFO PRECO
         , e.qtde_estoque_atu * rtc.PRECO_CUSTO_INFO TOTAL
+        , COALESCE(parm.ESTOQUE_MINIMO, 0) ESTOQUE_MINIMO
+        , parm.TEMPO_REPOSICAO LEAD
         FROM ESTQ_040 e
         JOIN BASI_030 r
           ON r.NIVEL_ESTRUTURA = e.cditem_nivel99
@@ -68,6 +70,11 @@ def valor_mp(
          AND rtc.GRUPO_ESTRUTURA = e.cditem_grupo
          AND rtc.SUBGRU_ESTRUTURA = e.cditem_subgrupo
          AND rtc.ITEM_ESTRUTURA = e.cditem_item
+        JOIN BASI_015 parm
+          ON parm.NIVEL_ESTRUTURA = e.cditem_nivel99
+         AND parm.GRUPO_ESTRUTURA = e.cditem_grupo
+         AND parm.SUBGRU_ESTRUTURA = e.cditem_subgrupo
+         AND parm.ITEM_ESTRUTURA = e.cditem_item
         LEFT JOIN BASI_205 d
           ON d.CODIGO_DEPOSITO = e.DEPOSITO
         WHERE 1=1
