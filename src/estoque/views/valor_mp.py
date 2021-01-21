@@ -47,14 +47,18 @@ class ValorMp(View):
         context.update({
             'headers': ('Nível', 'Referência', 'Tamanho', 'Cor',
                         'Conta estoque', 'Depósito',
+                        'Estoque mínimo', 'Lead',
                         'Quantidade', 'Preço', 'Total'),
             'fields': ('nivel', 'ref', 'tam', 'cor',
                        'conta_estoque', 'deposito',
+                       'estoque_minimo', 'lead',
                        'qtd', 'preco', 'total'),
             'style': {
                 7: 'text-align: right;',
                 8: 'text-align: right;',
                 9: 'text-align: right;',
+                10: 'text-align: right;',
+                11: 'text-align: right;',
             },
             'data': data,
         })
