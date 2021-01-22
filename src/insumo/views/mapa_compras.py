@@ -164,8 +164,12 @@ class MapaCompras(View):
                 row['QTD_A_RECEBER|STYLE'] = \
                     'font-weight: bold; color: brown;'
 
+        safe_qtd_header = (
+            'Quantidade<span style="font-size: 50%;vertical-align: super;" '
+            'class="glyphicon glyphicon-comment" aria-hidden="true"></span>',
+        )
         context.update({
-            'headers_irs': ['Semana', 'Quantidade'],
+            'headers_irs': ['Semana', safe_qtd_header],
             'fields_irs': ['SEMANA_ENTREGA', 'QTD_A_RECEBER'],
             'style_irs': {2: 'text-align: right;'},
             'data_irs': data_irs,
