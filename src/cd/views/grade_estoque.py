@@ -73,16 +73,14 @@ class Grade(View):
                 'title_tipo': 1,
                 'link_ref': 1,
             })
+            tipo = self.tipo(ref)
             referencias = [{
                 'referencia': ref,
                 'modelo': refnum,
+                'tipo': tipo['tipo'],
+                'ordem_tipo': tipo['ordem'],
+                'grade_tipo': tipo['grade'],
             }]
-            row = referencias[0]
-            tipo = self.tipo(ref)
-            row['tipo'] = tipo['tipo']
-            row['ordem_tipo'] = tipo['ordem']
-            row['grade_tipo'] = tipo['grade']
-
             modelos = [refnum]
             exec = 'grade'
         else:  # Todos ou Modelo ou Totais
