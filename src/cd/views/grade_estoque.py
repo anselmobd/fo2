@@ -50,8 +50,8 @@ class Grade(View):
             ref = ''
             exec = 'totais'
 
-        refnum = int('0{}'.format(
-            ''.join([c for c in ref if c.isdigit()])))
+        refnum_digitos = "".join([c for c in ref if c in "0123456789"])
+        refnum = int(f'0{refnum_digitos}')
         context = {
             'ref': ref,
             'refnum': refnum,
