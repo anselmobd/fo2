@@ -1,8 +1,12 @@
+from pprint import pprint
+
 from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
 from utils.views import totalize_grouped_data
+
+import insumo.queries
 
 from estoque import forms
 from estoque import queries
@@ -32,6 +36,10 @@ class ValorMp(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
+
+        data_pedido = insumo.queries.mapa_compras_necessidades_nivel_atual(
+            cursor, nivel)
+
         totalize_grouped_data(data, {
             'group': ['nivel'],
             'sum': ['total'],
@@ -43,14 +51,22 @@ class ValorMp(View):
             row['qtd|DECIMALS'] = 2
             row['preco|DECIMALS'] = 2
             row['total|DECIMALS'] = 2
+            key = (row['ref'], row['tam'], row['cor'])
+            try:
+                row['pedidos'] = data_pedido[key]
+            except Exception:
+                row['pedidos'] = 0
+
+        for row in data:
+            row['pedidos'] = round(row['pedidos'])
 
         context.update({
             'headers': ('Nível', 'Referência', 'Tamanho', 'Cor',
-                        'Conta estoque', 'Depósito',
+                        'Conta estoque', 'Depósito', 'Pedidos',
                         'Estoque mínimo', 'Reposição',
                         'Quantidade', 'Preço', 'Total'),
             'fields': ('nivel', 'ref', 'tam', 'cor',
-                       'conta_estoque', 'deposito',
+                       'conta_estoque', 'deposito', 'pedidos',
                        'estoque_minimo', 'tempo_reposicao',
                        'qtd', 'preco', 'total'),
             'style': {
@@ -59,6 +75,7 @@ class ValorMp(View):
                 9: 'text-align: right;',
                 10: 'text-align: right;',
                 11: 'text-align: right;',
+                12: 'text-align: right;',
             },
             'data': data,
         })

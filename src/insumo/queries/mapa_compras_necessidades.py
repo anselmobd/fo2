@@ -320,6 +320,31 @@ def mapa_compras_necessidades_gerais(cursor, dtini=None, nsem=None):
     return cached_result
 
 
+def mapa_compras_necessidades_nivel_atual(cursor, nivel):
+    '''
+        Busca por referencia de nível o total de nessecidades (pedidos)
+        até a semana atual.
+    '''
+
+    p = Perf(id='mcnna', on=False)
+    p.prt('mapa_compras_necessidades_nivel_atual')
+
+    dados_gerais = mapa_compras_necess_gerais_multi(cursor)
+
+    result_dict = {}
+    for row in dados_gerais:
+        if row['CNIV'] == str(nivel):
+            key = (row['CREF'], row['CTAM_B'], row['CCOR_B'])
+            qtd = row['CCONSUMO_B'] * row['QTD']
+            try:
+                result_dict[key] += qtd
+            except Exception:
+                result_dict[key] = qtd
+
+    p.prt('fim')
+    return result_dict
+
+
 def mapa_compras_necessidades_especificas(
         cursor, nivel, ref, cor, tam, dtini=None, nsem=None, colunas='m'):
     '''
