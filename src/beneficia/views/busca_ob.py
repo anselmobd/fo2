@@ -40,6 +40,15 @@ class BuscaOb(View):
             return
 
         for row in dados:
+            if row['ob2']:
+                row['ob2|LINK'] = reverse(
+                    'beneficia:ob__get',
+                    args=[row['ob2']],
+                )
+            else:
+                row['ob2'] = '-'
+            if not row['ot']:
+                row['ot'] = '-'
             row['ob|LINK'] = reverse(
                 'beneficia:ob__get',
                 args=[row['ob']],
@@ -56,6 +65,7 @@ class BuscaOb(View):
                 'Situação',
                 'Cancelamento',
                 'Referência',
+                'OB2',
                 'OT',
             ],
             'fields': [
@@ -68,6 +78,7 @@ class BuscaOb(View):
                 'sit',
                 'canc',
                 'ref',
+                'ob2',
                 'ot',
             ],
             'dados': dados,
