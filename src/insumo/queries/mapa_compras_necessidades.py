@@ -1,3 +1,4 @@
+import datetime
 from functools import reduce
 from operator import itemgetter, mul
 from pprint import pprint
@@ -332,8 +333,9 @@ def mapa_compras_necessidades_nivel_atual(cursor, nivel):
     dados_gerais = mapa_compras_necess_gerais_multi(cursor)
 
     result_dict = {}
+    hoje = datetime.date.today()
     for row in dados_gerais:
-        if row['CNIV'] == str(nivel):
+        if row['CNIV'] == str(nivel) and row['SEM'].date() <= hoje:
             key = (row['CREF'], row['CTAM_B'], row['CCOR_B'])
             qtd = row['CCONSUMO_B'] * row['QTD']
             try:
