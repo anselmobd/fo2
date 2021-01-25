@@ -68,9 +68,13 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None, ref=None):
             WHERE t.ORDEM_PRODUCAO = b.ORDEM_PRODUCAO
               AND rownum = 1
           ) REF
-        FROM PCPB_010 b
+        , bd.ORDEM_PRODUCAO OB2
+        FROM PCPB_010 b -- OB
         LEFT JOIN PCPT_050 canc
           ON canc.COD_CANCELAMENTO = b.COD_CANCELAMENTO 
+        LEFT JOIN pcpb_030 bd -- destinos
+          ON bd.PEDIDO_CORTE = 7 
+         AND bd.NR_PEDIDO_ORDEM = b.ORDEM_PRODUCAO
         WHERE 1=1
           {filtra_ob} -- filtra_ob
           {filtra_periodo} -- filtra_periodo
