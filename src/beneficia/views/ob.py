@@ -61,12 +61,14 @@ class Ob(View):
             'est_headers': (
                 'Sequência',
                 'Estágio',
+                'Descrição',
                 'Início',
                 'Término',
             ),
             'est_fields': (
                 'seq',
                 'est',
+                'est_descr',
                 'ini',
                 'fim',
             ),

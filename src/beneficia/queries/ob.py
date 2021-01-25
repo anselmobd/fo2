@@ -112,11 +112,14 @@ def ob_estagios(cursor, ob=None):
         SELECT 
           bt.SEQ_OPERACAO SEQ
         , bt.CODIGO_ESTAGIO EST
+        , e.DESCRICAO EST_DESCR
         , bt.DATA_INICIO DT_INI
         , bt.HORA_INICIO H_INI
         , bt.DATA_TERMINO DT_FIM
         , bt.HORA_TERMINO H_FIM
         FROM pcpb_015 bt
+        LEFT JOIN MQOP_005 e
+          ON e.CODIGO_ESTAGIO = bt.CODIGO_ESTAGIO
         WHERE 1=1
           {filtra_ob} -- filtra_ob
     '''
