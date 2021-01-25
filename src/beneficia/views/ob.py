@@ -129,6 +129,13 @@ class Ob(View):
         if tipo_ob == 'OB1':
             self.context['headers'].append('OB2')
             self.context['fields'].append('ob2')
+            for row in dados:
+                if row['ob2']:
+                    row['ob2|LINK'] = reverse(
+                        'beneficia:ob__get',
+                        args=[row['ob2']],
+                    )
+
         elif tipo_ob == 'OB2':
             self.context['headers'].append('OT')
             self.context['fields'].append('ot')
