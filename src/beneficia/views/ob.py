@@ -33,7 +33,7 @@ class Ob(View):
             return
 
         self.context.update({
-            'headers': (
+            'headers': [
                 'Período',
                 'Equipamento',
                 'Rolos',
@@ -41,9 +41,8 @@ class Ob(View):
                 'Obs.',
                 'Situação',
                 'Cancelamento',
-                'OT'
-            ),
-            'fields': (
+            ],
+            'fields': [
                 'periodo',
                 'maq',
                 'rolos',
@@ -51,8 +50,7 @@ class Ob(View):
                 'obs',
                 'sit',
                 'canc',
-                'ot'
-            ),
+            ],
             'dados': dados,
         })
 
@@ -127,6 +125,12 @@ class Ob(View):
             'tipo_ob': tipo_ob,
         })
 
+        if tipo_ob == 'OB1':
+            self.context['headers'].append('OB2')
+            self.context['fields'].append('ob2')
+        elif tipo_ob == 'OB2':
+            self.context['headers'].append('OT')
+            self.context['fields'].append('ot')
 
     def get(self, request, *args, **kwargs):
         if 'ob' in kwargs:
