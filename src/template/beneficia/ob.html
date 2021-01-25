@@ -52,5 +52,13 @@
   {% else %}
     <h4>OB sem tecidos a produzir</h4>
   {% endif %}
+  {% if dest_dados %}
+    <br/>
+    <h4>Destinos</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=dest_headers style=dest_style only %}
+      {% include "layout/tbody_generic.html" with fields=dest_fields data=dest_dados style=dest_style safe=dest_safe only %}
+    </table>
+  {% endif %}
 {% endif %}
 {% endblock %}

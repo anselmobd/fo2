@@ -175,3 +175,29 @@ def ob_tecidos(cursor, ob=None):
     dados = rows_to_dict_list_lower(cursor)
 
     return dados
+
+
+def ob_destinos(cursor, ob=None):
+
+    filtra_ob = ""
+    if ob is not None and ob != '':
+        filtra_ob = f"""--
+            AND b.ORDEM_PRODUCAO = {ob}
+        """
+
+    sql = f'''
+        SELECT 
+          b.PEDIDO_CORTE
+        , b.NR_PEDIDO_ORDEM NUMERO
+        , b.CODIGO_DEPOSITO DEP
+        , b.QTDE_ROLOS_PROG ROLOS
+        , b.QTDE_QUILOS_PROG QUILOS
+        FROM pcpb_030 b
+        WHERE 1=1
+          {filtra_ob} -- filtra_ob
+    '''
+
+    cursor.execute(sql)
+    dados = rows_to_dict_list_lower(cursor)
+
+    return dados
