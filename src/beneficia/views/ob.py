@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.db import connections
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from utils.functions.views import (
@@ -133,6 +134,14 @@ class Ob(View):
             self.context['fields'].append('ot')
 
         dest_dados = beneficia.queries.ob_destinos(self.cursor, self.context['ob'])
+
+        for row in dest_dados:
+            if row['numero']:
+                row['numero|LINK'] = reverse(
+                    'beneficia:ob__get',
+                    args=[row['numero']],
+                )
+
         self.context.update({
             'dest_headers': [
                 'Número',
