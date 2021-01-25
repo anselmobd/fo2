@@ -108,6 +108,26 @@ class Ob(View):
             'tec_dados': tec_dados,
         })
 
+        tipo_tecido = ''
+        for row in tec_dados:
+            if not tipo_tecido:
+                tipo_tecido = row['tam']
+            elif tipo_tecido != row['tam']:
+                tipo_tecido = 'X'
+
+        tecido_ob = {
+            'TIN': 'OB2',
+            'INT': 'OB1',
+            'X': 'Erro',
+            '': 'Indefinido',
+        }
+        tipo_ob = tecido_ob[tipo_tecido]
+
+        self.context.update({
+            'tipo_ob': tipo_ob,
+        })
+
+
     def get(self, request, *args, **kwargs):
         if 'ob' in kwargs:
             return self.post(request, *args, **kwargs)
