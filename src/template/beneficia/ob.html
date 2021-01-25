@@ -24,6 +24,7 @@
 {% if post %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
   {% if dados %}
+    <h4>Tipo de OB: {{ tipo_ob }}</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=dados style=style safe=safe only %}
