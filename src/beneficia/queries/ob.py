@@ -195,6 +195,8 @@ def ob_destinos(cursor, ob=None):
         FROM pcpb_030 b
         WHERE 1=1
           {filtra_ob} -- filtra_ob
+        ORDER BY
+          b.NR_PEDIDO_ORDEM
     '''
 
     cursor.execute(sql)
