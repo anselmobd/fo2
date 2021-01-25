@@ -132,14 +132,20 @@ def ob_estagios(cursor, ob=None):
     dados = rows_to_dict_list_lower(cursor)
 
     for row in dados:
-        row['ini'] = datetime.datetime.combine(
-            row['dt_ini'].date(),
-            row['h_ini'].time(),
-        )
-        row['fim'] = datetime.datetime.combine(
-            row['dt_fim'].date(),
-            row['h_fim'].time(),
-        )
+        if row['dt_ini']:
+            row['ini'] = datetime.datetime.combine(
+                row['dt_ini'].date(),
+                row['h_ini'].time(),
+            )
+        else:
+            row['ini'] = ''
+        if row['dt_fim']:
+            row['fim'] = datetime.datetime.combine(
+                row['dt_fim'].date(),
+                row['h_fim'].time(),
+            )
+        else:
+            row['fim'] = ''
 
     return dados
 
