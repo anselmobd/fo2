@@ -104,11 +104,13 @@ class Command(BaseCommand):
         return iter(ops_f.order_by('op').values())
 
     def get_last_sync_ids(self):
-        try:
-            last_sync = models.Op.objects.all().order_by('-sync').values(
-                'sync')[0]['sync']
-        except Exception as e:
-            last_sync = -1
+        last_sync = -1
+        if models.Op.objects.filter(sync=0).count() == 0:
+            try:
+                last_sync = models.Op.objects.all().order_by('-sync').values(
+                    'sync')[0]['sync']
+            except Exception as e:
+                last_sync = -1
 
         try:
             last_sync_del = base.models.SyncDel.objects.all().order_by(
