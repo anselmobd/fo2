@@ -132,6 +132,24 @@ class Ob(View):
             self.context['headers'].append('OT')
             self.context['fields'].append('ot')
 
+        dest_dados = beneficia.queries.ob_destinos(self.cursor, self.context['ob'])
+        self.context.update({
+            'dest_headers': [
+                'Número',
+                'Depósito',
+                'Rolos',
+                'Quilos',
+            ],
+            'dest_fields': [
+                'numero',
+                'dep',
+                'rolos',
+                'quilos',
+            ],
+            'dest_dados': dest_dados,
+        })
+
+
     def get(self, request, *args, **kwargs):
         if 'ob' in kwargs:
             return self.post(request, *args, **kwargs)
