@@ -38,6 +38,15 @@ class BuscaObForm(forms.Form):
             }
         )
     )
+    ob2 = forms.CharField(
+        label='OB2', required=False,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+                'size': 5,
+            }
+        )
+    )
     ref = forms.CharField(
         label='Referencia a produzir', required=False,
         widget=forms.TextInput(attrs={'size': 5})
