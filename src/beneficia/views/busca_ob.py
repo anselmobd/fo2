@@ -34,6 +34,7 @@ class BuscaOb(View):
             self.cursor,
             periodo=self.context['periodo'],
             obs=self.context['obs'],
+            ordens=self.context['ordens'],
             ot=self.context['ot'],
             ob2=self.context['ob2'],
             ref=self.context['ref'],

@@ -29,6 +29,11 @@ class BuscaObForm(forms.Form):
         widget=forms.TextInput(),
         help_text='(parte)'
     )
+    ordens = forms.CharField(
+        label='Ordens', required=False,
+        widget=forms.TextInput(),
+        help_text='(separadas por vírgulas)'
+    )
     ot = forms.CharField(
         label='OT', required=False,
         widget=forms.TextInput(

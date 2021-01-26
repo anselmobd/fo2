@@ -5,7 +5,7 @@ from utils.functions.models import rows_to_dict_list_lower
 
 
 def busca_ob(
-        cursor, ob=None, periodo=None, obs=None, ot=None, ob2=None, ref=None):
+        cursor, ob=None, periodo=None, obs=None, ordens=None, ot=None, ob2=None, ref=None):
 
     filtra_ob = ""
     if ob is not None and ob != '':
@@ -23,6 +23,18 @@ def busca_ob(
     if obs is not None and obs != '':
         filtra_obs = f"""--
             AND UPPER(b.OBSERVACAO) LIKE UPPER('%{obs}%')
+        """
+
+    filtra_ordens = ""
+    if ordens is not None and ordens != '':
+        filtra_ordens_sep = ""
+        for ordem in [o for o in ordens.strip().split(',') if o.strip()]:
+            filtra_ordens += f"""--
+                {filtra_ordens_sep} b.ORDEM_PRODUCAO = {ordem}
+            """
+            filtra_ordens_sep = "OR"
+        filtra_ordens = f"""--
+            AND ({filtra_ordens})
         """
 
     filtra_ot = ""
@@ -86,6 +98,7 @@ def busca_ob(
           {filtra_ob} -- filtra_ob
           {filtra_periodo} -- filtra_periodo
           {filtra_obs} -- filtra_obs
+          {filtra_ordens} -- filtra_ordens
           {filtra_ot} -- filtra_ot
           {filtra_ob2} -- filtra_ob2
           {filtra_ref} -- filtra_ref
