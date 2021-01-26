@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from utils.functions import untuple_keys_concat
 from utils.functions.views import (
     cleanned_fields_to_context,
     context_to_form_post,
@@ -82,6 +83,10 @@ class BuscaOb(View):
                 'ob2',
                 'ot',
             ],
+            'style': untuple_keys_concat({
+                (4, 5): 'text-align: right;',
+                (9, 10, 11): 'text-align: center;',
+            }),
             'dados': dados,
         })
 
