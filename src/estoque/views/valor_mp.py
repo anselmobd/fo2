@@ -4,6 +4,7 @@ from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
+from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data
 
 import insumo.queries
@@ -69,14 +70,9 @@ class ValorMp(View):
                        'conta_estoque', 'deposito', 'pedidos',
                        'estoque_minimo', 'tempo_reposicao',
                        'qtd', 'preco', 'total'),
-            'style': {
-                7: 'text-align: right;',
-                8: 'text-align: right;',
-                9: 'text-align: right;',
-                10: 'text-align: right;',
-                11: 'text-align: right;',
-                12: 'text-align: right;',
-            },
+            'style': untuple_keys_concat({
+                (7, 8, 9, 10, 11, 12): 'text-align: right;',
+            }),
             'data': data,
         })
 
