@@ -275,27 +275,27 @@ def cache_ttl(cache, key):
     return seconds
 
 
-def untuple_keys(dict_):
+def untuple_keys(dicti):
     result = {}
-    for key in dict_:
+    for key in dicti:
         if isinstance(key, tuple):
             for sub_key in key:
-                result[sub_key] = dict_[key]
+                result[sub_key] = dicti[key]
         else:
-            result[key] = dict_[key]
+            result[key] = dicti[key]
     return result
 
 
-def untuple_keys_concat(dict_, sep=""):
+def untuple_keys_concat(dicti, sep=""):
 
     def val_concat(key, master):
         if key in result:
-            result[key] = sep.join([result[key], dict_[master]])
+            result[key] = sep.join([result[key], dicti[master]])
         else:
-            result[key] = dict_[master]
+            result[key] = dicti[master]
 
     result = {}
-    for key in dict_:
+    for key in dicti:
         if isinstance(key, tuple):
             for sub_key in key:
                 val_concat(sub_key, key)
