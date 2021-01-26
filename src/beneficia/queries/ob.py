@@ -4,7 +4,8 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None, ref=None):
+def busca_ob(
+        cursor, ob=None, periodo=None, obs=None, ot=None, ob2=None, ref=None):
 
     filtra_ob = ""
     if ob is not None and ob != '':
@@ -28,6 +29,12 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None, ref=None):
     if ot is not None and ot != '':
         filtra_ot = f"""--
             AND b.ORDEM_TINGIMENTO = {ot}
+        """
+
+    filtra_ob2 = ""
+    if ob2 is not None and ob2 != '':
+        filtra_ob2 = f"""--
+            AND bd.ORDEM_PRODUCAO = {ob2}
         """
 
     filtra_ref = ""
@@ -80,6 +87,7 @@ def busca_ob(cursor, ob=None, periodo=None, obs=None, ot=None, ref=None):
           {filtra_periodo} -- filtra_periodo
           {filtra_obs} -- filtra_obs
           {filtra_ot} -- filtra_ot
+          {filtra_ob2} -- filtra_ob2
           {filtra_ref} -- filtra_ref
         ORDER BY
           b.ORDEM_PRODUCAO
