@@ -55,6 +55,7 @@ class BuscaOb(View):
                 'beneficia:ob__get',
                 args=[row['ob']],
             )
+            row['quilos|DECIMALS'] = 2
 
         self.context.update({
             'headers': [
