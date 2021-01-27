@@ -30,7 +30,7 @@ class BuscaObForm(forms.Form):
         help_text='(parte)'
     )
     ordens = forms.CharField(
-        label='Ordens', required=False,
+        label='OBs', required=False,
         widget=forms.TextInput(),
         help_text='(Ex.: -2, 4, 6, 8-10, 12-  )'
     )
