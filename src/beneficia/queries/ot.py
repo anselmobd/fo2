@@ -27,6 +27,8 @@ def busca_ot(cursor, ot=None):
             WHEN t.TIPO_ORDEM = 7 THEN '7 - Ordem revestimento'
           ELSE ''
           END TIPO
+        , t.RELACAO_BANHO 
+        , t.VOLUME_BANHO 
         FROM PCPB_110 t -- OT
         WHERE 1=1
           {filtra_ot} -- filtra_ot
