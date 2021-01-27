@@ -29,6 +29,9 @@ def busca_ot(cursor, ot=None):
           END TIPO
         , t.RELACAO_BANHO 
         , t.VOLUME_BANHO 
+        , t.GRUPO_MAQUINA GRUP_MAQ
+        , t.SUBGRUPO_MAQUINA SUB_MAQ 
+        , t.NUMERO_MAQUINA NUM_MAQ
         FROM PCPB_110 t -- OT
         WHERE 1=1
           {filtra_ot} -- filtra_ot
@@ -38,5 +41,8 @@ def busca_ot(cursor, ot=None):
 
     cursor.execute(sql)
     dados = rows_to_dict_list_lower(cursor)
+
+    for row in dados:
+        row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
 
     return dados
