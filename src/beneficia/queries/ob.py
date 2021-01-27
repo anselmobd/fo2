@@ -2,6 +2,7 @@ import datetime
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.strings import split_nonempty
 
 
 def busca_ob(
@@ -27,14 +28,26 @@ def busca_ob(
 
     filtra_ordens = ""
     if ordens is not None and ordens != '':
-        filtra_ordens_sep = ""
-        for ordem in [o for o in ordens.strip().split(',') if o.strip()]:
-            filtra_ordens += f"""--
-                {filtra_ordens_sep} b.ORDEM_PRODUCAO = {ordem}
-            """
-            filtra_ordens_sep = "OR"
+        filtro = ""
+        sep = ""
+        for chunk in split_nonempty(ordens, ','):
+            limits = split_nonempty(chunk, '-')
+            start = limits[0]
+            try:
+                end = limits[1]
+                filtro += f"""--
+                    {sep} (
+                    b.ORDEM_PRODUCAO >= {start}
+                    AND b.ORDEM_PRODUCAO <= {end}
+                    )
+                """
+            except Exception:
+                filtro += f"""--
+                    {sep} b.ORDEM_PRODUCAO = {start}
+                """
+            sep = "OR"
         filtra_ordens = f"""--
-            AND ({filtra_ordens})
+            AND ({filtro})
         """
 
     filtra_ot = ""
@@ -106,6 +119,7 @@ def busca_ob(
           b.ORDEM_PRODUCAO
     '''
 
+    print(sql)
     cursor.execute(sql)
     dados = rows_to_dict_list_lower(cursor)
 
