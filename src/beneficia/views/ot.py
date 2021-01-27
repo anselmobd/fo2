@@ -29,28 +29,18 @@ class Ot(View):
     def mount_context(self):
         self.cursor = connections['so'].cursor()
 
-        dados = beneficia.queries.busca_ob(self.cursor, self.context['ot'])
+        dados = beneficia.queries.busca_ot(self.cursor, self.context['ot'])
         if len(dados) == 0:
             return
 
         self.context.update({
             'headers': [
-                'Período',
-                'Equipamento',
-                'Rolos',
-                'Quilos',
-                'Obs.',
-                'Situação',
-                'Cancelamento',
+                'OT',
+                'OB',
             ],
             'fields': [
-                'periodo',
-                'maq',
-                'rolos',
-                'quilos',
-                'obs',
-                'sit',
-                'canc',
+                'ot',
+                'ob',
             ],
             'dados': dados,
         })
