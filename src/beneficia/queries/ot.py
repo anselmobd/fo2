@@ -23,7 +23,7 @@ def busca_ot(cursor, ot=None):
         , t.GRUPO_MAQUINA GRUP_MAQ
         , t.SUBGRUPO_MAQUINA SUB_MAQ 
         , t.NUMERO_MAQUINA NUM_MAQ
-        FROM PCPB_110 t -- OT
+        FROM PCPB_100 t -- OT
         WHERE 1=1
           {filtra_ot} -- filtra_ot
         ORDER BY
