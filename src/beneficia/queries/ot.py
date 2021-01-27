@@ -23,6 +23,7 @@ def busca_ot(cursor, ot=None):
         , t.GRUPO_MAQUINA GRUP_MAQ
         , t.SUBGRUPO_MAQUINA SUB_MAQ 
         , t.NUMERO_MAQUINA NUM_MAQ
+        , t.SITUACAO
         FROM PCPB_100 t -- OT
         WHERE 1=1
           {filtra_ot} -- filtra_ot
@@ -43,8 +44,20 @@ def busca_ot(cursor, ot=None):
         '7': '7-Ordem revestimento',
         '': '-',
     }
+
+    situacao = {
+        '0': '0-Digitada',
+        '1': '1-Impressa',
+        '2': '2-A produzir',
+        '3': '3-Em producao',
+        '4': '4-Produzida',
+        '5': '5-Ordem alterada na producao',
+        '': '-',
+    }
+
     for row in dados:
         row['tipo'] = tipo_ordem[row['tipo_ordem']]
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
+        row['sit'] = situacao[row['situacao']]
 
     return dados
