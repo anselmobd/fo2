@@ -17,6 +17,16 @@ def busca_ot(cursor, ot=None):
         SELECT 
           t.ORDEM_AGRUPAMENTO OT
         , t.ORDEM_PRODUCAO OB
+        , CASE
+            WHEN t.TIPO_ORDEM = 1 THEN '1 - Ordem tingimento'
+            WHEN t.TIPO_ORDEM = 2 THEN '2 - Ordem lavação'
+            WHEN t.TIPO_ORDEM = 3 THEN '3 - Ordem estamparia'
+            WHEN t.TIPO_ORDEM = 4 THEN '4 - Ordem reprocesso'
+            WHEN t.TIPO_ORDEM = 5 THEN '5 - Ordem retração'
+            WHEN t.TIPO_ORDEM = 6 THEN '6 - Processo contínuo'
+            WHEN t.TIPO_ORDEM = 7 THEN '7 - Ordem revestimento'
+          ELSE ''
+          END TIPO
         FROM PCPB_110 t -- OT
         WHERE 1=1
           {filtra_ot} -- filtra_ot

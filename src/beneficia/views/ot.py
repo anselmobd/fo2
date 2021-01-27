@@ -35,11 +35,11 @@ class Ot(View):
 
         self.context.update({
             'headers': [
-                'OT',
+                'Tipo',
                 'OB',
             ],
             'fields': [
-                'ot',
+                'tipo',
                 'ob',
             ],
             'dados': dados,
