@@ -33,6 +33,13 @@ class Ot(View):
         if len(dados) == 0:
             return
 
+        row = dados[0]
+        if row['ob']:
+            row['ob|LINK'] = reverse(
+                'beneficia:ob__get',
+                args=[row['ob']],
+            )
+
         self.context.update({
             'headers': [
                 'Tipo',
