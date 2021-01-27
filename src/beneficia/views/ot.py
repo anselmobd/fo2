@@ -43,12 +43,14 @@ class Ot(View):
         self.context.update({
             'headers': [
                 'Tipo',
+                'Máquina',
                 'OB',
                 'Relação Banho',
                 'Volume Banho',
             ],
             'fields': [
                 'tipo',
+                'maq',
                 'ob',
                 'relacao_banho',
                 'volume_banho',
