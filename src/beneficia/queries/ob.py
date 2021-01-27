@@ -31,19 +31,31 @@ def busca_ob(
         filtro = ""
         sep = ""
         for chunk in split_nonempty(ordens, ','):
-            limits = split_nonempty(chunk, '-')
-            start = limits[0]
-            try:
-                end = limits[1]
+            if '-' in chunk:
+                sub_filtro = ""
+                sub_sep = ""
+                limits = chunk.split('-')
+                
+                start = limits[0].strip()
+                if start:
+                    sub_filtro = f"""--
+                        b.ORDEM_PRODUCAO >= {start}
+                    """
+                    sub_sep = "AND"
+
+                end = limits[1].strip()
+                if end:
+                    sub_filtro += f"""--
+                        {sub_sep} b.ORDEM_PRODUCAO <= {end}
+                    """
+
+                if sub_filtro:
+                    filtro += f"""--
+                        {sep} ({sub_filtro})
+                    """
+            else:    
                 filtro += f"""--
-                    {sep} (
-                    b.ORDEM_PRODUCAO >= {start}
-                    AND b.ORDEM_PRODUCAO <= {end}
-                    )
-                """
-            except Exception:
-                filtro += f"""--
-                    {sep} b.ORDEM_PRODUCAO = {start}
+                    {sep} b.ORDEM_PRODUCAO = {chunk}
                 """
             sep = "OR"
         filtra_ordens = f"""--
@@ -119,7 +131,6 @@ def busca_ob(
           b.ORDEM_PRODUCAO
     '''
 
-    print(sql)
     cursor.execute(sql)
     dados = rows_to_dict_list_lower(cursor)
 
