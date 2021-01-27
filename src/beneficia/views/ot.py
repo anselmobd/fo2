@@ -44,10 +44,14 @@ class Ot(View):
             'headers': [
                 'Tipo',
                 'OB',
+                'Relação Banho',
+                'Volume Banho',
             ],
             'fields': [
                 'tipo',
                 'ob',
+                'relacao_banho',
+                'volume_banho',
             ],
             'dados': dados,
         })
