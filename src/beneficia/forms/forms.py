@@ -13,6 +13,18 @@ class ObForm(forms.Form):
     )
 
 
+class OtForm(forms.Form):
+    ot = forms.CharField(
+        label='OT',
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+                'autofocus': 'autofocus'
+            }
+        )
+    )
+
+
 class BuscaObForm(forms.Form):
     periodo = forms.CharField(
         label='Período', required=False,

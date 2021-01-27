@@ -1,0 +1,35 @@
+{% extends 'beneficia/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'beneficia:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+.bad {
+  color: darkred;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'beneficia:ot' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" name="busca" value="Busca"/>
+</form>
+{% if erro_msg %}
+  <h4 class="bad">Erro: {{ erro_msg }}</h4>
+{% endif %}
+{% if post %}
+  {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+  {% if dados %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=dados style=style safe=safe only %}
+    </table>
+  {% else %}
+    <h4>OT não encontrada</h4>
+  {% endif %}
+{% endif %}
+{% endblock %}
