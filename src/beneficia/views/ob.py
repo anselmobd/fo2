@@ -139,6 +139,12 @@ class Ob(View):
         elif tipo_ob == 'OB2':
             self.context['headers'].append('OT')
             self.context['fields'].append('ot')
+            for row in dados:
+                if row['ot']:
+                    row['ot|LINK'] = reverse(
+                        'beneficia:ot__get',
+                        args=[row['ot']],
+                    )
 
         dest_dados = beneficia.queries.ob_destinos(self.cursor, self.context['ob'])
 
