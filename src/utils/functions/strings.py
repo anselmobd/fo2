@@ -18,3 +18,11 @@ def only_digits(text):
         if char.isdigit():
             num_text.append(char)
     return ''.join(num_text)
+
+
+def split_nonempty(text, sep):
+    return [
+        t.strip()
+        for t in text.split(sep)
+        if t.strip()
+    ]
