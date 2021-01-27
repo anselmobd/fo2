@@ -54,14 +54,14 @@ class Ot(View):
 
 
     def get(self, request, *args, **kwargs):
-        if 'ob' in kwargs:
+        if 'ot' in kwargs:
             return self.post(request, *args, **kwargs)
         self.context['form'] = self.Form_class()
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         self.request = request
-        if 'ob' in kwargs:
+        if 'ot' in kwargs:
             self.context['post'] = True
             self.context['form'] = self.Form_class(kwargs)
         else:
