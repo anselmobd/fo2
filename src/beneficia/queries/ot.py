@@ -17,16 +17,7 @@ def busca_ot(cursor, ot=None):
         SELECT 
           t.ORDEM_AGRUPAMENTO OT
         , t.ORDEM_PRODUCAO OB
-        , CASE
-            WHEN t.TIPO_ORDEM = 1 THEN '1 - Ordem tingimento'
-            WHEN t.TIPO_ORDEM = 2 THEN '2 - Ordem lavação'
-            WHEN t.TIPO_ORDEM = 3 THEN '3 - Ordem estamparia'
-            WHEN t.TIPO_ORDEM = 4 THEN '4 - Ordem reprocesso'
-            WHEN t.TIPO_ORDEM = 5 THEN '5 - Ordem retração'
-            WHEN t.TIPO_ORDEM = 6 THEN '6 - Processo contínuo'
-            WHEN t.TIPO_ORDEM = 7 THEN '7 - Ordem revestimento'
-          ELSE ''
-          END TIPO
+        , t.TIPO_ORDEM
         , t.RELACAO_BANHO 
         , t.VOLUME_BANHO 
         , t.GRUPO_MAQUINA GRUP_MAQ
@@ -42,7 +33,18 @@ def busca_ot(cursor, ot=None):
     cursor.execute(sql)
     dados = rows_to_dict_list_lower(cursor)
 
+    tipo_ordem = {
+        '1': '1-Ordem tingimento',
+        '2': '2-Ordem lavação',
+        '3': '3-Ordem estamparia',
+        '4': '4-Ordem reprocesso',
+        '5': '5-Ordem retração',
+        '6': '6-Processo contínuo',
+        '7': '7-Ordem revestimento',
+        '': '-',
+    }
     for row in dados:
+        row['tipo'] = tipo_ordem[row['tipo_ordem']]
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
 
     return dados
