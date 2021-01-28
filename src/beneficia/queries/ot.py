@@ -24,6 +24,7 @@ def busca_ot(cursor, ot=None):
         , t.SUBGRUPO_MAQUINA SUB_MAQ 
         , t.NUMERO_MAQUINA NUM_MAQ
         , t.SITUACAO
+        , t.SITUACAO_RECEITA
         FROM PCPB_100 t -- OT
         WHERE 1=1
           {filtra_ot} -- filtra_ot
@@ -55,9 +56,22 @@ def busca_ot(cursor, ot=None):
         '': '-',
     }
 
+    situacao_receita = {
+            '0': '0-A imprimir',
+            '1': '1-Impressa',
+            '2': '2-Revisada/confirmada',
+            '3': '3-Teste de desenvolvimento',
+            '4': '4-Estoque insuficiente',
+            '5': '5-Exportar - link outro software',
+            '6': '6-Exportado - link outro software',
+            '7': '7-Bloqueada manualmente',
+        '': '-',
+    }
+
     for row in dados:
         row['tipo'] = tipo_ordem[row['tipo_ordem']]
         row['maq'] = f"{row['grup_maq']} {row['sub_maq']} {row['num_maq']:05}"
         row['sit'] = situacao[row['situacao']]
+        row['sit_receita'] = situacao_receita[row['situacao_receita']]
 
     return dados
