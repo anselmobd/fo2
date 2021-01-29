@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
         try:
             hoje = datetime.date.today()
-            meses, total = comercial.queries.dados_meta_no_ano(hoje)
+            msg_erro, meses, total = comercial.queries.dados_meta_no_ano(hoje)
             self.my_pprintln(meses)
             self.my_pprintln(total)
 
