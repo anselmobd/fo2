@@ -17,7 +17,7 @@ class MetaNoAno(O2BaseGetView):
         hoje = datetime.date.today()
         mes_atual = hoje.month
 
-        meses, total = comercial.queries.dados_meta_no_ano(hoje)
+        msg_erro, meses, total = comercial.queries.dados_meta_no_ano(hoje)
 
         self.context.update({
             'meses': meses,

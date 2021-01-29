@@ -28,10 +28,7 @@ def dados_meta_no_ano(hoje):
     metas = comercial.models.MetaFaturamento.objects.filter(
         data__year=ano_atual).order_by('data')
     if len(metas) == 0:
-        self.context.update({
-            'msg_erro': 'Nenhuma meta definida para o ano',
-        })
-        return
+        return 'Nenhuma meta definida para o ano', None, None
 
     faturados = comercial.queries.faturamento_para_meta(
         cursor, ano_atual)
@@ -141,4 +138,4 @@ def dados_meta_no_ano(hoje):
     total['percentual'] = round(
         total['faturado'] / total['planejado'] * 100, 1)
 
-    return meses, total
+    return None, meses, total
