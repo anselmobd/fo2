@@ -30,8 +30,11 @@ class Command(BaseCommand):
         try:
             hoje = datetime.date.today()
             msg_erro, meses, total = comercial.queries.dados_meta_no_ano(hoje)
-            self.my_pprintln(meses)
-            self.my_pprintln(total)
+            if msg_erro:
+                self.my_println(msg_erro)
+            else:
+                self.my_pprintln(meses)
+                self.my_pprintln(total)
 
         except Exception as e:
             raise CommandError(
