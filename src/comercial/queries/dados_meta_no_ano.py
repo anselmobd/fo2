@@ -20,26 +20,6 @@ import comercial.models
 import comercial.queries
 
 
-# padrão de decorator
-def padrao_decorator(func=None, *, message=None):
-    if func is None:
-        return partial(padrao_decorator, message=message)
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if message is not None:
-            print(message)
-
-        result = func(*args, **kwargs)
-
-        if message is not None:
-            print(message)
-
-        return result
-
-    return wrapper
-
-
 def caching_function(
         func=None, *,
         key_cache_fields=[],
