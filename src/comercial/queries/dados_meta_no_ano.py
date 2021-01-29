@@ -1,18 +1,10 @@
-import datetime
 import time
-from inspect import signature
 from pprint import pprint
 
-from django.core.cache import cache
 from django.db import connections
 
-from utils.cache import entkeys
 from utils.decorators import caching_function
-from utils.functions import (
-    dias_mes_data,
-    fo2logger,
-    my_make_key_cache,
-)
+from utils.functions import dias_mes_data
 
 import lotes.queries.pedido as l_q_p
 
