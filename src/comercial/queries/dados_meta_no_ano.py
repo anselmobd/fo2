@@ -12,7 +12,11 @@ import comercial.models
 import comercial.queries
 
 
-@caching_function(key_cache_fields=['hoje'], minutes_key_variation=10)
+@caching_function(
+    key_cache_fields=['hoje'], 
+    minutes_key_variation=10, 
+    version_key_variation=3
+)
 def dados_meta_no_ano(hoje):
     cursor = connections['so'].cursor()
 

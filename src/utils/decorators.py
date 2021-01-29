@@ -52,13 +52,15 @@ def caching_function(
         func=None, *,
         key_cache_fields=[],
         max_run_delay=20,
-        minutes_key_variation=None):
+        minutes_key_variation=None,
+        version_key_variation=None):
     if func is None:
         return partial(
             caching_function,
             key_cache_fields=key_cache_fields,
             max_run_delay=max_run_delay,
             minutes_key_variation=minutes_key_variation,
+            version_key_variation=version_key_variation,
         )
 
     @wraps(func)
@@ -80,6 +82,8 @@ def caching_function(
             except IndexError:
                 value = kwargs[field]
             my_make_key_cache_args.append(value)
+        if version_key_variation:
+            my_make_key_cache_args.append(version_key_variation)
 
         if minutes_key_variation is not None:
             my_make_key_cache_args.append(key_variation)
