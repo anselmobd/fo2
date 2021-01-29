@@ -180,6 +180,13 @@
 
 </script>
 </head>
+
+{% if msg_erro %}
+<body>
+  <h4>{{ msg_erro }}</h4>
+</body>
+{% else %}
+
 <body onload="resetScroll();">
     <div class="p_header container-fluid">
       <div class="col-xs-3">
@@ -331,4 +338,5 @@
     }
   </script>
 </body>
+{% endif %}
 </html>

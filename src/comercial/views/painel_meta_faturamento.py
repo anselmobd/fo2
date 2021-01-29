@@ -27,6 +27,12 @@ class PainelMetaFaturamento(View):
 
         msg_erro, meses, _ = comercial.queries.dados_meta_no_ano(hoje.date())
 
+        if msg_erro:
+            self.context.update({
+                'msg_erro': msg_erro,
+            })
+            return
+
         mes = [mes for mes in meses
                if mes['imes'] == mes_atual][0]
         mes['perc_faturado'] = round(
