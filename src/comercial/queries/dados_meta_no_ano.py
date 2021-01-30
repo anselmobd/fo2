@@ -15,7 +15,8 @@ import comercial.queries
 @caching_function(
     key_cache_fields=['hoje'], 
     minutes_key_variation=10, 
-    version_key_variation=3
+    version_key_variation=1,
+    caching_params=True,
 )
 def dados_meta_no_ano(hoje):
     cursor = connections['so'].cursor()
