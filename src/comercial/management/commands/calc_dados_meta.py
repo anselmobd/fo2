@@ -3,6 +3,8 @@ from pprint import pprint, pformat
 
 from django.core.management.base import BaseCommand, CommandError
 
+from utils.decorators import CacheGet
+
 import comercial.queries
 
 
@@ -13,6 +15,7 @@ class Command(BaseCommand):
         self.my_print(text, ending='\n')
 
     def my_print(self, text='', ending=''):
+        text = str(text)
         self.stdout.write(text, ending=ending)
         self.stdout.flush()
 
@@ -29,7 +32,13 @@ class Command(BaseCommand):
 
         try:
             hoje = datetime.date.today()
-            msg_erro, meses, total = comercial.queries.dados_meta_no_ano(hoje)
+
+            cg = CacheGet()
+            msg_erro, meses, total = cg.get_result(
+                comercial.queries.dados_meta_no_ano(hoje)
+            )
+            self.my_pprintln(cg.params)
+
             if msg_erro:
                 self.my_println(msg_erro)
             else:

@@ -2,6 +2,7 @@ from pprint import pprint
 import datetime
 
 from base.views import O2BaseGetView
+from utils.decorators import CacheGet
 
 import comercial.queries
 
@@ -17,7 +18,10 @@ class MetaNoAno(O2BaseGetView):
         hoje = datetime.date.today()
         mes_atual = hoje.month
 
-        msg_erro, meses, total = comercial.queries.dados_meta_no_ano(hoje)
+        cg = CacheGet()
+        msg_erro, meses, total = cg.get_result(
+            comercial.queries.dados_meta_no_ano(hoje)
+        )
 
         self.context.update({
             'msg_erro': msg_erro,
