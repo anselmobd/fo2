@@ -1,7 +1,7 @@
 import datetime
 from functools import wraps, partial
 from inspect import signature
-from pprint import pprint
+from pprint import pprint, pformat
 
 from django.core.cache import cache
 
@@ -48,12 +48,32 @@ def padrao_decorator(func=None, *, message=None):
     return wrapper
 
 
+class CachingResult:
+
+    def __init__(self, result, params):
+        self.params = params
+        self.result = result
+
+
+class CacheGet:
+    def __init__(self):
+        self.params = None
+
+    def get_result(self, result):
+        if isinstance(result, CachingResult):
+            self.params = result.params
+            return result.result
+        else:
+            return result
+
+
 def caching_function(
         func=None, *,
         key_cache_fields=[],
         max_run_delay=20,
         minutes_key_variation=None,
-        version_key_variation=None):
+        version_key_variation=None,
+        caching_params=None):
     if func is None:
         return partial(
             caching_function,
@@ -61,13 +81,14 @@ def caching_function(
             max_run_delay=max_run_delay,
             minutes_key_variation=minutes_key_variation,
             version_key_variation=version_key_variation,
+            caching_params=caching_params,
         )
 
     @wraps(func)
     def wrapper(*args, **kwargs):
+        now = datetime.datetime.now()
         if minutes_key_variation is not None:
             # nova key a cada x minutos
-            now = datetime.datetime.now()
             key_variation = int(
                 (now.hour * 60 + now.minute) / minutes_key_variation)
 
@@ -108,12 +129,23 @@ def caching_function(
                         timeout=entkeys._SECOND * max_run_delay)
                     break
                 else:
+                    fo2logger.info('cached_result '+pformat(cached_result))
+                    if isinstance(cached_result, CachingResult):
+                        fo2logger.info('cached_result.result '+pformat(cached_result.result))
+                        fo2logger.info('cached_result.params '+pformat(cached_result.params))
+
                     fo2logger.info('cached '+key_cache)
                     return cached_result
 
         fo2logger.info('depois do while')
 
         cached_result = func(*args, **kwargs)
+        fo2logger.info('cached_result '+pformat(cached_result))
+
+        if caching_params:
+            fo2logger.info('params '+pformat(now))
+            cached_result = CachingResult(cached_result, now)
+            fo2logger.info('CachingResult '+pformat(cached_result))
 
         cache.set(key_cache, cached_result)
         cache.set(f"{key_cache}_calc_", "n")
