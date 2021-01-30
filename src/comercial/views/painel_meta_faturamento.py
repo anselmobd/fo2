@@ -4,6 +4,7 @@ import datetime
 from django.shortcuts import render
 from django.views import View
 
+from utils.decorators import CacheGet
 from utils.functions import dias_mes_data
 from utils.functions.models import queryset_to_dict_list_lower
 from utils.views import totalize_data
@@ -25,7 +26,18 @@ class PainelMetaFaturamento(View):
         ano_atual = hoje.year
         mes_atual = hoje.month
 
-        msg_erro, meses, _ = comercial.queries.dados_meta_no_ano(hoje.date())
+        # se:
+        # - a função foi decorada com caching_function; E
+        # - foi indicado o uso de caching_params
+        cg = CacheGet()
+        msg_erro, meses, _ = cg.get_result(
+            comercial.queries.dados_meta_no_ano(hoje.date())
+        )
+
+        # se:
+        # - a função NÃO foi decorada com caching_function; OU
+        # - NÃO foi indicado o uso de caching_params
+        # msg_erro, meses, _ = comercial.queries.dados_meta_no_ano(hoje.date())
 
         if msg_erro:
             self.context.update({
