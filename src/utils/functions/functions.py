@@ -8,6 +8,8 @@ import hashlib
 
 from django.conf import settings
 
+from utils.classes import AcessoInterno
+
 
 fo2logger = logging.getLogger('fo2')
 
@@ -295,3 +297,11 @@ def mes_atual():
 def dia_atual():
     hoje = datetime.date.today()
     return hoje.day
+
+def acesso_externo():
+    acesso_interno = AcessoInterno()
+    try:
+        acesso_externo = not acesso_interno.current_interno
+    except Exception:
+        acesso_externo = False
+    return acesso_externo
