@@ -9,8 +9,7 @@ from django.views.generic import TemplateView, View
 
 from base.models import Colaborador
 
-from utils.classes import AcessoInterno
-from utils.functions import get_client_ip, fo2logger
+from utils.functions import get_client_ip, fo2logger, acesso_externo
 from utils.functions.ssh import router_add_ip_apoio_auth
 
 
@@ -61,13 +60,8 @@ def ack_view(request):
 
 class SystextilView(View):
     def get(self, request, *args, **kwargs):
-        acesso_interno = AcessoInterno()
-        try:
-            acesso_externo = not acesso_interno.current_interno
-        except Exception:
-            acesso_externo = False
         context = {
-            'externo': acesso_externo,
+            'externo': acesso_externo(),
         }
         return render(request, "oficial_systextil.html", context)
 
