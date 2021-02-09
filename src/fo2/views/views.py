@@ -38,12 +38,20 @@ class ApoioAoErpAgatorView(TemplateView):
     template_name = "index_agator.html"
 
 
-class IntranetTussorView(TemplateView):
-    template_name = "intranet.html"
+class IntranetTussorView(View):
+    def get(self, request, *args, **kwargs):
+        context = {
+            'externo': acesso_externo(),
+        }
+        return render(request, "intranet.html", context)
 
 
-class IntranetAgatorView(TemplateView):
-    template_name = "intranet_agator.html"
+class IntranetAgatorView(View):
+    def get(self, request, *args, **kwargs):
+        context = {
+            'externo': acesso_externo(),
+        }
+        return render(request, "intranet_agator.html", context)
 
 
 def myip_view(request):
