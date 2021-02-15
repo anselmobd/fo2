@@ -101,7 +101,8 @@ class Command(BaseCommand):
             ops_f = models.Op.objects.all()
         else:
             ops_f = models.Op.objects.filter(op__in=ops)
-        return iter(ops_f.order_by('op').values())
+        ops_f = ops_f.order_by('op').values()
+        return iter(ops_f)
 
     def get_last_sync_ids(self):
         last_sync = -1
