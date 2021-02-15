@@ -289,12 +289,12 @@ class MapaRefsForm(forms.Form):
         queryset=ContaEstoque.objects.exclude(conta_estoque=0).order_by(
             'conta_estoque'), empty_label="(Todas)")
 
-    CHOICES = [('a', 'Apenas insumos com necessidades a partir desta semana'),
-               ('t', 'Todos os insumos')]
-    necessidade = forms.ChoiceField(
-        label='Necessidades',
-        help_text='(data de necessidade = data do corte - 7 dias)',
-        choices=CHOICES, initial='a', widget=forms.RadioSelect())
+    # CHOICES = [('a', 'Apenas insumos com necessidades a partir desta semana'),
+    #            ('t', 'Todos os insumos')]
+    # necessidade = forms.ChoiceField(
+    #     label='Necessidades',
+    #     help_text='(data de necessidade = data do corte - 7 dias)',
+    #     choices=CHOICES, initial='a', widget=forms.RadioSelect())
 
     def clean_insumo(self):
         insumo = self.cleaned_data['insumo'].upper()

@@ -657,7 +657,7 @@ class MapaPorRefs(View):
         if form.is_valid():
             insumo = form.cleaned_data['insumo']
             conta_estoque = form.cleaned_data['conta_estoque']
-            necessidade = form.cleaned_data['necessidade']
+            necessidade = 't'  # form.cleaned_data['necessidade']
             cursor = connections['so'].cursor()
             context.update(
                 self.mount_context(cursor, insumo, conta_estoque, necessidade))
