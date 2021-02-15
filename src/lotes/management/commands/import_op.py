@@ -154,13 +154,17 @@ class Command(BaseCommand):
         op.save()
 
     def atualiza(self, row):
-        self.my_println('Atualizando OP {}'.format(row['op']))
+        op_num = row['op']
+        self.my_println(f'Atualizando OP {op_num}')
 
         try:
-            op = models.Op.objects.get(op=row['op'])
+            op = models.Op.objects.get(op=op_num)
         except models.Op.DoesNotExist:
             self.my_println('OP {} não encontrada em Fo2'.format(op))
             return
+        except models.Op.MultipleObjectsReturned as e:
+            raise CommandError(
+                f'Erro ao atualizar OP {op_num}. "{e}"')
         if self.set_op(op, row):
             op.save()
 
