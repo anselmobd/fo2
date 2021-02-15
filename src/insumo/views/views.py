@@ -615,7 +615,8 @@ class MapaPorRefs(View):
             'necessidade': necessidade,
         })
 
-        data = queries.mapa_refs(cursor, insumo, conta_estoque, necessidade)
+        data = queries.mapa_refs_simples(
+            cursor, insumo, conta_estoque)
 
         if len(data) == 0:
             context.update({

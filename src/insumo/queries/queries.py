@@ -828,6 +828,54 @@ def mapa_refs(cursor, insumo, conta_estoque, necessidade):
     return rows_to_dict_list(cursor)
 
 
+def mapa_refs_simples(cursor, insumo, conta_estoque):
+    filtro_insumo = ''
+    if insumo:
+        if len(insumo) == 5:
+            filtro_insumo = \
+                "AND i.GRUPO_ESTRUTURA = '{insumo}'".format(
+                    insumo=insumo)
+        else:
+            filtro_insumo = \
+                "AND i.GRUPO_ESTRUTURA LIKE '%{insumo}%'".format(
+                    insumo=insumo)
+
+    filtro_conta_estoque = ''
+    if conta_estoque:
+        filtro_conta_estoque = \
+            "AND g.CONTA_ESTOQUE = {conta_estoque}".format(
+                conta_estoque=conta_estoque.conta_estoque)
+
+    sql = f"""
+        SELECT
+          i.NIVEL_ESTRUTURA NIVEL
+        , i.GRUPO_ESTRUTURA REF
+        , i.ITEM_ESTRUTURA COR
+        , i.SUBGRU_ESTRUTURA TAM
+        , g.DESCR_REFERENCIA DESCR
+        , i.DESCRICAO_15 DESCR_COR
+        , sg.DESCR_TAM_REFER DESCR_TAM
+        FROM BASI_010 i -- item
+        JOIN BASI_020 sg -- subgrupo
+          ON sg.BASI030_NIVEL030 = i.NIVEL_ESTRUTURA 
+        AND sg.BASI030_REFERENC = i.GRUPO_ESTRUTURA 
+        AND sg.TAMANHO_REF = i.SUBGRU_ESTRUTURA 
+        JOIN BASI_030 g -- grupo
+          ON g.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA 
+        AND g.REFERENCIA = i.GRUPO_ESTRUTURA
+        WHERE i.NIVEL_ESTRUTURA <> 1
+          {filtro_insumo} -- filtro_insumo
+          {filtro_conta_estoque} -- filtro_conta_estoque
+        ORDER BY
+          i.NIVEL_ESTRUTURA
+        , i.GRUPO_ESTRUTURA
+        , i.ITEM_ESTRUTURA
+        , sg.TAMANHO_REF
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
+
+
 def insumo_necessidade_detalhe(
         cursor, nivel, ref, cor, tam, semana, new_calc=True):
     sql = """
