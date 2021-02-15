@@ -1093,7 +1093,7 @@ class NecessidadesPrevisoes(View):
 class MapaPorSemanaNew(View):
     Form_class = MapaPorSemanaNewForm
     template_name = 'insumo/mapa_sem_new.html'
-    title_name = 'Mapa de compras por semana'
+    title_name = 'Mapa de compras por semana (old2)'
 
     def mount_context_pre(self, cursor, periodo, qtd_semanas):
         if periodo is None:
@@ -1320,7 +1320,7 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem, versao='A'):
 class MapaPorSemana(View):
     Form_class = MapaPorSemanaForm
     template_name = 'insumo/mapa_sem.html'
-    title_name = 'Mapa de compras por semana'
+    title_name = 'Mapa de compras por semana (old1)'
 
     def mount_context_pre(self, cursor, periodo, qtd_semanas):
         if periodo is None:
