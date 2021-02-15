@@ -10,7 +10,7 @@ import insumo.functions
 
 class MapaNovoPorInsumo(View):
     template_name = 'insumo/mapa.html'
-    title_name = 'Mapa de compras'
+    title_name = 'Mapa de compras (old2)'
 
     def __init__(self, *args, **kwargs):
         super(MapaNovoPorInsumo, self).__init__(*args, **kwargs)
