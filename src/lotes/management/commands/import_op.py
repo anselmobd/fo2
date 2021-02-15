@@ -467,6 +467,7 @@ class Command(BaseCommand):
                 for row in ics:
                     ops.append(row['op'])
 
+                # pega OPs no Systêxtil - NOVAMENTE, pois já foi percorrido
                 ics = self.get_ops_s(self.last_sync)
 
                 # pega deleções de OPs no Fo2
