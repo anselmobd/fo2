@@ -104,6 +104,15 @@ class Command(BaseCommand):
         ops_f = ops_f.order_by('op').values()
         return iter(ops_f)
 
+    def op_existe(self, op):
+        try:
+            models.Op.objects.get(op=op)
+        except models.Op.DoesNotExist:
+            return False
+        except Exception as e:
+            raise CommandError(f'Erro verificando existência de OP {op}. "{e}"')
+        return True
+
     def get_last_sync_ids(self):
         last_sync = -1
         if models.Op.objects.filter(sync=0).count() == 0:
@@ -264,6 +273,9 @@ class Command(BaseCommand):
                 break
 
             if op_s < op_f:
+                if self.op_existe(op_s):
+                    raise CommandError(
+                        f'Tentativa de incluir OP {op_s}, já existente.')
                 self.my_println('Incluir OP {} no Fo2'.format(op_s))
                 self.inclui_op.append(row_s)
                 count_task += 1
