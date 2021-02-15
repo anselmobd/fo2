@@ -282,7 +282,8 @@ class MapaRefsForm(forms.Form):
         label='Referência do insumo',
         help_text='(código inteiro ou parcial)',
         max_length=5, min_length=2, required=False,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput(attrs={'type': 'string',
+                               'autofocus': 'autofocus'}))
 
     conta_estoque = forms.ModelChoiceField(
         label='Conta de estoque do insumo', required=False,
