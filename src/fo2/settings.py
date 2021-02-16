@@ -196,11 +196,11 @@ DATABASES_EXTRAS = {
     },
     'sh': {  # Systextil homologação
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'DBSYSTEX',
+        'NAME': 'db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
         'USER': 'systextil',
         'PASSWORD': DBPASS_SH,
-        'HOST': 'tussordb.ct1ld03gbnas.sa-east-1.rds.amazonaws.com',
-        'PORT': '1521',
+        'HOST': 'localhost',
+        'PORT': '14521',
     },
 }
 
