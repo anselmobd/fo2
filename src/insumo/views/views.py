@@ -1190,10 +1190,6 @@ class MapaPorSemanaNew(View):
 
 
 def mapa_novo_sem_ref_new(request, item, dtini, qtdsem):
-    return mapa_sem_ref_new(request, item, dtini, qtdsem, 'N')
-
-
-def mapa_sem_ref_new(request, item, dtini, qtdsem, versao='A'):
 
     def return_result(result):
         cached_result = result
@@ -1202,9 +1198,8 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem, versao='A'):
         entkeys.add(key_cache, (nivel, ref, cor, tam), timeout=entkeys._DAY*10)
         return cached_result
 
-    # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
-        'mapa_sem_ref_new', item, dtini, qtdsem, versao)
+        'mapa_novo_sem_ref_new', item, dtini, qtdsem)
     cached_result = cache.get(key_cache)
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)
@@ -1218,7 +1213,6 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem, versao='A'):
     tam = item[15:18]
     context = {
         'qtdsem': int(qtdsem),
-        'versao': versao,
     }
 
     if len(item) == 2:
@@ -1228,12 +1222,8 @@ def mapa_sem_ref_new(request, item, dtini, qtdsem, versao='A'):
 
         data = []
 
-        if versao == 'A':
-            datas = insumo.functions.mapa_por_insumo_dados(
-                cursor, nivel, ref, cor, tam)
-        else:
-            datas = insumo.functions.new_mapa_por_insumo_dados(
-                cursor, nivel, ref, cor, tam)
+        datas = insumo.functions.new_mapa_por_insumo_dados(
+            cursor, nivel, ref, cor, tam)
 
         if 'msg_erro' in datas:
             context.update({
