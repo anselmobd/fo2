@@ -73,17 +73,6 @@ urlpatterns = [
         views.mapa_sem_ref,
         name='mapa_por_sem_ref__get'),
 
-    url(r'^mapa_por_semana/$', views.MapaPorSemanaNew.as_view(),
-        name='mapa_por_semana'),
-    url(r'^mapa_por_semana/(?P<periodo>\d{1,4})/(?P<qtd_semanas>\d{1,2})/?$',
-        views.MapaPorSemanaNew.as_view(),
-        name='mapa_por_semana__get'),
-
-    url(r'^mapa_novo_por_semana_ref/(?P<item>(?:.{2}|\d\..{5}\..{6}\..{1,3}))/'
-        r'(?P<dtini>\d{8})/(?P<qtdsem>(?:\d{1,2}|--))/$',
-        views.mapa_novo_sem_ref_new,
-        name='mapa_novo_por_semana_ref__get'),
-
     url(r'^mapa_semanal/$',
         views.MapaSemanal.as_view(),
         name='mapa_semanal'),
