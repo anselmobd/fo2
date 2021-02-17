@@ -335,9 +335,3 @@ class MapaPorInsumo(View):
                 cursor, kwargs['nivel'], kwargs['ref'],
                 kwargs['cor'], kwargs['tam']))
         return render(request, self.template_name, context)
-
-
-class MapaPorInsumoCalc(MapaPorInsumo):
-    def __init__(self, *args, **kwargs):
-        super(MapaPorInsumoCalc, self).__init__(*args, **kwargs)
-        self.calc = True
