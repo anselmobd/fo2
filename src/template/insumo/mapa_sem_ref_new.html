@@ -30,11 +30,7 @@
         {% if row.comprar == 0 and row.compra_atrasada == 0 and row.movido == 0 %}flag_zerado{% endif %}
         ">
         <td>{{ row.nivel }}</td>
-        {% if versao == 'A' %}
           <td><a href="{% url 'insumo:mapa' row.nivel row.ref row.cor row.tam %}" target="_blank">{{ row.REF }}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></td>
-        {% else %}
-          <td><a href="{% url 'insumo:mapa_novo' row.nivel row.ref row.cor row.tam %}" target="_blank">{{ row.REF }}<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a></td>
-        {% endif %}
         <td>{{ row.COR }}</td>
         <td>{{ row.TAM }}</td>
         <td>{{ row.REP_STR }}</td>
