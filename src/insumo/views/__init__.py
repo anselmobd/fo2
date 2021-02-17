@@ -3,7 +3,6 @@ from .mapa_compras_necessidades import *
 from .mapa_compras_semana_ref_ import *
 from .mapa_compras_semana import *
 from .mapa_compras import *
-from .mapa_novo import *
 from .mapa import *
 from .ref import *
 from .rolo import *
