@@ -25,7 +25,7 @@ class MapaPorInsumo(View):
             'calc': self.calc,
         }
 
-        datas = insumo.functions.new_mapa_por_insumo_dados(
+        datas = insumo.functions.mapa_por_insumo_dados(
             cursor, nivel, ref, cor, tam, calc=self.calc)
         if 'msg_erro' in datas:
             context.update({
