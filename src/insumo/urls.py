@@ -35,11 +35,6 @@ urlpatterns = [
     url(r'^mapa_por_ref/$', views.MapaPorRefs.as_view(),
         name='mapa_por_ref'),
 
-    url(r'^mapa_OFF/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
-        r'(?P<tam>.{1,3})/$',
-        views.MapaPorInsumo.as_view(),
-        name='mapa_OFF'),
-
     url(r'^mapa_novo/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
         r'(?P<tam>.{1,3})/$',
         views.MapaNovoPorInsumo.as_view(),
