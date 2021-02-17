@@ -17,9 +17,9 @@ import insumo.queries as queries
 from insumo.functions.mapa import *
 
 
-def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
+def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
-    fo2logger.info('function new_mapa_por_insumo_dados')
+    fo2logger.info('function mapa_por_insumo_dados')
 
     def return_result(result):
         cached_result = result
@@ -34,7 +34,7 @@ def new_mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):
 
     # key_cache = make_key_cache(ignore=['calc'])
     key_cache = my_make_key_cache(
-        'new_mapa_por_insumo_dados', nivel, ref, cor, tam)
+        'mapa_por_insumo_dados', nivel, ref, cor, tam)
     if not calc:
         cached_result = cache.get(key_cache)
         if cached_result is not None:
