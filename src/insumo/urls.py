@@ -35,14 +35,14 @@ urlpatterns = [
     url(r'^mapa_por_ref/$', views.MapaPorRefs.as_view(),
         name='mapa_por_ref'),
 
-    url(r'^mapa_novo/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
+    url(r'^mapa/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
         r'(?P<tam>.{1,3})/$',
         views.MapaPorInsumo.as_view(),
-        name='mapa_novo'),
-    url(r'^mapa_novo_calc/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
+        name='mapa'),
+    url(r'^mapa_calc/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'
         r'(?P<tam>.{1,3})/$',
         views.MapaPorInsumoCalc.as_view(),
-        name='mapa_novo_calc'),
+        name='mapa_calc'),
 
     url(r'^mapa_necessidade_detalhe/(?P<nivel>[29])/(?P<ref>.{5})/'
         r'(?P<cor>.{6})/(?P<tam>.{1,3})/(?P<semana>.*)/$',
