@@ -8,12 +8,12 @@ from utils.functions.numbers import num_digits
 import insumo.functions
 
 
-class MapaNovoPorInsumo(View):
+class MapaPorInsumo(View):
     template_name = 'insumo/mapa.html'
     title_name = 'Mapa de compras (old2)'
 
     def __init__(self, *args, **kwargs):
-        super(MapaNovoPorInsumo, self).__init__(*args, **kwargs)
+        super(MapaPorInsumo, self).__init__(*args, **kwargs)
         self.calc = True
 
     def mount_context(self, cursor, nivel, ref, cor, tam):
@@ -339,7 +339,7 @@ class MapaNovoPorInsumo(View):
         return render(request, self.template_name, context)
 
 
-class MapaNovoPorInsumoCalc(MapaNovoPorInsumo):
+class MapaPorInsumoCalc(MapaPorInsumo):
     def __init__(self, *args, **kwargs):
-        super(MapaNovoPorInsumoCalc, self).__init__(*args, **kwargs)
+        super(MapaPorInsumoCalc, self).__init__(*args, **kwargs)
         self.calc = True
