@@ -36,10 +36,10 @@ class MapaPorInsumo(View):
         data_id = datas['data_id']
 
         for row in data_id:
-            row['REF'] = row['REF'] + ' - ' + row['DESCR']
-            row['COR'] = row['COR'] + ' - ' + row['DESCR_COR']
+            row['REF'] = f"{row['REF']} - {row['DESCR']}"
+            row['COR'] = f"{row['COR']} - {row['DESCR_COR']}"
             if row['TAM'] != row['DESCR_TAM']:
-                row['TAM'] = row['TAM'] + ' - ' + row['DESCR_TAM']
+                row['TAM'] = f"{row['TAM']} - {row['DESCR_TAM']}"
             if row['ULT_ENTRADA']:
                 row['ULT_ENTRADA'] = row['ULT_ENTRADA'].date()
             else:
@@ -52,8 +52,7 @@ class MapaPorInsumo(View):
                 row['DT_INVENTARIO'] = row['DT_INVENTARIO'].date()
             else:
                 row['DT_INVENTARIO'] = ''
-            row['REP_STR'] = '{}d. ({}s.)'.format(
-                row['REPOSICAO'], row['SEMANAS'])
+            row['REP_STR'] = f"{row['REPOSICAO']}d. ({row['SEMANAS']}s.)"
             if row['QUANT'] < row['STQ_MIN']:
                 row['QUANT|STYLE'] = 'font-weight: bold; color: red;'
 
