@@ -311,7 +311,8 @@ class TableHfs(object):
         styles = {}
         for idx, col in enumerate(cols, 1):
             if col in self.definition:
-                headers.append(self.definition[col].get('header', ''))
+                headers.append(
+                    self.definition[col].get('header', '') or col.capitalize())
                 fields.append(col)
                 if 'style' in self.definition[col]:
                     styles[idx] = self.definition[col]['style']
