@@ -35,7 +35,7 @@
     <tbody>
     {% for row in data %}
     <tr>
-      <td><a href="{% url 'comercial:ficha_cliente__get' row|get_item:'C_CGC' %}">{{ row|get_item:'C_CGC' }}</a></td>
+      <td><a href="{% url 'comercial:ficha_cliente__get' row|get_item:'C_CGC' %}">{{ row|get_item:'C_CGC_F' }}</a></td>
       <td>{{ row|get_item:'C_RSOC' }}</td>
     </tr>
     {% endfor %}

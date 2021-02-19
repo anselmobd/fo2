@@ -3,6 +3,8 @@ from pprint import pprint
 from django.shortcuts import render
 from django.views import View
 
+from utils.functions.format import format_cnpj, format_cpf
+
 import comercial.forms as forms
 import comercial.queries as queries
 
@@ -42,6 +44,10 @@ class FichaCliente(View):
                 context['conteudo'] = 'lista'
                 for row in data:
                     row['C_CGC'] = row['C_CGC'].strip()
+                    if len(row['C_CGC']) < 14:
+                        row['C_CGC_F'] = format_cpf(row['C_CGC'])
+                    else:
+                        row['C_CGC_F'] = format_cnpj(row['C_CGC'])
                 context['data'] = data
 
             else:
