@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from utils.functions import untuple_keys_concat
 from utils.functions.numbers import num_digits
 
 import insumo.functions
@@ -313,7 +314,9 @@ class MapaPorInsumo(View):
                            'RECEBIMENTO', 'RECEBIMENTO_ATRASADO',
                            'RECEBIMENTO_MOVIDO',
                            'COMPRAR', 'COMPRAR_PASSADO', 'RECEBER'],
-                'style': {(2, 3, 4, 5, 6, 7, 8, 9, 10): 'text-align: right;'},
+                'style': untuple_keys_concat({
+                    (2, 3, 4, 5, 6, 7, 8, 9, 10): 'text-align: right;',
+                }),
                 'data': data,
                 'arrows': arrows,
             })
