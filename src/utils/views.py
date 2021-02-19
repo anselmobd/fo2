@@ -327,6 +327,14 @@ class TableHfs(object):
                     styles[idx] = self.definition[col]['style']
         return headers, fields, styles
 
+    def hfs_dict(self, *cols):
+        headers, fields, style = self.hfs(*cols)
+        return {
+            'headers': headers,
+            'fields': fields,
+            'style': style,
+        }
+
 
 def hash_trail(*fields):
     hash_cache = ';'.join(map(format, fields))
