@@ -264,17 +264,22 @@ class TableHfs(object):
         }
     '''
 
-    def __init__(self, definition, keys=None):
+    def __init__(self, definition, keys=None, **kwargs):
         '''
-            se keys for uma lista de chaves como ['header', 'style']
+            se keys for uma lista de chaves como ['header', 'style'],
             a definition recebida estará no formato
             {
                 'field': ['Header', 'text-align: right;'],
                 ...
             }
             e deverá ser convertida para o formato do self.definition
+
+            se uma key na lista de chaves iniciar com '+' como ['header', '+style'],
+            valor do key será uma chave para um dicionário com esse nome
+            passado no kwargs
         '''
         super(TableHfs, self).__init__()
+        self.kwargs = kwargs
         self.cols_list = []
         if keys is None:
             self.definition = definition
@@ -287,7 +292,11 @@ class TableHfs(object):
             def_col = {}
             for i, key in enumerate(keys):
                 if i < len(definition[col]):
-                    def_col[key] = definition[col][i]
+                    if key.startswith('+'):
+                        key = key[1:]
+                        def_col[key] = self.kwargs[key][definition[col][i]]
+                    else:
+                        def_col[key] = definition[col][i]
             result[col] = def_col
         return result
 
