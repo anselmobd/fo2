@@ -275,6 +275,7 @@ class TableHfs(object):
             e deverá ser convertida para o formato do self.definition
         '''
         super(TableHfs, self).__init__()
+        self.cols_list = []
         if keys is None:
             self.definition = definition
         else:
@@ -291,18 +292,20 @@ class TableHfs(object):
         return result
 
     def cols(self, *cols):
-        self._cols = cols
+        self.cols_list = cols
 
     def add(self, pos, *cols):
         if isinstance(pos, int):
-            self._cols = self._cols[:pos] + cols + self._cols[pos:]
+            self.cols_list = self.cols_list[:pos] + cols + self.cols_list[pos:]
         else:
-            self._cols += (pos,) + cols
+            self.cols_list += (pos,) + cols
 
     def hfs(self, *cols):
         if len(cols) == 0:
-            if len(self._cols) != 0:
-                cols = self._cols
+            if len(self.cols_list) == 0:
+                cols = self.definition.keys()
+            else:
+                cols = self.cols_list
         headers = []
         fields = []
         styles = {}
