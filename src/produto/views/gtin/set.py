@@ -67,12 +67,12 @@ class SetGtinDefine(PermissionRequiredMixin, View):
                     return context
                 else:
                     context.update(
-                        {'erro': f'Erro ao atualizar GTIN [{result}]'})
+                        {'erro': f'Erro ao atualizar GTIN [{error_msg}]'})
                     return context
             else:
                 context.update({'msg': f'GTIN atualizado'})
 
-                objs_prod = classes.ObjsProduto(
+                _ = classes.ObjsProduto(
                     nivel, ref, tamanho, cor, new_gtin, self.request.user)
 
         return context
