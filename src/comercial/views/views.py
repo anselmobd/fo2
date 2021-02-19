@@ -41,12 +41,12 @@ class FichaCliente(View):
             elif len(data) > 1:
                 context['conteudo'] = 'lista'
                 for row in data:
-                    row['CNPJ'] = row['CNPJ'].strip()
+                    row['C_CGC'] = row['C_CGC'].strip()
                 context['data'] = data
 
             else:
-                cnpj = data[0]['CNPJ'].strip()
-                cliente = data[0]['CLIENTE'].strip()
+                cnpj = data[0]['C_CGC'].strip()
+                cliente = data[0]['C_RSOC'].strip()
 
                 context['conteudo'] = 'ficha'
                 if len(cnpj) == 14:
