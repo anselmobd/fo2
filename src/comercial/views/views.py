@@ -51,8 +51,8 @@ class FichaCliente(View):
                 context['data'] = data
 
             else:
-                cnpj = data[0]['C_CGC'].strip()
-                cliente = data[0]['C_RSOC'].strip()
+                cnpj = data[0]['c_cgc'].strip()
+                cliente = data[0]['c_rsoc'].strip()
 
                 context['conteudo'] = 'ficha'
                 if len(cnpj) == 14:
