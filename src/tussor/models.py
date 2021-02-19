@@ -62,3 +62,8 @@ class dis_dup(models.Model):
     d_xmlenvia = models.CharField(max_length=1)
     d_obsentr = models.CharField(max_length=80)
     d_descfat = models.DecimalField(max_digits=9, decimal_places=2)
+
+    class Meta:
+        db_table = "tussor_dis_dup"
+
+
