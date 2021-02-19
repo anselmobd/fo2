@@ -23,21 +23,26 @@ class Command(BaseCommand):
             self.stdout.flush()
 
     def add_arguments(self, parser):
-        parser.add_argument('tabela', help='cli ou dup')
-        parser.add_argument('qtd', type=int, help='quantidade de registros')
+        parser.add_argument('tabela', help='cli ou dup', nargs='?')
+        parser.add_argument('qtd', type=int, help='quantidade de registros', nargs='?')
 
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
 
-        self.my_println('---', v=2)
-        self.my_println('{}'.format(datetime.datetime.now()), v=2)
+        self.my_println('---')
+        self.my_println('{}'.format(datetime.datetime.now()))
 
         tabela = options['tabela']
         qtd = options['qtd']
+
+        if tabela:
+            self.my_println(f'tabela = {tabela}')
+        if qtd:
+            self.my_println(f'qtd = {qtd}')
 
         try:
             pass
         except Exception as e:
             raise CommandError(f"Exceção [{e}]")
 
-        self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'), v=2)
+        self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
