@@ -43,11 +43,11 @@ class FichaCliente(View):
             elif len(data) > 1:
                 context['conteudo'] = 'lista'
                 for row in data:
-                    row['C_CGC'] = row['C_CGC'].strip()
-                    if len(row['C_CGC']) < 14:
-                        row['C_CGC_F'] = format_cpf(row['C_CGC'])
+                    row['c_cgc'] = row['c_cgc'].strip()
+                    if len(row['c_cgc']) < 14:
+                        row['c_cgc_f'] = format_cpf(row['c_cgc'])
                     else:
-                        row['C_CGC_F'] = format_cnpj(row['C_CGC'])
+                        row['c_cgc_f'] = format_cnpj(row['c_cgc'])
                 context['data'] = data
 
             else:
