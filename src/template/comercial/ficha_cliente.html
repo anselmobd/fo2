@@ -18,57 +18,33 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if conteudo %}
-{% if conteudo == 'nada' %}
+  {% if conteudo == 'nada' %}
 
-  <h3>Cliente não encontrado</h3>
+    <h3>Cliente não encontrado</h3>
 
-{% elif conteudo == 'lista' %}
+  {% elif conteudo == 'lista' %}
 
-  <h3>Clientes encontrados</h3>
-  <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
-  </table>
-
-{% else %}
-
-  <br/>
-  <h3>CNPJ: {{ cnpj }}</h3>
-  <h3>Cliente: {{ cliente }}</h3>
-  {% if conteudo == 'zerado' %}
-    <h3>Nenhuma duplicata encontrada</h3>
+    <h3>Clientes encontrados</h3>
 
   {% else %}
-  <h3>{{ titulo }}</h3>
-  <table>
-    {% include "layout/html_thead.html" with data=headers only %}
-    <tbody>
-    {% for row in data %}
-    <tr>
-      <td>{{ row|get_item:'DUPLICATA' }}</td>
-      <td>{{ row|get_item:'STAT' }}</td>
-      <td>{{ row|get_item:'PEDIDO' }}</td>
-      <td>{{ row|get_item:'EMISSAO' }}</td>
-      <td>{{ row|get_item:'VENC_ORI' }}</td>
-      <td>{{ row|get_item:'VENCIMENTO' }}</td>
-      <td>{{ row|get_item:'PRORROGADO' }}</td>
-      <td style='text-align:right'>{{ row|get_item:'VALOR'|floatformat:2|intcomma }}</td>
-      <td style='text-align:right'>{{ row|get_item:'QUANT'|intcomma }}</td>
-      <td style='text-align:right'>{{ row|get_item:'QUANT_FAT'|intcomma }}</td>
-      <td>{{ row|get_item:'DATA_PAGO' }}</td>
-      <td style='text-align:right'>{{ row|get_item:'VALOR_PAGO'|floatformat:2|intcomma }}</td>
-      <td style='text-align:right'>{{ row|get_item:'JUROS'|floatformat:2|intcomma }}</td>
-      <td style='text-align:right'>{{ row|get_item:'ATRASO' }}</td>
-      <td>{{ row|get_item:'OP' }}</td>
-      <td>{{ row|get_item:'BANCO' }}</td>
-      <td>{{ row|get_item:'DESCONTO' }}</td>
-      <td>{{ row|get_item:'OBSERVACAO' }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+
+    <br/>
+    <h3>CNPJ: {{ cnpj }}</h3>
+    <h3>Cliente: {{ cliente }}</h3>
+
+    {% if conteudo == 'zerado' %}
+
+      <h3>Nenhuma duplicata encontrada</h3>
+
+    {% endif %}
 
   {% endif %}
-{% endif %}
+
+  {% if conteudo == 'lista' or conteudo == 'ficha' %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+    </table>
+  {% endif %}
 {% endif %}
 {% endblock %}
