@@ -26,20 +26,8 @@
 
   <h3>Clientes encontrados</h3>
   <table>
-    <thead>
-      <tr>
-        <th>CNPJ</th>
-        <th>Razão Social</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for row in data %}
-    <tr>
-      <td><a href="{% url 'comercial:ficha_cliente__get' row|get_item:'c_cgc' %}">{{ row|get_item:'c_cgc_f' }}</a></td>
-      <td>{{ row|get_item:'c_rsoc' }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
   </table>
 
 {% else %}

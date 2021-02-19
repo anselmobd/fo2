@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from utils.functions.format import format_cnpj, format_cpf
@@ -41,14 +42,23 @@ class FichaCliente(View):
                 context['conteudo'] = 'nada'
 
             elif len(data) > 1:
-                context['conteudo'] = 'lista'
                 for row in data:
                     row['c_cgc'] = row['c_cgc'].strip()
+                    link = reverse(
+                        "comercial:ficha_cliente__get",
+                        args=[row['c_cgc']],
+                    )
                     if len(row['c_cgc']) < 14:
-                        row['c_cgc_f'] = format_cpf(row['c_cgc'])
+                        row['c_cgc'] = format_cpf(row['c_cgc'])
                     else:
-                        row['c_cgc_f'] = format_cnpj(row['c_cgc'])
-                context['data'] = data
+                        row['c_cgc'] = format_cnpj(row['c_cgc'])
+                    row['c_cgc|LINK'] = link
+                context.update({
+                    'conteudo': 'lista',
+                    'headers': ['CNPJ', 'Razão Social'],
+                    'fields': ['c_cgc', 'c_rsoc'],
+                    'data': data,
+                })
 
             else:
                 cnpj = data[0]['c_cgc'].strip()
