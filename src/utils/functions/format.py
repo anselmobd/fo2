@@ -22,6 +22,6 @@ def format_cnpj(cnpj9, cnpj4=None, cnpj2=None, tamanho=14):
                 return f"{cnpj[:8]}/{cnpj[8:12]}-{cnpj[12:14]}"
             else:
                 cnpj = f"{cnpj9:015d}"
-                return f"{cnpj[:9]}/{cnpj[8:12]}-{cnpj[12:14]}"
+                return f"{cnpj[:9]}/{cnpj[9:13]}-{cnpj[13:15]}"
     except Exception:
         return ""
