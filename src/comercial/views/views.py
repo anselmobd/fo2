@@ -110,13 +110,10 @@ class FichaCliente(View):
                     'c': 'text-align: center;',
                 }
             )
-
-            headers, fields, style = table.hfs()
+            context.update(table.hfs_dict())
             context.update({
                 'conteudo': 'ficha',
-                'headers': headers,
-                'fields': fields,
-                'style': style,
                 'data': data,
             })
+ 
         return render(request, self.template_name, context)
