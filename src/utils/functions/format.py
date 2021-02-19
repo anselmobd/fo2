@@ -25,3 +25,18 @@ def format_cnpj(cnpj9, cnpj4=None, cnpj2=None, tamanho=14):
                 return f"{cnpj[:9]}/{cnpj[9:13]}-{cnpj[13:15]}"
     except Exception:
         return ""
+
+def format_cpf(cpf9, cpf2=None):
+    try:
+        if isinstance(cpf9, str):
+            cpf9 = int(cpf9)
+        if cpf2:
+            if isinstance(cpf2, str):
+                cpf2 = int(cpf2)
+        if cpf2:
+            return f"{cpf9:09d}-{cpf2:02d}"
+        else:
+            cpf = f"{cpf9:011d}"
+            return f"{cpf[:9]}-{cpf[9:11]}"
+    except Exception:
+        return ""
