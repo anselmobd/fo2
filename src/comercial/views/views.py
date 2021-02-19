@@ -4,7 +4,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from utils.functions import untuple_keys_concat
 from utils.functions.format import format_cnpj, format_cpf
 from utils.views import TableHfs
 
@@ -85,37 +84,39 @@ class FichaCliente(View):
                 if row['data_pago'].year == 1899:
                     row['data_pago'] = '-'
 
+            _ = ''
             table = TableHfs({
                 'duplicata': [],
-                'stat': ['Stat.'],
+                'stat': ['Stat.', 'c'],
                 'pedido': [],
-                'emissao': ['Emissão'],
-                'venc_ori': ['Venc. orig.'],
-                'vencimento': [],
-                'prorrogado': ['P.'],
-                'valor': [],
-                'quant': ['Quant.'],
-                'quant_fat': ['Quant. fat.'],
-                'data_pago': [],
-                'valor_pago': ['Valor pago'],
-                'juros': [],
-                'atraso': [],
-                'op': ['Op.'],
-                'banco': [],
-                'desconto': [],
+                'emissao': ['Emissão', 'c'],
+                'venc_ori': ['Venc. orig.', 'c'],
+                'vencimento': [_, 'c'],
+                'prorrogado': ['P.', 'c'],
+                'valor': [_, 'r'],
+                'quant': ['Quant.', 'r'],
+                'quant_fat': ['Quant. fat.', 'r'],
+                'data_pago': [_, 'c'],
+                'valor_pago': ['Valor pago', 'r'],
+                'juros': [_, 'r'],
+                'atraso': [_, 'r'],
+                'op': ['Op.', 'c'],
+                'banco': [_, 'c'],
+                'desconto': [_, 'c'],
                 'observacao': ['Observação'],},
-                ['header', 'style'],
+                ['header', '+style'],
+                style = {
+                    'r': 'text-align: right;',
+                    'c': 'text-align: center;',
+                }
             )
 
-            headers, fields, _ = table.hfs()
+            headers, fields, style = table.hfs()
             context.update({
                 'conteudo': 'ficha',
                 'headers': headers,
                 'fields': fields,
-                'style': untuple_keys_concat({
-                    (8, 9, 10, 12, 13, 14): 'text-align: right;',
-                    (2, 4, 5, 6, 7, 11, 15, 16, 17): 'text-align: center;',
-                }),
+                'style': style,
                 'data': data,
             })
         return render(request, self.template_name, context)
