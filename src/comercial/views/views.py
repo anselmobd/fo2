@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from utils.functions import untuple_keys_concat
 from utils.functions.format import format_cnpj, format_cpf
 
 import comercial.forms as forms
@@ -33,6 +34,7 @@ class FichaCliente(View):
         form = self.Form_class(request.POST)
         if 'cnpj' in kwargs:
             form.data['cnpj'] = kwargs['cnpj']
+
         context['form'] = form
         if form.is_valid():
             cnpj = form.cleaned_data['cnpj']
@@ -40,81 +42,94 @@ class FichaCliente(View):
             data = queries.busca_clientes(cnpj)
             if len(data) == 0:
                 context['conteudo'] = 'nada'
+                return render(request, self.template_name, context)
 
-            elif len(data) > 1:
-                for row in data:
-                    row['c_cgc'] = row['c_cgc'].strip()
-                    link = reverse(
-                        "comercial:ficha_cliente__get",
-                        args=[row['c_cgc']],
-                    )
-                    if len(row['c_cgc']) < 14:
-                        row['c_cgc'] = format_cpf(row['c_cgc'])
-                    else:
-                        row['c_cgc'] = format_cnpj(row['c_cgc'])
-                    row['c_cgc|LINK'] = link
+
+            for row in data:
+                row['c_cgc_num'] = row['c_cgc'].strip()
+                link = reverse(
+                    "comercial:ficha_cliente__get",
+                    args=[row['c_cgc_num']],
+                )
+                if len(row['c_cgc_num']) < 14:
+                    row['c_cgc'] = format_cpf(row['c_cgc_num'])
+                else:
+                    row['c_cgc'] = format_cnpj(row['c_cgc_num'])
+                row['c_cgc|LINK'] = link
+                row['c_rsoc'] = row['c_rsoc'].strip()
+
+            if len(data) > 1:
                 context.update({
                     'conteudo': 'lista',
                     'headers': ['CNPJ', 'Razão Social'],
                     'fields': ['c_cgc', 'c_rsoc'],
                     'data': data,
                 })
+                return render(request, self.template_name, context)
 
-            else:
-                cnpj = data[0]['c_cgc'].strip()
-                cliente = data[0]['c_rsoc'].strip()
+            context.update({
+                'cnpj': data[0]['c_cgc'],
+                'cliente': data[0]['c_rsoc'],
+            })
 
-                context['conteudo'] = 'ficha'
-                if len(cnpj) == 14:
-                    context['cnpj'] = '{}/{}-{}'.format(
-                        cnpj[0:8],
-                        cnpj[8:12],
-                        cnpj[12:14])
-                else:
-                    context['cnpj'] = cnpj
-                context['cliente'] = cliente
+            data = queries.ficha_cliente(data[0]['c_cgc_num'])
+            if len(data) == 0:
+                context['conteudo'] = 'zerado'
+                return render(request, self.template_name, context)
 
-                data = queries.ficha_cliente(cnpj)
-                if len(data) == 0:
-                    context['conteudo'] = 'zerado'
-                else:
-                    formats = {
-                        'EMISSAO': '%d/%m/%Y',
-                        'VENC_ORI': '%d/%m/%Y',
-                        'VENCIMENTO': '%d/%m/%Y',
-                        'DATA_PAGO': '%d/%m/%Y',
-                    }
-                    for row in data:
-                        for field in row:
-                            if field in formats:
-                                if row[field].year == 1899:
-                                    row[field] = '-'
-                                else:
-                                    row[field] = \
-                                        ('{:'+formats[field]+'}').format(
-                                            row[field])
-                    cliente = data[0]
-                    context.update({
-                        'headers': (
-                            'Duplicata',
-                            'Stat.',
-                            'Pedido',
-                            'Emissão',
-                            'Venc. Orig.',
-                            'Vencimento',
-                            'P.',
-                            'Valor',
-                            'Quant.',
-                            'Quant.Fat.',
-                            'Pagamento',
-                            'Valor pago',
-                            'Juros',
-                            'Atraso',
-                            'OP',
-                            'Banco',
-                            'Desconto',
-                            'Observação',
-                            ),
-                        'data': data,
-                    })
+            for row in data:
+                row['VALOR|DECIMALS'] = 2
+                row['VALOR_PAGO|DECIMALS'] = 2
+                row['JUROS|DECIMALS'] = 2
+                if row['DATA_PAGO'].year == 1899:
+                    row['DATA_PAGO'] = '-'
+
+            context.update({
+                'conteudo': 'ficha',
+                'headers': (
+                    'Duplicata',
+                    'Stat.',
+                    'Pedido',
+                    'Emissão',
+                    'Venc. Orig.',
+                    'Vencimento',
+                    'P.',
+                    'Valor',
+                    'Quant.',
+                    'Quant.Fat.',
+                    'Pagamento',
+                    'Valor pago',
+                    'Juros',
+                    'Atraso',
+                    'OP',
+                    'Banco',
+                    'Desconto',
+                    'Observação',
+                ),
+                'fields': (
+                    'DUPLICATA',
+                    'STAT',
+                    'PEDIDO',
+                    'EMISSAO',
+                    'VENC_ORI',
+                    'VENCIMENTO',
+                    'PRORROGADO',
+                    'VALOR',
+                    'QUANT',
+                    'QUANT_FAT',
+                    'DATA_PAGO',
+                    'VALOR_PAGO',
+                    'JUROS',
+                    'ATRASO',
+                    'OP',
+                    'BANCO',
+                    'DESCONTO',
+                    'OBSERVACAO',
+                ),
+                'style': untuple_keys_concat({
+                    (8, 9, 10, 12, 13, 14): 'text-align: right;',
+                    (2, 4, 5, 6, 7, 11, 16, 17): 'text-align: center;',
+                }),
+                'data': data,
+            })
         return render(request, self.template_name, context)
