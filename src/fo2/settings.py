@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'remote_files',
     # 'systextil',
     'ti',
+    'tussor',
     'utils',
 ]
 
