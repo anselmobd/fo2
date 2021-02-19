@@ -1,14 +1,10 @@
 import datetime
-import re
-from pprint import pprint, pformat
+from pprint import pprint
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 
-import produto.queries
-
-import estoque.queries
-from estoque.functions import ajuste_por_inventario
+import comercial.queries
 
 
 class Command(BaseCommand):
@@ -47,6 +43,9 @@ class Command(BaseCommand):
 
     def sync_cli(self):
         self.my_println('sync_cli', v=2)
+        dados = comercial.queries.busca_clientes()
+        self.my_println(f"len(dados) = {len(dados)}", v=2)
+
 
     def sync_dup(self):
         self.my_println('sync_dup', v=2)

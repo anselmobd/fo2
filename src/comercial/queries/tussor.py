@@ -30,7 +30,7 @@ def busca_clientes(cnpj=None, all=None):
 
     cursor = conn.cursor()
     sql = f"""
-        SELECT FIRST 10000
+        SELECT
           {fields} -- fields
         FROM DIS_CLI c
         WHERE 1=1
