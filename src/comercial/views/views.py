@@ -78,11 +78,11 @@ class FichaCliente(View):
                 return render(request, self.template_name, context)
 
             for row in data:
-                row['VALOR|DECIMALS'] = 2
-                row['VALOR_PAGO|DECIMALS'] = 2
-                row['JUROS|DECIMALS'] = 2
-                if row['DATA_PAGO'].year == 1899:
-                    row['DATA_PAGO'] = '-'
+                row['valor|DECIMALS'] = 2
+                row['valor_pago|DECIMALS'] = 2
+                row['juros|DECIMALS'] = 2
+                if row['data_pago'].year == 1899:
+                    row['data_pago'] = '-'
 
             context.update({
                 'conteudo': 'ficha',
@@ -91,12 +91,12 @@ class FichaCliente(View):
                     'Stat.',
                     'Pedido',
                     'Emissão',
-                    'Venc. Orig.',
+                    'Venc. orig.',
                     'Vencimento',
                     'P.',
                     'Valor',
                     'Quant.',
-                    'Quant.Fat.',
+                    'Quant. fat.',
                     'Pagamento',
                     'Valor pago',
                     'Juros',
@@ -107,24 +107,24 @@ class FichaCliente(View):
                     'Observação',
                 ),
                 'fields': (
-                    'DUPLICATA',
-                    'STAT',
-                    'PEDIDO',
-                    'EMISSAO',
-                    'VENC_ORI',
-                    'VENCIMENTO',
-                    'PRORROGADO',
-                    'VALOR',
-                    'QUANT',
-                    'QUANT_FAT',
-                    'DATA_PAGO',
-                    'VALOR_PAGO',
-                    'JUROS',
-                    'ATRASO',
-                    'OP',
-                    'BANCO',
-                    'DESCONTO',
-                    'OBSERVACAO',
+                    'duplicata',
+                    'stat',
+                    'pedido',
+                    'emissao',
+                    'venc_ori',
+                    'vencimento',
+                    'prorrogado',
+                    'valor',
+                    'quant',
+                    'quant_fat',
+                    'data_pago',
+                    'valor_pago',
+                    'juros',
+                    'atraso',
+                    'op',
+                    'banco',
+                    'desconto',
+                    'observacao',
                 ),
                 'style': untuple_keys_concat({
                     (8, 9, 10, 12, 13, 14): 'text-align: right;',
