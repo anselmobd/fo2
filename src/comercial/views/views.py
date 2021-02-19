@@ -6,6 +6,7 @@ from django.views import View
 
 from utils.functions import untuple_keys_concat
 from utils.functions.format import format_cnpj, format_cpf
+from utils.views import TableHfs
 
 import comercial.forms as forms
 import comercial.queries as queries
@@ -84,51 +85,36 @@ class FichaCliente(View):
                 if row['data_pago'].year == 1899:
                     row['data_pago'] = '-'
 
+            table = TableHfs({
+                'duplicata': ['Duplicata'],
+                'stat': ['Stat.'],
+                'pedido': ['Pedido'],
+                'emissao': ['Emissão'],
+                'venc_ori': ['Venc. orig.'],
+                'vencimento': ['Vencimento'],
+                'prorrogado': ['P.'],
+                'valor': ['Valor'],
+                'quant': ['Quant.'],
+                'quant_fat': ['Quant. fat.'],
+                'data_pago': ['Pagamento'],
+                'valor_pago': ['Valor pago'],
+                'juros': ['Juros'],
+                'atraso': ['Atraso'],
+                'op': ['Op.'],
+                'banco': ['Banco'],
+                'desconto': ['Desconto'],
+                'observacao': ['Observação'],},
+                ['header', 'style'],
+            )
+
+            headers, fields, _ = table.hfs()
             context.update({
                 'conteudo': 'ficha',
-                'headers': (
-                    'Duplicata',
-                    'Stat.',
-                    'Pedido',
-                    'Emissão',
-                    'Venc. orig.',
-                    'Vencimento',
-                    'P.',
-                    'Valor',
-                    'Quant.',
-                    'Quant. fat.',
-                    'Pagamento',
-                    'Valor pago',
-                    'Juros',
-                    'Atraso',
-                    'OP',
-                    'Banco',
-                    'Desconto',
-                    'Observação',
-                ),
-                'fields': (
-                    'duplicata',
-                    'stat',
-                    'pedido',
-                    'emissao',
-                    'venc_ori',
-                    'vencimento',
-                    'prorrogado',
-                    'valor',
-                    'quant',
-                    'quant_fat',
-                    'data_pago',
-                    'valor_pago',
-                    'juros',
-                    'atraso',
-                    'op',
-                    'banco',
-                    'desconto',
-                    'observacao',
-                ),
+                'headers': headers,
+                'fields': fields,
                 'style': untuple_keys_concat({
                     (8, 9, 10, 12, 13, 14): 'text-align: right;',
-                    (2, 4, 5, 6, 7, 11, 16, 17): 'text-align: center;',
+                    (2, 4, 5, 6, 7, 11, 15, 16, 17): 'text-align: center;',
                 }),
                 'data': data,
             })
