@@ -6,21 +6,35 @@ from utils.functions.models import rows_to_dict_list
 from utils.functions.data import connect_fdb
 
 
-def busca_clientes(cnpj):
+def busca_clientes(cnpj=None, all=None):
     erros = []
     conn = connect_fdb(settings.DATABASES_EXTRAS, 'f1', erros)
     if not conn:
         pprint(erros)
         return []
 
+    filter_cnpj = ""
+    if cnpj:
+      filter_cnpj = f""" --
+        AND ( c.C_CGC STARTING WITH '{cnpj}'
+            OR c.C_RSOC CONTAINING '{cnpj}' )
+      """
+
+    if all:
+      fields = 'c.*'
+    else:
+      fields = """ --
+          c.C_CGC
+        , c.C_RSOC
+      """
+
     cursor = conn.cursor()
     sql = f"""
         SELECT FIRST 10000
-          c.C_CGC CNPJ
-        , c.C_RSOC CLIENTE
+          {fields} -- fields
         FROM DIS_CLI c
-        WHERE c.C_CGC STARTING WITH '{cnpj[:14]}'
-           OR c.C_RSOC CONTAINING '{cnpj}'
+        WHERE 1=1
+          {filter_cnpj} -- filter_cnpj
         ORDER BY
           c.C_CGC
     """
