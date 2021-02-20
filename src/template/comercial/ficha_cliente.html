@@ -43,7 +43,7 @@
   {% if conteudo == 'lista' or conteudo == 'ficha' %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data style=style decimals=decimals only %}
     </table>
   {% endif %}
 {% endif %}

@@ -78,9 +78,6 @@ class FichaCliente(View):
                 return render(request, self.template_name, context)
 
             for row in data:
-                row['valor|DECIMALS'] = 2
-                row['valor_pago|DECIMALS'] = 2
-                row['juros|DECIMALS'] = 2
                 if row['data_pago'].year == 1899:
                     row['data_pago'] = '-'
 
@@ -114,6 +111,11 @@ class FichaCliente(View):
             context.update({
                 'conteudo': 'ficha',
                 'data': data,
+                'decimals': {
+                    8: 2,
+                    12: 2,
+                    13: 2,
+                }
             })
  
         return render(request, self.template_name, context)
