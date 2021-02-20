@@ -252,7 +252,7 @@ def group_rowspan(data, group):
         del list(group)[:]
 
 
-class TableHfs(object):
+class TableDefs(object):
     '''
         formato do self.definition:
         {
@@ -278,7 +278,7 @@ class TableHfs(object):
             valor do key será uma chave para um dicionário com esse nome
             passado no kwargs
         '''
-        super(TableHfs, self).__init__()
+        super(TableDefs, self).__init__()
         self.kwargs = kwargs
         self.cols_list = []
         if keys is None:
@@ -349,3 +349,9 @@ def request_hash_trail(request, *fields):
         request.session.session_key,
     ]
     return hash_trail(*params)
+
+
+class TableHfs(TableDefs):
+
+    def __init__(self, definition, keys=None, **kwargs):
+        super(TableHfs, self).__init__(definition, keys, **kwargs)
