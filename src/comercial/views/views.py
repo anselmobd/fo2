@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views import View
 
 from utils.functions.format import format_cnpj, format_cpf
-from utils.views import TableHfs
+from utils.views import TableDefs
 
 import comercial.forms as forms
 import comercial.queries as queries
@@ -82,7 +82,7 @@ class FichaCliente(View):
                     row['data_pago'] = '-'
 
             _ = ''
-            table = TableHfs({
+            table = TableDefs({
                 'duplicata': [],
                 'stat': ['Stat.', 'c'],
                 'pedido': [],
@@ -90,32 +90,27 @@ class FichaCliente(View):
                 'venc_ori': ['Venc. orig.', 'c'],
                 'vencimento': [_, 'c'],
                 'prorrogado': ['P.', 'c'],
-                'valor': [_, 'r'],
+                'valor': [_, 'r', 2],
                 'quant': ['Quant.', 'r'],
                 'quant_fat': ['Quant. fat.', 'r'],
                 'data_pago': [_, 'c'],
-                'valor_pago': ['Valor pago', 'r'],
-                'juros': [_, 'r'],
+                'valor_pago': ['Valor pago', 'r', 2],
+                'juros': [_, 'r', 2],
                 'atraso': [_, 'r'],
                 'op': ['Op.', 'c'],
                 'banco': [_, 'c'],
                 'desconto': [_, 'c'],
                 'observacao': ['Observação'],},
-                ['header', '+style'],
+                ['header', '+style', 'decimals'],
                 style = {
                     'r': 'text-align: right;',
                     'c': 'text-align: center;',
                 }
             )
-            context.update(table.hfs_dict())
+            context.update(table.hfsd_dict())
             context.update({
                 'conteudo': 'ficha',
                 'data': data,
-                'decimals': {
-                    8: 2,
-                    12: 2,
-                    13: 2,
-                }
             })
  
         return render(request, self.template_name, context)
