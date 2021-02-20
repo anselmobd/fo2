@@ -8,10 +8,10 @@
     {% endwith %}
     {% endspaceless %}>{% spaceless %}
     {% if row|get_item:field %}
-      {% include "layout/field_decimals.html" with row=row field=field only %}
+      {% include "layout/field_decimals.html" with row=row field=field count=count decimals=decimals only %}
     {% endif %}
     {% endspaceless %}{% include "layout/field_glyphicon.html" with row=row field=field only %}</a>
   {% else %}
-    {% include "layout/field_decimals.html" with row=row field=field only %}
+    {% include "layout/field_decimals.html" with row=row field=field count=count decimals=decimals only %}
   {% endif %}
 {% endwith %}
