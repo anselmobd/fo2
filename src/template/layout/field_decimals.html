@@ -1,9 +1,19 @@
 {% with field|add:'|DECIMALS' as field_decimals %}
-  {% with row|get_item:field_decimals as decimals %}
-    {% if decimals %}
-      {{ row|get_item:field|floatformat:decimals|transp_decimals|safe }}
+  {% with row|get_item:field_decimals as fdecimals %}
+    {% if fdecimals %}
+      {{ row|get_item:field|floatformat:fdecimals|transp_decimals|safe }}
     {% else %}
-      {{ row|get_item:field }}
+      {% if decimals %}
+        {% if decimals|get_item:count %}
+          {% with decimals|get_item:count as fdecimals %}
+            {{ row|get_item:field|floatformat:fdecimals|transp_decimals|safe }}
+          {% endwith %}
+        {% else %}
+          {{ row|get_item:field }}
+        {% endif %}
+      {% else %}
+        {{ row|get_item:field }}
+      {% endif %}
     {% endif %}
   {% endwith %}
 {% endwith %}
