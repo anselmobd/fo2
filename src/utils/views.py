@@ -309,30 +309,33 @@ class TableDefs(object):
         else:
             self.cols_list += (pos,) + cols
 
-    def hfs(self, *cols):
+    def defs(self, *cols):
         if len(cols) == 0:
             if len(self.cols_list) == 0:
                 cols = self.definition.keys()
             else:
                 cols = self.cols_list
-        headers = []
-        fields = []
-        styles = {}
+        self.headers = []
+        self.fields = []
+        self.style = {}
         for idx, col in enumerate(cols, 1):
             if col in self.definition:
-                headers.append(
+                self.headers.append(
                     self.definition[col].get('header', '') or col.capitalize())
-                fields.append(col)
+                self.fields.append(col)
                 if 'style' in self.definition[col]:
-                    styles[idx] = self.definition[col]['style']
-        return headers, fields, styles
+                    self.style[idx] = self.definition[col]['style']
+
+    def hfs(self, *cols):
+        self.defs(*cols)
+        return self.headers, self.fields, self.style
 
     def hfs_dict(self, *cols):
-        headers, fields, style = self.hfs(*cols)
+        self.defs(*cols)
         return {
-            'headers': headers,
-            'fields': fields,
-            'style': style,
+            'headers': self.headers,
+            'fields': self.fields,
+            'style': self.style,
         }
 
 
