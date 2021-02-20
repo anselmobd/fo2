@@ -318,6 +318,7 @@ class TableDefs(object):
         self.headers = []
         self.fields = []
         self.style = {}
+        self.decimals = {}
         for idx, col in enumerate(cols, 1):
             if col in self.definition:
                 self.headers.append(
@@ -325,6 +326,8 @@ class TableDefs(object):
                 self.fields.append(col)
                 if 'style' in self.definition[col]:
                     self.style[idx] = self.definition[col]['style']
+                if 'decimals' in self.definition[col]:
+                    self.decimals[idx] = self.definition[col]['decimals']
 
     def hfs(self, *cols):
         self.defs(*cols)
@@ -336,6 +339,19 @@ class TableDefs(object):
             'headers': self.headers,
             'fields': self.fields,
             'style': self.style,
+        }
+
+    def hfsd(self, *cols):
+        self.defs(*cols)
+        return self.headers, self.fields, self.style, self.decimals
+
+    def hfsd_dict(self, *cols):
+        self.defs(*cols)
+        return {
+            'headers': self.headers,
+            'fields': self.fields,
+            'style': self.style,
+            'decimals': self.decimals,
         }
 
 
