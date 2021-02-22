@@ -8,10 +8,13 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from insumo.queries import insumos_de_produtos_em_dual
+from fo2.connections import db_conn
+
 from geral.functions import config_get_value
 from utils.classes import Perf
 from utils.views import totalize_grouped_data, totalize_data, group_rowspan
+
+from insumo.queries import insumos_de_produtos_em_dual
 
 import lotes.forms as forms
 import lotes.functions as functions
@@ -348,7 +351,7 @@ class Op(View):
             form.data['op'] = kwargs['op']
         if form.is_valid():
             op = form.cleaned_data['op']
-            cursor = connections['so'].cursor()
+            cursor = db_conn('so').cursor()
             context.update(self.mount_context(cursor, op, request))
         context['form'] = form
         return render(request, self.template_name, context)
@@ -493,7 +496,7 @@ class ComponentesDeOp(View):
             form.data['op'] = kwargs['op']
         if form.is_valid():
             op = form.cleaned_data['op']
-            cursor = connections['so'].cursor()
+            cursor = db_conn('so').cursor()
             context.update(self.mount_context(cursor, op))
         context['form'] = form
         return render(request, self.template_name, context)
@@ -528,7 +531,7 @@ class OpConserto(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so').cursor()
         context.update(self.mount_context(cursor))
         return render(request, self.template_name, context)
 
@@ -607,7 +610,7 @@ class OpPerda(View):
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
             detalhe = form.cleaned_data['detalhe']
-            cursor = connections['so'].cursor()
+            cursor = db_conn('so').cursor()
             context.update(self.mount_context(
                 cursor, data_de, data_ate, detalhe))
         context['form'] = form
@@ -658,7 +661,7 @@ class ListaLotes(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             op = form.cleaned_data['op']
-            cursor = connections['so'].cursor()
+            cursor = db_conn('so').cursor()
             context.update(self.mount_context(cursor, op))
         context['form'] = form
         return render(request, self.template_name, context)
@@ -678,7 +681,7 @@ class CorrigeSequenciamento(PermissionRequiredMixin, View):
             'op': op
         })
 
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so').cursor()
 
         data = lotes.queries.lote.get_lotes(cursor, op=op, order='o')
         if len(data) == 0:
