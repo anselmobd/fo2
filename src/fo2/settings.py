@@ -51,6 +51,7 @@ ALLOWED_HOSTS = [
     # development
     '192.168.1.242', '192.168.1.225', 'localhost', '192.168.15.10',
     'agator.local', 'tussor.local',
+    'alteragator.local', 'altertussor.local',
 ]
 
 # Application definition
