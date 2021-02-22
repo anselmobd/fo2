@@ -66,6 +66,10 @@ def get_empresa(request):
     return 'tussor'
 
 
+def is_alternativa(request):
+    return request.get_host().startswith('alter')
+
+
 def has_permission(request, permission):
     can = False
     user = request_user(request)
