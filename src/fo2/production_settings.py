@@ -29,6 +29,12 @@ DATABASES = {
         'HOST': '192.168.1.28',
         'PORT': '1521',
     },
+    'sn': {  # Systextil OC (nuvem)
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': '10.0.0.3:1521/db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
+        'USER': 'systextil',
+        'PASSWORD': DBPASS_SH,
+    },
     'persona': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': "nasajon_db3_20200617_163619",
