@@ -1,9 +1,10 @@
 from pprint import pprint
 
 from django import forms
-from django.db import connections
 from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
+
+from fo2.connections import db_conn
 
 from utils.functions.digits import *
 from utils.functions.strings import only_digits
@@ -106,6 +107,10 @@ class EnderecarForm(forms.Form):
         required=False,
         widget=forms.HiddenInput())
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(EnderecarForm, self).__init__(*args, **kwargs)
+
     def clean_endereco(self):
         endereco = self.cleaned_data['endereco'].upper()
         if not endereco[0].isalpha():
@@ -122,7 +127,7 @@ class EnderecarForm(forms.Form):
     def clean_lote(self):
         lote = only_digits(self.cleaned_data.get('lote', ''))
 
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so', self.request).cursor()
         periodo = lote[:4]
         ordem_confeccao = lote[-5:]
         lote_sys = lotes.queries.lote.existe_lote(
