@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_conn
 
 from utils.functions.views import (
     cleanned_fields_to_context,
@@ -27,7 +28,7 @@ class Ob(View):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
-        self.cursor = connections['so'].cursor()
+        self.cursor = db_conn('so', self.request).cursor()
 
         dados = beneficia.queries.busca_ob(self.cursor, self.context['ob'])
         if len(dados) == 0:
