@@ -43,13 +43,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     # production
-    'intranet', 'intranet.tussor', 'intranet.tussor.com.br', '192.168.1.96',
-    'intranet.agator.com', 'intranet.agator.com.br',
-    'intranet.cuecasduomo.com', 'intranet.cuecasduomo.com.br',
+    '192.168.1.96', '177.23.138.90', ' 192.141.163.26',
     'in.cuecasduomo.com.br', 'vox.cuecasduomo.com', 'velosat.cuecasduomo.com',
-    '177.23.138.90', ' 192.141.163.26',
+    'intranet', 'intranet.tussor',
+    'alterintranet', 'alterintranet.tussor',
+    'intranet.tussor.com.br',
+    'alterintranet.tussor.com.br',
+    'intranet.cuecasduomo.com', 'intranet.cuecasduomo.com.br',
+    'alterintranet.cuecasduomo.com', 'alterintranet.cuecasduomo.com.br',
+    'intranet.agator.com', 'intranet.agator.com.br',
+    'alterintranet.agator.com', 'alterintranet.agator.com.br',
     # development
-    '192.168.1.242', '192.168.1.225', 'localhost', '192.168.15.10',
+    '192.168.1.242', '192.168.1.225', '192.168.15.10',
+    'localhost',
     'agator.local', 'tussor.local',
     'alteragator.local', 'altertussor.local',
 ]
