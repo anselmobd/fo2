@@ -202,11 +202,15 @@
     <h3>Telas de ajuda</h3>
     <p>Control-clique</p>
     <img src="{% static "img/ctrl_left.png" %}" alt="chrome">
-    <p>Clicando com o botão direito no link no Firefox</p>
-    <img src="{% static "img/firefox.png" %}" alt="firefox">
-    <p>Clicando com o botão direito no link no Chrome</p>
-    <img src="{% static "img/chrome.png" %}" alt="chrome">
-  </div>
+    <div id="img_firefox" style="display: none;">
+      <p>Clicando com o botão direito no link no Firefox</p>
+      <img src="{% static "img/firefox.png" %}" alt="firefox">
+    </div>
+    <div id="img_chrome" style="display: none;">
+      <p>Clicando com o botão direito no link no Chrome</p>
+      <img src="{% static "img/chrome.png" %}" alt="chrome">
+    </div>
+</div>
   <hr>
   <!-- <p id="porque" class="text-align: justify;">Originalmente,
     o link para o "SystêxtilERP",
@@ -226,5 +230,13 @@
     2 sistemas operacionais, em várias versões,
     e 2 paginadores homologados, em várias versões.
   </p> -->
+  <script type="text/javascript">
+    if (navigator.userAgent.indexOf("Chrome") !== -1){
+      document.getElementById("img_chrome").style.display = 'block';
+    }
+    if (navigator.userAgent.indexOf("Firefox") !== -1){
+      document.getElementById("img_firefox").style.display = 'block';
+    }
+  </script>
 </body>
 </html>
