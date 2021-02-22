@@ -2,7 +2,6 @@ import copy
 import time
 from pprint import pprint
 
-from django.db import connections
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse
