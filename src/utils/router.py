@@ -1,10 +1,23 @@
+import threading
+
+
+request_cfg = threading.local()
+
+
 class Router(object):
     """
     A router to control all database operations on models.
     """
+
+    def systextil_conn(self):
+        if hasattr(request_cfg, 'alter_db') and request_cfg.alter_db:
+            return 'sn '
+        else:
+            return 'so'
+
     def db_for_read(self, model, **hints):
         if model._meta.app_label == 'systextil':
-            return 'so'
+            return self.systextil_conn()
         return 'default'
 
     db_for_write = db_for_read
