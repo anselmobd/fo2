@@ -108,6 +108,7 @@ MIDDLEWARE = [
     # Project
     'utils.middlewares.LoggedInUserMiddleware',
     'utils.middlewares.NeedToLoginOrLocalMiddleware',  # N2LOL
+    'utils.middlewares.AlterRouterMiddleware',
     # Cache
     # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
