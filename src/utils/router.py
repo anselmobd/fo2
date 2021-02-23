@@ -1,7 +1,4 @@
-import threading
-
-
-request_cfg = threading.local()
+from utils.middlewares import request_cfg
 
 
 class Router(object):
