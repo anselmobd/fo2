@@ -1,11 +1,16 @@
 import re
+import threading
 
 from django.shortcuts import redirect
 from django.http import HttpResponse
 
 from fo2 import settings
 
+from geral.functions import is_alternativa
 from utils.functions import get_client_ip
+
+
+request_cfg = threading.local()
 
 
 try:
@@ -63,3 +68,40 @@ class NeedToLoginOrLocalMiddleware(object):
 
         # return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
         return redirect(settings.N2LOL_REDIRECT)
+
+
+class AlterRouterMiddleware:
+    """
+    Based on
+    https://gist.github.com/gijzelaerr/7a3130c494215a0dd9b2/
+    
+    The Alternative router middelware.
+
+    process_view (or process_request) function sets some context from the URL 
+    into thread local storage, and process_response deletes it.
+    
+    In between, any database operation will call the router, which checks for
+    this context and returns an appropriate database alias.
+
+    Add this to your middleware, for example:
+
+    MIDDLEWARE += ['bananaproject.multidb.MultiDbRouterMiddleware']
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+        request_cfg.alter_db = is_alternativa(request)
+        request.alter_db = request_cfg.alter_db
+
+        response = self.get_response(request)
+
+        # Code to be executed for each request/response after
+        # the view is called.
+        del request_cfg.alter_db
+
+        return response
