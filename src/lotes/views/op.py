@@ -372,6 +372,8 @@ class ComponentesDeOp(View):
             })
             return context
 
+        ref2_data = [ref_data[0]]
+
         # referência
         ref_row = ref_data[0]
         ref_row['REF|LINK'] = reverse(
@@ -386,6 +388,14 @@ class ComponentesDeOp(View):
                            'ALTERNATIVA', 'ROTEIRO',
                            'DESCR_REF'),
             'ref_data': ref_data,
+        })
+
+        for row in ref2_data:
+            row['DT_CORTE'] = row['DT_CORTE'].date()
+        context.update({
+            'ref2_headers': ('Observação', 'Observação 2', 'Data Corte'),
+            'ref2_fields': ('OBSERVACAO', 'OBSERVACAO2', 'DT_CORTE'),
+            'ref2_data': ref2_data,
         })
 
         # tam, cor e quantidade de produto de OP
@@ -465,7 +475,7 @@ class ComponentesDeOp(View):
                             and item['COR'] == row['COR']
                             and item['TAM'] == row['TAM']
                             and item['ALT'] == row['ALT']
-                            ]
+                        ]
                         if busca_insumo == []:
                             data.append(row)
                         else:

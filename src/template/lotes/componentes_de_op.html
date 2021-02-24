@@ -30,6 +30,10 @@
     {% include "layout/html_thead.html" with data=ref_headers only %}
     {% include "layout/html_tbody_group.html" with fields=ref_fields data=ref_data group=ref_group only %}
   </table>
+  <table>
+    {% include "layout/html_thead.html" with data=ref2_headers only %}
+    {% include "layout/html_tbody_group.html" with fields=ref2_fields data=ref2_data group=ref2_group only %}
+  </table>
 {% endif %}
 {% for comp in componentes %}
   <h3>{{ comp.header_text }}</h3>
