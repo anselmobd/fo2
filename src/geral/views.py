@@ -373,6 +373,10 @@ def dict_alternativas():
         71: 'PG Interno',
         81: 'PA de PG Interno',
         52: 'Sobra de Multimarca',
+        53: 'Costura externa de MD',
+        63: 'PB Costura externa de MD',
+        73: 'PG Costura externa de MD',
+        83: 'PA de PG Costura externa de MD',
     }
 
 
@@ -391,6 +395,7 @@ def dict_roteiros():
             9: 'MD Meia',
             51: 'MD Interno',
             52: 'Sobra de Multimarca',
+            53: 'Costura externa de MD',
         },
         'pb': {
             11: 'PB Interno',
@@ -399,6 +404,7 @@ def dict_roteiros():
             14: 'PB Sem Costura',
             15: 'PB Sunga',
             61: 'PB Interno',
+            63: 'PB Costura externa de MD',
         },
         'pg': {
             21: 'PG Interno',
@@ -409,6 +415,7 @@ def dict_roteiros():
             27: 'PG Pijama',
             29: 'PG Meia',
             71: 'PG Interno',
+            73: 'PG Costura externa de MD',
         },
         'pa': {
             1: 'PA Interno',
@@ -439,6 +446,10 @@ def dict_roteiros():
             71: 'PA de PG Interno',
             81: 'PA de PG Interno',
             52: 'Sobra de Multimarca',
+            53: 'Costura externa de MD',
+            63: 'PB Costura externa de MD',
+            73: 'PG Costura externa de MD',
+            83: 'PA de PG Costura externa de MD',
         }
     }
 
@@ -1178,6 +1189,28 @@ def dict_fluxo(id):
         },
     }
     fluxo_config[5] = update_dict(fluxo_config[1], fluxo_aux)
+
+    # 53 <- 5
+    fluxo_aux = {
+        'fluxo_nome': 'Costura externa de MD',
+        'produto': 'Vários',
+        'caracteristicas': [
+            'Corte: Interno',
+            'Costura: Externa',
+            'Embalagem: Interna',
+        ],
+        'tem_mp': False,
+        'md_p_pg': {
+            'insumos': {
+                15: ['Malha', ],
+                18: ['Transfer', ],
+                55: ['Etiquetas',
+                     'Eslástico',
+                     'Cadarço', ],
+            },
+        },
+    }
+    fluxo_config[53] = update_dict(fluxo_config[5], fluxo_aux)
 
     fluxo_config[6] = {
         'base': '1_bloco',
