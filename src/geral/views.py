@@ -578,9 +578,9 @@ def dict_fluxo(id):
         # específicos
         # 'rascunho': '#Rascunho#',
         'rascunho': '',
-        'versao_num': '20.01',
-        'versao_data': '29/04/2020',
-        'versao_sufixo': '20200429',
+        'versao_num': '21.01',
+        'versao_data': '24/02/2021',
+        'versao_sufixo': '20210224',
         'id': id,
         'fluxo_num': fluxo_num,
     }
@@ -847,7 +847,7 @@ def dict_fluxo(id):
         'md_p_pb': {
             'cabecalho': 'MD p/ PB - <b><u>C</u></b>999*<br />'
                          'Com acessórios (TAG)<br />para encabidar',
-            'ests': [3, 6, 15, 18, 12],
+            'ests': [3, 6, 12, 15, 18],
             'gargalo': 12,
             'insumos': {
                 15: ['Malha', ],
@@ -856,7 +856,7 @@ def dict_fluxo(id):
         'md_p_pg': {
             'cabecalho': 'MD p/ PG - <b><u>C</u></b>999<b><u>A</u></b><br />'
                          'Sem acessórios (TAG)<br />para encabidar',
-            'ests': [3, 6, 15, 18, 12],
+            'ests': [3, 6, 12, 15, 18],
             'gargalo': 12,
             'insumos': {
                 15: ['Malha', ],
