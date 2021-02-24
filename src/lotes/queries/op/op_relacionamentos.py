@@ -1,7 +1,9 @@
 from utils.functions.models import rows_to_dict_list
 
 
-def op_relacionamentos(cursor, op):
+def op_relacionamentos(cursor, op, ref=None):
+    if ref is None:
+        ref = ''
     sql = f'''
         WITH ordemp AS
         (
@@ -22,6 +24,8 @@ def op_relacionamentos(cursor, op):
         FROM ordemp o
         JOIN PCPC_020 ofi
           ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
+        where '{ref}' is null
+           or ofi.REFERENCIA_PECA = '{ref}'
         --
         UNION
         --
@@ -36,6 +40,8 @@ def op_relacionamentos(cursor, op):
           ON ofi.ORDEM_PRINCIPAL = o.ORDEM_PRODUCAO
         JOIN PCPC_020 one
           ON one.ORDEM_PRINCIPAL = ofi.ORDEM_PRODUCAO
+        where '{ref}' is null
+           or one.REFERENCIA_PECA = '{ref}'
         --
         UNION
         --
@@ -49,6 +55,9 @@ def op_relacionamentos(cursor, op):
         JOIN PCPC_020 omae
           ON omae.ORDEM_PRODUCAO = o.ORDEM_PRINCIPAL
         WHERE o.ORDEM_PRINCIPAL <> 0
+          and ( '{ref}' is null
+                or omae.REFERENCIA_PECA = '{ref}'
+              )
         --
         UNION
         --
@@ -65,6 +74,9 @@ def op_relacionamentos(cursor, op):
           ON oavo.ORDEM_PRODUCAO = omae.ORDEM_PRINCIPAL
         WHERE o.ORDEM_PRINCIPAL <> 0
           AND omae.ORDEM_PRINCIPAL <> 0
+          and ( '{ref}' is null
+                or oavo.REFERENCIA_PECA = '{ref}'
+              )
         --
         UNION
         --
@@ -77,6 +89,9 @@ def op_relacionamentos(cursor, op):
         FROM ordemp o
         JOIN PCPC_020 ose
           ON ose.ORDEM_MESTRE = o.ORDEM_PRODUCAO
+        where ( '{ref}' is null
+                or ose.REFERENCIA_PECA = '{ref}'
+              )
         --
         UNION
         --
@@ -90,6 +105,9 @@ def op_relacionamentos(cursor, op):
         JOIN PCPC_020 ome
           ON ome.ORDEM_PRODUCAO = o.ORDEM_MESTRE
         WHERE o.ORDEM_MESTRE <> 0
+          and ( '{ref}' is null
+                or ome.REFERENCIA_PECA = '{ref}'
+              )
         --
         ORDER BY
           2
