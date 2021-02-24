@@ -1,4 +1,5 @@
 {% extends 'lotes/index.html' %}
+{% load static %}
 
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
 {% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
@@ -10,17 +11,26 @@
 {% endblock %}
 
 {% block content %}
-<form action="/lotes/componentes_de_op/" method="post">
+<div class="visible-print">
+  <div align="center">
+    <img src="{% static "img/DUOMO_small.png"  height="40" width="176" %}" alt="D'UOMO">
+  </div>
+</div>
+<div class="noprint">
+  <form action="/lotes/componentes_de_op/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
-</form>
+  </form>
+</div>
 {% if op %}
   <h3>OP {{ op }}</h3>
-  {% url 'producao:op__get' op as detalhes_op %}
-  {% with 'Detalhes da OP ' as text %}
-    {% include "layout/link.html" with link=detalhes_op text=text|add:op only %}
-  {% endwith %}
+  <div class="noprint">
+    {% url 'producao:op__get' op as detalhes_op %}
+    {% with 'Detalhes da OP ' as text %}
+      {% include "layout/link.html" with link=detalhes_op text=text|add:op only %}
+    {% endwith %}
+  </div>
 {% endif %}
 {% if msg_erro %}
 <h3>{{ msg_erro }}</h3>
