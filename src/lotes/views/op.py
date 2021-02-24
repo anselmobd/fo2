@@ -405,9 +405,9 @@ class ComponentesDeOp(View):
             row['REF'] = ref_row['REF']
             row['ALT'] = ref_row['ALTERNATIVA']
 
-        comp_headers = ['Nivel', 'Ref.', 'Tamanho', 'Cor', 'Alt.', 'Qtd.']
         comp_fields = ['NIVEL', 'REF', 'TAM', 'COR', 'ALT', 'QTD']
 
+        op_comp = None
         componentes = []
         componentes_nivel = 0
         while True:
@@ -416,9 +416,11 @@ class ComponentesDeOp(View):
 
             if componentes_nivel == 0:
                 header_text = 'Produtos da OP'
+                comp_headers = ['Nivel', 'Ref.', 'Tamanho', 'Cor', 'Alt.', 'Qtd.']
             else:
-                header_text = 'Produtos componentes {}ª descendência'.format(
-                    componentes_nivel)
+                header_text = f'Produtos componentes {componentes_nivel}ª descendência'
+                header_text += f' (OP {op_comp})'
+                comp_headers = ['Nivel', 'Ref.', 'Tamanho', 'Cor', 'Alt.', 'Qtd. Calculada']
 
             group = ['NIVEL', 'REF']
             totalize_grouped_data(data, {
@@ -463,10 +465,19 @@ class ComponentesDeOp(View):
             data = []
 
             if dual_nivel is not None:
+                op_comp = None
                 insumos = insumos_de_produtos_em_dual(
                     cursor, dual_nivel, order='tc')
                 # data = [f_row for f_row in data if (f_row['NIVEL'] == '1')]
                 for row in insumos:
+
+                    if op_comp is None:
+                        r_data = lotes.queries.op.op_relacionamentos(cursor, op, row['REF'])
+                        if len(r_data) != 0:
+                            op_comp = r_data[0]['OP_REL']
+                        else:
+                            op_comp = 'não existe'
+
                     if row['NIVEL'] == '1':
                         busca_insumo = [
                             item for item in data
