@@ -1,13 +1,13 @@
-import os
 import copy
-import time
-from subprocess import Popen, PIPE
+import os
 import struct
+import time
 from pprint import pprint
+from subprocess import PIPE, Popen
 
-from django.template import Template, Context
-from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.template import Context, Template
 
 
 class SingletonMeta(type):
