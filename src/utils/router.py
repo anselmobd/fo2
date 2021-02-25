@@ -8,7 +8,7 @@ class Router(object):
 
     def systextil_conn(self):
         if hasattr(request_cfg, 'alter_db') and request_cfg.alter_db:
-            return 'sn '
+            return 'sn'
         else:
             return 'so'
 
