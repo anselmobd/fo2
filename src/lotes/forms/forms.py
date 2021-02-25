@@ -8,7 +8,7 @@ from systextil.models import Colecao, Familia
 
 class LoteForm(forms.Form):
     lote = forms.CharField(
-        label='Lote', max_length=9, min_length=9,
+        label='Lote/OC', max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 

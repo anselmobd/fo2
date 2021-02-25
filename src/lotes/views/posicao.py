@@ -19,7 +19,7 @@ from lotes.forms import LoteForm
 class Posicao(View):
     Form_class = LoteForm
     template_name = 'lotes/posicao.html'
-    title_name = 'Posição do lote'
+    title_name = 'Lote/OC'
     request = {}
 
     def mount_context(self, cursor, periodo, ordem_confeccao, lote):
