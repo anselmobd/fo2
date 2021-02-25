@@ -226,6 +226,7 @@ class Posicao(View):
             lote__lote=lote,
             ).order_by('-create_at').values(
             'solicitacao_id', 'solicitacao__codigo', 'solicitacao__descricao',
+            'solicitacao__data', 
             'solicitacao__usuario__username', 'create_at', 'qtd')
 
         desreserva_lote = False
@@ -236,6 +237,8 @@ class Posicao(View):
                 solicit_id = slq[0]['solicitacao_id']
 
         for row in slq:
+            if row['solicitacao__data'] is None:
+                row['solicitacao__data'] = ''
             row['numero'] = f"#{fo2_digit_with(row['solicitacao_id'])}"
             row['solicitacao__codigo|TARGET'] = '_blank'
             row['solicitacao__codigo|LINK'] = reverse(
@@ -243,12 +246,14 @@ class Posicao(View):
         context.update({
             'slq_headers': (
                 '#', 'Solicidação', 'Descrição',
+                'Data de embarque',
                 'Usuário', 'Data', 'Quantidade'),
             'slq_fields': (
                 'numero', 'solicitacao__codigo', 'solicitacao__descricao',
+                'solicitacao__data',
                 'solicitacao__usuario__username', 'create_at', 'qtd'),
             'slq_data': slq,
-            'slq_style': {5: 'text-align: right;'},
+            'slq_style': {7: 'text-align: right;'},
             'desreserva_lote': desreserva_lote,
             'solicit_id': solicit_id,
         })
