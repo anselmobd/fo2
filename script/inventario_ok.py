@@ -9,8 +9,8 @@ from pprint import pprint
 
 locale.setlocale(locale.LC_ALL, '')
 
-if len(sys.argv) < 3:
-    print(sys.argv[0], '../9999_99_inventario_revisado.ods ../9999_99')
+if len(sys.argv) < 2:
+    print(sys.argv[0], '../9999_99')
     sys.exit()
 
 def file_ok(name):
@@ -19,8 +19,8 @@ def file_ok(name):
     else:
         return False
 
-ods = sys.argv[1]
-ano_mes = sys.argv[2]
+ano_mes = sys.argv[1]
+ods = ano_mes+'inventario_revisado.ods'
 f0200 = ano_mes+'_0200.txt'
 fk200 = ano_mes+'_k200.txt'
 
