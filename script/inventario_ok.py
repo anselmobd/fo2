@@ -37,19 +37,19 @@ if not (file_ok(fk200)):
     sys.exit()
 
 df_alt = pd.read_excel(ods, index_col=0)
-pprint(df_alt)
+# pprint(df_alt)
 
 k200_file = pd.read_csv(
     fk200, sep='|', skiprows=2, header=None,
     names=['NaN1', 'k200', 'data', 'item', 'qtd', 'zero', 'NaN2', 'NaN3']
 )
 k200_file['qtd'] = k200_file['qtd'].apply(locale.atof)
-pprint(k200_file)
+# pprint(k200_file)
 
 z200_file = pd.read_csv(
     f0200, sep='|', header=None, dtype=str,
 )
-pprint(z200_file)
+# pprint(z200_file)
 
 for item in df_alt.index:
     if item is not np.nan:
@@ -74,13 +74,13 @@ fk200_tmp = ano_mes+'_k200_tmp.txt'
 fk200_ok = ano_mes+'_k200_ok.txt'
 f0200_ok = ano_mes+'_0200_ok.txt'
 
-pprint(k200_file)
+# pprint(k200_file)
 k200_file.to_csv(
     fk200_tmp, sep='|', header=False, index=False,
     decimal=',', float_format='%.2f',
 )
         
-pprint(z200_file)
+# pprint(z200_file)
 z200_file.to_csv(
     f0200_ok, sep='|', header=False, index=False,
 )
