@@ -20,20 +20,20 @@ def file_ok(name):
         return False
 
 ano_mes = sys.argv[1]
-ods = ano_mes+'inventario_revisado.ods'
+ods = ano_mes+'_inventario_revisado.ods'
 f0200 = ano_mes+'_0200.txt'
 fk200 = ano_mes+'_k200.txt'
 
 if not (file_ok(ods)):
-    print('Planilha não acessível')
+    print(f'Planilha "{ods}" não acessível')
     sys.exit()
 
 if not (file_ok(f0200)):
-    print('0200 não acessível')
+    print(f'0200 "{f0200}" não acessível')
     sys.exit()
 
 if not (file_ok(fk200)):
-    print('k200 não acessível')
+    print(f'k200 "{fk200}" não acessível')
     sys.exit()
 
 df_alt = pd.read_excel(ods, index_col=0)
