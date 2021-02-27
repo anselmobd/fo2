@@ -1,8 +1,13 @@
+from pprint import pprint
+
+from django.conf import settings
 from django.contrib import admin
 
-from fo2 import settings
 from fo2.admin import intr_adm_site
+
+from .forms import ModeloTermicaForm
 from .models import (
+    EnderecoDisponivel,
     Impresso,
     ImpressoraTermica,
     Lote,
@@ -12,9 +17,7 @@ from .models import (
     SolicitaLotePedido,
     SolicitaLotePrinted,
     UsuarioImpresso,
-    EnderecoDisponivel,
 )
-from .forms import ModeloTermicaForm
 
 
 class ImpressoAdmin(admin.ModelAdmin):
