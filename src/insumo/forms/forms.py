@@ -1,20 +1,24 @@
-from pprint import pprint
 import pytz
+from pprint import pprint
 
-from django.utils import timezone
 from django import forms
+from django.utils import timezone
 
-from fo2 import settings
-from systextil.models import Colecao
-from base.forms import \
-    O2BaseForm, \
-    O2FieldNivelForm, \
-    O2FieldRefForm, \
-    O2FieldTamanhoForm, \
-    O2FieldCorForm, \
-    O2FieldFiltroForm
+from base.forms import (
+    O2BaseForm,
+    O2FieldCorForm,
+    O2FieldFiltroForm,
+    O2FieldNivelForm,
+    O2FieldRefForm,
+    O2FieldTamanhoForm,
+)
 
-from systextil.models import ContaEstoque, Periodo, TipoContaEstoque
+from systextil.models import (
+    Colecao,
+    ContaEstoque,
+    Periodo,
+    TipoContaEstoque,
+) 
 
 
 class FiltroMpForm(
