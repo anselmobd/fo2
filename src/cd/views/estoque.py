@@ -2,11 +2,12 @@ from pprint import pprint
 from datetime import timedelta
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db import connections
 from django.db.models import Sum
 from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
+
+from fo2.connections import db_conn
 
 from geral.functions import request_user
 from utils.functions.digits import fo2_digit_with
@@ -32,7 +33,7 @@ class Estoque(View):
         return False
 
     def mount_context(self, form, user):
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so', self.request).cursor()
         linhas_pagina = 100
         page = form.cleaned_data['page']
 
@@ -342,6 +343,7 @@ class Estoque(View):
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'ordem' in kwargs:
