@@ -1,17 +1,17 @@
 import os
-from pprint import pprint
 from pathlib import Path
+from pprint import pprint
 
-from django.shortcuts import render
-from django.db import connections
-from django.views import View
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import connections
+from django.shortcuts import render
+from django.views import View
 
-from fo2 import settings
 from utils.classes import TermalPrint
 
-from lotes.forms import ImprimeTagForm
 import lotes.models as models
+from lotes.forms import ImprimeTagForm
 
 
 class ImprimeTag(LoginRequiredMixin, View):

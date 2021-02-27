@@ -1,10 +1,9 @@
 import re
 import threading
 
-from django.shortcuts import redirect
+from django.conf import settings
 from django.http import HttpResponse
-
-from fo2 import settings
+from django.shortcuts import redirect
 
 from geral.functions import is_alternativa
 from utils.functions import get_client_ip

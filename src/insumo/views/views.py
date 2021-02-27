@@ -3,49 +3,50 @@ import math
 import os
 import re
 import time
+from datetime import timedelta
 from operator import itemgetter
 from pprint import pprint
-from datetime import timedelta
 
+from django.conf import settings
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.cache import cache
 from django.db import connections
 from django.db.models import Q
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
-from django.template.loader import render_to_string
-from django.core.cache import cache
 
-from fo2 import settings
-
-import systextil.models
 from geral.models import Dispositivos, RoloBipado
 from utils.cache import entkeys
 from utils.functions import (
-    fo2logger,
-    max_not_None,
+    fo2logger, 
+    max_not_None, 
     min_not_None,
-    my_make_key_cache,
+    my_make_key_cache, 
     segunda,
 )
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
-from utils.views import totalize_grouped_data, group_rowspan
+from utils.views import group_rowspan, totalize_grouped_data
+
+import systextil.models
 
 import insumo.functions
-import insumo.queries as queries
 import insumo.models as models
-from insumo.forms import \
-    EstoqueForm, \
-    MapaRefsForm, \
-    NecessidadeForm, \
-    PrevisaoForm, \
-    BipaRoloForm, \
-    RolosBipadosForm, \
-    ReceberForm, \
-    MapaPorSemanaForm, \
-    MapaSemanalForm, \
-    FiltroMpForm
+import insumo.queries as queries
+from insumo.forms import (
+    BipaRoloForm, 
+    EstoqueForm, 
+    FiltroMpForm,
+    MapaPorSemanaForm, 
+    MapaRefsForm, 
+    MapaSemanalForm,
+    NecessidadeForm, 
+    PrevisaoForm, 
+    ReceberForm,
+    RolosBipadosForm,
+)
 
 
 def index(request):
