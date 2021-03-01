@@ -39,3 +39,7 @@ def MountNumberFieldForm(name, attrs={}, widget_attrs={}):
     return MountTypeFieldForm(
         name, **kwargs, type_field=forms.CharField,
         widget=forms.NumberInput)
+
+
+def MountCharFieldForm(name, **kwargs):
+    return MountTypeFieldForm(name, **kwargs, type_field=forms.CharField)
