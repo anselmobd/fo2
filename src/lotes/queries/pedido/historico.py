@@ -13,7 +13,7 @@ def historico(pedido):
           h.data_ocorr
         , h.usuario
         , h.maquina_rede
-        , h.long01
+        , h.long01 descricao
         from systextil_logs.hist_100 h
         where h.programa = 'pedi_f130'
           -- and h.tabela = 'PEDI_100'
