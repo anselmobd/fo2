@@ -36,6 +36,9 @@ urlpatterns = [
     url(r'^busca/(?P<busca>.+)/$', views.Busca.as_view(),
         name='busca__get'),
 
+    url(r'^hist_narrativa/$', views.HistNarrativa.as_view(),
+        name='hist_narrativa'),
+
     url(r'^estr_estagio_de_insumo/$', views.EstrEstagioDeInsumo.as_view(),
         name='estr_estagio_de_insumo'),
 
