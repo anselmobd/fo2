@@ -1,0 +1,31 @@
+{% extends 'produto/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+<h4>A partir de 04/11/2020</h4>
+<form action="{% url 'produto:hist_narrativa' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+</form>
+{% if referencia %}
+  <h3>Referência: {{ referencia }}</h3>
+{% endif %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data pre=pre only %}
+  </table>
+{% endif %}
+{% endblock %}
