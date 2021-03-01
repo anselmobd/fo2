@@ -31,3 +31,9 @@ O2FieldDepositoForm2 = mount_fields.MountIntegerFieldForm(
     },
     widget_attrs={'size': 3},
 )
+
+O2FieldReferenciaForm2 = mount_fields.MountCharFieldForm(
+    'referencia',
+    widget_attrs={'size': 5},
+)
+
