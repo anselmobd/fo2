@@ -1,17 +1,17 @@
-{% with field|add:'|LINK' as field_link %}
+{% with field|add:'|LINK' as field_link %}{% spaceless %}
   {% if row|get_item:field_link %}
-    <a href="{{ row|get_item:field_link }}"{% spaceless %}
+    <a href="{{ row|get_item:field_link }}"
     {% with field|add:'|TARGET' as field_target %}
       {% if row|get_item:field_target %}
         target="{{ row|get_item:field_target }}"
       {% endif %}
     {% endwith %}
-    {% endspaceless %}>{% spaceless %}
+    >
     {% if row|get_item:field %}
       {% include "layout/field_decimals.html" with row=row field=field count=count decimals=decimals only %}
     {% endif %}
-    {% endspaceless %}{% include "layout/field_glyphicon.html" with row=row field=field only %}</a>
+    {% include "layout/field_glyphicon.html" with row=row field=field only %}</a>
   {% else %}
     {% include "layout/field_decimals.html" with row=row field=field count=count decimals=decimals only %}
   {% endif %}
-{% endwith %}
+{% endspaceless %}{% endwith %}

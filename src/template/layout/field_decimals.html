@@ -1,4 +1,4 @@
-{% with field|add:'|DECIMALS' as field_decimals %}
+{% with field|add:'|DECIMALS' as field_decimals %}{% spaceless %}
   {% with row|get_item:field_decimals as fdecimals %}
     {% if fdecimals %}
       {{ row|get_item:field|floatformat:fdecimals|transp_decimals|safe }}
@@ -16,4 +16,4 @@
       {% endif %}
     {% endif %}
   {% endwith %}
-{% endwith %}
+{% endspaceless %}{% endwith %}
