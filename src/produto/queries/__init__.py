@@ -3,6 +3,7 @@ from .colecoes_de_modelo import *
 from .custo_item import *
 from .item_componentes import *
 from .gtin import *
+from .historico import *
 from .queries import *
 from .ref_custo import *
 from .ref_estrutura_comp import *
