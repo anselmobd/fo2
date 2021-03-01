@@ -40,8 +40,8 @@ class Historico(View):
             'headers': ('Data', 'Usuário',
                         'Máquina', 'Descrição'),
             'fields': ('data_ocorr', 'usuario',
-                       'maquina_rede', 'long01'),
-            'pre': ['long01'],
+                       'maquina_rede', 'descricao'),
+            'pre': ['descricao'],
             'data': data,
         })
         return context
