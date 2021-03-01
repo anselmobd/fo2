@@ -2,6 +2,7 @@
   <li><a href="{% url 'produto:ref' %}">Produto</a> (nível 1)</li>
   <ul>
     <li><a href="{% url 'produto:busca' %}">Busca</a></li>
+    <li><a href="{% url 'produto:hist_narrativa' %}">Histórico de narrativa</a></li>
     {% if request.user.is_authenticated %}
       <li><a href="{% url 'produto:estatistica' %}">Estatística</a></li>
     {% endif %}
