@@ -34,3 +34,9 @@ DepositoDatasForm2 = MountForm(
     autofocus_field='deposito',
     required_fields=['deposito'],
 )
+
+ReferenciaForm2 = MountForm(
+    'referencia',
+    autofocus_field='referencia',
+    required_fields=['referencia'],
+)
