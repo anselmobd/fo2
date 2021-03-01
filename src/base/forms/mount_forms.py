@@ -18,6 +18,7 @@ def MountForm(*args, **kwargs):
         'deposito': fields2.O2FieldDepositoForm2,
         'modelo': fields2.O2FieldModeloForm2,
         'pedido': fields2.O2FieldPedidoForm2,
+        'referencia': fields2.O2FieldReferenciaForm2,
     }
 
     if 'fields' in kwargs:
