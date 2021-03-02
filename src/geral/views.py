@@ -1328,6 +1328,24 @@ def dict_fluxo(id):
         },
     }
 
+    # 8p <- 8
+    fluxo_aux = {
+        'fluxo_nome': 'Parte preparada',
+        'produto': 'SHORT (tela)',
+        'bloco': {
+            'nivel': 'mp',
+            'cabecalho': 'MP - <b><u>F</u></b>9999<br />'
+                         'Depósito da OP: 231',
+            'ests': [3, 6, 15, 18, 21, 31],
+            'gargalo': 6,
+            'insumos': {
+                15: ['Malha', ],
+                18: ['Etiquetas', ],
+            },
+        },
+    }
+    fluxo_config['8p'] = update_dict(fluxo_config[8], fluxo_aux)
+
     fluxo_config[9] = {
         'base': 'cueca',
         'produto': 'MEIA',
