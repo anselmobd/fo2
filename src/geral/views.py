@@ -365,7 +365,7 @@ def dict_alternativas():
         6: 'Camisa',
         7: 'Pijama',
         27: 'PG Pijama',
-        8: 'Forro Interno',
+        8: 'Forro/Tela Interno',
         9: 'Meia',
         29: 'PG Meia',
         51: 'Interno',
@@ -383,7 +383,7 @@ def dict_alternativas():
 def dict_roteiros():
     return {
         'mp': {
-            8: 'Forro Interno',
+            8: 'Forro/Tela Interno',
         },
         'md': {
             1: 'MD Interno',
@@ -515,11 +515,11 @@ def dict_estagios():
         },
         31: {
             'descr': 'Prepara parte',
-            'deposito': '231',
+            'deposito': '-',
         },
         32: {
             'descr': 'Prepara peça',
-            'deposito': '231',
+            'deposito': '-',
         },
         33: {
             'descr': 'Costura Costurado',
@@ -598,8 +598,8 @@ def dict_fluxo(id):
         # 'rascunho': '#Rascunho#',
         'rascunho': '',
         'versao_num': '21.01',
-        'versao_data': '24/02/2021',
-        'versao_sufixo': '20210224',
+        'versao_data': '02/03/2021',
+        'versao_sufixo': '20210302',
         'id': id,
         'fluxo_num': fluxo_num,
     }
@@ -1310,7 +1310,7 @@ def dict_fluxo(id):
 
     fluxo_config[8] = {
         'base': '1_bloco',
-        'fluxo_nome': 'Parte',
+        'fluxo_nome': 'Parte cortada',
         'produto': 'SUNGA (Forro)',
         'caracteristicas': [
             'Corte: Interno',
