@@ -513,6 +513,14 @@ def dict_estagios():
             'descr': 'Tecelagem fundo',
             'deposito': '212',
         },
+        31: {
+            'descr': 'Prepara parte',
+            'deposito': '231',
+        },
+        32: {
+            'descr': 'Prepara peça',
+            'deposito': '231',
+        },
         33: {
             'descr': 'Costura Costurado',
             'deposito': '231',
