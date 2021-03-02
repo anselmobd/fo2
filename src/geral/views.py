@@ -801,12 +801,14 @@ def dict_fluxo(id):
             'Costura: Interna',
         ],
         'seta_pg_label': 'PG',
-        'tem_mp': False,
+        'tem_mp': True,
         'md_p_pb': False,
+        'mp_cabecalho': 'Tela - F9999\nFluxo 8p',
         'md_p_pg': {
             'cabecalho': 'MD - <b><u>M</u></b>999*',
+            'ests': [3, 6, 12, 15, 43, 18, 21, 32, 33, 45, 48, 51],
             'insumos': {
-                15: ['Forro',
+                15: ['Tela',
                      'Malha', ],
                 18: ['Etiquetas',
                      'Elástico',
