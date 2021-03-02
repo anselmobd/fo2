@@ -1136,6 +1136,7 @@ def dict_fluxo(id):
         ],
         'seta_pg_label': 'PG',
         'tem_mp': True,
+        'mp_cabecalho': 'Forro - F9999\nFluxo 8',
         'md_p_pb': False,
         'md_p_pg': {
             'cabecalho': 'MD - <b><u>C</u></b>999*',
