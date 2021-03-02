@@ -537,6 +537,10 @@ def dict_estagios():
             'descr': 'Estamparia',
             'deposito': '-',
         },
+        43: {
+            'descr': 'Sublimação',
+            'deposito': '-',
+        },
         45: {
             'descr': 'Transfer / TAG',
             'deposito': '231',
