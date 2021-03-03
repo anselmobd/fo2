@@ -8,7 +8,7 @@ import locale
 import argparse
 from datetime import datetime, timedelta
 
-from db_password import DBPASS_POSTGRE, DBPASS_ORACLE
+from fo2.db_password import DBPASS_POSTGRE, DBPASS_ORACLE
 
 
 class Oracle:
