@@ -52,12 +52,14 @@ class PorDepositoForm(forms.Form):
     tipo = forms.ChoiceField(
         choices=CHOICES, initial='t')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, cursor=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.cursor = cursor
         self.mount_choices()
 
     def mount_choices(self):
         CHOICES = geral.functions.depositos_choices(
+            self.cursor,
             cod_todos='999', descr_todos='--Todos--', cod_only='A00',
             only=(101, 102, 103, 122, 231), rest=True)
         setattr(self.fields['deposito'], 'choices', CHOICES)
@@ -144,12 +146,14 @@ class ReferenciasEstoqueForm(
     deposito = forms.ChoiceField(
         label='Depósito', initial='-')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, cursor=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.cursor = cursor
         self.mount_choices()
 
     def mount_choices(self):
         CHOICES = geral.functions.depositos_choices(
+            self.cursor,
             cod_todos='A00', only=(101, 102, 103, 122, 231))
         setattr(self.fields['deposito'], 'choices', CHOICES)
 
@@ -205,12 +209,14 @@ class ConfrontaEstoqueForm(forms.Form):
     deposito = forms.ChoiceField(
         label='Depósito', required=True, initial='')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, cursor=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.cursor = cursor
         self.mount_choices()
 
     def mount_choices(self):
         CHOICES = geral.functions.depositos_choices(
+            self.cursor,
             only=(101, 102, 103, 122, 231))
         setattr(self.fields['deposito'], 'choices', CHOICES)
 
@@ -260,12 +266,14 @@ class EstoqueNaDataForm(forms.Form):
     deposito = forms.ChoiceField(
         label='Depósito', required=True, initial='')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, cursor=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.cursor = cursor
         self.mount_choices()
 
     def mount_choices(self):
         CHOICES = geral.functions.depositos_choices(
+            self.cursor,
             cod_only='A00', only=(101, 102, 103, 122, 231))
         setattr(self.fields['deposito'], 'choices', CHOICES)
 

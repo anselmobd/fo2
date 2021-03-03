@@ -52,12 +52,14 @@ class ItemNoTempoForm(forms.Form):
         label='Agrupa transações', required=True,
         choices=CHOICES, initial='S')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, cursor=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.cursor = cursor
         self.mount_choices()
 
     def mount_choices(self):
         CHOICES = geral.functions.depositos_choices(
+            self.cursor,
             only=(101, 102, 103, 122, 231), rest=True)
         setattr(self.fields['deposito'], 'choices', CHOICES)
 
