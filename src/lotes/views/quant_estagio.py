@@ -8,6 +8,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 from base.views import O2BaseGetView
 from geral.functions import has_permission
 from utils.views import totalize_grouped_data, totalize_data
@@ -271,7 +273,8 @@ class LeadColecao(View):
                 lc.lead = lead
                 lc.save()
 
-                calculaMetaGiroTodas()
+                cursor = db_cursor_so(request)
+                calculaMetaGiroTodas(cursor)
 
             except IntegrityError as e:
                 context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
@@ -771,9 +774,7 @@ def grade_meta_giro(meta, lead, show_distrib=True):
     return grade
 
 
-def calculaMetaGiroTodas():
-    cursor = connections['so'].cursor()
-
+def calculaMetaGiroTodas(cursor):
     metas = comercial.models.getMetaEstoqueAtual()
     if len(metas) == 0:
         return 0
