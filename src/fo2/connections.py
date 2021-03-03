@@ -18,3 +18,6 @@ def db_conn(name, request=None):
         else:
             return connections[fo2_db_so]
     return connections[name]
+
+def db_conn_so(request=None):
+    return db_conn(fo2_db_so, request)
