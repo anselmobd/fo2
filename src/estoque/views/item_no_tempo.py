@@ -31,8 +31,6 @@ class ItemNoTempo(View):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
-        cursor = db_cursor_so(self.request)
-
         self.context.update({
             'item': '{ref}.{tam}.{cor}'.format(**self.context)
         })
@@ -48,7 +46,7 @@ class ItemNoTempo(View):
         })
 
         estoque_list = queries.get_estoque_dep_ref_cor_tam(
-            cursor, *(self.context[f] for f in [
+            self.cursor, *(self.context[f] for f in [
                 'deposito', 'ref', 'cor', 'tam']))
         if len(estoque_list) > 0:
             estoque = estoque_list[0]['estoque']
@@ -60,7 +58,7 @@ class ItemNoTempo(View):
             })
 
         dados = queries.item_no_tempo(
-            cursor, *(self.context[f] for f in [
+            self.cursor, *(self.context[f] for f in [
                 'ref', 'tam', 'cor', 'deposito', 'apartirde']))
 
         for row in dados:
@@ -229,7 +227,7 @@ class ItemNoTempo(View):
             })
 
         p_dados = lotes.queries.pedido.pedido_faturavel_modelo(
-            cursor, cached=False,
+            self.cursor, cached=False,
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']}
             )
@@ -271,7 +269,7 @@ class ItemNoTempo(View):
                 })
 
         oc_dados = lotes.queries.analise.quant_estagio(
-            cursor, only=[57, 63], group='op',
+            self.cursor, only=[57, 63], group='op',
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']})
 
@@ -306,7 +304,7 @@ class ItemNoTempo(View):
                 })
 
         op_dados = lotes.queries.analise.quant_estagio(
-            cursor, less=[57, 63], group='op',
+            self.cursor, less=[57, 63], group='op',
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']})
 
@@ -345,13 +343,14 @@ class ItemNoTempo(View):
             })
 
     def get(self, request, *args, **kwargs):
+        self.cursor = db_cursor_so(request)
         if 'deposito' in kwargs:
             return self.post(request, *args, **kwargs)
-        self.context['form'] = self.Form_class()
+        self.context['form'] = self.Form_class(cursor=self.cursor)
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        self.request = request
+        self.cursor = db_cursor_so(request)
         if 'deposito' in kwargs:
             initial = {
                 "ref": kwargs['ref'],
@@ -361,11 +360,11 @@ class ItemNoTempo(View):
                 "periodo": '6',
                 "agrupa": 'S',
             }
-            self.context['form'] = self.Form_class(initial)
+            self.context['form'] = self.Form_class(initial, cursor=self.cursor)
         else:
-            self.context['form'] = self.Form_class(request.POST)
+            self.context['form'] = self.Form_class(request.POST, cursor=self.cursor)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
-            self.context['form'] = self.Form_class(self.context)
+            self.context['form'] = self.Form_class(self.context, cursor=self.cursor)
             self.mount_context()
         return render(request, self.template_name, self.context)
