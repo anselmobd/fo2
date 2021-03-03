@@ -480,12 +480,13 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             meta_cor.quantidade = cores[cor]
             meta_cor.save()
 
-        cursor = connections['so'].cursor()
         metas = models.getMetaEstoqueAtual().filter(modelo=modelo)
         if len(metas) != 0:
-            lotes.views.calculaMetaGiroMetas(cursor, metas)
+            lotes.views.calculaMetaGiroMetas(self.cursor, metas)
 
     def mount_context(self):
+        self.cursor = connections['so'].cursor()
+
         modelo = self.form.cleaned_data['modelo']
         if 'grava' in self.request.POST:
             self.grava_meta()
@@ -535,7 +536,5 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             ** self.style,
             len(self.periodos)+2: 'text-align: right;',
         }
-
-        self.cursor = connections['so'].cursor()
 
         self.mount_context_modelo(modelo)
