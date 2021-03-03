@@ -2,29 +2,19 @@ import datetime
 import re
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from geral.functions import (
-    has_permission,
-    request_user,
-    )
-from utils.views import (
-    request_hash_trail,
-    TableHfs,
-    totalize_data,
-    )
+from fo2.connections import db_cursor_so
+
+from geral.functions import has_permission, request_user
+from utils.views import TableHfs, request_hash_trail, totalize_data
 
 import produto.queries
 
-from estoque import forms
-from estoque import queries
-from estoque.functions import (
-    transfo2_num_doc,
-    transfo2_num_doc_dt,
-    )
+from estoque import forms, queries
+from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
 
 
 class MostraEstoque(View):
@@ -284,7 +274,7 @@ class MostraEstoque(View):
         deposito = kwargs['deposito']
         ref = kwargs['ref']
         modelo = kwargs['modelo']
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(self.mount_context(
             request, cursor, deposito, ref, None, idata, None, modelo))
 
@@ -305,7 +295,7 @@ class MostraEstoque(View):
             data = self.form.cleaned_data['data']
             hora = self.form.cleaned_data['hora']
             set_data_inv = data
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 request, cursor, deposito, ref, qtd, data, hora, modelo))
 
