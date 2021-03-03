@@ -88,21 +88,22 @@ class ConfrontaEstoque(View):
         return context
 
     def get(self, request, *args, **kwargs):
+        cursor = db_cursor_so(request)
         context = {'titulo': self.title_name}
-        form = self.Form_class()
+        form = self.Form_class(cursor=cursor)
         context['form'] = form
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        cursor = db_cursor_so(request)
         context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
+        form = self.Form_class(request.POST, cursor=cursor)
         if form.is_valid():
             ref = form.cleaned_data['ref']
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
             deposito = form.cleaned_data['deposito']
             botao = 'c' if 'corrige' in request.POST else 'v'
-            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 request, cursor, ref, tam, cor, deposito, botao))
         context['form'] = form
