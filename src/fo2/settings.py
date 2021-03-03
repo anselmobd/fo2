@@ -193,6 +193,14 @@ DATABASES = {
         'PORT': '25432',
     },
 }
+
+FO2_DEFAULT_SYSTEXTIL_DB = os.getenv('DEFAULT_SYSTEXTIL_DB', 'so')
+_FO2_ALTER_SYSTEXTIL_DICT = {
+    'so': 'sn',
+    'sn': 'so',
+}
+FO2_ALTER_SYSTEXTIL_DB = _FO2_ALTER_SYSTEXTIL_DICT[FO2_DEFAULT_SYSTEXTIL_DB]
+
 DATABASES_EXTRAS = {
     'f1': {  # F1 e SCC
         'ENGINE': 'firebird',
