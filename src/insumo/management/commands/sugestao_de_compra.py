@@ -1,16 +1,18 @@
+import pytz
 import re
+import time
 from datetime import datetime, timedelta
 from pprint import pprint
-import pytz
-import time
 
-from django.utils import timezone
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
+from django.utils import timezone
+
+from fo2.connections import db_cursor_so
 
 import insumo.models as models
-from insumo.views import MapaPorInsumo_dados
 from insumo.queries import insumos_cor_tamanho_usados
+from insumo.views import MapaPorInsumo_dados
 
 
 class Command(BaseCommand):
@@ -49,7 +51,7 @@ class Command(BaseCommand):
     @property
     def cursor(self):
         if self.__cursor is None:
-            self.__cursor = connections['so'].cursor()
+            self.__cursor = db_cursor_so()
         return self.__cursor
 
     def sugestao_de_insumo(self, nivel, ref, cor, tam, limite):
