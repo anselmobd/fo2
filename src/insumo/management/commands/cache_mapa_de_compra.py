@@ -1,17 +1,18 @@
-import sys
+import pytz
 import re
+import sys
+import time
 from datetime import datetime, timedelta
 from pprint import pprint
-import pytz
-import time
 
-from django.utils import timezone
-from django.db import connections
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import timezone
+
+from fo2.connections import db_cursor_so
 
 import insumo.models as models
 from insumo.functions import mapa_por_insumo_dados
-from insumo.queries import insumos_cor_tamanho_usados, insumos_cor_tamanho
+from insumo.queries import insumos_cor_tamanho, insumos_cor_tamanho_usados
 
 
 class Command(BaseCommand):
@@ -55,7 +56,7 @@ class Command(BaseCommand):
     @property
     def cursor(self):
         if self._cursor is None:
-            self._cursor = connections['so'].cursor()
+            self._cursor = db_cursor_so()
         return self._cursor
 
     def handle(self, *args, **kwargs):
