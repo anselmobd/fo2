@@ -1,7 +1,7 @@
 from pprint import pprint
 import datetime
 
-from django.db import connections
+from fo2.connections import db_conn
 
 from base.views import O2BaseGetView
 from utils.decorators import CacheGet
@@ -17,7 +17,7 @@ class MetaNoAno(O2BaseGetView):
         self.title_name = 'Meta do ano'
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so', self.request).cursor()
         hoje = datetime.date.today()
         mes_atual = hoje.month
 
