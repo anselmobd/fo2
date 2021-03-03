@@ -5,11 +5,11 @@ from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 from utils.functions.views import cleanned_fields_to_context
 
-from estoque import classes
-from estoque import forms
-from estoque import models
+from estoque import classes, forms, models
 
 
 class Transferencia(PermissionRequiredMixin, View):
@@ -46,7 +46,7 @@ class Transferencia(PermissionRequiredMixin, View):
             })
 
     def mount_context(self):
-        self.cursor = connections['so'].cursor()
+        self.cursor = db_cursor_so(self.request)
 
         try:
             transf = classes.Transfere(
@@ -88,6 +88,7 @@ class Transferencia(PermissionRequiredMixin, View):
             })
 
     def get(self, request, *args, **kwargs):
+        self.request = request
         self.get_tipo()
         if not self.tip_mov:
             return render(request, self.template_name, self.context)
@@ -96,6 +97,7 @@ class Transferencia(PermissionRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         self.get_tipo()
         self.context['form'] = self.Form_class(
             request.POST, user=self.request.user, tipo_mov=self.tip_mov)
