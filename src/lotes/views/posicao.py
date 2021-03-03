@@ -1,9 +1,10 @@
 from pprint import pprint
 
 from django.shortcuts import render
-from django.db import connections
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from geral.functions import request_user, has_permission
 from utils.functions import untuple_keys_concat
@@ -279,7 +280,7 @@ class Posicao(View):
             lote = form.cleaned_data['lote']
             periodo = lote[:4]
             ordem_confeccao = lote[-5:]
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             data = queries.lote.existe_lote(cursor, periodo, ordem_confeccao)
             if len(data) == 0:
                 context['erro'] = '.'

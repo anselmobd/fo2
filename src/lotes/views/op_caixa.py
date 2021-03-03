@@ -1,8 +1,10 @@
 from operator import itemgetter
+from pprint import pprint
 
 from django.shortcuts import render
-from django.db import connections
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.views import group_rowspan
 
@@ -185,7 +187,7 @@ class OpCaixa(View):
             form.data['op'] = kwargs['op']
         if form.is_valid():
             op = form.cleaned_data['op']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, op))
         context['form'] = form
         return render(request, self.template_name, context)

@@ -1,6 +1,9 @@
+from pprint import pprint
+
 from django.shortcuts import render
-from django.db import connections
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.views import totalize_data, group_rowspan
 
@@ -132,7 +135,7 @@ class OpPendente(View):
             colecao = form.cleaned_data['colecao']
             situacao = form.cleaned_data['situacao']
             tipo = form.cleaned_data['tipo']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(cursor, estagio, periodo_de, periodo_ate,
                                    data_de, data_ate, colecao, situacao, tipo))
