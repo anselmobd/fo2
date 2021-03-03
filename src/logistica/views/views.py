@@ -5,7 +5,6 @@ from datetime import timedelta
 import pytz
 from operator import itemgetter
 
-from django.db import connections
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.views import View
@@ -13,6 +12,8 @@ from django.urls import reverse
 from django.db.models import When, F, Q
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list
 from base.views import O2BaseGetPostView, O2BaseGetView
@@ -223,10 +224,6 @@ class NotafiscalRel(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        # if 'dia' in kwargs:
-        #     data = '{dia}/{mes}/{ano}'.format(**kwargs)
-        #     form.data['data_de'] = data  # não funciona
-        #     form.data['data_ate'] = data
         if form.is_valid():
             context.update(self.mount_context(form.cleaned_data, form))
         context['form'] = form
@@ -439,7 +436,7 @@ def notafiscal_nf(request, *args, **kwargs):
     if 'nf' not in kwargs or kwargs['nf'] is None:
         return redirect('logistica:index')
 
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     data_nf = get_chave_pela_nf(cursor, kwargs['nf'])
     if len(data_nf) == 0:
         return redirect('logistica:index')
