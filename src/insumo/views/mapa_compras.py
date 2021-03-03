@@ -1,7 +1,11 @@
+from pprint import pprint
+
 from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.functions.numbers import num_digits
 
@@ -340,7 +344,7 @@ class MapaCompras(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(
             self.mount_context(
                 cursor, kwargs['nivel'], kwargs['ref'],

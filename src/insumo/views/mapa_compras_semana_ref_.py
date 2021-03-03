@@ -2,13 +2,15 @@ import datetime
 import math
 from pprint import pprint
 
+from django.core.cache import cache
 from django.db import connections
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from django.core.cache import cache
+
+from fo2.connections import db_cursor_so
 
 from utils.cache import entkeys
-from utils.functions import my_make_key_cache, fo2logger
+from utils.functions import fo2logger, my_make_key_cache
 
 import insumo.functions
 
@@ -43,8 +45,8 @@ def mapa_compras_semana_ref(request, item, dtini, qtdsem):
     if len(item) == 2:
         context['th'] = True
     else:
-        cursor = connections['so'].cursor()
-
+        cursor = db_cursor_so(request)
+    
         data = []
 
         datas = insumo.functions.mapa_compras_semana_ref_dados(
