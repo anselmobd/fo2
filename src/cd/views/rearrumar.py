@@ -1,9 +1,10 @@
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
+
+from fo2.connections import db_conn
 
 import lotes.models
 
@@ -25,7 +26,7 @@ class Rearrumar(PermissionRequiredMixin, View):
             self.title_name = 'Rearrumar pallet na rua'
 
     def mount_context(self, request, form):
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so', self.request).cursor()
         context = {}
 
         rua = form.cleaned_data['rua'].upper()
