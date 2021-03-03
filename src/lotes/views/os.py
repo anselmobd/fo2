@@ -1,7 +1,10 @@
+from pprint import pprint
+
 from django.shortcuts import render
-from django.db import connections
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.views import group_rowspan
 
@@ -158,7 +161,7 @@ class Os(View):
             form.data['os'] = kwargs['os']
         if form.is_valid():
             os = form.cleaned_data['os']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, os))
         context['form'] = form
         return render(request, self.template_name, context)
