@@ -1,9 +1,10 @@
-from pprint import pprint
 import copy
+from pprint import pprint
 
 from django.shortcuts import render
-from django.db import connections
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.views import totalize_grouped_data, group_rowspan
 
@@ -68,7 +69,7 @@ class Distribuicao(View):
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
             familia = form.cleaned_data['familia']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(
                     cursor, estagio, data_de, data_ate, familia))

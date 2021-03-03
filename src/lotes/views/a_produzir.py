@@ -1,21 +1,22 @@
-from pprint import pprint
 import copy
+from pprint import pprint
 
-from django.db import connections
 from django.db.models import Exists, OuterRef
 from django.http import JsonResponse
 
-from utils.views import totalize_data
+from fo2.connections import db_cursor_so
+
 from base.forms.forms2 import ModeloForm2
-from base.views import O2BaseGetView, O2BaseGetPostView
+from base.views import O2BaseGetPostView, O2BaseGetView
 from geral.functions import config_get_value
+from utils.views import totalize_data
 
 import comercial.models
-from comercial.views.estoque import grade_meta_estoque
-import produto.queries
-import produto.models
-import systextil.models
 import estoque.queries
+import produto.models
+import produto.queries
+import systextil.models
+from comercial.views.estoque import grade_meta_estoque
 
 import lotes.models
 import lotes.queries.op
@@ -31,7 +32,7 @@ class AProduzir(O2BaseGetView):
         self.title_name = 'Aproduzir - Por modelo - Totais sem grade'
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         data = []
 
@@ -251,7 +252,7 @@ class GradeProduzirOld(O2BaseGetPostView):
         self.get_args = ['modelo']
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         modelo = self.form.cleaned_data['modelo']
         self.context.update({
