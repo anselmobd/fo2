@@ -1,7 +1,6 @@
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
@@ -46,8 +45,6 @@ class Transferencia(PermissionRequiredMixin, View):
             })
 
     def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-
         try:
             transf = classes.Transfere(
                 self.cursor, self.request, self.tip_mov,
@@ -89,24 +86,26 @@ class Transferencia(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.request = request
+        self.cursor = db_cursor_so(request)
         self.get_tipo()
         if not self.tip_mov:
             return render(request, self.template_name, self.context)
         self.context['form'] = self.Form_class(
-            user=request.user, tipo_mov=self.tip_mov)
+            cursor=self.cursor, user=request.user, tipo_mov=self.tip_mov)
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         self.request = request
+        self.cursor = db_cursor_so(request)
         self.get_tipo()
         self.context['form'] = self.Form_class(
-            request.POST, user=self.request.user, tipo_mov=self.tip_mov)
+            request.POST, cursor=self.cursor, user=self.request.user, tipo_mov=self.tip_mov)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
             if self.tip_mov:
                 self.mount_context()
             self.context['form'] = self.Form_class(
-                self.context, user=self.request.user, tipo_mov=self.tip_mov)
+                self.context, cursor=self.cursor, user=self.request.user, tipo_mov=self.tip_mov)
         else:
             self.context.update({
                 'erro_input': True,
