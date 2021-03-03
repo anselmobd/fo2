@@ -39,7 +39,7 @@ class RemessaIndustr(View):
             nf = form.cleaned_data['nf']
             detalhe = form.cleaned_data['detalhe']
 
-            cursor = db_cursor_so(self.request)
+            cursor = db_cursor_so(request)
             data = queries.reme_indu(
                 cursor, dt_saida_de=data_de, dt_saida_ate=data_ate,
                 faccao=faccao, cliente=cliente,
