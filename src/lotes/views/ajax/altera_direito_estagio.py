@@ -1,13 +1,14 @@
 from pprint import pprint
 
-from django.db import connections
 from django.http import JsonResponse
+
+from fo2.connections import db_cursor_so
 
 import lotes.queries as queries
 
 
 def altera_direito_estagio(request, id):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     data = {
         'id': id,
     }

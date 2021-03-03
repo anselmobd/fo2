@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from django.db import connections
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django_tables2 import RequestConfig
+
+from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list
 from geral.functions import get_empresa
@@ -42,7 +43,7 @@ def posicaoOri(request):
             lote = form.cleaned_data['lote']
             periodo = lote[:4]
             ordem_confeccao = lote[-5:]
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             sql = '''
                 SELECT
                   CASE WHEN l.QTDE_EM_PRODUCAO_PACOTE = 0 THEN 0
@@ -233,7 +234,7 @@ def get_estagios(cursor, context, periodo, ordem_confeccao):
 def detalhes_lote(request, lote):
     periodo = lote[:4]
     ordem_confeccao = lote[-5:]
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     context = {}
     if not get_periodo_oc(cursor, context, periodo, ordem_confeccao):
         return HttpResponse('')
