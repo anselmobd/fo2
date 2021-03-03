@@ -2,11 +2,12 @@ import datetime
 from pprint import pprint
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
 from django.utils import timezone
 
-from utils.functions.models import rows_to_dict_list
+from fo2.connections import db_cursor_so
+
 import logistica.models as models
+from utils.functions.models import rows_to_dict_list
 
 
 class Command(BaseCommand):
@@ -14,7 +15,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so()
 
             # get lotes a atualizar família do estágio 33
             sql_get = '''
