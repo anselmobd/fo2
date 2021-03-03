@@ -1,8 +1,9 @@
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db import connections
 from django.utils import timezone
+
+from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
@@ -24,7 +25,7 @@ class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'chave': self.form.cleaned_data['chave'],
         })
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
         data_nf = get_nf_pela_chave(cursor, self.form.cleaned_data['chave'])
         if len(data_nf) == 0:
             self.context.update({
