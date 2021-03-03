@@ -166,14 +166,16 @@ class PosicaoEstoque(View):
         return context
 
     def get(self, request, *args, **kwargs):
+        cursor = db_cursor_so(request)
         context = {'titulo': self.title_name}
-        form = self.Form_class()
+        form = self.Form_class(cursor=cursor)
         context['form'] = form
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        cursor = db_cursor_so(request)
         context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
+        form = self.Form_class(request.POST, cursor=cursor)
         if form.is_valid():
             nivel = form.cleaned_data['nivel']
             ref = form.cleaned_data['ref']
@@ -182,7 +184,6 @@ class PosicaoEstoque(View):
             deposito = form.cleaned_data['deposito']
             agrupamento = form.cleaned_data['agrupamento']
             tipo = form.cleaned_data['tipo']
-            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo))
         context['form'] = form
