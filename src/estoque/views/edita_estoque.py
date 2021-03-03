@@ -4,23 +4,17 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import SuspiciousOperation
-from django.db import connections
-from django.shortcuts import (
-    redirect,
-    render,
-    )
+from django.shortcuts import redirect, render
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from geral.functions import request_user
 from utils.functions import get_client_ip
 
 import estoque.classes
-from estoque import forms
-from estoque import queries
-from estoque.functions import (
-    transfo2_num_doc,
-    transfo2_num_doc_dt,
-    )
+from estoque import forms, queries
+from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
 
 
 class EditaEstoque(PermissionRequiredMixin, View):
@@ -35,7 +29,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
 
     def start(self):
         self.context = {'titulo': self.title_name}
-        self.cursor = connections['so'].cursor()
+        self.cursor = db_cursor_so(self.request)
 
     def pre_mount_context(self, request, **kwargs):
         self.request = request
@@ -225,6 +219,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         return True
 
     def get(self, request, *args, **kwargs):
+        self.request = request
         self.start()
 
         get_data_inv = None
@@ -260,6 +255,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         self.start()
         self.form = self.Form_class(request.POST)
 
