@@ -1,9 +1,10 @@
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db import connections
 from django.http import JsonResponse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from estoque import classes
 
@@ -58,7 +59,7 @@ class Movimenta(PermissionRequiredMixin, View):
     def get(self, request, **kwargs):
         self.request = request
         self.data = kwargs
-        self.cursor = connections['so'].cursor()
+        self.cursor = db_cursor_so(request)
 
         self.data.update({
             'status': 'requisitado',
