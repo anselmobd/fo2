@@ -1,9 +1,10 @@
 import datetime
 import re
-from pprint import pprint, pformat
+from pprint import pformat, pprint
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
+
+from fo2.connections import db_cursor_so
 
 import produto.queries
 
@@ -80,7 +81,7 @@ class Command(BaseCommand):
 
         itens = []
 
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so()
 
         if len(refmod) != 5:
             modelo = refmod
