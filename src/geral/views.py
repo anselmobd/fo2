@@ -37,7 +37,8 @@ def index(request):
 
 
 def deposito(request):
-    data = queries.deposito()
+    cursor = db_cursor_so(request)
+    data = queries.deposito(cursor)
     propriedades = {
         1: 'Próprio',
         2: 'Em terceiros',
