@@ -1,7 +1,5 @@
 from pprint import pprint
 
-from django.db import connections
-
 from base.models import Colaborador
 from systextil.models import Usuario as S_Usuario
 
@@ -10,13 +8,12 @@ from estoque import models
 
 class ObjDocMovStq():
 
-    def __init__(self, num_doc, descricao, user, cria=True):
+    def __init__(self, cursor, num_doc, descricao, user, cria=True):
+        self.cursor = cursor
         self.num_doc = num_doc
         self.descricao = descricao
         self.user = user
         self.cria = cria
-
-        self.cursor = connections['so'].cursor()
 
         self.get_num_doc()
 

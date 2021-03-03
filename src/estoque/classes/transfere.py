@@ -201,7 +201,7 @@ class Transfere():
 
     def valid_num_doc(self):
         obj_doc_mov_stq = classes.ObjDocMovStq(
-            self.num_doc, self.descricao, self.request.user,
+            self.cursor, self.num_doc, self.descricao, self.request.user,
             cria=self.cria_num_doc)
         if obj_doc_mov_stq.num_doc != '0':
             self.num_doc = obj_doc_mov_stq.num_doc
