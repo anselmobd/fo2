@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 import comercial.forms as forms
 import comercial.queries as queries
@@ -128,7 +129,7 @@ class TabelaDePreco(View):
             form.data['tabela'] = kwargs['tabela']
         if form.is_valid():
             tabela = form.cleaned_data['tabela']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, tabela))
         context['form'] = form
         return render(request, self.template_name, context)
