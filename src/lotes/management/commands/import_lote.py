@@ -1,19 +1,16 @@
-import sys
 import datetime
-from pprint import pprint, pformat
+import sys
+from pprint import pformat, pprint
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
 
-from utils.functions.models import rows_to_dict_list_lower
+from fo2.connections import db_cursor, db_cursor_so
 
 import lotes.models as models
-from lotes.functions import (
-    oracle_existe_col,
-    oracle_existe_seq,
-    oracle_existe_table,
-    oracle_existem_triggers,
-)
+from utils.functions.models import rows_to_dict_list_lower
+
+from lotes.functions import (oracle_existe_col, oracle_existe_seq,
+                             oracle_existe_table, oracle_existem_triggers)
 
 
 class Command(BaseCommand):
@@ -49,7 +46,7 @@ class Command(BaseCommand):
             yield dict_row
 
     def get_ops_trail_s(self):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = '''
             SELECT
               lo.ORDEM_PRODUCAO op
@@ -99,7 +96,7 @@ class Command(BaseCommand):
         return self.iter_cursor(cursor_s)
 
     def get_ops_trail_f(self):
-        cursor_f = connections['default'].cursor()
+        cursor_f = db_cursor('default')
         sql = '''
             SELECT
               le.op
@@ -133,7 +130,7 @@ class Command(BaseCommand):
         return self.iter_cursor(cursor_f)
 
     def get_lotes_op(self, op):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so()
         sql = f'''
             SELECT
               lote.OP
@@ -397,15 +394,15 @@ class Command(BaseCommand):
                 self.exclui(op)
 
     def verifica_seq(self):
-        cursor_vs = connections['so'].cursor()
+        cursor_vs = db_cursor_so()
         return oracle_existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
     def verifica_del_table(self):
-        cursor_vs = connections['so'].cursor()
+        cursor_vs = db_cursor_so()
         return oracle_existe_table(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR_SYNC_DEL')
 
     def verifica_column(self):
-        cursor_vs = connections['so'].cursor()
+        cursor_vs = db_cursor_so()
         return (
             oracle_existe_col(cursor_vs, 'PCPC_040', 'FO2_TUSSOR_SYNC')
             and
@@ -413,7 +410,7 @@ class Command(BaseCommand):
         )
 
     def verifica_trigger(self):
-        cursor_vs = connections['so'].cursor()
+        cursor_vs = db_cursor_so()
         return oracle_existem_triggers(
             cursor_vs, 'SYSTEXTIL',
             [
