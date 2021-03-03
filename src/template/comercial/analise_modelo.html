@@ -33,7 +33,7 @@
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
   </form>
-  <a href="{% url 'comercial:analise_vendas' %}" target="_blank">Vendas por modelo</a>
+  <a href="{% url 'comercial:vendas_por_modelo' %}" target="_blank">Vendas por modelo</a>
   {% if modelo %}
     <h4>Modelo {{ modelo }}</h4>
   {% endif %}
