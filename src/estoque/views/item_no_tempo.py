@@ -1,25 +1,22 @@
 import datetime
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from utils.views import totalize_data
+from fo2.connections import db_cursor_so
+
 from utils.functions import untuple_keys_concat
 from utils.functions.views import cleanned_fields_to_context
+from utils.views import totalize_data
 
 import lotes.models
-import lotes.queries.pedido
 import lotes.queries.analise
+import lotes.queries.pedido
 
-from estoque import forms
-from estoque import queries
-from estoque.functions import (
-    transfo2_num_doc,
-    transfo2_num_doc_dt,
-    )
+from estoque import forms, queries
+from estoque.functions import transfo2_num_doc, transfo2_num_doc_dt
 
 
 class ItemNoTempo(View):
@@ -34,7 +31,7 @@ class ItemNoTempo(View):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         self.context.update({
             'item': '{ref}.{tam}.{cor}'.format(**self.context)
@@ -354,6 +351,7 @@ class ItemNoTempo(View):
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         if 'deposito' in kwargs:
             initial = {
                 "ref": kwargs['ref'],
