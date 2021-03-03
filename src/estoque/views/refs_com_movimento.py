@@ -1,9 +1,11 @@
-from django.db import connections
+from pprint import pprint
+
 from django.shortcuts import render
 from django.views import View
 
-from estoque import forms
-from estoque import queries
+from fo2.connections import db_cursor_so
+
+from estoque import forms, queries
 
 
 class RefsComMovimento(View):
@@ -60,7 +62,7 @@ class RefsComMovimento(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             data_ini = form.cleaned_data['data_ini']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, data_ini))
         context['form'] = form
         return render(request, self.template_name, context)

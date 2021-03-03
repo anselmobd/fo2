@@ -1,17 +1,17 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 import utils.functions.strings
-from utils.views import totalize_grouped_data, group_rowspan
+from utils.views import group_rowspan, totalize_grouped_data
 
 import produto.queries
 
-from estoque import forms
-from estoque import queries
+from estoque import forms, queries
 
 
 class ReferenciaDeposito(View):
@@ -111,7 +111,7 @@ class ReferenciaDeposito(View):
         if form.is_valid():
             deposito = form.cleaned_data['deposito']
             modelo = form.cleaned_data['modelo']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             self.context.update(self.mount_context(
                 request, cursor, deposito, modelo))
         self.context['form'] = form
