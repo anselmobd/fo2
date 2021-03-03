@@ -80,8 +80,7 @@ class Command(BaseCommand):
 
         itens = []
 
-        if refmod is None or cor is None or tam is None:
-            cursor = connections['so'].cursor()
+        cursor = connections['so'].cursor()
 
         if len(refmod) != 5:
             modelo = refmod
@@ -149,6 +148,7 @@ class Command(BaseCommand):
 
             try:
                 sucesso, mensagem, infos = ajuste_por_inventario(
+                    cursor,
                     dep,
                     item['ref'],
                     item['tam'],

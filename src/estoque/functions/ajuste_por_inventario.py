@@ -1,14 +1,13 @@
 import datetime
 from pprint import pprint
 
-from django.db import connections
-
 import estoque.classes
 import estoque.functions
 from estoque import queries
 
 
 def ajuste_por_inventario(
+    cursor,
     dep,
     ref,
     tam,
@@ -31,7 +30,6 @@ def ajuste_por_inventario(
     if dep not in ['101', '102', '231']:
         return False, 'Depósito inválido', infos
 
-    cursor = connections['so'].cursor()
     infos['ref'] = ref
     infos['tam'] = tam
     infos['cor'] = cor
