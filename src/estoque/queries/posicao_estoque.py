@@ -191,6 +191,5 @@ def posicao_estoque(
           e.CDITEM_NIVEL99
         {order_by} -- order_by
     '''
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
