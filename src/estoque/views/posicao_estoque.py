@@ -1,13 +1,13 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 from utils.views import totalize_data
 
-from estoque import forms
-from estoque import queries
+from estoque import forms, queries
 
 
 class PosicaoEstoque(View):
@@ -182,7 +182,7 @@ class PosicaoEstoque(View):
             deposito = form.cleaned_data['deposito']
             agrupamento = form.cleaned_data['agrupamento']
             tipo = form.cleaned_data['tipo']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo))
         context['form'] = form
