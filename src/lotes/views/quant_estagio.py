@@ -2,7 +2,6 @@ from operator import itemgetter
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db import connections
 from django.db.models import Exists, OuterRef
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -85,7 +84,7 @@ class QuantEstagio(View):
             estagio = form.cleaned_data['estagio']
             ref = form.cleaned_data['ref']
             tipo = form.cleaned_data['tipo']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, estagio, ref, tipo))
         context['form'] = form
         return render(request, self.template_name, context)
@@ -813,7 +812,7 @@ class MetaGiro(O2BaseGetView):
         self.title_name = 'Visualiza meta de giro'
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         metas = comercial.models.getMetaEstoqueAtual()
         metas = metas.order_by('-venda_mensal')
@@ -884,7 +883,7 @@ class MetaTotal(O2BaseGetView):
         self.title_name = 'Visualiza total das metas'
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         metas = comercial.models.getMetaEstoqueAtual()
         metas = metas.order_by('-venda_mensal')
