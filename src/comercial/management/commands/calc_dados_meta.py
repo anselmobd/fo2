@@ -2,6 +2,7 @@ import datetime
 from pprint import pprint, pformat
 
 from django.core.management.base import BaseCommand, CommandError
+from django.db import connections
 
 from utils.decorators import CacheGet
 
@@ -29,13 +30,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
+        cursor = connections['so'].cursor()
 
         try:
             hoje = datetime.date.today()
 
             cg = CacheGet()
             msg_erro, meses, total = cg.get_result(
-                comercial.queries.dados_meta_no_ano(hoje)
+                comercial.queries.dados_meta_no_ano(cursor, hoje)
             )
             self.my_pprintln(cg.params)
 

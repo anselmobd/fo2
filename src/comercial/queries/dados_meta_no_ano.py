@@ -1,8 +1,6 @@
 import time
 from pprint import pprint
 
-from django.db import connections
-
 from utils.decorators import caching_function
 from utils.functions import dias_mes_data
 
@@ -18,9 +16,7 @@ import comercial.queries
     version_key_variation=1,
     caching_params=True,
 )
-def dados_meta_no_ano(hoje):
-    cursor = connections['so'].cursor()
-
+def dados_meta_no_ano(cursor, hoje):
     ano_atual = hoje.year
     mes_atual = hoje.month
     dia_atual = hoje.day
