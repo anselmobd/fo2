@@ -1,14 +1,15 @@
 import re
 import urllib
-from pprint import pprint, pformat
+from pprint import pformat, pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db import connections
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 from geral.functions import has_permission
@@ -31,7 +32,7 @@ def lista_item_n1_sem_preco_medio(request):
         'urltitulo': '/produto/',
         'subtitulo': 'Itens de nível 1 sem definição de preço médio',
     }
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     sql = '''
         SELECT
           ptc.GRUPO_ESTRUTURA REF
@@ -65,16 +66,8 @@ def lista_item_n1_sem_preco_medio(request):
     return render(request, 'layout/tabela_geral.html', context)
 
 
-# UPDATE basi_010 ptc
-# SET
-#   ptc.PRECO_MEDIO = 2
-# WHERE ptc.NIVEL_ESTRUTURA = 1
-#   AND ptc.PRECO_MEDIO <> 2
-# ;
-
-
 def estatistica(request):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     sql = '''
         SELECT
           count(*) quant
@@ -93,7 +86,7 @@ def estatistica(request):
 
 # ajax json example
 def stat_nivel(request):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
 
     # Marca com 'OP' produtos com alguma OP, porém sem nenhuma marca
     sql = '''
@@ -171,7 +164,7 @@ def stat_niveis(request, nivel):
         html = render_to_string('produto/ajax/stat_niveis.html', context)
         return HttpResponse(html)
     elif nivel in ('2', '9'):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         sql = '''
             SELECT
               ROWNUM
@@ -301,7 +294,7 @@ class Modelo(View):
             form.data['modelo'] = kwargs['modelo']
         if form.is_valid():
             modelo = form.cleaned_data['modelo']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, modelo))
         context['form'] = form
         return render(request, self.template_name, context)
@@ -390,7 +383,7 @@ class Busca(View):
             cor = form.cleaned_data['cor']
             roteiro = form.cleaned_data['roteiro']
             alternativa = form.cleaned_data['alternativa']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, filtro, cor, roteiro, alternativa))
         context['form'] = form
@@ -430,7 +423,7 @@ class EstrEstagioDeInsumo(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(self.mount_context(cursor))
         return render(request, self.template_name, context)
 
@@ -471,7 +464,7 @@ class MultiplasColecoes(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(self.mount_context(cursor))
         return render(request, self.template_name, context)
 
@@ -551,18 +544,17 @@ class RoteirosPadraoRef(View):
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
             ref = form.cleaned_data['ref']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, ref))
         context['form'] = form
         return render(request, self.template_name, context)
 
 
-def gera_roteiros_padrao_ref(ref):
+def gera_roteiros_padrao_ref(cursor, ref):
     roteiro_correto = 0
     roteiro_errado = 0
     gargalo_errado = 0
 
-    cursor = connections['so'].cursor()
     data = queries.ref_inform(cursor, ref)
 
     info = data[0]
@@ -670,7 +662,7 @@ class GeraRoteirosPadraoRef(PermissionRequiredMixin, View):
             return HttpResponse('', content_type='text/plain')
 
         ref = ref.upper()
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
 
         quant = kwargs['quant']
         if quant is None:
@@ -693,6 +685,7 @@ class GeraRoteirosPadraoRef(PermissionRequiredMixin, View):
                 count += 1
                 if count <= quant:
                     output_ref, stat = gera_roteiros_padrao_ref(
+                        cursor,
                         referencia['REFERENCIA'])
                     roteiro_correto += stat[0]
                     roteiro_errado += stat[1]
@@ -775,7 +768,7 @@ class InfoXml(View):
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
             ref = form.cleaned_data['ref']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, ref))
         context['form'] = form
         return render(request, self.template_name, context)
@@ -827,7 +820,7 @@ class PorCliente(View):
             form.data['cliente'] = kwargs['cliente']
         if form.is_valid():
             cliente = form.cleaned_data['cliente']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, cliente))
         context['form'] = form
         return render(request, self.template_name, context)
@@ -868,7 +861,7 @@ class BuscaModelo(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             descricao = form.cleaned_data['descricao']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, descricao))
         context['form'] = form
         return render(request, self.template_name, context)
