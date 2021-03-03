@@ -26,7 +26,7 @@ class Rearrumar(PermissionRequiredMixin, View):
             self.title_name = 'Rearrumar pallet na rua'
 
     def mount_context(self, request, form):
-        cursor = db_conn('so', self.request).cursor()
+        cursor = db_conn('so', request).cursor()
         context = {}
 
         rua = form.cleaned_data['rua'].upper()
