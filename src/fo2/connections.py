@@ -19,5 +19,14 @@ def db_conn(name, request=None):
             return connections[fo2_db_so]
     return connections[name]
 
+
 def db_conn_so(request=None):
     return db_conn(fo2_db_so, request)
+
+
+def db_cursor(name, request=None):
+    return db_conn(name, request).cursor()
+
+
+def db_cursor_so(request=None):
+    return db_conn_so(request).cursor()
