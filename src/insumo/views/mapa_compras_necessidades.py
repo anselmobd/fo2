@@ -1,16 +1,17 @@
 import re
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from base.views import O2BaseGetPostView
-from utils.views import totalize_grouped_data, totalize_data, group_rowspan
+from fo2.connections import db_cursor_so
 
-import insumo.queries as queries
+from base.views import O2BaseGetPostView
+from utils.views import group_rowspan, totalize_data, totalize_grouped_data
+
 import insumo.forms as forms
+import insumo.queries as queries
 
 
 class MapaComprasNecessidades(O2BaseGetPostView):
@@ -39,7 +40,7 @@ class MapaComprasNecessidades(O2BaseGetPostView):
             'colunas': colunas,
         })
 
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         data = queries.mapa_compras_necessidades_especificas(
             cursor, nivel, ref, cor, tamanho, colunas=colunas)
