@@ -96,9 +96,10 @@ class TransferenciaForm(forms.Form):
         label='Descrição do documento', required=False,
         widget=forms.TextInput(attrs={'size': 50}))
 
-    def __init__(self, *args, user=None, tipo_mov=None, **kwargs):
+    def __init__(self, *args, cursor=None, user=None, tipo_mov=None, **kwargs):
         super(TransferenciaForm, self).__init__(*args, **kwargs)
 
+        self.cursor = cursor
         self.user = user
         self.tipo_mov = tipo_mov
 
@@ -108,6 +109,7 @@ class TransferenciaForm(forms.Form):
 
     def mount_choices(self):
         CHOICES = geral.functions.depositos_choices(
+            self.cursor,
             only=(101, 102, 103, 122, 231))
         setattr(self.fields['deposito_origem'], 'choices', CHOICES)
         setattr(self.fields['deposito_destino'], 'choices', CHOICES)
