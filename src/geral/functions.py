@@ -153,7 +153,7 @@ def config_set_value(param_codigo, value, usuario=None):
 
 
 def depositos_choices(
-        cod_todos=None, descr_todos=None, cod_only=None,
+        cursor, cod_todos=None, descr_todos=None, cod_only=None,
         only=None, less=None, rest=None):
     CHOICES = []
 
@@ -181,7 +181,7 @@ def depositos_choices(
 
     depositos_only = []
     if only is not None:
-        depositos_only = geral.queries.deposito(only=only)
+        depositos_only = geral.queries.deposito(cursor, only=only)
 
     if rest is not None:
         if rest:
@@ -189,7 +189,7 @@ def depositos_choices(
 
     depositos_less = []
     if less is not None:
-        depositos_less = geral.queries.deposito(less=less)
+        depositos_less = geral.queries.deposito(cursor, less=less)
 
     for deposito in (todos + grupo + depositos_only + depositos_less):
         if deposito['COD'] in (cod_todos, cod_only):
