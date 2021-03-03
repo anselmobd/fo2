@@ -51,6 +51,12 @@ class DevolucaoParaMeta(O2BaseGetPostView):
         faturados = comercial.queries.devolucao_para_meta(
             cursor, ano_atual, mes_atual, tipo=tipo)
 
+        if len(faturados) == 0:
+            self.context.update({
+                'msg_erro': 'Nenhuma devolução encontrada',
+            })
+            return
+
         totalize_data(faturados, {
             'sum': ['valor'],
             'descr': {'cliente': 'Total:'},
