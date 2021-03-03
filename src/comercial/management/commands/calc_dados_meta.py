@@ -4,7 +4,7 @@ from pprint import pprint, pformat
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from fo2.connections import db_conn
+from fo2.connections import db_cursor_so
 
 from utils.decorators import CacheGet
 
@@ -34,7 +34,7 @@ class Command(BaseCommand):
         self.my_println('{}'.format(datetime.datetime.now()))
 
         try:
-            cursor = db_conn(settings.FO2_DEFAULT_SYSTEXTIL_DB).cursor()
+            cursor = db_cursor_so()
             hoje = datetime.date.today()
 
             cg = CacheGet()
