@@ -1,8 +1,10 @@
 import datetime
 from pprint import pprint, pformat
 
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
+
+from fo2.connections import db_conn
 
 from utils.decorators import CacheGet
 
@@ -30,9 +32,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
-        cursor = connections['so'].cursor()
 
         try:
+            cursor = db_conn(settings.FO2_DEFAULT_SYSTEXTIL_DB).cursor()
             hoje = datetime.date.today()
 
             cg = CacheGet()
