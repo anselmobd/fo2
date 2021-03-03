@@ -1,6 +1,9 @@
-from django.db import connections
+from pprint import pprint
+
 from django.db.models import Exists, OuterRef
 from django.urls import reverse
+
+from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView
@@ -10,6 +13,7 @@ import produto
 import lotes
 import estoque
 from comercial.views.estoque import grade_meta_estoque
+
 from lotes.views.a_produzir import *
 
 
@@ -23,7 +27,7 @@ class GradeProduzir(O2BaseGetPostView):
         self.get_args = ['modelo']
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         modelo = self.form.cleaned_data['modelo']
         self.context.update({
