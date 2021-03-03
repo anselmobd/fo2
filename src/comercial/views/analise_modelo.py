@@ -6,7 +6,7 @@ from django import forms
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from fo2.connections import db_conn, fo2_db_so
+from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView
@@ -486,7 +486,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             lotes.views.calculaMetaGiroMetas(self.cursor, metas)
 
     def mount_context(self):
-        self.cursor = db_conn(fo2_db_so, self.request).cursor()
+        self.cursor = db_cursor_so(self.request)
 
         modelo = self.form.cleaned_data['modelo']
         if 'grava' in self.request.POST:
