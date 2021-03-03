@@ -1,6 +1,8 @@
 from pprint import pprint
 import datetime
 
+from django.db import connections
+
 from base.views import O2BaseGetView
 from utils.decorators import CacheGet
 
@@ -15,12 +17,13 @@ class MetaNoAno(O2BaseGetView):
         self.title_name = 'Meta do ano'
 
     def mount_context(self):
+        cursor = connections['so'].cursor()
         hoje = datetime.date.today()
         mes_atual = hoje.month
 
         cg = CacheGet()
         msg_erro, meses, total = cg.get_result(
-            comercial.queries.dados_meta_no_ano(hoje)
+            comercial.queries.dados_meta_no_ano(cursor, hoje)
         )
 
         self.context.update({
