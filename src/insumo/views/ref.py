@@ -1,7 +1,10 @@
-from django.db import connections
+from pprint import pprint
+
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 import insumo.forms as forms
 import insumo.queries as queries
@@ -148,7 +151,7 @@ class Ref(View):
             form.data['item'] = kwargs['item']
         if form.is_valid():
             item = form.cleaned_data['item']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, item))
         context['form'] = form
         return render(request, self.template_name, context)
