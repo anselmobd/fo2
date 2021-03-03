@@ -1,6 +1,9 @@
+from pprint import pprint 
+
 from django.contrib.auth.decorators import permission_required
-from django.db import connections
 from django.http import JsonResponse
+
+from fo2.connections import db_cursor_so
 
 from utils.views import request_hash_trail
 
@@ -37,7 +40,7 @@ def executa_ajuste(request, **kwargs):
         })
         return JsonResponse(data, safe=False)
 
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
 
     produto = queries.get_preco_medio_ref_cor_tam(
         cursor, ref, cor, tam)
