@@ -1,18 +1,16 @@
 from pprint import pprint
 
-from django.db import connections
 from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from utils.functions.views import (
-    cleanned_fields_to_context,
-    context_to_form_post,
-    )
+from fo2.connections import db_cursor_so
 
-from estoque import forms
-from estoque import models
+from utils.functions.views import (cleanned_fields_to_context,
+                                   context_to_form_post)
+
+from estoque import forms, models
 
 
 class ListaDocsMovimentacao(View):
@@ -28,7 +26,7 @@ class ListaDocsMovimentacao(View):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
-        self.cursor = connections['so'].cursor()
+        self.cursor = db_cursor_so(self.request)
 
         dados = models.DocMovStq.objects
         if self.context['data']:
