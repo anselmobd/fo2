@@ -1,32 +1,32 @@
 import datetime
 import pytz
 import yaml
-from pprint import pprint, pformat
+from pprint import pformat, pprint
 
 import django.forms
-from django.contrib.auth.mixins \
-    import PermissionRequiredMixin, LoginRequiredMixin
-from django.db import connections
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 
-import geral.models as models
-import geral.forms as forms
-import geral.queries as queries
-from geral.functions import get_empresa
+from fo2.connections import db_cursor_so
+
 from base.views import O2BaseGetPostView
-from geral.functions import config_get_value, config_set_value
 from utils.functions.models import rows_to_dict_list
 
 import produto.queries
 
-from .models import Painel, PainelModulo, InformacaoModulo, \
-                    UsuarioPainelModulo, Pop, PopAssunto, UsuarioPopAssunto
+import geral.forms as forms
+import geral.models as models
+import geral.queries as queries
+from geral.functions import config_get_value, config_set_value, get_empresa
+from .models import (InformacaoModulo, Painel, PainelModulo, Pop, PopAssunto,
+                     UsuarioPainelModulo, UsuarioPopAssunto)
 
 
 def index(request):
@@ -62,7 +62,7 @@ def deposito(request):
 
 
 def estagio(request):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     sql = '''
         SELECT
           e.CODIGO_ESTAGIO EST
@@ -89,7 +89,7 @@ def estagio(request):
 
 
 def periodo_confeccao(request):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     sql = '''
         SELECT
           p.PERIODO_PRODUCAO PERIODO
@@ -119,7 +119,7 @@ def periodo_confeccao(request):
 class PainelView(View):
 
     def get(self, request, *args, **kwargs):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         painel = Painel.objects.filter(slug=kwargs['painel'], habilitado=True)
         if len(painel) == 0:
             return redirect('apoio_ao_erp')
@@ -1646,7 +1646,7 @@ def roteiros_de_fluxo(request, id):
 
 
 def unidade(request):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     sql = '''
         SELECT
           di.DIVISAO_PRODUCAO DIV
