@@ -1,9 +1,10 @@
-from pprint import pprint
 import datetime
+from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 from utils.functions import dias_mes_data
@@ -11,6 +12,7 @@ from utils.functions.models import queryset_to_dict_list_lower
 from utils.views import totalize_data
 
 import lotes.queries.pedido as l_q_p
+
 import comercial.forms
 import comercial.models
 import comercial.queries
@@ -25,7 +27,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         self.title_name = 'Faturamento no mês'
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         ano = self.form.cleaned_data['ano']
         mes = self.form.cleaned_data['mes']
