@@ -1,16 +1,16 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data
 
 import insumo.queries
 
-from estoque import forms
-from estoque import queries
+from estoque import forms, queries
 
 
 class ValorMp(View):
@@ -94,7 +94,7 @@ class ValorMp(View):
             negativos = form.cleaned_data['negativos']
             preco_zerado = form.cleaned_data['preco_zerado']
             deposito_compras = form.cleaned_data['deposito_compras']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, nivel, positivos, zerados, negativos, preco_zerado,
                 deposito_compras))
