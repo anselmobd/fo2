@@ -102,16 +102,17 @@ class ReferenciaDeposito(View):
         return texto
 
     def get(self, request, *args, **kwargs):
-        form = self.Form_class()
+        cursor = db_cursor_so(request)
+        form = self.Form_class(cursor=cursor)
         self.context['form'] = form
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        form = self.Form_class(request.POST)
+        cursor = db_cursor_so(request)
+        form = self.Form_class(request.POST, cursor=cursor)
         if form.is_valid():
             deposito = form.cleaned_data['deposito']
             modelo = form.cleaned_data['modelo']
-            cursor = db_cursor_so(request)
             self.context.update(self.mount_context(
                 request, cursor, deposito, modelo))
         self.context['form'] = form
