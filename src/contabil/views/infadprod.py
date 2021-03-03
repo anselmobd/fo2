@@ -3,8 +3,9 @@ import urllib
 
 from django.shortcuts import render
 from django.urls import reverse
-from django.db import connections
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.views import totalize_grouped_data
 
@@ -21,7 +22,7 @@ class InfAdProd(View):
         context = {
             'pedido': pedido,
         }
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
         data = queries.infadprod_por_pedido(cursor, pedido)
         if len(data) == 0:
             context['erro'] = 'Pedido não encontrado'
@@ -84,6 +85,7 @@ class InfAdProd(View):
             return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if 'pedido' in kwargs and kwargs['pedido'] is not None:

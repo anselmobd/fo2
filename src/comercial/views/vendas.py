@@ -1,7 +1,8 @@
 from pprint import pprint
 
-from django.db import connections
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
@@ -29,7 +30,7 @@ class VendasPor(O2BaseGetPostView):
             # 'cliente': cliente,
             'ref': self.ref,
         })
-        self.cursor = connections['so'].cursor()
+        self.cursor = db_cursor_so(self.request)
 
         descricao = ''
         codigo_colecao = ''
