@@ -1,13 +1,13 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 from geral.functions import has_permission
 
-from estoque import forms
-from estoque import queries
+from estoque import forms, queries
 
 
 class ConfrontaEstoque(View):
@@ -102,7 +102,7 @@ class ConfrontaEstoque(View):
             cor = form.cleaned_data['cor']
             deposito = form.cleaned_data['deposito']
             botao = 'c' if 'corrige' in request.POST else 'v'
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 request, cursor, ref, tam, cor, deposito, botao))
         context['form'] = form
