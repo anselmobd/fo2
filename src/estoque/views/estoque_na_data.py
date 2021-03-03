@@ -79,14 +79,16 @@ class EstoqueNaData(View):
         return context
 
     def get(self, request, *args, **kwargs):
+        cursor = db_cursor_so(request)
         context = {'titulo': self.title_name}
-        form = self.Form_class()
+        form = self.Form_class(cursor=cursor)
         context['form'] = form
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        cursor = db_cursor_so(request)
         context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
+        form = self.Form_class(request.POST, cursor=cursor)
         if form.is_valid():
             ref = form.cleaned_data['ref']
             cor = form.cleaned_data['cor']
@@ -94,7 +96,6 @@ class EstoqueNaData(View):
             data = form.cleaned_data['data']
             hora = form.cleaned_data['hora']
             deposito = form.cleaned_data['deposito']
-            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(
                     cursor, ref, tam, cor, data, hora, deposito))
