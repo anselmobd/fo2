@@ -3,9 +3,10 @@ from datetime import datetime
 from pprint import pprint
 
 from django.shortcuts import render
-from django.db import connections
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
@@ -123,7 +124,7 @@ class ImprimeOb1(LoginRequiredMixin, View):
             caixa_inicial = form.cleaned_data['caixa_inicial']
             caixa_final = form.cleaned_data['caixa_final']
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context_and_print(
                     cursor, os, caixa_inicial, caixa_final,

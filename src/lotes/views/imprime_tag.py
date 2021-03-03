@@ -4,9 +4,10 @@ from pprint import pprint
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
@@ -149,7 +150,7 @@ class ImprimeTag(LoginRequiredMixin, View):
             item = form.cleaned_data['item']
             quant = form.cleaned_data['quant']
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context_and_print(cursor, item, quant))
         context['form'] = form
         return render(request, self.template_name, context)
