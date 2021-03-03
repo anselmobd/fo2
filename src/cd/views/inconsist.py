@@ -1,11 +1,13 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
-from django.views import View
 from django.urls import reverse
+from django.views import View
+
+from fo2.connections import db_conn
 
 from utils.functions.models import rows_to_dict_list_lower
+
 import lotes.models
 
 
@@ -172,9 +174,7 @@ class Inconsistencias(View):
                     ordem = 'A'
 
         context = {'titulo': self.title_name}
-        # form = self.Form_class()
-        # context['form'] = form
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so', self.request).cursor()
         data = self.mount_context(cursor, ordem, opini)
         context.update(data)
         return render(request, self.template_name, context)
