@@ -2,10 +2,11 @@ from pprint import pprint
 from datetime import datetime, date
 from itertools import product
 
-from django.db import connections
 from django import forms
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from fo2.connections import db_conn, fo2_db_so
 
 from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView
@@ -485,7 +486,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             lotes.views.calculaMetaGiroMetas(self.cursor, metas)
 
     def mount_context(self):
-        self.cursor = connections['so'].cursor()
+        self.cursor = db_conn(fo2_db_so, self.request).cursor()
 
         modelo = self.form.cleaned_data['modelo']
         if 'grava' in self.request.POST:
