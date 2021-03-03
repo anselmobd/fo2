@@ -1,9 +1,10 @@
 from pprint import pprint
 
 from django.shortcuts import render
-from django.db import connections
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.views import totalize_grouped_data, group_rowspan
 
@@ -207,7 +208,7 @@ class Expedicao(View):
             cliente = form.cleaned_data['cliente']
             deposito = form.cleaned_data['deposito']
             detalhe = form.cleaned_data['detalhe']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, embarque_de, embarque_ate,
                 emissao_de, emissao_ate,
