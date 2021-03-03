@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from django.db import connections
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
+
+from fo2.connections import db_conn
 
 import lotes.models
 import lotes.queries
@@ -27,7 +28,7 @@ class RetirarParcial(PermissionRequiredMixin, View):
             self.title_name = 'Retirar lote parcial'
 
     def mount_context(self, request, form):
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so', request).cursor()
         context = {}
 
         lote = form.cleaned_data['lote']
