@@ -2,8 +2,9 @@ from pprint import pprint
 
 from django.shortcuts import render
 from django.urls import reverse
-from django.db import connections
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 import contabil.forms as forms
 import contabil.queries as queries
@@ -38,7 +39,7 @@ class RemessaIndustr(View):
             nf = form.cleaned_data['nf']
             detalhe = form.cleaned_data['detalhe']
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(self.request)
             data = queries.reme_indu(
                 cursor, dt_saida_de=data_de, dt_saida_ate=data_ate,
                 faccao=faccao, cliente=cliente,
