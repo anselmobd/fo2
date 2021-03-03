@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from fo2.connections import db_conn_so
+from fo2.connections import db_cursor_so
 
 from utils.functions import untuple_keys_concat
 from utils.functions.views import (
@@ -29,7 +29,7 @@ class BuscaOb(View):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
-        self.cursor = db_conn_so(self.request).cursor()
+        self.cursor = db_cursor_so(self.request)
 
         dados = beneficia.queries.busca_ob(
             self.cursor,
