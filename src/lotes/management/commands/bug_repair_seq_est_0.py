@@ -2,8 +2,9 @@ import datetime
 from pprint import pprint
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
 from django.utils import timezone
+
+from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list_lower
 import logistica.models as models
@@ -16,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('---\n{}'.format(datetime.datetime.now()))
         # try:
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so()
 
         # get primeira OP com mais de um padrão de SEQUENCIA_ESTAGIO
         sql_get = '''
