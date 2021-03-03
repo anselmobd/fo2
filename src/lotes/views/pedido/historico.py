@@ -2,10 +2,11 @@ import datetime
 from pprint import pprint
 
 from django.conf import settings
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import PedidoForm2
 
@@ -18,10 +19,9 @@ class Historico(View):
     template_name = 'lotes/historico.html'
     title_name = 'Histórico de pedido'
 
-    def mount_context(self, pedido):
+    def mount_context(self, cursor, pedido):
         context = {'pedido': pedido}
 
-        cursor = connections['so'].cursor()
         data = queries.pedido.ped_inform(cursor, pedido)
         if len(data) == 0:
             context.update({
@@ -62,6 +62,7 @@ class Historico(View):
             form.data['pedido'] = kwargs['pedido']
         if form.is_valid():
             pedido = form.cleaned_data['pedido']
-            context.update(self.mount_context(pedido))
+            cursor = db_cursor_so(request)
+            context.update(self.mount_context(cursor, pedido))
         context['form'] = form
         return render(request, self.template_name, context)

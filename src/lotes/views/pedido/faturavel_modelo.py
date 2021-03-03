@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from geral.functions import config_get_value
 from utils.views import totalize_data
@@ -136,7 +137,7 @@ class PedidoFaturavelModelo(View):
             modelo = form.cleaned_data['modelo']
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(cursor, modelo, tam, cor))
         context['form'] = form

@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.views import totalize_data
 
@@ -167,7 +168,7 @@ class BuscaOP(View):
             motivo = form.cleaned_data['motivo']
             quant_fin = form.cleaned_data['quant_fin']
             quant_emp = form.cleaned_data['quant_emp']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(
                     cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
