@@ -10,7 +10,6 @@ from pprint import pprint
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.cache import cache
-from django.db import connections
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
@@ -18,15 +17,12 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 from geral.models import Dispositivos, RoloBipado
 from utils.cache import entkeys
-from utils.functions import (
-    fo2logger, 
-    max_not_None, 
-    min_not_None,
-    my_make_key_cache, 
-    segunda,
-)
+from utils.functions import (fo2logger, max_not_None, min_not_None,
+                             my_make_key_cache, segunda)
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 from utils.views import group_rowspan, totalize_grouped_data
 
@@ -35,18 +31,10 @@ import systextil.models
 import insumo.functions
 import insumo.models as models
 import insumo.queries as queries
-from insumo.forms import (
-    BipaRoloForm, 
-    EstoqueForm, 
-    FiltroMpForm,
-    MapaPorSemanaForm, 
-    MapaRefsForm, 
-    MapaSemanalForm,
-    NecessidadeForm, 
-    PrevisaoForm, 
-    ReceberForm,
-    RolosBipadosForm,
-)
+from insumo.forms import (BipaRoloForm, EstoqueForm, FiltroMpForm,
+                          MapaPorSemanaForm, MapaRefsForm, MapaSemanalForm,
+                          NecessidadeForm, PrevisaoForm, ReceberForm,
+                          RolosBipadosForm)
 
 
 def index(request):
@@ -100,7 +88,7 @@ class Busca(View):
             filtro = form.cleaned_data['filtro']
             conta_estoque = form.cleaned_data['conta_estoque']
             tipo_conta_estoque = form.cleaned_data['tipo_conta_estoque']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, filtro, conta_estoque, tipo_conta_estoque))
         context['form'] = form
@@ -115,7 +103,7 @@ def rolo_json(request, *args, **kwargs):
     else:
         dispositivo = dispositivo[0]
     barcode = re.sub("\D", "", kwargs['barcode'])[:9]
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     data = queries.rolo_ref(cursor, barcode)
     if len(data) == 0:
         data = [{}]
@@ -229,7 +217,7 @@ class RolosBipados(View):
             cor = form.cleaned_data['cor']
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, dispositivo, ref, cor, data_de, data_ate))
         context['form'] = form
@@ -243,7 +231,7 @@ class BipaRolo(PermissionRequiredMixin, View):
     title_name = 'Bipa rolo'
 
     def mount_context(self, request, form):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
 
         rolo = form.cleaned_data['rolo']
         identificado = form.cleaned_data['identificado']
@@ -413,7 +401,7 @@ class Necessidade(View):
             conta_estoque_ref = form.cleaned_data['conta_estoque_ref']
             colecao = form.cleaned_data['colecao']
             quais = form.cleaned_data['quais']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, op, data_corte, data_corte_ate, periodo_corte,
                 data_compra, data_compra_ate, periodo_compra,
@@ -507,7 +495,7 @@ class Receber(View):
             insumo = form.cleaned_data['insumo']
             conta_estoque = form.cleaned_data['conta_estoque']
             recebimento = form.cleaned_data['recebimento']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(cursor, insumo, conta_estoque, recebimento))
         context['form'] = form
@@ -590,7 +578,7 @@ class Estoque(View):
         if form.is_valid():
             insumo = form.cleaned_data['insumo']
             conta_estoque = form.cleaned_data['conta_estoque']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(cursor, insumo, conta_estoque))
         context['form'] = form
@@ -659,7 +647,7 @@ class MapaPorRefs(View):
             insumo = form.cleaned_data['insumo']
             conta_estoque = form.cleaned_data['conta_estoque']
             necessidade = 't'  # form.cleaned_data['necessidade']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(cursor, insumo, conta_estoque, necessidade))
         context['form'] = form
@@ -747,7 +735,7 @@ class MapaNecessidadeDetalhe(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(
             self.mount_context(
                 cursor, kwargs['nivel'], kwargs['ref'],
@@ -849,7 +837,7 @@ class Previsao(View):
         form = self.Form_class(request.POST)
         if form.is_valid():
             periodo = form.cleaned_data['periodo']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, periodo))
         context['form'] = form
         return render(request, self.template_name, context)
@@ -968,7 +956,7 @@ class Necessidade1Previsao(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(self.mount_context(cursor, kwargs['periodo']))
         return render(request, self.template_name, context)
 
@@ -1085,7 +1073,7 @@ class NecessidadesPrevisoes(View):
 
     def get(self, request):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(self.mount_context(cursor))
         return render(request, self.template_name, context)
 
@@ -1124,7 +1112,6 @@ class MapaPorSemana(View):
 
     def mount_context(
             self, cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo):
-        cursor = connections['so'].cursor()
         data = queries.insumos_cor_tamanho_usados(
             cursor, qtd_itens, nivel, uso, insumo)
         refs = []
@@ -1154,7 +1141,7 @@ class MapaPorSemana(View):
             qtd_semanas = None
             if form.fields['qtd_semanas'].initial:
                 qtd_semanas = form.fields['qtd_semanas'].initial
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
             context['form'] = form
@@ -1176,7 +1163,7 @@ class MapaPorSemana(View):
             insumo = ' '.join(insumo.strip().upper().split())
             form.data['insumo'] = insumo
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
             context.update(self.mount_context(
@@ -1195,7 +1182,7 @@ def mapa_sem_ref(request, item, dtini, nsem):
         ref = item[2:7]
         cor = item[8:14]
         tam = item[15:18]
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
 
         data = queries.insumo_descr(cursor, nivel, ref, cor, tam)
         drow = data[0]
@@ -1284,7 +1271,7 @@ class MapaSemanal(View):
     template_name = 'insumo/mapa_semanal.html'
     title_name = 'Mapa de compras por semana (Rápido)'
 
-    def mount_context_pre(self, cursor, periodo):
+    def mount_context_pre(self, periodo):
         if periodo is None:
             return {}
 
@@ -1308,7 +1295,6 @@ class MapaSemanal(View):
     def mount_context(self, cursor, periodo, nivel, uso, insumo):
         semana_hoje = segunda(datetime.date.today())
 
-        cursor = connections['so'].cursor()
         data = queries.insumos_cor_tamanho_usados(
             cursor, '0', nivel, uso, insumo)
 
@@ -1372,8 +1358,7 @@ class MapaSemanal(View):
             periodo = form.fields['periodo'].initial
         context['form'] = form
 
-        cursor = connections['so'].cursor()
-        context.update(self.mount_context_pre(cursor, periodo))
+        context.update(self.mount_context_pre(periodo))
 
         return render(request, self.template_name, context)
 
@@ -1390,8 +1375,8 @@ class MapaSemanal(View):
             insumo = ' '.join(insumo.strip().upper().split())
             form.data['insumo'] = insumo
 
-            cursor = connections['so'].cursor()
-            context.update(self.mount_context_pre(cursor, periodo))
+            cursor = db_cursor_so(request)
+            context.update(self.mount_context_pre(periodo))
             context.update(self.mount_context(
                 cursor, periodo, nivel, uso, insumo))
 
