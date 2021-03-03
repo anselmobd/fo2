@@ -1,9 +1,9 @@
-from django.db import connections
+from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 
 
-def deposito(only=None, less=None):
+def deposito(cursor, only=None, less=None):
 
     def monta_filtro(in_, depositos):
         filtro = ''
@@ -22,7 +22,6 @@ def deposito(only=None, less=None):
         monta_filtro('NOT IN', less),
     ])
 
-    cursor = connections['so'].cursor()
     sql = f'''
         SELECT
           d.CODIGO_DEPOSITO COD
