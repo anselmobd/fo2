@@ -1,20 +1,17 @@
-import sys
 import datetime
-from pprint import pprint, pformat
+import sys
+from pprint import pformat, pprint
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connection, connections
+
+from fo2.connections import db_cursor_so
 
 import base.models
 from utils.functions.models import rows_to_dict_list_lower
 
 import lotes.models as models
-from lotes.functions import (
-    oracle_existe_col,
-    oracle_existe_seq,
-    oracle_existe_table,
-    oracle_existem_triggers,
-)
+from lotes.functions import (oracle_existe_col, oracle_existe_seq,
+                             oracle_existe_table, oracle_existem_triggers)
 
 
 class Command(BaseCommand):
@@ -48,7 +45,7 @@ class Command(BaseCommand):
         return data
 
     def get_ops_s(self, last_sync=None):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = '''
             SELECT
               o.ORDEM_PRODUCAO op
@@ -81,7 +78,7 @@ class Command(BaseCommand):
         return self.iter_cursor(cursor_s)
 
     def get_ops_s_del(self, tabela, last_id):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = f'''
             SELECT
               d.ID
@@ -330,15 +327,15 @@ class Command(BaseCommand):
                     count_task += 1
 
     def verifica_seq(self):
-        cursor_vs = connections['so'].cursor()
+        cursor_vs = db_cursor_so()
         return oracle_existe_seq(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR')
 
     def verifica_del_table(self):
-        cursor_vs = connections['so'].cursor()
+        cursor_vs = db_cursor_so()
         return oracle_existe_table(cursor_vs, 'SYSTEXTIL', 'FO2_TUSSOR_SYNC_DEL')
 
     def verifica_column(self):
-        cursor_vs = connections['so'].cursor()
+        cursor_vs = db_cursor_so()
         return (
             oracle_existe_col(cursor_vs, 'PCPC_020', 'FO2_TUSSOR_SYNC')
             and
@@ -346,7 +343,7 @@ class Command(BaseCommand):
         )
 
     def verifica_trigger(self):
-        cursor_vs = connections['so'].cursor()
+        cursor_vs = db_cursor_so()
         return oracle_existem_triggers(
             cursor_vs, 'SYSTEXTIL',
             [
