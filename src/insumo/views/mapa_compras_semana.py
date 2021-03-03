@@ -1,9 +1,10 @@
-from pprint import pprint
 from datetime import timedelta
+from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 import systextil.models
 
@@ -46,7 +47,6 @@ class MapaComprasSemana(View):
     def mount_context(
             self, cursor, periodo, qtd_semanas, qtd_itens, nivel, uso, insumo,
             versao):
-        cursor = connections['so'].cursor()
         data = queries.insumos_cor_tamanho_usados(
             cursor, qtd_itens, nivel, uso, insumo)
         refs = []
@@ -77,7 +77,7 @@ class MapaComprasSemana(View):
                 periodo = form.fields['periodo'].initial
             if form.fields['qtd_semanas'].initial:
                 qtd_semanas = form.fields['qtd_semanas'].initial
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
             context['form'] = form
@@ -100,7 +100,7 @@ class MapaComprasSemana(View):
             insumo = ' '.join(insumo.strip().upper().split())
             form.data['insumo'] = insumo
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context_pre(
                 cursor, periodo, qtd_semanas))
             context.update(self.mount_context(
