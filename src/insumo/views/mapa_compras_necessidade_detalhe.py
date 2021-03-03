@@ -1,12 +1,13 @@
 from operator import itemgetter
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
-from django.views import View
 from django.urls import reverse
+from django.views import View
 
-from utils.views import totalize_grouped_data, group_rowspan
+from fo2.connections import db_cursor_so
+
+from utils.views import group_rowspan, totalize_grouped_data
 
 import produto.queries
 
@@ -138,7 +139,7 @@ class MapaComprasNecessidadeDetalhe(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(
             self.mount_context(
                 cursor, kwargs['nivel'], kwargs['ref'],
