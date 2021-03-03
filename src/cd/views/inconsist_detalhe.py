@@ -74,7 +74,7 @@ class InconsistenciasDetalhe(View):
         op = int(kwargs['op'])
 
         context = {'titulo': self.title_name}
-        cursor = db_conn('so', self.request).cursor()
+        cursor = db_conn('so', request).cursor()
         data = self.mount_context(cursor, op)
         context.update(data)
         return render(request, self.template_name, context)

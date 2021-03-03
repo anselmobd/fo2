@@ -174,7 +174,7 @@ class Inconsistencias(View):
                     ordem = 'A'
 
         context = {'titulo': self.title_name}
-        cursor = db_conn('so', self.request).cursor()
+        cursor = db_conn('so', request).cursor()
         data = self.mount_context(cursor, ordem, opini)
         context.update(data)
         return render(request, self.template_name, context)
