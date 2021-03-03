@@ -1,10 +1,11 @@
 from pprint import pprint
 
 from django.shortcuts import render
-from django.db import connections
 from django.db.models import Count
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
@@ -382,7 +383,7 @@ class ImprimePacote3Lotes(LoginRequiredMixin, View):
             obs1 = form.cleaned_data['obs1']
             obs2 = form.cleaned_data['obs2']
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context_and_print(
                     cursor, op, tam, cor, pula, qtd_lotes,
