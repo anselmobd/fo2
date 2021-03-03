@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.db import connections
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.views import group_rowspan
 
@@ -77,7 +78,7 @@ class PeriodoAlter(View):
             periodo_de = form.cleaned_data['periodo_de']
             periodo_ate = form.cleaned_data['periodo_ate']
             alternativa = form.cleaned_data['alternativa']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, periodo_de, periodo_ate, alternativa))
         context['form'] = form

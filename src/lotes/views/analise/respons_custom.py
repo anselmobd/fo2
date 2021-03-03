@@ -2,7 +2,8 @@ import re
 from pprint import pprint
 
 from django.shortcuts import render
-from django.db import connections
+
+from fo2.connections import db_cursor_so
 
 from geral.functions import has_permission
 
@@ -52,7 +53,7 @@ def respons_custom(request, todos):
             usuario = '%'+form.cleaned_data['usuario']+'%'
             usuario_num = re.sub("\D", "", form.cleaned_data['usuario'])
             ordem = form.cleaned_data['ordem']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             data = queries.responsavel(
                 cursor, todos, ordem, estagio, usuario, usuario_num)
             if len(data) != 0:
