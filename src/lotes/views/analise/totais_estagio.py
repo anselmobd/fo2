@@ -1,8 +1,9 @@
 from pprint import pprint
 
 from django.shortcuts import render
-from django.db import connections
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 import produto.queries
 
@@ -221,7 +222,7 @@ class TotalEstagio(View):
         deposito = ''
         data_de = ''
         data_ate = ''
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(
             self.mount_context(
                 cursor, tipo_roteiro, cliente, deposito, data_de, data_ate))
@@ -236,7 +237,7 @@ class TotalEstagio(View):
             deposito = form.cleaned_data['deposito']
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, tipo_roteiro, cliente, deposito, data_de, data_ate))
         context['form'] = form

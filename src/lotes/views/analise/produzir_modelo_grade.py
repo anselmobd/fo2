@@ -1,7 +1,8 @@
 from pprint import pprint
 
-from django.db import connections
 from django.db.models import Exists, OuterRef
+
+from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView, O2BaseGetView
 from geral.functions import config_get_value
@@ -21,7 +22,7 @@ class ProduzirModeloGrade(O2BaseGetPostView):
         self.title_name = 'Aproduzir - Por modelo - Totais com grade'
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         deposito = self.form.cleaned_data['deposito']
         self.context.update({
