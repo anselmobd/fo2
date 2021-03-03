@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
-from django.views import View
 from django.urls import reverse
+from django.views import View
+
+from fo2.connections import db_conn
 
 import lotes.models
 
@@ -73,7 +74,7 @@ class InconsistenciasDetalhe(View):
         op = int(kwargs['op'])
 
         context = {'titulo': self.title_name}
-        cursor = connections['so'].cursor()
+        cursor = db_conn('so', self.request).cursor()
         data = self.mount_context(cursor, op)
         context.update(data)
         return render(request, self.template_name, context)
