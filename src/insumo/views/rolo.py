@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db import connections
-from django.shortcuts import render, redirect
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.shortcuts import redirect, render
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 import insumo.forms
 import insumo.queries
@@ -150,7 +151,7 @@ class Rolo(View):
             est_aloc = form.cleaned_data['est_aloc']
             est_conf = form.cleaned_data['est_conf']
             page = form.cleaned_data['page']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, rolo, sit, ref, cor, op, reserva_de, reserva_ate, est_res, est_aloc, est_conf, page))
         context['form'] = form
