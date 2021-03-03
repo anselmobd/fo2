@@ -1,8 +1,9 @@
 from pprint import pprint
 
-from django.db import connections
 from django.db.models import Exists, OuterRef
 from django.http import JsonResponse
+
+from fo2.connections import db_cursor_so
 
 from systextil.queries.deposito.total_modelo import totais_modelos_depositos
 
@@ -10,7 +11,7 @@ import comercial.models
 
 
 def estoque_depositos_modelo(request, modelo, filtra=''):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     data = {
         'modelo': modelo,
     }

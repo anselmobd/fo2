@@ -1,7 +1,8 @@
 from pprint import pprint
 
-from django.db import connections
 from django.http import JsonResponse
+
+from fo2.connections import db_cursor_so
 
 from utils.views import totalize_data
 
@@ -9,7 +10,7 @@ import lotes.queries.op
 
 
 def op_producao_modelo(request, modelo):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     data = {
         'modelo': modelo,
     }

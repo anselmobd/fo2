@@ -1,7 +1,8 @@
 from pprint import pprint
 
-from django.db import connections
 from django.http import JsonResponse
+
+from fo2.connections import db_cursor_so
 
 from geral.functions import config_get_value
 from utils.views import totalize_data
@@ -11,7 +12,7 @@ import produto.queries
 
 
 def pedido_lead_modelo(request, modelo):
-    cursor = connections['so'].cursor()
+    cursor = db_cursor_so(request)
     data = {
         'modelo': modelo,
     }

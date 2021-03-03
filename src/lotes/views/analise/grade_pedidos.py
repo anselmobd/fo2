@@ -1,7 +1,8 @@
 from pprint import pprint
 
-from django.db import connections
 from django.urls import reverse
+
+from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import DepositoDatasForm2
 from base.views import O2BaseGetPostView
@@ -21,7 +22,7 @@ class GradePedidos(O2BaseGetPostView):
         self.get_args = ['deposito']
 
     def mount_context(self):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         deposito = self.form.cleaned_data['deposito']
         data_de = self.form.cleaned_data['data_de']
