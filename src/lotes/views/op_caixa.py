@@ -8,7 +8,7 @@ from fo2.connections import db_cursor_so
 
 from utils.views import group_rowspan
 
-import lotes.functions
+import lotes.lotes
 import lotes.models as models
 import lotes.queries as queries
 from lotes.forms import OpForm
@@ -42,7 +42,7 @@ class OpCaixa(View):
         else:
             lotes_por_caixa = 3
 
-        caixas = lotes.functions.CaixasDeLotes(data, lotes_por_caixa)
+        caixas = lotes.lotes.CaixasDeLotes(data, lotes_por_caixa)
         c_data = caixas.as_data()
 
         group = ['op', 'ref', 'num_caixa_txt',
