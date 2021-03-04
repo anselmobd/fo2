@@ -73,7 +73,7 @@ class SetGtinDefine(PermissionRequiredMixin, View):
                 context.update({'msg': f'GTIN atualizado'})
 
                 _ = classes.ObjsProduto(
-                    nivel, ref, tamanho, cor, new_gtin, self.request.user)
+                    cursor, nivel, ref, tamanho, cor, new_gtin, self.request.user)
 
         return context
 

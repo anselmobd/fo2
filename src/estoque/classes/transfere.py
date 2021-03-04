@@ -136,7 +136,7 @@ class Transfere():
         produto_item = None
         for item in item_lista:
             objs_prod = pro_cla.ObjsProduto(
-                self.nivel, item['ref'], item['tam'], item['cor'])
+                self.cursor, self.nivel, item['ref'], item['tam'], item['cor'])
             item.update({
                 'str_item': objs_prod.str_item,
                 'produto_item': objs_prod.produto_item,
