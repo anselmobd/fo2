@@ -22,19 +22,30 @@ class OpCaixa(View):
     def mount_context(self, cursor, op):
         context = {'op': op}
 
+        data_op = lotes.queries.op.op_inform(cursor, op, cached=False)
+        if len(data_op) == 0:
+            context.update({
+                'msg_erro': 'OP não encontrada',
+            })
+            return context
+        row_op = data_op[0]
+        context.update({
+            'ref': row_op['REF'],
+            'tipo_ref': row_op['TIPO_REF'],
+        })
+
+        if context['tipo_ref'] != 'MD':
+            context.update({
+                'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
+            })
+            return context
+
         # Lotes order 'r' = referência + cor + tamanho + OC
         data = queries.lote.get_imprime_lotes(cursor, op=op, order='r')
         if len(data) == 0:
             context.update({
-                'msg_erro': 'Lotes não encontradas',
+                'msg_erro': 'Lotes não encontrados',
             })
-            return context
-
-        if data[0]['ref'] < 'C':
-            context.update({
-                'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
-            })
-            l_data = []
             return context
 
         if data[0]['colecao'] == 5:  # camisa
