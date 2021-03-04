@@ -1,11 +1,12 @@
 import urllib
 from pprint import pprint
 
-from django.db import connections
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.functions.gtin import gtin13_valid
 
@@ -95,7 +96,7 @@ class SetGtinDefine(PermissionRequiredMixin, View):
             })
         context['form'] = form
 
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(request)
         context.update(
             self.mount_context(cursor, nivel, ref, tamanho, cor, ''))
         return render(request, self.template_name, context)
@@ -112,7 +113,7 @@ class SetGtinDefine(PermissionRequiredMixin, View):
         if form.is_valid():
             new_gtin = form.cleaned_data['gtin']
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(cursor, nivel, ref, tamanho, cor, new_gtin))
 

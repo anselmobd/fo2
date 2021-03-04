@@ -2,7 +2,8 @@ import sys
 from pprint import pprint
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
+
+from fo2.connections import db_cursor_so
 
 
 class Command(BaseCommand):
@@ -10,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            systextil_conn = connections['so']
+            systextil_conn = db_cursor_so()
             tables = systextil_conn.introspection.table_names()
             cursor = systextil_conn.cursor()
 
