@@ -1,9 +1,11 @@
 import re
+from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from geral.functions import has_permission
 from utils.views import group_rowspan
@@ -284,7 +286,7 @@ class Ref(View):
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
             ref = form.cleaned_data['ref']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(request, cursor, ref))
         context['form'] = form
         return render(request, self.template_name, context)
