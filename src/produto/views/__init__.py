@@ -1,3 +1,4 @@
+from .busca_modelo import *
 from .custo import *
 from .custo_ref import *
 from .gtin_range import *
