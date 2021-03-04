@@ -18,16 +18,19 @@
 </form>
 </div>
 {% if op %}
-<h2>OP {{ op }}</h2>
+  <h3>OP: {{ op }}</h3>
+{% endif %}
+{% if ref %}
+  <p>Referência: {{ ref }} &nbsp; Tipo: {{ tipo_ref }}</p>
 {% endif %}
 {% if msg_erro %}
-<h3>{{ msg_erro }}</h3>
+  <h3>{{ msg_erro }}</h3>
 {% endif %}
 {% if data %}
-<h3>Caixas e lotes</h3>
-<table>
-  {% include "layout/html_thead.html" with data=headers only %}
-  {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
-</table>
+  <h4>Caixas e lotes</h4>
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody_group.html" with fields=fields data=data group=group only %}
+  </table>
 {% endif %}
 {% endblock %}
