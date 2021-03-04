@@ -714,7 +714,7 @@ class CorrigeSequenciamento(PermissionRequiredMixin, View):
 
         count_repair = 0
         for row in data:
-            ret, alt, ests = functions.repair_sequencia_estagio(
+            ret, alt, ests = lotes.queries.op.repair_sequencia_estagio(
                 cursor, row['PERIODO'], row['OC'], exec)
             if ret:
                 if exec:

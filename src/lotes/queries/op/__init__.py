@@ -13,3 +13,4 @@ from .op_relacionamentos import *
 from .op_sortimento import *
 from .op_tam_cor_qtd import *
 from .posicao_op import *
+from .repair_seq import *
