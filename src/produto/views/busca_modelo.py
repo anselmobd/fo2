@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
@@ -27,6 +28,8 @@ class BuscaModelo(View):
         for row in data:
             if row['modelo'] is None:
                 row['modelo'] = '-'
+            else:
+                row['modelo|LINK'] = reverse('produto:modelo__get', args=[row['modelo']])
 
         headers = ['Modelo', 'Descrição']
         fields = ['modelo', 'descr']
