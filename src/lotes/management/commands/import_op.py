@@ -10,8 +10,12 @@ import base.models
 from utils.functions.models import rows_to_dict_list_lower
 
 import lotes.models as models
-from lotes.functions import (oracle_existe_col, oracle_existe_seq,
-                             oracle_existe_table, oracle_existem_triggers)
+from lotes.queries.oracle import (
+    oracle_existe_col, 
+    oracle_existe_seq,
+    oracle_existe_table, 
+    oracle_existem_triggers,
+)
 
 
 class Command(BaseCommand):
