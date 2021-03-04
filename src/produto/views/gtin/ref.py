@@ -1,8 +1,9 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from utils.functions.gtin import gtin13_valid
 
@@ -55,7 +56,7 @@ class RefGtinDefine(View):
             tamanho = form.cleaned_data['tamanho']
             cor = form.cleaned_data['cor']
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             context.update(self.mount_context(cursor, ref, tamanho, cor))
 
         context['form'] = form
