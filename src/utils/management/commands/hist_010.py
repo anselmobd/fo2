@@ -3,7 +3,8 @@ import datetime
 from pprint import pprint, pformat
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connection, connections
+
+from fo2.connections import db_cursor, db_cursor_so
 
 import base.models
 from utils.functions.models import rows_to_dict_list_lower
@@ -42,7 +43,7 @@ class Command(BaseCommand):
         return data
 
     def get_last_hist_010_data(self):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = '''
             SELECT
               hhh.*
@@ -69,7 +70,7 @@ class Command(BaseCommand):
             return data_s[0][0]
 
     def get_hist_010(self, data):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = '''
             SELECT
               h.*
@@ -82,7 +83,7 @@ class Command(BaseCommand):
         return self.iter_cursor(cursor_s)
 
     def insert_hist_010(self, row):
-        cursor_f = connections['default'].cursor()
+        cursor_f = db_cursor('default')
         sql = f'''
             INSERT INTO systextil_logs.hist_010
             ( area_producao
@@ -172,7 +173,7 @@ class Command(BaseCommand):
         )
 
     def del_hist_010(self, data):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = '''
             DELETE FROM HIST_010 h
             WHERE h.DATA_OCORR <= %s
