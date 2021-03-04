@@ -1,8 +1,9 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from estoque import forms
 
@@ -14,8 +15,8 @@ class Sugestao(View):
         self.template_name = 'rh/sugestao.html'
         self.context = {'titulo': 'Sugestão'}
 
-    def mount_context(self):
-        cursor = connections['so'].cursor()
+    def mount_context(self, cursor):
+        pass
 
     def cleanned_fields_to_context(self):
         for field in self.context['form'].fields:
@@ -30,5 +31,6 @@ class Sugestao(View):
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context()
             self.context['form'] = self.Form_class(self.context)
-            self.mount_context()
+            cursor = db_cursor_so(request)
+            self.mount_context(cursor)
         return render(request, self.template_name, self.context)
