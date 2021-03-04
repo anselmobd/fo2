@@ -2,8 +2,9 @@ import datetime
 from pprint import pprint
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
 from django.utils import timezone
+
+from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list
 import logistica.models as models
@@ -14,7 +15,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so()
 
             # get zeroed itens
             sql_get = '''
