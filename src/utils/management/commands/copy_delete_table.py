@@ -3,7 +3,8 @@ import datetime
 from pprint import pprint, pformat
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connection, connections
+
+from fo2.connections import db_cursor, db_cursor_so
 
 import base.models
 from utils.functions.models import rows_to_dict_list_lower
@@ -46,7 +47,7 @@ class Command(BaseCommand):
         return data
 
     def get_last_table_data(self):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = '''
             SELECT
               hh.*
@@ -66,7 +67,7 @@ class Command(BaseCommand):
             return data_s[0][0]
 
     def get_table(self, data):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = '''
             SELECT
               h.*
@@ -77,7 +78,7 @@ class Command(BaseCommand):
         return self.iter_cursor(cursor_s)
 
     def insert_table(self, row):
-        cursor_f = connections['default'].cursor()
+        cursor_f = db_cursor('default')
         sql = f'''
             INSERT INTO systextil_logs.table
             ( tabela
@@ -242,7 +243,7 @@ class Command(BaseCommand):
         )
 
     def del_table(self, data):
-        cursor_s = connections['so'].cursor()
+        cursor_s = db_cursor_so()
         sql = '''
             DELETE FROM table h
             WHERE h.DATA_OCORR < %s
@@ -295,7 +296,7 @@ class Command(BaseCommand):
             return False
 
     def verifica_s_tabela(self, tabela):
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so()
         existe = self.existe_s_table(cursor, 'SYSTEXTIL', tabela)
         if existe:
             self.my_println('systextil tem tabela')
@@ -304,7 +305,7 @@ class Command(BaseCommand):
         return existe
 
     def verifica_l_tabela(self, tabela):
-        cursor = connections['default'].cursor()
+        cursor = db_cursor('default')
         existe = self.existe_l_table(cursor, tabela)
         if existe:
             self.my_println('sqlite tem tabela')
@@ -313,7 +314,7 @@ class Command(BaseCommand):
         return existe
 
     def verifica_f_tabela(self, tabela):
-        cursor = connections['default'].cursor()
+        cursor = db_cursor('default')
         existe = self.existe_f_table(cursor, 'systextil_logs', tabela)
         if existe:
             self.my_println('postgre tem tabela')
