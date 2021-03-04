@@ -839,14 +839,19 @@ class BuscaModelo(View):
             context.update({
                 'msg_erro': 'Nenhum modelo selecionado',
             })
-        else:
-            headers = ['Modelo', 'Descrição']
-            fields = ['modelo', 'descr']
-            context.update({
-                'headers': headers,
-                'fields': fields,
-                'data': data,
-            })
+            return context
+
+        for row in data:
+            if row['modelo'] is None:
+                row['modelo'] = '-'
+
+        headers = ['Modelo', 'Descrição']
+        fields = ['modelo', 'descr']
+        context.update({
+            'headers': headers,
+            'fields': fields,
+            'data': data,
+        })
 
         return context
 
