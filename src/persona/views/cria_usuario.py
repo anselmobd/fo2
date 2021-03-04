@@ -4,10 +4,11 @@ from pprint import pprint
 
 from django import forms
 from django.contrib.auth.models import User
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor, db_cursor_so
 
 import base.models
 
@@ -25,8 +26,8 @@ class CriaUsuario(View):
     def mount_context(self):
         self.erro = False
         self.sucesso = False
-        cursor = connections['so'].cursor()
-        pcursor = connections['persona'].cursor()
+        cursor = db_cursor_so(self.request)
+        pcursor = db_cursor('persona', self.request)
 
         try:
             usuario = base.models.Colaborador.objects.get(
@@ -158,6 +159,7 @@ class CriaUsuario(View):
                     forms.HiddenInput())
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         self.context['form'] = self.Form_class(request.POST)
         if self.context['form'].is_valid():
             self.cleanned_fields_to_context(request.POST)

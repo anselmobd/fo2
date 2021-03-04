@@ -1,7 +1,8 @@
 import datetime
 
-from django.db import connections
 from django.shortcuts import render
+
+from fo2.connections import db_cursor
 
 from utils.functions import inc_month
 
@@ -31,7 +32,7 @@ def aniversariantes(request, *args, **kwargs):
     posteriosmes = inc_month(datames, 1)
     intmespos = posteriosmes.month
 
-    pcursor = connections['persona'].cursor()
+    pcursor = db_cursor('persona', request)
     data = queries.aniversariantes(pcursor, intmes)
 
     aniver_db = []

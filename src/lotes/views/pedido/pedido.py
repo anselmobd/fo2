@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from django.db import connections
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from fo2.connections import db_cursor_so
 
 from base.forms.forms2 import PedidoForm2
 from geral.functions import get_empresa
@@ -162,7 +163,7 @@ class Pedido(View):
             form.data['pedido'] = kwargs['pedido']
         if form.is_valid():
             pedido = form.cleaned_data['pedido']
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so(request)
             self.mount_context(cursor, pedido)
         self.context['form'] = form
         return render(request, self.template_name, self.context)
