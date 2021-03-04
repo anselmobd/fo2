@@ -4,7 +4,8 @@ from pprint import pprint
 from dbfread import DBF
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
+
+from fo2.connections import db_cursor_so
 
 from utils.functions.gtin import gtin_check_digit
 
@@ -65,7 +66,7 @@ class Command(BaseCommand):
 
             # pprint(ref_bars)
 
-            cursor = connections['so'].cursor()
+            cursor = db_cursor_so()
 
             sql_set = '''
                 UPDATE SYSTEXTIL.BASI_010
