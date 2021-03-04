@@ -1,4 +1,4 @@
-from django.db import connections
+from pprint import pprint
 
 from django.core.cache import cache
 
@@ -9,10 +9,9 @@ from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
 import produto.queries
 
 
-def produtos_n1_basic(param):
+def produtos_n1_basic(cursor, param):
     tipo = param[0:2]
     qualidade = param[3:]
-    cursor = connections['so'].cursor()
     sql = '''
         SELECT
           ROWNUM
