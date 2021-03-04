@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from django.db import connections
+from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
@@ -29,7 +29,7 @@ class Custo(O2BaseGetPostView):
             'ref': ref,
             })
 
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         info = queries.nivel_ref_inform(cursor, nivel, ref)
         if len(info) == 0:

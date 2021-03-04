@@ -1,7 +1,8 @@
 from pprint import pprint
 
-from django.db import connections
 from django.urls import reverse
+
+from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
@@ -27,7 +28,7 @@ class CustoRef(O2BaseGetPostView):
             'ref': ref,
             })
 
-        cursor = connections['so'].cursor()
+        cursor = db_cursor_so(self.request)
 
         estruturas = queries.ref_estruturas(cursor, ref)
         if len(estruturas) == 0:
