@@ -1,7 +1,5 @@
 from pprint import pprint
 
-from django.db import connections
-
 import systextil.queries as sys_que
 
 from base.queries.models import get_create_colaborador_by_user
@@ -12,7 +10,8 @@ import produto.models as pro_mod
 
 class ObjsProduto():
 
-    def __init__(self, nivel, ref, tam, cor, gtin=None, usuario=None):
+    def __init__(self, cursor, nivel, ref, tam, cor, gtin=None, usuario=None):
+        self.cursor = cursor
         self.nivel = nivel
         self.ref = ref
         self.tam = tam
@@ -23,7 +22,6 @@ class ObjsProduto():
 
         self.str_item = pro_fun.item_str(
             self.nivel, self.ref, self.tam, self.cor)
-        self.cursor = connections['so'].cursor()
 
         self.valid_entries()
 
