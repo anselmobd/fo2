@@ -16,7 +16,6 @@ from utils.views import totalize_grouped_data, totalize_data, group_rowspan
 from insumo.queries import insumos_de_produtos_em_dual
 
 import lotes.forms as forms
-import lotes.functions as functions
 import lotes.models as models
 import lotes.queries.lote
 import lotes.queries.op
