@@ -134,40 +134,42 @@ class OpCaixa(View):
     def mount_context(self, cursor, op):
         context = {'op': op}
 
-        # Lotes ordenados por OS + referência + estágio
+        # Lotes order 'r' = referência + cor + tamanho + OC
         data = queries.lote.get_imprime_lotes(cursor, op=op, order='r')
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Lotes não encontradas',
             })
-        else:
-            if data[0]['ref'] < 'C':
-                context.update({
-                    'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
-                })
-                l_data = []
-                return context
-            if data[0]['colecao'] == 5:  # camisa
-                lotes_por_caixa = 2
-            else:
-                lotes_por_caixa = 3
+            return context
 
-            caixas = CaixasDeLotes(data, lotes_por_caixa)
-            c_data = caixas.as_data()
-
-            group = ['op', 'ref', 'num_caixa_txt',
-                     'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa']
-            group_rowspan(c_data, group)
+        if data[0]['ref'] < 'C':
             context.update({
-                'headers': ('OP', 'Referência', 'Cx.OP',
-                            'Cor', 'Tamanho', 'Cx.C/T', 'Peças',
-                            'Lote', 'Quant.', 'Peso'),
-                'fields': ('op', 'ref', 'num_caixa_txt',
-                           'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa',
-                           'lote', 'qtd', 'peso'),
-                'group': group,
-                'data': c_data,
+                'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
             })
+            l_data = []
+            return context
+
+        if data[0]['colecao'] == 5:  # camisa
+            lotes_por_caixa = 2
+        else:
+            lotes_por_caixa = 3
+
+        caixas = CaixasDeLotes(data, lotes_por_caixa)
+        c_data = caixas.as_data()
+
+        group = ['op', 'ref', 'num_caixa_txt',
+                    'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa']
+        group_rowspan(c_data, group)
+        context.update({
+            'headers': ('OP', 'Referência', 'Cx.OP',
+                        'Cor', 'Tamanho', 'Cx.C/T', 'Peças',
+                        'Lote', 'Quant.', 'Peso'),
+            'fields': ('op', 'ref', 'num_caixa_txt',
+                        'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa',
+                        'lote', 'qtd', 'peso'),
+            'group': group,
+            'data': c_data,
+        })
 
         return context
 
