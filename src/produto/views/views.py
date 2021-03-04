@@ -151,8 +151,9 @@ def stat_nivelX(request):
 
 # ajax template, url with value
 def stat_niveis(request, nivel):
+    cursor = db_cursor_so(request)
     if nivel[0:4] in ('1-MD', '1-PB', '1-PG', '1-PA', '1-MP'):
-        data = queries.produtos_n1_basic(nivel[2:])
+        data = queries.produtos_n1_basic(cursor, nivel[2:])
         context = {
             'nivel': nivel,
             'headers': ('#', 'Referência', 'Descrição',
@@ -164,7 +165,6 @@ def stat_niveis(request, nivel):
         html = render_to_string('produto/ajax/stat_niveis.html', context)
         return HttpResponse(html)
     elif nivel in ('2', '9'):
-        cursor = db_cursor_so(request)
         sql = '''
             SELECT
               ROWNUM
