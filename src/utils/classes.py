@@ -61,10 +61,10 @@ class LoggedInUser(SingletonBaseMeta):
         return user is not None
 
 
-class NotAcessoInternoException(Exception):
+class AcessoInterno_InternoNotDefined_Exception(Exception):
     def __init__(self, val='Não foi verificado se o acesso é interno'):
         self.val = val
-        super(NotAcessoInternoException, self).__init__()
+        super(AcessoInterno_InternoNotDefined_Exception, self).__init__()
 
     def __str__(self):
         return self.val
@@ -83,7 +83,7 @@ class AcessoInterno(SingletonBaseMeta):
             Return interno if defined or raise Exception
         '''
         if self.interno is None:
-            raise NotAcessoInternoException()
+            raise AcessoInterno_InternoNotDefined_Exception()
         return self.interno
 
     @property
