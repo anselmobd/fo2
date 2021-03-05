@@ -204,8 +204,11 @@
     {% endif %}
     <div id="id_links" class="links" style="font-size: x-large;">
       {% if externo %}
-        <p><a href="http://systextil.tussor.com.br:8045/systextil">Link</a></p>
-        <p><a href="http://oc.tussor.com.br:8345/systextil">Link na nuvem</a></p>
+        {% if alter_db %}
+          <p><a href="http://oc.tussor.com.br:8345/systextil">Link</a></p>
+        {% else %}
+          <p><a href="http://systextil.tussor.com.br:8045/systextil">Link</a></p>
+        {% endif %}
       {% else %}
         {% if alter_db %}
           <p><a href="http://oc.tussor.com.br/systextil">Link oficial (domínio)</a></p>
