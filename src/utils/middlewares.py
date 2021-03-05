@@ -74,17 +74,17 @@ class AlterRouterMiddleware:
     Based on
     https://gist.github.com/gijzelaerr/7a3130c494215a0dd9b2/
     
-    The Alternative router middelware.
+    The Alternative db router middelware.
 
-    process_view (or process_request) function sets some context from the URL 
-    into thread local storage, and process_response deletes it.
+    Before the view sets some context from the URL into thread local storage.
+    After, deletes it.
     
     In between, any database operation will call the router, which checks for
-    this context and returns an appropriate database alias.
+    the thread local storage and returns an appropriate database alias.
 
     Add this to your middleware, for example:
 
-    MIDDLEWARE += ['bananaproject.multidb.MultiDbRouterMiddleware']
+    MIDDLEWARE += ['utils.middlewares.AlterRouterMiddleware']
     """
 
     def __init__(self, get_response):
@@ -101,6 +101,7 @@ class AlterRouterMiddleware:
 
         # Code to be executed for each request/response after
         # the view is called.
-        del request_cfg.alter_db
+        if hasattr(request_cfg, 'alter_db'):
+            del request_cfg.alter_db
 
         return response
