@@ -52,7 +52,7 @@
       {% block intranetheader %}
       <div class="noprint">
       <div class="container-fluid"
-           style="background-image: linear-gradient(white,#f1f1f1);">
+           style="background-image: linear-gradient(white,{%if alter_db%}#bff4{%else%}#f1f1f1{%endif%});">
         <div class="row">
           <div class="col-xs-4 col-sm-2 hidden-xs hidden-sm hidden-md">
             <div align="center">
