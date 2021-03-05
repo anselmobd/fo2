@@ -14,17 +14,37 @@
   <tr>
     <td style="vertical-align: top;">
       <ul>
+        {%if debug%}
+          {%if alter_db%}
+            <li><a href="http://agator.local:8088/intranet/">Ir para Intranet interna </a></li>
+          {%else%}
+            <li><a href="http://alteragator.local:8088/intranet/">Ir para Intranet na nuvem</a></li>
+          {%endif%}
+        {%else%}
+          {%if alter_db%}
+            <li><a href="http://intranet.agator.com.br:88/intranet/">Ir para Intranet interna </a></li>
+          {%else%}
+            <li><a href="http://alterintranet.agator.com.br:88/intranet/">Ir para Intranet na nuvem </a></li>
+          {%endif%}
+        {%endif%}
+        <br />
         {% if request.user.is_authenticated or base_ip_interno %}
         <li>ERP</li>
         <ul>
           <li><a href="{% url 'systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></li>
           <ul>
             {% if externo %}
-              <li><a href="http://systextil.tussor.com.br:8045/systextil/sessions" target="_blank">Sessões</a></li>
-              <li><a href="http://oc.tussor.com.br:8345/systextil/sessions" target="_blank">Sessões na nuvem</a></li>
+              {%if alter_db%}
+                <li><a href="http://oc.tussor.com.br:8345/systextil/sessions" target="_blank">Sessões/a></li>
+              {% else %}
+                <li><a href="http://systextil.tussor.com.br:8045/systextil/sessions" target="_blank">Sessões</a></li>
+              {% endif %}
             {% else %}
-              <li><a href="http://systextil.tussor.com.br/systextil/sessions" target="_blank">Sessões</a></li>
-              <li><a href="http://oc.tussor.com.br/systextil/sessions" target="_blank">Sessões na nuvem</a></li>
+              {%if alter_db%}
+                <li><a href="http://oc.tussor.com.br/systextil/sessions" target="_blank">Sessões</a></li>
+              {% else %}
+                <li><a href="http://systextil.tussor.com.br/systextil/sessions" target="_blank">Sessões</a></li>
+              {% endif %}
             {% endif %}
             <li><a href="https://systextil.movidesk.com/" target="_blank">Área do cliente (Ticket)</a></li>
             <li><a href="http://intersys.com.br/cliente/" target="_blank">Antiga página de SS</a></li>
