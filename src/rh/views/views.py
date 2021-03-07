@@ -317,6 +317,10 @@ def datas(request, data):
         context = {'titulo': 'Feliz 2021!'}
         return render(
             request, 'rh/datas/2021-virada.html', context)
+    elif data == '2021-03-08':
+        context = {'titulo': 'Feliz dia Internacional da Mulher 2021!'}
+        return render(
+            request, 'rh/datas/2021-dia-da-mulher.html', context)
 
 
 def v2018_dia_rosa_fotos(request):
