@@ -322,20 +322,51 @@
       </div>
     </div>
   </div>
-  <div class="overlay" id="cartaz_div">
-    <!-- <img class="cartaz" src="/media/rh/meta/2020/06/resultado.jpg" alt="2020-06-meta"> -->
+  <div class="overlay" id="cartaz_div1">
+    <img class="cartaz" src="/media/rh/datas_comemorativas/2021/03/08-mulher/01.gif" alt="mulher01">
+  </div>
+  <div class="overlay" id="cartaz_div2">
+    <img class="cartaz" src="/media/rh/datas_comemorativas/2021/03/08-mulher/02.gif" alt="mulher02">
+  </div>
+  <div class="overlay" id="cartaz_div3">
+    <img class="cartaz" src="/media/rh/datas_comemorativas/2021/03/08-mulher/03.gif" alt="mulher03">
   </div>
   <script>
-    var varDate = new Date('07/02/2020');
+    var varDate = new Date('03/08/2021');
     var today = new Date();
     today.setHours(0, 0, 0, 0);
-    if (today.getTime() == varDate.getTime()) {
-      let nrandom = Math.floor(Math.random()*5);
-      if (nrandom == 1) {
-        let elemento = document.getElementById('cartaz_div');
-        elemento.style.visibility='visible';
+    var c1_elemento = document.getElementById('cartaz_div1');
+    var c2_elemento = document.getElementById('cartaz_div2');
+    var c3_elemento = document.getElementById('cartaz_div3');
+
+    function mostra_imagem() {
+      if (today.getTime() == varDate.getTime()) {
+        let nrandom = Math.floor(Math.random()*3);
+        console.log(nrandom);
+        if (nrandom == 1) {
+          let irandom = Math.floor(Math.random()*3) + 1;
+          console.log(irandom);
+          if (irandom == 1) {
+            c1_elemento.style.visibility='visible';
+          }
+          if (irandom == 2) {
+            c2_elemento.style.visibility='visible';
+          }
+          if (irandom == 3) {
+            c3_elemento.style.visibility='visible';
+          }
+        } else {
+          c1_elemento.style.visibility='hidden';
+          c2_elemento.style.visibility='hidden';
+          c3_elemento.style.visibility='hidden';
+        }
       }
     }
+
+    setInterval(function () {
+      mostra_imagem();
+    }, 10000);
+
   </script>
 </body>
 {% endif %}
