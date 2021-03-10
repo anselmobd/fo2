@@ -16,7 +16,7 @@ import insumo.queries as queries
 
 class MapaComprasNecessidadeDetalhe(View):
     template_name = 'insumo/mapa_compras_necessidade_detalhe.html'
-    title_name = 'Detalhe de necessidade de insumo em uma semana (novo)'
+    title_name = 'Detalhe de necessidade de insumo em uma semana'
 
     def __init__(self, *args, **kwargs):
         super(MapaComprasNecessidadeDetalhe, self).__init__(*args, **kwargs)
