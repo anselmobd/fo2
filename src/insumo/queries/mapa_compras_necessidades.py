@@ -57,8 +57,11 @@ def mapa_compras_necess_gerais_multi(cursor, dtini=None, nsem=None):
             consumo = {}
             for row in subdata:
                 estrut_nivel = int(row['ESTRUT_NIVEL'])
-                consumo[estrut_nivel] = row['CONSUMO'] * (
-                    row['RBANHO'] if row['TCALC'] == 2 else 1)
+                consumo[estrut_nivel] = row['CONSUMO'] 
+                # o mapa_compras_necessidades_gerais já traz consumo
+                # considerando banho
+                # * (
+                #     row['RBANHO'] if row['TCALC'] == 2 else 1)
 
                 if debug == 2:
                     componente = '.'.join([
