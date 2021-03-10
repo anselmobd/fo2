@@ -41,13 +41,13 @@ class Command(BaseCommand):
             msg_erro, meses, total = cg.get_result(
                 comercial.queries.dados_meta_no_ano(cursor, hoje)
             )
-            self.my_pprintln(cg.params)
+            # self.my_pprintln(cg.params)
 
             if msg_erro:
                 self.my_println(msg_erro)
-            else:
-                self.my_pprintln(meses)
-                self.my_pprintln(total)
+            # else:
+            #     self.my_pprintln(meses)
+            #     self.my_pprintln(total)
 
         except Exception as e:
             raise CommandError(
