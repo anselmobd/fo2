@@ -10,7 +10,7 @@ def busca_clientes(cnpj=None, all=None):
     erros = []
     conn = connect_fdb(settings.DATABASES_EXTRAS, 'f1', erros)
     if not conn:
-        pprint(erros)
+        # pprint(erros)
         return []
 
     filter_cnpj = ""
@@ -46,7 +46,7 @@ def ficha_cliente(cnpj):
     erros = []
     conn = connect_fdb(settings.DATABASES_EXTRAS, 'f1', erros)
     if not conn:
-        pprint(erros)
+        # pprint(erros)
         return []
 
     cursor = conn.cursor()
