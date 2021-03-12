@@ -112,45 +112,45 @@ def caching_function(
 
         key_cache = my_make_key_cache(*my_make_key_cache_args)
 
-        fo2logger.info('antes do while')
+        # fo2logger.info('antes do while')
 
         while True:
-            fo2logger.info('dentro do while')
+            # fo2logger.info('dentro do while')
             calc_cache = cache.get(f"{key_cache}_calc_", "n")
             if calc_cache == 's':
-                fo2logger.info('is _calc_ '+key_cache)
+                # fo2logger.info('is _calc_ '+key_cache)
                 time.sleep(0.2)
             else:
-                fo2logger.info('not _calc_ '+key_cache)
+                # fo2logger.info('not _calc_ '+key_cache)
                 cached_result = cache.get(key_cache)
                 if cached_result is None:
-                    fo2logger.info('set _calc_ '+key_cache)
+                    # fo2logger.info('set _calc_ '+key_cache)
                     cache.set(
                         f"{key_cache}_calc_", "s",
                         timeout=entkeys._SECOND * max_run_delay)
                     break
                 else:
-                    fo2logger.info('cached_result '+pformat(cached_result))
-                    if isinstance(cached_result, CachingResult):
-                        fo2logger.info('cached_result.result '+pformat(cached_result.result))
-                        fo2logger.info('cached_result.params '+pformat(cached_result.params))
+                    # fo2logger.info('cached_result '+pformat(cached_result))
+                    # if isinstance(cached_result, CachingResult):
+                    #     fo2logger.info('cached_result.result '+pformat(cached_result.result))
+                    #     fo2logger.info('cached_result.params '+pformat(cached_result.params))
 
-                    fo2logger.info('cached '+key_cache)
+                    # fo2logger.info('cached '+key_cache)
                     return cached_result
 
-        fo2logger.info('depois do while')
+        # fo2logger.info('depois do while')
 
         cached_result = func(*args, **kwargs)
-        fo2logger.info('cached_result '+pformat(cached_result))
+        # fo2logger.info('cached_result '+pformat(cached_result))
 
         if caching_params:
-            fo2logger.info('params '+pformat(now))
+            # fo2logger.info('params '+pformat(now))
             cached_result = CachingResult(cached_result, now)
-            fo2logger.info('CachingResult '+pformat(cached_result))
+            # fo2logger.info('CachingResult '+pformat(cached_result))
 
         cache.set(key_cache, cached_result)
         cache.set(f"{key_cache}_calc_", "n")
-        fo2logger.info('calculated '+key_cache)
+        # fo2logger.info('calculated '+key_cache)
 
         return cached_result
 
