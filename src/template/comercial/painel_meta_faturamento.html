@@ -327,7 +327,7 @@
     <img class="cartaz" id="cartaz_gif" src="/media/rh/campanhas/2021/03/15/covid-mar21.gif" alt="covid-mar-2021">
   </div>
   <script>
-    var varDate = new Date('03/15/2021');
+    var varDate = new Date('03/16/2021');
     var today = new Date();
     today.setHours(0, 0, 0, 0);
     var c1_elemento = document.getElementById('cartaz_div');
@@ -336,7 +336,7 @@
     var chave_meta = false;
 
     function mostra_imagem() {
-      if (today.getTime() == varDate.getTime()) {
+      if (today.getTime() <= varDate.getTime()) {
         // let nrandom = Math.floor(Math.random()*3);
         // console.log(chave_meta)
         if (chave_meta) {
