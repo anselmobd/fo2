@@ -322,50 +322,34 @@
       </div>
     </div>
   </div>
-  <div class="overlay" id="cartaz_div1">
-    <img class="cartaz" src="/media/rh/datas_comemorativas/2021/03/08-mulher/01.gif" alt="mulher01">
-  </div>
-  <div class="overlay" id="cartaz_div2">
-    <img class="cartaz" src="/media/rh/datas_comemorativas/2021/03/08-mulher/02.gif" alt="mulher02">
-  </div>
-  <div class="overlay" id="cartaz_div3">
-    <img class="cartaz" src="/media/rh/datas_comemorativas/2021/03/08-mulher/03.gif" alt="mulher03">
+  <div class="overlay" id="cartaz_div">
+    <img class="cartaz" id="cartaz_gif" src="/media/rh/campanhas/2021/03/15/covid-mar21.gif" alt="covid-mar-2021">
   </div>
   <script>
-    var varDate = new Date('03/08/2021');
+    var varDate = new Date('03/15/2021');
     var today = new Date();
     today.setHours(0, 0, 0, 0);
-    var c1_elemento = document.getElementById('cartaz_div1');
-    var c2_elemento = document.getElementById('cartaz_div2');
-    var c3_elemento = document.getElementById('cartaz_div3');
+    var c1_elemento = document.getElementById('cartaz_div');
+    var img_elemento = document.getElementById('cartaz_gif');
+    var chave_meta = false;
 
     function mostra_imagem() {
       if (today.getTime() == varDate.getTime()) {
-        let nrandom = Math.floor(Math.random()*3);
-        console.log(nrandom);
-        if (nrandom == 1) {
-          let irandom = Math.floor(Math.random()*3) + 1;
-          console.log(irandom);
-          if (irandom == 1) {
-            c1_elemento.style.visibility='visible';
-          }
-          if (irandom == 2) {
-            c2_elemento.style.visibility='visible';
-          }
-          if (irandom == 3) {
-            c3_elemento.style.visibility='visible';
-          }
-        } else {
+        // let nrandom = Math.floor(Math.random()*3);
+        // console.log(chave_meta)
+        if (chave_meta) {
           c1_elemento.style.visibility='hidden';
-          c2_elemento.style.visibility='hidden';
-          c3_elemento.style.visibility='hidden';
+        } else {
+          img_elemento.src=img_elemento.getAttribute('src')+"?a="+Math.random();
+          c1_elemento.style.visibility='visible';
         }
+        chave_meta = !chave_meta;
       }
     }
 
     setInterval(function () {
       mostra_imagem();
-    }, 10000);
+    }, 67500);
 
   </script>
 </body>
