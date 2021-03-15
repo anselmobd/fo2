@@ -331,6 +331,7 @@
     today.setHours(0, 0, 0, 0);
     var c1_elemento = document.getElementById('cartaz_div');
     var img_elemento = document.getElementById('cartaz_gif');
+    var img_elemento_src = img_elemento.getAttribute('src');
     var chave_meta = false;
 
     function mostra_imagem() {
@@ -338,10 +339,11 @@
         // let nrandom = Math.floor(Math.random()*3);
         // console.log(chave_meta)
         if (chave_meta) {
-          c1_elemento.style.visibility='hidden';
+          c1_elemento.style.visibility = 'hidden';
         } else {
-          img_elemento.src=img_elemento.getAttribute('src')+"?a="+Math.random();
-          c1_elemento.style.visibility='visible';
+          // trocar o src com uma query variável para forçar a animação do gif a recomeçar
+          img_elemento.src = img_elemento_src+"?a="+Math.random();
+          c1_elemento.style.visibility = 'visible';
         }
         chave_meta = !chave_meta;
       }
