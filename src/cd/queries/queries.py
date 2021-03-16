@@ -113,7 +113,7 @@ def sum_pedido(cursor, referencia=None):
     """
     if len(end_disp) != 0:
         filter_end = """--
-            AND l.local ~ '("""
+            AND l.local ~ '^("""
         filter_sep = ""
         for regra in end_disp:
             filter_end += f"{filter_sep}{regra['inicio']}"
