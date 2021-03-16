@@ -30,7 +30,7 @@ def grade_solicitacao(
     """
     if len(end_disp) != 0:
         filter_end = """--
-            AND l.local ~ '("""
+            AND l.local ~ '^("""
         filter_sep = ""
         for regra in end_disp:
             filter_end += f"{filter_sep}{regra['inicio']}"
@@ -585,6 +585,7 @@ def grade_solicitacao(
               l.tamanho
             , l.cor
         '''
+        print(sql)
     elif tipo == 'i':
         sql = f'''
             SELECT
