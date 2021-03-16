@@ -585,7 +585,6 @@ def grade_solicitacao(
               l.tamanho
             , l.cor
         '''
-        print(sql)
     elif tipo == 'i':
         sql = f'''
             SELECT
