@@ -21,11 +21,17 @@ class CustomView(View):
             um boolean indicando se as variáveis recebidas por GET
             vão para o context
         """
-        super(CustomBaseView, self).__init__(*args, **kwargs)
+        super(CustomView, self).__init__(*args, **kwargs)
         self.get_args = []
         self.get_args2context = False
 
     def init_self(self, request, kwargs):
+        """
+        Inicializa variáveis do self:
+            request
+            kwargs
+            context
+        """
         self.request = request
         self.kwargs = kwargs
 
@@ -39,13 +45,19 @@ class CustomView(View):
                 self.context.update({arg: arg_value})
 
     def get_arg(self, field):
+        """
+        Retorna Keyword Argument ou nulo
+        """
         return self.kwargs[field] if field in self.kwargs else None
 
     def my_render(self):
+        """
+        Chama render com self: request, template_name e context
+        """
         return render(self.request, self.template_name, self.context)
 
     def mount_context(self):
         """
-        
+        Metodo de montagem de contexto        
         """
         pass
