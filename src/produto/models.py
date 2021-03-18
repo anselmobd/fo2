@@ -252,6 +252,9 @@ class FichaTecnica(models.Model):
     referencia = models.CharField(
         db_index=True, max_length=5,
         verbose_name='Referência')
+    tipo = models.ForeignKey(
+        TipoFichaTecnica, on_delete=models.PROTECT,
+        default=TipoFichaTecnica.objects.first().id)
     uploaded_at = models.DateTimeField(
         db_index=True, auto_now_add=True,
         verbose_name='Inserida em')
@@ -270,9 +273,10 @@ class FichaTecnica(models.Model):
             try:
                 with transaction.atomic():
                     old_ftec = FichaTecnica.objects.exclude(
-                        uploaded_at=self.uploaded_at
+                        uploaded_at=self.uploaded_at,
                     ).filter(
-                        referencia=self.referencia
+                        referencia=self.referencia,
+                        tipo=self.tipo,
                     )
                     for ftec in old_ftec:
                         ftec.habilitada = False
