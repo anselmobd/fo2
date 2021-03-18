@@ -66,7 +66,8 @@ class GtinLogAdmin(admin.ModelAdmin):
     pass
 
 class FichaTecnicaAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['referencia']
+    ordering = ['referencia', 'uploaded_at']
 
 
 intr_adm_site.register(Composicao, ComposicaoAdmin)
