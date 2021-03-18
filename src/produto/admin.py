@@ -66,6 +66,8 @@ class GtinLogAdmin(admin.ModelAdmin):
     pass
 
 class FichaTecnicaAdmin(admin.ModelAdmin):
+    list_display = ['referencia', 'uploaded_at', 'habilitada']
+    readonly_fields = ['uploaded_at']
     search_fields = ['referencia']
     ordering = ['referencia', 'uploaded_at']
 
