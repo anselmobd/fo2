@@ -17,8 +17,8 @@
         {% if ref %}
           <h2>Referência: {{ ref }}&nbsp;&nbsp;&nbsp;Tipo: {{ tipo }}</h2>
           {% if ftec_link %}
-            {% with 'Ficha técnica da referência ' as text %}
-              {% include "layout/link.html" with link=ftec_link text=text|add:ref target='_blank' only %}<br />
+            {% with 'Ficha técnica' as text %}
+              {% include "layout/link.html" with link=ftec_link text=text target='_blank' only %}<br />
             {% endwith %}
           {% endif %}
           {% url 'producao:busca_op__get' ref as busca_op_ref %}
