@@ -252,14 +252,20 @@ class FichaTecnica(models.Model):
 
     @transaction.atomic
     def save(self, *args, **kwargs):
+        if self.habilitada:
+            try:
+                with transaction.atomic():
+                    old_ftec = FichaTecnica.objects.exclude(
+                        uploaded_at=self.uploaded_at
+                    ).filter(
+                        referencia=self.referencia
+                    )
+                    for ftec in old_ftec:
+                        ftec.habilitada = False
+                        ftec.save()
+            except Exception:
+                pass
         super(FichaTecnica, self).save(*args, **kwargs)
-        try:
-            with transaction.atomic():
-                old_ftec = FichaTecnica.objects.get(referencia=self.referencia, id=id)
-                old_ftec.habilitada = False
-                old_ftec.save()
-        except Exception:
-            pass
 
     class Meta:
         db_table = "fo2_prod_ftec"
