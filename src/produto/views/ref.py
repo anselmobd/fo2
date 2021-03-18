@@ -37,9 +37,17 @@ class Ref(View):
             })
         else:
             try:
-                ft = models.FichaTecnica.objects.get(referencia=ref, habilitada=True)
+                fichas = models.FichaTecnica.objects.filter(
+                    referencia=ref, habilitada=True
+                ).order_by('tipo')
+                ftecs = []
+                for ficha in fichas:
+                    ftecs.append({
+                        'tipo': ficha.tipo,
+                        'link': f'/media/{ficha.ficha}',
+                    })
                 context.update({
-                    'ftec_link': f'/media/{ft.ficha}',
+                    'ftecs': ftecs,
                 })
 
             except models.FichaTecnica.DoesNotExist:
