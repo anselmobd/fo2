@@ -12,6 +12,7 @@ from utils.views import group_rowspan
 
 import produto.forms as forms
 import produto.queries as queries
+import produto.models as models
 
 
 class Ref(View):
@@ -35,6 +36,15 @@ class Ref(View):
                 'msg_erro': 'Referência não encontrada',
             })
         else:
+            try:
+                ft = models.FichaTecnica.objects.get(referencia=ref, habilitada=True)
+                context.update({
+                    'ftec_link': f'/media/{ft.ficha}',
+                })
+
+            except models.FichaTecnica.DoesNotExist:
+                pass
+            
             modelo_link = \
                 '<a href="{modelo_link}">{modelo}&nbsp;' \
                 '<span class="glyphicon glyphicon-link" ' \
