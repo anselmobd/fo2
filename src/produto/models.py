@@ -1,5 +1,11 @@
+from pprint import pprint
+import os
+
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import (
+    models,
+    transaction,
+)
 from base.models import (
     Colaborador,
     ImagemTag,
@@ -222,3 +228,40 @@ class GtinLog(models.Model):
     def save(self, *args, **kwargs):
         self.quando = timezone.now()
         super(GtinLog, self).save(*args, **kwargs)
+
+
+def ficha_tecnica_upload_to(instance, filename):
+    return os.path.join('pop', instance.referencia, filename)
+
+
+class FichaTecnica(models.Model):
+    referencia = models.CharField(
+        db_index=True, max_length=5,
+        verbose_name='Referência')
+    uploaded_at = models.DateTimeField(
+        db_index=True, auto_now_add=True,
+        verbose_name='Inserida em')
+    ficha = models.FileField(
+        upload_to=ficha_tecnica_upload_to,
+        verbose_name='Ficha técnica')
+    habilitada = models.NullBooleanField(
+        default=True)
+
+    def __str__(self):
+        return f"{self.referencia} - {self.uploaded_at}"
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        super(FichaTecnica, self).save(*args, **kwargs)
+        try:
+            with transaction.atomic():
+                old_ftec = FichaTecnica.objects.get(referencia=self.referencia, id=id)
+                old_ftec.habilitada = False
+                old_ftec.save()
+        except Exception:
+            pass
+
+    class Meta:
+        db_table = "fo2_prod_ftec"
+        verbose_name = 'Ficha técnica'
+        verbose_name_plural = 'Fichas técnicas'
