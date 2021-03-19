@@ -2,10 +2,7 @@ from pprint import pprint
 import os
 
 from django.core.exceptions import ValidationError
-from django.db import (
-    models,
-    transaction,
-)
+from django.db import models
 from base.models import (
     Colaborador,
     ImagemTag,
@@ -267,22 +264,17 @@ class FichaTecnica(models.Model):
     def __str__(self):
         return f"{self.referencia} - {self.uploaded_at}"
 
-    @transaction.atomic
     def save(self, *args, **kwargs):
         if self.habilitada:
-            try:
-                with transaction.atomic():
-                    old_ftec = FichaTecnica.objects.exclude(
-                        uploaded_at=self.uploaded_at,
-                    ).filter(
-                        referencia=self.referencia,
-                        tipo=self.tipo,
-                    )
-                    for ftec in old_ftec:
-                        ftec.habilitada = False
-                        ftec.save()
-            except Exception:
-                pass
+            old_ftec = FichaTecnica.objects.exclude(
+                uploaded_at=self.uploaded_at,
+            ).filter(
+                referencia=self.referencia,
+                tipo=self.tipo,
+            )
+            for ftec in old_ftec:
+                ftec.habilitada = False
+                ftec.save()
         super(FichaTecnica, self).save(*args, **kwargs)
 
     class Meta:
