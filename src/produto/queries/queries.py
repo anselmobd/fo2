@@ -187,6 +187,12 @@ def ref_linha(cursor, ref):
     return df.to_dict('records')
 
 
+def dict_ref_linha(cursor, ref):
+    info = nivel_ref_inform(cursor, 1, ref, upper=False)
+    df = pd.DataFrame(info)
+    return df.set_index('ref')['linha_produto'].to_dict()
+
+
 def nivel_ref_inform(cursor, nivel, ref, upper=True):
     if isinstance(ref, tuple):
         refs = map(repr, ref)
@@ -275,7 +281,7 @@ def nivel_ref_inform(cursor, nivel, ref, upper=True):
     """
     cursor.execute(sql)
     if upper:
-    return rows_to_dict_list(cursor)
+        return rows_to_dict_list(cursor)
     else:
         return rows_to_dict_list_lower(cursor)
 
