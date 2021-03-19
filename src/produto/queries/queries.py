@@ -189,6 +189,8 @@ def ref_linha(cursor, ref):
 
 def dict_ref_linha(cursor, ref):
     info = nivel_ref_inform(cursor, 1, ref, upper=False)
+    if len(info) == 0:
+      return {}
     df = pd.DataFrame(info)
     return df.set_index('ref')['linha_produto'].to_dict()
 
