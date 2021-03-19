@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^estr_estagio_de_insumo/$', views.EstrEstagioDeInsumo.as_view(),
         name='estr_estagio_de_insumo'),
 
+    url(r'^ficha_tecnica/$', views.FichaTecnica.as_view(),
+        name='ficha_tecnica'),
+
     url(r'^gera_roteiros_padrao_ref/(?P<ref>[^/]+)?/(?P<quant>[^/]+)?/?$',
         views.GeraRoteirosPadraoRef.as_view(),
         name='gera_roteiros_padrao_ref'),

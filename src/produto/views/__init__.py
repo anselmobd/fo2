@@ -1,6 +1,7 @@
 from .busca_modelo import *
 from .custo import *
 from .custo_ref import *
+from .ficha_tecnica import *
 from .gtin_range import *
 from .gtin import *
 from .historico import *
