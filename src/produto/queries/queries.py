@@ -179,7 +179,7 @@ def ref_inform(cursor, ref):
     return nivel_ref_inform(cursor, 1, ref)
 
 
-def nivel_ref_inform(cursor, nivel, ref):
+def nivel_ref_inform(cursor, nivel, ref, upper=True):
     if isinstance(ref, tuple):
         refs = map(repr, ref)
         refs_join = ', '.join(refs)
@@ -266,7 +266,10 @@ def nivel_ref_inform(cursor, nivel, ref):
          and cl.CGC_4 = r.CGC_CLIENTE_4
     """
     cursor.execute(sql)
+    if upper:
     return rows_to_dict_list(cursor)
+    else:
+        return rows_to_dict_list_lower(cursor)
 
 
 def ref_utilizada_em(cursor, ref):
