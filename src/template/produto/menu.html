@@ -3,6 +3,8 @@
   <ul>
     {% if perms.produto.change_fichatecnica %}
       <li><a href="{% url 'intradm:produto_fichatecnica_changelist' %}" target="_blank">Ficha técnica</a></li>
+    {% else %}
+      <li><a href="{% url 'produto:ficha_tecnica' %}">Ficha técnica</a></li>
     {% endif %}
     <li><a href="{% url 'produto:busca' %}">Busca</a></li>
     <li><a href="{% url 'produto:hist_narrativa' %}">Histórico de narrativa</a></li>
