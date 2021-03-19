@@ -205,6 +205,7 @@ def nivel_ref_inform(cursor, nivel, ref):
         , r.DESCR_REFERENCIA DESCR
         , ce.DESCR_CT_ESTOQUE
           || ' (' || r.CONTA_ESTOQUE || ')' CONTA_ESTOQUE
+        , r.LINHA_PRODUTO
         , lin.DESCRICAO_LINHA
           || ' (' || r.LINHA_PRODUTO || ')' LINHA
         , r.COLECAO CODIGO_COLECAO
