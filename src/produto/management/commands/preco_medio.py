@@ -55,7 +55,7 @@ class Command(BaseCommand):
             for ori in zeroed_ori:
                 if ori not in zeroed_new:
                     if date:
-                        print(date)
+                        self.stdout.write(date)
                         date = None
                     self.stdout.write(str(ori))
 
