@@ -5,6 +5,7 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 
 import produto.forms
+import produto.models
 import produto.queries
 
 
@@ -19,6 +20,7 @@ class FichaTecnica(O2BaseGetPostView):
     def mount_context(self):
         ref = self.form.cleaned_data['ref']
 
+        fichas = produto.models.FichaTecnica.objects
         if ref != '':
         cursor = db_cursor_so(self.request)
 
@@ -27,3 +29,17 @@ class FichaTecnica(O2BaseGetPostView):
             self.context.update({
                 'erro': 'Referência não encontrada',
             })
+                return
+
+            fichas = fichas.filter(
+                referencia=ref,
+            )
+
+        fichas = fichas.filter(
+            habilitada=True,
+        )
+
+        self.context.update({
+            'count': len(fichas),
+        })
+
