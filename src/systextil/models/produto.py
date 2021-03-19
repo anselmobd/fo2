@@ -33,6 +33,40 @@ class Familia(models.Model):
         verbose_name = "Família"
 
 
+class LinhaNivel1Manager(models.Manager):
+    def get_queryset(self):
+        return super(LinhaNivel1Manager, self).get_queryset().exclude(
+            linha_produto=0,
+        ).filter(
+            nivel_estrutura=1,
+        )
+
+
+class LinhaNivel1(models.Model):
+    linha_produto = models.IntegerField(
+        primary_key=True,
+        verbose_name='Linha',
+    )
+    nivel_estrutura = models.IntegerField(
+        verbose_name='Nível',
+    )
+    descricao_linha = models.CharField(
+        max_length=20,
+        verbose_name='Descrição',
+    )
+
+    objects = LinhaNivel1Manager()
+
+    def __str__(self):
+        return '{}-{}'.format(self.linha_produto, self.descricao_linha)
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "BASI_120"
+        verbose_name = "Linha de Produto Nível 1"
+
+
 class Produto(models.Model):
     nivel_estrutura = models.CharField(
         primary_key=True, max_length=1,
