@@ -187,12 +187,16 @@ def ref_linha(cursor, ref):
     return df.to_dict('records')
 
 
-def dict_ref_linha(cursor, ref):
+def dict_ref_val(cursor, ref, valor):
     info = nivel_ref_inform(cursor, 1, ref, upper=False)
     if len(info) == 0:
       return {}
     df = pd.DataFrame(info)
-    return df.set_index('ref')['linha_produto'].to_dict()
+    return df.set_index('ref')[valor].to_dict()
+
+
+def dict_ref_linha(cursor, ref):
+    return dict_ref_val(cursor, ref, 'linha_produto')
 
 
 def nivel_ref_inform(cursor, nivel, ref, upper=True):
