@@ -31,7 +31,7 @@ class FichaTecnica(O2BaseGetPostView):
 
         fichas = produto.models.FichaTecnica.objects
 
-            cursor = db_cursor_so(self.request)
+        cursor = db_cursor_so(self.request)
         if ref == '':
             ref_linha = produto.queries.dict_ref_linha(cursor, refs)
         else:
@@ -41,10 +41,10 @@ class FichaTecnica(O2BaseGetPostView):
             )
 
         if not ref_linha:
-                self.context.update({
-                    'erro': 'Referência não encontrada',
-                })
-                return
+            self.context.update({
+                'erro': 'Referência não encontrada',
+            })
+            return
 
         fichas = fichas.filter(
             habilitada=True,
@@ -64,9 +64,10 @@ class FichaTecnica(O2BaseGetPostView):
         for row in fichas:
             row['tipo__tipo|LINK'] = f'/media/{row["ficha"]}'
             row['tipo__tipo|TARGET'] = '_blank'
+            row['linha'] = ref_linha[row['referencia']]
 
         self.context.update({
-            'headers': ['Referência', 'Tipo', 'Data/hora'],
-            'fields': ['referencia', 'tipo__tipo', 'uploaded_at'],
+            'headers': ['Linha', 'Referência', 'Tipo', 'Data/hora'],
+            'fields': ['linha', 'referencia', 'tipo__tipo', 'uploaded_at'],
             'data': fichas,
         })
