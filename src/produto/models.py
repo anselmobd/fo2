@@ -245,7 +245,7 @@ class TipoFichaTecnica(models.Model):
 
 
 def ficha_tecnica_upload_to(instance, filename):
-    return os.path.join('pop', instance.referencia, filename)
+    return os.path.join('ficha_tecnica', instance.referencia, filename)
 
 
 class FichaTecnica(models.Model):
