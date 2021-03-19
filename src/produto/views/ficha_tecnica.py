@@ -20,6 +20,15 @@ class FichaTecnica(O2BaseGetPostView):
     def mount_context(self):
         ref = self.form.cleaned_data['ref']
 
+        dados_refs = produto.models.FichaTecnica.objects.distinct().values('referencia')
+        refs = tuple([r['referencia'] for r in dados_refs])
+
+        if len(refs) == 0:
+            self.context.update({
+                'erro': 'Nenhuma ficha cadastrada',
+            })
+            return
+
         fichas = produto.models.FichaTecnica.objects
         if ref != '':
             cursor = db_cursor_so(self.request)
