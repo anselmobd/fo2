@@ -17,23 +17,29 @@ class FichaTecnica(O2BaseGetPostView):
         self.template_name = 'produto/ficha_tecnica.html'
         self.title_name = 'Ficha técnica'
 
-    def mount_context(self):
-        ref = self.form.cleaned_data['ref']
-
-        dados_refs = produto.models.FichaTecnica.objects.distinct().values('referencia')
-        refs = tuple([r['referencia'] for r in dados_refs])
-
-        if len(refs) == 0:
+    def get_ftec_refs(self):
+        dados_refs = produto.models.FichaTecnica.objects.filter(
+            habilitada=True,
+        ).distinct().values('referencia')
+        ftec_refs = tuple([r['referencia'] for r in dados_refs])
+        if len(ftec_refs) == 0:
             self.context.update({
                 'erro': 'Nenhuma ficha cadastrada',
             })
+        return ftec_refs
+
+    def mount_context(self):
+        ref = self.form.cleaned_data['ref']
+
+        ftec_refs = self.get_ftec_refs()
+        if not ftec_refs:
             return
 
         fichas = produto.models.FichaTecnica.objects
 
         cursor = db_cursor_so(self.request)
         if ref == '':
-            ref_linha = produto.queries.dict_ref_val(cursor, refs, 'linha')
+            ref_linha = produto.queries.dict_ref_val(cursor, ftec_refs, 'linha')
         else:
             ref_linha = produto.queries.dict_ref_val(cursor, ref, 'linha')
             fichas = fichas.filter(
