@@ -127,6 +127,14 @@ class ReferenciaForm(
         autofocus_field = 'ref'
 
 
+class ReferenciaNoneForm(
+        O2BaseForm,
+        O2FieldRefForm):
+
+    class Meta:
+        autofocus_field = 'ref'
+
+
 class CustoDetalhadoForm(
         O2BaseForm,
         O2FieldNivelForm,
