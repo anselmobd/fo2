@@ -42,12 +42,17 @@ class FichaTecnica(O2BaseGetPostView):
         ).values(
             'referencia',
             'tipo__tipo',
-            'uploaded_at'
+            'uploaded_at',
+            'ficha',
         )
 
         self.context.update({
             'count': len(fichas),
         })
+
+        for row in fichas:
+            row['tipo__tipo|LINK'] = f'/media/{row["ficha"]}'
+            row['tipo__tipo|TARGET'] = '_blank'
 
         self.context.update({
             'headers': ['Referência', 'Tipo', 'Data/hora'],
