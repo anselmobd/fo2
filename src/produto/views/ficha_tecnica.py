@@ -1,8 +1,11 @@
 from pprint import pprint
 
+from fo2.connections import db_cursor_so
+
 from base.views import O2BaseGetPostView
 
 import produto.forms
+import produto.queries
 
 
 class FichaTecnica(O2BaseGetPostView):
@@ -10,7 +13,7 @@ class FichaTecnica(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(FichaTecnica, self).__init__(*args, **kwargs)
         self.Form_class = produto.forms.ReferenciaForm
-        self.template_name = 'comercial/ficha_tecnica.html'
+        self.template_name = 'produto/ficha_tecnica.html'
         self.title_name = 'Ficha técnica'
 
     def mount_context(self):
@@ -18,3 +21,11 @@ class FichaTecnica(O2BaseGetPostView):
 
         if ref == '':
             return
+
+        cursor = db_cursor_so(self.request)
+
+        data = produto.queries.ref_inform(cursor, ref)
+        if len(data) == 0:
+            self.context.update({
+                'erro': 'Referência não encontrada',
+            })

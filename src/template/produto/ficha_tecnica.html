@@ -10,25 +10,20 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'produto:custo_ref' %}" method="post">
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if ref %}
-  <h4>Referência: {{ ref }}</h4>
-{% endif %}
-{% if erro %}
-  <h4>{{ erro }}</h4>
-{% else %}
-  {% if grades %}
-    {%for grade in grades%}
-      <h4>Alternativa: {{grade|get_item:'alt'}} ({{grade|get_item:'alt_descr'}})</h4>
-      <table>
-        {% include "layout/thead_generic.html" with data=grade|get_item:'headers' only %}
-        {% include "layout/tbody_generic.html" with fields=grade|get_item:'fields' data=grade|get_item:'data' only %}
-      </table>
-    {% endfor %}
+{% if request.POST %}
+  {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+  {% if erro %}
+    <h4>{{ erro }}</h4>
+  {% elif data %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
   {% endif %}
 {% endif %}
 {% endblock %}
