@@ -30,19 +30,21 @@ class FichaTecnica(O2BaseGetPostView):
             return
 
         fichas = produto.models.FichaTecnica.objects
-        if ref != '':
-            cursor = db_cursor_so(self.request)
 
-            data = produto.queries.ref_inform(cursor, ref)
-            if len(data) == 0:
+            cursor = db_cursor_so(self.request)
+        if ref == '':
+            ref_linha = produto.queries.dict_ref_linha(cursor, refs)
+        else:
+            ref_linha = produto.queries.dict_ref_linha(cursor, ref)
+            fichas = fichas.filter(
+                referencia=ref,
+            )
+
+        if not ref_linha:
                 self.context.update({
                     'erro': 'Referência não encontrada',
                 })
                 return
-
-            fichas = fichas.filter(
-                referencia=ref,
-            )
 
         fichas = fichas.filter(
             habilitada=True,
