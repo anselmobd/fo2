@@ -179,6 +179,13 @@ def ref_inform(cursor, ref):
     return nivel_ref_inform(cursor, 1, ref)
 
 
+def ref_linha(cursor, ref):
+    info = nivel_ref_inform(cursor, 1, ref, upper=False)
+    df = pd.DataFrame(info)
+    df = df.loc[:, ['ref', 'linha_produto']]
+    return df.to_dict('records')
+
+
 def nivel_ref_inform(cursor, nivel, ref, upper=True):
     if isinstance(ref, tuple):
         refs = map(repr, ref)
