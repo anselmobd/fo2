@@ -14,6 +14,7 @@ from .models import (
     ProdutoCor, 
     ProdutoItem, 
     ProdutoTamanho,
+    TipoFichaTecnica,
 )
 
 
@@ -65,11 +66,16 @@ class ComposicaoLinhaAdmin(admin.ModelAdmin):
 class GtinLogAdmin(admin.ModelAdmin):
     pass
 
+
 class FichaTecnicaAdmin(admin.ModelAdmin):
-    list_display = ['referencia', 'uploaded_at', 'habilitada']
+    list_display = ['referencia', 'tipo', 'uploaded_at', 'habilitada']
     readonly_fields = ['uploaded_at']
     search_fields = ['referencia']
-    ordering = ['referencia', 'uploaded_at']
+    ordering = ['referencia', 'tipo', 'uploaded_at']
+
+
+class TipoFichaTecnicaAdmin(admin.ModelAdmin):
+    pass
 
 
 intr_adm_site.register(Composicao, ComposicaoAdmin)
@@ -81,3 +87,4 @@ intr_adm_site.register(Produto, ProdutoAdmin)
 intr_adm_site.register(ProdutoCor, ProdutoCorAdmin)
 intr_adm_site.register(ProdutoItem, ProdutoItemAdmin)
 intr_adm_site.register(ProdutoTamanho, ProdutoTamanhoAdmin)
+intr_adm_site.register(TipoFichaTecnica, TipoFichaTecnicaAdmin)

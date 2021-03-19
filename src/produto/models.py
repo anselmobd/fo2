@@ -230,6 +230,20 @@ class GtinLog(models.Model):
         super(GtinLog, self).save(*args, **kwargs)
 
 
+class TipoFichaTecnica(models.Model):
+    tipo = models.CharField(
+        max_length=10,
+        verbose_name='Tipo')
+
+    def __str__(self):
+        return self.tipo
+
+    class Meta:
+        db_table = "fo2_prod_ftec_tipo"
+        verbose_name = 'Tipo de ficha técnica'
+        verbose_name_plural = 'Tipos de ficha técnica'
+
+
 def ficha_tecnica_upload_to(instance, filename):
     return os.path.join('pop', instance.referencia, filename)
 
