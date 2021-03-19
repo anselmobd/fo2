@@ -33,9 +33,9 @@ class FichaTecnica(O2BaseGetPostView):
 
         cursor = db_cursor_so(self.request)
         if ref == '':
-            ref_linha = produto.queries.dict_ref_linha(cursor, refs)
+            ref_linha = produto.queries.dict_ref_val(cursor, refs, 'linha')
         else:
-            ref_linha = produto.queries.dict_ref_linha(cursor, ref)
+            ref_linha = produto.queries.dict_ref_val(cursor, ref, 'linha')
             fichas = fichas.filter(
                 referencia=ref,
             )
