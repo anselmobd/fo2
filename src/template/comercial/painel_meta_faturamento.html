@@ -326,17 +326,26 @@
   <div class="overlay" id="cartaz_div">
     <img class="cartaz" id="cartaz_gif" src="/media/rh/campanhas/2021/03/15/covid-mar21.gif" alt="covid-mar-2021">
   </div>
+  <div class="overlay" id="agua1">
+    <img class="cartaz" id="agua1_gif" src="/media/rh/campanhas/2021/03/22_agua/agua1.gif" alt="agua1">
+  </div>
+  <div class="overlay" id="agua2">
+    <img class="cartaz" id="agua2_gif" src="/media/rh/campanhas/2021/03/22_agua/agua2.gif" alt="agua2">
+  </div>
   <script>
-    var varDate = new Date('03/18/2021');
+    var aguaDate = new Date('03/22/2021');
     var today = new Date();
+    var dow = today.getDay();
     today.setHours(0, 0, 0, 0);
-    var c1_elemento = document.getElementById('cartaz_div');
-    var img_elemento = document.getElementById('cartaz_gif');
-    var img_elemento_src = img_elemento.getAttribute('src');
-    var chave_meta = false;
 
-    function mostra_imagem() {
-      if (today.getTime() <= varDate.getTime()) {
+    if ((dow == 2) || (dow == 4)) {
+      console.log('covid');
+      var c1_elemento = document.getElementById('cartaz_div');
+      var img_elemento = document.getElementById('cartaz_gif');
+      var img_elemento_src = img_elemento.getAttribute('src');
+      var chave_meta = false;
+
+      function mostra_imagem() {
         // let nrandom = Math.floor(Math.random()*3);
         // console.log(chave_meta)
         if (chave_meta) {
@@ -348,11 +357,55 @@
         }
         chave_meta = !chave_meta;
       }
+
+      setInterval(function () {
+        mostra_imagem();
+      }, 67500);
     }
 
-    setInterval(function () {
+    showAgua = (today.getTime() == aguaDate.getTime())
+    if (showAgua) {
+      console.log('agua');
+
+      var c1_elemento = document.getElementById('agua1');
+      var img1_elemento = document.getElementById('agua1_gif');
+      var img1_elemento_src = img1_elemento.getAttribute('src');
+      var c2_elemento = document.getElementById('agua2');
+      var img2_elemento = document.getElementById('agua2_gif');
+      var img2_elemento_src = img2_elemento.getAttribute('src');
+      var chave_meta = 0;
+
+      function mostra_imagem() {
+        // let nrandom = Math.floor(Math.random()*3);
+        // console.log(chave_meta)
+        if (chave_meta % 2 == 0) {
+          c1_elemento.style.visibility = 'hidden';
+          c2_elemento.style.visibility = 'hidden';
+          window.setTimeout(function () {
+              mostra_imagem();
+            }, 39000);
+        } else {
+          // trocar o src com uma query variável para forçar a animação do gif a recomeçar
+          if (chave_meta % 4 == 1) {
+            img1_elemento.src = img1_elemento_src+"?a="+Math.random();
+            c1_elemento.style.visibility = 'visible';
+            window.setTimeout(function () {
+              mostra_imagem();
+            }, 63000);
+          } else {
+            img2_elemento.src = img2_elemento_src+"?a="+Math.random();
+            c2_elemento.style.visibility = 'visible';
+            window.setTimeout(function () {
+              mostra_imagem();
+            }, 84000);
+          }
+        }
+        chave_meta += 1;
+      }
+
       mostra_imagem();
-    }, 67500);
+
+    }
 
   </script>
 </body>
