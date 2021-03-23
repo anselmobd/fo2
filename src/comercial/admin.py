@@ -30,9 +30,14 @@ class MetaEstoqueCorAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'quantidade']
 
 
+class MetaModeloReferenciaAdmin(admin.ModelAdmin):
+    list_display = ['__str__']
+
+
 intr_adm_site.register(MetaEstoque, MetaEstoqueAdmin)
 intr_adm_site.register(MetaEstoqueTamanho, MetaEstoqueTamanhoAdmin)
 intr_adm_site.register(MetaEstoqueCor, MetaEstoqueCorAdmin)
+intr_adm_site.register(MetaModeloReferencia, MetaModeloReferenciaAdmin)
 
 
 class MetaFaturamentoAdmin(admin.ModelAdmin):
