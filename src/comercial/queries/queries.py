@@ -83,7 +83,7 @@ def get_vendas(
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
         'get_vendas', ref, periodo, colecao, cliente, por, modelo, order_qtd,
-        ultimos_dias)
+        ultimos_dias, refs_incl)
 
     cached_result = cache.get(key_cache)
     if cached_result is not None:
@@ -193,6 +193,10 @@ def get_vendas(
         select_global = select_por
         group_por = ", v.MODELO"
         add_order('v.MODELO')
+    elif por == 'modelo+incl':
+        select_por = f", '{modelo}' MODELO"
+        select_item = f", '{modelo}' MODELO"
+        select_global = select_por
     elif por == 'ref':
         select_por = ", v.REF"
         select_item = ", v.GRUPO_ESTRUTURA REF"
