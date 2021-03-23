@@ -125,8 +125,8 @@ def get_vendas(
     if (
         modelo is None and
         refs_incl is None and
-        ref is None and 
-        colecao is None and 
+        ref is None and
+        colecao is None and
         cliente is None
     ):
         or_filtro_select_item = '1=1'
@@ -156,10 +156,24 @@ def get_vendas(
     pre_filtra_refs_incl = '1=2'
     filtra_refs_incl_select_item = '1=2'
     if refs_incl is not None:
-        filtra_refs_incl = f"v.REF = '{refs_incl}'"
-        pre_filtra_refs_incl = \
-            f"inf.GRUPO_ESTRUTURA = '{refs_incl}'"
-        filtra_refs_incl_select_item = f"v.GRUPO_ESTRUTURA = '{refs_incl}'"
+        if isinstance(refs_incl, tuple):
+            filtra_refs_incl = ""
+            pre_filtra_refs_incl = ""
+            filtra_refs_incl_select_item = ""
+            refs_incl_sep = ""
+            for ref_incl in refs_incl:
+                filtra_refs_incl += (
+                    refs_incl_sep + f"v.REF = '{ref_incl}'")
+                pre_filtra_refs_incl += (
+                    refs_incl_sep + f"inf.GRUPO_ESTRUTURA = '{ref_incl}'")
+                filtra_refs_incl_select_item += (
+                    refs_incl_sep + f"v.GRUPO_ESTRUTURA = '{ref_incl}'")
+                refs_incl_sep = " OR "
+        else:
+            filtra_refs_incl = f"v.REF = '{refs_incl}'"
+            pre_filtra_refs_incl = \
+                f"inf.GRUPO_ESTRUTURA = '{refs_incl}'"
+            filtra_refs_incl_select_item = f"v.GRUPO_ESTRUTURA = '{refs_incl}'"
 
     filtra_ref = '1=2'
     pre_filtra_ref = '1=2'
@@ -288,13 +302,13 @@ def get_vendas(
               )
           AND nf.SITUACAO_NFISC = 1
           AND fe.DOCUMENTO IS NULL
-          AND ( 
+          AND (
             {or_filtro} -- or_filtro
             OR
             {pre_filtra_modelo} -- pre_filtra_modelo
-            OR 
+            OR
             {pre_filtra_refs_incl} -- pre_filtra_refs_incl
-            OR 
+            OR
             {pre_filtra_ref} -- pre_filtra_ref
           )
           {pre_filtra_periodo} -- pre_filtra_periodo
@@ -310,13 +324,13 @@ def get_vendas(
           -- AND v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
           {filtra_col} -- filtra_col
           {filtra_cliente} -- filtra_cliente
-          AND ( 
+          AND (
             {or_filtro} -- or_filtro
             OR
             {filtra_modelo} -- filtra_modelo
-            OR 
+            OR
             {filtra_refs_incl} -- filtra_refs_incl
-            OR 
+            OR
             {filtra_ref} -- filtra_ref
           )
           {filtra_ultimos_dias} -- filtra_ultimos_dias
@@ -333,13 +347,13 @@ def get_vendas(
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = v.SUBGRU_ESTRUTURA
         WHERE v.NIVEL_ESTRUTURA = 1
-          AND ( 
+          AND (
             {or_filtro_select_item} -- or_filtro_select_item
             OR
             {filtra_modelo_select_item} -- filtra_modelo_select_item
-            OR 
+            OR
             {filtra_refs_incl_select_item} -- filtra_refs_incl_select_item
-            OR 
+            OR
             {filtra_ref_select_item} -- filtra_ref_select_item
             OR
             {filtra_col_select_item} -- filtra_col_select_item
