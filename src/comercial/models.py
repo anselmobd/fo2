@@ -51,10 +51,7 @@ class MetaEstoque(models.Model):
         default=0)
 
     def __str__(self):
-        return '{} - {}'.format(
-            self.modelo,
-            self.data,
-        )
+        return f'{self.modelo} - {self.data}'
 
     class Meta:
         db_table = "fo2_meta_estoque"
@@ -83,11 +80,7 @@ class MetaEstoqueTamanho(models.Model):
     ordem = models.IntegerField(default=0)
 
     def __str__(self):
-        return '{} - {} - {}'.format(
-            self.meta.modelo,
-            self.meta.data,
-            self.tamanho,
-        )
+        return f'{self.meta.modelo} - {self.meta.data} - {self.tamanho}'
 
     class Meta:
         db_table = "fo2_meta_estoque_tamanho"
@@ -101,11 +94,7 @@ class MetaEstoqueCor(models.Model):
     quantidade = models.IntegerField()
 
     def __str__(self):
-        return '{} - {} - {}'.format(
-            self.meta.modelo,
-            self.meta.data,
-            self.cor,
-        )
+        return f'{self.meta.modelo} - {self.meta.data} - {self.cor}'
 
     class Meta:
         db_table = "fo2_meta_estoque_cor"
@@ -118,10 +107,7 @@ class MetaFaturamento(models.Model):
     ajuste = models.IntegerField(default=0)
 
     def __str__(self):
-        return '{} - R$ {}'.format(
-            self.data,
-            self.faturamento,
-        )
+        return f'{self.data} - R$ {self.faturamento}'
 
     class Meta:
         db_table = "fo2_meta_faturamento"
