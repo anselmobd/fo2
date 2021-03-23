@@ -40,6 +40,28 @@ class ModeloPassadoPeriodo(models.Model):
         verbose_name_plural = "Períodos de modelo de análise do passado"
 
 
+class MetaModeloReferencia(models.Model):
+    modelo = models.CharField(
+        max_length=5,
+    )
+    referencia = models.CharField(
+        max_length=5,
+        verbose_name='Referência',
+    )
+    incl_excl = models.CharField(
+        max_length=1,
+        verbose_name='Inclui/Exclui')
+
+    def __str__(self):
+        incl_excl = "Inclui" if self.incl_excl == 'i' else "Exclui"
+        return f'{self.modelo} - {incl_excl} {self.referencia}'
+
+    class Meta:
+        db_table = "fo2_meta_mod_ref"
+        verbose_name = "Referência de modelo para meta"
+        verbose_name_plural = "Referências de modelos para meta"
+
+
 class MetaEstoque(models.Model):
     modelo = models.CharField(max_length=5)
     data = models.DateField()
