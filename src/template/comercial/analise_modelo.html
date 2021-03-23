@@ -313,7 +313,7 @@
     }
   }
 
-  fields_to_vars();
+  // fields_to_vars();
 
   function calc_tot_grade_tamanho() {
     var e_tot_grade_tamanhos = document.getElementById('id_tot_grade_tamanhos');
@@ -321,7 +321,7 @@
     e_tot_grade_tamanhos.innerText = tot_grade_tamanhos;
   }
 
-  calc_tot_grade_tamanho();
+  // calc_tot_grade_tamanho();
 
   function calc_estoque() {
     var e_estoque_ideal_cru = document.getElementById('id_estoque_ideal_cru');
@@ -340,7 +340,7 @@
     e_qtd_grade_tamanhos.innerText = Number(qtd_grade_tamanhos).toLocaleString('pt-BR');
   }
 
-  calc_estoque();
+  // calc_estoque();
 
   function calc_tot_grade_cor() {
     var e_tot_grade_cores = document.getElementById('id_tot_grade_cores');
@@ -364,7 +364,7 @@
     e_qtd_grade_tam_cor.innerText = Number(tot_grades_por_cor).toLocaleString('pt-BR');
   }
 
-  calc_tot_grade_cor();
+  // calc_tot_grade_cor();
 
   function calc_grade() {
     var table = document.getElementById('t_grade'),
@@ -412,7 +412,7 @@
 
   }
 
-  calc_grade();
+  // calc_grade();
 
   function calc_tudo() {
     fields_to_vars();
@@ -423,6 +423,8 @@
   }
 
   $(document).ready(function() {
+    calc_tudo();
+
     var inputbox = $("#{{meta_form.multiplicador.id_for_label}}");
     inputbox.on('change', calc_tudo);
     inputbox.on('keyup', calc_tudo);
