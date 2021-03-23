@@ -76,7 +76,7 @@ def get_modelo_dims(cursor, modelo=None, get=None):
 
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
-        modelo=None, order_qtd=True, ultimos_dias=None, refs_incl=None):
+        modelo=None, order_qtd=True, ultimos_dias=None, refs_incl=None, mult_incl=None):
     """
     ref e modelo e refs_incl são tratados em conjunto com OR
     """
@@ -155,13 +155,17 @@ def get_vendas(
     filtra_refs_incl = '1=2'
     pre_filtra_refs_incl = '1=2'
     filtra_refs_incl_select_item = '1=2'
+    multiplicador = ''
     if refs_incl is not None:
         if isinstance(refs_incl, tuple):
             filtra_refs_incl = ""
             pre_filtra_refs_incl = ""
             filtra_refs_incl_select_item = ""
             refs_incl_sep = ""
-            for ref_incl in refs_incl:
+            for idx, ref_incl in enumerate(refs_incl):
+                if mult_incl is not None:
+                    multiplicador += (
+                        f" WHEN inf.GRUPO_ESTRUTURA = '{ref_incl}' THEN {mult_incl[idx]} ")
                 filtra_refs_incl += (
                     refs_incl_sep + f"v.REF = '{ref_incl}'")
                 pre_filtra_refs_incl += (
@@ -270,7 +274,11 @@ def get_vendas(
                                ))) MODELO
         , inf.SUBGRU_ESTRUTURA TAM
         , inf.ITEM_ESTRUTURA COR
-        , inf.QTDE_ITEM_FATUR QTD
+        , CASE
+            WHEN 1=2 THEN 0
+            {multiplicador} -- multiplicador
+            ELSE 1
+          END * inf.QTDE_ITEM_FATUR QTD
         , inf.VALOR_UNITARIO PRECO
         , r.COLECAO COL
         , col.DESCR_COLECAO COLECAO
