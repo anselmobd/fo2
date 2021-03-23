@@ -76,8 +76,10 @@ def get_modelo_dims(cursor, modelo=None, get=None):
 
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
-        modelo=None, order_qtd=True, ultimos_dias=None):
-
+        modelo=None, order_qtd=True, ultimos_dias=None, refs_incl=None):
+    """
+    ref e modelo e refs_incl são tratados em conjunto com OR
+    """
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
         'get_vendas', ref, periodo, colecao, cliente, por, modelo, order_qtd,
@@ -107,29 +109,46 @@ def get_vendas(
     if cliente is not None:
         filtra_cliente = "AND v.CNPJ9 = '{}'".format(cliente)
 
-    filtra_modelo = ''
-    filtra_modelo_select_item = ''
-    pre_filtra_modelo = ''
+    if modelo is None and refs_incl is None and ref is None:
+        or_filtro = '1=1'
+    else:
+        or_filtro = '1=2'
+
+    filtra_modelo = '1=2'
+    pre_filtra_modelo = '1=2'
+    filtra_modelo_select_item = '1=2'
     if modelo is not None:
-        filtra_modelo = "AND v.MODELO = '{}'".format(modelo)
+        filtra_modelo = "v.MODELO = '{}'".format(modelo)
         pre_filtra_modelo = \
-            "AND inf.GRUPO_ESTRUTURA LIKE '%{}%'".format(modelo)
+            "inf.GRUPO_ESTRUTURA LIKE '%{}%'".format(modelo)
         filtra_modelo_select_item = f""" --
-          AND TRIM(
-                LEADING '0' FROM (
-                  REGEXP_REPLACE(
-                    v.GRUPO_ESTRUTURA
-                  , '^([^a-zA-Z]+)[a-zA-Z]*$'
-                  , '\\1'
-                  )
+            TRIM(
+              LEADING '0' FROM (
+                REGEXP_REPLACE(
+                  v.GRUPO_ESTRUTURA
+                , '^([^a-zA-Z]+)[a-zA-Z]*$'
+                , '\\1'
                 )
-              ) = '{modelo}'
+              )
+            ) = '{modelo}'
         """
-    filtra_ref = ''
-    pre_filtra_ref = ''
+
+    filtra_refs_incl = '1=2'
+    pre_filtra_refs_incl = '1=2'
+    filtra_refs_incl_select_item = '1=2'
+    if refs_incl is not None:
+        filtra_refs_incl = f"v.REF = '{refs_incl}'"
+        pre_filtra_refs_incl = \
+            f"inf.GRUPO_ESTRUTURA = '{refs_incl}'"
+        filtra_refs_incl_select_item = f"v.GRUPO_ESTRUTURA = '{refs_incl}'"
+
+    filtra_ref = '1=2'
+    pre_filtra_ref = '1=2'
+    filtra_ref_select_item = '1=2'
     if ref is not None:
-        filtra_ref = "AND v.REF = '{}'".format(ref)
-        pre_filtra_ref = "AND inf.GRUPO_ESTRUTURA = '{}'".format(ref)
+        filtra_ref = f"v.REF = '{ref}'"
+        pre_filtra_ref = f"inf.GRUPO_ESTRUTURA = '{ref}'"
+        filtra_ref_select_item = f"v.GRUPO_ESTRUTURA = '{ref}'"
 
     hoje = date.today()
     ini_mes = hoje.replace(day=1)
@@ -246,8 +265,15 @@ def get_vendas(
               )
           AND nf.SITUACAO_NFISC = 1
           AND fe.DOCUMENTO IS NULL
-          {pre_filtra_modelo} -- pre_filtra_modelo
-          {pre_filtra_ref} -- pre_filtra_ref
+          AND ( 
+            {or_filtro} -- or_filtro
+            OR
+            {pre_filtra_modelo} -- pre_filtra_modelo
+            OR 
+            {pre_filtra_refs_incl} -- pre_filtra_refs_incl
+            OR 
+            {pre_filtra_ref} -- pre_filtra_ref
+          )
           {pre_filtra_periodo} -- pre_filtra_periodo
           {pre_filtra_ultimos_dias} -- pre_filtra_ultimos_dias
         )
@@ -261,8 +287,15 @@ def get_vendas(
           -- AND v.dt > TO_DATE('2019-01-01', 'yyyy-mm-dd')
           {filtra_col} -- filtra_col
           {filtra_cliente} -- filtra_cliente
-          {filtra_modelo} -- filtra_modelo
-          {filtra_ref} -- filtra_ref
+          AND ( 
+            {or_filtro} -- or_filtro
+            OR
+            {filtra_modelo} -- filtra_modelo
+            OR 
+            {filtra_refs_incl} -- filtra_refs_incl
+            OR 
+            {filtra_ref} -- filtra_ref
+          )
           {filtra_ultimos_dias} -- filtra_ultimos_dias
         --
         UNION
@@ -274,7 +307,15 @@ def get_vendas(
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = v.SUBGRU_ESTRUTURA
         WHERE v.NIVEL_ESTRUTURA = 1
-          {filtra_modelo_select_item} -- filtra_modelo_select_item
+          AND ( 
+            {or_filtro} -- or_filtro
+            OR
+            {filtra_modelo_select_item} -- filtra_modelo_select_item
+            OR 
+            {filtra_refs_incl_select_item} -- filtra_refs_incl_select_item
+            OR 
+            {filtra_ref_select_item} -- filtra_ref_select_item
+          )
         ) v
         GROUP BY
           1
