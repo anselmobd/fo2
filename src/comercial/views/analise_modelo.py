@@ -63,9 +63,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 'fields': ['referencia'],
                 'data': ref_incl,
             }
-            refs_incl = [r['referencia'] for r in ref_incl]
-            # por ora forçando pegar só a primeira referência
-            refs_incl = refs_incl[0]
+            refs_incl = tuple([r['referencia'] for r in ref_incl])
 
         # vendas do modelo
         data = []
