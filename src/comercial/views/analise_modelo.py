@@ -50,6 +50,21 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 'data': data_ref,
             }
 
+        # referências a incluir
+        ref_incl = models.MetaModeloReferencia.objects.filter(
+            modelo=modelo,
+            incl_excl='i',
+        ).values('referencia')
+        if len(ref_incl) == 0:
+            refs_incl = []
+        else:
+            self.context['adicionadas'] = {
+                'headers': ['Referência'],
+                'fields': ['referencia'],
+                'data': ref_incl,
+            }
+            refs_incl = [r['referencia'] for r in ref_incl]
+
         # vendas do modelo
         data = []
         zero_data_row = {p['range']: 0 for p in self.periodos}
