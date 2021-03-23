@@ -328,13 +328,21 @@
     var e_estoque_ideal_tam = document.getElementById('id_estoque_ideal_tam');
     var e_qtd_grade_tamanhos = document.getElementById('id_qtd_grade_tamanhos');
     estoque_ideal_cru = Math.round(venda_mensal * multiplicador *100)/100;
-    resto = estoque_ideal_cru % tot_grade_tamanhos;
+    if (tot_grade_tamanhos == 0) {
+      resto = estoque_ideal_cru;
+    } else {
+      resto = estoque_ideal_cru % tot_grade_tamanhos;
+    }
     if ( resto == 0 ) {
       estoque_ideal_tam = estoque_ideal_cru;
     } else {
       estoque_ideal_tam = estoque_ideal_cru + tot_grade_tamanhos - resto;
     }
-    qtd_grade_tamanhos = estoque_ideal_tam / tot_grade_tamanhos;
+    if (tot_grade_tamanhos == 0) {
+      qtd_grade_tamanhos = estoque_ideal_tam;
+    } else {
+      qtd_grade_tamanhos = estoque_ideal_tam / tot_grade_tamanhos;
+    }
     e_estoque_ideal_cru.innerText = Number(estoque_ideal_cru).toLocaleString('pt-BR');
     e_estoque_ideal_tam.innerText = Number(estoque_ideal_tam).toLocaleString('pt-BR');
     e_qtd_grade_tamanhos.innerText = Number(qtd_grade_tamanhos).toLocaleString('pt-BR');
@@ -353,7 +361,11 @@
     tot_grades_por_cor = 0;
     for (key in dict_cores) {
       var e_grades_por_1_cor = document.getElementById('id_lotes_cor_'+key);
-      qtd_grades_cor = Math.round(qtd_grade_tamanhos / tot_grade_cores * dict_cores[key]);
+      if (tot_grade_cores == 0) {
+        qtd_grades_cor = 0;
+      } else {
+        qtd_grades_cor = Math.round(qtd_grade_tamanhos / tot_grade_cores * dict_cores[key]);
+      }
       grades_por_cor[key] = qtd_grades_cor;
       tot_grades_por_cor = tot_grades_por_cor + qtd_grades_cor;
       e_grades_por_1_cor.innerText = Number(qtd_grades_cor).toLocaleString('pt-BR');
