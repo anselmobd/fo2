@@ -54,16 +54,18 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         ref_incl = models.MetaModeloReferencia.objects.filter(
             modelo=modelo,
             incl_excl='i',
-        ).values('referencia')
+        ).values('referencia', 'multiplicador')
         if len(ref_incl) == 0:
             refs_incl = None
+            mult_incl = None
         else:
             self.context['adicionadas'] = {
-                'headers': ['Referência'],
-                'fields': ['referencia'],
+                'headers': ['Referência', 'Multiplicador'],
+                'fields': ['referencia', 'multiplicador'],
                 'data': ref_incl,
             }
             refs_incl = tuple([r['referencia'] for r in ref_incl])
+            mult_incl = tuple([r['multiplicador'] for r in ref_incl])
 
         # vendas do modelo
         data = []
@@ -73,7 +75,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
                 colecao=None, cliente=None, por='modelo+incl', modelo=modelo,
-                refs_incl=refs_incl)
+                refs_incl=refs_incl, mult_incl=mult_incl)
             if len(data_periodo) == 0:
                 data_periodo = [{'modelo': modelo, 'qtd': 0}]
             for row in data_periodo:
@@ -125,7 +127,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 data_periodo = queries.get_vendas(
                     self.cursor, ref=None, periodo=periodo['range'],
                     colecao=None, cliente=None, por='tam', modelo=modelo,
-                    order_qtd=False, refs_incl=refs_incl)
+                    order_qtd=False, refs_incl=refs_incl, mult_incl=mult_incl)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['tam'] == row['tam']),
@@ -228,7 +230,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 data_periodo = queries.get_vendas(
                     self.cursor, ref=None, periodo=periodo['range'],
                     colecao=None, cliente=None, por='cor', modelo=modelo,
-                    refs_incl=refs_incl)
+                    refs_incl=refs_incl, mult_incl=mult_incl)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['cor'] == row['cor']),
@@ -303,7 +305,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 data_periodo = queries.get_vendas(
                     self.cursor, ref=None, periodo=periodo['range'],
                     colecao=None, cliente=None, por='ref', modelo=modelo,
-                    refs_incl=refs_incl)
+                    refs_incl=refs_incl, mult_incl=mult_incl)
             for row in data_periodo:
                 data_row = next(
                     (dr for dr in data if dr['ref'] == row['ref']),
