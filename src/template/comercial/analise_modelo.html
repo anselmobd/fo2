@@ -44,6 +44,7 @@
   <ul class="nav nav-tabs" id="myTab">
     <li><a data-toggle="tab" href="#vendas">Vendas</a></li>
     <li class="active"><a data-toggle="tab" href="#param">Meta de estoque</a></li>
+    <li><a data-toggle="tab" href="#referencias">Referências</a></li>
   </ul>
   <div class="tab-content">
     <div id="vendas" class="tab-pane fade">
@@ -220,6 +221,25 @@
         </tbody>
       </table>
 
+    </div>
+    <div id="referencias" class="tab-pane fade">
+      <table class="layout">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;">
+              <h4>Referências automaticamente consideradas</h4>
+              {% if referencias %}
+                {% if referencias.data %}
+                  <table>
+                    {% include "layout/thead_generic.html" with data=referencias.headers style=referencias.style only %}
+                    {% include "layout/tbody_generic.html" with fields=referencias.fields data=referencias.data style=referencias.style only %}
+                  </table>
+                {% endif %}
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   {% endif %}
