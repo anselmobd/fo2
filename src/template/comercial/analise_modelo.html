@@ -237,6 +237,19 @@
                 {% endif %}
               {% endif %}
             </td>
+            <td style="vertical-align: top;">
+              <h4>Referências adicionadas</h4>
+              {% if adicionadas %}
+                {% if adicionadas.data %}
+                  <table>
+                    {% include "layout/thead_generic.html" with data=adicionadas.headers style=adicionadas.style only %}
+                    {% include "layout/tbody_generic.html" with fields=adicionadas.fields data=adicionadas.data style=adicionadas.style only %}
+                  </table>
+                {% endif %}
+              {% else %}
+                  <h5>Nenhuma</h5>
+              {% endif %}
+            </td>
           </tr>
         </tbody>
       </table>
