@@ -41,6 +41,15 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             })
             return
 
+        # referencias automaticamente consideradas
+        data_ref = queries.pa_de_modelo(self.cursor, modelo)
+        if len(data_ref) > 0:
+            self.context['referencias'] = {
+                'headers': ['Referência'],
+                'fields': ['ref'],
+                'data': data_ref,
+            }
+
         # vendas do modelo
         data = []
         zero_data_row = {p['range']: 0 for p in self.periodos}
