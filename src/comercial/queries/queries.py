@@ -101,18 +101,37 @@ def get_vendas(
         order += sep + new_order
 
     filtra_col = ''
+    filtra_col_select_item = '1=2'
     if colecao is not None:
         ref = None
-        filtra_col = "AND v.COL = '{}'".format(colecao)
+        filtra_col = f"AND v.COL = '{colecao}'"
+        filtra_col_select_item = f"r.COLECAO = '{colecao}'"
 
     filtra_cliente = ''
+    filtra_cliente_select_item = '1=2'
     if cliente is not None:
-        filtra_cliente = "AND v.CNPJ9 = '{}'".format(cliente)
+        filtra_cliente = f"AND v.CNPJ9 = '{cliente}'"
+        filtra_cliente_select_item = f"r.CGC_CLIENTE_9 = '{cliente}'"
 
-    if modelo is None and refs_incl is None and ref is None:
+    if (
+        modelo is None and
+        refs_incl is None and
+        ref is None
+    ):
         or_filtro = '1=1'
     else:
         or_filtro = '1=2'
+
+    if (
+        modelo is None and
+        refs_incl is None and
+        ref is None and 
+        colecao is None and 
+        cliente is None
+    ):
+        or_filtro_select_item = '1=1'
+    else:
+        or_filtro_select_item = '1=2'
 
     filtra_modelo = '1=2'
     pre_filtra_modelo = '1=2'
@@ -251,7 +270,7 @@ def get_vendas(
          AND nop.ESTADO_NATOPER = nf.NATOP_NF_EST_OPER
         JOIN fatu_060 inf -- item de nf de saída
           ON inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
-        LEFT JOIN BASI_030 r -- item (ref+tam+cor)
+        LEFT JOIN BASI_030 r -- ref
           on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
          AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
         LEFT JOIN BASI_140 col
@@ -308,17 +327,24 @@ def get_vendas(
           0
           {select_item} -- select_item
         FROM BASI_010 v -- item (ref+tam+cor)
+        JOIN BASI_030 r -- ref
+          on r.NIVEL_ESTRUTURA = v.NIVEL_ESTRUTURA
+         AND r.REFERENCIA = v.GRUPO_ESTRUTURA
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = v.SUBGRU_ESTRUTURA
         WHERE v.NIVEL_ESTRUTURA = 1
           AND ( 
-            {or_filtro} -- or_filtro
+            {or_filtro_select_item} -- or_filtro_select_item
             OR
             {filtra_modelo_select_item} -- filtra_modelo_select_item
             OR 
             {filtra_refs_incl_select_item} -- filtra_refs_incl_select_item
             OR 
             {filtra_ref_select_item} -- filtra_ref_select_item
+            OR
+            {filtra_col_select_item} -- filtra_col_select_item
+            OR
+            {filtra_cliente_select_item} -- filtra_cliente_select_item
           )
         ) v
         GROUP BY
