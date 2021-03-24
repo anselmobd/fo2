@@ -154,7 +154,7 @@ class Vendas(O2BaseGetPostView):
 
         cursor = db_cursor_so(self.request)
 
-        data = queries.get_vendas(cursor, ref=ref, por='ref')
+        data = queries.analise_vendas(cursor, ref=ref, por='ref')
 
         self.context.update({
             'headers': ['Referência', 'Quantidade'],
