@@ -13,9 +13,15 @@ urlpatterns = [
 
     url(r'^vendas_cor/$', views.VendasPorCor.as_view(),
         name='vendas_cor'),
+    url(r'^vendas_cor/(?P<ref>.+)/$',
+        views.VendasPorCor.as_view(),
+        name='vendas_cor__get'),
 
     url(r'^vendas_tamanho/$', views.VendasPorTamanho.as_view(),
         name='vendas_tamanho'),
+    url(r'^vendas_tamanho/(?P<ref>.+)/$',
+        views.VendasPorTamanho.as_view(),
+        name='vendas_tamanho__get'),
 
     url(r'^vendas_por_modelo/$',
         views.VendasPorModelo.as_view(),
