@@ -49,8 +49,10 @@ class AnaliseVendas():
           , inf.ITEM_ESTRUTURA
         )
     """)
+
     filtra_ref = ''
     filtra_periodos = ''
+
     select_fields = (
     """   iv.DT
         , iv.COL
@@ -64,6 +66,36 @@ class AnaliseVendas():
     sum_fields = ""
     group_fields = select_fields
     order_fields = select_fields
+
+    por_dict_fields = [
+        'select_fields',
+        'sum_fields',
+        'group_fields',
+        'order_fields',
+    ]
+    por_dict = {
+        'ref': {
+            'select_fields': (
+                """iv."REF"
+                """),
+            'sum_fields': (
+                """, sum(iv.QTD) QTD
+                """),
+            'group_fields': ('select_fields', ),
+            'order_fields': ('select_fields', ),
+        },
+        'qtd_ref': {
+            'select_fields': (
+                """iv."REF"
+                """),
+            'sum_fields': (
+                """, sum(iv.QTD) QTD
+                """),
+            'group_fields': ('select_fields', ),
+            'order_fields': '2 DESC',
+        },
+    }        
+
     result = None
 
     def __init__(
@@ -79,6 +111,17 @@ class AnaliseVendas():
 
     ref = property(fset=_set_ref)
     del _set_ref
+
+    def _set_por(self, value):
+        if value:
+            for field in self.por_dict_fields:
+                por_value = self.por_dict[value][field]
+                if isinstance(por_value, tuple):
+                    por_value = self.por_dict[value][por_value[0]]
+                setattr(self, field, por_value)
+
+    por = property(fset=_set_por)
+    del _set_por
 
     def filtra_periodo_data(self, comparacao, data):
         if data:
