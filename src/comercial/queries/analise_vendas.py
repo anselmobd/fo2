@@ -1,10 +1,36 @@
+from datetime import date
 from pprint import pprint
 
+from utils.functions import dec_months
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def analise_vendas(cursor, ref=None, por=None):
+def analise_vendas(cursor, ref=None, por=None, periodo_cols=None):
   
+    def mes_to_timestamp(mes):
+        if mes:
+            hoje = date.today()
+            ini_mes = hoje.replace(day=1)
+            data = dec_months(ini_mes, int(mes))
+            return f"TIMESTAMP '{data.strftime('%Y-%m-%d')} 00:00:00'"
+        return ''
+
+    def limites(periodo_cols):
+        periodos = list(periodo_cols.values())
+        inicial = ''
+        final = ''
+        for periodo in periodos:
+            lim_ini, lim_fim = tuple(periodo.split(':'))
+            if lim_ini:
+                if not inicial or int(lim_ini) > int(inicial):
+                    inicial = lim_ini
+            if lim_fim:
+                if not final or int(lim_fim) > int(final):
+                    final = lim_fim
+        data_de = mes_to_timestamp(inicial)
+        data_ate = mes_to_timestamp(final)
+        return data_de, data_ate
+
     sql_base = (
     f"""WITH item_vendido AS
         ( SELECT
@@ -47,19 +73,39 @@ def analise_vendas(cursor, ref=None, por=None):
         )
     """)
 
+    # filtros
     filtra_ref = ""
     if ref is not None:
         filtra_ref = f"AND iv.REF = '{ref}'"
 
+    filtra_periodos = ""
+    if periodo_cols is not None:
+        data_de, data_ate = limites(periodo_cols)
+        filtra_periodos = ''
+        if data_de:
+            filtra_periodos += (
+            f"""AND iv.DT >= {data_de}
+            """)
+        if data_ate:
+            filtra_periodos += (
+            f"""AND iv.DT < {data_ate}
+            """)
+
+    filtros = (
+    f"""{filtra_ref} -- filtra_ref
+        {filtra_periodos} -- filtra_periodos
+    """)
+
+    # retorno
     select_fields = (
-    """ iv.DT
-      , iv.COL
-      , iv.CNPJ9
-      , iv.NIVEL
-      , iv."REF"
-      , iv.TAM
-      , iv.COR
-      , iv.QTD
+    """   iv.DT
+        , iv.COL
+        , iv.CNPJ9
+        , iv.NIVEL
+        , iv."REF"
+        , iv.TAM
+        , iv.COR
+        , iv.QTD
     """)
     sum_fields = ""
     group_fields = select_fields
@@ -92,7 +138,7 @@ def analise_vendas(cursor, ref=None, por=None):
           {sum_fields} -- sum_fields
         FROM item_vendido iv
         WHERE 1=1
-          {filtra_ref} -- filtra_ref
+          {filtros} -- filtros
         GROUP BY
           {group_fields} -- group_fields
         ORDER BY
