@@ -123,13 +123,6 @@ class AnaliseVendas():
     por = property(fset=_set_por)
     del _set_por
 
-    def filtra_periodo_data(self, comparacao, data):
-        if data:
-            self.filtra_periodos += (
-                f"""AND iv.DT {comparacao} {data}
-                """
-            )
-
     def _set_periodo_cols(self, value):
         if value:
             data_de, data_ate = self.limites_de_periodo_cols(value)
@@ -162,6 +155,13 @@ class AnaliseVendas():
             data = dec_months(ini_mes, int(mes))
             return f"TIMESTAMP '{data.strftime('%Y-%m-%d')} 00:00:00'"
         return ''
+
+    def filtra_periodo_data(self, comparacao, data):
+        if data:
+            self.filtra_periodos += (
+                f"""AND iv.DT {comparacao} {data}
+                """
+            )
 
     @property
     def filtros(self):
