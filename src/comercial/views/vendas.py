@@ -137,3 +137,27 @@ class VendasPorTamanho(VendasPor):
         self.title_name = 'Distribuição de vendas por tamanho'
         self.por = 'tam'
         self.por_name = 'Tamanho'
+
+
+class Vendas(O2BaseGetPostView):
+
+    def __init__(self, *args, **kwargs):
+        super(Vendas, self).__init__(*args, **kwargs)
+        self.Form_class = forms.VendasForm
+        self.template_name = 'comercial/vendas.html'
+        self.title_name = 'Vendas'
+
+    def mount_context(self):
+        ref = self.form.cleaned_data['ref']
+        if ref == '':
+            ref = None
+
+        cursor = db_cursor_so(self.request)
+
+        data = queries.get_vendas(cursor, ref=ref, por='ref')
+
+        self.context.update({
+            'headers': ['Referência', 'Quantidade'],
+            'fields': ['ref', 'qtd'],
+            'data': data,
+        })

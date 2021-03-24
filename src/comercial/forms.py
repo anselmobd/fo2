@@ -10,6 +10,14 @@ class ClienteForm(forms.Form):
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
 
 
+class VendasForm(
+        O2BaseForm,
+        O2FieldRefForm):
+
+    class Meta:
+        autofocus_field = 'ref'
+
+
 class VendasPorForm(
         O2BaseForm,
         O2FieldRefForm):
