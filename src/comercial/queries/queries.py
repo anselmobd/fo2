@@ -146,6 +146,16 @@ def analise_vendas(cursor, ref=None, por=None):
         group_fields = select_fields
         order_fields = select_fields
 
+    if por == 'qtd_ref':
+        select_fields = (
+        """iv."REF"
+        """)
+        sum_fields = (
+        """, sum(iv.QTD) QTD
+        """)
+        group_fields = select_fields
+        order_fields = '2 DESC'
+
     sql = f"""
         {sql_base} -- sql_base
         SELECT 
