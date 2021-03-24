@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^ficha_cliente/(?P<cnpj>.+)/$', views.FichaCliente.as_view(),
         name='ficha_cliente__get'),
 
+    url(r'^vendas/$', views.Vendas.as_view(),
+        name='vendas'),
+
     url(r'^vendas_cor/$', views.VendasPorCor.as_view(),
         name='vendas_cor'),
     url(r'^vendas_cor/(?P<ref>.+)/$',
