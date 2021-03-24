@@ -81,7 +81,6 @@ def analise_vendas(cursor, ref=None, por=None, periodo_cols=None):
     filtra_periodos = ""
     if periodo_cols is not None:
         data_de, data_ate = limites(periodo_cols)
-        filtra_periodos = ''
         if data_de:
             filtra_periodos += (
             f"""AND iv.DT >= {data_de}
