@@ -155,11 +155,13 @@ class Vendas(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         periodo_cols = {
-            'meses3': '3:',
+            'meses3': '3:0',
             'anos2': '24:',
         }
-        data = queries.analise_vendas(
+
+        av = queries.AnaliseVendas(
             cursor, ref=ref, por='qtd_ref', periodo_cols=periodo_cols)
+        data = av.data
 
         self.context.update({
             'headers': ['Referência', 'Quantidade'],
