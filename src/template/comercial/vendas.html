@@ -21,6 +21,7 @@
     <h4>{{ erro }}</h4>
   {% else %}
     {% if data %}
+      <h4>Totais de quantidades vendidas</h4>
       <table>
         {% include "layout/thead_generic.html" with data=headers only %}
         {% include "layout/tbody_generic.html" with fields=fields data=data only %}
