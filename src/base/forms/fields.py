@@ -13,6 +13,13 @@ class O2FieldNivelForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number', 'size': 1}))
 
 
+class O2FieldModeloForm(forms.Form):
+    modelo = forms.IntegerField(
+        min_value=1, max_value=99999,
+        required=False,
+        widget=forms.TextInput(attrs={'type': 'number', 'size': 5}))
+
+
 class O2FieldRefForm(forms.Form):
     ref = forms.CharField(
         label='Referência',
