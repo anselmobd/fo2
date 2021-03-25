@@ -149,8 +149,6 @@ class Vendas(O2BaseGetPostView):
 
     def mount_context(self):
         ref = self.form.cleaned_data['ref']
-        if ref == '':
-            ref = None
 
         cursor = db_cursor_so(self.request)
 
