@@ -143,7 +143,7 @@ class AnaliseVendas():
                 if not inicial or int(lim_ini) > int(inicial):
                     inicial = lim_ini
             if lim_fim:
-                if not final or int(lim_fim) > int(final):
+                if not final or int(lim_fim) < int(final):
                     final = lim_fim
         data_de = self.mes_to_timestamp(inicial)
         data_ate = self.mes_to_timestamp(final)
