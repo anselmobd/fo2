@@ -479,6 +479,11 @@ def nivel_ref_estruturas(cursor, nivel, ref):
     return rows_to_dict_list(cursor)
 
 
+def refs_de_modelo(cursor, modelo, tipo=None):
+    data = modelo_inform(cursor, modelo, tipo)
+    return [m['REF'] for m in data]
+
+
 def modelo_inform(cursor, modelo, tipo=None):
     filtra_tipo = ""
     if tipo:
