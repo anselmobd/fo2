@@ -479,8 +479,16 @@ def nivel_ref_estruturas(cursor, nivel, ref):
     return rows_to_dict_list(cursor)
 
 
-def modelo_inform(cursor, modelo):
+def modelo_inform(cursor, modelo, tipo=None):
+    filtra_tipo = ""
+    if tipo:
+        filtra_tipo = (
+            f"""AND m.tipo = '{tipo.upper()}'
+            """
+        )
+
     sql = f"""
+        WITH modelos AS (
         SELECT
           re.REF
         , COALESCE( r.DESCR_REFERENCIA, ' ' ) DESCR
@@ -534,6 +542,12 @@ def modelo_inform(cursor, modelo):
          and cl.CGC_2 = r.CGC_CLIENTE_2
         ORDER BY
           NLSSORT(re.REF,'NLS_SORT=BINARY_AI')
+        )
+        SELECT
+          m.*
+        FROM modelos m
+        WHERE 1=1
+          {filtra_tipo} -- filtra_tipo
     """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
