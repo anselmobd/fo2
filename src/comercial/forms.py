@@ -1,6 +1,6 @@
 from django import forms
 
-from base.forms import O2BaseForm, O2FieldRefForm
+from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
 from utils.functions import mes_atual, ano_atual
 
 
@@ -12,10 +12,12 @@ class ClienteForm(forms.Form):
 
 class VendasForm(
         O2BaseForm,
-        O2FieldRefForm):
+        O2FieldRefForm,
+        O2FieldModeloForm):
 
     class Meta:
         autofocus_field = 'ref'
+        order_fields = ['ref', 'modelo']
 
 
 class VendasPorForm(
