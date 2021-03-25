@@ -480,8 +480,7 @@ def nivel_ref_estruturas(cursor, nivel, ref):
 
 
 def modelo_inform(cursor, modelo):
-    # Totais por OP
-    sql = """
+    sql = f"""
         SELECT
           re.REF
         , COALESCE( r.DESCR_REFERENCIA, ' ' ) DESCR
@@ -508,7 +507,7 @@ def modelo_inform(cursor, modelo):
         --       IN ('[]', '0[]', '00[]')
         WHERE TRIM(LEADING '0' FROM (
                 REGEXP_REPLACE(r.REFERENCIA, '[^0-9]', '')
-              )) = '{}'
+              )) = '{modelo}'
           AND r.REFERENCIA < 'C0000'
           AND r.NIVEL_ESTRUTURA = 1
         UNION
@@ -521,7 +520,7 @@ def modelo_inform(cursor, modelo):
           --     IN ('[]', '0[]', '00[]')
           AND TRIM(LEADING '0' FROM (
                 REGEXP_REPLACE(ec.GRUPO_ITEM, '[^0-9]', '')
-              )) = '{}'
+              )) = '{modelo}'
           AND ec.GRUPO_ITEM < 'C0000'
         ) re
         JOIN basi_030 r
@@ -536,7 +535,6 @@ def modelo_inform(cursor, modelo):
         ORDER BY
           NLSSORT(re.REF,'NLS_SORT=BINARY_AI')
     """
-    sql = sql.format(modelo, modelo)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
