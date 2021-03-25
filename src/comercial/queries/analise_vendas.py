@@ -67,12 +67,6 @@ class AnaliseVendas():
     group_fields = select_fields
     order_fields = select_fields
 
-    por_dict_fields = [
-        'select_fields',
-        'sum_fields',
-        'group_fields',
-        'order_fields',
-    ]
     por_dict = {
         'ref': {
             'select_fields': (
@@ -114,7 +108,8 @@ class AnaliseVendas():
 
     def _set_por(self, value):
         if value:
-            for field in self.por_dict_fields:
+            first = list(self.por_dict)[0]
+            for field in self.por_dict[first].keys():
                 por_value = self.por_dict[value][field]
                 if isinstance(por_value, tuple):
                     por_value = self.por_dict[value][por_value[0]]
