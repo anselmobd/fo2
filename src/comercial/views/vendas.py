@@ -161,6 +161,13 @@ class Vendas(O2BaseGetPostView):
             '2 anos': '24:',
         }
 
+        periodo_cols = {
+            'Mês anterior': '1:0',
+            '2 meses antes': '3:1',
+            '3 meses antes': '6:3',
+            '4 meses antes': '10:6',
+        }
+
         av = queries.AnaliseVendas(
             cursor, ref=ref, por='qtd_ref', periodo_cols=periodo_cols)
         data = av.data
