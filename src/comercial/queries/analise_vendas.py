@@ -64,6 +64,7 @@ class AnaliseVendas():
         , iv.QTD
     """)
     sum_fields = ""
+    periodo_fields = ""
     group_fields = select_fields
     order_fields = select_fields
 
@@ -127,6 +128,7 @@ class AnaliseVendas():
             data_de, data_ate = self.limites_de_periodo_cols(value)
             self.filtra_periodo_data('>=', data_de)
             self.filtra_periodo_data('<', data_ate)
+            self.monta_periodo_fields(value)
 
     periodo_cols = property(fset=_set_periodo_cols)
     del _set_periodo_cols
@@ -160,6 +162,34 @@ class AnaliseVendas():
                 """
             )
 
+    def monta_periodo_fields(self, periodo_cols):
+        for coluna in periodo_cols:
+            periodo = periodo_cols[coluna]
+
+            lim_ini, lim_fim = tuple(periodo.split(':'))
+
+            data = dec_months(self.ini_mes, int(lim_ini))
+            filtro = (
+                f"""iv.dt >= TIMESTAMP '{data.strftime('%Y-%m-%d')} 00:00:00'
+                """    
+            )
+
+            if lim_fim != '':
+                data = dec_months(self.ini_mes, int(lim_fim))
+                filtro += (
+                    f"""AND iv.dt < TIMESTAMP '{data.strftime('%Y-%m-%d')} 00:00:00'
+                    """    
+                )
+            
+            self.periodo_fields += (
+                f""", SUM(
+                        CASE WHEN {filtro} THEN iv.QTD
+                        ELSE 0
+                        END
+                      ) {str2col_name(coluna)}
+                """
+            )
+
     @property
     def filtros(self):
         return (
@@ -175,6 +205,7 @@ class AnaliseVendas():
             SELECT 
               {self.select_fields} -- select_fields
               {self.sum_fields} -- sum_fields
+              {self.periodo_fields} -- periodo_fields
             FROM item_vendido iv
             WHERE 1=1
               {self.filtros} -- filtros
