@@ -196,3 +196,17 @@ class AnaliseVendas():
             columns = [i[0].lower() for i in self.cursor.description]
             self.result = pd.DataFrame(self.cursor, columns=columns)
         return self.result
+
+
+def str2col_name(texto, ini='f'):
+    name = ini
+    append = False
+    for c in texto:
+        if c.isalnum():
+            name += c.lower()
+            append = True
+        else:
+            if append:
+                name += '_'
+                append = False
+    return name
