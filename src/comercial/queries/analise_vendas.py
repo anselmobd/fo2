@@ -5,6 +5,8 @@ from pprint import pprint
 from utils.functions import dec_months
 from utils.functions.models import rows_to_dict_list_lower
 
+import produto.queries
+
 
 class AnaliseVendas():
 
@@ -50,7 +52,6 @@ class AnaliseVendas():
         )
     """)
 
-    filtra_ref = ''
     filtra_periodos = ''
 
     select_fields = (
@@ -94,22 +95,34 @@ class AnaliseVendas():
     result = None
 
     def __init__(
-        self, cursor, ref=None, por=None, periodo_cols=None):
+        self, cursor, ref=None, modelo=None, por=None, periodo_cols=None):
 
         self.hoje = date.today()
         self.ini_mes = self.hoje.replace(day=1)
+        self.referencias = []
 
         self.cursor = cursor
         self.ref = ref
+        self.modelo = modelo
         self.por = por
         self.periodo_cols = periodo_cols
 
     def _set_ref(self, value):
         if value:
-            self.filtra_ref = f"AND iv.REF = '{value}'"
+            if isinstance(value, list):
+                self.referencias += value
+            else:
+                self.referencias.append(value)
 
     ref = property(fset=_set_ref)
     del _set_ref
+
+    def _set_modelo(self, value):
+        if value:
+            self.ref = produto.queries.refs_de_modelo(self.cursor, value, tipo='pa')
+
+    modelo = property(fset=_set_modelo)
+    del _set_modelo
 
     def _set_por(self, value):
         if value:
@@ -189,6 +202,15 @@ class AnaliseVendas():
                       ) {str2col_name(coluna)}
                 """
             )
+
+    @property
+    def filtra_ref(self):
+        if self.referencias:
+            refs = ", ".join(
+                [f"'{r}'" for r in self.referencias]
+            )
+            return f" AND iv.REF IN ({refs})"
+        return ""
 
     @property
     def filtros(self):
