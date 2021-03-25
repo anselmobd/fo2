@@ -94,6 +94,10 @@ class AnaliseVendas():
 
     def __init__(
         self, cursor, ref=None, por=None, periodo_cols=None):
+
+        self.hoje = date.today()
+        self.ini_mes = self.hoje.replace(day=1)
+
         self.cursor = cursor
         self.ref = ref
         self.por = por
@@ -145,9 +149,7 @@ class AnaliseVendas():
 
     def mes_to_timestamp(self, mes):
         if mes:
-            hoje = date.today()
-            ini_mes = hoje.replace(day=1)
-            data = dec_months(ini_mes, int(mes))
+            data = dec_months(self.ini_mes, int(mes))
             return f"TIMESTAMP '{data.strftime('%Y-%m-%d')} 00:00:00'"
         return ''
 
