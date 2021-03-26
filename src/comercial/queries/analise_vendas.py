@@ -207,17 +207,35 @@ class AnaliseVendas():
                 """
             )
 
+    def diff_fmonth(self, d1, d2):
+        return (
+            (d2.year - d1.year) * 12 +
+            (d2.month - d1.month) +
+            (d2.day - d1.day) / 30.5
+        )
+
     def field_to_date(self, row, field):
         if field in row:
             row[field] = row[field].date()
-
 
     def ajuste_fields(self, data):
         for row in data:
             self.field_to_date(row, 'dt')
             self.field_to_date(row, 'dt_min')
             self.field_to_date(row, 'dt_max')
-
+            if 'dt_min' in row and 'dt_max' in row:
+                row['meses'] = round(
+                    self.diff_fmonth(
+                        row['dt_min'],
+                        row['dt_max']
+                    ),
+                    1
+                )
+            if 'qtd' in row and 'meses' in row:
+                row['qtd_mes'] = int(
+                    row['qtd'] / row['meses']
+                )
+                
     @property
     def filtra_ref(self):
         if self.referencias:
