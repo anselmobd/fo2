@@ -150,25 +150,30 @@ class Vendas(O2BaseGetPostView):
     def mount_context(self):
         ref = self.form.cleaned_data['ref']
         modelo = self.form.cleaned_data['modelo']
+        periodo = self.form.cleaned_data['periodo']
 
         cursor = db_cursor_so(self.request)
 
-        periodo_cols = {
-            '3 meses': '3:',
-            '6 meses': '6:',
-            '1 ano': '12:',
-            '2 anos': '24:',
+        periodo_cols_options = {
+            '0': None,
+            '3612': {
+                '3 meses': '3:',
+                '6 meses': '6:',
+                '1 ano': '12:',
+                '2 anos': '24:',
+            },
+            '1234': {
+                'Mês anterior': '1:0',
+                '2 meses antes': '3:1',
+                '3 meses antes': '6:3',
+                '4 meses antes': '10:6',
+            },
         }
-
-        periodo_cols = {
-            'Mês anterior': '1:0',
-            '2 meses antes': '3:1',
-            '3 meses antes': '6:3',
-            '4 meses antes': '10:6',
-        }
+        periodo_cols=periodo_cols_options[periodo]
 
         av = queries.AnaliseVendas(
-            cursor, ref=ref, modelo=modelo, por='qtd_ref', periodo_cols=periodo_cols)
+            cursor, ref=ref, modelo=modelo, por='qtd_ref',
+            periodo_cols=periodo_cols)
         data = av.data
 
         headers = ['Referência']

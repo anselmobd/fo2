@@ -15,9 +15,17 @@ class VendasForm(
         O2FieldRefForm,
         O2FieldModeloForm):
 
+    CHOICES = [
+        ('0', 'Nenhum'),
+        ('3612', 'Meses e Anos'),
+        ('1234', 'Períodos de análises de metas'),
+    ]
+    periodo = forms.ChoiceField(
+        label='Períodos em colunas', choices=CHOICES, initial='0')
+
     class Meta:
         autofocus_field = 'ref'
-        order_fields = ['ref', 'modelo']
+        order_fields = ['ref', 'modelo', 'periodo']
 
 
 class VendasPorForm(
