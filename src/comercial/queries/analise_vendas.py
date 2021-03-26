@@ -104,14 +104,16 @@ class AnaliseVendas():
 
         self.hoje = date.today()
         self.ini_mes = self.hoje.replace(day=1)
+
         self.referencias = []
 
         self.cursor = cursor
+        self.qtd_por_mes = qtd_por_mes
+
         self.ref = ref
         self.modelo = modelo
         self.por = por
         self.periodo_cols = periodo_cols
-        self.qtd_por_mes = qtd_por_mes
 
     def _set_ref(self, value):
         if value:
@@ -186,26 +188,35 @@ class AnaliseVendas():
             periodo = periodo_cols[coluna]
 
             lim_ini, lim_fim = tuple(periodo.split(':'))
-
-            data = dec_months(self.ini_mes, int(lim_ini))
+            data_ini = dec_months(self.ini_mes, int(lim_ini))
             filtro = (
-                f"""iv.dt >= TIMESTAMP '{data.strftime('%Y-%m-%d')} 00:00:00'
+                f"""iv.dt >= TIMESTAMP '{data_ini.strftime('%Y-%m-%d')} 00:00:00'
                 """    
             )
 
-            if lim_fim != '':
-                data = dec_months(self.ini_mes, int(lim_fim))
+            if lim_fim == '':
+                meses = self.diff_fmonth(data_ini, self.hoje)
+            else:
+                data_fim = dec_months(self.ini_mes, int(lim_fim))
                 filtro += (
-                    f"""AND iv.dt < TIMESTAMP '{data.strftime('%Y-%m-%d')} 00:00:00'
+                    f"""AND iv.dt < TIMESTAMP '{data_fim.strftime('%Y-%m-%d')} 00:00:00'
                     """    
                 )
+                meses = self.diff_fmonth(data_ini, data_fim)
             
+            if self.qtd_por_mes:
+                div_meses = f" / {meses}"
+            else:
+                div_meses = ""
+
             self.periodo_fields += (
-                f""", SUM(
-                        CASE WHEN {filtro} THEN iv.QTD
-                        ELSE 0
-                        END
-                      ) {str2col_name(coluna)}
+                f""", TRUNC(
+                        SUM(
+                          CASE WHEN {filtro} THEN iv.QTD
+                          ELSE 0
+                          END
+                        )
+                      {div_meses} ) {str2col_name(coluna)}
                 """
             )
 
