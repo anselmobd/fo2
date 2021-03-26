@@ -207,6 +207,17 @@ class AnaliseVendas():
                 """
             )
 
+    def field_to_date(self, row, field):
+        if field in row:
+            row[field] = row[field].date()
+
+
+    def ajuste_fields(self, data):
+        for row in data:
+            self.field_to_date(row, 'dt')
+            self.field_to_date(row, 'dt_min')
+            self.field_to_date(row, 'dt_max')
+
     @property
     def filtra_ref(self):
         if self.referencias:
@@ -247,6 +258,7 @@ class AnaliseVendas():
         if not self.result:
             self.cursor.execute(self.sql)
             self.result = rows_to_dict_list_lower(self.cursor)
+            self.ajuste_fields(self.result)
         return self.result
 
     @property
@@ -255,6 +267,7 @@ class AnaliseVendas():
             self.cursor.execute(self.sql)
             columns = [i[0].lower() for i in self.cursor.description]
             self.result = pd.DataFrame(self.cursor, columns=columns)
+            self.ajuste_fields(self.result)
         return self.result
 
 
