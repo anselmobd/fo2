@@ -141,6 +141,22 @@ class VendasPorTamanho(VendasPor):
 
 class Vendas(O2BaseGetPostView):
 
+    periodo_cols_options = {
+        '0': None,
+        '3612': {
+            '3 meses': '3:',
+            '6 meses': '6:',
+            '1 ano': '12:',
+            '2 anos': '24:',
+        },
+        '1234': {
+            'Mês anterior': '1:0',
+            '2 meses antes': '3:1',
+            '3 meses antes': '6:3',
+            '4 meses antes': '10:6',
+        },
+    }
+
     def __init__(self, *args, **kwargs):
         super(Vendas, self).__init__(*args, **kwargs)
         self.Form_class = forms.VendasForm
@@ -154,22 +170,7 @@ class Vendas(O2BaseGetPostView):
 
         cursor = db_cursor_so(self.request)
 
-        periodo_cols_options = {
-            '0': None,
-            '3612': {
-                '3 meses': '3:',
-                '6 meses': '6:',
-                '1 ano': '12:',
-                '2 anos': '24:',
-            },
-            '1234': {
-                'Mês anterior': '1:0',
-                '2 meses antes': '3:1',
-                '3 meses antes': '6:3',
-                '4 meses antes': '10:6',
-            },
-        }
-        periodo_cols=periodo_cols_options[periodo]
+        periodo_cols=self.periodo_cols_options[periodo]
 
         av = queries.AnaliseVendas(
             cursor, ref=ref, modelo=modelo, por='qtd_ref',
