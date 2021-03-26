@@ -23,6 +23,13 @@ class VendasForm(
     periodo = forms.ChoiceField(
         label='Períodos em colunas', choices=CHOICES, initial='0')
 
+    CHOICES = [
+        ('t', 'Totais'),
+        ('m', 'Média por mês'),
+    ]
+    qtd_por_mes = forms.ChoiceField(
+        label='Quantidades', choices=CHOICES, initial='t')
+
     class Meta:
         autofocus_field = 'ref'
         order_fields = ['ref', 'modelo', 'periodo']
