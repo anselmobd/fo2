@@ -16,6 +16,20 @@ class VendasForm(
         O2FieldModeloForm):
 
     CHOICES = [
+        ('ref', 'Referência'),
+        ('modelo', 'Modelo'),
+    ]
+    infor = forms.ChoiceField(
+        label='Informação totalizada', choices=CHOICES, initial='t')
+
+    CHOICES = [
+        ('i', 'Informação totalizada'),
+        ('q', 'Quantidade'),
+    ]
+    ordem = forms.ChoiceField(
+        label='Ordem', choices=CHOICES, initial='t')
+
+    CHOICES = [
         ('0', 'Nenhum'),
         ('3612', 'Meses e Anos'),
         ('1234', 'Períodos de análises de metas'),
@@ -32,7 +46,14 @@ class VendasForm(
 
     class Meta:
         autofocus_field = 'ref'
-        order_fields = ['ref', 'modelo', 'periodo']
+        order_fields = [
+            'ref',
+            'modelo',
+            'infor',
+            'ordem',
+            'periodo',
+            'qtd_por_mes',
+        ]
 
 
 class VendasPorForm(
