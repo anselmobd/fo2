@@ -64,6 +64,10 @@ class AnaliseVendas():
         , iv.COR
         , iv.QTD
     """)
+    agreg_fields = (
+    """ , MIN(iv.DT) DT_MIN
+        , MAX(iv.DT) DT_MAX
+    """)
     sum_fields = ""
     periodo_fields = ""
     group_fields = select_fields
@@ -88,7 +92,7 @@ class AnaliseVendas():
                 """, sum(iv.QTD) QTD
                 """),
             'group_fields': ('select_fields', ),
-            'order_fields': '2 DESC',
+            'order_fields': '2 DESC, iv."REF"',
         },
     }        
 
@@ -226,6 +230,7 @@ class AnaliseVendas():
             f"""{self.sql_base} -- sql_base
             SELECT 
               {self.select_fields} -- select_fields
+              {self.agreg_fields} -- sum_fields
               {self.sum_fields} -- sum_fields
               {self.periodo_fields} -- periodo_fields
             FROM item_vendido iv
