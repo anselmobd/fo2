@@ -36,6 +36,7 @@ class Vendas(O2BaseGetPostView):
         ref = self.form.cleaned_data['ref']
         modelo = self.form.cleaned_data['modelo']
         periodo = self.form.cleaned_data['periodo']
+        qtd_por_mes = self.form.cleaned_data['qtd_por_mes']
 
         cursor = db_cursor_so(self.request)
 
@@ -54,8 +55,11 @@ class Vendas(O2BaseGetPostView):
                 headers.append(col)
                 fields.append(queries.str2col_name(col))
         else:
-            headers.append('Quantidade')
-            fields.append('qtd')
+            headers += ['Quantidade']
+            fields += ['qtd']
+            if qtd_por_mes == 'm':
+                headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
+                fields += ['dt_max', 'dt_min', 'qtd_mes']
 
         self.context.update({
             'headers': headers,
