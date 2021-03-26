@@ -44,7 +44,7 @@ class Vendas(O2BaseGetPostView):
 
         av = queries.AnaliseVendas(
             cursor, ref=ref, modelo=modelo, por='qtd_ref',
-            periodo_cols=periodo_cols)
+            periodo_cols=periodo_cols, qtd_por_mes=qtd_por_mes=='m')
         data = av.data
 
         headers = ['Referência']
