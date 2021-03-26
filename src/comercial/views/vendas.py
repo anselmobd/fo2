@@ -45,7 +45,7 @@ class Vendas(O2BaseGetPostView):
         periodo_cols=self.periodo_cols_options[periodo]
 
         av = queries.AnaliseVendas(
-            cursor, ref=ref, modelo=modelo, por='qtd_ref',
+            cursor, ref=ref, modelo=modelo, infor=infor, ordem=ordem,
             periodo_cols=periodo_cols, qtd_por_mes=qtd_por_mes=='m')
         data = av.data
 

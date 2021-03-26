@@ -73,7 +73,7 @@ class AnaliseVendas():
     group_fields = select_fields
     order_fields = select_fields
 
-    por_dict = {
+    infor_dict = {
         'ref': {
             'select_fields': (
                 """iv."REF"
@@ -81,19 +81,25 @@ class AnaliseVendas():
             'group_fields': ('select_fields', ),
             'order_fields': ('select_fields', ),
         },
-        'qtd_ref': {
+        'modelo': {
             'select_fields': (
                 """iv."REF"
                 """),
             'group_fields': ('select_fields', ),
-            'order_fields': 'sum(iv.QTD) DESC, iv."REF"',
+            'order_fields': ('select_fields', ),
         },
+    }        
+
+    ordem_dict = {
+        'infor': '',
+        'qtd': 'sum(iv.QTD) DESC',
     }        
 
     result = None
 
     def __init__(
-        self, cursor, ref=None, modelo=None, por=None,
+        self, cursor, ref=None, modelo=None,
+        infor=None, ordem=None,
         periodo_cols=None, qtd_por_mes=False):
 
         self.hoje = date.today()
@@ -103,10 +109,11 @@ class AnaliseVendas():
 
         self.cursor = cursor
         self.qtd_por_mes = qtd_por_mes
+        self.ordem = ordem
 
         self.ref = ref
         self.modelo = modelo
-        self.por = por
+        self.infor = infor
         self.periodo_cols = periodo_cols
 
     def _set_ref(self, value):
@@ -126,17 +133,25 @@ class AnaliseVendas():
     modelo = property(fset=_set_modelo)
     del _set_modelo
 
-    def _set_por(self, value):
+    def _set_infor(self, value):
         if value:
-            first = list(self.por_dict)[0]
-            for field in self.por_dict[first].keys():
-                por_value = self.por_dict[value][field]
-                if isinstance(por_value, tuple):
-                    por_value = self.por_dict[value][por_value[0]]
-                setattr(self, field, por_value)
+            first = list(self.infor_dict)[0]
+            for field in self.infor_dict[first].keys():
 
-    por = property(fset=_set_por)
-    del _set_por
+                sql_chunk = ""
+                if field == "order_fields":
+                    sql_chunk = self.ordem_dict[self.ordem]
+                sql_chunk += " , " if sql_chunk else ""
+
+                por_value = self.infor_dict[value][field]
+                if isinstance(por_value, tuple):
+                    por_value = self.infor_dict[value][por_value[0]]
+
+                sql_chunk += por_value
+                setattr(self, field, sql_chunk)
+
+    infor = property(fset=_set_infor)
+    del _set_infor
 
     def _set_periodo_cols(self, value):
         if value:

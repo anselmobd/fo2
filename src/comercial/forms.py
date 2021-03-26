@@ -23,8 +23,8 @@ class VendasForm(
         label='Informação totalizada', choices=CHOICES, initial='t')
 
     CHOICES = [
-        ('i', 'Informação totalizada'),
-        ('q', 'Quantidade'),
+        ('infor', 'Informação totalizada'),
+        ('qtd', 'Quantidade'),
     ]
     ordem = forms.ChoiceField(
         label='Ordem', choices=CHOICES, initial='t')
