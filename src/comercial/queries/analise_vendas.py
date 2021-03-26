@@ -99,7 +99,8 @@ class AnaliseVendas():
     result = None
 
     def __init__(
-        self, cursor, ref=None, modelo=None, por=None, periodo_cols=None):
+        self, cursor, ref=None, modelo=None, por=None,
+        periodo_cols=None, qtd_por_mes=False):
 
         self.hoje = date.today()
         self.ini_mes = self.hoje.replace(day=1)
@@ -110,6 +111,7 @@ class AnaliseVendas():
         self.modelo = modelo
         self.por = por
         self.periodo_cols = periodo_cols
+        self.qtd_por_mes = qtd_por_mes
 
     def _set_ref(self, value):
         if value:
@@ -218,23 +220,27 @@ class AnaliseVendas():
         if field in row:
             row[field] = row[field].date()
 
+    def calc_qtd_mes(self, row):
+        if 'dt_min' in row and 'dt_max' in row:
+            row['meses'] = round(
+                self.diff_fmonth(
+                    row['dt_min'],
+                    row['dt_max']
+                ),
+                1
+            )
+        if 'qtd' in row and 'meses' in row:
+            row['qtd_mes'] = int(
+                row['qtd'] / row['meses']
+            )
+
     def ajuste_fields(self, data):
         for row in data:
             self.field_to_date(row, 'dt')
             self.field_to_date(row, 'dt_min')
             self.field_to_date(row, 'dt_max')
-            if 'dt_min' in row and 'dt_max' in row:
-                row['meses'] = round(
-                    self.diff_fmonth(
-                        row['dt_min'],
-                        row['dt_max']
-                    ),
-                    1
-                )
-            if 'qtd' in row and 'meses' in row:
-                row['qtd_mes'] = int(
-                    row['qtd'] / row['meses']
-                )
+            if self.qtd_por_mes:
+                self.calc_qtd_mes(row)
                 
     @property
     def filtra_ref(self):
