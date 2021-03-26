@@ -194,17 +194,20 @@ class AnaliseVendas():
                 """    
             )
 
-            if lim_fim == '':
-                meses = self.diff_fmonth(data_ini, self.hoje)
-            else:
+            if lim_fim != '':
                 data_fim = dec_months(self.ini_mes, int(lim_fim))
                 filtro += (
                     f"""AND iv.dt < TIMESTAMP '{data_fim.strftime('%Y-%m-%d')} 00:00:00'
                     """    
                 )
-                meses = self.diff_fmonth(data_ini, data_fim)
             
             if self.qtd_por_mes:
+                if lim_fim == '':
+                    meses = self.diff_fmonth(data_ini, self.hoje)
+                else:
+                meses = self.diff_fmonth(data_ini, data_fim)
+            if meses < 1:
+                meses = 1
                 div_meses = f" / {meses}"
             else:
                 div_meses = ""
@@ -240,6 +243,8 @@ class AnaliseVendas():
                 ),
                 1
             )
+            if row['meses'] < 1:
+                row['meses'] = 1
         if 'qtd' in row and 'meses' in row:
             row['qtd_mes'] = int(
                 row['qtd'] / row['meses']
