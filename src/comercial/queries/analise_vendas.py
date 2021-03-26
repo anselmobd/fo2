@@ -67,8 +67,8 @@ class AnaliseVendas():
     agreg_fields = (
     """ , MIN(iv.DT) DT_MIN
         , MAX(iv.DT) DT_MAX
+        , SUM(iv.QTD) QTD
     """)
-    sum_fields = ""
     periodo_fields = ""
     group_fields = select_fields
     order_fields = select_fields
@@ -78,18 +78,12 @@ class AnaliseVendas():
             'select_fields': (
                 """iv."REF"
                 """),
-            'sum_fields': (
-                """, sum(iv.QTD) QTD
-                """),
             'group_fields': ('select_fields', ),
             'order_fields': ('select_fields', ),
         },
         'qtd_ref': {
             'select_fields': (
                 """iv."REF"
-                """),
-            'sum_fields': (
-                """, sum(iv.QTD) QTD
                 """),
             'group_fields': ('select_fields', ),
             'order_fields': 'sum(iv.QTD) DESC, iv."REF"',
@@ -281,8 +275,7 @@ class AnaliseVendas():
             f"""{self.sql_base} -- sql_base
             SELECT 
               {self.select_fields} -- select_fields
-              {self.agreg_fields} -- sum_fields
-              {self.sum_fields} -- sum_fields
+              {self.agreg_fields} -- agreg_fields
               {self.periodo_fields} -- periodo_fields
             FROM item_vendido iv
             WHERE 1=1
