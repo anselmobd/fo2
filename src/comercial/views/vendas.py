@@ -35,6 +35,8 @@ class Vendas(O2BaseGetPostView):
     def mount_context(self):
         ref = self.form.cleaned_data['ref']
         modelo = self.form.cleaned_data['modelo']
+        infor = self.form.cleaned_data['infor']
+        ordem = self.form.cleaned_data['ordem']
         periodo = self.form.cleaned_data['periodo']
         qtd_por_mes = self.form.cleaned_data['qtd_por_mes']
 
