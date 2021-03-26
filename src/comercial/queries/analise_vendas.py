@@ -92,7 +92,7 @@ class AnaliseVendas():
                 """, sum(iv.QTD) QTD
                 """),
             'group_fields': ('select_fields', ),
-            'order_fields': '2 DESC, iv."REF"',
+            'order_fields': 'sum(iv.QTD) DESC, iv."REF"',
         },
     }        
 
@@ -205,9 +205,9 @@ class AnaliseVendas():
                 if lim_fim == '':
                     meses = self.diff_fmonth(data_ini, self.hoje)
                 else:
-                meses = self.diff_fmonth(data_ini, data_fim)
-            if meses < 1:
-                meses = 1
+                    meses = self.diff_fmonth(data_ini, data_fim)
+                if meses < 1:
+                    meses = 1
                 div_meses = f" / {meses}"
             else:
                 div_meses = ""
