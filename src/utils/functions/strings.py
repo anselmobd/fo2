@@ -12,7 +12,7 @@ def all_str(something):
         return str(something)
 
 
-def join(sep, lista):
+def __join(sep, lista):
     sep = all_str(sep)
     lista = all_str(lista)
     if len(lista) == 1:
@@ -22,6 +22,13 @@ def join(sep, lista):
         return sep[1].join([first, lista[-1]])
     else:
         return sep.join(lista)
+
+
+def join(sep, lista):
+    try:
+        return(__join(sep, lista))
+    except Exception:
+        return ''
 
 
 def join_non_empty(sep, lista):
