@@ -4,6 +4,7 @@ from pprint import pprint
 
 from utils.functions import dec_months
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.strings import join_non_empty
 
 import produto.queries
 
@@ -133,22 +134,23 @@ class AnaliseVendas():
     modelo = property(fset=_set_modelo)
     del _set_modelo
 
-    def _set_infor(self, value):
-        if value:
-            first = list(self.infor_dict)[0]
-            for field in self.infor_dict[first].keys():
+    def _set_infor(self, selecao):
 
-                sql_chunk = ""
-                if field == "order_fields":
-                    sql_chunk = self.ordem_dict[self.ordem]
-                sql_chunk += " , " if sql_chunk else ""
+        if selecao:
+            first_infor = list(self.infor_dict)[0]
+            sql_fields = self.infor_dict[first_infor].keys()
 
-                por_value = self.infor_dict[value][field]
-                if isinstance(por_value, tuple):
-                    por_value = self.infor_dict[value][por_value[0]]
+            for sql_field in sql_fields:
+                info_sql = self.infor_dict[selecao][sql_field]
 
-                sql_chunk += por_value
-                setattr(self, field, sql_chunk)
+                if isinstance(info_sql, tuple):
+                    sql_field_aux = info_sql[0]
+                    info_sql = self.infor_dict[selecao][sql_field_aux]
+
+                if sql_field == "order_fields":
+                    info_sql = self.add_to_order_fields(info_sql)
+
+                setattr(self, sql_field, info_sql)
 
     infor = property(fset=_set_infor)
     del _set_infor
@@ -162,6 +164,15 @@ class AnaliseVendas():
 
     periodo_cols = property(fset=_set_periodo_cols)
     del _set_periodo_cols
+
+    def add_to_order_fields(self, info_sql):
+        return join_non_empty(
+            " , ",
+            [
+                self.ordem_dict[self.ordem],
+                info_sql
+            ]
+        )
 
     def limites_de_periodo_cols(self, periodo_cols):
         periodos = list(periodo_cols.values())
