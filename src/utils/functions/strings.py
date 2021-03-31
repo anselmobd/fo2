@@ -13,11 +13,13 @@ def all_str(something):
 
 
 def join(sep, lista):
+    sep = all_str(sep)
+    lista = all_str(lista)
     if isinstance(sep, (list, tuple)) and len(sep) == 2:
-        first = str(sep[0]).join(map(str, lista[:-1]))
-        return str(sep[1]).join([first, str(lista[-1])])
+        first = sep[0].join(lista[:-1])
+        return sep[1].join([first, lista[-1]])
     else:
-        return sep.join(map(str, lista))
+        return sep.join(lista)
 
 
 def join_non_empty(sep, lista):
