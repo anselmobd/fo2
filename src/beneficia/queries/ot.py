@@ -2,7 +2,6 @@ import datetime
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
-from utils.functions.strings import split_nonempty
 
 
 def busca_ot(cursor, ot=None):
