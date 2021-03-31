@@ -9,6 +9,10 @@ def join(sep, lista):
         return sep.join(map(str, lista))
 
 
+def join_non_empty(sep, lista):
+    return join(sep, [s for s in lista if s.strip()])
+
+
 def only_digits(text):
     num_text = []
     for char in text:
