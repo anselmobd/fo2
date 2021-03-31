@@ -63,7 +63,6 @@ class Vendas(O2BaseGetPostView):
         if meta_cols:
             self._periodo_cols_options['meta'] = meta_cols
 
-        pprint(self._periodo_cols_options)
         return self._periodo_cols_options
 
     def __init__(self, *args, **kwargs):
