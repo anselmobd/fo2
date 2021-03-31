@@ -41,7 +41,7 @@ def only_digits(text):
     )
 
 
-def split_nonempty(text, sep):
+def split_non_empty(text, sep):
     return [
         t.strip()
         for t in text.split(sep)
