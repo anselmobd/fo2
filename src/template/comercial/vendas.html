@@ -17,6 +17,9 @@
 </form>
 {% if request.POST %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+  {% if obs %}
+    <h5>Obs.: {{ obs }}</h5>
+  {% endif %}
   {% if erro %}
     <h4>{{ erro }}</h4>
   {% else %}

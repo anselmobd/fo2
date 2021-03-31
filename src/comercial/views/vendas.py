@@ -1,30 +1,70 @@
 from pprint import pprint
+from datetime import datetime
 
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.functions import dec_month, dec_months
 
 import comercial.forms as forms
+import comercial.models as models
 import comercial.queries as queries
 
 
 class Vendas(O2BaseGetPostView):
 
-    periodo_cols_options = {
-        '0': None,
-        '3612': {
-            '3 meses': '3:',
-            '6 meses': '6:',
-            '1 ano': '12:',
-            '2 anos': '24:',
-        },
-        '1234': {
-            'Mês anterior': '1:0',
-            '2 meses antes': '3:1',
-            '3 meses antes': '6:3',
-            '4 meses antes': '10:6',
-        },
-    }
+    _periodo_cols_options = None
+
+    @property
+    def periodo_cols_options(self):
+        if self._periodo_cols_options:
+            return self._periodo_cols_options
+
+        self._periodo_cols_options = {
+            '0': None,
+            '3612': {
+                '3 meses': '3:',
+                '6 meses': '6:',
+                '1 ano': '12:',
+                '2 anos': '24:',
+            },
+        }
+
+        meta_cols = {}
+        nfs = list(models.ModeloPassadoPeriodo.objects.filter(
+            modelo_id=1).order_by('ordem').values())
+        if len(nfs) == 0:
+            return self._periodo_cols_options
+
+        data_nfs = list(nfs)
+
+        n_mes = 0
+        hoje = datetime.today()
+        mes = dec_month(hoje, 1)
+        for i, row in enumerate(data_nfs):
+            range = '{}:{}'.format(
+                n_mes+row['meses'], n_mes)
+            n_mes += row['meses']    
+
+            mes_fim = mes.strftime("%m/%Y")
+            mes = dec_months(mes, row['meses']-1)
+            mes_ini = mes.strftime("%m/%Y")
+            mes = dec_month(mes)
+            if row['meses'] == 1:
+                descr = mes_ini
+            else:
+                if mes_ini[-4:] == mes_fim[-4:]:
+                    descr = '{} - {}'.format(mes_fim[:2], mes_ini)
+                else:
+                    descr = '{} - {}'.format(mes_fim, mes_ini)
+
+            meta_cols[descr] = range
+
+        if meta_cols:
+            self._periodo_cols_options['meta'] = meta_cols
+
+        pprint(self._periodo_cols_options)
+        return self._periodo_cols_options
 
     def __init__(self, *args, **kwargs):
         super(Vendas, self).__init__(*args, **kwargs)
@@ -42,7 +82,12 @@ class Vendas(O2BaseGetPostView):
 
         cursor = db_cursor_so(self.request)
 
-        periodo_cols=self.periodo_cols_options[periodo]
+        if periodo not in self.periodo_cols_options:
+            periodo = '0'
+            self.context.update({
+                'obs': 'Não há periodo de metas definido.',
+            })
+        periodo_cols=self.periodo_cols_options[periodo]      
 
         av = queries.AnaliseVendas(
             cursor, ref=ref, modelo=modelo, infor=infor, ordem=ordem,

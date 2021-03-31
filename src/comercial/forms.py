@@ -32,7 +32,7 @@ class VendasForm(
     CHOICES = [
         ('0', 'Nenhum'),
         ('3612', 'Meses e Anos'),
-        ('1234', 'Períodos de análises de metas'),
+        ('meta', 'Períodos de análises de metas'),
     ]
     periodo = forms.ChoiceField(
         label='Períodos em colunas', choices=CHOICES, initial='0')
