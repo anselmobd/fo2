@@ -20,14 +20,14 @@ class VendasForm(
         ('modelo', 'Modelo'),
     ]
     infor = forms.ChoiceField(
-        label='Informação totalizada', choices=CHOICES, initial='t')
+        label='Informação totalizada', choices=CHOICES, initial='ref')
 
     CHOICES = [
         ('infor', 'Informação totalizada'),
         ('qtd', 'Quantidade'),
     ]
     ordem = forms.ChoiceField(
-        label='Ordem', choices=CHOICES, initial='t')
+        label='Ordem', choices=CHOICES, initial='infor')
 
     CHOICES = [
         ('0', 'Nenhum'),
