@@ -15,6 +15,8 @@ def all_str(something):
 def join(sep, lista):
     sep = all_str(sep)
     lista = all_str(lista)
+    if len(lista) == 1:
+        return lista[0]
     if isinstance(sep, (list, tuple)) and len(sep) == 2:
         first = sep[0].join(lista[:-1])
         return sep[1].join([first, lista[-1]])
