@@ -98,7 +98,7 @@ class ReferenciaDeposito(View):
 
     def str_depositos(seft):
         texto = utils.functions.strings.join(
-            (', ', ' e '), (101, 102, 122, 231))
+            (', ', ' e '), (101, 102, 103, 122, 231))
         return texto
 
     def get(self, request, *args, **kwargs):
