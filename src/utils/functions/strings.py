@@ -25,7 +25,7 @@ def join(sep, lista):
 
 
 def join_non_empty(sep, lista):
-    return join(sep, [s for s in lista if s.strip()])
+    return join(sep, [s for s in lista if str(s).strip()])
 
 
 def only_digits(text):
