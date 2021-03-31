@@ -2,7 +2,7 @@ import datetime
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
-from utils.functions.strings import split_nonempty
+from utils.functions.strings import split_non_empty
 
 
 def busca_ob(
@@ -30,7 +30,7 @@ def busca_ob(
     if ordens is not None and ordens != '':
         filtro = ""
         sep = ""
-        for chunk in split_nonempty(ordens, ','):
+        for chunk in split_non_empty(ordens, ','):
             if '-' in chunk:
                 sub_filtro = ""
                 sub_sep = ""
