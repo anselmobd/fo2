@@ -19,6 +19,9 @@ class AnaliseVendas():
           , r.CGC_CLIENTE_9 CNPJ9
           , inf.NIVEL_ESTRUTURA NIVEL
           , inf.GRUPO_ESTRUTURA REF
+          , TRIM(LEADING '0' FROM (
+              REGEXP_REPLACE(inf.GRUPO_ESTRUTURA, '[^0-9]', '')
+            )) MODELO
           , inf.SUBGRU_ESTRUTURA TAM
           , inf.ITEM_ESTRUTURA COR
           , sum(inf.QTDE_ITEM_FATUR) QTD
@@ -84,7 +87,7 @@ class AnaliseVendas():
         },
         'modelo': {
             'select_fields': (
-                """iv."REF"
+                """iv.MODELO
                 """),
             'group_fields': ('select_fields', ),
             'order_fields': ('select_fields', ),
