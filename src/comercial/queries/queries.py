@@ -568,7 +568,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
     return rows_to_dict_list_lower(cursor)
 
 
-def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
+def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=None):
     '''
         tipo:
             total - totaliza por mês
@@ -591,24 +591,38 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
         mes = f"{mes:02}"
         prox_mes = f"{prox_mes:02}"
 
+    filtra_ref = ""
+    if ref:
+        filtra_ref = f"AND inf.CODITEM_GRUPO = '{ref}'"
+
     sql = """
         SELECT
     """
     if tipo == 'total':
         sql += """
               to_char(fe.DATA_TRANSACAO, 'MM/YYYY') MES
-            , sum(fe.VALOR_ITENS - fe.VALOR_DESCONTO) VALOR
         """
     elif tipo == 'cliente':
         sql += """
               c.NOME_CLIENTE CLIENTE
-            , sum(fe.VALOR_ITENS - fe.VALOR_DESCONTO) VALOR
+        """
+    elif tipo == 'referencia':
+        sql += """
+              fe.DOCUMENTO NF
+            , fe.DATA_TRANSACAO DATA
+            , c.NOME_CLIENTE
+              || ' (' || lpad(c.CGC_9, 8, '0')
+              || '/' || lpad(c.CGC_4, 4, '0')
+              || '-' || lpad(c.CGC_2, 2, '0')
+              || ')' CLIENTE
+            , n.COD_NATUREZA NAT
+            , n.DIVISAO_NATUR DIV
+            , inf.CODITEM_GRUPO REF
         """
     else:
         sql += """
               fe.DOCUMENTO NF
             , fe.DATA_TRANSACAO DATA
-            , fe.VALOR_ITENS - fe.VALOR_DESCONTO VALOR
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
@@ -618,7 +632,15 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
             , n.DIVISAO_NATUR DIV
         """
     sql += f"""
+        , sum(inf.VALOR_TOTAL-inf.VALOR_DESC) VALOR
+        , sum(inf.QUANTIDADE) QTD
         FROM OBRF_010 fe -- capa de nota de entrada
+        LEFT JOIN OBRF_015 inf
+          ON inf.CAPA_ENT_FORCLI9 = fe.CGC_CLI_FOR_9
+        AND inf.CAPA_ENT_FORCLI4 = fe.CGC_CLI_FOR_4
+        AND inf.CAPA_ENT_FORCLI2 = fe.CGC_CLI_FOR_2
+        AND inf.CAPA_ENT_NRDOC = fe.DOCUMENTO
+        AND inf.CAPA_ENT_SERIE = fe.SERIE
         JOIN PEDI_080 n -- natureza de operação
           ON n.NATUR_OPERACAO = fe.NATOPER_NAT_OPER
          AND n.ESTADO_NATOPER = fe.NATOPER_EST_OPER
@@ -630,6 +652,7 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
           ON tre.CODIGO_TRANSACAO = fe.CODIGO_TRANSACAO
         WHERE 1=1
           AND fe.LOCAL_ENTREGA = {empresa}
+          {filtra_ref} -- filtra_ref
           -- filtro de devolvidos baseado na view Faturados_X_Devolvidos
           -- filtrando faturamento_Sim_Nao = "Sim" e por data
           -- situacao
@@ -661,8 +684,33 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
             ORDER BY
               c.NOME_CLIENTE
         """
+    elif tipo == 'referencia':
+        sql += """
+            GROUP BY
+              fe.DOCUMENTO
+            , fe.DATA_TRANSACAO
+            , c.NOME_CLIENTE
+            , c.CGC_9
+            , c.CGC_4
+            , c.CGC_2
+            , n.COD_NATUREZA
+            , n.DIVISAO_NATUR
+            , inf.CODITEM_GRUPO
+            ORDER BY
+              fe.DOCUMENTO
+            , inf.CODITEM_GRUPO
+        """
     else:
         sql += """
+            GROUP BY
+              fe.DOCUMENTO
+            , fe.DATA_TRANSACAO
+            , c.NOME_CLIENTE
+            , c.CGC_9
+            , c.CGC_4
+            , c.CGC_2
+            , n.COD_NATUREZA
+            , n.DIVISAO_NATUR
             ORDER BY
               fe.DOCUMENTO
         """
