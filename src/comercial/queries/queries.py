@@ -446,21 +446,15 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
     if tipo == 'total':
         sql += """
               to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
-            , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
-            , sum(fi.QTDE_ITEM_FATUR) QTD
         """
     elif tipo == 'cliente':
         sql += """
               c.NOME_CLIENTE CLIENTE
-            , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
-            , sum(fi.QTDE_ITEM_FATUR) QTD
         """
     elif tipo == 'referencia':
         sql += """
               f.NUM_NOTA_FISCAL NF
             , f.DATA_EMISSAO DATA
-            , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
-            , sum(fi.QTDE_ITEM_FATUR) QTD
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
@@ -475,8 +469,6 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
         sql += """
               f.NUM_NOTA_FISCAL NF
             , f.DATA_EMISSAO DATA
-            , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
-            , sum(fi.QTDE_ITEM_FATUR) QTD
             , c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
               || '/' || lpad(c.CGC_4, 4, '0')
@@ -486,6 +478,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
             , n.DIVISAO_NATUR DIV
         """
     sql += f"""
+        , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
+        , sum(fi.QTDE_ITEM_FATUR) QTD
         FROM FATU_050 f
         JOIN fatu_060 fi
           ON fi.ch_it_nf_cd_empr = f.codigo_empresa
