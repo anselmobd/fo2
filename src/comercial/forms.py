@@ -73,7 +73,9 @@ class VendasPorForm(
         ])
 
 
-class FaturamentoParaMetaForm(forms.Form):
+class FaturamentoParaMetaForm(
+        O2BaseForm,
+        O2FieldRefForm):
     ano = forms.IntegerField(
         required=False, initial=ano_atual,
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
@@ -87,6 +89,15 @@ class FaturamentoParaMetaForm(forms.Form):
         ]
     apresentacao = forms.ChoiceField(
         choices=CHOICES, initial='cliente', label='Apresentação')
+
+    class Meta:
+        autofocus_field = 'ano'
+        order_fields = [
+            'ano',
+            'mes',
+            'ref',
+            'apresentacao',
+        ]
 
 
 class TabelaDePrecoForm(forms.Form):
