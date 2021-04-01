@@ -26,26 +26,34 @@ class AnaliseVendas():
           , inf.ITEM_ESTRUTURA COR
           , sum(inf.QTDE_ITEM_FATUR) QTD
           FROM FATU_050 nf -- nota fiscal da Tussor - capa
+          JOIN fatu_060 inf -- item de nf de saída
+            ON inf.CH_IT_NF_CD_EMPR = nf.CODIGO_EMPRESA
+           AND inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
+           AND inf.CH_IT_NF_SER_NFIS = nf.SERIE_NOTA_FISC
+          JOIN estq_005 t -- transação de estoque
+            ON t.CODIGO_TRANSACAO = inf.TRANSACAO
+          JOIN PEDI_080 nop -- natureza de operação
+            ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
+           AND nop.ESTADO_NATOPER = nf.NATOP_NF_EST_OPER
           LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
             ON fe.NOTA_DEV = nf.NUM_NOTA_FISCAL
-          AND fe.SITUACAO_ENTRADA = 1 -- ativa
-          JOIN PEDI_080 nop -- natureza da operação
-            ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
-          AND nop.ESTADO_NATOPER = nf.NATOP_NF_EST_OPER
-          JOIN fatu_060 inf -- item de nf de saída
-            ON inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
+           AND fe.SITUACAO_ENTRADA = 1 -- ativa
           LEFT JOIN BASI_030 r -- ref
             on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
-          AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
+           AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
           WHERE 1=1
             AND nf.CODIGO_EMPRESA = 1
-            AND nf.SITUACAO_NFISC = 1
-            AND fe.DOCUMENTO IS NULL
-            AND (nf.NATOP_NF_NAT_OPER IN (1, 2)
-                OR (nop.DIVISAO_NATUR = 8
-                    AND nop.COD_NATUREZA in ('5.11', '6.11')
-                    )
+            -- ou o faturamento tem uma transação de venda
+            -- ou é o caso especial de remessa de residuo
+            AND ( t.TIPO_TRANSACAO = 'V'
+                OR nf.NATOP_NF_NAT_OPER = 900
                 )
+            -- não cancelada
+            AND nf.COD_CANC_NFISC = 0
+            -- utilizou natureza configurada como faturamento
+            AND nop.faturamento = 1
+            -- sem nota de devolução
+            AND fe.DOCUMENTO IS NULL
           GROUP BY 
             nf.DATA_EMISSAO
           , r.COLECAO
