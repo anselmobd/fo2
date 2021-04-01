@@ -548,6 +548,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
             , fi.GRUPO_ESTRUTURA
             ORDER BY
               f.NUM_NOTA_FISCAL
+            , fi.GRUPO_ESTRUTURA
         """
     else:
         sql += """
