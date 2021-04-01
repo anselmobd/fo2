@@ -413,7 +413,7 @@ def pa_de_modelo(cursor, modelo=None):
     return cached_result
 
 
-def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
+def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=None):
     '''
         tipo:
             total - totaliza por mês
@@ -435,6 +435,10 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
             prox_ano = ano
         mes = f"{mes:02}"
         prox_mes = f"{prox_mes:02}"
+
+    filtra_ref = ""
+    if ref:
+        filtra_ref = f"AND fi.GRUPO_ESTRUTURA = '{ref}'"
 
     sql = """
         SELECT
@@ -493,6 +497,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
          AND c.CGC_4 = f.CGC_4
         WHERE 1=1
           AND f.CODIGO_EMPRESA = {empresa}
+          {filtra_ref} -- filtra_ref
           -- ou o faturamento tem uma transação de venda
           -- ou é o caso especial de remessa de residuo
           AND ( t.TIPO_TRANSACAO = 'V'
