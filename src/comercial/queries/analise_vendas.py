@@ -42,7 +42,10 @@ class AnaliseVendas():
             on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
            AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
           WHERE 1=1
+            -- apenas Tussor
             AND nf.CODIGO_EMPRESA = 1
+            -- apenas produto produzido
+            AND inf.NIVEL_ESTRUTURA = 1
             -- ou o faturamento tem uma transação de venda
             -- ou é o caso especial de remessa de residuo
             AND ( t.TIPO_TRANSACAO = 'V'
