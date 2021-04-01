@@ -64,7 +64,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
 
         for faturado in faturados:
             faturado['valor|DECIMALS'] = 2
-            if apresentacao == 'detalhe':
+            if apresentacao in ['detalhe', 'referencia']:
                 faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
 
         if apresentacao == 'detalhe':
