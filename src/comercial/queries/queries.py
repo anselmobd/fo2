@@ -449,6 +449,21 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
               c.NOME_CLIENTE CLIENTE
             , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
         """
+    elif tipo == 'referencia':
+        sql += """
+              f.NUM_NOTA_FISCAL NF
+            , f.DATA_EMISSAO DATA
+            , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
+            , c.NOME_CLIENTE
+              || ' (' || lpad(c.CGC_9, 8, '0')
+              || '/' || lpad(c.CGC_4, 4, '0')
+              || '-' || lpad(c.CGC_2, 2, '0')
+              || ')' CLIENTE
+            , n.COD_NATUREZA NAT
+            , n.DIVISAO_NATUR DIV
+            , fi.NIVEL_ESTRUTURA NIVEL
+            , fi.GRUPO_ESTRUTURA REF
+        """
     else:
         sql += """
               f.NUM_NOTA_FISCAL NF
@@ -508,6 +523,22 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1):
               c.NOME_CLIENTE
             ORDER BY
               c.NOME_CLIENTE
+        """
+    elif tipo == 'referencia':
+        sql += """
+            GROUP BY
+              f.NUM_NOTA_FISCAL
+            , f.DATA_EMISSAO
+            , c.NOME_CLIENTE
+            , c.CGC_9
+            , c.CGC_4
+            , c.CGC_2
+            , n.COD_NATUREZA
+            , n.DIVISAO_NATUR
+            , fi.NIVEL_ESTRUTURA
+            , fi.GRUPO_ESTRUTURA
+            ORDER BY
+              f.NUM_NOTA_FISCAL
         """
     else:
         sql += """

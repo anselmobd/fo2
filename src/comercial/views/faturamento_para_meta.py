@@ -75,6 +75,15 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                     5: 'text-align: right;',
                 },
             })
+        elif apresentacao == 'referencia':
+            self.context.update({
+                'headers': ['Nota', 'Data', 'CFOP', 'Cliente', 'Referência', 'Valor', ],
+                'fields': ['nf', 'data', 'cfop', 'cliente', 'ref', 'valor', ],
+                'data': faturados,
+                'style': {
+                    6: 'text-align: right;',
+                },
+            })
         else:
             self.context.update({
                 'headers': ['Cliente', 'Valor', ],

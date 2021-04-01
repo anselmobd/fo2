@@ -83,6 +83,7 @@ class FaturamentoParaMetaForm(forms.Form):
     CHOICES = [
         ('cliente', 'Por cliente'),
         ('detalhe', 'Por nota'),
+        ('referencia', 'Por nota e referência'),
         ]
     apresentacao = forms.ChoiceField(
         choices=CHOICES, initial='cliente', label='Apresentação')
