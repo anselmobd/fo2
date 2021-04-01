@@ -57,7 +57,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             return
 
         totalize_data(faturados, {
-            'sum': ['valor'],
+            'sum': ['qtd', 'valor'],
             'descr': {'cliente': 'Total:'},
             'row_style': 'font-weight: bold;',
         })
@@ -78,11 +78,14 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             })
         elif apresentacao == 'referencia':
             self.context.update({
-                'headers': ['Nota', 'Data', 'CFOP', 'Cliente', 'Referência', 'Valor', ],
-                'fields': ['nf', 'data', 'cfop', 'cliente', 'ref', 'valor', ],
+                'headers': ['Nota', 'Data', 'CFOP', 'Cliente',
+                            'Referência', 'Quantidade', 'Valor', ],
+                'fields': ['nf', 'data', 'cfop', 'cliente',
+                           'ref', 'qtd', 'valor', ],
                 'data': faturados,
                 'style': {
                     6: 'text-align: right;',
+                    7: 'text-align: right;',
                 },
             })
         else:
