@@ -93,8 +93,12 @@ class Vendas(O2BaseGetPostView):
             periodo_cols=periodo_cols, qtd_por_mes=qtd_por_mes=='m')
         data = av.data
 
-        headers = ['Referência']
-        fields = ['ref']
+        if infor == "ref":
+            headers = ['Referência']
+            fields = ['ref']
+        else:
+            headers = ['Modelo']
+            fields = ['modelo']
 
         if periodo_cols:
             for col in periodo_cols:
