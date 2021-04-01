@@ -38,6 +38,7 @@ class AnaliseVendas():
             on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
           AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
           WHERE 1=1
+            AND nf.CODIGO_EMPRESA = 1
             AND nf.SITUACAO_NFISC = 1
             AND fe.DOCUMENTO IS NULL
             AND (nf.NATOP_NF_NAT_OPER IN (1, 2)
