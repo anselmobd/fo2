@@ -31,10 +31,6 @@ class DevolucaoParaMeta(O2BaseGetPostView):
         ano = self.form.cleaned_data['ano']
         mes = self.form.cleaned_data['mes']
         apresentacao = self.form.cleaned_data['apresentacao']
-        if apresentacao == 'C':
-            tipo = 'cliente'
-        else:
-            tipo = 'detalhe'
 
         if ano is None or mes is None:
             hoje = datetime.date.today()
@@ -50,7 +46,7 @@ class DevolucaoParaMeta(O2BaseGetPostView):
         })
 
         faturados = comercial.queries.devolucao_para_meta(
-            cursor, ano_atual, mes_atual, tipo=tipo)
+            cursor, ano_atual, mes_atual, tipo=apresentacao)
 
         if len(faturados) == 0:
             self.context.update({
@@ -66,10 +62,10 @@ class DevolucaoParaMeta(O2BaseGetPostView):
 
         for faturado in faturados:
             faturado['valor|DECIMALS'] = 2
-            if apresentacao == 'N':
+            if apresentacao == 'detalhe':
                 faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
 
-        if apresentacao == 'N':
+        if apresentacao == 'detalhe':
             self.context.update({
                 'headers': ['Nota', 'Data', 'CFOP', 'Cliente', 'Valor', ],
                 'fields': ['nf', 'data', 'cfop', 'cliente', 'valor', ],

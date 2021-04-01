@@ -81,11 +81,11 @@ class FaturamentoParaMetaForm(forms.Form):
     mes = forms.IntegerField(required=False, initial=mes_atual)
 
     CHOICES = [
-        ('C', 'Por cliente'),
-        ('N', 'Por nota'),
+        ('cliente', 'Por cliente'),
+        ('detalhe', 'Por nota'),
         ]
     apresentacao = forms.ChoiceField(
-        choices=CHOICES, initial='C', label='Apresentação')
+        choices=CHOICES, initial='cliente', label='Apresentação')
 
 
 class TabelaDePrecoForm(forms.Form):
