@@ -234,6 +234,7 @@ def get_vendas(
                                ))) MODELO
         """)
         select_global = select_por
+        join_on = "ON pr.MODELO = v.MODELO"
         group_por = ", v.MODELO"
         add_order('v.MODELO')
     elif por == 'modelo+incl':
@@ -246,30 +247,30 @@ def get_vendas(
                                ))) MODELO
         """)
         select_global = select_por
+        join_on = "ON pr.MODELO = v.MODELO"
     elif por == 'ref':
         select_por = ", v.REF"
         select_item = ", v.GRUPO_ESTRUTURA REF"
         select_global = select_por
+        join_on = "ON pr.REF = v.REF"
         group_por = ", v.REF"
         add_order('v.REF')
     elif por == 'cor':
         select_por = ", v.COR"
         select_item = ", v.ITEM_ESTRUTURA COR"
         select_global = select_por
+        join_on = "ON pr.COR = v.COR"
         group_por = ", v.COR"
         add_order('v.COR')
     elif por == 'tam':
         select_por = ", t.ORDEM_TAMANHO\n, v.TAM"
         select_item = ", t.ORDEM_TAMANHO\n, v.SUBGRU_ESTRUTURA TAM"
         select_global = ", v.ORDEM_TAMANHO\n, v.TAM"
+        join_on = "ON pr.TAM = v.TAM"
         group_por = ", v.ORDEM_TAMANHO\n, v.TAM"
         add_order("v.ORDEM_TAMANHO\n, v.TAM")
 
     sql = f"""
-        SELECT
-          sum(v.qtd) qtd
-          {select_global} -- select_global
-        FROM (
         WITH vendido AS
         (
         SELECT
@@ -333,7 +334,9 @@ def get_vendas(
           )
           {pre_filtra_periodo} -- pre_filtra_periodo
           {pre_filtra_ultimos_dias} -- pre_filtra_ultimos_dias
-        )
+        ),
+        por_ref AS
+        (
         SELECT
           v.qtd
           {select_por} -- select_por
@@ -354,11 +357,11 @@ def get_vendas(
             {filtra_ref} -- filtra_ref
           )
           {filtra_ultimos_dias} -- filtra_ultimos_dias
-        --
-        UNION
-        --
-        SELECT
-          0
+        ),
+        all_ref AS 
+        (
+        SELECT DISTINCT
+          0 qtd
           {select_item} -- select_item
         FROM BASI_010 v -- item (ref+tam+cor)
         JOIN BASI_030 r -- ref
@@ -380,7 +383,14 @@ def get_vendas(
             OR
             {filtra_cliente_select_item} -- filtra_cliente_select_item
           )
-        ) v
+        )
+        SELECT
+          coalesce(sum(pr.qtd), 0) qtd
+          {select_global} -- select_global
+        FROM all_ref v
+        LEFT JOIN por_ref pr
+          -- ON pr.REF = v.ref
+          {join_on} -- join_on
         GROUP BY
           1
           {group_por} -- group_por
