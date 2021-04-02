@@ -226,13 +226,25 @@ def get_vendas(
         select_por = ", v.MODELO"
         # no filtro por modelo não busca modelos com qtd zerada, por EMISSAO
         # apenas repete o valor, para, ao agrupar, não fazer diferença
-        select_item = ", '{}' MODELO".format(modelo)
+        select_item = (
+        """--
+            , TRIM(LEADING '0' FROM
+               (REGEXP_REPLACE(v.GRUPO_ESTRUTURA,
+                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                               ))) MODELO
+        """)
         select_global = select_por
         group_por = ", v.MODELO"
         add_order('v.MODELO')
     elif por == 'modelo+incl':
         select_por = f", '{modelo}' MODELO"
-        select_item = f", '{modelo}' MODELO"
+        select_item = (
+        """--
+            , TRIM(LEADING '0' FROM
+               (REGEXP_REPLACE(v.GRUPO_ESTRUTURA,
+                               '^([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                               ))) MODELO
+        """)
         select_global = select_por
     elif por == 'ref':
         select_por = ", v.REF"
