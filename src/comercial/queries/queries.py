@@ -370,6 +370,12 @@ def get_vendas(
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = v.SUBGRU_ESTRUTURA
         WHERE v.NIVEL_ESTRUTURA = 1
+          AND v.GRUPO_ESTRUTURA < 'A0000'
+          AND (
+            NOT ( v.GRUPO_ESTRUTURA >= '0A000'
+                AND v.GRUPO_ESTRUTURA <= '0Z999'
+                )
+              )  
           AND (
             {or_filtro_select_item} -- or_filtro_select_item
             OR
