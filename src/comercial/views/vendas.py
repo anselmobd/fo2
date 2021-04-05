@@ -99,6 +99,9 @@ class Vendas(O2BaseGetPostView):
         elif infor == "tam":
             headers = ['Tamanho']
             fields = ['tam']
+        elif infor == "cor":
+            headers = ['Cor']
+            fields = ['cor']
         else:
             headers = ['Modelo']
             fields = ['modelo']

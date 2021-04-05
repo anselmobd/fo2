@@ -118,6 +118,13 @@ class AnaliseVendas():
                 """),
             'order_fields': 'iv.ORD_TAM',
         },
+        'cor': {
+            'select_fields': (
+                """iv.COR
+                """),
+            'group_fields': ('select_fields', ),
+            'order_fields': ('select_fields', ),
+        },
     }        
 
     ordem_dict = {
