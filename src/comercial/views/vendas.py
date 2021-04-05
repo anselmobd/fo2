@@ -96,6 +96,9 @@ class Vendas(O2BaseGetPostView):
         if infor == "ref":
             headers = ['Referência']
             fields = ['ref']
+        elif infor == "tam":
+            headers = ['Tamanho']
+            fields = ['tam']
         else:
             headers = ['Modelo']
             fields = ['modelo']
