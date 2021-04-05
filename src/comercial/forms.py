@@ -19,6 +19,7 @@ class VendasForm(
         ('ref', 'Referência'),
         ('modelo', 'Modelo'),
         ('tam', 'Tamanho'),
+        ('cor', 'Cor'),
     ]
     infor = forms.ChoiceField(
         label='Informação totalizada', choices=CHOICES, initial='ref')
