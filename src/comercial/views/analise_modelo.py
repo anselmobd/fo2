@@ -74,7 +74,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='modelo+incl', modelo=modelo,
+                colecao=None, cliente=None, por='modelo', modelo=modelo,
                 )  # refs_incl=refs_incl, mult_incl=mult_incl)
             if len(data_periodo) == 0:
                 data_periodo = [{'modelo': modelo, 'qtd': 0}]
