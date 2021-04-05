@@ -23,6 +23,7 @@ class AnaliseVendas():
               REGEXP_REPLACE(inf.GRUPO_ESTRUTURA, '[^0-9]', '')
             )) MODELO
           , inf.SUBGRU_ESTRUTURA TAM
+          , tam.ORDEM_TAMANHO ORD_TAM
           , inf.ITEM_ESTRUTURA COR
           , sum(inf.QTDE_ITEM_FATUR) QTD
           FROM FATU_050 nf -- nota fiscal da Tussor - capa
@@ -41,6 +42,8 @@ class AnaliseVendas():
           LEFT JOIN BASI_030 r -- ref
             on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
            AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
+          LEFT JOIN BASI_220 tam
+            ON tam.TAMANHO_REF = inf.SUBGRU_ESTRUTURA
           WHERE 1=1
             -- apenas Tussor
             AND nf.CODIGO_EMPRESA = 1
@@ -64,6 +67,7 @@ class AnaliseVendas():
           , inf.NIVEL_ESTRUTURA
           , inf.GRUPO_ESTRUTURA
           , inf.SUBGRU_ESTRUTURA
+          , tam.ORDEM_TAMANHO
           , inf.ITEM_ESTRUTURA
         )
     """)
@@ -103,6 +107,16 @@ class AnaliseVendas():
                 """),
             'group_fields': ('select_fields', ),
             'order_fields': ('select_fields', ),
+        },
+        'tam': {
+            'select_fields': (
+                """iv.TAM
+                """),
+            'group_fields': (
+                """   iv.TAM
+                    , iv.ORD_TAM   
+                """),
+            'order_fields': 'iv.ORD_TAM',
         },
     }        
 
