@@ -93,18 +93,8 @@ class Vendas(O2BaseGetPostView):
             periodo_cols=periodo_cols, qtd_por_mes=qtd_por_mes=='m')
         data = av.data
 
-        if infor == "ref":
-            headers = ['Referência']
-            fields = ['ref']
-        elif infor == "tam":
-            headers = ['Tamanho']
-            fields = ['tam']
-        elif infor == "cor":
-            headers = ['Cor']
-            fields = ['cor']
-        else:
-            headers = ['Modelo']
-            fields = ['modelo']
+        headers = [dict(self.Form_class.base_fields['infor'].choices)[infor]]
+        fields = [infor]
 
         if periodo_cols:
             for col in periodo_cols:
