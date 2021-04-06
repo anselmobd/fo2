@@ -236,15 +236,15 @@ class AnaliseVendas():
         Se algum limite final for vazio, devolve última data como None.
         """
         periodos = list(periodo_cols.values())
-        inicial = '999999'
+        inicial = ''
         final = '0'
         for periodo in periodos:
             lim_ini, lim_fim = tuple(periodo.split(':'))
             if lim_ini:
-                if int(lim_ini) > int(inicial):
+                if not inicial or int(lim_ini) > int(inicial):
                     inicial = lim_ini
-            if lim_fim:
-                if final is not None or int(lim_fim) < int(final):
+            if lim_fim and final is not None:
+                if int(lim_fim) < int(final):
                     final = lim_fim
             else:
                 final = None
