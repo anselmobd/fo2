@@ -76,12 +76,12 @@ def get_modelo_dims(cursor, modelo=None, get=None):
 
 def get_vendas(
         cursor, ref=None, periodo=None, colecao=None, cliente=None, por=None,
-        modelo=None, order_qtd=True, ultimos_dias=None):
+        modelo=None, order_qtd=True, ultimos_dias=None, zerados=True):
 
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
         'get_vendas', ref, periodo, colecao, cliente, por, modelo, order_qtd,
-        ultimos_dias)
+        ultimos_dias, zerados)
 
     cached_result = cache.get(key_cache)
     if cached_result is not None:
@@ -264,17 +264,22 @@ def get_vendas(
           {filtra_modelo} -- filtra_modelo
           {filtra_ref} -- filtra_ref
           {filtra_ultimos_dias} -- filtra_ultimos_dias
-        --
-        UNION
-        --
-        SELECT
-          0
-          {select_item} -- select_item
-        FROM BASI_010 v -- item (ref+tam+cor)
-        LEFT JOIN BASI_220 t
-          ON t.TAMANHO_REF = v.SUBGRU_ESTRUTURA
-        WHERE v.NIVEL_ESTRUTURA = 1
-          {filtra_modelo_select_item} -- filtra_modelo_select_item
+    """
+    if zerados:
+        sql += f"""
+            --
+            UNION
+            --
+            SELECT
+              0
+              {select_item} -- select_item
+            FROM BASI_010 v -- item (ref+tam+cor)
+            LEFT JOIN BASI_220 t
+              ON t.TAMANHO_REF = v.SUBGRU_ESTRUTURA
+            WHERE v.NIVEL_ESTRUTURA = 1
+              {filtra_modelo_select_item} -- filtra_modelo_select_item
+        """
+    sql += f"""
         ) v
         GROUP BY
           1
