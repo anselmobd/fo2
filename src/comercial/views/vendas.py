@@ -104,8 +104,22 @@ class Vendas(O2BaseGetPostView):
             com_venda=(lista=='venda'))
         data = av.data
 
-        headers = [dict(self.Form_class.base_fields['infor'].choices)[infor]]
-        fields = [infor]
+        infor_fields = {
+            'nf': {
+                'headers': ['Nota fiscal', 'Data'],
+                'fields': ['nf', 'dt_min'],
+            }
+        }
+
+        if infor in infor_fields:
+            headers = infor_fields[infor]['headers']
+        else:
+            headers = [dict(self.Form_class.base_fields['infor'].choices)[infor]]
+
+        if infor in infor_fields:
+            fields = infor_fields[infor]['fields']
+        else:
+            fields = [infor]
 
         if periodo_cols:
             for col in periodo_cols:
