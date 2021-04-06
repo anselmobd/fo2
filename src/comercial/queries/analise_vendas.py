@@ -193,10 +193,7 @@ class AnaliseVendas():
 
     def _set_infor(self, selecao):
         if selecao:
-            first_infor = list(self.infor_dict)[0]
-            sql_fields = self.infor_dict[first_infor].keys()
-
-            for sql_field in sql_fields:
+            for sql_field in self.infor_dict[selecao]:
                 info_sql = self.infor_dict[selecao][sql_field]
 
                 if isinstance(info_sql, tuple):
