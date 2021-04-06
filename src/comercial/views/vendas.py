@@ -114,7 +114,7 @@ class Vendas(O2BaseGetPostView):
         else:
             headers += ['Quantidade']
             fields += ['qtd']
-            if qtd_por_mes == 'm':
+            if qtd_por_mes == 'm' and infor != 'nf':
                 headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
                 fields += ['dt_max', 'dt_min', 'qtd_mes']
 
