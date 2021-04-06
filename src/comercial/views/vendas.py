@@ -1,6 +1,8 @@
 from pprint import pprint
 from datetime import datetime
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
@@ -109,6 +111,11 @@ class Vendas(O2BaseGetPostView):
             if qtd_por_mes == 'm':
                 headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
                 fields += ['dt_max', 'dt_min', 'qtd_mes']
+
+        for row in data:
+            if infor == 'nf':
+                row['nf|LINK'] = reverse(
+                    'contabil:nota_fiscal__get', args=[row['nf']])
 
         self.context.update({
             'headers': headers,
