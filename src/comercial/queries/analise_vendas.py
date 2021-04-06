@@ -215,7 +215,8 @@ class AnaliseVendas():
         if value:
             data_de, data_ate = self.limites_de_periodo_cols(value)
             self.filtra_periodo_data('>=', data_de)
-            self.filtra_periodo_data('<', data_ate)
+            if data_ate:
+                self.filtra_periodo_data('<', data_ate)
             self.monta_periodo_fields(value)
 
     periodo_cols = property(fset=_set_periodo_cols)
@@ -231,19 +232,24 @@ class AnaliseVendas():
         )
 
     def limites_de_periodo_cols(self, periodo_cols):
+        """De todos os períodos, pega os extremos e devolve como datas limites.
+        Se algum limite final for vazio, devolve última data como None.
+        """
         periodos = list(periodo_cols.values())
-        inicial = ''
-        final = ''
+        inicial = '999999'
+        final = '0'
         for periodo in periodos:
             lim_ini, lim_fim = tuple(periodo.split(':'))
             if lim_ini:
-                if not inicial or int(lim_ini) > int(inicial):
+                if int(lim_ini) > int(inicial):
                     inicial = lim_ini
             if lim_fim:
-                if not final or int(lim_fim) < int(final):
+                if final is not None or int(lim_fim) < int(final):
                     final = lim_fim
+            else:
+                final = None
         data_de = self.mes_to_timestamp(inicial)
-        data_ate = self.mes_to_timestamp(final)
+        data_ate = self.mes_to_timestamp(final) if final else None
         return data_de, data_ate
 
     def mes_to_timestamp(self, mes):
