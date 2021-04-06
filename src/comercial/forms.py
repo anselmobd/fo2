@@ -41,6 +41,7 @@ class VendasForm(
 
     CHOICES = [
         ('0', 'Total'),
+        ('a123', 'Mês atual e 3 anteriores'),
         ('3612', '3 e 6 meses, 1 e 2 anos'),
         ('meta', 'Períodos de análises de metas'),
     ]
