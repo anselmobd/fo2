@@ -356,7 +356,7 @@ class AnaliseVendas():
                 return f"""
                     {self.filtra_periodos} -- filtra_periodos
                 """
-        else:
+            else:
                 return "AND iv.DT IS NOT NULL"
         else:
             return ""
