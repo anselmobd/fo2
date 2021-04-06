@@ -30,6 +30,12 @@ class Vendas(O2BaseGetPostView):
                 '1 ano': '12:',
                 '2 anos': '24:',
             },
+            'a123': {
+                'Mês atual': '0:',
+                'Mês passado': '1:0',
+                '2 meses atrás': '2:1',
+                '3 meses atrás': '3:2',
+            },
         }
 
         meta_cols = {}
