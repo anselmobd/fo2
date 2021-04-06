@@ -57,12 +57,12 @@ class AnaliseVendas():
                 OR ( 
                    -- apenas Tussor
                    nf.CODIGO_EMPRESA = 1
-            -- não cancelada
-            AND nf.COD_CANC_NFISC = 0
+                   -- não cancelada
+                   AND nf.COD_CANC_NFISC = 0
                    -- sem nota de devolução
                    AND fe.DOCUMENTO IS NULL
-            -- utilizou natureza configurada como faturamento
-            AND nop.faturamento = 1
+                   -- utilizou natureza configurada como faturamento
+                   AND nop.faturamento = 1
                    -- o faturamento tem uma transação de venda; OU
                    -- é o caso especial de remessa de residuo
                    AND ( t.TIPO_TRANSACAO = 'V'
@@ -298,10 +298,11 @@ class AnaliseVendas():
 
     def field_to_date(self, row, field):
         if field in row:
-            row[field] = row[field].date()
+            if row[field]:
+                row[field] = row[field].date()
 
     def calc_qtd_mes(self, row):
-        if 'dt_min' in row and 'dt_max' in row:
+        if row['dt_min']:
             row['meses'] = round(
                 self.diff_fmonth(
                     row['dt_min'],
@@ -337,7 +338,11 @@ class AnaliseVendas():
     def filtros(self):
         return (
             f"""{self.filtra_ref} -- filtra_ref
-                {self.filtra_periodos} -- filtra_periodos
+               AND ( iv.DT IS NULL
+                   OR ( 1=1
+                      {self.filtra_periodos} -- filtra_periodos
+                      )
+                   )   
             """
         )
 
