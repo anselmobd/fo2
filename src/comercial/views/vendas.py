@@ -7,6 +7,7 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 from utils.functions import dec_month, dec_months
+from utils.views import totalize_data
 
 import comercial.forms as forms
 import comercial.models as models
@@ -121,13 +122,16 @@ class Vendas(O2BaseGetPostView):
         else:
             fields = [infor]
 
+        sum_fields = []
         if periodo_cols:
             for col in periodo_cols:
                 headers.append(col)
                 fields.append(queries.str2col_name(col))
+                sum_fields.append(queries.str2col_name(col))
         else:
             headers += ['Quantidade']
             fields += ['qtd']
+            sum_fields += ['qtd']
             if qtd_por_mes == 'm' and infor != 'nf':
                 headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
                 fields += ['dt_max', 'dt_min', 'qtd_mes']
@@ -136,6 +140,12 @@ class Vendas(O2BaseGetPostView):
             for row in data:
                 row['nf|LINK'] = reverse(
                     'contabil:nota_fiscal__get', args=[row['nf']])
+
+        totalize_data(data, {
+            'sum': sum_fields,
+            'descr': {fields[0]: 'Total:'},
+            'row_style': 'font-weight: bold;',
+        })
 
         self.context.update({
             'headers': headers,
