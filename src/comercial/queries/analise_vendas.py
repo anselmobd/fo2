@@ -102,6 +102,7 @@ class AnaliseVendas():
         , SUM(iv.QTD) QTD
     """)
     periodo_fields = ""
+    filter_not_null = ""
     group_fields = select_fields
     order_fields = select_fields
 
@@ -141,6 +142,7 @@ class AnaliseVendas():
             'select_fields': (
                 """iv.NF
                 """),
+            'filter_not_null': "AND iv.NF IS NOT NULL",
             'group_fields': ('select_fields', ),
             'order_fields': (
                 """iv.NF DESC
@@ -378,6 +380,7 @@ class AnaliseVendas():
             FROM item_vendido iv
             WHERE 1=1
               {self.filtros} -- filtros
+              {self.filter_not_null} -- filter_not_null
             GROUP BY
               {self.group_fields} -- group_fields
             ORDER BY
