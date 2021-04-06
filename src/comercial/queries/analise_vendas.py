@@ -14,7 +14,8 @@ class AnaliseVendas():
     sql_base = (
     """ WITH item_vendido AS
         ( SELECT
-            nf.DATA_EMISSAO DT
+            nf.NUM_NOTA_FISCAL NF
+          , nf.DATA_EMISSAO DT
           , r.COLECAO COL
           , r.CGC_CLIENTE_9 CNPJ9
           , item.NIVEL_ESTRUTURA NIVEL
@@ -71,7 +72,8 @@ class AnaliseVendas():
                    )
                 )   
           GROUP BY 
-            nf.DATA_EMISSAO
+            nf.NUM_NOTA_FISCAL
+          , nf.DATA_EMISSAO
           , r.COLECAO
           , r.CGC_CLIENTE_9
           , item.NIVEL_ESTRUTURA
@@ -134,6 +136,15 @@ class AnaliseVendas():
                 """),
             'group_fields': ('select_fields', ),
             'order_fields': ('select_fields', ),
+        },
+        'nf': {
+            'select_fields': (
+                """iv.NF
+                """),
+            'group_fields': ('select_fields', ),
+            'order_fields': (
+                """iv.NF DESC
+                """),
         },
     }        
 
