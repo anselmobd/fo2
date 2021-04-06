@@ -75,6 +75,7 @@ class Vendas(O2BaseGetPostView):
         ref = self.form.cleaned_data['ref']
         modelo = self.form.cleaned_data['modelo']
         infor = self.form.cleaned_data['infor']
+        lista = self.form.cleaned_data['lista']
         ordem = self.form.cleaned_data['ordem']
         periodo = self.form.cleaned_data['periodo']
         qtd_por_mes = self.form.cleaned_data['qtd_por_mes']
@@ -90,7 +91,9 @@ class Vendas(O2BaseGetPostView):
 
         av = queries.AnaliseVendas(
             cursor, ref=ref, modelo=modelo, infor=infor, ordem=ordem,
-            periodo_cols=periodo_cols, qtd_por_mes=qtd_por_mes=='m')
+            periodo_cols=periodo_cols,
+            qtd_por_mes=(qtd_por_mes=='m'),
+            com_venda=(lista=='venda'))
         data = av.data
 
         headers = [dict(self.Form_class.base_fields['infor'].choices)[infor]]
