@@ -23,6 +23,19 @@ class ModeloForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
+class ModeloBugForm(forms.Form):
+    modelo = forms.CharField(
+        label='Modelo', max_length=4, min_length=1,
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    CHOICES = [
+        ('bug', 'Bug de cálculo; com zerados'),
+        ('ok', 'Cálculo OK; sem zerados'),
+    ]
+    rotina_calculo = forms.ChoiceField(
+        label='Rotina de cálculo', choices=CHOICES, initial='bug')
+
+
 class FiltroRefForm(
         O2BaseForm,
         O2FieldFiltroForm,
