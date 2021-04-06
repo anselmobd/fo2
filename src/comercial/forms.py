@@ -40,8 +40,8 @@ class VendasForm(
         label='Ordem', choices=CHOICES, initial='infor')
 
     CHOICES = [
-        ('0', 'Nenhum'),
-        ('3612', 'Meses e Anos'),
+        ('0', 'Total'),
+        ('3612', '3 e 6 meses, 1 e 2 anos'),
         ('meta', 'Períodos de análises de metas'),
     ]
     periodo = forms.ChoiceField(
