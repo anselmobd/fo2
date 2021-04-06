@@ -353,19 +353,20 @@ class AnaliseVendas():
     @property
     def filtra_com_venda(self):
         if self.com_venda:
-            return 'iv.DT IS NOT NULL'
+            if self.filtra_periodos:
+                return f"""
+                    {self.filtra_periodos} -- filtra_periodos
+                """
         else:
-            return 'iv.DT IS NULL'
+                return "AND iv.DT IS NOT NULL"
+        else:
+            return ""
 
     @property
     def filtros(self):
         return (
             f"""{self.filtra_ref} -- filtra_ref
-               AND ( {self.filtra_com_venda} -- filtra_com_venda
-                   OR ( 1=1
-                      {self.filtra_periodos} -- filtra_periodos
-                      )
-                   )   
+                {self.filtra_com_venda} -- filtra_com_venda
             """
         )
 
