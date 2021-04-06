@@ -17,58 +17,68 @@ class AnaliseVendas():
             nf.DATA_EMISSAO DT
           , r.COLECAO COL
           , r.CGC_CLIENTE_9 CNPJ9
-          , inf.NIVEL_ESTRUTURA NIVEL
-          , inf.GRUPO_ESTRUTURA REF
+          , item.NIVEL_ESTRUTURA NIVEL
+          , item.GRUPO_ESTRUTURA REF
           , TRIM(LEADING '0' FROM (
-              REGEXP_REPLACE(inf.GRUPO_ESTRUTURA, '[^0-9]', '')
+              REGEXP_REPLACE(item.GRUPO_ESTRUTURA, '[^0-9]', '')
             )) MODELO
-          , inf.SUBGRU_ESTRUTURA TAM
+          , item.SUBGRU_ESTRUTURA TAM
           , tam.ORDEM_TAMANHO ORD_TAM
-          , inf.ITEM_ESTRUTURA COR
-          , sum(inf.QTDE_ITEM_FATUR) QTD
-          FROM FATU_050 nf -- nota fiscal da Tussor - capa
-          JOIN fatu_060 inf -- item de nf de saída
-            ON inf.CH_IT_NF_CD_EMPR = nf.CODIGO_EMPRESA
-           AND inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
-           AND inf.CH_IT_NF_SER_NFIS = nf.SERIE_NOTA_FISC
-          JOIN estq_005 t -- transação de estoque
+          , item.ITEM_ESTRUTURA COR
+          , COALESCE(sum(inf.QTDE_ITEM_FATUR), 0) QTD
+          FROM BASI_010 item -- item (ref+tam+cor)
+          JOIN BASI_030 r -- ref
+            on r.NIVEL_ESTRUTURA = item.NIVEL_ESTRUTURA
+           AND r.REFERENCIA = item.GRUPO_ESTRUTURA
+          JOIN BASI_220 tam
+            ON tam.TAMANHO_REF = item.SUBGRU_ESTRUTURA
+          LEFT JOIN fatu_060 inf -- item de nf de saída
+            ON inf.NIVEL_ESTRUTURA = item.NIVEL_ESTRUTURA 
+           AND inf.GRUPO_ESTRUTURA = item.GRUPO_ESTRUTURA 
+           AND inf.SUBGRU_ESTRUTURA = item.SUBGRU_ESTRUTURA 
+           AND inf.ITEM_ESTRUTURA = item.ITEM_ESTRUTURA 
+          LEFT JOIN FATU_050 nf -- nota fiscal da Tussor - capa
+            ON nf.CODIGO_EMPRESA = inf.CH_IT_NF_CD_EMPR
+           AND nf.NUM_NOTA_FISCAL = inf.CH_IT_NF_NUM_NFIS
+           AND nf.SERIE_NOTA_FISC = inf.CH_IT_NF_SER_NFIS
+          LEFT JOIN estq_005 t -- transação de estoque
             ON t.CODIGO_TRANSACAO = inf.TRANSACAO
-          JOIN PEDI_080 nop -- natureza de operação
+          LEFT JOIN PEDI_080 nop -- natureza de operação
             ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
            AND nop.ESTADO_NATOPER = nf.NATOP_NF_EST_OPER
           LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
             ON fe.NOTA_DEV = nf.NUM_NOTA_FISCAL
            AND fe.SITUACAO_ENTRADA = 1 -- ativa
-          LEFT JOIN BASI_030 r -- ref
-            on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
-           AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
-          LEFT JOIN BASI_220 tam
-            ON tam.TAMANHO_REF = inf.SUBGRU_ESTRUTURA
           WHERE 1=1
-            -- apenas Tussor
-            AND nf.CODIGO_EMPRESA = 1
             -- apenas produto produzido
-            AND inf.NIVEL_ESTRUTURA = 1
-            -- ou o faturamento tem uma transação de venda
-            -- ou é o caso especial de remessa de residuo
-            AND ( t.TIPO_TRANSACAO = 'V'
-                OR nf.NATOP_NF_NAT_OPER = 900
-                )
+            AND item.NIVEL_ESTRUTURA = 1
+            -- se item não foi vendido OR ... 
+            AND ( inf.NIVEL_ESTRUTURA IS NULL
+                OR ( 
+                   -- apenas Tussor
+                   nf.CODIGO_EMPRESA = 1
             -- não cancelada
             AND nf.COD_CANC_NFISC = 0
+                   -- sem nota de devolução
+                   AND fe.DOCUMENTO IS NULL
             -- utilizou natureza configurada como faturamento
             AND nop.faturamento = 1
-            -- sem nota de devolução
-            AND fe.DOCUMENTO IS NULL
+                   -- o faturamento tem uma transação de venda; OU
+                   -- é o caso especial de remessa de residuo
+                   AND ( t.TIPO_TRANSACAO = 'V'
+                       OR nf.NATOP_NF_NAT_OPER = 900
+                       )
+                   )
+                )   
           GROUP BY 
             nf.DATA_EMISSAO
           , r.COLECAO
           , r.CGC_CLIENTE_9
-          , inf.NIVEL_ESTRUTURA
-          , inf.GRUPO_ESTRUTURA
-          , inf.SUBGRU_ESTRUTURA
+          , item.NIVEL_ESTRUTURA
+          , item.GRUPO_ESTRUTURA
+          , item.SUBGRU_ESTRUTURA
           , tam.ORDEM_TAMANHO
-          , inf.ITEM_ESTRUTURA
+          , item.ITEM_ESTRUTURA
         )
     """)
 
