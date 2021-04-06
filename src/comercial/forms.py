@@ -26,8 +26,8 @@ class VendasForm(
         label='Informação totalizada', choices=CHOICES, initial='ref')
 
     CHOICES = [
-        ('venda', 'Apenas com venda'),
-        ('tudo', 'Com e sem venda'),
+        ('venda', 'Apenas com venda no período'),
+        ('tudo', 'Com e sem venda no período'),
     ]
     lista = forms.ChoiceField(
         label='Lista Informação', choices=CHOICES, initial='venda')
