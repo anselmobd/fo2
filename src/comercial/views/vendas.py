@@ -118,8 +118,8 @@ class Vendas(O2BaseGetPostView):
                 headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
                 fields += ['dt_max', 'dt_min', 'qtd_mes']
 
-        for row in data:
             if infor == 'nf':
+            for row in data:
                 row['nf|LINK'] = reverse(
                     'contabil:nota_fiscal__get', args=[row['nf']])
 
