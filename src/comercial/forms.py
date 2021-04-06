@@ -25,6 +25,13 @@ class VendasForm(
         label='Informação totalizada', choices=CHOICES, initial='ref')
 
     CHOICES = [
+        ('venda', 'Apenas com venda'),
+        ('tudo', 'Com e sem venda'),
+    ]
+    lista = forms.ChoiceField(
+        label='Lista Informação', choices=CHOICES, initial='venda')
+
+    CHOICES = [
         ('infor', 'Informação totalizada'),
         ('qtd', 'Quantidade'),
     ]
@@ -52,6 +59,7 @@ class VendasForm(
             'ref',
             'modelo',
             'infor',
+            'lista',
             'ordem',
             'periodo',
             'qtd_por_mes',

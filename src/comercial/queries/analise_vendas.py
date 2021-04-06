@@ -145,9 +145,8 @@ class AnaliseVendas():
     result = None
 
     def __init__(
-        self, cursor, ref=None, modelo=None,
-        infor=None, ordem=None,
-        periodo_cols=None, qtd_por_mes=False):
+        self, cursor, ref=None, modelo=None, infor=None, ordem=None,
+        periodo_cols=None, qtd_por_mes=False, com_venda=False):
 
         self.hoje = date.today()
         self.ini_mes = self.hoje.replace(day=1)
@@ -161,6 +160,7 @@ class AnaliseVendas():
         self.ref = ref
         self.modelo = modelo
         self.infor = infor
+        self.com_venda = com_venda
         self.periodo_cols = periodo_cols
 
     def _set_ref(self, value):
@@ -181,7 +181,6 @@ class AnaliseVendas():
     del _set_modelo
 
     def _set_infor(self, selecao):
-
         if selecao:
             first_infor = list(self.infor_dict)[0]
             sql_fields = self.infor_dict[first_infor].keys()
@@ -335,10 +334,17 @@ class AnaliseVendas():
         return ""
 
     @property
+    def filtra_com_venda(self):
+        if self.com_venda:
+            return 'iv.DT IS NOT NULL'
+        else:
+            return 'iv.DT IS NULL'
+
+    @property
     def filtros(self):
         return (
             f"""{self.filtra_ref} -- filtra_ref
-               AND ( iv.DT IS NULL
+               AND ( {self.filtra_com_venda} -- filtra_com_venda
                    OR ( 1=1
                       {self.filtra_periodos} -- filtra_periodos
                       )
