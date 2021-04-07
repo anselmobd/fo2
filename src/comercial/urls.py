@@ -31,11 +31,18 @@ urlpatterns = [
         name='vendas_por_modelo'),
 
     url(r'^analise_modelo/$',
-        views.AnaliseModelo.as_view(),
+        views.AnaliseModeloOld.as_view(),
         name='analise_modelo'),
     url(r'^analise_modelo/(?P<modelo>.+)/$',
-        views.AnaliseModelo.as_view(),
+        views.AnaliseModeloOld.as_view(),
         name='analise_modelo__get'),
+
+    url(r'^analise_modelo_new/$',
+        views.AnaliseModelo.as_view(),
+        name='analise_modelo_new'),
+    url(r'^analise_modelo_new/(?P<modelo>.+)/$',
+        views.AnaliseModelo.as_view(),
+        name='analise_modelo_new__get'),
 
     url(r'^ponderacao/$',
         views.estoque.Ponderacao.as_view(),
