@@ -24,7 +24,7 @@ import comercial.queries as queries
 class AnaliseModeloOld(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
-        super(AnaliseModelo, self).__init__(*args, **kwargs)
+        super(AnaliseModeloOld, self).__init__(*args, **kwargs)
         # self.Form_class = ModeloForm2
         self.Form_class = ModeloBugForm
         self.template_name = 'comercial/analise_modelo.html'
