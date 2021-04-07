@@ -23,7 +23,7 @@ class VendasForm(
         ('nf', 'Nota fiscal'),
     ]
     infor = forms.ChoiceField(
-        label='Informação totalizada', choices=CHOICES, initial='ref')
+        label='Informação', choices=CHOICES, initial='ref')
 
     CHOICES = [
         ('venda', 'Apenas com venda no período'),
@@ -33,14 +33,14 @@ class VendasForm(
         label='Lista Informação', choices=CHOICES, initial='venda')
 
     CHOICES = [
-        ('infor', 'Informação totalizada'),
+        ('infor', 'Informação'),
         ('qtd', 'Quantidade'),
     ]
     ordem = forms.ChoiceField(
         label='Ordem', choices=CHOICES, initial='infor')
 
     CHOICES = [
-        ('0', 'Total'),
+        ('0', 'Total vendido'),
         ('a123', 'Mês atual e 3 anteriores'),
         ('3612', '3 e 6 meses, 1 e 2 anos'),
         ('meta', 'Períodos de análises de metas'),
@@ -49,7 +49,7 @@ class VendasForm(
         label='Períodos em colunas', choices=CHOICES, initial='0')
 
     CHOICES = [
-        ('t', 'Totais'),
+        ('t', 'Total do período'),
         ('m', 'Média por mês'),
     ]
     qtd_por_mes = forms.ChoiceField(
@@ -61,8 +61,8 @@ class VendasForm(
             'ref',
             'modelo',
             'infor',
-            'lista',
             'ordem',
+            'lista',
             'periodo',
             'qtd_por_mes',
         ]
