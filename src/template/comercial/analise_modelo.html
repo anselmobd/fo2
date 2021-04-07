@@ -87,7 +87,7 @@
     </div>
     <div id="param" class="tab-pane fade in active">
       {% if pode_gravar %}
-        <form class="" action="{% url 'comercial:analise_modelo' %}" method="post" onsubmit="return confirma_gravar();">
+        <form class="" action="" method="post" onsubmit="return confirma_gravar();">
       {% endif %}
         {% csrf_token %}
         {{ meta_form.non_field_errors }}

@@ -32,17 +32,17 @@ urlpatterns = [
 
     url(r'^analise_modelo_old/$',
         views.AnaliseModeloOld.as_view(),
-        name='analise_modelo'),
+        name='analise_modelo_old'),
     url(r'^analise_modelo_old/(?P<modelo>.+)/$',
         views.AnaliseModeloOld.as_view(),
-        name='analise_modelo__get'),
+        name='analise_modelo_old__get'),
 
-    url(r'^analise_modelo/$',
+    url(r'^define_meta/$',
         views.AnaliseModelo.as_view(),
-        name='analise_modelo_new'),
-    url(r'^analise_modelo/(?P<modelo>.+)/$',
+        name='define_meta'),
+    url(r'^define_meta/(?P<modelo>.+)/$',
         views.AnaliseModelo.as_view(),
-        name='analise_modelo_new__get'),
+        name='define_meta__get'),
 
     url(r'^ponderacao/$',
         views.estoque.Ponderacao.as_view(),
