@@ -30,17 +30,17 @@ urlpatterns = [
         views.VendasPorModelo.as_view(),
         name='vendas_por_modelo'),
 
-    url(r'^analise_modelo/$',
+    url(r'^analise_modelo_old/$',
         views.AnaliseModeloOld.as_view(),
         name='analise_modelo'),
-    url(r'^analise_modelo/(?P<modelo>.+)/$',
+    url(r'^analise_modelo_old/(?P<modelo>.+)/$',
         views.AnaliseModeloOld.as_view(),
         name='analise_modelo__get'),
 
-    url(r'^analise_modelo_new/$',
+    url(r'^analise_modelo/$',
         views.AnaliseModelo.as_view(),
         name='analise_modelo_new'),
-    url(r'^analise_modelo_new/(?P<modelo>.+)/$',
+    url(r'^analise_modelo/(?P<modelo>.+)/$',
         views.AnaliseModelo.as_view(),
         name='analise_modelo_new__get'),
 
