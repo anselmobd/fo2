@@ -6,7 +6,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
-from utils.functions import dec_month, dec_months
+from utils.functions import dec_month, dec_months, untuple_keys_concat
 from utils.views import totalize_data
 
 import comercial.forms as forms
@@ -124,6 +124,10 @@ class Vendas(O2BaseGetPostView):
 
         sum_fields = []
         if periodo_cols:
+            style = untuple_keys_concat({
+                tuple(range(2, 2+len(periodo_cols))): 'text-align: right;',
+            })
+
             for col in periodo_cols:
                 headers.append(col)
                 fields.append(queries.str2col_name(col))
@@ -133,11 +137,21 @@ class Vendas(O2BaseGetPostView):
             sum_fields += ['qtd']
             if infor == 'nf':
                 headers += ['Quantidade']
+                style = {
+                    3: 'text-align: right;',
+                }
             else:
                 headers += ['Total vendido']
                 if qtd_por_mes == 'm':
                     headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
                     fields += ['dt_max', 'dt_min', 'qtd_mes']
+                    style = untuple_keys_concat({
+                        tuple(range(2, 6)): 'text-align: right;',
+                    })
+                else:
+                    style = {
+                        2: 'text-align: right;',
+                    }
 
         if infor == 'nf':
             for row in data:
@@ -154,4 +168,5 @@ class Vendas(O2BaseGetPostView):
             'headers': headers,
             'fields': fields,
             'data': data,
+            'style': style,
         })
