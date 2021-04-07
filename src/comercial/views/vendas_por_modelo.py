@@ -44,7 +44,7 @@ class VendasPorModelo(O2BaseGetView):
                     'modelo': row['modelo'],
                     'modelo|TARGET': '_blank',
                     'modelo|LINK': reverse(
-                        'comercial:analise_modelo__get',
+                        'comercial:define_meta__get',
                         args=[row['modelo']]),
                     **zero_data_row
                 }
@@ -66,7 +66,7 @@ class VendasPorModelo(O2BaseGetView):
                         'modelo': row['modelo'],
                         'modelo|TARGET': '_blank',
                         'modelo|LINK': reverse(
-                            'comercial:analise_modelo__get',
+                            'comercial:define_meta__get',
                             args=[row['modelo']]),
                         **zero_data_row
                     }
