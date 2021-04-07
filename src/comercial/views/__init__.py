@@ -1,4 +1,5 @@
 from .analise_modelo import *
+from .analise_modelo_old import *
 from .estoque import *
 from .devolucao_para_meta import *
 from .faturamento_para_meta import *
