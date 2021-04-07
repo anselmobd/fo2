@@ -129,12 +129,15 @@ class Vendas(O2BaseGetPostView):
                 fields.append(queries.str2col_name(col))
                 sum_fields.append(queries.str2col_name(col))
         else:
-            headers += ['Quantidade']
             fields += ['qtd']
             sum_fields += ['qtd']
-            if qtd_por_mes == 'm' and infor != 'nf':
-                headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
-                fields += ['dt_max', 'dt_min', 'qtd_mes']
+            if infor == 'nf':
+                headers += ['Quantidade']
+            else:
+                headers += ['Total vendido']
+                if qtd_por_mes == 'm':
+                    headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
+                    fields += ['dt_max', 'dt_min', 'qtd_mes']
 
         if infor == 'nf':
             for row in data:
