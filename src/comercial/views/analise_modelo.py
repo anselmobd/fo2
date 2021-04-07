@@ -15,7 +15,6 @@ from utils.functions import dec_month, dec_months, safe_cast
 
 import produto.queries
 import lotes.views
-from produto.forms import ModeloBugForm
 
 import comercial.models as models
 import comercial.queries as queries
@@ -25,13 +24,12 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(AnaliseModelo, self).__init__(*args, **kwargs)
-        # self.Form_class = ModeloForm2
-        self.Form_class = ModeloBugForm
+        self.Form_class = ModeloForm2
         self.template_name = 'comercial/analise_modelo.html'
         self.title_name = 'Define meta de estoque'
-        self.get_args = ['modelo', 'rotina_calculo']
+        self.get_args = ['modelo']
 
-    def mount_context_modelo(self, modelo, zerados):
+    def mount_context_modelo(self, modelo):
         self.context.update({
             'modelo': modelo,
         })
@@ -76,8 +74,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='modelo', modelo=modelo,
-                zerados=zerados
+                colecao=None, cliente=None, por='modelo', modelo=modelo
                 )  # refs_incl=refs_incl, mult_incl=mult_incl)
             if len(data_periodo) == 0:
                 data_periodo = [{'modelo': modelo, 'qtd': 0}]
@@ -130,7 +127,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
                 data_periodo = queries.get_vendas(
                     self.cursor, ref=None, periodo=periodo['range'],
                     colecao=None, cliente=None, por='tam', modelo=modelo,
-                    order_qtd=False, zerados=zerados
+                    order_qtd=False
                     )  # , refs_incl=refs_incl, mult_incl=mult_incl)
             for row in data_periodo:
                 data_row = next(
@@ -233,8 +230,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             else:
                 data_periodo = queries.get_vendas(
                     self.cursor, ref=None, periodo=periodo['range'],
-                    colecao=None, cliente=None, por='cor', modelo=modelo,
-                    zerados=zerados
+                    colecao=None, cliente=None, por='cor', modelo=modelo
                     )  # refs_incl=refs_incl, mult_incl=mult_incl)
             for row in data_periodo:
                 data_row = next(
@@ -309,8 +305,7 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             else:
                 data_periodo = queries.get_vendas(
                     self.cursor, ref=None, periodo=periodo['range'],
-                    colecao=None, cliente=None, por='ref', modelo=modelo,
-                    zerados=zerados
+                    colecao=None, cliente=None, por='ref', modelo=modelo
                     )  # refs_incl=refs_incl, mult_incl=mult_incl)
             for row in data_periodo:
                 data_row = next(
@@ -524,7 +519,6 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
 
         modelo = self.form.cleaned_data['modelo']
-        rotina_calculo = self.form.cleaned_data['rotina_calculo']
         if 'grava' in self.request.POST:
             self.grava_meta()
 
@@ -574,4 +568,4 @@ class AnaliseModelo(LoginRequiredMixin, O2BaseGetPostView):
             len(self.periodos)+2: 'text-align: right;',
         }
 
-        self.mount_context_modelo(modelo, zerados=(rotina_calculo=="bug"))
+        self.mount_context_modelo(modelo)
