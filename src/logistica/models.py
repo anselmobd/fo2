@@ -28,7 +28,7 @@ class NotaFiscal(models.Model):
         null=True, blank=True,
         verbose_name='status')
     msg_status = models.CharField(
-        max_length=100, null=True, blank=True,
+        max_length=200, null=True, blank=True,
         verbose_name='status (descr.)')
     dest_cnpj = models.CharField(
         max_length=20, null=True, blank=True,
