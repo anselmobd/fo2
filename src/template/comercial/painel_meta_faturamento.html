@@ -350,9 +350,103 @@
   <script>
     var aguaDate = new Date('03/22/2021');
     var today = new Date();
+    var today_time = today.getTime()
     var dow = today.getDay();
     today.setHours(0, 0, 0, 0);
     var displayImg = false;
+
+    var cards = {
+      'com_vc': {
+        'dtde': new Date('04/08/2021'),
+        'dtate': new Date('04/09/2021'),
+        'cartaz': {
+          'path': '/media/rh/dicas/2021/04/com_vc_somos_mais',
+          'files': [
+            '01.jpg',
+            '02.jpg',
+            '03.jpg',
+            '04.jpg',
+            '05.jpg',
+            '06.jpg',
+            '07.jpg',
+            '08.jpg',
+            '09.jpg',
+            '10.jpg',
+            '11.jpg'
+          ]
+        },
+        'delay_file': 8000,
+        'n_loops': 5,
+      }
+    }
+
+    for (var name in cards) {
+      let card = cards[name];
+      showCard = (
+        today_time >= card['dtde'] &&
+        today_time <= card['dtate']
+      );
+
+      // selecionado para aparecer
+      if (showCard) {
+        let cartaz = card['cartaz'];
+        let delay_file = card['delay_file'];
+        let n_loops = card['n_loops'];
+        
+        let path = cartaz['path'];
+        let files = cartaz['files'];
+
+        var nimagens = files.length
+
+        // Cria divs e images
+        var els={}
+        for (var i = 1; i <= nimagens; i++) {
+          fname = files[i-1];
+
+          var eldiv = document.createElement('div');
+          eldiv.id = name+"d"+i;
+          eldiv.classList.add("overlay");
+
+          var elimg = document.createElement('img');
+          elimg.id = name+"i"+i;
+          elimg.classList.add("cartaz");
+          elimg.src = path+'/'+fname;
+
+          eldiv.appendChild(elimg);
+          document.body.appendChild(eldiv);
+
+          els[i] = eldiv;
+        }
+
+        var chave_imagens = 0;
+
+        function mostra_imagem() {
+          let imgloop = chave_imagens % (nimagens+1)
+
+          for (var key = 1; key <= nimagens; key++) {
+            if (key == imgloop) {
+              els[key].style.visibility = 'visible';
+            } else {
+              els[key].style.visibility = 'hidden';
+            }
+          }
+
+          if ( imgloop == 0) {
+            var demora = 675000/n_loops - delay_file*nimagens;
+          } else {
+            var demora = delay_file;
+          }
+
+          window.setTimeout(function () {
+            mostra_imagem();
+          }, demora);
+          chave_imagens += 1;
+        }
+
+        mostra_imagem();
+        displayImg = true;
+      }
+    }
 
     var pascoaDateIni = new Date('03/31/2021');
     var pascoaDateFim = new Date('04/04/2021');
