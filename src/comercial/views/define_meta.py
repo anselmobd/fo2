@@ -71,13 +71,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         zero_data_row = {p['range']: 0 for p in self.periodos}
         zero_data_row['qtd'] = 0
         for periodo in self.periodos:
-            # print(periodo['range'])
-            # data_periodo = queries.get_vendas(
-            #     self.cursor, ref=None, periodo=periodo['range'],
-            #     colecao=None, cliente=None, por='modelo', modelo=modelo, zerados=False
-            #     )  # refs_incl=refs_incl, mult_incl=mult_incl)
-            # pprint(data_periodo)
-
             av = queries.AnaliseVendas(
                 self.cursor,
                 ref=None,
@@ -88,13 +81,11 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 qtd_por_mes=False,
                 com_venda=False)
             data_ = av.data
-            # pprint(data_)
 
             data_periodo = [{
                 'modelo': data_[0]['modelo'],
                 'qtd': data_[0]['fp'],
             }]
-            # pprint(data_periodo)
 
             if len(data_periodo) == 0:
                 data_periodo = [{'modelo': modelo, 'qtd': 0}]
@@ -144,12 +135,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                         {'tam': row_tam['TAM'], 'qtd': 0}
                     )
             else:
-                # data_periodo = queries.get_vendas(
-                #     self.cursor, ref=None, periodo=periodo['range'],
-                #     colecao=None, cliente=None, por='tam', modelo=modelo,
-                #     order_qtd=False
-                #     )  # , refs_incl=refs_incl, mult_incl=mult_incl)
-
                 av = queries.AnaliseVendas(
                     self.cursor,
                     ref=None,
@@ -160,7 +145,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     qtd_por_mes=False,
                     com_venda=False)
                 data_ = av.data
-                # pprint(data_)
 
                 data_periodo = []
                 for row in data_:
@@ -268,11 +252,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                         {'cor': row_tam['COR'], 'qtd': 0}
                     )
             else:
-                # data_periodo = queries.get_vendas(
-                #     self.cursor, ref=None, periodo=periodo['range'],
-                #     colecao=None, cliente=None, por='cor', modelo=modelo
-                #     )  # refs_incl=refs_incl, mult_incl=mult_incl)
-
                 av = queries.AnaliseVendas(
                     self.cursor,
                     ref=None,
@@ -283,7 +262,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     qtd_por_mes=False,
                     com_venda=False)
                 data_ = av.data
-                # pprint(data_)
 
                 data_periodo = []
                 for row in data_:
@@ -362,11 +340,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                         {'ref': row_tam['REF'], 'qtd': 0}
                     )
             else:
-                # data_periodo = queries.get_vendas(
-                #     self.cursor, ref=None, periodo=periodo['range'],
-                #     colecao=None, cliente=None, por='ref', modelo=modelo
-                #     )  # refs_incl=refs_incl, mult_incl=mult_incl)
-
                 av = queries.AnaliseVendas(
                     self.cursor,
                     ref=None,
@@ -377,7 +350,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     qtd_por_mes=False,
                     com_venda=False)
                 data_ = av.data
-                # pprint(data_)
 
                 data_periodo = []
                 for row in data_:
