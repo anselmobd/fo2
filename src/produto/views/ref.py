@@ -144,6 +144,8 @@ class Ref(View):
                 if row['TAM'] != '000' or row['COR'] != '000000':
                     conta_tam_cor += 1
                 if row['REF'] != '-':
+                    ref_list = list(set(row['REF'].split(', ')))
+                    row['REF'] = ', '.join(ref_list)
                     conta_ref += 1
                     row['REF'] = re.sub(
                         r'([A-Z0-9]+)',
