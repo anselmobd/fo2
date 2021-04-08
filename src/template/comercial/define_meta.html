@@ -1,0 +1,500 @@
+{% extends 'comercial/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'comercial:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% load l10n %}
+{% load humanize %}
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+.number {
+  text-align: right;
+}
+.total {
+  font-weight: bold;
+}
+.ponderado {
+  color: blue;
+}
+.meta {
+  color: green;
+}
+.aviso {
+  color: orange;
+  font-weight: bold;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+  </form>
+  <a href="{% url 'comercial:vendas_por_modelo' %}" target="_blank">Vendas por modelo</a>
+  {% if modelo %}
+    <h4>Modelo {{ modelo }}</h4>
+  {% endif %}
+  {% if msg_erro %}
+    <h4>{{ msg_erro }}</h4>
+  {% endif %}
+  {% if modelo_ponderado %}
+  <ul class="nav nav-tabs" id="myTab">
+    <li><a data-toggle="tab" href="#vendas">Vendas</a></li>
+    <li class="active"><a data-toggle="tab" href="#param">Meta de estoque</a></li>
+    <li><a data-toggle="tab" href="#referencias">Referências</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="vendas" class="tab-pane fade">
+      {% if modelo_ponderado %}
+        {% if modelo_ponderado.data %}
+          <h4>Vendas do modelo</h4>
+          <table>
+            {% include "layout/thead_generic.html" with data=modelo_ponderado.headers style=modelo_ponderado.style only %}
+            {% include "layout/tbody_generic.html" with fields=modelo_ponderado.fields data=modelo_ponderado.data style=modelo_ponderado.style only %}
+          </table>
+        {% endif %}
+      {% endif %}
+      {% if tamanho_ponderado %}
+        {% if tamanho_ponderado.data %}
+          <h4>Vendas por tamanho</h4>
+          <table>
+            {% include "layout/thead_generic.html" with data=tamanho_ponderado.headers style=tamanho_ponderado.style only %}
+            {% include "layout/tbody_generic.html" with fields=tamanho_ponderado.fields data=tamanho_ponderado.data style=tamanho_ponderado.style only %}
+          </table>
+        {% endif %}
+      {% endif %}
+      {% if cor_ponderada %}
+        {% if cor_ponderada.data %}
+          <h4>Vendas por cor</h4>
+          <table>
+            {% include "layout/thead_generic.html" with data=cor_ponderada.headers style=cor_ponderada.style only %}
+            {% include "layout/tbody_generic.html" with fields=cor_ponderada.fields data=cor_ponderada.data style=cor_ponderada.style only %}
+          </table>
+        {% endif %}
+      {% endif %}
+      {% if por_ref %}
+        {% if por_ref.data %}
+          <h4>Vendas por referência</h4>
+          <table>
+            {% include "layout/thead_generic.html" with data=por_ref.headers style=por_ref.style only %}
+            {% include "layout/tbody_generic.html" with fields=por_ref.fields data=por_ref.data style=por_ref.style only %}
+          </table>
+        {% endif %}
+      {% endif %}
+    </div>
+    <div id="param" class="tab-pane fade in active">
+      {% if pode_gravar %}
+        <form class="" action="" method="post" onsubmit="return confirma_gravar();">
+      {% endif %}
+        {% csrf_token %}
+        {{ meta_form.non_field_errors }}
+        {{ meta_form.modelo }}
+        {{ meta_form.meta_estoque }}
+        {{ meta_form.str_tamanhos }}
+        <h4>Parâmetros para cálculo da grade da meta de estoque</h4>
+        {{ meta_form.venda.label_tag }}
+        <span class="ponderado">(Ponderado: {{pond_venda_mensal}})</span>
+        {% if meta_venda_mensal %}
+          <span class="meta">(Meta gravada: {{ meta_venda_mensal }})</span>
+        {% endif %}
+        {{ meta_form.venda }}<br />
+        {{ meta_form.multiplicador.label_tag }}
+        ({{pond_multiplicador}})
+        {% if meta_multiplicador %}
+          <span class="meta">({{ meta_multiplicador }})</span>
+        {% endif %}
+        {{ meta_form.multiplicador }}<br />
+        <label>Meta de estoque</label>
+        <ul>
+          <li><label>Cálculo direto:</label> <span id="id_estoque_ideal_cru">0</span></li>
+          <li><label>Múltiplo da grade de tamanhos:</label> <span id="id_estoque_ideal_tam">0</span> (<span id="id_qtd_grade_tamanhos">0</span> packs)</li>
+          <li><label>Meta de estoque (considerando a distribuição de cores):</label>
+            <span id="id_estoque_ideal_cor" style="color: red; font-weight: bold;">0</span> (<span id="id_qtd_grade_tam_cor">0</span> pack)
+            {% if meta_meta_estoque %}
+              <span class="meta">({{ meta_meta_estoque }})</span>
+            {% endif %}
+          </li>
+        </ul>
+
+        <table class="layout">
+          <tr>
+            <td style="vertical-align: top;">
+
+              {% if tam_form %}
+                <h4>Grade de tamanhos (pack)</h4>
+                {% for field in tam_form %}
+                    <div class="fieldWrapper">
+                        {{ field.errors }}
+                        {{ field.label_tag }}
+                        <span class="ponderado">({{ pond_grade_tamanhos|get_item:field.html_name }})</span>
+                        {% if meta_grade_tamanhos %}
+                          <span class="meta">({% spaceless %}
+                            {% if field.html_name in meta_grade_tamanhos %}
+                              {{ meta_grade_tamanhos|get_item:field.html_name }}
+                            {% else %}
+                              0
+                            {% endif %}
+                            {% endspaceless %})</span>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <label>Quantidade total do pack:</label> <span id="id_tot_grade_tamanhos">0</span>
+              {% endif %}
+
+            </td>
+            <td></td>
+            <td style="border-left: thin solid lightgrey;"></td>
+            <td style="vertical-align: top;">
+
+              {% if cor_form %}
+              <h4>Distribuição das cores</h4>
+                {% for field in cor_form %}
+                    <div class="fieldWrapper">
+                        {{ field.errors }}
+                        {{ field.label_tag }}
+                        <span class="ponderado">({{ pond_grade_cores|get_item:field.html_name }})</span>
+                        {% if meta_grade_cores %}
+                          <span class="meta">({% spaceless %}
+                            {% if field.html_name in meta_grade_cores %}
+                              {{ meta_grade_cores|get_item:field.html_name }}
+                            {% else %}
+                              0
+                            {% endif %}
+                            {% endspaceless %})</span>
+                        {% endif %}
+                        {{ field }} (<span id="id_lotes_{{ field.html_name }}">{{ field.html_name }}</span> packs)
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <label>Quantidade total da distribuição:</label> <span id="id_tot_grade_cores">0</span>
+              {% endif %}
+
+            </td>
+          </tr>
+        </table>
+
+      {% if pode_gravar %}
+        <input type="submit" name="grava" value="Grava definição"/>
+        </form>
+      {% else %}
+        <p class="aviso">[Somente pessoal autorizado pode gravar parâmetros de meta de estoque!]</p>
+      {% endif %}
+
+      <h4>Grade por cor e tamanho</h4>
+      <table id="t_grade">
+        <thead>
+          <tr>
+            <th>Cor/Tamanho</th>
+            {% for tam in tamanho_ponderado.data %}
+              <th class="number">{{ tam.tam }}</th>
+            {% endfor %}
+            <th class="number total">Totais</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cor in cor_ponderada.data %}
+            <tr>
+              <td>{{ cor.cor }}</td>
+              {% for tam in tamanho_ponderado.data %}
+                <td id="item_{{ tam.tam }}_{{ cor.cor }}" class="number">0</td>
+              {% endfor %}
+              <td id="tot_cor_{{ cor.cor }}" class="number total">0</td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td class="total">Totais</td>
+            {% for tam in tamanho_ponderado.data %}
+              <td id="tot_tam_{{ tam.tam }}" class="number total">0</td>
+            {% endfor %}
+            <td id="tot_tam_cor" class="number total">0</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div id="referencias" class="tab-pane fade">
+      <table class="layout">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;">
+              <h4>Referências automaticamente consideradas</h4>
+              {% if referencias %}
+                {% if referencias.data %}
+                  <table>
+                    {% include "layout/thead_generic.html" with data=referencias.headers style=referencias.style only %}
+                    {% include "layout/tbody_generic.html" with fields=referencias.fields data=referencias.data style=referencias.style only %}
+                  </table>
+                {% endif %}
+              {% endif %}
+            </td>
+            <td style="vertical-align: top;">
+              <h4>Referências adicionadas</h4>
+              {% if adicionadas %}
+                {% if adicionadas.data %}
+                  <table>
+                    {% include "layout/thead_generic.html" with data=adicionadas.headers style=adicionadas.style only %}
+                    {% include "layout/tbody_generic.html" with fields=adicionadas.fields data=adicionadas.data style=adicionadas.style only %}
+                  </table>
+                {% endif %}
+              {% else %}
+                  <h5>Nenhuma</h5>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block javascript %}
+{% block javascript.pos %}
+<script >
+
+  function confirma_gravar() {
+    opcao = prompt("Digite S para gravar valores");
+    if ( opcao == "" ) {
+      return false;
+    }
+    var pos = "sS".indexOf( opcao );
+    if ( pos > -1 ) {
+      return true;
+    }
+    return false;
+  }
+
+  const tot_arr = arr => arr.reduce((a,b) => a + b, 0);
+
+  function tot_dict(dic) {
+    var tot = 0;
+    for (key in dic) {
+      tot = tot + dic[key];
+    }
+    return tot;
+  }
+
+  var dict_tamanhos = {
+    {% for tam in tamanho_ponderado.data %}
+      {% if forloop.counter != 1 %}, {% endif %}"{{ tam.tam }}": {{ tam.grade }}
+    {% endfor %}
+  };
+  var tot_grade_tamanhos = 0;
+
+  var dict_cores = {
+    {% for cor in cor_ponderada.data %}
+      {% if forloop.counter != 1 %}, {% endif %}"{{ cor.cor }}": {{ cor.distr }}
+    {% endfor %}
+  };
+  var tot_grade_cores = 0;
+
+  var venda_mensal = 0;
+  var multiplicador = 0;
+  var estoque_ideal_cru = 0;
+  var estoque_ideal_tam = 0;
+  var estoque_ideal_cor = 0;
+  var qtd_grade_tamanhos = 0;
+  var grades_por_cor = {};
+
+  function fields_to_vars() {
+    var valor
+
+    valor = document.getElementById('id_venda').value;
+    valor = parseInt(valor);
+    if ( !isNaN(valor) ) {
+      if ( valor >= 0 ) {
+        venda_mensal = valor;
+      }
+    }
+
+    valor = document.getElementById('id_multiplicador').value;
+    valor = parseFloat(valor);
+    if ( !isNaN(valor) ) {
+      if ( valor >= 0 ) {
+        multiplicador = valor;
+      }
+    }
+
+    for (key in dict_tamanhos) {
+      valor = document.getElementById('id_tam_'+key).value;
+      valor = parseInt(valor);
+      if ( !isNaN(valor) ) {
+        if ( valor >= 0 ) {
+          dict_tamanhos[key] = valor;
+        }
+      }
+    }
+
+    for (key in dict_cores) {
+      valor = document.getElementById('id_cor_'+key).value;
+      valor = parseInt(valor);
+      if ( !isNaN(valor) ) {
+        if ( valor >= 0 ) {
+          dict_cores[key] = valor;
+        }
+      }
+    }
+  }
+
+  // fields_to_vars();
+
+  function calc_tot_grade_tamanho() {
+    var e_tot_grade_tamanhos = document.getElementById('id_tot_grade_tamanhos');
+    tot_grade_tamanhos = tot_dict(dict_tamanhos);
+    e_tot_grade_tamanhos.innerText = tot_grade_tamanhos;
+  }
+
+  // calc_tot_grade_tamanho();
+
+  function calc_estoque() {
+    var e_estoque_ideal_cru = document.getElementById('id_estoque_ideal_cru');
+    var e_estoque_ideal_tam = document.getElementById('id_estoque_ideal_tam');
+    var e_qtd_grade_tamanhos = document.getElementById('id_qtd_grade_tamanhos');
+    estoque_ideal_cru = Math.round(venda_mensal * multiplicador *100)/100;
+    if (tot_grade_tamanhos == 0) {
+      resto = estoque_ideal_cru;
+    } else {
+      resto = estoque_ideal_cru % tot_grade_tamanhos;
+    }
+    if ( resto == 0 ) {
+      estoque_ideal_tam = estoque_ideal_cru;
+    } else {
+      estoque_ideal_tam = estoque_ideal_cru + tot_grade_tamanhos - resto;
+    }
+    if (tot_grade_tamanhos == 0) {
+      qtd_grade_tamanhos = estoque_ideal_tam;
+    } else {
+      qtd_grade_tamanhos = estoque_ideal_tam / tot_grade_tamanhos;
+    }
+    e_estoque_ideal_cru.innerText = Number(estoque_ideal_cru).toLocaleString('pt-BR');
+    e_estoque_ideal_tam.innerText = Number(estoque_ideal_tam).toLocaleString('pt-BR');
+    e_qtd_grade_tamanhos.innerText = Number(qtd_grade_tamanhos).toLocaleString('pt-BR');
+  }
+
+  // calc_estoque();
+
+  function calc_tot_grade_cor() {
+    var e_tot_grade_cores = document.getElementById('id_tot_grade_cores');
+    var e_estoque_ideal_cor = document.getElementById('id_estoque_ideal_cor');
+    var e_input_meta_estoque = document.getElementById('id_meta_estoque');
+    var e_qtd_grade_tam_cor = document.getElementById('id_qtd_grade_tam_cor');
+    tot_grade_cores = tot_dict(dict_cores);
+    e_tot_grade_cores.innerText = tot_grade_cores;
+    grades_por_cor = {};
+    tot_grades_por_cor = 0;
+    for (key in dict_cores) {
+      var e_grades_por_1_cor = document.getElementById('id_lotes_cor_'+key);
+      if (tot_grade_cores == 0) {
+        qtd_grades_cor = 0;
+      } else {
+        qtd_grades_cor = Math.round(qtd_grade_tamanhos / tot_grade_cores * dict_cores[key]);
+      }
+      grades_por_cor[key] = qtd_grades_cor;
+      tot_grades_por_cor = tot_grades_por_cor + qtd_grades_cor;
+      e_grades_por_1_cor.innerText = Number(qtd_grades_cor).toLocaleString('pt-BR');
+    }
+    estoque_ideal_cor = tot_grades_por_cor * tot_grade_tamanhos;
+    e_estoque_ideal_cor.innerText = Number(estoque_ideal_cor).toLocaleString('pt-BR');
+    e_input_meta_estoque.value = estoque_ideal_cor;
+    e_qtd_grade_tam_cor.innerText = Number(tot_grades_por_cor).toLocaleString('pt-BR');
+  }
+
+  // calc_tot_grade_cor();
+
+  function calc_grade() {
+    var table = document.getElementById('t_grade'),
+    rows = table.rows, rowcount = rows.length, r,
+    cells, cellcount, c, cell;
+    for( r=0; r<rowcount; r++) {
+      cells = rows[r].cells;
+      cellcount = cells.length;
+      for( c=0; c<cellcount; c++) {
+        cell = cells[c];
+        if ( cell.id.startsWith('item_') ) {
+          cell_id = cell.id.split('_');
+          cod_cor = cell_id[2];
+          cod_tam = cell_id[1];
+          valor = grades_por_cor[cod_cor] * dict_tamanhos[cod_tam];
+          cell.innerHTML = Number(valor).toLocaleString('pt-BR');
+        }
+      }
+    }
+
+    var total_tam = {};
+    for (cod_tam in dict_tamanhos) {
+      total_tam[cod_tam] = 0;
+    }
+    for (cod_cor in grades_por_cor) {
+      var e_cell;
+      var total_cor = 0;
+      for (cod_tam in dict_tamanhos) {
+        e_cell = document.getElementById('item_'+cod_tam+'_'+cod_cor);
+        valor = parseInt(e_cell.innerHTML.replace(/\./g, ""));
+        total_cor = total_cor + valor;
+        total_tam[cod_tam] = total_tam[cod_tam] + valor;
+      }
+      e_cell = document.getElementById('tot_cor_'+cod_cor);
+      e_cell.innerHTML = Number(total_cor).toLocaleString('pt-BR');
+    }
+    var total_tam_cor = 0;
+    for (cod_tam in dict_tamanhos) {
+      e_cell = document.getElementById('tot_tam_'+cod_tam);
+      e_cell.innerHTML = Number(total_tam[cod_tam]).toLocaleString('pt-BR');
+      total_tam_cor = total_tam_cor + total_tam[cod_tam];
+    }
+    e_cell = document.getElementById('tot_tam_cor');
+    e_cell.innerHTML = Number(total_tam_cor).toLocaleString('pt-BR');
+
+  }
+
+  // calc_grade();
+
+  function calc_tudo() {
+    fields_to_vars();
+    calc_tot_grade_tamanho();
+    calc_estoque();
+    calc_tot_grade_cor();
+    calc_grade();
+  }
+
+  $(document).ready(function() {
+    calc_tudo();
+
+    var inputbox = $("#{{meta_form.multiplicador.id_for_label}}");
+    inputbox.on('change', calc_tudo);
+    inputbox.on('keyup', calc_tudo);
+    inputbox.on('paste', calc_tudo);
+
+    var inputbox = $("#{{meta_form.venda.id_for_label}}");
+    inputbox.on('change', calc_tudo);
+    inputbox.on('keyup', calc_tudo);
+    inputbox.on('paste', calc_tudo);
+
+    for (key in dict_cores) {
+      var inputbox = $("#id_cor_"+key);
+      inputbox.on('change', calc_tudo);
+      inputbox.on('keyup', calc_tudo);
+      inputbox.on('paste', calc_tudo);
+    }
+
+    for (key in dict_tamanhos) {
+      var inputbox = $("#id_tam_"+key);
+      inputbox.on('change', calc_tudo);
+      inputbox.on('keyup', calc_tudo);
+      inputbox.on('paste', calc_tudo);
+    }
+  });
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}
