@@ -332,21 +332,6 @@
   <div class="overlay" id="agua2">
     <img class="cartaz" id="agua2_gif" src="/media/rh/campanhas/2021/03/22_agua/agua2.gif" alt="agua2">
   </div>
-  <div class="overlay" id="pascoad1">
-    <img class="cartaz" id="pascoag1" src="/media/rh/datas_comemorativas/2021/04/04-pascoa/1.jpg">
-  </div>
-  <div class="overlay" id="pascoad2">
-    <img class="cartaz" id="pascoag2" src="/media/rh/datas_comemorativas/2021/04/04-pascoa/2.jpg">
-  </div>
-  <div class="overlay" id="pascoad3">
-    <img class="cartaz" id="pascoag3" src="/media/rh/datas_comemorativas/2021/04/04-pascoa/3.jpg">
-  </div>
-  <div class="overlay" id="pascoad4">
-    <img class="cartaz" id="pascoag4" src="/media/rh/datas_comemorativas/2021/04/04-pascoa/4.jpg">
-  </div>
-  <div class="overlay" id="pascoad5">
-    <img class="cartaz" id="pascoag5" src="/media/rh/datas_comemorativas/2021/04/04-pascoa/5.jpg">
-  </div>
   <script>
     var aguaDate = new Date('03/22/2021');
     var today = new Date();
@@ -446,50 +431,6 @@
         mostra_imagem();
         displayImg = true;
       }
-    }
-
-    var pascoaDateIni = new Date('03/31/2021');
-    var pascoaDateFim = new Date('04/04/2021');
-    showPascoa = (
-      today.getTime() >= pascoaDateIni.getTime() &&
-      today.getTime() <= pascoaDateFim.getTime()
-    )
-    if (showPascoa && !displayImg) {
-      console.log('pascoa');
-      var chave_meta = 0;
-
-      var els={}
-      for (i = 1; i <= 5; i++) {
-       els[i] = {
-          'd': document.getElementById('pascoad'+i),
-          'g': document.getElementById('pascoag'+i),
-        };
-      }
-
-      function mostra_imagem() {
-        imgloop = chave_meta % 6
-        Object.keys(els).forEach(
-          function (key) {
-            if (key == imgloop) {
-              els[key]['d'].style.visibility = 'visible';
-            } else {
-              els[key]['d'].style.visibility = 'hidden';
-            }
-          }
-        )
-        if ( imgloop == 0) {
-          var demora = 13100
-        } else {
-          var demora = 4000
-        }
-        window.setTimeout(function () {
-          mostra_imagem();
-        }, demora);
-        chave_meta += 1;
-      }
-
-      mostra_imagem();
-      displayImg = true;
     }
 
     if ( ((dow == 2) || (dow == 4)) && !displayImg) {
