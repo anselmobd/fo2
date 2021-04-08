@@ -38,10 +38,10 @@ urlpatterns = [
         name='analise_modelo_old__get'),
 
     url(r'^define_meta/$',
-        views.AnaliseModelo.as_view(),
+        views.DefineMeta.as_view(),
         name='define_meta'),
     url(r'^define_meta/(?P<modelo>.+)/$',
-        views.AnaliseModelo.as_view(),
+        views.DefineMeta.as_view(),
         name='define_meta__get'),
 
     url(r'^ponderacao/$',
