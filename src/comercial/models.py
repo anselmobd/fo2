@@ -52,13 +52,10 @@ class MetaModeloReferencia(models.Model):
         max_length=1,
         verbose_name='Inclui/Exclui',
     )
-    multiplicador = models.IntegerField(
-        default=1,
-    )
 
     def __str__(self):
         incl_excl = "Inclui" if self.incl_excl == 'i' else "Exclui"
-        return f'{self.modelo} - {incl_excl} {self.referencia} (x{self.multiplicador})'
+        return f'{self.modelo} - {incl_excl} {self.referencia}'
 
     class Meta:
         db_table = "fo2_meta_mod_ref"

@@ -54,18 +54,17 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         ref_incl = models.MetaModeloReferencia.objects.filter(
             modelo=modelo,
             incl_excl='i',
-        ).values('referencia', 'multiplicador')
+        ).values('referencia')
         if len(ref_incl) == 0:
             refs_incl = None
             mult_incl = None
         else:
             self.context['adicionadas'] = {
-                'headers': ['Referência', 'Multiplicador'],
-                'fields': ['referencia', 'multiplicador'],
+                'headers': ['Referência'],
+                'fields': ['referencia'],
                 'data': ref_incl,
             }
             refs_incl = tuple([r['referencia'] for r in ref_incl])
-            mult_incl = tuple([r['multiplicador'] for r in ref_incl])
 
         # vendas do modelo
         data = []
