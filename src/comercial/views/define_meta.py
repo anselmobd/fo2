@@ -25,7 +25,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(DefineMeta, self).__init__(*args, **kwargs)
         self.Form_class = ModeloForm2
-        self.template_name = 'comercial/analise_modelo.html'
+        self.template_name = 'comercial/define_meta.html'
         self.title_name = 'Define meta de estoque'
         self.get_args = ['modelo']
 
