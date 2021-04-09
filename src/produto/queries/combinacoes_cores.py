@@ -60,7 +60,10 @@ def combinacoes_cores(cursor, ref, alt):
           THEN coc.ITEM_ITEM
           ELSE icor.ITEM_ESTRUTURA
           END
-        , e.SEQUENCIA
+        , CASE WHEN e.ITEM_COMP = '000000'
+          THEN coc.ITEM_COMP
+          ELSE e.ITEM_COMP
+          END
     """
     cursor.execute(sql, [ref, alt])
     return rows_to_dict_list(cursor)
