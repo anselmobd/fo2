@@ -1,3 +1,4 @@
+import numpy as np
 from datetime import datetime, date
 from itertools import product
 from pprint import pprint
@@ -12,6 +13,7 @@ from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView
 from geral.functions import has_permission
 from utils.functions import dec_month, dec_months, safe_cast
+from utils.functions.strings import join_non_empty
 
 import produto.queries
 import lotes.views
@@ -54,7 +56,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         ref_incl = models.MetaModeloReferencia.objects.filter(
             modelo=modelo,
             incl_excl='i',
-        ).values('referencia')
+        ).order_by('referencia').values('referencia')
         if len(ref_incl) != 0:
 
             for ref in ref_incl:
@@ -92,12 +94,39 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                         cores_list.append(f"{cor} = {cor1}")
 
 
-                    alt_cores_list.append('; '.join(cores_list))
-                cores = list(set(alt_cores_list))
-                if len(cores) == 1:
-                    ref['info'] = cores[0]
+                    alt_cores_list.append(cores_list)
+
+                len_alt_cores = 0
+                len_alt_cores_err = False
+                for alt_cores in alt_cores_list:
+                    if len_alt_cores == 0:
+                        len_alt_cores = len(alt_cores)
+                    else:
+                        len_alt_cores_err = len_alt_cores_err or len_alt_cores != len(alt_cores)
+
+                if len_alt_cores_err:
+                    ref['info'] = 'ERRO: Alternativas com número de cores diferentes'
                 else:
-                    ref['info'] = 'ERRO: ' + ' DIFERE DE '.join(cores)
+                    alt_cores_arr = np.array(alt_cores_list)
+                    alt_cores_arr_t = alt_cores_arr.transpose()
+                    cores_ok = []
+                    cores_err = []
+                    for alt_cores_vet in alt_cores_arr_t:
+                        alt_cores_set = list(set(alt_cores_vet))
+                        if len(alt_cores_set) == 1:
+                            cores_ok.append(alt_cores_set[0])
+                        else:
+                            cores_err.append(alt_cores_set)
+
+                    ref['info'] = ''
+                    if len(cores_err) != 0:
+                        ref['info'] = 'ERRO: '
+                        for cor_err in cores_err:
+                            ref['info'] += ' DIFERE DE '.join(cor_err)
+                    ref['info'] += join_non_empty(
+                        '; ',
+                        [ref['info'], '; '.join(cores_ok)]
+                    )
 
             self.context['adicionadas'] = {
                 'headers': ['Referência', 'Informações'],
