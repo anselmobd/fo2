@@ -56,7 +56,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             modelo=modelo,
             incl_excl='i',
         ).values('referencia')
-        if len(ref_incl) == 0:
+        if len(ref_incl) != 0:
 
             for ref in ref_incl:
                 # print(ref['referencia'])
