@@ -1,5 +1,6 @@
 from .busca_modelo import *
 from .colecoes_de_modelo import *
+from .combinacoes_cores import *
 from .custo_item import *
 from .item_componentes import *
 from .gtin import *
