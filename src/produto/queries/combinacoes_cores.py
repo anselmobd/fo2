@@ -13,25 +13,25 @@ def combinacoes_cores(cursor, ref, alt):
           FROM BASI_010 i -- item
         )
         SELECT 
-          e.ALTERNATIVA_ITEM
-        , e.SEQUENCIA
+          e.ALTERNATIVA_ITEM ALT
+        -- , e.SEQUENCIA
         --, e.NIVEL_ITEM 
         --, e.GRUPO_ITEM 
         --, e.SUB_ITEM 
-        , e.ITEM_ITEM 
+        -- , e.ITEM_ITEM 
         --, e.NIVEL_COMP
         --, e.GRUPO_COMP
         --, e.SUB_COMP 
-        , e.ITEM_COMP
+        -- , e.ITEM_COMP
         , CASE WHEN e.ITEM_COMP = '000000'
           THEN coc.ITEM_ITEM
           ELSE icor.ITEM_ESTRUTURA
-          END ITEM_ITEM
-        , e.CONSUMO
+          END COR_ITEM
+        , TRUNC(e.CONSUMO) CONSUMO
         , CASE WHEN e.ITEM_COMP = '000000'
           THEN coc.ITEM_COMP
           ELSE e.ITEM_COMP
-          END ITEM_COMP
+          END COR_COMP
         --, e.*
         FROM BASI_050 e
         LEFT JOIN BASI_040 coc -- combinação cor
