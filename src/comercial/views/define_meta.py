@@ -1,6 +1,7 @@
-from pprint import pprint
+from collections import Counter
 from datetime import datetime, date
 from itertools import product
+from pprint import pprint
 
 from django import forms
 from django.db.models import Exists, OuterRef
@@ -57,11 +58,54 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         ).values('referencia')
         if len(ref_incl) == 0:
             refs_incl = None
-            mult_incl = None
         else:
+
+            for ref in ref_incl:
+
+                alternativas = produto.queries.ref_estruturas(
+                    self.cursor, ref['referencia'])
+                alt_cores_list = []
+                for alternativa in alternativas:
+                    print(ref['referencia'])
+
+                    estrutura = produto.queries.ref_estrutura_comp(
+                        self.cursor, ref['referencia'], alternativa['ALTERNATIVA'])
+
+                    alt_cores = {}
+                    for row in estrutura:
+                        if row['NIVEL'] == '1':
+                            cor_insumo = row['COR'] 
+                            cor_list = cor_insumo.split(' -> ')
+                            if row['COR_REF'] == '000000' and len(cor_list) == 2:
+                                ref_cor = cor_list[0]
+                                comp_cor = cor_list[1]
+                            else:
+                                ref_cor = row['COR_REF']
+                                comp_cor = row['COR']
+                            if ref_cor not in alt_cores:
+                                alt_cores[ref_cor] = []
+                            for i in range(int(row['CONSUMO'])):
+                                alt_cores[ref_cor].append(comp_cor)
+
+                    cores_list = []
+                    for cor in alt_cores:
+                        conta = dict(Counter(alt_cores[cor]))
+                        cor1_list = []
+                        for item in conta:
+                            cor1_list.append(f"{conta[item]} {item}")
+                        cor1 = ' + '.join(cor1_list)
+                        cores_list.append(f"{cor} = {cor1}")
+
+                    alt_cores_list.append(' ; '.join(cores_list))
+                cores = list(set(alt_cores_list))
+                if len(cores) == 1:
+                    ref['info'] = cores[0]
+                else:
+                    ref['info'] = 'ERRO: ' + ' <> '.join(cores)
+
             self.context['adicionadas'] = {
-                'headers': ['Referência'],
-                'fields': ['referencia'],
+                'headers': ['Referência', 'Informações'],
+                'fields': ['referencia', 'info'],
                 'data': ref_incl,
             }
             refs_incl = tuple([r['referencia'] for r in ref_incl])
