@@ -75,9 +75,9 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     for row in estrutura:
                         for i in range(int(row['CONSUMO'])):
                             try:
-                                alt_cores[row['ITEM_ITEM']].append(row['ITEM_COMP'])
+                                alt_cores[row['COR_ITEM']].append(row['COR_COMP'])
                             except KeyError:
-                                alt_cores[row['ITEM_ITEM']] = [row['ITEM_COMP']]
+                                alt_cores[row['COR_ITEM']] = [row['COR_COMP']]
 
                     cores_list = []
                     for cor in alt_cores:
