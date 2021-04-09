@@ -1,4 +1,3 @@
-from collections import Counter
 from datetime import datetime, date
 from itertools import product
 from pprint import pprint
@@ -59,8 +58,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if len(ref_incl) != 0:
 
             for ref in ref_incl:
-                # print(ref['referencia'])
-
                 alternativas = produto.queries.ref_estruturas(
                     self.cursor, ref['referencia'])
                 alternativas = list(set([alt['ALTERNATIVA'] for alt in alternativas]))
@@ -69,19 +66,24 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 for alternativa in alternativas:
                     estrutura = produto.queries.combinacoes_cores(
                         self.cursor, ref['referencia'], alternativa)
-                    # pprint(estrutura)
 
                     alt_cores = {}
                     for row in estrutura:
-                        for i in range(int(row['CONSUMO'])):
-                            try:
-                                alt_cores[row['COR_ITEM']].append(row['COR_COMP'])
-                            except KeyError:
-                                alt_cores[row['COR_ITEM']] = [row['COR_COMP']]
+                        cor_item = row['COR_ITEM'].lstrip("0")
+                        cor_comp = row['COR_COMP'].lstrip("0")
+                        try:
+                            alt_cor = alt_cores[cor_item]
+                        except KeyError:
+                            alt_cores[cor_item] = {}
+                            alt_cor = alt_cores[cor_item]
+                        try:
+                            alt_cor[cor_comp] += row['CONSUMO']
+                        except KeyError:
+                            alt_cor[cor_comp] = row['CONSUMO']
 
                     cores_list = []
                     for cor in alt_cores:
-                        conta = dict(Counter(alt_cores[cor]))
+                        conta = alt_cores[cor]
                         cor1_list = [
                             f"{conta[item]} {item}"
                             for item in conta
@@ -89,12 +91,13 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                         cor1 = ' + '.join(cor1_list)
                         cores_list.append(f"{cor} = {cor1}")
 
-                    alt_cores_list.append(' ; '.join(cores_list))
+
+                    alt_cores_list.append('; '.join(cores_list))
                 cores = list(set(alt_cores_list))
                 if len(cores) == 1:
                     ref['info'] = cores[0]
                 else:
-                    ref['info'] = 'ERRO: ' + ' <-DIFERENTE-> '.join(cores)
+                    ref['info'] = 'ERRO: ' + ' DIFERE DE '.join(cores)
 
             self.context['adicionadas'] = {
                 'headers': ['Referência', 'Informações'],
