@@ -64,12 +64,14 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
                 alternativas = produto.queries.ref_estruturas(
                     self.cursor, ref['referencia'])
+                alternativas = list(set([alt['ALTERNATIVA'] for alt in alternativas]))
+
                 alt_cores_list = []
                 for alternativa in alternativas:
                     print(ref['referencia'])
 
                     estrutura = produto.queries.ref_estrutura_comp(
-                        self.cursor, ref['referencia'], alternativa['ALTERNATIVA'])
+                        self.cursor, ref['referencia'], alternativa)
 
                     alt_cores = {}
                     for row in estrutura:
