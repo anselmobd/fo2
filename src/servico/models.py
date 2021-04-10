@@ -86,3 +86,26 @@ class PapelUsuario(models.Model):
         db_table = "fo2_serv_papel_usuario"
         verbose_name = "Papel de usuário"
         verbose_name_plural = "Papeis de usuário"
+
+
+class NivelAtendimento(models.Model):
+    nome = models.CharField(
+        db_index=True,
+        max_length=20,
+    )
+    slug = models.SlugField()
+    horas = models.IntegerField(
+        default=0,
+    )
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = 'fo2_serv_nivel_atend'
+        verbose_name = 'Nível de atendimento'
+        verbose_name_plural = 'Níveis de atendimento'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(NivelAtendimento, self).save(*args, **kwargs)
