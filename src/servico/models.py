@@ -30,3 +30,23 @@ class EquipeAtendimento(models.Model):
         super(EquipeAtendimento, self).save(*args, **kwargs)
 
 
+class TipoFuncaoExercida(models.Model):
+    nome = models.CharField(
+        db_index=True,
+        max_length=20,
+        )
+    slug = models.SlugField()
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = 'fo2_serv_tp_funcao_exer'
+        verbose_name = 'Tipo de função exercida'
+        verbose_name_plural = 'Tipos de função exercida'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(TipoFuncaoExercida, self).save(*args, **kwargs)
+
+

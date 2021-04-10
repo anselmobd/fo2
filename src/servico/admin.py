@@ -12,3 +12,12 @@ class EquipeAtendimentoAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(servico.models.EquipeAtendimento, EquipeAtendimentoAdmin)
+
+
+class TipoFuncaoExercidaAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'slug']
+    fields = ['nome', 'slug']
+    readonly_fields = ['slug']
+
+
+intr_adm_site.register(servico.models.TipoFuncaoExercida, TipoFuncaoExercidaAdmin)
