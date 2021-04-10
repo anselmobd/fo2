@@ -6,14 +6,14 @@ class EquipeAtendimento(models.Model):
     nome = models.CharField(
         db_index=True,
         max_length=20,
-        )
+    )
     slug = models.SlugField()
     descricao = models.CharField(
         'Descrição',
         max_length=250,
         null=True,
         blank=True,
-        )
+    )
 
     def __str__(self):
         return self.nome
@@ -34,8 +34,18 @@ class TipoFuncaoExercida(models.Model):
     nome = models.CharField(
         db_index=True,
         max_length=20,
-        )
+    )
     slug = models.SlugField()
+    # nivel_operacional:
+    # 0: auxilia
+    # 1: executa
+    # 2: chefia
+    # 3: supervisiona
+    # 4: supervisor geral
+    nivel_operacional = models.IntegerField(
+        'Nível operacional',
+        default=0,
+    )
 
     def __str__(self):
         return self.nome
