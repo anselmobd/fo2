@@ -37,11 +37,16 @@ class TipoFuncaoExercida(models.Model):
     )
     slug = models.SlugField()
     # nivel_operacional:
-    # 0: auxilia
-    # 1: executa
-    # 2: chefia
-    # 3: supervisiona
-    # 4: supervisor geral
+    # -5: diretor
+    # -4: gerente
+    # -3: chefe
+    # -2: usuário
+    # -1: local
+    # 1: auxilia
+    # 2: executa
+    # 3: chefia
+    # 4: supervisiona
+    # 5: supervisor geral
     nivel_operacional = models.IntegerField(
         'Nível operacional',
         default=0,
