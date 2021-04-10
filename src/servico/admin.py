@@ -22,3 +22,12 @@ class TipoFuncaoExercidaAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(servico.models.TipoFuncaoExercida, TipoFuncaoExercidaAdmin)
+
+
+class PapelUsuarioAdmin(admin.ModelAdmin):
+    list_display = ['usuario', 'funcao', 'equipe']
+    fields = ['usuario', 'funcao', 'equipe']
+    ordering = ['usuario', 'funcao', 'equipe']
+
+
+intr_adm_site.register(servico.models.PapelUsuario, PapelUsuarioAdmin)

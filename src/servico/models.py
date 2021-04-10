@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 class EquipeAtendimento(models.Model):
@@ -41,11 +42,11 @@ class TipoFuncaoExercida(models.Model):
     # -4: gerente
     # -3: chefe
     # -2: usuário
-    # -1: local
-    # 1: auxilia
-    # 2: executa
-    # 3: chefia
-    # 4: supervisiona
+    # -1: auxiliar
+    # 1: auxiliar
+    # 2: executor
+    # 3: chefe
+    # 4: supervisor
     # 5: supervisor geral
     nivel_operacional = models.IntegerField(
         'Nível operacional',
@@ -65,3 +66,23 @@ class TipoFuncaoExercida(models.Model):
         super(TipoFuncaoExercida, self).save(*args, **kwargs)
 
 
+class PapelUsuario(models.Model):
+    usuario = models.ForeignKey(
+        User, on_delete=models.PROTECT,
+        verbose_name='usuário')
+    funcao = models.ForeignKey(
+        TipoFuncaoExercida, on_delete=models.PROTECT,
+        verbose_name='função')
+    equipe = models.ForeignKey(
+        EquipeAtendimento, on_delete=models.PROTECT,
+        null=True, blank=True,
+        )
+
+    def __str__(self):
+        equipe = f" {self.equipe}" if self.equipe else ""
+        return f"{self.usuario} ({self.funcao}){equipe}"
+
+    class Meta:
+        db_table = "fo2_serv_papel_usuario"
+        verbose_name = "Papel de usuário"
+        verbose_name_plural = "Papeis de usuário"
