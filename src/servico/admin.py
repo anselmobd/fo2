@@ -31,3 +31,13 @@ class PapelUsuarioAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(servico.models.PapelUsuario, PapelUsuarioAdmin)
+
+
+class NivelAtendimentoAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'slug', 'horas']
+    fields = ['nome', 'slug', 'horas']
+    readonly_fields = ['slug']
+    ordering = ['horas']
+
+
+intr_adm_site.register(servico.models.NivelAtendimento, NivelAtendimentoAdmin)
