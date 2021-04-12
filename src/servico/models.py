@@ -154,3 +154,17 @@ class NumeroDocumento(models.Model):
         logged_in = LoggedInUser()
         self.user = logged_in.user
         super(NumeroDocumento, self).save(*args, **kwargs)
+
+
+class TipoEvento(models.Model):
+    nome = models.CharField(
+        max_length=20,
+    )
+    slug = models.SlugField()
+
+    class Meta:
+        db_table = 'fo2_serv_tipo_evento'
+        verbose_name = 'Tipo de evento'
+        verbose_name_plural = 'Tipos de evento'
+
+
