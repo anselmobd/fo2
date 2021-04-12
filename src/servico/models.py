@@ -146,6 +146,9 @@ class NumeroDocumento(models.Model):
         default=False,
     )
 
+    def __str__(self):
+        return f"{self.tipo} {self.id}"
+
     class Meta:
         db_table = 'fo2_serv_num_doc'
         verbose_name = 'Número de documento'
