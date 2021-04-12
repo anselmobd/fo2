@@ -41,3 +41,10 @@ class NivelAtendimentoAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(servico.models.NivelAtendimento, NivelAtendimentoAdmin)
+
+
+class TipoDocumentoAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'slug']
+
+
+intr_adm_site.register(servico.models.TipoDocumento, TipoDocumentoAdmin)
