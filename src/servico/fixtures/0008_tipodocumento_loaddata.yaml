@@ -1,0 +1,5 @@
+- model: servico.TipoDocumento
+  pk: 1
+  fields:
+    nome: Ordem de serviço
+    slug: os
