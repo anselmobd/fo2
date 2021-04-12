@@ -172,6 +172,9 @@ class TipoEvento(models.Model):
         default=0,
     )
 
+    def __str__(self):
+        return self.nome
+
     class Meta:
         db_table = 'fo2_serv_tipo_evento'
         verbose_name = 'Tipo de evento'
