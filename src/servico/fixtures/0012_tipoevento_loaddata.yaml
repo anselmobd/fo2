@@ -1,0 +1,30 @@
+- model: servico.TipoEvento
+  pk: 1
+  fields:
+    nome: Requisição
+    slug: req
+    ordem: 10
+- model: servico.TipoEvento
+  pk: 2
+  fields:
+    nome: Início
+    slug: ini
+    ordem: 20
+- model: servico.TipoEvento
+  pk: 3
+  fields:
+    nome: Alteração
+    slug: alt
+    ordem: 30
+- model: servico.TipoEvento
+  pk: 4
+  fields:
+    nome: Comentário
+    slug: com
+    ordem: 40
+- model: servico.TipoEvento
+  pk: 5
+  fields:
+    nome: Término
+    slug: fim
+    ordem: 50
