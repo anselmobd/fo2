@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 
@@ -121,3 +122,31 @@ class TipoDocumento(models.Model):
         db_table = 'fo2_serv_tipo_doc'
         verbose_name = 'Tipo de documento'
         verbose_name_plural = 'Tipos de documento'
+
+
+class NumeroDocumento(models.Model):
+    tipo = models.ForeignKey(
+        TipoDocumento, on_delete=models.PROTECT,
+    )
+    create_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='criado em',
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.PROTECT,
+        verbose_name='usuário',
+    )
+    ativo = models.BooleanField(
+        default=False,
+    )
+
+    class Meta:
+        db_table = 'fo2_serv_num_doc'
+        verbose_name = 'Número de documento'
+        verbose_name_plural = 'Números de documento'
+
+    def save(self, *args, **kwargs):
+        now = timezone.now()
+        if not self.id:
+            self.create_at = now
+        super(NumeroDocumento, self).save(*args, **kwargs)
