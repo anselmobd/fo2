@@ -171,3 +171,46 @@ class TipoEvento(models.Model):
         verbose_name_plural = 'Tipos de evento'
 
 
+class ServicoEvento(models.Model):
+    numero = models.ForeignKey(
+        NumeroDocumento, on_delete=models.PROTECT,
+        verbose_name='Número',
+    )
+    evento = models.ForeignKey(
+        TipoEvento, on_delete=models.PROTECT,
+    )
+    create_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Criado em',
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.PROTECT,
+        verbose_name='Usuário',
+    )
+    nivel = models.ForeignKey(
+        NivelAtendimento, on_delete=models.PROTECT,
+        verbose_name='Nível de etendimento',
+    )
+    equipe = models.ForeignKey(
+        EquipeAtendimento, on_delete=models.PROTECT,
+        verbose_name='Equipe de atendimento',
+    )
+    descricao = models.CharField(
+        'Descrição',
+        max_length=2000,
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        db_table = 'fo2_serv_servico_evento'
+        verbose_name = 'Evento relacionado a serviços'
+        verbose_name_plural = 'Eventos relacionados a serviços'
+
+    def save(self, *args, **kwargs):
+        now = timezone.now()
+        if not self.id:
+            self.create_at = now
+        logged_in = LoggedInUser()
+        self.user = logged_in.user
+        super(ServicoEvento, self).save(*args, **kwargs)
