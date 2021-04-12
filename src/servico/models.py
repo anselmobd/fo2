@@ -120,6 +120,9 @@ class TipoDocumento(models.Model):
     )
     slug = models.SlugField()
 
+    def __str__(self):
+        return f"{self.nome} ({self.slug})"
+
     class Meta:
         db_table = 'fo2_serv_tipo_doc'
         verbose_name = 'Tipo de documento'
