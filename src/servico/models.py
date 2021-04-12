@@ -109,3 +109,19 @@ class NivelAtendimento(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
         super(NivelAtendimento, self).save(*args, **kwargs)
+
+
+class TipoDocumento(models.Model):
+    tipo = models.CharField(
+        max_length=20,
+    )
+    slug = models.SlugField()
+
+    class Meta:
+        db_table = 'fo2_serv_tipo_doc'
+        verbose_name = 'Tipo de documento'
+        verbose_name_plural = 'Tipos de documento'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.nome)
+        super(TipoDocumento, self).save(*args, **kwargs)
