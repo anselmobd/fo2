@@ -139,6 +139,7 @@ class NumeroDocumento(models.Model):
     )
     user = models.ForeignKey(
         User, on_delete=models.PROTECT,
+        blank=True,
         verbose_name='usuário',
     )
     ativo = models.BooleanField(
