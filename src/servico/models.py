@@ -161,6 +161,9 @@ class TipoEvento(models.Model):
         max_length=20,
     )
     slug = models.SlugField()
+    ordem = models.IntegerField(
+        default=0,
+    )
 
     class Meta:
         db_table = 'fo2_serv_tipo_evento'
