@@ -121,7 +121,3 @@ class TipoDocumento(models.Model):
         db_table = 'fo2_serv_tipo_doc'
         verbose_name = 'Tipo de documento'
         verbose_name_plural = 'Tipos de documento'
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.nome)
-        super(TipoDocumento, self).save(*args, **kwargs)
