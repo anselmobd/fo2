@@ -48,3 +48,13 @@ class TipoDocumentoAdmin(admin.ModelAdmin):
 
 
 intr_adm_site.register(servico.models.TipoDocumento, TipoDocumentoAdmin)
+
+
+class NumeroDocumentoAdmin(admin.ModelAdmin):
+    list_display = ['id', 'tipo', 'create_at', 'user', 'ativo']
+    fields = ['id', 'tipo', 'create_at', 'user', 'ativo']
+    readonly_fields = ['id', 'create_at']
+    ordering = ['create_at']
+
+
+intr_adm_site.register(servico.models.NumeroDocumento, NumeroDocumentoAdmin)
