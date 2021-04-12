@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 
+from utils.classes import LoggedInUser
+
 
 class EquipeAtendimento(models.Model):
     nome = models.CharField(
@@ -149,4 +151,6 @@ class NumeroDocumento(models.Model):
         now = timezone.now()
         if not self.id:
             self.create_at = now
+        logged_in = LoggedInUser()
+        self.user = logged_in.user
         super(NumeroDocumento, self).save(*args, **kwargs)
