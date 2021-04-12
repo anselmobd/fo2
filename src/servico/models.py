@@ -195,11 +195,12 @@ class ServicoEvento(models.Model):
     )
     user = models.ForeignKey(
         User, on_delete=models.PROTECT,
+        blank=True,
         verbose_name='Usuário',
     )
     nivel = models.ForeignKey(
         NivelAtendimento, on_delete=models.PROTECT,
-        verbose_name='Nível de etendimento',
+        verbose_name='Nível de atendimento',
     )
     equipe = models.ForeignKey(
         EquipeAtendimento, on_delete=models.PROTECT,
@@ -208,8 +209,7 @@ class ServicoEvento(models.Model):
     descricao = models.CharField(
         'Descrição',
         max_length=2000,
-        null=True,
-        blank=True,
+        default='',
     )
 
     class Meta:
