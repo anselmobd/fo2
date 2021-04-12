@@ -112,7 +112,7 @@ class NivelAtendimento(models.Model):
 
 
 class TipoDocumento(models.Model):
-    tipo = models.CharField(
+    nome = models.CharField(
         max_length=20,
     )
     slug = models.SlugField()
