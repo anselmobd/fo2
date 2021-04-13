@@ -76,33 +76,26 @@ class Vendas(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(Vendas, self).__init__(*args, **kwargs)
+        self.cleaned_data2self = True
         self.Form_class = forms.VendasForm
         self.template_name = 'comercial/vendas.html'
         self.title_name = 'Vendas'
 
     def mount_context(self):
-        ref = self.form.cleaned_data['ref']
-        modelo = self.form.cleaned_data['modelo']
-        infor = self.form.cleaned_data['infor']
-        lista = self.form.cleaned_data['lista']
-        ordem = self.form.cleaned_data['ordem']
-        periodo = self.form.cleaned_data['periodo']
-        qtd_por_mes = self.form.cleaned_data['qtd_por_mes']
-
         cursor = db_cursor_so(self.request)
 
-        if periodo not in self.periodo_cols_options:
-            periodo = '0'
+        if self.periodo not in self.periodo_cols_options:
+            self.periodo = '0'
             self.context.update({
                 'obs': 'Não há periodo de metas definido.',
             })
-        periodo_cols=self.periodo_cols_options[periodo]      
+        periodo_cols=self.periodo_cols_options[self.periodo]      
 
         av = queries.AnaliseVendas(
-            cursor, ref=ref, modelo=modelo, infor=infor, ordem=ordem,
+            cursor, ref=self.ref, modelo=self.modelo, infor=self.infor, ordem=self.ordem,
             periodo_cols=periodo_cols,
-            qtd_por_mes=(qtd_por_mes=='m'),
-            com_venda=(lista=='venda'))
+            qtd_por_mes=(self.qtd_por_mes=='m'),
+            com_venda=(self.lista=='venda'))
         data = av.data
 
         infor_fields = {
@@ -112,15 +105,15 @@ class Vendas(O2BaseGetPostView):
             }
         }
 
-        if infor in infor_fields:
-            headers = infor_fields[infor]['headers']
+        if self.infor in infor_fields:
+            headers = infor_fields[self.infor]['headers']
         else:
-            headers = [dict(self.Form_class.base_fields['infor'].choices)[infor]]
+            headers = [dict(self.Form_class.base_fields['infor'].choices)[self.infor]]
 
-        if infor in infor_fields:
-            fields = infor_fields[infor]['fields']
+        if self.infor in infor_fields:
+            fields = infor_fields[self.infor]['fields']
         else:
-            fields = [infor]
+            fields = [self.infor]
 
         sum_fields = []
         if periodo_cols:
@@ -135,14 +128,14 @@ class Vendas(O2BaseGetPostView):
         else:
             fields += ['qtd']
             sum_fields += ['qtd']
-            if infor == 'nf':
+            if self.infor == 'nf':
                 headers += ['Quantidade']
                 style = {
                     3: 'text-align: right;',
                 }
             else:
                 headers += ['Total vendido']
-                if qtd_por_mes == 'm':
+                if self.qtd_por_mes == 'm':
                     headers += ['Última venda', 'Primeira venda', 'Quantidade por mês']
                     fields += ['dt_max', 'dt_min', 'qtd_mes']
                     style = untuple_keys_concat({
@@ -153,7 +146,7 @@ class Vendas(O2BaseGetPostView):
                         2: 'text-align: right;',
                     }
 
-        if infor == 'nf':
+        if self.infor == 'nf':
             for row in data:
                 row['nf|LINK'] = reverse(
                     'contabil:nota_fiscal__get', args=[row['nf']])
