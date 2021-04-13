@@ -72,7 +72,7 @@ class O2FieldFiltroForm(forms.Form):
 
 class O2FieldOrdemForm(forms.Form):
     ordem = forms.IntegerField(
-        min_value=1, max_value=99999,
-        required=False,
+        min_value=0, max_value=999999,
+        required=False, initial='0',
         widget=forms.TextInput(attrs={'type': 'number', 'size': 6}))
 
