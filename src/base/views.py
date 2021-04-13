@@ -19,8 +19,24 @@ from base.pages_context import get_current_users_requisicao
 
 class O2BaseGetPostView(CustomView):
 
+    def __init__(self, *args, **kwargs):
+        """
+        Inicializa parâmetros, sendo:
+        
+        cleaned_data2self
+            valores no self.form.cleaned_data viram atributos do objeto (self)
+        """
+        super(O2BaseGetPostView, self).__init__(*args, **kwargs)
+        self.cleaned_data2self = False
+
+    def do_cleaned_data2self(self):
+        if self.cleaned_data2self:
+            for field in self.form.cleaned_data:
+                setattr(self, field, self.form.cleaned_data[field])
+
     def render_mount(self):
         if self.form.is_valid():
+            self.do_cleaned_data2self()
             self.mount_context()
         self.context['form'] = self.form
         return self.my_render()
