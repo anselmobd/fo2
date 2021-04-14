@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'logistica',
     'lotes',
     'manutencao',
+    'o2',
     'persona',
     'produto',
     'remote_files',
