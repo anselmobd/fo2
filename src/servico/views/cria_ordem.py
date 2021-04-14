@@ -75,11 +75,6 @@ class CriaOrdem(O2BaseGetPostView):
         try:
             with transaction.atomic():
                 self.salva_evento()
-        except IntegrityError:
-            self.context.update({
-                'erro': 'Genérico ao salvar.',
-            })
-            return
         except Exception:
             return
 
