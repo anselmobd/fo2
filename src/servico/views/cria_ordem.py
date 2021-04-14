@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.db import IntegrityError, transaction
+
 from base.views import O2BaseGetPostView
 
 import servico.forms
@@ -16,33 +18,32 @@ class CriaOrdem(O2BaseGetPostView):
         self.title_name = 'Cria ordem'
 
 
-    def mount_context(self):
+    def salva_evento(self):
         try:
             tipo = servico.models.TipoDocumento.objects.get(slug='os')
-        except servico.models.TipoDocumento.DoesNotExist:
+        except servico.models.TipoDocumento.DoesNotExist as e:
             self.context.update({
                 'erro': 'Tipo de documento inválido.',
             })
-            return
+            raise e
 
         try:
             evento = servico.models.TipoEvento.objects.get(slug='req')
-        except servico.models.TipoEvento.DoesNotExist:
+        except servico.models.TipoEvento.DoesNotExist as e:
             self.context.update({
                 'erro': 'Tipo de evento inválido.',
             })
-            return
+            raise e
 
         try:
             doc = servico.models.NumeroDocumento(tipo=tipo)
             doc.save()
-        except Exception:
+        except Exception as e:
             self.context.update({
                 'erro': 'Não foi possível gerar um número de documento.',
             })
-            return
+            raise e
 
-        pprint(self.__dict__)
         try:
             evento = servico.models.ServicoEvento(
                 numero=doc,
@@ -56,6 +57,22 @@ class CriaOrdem(O2BaseGetPostView):
             self.context.update({
                 'erro': 'Não foi possível gerar o evento de requisição.',
             })
+            raise e
+
+        doc.ativo = True
+        doc.save()
+
+
+    def mount_context(self):
+        try:
+            with transaction.atomic():
+                self.salva_evento()
+        except IntegrityError:
+            self.context.update({
+                'erro': 'Genérico ao salvar.',
+            })
+            return
+        except Exception:
             return
 
         self.redirect = ('servico:ordens',)
