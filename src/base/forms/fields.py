@@ -68,11 +68,3 @@ class O2FieldFiltroForm(forms.Form):
 
     def clean_filtro(self):
         return O2BaseForm.upper(self, 'filtro')
-
-
-class O2FieldOrdemForm(forms.Form):
-    ordem = forms.IntegerField(
-        min_value=0, max_value=999999,
-        required=False, initial='0',
-        widget=forms.TextInput(attrs={'type': 'number', 'size': 6}))
-
