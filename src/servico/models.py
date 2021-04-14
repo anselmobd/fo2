@@ -206,7 +206,7 @@ class ServicoEvento(models.Model):
         EquipeAtendimento, on_delete=models.PROTECT,
         verbose_name='Equipe de atendimento',
     )
-    descricao = models.CharField(
+    descricao = models.TextField(
         'Descrição',
         max_length=2000,
         default='',
