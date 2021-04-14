@@ -29,6 +29,9 @@ class RecordTracking(models.Model):
         db_table = "fo2_ger_record_tracking"
         verbose_name = "log de registro"
         verbose_name_plural = "logs de registro de tabela"
+        index_together = [
+            ("time", "table", "record_id"),
+        ]
 
 
 class Dispositivos(models.Model):
