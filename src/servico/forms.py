@@ -19,8 +19,11 @@ class OrdensForm(
 
 
 class CriaOrdemForm(
-        O2BaseForm,
-        O2FieldOrdemForm):
+        O2BaseForm):
+
+    descricao = forms.CharField(
+        label='Descrição', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
 
     class Meta:
-        autofocus_field = 'ordem'
+        autofocus_field = 'descricao'
