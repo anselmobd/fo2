@@ -1,0 +1,12 @@
+- model: servico.TipoEvento
+  pk: 6
+  fields:
+    nome: Cancelamento
+    slug: can
+    ordem: 15
+- model: servico.TipoEvento
+  pk: 7
+  fields:
+    nome: Reabertura
+    slug: rea
+    ordem: 60
