@@ -8,4 +8,7 @@ urlpatterns = [
     url(r'^ordens/$',
         views.Ordens.as_view(), name='ordens'),
 
+    url(r'^ordem/$',
+        views.Ordem.as_view(), name='ordem'),
+
 ]
