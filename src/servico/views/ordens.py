@@ -1,15 +1,9 @@
 from pprint import pprint
 
-from django.shortcuts import render
-
 from base.views import O2BaseGetPostView
 
 import servico.forms
 import servico.models
-
-
-def index(request):
-    return render(request, 'servico/index.html')
 
 
 class Ordens(O2BaseGetPostView):
