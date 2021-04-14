@@ -6,14 +6,14 @@ import servico.forms
 import servico.models
 
 
-class Ordem(O2BaseGetPostView):
+class CriaOrdem(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
-        super(Ordem, self).__init__(*args, **kwargs)
+        super(CriaOrdem, self).__init__(*args, **kwargs)
         self.cleaned_data2self = True
-        self.Form_class = servico.forms.OrdemForm
-        self.template_name = 'servico/ordem.html'
-        self.title_name = 'Ordem'
+        self.Form_class = servico.forms.CriaOrdemForm
+        self.template_name = 'servico/cria_ordem.html'
+        self.title_name = 'Cria ordem'
 
 
     def mount_context(self):
