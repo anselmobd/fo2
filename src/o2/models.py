@@ -8,6 +8,7 @@ class CsrfToken(models.Model):
     )
     token = models.CharField(
         max_length=128,
+        unique=True,
     )
 
     class Meta:
