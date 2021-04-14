@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
 
 
@@ -24,6 +24,7 @@ class CustomView(View):
         super(CustomView, self).__init__(*args, **kwargs)
         self.get_args = []
         self.get_args2context = False
+        self.redirect = None
 
     def init_self(self, request, kwargs):
         """
@@ -52,8 +53,14 @@ class CustomView(View):
 
     def my_render(self):
         """
-        Chama render com self: request, template_name e context
+        Se redirect for definifo, execute.
+        Senão, chama render com self: request, template_name e context
         """
+        if self.redirect:
+            if isinstance(self.redirect, tuple):
+                return redirect(*self.redirect)
+            else:
+                return redirect(self.redirect)
         return render(self.request, self.template_name, self.context)
 
     def mount_context(self):
