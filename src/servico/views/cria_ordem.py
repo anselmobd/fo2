@@ -57,3 +57,5 @@ class CriaOrdem(O2BaseGetPostView):
                 'erro': 'Não foi possível gerar o evento de requisição.',
             })
             return
+
+        self.redirect = ('servico:ordens',)
