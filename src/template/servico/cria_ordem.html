@@ -12,15 +12,15 @@ label {
 {% endblock %}
 
 {% block content %}
+  <input type="button"
+    value="Limpa campos"
+    onclick="location.href='{% url 'servico:cria_ordem' %}'"
+  />
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
     {% if erro %}
       <h4>Erro: {{ erro }}</h4>
     {% endif %}
-    <input type="button"
-      value="Voltar"
-      onclick="location.href='{% url 'servico:cria_ordem' %}'"
-    />
   {% else %}
     <form method="post">
       {% csrf_token %}

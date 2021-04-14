@@ -1,8 +1,10 @@
 from pprint import pprint
 
 from django.db import IntegrityError, transaction
+from django.db.utils import Error
 
 from base.views import O2BaseGetPostView
+from o2.functions import csrf_used
 
 import servico.forms
 import servico.models
@@ -19,6 +21,12 @@ class CriaOrdem(O2BaseGetPostView):
 
 
     def salva_evento(self):
+        if csrf_used(self.request):
+            self.context.update({
+                'erro': 'Formulário já gravado.',
+            })
+            raise Error
+
         try:
             tipo = servico.models.TipoDocumento.objects.get(slug='os')
         except servico.models.TipoDocumento.DoesNotExist as e:
