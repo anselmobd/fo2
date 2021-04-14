@@ -39,7 +39,7 @@ class Ordens(O2BaseGetPostView):
         )
 
         self.context.update({
-            'headers': ['Número', 'Evento', 'Data/hora', 'Usuário', 'Descrição', 'Equipe', 'Nível'],
-            'fields': ['numero_id', 'evento__nome', 'create_at', 'user__username', 'descricao', 'equipe__nome', 'nivel__nome'],
+            'headers': ['Número', 'Evento', 'Usuário', 'Data/hora', 'Equipe', 'Descrição', 'Nível'],
+            'fields': ['numero_id', 'evento__nome', 'user__username', 'create_at', 'equipe__nome', 'descricao', 'nivel__nome'],
             'data': data,
         })
