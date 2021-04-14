@@ -1,6 +1,9 @@
 from django import forms
+from django.forms import ModelForm
 
 from base.forms import O2BaseForm
+
+from servico.models import ServicoEvento
 
 
 class O2FieldOrdemForm(forms.Form):
@@ -18,12 +21,7 @@ class OrdensForm(
         autofocus_field = 'ordem'
 
 
-class CriaOrdemForm(
-        O2BaseForm):
-
-    descricao = forms.CharField(
-        label='Descrição', required=False,
-        widget=forms.TextInput(attrs={'type': 'string'}))
-
+class CriaServicoEventoForm(ModelForm):
     class Meta:
-        autofocus_field = 'descricao'
+        model = ServicoEvento
+        fields = ['equipe', 'descricao', 'nivel']
