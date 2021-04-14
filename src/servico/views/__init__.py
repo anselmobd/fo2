@@ -1,1 +1,1 @@
-default_app_config = 'servico.apps.ServicoConfig'
+from .views import *
