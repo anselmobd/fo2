@@ -1,4 +1,7 @@
 <ul>
-  <li><a href="{% url 'servico:cria_ordem' %}">Cria ordem</a></li>
-  <li><a href="{% url 'servico:ordens' %}">Lista ordens</a></li>
+  <li><a href="{% url 'servico:ordem' %}">Ordem</a></li>
+  <ul>
+    <li><a href="{% url 'servico:cria_ordem' %}">Cria</a></li>
+    <li><a href="{% url 'servico:ordens' %}">Lista</a></li>
+  </ul>
 </ul>
