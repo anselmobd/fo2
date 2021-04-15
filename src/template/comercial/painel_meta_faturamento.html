@@ -358,7 +358,7 @@
       },
       'vida': {
         'dtde': new Date('04/15/2021'),
-        'dtate': new Date('04/16/2021'),
+        'dtate': new Date('04/15/2021'),
         'cartaz': {
           'path': '/media/rh/campanhas/2021/04/15-vida',
           'files': [
@@ -389,7 +389,9 @@
         var nimagens = files.length
 
         // Cria divs e images
-        var els={}
+        var elsdiv = {};
+        var elsimg = {};
+
         for (var i = 1; i <= nimagens; i++) {
           fname = files[i-1];
 
@@ -405,19 +407,27 @@
           eldiv.appendChild(elimg);
           document.body.appendChild(eldiv);
 
-          els[i] = eldiv;
+          elsdiv[i] = eldiv;
+          elsimg[i] = elimg;
         }
 
         var chave_imagens = 0;
+
+        var post_div = null;
+        function post_div_visible() {
+          post_div.style.visibility = 'visible';
+        }
 
         function mostra_imagem() {
           let imgloop = chave_imagens % (nimagens+1)
 
           for (var key = 1; key <= nimagens; key++) {
             if (key == imgloop) {
-              els[key].style.visibility = 'visible';
+              post_div = elsdiv[key];
+              elsimg[key].src = elsimg[key].getAttribute('src');
+              elsimg[key].addEventListener('load', post_div_visible)
             } else {
-              els[key].style.visibility = 'hidden';
+              elsdiv[key].style.visibility = 'hidden';
             }
           }
 
