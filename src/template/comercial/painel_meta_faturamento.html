@@ -356,6 +356,21 @@
         'delay_file': 8000,
         'n_loops': 5,
       },
+      'covid': {
+        'dtde': new Date('04/17/2021'),
+        'dtate': new Date('04/17/2021'),
+        'cartaz': {
+          'path': '/media/rh/campanhas/2020/11/27',
+          'files': [
+            '1.jpeg',
+            '2.png',
+            '3.png',
+            '4.png',
+          ]
+        },
+        'delay_file': 10000,
+        'n_loops': 8,
+      },
       'vida': {
         'dtde': new Date('04/15/2021'),
         'dtate': new Date('04/15/2021'),
@@ -379,6 +394,7 @@
 
       // selecionado para aparecer
       if (showCard) {
+
         let cartaz = card['cartaz'];
         let delay_file = card['delay_file'];
         let n_loops = card['n_loops'];
