@@ -8,7 +8,7 @@ import locale
 import argparse
 from datetime import datetime, timedelta
 
-from fo2.db_password import DBPASS_POSTGRE, DBPASS_ORACLE
+from db_password import DBPASS_POSTGRE, DBPASS_ORACLE
 
 
 class Oracle:
@@ -96,7 +96,6 @@ class Postgre:
             sys.exit(1)
 
         self.cursor = self.con.cursor()
-
         try:
             self.cursor.execute(
                 'SELECT version();')
