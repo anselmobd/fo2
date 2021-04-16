@@ -5,9 +5,7 @@
 
 {% block stylesheet %}
 <style>
-label {
-    display: table;
-}
+{% include 'layout/simple_table.css' %}
 </style>
 {% endblock %}
 
@@ -15,10 +13,54 @@ label {
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Cria"/>
+    <input type="submit" value="Busca"/>
   </form>
-  {% include "layout/form_inputs_report.html" with form=form h=5 only %}
   {% if erro %}
+    {% include "layout/form_inputs_report.html" with form=form h=5 only %}
     <h4>Erro: {{ erro }}</h4>
+  {% endif %}
+  {% if numero %}
+    <h5>Ordem número {{ numero }}{% if not ativo %}, criada por {{ usuario }}, em {{ data }}; Inativa{% endif %}</h5>
+  {% endif %}
+  {% if eventos %}
+    <table>
+      <tbody>
+        {% for row in eventos %}
+          <tr>
+            <td>
+              Usuário:
+            </td>
+            <td>
+              {{ row.user__username }}
+            </td>
+            <td>
+              <h4>{{ row.evento__nome }}</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Data:
+            </td>
+            <td>
+              {{ row.create_at }}
+            </td>
+            <td>
+              <h4>{{ row.nivel__nome }}</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Equipe:
+            </td>
+            <td>
+              {{ row.equipe__nome }}
+            </td>
+            <td>
+              {{ row.descricao }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   {% endif %}
 {% endblock %}
