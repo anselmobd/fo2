@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-from pprint import pprint
-import locale
 import argparse
+import csv
+import locale
+import sys
+from pprint import pprint
 
 
 class Corrige:
@@ -37,8 +39,39 @@ class Corrige:
     def saida(self, value):
         self._saida = value
 
+    def executa(self):
+        self.abre_inventario()
+
+    def abre_inventario(self):
+        try:
+            with open(self._inventario) as csvfile:
+                self._inventario_reader = csv.reader(csvfile, delimiter=';', quotechar='"')
+                self.abre_compras()
+        except Exception:
+            print(f"Não consegui abrir para leitura {self._inventario}")
+            sys.exit(10)
+
+    def abre_compras(self):
+        try:
+            with open(self._compras) as csvfile:
+                self._compras_reader = csv.reader(csvfile, delimiter=';', quotechar='"')
+                self.abre_saida()
+        except Exception:
+            print(f"Não consegui abrir para leitura {self._compras}")
+            sys.exit(11)
+
+    def abre_saida(self):
+        try:
+            with open(self._saida) as csvfile:
+                self._saida_writer = csv.writer(csvfile, delimiter=';', quotechar='"')
+                self.processa()
+        except Exception:
+            print(f"Não consegui abrir para escrita {self._saida}")
+            sys.exit(11)
+
     def processa(self):
-        pass
+        for inv in self._inventario_reader:
+            pprint(inv)
 
 
 def parse_args():
@@ -68,4 +101,4 @@ if __name__ == '__main__':
     inv.inventario = args.inventario
     inv.compras = args.compras
     inv.saida = args.saida
-    inv.processa()
+    inv.executa()
