@@ -40,38 +40,61 @@ class Corrige:
         self._saida = value
 
     def executa(self):
-        self.abre_inventario()
+        try:
+            self.abre_inventario()
+            self.abre_compras()
+            self.abre_saida()
+        except Exception as e:
+            try:
+                self._inventario_csvfile.close()
+            except Exception:
+                pass
+            try:
+                self._compras_csvfile.close()
+            except Exception:
+                pass
+            try:
+                self._saida_csvfile.close()
+            except Exception:
+                pass
+            raise e
+        self.processa()
 
     def abre_inventario(self):
         try:
-            with open(self._inventario) as csvfile:
-                self._inventario_reader = csv.reader(csvfile, delimiter=';', quotechar='"')
-                self.abre_compras()
-        except Exception:
+            self._inventario_csvfile = open(self._inventario, newline='')
+            self._inventario_reader = csv.reader(
+                self._inventario_csvfile, delimiter=';', quotechar='"')
+        except Exception as e:
             print(f"Não consegui abrir para leitura {self._inventario}")
-            sys.exit(10)
+            raise e
 
     def abre_compras(self):
         try:
-            with open(self._compras) as csvfile:
-                self._compras_reader = csv.reader(csvfile, delimiter=';', quotechar='"')
-                self.abre_saida()
-        except Exception:
+            self._compras_csvfile = open(self._compras, newline='')
+            self._compras_reader = csv.reader(
+                self._compras_csvfile, delimiter=';', quotechar='"')
+        except Exception as e:
             print(f"Não consegui abrir para leitura {self._compras}")
-            sys.exit(11)
+            raise e
 
     def abre_saida(self):
         try:
-            with open(self._saida) as csvfile:
-                self._saida_writer = csv.writer(csvfile, delimiter=';', quotechar='"')
-                self.processa()
-        except Exception:
+            self._saida_csvfile = open(self._saida, 'w', newline='')
+            self._saida_writer = csv.writer(
+                self._saida_csvfile, delimiter=';', quotechar='"')
+        except Exception as e:
             print(f"Não consegui abrir para escrita {self._saida}")
-            sys.exit(11)
+            raise e
 
     def processa(self):
-        for inv in self._inventario_reader:
+        # compras = {rows[0]:rows[1] for rows in self._compras_reader}
+        # pprint(compras)
+
+        for i, inv in enumerate(self._inventario_reader):
             pprint(inv)
+            if i > 3:
+                break
 
 
 def parse_args():
