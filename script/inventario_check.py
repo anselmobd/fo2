@@ -89,15 +89,44 @@ class Corrige:
             print(f"Não consegui abrir para escrita {self._saida}")
             raise e
 
+    def make_csv_mask(self, values):
+        sep = ''
+        result = ''
+        for val in values:
+            if isinstance(val, str):
+                result += sep + '"{}"'
+            else:
+                result += sep + '{}'
+            sep = ';'
+        return result+"\n"
+
+    def print_row_values(self, values):
+        for i in range(len(values)):
+            if isinstance(values[i], str):
+                values[i] = values[i].strip()
+            else:
+                values[i] = locale.currency(
+                    values[i], grouping=False, symbol=None)
+        self._saida_csvfile.write(self._mask.format(*values))
+
     def processa(self):
         compras = [
             {k: v for k, v in row.items()}
             for row in self._compras_reader
         ]
         # pprint(compras[:2])
+        self._mask = None
+        self._print_header = True
 
-        for i, inv in enumerate(self._inventario_reader):
+        for inv in self._inventario_reader:
             inv_line = dict(inv.items())
+            inv_line['Quantidade'] = locale.atof(inv_line['Quantidade'])
+            inv_line['Valor unitário'] = locale.atof(inv_line['Valor unitário'])
+            inv_line['Valor total'] = locale.atof(inv_line['Valor total'])
+            inv_line['Conta contábil'] = locale.atof(inv_line['Conta contábil'])
+
+            keys = list(inv_line.keys())
+
             nivel, ref, tam, cor = tuple(inv_line['Código'].split('.'))
             compra_line = next(
                 (
@@ -114,17 +143,35 @@ class Corrige:
             )
 
             if compra_line:
-                qtd_inv = locale.atof(inv_line['Quantidade'])
+                qtd_inv = inv_line['Quantidade']
                 qtd_compra = locale.atof(compra_line['Quantidade'])
                 qtd_dif = abs(qtd_inv - qtd_compra)
-                if qtd_dif > qtd_inv * 0.5:
-                    inv_line['Quantidade'] = compra_line['Quantidade']
+                if (
+                    min(qtd_dif, qtd_inv, 100) == 100
+                    and qtd_dif > qtd_inv * 0.5
+                ):
+                    print(f"{inv_line['Código']} alterado")
+                    inv_line['Quantidade'] = qtd_compra
+                    inv_line['Valor total'] = inv_line['Valor unitário'] * inv_line['Quantidade']
 
-            if not self._saida_writer:
-                self._saida_writer = csv.DictWriter(
-                    self._saida_csvfile, inv_line.keys(), delimiter=';', quotechar='"')
-                self._saida_writer.writeheader()
-            self._saida_writer.writerow(inv_line)
+            values = list(inv_line.values())
+
+            # if not self._saida_writer:
+            #     self._saida_writer = csv.DictWriter(
+            #         self._saida_csvfile, inv_line.keys(), delimiter=';', quotechar='"',
+            #         quoting=csv.QUOTE_NONNUMERIC,
+            #     )
+            #     self._saida_writer.writeheader()
+            # self._saida_writer.writerow(inv_line)
+
+            if not self._mask:
+                self._mask = self.make_csv_mask(values)
+
+            if self._print_header:
+                self._print_header = False
+                self._saida_csvfile.write(';'.join(keys)+"\n")
+
+            self.print_row_values(values)
 
 
 def parse_args():
