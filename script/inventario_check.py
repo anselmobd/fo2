@@ -66,7 +66,7 @@ class Corrige:
     def abre_inventario(self):
         try:
             self._inventario_csvfile = open(self._inventario, newline='')
-            self._inventario_reader = csv.reader(
+            self._inventario_reader = csv.DictReader(
                 self._inventario_csvfile, delimiter=';', quotechar='"')
         except Exception as e:
             print(f"Não consegui abrir para leitura {self._inventario}")
@@ -95,11 +95,31 @@ class Corrige:
             {k: v for k, v in row.items()}
             for row in self._compras_reader
         ]
-        pprint(compras[:4])
+        # pprint(compras[:2])
 
         for i, inv in enumerate(self._inventario_reader):
-            pprint(inv)
-            if i > 2:
+            inv_line = dict(inv.items())
+            pprint(inv_line)
+            nivel, ref, tam, cor = tuple(inv_line['Código'].split('.'))
+            compra_line = next(
+                (
+                    item 
+                    for item in compras
+                    if (
+                        item["Nível"] == nivel
+                        and item["Referência"] == ref
+                        and item["Tamanho"] == tam
+                        and item["Cor"] == cor
+                    )
+                ),
+                None
+            )
+            if compra_line:
+                pprint(compra_line)
+            else:
+                # print(f"{inv_line['Código']} não encontrado")
+                pass
+            if i > 5:
                 break
 
 def parse_args():
