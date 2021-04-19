@@ -40,6 +40,10 @@ class Corrige:
         self._saida = value
 
     def executa(self):
+        self.abre_arquivos()
+        self.processa()
+
+    def abre_arquivos(self):
         try:
             self.abre_inventario()
             self.abre_compras()
@@ -58,7 +62,6 @@ class Corrige:
             except Exception:
                 pass
             raise e
-        self.processa()
 
     def abre_inventario(self):
         try:
@@ -72,7 +75,7 @@ class Corrige:
     def abre_compras(self):
         try:
             self._compras_csvfile = open(self._compras, newline='')
-            self._compras_reader = csv.reader(
+            self._compras_reader = csv.DictReader(
                 self._compras_csvfile, delimiter=';', quotechar='"')
         except Exception as e:
             print(f"Não consegui abrir para leitura {self._compras}")
@@ -88,14 +91,16 @@ class Corrige:
             raise e
 
     def processa(self):
-        # compras = {rows[0]:rows[1] for rows in self._compras_reader}
-        # pprint(compras)
+        compras = [
+            {k: v for k, v in row.items()}
+            for row in self._compras_reader
+        ]
+        pprint(compras[:4])
 
         for i, inv in enumerate(self._inventario_reader):
             pprint(inv)
-            if i > 3:
+            if i > 2:
                 break
-
 
 def parse_args():
     parser = argparse.ArgumentParser(
