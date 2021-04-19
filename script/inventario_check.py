@@ -84,8 +84,7 @@ class Corrige:
     def abre_saida(self):
         try:
             self._saida_csvfile = open(self._saida, 'w', newline='')
-            self._saida_writer = csv.writer(
-                self._saida_csvfile, delimiter=';', quotechar='"')
+            self._saida_writer = None
         except Exception as e:
             print(f"Não consegui abrir para escrita {self._saida}")
             raise e
@@ -99,7 +98,6 @@ class Corrige:
 
         for i, inv in enumerate(self._inventario_reader):
             inv_line = dict(inv.items())
-            pprint(inv_line)
             nivel, ref, tam, cor = tuple(inv_line['Código'].split('.'))
             compra_line = next(
                 (
@@ -114,13 +112,20 @@ class Corrige:
                 ),
                 None
             )
+
             if compra_line:
-                pprint(compra_line)
-            else:
-                # print(f"{inv_line['Código']} não encontrado")
-                pass
-            if i > 5:
-                break
+                qtd_inv = locale.atof(inv_line['Quantidade'])
+                qtd_compra = locale.atof(compra_line['Quantidade'])
+                qtd_dif = abs(qtd_inv - qtd_compra)
+                if qtd_dif > qtd_inv * 0.5:
+                    inv_line['Quantidade'] = compra_line['Quantidade']
+
+            if not self._saida_writer:
+                self._saida_writer = csv.DictWriter(
+                    self._saida_csvfile, inv_line.keys(), delimiter=';', quotechar='"')
+                self._saida_writer.writeheader()
+            self._saida_writer.writerow(inv_line)
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
