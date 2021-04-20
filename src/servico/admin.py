@@ -61,8 +61,12 @@ intr_adm_site.register(servico.models.NumeroDocumento, NumeroDocumentoAdmin)
 
 
 class TipoEventoAdmin(admin.ModelAdmin):
-    list_display = ['ordem', 'nome', 'slug']
-    fields = ['ordem', 'nome', 'slug']
+    list_display = [
+        'ordem', 'nome', 'slug',
+        'criar', 'inativar', 'ativar',
+        'edita_nivel', 'edita_equipe', 'edita_descricao'
+    ]
+    fields = list_display
     ordering = ['ordem']
 
 
