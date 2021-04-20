@@ -16,4 +16,7 @@ urlpatterns = [
     url(r'^cria_ordem/$',
         views.CriaOrdem.as_view(), name='cria_ordem'),
 
+    url(r'^edita_ordem/(?P<evento>.+)/(?P<numero>.+)/$',
+        views.EditaOrdem.as_view(), name='edita_ordem'),
+
 ]
