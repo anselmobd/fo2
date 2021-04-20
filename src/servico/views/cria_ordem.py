@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
 from django.db.utils import Error
 
@@ -10,7 +11,7 @@ import servico.forms
 import servico.models
 
 
-class CriaOrdem(O2BaseGetPostView):
+class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(CriaOrdem, self).__init__(*args, **kwargs)
