@@ -64,8 +64,14 @@ class CustomView(View):
                 return redirect(self.redirect)
         return render(self.request, self.template_name, self.context)
 
+    def pre_mount_context(self):
+        """
+        Metodo de pré-montagem de contexto
+        """
+        pass
+
     def mount_context(self):
         """
-        Metodo de montagem de contexto        
+        Metodo de montagem de contexto
         """
         pass
