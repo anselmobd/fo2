@@ -45,8 +45,8 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
-            doc = servico.models.NumeroDocumento(tipo=tipo)
-            doc.save()
+            self.doc = servico.models.NumeroDocumento(tipo=tipo)
+            self.doc.save()
         except Exception as e:
             self.context.update({
                 'erro': 'Não foi possível gerar um número de documento.',
@@ -55,7 +55,7 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
 
         try:
             evento = servico.models.ServicoEvento(
-                numero=doc,
+                numero=self.doc,
                 evento=evento,
                 nivel=self.nivel,
                 equipe=self.equipe,
@@ -68,8 +68,8 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             })
             raise e
 
-        doc.ativo = True
-        doc.save()
+        self.doc.ativo = True
+        self.doc.save()
 
 
     def mount_context(self):
@@ -78,5 +78,5 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
                 self.salva_evento()
         except Exception:
             return
-
-        self.redirect = ('servico:ordens',)
+        numero = self.doc.id
+        self.redirect = ('servico:ordem__get', numero)
