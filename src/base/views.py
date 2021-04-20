@@ -48,10 +48,10 @@ class O2BaseGetPostView(CustomView):
 
     def get(self, request, *args, **kwargs):
         self.init_self(request, kwargs)
-
-        for arg in self.get_args:
-            if self.get_arg(arg) is not None:
-                return self.post(request, *args, **kwargs)
+        if self.get_args2form:
+            for arg in self.get_args:
+                if self.get_arg(arg) is not None:
+                    return self.post(request, *args, **kwargs)
 
         self.form = self.Form_class()
         return self.render_mount()
@@ -60,8 +60,9 @@ class O2BaseGetPostView(CustomView):
         self.init_self(request, kwargs)
         self.form = self.Form_class(self.request.POST)
 
-        for arg in self.get_args:
-            self.set_form_arg(arg)
+        if self.get_args2form:
+            for arg in self.get_args:
+                self.set_form_arg(arg)
 
         return self.render_mount()
 

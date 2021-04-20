@@ -24,6 +24,7 @@ class CustomView(View):
         super(CustomView, self).__init__(*args, **kwargs)
         self.get_args = []
         self.get_args2context = False
+        self.get_args2form = True
         self.redirect = None
 
     def init_self(self, request, kwargs):
