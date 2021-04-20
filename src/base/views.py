@@ -35,6 +35,7 @@ class O2BaseGetPostView(CustomView):
                 setattr(self, field, self.form.cleaned_data[field])
 
     def render_mount(self):
+        self.pre_mount_context()
         if self.form.is_valid():
             self.do_cleaned_data2self()
             self.mount_context()
