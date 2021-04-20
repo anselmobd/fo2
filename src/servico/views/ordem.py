@@ -28,6 +28,11 @@ class Ordem(O2BaseGetPostView):
             })
             return
 
+        self.tipos_eventos = servico.models.TipoEvento.objects.filter(criar=False)
+        self.context.update({
+            'tipos_eventos': self.tipos_eventos,
+        })
+
         self.context.update({
             'numero': doc.id,
             'usuario': doc.user.username,
