@@ -1,3 +1,6 @@
+from pprint import pprint
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -197,6 +200,21 @@ class TipoEvento(models.Model):
         db_table = 'fo2_serv_tipo_evento'
         verbose_name = 'Tipo de evento'
         verbose_name_plural = 'Tipos de evento'
+
+    def so1(self, field, name):
+        if self.__dict__[field]:
+            filtro = {field: True}
+            evento = TipoEvento.objects.filter(**filtro)
+            if self.id:
+                evento = evento.exclude(id=self.id)
+            if evento.count() != 0:
+                raise ValidationError(f"Só pode haver um evento de {name}.")
+
+    def save(self, *args, **kwargs):
+        self.so1('criar', 'criação')
+        self.so1('inativar', 'inativação')
+        self.so1('ativar', 'ativação')
+        super(TipoEvento, self).save(*args, **kwargs)
 
 
 class ServicoEvento(models.Model):
