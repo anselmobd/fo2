@@ -50,6 +50,14 @@ class TipoDocumentoAdmin(admin.ModelAdmin):
 intr_adm_site.register(servico.models.TipoDocumento, TipoDocumentoAdmin)
 
 
+class StatusDocumentoAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'slug', 'criado', 'cancelado', 'iniciado', 'terminado']
+    fields = list_display
+
+
+intr_adm_site.register(servico.models.StatusDocumento, StatusDocumentoAdmin)
+
+
 class NumeroDocumentoAdmin(admin.ModelAdmin):
     list_display = ['id', 'tipo', 'create_at', 'user', 'ativo']
     fields = ['id', 'tipo', 'create_at', 'user', 'ativo']

@@ -132,6 +132,33 @@ class TipoDocumento(models.Model):
         verbose_name_plural = 'Tipos de documento'
 
 
+class StatusDocumento(models.Model):
+    nome = models.CharField(
+        max_length=20,
+    )
+    slug = models.SlugField()
+    criado = models.BooleanField(
+        default=False,
+    )
+    cancelado = models.BooleanField(
+        default=False,
+    )
+    iniciado = models.BooleanField(
+        default=False,
+    )
+    terminado = models.BooleanField(
+        default=False,
+    )
+
+    def __str__(self):
+        return f"{self.nome} ({self.slug})"
+
+    class Meta:
+        db_table = 'fo2_serv_status_doc'
+        verbose_name = 'Status de documento'
+        verbose_name_plural = verbose_name
+
+
 class NumeroDocumento(models.Model):
     tipo = models.ForeignKey(
         TipoDocumento, on_delete=models.PROTECT,
