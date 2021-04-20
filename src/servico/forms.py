@@ -7,7 +7,7 @@ from servico.models import ServicoEvento
 
 
 class O2FieldOrdemForm(forms.Form):
-    ordem = forms.IntegerField(
+    numero = forms.IntegerField(
         min_value=1, max_value=999999,
         widget=forms.TextInput(attrs={'type': 'number', 'size': 6}))
 
