@@ -23,6 +23,10 @@
     <h5>Ordem número {{ numero }}{% if not ativo %}, criada por {{ usuario }}, em {{ data }}; Inativa{% endif %}</h5>
   {% endif %}
   {% if eventos %}
+    <input type="button"
+      value="Comenta"
+      onclick="location.href='{% url 'servico:edita_ordem' 'com' numero %}'"
+    />
     <table>
       <tbody>
         {% for row in eventos %}
