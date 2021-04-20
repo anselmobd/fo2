@@ -171,6 +171,24 @@ class TipoEvento(models.Model):
     ordem = models.IntegerField(
         default=0,
     )
+    criar = models.BooleanField(
+        default=False,
+    )
+    inativar = models.BooleanField(
+        default=False,
+    )
+    ativar = models.BooleanField(
+        default=False,
+    )
+    edita_nivel = models.BooleanField(
+        default=False,
+    )
+    edita_equipe = models.BooleanField(
+        default=False,
+    )
+    edita_descricao = models.BooleanField(
+        default=False,
+    )
 
     def __str__(self):
         return self.nome
