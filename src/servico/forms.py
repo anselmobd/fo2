@@ -24,7 +24,7 @@ class OrdemForm(
         O2FieldOrdemForm):
 
     class Meta:
-        autofocus_field = 'ordem'
+        autofocus_field = 'numero'
 
 
 class OrdensForm(
