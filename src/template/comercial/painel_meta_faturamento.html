@@ -388,16 +388,33 @@
     cards_to_show = [];
     for (var name in cards) {
       let card = cards[name];
-      showCard = (
-        today_time >= card['dtde'] &&
-        today_time <= card['dtate']
-      );
+      showCard = true;
+      if ("dtde" in card) {
+        showCard = showCard && (
+          today_time >= card['dtde']
+        );
+      }
+      if ("dtate" in card) {
+        showCard = showCard && (
+          today_time <= card['dtate']
+        );
+      }
+      if ("dow" in card) {
+        let dows = card['dow']
+        for (var i = 0; i <= dows.length-1; i++) {
+          cdow = dows[i];
+          if ( cdow == dow ) {
+            showCard = showCard && true;
+          }
+        }
+      }
 
       // selecionado para aparecer
       if (showCard) {
         cards_to_show.push(name);
       }
     }
+    console.log(cards_to_show);
 
     if (cards_to_show.length > 0) {
       var name = cards_to_show[Math.floor(Math.random() * cards_to_show.length)];
