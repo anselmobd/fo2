@@ -14,6 +14,7 @@ class Ordem(O2BaseGetPostView):
         self.Form_class = servico.forms.OrdemForm
         self.template_name = 'servico/ordem.html'
         self.title_name = 'Ordem'
+        self.get_args = ['ordem']
 
 
     def mount_context(self):
