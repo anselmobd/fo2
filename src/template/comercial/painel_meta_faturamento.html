@@ -105,7 +105,7 @@
       color: snow;
       justify-content: right;
       animation-name: timer;
-      animation-duration: 675s;
+      animation-duration: 600s;
     }
     @keyframes timer {
       0%   {color: #0088ff;}
@@ -120,12 +120,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      /* background: url("/media/rh/meta/2020/02/resultado.png") repeat; */
       background-color: rgba(255,255,255,0.8);
     }
     .cartaz {
-      /* position: absolute; */
-      /* text-align: center; */
       position: absolute;
       margin: auto;
       left: 0;
@@ -137,8 +134,7 @@
 <script>
 
  var valendo = false;
-//  var refresh_rate = 300; //<-- In seconds, change to your needs
- var refresh_rate = 675; //<-- coloquei 10 vezes o tamanho do gif animado
+ var refresh_rate = 600; // segundos
  var last_user_action = 0;
 
  function reset() {
@@ -323,15 +319,11 @@
       </div>
     </div>
   </div>
-  <div class="overlay" id="cartaz_div">
-    <img class="cartaz" id="cartaz_gif" src="/media/rh/campanhas/2021/03/15/covid-mar21.gif" alt="covid-mar-2021">
-  </div>
   <script>
     var today = new Date();
     today.setHours(0, 0, 0, 0);
     var today_time = today.getTime()
     var dow = today.getDay();
-    var displayImg = false;
 
     var cards = {
       'com_vc': {
@@ -358,7 +350,7 @@
       },
       'novo_ciclo': {
         'dtde': new Date('04/16/2021'),
-        'dtate': new Date('04/19/2021'),
+        'dtate': new Date('04/21/2021'),
         'cartaz': {
           'path': '/media/rh/campanhas/2020/11/27',
           'files': [
@@ -382,6 +374,19 @@
         },
         'delay_file': 32000,
         'n_loops': 10,
+      },
+      'covid': {
+        'dtde': new Date('03/15/2021'),
+        'dtate': new Date('04/15/2021'),
+        'dow': [2, 4],
+        'cartaz': {
+          'path': '/media/rh/campanhas/2021/03/15',
+          'files': [
+            'covid-mar21.gif',
+          ]
+        },
+        'delay_file': 60000,
+        'n_loops': 5,
       }
     }
 
@@ -409,12 +414,10 @@
         }
       }
 
-      // selecionado para aparecer
       if (showCard) {
         cards_to_show.push(name);
       }
     }
-    console.log(cards_to_show);
 
     if (cards_to_show.length > 0) {
       var name = cards_to_show[Math.floor(Math.random() * cards_to_show.length)];
@@ -466,8 +469,8 @@
         for (var key = 1; key <= nimagens; key++) {
           if (key == imgloop) {
             post_div = elsdiv[key];
-            elsimg[key].src = elsimg[key].getAttribute('src');
             elsimg[key].addEventListener('load', post_div_visible)
+            elsimg[key].src = elsimg[key].getAttribute('src');
           } else {
             elsdiv[key].style.visibility = 'hidden';
           }
@@ -486,33 +489,6 @@
       }
 
       mostra_imagem();
-      displayImg = true;
-    }
-
-    if ( ((dow == 2) || (dow == 4)) && !displayImg) {
-      console.log('covid');
-      var c1_elemento = document.getElementById('cartaz_div');
-      var img_elemento = document.getElementById('cartaz_gif');
-      var img_elemento_src = img_elemento.getAttribute('src');
-      var chave_meta = false;
-
-      function mostra_imagem() {
-        // let nrandom = Math.floor(Math.random()*3);
-        // console.log(chave_meta)
-        if (chave_meta) {
-          c1_elemento.style.visibility = 'hidden';
-        } else {
-          // trocar o src com uma query variável para forçar a animação do gif a recomeçar
-          img_elemento.src = img_elemento_src+"?a="+Math.random();
-          c1_elemento.style.visibility = 'visible';
-        }
-        chave_meta = !chave_meta;
-      }
-
-      setInterval(function () {
-        mostra_imagem();
-      }, 67500);
-      displayImg = true;
     }
 
   </script>
