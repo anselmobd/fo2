@@ -1,0 +1,36 @@
+- model: servico.StatusDocumento
+  pk: 1
+  fields:
+    nome: Criado
+    slug: cri
+    criado: True
+    cancelado: False
+    iniciado: False
+    terminado: False
+- model: servico.StatusDocumento
+  pk: 2
+  fields:
+    nome: Cancelado
+    slug: can
+    criado: False
+    cancelado: True
+    iniciado: False
+    terminado: False
+- model: servico.StatusDocumento
+  pk: 3
+  fields:
+    nome: Iniciado
+    slug: ini
+    criado: False
+    cancelado: False
+    iniciado: True
+    terminado: False
+- model: servico.StatusDocumento
+  pk: 4
+  fields:
+    nome: Terminado
+    slug: ter
+    criado: False
+    cancelado: False
+    iniciado: False
+    terminado: True
