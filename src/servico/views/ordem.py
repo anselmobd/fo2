@@ -44,9 +44,10 @@ class Ordem(O2BaseGetPostView):
             return
 
         eventos = eventos.values(
-            'user__username',
+            'numero__status__nome',
             'create_at',
             'evento__nome',
+            'user__username',
             'nivel__nome',
             'equipe__nome',
             'descricao',
