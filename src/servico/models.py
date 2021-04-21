@@ -265,6 +265,20 @@ class TipoEvento(models.Model):
         super(TipoEvento, self).save(*args, **kwargs)
 
 
+class EventoDeStatus(models.Model):
+    status = models.ForeignKey(
+        StatusDocumento, on_delete=models.PROTECT,
+    )
+    evento = models.ForeignKey(
+        TipoEvento, on_delete=models.PROTECT,
+    )
+
+    class Meta:
+        db_table = 'fo2_serv_sevento_status'
+        verbose_name = 'Evento de status'
+        verbose_name_plural = 'Eventos de status'
+
+
 class ServicoEvento(models.Model):
     numero = models.ForeignKey(
         NumeroDocumento, on_delete=models.PROTECT,
