@@ -188,7 +188,7 @@ class NumeroDocumento(models.Model):
         super(NumeroDocumento, self).save(*args, **kwargs)
 
 
-class TipoEvento(models.Model):
+class Evento(models.Model):
     nome = models.CharField(
         max_length=20,
     )
@@ -226,7 +226,7 @@ class TipoEvento(models.Model):
     def so1(self, field, name):
         if self.__dict__[field]:
             filtro = {field: True}
-            evento = TipoEvento.objects.filter(**filtro)
+            evento = Evento.objects.filter(**filtro)
             if self.id:
                 evento = evento.exclude(id=self.id)
             if evento.count() != 0:
@@ -236,7 +236,7 @@ class TipoEvento(models.Model):
         self.so1('criar', 'criação')
         self.so1('inativar', 'inativação')
         self.so1('ativar', 'ativação')
-        super(TipoEvento, self).save(*args, **kwargs)
+        super(Evento, self).save(*args, **kwargs)
 
 
 class EventoDeStatus(models.Model):
@@ -246,7 +246,7 @@ class EventoDeStatus(models.Model):
         related_name='eventos_dependentes'
     )
     evento = models.ForeignKey(
-        TipoEvento, on_delete=models.PROTECT,
+        Evento, on_delete=models.PROTECT,
     )
     status_pos = models.ForeignKey(
         Status, on_delete=models.PROTECT,
@@ -271,7 +271,7 @@ class ServicoEvento(models.Model):
         verbose_name='Número',
     )
     evento = models.ForeignKey(
-        TipoEvento, on_delete=models.PROTECT,
+        Evento, on_delete=models.PROTECT,
     )
     create_at = models.DateTimeField(
         null=True, blank=True,

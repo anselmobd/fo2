@@ -77,7 +77,7 @@ class TipoEventoAdmin(admin.ModelAdmin):
     ordering = ['ordem']
 
 
-intr_adm_site.register(servico.models.TipoEvento, TipoEventoAdmin)
+intr_adm_site.register(servico.models.Evento, TipoEventoAdmin)
 
 
 class EventoDeStatusAdmin(admin.ModelAdmin):

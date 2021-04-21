@@ -37,8 +37,8 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
-            evento = servico.models.TipoEvento.objects.get(criar=True)
-        except servico.models.TipoEvento.DoesNotExist as e:
+            evento = servico.models.Evento.objects.get(criar=True)
+        except servico.models.Evento.DoesNotExist as e:
             self.context.update({
                 'erro': 'Evento de criação não encontrado.',
             })
