@@ -132,7 +132,7 @@ class TipoDocumento(models.Model):
         verbose_name_plural = 'Tipos de documento'
 
 
-class StatusDocumento(models.Model):
+class Status(models.Model):
     nome = models.CharField(
         max_length=20,
     )
@@ -166,8 +166,8 @@ class NumeroDocumento(models.Model):
         default=False,
     )
     status = models.ForeignKey(
-        StatusDocumento, on_delete=models.PROTECT,
-        # default=StatusDocumento.objects.get(criado=True).id
+        Status, on_delete=models.PROTECT,
+        # default=Status.objects.get(criado=True).id
     )
 
     def __str__(self):
@@ -182,7 +182,7 @@ class NumeroDocumento(models.Model):
         now = timezone.now()
         if not self.id:
             self.create_at = now
-            # self.status = StatusDocumento.objects.get(criado=True)
+            # self.status = Status.objects.get(criado=True)
         logged_in = LoggedInUser()
         self.user = logged_in.user
         super(NumeroDocumento, self).save(*args, **kwargs)
@@ -241,7 +241,7 @@ class TipoEvento(models.Model):
 
 class EventoDeStatus(models.Model):
     status_pre = models.ForeignKey(
-        StatusDocumento, on_delete=models.PROTECT,
+        Status, on_delete=models.PROTECT,
         null=True, blank=True,
         related_name='eventos_dependentes'
     )
@@ -249,7 +249,7 @@ class EventoDeStatus(models.Model):
         TipoEvento, on_delete=models.PROTECT,
     )
     status_pos = models.ForeignKey(
-        StatusDocumento, on_delete=models.PROTECT,
+        Status, on_delete=models.PROTECT,
         null=True, blank=True,
         related_name='eventos_criadores'
     )
