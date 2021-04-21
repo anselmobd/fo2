@@ -28,7 +28,7 @@ class Ordem(O2BaseGetPostView):
             })
             return
 
-        self.tipos_eventos = servico.models.Evento.objects.filter(criar=False)
+        self.tipos_eventos = servico.models.Evento.objects.exclude(codigo='req')
         self.context.update({
             'tipos_eventos': self.tipos_eventos,
         })
