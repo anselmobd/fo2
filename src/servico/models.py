@@ -192,7 +192,7 @@ class Evento(models.Model):
     nome = models.CharField(
         max_length=20,
     )
-    slug = models.SlugField()
+    codigo = models.SlugField()
     ordem = models.IntegerField(
         default=0,
     )
@@ -221,21 +221,6 @@ class Evento(models.Model):
     class Meta:
         db_table = 'fo2_serv_evento'
         verbose_name = 'Evento'
-
-    def so1(self, field, name):
-        if self.__dict__[field]:
-            filtro = {field: True}
-            evento = Evento.objects.filter(**filtro)
-            if self.id:
-                evento = evento.exclude(id=self.id)
-            if evento.count() != 0:
-                raise ValidationError(f"Só pode haver um evento de {name}.")
-
-    def save(self, *args, **kwargs):
-        self.so1('criar', 'criação')
-        self.so1('inativar', 'inativação')
-        self.so1('ativar', 'ativação')
-        super(Evento, self).save(*args, **kwargs)
 
 
 class EventoDeStatus(models.Model):
