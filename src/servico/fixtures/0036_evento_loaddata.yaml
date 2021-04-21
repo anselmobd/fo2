@@ -1,0 +1,72 @@
+- model: servico.Evento
+  pk: 1
+  fields:
+    nome: Requisição
+    codigo: requisicao
+    ordem: 10
+    edita_nivel: True
+    edita_equipe: True
+    edita_descricao: True
+- model: servico.Evento
+  pk: 2
+  fields:
+    nome: Cancelamento
+    codigo: cancelamento
+    ordem: 20
+    edita_nivel: False
+    edita_equipe: False
+    edita_descricao: True
+- model: servico.Evento
+  pk: 3
+  fields:
+    nome: Início
+    codigo: inicio
+    ordem: 30
+    edita_nivel: False
+    edita_equipe: False
+    edita_descricao: True
+- model: servico.Evento
+  pk: 4
+  fields:
+    nome: Alteração
+    codigo: alteracao
+    ordem: 40
+    edita_nivel: True
+    edita_equipe: True
+    edita_descricao: True
+- model: servico.Evento
+  pk: 5
+  fields:
+    nome: Comentário
+    codigo: comentario
+    ordem: 50
+    edita_nivel: False
+    edita_equipe: False
+    edita_descricao: True
+- model: servico.Evento
+  pk: 6
+  fields:
+    nome: Término
+    codigo: termino
+    ordem: 60
+    edita_nivel: False
+    edita_equipe: False
+    edita_descricao: True
+- model: servico.Evento
+  pk: 7
+  fields:
+    nome: Reabertura
+    codigo: reabertura
+    ordem: 70
+    edita_nivel: True
+    edita_equipe: True
+    edita_descricao: True
+- model: servico.Evento
+  pk: 8
+  fields:
+    nome: Aceito
+    codigo: aceito
+    ordem: 80
+    edita_nivel: False
+    edita_equipe: False
+    edita_descricao: True
