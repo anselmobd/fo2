@@ -158,6 +158,22 @@ class StatusDocumento(models.Model):
         verbose_name = 'Status de documento'
         verbose_name_plural = verbose_name
 
+    def so1(self, field, name):
+        if self.__dict__[field]:
+            filtro = {field: True}
+            evento = StatusDocumento.objects.filter(**filtro)
+            if self.id:
+                evento = evento.exclude(id=self.id)
+            if evento.count() != 0:
+                raise ValidationError(f"Só pode haver um status de {name}.")
+
+    def save(self, *args, **kwargs):
+        self.so1('criado', 'criação')
+        self.so1('cancelado', 'inativação')
+        self.so1('iniciado', 'ativação')
+        self.so1('terminado', 'ativação')
+        super(TipoEvento, self).save(*args, **kwargs)
+
 
 class NumeroDocumento(models.Model):
     tipo = models.ForeignKey(
@@ -175,6 +191,9 @@ class NumeroDocumento(models.Model):
     ativo = models.BooleanField(
         default=False,
     )
+    status = models.ForeignKey(
+        StatusDocumento, on_delete=models.PROTECT,
+    )
 
     def __str__(self):
         return f"{self.tipo} {self.id}"
@@ -188,6 +207,7 @@ class NumeroDocumento(models.Model):
         now = timezone.now()
         if not self.id:
             self.create_at = now
+            self.status = StatusDocumento.objects.get(criado=True)
         logged_in = LoggedInUser()
         self.user = logged_in.user
         super(NumeroDocumento, self).save(*args, **kwargs)
