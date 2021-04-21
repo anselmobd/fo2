@@ -51,8 +51,7 @@ intr_adm_site.register(servico.models.TipoDocumento, TipoDocumentoAdmin)
 
 
 class StatusDocumentoAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'slug', 'criado', 'cancelado', 'iniciado', 'terminado']
-    fields = list_display
+    pass
 
 
 intr_adm_site.register(servico.models.StatusDocumento, StatusDocumentoAdmin)

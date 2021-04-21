@@ -136,43 +136,17 @@ class StatusDocumento(models.Model):
     nome = models.CharField(
         max_length=20,
     )
-    slug = models.SlugField()
-    criado = models.BooleanField(
-        default=False,
-    )
-    cancelado = models.BooleanField(
-        default=False,
-    )
-    iniciado = models.BooleanField(
-        default=False,
-    )
-    terminado = models.BooleanField(
-        default=False,
+    codigo = models.CharField(
+        max_length=20,
     )
 
     def __str__(self):
-        return f"{self.nome} ({self.slug})"
+        return f"{self.nome} ({self.codigo})"
 
     class Meta:
         db_table = 'fo2_serv_status_doc'
         verbose_name = 'Status de documento'
         verbose_name_plural = verbose_name
-
-    def so1(self, field, name):
-        if self.__dict__[field]:
-            filtro = {field: True}
-            evento = StatusDocumento.objects.filter(**filtro)
-            if self.id:
-                evento = evento.exclude(id=self.id)
-            if evento.count() != 0:
-                raise ValidationError(f"Só pode haver um status de {name}.")
-
-    def save(self, *args, **kwargs):
-        self.so1('criado', 'criação')
-        self.so1('cancelado', 'inativação')
-        self.so1('iniciado', 'ativação')
-        self.so1('terminado', 'ativação')
-        super(StatusDocumento, self).save(*args, **kwargs)
 
 
 class NumeroDocumento(models.Model):
