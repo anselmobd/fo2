@@ -193,6 +193,7 @@ class NumeroDocumento(models.Model):
     )
     status = models.ForeignKey(
         StatusDocumento, on_delete=models.PROTECT,
+        default=StatusDocumento.objects.get(criado=True).id
     )
 
     def __str__(self):
