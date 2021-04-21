@@ -274,7 +274,7 @@ class EventoDeStatus(models.Model):
     )
 
     class Meta:
-        db_table = 'fo2_serv_sevento_status'
+        db_table = 'fo2_serv_evento_status'
         verbose_name = 'Evento de status'
         verbose_name_plural = 'Eventos de status'
 
