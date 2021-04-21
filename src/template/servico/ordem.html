@@ -26,7 +26,7 @@
     {% for tipo_evento in tipos_eventos %}
       <input type="button"
         value="{{tipo_evento.nome}}"
-        onclick="location.href='{% url 'servico:edita_ordem' tipo_evento.slug numero %}'"
+        onclick="location.href='{% url 'servico:edita_ordem' tipo_evento.codigo numero %}'"
       />
     {% endfor %}
     <table>
