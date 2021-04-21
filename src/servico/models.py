@@ -198,15 +198,6 @@ class Evento(models.Model):
     ordem = models.IntegerField(
         default=0,
     )
-    criar = models.BooleanField(
-        default=False,
-    )
-    inativar = models.BooleanField(
-        default=False,
-    )
-    ativar = models.BooleanField(
-        default=False,
-    )
     edita_nivel = models.BooleanField(
         default=False,
     )
