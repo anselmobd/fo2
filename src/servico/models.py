@@ -144,8 +144,8 @@ class Status(models.Model):
         return f"{self.nome} ({self.codigo})"
 
     class Meta:
-        db_table = 'fo2_serv_status_doc'
-        verbose_name = 'Status de documento'
+        db_table = 'fo2_serv_status'
+        verbose_name = 'Status'
         verbose_name_plural = verbose_name
 
 
