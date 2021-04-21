@@ -82,7 +82,7 @@ intr_adm_site.register(servico.models.TipoEvento, TipoEventoAdmin)
 
 
 class EventoDeStatusAdmin(admin.ModelAdmin):
-    list_display = ['status', 'evento']
+    list_display = ['status_pre', 'evento', 'status_pos']
     fields = list_display
     ordering = list_display
 
