@@ -266,17 +266,29 @@ class TipoEvento(models.Model):
 
 
 class EventoDeStatus(models.Model):
-    status = models.ForeignKey(
+    status_pre = models.ForeignKey(
         StatusDocumento, on_delete=models.PROTECT,
+        null=True, blank=True,
+        related_name='eventos_dependentes'
     )
     evento = models.ForeignKey(
         TipoEvento, on_delete=models.PROTECT,
+    )
+    status_pos = models.ForeignKey(
+        StatusDocumento, on_delete=models.PROTECT,
+        null=True, blank=True,
+        related_name='eventos_criadores'
     )
 
     class Meta:
         db_table = 'fo2_serv_evento_status'
         verbose_name = 'Evento de status'
         verbose_name_plural = 'Eventos de status'
+
+    def save(self, *args, **kwargs):
+        if not self.status_pre and not self.status_pos:
+            raise ValidationError(f"Ao menos um status deve ser indicado.")
+        super(EventoDeStatus, self).save(*args, **kwargs)
 
 
 class ServicoEvento(models.Model):
