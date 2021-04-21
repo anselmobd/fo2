@@ -232,9 +232,9 @@ class StatusEvento(models.Model):
     )
 
     class Meta:
-        db_table = 'fo2_serv_evento_status'
-        verbose_name = 'Evento de status'
-        verbose_name_plural = 'Eventos de status'
+        db_table = 'fo2_serv_status_evento'
+        verbose_name = 'Status-Evento'
+        verbose_name_plural = verbose_name
 
     def save(self, *args, **kwargs):
         if not self.status_pre and not self.status_pos:
