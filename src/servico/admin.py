@@ -50,11 +50,11 @@ class TipoDocumentoAdmin(admin.ModelAdmin):
 intr_adm_site.register(servico.models.TipoDocumento, TipoDocumentoAdmin)
 
 
-class StatusDocumentoAdmin(admin.ModelAdmin):
+class StatusAdmin(admin.ModelAdmin):
     pass
 
 
-intr_adm_site.register(servico.models.StatusDocumento, StatusDocumentoAdmin)
+intr_adm_site.register(servico.models.Status, StatusAdmin)
 
 
 class NumeroDocumentoAdmin(admin.ModelAdmin):
