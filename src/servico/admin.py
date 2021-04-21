@@ -85,7 +85,7 @@ class EventoDeStatusAdmin(admin.ModelAdmin):
     ordering = list_display
 
 
-intr_adm_site.register(servico.models.EventoDeStatus, EventoDeStatusAdmin)
+intr_adm_site.register(servico.models.StatusEvento, EventoDeStatusAdmin)
 
 
 class ServicoEventoAdmin(admin.ModelAdmin):
