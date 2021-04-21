@@ -216,7 +216,7 @@ class Evento(models.Model):
         verbose_name = 'Evento'
 
 
-class EventoDeStatus(models.Model):
+class StatusEvento(models.Model):
     status_pre = models.ForeignKey(
         Status, on_delete=models.PROTECT,
         null=True, blank=True,
@@ -239,7 +239,7 @@ class EventoDeStatus(models.Model):
     def save(self, *args, **kwargs):
         if not self.status_pre and not self.status_pos:
             raise ValidationError(f"Ao menos um status deve ser indicado.")
-        super(EventoDeStatus, self).save(*args, **kwargs)
+        super(StatusEvento, self).save(*args, **kwargs)
 
 
 class ServicoEvento(models.Model):
