@@ -33,35 +33,29 @@
       <tbody>
         {% for row in eventos %}
           <tr>
-            <td>
-              Usuário:
-            </td>
-            <td>
-              {{ row.user__username }}
-            </td>
-            <td>
-              <h4>{{ row.evento__nome }}</h4>
+            <td colspan="4">
+              <h3>{{ row.numero__status__nome }} - {{ row.create_at }}</h3>
             </td>
           </tr>
           <tr>
             <td>
-              Data:
+              &nbsp;
             </td>
             <td>
-              {{ row.create_at }}
+              {{ row.evento__nome }} de {{ row.user__username }}
             </td>
             <td>
               <h4>{{ row.nivel__nome }}</h4>
             </td>
+            <td>
+              <h4>{{ row.equipe__nome }}</h4>
+            </td>
           </tr>
           <tr>
             <td>
-              Equipe:
+              &nbsp;
             </td>
-            <td>
-              {{ row.equipe__nome }}
-            </td>
-            <td>
+            <td colspan="3">
               {{ row.descricao }}
             </td>
           </tr>
