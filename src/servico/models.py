@@ -192,7 +192,9 @@ class Evento(models.Model):
     nome = models.CharField(
         max_length=20,
     )
-    codigo = models.SlugField()
+    codigo = models.CharField(
+        max_length=20,
+    )
     ordem = models.IntegerField(
         default=0,
     )
