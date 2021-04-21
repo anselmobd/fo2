@@ -34,8 +34,8 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
-            self.evento_record = servico.models.TipoEvento.objects.get(slug=self.context['evento'])
-        except servico.models.TipoEvento.DoesNotExist as e:
+            self.evento_record = servico.models.Evento.objects.get(slug=self.context['evento'])
+        except servico.models.Evento.DoesNotExist as e:
             self.context.update({
                 'erro': 'Tipo de evento inválido.',
             })
