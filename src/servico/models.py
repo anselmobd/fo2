@@ -172,7 +172,7 @@ class StatusDocumento(models.Model):
         self.so1('cancelado', 'inativação')
         self.so1('iniciado', 'ativação')
         self.so1('terminado', 'ativação')
-        super(TipoEvento, self).save(*args, **kwargs)
+        super(StatusDocumento, self).save(*args, **kwargs)
 
 
 class NumeroDocumento(models.Model):
