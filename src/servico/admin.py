@@ -59,8 +59,8 @@ intr_adm_site.register(servico.models.StatusDocumento, StatusDocumentoAdmin)
 
 
 class NumeroDocumentoAdmin(admin.ModelAdmin):
-    list_display = ['id', 'tipo', 'create_at', 'user', 'ativo']
-    fields = ['id', 'tipo', 'create_at', 'user', 'ativo']
+    list_display = ['id', 'tipo', 'create_at', 'user', 'ativo', 'status']
+    fields = list_display
     readonly_fields = ['id', 'create_at']
     ordering = ['create_at']
 
