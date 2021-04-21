@@ -193,7 +193,7 @@ class NumeroDocumento(models.Model):
     )
     status = models.ForeignKey(
         StatusDocumento, on_delete=models.PROTECT,
-        default=StatusDocumento.objects.get(criado=True).id
+        # default=StatusDocumento.objects.get(criado=True).id
     )
 
     def __str__(self):
@@ -208,7 +208,7 @@ class NumeroDocumento(models.Model):
         now = timezone.now()
         if not self.id:
             self.create_at = now
-            self.status = StatusDocumento.objects.get(criado=True)
+            # self.status = StatusDocumento.objects.get(criado=True)
         logged_in = LoggedInUser()
         self.user = logged_in.user
         super(NumeroDocumento, self).save(*args, **kwargs)
