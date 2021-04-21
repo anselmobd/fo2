@@ -219,9 +219,8 @@ class Evento(models.Model):
         return self.nome
 
     class Meta:
-        db_table = 'fo2_serv_tipo_evento'
-        verbose_name = 'Tipo de evento'
-        verbose_name_plural = 'Tipos de evento'
+        db_table = 'fo2_serv_evento'
+        verbose_name = 'Evento'
 
     def so1(self, field, name):
         if self.__dict__[field]:
