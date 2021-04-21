@@ -1,0 +1,25 @@
+- model: servico.Status
+  pk: 1
+  fields:
+    nome: Aberto
+    codigo: aberto
+- model: servico.Status
+  pk: 2
+  fields:
+    nome: Cancelado
+    codigo: cancelado
+- model: servico.Status
+  pk: 3
+  fields:
+    nome: Iniciado
+    codigo: iniciado
+- model: servico.Status
+  pk: 4
+  fields:
+    nome: Terminado
+    codigo: terminado
+- model: servico.Status
+  pk: 5
+  fields:
+    nome: Fechado
+    codigo: fechado
