@@ -31,44 +31,91 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
     if ref:
         filtra_ref = f"AND fi.GRUPO_ESTRUTURA = '{ref}'"
 
-    sql = """
+    sql_tipo = {
+        'total': {
+            'fields': """
+                to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
+            """,
+            'group_order': """
+                GROUP BY
+                  to_char(f.DATA_EMISSAO, 'MM/YYYY')
+                ORDER BY
+                  to_char(f.DATA_EMISSAO, 'MM/YYYY')
+            """
+        },
+        'cliente': {
+            'fields': """
+                c.NOME_CLIENTE CLIENTE
+            """,
+            'group_order': """
+                GROUP BY
+                  c.NOME_CLIENTE
+                ORDER BY
+                  c.NOME_CLIENTE
+            """
+        },
+        'nota': {
+            'fields': """
+                  f.NUM_NOTA_FISCAL NF
+                , f.DATA_EMISSAO DATA
+                , c.NOME_CLIENTE
+                  || ' (' || lpad(c.CGC_9, 8, '0')
+                  || '/' || lpad(c.CGC_4, 4, '0')
+                  || '-' || lpad(c.CGC_2, 2, '0')
+                  || ')' CLIENTE
+                , n.COD_NATUREZA NAT
+                , n.DIVISAO_NATUR DIV
+            """,
+            'group_order': """
+                GROUP BY
+                  f.NUM_NOTA_FISCAL
+                , f.DATA_EMISSAO
+                , c.NOME_CLIENTE
+                , c.CGC_9
+                , c.CGC_4
+                , c.CGC_2
+                , n.COD_NATUREZA
+                , n.DIVISAO_NATUR
+                ORDER BY
+                  f.NUM_NOTA_FISCAL
+            """
+        },
+        'nota_referencia': {
+            'fields': """
+                  f.NUM_NOTA_FISCAL NF
+                , f.DATA_EMISSAO DATA
+                , c.NOME_CLIENTE
+                  || ' (' || lpad(c.CGC_9, 8, '0')
+                  || '/' || lpad(c.CGC_4, 4, '0')
+                  || '-' || lpad(c.CGC_2, 2, '0')
+                  || ')' CLIENTE
+                , n.COD_NATUREZA NAT
+                , n.DIVISAO_NATUR DIV
+                , fi.NIVEL_ESTRUTURA NIVEL
+                , fi.GRUPO_ESTRUTURA REF
+            """,
+            'group_order': """
+                GROUP BY
+                  f.NUM_NOTA_FISCAL
+                , f.DATA_EMISSAO
+                , c.NOME_CLIENTE
+                , c.CGC_9
+                , c.CGC_4
+                , c.CGC_2
+                , n.COD_NATUREZA
+                , n.DIVISAO_NATUR
+                , fi.NIVEL_ESTRUTURA
+                , fi.GRUPO_ESTRUTURA
+                ORDER BY
+                  f.NUM_NOTA_FISCAL
+                , fi.GRUPO_ESTRUTURA
+            """
+        },
+    }
+
+    sql = f"""
         SELECT
-    """
-    if tipo == 'total':
-        sql += """
-              to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
-        """
-    elif tipo == 'cliente':
-        sql += """
-              c.NOME_CLIENTE CLIENTE
-        """
-    elif tipo == 'nota_referencia':
-        sql += """
-              f.NUM_NOTA_FISCAL NF
-            , f.DATA_EMISSAO DATA
-            , c.NOME_CLIENTE
-              || ' (' || lpad(c.CGC_9, 8, '0')
-              || '/' || lpad(c.CGC_4, 4, '0')
-              || '-' || lpad(c.CGC_2, 2, '0')
-              || ')' CLIENTE
-            , n.COD_NATUREZA NAT
-            , n.DIVISAO_NATUR DIV
-            , fi.NIVEL_ESTRUTURA NIVEL
-            , fi.GRUPO_ESTRUTURA REF
-        """
-    elif tipo == 'nota':
-        sql += """
-              f.NUM_NOTA_FISCAL NF
-            , f.DATA_EMISSAO DATA
-            , c.NOME_CLIENTE
-              || ' (' || lpad(c.CGC_9, 8, '0')
-              || '/' || lpad(c.CGC_4, 4, '0')
-              || '-' || lpad(c.CGC_2, 2, '0')
-              || ')' CLIENTE
-            , n.COD_NATUREZA NAT
-            , n.DIVISAO_NATUR DIV
-        """
-    sql += f"""
+          {sql_tipo[tipo]['fields']}
         , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
         , sum(fi.QTDE_ITEM_FATUR) QTD
         FROM FATU_050 f
@@ -103,51 +150,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
               TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
           AND f.DATA_EMISSAO <
               TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
+        {sql_tipo[tipo]['group_order']}
     """
-    if tipo == 'total':
-        sql += """
-            GROUP BY
-              to_char(f.DATA_EMISSAO, 'MM/YYYY')
-            ORDER BY
-              to_char(f.DATA_EMISSAO, 'MM/YYYY')
-        """
-    elif tipo == 'cliente':
-        sql += """
-            GROUP BY
-              c.NOME_CLIENTE
-            ORDER BY
-              c.NOME_CLIENTE
-        """
-    elif tipo == 'nota_referencia':
-        sql += """
-            GROUP BY
-              f.NUM_NOTA_FISCAL
-            , f.DATA_EMISSAO
-            , c.NOME_CLIENTE
-            , c.CGC_9
-            , c.CGC_4
-            , c.CGC_2
-            , n.COD_NATUREZA
-            , n.DIVISAO_NATUR
-            , fi.NIVEL_ESTRUTURA
-            , fi.GRUPO_ESTRUTURA
-            ORDER BY
-              f.NUM_NOTA_FISCAL
-            , fi.GRUPO_ESTRUTURA
-        """
-    elif tipo == 'nota':
-        sql += """
-            GROUP BY
-              f.NUM_NOTA_FISCAL
-            , f.DATA_EMISSAO
-            , c.NOME_CLIENTE
-            , c.CGC_9
-            , c.CGC_4
-            , c.CGC_2
-            , n.COD_NATUREZA
-            , n.DIVISAO_NATUR
-            ORDER BY
-              f.NUM_NOTA_FISCAL
-        """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
