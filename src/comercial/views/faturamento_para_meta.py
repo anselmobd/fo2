@@ -93,6 +93,17 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                         faturado['pedido_cliente'] = '-'
 
         tabela = {
+            'mes': {
+                'headers': [
+                    'Mês', 'Valor',
+                ],
+                'fields': [
+                    'mes', 'valor',
+                ],
+                'style': {
+                    2: 'text-align: right;',
+                },
+            },
             'nota': {
                 'headers': [
                     'Nota', 'Data', 'CFOP', 'Cliente',

@@ -4,14 +4,16 @@ from utils.functions.models import rows_to_dict_list_lower
 
 
 def faturamento_para_meta(
-        cursor, ano, mes=None, tipo='total', empresa=1,
+        cursor, ano, mes=None, tipo='mes', empresa=1,
         ref=None, ordem='apresentacao', cliente=None):
     '''
         tipo:
-            total - totaliza por mês
+            mes - totaliza por mês
             cliente - totaliza por cliente
             nota - mostra por nota
             nota_referencia - mostra por nota e referência
+            referencia - totaliza por referência
+            modelo - totaliza por modelo
     '''
     ano = str(ano)
     if mes is None:
@@ -43,7 +45,7 @@ def faturamento_para_meta(
               || ')' like '%{cliente}%' '''
 
     sql_tipo = {
-        'total': {
+        'mes': {
             'fields': """--
                 , to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
             """,
