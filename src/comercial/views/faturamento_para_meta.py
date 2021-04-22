@@ -64,10 +64,10 @@ class FaturamentoParaMeta(O2BaseGetPostView):
 
         for faturado in faturados:
             faturado['valor|DECIMALS'] = 2
-            if apresentacao in ['detalhe', 'referencia']:
+            if apresentacao in ['nota', 'nota_referencia']:
                 faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
 
-        if apresentacao == 'detalhe':
+        if apresentacao == 'nota':
             self.context.update({
                 'headers': ['Nota', 'Data', 'CFOP', 'Cliente', 'Valor', ],
                 'fields': ['nf', 'data', 'cfop', 'cliente', 'valor', ],
@@ -76,7 +76,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                     5: 'text-align: right;',
                 },
             })
-        elif apresentacao == 'referencia':
+        elif apresentacao == 'nota_referencia':
             self.context.update({
                 'headers': ['Nota', 'Data', 'CFOP', 'Cliente',
                             'Referência', 'Quantidade', 'Valor', ],
