@@ -22,14 +22,16 @@
     <h3>Filtro:</h3>
     <ul>
       {% if mes %}
-        <li>Mês:
-          {{mes}}
-        </li>
+        <li>Mês: {{mes}}</li>
       {% endif %}
       {% if ano %}
-        <li>Ano:
-          {{ano}}
-        </li>
+        <li>Ano: {{ano}}</li>
+      {% endif %}
+      {% if ref %}
+        <li>Referência: {{ref}}</li>
+      {% endif %}
+      {% if cliente %}
+        <li>Cliente: {{cliente}}</li>
       {% endif %}
     </ul>
   {% endif %}
