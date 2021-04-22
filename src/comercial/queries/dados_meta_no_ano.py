@@ -27,7 +27,7 @@ def dados_meta_no_ano(cursor, hoje):
     if len(metas) == 0:
         return 'Nenhuma meta definida para o ano', None, None
 
-    faturados = comercial.queries.faturamento_para_meta_old(
+    faturados = comercial.queries.faturamento_para_meta(
         cursor, ano_atual)
     for faturado in faturados:
         faturado['mes'] = int(faturado['mes'][:2])
