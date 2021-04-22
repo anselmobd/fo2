@@ -151,21 +151,21 @@ def faturamento_para_meta(
         },
         'modelo': {
             'fields': """--
-                , TRIM(LEADING '0' FROM (
+                , TO_NUMBER(
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
-                  )) MODELO
+                  ) MODELO
             """,
             'group': """--
                 GROUP BY
-                  TRIM(LEADING '0' FROM (
+                  TO_NUMBER(
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
-                  ))
+                  )
             """,
             'order': """--
                 ORDER BY
-                  TRIM(LEADING '0' FROM (
+                  TO_NUMBER(
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
-                  ))
+                  )
             """
         },
     }
