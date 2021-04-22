@@ -35,7 +35,10 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         apresentacao = self.form.cleaned_data['apresentacao']
         ordem = self.form.cleaned_data['ordem']
 
-        percentual = ordem == 'valor' and apresentacao in ['cliente', 'referencia']
+        percentual = (
+            ordem == 'valor' and
+            apresentacao in ['cliente', 'referencia', 'modelo']
+        )
 
         if ano is None or mes is None:
             hoje = datetime.date.today()
@@ -110,6 +113,14 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             'referencia': {
                 'headers': ['Referencia', 'Valor', ],
                 'fields': ['ref', 'valor', ],
+                'data': faturados,
+                'style': {
+                    2: 'text-align: right;',
+                },
+            },
+            'modelo': {
+                'headers': ['Modelo', 'Valor', ],
+                'fields': ['modelo', 'valor', ],
                 'data': faturados,
                 'style': {
                     2: 'text-align: right;',

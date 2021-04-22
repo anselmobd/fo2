@@ -95,17 +95,18 @@ class FaturamentoParaMetaForm(
     mes = forms.IntegerField(required=False, initial=mes_atual)
 
     CHOICES = [
-        ('cliente', 'Por cliente'),
         ('nota', 'Por nota'),
         ('nota_referencia', 'Por nota e referência'),
-        ('referencia', 'Por referência'),
+        ('cliente', '*Por cliente'),
+        ('referencia', '*Por referência'),
+        ('modelo', '*Por modelo'),
         ]
     apresentacao = forms.ChoiceField(
-        choices=CHOICES, initial='cliente', label='Apresentação')
+        choices=CHOICES, initial='nota', label='Apresentação')
 
     CHOICES = [
         ('apresentacao', 'Pela informação da apresentação'),
-        ('valor', 'Pelo valor'),
+        ('valor', '*Pelo valor'),
         ]
     ordem = forms.ChoiceField(
         choices=CHOICES, initial='apresentacao')
