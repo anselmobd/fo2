@@ -41,23 +41,21 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             apresentacao in ['cliente', 'referencia', 'modelo']
         )
 
-        if ano is None or mes is None:
+        if ano is None:
             hoje = datetime.date.today()
             ano_atual = hoje.year
-            mes_atual = hoje.month
         else:
             ano_atual = ano
-            mes_atual = mes
 
         self.context.update({
             'ano': ano_atual,
-            'mes': mes_atual,
+            'mes': mes,
             'ref': ref,
             'cliente': cliente,
         })
 
         faturados = comercial.queries.faturamento_para_meta(
-            cursor, ano_atual, mes_atual, ref=ref, cliente=cliente,
+            cursor, ano_atual, mes, ref=ref, cliente=cliente,
             tipo=apresentacao, ordem=ordem)
 
         if len(faturados) == 0:
