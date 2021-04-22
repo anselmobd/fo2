@@ -22,7 +22,7 @@ class DevolucaoParaMeta(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(DevolucaoParaMeta, self).__init__(*args, **kwargs)
-        self.Form_class = comercial.forms.FaturamentoParaMetaForm
+        self.Form_class = comercial.forms.DevolucaoParaMetaForm
         self.template_name = 'comercial/devolucao_para_meta.html'
         self.title_name = 'Devolução no mês'
 
