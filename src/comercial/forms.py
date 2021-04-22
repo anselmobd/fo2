@@ -1,6 +1,6 @@
 from django import forms
 
-from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm
+from base.forms import O2BaseForm, O2FieldRefForm, O2FieldModeloForm, O2FieldClienteForm
 from utils.functions import mes_atual, ano_atual
 
 
@@ -87,7 +87,9 @@ class VendasPorForm(
 
 class FaturamentoParaMetaForm(
         O2BaseForm,
-        O2FieldRefForm):
+        O2FieldRefForm,
+        O2FieldClienteForm):
+
     ano = forms.IntegerField(
         required=False, initial=ano_atual,
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
@@ -117,6 +119,7 @@ class FaturamentoParaMetaForm(
             'ano',
             'mes',
             'ref',
+            'cliente',
             'apresentacao',
             'ordem',
         ]

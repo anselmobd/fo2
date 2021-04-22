@@ -5,7 +5,7 @@ from utils.functions.models import rows_to_dict_list_lower
 
 def faturamento_para_meta(
         cursor, ano, mes=None, tipo='total', empresa=1,
-        ref=None, ordem='apresentacao'):
+        ref=None, ordem='apresentacao', cliente=None):
     '''
         tipo:
             total - totaliza por mês
@@ -32,6 +32,15 @@ def faturamento_para_meta(
     filtra_ref = ""
     if ref:
         filtra_ref = f"AND fi.GRUPO_ESTRUTURA = '{ref}'"
+
+    filtro_cliente = ''
+    if cliente != '':
+        filtro_cliente = f'''--
+            AND c.NOME_CLIENTE
+              || ' (' || lpad(c.CGC_9, 8, '0')
+              || '/' || lpad(c.CGC_4, 4, '0')
+              || '-' || lpad(c.CGC_2, 2, '0')
+              || ')' like '%{cliente}%' '''
 
     sql_tipo = {
         'total': {
@@ -202,6 +211,7 @@ def faturamento_para_meta(
         WHERE 1=1
           AND f.CODIGO_EMPRESA = {empresa}
           {filtra_ref} -- filtra_ref
+          {filtro_cliente} -- filtro_cliente
           -- ou o faturamento tem uma transação de venda
           -- ou é o caso especial de remessa de residuo
           AND ( t.TIPO_TRANSACAO = 'V'
