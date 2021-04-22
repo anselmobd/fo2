@@ -221,6 +221,5 @@ def faturamento_para_meta(
         {sql_tipo[tipo]['group']} -- group
         {sql_order} -- order
     """
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
