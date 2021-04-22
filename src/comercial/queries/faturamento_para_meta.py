@@ -111,6 +111,20 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
                 , fi.GRUPO_ESTRUTURA
             """
         },
+        'referencia': {
+            'fields': """
+                  fi.NIVEL_ESTRUTURA NIVEL
+                , fi.GRUPO_ESTRUTURA REF
+            """,
+            'group_order': """
+                GROUP BY
+                  fi.NIVEL_ESTRUTURA
+                , fi.GRUPO_ESTRUTURA
+                ORDER BY
+                  fi.NIVEL_ESTRUTURA
+                , fi.GRUPO_ESTRUTURA
+            """
+        },
     }
 
     sql = f"""

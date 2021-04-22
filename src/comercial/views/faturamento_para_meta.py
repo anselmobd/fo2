@@ -88,10 +88,19 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                     7: 'text-align: right;',
                 },
             })
-        else:
+        elif apresentacao == 'cliente':
             self.context.update({
                 'headers': ['Cliente', 'Valor', ],
                 'fields': ['cliente', 'valor', ],
+                'data': faturados,
+                'style': {
+                    2: 'text-align: right;',
+                },
+            })
+        elif apresentacao == 'referencia':
+            self.context.update({
+                'headers': ['Referencia', 'Valor', ],
+                'fields': ['ref', 'valor', ],
                 'data': faturados,
                 'style': {
                     2: 'text-align: right;',
