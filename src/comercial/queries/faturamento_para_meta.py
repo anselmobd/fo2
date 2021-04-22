@@ -34,7 +34,7 @@ def faturamento_para_meta(
         filtra_ref = f"AND fi.GRUPO_ESTRUTURA = '{ref}'"
 
     filtro_cliente = ''
-    if cliente != '':
+    if cliente is not None and cliente != '':
         filtro_cliente = f'''--
             AND c.NOME_CLIENTE
               || ' (' || lpad(c.CGC_9, 8, '0')
