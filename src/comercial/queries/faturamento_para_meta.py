@@ -8,7 +8,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
         tipo:
             total - totaliza por mês
             cliente - totaliza por cliente
-            detalhe - mostra por nota
+            nota - mostra por nota
+            nota_referencia - mostra por nota e referência
     '''
     ano = str(ano)
     if mes is None:
@@ -41,7 +42,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
         sql += """
               c.NOME_CLIENTE CLIENTE
         """
-    elif tipo == 'referencia':
+    elif tipo == 'nota_referencia':
         sql += """
               f.NUM_NOTA_FISCAL NF
             , f.DATA_EMISSAO DATA
@@ -55,7 +56,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
             , fi.NIVEL_ESTRUTURA NIVEL
             , fi.GRUPO_ESTRUTURA REF
         """
-    else:
+    elif tipo == 'nota':
         sql += """
               f.NUM_NOTA_FISCAL NF
             , f.DATA_EMISSAO DATA
@@ -117,7 +118,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
             ORDER BY
               c.NOME_CLIENTE
         """
-    elif tipo == 'referencia':
+    elif tipo == 'nota_referencia':
         sql += """
             GROUP BY
               f.NUM_NOTA_FISCAL
@@ -134,7 +135,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
               f.NUM_NOTA_FISCAL
             , fi.GRUPO_ESTRUTURA
         """
-    else:
+    elif tipo == 'nota':
         sql += """
             GROUP BY
               f.NUM_NOTA_FISCAL
