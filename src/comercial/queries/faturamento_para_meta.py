@@ -59,7 +59,7 @@ def faturamento_para_meta(
             """,
             'order': """
                 ORDER BY
-                , max(c.NOME_CLIENTE)
+                  max(c.NOME_CLIENTE)
                   || ' (' || lpad(c.CGC_9, 8, '0')
                   || '/....-..)'
             """
@@ -221,5 +221,6 @@ def faturamento_para_meta(
         {sql_tipo[tipo]['group']}
         {sql_order}
     """
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
