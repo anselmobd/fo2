@@ -35,29 +35,29 @@ def faturamento_para_meta(
 
     sql_tipo = {
         'total': {
-            'fields': """
+            'fields': """--
                 , to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
             """,
-            'group': """
+            'group': """--
                 GROUP BY
                   to_char(f.DATA_EMISSAO, 'MM/YYYY')
             """,
-            'order': """
+            'order': """--
                 ORDER BY
                   to_char(f.DATA_EMISSAO, 'MM/YYYY')
             """
         },
         'cliente': {
-            'fields': """
+            'fields': """--
                 , max(c.NOME_CLIENTE)
                   || ' (' || lpad(c.CGC_9, 8, '0')
                   || '/....-..)' CLIENTE
             """,
-            'group': """
+            'group': """--
                 GROUP BY
                   c.CGC_9
             """,
-            'order': """
+            'order': """--
                 ORDER BY
                   max(c.NOME_CLIENTE)
                   || ' (' || lpad(c.CGC_9, 8, '0')
@@ -65,7 +65,7 @@ def faturamento_para_meta(
             """
         },
         'nota': {
-            'fields': """
+            'fields': """--
                 , f.NUM_NOTA_FISCAL NF
                 , f.DATA_EMISSAO DATA
                 , c.NOME_CLIENTE
@@ -78,7 +78,7 @@ def faturamento_para_meta(
                 , ped.PEDIDO_VENDA PEDIDO
                 , ped.COD_PED_CLIENTE PEDIDO_CLIENTE
             """,
-            'group': """
+            'group': """--
                 GROUP BY
                   f.NUM_NOTA_FISCAL
                 , f.DATA_EMISSAO
@@ -91,13 +91,13 @@ def faturamento_para_meta(
                 , ped.PEDIDO_VENDA
                 , ped.COD_PED_CLIENTE
             """,
-            'order': """
+            'order': """--
                 ORDER BY
                   f.NUM_NOTA_FISCAL
             """
         },
         'nota_referencia': {
-            'fields': """
+            'fields': """--
                 , f.NUM_NOTA_FISCAL NF
                 , f.DATA_EMISSAO DATA
                 , c.NOME_CLIENTE
@@ -112,7 +112,7 @@ def faturamento_para_meta(
                 , fi.NIVEL_ESTRUTURA NIVEL
                 , fi.GRUPO_ESTRUTURA REF
             """,
-            'group': """
+            'group': """--
                 GROUP BY
                   f.NUM_NOTA_FISCAL
                 , f.DATA_EMISSAO
@@ -127,41 +127,41 @@ def faturamento_para_meta(
                 , fi.NIVEL_ESTRUTURA
                 , fi.GRUPO_ESTRUTURA
             """,
-            'order': """
+            'order': """--
                 ORDER BY
                   f.NUM_NOTA_FISCAL
                 , fi.GRUPO_ESTRUTURA
             """
         },
         'referencia': {
-            'fields': """
+            'fields': """--
                 , fi.NIVEL_ESTRUTURA NIVEL
                 , fi.GRUPO_ESTRUTURA REF
             """,
-            'group': """
+            'group': """--
                 GROUP BY
                   fi.NIVEL_ESTRUTURA
                 , fi.GRUPO_ESTRUTURA
             """,
-            'order': """
+            'order': """--
                 ORDER BY
                   fi.NIVEL_ESTRUTURA
                 , fi.GRUPO_ESTRUTURA
             """
         },
         'modelo': {
-            'fields': """
+            'fields': """--
                 , TRIM(LEADING '0' FROM (
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
                   )) MODELO
             """,
-            'group': """
+            'group': """--
                 GROUP BY
                   TRIM(LEADING '0' FROM (
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
                   ))
             """,
-            'order': """
+            'order': """--
                 ORDER BY
                   TRIM(LEADING '0' FROM (
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
@@ -182,7 +182,7 @@ def faturamento_para_meta(
         SELECT
           sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
         , sum(fi.QTDE_ITEM_FATUR) QTD
-        {sql_tipo[tipo]['fields']}
+        {sql_tipo[tipo]['fields']} -- fields
         FROM FATU_050 f
         JOIN fatu_060 fi
           ON fi.ch_it_nf_cd_empr = f.codigo_empresa
@@ -218,8 +218,8 @@ def faturamento_para_meta(
               TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
           AND f.DATA_EMISSAO <
               TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
-        {sql_tipo[tipo]['group']}
-        {sql_order}
+        {sql_tipo[tipo]['group']} -- group
+        {sql_order} -- order
     """
     print(sql)
     cursor.execute(sql)
