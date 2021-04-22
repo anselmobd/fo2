@@ -84,23 +84,40 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             faturado['valor|DECIMALS'] = 2
             if apresentacao in ['nota', 'nota_referencia']:
                 faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
+                if (idx + 1) < len(faturados):
+                    if not faturado['pedido']:
+                        faturado['pedido'] = '-'
+                    if not faturado['pedido_cliente']:
+                        faturado['pedido_cliente'] = '-'
 
         tabela = {
             'nota': {
-                'headers': ['Nota', 'Data', 'CFOP', 'Cliente', 'Valor', ],
-                'fields': ['nf', 'data', 'cfop', 'cliente', 'valor', ],
+                'headers': [
+                    'Nota', 'Data', 'CFOP', 'Cliente',
+                    'Pedido', 'Pedido cliente', 'Valor',
+                ],
+                'fields': [
+                    'nf', 'data', 'cfop', 'cliente',
+                    'pedido', 'pedido_cliente', 'valor',
+                ],
                 'style': {
-                    5: 'text-align: right;',
+                    7: 'text-align: right;',
                 },
             },
             'nota_referencia': {
-                'headers': ['Nota', 'Data', 'CFOP', 'Cliente',
-                            'Referência', 'Quantidade', 'Valor', ],
-                'fields': ['nf', 'data', 'cfop', 'cliente',
-                           'ref', 'qtd', 'valor', ],
+                'headers': [
+                    'Nota', 'Data', 'CFOP', 'Cliente',
+                    'Pedido', 'Pedido cliente',
+                    'Referência', 'Quantidade', 'Valor',
+                ],
+                'fields': [
+                    'nf', 'data', 'cfop', 'cliente',
+                    'pedido', 'pedido_cliente',
+                    'ref', 'qtd', 'valor',
+                ],
                 'style': {
-                    6: 'text-align: right;',
-                    7: 'text-align: right;',
+                    8: 'text-align: right;',
+                    9: 'text-align: right;',
                 },
             },
             'cliente': {

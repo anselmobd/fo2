@@ -75,6 +75,8 @@ def faturamento_para_meta(
                   || ')' CLIENTE
                 , n.COD_NATUREZA NAT
                 , n.DIVISAO_NATUR DIV
+                , ped.PEDIDO_VENDA PEDIDO
+                , ped.COD_PED_CLIENTE PEDIDO_CLIENTE
             """,
             'group': """
                 GROUP BY
@@ -86,6 +88,8 @@ def faturamento_para_meta(
                 , c.CGC_2
                 , n.COD_NATUREZA
                 , n.DIVISAO_NATUR
+                , ped.PEDIDO_VENDA
+                , ped.COD_PED_CLIENTE
             """,
             'order': """
                 ORDER BY
@@ -103,6 +107,8 @@ def faturamento_para_meta(
                   || ')' CLIENTE
                 , n.COD_NATUREZA NAT
                 , n.DIVISAO_NATUR DIV
+                , ped.PEDIDO_VENDA PEDIDO
+                , ped.COD_PED_CLIENTE PEDIDO_CLIENTE
                 , fi.NIVEL_ESTRUTURA NIVEL
                 , fi.GRUPO_ESTRUTURA REF
             """,
@@ -116,6 +122,8 @@ def faturamento_para_meta(
                 , c.CGC_2
                 , n.COD_NATUREZA
                 , n.DIVISAO_NATUR
+                , ped.PEDIDO_VENDA
+                , ped.COD_PED_CLIENTE
                 , fi.NIVEL_ESTRUTURA
                 , fi.GRUPO_ESTRUTURA
             """,
@@ -188,6 +196,9 @@ def faturamento_para_meta(
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = f.CGC_9
          AND c.CGC_4 = f.CGC_4
+        LEFT JOIN PEDI_100 ped -- pedido de venda  
+          ON f.PEDIDO_VENDA > 0
+         AND ped.PEDIDO_VENDA = f.PEDIDO_VENDA
         WHERE 1=1
           AND f.CODIGO_EMPRESA = {empresa}
           {filtra_ref} -- filtra_ref
