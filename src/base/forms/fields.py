@@ -29,6 +29,15 @@ class O2FieldRefForm(forms.Form):
     def clean_ref(self):
         return O2BaseForm.cleanner_pad(self, 'ref', 5)
 
+class O2FieldClienteForm(forms.Form):
+    cliente = forms.CharField(
+        label='Cliente', required=False,
+        help_text='Parte do nome ou início do CNPJ.',
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    def clean_cliente(self):
+        return O2BaseForm.upper(self, 'cliente')
+
 
 class O2FieldTamanhoForm(forms.Form):
     tamanho = forms.CharField(
