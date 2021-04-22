@@ -34,7 +34,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
     sql_tipo = {
         'total': {
             'fields': """
-                to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
+                , to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
             """,
             'group': """
                 GROUP BY
@@ -47,7 +47,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
         },
         'cliente': {
             'fields': """
-                c.NOME_CLIENTE CLIENTE
+                , c.NOME_CLIENTE CLIENTE
             """,
             'group': """
                 GROUP BY
@@ -60,7 +60,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
         },
         'nota': {
             'fields': """
-                  f.NUM_NOTA_FISCAL NF
+                , f.NUM_NOTA_FISCAL NF
                 , f.DATA_EMISSAO DATA
                 , c.NOME_CLIENTE
                   || ' (' || lpad(c.CGC_9, 8, '0')
@@ -88,7 +88,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
         },
         'nota_referencia': {
             'fields': """
-                  f.NUM_NOTA_FISCAL NF
+                , f.NUM_NOTA_FISCAL NF
                 , f.DATA_EMISSAO DATA
                 , c.NOME_CLIENTE
                   || ' (' || lpad(c.CGC_9, 8, '0')
@@ -121,7 +121,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
         },
         'referencia': {
             'fields': """
-                  fi.NIVEL_ESTRUTURA NIVEL
+                , fi.NIVEL_ESTRUTURA NIVEL
                 , fi.GRUPO_ESTRUTURA REF
             """,
             'group': """
@@ -139,9 +139,9 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
 
     sql = f"""
         SELECT
-          {sql_tipo[tipo]['fields']}
-        , sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
+          sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
         , sum(fi.QTDE_ITEM_FATUR) QTD
+        {sql_tipo[tipo]['fields']}
         FROM FATU_050 f
         JOIN fatu_060 fi
           ON fi.ch_it_nf_cd_empr = f.codigo_empresa
