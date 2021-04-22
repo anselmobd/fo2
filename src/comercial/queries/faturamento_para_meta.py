@@ -36,9 +36,11 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
             'fields': """
                 to_char(f.DATA_EMISSAO, 'MM/YYYY') MES
             """,
-            'group_order': """
+            'group': """
                 GROUP BY
                   to_char(f.DATA_EMISSAO, 'MM/YYYY')
+            """,
+            'order': """
                 ORDER BY
                   to_char(f.DATA_EMISSAO, 'MM/YYYY')
             """
@@ -47,9 +49,11 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
             'fields': """
                 c.NOME_CLIENTE CLIENTE
             """,
-            'group_order': """
+            'group': """
                 GROUP BY
                   c.NOME_CLIENTE
+            """,
+            'order': """
                 ORDER BY
                   c.NOME_CLIENTE
             """
@@ -66,7 +70,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
                 , n.COD_NATUREZA NAT
                 , n.DIVISAO_NATUR DIV
             """,
-            'group_order': """
+            'group': """
                 GROUP BY
                   f.NUM_NOTA_FISCAL
                 , f.DATA_EMISSAO
@@ -76,6 +80,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
                 , c.CGC_2
                 , n.COD_NATUREZA
                 , n.DIVISAO_NATUR
+            """,
+            'order': """
                 ORDER BY
                   f.NUM_NOTA_FISCAL
             """
@@ -94,7 +100,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
                 , fi.NIVEL_ESTRUTURA NIVEL
                 , fi.GRUPO_ESTRUTURA REF
             """,
-            'group_order': """
+            'group': """
                 GROUP BY
                   f.NUM_NOTA_FISCAL
                 , f.DATA_EMISSAO
@@ -106,6 +112,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
                 , n.DIVISAO_NATUR
                 , fi.NIVEL_ESTRUTURA
                 , fi.GRUPO_ESTRUTURA
+            """,
+            'order': """
                 ORDER BY
                   f.NUM_NOTA_FISCAL
                 , fi.GRUPO_ESTRUTURA
@@ -116,10 +124,12 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
                   fi.NIVEL_ESTRUTURA NIVEL
                 , fi.GRUPO_ESTRUTURA REF
             """,
-            'group_order': """
+            'group': """
                 GROUP BY
                   fi.NIVEL_ESTRUTURA
                 , fi.GRUPO_ESTRUTURA
+            """,
+            'order': """
                 ORDER BY
                   fi.NIVEL_ESTRUTURA
                 , fi.GRUPO_ESTRUTURA
@@ -164,7 +174,8 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
               TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
           AND f.DATA_EMISSAO <
               TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
-        {sql_tipo[tipo]['group_order']}
+        {sql_tipo[tipo]['group']}
+        {sql_tipo[tipo]['order']}
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
