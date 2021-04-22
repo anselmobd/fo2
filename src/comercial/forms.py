@@ -85,6 +85,33 @@ class VendasPorForm(
         ])
 
 
+class DevolucaoParaMetaForm(
+        O2BaseForm,
+        O2FieldRefForm):
+    ano = forms.IntegerField(
+        required=False, initial=ano_atual,
+        widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
+
+    mes = forms.IntegerField(required=False, initial=mes_atual)
+
+    CHOICES = [
+        ('cliente', 'Por cliente'),
+        ('detalhe', 'Por nota'),
+        ('referencia', 'Por nota e referência'),
+        ]
+    apresentacao = forms.ChoiceField(
+        choices=CHOICES, initial='cliente', label='Apresentação')
+
+    class Meta:
+        autofocus_field = 'ano'
+        order_fields = [
+            'ano',
+            'mes',
+            'ref',
+            'apresentacao',
+        ]
+
+
 class FaturamentoParaMetaForm(
         O2BaseForm,
         O2FieldRefForm,
