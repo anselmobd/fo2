@@ -49,15 +49,19 @@ def faturamento_para_meta(
         },
         'cliente': {
             'fields': """
-                , c.NOME_CLIENTE CLIENTE
+                , max(c.NOME_CLIENTE)
+                  || ' (' || lpad(c.CGC_9, 8, '0')
+                  || '/....-..)' CLIENTE
             """,
             'group': """
                 GROUP BY
-                  c.NOME_CLIENTE
+                  c.CGC_9
             """,
             'order': """
                 ORDER BY
-                  c.NOME_CLIENTE
+                , max(c.NOME_CLIENTE)
+                  || ' (' || lpad(c.CGC_9, 8, '0')
+                  || '/....-..)'
             """
         },
         'nota': {
