@@ -103,6 +103,13 @@ class FaturamentoParaMetaForm(
     apresentacao = forms.ChoiceField(
         choices=CHOICES, initial='cliente', label='Apresentação')
 
+    CHOICES = [
+        ('apresentacao', 'Pela informação da apresentação'),
+        ('valor', 'Pelo valor'),
+        ]
+    ordem = forms.ChoiceField(
+        choices=CHOICES, initial='apresentacao')
+
     class Meta:
         autofocus_field = 'ano'
         order_fields = [
@@ -110,6 +117,7 @@ class FaturamentoParaMetaForm(
             'mes',
             'ref',
             'apresentacao',
+            'ordem',
         ]
 
 
