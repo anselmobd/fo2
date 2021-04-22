@@ -3,7 +3,9 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=None):
+def faturamento_para_meta(
+        cursor, ano, mes=None, tipo='total', empresa=1,
+        ref=None, ordem='apresentacao'):
     '''
         tipo:
             total - totaliza por mês
@@ -137,6 +139,14 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
         },
     }
 
+    if ordem == 'apresentacao':
+        sql_order = sql_tipo[tipo]['order']
+    else:
+        sql_order = """
+            ORDER BY
+              1 DESC
+        """
+
     sql = f"""
         SELECT
           sum(fi.VALOR_FATURADO +  fi.RATEIO_DESPESA) VALOR
@@ -175,7 +185,7 @@ def faturamento_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=No
           AND f.DATA_EMISSAO <
               TIMESTAMP '{prox_ano}-{prox_mes}-01 00:00:00.000'
         {sql_tipo[tipo]['group']}
-        {sql_tipo[tipo]['order']}
+        {sql_order}
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
