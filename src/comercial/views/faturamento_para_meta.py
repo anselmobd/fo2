@@ -35,6 +35,8 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         apresentacao = self.form.cleaned_data['apresentacao']
         ordem = self.form.cleaned_data['ordem']
 
+        percentual = ordem == 'valor' and apresentacao in ['cliente', 'referencia']
+
         if ano is None or mes is None:
             hoje = datetime.date.today()
             ano_atual = hoje.year
@@ -63,7 +65,19 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             'row_style': 'font-weight: bold;',
         })
 
-        for faturado in faturados:
+        valor_total = faturados[-1]['valor']
+        participacao_acumulada = 0
+        for idx, faturado in enumerate(faturados):
+            if percentual:
+                faturado['percent'] = faturado['valor'] / valor_total * 100
+                faturado['percent|DECIMALS'] = 1
+                participacao_acumulada += faturado['valor']
+                faturado['acumulada'] = participacao_acumulada / valor_total * 100
+                faturado['acumulada|DECIMALS'] = 1
+                if (idx + 1) < len(faturados):
+                    faturado['idx'] = idx + 1
+                else:
+                    faturado['idx'] = ' '
             faturado['valor|DECIMALS'] = 2
             if apresentacao in ['nota', 'nota_referencia']:
                 faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
@@ -103,9 +117,21 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             },
         }
 
+        headers = tabela[apresentacao]['headers']
+        fields = tabela[apresentacao]['fields']
+        style = tabela[apresentacao]['style']
+        if percentual:
+            headers += ['Participação(%)', 'Acumulada(%)', '#']
+            fields += ['percent', 'acumulada', 'idx']
+            style.update({
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+                5: 'text-align: right;',
+            })
+
         self.context.update({
-            'headers': tabela[apresentacao]['headers'],
-            'fields': tabela[apresentacao]['fields'],
+            'headers': headers,
+            'fields': fields,
             'data': faturados,
-            'style': tabela[apresentacao]['style'],
+            'style': style,
         })
