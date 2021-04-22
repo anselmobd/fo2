@@ -68,42 +68,44 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             if apresentacao in ['nota', 'nota_referencia']:
                 faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
 
-        if apresentacao == 'nota':
-            self.context.update({
+        tabela = {
+            'nota': {
                 'headers': ['Nota', 'Data', 'CFOP', 'Cliente', 'Valor', ],
                 'fields': ['nf', 'data', 'cfop', 'cliente', 'valor', ],
-                'data': faturados,
                 'style': {
                     5: 'text-align: right;',
                 },
-            })
-        elif apresentacao == 'nota_referencia':
-            self.context.update({
+            },
+            'nota_referencia': {
                 'headers': ['Nota', 'Data', 'CFOP', 'Cliente',
                             'Referência', 'Quantidade', 'Valor', ],
                 'fields': ['nf', 'data', 'cfop', 'cliente',
                            'ref', 'qtd', 'valor', ],
-                'data': faturados,
                 'style': {
                     6: 'text-align: right;',
                     7: 'text-align: right;',
                 },
-            })
-        elif apresentacao == 'cliente':
-            self.context.update({
+            },
+            'cliente': {
                 'headers': ['Cliente', 'Valor', ],
                 'fields': ['cliente', 'valor', ],
-                'data': faturados,
                 'style': {
                     2: 'text-align: right;',
                 },
-            })
-        elif apresentacao == 'referencia':
-            self.context.update({
+            },
+            'referencia': {
                 'headers': ['Referencia', 'Valor', ],
                 'fields': ['ref', 'valor', ],
                 'data': faturados,
                 'style': {
                     2: 'text-align: right;',
                 },
-            })
+            },
+        }
+
+        self.context.update({
+            'headers': tabela[apresentacao]['headers'],
+            'fields': tabela[apresentacao]['fields'],
+            'data': faturados,
+            'style': tabela[apresentacao]['style'],
+        })
