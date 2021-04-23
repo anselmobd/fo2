@@ -57,14 +57,14 @@ class StatusAdmin(admin.ModelAdmin):
 intr_adm_site.register(servico.models.Status, StatusAdmin)
 
 
-class NumeroDocumentoAdmin(admin.ModelAdmin):
+class DocumentoAdmin(admin.ModelAdmin):
     list_display = ['id', 'tipo', 'create_at', 'user', 'ativo', 'status']
     fields = list_display
     readonly_fields = ['id', 'create_at']
     ordering = ['create_at']
 
 
-intr_adm_site.register(servico.models.NumeroDocumento, NumeroDocumentoAdmin)
+intr_adm_site.register(servico.models.Documento, DocumentoAdmin)
 
 
 class TipoEventoAdmin(admin.ModelAdmin):

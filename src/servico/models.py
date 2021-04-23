@@ -149,7 +149,7 @@ class Status(models.Model):
         verbose_name_plural = verbose_name
 
 
-class NumeroDocumento(models.Model):
+class Documento(models.Model):
     tipo = models.ForeignKey(
         TipoDocumento, on_delete=models.PROTECT,
     )
@@ -189,7 +189,7 @@ class NumeroDocumento(models.Model):
             self.status = StatusEvento.objects.get(status_pre=None).status_pos
         logged_in = LoggedInUser()
         self.user = logged_in.user
-        super(NumeroDocumento, self).save(*args, **kwargs)
+        super(Documento, self).save(*args, **kwargs)
 
 
 class Evento(models.Model):
@@ -248,7 +248,7 @@ class StatusEvento(models.Model):
 
 class ServicoEvento(models.Model):
     numero = models.ForeignKey(
-        NumeroDocumento, on_delete=models.PROTECT,
+        Documento, on_delete=models.PROTECT,
         verbose_name='Número',
     )
     evento = models.ForeignKey(

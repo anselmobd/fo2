@@ -20,9 +20,9 @@ class Ordem(O2BaseGetPostView):
     def mount_context(self):
         try:
             self.numero = int(self.numero)
-            doc = servico.models.NumeroDocumento.objects.get(id=self.numero)
+            doc = servico.models.Documento.objects.get(id=self.numero)
             eventos = servico.models.ServicoEvento.objects.filter(numero=doc).order_by('create_at')
-        except servico.models.NumeroDocumento.DoesNotExist:
+        except servico.models.Documento.DoesNotExist:
             self.context.update({
                 'erro': 'Ordem não encontrada.',
             })

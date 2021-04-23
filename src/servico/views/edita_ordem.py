@@ -42,7 +42,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
-            self.doc = servico.models.NumeroDocumento.objects.get(id=self.context['numero'])
+            self.doc = servico.models.Documento.objects.get(id=self.context['numero'])
         except Exception as e:
             self.context.update({
                 'erro': 'Número de documento não encontrado.',
