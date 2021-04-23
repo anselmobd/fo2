@@ -246,7 +246,7 @@ class StatusEvento(models.Model):
 
 
 class ServicoEvento(models.Model):
-    numero = models.ForeignKey(
+    documento = models.ForeignKey(
         Documento, on_delete=models.PROTECT,
         verbose_name='Número',
     )
