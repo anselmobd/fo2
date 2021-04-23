@@ -271,9 +271,9 @@ class Interacao(models.Model):
     )
 
     class Meta:
-        db_table = 'fo2_serv_servico_evento'
-        verbose_name = 'Evento relacionado a serviços'
-        verbose_name_plural = 'Eventos relacionados a serviços'
+        db_table = 'fo2_serv_interacao'
+        verbose_name = 'Interação em documento'
+        verbose_name_plural = 'Interações em documentos'
 
     def save(self, *args, **kwargs):
         now = timezone.now()
