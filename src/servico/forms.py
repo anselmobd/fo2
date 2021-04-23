@@ -6,8 +6,8 @@ from base.forms import O2BaseForm
 from servico.models import ServicoEvento
 
 
-class O2FieldOrdemForm(forms.Form):
-    numero = forms.IntegerField(
+class O2FieldDocumentoForm(forms.Form):
+    documento = forms.IntegerField(
         min_value=1, max_value=999999,
         widget=forms.TextInput(attrs={'type': 'number', 'size': 6}))
 
@@ -21,10 +21,10 @@ class O2FiltraOrdemForm(forms.Form):
 
 class OrdemForm(
         O2BaseForm,
-        O2FieldOrdemForm):
+        O2FieldDocumentoForm):
 
     class Meta:
-        autofocus_field = 'numero'
+        autofocus_field = 'documento'
 
 
 class OrdensForm(

@@ -79,5 +79,5 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
                 self.salva_evento()
         except Exception:
             return
-        numero = self.doc.id
-        self.redirect = ('servico:ordem__get', numero)
+        doc_num = self.doc.id
+        self.redirect = ('servico:ordem__get', doc_num)

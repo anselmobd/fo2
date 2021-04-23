@@ -14,13 +14,13 @@ class Ordem(O2BaseGetPostView):
         self.Form_class = servico.forms.OrdemForm
         self.template_name = 'servico/ordem.html'
         self.title_name = 'Ordem'
-        self.get_args = ['numero']
+        self.get_args = ['documento']
 
 
     def mount_context(self):
         try:
-            self.numero = int(self.numero)
-            doc = servico.models.Documento.objects.get(id=self.numero)
+            self.documento = int(self.documento)
+            doc = servico.models.Documento.objects.get(id=self.documento)
             eventos = servico.models.ServicoEvento.objects.filter(documento=doc).order_by('create_at')
         except servico.models.Documento.DoesNotExist:
             self.context.update({
@@ -35,7 +35,7 @@ class Ordem(O2BaseGetPostView):
         })
 
         self.context.update({
-            'numero': doc.id,
+            'documento': doc.id,
             'usuario': doc.user.username,
             'data': doc.create_at,
             'ativo': doc.ativo,
