@@ -178,9 +178,8 @@ class Documento(models.Model):
         return f"{self.tipo} {self.id}"
 
     class Meta:
-        db_table = 'fo2_serv_num_doc'
-        verbose_name = 'Número de documento'
-        verbose_name_plural = 'Números de documento'
+        db_table = 'fo2_serv_doc'
+        verbose_name = 'Documento'
 
     def save(self, *args, **kwargs):
         now = timezone.now()
