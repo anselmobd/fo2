@@ -10,13 +10,13 @@ urlpatterns = [
 
     url(r'^ordem/$',
         views.Ordem.as_view(), name='ordem'),
-    url(r'^ordem/(?P<numero>\d+)/$',
+    url(r'^ordem/(?P<documento>\d+)/$',
         views.Ordem.as_view(), name='ordem__get'),
 
     url(r'^cria_ordem/$',
         views.CriaOrdem.as_view(), name='cria_ordem'),
 
-    url(r'^edita_ordem/(?P<evento>.+)/(?P<numero>.+)/$',
+    url(r'^edita_ordem/(?P<evento>.+)/(?P<documento>.+)/$',
         views.EditaOrdem.as_view(), name='edita_ordem'),
 
 ]

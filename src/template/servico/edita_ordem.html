@@ -18,7 +18,7 @@ label {
       <h4>Erro: {{ erro }}</h4>
     {% endif %}
   {% else %}
-  <h4>Número da ordem: {{ numero }}</h4>
+  <h4>Ordem: {{ documento }}</h4>
   <h4>Evento: {{ evento_record.nome }}</h4>
   <form method="post">
       {% csrf_token %}

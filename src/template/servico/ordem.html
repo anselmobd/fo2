@@ -19,14 +19,14 @@
     {% include "layout/form_inputs_report.html" with form=form h=5 only %}
     <h4>Erro: {{ erro }}</h4>
   {% endif %}
-  {% if numero %}
-    <h5>Ordem número {{ numero }}{% if not ativo %}, criada por {{ usuario }}, em {{ data }}; Inativa{% endif %}</h5>
+  {% if documento %}
+    <h5>Ordem: {{ documento }}{% if not ativo %}, criada por {{ usuario }}, em {{ data }}; Inativa{% endif %}</h5>
   {% endif %}
   {% if eventos %}
     {% for tipo_evento in tipos_eventos %}
       <input type="button"
         value="{{tipo_evento.nome}}"
-        onclick="location.href='{% url 'servico:edita_ordem' tipo_evento.codigo numero %}'"
+        onclick="location.href='{% url 'servico:edita_ordem' tipo_evento.codigo documento %}'"
       />
     {% endfor %}
     <table>

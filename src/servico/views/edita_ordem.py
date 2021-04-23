@@ -21,7 +21,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         self.Form_class = servico.forms.CriaServicoEventoForm
         self.template_name = 'servico/edita_ordem.html'
         self.title_name = 'Edita ordem'
-        self.get_args = ['evento', 'numero']
+        self.get_args = ['evento', 'documento']
 
 
     def get_records(self):
@@ -42,7 +42,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
-            self.doc = servico.models.Documento.objects.get(id=self.context['numero'])
+            self.doc = servico.models.Documento.objects.get(id=self.context['documento'])
         except Exception as e:
             self.context.update({
                 'erro': 'Número de documento não encontrado.',
@@ -52,9 +52,9 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
     def pre_mount_context(self):
         print('pre_mount_context')
         print(self.context['evento'])
-        print(self.context['numero'])
+        print(self.context['documento'])
         try:
-            self.context['numero'] = int(self.context['numero'])
+            self.context['documento'] = int(self.context['documento'])
             self.get_records()
         except Exception:
             return
