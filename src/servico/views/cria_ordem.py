@@ -56,7 +56,7 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
 
         try:
             evento = servico.models.ServicoEvento(
-                numero=self.doc,
+                documento=self.doc,
                 evento=evento,
                 nivel=self.nivel,
                 equipe=self.equipe,
