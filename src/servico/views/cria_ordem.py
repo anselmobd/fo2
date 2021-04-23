@@ -46,7 +46,7 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
-            self.doc = servico.models.NumeroDocumento(tipo=tipo)
+            self.doc = servico.models.Documento(tipo=tipo)
             self.doc.save()
         except Exception as e:
             self.context.update({

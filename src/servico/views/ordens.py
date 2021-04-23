@@ -26,9 +26,9 @@ class Ordens(O2BaseGetPostView):
             data = servico.models.ServicoEvento.objects.all()
         else:
             try:
-                doc = servico.models.NumeroDocumento.objects.get(id=self.ordem)
+                doc = servico.models.Documento.objects.get(id=self.ordem)
                 data = servico.models.ServicoEvento.objects.filter(numero=doc)
-            except servico.models.NumeroDocumento.DoesNotExist:
+            except servico.models.Documento.DoesNotExist:
                 self.context.update({
                     'erro': 'Ordem não encontrada.',
                 })
