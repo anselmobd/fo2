@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 from base.forms import O2BaseForm
 
-from servico.models import ServicoEvento
+from servico.models import Interacao
 
 
 class O2FieldDocumentoForm(forms.Form):
@@ -35,7 +35,7 @@ class OrdensForm(
         autofocus_field = 'ordem'
 
 
-class CriaServicoEventoForm(ModelForm):
+class CriaInteracaoForm(ModelForm):
     class Meta:
-        model = ServicoEvento
+        model = Interacao
         fields = ['equipe', 'descricao', 'nivel']

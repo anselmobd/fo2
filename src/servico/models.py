@@ -240,7 +240,7 @@ class StatusEvento(models.Model):
         super(StatusEvento, self).save(*args, **kwargs)
 
 
-class ServicoEvento(models.Model):
+class Interacao(models.Model):
     documento = models.ForeignKey(
         Documento, on_delete=models.PROTECT,
     )
@@ -281,4 +281,4 @@ class ServicoEvento(models.Model):
             self.create_at = now
         logged_in = LoggedInUser()
         self.user = logged_in.user
-        super(ServicoEvento, self).save(*args, **kwargs)
+        super(Interacao, self).save(*args, **kwargs)

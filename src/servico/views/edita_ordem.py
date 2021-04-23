@@ -18,7 +18,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
         self.get_args2context = True
         self.get_args2form = False
-        self.Form_class = servico.forms.CriaServicoEventoForm
+        self.Form_class = servico.forms.CriaInteracaoForm
         self.template_name = 'servico/edita_ordem.html'
         self.title_name = 'Edita ordem'
         self.get_args = ['evento', 'documento']
