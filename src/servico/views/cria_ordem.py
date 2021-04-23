@@ -16,7 +16,7 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(CriaOrdem, self).__init__(*args, **kwargs)
         self.cleaned_data2self = True
-        self.Form_class = servico.forms.CriaServicoEventoForm
+        self.Form_class = servico.forms.CriaInteracaoForm
         self.template_name = 'servico/cria_ordem.html'
         self.title_name = 'Cria ordem'
 
@@ -55,7 +55,7 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
-            evento = servico.models.ServicoEvento(
+            evento = servico.models.Interacao(
                 documento=self.doc,
                 evento=evento,
                 nivel=self.nivel,

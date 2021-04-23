@@ -21,7 +21,7 @@ class Ordem(O2BaseGetPostView):
         try:
             self.documento = int(self.documento)
             doc = servico.models.Documento.objects.get(id=self.documento)
-            eventos = servico.models.ServicoEvento.objects.filter(documento=doc).order_by('create_at')
+            eventos = servico.models.Interacao.objects.filter(documento=doc).order_by('create_at')
         except servico.models.Documento.DoesNotExist:
             self.context.update({
                 'erro': 'Ordem não encontrada.',
