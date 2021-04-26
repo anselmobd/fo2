@@ -18,7 +18,10 @@ label {
       <h4>Erro: {{ erro }}</h4>
     {% endif %}
   {% else %}
-  <h4>Ordem: {{ documento }}</h4>
+  <h4>
+    {% url 'servico:ordem__get' documento as ordem_doc %}
+    Ordem: {% include "layout/link.html" with link=ordem_doc text=documento only %}
+  </h4>
   <h4>Evento: {{ evento_record.nome }}</h4>
   <form method="post">
       {% csrf_token %}
