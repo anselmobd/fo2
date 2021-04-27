@@ -29,15 +29,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             self.tipo_record = servico.models.TipoDocumento.objects.get(slug='os')
         except servico.models.TipoDocumento.DoesNotExist as e:
             self.context.update({
-                'erro': 'Tipo de documento inválido.',
-            })
-            raise e
-
-        try:
-            self.evento_record = servico.models.Evento.objects.get(codigo=self.context['evento'])
-        except servico.models.Evento.DoesNotExist as e:
-            self.context.update({
-                'erro': 'Evento inválido.',
+                'preerro': 'Tipo de documento inválido.',
             })
             raise e
 
@@ -45,14 +37,20 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             self.doc = servico.models.Documento.objects.get(id=self.context['documento'])
         except Exception as e:
             self.context.update({
-                'erro': 'Número de documento não encontrado.',
+                'preerro': 'Número de documento não encontrado.',
+            })
+            raise e
+
+        try:
+            self.evento_record = servico.models.Evento.objects.get(
+                codigo=self.context['evento'], statusevento__status_pre=self.doc.status)
+        except servico.models.Evento.DoesNotExist as e:
+            self.context.update({
+                'preerro': 'Evento inválido.',
             })
             raise e
 
     def pre_mount_context(self):
-        print('pre_mount_context')
-        print(self.context['evento'])
-        print(self.context['documento'])
         try:
             self.context['documento'] = int(self.context['documento'])
             self.get_records()
