@@ -2,7 +2,6 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
-from django.db.utils import Error
 
 from base.views import O2BaseGetPostView
 from o2.functions import csrf_used
@@ -75,7 +74,7 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
                 self.context.update({
                     'erro': 'Formulário já gravado.',
                 })
-                raise Error
+                raise IntegrityError
 
 
     def mount_context(self):
@@ -185,6 +184,6 @@ def salva_interacao(
             msg.update({
                 'erro': 'Formulário já gravado.',
             })
-            raise Error
+            raise IntegrityError
 
     return doc
