@@ -2,15 +2,13 @@ from pprint import pprint
 
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import IntegrityError, transaction
-from django.db.utils import Error
+from django.db import transaction
 
 from base.views import O2BaseGetPostView
-from o2.functions import csrf_used
 
 import servico.forms
 import servico.models
-
+from servico.views.cria_ordem import salva_interacao
 
 class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
 
@@ -83,9 +81,10 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         try:
             msg = {}
             with transaction.atomic():
-                # self.salva_evento()
                 self.doc = salva_interacao(
-                    msg, self.request, 
+                    msg, self.request,
+                    evento_cod=self.context['evento'],
+                    doc_id=self.context['documento'],
                     nivel=self.nivel,
                     equipe=self.equipe,
                     descricao=self.descricao,
