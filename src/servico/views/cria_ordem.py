@@ -125,7 +125,7 @@ def salva_interacao(
                     'erro': f'Não foi possível encontrar StatusEvento "{last_interacao.status}"">--"{evento}".',
                 })
                 raise e
-            status_pos = status_evento.status_pos
+            status_pos = status_evento.status_pos if status_evento.status_pos else status_evento.status_pre
 
         try:
             evento = servico.models.Interacao(
@@ -139,7 +139,7 @@ def salva_interacao(
             evento.save()
         except Exception as e:
             msg.update({
-                'erro': 'Não foi possível gerar o evento de requisição.',
+                'erro': 'Não foi possível gerar a Interacao.',
             })
             raise e
 
