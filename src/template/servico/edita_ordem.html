@@ -22,11 +22,18 @@ label {
     {% url 'servico:ordem__get' documento as ordem_doc %}
     Ordem: {% include "layout/link.html" with link=ordem_doc text=documento only %}
   </h4>
-  <h4>Evento: {{ evento_record.nome }}</h4>
-  <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Cria"/>
-    </form>
+  {% if preerro %}
+    <h4>Erro: {{preerro}}</h4>
+  {% else %}
+    <h4>Evento: {{ evento_record.nome }}</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Cria"/>
+      </form>
+    {% endif %}
+    {% if erro %}
+      <h4>Erro: {{erro}}</h4>
+    {% endif %}
   {% endif %}
 {% endblock %}
