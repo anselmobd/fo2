@@ -19,69 +19,10 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         self.template_name = 'servico/cria_ordem.html'
         self.title_name = 'Cria ordem'
 
-
-    def salva_evento(self):
-        try:
-            try:
-                tipo = servico.models.TipoDocumento.objects.get(slug='os')
-            except servico.models.TipoDocumento.DoesNotExist as e:
-                self.context.update({
-                    'erro': 'Tipo de documento inválido.',
-                })
-                raise e
-
-            try:
-                evento = servico.models.Evento.objects.get(
-                    statusevento__status_pre=None)
-            except servico.models.Evento.DoesNotExist as e:
-                self.context.update({
-                    'erro': 'Evento de criação não encontrado.',
-                })
-                raise e
-
-            try:
-                self.doc = servico.models.Documento(tipo=tipo)
-                self.doc.save()
-            except Exception as e:
-                self.context.update({
-                    'erro': 'Não foi possível gerar um número de documento.',
-                })
-                raise e
-
-            try:
-                evento = servico.models.Interacao(
-                    documento=self.doc,
-                    evento=evento,
-                    nivel=self.nivel,
-                    equipe=self.equipe,
-                    descricao=self.descricao,
-                )
-                evento.save()
-            except Exception as e:
-                self.context.update({
-                    'erro': 'Não foi possível gerar o evento de requisição.',
-                })
-                raise e
-
-            self.doc.ativo = True
-            self.doc.save()
-        except Exception as e:
-            raise e
-
-        else:
-            # se não houve exceptions, tem que tentar salvar o csrf
-            if csrf_used(self.request):
-                self.context.update({
-                    'erro': 'Formulário já gravado.',
-                })
-                raise IntegrityError
-
-
     def mount_context(self):
         try:
             msg = {}
             with transaction.atomic():
-                # self.salva_evento()
                 self.doc = salva_interacao(
                     msg, self.request, 
                     nivel=self.nivel,
