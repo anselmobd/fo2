@@ -23,7 +23,8 @@ class Ordens(O2BaseGetPostView):
             return
         
         if self.ordem == 0:
-            data = servico.models.Interacao.objects.all()
+            data = servico.models.Interacao.objects.all().order_by(
+                "-documento__id", "-create_at")
         else:
             try:
                 doc = servico.models.Documento.objects.get(id=self.ordem)
@@ -35,11 +36,11 @@ class Ordens(O2BaseGetPostView):
                 return
 
         data = data.values(
-            'documento_id', 'create_at', 'user__username', 'descricao', 'equipe__nome', 'evento__nome', 'nivel__nome'
+            'documento__id', 'create_at', 'user__username', 'descricao', 'equipe__nome', 'status__nome', 'evento__nome', 'nivel__nome'
         )
 
         self.context.update({
-            'headers': ['#', 'Evento', 'Usuário', 'Data/hora', 'Equipe', 'Descrição', 'Nível'],
-            'fields': ['documento_id', 'evento__nome', 'user__username', 'create_at', 'equipe__nome', 'descricao', 'nivel__nome'],
+            'headers': ['#', 'Status', 'Evento', 'Usuário', 'Data/hora', 'Equipe', 'Descrição', 'Nível'],
+            'fields': ['documento__id', 'status__nome', 'evento__nome', 'user__username', 'create_at', 'equipe__nome', 'descricao', 'nivel__nome'],
             'data': data,
         })
