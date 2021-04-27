@@ -141,7 +141,7 @@ class Status(models.Model):
     )
 
     def __str__(self):
-        return f"{self.nome} ({self.codigo})"
+        return f"{self.nome}"
 
     class Meta:
         db_table = 'fo2_serv_status'
