@@ -404,8 +404,6 @@ class ComponentesDeOp(View):
             row['REF'] = ref_row['REF']
             row['ALT'] = ref_row['ALTERNATIVA']
 
-        comp_fields = ['NIVEL', 'REF', 'TAM', 'COR', 'ALT', 'QTD']
-
         op_comp = None
         componentes = []
         componentes_nivel = 0
@@ -416,10 +414,12 @@ class ComponentesDeOp(View):
             if componentes_nivel == 0:
                 header_text = 'Produtos da OP'
                 comp_headers = ['Nivel', 'Ref.', 'Tamanho', 'Cor', 'Alt.', 'Qtd.']
+                comp_fields = ['NIVEL', 'REF', 'TAM', 'COR', 'ALT', 'QTD']
             else:
                 header_text = f'Produtos componentes {componentes_nivel}ª descendência'
                 header_text += f' (OP {op_comp})'
-                comp_headers = ['Nivel', 'Ref.', 'Tamanho', 'Cor', 'Alt.', 'Qtd. Calculada']
+                comp_headers = ['Nivel', 'Ref.', 'Tamanho', 'Cor', 'Descr. Cor', 'Alt.', 'Qtd. Calculada']
+                comp_fields = ['NIVEL', 'REF', 'TAM', 'COR', 'COR_DESCR', 'ALT', 'QTD']
 
             group = ['NIVEL', 'REF']
             totalize_grouped_data(data, {
