@@ -105,9 +105,9 @@ def salva_interacao(
         tipo_documento: Por ora apenas "os", ordem de serviço
         evento_cod: passa None quando for evento de criação ou codigo de um evento
         doc_id: None para criar um novo (evento de criação) ou id de um documento
-        nivel
-        equipe
-        descrição
+        nivel: nivel ou None
+        equipe: equipe ou None
+        descrição: descrição ou None
     Retorna:
         o documento que recebeu interação (criado ou não)
     """
