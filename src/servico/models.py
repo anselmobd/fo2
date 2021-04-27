@@ -252,6 +252,10 @@ class Interacao(models.Model):
     evento = models.ForeignKey(
         Evento, on_delete=models.PROTECT,
     )
+    status = models.ForeignKey(
+        Status, on_delete=models.PROTECT,
+        default=1,
+    )
     create_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='Criado em',
@@ -284,6 +288,7 @@ class Interacao(models.Model):
         now = timezone.now()
         if not self.id:
             self.create_at = now
+            self.status = StatusEvento.objects.get(status_pre=None).status_pos
         logged_in = LoggedInUser()
         self.user = logged_in.user
         super(Interacao, self).save(*args, **kwargs)
