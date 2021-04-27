@@ -58,7 +58,7 @@ intr_adm_site.register(servico.models.Status, StatusAdmin)
 
 
 class DocumentoAdmin(admin.ModelAdmin):
-    list_display = ['id', 'tipo', 'create_at', 'user', 'ativo', 'status']
+    list_display = ['id', 'tipo', 'create_at', 'user', 'ativo']
     fields = list_display
     readonly_fields = ['id', 'create_at']
     ordering = ['create_at']
