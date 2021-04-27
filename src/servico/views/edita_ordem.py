@@ -43,8 +43,17 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
+            last_interacao = servico.models.Interacao.objects.filter(
+                documento=self.doc).order_by('create_at').last()
+        except Exception as e:
+            self.context.update({
+                'preerro': f'Não foi possível pegar última interação.',
+            })
+            raise e
+
+        try:
             self.evento_record = servico.models.Evento.objects.get(
-                codigo=self.context['evento'], statusevento__status_pre=self.doc.status)
+                codigo=self.context['evento'], statusevento__status_pre=last_interacao.status)
         except servico.models.Evento.DoesNotExist as e:
             self.context.update({
                 'preerro': 'Evento inválido.',
