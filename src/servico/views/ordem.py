@@ -21,18 +21,12 @@ class Ordem(O2BaseGetPostView):
         try:
             self.documento = int(self.documento)
             doc = servico.models.Documento.objects.get(id=self.documento)
-            eventos = servico.models.Interacao.objects.filter(documento=doc).order_by('create_at')
+            eventos = servico.models.Interacao.objects.filter(documento=doc).order_by('-create_at')
         except servico.models.Documento.DoesNotExist:
             self.context.update({
                 'erro': 'Ordem não encontrada.',
             })
             return
-
-        self.tipos_eventos = servico.models.Evento.objects.filter(
-            statusevento__status_pre=doc.status).order_by('ordem')
-        self.context.update({
-            'tipos_eventos': self.tipos_eventos,
-        })
 
         self.context.update({
             'documento': doc.id,
@@ -44,14 +38,20 @@ class Ordem(O2BaseGetPostView):
             return
 
         eventos = eventos.values(
-            'documento__status__nome',
             'create_at',
             'evento__nome',
+            'status__id',
+            'status__nome',
             'user__username',
             'nivel__nome',
             'equipe__nome',
             'descricao',
         )
+
+        self.tipos_eventos = servico.models.Evento.objects.filter(
+            statusevento__status_pre=eventos[0]['status__id']).order_by('ordem')
+
         self.context.update({
             'eventos': eventos,
+            'tipos_eventos': self.tipos_eventos,
         })
