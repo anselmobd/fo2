@@ -284,7 +284,6 @@ class Interacao(models.Model):
         now = timezone.now()
         if not self.id:
             self.create_at = now
-            self.status = StatusEvento.objects.get(status_pre=None).status_pos
         logged_in = LoggedInUser()
         self.user = logged_in.user
         super(Interacao, self).save(*args, **kwargs)
