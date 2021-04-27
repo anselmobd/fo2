@@ -71,3 +71,18 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         pprint(self.tipo_record)
         pprint(self.evento_record)
         pprint(self.doc)
+        try:
+            msg = {}
+            with transaction.atomic():
+                # self.salva_evento()
+                self.doc = salva_interacao(
+                    msg, self.request, 
+                    nivel=self.nivel,
+                    equipe=self.equipe,
+                    descricao=self.descricao,
+                )
+        except Exception:
+            self.context.update(msg)
+            return
+        doc_num = self.doc.id
+        self.redirect = ('servico:ordem__get', doc_num)
