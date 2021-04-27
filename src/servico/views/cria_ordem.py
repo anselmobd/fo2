@@ -80,9 +80,17 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
 
     def mount_context(self):
         try:
+            msg = {}
             with transaction.atomic():
-                self.salva_evento()
+                # self.salva_evento()
+                self.doc = salva_interacao(
+                    msg, self.request, 
+                    nivel=self.nivel,
+                    equipe=self.equipe,
+                    descricao=self.descricao,
+                )
         except Exception:
+            self.context.update(msg)
             return
         doc_num = self.doc.id
         self.redirect = ('servico:ordem__get', doc_num)
