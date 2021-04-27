@@ -229,6 +229,11 @@ class StatusEvento(models.Model):
         related_name='eventos_criadores'
     )
 
+    def __str__(self):
+        status_pre = self.status_pre if self.status_pre else '{}'
+        status_pos = self.status_pos if self.status_pos else '{}'
+        return f"{status_pre} >--({self.evento})--> {status_pos}"
+
     class Meta:
         db_table = 'fo2_serv_status_evento'
         verbose_name = 'Status-Evento'
