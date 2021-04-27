@@ -89,23 +89,52 @@ def salva_interacao(
                     'erro': 'Não foi possível gerar um número de documento.',
                 })
                 raise e
+            last_nivel=None
+            last_equipe=None
+            last_descricao=None
+
+            status_pos = servico.models.StatusEvento.objects.get(status_pre=None).status_pos
+
         else:
             try:
                 doc = servico.models.Documento.objects.get(id=doc_id)
-                doc.save()
             except Exception as e:
                 msg.update({
                     'erro': f'Não foi possível encontrar o documento "{doc_id}".',
                 })
                 raise e
 
+            try:
+                last_interacao = servico.models.Interacao.objects.filter(
+                    documento=doc).order_by('create_at').last()
+            except Exception as e:
+                msg.update({
+                    'erro': f'Não foi possível pegar última interação.',
+                })
+                raise e
+            last_nivel=last_interacao.nivel
+            last_equipe=last_interacao.equipe
+            last_descricao=last_interacao.descricao
+
+            try:
+                status_evento = servico.models.StatusEvento.objects.get(
+                    status_pre=last_interacao.status,
+                    evento=evento)
+            except Exception as e:
+                msg.update({
+                    'erro': f'Não foi possível encontrar StatusEvento "{last_interacao.status}"">--"{evento}".',
+                })
+                raise e
+            status_pos = status_evento.status_pos
+
         try:
             evento = servico.models.Interacao(
                 documento=doc,
                 evento=evento,
-                nivel=nivel,
-                equipe=equipe,
-                descricao=descricao,
+                status=status_pos,
+                nivel=last_nivel if nivel is None else nivel,
+                equipe=last_equipe if equipe is None else equipe,
+                descricao=last_descricao if descricao is None else descricao,
             )
             evento.save()
         except Exception as e:
@@ -114,8 +143,10 @@ def salva_interacao(
             })
             raise e
 
-        doc.ativo = True
-        doc.save()
+        if doc_id is None:
+            doc.ativo = True
+            doc.save()
+
     except Exception as e:
         raise e
 
