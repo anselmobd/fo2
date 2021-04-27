@@ -62,15 +62,15 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         })
         if not self.evento_record.edita_nivel:
             self.form.fields['nivel'].widget = forms.HiddenInput()
+            self.form.fields['nivel'].required = False
         if not self.evento_record.edita_equipe:
             self.form.fields['equipe'].widget = forms.HiddenInput()
+            self.form.fields['equipe'].required = False
         if not self.evento_record.edita_descricao:
             self.form.fields['descricao'].widget = forms.HiddenInput()
+            self.form.fields['descricao'].required = False
 
     def mount_context(self):
-        pprint(self.tipo_record)
-        pprint(self.evento_record)
-        pprint(self.doc)
         try:
             msg = {}
             with transaction.atomic():
