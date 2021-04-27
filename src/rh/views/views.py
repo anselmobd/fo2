@@ -326,6 +326,10 @@ def datas(request, data):
         context = {'titulo': 'Feliz dia Internacional da Mulher 2021!'}
         return render(
             request, 'rh/datas/2021-dia-da-mulher.html', context)
+    elif data == '2021-05-01':
+        context = {'titulo': '1º de maio - Dia do Trabalhador'}
+        return render(
+            request, 'rh/datas/2021-dia-do-trabalhador.html', context)
 
 
 def v2018_dia_rosa_fotos(request):
