@@ -69,7 +69,8 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         except Exception as e:
             raise e
 
-        finally:
+        else:
+            # se não houve exceptions, tem que tentar salvar o csrf
             if csrf_used(self.request):
                 self.context.update({
                     'erro': 'Formulário já gravado.',
