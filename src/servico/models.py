@@ -165,9 +165,6 @@ class Documento(models.Model):
     ativo = models.BooleanField(
         default=False,
     )
-    status = models.ForeignKey(
-        Status, on_delete=models.PROTECT,
-    )
 
     def __str__(self):
         return f"{self.tipo} {self.id}"
@@ -180,7 +177,6 @@ class Documento(models.Model):
         now = timezone.now()
         if not self.id:
             self.create_at = now
-            self.status = StatusEvento.objects.get(status_pre=None).status_pos
         logged_in = LoggedInUser()
         self.user = logged_in.user
         super(Documento, self).save(*args, **kwargs)
