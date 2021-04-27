@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
 from django.db.utils import Error
@@ -59,6 +60,12 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'evento_record': self.evento_record,
         })
+        if not self.evento_record.edita_nivel:
+            self.form.fields['nivel'].widget = forms.HiddenInput()
+        if not self.evento_record.edita_equipe:
+            self.form.fields['equipe'].widget = forms.HiddenInput()
+        if not self.evento_record.edita_descricao:
+            self.form.fields['descricao'].widget = forms.HiddenInput()
 
     def mount_context(self):
         pprint(self.tipo_record)
