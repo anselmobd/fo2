@@ -27,7 +27,7 @@ class OrdemForm(
         autofocus_field = 'documento'
 
 
-class OrdensForm(
+class ListaForm(
         O2BaseForm,
         O2FiltraOrdemForm):
 
