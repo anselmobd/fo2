@@ -46,6 +46,14 @@ class O2BaseGetPostView(CustomView):
         if value is not None:
             self.form.data[field] = value
 
+    def empty_form_initial(self):
+        """Monta um dict com campos do Form_class e valores None"""
+        return {name: None for name in self.Form_class.base_fields}
+
+    def form_initial(self):
+        """Metodo chamado no GET para colocar valores no dict que inicializará o Form_class"""
+        return self.empty_form_initial()
+
     def get(self, request, *args, **kwargs):
         self.init_self(request, kwargs)
         if self.get_args2form:
@@ -54,7 +62,7 @@ class O2BaseGetPostView(CustomView):
                     return self.post(request, *args, **kwargs)
 
         self.pre_mount_context()
-        self.form = self.Form_class()
+        self.form = self.Form_class(initial=self.form_initial())
         return self.render_mount()
 
     def post(self, request, *args, **kwargs):
