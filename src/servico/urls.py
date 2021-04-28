@@ -6,7 +6,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 
     url(r'^ordens/$',
-        views.Ordens.as_view(), name='ordens'),
+        views.Lista.as_view(), name='ordens'),
 
     url(r'^ordem/$',
         views.Ordem.as_view(), name='ordem'),
