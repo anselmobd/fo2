@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.urls import reverse
+
 from base.views import O2BaseGetPostView
 
 import servico.forms
@@ -37,6 +39,12 @@ class Lista(O2BaseGetPostView):
         interacoes = interacoes.values(
             'documento__id', 'create_at', 'user__username', 'descricao', 'equipe__nome', 'status__nome', 'evento__nome', 'nivel__nome'
         )
+
+        for row in interacoes:
+            row['documento__id|LINK'] = reverse(
+                    'servico:ordem__get',
+                    args=[row['documento__id']],
+                )
 
         self.context.update({
             'headers': ['#', 'Status', 'Evento', 'Usuário', 'Data/hora', 'Equipe', 'Descrição', 'Nível'],
