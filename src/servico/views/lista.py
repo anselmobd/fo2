@@ -23,7 +23,7 @@ class Lista(O2BaseGetPostView):
             return
         
         if self.ordem == 0:
-            data = servico.models.Interacao.objects.all().order_by(
+            interacoes = servico.models.Interacao.objects.all().order_by(
                 "-documento__id", "-create_at")
         else:
             try:
@@ -34,7 +34,7 @@ class Lista(O2BaseGetPostView):
                 })
                 return
 
-        data = data.values(
+        interacoes = interacoes.values(
             'documento__id', 'create_at', 'user__username', 'descricao', 'equipe__nome', 'status__nome', 'evento__nome', 'nivel__nome'
         )
 
