@@ -27,8 +27,7 @@ class Lista(O2BaseGetPostView):
                 "-documento__id", "-create_at")
         else:
             try:
-                doc = servico.models.Documento.objects.get(id=self.ordem)
-                data = servico.models.Interacao.objects.filter(documento=doc)
+                interacoes = servico.models.Interacao.objects.filter(documento__id=self.ordem)
             except servico.models.Documento.DoesNotExist:
                 self.context.update({
                     'erro': 'Ordem não encontrada.',
@@ -42,5 +41,5 @@ class Lista(O2BaseGetPostView):
         self.context.update({
             'headers': ['#', 'Status', 'Evento', 'Usuário', 'Data/hora', 'Equipe', 'Descrição', 'Nível'],
             'fields': ['documento__id', 'status__nome', 'evento__nome', 'user__username', 'create_at', 'equipe__nome', 'descricao', 'nivel__nome'],
-            'data': data,
+            'data': interacoes,
         })
