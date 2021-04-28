@@ -5,7 +5,17 @@
 
 {% block stylesheet %}
 <style>
-{% include 'layout/simple_table.css' %}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+tr.status {
+  background-image: linear-gradient(white, #DDD);
+}
+td.descricao {
+  border: 2px solid #aaa;
+  border-collapse: collapse;
+}
 </style>
 {% endblock %}
 
@@ -20,7 +30,7 @@
     <h4>Erro: {{ erro }}</h4>
   {% endif %}
   {% if documento %}
-    <h5>Ordem: {{ documento }}{% if not ativo %}, criada por {{ usuario }}, em {{ data }}; Inativa{% endif %}</h5>
+    <h4>Ordem: {{ documento }}{% if not ativo %}, criada por {{ usuario }}, em {{ data }}; Inativa{% endif %}</h4>
   {% endif %}
   {% if eventos %}
     {% for tipo_evento in tipos_eventos %}
@@ -32,30 +42,30 @@
     <table>
       <tbody>
         {% for row in eventos %}
-          <tr>
+          <tr class="status">
             <td colspan="4">
-              <h3>{{ row.status__nome }} - {{ row.create_at }}</h3>
+              <h4>{{ row.status__nome }} - {{ row.create_at }}</h4>
             </td>
           </tr>
           <tr>
-            <td>
+            <td width="5%">
               &nbsp;
             </td>
             <td>
               {{ row.evento__nome }} de {{ row.user__username }}
             </td>
             <td>
-              <h4>{{ row.nivel__nome }}</h4>
+              <h4>{{ row.equipe__nome }}</h4>
             </td>
             <td>
-              <h4>{{ row.equipe__nome }}</h4>
+              <h4>{{ row.nivel__nome }}</h4>
             </td>
           </tr>
           <tr>
             <td>
               &nbsp;
             </td>
-            <td colspan="3">
+            <td colspan="3" class="descricao">
               {{ row.descricao }}
             </td>
           </tr>
