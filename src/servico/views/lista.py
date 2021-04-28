@@ -11,7 +11,7 @@ class Lista(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(Lista, self).__init__(*args, **kwargs)
         self.cleaned_data2self = True
-        self.Form_class = servico.forms.OrdensForm
+        self.Form_class = servico.forms.ListaForm
         self.template_name = 'servico/ordens.html'
         self.title_name = 'Lista ordens'
 
