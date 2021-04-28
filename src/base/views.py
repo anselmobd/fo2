@@ -35,6 +35,7 @@ class O2BaseGetPostView(CustomView):
                 setattr(self, field, self.form.cleaned_data[field])
 
     def render_mount(self):
+        self.pre_mount_context()
         if self.form.is_valid():
             self.do_cleaned_data2self()
             self.mount_context()
@@ -54,6 +55,9 @@ class O2BaseGetPostView(CustomView):
         """Metodo chamado no GET para colocar valores no dict que inicializará o Form_class"""
         return self.empty_form_initial()
 
+    def pre_form(self):
+        pass
+
     def get(self, request, *args, **kwargs):
         self.init_self(request, kwargs)
         if self.get_args2form:
@@ -61,7 +65,7 @@ class O2BaseGetPostView(CustomView):
                 if self.get_arg(arg) is not None:
                     return self.post(request, *args, **kwargs)
 
-        self.pre_mount_context()
+        self.pre_form()
         self.form = self.Form_class(initial=self.form_initial())
         return self.render_mount()
 
