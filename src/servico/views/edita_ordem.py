@@ -41,7 +41,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             raise e
 
         try:
-            last_interacao = servico.models.Interacao.objects.filter(
+            self.last_interacao = servico.models.Interacao.objects.filter(
                 documento=self.doc).order_by('create_at').last()
         except Exception as e:
             self.context.update({
@@ -51,7 +51,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
 
         try:
             self.evento_record = servico.models.Evento.objects.get(
-                codigo=self.context['evento'], statusevento__status_pre=last_interacao.status)
+                codigo=self.context['evento'], statusevento__status_pre=self.last_interacao.status)
         except servico.models.Evento.DoesNotExist as e:
             self.context.update({
                 'preerro': 'Evento inválido.',
@@ -76,6 +76,12 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         if not self.evento_record.edita_descricao:
             self.form.fields['descricao'].widget = forms.HiddenInput()
             self.form.fields['descricao'].required = False
+
+    def form_initial(self):
+        initial = super(EditaOrdem, self).form_initial()
+        initial['nivel'] = self.last_interacao.nivel
+        initial['equipe'] = self.last_interacao.equipe
+        return initial
 
     def mount_context(self):
         try:
