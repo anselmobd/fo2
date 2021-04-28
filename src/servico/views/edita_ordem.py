@@ -58,7 +58,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             })
             raise e
 
-    def pre_mount_context(self):
+    def pre_form(self):
         try:
             self.context['documento'] = int(self.context['documento'])
             self.get_records()
@@ -67,6 +67,8 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'evento_record': self.evento_record,
         })
+
+    def pre_mount_context(self):
         if not self.evento_record.edita_nivel:
             self.form.fields['nivel'].widget = forms.HiddenInput()
             self.form.fields['nivel'].required = False
