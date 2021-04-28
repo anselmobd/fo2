@@ -71,6 +71,7 @@ class O2BaseGetPostView(CustomView):
 
     def post(self, request, *args, **kwargs):
         self.init_self(request, kwargs)
+        self.pre_form()
         self.form = self.Form_class(self.request.POST)
 
         if self.get_args2form:
