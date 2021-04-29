@@ -21,11 +21,14 @@ class Lista(O2BaseGetPostView):
 
 
     def mount_context(self):
-        try:
-            self.ordem = int(self.ordem)
-        except Exception:
-            return
-        
+        if self.ordem:
+            try:
+                self.ordem = int(self.ordem)
+            except Exception:
+                return
+        else:
+            self.ordem = 0
+
         cursor = connection.cursor()
         interacoes = lista_documentos(cursor, self.ordem)
 
