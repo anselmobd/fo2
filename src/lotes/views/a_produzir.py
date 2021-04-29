@@ -21,7 +21,7 @@ from comercial.views.estoque import grade_meta_estoque
 import lotes.models
 import lotes.queries.op
 import lotes.queries.pedido
-from lotes.views.quant_estagio import grade_meta_giro
+from lotes.views.parametros import grade_meta_giro
 
 
 class AProduzir(O2BaseGetView):
