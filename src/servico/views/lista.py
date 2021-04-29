@@ -81,6 +81,7 @@ class Lista(O2BaseGetPostView):
         interacoes = rows_to_dict_list_lower(cursor)
 
         for row in interacoes:
+            row['documento_id|TARGET'] = '_blank'
             row['documento_id|LINK'] = reverse(
                     'servico:ordem__get',
                     args=[row['documento_id']],
