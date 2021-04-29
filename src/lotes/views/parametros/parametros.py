@@ -54,29 +54,3 @@ class MetaGiro(O2BaseGetView):
             },
             'total': metas_list[-1]['giro'],
         })
-
-
-class MetaTotal(O2BaseGetView):
-
-    def __init__(self, *args, **kwargs):
-        super(MetaTotal, self).__init__(*args, **kwargs)
-        self.template_name = 'lotes/meta_total.html'
-        self.title_name = 'Visualiza total das metas'
-
-    def mount_context(self):
-        cursor = db_cursor_so(self.request)
-
-        metas = comercial.models.getMetaEstoqueAtual()
-        metas = metas.order_by('-venda_mensal')
-        if len(metas) == 0:
-            self.context.update({
-                'msg_erro': 'Sem metas definidas',
-            })
-            return
-
-        metas_list, total = calculaMetaTotalMetas(cursor, metas)
-
-        self.context.update({
-            'data': metas_list,
-            'total': total,
-        })
