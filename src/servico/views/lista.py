@@ -36,6 +36,7 @@ class Lista(O2BaseGetPostView):
               int_lim.documento_id
             , max(int_lim.create_at) ult_at
             , min(int_lim.create_at) pri_at
+            , count(int_lim.create_at) conta
             from fo2_serv_interacao int_lim
             group by
               int_lim.documento_id
@@ -52,6 +53,7 @@ class Lista(O2BaseGetPostView):
             , last_s.nome last_status__nome
             , last_inte.create_at last_create_at
             , il.ult_at - il.pri_at diff_at
+            , il.conta
             from inte_limites il
             join fo2_serv_interacao inte
               on inte.documento_id = il.documento_id
@@ -91,12 +93,12 @@ class Lista(O2BaseGetPostView):
             'headers': [
                 '#', 'Data/hora', 'Status', 'Usuário',
                 'Equipe', 'Nível', 'Descrição',
-                'Status atual', 'Data/hora', 'Período',
+                'Interações', 'Status atual', 'Data/hora', 'Período',
             ],
             'fields': [
                 'documento_id', 'create_at', 'status__nome', 'user__username',
                 'equipe__nome', 'nivel__nome', 'descricao',
-                'last_status__nome', 'last_create_at', 'diff_at',
+                'conta', 'last_status__nome', 'last_create_at', 'diff_at',
             ],
             'data': interacoes,
         })
