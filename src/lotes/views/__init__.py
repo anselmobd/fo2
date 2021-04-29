@@ -13,6 +13,6 @@ from .op_caixa import *
 from .op_pendente import *
 from .op import *
 from .os import *
+from .parametros import *
 from .posicao import *
-from .quant_estagio import *
 from .views import *
