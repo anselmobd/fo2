@@ -26,22 +26,6 @@ class Lista(O2BaseGetPostView):
         except Exception:
             return
         
-        # if self.ordem == 0:
-        #     interacoes = servico.models.Interacao.objects.all().order_by(
-        #         "-documento_id", "-create_at")
-        # else:
-        #     try:
-        #         interacoes = servico.models.Interacao.objects.filter(documento_id=self.ordem)
-        #     except servico.models.Documento.DoesNotExist:
-        #         self.context.update({
-        #             'erro': 'Ordem não encontrada.',
-        #         })
-        #         return
-
-        # interacoes = interacoes.values(
-        #     'documento_id', 'create_at', 'user__username', 'descricao', 'equipe__nome', 'status__nome', 'evento__nome', 'nivel__nome'
-        # )
-
         filtra_ordem = ''
         if self.ordem != 0:
             filtra_ordem = f'and il.documento_id = {self.ordem}'
@@ -60,7 +44,7 @@ class Lista(O2BaseGetPostView):
               inte.documento_id
             , inte.create_at
             , s.nome status__nome
-            , ev.nome evento__nome
+            --, ev.nome evento__nome
             , u.username user__username
             , e.nome equipe__nome
             , na.nome nivel__nome
@@ -103,7 +87,15 @@ class Lista(O2BaseGetPostView):
                 )
 
         self.context.update({
-            'headers': ['#', 'Status', 'Evento', 'Usuário', 'Data/hora', 'Equipe', 'Descrição', 'Nível'],
-            'fields': ['documento_id', 'status__nome', 'evento__nome', 'user__username', 'create_at', 'equipe__nome', 'descricao', 'nivel__nome'],
+            'headers': [
+                '#', 'Data/hora', 'Status', 'Usuário',
+                'Equipe', 'Nível', 'Descrição',
+                'Status atual', 'Data/hora', 'Período',
+            ],
+            'fields': [
+                'documento_id', 'create_at', 'status__nome', 'user__username',
+                'equipe__nome', 'nivel__nome', 'descricao',
+                'last_status__nome', 'last_create_at', 'diff_at',
+            ],
             'data': interacoes,
         })
