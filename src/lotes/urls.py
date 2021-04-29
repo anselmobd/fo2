@@ -92,9 +92,9 @@ urlpatterns = [
         views.CorrigeSequenciamento.as_view(), name='corrige_sequenciamento'),
 
     url(r'^quant_estagio/$',
-        views.QuantEstagio.as_view(), name='quant_estagio'),
+        views.analise.QuantEstagio.as_view(), name='quant_estagio'),
     url(r'^quant_estagio/(?P<estagio>\d+)/$',
-        views.QuantEstagio.as_view(), name='quant_estagio__get'),
+        views.analise.QuantEstagio.as_view(), name='quant_estagio__get'),
 
     url(r'^totais_estagio/$',
         views.analise.TotalEstagio.as_view(), name='totais_estagio'),
