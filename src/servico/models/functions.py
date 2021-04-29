@@ -22,6 +22,7 @@ def salva_interacao(
         descrição: descrição ou None
     Retorna:
         o documento que recebeu interação (criado ou não)
+    Joga exceção caso não consegua salvar algo
     """
     try:
         try:
