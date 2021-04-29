@@ -40,7 +40,7 @@ class Ordem(O2BaseGetPostView):
         eventos = eventos.values(
             'create_at',
             'evento__nome',
-            'status__id',
+            'status_id',
             'status__nome',
             'user__username',
             'nivel__nome',
@@ -49,7 +49,7 @@ class Ordem(O2BaseGetPostView):
         )
 
         self.tipos_eventos = servico.models.Evento.objects.filter(
-            statusevento__status_pre=eventos[0]['status__id']).order_by('ordem')
+            statusevento__status_pre=eventos[0]['status_id']).order_by('ordem')
 
         self.context.update({
             'eventos': eventos,

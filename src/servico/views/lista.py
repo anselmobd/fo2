@@ -26,10 +26,10 @@ class Lista(O2BaseGetPostView):
         
         if self.ordem == 0:
             interacoes = servico.models.Interacao.objects.all().order_by(
-                "-documento__id", "-create_at")
+                "-documento_id", "-create_at")
         else:
             try:
-                interacoes = servico.models.Interacao.objects.filter(documento__id=self.ordem)
+                interacoes = servico.models.Interacao.objects.filter(documento_id=self.ordem)
             except servico.models.Documento.DoesNotExist:
                 self.context.update({
                     'erro': 'Ordem não encontrada.',
@@ -37,17 +37,17 @@ class Lista(O2BaseGetPostView):
                 return
 
         interacoes = interacoes.values(
-            'documento__id', 'create_at', 'user__username', 'descricao', 'equipe__nome', 'status__nome', 'evento__nome', 'nivel__nome'
+            'documento_id', 'create_at', 'user__username', 'descricao', 'equipe__nome', 'status__nome', 'evento__nome', 'nivel__nome'
         )
 
         for row in interacoes:
-            row['documento__id|LINK'] = reverse(
+            row['documento_id|LINK'] = reverse(
                     'servico:ordem__get',
-                    args=[row['documento__id']],
+                    args=[row['documento_id']],
                 )
 
         self.context.update({
             'headers': ['#', 'Status', 'Evento', 'Usuário', 'Data/hora', 'Equipe', 'Descrição', 'Nível'],
-            'fields': ['documento__id', 'status__nome', 'evento__nome', 'user__username', 'create_at', 'equipe__nome', 'descricao', 'nivel__nome'],
+            'fields': ['documento_id', 'status__nome', 'evento__nome', 'user__username', 'create_at', 'equipe__nome', 'descricao', 'nivel__nome'],
             'data': interacoes,
         })
