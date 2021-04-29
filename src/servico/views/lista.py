@@ -38,12 +38,12 @@ class Lista(O2BaseGetPostView):
 
         self.context.update({
             'headers': [
-                '#', 'Data/hora', 'Status', 'Usuário',
+                '#', 'Data/hora', 'Usuário',
                 'Equipe', 'Nível', 'Descrição',
                 'Interações', 'Status atual', 'Data/hora', 'Período',
             ],
             'fields': [
-                'documento_id', 'create_at', 'status__nome', 'user__username',
+                'documento_id', 'create_at', 'user__username',
                 'equipe__nome', 'nivel__nome', 'descricao',
                 'conta', 'last_status__nome', 'last_create_at', 'diff_at',
             ],
