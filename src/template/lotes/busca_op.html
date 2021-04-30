@@ -91,6 +91,19 @@
     {% endif %}
   </h4>
 {% endif %}
+{% if data_de or data_ate %}
+  <h4>Data do Corte:
+  {% if data_de %}
+    de {{data_de}}
+  {% endif %}
+  {% if data_ate %}
+    até {{data_ate}}
+  {% endif %}
+  </h4>
+{% endif %}
+{% if apenas_totais %}
+  <h4>Apenas totais</h4>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}

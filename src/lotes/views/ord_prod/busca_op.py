@@ -19,7 +19,8 @@ class BuscaOP(View):
 
     def mount_context(
             self, cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
-            situacao, posicao, motivo, quant_fin, quant_emp, data_de, data_ate):
+            situacao, posicao, motivo, quant_fin, quant_emp,
+            data_de, data_ate, apenas_totais):
         context = {
             'ref': ref,
             'modelo': modelo,
@@ -35,6 +36,7 @@ class BuscaOP(View):
             'quant_emp': quant_emp,
             'data_de': data_de,
             'data_ate': data_ate,
+            'apenas_totais': apenas_totais,
         }
 
         data = lotes.queries.op.busca_op(
@@ -127,7 +129,7 @@ class BuscaOP(View):
                        'DEPOSITO_CODIGO', 'PERIODO',
                        'DT_DIGITACAO', 'DT_CORTE', 'DT_EMBARQUE',
                        'OP_REL'),
-            'data': data,
+            'data': data[-1:] if apenas_totais else data,
             'safe': safe,
             'style': {
                 11: 'text-align: right;',
@@ -140,7 +142,6 @@ class BuscaOP(View):
                 18: 'text-align: center;',
             },
         })
-
         return context
 
     def get(self, request, *args, **kwargs):
@@ -172,10 +173,12 @@ class BuscaOP(View):
             quant_emp = form.cleaned_data['quant_emp']
             data_de = form.cleaned_data['data_de']
             data_ate = form.cleaned_data['data_ate']
+            apenas_totais = form.cleaned_data['apenas_totais']
             cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(
                     cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
-                    situacao, posicao, motivo, quant_fin, quant_emp, data_de, data_ate))
+                    situacao, posicao, motivo, quant_fin, quant_emp,
+                    data_de, data_ate, apenas_totais))
         context['form'] = form
         return render(request, self.template_name, context)
