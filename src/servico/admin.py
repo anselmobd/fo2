@@ -51,7 +51,7 @@ intr_adm_site.register(servico.models.TipoDocumento, TipoDocumentoAdmin)
 
 
 class StatusAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['nome', 'codigo']
 
 
 intr_adm_site.register(servico.models.Status, StatusAdmin)
