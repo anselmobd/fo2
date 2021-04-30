@@ -409,6 +409,10 @@ class BuscaOpForm(forms.Form):
         label='Até', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
 
+    apenas_totais = forms.BooleanField(
+        label='Apenas totais', required=False,
+        widget=forms.CheckboxInput(attrs={'checked': False}))
+
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
         data = self.data.copy()
