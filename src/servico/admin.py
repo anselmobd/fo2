@@ -14,14 +14,14 @@ class EquipeAtendimentoAdmin(admin.ModelAdmin):
 intr_adm_site.register(servico.models.EquipeAtendimento, EquipeAtendimentoAdmin)
 
 
-class TipoFuncaoExercidaAdmin(admin.ModelAdmin):
+class FuncaoExercidaAdmin(admin.ModelAdmin):
     list_display = ['nome', 'slug', 'nivel_operacional', 'parte']
     fields = list_display
     readonly_fields = ['slug']
     ordering = ['nivel_operacional']
 
 
-intr_adm_site.register(servico.models.TipoFuncaoExercida, TipoFuncaoExercidaAdmin)
+intr_adm_site.register(servico.models.FuncaoExercida, FuncaoExercidaAdmin)
 
 
 class PapelUsuarioAdmin(admin.ModelAdmin):
