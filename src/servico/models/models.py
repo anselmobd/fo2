@@ -69,7 +69,7 @@ class FuncaoExercida(models.Model):
         return self.nome
 
     class Meta:
-        db_table = 'fo2_serv_tp_funcao_exer'
+        db_table = 'fo2_serv_funcao_exercida'
         verbose_name = 'Função exercida'
         verbose_name_plural = 'Funções exercidas'
 
