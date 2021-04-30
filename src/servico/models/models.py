@@ -99,6 +99,17 @@ class UsuarioFuncao(models.Model):
         verbose_name = "Usuário-função"
         verbose_name_plural = "Usuários-funções"
 
+    def save(self, *args, **kwargs):
+        try:
+            funcao = FuncaoExercida.objects.get(id=self.funcao_id)
+        except FuncaoExercida.DoesNotExist:
+            raise ValidationError(f"Função inválida.")
+        if funcao.parte != bool(self.equipe):
+            if funcao.parte:
+                raise ValidationError(f"Função exige equipe.")
+            else:
+                raise ValidationError(f"Função não deve indicar equipe.")
+        super(UsuarioFuncao, self).save(*args, **kwargs)
 
 class NivelAtendimento(models.Model):
     nome = models.CharField(
