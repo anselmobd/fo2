@@ -219,7 +219,13 @@ class ImprimeLotes(LoginRequiredMixin, View):
                         row['data_entrada_corte'] = '-'
                     row['estagios'] = estagios
                     teg.context(row)
-                    teg.printer_send()
+                    try:
+                        teg.printer_send()
+                    except Exception as e:
+                        context.update({
+                            'msg_erro': f'Erro ao imprimir <{e}>',
+                        })
+                        return context
             finally:
                 teg.printer_end()
 
