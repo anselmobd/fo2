@@ -37,7 +37,7 @@ class EquipeAtendimento(models.Model):
         super(EquipeAtendimento, self).save(*args, **kwargs)
 
 
-class TipoFuncaoExercida(models.Model):
+class FuncaoExercida(models.Model):
     nome = models.CharField(
         db_index=True,
         max_length=20,
@@ -70,12 +70,12 @@ class TipoFuncaoExercida(models.Model):
 
     class Meta:
         db_table = 'fo2_serv_tp_funcao_exer'
-        verbose_name = 'Tipo de função exercida'
-        verbose_name_plural = 'Tipos de função exercida'
+        verbose_name = 'Função exercida'
+        verbose_name_plural = 'Funções exercidas'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
-        super(TipoFuncaoExercida, self).save(*args, **kwargs)
+        super(FuncaoExercida, self).save(*args, **kwargs)
 
 
 class PapelUsuario(models.Model):
@@ -83,7 +83,7 @@ class PapelUsuario(models.Model):
         User, on_delete=models.PROTECT,
         verbose_name='usuário')
     funcao = models.ForeignKey(
-        TipoFuncaoExercida, on_delete=models.PROTECT,
+        FuncaoExercida, on_delete=models.PROTECT,
         verbose_name='função')
     equipe = models.ForeignKey(
         EquipeAtendimento, on_delete=models.PROTECT,
