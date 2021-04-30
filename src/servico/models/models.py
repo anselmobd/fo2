@@ -95,7 +95,7 @@ class UsuarioFuncao(models.Model):
         return f"{self.usuario} ({self.funcao}){equipe}"
 
     class Meta:
-        db_table = "fo2_serv_papel_usuario"
+        db_table = "fo2_serv_usuario_funcao"
         verbose_name = "Usuário-função"
         verbose_name_plural = "Usuários-funções"
 
