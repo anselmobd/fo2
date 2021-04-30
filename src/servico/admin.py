@@ -24,13 +24,13 @@ class FuncaoExercidaAdmin(admin.ModelAdmin):
 intr_adm_site.register(servico.models.FuncaoExercida, FuncaoExercidaAdmin)
 
 
-class PapelUsuarioAdmin(admin.ModelAdmin):
+class UsuarioAdminFuncao(admin.ModelAdmin):
     list_display = ['usuario', 'funcao', 'equipe']
     fields = ['usuario', 'funcao', 'equipe']
     ordering = ['usuario', 'funcao', 'equipe']
 
 
-intr_adm_site.register(servico.models.PapelUsuario, PapelUsuarioAdmin)
+intr_adm_site.register(servico.models.UsuarioFuncao, UsuarioAdminFuncao)
 
 
 class NivelAtendimentoAdmin(admin.ModelAdmin):

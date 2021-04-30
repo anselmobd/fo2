@@ -78,7 +78,7 @@ class FuncaoExercida(models.Model):
         super(FuncaoExercida, self).save(*args, **kwargs)
 
 
-class PapelUsuario(models.Model):
+class UsuarioFuncao(models.Model):
     usuario = models.ForeignKey(
         User, on_delete=models.PROTECT,
         verbose_name='usuário')
@@ -96,8 +96,8 @@ class PapelUsuario(models.Model):
 
     class Meta:
         db_table = "fo2_serv_papel_usuario"
-        verbose_name = "Papel de usuário"
-        verbose_name_plural = "Papeis de usuário"
+        verbose_name = "Usuário-função"
+        verbose_name_plural = "Usuários-funções"
 
 
 class NivelAtendimento(models.Model):
