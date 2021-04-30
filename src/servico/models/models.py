@@ -44,19 +44,25 @@ class TipoFuncaoExercida(models.Model):
     )
     slug = models.SlugField()
     # nivel_operacional:
+    #     cliente do serviço
     # -5: diretor
     # -4: gerente
     # -3: chefe
     # -2: usuário
     # -1: auxiliar
+    # 0: visitante
     # 1: auxiliar
     # 2: executor
     # 3: chefe
     # 4: supervisor
     # 5: supervisor geral
+    #     responsável pelo serviço
     nivel_operacional = models.IntegerField(
         'Nível operacional',
         default=0,
+    )
+    parte = models.BooleanField(
+        default=True,
     )
 
     def __str__(self):
