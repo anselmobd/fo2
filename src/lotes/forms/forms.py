@@ -401,6 +401,14 @@ class BuscaOpForm(forms.Form):
     quant_emp = forms.ChoiceField(
         label='Quantidade em produção', choices=CHOICES, initial='t')
 
+    data_de = forms.DateField(
+        label='Data do Corte: De', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
+    data_ate = forms.DateField(
+        label='Até', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()
         data = self.data.copy()

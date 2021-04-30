@@ -13,7 +13,8 @@ def op_inform(cursor, op, cached=False):
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
-        motivo=None, cached=False, quant_fin=None, quant_emp=None):
+        motivo=None, cached=False, quant_fin=None, quant_emp=None,
+        data_de=None, data_ate=None):
     """
     posicao: t - Todas as OPs
              p - Em produção
@@ -244,6 +245,18 @@ def busca_op(
         filtro_quant_emp = "AND sele.QTD_AP = 0"
     elif quant_emp == 'n':
         filtro_quant_emp = "AND sele.QTD_AP <> 0"
+
+    filtra_data_de = ""
+    if data_de is not None and data_de != '':
+        filtra_data_de = f"""
+            AND o.DATA_ENTRADA_CORTE >= '{data_de}'
+        """
+
+    filtra_data_ate = ""
+    if data_ate is not None and data_ate != '':
+        filtra_data_ate = f"""
+            AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
+        """
 
     sql = '''
         SELECT
@@ -508,6 +521,8 @@ def busca_op(
           {filtro_tipo_alt} -- filtro_tipo_alt
           {filtra_situacao} -- filtra_situacao
           {filtra_posicao} -- filtra_posicao
+          {filtra_data_de} -- filtra_data_de
+          {filtra_data_ate} -- filtra_data_ate
         GROUP BY
           o.ORDEM_PRODUCAO
         , o.REFERENCIA_PECA
@@ -566,6 +581,8 @@ def busca_op(
         filtra_posicao=filtra_posicao,
         filtro_quant_fin=filtro_quant_fin,
         filtro_quant_emp=filtro_quant_emp,
+        filtra_data_de=filtra_data_de,
+        filtra_data_ate=filtra_data_ate,
     )
     cursor.execute(sql)
 

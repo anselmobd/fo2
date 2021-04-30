@@ -19,7 +19,7 @@ class BuscaOP(View):
 
     def mount_context(
             self, cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
-            situacao, posicao, motivo, quant_fin, quant_emp):
+            situacao, posicao, motivo, quant_fin, quant_emp, data_de, data_ate):
         context = {
             'ref': ref,
             'modelo': modelo,
@@ -33,13 +33,15 @@ class BuscaOP(View):
             'motivo': motivo,
             'quant_fin': quant_fin,
             'quant_emp': quant_emp,
+            'data_de': data_de,
+            'data_ate': data_ate,
         }
 
         data = lotes.queries.op.busca_op(
             cursor, ref=ref, modelo=modelo, tam=tam, cor=cor,
             deposito=deposito, tipo=tipo, tipo_alt=tipo_alt, situacao=situacao,
             posicao=posicao, motivo=motivo, quant_fin=quant_fin,
-            quant_emp=quant_emp)
+            quant_emp=quant_emp, data_de=data_de, data_ate=data_ate)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'OPs não encontradas',
@@ -168,10 +170,12 @@ class BuscaOP(View):
             motivo = form.cleaned_data['motivo']
             quant_fin = form.cleaned_data['quant_fin']
             quant_emp = form.cleaned_data['quant_emp']
+            data_de = form.cleaned_data['data_de']
+            data_ate = form.cleaned_data['data_ate']
             cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(
                     cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
-                    situacao, posicao, motivo, quant_fin, quant_emp))
+                    situacao, posicao, motivo, quant_fin, quant_emp, data_de, data_ate))
         context['form'] = form
         return render(request, self.template_name, context)
