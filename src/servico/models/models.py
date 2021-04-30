@@ -244,6 +244,12 @@ class StatusEvento(models.Model):
     def save(self, *args, **kwargs):
         if not self.status_pre and not self.status_pos:
             raise ValidationError(f"Ao menos um status deve ser indicado.")
+        if not self.status_pre:
+            try:
+                StatusEvento.objects.get(status_pre=None)
+                raise ValidationError(f"Apenas um StatusEvento pode ter o campo status_pre nulo.")
+            except StatusEvento.DoesNotExist:
+                pass
         super(StatusEvento, self).save(*args, **kwargs)
 
 
