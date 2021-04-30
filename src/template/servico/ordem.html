@@ -32,7 +32,7 @@ td.descricao {
   {% if documento %}
     <h4>Ordem: {{ documento }}{% if not ativo %}, criada por {{ usuario }}, em {{ data }}; Inativa{% endif %}</h4>
   {% endif %}
-  {% if eventos %}
+  {% if interacoes %}
     {% for tipo_evento in tipos_eventos %}
       <input type="button"
         value="{{tipo_evento.nome}}"
@@ -41,7 +41,7 @@ td.descricao {
     {% endfor %}
     <table>
       <tbody>
-        {% for row in eventos %}
+        {% for row in interacoes %}
           <tr class="status">
             <td colspan="4">
               <h4>{{ row.status__nome }} - {{ row.create_at }}</h4>
