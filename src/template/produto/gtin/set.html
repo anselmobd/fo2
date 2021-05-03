@@ -24,15 +24,23 @@
     <script>
       var inp = document.getElementById('id_gtin');
       inp.select();
+
+      window.onkeydown = function(e) {
+        e.preventDefault();
+        if ((e.keyCode == 66) || (e.keyCode == 98)) {
+          document.getElementById('busca_prox').click();
+        }
+      }
+
     </script>
   {% endblock javascript %}
   {% if prox_tamanho %}
     {% if do_next and new_gtin %}
-      <p><a href="{% url 'produto:gtin_set_next' '1' ref prox_tamanho cor new_gtin %}"><span class="glyphicon glyphicon-search"></span> Busca tamanho {{prox_tamanho}}</a></p>
+      <p><a id="busca_prox" href="{% url 'produto:gtin_set_next' '1' ref prox_tamanho cor new_gtin %}"><span class="glyphicon glyphicon-search"></span> Busca tamanho {{prox_tamanho}}</a></p>
     {% elif do_next and gtin != 'SEM GTIN' %}
-      <p><a href="{% url 'produto:gtin_set_next' '1' ref prox_tamanho cor gtin %}"><span class="glyphicon glyphicon-search"></span> Busca tamanho {{prox_tamanho}}</a></p>
+      <p><a id="busca_prox" href="{% url 'produto:gtin_set_next' '1' ref prox_tamanho cor gtin %}"><span class="glyphicon glyphicon-search"></span> Busca tamanho {{prox_tamanho}}</a></p>
     {% else %}
-    <p><a href="{% url 'produto:gtin_set' '1' ref prox_tamanho cor %}"><span class="glyphicon glyphicon-search"></span> Busca tamanho {{prox_tamanho}}</a></p>
+      <p><a id="busca_prox" href="{% url 'produto:gtin_set' '1' ref prox_tamanho cor %}"><span class="glyphicon glyphicon-search"></span> Busca tamanho {{prox_tamanho}}</a></p>
     {% endif %}
   {% endif %}
   <p><a href="{% url 'produto:gtin_ref' %}"><span class="glyphicon glyphicon-search"></span> Busca outra referência ou cor</a></p>
