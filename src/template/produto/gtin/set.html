@@ -26,8 +26,8 @@
       inp.select();
 
       window.onkeydown = function(e) {
-        e.preventDefault();
         if ((e.keyCode == 66) || (e.keyCode == 98)) {
+          e.preventDefault();
           document.getElementById('busca_prox').click();
         }
       }
