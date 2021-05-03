@@ -37,6 +37,7 @@ class GtinPesquisa(View):
                 urllib.parse.urlencode({
                     'ref': row['REF'],
                 }))
+            row['REDEF'] = ''
             if row['GTIN'] == 'SEM GTIN':
                 row['GTIN|LINK'] = reverse(
                     'produto:gtin_set',
@@ -53,6 +54,12 @@ class GtinPesquisa(View):
                         urllib.parse.urlencode({
                             'gtin': row['GTIN'],
                         }))
+                    row['REDEF'] = 'Redefine'
+                    row['REDEF|LINK'] = reverse(
+                        'produto:gtin_set',
+                        args=[1, row['REF'], row['TAM'], row['COR']]
+                    )
+                    row['REDEF|TARGET'] = '_blank'
 
         headers = ['Referência', 'GTINs']
         fields = ['REF', 'BAR']
@@ -73,6 +80,8 @@ class GtinPesquisa(View):
             fields.append('GTIN')
             headers.append('')
             fields.append('QTD')
+            headers.append('')
+            fields.append('REDEF')
 
         context.update({
             'headers': headers,
