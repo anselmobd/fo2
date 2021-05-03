@@ -38,6 +38,11 @@ class GtinPesquisa(View):
                     'ref': row['REF'],
                 }))
             if row['GTIN'] == 'SEM GTIN':
+                row['GTIN|LINK'] = reverse(
+                    'produto:gtin_set',
+                    args=[1, row['REF'], row['TAM'], row['COR']]
+                )
+                row['GTIN|TARGET'] = '_blank'
                 row['QTD'] = ''
             else:
                 if row['QTD'] == 1:
