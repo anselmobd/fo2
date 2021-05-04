@@ -4,6 +4,35 @@ from utils.functions.models import rows_to_dict_list
 def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
                 colecao, situacao, tipo):
 
+
+    filtro_colecao = ''
+    if colecao is not None and colecao != '':
+        filtro_colecao = f"AND c.COLECAO = {colecao}"
+
+    filtro_estagio = ''
+    if estagio is not None and estagio != '':
+        filtro_estagio = f"AND e.CODIGO_ESTAGIO = {estagio}"
+
+    filtro_periodo_de = ''
+    if periodo_de is not None and periodo_de != '':
+        filtro_periodo_de = f"AND l.PERIODO_PRODUCAO >= {periodo_de}"
+
+    filtro_periodo_ate = ''
+    if periodo_ate is not None and periodo_ate != '':
+        filtro_periodo_ate = f"AND l.PERIODO_PRODUCAO <= {periodo_ate}"
+
+    filtro_data_de = ''
+    if data_de is not None and data_de != '':
+        filtro_data_de = f"AND o.DATA_ENTRADA_CORTE >= '{data_de}'"
+
+    filtro_data_ate = ''
+    if data_ate is not None and data_ate != '':
+        filtro_data_ate = f"AND o.DATA_ENTRADA_CORTE <= '{data_ate}'"
+
+    filtro_situacao = ''
+    if situacao is not None and situacao != '':
+        filtro_situacao = f"AND o.SITUACAO = {situacao}"
+
     filtro_tipo = ''
     if tipo == 'a':
         filtro_tipo = "AND l.PROCONF_GRUPO < 'A0000'"
@@ -21,7 +50,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
     elif tipo == 'm':
         filtro_tipo = "AND l.PROCONF_GRUPO >= 'C0000'"
 
-    sql = """
+    sql = f"""
         SELECT
           pend.*
         , (
@@ -71,7 +100,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
          AND r.REFERENCIA = l.PROCONF_GRUPO
         JOIN BASI_140 c -- cadastro de coleções de produtos
           ON c.COLECAO = r.COLECAO
-         AND ( %s is NULL or c.COLECAO = %s )
+         {filtro_colecao} -- filtro_colecao
         JOIN PCPC_020 o
           ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         JOIN PCPC_010 p
@@ -80,12 +109,12 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
         WHERE l.QTDE_EM_PRODUCAO_PACOTE <> 0
           AND o.SITUACAO in (4, 2) -- Ordens em produção, Ordem confec. gerada
           AND o.COD_CANCELAMENTO = 0 -- não cancelada
-          AND ( %s is NULL or e.CODIGO_ESTAGIO = %s )
-          AND l.PERIODO_PRODUCAO >= %s
-          AND l.PERIODO_PRODUCAO <= %s
-          AND ( %s is NULL or o.DATA_ENTRADA_CORTE >= %s )
-          AND ( %s is NULL or o.DATA_ENTRADA_CORTE <= %s )
-          AND ( %s is NULL or o.SITUACAO = %s )
+          {filtro_estagio} -- filtro_estagio
+          {filtro_periodo_de} -- filtro_periodo_de
+          {filtro_periodo_ate} -- filtro_periodo_ate
+          {filtro_data_de} -- filtro_data_de
+          {filtro_data_ate} -- filtro_data_ate
+          {filtro_situacao} -- filtro_situacao
           {filtro_tipo} -- filtro_tipo
         GROUP BY
           e.CODIGO_ESTAGIO
@@ -108,11 +137,6 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
         , l.PROCONF_GRUPO
         , l.ORDEM_PRODUCAO
         ) pend
-    """.format(
-        filtro_tipo=filtro_tipo
-    )
-    cursor.execute(sql, (colecao, colecao, estagio, estagio,
-                   periodo_de, periodo_ate,
-                   data_de, data_de, data_ate, data_ate,
-                   situacao, situacao))
+    """
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
