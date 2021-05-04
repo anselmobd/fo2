@@ -90,7 +90,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
         , l.SEQ_OPERACAO SEQ
         , o.DATA_ENTRADA_CORTE DT_CORTE
         , o.SITUACAO
-        , SUM( l.QTDE_PECAS_PROG - l.QTDE_PECAS_PROD) QTD
+        , SUM(l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) QTD
         , COUNT(*) LOTES
         FROM MQOP_005 e
         JOIN PCPC_040 l
@@ -106,7 +106,7 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
         JOIN PCPC_010 p
           ON p.AREA_PERIODO = 1
          AND p.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO
-        WHERE l.QTDE_EM_PRODUCAO_PACOTE <> 0
+        WHERE (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) <> 0
           AND o.SITUACAO in (4, 2) -- Ordens em produção, Ordem confec. gerada
           AND o.COD_CANCELAMENTO = 0 -- não cancelada
           {filtro_estagio} -- filtro_estagio
