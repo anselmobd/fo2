@@ -213,7 +213,7 @@ class Evento(models.Model):
     ordem = models.IntegerField(
         default=0,
     )
-    edita_nivel = models.BooleanField(
+    edita_classificacao = models.BooleanField(
         default=False,
     )
     edita_equipe = models.BooleanField(
