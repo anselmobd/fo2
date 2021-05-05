@@ -69,7 +69,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
         })
 
     def pre_mount_context(self):
-        if not self.evento_record.edita_nivel:
+        if not self.evento_record.edita_classificacao:
             self.form.fields['classificacao'].widget = forms.HiddenInput()
             self.form.fields['classificacao'].required = False
         if not self.evento_record.edita_equipe:
