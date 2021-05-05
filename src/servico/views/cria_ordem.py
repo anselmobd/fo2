@@ -25,7 +25,7 @@ class CriaOrdem(LoginRequiredMixin, O2BaseGetPostView):
             with transaction.atomic():
                 self.doc = salva_interacao(
                     msg, self.request, 
-                    nivel=self.nivel,
+                    classificacao=self.classificacao,
                     equipe=self.equipe,
                     descricao=self.descricao,
                 )

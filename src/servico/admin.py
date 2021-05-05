@@ -91,7 +91,7 @@ intr_adm_site.register(servico.models.StatusEvento, StatusEventoAdmin)
 class InteracaoAdmin(admin.ModelAdmin):
     list_display = [
         'documento', 'evento', 'status', 'create_at', 'user',
-        'nivel', 'equipe', 'descricao'
+        'classificacao', 'equipe', 'descricao'
     ]
     ordering = ['-documento', '-create_at']
 

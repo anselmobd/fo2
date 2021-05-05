@@ -38,4 +38,4 @@ class ListaForm(
 class CriaInteracaoForm(ModelForm):
     class Meta:
         model = Interacao
-        fields = ['equipe', 'nivel', 'descricao']
+        fields = ['equipe', 'classificacao', 'descricao']
