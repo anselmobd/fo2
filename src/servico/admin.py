@@ -67,16 +67,17 @@ class DocumentoAdmin(admin.ModelAdmin):
 intr_adm_site.register(servico.models.Documento, DocumentoAdmin)
 
 
-class TipoEventoAdmin(admin.ModelAdmin):
+class EventoAdmin(admin.ModelAdmin):
     list_display = [
         'ordem', 'nome', 'codigo',
-        'edita_classificacao', 'edita_equipe', 'edita_descricao'
+        'edita_classificacao', 'edita_equipe', 'edita_descricao',
+        'nivel_op_minimo'
     ]
     fields = list_display
     ordering = ['ordem']
 
 
-intr_adm_site.register(servico.models.Evento, TipoEventoAdmin)
+intr_adm_site.register(servico.models.Evento, EventoAdmin)
 
 
 class StatusEventoAdmin(admin.ModelAdmin):

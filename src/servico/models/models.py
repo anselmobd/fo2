@@ -226,6 +226,10 @@ class Evento(models.Model):
         default=False,
         verbose_name='Edita descrição',
     )
+    nivel_op_minimo = models.IntegerField(
+        default=0,
+        verbose_name='Nivel operacional mínimo',
+    )
 
     def __str__(self):
         return self.nome
