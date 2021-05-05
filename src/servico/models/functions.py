@@ -9,7 +9,7 @@ import servico.models
 
 def salva_interacao(
         msg, request, tipo_documento="os", evento_cod=None,
-        doc_id=None, nivel=None, equipe=None, descricao=None):
+        doc_id=None, classificacao=None, equipe=None, descricao=None):
     """Salva uma interação de serviço
     Recebe:
         msg: deve ser iniciado com {} e recebe mensagens de erro
@@ -17,7 +17,7 @@ def salva_interacao(
         tipo_documento: Por ora apenas "os", ordem de serviço
         evento_cod: passa None quando for evento de criação ou codigo de um evento
         doc_id: None para criar um novo (evento de criação) ou id de um documento
-        nivel: nivel ou None
+        classificacao: classificacao ou None
         equipe: equipe ou None
         descrição: descrição ou None
     Retorna:
@@ -61,7 +61,7 @@ def salva_interacao(
                     'erro': 'Não foi possível gerar um número de documento.',
                 })
                 raise e
-            last_nivel=None
+            last_classificacao=None
             last_equipe=None
             last_descricao=None
 
@@ -84,7 +84,7 @@ def salva_interacao(
                     'erro': f'Não foi possível pegar última interação.',
                 })
                 raise e
-            last_nivel=last_interacao.nivel
+            last_classificacao=last_interacao.classificacao
             last_equipe=last_interacao.equipe
             last_descricao=last_interacao.descricao
 
@@ -104,7 +104,7 @@ def salva_interacao(
                 documento=doc,
                 evento=evento,
                 status=status_pos,
-                nivel=last_nivel if nivel is None else nivel,
+                classificacao=last_classificacao if classificacao is None else classificacao,
                 equipe=last_equipe if equipe is None else equipe,
                 descricao=last_descricao if descricao is None else descricao,
             )

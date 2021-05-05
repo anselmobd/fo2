@@ -70,8 +70,8 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
 
     def pre_mount_context(self):
         if not self.evento_record.edita_nivel:
-            self.form.fields['nivel'].widget = forms.HiddenInput()
-            self.form.fields['nivel'].required = False
+            self.form.fields['classificacao'].widget = forms.HiddenInput()
+            self.form.fields['classificacao'].required = False
         if not self.evento_record.edita_equipe:
             self.form.fields['equipe'].widget = forms.HiddenInput()
             self.form.fields['equipe'].required = False
@@ -81,7 +81,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
 
     def form_initial(self):
         initial = super(EditaOrdem, self).form_initial()
-        initial['nivel'] = self.last_interacao.nivel
+        initial['classificacao'] = self.last_interacao.classificacao
         initial['equipe'] = self.last_interacao.equipe
         return initial
 
@@ -93,7 +93,7 @@ class EditaOrdem(LoginRequiredMixin, O2BaseGetPostView):
                     msg, self.request,
                     evento_cod=self.context['evento'],
                     doc_id=self.context['documento'],
-                    nivel=self.nivel,
+                    classificacao=self.classificacao,
                     equipe=self.equipe,
                     descricao=self.descricao,
                 )

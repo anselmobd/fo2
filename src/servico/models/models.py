@@ -290,7 +290,7 @@ class Interacao(models.Model):
     )
     classificacao = models.ForeignKey(
         Classificacao, on_delete=models.PROTECT,
-        verbose_name='Nível de atendimento',
+        verbose_name='Classificação',
     )
     equipe = models.ForeignKey(
         EquipeAtendimento, on_delete=models.PROTECT,
