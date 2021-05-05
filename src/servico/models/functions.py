@@ -8,12 +8,13 @@ from o2.functions import csrf_used
 import servico.models
 
 
-def get_eventos_possiveis(logged_user, documento, ult_interacao_dict):
+def get_eventos_possiveis(
+        logged_user, documento, ult_interacao_equipe__id, ult_interacao_status_id):
     try:
         usuario_funcao = servico.models.UsuarioFuncao.objects.get(
             usuario=logged_user,
             funcao__independente=False,
-            equipe=ult_interacao_dict['equipe__id']
+            equipe=ult_interacao_equipe__id
         )
         nivel_op = usuario_funcao.funcao.nivel_operacional
     except servico.models.UsuarioFuncao.DoesNotExist:
@@ -31,7 +32,7 @@ def get_eventos_possiveis(logged_user, documento, ult_interacao_dict):
             pass
 
     tipos_eventos = servico.models.Evento.objects.filter(
-        statusevento__status_pre=ult_interacao_dict['status_id']
+        statusevento__status_pre=ult_interacao_status_id
     )
     if nivel_op > 0 and acesso:
         tipos_eventos = tipos_eventos.filter(
@@ -52,7 +53,7 @@ def get_eventos_possiveis(logged_user, documento, ult_interacao_dict):
         tipos_eventos = tipos_eventos.filter(
             id=-1
         )
-    return tipos_eventos.order_by('ordem').values()
+    return tipos_eventos.order_by('ordem')
 
 
 def salva_interacao(
