@@ -288,7 +288,7 @@ class Interacao(models.Model):
         blank=True,
         verbose_name='Usuário',
     )
-    nivel = models.ForeignKey(
+    classificacao = models.ForeignKey(
         Classificacao, on_delete=models.PROTECT,
         verbose_name='Nível de atendimento',
     )
