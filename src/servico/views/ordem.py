@@ -1,12 +1,11 @@
 from pprint import pprint
 
-from django.db.models import Q
-
 from base.views import O2BaseGetPostView
 from utils.classes import LoggedInUser
 
 import servico.forms
 import servico.models
+from servico.models.functions import get_eventos_possiveis
 
 
 class Ordem(O2BaseGetPostView):
@@ -65,49 +64,3 @@ class Ordem(O2BaseGetPostView):
             'interacoes': interacoes,
             'tipos_eventos': self.tipos_eventos,
         })
-
-def get_eventos_possiveis(logged_user, documento, ult_interacao_dict):
-    try:
-        usuario_funcao = servico.models.UsuarioFuncao.objects.get(
-            usuario=logged_user,
-            funcao__independente=False,
-            equipe=ult_interacao_dict['equipe__id']
-        )
-        nivel_op = usuario_funcao.funcao.nivel_operacional
-    except servico.models.UsuarioFuncao.DoesNotExist:
-        nivel_op = 0
-
-    acesso = logged_user == documento.user
-    if not acesso:
-        try:
-            usuario_funcao = servico.models.UsuarioFuncao.objects.get(
-                usuario=logged_user,
-                funcao__independente=True,
-            )
-            acesso = True
-        except servico.models.UsuarioFuncao.DoesNotExist:
-            pass
-
-    tipos_eventos = servico.models.Evento.objects.filter(
-        statusevento__status_pre=ult_interacao_dict['status_id']
-    )
-    if nivel_op > 0 and acesso:
-        tipos_eventos = tipos_eventos.filter(
-            Q(nivel_op_minimo__gt=0, nivel_op_minimo__lte=nivel_op)
-            |
-            Q(nivel_op_minimo=0)
-        )
-    elif nivel_op > 0:
-        tipos_eventos = tipos_eventos.filter(
-            nivel_op_minimo__gt=0, nivel_op_minimo__lte=nivel_op
-        )
-    elif acesso:
-        tipos_eventos = tipos_eventos.filter(
-            nivel_op_minimo=0
-        )
-    else:
-        # força não encontrar nada
-        tipos_eventos = tipos_eventos.filter(
-            id=-1
-        )
-    return tipos_eventos.order_by('ordem').values()
