@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from base.views import O2BaseGetPostView
+from utils.classes import LoggedInUser
 
 import servico.forms
 import servico.models
@@ -18,6 +19,8 @@ class Ordem(O2BaseGetPostView):
 
 
     def mount_context(self):
+        logged_in = LoggedInUser()
+
         try:
             self.documento = int(self.documento)
             doc = servico.models.Documento.objects.get(id=self.documento)
@@ -49,8 +52,15 @@ class Ordem(O2BaseGetPostView):
             'descricao',
         )
 
-        self.tipos_eventos = servico.models.Evento.objects.filter(
-            statusevento__status_pre=interacoes[0]['status_id']).order_by('ordem')
+        if logged_in.user:
+            self.tipos_eventos = servico.models.Evento.objects.filter(
+                statusevento__status_pre=interacoes[0]['status_id']
+            )
+            
+            self.tipos_eventos = self.tipos_eventos.order_by('ordem').values()
+        else:
+            self.tipos_eventos = []
+        
 
         self.context.update({
             'interacoes': interacoes,
