@@ -148,6 +148,16 @@ def salva_interacao(
                 raise e
             status_pos = status_evento.status_pos if status_evento.status_pos else status_evento.status_pre
 
+            eventos_possiveis = get_eventos_possiveis(
+                request.user, doc, last_interacao.equipe.id, last_interacao.status.id)
+            try:
+                eventos_possiveis.get(codigo=evento_cod)
+            except servico.models.Evento.DoesNotExist as e:
+                msg.update({
+                    'erro': 'Evento não vádido para o usuário.',
+                })
+                raise e
+
         try:
             evento = servico.models.Interacao(
                 documento=doc,
