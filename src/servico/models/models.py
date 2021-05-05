@@ -104,11 +104,11 @@ class UsuarioFuncao(models.Model):
             funcao = FuncaoExercida.objects.get(id=self.funcao_id)
         except FuncaoExercida.DoesNotExist:
             raise ValidationError(f"Função inválida.")
-        if funcao.parte != bool(self.equipe):
-            if funcao.parte:
-                raise ValidationError(f"Função exige equipe.")
+        if funcao.independente == bool(self.equipe):
+            if funcao.independente:
+                raise ValidationError(f"Função requer ausência de indicação de equipe.")
             else:
-                raise ValidationError(f"Função não deve indicar equipe.")
+                raise ValidationError(f"Função requer indicação de equipe.")
         super(UsuarioFuncao, self).save(*args, **kwargs)
 
 class Classificacao(models.Model):
