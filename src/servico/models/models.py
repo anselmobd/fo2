@@ -122,7 +122,11 @@ class NivelAtendimento(models.Model):
     )
 
     def __str__(self):
-        return self.nome
+        if self.horas == 0:
+            horas = ""
+        else:
+            horas = f" ({self.horas} horas)"
+        return f"{self.nome}{horas}"
 
     class Meta:
         db_table = 'fo2_serv_nivel_atend'
