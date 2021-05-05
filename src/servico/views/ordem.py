@@ -43,8 +43,8 @@ class Ordem(O2BaseGetPostView):
             'status_id',
             'status__nome',
             'user__username',
-            'nivel__nome',
-            'nivel__horas',
+            'classificacao__nome',
+            'classificacao__horas',
             'equipe__nome',
             'descricao',
         )

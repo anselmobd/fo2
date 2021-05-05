@@ -27,7 +27,7 @@ def lista_documentos(cursor, ordem):
         --, ev.nome evento__nome
         , u.username user__username
         , e.nome equipe__nome
-        , na.nome nivel__nome
+        , cl.nome classificacao__nome
         , inte.descricao
         , last_s.nome last_status__nome
         , last_inte.create_at last_create_at
@@ -45,8 +45,8 @@ def lista_documentos(cursor, ordem):
             on s.id = inte.status_id
         join fo2_serv_evento ev
             on ev.id = inte.evento_id
-        join fo2_serv_nivel_atend na
-            on na.id = inte.nivel_id
+        join fo2_serv_classificacao cl
+            on cl.id = inte.classificacao_id
         join fo2_serv_interacao last_inte
             on last_inte.documento_id = il.documento_id
             and last_inte.create_at = il.ult_at

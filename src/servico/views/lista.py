@@ -47,7 +47,7 @@ class Lista(O2BaseGetPostView):
             ],
             'fields': [
                 'documento_id', 'create_at', 'user__username',
-                'equipe__nome', 'nivel__nome', 'descricao',
+                'equipe__nome', 'classificacao__nome', 'descricao',
                 'conta', 'last_status__nome', 'last_create_at', 'diff_at',
             ],
             'data': interacoes,
