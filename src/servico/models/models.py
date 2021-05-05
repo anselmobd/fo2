@@ -129,9 +129,9 @@ class Classificacao(models.Model):
         return f"{self.nome}{horas}"
 
     class Meta:
-        db_table = 'fo2_serv_nivel_atend'
-        verbose_name = 'Nível de atendimento'
-        verbose_name_plural = 'Níveis de atendimento'
+        db_table = 'fo2_serv_classificacao'
+        verbose_name = 'Classificação'
+        verbose_name_plural = 'Classificações'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
