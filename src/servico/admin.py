@@ -15,7 +15,7 @@ intr_adm_site.register(servico.models.EquipeAtendimento, EquipeAtendimentoAdmin)
 
 
 class FuncaoExercidaAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'slug', 'nivel_operacional', 'parte']
+    list_display = ['nome', 'slug', 'nivel_operacional', 'independente']
     fields = list_display
     readonly_fields = ['slug']
     ordering = ['nivel_operacional']

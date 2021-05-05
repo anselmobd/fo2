@@ -61,7 +61,7 @@ class FuncaoExercida(models.Model):
         'Nível operacional',
         default=0,
     )
-    parte = models.BooleanField(
+    independente = models.BooleanField(
         default=True,
     )
 
