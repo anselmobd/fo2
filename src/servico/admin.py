@@ -33,14 +33,14 @@ class UsuarioAdminFuncao(admin.ModelAdmin):
 intr_adm_site.register(servico.models.UsuarioFuncao, UsuarioAdminFuncao)
 
 
-class NivelAtendimentoAdmin(admin.ModelAdmin):
+class ClassificacaoAdmin(admin.ModelAdmin):
     list_display = ['nome', 'slug', 'horas']
     fields = ['nome', 'slug', 'horas']
     readonly_fields = ['slug']
     ordering = ['horas']
 
 
-intr_adm_site.register(servico.models.NivelAtendimento, NivelAtendimentoAdmin)
+intr_adm_site.register(servico.models.Classificacao, ClassificacaoAdmin)
 
 
 class TipoDocumentoAdmin(admin.ModelAdmin):

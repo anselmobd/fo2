@@ -111,7 +111,7 @@ class UsuarioFuncao(models.Model):
                 raise ValidationError(f"Função não deve indicar equipe.")
         super(UsuarioFuncao, self).save(*args, **kwargs)
 
-class NivelAtendimento(models.Model):
+class Classificacao(models.Model):
     nome = models.CharField(
         db_index=True,
         max_length=20,
@@ -135,7 +135,7 @@ class NivelAtendimento(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
-        super(NivelAtendimento, self).save(*args, **kwargs)
+        super(Classificacao, self).save(*args, **kwargs)
 
 
 class TipoDocumento(models.Model):
@@ -289,7 +289,7 @@ class Interacao(models.Model):
         verbose_name='Usuário',
     )
     nivel = models.ForeignKey(
-        NivelAtendimento, on_delete=models.PROTECT,
+        Classificacao, on_delete=models.PROTECT,
         verbose_name='Nível de atendimento',
     )
     equipe = models.ForeignKey(
