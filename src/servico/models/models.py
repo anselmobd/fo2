@@ -209,18 +209,22 @@ class Evento(models.Model):
     )
     codigo = models.CharField(
         max_length=20,
+        verbose_name='criado em',
     )
     ordem = models.IntegerField(
         default=0,
     )
     edita_classificacao = models.BooleanField(
         default=False,
+        verbose_name='Edita classificação',
     )
     edita_equipe = models.BooleanField(
         default=False,
+        verbose_name='Edita equipe',
     )
     edita_descricao = models.BooleanField(
         default=False,
+        verbose_name='Edita descrição',
     )
 
     def __str__(self):
