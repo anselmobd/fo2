@@ -12,9 +12,12 @@ table {
 tr.status {
   background-image: linear-gradient(white, #DDD);
 }
-td.descricao {
-  border: 2px solid #aaa;
-  border-collapse: collapse;
+pre.descricao {
+  white-space: pre-line;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
 }
 </style>
 {% endblock %}
@@ -48,7 +51,7 @@ td.descricao {
             </td>
           </tr>
           <tr>
-            <td width="5%">
+            <td width="3%">
               &nbsp;
             </td>
             <td>
@@ -65,8 +68,10 @@ td.descricao {
             <td>
               &nbsp;
             </td>
-            <td colspan="3" class="descricao">
-              {{ row.descricao }}
+            <td colspan="3">
+              <pre class="descricao">
+                {{ row.descricao }}
+              </pre>
             </td>
           </tr>
         {% endfor %}
