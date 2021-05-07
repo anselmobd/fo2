@@ -330,6 +330,10 @@ def datas(request, data):
         context = {'titulo': '1º de maio - Dia do Trabalhador'}
         return render(
             request, 'rh/datas/2021-dia-do-trabalhador.html', context)
+    elif data == '2021-05-09':
+        context = {'titulo': 'Dia das Mães'}
+        return render(
+            request, 'rh/datas/2021-05-09-maes.html', context)
 
 
 def v2018_dia_rosa_fotos(request):
