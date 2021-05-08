@@ -4,6 +4,7 @@ from django.db import connection
 from django.urls import reverse
 
 from base.views import O2BaseGetPostView
+from utils.classes import LoggedInUser
 
 import servico.forms
 import servico.models
@@ -21,6 +22,9 @@ class Painel(O2BaseGetPostView):
 
 
     def mount_context(self):
+        logged_in = LoggedInUser()
+        self.user = logged_in.user
+
         if self.ordem:
             try:
                 self.ordem = int(self.ordem)
@@ -30,7 +34,7 @@ class Painel(O2BaseGetPostView):
             self.ordem = 0
 
         cursor = connection.cursor()
-        interacoes = lista_documentos(cursor, self.ordem)
+        interacoes = lista_documentos(cursor, self.ordem, self.user)
 
         for row in interacoes:
             row['documento_id|TARGET'] = '_blank'
