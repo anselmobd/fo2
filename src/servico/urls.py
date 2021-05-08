@@ -19,4 +19,7 @@ urlpatterns = [
     url(r'^edita_ordem/(?P<evento>.+)/(?P<documento>.+)/$',
         views.EditaOrdem.as_view(), name='edita_ordem'),
 
+    url(r'^painel/$',
+        views.Painel.as_view(), name='painel'),
+
 ]
