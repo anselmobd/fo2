@@ -3,11 +3,15 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def lista_documentos(cursor, ordem):
+def lista_documentos(cursor, ordem, user=None):
     
     filtra_ordem = ''
     if ordem != 0:
         filtra_ordem = f'and il.documento_id = {ordem}'
+
+    filtra_user = ''
+    if user is not None:
+        filtra_user = f'and last_inte.user_id = {user.id}'
 
     sql = f"""
         with inte_limites as
@@ -54,6 +58,7 @@ def lista_documentos(cursor, ordem):
             on last_s.id = last_inte.status_id
         where 1=1
             {filtra_ordem} -- filtra_ordem
+            {filtra_user} -- filtra_user
         order by
             il.documento_id desc
     """
