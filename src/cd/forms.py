@@ -4,7 +4,7 @@ from django import forms
 from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
 
-from fo2.connections import db_conn
+from fo2.connections import db_cursor_so
 
 from utils.functions.digits import *
 from utils.functions.strings import only_digits
@@ -127,7 +127,7 @@ class EnderecarForm(forms.Form):
     def clean_lote(self):
         lote = only_digits(self.cleaned_data.get('lote', ''))
 
-        cursor = db_conn('so', self.request).cursor()
+        cursor = db_cursor_so(self.request)
         periodo = lote[:4]
         ordem_confeccao = lote[-5:]
         lote_sys = lotes.queries.lote.existe_lote(
