@@ -8,9 +8,9 @@ class Router(object):
 
     def systextil_conn(self):
         if hasattr(request_cfg, 'alter_db') and request_cfg.alter_db:
-            return 'sn'
-        else:
             return 'so'
+        else:
+            return 'sn'
 
     def db_for_read(self, model, **hints):
         if model._meta.app_label == 'systextil':
@@ -29,7 +29,7 @@ class Router(object):
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         if app_label == 'systextil':
-            return db == 'so'
-        elif db == 'so':
+            return db == 'sn'
+        elif db == 'sn':
             return False
         return None
