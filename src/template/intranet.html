@@ -43,15 +43,16 @@
           <ul>
             {% if externo %}
               {%if alter_db%}
-                <li><a href="http://oc.tussor.com.br:8345/systextil/sessions" target="_blank">Sessões/a></li>
-              {% else %}
                 <li><a href="http://systextil.tussor.com.br:8045/systextil/sessions" target="_blank">Sessões</a></li>
+              {% else %}
+                <li><a href="http://tussor.systextil.com.br/systextil/sessions" target="_blank">Sessões</a></li>
+                <!-- <li><a href="http://oc.tussor.com.br:8345/systextil/sessions" target="_blank">Sessões</a></li> -->
               {% endif %}
             {% else %}
               {%if alter_db%}
-                <li><a href="http://oc.tussor.com.br/systextil/sessions" target="_blank">Sessões</a></li>
-              {% else %}
                 <li><a href="http://systextil.tussor.com.br/systextil/sessions" target="_blank">Sessões</a></li>
+              {% else %}
+                <li><a href="http://oc.tussor.com.br/systextil/sessions" target="_blank">Sessões</a></li>
               {% endif %}
             {% endif %}
             <li><a href="https://systextil.movidesk.com/" target="_blank">Área do cliente (Ticket)</a></li>
