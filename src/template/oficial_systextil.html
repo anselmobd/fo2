@@ -176,7 +176,7 @@
     <small><a href="{% url 'intranet' %}">Intranet Tussor</a> | <a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></small>
   </div>
   <div style="text-align: center">
-    <h3>Para executar o Systêxtil {% if alter_db %}na nuvem{% else %}local{% endif %}</h3>
+    <h3>Para executar o Systêxtil {% if alter_db %}local{% else %}na nuvem{% endif %}</h3>
     <p>Abrir {% if externo %}o link{%else%}um dos links{%endif%} abaixo em nova aba (ou guia):<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<a href="#porque">Porque?</a>}--><br />
       &bullet; Clicando com o botão direito do mouse no link para aparecer um menu com opção de abrir o link em nova aba (ou guia); ou<br />
       &bullet; Fazendo "Control-clique" no link (segura a tecla "Ctrl" e clica normalmente no link) para abrir o link em nova aba (ou guia).<br />
@@ -205,17 +205,18 @@
     <div id="id_links" class="links" style="font-size: x-large;">
       {% if externo %}
         {% if alter_db %}
-          <p><a href="http://oc.tussor.com.br:8345/systextil">Link</a></p>
-        {% else %}
           <p><a href="http://systextil.tussor.com.br:8045/systextil">Link</a></p>
+        {% else %}
+          <p><a href="http://tussor.systextil.com.br/systextil">Link</a></p>
+          <!-- <p><a href="http://oc.tussor.com.br:8345/systextil">Link</a></p> -->
         {% endif %}
       {% else %}
         {% if alter_db %}
-          <p><a href="http://oc.tussor.com.br/systextil">Link oficial (domínio)</a></p>
-          <p><a href="http://10.0.0.4/systextil">Link alternativo (IP)</a></p>
-        {% else %}
           <p><a href="http://systextil.tussor.com.br/systextil">Link oficial (domínio)</a></p>
           <p><a href="http://192.168.1.45/systextil">Link alternativo (IP)</a></p>
+        {% else %}
+          <p><a href="http://oc.tussor.com.br/systextil">Link oficial (domínio)</a></p>
+          <p><a href="http://10.0.0.4/systextil">Link alternativo (IP)</a></p>
         {% endif %}
       {% endif %}
     </div>
