@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from fo2.connections import db_conn
+from fo2.connections import db_cursor_so
 
 import lotes.models
 
@@ -74,7 +74,7 @@ class InconsistenciasDetalhe(View):
         op = int(kwargs['op'])
 
         context = {'titulo': self.title_name}
-        cursor = db_conn('so', request).cursor()
+        cursor = db_cursor_so(request)
         data = self.mount_context(cursor, op)
         context.update(data)
         return render(request, self.template_name, context)

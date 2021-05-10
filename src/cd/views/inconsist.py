@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from fo2.connections import db_conn
+from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list_lower
 
@@ -174,7 +174,7 @@ class Inconsistencias(View):
                     ordem = 'A'
 
         context = {'titulo': self.title_name}
-        cursor = db_conn('so', request).cursor()
+        cursor = db_cursor_so(request)
         data = self.mount_context(cursor, ordem, opini)
         context.update(data)
         return render(request, self.template_name, context)
