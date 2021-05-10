@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
 
-from fo2.connections import db_conn
+from fo2.connections import db_cursor_so
 
 from geral.functions import request_user
 from utils.functions.digits import fo2_digit_with
@@ -33,7 +33,7 @@ class Estoque(View):
         return False
 
     def mount_context(self, form, user):
-        cursor = db_conn('so', self.request).cursor()
+        cursor = db_cursor_so(self.request)
         linhas_pagina = 100
         page = form.cleaned_data['page']
 
