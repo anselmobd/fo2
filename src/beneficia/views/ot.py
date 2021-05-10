@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from fo2.connections import db_conn
+from fo2.connections import db_cursor_so
 
 from utils.functions.views import (
     cleanned_fields_to_context,
@@ -28,7 +28,7 @@ class Ot(View):
         self.context = {'titulo': self.title_name}
 
     def mount_context(self):
-        self.cursor = db_conn('so', self.request).cursor()
+        self.cursor = db_cursor_so(self.request)
 
         dados = beneficia.queries.busca_ot(self.cursor, self.context['ot'])
         if len(dados) == 0:
