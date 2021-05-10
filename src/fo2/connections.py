@@ -11,17 +11,17 @@ fo2_db_sn = settings.FO2_ALTER_SYSTEXTIL_DB
 
 
 def db_conn(name, request=None):
-    if request and name == fo2_db_sn:
+    if request and name == fo2_db_so:
         # 2021-02-22 url alternativa aponta db alernativo
         if is_alternativa(request):
-            return connections[fo2_db_so]
-        else:
             return connections[fo2_db_sn]
+        else:
+            return connections[fo2_db_so]
     return connections[name]
 
 
 def db_conn_so(request=None):
-    return db_conn(fo2_db_sn, request)
+    return db_conn(fo2_db_so, request)
 
 
 def db_cursor(name, request=None):
