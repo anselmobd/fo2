@@ -4,7 +4,7 @@ import datetime
 from django.shortcuts import render
 from django.views import View
 
-from fo2.connections import db_conn
+from fo2.connections import db_cursor_so
 
 from utils.decorators import CacheGet
 from utils.functions import dias_mes_data
@@ -24,7 +24,7 @@ class PainelMetaFaturamento(View):
         self.context = {}
 
     def mount_context(self):
-        cursor = db_conn('so', self.request).cursor()
+        cursor = db_cursor_so(self.request)
         hoje = datetime.datetime.now()
         ano_atual = hoje.year
         mes_atual = hoje.month
