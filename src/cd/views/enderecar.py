@@ -4,8 +4,6 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
 
-from fo2.connections import db_conn
-
 import lotes.models
 import lotes.queries
 from lotes.views.lote.conserto_lote import dict_conserto_lote
@@ -23,12 +21,8 @@ class Enderecar(PermissionRequiredMixin, View):
         self.title_name = 'Endereçar'
 
     def mount_context(self, request, form):
-        cursor = db_conn('so', self.request).cursor()
-
         endereco = form.cleaned_data['endereco']
         lote = form.cleaned_data['lote']
-        periodo = lote[:4]
-        ordem_confeccao = lote[-5:]
         identificado = form.cleaned_data['identificado']
         end_conf = form.cleaned_data['end_conf']
 
