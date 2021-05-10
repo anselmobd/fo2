@@ -4,8 +4,6 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
 
-from fo2.connections import db_conn
-
 from lotes.views.lote.conserto_lote import dict_conserto_lote
 
 import cd.forms
@@ -26,12 +24,9 @@ class Retirar(PermissionRequiredMixin, View):
             self.title_name = 'Retirar lote inteiro'
 
     def mount_context(self, request, form):
-        cursor = db_conn('so', request).cursor()
         context = {}
 
         lote = form.cleaned_data['lote']
-        periodo = lote[:4]
-        ordem_confeccao = lote[-5:]
         identificado = form.cleaned_data['identificado']
 
         lote_rec = form.lote_object
