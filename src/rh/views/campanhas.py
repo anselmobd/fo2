@@ -23,3 +23,7 @@ def campanhas(request, id):
     elif id == '2020-11-27':
         return render(
             request, 'rh/campanhas/2020-11-27-agentes.html')
+    elif id == '2021-05-15':
+        print('rh/campanhas/2021-05-15-familia.html')
+        return render(
+            request, 'rh/campanhas/2021-05-15-familia.html')
