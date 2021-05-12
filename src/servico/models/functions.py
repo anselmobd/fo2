@@ -9,14 +9,14 @@ import servico.models
 
 
 def get_eventos_possiveis(
-        logged_user, documento, ult_interacao_equipe__id, ult_interacao_status_id):
+        logged_user, documento, ult_interacao_equipe_id, ult_interacao_status_id):
     # se usuário logado tem função dependente de equipe,
     # pega o nível operacional dela
     try:
         usuario_funcao = servico.models.UsuarioFuncao.objects.get(
             usuario=logged_user,
             funcao__independente=False,
-            equipe=ult_interacao_equipe__id
+            equipe=ult_interacao_equipe_id
         )
         nivel_op = usuario_funcao.funcao.nivel_operacional
     except servico.models.UsuarioFuncao.DoesNotExist:
