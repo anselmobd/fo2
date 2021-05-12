@@ -209,7 +209,7 @@ class Evento(models.Model):
     )
     codigo = models.CharField(
         max_length=20,
-        verbose_name='criado em',
+        verbose_name='Código',
     )
     ordem = models.IntegerField(
         default=0,
