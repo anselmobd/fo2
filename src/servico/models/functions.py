@@ -48,11 +48,13 @@ def get_eventos_possiveis(
             |
             Q(nivel_op_minimo=0)
         )
+    # se é de equipe
     elif nivel_op > 0:
         # eventos com nível mínimo menor ou igual ao atual
         tipos_eventos = tipos_eventos.filter(
             nivel_op_minimo__gt=0, nivel_op_minimo__lte=nivel_op
         )
+    # se tem acesso
     elif acesso:
         # eventos sem nível mínimo
         tipos_eventos = tipos_eventos.filter(
