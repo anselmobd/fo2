@@ -10,6 +10,8 @@ import servico.models
 
 def get_eventos_possiveis(
         logged_user, documento, ult_interacao_equipe__id, ult_interacao_status_id):
+    # se usuário logado tem função dependente de equipe,
+    # pega o nível operacional dela
     try:
         usuario_funcao = servico.models.UsuarioFuncao.objects.get(
             usuario=logged_user,
@@ -20,8 +22,10 @@ def get_eventos_possiveis(
     except servico.models.UsuarioFuncao.DoesNotExist:
         nivel_op = 0
 
+    # se usuário logado é o que abriu o documento, acesso = True
     acesso = logged_user == documento.user
     if not acesso:
+        # se usuário logado tem função independente, acesso = True
         try:
             usuario_funcao = servico.models.UsuarioFuncao.objects.get(
                 usuario=logged_user,
@@ -31,20 +35,26 @@ def get_eventos_possiveis(
         except servico.models.UsuarioFuncao.DoesNotExist:
             pass
 
+    # eventos que atuam no status atual
     tipos_eventos = servico.models.Evento.objects.filter(
         statusevento__status_pre=ult_interacao_status_id
     )
+    # se é de equipe e tem acesso
     if nivel_op > 0 and acesso:
+        # eventos com nível mínimo menor ou igual ao atual; ou
+        # eventos sem nível mínimo
         tipos_eventos = tipos_eventos.filter(
             Q(nivel_op_minimo__gt=0, nivel_op_minimo__lte=nivel_op)
             |
             Q(nivel_op_minimo=0)
         )
     elif nivel_op > 0:
+        # eventos com nível mínimo menor ou igual ao atual
         tipos_eventos = tipos_eventos.filter(
             nivel_op_minimo__gt=0, nivel_op_minimo__lte=nivel_op
         )
     elif acesso:
+        # eventos sem nível mínimo
         tipos_eventos = tipos_eventos.filter(
             nivel_op_minimo=0
         )
