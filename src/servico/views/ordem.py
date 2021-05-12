@@ -50,13 +50,13 @@ class Ordem(O2BaseGetPostView):
             'classificacao__nome',
             'classificacao__horas',
             'equipe__nome',
-            'equipe__id',
+            'equipe_id',
             'descricao',
         )
 
         if logged_in.user:
             self.tipos_eventos = get_eventos_possiveis(
-                logged_in.user, doc, interacoes[0]['equipe__id'], interacoes[0]['status_id'])
+                logged_in.user, doc, interacoes[0]['equipe_id'], interacoes[0]['status_id'])
         else:
             self.tipos_eventos = []
         
