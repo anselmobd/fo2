@@ -71,7 +71,7 @@
               {% if request.user.is_authenticated or base_ip_interno %}
                 <span class="hidden-xs hidden-sm noprint">|<span class="hidden-xs hidden-sm hidden-md noprint"><br /></span></span>
                 <a href="{% url 'apoio_ao_erp' %}">Apoio<span class="hidden-xs hidden-sm hidden-md noprint"> ao ERP</span>{%if alter_db%}(local){%else%}(nuvem){%endif%}</a>
-                <span class="hidden-xs hidden-sm noprint">| <a target="_blank" href="{% url 'systextil' %}"><span class="stnavbar stlogo">Systêxtil<span class="hidden-xs hidden-sm hidden-md noprint"><b>ERP</b></span></span></a>
+                <span class="noprint">| <a target="_blank" href="{% url 'systextil' %}"><span class="stnavbar stlogo">Systêxtil<span class="hidden-xs hidden-sm hidden-md noprint"><b>ERP</b></span></span></a>
                 </span>
               {% endif %}
             </small>
