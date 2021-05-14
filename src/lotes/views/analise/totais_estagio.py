@@ -101,7 +101,7 @@ class TotalEstagio(View):
             'style': style,
         })
 
-        estagio_programacao = [3]
+        estagio_programacao = [3, 6, 22]
         estagio_estoque = [57, 60, 63]
         estagio_vendido = [66]
         estagio_nao_producao = \
