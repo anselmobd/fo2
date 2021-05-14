@@ -120,7 +120,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
                     ref['info'] = ''
                     if len(cores_err) != 0:
-                        ref['info'] = 'ERRO: '
+                        ref['info'] = ' ERRO: '
                         for cor_err in cores_err:
                             ref['info'] += ' DIFERE DE '.join(cor_err)
                     ref['info'] += join_non_empty(
