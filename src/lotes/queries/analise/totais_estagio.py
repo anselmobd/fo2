@@ -229,6 +229,7 @@ def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
           {filtro_deposito} -- filtro_deposito
           {filtro_data_de} -- filtro_data_de
           {filtro_data_ate} -- filtro_data_ate
+          AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
         GROUP BY
           l.CODIGO_ESTAGIO
         , e.DESCRICAO
