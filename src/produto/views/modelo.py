@@ -18,7 +18,7 @@ class Modelo(View):
     def mount_context(self, cursor, modelo):
         context = {'modelo': modelo}
 
-        if len(modelo) not in range(1, 5):
+        if len(modelo) not in range(1, 6):
             context.update({
                 'msg_erro': 'Modelo inválido',
             })
