@@ -6,6 +6,7 @@ from pprint import pprint
 from django import forms
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
@@ -45,6 +46,12 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
         # referencias automaticamente consideradas
         data_ref = queries.pa_de_modelo(self.cursor, modelo)
+        for row in data_ref:
+            row['ref|TARGET'] = '_blank'
+            row['ref|LINK'] = reverse(
+                'produto:ref__get',
+                args=[row['ref']],
+            )
         if len(data_ref) > 0:
             self.context['referencias'] = {
                 'headers': ['Referência'],
