@@ -55,7 +55,7 @@ class VendasPorModelo(O2BaseGetView):
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
                 self.cursor, ref=None, periodo=periodo['range'],
-                colecao=None, cliente=None, por='modelo'
+                colecao=None, cliente=None, por='modelo', zerados=False
             )
             for row in data_periodo:
                 data_row = next(
