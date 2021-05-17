@@ -66,6 +66,13 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         ).order_by('referencia').values('referencia')
         if len(ref_incl) != 0:
 
+            for row in ref_incl:
+                row['referencia|TARGET'] = '_blank'
+                row['referencia|LINK'] = reverse(
+                    'produto:ref__get',
+                    args=[row['referencia']],
+                )
+
             for ref in ref_incl:
                 alternativas = produto.queries.ref_estruturas(
                     self.cursor, ref['referencia'])
