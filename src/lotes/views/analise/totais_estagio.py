@@ -49,8 +49,11 @@ class TotalEstagio(View):
         else:
             cnpj9 = None
 
+        ops_18_prog = queries.analise.totais_estagio_ops_18_prog(cursor)
+        ops_prog = [o['ORDEM_PRODUCAO'] for o in ops_18_prog]
+
         data = queries.analise.totais_estagios(
-            cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate)
+            cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate, ops_prog)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem quantidades',
@@ -101,7 +104,7 @@ class TotalEstagio(View):
             'style': style,
         })
 
-        estagio_programacao = [3, 6, 22]
+        estagio_programacao = [3, 6, 22, 118]
         estagio_estoque = [57, 60, 63]
         estagio_vendido = [66]
         estagio_nao_producao = \

@@ -57,8 +57,13 @@ def totais_estagios(
 
     sql = """
         SELECT
-          l.CODIGO_ESTAGIO
-        , l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO ESTAGIO
+          CASE WHEN e.DESCRICAO IS NULL THEN l.CODIGO_ESTAGIO+100
+          ELSE l.CODIGO_ESTAGIO
+          END CODIGO_ESTAGIO
+        , l.CODIGO_ESTAGIO || ' - ' || 
+          CASE WHEN e.DESCRICAO IS NULL THEN e_p.DESCRICAO 
+          ELSE e.DESCRICAO 
+          END ESTAGIO
         , sum(
             CASE WHEN l.PROCONF_GRUPO <= '99999'
               AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
@@ -222,8 +227,12 @@ def totais_estagios(
         JOIN BASI_030 r
           ON r.NIVEL_ESTRUTURA = 1
          AND r.REFERENCIA = o.REFERENCIA_PECA
-        JOIN MQOP_005 e
+        LEFT JOIN MQOP_005 e_p
+          ON e_p.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+        AND l.ORDEM_PRODUCAO IN (27528, 27829, 28195, 28799, 28968)
+        LEFT JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
+        AND e_p.CODIGO_ESTAGIO IS NULL 
         WHERE o.SITUACAO in (4, 2) -- Ordens em produção, Ordem confec. gerada
           {filtro_tipo_roteiro} -- filtro_tipo_roteiro
           {filtro_cnpj9} -- filtro_cnpj9
@@ -234,6 +243,7 @@ def totais_estagios(
         GROUP BY
           l.CODIGO_ESTAGIO
         , e.DESCRICAO
+        , e_p.DESCRICAO
         HAVING
           sum((l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)) > 0
         ORDER BY
