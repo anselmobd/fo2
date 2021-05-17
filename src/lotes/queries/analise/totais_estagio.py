@@ -55,6 +55,10 @@ def totais_estagios(
         filtro_data_ate = ''' --
             AND o.DATA_ENTRADA_CORTE <= '{}' '''.format(data_ate)
 
+    lista_op_prog = '0'
+    if ops_prog:
+        lista_op_prog = ', '.join([str(op) for op in ops_prog])
+
     sql = """
         SELECT
           CASE WHEN e.DESCRICAO IS NULL THEN l.CODIGO_ESTAGIO+100
@@ -229,7 +233,7 @@ def totais_estagios(
          AND r.REFERENCIA = o.REFERENCIA_PECA
         LEFT JOIN MQOP_005 e_p
           ON e_p.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-        AND l.ORDEM_PRODUCAO IN (27528, 27829, 28195, 28799, 28968)
+        AND l.ORDEM_PRODUCAO IN ({lista_op_prog}) -- lista_op_prog
         LEFT JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         AND e_p.CODIGO_ESTAGIO IS NULL 
@@ -249,6 +253,7 @@ def totais_estagios(
         ORDER BY
           l.CODIGO_ESTAGIO
     """.format(
+        lista_op_prog=lista_op_prog,
         filtro_tipo_roteiro=filtro_tipo_roteiro,
         filtro_cnpj9=filtro_cnpj9,
         filtro_deposito=filtro_deposito,
