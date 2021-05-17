@@ -7,10 +7,11 @@ from utils.functions.models import rows_to_dict_list
 from utils.functions import my_make_key_cache, fo2logger
 
 
-def totais_estagios(cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate):
-    # key_cache = make_key_cache()
+def totais_estagios(
+      cursor, tipo_roteiro, cnpj9, deposito, data_de, data_ate, ops_prog=[]):
+
     key_cache = my_make_key_cache(
-        'totais_estagios', tipo_roteiro, cnpj9, deposito, data_de, data_ate)
+        'totais_estagios', tipo_roteiro, cnpj9, deposito, data_de, data_ate, str(ops_prog))
 
     cached_result = cache.get(key_cache)
     if cached_result is not None:
