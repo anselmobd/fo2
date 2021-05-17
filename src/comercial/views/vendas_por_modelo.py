@@ -35,22 +35,26 @@ class VendasPorModelo(O2BaseGetView):
         ))
         metas = metas.filter(antiga=False)
         metas = metas.order_by('-meta_estoque').values()
+        meta_zerada_data = {}
         for row in metas:
-            data_row = next(
-                (dr for dr in data if dr['modelo'] == row['modelo']),
-                False)
-            if not data_row:
-                data_row = {
-                    'modelo': row['modelo'],
-                    'modelo|TARGET': '_blank',
-                    'modelo|LINK': reverse(
-                        'comercial:define_meta__get',
-                        args=[row['modelo']]),
-                    **zero_data_row
-                }
-                data.append(data_row)
-            data_row['meta'] = row['meta_estoque']
-            data_row['data'] = row['data']
+            if row['meta_estoque']:
+                data_row = next(
+                    (dr for dr in data if dr['modelo'] == row['modelo']),
+                    False)
+                if not data_row:
+                    data_row = {
+                        'modelo': row['modelo'],
+                        'modelo|TARGET': '_blank',
+                        'modelo|LINK': reverse(
+                            'comercial:define_meta__get',
+                            args=[row['modelo']]),
+                        **zero_data_row
+                    }
+                    data.append(data_row)
+                data_row['meta'] = row['meta_estoque']
+                data_row['data'] = row['data']
+            else:
+                meta_zerada_data[row['modelo']] = row['data']
 
         for periodo in self.periodos:
             data_periodo = queries.get_vendas(
@@ -70,6 +74,9 @@ class VendasPorModelo(O2BaseGetView):
                             args=[row['modelo']]),
                         **zero_data_row
                     }
+                    if row['modelo'] in meta_zerada_data:
+                        data_row['meta'] = 0
+                        data_row['data'] = meta_zerada_data[row['modelo']]
                     data.append(data_row)
                 data_row[periodo['range']] = round(
                     row['qtd'] / periodo['meses'])
