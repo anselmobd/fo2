@@ -132,6 +132,9 @@ class TotalEstagio(View):
         data_p = [
             r for r in data if r['CODIGO_ESTAGIO'] in estagio_programacao]
         if len(data_p) > 0:
+            total_programacao = init_total('Total em programação', data_p)
+            soma_fields(total_programacao, data_p, quant_fields)
+            data_p.append(total_programacao)
             red_columns(data_p[0])
             context.update({
                 'data_p': data_p,
