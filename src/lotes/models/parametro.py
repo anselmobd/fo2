@@ -26,6 +26,8 @@ class RegraColecao(models.Model):
     referencia = models.CharField(
         max_length=5, default='',
         verbose_name='Referência')
+    lotes_caixa = models.IntegerField(
+        null=True, blank=True, default=0)
 
     objects_referencia = models.Manager()
     objects = RegraColecaoManager()
