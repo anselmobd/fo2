@@ -12,8 +12,6 @@ class RegraColecaoManager(models.Manager):
 
 
 class RegraColecao(models.Model):
-    id = models.IntegerField(
-        primary_key=True)
     colecao = models.IntegerField(
         null=True, blank=True, default=0,
         verbose_name='Coleção')
@@ -39,6 +37,7 @@ class RegraColecao(models.Model):
         db_table = "fo2_lot_regra_colecao"
         verbose_name = "Regra por coleção"
         verbose_name_plural = "Regras por coleção"
+        # unique_together = (("colecao", "referencia"),)
 
     def save(self, *args, **kwargs):
         if self.referencia:
@@ -48,7 +47,8 @@ class RegraColecao(models.Model):
                     referencia='',
                 )
             except RegraColecao.DoesNotExist:
-                raise ValidationError(f"Só pode definir uma regra por referência se já houver uma sem referência.")
+                raise ValidationError(
+                    f"Só pode definir uma regra por referência se já houver uma sem referência.")
         super(RegraColecao, self).save(*args, **kwargs)
 
 
