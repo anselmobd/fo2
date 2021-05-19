@@ -15,9 +15,12 @@ class RegraColecao(models.Model):
     lm_cor = models.IntegerField(
         null=True, blank=True, default=0,
         verbose_name='Lote mínimo por cor')
+    referencia = models.CharField(
+        max_length=5, default='',
+        verbose_name='Referência')
 
     def __str__(self):
-        return '{}-{}'.format(self.colecao, self.lead)
+        return str(self.colecao)
 
     class Meta:
         db_table = "fo2_lot_regra_colecao"
