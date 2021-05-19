@@ -11,7 +11,7 @@ from .models import (
     Impresso,
     ImpressoraTermica,
     Lote,
-    LeadColecao,
+    RegraColecao,
     ModeloTermica,
     SolicitaLote,
     SolicitaLotePedido,
@@ -82,7 +82,7 @@ class LoteAdmin(admin.ModelAdmin):
     ]
 
 
-class LeadColecaoAdmin(admin.ModelAdmin):
+class RegraColecaoAdmin(admin.ModelAdmin):
     list_display = ['colecao', 'lead']
     ordering = ['colecao']
 
@@ -92,7 +92,7 @@ intr_adm_site.register(ImpressoraTermica, ImpressoraTermicaAdmin)
 intr_adm_site.register(ModeloTermica, ModeloTermicaAdmin)
 intr_adm_site.register(UsuarioImpresso, UsuarioImpressoAdmin)
 intr_adm_site.register(Lote, LoteAdmin)
-intr_adm_site.register(LeadColecao, LeadColecaoAdmin)
+intr_adm_site.register(RegraColecao, RegraColecaoAdmin)
 
 
 # solicitações

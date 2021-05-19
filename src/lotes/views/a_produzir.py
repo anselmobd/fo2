@@ -276,10 +276,10 @@ class GradeProduzirOld(O2BaseGetPostView):
         lm_tam = 0
         lm_cor = 0
         try:
-            LC = lotes.models.LeadColecao.objects.get(colecao=colecao)
+            LC = lotes.models.RegraColecao.objects.get(colecao=colecao)
             lm_tam = LC.lm_tam
             lm_cor = LC.lm_cor
-        except lotes.models.LeadColecao.DoesNotExist:
+        except lotes.models.RegraColecao.DoesNotExist:
             pass
 
         metas = comercial.models.MetaEstoque.objects

@@ -3,7 +3,7 @@ from pprint import pprint
 from django.db import models
 
 
-class LeadColecao(models.Model):
+class RegraColecao(models.Model):
     colecao = models.IntegerField(
         primary_key=True,
         verbose_name='Coleção')

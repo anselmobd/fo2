@@ -49,9 +49,9 @@ def lead_de_modelo(cursor, modelo):
     rows = colecoes_de_modelo(cursor, modelo)
     for row in rows:
         try:
-            lc = lotes.models.LeadColecao.objects.get(colecao=row['COLECAO'])
+            lc = lotes.models.RegraColecao.objects.get(colecao=row['COLECAO'])
             lc_lead = lc.lead
-        except lotes.models.LeadColecao.DoesNotExist:
+        except lotes.models.RegraColecao.DoesNotExist:
             lc_lead = 0
             break
         if lead == 0:
