@@ -37,7 +37,7 @@ class RegraColecao(models.Model):
         db_table = "fo2_lot_regra_colecao"
         verbose_name = "Regra por coleção"
         verbose_name_plural = "Regras por coleção"
-        # unique_together = (("colecao", "referencia"),)
+        unique_together = (("colecao", "referencia"),)
 
     def save(self, *args, **kwargs):
         if self.referencia:
