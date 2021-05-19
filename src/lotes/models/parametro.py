@@ -3,6 +3,13 @@ from pprint import pprint
 from django.db import models
 
 
+class RegraColecaoManager(models.Manager):
+    def get_queryset(self):
+        return super(
+            RegraColecaoManager,
+            self).get_queryset().filter(referencia='')
+
+
 class RegraColecao(models.Model):
     colecao = models.IntegerField(
         primary_key=True,
@@ -18,6 +25,9 @@ class RegraColecao(models.Model):
     referencia = models.CharField(
         max_length=5, default='',
         verbose_name='Referência')
+
+    objects_referencia = models.Manager()
+    objects = RegraColecaoManager()
 
     def __str__(self):
         return str(self.colecao)
