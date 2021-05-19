@@ -83,7 +83,7 @@ class LoteAdmin(admin.ModelAdmin):
 
 
 class RegraColecaoAdmin(admin.ModelAdmin):
-    list_display = ['colecao', 'lead']
+    list_display = ['colecao', 'lead', 'lm_tam', 'lm_cor', 'referencia']
     ordering = ['colecao']
 
 
