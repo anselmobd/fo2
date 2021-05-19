@@ -24,6 +24,7 @@ class RegraColecao(models.Model):
         null=True, blank=True, default=0,
         verbose_name='Lote mínimo por cor')
     referencia = models.CharField(
+        null=True, blank=True,
         max_length=5, default='',
         verbose_name='Referência')
     lotes_caixa = models.IntegerField(
