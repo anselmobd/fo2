@@ -20,9 +20,9 @@ class RegraColecao(models.Model):
         return '{}-{}'.format(self.colecao, self.lead)
 
     class Meta:
-        db_table = "fo2_lot_lead_colecao"
-        verbose_name = "Lead de produção"
-        verbose_name_plural = "Leads de produção"
+        db_table = "fo2_lot_regra_colecao"
+        verbose_name = "Regra por coleção"
+        verbose_name_plural = "Regras por coleção"
 
 
 class RegraLMTamanho(models.Model):
