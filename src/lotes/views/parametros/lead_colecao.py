@@ -37,8 +37,8 @@ class LeadColecao(View):
             return
 
         try:
-            LC = models.LeadColecao.objects.all().order_by('colecao')
-        except models.LeadColecao.DoesNotExist:
+            LC = models.RegraColecao.objects.all().order_by('colecao')
+        except models.RegraColecao.DoesNotExist:
             self.context.update({
                 'msg_erro': 'Parâmetros de coleções não encontrados',
             })
@@ -96,8 +96,8 @@ class LeadColecao(View):
         for key in lcs:
             if lcs[key]['status'] == 'd':
                 try:
-                    models.LeadColecao.objects.filter(colecao=key).delete()
-                except models.LeadColecao.DoesNotExist:
+                    models.RegraColecao.objects.filter(colecao=key).delete()
+                except models.RegraColecao.DoesNotExist:
                     self.context.update({
                         'msg_erro': 'Erro apagando parâmetros de coleção',
                     })
@@ -106,7 +106,7 @@ class LeadColecao(View):
 
             if lcs[key]['status'] == 'i':
                 try:
-                    lc = models.LeadColecao()
+                    lc = models.RegraColecao()
                     lc.colecao = key
                     lc.lead = 0
                     lc.save()
@@ -146,8 +146,8 @@ class LeadColecao(View):
         if self.id:
             if has_permission(request, 'lotes.change_leadcolecao'):
                 try:
-                    lc = models.LeadColecao.objects.get(colecao=self.id)
-                except models.LeadColecao.DoesNotExist:
+                    lc = models.RegraColecao.objects.get(colecao=self.id)
+                except models.RegraColecao.DoesNotExist:
                     self.context.update({
                         'msg_erro': 'Parâmetros de coleção não encontrados',
                     })
@@ -187,8 +187,8 @@ class LeadColecao(View):
             lead = form.cleaned_data['lead']
 
             try:
-                lc = models.LeadColecao.objects.get(colecao=self.id)
-            except models.LeadColecao.DoesNotExist:
+                lc = models.RegraColecao.objects.get(colecao=self.id)
+            except models.RegraColecao.DoesNotExist:
                 self.context.update({
                     'msg_erro': 'Parâmetros de coleção não encontrados',
                 })
