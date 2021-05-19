@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -36,6 +37,17 @@ class RegraColecao(models.Model):
         db_table = "fo2_lot_regra_colecao"
         verbose_name = "Regra por coleção"
         verbose_name_plural = "Regras por coleção"
+
+    def save(self, *args, **kwargs):
+        if self.referencia:
+            try:
+                RegraColecao.objects.get(
+                    colecao=self.colecao,
+                    referencia='',
+                )
+            except RegraColecao.DoesNotExist:
+                raise ValidationError(f"Só pode definir uma regra por referência se já houver uma sem referência.")
+        super(RegraColecao, self).save(*args, **kwargs)
 
 
 class RegraLMTamanho(models.Model):
