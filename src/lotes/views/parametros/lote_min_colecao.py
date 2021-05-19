@@ -11,6 +11,7 @@ import systextil.models
 
 import lotes.forms as forms
 import lotes.models as models
+from lotes.models.functions.sync_regra_colecao import sync_regra_colecao
 from lotes.views.parametros_functions import *
 
 
@@ -24,104 +25,23 @@ class LoteMinColecao(View):
         self.context = {'titulo': self.title_name}
 
     def lista(self):
-        try:
-            colecoes = systextil.models.Colecao.objects.exclude(
-                colecao=0).order_by('colecao')
-        except systextil.models.Colecao.DoesNotExist:
-            self.context.update({
-                'msg_erro': 'Coleções não encontradas',
-            })
-            return
+        sync_regra_colecao()
 
-        try:
-            LC = models.RegraColecao.objects.all().order_by('colecao')
-        except models.RegraColecao.DoesNotExist:
-            self.context.update({
-                'msg_erro': 'Parâmetros de coleções não encontrados',
-            })
-            return
+        col_list = systextil.models.Colecao.objects.exclude(
+                colecao=0).values()
+        colecao = {c['colecao']: c['descr_colecao'] for c in col_list}
 
-        lcs = {}
-        inter_col = colecoes.iterator()
-        inter_LC = LC.iterator()
-        walk = 'b'   # from, to, both
-        while True:
-            if walk in ['f', 'b']:
-                try:
-                    col = next(inter_col)
-                except StopIteration:
-                    col = None
+        regras = models.RegraColecao.objects.all().order_by('colecao').values()
 
-            if walk in ['t', 'b']:
-                try:
-                    lc = next(inter_LC)
-                except StopIteration:
-                    lc = None
+        for row in regras:
+            row['descr_colecao'] = colecao[row['colecao']]
 
-            if lc is None and col is None:
-                break
-
-            rec = {
-                'descr_colecao': '',
-                'lm_tam': 0,
-                'lm_cor': 0,
-            }
-            acao_definida = False
-
-            if lc is not None:
-                if col is None or col.colecao > lc.colecao:
-                    acao_definida = True
-                    rec['status'] = 'd'
-                    rec['colecao'] = lc.colecao
-                    walk = 't'
-
-            if not acao_definida:
-                rec['colecao'] = col.colecao
-                rec['descr_colecao'] = col.descr_colecao
-                if lc is None or col.colecao < lc.colecao:
-                    acao_definida = True
-                    rec['status'] = 'i'
-                    walk = 'f'
-
-            if not acao_definida:
-                rec['lm_tam'] = lc.lm_tam
-                rec['lm_cor'] = lc.lm_cor
-                rec['status'] = 'u'
-                walk = 'b'
-
-            lcs[rec['colecao']] = rec
-
-        data = []
-        for key in lcs:
-            if lcs[key]['status'] == 'd':
-                try:
-                    models.RegraColecao.objects.filter(colecao=key).delete()
-                except models.RegraColecao.DoesNotExist:
-                    self.context.update({
-                        'msg_erro': 'Erro apagando parâmetros de coleção',
-                    })
-                    return
-                continue
-
-            if lcs[key]['status'] == 'i':
-                try:
-                    lc = models.RegraColecao()
-                    lc.colecao = key
-                    lc.save()
-                except Exception:
-                    self.context.update({
-                        'msg_erro': 'Erro salvando lote mínimo',
-                    })
-                    return
-            lcs[key].update({
-                'edit': ('<a title="Editar" '
+            row['edit'] = ('<a title="Editar" '
                          'href="{}">'
                          '<span class="glyphicon glyphicon-pencil" '
                          'aria-hidden="true"></span></a>'
                          ).format(reverse(
-                            'producao:lote_min_colecao', args=[key])),
-            })
-            data.append(lcs[key])
+                            'producao:lote_min_colecao', args=[row['colecao']]))
 
         headers = ['Coleção', 'Descrição',
                    'Lote mínimo por tamanho', 'Lote mínimo por cor']
@@ -133,7 +53,7 @@ class LoteMinColecao(View):
         self.context.update({
             'headers': headers,
             'fields': fields,
-            'data': data,
+            'data': regras,
             'safe': ['edit'],
         })
 
