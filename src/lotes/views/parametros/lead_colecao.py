@@ -108,7 +108,6 @@ class LeadColecao(View):
                 try:
                     lc = models.RegraColecao()
                     lc.colecao = key
-                    lc.lead = 0
                     lc.save()
                 except Exception:
                     self.context.update({

@@ -107,8 +107,6 @@ class LoteMinColecao(View):
                 try:
                     lc = models.RegraColecao()
                     lc.colecao = key
-                    lc.lm_tam = 0
-                    lc.lm_cor = 0
                     lc.save()
                 except Exception:
                     self.context.update({
