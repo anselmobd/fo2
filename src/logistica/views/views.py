@@ -15,6 +15,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from fo2.connections import db_cursor_so
 
+from utils.functions import untuple_keys_concat
 from utils.functions.models import rows_to_dict_list
 from base.views import O2BaseGetPostView, O2BaseGetView
 
@@ -425,6 +426,10 @@ class NotafiscalMovimentadas(O2BaseGetPostView):
                                'confirmada', 'uf', 'dest_nome',
                                'transp_nome', 'volumes', 'valor',
                                'pedido', 'ped_cliente'),
+                    'style': untuple_keys_concat({
+                        tuple(range(1, 11)): 'text-align: center;',
+                        (14, 15, 16, 17): 'text-align: right;',
+                    }),
                     'dados': dados,
                     'quant': len(dados),
                 })
