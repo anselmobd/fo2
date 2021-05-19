@@ -13,9 +13,9 @@ class RegraColecaoManager(models.Manager):
 
 class RegraColecao(models.Model):
     id = models.IntegerField(
-        null=True, blank=True, default=0)
+        primary_key=True)
     colecao = models.IntegerField(
-        primary_key=True,
+        null=True, blank=True, default=0,
         verbose_name='Coleção')
     lead = models.IntegerField(
         null=True, blank=True, default=0)
