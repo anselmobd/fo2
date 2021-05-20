@@ -43,6 +43,7 @@ class RegrasLoteCaixa(View):
                 args=[
                     row['colecao'],
                     row['referencia'],
+                    'e',
                 ]
             )
             row['edit'] = ('<a title="Editar" '
@@ -64,7 +65,7 @@ class RegrasLoteCaixa(View):
         })
 
 
-    def edit(self, num_colecao, referencia):
+    def edit(self, num_colecao, referencia, ead):
         referencia_filter = referencia
         if referencia_filter == '-':
             referencia_filter = ''
@@ -90,19 +91,26 @@ class RegrasLoteCaixa(View):
         if referencia_filter and len(referencia) < 5 and '%' not in referencia:
             referencia = f'{referencia}%'
 
-        self.context['colecao'] = num_colecao
-        self.context['referencia'] = referencia
-        self.context['descr_colecao'] = colecao.descr_colecao
-        self.context['form'] = self.Form_class(
-            initial={
-                'lotes_caixa': rc.lotes_caixa,
-            })
+        self.context.update({
+            'colecao': num_colecao,
+            'referencia': referencia,
+            'descr_colecao': colecao.descr_colecao,
+            'form': self.Form_class(
+                initial={
+                    'lotes_caixa': rc.lotes_caixa,
+                }
+            ),
+        })
 
     def get(self, request, *args, **kwargs):
         self.request = request
 
-        if 'referencia' in kwargs and has_permission(request, 'lotes.change_leadcolecao'):
-            self.edit(kwargs['colecao'], kwargs['referencia'])
+        if 'ead' in kwargs and has_permission(request, 'lotes.change_leadcolecao'):
+            self.edit(
+                kwargs['colecao'],
+                kwargs['referencia'],
+                kwargs['ead'],
+            )
         else:
             self.lista()
 
@@ -111,14 +119,18 @@ class RegrasLoteCaixa(View):
     def post(self, request, *args, **kwargs):
         self.request = request
 
-        if not ('referencia' in kwargs and
+        if not ('ead' in kwargs and
                 has_permission(request, 'lotes.change_leadcolecao')
                 ):
             self.lista()
         else:
             form = self.Form_class(request.POST)
             if not form.is_valid():
-                self.edit(kwargs['colecao'], kwargs['referencia'])
+                self.edit(
+                    kwargs['colecao'],
+                    kwargs['referencia'],
+                    kwargs['ead'],
+                )
                 self.context['form'] = form
             else:
                 lotes_caixa = form.cleaned_data['lotes_caixa']
