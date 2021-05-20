@@ -65,12 +65,13 @@ class RegrasLoteCaixa(View):
 
 
     def edit(self, num_colecao, referencia):
-        if referencia == '-':
-            referencia = ''
+        referencia_filter = referencia
+        if referencia_filter == '-':
+            referencia_filter = ''
         print(f"'{referencia}'")
         try:
-            lc = lotes.models.RegraColecao.objects_referencia.get(
-                colecao=num_colecao, referencia=referencia)
+            rc = lotes.models.RegraColecao.objects_referencia.get(
+                colecao=num_colecao, referencia=referencia_filter)
         except lotes.models.RegraColecao.DoesNotExist:
             self.context.update({
                 'msg_erro': 'Regra de coleção e referência não encontrados',
@@ -86,7 +87,7 @@ class RegrasLoteCaixa(View):
             })
             return
 
-        if referencia and len(referencia) < 5 and '%' not in referencia:
+        if referencia_filter and len(referencia) < 5 and '%' not in referencia:
             referencia = f'{referencia}%'
 
         self.context['colecao'] = num_colecao
@@ -94,7 +95,7 @@ class RegrasLoteCaixa(View):
         self.context['descr_colecao'] = colecao.descr_colecao
         self.context['form'] = self.Form_class(
             initial={
-                'lotes_caixa': lc.lotes_caixa,
+                'lotes_caixa': rc.lotes_caixa,
             })
 
     def get(self, request, *args, **kwargs):
@@ -110,32 +111,39 @@ class RegrasLoteCaixa(View):
     def post(self, request, *args, **kwargs):
         self.request = request
 
-        if 'id' in kwargs:
-            self.id = kwargs['id']
-
-        form = self.Form_class(request.POST)
-        if self.id and form.is_valid():
-            lm_tam = form.cleaned_data['lm_tam']
-            lm_cor = form.cleaned_data['lm_cor']
-
-            try:
-                lc = lotes.models.RegraColecao.objects.get(colecao=self.id)
-            except lotes.models.RegraColecao.DoesNotExist:
-                self.context.update({
-                    'msg_erro': 'Parâmetros de coleção não encontrados',
-                })
-                return render(
-                    self.request, self.template_name, self.context)
-
-            try:
-                lc.lm_tam = lm_tam
-                lc.lm_cor = lm_cor
-                lc.save()
-            except IntegrityError as e:
-                self.context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
-                    'o lotes mínimos. <{}>'.format(str(e))
-
+        if not ('referencia' in kwargs and
+                has_permission(request, 'lotes.change_leadcolecao')
+                ):
             self.lista()
         else:
-            self.context['form'] = form
+            form = self.Form_class(request.POST)
+            if not form.is_valid():
+                self.edit(kwargs['colecao'], kwargs['referencia'])
+                self.context['form'] = form
+            else:
+                lotes_caixa = form.cleaned_data['lotes_caixa']
+
+                referencia_filter = kwargs['referencia']
+                if referencia_filter == '-':
+                    referencia_filter = ''
+                try:
+                    rc = lotes.models.RegraColecao.objects.get(
+                        colecao=kwargs['colecao'], referencia=referencia_filter)
+                except lotes.models.RegraColecao.DoesNotExist:
+                    self.context.update({
+                        'msg_erro': 'Regra de coleção e referência não encontrados',
+                    })
+                    return render(
+                        self.request, self.template_name, self.context)
+
+                try:
+                    rc.lotes_caixa = lotes_caixa
+                    rc.save()
+                except IntegrityError as e:
+                    self.context.update({
+                        'msg_erro': 'Ocorreu um erro ao gravar ' \
+                            'o lotes mínimos. <{}>'.format(str(e)),
+                    })
+
+                self.lista()
         return render(self.request, self.template_name, self.context)
