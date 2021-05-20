@@ -38,7 +38,7 @@ class RegrasLoteCaixa(View):
             row['descr_colecao'] = colecao[row['colecao']]
             if not row['referencia']:
                 row['referencia'] = '-'
-            link = reverse(
+            link_e = reverse(
                 'producao:regras_lote_caixa__get',
                 args=[
                     row['colecao'],
@@ -46,22 +46,37 @@ class RegrasLoteCaixa(View):
                     'e',
                 ]
             )
-            row['edit'] = ('<a title="Editar" '
-                         f'href="{link}">'
-                         '<span class="glyphicon glyphicon-pencil" '
-                         'aria-hidden="true"></span></a>'
-                         )
+            link_d = reverse(
+                'producao:regras_lote_caixa__get',
+                args=[
+                    row['colecao'],
+                    row['referencia'],
+                    'd',
+                ]
+            )
+            row['ead'] = (
+                '<a title="Editar" '
+                f'href="{link_e}">'
+                '<span class="glyphicon glyphicon-pencil" '
+                'aria-hidden="true"></span></a>'
+                '&nbsp;&nbsp;&nbsp;'
+                '<a title="Apagar" '
+                f'href="{link_d}" '
+                'onclick="return confirm(\'Confirma apagar?\');">'
+                '<span class="glyphicon glyphicon-remove" '
+                'aria-hidden="true"></span></a>'
+            )
 
         headers = ['Coleção', 'Descrição', 'Referência', 'Lote por caixa']
         fields = ['colecao', 'descr_colecao', 'referencia', 'lotes_caixa']
         if has_permission(self.request, 'lotes.change_leadcolecao'):
             headers.insert(0, '')
-            fields.insert(0, 'edit')
+            fields.insert(0, 'ead')
         self.context.update({
             'headers': headers,
             'fields': fields,
             'data': regras,
-            'safe': ['edit'],
+            'safe': ['ead'],
         })
 
 
