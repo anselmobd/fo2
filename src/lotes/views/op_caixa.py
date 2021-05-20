@@ -34,9 +34,9 @@ class OpCaixa(View):
             'colecao': row_op['COLECAO'],
         })
 
-        if context['tipo_ref'] != 'MD':
+        if context['tipo_ref'] not in ['MD', 'MP']:
             context.update({
-                'msg_erro': 'Lotes agrupados em caixas é utilizado apenas para MD',
+                'msg_erro': 'Lotes agrupados em caixas é utilizado apenas para MD e MP',
             })
             return context
 
