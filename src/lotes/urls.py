@@ -110,6 +110,9 @@ urlpatterns = [
     url(r'^regras_lote_min_tamanho/(?P<id>[^/]+)?$',
         views.RegrasLoteMinTamanho.as_view(), name='regras_lote_min_tamanho'),
 
+    url(r'^regras_lote_caixa/(?P<id>[^/]+)?$',
+        views.RegrasLoteCaixa.as_view(), name='regras_lote_caixa'),
+
     url(r'^meta_giro/$',
         views.MetaGiro.as_view(), name='meta_giro'),
 

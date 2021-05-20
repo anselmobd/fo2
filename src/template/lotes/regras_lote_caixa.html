@@ -1,0 +1,31 @@
+{% extends 'lotes/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'producao:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if msg_erro %}
+  <h3>{{ msg_erro }}</h3>
+{% endif %}
+{% if form %}
+  <p><a title="Listar" href="{% url 'producao:regras_lote_caixa' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
+  <h3>Edita lote mínimo da coleção: {{id}} - {{descr_colecao}}</h3>
+  <form action="{% url 'producao:regras_lote_caixa' id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Grava"/>
+  </form>
+{% endif %}
+{% if data %}
+  <table>
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data style=style safe=safe only %}
+  </table>
+{% endif %}
+{% endblock %}
