@@ -25,7 +25,7 @@ class RegrasLoteCaixa(View):
         self.id = None
         self.context = {'titulo': self.title_name}
 
-    def lista(self):
+    def lista(self, has_perm):
         sync_regra_colecao()
 
         col_list = systextil.models.Colecao.objects.exclude(
@@ -70,10 +70,11 @@ class RegrasLoteCaixa(View):
 
         headers = ['Coleção', 'Descrição', 'Início de referência', 'Lote por caixa']
         fields = ['colecao', 'descr_colecao', 'referencia', 'lotes_caixa']
-        if has_permission(self.request, 'lotes.change_leadcolecao'):
+        if has_perm:
             headers.insert(0, '')
             fields.insert(0, 'ead')
         self.context.update({
+            'has_perm': has_perm,
             'headers': headers,
             'fields': fields,
             'data': regras,
@@ -126,8 +127,9 @@ class RegrasLoteCaixa(View):
 
     def get(self, request, *args, **kwargs):
         self.request = request
-
-        if 'ead' in kwargs and has_permission(request, 'lotes.change_leadcolecao'):
+        has_perm = has_permission(request, 'lotes.change_leadcolecao')
+        print(has_perm)
+        if 'ead' in kwargs and has_perm:
             if kwargs['ead'] == 'e':
                 self.edit(
                     kwargs['colecao'],
@@ -157,19 +159,18 @@ class RegrasLoteCaixa(View):
                         'msg_erro': 'Ocorreu um erro ao apagar regra de coleção.',
                     })
 
-                self.lista()
+                self.lista(has_perm)
         else:
-            self.lista()
+            self.lista(has_perm)
 
         return render(self.request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         self.request = request
+        has_perm = has_permission(request, 'lotes.change_leadcolecao')
 
-        if not ('ead' in kwargs and
-                has_permission(request, 'lotes.change_leadcolecao')
-                ):
-            self.lista()
+        if not ('ead' in kwargs and has_perm):
+            self.lista(has_perm)
         else:
             if kwargs['ead'] == 'e':
                 form = self.Form_class(request.POST)
@@ -185,7 +186,7 @@ class RegrasLoteCaixa(View):
                 elif kwargs['ead'] == 'a':
                     self.add(form)
                 else:
-                    self.lista()
+                    self.lista(has_perm)
                 self.context['form'] = form
             else:
                 lotes_caixa = form.cleaned_data['lotes_caixa']
@@ -229,5 +230,5 @@ class RegrasLoteCaixa(View):
                             'msg_erro': 'Ocorreu um erro ao gravar regra de coleção.',
                         })
 
-                self.lista()
+                self.lista(has_perm)
         return render(self.request, self.template_name, self.context)
