@@ -18,9 +18,9 @@ from lotes.views.parametros_functions import *
 class RegrasLoteCaixa(View):
 
     def __init__(self):
-        self.Form_class = forms.LoteMinColecaoForm
-        self.template_name = 'lotes/lote_min_colecao.html'
-        self.title_name = 'Lote mínimo por coleção'
+        self.Form_class = forms.RegrasLoteCaixaForm
+        self.template_name = 'lotes/regras_lote_caixa.html'
+        self.title_name = 'Lotes por caixa'
         self.id = None
         self.context = {'titulo': self.title_name}
 
@@ -31,7 +31,8 @@ class RegrasLoteCaixa(View):
                 colecao=0).values()
         colecao = {c['colecao']: c['descr_colecao'] for c in col_list}
 
-        regras = models.RegraColecao.objects.all().order_by('colecao').values()
+        regras = models.RegraColecao.objects_referencia.all(
+            ).order_by('colecao', 'referencia').values()
 
         for row in regras:
             row['descr_colecao'] = colecao[row['colecao']]
@@ -41,12 +42,10 @@ class RegrasLoteCaixa(View):
                          '<span class="glyphicon glyphicon-pencil" '
                          'aria-hidden="true"></span></a>'
                          ).format(reverse(
-                            'producao:lote_min_colecao', args=[row['colecao']]))
+                            'producao:regras_lote_caixa', args=[row['colecao']]))
 
-        headers = ['Coleção', 'Descrição',
-                   'Lote mínimo por tamanho', 'Lote mínimo por cor']
-        fields = ['colecao', 'descr_colecao',
-                  'lm_tam', 'lm_cor']
+        headers = ['Coleção', 'Descrição', 'Referência', 'Lote por caixa']
+        fields = ['colecao', 'descr_colecao', 'referencia', 'lotes_caixa']
         if has_permission(self.request, 'lotes.change_leadcolecao'):
             headers.insert(0, '')
             fields.insert(0, 'edit')
