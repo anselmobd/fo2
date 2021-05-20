@@ -1,4 +1,3 @@
-from operator import itemgetter
 from pprint import pprint
 
 from django.shortcuts import render
@@ -9,8 +8,7 @@ from fo2.connections import db_cursor_so
 from utils.views import group_rowspan
 
 import lotes.classes
-import lotes.models as models
-import lotes.queries as queries
+import lotes.queries
 from lotes.forms import OpForm
 
 
@@ -28,30 +26,41 @@ class OpCaixa(View):
                 'msg_erro': 'OP não encontrada',
             })
             return context
+
         row_op = data_op[0]
         context.update({
             'ref': row_op['REF'],
             'tipo_ref': row_op['TIPO_REF'],
+            'colecao': row_op['COLECAO'],
         })
 
         if context['tipo_ref'] != 'MD':
             context.update({
-                'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
+                'msg_erro': 'Lotes agrupados em caixas é utilizado apenas para MD',
             })
             return context
 
         # Lotes order 'r' = referência + cor + tamanho + OC
-        data = queries.lote.get_imprime_lotes(cursor, op=op, order='r')
+        data = lotes.queries.lote.get_imprime_lotes(cursor, op=op, order='r')
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Lotes não encontrados',
             })
             return context
 
-        if data[0]['colecao'] == 5:  # camisa
-            lotes_por_caixa = 2
-        else:
-            lotes_por_caixa = 3
+        try:
+            rc = lotes.models.RegraColecao.objects_referencia.get(
+                colecao=data[0]['colecao'], referencia=context['ref'][0])
+        except lotes.models.RegraColecao.DoesNotExist:
+            try:
+                rc = lotes.models.RegraColecao.objects_referencia.get(
+                    colecao=data[0]['colecao'])
+            except lotes.models.RegraColecao.DoesNotExist:
+                self.context.update({
+                    'msg_erro': 'Regra de coleção e referência não encontrados',
+                })
+                return
+        lotes_por_caixa = rc.lotes_caixa
 
         caixas = lotes.classes.CaixasDeLotes(data, lotes_por_caixa)
         c_data = caixas.as_data()
