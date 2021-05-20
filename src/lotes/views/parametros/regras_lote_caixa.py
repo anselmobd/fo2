@@ -112,9 +112,6 @@ class RegrasLoteCaixa(View):
             })
             return
 
-        if referencia_filter and len(referencia) < 5 and '%' not in referencia:
-            referencia = f'{referencia}%'
-
         self.context.update({
             'ead': 'e',
             'colecao': num_colecao,
