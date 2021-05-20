@@ -178,7 +178,7 @@ class RegrasLoteCaixa(View):
                         referencia_filter = ''
 
                     try:
-                        rc = lotes.models.RegraColecao.objects.get(
+                        rc = lotes.models.RegraColecao.objects_referencia.get(
                             colecao=kwargs['colecao'], referencia=referencia_filter)
                     except lotes.models.RegraColecao.DoesNotExist:
                         self.context.update({
