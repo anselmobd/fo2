@@ -51,18 +51,26 @@ class OpCaixa(View):
         try:
             rc = lotes.models.RegraColecao.objects_referencia.get(
                 colecao=data[0]['colecao'], referencia=context['ref'][0])
+            context.update({
+                'ini_ref': rc.referencia,
+            })
         except lotes.models.RegraColecao.DoesNotExist:
             try:
-                rc = lotes.models.RegraColecao.objects_referencia.get(
+                rc = lotes.models.RegraColecao.objects.get(
                     colecao=data[0]['colecao'])
+                context.update({
+                    'ini_ref': '',
+                })
             except lotes.models.RegraColecao.DoesNotExist:
                 self.context.update({
                     'msg_erro': 'Regra de coleção e referência não encontrados',
                 })
                 return
-        lotes_por_caixa = rc.lotes_caixa
+        context.update({
+            'lotes_caixa': rc.lotes_caixa,
+        })
 
-        caixas = lotes.classes.CaixasDeLotes(data, lotes_por_caixa)
+        caixas = lotes.classes.CaixasDeLotes(data, rc.lotes_caixa)
         c_data = caixas.as_data()
 
         group = ['op', 'ref', 'num_caixa_txt',

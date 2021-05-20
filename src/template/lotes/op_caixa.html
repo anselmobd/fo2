@@ -21,7 +21,7 @@
   <h3>OP: {{ op }}</h3>
 {% endif %}
 {% if ref %}
-  <p>Referência: {{ ref }} &nbsp; Tipo: {{ tipo_ref }} &nbsp; Coleção: {{ colecao }}</p>
+  <p>Referência: {{ ref }} &nbsp; Tipo: {{ tipo_ref }} &nbsp; Coleção: {{ colecao }}{% if ini_ref %} &nbsp; Início de referência: {{ ini_ref }}{% endif %} &nbsp; Lotes/caixa: {{ lotes_caixa }}</p>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
