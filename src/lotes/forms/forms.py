@@ -701,12 +701,22 @@ class AddRegrasLoteCaixaForm(forms.Form):
 
     referencia = forms.CharField(
         label='Referência', required=False, min_length=1, max_length=5,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput(attrs={
+            'type': 'string',
+            'style': 'text-transform:uppercase;',
+        }))
 
     lotes_caixa = forms.IntegerField(
         label='Lotes por caixa',
         min_value=0, max_value=10,
         widget=forms.TextInput(attrs={'type': 'number'}))
+
+    def clean_referencia(self):
+        referencia = self.cleaned_data['referencia'].upper()
+        data = self.data.copy()
+        data['referencia'] = referencia
+        self.data = data
+        return referencia
 
 
 class ProduzirModeloGradeForm(forms.Form):
