@@ -694,6 +694,21 @@ class RegrasLoteCaixaForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number'}))
 
 
+class AddRegrasLoteCaixaForm(forms.Form):
+    colecao = forms.ModelChoiceField(
+        label='Coleção', required=True,
+        queryset=Colecao.objects.exclude(colecao=0).order_by('colecao'))
+
+    referencia = forms.CharField(
+        label='Referência', required=False, min_length=1, max_length=5,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
+    lotes_caixa = forms.IntegerField(
+        label='Lotes por caixa',
+        min_value=0, max_value=10,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+
 class ProduzirModeloGradeForm(forms.Form):
     CHOICES = [('s', 'Sim'),
                ('n', 'Não'),
