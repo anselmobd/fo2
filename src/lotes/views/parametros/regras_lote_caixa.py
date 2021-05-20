@@ -81,11 +81,19 @@ class RegrasLoteCaixa(View):
         })
 
 
-    def edit(self, num_colecao, referencia, ead):
+    def add(self, form):
+        self.context.update({
+            'ead': 'a',
+            'colecao': '-',
+            'referencia': '-',
+            'form': form,
+        })
+
+    def edit(self, num_colecao, referencia):
         referencia_filter = referencia
         if referencia_filter == '-':
             referencia_filter = ''
-        print(f"'{referencia}'")
+
         try:
             rc = lotes.models.RegraColecao.objects_referencia.get(
                 colecao=num_colecao, referencia=referencia_filter)
@@ -108,6 +116,7 @@ class RegrasLoteCaixa(View):
             referencia = f'{referencia}%'
 
         self.context.update({
+            'ead': 'e',
             'colecao': num_colecao,
             'referencia': referencia,
             'descr_colecao': colecao.descr_colecao,
@@ -122,11 +131,15 @@ class RegrasLoteCaixa(View):
         self.request = request
 
         if 'ead' in kwargs and has_permission(request, 'lotes.change_leadcolecao'):
-            self.edit(
-                kwargs['colecao'],
-                kwargs['referencia'],
-                kwargs['ead'],
-            )
+            if kwargs['ead'] == 'e':
+                self.edit(
+                    kwargs['colecao'],
+                    kwargs['referencia'],
+                )
+            elif kwargs['ead'] == 'a':
+                self.add(self.Form_class_add())
+            else:
+                self.lista()
         else:
             self.lista()
 
@@ -140,38 +153,63 @@ class RegrasLoteCaixa(View):
                 ):
             self.lista()
         else:
-            form = self.Form_class(request.POST)
+            if kwargs['ead'] == 'e':
+                form = self.Form_class(request.POST)
+            elif kwargs['ead'] == 'a':
+                form = self.Form_class_add(request.POST)
+
             if not form.is_valid():
-                self.edit(
-                    kwargs['colecao'],
-                    kwargs['referencia'],
-                    kwargs['ead'],
-                )
+                if kwargs['ead'] == 'e':
+                    self.edit(
+                        kwargs['colecao'],
+                        kwargs['referencia'],
+                    )
+                elif kwargs['ead'] == 'a':
+                    self.add(form)
+                else:
+                    self.lista()
                 self.context['form'] = form
             else:
                 lotes_caixa = form.cleaned_data['lotes_caixa']
 
-                referencia_filter = kwargs['referencia']
-                if referencia_filter == '-':
-                    referencia_filter = ''
-                try:
-                    rc = lotes.models.RegraColecao.objects.get(
-                        colecao=kwargs['colecao'], referencia=referencia_filter)
-                except lotes.models.RegraColecao.DoesNotExist:
-                    self.context.update({
-                        'msg_erro': 'Regra de coleção e referência não encontrados',
-                    })
-                    return render(
-                        self.request, self.template_name, self.context)
+                if kwargs['ead'] == 'e':
+                    referencia_filter = kwargs['referencia']
+                    if referencia_filter == '-':
+                        referencia_filter = ''
 
-                try:
-                    rc.lotes_caixa = lotes_caixa
-                    rc.save()
-                except IntegrityError as e:
-                    self.context.update({
-                        'msg_erro': 'Ocorreu um erro ao gravar ' \
-                            'o lotes mínimos. <{}>'.format(str(e)),
-                    })
+                    try:
+                        rc = lotes.models.RegraColecao.objects.get(
+                            colecao=kwargs['colecao'], referencia=referencia_filter)
+                    except lotes.models.RegraColecao.DoesNotExist:
+                        self.context.update({
+                            'msg_erro': 'Regra de coleção e referência não encontrados',
+                        })
+                        return render(
+                            self.request, self.template_name, self.context)
+
+                    try:
+                        rc.lotes_caixa = lotes_caixa
+                        rc.save()
+                    except IntegrityError as e:
+                        self.context.update({
+                            'msg_erro': 'Ocorreu um erro ao gravar regra de coleção.',
+                        })
+
+                if kwargs['ead'] == 'a':
+                    colecao = form.cleaned_data['colecao']
+                    referencia = form.cleaned_data['referencia']
+                    pprint(colecao.colecao)
+                    pprint(referencia)
+                    try:
+                        rc = lotes.models.RegraColecao()
+                        rc.colecao = colecao.colecao
+                        rc.referencia = referencia
+                        rc.lotes_caixa = lotes_caixa
+                        rc.save()
+                    except IntegrityError as e:
+                        self.context.update({
+                            'msg_erro': 'Ocorreu um erro ao gravar regra de coleção.',
+                        })
 
                 self.lista()
         return render(self.request, self.template_name, self.context)
