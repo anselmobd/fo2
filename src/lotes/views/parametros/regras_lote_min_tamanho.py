@@ -1,6 +1,7 @@
 from operator import itemgetter
 from pprint import pprint
 
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -211,8 +212,13 @@ class RegrasLoteMinTamanho(View):
                 rlm.lm_cor_sozinha = lm_cor_sozinha
                 rlm.save()
             except IntegrityError as e:
-                context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
-                    'o lotes mínimos. <{}>'.format(str(e))
+                self.context.update({
+                    'msg_erro': 
+                        (
+                            'Ocorreu um erro ao gravar '
+                            'o lotes mínimos. <{}>'
+                        ).format(str(e)),
+                })
 
             self.lista()
         else:
