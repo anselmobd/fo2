@@ -136,6 +136,27 @@ class RegrasLoteCaixa(View):
             elif kwargs['ead'] == 'a':
                 self.add(self.Form_class_add())
             else:
+                referencia_filter = kwargs['referencia']
+                if referencia_filter == '-':
+                    referencia_filter = ''
+
+                try:
+                    rc = lotes.models.RegraColecao.objects_referencia.get(
+                        colecao=kwargs['colecao'], referencia=referencia_filter)
+                except lotes.models.RegraColecao.DoesNotExist:
+                    self.context.update({
+                        'msg_erro': 'Regra de coleção e referência não encontrados',
+                    })
+                    return render(
+                        self.request, self.template_name, self.context)
+
+                try:
+                    rc.delete()
+                except IntegrityError as e:
+                    self.context.update({
+                        'msg_erro': 'Ocorreu um erro ao apagar regra de coleção.',
+                    })
+
                 self.lista()
         else:
             self.lista()
