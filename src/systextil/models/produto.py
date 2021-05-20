@@ -8,7 +8,7 @@ class Colecao(models.Model):
         verbose_name='Descrição')
 
     def __str__(self):
-        return self.descr_colecao
+        return f"{self.colecao}-{self.descr_colecao}"
 
     class Meta:
         managed = False
