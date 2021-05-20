@@ -36,13 +36,20 @@ class RegrasLoteCaixa(View):
 
         for row in regras:
             row['descr_colecao'] = colecao[row['colecao']]
-
+            if not row['referencia']:
+                row['referencia'] = '-'
+            link = reverse(
+                'producao:regras_lote_caixa__get',
+                args=[
+                    row['colecao'],
+                    row['referencia'],
+                ]
+            )
             row['edit'] = ('<a title="Editar" '
-                         'href="{}">'
+                         f'href="{link}">'
                          '<span class="glyphicon glyphicon-pencil" '
                          'aria-hidden="true"></span></a>'
-                         ).format(reverse(
-                            'producao:regras_lote_caixa', args=[row['colecao']]))
+                         )
 
         headers = ['Coleção', 'Descrição', 'Referência', 'Lote por caixa']
         fields = ['colecao', 'descr_colecao', 'referencia', 'lotes_caixa']
