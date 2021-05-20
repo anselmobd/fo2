@@ -112,8 +112,7 @@ urlpatterns = [
 
     url(r'^regras_lote_caixa/$',
         views.RegrasLoteCaixa.as_view(), name='regras_lote_caixa'),
-
-    url(r'^regras_lote_caixa/(?P<colecao>[^/]+)/(?P<referencia>[^/]+)$',
+    url(r'^regras_lote_caixa/(?P<colecao>[^/]+)?/(?P<referencia>[^/]+)?/$',
         views.RegrasLoteCaixa.as_view(), name='regras_lote_caixa__get'),
 
     url(r'^meta_giro/$',

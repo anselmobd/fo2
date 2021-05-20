@@ -15,8 +15,8 @@
 {% endif %}
 {% if form %}
   <p><a title="Listar" href="{% url 'producao:regras_lote_caixa' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a></p>
-  <h3>Edita lote mínimo da coleção: {{id}} - {{descr_colecao}}</h3>
-  <form action="{% url 'producao:regras_lote_caixa' id %}" method="post">
+  <h3>Coleção: {{colecao}} ({{descr_colecao}}){% if referencia %} - Referência "{{referencia}}"{%endif%}</h3>
+  <form action="{% url 'producao:regras_lote_caixa__get' colecao referencia %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Grava"/>

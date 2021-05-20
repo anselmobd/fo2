@@ -10,7 +10,7 @@ from geral.functions import has_permission
 import systextil.models
 
 import lotes.forms as forms
-import lotes.models as models
+import lotes.models
 from lotes.models.functions.sync_regra_colecao import sync_regra_colecao
 from lotes.views.parametros_functions import *
 
@@ -31,7 +31,7 @@ class RegrasLoteCaixa(View):
                 colecao=0).values()
         colecao = {c['colecao']: c['descr_colecao'] for c in col_list}
 
-        regras = models.RegraColecao.objects_referencia.all(
+        regras = lotes.models.RegraColecao.objects_referencia.all(
             ).order_by('colecao', 'referencia').values()
 
         for row in regras:
@@ -63,44 +63,46 @@ class RegrasLoteCaixa(View):
             'safe': ['edit'],
         })
 
+
+    def edit(self, num_colecao, referencia):
+        if referencia == '-':
+            referencia = ''
+        print(f"'{referencia}'")
+        try:
+            lc = lotes.models.RegraColecao.objects_referencia.get(
+                colecao=num_colecao, referencia=referencia)
+        except lotes.models.RegraColecao.DoesNotExist:
+            self.context.update({
+                'msg_erro': 'Regra de coleção e referência não encontrados',
+            })
+            return
+
+        try:
+            colecao = systextil.models.Colecao.objects.get(
+                colecao=num_colecao)
+        except systextil.models.Colecao.DoesNotExist:
+            self.context.update({
+                'msg_erro': 'Coleção não encontrada',
+            })
+            return
+
+        if referencia and len(referencia) < 5 and '%' not in referencia:
+            referencia = f'{referencia}%'
+
+        self.context['colecao'] = num_colecao
+        self.context['referencia'] = referencia
+        self.context['descr_colecao'] = colecao.descr_colecao
+        self.context['form'] = self.Form_class(
+            initial={
+                'lotes_caixa': lc.lotes_caixa,
+            })
+
     def get(self, request, *args, **kwargs):
         self.request = request
 
-        if 'id' in kwargs:
-            self.id = kwargs['id']
-
-        if self.id:
-            if has_permission(request, 'lotes.change_leadcolecao'):
-                try:
-                    lc = models.RegraColecao.objects.get(colecao=self.id)
-                except models.RegraColecao.DoesNotExist:
-                    self.context.update({
-                        'msg_erro': 'Parâmetros de coleção não encontrados',
-                    })
-                    return render(
-                        self.request, self.template_name, self.context)
-
-                try:
-                    colecao = systextil.models.Colecao.objects.get(
-                        colecao=self.id)
-                except systextil.models.Colecao.DoesNotExist:
-                    self.context.update({
-                        'msg_erro': 'Coleção não encontrada',
-                    })
-                    return render(
-                        self.request, self.template_name, self.context)
-
-                self.context['id'] = self.id
-                self.context['descr_colecao'] = colecao.descr_colecao
-                self.context['form'] = self.Form_class(
-                    initial={
-                        'lm_tam': lc.lm_tam,
-                        'lm_cor': lc.lm_cor,
-                    })
-            else:
-                self.id = None
-
-        if not self.id:
+        if 'referencia' in kwargs and has_permission(request, 'lotes.change_leadcolecao'):
+            self.edit(kwargs['colecao'], kwargs['referencia'])
+        else:
             self.lista()
 
         return render(self.request, self.template_name, self.context)
@@ -117,8 +119,8 @@ class RegrasLoteCaixa(View):
             lm_cor = form.cleaned_data['lm_cor']
 
             try:
-                lc = models.RegraColecao.objects.get(colecao=self.id)
-            except models.RegraColecao.DoesNotExist:
+                lc = lotes.models.RegraColecao.objects.get(colecao=self.id)
+            except lotes.models.RegraColecao.DoesNotExist:
                 self.context.update({
                     'msg_erro': 'Parâmetros de coleção não encontrados',
                 })
