@@ -687,6 +687,13 @@ class RegrasLoteMinTamanhoForm(forms.Form):
         choices=CHOICES, required=False, initial='s')
 
 
+class RegrasLoteCaixaForm(forms.Form):
+    lotes_caixa = forms.IntegerField(
+        label='Lotes por caixa',
+        min_value=0, max_value=10,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+
 class ProduzirModeloGradeForm(forms.Form):
     CHOICES = [('s', 'Sim'),
                ('n', 'Não'),
