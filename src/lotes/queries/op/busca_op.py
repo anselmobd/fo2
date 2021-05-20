@@ -330,7 +330,9 @@ def busca_op(
           ) ESTAGIO
         , case
           when o.REFERENCIA_PECA <= '99999' then 'PA'
-          when o.REFERENCIA_PECA <= 'B9999' then 'PG'
+          when o.REFERENCIA_PECA <= 'A9999' then 'PG'
+          when o.REFERENCIA_PECA <= 'B9999' then 'PB'
+          when o.REFERENCIA_PECA LIKE 'F%' then 'MP'
           else 'MD'
           end TIPO_REF
         , CASE
