@@ -40,7 +40,7 @@ def busca_op(
 
     filtra_op = ""
     if op is not None and op != '':
-        filtra_op = """
+        filtra_op = """--
             AND o.ORDEM_PRODUCAO = '{}'
             AND rownum = 1
         """.format(op)
@@ -292,6 +292,7 @@ def busca_op(
         , sele.STATUS_PEDIDO
         , sele.MOLDE
         , sele.DESCR_REF
+        , sele.COLECAO
         , sele.OBSERVACAO
         , sele.OBSERVACAO2
         , sele.UNIDADE
@@ -408,6 +409,7 @@ def busca_op(
         , COALESCE(ped.STATUS_PEDIDO, NULL) STATUS_PEDIDO
         , COALESCE(r.NUMERO_MOLDE, '-') MOLDE
         , r.DESCR_REFERENCIA DESCR_REF
+        , r.COLECAO
         , o.OBSERVACAO
         , o.OBSERVACAO2
         , CASE WHEN div.DIVISAO_PRODUCAO IS NULL
@@ -557,6 +559,7 @@ def busca_op(
         , ped.STATUS_PEDIDO
         , r.NUMERO_MOLDE
         , r.DESCR_REFERENCIA
+        , r.COLECAO
         , o.OBSERVACAO
         , o.OBSERVACAO2
         ORDER BY
