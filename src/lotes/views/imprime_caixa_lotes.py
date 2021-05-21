@@ -18,7 +18,7 @@ import lotes.models as models
 class ImprimeCaixaLotes(LoginRequiredMixin, View):
     login_url = '/intradm/login/'
     Form_class = ImprimePacote3LotesForm
-    template_name = 'lotes/imprime_pacote3lotes.html'
+    template_name = 'lotes/imprime_caixa_lotes.html'
     title_name = 'Etiqueta de caixa lotes'
 
     def mount_context_and_print(
@@ -242,8 +242,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             ultimo = form.cleaned_data['ultimo']
             ultima_cx = form.cleaned_data['ultima_cx']
             impresso = form.cleaned_data['impresso']
-            impresso_descr = [ord[1] for ord in form.fields['impresso'].choices
-                              if ord[0] == impresso][0]
+            impresso_descr = dict(form.fields['impresso'].choices)[impresso]
             obs1 = form.cleaned_data['obs1']
             obs2 = form.cleaned_data['obs2']
 
