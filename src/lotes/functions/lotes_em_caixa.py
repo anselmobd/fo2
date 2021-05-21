@@ -125,9 +125,6 @@ def lotes_em_caixa(view_obj, cursor, op):
     for lote in data:
         lote['data_entrada_corte'] = row_op['DT_CORTE']
         lote['situacao'] = row_op['SITUACAO']
-        lote['qtd_cortam'] = str(lote['total_cx_ct'])
-        lote['cont_cortam'] = str(lote['caixa_ct'])
-        lote['cx_ct'] = lote['cor_tam_caixa_txt']
     # fim
 
     view_obj.context.update({
