@@ -9,10 +9,11 @@ from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
-from lotes.forms import ImprimePacote3LotesForm
+import lotes.functions
 import lotes.queries.op
 import lotes.queries.lote
 import lotes.models as models
+from lotes.forms import ImprimePacote3LotesForm
 
 
 class ImprimeCaixaLotes(LoginRequiredMixin, View):
@@ -25,80 +26,68 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             self, cursor, op, tam, cor, parm_pula, parm_qtd_lotes,
             ultimo, ultima_cx, impresso, impresso_descr, obs1, obs2, do_print):
 
-        # Pacotes de 3 Lotes
-        l_data = lotes.queries.op.caixas_op_3lotes(cursor, op)
-
-        if len(l_data) == 0:
-            self.context.update({
-                'msg_erro': 'Nehum lote selecionado',
-            })
+        if not lotes.functions.lotes_em_caixa(self, cursor, op):
             return
 
-        if l_data[0]['situacao'] == 9:
-            self.context.update({
-                'msg_erro': 'OP cancelada!',
-            })
-            l_data = []
-            return
+        data = self.context['data']
+        lotes_caixa = self.context['lotes_caixa']
+        ref = self.context['ref']
+        descr_ref = self.context['descr_ref']
 
-        ref = l_data[0]['ref']
-        descr_ref = l_data[0]['descr_referencia']
+        header_lotes_caixa = []
+        field_lotes_caixa = []
+        dict_lotes_caixa = {}
+        for i in range(1,lotes_caixa+1):
+            f_lote = f'lote{i}'
+            f_qtd = f'qtd{i}'
+            dict_lotes_caixa[f_lote] = ""
+            dict_lotes_caixa[f_qtd] = ""
+            header_lotes_caixa.append(f'Lote {i}')
+            header_lotes_caixa.append(f'Qtd. {i}')
+            field_lotes_caixa.append(f_lote)
+            field_lotes_caixa.append(f_qtd)
 
-        if ref[0] < 'C':
-            self.context.update({
-                'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
-            })
-            l_data = []
-            return
-
-        # atribui qtd_cortam
-        p_cor = ''
-        p_tam = ''
-        for row in reversed(l_data):
-            if p_cor != row['cor'] or p_tam != row['tam']:
-                p_cor = row['cor']
-                p_tam = row['tam']
-                qtd_cortam = row['pacote']
-            row['qtd_cortam'] = '{}'.format(qtd_cortam)
-            row['cont_cortam'] = '{}'.format(row['pacote'])
-            row['cx_ct'] = '{} / {}'.format(row['pacote'], qtd_cortam)
-
-        # completa informações da pesquisa
-        qtd_total = len(l_data)
-        cont_total = 0
-        for row in l_data:
-            row['narrativa'] = ' '.join((
-                row['descr_referencia'],
-                row['descr_cor'],
-                row['descr_tamanho']))
-            row['narrativa_ct'] = ' '.join((
-                row['descr_cor'],
-                row['descr_tamanho']))
-            row['qtd_total'] = '{}'.format(qtd_total)
-            row['qtd_pcs_cx'] = row['qtd1']
-            cont_total += 1
-            row['cont_total'] = '{}'.format(cont_total)
-            row['cx_op'] = '{} / {}'.format(cont_total, qtd_total)
-
-            row['qtd_lotes'] = '1'
-            if row['oc2']:
-                row['qtd_lotes'] = '2'
-                row['qtd_pcs_cx'] += row['qtd2']
+        l_data = []
+        for row in data:
+            n_lote_caixa = row['n_lote_caixa']
+            if n_lote_caixa == 1:
+                l_row = {
+                    'cor': row['cor'],
+                    'data_entrada_corte': row['data_entrada_corte'],
+                    'descr_cor': row['descr_cor'],
+                    'descr_referencia': row['descr_referencia'],
+                    'descr_tamanho': row['descr_tamanho'],
+                    'narrativa': row['narrativa'],
+                    'op': row['op'],
+                    'pacote': row['caixa_ct'],
+                    'ref': row['ref'],
+                    'situacao': row['situacao'],
+                    'tam': row['tam'],
+                    'tamord': row['ordem_tamanho'],
+                    'qtd_cortam': str(row['total_cx_ct']),
+                    'cont_cortam': str(row['caixa_ct']),
+                    'cx_ct': f"{row['caixa_ct']} / {row['total_cx_ct']}",
+                    'cx_op': f"{row['caixa_op']} / {row['total_cx_op']}",
+                    'lote_count': row['qtd_lote_caixa'],
+                    'narrativa': ' '.join((
+                        row['descr_referencia'],
+                        row['descr_cor'],
+                        row['descr_tamanho'])),
+                    'narrativa_ct': ' '.join((
+                        row['descr_cor'],
+                        row['descr_tamanho'])),
+                    'qtd_pcs_cx': row['qtd_caixa'],
+                    'prim': '*' if row['caixa_ct'] == 1 else ''
+                }
+                l_row.update(dict_lotes_caixa)
+                l_data.append(l_row)
             else:
-                row['oc2'] = ''
-                row['qtd2'] = ''
-            if row['oc3']:
-                row['qtd_lotes'] = '3'
-                row['qtd_pcs_cx'] += row['qtd3']
-            else:
-                row['oc3'] = ''
-                row['qtd3'] = ''
-
-            if row['pacote'] == 1:
-                row['prim'] = '*'
-            else:
-                row['prim'] = ''
-
+                l_row = l_data[-1]
+            f_lote = f'lote{n_lote_caixa}'
+            f_qtd = f'qtd{n_lote_caixa}'
+            l_row[f_lote] = row['lote']
+            l_row[f_qtd] = row['qtd']
+    
         # filtra resultado
         if parm_pula is None:
             pula = 0
@@ -149,6 +138,15 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             row['op_mae'] = op_mae
             row['ref_mae'] = ref_mae
 
+        headers = [
+            'CX.OP', 'Cor', 'Tamanho', 'Narrativa', '1º', 'CX.Cor/Tam']
+        headers += header_lotes_caixa
+        headers += ['Qtd. Caixa']
+
+        fields = ['cx_op', 'cor', 'tam', 'narrativa_ct', 'prim', 'cx_ct']
+        fields += field_lotes_caixa
+        fields += ['qtd_pcs_cx']
+
         # prepara dados selecionados
         cod_impresso = impresso_descr
         self.context.update({
@@ -165,14 +163,8 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             'ultimo': ultimo,
             'pula': parm_pula,
             'qtd_lotes': parm_qtd_lotes,
-            'headers': ('CX.OP', 'Cor', 'Tamanho', 'Narrativa',
-                        '1º', 'CX.Cor/Tam',
-                        'Lote 1', 'Qtd. 1', 'Lote 2', 'Qtd. 2',
-                        'Lote 3', 'Qtd. 3', 'Qtd. Caixa'),
-            'fields': ('cx_op', 'cor', 'tam', 'narrativa_ct',
-                       'prim', 'cx_ct',
-                       'lote1', 'qtd1', 'lote2', 'qtd2',
-                       'lote3', 'qtd3', 'qtd_pcs_cx'),
+            'headers': headers,
+            'fields': fields,
             'data': data,
         })
 
