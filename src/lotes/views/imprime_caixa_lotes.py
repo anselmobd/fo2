@@ -42,6 +42,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             return
 
         ref = l_data[0]['ref']
+        descr_ref = l_data[0]['descr_referencia']
 
         if ref[0] < 'C':
             self.context.update({
@@ -68,6 +69,9 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
         for row in l_data:
             row['narrativa'] = ' '.join((
                 row['descr_referencia'],
+                row['descr_cor'],
+                row['descr_tamanho']))
+            row['narrativa_ct'] = ' '.join((
                 row['descr_cor'],
                 row['descr_tamanho']))
             row['qtd_total'] = '{}'.format(qtd_total)
@@ -152,6 +156,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             'cod_impresso': cod_impresso,
             'op': op,
             'ref': ref,
+            'descr_ref': descr_ref,
             'op_mae': op_mae,
             'ref_mae': ref_mae,
             'cor': cor,
@@ -164,7 +169,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
                         '1º', 'CX.Cor/Tam',
                         'Lote 1', 'Qtd. 1', 'Lote 2', 'Qtd. 2',
                         'Lote 3', 'Qtd. 3', 'Qtd. Caixa'),
-            'fields': ('cx_op', 'cor', 'tam', 'narrativa',
+            'fields': ('cx_op', 'cor', 'tam', 'narrativa_ct',
                        'prim', 'cx_ct',
                        'lote1', 'qtd1', 'lote2', 'qtd2',
                        'lote3', 'qtd3', 'qtd_pcs_cx'),
