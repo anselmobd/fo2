@@ -28,6 +28,7 @@ def lotes_em_caixa(view_obj, cursor, op):
 
     view_obj.context.update({
         'ref': row_op['REF'],
+        'descr_ref': row_op['DESCR_REF'],
         'tipo_ref': row_op['TIPO_REF'],
         'colecao': row_op['COLECAO'],
     })
@@ -70,11 +71,6 @@ def lotes_em_caixa(view_obj, cursor, op):
         lote['lote|LINK'] = reverse('producao:posicao__get', args=[lote['lote']])
         lote['peso'] = " "
         
-        # inicio - necessários para impressão de etiquetas
-        lote['data_entrada_corte'] = row_op['DT_CORTE']
-        lote['situacao'] = row_op['SITUACAO']
-        # fim
-
         if lote['cor'] != cor_ant or lote['tam'] != tam_ant:
             cor_ant = lote['cor']
             tam_ant = lote['tam']
@@ -120,8 +116,19 @@ def lotes_em_caixa(view_obj, cursor, op):
             tam_ant = lote['tam']
             total_cx_ct = lote['caixa_ct']
 
+        lote['total_cx_op'] = total_cx_op
+        lote['total_cx_ct'] = total_cx_ct
         lote['num_caixa_txt'] = f"{lote['caixa_op']}/{total_cx_op}"
         lote['cor_tam_caixa_txt'] = f"{lote['caixa_ct']}/{total_cx_ct}"
+
+    # inicio - necessários para impressão de etiquetas
+    for lote in data:
+        lote['data_entrada_corte'] = row_op['DT_CORTE']
+        lote['situacao'] = row_op['SITUACAO']
+        lote['qtd_cortam'] = str(lote['total_cx_ct'])
+        lote['cont_cortam'] = str(lote['caixa_ct'])
+        lote['cx_ct'] = lote['cor_tam_caixa_txt']
+    # fim
 
     view_obj.context.update({
         'data': data,
