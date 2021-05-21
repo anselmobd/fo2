@@ -63,6 +63,7 @@ def lotes_em_caixa(view_obj, cursor, op):
         lote['lote'] = f"{lote['periodo']}{lote['oc']:05}"
         lote['lote|LINK'] = reverse('producao:posicao__get', args=[lote['lote']])
         lote['peso'] = " "
+        
         # inicio - necessários para impressão de etiquetas
         lote['data_entrada_corte'] = row_op['DT_CORTE']
         lote['situacao'] = row_op['SITUACAO']
@@ -74,6 +75,7 @@ def lotes_em_caixa(view_obj, cursor, op):
             caixa_ct = 1
             caixa_op += 1
             conta_lotes_caixa = 1
+            n_lote_caixa = 0
             qtd_caixa = 0
         else:
             conta_lotes_caixa += 1
@@ -82,10 +84,13 @@ def lotes_em_caixa(view_obj, cursor, op):
             conta_lotes_caixa = 1
             caixa_ct += 1
             caixa_op += 1
+            n_lote_caixa = 1
             qtd_caixa = lote['qtd']
         else:
+            n_lote_caixa += 1
             qtd_caixa += lote['qtd']
 
+        lote['n_lote_caixa'] = n_lote_caixa
         lote['qtd_caixa'] = qtd_caixa
         lote['caixa_op'] = caixa_op
         lote['caixa_ct'] = caixa_ct
@@ -98,8 +103,11 @@ def lotes_em_caixa(view_obj, cursor, op):
         if lote['caixa_op'] != caixa_op_ant:
             caixa_op_ant = lote['caixa_op']
             qtd_caixa = lote['qtd_caixa']
+            qtd_lote_caixa = lote['n_lote_caixa']
+            lote['qtd_lote_caixa'] = qtd_lote_caixa
         else:
             lote['qtd_caixa'] = qtd_caixa
+            lote['qtd_lote_caixa'] = qtd_lote_caixa
 
         if lote['cor'] != cor_ant or lote['tam'] != tam_ant:
             cor_ant = lote['cor']
