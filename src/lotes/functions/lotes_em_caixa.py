@@ -5,22 +5,22 @@ from django.urls import reverse
 import lotes.queries
 
 
-def lotes_em_caixa(self, cursor, op):
+def lotes_em_caixa(view_obj, cursor, op):
     data_op = lotes.queries.op.op_inform(cursor, op, cached=False)
     if len(data_op) == 0:
-        self.context.update({
+        view_obj.context.update({
             'msg_erro': 'OP não encontrada',
         })
         return False
 
     row_op = data_op[0]
     if row_op['TIPO_REF'] not in ['MD', 'MP']:
-        self.context.update({
+        view_obj.context.update({
             'msg_erro': 'Lotes agrupados em caixas é utilizado apenas para MD e MP',
         })
-        return
+        return False
 
-    self.context.update({
+    view_obj.context.update({
         'ref': row_op['REF'],
         'tipo_ref': row_op['TIPO_REF'],
         'colecao': row_op['COLECAO'],
@@ -29,30 +29,30 @@ def lotes_em_caixa(self, cursor, op):
     # Lotes order 'r' = referência + cor + tamanho + OC
     data = lotes.queries.lote.get_imprime_lotes(cursor, op=op, order='r')
     if len(data) == 0:
-        self.context.update({
+        view_obj.context.update({
             'msg_erro': 'Lotes não encontrados',
         })
-        return
+        return False
 
     try:
         rc = lotes.models.RegraColecao.objects_referencia.get(
-            colecao=data[0]['colecao'], referencia=self.context['ref'][0])
-        self.context.update({
+            colecao=data[0]['colecao'], referencia=view_obj.context['ref'][0])
+        view_obj.context.update({
             'ini_ref': rc.referencia,
         })
     except lotes.models.RegraColecao.DoesNotExist:
         try:
             rc = lotes.models.RegraColecao.objects.get(
                 colecao=data[0]['colecao'])
-            self.context.update({
+            view_obj.context.update({
                 'ini_ref': '',
             })
         except lotes.models.RegraColecao.DoesNotExist:
-            self.context.update({
+            view_obj.context.update({
                 'msg_erro': 'Regra de coleção e referência não encontrados',
             })
-            return
-    self.context.update({
+            return False
+    view_obj.context.update({
         'lotes_caixa': rc.lotes_caixa,
     })
 
@@ -105,7 +105,7 @@ def lotes_em_caixa(self, cursor, op):
         lote['num_caixa_txt'] = f"{lote['caixa_op']}/{total_cx_op}"
         lote['cor_tam_caixa_txt'] = f"{lote['caixa_ct']}/{total_cx_ct}"
 
-    self.context.update({
+    view_obj.context.update({
         'data': data,
     })
 
