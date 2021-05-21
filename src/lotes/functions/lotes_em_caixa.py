@@ -20,6 +20,12 @@ def lotes_em_caixa(view_obj, cursor, op):
         })
         return False
 
+    if row_op['SITUACAO'] == 9:
+        view_obj.context.update({
+            'msg_erro': 'OP cancelada!',
+        })
+        return False
+
     view_obj.context.update({
         'ref': row_op['REF'],
         'tipo_ref': row_op['TIPO_REF'],
