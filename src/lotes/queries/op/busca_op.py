@@ -268,6 +268,7 @@ def busca_op(
         , sele.TIPO_FM_OP
         , sele.OP_REL
         , sele.SITUACAO
+        , sele.COD_SITUACAO
         , sele.CANCELAMENTO
         , sele.ALTERNATIVA
         , sele.ROTEIRO
@@ -355,6 +356,7 @@ def busca_op(
         , coalesce( LISTAGG(ofi.ORDEM_PRODUCAO, ', ')
             WITHIN GROUP (ORDER BY ofi.ORDEM_PRODUCAO)
               , CAST(o.ORDEM_PRINCIPAL AS varchar2(8)) ) OP_REL
+        , o.SITUACAO COD_SITUACAO
         , o.SITUACAO ||
           CASE
           WHEN o.SITUACAO = 2 THEN '-Ordem conf. gerada'
