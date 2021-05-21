@@ -63,6 +63,10 @@ def lotes_em_caixa(view_obj, cursor, op):
         lote['lote'] = f"{lote['periodo']}{lote['oc']:05}"
         lote['lote|LINK'] = reverse('producao:posicao__get', args=[lote['lote']])
         lote['peso'] = " "
+        # inicio - necessários para impressão de etiquetas
+        lote['data_entrada_corte'] = row_op['DT_CORTE']
+        lote['situacao'] = row_op['SITUACAO']
+        # fim
 
         if lote['cor'] != cor_ant or lote['tam'] != tam_ant:
             cor_ant = lote['cor']
