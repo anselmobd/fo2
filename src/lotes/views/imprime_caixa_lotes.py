@@ -25,32 +25,30 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             self, cursor, op, tam, cor, parm_pula, parm_qtd_lotes,
             ultimo, ultima_cx, impresso, impresso_descr, obs1, obs2, do_print):
 
-        context = {}
-
         # Pacotes de 3 Lotes
         l_data = lotes.queries.op.caixas_op_3lotes(cursor, op)
 
         if len(l_data) == 0:
-            context.update({
+            self.context.update({
                 'msg_erro': 'Nehum lote selecionado',
             })
-            return context
+            return
 
         if l_data[0]['situacao'] == 9:
-            context.update({
+            self.context.update({
                 'msg_erro': 'OP cancelada!',
             })
             l_data = []
-            return context
+            return
 
         ref = l_data[0]['ref']
 
         if ref[0] < 'C':
-            context.update({
+            self.context.update({
                 'msg_erro': 'Etiqueta de caixa deve ser utilizada para MD',
             })
             l_data = []
-            return context
+            return
 
         # atribui qtd_cortam
         p_cor = ''
@@ -128,10 +126,10 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
                             qtd_lotes -= 1
 
         if len(data) == 0:
-            context.update({
+            self.context.update({
                 'msg_erro': 'Nehum lote selecionado',
             })
-            return context
+            return
 
         # busca informação de OP mãe
         opi_data = lotes.queries.op.op_inform(cursor, op)
@@ -149,7 +147,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
 
         # prepara dados selecionados
         cod_impresso = impresso_descr
-        context.update({
+        self.context.update({
             'count': len(data),
             'cod_impresso': cod_impresso,
             'op': op,
@@ -180,7 +178,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             except models.Impresso.DoesNotExist:
                 impresso = None
             if impresso is None:
-                context.update({
+                self.context.update({
                     'msg_erro': 'Impresso não cadastrado',
                 })
                 do_print = False
@@ -192,7 +190,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             except models.UsuarioImpresso.DoesNotExist:
                 usuario_impresso = None
             if usuario_impresso is None:
-                context.update({
+                self.context.update({
                     'msg_erro': 'Impresso não cadastrado para o usuário',
                 })
                 do_print = False
@@ -221,17 +219,17 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             finally:
                 teg.printer_end()
 
-        return context
+        return
 
     def get(self, request):
-        context = {'titulo': self.title_name}
+        self.context = {'titulo': self.title_name}
         form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         self.request = request
-        context = {'titulo': self.title_name}
+        self.context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():
             op = form.cleaned_data['op']
@@ -247,10 +245,9 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             obs2 = form.cleaned_data['obs2']
 
             cursor = db_cursor_so(request)
-            context.update(
-                self.mount_context_and_print(
-                    cursor, op, tam, cor, pula, qtd_lotes,
-                    ultimo, ultima_cx, impresso, impresso_descr, obs1, obs2,
-                    'print' in request.POST))
-        context['form'] = form
-        return render(request, self.template_name, context)
+            self.mount_context_and_print(
+                cursor, op, tam, cor, pula, qtd_lotes,
+                ultimo, ultima_cx, impresso, impresso_descr, obs1, obs2,
+                'print' in request.POST)
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
