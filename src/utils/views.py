@@ -161,11 +161,24 @@ def totalize_data(data, config):
 
 
 def totalize_grouped_data(data, config):
-    empty = config['empty'] if 'empty' in config else ''
 
-    temp_end_row = data[0].copy()
-    for key in temp_end_row:
-        temp_end_row[key] = empty
+    def copy_init_clean(row_ori, empty, not_fields, clean_pipe):
+        row = row_ori.copy()
+        del_keys = []
+        for key in row:
+            if key not in not_fields:
+                row[key] = empty
+            if clean_pipe:
+                if '|' in key:
+                    del_keys.append(key)
+        for key in del_keys:
+            del row[key]
+        return row
+
+    empty = config['empty'] if 'empty' in config else ''
+    clean_pipe = config['clean_pipe'] if 'clean_pipe' in config else False
+
+    temp_end_row = copy_init_clean(data[0], empty, [], clean_pipe)
     data.append(temp_end_row)
 
     if 'global_sum' in config:
@@ -203,10 +216,7 @@ def totalize_grouped_data(data, config):
         if init_group:
             group_count = 0
             list_key = [row[key] for key in config['group']]
-            totrow = row.copy()
-            for key in totrow:
-                if key not in config['group']:
-                    totrow[key] = empty
+            totrow = copy_init_clean(row, empty, config['group'], clean_pipe)
             sum = {key: 0 for key in config['sum']}
             init_group = False
 
