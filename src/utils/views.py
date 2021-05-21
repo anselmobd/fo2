@@ -161,9 +161,11 @@ def totalize_data(data, config):
 
 
 def totalize_grouped_data(data, config):
+    empty = config['empty'] if 'empty' in config else ''
+
     temp_end_row = data[0].copy()
     for key in temp_end_row:
-        temp_end_row[key] = ''
+        temp_end_row[key] = empty
     data.append(temp_end_row)
 
     if 'global_sum' in config:
@@ -204,7 +206,7 @@ def totalize_grouped_data(data, config):
             totrow = row.copy()
             for key in totrow:
                 if key not in config['group']:
-                    totrow[key] = ''
+                    totrow[key] = empty
             sum = {key: 0 for key in config['sum']}
             init_group = False
 
