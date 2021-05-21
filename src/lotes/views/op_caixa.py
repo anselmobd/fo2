@@ -17,9 +17,8 @@ class OpCaixa(View):
     template_name = 'lotes/op_caixa.html'
     title_name = 'Lista caixas de OP'
 
-
     def mount_context(self, cursor, op):
-        self.context = {'op': op}
+        self.context['op'] = op
 
         if not lotes.functions.lotes_em_caixa(self, cursor, op):
             return
@@ -36,14 +35,14 @@ class OpCaixa(View):
             'clean_pipe': True,
         })
         group = ['op', 'ref', 'num_caixa_txt',
-                    'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa']
+                    'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_lote_caixa', 'qtd_caixa']
         group_rowspan(data, group)
         self.context.update({
             'headers': ('OP', 'Referência', 'Cx.OP',
-                        'Cor', 'Tamanho', 'Cx.C/T', 'Peças',
+                        'Cor', 'Tamanho', 'Cx.C/T', 'Lotes', 'Peças',
                         'Lote', 'Quant.', 'Peso'),
             'fields': ('op', 'ref', 'num_caixa_txt',
-                        'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_caixa',
+                        'cor', 'tam', 'cor_tam_caixa_txt', 'qtd_lote_caixa', 'qtd_caixa',
                         'lote', 'qtd', 'peso'),
             'group': group,
             'data': data,
