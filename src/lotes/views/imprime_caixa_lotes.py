@@ -9,22 +9,23 @@ from fo2.connections import db_cursor_so
 
 from utils.classes import TermalPrint
 
+import lotes.forms
 import lotes.functions
 import lotes.queries.op
 import lotes.queries.lote
 import lotes.models as models
-from lotes.forms import ImprimePacote3LotesForm
 
 
 class ImprimeCaixaLotes(LoginRequiredMixin, View):
     login_url = '/intradm/login/'
-    Form_class = ImprimePacote3LotesForm
+    Form_class = lotes.forms.ImprimeCaixaLotesForm
     template_name = 'lotes/imprime_caixa_lotes.html'
     title_name = 'Etiqueta de caixa lotes'
+    impresso_slug = "etiqueta-de-caixa-com-barras-de-n-lotes"
 
     def mount_context_and_print(
             self, cursor, op, tam, cor, parm_pula, parm_qtd_lotes,
-            ultimo, ultima_cx, impresso, impresso_descr, obs1, obs2, do_print):
+            ultimo, ultima_cx, obs1, obs2, do_print):
 
         if not lotes.functions.lotes_em_caixa(self, cursor, op):
             return
@@ -151,7 +152,6 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
         cod_impresso = impresso_descr
         self.context.update({
             'count': len(data),
-            'cod_impresso': cod_impresso,
             'op': op,
             'ref': ref,
             'descr_ref': descr_ref,
@@ -168,17 +168,18 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             'data': data,
         })
 
-        if do_print:
-            try:
-                impresso = models.Impresso.objects.get(
-                    nome=cod_impresso)
-            except models.Impresso.DoesNotExist:
-                impresso = None
-            if impresso is None:
-                self.context.update({
-                    'msg_erro': 'Impresso não cadastrado',
-                })
-                do_print = False
+        try:
+            impresso = models.Impresso.objects.get(
+                slug=self.impresso_slug)
+        except models.Impresso.DoesNotExist:
+            self.context.update({
+                'msg_erro': 'Impresso não cadastrado',
+            })
+            do_print = False
+
+        self.context.update({
+            'cod_impresso': impresso.nome,
+        })
 
         if do_print:
             try:

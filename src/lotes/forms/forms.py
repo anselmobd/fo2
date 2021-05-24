@@ -222,6 +222,54 @@ class ImprimePacote3LotesForm(forms.Form):
         return cor
 
 
+class ImprimeCaixaLotesForm(forms.Form):
+    op = forms.CharField(
+        label='OP',
+        widget=forms.TextInput(attrs={'type': 'number',
+                               'autofocus': 'autofocus'}))
+    tam = forms.CharField(
+        label='Tamanho', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+    cor = forms.CharField(
+        label='Cor', required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+    ultimo = forms.CharField(
+        label='Lote em última etiqueta de caixa impressa', required=False,
+        max_length=9, min_length=9,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    ultima_cx = forms.CharField(
+        label='Número da última caixa impressa', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    pula = forms.IntegerField(
+        label='Pula quantos pacotes', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    qtd_lotes = forms.IntegerField(
+        label='Imprime quantos pacotes', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+    obs1 = forms.CharField(
+        label='Observação 1', required=False,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'style': 'width:20en'}))
+    obs2 = forms.CharField(
+        label='Observação 2', required=False,
+        widget=forms.TextInput(
+            attrs={'type': 'string', 'style': 'width:20en'}))
+
+    def clean_tam(self):
+        tam = self.cleaned_data['tam'].upper()
+        data = self.data.copy()
+        data['tam'] = tam
+        self.data = data
+        return tam
+
+    def clean_cor(self):
+        cor = self.cleaned_data['cor'].upper()
+        data = self.data.copy()
+        data['cor'] = cor
+        self.data = data
+        return cor
+
+
 class OpPendenteForm(forms.Form):
     estagio = forms.CharField(
         label='Estágio', max_length=2, required=False,
