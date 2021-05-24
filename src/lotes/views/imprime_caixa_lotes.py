@@ -104,11 +104,11 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
         data = []
         for row in l_data:
             if pula_lote:
-                pula_lote = \
-                    row['lote1'] != ultimo and \
-                    row['lote2'] != ultimo and \
-                    row['lote3'] != ultimo and \
-                    row['cont_total'] != ultima_cx
+                pula_lote = row['cont_total'] != ultima_cx
+                for i in range(1,lotes_caixa+1):
+                    f_lote = f'lote{i}'
+                    if f_lote in row:
+                        pula_lote = pula_lote and row[f_lote] != ultimo
             else:
                 print_lote = (tam == '' or row['tam'] == tam) \
                     and (cor == '' or row['cor'] == cor)
@@ -213,6 +213,7 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
                     else:
                         row['data_entrada_corte'] = '-'
                     teg.context(row)
+                    pprint(row)
                     teg.printer_send()
             finally:
                 teg.printer_end()
