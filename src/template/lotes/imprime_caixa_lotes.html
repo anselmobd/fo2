@@ -21,7 +21,9 @@
 {% else %}
   {% if data %}
     <h3>{{ count }} caixa{{ count|pluralize }} selecionada{{ count|pluralize }} para impressão</h3>
-    Impressão: {{ cod_impresso }}<br />
+    {% if cod_impresso %}
+      Impressão: {{ cod_impresso }}<br />
+    {% endif %}
     OP: {{ op }}&nbsp;&nbsp;
     Referência: {{ ref }} - {{ descr_ref }}<br />
     {% if op_mae %}
