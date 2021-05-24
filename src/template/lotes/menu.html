@@ -64,8 +64,8 @@
   <ul>
     {% if empresa == 'tussor' %}
       <li><a href="{% url 'producao:imprime_lotes' %}">Cartela de lote</a></li>
-      <li><a href="{% url 'producao:imprime_pacote3lotes' %}">Etiqueta de caixa de <i>n</i> lotes</a></li>
-      <li><a href="{% url 'producao:imprime_caixa_lotes' %}">(desenvolvimento) Etq. caixa de lotes</a></li>
+      <li><a href="{% url 'producao:imprime_pacote3lotes' %}">Etiqueta de caixa de <i>"2 ou 3"</i> lotes</a></li>
+      <li><a href="{% url 'producao:imprime_caixa_lotes' %}">(NOVO) Etq. caixa de <i>N</i> lotes</a></li>
       <li><a href="{% url 'producao:imprime_tag' %}">TAG</a></li>
     {% elif empresa == 'agator' %}
       <li><a href="{% url 'producao:imprime_ob1' %}">OB1</a></li>
