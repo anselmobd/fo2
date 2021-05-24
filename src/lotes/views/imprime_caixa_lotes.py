@@ -149,7 +149,6 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
         fields += ['qtd_pcs_cx']
 
         # prepara dados selecionados
-        cod_impresso = impresso_descr
         self.context.update({
             'count': len(data),
             'op': op,
@@ -173,9 +172,10 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
                 slug=self.impresso_slug)
         except models.Impresso.DoesNotExist:
             self.context.update({
-                'msg_erro': 'Impresso não cadastrado',
+                "msg_erro": f"Impresso '{self.impresso_slug}'não cadastrado",
             })
             do_print = False
+            return
 
         self.context.update({
             'cod_impresso': impresso.nome,
@@ -237,15 +237,13 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
             ultima_cx = form.cleaned_data['ultima_cx']
-            impresso = form.cleaned_data['impresso']
-            impresso_descr = dict(form.fields['impresso'].choices)[impresso]
             obs1 = form.cleaned_data['obs1']
             obs2 = form.cleaned_data['obs2']
 
             cursor = db_cursor_so(request)
             self.mount_context_and_print(
                 cursor, op, tam, cor, pula, qtd_lotes,
-                ultimo, ultima_cx, impresso, impresso_descr, obs1, obs2,
+                ultimo, ultima_cx, obs1, obs2,
                 'print' in request.POST)
         self.context['form'] = form
         return render(request, self.template_name, self.context)
