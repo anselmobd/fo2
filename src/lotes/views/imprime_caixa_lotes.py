@@ -167,19 +167,18 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             'data': data,
         })
 
-        try:
-            impresso = models.Impresso.objects.get(
-                slug=self.impresso_slug)
-        except models.Impresso.DoesNotExist:
-            self.context.update({
-                "msg_erro": f"Impresso '{self.impresso_slug}'não cadastrado",
-            })
-            do_print = False
-            return
-
-        self.context.update({
-            'cod_impresso': impresso.nome,
-        })
+        if do_print:
+            try:
+                impresso = models.Impresso.objects.get(
+                    slug=self.impresso_slug)
+                self.context.update({
+                    'cod_impresso': impresso.nome,
+                })
+            except models.Impresso.DoesNotExist:
+                self.context.update({
+                    "msg_erro": f"Impresso '{self.impresso_slug}'não cadastrado",
+                })
+                do_print = False
 
         if do_print:
             try:
