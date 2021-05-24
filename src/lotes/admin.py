@@ -25,6 +25,7 @@ class ImpressoAdmin(admin.ModelAdmin):
     search_fields = ['nome', 'slug']
     fields = ['nome', 'slug']
     readonly_fields = ['slug']
+    ordering = ['slug']
 
 
 class ImpressoraTermicaAdmin(admin.ModelAdmin):
