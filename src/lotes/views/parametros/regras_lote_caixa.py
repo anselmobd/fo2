@@ -127,7 +127,7 @@ class RegrasLoteCaixa(View):
 
     def get(self, request, *args, **kwargs):
         self.request = request
-        has_perm = has_permission(request, 'lotes.change_leadcolecao')
+        has_perm = has_permission(request, 'lotes.manutencao-de-regra-de-lote-por-caixa')
         print(has_perm)
         if 'ead' in kwargs and has_perm:
             if kwargs['ead'] == 'e':
