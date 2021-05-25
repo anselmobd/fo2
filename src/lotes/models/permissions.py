@@ -13,4 +13,6 @@ class LotesPermissions(models.Model):
              "Pode reabrir solicitação marada como completa"),
             ("libera_coleta_de_solicitacao",
              "Libera coleta de solicitação"),
+            ("manutencao-de-regra-de-lote-por-caixa",
+             "Manutenção de regra de lote por caixa"),
         )
