@@ -54,8 +54,6 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             if n_lote_caixa == 1:
                 l_row = {
                     'lotes_caixa': lotes_caixa,
-                    'obs1': obs1,
-                    'obs2': obs2,
                     'cor': row['cor'],
                     'data_entrada_corte': row['data_entrada_corte'],
                     'descr_cor': row['descr_cor'],
