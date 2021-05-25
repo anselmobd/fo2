@@ -653,14 +653,13 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if 'grava' in self.request.POST:
             self.grava_meta()
 
-        nfs = list(models.ModeloPassadoPeriodo.objects.filter(
+        self.data_nfs = list(models.ModeloPassadoPeriodo.objects.filter(
             modelo_id=1).order_by('ordem').values())
-        if len(nfs) == 0:
+        if len(self.data_nfs) == 0:
             self.context.update({
-                'msg_erro': 'Nenhum período definido',
+                'msg_erro': 'Nenhum período definido para análise de meta',
             })
             return
-        self.data_nfs = list(nfs)
 
         self.periodos = []
         self.tot_peso = 0
@@ -693,10 +692,11 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.style[i+2] = 'text-align: right;'
 
             self.periodos.append(periodo)
-
+        pprint(self.periodos)
         self.style_pond_meses = {
             ** self.style,
             len(self.periodos)+2: 'text-align: right;',
         }
+        pprint(self.style_pond_meses)
 
         self.mount_context_modelo(modelo)
