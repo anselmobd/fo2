@@ -252,8 +252,8 @@ class ImprimeCaixaLotesForm(forms.Form):
             'Etiqueta de caixa com barras de N lotes',
         ),
         (
-            'etiqueta-de-caixa-de-n-lotes',
-            'Etiqueta de caixa de N lotes',
+            'etiqueta-de-caixa-de-lotes',
+            'Etiqueta de caixa de lotes',
         )
     ]
     impresso = forms.ChoiceField(
