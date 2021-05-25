@@ -21,11 +21,10 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
     Form_class = lotes.forms.ImprimeCaixaLotesForm
     template_name = 'lotes/imprime_caixa_lotes.html'
     title_name = 'Etiqueta de caixa lotes'
-    impresso_slug = "etiqueta-de-caixa-com-barras-de-n-lotes"
 
     def mount_context_and_print(
             self, cursor, op, tam, cor, parm_pula, parm_qtd_lotes,
-            ultimo, ultima_cx, obs1, obs2, do_print):
+            ultimo, ultima_cx, impresso, obs1, obs2, do_print):
 
         if not lotes.functions.lotes_em_caixa(self, cursor, op):
             return
@@ -170,21 +169,21 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
 
         if do_print:
             try:
-                impresso = models.Impresso.objects.get(
-                    slug=self.impresso_slug)
+                obj_impresso = models.Impresso.objects.get(
+                    slug=impresso)
                 self.context.update({
-                    'cod_impresso': impresso.nome,
+                    'cod_impresso': obj_impresso.nome,
                 })
             except models.Impresso.DoesNotExist:
                 self.context.update({
-                    "msg_erro": f"Impresso '{self.impresso_slug}'não cadastrado",
+                    "msg_erro": f"Impresso '{impresso}'não cadastrado",
                 })
                 do_print = False
 
         if do_print:
             try:
                 usuario_impresso = models.UsuarioImpresso.objects.get(
-                    usuario=self.request.user, impresso=impresso)
+                    usuario=self.request.user, impresso=obj_impresso)
             except models.UsuarioImpresso.DoesNotExist:
                 usuario_impresso = None
             if usuario_impresso is None:
@@ -237,13 +236,14 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             qtd_lotes = form.cleaned_data['qtd_lotes']
             ultimo = form.cleaned_data['ultimo']
             ultima_cx = form.cleaned_data['ultima_cx']
+            impresso = form.cleaned_data['impresso']
             obs1 = form.cleaned_data['obs1']
             obs2 = form.cleaned_data['obs2']
 
             cursor = db_cursor_so(request)
             self.mount_context_and_print(
                 cursor, op, tam, cor, pula, qtd_lotes,
-                ultimo, ultima_cx, obs1, obs2,
+                ultimo, ultima_cx, impresso, obs1, obs2,
                 'print' in request.POST)
         self.context['form'] = form
         return render(request, self.template_name, self.context)

@@ -246,6 +246,18 @@ class ImprimeCaixaLotesForm(forms.Form):
     qtd_lotes = forms.IntegerField(
         label='Imprime quantos pacotes', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
+    CHOICES = [
+        (
+            'etiqueta-de-caixa-com-barras-de-n-lotes',
+            'Etiqueta de caixa com barras de N lotes',
+        ),
+        (
+            'etiqueta-de-caixa-de-n-lotes',
+            'Etiqueta de caixa de N lotes',
+        )
+    ]
+    impresso = forms.ChoiceField(
+        label='Impresso', choices=CHOICES, initial='B')
     obs1 = forms.CharField(
         label='Observação 1', required=False,
         widget=forms.TextInput(
