@@ -67,6 +67,8 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
                     'tamord': row['ordem_tamanho'],
                     'qtd_cortam': str(row['total_cx_ct']),
                     'cont_cortam': str(row['caixa_ct']),
+                    'qtd_total': str(row['total_cx_op']),
+                    'cont_total': str(row['caixa_op']),
                     'cx_ct': f"{row['caixa_ct']} / {row['total_cx_ct']}",
                     'cx_op': f"{row['caixa_op']} / {row['total_cx_op']}",
                     'lote_count': row['qtd_lote_caixa'],
