@@ -52,7 +52,12 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'produto:ref__get',
                 args=[row['ref']],
             )
-        if len(data_ref) > 0:
+        if len(data_ref) == 0:
+            self.context.update({
+                'msg_erro': 'Erro ao pegar PAs de modelo',
+            })
+            return
+        else:
             self.context['referencias'] = {
                 'headers': ['Referência'],
                 'fields': ['ref'],
@@ -692,11 +697,10 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.style[i+2] = 'text-align: right;'
 
             self.periodos.append(periodo)
-        pprint(self.periodos)
+
         self.style_pond_meses = {
             ** self.style,
             len(self.periodos)+2: 'text-align: right;',
         }
-        pprint(self.style_pond_meses)
 
         self.mount_context_modelo(modelo)
