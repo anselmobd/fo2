@@ -19,6 +19,7 @@ def pa_de_modelo(cursor, modelo=None):
           v.REFERENCIA REF
         FROM BASI_030 v -- ref
         WHERE 1=1
+          AND v.NIVEL_ESTRUTURA = 1 
           AND v.REFERENCIA LIKE '%{modelo}%' 
           AND TRIM(
                 LEADING '0' FROM (
