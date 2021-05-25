@@ -644,7 +644,9 @@ def pa_de_modelo(cursor, modelo=None):
         SELECT DISTINCT
           v.REFERENCIA REF
         FROM BASI_030 v -- ref
-        WHERE TRIM(
+        WHERE 1=1
+          AND v.REFERENCIA LIKE '%{modelo}%' 
+          AND TRIM(
                 LEADING '0' FROM (
                   REGEXP_REPLACE(
                     v.REFERENCIA
