@@ -16,6 +16,8 @@ def get_meta_periodos():
     periodos = []
     periodos_headers = []
     periodos_fields = []
+    periodos_col_fields = []
+    periodo_cols = {}
     periodos_zero_data_row = {}
     style_meses = {}
     tot_peso = 0
@@ -26,7 +28,9 @@ def get_meta_periodos():
         meses = row['meses']
         peso = row['peso']
         range_str = f"{n_mes + meses}:{n_mes}"
+        field = comercial.queries.str2col_name(range_str)
         periodo = {
+            'field': field,
             'range': range_str,
             'meses': meses,
             'peso': peso,
@@ -51,6 +55,8 @@ def get_meta_periodos():
             '{} (P:{})'.format(periodo_descr, peso)
         )
         periodos_fields.append(range_str)
+        periodos_col_fields.append(field)
+        periodo_cols[field] = range_str
         periodos_zero_data_row[range_str] = 0
 
         # por padrão, meses ficam nas colunas 2 em diante
@@ -60,6 +66,8 @@ def get_meta_periodos():
         'list': periodos,
         'headers': periodos_headers,
         'fields': periodos_fields,
+        'col_fields': periodos_col_fields,
+        'cols': periodo_cols,
         'zero_data_row': periodos_zero_data_row,
         'style_meses': style_meses,
         'tot_peso': tot_peso,
