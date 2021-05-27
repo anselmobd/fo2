@@ -586,30 +586,31 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         mes = dec_month(hoje, 1)
         for i, row in enumerate(self.data_nfs):
             meses = row['meses']
+            peso = row['peso']
             range_str = f"{n_mes + meses}:{n_mes}"
             periodo = {
                 'range': range_str,
                 'meses': meses,
-                'peso': row['peso'],
+                'peso': peso,
             }
             n_mes += meses
-            self.tot_peso += meses * row['peso']
+            self.tot_peso += meses * peso
 
             mes_fim = mes.strftime("%m/%Y")
             mes = dec_months(mes, meses-1)
             mes_ini = mes.strftime("%m/%Y")
             mes = dec_month(mes)
             if meses == 1:
-                periodo['descr'] = mes_ini
+                periodo_descr = mes_ini
             else:
                 if mes_ini[-4:] == mes_fim[-4:]:
-                    periodo['descr'] = '{} - {}'.format(mes_fim[:2], mes_ini)
+                    periodo_descr = '{} - {}'.format(mes_fim[:2], mes_ini)
                 else:
-                    periodo['descr'] = '{} - {}'.format(mes_fim, mes_ini)
+                    periodo_descr = '{} - {}'.format(mes_fim, mes_ini)
 
             self.periodos.append(periodo)
             self.periodos_headers.append(
-                '{} (P:{})'.format(periodo['descr'], periodo['peso'])
+                '{} (P:{})'.format(periodo_descr, peso)
             )
             self.periodos_fields.append(range_str)
             self.periodos_zero_data_row[range_str] = 0
