@@ -33,37 +33,40 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         self.get_args = ['modelo']
 
     def mount_context_modelo(self, modelo):
+
         # Ponderação do modelo
+        av = queries.AnaliseVendas(
+            self.cursor,
+            ref=None,
+            modelo=modelo,
+            infor='modelo',
+            ordem='qtd',
+            periodo_cols=self.meta_periodos['cols'],
+            qtd_por_mes=True,
+            com_venda=False,
+            field_ini='',
+            )
         data_row = {
             'modelo': modelo,
-            **self.meta_periodos['zero_data_row'],
-            'qtd': 0,
+            **av.data[0],
+            'ponderada': 0,
         }
         for periodo in self.meta_periodos['list']:
-            av = queries.AnaliseVendas(
-                self.cursor,
-                ref=None,
-                modelo=modelo,
-                infor='modelo',
-                ordem='qtd',
-                periodo_cols={'p': periodo['range']},
-                qtd_por_mes=False,
-                com_venda=False)
-            qtd = av.data[0]['fp']
-
-            data_row[periodo['range']] = round(qtd / periodo['meses'])
-            data_row['qtd'] += round(
-                qtd * periodo['peso'] / self.meta_periodos['tot_peso'])
-
+            data_row['ponderada'] += round(
+                data_row[periodo['field']] 
+                * periodo['peso']
+                * periodo['meses']
+                / self.meta_periodos['tot_peso']
+            )
         self.context['modelo_ponderado'] = {
             'headers': ['Modelo', 'Venda ponderada',
                         *self.meta_periodos['headers']],
-            'fields': ['modelo', 'qtd',
-                       *self.meta_periodos['fields']],
+            'fields': ['modelo', 'ponderada',
+                       *self.meta_periodos['col_fields']],
             'data': [data_row],
             'style': self.style_pond_meses,
         }
-        venda_ponderada = data_row['qtd']
+        venda_ponderada = data_row['ponderada']
 
         # vendas por tamanho
         data = []
