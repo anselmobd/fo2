@@ -75,7 +75,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
         # vendas do modelo
         data = []
-        zero_data_row = {p['range']: 0 for p in self.periodos}
+        zero_data_row = self.periodos_zero_data_row.copy()
         zero_data_row['qtd'] = 0
         for periodo in self.periodos:
             av = queries.AnaliseVendas(
@@ -123,7 +123,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
         # vendas por tamanho
         data = []
-        zero_data_row = {p['range']: 0 for p in self.periodos}
+        zero_data_row = self.periodos_zero_data_row.copy()
         zero_data_row['qtd'] = 0
         zero_data_row['grade'] = 0
         total_qtd = 0
@@ -236,7 +236,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
         # vendas por cor
         data = []
-        zero_data_row = {p['range']: 0 for p in self.periodos}
+        zero_data_row = self.periodos_zero_data_row.copy()
         zero_data_row['qtd'] = 0
         zero_data_row['distr'] = 0
         total_qtd = 0
@@ -322,7 +322,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
         # vendas por referência
         data = []
-        zero_data_row = {p['range']: 0 for p in self.periodos}
+        zero_data_row = self.periodos_zero_data_row.copy()
         zero_data_row['qtd'] = 0
         for periodo in self.periodos:
             if venda_ponderada == 0:
@@ -578,6 +578,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         self.periodos = []
         self.periodos_headers = []
         self.periodos_fields = []
+        self.periodos_zero_data_row = {}
         self.tot_peso = 0
         n_mes = 0
         hoje = datetime.today()
@@ -610,6 +611,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 '{} (P:{})'.format(periodo['descr'], periodo['peso'])
             )
             self.periodos_fields.append(periodo['range'])
+            self.periodos_zero_data_row[periodo['range']] = 0
 
             # meses nas colunas 2 em diante
             self.style_pond_meses[i+2] = 'text-align: right;'
