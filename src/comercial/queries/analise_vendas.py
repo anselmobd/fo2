@@ -295,7 +295,7 @@ class AnaliseVendas():
                 div_meses = ""
 
             self.periodo_fields += (
-                f""", TRUNC(
+                f""", ROUND(
                         SUM(
                           CASE WHEN {filtro} THEN iv.QTD
                           ELSE 0
