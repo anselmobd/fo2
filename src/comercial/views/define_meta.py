@@ -65,10 +65,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'data': data_ref,
             }
 
-        ok, ref_incl = meta_ref_incluir(self.cursor, self.context, modelo)
-        if not ok:
-            return
-
+        ref_incl = meta_ref_incluir(self.cursor, modelo)
         if ref_incl:
             self.context['adicionadas'] = {
                 'headers': ['Referência', 'Informações'],

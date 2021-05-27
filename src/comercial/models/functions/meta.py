@@ -11,8 +11,9 @@ import comercial.models
 import comercial.queries
 
 
-def meta_ref_incluir(cursor, context, modelo):
-    # referências a incluir
+def meta_ref_incluir(cursor, modelo):
+    """Referências a incluir no cálculo de definição de meta
+    """
     ref_incl = comercial.models.MetaModeloReferencia.objects.filter(
         modelo=modelo,
         incl_excl='i',
@@ -94,4 +95,4 @@ def meta_ref_incluir(cursor, context, modelo):
                     [ref['info'], '; '.join(cores_ok)]
                 )
 
-    return True, ref_incl
+    return ref_incl
