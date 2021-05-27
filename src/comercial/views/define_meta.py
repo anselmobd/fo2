@@ -579,26 +579,27 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         self.periodos_headers = []
         self.periodos_fields = []
         self.periodos_zero_data_row = {}
+        self.style_pond_meses = {}
         self.tot_peso = 0
         n_mes = 0
         hoje = datetime.today()
         mes = dec_month(hoje, 1)
-        self.style_pond_meses = {}
         for i, row in enumerate(self.data_nfs):
+            meses = row['meses']
+            range_str = f"{n_mes + meses}:{n_mes}"
             periodo = {
-                'range': '{}:{}'.format(
-                    n_mes+row['meses'], n_mes),
-                'meses': row['meses'],
+                'range': range_str,
+                'meses': meses,
                 'peso': row['peso'],
             }
-            n_mes += row['meses']
-            self.tot_peso += row['meses'] * row['peso']
+            n_mes += meses
+            self.tot_peso += meses * row['peso']
 
             mes_fim = mes.strftime("%m/%Y")
-            mes = dec_months(mes, row['meses']-1)
+            mes = dec_months(mes, meses-1)
             mes_ini = mes.strftime("%m/%Y")
             mes = dec_month(mes)
-            if row['meses'] == 1:
+            if meses == 1:
                 periodo['descr'] = mes_ini
             else:
                 if mes_ini[-4:] == mes_fim[-4:]:
@@ -610,8 +611,8 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.periodos_headers.append(
                 '{} (P:{})'.format(periodo['descr'], periodo['peso'])
             )
-            self.periodos_fields.append(periodo['range'])
-            self.periodos_zero_data_row[periodo['range']] = 0
+            self.periodos_fields.append(range_str)
+            self.periodos_zero_data_row[range_str] = 0
 
             # meses nas colunas 2 em diante
             self.style_pond_meses[i+2] = 'text-align: right;'
