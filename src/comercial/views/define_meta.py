@@ -37,26 +37,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             'modelo': modelo,
         })
 
-        # referencias automaticamente consideradas
-        data_ref = queries.pa_de_modelo(self.cursor, modelo)
-        for row in data_ref:
-            row['ref|TARGET'] = '_blank'
-            row['ref|LINK'] = reverse(
-                'produto:ref__get',
-                args=[row['ref']],
-            )
-        if len(data_ref) == 0:
-            self.context.update({
-                'msg_erro': 'Erro ao pegar PAs de modelo',
-            })
-            return
-        else:
-            self.context['referencias'] = {
-                'headers': ['Referência'],
-                'fields': ['ref'],
-                'data': data_ref,
-            }
-
         ref_incl = meta_ref_incluir(self.cursor, modelo)
         if ref_incl:
             self.context['adicionadas'] = {
@@ -586,10 +566,33 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 return False
         return True
 
+    def referencias(self):
+        # referencias automaticamente consideradas
+        data_ref = queries.pa_de_modelo(self.cursor, self.modelo)
+
+        if len(data_ref) == 0:
+            raise Exception('Erro ao pegar PAs de modelo')
+
+        for row in data_ref:
+            row['ref|TARGET'] = '_blank'
+            row['ref|LINK'] = reverse(
+                'produto:ref__get',
+                args=[row['ref']],
+            )
+
+        return {
+            'referencias': {
+                'headers': ['Referência'],
+                'fields': ['ref'],
+                'data': data_ref,
+            }
+        }
+
     def mostra_meta(self):
         steps = [
             self.testa_modelo,
             (get_meta_periodos, 'meta_periodos'),
+            (self.referencias, 'context'),
         ]
 
         if not self.do_steps(steps):
