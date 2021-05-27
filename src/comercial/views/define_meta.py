@@ -115,7 +115,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             'headers': ['Modelo', 'Venda ponderada',
                         *self.periodos_headers],
             'fields': ['modelo', 'qtd',
-                       *[p['range'] for p in self.periodos]],
+                       *self.periodos_fields],
             'data': data,
             'style': self.style_pond_meses,
         }
@@ -182,7 +182,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'headers': ['Tamanho', 'Venda ponderada',
                             *self.periodos_headers],
                 'fields': ['tam', 'qtd',
-                           *[p['range'] for p in self.periodos]],
+                           *self.periodos_fields],
                 'data': data,
                 'style': self.style_pond_meses,
             }
@@ -226,7 +226,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                             'Venda ponderada',
                             *self.periodos_headers],
                 'fields': ['tam', 'grade', 'qtd',
-                           *[p['range'] for p in self.periodos]],
+                           *self.periodos_fields],
                 'data': data,
                 'style': {
                     ** self.style_pond_meses,
@@ -294,7 +294,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'headers': ['Cor', 'Venda ponderada',
                             *self.periodos_headers],
                 'fields': ['cor', 'qtd',
-                           *[p['range'] for p in self.periodos]],
+                           *self.periodos_fields],
                 'data': data,
                 'style': self.style_pond_meses,
             }
@@ -312,7 +312,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'headers': ['Cor', 'Distribuição', 'Venda ponderada',
                             *self.periodos_headers],
                 'fields': ['cor', 'distr', 'qtd',
-                           *[p['range'] for p in self.periodos]],
+                           *self.periodos_fields],
                 'data': data,
                 'style': {
                     ** self.style_pond_meses,
@@ -372,7 +372,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             'headers': ['Referência', 'Venda ponderada',
                         *self.periodos_headers],
             'fields': ['ref', 'qtd',
-                       *[p['range'] for p in self.periodos]],
+                       *self.periodos_fields],
             'data': data,
             'style': self.style_pond_meses,
         }
@@ -577,6 +577,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
         self.periodos = []
         self.periodos_headers = []
+        self.periodos_fields = []
         self.tot_peso = 0
         n_mes = 0
         hoje = datetime.today()
@@ -608,6 +609,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.periodos_headers.append(
                 '{} (P:{})'.format(periodo['descr'], periodo['peso'])
             )
+            self.periodos_fields.append(periodo['range'])
 
             # meses nas colunas 2 em diante
             self.style_pond_meses[i+2] = 'text-align: right;'
