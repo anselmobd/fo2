@@ -558,25 +558,44 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if len(metas) != 0:
             lotes.views.calculaMetaGiroMetas(self.cursor, metas)
 
+    def testa_modelo(self):
+        refs = produto.queries.modelo_inform(self.cursor, self.modelo)
+        if len(refs) == 0:
+            return False, 'Modelo não encontrado'
+        return True, None
+
+    def get_periodos(self):
+        meta_periodos = get_meta_periodos()
+        if 'erro' in meta_periodos:
+            return False, meta_periodos['erro']
+        return True, meta_periodos
+
+    def do_context(self):
+        do_get_list = [
+            (self.testa_modelo, ''),
+            (self.get_periodos, 'meta_periodos'),
+        ]
+
+        for do, attrib in do_get_list:
+            ok, value = do()
+            if ok:
+                setattr(self, attrib, value)
+            else:
+                self.context.update({
+                    'msg_erro': value,
+                })
+                break
+
+        return ok
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        modelo = self.form.cleaned_data['modelo']
+        self.modelo = self.form.cleaned_data['modelo']
         if 'grava' in self.request.POST:
             self.grava_meta()
 
-        refs = produto.queries.modelo_inform(self.cursor, modelo)
-        if len(refs) == 0:
-            self.context.update({
-                'msg_erro': 'Modelo não encontrado',
-            })
+        if not self.do_context():
             return
 
-        self.meta_periodos = get_meta_periodos()
-        if 'erro' in self.meta_periodos:
-            self.context.update({
-                'msg_erro': self.meta_periodos['erro']
-            })
-            return
-
-        self.mount_context_modelo(modelo)
+        self.mount_context_modelo(self.modelo)
