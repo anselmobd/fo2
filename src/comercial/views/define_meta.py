@@ -541,6 +541,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     'data': ref_incl,
                 },
             }
+        return {}
 
     def inicializacoes_gerais(self):
         self.context.update({
