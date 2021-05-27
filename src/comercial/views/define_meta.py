@@ -563,22 +563,32 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if len(refs) == 0:
             raise Exception('Modelo não encontrado')
 
-    def do_context(self):
-        do_get_list = [
-            (self.testa_modelo, ''),
-            (get_meta_periodos, 'meta_periodos'),
-        ]
-        for do, attrib in do_get_list:
+    def do_steps(self, steps, msg_erro='msg_erro'):
+        for do_get in steps:
             try:
-                result = do()
-                if attrib:
+                if isinstance(do_get, tuple):
+                    do, attrib = do_get
+                    result = do()
                     setattr(self, attrib, result)
+                else:
+                    do_get()
             except Exception as e:
                 self.context.update({
-                    'msg_erro': e,
+                    msg_erro: e,
                 })
                 return False
         return True
+
+    def mostra_meta(self):
+        steps = [
+            self.testa_modelo,
+            (get_meta_periodos, 'meta_periodos'),
+        ]
+
+        if not self.do_steps(steps):
+            return
+
+        self.mount_context_modelo(self.modelo)
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -587,7 +597,4 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if 'grava' in self.request.POST:
             self.grava_meta()
 
-        if not self.do_context():
-            return
-
-        self.mount_context_modelo(self.modelo)
+        self.mostra_meta()
