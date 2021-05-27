@@ -19,7 +19,7 @@ import lotes.views
 
 import comercial.models as models
 import comercial.queries as queries
-from comercial.models.functions.meta import meta_ref_incluir
+from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.models.functions.meta_periodos import get_meta_periodos
 
 
