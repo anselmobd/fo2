@@ -34,40 +34,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def mount_context_modelo(self, modelo):
 
-        # Ponderação do modelo
-        av = queries.AnaliseVendas(
-            self.cursor,
-            ref=None,
-            modelo=modelo,
-            infor='modelo',
-            ordem='qtd',
-            periodo_cols=self.meta_periodos['cols'],
-            qtd_por_mes=True,
-            com_venda=False,
-            field_ini='',
-            )
-        data_row = {
-            'modelo': modelo,
-            **av.data[0],
-            'ponderada': 0,
-        }
-        for periodo in self.meta_periodos['list']:
-            data_row['ponderada'] += round(
-                data_row[periodo['field']] 
-                * periodo['peso']
-                * periodo['meses']
-                / self.meta_periodos['tot_peso']
-            )
-        self.context['modelo_ponderado'] = {
-            'headers': ['Modelo', 'Venda ponderada',
-                        *self.meta_periodos['headers']],
-            'fields': ['modelo', 'ponderada',
-                       *self.meta_periodos['col_fields']],
-            'data': [data_row],
-            'style': self.style_pond_meses,
-        }
-        venda_ponderada = data_row['ponderada']
-
         # vendas por tamanho
         data = []
         zero_data_row = self.meta_periodos['zero_data_row'].copy()
@@ -75,7 +41,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         zero_data_row['grade'] = 0
         total_qtd = 0
         for periodo in self.meta_periodos['list']:
-            if venda_ponderada == 0:
+            if self.context['venda_ponderada'] == 0:
                 data_tam = queries.get_modelo_dims(
                     self.cursor,
                     modelo=modelo,
@@ -188,7 +154,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         zero_data_row['distr'] = 0
         total_qtd = 0
         for periodo in self.meta_periodos['list']:
-            if venda_ponderada == 0:
+            if self.context['venda_ponderada'] == 0:
                 data_tam = queries.get_modelo_dims(
                     self.cursor,
                     modelo=modelo,
@@ -272,7 +238,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         zero_data_row = self.meta_periodos['zero_data_row'].copy()
         zero_data_row['qtd'] = 0
         for periodo in self.meta_periodos['list']:
-            if venda_ponderada == 0:
+            if self.context['venda_ponderada'] == 0:
                 data_tam = queries.get_modelo_dims(
                     self.cursor,
                     modelo=modelo,
@@ -557,6 +523,43 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.meta_periodos['n_periodos']+2: 'text-align: right;',
         }
 
+    def pondera_modelo(self):
+        # Ponderação do modelo
+        av = queries.AnaliseVendas(
+            self.cursor,
+            ref=None,
+            modelo=self.modelo,
+            infor='modelo',
+            ordem='qtd',
+            periodo_cols=self.meta_periodos['cols'],
+            qtd_por_mes=True,
+            com_venda=False,
+            field_ini='',
+            )
+        data_row = {
+            'modelo': self.modelo,
+            **av.data[0],
+            'ponderada': 0,
+        }
+        for periodo in self.meta_periodos['list']:
+            data_row['ponderada'] += round(
+                data_row[periodo['field']] 
+                * periodo['peso']
+                * periodo['meses']
+                / self.meta_periodos['tot_peso']
+            )
+        return {
+            'modelo_ponderado': {
+                'headers': ['Modelo', 'Venda ponderada',
+                            *self.meta_periodos['headers']],
+                'fields': ['modelo', 'ponderada',
+                        *self.meta_periodos['col_fields']],
+                'data': [data_row],
+                'style': self.style_pond_meses,
+            },
+            'venda_ponderada': data_row['ponderada'],
+        }
+
     def mostra_meta(self):
         steps = [
             self.testa_modelo,
@@ -564,6 +567,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             (self.referencias, 'context'),
             (self.ref_incluir, 'context'),
             self.inicializacoes_gerais,
+            (self.pondera_modelo, 'context'),
         ]
 
         if not self.do_steps(steps):
