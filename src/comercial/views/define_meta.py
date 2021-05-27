@@ -113,9 +113,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
         self.context['modelo_ponderado'] = {
             'headers': ['Modelo', 'Venda ponderada',
-                        *['{} (P:{})'.format(
-                            p['descr'], p['peso']
-                        ) for p in self.periodos]],
+                        *self.periodos_headers],
             'fields': ['modelo', 'qtd',
                        *[p['range'] for p in self.periodos]],
             'data': data,
@@ -182,9 +180,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     row['grade'] = 1
             self.context['tamanho_ponderado'] = {
                 'headers': ['Tamanho', 'Venda ponderada',
-                            *['{} (P:{})'.format(
-                                p['descr'], p['peso']
-                            ) for p in self.periodos]],
+                            *self.periodos_headers],
                 'fields': ['tam', 'qtd',
                            *[p['range'] for p in self.periodos]],
                 'data': data,
@@ -228,9 +224,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'headers': ['Tamanho',
                             'Grade (E:{:.0f}%)'.format(grade_erro * 100),
                             'Venda ponderada',
-                            *['{} (P:{})'.format(
-                                p['descr'], p['peso']
-                            ) for p in self.periodos]],
+                            *self.periodos_headers],
                 'fields': ['tam', 'grade', 'qtd',
                            *[p['range'] for p in self.periodos]],
                 'data': data,
@@ -298,9 +292,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     row['distr'] = 1
             self.context['cor_ponderada'] = {
                 'headers': ['Cor', 'Venda ponderada',
-                            *['{} (P:{})'.format(
-                                p['descr'], p['peso']
-                            ) for p in self.periodos]],
+                            *self.periodos_headers],
                 'fields': ['cor', 'qtd',
                            *[p['range'] for p in self.periodos]],
                 'data': data,
@@ -318,9 +310,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 max_distr_row['distr'] += (100 - tot_distr)
             self.context['cor_ponderada'] = {
                 'headers': ['Cor', 'Distribuição', 'Venda ponderada',
-                            *['{} (P:{})'.format(
-                                p['descr'], p['peso']
-                            ) for p in self.periodos]],
+                            *self.periodos_headers],
                 'fields': ['cor', 'distr', 'qtd',
                            *[p['range'] for p in self.periodos]],
                 'data': data,
@@ -380,9 +370,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     row['qtd'] * periodo['peso'] / self.tot_peso)
         self.context['por_ref'] = {
             'headers': ['Referência', 'Venda ponderada',
-                        *['{} (P:{})'.format(
-                            p['descr'], p['peso']
-                        ) for p in self.periodos]],
+                        *self.periodos_headers],
             'fields': ['ref', 'qtd',
                        *[p['range'] for p in self.periodos]],
             'data': data,
@@ -588,6 +576,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             return
 
         self.periodos = []
+        self.periodos_headers = []
         self.tot_peso = 0
         n_mes = 0
         hoje = datetime.today()
@@ -616,6 +605,9 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     periodo['descr'] = '{} - {}'.format(mes_fim, mes_ini)
 
             self.periodos.append(periodo)
+            self.periodos_headers.append(
+                '{} (P:{})'.format(periodo['descr'], periodo['peso'])
+            )
 
             # meses nas colunas 2 em diante
             self.style_pond_meses[i+2] = 'text-align: right;'
