@@ -37,13 +37,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             'modelo': modelo,
         })
 
-        refs = produto.queries.modelo_inform(self.cursor, modelo)
-        if len(refs) == 0:
-            self.context.update({
-                'msg_erro': 'Modelo não encontrado',
-            })
-            return
-
         # referencias automaticamente consideradas
         data_ref = queries.pa_de_modelo(self.cursor, modelo)
         for row in data_ref:
@@ -71,6 +64,12 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'fields': ['referencia', 'info'],
                 'data': ref_incl,
             }
+
+        # adicionada coluna de "Venda ponderada" em todas as tabelas
+        self.style_pond_meses = {
+            **self.meta_periodos['style_meses'],
+            self.meta_periodos['n_periodos']+2: 'text-align: right;',
+        }
 
         # vendas do modelo
         data = []
@@ -566,17 +565,18 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if 'grava' in self.request.POST:
             self.grava_meta()
 
+        refs = produto.queries.modelo_inform(self.cursor, modelo)
+        if len(refs) == 0:
+            self.context.update({
+                'msg_erro': 'Modelo não encontrado',
+            })
+            return
+
         self.meta_periodos = get_meta_periodos()
         if 'erro' in self.meta_periodos:
             self.context.update({
                 'msg_erro': self.meta_periodos['erro']
             })
             return
-
-        # adicionada coluna de "Venda ponderada" em todas as tabelas
-        self.style_pond_meses = {
-            **self.meta_periodos['style_meses'],
-            self.meta_periodos['n_periodos']+2: 'text-align: right;',
-        }
 
         self.mount_context_modelo(modelo)
