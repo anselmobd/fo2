@@ -8,14 +8,10 @@ import comercial.queries
 
 
 def get_meta_periodos():
-    meta_periodos = {}
     data_nfs = list(comercial.models.ModeloPassadoPeriodo.objects.filter(
         modelo_id=1).order_by('ordem').values())
     if len(data_nfs) == 0:
-        meta_periodos.update({
-            'erro': 'Nenhum período definido para análise de meta',
-        })
-        return meta_periodos
+        raise Exception('Nenhum período definido para análise de meta')
 
     periodos = []
     periodos_headers = []
@@ -60,13 +56,12 @@ def get_meta_periodos():
         # por padrão, meses ficam nas colunas 2 em diante
         style_meses[i+2] = 'text-align: right;'
 
-        meta_periodos.update({
-            'list': periodos,
-            'headers': periodos_headers,
-            'fields': periodos_fields,
-            'zero_data_row': periodos_zero_data_row,
-            'style_meses': style_meses,
-            'tot_peso': tot_peso,
-            'n_periodos': len(periodos),
-        })
-    return meta_periodos
+    return {
+        'list': periodos,
+        'headers': periodos_headers,
+        'fields': periodos_fields,
+        'zero_data_row': periodos_zero_data_row,
+        'style_meses': style_meses,
+        'tot_peso': tot_peso,
+        'n_periodos': len(periodos),
+    }
