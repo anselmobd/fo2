@@ -560,13 +560,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if len(metas) != 0:
             lotes.views.calculaMetaGiroMetas(self.cursor, metas)
 
-    def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-
-        modelo = self.form.cleaned_data['modelo']
-        if 'grava' in self.request.POST:
-            self.grava_meta()
-
+    def get_meta_periodos(self):
         self.data_nfs = list(models.ModeloPassadoPeriodo.objects.filter(
             modelo_id=1).order_by('ordem').values())
         if len(self.data_nfs) == 0:
@@ -618,7 +612,16 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             # meses nas colunas 2 em diante
             self.style_pond_meses[i+2] = 'text-align: right;'
 
-        # adicionada coluna de "Venda ponderada"
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+
+        modelo = self.form.cleaned_data['modelo']
+        if 'grava' in self.request.POST:
+            self.grava_meta()
+
+        self.get_meta_periodos()
+
+        # adicionada coluna de "Venda ponderada" em todas as tabelas
         self.style_pond_meses[len(self.periodos)+2] = 'text-align: right;'
 
         self.mount_context_modelo(modelo)
