@@ -543,29 +543,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if len(refs) == 0:
             raise Exception('Modelo não encontrado')
 
-    def do_steps(self, steps, msg_erro='msg_erro'):
-        for do_get in steps:
-            try:
-                if isinstance(do_get, tuple):
-                    do, attrib = do_get
-                    result = do()
-                    value = getattr(self, attrib, None)
-                    if value:
-                        if isinstance(value, dict) and isinstance(result, dict):
-                            value.update(result)
-                        else:
-                            raise Exception(f"Atributo '{attrib}' já existe e não é caso de 'dict.update'")
-                    else:
-                        setattr(self, attrib, result)
-                else:
-                    do_get()
-            except Exception as e:
-                self.context.update({
-                    msg_erro: e,
-                })
-                return False
-        return True
-
     def referencias(self):
         # referencias automaticamente consideradas
         data_ref = queries.pa_de_modelo(self.cursor, self.modelo)

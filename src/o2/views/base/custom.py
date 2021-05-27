@@ -75,3 +75,43 @@ class CustomView(View):
         Metodo de montagem de contexto
         """
         pass
+
+    def do_steps(self, steps, msg_erro='msg_erro'):
+        """Metodo de que recebe lista de metodos e os executa.
+        Retorna booleano indicando sucesso da execução da lista inteira.
+        
+        Se os métodos levantarem uma exceção o texto desta vai para a chave
+        msg_erro do self.context
+
+        Se, na lista, no lugar de um método, constar um tupla, entende-se que esta 
+        contenha (método, atributo).
+
+        Na ausência de exceção, o retorno do método é atribuido ao atributo no self.
+
+        Caso tanto o atributo quanto o retorno forem dicionários, é feito um
+        atributo.update(retorno). Isso é útil, por exemplo, quando se quer que o 
+        retorno seja adicionado ao context.
+
+        Na primeira ocorrência de excessão a execução da lista é interompida.
+        """
+        for do_get in steps:
+            try:
+                if isinstance(do_get, tuple):
+                    do, attrib = do_get
+                    result = do()
+                    value = getattr(self, attrib, None)
+                    if value:
+                        if isinstance(value, dict) and isinstance(result, dict):
+                            value.update(result)
+                        else:
+                            raise Exception(f"Atributo '{attrib}' já existe e não é caso de 'dict.update'")
+                    else:
+                        setattr(self, attrib, result)
+                else:
+                    do_get()
+            except Exception as e:
+                self.context.update({
+                    msg_erro: e,
+                })
+                return False
+        return True
