@@ -33,25 +33,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         self.get_args = ['modelo']
 
     def mount_context_modelo(self, modelo):
-        self.context.update({
-            'modelo': modelo,
-        })
-
-        ref_incl = meta_ref_incluir(self.cursor, modelo)
-        if ref_incl:
-            self.context['adicionadas'] = {
-                'headers': ['Referência', 'Informações'],
-                'fields': ['referencia', 'info'],
-                'data': ref_incl,
-            }
-
-        # adicionada coluna de "Venda ponderada" em todas as tabelas
-        self.style_pond_meses = {
-            **self.meta_periodos['style_meses'],
-            self.meta_periodos['n_periodos']+2: 'text-align: right;',
-        }
-
-        # vendas do modelo
         data = []
         zero_data_row = self.meta_periodos['zero_data_row'].copy()
         zero_data_row['qtd'] = 0
@@ -565,11 +546,35 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             }
         }
 
+    def ref_incluir(self):
+        ref_incl = meta_ref_incluir(self.cursor, self.modelo)
+        if ref_incl:
+            return {
+                'adicionadas': {
+                    'headers': ['Referência', 'Informações'],
+                    'fields': ['referencia', 'info'],
+                    'data': ref_incl,
+                },
+            }
+
+    def inicializacoes_gerais(self):
+        self.context.update({
+            'modelo': self.modelo,
+        })
+
+        # adicionada coluna de "Venda ponderada" em todas as tabelas
+        self.style_pond_meses = {
+            **self.meta_periodos['style_meses'],
+            self.meta_periodos['n_periodos']+2: 'text-align: right;',
+        }
+
     def mostra_meta(self):
         steps = [
             self.testa_modelo,
             (get_meta_periodos, 'meta_periodos'),
             (self.referencias, 'context'),
+            (self.ref_incluir, 'context'),
+            self.inicializacoes_gerais,
         ]
 
         if not self.do_steps(steps):
