@@ -563,16 +563,10 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if len(refs) == 0:
             raise Exception('Modelo não encontrado')
 
-    def get_periodos(self):
-        meta_periodos = get_meta_periodos()
-        if 'erro' in meta_periodos:
-            raise Exception(meta_periodos['erro'])
-        return meta_periodos
-
     def do_context(self):
         do_get_list = [
             (self.testa_modelo, ''),
-            (self.get_periodos, 'meta_periodos'),
+            (get_meta_periodos, 'meta_periodos'),
         ]
         for do, attrib in do_get_list:
             try:
