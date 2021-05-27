@@ -592,7 +592,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         n_mes = 0
         hoje = datetime.today()
         mes = dec_month(hoje, 1)
-        self.style = {}
+        self.style_pond_meses = {}
         for i, row in enumerate(self.data_nfs):
             periodo = {
                 'range': '{}:{}'.format(
@@ -615,13 +615,12 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 else:
                     periodo['descr'] = '{} - {}'.format(mes_fim, mes_ini)
 
-            self.style[i+2] = 'text-align: right;'
-
             self.periodos.append(periodo)
 
-        self.style_pond_meses = {
-            ** self.style,
-            len(self.periodos)+2: 'text-align: right;',
-        }
+            # meses nas colunas 2 em diante
+            self.style_pond_meses[i+2] = 'text-align: right;'
+
+        # adicionada coluna de "Venda ponderada"
+        self.style_pond_meses[len(self.periodos)+2] = 'text-align: right;'
 
         self.mount_context_modelo(modelo)
