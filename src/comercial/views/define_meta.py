@@ -561,32 +561,30 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
     def testa_modelo(self):
         refs = produto.queries.modelo_inform(self.cursor, self.modelo)
         if len(refs) == 0:
-            return False, 'Modelo não encontrado'
-        return True, None
+            raise Exception('Modelo não encontrado')
 
     def get_periodos(self):
         meta_periodos = get_meta_periodos()
         if 'erro' in meta_periodos:
-            return False, meta_periodos['erro']
-        return True, meta_periodos
+            raise Exception(meta_periodos['erro'])
+        return meta_periodos
 
     def do_context(self):
         do_get_list = [
             (self.testa_modelo, ''),
             (self.get_periodos, 'meta_periodos'),
         ]
-
         for do, attrib in do_get_list:
-            ok, value = do()
-            if ok:
-                setattr(self, attrib, value)
-            else:
+            try:
+                result = do()
+                if attrib:
+                    setattr(self, attrib, result)
+            except Exception as e:
                 self.context.update({
-                    'msg_erro': value,
+                    'msg_erro': e,
                 })
-                break
-
-        return ok
+                return False
+        return True
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
