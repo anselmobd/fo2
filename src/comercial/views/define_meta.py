@@ -569,7 +569,14 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 if isinstance(do_get, tuple):
                     do, attrib = do_get
                     result = do()
-                    setattr(self, attrib, result)
+                    value = getattr(self, attrib, None)
+                    if value:
+                        if isinstance(value, dict) and isinstance(result, dict):
+                            value.update(result)
+                        else:
+                            raise Exception(f"Atributo '{attrib}' já existe e não é caso de 'dict.update'")
+                    else:
+                        setattr(self, attrib, result)
                 else:
                     do_get()
             except Exception as e:
