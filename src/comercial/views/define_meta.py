@@ -33,9 +33,12 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         self.get_args = ['modelo']
 
     def mount_context_modelo(self, modelo):
-        data = []
-        zero_data_row = self.meta_periodos['zero_data_row'].copy()
-        zero_data_row['qtd'] = 0
+        # Ponderação do modelo
+        data_row = {
+            'modelo': modelo,
+            **self.meta_periodos['zero_data_row'],
+            'qtd': 0,
+        }
         for periodo in self.meta_periodos['list']:
             av = queries.AnaliseVendas(
                 self.cursor,
@@ -46,39 +49,21 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 periodo_cols={'p': periodo['range']},
                 qtd_por_mes=False,
                 com_venda=False)
-            data_ = av.data
+            qtd = av.data[0]['fp']
 
-            data_periodo = [{
-                'modelo': data_[0]['modelo'],
-                'qtd': data_[0]['fp'],
-            }]
-
-            if len(data_periodo) == 0:
-                data_periodo = [{'modelo': modelo, 'qtd': 0}]
-            for row in data_periodo:
-                data_row = next(
-                    (dr for dr in data if dr['modelo'] == row['modelo']),
-                    False)
-                if not data_row:
-                    data_row = {
-                        'modelo': row['modelo'],
-                        **zero_data_row
-                    }
-                    data.append(data_row)
-                data_row[periodo['range']] = round(
-                    row['qtd'] / periodo['meses'])
-                data_row['qtd'] += round(
-                    row['qtd'] * periodo['peso'] / self.meta_periodos['tot_peso'])
+            data_row[periodo['range']] = round(qtd / periodo['meses'])
+            data_row['qtd'] += round(
+                qtd * periodo['peso'] / self.meta_periodos['tot_peso'])
 
         self.context['modelo_ponderado'] = {
             'headers': ['Modelo', 'Venda ponderada',
                         *self.meta_periodos['headers']],
             'fields': ['modelo', 'qtd',
                        *self.meta_periodos['fields']],
-            'data': data,
+            'data': [data_row],
             'style': self.style_pond_meses,
         }
-        venda_ponderada = data[0]['qtd']
+        venda_ponderada = data_row['qtd']
 
         # vendas por tamanho
         data = []
