@@ -159,7 +159,7 @@ class AnaliseVendas():
 
     def __init__(
         self, cursor, ref=None, modelo=None, infor=None, ordem=None,
-        periodo_cols=None, qtd_por_mes=False, com_venda=False):
+        periodo_cols=None, qtd_por_mes=False, com_venda=False, field_ini=None):
 
         self.hoje = date.today()
         self.ini_mes = self.hoje.replace(day=1)
@@ -169,6 +169,7 @@ class AnaliseVendas():
         self.cursor = cursor
         self.qtd_por_mes = qtd_por_mes
         self.ordem = ordem
+        self.field_ini = field_ini
 
         self.ref = ref
         self.modelo = modelo
@@ -300,7 +301,7 @@ class AnaliseVendas():
                           ELSE 0
                           END
                         )
-                      {div_meses} ) {str2col_name(coluna)}
+                      {div_meses} ) {str2col_name(coluna, self.field_ini)}
                 """
             )
 
@@ -405,7 +406,9 @@ class AnaliseVendas():
         return self.result
 
 
-def str2col_name(texto, ini='f'):
+def str2col_name(texto, ini=None):
+    if ini is None:
+        ini = 'f'
     name = ini
     append = False
     for c in texto:
