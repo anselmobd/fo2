@@ -418,7 +418,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             ref=None,
             modelo=self.modelo,
             infor='ref',
-            ordem='qtd',
+            ordem='infor',
             periodo_cols=self.meta_periodos['cols'],
             qtd_por_mes=True,
             com_venda=False,
