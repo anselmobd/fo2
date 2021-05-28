@@ -301,39 +301,8 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             com_venda=False,
             field_ini='',
             )
-        return av
-
-    def pondera_modelo(self):
-        av = self.get_av('modelo')
-        data_row = {
-            'modelo': self.modelo,
-            **av.data[0],
-            'ponderada': 0,
-        }
-        for periodo in self.meta_periodos['list']:
-            data_row['ponderada'] += round(
-                data_row[periodo['field']] 
-                * periodo['peso']
-                * periodo['meses']
-                / self.meta_periodos['tot_peso']
-            )
-        return {
-            'modelo_ponderado': {
-                'headers': ['Modelo', 'Venda ponderada',
-                            *self.meta_periodos['headers']],
-                'fields': ['modelo', 'ponderada',
-                        *self.meta_periodos['col_fields']],
-                'data': [data_row],
-                'style': self.style_pond_meses,
-            },
-            'venda_ponderada': data_row['ponderada'],
-        }
-
-    def pondera_tamanho(self):
-        av = self.get_av('tam')
         for row in av.data:
             row['ponderada'] = 0
-            row['grade'] = 0
             for periodo in self.meta_periodos['list']:
                 row['ponderada'] += round(
                     row[periodo['field']] 
@@ -341,6 +310,26 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     * periodo['meses']
                     / self.meta_periodos['tot_peso']
                 )
+        return av
+
+    def pondera_modelo(self):
+        av = self.get_av('modelo')
+        return {
+            'modelo_ponderado': {
+                'headers': ['Modelo', 'Venda ponderada',
+                            *self.meta_periodos['headers']],
+                'fields': ['modelo', 'ponderada',
+                        *self.meta_periodos['col_fields']],
+                'data': av.data,
+                'style': self.style_pond_meses,
+            },
+            'venda_ponderada': av.data[0]['ponderada'],
+        }
+
+    def pondera_tamanho(self):
+        av = self.get_av('tam')
+        for row in av.data:
+            row['grade'] = 0
         if self.context['venda_ponderada'] == 0:
             grade_erro = 0
         else:
@@ -370,14 +359,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
     def pondera_cor(self):
         av = self.get_av('cor')
         for row in av.data:
-            row['ponderada'] = 0
-            for periodo in self.meta_periodos['list']:
-                row['ponderada'] += round(
-                    row[periodo['field']] 
-                    * periodo['peso']
-                    * periodo['meses']
-                    / self.meta_periodos['tot_peso']
-                )
             if self.context['venda_ponderada'] == 0:
                 row['distr'] = 0
             else:
@@ -398,15 +379,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def por_ref(self):
         av = self.get_av('ref')
-        for row in av.data:
-            row['ponderada'] = 0
-            for periodo in self.meta_periodos['list']:
-                row['ponderada'] += round(
-                    row[periodo['field']] 
-                    * periodo['peso']
-                    * periodo['meses']
-                    / self.meta_periodos['tot_peso']
-                )
         return {
             'por_ref': {
                 'headers': ['Referência', 'Venda ponderada',
