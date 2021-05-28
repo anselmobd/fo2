@@ -55,9 +55,9 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         self.title_name = 'Define meta de estoque'
         self.get_args = ['modelo']
 
-    def mount_context_modelo(self, modelo):
+    def mount_context_modelo(self):
         # última meta
-        meta = models.MetaEstoque.objects.filter(modelo=modelo)
+        meta = models.MetaEstoque.objects.filter(modelo=self.modelo)
         meta = meta.annotate(antiga=Exists(
             models.MetaEstoque.objects.filter(
                 modelo=OuterRef('modelo'),
@@ -100,7 +100,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
         meta_form = forms.Form()
         meta_form.fields['modelo'] = forms.CharField(
-            initial=modelo, widget=forms.HiddenInput())
+            initial=self.modelo, widget=forms.HiddenInput())
         meta_form.fields['meta_estoque'] = forms.IntegerField(
             initial=0, widget=forms.HiddenInput())
 
@@ -406,7 +406,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if not self.do_steps(steps):
             return
 
-        self.mount_context_modelo(self.modelo)
+        self.mount_context_modelo()
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
