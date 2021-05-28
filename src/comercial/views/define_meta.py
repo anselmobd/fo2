@@ -56,64 +56,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         self.get_args = ['modelo']
 
     def mount_context_modelo(self, modelo):
-
-        # vendas por referência
-        data = []
-        zero_data_row = self.meta_periodos['zero_data_row'].copy()
-        zero_data_row['qtd'] = 0
-        for periodo in self.meta_periodos['list']:
-            if self.context['venda_ponderada'] == 0:
-                data_tam = queries.get_modelo_dims(
-                    self.cursor,
-                    modelo=modelo,
-                    get='ref',
-                )
-                data_periodo = []
-                for row_tam in data_tam:
-                    data_periodo.append(
-                        {'ref': row_tam['REF'], 'qtd': 0}
-                    )
-            else:
-                av = queries.AnaliseVendas(
-                    self.cursor,
-                    ref=None,
-                    modelo=modelo,
-                    infor='ref',
-                    ordem='qtd',
-                    periodo_cols={'p': periodo['range']},
-                    qtd_por_mes=False,
-                    com_venda=False)
-                data_ = av.data
-
-                data_periodo = []
-                for row in data_:
-                    data_periodo.append({
-                        'ref': row['ref'],
-                        'qtd': row['fp'],
-                    })
-            for row in data_periodo:
-                data_row = next(
-                    (dr for dr in data if dr['ref'] == row['ref']),
-                    False)
-                if not data_row:
-                    data_row = {
-                        'ref': row['ref'],
-                        **zero_data_row
-                    }
-                    data.append(data_row)
-                data_row[periodo['range']] = round(
-                    row['qtd'] / periodo['meses'])
-                data_row['qtd'] += round(
-                    row['qtd'] * periodo['peso'] / self.meta_periodos['tot_peso'])
-        self.context['por_ref'] = {
-            'headers': ['Referência', 'Venda ponderada',
-                        *self.meta_periodos['headers']],
-            'fields': ['ref', 'qtd',
-                       *self.meta_periodos['fields']],
-            'data': data,
-            'style': self.style_pond_meses,
-        }
-
         # última meta
         meta = models.MetaEstoque.objects.filter(modelo=modelo)
         meta = meta.annotate(antiga=Exists(
@@ -470,6 +412,38 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             },
         }
 
+    def por_ref(self):
+        av = queries.AnaliseVendas(
+            self.cursor,
+            ref=None,
+            modelo=self.modelo,
+            infor='ref',
+            ordem='qtd',
+            periodo_cols=self.meta_periodos['cols'],
+            qtd_por_mes=True,
+            com_venda=False,
+            field_ini='',
+            )
+        for row in av.data:
+            row['ponderada'] = 0
+            for periodo in self.meta_periodos['list']:
+                row['ponderada'] += round(
+                    row[periodo['field']] 
+                    * periodo['peso']
+                    * periodo['meses']
+                    / self.meta_periodos['tot_peso']
+                )
+        return {
+            'por_ref': {
+                'headers': ['Referência', 'Venda ponderada',
+                            *self.meta_periodos['headers']],
+                'fields': ['ref', 'ponderada',
+                        *self.meta_periodos['col_fields']],
+                'data': av.data,
+                'style': self.style_pond_meses,
+            },
+        }
+
     def mostra_meta(self):
         steps = [
             self.testa_modelo,
@@ -480,6 +454,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             (self.pondera_modelo, 'context'),
             (self.pondera_tamanho, 'context'),
             (self.pondera_cor, 'context'),
+            (self.por_ref, 'context'),
         ]
 
         if not self.do_steps(steps):
