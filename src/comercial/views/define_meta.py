@@ -57,92 +57,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def mount_context_modelo(self, modelo):
 
-        # vendas por cor
-        data = []
-        zero_data_row = self.meta_periodos['zero_data_row'].copy()
-        zero_data_row['qtd'] = 0
-        zero_data_row['distr'] = 0
-        total_qtd = 0
-        for periodo in self.meta_periodos['list']:
-            if self.context['venda_ponderada'] == 0:
-                data_tam = queries.get_modelo_dims(
-                    self.cursor,
-                    modelo=modelo,
-                    get='cor',
-                )
-                data_periodo = []
-                for row_tam in data_tam:
-                    data_periodo.append(
-                        {'cor': row_tam['COR'], 'qtd': 0}
-                    )
-            else:
-                av = queries.AnaliseVendas(
-                    self.cursor,
-                    ref=None,
-                    modelo=modelo,
-                    infor='cor',
-                    ordem='infor',
-                    periodo_cols={'p': periodo['range']},
-                    qtd_por_mes=False,
-                    com_venda=False)
-                data_ = av.data
-
-                data_periodo = []
-                for row in data_:
-                    data_periodo.append({
-                        'cor': row['cor'],
-                        'qtd': row['fp'],
-                    })
-            for row in data_periodo:
-                data_row = next(
-                    (dr for dr in data if dr['cor'] == row['cor']),
-                    False)
-                if not data_row:
-                    data_row = {
-                        'cor': row['cor'],
-                        **zero_data_row
-                    }
-                    data.append(data_row)
-                data_row[periodo['range']] = round(
-                    row['qtd'] / periodo['meses'])
-                qtd = round(row['qtd'] * periodo['peso'] / self.meta_periodos['tot_peso'])
-                data_row['qtd'] += qtd
-                total_qtd += qtd
-
-        if len(data) == 1 or total_qtd == 0:
-            if total_qtd == 0:
-                for row in data:
-                    row['distr'] = 1
-            self.context['cor_ponderada'] = {
-                'headers': ['Cor', 'Venda ponderada',
-                            *self.meta_periodos['headers']],
-                'fields': ['cor', 'qtd',
-                           *self.meta_periodos['fields']],
-                'data': data,
-                'style': self.style_pond_meses,
-            }
-        else:
-            tot_distr = 0
-            max_distr_row = {'distr': 0}
-            for row in data:
-                row['distr'] = round(row['qtd'] / total_qtd * 100)
-                if max_distr_row['distr'] < row['distr']:
-                    max_distr_row = row
-                tot_distr += row['distr']
-            if tot_distr < 100:
-                max_distr_row['distr'] += (100 - tot_distr)
-            self.context['cor_ponderada'] = {
-                'headers': ['Cor', 'Distribuição', 'Venda ponderada',
-                            *self.meta_periodos['headers']],
-                'fields': ['cor', 'distr', 'qtd',
-                           *self.meta_periodos['fields']],
-                'data': data,
-                'style': {
-                    ** self.style_pond_meses,
-                    self.meta_periodos['n_periodos']+3: 'text-align: right;',
-                }
-            }
-
         # vendas por referência
         data = []
         zero_data_row = self.meta_periodos['zero_data_row'].copy()
@@ -434,7 +348,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         }
 
     def pondera_modelo(self):
-        # Ponderação do modelo
         av = queries.AnaliseVendas(
             self.cursor,
             ref=None,
@@ -471,7 +384,6 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         }
 
     def pondera_tamanho(self):
-        # Ponderação por tamanho
         av = queries.AnaliseVendas(
             self.cursor,
             ref=None,
@@ -519,6 +431,45 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             },
         }
 
+    def pondera_cor(self):
+        av = queries.AnaliseVendas(
+            self.cursor,
+            ref=None,
+            modelo=self.modelo,
+            infor='cor',
+            ordem='infor',
+            periodo_cols=self.meta_periodos['cols'],
+            qtd_por_mes=True,
+            com_venda=False,
+            field_ini='',
+            )
+        for row in av.data:
+            row['ponderada'] = 0
+            for periodo in self.meta_periodos['list']:
+                row['ponderada'] += round(
+                    row[periodo['field']] 
+                    * periodo['peso']
+                    * periodo['meses']
+                    / self.meta_periodos['tot_peso']
+                )
+            if self.context['venda_ponderada'] == 0:
+                row['distr'] = 0
+            else:
+                row['distr'] = round(row['ponderada'] / self.context['venda_ponderada'] * 100)
+        return {
+            'cor_ponderada': {
+                'headers': ['Cor', 'Distribuição', 'Venda ponderada',
+                            *self.meta_periodos['headers']],
+                'fields': ['cor', 'distr', 'ponderada',
+                        *self.meta_periodos['col_fields']],
+                'data': av.data,
+                'style': {
+                    ** self.style_pond_meses,
+                    self.meta_periodos['n_periodos']+3: 'text-align: right;',
+                }
+            },
+        }
+
     def mostra_meta(self):
         steps = [
             self.testa_modelo,
@@ -528,6 +479,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.inicializacoes_gerais,
             (self.pondera_modelo, 'context'),
             (self.pondera_tamanho, 'context'),
+            (self.pondera_cor, 'context'),
         ]
 
         if not self.do_steps(steps):
