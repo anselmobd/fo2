@@ -289,18 +289,22 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.meta_periodos['n_periodos']+2: 'text-align: right;',
         }
 
-    def pondera_modelo(self):
+    def get_av(self, infor):
         av = queries.AnaliseVendas(
             self.cursor,
             ref=None,
             modelo=self.modelo,
-            infor='modelo',
-            ordem='qtd',
+            infor=infor,
+            ordem='infor',
             periodo_cols=self.meta_periodos['cols'],
             qtd_por_mes=True,
             com_venda=False,
             field_ini='',
             )
+        return av
+
+    def pondera_modelo(self):
+        av = self.get_av('modelo')
         data_row = {
             'modelo': self.modelo,
             **av.data[0],
@@ -326,17 +330,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         }
 
     def pondera_tamanho(self):
-        av = queries.AnaliseVendas(
-            self.cursor,
-            ref=None,
-            modelo=self.modelo,
-            infor='tam',
-            ordem='infor',
-            periodo_cols=self.meta_periodos['cols'],
-            qtd_por_mes=True,
-            com_venda=False,
-            field_ini='',
-            )
+        av = self.get_av('tam')
         for row in av.data:
             row['ponderada'] = 0
             row['grade'] = 0
@@ -374,17 +368,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         }
 
     def pondera_cor(self):
-        av = queries.AnaliseVendas(
-            self.cursor,
-            ref=None,
-            modelo=self.modelo,
-            infor='cor',
-            ordem='infor',
-            periodo_cols=self.meta_periodos['cols'],
-            qtd_por_mes=True,
-            com_venda=False,
-            field_ini='',
-            )
+        av = self.get_av('cor')
         for row in av.data:
             row['ponderada'] = 0
             for periodo in self.meta_periodos['list']:
@@ -413,17 +397,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         }
 
     def por_ref(self):
-        av = queries.AnaliseVendas(
-            self.cursor,
-            ref=None,
-            modelo=self.modelo,
-            infor='ref',
-            ordem='infor',
-            periodo_cols=self.meta_periodos['cols'],
-            qtd_por_mes=True,
-            com_venda=False,
-            field_ini='',
-            )
+        av = self.get_av('ref')
         for row in av.data:
             row['ponderada'] = 0
             for periodo in self.meta_periodos['list']:
