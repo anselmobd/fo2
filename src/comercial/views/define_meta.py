@@ -1,5 +1,4 @@
 from datetime import date
-from itertools import product
 from pprint import pprint
 
 from django import forms
@@ -17,33 +16,11 @@ from utils.functions import safe_cast
 import produto.queries
 import lotes.views
 
+import comercial.functions
 import comercial.models as models
 import comercial.queries as queries
 from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.models.functions.meta_periodos import get_meta_periodos
-
-def grade_minima(qtds, max_erro):
-    total = sum(qtds)
-    max_value = 1
-    while max_value <= 9:
-        grades = product(
-            range(max_value+1), repeat=len(qtds))
-        best = {'grade': [], 'erro': 1}
-        for grade in grades:
-            if max(grade) < max_value:
-                continue
-            tot_grade = sum(grade)
-            diff = 0
-            for i in range(len(qtds)):
-                qtd_grade = total / tot_grade * grade[i]
-                diff += abs(qtd_grade - qtds[i])
-            if best['erro'] > (diff / total):
-                best['erro'] = diff / total
-                best['grade'] = grade
-        if best['erro'] <= max_erro:
-            break
-        max_value += 1
-    return best['grade'], best['erro']
 
 
 class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
@@ -334,7 +311,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             grade_erro = 0
         else:
             qtds = [row['ponderada'] for row in av.data]
-            grade_tam, grade_erro = grade_minima(qtds, 0.05)
+            grade_tam, grade_erro = comercial.functions.grade_minima(qtds, 0.05)
             for i in range(len(av.data)):
                 if grade_tam is None:
                     av.data[i]['grade'] = 0
