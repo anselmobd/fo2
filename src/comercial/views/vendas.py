@@ -98,6 +98,16 @@ class Vendas(O2BaseGetPostView):
             com_venda=(self.lista=='venda'))
         data = av.data
 
+        for row in data:
+            if 'dt_max' in row:
+                if row['dt_max'] is None:
+                    row['dt_max'] = '-'
+            if 'dt_min' in row:
+                if row['dt_min'] is None:
+                    row['dt_min'] = '-'
+            if 'qtd_mes' not in row or row['qtd_mes'] is None:
+                row['qtd_mes'] = 0
+
         infor_fields = {
             'nf': {
                 'headers': ['Nota fiscal', 'Data'],
