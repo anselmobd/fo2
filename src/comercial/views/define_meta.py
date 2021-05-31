@@ -255,11 +255,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             }
         return {}
 
-    def inicializacoes_gerais(self):
-        self.context.update({
-            'modelo': self.modelo,
-        })
-
+    def inicializacoes_para_grids(self):
         # adicionada coluna de "Venda ponderada" em todas as tabelas
         self.style_pond_meses = {
             **self.meta_periodos['style_meses'],
@@ -373,7 +369,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             (get_meta_periodos, 'meta_periodos'),
             (self.referencias, 'context'),
             (self.ref_incluir, 'context'),
-            self.inicializacoes_gerais,
+            self.inicializacoes_para_grids,
             (self.pondera_modelo, 'context'),
             (self.pondera_tamanho, 'context'),
             (self.pondera_cor, 'context'),
@@ -391,4 +387,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if 'grava' in self.request.POST:
             self.grava_meta()
 
+        self.context.update({
+            'modelo': self.modelo,
+        })
         self.mostra_meta()
