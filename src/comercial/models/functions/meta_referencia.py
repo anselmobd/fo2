@@ -24,10 +24,8 @@ def descr_combinacoes_de_alternativas(cursor, ref):
 
         cores_list = []
 
-        conta_componentes = 0
         for cor in cores_dict_alt:
             conta = cores_dict_alt[cor]
-            conta_componentes += conta
             cor1_list = [
                 f"{conta[item]} {item}"
                 for item in conta
@@ -37,6 +35,12 @@ def descr_combinacoes_de_alternativas(cursor, ref):
 
         comb_info['cores_list'].append(cores_list)
     comb_info['cores_dict'] = cores_dict_alt
+
+    conta_componentes = 0
+    for cor in cores_dict_alt:
+        for comp in cores_dict_alt[cor]:
+            conta_componentes += cores_dict_alt[cor][comp]
+        break
     comb_info['conta_componentes'] = conta_componentes
     return comb_info
 
