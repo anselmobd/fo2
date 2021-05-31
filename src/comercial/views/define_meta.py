@@ -278,20 +278,27 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             com_venda=False,
             field_ini='',
             )
+
         for row in av.data:
-            row['ponderada'] = 0
             for periodo in self.meta_periodos['list']:
                 row[periodo['field']] = row[periodo['field']] * conta_componentes
+
+        return av.data
+
+    def calcula_venda_ponderada(self, av_data):
+        for row in av_data:
+            row['ponderada'] = 0
+            for periodo in self.meta_periodos['list']:
                 row['ponderada'] += round(
                     row[periodo['field']] 
                     * periodo['peso']
                     * periodo['meses']
                     / self.meta_periodos['tot_peso']
                 )
-        return av.data
 
     def pondera_modelo(self):
         av_data = self.get_av_data('modelo')
+        self.calcula_venda_ponderada(av_data)
         
         return {
             'modelo_ponderado': {
@@ -307,6 +314,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def pondera_tamanho(self):
         av_data = self.get_av_data('tam')
+        self.calcula_venda_ponderada(av_data)
         for row in av_data:
             row['grade'] = 0
         if self.context['venda_ponderada'] == 0:
@@ -337,6 +345,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def pondera_cor(self):
         av_data = self.get_av_data('cor')
+        self.calcula_venda_ponderada(av_data)
         for row in av_data:
             if self.context['venda_ponderada'] == 0:
                 row['distr'] = 0
@@ -367,6 +376,8 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     ref_adicionada['conta_componentes'])
                 for row in av_ref_data:
                     av_data.append(row)
+
+        self.calcula_venda_ponderada(av_data)
 
         return {
             'por_ref': {
