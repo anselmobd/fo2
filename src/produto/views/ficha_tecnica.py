@@ -68,8 +68,8 @@ class FichaTecnica(O2BaseGetPostView):
         })
 
         for row in fichas:
-            row['tipo__tipo|LINK'] = f'/media/{row["ficha"]}'
-            row['tipo__tipo|TARGET'] = '_blank'
+            row['referencia|LINK'] = f'/media/{row["ficha"]}'
+            row['referencia|TARGET'] = '_blank'
             row['linha'] = ref_linha[row['referencia']]
 
         self.context.update({
