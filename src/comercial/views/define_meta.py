@@ -72,7 +72,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 self.request, 'comercial.can_define_goal'),
         })
 
-        venda_mensal = self.context['modelo_ponderado']['data'][0]['qtd']
+        venda_mensal = self.context['modelo_ponderado']['data'][0]['ponderada']
         multiplicador = 2
 
         meta_form = forms.Form()
