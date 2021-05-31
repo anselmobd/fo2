@@ -161,11 +161,12 @@ class Vendas(O2BaseGetPostView):
                 row['nf|LINK'] = reverse(
                     'contabil:nota_fiscal__get', args=[row['nf']])
 
-        totalize_data(data, {
-            'sum': sum_fields,
-            'descr': {fields[0]: 'Total:'},
-            'row_style': 'font-weight: bold;',
-        })
+        if data:
+            totalize_data(data, {
+                'sum': sum_fields,
+                'descr': {fields[0]: 'Total:'},
+                'row_style': 'font-weight: bold;',
+            })
 
         self.context.update({
             'headers': headers,
