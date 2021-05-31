@@ -359,13 +359,14 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
     def por_ref(self):
         av_data = self.get_av_data('ref')
 
-        refs_adicionadas = self.context['adicionadas']['data']
-        for ref_adicionada in refs_adicionadas:
-            av_ref_data = self.get_av_data(
-                'ref', ref_adicionada['referencia'],
-                ref_adicionada['conta_componentes'])
-            for row in av_ref_data:
-                av_data.append(row)
+        if 'adicionadas' in self.context:
+            refs_adicionadas = self.context['adicionadas']['data']
+            for ref_adicionada in refs_adicionadas:
+                av_ref_data = self.get_av_data(
+                    'ref', ref_adicionada['referencia'],
+                    ref_adicionada['conta_componentes'])
+                for row in av_ref_data:
+                    av_data.append(row)
 
         return {
             'por_ref': {
