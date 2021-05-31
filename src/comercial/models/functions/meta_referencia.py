@@ -11,6 +11,29 @@ import comercial.models
 import comercial.queries
 
 
+def descr_combinacoes_de_alternativas(cursor, ref):
+    ref_alternativas = produto.queries.ref_estruturas(cursor, ref)
+    alternativas = list(set([alt['ALTERNATIVA'] for alt in ref_alternativas]))
+
+    alt_cores_list = []
+    for alternativa in alternativas:
+        cores_dict_alt = produto.queries.dict_combinacoes_cores(
+            cursor, ref, alternativa)
+
+        cores_list = []
+        for cor in cores_dict_alt:
+            conta = cores_dict_alt[cor]
+            cor1_list = [
+                f"{conta[item]} {item}"
+                for item in conta
+            ]
+            cor1 = ' + '.join(cor1_list)
+            cores_list.append(f"{cor} = {cor1}")
+
+        alt_cores_list.append(cores_list)
+    return alt_cores_list
+
+
 def meta_ref_incluir(cursor, modelo):
     """Referências a incluir no cálculo de definição de meta
     """
@@ -27,27 +50,8 @@ def meta_ref_incluir(cursor, modelo):
                 args=[ref['referencia']],
             )
 
-            alternativas = produto.queries.ref_estruturas(
-                cursor, ref['referencia'])
-            alternativas = list(set([alt['ALTERNATIVA'] for alt in alternativas]))
-
-            alt_cores_list = []
-            for alternativa in alternativas:
-                alt_cores = produto.queries.dict_combinacoes_cores(
-                    cursor, ref['referencia'], alternativa)
-
-                cores_list = []
-                for cor in alt_cores:
-                    conta = alt_cores[cor]
-                    cor1_list = [
-                        f"{conta[item]} {item}"
-                        for item in conta
-                    ]
-                    cor1 = ' + '.join(cor1_list)
-                    cores_list.append(f"{cor} = {cor1}")
-
-
-                alt_cores_list.append(cores_list)
+            alt_cores_list = descr_combinacoes_de_alternativas(
+                    cursor, ref['referencia'])
 
             len_alt_cores = 0
             len_alt_cores_err = False
@@ -71,6 +75,7 @@ def meta_ref_incluir(cursor, modelo):
                     else:
                         cores_err.append(alt_cores_set)
 
+                ref['ok'] = len(cores_err) == 0
                 ref['info'] = ''
                 if len(cores_err) != 0:
                     ref['info'] = ' ERRO: '
