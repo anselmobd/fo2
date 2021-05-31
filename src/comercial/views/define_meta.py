@@ -379,14 +379,19 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             },
         }
 
-    def pondera_cor(self):
-        av_data = self.get_av_data('cor')
-        self.calcula_venda_ponderada(av_data)
+    def calcula_distrubuicao_por_cor(self, av_data):
         for row in av_data:
             if self.context['venda_ponderada'] == 0:
                 row['distr'] = 0
             else:
                 row['distr'] = round(row['ponderada'] / self.context['venda_ponderada'] * 100)
+
+    def pondera_cor(self):
+        av_data = self.get_av_data('cor')
+
+        self.calcula_venda_ponderada(av_data)
+        self.calcula_distrubuicao_por_cor(av_data)
+
         return {
             'cor_ponderada': {
                 'headers': ['Cor', 'Distribuição', 'Venda ponderada',
