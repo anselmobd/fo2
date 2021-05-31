@@ -33,22 +33,8 @@ def meta_ref_incluir(cursor, modelo):
 
             alt_cores_list = []
             for alternativa in alternativas:
-                estrutura = produto.queries.combinacoes_cores(
+                alt_cores = produto.queries.dict_combinacoes_cores(
                     cursor, ref['referencia'], alternativa)
-
-                alt_cores = {}
-                for row in estrutura:
-                    cor_item = row['COR_ITEM'].lstrip("0")
-                    cor_comp = row['COR_COMP'].lstrip("0")
-                    try:
-                        alt_cor = alt_cores[cor_item]
-                    except KeyError:
-                        alt_cores[cor_item] = {}
-                        alt_cor = alt_cores[cor_item]
-                    try:
-                        alt_cor[cor_comp] += row['CONSUMO']
-                    except KeyError:
-                        alt_cor[cor_comp] = row['CONSUMO']
 
                 cores_list = []
                 for cor in alt_cores:
