@@ -262,7 +262,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.meta_periodos['n_periodos']+2: 'text-align: right;',
         }
 
-    def get_av(self, infor, ref=None, conta_componentes=1):
+    def get_av_data(self, infor, ref=None, conta_componentes=1):
         if ref is None:
             modelo=self.modelo
         else:
@@ -288,36 +288,37 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     * periodo['meses']
                     / self.meta_periodos['tot_peso']
                 )
-        return av
+        return av.data
 
     def pondera_modelo(self):
-        av = self.get_av('modelo')
+        av_data = self.get_av_data('modelo')
+        
         return {
             'modelo_ponderado': {
                 'headers': ['Modelo', 'Venda ponderada',
                             *self.meta_periodos['headers']],
                 'fields': ['modelo', 'ponderada',
                         *self.meta_periodos['col_fields']],
-                'data': av.data,
+                'data': av_data,
                 'style': self.style_pond_meses,
             },
-            'venda_ponderada': av.data[0]['ponderada'],
+            'venda_ponderada': av_data[0]['ponderada'],
         }
 
     def pondera_tamanho(self):
-        av = self.get_av('tam')
-        for row in av.data:
+        av_data = self.get_av_data('tam')
+        for row in av_data:
             row['grade'] = 0
         if self.context['venda_ponderada'] == 0:
             grade_erro = 0
         else:
-            qtds = [row['ponderada'] for row in av.data]
+            qtds = [row['ponderada'] for row in av_data]
             grade_tam, grade_erro = comercial.functions.grade_minima(qtds, 0.05)
-            for i in range(len(av.data)):
+            for i in range(len(av_data)):
                 if grade_tam is None:
-                    av.data[i]['grade'] = 0
+                    av_data[i]['grade'] = 0
                 else:
-                    av.data[i]['grade'] = grade_tam[i]
+                    av_data[i]['grade'] = grade_tam[i]
         return {
             'tamanho_ponderado': {
                 'headers': ['Tamanho',
@@ -326,7 +327,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                             *self.meta_periodos['headers']],
                 'fields': ['tam', 'grade', 'ponderada',
                         *self.meta_periodos['col_fields']],
-                'data': av.data,
+                'data': av_data,
                 'style': {
                     ** self.style_pond_meses,
                     self.meta_periodos['n_periodos']+3: 'text-align: right;',
@@ -335,8 +336,8 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         }
 
     def pondera_cor(self):
-        av = self.get_av('cor')
-        for row in av.data:
+        av_data = self.get_av_data('cor')
+        for row in av_data:
             if self.context['venda_ponderada'] == 0:
                 row['distr'] = 0
             else:
@@ -347,7 +348,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                             *self.meta_periodos['headers']],
                 'fields': ['cor', 'distr', 'ponderada',
                         *self.meta_periodos['col_fields']],
-                'data': av.data,
+                'data': av_data,
                 'style': {
                     ** self.style_pond_meses,
                     self.meta_periodos['n_periodos']+3: 'text-align: right;',
@@ -356,23 +357,23 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         }
 
     def por_ref(self):
-        av = self.get_av('ref')
+        av_data = self.get_av_data('ref')
 
         refs_adicionadas = self.context['adicionadas']['data']
         for ref_adicionada in refs_adicionadas:
-            av_ref = self.get_av(
+            av_ref_data = self.get_av_data(
                 'ref', ref_adicionada['referencia'],
                 ref_adicionada['conta_componentes'])
-            for row in av_ref.data:
-                av.data.append(row)
+            for row in av_ref_data:
+                av_data.append(row)
 
         return {
             'por_ref': {
                 'headers': ['Referência', 'Venda ponderada',
                             *self.meta_periodos['headers']],
                 'fields': ['ref', 'ponderada',
-                        *self.meta_periodos['col_fields']],
-                'data': av.data,
+                           *self.meta_periodos['col_fields']],
+                'data': av_data,
                 'style': self.style_pond_meses,
             },
         }
