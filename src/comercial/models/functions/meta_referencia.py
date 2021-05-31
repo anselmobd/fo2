@@ -23,8 +23,11 @@ def descr_combinacoes_de_alternativas(cursor, ref):
             cursor, ref, alternativa)
 
         cores_list = []
+
+        conta_componentes = 0
         for cor in cores_dict_alt:
             conta = cores_dict_alt[cor]
+            conta_componentes += conta
             cor1_list = [
                 f"{conta[item]} {item}"
                 for item in conta
@@ -32,8 +35,9 @@ def descr_combinacoes_de_alternativas(cursor, ref):
             cor1 = ' + '.join(cor1_list)
             cores_list.append(f"{cor} = {cor1}")
 
-        comb_info['cores_dict'] = cores_dict_alt
         comb_info['cores_list'].append(cores_list)
+    comb_info['cores_dict'] = cores_dict_alt
+    comb_info['conta_componentes'] = conta_componentes
     return comb_info
 
 
@@ -94,6 +98,7 @@ def meta_ref_incluir(cursor, modelo):
             comb_info = descr_combinacoes_de_alternativas(
                     cursor, ref['referencia'])
             ref['cores_dict'] = comb_info['cores_dict']
+            ref['conta_componentes'] = comb_info['conta_componentes']
 
             ref['ok'], ref['info'] = critica_cores_list(
                 comb_info['cores_list'])
