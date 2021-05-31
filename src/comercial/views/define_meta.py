@@ -262,11 +262,15 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.meta_periodos['n_periodos']+2: 'text-align: right;',
         }
 
-    def get_av(self, infor):
+    def get_av(self, infor, ref=None, conta_componentes=1):
+        if ref is None:
+            modelo=self.modelo
+        else:
+            modelo=None
         av = queries.AnaliseVendas(
             self.cursor,
-            ref=None,
-            modelo=self.modelo,
+            ref=ref,
+            modelo=modelo,
             infor=infor,
             ordem='infor',
             periodo_cols=self.meta_periodos['cols'],
@@ -277,6 +281,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         for row in av.data:
             row['ponderada'] = 0
             for periodo in self.meta_periodos['list']:
+                row[periodo['field']] = row[periodo['field']] * conta_componentes
                 row['ponderada'] += round(
                     row[periodo['field']] 
                     * periodo['peso']
