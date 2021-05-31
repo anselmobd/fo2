@@ -302,14 +302,15 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if 'adicionadas' in self.context:
             refs_adicionadas = self.context['adicionadas']['data']
             for ref_adicionada in refs_adicionadas:
-                av_ref_data = self.get_av_data(
-                    'ref', ref_adicionada['referencia'],
-                    ref_adicionada['conta_componentes'])
+                if ref_adicionada['ok']:
+                    av_ref_data = self.get_av_data(
+                        'ref', ref_adicionada['referencia'],
+                        ref_adicionada['conta_componentes'])
 
-                av_row = av_data[0]
-                for row in av_ref_data:
-                    for periodo in self.meta_periodos['list']:
-                        av_row[periodo['field']] += row[periodo['field']]
+                    av_row = av_data[0]
+                    for row in av_ref_data:
+                        for periodo in self.meta_periodos['list']:
+                            av_row[periodo['field']] += row[periodo['field']]
 
         self.calcula_venda_ponderada(av_data)
         
@@ -346,17 +347,18 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if 'adicionadas' in self.context:
             refs_adicionadas = self.context['adicionadas']['data']
             for ref_adicionada in refs_adicionadas:
-                av_ref_data = self.get_av_data(
-                    'tam', ref_adicionada['referencia'],
-                    ref_adicionada['conta_componentes'])
-                for row in av_ref_data:
-                    av_row = next(
-                        item
-                        for item in av_data
-                        if item["tam"] == row['tam']
-                    )
-                    for periodo in self.meta_periodos['list']:
-                        av_row[periodo['field']] += row[periodo['field']]
+                if ref_adicionada['ok']:
+                    av_ref_data = self.get_av_data(
+                        'tam', ref_adicionada['referencia'],
+                        ref_adicionada['conta_componentes'])
+                    for row in av_ref_data:
+                        av_row = next(
+                            item
+                            for item in av_data
+                            if item["tam"] == row['tam']
+                        )
+                        for periodo in self.meta_periodos['list']:
+                            av_row[periodo['field']] += row[periodo['field']]
 
         self.calcula_venda_ponderada(av_data)
         grade_erro = self.calcula_grade_tamanho(av_data)
@@ -405,11 +407,12 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if 'adicionadas' in self.context:
             refs_adicionadas = self.context['adicionadas']['data']
             for ref_adicionada in refs_adicionadas:
-                av_ref_data = self.get_av_data(
-                    'ref', ref_adicionada['referencia'],
-                    ref_adicionada['conta_componentes'])
-                for row in av_ref_data:
-                    av_data.append(row)
+                if ref_adicionada['ok']:
+                    av_ref_data = self.get_av_data(
+                        'ref', ref_adicionada['referencia'],
+                        ref_adicionada['conta_componentes'])
+                    for row in av_ref_data:
+                        av_data.append(row)
 
         self.calcula_venda_ponderada(av_data)
 
