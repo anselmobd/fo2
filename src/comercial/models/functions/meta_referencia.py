@@ -15,7 +15,9 @@ def descr_combinacoes_de_alternativas(cursor, ref):
     ref_alternativas = produto.queries.ref_estruturas(cursor, ref)
     alternativas = list(set([alt['ALTERNATIVA'] for alt in ref_alternativas]))
 
-    alt_cores_list = []
+    comb_info = {
+        'cores_list': [],
+    }
     for alternativa in alternativas:
         cores_dict_alt = produto.queries.dict_combinacoes_cores(
             cursor, ref, alternativa)
@@ -30,8 +32,47 @@ def descr_combinacoes_de_alternativas(cursor, ref):
             cor1 = ' + '.join(cor1_list)
             cores_list.append(f"{cor} = {cor1}")
 
-        alt_cores_list.append(cores_list)
-    return alt_cores_list
+        comb_info['cores_dict'] = cores_dict_alt
+        comb_info['cores_list'].append(cores_list)
+    return comb_info
+
+
+def critica_cores_list(comb_cores_list):
+    len_alt_cores = 0
+    len_alt_cores_err = False
+    for alt_cores in comb_cores_list:
+        if len_alt_cores == 0:
+            len_alt_cores = len(alt_cores)
+        else:
+            len_alt_cores_err = len_alt_cores_err or len_alt_cores != len(alt_cores)
+
+    if len_alt_cores_err:
+        ok = False
+        info = 'ERRO: Alternativas com número de cores diferentes'
+    else:
+        ok = True
+        alt_cores_arr = np.array(comb_cores_list)
+        alt_cores_arr_t = alt_cores_arr.transpose()
+        cores_ok = []
+        cores_err = []
+        for alt_cores_vet in alt_cores_arr_t:
+            alt_cores_set = list(set(alt_cores_vet))
+            if len(alt_cores_set) == 1:
+                cores_ok.append(alt_cores_set[0])
+            else:
+                cores_err.append(alt_cores_set)
+
+        info = ''
+        if len(cores_err) != 0:
+            ok = False
+            info = ' ERRO: '
+            for cor_err in cores_err:
+                info += ' DIFERE DE '.join(cor_err)
+        info += join_non_empty(
+            '; ',
+            [info, '; '.join(cores_ok)]
+        )
+    return ok, info
 
 
 def meta_ref_incluir(cursor, modelo):
@@ -50,40 +91,11 @@ def meta_ref_incluir(cursor, modelo):
                 args=[ref['referencia']],
             )
 
-            alt_cores_list = descr_combinacoes_de_alternativas(
+            comb_info = descr_combinacoes_de_alternativas(
                     cursor, ref['referencia'])
+            ref['cores_dict'] = comb_info['cores_dict']
 
-            len_alt_cores = 0
-            len_alt_cores_err = False
-            for alt_cores in alt_cores_list:
-                if len_alt_cores == 0:
-                    len_alt_cores = len(alt_cores)
-                else:
-                    len_alt_cores_err = len_alt_cores_err or len_alt_cores != len(alt_cores)
-
-            if len_alt_cores_err:
-                ref['info'] = 'ERRO: Alternativas com número de cores diferentes'
-            else:
-                alt_cores_arr = np.array(alt_cores_list)
-                alt_cores_arr_t = alt_cores_arr.transpose()
-                cores_ok = []
-                cores_err = []
-                for alt_cores_vet in alt_cores_arr_t:
-                    alt_cores_set = list(set(alt_cores_vet))
-                    if len(alt_cores_set) == 1:
-                        cores_ok.append(alt_cores_set[0])
-                    else:
-                        cores_err.append(alt_cores_set)
-
-                ref['ok'] = len(cores_err) == 0
-                ref['info'] = ''
-                if len(cores_err) != 0:
-                    ref['info'] = ' ERRO: '
-                    for cor_err in cores_err:
-                        ref['info'] += ' DIFERE DE '.join(cor_err)
-                ref['info'] += join_non_empty(
-                    '; ',
-                    [ref['info'], '; '.join(cores_ok)]
-                )
+            ref['ok'], ref['info'] = critica_cores_list(
+                comb_info['cores_list'])
 
     return ref_incl
