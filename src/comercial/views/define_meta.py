@@ -357,6 +357,15 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def por_ref(self):
         av = self.get_av('ref')
+
+        refs_adicionadas = self.context['adicionadas']['data']
+        for ref_adicionada in refs_adicionadas:
+            av_ref = self.get_av(
+                'ref', ref_adicionada['referencia'],
+                ref_adicionada['conta_componentes'])
+            for row in av_ref.data:
+                av.data.append(row)
+
         return {
             'por_ref': {
                 'headers': ['Referência', 'Venda ponderada',
