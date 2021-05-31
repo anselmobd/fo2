@@ -3,7 +3,7 @@ from utils.functions.models import rows_to_dict_list
 
 def combinacoes_cores(cursor, ref, alt):
     # Detalhando Estruturas
-    sql = """
+    sql = f"""
         WITH
         item_cores AS 
         ( SELECT DISTINCT 
@@ -51,8 +51,8 @@ def combinacoes_cores(cursor, ref, alt):
           ON es.CODIGO_ESTAGIO = e.ESTAGIO
         WHERE 1=1
           AND e.NIVEL_ITEM = 1
-          AND e.GRUPO_ITEM = %s
-          AND e.ALTERNATIVA_ITEM = %s
+          AND e.GRUPO_ITEM = '{ref}'
+          AND e.ALTERNATIVA_ITEM = {alt}
           AND e.NIVEL_COMP = 1
         ORDER BY
           e.ALTERNATIVA_ITEM
@@ -65,5 +65,5 @@ def combinacoes_cores(cursor, ref, alt):
           ELSE e.ITEM_COMP
           END
     """
-    cursor.execute(sql, [ref, alt])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
