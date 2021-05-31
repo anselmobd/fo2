@@ -325,9 +325,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             'venda_ponderada': av_data[0]['ponderada'],
         }
 
-    def pondera_tamanho(self):
-        av_data = self.get_av_data('tam')
-        self.calcula_venda_ponderada(av_data)
+    def calcula_grade_tamanho(self, av_data):
         for row in av_data:
             row['grade'] = 0
         if self.context['venda_ponderada'] == 0:
@@ -340,6 +338,12 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     av_data[i]['grade'] = 0
                 else:
                     av_data[i]['grade'] = grade_tam[i]
+        return grade_erro
+
+    def pondera_tamanho(self):
+        av_data = self.get_av_data('tam')
+        self.calcula_venda_ponderada(av_data)
+        grade_erro = self.calcula_grade_tamanho(av_data)
         return {
             'tamanho_ponderado': {
                 'headers': ['Tamanho',
