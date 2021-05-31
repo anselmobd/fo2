@@ -67,3 +67,23 @@ def combinacoes_cores(cursor, ref, alt):
     """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def dict_combinacoes_cores(cursor, ref, alt):
+    estrutura = combinacoes_cores(cursor, ref, alt)
+
+    alt_cores = {}
+    for row in estrutura:
+        cor_item = row['COR_ITEM'].lstrip("0")
+        cor_comp = row['COR_COMP'].lstrip("0")
+        try:
+            alt_cor = alt_cores[cor_item]
+        except KeyError:
+            alt_cores[cor_item] = {}
+            alt_cor = alt_cores[cor_item]
+        try:
+            alt_cor[cor_comp] += row['CONSUMO']
+        except KeyError:
+            alt_cor[cor_comp] = row['CONSUMO']
+
+    return alt_cores
