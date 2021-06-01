@@ -262,6 +262,11 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             **self.meta_periodos['style_meses'],
             self.meta_periodos['n_periodos']+2: 'text-align: right;',
         }
+        # adicionada coluna de distribuição e algumas as tabelas
+        self.style_distr_pond_meses = {
+            ** self.style_pond_meses,
+            self.meta_periodos['n_periodos']+3: 'text-align: right;',
+        }
 
     def get_av_data(self, infor, ref=None, conta_componentes=1):
         if ref is None:
@@ -371,10 +376,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'fields': ['tam', 'grade', 'ponderada',
                         *self.meta_periodos['col_fields']],
                 'data': av_data,
-                'style': {
-                    ** self.style_pond_meses,
-                    self.meta_periodos['n_periodos']+3: 'text-align: right;',
-                }
+                'style': self.style_distr_pond_meses,
             },
         }
 
@@ -425,10 +427,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 'fields': ['cor', 'distr', 'ponderada',
                         *self.meta_periodos['col_fields']],
                 'data': av_data,
-                'style': {
-                    ** self.style_pond_meses,
-                    self.meta_periodos['n_periodos']+3: 'text-align: right;',
-                }
+                'style': self.style_distr_pond_meses,
             },
         }
 
