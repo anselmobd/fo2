@@ -256,6 +256,13 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             }
         return {}
 
+    def destaca_ref_erro(self):
+        if 'adicionadas' in self.context:
+            ref_incl = self.context['adicionadas']['data']
+            for row in ref_incl:
+                if not row['ok']:
+                    row['|STYLE'] = 'color: red;'
+
     def inicializacoes_para_grids(self):
         # adicionada coluna de "Venda ponderada" em todas as tabelas
         self.style_pond_meses = {
@@ -394,6 +401,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             ref_cor = row['cor'].lstrip("0")
             if ref_cor not in ref_adicionada['cores_dict']:
                 ref_adicionada['info'] = f"ERRO: FALTA COR '{ref_cor}'; " + ref_adicionada['info']
+                ref_adicionada['ok'] = False
                 continue
             combinacao = ref_adicionada['cores_dict'][ref_cor]
             for cor in combinacao:
@@ -467,6 +475,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             (self.pondera_tamanho, 'context'),
             (self.pondera_cor, 'context'),
             (self.por_ref, 'context'),
+            (self.destaca_ref_erro),
             (self.monta_form_define_meta),
         ]
 
