@@ -391,6 +391,9 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             'cor', ref_adicionada['referencia'])
         for row in av_ref_data:
             ref_cor = row['cor'].lstrip("0")
+            if ref_cor not in ref_adicionada['cores_dict']:
+                ref_adicionada['info'] = f"ERRO: FALTA COR '{ref_cor}'; " + ref_adicionada['info']
+                continue
             combinacao = ref_adicionada['cores_dict'][ref_cor]
             for cor in combinacao:
                 av_row = next(
