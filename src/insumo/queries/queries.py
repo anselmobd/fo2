@@ -184,25 +184,25 @@ def ref_usado_em(cursor, nivel, ref):
 def lista_insumo(cursor, busca, conta_estoque, tipo_conta_estoque):
     filtro = ''
     for palavra in busca.split(' '):
-        filtro += """
-              AND (  r.REFERENCIA LIKE '%{}%'
-                  OR r.DESCR_REFERENCIA LIKE '%{}%'
+        filtro += f"""
+              AND (  r.REFERENCIA LIKE '%{palavra}%'
+                  OR r.DESCR_REFERENCIA LIKE '%{palavra}%'
                   )
-        """.format(palavra, palavra)
+        """
 
     filtro_conta_estoque = ''
     if conta_estoque is not None:
-        filtro_conta_estoque += """
-              AND r.CONTA_ESTOQUE = {}
-        """.format(conta_estoque.conta_estoque)
+        filtro_conta_estoque += f"""
+              AND r.CONTA_ESTOQUE = {conta_estoque.conta_estoque}
+        """
 
     filtro_tipo_conta_estoque = ''
     if tipo_conta_estoque != '':
-        filtro_tipo_conta_estoque += """
-              AND ce.TIPO_CONTA_ESTOQUE = {}
-        """.format(tipo_conta_estoque)
+        filtro_tipo_conta_estoque += f"""
+              AND ce.TIPO_CONTA_ESTOQUE = {tipo_conta_estoque}
+        """
 
-    sql = """
+    sql = f"""
         SELECT
           rownum NUM
         , rr.NIVEL
@@ -214,7 +214,7 @@ def lista_insumo(cursor, busca, conta_estoque, tipo_conta_estoque):
           r.NIVEL_ESTRUTURA NIVEL
         , r.REFERENCIA REF
         , r.DESCR_REFERENCIA DESCR
-        , r.CONTA_ESTOQUE || '-' || ce.ce.DESCR_CT_ESTOQUE CONTA_ESTOQUE
+        , r.CONTA_ESTOQUE || '-' || ce.DESCR_CT_ESTOQUE CONTA_ESTOQUE
         FROM BASI_030 r
         LEFT JOIN BASI_150 ce
           ON ce.CONTA_ESTOQUE = r.CONTA_ESTOQUE
@@ -226,11 +226,7 @@ def lista_insumo(cursor, busca, conta_estoque, tipo_conta_estoque):
           r.NIVEL_ESTRUTURA
         , NLSSORT(r.REFERENCIA,'NLS_SORT=BINARY_AI')
         ) rr
-    """.format(
-        filtro=filtro,
-        filtro_conta_estoque=filtro_conta_estoque,
-        filtro_tipo_conta_estoque=filtro_tipo_conta_estoque,
-    )
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
