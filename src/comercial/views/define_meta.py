@@ -11,6 +11,7 @@ from fo2.connections import db_cursor_so
 from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView
 from geral.functions import has_permission
+from o2.views.base.custom import StopStepsException
 from utils.functions import safe_cast
 
 import produto.queries
@@ -219,14 +220,14 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
     def testa_modelo(self):
         refs = produto.queries.modelo_inform(self.cursor, self.modelo)
         if len(refs) == 0:
-            raise Exception('Modelo não encontrado')
+            raise StopStepsException('Modelo não encontrado')
 
     def referencias(self):
         # referencias automaticamente consideradas
         data_ref = queries.pa_de_modelo(self.cursor, self.modelo)
 
         if len(data_ref) == 0:
-            raise Exception('Erro ao pegar PAs de modelo')
+            raise StopStepsException('Erro ao pegar PAs de modelo')
 
         for row in data_ref:
             row['ref|TARGET'] = '_blank'
