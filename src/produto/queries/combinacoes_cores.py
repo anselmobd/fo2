@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from utils.functions.models import rows_to_dict_list
 
 
@@ -38,10 +40,10 @@ def combinacoes_cores(cursor, ref, alt):
         FROM BASI_050 e
         LEFT JOIN BASI_040 coc -- combinação cor
           ON e.ITEM_COMP = '000000'
-        AND coc.SUB_ITEM = '000'
-        AND coc.GRUPO_ITEM = e.GRUPO_ITEM
-        AND coc.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
-        AND coc.SEQUENCIA = e.SEQUENCIA
+         AND coc.SUB_ITEM = '000'
+         AND coc.GRUPO_ITEM = e.GRUPO_ITEM
+         AND coc.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
+         AND coc.SEQUENCIA = e.SEQUENCIA
         LEFT JOIN item_cores icor -- cores por item 
           ON e.ITEM_ITEM = '000000' AND e.ITEM_COMP <> '000000'
          AND icor.NIVEL_ESTRUTURA = e.NIVEL_ITEM 
