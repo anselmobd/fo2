@@ -4,6 +4,17 @@ from django.shortcuts import redirect, render
 from django.views import View
 
 
+class StopStepsException(Exception):
+    '''
+    '''
+    def __init__(self, val=""):
+        self.val = val
+        super(StopStepsException, self).__init__()
+
+    def __str__(self):
+        return f"Passos interrompidos. Motivo: {self.val}"
+
+
 class CustomView(View):
     """
     Base para customizar views
@@ -109,7 +120,7 @@ class CustomView(View):
                         setattr(self, attrib, result)
                 else:
                     do_get()
-            except Exception as e:
+            except StopStepsException as e:
                 self.context.update({
                     msg_erro: e,
                 })
