@@ -44,7 +44,13 @@
   <ul class="nav nav-tabs" id="myTab">
     <li><a data-toggle="tab" href="#vendas">Vendas</a></li>
     <li class="active"><a data-toggle="tab" href="#param">Meta de estoque</a></li>
-    <li><a data-toggle="tab" href="#referencias">Referências</a></li>
+    <li><a data-toggle="tab" href="#referencias"
+    {% if adicionadas %}
+      {% if adicionadas.tem_erro %}
+        style="color: red;"
+      {% endif %}
+    {% endif %}>Referências</a></li>
+
   </ul>
   <div class="tab-content">
     <div id="vendas" class="tab-pane fade">

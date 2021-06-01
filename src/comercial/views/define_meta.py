@@ -259,9 +259,11 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
     def destaca_ref_erro(self):
         if 'adicionadas' in self.context:
             ref_incl = self.context['adicionadas']['data']
+            self.context['adicionadas']['tem_erro'] = False
             for row in ref_incl:
                 if not row['ok']:
                     row['|STYLE'] = 'color: red;'
+                    self.context['adicionadas']['tem_erro'] = True
 
     def inicializacoes_para_grids(self):
         # adicionada coluna de "Venda ponderada" em todas as tabelas
