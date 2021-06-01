@@ -405,14 +405,17 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                 for periodo in self.meta_periodos['list']:
                     av_row[periodo['field']] += row[periodo['field']] * combinacao[cor]
 
-    def pondera_cor(self):
-        av_data = self.get_av_data('cor')
-
+    def adiciona_referencias(self, av_data, metodo):
         if 'adicionadas' in self.context:
             refs_adicionadas = self.context['adicionadas']['data']
             for ref_adicionada in refs_adicionadas:
                 if ref_adicionada['ok']:
-                    self.add_ref_cor(av_data, ref_adicionada)
+                    metodo(av_data, ref_adicionada)
+
+    def pondera_cor(self):
+        av_data = self.get_av_data('cor')
+
+        self.adiciona_referencias(av_data, self.add_ref_cor)
 
         self.calcula_venda_ponderada(av_data)
         self.calcula_distrubuicao_por_cor(av_data)
