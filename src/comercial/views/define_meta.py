@@ -386,6 +386,21 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             else:
                 row['distr'] = round(row['ponderada'] / self.context['venda_ponderada'] * 100)
 
+    def add_ref_cor(self, av_data, ref_adicionada):
+        av_ref_data = self.get_av_data(
+            'cor', ref_adicionada['referencia'])
+        for row in av_ref_data:
+            ref_cor = row['cor'].lstrip("0")
+            combinacao = ref_adicionada['cores_dict'][ref_cor]
+            for cor in combinacao:
+                av_row = next(
+                    item
+                    for item in av_data
+                    if item["cor"].lstrip("0") == cor
+                )
+                for periodo in self.meta_periodos['list']:
+                    av_row[periodo['field']] += row[periodo['field']] * combinacao[cor]
+
     def pondera_cor(self):
         av_data = self.get_av_data('cor')
 
@@ -393,19 +408,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             refs_adicionadas = self.context['adicionadas']['data']
             for ref_adicionada in refs_adicionadas:
                 if ref_adicionada['ok']:
-                    av_ref_data = self.get_av_data(
-                        'cor', ref_adicionada['referencia'])
-                    for row in av_ref_data:
-                        ref_cor = row['cor'].lstrip("0")
-                        combinacao = ref_adicionada['cores_dict'][ref_cor]
-                        for cor in combinacao:
-                            av_row = next(
-                                item
-                                for item in av_data
-                                if item["cor"].lstrip("0") == cor
-                            )
-                            for periodo in self.meta_periodos['list']:
-                                av_row[periodo['field']] += row[periodo['field']] * combinacao[cor]
+                    self.add_ref_cor(av_data, ref_adicionada)
 
         self.calcula_venda_ponderada(av_data)
         self.calcula_distrubuicao_por_cor(av_data)
