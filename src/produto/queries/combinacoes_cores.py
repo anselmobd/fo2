@@ -23,8 +23,10 @@ def combinacoes_cores(cursor, ref, alt):
         --, e.GRUPO_COMP
         --, e.SUB_COMP 
         -- , e.ITEM_COMP
-        , CASE WHEN e.ITEM_COMP = '000000'
-          THEN coc.ITEM_ITEM
+        , CASE WHEN e.ITEM_ITEM = '000000' AND e.ITEM_COMP = '000000'
+            THEN coc.ITEM_ITEM
+          WHEN e.ITEM_ITEM <> '000000'
+            THEN e.ITEM_ITEM
           ELSE icor.ITEM_ESTRUTURA
           END COR_ITEM
         , TRUNC(e.CONSUMO) CONSUMO
@@ -41,12 +43,9 @@ def combinacoes_cores(cursor, ref, alt):
         AND coc.ALTERNATIVA_ITEM = e.ALTERNATIVA_ITEM
         AND coc.SEQUENCIA = e.SEQUENCIA
         LEFT JOIN item_cores icor -- cores por item 
-          ON e.ITEM_COMP <> '000000'
-        AND icor.NIVEL_ESTRUTURA = e.NIVEL_COMP
-        AND icor.GRUPO_ESTRUTURA = e.GRUPO_COMP
-        AND ( e.ITEM_ITEM = '000000'
-            OR icor.ITEM_ESTRUTURA = e.ITEM_ITEM
-            ) 
+          ON e.ITEM_ITEM = '000000' AND e.ITEM_COMP <> '000000'
+         AND icor.NIVEL_ESTRUTURA = e.NIVEL_ITEM 
+         AND icor.GRUPO_ESTRUTURA = e.GRUPO_ITEM
         LEFT JOIN MQOP_005 es
           ON es.CODIGO_ESTAGIO = e.ESTAGIO
         WHERE 1=1
@@ -56,8 +55,10 @@ def combinacoes_cores(cursor, ref, alt):
           AND e.NIVEL_COMP = 1
         ORDER BY
           e.ALTERNATIVA_ITEM
-        , CASE WHEN e.ITEM_COMP = '000000'
-          THEN coc.ITEM_ITEM
+        , CASE WHEN e.ITEM_ITEM = '000000' AND e.ITEM_COMP = '000000'
+            THEN coc.ITEM_ITEM
+          WHEN e.ITEM_ITEM <> '000000'
+            THEN e.ITEM_ITEM
           ELSE icor.ITEM_ESTRUTURA
           END
         , CASE WHEN e.ITEM_COMP = '000000'
