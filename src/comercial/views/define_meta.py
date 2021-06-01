@@ -268,7 +268,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             self.meta_periodos['n_periodos']+3: 'text-align: right;',
         }
 
-    def get_av_data(self, infor, ref=None, conta_componentes=1):
+    def get_av_data(self, infor, ref=None, conta_componentes=1, com_venda=False):
         if ref is None:
             modelo=self.modelo
         else:
@@ -281,7 +281,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             ordem='infor',
             periodo_cols=self.meta_periodos['cols'],
             qtd_por_mes=True,
-            com_venda=False,
+            com_venda=com_venda,
             field_ini='',
             )
 
@@ -349,7 +349,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
     def add_ref_tamanho(self, av_data, ref_adicionada):
         av_ref_data = self.get_av_data(
             'tam', ref_adicionada['referencia'],
-            ref_adicionada['conta_componentes'])
+            ref_adicionada['conta_componentes'], com_venda=True)
         for row in av_ref_data:
             av_row = next(
                 item
@@ -389,7 +389,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def add_ref_cor(self, av_data, ref_adicionada):
         av_ref_data = self.get_av_data(
-            'cor', ref_adicionada['referencia'])
+            'cor', ref_adicionada['referencia'], com_venda=True)
         for row in av_ref_data:
             ref_cor = row['cor'].lstrip("0")
             if ref_cor not in ref_adicionada['cores_dict']:
