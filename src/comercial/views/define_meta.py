@@ -432,18 +432,17 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             },
         }
 
+    def add_ref_refs(self, av_data, ref_adicionada):
+        av_ref_data = self.get_av_data(
+            'ref', ref_adicionada['referencia'],
+            ref_adicionada['conta_componentes'])
+        for row in av_ref_data:
+            av_data.append(row)
+
     def por_ref(self):
         av_data = self.get_av_data('ref')
 
-        if 'adicionadas' in self.context:
-            refs_adicionadas = self.context['adicionadas']['data']
-            for ref_adicionada in refs_adicionadas:
-                if ref_adicionada['ok']:
-                    av_ref_data = self.get_av_data(
-                        'ref', ref_adicionada['referencia'],
-                        ref_adicionada['conta_componentes'])
-                    for row in av_ref_data:
-                        av_data.append(row)
+        self.adiciona_referencias(av_data, self.add_ref_refs)
 
         self.calcula_venda_ponderada(av_data)
 
