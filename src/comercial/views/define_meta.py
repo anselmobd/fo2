@@ -342,24 +342,23 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     av_data[i]['grade'] = grade_tam[i]
         return grade_erro
 
+    def add_ref_tamanho(self, av_data, ref_adicionada):
+        av_ref_data = self.get_av_data(
+            'tam', ref_adicionada['referencia'],
+            ref_adicionada['conta_componentes'])
+        for row in av_ref_data:
+            av_row = next(
+                item
+                for item in av_data
+                if item["tam"] == row['tam']
+            )
+            for periodo in self.meta_periodos['list']:
+                av_row[periodo['field']] += row[periodo['field']]
+
     def pondera_tamanho(self):
         av_data = self.get_av_data('tam')
 
-        if 'adicionadas' in self.context:
-            refs_adicionadas = self.context['adicionadas']['data']
-            for ref_adicionada in refs_adicionadas:
-                if ref_adicionada['ok']:
-                    av_ref_data = self.get_av_data(
-                        'tam', ref_adicionada['referencia'],
-                        ref_adicionada['conta_componentes'])
-                    for row in av_ref_data:
-                        av_row = next(
-                            item
-                            for item in av_data
-                            if item["tam"] == row['tam']
-                        )
-                        for periodo in self.meta_periodos['list']:
-                            av_row[periodo['field']] += row[periodo['field']]
+        self.adiciona_referencias(av_data, self.add_ref_tamanho)
 
         self.calcula_venda_ponderada(av_data)
         grade_erro = self.calcula_grade_tamanho(av_data)
