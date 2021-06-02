@@ -19,7 +19,7 @@ import lotes.views
 
 import comercial.functions
 import comercial.models as models
-import comercial.queries as queries
+import comercial.queries
 from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.models.functions.meta_periodos import get_meta_periodos
 
@@ -224,7 +224,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
 
     def referencias(self):
         # referencias automaticamente consideradas
-        data_ref = queries.pa_de_modelo(self.cursor, self.modelo)
+        data_ref = comercial.queries.pa_de_modelo(self.cursor, self.modelo)
 
         if len(data_ref) == 0:
             raise StopStepsException('Erro ao pegar PAs de modelo')
@@ -280,7 +280,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
             modelo=self.modelo
         else:
             modelo=None
-        av = queries.AnaliseVendas(
+        av = comercial.queries.AnaliseVendas(
             self.cursor,
             ref=ref,
             modelo=modelo,
