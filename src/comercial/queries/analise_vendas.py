@@ -420,3 +420,52 @@ def str2col_name(texto, ini=None):
                 name += '_'
                 append = False
     return name
+
+
+def add_ref_modelo(av_data, ref_adicionada):
+    av_ref_data = get_av_data(
+        'ref', ref_adicionada['referencia'],
+        ref_adicionada['conta_componentes'])
+
+    av_row = av_data[0]
+    for row in av_ref_data:
+        for periodo in self.meta_periodos['list']:
+            av_row[periodo['field']] += row[periodo['field']]
+
+def adiciona_referencias(av_data, adicionadas, metodo):
+    refs_adicionadas = adicionadas['data']
+    for ref_adicionada in refs_adicionadas:
+        if ref_adicionada['ok']:
+            metodo(av_data, ref_adicionada)
+
+def get_av_data(
+        cursor, meta_periodos, infor,
+        ref=None, modelo=None, conta_componentes=1, com_venda=False):
+    av = AnaliseVendas(
+        cursor,
+        ref=ref,
+        modelo=modelo,
+        infor=infor,
+        ordem='infor',
+        periodo_cols=meta_periodos['cols'],
+        qtd_por_mes=True,
+        com_venda=com_venda,
+        field_ini='',
+        )
+
+    for row in av.data:
+        for periodo in meta_periodos['list']:
+            row[periodo['field']] = row[periodo['field']] * conta_componentes
+
+    return av.data
+
+
+def pondera_infor(cursor, meta_periodos, adicionadas, infor, modelo=None):
+    metodos = {
+        'modelo': add_ref_modelo,
+    }
+    av_data = get_av_data(cursor, meta_periodos, infor, modelo=modelo)
+    adiciona_referencias(av_data, adicionadas, metodos[infor])
+    return av_data
+
+
