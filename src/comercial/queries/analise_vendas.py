@@ -422,50 +422,55 @@ def str2col_name(texto, ini=None):
     return name
 
 
-def add_ref_modelo(av_data, ref_adicionada):
-    av_ref_data = get_av_data(
-        'ref', ref_adicionada['referencia'],
-        ref_adicionada['conta_componentes'])
+class AnaliseVendasComKits():
 
-    av_row = av_data[0]
-    for row in av_ref_data:
-        for periodo in self.meta_periodos['list']:
-            av_row[periodo['field']] += row[periodo['field']]
+    def __init__(self, cursor, meta_periodos, adicionadas, infor, modelo):
+        self.cursor = cursor
+        self.meta_periodos = meta_periodos
+        self.adicionadas = adicionadas
+        self.infor = infor
+        self.modelo = modelo
 
-def adiciona_referencias(av_data, adicionadas, metodo):
-    refs_adicionadas = adicionadas['data']
-    for ref_adicionada in refs_adicionadas:
-        if ref_adicionada['ok']:
-            metodo(av_data, ref_adicionada)
+        self.metodos = {
+            'modelo': self.add_ref_modelo,
+        }
 
-def get_av_data(
-        cursor, meta_periodos, infor,
-        ref=None, modelo=None, conta_componentes=1, com_venda=False):
-    av = AnaliseVendas(
-        cursor,
-        ref=ref,
-        modelo=modelo,
-        infor=infor,
-        ordem='infor',
-        periodo_cols=meta_periodos['cols'],
-        qtd_por_mes=True,
-        com_venda=com_venda,
-        field_ini='',
-        )
+    def get_av_data(self, ref=None, modelo=None, conta_componentes=1, com_venda=False):
+        av = AnaliseVendas(
+            self.cursor,
+            ref=ref,
+            modelo=modelo,
+            infor=self.infor,
+            ordem='infor',
+            periodo_cols=self.meta_periodos['cols'],
+            qtd_por_mes=True,
+            com_venda=com_venda,
+            field_ini='',
+            )
 
-    for row in av.data:
-        for periodo in meta_periodos['list']:
-            row[periodo['field']] = row[periodo['field']] * conta_componentes
+        for row in av.data:
+            for periodo in self.meta_periodos['list']:
+                row[periodo['field']] = row[periodo['field']] * conta_componentes
 
-    return av.data
+        return av
 
+    def add_ref_modelo(self, av, ref_adicionada):
+        av_ref = self.get_av_data(ref=ref_adicionada['referencia'],
+            conta_componentes=ref_adicionada['conta_componentes'])
 
-def pondera_infor(cursor, meta_periodos, adicionadas, infor, modelo=None):
-    metodos = {
-        'modelo': add_ref_modelo,
-    }
-    av_data = get_av_data(cursor, meta_periodos, infor, modelo=modelo)
-    adiciona_referencias(av_data, adicionadas, metodos[infor])
-    return av_data
+        av_row = av.data[0]
+        for row in av_ref.data:
+            for periodo in self.meta_periodos['list']:
+                av_row[periodo['field']] += row[periodo['field']]
+
+    def get_data(self):
+        av = self.get_av_data(modelo=self.modelo)
+
+        refs_adicionadas = self.adicionadas['data']
+        for ref_adicionada in refs_adicionadas:
+            if ref_adicionada['ok']:
+                self.metodos[self.infor](av, ref_adicionada)
+
+        return av.data
 
 
