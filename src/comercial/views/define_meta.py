@@ -309,20 +309,11 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     / self.meta_periodos['tot_peso']
                 )
 
-    def add_ref_modelo(self, av_data, ref_adicionada):
-        av_ref_data = self.get_av_data(
-            'ref', ref_adicionada['referencia'],
-            ref_adicionada['conta_componentes'])
-
-        av_row = av_data[0]
-        for row in av_ref_data:
-            for periodo in self.meta_periodos['list']:
-                av_row[periodo['field']] += row[periodo['field']]
-
     def pondera_modelo(self):
-        av_data = self.get_av_data('modelo')
-
-        self.adiciona_referencias(av_data, self.add_ref_modelo)
+        av_data = comercial.queries.AnaliseVendasComKits(
+            self.cursor, self.meta_periodos,
+            self.context['adicionadas'], 'modelo',
+            modelo=self.modelo).get_data()
 
         self.calcula_venda_ponderada(av_data)
         
