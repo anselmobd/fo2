@@ -254,16 +254,14 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     'data': ref_incl,
                 },
             }
-        return {}
+        return {'adicionadas': {'data': [] } }
 
     def destaca_ref_erro(self):
-        if 'adicionadas' in self.context:
-            ref_incl = self.context['adicionadas']['data']
-            self.context['adicionadas']['tem_erro'] = False
-            for row in ref_incl:
-                if not row['ok']:
-                    row['|STYLE'] = 'color: red;'
-                    self.context['adicionadas']['tem_erro'] = True
+        ref_incl = self.context['adicionadas']['data']
+        for row in ref_incl:
+            if not row['ok']:
+                row['|STYLE'] = 'color: red;'
+                self.context['adicionadas']['tem_erro'] = True
 
     def inicializacoes_para_grids(self):
         # adicionada coluna de "Venda ponderada" em todas as tabelas
@@ -416,11 +414,10 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
                     av_row[periodo['field']] += row[periodo['field']] * combinacao[cor]
 
     def adiciona_referencias(self, av_data, metodo):
-        if 'adicionadas' in self.context:
-            refs_adicionadas = self.context['adicionadas']['data']
-            for ref_adicionada in refs_adicionadas:
-                if ref_adicionada['ok']:
-                    metodo(av_data, ref_adicionada)
+        refs_adicionadas = self.context['adicionadas']['data']
+        for ref_adicionada in refs_adicionadas:
+            if ref_adicionada['ok']:
+                metodo(av_data, ref_adicionada)
 
     def pondera_cor(self):
         av_data = self.get_av_data('cor')
