@@ -35,17 +35,10 @@ class VendasPorModeloNew(O2BaseGetView):
             com_venda=True,
             field_ini='',
         )
-        # pprint(av.data)
 
         for row in av.data:
             row["meta"] = " "
             row["data"] = " "
-            link = reverse(
-                'comercial:define_meta__get',
-                args=[row['modelo']],
-            )
-            row['modelo|TARGET'] = '_blank'
-            row['modelo|LINK'] = link
             row['ponderada'] = 0
             for periodo in self.meta_periodos['list']:
                 row['ponderada'] += round(
@@ -69,24 +62,21 @@ class VendasPorModeloNew(O2BaseGetView):
                 (dr for dr in av.data if dr['modelo'] == row['modelo']),
                 False)
             if not data_row:
-                link = reverse(
-                    'comercial:define_meta__get',
-                    args=[row['modelo']],
-                )
                 data_row = {
                     'modelo': row['modelo'],
-                    'modelo|TARGET': '_blank',
-                    'modelo|LINK': link,
                     'ponderada': 0,
                     **self.meta_periodos["zero_field_row"],
                 }
                 av.data.append(data_row)
-            if row['meta_estoque']:
-                data_row['meta'] = row['meta_estoque']
-                data_row['data'] = row['data']
-            else:
-                data_row['meta'] = 0
-                data_row['data'] = row['data']
+            data_row['meta'] = row['meta_estoque']
+            data_row['data'] = row['data']
+
+        for row in av.data:
+            row['modelo|TARGET'] = '_blank'
+            row['modelo|LINK'] = reverse(
+                'comercial:define_meta__get',
+                args=[row['modelo']],
+            )
 
         data = sorted(
             av.data,
@@ -97,21 +87,23 @@ class VendasPorModeloNew(O2BaseGetView):
             )
         )
 
-        style = {
-            2: 'text-align: right;',
-            3: 'text-align: center;',
-            4: 'text-align: right;',
-            5: 'text-align: right;',
-            6: 'text-align: right;',
-            7: 'text-align: right;',
-            8: 'text-align: right;',
-        }
-
         self.context.update({
-            'headers': ['Modelo', 'Meta de estoque', 'Data da meta', 'Venda ponderada',
-                        *self.meta_periodos['headers']],
-            'fields': ['modelo', 'meta', 'data', 'ponderada',
-                       *self.meta_periodos['col_fields']],
+            'headers': [
+                'Modelo', 'Meta de estoque', 'Data da meta', 'Venda ponderada',
+                *self.meta_periodos['headers']
+            ],
+            'fields': [
+                'modelo', 'meta', 'data', 'ponderada',
+                *self.meta_periodos['col_fields']
+            ],
             'data': data,
-            'style': style,
+            'style': {
+                2: 'text-align: right;',
+                3: 'text-align: center;',
+                4: 'text-align: right;',
+                5: 'text-align: right;',
+                6: 'text-align: right;',
+                7: 'text-align: right;',
+                8: 'text-align: right;',
+            },
         })
