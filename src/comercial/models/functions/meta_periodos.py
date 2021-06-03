@@ -19,6 +19,7 @@ def get_meta_periodos():
     periodos_col_fields = []
     periodo_cols = {}
     periodos_zero_data_row = {}
+    periodos_zero_field_row = {}
     style_meses = {}
     tot_peso = 0
     n_mes = 0
@@ -58,6 +59,7 @@ def get_meta_periodos():
         periodos_col_fields.append(field)
         periodo_cols[field] = range_str
         periodos_zero_data_row[range_str] = 0
+        periodos_zero_field_row[field] = 0
 
         # por padrão, meses ficam nas colunas 2 em diante
         style_meses[i+2] = 'text-align: right;'
@@ -69,6 +71,7 @@ def get_meta_periodos():
         'col_fields': periodos_col_fields,
         'cols': periodo_cols,
         'zero_data_row': periodos_zero_data_row,
+        'zero_field_row': periodos_zero_field_row,
         'style_meses': style_meses,
         'tot_peso': tot_peso,
         'n_periodos': len(periodos),
