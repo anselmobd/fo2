@@ -22,7 +22,7 @@ class VendasPorModeloNew(O2BaseGetView):
         self.title_name = 'Vendas por modelo'
 
     def get_av(self):
-        return queries.AnaliseVendas(
+        self.av = queries.AnaliseVendas(
             self.cursor,
             infor="modelo",
             ordem="infor",
@@ -37,9 +37,9 @@ class VendasPorModeloNew(O2BaseGetView):
 
         self.meta_periodos = get_meta_periodos()
         
-        av = self.get_av()
+        self.get_av()
 
-        for row in av.data:
+        for row in self.av.data:
             row["meta"] = " "
             row["data"] = " "
             row['ponderada'] = 0
@@ -62,7 +62,7 @@ class VendasPorModeloNew(O2BaseGetView):
         metas = metas.filter(antiga=False).values()
         for row in metas:
             data_row = next(
-                (dr for dr in av.data if dr['modelo'] == row['modelo']),
+                (dr for dr in self.av.data if dr['modelo'] == row['modelo']),
                 False)
             if not data_row:
                 data_row = {
@@ -70,11 +70,11 @@ class VendasPorModeloNew(O2BaseGetView):
                     'ponderada': 0,
                     **self.meta_periodos["zero_field_row"],
                 }
-                av.data.append(data_row)
+                self.av.data.append(data_row)
             data_row['meta'] = row['meta_estoque']
             data_row['data'] = row['data']
 
-        for row in av.data:
+        for row in self.av.data:
             row['modelo|TARGET'] = '_blank'
             row['modelo|LINK'] = reverse(
                 'comercial:define_meta__get',
@@ -82,7 +82,7 @@ class VendasPorModeloNew(O2BaseGetView):
             )
 
         data = sorted(
-            av.data,
+            self.av.data,
             key=lambda k: (
                 0 if k['meta'] == ' ' else -k['meta'],
                 -k['ponderada'],
