@@ -21,12 +21,8 @@ class VendasPorModeloNew(O2BaseGetView):
         self.template_name = 'comercial/vendas_por_modelo.html'
         self.title_name = 'Vendas por modelo'
 
-    def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-
-        self.meta_periodos = get_meta_periodos()
-        
-        av = queries.AnaliseVendas(
+    def get_av(self):
+        return queries.AnaliseVendas(
             self.cursor,
             infor="modelo",
             ordem="infor",
@@ -35,6 +31,13 @@ class VendasPorModeloNew(O2BaseGetView):
             com_venda=True,
             field_ini='',
         )
+
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+
+        self.meta_periodos = get_meta_periodos()
+        
+        av = self.get_av()
 
         for row in av.data:
             row["meta"] = " "
