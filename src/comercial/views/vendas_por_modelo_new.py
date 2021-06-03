@@ -53,18 +53,7 @@ class VendasPorModeloNew(O2BaseGetView):
         ))
         return metas.filter(antiga=False).values()
 
-    def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-
-        self.meta_periodos = get_meta_periodos()
-        
-        self.get_av()
-        self.calc_ponderada()
-
-        for row in self.av.data:
-            row["meta"] = " "
-            row["data"] = " "
-
+    def insere_metas(self):
         for row in self.get_metas():
             data_row = next(
                 (dr for dr in self.av.data if dr['modelo'] == row['modelo']),
@@ -78,6 +67,20 @@ class VendasPorModeloNew(O2BaseGetView):
                 self.av.data.append(data_row)
             data_row['meta'] = row['meta_estoque']
             data_row['data'] = row['data']
+
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+
+        self.meta_periodos = get_meta_periodos()
+        
+        self.get_av()
+        self.calc_ponderada()
+
+        for row in self.av.data:
+            row["meta"] = " "
+            row["data"] = " "
+
+        self.insere_metas()
 
         for row in self.av.data:
             row['modelo|TARGET'] = '_blank'
