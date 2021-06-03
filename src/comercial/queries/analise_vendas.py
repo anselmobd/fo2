@@ -424,12 +424,13 @@ def str2col_name(texto, ini=None):
 
 class AnaliseVendasComKits():
 
-    def __init__(self, cursor, meta_periodos, adicionadas, infor, modelo):
+    def __init__(self, cursor, meta_periodos, adicionadas, infor, modelo, data=None):
         self.cursor = cursor
         self.meta_periodos = meta_periodos
         self.adicionadas = adicionadas
         self.infor = infor
         self.modelo = modelo
+        self.data = data
 
         self.metodos = {
             'modelo': self.add_ref_modelo,
@@ -454,23 +455,24 @@ class AnaliseVendasComKits():
 
         return av.data
 
-    def add_ref_modelo(self, data, ref_adicionada):
+    def add_ref_modelo(self, ref_adicionada):
         data_ref = self.get_av_data(ref=ref_adicionada['referencia'],
             conta_componentes=ref_adicionada['conta_componentes'])
 
-        data_row = data[0]
+        data_row = self.data[0]
         for row in data_ref:
             for periodo in self.meta_periodos['list']:
                 data_row[periodo['field']] += row[periodo['field']]
 
     def get_data(self):
-        data = self.get_av_data(modelo=self.modelo)
+        if not self.data:
+            self.data = self.get_av_data(modelo=self.modelo)
 
         refs_adicionadas = self.adicionadas['data']
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok']:
-                self.metodos[self.infor](data, ref_adicionada)
+                self.metodos[self.infor](ref_adicionada)
 
-        return data
+        return self.data
 
 
