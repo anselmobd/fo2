@@ -71,6 +71,23 @@ class VendasPorModeloNew(O2BaseGetView):
             data_row['meta'] = row['meta_estoque']
             data_row['data'] = row['data']
 
+    def add_link_modelo(self):
+        for row in self.av.data:
+            row['modelo|TARGET'] = '_blank'
+            row['modelo|LINK'] = reverse(
+                'comercial:define_meta__get',
+                args=[row['modelo']],
+            )
+
+    def av_data_sorted(self):
+        return sorted(
+            self.av.data,
+            key=lambda k: (
+                0 if k['meta'] == ' ' else -k['meta'],
+                -k['ponderada'],
+                int(k['modelo']),
+            )
+        )
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
@@ -81,21 +98,8 @@ class VendasPorModeloNew(O2BaseGetView):
 
         self.insere_metas()
 
-        for row in self.av.data:
-            row['modelo|TARGET'] = '_blank'
-            row['modelo|LINK'] = reverse(
-                'comercial:define_meta__get',
-                args=[row['modelo']],
-            )
-
-        data = sorted(
-            self.av.data,
-            key=lambda k: (
-                0 if k['meta'] == ' ' else -k['meta'],
-                -k['ponderada'],
-                int(k['modelo']),
-            )
-        )
+        self.add_link_modelo()
+        data = self.av_data_sorted()
 
         self.context.update({
             'headers': [
