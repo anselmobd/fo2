@@ -54,6 +54,9 @@ class VendasPorModeloNew(O2BaseGetView):
         return metas.filter(antiga=False).values()
 
     def insere_metas(self):
+        for row in self.av.data:
+            row["meta"] = " "
+            row["data"] = " "
         for row in self.get_metas():
             data_row = next(
                 (dr for dr in self.av.data if dr['modelo'] == row['modelo']),
@@ -75,10 +78,6 @@ class VendasPorModeloNew(O2BaseGetView):
         
         self.get_av()
         self.calc_ponderada()
-
-        for row in self.av.data:
-            row["meta"] = " "
-            row["data"] = " "
 
         self.insere_metas()
 
