@@ -7,9 +7,9 @@ O2FieldModeloForm2 = mount_fields.MountIntegerFieldForm(
     'modelo',
     attrs={
         'min_value': 1,
-        'max_value': 9999,
+        'max_value': 99999,
     },
-    widget_attrs={'size': 4},
+    widget_attrs={'size': 5},
 )
 
 
