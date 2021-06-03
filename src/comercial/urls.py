@@ -27,7 +27,7 @@ urlpatterns = [
         name='vendas_tamanho__get'),
 
     url(r'^vendas_por_modelo/$',
-        views.VendasPorModelo.as_view(),
+        views.VendasPorModeloNew.as_view(),
         name='vendas_por_modelo'),
 
     url(r'^analise_modelo_old/$',
