@@ -32,16 +32,8 @@ class VendasPorModeloNew(O2BaseGetView):
             field_ini='',
         )
 
-    def mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-
-        self.meta_periodos = get_meta_periodos()
-        
-        self.get_av()
-
+    def calc_ponderada(self):
         for row in self.av.data:
-            row["meta"] = " "
-            row["data"] = " "
             row['ponderada'] = 0
             for periodo in self.meta_periodos['list']:
                 row['ponderada'] += round(
@@ -50,6 +42,18 @@ class VendasPorModeloNew(O2BaseGetView):
                     * periodo['meses']
                     / self.meta_periodos['tot_peso']
                 )
+
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+
+        self.meta_periodos = get_meta_periodos()
+        
+        self.get_av()
+        self.calc_ponderada()
+
+        for row in self.av.data:
+            row["meta"] = " "
+            row["data"] = " "
 
         # pega as metas definidas
         metas = models.MetaEstoque.objects
