@@ -63,37 +63,37 @@ class VendasPorModeloNew(O2BaseGetView):
                 data__gt=OuterRef('data')
             )
         ))
-        metas = metas.filter(antiga=False)
-        metas = metas.order_by('-meta_estoque').values()
-        meta_zerada_data = {}
+        metas = metas.filter(antiga=False).values()
         for row in metas:
+            data_row = next(
+                (dr for dr in av.data if dr['modelo'] == row['modelo']),
+                False)
+            if not data_row:
+                link = reverse(
+                    'comercial:define_meta__get',
+                    args=[row['modelo']],
+                )
+                data_row = {
+                    'modelo': row['modelo'],
+                    'modelo|TARGET': '_blank',
+                    'modelo|LINK': link,
+                    'ponderada': 0,
+                    **self.meta_periodos["zero_field_row"],
+                }
+                av.data.append(data_row)
             if row['meta_estoque']:
-                data_row = next(
-                    (dr for dr in av.data if dr['modelo'] == row['modelo']),
-                    False)
-                if not data_row:
-                    link = reverse(
-                        'comercial:define_meta__get',
-                        args=[row['modelo']],
-                    )
-                    data_row = {
-                        'modelo': row['modelo'],
-                        'modelo|TARGET': '_blank',
-                        'modelo|LINK': link,
-                        'ponderada': 0,
-                        **self.meta_periodos["zero_field_row"],
-                    }
-                    av.data.append(data_row)
                 data_row['meta'] = row['meta_estoque']
                 data_row['data'] = row['data']
             else:
-                meta_zerada_data[row['modelo']] = row['data']
+                data_row['meta'] = 0
+                data_row['data'] = row['data']
 
         data = sorted(
             av.data,
             key=lambda k: (
                 0 if k['meta'] == ' ' else -k['meta'],
                 -k['ponderada'],
+                int(k['modelo']),
             )
         )
 
