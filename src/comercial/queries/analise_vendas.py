@@ -452,25 +452,25 @@ class AnaliseVendasComKits():
             for periodo in self.meta_periodos['list']:
                 row[periodo['field']] = row[periodo['field']] * conta_componentes
 
-        return av
+        return av.data
 
-    def add_ref_modelo(self, av, ref_adicionada):
-        av_ref = self.get_av_data(ref=ref_adicionada['referencia'],
+    def add_ref_modelo(self, data, ref_adicionada):
+        data_ref = self.get_av_data(ref=ref_adicionada['referencia'],
             conta_componentes=ref_adicionada['conta_componentes'])
 
-        av_row = av.data[0]
-        for row in av_ref.data:
+        data_row = data[0]
+        for row in data_ref:
             for periodo in self.meta_periodos['list']:
-                av_row[periodo['field']] += row[periodo['field']]
+                data_row[periodo['field']] += row[periodo['field']]
 
     def get_data(self):
-        av = self.get_av_data(modelo=self.modelo)
+        data = self.get_av_data(modelo=self.modelo)
 
         refs_adicionadas = self.adicionadas['data']
         for ref_adicionada in refs_adicionadas:
             if ref_adicionada['ok']:
-                self.metodos[self.infor](av, ref_adicionada)
+                self.metodos[self.infor](data, ref_adicionada)
 
-        return av.data
+        return data
 
 
