@@ -43,6 +43,16 @@ class VendasPorModeloNew(O2BaseGetView):
                     / self.meta_periodos['tot_peso']
                 )
 
+    def get_metas(self):
+        metas = models.MetaEstoque.objects
+        metas = metas.annotate(antiga=Exists(
+            models.MetaEstoque.objects.filter(
+                modelo=OuterRef('modelo'),
+                data__gt=OuterRef('data')
+            )
+        ))
+        return metas.filter(antiga=False).values()
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
@@ -55,16 +65,7 @@ class VendasPorModeloNew(O2BaseGetView):
             row["meta"] = " "
             row["data"] = " "
 
-        # pega as metas definidas
-        metas = models.MetaEstoque.objects
-        metas = metas.annotate(antiga=Exists(
-            models.MetaEstoque.objects.filter(
-                modelo=OuterRef('modelo'),
-                data__gt=OuterRef('data')
-            )
-        ))
-        metas = metas.filter(antiga=False).values()
-        for row in metas:
+        for row in self.get_metas():
             data_row = next(
                 (dr for dr in self.av.data if dr['modelo'] == row['modelo']),
                 False)
