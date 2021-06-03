@@ -35,7 +35,20 @@
   </form>
   <a href="{% url 'comercial:vendas_por_modelo' %}" target="_blank">Vendas por modelo</a>
   {% if modelo %}
-    <h4>Modelo {{ modelo }}</h4>
+    <h4>Modelo {{ modelo }}
+      {% if adicionadas %}
+        {% if adicionadas.data %}
+          <small>( +
+          {% for row in adicionadas.data %}
+            {{ row.referencia }}
+          {% endfor %}
+          )</small>
+        {% endif %}
+      {% else %}
+          <h5>Nenhuma</h5>
+      {% endif %}
+
+    </h4>
   {% endif %}
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>
