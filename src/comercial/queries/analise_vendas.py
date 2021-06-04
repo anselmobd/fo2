@@ -468,8 +468,7 @@ class AnaliseVendasComKits():
         if not self.data:
             self.data = self.get_av_data(modelo=self.modelo)
 
-        refs_adicionadas = self.adicionadas['data']
-        for ref_adicionada in refs_adicionadas:
+        for ref_adicionada in self.adicionadas:
             if ref_adicionada['ok']:
                 self.metodos[self.infor](ref_adicionada)
 

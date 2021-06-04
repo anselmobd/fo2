@@ -312,7 +312,7 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
     def pondera_modelo(self):
         av_data = comercial.queries.AnaliseVendasComKits(
             self.cursor, self.meta_periodos,
-            self.context['adicionadas'], 'modelo',
+            self.context['adicionadas']['data'], 'modelo',
             modelo=self.modelo).get_data()
 
         self.calcula_venda_ponderada(av_data)
