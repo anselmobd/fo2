@@ -8,9 +8,9 @@ from utils.functions import my_make_key_cache, fo2logger
 
 
 def pedido_faturavel_modelo_sortimento(
-        cursor, modelo=None, periodo=None, cached=True):
+        cursor, modelo=None, referencia=None, periodo=None, cached=True):
     key_cache = my_make_key_cache(
-        'pedido_faturavel_modelo_sortimento', modelo, periodo, cached)
+        'pedido_faturavel_modelo_sortimento', modelo, referencia, periodo, cached)
 
     cached_result = cache.get(key_cache)
     if cached and cached_result is not None:
@@ -24,6 +24,11 @@ def pedido_faturavel_modelo_sortimento(
                      (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
                                      '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
                                      ))) = '{modelo}' '''
+
+    filtro_referencia = ''
+    if referencia is not None:
+        filtro_referencia = f'''--
+            AND i.CD_IT_PE_GRUPO = '{referencia}' '''
 
     filtra_periodo = ''
     if periodo is not None:
@@ -87,6 +92,7 @@ def pedido_faturavel_modelo_sortimento(
               JOIN PEDI_110 i -- item de pedido de venda
                 ON i.PEDIDO_VENDA = ps.PEDIDO
               WHERE 1=1
+                {filtro_referencia} -- filtro_referencia
                 {filtro_modelo} -- filtro_modelo
                 -- AND TRIM(LEADING '0' FROM
                 --          (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
