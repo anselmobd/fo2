@@ -109,6 +109,33 @@ class GradeProduzir(O2BaseGetPostView):
             lotes.queries.op.op_sortimentos(
                 cursor, tipo='ap', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+        # print('modelo')
+        # pprint(gpr_data)
+
+        for ref_adicionada in refs_adicionadas:
+            # print('ref_adicionada GPR')
+            # pprint(ref_adicionada)
+            if ref_adicionada['ok']:
+                _, r_gpr_fields, r_gpr_data, _, r_total_oppr = \
+                    lotes.queries.op.op_sortimentos(
+                        cursor, tipo='ap', descr_sort=False, referencia=ref_adicionada['referencia'],
+                        situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+                # print('referencia', ref_adicionada['referencia'])
+                # pprint(r_gpr_data)
+                if r_total_oppr != 0:
+                    total_oppr += r_total_oppr
+                    for row in r_gpr_data:
+                        ref_cor = row['SORTIMENTO'].lstrip("0")
+                        if ref_cor in ref_adicionada['cores_dict']:
+                            combinacao = ref_adicionada['cores_dict'][ref_cor]
+                            for cor in combinacao:
+                                av_row = next(
+                                    item
+                                    for item in gpr_data
+                                    if item["SORTIMENTO"].lstrip("0") == cor
+                                )
+                                for tamanho in r_gpr_fields[1:-1]:
+                                    av_row[tamanho] += row[tamanho] * combinacao[cor]
 
         goppr = None
         if total_oppr != 0:
@@ -118,6 +145,8 @@ class GradeProduzir(O2BaseGetPostView):
                 'data': gpr_data,
                 'style': gpr_style,
             }
+            # print('modelo goppr')
+            # pprint(goppr)
             gzerada = update_gzerada(gzerada, goppr)
 
         gcd_header, gcd_fields, gcd_data, gcd_style, total_opcd = \
