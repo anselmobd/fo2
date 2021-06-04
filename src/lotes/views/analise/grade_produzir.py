@@ -12,6 +12,7 @@ import comercial
 import produto
 import lotes
 import estoque
+from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.views.estoque import grade_meta_estoque
 
 from lotes.views.a_produzir import *
@@ -101,6 +102,8 @@ class GradeProduzir(O2BaseGetPostView):
 
         if not calcula_grade:
             return
+
+        refs_adicionadas = meta_ref_incluir(cursor, modelo)
 
         gpr_header, gpr_fields, gpr_data, gpr_style, total_oppr = \
             lotes.queries.op.op_sortimentos(
