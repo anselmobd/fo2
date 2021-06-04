@@ -25,6 +25,8 @@ def op_sortimentos(cursor, **kwargs):
                >True - Descrição junto ao código do sortimento (cor)
     modelo: Filtra PA, PB ou PG de determinado modelo_inform
            >None - QQ referência
+    referencia: Filtra referência
+               >None - QQ referência
     situacao:>None - Todas
               c - OP cancelada
               a - OP não cancelado (ativa)
@@ -48,6 +50,7 @@ def op_sortimentos(cursor, **kwargs):
     tipo = argdef('tipo', 't')
     descr_sort = argdef('descr_sort', True)
     modelo = argdef('modelo', None)
+    referencia = argdef('referencia', None)
     situacao = argdef('situacao', None)
     tipo_ref = argdef('tipo_ref', None)
     tipo_alt = argdef('tipo_alt', None)
@@ -68,6 +71,12 @@ def op_sortimentos(cursor, **kwargs):
                   )
                 ) = '{}'
         """.format(modelo)
+
+    filtra_referencia = ''
+    if referencia is not None:
+        filtra_referencia = """--
+            AND o.REFERENCIA_PECA = '{}'
+        """.format(referencia)
 
     filtra_situacao = ''
     if situacao is not None:
@@ -154,6 +163,7 @@ def op_sortimentos(cursor, **kwargs):
               {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
+              {filtra_referencia} -- filtra_referencia
               {filtra_situacao} -- filtra_situacao
               {filtro_tipo_ref} -- filtro_tipo_ref
               {filtro_tipo_alt} -- filtro_tipo_alt
@@ -163,6 +173,7 @@ def op_sortimentos(cursor, **kwargs):
             filtro_especifico=filtro_especifico,
             filtra_op=filtra_op,
             filtra_modelo=filtra_modelo,
+            filtra_referencia=filtra_referencia,
             filtra_situacao=filtra_situacao,
             filtro_tipo_ref=filtro_tipo_ref,
             filtro_tipo_alt=filtro_tipo_alt,
@@ -199,6 +210,7 @@ def op_sortimentos(cursor, **kwargs):
           {filtro_especifico} -- filtro_especifico
           {filtra_op} -- filtra_op
           {filtra_modelo} -- filtra_modelo
+          {filtra_referencia} -- filtra_referencia
           {filtra_situacao} -- filtra_situacao
           {filtro_tipo_ref} -- filtro_tipo_ref
           {filtro_tipo_alt} -- filtro_tipo_alt
@@ -210,6 +222,7 @@ def op_sortimentos(cursor, **kwargs):
         filtro_especifico=filtro_especifico,
         filtra_op=filtra_op,
         filtra_modelo=filtra_modelo,
+        filtra_referencia=filtra_referencia,
         filtra_situacao=filtra_situacao,
         filtro_tipo_ref=filtro_tipo_ref,
         filtro_tipo_alt=filtro_tipo_alt,
@@ -279,6 +292,7 @@ def op_sortimentos(cursor, **kwargs):
               {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
+              {filtra_referencia} -- filtra_referencia
               {filtra_situacao} -- filtra_situacao
               {filtro_tipo_ref} -- filtro_tipo_ref
               {filtro_tipo_alt} -- filtro_tipo_alt
@@ -304,6 +318,7 @@ def op_sortimentos(cursor, **kwargs):
             filtro_especifico=filtro_especifico,
             filtra_op=filtra_op,
             filtra_modelo=filtra_modelo,
+            filtra_referencia=filtra_referencia,
             filtra_situacao=filtra_situacao,
             filtro_tipo_ref=filtro_tipo_ref,
             filtro_tipo_alt=filtro_tipo_alt,
@@ -333,6 +348,7 @@ def op_sortimentos(cursor, **kwargs):
               {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
+              {filtra_referencia} -- filtra_referencia
               {filtra_situacao} -- filtra_situacao
               {filtro_tipo_ref} -- filtro_tipo_ref
               {filtro_tipo_alt} -- filtro_tipo_alt
@@ -363,6 +379,7 @@ def op_sortimentos(cursor, **kwargs):
             filtro_especifico=filtro_especifico,
             filtra_op=filtra_op,
             filtra_modelo=filtra_modelo,
+            filtra_referencia=filtra_referencia,
             filtra_situacao=filtra_situacao,
             filtro_tipo_ref=filtro_tipo_ref,
             filtro_tipo_alt=filtro_tipo_alt,
@@ -391,6 +408,7 @@ def op_sortimentos(cursor, **kwargs):
               {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
               {filtra_modelo} -- filtra_modelo
+              {filtra_referencia} -- filtra_referencia
               {filtra_situacao} -- filtra_situacao
               {filtro_tipo_ref} -- filtro_tipo_ref
               {filtro_tipo_alt} -- filtro_tipo_alt
@@ -420,6 +438,7 @@ def op_sortimentos(cursor, **kwargs):
             filtro_especifico=filtro_especifico,
             filtra_op=filtra_op,
             filtra_modelo=filtra_modelo,
+            filtra_referencia=filtra_referencia,
             filtra_situacao=filtra_situacao,
             filtro_tipo_ref=filtro_tipo_ref,
             filtro_tipo_alt=filtro_tipo_alt,
