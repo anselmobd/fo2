@@ -86,7 +86,21 @@ class VendasPorModeloNew(O2BaseGetView):
             ref_incl = self.inclui_referencias_adicionadas(data_row)
             if ref_incl:
                 data_row['ref_incluir'] = "&larr;"
-                data_row['ref_incluir|HOVER'] = ', '.join([r['referencia'] for r in ref_incl])
+                refs = ', '.join([r['referencia'] for r in ref_incl])
+                data_row['ref_incluir|HOVER'] = f"{data_row['modelo']}<-{refs}"
+                for ref in ref_incl:
+                    incl_row = next(
+                        (ir for ir in self.av.data 
+                         if ir['modelo'] == ref['modelo']),
+                        False)
+                    if incl_row:
+                        incl_row['ref_incluir'] = "&rarr;"
+                        hover = f"{ref['referencia']}->{data_row['modelo']}"
+                        try:
+                            incl_row['ref_incluir|HOVER'] += f" {hover}"
+                        except Exception:
+                            incl_row['ref_incluir|HOVER'] = f"{hover}"
+
 
     def add_link_modelo(self):
         for row in self.av.data:
