@@ -3,7 +3,7 @@ from utils.functions.models import rows_to_dict_list_lower, GradeQtd
 
 def grade_estoque(
         cursor, ref=None, dep=None, data_ini=None, tipo_grade=None,
-        modelo=None):
+        modelo=None, referencia=None):
 
     filtro_modelo = ''
     filtro_modelo_mask = ''
@@ -19,6 +19,13 @@ def grade_estoque(
                   )
                 )
               ) = '{modelo}'
+        '''
+
+    filtro_referencia = ''
+    filtro_referencia_mask = ''
+    if referencia is not None:
+        filtro_referencia_mask = f'''--
+            AND {{}} = '{referencia}'
         '''
 
     teste_dep = ''
@@ -51,6 +58,8 @@ def grade_estoque(
             filtro_ref = f"AND ee.GRUPO_ESTRUTURA  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('ee.GRUPO_ESTRUTURA')
+        if referencia is not None:
+            filtro_referencia = filtro_referencia_mask.format('ee.GRUPO_ESTRUTURA')
         sql = f'''
             SELECT DISTINCT
               ee.SUBGRUPO_ESTRUTURA TAMANHO
@@ -61,6 +70,7 @@ def grade_estoque(
             WHERE ee.NIVEL_ESTRUTURA = 1
               {filtro_ref} -- filtro_ref
               {filtro_modelo} -- filtro_modelo
+              {filtro_referencia} -- filtro_referencia
               AND ee.CODIGO_DEPOSITO {teste_dep}
               {filtro_data_ini} -- filtro_data_ini
             ORDER BY
@@ -72,6 +82,8 @@ def grade_estoque(
             filtro_ref = f"AND e.CDITEM_GRUPO  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('e.CDITEM_GRUPO')
+        if referencia is not None:
+            filtro_referencia = filtro_referencia_mask.format('e.CDITEM_GRUPO')
         sql = f'''
             SELECT DISTINCT
               e.CDITEM_SUBGRUPO TAMANHO
@@ -82,6 +94,7 @@ def grade_estoque(
             WHERE e.CDITEM_NIVEL99 = 1
               {filtro_ref} -- filtro_ref
               {filtro_modelo} -- filtro_modelo
+              {filtro_referencia} -- filtro_referencia
               AND e.DEPOSITO {teste_dep}
               AND e.QTDE_ESTOQUE_ATU <> 0
             ORDER BY
@@ -94,6 +107,8 @@ def grade_estoque(
             filtro_ref = f"AND t.BASI030_REFERENC  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('t.BASI030_REFERENC')
+        if referencia is not None:
+            filtro_referencia = filtro_referencia_mask.format('t.BASI030_REFERENC')
         sql = f'''
             SELECT DISTINCT
               t.TAMANHO_REF TAMANHO
@@ -104,6 +119,7 @@ def grade_estoque(
             WHERE t.BASI030_NIVEL030 = 1
               {filtro_ref} -- filtro_ref
               {filtro_modelo} -- filtro_modelo
+              {filtro_referencia} -- filtro_referencia
             ORDER BY
               2
         '''
@@ -123,6 +139,8 @@ def grade_estoque(
             filtro_ref = f"AND ee.GRUPO_ESTRUTURA  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('ee.GRUPO_ESTRUTURA')
+        if referencia is not None:
+            filtro_referencia = filtro_referencia_mask.format('ee.GRUPO_ESTRUTURA')
         sql = f'''
             SELECT DISTINCT
               ee.ITEM_ESTRUTURA SORTIMENTO
@@ -130,6 +148,7 @@ def grade_estoque(
             WHERE ee.NIVEL_ESTRUTURA = 1
               {filtro_ref} -- filtro_ref
               {filtro_modelo} -- filtro_modelo
+              {filtro_referencia} -- filtro_referencia
               AND ee.CODIGO_DEPOSITO {teste_dep}
               {filtro_data_ini} -- filtro_data_ini
             ORDER BY
@@ -141,6 +160,8 @@ def grade_estoque(
             filtro_ref = f"AND e.CDITEM_GRUPO  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('e.CDITEM_GRUPO')
+        if referencia is not None:
+            filtro_referencia = filtro_referencia_mask.format('e.CDITEM_GRUPO')
         sql = f'''
             SELECT DISTINCT
               e.CDITEM_ITEM SORTIMENTO
@@ -148,6 +169,7 @@ def grade_estoque(
             WHERE e.CDITEM_NIVEL99 = 1
               {filtro_ref} -- filtro_ref
               {filtro_modelo} -- filtro_modelo
+              {filtro_referencia} -- filtro_referencia
               AND e.DEPOSITO {teste_dep}
               AND e.QTDE_ESTOQUE_ATU <> 0
             ORDER BY
@@ -169,6 +191,8 @@ def grade_estoque(
         filtro_ref = f"AND e.CDITEM_GRUPO  = '{ref}'"
     if modelo is not None:
         filtro_modelo = filtro_modelo_mask.format('e.CDITEM_GRUPO')
+    if referencia is not None:
+        filtro_referencia = filtro_referencia_mask.format('e.CDITEM_GRUPO')
     sql = f'''
         SELECT
           e.CDITEM_SUBGRUPO TAMANHO
@@ -179,6 +203,7 @@ def grade_estoque(
           AND e.CDITEM_NIVEL99 = 1
           {filtro_ref} -- filtro_ref
           {filtro_modelo} -- filtro_modelo
+          {filtro_referencia} -- filtro_referencia
           AND e.DEPOSITO {teste_dep}
         GROUP BY
           e.CDITEM_SUBGRUPO
