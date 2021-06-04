@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.conf import settings
 from django.db.models import Exists, OuterRef
 from django.urls import reverse
 
@@ -103,7 +104,10 @@ class GradeProduzir(O2BaseGetPostView):
         if not calcula_grade:
             return
 
-        refs_adicionadas = meta_ref_incluir(cursor, modelo)
+        if settings.DEBUG:
+            refs_adicionadas = meta_ref_incluir(cursor, modelo)
+        else:
+            refs_adicionadas = []
 
         gpr_header, gpr_fields, gpr_data, gpr_style, total_oppr = \
             lotes.queries.op.op_sortimentos(
