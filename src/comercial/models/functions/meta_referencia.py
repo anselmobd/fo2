@@ -93,6 +93,8 @@ def meta_ref_incluir(cursor, modelo):
     if len(ref_incl) != 0:
 
         for ref in ref_incl:
+            ref['modelo'] = ''.join(i for i in ref['referencia'] if i.isdigit())
+            ref['modelo'] = ref['modelo'].lstrip('0')
             ref['referencia|TARGET'] = '_blank'
             ref['referencia|LINK'] = reverse(
                 'produto:ref__get',
