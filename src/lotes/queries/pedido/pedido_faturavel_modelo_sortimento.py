@@ -9,7 +9,6 @@ from utils.functions import my_make_key_cache, fo2logger
 
 def pedido_faturavel_modelo_sortimento(
         cursor, modelo=None, periodo=None, cached=True):
-    # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
         'pedido_faturavel_modelo_sortimento', modelo, periodo, cached)
 
@@ -20,25 +19,25 @@ def pedido_faturavel_modelo_sortimento(
 
     filtro_modelo = ''
     if modelo is not None:
-        filtro_modelo = '''--
+        filtro_modelo = f'''--
             AND TRIM(LEADING '0' FROM
                      (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
                                      '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                                     ))) = '{}' '''.format(modelo)
+                                     ))) = '{modelo}' '''
 
     filtra_periodo = ''
     if periodo is not None:
         periodo_list = periodo.split(':')
         if periodo_list[0] != '':
-            filtra_periodo += '''--
-                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {}
-            '''.format(periodo_list[0])
+            filtra_periodo += f'''--
+                AND ped.DATA_ENTR_VENDA > CURRENT_DATE + {periodo_list[0]}
+            '''
         if periodo_list[1] != '':
-            filtra_periodo += '''--
-                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {}
-            '''.format(periodo_list[1])
+            filtra_periodo += f'''--
+                AND ped.DATA_ENTR_VENDA <= CURRENT_DATE + {periodo_list[1]}
+            '''
 
-    sql = """
+    sql = f"""
         SELECT
           pref.TAM
         , t.ORDEM_TAMANHO
@@ -132,10 +131,7 @@ def pedido_faturavel_modelo_sortimento(
           pref.COR
         , t.ORDEM_TAMANHO
         , pref.TAM
-    """.format(
-        filtro_modelo=filtro_modelo,
-        filtra_periodo=filtra_periodo,
-    )
+    """
     cursor.execute(sql)
     result = rows_to_dict_list_lower(cursor)
 
