@@ -10,8 +10,9 @@ from base.views import O2BaseGetView
 from utils.functions import dec_month, dec_months
 
 import comercial.models as models
-from comercial.models.functions.meta_periodos import get_meta_periodos
 import comercial.queries as queries
+from comercial.models.functions.meta_periodos import get_meta_periodos
+from comercial.models.functions.meta_referencia import meta_ref_incluir
 
 
 class VendasPorModeloNew(O2BaseGetView):
@@ -53,6 +54,15 @@ class VendasPorModeloNew(O2BaseGetView):
         ))
         return metas.filter(antiga=False).values()
 
+    def inclui_referencias_adicionadas(self, data_row):
+        ref_incl = meta_ref_incluir(self.cursor, data_row['modelo'])
+        queries.AnaliseVendasComKits(
+            self.cursor, self.meta_periodos,
+            ref_incl, 'modelo',
+            modelo=data_row['modelo'],
+            data=[data_row],
+        ).get_data()
+
     def insere_metas(self):
         for row in self.av.data:
             row["meta"] = " "
@@ -70,6 +80,7 @@ class VendasPorModeloNew(O2BaseGetView):
                 self.av.data.append(data_row)
             data_row['meta'] = row['meta_estoque']
             data_row['data'] = row['data']
+            self.inclui_referencias_adicionadas(data_row)
 
     def add_link_modelo(self):
         for row in self.av.data:
@@ -88,15 +99,17 @@ class VendasPorModeloNew(O2BaseGetView):
                 int(k['modelo']),
             )
         )
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
         self.meta_periodos = get_meta_periodos()
         
         self.get_av()
-        self.calc_ponderada()
 
         self.insere_metas()
+
+        self.calc_ponderada()
 
         self.add_link_modelo()
         data = self.av_data_sorted()
