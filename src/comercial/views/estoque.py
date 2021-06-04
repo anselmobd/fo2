@@ -67,9 +67,7 @@ def grade_meta_estoque(meta):
     meta_grade_tamanhos = {}
     tot_tam = 0
     qtd_por_tam = {}
-    grade['style'] = {
-        1: 'text-align: left;',
-    }
+    style = ["text-align: left;"] 
     for tamanho in meta_tamanhos:
         if tamanho.quantidade != 0:
             grade['headers'].append(tamanho.tamanho)
@@ -77,10 +75,9 @@ def grade_meta_estoque(meta):
             meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
             tot_tam += tamanho.quantidade
             qtd_por_tam[tamanho.tamanho] = 0
-            grade['style'][max(grade['style'].keys())+1] = \
-                'text-align: right;'
-    grade['style'][max(grade['style'].keys())+1] = \
-        'text-align: right; font-weight: bold;'
+            style.append('text-align: right;')
+    style.append('text-align: right; font-weight: bold;')
+    grade['style'] = dict(enumerate(style, start=1))
 
     qtd_por_tam['total'] = meta.meta_estoque
 
