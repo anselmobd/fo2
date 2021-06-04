@@ -21,9 +21,7 @@ def grade_meta_giro(meta, lead, show_distrib=True):
     meta_grade_tamanhos = {}
     tot_tam = 0
     qtd_por_tam = {}
-    grade['style'] = {
-        1: 'text-align: left;',
-    }
+    style = ["text-align: left;"] 
     for tamanho in meta_tamanhos:
         if tamanho.quantidade != 0:
             if show_distrib:
@@ -35,8 +33,9 @@ def grade_meta_giro(meta, lead, show_distrib=True):
             meta_grade_tamanhos[tamanho.tamanho] = tamanho.quantidade
             tot_tam += tamanho.quantidade
             qtd_por_tam[tamanho.tamanho] = 0
-            grade['style'][max(grade['style'].keys())+1] = \
-                'text-align: right;'
+            style.append('text-align: right;')
+    style.append('text-align: right; font-weight: bold;')
+    grade['style'] = dict(enumerate(style, start=1))
 
     resto = meta_giro % tot_tam
     if resto != 0:
@@ -44,8 +43,6 @@ def grade_meta_giro(meta, lead, show_distrib=True):
 
     grade['headers'].append('Total')
     grade['fields'].append('total')
-    grade['style'][max(grade['style'].keys())+1] = \
-        'text-align: right; font-weight: bold;'
 
     tot_packs = meta_giro / tot_tam
 
