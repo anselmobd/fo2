@@ -8,34 +8,31 @@ def grade_estoque(
     filtro_modelo = ''
     filtro_modelo_mask = ''
     if modelo is not None:
-        filtro_modelo_mask = '''--
+        filtro_modelo_mask = f'''--
             AND
               TRIM(
                 LEADING '0' FROM (
                   REGEXP_REPLACE(
-                    {field},
+                    {{}},
                     '^[abAB]?([0-9]+)[a-zA-Z]*$',
                     '\\1'
                   )
                 )
               ) = '{modelo}'
-        '''.format(
-            field='{}',
-            modelo=modelo,
-        )
+        '''
 
     teste_dep = ''
     if type(dep) is tuple:
-        teste_dep = ','.join(map(lambda x: "'{}'".format(x), dep))
-        teste_dep = ' IN ({})'.format(teste_dep)
+        teste_dep = ",".join(map(str, dep))
+        teste_dep = f" IN ({teste_dep})"
     else:
-        teste_dep = " = '{dep}'".format(dep=dep)
+        teste_dep = f" = '{dep}'"
 
     filtro_data_ini = ''
     if data_ini is not None:
         filtro_data_ini = (
             "AND ee.DATA_MOVIMENTO >= "
-            "TO_DATE('{data_ini}', 'yyyy-mm-dd')".format(data_ini=data_ini)
+            f"TO_DATE('{data_ini}', 'yyyy-mm-dd')"
         )
 
     if tipo_grade is None:
@@ -51,10 +48,10 @@ def grade_estoque(
     if tipo_grade['t'] == 'm':  # com movimento
         filtro_ref = ''
         if ref is not None:
-            filtro_ref = "AND ee.GRUPO_ESTRUTURA  = '{}'".format(ref)
+            filtro_ref = f"AND ee.GRUPO_ESTRUTURA  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('ee.GRUPO_ESTRUTURA')
-        sql = '''
+        sql = f'''
             SELECT DISTINCT
               ee.SUBGRUPO_ESTRUTURA TAMANHO
             , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
@@ -68,19 +65,14 @@ def grade_estoque(
               {filtro_data_ini} -- filtro_data_ini
             ORDER BY
               2
-        '''.format(
-            filtro_ref=filtro_ref,
-            filtro_modelo=filtro_modelo,
-            teste_dep=teste_dep,
-            filtro_data_ini=filtro_data_ini,
-        )
+        '''
     elif tipo_grade['t'] == 'e':  # com estoque
         filtro_ref = ''
         if ref is not None:
-            filtro_ref = "AND e.CDITEM_GRUPO  = '{}'".format(ref)
+            filtro_ref = f"AND e.CDITEM_GRUPO  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('e.CDITEM_GRUPO')
-        sql = '''
+        sql = f'''
             SELECT DISTINCT
               e.CDITEM_SUBGRUPO TAMANHO
             , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
@@ -94,19 +86,15 @@ def grade_estoque(
               AND e.QTDE_ESTOQUE_ATU <> 0
             ORDER BY
               2
-        '''.format(
-            filtro_ref=filtro_ref,
-            filtro_modelo=filtro_modelo,
-            teste_dep=teste_dep,
-        )
+        '''
 
     elif tipo_grade['t'] == 'c':  # como cadastrado
         filtro_ref = ''
         if ref is not None:
-            filtro_ref = "AND t.BASI030_REFERENC  = '{}'".format(ref)
+            filtro_ref = f"AND t.BASI030_REFERENC  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('t.BASI030_REFERENC')
-        sql = '''
+        sql = f'''
             SELECT DISTINCT
               t.TAMANHO_REF TAMANHO
             , tam.ORDEM_TAMANHO SEQUENCIA_TAMANHO
@@ -118,10 +106,7 @@ def grade_estoque(
               {filtro_modelo} -- filtro_modelo
             ORDER BY
               2
-        '''.format(
-            filtro_ref=filtro_ref,
-            filtro_modelo=filtro_modelo,
-        )
+        '''
 
     grade.col(
         id='TAMANHO',
@@ -135,10 +120,10 @@ def grade_estoque(
     if tipo_grade['c'] == 'm':  # com movimento
         filtro_ref = ''
         if ref is not None:
-            filtro_ref = "AND ee.GRUPO_ESTRUTURA  = '{}'".format(ref)
+            filtro_ref = f"AND ee.GRUPO_ESTRUTURA  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('ee.GRUPO_ESTRUTURA')
-        sql = '''
+        sql = f'''
             SELECT DISTINCT
               ee.ITEM_ESTRUTURA SORTIMENTO
             FROM ESTQ_300_ESTQ_310 ee -- mov. de estoque em aberto e fechado
@@ -149,19 +134,14 @@ def grade_estoque(
               {filtro_data_ini} -- filtro_data_ini
             ORDER BY
               ee.ITEM_ESTRUTURA
-        '''.format(
-            filtro_ref=filtro_ref,
-            filtro_modelo=filtro_modelo,
-            teste_dep=teste_dep,
-            filtro_data_ini=filtro_data_ini,
-        )
+        '''
     elif tipo_grade['c'] == 'e':  # com estoque
         filtro_ref = ''
         if ref is not None:
-            filtro_ref = "AND e.CDITEM_GRUPO  = '{}'".format(ref)
+            filtro_ref = f"AND e.CDITEM_GRUPO  = '{ref}'"
         if modelo is not None:
             filtro_modelo = filtro_modelo_mask.format('e.CDITEM_GRUPO')
-        sql = '''
+        sql = f'''
             SELECT DISTINCT
               e.CDITEM_ITEM SORTIMENTO
             FROM ESTQ_040 e
@@ -172,11 +152,7 @@ def grade_estoque(
               AND e.QTDE_ESTOQUE_ATU <> 0
             ORDER BY
               e.CDITEM_ITEM
-        '''.format(
-            filtro_ref=filtro_ref,
-            filtro_modelo=filtro_modelo,
-            teste_dep=teste_dep,
-        )
+        '''
 
     grade.row(
         id='SORTIMENTO',
@@ -190,10 +166,10 @@ def grade_estoque(
     # sortimento
     filtro_ref = ''
     if ref is not None:
-        filtro_ref = "AND e.CDITEM_GRUPO  = '{}'".format(ref)
+        filtro_ref = f"AND e.CDITEM_GRUPO  = '{ref}'"
     if modelo is not None:
         filtro_modelo = filtro_modelo_mask.format('e.CDITEM_GRUPO')
-    sql = '''
+    sql = f'''
         SELECT
           e.CDITEM_SUBGRUPO TAMANHO
         , e.CDITEM_ITEM SORTIMENTO
@@ -210,11 +186,7 @@ def grade_estoque(
         ORDER BY
           e.CDITEM_SUBGRUPO
         , e.CDITEM_ITEM
-    '''.format(
-        filtro_ref=filtro_ref,
-        filtro_modelo=filtro_modelo,
-        teste_dep=teste_dep,
-    )
+    '''
 
     grade.value(
         id='QUANTIDADE',
