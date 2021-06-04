@@ -18,8 +18,8 @@
   <h4>Médias mensais das quantidades faturadas nos períodos de ponderação</h4>
   {% if data %}
     <table>
-      {% include "layout/thead_generic.html" with data=headers style=style only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
+      {% include "layout/thead_generic.html" with data=headers style=style safe=safe only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data style=style safe=safe only %}
     </table>
   {% endif %}
 {% endblock %}

@@ -62,11 +62,13 @@ class VendasPorModeloNew(O2BaseGetView):
             modelo=data_row['modelo'],
             data=[data_row],
         ).get_data()
+        return ref_incl
 
     def insere_metas(self):
         for row in self.av.data:
             row["meta"] = " "
             row["data"] = " "
+            row['ref_incluir'] = " "
         for row in self.get_metas():
             data_row = next(
                 (dr for dr in self.av.data if dr['modelo'] == row['modelo']),
@@ -74,13 +76,17 @@ class VendasPorModeloNew(O2BaseGetView):
             if not data_row:
                 data_row = {
                     'modelo': row['modelo'],
+                    'ref_incluir': " ",
                     'ponderada': 0,
                     **self.meta_periodos["zero_field_row"],
                 }
                 self.av.data.append(data_row)
             data_row['meta'] = row['meta_estoque']
             data_row['data'] = row['data']
-            self.inclui_referencias_adicionadas(data_row)
+            ref_incl = self.inclui_referencias_adicionadas(data_row)
+            if ref_incl:
+                data_row['ref_incluir'] = "&larr;"
+                data_row['ref_incluir|HOVER'] = ', '.join([r['referencia'] for r in ref_incl])
 
     def add_link_modelo(self):
         for row in self.av.data:
@@ -114,23 +120,29 @@ class VendasPorModeloNew(O2BaseGetView):
         self.add_link_modelo()
         data = self.av_data_sorted()
 
+        safe_refs_header = (
+            'Refs.<span style="font-size: 50%;vertical-align: super;" '
+            'class="glyphicon glyphicon-comment" aria-hidden="true"></span>',
+        )
         self.context.update({
             'headers': [
-                'Modelo', 'Meta de estoque', 'Data da meta', 'Venda ponderada',
+                'Modelo', safe_refs_header, 'Meta de estoque', 'Data da meta', 'Venda ponderada',
                 *self.meta_periodos['headers']
             ],
             'fields': [
-                'modelo', 'meta', 'data', 'ponderada',
+                'modelo', 'ref_incluir', 'meta', 'data', 'ponderada',
                 *self.meta_periodos['col_fields']
             ],
             'data': data,
+            'safe': ['ref_incluir'],
             'style': {
-                2: 'text-align: right;',
-                3: 'text-align: center;',
-                4: 'text-align: right;',
+                2: 'text-align: center;',
+                3: 'text-align: right;',
+                4: 'text-align: center;',
                 5: 'text-align: right;',
                 6: 'text-align: right;',
                 7: 'text-align: right;',
                 8: 'text-align: right;',
+                9: 'text-align: right;',
             },
         })
