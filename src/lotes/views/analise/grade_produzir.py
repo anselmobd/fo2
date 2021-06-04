@@ -290,6 +290,8 @@ class GradeProduzir(O2BaseGetPostView):
             if total_ped == 0:
                 if total_est == 0:
                     gopp = gop
+                if total_op == 0:
+                    gopp = gest
                 else:
                     gopp = soma_grades(gop, gest)
             elif total_op == 0:
