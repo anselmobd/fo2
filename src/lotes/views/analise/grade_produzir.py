@@ -218,8 +218,8 @@ class GradeProduzir(O2BaseGetPostView):
                 cached=False
             )
         gped = None
-        print(reverse(
-            'producao:pedido_faturavel_modelo__get', args=[modelo]))
+        # print(reverse(
+        #     'producao:pedido_faturavel_modelo__get', args=[modelo]))
         if total_ped != 0:
             self.context.update({
                 'gped_header_link': reverse(
