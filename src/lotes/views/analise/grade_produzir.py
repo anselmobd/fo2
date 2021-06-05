@@ -164,6 +164,16 @@ class GradeProduzir(O2BaseGetPostView):
                 cursor, tipo='acd', descr_sort=False, modelo=modelo,
                 situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
 
+        for ref_adicionada in refs_adicionadas:
+            if ref_adicionada['ok']:
+                _, r_gcd_fields, r_gcd_data, _, r_total_opcd = \
+                    lotes.queries.op.op_sortimentos(
+                        cursor, tipo='acd', descr_sort=False, referencia=ref_adicionada['referencia'],
+                        situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
+                if r_total_opcd != 0:
+                    total_opcd += r_total_opcd
+                    self.adiciona_referencia_em_modelo(ref_adicionada, r_gcd_fields, r_gcd_data, gcd_data)
+
         gopcd = None
         if total_opcd != 0:
             gopcd = {
