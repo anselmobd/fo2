@@ -28,6 +28,31 @@ class GradeProduzir(O2BaseGetPostView):
         self.title_name = 'A produzir, por grade, depósito'
         self.get_args = ['modelo']
 
+    def adiciona_referencia_em_modelo(self, ref_adicionada, r_gpr_fields, r_gpr_data, gpr_data):
+        for index, row in enumerate(r_gpr_data):
+            ref_cor = row['SORTIMENTO'].lstrip("0")
+            if ref_cor in ref_adicionada['cores_dict']:
+                combinacao = ref_adicionada['cores_dict'][ref_cor]
+                for cor in combinacao:
+                    try:
+                        av_row = next(
+                            item
+                            for item in gpr_data
+                            if item["SORTIMENTO"].lstrip("0") == cor
+                        )
+                    except StopIteration:
+                        # print('index', index)
+                        gpr_data.insert(index, row.copy())
+                        av_row = gpr_data[index]
+                        for tamanho in r_gpr_fields[1:-1]:
+                            av_row[tamanho] = 0
+                    for tamanho in r_gpr_fields[1:-1]:
+                        if tamanho in row:
+                            try:
+                                av_row[tamanho] += row[tamanho] * combinacao[cor]
+                            except KeyError:
+                                av_row[tamanho] = row[tamanho] * combinacao[cor]
+
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
@@ -140,29 +165,30 @@ class GradeProduzir(O2BaseGetPostView):
                 # pprint(r_gpr_data)
                 if r_total_oppr != 0:
                     total_oppr += r_total_oppr
-                    for index, row in enumerate(r_gpr_data):
-                        ref_cor = row['SORTIMENTO'].lstrip("0")
-                        if ref_cor in ref_adicionada['cores_dict']:
-                            combinacao = ref_adicionada['cores_dict'][ref_cor]
-                            for cor in combinacao:
-                                try:
-                                    av_row = next(
-                                        item
-                                        for item in gpr_data
-                                        if item["SORTIMENTO"].lstrip("0") == cor
-                                    )
-                                except StopIteration:
-                                    print('index', index)
-                                    gpr_data.insert(index, row.copy())
-                                    av_row = gpr_data[index]
-                                    for tamanho in r_gpr_fields[1:-1]:
-                                        av_row[tamanho] = 0
-                                for tamanho in r_gpr_fields[1:-1]:
-                                    if tamanho in row:
-                                        try:
-                                            av_row[tamanho] += row[tamanho] * combinacao[cor]
-                                        except KeyError:
-                                            av_row[tamanho] = row[tamanho] * combinacao[cor]
+                    self.adiciona_referencia_em_modelo(ref_adicionada, r_gpr_fields, r_gpr_data, gpr_data)
+                    # for index, row in enumerate(r_gpr_data):
+                    #     ref_cor = row['SORTIMENTO'].lstrip("0")
+                    #     if ref_cor in ref_adicionada['cores_dict']:
+                    #         combinacao = ref_adicionada['cores_dict'][ref_cor]
+                    #         for cor in combinacao:
+                    #             try:
+                    #                 av_row = next(
+                    #                     item
+                    #                     for item in gpr_data
+                    #                     if item["SORTIMENTO"].lstrip("0") == cor
+                    #                 )
+                    #             except StopIteration:
+                    #                 # print('index', index)
+                    #                 gpr_data.insert(index, row.copy())
+                    #                 av_row = gpr_data[index]
+                    #                 for tamanho in r_gpr_fields[1:-1]:
+                    #                     av_row[tamanho] = 0
+                    #             for tamanho in r_gpr_fields[1:-1]:
+                    #                 if tamanho in row:
+                    #                     try:
+                    #                         av_row[tamanho] += row[tamanho] * combinacao[cor]
+                    #                     except KeyError:
+                    #                         av_row[tamanho] = row[tamanho] * combinacao[cor]
 
         goppr = None
         if total_oppr != 0:
