@@ -1,5 +1,4 @@
 from pprint import pprint
-from datetime import datetime
 
 from django.urls import reverse
 from django.db.models import Exists, OuterRef
@@ -7,7 +6,6 @@ from django.db.models import Exists, OuterRef
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
-from utils.functions import dec_month, dec_months
 
 import comercial.models as models
 import comercial.queries as queries
