@@ -146,7 +146,7 @@ class GradeProduzir(O2BaseGetPostView):
                         cursor, tipo='ap', descr_sort=False, referencia=ref_adicionada['referencia'],
                         situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
                 if r_total_oppr != 0:
-                    total_oppr += r_total_oppr
+                    total_oppr += r_total_oppr * ref_adicionada['conta_componentes']
                     self.adiciona_referencia_em_modelo(ref_adicionada, r_gpr_fields, r_gpr_data, gpr_data)
 
         goppr = None
@@ -171,7 +171,7 @@ class GradeProduzir(O2BaseGetPostView):
                         cursor, tipo='acd', descr_sort=False, referencia=ref_adicionada['referencia'],
                         situacao='a', tipo_ref='v', tipo_alt='p', total='Total')
                 if r_total_opcd != 0:
-                    total_opcd += r_total_opcd
+                    total_opcd += r_total_opcd * ref_adicionada['conta_componentes']
                     self.adiciona_referencia_em_modelo(ref_adicionada, r_gcd_fields, r_gcd_data, gcd_data)
 
         gopcd = None
