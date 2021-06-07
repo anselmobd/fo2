@@ -132,6 +132,9 @@ class GradeProduzir(O2BaseGetPostView):
             refs_adicionadas = meta_ref_incluir(cursor, modelo)
         else:
             refs_adicionadas = []
+        self.context.update({
+            'adicionadas': refs_adicionadas,
+        })
 
         gpr_header, gpr_fields, gpr_data, gpr_style, total_oppr = \
             lotes.queries.op.op_sortimentos(
