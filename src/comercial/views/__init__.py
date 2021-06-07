@@ -9,5 +9,4 @@ from .tabela_de_preco import *
 from .vendas import *
 from .vendas_por import *
 from .vendas_por_modelo_new import *
-from .vendas_por_modelo import *
 from .views import *
