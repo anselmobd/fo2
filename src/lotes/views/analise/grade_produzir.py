@@ -41,7 +41,6 @@ class GradeProduzir(O2BaseGetPostView):
                             if item["SORTIMENTO"].lstrip("0") == cor
                         )
                     except StopIteration:
-                        # print('index', index)
                         gpr_data.insert(index, row.copy())
                         av_row = gpr_data[index]
                         for tamanho in r_gpr_fields[1:-1]:
@@ -187,6 +186,16 @@ class GradeProduzir(O2BaseGetPostView):
         e_header, e_fields, e_data, e_style, total_est = \
             estoque.queries.grade_estoque(
                 cursor, dep=('101', '102', '231'), modelo=modelo)
+
+        for ref_adicionada in refs_adicionadas:
+            if ref_adicionada['ok'] and 1==1:
+                _, r_e_fields, r_e_data, _, r_total_est = \
+                    estoque.queries.grade_estoque(
+                        cursor, dep=('101', '102', '231'), referencia=ref_adicionada['referencia'])
+                if r_total_est != 0:
+                    total_est += r_total_est * ref_adicionada['conta_componentes']
+                    self.adiciona_referencia_em_modelo(ref_adicionada, r_e_fields, r_e_data, e_data)
+
         gest = None
         if total_est != 0:
             gest = {
