@@ -216,19 +216,24 @@ class GradeProduzir(O2BaseGetPostView):
         else:
             periodo = lead + dias_alem_lead
 
-        # gp_header, gp_fields, gp_data, gp_style, total_ped = \
-        #     lotes.queries.pedido.sortimento(
-        #         cursor, tipo_sort='c', descr_sort=False, modelo=modelo,
-        #         cancelado='n', faturavel='f', total='Total',
-        #         periodo=':{}'.format(periodo))
         gp_header, gp_fields, gp_data, gp_style, total_ped = \
             lotes.queries.pedido.pedido_faturavel_modelo_sortimento(
-                cursor, modelo=modelo, periodo=':{}'.format(periodo),
-                cached=False
+                cursor, modelo=modelo,
+                periodo=':{}'.format(periodo), cached=False
             )
+
+        for ref_adicionada in refs_adicionadas:
+            if ref_adicionada['ok'] and 1==1:
+                _, r_gp_fields, r_gp_data, _, r_total_ped = \
+                    lotes.queries.pedido.pedido_faturavel_modelo_sortimento(
+                        cursor, referencia=ref_adicionada['referencia'],
+                        periodo=':{}'.format(periodo), cached=False
+                    )
+                if r_total_ped != 0:
+                    total_ped += r_total_ped * ref_adicionada['conta_componentes']
+                    self.adiciona_referencia_em_modelo(ref_adicionada, r_gp_fields, r_gp_data, gp_data)
+
         gped = None
-        # print(reverse(
-        #     'producao:pedido_faturavel_modelo__get', args=[modelo]))
         if total_ped != 0:
             self.context.update({
                 'gped_header_link': reverse(
