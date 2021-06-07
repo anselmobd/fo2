@@ -15,10 +15,10 @@ from comercial.models.functions.meta_periodos import get_meta_periodos
 from comercial.models.functions.meta_referencia import meta_ref_incluir
 
 
-class VendasPorModeloNew(O2BaseGetView):
+class VendasPorModelo(O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
-        super(VendasPorModeloNew, self).__init__(*args, **kwargs)
+        super(VendasPorModelo, self).__init__(*args, **kwargs)
         self.template_name = 'comercial/vendas_por_modelo.html'
         self.title_name = 'Vendas por modelo'
 
