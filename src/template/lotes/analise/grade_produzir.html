@@ -18,7 +18,11 @@
 </form>
 {% if modelo %}
   <h3>Modelo: {{ modelo }} - {{ descr }}</h3>
-
+  {% if adicionadas %}
+    <h4>( + referências
+    {% for row in adicionadas %}{% if not forloop.first %}{% if forloop.last %} e {% else %}, {% endif %}{% endif %}{{ row.referencia }}{% endfor %}
+    )</h4>
+  {% endif %}
   {% if msg_erro %}
     <h4>{{ msg_erro }}</h4>
   {% else %}
