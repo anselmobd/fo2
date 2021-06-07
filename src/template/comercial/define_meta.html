@@ -39,9 +39,7 @@
       {% if adicionadas %}
         {% if adicionadas.data %}
           <small>( +
-          {% for row in adicionadas.data %}
-            {{ row.referencia }}
-          {% endfor %}
+          {% for row in adicionadas.data %}{% if not forloop.first %}{% if forloop.last %} e {% else %}, {% endif %}{% endif %}{{ row.referencia }}{% endfor %}
           )</small>
         {% endif %}
       {% endif %}
