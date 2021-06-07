@@ -103,13 +103,14 @@ class PedidoFaturavelModelo(View):
                     row['PEDIDO|TARGET'] = '_blank'
                     row['PEDIDO|LINK'] = reverse(
                         'producao:pedido__get', args=[row['PEDIDO']])
+                    row['QTD_AFAT'] = row['QTD'] - row['QTD_FAT']
                     if row['DATA'] is None:
                         row['DATA'] = ''
                     else:
                         row['DATA'] = row['DATA'].date()
 
                 totalize_data(data_pos, {
-                    'sum': ['QTD'],
+                    'sum': ['QTD_AFAT'],
                     'count': [],
                     'descr': {'REF': 'Total:'}})
 
