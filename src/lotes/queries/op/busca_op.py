@@ -93,6 +93,21 @@ def busca_op(
         """.format(cor)
         filtra_qtd_cor = "AND l.PROCONF_ITEM = '{}'".format(cor)
 
+    filtra_cor_tam = ""
+    if filtra_tam and filtra_cor:
+        filtra_cor_tam = """--
+            AND EXISTS
+            ( SELECT
+                l.*
+              FROM PCPC_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND l.PROCONF_SUBGRUPO = '{}'
+                AND l.PROCONF_ITEM = '{}'
+            )
+        """.format(tam, cor)
+        filtra_tam = ""
+        filtra_cor = ""
+
     filtra_deposito = ""
     if deposito is not None and deposito != '':
         filtra_deposito = """
@@ -522,6 +537,7 @@ def busca_op(
           {filtra_modelo} -- filtra_modelo
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
+          {filtra_cor_tam} -- filtra_cor_tam
           {filtra_deposito} -- filtra_deposito
           {filtro_tipo} -- filtro_tipo
           {filtro_tipo_alt} -- filtro_tipo_alt
@@ -580,6 +596,7 @@ def busca_op(
         filtra_tam=filtra_tam,
         filtra_qtd_tam=filtra_qtd_tam,
         filtra_cor=filtra_cor,
+        filtra_cor_tam=filtra_cor_tam,
         filtra_qtd_cor=filtra_qtd_cor,
         filtra_deposito=filtra_deposito,
         filtro_tipo=filtro_tipo,
