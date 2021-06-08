@@ -1,4 +1,5 @@
 import datetime
+from pprint import pprint
 
 from django.core.cache import cache
 
@@ -13,7 +14,13 @@ from utils.functions import (
 
 def pedido_faturavel_modelo(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
-        cached=True, deposito=None, empresa=1, nat_oper=None):
+        cached=True, deposito=None, empresa=1, nat_oper=None, group="dpnr"):
+    """Devolve dados de pedidos faturáveis
+
+    Recebe:
+        group: "dpnr" = data, pedido, nivel, referência  
+               "p" = pedido
+    """
 
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
@@ -197,7 +204,24 @@ def pedido_faturavel_modelo(
 
     cursor.execute(sql)
 
-    cached_result = rows_to_dict_list(cursor)
+    data = rows_to_dict_list(cursor)
+
+    if group == "p":
+        dp_dict = {}
+        for row in data:
+            try:
+                anterior = dp_dict[row['PEDIDO']]
+                anterior['QTD'] += row['QTD']
+                anterior['QTD_FAT'] += row['QTD_FAT']
+                anterior['PRECO'] += row['PRECO']
+            except KeyError:
+                dp_dict[row['PEDIDO']] = row
+        dp_list = []
+        for pedido in sorted(dp_dict.keys()):
+            dp_list.append(dp_dict[pedido])
+        data = dp_list
+
+    cached_result = data
     cache.set(key_cache, cached_result)
     fo2logger.info('calculated '+key_cache)
     return cached_result
