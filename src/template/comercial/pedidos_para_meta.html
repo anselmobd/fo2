@@ -12,19 +12,10 @@
 {% endblock %}
 
 {% block content %}
-  <form action="{% url 'comercial:pedidos_para_meta' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Busca"/>
-  </form>
-  {% if request.POST %}
-    <h3>Filtro:</h3>
-    <ul>
-      <li>Ano: {{ano}}</li>
-      <li>Mês: {{mes}}</li>
-      <li>Naturezas de operação: {% for nat in nat_oper %}{% if not forloop.first %}{% if forloop.last %} e {% else %}, {% endif %}{% endif %}{{ nat }}{% endfor %}</li>
-    </ul>
-  {% endif %}
+  <h3>Filtro:</h3>
+  <ul>
+    <li>Naturezas de operação: {% for nat in nat_oper %}{% if not forloop.first %}{% if forloop.last %} e {% else %}, {% endif %}{% endif %}{{ nat }}{% endfor %}</li>
+  </ul>
   {% if msg_erro %}
     <h3>{{ msg_erro }}</h3>
   {% endif %}
