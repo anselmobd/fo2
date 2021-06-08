@@ -72,6 +72,10 @@ urlpatterns = [
         views.DevolucaoParaMeta.as_view(),
         name='devolucao_para_meta'),
 
+    url(r'^pedidos_para_meta/$',
+        views.PedidosParaMeta.as_view(),
+        name='pedidos_para_meta'),
+
     url(r'^tabela_de_preco/$',
         views.TabelaDePreco.as_view(),
         name='tabela_de_preco'),

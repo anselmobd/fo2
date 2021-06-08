@@ -153,6 +153,14 @@ class FaturamentoParaMetaForm(
         ]
 
 
+class PedidosParaMetaForm(forms.Form):
+    ano = forms.IntegerField(
+        required=False, initial=ano_atual,
+        widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
+
+    mes = forms.IntegerField(required=False, initial=mes_atual)
+
+
 class TabelaDePrecoForm(forms.Form):
     tabela = forms.CharField(
         required=False,
