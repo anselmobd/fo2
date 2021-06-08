@@ -32,12 +32,14 @@ class PedidosParaMeta(O2BaseGetPostView):
         ano = self.form.cleaned_data['ano']
         mes = self.form.cleaned_data['mes']
 
-        if ano is None or mes is None:
-            hoje = datetime.date.today()
+        hoje = datetime.date.today()
+        if ano is None:
             ano_atual = hoje.year
-            mes_atual = hoje.month
         else:
             ano_atual = ano
+        if mes is None:
+            mes_atual = hoje.month
+        else:
             mes_atual = mes
 
         self.context.update({
@@ -45,29 +47,44 @@ class PedidosParaMeta(O2BaseGetPostView):
             'mes': mes_atual,
         })
 
-        faturados = comercial.queries.devolucao_para_meta(
-            cursor, ano_atual, mes_atual)
+        # ignorando form
+        dia_atual = hoje.day
+        dias_mes = dias_mes_data(hoje)
 
-        if len(faturados) == 0:
+        nat_oper=(1, 2)
+        self.context.update({
+            'nat_oper': nat_oper,
+        })
+
+        pedidos = l_q_p.pedido_faturavel_modelo(
+            cursor, periodo=f'-{dia_atual}:{dias_mes-dia_atual}', nat_oper=nat_oper)
+
+        if len(pedidos) == 0:
             self.context.update({
-                'msg_erro': 'Nenhuma devolução encontrada',
+                'msg_erro': 'Nenhum pedido encontrado',
             })
             return
 
-        totalize_data(faturados, {
-            'sum': ['qtd', 'valor'],
+        total_pedido = 0
+        for pedido in pedidos:
+            total_pedido += pedido['PRECO']
+            pedido['DATA'] = pedido['DATA'].date()
+        # total_pedido = int(round(total_pedido/1000))
+
+        totalize_data(pedidos, {
+            'sum': ['QTD', 'PRECO'],
             'descr': {'cliente': 'Total:'},
             'row_style': 'font-weight: bold;',
         })
 
         self.context.update({
-            'headers': ['Nota', 'Data', 'CFOP', 'Cliente',
-                        'Referência', 'Quantidade', 'Valor', ],
-            'fields': ['nf', 'data', 'cfop', 'cliente',
-                        'ref', 'qtd', 'valor', ],
-            'data': faturados,
+            'headers': ['Pedido', 'Data', 'Cliente',
+                        'Referência', 'Quantidade', 'Valor', 'Situação'],
+            'fields': ['PEDIDO', 'DATA', 'CLIENTE',
+                        'REF', 'QTD', 'PRECO', 'FAT'],
+            'data': pedidos,
             'style': {
+                5: 'text-align: right;',
                 6: 'text-align: right;',
-                7: 'text-align: right;',
             },
         })
