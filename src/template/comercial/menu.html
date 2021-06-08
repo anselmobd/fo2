@@ -27,6 +27,7 @@
     {% endif %}
     <li><a href="{% url 'comercial:faturamento_para_meta' %}">Faturamento no mês</a></li>
     <li><a href="{% url 'comercial:devolucao_para_meta' %}">Devolução no mês</a></li>
+    <li><a href="{% url 'comercial:pedidos_para_meta' %}">Pedidos no mês</a></li>
     <li><a href="{% url 'comercial:meta_no_ano' %}">Meta no ano</a></li>
     {% if perms.comercial.change_pendenciafaturamento %}
       <li><a href="/intradm/comercial/pendenciafaturamento/" target="_blank">Pendências do faturamento</a></li>

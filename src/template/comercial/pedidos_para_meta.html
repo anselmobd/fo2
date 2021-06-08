@@ -20,16 +20,9 @@
   {% if request.POST %}
     <h3>Filtro:</h3>
     <ul>
-      {% if mes %}
-        <li>Mês:
-          {{mes}}
-        </li>
-      {% endif %}
-      {% if ano %}
-        <li>Ano:
-          {{ano}}
-        </li>
-      {% endif %}
+      <li>Ano: {{ano}}</li>
+      <li>Mês: {{mes}}</li>
+      <li>Naturezas de operação: {% for nat in nat_oper %}{% if not forloop.first %}{% if forloop.last %} e {% else %}, {% endif %}{% endif %}{{ nat }}{% endfor %}</li>
     </ul>
   {% endif %}
   {% if msg_erro %}
