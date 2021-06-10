@@ -53,7 +53,8 @@
         <li>Por grade de modelo</li>
         <ul>
           <li><a href="{% url 'producao:grade_produzir' %}">Situação de OPs</a></li>
-          <li><a href="{% url 'producao:analise_grade_produzir' %}">Depósitos</a></li>
+          <li><a href="{% url 'producao:analise_grade_produzir_modelo' %}">Depósitos (só Modelo)</a></li>
+          <li><a href="{% url 'producao:analise_grade_produzir' %}">Depósitos (Modelo+Refs)</a></li>
         </ul>
       </ul>
       <li><a href="{% url 'producao:analise_grade_pedidos' %}">Grade de pedidos a embarcar</a></li>
