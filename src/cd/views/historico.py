@@ -56,9 +56,11 @@ class Historico(View):
                 row['usuario'] = '-'
             row['lote|LINK'] = reverse(
                 'cd:historico_lote', args=[row['lote']])
+            if row['estagio'] == 999:
+                row['estagio'] = '-'
         context.update({
-            'd_headers': ('Lote', 'Última data', 'Endereço', 'Usuário'),
-            'd_fields': ('lote', 'dt', 'endereco', 'usuario'),
+            'd_headers': ('Lote', 'Última data', 'Endereço', 'Estágio', 'Usuário'),
+            'd_fields': ('lote', 'dt', 'endereco', 'estagio', 'usuario'),
             'd_data': data,
         })
 
