@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-import lotes.models
+from utils.views import totalize_data
 
 import cd.queries as queries
 import cd.forms
@@ -52,15 +52,31 @@ class Historico(View):
                     row['endereco'] = '-'
                 else:
                     row['endereco'] = 'SAIU!'
+                row['qtd_end'] = 0
+            else:
+                row['qtd_end'] = row['qtd']
             if row['usuario'] is None:
                 row['usuario'] = '-'
             row['lote|LINK'] = reverse(
                 'cd:historico_lote', args=[row['lote']])
             if row['estagio'] == 999:
                 row['estagio'] = '-'
+                row['qtd'] = 0
+
+        totalize_data(data, {
+            'sum': ['qtd_end', 'qtd'],
+            'count': [],
+            'descr': {'endereco': 'Totais:'}})
+
+        for row in data:
+            if row['qtd_end'] == 0:
+                row['qtd_end'] = '-'
+            if row['qtd'] == 0:
+                row['qtd'] = '-'
+
         context.update({
-            'd_headers': ('Lote', 'Última data', 'Endereço', 'Estágio', 'Usuário'),
-            'd_fields': ('lote', 'dt', 'endereco', 'estagio', 'usuario'),
+            'd_headers': ('Lote', 'Última data', 'Endereço', 'Quant.', 'Estágio', 'Quant.', 'Usuário'),
+            'd_fields': ('lote', 'dt', 'endereco', 'qtd_end', 'estagio', 'qtd', 'usuario'),
             'd_data': data,
         })
 
