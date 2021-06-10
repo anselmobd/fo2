@@ -194,6 +194,7 @@ def pedido_faturavel_modelo(
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE pref.QTD > pref.QTD_FAT
         ORDER BY
           ped.DATA_ENTR_VENDA
