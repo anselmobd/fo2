@@ -10,6 +10,7 @@ from utils.views import totalize_data
 
 import lotes.forms as forms
 import lotes.queries.op
+import lotes.models
 
 
 class BuscaOP(View):
@@ -50,8 +51,34 @@ class BuscaOP(View):
             })
             return context
 
+        ends = lotes.models.EnderecoDisponivel.objects.all().values('inicio')
+        ends_ok = set()
+        for end in ends:
+            ends_ok.add(end['inicio'])
+
         safe = []
         for row in data:
+            enderecos = lotes.models.Lote.objects.filter(
+                op=row['OP']
+            ).exclude(
+                local__isnull=True
+            ).exclude(
+                local__exact=''
+            ).order_by(
+                'local'
+            ).values(
+                'local', 'qtd'
+            )
+            end_set = set()
+            qtd_end = 0
+            for end in enderecos:
+                if end['local'][0] in ends_ok:
+                    end_set.add(end['local'])
+                    qtd_end += end['qtd']
+            row['ENDS'] = ', '.join(sorted(end_set))
+            row['QTD_END'] = qtd_end
+            row['QTD_NEND'] = row['QTD'] - qtd_end
+
             row['OP|LINK'] = '/lotes/op/{}'.format(row['OP'])
             if row['OP_REL'] == '0':
                 row['OP_REL'] = '-'
@@ -104,7 +131,7 @@ class BuscaOP(View):
             row['QTD_OUTROS'] = row['QTD_AP'] - row['QTD_CD']
 
         totalize_data(data, {
-            'sum': ['QTD', 'QTD_AP', 'QTD_F', 'QTD_CD', 'QTD_OUTROS'],
+            'sum': ['QTD', 'QTD_AP', 'QTD_F', 'QTD_CD', 'QTD_OUTROS', 'QTD_END', 'QTD_NEND'],
             'count': [],
             'descr': {'LOTES': 'Totais:'}})
 
@@ -114,6 +141,7 @@ class BuscaOP(View):
                         'Tipo', 'Referência',
                         'Alt.', 'Roteiro', 'Estágio',
                         'Quant. Lotes', 'Quant. Itens',
+                        'Ends.', 'Quant. End.', 'Quant. não End',
                         'Quant. CD', 'Quant. não CD',
                         'Quant. a Prod.', 'Quant. Finaliz.',
                         'Depósito', 'Período',
@@ -124,6 +152,7 @@ class BuscaOP(View):
                        'TIPO_REF', 'REF',
                        'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
                        'LOTES', 'QTD',
+                       'ENDS', 'QTD_END', 'QTD_NEND',
                        'QTD_CD', 'QTD_OUTROS',
                        'QTD_AP', 'QTD_F',
                        'DEPOSITO_CODIGO', 'PERIODO',
@@ -134,12 +163,15 @@ class BuscaOP(View):
             'style': {
                 11: 'text-align: right;',
                 12: 'text-align: right;',
-                13: 'text-align: right;',
+                13: 'text-align: center;',
                 14: 'text-align: right;',
                 15: 'text-align: right;',
                 16: 'text-align: right;',
-                17: 'text-align: center;',
-                18: 'text-align: center;',
+                17: 'text-align: right;',
+                18: 'text-align: right;',
+                19: 'text-align: right;',
+                20: 'text-align: center;',
+                21: 'text-align: center;',
             },
         })
         return context
