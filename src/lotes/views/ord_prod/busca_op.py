@@ -75,7 +75,12 @@ class BuscaOP(View):
                 if end['local'][0] in ends_ok:
                     end_set.add(end['local'])
                     qtd_end += end['qtd']
-            row['ENDS'] = ', '.join(sorted(end_set))
+            end_list = sorted(end_set)
+            if end_list:
+                row['ENDS|HOVER'] = ', '.join(end_list)
+                row['ENDS'] = len(end_list)
+            else:
+                row['ENDS'] = "-"
             row['QTD_END'] = qtd_end
             row['QTD_NEND'] = row['QTD'] - qtd_end
 
