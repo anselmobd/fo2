@@ -1,6 +1,8 @@
 import datetime
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
@@ -42,10 +44,15 @@ class PedidosParaMeta(O2BaseGetView):
             return
 
         n = 1
-        for pedido in pedidos:
-            pedido['DATA'] = pedido['DATA'].date()
-            pedido['valor|DECIMALS'] = 2
-            pedido['N'] = n
+        for row in pedidos:
+            row['DATA'] = row['DATA'].date()
+            row['PEDIDO|LINK'] = reverse(
+                'producao:pedido__get',
+                args=[row['PEDIDO']],
+            )
+
+            row['valor|DECIMALS'] = 2
+            row['N'] = n
             n += 1
 
         totalize_data(pedidos, {
