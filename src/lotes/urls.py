@@ -155,6 +155,9 @@ urlpatterns = [
     url(r'^analise/grade_produzir/$',
         views.analise.GradeProduzir.as_view(), name='analise_grade_produzir'),
 
+    url(r'^analise/grade_produzir_modelo/$',
+        views.analise.GradeProduzirSoModelo.as_view(), name='analise_grade_produzir_modelo'),
+
     url(r'^analise/grade_pedidos/$',
         views.analise.GradePedidos.as_view(), name='analise_grade_pedidos'),
 

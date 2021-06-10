@@ -25,8 +25,9 @@ class GradeProduzir(O2BaseGetPostView):
         super(GradeProduzir, self).__init__(*args, **kwargs)
         self.Form_class = ModeloForm2
         self.template_name = 'lotes/analise/grade_produzir.html'
-        self.title_name = 'A produzir, por grade, depósito'
+        self.title_name = 'A produzir, por grade, depósito (+Refs)'
         self.get_args = ['modelo']
+        self.add_refs = True
 
     def adiciona_referencia_em_modelo(self, ref_adicionada, r_gpr_fields, r_gpr_data, gpr_data):
         for index, row in enumerate(r_gpr_data):
@@ -57,6 +58,7 @@ class GradeProduzir(O2BaseGetPostView):
 
         modelo = self.form.cleaned_data['modelo']
         self.context.update({
+            'add_refs': self.add_refs,
             'modelo': modelo,
         })
 
@@ -128,7 +130,7 @@ class GradeProduzir(O2BaseGetPostView):
         if not calcula_grade:
             return
 
-        if settings.DEBUG:
+        if self.add_refs:
             refs_adicionadas = meta_ref_incluir(cursor, modelo)
         else:
             refs_adicionadas = []
@@ -464,3 +466,11 @@ class GradeProduzir(O2BaseGetPostView):
                 self.context.update({
                     'glc': glc,
                 })
+
+
+class GradeProduzirSoModelo(GradeProduzir):
+
+    def __init__(self, *args, **kwargs):
+        super(GradeProduzirSoModelo, self).__init__(*args, **kwargs)
+        self.title_name = 'A produzir, por grade, depósito (só modelo)'
+        self.add_refs = False

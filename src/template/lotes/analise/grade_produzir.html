@@ -11,7 +11,11 @@
 
 {% block content %}
 <h4>Considerando "Saldo em depósitos (estoque em expedição)"</h4>
-<form action="{% url 'producao:analise_grade_produzir' %}" method="post">
+  {% if add_refs %}
+    <form action="{% url 'producao:analise_grade_produzir' %}" method="post">
+  {% else %}
+    <form action="{% url 'producao:analise_grade_produzir_modelo' %}" method="post">
+  {% endif %}
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca"/>
