@@ -183,6 +183,7 @@ def historico_detalhe(cursor, op):
         , l."local" endereco
         , u.username usuario
         , l.estagio 
+        , l.qtd
         from fo2_cd_lote l
         left join auth_user u
           on u.id = l.local_usuario_id
