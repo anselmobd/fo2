@@ -207,17 +207,31 @@
         {% if alter_db %}
           <p><a href="http://systextil.tussor.com.br:8045/systextil">Link</a></p>
         {% else %}
-          <p><a href="http://tussor.systextil.com.br/systextil">Link</a></p>
           <!-- <p><a href="http://oc.tussor.com.br:8345/systextil">Link</a></p> -->
+          {% if direto_url %}
+            <p><a href="http://tussor.systextil.com.br/systextil">Link</a></p>
+          {% else %}
+            <p><a href="{% url 'systextil' %}">Systêxtil não acessível no momento (clique para recarregar)</a></p>
+          {% endif %}
         {% endif %}
       {% else %}
         {% if alter_db %}
           <p><a href="http://systextil.tussor.com.br/systextil">Link oficial (domínio)</a></p>
           <p><a href="http://192.168.1.45/systextil">Link alternativo (IP)</a></p>
         {% else %}
-          <p><a href="http://oc.tussor.com.br/systextil">Link oficial (domínio)</a></p>
-          <p><a href="http://10.0.0.4/systextil">Link alternativo (IP)</a></p>
-          <p><a href="http://tussor.systextil.com.br/systextil">Link alternativo (direto na internet)</a></p>
+          {% if vpn_url or vpn_ip or direto_url %}
+            {% if vpn_url %}
+              <p><a href="http://oc.tussor.com.br/systextil">Link oficial (domínio)</a></p>
+            {% endif %}
+            {% if vpn_ip %}
+              <p><a href="http://10.0.0.4/systextil">Link alternativo (IP)</a></p>
+            {% endif %}
+            {% if direto_url %}
+              <p><a href="http://tussor.systextil.com.br/systextil">Link alternativo (direto na internet)</a></p>
+            {% endif %}
+          {% else %}
+            <p><a href="{% url 'systextil' %}">Systêxtil não acessível no momento (clique para recarregar)</a></p>
+          {% endif %}
         {% endif %}
       {% endif %}
     </div>
