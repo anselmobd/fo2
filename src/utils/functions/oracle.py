@@ -42,11 +42,9 @@ def get_oracle_conn_err(**kwargs):
         if key in __oracle_connections:
             conn = __oracle_connections[key]
             if not isOpen(conn):
-                print('apaga')
                 del(__oracle_connections[key])
 
         if key not in __oracle_connections:
-            print('connecta')
             if "/" in name:
                 host_port, name = tuple(name.split("/"))
                 if ":" in host_port:
