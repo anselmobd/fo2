@@ -11,6 +11,7 @@ from base.models import Colaborador
 
 from utils.functions import get_client_ip, fo2logger, acesso_externo
 from utils.functions.ssh import router_add_ip_apoio_auth
+from utils.functions.network import ping
 
 
 def index_view(request):
@@ -68,9 +69,27 @@ def ack_view(request):
 
 class SystextilView(View):
     def get(self, request, *args, **kwargs):
+        externo = acesso_externo()
         context = {
-            'externo': acesso_externo(),
+            'externo': externo,
         }
+
+        if not externo:
+            ok, _ = ping('oc.tussor.com.br')
+            context.update({
+                'vpn_url': ok,
+            })
+
+            ok, _ = ping('10.0.0.4')
+            context.update({
+                'vpn_ip': ok,
+            })
+
+        ok, _ = ping('tussor.systextil.com.br')
+        context.update({
+            'direto_url': ok,
+        })
+
         return render(request, "oficial_systextil.html", context)
 
 
