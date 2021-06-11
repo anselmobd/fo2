@@ -3,7 +3,7 @@ import os
 import struct
 import time
 from pprint import pprint
-from subprocess import PIPE, Popen
+from subprocess import Popen, PIPE, STDOUT
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -109,9 +109,9 @@ class GitVersion(SingletonBaseMeta):
                 comm = comm.format(git_dir)
                 print(comm)
                 # Date and hash ID
-                head = subprocess.Popen(
+                head = Popen(
                     comm, shell=True,
-                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                    stdout=PIPE, stderr=STDOUT)
                 self.git_version = head.stdout.readline().strip().decode()
             except Exception as e:
                 self.git_version = 'desconhecida'
