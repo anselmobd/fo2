@@ -229,6 +229,13 @@ DATABASES_EXTRAS = {
         'HOST': 'localhost',
         'PORT': '14521',
     },
+    'sn': {  # Systextil OC (nuvem)
+        'ENGINE': 'django.db.backends.oracle',
+        # 'NAME': 'localhost:14521/db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
+        'NAME': '152.67.55.216:1521/db_pdb1.sub02011943440.tussorvcn.oraclevcn.com',
+        'USER': 'systextil',
+        'PASSWORD': DBPASS_SH,
+    },
 }
 
 DATABASE_ROUTERS = ['utils.router.Router', ]
