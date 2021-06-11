@@ -13,6 +13,7 @@ from django.views import View
 from o2.views.base.custom import CustomView
 
 from utils.functions.models import queryset_to_dict_list_lower
+from utils.functions.oracle import get_oracle_conn_err
 
 from base.pages_context import get_current_users_requisicao
 
@@ -185,31 +186,22 @@ class TestaDB(PermissionRequiredMixin, O2BaseGetView):
                 f'({count}) Erro ao acessar banco "{db_id}" [{error}]')
 
     def acessa_oracle_db(self, databases, db_id):
-        try:
-            db_dict = databases[db_id]
+        connect_dict = databases[db_id] if db_id in databases else {}
+        conn, err = get_oracle_conn_err(**connect_dict)
+        if conn:
+            try:
+                cursor = conn.cursor()
+                conn.close()
+            except Exception as e:
+                conn = None
+                err = e
 
-            dsn_tns = cx_Oracle.makedsn(
-                db_dict['HOST'],
-                db_dict['PORT'],
-                service_name=db_dict['NAME'],
-            )
-
-            conn = cx_Oracle.connect(
-                user=db_dict['USER'],
-                password=db_dict['PASSWORD'],
-                dsn=dsn_tns
-            )
-
-            cursor = conn.cursor()
-
-            conn.close()
-
+        if conn:
             self.context['msgs_ok'].append(f'Banco "{db_id}" acessível')
             return True
-
-        except Exception as e:
+        else:
             self.context['msgs_erro'].append(
-                f'Erro ao acessar banco "{db_id}" [{e}]')
+                f'Erro ao acessar banco "{db_id}" [{err}]')
             return False
 
     def mount_context(self):
