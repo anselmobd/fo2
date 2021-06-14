@@ -68,14 +68,14 @@ intr_adm_site.register(
 class NfEntradaAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_display = [
-        'emissor', 'numero', 'descricao', 'qtd',
+        '__str__', 'emissor', 'descricao', 'qtd',
         'hora_entrada', 'transportadora', 'motorista', 'placa',
         'responsavel', 'usuario', 'quando'
     ]
     search_fields = ['emissor', 'numero', 'descricao']
     ordering = ['-quando']
     fields = (
-        'emissor', 'numero', 'descricao', 'qtd',
+        'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
         'hora_entrada', 'transportadora', 'motorista', 'placa',
         'responsavel', 'usuario', 'quando'
     )

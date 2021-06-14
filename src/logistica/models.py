@@ -213,7 +213,7 @@ class NfEntrada(models.Model):
         null=True, auto_now_add=True)
 
     def __str__(self):
-        return f'NF {self.numero} - {self.emissor}'
+        return f'CNPJ {self.cadastro} NF {self.numero}'
 
     def save(self, *args, **kwargs):
         logged_in = LoggedInUser()
