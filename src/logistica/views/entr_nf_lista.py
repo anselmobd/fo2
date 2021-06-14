@@ -13,19 +13,21 @@ class EntradaNfLista(O2BaseGetView):
         self.title_name = 'Lista NF de entrada'
 
     def mount_context(self):
-        dados = logistica.models.NfEntrada.objects.all().values()
+        fields = (
+            'emissor', 'numero', 'descricao', 'qtd',
+            'hora_entrada', 'transportadora', 'motorista', 'placa',
+            'responsavel', 'usuario__username', 'quando'
+        )
+        dados = logistica.models.NfEntrada.objects.all().values(*fields)
+        pprint(dados)
 
         self.context.update({
             'headers': (
-                'emissor', 'numero', 'descricao', 'qtd',
-                'hora_entrada', 'transportadora', 'motorista', 'placa',
-                'responsavel', 'usuario', 'quando'
+                'Emissor', 'NF', 'Descrição', 'Quant.',
+                'Hora de entrada', 'Transportadora', 'Motorista', 'Placa',
+                'Responsável', 'Digitado por', 'Digitado em'
             ),
-            'fields': (
-                'emissor', 'numero', 'descricao', 'qtd',
-                'hora_entrada', 'transportadora', 'motorista', 'placa',
-                'responsavel', 'usuario', 'quando'
-            ),
+            'fields': fields,
             'dados': dados,
         })
 
