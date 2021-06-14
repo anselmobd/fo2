@@ -3,7 +3,7 @@ from utils.functions.models import rows_to_dict_list
 
 def ref_estrutura_comp(cursor, ref, alt):
     # Detalhando Estruturas
-    sql = """
+    sql = f"""
         SELECT DISTINCT
           e.SEQUENCIA
         , (
@@ -119,12 +119,12 @@ def ref_estrutura_comp(cursor, ref, alt):
         LEFT JOIN MQOP_005 es
           ON es.CODIGO_ESTAGIO = e.ESTAGIO
         WHERE e.NIVEL_ITEM = 1
-          AND e.GRUPO_ITEM = %s
-          AND e.ALTERNATIVA_ITEM = %s
+          AND e.GRUPO_ITEM = '{ref}'
+          AND e.ALTERNATIVA_ITEM = {alt}
         ORDER BY
           e.SEQUENCIA
         , 2
         , 7
     """
-    cursor.execute(sql, [ref, alt])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
