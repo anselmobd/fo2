@@ -63,3 +63,11 @@ class PosicaoCargaAlteracaoAdmin(admin.ModelAdmin):
 
 intr_adm_site.register(
     models.PosicaoCargaAlteracao, PosicaoCargaAlteracaoAdmin)
+
+
+class NfEntradaAdmin(admin.ModelAdmin):
+    pass
+
+
+intr_adm_site.register(
+    models.NfEntrada, NfEntradaAdmin)
