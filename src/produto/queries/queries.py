@@ -294,7 +294,7 @@ def nivel_ref_inform(cursor, nivel, ref, upper=True):
 
 def ref_utilizada_em(cursor, ref):
     # Totais por OP
-    sql = """
+    sql = f"""
         SELECT DISTINCT
           ec.GRUPO_ITEM REF
         , CASE WHEN ec.GRUPO_ITEM <= '99999' THEN 'PA'
@@ -310,9 +310,9 @@ def ref_utilizada_em(cursor, ref):
           ON r.NIVEL_ESTRUTURA = ec.NIVEL_ITEM
          AND r.REFERENCIA = ec.GRUPO_ITEM
         WHERE ec.NIVEL_COMP = 1
-          AND ec.GRUPO_COMP = %s
+          AND ec.GRUPO_COMP = '{ref}'
     """
-    cursor.execute(sql, [ref])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
@@ -322,17 +322,17 @@ def ref_cores(cursor, ref):
 
 def prod_cores(cursor, nivel, grupo):
     # Cores de produto
-    sql = """
+    sql = f"""
         SELECT DISTINCT
           c.ITEM_ESTRUTURA COR
         , c.DESCRICAO_15 DESCR
         FROM basi_010 c
-        WHERE c.NIVEL_ESTRUTURA = %s
-          AND c.GRUPO_ESTRUTURA = %s
+        WHERE c.NIVEL_ESTRUTURA = {nivel}
+          AND c.GRUPO_ESTRUTURA = '{grupo}'
         ORDER BY
           c.ITEM_ESTRUTURA
     """
-    cursor.execute(sql, [nivel, grupo])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
@@ -342,7 +342,7 @@ def ref_tamanhos(cursor, ref):
 
 def prod_tamanhos(cursor, nivel, grupo):
     # Tamanhos de produto
-    sql = """
+    sql = f"""
         SELECT DISTINCT
           t.TAMANHO_REF TAM
         , t.DESCR_TAM_REFER DESCR
@@ -352,18 +352,18 @@ def prod_tamanhos(cursor, nivel, grupo):
         FROM basi_020 t
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = t.TAMANHO_REF
-        WHERE t.BASI030_NIVEL030 = %s
-          AND t.BASI030_REFERENC = %s
+        WHERE t.BASI030_NIVEL030 = {nivel}
+          AND t.BASI030_REFERENC = '{grupo}'
         ORDER BY
           tam.ORDEM_TAMANHO
     """
-    cursor.execute(sql, [nivel, grupo])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
 def ref_roteiros(cursor, ref):
     # Totais por OP
-    sql = """
+    sql = f"""
         SELECT DISTINCT
           r.NUMERO_ALTERNATI
         , r.NUMERO_ROTEIRO
@@ -394,20 +394,20 @@ def ref_roteiros(cursor, ref):
          AND alg.ALTERNATIVA = r.NUMERO_ALTERNATI
          AND alg.DESCRICAO IS NOT NULL
         WHERE r.NIVEL_ESTRUTURA = 1
-          AND r.GRUPO_ESTRUTURA = %s
+          AND r.GRUPO_ESTRUTURA = '{ref}'
         ORDER BY
           r.NUMERO_ALTERNATI
         , r.NUMERO_ROTEIRO
         , r.SUBGRU_ESTRUTURA
         , r.ITEM_ESTRUTURA
     """
-    cursor.execute(sql, [ref])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
 def ref_1roteiro(cursor, ref, alternativa, roteiro, tamanho, cor):
     # Totais por OP
-    sql = """
+    sql = f"""
         SELECT
           r.SEQ_OPERACAO SEQ
         , r.CODIGO_OPERACAO || ' - ' || o.NOME_OPERACAO OPERACAO
@@ -422,15 +422,15 @@ def ref_1roteiro(cursor, ref, alternativa, roteiro, tamanho, cor):
         JOIN MQOP_040 o -- operacao
           ON o.CODIGO_OPERACAO = r.CODIGO_OPERACAO
         WHERE r.NIVEL_ESTRUTURA = 1
-          AND r.GRUPO_ESTRUTURA = %s
-          AND r.NUMERO_ALTERNATI = %s
-          AND r.NUMERO_ROTEIRO = %s
-          AND r.SUBGRU_ESTRUTURA = %s
-          AND r.ITEM_ESTRUTURA = %s
+          AND r.GRUPO_ESTRUTURA = '{ref}'
+          AND r.NUMERO_ALTERNATI = {alternativa}
+          AND r.NUMERO_ROTEIRO = {roteiro}
+          AND r.SUBGRU_ESTRUTURA = '{tamanho}'
+          AND r.ITEM_ESTRUTURA = '{cor}'
         ORDER BY
           r.SEQ_OPERACAO
     """
-    cursor.execute(sql, [ref,  alternativa, roteiro, tamanho, cor])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
 
 
