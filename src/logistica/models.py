@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 
+from utils.classes import LoggedInUser
+
 
 class PosicaoCarga(models.Model):
     nome = models.CharField(
@@ -209,6 +211,11 @@ class NfEntrada(models.Model):
 
     def __str__(self):
         return f'NF {self.numero} - {self.emissor}'
+
+    def save(self, *args, **kwargs):
+        logged_in = LoggedInUser()
+        self.usuario = logged_in.user
+        super(NfEntrada, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_nf_entrada"
