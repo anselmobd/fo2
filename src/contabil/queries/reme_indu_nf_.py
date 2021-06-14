@@ -115,12 +115,17 @@ def reme_indu_nf(
             , inf.SUBGRU_ESTRUTURA TAM
             , inf.ITEM_ESTRUTURA COR
             , sum(inf.QTDE_ITEM_FATUR) QTD'''
+    elif detalhe == 'R':
+        sql += '''
+            , inf.NIVEL_ESTRUTURA NIVEL
+            , inf.GRUPO_ESTRUTURA REF
+            , sum(inf.QTDE_ITEM_FATUR) QTD'''
     sql += '''
         , min(osi.NUMERO_ORDEM) OS
         , min(l.ORDEM_PRODUCAO) OP
         , nfec.DOCUMENTO NF_RET
         , nfec.DATA_EMISSAO DT_RET'''
-    if detalhe in ['I', '1']:
+    if detalhe in ['I', '1', 'R']:
         sql += '''
             , sum(nfei.QUANTIDADE) QTD_RET'''
     sql += '''
@@ -177,7 +182,7 @@ def reme_indu_nf(
           {dt_entrada_filter} -- dt_entrada_filter
           {nf_entrada_filter} -- nf_entrada_filter
     '''
-    if detalhe == '1':
+    if detalhe in ['1', 'R']:
         sql += ''' --
             AND inf.NIVEL_ESTRUTURA = 1
         '''
@@ -196,6 +201,11 @@ def reme_indu_nf(
             , inf.GRUPO_ESTRUTURA
             , inf.SUBGRU_ESTRUTURA
             , inf.ITEM_ESTRUTURA
+        '''
+    elif detalhe == 'R':
+        sql += ''' --
+            , inf.NIVEL_ESTRUTURA
+            , inf.GRUPO_ESTRUTURA
         '''
     sql += ''' --
         , nfec.DOCUMENTO
@@ -225,6 +235,9 @@ def reme_indu_nf(
     if detalhe in ['I', '1']:
         sql += '''
             , r.SEQ'''
+    elif detalhe == 'R':
+        sql += '''
+            , r.REF'''
     sql += '''
         , r.NF_RET
     '''
