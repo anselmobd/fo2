@@ -14,8 +14,8 @@
     <h3>{{ msg_erro }}</h3>
   {% else %}
     <table>
-      {% include "layout/thead_generic.html" with data=passo.headers style=passo.style only %}
-      {% include "layout/tbody_generic.html" with fields=passo.fields data=passo.dados style=passo.style only %}
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
     </table>
   {% endif %}
 {% endblock %}
