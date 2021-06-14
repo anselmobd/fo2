@@ -64,7 +64,7 @@ class RemessaIndustrNF(View):
             else:
                 total_pecas = 0
                 for row in data:
-                    if detalhe in ['I', '1']:
+                    if detalhe in ['I', '1', 'R']:
                         total_pecas += row['QTD']
                     row['DT'] = row['DT'].date()
                     if row['DT_RET'] is None:
@@ -118,6 +118,23 @@ class RemessaIndustrNF(View):
                     style = {
                         15: 'text-align: right;',
                         18: 'text-align: right;',
+                    }
+                if detalhe == 'R':
+                    headers = ('NF. saída', 'Situação', 'Data saída', 'Facção',
+                               'OP', 'Pedido', 'Ped. cliente', 'Cliente',
+                               'OS', 'Nivel', 'Ref.',
+                               'Quant.',
+                               'NF retorno', 'Data retorno', 'Quant. retorno',
+                               )
+                    fields = ('NF', 'ATIVA', 'DT', 'FACCAO',
+                              'OP', 'PED', 'PED_CLI', 'CLI',
+                              'OS', 'NIVEL', 'REF',
+                              'QTD',
+                              'NF_RET', 'DT_RET', 'QTD_RET'
+                              )
+                    style = {
+                        12: 'text-align: right;',
+                        15: 'text-align: right;',
                     }
                 else:
                     headers = ('NF. saída', 'Situação', 'Data saída', 'Facção',
