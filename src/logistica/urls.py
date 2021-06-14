@@ -22,4 +22,11 @@ urlpatterns = [
     url(r'^notafiscal_movimentadas/$',
         views.NotafiscalMovimentadas.as_view(),
         name='notafiscal_movimentadas'),
+
+    url(r'^entrada_nf/sem_xml/$',
+        views.EntradaNfSemXml.as_view(), name='entr_nf_sem_xml'),
+
+    url(r'^entrada_nf/lista/$',
+        views.EntradaNfLista.as_view(), name='entr_nf_lista'),
+
 ]
