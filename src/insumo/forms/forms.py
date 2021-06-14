@@ -31,16 +31,30 @@ class FiltroMpForm(
             'conta_estoque'),
         empty_label="(Todas)")
 
-    CHOICES = [(None, '--Todos--')]
-    tipos_ce = TipoContaEstoque.objects.all()
-    for tipo_ce in tipos_ce:
-        CHOICES.append((
-            tipo_ce.codigo,
-            '{}-{}'.format(tipo_ce.codigo, tipo_ce.descricao)
-        ))
+    # CHOICES = [(None, '--Todos--')]
+    # tipos_ce = TipoContaEstoque.objects.all()
+    # for tipo_ce in tipos_ce:
+    #     CHOICES.append((
+    #         tipo_ce.codigo,
+    #         '{}-{}'.format(tipo_ce.codigo, tipo_ce.descricao)
+    #     ))
+
     tipo_conta_estoque = forms.ChoiceField(
         label='Tipo de conta de estoque do insumo',
-        required=False, choices=CHOICES, initial=None)
+        required=False, initial=None)
+
+    def __init__(self, *args, **kwargs):
+        super(FiltroMpForm, self).__init__(*args, **kwargs)
+
+        CHOICES = [(None, '--Todos--')]
+        tipos_ce = TipoContaEstoque.objects.all()
+        for tipo_ce in tipos_ce:
+            CHOICES.append((
+                tipo_ce.codigo,
+                '{}-{}'.format(tipo_ce.codigo, tipo_ce.descricao)
+            ))
+
+        self.fields['tipo_conta_estoque'].choices = CHOICES
 
     class Meta:
         autofocus_field = 'filtro'
