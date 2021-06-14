@@ -1,3 +1,6 @@
+from pprint import pprint
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 
@@ -177,3 +180,39 @@ class PosicaoCargaAlteracaoLog(models.Model):
     class Meta:
         db_table = "fo2_pos_carga_alt_log"
         verbose_name = "Log de alteração de posição de carga(NF)"
+
+
+class NfEntrada(models.Model):
+    emissor = models.CharField(
+        max_length=200)
+    numero = models.IntegerField(
+        'número', db_index=True)
+    descricao = models.CharField(
+        'descrição', max_length=200)
+    qtd = models.DecimalField(
+        'Quantidade', max_digits=13, decimal_places=4)
+    hora_entrada = models.TimeField(
+        'hora de entrada', null=True, auto_now_add=True)
+    transportadora = models.CharField(
+        max_length=100)
+    motorista = models.CharField(
+        max_length=100)
+    placa = models.CharField(
+        max_length=10)
+    responsavel = models.CharField(
+        'responsável', max_length=100)
+    usuario = models.ForeignKey(
+        User, models.PROTECT,
+        verbose_name='usuário')
+    quando = models.DateTimeField(
+        null=True, auto_now_add=True)
+
+    def __str__(self):
+        return f'NF {self.numero} - {self.emissor}'
+
+    class Meta:
+        db_table = "fo2_nf_entrada"
+        verbose_name = "Nota fiscal de entrada"
+        verbose_name_plural = "Notas fiscais de entrada"
+
+
