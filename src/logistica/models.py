@@ -194,7 +194,7 @@ class NfEntrada(models.Model):
     qtd = models.DecimalField(
         'Quantidade', max_digits=13, decimal_places=4)
     hora_entrada = models.TimeField(
-        'hora de entrada', null=True, auto_now_add=True)
+        'hora de entrada', null=True)
     transportadora = models.CharField(
         max_length=100)
     motorista = models.CharField(
