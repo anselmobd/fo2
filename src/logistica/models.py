@@ -188,7 +188,7 @@ class NfEntrada(models.Model):
     emissor = models.CharField(
         max_length=200)
     numero = models.IntegerField(
-        'número', db_index=True)
+        'número')
     descricao = models.CharField(
         'descrição', max_length=200)
     qtd = models.DecimalField(
