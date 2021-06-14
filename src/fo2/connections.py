@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import connections
 
 from geral.functions import is_alternativa
+from utils.functions.oracle import get_oracle_conn
 
 
 fo2_db_so = settings.FO2_DEFAULT_SYSTEXTIL_DB
@@ -17,6 +18,7 @@ def db_conn(name, request=None):
             return connections[fo2_db_sn]
         else:
             return connections[fo2_db_so]
+            # return get_oracle_conn(**settings.DATABASES_EXTRAS['sn'])
     return connections[name]
 
 
