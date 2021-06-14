@@ -185,6 +185,8 @@ class PosicaoCargaAlteracaoLog(models.Model):
 
 
 class NfEntrada(models.Model):
+    cadastro = models.CharField(
+        max_length=20, default='')
     emissor = models.CharField(
         max_length=200)
     numero = models.IntegerField(
