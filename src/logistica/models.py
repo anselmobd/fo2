@@ -1,5 +1,6 @@
 from pprint import pprint
 
+import django.utils.timezone
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
@@ -194,9 +195,9 @@ class NfEntrada(models.Model):
     descricao = models.CharField(
         'descrição', max_length=200)
     qtd = models.DecimalField(
-        'Quantidade', max_digits=13, decimal_places=4)
+        'quantidade', max_digits=13, decimal_places=4)
     hora_entrada = models.TimeField(
-        'hora de entrada', null=True)
+        'hora de entrada', default=django.utils.timezone.now)
     transportadora = models.CharField(
         max_length=100)
     motorista = models.CharField(
