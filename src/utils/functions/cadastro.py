@@ -5,11 +5,11 @@ from validate_docbr import CNPJ as docbr_CNPJ
 class CNPJ(docbr_CNPJ):
 
     def validate(self, doc: str = '') -> bool:
+        doc = self._only_digits(doc)
         if super(CNPJ, self).validate(doc):
             self.cnpj = doc
             return True
         else:
-            doc = self._only_digits(doc)
             if len(doc) <= 8:
                 idoc = int(f"0{doc}")
                 fdoc = f"{idoc:08}"
