@@ -22,5 +22,5 @@ class EntradaNfSemXml(LoginRequiredMixin, O2BaseGetPostView):
             nf.save()
         except Exception as e:
             self.context.update({
-                'msg_erro': f"NF não gravada <{e}>"
+                'msg_erro': f"NF não gravada - {e}"
             })
