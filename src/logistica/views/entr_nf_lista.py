@@ -19,7 +19,6 @@ class EntradaNfLista(O2BaseGetView):
             'responsavel', 'usuario__username', 'quando'
         )
         dados = logistica.models.NfEntrada.objects.all().values(*fields)
-        pprint(dados)
 
         self.context.update({
             'headers': (
