@@ -13,7 +13,7 @@
   <form method="post" action="{% url 'logistica:entr_nf_sem_xml' %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Busca"/>
+    <input type="submit" value="Grava"/>
   </form>
   {% if request.POST %}
     {% if msg_erro %}

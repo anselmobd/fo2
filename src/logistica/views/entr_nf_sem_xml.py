@@ -15,23 +15,8 @@ class EntradaNfSemXml(O2BaseGetPostView):
         self.title_name = 'Entrada de NF sem XML'
 
     def mount_context(self):
-        fields = (
-            'emissor', 'numero', 'descricao', 'qtd',
-            'hora_entrada', 'transportadora', 'motorista', 'placa',
-            'responsavel', 'usuario__username', 'quando'
-        )
-        dados = logistica.models.NfEntrada.objects.all().values(*fields)
-        pprint(dados)
-
-        self.context.update({
-            'headers': (
-                'Emissor', 'NF', 'Descrição', 'Quant.',
-                'Hora de entrada', 'Transportadora', 'Motorista', 'Placa',
-                'Responsável', 'Digitado por', 'Digitado em'
-            ),
-            'fields': fields,
-            'dados': dados,
-        })
+        pprint(self.context)
+        pprint(self.form)
 
 
 
