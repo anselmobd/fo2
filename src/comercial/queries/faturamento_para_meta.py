@@ -207,6 +207,7 @@ def faturamento_para_meta(
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = f.CGC_9
          AND c.CGC_4 = f.CGC_4
+         AND c.CGC_2 = f.CGC_2
         LEFT JOIN PEDI_100 ped -- pedido de venda  
           ON f.PEDIDO_VENDA > 0
          AND ped.PEDIDO_VENDA = f.PEDIDO_VENDA
