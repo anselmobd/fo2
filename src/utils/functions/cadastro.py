@@ -12,6 +12,8 @@ class CNPJ(docbr_CNPJ):
         else:
             if len(doc) <= 8:
                 idoc = int(f"0{doc}")
+                if idoc == 0:
+                    return False
                 fdoc = f"{idoc:08}"
                 self.cnpj = fdoc + '0001'
                 digito = self._generate_first_digit(self.cnpj)
