@@ -1,12 +1,14 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from base.views import O2BaseGetPostView
 
 import logistica.forms
 import logistica.models
 
 
-class EntradaNfSemXml(O2BaseGetPostView):
+class EntradaNfSemXml(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(EntradaNfSemXml, self).__init__(*args, **kwargs)
@@ -17,7 +19,3 @@ class EntradaNfSemXml(O2BaseGetPostView):
     def mount_context(self):
         pprint(self.context)
         pprint(self.form)
-
-
-
-

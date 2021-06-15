@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from pprint import pprint
 
 from django import forms
+from django.forms import ModelForm
 
 from base.forms import O2BaseForm
 from utils.functions import shift_years
@@ -118,7 +119,17 @@ class NfPosicaoForm(forms.Form):
         initial=2, empty_label='--Todas--')
 
 
-class EntradaNfSemXmlForm(O2BaseForm):
+class EntradaNfSemXmlForm(ModelForm):
+    class Meta:
+        model = NfEntrada
+        fields = [
+            'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
+            'hora_entrada', 'transportadora', 'motorista', 'placa',
+            'responsavel'
+        ]
+
+
+class EEntradaNfSemXmlForm(O2BaseForm):
     cadastro = forms.CharField(
         label='CNPJ',
         help_text='CNPJ da empresa emissora',
