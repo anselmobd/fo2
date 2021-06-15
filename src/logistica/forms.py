@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from pprint import pprint
 
 from django import forms
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.forms import ModelForm
 
 from base.forms import O2BaseForm
@@ -127,3 +128,8 @@ class EntradaNfSemXmlForm(ModelForm):
             'hora_entrada', 'transportadora', 'motorista', 'placa',
             'responsavel'
         ]
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "O par CNPJ e número não podem ser repetidos",
+            }
+        }
