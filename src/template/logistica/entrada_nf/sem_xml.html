@@ -1,0 +1,25 @@
+{% extends 'logistica/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'logistica:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form method="post" action="{% url 'logistica:entr_nf_sem_xml' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+  </form>
+  {% if request.POST %}
+    {% if msg_erro %}
+      <h3>{{ msg_erro }}</h3>
+    {% else %}
+      <h3>Entrada gravada</h3>
+    {% endif %}
+  {% endif %}
+{% endblock %}
