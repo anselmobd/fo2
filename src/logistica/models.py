@@ -2,10 +2,12 @@ from pprint import pprint
 
 import django.utils.timezone
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 
 from utils.classes import LoggedInUser
+from utils.functions.cadastro import CNPJ
 
 
 class PosicaoCarga(models.Model):
@@ -216,6 +218,11 @@ class NfEntrada(models.Model):
         return f'CNPJ {self.cadastro} NF {self.numero}'
 
     def save(self, *args, **kwargs):
+        val_cnpj = CNPJ()
+        if val_cnpj.validate(self.cadastro):
+            self.cadastro = val_cnpj.cnpj
+        else:
+            raise ValidationError(f"Cadastro nacional inválido.")
         logged_in = LoggedInUser()
         self.usuario = logged_in.user
         super(NfEntrada, self).save(*args, **kwargs)
