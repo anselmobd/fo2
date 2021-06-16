@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from base.views import O2BaseGetView
+from utils.functions.cadastro import CNPJ
 
 import logistica.models
 
@@ -19,6 +20,10 @@ class EntradaNfLista(O2BaseGetView):
             'responsavel', 'usuario__username', 'quando'
         )
         dados = logistica.models.NfEntrada.objects.all().values(*fields)
+
+        cnpj = CNPJ()
+        for row in dados:
+            row['cadastro'] = cnpj.mask(row['cadastro'])
 
         self.context.update({
             'headers': (
