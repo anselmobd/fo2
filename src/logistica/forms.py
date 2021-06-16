@@ -120,6 +120,11 @@ class NfPosicaoForm(forms.Form):
 
 class EntradaNfSemXmlForm(ModelForm):
 
+    cadastro = forms.CharField(
+        label='CNPJ',
+        widget=forms.TextInput(
+            attrs={'size': 20, 'autofocus': 'autofocus'}))
+
     emissor = forms.CharField(
         widget=forms.TextInput(attrs={'size': 100}))
 
