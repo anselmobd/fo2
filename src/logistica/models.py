@@ -3,7 +3,7 @@ from pprint import pprint
 import django.utils.timezone
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import IntegrityError, models
 from django.utils.text import slugify
 
 from utils.classes import LoggedInUser
@@ -225,7 +225,13 @@ class NfEntrada(models.Model):
             raise ValidationError(f"Cadastro nacional inválido.")
         logged_in = LoggedInUser()
         self.usuario = logged_in.user
-        super(NfEntrada, self).save(*args, **kwargs)
+        try:
+            super(NfEntrada, self).save(*args, **kwargs)
+        except IntegrityError as e:
+            if 'Key (cadastro, numero)' in str(e):
+                raise IntegrityError(
+                    f"CNPJ '{self.cadastro}' com número de NF '{self.numero}' já gravado"
+                )
 
     class Meta:
         db_table = "fo2_nf_entrada"
