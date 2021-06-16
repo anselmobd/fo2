@@ -32,6 +32,9 @@ class RecordTracking(models.Model):
         index_together = [
             ("time", "table", "record_id"),
         ]
+        indexes = [
+            models.Index(fields=['-id'], name='fo2_ger_record_track_desc_id'),
+        ]
 
 
 class Dispositivos(models.Model):
