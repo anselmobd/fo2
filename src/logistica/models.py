@@ -218,23 +218,21 @@ class NfEntrada(models.Model):
         cnpj = CNPJ()
         return f'{cnpj.mask(self.cadastro)} NF {self.numero}'
 
-    def save(self, *args, **kwargs):
+    def clean_cadastro(self):
         val_cnpj = CNPJ()
         if val_cnpj.validate(self.cadastro):
-            self.cadastro = val_cnpj.cnpj
+            cadastro = val_cnpj.cnpj
         else:
             raise ValidationError(f"Cadastro nacional inválido.")
+        return cadastro
+
+    def clean_usuario(self):
         logged_in = LoggedInUser()
-        self.usuario = logged_in.user
-        try:
-            super(NfEntrada, self).save(*args, **kwargs)
-        except IntegrityError as e:
-            if '(cadastro, numero)' in str(e):
-                raise IntegrityError(
-                    f"CNPJ '{self.cadastro}' com número de NF '{self.numero}' já gravado"
-                )
-            else:
-                raise e
+        return logged_in.user
+
+    def clean(self):
+        self.cadastro = self.clean_cadastro()
+        self.usuario = self.clean_usuario()
 
     class Meta:
         db_table = "fo2_nf_entrada"
