@@ -229,7 +229,7 @@ class NfEntrada(models.Model):
         try:
             super(NfEntrada, self).save(*args, **kwargs)
         except IntegrityError as e:
-            if 'Key (cadastro, numero)' in str(e):
+            if '(cadastro, numero)' in str(e):
                 raise IntegrityError(
                     f"CNPJ '{self.cadastro}' com número de NF '{self.numero}' já gravado"
                 )
