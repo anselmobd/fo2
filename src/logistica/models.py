@@ -215,7 +215,8 @@ class NfEntrada(models.Model):
         null=True, auto_now_add=True)
 
     def __str__(self):
-        return f'CNPJ {self.cadastro} NF {self.numero}'
+        cnpj = CNPJ()
+        return f'{cnpj.mask(self.cadastro)} NF {self.numero}'
 
     def save(self, *args, **kwargs):
         val_cnpj = CNPJ()
