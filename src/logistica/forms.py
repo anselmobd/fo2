@@ -119,6 +119,22 @@ class NfPosicaoForm(forms.Form):
 
 
 class EntradaNfSemXmlForm(ModelForm):
+
+    emissor = forms.CharField(
+        widget=forms.TextInput(attrs={'size': 100}))
+
+    descricao = forms.CharField(
+        widget=forms.TextInput(attrs={'size': 100}))
+
+    hora_entrada = forms.TimeField(
+        widget=forms.TimeInput(attrs={'type': 'time'}))
+
+    transportadora = forms.CharField(
+        widget=forms.TextInput(attrs={'size': 60}))
+
+    motorista = forms.CharField(
+        widget=forms.TextInput(attrs={'size': 60}))
+
     class Meta:
         model = NfEntrada
         fields = [
