@@ -10,7 +10,7 @@ from .forms import PainelModelForm, InformacaoModuloModelForm
 class RecordTrackingAdmin(admin.ModelAdmin):
     list_display = ['time', 'table', 'record_id', 'iud', 'log', 'user']
     search_fields = ['table', 'log', 'user']
-    ordering = ['-time', '-table', '-record_id']
+    ordering = ['-id']
     fields = ['time', 'table', 'record_id', 'iud', 'log', 'user']
     readonly_fields = ['time', 'table', 'record_id', 'iud', 'log', 'user']
 
