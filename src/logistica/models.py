@@ -233,6 +233,8 @@ class NfEntrada(models.Model):
                 raise IntegrityError(
                     f"CNPJ '{self.cadastro}' com número de NF '{self.numero}' já gravado"
                 )
+            else:
+                raise e
 
     class Meta:
         db_table = "fo2_nf_entrada"
