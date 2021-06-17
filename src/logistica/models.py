@@ -1,9 +1,9 @@
 from pprint import pprint
 
-import django.utils.timezone
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError, models
+from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 
 from utils.classes import LoggedInUser
@@ -199,7 +199,7 @@ class NfEntrada(models.Model):
     qtd = models.DecimalField(
         'quantidade', max_digits=13, decimal_places=4)
     hora_entrada = models.TimeField(
-        'hora de entrada', default=django.utils.timezone.now)
+        'hora de entrada', default=timezone.now)
     transportadora = models.CharField(
         max_length=100)
     motorista = models.CharField(
@@ -212,7 +212,7 @@ class NfEntrada(models.Model):
         User, models.PROTECT,
         verbose_name='usuário')
     quando = models.DateTimeField(
-        null=True, auto_now_add=True)
+        null=True, editable=False)
 
     def __str__(self):
         cnpj = CNPJ()
@@ -230,9 +230,13 @@ class NfEntrada(models.Model):
         logged_in = LoggedInUser()
         return logged_in.user
 
+    def clean_quando(self):
+        return timezone.now()
+
     def clean(self):
         self.cadastro = self.clean_cadastro()
         self.usuario = self.clean_usuario()
+        self.quando = self.clean_quando()
 
     class Meta:
         db_table = "fo2_nf_entrada"
