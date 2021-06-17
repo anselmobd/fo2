@@ -19,7 +19,9 @@ class RecordTracking(models.Model):
     iud = models.CharField(
         max_length=1, verbose_name='Ação')
     # versão 1
-    # rt.log = dict_object
+    #   rt.log = dict_object
+    # versão 2
+    #   rt.log = yaml
     log_version = models.SmallIntegerField(
         verbose_name='Versão do log', default=1)
     log = models.CharField(
