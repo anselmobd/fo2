@@ -9,6 +9,8 @@ from django.utils.text import slugify
 from utils.classes import LoggedInUser
 from utils.functions.cadastro import CNPJ
 
+from base.models import Empresa
+
 
 class PosicaoCarga(models.Model):
     nome = models.CharField(
@@ -188,6 +190,13 @@ class PosicaoCargaAlteracaoLog(models.Model):
 
 
 class NfEntrada(models.Model):
+
+    def get_tussor():
+        return Empresa.objects.get(numero=1).id
+
+    empresa = models.ForeignKey(
+        Empresa, default=get_tussor,
+        on_delete=models.PROTECT)
     cadastro = models.CharField(
         'CNPJ', max_length=20, default='')
     emissor = models.CharField(
