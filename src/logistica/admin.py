@@ -7,18 +7,6 @@ from fo2.admin import intr_adm_site
 import logistica.models as models
 
 
-_list_display = [
-    '__str__', 'emissor', 'descricao', 'qtd',
-    'hora_entrada', 'transportadora', 'motorista', 'placa',
-    'responsavel', 'usuario', 'quando'
-]
-_fields = [
-    'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
-    'hora_entrada', 'transportadora', 'motorista', 'placa',
-    'responsavel', 'usuario', 'quando'
-]
-
-
 class NotaFiscalAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_display = ['numero', 'faturamento', 'posicao',
@@ -80,26 +68,45 @@ intr_adm_site.register(
 
 
 class NfEntradaAdmin(admin.ModelAdmin):
-    list_per_page = 50
-    list_display = _list_display.copy()
-    list_display.insert(0, 'empresa')
-    search_fields = ['emissor', 'numero', 'descricao']
-    ordering = ['-quando']
-    fields = _fields.copy()
-    fields.insert(0, 'empresa')
-    readonly_fields = ['usuario', 'quando']
 
+    def __init__(self, *args):
+        super().__init__(*args)
+        self._list_display = [
+            '__str__', 'emissor', 'descricao', 'qtd',
+            'hora_entrada', 'transportadora', 'motorista', 'placa',
+            'responsavel', 'usuario', 'quando'
+        ]
+        self._fields = [
+            'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
+            'hora_entrada', 'transportadora', 'motorista', 'placa',
+            'responsavel', 'usuario', 'quando'
+        ]
 
+        self.list_per_page = 50
+        self.list_display = self._list_display.copy()
+        self.list_display.insert(0, 'empresa')
+        self.search_fields = ['emissor', 'numero', 'descricao']
+        self.ordering = ['-quando']
+        self.fields = self._fields.copy()
+        self.fields.insert(0, 'empresa')
+        self.readonly_fields = ['usuario', 'quando']
 
 class NfEntradaAgatorAdmin(NfEntradaAdmin):
-    list_display = _list_display
-    fields = _fields
+
+    def __init__(self, *args):
+        super().__init__(*args)
+
+        self.list_display = self._list_display
+        self.fields = self._fields
 
 
 class NfEntradaTussorAdmin(NfEntradaAdmin):
-    list_display = _list_display
-    fields = _fields
 
+    def __init__(self, *args):
+        super().__init__(*args)
+
+        self.list_display = self._list_display
+        self.fields = self._fields
 
 intr_adm_site.register(
     models.NfEntrada, NfEntradaAdmin)
