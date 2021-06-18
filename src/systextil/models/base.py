@@ -49,3 +49,20 @@ class Usuario(models.Model):
         app_label = 'systextil'
         db_table = "HDOC_030"
         verbose_name = "Usuário"
+
+
+class Empresa(models.Model):
+    codigo_empresa = models.IntegerField(
+        primary_key=True,
+        verbose_name='codigo')
+    nome_fantasia = models.CharField(
+        max_length=20,
+        verbose_name='nome')
+
+    def __str__(self):
+        return f'{self.codigo_empresa}-{self.nome_fantasia}'
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "FATU_500"
