@@ -191,8 +191,9 @@ class PosicaoCargaAlteracaoLog(models.Model):
 
 class NfEntrada(models.Model):
 
+    # Obs.: Não consigo apagar pois está referenciado em uma migration
     def get_tussor():
-        return Empresa.objects.get(numero=1).id
+        return None
 
     empresa = models.ForeignKey(
         Empresa,
