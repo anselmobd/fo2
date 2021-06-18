@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 class Empresa(models.Model):
     numero = models.IntegerField(
-        'número')
+        'número', unique=True)
     nome = models.CharField(
         max_length=20)
 
