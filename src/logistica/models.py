@@ -195,7 +195,7 @@ class NfEntrada(models.Model):
         return Empresa.objects.get(numero=1).id
 
     empresa = models.ForeignKey(
-        Empresa, default=get_tussor,
+        Empresa,
         on_delete=models.PROTECT)
     cadastro = models.CharField(
         'CNPJ', max_length=20, default='')
