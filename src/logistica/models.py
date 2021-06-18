@@ -255,20 +255,24 @@ class NfEntrada(models.Model):
         unique_together = [["cadastro", "numero"]]
 
 
-class NfEntradaAgatorManager(models.Manager):
+class NfEntradaXManager(models.Manager):
+
+    def __init__(self, nome):
+        self.nome = nome
+        super().__init__()
 
     def get_queryset(self):
         try:
-            numero = Empresa.objects.get(nome="AGATOR").numero
+            numero = Empresa.objects.get(nome=self.nome).numero
         except Exception:
             numero = 0
-        return super(NfEntradaAgatorManager, self).get_queryset().filter(
+        return super(NfEntradaXManager, self).get_queryset().filter(
             empresa__numero=numero)
 
 
 class NfEntradaAgator(NfEntrada):
 
-    objects = NfEntradaAgatorManager()
+    objects = NfEntradaXManager("AGATOR")
 
     def clean(self):
         try:
@@ -283,20 +287,9 @@ class NfEntradaAgator(NfEntrada):
         verbose_name_plural = "Notas fiscais de entrada Agator"
 
 
-class NfEntradaTussorManager(models.Manager):
-
-    def get_queryset(self):
-        try:
-            numero = Empresa.objects.get(nome="DUOMO").numero
-        except Exception:
-            numero = 0
-        return super(NfEntradaTussorManager, self).get_queryset().filter(
-            empresa__numero=numero)
-
-
 class NfEntradaTussor(NfEntrada):
 
-    objects = NfEntradaTussorManager()
+    objects = NfEntradaXManager("DUOMO")
 
     def clean(self):
         try:
@@ -309,5 +302,3 @@ class NfEntradaTussor(NfEntrada):
         proxy = True
         verbose_name = "Nota fiscal de entrada Tussor"
         verbose_name_plural = "Notas fiscais de entrada Tussor"
-
-
