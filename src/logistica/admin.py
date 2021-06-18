@@ -99,6 +99,7 @@ class NfEntradaAgatorAdmin(NfEntradaAdmin):
 
     def get_queryset(self, request):
         return super(NfEntradaAdmin, self).get_queryset(request).filter(empresa__numero=2)
+
     def save_model(self, request, obj, form, change):
         obj.empresa = Empresa.objects.get(numero=2)
         obj.save()
@@ -110,6 +111,10 @@ class NfEntradaTussorAdmin(NfEntradaAdmin):
 
     def get_queryset(self, request):
         return super(NfEntradaAdmin, self).get_queryset(request).filter(empresa__numero=1)
+
+    def save_model(self, request, obj, form, change):
+        obj.empresa = Empresa.objects.get(numero=1)
+        obj.save()
 
 
 intr_adm_site.register(
