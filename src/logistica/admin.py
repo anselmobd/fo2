@@ -4,6 +4,8 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
+from base.models import Empresa
+
 import logistica.models as models
 
 
@@ -91,7 +93,28 @@ class NfEntradaAdmin(admin.ModelAdmin):
 
 
 
+class NfEntradaAgatorAdmin(NfEntradaAdmin):
+    list_display = _list_display
+    fields = _fields
+
+    def get_queryset(self, request):
+        return super(NfEntradaAdmin, self).get_queryset(request).filter(empresa__numero=2)
+    def save_model(self, request, obj, form, change):
+        obj.empresa = Empresa.objects.get(numero=2)
+        obj.save()
+
+
+class NfEntradaTussorAdmin(NfEntradaAdmin):
+    list_display = _list_display
+    fields = _fields
+
+    def get_queryset(self, request):
+        return super(NfEntradaAdmin, self).get_queryset(request).filter(empresa__numero=1)
 
 
 intr_adm_site.register(
     models.NfEntrada, NfEntradaAdmin)
+intr_adm_site.register(
+    models.NfEntradaAgator, NfEntradaAgatorAdmin)
+intr_adm_site.register(
+    models.NfEntradaTussor, NfEntradaTussorAdmin)
