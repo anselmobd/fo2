@@ -95,16 +95,10 @@ class NfEntradaAgatorAdmin(NfEntradaAdmin):
     list_display = _list_display
     fields = _fields
 
-    def get_queryset(self, request):
-        return super(NfEntradaAdmin, self).get_queryset(request).filter(empresa__numero=2)
-
 
 class NfEntradaTussorAdmin(NfEntradaAdmin):
     list_display = _list_display
     fields = _fields
-
-    def get_queryset(self, request):
-        return super(NfEntradaAdmin, self).get_queryset(request).filter(empresa__numero=1)
 
 
 intr_adm_site.register(
