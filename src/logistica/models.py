@@ -256,6 +256,14 @@ class NfEntrada(models.Model):
 
 
 class NfEntradaAgator(NfEntrada):
+
+    def clean(self):
+        try:
+            self.empresa = Empresa.objects.get(nome="AGATOR")
+        except Exception:
+            raise ValidationError(f"Registro da Empresa 'AGATOR' não encontrado.")
+        super(NfEntradaAgator, self).clean()
+
     class Meta:
         proxy = True
         verbose_name = "Nota fiscal de entrada Agator"
@@ -263,6 +271,14 @@ class NfEntradaAgator(NfEntrada):
 
 
 class NfEntradaTussor(NfEntrada):
+
+    def clean(self):
+        try:
+            self.empresa = Empresa.objects.get(nome="DUOMO")
+        except Exception:
+            raise ValidationError(f"Registro da Empresa 'DUOMO' não encontrado.")
+        super(NfEntradaTussor, self).clean()
+
     class Meta:
         proxy = True
         verbose_name = "Nota fiscal de entrada Tussor"
