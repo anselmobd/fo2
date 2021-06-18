@@ -42,6 +42,9 @@
       <ul>
         <li><a href="{% url 'geral:index' %}">Cadastros gerais</a></li>
         {% include 'geral/menu.html' with empresa='agator' %}
+        <br />
+        <li><a href="{% url 'logistica:index' %}">Logistica</a></li>
+        {% include 'logistica/menu.html' with empresa='agator' %}
       </ul>
     </td>
     <td>&nbsp;</td>

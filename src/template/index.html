@@ -282,7 +282,7 @@
         {% include 'contabil/menu.html' %}
         <br />
         <li><a href="{% url 'logistica:index' %}">Logistica</a></li>
-        {% include 'logistica/menu.html' %}
+        {% include 'logistica/menu.html' with empresa='tussor' %}
       </ul>
     </td>
     <td>&nbsp;</td>
