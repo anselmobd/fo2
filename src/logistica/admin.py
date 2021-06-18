@@ -75,11 +75,11 @@ class NfEntradaAdmin(admin.ModelAdmin):
     search_fields = ['emissor', 'numero', 'descricao']
     ordering = ['-quando']
     fields = (
-        'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
+        'empresa', 'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
         'hora_entrada', 'transportadora', 'motorista', 'placa',
         'responsavel', 'usuario', 'quando'
     )
-    readonly_fields = ['usuario', 'quando']
+    readonly_fields = ['empresa', 'usuario', 'quando']
 
 
 intr_adm_site.register(
