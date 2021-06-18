@@ -1,4 +1,3 @@
-import sys
 from pprint import pprint
 import datetime
 from datetime import timedelta
@@ -9,19 +8,17 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse
-from django.db.models import When, F, Q
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from fo2.connections import db_cursor_so
 
-from utils.functions import untuple_keys_concat
-from utils.functions.models import rows_to_dict_list
 from base.views import O2BaseGetPostView, O2BaseGetView
+from utils.functions import untuple_keys_concat
 from geral.functions import get_empresa
 
 from logistica.models import *
-from logistica.queries import get_nf_pela_chave, get_chave_pela_nf
+from logistica.queries import get_chave_pela_nf
 from logistica.forms import *
 
 
