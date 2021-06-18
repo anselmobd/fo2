@@ -252,3 +252,19 @@ class NfEntrada(models.Model):
         verbose_name = "Nota fiscal de entrada"
         verbose_name_plural = "Notas fiscais de entrada"
         unique_together = [["cadastro", "numero"]]
+
+
+class NfEntradaAgator(NfEntrada):
+    class Meta:
+        proxy = True
+        verbose_name = "Nota fiscal de entrada Agator"
+        verbose_name_plural = "Notas fiscais de entrada Agator"
+
+
+class NfEntradaTussor(NfEntrada):
+    class Meta:
+        proxy = True
+        verbose_name = "Nota fiscal de entrada Tussor"
+        verbose_name_plural = "Notas fiscais de entrada Tussor"
+
+
