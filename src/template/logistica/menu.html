@@ -1,15 +1,21 @@
 <ul>
-  <li>Controle de datas de NF</li>
-  <ul>
-    <li><a href="/intradm/logistica/notafiscal/" target="_blank">Digitação</a></li>
-    <li><a href="{% url 'logistica:notafiscal_rel' %}">Consulta</a></li>
-    <li><a href="{% url 'logistica:notafiscal_chave' %}">Movimenta NF por chave</a></li>
-    <li><a href="{% url 'logistica:notafiscal_embarcando' %}">NFs entregues ao apoio</a></li>
-    <li><a href="{% url 'logistica:notafiscal_movimentadas' %}">NFs movimentadas</a></li>
-  </ul>
+  {% if empresa == 'tussor' %}
+    <li>Controle de datas de NF</li>
+    <ul>
+      <li><a href="/intradm/logistica/notafiscal/" target="_blank">Digitação</a></li>
+      <li><a href="{% url 'logistica:notafiscal_rel' %}">Consulta</a></li>
+      <li><a href="{% url 'logistica:notafiscal_chave' %}">Movimenta NF por chave</a></li>
+      <li><a href="{% url 'logistica:notafiscal_embarcando' %}">NFs entregues ao apoio</a></li>
+      <li><a href="{% url 'logistica:notafiscal_movimentadas' %}">NFs movimentadas</a></li>
+    </ul>
+  {% endif %}
   <li>Entrada de NF</li>
   <ul>
-    <li><a href="/intradm/logistica/nfentradatussor/" target="_blank">Sem XML</a></li>
-    <li><a href="{% url 'logistica:entr_nf_lista' %}">Lista</a></li>
+    {% if empresa == 'tussor' %}
+      <li><a href="/intradm/logistica/nfentradatussor/" target="_blank">Sem XML</a></li>
+      <li><a href="{% url 'logistica:entr_nf_lista' %}">Lista</a></li>
+    {% elif empresa == 'agator' %}
+      <li><a href="/intradm/logistica/nfentradaagator/" target="_blank">Sem XML</a></li>
+    {% endif %}
   </ul>
 </ul>

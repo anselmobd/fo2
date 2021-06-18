@@ -18,6 +18,7 @@ from fo2.connections import db_cursor_so
 from utils.functions import untuple_keys_concat
 from utils.functions.models import rows_to_dict_list
 from base.views import O2BaseGetPostView, O2BaseGetView
+from geral.functions import get_empresa
 
 from logistica.models import *
 from logistica.queries import get_nf_pela_chave, get_chave_pela_nf
@@ -25,7 +26,10 @@ from logistica.forms import *
 
 
 def index(request):
-    return render(request, 'logistica/index.html')
+    if get_empresa(request) == 'agator':
+        return render(request, 'logistica/index_agator.html')
+    else:
+        return render(request, 'logistica/index.html')
 
 
 class NotafiscalRel(View):
