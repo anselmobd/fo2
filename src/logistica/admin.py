@@ -1,8 +1,22 @@
+from pprint import pprint
+
 from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
 import logistica.models as models
+
+
+_list_display = [
+    '__str__', 'emissor', 'descricao', 'qtd',
+    'hora_entrada', 'transportadora', 'motorista', 'placa',
+    'responsavel', 'usuario', 'quando'
+]
+_fields = [
+    'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
+    'hora_entrada', 'transportadora', 'motorista', 'placa',
+    'responsavel', 'usuario', 'quando'
+]
 
 
 class NotaFiscalAdmin(admin.ModelAdmin):
@@ -67,19 +81,16 @@ intr_adm_site.register(
 
 class NfEntradaAdmin(admin.ModelAdmin):
     list_per_page = 50
-    list_display = [
-        '__str__', 'emissor', 'descricao', 'qtd',
-        'hora_entrada', 'transportadora', 'motorista', 'placa',
-        'responsavel', 'usuario', 'quando'
-    ]
+    list_display = _list_display.copy()
+    list_display.insert(0, 'empresa')
     search_fields = ['emissor', 'numero', 'descricao']
     ordering = ['-quando']
-    fields = (
-        'empresa', 'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
-        'hora_entrada', 'transportadora', 'motorista', 'placa',
-        'responsavel', 'usuario', 'quando'
-    )
-    readonly_fields = ['empresa', 'usuario', 'quando']
+    fields = _fields.copy()
+    fields.insert(0, 'empresa')
+    readonly_fields = ['usuario', 'quando']
+
+
+
 
 
 intr_adm_site.register(
