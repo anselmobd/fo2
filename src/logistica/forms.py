@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from pprint import pprint
 
 from django import forms
-from django.forms import ModelForm
 
 from utils.functions import shift_years
 
@@ -118,7 +117,7 @@ class NfPosicaoForm(forms.Form):
         initial=2, empty_label='--Todas--')
 
 
-class EntradaNfSemXmlForm(ModelForm):
+class EntradaNfForm(forms.ModelForm):
 
     cadastro = forms.CharField(
         label='CNPJ',
@@ -126,13 +125,10 @@ class EntradaNfSemXmlForm(ModelForm):
             attrs={'size': 20, 'autofocus': 'autofocus'}))
 
     emissor = forms.CharField(
-        widget=forms.TextInput(attrs={'size': 100}))
+        widget=forms.TextInput(attrs={'size': 80}))
 
     descricao = forms.CharField(
-        widget=forms.TextInput(attrs={'size': 100}))
-
-    hora_entrada = forms.TimeField(
-        widget=forms.TimeInput(attrs={'type': 'time'}))
+        widget=forms.TextInput(attrs={'size': 80}))
 
     transportadora = forms.CharField(
         widget=forms.TextInput(attrs={'size': 60}))
@@ -140,10 +136,16 @@ class EntradaNfSemXmlForm(ModelForm):
     motorista = forms.CharField(
         widget=forms.TextInput(attrs={'size': 60}))
 
+
+class EntradaNfSemXmlForm(EntradaNfForm):
+
+    hora_entrada = forms.TimeField(
+        widget=forms.TimeInput(attrs={'type': 'time'}))
+
     class Meta:
         model = NfEntrada
         fields = [
-            'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
+            'cadastro', 'numero', 'emissor', 'descricao', 'qtd',
             'hora_entrada', 'transportadora', 'motorista', 'placa',
             'responsavel'
         ]
