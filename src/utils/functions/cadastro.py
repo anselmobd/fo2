@@ -5,6 +5,7 @@ from validate_docbr import CNPJ as docbr_CNPJ
 class CNPJ(docbr_CNPJ):
 
     def validate(self, doc: str = '') -> bool:
+        self.cnpj = '0'*14
         doc = self._only_digits(doc)
         if super(CNPJ, self).validate(doc):
             self.cnpj = doc
