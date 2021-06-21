@@ -19,7 +19,7 @@ def entr_nf_cadastro(request, *args, **kwargs):
             result = NfEntrada.objects.filter(
                 cadastro=cadastro
             ).values(
-                'emissor', 'descricao', 'transportadora'
+                'cadastro', 'emissor', 'descricao', 'transportadora'
             ).order_by('-quando').first()
     except Exception:
         pass
