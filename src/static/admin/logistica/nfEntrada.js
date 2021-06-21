@@ -11,6 +11,7 @@ async function get_data(cadastro) {
         console.log('erro buscando cadastro', cadastro);
     }
     
+    document.getElementById('id_cadastro').value = nfEntrada_obj.cadastro;
     document.getElementById('id_emissor').value = nfEntrada_obj.emissor;
     document.getElementById('id_descricao').value = nfEntrada_obj.descricao;
     document.getElementById('id_transportadora').value = nfEntrada_obj.transportadora;
