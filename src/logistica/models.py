@@ -226,12 +226,13 @@ class NfEntrada(models.Model):
 
     def __str__(self):
         cnpj = CNPJ()
-        return f'{cnpj.mask(self.cadastro)} NF {self.numero}'
+        cnpj.validate(self.cadastro)
+        return f'{cnpj.mask(cnpj.cnpj)} NF {self.numero}'
 
     def clean_cadastro(self):
         val_cnpj = CNPJ()
         if val_cnpj.validate(self.cadastro):
-            cadastro = val_cnpj.cnpj
+            cadastro = val_cnpj.mask(val_cnpj.cnpj)
         else:
             raise ValidationError(f"Cadastro nacional inválido.")
         return cadastro
