@@ -1,6 +1,8 @@
 from django.conf.urls import url
 
 import logistica.views
+import logistica.views.ajax
+
 
 urlpatterns = [
     url(r'^$', logistica.views.index, name='index'),
@@ -28,5 +30,8 @@ urlpatterns = [
 
     url(r'^entrada_nf/lista/$',
         logistica.views.EntradaNfLista.as_view(), name='entr_nf_lista'),
+
+    url(r'^ajax/entr_nf_cadastro/(?P<cadastro>\d+)/$',
+        logistica.views.ajax.entr_nf_cadastro, name='ajax_entr_nf_cadastro'),
 
 ]
