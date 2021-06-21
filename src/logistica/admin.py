@@ -6,6 +6,7 @@ from django.contrib import admin
 from fo2.admin import intr_adm_site
 
 import logistica.models as models
+from logistica.forms import EntradaNfForm
 
 
 class NotaFiscalAdmin(admin.ModelAdmin):
@@ -72,6 +73,8 @@ class NfEntradaAdmin(admin.ModelAdmin):
 
     def __init__(self, *args):
         super().__init__(*args)
+        self.form = EntradaNfForm
+
         self._list_display = [
             '__str__', 'emissor', 'descricao', 'qtd',
             'hora_entrada', 'transportadora', 'motorista', 'placa',
