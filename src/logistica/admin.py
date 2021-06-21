@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.conf import settings
 from django.contrib import admin
 
 from fo2.admin import intr_adm_site
@@ -90,6 +91,11 @@ class NfEntradaAdmin(admin.ModelAdmin):
         self.fields = self._fields.copy()
         self.fields.insert(0, 'empresa')
         self.readonly_fields = ['usuario', 'quando']
+
+    class Media:
+        static_url = getattr(settings, 'STATIC_URL', '/static/')
+        js = [static_url+'/admin/logistica/nfEntrada.js', ]
+
 
 class NfEntradaAgatorAdmin(NfEntradaAdmin):
 
