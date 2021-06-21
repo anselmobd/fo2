@@ -78,7 +78,7 @@ class NfEntradaAdmin(admin.ModelAdmin):
             'responsavel', 'usuario', 'quando'
         ]
         self._fields = [
-            'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
+            'cadastro', 'numero', 'emissor', 'descricao', 'qtd',
             'hora_entrada', 'transportadora', 'motorista', 'placa',
             'responsavel', 'usuario', 'quando'
         ]
