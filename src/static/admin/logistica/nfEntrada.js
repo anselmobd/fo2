@@ -11,6 +11,12 @@ async function get_data(cadastro) {
         document.getElementById('id_emissor').value = nfEntrada_obj.emissor;
         document.getElementById('id_descricao').value = nfEntrada_obj.descricao;
         document.getElementById('id_transportadora').value = nfEntrada_obj.transportadora;
+        if ('motorista' in nfEntrada_obj) {
+            document.getElementById('id_motorista').value = nfEntrada_obj.motorista;
+        }
+        if ('placa' in nfEntrada_obj) {
+            document.getElementById('id_placa').value = nfEntrada_obj.placa;
+        }
     } catch(e) {
         console.log('erro buscando cadastro', cadastro);
     }
