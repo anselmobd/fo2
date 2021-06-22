@@ -1,3 +1,4 @@
+import datetime
 import json
 from pprint import pprint
 
@@ -21,12 +22,17 @@ def entr_nf_cadastro(request, *args, **kwargs):
             result = NfEntrada.objects.filter(
                 Q(cadastro=cadastro) | Q(cadastro=cadastro_mask)
             ).values(
-                'emissor', 'descricao', 'transportadora'
+                'emissor', 'descricao', 'transportadora',
+                'motorista', 'placa', 'quando'
             ).order_by('-quando').first()
             result.update({
                 'cadastro': cadastro_mask,
             })
+            result['quando'] = result['quando'].date()
+            if result['quando'] != datetime.date.today():
+                del(result['motorista'])
+                del(result['placa'])
     except Exception:
         pass
 
-    return HttpResponse(json.dumps(result), content_type="application/json")
+    return HttpResponse(json.dumps(result, default=str), content_type="application/json")
