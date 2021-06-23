@@ -139,13 +139,10 @@ class EntradaNfForm(forms.ModelForm):
 
 class EntradaNfSemXmlForm(EntradaNfForm):
 
-    hora_entrada = forms.TimeField(
-        widget=forms.TimeInput(attrs={'type': 'time'}))
-
     class Meta:
         model = NfEntrada
         fields = [
             'cadastro', 'numero', 'emissor', 'descricao', 'qtd',
-            'hora_entrada', 'transportadora', 'motorista', 'placa',
+            'chegada', 'transportadora', 'motorista', 'placa',
             'responsavel'
         ]
