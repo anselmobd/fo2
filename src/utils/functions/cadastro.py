@@ -3,9 +3,8 @@ from validate_docbr import CNPJ as docbr_CNPJ
 
 
 class CNPJ(docbr_CNPJ):
-
-    def validate(self, doc: str = '') -> bool:
-        self.cnpj = '0'*14
+    def validate(self, doc: str = "") -> bool:
+        self.cnpj = "0" * 14
         doc = self._only_digits(doc)
         if super(CNPJ, self).validate(doc):
             self.cnpj = doc
@@ -16,7 +15,7 @@ class CNPJ(docbr_CNPJ):
                 if idoc == 0:
                     return False
                 fdoc = f"{idoc:08}"
-                self.cnpj = fdoc + '0001'
+                self.cnpj = fdoc + "0001"
                 digito = self._generate_first_digit(self.cnpj)
                 self.cnpj = self.cnpj + digito
                 digito = self._generate_second_digit(self.cnpj)
@@ -24,4 +23,3 @@ class CNPJ(docbr_CNPJ):
                 return True
             else:
                 return False
-
