@@ -142,7 +142,7 @@ class EntradaNfSemXmlForm(EntradaNfForm):
     class Meta:
         model = NfEntrada
         fields = [
-            'cadastro', 'numero', 'emissor', 'descricao', 'qtd',
+            'cadastro', 'numero', 'emissor', 'descricao', 'volumes',
             'chegada', 'transportadora', 'motorista', 'placa',
             'responsavel'
         ]

@@ -15,7 +15,7 @@ class EntradaNfLista(O2BaseGetView):
 
     def mount_context(self):
         fields = (
-            'cadastro', 'emissor', 'numero', 'descricao', 'qtd',
+            'cadastro', 'emissor', 'numero', 'descricao', 'volumes',
             'chegada', 'transportadora', 'motorista', 'placa',
             'responsavel', 'usuario__username', 'quando'
         )
@@ -27,7 +27,7 @@ class EntradaNfLista(O2BaseGetView):
 
         self.context.update({
             'headers': (
-                'CNPJ', 'Emissor', 'NF', 'Descrição', 'Quant.',
+                'CNPJ', 'Emissor', 'NF', 'Descrição', 'Volumes',
                 'Chegada', 'Transportadora', 'Motorista', 'Placa',
                 'Responsável', 'Digitado por', 'Digitado em'
             ),
