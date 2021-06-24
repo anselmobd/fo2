@@ -234,6 +234,7 @@ def log_version_by_table(table):
     table_dict = {
         'Lote': 2,
         'SolicitaLote': 2,
+        'NfEntrada': 2,
     }
     return table_dict.get(table, 1)
 
