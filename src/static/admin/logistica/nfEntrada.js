@@ -29,7 +29,8 @@ function nfEntradaReady () {
     
     if (i_cadastro) {
         i_cadastro.addEventListener('focusout', (event) => {
-            get_data(i_cadastro.value);
+            let cadastro = i_cadastro.value.replace(/[^\d]/g, '');
+            get_data(cadastro);
         });
     }
 }
