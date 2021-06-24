@@ -169,7 +169,7 @@ class NfEntrada(models.Model):
     emissor = models.CharField(max_length=200)
     numero = models.IntegerField("número")
     descricao = models.CharField("descrição", max_length=200)
-    qtd = models.IntegerField("quantidade")
+    volumes = models.IntegerField("quantidade")
     chegada = models.DateTimeField("chegada", default=timezone.now)
     transportadora = models.CharField(max_length=100)
     motorista = models.CharField(max_length=100)
