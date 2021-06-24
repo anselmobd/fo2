@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.urls import reverse
+
 from base.views import O2BaseGetView
 from utils.functions.cadastro import CNPJ
 
@@ -15,22 +17,24 @@ class EntradaNfLista(O2BaseGetView):
 
     def mount_context(self):
         fields = (
-            'cadastro', 'emissor', 'numero', 'descricao', 'volumes',
+            'cadastro', 'numero', 'emissor', 'descricao', 'volumes',
             'chegada', 'transportadora', 'motorista', 'placa',
-            'responsavel', 'usuario__username', 'quando'
+            'responsavel', 'usuario__username', 'quando', 'id'
         )
-        dados = logistica.models.NfEntrada.objects.all().values(*fields)
+        dados = logistica.models.NfEntrada.objects.all().values(*fields).order_by("-quando")
 
         cnpj = CNPJ()
         for row in dados:
             row['cadastro'] = cnpj.mask(row['cadastro'])
+            row['numero|LINK'] = reverse(
+                'logistica:entr_nf_historico', args=[row['id']])
 
         self.context.update({
             'headers': (
-                'CNPJ', 'Emissor', 'NF', 'Descrição', 'Volumes',
+                'CNPJ', 'NF', 'Emissor', 'Descrição', 'Volumes',
                 'Chegada', 'Transportadora', 'Motorista', 'Placa',
                 'Responsável', 'Digitado por', 'Digitado em'
             ),
-            'fields': fields,
+            'fields': fields[:-1],
             'dados': dados,
         })
