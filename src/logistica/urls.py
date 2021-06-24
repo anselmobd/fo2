@@ -47,6 +47,11 @@ urlpatterns = [
         name="entr_nf_lista",
     ),
     url(
+        r"^entrada_nf/historico/(?P<id>[^/]+)/$",
+        logistica.views.EntradaNfHistorico.as_view(),
+        name="entr_nf_historico",
+    ),
+    url(
         r"^ajax/entr_nf_cadastro/(?P<cadastro>[^/]+)/$",
         logistica.views.ajax.entr_nf_cadastro,
         name="ajax_entr_nf_cadastro",
