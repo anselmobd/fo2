@@ -23,3 +23,7 @@ class CNPJ(docbr_CNPJ):
                 return True
             else:
                 return False
+
+    def mask(self, doc: str = '') -> str:
+        doc = self._only_digits(doc)
+        return super(CNPJ, self).mask(doc)
