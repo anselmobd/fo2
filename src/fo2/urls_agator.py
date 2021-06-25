@@ -17,6 +17,6 @@ urlpatterns += [
     # Autenticação
 
     url(r'^accounts/login/$',
-        auth_views.login, {'template_name': 'login_agator.html'}, name='login'),
+        auth_views.LoginView.as_view(template_name="login_agator.html"), name='login'),
 
 ]

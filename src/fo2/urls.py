@@ -32,7 +32,7 @@ urlpatterns = [
     # url(r'^accounts/login/$',
     #     auth_views.login, {'template_name': 'login.html'}, name='login'),
 
-    url(r'^encerrar/', auth_views.logout, {'next_page': '/'}, name='encerrar'),
+    url(r'^encerrar/', auth_views.LogoutView.as_view(next_page="/"), name='encerrar'),
 
     # Administração
 
