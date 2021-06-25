@@ -4,6 +4,7 @@ import logistica.views
 import logistica.views.ajax
 
 
+app_name = 'logistica'
 urlpatterns = [
     url(r"^$", logistica.views.index, name="index"),
     url(
