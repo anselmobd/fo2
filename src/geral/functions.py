@@ -55,7 +55,7 @@ def list_geral_filtro(data, filtro):
 
 def request_user(request):
     user = None
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         user = request.user
     return user
 
