@@ -44,7 +44,7 @@ class LoggedInUser(SingletonBaseMeta):
     user = None
 
     def set_user(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             self.user = request.user
 
     @property
