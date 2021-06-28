@@ -101,6 +101,6 @@ urlpatterns = [
     url(r'^troca_endereco/m/$',
         views.TrocaEnderecoMobile.as_view(), name='troca_endereco_m'),
 
-    url(r'^mapa/', include('cd.urls.mapa', namespace='mapa')),
+    url(r'^mapa/', include('cd.urls.mapa')),
 
 ]
