@@ -1,27 +1,27 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from . import views
 
 
 app_name = 'servico'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    re_path(r'^$', views.index, name='index'),
 
-    url(r'^ordens/$',
+    re_path(r'^ordens/$',
         views.Lista.as_view(), name='ordens'),
 
-    url(r'^ordem/$',
+    re_path(r'^ordem/$',
         views.Ordem.as_view(), name='ordem'),
-    url(r'^ordem/(?P<documento>\d+)/$',
+    re_path(r'^ordem/(?P<documento>\d+)/$',
         views.Ordem.as_view(), name='ordem__get'),
 
-    url(r'^cria_ordem/$',
+    re_path(r'^cria_ordem/$',
         views.CriaOrdem.as_view(), name='cria_ordem'),
 
-    url(r'^edita_ordem/(?P<evento>.+)/(?P<documento>.+)/$',
+    re_path(r'^edita_ordem/(?P<evento>.+)/(?P<documento>.+)/$',
         views.EditaOrdem.as_view(), name='edita_ordem'),
 
-    url(r'^painel/$',
+    re_path(r'^painel/$',
         views.Painel.as_view(), name='painel'),
 
 ]

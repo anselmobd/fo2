@@ -1,14 +1,14 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 import base.views as views
 
 
 app_name = 'base'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    re_path(r'^$', views.index, name='index'),
 
-    url(r'^usuarios/$', views.Usuarios.as_view(), name='usuarios'),
+    re_path(r'^usuarios/$', views.Usuarios.as_view(), name='usuarios'),
 
-    url(r'^testa_db/$', views.TestaDB.as_view(), name='testa_db'),
+    re_path(r'^testa_db/$', views.TestaDB.as_view(), name='testa_db'),
 
 ]
