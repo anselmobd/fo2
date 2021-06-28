@@ -256,7 +256,7 @@ def pop(request, pop_assunto=None, id=None):
 
     can_edit = False
     user = None
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         user = request.user
     if user:
         can_edit = user.has_perm('geral.can_manage_pop')
