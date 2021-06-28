@@ -42,40 +42,39 @@ urlpatterns = [
 
     # Apps
 
-    url(r'^base/', include('base.urls', namespace='base')),
+    url(r'^base/', include('base.urls')),
 
-    url(r'^beneficia/', include('beneficia.urls', namespace='beneficia')),
+    url(r'^beneficia/', include('beneficia.urls')),
 
-    url(r'^cd/', include('cd.urls', namespace='cd')),
+    url(r'^cd/', include('cd.urls')),
 
-    url(r'^comercial/', include('comercial.urls', namespace='comercial')),
+    url(r'^comercial/', include('comercial.urls')),
 
-    url(r'^contabil/', include('contabil.urls', namespace='contabil')),
+    url(r'^contabil/', include('contabil.urls')),
 
-    url(r'^dp/', include('dp.urls', namespace='dp')),
+    url(r'^dp/', include('dp.urls')),
 
-    url(r'^email_signature/', include('email_signature.urls',
-        namespace='email_signature')),
+    url(r'^email_signature/', include('email_signature.urls')),
 
-    url(r'^estoque/', include('estoque.urls', namespace='estoque')),
+    url(r'^estoque/', include('estoque.urls')),
 
-    url(r'^geral/', include('geral.urls', namespace='geral')),
+    url(r'^geral/', include('geral.urls')),
 
-    url(r'^insumo/', include('insumo.urls', namespace='insumo')),
+    url(r'^insumo/', include('insumo.urls')),
 
-    url(r'^logistica/', include('logistica.urls', namespace='logistica')),
+    url(r'^logistica/', include('logistica.urls')),
 
-    url(r'^lotes/', include('lotes.urls', namespace='producao')),
+    url(r'^lotes/', include('lotes.urls')),
 
-    url(r'^manutencao/', include('manutencao.urls', namespace='manutencao')),
+    url(r'^manutencao/', include('manutencao.urls')),
 
-    url(r'^persona/', include('persona.urls', namespace='persona')),
+    url(r'^persona/', include('persona.urls')),
 
-    url(r'^produto/', include('produto.urls', namespace='produto')),
+    url(r'^produto/', include('produto.urls')),
 
-    url(r'^rh/', include('rh.urls', namespace='rh')),
+    url(r'^rh/', include('rh.urls')),
 
-    url(r'^servico/', include('servico.urls', namespace='servico')),
+    url(r'^servico/', include('servico.urls')),
 
     # Links para fora
 

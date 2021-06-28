@@ -5,7 +5,7 @@ from lotes.views import parametros
 from . import views
 
 
-app_name = 'lotes'
+app_name = 'producao'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
 
