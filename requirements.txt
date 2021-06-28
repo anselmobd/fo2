@@ -1,5 +1,5 @@
 cx-Oracle==7.2.3
-Django==1.11.29
+Django==2.0.13
 django-firebird==1.11
 django-redis==4.10.0
 django-settings-export==1.2.1
