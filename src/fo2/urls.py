@@ -1,6 +1,6 @@
 import re
 
-from django.conf.urls import include, url
+from django.urls import include, re_path
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.conf import settings
@@ -17,82 +17,82 @@ admin.site.index_title = "Cadastros"
 
 
 urlpatterns = [
-    url(r'^$', views.index_view, name='index'),
+    re_path(r'^$', views.index_view, name='index'),
 
-    # url(r'^favicon\.ico$',
+    # re_path(r'^favicon\.ico$',
     #     RedirectView.as_view(url='/static/favicon.ico')),
 
-    # url(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(),
+    # re_path(r'^apoio_ao_erp/', views.ApoioAoErpView.as_view(),
     #     name='apoio_ao_erp'),
 
-    # url(r'^intranet/', views.IntranetView.as_view(), name='intranet'),
+    # re_path(r'^intranet/', views.IntranetView.as_view(), name='intranet'),
 
     # Autenticação
 
-    # url(r'^accounts/login/$',
+    # re_path(r'^accounts/login/$',
     #     auth_views.login, {'template_name': 'login.html'}, name='login'),
 
-    url(r'^encerrar/', auth_views.LogoutView.as_view(next_page="/"), name='encerrar'),
+    re_path(r'^encerrar/', auth_views.LogoutView.as_view(next_page="/"), name='encerrar'),
 
     # Administração
 
-    url(r'^rootadm/', admin.site.urls),
+    re_path(r'^rootadm/', admin.site.urls),
 
-    url(r'^intradm/', intr_adm_site.urls),
+    re_path(r'^intradm/', intr_adm_site.urls),
 
     # Apps
 
-    url(r'^base/', include('base.urls')),
+    re_path(r'^base/', include('base.urls')),
 
-    url(r'^beneficia/', include('beneficia.urls')),
+    re_path(r'^beneficia/', include('beneficia.urls')),
 
-    url(r'^cd/', include('cd.urls')),
+    re_path(r'^cd/', include('cd.urls')),
 
-    url(r'^comercial/', include('comercial.urls')),
+    re_path(r'^comercial/', include('comercial.urls')),
 
-    url(r'^contabil/', include('contabil.urls')),
+    re_path(r'^contabil/', include('contabil.urls')),
 
-    url(r'^dp/', include('dp.urls')),
+    re_path(r'^dp/', include('dp.urls')),
 
-    url(r'^email_signature/', include('email_signature.urls')),
+    re_path(r'^email_signature/', include('email_signature.urls')),
 
-    url(r'^estoque/', include('estoque.urls')),
+    re_path(r'^estoque/', include('estoque.urls')),
 
-    url(r'^geral/', include('geral.urls')),
+    re_path(r'^geral/', include('geral.urls')),
 
-    url(r'^insumo/', include('insumo.urls')),
+    re_path(r'^insumo/', include('insumo.urls')),
 
-    url(r'^logistica/', include('logistica.urls')),
+    re_path(r'^logistica/', include('logistica.urls')),
 
-    url(r'^lotes/', include('lotes.urls')),
+    re_path(r'^lotes/', include('lotes.urls')),
 
-    url(r'^manutencao/', include('manutencao.urls')),
+    re_path(r'^manutencao/', include('manutencao.urls')),
 
-    url(r'^persona/', include('persona.urls')),
+    re_path(r'^persona/', include('persona.urls')),
 
-    url(r'^produto/', include('produto.urls')),
+    re_path(r'^produto/', include('produto.urls')),
 
-    url(r'^rh/', include('rh.urls')),
+    re_path(r'^rh/', include('rh.urls')),
 
-    url(r'^servico/', include('servico.urls')),
+    re_path(r'^servico/', include('servico.urls')),
 
     # Links para fora
 
-    url(r'^systextil/', views.SystextilView.as_view(), name='systextil'),
+    re_path(r'^systextil/', views.SystextilView.as_view(), name='systextil'),
 
-    url(r'^ajax/router_ip_to_apoio_auth/',
+    re_path(r'^ajax/router_ip_to_apoio_auth/',
         views.router_ip_to_apoio_auth, name='router_ip_to_apoio_auth'),
 
     # Links utilitários
 
-    url(r'^myip/', views.myip_view, name='myip'),
+    re_path(r'^myip/', views.myip_view, name='myip'),
 
-    url(r'^meuip/', views.meuip_view, name='meuip'),
+    re_path(r'^meuip/', views.meuip_view, name='meuip'),
 
-    url(r'^ack$', views.ack_view, name='ack'),
+    re_path(r'^ack$', views.ack_view, name='ack'),
 
     # Acesso a teste.html para testes de html e css
 
-    url(r'^t$', views.test_view, name='test'),
+    re_path(r'^t$', views.test_view, name='test'),
 
   ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

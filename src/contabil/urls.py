@@ -1,23 +1,23 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from . import views
 
 
 app_name = 'contabil'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    re_path(r'^$', views.index, name='index'),
 
-    url(r'^infadprod/(?P<pedido>.+)?/?$',
+    re_path(r'^infadprod/(?P<pedido>.+)?/?$',
         views.InfAdProd.as_view(), name='infadprod'),
 
-    url(r'^nota_fiscal/$', views.NotaFiscal.as_view(), name='nota_fiscal'),
-    url(r'^nota_fiscal/(?P<nf>\d+)/$', views.NotaFiscal.as_view(),
+    re_path(r'^nota_fiscal/$', views.NotaFiscal.as_view(), name='nota_fiscal'),
+    re_path(r'^nota_fiscal/(?P<nf>\d+)/$', views.NotaFiscal.as_view(),
         name='nota_fiscal__get'),
 
-    url(r'^remeindu/$', views.RemessaIndustr.as_view(), name='remeindu'),
+    re_path(r'^remeindu/$', views.RemessaIndustr.as_view(), name='remeindu'),
 
-    url(r'^remeindunf/?$',
+    re_path(r'^remeindunf/?$',
         views.RemessaIndustrNF.as_view(), name='remeindunf'),
-    url(r'^remeindunf/(?P<nf>.+)?/(?P<detalhe>.+)?/$',
+    re_path(r'^remeindunf/(?P<nf>.+)?/(?P<detalhe>.+)?/$',
         views.RemessaIndustrNF.as_view(), name='remeindunf__get'),
 ]
