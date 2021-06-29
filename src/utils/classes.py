@@ -8,6 +8,7 @@ from subprocess import Popen, PIPE, STDOUT
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.template import Context, Template
+from django.utils import timezone
 
 
 class SingletonMeta(type):
@@ -136,13 +137,13 @@ def rawbytes(s):
 
 class TermalPrint:
     _termal_print_controls = {
-        'soh_': b'\x01',
-        'stx_': b'\x02',
-        'ctr_': b'\x0d',
-        'esc_': b'\x1b',
+        'soh_': b'\x01'.decode('cp850'),
+        'stx_': b'\x02'.decode('cp850'),
+        'ctr_': b'\x0d'.decode('cp850'),
+        'esc_': b'\x1b'.decode('cp850'),
     }
-    _mark_ini = b'[#[binary:'
-    _mark_fim = b']#]'
+    _mark_ini = b'[#[binary:'.decode('cp850')
+    _mark_fim = b']#]'.decode('cp850')
 
     def __init__(self, p='SuporteTI_SuporteTI', write_file=False):
         self._print_started = False
