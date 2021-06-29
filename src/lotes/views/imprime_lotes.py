@@ -200,7 +200,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
             estagios = []
             for e_row in e_data:
                 estagios.append(e_row['EST'])
-            teg = TermalPrint(usuario_impresso.impressora_termica.nome)
+            teg = TermalPrint(usuario_impresso.impressora_termica.nome, write_file=True)
             teg.template(usuario_impresso.modelo.gabarito, '\r\n')
             teg.printer_start()
             try:
@@ -222,10 +222,13 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     try:
                         teg.printer_send()
                     except Exception as e:
+                        raise e
                         context.update({
                             'msg_erro': f'Erro ao imprimir <{e}>',
                         })
                         return context
+            except Exception as e:
+                raise e
             finally:
                 teg.printer_end()
 
