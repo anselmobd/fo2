@@ -62,6 +62,7 @@ class QuantEstagio(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'estagio' in kwargs:
             form.data['estagio'] = kwargs['estagio']
         if form.is_valid():

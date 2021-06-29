@@ -137,6 +137,7 @@ class Rolo(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'rolo' in kwargs:
             form.data['rolo'] = kwargs['rolo']
         if form.is_valid():

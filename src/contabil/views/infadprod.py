@@ -88,6 +88,7 @@ class InfAdProd(View):
         self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'pedido' in kwargs and kwargs['pedido'] is not None:
             form.data['pedido'] = kwargs['pedido']
         if form.is_valid():

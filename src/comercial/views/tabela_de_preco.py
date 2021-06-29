@@ -125,6 +125,7 @@ class TabelaDePreco(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'tabela' in kwargs:
             form.data['tabela'] = kwargs['tabela']
         if form.is_valid():

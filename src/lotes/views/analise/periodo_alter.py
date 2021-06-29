@@ -71,6 +71,7 @@ class PeriodoAlter(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'periodo' in kwargs:
             form.data['periodo_de'] = kwargs['periodo']
             form.data['periodo_ate'] = kwargs['periodo']

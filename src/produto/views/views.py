@@ -309,6 +309,7 @@ class Busca(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'filtro' in kwargs:
             form.data['filtro'] = kwargs['filtro']
         if form.is_valid():
@@ -473,6 +474,7 @@ class RoteirosPadraoRef(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'ref' in kwargs and kwargs['ref'] is not None:
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
@@ -697,6 +699,7 @@ class InfoXml(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'ref' in kwargs:
             form.data['ref'] = kwargs['ref']
         if form.is_valid():
@@ -749,6 +752,7 @@ class PorCliente(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'cliente' in kwargs:
             form.data['cliente'] = kwargs['cliente']
         if form.is_valid():

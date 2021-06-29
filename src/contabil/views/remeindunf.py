@@ -28,6 +28,7 @@ class RemessaIndustrNF(View):
 
     def post(self, request, *args, **kwargs):
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         context = {'titulo': self.title_name}
         if 'nf' in kwargs:
             if kwargs['nf'] is not None:

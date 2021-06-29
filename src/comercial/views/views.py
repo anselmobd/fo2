@@ -32,6 +32,7 @@ class FichaCliente(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.titulo}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'cnpj' in kwargs:
             form.data['cnpj'] = kwargs['cnpj']
 

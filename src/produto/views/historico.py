@@ -56,6 +56,7 @@ class HistNarrativa(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'referencia' in kwargs:
             form.data['referencia'] = kwargs['referencia']
         if form.is_valid():

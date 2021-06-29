@@ -112,6 +112,7 @@ class HistoricoLote(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'lote' in kwargs and kwargs['lote'] is not None:
             form.data['lote'] = kwargs['lote']
         if form.is_valid():

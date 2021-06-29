@@ -82,6 +82,7 @@ class Busca(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'filtro' in kwargs:
             form.data['filtro'] = kwargs['filtro']
         if form.is_valid():
@@ -290,6 +291,7 @@ class BipaRolo(PermissionRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST.copy())
+        form.data = form.data.copy()
         if 'lote' in kwargs:
             form.data['lote'] = kwargs['lote']
         if form.is_valid():
@@ -1150,6 +1152,7 @@ class MapaPorSemana(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST.copy())
+        form.data = form.data.copy()
         if 'periodo' in kwargs:
             form.data['periodo'] = kwargs['periodo']
         if form.is_valid():
@@ -1366,6 +1369,7 @@ class MapaSemanal(View):
         context = {'titulo': self.title_name}
 
         form = self.Form_class(request.POST.copy())
+        form.data = form.data.copy()
         if form.is_valid():
             periodo = form.cleaned_data['periodo']
             nivel = form.cleaned_data['nivel']

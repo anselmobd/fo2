@@ -102,6 +102,7 @@ class DtCorteAlter(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'data' in kwargs:
             form.data['data_de'] = kwargs['data']
             form.data['data_ate'] = kwargs['data']

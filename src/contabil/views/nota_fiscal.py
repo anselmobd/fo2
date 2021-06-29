@@ -103,6 +103,7 @@ class NotaFiscal(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'nf' in kwargs:
             form.data['nf'] = kwargs['nf']
         if form.is_valid():

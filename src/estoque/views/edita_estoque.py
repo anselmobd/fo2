@@ -258,6 +258,7 @@ class EditaEstoque(PermissionRequiredMixin, View):
         self.request = request
         self.start()
         self.form = self.Form_class(request.POST)
+        self.form.data = self.form.data.copy()
 
         if 'qtd' in kwargs:
             self.form.data['qtd'] = kwargs['qtd']

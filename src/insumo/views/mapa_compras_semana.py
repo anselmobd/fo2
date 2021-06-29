@@ -86,6 +86,7 @@ class MapaComprasSemana(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST.copy())
+        form.data = form.data.copy()
         if 'periodo' in kwargs:
             form.data['periodo'] = kwargs['periodo']
         if form.is_valid():
