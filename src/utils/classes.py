@@ -137,13 +137,13 @@ def rawbytes(s):
 
 class TermalPrint:
     _termal_print_controls = {
-        'soh_': b'\x01'.decode('cp850'),
-        'stx_': b'\x02'.decode('cp850'),
-        'ctr_': b'\x0d'.decode('cp850'),
-        'esc_': b'\x1b'.decode('cp850'),
+        'soh_': '\x01',
+        'stx_': '\x02',
+        'ctr_': '\x0d',
+        'esc_': '\x1b',
     }
-    _mark_ini = b'[#[binary:'.decode('cp850')
-    _mark_fim = b']#]'.decode('cp850')
+    _mark_ini = '[#[binary:'
+    _mark_fim = ']#]'
 
     def __init__(self, p='SuporteTI_SuporteTI', write_file=False):
         self._print_started = False
