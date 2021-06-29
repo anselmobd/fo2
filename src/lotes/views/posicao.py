@@ -274,6 +274,7 @@ class Posicao(View):
         self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'lote' in kwargs:
             form.data['lote'] = kwargs['lote']
         if form.is_valid():

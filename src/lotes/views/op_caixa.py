@@ -62,6 +62,7 @@ class OpCaixa(View):
     def post(self, request, *args, **kwargs):
         self.context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'op' in kwargs:
             form.data['op'] = kwargs['op']
         if form.is_valid():

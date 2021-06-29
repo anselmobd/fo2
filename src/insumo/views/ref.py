@@ -147,6 +147,7 @@ class Ref(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'item' in kwargs:
             form.data['item'] = kwargs['item']
         if form.is_valid():

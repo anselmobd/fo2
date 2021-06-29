@@ -58,6 +58,7 @@ class Historico(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'pedido' in kwargs:
             form.data['pedido'] = kwargs['pedido']
         if form.is_valid():

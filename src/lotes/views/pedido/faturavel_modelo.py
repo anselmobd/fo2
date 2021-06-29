@@ -132,6 +132,7 @@ class PedidoFaturavelModelo(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'modelo' in kwargs:
             form.data['modelo'] = kwargs['modelo']
         if form.is_valid():

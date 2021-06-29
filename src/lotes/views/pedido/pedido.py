@@ -159,6 +159,7 @@ class Pedido(View):
     def post(self, request, *args, **kwargs):
         self.set_context(request)
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'pedido' in kwargs:
             form.data['pedido'] = kwargs['pedido']
         if form.is_valid():

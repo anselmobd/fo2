@@ -193,6 +193,7 @@ class BuscaOP(View):
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'ref' in kwargs:
             form.data['ref'] = kwargs['ref']
         if form.is_valid():

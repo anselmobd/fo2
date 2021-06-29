@@ -346,6 +346,7 @@ class Estoque(View):
         self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
+        form.data = form.data.copy()
         if 'ordem' in kwargs:
             form.data['ordem'] = kwargs['ordem']
             if 'endereco' in kwargs:
