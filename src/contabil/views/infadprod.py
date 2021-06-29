@@ -41,6 +41,10 @@ class InfAdProd(View):
                         }))
                     row['COUNT_GTIN|TARGET'] = '_BLANK'
 
+            for row in data:
+                row['REF|LINK'] = reverse(
+                    'produto:ref__get', args=[row['REF']])
+
             totalize_grouped_data(data, {
                 'group': [],
                 'sum': ['QTD', 'VALOR_TOTAL'],
@@ -50,10 +54,9 @@ class InfAdProd(View):
             })
 
             for row in data:
-                row['REF|LINK'] = reverse(
-                    'produto:ref__get', args=[row['REF']])
                 row['VALOR|DECIMALS'] = 2
                 row['VALOR_TOTAL|DECIMALS'] = 2
+
             row = data[0]
             context.update({
                 'cliente': row['CLIENTE'],
