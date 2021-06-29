@@ -193,22 +193,21 @@ class TermalPrint:
 
     def render(self):
         commands = self._template.render(self._context)
-        bcommands = commands.encode('cp850')
 
-        pos_mark = bcommands.find(self._mark_ini)
+        pos_mark = commands.find(self._mark_ini)
         while pos_mark >= 0:
             pos_nome = pos_mark+len(self._mark_ini)
-            len_name = bcommands[pos_nome:].find(self._mark_fim)
-            name = bcommands[pos_nome:pos_nome+len_name].decode()
-            bcommands = \
-                bcommands[:pos_mark] + \
+            len_name = commands[pos_nome:].find(self._mark_fim)
+            name = commands[pos_nome:pos_nome+len_name].decode()
+            commands = \
+                commands[:pos_mark] + \
                 self._context[name] + \
-                bcommands[pos_mark+len(
+                commands[pos_mark+len(
                     self._mark_ini)+len_name+len(self._mark_fim):]
-            pos_mark = bcommands.find(self._mark_ini)
+            pos_mark = commands.find(self._mark_ini)
             break
 
-        return bcommands
+        return commands
 
     def printer_start(self):
         self._lpr = Popen([self._lp, "-d{}".format(self._p), "-"], stdin=PIPE)
@@ -226,7 +225,7 @@ class TermalPrint:
             self._file.close()
 
     def printer_send(self):
-        data = self.render()
+        data = self.render().encode('cp850')
         self._lpr.stdin.write(data)
 
         if self._write_file:
