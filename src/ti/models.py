@@ -142,3 +142,29 @@ class Interface(models.Model):
 
     class Meta:
         db_table = "fo2_ti_interface"
+
+
+class Share(models.Model):
+    equipment = models.ForeignKey(
+        Equipment, on_delete=models.PROTECT, blank=False, null=False,
+        verbose_name='Servidor',
+    )
+    name = models.CharField(
+        'Nome', max_length=30, blank=False, null=False
+    )
+    path = models.CharField(
+        'Caminho', max_length=200, blank=False, null=False
+    )
+    read_only = models.BooleanField(
+        'Somente leitura', default=False)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        super(Share, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ti_share"
+        verbose_name = "Compartilhamento"
