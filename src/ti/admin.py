@@ -50,3 +50,11 @@ class DhcpConfigAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 intr_adm_site.register(ti.models.DhcpConfig, DhcpConfigAdmin)
+
+
+class ShareAdmin(admin.ModelAdmin):
+    list_display = ['name', 'equipment', 'path', 'read_only']
+    search_fields = ['name', 'equipment', 'path', 'read_only']
+    ordering = ['name']
+
+intr_adm_site.register(ti.models.Share, ShareAdmin)
