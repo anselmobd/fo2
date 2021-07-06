@@ -92,7 +92,7 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
             , l.PERIODO_PRODUCAO
             , l.ORDEM_CONFECCAO'''
 
-    sql = '''
+    sql = f'''
         {sql_pre_qtd_lotes} -- sql_pre_qtd_lotes
         SELECT
           COALESCE(
@@ -214,12 +214,12 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           , max( os.ROWID ) ROW_ID
           FROM PCPC_040 os
           WHERE 1=1
-            AND (%s IS NULL OR os.ORDEM_PRODUCAO = %s)
-            AND (%s IS NULL OR os.NUMERO_ORDEM = %s)
-            AND (%s IS NULL OR os.ORDEM_CONFECCAO >= %s)
-            AND (%s IS NULL OR os.ORDEM_CONFECCAO <= %s)
-            AND (%s IS NULL OR os.PROCONF_SUBGRUPO = %s)
-            AND (%s IS NULL OR os.PROCONF_ITEM = %s)
+            AND ('{op}' IS NULL OR os.ORDEM_PRODUCAO = '{op}')
+            AND ('{os}' IS NULL OR os.NUMERO_ORDEM = '{os}')
+            AND ('{oc_ini}' IS NULL OR os.ORDEM_CONFECCAO >= '{oc_ini}')
+            AND ('{oc_fim}' IS NULL OR os.ORDEM_CONFECCAO <= '{oc_fim}')
+            AND ('{tam}' IS NULL OR os.PROCONF_SUBGRUPO = '{tam}')
+            AND ('{cor}' IS NULL OR os.PROCONF_ITEM = '{cor}')
           GROUP BY
             os.PERIODO_PRODUCAO
           , os.ORDEM_CONFECCAO
@@ -262,15 +262,8 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           ON op.ordem_producao = l.ORDEM_PRODUCAO
         {sql_order} -- sql_order
         {sql_pos_qtd_lotes} -- sql_pos_qtd_lotes
-    '''.format(
-        sql_order=sql_order,
-        sql_pre_qtd_lotes=sql_pre_qtd_lotes,
-        sql_pos_qtd_lotes=sql_pos_qtd_lotes,
-    )
-
-    cursor.execute(
-        sql, [op, op, os, os, oc_ini, oc_ini, oc_fim, oc_fim,
-              tam, tam, cor, cor])
+    '''
+    cursor.execute(sql)
     data = rows_to_dict_list(cursor)
     for i in range(0, pula):
         if len(data) != 0:
