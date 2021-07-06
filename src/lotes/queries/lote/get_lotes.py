@@ -238,14 +238,14 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
         LEFT JOIN BASI_220 t
           ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
         JOIN BASI_030 ref
-          ON ref.NIVEL_ESTRUTURA = 1
+          ON ref.NIVEL_ESTRUTURA = '1'
          AND ref.REFERENCIA = l.PROCONF_GRUPO
         JOIN BASI_020 tam
-          ON tam.BASI030_NIVEL030 = 1
+          ON tam.BASI030_NIVEL030 = '1'
          AND tam.BASI030_REFERENC = l.PROCONF_GRUPO
          AND tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
         JOIN BASI_010 r
-          ON r.NIVEL_ESTRUTURA = 1
+          ON r.NIVEL_ESTRUTURA = '1'
          AND r.GRUPO_ESTRUTURA = l.PROCONF_GRUPO
          AND r.SUBGRU_ESTRUTURA = l.PROCONF_SUBGRUPO
          AND r.ITEM_ESTRUTURA = l.PROCONF_ITEM
