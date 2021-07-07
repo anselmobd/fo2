@@ -54,27 +54,7 @@ class Command(BaseCommand):
         sql = '''
             SELECT
               lo.ORDEM_PRODUCAO op
-        '''
-        if self.tem_trigger:
-            sql += ''' --
-                , max(lo.FO2_TUSSOR_SYNC) trail
-            '''
-        else:
-            sql += ''' --
-                , sum(
-                    (
-                      (lo.QTDE_PECAS_PROG + 1) * 2
-                    + (lo.QTDE_EM_PRODUCAO_PACOTE + 1) * 3
-                    + (lo.QTDE_PECAS_PROD + 1) * 5
-                    + (lo.QTDE_DISPONIVEL_BAIXA + 1) * 7
-                    + (lo.QTDE_CONSERTO + 1) * 11
-                    + (lo.CODIGO_ESTAGIO + 1) * 13
-                    + (MOD(op.ORDEM_PRODUCAO, 1000) + 1)
-                    )
-                    * (MOD(lo.ORDEM_CONFECCAO, 1000) + 1)
-                  ) trail
-            '''
-        sql += ''' --
+            , max(lo.FO2_TUSSOR_SYNC) trail
             FROM PCPC_040 lo -- lote estágio
             JOIN PCPC_020 op -- OP capa
               ON op.ordem_producao = lo.ORDEM_PRODUCAO
@@ -104,16 +84,7 @@ class Command(BaseCommand):
         sql = '''
             SELECT
               le.op
-        '''
-        if self.tem_trigger:
-            sql += ''' --
-                , max(le.sync) trail
-            '''
-        else:
-            sql += ''' --
-                , sum( le.trail ) trail
-            '''
-        sql += ''' --
+            , max(le.sync) trail
             FROM fo2_cd_lote le
         '''
         if self.oponly is not None:
@@ -172,26 +143,8 @@ class Command(BaseCommand):
               , le.QTDE_PECAS_PROG QTD_PRODUZIR
               , max(le.CODIGO_ESTAGIO) ULTIMO_ESTAGIO
               , max(le.SEQUENCIA_ESTAGIO) ULTIMA_SEQ_ESTAGIO
+              , 0 trail
         '''
-        if self.tem_trigger:
-            sql += ''' --
-                , 0 trail
-            '''
-        else:
-            sql += ''' --
-              , sum(
-                  (
-                    (le.QTDE_PECAS_PROG + 1) * 2
-                  + (le.QTDE_EM_PRODUCAO_PACOTE + 1) * 3
-                  + (le.QTDE_PECAS_PROD + 1) * 5
-                  + (le.QTDE_DISPONIVEL_BAIXA + 1) * 7
-                  + (le.QTDE_CONSERTO + 1) * 11
-                  + (le.CODIGO_ESTAGIO + 1) * 13
-                  + (MOD(le.ORDEM_PRODUCAO, 1000) + 1)
-                  )
-                  * (MOD(le.ORDEM_CONFECCAO, 1000) + 1)
-                ) trail
-            '''
         if self.tem_col_sync:
             sql += ''' --
                 , max(le.FO2_TUSSOR_ID) sync_id
@@ -277,11 +230,6 @@ class Command(BaseCommand):
             alter = True
             lote.qtd_produzir = row['qtd_produzir']
             # self.stdout.write('qtd_produzir {}'.format(lote.qtd_produzir))
-        if not self.tem_trigger:
-            if lote.trail != row['trail']:
-                alter = True
-                lote.trail = row['trail']
-                # self.stdout.write('trail {}'.format(lote.trail))
         if self.tem_col_sync:
             if lote.sync != row['sync']:
                 alter = True
@@ -519,6 +467,54 @@ class Command(BaseCommand):
             else 'Tabelas não tem triggers'
         )
 
+    def syncing(self):
+        # pega no Systêxtil a lista OPs com um valor de teste de quantidade
+        ics = self.get_ops_trail_s()
+
+        # pega no Fo2 a lista OPs com um valor de teste de quantidade
+        icf = self.get_ops_trail_f()
+
+        op_s = -1
+        op_f = -1
+        self.init_tasks()
+        count_task = 0
+        while count_task < self.__MAX_TASKS:
+
+            if op_s != sys.maxsize and (op_s < 0 or op_s <= op_f):
+                try:
+                    row_s = next(ics)
+                    getop_s = row_s['op']
+                except StopIteration:
+                    getop_s = sys.maxsize
+
+            if op_f != sys.maxsize and (op_f < 0 or op_f <= op_s):
+                try:
+                    row_f = next(icf)
+                    getop_f = row_f['op']
+                except StopIteration:
+                    getop_f = sys.maxsize
+
+            op_s = getop_s
+            op_f = getop_f
+
+            if op_s == sys.maxsize and op_f == sys.maxsize:
+                break
+
+            if op_s < op_f:
+                self.my_println('Incluir OP {}'.format(op_s))
+                self.inclui_op.append(op_s)
+                count_task += 1
+            elif op_s > op_f:
+                self.my_println('Excluir OP {}'.format(op_f))
+                self.exclui_op.append(op_f)
+            else:
+                if row_s['trail'] != row_f['trail']:
+                    self.my_println('Atualizar OP {}'.format(op_f))
+                    self.atualiza_op.append(op_s)
+                    count_task += 1
+
+        self.exec_tasks()
+
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
         self.my_println('---')
@@ -528,56 +524,9 @@ class Command(BaseCommand):
         self.opini = options['opini']
 
         try:
-
             self.verificacoes()
-
-            # pega no Systêxtil a lista OPs com um valor de teste de quantidade
-            ics = self.get_ops_trail_s()
-
-            # pega no Fo2 a lista OPs com um valor de teste de quantidade
-            icf = self.get_ops_trail_f()
-
-            op_s = -1
-            op_f = -1
-            self.init_tasks()
-            count_task = 0
-            while count_task < self.__MAX_TASKS:
-
-                if op_s != sys.maxsize and (op_s < 0 or op_s <= op_f):
-                    try:
-                        row_s = next(ics)
-                        getop_s = row_s['op']
-                    except StopIteration:
-                        getop_s = sys.maxsize
-
-                if op_f != sys.maxsize and (op_f < 0 or op_f <= op_s):
-                    try:
-                        row_f = next(icf)
-                        getop_f = row_f['op']
-                    except StopIteration:
-                        getop_f = sys.maxsize
-
-                op_s = getop_s
-                op_f = getop_f
-
-                if op_s == sys.maxsize and op_f == sys.maxsize:
-                    break
-
-                if op_s < op_f:
-                    self.my_println('Incluir OP {}'.format(op_s))
-                    self.inclui_op.append(op_s)
-                    count_task += 1
-                elif op_s > op_f:
-                    self.my_println('Excluir OP {}'.format(op_f))
-                    self.exclui_op.append(op_f)
-                else:
-                    if row_s['trail'] != row_f['trail']:
-                        self.my_println('Atualizar OP {}'.format(op_f))
-                        self.atualiza_op.append(op_s)
-                        count_task += 1
-
-            self.exec_tasks()
-
+            if self.tem_trigger:
+                self.syncing()
         except Exception as e:
             raise CommandError('Error syncing lotes "{}"'.format(e))
 
