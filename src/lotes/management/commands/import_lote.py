@@ -123,13 +123,8 @@ class Command(BaseCommand):
               ELSE l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO END QTD
             , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 0
               ELSE l.QTDE_CONSERTO END CONSERTO
-        '''
-        if self.tem_col_sync:
-            sql += ''' --
-                , lote.sync_id
-                , lote.sync
-            '''
-        sql += ''' --
+            , lote.sync_id
+            , lote.sync
             FROM
             (
               SELECT
@@ -144,13 +139,8 @@ class Command(BaseCommand):
               , max(le.CODIGO_ESTAGIO) ULTIMO_ESTAGIO
               , max(le.SEQUENCIA_ESTAGIO) ULTIMA_SEQ_ESTAGIO
               , 0 trail
-        '''
-        if self.tem_col_sync:
-            sql += ''' --
-                , max(le.FO2_TUSSOR_ID) sync_id
-                , max(le.FO2_TUSSOR_SYNC) sync
-            '''
-        sql += f''' --
+              , max(le.FO2_TUSSOR_ID) sync_id
+              , max(le.FO2_TUSSOR_SYNC) sync
               FROM PCPC_040 le -- lote estágio
               LEFT JOIN BASI_220 t
                 ON t.TAMANHO_REF = le.PROCONF_SUBGRUPO
@@ -230,13 +220,12 @@ class Command(BaseCommand):
             alter = True
             lote.qtd_produzir = row['qtd_produzir']
             # self.stdout.write('qtd_produzir {}'.format(lote.qtd_produzir))
-        if self.tem_col_sync:
-            if lote.sync != row['sync']:
-                alter = True
-                lote.sync = row['sync']
-            if lote.sync_id != row['sync_id']:
-                alter = True
-                lote.sync_id = row['sync_id']
+        if lote.sync != row['sync']:
+            alter = True
+            lote.sync = row['sync']
+        if lote.sync_id != row['sync_id']:
+            alter = True
+            lote.sync_id = row['sync_id']
         return alter
 
     def inclui(self, op):
@@ -525,7 +514,7 @@ class Command(BaseCommand):
 
         try:
             self.verificacoes()
-            if self.tem_trigger:
+            if self.tem_trigger and self.tem_col_sync:
                 self.syncing()
         except Exception as e:
             raise CommandError('Error syncing lotes "{}"'.format(e))
