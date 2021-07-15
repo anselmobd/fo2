@@ -27,12 +27,44 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
     if oc != '':
         oc_ini = oc
         oc_fim = oc
-    if oc_ini == '':
-        oc_ini = 0
-    if oc_fim == '':
-        oc_fim = 99999
     if pula is None:
         pula = 0
+
+    filtra_op = ''
+    if op is not None and op != '':
+      filtra_op = f'''--
+          AND os.ORDEM_PRODUCAO = '{op}'
+      '''
+
+    filtra_os = ''
+    if os is not None and os != '':
+      filtra_os = f'''--
+          AND os.NUMERO_ORDEM = '{os}'
+      '''
+
+    filtra_oc_ini = ''
+    if oc_ini is not None and oc_ini != '':
+      filtra_oc_ini = f'''--
+          AND os.ORDEM_CONFECCAO >= '{oc_ini}'
+      '''
+
+    filtra_oc_fim = ''
+    if oc_fim is not None and oc_fim != '':
+      filtra_oc_fim = f'''--
+          AND os.ORDEM_CONFECCAO <= '{oc_fim}'
+      '''
+
+    filtra_tam = ''
+    if tam is not None and tam != '':
+      filtra_tam = f'''--
+          AND os.PROCONF_SUBGRUPO = '{tam}'
+      '''
+
+    filtra_cor = ''
+    if cor is not None and cor != '':
+      filtra_cor = f'''--
+          AND os.PROCONF_ITEM = '{cor}'
+      '''
 
     sql_pre_qtd_lotes = ''
     sql_pos_qtd_lotes = ''
@@ -214,12 +246,12 @@ def get_lotes(cursor, op='', os='', tam='', cor='', order='',
           , max( os.ROWID ) ROW_ID
           FROM PCPC_040 os
           WHERE 1=1
-            AND ('{op}' IS NULL OR os.ORDEM_PRODUCAO = '{op}')
-            AND ('{os}' IS NULL OR os.NUMERO_ORDEM = '{os}')
-            AND ('{oc_ini}' IS NULL OR os.ORDEM_CONFECCAO >= '{oc_ini}')
-            AND ('{oc_fim}' IS NULL OR os.ORDEM_CONFECCAO <= '{oc_fim}')
-            AND ('{tam}' IS NULL OR os.PROCONF_SUBGRUPO = '{tam}')
-            AND ('{cor}' IS NULL OR os.PROCONF_ITEM = '{cor}')
+            {filtra_op} -- filtra_op
+            {filtra_os} -- filtra_os
+            {filtra_oc_ini} -- filtra_oc_ini
+            {filtra_oc_fim} -- filtra_oc_fim
+            {filtra_tam} -- filtra_tam
+            {filtra_cor} -- filtra_cor
           GROUP BY
             os.PERIODO_PRODUCAO
           , os.ORDEM_CONFECCAO
