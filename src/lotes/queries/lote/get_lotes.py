@@ -1,7 +1,7 @@
 from utils.functions.models import rows_to_dict_list, dict_list_to_lower
 
 
-def op_lotes2(cursor, op):
+def op_lotes(cursor, op):
     sql = f'''
         WITH
         filtro AS (
@@ -83,10 +83,6 @@ def op_lotes2(cursor, op):
     '''
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
-
-def op_lotes(cursor, op):
-    # Lotes ordenados por OS + referência + estágio
-    return get_lotes(cursor, op=op, order='e')
 
 
 def os_lotes(cursor, os):
