@@ -13,6 +13,7 @@ def op_lotes(cursor, op):
           SELECT DISTINCT 
             l.PERIODO_PRODUCAO PER
           , l.ORDEM_CONFECCAO OC
+          , min(l.SEQUENCIA_ESTAGIO) SEQ1
           , min(
               CASE
               WHEN l.QTDE_DISPONIVEL_BAIXA > 0
@@ -53,17 +54,21 @@ def op_lotes(cursor, op):
           FROM ocs
           JOIN PCPC_040 l
             ON l.PERIODO_PRODUCAO = ocs.PER 
-          AND l.ORDEM_CONFECCAO = ocs.OC
-          AND l.CODIGO_ESTAGIO = ocs.EST
+           AND l.ORDEM_CONFECCAO = ocs.OC
+           AND l.SEQUENCIA_ESTAGIO = ocs.SEQ1
           LEFT JOIN BASI_220 t
             ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
-          JOIN MQOP_005 ed
+          LEFT JOIN MQOP_005 ed
             ON ed.CODIGO_ESTAGIO = ocs.EST
           LEFT JOIN MQOP_005 eod
             ON eod.CODIGO_ESTAGIO = ocs.EST_OS
         )
         SELECT
-          l.EST || ' - ' || l.EST_DESCR EST
+          CASE
+            WHEN l.EST = 999
+            THEN 'FINALIZADO'
+            ELSE l.EST || ' - ' || l.EST_DESCR 
+          END EST
         , l.OS || ' (' || l.EST_OS_DESCR || ')' OS
         , l.REF
         , l.COR
