@@ -46,7 +46,14 @@ def sql_op_sort_cor(op, descr_sort):
     return sql
 
 
-def sql_op_sort_grade(op):
+def sql_op_sort_grade(op, tipo):
+    if tipo == 't':
+        get_seq = 'min(l.SEQUENCIA_ESTAGIO)'
+        get_qtd = 'sum(l.QTDE_PECAS_PROG)'
+    elif tipo == 's':
+        get_seq = 'max(l.SEQUENCIA_ESTAGIO)'
+        get_qtd = 'sum(l.QTDE_PECAS_2A)'
+
     sql = f'''
         WITH
         filtro AS (
@@ -56,7 +63,7 @@ def sql_op_sort_grade(op):
         ),
         seq AS (
           SELECT
-            min(l.SEQUENCIA_ESTAGIO) SEQ
+            {get_seq} SEQ
           FROM filtro
           JOIN PCPC_040 l
             ON l.ORDEM_PRODUCAO = filtro.OP
@@ -70,11 +77,11 @@ def sql_op_sort_grade(op):
         SELECT 
           l.PROCONF_SUBGRUPO TAMANHO
         , l.PROCONF_ITEM SORTIMENTO
-        , sum(l.QTDE_PECAS_PROG ) QUANTIDADE
+        , {get_qtd} QUANTIDADE
         FROM filt_seq fs
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = fs.OP
-        AND l.SEQUENCIA_ESTAGIO = fs.SEQ
+         AND l.SEQUENCIA_ESTAGIO = fs.SEQ
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
         GROUP BY
