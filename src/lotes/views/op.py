@@ -28,7 +28,7 @@ class Op(View):
     title_name = 'OP'
 
     def mount_context(self, cursor, op, request):
-        p = Perf(True)
+        p = Perf(False)
 
         context = {'op': op}
 
