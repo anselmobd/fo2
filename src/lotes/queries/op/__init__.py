@@ -5,6 +5,7 @@ from .get_seq_est_op import *
 from .op_conserto import *
 from .op_os_ref import *
 from .op_estagios import *
+from .op_grade import *
 from .op_movi_estagios import *
 from .op_pendente import *
 from .op_perda import *
