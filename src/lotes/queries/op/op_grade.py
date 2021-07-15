@@ -122,15 +122,15 @@ def op_grade(cursor, op, tipo='t', descr_sort=True):
         sql=sql_op_sort_cor(op, descr_sort)
     )
 
-    if tipo == 't':  # Total a produzir / programado
-        grade.value(
-            id='QUANTIDADE',
-            sql=sql_op_sort_grade(op)
-        )
+    grade.value(
+        id='QUANTIDADE',
+        sql=sql_op_sort_grade(op, tipo)
+    )
 
     result = (
         grade.table_data['header'],
         grade.table_data['fields'],
         grade.table_data['data'],
+        grade.total,
     )
     return result
