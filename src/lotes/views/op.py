@@ -43,8 +43,8 @@ class Op(View):
         else:
 
             # Lotes ordenados por OS + referência + estágio
-            data = lotes.queries.lote.op_lotes(cursor, op)
-            p.prt('op_lotes')
+            data = lotes.queries.lote.op_lotes2(cursor, op)
+            p.prt('op_lotes2')
 
             link = ('LOTE')
             for row in data:
