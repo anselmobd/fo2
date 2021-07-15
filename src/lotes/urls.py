@@ -60,9 +60,6 @@ urlpatterns = [
     re_path(r'^imprime_ob1/$',
         views.ImprimeOb1.as_view(), name='imprime_ob1'),
 
-    re_path(r'^imprime_pacote3lotes/$',
-        views.ImprimePacote3Lotes.as_view(), name='imprime_pacote3lotes'),
-
     re_path(r'^imprime_caixa_lotes/$',
         views.ImprimeCaixaLotes.as_view(), name='imprime_caixa_lotes'),
 
