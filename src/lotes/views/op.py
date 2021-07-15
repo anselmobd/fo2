@@ -28,7 +28,7 @@ class Op(View):
     title_name = 'OP'
 
     def mount_context(self, cursor, op, request):
-        p = Perf(False)
+        p = Perf(True)
 
         context = {'op': op}
 
@@ -175,7 +175,7 @@ class Op(View):
                 })
 
             # Grade
-            g_header, g_fields, g_data = lotes.queries.op.op_grade(
+            g_header, g_fields, g_data, _ = lotes.queries.op.op_grade(
                 cursor, op=op)
             p.prt('op_sortimento 1ª')
 
@@ -200,9 +200,9 @@ class Op(View):
                 })
 
             # Grade de segunda qualidade
-            gs_header, gs_fields, gs_data, total = \
-                lotes.queries.op.op_sortimentos(
-                    cursor, op=op, tipo='s', descr_sort=False)
+            gs_header, gs_fields, gs_data, total = lotes.queries.op.op_grade(
+                cursor, op=op, tipo='s', descr_sort=False
+            )
             p.prt('op_sortimentos 2ª')
 
             if total != 0:
