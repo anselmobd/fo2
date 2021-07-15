@@ -175,7 +175,7 @@ class Op(View):
                 })
 
             # Grade
-            g_header, g_fields, g_data = lotes.queries.op.op_sortimento(
+            g_header, g_fields, g_data = lotes.queries.op.op_grade(
                 cursor, op=op)
             p.prt('op_sortimento 1ª')
 
