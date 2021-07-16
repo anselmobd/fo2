@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.views import View
 
 from fo2.connections import db_cursor_so
-from utils.functions import fo2logger
 
 import systextil.models
 
@@ -51,17 +50,10 @@ class MapaComprasSemana(View):
         data = queries.insumos_cor_tamanho_usados(
             cursor, qtd_itens, nivel, uso, insumo)
         refs = []
-        co003 = False
-        co006 = False
         for row in data:
-            co003 = co003 or row['ref'] == 'CO003'
-            co006 = co006 or row['ref'] == 'CO006'
             refs.append('{}.{}.{}.{}'.format(
                 row['nivel'], row['ref'], row['cor'], row['tam']))
 
-        fo2logger.info(f'MapaComprasSemana len(refs) {len(refs)}')
-        fo2logger.info(f'MapaComprasSemana co003 {co003}')
-        fo2logger.info(f'MapaComprasSemana co006 {co006}')
         context = {
             'refs': refs,
             'qtd_itens': qtd_itens,
