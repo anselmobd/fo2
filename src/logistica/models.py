@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from utils.classes import LoggedInUser
-from utils.functions.cadastro import CNPJ
+from utils.functions.cadastro import CNPJ, CPF
 
 from base.models import Empresa
 
@@ -179,16 +179,27 @@ class NfEntrada(models.Model):
     quando = models.DateTimeField(null=True, editable=False)
 
     def __str__(self):
-        cnpj = CNPJ()
-        cnpj.validate(self.cadastro)
-        return f"{cnpj.mask(cnpj.cnpj)} NF {self.numero}"
+        val_cnpj = CNPJ()
+        if val_cnpj.validate(self.cadastro):
+            cadastro = val_cnpj.mask(val_cnpj.cnpj)
+        else:
+            val_cpf = CPF()
+            if val_cpf.validate(self.cadastro):
+                cadastro = val_cpf.mask(val_cpf.cpf)
+            else:
+                cadastro = self.cadastro
+        return f"{cadastro} NF {self.numero}"
 
     def clean_cadastro(self):
         val_cnpj = CNPJ()
         if val_cnpj.validate(self.cadastro):
             cadastro = val_cnpj.mask(val_cnpj.cnpj)
         else:
-            raise ValidationError(f"Cadastro nacional inválido.")
+            val_cpf = CPF()
+            if val_cpf.validate(self.cadastro):
+                cadastro = val_cpf.mask(val_cpf.cpf)
+            else:
+                raise ValidationError(f"Cadastro nacional inválido.")
         return cadastro
 
     def clean_usuario(self):
