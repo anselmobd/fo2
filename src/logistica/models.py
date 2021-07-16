@@ -165,7 +165,7 @@ class NfEntrada(models.Model):
         return None
 
     empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT)
-    cadastro = models.CharField("CNPJ", max_length=20, default="")
+    cadastro = models.CharField("CNPJ/CPF", max_length=20, default="")
     emissor = models.CharField(max_length=200)
     numero = models.IntegerField("número")
     descricao = models.CharField("descrição", max_length=200)
