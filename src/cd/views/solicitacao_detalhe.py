@@ -131,7 +131,7 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
         })
 
         por_endereco = lotes.models.SolicitaLoteQtd.objects.values(
-            'lote__op', 'lote__lote', 'lote__qtd_produzir',
+            'lote__op', 'lote__lote', 'lote__qtd_produzir', 'lote__qtd',
             'lote__referencia', 'lote__cor', 'lote__tamanho'
         ).annotate(
             lote_ordem=Coalesce('lote__local', Value('0000')),
@@ -149,6 +149,8 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 row['inteira_parcial'] = 'Lote inteiro'
             else:
                 row['inteira_parcial'] = 'Parcial'
+            if row['qtdsum'] > row['lote__qtd']:
+                row['inteira_parcial'] += "*"
             row['lote__lote|LINK'] = reverse(
                 'producao:posicao__get',
                 args=[row['lote__lote']])
