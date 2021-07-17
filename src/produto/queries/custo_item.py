@@ -42,6 +42,8 @@ class CustoItem:
         if componentes and self.data:
             self.data[-1]['TEMALT'] = 1
         for comp in componentes:
+            if comp['CONSUMO'] is None:
+                comp['CONSUMO'] = 0
             self.data.append(comp)
             comp['TEMALT'] = 0
             comp['ESTRUT_NIVEL'] = estrut_nivel
