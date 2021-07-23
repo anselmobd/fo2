@@ -20,4 +20,7 @@ urlpatterns = [
         views.RemessaIndustrNF.as_view(), name='remeindunf'),
     re_path(r'^remeindunf/(?P<nf>.+)?/(?P<detalhe>.+)?/$',
         views.RemessaIndustrNF.as_view(), name='remeindunf__get'),
+
+    re_path(r'^converte/$', views.Converte.as_view(), name='converte'),
+
 ]
