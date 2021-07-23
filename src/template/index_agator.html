@@ -34,6 +34,9 @@
       <ul>
         <li><a href="{% url 'producao:index' %}">Produção</a></li>
         {% include 'lotes/menu.html' with empresa='agator' %}
+        <br />
+        <li><a href="{% url 'contabil:index' %}">Contabilidade</a></li>
+        {% include 'contabil/menu.html' with empresa='agator' %}
       </ul>
     </td>
     <td>&nbsp;</td>

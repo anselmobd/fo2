@@ -1,12 +1,19 @@
 <ul>
-  <li>Faturamento</li>
-  <ul>
-    <li><a href="{% url 'contabil:nota_fiscal' %}">Nota fiscal</a></li>
-    <li><a href="{% url 'contabil:infadprod' %}">Itens de pedido</a></li>
-    <li>Industrialização</li>
+  {% if empresa == 'agator' %}
+    <li>RH</li>
     <ul>
-      <li><a href="{% url 'contabil:remeindu' %}">Por OP</a></li>
-      <li><a href="{% url 'contabil:remeindunf' %}">Por NF de remessa</a></li>
+      <li><a href="{% url 'contabil:converte' %}">Converte para importar</a></li>
     </ul>
-  </ul>
+    {% else %}
+    <li>Faturamento</li>
+    <ul>
+      <li><a href="{% url 'contabil:nota_fiscal' %}">Nota fiscal</a></li>
+      <li><a href="{% url 'contabil:infadprod' %}">Itens de pedido</a></li>
+      <li>Industrialização</li>
+      <ul>
+        <li><a href="{% url 'contabil:remeindu' %}">Por OP</a></li>
+        <li><a href="{% url 'contabil:remeindunf' %}">Por NF de remessa</a></li>
+      </ul>
+    </ul>
+  {% endif %}
 </ul>
