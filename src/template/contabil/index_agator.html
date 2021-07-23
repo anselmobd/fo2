@@ -1,0 +1,9 @@
+{% extends 'index_agator.html' %}
+
+{% block title.content %}Contabilidade - {{ block.super }}{% endblock title.content %}
+
+{% block header.content %}Contabilidade - {{ block.super }}{% endblock header.content %}
+
+{% block content %}
+{% include 'contabil/menu.html' with empresa='agator' %}
+{% endblock %}
