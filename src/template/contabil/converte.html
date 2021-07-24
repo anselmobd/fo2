@@ -1,0 +1,25 @@
+{% extends 'contabil/index_agator.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'contabil:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'contabil:converte' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Processa"/>
+  </form>
+  {% if erro %}
+    <h3>{{ erro }}</h3>
+  {% endif %}
+  {% if original %}
+    <h3>Original</h3>
+    <pre>{{ original }}</pre>
+  {% endif %}
+{% endblock %}
