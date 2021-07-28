@@ -28,7 +28,6 @@ class Converte(View):
             lines = []
             i_contas = -1
             for i, line in enumerate(request.FILES['arquivo']):
-                print(line)
                 line = line.decode('utf-8', errors='ignore').strip("\n").strip()
                 lines.append(line)
                 if line == '[Contas]':
@@ -47,16 +46,13 @@ class Converte(View):
                     codigo, linha = tuple(linha.split("="))
                     colunas = linha.split(",")
                     codigos[codigo] = colunas[2].strip('"')
-                pprint(codigos)
 
                 registros = []
                 for idx in range(i_contas):
                     linha = lines[idx]
                     if len(linha) == 0:
                         continue
-                    print(linha)
                     colunas = linha[1:-1].split('","')
-                    pprint(colunas)
                     conta_d = colunas[1]
                     conta_c = colunas[2]
                     data = colunas[3]
@@ -94,7 +90,9 @@ class Converte(View):
                     ]))
 
             context['systextil'] = "\n".join(registros)
-
+            context['systextil_download'] = "%0A%0D".join(registros)
+            context['systextil_file'] = f"Systextil_{request.FILES['arquivo']._name}"
+            
         else:
             context['erro'] = 'Erro inexperado!'
         context['form'] = form
