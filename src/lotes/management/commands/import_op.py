@@ -403,14 +403,8 @@ class Command(BaseCommand):
         # após a criação das triggers, acerta os registros anteriores à trigger
 
         # UPDATE SYSTEXTIL.PCPC_020
-        # SET FO2_TUSSOR_SYNC = SYSTEXTIL.FO2_TUSSOR.nextval
-        # WHERE FO2_TUSSOR_SYNC IS NULL;
-        # COMMIT;
-
-        # UPDATE SYSTEXTIL.PCPC_020
-        # SET FO2_TUSSOR_ID = FO2_TUSSOR_SYNC
-        # WHERE FO2_TUSSOR_ID IS NULL
-        #   AND FO2_TUSSOR_SYNC IS NOT NULL;
+        # SET FO2_TUSSOR_ID = NULL
+        # WHERE FO2_TUSSOR_ID IS NULL;
         # COMMIT;
 
         self.tem_col_sync = self.verifica_column()
@@ -437,14 +431,17 @@ class Command(BaseCommand):
         # DECLARE
         #   v_sync SYSTEXTIL.PCPC_020.FO2_TUSSOR_SYNC%TYPE;
         # BEGIN
-        #   SELECT SYSTEXTIL.FO2_TUSSOR.nextval INTO v_sync FROM DUAL;
-        #   IF INSERTING THEN
+        #   SELECT SYSTEXTIL.FO2_TUSSOR.NEXTVAL
+        #   INTO   v_sync
+        #   FROM   DUAL;
+        #   IF INSERTING or :old.FO2_TUSSOR_ID is NULL THEN
         #     :new.FO2_TUSSOR_ID := v_sync;
         #   ELSE
         #     :new.FO2_TUSSOR_ID := :old.FO2_TUSSOR_ID;
         #   END IF;
         #   :new.FO2_TUSSOR_SYNC := v_sync;
         # END TUSSOR_TR_PCPC_020_SYNC
+        # ;
 
         # CREATE OR REPLACE TRIGGER SYSTEXTIL.TUSSOR_TR_PCPC_020_SYNC_DEL
         #   AFTER DELETE
