@@ -183,10 +183,10 @@ class SyncDelTable(models.Model):
 
 class SyncDel(models.Model):
     tabela = models.ForeignKey(SyncDelTable, on_delete=models.PROTECT)
-    sync_id = models.IntegerField()
+    tussor_id = models.IntegerField()
 
     def __str__(self):
-        return f'{self.tabela__nome}#{self.sync_id}'
+        return f'{self.tabela__nome}#{self.tussor_id}'
 
     class Meta:
         db_table = "fo2_sync_del"
