@@ -125,7 +125,7 @@ class Command(BaseCommand):
 
         try:
             last_sync_del = base.models.SyncDel.objects.all().order_by(
-                '-tussor_id').values('tussor_id')[0]['tussor_id']
+                '-sync_id').values('sync_id')[0]['sync_id']
         except Exception as e:
             last_sync_del = -1
 
@@ -205,7 +205,7 @@ class Command(BaseCommand):
 
         base.models.SyncDel.objects.create(
             tabela=table,
-            tussor_id=sync_id,
+            sync_id=sync_id,
         )
 
     def init_tasks(self):
