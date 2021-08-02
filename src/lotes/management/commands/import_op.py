@@ -170,7 +170,7 @@ class Command(BaseCommand):
         try:
             op = models.Op.objects.get(op=op_num)
         except models.Op.DoesNotExist:
-            self.my_println('OP {} não encontrada em Fo2'.format(op))
+            self.my_println('OP {} não encontrada em Fo2'.format(op_num))
             return
         except models.Op.MultipleObjectsReturned as e:
             raise CommandError(
