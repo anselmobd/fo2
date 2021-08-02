@@ -70,15 +70,22 @@ def dados_meta_no_ano(cursor, hoje):
             devolvidos_dict.get(mes['imes'], 0)
             )
         if mes['imes'] < mes_atual:
-            if mes['planejado'] == 0:
-                mes['acompensar'] = mes['ajuste']
-                total['acompensar'] += mes['acompensar']
-                compensar += - mes['ajuste']
+            if ano_atual < 2021:
+                if mes['planejado'] == 0:
+                    mes['acompensar'] = mes['ajuste']
+                    total['acompensar'] += mes['acompensar']
+                    compensar += - mes['ajuste']
+                else:
+                    mes['acompensar'] = (
+                        mes['faturado'] - mes['planejado'])
+                    total['acompensar'] += mes['acompensar']
+                    compensar += mes['planejado'] - mes['faturado']
             else:
+                print(mes['ajuste'])
                 mes['acompensar'] = (
-                    mes['faturado'] - mes['planejado'])
+                    mes['faturado'] - mes['planejado'] + mes['ajuste'])
                 total['acompensar'] += mes['acompensar']
-                compensar += mes['planejado'] - mes['faturado']
+                compensar += mes['planejado'] - mes['faturado'] - mes['ajuste']
         else:
             meses_restantes += 1
         if mes['imes'] == mes_atual:
