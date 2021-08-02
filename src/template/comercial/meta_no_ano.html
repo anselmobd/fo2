@@ -90,8 +90,15 @@ p::first-line {
                       {% endif %}<br>
                       {% if mes.imes < mes_atual %}
                         {{mes.acompensar}}
+                        {% if mes.ajuste > 0 %}
+                          + {{mes.ajuste}}
+                        {% endif %}
                       {% else %}
-                        .
+                        {% if mes.ajuste > 0 %}
+                          + {{mes.ajuste}}
+                        {% else %}
+                          .
+                        {% endif %}
                       {% endif %}
                     </span>
                   </p>
