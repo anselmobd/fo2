@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.db.models.base import ModelState
+
 
 def rows_to_key_dict(cursor, keys):
 
@@ -304,3 +306,11 @@ class GradeQtd(object):
     @table_data.setter
     def table_data(self, value):
         self._table_data = value
+
+
+def record2dict(rec):
+    return {
+        k:rec.__dict__[k]
+        for k in rec.__dict__
+        if not isinstance(rec.__dict__[k], ModelState)
+    }
