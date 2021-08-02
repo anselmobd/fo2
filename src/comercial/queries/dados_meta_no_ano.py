@@ -83,8 +83,8 @@ def dados_meta_no_ano(cursor, hoje):
             else:
                 print(mes['ajuste'])
                 mes['acompensar'] = (
-                    mes['faturado'] - mes['planejado'] + mes['ajuste'])
-                total['acompensar'] += mes['acompensar']
+                    mes['faturado'] - mes['planejado'])
+                total['acompensar'] += mes['acompensar'] + mes['ajuste']
                 compensar += mes['planejado'] - mes['faturado'] - mes['ajuste']
         else:
             meses_restantes += 1
