@@ -30,6 +30,7 @@ class Command(BaseCommand):
                 JOIN pcpc_020 o
                   ON o.ORDEM_PRODUCAO = l21.ORDEM_PRODUCAO
                 WHERE o.ALTERNATIVA_PECA = 1
+                  AND l21.PERIODO_PRODUCAO = o.PERIODO_PRODUCAO
                   AND l21.CODIGO_ESTAGIO = 21
                   AND l21.CODIGO_FAMILIA <> 0
                   AND l33.CODIGO_ESTAGIO = 33
