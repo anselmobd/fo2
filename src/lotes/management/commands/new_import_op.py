@@ -138,8 +138,10 @@ class Command(BaseCommand):
         op.save()
 
     def apaga(self, row):
+        num_op = None
         op = self.get_op_by_sync_id(row['sync_id'])
         if op:
+            num_op = op.op
             op.delete()
 
         try:
@@ -155,7 +157,7 @@ class Command(BaseCommand):
             sync_id=row['sync_id'],
         )
 
-        # sys.exit(1)
+        return num_op
 
     def sincroniza(self):
         count_task = 1
@@ -174,10 +176,10 @@ class Command(BaseCommand):
                 count_task = 1
                 
                 if row['op'] > self.last_op:
-                    print('i', row['op'])
+                    self.my_println(f"i {row['op']}")
                     self.inclui(row)
                 else:
-                    print('u', row['op'])
+                    self.my_println(f"u {row['op']}")
                     self.atualiza(row)
 
             # pega deleções de OPs no Fo2
@@ -188,8 +190,10 @@ class Command(BaseCommand):
                     return
                 count_task = 1
                 
-                print('d', row['sync_id'])
-                self.apaga(row)
+                self.my_println(f"d {row['sync_id']}")
+                num_op = self.apaga(row)
+                if num_op:
+                    self.my_println(f"= {num_op}")
 
         except Exception as e:
             raise CommandError('Error syncing OPs (Fo2) "{}"'.format(e))
