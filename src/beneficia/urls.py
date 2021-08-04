@@ -14,4 +14,6 @@ urlpatterns = [
 
     re_path(r'^ot/$', views.Ot.as_view(), name='ot'),
     re_path(r'^ot/(?P<ot>\d+)/$', views.Ot.as_view(), name='ot__get'),
+
+    re_path(r'^receita/(?P<ref>\d+)?/?$', views.Receita.as_view(), name='receita'),
 ]
