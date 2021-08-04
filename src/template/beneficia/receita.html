@@ -21,7 +21,7 @@
 {% if erro_msg %}
   <h4 class="bad">Erro: {{ erro_msg }}</h4>
 {% endif %}
-{% if post %}
+{% if request.POST %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
   {% if dados %}
     <table>
@@ -29,7 +29,7 @@
       {% include "layout/tbody_generic.html" with fields=fields data=dados style=style safe=safe only %}
     </table>
   {% else %}
-    <h4>Receita não encontrada</h4>
+    <h4 class="bad">Receita não encontrada</h4>
   {% endif %}
 {% endif %}
 {% endblock %}
