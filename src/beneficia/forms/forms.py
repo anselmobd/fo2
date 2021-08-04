@@ -1,5 +1,18 @@
 from django import forms
 
+from base.forms import \
+    O2BaseForm, \
+    O2FieldReceitaForm
+
+
+class ReferenciaForm(
+        O2BaseForm,
+        O2FieldReceitaForm):
+
+    class Meta:
+        required_fields = ['receita']
+        autofocus_field = 'receita'
+
 
 class ObForm(forms.Form):
     ob = forms.CharField(
