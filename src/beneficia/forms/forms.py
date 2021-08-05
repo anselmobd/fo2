@@ -5,7 +5,7 @@ from base.forms import \
     O2FieldReceitaForm
 
 
-class ReferenciaForm(
+class ReceitaForm(
         O2BaseForm,
         O2FieldReceitaForm):
 

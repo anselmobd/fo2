@@ -11,7 +11,7 @@ class Receita(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(Receita, self).__init__(*args, **kwargs)
-        self.Form_class = beneficia.forms.ReferenciaForm
+        self.Form_class = beneficia.forms.ReceitaForm
         self.template_name = 'beneficia/receita.html'
         self.title_name = 'Receita'
         self.get_args = ['receita']
