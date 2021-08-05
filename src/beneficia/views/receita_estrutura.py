@@ -35,18 +35,6 @@ class ReceitaEstrutura(O2BaseGetPostView):
         if not dados:
             return
 
-        for row in dados:
-            row['comp'] = '.'.join([
-                row['niv'],
-                row['grup'],
-                row['sub'],
-                row['item'],
-            ])
-            row['calculo'] = ':'.join([
-                str(row['tipo_calc']),
-                row['calc_descr'],
-            ])
-
         self.context.update({
             'headers': [
                 'Seq.', 'Componente', 'Narrativa', 'Alt.',
