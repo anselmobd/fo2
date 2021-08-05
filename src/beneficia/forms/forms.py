@@ -1,8 +1,10 @@
 from django import forms
 
-from base.forms import \
-    O2BaseForm, \
-    O2FieldReceitaForm
+from base.forms import (
+    O2BaseForm, 
+    O2FieldReceitaForm,
+    O2FieldReceitaItemForm,
+)
 
 
 class ReceitaForm(
@@ -12,6 +14,15 @@ class ReceitaForm(
     class Meta:
         required_fields = ['receita']
         autofocus_field = 'receita'
+
+
+class ReceitaItemForm(
+        O2BaseForm,
+        O2FieldReceitaItemForm):
+
+    class Meta:
+        required_fields = ['item']
+        autofocus_field = 'item'
 
 
 class ObForm(forms.Form):
