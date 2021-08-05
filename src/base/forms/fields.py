@@ -33,11 +33,11 @@ class O2FieldRefForm(forms.Form):
 class O2FieldReceitaForm(forms.Form):
     receita = forms.CharField(
         label='Receita',
-        required=False,
+        required=False, min_length=5, max_length=5,
         widget=forms.TextInput(attrs={'size': 5}))
 
-    def clean_ref(self):
-        return O2BaseForm.cleanner_pad(self, 'receita', 5)
+    def clean_receita(self):
+        return O2BaseForm.upper(self, 'receita')
 
 
 class O2FieldClienteForm(forms.Form):
