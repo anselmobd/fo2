@@ -28,6 +28,30 @@
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=dados style=style safe=safe only %}
     </table>
+    <table class="layout">
+      <tr>
+        <td style="vertical-align: top;">
+          {% if sg_dados %}
+            <h3>Subgrupo</h3>
+            <table>
+              {% include "layout/html_thead.html" with data=sg_headers only %}
+              {% include "layout/html_tbody.html" with fields=sg_fields data=sg_dados only %}
+            </table>
+          {% endif %}
+        </td>
+        <td></td>
+        <td style="border-left: thin solid lightgrey;"></td>
+        <td style="vertical-align: top;">
+          {% if so_dados %}
+            <h3>Sortimento</h3>
+            <table>
+              {% include "layout/html_thead.html" with data=so_headers only %}
+              {% include "layout/html_tbody.html" with fields=so_fields data=so_dados only %}
+            </table>
+          {% endif %}
+        </td>
+      </tr>
+    </table>
   {% else %}
     <h4 class="bad">Receita não encontrada</h4>
   {% endif %}
