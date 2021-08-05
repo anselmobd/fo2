@@ -52,3 +52,37 @@ def receita_cores(cursor, receita):
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def receita_estrutura(cursor, niv, grup, sub, item):
+    sql = f"""
+        SELECT
+          re.SEQUENCIA seq
+        , re.NIVEL_COMP niv
+        , re.GRUPO_COMP grup
+        , re.SUB_COMP sub
+        , re.ITEM_COMP item
+        , item.NARRATIVA descr
+        , re.ALTERNATIVA_COMP alt
+        , re.CONS_UN_REC consumo_unidade
+        , re.TIPO_CALCULO tipo_calc
+        , calc.DESCRICAO calc_descr
+        , re.CONSUMO consumo
+        , COALESCE(re.LETRA_GRAFICO, '.') letra
+        FROM BASI_050 re
+        JOIN BASI_420 calc
+          ON calc.CODIGO = re.TIPO_CALCULO
+        JOIN BASI_010 item
+          ON item.NIVEL_ESTRUTURA = re.NIVEL_COMP
+         AND item.GRUPO_ESTRUTURA = re.GRUPO_COMP
+         AND item.SUBGRU_ESTRUTURA = re.SUB_COMP
+         AND item.ITEM_ESTRUTURA = re.ITEM_COMP
+        WHERE re.NIVEL_ITEM = {niv}
+          AND re.GRUPO_ITEM = '{grup}'
+          AND re.SUB_ITEM = '{sub}'
+          AND re.ITEM_ITEM = '{item}'
+        ORDER BY 
+          re.SEQUENCIA
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
