@@ -20,3 +20,18 @@ def receita_inform(cursor, receita):
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def receita_subgrupo(cursor, receita):
+    sql = f"""
+        SELECT DISTINCT
+          t.TAMANHO_REF COD
+        , t.DESCR_TAM_REFER DESCR
+        FROM basi_020 t
+        WHERE t.BASI030_NIVEL030 = 5
+          AND t.BASI030_REFERENC = '{receita}'
+        ORDER BY
+          t.TAMANHO_REF
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
