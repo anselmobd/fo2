@@ -35,7 +35,15 @@ class Receita(O2BaseGetPostView):
         sg_dados = beneficia.queries.receita_subgrupo(self.cursor, self.receita)
 
         self.context.update({
-            'sg_headers': ['Codigo', 'Descrição'],
-            'sg_fields': ['cod', 'descr'],
+            'sg_headers': ['Subgrupo', 'Descrição'],
+            'sg_fields': ['subgrupo', 'descr'],
             'sg_dados': sg_dados,
+        })
+
+        so_dados = beneficia.queries.receita_cores(self.cursor, self.receita)
+
+        self.context.update({
+            'so_headers': ['Subgrupo', 'Cor', 'Descrição'],
+            'so_fields': ['subgrupo', 'cor', 'descr'],
+            'so_dados': so_dados,
         })
