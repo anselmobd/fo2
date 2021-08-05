@@ -19,6 +19,10 @@ class ReceitaEstrutura(O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def mount_context(self):
+        if not self.item:
+            return
+        self.context.update({'render': True})
+
         self.cursor = db_cursor_so(self.request)
 
         niv, grup, sub, item = tuple(
