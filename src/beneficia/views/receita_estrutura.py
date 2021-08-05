@@ -28,6 +28,8 @@ class ReceitaEstrutura(O2BaseGetPostView):
         niv, grup, sub, item = tuple(
             self.item.split('.')
         )
+        self.context.update({'receita': grup})
+
         dados = beneficia.queries.receita_estrutura(
             self.cursor, niv, grup, sub, item
         )

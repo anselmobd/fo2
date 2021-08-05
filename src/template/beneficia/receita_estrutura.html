@@ -23,6 +23,11 @@
 {% endif %}
 {% if render %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+  {% if receita %}
+    {% url 'beneficia:receita' receita as link_receita %}
+    Receita: 
+    {% include "layout/link.html" with link=link_receita text=receita only %}
+  {% endif %}
   {% if dados %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
