@@ -7,7 +7,7 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
     sql_seq = '''
         SELECT
           ( SELECT
-              count(DISTINCT l.ESTAGIO_ANTERIOR)
+              count(DISTINCT (l.ESTAGIO_ANTERIOR || '_' ||l.CODIGO_ESTAGIO))
             FROM PCPC_040 l -- lote
             WHERE l.ORDEM_PRODUCAO = le.ORDEM_PRODUCAO
               AND l.ORDEM_CONFECCAO = le.ORDEM_CONFECCAO
