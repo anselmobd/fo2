@@ -40,6 +40,43 @@ class O2FieldReceitaForm(forms.Form):
         return O2BaseForm.upper(self, 'receita')
 
 
+class O2FieldItemForm(forms.Form):
+
+    def __init__(self, *args, nivel='1', **kwargs):
+        super(O2FieldItemForm, self).__init__(*args, **kwargs)
+        self.nivel = nivel
+
+    item = forms.CharField(
+        label='Item',
+        required=False, max_length=19,
+        widget=forms.TextInput(attrs={'size': 19}))
+
+    def clean_item(self):
+        item = self.cleaned_data['item'].upper()
+        data = self.data.copy()
+        if '.' in item:
+            parts = item.split('.')
+        else:
+            if len(item) < 15:
+                item = f"{self.nivel}{item}"
+            parts = [
+                item[0].zfill(1),
+                item[1:6].zfill(5),
+                item[6:9].zfill(3),
+                item[9:].zfill(6),
+            ]
+        item = '.'.join(parts)
+        data['item'] = item
+        self.data = data
+        return item
+
+
+class O2FieldReceitaItemForm(O2FieldItemForm):
+
+    def __init__(self, *args, **kwargs):
+        super(O2FieldReceitaItemForm, self).__init__(*args, nivel='5', **kwargs)
+
+
 class O2FieldClienteForm(forms.Form):
     cliente = forms.CharField(
         label='Cliente', required=False,
