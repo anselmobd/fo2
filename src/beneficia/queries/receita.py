@@ -85,4 +85,16 @@ def receita_estrutura(cursor, niv, grup, sub, item):
           re.SEQUENCIA
     """
     cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    dados = rows_to_dict_list_lower(cursor)
+    for row in dados:
+        row['comp'] = '.'.join([
+            row['niv'],
+            row['grup'],
+            row['sub'],
+            row['item'],
+        ])
+        row['calculo'] = ':'.join([
+            str(row['tipo_calc']),
+            row['calc_descr'],
+        ])
+    return dados
