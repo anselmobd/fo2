@@ -21,7 +21,7 @@
 {% if erro_msg %}
   <h4 class="bad">Erro: {{ erro_msg }}</h4>
 {% endif %}
-{% if request.POST %}
+{% if render %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
   {% if dados %}
     <table>
