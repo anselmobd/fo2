@@ -46,6 +46,11 @@ class O2BaseGetPostView(CustomView):
     def set_form_arg(self, field):
         value = self.get_arg(field)
         if value is not None:
+
+            # evita erro "This QueryDict instance is immutable"
+            aux_data = self.form.data.copy()
+            self.form.data = aux_data
+
             self.form.data[field] = value
 
     def empty_form_initial(self):
