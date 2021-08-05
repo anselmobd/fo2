@@ -21,7 +21,7 @@
 {% if erro_msg %}
   <h4 class="bad">Erro: {{ erro_msg }}</h4>
 {% endif %}
-{% if request.POST %}
+{% if render %}
   {% include "layout/form_inputs_report.html" with form=form h=5 only %}
   {% if dados %}
     <table>
@@ -34,8 +34,8 @@
           {% if sg_dados %}
             <h3>Subgrupo</h3>
             <table>
-              {% include "layout/html_thead.html" with data=sg_headers only %}
-              {% include "layout/html_tbody.html" with fields=sg_fields data=sg_dados only %}
+              {% include "layout/thead_generic.html" with data=sg_headers only %}
+              {% include "layout/tbody_generic.html" with fields=sg_fields data=sg_dados only %}
             </table>
           {% endif %}
         </td>
@@ -45,8 +45,8 @@
           {% if so_dados %}
             <h3>Sortimento</h3>
             <table>
-              {% include "layout/html_thead.html" with data=so_headers only %}
-              {% include "layout/html_tbody.html" with fields=so_fields data=so_dados only %}
+              {% include "layout/thead_generic.html" with data=so_headers only %}
+              {% include "layout/tbody_generic.html" with fields=so_fields data=so_dados only %}
             </table>
           {% endif %}
         </td>

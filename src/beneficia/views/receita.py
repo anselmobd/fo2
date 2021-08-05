@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
@@ -19,6 +21,10 @@ class Receita(O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def mount_context(self):
+        if not self.receita:
+            return
+        self.context.update({'render': True})
+
         self.cursor = db_cursor_so(self.request)
 
         dados = beneficia.queries.receita_inform(self.cursor, self.receita)
@@ -41,6 +47,19 @@ class Receita(O2BaseGetPostView):
         })
 
         so_dados = beneficia.queries.receita_cores(self.cursor, self.receita)
+
+        for row in so_dados:
+            row['cor|LINK'] = reverse(
+                'beneficia:receita_estrutura',
+                args=[
+                    '.'.join([
+                        '5',
+                        self.receita,
+                        row['subgrupo'],
+                        row['cor'],
+                    ])
+                ],
+            )
 
         self.context.update({
             'so_headers': ['Subgrupo', 'Cor', 'Descrição'],
