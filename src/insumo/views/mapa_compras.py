@@ -86,6 +86,7 @@ class MapaCompras(View):
                 max_digits,
                 num_digits(row['QTD_INSUMO'])
             )
+        max_digits = min(max_digits, 6)
 
         for row in data_ins:
             row['SEMANA_NECESSIDADE|LINK'] = reverse(
@@ -119,6 +120,7 @@ class MapaCompras(View):
                 max_digits,
                 num_digits(row['QTD'])
             )
+        max_digits = min(max_digits, 6)
 
         previsao_alterada = False
         for row in data_prev:
@@ -156,6 +158,7 @@ class MapaCompras(View):
                 max_digits,
                 num_digits(row['QTD_A_RECEBER'])
             )
+        max_digits = min(max_digits, 6)
 
         for row in data_irs:
             row['QTD_A_RECEBER|DECIMALS'] = max_digits
@@ -186,6 +189,7 @@ class MapaCompras(View):
                 max_digits,
                 num_digits(row['QUANT'])
             )
+        max_digits = min(max_digits, 6)
 
         for row in data_adi:
             row['QUANT|DECIMALS'] = max_digits
@@ -211,6 +215,7 @@ class MapaCompras(View):
                     max_digits,
                     num_digits(row['QUANT'])
                 )
+            max_digits = min(max_digits, 6)
 
             for row in data_sug:
                 row['QUANT|DECIMALS'] = max_digits
@@ -249,6 +254,7 @@ class MapaCompras(View):
                         row['RECEBER']
                     ),
                 )
+            max_digits = min(max_digits, 6)
 
             arrows = []
             for index, row in enumerate(data):
