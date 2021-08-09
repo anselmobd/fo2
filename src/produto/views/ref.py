@@ -221,8 +221,8 @@ class Ref(View):
                     roteiros.append({
                         'r_titulos': [roteiro_tit],
                         'r_headers': ['Sequência', 'Operação', 'Estágio',
-                                      'Gargalo'],
-                        'r_fields': ['SEQ', 'OPERACAO', 'ESTAGIO', 'GARGALO'],
+                                      'Gargalo', 'Seq. Estágio'],
+                        'r_fields': ['SEQ', 'OPERACAO', 'ESTAGIO', 'GARGALO', 'SEQ_EST'],
                         'r_data': roteiro,
                     })
             context.update({

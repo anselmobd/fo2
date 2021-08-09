@@ -416,6 +416,7 @@ def ref_1roteiro(cursor, ref, alternativa, roteiro, tamanho, cor):
           THEN 'Gargalo'
           ELSE ' '
           END GARGALO
+        , r.SEQUENCIA_ESTAGIO SEQ_EST
         FROM MQOP_050 r -- roteiro
         JOIN MQOP_005 e -- estagio
           ON e.CODIGO_ESTAGIO = r.CODIGO_ESTAGIO
