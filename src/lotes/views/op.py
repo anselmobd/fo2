@@ -246,14 +246,16 @@ class Op(View):
                     'Itens 1ª Qualidade', 'Itens 2ª Qualidade',
                     'Itens Perda', 'Itens Conserto'
                 ] + headers_63 + [
-                    'Itens Em Produção', 'Lotes no estágio'
+                    'Itens Em Produção', 'Lotes no estágio',
+                    'Seq. Operação', 'Seq. Estágio', 'Est. Anterior',
                 ],
                 'e_fields': [
                     'EST', 'PERC',
                     'PROD', 'Q2',
                     'PERDA', 'CONSERTO',
                 ] + fields_63 + [
-                    'EMPROD', 'LOTES'
+                    'EMPROD', 'LOTES',
+                    'SEQ_OPER', 'SEQ_EST', 'EST_ANT',
                 ],
                 'e_data': e_data,
                 'qtd_lotes_fim': qtd_lotes_fim,
