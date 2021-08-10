@@ -74,11 +74,11 @@ class SetGtinDefine(PermissionRequiredMixin, View):
             else:
                 context.update({'msg': f'GTIN atualizado'})
                 try:
-                    last_value = cache.get('set_gtin_last_value', '0')
-                    cache.set('set_gtin_last_value', new_gtin[:-1])
+                    last_value = cache.get(f"set_gtin_{self.username}_last_value", '0')
+                    cache.set(f"set_gtin_{self.username}_last_value", new_gtin[:-1])
                     diff = int(new_gtin[:-1]) - int(last_value)
                     if abs(diff) == 1:
-                        cache.set('set_gtin_last_diff', diff)
+                        cache.set(f"set_gtin_{self.username}_last_diff", diff)
                 except Exception as error:
                     pass
 
@@ -90,6 +90,7 @@ class SetGtinDefine(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.request = request
+        self.username = self.request.user.username
         context = {'titulo': self.title_name}
         nivel = kwargs['nivel']
         ref = kwargs['ref']
@@ -100,7 +101,7 @@ class SetGtinDefine(PermissionRequiredMixin, View):
         if old_gtin is None:
             form = self.Form_class()
         else:
-            last_diff = cache.get('set_gtin_last_diff', 1)
+            last_diff = cache.get(f"set_gtin_{self.username}_last_diff", 1)
             old_gtin = str(int(old_gtin[:-1])+last_diff)
             form = self.Form_class({
                 'gtin': old_gtin,
@@ -114,6 +115,7 @@ class SetGtinDefine(PermissionRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         self.request = request
+        self.username = self.request.user.username
         context = {'titulo': self.title_name}
         nivel = kwargs['nivel']
         ref = kwargs['ref']
