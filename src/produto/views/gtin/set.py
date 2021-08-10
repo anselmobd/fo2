@@ -2,6 +2,7 @@ import urllib
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.cache import cache
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -72,6 +73,15 @@ class SetGtinDefine(PermissionRequiredMixin, View):
                     return context
             else:
                 context.update({'msg': f'GTIN atualizado'})
+                try:
+                    last_value = cache.get('set_gtin_last_value', '0')
+                    cache.set('set_gtin_last_value', new_gtin[:-1])
+                    diff = int(new_gtin[:-1]) - int(last_value)
+                    if abs(diff) == 1:
+                        cache.set('set_gtin_last_diff', diff)
+                except Exception as error:
+                    pass
+
 
                 _ = classes.ObjsProduto(
                     cursor, nivel, ref, tamanho, cor, new_gtin, self.request.user)
@@ -90,7 +100,8 @@ class SetGtinDefine(PermissionRequiredMixin, View):
         if old_gtin is None:
             form = self.Form_class()
         else:
-            old_gtin = str(int(old_gtin[:-1])+1)
+            last_diff = cache.get('set_gtin_last_diff', 1)
+            old_gtin = str(int(old_gtin[:-1])+last_diff)
             form = self.Form_class({
                 'gtin': old_gtin,
             })
