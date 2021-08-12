@@ -92,3 +92,18 @@ def estagios(cursor):
     '''
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
+
+
+def periodos_confeccao(cursor):
+    sql = '''
+        SELECT
+          p.PERIODO_PRODUCAO PERIODO
+        , p.DATA_INI_PERIODO INI
+        , p.DATA_FIM_PERIODO FIM
+        FROM PCPC_010 p
+        WHERE p.AREA_PERIODO = 1 -- confecção
+        ORDER BY
+          p.PERIODO_PRODUCAO
+    '''
+    cursor.execute(sql)
+    return rows_to_dict_list(cursor)
