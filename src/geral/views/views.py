@@ -107,14 +107,14 @@ def periodo_confeccao(request):
 class PainelView(View):
 
     def get(self, request, *args, **kwargs):
-        cursor = db_cursor_so(request)
-        painel = Painel.objects.filter(slug=kwargs['painel'], habilitado=True)
-        if len(painel) == 0:
+        try:
+            painel = Painel.objects.get(slug=kwargs['painel'], habilitado=True)
+        except Painel.DoesNotExist:
             return redirect('apoio_ao_erp')
 
         ultimo_mes = timezone.now() - datetime.timedelta(days=61)
 
-        layout = painel[0].layout
+        layout = painel.layout
         config = yaml.load(layout)
         for dado in config['dados']:
             try:
@@ -131,11 +131,11 @@ class PainelView(View):
                 ).order_by('-data')
 
         context = {
-            'titulo': painel[0].nome,
+            'titulo': painel.nome,
             'config': config,
             }
         return render(
-            request, 'geral/{}.html'.format(config['template']), context)
+            request, f"geral/{config['template']}.html", context)
 
 
 class InformativoView(LoginRequiredMixin, View):
