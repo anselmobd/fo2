@@ -14,7 +14,7 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 from geral.functions import has_permission
 from geral.dados.colecao_fluxos import dict_colecao_fluxos
-from geral.views import get_roteiros_de_fluxo
+from geral.dados.fluxo_roteiros import get_roteiros_de_fluxo
 from utils.forms import FiltroForm
 from utils.functions.models import rows_to_dict_list
 from utils.views import group_rowspan
