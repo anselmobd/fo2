@@ -67,22 +67,7 @@ def deposito(request):
 
 def estagio(request):
     cursor = db_cursor_so(request)
-    sql = '''
-        SELECT
-          e.CODIGO_ESTAGIO EST
-        , e.DESCRICAO DESCR
-        , CASE WHEN e.CODIGO_DEPOSITO = 0 THEN ' '
-          ELSE e.CODIGO_DEPOSITO || '-' || d.DESCRICAO
-          END DEP
-        , e.LEED_TIME LT
-        FROM MQOP_005 e
-        LEFT JOIN BASI_205 d
-          ON d.CODIGO_DEPOSITO = e.CODIGO_DEPOSITO
-        ORDER BY
-          e.CODIGO_ESTAGIO
-    '''
-    cursor.execute(sql)
-    data = rows_to_dict_list(cursor)
+    data = queries.estagios(cursor)
     context = {
         'titulo': 'Estágios',
         'headers': ('Estágio', 'Descrição', 'Lead time', 'Depósito'),
