@@ -29,6 +29,7 @@ from .models import (InformacaoModulo, Painel, PainelModulo, Pop, PopAssunto,
                      UsuarioPainelModulo, UsuarioPopAssunto)
 
 from geral.dados.alternativas import dict_alternativas
+from geral.dados.roteiros import dict_roteiros
 
 
 def index(request):
@@ -342,80 +343,6 @@ def update_dict(original, adding):
         else:
             result[key] = adding[key]
     return result
-
-
-def dict_roteiros():
-    return {
-        'mp': {
-            8: 'Forro/Tela Interno',
-        },
-        'md': {
-            1: 'MD Interno',
-            2: 'MD Unidade Sem Corte',
-            3: 'MD Unidade Com Corte',
-            4: 'MD Sem Costura',
-            5: 'MD Sunga',
-            6: 'MD Camisa',
-            9: 'MD Meia',
-            51: 'MD Interno',
-            52: 'Sobra de Multimarca',
-            53: 'Costura externa de MD',
-        },
-        'pb': {
-            11: 'PB Interno',
-            12: 'PB Unidade Sem Corte',
-            13: 'PB Unidade Com Corte',
-            14: 'PB Sem Costura',
-            15: 'PB Sunga',
-            61: 'PB Interno',
-            63: 'PB Costura externa de MD',
-        },
-        'pg': {
-            21: 'PG Interno',
-            22: 'PG Unidade Sem Corte',
-            23: 'PG Unidade Com Corte',
-            24: 'PG Sem Costura',
-            25: 'PG Sunga',
-            27: 'PG Pijama',
-            29: 'PG Meia',
-            71: 'PG Interno',
-            73: 'PG Costura externa de MD',
-        },
-        'pa': {
-            1: 'PA Interno',
-            11: 'PA de PB Interno',
-            21: 'PA de PG Interno',
-            31: 'PA de PG Interno',
-            2: 'PA Unidade Sem Corte',
-            12: 'PA de PB Unidade Sem Corte',
-            22: 'PA de PG Unidade Sem Corte',
-            32: 'PA de PG Unidade Sem Corte',
-            3: 'PA Unidade Com Corte',
-            13: 'PA de PB Unidade Com Corte',
-            23: 'PA de PG Unidade Com Corte',
-            4: 'PA Sem Costura',
-            14: 'PA de PB Sem Costura',
-            24: 'PA de PG Sem Costura',
-            34: 'PA de PG Sem Costura',
-            5: 'PA Sunga',
-            15: 'PA de PB Sunga',
-            25: 'PA de PG Sunga',
-            35: 'PA de PG Sunga',
-            7: 'PA Pijama',
-            27: 'PA de PG Pijama',
-            9: 'PA Meia',
-            29: 'PA de PG Meia',
-            51: 'PA Interno',
-            61: 'PA de PB Interno',
-            71: 'PA de PG Interno',
-            81: 'PA de PG Interno',
-            52: 'Sobra de Multimarca',
-            53: 'Costura externa de MD',
-            63: 'PB Costura externa de MD',
-            73: 'PG Costura externa de MD',
-            83: 'PA de PG Costura externa de MD',
-        }
-    }
 
 
 def dict_estagios():
