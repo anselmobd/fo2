@@ -17,6 +17,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.functions.dict import update_dict
 from utils.functions.models import rows_to_dict_list
 
 import produto.queries
@@ -329,21 +330,6 @@ def pop(request, pop_assunto=None, id=None):
             'extends_html': 'geral/index.html'
         })
     return render(request, 'geral/pop.html', context)
-
-
-def update_dict(original, adding):
-    result = original.copy()
-    for key in adding.keys():
-        if adding[key] is None:
-            continue
-        if isinstance(adding[key], dict):
-            if key not in result or not isinstance(result[key], dict):
-                result[key] = adding[key].copy()
-            else:
-                result[key] = update_dict(result[key], adding[key])
-        else:
-            result[key] = adding[key]
-    return result
 
 
 def dict_fluxo(id):
