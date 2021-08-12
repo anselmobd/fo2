@@ -28,6 +28,7 @@ from geral.functions import config_get_value, config_set_value, get_empresa
 from geral.models import (InformacaoModulo, Painel, PainelModulo, Pop, PopAssunto,
                      UsuarioPainelModulo, UsuarioPopAssunto)
 
+from geral.dados.fluxo_roteiros import get_roteiros_de_fluxo
 from geral.dados.fluxos import dict_fluxo
 
 
@@ -371,29 +372,6 @@ class GeraFluxoDot(O2BaseGetPostView):
             self.context.update({
                 'erro': "Fluxo {} não encontrado".format(id),
             })
-
-
-def get_roteiros_de_fluxo(id):
-    fluxo = dict_fluxo(id)
-
-    roteiros = {}
-    fluxo_num = fluxo['fluxo_num']
-    for k in fluxo:
-        if isinstance(fluxo[k], dict):
-            if 'ests' in fluxo[k]:
-                if k == 'bloco':
-                    tipo = fluxo[k]['nivel']
-                else:
-                    tipo = k[:2]
-                if tipo == 'mp':
-                    tipo = 'md'
-                if tipo not in roteiros:
-                    roteiros[tipo] = {}
-                roteiros[tipo][fluxo_num+fluxo[k]['alt_incr']] = [
-                    fluxo[k]['ests'],
-                    fluxo[k]['gargalo'],
-                ]
-    return roteiros
 
 
 def roteiros_de_fluxo(request, id):
