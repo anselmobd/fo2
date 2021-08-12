@@ -117,12 +117,14 @@ class Posicao(View):
         context.update({
             'se_headers': (
                 'Estágio', 'Progr.', 'A Prod.', 'Em Prod.', 'Disp. Baixa',
-                'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Cons./End.',
-                'Família', 'OS'),
+                'Prod. 1ª', 'Prod. 2ª', 'Perda', 'Cons./End.', 'Família', 'OS',
+                'Seq. Oper.', 'Seq. Est.', 'Est. Ant.',
+                ),
             'se_fields': (
                 'EST', 'Q_P', 'Q_AP', 'Q_EP', 'Q_DB',
-                'Q_PROD', 'Q_2A', 'Q_PERDA', 'Q_CONSERTO',
-                'FAMI', 'OS'),
+                'Q_PROD', 'Q_2A', 'Q_PERDA', 'Q_CONSERTO', 'FAMI', 'OS',
+                'SEQ_OPER', 'SEQ_EST', 'EST_ANT',
+                ),
             'se_data': data,
             'se_style': untuple_keys_concat({
                 (2, 3, 4, 5, 6, 7, 8, 9): 'text-align: right;',
