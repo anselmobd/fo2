@@ -48,13 +48,13 @@ class DefineMeta(LoginRequiredMixin, O2BaseGetPostView):
         if tem_meta:
             meta_list = meta_list[0]
 
-            meta_tamanhos = models.MetaEstoqueTamanho.objects.filter(meta=meta)
+            meta_tamanhos = models.MetaEstoqueTamanho.objects.filter(meta__id=meta_list['id'])
             meta_grade_tamanhos = {}
             for tamanho in meta_tamanhos:
                 meta_grade_tamanhos[
                     'tam_{}'.format(tamanho.tamanho)] = tamanho.quantidade
 
-            meta_cores = models.MetaEstoqueCor.objects.filter(meta=meta)
+            meta_cores = models.MetaEstoqueCor.objects.filter(meta__id=meta_list['id'])
             meta_grade_cores = {}
             for cor in meta_cores:
                 meta_grade_cores['cor_{}'.format(cor.cor)] = cor.quantidade
