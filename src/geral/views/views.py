@@ -28,6 +28,8 @@ from geral.functions import config_get_value, config_set_value, get_empresa
 from .models import (InformacaoModulo, Painel, PainelModulo, Pop, PopAssunto,
                      UsuarioPainelModulo, UsuarioPopAssunto)
 
+from geral.dados.alternativas import dict_alternativas
+
 
 def index(request):
     if get_empresa(request) == 'agator':
@@ -340,45 +342,6 @@ def update_dict(original, adding):
         else:
             result[key] = adding[key]
     return result
-
-
-def dict_alternativas():
-    return {
-        1: 'Interno',
-        11: 'PB Interno',
-        21: 'PG Interno',
-        31: 'PA de PG Interno',
-        2: 'Unidade Sem Corte',
-        12: 'PB Unidade Sem Corte',
-        22: 'PG Unidade Sem Corte',
-        32: 'PA de PG Unidade Sem Corte',
-        3: 'Unidade Com Corte',
-        13: 'PB Unidade Com Corte',
-        23: 'PG Unidade Com Corte',
-        4: 'Sem Costura',
-        14: 'PB Sem Costura',
-        24: 'PG Sem Costura',
-        34: 'PA de PG Sem Costura',
-        5: 'Sunga',
-        15: 'PB Sunga',
-        25: 'PG Sunga',
-        35: 'PA de PG Sunga',
-        6: 'Camisa',
-        7: 'Pijama',
-        27: 'PG Pijama',
-        8: 'Forro/Tela Interno',
-        9: 'Meia',
-        29: 'PG Meia',
-        51: 'Interno',
-        61: 'PB Interno',
-        71: 'PG Interno',
-        81: 'PA de PG Interno',
-        52: 'Sobra de Multimarca',
-        53: 'Costura externa de MD',
-        63: 'PB Costura externa de MD',
-        73: 'PG Costura externa de MD',
-        83: 'PA de PG Costura externa de MD',
-    }
 
 
 def dict_roteiros():
