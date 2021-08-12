@@ -69,7 +69,10 @@ def op_lotes(cursor, op):
             THEN 'FINALIZADO'
             ELSE l.EST || ' - ' || l.EST_DESCR 
           END EST
-        , l.OS || ' (' || l.EST_OS_DESCR || ')' OS
+        , CASE WHEN l.OS = 0
+            THEN '-'
+            ELSE l.OS || ' (' || l.EST_OS_DESCR || ')'
+          END OS
         , l.REF
         , l.COR
         , l.TAM
