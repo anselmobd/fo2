@@ -1,15 +1,19 @@
 import datetime
-import pytz
 import yaml
 from pprint import pformat, pprint
 
 import django.forms
-from django.contrib.auth.mixins import (LoginRequiredMixin,
-                                        PermissionRequiredMixin)
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+)
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.template import loader
-from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View
@@ -17,19 +21,25 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
-from utils.functions.models import rows_to_dict_list
-
-import produto.queries
 
 import geral.forms as forms
-import geral.models as models
 import geral.queries as queries
-from geral.functions import config_get_value, config_set_value, get_empresa
-from geral.models import (InformacaoModulo, Painel, PainelModulo, Pop, PopAssunto,
-                     UsuarioPainelModulo, UsuarioPopAssunto)
-
 from geral.dados.fluxo_roteiros import get_roteiros_de_fluxo
 from geral.dados.fluxos import dict_fluxo
+from geral.functions import (
+    config_get_value,
+    config_set_value,
+    get_empresa,
+)
+from geral.models import (
+    InformacaoModulo,
+    Painel,
+    PainelModulo,
+    Pop,
+    PopAssunto,
+    UsuarioPainelModulo,
+    UsuarioPopAssunto,
+)
 
 
 def index(request):
