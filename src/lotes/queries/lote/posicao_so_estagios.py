@@ -19,6 +19,9 @@ def posicao_so_estagios(cursor, periodo, ordem_confeccao):
         , l.QTDE_CONSERTO Q_CONSERTO
         , l.CODIGO_FAMILIA FAMI
         , l.NUMERO_ORDEM OS
+        , l.SEQ_OPERACAO SEQ_OPER
+        , l.SEQUENCIA_ESTAGIO SEQ_EST
+        , l.ESTAGIO_ANTERIOR EST_ANT
         FROM PCPC_040 l
         JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
