@@ -89,7 +89,7 @@ class AcessoInterno(SingletonBaseMeta):
 
     @property
     def have_interno(self):
-        return interno is not None
+        return self.interno is not None
 
 
 class GitVersion(SingletonBaseMeta):
