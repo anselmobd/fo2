@@ -21,6 +21,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.functions.format import format_cnpj
 
 import geral.forms as forms
 import geral.queries as queries
@@ -62,7 +63,7 @@ def deposito(request):
             row['CNPJ'] = ''
         else:
             row['CNPJ'] = \
-                '{CNPJ9:09}/{CNPJ4:04}-{CNPJ2:02} - {FORN}'.format(**row)
+                f"{format_cnpj(row)} - {row['FORN']}"
         if row['PROP'] in propriedades:
             row['PROP'] = '{} - {}'.format(
                 row['PROP'], propriedades[row['PROP']])
