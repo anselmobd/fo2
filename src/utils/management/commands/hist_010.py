@@ -76,7 +76,7 @@ class Command(BaseCommand):
         return data_s[0][0]
 
     def get_last_hist_010_data(self):
-        for d in range(1,8):
+        for d in range(1,30):
             data = self.get_last_hist_010_data_dias(d)
             if data:
                 return data
@@ -191,7 +191,7 @@ class Command(BaseCommand):
             DELETE FROM HIST_010 h
             WHERE h.DATA_OCORR <= %s
         '''
-        # cursor_s.execute(sql, [data])
+        cursor_s.execute(sql, [data])
 
     def handle(self, *args, **options):
         self.my_println('---')
