@@ -42,28 +42,45 @@ class Command(BaseCommand):
             data.append(row)
         return data
 
-    def get_last_hist_010_data(self):
+    def get_last_hist_010_data_dias(self, dias):
         cursor_s = db_cursor_so()
 
-        sql = '''
-        WITH pridata AS
-        (
-          SELECT
-            min(hm.DATA_OCORR) DATA_OCORR
-          FROM systextil.HIST_010 hm
-        )
-        SELECT 
-          max(hh.DATA_OCORR) 
-        FROM pridata p
-        JOIN systextil.HIST_010 hh
-          ON hh.DATA_OCORR = p.DATA_OCORR
-          OR hh.DATA_OCORR < p.DATA_OCORR + 1 
+        if dias > 1:
+            self.my_println(f'N dias: {dias}')
+
+        sql = f'''
+            WITH pridata AS
+            (
+              SELECT
+                min(hp.DATA_OCORR) DATA_OCORR
+              FROM systextil.HIST_010 hp
+            )
+            , dias AS 
+            (
+              SELECT 
+                max(hd.DATA_OCORR) DATA_OCORR 
+              FROM pridata p
+              JOIN systextil.HIST_010 hd
+                ON hd.DATA_OCORR < p.DATA_OCORR + {dias}
+            )
+            SELECT 
+              max(d.DATA_OCORR) 
+            FROM dias d
+            JOIN pridata p
+              ON d.DATA_OCORR <> p.DATA_OCORR
         '''
         data_s = list(cursor_s.execute(sql))
 
         if len(data_s) == 0:
             return None
         return data_s[0][0]
+
+    def get_last_hist_010_data(self):
+        for d in range(1,8):
+            data = self.get_last_hist_010_data_dias(d)
+            if data:
+                return data
+        return None
 
     def get_hist_010(self, data):
         cursor_s = db_cursor_so()
@@ -174,7 +191,7 @@ class Command(BaseCommand):
             DELETE FROM HIST_010 h
             WHERE h.DATA_OCORR <= %s
         '''
-        cursor_s.execute(sql, [data])
+        # cursor_s.execute(sql, [data])
 
     def handle(self, *args, **options):
         self.my_println('---')
