@@ -44,30 +44,26 @@ class Command(BaseCommand):
 
     def get_last_hist_010_data(self):
         cursor_s = db_cursor_so()
+
         sql = '''
-            SELECT
-              hhh.*
-            FROM
-            ( SELECT
-                hh.*
-              FROM
-              ( SELECT DISTINCT
-                  h.DATA_OCORR
-                FROM HIST_010 h
-                ORDER BY
-                  h.DATA_OCORR DESC
-              ) hh
-              WHERE rownum <= 10
-              ORDER BY
-                hh.DATA_OCORR
-            ) hhh
-            WHERE rownum = 1
+        WITH pridata AS
+        (
+          SELECT
+            min(hm.DATA_OCORR) DATA_OCORR
+          FROM systextil.HIST_010 hm
+        )
+        SELECT 
+          max(hh.DATA_OCORR) 
+        FROM pridata p
+        JOIN systextil.HIST_010 hh
+          ON hh.DATA_OCORR = p.DATA_OCORR
+          OR hh.DATA_OCORR < p.DATA_OCORR + 1 
         '''
         data_s = list(cursor_s.execute(sql))
+
         if len(data_s) == 0:
             return None
-        else:
-            return data_s[0][0]
+        return data_s[0][0]
 
     def get_hist_010(self, data):
         cursor_s = db_cursor_so()
