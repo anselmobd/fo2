@@ -1,0 +1,9 @@
+{% extends 'systextil/index.html' %}
+{% load static %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'systextil:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block content %}
+  {{ json }}
+{% endblock %}
