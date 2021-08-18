@@ -5,5 +5,7 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'systextil:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
+<pre>
   {{ json }}
+</pre>
 {% endblock %}
