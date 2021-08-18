@@ -4,24 +4,11 @@ from pprint import pprint
 
 from django.shortcuts import render
 
+from systextil.functions import get_sessions
+
 
 def index(request):
     return render(request, 'systextil/index.html')
-
-
-def get_sessions():
-    urls = [
-        "http://oc.tussor.com.br/systextil/sessions",
-        "http://tussor.systextil.com.br/systextil/sessions",
-    ]
-    for u in urls:
-        try:
-            req = requests.get(u, timeout=10)
-        except requests.exceptions.ConnectTimeout:
-            continue
-        if req.status_code == 200:
-            return req.json()
-    return {}
 
 
 def sessions(request):
