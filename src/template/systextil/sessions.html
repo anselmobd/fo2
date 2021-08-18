@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block content %}
+  <h4>{{ dados|length }} seç{{ dados|length|pluralize:"ão,ões" }}</h4>
   <table>
     {% include "layout/html_thead.html" with data=headers only %}
     {% include "layout/html_tbody.html" with fields=fields data=dados only %}
