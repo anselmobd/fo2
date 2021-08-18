@@ -328,6 +328,9 @@
         <li><a href="{% url 'base:index' %}">Base</a></li>
         {% include 'base/menu.html' %}
         <br />
+        <li><a href="{% url 'systextil:index' %}">Systextil</a></li>
+        {% include 'systextil/menu.html' %}
+        <br />
         <li>Intranet</li>
         <ul>
           <li>Usuário{% if request.user.is_authenticated %} ( {{ request.user.username }} ){% endif %}</li>
