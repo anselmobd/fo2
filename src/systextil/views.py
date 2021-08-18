@@ -9,10 +9,19 @@ def index(request):
 
 
 def sessions(request):
-    req = requests.get('http://oc.tussor.com.br/systextil/sessions')
-    json = req.json()
-    context = {
-        "titulo": "Sessions",
-        "json": pformat(json),
-    }
+    context = {"titulo": "Sessions", "json": ""}
+    urls = [
+        "http://oc.tussor.com.br/systextil/sessions",
+        "http://tussor.systextil.com.br/systextil/sessions",
+    ]
+    for u in urls:
+        try:
+            req = requests.get(u, timeout=10)
+        except requests.exceptions.ConnectTimeout:
+            continue
+        if req.status_code == 200:
+            context.update({
+                "json": pformat(req.json()),
+            })
+
     return render(request, 'systextil/sessions.html', context)
