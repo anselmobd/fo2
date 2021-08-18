@@ -1,3 +1,4 @@
+import requests
 from pprint import pprint, pformat
 
 from django.shortcuts import render
@@ -8,7 +9,8 @@ def index(request):
 
 
 def sessions(request):
-    json = {'teste': "Teste!"}
+    req = requests.get('http://oc.tussor.com.br/systextil/sessions')
+    json = req.json()
     context = {
         "titulo": "Sessions",
         "json": pformat(json),
