@@ -69,10 +69,10 @@ class LinhaNivel1(models.Model):
 
 class Produto(models.Model):
     nivel_estrutura = models.CharField(
-        primary_key=True, max_length=1,
+        max_length=1,
         verbose_name='Nível')
     referencia = models.CharField(
-        primary_key=True, max_length=5,
+        max_length=5,
         verbose_name='Referência')
 
     def __str__(self):

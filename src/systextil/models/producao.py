@@ -9,10 +9,8 @@ class PeriodoConfeccaoManager(models.Manager):
 
 class Periodo(models.Model):
     area_periodo = models.IntegerField(
-        primary_key=True,
         verbose_name='Área do período')
     periodo_producao = models.IntegerField(
-        primary_key=True,
         verbose_name='Período de produção')
     data_ini_periodo = models.DateTimeField(
         verbose_name='Data inicial do período')
