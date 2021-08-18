@@ -40,6 +40,8 @@ def sessions(request):
     for row in dados:
         row['desde'] = datetime.datetime.fromtimestamp(row['timestamp']/1000.0)
 
+    dados = sorted(dados, key=lambda k: k['desde']) 
+
     context.update({
         "headers": ["IP", "Desde"],
         "fields": ["ip", "desde"],
