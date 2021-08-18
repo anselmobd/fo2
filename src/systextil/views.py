@@ -25,7 +25,7 @@ def get_sessions():
 
 
 def sessions(request):
-    context = {"titulo": "Sessions"}
+    context = {"titulo": "Seções"}
     json = get_sessions()
 
     dados = []
