@@ -8,8 +8,7 @@ def index(request):
     return render(request, 'systextil/index.html')
 
 
-def sessions(request):
-    context = {"titulo": "Sessions", "json": ""}
+def get_sessions():
     urls = [
         "http://oc.tussor.com.br/systextil/sessions",
         "http://tussor.systextil.com.br/systextil/sessions",
@@ -20,8 +19,13 @@ def sessions(request):
         except requests.exceptions.ConnectTimeout:
             continue
         if req.status_code == 200:
-            context.update({
-                "json": pformat(req.json()),
-            })
+            return pformat(req.json())
+    return ""
 
+
+def sessions(request):
+    context = {
+        "titulo": "Sessions",
+        "json": get_sessions()
+    }
     return render(request, 'systextil/sessions.html', context)
