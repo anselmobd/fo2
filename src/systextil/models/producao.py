@@ -13,6 +13,7 @@ class Periodo(models.Model):
     periodo_producao = models.IntegerField(
         verbose_name='Período de produção')
     data_ini_periodo = models.DateTimeField(
+        primary_key=True,
         verbose_name='Data inicial do período')
     data_fim_periodo = models.DateTimeField(
         verbose_name='Data final do período')
