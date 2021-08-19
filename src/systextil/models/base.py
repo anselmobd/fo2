@@ -4,6 +4,7 @@ from django.db import models
 class HDoc001(models.Model):
     tipo = models.IntegerField()
     codigo = models.IntegerField(
+        primary_key=True,
         verbose_name='Código')
     descricao = models.CharField(
         max_length=60,
