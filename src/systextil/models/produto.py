@@ -72,6 +72,7 @@ class Produto(models.Model):
         max_length=1,
         verbose_name='Nível')
     referencia = models.CharField(
+        primary_key=True,
         max_length=5,
         verbose_name='Referência')
 
