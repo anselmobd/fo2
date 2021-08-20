@@ -1,5 +1,6 @@
 from . import analise
 from . import lote
+from . import ops
 from . import ord_prod
 from . import pedido
 from .ajax import *

@@ -167,6 +167,9 @@ urlpatterns = [
     re_path(r'^pedido/historico/(?P<pedido>\d+)/$', views.pedido.Historico.as_view(),
         name='pedido_historico__get'),
 
+    re_path(r'^op/historico/(?P<op>\d+)?/?$', views.ops.historico.Historico.as_view(),
+        name='historico_op'),
+
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     re_path(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
