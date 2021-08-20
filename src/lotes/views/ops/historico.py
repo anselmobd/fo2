@@ -24,12 +24,27 @@ class Historico(View):
                 'msg_erro': 'Histórico não encontrado',
             })
             return context
-
         context.update({
-            'headers': ('Data', 'Usuário',
-                        'Tamanho', 'Cor', 'Narrativa'),
-            'fields': ('data_ocorr', 'usuario',
-                       'tam', 'cor', 'narrativa'),
+            'headers': [
+                'Periodo',
+                'OC',
+                'Data/hora', 
+                'Tipo', 
+                'Descrição', 
+                'Usuario', 
+                'Máquina', 
+                'Tela',
+            ],
+            'fields': [
+                'periodo_producao',
+                'ordem_confeccao',
+                'data_ocorr', 
+                'tipo_ocorr', 
+                'descricao_historico', 
+                'usuario_rede', 
+                'maquina_rede', 
+                'aplicacao',
+            ],
             'data': data,
         })
         return context
