@@ -11,7 +11,9 @@ def historico_op(cursor, op):
       where 1=1
         and h.ordem_producao = '{op}'
       order by
-        h.data_ocorr desc
+        h.periodo_producao
+      , h.ordem_confeccao
+      , h.data_ocorr
     """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
