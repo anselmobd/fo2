@@ -2,6 +2,7 @@ from .busca_op import *
 from .busca_ops_info import *
 from .caixas_op_3lotes import *
 from .get_seq_est_op import *
+from .historico_op import *
 from .op_conserto import *
 from .op_os_ref import *
 from .op_estagios import *
