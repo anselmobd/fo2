@@ -199,7 +199,7 @@ class Command(BaseCommand):
 
         try:
             data = self.get_last_hist_010_data()
-            self.my_println(f"data {data}")
+            self.my_println(f"trabalhando < data {data}")
 
             ics = self.get_hist_010(data)
 
@@ -235,7 +235,7 @@ class Command(BaseCommand):
             self.my_println(f"{count} registros copiados")
 
             if ult_data_ocorr is not None:
-                self.my_println(f"ult_data_ocorr {ult_data_ocorr}")
+                self.my_println(f"ultima data transferida: {ult_data_ocorr}")
                 self.del_hist_010(ult_data_ocorr)
 
         except Exception as e:
