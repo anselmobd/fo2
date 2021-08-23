@@ -56,13 +56,16 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if op %}
-  <h3>OP: {{ op }}</h3>
+  <h4>OP: {{ op }}</h4>
 {% endif %}
 {% if oc %}
-  <h3>OC: {{ oc }}</h3>
+  <h4>OC: {{ oc }}</h4>
+{% endif %}
+{% if dia %}
+  <h4>Dia: {{ dia }}</h4>
 {% endif %}
 {% if usuario %}
-  <h3>Usuário: {{ usuario }}</h3>
+  <h4>Usuário: {{ usuario }}</h4>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
