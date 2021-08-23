@@ -55,8 +55,11 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
 </form>
-{% if referencia %}
-  <h3>Referência: {{ referencia }}</h3>
+{% if op %}
+  <h3>OP: {{ op }}</h3>
+{% endif %}
+{% if oc %}
+  <h3>OC: {{ oc }}</h3>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
