@@ -24,6 +24,9 @@ class Op2Form(forms.Form):
         label='OP',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+    oc = forms.CharField(
+        label='OC', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 

@@ -16,14 +16,15 @@ class Historico(View):
     template_name = 'lotes/historico_op.html'
     title_name = 'Histórico de OP'
 
-    def mount_context(self, cursor, op, page):
+    def mount_context(self, cursor, op, oc, page):
         linhas_pagina = 100
         context = {
             'op': op,
+            'oc': oc,
             'linhas_pagina': linhas_pagina,
         }
 
-        data = lotes.queries.op.historico_op(cursor, op)
+        data = lotes.queries.op.historico_op(cursor, op, oc)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Histórico não encontrado',
@@ -83,8 +84,9 @@ class Historico(View):
             form.data['op'] = kwargs['op']
         if form.is_valid():
             op = form.cleaned_data['op']
+            oc = form.cleaned_data['oc']
             page = form.cleaned_data['page']
             cursor = connection.cursor()
-            context.update(self.mount_context(cursor, op, page))
+            context.update(self.mount_context(cursor, op, oc, page))
         context['form'] = form
         return render(request, self.template_name, context)
