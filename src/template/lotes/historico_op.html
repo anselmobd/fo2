@@ -88,7 +88,7 @@
 
   <table>
     {% include "layout/thead_generic.html" with data=headers only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data pre=pre only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data pre=pre pre=pre only %}
   </table>
 {% endif %}
 {% endblock %}

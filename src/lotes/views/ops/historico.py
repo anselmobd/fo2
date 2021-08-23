@@ -59,6 +59,9 @@ class Historico(View):
                 'maquina_rede', 
                 'aplicacao',
             ],
+            'pre': [
+                'descricao_historico', 
+            ],
             'data': data,
         })
         return context
