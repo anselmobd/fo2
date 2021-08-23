@@ -27,6 +27,9 @@ class Op2Form(forms.Form):
     oc = forms.CharField(
         label='OC', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
+    dia = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
     usuario = forms.CharField(
         label='Usuário', max_length=20, required=False,
         widget=forms.TextInput(attrs={'type': 'string'}))
