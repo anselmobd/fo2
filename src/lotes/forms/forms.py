@@ -27,6 +27,9 @@ class Op2Form(forms.Form):
     oc = forms.CharField(
         label='OC', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
+    usuario = forms.CharField(
+        label='Usuário', max_length=20, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 
