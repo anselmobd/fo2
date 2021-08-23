@@ -10,7 +10,7 @@ def historico_op(cursor, op, oc=None, usuario=None):
 
     filter_usuario = ""
     if usuario is not None and usuario != "":
-      filter_usuario = f"AND h.usuario_sistema = {usuario}"
+      filter_usuario = f"AND h.usuario_sistema LIKE '%{usuario}%'"
 
     sql = f"""
       select 
