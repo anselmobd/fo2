@@ -14,7 +14,7 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Move HIST_100 do banco do systextil para o banco da intranet'
-    __MAX_TASKS = 1000
+    __MAX_TASKS = 10000000
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -42,32 +42,47 @@ class Command(BaseCommand):
             data.append(row)
         return data
 
-    def get_last_hist_100_data(self):
+    def get_last_hist_100_data_dias(self, dias):
         cursor_s = db_cursor_so()
-        sql = '''
-            SELECT
-              hhh.*
-            FROM
-            ( SELECT
-                hh.*
-              FROM
-              ( SELECT DISTINCT
-                  h.DATA_OCORR
-                FROM HIST_100 h
-                ORDER BY
-                  h.DATA_OCORR DESC
-              ) hh
-              WHERE rownum <= 100
-              ORDER BY
-                hh.DATA_OCORR
-            ) hhh
-            WHERE rownum = 1
+
+        if dias > 1:
+            self.my_println(f'N dias: {dias}')
+
+        as_of = "as of timestamp timestamp '2021-08-24 16:22:25'"
+
+        sql = f'''
+            WITH pridata AS
+            (
+              SELECT
+                min(hp.DATA_OCORR) DATA_OCORR
+              FROM systextil.HIST_100 {as_of} hp
+            )
+            , dias AS 
+            (
+              SELECT 
+                max(hd.DATA_OCORR) DATA_OCORR 
+              FROM pridata p
+              JOIN systextil.HIST_100 {as_of} hd
+                ON hd.DATA_OCORR < p.DATA_OCORR + {dias}
+            )
+            SELECT 
+              max(d.DATA_OCORR) 
+            FROM dias d
+            JOIN pridata p
+              ON d.DATA_OCORR <> p.DATA_OCORR
         '''
         data_s = list(cursor_s.execute(sql))
+
         if len(data_s) == 0:
             return None
-        else:
-            return data_s[0][0]
+        return data_s[0][0]
+
+    def get_last_hist_100_data(self):
+        for d in range(1000,1030):
+            data = self.get_last_hist_100_data_dias(d)
+            if data:
+                return data
+        return None
 
     def get_hist_100(self, data):
         cursor_s = db_cursor_so()
@@ -264,16 +279,28 @@ class Command(BaseCommand):
             ics = self.get_hist_100(data)
 
             count = 0
+            ult_data_ocorr = None
+            can_break = False
             for row in ics:
                 count += 1
+                if (ult_data_ocorr is None or
+                        ult_data_ocorr != row['data_ocorr']):
+                    if can_break:
+                        break
+                    ult_data_ocorr = row['data_ocorr']
+
                 self.trata_none(row)
                 self.my_print(".")
                 self.insert_hist_100(row)
+
                 if count >= self.__MAX_TASKS:
-                    break
+                    can_break = True
+
             self.my_println(f"{count} registros copiados")
 
-            self.del_hist_100(data)
+            if ult_data_ocorr is not None:
+                self.my_println(f"ultima data transferida: {ult_data_ocorr}")
+                self.del_hist_100(ult_data_ocorr)
 
         except Exception as e:
             raise CommandError('Erro movendo HIST_100 "{}"'.format(e))
