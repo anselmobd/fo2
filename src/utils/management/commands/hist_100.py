@@ -15,6 +15,7 @@ import lotes.models as models
 class Command(BaseCommand):
     help = 'Move HIST_100 do banco do systextil para o banco da intranet'
     __MAX_TASKS = 10000000
+    as_of = "as of timestamp timestamp '2021-08-24 16:22:25'"
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
@@ -48,21 +49,19 @@ class Command(BaseCommand):
         if dias > 1:
             self.my_println(f'N dias: {dias}')
 
-        as_of = "as of timestamp timestamp '2021-08-24 16:22:25'"
-
         sql = f'''
             WITH pridata AS
             (
               SELECT
                 min(hp.DATA_OCORR) DATA_OCORR
-              FROM systextil.HIST_100 {as_of} hp
+              FROM systextil.HIST_100 {self.as_of} hp
             )
             , dias AS 
             (
               SELECT 
                 max(hd.DATA_OCORR) DATA_OCORR 
               FROM pridata p
-              JOIN systextil.HIST_100 {as_of} hd
+              JOIN systextil.HIST_100 {self.as_of} hd
                 ON hd.DATA_OCORR < p.DATA_OCORR + {dias}
             )
             SELECT 
@@ -86,10 +85,10 @@ class Command(BaseCommand):
 
     def get_hist_100(self, data):
         cursor_s = db_cursor_so()
-        sql = '''
+        sql = f'''
             SELECT
               h.*
-            FROM HIST_100 h
+            FROM HIST_100 {self.as_of} h
             WHERE h.DATA_OCORR < %s
         '''
         cursor_s.execute(sql, [data])
