@@ -14,8 +14,9 @@ import lotes.models as models
 
 class Command(BaseCommand):
     help = 'Move HIST_100 do banco do systextil para o banco da intranet'
-    __MAX_TASKS = 10000000
-    as_of = "as of timestamp timestamp '2021-08-24 16:22:25'"
+    __MAX_TASKS = 1000
+    # as_of = "as of timestamp timestamp '2021-08-24 16:22:25'"
+    as_of = ""
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
