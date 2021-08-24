@@ -264,7 +264,7 @@ class Command(BaseCommand):
         cursor_s = db_cursor_so()
         sql = '''
             DELETE FROM HIST_100 h
-            WHERE h.DATA_OCORR < %s
+            WHERE h.DATA_OCORR <= %s
         '''
         cursor_s.execute(sql, [data])
 
@@ -274,7 +274,7 @@ class Command(BaseCommand):
 
         try:
             data = self.get_last_hist_100_data()
-            self.my_println(f"data {data}")
+            self.my_println(f"trabalhando < data {data}")
 
             ics = self.get_hist_100(data)
 
