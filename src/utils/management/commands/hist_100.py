@@ -78,7 +78,7 @@ class Command(BaseCommand):
         return data_s[0][0]
 
     def get_last_hist_100_data(self):
-        for d in range(1000,1030):
+        for d in range(1,30):
             data = self.get_last_hist_100_data_dias(d)
             if data:
                 return data
