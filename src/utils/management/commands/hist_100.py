@@ -264,7 +264,7 @@ class Command(BaseCommand):
         cursor_s = db_cursor_so()
         sql = '''
             DELETE FROM HIST_100 h
-            WHERE h.DATA_OCORR <= %s
+            WHERE h.DATA_OCORR < %s
         '''
         cursor_s.execute(sql, [data])
 
