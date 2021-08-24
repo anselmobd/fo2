@@ -47,9 +47,6 @@ class Command(BaseCommand):
     def get_last_hist_100_data_dias(self, dias):
         cursor_s = db_cursor_so()
 
-        if dias > 1:
-            self.my_println(f'N dias: {dias}')
-
         sql = f'''
             WITH pridata AS
             (
@@ -81,6 +78,8 @@ class Command(BaseCommand):
         for d in range(1,30):
             data = self.get_last_hist_100_data_dias(d)
             if data:
+                if d > 1:
+                    self.my_println(f'N dias: {d}')
                 return data
         return None
 
