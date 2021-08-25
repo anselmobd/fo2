@@ -45,6 +45,20 @@ class HistoricoOpForm(forms.Form):
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 
+    def clean_usuario(self):
+        usuario = self.cleaned_data['usuario'].upper()
+        data = self.data.copy()
+        data['usuario'] = usuario
+        self.data = data
+        return usuario
+
+    def clean_descr(self):
+        descr = self.cleaned_data['descr'].upper()
+        data = self.data.copy()
+        data['descr'] = descr
+        self.data = data
+        return descr
+
 
 class OsForm(forms.Form):
     os = forms.CharField(
