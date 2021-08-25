@@ -58,7 +58,7 @@ class Historico(View):
                 'data_ocorr', 
                 'tipo_ocorr', 
                 'descricao_historico', 
-                'usuario_sistema', 
+                'usuario_rede', 
                 'maquina_rede', 
                 'aplicacao',
             ],
