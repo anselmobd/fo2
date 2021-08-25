@@ -23,6 +23,7 @@ class Historico(View):
             'oc': oc,
             'dia': dia,
             'usuario': usuario,
+            'descr': descr,
             'linhas_pagina': linhas_pagina,
         }
 
