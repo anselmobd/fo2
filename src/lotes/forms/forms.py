@@ -38,7 +38,10 @@ class HistoricoOpForm(forms.Form):
         }))
     descr = forms.CharField(
         label='Partes da descrição', max_length=30, required=False,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput(attrs={
+            'type': 'string',
+            'style': 'text-transform:uppercase;',
+        }))
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 
