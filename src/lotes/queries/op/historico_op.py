@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list
 
 
-def historico_op(cursor, op, oc=None, dia=None, usuario=None):
+def historico_op(cursor, op, oc=None, dia=None, usuario=None, descr=None):
     filter_oc = ""
     if oc is not None and oc != "":
       filter_oc = f"AND h.ordem_confeccao = {oc}"
@@ -16,6 +16,11 @@ def historico_op(cursor, op, oc=None, dia=None, usuario=None):
     if usuario is not None and usuario != "":
       filter_usuario = f"AND h.usuario_rede LIKE '%{usuario}%'"
 
+    filter_descr = ""
+    if descr is not None and descr != "":
+      descr.replace(' ', '%')
+      filter_descr = f"AND h.descricao_historico LIKE '%{descr}%'"
+
     sql = f"""
       select 
         h.*
@@ -24,6 +29,7 @@ def historico_op(cursor, op, oc=None, dia=None, usuario=None):
         {filter_oc} -- filter_oc
         {filter_dia} -- filter_dia
         {filter_usuario} -- filter_usuario
+        {filter_descr} -- filter_descr
       order by
         h.periodo_producao
       , h.ordem_confeccao
