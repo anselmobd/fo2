@@ -122,7 +122,7 @@ intr_adm_site.register(SolicitaLotePrinted, SolicitaLotePrintedAdmin)
 
 
 class EnderecoDisponivelAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['inicio', 'disponivel']
 
 
 intr_adm_site.register(EnderecoDisponivel, EnderecoDisponivelAdmin)

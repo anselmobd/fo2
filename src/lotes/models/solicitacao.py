@@ -211,6 +211,10 @@ class EnderecoDisponivel(models.Model):
     inicio = models.CharField(
         unique=True, max_length=4,
         verbose_name='Início do endereço')
+    disponivel = models.BooleanField(
+        default=True,
+        verbose_name='Disponível',
+    )
 
     def __str__(self):
         return self.inicio
