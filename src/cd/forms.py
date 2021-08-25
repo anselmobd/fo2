@@ -183,11 +183,20 @@ class RetirarForm(forms.Form):
             if self.op_object.pedido != 0:
                 return lote
 
-            rua = self.lote_object.local[0]
+            ende = self.lote_object.local
+            rua = ende[0]
             try:
+                # rua é válida
                 lotes.models.EnderecoDisponivel.objects.get(inicio=rua, disponivel=True) 
             except lotes.models.EnderecoDisponivel.DoesNotExist:
                 return lote
+
+            try:
+                # endereço é inválido
+                lotes.models.EnderecoDisponivel.objects.get(inicio=ende, disponivel=False) 
+                return lote
+            except lotes.models.EnderecoDisponivel.DoesNotExist:
+                pass
 
             raise forms.ValidationError(
                 "Lote não consta em nenhuma solicitação")
