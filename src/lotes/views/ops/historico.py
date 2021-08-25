@@ -12,7 +12,7 @@ import lotes.queries.op
 
 
 class Historico(View):
-    Form_class = lotes.forms.Op2Form
+    Form_class = lotes.forms.HistoricoOpForm
     template_name = 'lotes/historico_op.html'
     title_name = 'Histórico de OP'
 

@@ -19,7 +19,7 @@ class OpForm(forms.Form):
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
-class Op2Form(forms.Form):
+class HistoricoOpForm(forms.Form):
     op = forms.CharField(
         label='OP',
         widget=forms.TextInput(attrs={'type': 'number',
