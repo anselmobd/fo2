@@ -32,9 +32,13 @@ class Op2Form(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}))
     usuario = forms.CharField(
         label='Usuário', max_length=20, required=False,
-        widget=forms.TextInput(attrs={'type': 'string'}))
+        widget=forms.TextInput(attrs={
+            'type': 'string',
+            'style': 'text-transform:uppercase;',
+        }))
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
+
 
 class OsForm(forms.Form):
     os = forms.CharField(
