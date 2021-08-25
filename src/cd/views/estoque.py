@@ -239,7 +239,7 @@ class Estoque(View):
         except EmptyPage:
             data = paginator.page(paginator.num_pages)
 
-        self.end_disp = list(lotes.models.EnderecoDisponivel.objects.all().values())
+        self.end_disp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values())
 
         for row in data:
             row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
