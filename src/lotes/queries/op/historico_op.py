@@ -6,20 +6,20 @@ from utils.functions.models import rows_to_dict_list
 def historico_op(cursor, op, oc=None, dia=None, usuario=None, descr=None):
     filter_oc = ""
     if oc is not None and oc != "":
-      filter_oc = f"AND h.ordem_confeccao = {oc}"
+        filter_oc = f"AND h.ordem_confeccao = {oc}"
 
     filter_dia = ""
     if dia is not None and dia != "":
-      filter_dia = f"AND h.data_ocorr::DATE = '{dia}'::DATE"
+        filter_dia = f"AND h.data_ocorr::DATE = '{dia}'::DATE"
 
     filter_usuario = ""
     if usuario is not None and usuario != "":
-      filter_usuario = f"AND h.usuario_rede LIKE '%{usuario}%'"
+        filter_usuario = f"AND h.usuario_rede LIKE '%{usuario}%'"
 
     filter_descr = ""
     if descr is not None and descr != "":
-      descr.replace(' ', '%')
-      filter_descr = f"AND h.descricao_historico LIKE '%{descr}%'"
+        descr = descr.replace(' ', '%')
+        filter_descr = f"AND h.descricao_historico LIKE '%{descr}%'"
 
     sql = f"""
       select 
