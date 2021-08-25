@@ -4,23 +4,25 @@ from utils.functions.models import GradeQtd
 
 import lotes.models
 
-# referencia: None = grade total (da solicitação)
-#             string = filtra uma referência
-#             list = lista de referências
-# tipo: 1s = uma solicitação
-#            solicit_id é obrigatório
-#       s = todas as solicitação
-#       p = todos os pedidos
-#       sp = todas as solicitação + todos os pedidos
-#       i = inventário
-#       i-s = disponível (inventário - todas as solicitações)
-#       i-sp = disponível (inventário - todas as solicitações - pedidos)
-# grade_inventario: pega cores e tamanhos do inventário,
-#                   mesmo que o tipo seja outro
-# referencia: pode ser uma referência oi uma lista de referências
 def grade_solicitacao(
         cursor, referencia=None, solicit_id=None, tipo='1s',
         grade_inventario=False):
+    """
+    referencia: None = grade total (da solicitação)
+                string = filtra uma referência
+                list = lista de referências
+    tipo: 1s = uma solicitação
+               solicit_id é obrigatório
+          s = todas as solicitação
+          p = todos os pedidos
+          sp = todas as solicitação + todos os pedidos
+          i = inventário
+          i-s = disponível (inventário - todas as solicitações)
+          i-sp = disponível (inventário - todas as solicitações - pedidos)
+    grade_inventario: pega cores e tamanhos do inventário,
+                      mesmo que o tipo seja outro
+    referencia: pode ser uma referência oi uma lista de referências
+    """
 
     end_disp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values())
 
