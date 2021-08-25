@@ -22,7 +22,7 @@ def grade_solicitacao(
         cursor, referencia=None, solicit_id=None, tipo='1s',
         grade_inventario=False):
 
-    end_disp = list(lotes.models.EnderecoDisponivel.objects.all().values())
+    end_disp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values())
 
     filter_local = """--
         and l.local is not null

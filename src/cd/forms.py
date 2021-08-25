@@ -185,7 +185,7 @@ class RetirarForm(forms.Form):
 
             rua = self.lote_object.local[0]
             try:
-                lotes.models.EnderecoDisponivel.objects.get(inicio=rua) 
+                lotes.models.EnderecoDisponivel.objects.get(inicio=rua, disponivel=True) 
             except lotes.models.EnderecoDisponivel.DoesNotExist:
                 return lote
 

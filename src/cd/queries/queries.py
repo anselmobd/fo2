@@ -105,7 +105,7 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
 
 def sum_pedido(cursor, referencia=None):
 
-    end_disp = list(lotes.models.EnderecoDisponivel.objects.all().values())
+    end_disp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values())
 
     filter_local = """--
         and l.local is not null

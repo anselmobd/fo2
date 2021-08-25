@@ -51,7 +51,7 @@ class BuscaOP(View):
             })
             return context
 
-        ends = lotes.models.EnderecoDisponivel.objects.all().values('inicio')
+        ends = lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values('inicio')
         ends_ok = set()
         for end in ends:
             ends_ok.add(end['inicio'])
