@@ -2,6 +2,8 @@ from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
 
+from cd.queries.functions import where_ende_disponivel
+
 import lotes.models
 
 
@@ -104,22 +106,12 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
 
 
 def sum_pedido(cursor, referencia=None):
-
-    end_disp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values())
-
     filter_local = """--
         and l.local is not null
         and l.local <> ''
     """
-    if len(end_disp) != 0:
-        filter_end = """--
-            AND l.local ~ '^("""
-        filter_sep = ""
-        for regra in end_disp:
-            filter_end += f"{filter_sep}{regra['inicio']}"
-            filter_sep = "|"
-        filter_local += filter_end + """).*'
-        """
+
+    filter_local += where_ende_disponivel("l.local")
 
     if referencia is None:
         filter_referencia = '--'
