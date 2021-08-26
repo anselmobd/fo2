@@ -29,6 +29,9 @@ class Estoque(View):
     def esta_disp(self, end):
         for regra in self.end_disp:
             if end.startswith(regra['inicio']):
+                for regrain in self.end_indisp:
+                    if end == regrain['inicio']:
+                        return False
                 return True
         return False
 
@@ -240,6 +243,7 @@ class Estoque(View):
             data = paginator.page(paginator.num_pages)
 
         self.end_disp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values())
+        self.end_indisp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=False).values())
 
         for row in data:
             row['referencia|HOVER'] = ref_dict[row['referencia']]['DESCR']
