@@ -43,7 +43,6 @@ class GeraMoviPremio(View):
                     dados_func = re.split('-| |"', funcionario)
                     if len(dados_func) > 1:
                         if dados_func[1].isdigit():
-                            pprint(dados_func)
                             ident = f"{int(dados_func[1]):05}"
                             registros.append(';'.join([
                                 ident,
