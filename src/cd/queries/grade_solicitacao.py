@@ -2,7 +2,8 @@ from pprint import pprint
 
 from utils.functions.models import GradeQtd
 
-import lotes.models
+from cd.queries.functions import where_ende_disponivel
+
 
 def grade_solicitacao(
         cursor, referencia=None, solicit_id=None, tipo='1s',
@@ -24,21 +25,13 @@ def grade_solicitacao(
     referencia: pode ser uma referência oi uma lista de referências
     """
 
-    end_disp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values())
-
     filter_local = """--
         and l.local is not null
         and l.local <> ''
     """
-    if len(end_disp) != 0:
-        filter_end = """--
-            AND l.local ~ '^("""
-        filter_sep = ""
-        for regra in end_disp:
-            filter_end += f"{filter_sep}{regra['inicio']}"
-            filter_sep = "|"
-        filter_local += filter_end + """).*'
-        """
+
+    filter_local += where_ende_disponivel("l.local")
+
     # Grade de solicitação
     grade = GradeQtd(cursor)
     if tipo == '1s':
@@ -728,6 +721,7 @@ def grade_solicitacao(
         id='qtd',
         sql=sql
         )
+    print(sql)
 
     if tipo == '1s':
         grade_complementar.value(
