@@ -1,0 +1,32 @@
+{% extends 'contabil/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'contabil:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'contabil:converte' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Processa"/>
+  </form>
+  {% if erro %}
+    <h3>{{ erro }}</h3>
+  {% endif %}
+  {% if original %}
+    <h3>Original</h3>
+    <pre>{{ original }}</pre>
+  {% endif %}
+  {% if systextil %}
+    <h3>Para Systextil</h3>
+    {% if systextil_download %}
+      <a download="{{systextil_file}}" href="data:application/octet-stream,{{systextil_download}}">Salvar arquivo convertido</a>
+    {% endif %}
+    <pre>{{ systextil }}</pre>
+  {% endif %}
+{% endblock %}
