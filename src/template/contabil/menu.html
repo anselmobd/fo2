@@ -4,7 +4,7 @@
     <ul>
       <li><a href="{% url 'contabil:converte' %}">Converte para Systêxtil</a></li>
     </ul>
-    {% else %}
+  {% else %}
     <li>Faturamento</li>
     <ul>
       <li><a href="{% url 'contabil:nota_fiscal' %}">Nota fiscal</a></li>
@@ -14,6 +14,10 @@
         <li><a href="{% url 'contabil:remeindu' %}">Por OP</a></li>
         <li><a href="{% url 'contabil:remeindunf' %}">Por NF de remessa</a></li>
       </ul>
+    </ul>
+    <li>RH</li>
+    <ul>
+      <li><a href="{% url 'contabil:gera_movi_premio' %}">Gera movimento prêmio</a></li>
     </ul>
   {% endif %}
 </ul>
