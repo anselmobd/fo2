@@ -56,6 +56,11 @@ class BuscaOP(View):
         for end in ends:
             ends_ok.add(end['inicio'])
 
+        endsin = lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values('inicio')
+        ends_nok = set()
+        for ende in endsin:
+            ends_nok.add(ende['inicio'])
+
         safe = []
         for row in data:
             enderecos = lotes.models.Lote.objects.filter(
@@ -69,12 +74,15 @@ class BuscaOP(View):
             ).values(
                 'local', 'qtd'
             )
+
             end_set = set()
             qtd_end = 0
             for end in enderecos:
                 if end['local'][0] in ends_ok:
-                    end_set.add(end['local'])
-                    qtd_end += end['qtd']
+                    if end['local'] not in ends_nok:
+                        end_set.add(end['local'])
+                        qtd_end += end['qtd']
+
             end_list = sorted(end_set)
             if end_list:
                 row['ENDS|HOVER'] = ', '.join(end_list)
