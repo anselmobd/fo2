@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <form action="{% url 'contabil:converte' %}" method="post" enctype="multipart/form-data">
+  <form action="{% url 'contabil:gera_movi_premio' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Processa"/>

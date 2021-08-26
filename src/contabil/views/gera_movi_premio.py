@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 from django.shortcuts import render
@@ -26,72 +27,44 @@ class GeraMoviPremio(View):
         form = self.Form_class(request.POST, request.FILES)
         if form.is_valid():
             lines = []
-            i_contas = -1
-            for i, line in enumerate(request.FILES['arquivo']):
+            for line in request.FILES['arquivo']:
                 line = line.decode('utf-8', errors='ignore').strip("\n").strip()
                 lines.append(line)
-                if line == '[Contas]':
-                    i_contas = i
-            context['original'] = "\n".join(lines)
+            # context['original'] = "orig"  # "\n".join(lines)
 
-            if i_contas == -1:
-                context['erro'] = "Arquivo sem '[Contas]'"
+            if not lines:
+                context['erro'] = "Arquivo vazio"
             else:
-
-                codigos = {}
-                for idx in range(i_contas, len(lines)):
-                    linha = lines[idx]
-                    if "=" not in linha:
-                        continue
-                    codigo, linha = tuple(linha.split("="))
-                    colunas = linha.split(",")
-                    codigos[codigo] = colunas[2].strip('"')
-
                 registros = []
-                for idx in range(i_contas):
-                    linha = lines[idx]
-                    if len(linha) == 0:
-                        continue
-                    colunas = linha[1:-1].split('","')
-                    conta_d = colunas[1]
-                    conta_c = colunas[2]
-                    data = colunas[3]
-                    if data == "D":
-                        continue
+                for line in lines:
+                    colunas = line.split(";")
+                    funcionario = colunas[0]
+                    valor = colunas[-1]
+                    dados_func = re.split('-| |"', funcionario)
+                    if len(dados_func) > 1:
+                        if dados_func[1].isdigit():
+                            pprint(dados_func)
+                            ident = f"{int(dados_func[1]):05}"
+                            registros.append(';'.join([
+                                ident,
+                                "9R44FO",
+                                valor,
+                                "",
+                                "",
+                                "",
+                            ]))
+                            registros.append(';'.join([
+                                ident,
+                                "9R45FO",
+                                valor,
+                                "",
+                                "",
+                                "",
+                            ]))
 
-                    valor = float(colunas[4].replace(",", "."))
-                    descricao = "/".join([
-                        codigos[conta_d],
-                        codigos[conta_c],
-                    ])
-
-                    registros.append(" ".join([
-                        "002",
-                        data,
-                        f"{int(conta_d):020}",
-                        "0000",
-                        "D",
-                        "700001",
-                        "0502",
-                        f"{descricao:100}",
-                        f"{valor:015.2f}"
-                    ]))
-
-                    registros.append(" ".join([
-                        "002",
-                        data,
-                        f"{int(conta_c):020}",
-                        "0000",
-                        "C",
-                        "700001",
-                        "0502",
-                        f"{descricao:100}",
-                        f"{valor:015.2f}"
-                    ]))
-
-            context['systextil'] = "\n".join(registros)
-            context['systextil_download'] = "%0A%0D".join(registros)
-            context['systextil_file'] = f"Systextil_{request.FILES['arquivo']._name}"
+                context['systextil'] = "\n".join(registros)
+                context['systextil_download'] = "%0A%0D".join(registros)
+                context['systextil_file'] = f"Nasajon_{request.FILES['arquivo']._name}"
             
         else:
             context['erro'] = 'Erro inexperado!'
