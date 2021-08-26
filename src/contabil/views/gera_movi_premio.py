@@ -63,7 +63,7 @@ class GeraMoviPremio(View):
                             ]))
 
                 context['systextil'] = "\n".join(registros)
-                context['systextil_download'] = "%0A%0D".join(registros)
+                context['systextil_download'] = "%0D%0A".join(registros)
                 context['systextil_file'] = f"Nasajon_{request.FILES['arquivo']._name}"
             
         else:
