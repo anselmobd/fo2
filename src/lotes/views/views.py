@@ -89,36 +89,11 @@ def posicaoOri(request):
     return render(request, 'lotes/posicaoOri.html', context)
 
 
-def get_periodo_oc(cursor, context, periodo, ordem_confeccao):
-    sql = '''
-        SELECT
-          p.PERIODO_PRODUCAO PERIODO
-        , TO_CHAR(p.DATA_INI_PERIODO, 'DD/MM/YYYY') INI
-        , TO_CHAR(p.DATA_FIM_PERIODO - 1, 'DD/MM/YYYY') FIM
-        , %s OC
-        FROM PCPC_010 p
-        WHERE AREA_PERIODO = 1
-          AND PERIODO_PRODUCAO = %s
-    '''
-    cursor.execute(sql, [ordem_confeccao, periodo])
-    data = rows_to_dict_list(cursor)
-    if len(data) == 0:
-        return False
-    context.update({
-        'l_headers': ('Período', 'Incício', 'Fim', 'OC'),
-        'l_fields': ('PERIODO', 'INI', 'FIM', 'OC'),
-        'l_data': data,
-    })
-    return True
-
-
 def detalhes_lote(request, lote):
     periodo = lote[:4]
     ordem_confeccao = lote[-5:]
     cursor = db_cursor_so(request)
     context = {}
-    if not get_periodo_oc(cursor, context, periodo, ordem_confeccao):
-        return HttpResponse('')
 
     html = render_to_string('lotes/ajax/detalhes_lote.html', context)
     return HttpResponse(html)
