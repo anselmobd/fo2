@@ -1,5 +1,4 @@
 import datetime
-import requests
 from pprint import pprint
 
 from django.shortcuts import render
