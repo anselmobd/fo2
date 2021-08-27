@@ -169,8 +169,4 @@ urlpatterns = [
 
     re_path(r'^totais_estagio/$',
         views.analise.TotalEstagio.as_view(), name='totais_estagio'),
-
-    # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
-
-    re_path(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
 ]
