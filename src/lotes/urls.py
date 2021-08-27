@@ -92,8 +92,8 @@ urlpatterns = [
     re_path(r'^imprime_tag/$',
         views.ImprimeTag.as_view(), name='imprime_tag'),
 
-    re_path(r'^impressora_termica/$',
-        views.impressoraTermica, name='impressora_termica'),
+    # re_path(r'^impressora_termica/$',
+    #     views.impressoraTermica, name='impressora_termica'),
 
     re_path(r'^lead_colecao/(?P<id>[^/]+)?$',
         views.LeadColecao.as_view(), name='lead_colecao'),
