@@ -14,5 +14,5 @@ python-stdnum==1.13
 pytz==2019.3
 PyYAML==5.4.1
 redis==3.3.11
-requests==2.22.0
+requests==2.26.0
 validate-docbr==1.8.2
