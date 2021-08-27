@@ -145,55 +145,6 @@ def get_item(cursor, context, periodo, ordem_confeccao):
     return True
 
 
-def get_estagios(cursor, context, periodo, ordem_confeccao):
-    sql = '''
-        SELECT
-          l.CODIGO_ESTAGIO || ' - ' || e.DESCRICAO EST
-        , l.QTDE_PROGRAMADA Q_P
-        , l.QTDE_EM_PRODUCAO_PACOTE Q_EP
-        , l.QTDE_A_PRODUZIR_PACOTE Q_AP
-        , l.CODIGO_FAMILIA FAMI
-        , l.NUMERO_ORDEM OS
-        , coalesce(u.USUARIO, ' ') USU
-        , TO_CHAR(d.DATA_INSERCAO, 'DD/MM/YYYY HH24:MI') DT
-        , coalesce(d.PROCESSO_SYSTEXTIL || ' - ' || p.DESCRICAO, ' ') PRG
-        FROM PCPC_040 l
-        JOIN MQOP_005 e
-          ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-        LEFT JOIN PCPC_045 d
-          ON d.PCPC040_PERCONF = l.PERIODO_PRODUCAO
-         AND d.PCPC040_ORDCONF = l.ORDEM_CONFECCAO
-         AND d.PCPC040_ESTCONF = l.CODIGO_ESTAGIO
-        LEFT JOIN HDOC_036 p
-          ON p.CODIGO_PROGRAMA = d.PROCESSO_SYSTEXTIL
-         AND p.LOCALE = 'pt_BR'
-        LEFT JOIN HDOC_030 u
-          ON u.EMPRESA = 1
-         AND u.CODIGO_USUARIO = d.CODIGO_USUARIO
-        WHERE l.PERIODO_PRODUCAO = %s
-          AND l.ORDEM_CONFECCAO = %s
-        ORDER BY
-          l.SEQ_OPERACAO
-        , d.SEQUENCIA
-    '''
-    cursor.execute(sql, [periodo, ordem_confeccao])
-    data = rows_to_dict_list(cursor)
-    if len(data) == 0:
-        return False
-    for row in data:
-        if row['DT'] is None:
-            row['DT'] = ''
-    context.update({
-        'e_headers': ('Estágio', 'Prog.', 'Em Prod.',
-                      'A Prod.', 'Família', 'Usuário', 'Data',
-                      'Programa', 'OS'),
-        'e_fields': ('EST', 'Q_P', 'Q_EP',
-                     'Q_AP', 'FAMI', 'USU', 'DT', 'PRG', 'OS'),
-        'e_data': data,
-    })
-    return True
-
-
 def detalhes_lote(request, lote):
     periodo = lote[:4]
     ordem_confeccao = lote[-5:]
@@ -203,8 +154,6 @@ def detalhes_lote(request, lote):
         return HttpResponse('')
 
     get_item(cursor, context, periodo, ordem_confeccao)
-
-    get_estagios(cursor, context, periodo, ordem_confeccao)
 
     html = render_to_string('lotes/ajax/detalhes_lote.html', context)
     return HttpResponse(html)
