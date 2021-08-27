@@ -1,19 +1,19 @@
-import django_tables2 as tables
+# import django_tables2 as tables
 
-import lotes.models as models
-
-
-class CustomTable(tables.Table):
-
-    class Meta:
-        order_by_field = 'ordem'
-        # add class="paleblue" to <table> tag
-        attrs = {'class': 'paleblue'}
+# import lotes.models as models
 
 
-class ImpressoraTermicaTable(CustomTable):
+# class CustomTable(tables.Table):
 
-    class Meta(CustomTable.Meta):
-        model = models.ImpressoraTermica
-        fields = ['nome']
-        order_by = 'nome'
+#     class Meta:
+#         order_by_field = 'ordem'
+#         # add class="paleblue" to <table> tag
+#         attrs = {'class': 'paleblue'}
+
+
+# class ImpressoraTermicaTable(CustomTable):
+
+#     class Meta(CustomTable.Meta):
+#         model = models.ImpressoraTermica
+#         fields = ['nome']
+#         order_by = 'nome'
