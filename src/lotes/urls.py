@@ -173,7 +173,4 @@ urlpatterns = [
     # OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
     re_path(r'^posicao.old/$', views.posicaoOri, name='posicao.old'),
-
-    re_path(r'^posicao.old/ajax/detalhes_lote/(\d{9})/$',
-        views.detalhes_lote, name='posicao.old_detalhes_lote'),
 ]

@@ -87,13 +87,3 @@ def posicaoOri(request):
         form = forms.LoteForm()
     context['form'] = form
     return render(request, 'lotes/posicaoOri.html', context)
-
-
-def detalhes_lote(request, lote):
-    periodo = lote[:4]
-    ordem_confeccao = lote[-5:]
-    cursor = db_cursor_so(request)
-    context = {}
-
-    html = render_to_string('lotes/ajax/detalhes_lote.html', context)
-    return HttpResponse(html)
