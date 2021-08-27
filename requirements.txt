@@ -3,7 +3,6 @@ Django==2.1.15
 django-firebird==1.11
 django-redis==4.10.0
 django-settings-export==1.2.1
-django-tables2==1.13.0
 fdb==2.0.1
 future==0.18.2
 gunicorn==19.9.0
