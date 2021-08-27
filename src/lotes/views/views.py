@@ -112,39 +112,6 @@ def get_periodo_oc(cursor, context, periodo, ordem_confeccao):
     return True
 
 
-def get_item(cursor, context, periodo, ordem_confeccao):
-    sql = '''
-        SELECT
-          l.PROCONF_NIVEL99
-          || '.' || l.PROCONF_GRUPO
-          || '.' || l.PROCONF_SUBGRUPO
-          || '.' || l.PROCONF_ITEM ITEM
-        , i.NARRATIVA NARR
-        , l.QTDE_PROGRAMADA QTDE
-        FROM PCPC_040 l
-        JOIN BASI_010 i
-          ON i.NIVEL_ESTRUTURA = l.PROCONF_NIVEL99
-         AND i.GRUPO_ESTRUTURA = l.PROCONF_GRUPO
-         AND i.SUBGRU_ESTRUTURA = l.PROCONF_SUBGRUPO
-         AND i.ITEM_ESTRUTURA = l.PROCONF_ITEM
-        WHERE l.PERIODO_PRODUCAO = %s
-          AND l.ORDEM_CONFECCAO = %s
-          AND rownum = 1
-        ORDER BY
-          l.SEQ_OPERACAO
-    '''
-    cursor.execute(sql, [periodo, ordem_confeccao])
-    data = rows_to_dict_list(cursor)
-    if len(data) == 0:
-        return False
-    context.update({
-        'i_headers': ('Item', 'Descrição', 'Quantidade'),
-        'i_fields': ('ITEM', 'NARR', 'QTDE'),
-        'i_data': data,
-    })
-    return True
-
-
 def detalhes_lote(request, lote):
     periodo = lote[:4]
     ordem_confeccao = lote[-5:]
@@ -152,8 +119,6 @@ def detalhes_lote(request, lote):
     context = {}
     if not get_periodo_oc(cursor, context, periodo, ordem_confeccao):
         return HttpResponse('')
-
-    get_item(cursor, context, periodo, ordem_confeccao)
 
     html = render_to_string('lotes/ajax/detalhes_lote.html', context)
     return HttpResponse(html)
