@@ -112,43 +112,6 @@ def get_periodo_oc(cursor, context, periodo, ordem_confeccao):
     return True
 
 
-def get_op(cursor, context, periodo, ordem_confeccao):
-    sql = '''
-        SELECT
-          l.ORDEM_PRODUCAO OP
-        , l.NOME_PROGRAMA_CRIACAO || ' - ' || p.DESCRICAO PRG
-        , l.SITUACAO_ORDEM SITU
-        , TO_CHAR(o.DATA_HORA, 'DD/MM/YYYY HH24:MI') DT
-        FROM PCPC_040 l
-        JOIN HDOC_036 p
-          ON p.CODIGO_PROGRAMA = l.NOME_PROGRAMA_CRIACAO
-         AND p.LOCALE = 'pt_BR'
-        LEFT JOIN PCPC_020 o
-          ON o.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
-        WHERE l.PERIODO_PRODUCAO = %s
-          AND l.ORDEM_CONFECCAO = %s
-          AND rownum = 1
-    '''
-    cursor.execute(sql, [periodo, ordem_confeccao])
-    data = rows_to_dict_list(cursor)
-    if len(data) == 0:
-        return False
-    situacoes = {
-        1: 'ORDEM CONF. GERADA',
-        2: 'ORDENS EM PRODUCAO',
-        9: 'ORDEM CANCELADA',
-    }
-    for row in data:
-        if row['SITU'] in situacoes:
-            row['SITU'] = '{} - {}'.format(row['SITU'], situacoes[row['SITU']])
-    context.update({
-        'o_headers': ('OP', 'Situação', 'Programa', 'Data/hora'),
-        'o_fields': ('OP', 'SITU', 'PRG', 'DT'),
-        'o_data': data,
-    })
-    return True
-
-
 def get_item(cursor, context, periodo, ordem_confeccao):
     sql = '''
         SELECT
@@ -237,9 +200,6 @@ def detalhes_lote(request, lote):
     cursor = db_cursor_so(request)
     context = {}
     if not get_periodo_oc(cursor, context, periodo, ordem_confeccao):
-        return HttpResponse('')
-
-    if not get_op(cursor, context, periodo, ordem_confeccao):
         return HttpResponse('')
 
     get_item(cursor, context, periodo, ordem_confeccao)
