@@ -42,7 +42,7 @@ intr_adm_site.register(MetaModeloReferencia, MetaModeloReferenciaAdmin)
 
 
 class MetaFaturamentoAdmin(admin.ModelAdmin):
-    list_display = ['data', 'faturamento', 'ajuste']
+    list_display = ['data', 'faturamento', 'reparo', 'ajuste']
     ordering = ['-data']
 
 
