@@ -721,7 +721,6 @@ def grade_solicitacao(
         id='qtd',
         sql=sql
         )
-    print(sql)
 
     if tipo == '1s':
         grade_complementar.value(
