@@ -25,17 +25,18 @@ class PainelMetaFaturamento(View):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
-        hoje = datetime.datetime.now()
+        hoje = datetime.datetime.now()  # + datetime.timedelta(days=1)
         ano_atual = hoje.year
         mes_atual = hoje.month
 
         # se:
         # - a função foi decorada com caching_function; E
         # - foi indicado o uso de caching_params
-        cg = CacheGet()
-        msg_erro, meses, _ = cg.get_result(
-            comercial.queries.dados_meta_no_ano(cursor, hoje.date())
-        )
+        # cg = CacheGet()
+        # msg_erro, meses, _ = cg.get_result(
+        #     comercial.queries.dados_meta_no_ano(cursor, hoje.date())
+        # )
+        msg_erro, meses, _ = comercial.queries.dados_meta_no_ano(cursor, hoje.date())
 
         # se:
         # - a função NÃO foi decorada com caching_function; OU
