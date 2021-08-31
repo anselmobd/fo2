@@ -127,7 +127,10 @@ class MetaEstoqueCor(models.Model):
 class MetaFaturamento(models.Model):
     data = models.DateField()
     faturamento = models.IntegerField(default=0)
+    # ajuste: adiciona ao valor que será compensado nos próximos meses
     ajuste = models.IntegerField(default=0)
+    # reparo: adiciona ao valor da meta do mês
+    reparo = models.IntegerField(default=0)
 
     def __str__(self):
         return f'{self.data} - R$ {self.faturamento}'
