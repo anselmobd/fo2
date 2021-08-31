@@ -1,4 +1,3 @@
-import time
 from pprint import pprint
 
 from utils.decorators import caching_function
@@ -10,12 +9,13 @@ import comercial.models
 import comercial.queries
 
 
-@caching_function(
-    key_cache_fields=['hoje'], 
-    minutes_key_variation=10, 
-    version_key_variation=1,
-    caching_params=True,
-)
+# @caching_function(
+#     key_cache_fields=['hoje'], 
+#     minutes_key_variation=10, 
+#     version_key_variation=1,
+#     caching_params=True,
+# )
+
 def dados_meta_no_ano(cursor, hoje):
     ano_atual = hoje.year
     mes_atual = hoje.month
