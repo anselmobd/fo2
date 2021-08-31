@@ -28,8 +28,6 @@ class MetaNoAno(O2BaseGetView):
 
         # msg_erro, meses, total = comercial.queries.dados_meta_no_ano(cursor, hoje)
 
-        # msg_erro, meses, total = comercial.queries.dados_meta_no_ano(cursor, hoje)
-
         self.context.update({
             'msg_erro': msg_erro,
             'meses': meses,
