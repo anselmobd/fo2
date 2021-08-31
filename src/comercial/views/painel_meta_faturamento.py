@@ -32,10 +32,11 @@ class PainelMetaFaturamento(View):
         # se:
         # - a função foi decorada com caching_function; E
         # - foi indicado o uso de caching_params
-        cg = CacheGet()
-        msg_erro, meses, _ = cg.get_result(
-            comercial.queries.dados_meta_no_ano(cursor, hoje.date())
-        )
+        # cg = CacheGet()
+        # msg_erro, meses, _ = cg.get_result(
+        #     comercial.queries.dados_meta_no_ano(cursor, hoje.date())
+        # )
+        msg_erro, meses, _ = comercial.queries.dados_meta_no_ano(cursor, hoje.date())
 
         # se:
         # - a função NÃO foi decorada com caching_function; OU
