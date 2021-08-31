@@ -21,11 +21,12 @@ class MetaNoAno(O2BaseGetView):
         hoje = datetime.date.today()  # + datetime.timedelta(days=1)
         mes_atual = hoje.month
 
-        # cg = CacheGet()
-        # msg_erro, meses, total = cg.get_result(
-        #     comercial.queries.dados_meta_no_ano(cursor, hoje)
-        # )
-        msg_erro, meses, total = comercial.queries.dados_meta_no_ano(cursor, hoje)
+        cg = CacheGet()
+        msg_erro, meses, total = cg.get_result(
+            comercial.queries.dados_meta_no_ano(cursor, hoje)
+        )
+
+        # msg_erro, meses, total = comercial.queries.dados_meta_no_ano(cursor, hoje)
 
         # msg_erro, meses, total = comercial.queries.dados_meta_no_ano(cursor, hoje)
 
