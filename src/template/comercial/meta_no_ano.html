@@ -36,6 +36,7 @@ p::first-line {
           <p>
             Mês<br>
             Planejado<br>
+            <br>
             Compensado<br>
             Meta<br>
             Faturado<br>
@@ -52,7 +53,8 @@ p::first-line {
                 <div class="col-xs-1 valores">
                   <p>
                     {{mes.mes|date:"M"}}<br>
-                    {{mes.planejado}}<br>
+                    {% if mes.reparo > 0 %}({% endif %}{{mes.faturamento}}<br>
+                    {% if mes.reparo > 0 %}+{{mes.reparo}}){% endif %}<br>
                     {% if mes.compensado %}
                       {{mes.compensado}}
                     {% else %}
@@ -89,13 +91,13 @@ p::first-line {
                         .
                       {% endif %}<br>
                       {% if mes.imes < mes_atual %}
-                        {{mes.acompensar}}
-                        {% if mes.ajuste > 0 %}
-                          + {{mes.ajuste}}
+                        {% if mes.ajuste > 0 %}({% endif %}{{mes.acompensar}}
+                        {% if mes.ajuste > 0 %}<br>
+                          +{{mes.ajuste}})
                         {% endif %}
                       {% else %}
                         {% if mes.ajuste > 0 %}
-                          + {{mes.ajuste}}
+                          +{{mes.ajuste}}
                         {% else %}
                           .
                         {% endif %}
@@ -111,6 +113,7 @@ p::first-line {
           <p>
             Totais<br>
             {{total.planejado}}<br>
+            <br>
             {{total.compensado}}<br>
             <br>
             {{total.faturado}}<br>

@@ -62,7 +62,9 @@ def dados_meta_no_ano(cursor, hoje):
     meses_restantes = 0
     for meta in metas:
         mes = dict(mes=meta.data)
-        mes['planejado'] = meta.faturamento
+        mes['faturamento'] = meta.faturamento
+        mes['reparo'] = meta.reparo
+        mes['planejado'] = meta.faturamento + meta.reparo
         mes['ajuste'] = meta.ajuste
         mes['imes'] = mes['mes'].month
         mes['faturado'] = (
