@@ -49,7 +49,7 @@ ALLOWED_HOSTS = [
     'alterintranet', 'alterintranet.tussor',
     'intranet.tussor.com.br',
     'alterintranet.tussor.com.br',
-    'intranet.cuecasduomo.com', 'intranet.cuecasduomo.com.br',
+    'intranet.cuecasduomo.com', 'intranet.cuecasduomo.com.br', 'velosat.cuecasduomo.com.br',
     'alterintranet.cuecasduomo.com', 'alterintranet.cuecasduomo.com.br',
     'intranet.agator.com', 'intranet.agator.com.br',
     'alterintranet.agator.com', 'alterintranet.agator.com.br',
