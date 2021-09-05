@@ -650,7 +650,7 @@ class ListaLotes(View):
     def mount_context(self, cursor, op):
         context = {'op': op}
 
-        data = models.base.get_lotes(cursor, op=op, order='o')
+        data = lotes.queries.lote.get_lotes(cursor, op=op, order='o')
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Sem lotes',
