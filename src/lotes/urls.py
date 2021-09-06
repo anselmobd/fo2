@@ -107,8 +107,8 @@ urlpatterns = [
     re_path(r'^meta_total/$',
         views.MetaTotal.as_view(), name='meta_total'),
 
-    re_path(r'^op/$', views.Op.as_view(), name='op'),
-    re_path(r'^op/(?P<op>\d+)/$', views.Op.as_view(), name='op__get'),
+    re_path(r'^op/$', views.ops.op.Op.as_view(), name='op'),
+    re_path(r'^op/(?P<op>\d+)/$', views.ops.op.Op.as_view(), name='op__get'),
 
     re_path(r'^op/historico/(?P<op>\d+)?/?$', views.ops.historico.Historico.as_view(),
         name='historico_op'),
