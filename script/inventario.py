@@ -295,26 +295,34 @@ class Inventario:
             if self.nivel == 1:
                 ref_filter = "AND e.referencia <= '99999'"
 
+        fitro_data = '''--
+            AND e."data" < TO_DATE('{ano}-{mes}-01','YYYY-MM-DD')
+        '''.format(ano=self.ano, mes=self.mes)
+
         rownum_filter = ''
         if self.rownum is not None:
             rownum_filter = 'limit {}'.format(self.rownum)
 
-        sql = """
+        sql = f"""
             select distinct
               '1' "NIVEL"
             , e.referencia "REF"
             from fo2_estoque_manual e
+            JOIN (
+              SELECT
+                max(e."data") DATA_BUSCA
+              FROM fo2_estoque_manual e
+              WHERE 1=1
+                {fitro_data} -- fitro_data
+            ) edata
+              on edata.data_busca = e."data"
             where 1=1
               {nivel_filter} -- nivel_filter
               {ref_filter} -- ref_filter
             order by
               e.referencia
             {rownum_filter} -- rownum_filter
-        """.format(
-            nivel_filter=nivel_filter,
-            ref_filter=ref_filter,
-            rownum_filter=rownum_filter,
-        )
+        """
         return sql
 
     def print(self):
