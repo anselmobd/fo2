@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.contrib import admin
 
-from fo2.admin import intr_adm_site
+from fo2.admin import intr_adm_site as site
 
 from systextil.models import Empresa as ErpEmpresa
 
@@ -16,22 +16,26 @@ from .models import (
 )
 
 
+@admin.register(TipoImagem, site=site)
 class TipoImagemAdmin(admin.ModelAdmin):
     fields = ["nome", "slug", "descricao"]
     readonly_fields = ['slug']
 
 
+@admin.register(Imagem, site=site)
 class ImagemAdmin(admin.ModelAdmin):
     list_display = ["tipo_imagem", "descricao", "slug", "imagem"]
     fields = ["tipo_imagem", "descricao", "slug", "imagem"]
     readonly_fields = ['slug']
 
 
+@admin.register(Tamanho, site=site)
 class TamanhoAdmin(admin.ModelAdmin):
     list_display = ["nome", "ordem"]
     ordering = ["ordem"]
 
 
+@admin.register(Colaborador, site=site)
 class ColaboradorAdmin(admin.ModelAdmin):
     fields = [
         "user", "matricula", "nome", "nascimento", "cpf", "obs",
@@ -45,6 +49,7 @@ class ColaboradorAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Requisicao, site=site)
 class RequisicaoAdmin(admin.ModelAdmin):
     list_display = ["colaborador", "quando", "path_info"]
     fields = [
@@ -53,6 +58,7 @@ class RequisicaoAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Empresa, site=site)
 class EmpresaAdmin(admin.ModelAdmin):
     readonly_fields = ['numero', 'nome']
 
@@ -80,12 +86,3 @@ class EmpresaAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request, obj=None):
         return False
-
-
-intr_adm_site.register(TipoImagem, TipoImagemAdmin)
-intr_adm_site.register(Imagem, ImagemAdmin)
-intr_adm_site.register(Tamanho, TamanhoAdmin)
-intr_adm_site.register(Colaborador, ColaboradorAdmin)
-intr_adm_site.register(Requisicao, RequisicaoAdmin)
-intr_adm_site.register(Empresa, EmpresaAdmin)
-
