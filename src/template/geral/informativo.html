@@ -59,7 +59,7 @@
 
   function atuChamadaSpan() {
     tam = chamada.value.length + (chamada.value.match(/\n/g) || []).length;
-    if (tam > 200) {
+    if (tam > 400) {
       chamadaSpan.style.color = 'red';
       chamada.value = chamadaContentOk;
       tam = chamadaTamanhoOk
