@@ -21,7 +21,7 @@ class InformacaoModuloForm(forms.Form):
     chamada = forms.CharField(
         help_text='(máximo 200 caracteres)',
         widget=forms.Textarea(
-            attrs={'max_length': 200, 'rows': 5, 'cols': 39,
+            attrs={'max_length': 400, 'rows': 8, 'cols': 49,
                    'style': 'vertical-align:top;'}))
     habilitado = forms.BooleanField(required=False)
 
