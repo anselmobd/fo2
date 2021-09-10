@@ -158,7 +158,7 @@ class InformacaoModulo(models.Model):
         null=True, blank=True,
         auto_now_add=True, verbose_name='Data')
     chamada = models.CharField(
-        max_length=200, null=True, blank=True,
+        max_length=400, null=True, blank=True,
         verbose_name='chamada')
     habilitado = models.NullBooleanField(default=True)
     texto = models.CharField(
