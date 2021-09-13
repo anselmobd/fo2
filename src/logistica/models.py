@@ -202,7 +202,7 @@ class NfEntrada(models.Model):
                 cadastro = val_cpf.mask(val_cpf.cpf)
             else:
                 cadastro = self.cadastro
-        return f"{cadastro} NF {self.numero}"
+        return f"{cadastro} NF{self.tipo} {self.numero}"
 
     def clean_cadastro(self):
         val_cnpj = CNPJ()
