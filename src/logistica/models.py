@@ -180,7 +180,7 @@ class NfEntrada(models.Model):
     tipo = models.CharField(
         max_length=1,
         choices=TIPO_NOTA,
-        default=INDEFINIDO,
+        default=VENDA,
     )
     descricao = models.CharField("descrição", max_length=200)
     volumes = models.IntegerField()
