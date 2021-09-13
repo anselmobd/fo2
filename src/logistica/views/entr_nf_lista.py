@@ -15,9 +15,11 @@ class EntradaNfLista(O2BaseGetView):
         self.title_name = "Lista NF de entrada"
 
     def mount_context(self):
+        tipo_nota = dict(logistica.models.NfEntrada.TIPO_NOTA)
         fields = (
             "cadastro",
             "numero",
+            "tipo",
             "emissor",
             "descricao",
             "volumes",
@@ -33,19 +35,20 @@ class EntradaNfLista(O2BaseGetView):
         dados = (
             logistica.models.NfEntrada.objects.all().values(*fields).order_by("-quando")
         )
-
         cnpj = CNPJ()
         for row in dados:
             row["cadastro"] = cnpj.mask(row["cadastro"])
             row["numero|LINK"] = reverse(
                 "logistica:entr_nf_historico", args=[row["id"]]
             )
+            row["tipo"] = tipo_nota[row["tipo"]]
 
         self.context.update(
             {
                 "headers": (
                     "CNPJ",
                     "NF",
+                    "Tipo",
                     "Emissor",
                     "Descrição",
                     "Volumes",
