@@ -164,10 +164,24 @@ class NfEntrada(models.Model):
     def get_tussor():
         return None
 
+    SERVICO = 's'
+    VENDA = "v"
+    INDEFINIDO = "_"
+    TIPO_NOTA = (
+        (SERVICO, "Serviço"),
+        (VENDA, "Venda"),
+        (INDEFINIDO, "")
+    )
+
     empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT)
     cadastro = models.CharField("CNPJ/CPF", max_length=20, default="")
     emissor = models.CharField(max_length=200)
     numero = models.IntegerField("número")
+    tipo = models.CharField(
+        max_length=1,
+        choices=TIPO_NOTA,
+        default=INDEFINIDO,
+    )
     descricao = models.CharField("descrição", max_length=200)
     volumes = models.IntegerField()
     chegada = models.DateTimeField("chegada", default=timezone.now)
