@@ -56,7 +56,7 @@ class Converte(View):
                     conta_d = colunas[1]
                     conta_c = colunas[2]
                     data = colunas[3]
-                    if data == "D":
+                    if data in ("C", "D"):
                         continue
 
                     valor = float(colunas[4].replace(",", "."))
