@@ -232,7 +232,7 @@ class NfEntrada(models.Model):
         db_table = "fo2_nf_entrada"
         verbose_name = "Nota fiscal de entrada"
         verbose_name_plural = "Notas fiscais de entrada"
-        unique_together = [["cadastro", "numero"]]
+        unique_together = [["cadastro", "numero", "tipo"]]
 
 
 class NfEntradaXManager(models.Manager):
