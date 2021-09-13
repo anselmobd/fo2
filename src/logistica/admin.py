@@ -118,6 +118,7 @@ class NfEntradaAdmin(admin.ModelAdmin):
         self._fields = [
             "cadastro",
             "numero",
+            "tipo",
             "emissor",
             "descricao",
             "volumes",
