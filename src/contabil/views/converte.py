@@ -93,6 +93,7 @@ class Converte(View):
             context['systextil_download'] = "%0D%0A".join(
                 [r.replace(" ", "%20") for r in registros]
             )
+            context['file_name'] = request.FILES['arquivo']._name
             context['systextil_file'] = f"Systextil_{request.FILES['arquivo']._name}"
             
         else:
