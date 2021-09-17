@@ -14,23 +14,31 @@ def sessions(request):
     context = {"titulo": "Seções"}
     json = get_sessions()
 
-    dados = []
+    ips = {}
     if "sessions" in json:
         for session in json["sessions"]:
-            row = {
-                "ip": session["clientId"],
-                "timestamp": session["startTimestamp"],
-            }
-            dados.append(row)
+            ip = session["clientId"]
+            desde = datetime.datetime.fromtimestamp(session["startTimestamp"]/1000.0)
+            desde_str = desde.strftime('%d/%m/%Y %H:%M:%S')
+            if ip in ips:
+                row = ips[ip]
+                if desde < row["desde"]:
+                    row["desde"] = desde
+                    row["desde_str"] = ", ".join([desde_str, row["desde_str"]])
+                else:
+                    row["desde_str"] = ", ".join([row["desde_str"], desde_str])
+            else:
+                ips[ip] = {
+                    "ip": ip,
+                    "desde": desde,
+                    "desde_str": desde_str,
+                }
 
-    for row in dados:
-        row['desde'] = datetime.datetime.fromtimestamp(row['timestamp']/1000.0)
-
-    dados = sorted(dados, key=lambda k: k['desde']) 
+    dados = sorted(ips.values(), key=lambda k: k['desde']) 
 
     context.update({
         "headers": ["IP", "Desde"],
-        "fields": ["ip", "desde"],
+        "fields": ["ip", "desde_str"],
         "dados": dados,
     })
     return render(request, 'systextil/sessions.html', context)
