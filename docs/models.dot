@@ -27,7 +27,7 @@ digraph d_django {
 
 }
 
-digraph d_systextil {
+digraph d_fo2_base_produto {
   sortv=2;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -37,28 +37,69 @@ digraph d_systextil {
     shape = "note"
   ]
 
-  subgraph cluster_systextil {
-    label = "Systêxtil"
-    style = "dotted, rounded"
+  subgraph cluster_fo2_base {
+    label = "Fo2 Base"
+    style="dotted, rounded"
 
-    "ContaEstoque BASI_150"
-    "Colecao BASI_140"
-    "Familia BASI_180"
-    "HDoc001 HDOC_001"
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_user [label="User"]
+    }
+    Colaborador
+    Requisicao
+    TipoImagem
+    Imagem
     {
       node [
         shape = "note"
         style = "dashed"
         color = gray
       ]
-      "TipoContaEstoque" # HDOC_001
+      ImagemTag
     }
-    "Periodo PCPC_010"
-    "Produto BASI_030"
-    "Tamanho BASI_220"
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_imagemtag [label="ImagemTag"]
+    }
+    Tamanho
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_tamanho [label="Tamanho"]
+    }
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_empresa [label="Empresa"]
+    }
+    Empresa
+    SyncDelTable
+    SyncDel
+
   }
 
-  "HDoc001 HDOC_001" -> TipoContaEstoque
+  fo2_base_user -> Colaborador
+  Colaborador -> Requisicao
+  TipoImagem -> Imagem
+  Imagem -> ImagemTag
+  ImagemTag -> fo2_base_imagemtag [dir=back,arrowtail=inv]
+  Tamanho -> fo2_base_tamanho [dir=back,arrowtail=inv]
+  Empresa -> fo2_base_empresa [dir=back,arrowtail=inv]
+  SyncDelTable -> SyncDel
 
 }
 
@@ -556,8 +597,8 @@ digraph d_fo2_rh {
 
 }
 
-digraph d_fo2_base_produto {
-  sortv=16;
+digraph d_systextil {
+  sortv=17;
   labelloc="t"
   label="Models\n(models.dot)"
   compound=true
@@ -566,68 +607,27 @@ digraph d_fo2_base_produto {
     shape = "note"
   ]
 
-  subgraph cluster_fo2_base {
-    label = "Fo2 Base"
-    style="dotted, rounded"
+  subgraph cluster_systextil {
+    label = "Systêxtil"
+    style = "dotted, rounded"
 
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_base_user [label="User"]
-    }
-    Colaborador
-    Requisicao
-    TipoImagem
-    Imagem
+    "ContaEstoque BASI_150"
+    "Colecao BASI_140"
+    "Familia BASI_180"
+    "HDoc001 HDOC_001"
     {
       node [
         shape = "note"
         style = "dashed"
         color = gray
       ]
-      ImagemTag
+      "TipoContaEstoque" # HDOC_001
     }
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_base_imagemtag [label="ImagemTag"]
-    }
-    Tamanho
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_base_tamanho [label="Tamanho"]
-    }
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_base_empresa [label="Empresa"]
-    }
-    Empresa
-    SyncDelTable
-    SyncDel
-
+    "Periodo PCPC_010"
+    "Produto BASI_030"
+    "Tamanho BASI_220"
   }
 
-  fo2_base_user -> Colaborador
-  Colaborador -> Requisicao
-  TipoImagem -> Imagem
-  Imagem -> ImagemTag
-  ImagemTag -> fo2_base_imagemtag [dir=back,arrowtail=inv]
-  Tamanho -> fo2_base_tamanho [dir=back,arrowtail=inv]
-  Empresa -> fo2_base_empresa [dir=back,arrowtail=inv]
-  SyncDelTable -> SyncDel
+  "HDoc001 HDOC_001" -> TipoContaEstoque
 
 }
