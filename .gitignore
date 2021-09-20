@@ -144,3 +144,6 @@ ENV/
 # Media específica
 media/insumos_rolos_bipados
 media/pop/
+
+# Docs - arquivos gerados
+docs/models.pdf
