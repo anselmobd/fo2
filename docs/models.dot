@@ -143,6 +143,7 @@ digraph d_fo2_base_produto {
       fo2_base_user [label="User"]
     }
     Colaborador
+    Requisicao
     TipoImagem
     Imagem
     {
@@ -169,6 +170,7 @@ digraph d_fo2_base_produto {
   }
 
   fo2_base_user -> Colaborador
+  Colaborador -> Requisicao
   TipoImagem -> Imagem
   Imagem -> ImagemTag
 
