@@ -130,73 +130,43 @@ digraph d_fo2_base_produto {
     shape = "note"
   ]
 
-  subgraph cluster_fo2_base {
-    label = "Fo2 Base"
-    style="dotted, rounded"
-
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_base_user [label="User"]
-    }
-    Colaborador
-    Requisicao
-    TipoImagem
-    Imagem
-    {
-      node [
-        shape = "note"
-        style = "dashed"
-        color = gray
-      ]
-      ImagemTag
-    }
-    Tamanho
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_base_empresa [label="Empresa"]
-    }
-    Empresa
-    SyncDelTable
-    SyncDel
-
-  }
-
-  fo2_base_user -> Colaborador
-  Colaborador -> Requisicao
-  TipoImagem -> Imagem
-  Imagem -> ImagemTag
-  Empresa -> fo2_base_empresa [dir=back,arrowtail=inv]
-  SyncDelTable -> SyncDel
-
   subgraph cluster_fo2_produto {
     label = "Fo2 Produto"
     style="dotted, rounded"
 
     GtinRange
     Composicao
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_produto_imagemtag [label="ImagemTag"]
+    }
     Produto
     ProdutoCor
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_produto_tamanho [label="Tamanho"]
+    }
     ProdutoTamanho
     ProdutoItem
     ComposicaoLinha
   }
 
   Composicao -> Produto
-  ImagemTag -> Produto
+  fo2_produto_imagemtag -> Produto
 
   Produto -> ProdutoCor
   Composicao -> ProdutoCor
 
   Produto -> ProdutoTamanho
-  Tamanho -> ProdutoTamanho
+  fo2_produto_tamanho -> ProdutoTamanho
 
   Produto -> ProdutoItem
   ProdutoCor -> ProdutoItem
@@ -583,5 +553,81 @@ digraph d_fo2_rh {
     }
 
   }
+
+}
+
+digraph d_fo2_base_produto {
+  sortv=16;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_base {
+    label = "Fo2 Base"
+    style="dotted, rounded"
+
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_user [label="User"]
+    }
+    Colaborador
+    Requisicao
+    TipoImagem
+    Imagem
+    {
+      node [
+        shape = "note"
+        style = "dashed"
+        color = gray
+      ]
+      ImagemTag
+    }
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_imagemtag [label="ImagemTag"]
+    }
+    Tamanho
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_tamanho [label="Tamanho"]
+    }
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_empresa [label="Empresa"]
+    }
+    Empresa
+    SyncDelTable
+    SyncDel
+
+  }
+
+  fo2_base_user -> Colaborador
+  Colaborador -> Requisicao
+  TipoImagem -> Imagem
+  Imagem -> ImagemTag
+  ImagemTag -> fo2_base_imagemtag [dir=back,arrowtail=inv]
+  Tamanho -> fo2_base_tamanho [dir=back,arrowtail=inv]
+  Empresa -> fo2_base_empresa [dir=back,arrowtail=inv]
+  SyncDelTable -> SyncDel
 
 }
