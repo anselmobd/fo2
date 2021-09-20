@@ -154,6 +154,18 @@ digraph d_fo2_base_produto {
       ImagemTag
     }
     Tamanho
+
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_empresa [label="Empresa"]
+    }
+    Empresa
+
+    Empresa -> fo2_base_empresa [dir=back,arrowtail=inv]
   }
 
   fo2_base_user -> Colaborador
