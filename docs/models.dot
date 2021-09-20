@@ -14,7 +14,7 @@ digraph d_django {
 
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -43,7 +43,7 @@ digraph d_fo2_base {
 
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -63,7 +63,7 @@ digraph d_fo2_base {
     }
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -72,7 +72,7 @@ digraph d_fo2_base {
     Tamanho
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -80,7 +80,7 @@ digraph d_fo2_base {
     }
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -119,7 +119,7 @@ digraph d_fo2_geral {
 
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -179,7 +179,7 @@ digraph d_fo2_produto {
     Composicao
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -189,7 +189,7 @@ digraph d_fo2_produto {
     ProdutoCor
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -199,7 +199,7 @@ digraph d_fo2_produto {
     ProdutoItem
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -245,7 +245,7 @@ digraph d_fo2_contabil {
 
 }
 
-digraph d_fo2_tableheap {
+digraph d_fo2_estoque {
   sortv=6;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -255,16 +255,40 @@ digraph d_fo2_tableheap {
     shape = "note"
   ]
 
-  subgraph cluster_fo2_tableheap {
-    label = "Fo2 Produção (lotes) TableHeap"
+  subgraph cluster_fo2_estoque {
+    label = "Fo2 Estoque"
     style="dotted, rounded"
 
-    TableHeap
+    {
+      node [
+        shape = "oval"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_estoque_user [label="User"]
+    }
+
+    TipoMovStq
+    DocMovStq
+    MovStq
+    {
+      node [
+        shape = "oval"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_estoque_produtoitem [label="ProdutoItem"]
+    }
   }
+
+  TipoMovStq -> MovStq
+  DocMovStq -> MovStq
+  fo2_estoque_user -> MovStq
+  fo2_estoque_produtoitem -> MovStq
 
 }
 
-digraph d_fo2_tag {
+digraph d_fo2_logistica {
   sortv=7;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -274,29 +298,63 @@ digraph d_fo2_tag {
     shape = "note"
   ]
 
-  subgraph cluster_fo2_tag {
-    label = "Fo2 Produção (lotes) TAG"
+  subgraph cluster_fo2_logistica {
+    label = "Fo2 Logística"
     style="dotted, rounded"
 
+    PosicaoCarga
+    NotaFiscal
+    RotinaLogistica
+    PosicaoCargaAlteracao
+    PosicaoCargaAlteracaoLog
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
-      fo2_tag_user [label="User"]
+      fo2_logistica_empresa [label="Empresa"]
     }
-    Impresso
-    ModeloTermica
-    ImpressoraTermica
-    UsuarioImpresso
+    {
+      node [
+        shape = "oval"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_logistica_user [label="User"]
+    }
+    NfEntrada
+    {
+      node [
+        shape = "note"
+        style = "dashed"
+        color = gray
+      ]
+      "NfEntradaAgator" # HDOC_001
+    }
+    {
+      node [
+        shape = "note"
+        style = "dashed"
+        color = gray
+      ]
+      "NfEntradaTussor" # HDOC_001
+    }
   }
 
-  fo2_tag_user -> UsuarioImpresso
-  Impresso -> UsuarioImpresso
-  ImpressoraTermica -> UsuarioImpresso
-  ModeloTermica -> UsuarioImpresso
+  PosicaoCarga -> NotaFiscal
 
+  PosicaoCarga -> PosicaoCargaAlteracao
+  PosicaoCarga -> PosicaoCargaAlteracao
+  RotinaLogistica -> PosicaoCargaAlteracao
+
+  PosicaoCarga -> PosicaoCargaAlteracaoLog
+  PosicaoCarga -> PosicaoCargaAlteracaoLog
+
+  fo2_logistica_empresa -> NfEntrada
+  fo2_logistica_user -> NfEntrada
+  NfEntrada -> NfEntradaAgator
+  NfEntrada -> NfEntradaTussor
 }
 
 digraph d_fo2_comercial {
@@ -344,7 +402,7 @@ digraph d_fo2_manutencao {
 
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -403,7 +461,7 @@ digraph d_fo2_email_signature {
 
 }
 
-digraph d_fo2_remote_files {
+digraph d_fo2_tableheap {
   sortv=11;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -413,19 +471,16 @@ digraph d_fo2_remote_files {
     shape = "note"
   ]
 
-  subgraph cluster_fo2_remote_files {
-    label = "Fo2 Remote Files"
+  subgraph cluster_fo2_tableheap {
+    label = "Fo2 Produção (lotes) TableHeap"
     style="dotted, rounded"
 
-    Servidor
-    Diretorio
+    TableHeap
   }
-
-  Servidor -> Diretorio
 
 }
 
-digraph d_fo2_logistica {
+digraph d_fo2_tag {
   sortv=12;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -435,63 +490,29 @@ digraph d_fo2_logistica {
     shape = "note"
   ]
 
-  subgraph cluster_fo2_logistica {
-    label = "Fo2 Logística"
+  subgraph cluster_fo2_tag {
+    label = "Fo2 Produção (lotes) TAG"
     style="dotted, rounded"
 
-    PosicaoCarga
-    NotaFiscal
-    RotinaLogistica
-    PosicaoCargaAlteracao
-    PosicaoCargaAlteracaoLog
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
-      fo2_logistica_empresa [label="Empresa"]
+      fo2_tag_user [label="User"]
     }
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_logistica_user [label="User"]
-    }
-    NfEntrada
-    {
-      node [
-        shape = "note"
-        style = "dashed"
-        color = gray
-      ]
-      "NfEntradaAgator" # HDOC_001
-    }
-    {
-      node [
-        shape = "note"
-        style = "dashed"
-        color = gray
-      ]
-      "NfEntradaTussor" # HDOC_001
-    }
+    Impresso
+    ModeloTermica
+    ImpressoraTermica
+    UsuarioImpresso
   }
 
-  PosicaoCarga -> NotaFiscal
+  fo2_tag_user -> UsuarioImpresso
+  Impresso -> UsuarioImpresso
+  ImpressoraTermica -> UsuarioImpresso
+  ModeloTermica -> UsuarioImpresso
 
-  PosicaoCarga -> PosicaoCargaAlteracao
-  PosicaoCarga -> PosicaoCargaAlteracao
-  RotinaLogistica -> PosicaoCargaAlteracao
-
-  PosicaoCarga -> PosicaoCargaAlteracaoLog
-  PosicaoCarga -> PosicaoCargaAlteracaoLog
-
-  fo2_logistica_empresa -> NfEntrada
-  fo2_logistica_user -> NfEntrada
-  NfEntrada -> NfEntradaAgator
-  NfEntrada -> NfEntradaTussor
 }
 
 digraph d_fo2_producao {
@@ -510,7 +531,7 @@ digraph d_fo2_producao {
 
     {
       node [
-        shape = "diamond"
+        shape = "oval"
         style = "dashed"
         color = gray
       ]
@@ -583,7 +604,7 @@ digraph d_fo2_rh {
 
 }
 
-digraph d_fo2_estoque {
+digraph d_fo2_remote_files {
   sortv=16;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -593,36 +614,15 @@ digraph d_fo2_estoque {
     shape = "note"
   ]
 
-  subgraph cluster_fo2_estoque {
-    label = "Fo2 Estoque"
+  subgraph cluster_fo2_remote_files {
+    label = "Fo2 Remote Files"
     style="dotted, rounded"
 
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_estoque_user [label="User"]
-    }
-
-    TipoMovStq
-    DocMovStq
-    MovStq
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_estoque_produtoitem [label="ProdutoItem"]
-    }
+    Servidor
+    Diretorio
   }
 
-  TipoMovStq -> MovStq
-  DocMovStq -> MovStq
-  fo2_estoque_user -> MovStq
-  fo2_estoque_produtoitem -> MovStq
+  Servidor -> Diretorio
 
 }
 
