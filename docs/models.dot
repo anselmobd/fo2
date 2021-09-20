@@ -155,7 +155,6 @@ digraph d_fo2_base_produto {
       ImagemTag
     }
     Tamanho
-
     {
       node [
         shape = "diamond"
@@ -165,14 +164,17 @@ digraph d_fo2_base_produto {
       fo2_base_empresa [label="Empresa"]
     }
     Empresa
+    SyncDelTable
+    SyncDel
 
-    Empresa -> fo2_base_empresa [dir=back,arrowtail=inv]
   }
 
   fo2_base_user -> Colaborador
   Colaborador -> Requisicao
   TipoImagem -> Imagem
   Imagem -> ImagemTag
+  Empresa -> fo2_base_empresa [dir=back,arrowtail=inv]
+  SyncDelTable -> SyncDel
 
   subgraph cluster_fo2_produto {
     label = "Fo2 Produto"
