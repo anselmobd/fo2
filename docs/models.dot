@@ -27,7 +27,7 @@ digraph d_django {
 
 }
 
-digraph d_fo2_base_produto {
+digraph d_fo2_base {
   sortv=2;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -161,7 +161,7 @@ digraph d_fo2_geral {
 
 }
 
-digraph d_fo2_base_produto {
+digraph d_fo2_produto {
   sortv=4;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -197,6 +197,14 @@ digraph d_fo2_base_produto {
     }
     ProdutoTamanho
     ProdutoItem
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_produto_produtoitem [label="ProdutoItem"]
+    }
     ComposicaoLinha
   }
 
@@ -212,31 +220,9 @@ digraph d_fo2_base_produto {
   Produto -> ProdutoItem
   ProdutoCor -> ProdutoItem
   ProdutoTamanho -> ProdutoItem
+  ProdutoItem -> fo2_produto_produtoitem [dir=back,arrowtail=inv]
 
   Composicao -> ComposicaoLinha
-
-  subgraph cluster_fo2_estoque {
-    label = "Fo2 Estoque"
-    style="dotted, rounded"
-
-    {
-      node [
-        shape = "diamond"
-        style = "dashed"
-        color = gray
-      ]
-      fo2_estoque_user [label="User"]
-    }
-
-    TipoMovStq
-    DocMovStq
-    MovStq
-  }
-
-  TipoMovStq -> MovStq
-  DocMovStq -> MovStq
-  fo2_estoque_user -> MovStq
-  ProdutoItem -> MovStq
 
 }
 
@@ -594,6 +580,49 @@ digraph d_fo2_rh {
     }
 
   }
+
+}
+
+digraph d_fo2_estoque {
+  sortv=16;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_estoque {
+    label = "Fo2 Estoque"
+    style="dotted, rounded"
+
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_estoque_user [label="User"]
+    }
+
+    TipoMovStq
+    DocMovStq
+    MovStq
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_estoque_produtoitem [label="ProdutoItem"]
+    }
+  }
+
+  TipoMovStq -> MovStq
+  DocMovStq -> MovStq
+  fo2_estoque_user -> MovStq
+  fo2_estoque_produtoitem -> MovStq
 
 }
 
