@@ -443,6 +443,39 @@ digraph d_fo2_logistica {
     RotinaLogistica
     PosicaoCargaAlteracao
     PosicaoCargaAlteracaoLog
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_logistica_empresa [label="Empresa"]
+    }
+    {
+      node [
+        shape = "diamond"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_logistica_user [label="User"]
+    }
+    NfEntrada
+    {
+      node [
+        shape = "note"
+        style = "dashed"
+        color = gray
+      ]
+      "NfEntradaAgator" # HDOC_001
+    }
+    {
+      node [
+        shape = "note"
+        style = "dashed"
+        color = gray
+      ]
+      "NfEntradaTussor" # HDOC_001
+    }
   }
 
   PosicaoCarga -> NotaFiscal
@@ -454,6 +487,10 @@ digraph d_fo2_logistica {
   PosicaoCarga -> PosicaoCargaAlteracaoLog
   PosicaoCarga -> PosicaoCargaAlteracaoLog
 
+  fo2_logistica_empresa -> NfEntrada
+  fo2_logistica_user -> NfEntrada
+  NfEntrada -> NfEntradaAgator
+  NfEntrada -> NfEntradaTussor
 }
 
 digraph d_fo2_producao {
