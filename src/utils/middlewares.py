@@ -45,9 +45,9 @@ class NeedToLoginOrLocalMiddleware(object):
         user_ip = get_client_ip(request)
         authenticated_by_ip = False
         for ip in settings.N2LOL_ALLOWED_IP_BLOCKS:
-            authenticated_by_ip = \
-                authenticated_by_ip or \
-                (re.compile(ip).match(user_ip) is not None)
+            if re.compile(ip).match(user_ip) is not None:
+                authenticated_by_ip = True
+                break
 
         acesso_interno = AcessoInterno()
         acesso_interno.set_interno(authenticated_by_ip)
@@ -58,9 +58,9 @@ class NeedToLoginOrLocalMiddleware(object):
         user_url = request.META['PATH_INFO']
         liberated_by_url = False
         for url in settings.N2LOL_ALLOWED_URLS:
-            liberated_by_url = \
-                liberated_by_url or \
-                (re.compile(url).match(user_url) is not None)
+            if re.compile(url).match(user_url) is not None:
+                liberated_by_url = True
+                break
 
         if liberated_by_url:
             return self.get_response(request)
