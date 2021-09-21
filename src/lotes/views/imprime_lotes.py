@@ -222,7 +222,6 @@ class ImprimeLotes(LoginRequiredMixin, View):
                     try:
                         teg.printer_send()
                     except Exception as e:
-                        raise e
                         context.update({
                             'msg_erro': f'Erro ao imprimir <{e}>',
                         })
