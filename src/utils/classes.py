@@ -2,6 +2,7 @@ import copy
 import os
 import struct
 import time
+from pathlib import Path
 from pprint import pprint
 from subprocess import Popen, PIPE, STDOUT
 
@@ -165,7 +166,9 @@ class TermalPrint:
     def open_file(self):
         if self._write_file:
             now = timezone.now()
-            self._filename = now.strftime("%m%d%Y-%H%M%S-%f")
+            self._filename = now.strftime("impresso/cartela/%Y/%m/%Y%m%d-%H%M%S-%f")
+            directory = os.path.dirname(self._filename)
+            Path(directory).mkdir(parents=True, exist_ok=True)
 
     def template(self, t, limpa, strip_end_line=''):
         tt = copy.copy(t)
