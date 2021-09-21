@@ -48,6 +48,7 @@ class NeedToLoginOrLocalMiddleware(object):
 
         acesso_interno = AcessoInterno()
         acesso_interno.set_interno(authenticated_by_ip)
+        acesso_interno.set_ip(user_ip)
 
         if request.user.is_authenticated:
             return self.get_response(request)
