@@ -15,28 +15,47 @@ from .queries.models import get_create_colaborador_by_user
 
 @receiver(request_started)
 def request_start(sender, environ, **kwargs):
-    if 'HTTP_COOKIE' not in environ:
-        return
+    passo = 1
+    if 'HTTP_COOKIE' in environ:
+        cookies = SimpleCookie()
+        cookies.load(environ['HTTP_COOKIE'])
+        passo += 1
 
-    cookies = SimpleCookie()
-    cookies.load(environ['HTTP_COOKIE'])
-    try:
-        sessionid = cookies['sessionid'].value
-    except Exception:
-        return
+    if passo == 2:
+        try:
+            sessionid = cookies['sessionid'].value
+            passo += 1
+        except Exception:
+            pass
 
-    try:
-        session = Session.objects.get(session_key=sessionid)
-    except Session.DoesNotExist:
-        return
+    if passo == 3:
+        try:
+            session = Session.objects.get(session_key=sessionid)
+            passo += 1
+        except Session.DoesNotExist:
+            pass
 
-    data = session.get_decoded()
-    user_id = data.get('_auth_user_id', None)
+    if passo == 4:
+        try:
+            data = session.get_decoded()
+            passo += 1
+        except AttributeError:
+            pass
 
-    try:
-        colab = Colaborador.objects.get(user__id=user_id)
-    except Colaborador.DoesNotExist:
-        return
+    if passo == 5:
+        try:
+            user_id = data.get('_auth_user_id', None)
+            passo += 1
+        except AttributeError:
+            pass
+
+    if passo == 6:
+        try:
+            colab = Colaborador.objects.get(user__id=user_id)
+        except Colaborador.DoesNotExist:
+            colab = None
+    else:
+        colab = None
 
     req = Requisicao(
         colaborador=colab,
