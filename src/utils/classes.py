@@ -148,8 +148,12 @@ class TermalPrint:
 
     def __init__(self, p='SuporteTI_SuporteTI', file_dir=None):
         self._print_started = False
-        self._file_dir = file_dir
         self._write_file = file_dir is not None
+        if self._write_file:
+            if file_dir == '':
+                self._file_dir = file_dir
+            else:
+                self._file_dir = f"{file_dir}/"
         self.lp()
         self.printer(p)
         self.open_file()
