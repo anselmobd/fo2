@@ -1,5 +1,5 @@
 from http.cookies import SimpleCookie
-from pprint import pprint
+from pprint import pprint, pformat
 
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.contrib.sessions.models import Session
@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from utils.classes import AcessoInterno
+from utils.functions import fo2logger
 
 from .models import Colaborador, Requisicao
 from .queries.models import get_create_colaborador_by_user
@@ -15,6 +16,7 @@ from .queries.models import get_create_colaborador_by_user
 
 @receiver(request_started)
 def request_start(sender, environ, **kwargs):
+    fo2logger.info(pformat(environ))
     path_info = environ['PATH_INFO']
 
     if path_info in [
