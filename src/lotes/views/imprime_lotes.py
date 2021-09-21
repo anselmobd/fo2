@@ -202,7 +202,7 @@ class ImprimeLotes(LoginRequiredMixin, View):
                 estagios.append(e_row['EST'])
             teg = TermalPrint(
                 usuario_impresso.impressora_termica.nome,
-                file_dir="impresso/cartela"
+                file_dir="impresso/cartela/%Y/%m"
             )
             teg.template(usuario_impresso.modelo.gabarito, '\r\n')
             teg.printer_start()

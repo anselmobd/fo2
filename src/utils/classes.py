@@ -171,7 +171,7 @@ class TermalPrint:
     def open_file(self):
         if self._write_file:
             self._filename = timezone.now().strftime(
-                f"{self._file_dir}/%Y/%m/%Y%m%d-%H%M%S-%f")
+                f"{self._file_dir}%Y%m%d-%H%M%S-%f")
             Path(os.path.dirname(self._filename)).mkdir(
                 parents=True, exist_ok=True)
 
