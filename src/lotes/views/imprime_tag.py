@@ -54,7 +54,10 @@ class ImprimeTag(LoginRequiredMixin, View):
         if do_print:
             data = [{'item': item,
                      'quant': quant}, ]
-            teg = TermalPrint(usuario_impresso.impressora_termica.nome)
+            teg = TermalPrint(
+                usuario_impresso.impressora_termica.nome,
+                file_dir="impresso/tag/%Y/%m"
+            )
             teg.template(
                 usuario_impresso.modelo.gabarito,
                 '\r\n', strip_end_line='\r\n')

@@ -97,7 +97,10 @@ class ImprimeOb1(LoginRequiredMixin, View):
                 do_print = False
 
         if do_print:
-            teg = TermalPrint(usuario_impresso.impressora_termica.nome)
+            teg = TermalPrint(
+                usuario_impresso.impressora_termica.nome,
+                file_dir="impresso/ob1/%Y/%m"
+            )
             teg.template(usuario_impresso.modelo.gabarito, '\r\n')
             teg.printer_start()
             try:
