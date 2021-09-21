@@ -165,10 +165,10 @@ class TermalPrint:
 
     def open_file(self):
         if self._write_file:
-            now = timezone.now()
-            self._filename = now.strftime("impresso/cartela/%Y/%m/%Y%m%d-%H%M%S-%f")
-            directory = os.path.dirname(self._filename)
-            Path(directory).mkdir(parents=True, exist_ok=True)
+            self._filename = timezone.now().strftime(
+                "impresso/cartela/%Y/%m/%Y%m%d-%H%M%S-%f")
+            Path(os.path.dirname(self._filename)).mkdir(
+                parents=True, exist_ok=True)
 
     def template(self, t, limpa, strip_end_line=''):
         tt = copy.copy(t)
