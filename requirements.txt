@@ -1,5 +1,5 @@
 cx-Oracle==8.2.1
-Django==2.1.15
+Django==2.2.24
 django-firebird==1.11
 django-ipware==4.0.0
 django-redis==4.10.0
