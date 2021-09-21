@@ -16,7 +16,7 @@ from .queries.models import get_create_colaborador_by_user
 
 @receiver(request_started)
 def request_start(sender, environ, **kwargs):
-    fo2logger.info(pformat(environ))
+    # fo2logger.info(pformat(environ))
     path_info = environ['PATH_INFO']
 
     if path_info in [
