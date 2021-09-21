@@ -51,7 +51,7 @@ class ColaboradorAdmin(admin.ModelAdmin):
 
 @admin.register(Requisicao, site=site)
 class RequisicaoAdmin(admin.ModelAdmin):
-    list_display = ["quando", "colaborador", "path_info", "ip"]
+    list_display = ["quando", "colaborador", "request_method", "path_info", "ip"]
     fields = [
         "colaborador", "request_method", "path_info", "http_accept",
         "quando", "ip"
