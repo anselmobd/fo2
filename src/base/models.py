@@ -54,7 +54,9 @@ class Colaborador(models.Model):
 
 
 class Requisicao(models.Model):
-    colaborador = models.ForeignKey(Colaborador, on_delete=models.PROTECT)
+    colaborador = models.ForeignKey(
+        Colaborador, on_delete=models.PROTECT,
+        null=True, blank=True)
     request_method = models.CharField(
         max_length=10, verbose_name='Tipo de requisição')
     path_info = models.CharField(
@@ -67,7 +69,10 @@ class Requisicao(models.Model):
         max_length=47, verbose_name='IP')
 
     def __str__(self):
-        return f"{self.colaborador.user.username} - {self.quando}"
+        if self.colaborador:
+            return f"{self.quando} - {self.colaborador.user.username}"
+        else:
+            return f"{self.quando} - Anônimo"
 
     class Meta:
         db_table = "fo2_requisicao"
