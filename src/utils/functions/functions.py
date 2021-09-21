@@ -105,15 +105,15 @@ def shift_years(years, from_date=None):
 
 
 def get_client_ip(request):
-    # x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    # if x_forwarded_for:
-    #     ip = x_forwarded_for.split(',')[-1].strip()
-    # else:
-    #     ip = request.META.get('REMOTE_ADDR')
-    # return ip
-    client_ip, is_routable = ipware.get_client_ip(request)
-    # pprint([client_ip, is_routable])
-    return client_ip
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+    # client_ip, is_routable = ipware.get_client_ip(request)
+    # # pprint([client_ip, is_routable])
+    # return client_ip
 
 
 def segunda(dt):
