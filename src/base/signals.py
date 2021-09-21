@@ -15,6 +15,20 @@ from .queries.models import get_create_colaborador_by_user
 
 @receiver(request_started)
 def request_start(sender, environ, **kwargs):
+    path_info = environ['PATH_INFO']
+
+    if path_info in [
+    	"/favicon.ico",
+        "/static/favicon_tussor.ico",
+        "/intradm/jsi18n/",
+        ]:
+        return
+
+    if path_info.startswith((
+        "/static/img/",
+        )):
+        return
+
     passo = 1
     if 'HTTP_COOKIE' in environ:
         cookies = SimpleCookie()
@@ -60,7 +74,7 @@ def request_start(sender, environ, **kwargs):
     req = Requisicao(
         colaborador=colab,
         request_method=environ['REQUEST_METHOD'],
-        path_info=environ['PATH_INFO'],
+        path_info=path_info,
         http_accept=environ['HTTP_ACCEPT'],
         quando=timezone.now(),
         ip=environ['REMOTE_ADDR'],
