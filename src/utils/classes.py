@@ -75,9 +75,13 @@ class AcessoInterno_InternoNotDefined_Exception(Exception):
 class AcessoInterno(SingletonBaseMeta):
 
     interno = None
+    ip = None
 
     def set_interno(self, interno):
         self.interno = interno
+
+    def set_ip(self, ip):
+        self.ip = ip
 
     @property
     def current_interno(self):
