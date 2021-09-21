@@ -56,16 +56,10 @@ class NeedToLoginOrLocalMiddleware(object):
             return self.get_response(request)
 
         user_url = request.META['PATH_INFO']
-        liberated_by_url = False
         for url in settings.N2LOL_ALLOWED_URLS:
             if re.compile(url).match(user_url) is not None:
-                liberated_by_url = True
-                break
+                return self.get_response(request)
 
-        if liberated_by_url:
-            return self.get_response(request)
-
-        # return HttpResponse("Your IP is : {}".format(get_client_ip(request)))
         return redirect(settings.N2LOL_REDIRECT)
 
 
