@@ -71,13 +71,14 @@ def request_start(sender, environ, **kwargs):
     else:
         colab = None
 
+    acesso_interno = AcessoInterno()
     req = Requisicao(
         colaborador=colab,
         request_method=environ['REQUEST_METHOD'],
         path_info=path_info,
         http_accept=environ['HTTP_ACCEPT'],
         quando=timezone.now(),
-        ip=environ['REMOTE_ADDR'],
+        ip=acesso_interno.ip,
     )
     req.save()
 
