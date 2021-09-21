@@ -106,12 +106,13 @@ def shift_years(years, from_date=None):
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    fo2logger.info('get_client_ip')
-    fo2logger.info(pformat(x_forwarded_for))
+    addr = request.META.get('REMOTE_ADDR')
+    fo2logger.info(
+        f'get_client_ip x_forwarded_for={x_forwarded_for} addr={addr}')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0].strip()
     else:
-        ip = request.META.get('REMOTE_ADDR')
+        ip = addr
     return ip
     # client_ip, is_routable = ipware.get_client_ip(request)
     # # pprint([client_ip, is_routable])
