@@ -14,6 +14,7 @@
   <tr>
     <td style="vertical-align: top;">
       <ul>
+        {%comment%}
         {%if debug%}
           {%if alter_db%}
             <li><a href="http://tussor.local:8088/intranet/">Ir para Intranet com ERP na nuvem</a></li>
@@ -28,6 +29,7 @@
           {%endif%}
         {%endif%}
         <br />
+        {%endcomment%}
         <li>Recursos Humanos</li>
         <ul>
           <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
