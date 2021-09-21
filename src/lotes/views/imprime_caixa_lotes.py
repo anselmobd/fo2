@@ -199,7 +199,10 @@ class ImprimeCaixaLotes(LoginRequiredMixin, View):
             estagios = []
             for e_row in e_data:
                 estagios.append(e_row['EST'])
-            teg = TermalPrint(usuario_impresso.impressora_termica.nome)
+            teg = TermalPrint(
+                usuario_impresso.impressora_termica.nome,
+                file_dir="impresso/caixa_lote/%Y/%m"
+            )
             teg.template(usuario_impresso.modelo.gabarito, '\r\n')
             teg.printer_start()
             try:
