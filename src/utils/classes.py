@@ -146,9 +146,10 @@ class TermalPrint:
     _mark_ini = '[#[binary:'
     _mark_fim = ']#]'
 
-    def __init__(self, p='SuporteTI_SuporteTI', write_file=False):
+    def __init__(self, p='SuporteTI_SuporteTI', file_dir=None):
         self._print_started = False
-        self._write_file = write_file
+        self._file_dir = file_dir
+        self._write_file = file_dir is not None
         self.lp()
         self.printer(p)
         self.open_file()
@@ -166,7 +167,7 @@ class TermalPrint:
     def open_file(self):
         if self._write_file:
             self._filename = timezone.now().strftime(
-                "impresso/cartela/%Y/%m/%Y%m%d-%H%M%S-%f")
+                f"{self._file_dir}/%Y/%m/%Y%m%d-%H%M%S-%f")
             Path(os.path.dirname(self._filename)).mkdir(
                 parents=True, exist_ok=True)
 
