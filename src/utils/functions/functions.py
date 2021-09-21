@@ -5,7 +5,7 @@ import logging
 import hashlib
 import sys
 import time
-from pprint import pprint
+from pprint import pprint, pformat
 
 from django.conf import settings
 
@@ -106,7 +106,8 @@ def shift_years(years, from_date=None):
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    pprint(x_forwarded_for)
+    fo2logger.info('get_client_ip')
+    fo2logger.info(pformat(x_forwarded_for))
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0].strip()
     else:
