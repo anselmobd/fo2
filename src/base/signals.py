@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from utils.classes import AcessoInterno
-from utils.functions import fo2logger
+from utils.functions import fo2logger, get_client_ip
 
 from .models import Colaborador, Requisicao
 from .queries.models import get_create_colaborador_by_user
@@ -84,7 +84,7 @@ def request_start(sender, environ, **kwargs):
         path_info=path_info,
         http_accept=environ['HTTP_ACCEPT'],
         quando=timezone.now(),
-        ip=environ['REMOTE_ADDR'],
+        ip=get_client_ip(environ),
     )
     req.save()
 
