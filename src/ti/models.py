@@ -30,6 +30,9 @@ class Equipment(models.Model):
         'Nome', max_length=50, blank=False, null=False,
     )
     slug = models.SlugField()
+    descr = models.CharField(
+        'Descrição', max_length=200, blank=True, null=True,
+    )
     primary_ip = models.GenericIPAddressField(
         'IP Principal', blank=True, null=True,
     )
