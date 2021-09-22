@@ -16,8 +16,8 @@ intr_adm_site.register(ti.models.EquipmentType, EquipmentTypeAdmin)
 
 
 class EquipmentAdmin(admin.ModelAdmin):
-    list_display = ['type', 'name', 'slug', 'primary_ip']
-    search_fields = ['type__name', 'type__slug', 'name', 'slug', 'primary_ip']
+    list_display = ['type', 'name', 'descr', 'users', 'primary_ip']
+    search_fields = ['type__name', 'type__slug', 'name', 'slug', 'descr', 'users', 'primary_ip']
     ordering = ['type', 'slug']
     readonly_fields = ['slug']
 
