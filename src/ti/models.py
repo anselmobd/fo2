@@ -46,7 +46,7 @@ class Equipment(models.Model):
         return f"{self.type.name} - {self.name}"
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = f"{self.type.slug}_{slugify(self.name)}"
         super(Equipment, self).save(*args, **kwargs)
 
     class Meta:
