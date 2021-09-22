@@ -20,6 +20,13 @@ class EquipmentAdmin(admin.ModelAdmin):
     search_fields = ['type__name', 'type__slug', 'name', 'slug', 'descr', 'users', 'primary_ip']
     ordering = ['type', 'slug']
     readonly_fields = ['slug']
+    fields = (
+        'type',
+        ('name', 'slug'),
+        'descr',
+        'users',
+        'primary_ip',
+    )
 
 intr_adm_site.register(ti.models.Equipment, EquipmentAdmin)
 
