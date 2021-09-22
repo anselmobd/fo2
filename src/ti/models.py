@@ -33,6 +33,9 @@ class Equipment(models.Model):
     descr = models.CharField(
         'Descrição', max_length=200, blank=True, null=True,
     )
+    users = models.CharField(
+        'Usuário(s)', max_length=100, blank=True, null=True,
+    )
     primary_ip = models.GenericIPAddressField(
         'IP Principal', blank=True, null=True,
     )
