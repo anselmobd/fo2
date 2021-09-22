@@ -29,7 +29,9 @@ class Equipment(models.Model):
     name = models.CharField(
         'Nome', max_length=50, blank=False, null=False,
     )
-    slug = models.SlugField()
+    slug = models.SlugField(
+        'Nome-chave', unique=True
+    )
     descr = models.CharField(
         'Descrição', max_length=200, blank=True, null=True,
     )
