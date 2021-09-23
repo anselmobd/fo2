@@ -88,17 +88,21 @@
           <li>Páginas de empresas parceiras</li>
           <ul>
           {%if debug%}
+            {%comment%}
             {%if alter_db%}
               <li><a href="http://alteragator.local:8088/intranet/">Intranet Agator</a></li>
             {%else%}
+            {%endcomment%}
               <li><a href="http://agator.local:8088/intranet/">Intranet Agator</a></li>
-            {%endif%}
+            {%comment endif%}{%endcomment%}
           {%else%}
+            {%comment%}
             {%if alter_db%}
               <li><a href="http://alterintranet.agator.com.br:88/intranet/">Intranet Agator</a></li>
             {%else%}
+            {%endcomment%}
               <li><a href="http://intranet.agator.com.br:88/intranet/">Intranet Agator</a></li>
-            {%endif%}
+            {%comment endif%}{%endcomment%}
           {%endif%}
           </ul>
         {% endif %}
