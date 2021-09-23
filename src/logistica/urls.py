@@ -2,6 +2,7 @@ from django.urls import re_path
 
 import logistica.views
 import logistica.views.ajax
+import logistica.views.entrada_nf
 
 
 app_name = 'logistica'
@@ -44,7 +45,7 @@ urlpatterns = [
     ),
     re_path(
         r"^entrada_nf/lista/$",
-        logistica.views.EntradaNfLista.as_view(),
+        logistica.views.entrada_nf.EntradaNfLista.as_view(),
         name="entr_nf_lista",
     ),
     re_path(
