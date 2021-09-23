@@ -30,7 +30,7 @@
         {%endif%}
         <br />
         {%endcomment%}
-        {% if request.user.is_authenticated or base_ip_interno %}
+    {% if request.user.is_authenticated or base_ip_interno %}
         <li>ERP</li>
         <ul>
           <li><a href="{% url 'systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></li>
@@ -67,23 +67,21 @@
         <br />
         <li><a href="{% url 'servico:index' %}">Serviço</a></li>
         {% include 'servico/menu.html' %}
-        {% endif %}
       </ul>
     </td>
     <td>&nbsp;</td>
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
-        {% if request.user.is_authenticated or base_ip_interno %}
         <li><a href="{% url 'ti:index' %}">TI</a></li>
         {% include 'ti/menu.html' %}
-        {% endif %}
       </ul>
     </td>
     <td>&nbsp;</td>
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
+      {% endif %}
         <li>Recursos Humanos</li>
         <ul>
           <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
