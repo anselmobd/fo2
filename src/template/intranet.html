@@ -31,7 +31,6 @@
         <br />
         {%endcomment%}
         {% if request.user.is_authenticated or base_ip_interno %}
-        <br />
         <li>ERP</li>
         <ul>
           <li><a href="{% url 'systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></li>
@@ -75,6 +74,7 @@
           <li><a href="{% url 'dp:index' %}">Informações internas</a></li>
           {% endif %}
         </ul>
+        <br />
         <li>Páginas da cuecas D'UOMO na web</li>
         <ul>
           <!-- <li><a href="https://www.cuecasduomo.com.br/" target="_blank">Loja on-line</a></li> -->
