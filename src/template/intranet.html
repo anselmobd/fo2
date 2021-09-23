@@ -65,6 +65,9 @@
           <li><a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></li>
         </ul>
         {% endif %}
+        <br />
+        <li><a href="{% url 'servico:index' %}">Serviço</a></li>
+        {% include 'servico/menu.html' %}
       </ul>
     </td>
     <td>&nbsp;</td>
