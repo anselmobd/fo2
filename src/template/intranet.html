@@ -30,13 +30,6 @@
         {%endif%}
         <br />
         {%endcomment%}
-        <li>Recursos Humanos</li>
-        <ul>
-          <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
-          {% if request.user.is_authenticated or base_ip_interno %}
-          <li><a href="{% url 'dp:index' %}">Informações internas</a></li>
-          {% endif %}
-        </ul>
         {% if request.user.is_authenticated or base_ip_interno %}
         <br />
         <li>ERP</li>
@@ -75,6 +68,13 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
+        <li>Recursos Humanos</li>
+        <ul>
+          <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
+          {% if request.user.is_authenticated or base_ip_interno %}
+          <li><a href="{% url 'dp:index' %}">Informações internas</a></li>
+          {% endif %}
+        </ul>
         <li>Páginas da cuecas D'UOMO na web</li>
         <ul>
           <!-- <li><a href="https://www.cuecasduomo.com.br/" target="_blank">Loja on-line</a></li> -->
