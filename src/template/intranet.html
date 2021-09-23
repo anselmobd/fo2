@@ -36,17 +36,21 @@
           <li><a href="{% url 'systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></li>
           <ul>
             {% if externo %}
+              {%comment%}
               {%if alter_db%}
                 <li><a href="http://systextil.tussor.com.br:8045/systextil/sessions" target="_blank">Sessões</a></li>
               {% else %}
+              {%endcomment%}
                 <li><a href="http://tussor.systextil.com.br/systextil/sessions" target="_blank">Sessões</a></li>
-              {% endif %}
+              {%comment endif%}{%endcomment%}
             {% else %}
+              {%comment%}
               {%if alter_db%}
                 <li><a href="http://systextil.tussor.com.br/systextil/sessions" target="_blank">Sessões</a></li>
               {% else %}
+              {%endcomment%}
                 <li><a href="http://oc.tussor.com.br/systextil/sessions" target="_blank">Sessões</a></li>
-              {% endif %}
+              {%comment endif%}{%endcomment%}
             {% endif %}
             <li><a href="https://systextil.movidesk.com/" target="_blank">Área do cliente (Ticket)</a></li>
             <li><a href="http://intersys.com.br/cliente/" target="_blank">Antiga página de SS</a></li>
