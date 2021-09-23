@@ -79,15 +79,7 @@
           {% endif %}
         </ul>
         <br />
-        <li>Páginas da cuecas D'UOMO na web</li>
-        <ul>
-          <!-- <li><a href="https://www.cuecasduomo.com.br/" target="_blank">Loja on-line</a></li> -->
-          <li><a href="https://pt-br.facebook.com/cuecasduomo" target="_blank">Página no Facebook</a></li>
-          <li><a href="https://www.instagram.com/cuecasduomo/" target="_blank">Página no Instagram</a></li>
-          <li><a href="http://www.cuecasduomo.net.br/" target="_blank">Página institucional (e antigo catálogo)</a></li>
-        </ul>
         {% if request.user.is_authenticated or base_ip_interno %}
-          <br/>
           <li>Páginas de empresas parceiras</li>
           <ul>
           {%if debug%}
@@ -108,7 +100,15 @@
             {%comment endif%}{%endcomment%}
           {%endif%}
           </ul>
+          <br/>
         {% endif %}
+        <li>Páginas da cuecas D'UOMO na web</li>
+        <ul>
+          <!-- <li><a href="https://www.cuecasduomo.com.br/" target="_blank">Loja on-line</a></li> -->
+          <li><a href="https://pt-br.facebook.com/cuecasduomo" target="_blank">Página no Facebook</a></li>
+          <li><a href="https://www.instagram.com/cuecasduomo/" target="_blank">Página no Instagram</a></li>
+          <li><a href="http://www.cuecasduomo.net.br/" target="_blank">Página institucional (e antigo catálogo)</a></li>
+        </ul>
       </ul>
     </td>
     <td>&nbsp;</td>
