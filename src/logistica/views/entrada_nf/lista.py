@@ -17,8 +17,8 @@ class EntradaNfLista(O2BaseGetPostView):
         self.title_name = "Lista NF de entrada"
         self.Form_class = logistica.forms.ListaForm
         self.cleaned_data2self = True
-        self.context["por_pagina"] = 2
-        self.context["paginas_vizinhas"] = 3
+        self.context["por_pagina"] = 50
+        self.context["paginas_vizinhas"] = 4
 
     def mount_context(self):
         tipo_nota = dict(logistica.models.NfEntrada.TIPO_NOTA)
