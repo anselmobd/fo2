@@ -17,7 +17,7 @@ class EntradaNfLista(O2BaseGetPostView):
         self.title_name = "Lista NF de entrada"
         self.Form_class = logistica.forms.ListaForm
         self.cleaned_data2self = True
-        self.por_pagina = 50
+        self.context["por_pagina"] = 50
 
     def mount_context(self):
         tipo_nota = dict(logistica.models.NfEntrada.TIPO_NOTA)
@@ -45,7 +45,7 @@ class EntradaNfLista(O2BaseGetPostView):
             dados = dados.filter(chegada__contains=self.data)
         dados = dados.values(*fields).order_by("-quando")
 
-        paginator = Paginator(dados, self.por_pagina)
+        paginator = Paginator(dados, self.context["por_pagina"])
         try:
             dados = paginator.page(self.pagina)
         except PageNotAnInteger:
@@ -61,25 +61,22 @@ class EntradaNfLista(O2BaseGetPostView):
             )
             row["tipo"] = tipo_nota[row["tipo"]]
 
-        self.context.update(
-            {
-                "headers": (
-                    "CNPJ",
-                    "NF",
-                    "Tipo",
-                    "Emissor",
-                    "Descrição",
-                    "Volumes",
-                    "Chegada",
-                    "Transportadora",
-                    "Motorista",
-                    "Placa",
-                    "Responsável",
-                    "Digitado por",
-                    "Digitado em",
-                ),
-                "fields": fields[:-1],
-                "dados": dados,
-                "por_pagina": self.por_pagina,
-            }
-        )
+        self.context.update({
+            "headers": (
+                "CNPJ",
+                "NF",
+                "Tipo",
+                "Emissor",
+                "Descrição",
+                "Volumes",
+                "Chegada",
+                "Transportadora",
+                "Motorista",
+                "Placa",
+                "Responsável",
+                "Digitado por",
+                "Digitado em",
+            ),
+            "fields": fields[:-1],
+            "dados": dados,
+        })
