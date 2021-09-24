@@ -150,6 +150,8 @@ class EntradaNfSemXmlForm(EntradaNfForm):
 class ListaForm(forms.Form):
     numero = forms.CharField(
         label='Número da NF', required=False,
-        widget=forms.TextInput(attrs={'type': 'number'}))
-
-
+        widget=forms.TextInput(attrs={
+            'type': 'number',
+            'size': 8,
+            'autofocus': 'autofocus',
+        }))
