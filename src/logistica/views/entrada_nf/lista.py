@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 
 from base.views import O2BaseGetPostView
@@ -16,6 +17,7 @@ class EntradaNfLista(O2BaseGetPostView):
         self.title_name = "Lista NF de entrada"
         self.Form_class = logistica.forms.ListaForm
         self.cleaned_data2self = True
+        self.por_pagina = 50
 
     def mount_context(self):
         tipo_nota = dict(logistica.models.NfEntrada.TIPO_NOTA)
@@ -42,6 +44,14 @@ class EntradaNfLista(O2BaseGetPostView):
         if self.data:
             dados = dados.filter(chegada__contains=self.data)
         dados = dados.values(*fields).order_by("-quando")
+
+        paginator = Paginator(dados, self.por_pagina)
+        try:
+            dados = paginator.page(self.pagina)
+        except PageNotAnInteger:
+            dados = paginator.page(1)
+        except EmptyPage:
+            dados = paginator.page(paginator.num_pages)
 
         cnpj = CNPJ()
         for row in dados:
@@ -70,5 +80,6 @@ class EntradaNfLista(O2BaseGetPostView):
                 ),
                 "fields": fields[:-1],
                 "dados": dados,
+                "por_pagina": self.por_pagina,
             }
         )

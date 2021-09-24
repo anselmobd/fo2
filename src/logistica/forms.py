@@ -158,3 +158,5 @@ class ListaForm(forms.Form):
     data = forms.DateField(
         label='Data de chegada', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
+    pagina = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())

@@ -4,13 +4,30 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'logistica:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-  <style>
-    {% include 'layout/simple_table.css' %}
-  </style>
+<style>
+{% include 'layout/simple_table.css' %}
+span.spanlink {
+  cursor:pointer;
+  color:#337ab7;
+}
+span.spanlink:hover {
+  color:##23527c;
+  text-decoration:underline;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    function setPageAndSubmit(page) {
+      document.getElementById('id_pagina').value = page;
+      document.formName.submit();
+    }
+  </script>
 {% endblock %}
 
 {% block content %}
-  <form method="post" action="{% url 'logistica:entr_nf_lista' %}">
+  <form method="post" action="{% url 'logistica:entr_nf_lista' %}" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
@@ -19,6 +36,27 @@
   {% if msg_erro %}
     <h3>{{ msg_erro }}</h3>
   {% else %}
+    {% if dados and dados.paginator.num_pages != 1 %}
+      <div class="mypagination">
+        <br/>
+        {% if dados.has_previous %}
+          <span class="spanlink" onclick="setPageAndSubmit(1)">&nbsp;&#8810;&nbsp;</span>
+          <span class="spanlink" onclick="setPageAndSubmit({{ dados.previous_page_number }})">&nbsp;<&nbsp;</span>
+        {% else %}
+          <span>&nbsp;&#8810;&nbsp;</span>
+          <span>&nbsp;<&nbsp;</span>
+        {% endif %}
+          <span>Página {{ dados.number }} de {{ dados.paginator.num_pages }}</span>
+        {% if dados.has_next %}
+          <span class="spanlink" onclick="setPageAndSubmit({{ dados.next_page_number }})">&nbsp;>&nbsp;</span>
+          <span class="spanlink" onclick="setPageAndSubmit({{ dados.paginator.num_pages }})">&nbsp;&#8811;&nbsp;</span>
+        {% else %}
+          <span">&nbsp;>&nbsp;</span>
+          <span>&nbsp;&#8811;&nbsp;</span>
+        {% endif %}
+        <small>({{por_pagina}} notas por página)</small>
+      </div>
+    {% endif %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
       {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
