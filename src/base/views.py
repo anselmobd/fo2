@@ -19,15 +19,20 @@ from base.pages_context import get_current_users_requisicao
 
 
 class O2BaseGetPostView(CustomView):
+    """Classe base para uma view com GET e POST
+    
+    Obrigatório definir no __init__:
+        Form_class <django.forms.Form>
+    """
 
     def __init__(self, *args, **kwargs):
-        """
-        Inicializa parâmetros, sendo:
+        """Inicializa parâmetros, sendo:
         
         cleaned_data2self
             valores no self.form.cleaned_data viram atributos do objeto (self)
         """
         super(O2BaseGetPostView, self).__init__(*args, **kwargs)
+        self.Form_class = None
         self.cleaned_data2self = False
 
     def do_cleaned_data2self(self):
