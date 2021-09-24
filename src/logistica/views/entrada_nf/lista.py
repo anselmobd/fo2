@@ -35,11 +35,12 @@ class EntradaNfLista(O2BaseGetPostView):
             "quando",
             "id",
         )
+
+        dados = logistica.models.NfEntrada.objects.all()
         if self.numero:
-            dados = logistica.models.NfEntrada.objects.filter(numero=self.numero)
-        else:
-            dados = logistica.models.NfEntrada.objects.all()
+            dados = dados.filter(numero=self.numero)
         dados = dados.values(*fields).order_by("-quando")
+
         cnpj = CNPJ()
         for row in dados:
             row["cadastro"] = cnpj.mask(row["cadastro"])
