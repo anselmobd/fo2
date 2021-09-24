@@ -37,6 +37,7 @@ class CustomView(View):
         self.get_args2context = False
         self.get_args2form = True
         self.redirect = None
+        self.context = {}
 
     def init_self(self, request, kwargs):
         """
@@ -48,7 +49,6 @@ class CustomView(View):
         self.request = request
         self.kwargs = kwargs
 
-        self.context = {}
         if hasattr(self, 'title_name'):
             self.context.update({'titulo': self.title_name})
 
