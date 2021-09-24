@@ -146,3 +146,10 @@ class EntradaNfSemXmlForm(EntradaNfForm):
             'chegada', 'transportadora', 'motorista', 'placa',
             'responsavel'
         ]
+
+class ListaForm(forms.Form):
+    numero = forms.CharField(
+        label='Número da NF', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
+

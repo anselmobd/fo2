@@ -10,6 +10,12 @@
 {% endblock %}
 
 {% block content %}
+  <form method="post" action="{% url 'logistica:entr_nf_lista' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+  </form>
+  {% include "layout/form_inputs_report.html" with form=form h=5 only %}
   {% if msg_erro %}
     <h3>{{ msg_erro }}</h3>
   {% else %}
