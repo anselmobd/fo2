@@ -6,13 +6,8 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
-span.spanlink {
-  cursor:pointer;
-  color:#337ab7;
-}
-span.spanlink:hover {
-  color:##23527c;
-  text-decoration:underline;
+.pagination {
+  margin: 0.5em 0em auto;
 }
 </style>
 {% endblock %}
@@ -37,25 +32,40 @@ span.spanlink:hover {
     <h3>{{ msg_erro }}</h3>
   {% else %}
     {% if dados and dados.paginator.num_pages != 1 %}
-      <div class="mypagination">
-        <br/>
+      <div>
+      <ul class="pagination">
         {% if dados.has_previous %}
-          <span class="spanlink" onclick="setPageAndSubmit(1)">&nbsp;&#8810;&nbsp;</span>
-          <span class="spanlink" onclick="setPageAndSubmit({{ dados.previous_page_number }})">&nbsp;<&nbsp;</span>
+          <li><a href="#" onclick="setPageAndSubmit(1)">&Lang;</a></li>
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.previous_page_number }})">&lang;</a></li>
         {% else %}
-          <span>&nbsp;&#8810;&nbsp;</span>
-          <span>&nbsp;<&nbsp;</span>
+          <li class="disabled"><span>&Lang;</span></li>
+          <li class="disabled"><span>&lang;</span></li>
         {% endif %}
-          <span>Página {{ dados.number }} de {{ dados.paginator.num_pages }}</span>
+        {% with pag_neib=paginas_vizinhas|stringformat:"i" %}
+        {% with pag_neibn="-"|add:pag_neib %}
+        {% for i in dados.paginator.page_range %}
+          {% if i >= dados.number|add:pag_neibn %}
+            {% if i <= dados.number|add:pag_neib %}
+              {% if dados.number == i %}
+                <li class="page-item active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li class="page-item"><a href="#" onclick="setPageAndSubmit({{ i }})">{{ i }}</a></li>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {% endwith %}
+        {% endwith %}
         {% if dados.has_next %}
-          <span class="spanlink" onclick="setPageAndSubmit({{ dados.next_page_number }})">&nbsp;>&nbsp;</span>
-          <span class="spanlink" onclick="setPageAndSubmit({{ dados.paginator.num_pages }})">&nbsp;&#8811;&nbsp;</span>
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.next_page_number }})">&rang;</a></li>
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.paginator.num_pages }})">&Rang;</a></li>
         {% else %}
-          <span">&nbsp;>&nbsp;</span>
-          <span>&nbsp;&#8811;&nbsp;</span>
+          <li class="disabled"><span>&rang;</span></li>
+          <li class="disabled"><span>&Rang;</span></li>
         {% endif %}
-        <small>({{por_pagina}} notas por página)</small>
+      </ul>
       </div>
+      <small>({{por_pagina}} notas por página)</small>
     {% endif %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
