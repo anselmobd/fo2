@@ -2,17 +2,20 @@ from pprint import pprint
 
 from django.urls import reverse
 
-from base.views import O2BaseGetView
+from base.views import O2BaseGetPostView
 from utils.functions.cadastro import CNPJ
 
+import logistica.forms
 import logistica.models
 
 
-class EntradaNfLista(O2BaseGetView):
+class EntradaNfLista(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(EntradaNfLista, self).__init__(*args, **kwargs)
         self.template_name = "logistica/entrada_nf/lista.html"
         self.title_name = "Lista NF de entrada"
+        self.Form_class = logistica.forms.ListaForm
+        self.cleaned_data2self = True
 
     def mount_context(self):
         tipo_nota = dict(logistica.models.NfEntrada.TIPO_NOTA)
@@ -32,9 +35,11 @@ class EntradaNfLista(O2BaseGetView):
             "quando",
             "id",
         )
-        dados = (
-            logistica.models.NfEntrada.objects.all().values(*fields).order_by("-quando")
-        )
+        if self.numero:
+            dados = logistica.models.NfEntrada.objects.filter(numero=self.numero)
+        else:
+            dados = logistica.models.NfEntrada.objects.all()
+        dados = dados.values(*fields).order_by("-quando")
         cnpj = CNPJ()
         for row in dados:
             row["cadastro"] = cnpj.mask(row["cadastro"])
