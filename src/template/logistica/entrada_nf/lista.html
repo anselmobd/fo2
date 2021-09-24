@@ -55,6 +55,7 @@ thead th
           <li class="disabled" title="Última"><span>&Rang;</span></li>
         {% endif %}
       </ul>
+      {% if dados.paginator.num_pages > 3 %}
       <ul class="pagination">
         {% with npaginas_vizinhas=paginas_vizinhas|add:1 %}
         {% with pag_neib=npaginas_vizinhas|stringformat:"i" %}
@@ -78,6 +79,7 @@ thead th
         {% endwith %}
         {% endwith %}
       </ul>
+      {% endif %}
       </div>
       <small>({{por_pagina}} notas por página)</small>
     {% endif %}
