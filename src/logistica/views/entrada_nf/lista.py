@@ -39,6 +39,8 @@ class EntradaNfLista(O2BaseGetPostView):
         dados = logistica.models.NfEntrada.objects.all()
         if self.numero:
             dados = dados.filter(numero=self.numero)
+        if self.data:
+            dados = dados.filter(chegada__contains=self.data)
         dados = dados.values(*fields).order_by("-quando")
 
         cnpj = CNPJ()

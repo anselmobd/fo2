@@ -155,3 +155,6 @@ class ListaForm(forms.Form):
             'size': 8,
             'autofocus': 'autofocus',
         }))
+    data = forms.DateField(
+        label='Data de chegada', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
