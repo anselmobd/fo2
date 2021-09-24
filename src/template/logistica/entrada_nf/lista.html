@@ -35,34 +35,43 @@
       <div>
       <ul class="pagination">
         {% if dados.has_previous %}
-          <li><a href="#" onclick="setPageAndSubmit(1)">&Lang;</a></li>
-          <li><a href="#" onclick="setPageAndSubmit({{ dados.previous_page_number }})">&lang;</a></li>
+          <li><a href="#" onclick="setPageAndSubmit(1)" title="Primeira">&Lang;</a></li>
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.previous_page_number }})" title="Pág. {{ dados.previous_page_number }}">&lang;</a></li>
         {% else %}
-          <li class="disabled"><span>&Lang;</span></li>
-          <li class="disabled"><span>&lang;</span></li>
+          <li class="disabled" title="Primeira"><span>&Lang;</span></li>
+          <li class="disabled" title="Anterior"><span>&lang;</span></li>
         {% endif %}
-        {% with pag_neib=paginas_vizinhas|stringformat:"i" %}
+        <li class="page-item active"><span>{{ dados.number }}</span></li>
+        {% if dados.has_next %}
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.next_page_number }})" title="Pág. {{ dados.next_page_number }}">&rang;</a></li>
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.paginator.num_pages }})" title="Última">&Rang;{{ dados.paginator.num_pages }}</a></li>
+        {% else %}
+          <li class="disabled" title="Próxima"><span>&rang;</span></li>
+          <li class="disabled" title="Última"><span>&Rang;</span></li>
+        {% endif %}
+      </ul>
+      <ul class="pagination">
+        {% with npaginas_vizinhas=paginas_vizinhas|add:1 %}
+        {% with pag_neib=npaginas_vizinhas|stringformat:"i" %}
         {% with pag_neibn="-"|add:pag_neib %}
         {% for i in dados.paginator.page_range %}
           {% if i >= dados.number|add:pag_neibn %}
             {% if i <= dados.number|add:pag_neib %}
               {% if dados.number == i %}
-                <li class="page-item active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+                <li class="page-item active"><span>&lang;&rang;</span></li>
+              {% elif 1 == i %}
+              {% elif dados.paginator.num_pages == i %}
+              {% elif dados.number|add:1 == i %}
+              {% elif dados.number|add:-1 == i %}
               {% else %}
-                <li class="page-item"><a href="#" onclick="setPageAndSubmit({{ i }})">{{ i }}</a></li>
+                <li class="page-item"><a href="#" onclick="setPageAndSubmit({{ i }})" title="Pág. {{ i }}">{{ i }}</a></li>
               {% endif %}
             {% endif %}
           {% endif %}
         {% endfor %}
         {% endwith %}
         {% endwith %}
-        {% if dados.has_next %}
-          <li><a href="#" onclick="setPageAndSubmit({{ dados.next_page_number }})">&rang;</a></li>
-          <li><a href="#" onclick="setPageAndSubmit({{ dados.paginator.num_pages }})">&Rang;</a></li>
-        {% else %}
-          <li class="disabled"><span>&rang;</span></li>
-          <li class="disabled"><span>&Rang;</span></li>
-        {% endif %}
+        {% endwith %}
       </ul>
       </div>
       <small>({{por_pagina}} notas por página)</small>
