@@ -70,7 +70,7 @@
               <span class="hidden-xs hidden-sm noprint">| <a href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"><span class="hidden-xs hidden-sm hidden-md noprint"> em ação!</span></a></span>
               {% if request.user.is_authenticated or base_ip_interno %}
                 <span class="hidden-xs hidden-sm noprint">|<span class="hidden-xs hidden-sm hidden-md noprint"><br /></span></span>
-                <a href="{% url 'apoio_ao_erp' %}">Apoio<span class="hidden-xs hidden-sm hidden-md noprint"> ao ERP</span>{%if alter_db%}(local){%else%}(nuvem){%endif%}</a>
+                <a href="{% url 'apoio_ao_erp' %}">Apoio<span class="hidden-xs hidden-sm hidden-md noprint"> ao ERP</span>{%comment%}{%if alter_db%}(local){%else%}(nuvem){%endif%}{%endcomment%}</a>
                 <span class="noprint">| <a target="_blank" href="{% url 'systextil' %}"><span class="stnavbar stlogo">Systêxtil<span class="hidden-xs hidden-sm hidden-md noprint"><b>ERP</b></span></span></a>
                 </span>
               {% endif %}
