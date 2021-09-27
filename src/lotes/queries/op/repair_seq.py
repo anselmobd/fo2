@@ -12,11 +12,20 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
             WHERE l.ORDEM_PRODUCAO = le.ORDEM_PRODUCAO
               AND l.ORDEM_CONFECCAO = le.ORDEM_CONFECCAO
               AND l.SEQ_OPERACAO <= le.SEQ_OPERACAO
-          ) SEQ_NEW
+          ) SEQ_NEW__OLD
+        , er.SEQUENCIA_ESTAGIO SEQ_NEW
         , le.SEQUENCIA_ESTAGIO SEQ_OLD
         , le.CODIGO_ESTAGIO EST
         , le.ROWID RID
         FROM pcpc_040 le
+        JOIN pcpc_020 op
+          ON op.ORDEM_PRODUCAO = le.ORDEM_PRODUCAO 
+        JOIN MQOP_050 er
+          ON er.NIVEL_ESTRUTURA = le.PROCONF_NIVEL99 
+        AND er.GRUPO_ESTRUTURA = le.PROCONF_GRUPO 
+        AND er.NUMERO_ALTERNATI = op.ALTERNATIVA_PECA 
+        AND er.NUMERO_ROTEIRO = op.ROTEIRO_PECA 
+        AND er.SEQ_OPERACAO = le.SEQ_OPERACAO 
         WHERE le.PERIODO_PRODUCAO = %s
           AND le.ORDEM_CONFECCAO = %s
         ORDER BY
