@@ -1,0 +1,113 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- this 3 meta tags *must* come first in the head -->
+
+  <link rel="shortcut icon" href="{% static 'favicon_tussor.ico' %}">
+
+  <title>{% spaceless %}
+    {% block title %}
+      {% block title.pre %}Fo2 - {% endblock title.pre %}
+      {% block title.content %}{% endblock title.content %}
+      {% block title.pos %} - Tussor (cuecas D`UOMO){% endblock title.pos %}
+    {% endblock title %}
+  {% endspaceless %}</title>
+
+  {% block ga %}
+    {% include "layout/snippets/ga.html" %}
+  {% endblock ga %}
+
+  {% block head.loaders %}
+  
+  <!--Chart.js-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js" integrity="sha256-N4u5BjTLNwmGul6RgLoESPNqDFVUibVuOYhP4gJgrew=" crossorigin="anonymous"></script>
+
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Bootstrap -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!-- Base CSS -->
+  <link href="{% static "css/base.css" %}" rel="stylesheet">
+
+  {% endblock %}
+
+  {% block stylesheet %}{% endblock %}
+
+</head>
+<body>
+  <header>
+    {% block pageheader %}{% endblock %}
+  </header>
+  <main>
+    <div class="fullwidth">
+      {% block intranetheader %}
+      <div class="noprint">
+        <div class="container-fluid"
+            style="background-image: linear-gradient(white,{%if alter_db%}#ff8953{%else%}#f1f1f1{%endif%});">
+          <div class="row" style="font-size: smaller;">
+            <div class="col-xs-6 col-sm-4" align="left">
+              <a href="{% url 'intranet' %}"><img
+                src="{% static "img/DUOMO_micro.png" %}" height="20" width="88"
+                alt="Intranet cuecas D'UOMO" title="Intranet cuecas D'UOMO"
+              ></a>
+              | <a
+                  href="{% url 'rh:index' %}" title="RH em ação!"><img
+                    src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22"
+              ></a>
+              {% if request.user.is_authenticated or base_ip_interno %}
+                | <a href="{% url 'apoio_ao_erp' %}">Apoio</a>
+                | <a target="_blank" href="{% url 'systextil' %}">Systêxtil</a>
+              {% endif %}
+            </div>
+            <div class="hidden-xs col-sm-4" align="center">
+              {% block advice %}{% endblock %}
+            </div>
+            <div class="col-xs-6 col-sm-4" align="right">
+              {% if request.user.is_authenticated %}{{ request.user.username }} - <a
+                href="{% url 'encerrar' %}">Encerrar</a
+              >{% else %}<a
+                href="{% url 'login' %}?next=/">Identificar-se</a
+              >{% endif %}
+              | <a href="{% url 'base:usuarios' %}"><img
+                  title="Lista usuários logados" src="{% static "img/people.svg" %}" alt="people" height="20">{{logged_count}}</a
+                >
+              {% if base_ip_interno %}
+                {% if not request.user.is_authenticated %}| <a href="{% url 'persona:cria_usuario' %}?next=/">Criar conta</a>{% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endblock %}
+      {% block divheader %}
+        <div class="container-fluid">
+          <div class="hidden-xs fo2 page-header">
+            {% block header %}
+              {% block header.pre %}<h3>{% endblock header.pre %}{% block header.content %}
+              {% endblock header.content %}{% block header.pos %}</h3>{% endblock header.pos %}
+            {% endblock %}
+          </div>
+        </div>
+      {% endblock %}
+      <div class="container-fluid">
+      {% block content %}{% endblock %}
+      </div>
+      <div class="container-fluid noprint">
+        <hr style="margin-top: 0px; margin-bottom: 5px;">
+      </div>
+    </div>
+  </main>
+  {% block footer %}{% endblock %}
+  {% block javascript %}{% endblock %}
+  {% block footer_space %}{% endblock %}
+</body>
+</html>
