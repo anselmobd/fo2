@@ -22,7 +22,11 @@ class EquipamentoLista(O2BaseGetPostView):
 
     def mount_context(self):
         fields = (
+            "type__name",
             "name",
+            "descr",
+            "users",
+            "primary_ip",
         )
 
         dados = ti.models.Equipment.objects.all()
@@ -38,9 +42,18 @@ class EquipamentoLista(O2BaseGetPostView):
         except EmptyPage:
             dados = paginator.page(paginator.num_pages)
 
+        for row in dados:
+            for field in fields:
+                if row[field] is None:
+                    row[field] = "-"
+
         self.context.update({
             "headers": (
+                "Tipo",
                 "Nome",
+                "Descrição",
+                "Usuários",
+                "IP principal",
             ),
             "fields": fields,
             "dados": dados,
