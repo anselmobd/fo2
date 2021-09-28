@@ -24,14 +24,15 @@ class EquipmentTypeAdmin(admin.ModelAdmin):
 
 @admin.register(ti.models.Equipment, site=intr_adm_site)
 class EquipmentAdmin(admin.ModelAdmin):
-    list_display = ['type', 'name', 'descr', 'users', 'primary_ip']
-    search_fields = ['type__name', 'type__slug', 'name', 'slug', 'descr', 'users', 'primary_ip']
-    ordering = ['type', 'slug']
+    list_display = ['slug', 'type', 'name', 'descr', 'use', 'users', 'primary_ip']
+    search_fields = ['slug', 'type__name', 'type__slug', 'name', 'descr', 'use', 'users', 'primary_ip']
+    ordering = ['slug']
     readonly_fields = ['slug']
     fields = (
         'type',
         ('name', 'slug'),
         'descr',
+        'uso',
         'users',
         'primary_ip',
     )
