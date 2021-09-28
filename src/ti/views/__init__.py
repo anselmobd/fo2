@@ -1,2 +1,2 @@
-from  . import lista
+from  . import equipamento_lista
 from  . import views
