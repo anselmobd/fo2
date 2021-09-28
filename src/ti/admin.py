@@ -6,6 +6,14 @@ import ti.forms
 import ti.models
 
 
+@admin.register(ti.models.OSType, site=intr_adm_site)
+class OSTypeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    search_fields = ['name', 'slug']
+    ordering = ['slug']
+    readonly_fields = ['slug']
+
+
 @admin.register(ti.models.EquipmentType, site=intr_adm_site)
 class EquipmentTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
