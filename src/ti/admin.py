@@ -6,15 +6,15 @@ import ti.forms
 import ti.models
 
 
+@admin.register(ti.models.EquipmentType, site=intr_adm_site)
 class EquipmentTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     search_fields = ['name', 'slug']
     ordering = ['slug']
     readonly_fields = ['slug']
 
-intr_adm_site.register(ti.models.EquipmentType, EquipmentTypeAdmin)
 
-
+@admin.register(ti.models.Equipment, site=intr_adm_site)
 class EquipmentAdmin(admin.ModelAdmin):
     list_display = ['type', 'name', 'descr', 'users', 'primary_ip']
     search_fields = ['type__name', 'type__slug', 'name', 'slug', 'descr', 'users', 'primary_ip']
@@ -28,27 +28,24 @@ class EquipmentAdmin(admin.ModelAdmin):
         'primary_ip',
     )
 
-intr_adm_site.register(ti.models.Equipment, EquipmentAdmin)
 
-
+@admin.register(ti.models.InterfaceType, site=intr_adm_site)
 class InterfaceTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     search_fields = ['name', 'slug']
     ordering = ['slug']
     readonly_fields = ['slug']
 
-intr_adm_site.register(ti.models.InterfaceType, InterfaceTypeAdmin)
 
-
+@admin.register(ti.models.Interface, site=intr_adm_site)
 class InterfaceAdmin(admin.ModelAdmin):
     list_display = ['equipment', 'type', 'name', 'slug', 'mac_adress', 'fixed_ip']
     search_fields = ['equipment__name', 'interface__name', 'type__name', 'type__slug', 'name', 'slug', 'mac_adress', 'fixed_ip']
     ordering = ['type', 'slug']
     readonly_fields = ['slug']
 
-intr_adm_site.register(ti.models.Interface, InterfaceAdmin)
 
-
+@admin.register(ti.models.DhcpConfig, site=intr_adm_site)
 class DhcpConfigAdmin(admin.ModelAdmin):
     form = ti.forms.DhcpConfigForm
     list_display = ['name', 'slug', 'primary_equipment', 'secondary_equipment']
@@ -56,12 +53,9 @@ class DhcpConfigAdmin(admin.ModelAdmin):
     ordering = ['slug']
     readonly_fields = ['slug']
 
-intr_adm_site.register(ti.models.DhcpConfig, DhcpConfigAdmin)
 
-
+@admin.register(ti.models.Share, site=intr_adm_site)
 class ShareAdmin(admin.ModelAdmin):
     list_display = ['name', 'equipment', 'path', 'read_only']
     search_fields = ['name', 'equipment', 'path', 'read_only']
     ordering = ['name']
-
-intr_adm_site.register(ti.models.Share, ShareAdmin)
