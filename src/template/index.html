@@ -82,11 +82,6 @@
         <br />
         <li><a href="{% url 'comercial:index' %}">Comercial</a></li>
         {% include 'comercial/menu.html' %}
-        {% if perms.email_signature.can_edit_mail_signature %}
-          <br />
-          <li><a href="{% url 'email_signature:index' %}">Assinatura de e-mail</a></li>
-          {% include 'email_signature/menu.html' %}
-        {% endif %}
         <br />
         <li><a href="{% url 'base:index' %}">Base</a></li>
         {% include 'base/menu.html' %}
