@@ -2,6 +2,27 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
+class OSType(models.Model):
+    name = models.CharField(
+        'Nome', max_length=60, blank=False, null=False
+    )
+    slug = models.SlugField(
+        'Nome-chave', unique=True
+    )
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(EquipmentType, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ti_os_type"
+        verbose_name = "Tipo de SO"
+        verbose_name_plural = "Tipos de SO"
+
+
 class EquipmentType(models.Model):
     name = models.CharField(
         'Nome', max_length=30, blank=False, null=False
