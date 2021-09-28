@@ -32,7 +32,7 @@ class EquipmentAdmin(admin.ModelAdmin):
         'type',
         ('name', 'slug'),
         'descr',
-        'uso',
+        'use',
         'users',
         'primary_ip',
     )
