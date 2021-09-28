@@ -1,1 +1,2 @@
-from .views import *
+from  . import lista
+from  . import views
