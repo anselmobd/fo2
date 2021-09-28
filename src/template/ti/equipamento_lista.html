@@ -1,0 +1,91 @@
+{% extends 'ti/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'ti:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+.pagination {
+  margin: 0.5em 0em auto;
+}
+thead th
+{
+  position: sticky;
+  top: 0px;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    function setPageAndSubmit(page) {
+      document.getElementById('id_pagina').value = page;
+      document.formName.submit();
+    }
+  </script>
+{% endblock %}
+
+{% block content %}
+  <form method="post" action="{% url 'ti:equipamento_lista' %}" name="formName">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+  </form>
+  {% include "layout/form_inputs_report.html" with form=form h=5 only %}
+  {% if msg_erro %}
+    <h3>{{ msg_erro }}</h3>
+  {% else %}
+    {% if dados and dados.paginator.num_pages != 1 %}
+      <div>
+      <ul class="pagination">
+        {% if dados.has_previous %}
+          <li><a href="#" onclick="setPageAndSubmit(1)" title="Primeira">&Lang;</a></li>
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.previous_page_number }})" title="Pág. {{ dados.previous_page_number }}">&lang;</a></li>
+        {% else %}
+          <li class="disabled" title="Primeira"><span>&Lang;</span></li>
+          <li class="disabled" title="Anterior"><span>&lang;</span></li>
+        {% endif %}
+        <li class="page-item active"><span>{{ dados.number }}</span></li>
+        {% if dados.has_next %}
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.next_page_number }})" title="Pág. {{ dados.next_page_number }}">&rang;</a></li>
+          <li><a href="#" onclick="setPageAndSubmit({{ dados.paginator.num_pages }})" title="Última">&Rang;{{ dados.paginator.num_pages }}</a></li>
+        {% else %}
+          <li class="disabled" title="Próxima"><span>&rang;</span></li>
+          <li class="disabled" title="Última"><span>&Rang;</span></li>
+        {% endif %}
+      </ul>
+      {% if dados.paginator.num_pages > 3 %}
+      <ul class="pagination">
+        {% with npaginas_vizinhas=paginas_vizinhas|add:1 %}
+        {% with pag_neib=npaginas_vizinhas|stringformat:"i" %}
+        {% with pag_neibn="-"|add:pag_neib %}
+        {% for i in dados.paginator.page_range %}
+          {% if i >= dados.number|add:pag_neibn %}
+            {% if i <= dados.number|add:pag_neib %}
+              {% if dados.number == i %}
+                <li class="page-item active"><span>&lang;&rang;</span></li>
+              {% elif 1 == i %}
+              {% elif dados.paginator.num_pages == i %}
+              {% elif dados.number|add:1 == i %}
+              {% elif dados.number|add:-1 == i %}
+              {% else %}
+                <li class="page-item"><a href="#" onclick="setPageAndSubmit({{ i }})" title="Pág. {{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+      </ul>
+      {% endif %}
+      </div>
+      <small>({{por_pagina}} notas por página)</small>
+    {% endif %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
+    </table>
+  {% endif %}
+{% endblock %}
