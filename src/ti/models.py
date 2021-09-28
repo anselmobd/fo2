@@ -15,7 +15,7 @@ class OSType(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(EquipmentType, self).save(*args, **kwargs)
+        super(OSType, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_ti_os_type"
