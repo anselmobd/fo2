@@ -22,6 +22,29 @@ class Empresa(models.Model):
         verbose_name = "Empresa"
 
 
+class Local(models.Model):
+    empresa = models.ForeignKey(
+        Empresa, on_delete=models.PROTECT, blank=False, null=False,
+    )
+    name = models.CharField(
+        'Nome', max_length=20, blank=False, null=False
+    )
+    slug = models.SlugField(
+        'Nome-chave', unique=True
+    )
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = f"{self.empresa.slug}_{slugify(self.name)}"
+        super(Local, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ti_local"
+        verbose_name = "Local em empresa"
+
+
 class OSType(models.Model):
     name = models.CharField(
         'Nome', max_length=60, blank=False, null=False
