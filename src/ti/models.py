@@ -45,7 +45,10 @@ class OS(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = f"{self.type.slug}_{slugify(self.name)}_{slugify(self.version)}_{slugify(self.bits)}"
+        name_slug = slugify(self.name) 
+        if self.type.slug != name_slug:
+            name_slug = f"{self.type.slug}_{name_slug}"
+        self.slug = f"{name_slug}_{slugify(self.version)}_{slugify(self.bits)}"
         super(OS, self).save(*args, **kwargs)
 
     class Meta:
