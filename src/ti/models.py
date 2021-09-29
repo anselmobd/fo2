@@ -34,7 +34,7 @@ class Local(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return f"{self.empresa} - {self.name}"
 
     def save(self, *args, **kwargs):
         self.slug = f"{self.empresa.slug}_{slugify(self.name)}"
