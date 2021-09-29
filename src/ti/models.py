@@ -41,7 +41,7 @@ class Location(models.Model):
         super(Location, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = "fo2_ti_local"
+        db_table = "fo2_ti_location"
         verbose_name = "Local em empresa"
 
 
