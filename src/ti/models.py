@@ -22,7 +22,7 @@ class Empresa(models.Model):
         verbose_name = "Empresa"
 
 
-class Local(models.Model):
+class Location(models.Model):
     empresa = models.ForeignKey(
         Empresa, on_delete=models.PROTECT, blank=False, null=False,
     )
@@ -38,7 +38,7 @@ class Local(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = f"{self.empresa.slug}_{slugify(self.name)}"
-        super(Local, self).save(*args, **kwargs)
+        super(Location, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_ti_local"
