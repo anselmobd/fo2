@@ -2,6 +2,26 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
+class Empresa(models.Model):
+    name = models.CharField(
+        'Nome', max_length=20, blank=False, null=False
+    )
+    slug = models.SlugField(
+        'Nome-chave', unique=True
+    )
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Empresa, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ti_empresa"
+        verbose_name = "Empresa"
+
+
 class OSType(models.Model):
     name = models.CharField(
         'Nome', max_length=60, blank=False, null=False
