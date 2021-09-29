@@ -14,6 +14,14 @@ class OSTypeAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 
+@admin.register(ti.models.OS, site=intr_adm_site)
+class OSAdmin(admin.ModelAdmin):
+    list_display = ['type', 'name', 'version', 'bits', 'slug']
+    search_fields = ['slug', 'type__name', 'type__slug', 'name', 'version', 'bits']
+    ordering = ['slug']
+    readonly_fields = ['slug']
+
+
 @admin.register(ti.models.EquipmentType, site=intr_adm_site)
 class EquipmentTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
