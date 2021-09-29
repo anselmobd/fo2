@@ -14,8 +14,8 @@ class EmpresaAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 
-@admin.register(ti.models.Local, site=intr_adm_site)
-class LocalAdmin(admin.ModelAdmin):
+@admin.register(ti.models.Location, site=intr_adm_site)
+class LocationAdmin(admin.ModelAdmin):
     list_display = ['slug', 'empresa', 'name']
     search_fields = ['slug', 'empresa__name', 'empresa__slug', 'name']
     ordering = ['slug']
