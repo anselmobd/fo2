@@ -23,6 +23,37 @@ class OSType(models.Model):
         verbose_name_plural = "Tipos de SO"
 
 
+class OS(models.Model):
+    type = models.ForeignKey(
+        OSType, on_delete=models.PROTECT, blank=False, null=False,
+        verbose_name='Tipo'
+    )
+    name = models.CharField(
+        'Nome', max_length=60, blank=False, null=False
+    )
+    version = models.CharField(
+        'Versão', max_length=60, blank=False, null=False
+    )
+    bits = models.IntegerField(
+        blank=True, null=True,
+    )
+    slug = models.SlugField(
+        'Nome-chave', unique=True
+    )
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = f"{self.type.slug}_{slugify(self.name)}_{slugify(self.version)}_{slugify(self.bits)}"
+        super(OS, self).save(*args, **kwargs)
+
+    class Meta:
+        db_table = "fo2_ti_os"
+        verbose_name = "SO"
+        verbose_name_plural = "SO"
+
+
 class EquipmentType(models.Model):
     name = models.CharField(
         'Nome', max_length=30, blank=False, null=False
