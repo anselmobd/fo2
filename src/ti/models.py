@@ -18,7 +18,7 @@ class Empresa(models.Model):
         super(Empresa, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = "fo2_ti_empresa"
+        db_table = "fo2_it_company"
         verbose_name = "Empresa"
 
 
