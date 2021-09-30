@@ -2,7 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
-class Empresa(models.Model):
+class Company(models.Model):
     name = models.CharField(
         'Nome', max_length=20, blank=False, null=False
     )
@@ -15,7 +15,7 @@ class Empresa(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(Empresa, self).save(*args, **kwargs)
+        super(Company, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "fo2_it_company"
@@ -24,7 +24,7 @@ class Empresa(models.Model):
 
 class Location(models.Model):
     empresa = models.ForeignKey(
-        Empresa, on_delete=models.PROTECT, blank=False, null=False,
+        Company, on_delete=models.PROTECT, blank=False, null=False,
     )
     name = models.CharField(
         'Nome', max_length=20, blank=False, null=False
