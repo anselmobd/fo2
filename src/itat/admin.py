@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from fo2.admin import intr_adm_site
 
+import itat.forms
 import itat.models
 
 
@@ -84,6 +85,7 @@ class InterfaceAdmin(admin.ModelAdmin):
 
 @admin.register(itat.models.DhcpConfig, site=intr_adm_site)
 class DhcpConfigAdmin(admin.ModelAdmin):
+    form = itat.forms.DhcpConfigForm
     list_display = ['name', 'slug', 'primary_equipment', 'secondary_equipment']
     search_fields = ['name', 'slug',
                      'primary_equipment__name', 'secondary_equipment__name']
