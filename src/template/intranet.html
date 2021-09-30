@@ -1,9 +1,9 @@
 {% extends 'layout/layout_small.html' %}
 {% load static %}
 
-{% block title.content %}Intranet {% endblock title.content %}
+{% block title.content %}Intranet{% endblock title.content %}
 
-{% block header.content %}Intranet{% endblock header.content %}
+{% block header.content %}<a href="{% url 'intranet' %}">Intranet</a>{% endblock header.content %}
 
 {% block content %}
 <table>
