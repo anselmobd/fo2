@@ -490,6 +490,8 @@ class FiltraSolicitacaoForm(forms.Form):
         label='Referência', required=False, max_length=5,
         widget=forms.TextInput(
             attrs={'type': 'string', 'size': 5}))
+    pagina = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())
 
     def clean_ref(self):
         ref = self.cleaned_data['ref'].upper()

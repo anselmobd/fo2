@@ -16,6 +16,15 @@ thead th
 </style>
 {% endblock %}
 
+{% block javascript %}
+  <script type="text/javascript">
+    function setPageAndSubmit(page) {
+      document.getElementById('id_pagina').value = page;
+      document.formName.submit();
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
@@ -100,7 +109,7 @@ thead th
   {% if add_solicita %}
     <p><a title="Inserir" href="{% url 'cd:solicitacoes' 'add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a></p>
   {% endif %}
-  <form action="{% url 'cd:solicitacoes' %}" method="post">
+  <form action="{% url 'cd:solicitacoes' %}" method="post" name="formName">
     {% csrf_token %}
     {{ filter.as_p }}
     <input type="submit" value="Busca"/>
@@ -109,6 +118,28 @@ thead th
 {% if data %}
   {% if ref %}
     <h4>Referência: {{ref}}</h4>
+  {% endif %}
+
+  {% if data and data.paginator.num_pages != 1 %}
+  <div>
+  <ul class="pagination">
+    {% if data.has_previous %}
+      <li><a href="#" onclick="setPageAndSubmit(1)" title="Primeira">&Lang;</a></li>
+      <li><a href="#" onclick="setPageAndSubmit({{ data.previous_page_number }})" title="Pág. {{ data.previous_page_number }}">&lang;</a></li>
+    {% else %}
+      <li class="disabled" title="Primeira"><span>&Lang;</span></li>
+      <li class="disabled" title="Anterior"><span>&lang;</span></li>
+    {% endif %}
+    <li class="page-item active"><span>{{ data.number }}</span></li>
+    {% if data.has_next %}
+      <li><a href="#" onclick="setPageAndSubmit({{ data.next_page_number }})" title="Pág. {{ data.next_page_number }}">&rang;</a></li>
+      <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages }})" title="Última">&Rang;{{ data.paginator.num_pages }}</a></li>
+    {% else %}
+      <li class="disabled" title="Próxima"><span>&rang;</span></li>
+      <li class="disabled" title="Última"><span>&Rang;</span></li>
+    {% endif %}
+  </ul>
+  <small>({{por_pagina}} solicitações por página)</small>
   {% endif %}
   <table>
     <thead>

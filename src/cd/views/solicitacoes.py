@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connection, IntegrityError
 from django.shortcuts import render
 from django.urls import reverse
@@ -28,7 +29,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         self.SL = lotes.models.SolicitaLote
         self.id = None
 
-    def lista(self, filtro=None, data=None, ref=None):
+    def lista(self, filtro=None, data=None, ref=None, pagina=None):
         fields = (
             'numero', 'codigo', 'ativa', 'descricao',
             'data', 'usuario__username', 'concluida', 'can_print', 'coleta',
@@ -43,6 +44,16 @@ class Solicitacoes(LoginRequiredMixin, View):
 
         cursor_def = connection.cursor()
         data = queries.lista_solicita_lote(cursor_def, filtro, data, ref)
+
+        por_pagina = 100
+        paginator = Paginator(data, por_pagina)
+        try:
+            data = paginator.page(pagina)
+        except PageNotAnInteger:
+            data = paginator.page(1)
+        except EmptyPage:
+            data = paginator.page(paginator.num_pages)
+
         for row in data:
             row['codigo|LINK'] = reverse(
                 'cd:solicitacao_detalhe', args=[row['id']])
@@ -51,6 +62,7 @@ class Solicitacoes(LoginRequiredMixin, View):
             'fields': fields,
             'data': data,
             'ref': ref,
+            'por_pagina': por_pagina,
         }
         return context
 
@@ -249,12 +261,14 @@ class Solicitacoes(LoginRequiredMixin, View):
                 filtro = filter.cleaned_data['filtro']
                 data = filter.cleaned_data['data']
                 ref = filter.cleaned_data['ref']
+                pagina = filter.cleaned_data['pagina']
             else:
                 filtro = None
                 data = None
                 ref = None
+                pagina = None
             context['filter'] = filter
-            context.update(self.lista(filtro, data, ref))
+            context.update(self.lista(filtro, data, ref, pagina))
             return render(request, self.template_name, context)
 
         form = self.Form_class(request.POST)
