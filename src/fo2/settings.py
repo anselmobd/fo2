@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'estoque',
     'geral',
     'insumo',
+    'itat',
     'logistica',
     'lotes',
     'manutencao',
