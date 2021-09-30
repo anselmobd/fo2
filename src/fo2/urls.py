@@ -62,6 +62,8 @@ urlpatterns = [
 
     re_path(r'^insumo/', include('insumo.urls')),
 
+    re_path(r'^itat/', include('itat.urls')),
+
     re_path(r'^logistica/', include('logistica.urls')),
 
     re_path(r'^lotes/', include('lotes.urls')),
