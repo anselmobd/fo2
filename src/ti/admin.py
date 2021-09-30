@@ -6,8 +6,8 @@ import ti.forms
 import ti.models
 
 
-@admin.register(ti.models.Empresa, site=intr_adm_site)
-class EmpresaAdmin(admin.ModelAdmin):
+@admin.register(ti.models.Company, site=intr_adm_site)
+class CompanyAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     search_fields = ['name', 'slug']
     ordering = ['slug']
