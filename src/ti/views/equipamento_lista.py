@@ -11,4 +11,50 @@ import ti.models
 
 
 class EquipamentoLista(O2BaseGetPostView):
-    pass
+    def __init__(self, *args, **kwargs):
+        super(EquipamentoLista, self).__init__(*args, **kwargs)
+        self.template_name = "ti/equipamento_lista.html"
+        self.title_name = "Lista equipamentos"
+        self.Form_class = ti.forms.EquipamentoListaForm
+        self.cleaned_data2self = True
+        self.context["por_pagina"] = 50
+        self.context["paginas_vizinhas"] = 4
+
+    def mount_context(self):
+        fields = (
+            "type__name",
+            "name",
+            "descr",
+            "users",
+            "primary_ip",
+        )
+
+        dados = ti.models.Equipment.objects.all()
+        if self.filtro:
+            dados = dados.filter(name__icontains=self.filtro)
+        dados = dados.values(*fields).order_by("name")
+
+        paginator = Paginator(dados, self.context["por_pagina"])
+        try:
+            dados = paginator.page(self.pagina)
+        except PageNotAnInteger:
+            dados = paginator.page(1)
+        except EmptyPage:
+            dados = paginator.page(paginator.num_pages)
+
+        for row in dados:
+            for field in fields:
+                if row[field] is None:
+                    row[field] = "-"
+
+        self.context.update({
+            "headers": (
+                "Tipo",
+                "Nome",
+                "Descrição",
+                "Usuários",
+                "IP principal",
+            ),
+            "fields": fields,
+            "dados": dados,
+        })
