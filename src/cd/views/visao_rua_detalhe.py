@@ -8,6 +8,7 @@ from django.views import View
 from utils.views import totalize_grouped_data, group_rowspan
 
 import lotes.models
+from cd.queries.visao import get_solic_dict
 
 
 class VisaoRuaDetalhe(View):
@@ -18,6 +19,9 @@ class VisaoRuaDetalhe(View):
 
     def mount_context(self, rua):
         context = {'rua': rua}
+
+        solic_dict = get_solic_dict(rua)
+
         locais_recs = lotes.models.Lote.objects.filter(
             local__startswith=rua
         ).exclude(
@@ -35,11 +39,15 @@ class VisaoRuaDetalhe(View):
             'local', 'op', 'referencia', 'cor', 'tamanho', 'qlotes', 'qtdsum'))
 
         for row in data:
+            if row['local'] in solic_dict:
+                row['solicitacoes'] = ', '.join(solic_dict[row['local']])
+            else:
+                row['solicitacoes'] = '-'
             row['local|TARGET'] = '_BLANK'
             row['local|LINK'] = reverse(
                 'cd:estoque_filtro', args=['E', row['local']])
 
-        group = ['local']
+        group = ['local', 'solicitacoes']
         totalize_grouped_data(data, {
             'group': group,
             'sum': ['qlotes', 'qtdsum'],
@@ -48,9 +56,9 @@ class VisaoRuaDetalhe(View):
         })
         group_rowspan(data, group)
 
-        headers = ['Endereço', 'OP', 'Referência', 'Cor', 'Tamanho',
+        headers = ['Endereço', 'Solicitações', 'OP', 'Referência', 'Cor', 'Tamanho',
                    'Lotes (caixas)', 'Qtd. itens']
-        fields = ['local', 'op', 'referencia', 'cor', 'tamanho',
+        fields = ['local', 'solicitacoes', 'op', 'referencia', 'cor', 'tamanho',
                   'qlotes', 'qtdsum']
 
         context.update({
@@ -58,6 +66,7 @@ class VisaoRuaDetalhe(View):
             'fields': fields,
             'group': group,
             'data': data,
+            'safe': ['solicitacoes'],
             'style': {6: 'text-align: right;',
                       7: 'text-align: right;'},
         })
