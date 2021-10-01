@@ -64,6 +64,7 @@ class VisaoRua(View):
             'headers': headers,
             'fields': fields,
             'data': data,
+            'safe': ['solicitacoes'],
             'style': {3: 'text-align: right;',
                       4: 'text-align: right;'},
         })
