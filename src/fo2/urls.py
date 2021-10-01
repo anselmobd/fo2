@@ -34,6 +34,8 @@ urlpatterns = [
 
     re_path(r'^encerrar/', auth_views.LogoutView.as_view(next_page="/"), name='encerrar'),
 
+    re_path(r'^encerrar_intranet/', auth_views.LogoutView.as_view(next_page='/intranet'), name='encerrar_intranet'),
+
     # Administração
 
     re_path(r'^rootadm/', admin.site.urls),
