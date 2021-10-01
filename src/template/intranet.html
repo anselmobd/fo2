@@ -98,6 +98,27 @@
           <li><a href="https://www.instagram.com/cuecasduomo/" target="_blank">No Instagram</a></li>
           <li><a href="http://www.cuecasduomo.net.br/" target="_blank">Institucional e catálogo</a></li>
         </ul>
+        <br />
+        <li>Intranet</li>
+        <ul>
+          <li>Usuário{% if request.user.is_authenticated %} ( {{ request.user.username }} ){% endif %}</li>
+            <ul>
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'encerrar' %}">Encerrar sessão</a></li>
+              <li><a href="/rootadm/password_change/?next=/">Alterar senha</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}?next=/">Identificar-se (Login)</a></li>
+            {% endif %}
+            {% if logged_count != 0 %}
+              <li><a href="{% url 'base:usuarios' %}?next=/">{{logged_count}} logado{{ logged_count|pluralize }}</a></li>
+            {% endif %}
+          </ul>
+          <li>Administração</li>
+          <ul>
+            <li><a href="/intradm/" target="_blank">Configurações e Dados</a></li>
+            <li><a href="/rootadm/" target="_blank">Usuários</a></li>
+          </ul>
+        </ul>
         {% if request.user.is_authenticated or base_ip_interno %}
           <br/>
           <li>Páginas de empresas parceiras</li>
