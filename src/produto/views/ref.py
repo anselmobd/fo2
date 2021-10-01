@@ -138,6 +138,7 @@ class Ref(View):
             e_data = queries.ref_estruturas(cursor, ref)
             conta_ref = 0
             conta_tam_cor = 0
+            conta_tecidos = 0
             for row in e_data:
                 row['ALT'] = '{} ({})'.format(
                     row['ALTERNATIVA'], row['DESCR'])
@@ -159,6 +160,7 @@ class Ref(View):
                     row['FALTA_PARTE'] = 'OK'
                 else:
                     row['FALTA_PARTE'] = f"Falta {row['FALTA_PARTE']}"
+                conta_tecidos += row['TECIDOS']
 
             e_headers = ['Alternativa']
             e_fields = ['ALT']
@@ -168,8 +170,9 @@ class Ref(View):
             if conta_tam_cor != 0:
                 e_headers.extend(['Tamanho', 'Cor'])
                 e_fields.extend(['TAM', 'COR'])
-            e_headers.append('Parte')
-            e_fields.extend(['FALTA_PARTE'])
+            if conta_tecidos:
+                e_headers.append('Parte')
+                e_fields.extend(['FALTA_PARTE'])
 
             if len(e_data) != 0:
                 context.update({
