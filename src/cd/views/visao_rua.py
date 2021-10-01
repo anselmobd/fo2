@@ -36,7 +36,6 @@ class VisaoRua(View):
         data = list(locais_recs.values(
             'local', 'qlotes', 'qtdsum'))
 
-        total = data[0].copy()
         for row in data:
             if row['local'] in solic_dict:
                 row['solicitacoes'] = ', '.join(solic_dict[row['local']])
@@ -49,6 +48,8 @@ class VisaoRua(View):
         headers = ['Endereço', 'Solicitações', 'Lotes (caixas)', 'Qtd. itens']
         fields = ['local', 'solicitacoes', 'qlotes', 'qtdsum']
 
+        total = data[0].copy()
+        total['solicitacoes'] = ''
         total['local'] = 'Total:'
         total['|STYLE'] = 'font-weight: bold;'
         quant_fileds = ['qlotes', 'qtdsum']
