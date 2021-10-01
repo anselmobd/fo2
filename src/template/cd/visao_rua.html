@@ -16,7 +16,7 @@
 {% if data %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style safe=safe only %}
   </table>
 {% else %}
   <h4>Não há endereços nesse rua</h4>
