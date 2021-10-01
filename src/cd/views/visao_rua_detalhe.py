@@ -40,7 +40,7 @@ class VisaoRuaDetalhe(View):
 
         for row in data:
             if row['local'] in solic_dict:
-                row['solicitacoes'] = ', '.join(solic_dict[row['local']])
+                row['solicitacoes'] = '<br/>'.join(solic_dict[row['local']])
             else:
                 row['solicitacoes'] = '-'
             row['local|TARGET'] = '_BLANK'
