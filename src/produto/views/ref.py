@@ -155,6 +155,10 @@ class Ref(View):
                         'class="glyphicon glyphicon-link" '
                         'aria-hidden="true"></span></a>',
                         row['REF'])
+                if row['FALTA_PARTE'] == 0:
+                    row['FALTA_PARTE'] = 'OK'
+                else:
+                    row['FALTA_PARTE'] = f"Falta {row['FALTA_PARTE']}"
 
             e_headers = ['Alternativa']
             e_fields = ['ALT']
@@ -164,6 +168,8 @@ class Ref(View):
             if conta_tam_cor != 0:
                 e_headers.extend(['Tamanho', 'Cor'])
                 e_fields.extend(['TAM', 'COR'])
+            e_headers.append('Parte')
+            e_fields.extend(['FALTA_PARTE'])
 
             if len(e_data) != 0:
                 context.update({
