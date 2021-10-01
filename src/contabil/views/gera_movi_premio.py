@@ -42,24 +42,27 @@ class GeraMoviPremio(View):
                     valor = colunas[-1]
                     dados_func = re.split('-| |"', funcionario)
                     if len(dados_func) > 1:
-                        if dados_func[1].isdigit():
-                            ident = f"{int(dados_func[1]):05}"
-                            registros.append(';'.join([
-                                ident,
-                                "9R44FO",
-                                valor,
-                                "",
-                                "",
-                                "",
-                            ]))
-                            registros.append(';'.join([
-                                ident,
-                                "9R45FO",
-                                valor,
-                                "",
-                                "",
-                                "",
-                            ]))
+                        idx = 1
+                    else:
+                        idx = 0
+                    if dados_func[idx].isdigit():
+                        ident = f"{int(dados_func[idx]):05}"
+                        registros.append(';'.join([
+                            ident,
+                            "9R44FO",
+                            valor,
+                            "",
+                            "",
+                            "",
+                        ]))
+                        registros.append(';'.join([
+                            ident,
+                            "9R45FO",
+                            valor,
+                            "",
+                            "",
+                            "",
+                        ]))
 
                 context['systextil'] = "\n".join(registros)
                 context['systextil_download'] = "%0D%0A".join(registros)
