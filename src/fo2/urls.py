@@ -80,8 +80,6 @@ urlpatterns = [
 
     re_path(r'^systext/', include('systextil.urls')),
 
-    re_path(r'^ti/', include('ti.urls')),
-
     # Links para fora
 
     re_path(r'^systextil/', views.SystextilView.as_view(), name='systextil'),

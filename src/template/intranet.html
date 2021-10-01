@@ -69,9 +69,6 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
-        <li><a href="{% url 'ti:index' %}">TI</a></li>
-        {% include 'ti/menu.html' %}
-        <br />
         <li><a href="{% url 'itat:index' %}">Controle de ativos de TI</a></li>
         {% include 'itat/menu.html' %}
         {% if perms.email_signature.can_edit_mail_signature %}
