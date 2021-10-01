@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.views import View
 
 import lotes.models
+from cd.queries.visao import get_solic_dict
 
 
 class VisaoRua(View):
@@ -16,6 +17,9 @@ class VisaoRua(View):
 
     def mount_context(self, rua):
         context = {'rua': rua}
+
+        solic_dict = get_solic_dict(rua)
+
         locais_recs = lotes.models.Lote.objects.filter(
             local__startswith=rua
         ).exclude(
@@ -33,12 +37,16 @@ class VisaoRua(View):
             'local', 'qlotes', 'qtdsum'))
 
         for row in data:
+            if row['local'] in solic_dict:
+                row['solicitacoes'] = ', '.join(solic_dict[row['local']])
+            else:
+                row['solicitacoes'] = '-'
             row['local|TARGET'] = '_BLANK'
             row['local|LINK'] = reverse(
                 'cd:estoque_filtro', args=['E', row['local']])
 
-        headers = ['Endereço', 'Lotes (caixas)', 'Qtd. itens']
-        fields = ['local', 'qlotes', 'qtdsum']
+        headers = ['Endereço', 'Solicitações', 'Lotes (caixas)', 'Qtd. itens']
+        fields = ['local', 'solicitacoes', 'qlotes', 'qtdsum']
 
         total = data[0].copy()
         total['local'] = 'Total:'
@@ -55,8 +63,8 @@ class VisaoRua(View):
             'headers': headers,
             'fields': fields,
             'data': data,
-            'style': {2: 'text-align: right;',
-                      3: 'text-align: right;'},
+            'style': {3: 'text-align: right;',
+                      4: 'text-align: right;'},
         })
 
         return context
