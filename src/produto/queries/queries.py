@@ -479,6 +479,18 @@ def nivel_ref_estruturas(cursor, nivel, ref):
               AND e.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
               AND e.NIVEL_COMP = 2
           ), 0) FALTA_PARTE 
+        , COALESCE(
+          ( SELECT
+              count(*)
+            FROM BASI_050 e -- estrutura
+            WHERE 1=1
+              AND e.NIVEL_ITEM = ia.NIVEL_ITEM
+              AND e.GRUPO_ITEM = ia.GRUPO_ITEM
+              AND e.SUB_ITEM = ia.SUB_ITEM
+              AND e.ITEM_ITEM = ia.ITEM_ITEM  
+              AND e.ALTERNATIVA_ITEM = ia.ALTERNATIVA_ITEM
+              AND e.NIVEL_COMP = 2
+          ), 0) TECIDOS 
         FROM BASI_050 ia -- insumos de alternativa
         -- específico
         LEFT JOIN BASI_070 al -- cadastro de altern. de estrutura e de roteiro
