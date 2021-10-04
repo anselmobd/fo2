@@ -6,6 +6,7 @@ from .faturamento_para_meta import *
 from .meta_no_ano import *
 from .painel_meta_faturamento import *
 from .pedidos_para_meta import *
+from .planilha_bling import *
 from .tabela_de_preco import *
 from .vendas import *
 from .vendas_por import *

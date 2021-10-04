@@ -84,4 +84,8 @@ urlpatterns = [
         views.TabelaDePreco.as_view(),
         name='tabela_de_preco__get'),
 
+    re_path(r'^planilha_bling/$',
+        views.PlanilhaBling.as_view(),
+        name='planilha_bling'),
+
 ]
