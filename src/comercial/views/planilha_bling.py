@@ -41,10 +41,6 @@ class PlanilhaBling(O2BaseGetPostView):
                 return
 
         codigo_tabela_ints = list(map(int, codigo_tabela_chunks))
-        self.tabela = "{:02d}.{:02d}.{:02d}".format(*codigo_tabela_ints)
-        self.context.update({
-            'tabela': self.tabela
-        })
 
         cursor = db_cursor_so(self.request)
 
@@ -56,16 +52,28 @@ class PlanilhaBling(O2BaseGetPostView):
             return
 
         for row in data:
+            for row in data:
+                row['tabela'] = "{:02d}.{:02d}.{:02d}".format(
+                    row['col_tabela_preco'],
+                    row['mes_tabela_preco'],
+                    row['seq_tabela_preco'],
+                )
+            row['tabela|LINK'] = reverse(
+                'comercial:tabela_de_preco__get',
+                args=[row['tabela']]
+            )
             row['data_ini_tabela'] = row['data_ini_tabela'].date()
             row['data_fim_tabela'] = row['data_fim_tabela'].date()
 
         self.context.update({
             'headers': [
+                'Tabela',
                 'Descrição',
                 'Início',
                 'Fim',
             ],
             'fields': [
+                'tabela',
                 'descricao',
                 'data_ini_tabela',
                 'data_fim_tabela',
