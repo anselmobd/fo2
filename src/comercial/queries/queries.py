@@ -821,3 +821,42 @@ def itens_tabela_preco(cursor, col, mes, seq):
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def itens_tabela_preco_cor_tam(cursor, col, mes, seq):
+    sql = f"""
+        SELECT
+          c.GRUPO_ESTRUTURA ref
+        , c.SUBGRU_ESTRUTURA tam
+        , c.ITEM_ESTRUTURA cor
+        , r.DESCR_REFERENCIA xref
+        , t.DESCR_TAM_REFER xtam
+        , c.DESCRICAO_15 xcor
+        , r.CLASSIFIC_FISCAL cfiscal
+        , ti.VAL_TABELA_PRECO preco
+        , t.PESO_LIQUIDO pesol
+        , c.CODIGO_BARRAS gtin
+        -- , ti.*
+        -- , t.*
+        -- , c.*
+        FROM pedi_095 ti
+        JOIN basi_030 r
+          ON r.NIVEL_ESTRUTURA = ti.NIVEL_ESTRUTURA
+         AND r.REFERENCIA = ti.GRUPO_ESTRUTURA
+        JOIN basi_020 t
+          ON t.BASI030_NIVEL030 = ti.NIVEL_ESTRUTURA
+        AND t.BASI030_REFERENC = ti.GRUPO_ESTRUTURA
+        JOIN basi_010 c
+          ON c.NIVEL_ESTRUTURA = ti.NIVEL_ESTRUTURA
+        AND c.GRUPO_ESTRUTURA = ti.GRUPO_ESTRUTURA
+        AND c.SUBGRU_ESTRUTURA = t.TAMANHO_REF
+        WHERE ti.TAB_COL_TAB = {col}
+          AND ti.TAB_MES_TAB = {mes}
+          AND ti.TAB_SEQ_TAB = {seq}
+          AND r.DESCR_REFERENCIA NOT LIKE '-%' 
+          AND t.DESCR_TAM_REFER NOT LIKE '-%' 
+          AND c.DESCRICAO_15 NOT LIKE '-%' 
+          AND c.ITEM_ATIVO = 0
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
