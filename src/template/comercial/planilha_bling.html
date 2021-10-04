@@ -27,11 +27,11 @@
     {% include "layout/tbody_generic.html" with fields=fields data=data only %}
   </table>
 {% endif %}
-{% if i_data %}
-  <h4>Itens</h4>
-  <table>
-    {% include "layout/thead_generic.html" with data=i_headers only %}
-    {% include "layout/tbody_generic.html" with fields=i_fields data=i_data only %}
-  </table>
+{% if planilha %}
+  <h3>Para Bling</h3>
+  {% if planilha_download %}
+    <a download="{{file_name}}" href="data:application/octet-stream,{{planilha_download}}">Salvar arquivo</a>
+  {% endif %}
+  <pre>{{ planilha }}</pre>
 {% endif %}
 {% endblock %}
