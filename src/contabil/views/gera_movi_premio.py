@@ -30,7 +30,6 @@ class GeraMoviPremio(View):
             for line in request.FILES['arquivo']:
                 line = line.decode('utf-8', errors='ignore').strip("\n").strip()
                 lines.append(line)
-            # context['original'] = "orig"  # "\n".join(lines)
 
             if not lines:
                 context['erro'] = "Arquivo vazio"
