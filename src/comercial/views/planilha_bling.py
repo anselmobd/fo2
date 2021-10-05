@@ -101,7 +101,7 @@ class PlanilhaBling(O2BaseGetPostView):
         for row in i_data:
             cor = row["cor"].strip("0")
             codigo = ".".join((row["ref"], row["tam"], cor))
-            descr = " - ".join((row["xref"], row["xtam"], row["xcor"]))
+            descr = " - ".join((codigo, row["xref"], row["xtam"], row["xcor"]))
             class_fiscal = "9999.99.99".replace("9", "{}").format(*row["cfiscal"])
 
             registro = self.colunas.copy()
