@@ -3,14 +3,14 @@ from utils.functions.models import rows_to_dict_list
 
 def posicao_op(cursor, op):
     sql = '''
-         WITH ops AS (
-           SELECT
-             ms.ORDEM_PRODUCAO OP
-           , max(ms.SEQUENCIA_ESTAGIO) MAXSEQ
-           FROM PCPC_040 ms
-           WHERE ms.ORDEM_PRODUCAO = %s
-           GROUP BY
-             ms.ORDEM_PRODUCAO
+        WITH ops AS (
+          SELECT
+            ms.ORDEM_PRODUCAO OP
+          , max(ms.SEQUENCIA_ESTAGIO) MAXSEQ
+          FROM PCPC_040 ms
+          WHERE ms.ORDEM_PRODUCAO = %s
+          GROUP BY
+            ms.ORDEM_PRODUCAO
         )
         (
         SELECT
