@@ -82,14 +82,14 @@ class HistoricoLote(View):
 
             row['n_info'] = n_info
 
-        for idx in reversed(range(len(data))):
-            if data[idx]['local'] == 'SAIU!':
+        for row in reversed(data):
+            if row['local'] == 'SAIU!':
                 break
-            if data[idx]['local'] not in ['-', '=']:
-                data[idx]['local|LINK'] = reverse(
+            if row['local'] not in ['-', '=']:
+                row['local|LINK'] = reverse(
                     'cd:estoque_filtro',
-                    args=['E', data[idx]['local']])
-                data[idx]['local|TARGET'] = '_BLANK'
+                    args=['E', row['local']])
+                row['local|TARGET'] = '_BLANK'
                 break
 
         context.update({
