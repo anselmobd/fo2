@@ -189,9 +189,9 @@ def dict_conserto_lote_custom(
         , SOLICITACAO_CONSERTO, NUMERO_SOLICITACAO, NUMERO_ORDEM
         , MINUTOS_PECA, NR_OPERADORES_INFORMADO, EFICIENCIA
         )
-        --SELECT
-        --  mli.*
-        --FROM (
+        SELECT
+          mli.*
+        FROM (
           SELECT
             ml1.*
           FROM (
@@ -248,16 +248,16 @@ def dict_conserto_lote_custom(
           )
           WHERE rownum = 1
         --) mli
-        --LEFT JOIN SYSTEXTIL.PCPC_045 mlt
-        --  ON mlt.PCPC040_PERCONF = mli.PCPC040_PERCONF
-        -- AND mlt.PCPC040_ORDCONF = mli.PCPC040_ORDCONF
-        -- AND mlt.PCPC040_ESTCONF = mli.PCPC040_ESTCONF
-        -- AND mlt.DATA_INSERCAO >= mli.DATA_INSERCAO - 2/24/60/60 -- existe um igual feita há 2 segundos
-        -- AND mlt.QTDE_CONSERTO = mli.QTDE_CONSERTO
-        -- AND mlt.QTDE_PRODUZIDA = mli.QTDE_PRODUZIDA
-        -- AND mlt.QTDE_PECAS_2A = mli.QTDE_PECAS_2A
-        -- AND mlt.QTDE_PERDAS = mli.QTDE_PERDAS
-        --WHERE mlt.PCPC040_PERCONF IS NULL 
+        LEFT JOIN SYSTEXTIL.PCPC_045 mlt
+          ON mlt.PCPC040_PERCONF = mli.PCPC040_PERCONF
+         AND mlt.PCPC040_ORDCONF = mli.PCPC040_ORDCONF
+         AND mlt.PCPC040_ESTCONF = mli.PCPC040_ESTCONF
+         AND mlt.DATA_INSERCAO >= mli.DATA_INSERCAO - 2/24/60/60 -- existe um igual feita há 2 segundos
+         AND mlt.QTDE_CONSERTO = mli.QTDE_CONSERTO
+         AND mlt.QTDE_PRODUZIDA = mli.QTDE_PRODUZIDA
+         AND mlt.QTDE_PECAS_2A = mli.QTDE_PECAS_2A
+         AND mlt.QTDE_PERDAS = mli.QTDE_PERDAS
+        WHERE mlt.PCPC040_PERCONF IS NULL 
     """
 
     try:
