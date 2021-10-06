@@ -103,6 +103,9 @@ class PlanilhaBling(O2BaseGetPostView):
             codigo = ".".join((row["ref"], row["tam"], cor))
             descr = " - ".join((codigo, row["xref"], row["xtam"], row["xcor"]))
             class_fiscal = "9999.99.99".replace("9", "{}").format(*row["cfiscal"])
+            gtin = row["gtin"]
+            if gtin is None or len(gtin) < 13:
+                gtin = " "
 
             registro = self.colunas.copy()
             registro.update({
@@ -112,7 +115,7 @@ class PlanilhaBling(O2BaseGetPostView):
                 "Preco": row["preco"],
                 "Peso_liquido_kg": row["pesol"],
                 "Peso_bruto_kg": row["pesol"],
-                "GTIN_EAN": row["gtin"],
+                "GTIN_EAN": gtin,
                 "Código Pai": "",  # Sem código pai
             })
 
