@@ -190,8 +190,11 @@ def dict_conserto_lote_custom(
         , MINUTOS_PECA, NR_OPERADORES_INFORMADO, EFICIENCIA
         )
         SELECT
-            *
+          mli.*
         FROM (
+          SELECT
+            ml1.*
+          FROM (
             SELECT
             l.PERIODO_PRODUCAO PCPC040_PERCONF
             , l.ORDEM_CONFECCAO PCPC040_ORDCONF
@@ -242,8 +245,19 @@ def dict_conserto_lote_custom(
             AND l.CODIGO_ESTAGIO = {estagio}
             ORDER BY
             ml.SEQUENCIA DESC
-        )
-        WHERE rownum = 1
+          )
+          WHERE rownum = 1
+        ) mli
+        LEFT JOIN SYSTEXTIL.PCPC_045 mlt
+          ON mlt.PCPC040_PERCONF = mli.PCPC040_PERCONF
+         AND mlt.PCPC040_ORDCONF = mli.PCPC040_ORDCONF
+         AND mlt.PCPC040_ESTCONF = mli.PCPC040_ESTCONF
+         AND mlt.DATA_INSERCAO >= mli.DATA_INSERCAO - 2/24/60/60 -- existe um igual feita há 2 segundos
+         AND mlt.QTDE_CONSERTO = mli.QTDE_CONSERTO
+         AND mlt.QTDE_PRODUZIDA = mli.QTDE_PRODUZIDA
+         AND mlt.QTDE_PECAS_2A = mli.QTDE_PECAS_2A
+         AND mlt.QTDE_PERDAS = mli.QTDE_PERDAS
+        WHERE mlt.PCPC040_PERCONF IS NULL 
     """
 
     try:
@@ -252,6 +266,13 @@ def dict_conserto_lote_custom(
         data.update({
             'error_level': 31,
             'msg': 'Erro ao mover a quantidade',
+        })
+        return data
+
+    if cursor.rowcount == 0:
+        data.update({
+            'error_level': 41,
+            'msg': 'Tentativa de gravar 2 vezes o mesmo movimento',
         })
         return data
 
