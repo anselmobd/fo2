@@ -75,7 +75,7 @@ class Historico(View):
                 row['qtd'] = '-'
 
         context.update({
-            'd_headers': ('Lote', 'Última data', 'Endereço', 'Quant.', 'Estágio', 'Quant.', 'Usuário'),
+            'd_headers': ('Lote', 'Última data', 'Endereço', 'Quant. enderaçada', 'Estágio', 'Quant.', 'Usuário'),
             'd_fields': ('lote', 'dt', 'endereco', 'qtd_end', 'estagio', 'qtd', 'usuario'),
             'd_data': data,
         })
