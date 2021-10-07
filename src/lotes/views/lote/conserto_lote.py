@@ -245,7 +245,7 @@ def dict_conserto_lote_custom(
             AND l.CODIGO_ESTAGIO = {estagio}
             ORDER BY
             ml.SEQUENCIA DESC
-          )
+          ) ml1
           WHERE rownum = 1
         ) mli
         LEFT JOIN SYSTEXTIL.PCPC_045 mlt
