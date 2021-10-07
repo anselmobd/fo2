@@ -259,7 +259,6 @@ def dict_conserto_lote_custom(
          AND mlt.QTDE_PERDAS = mli.QTDE_PERDAS
         WHERE mlt.PCPC040_PERCONF IS NULL 
     """
-    print(sql)
 
     try:
         cursor.execute(sql)
