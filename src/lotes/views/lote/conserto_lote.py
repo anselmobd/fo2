@@ -247,7 +247,7 @@ def dict_conserto_lote_custom(
             ml.SEQUENCIA DESC
           )
           WHERE rownum = 1
-        --) mli
+        ) mli
         LEFT JOIN SYSTEXTIL.PCPC_045 mlt
           ON mlt.PCPC040_PERCONF = mli.PCPC040_PERCONF
          AND mlt.PCPC040_ORDCONF = mli.PCPC040_ORDCONF
@@ -259,6 +259,7 @@ def dict_conserto_lote_custom(
          AND mlt.QTDE_PERDAS = mli.QTDE_PERDAS
         WHERE mlt.PCPC040_PERCONF IS NULL 
     """
+    print(sql)
 
     try:
         cursor.execute(sql)
