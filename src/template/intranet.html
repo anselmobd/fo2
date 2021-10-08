@@ -51,11 +51,11 @@
             <li><a href="https://systextil.movidesk.com/" target="_blank">Área do cliente (Ticket)</a></li>
             <li><a href="http://intersys.com.br/cliente/" target="_blank">Antiga página de SS</a></li>
             <li><a href="https://suporte.infraworld.com.br/" target="_blank">InfraWorld</a></li>
-            <li>Base de conhecimento Systêxtil</li>
+            <li>Base de conhecimento</li>
             <ul>
               <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/overview" target="_blank">Pesquise</a></li>
               <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/pages/6202151" target="_blank">Bugs corrigidos</a></li>
-              <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/pages/296976389" target="_blank"> Solução de Problemas e Dúvidas</a></li>
+              <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/pages/296976389" target="_blank">Dúvidas e soluções</a></li>
             </ul>
           </ul>
           <li><a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></li>
@@ -156,16 +156,16 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
-        <li>Verificação de estado de serviços utilizados</li>
+        <li>Verificação de serviços utilizados</li>
         <ul>
-          <li>Serviços do governo</li>
+          <li>Serviços do governo (SEFAZ)</li>
           <ul>
-            <li><a href="http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx" target="_blank">Disponibilidade do portal de NF-e da SEFAZ</a></li>
+            <li><a href="http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx" target="_blank">Disponibilidade do portal de NF-e</a></li>
           </ul>
           {% if request.user.is_authenticated or base_ip_interno %}
-          <li>Servidor de e-mail</li>
+          <li>Servidor de e-mail (Zoho)</li>
           <ul>
-            <li><a href="https://status.zoho.com/" target="_blank">Disponibilidade dos serviços do servidor Zoho</a></li>
+            <li><a href="https://status.zoho.com/" target="_blank">Disponibilidade dos serviços</a></li>
           </ul>
           {% endif %}
           <li>Link da internet</li>
@@ -191,10 +191,10 @@
           </ul>
         </ul>
         <br />
-        <li>Outros sites de interesse para o trabalho</li>
+        <li>Sites de interesse para o trabalho</li>
         <ul>
-          <li><a href="https://www.gs1.org/services/check-digit-calculator" target="_blank">Calcula dígito verificador de (EAN) GTIN</a></li>
-          <li><a href="http://www.receita.fazenda.gov.br/PessoaJuridica/CNPJ/cnpjreva/Cnpjreva_Solicitacao.asp" target="_blank">CNPJ - Consulta de Situação Cadastral</a></li>
+          <li><a href="https://www.gs1.org/services/check-digit-calculator" target="_blank">Dígito verificador de (EAN) GTIN</a></li>
+          <li><a href="http://www.receita.fazenda.gov.br/PessoaJuridica/CNPJ/cnpjreva/Cnpjreva_Solicitacao.asp" target="_blank">CNPJ - Consulta de Situação</a></li>
           <li><a href="http://www.sintegra.gov.br/" target="_blank">Sintegra</a></li>
           <li><a href="https://www.sefaz.rs.gov.br/nfe/nfe-val.aspx" target="_blank">Validador de XML de NF-e</a></li>
           <li><a href="https://www.fsist.com.br/converter-xml-nfe-para-danfe" target="_blank">XML para DANFE/DACTE</a></li>
