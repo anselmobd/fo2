@@ -61,6 +61,9 @@
           <li><a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></li>
         </ul>
         <br />
+        <li><a href="{% url 'systextil:index' %}">Systextil</a></li>
+        {% include 'systextil/menu.html' %}
+        <br />
         <li><a href="{% url 'servico:index' %}">Serviço</a></li>
         {% include 'servico/menu.html' %}
         <br />
