@@ -26,7 +26,7 @@
         {%endif%}
         <br />
         {%endcomment%}
-    {% if request.user.is_authenticated or base_ip_interno %}
+  {% if request.user.is_authenticated or base_ip_interno %}
         <li>ERP</li>
         <ul>
           <li><a href="{% url 'systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></li>
@@ -71,6 +71,9 @@
       <ul>
         <li><a href="{% url 'itat:index' %}">Controle de ativos de TI</a></li>
         {% include 'itat/menu.html' %}
+        <br />
+        <li><a href="{% url 'base:index' %}">Base</a></li>
+        {% include 'base/menu.html' %}
         {% if perms.email_signature.can_edit_mail_signature %}
           <br />
           <li><a href="{% url 'email_signature:index' %}">Assinatura de e-mail</a></li>
@@ -82,7 +85,7 @@
     <td style="border-left: thin solid lightgrey;">&nbsp;</td>
     <td style="vertical-align: top;">
       <ul>
-      {% endif %}
+  {% endif %}{# request.user.is_authenticated or base_ip_interno #}
         <li>Recursos Humanos</li>
         <ul>
           <li><a href="{% url 'rh:index' %}"><img src="{% static 'img/RH_micro.jpg' %}" alt="RH"> em ação!</a></li>
