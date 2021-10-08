@@ -1,0 +1,46 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- this 3 meta tags *must* come first in the head -->
+
+  <link rel="shortcut icon" href="{% static 'favicon_tussor.ico' %}">
+
+  <title>{% spaceless %}
+    {% block title %}
+      {% block title.pre %}Fo2 - {% endblock title.pre %}
+      {% block title.content %}{% endblock title.content %}
+      {% block title.pos %} - Tussor (cuecas D`UOMO){% endblock title.pos %}
+    {% endblock title %}
+  {% endspaceless %}</title>
+
+  {% block ga %}
+    {% include "layout/snippets/ga.html" %}
+  {% endblock ga %}
+
+  {% block head.loaders %}
+    <link href="{% static "css/base.css" %}" rel="stylesheet">
+    <link href="{% static "css/fo2base.css" %}" rel="stylesheet">
+  {% endblock %}
+  {% block stylesheet %}
+  {% endblock %}
+
+</head>
+<body>
+  <ul class="fo2nb">
+    <li><a class="active imagem h20" href="{% url 'intranet' %}"><img src="{% static "img/DUOMO_micro.png" %}" height="20" width="88" title="Intranet cuecas D'UOMO"></a></li>
+    <li><a class="imagem h22" href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22" title="RH em ação!"></a></li>
+    <li><a href="{% url 'apoio_ao_erp' %}">Apoio</a></li>
+    <li><a target="_blank" href="{% url 'systextil' %}">Systêxtil</a></li>
+    <li class="direita"><a class="imagem h20" href="#"><img src="{% static "img/people.svg" %}" height="20" title="Lista usuários logados" >{{logged_count}}</a></li>
+  </ul>
+  <div class="fo2body">
+    {% block content %}{% endblock %}
+  </div>
+  {% block footer %}{% endblock %}
+  {% block javascript %}{% endblock %}
+  {% block footer_space %}{% endblock %}
+</body>
+</html>

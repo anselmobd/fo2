@@ -1,0 +1,19 @@
+body {
+  margin:0;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  line-height: 1.4;
+  font-size: 14px;
+  color: #333;
+}
+
+a {
+  color: #337ab7;
+  text-decoration: none;
+}
+
+a:focus, a:hover {
+  color: #23527c;
+  text-decoration: underline;
+}
+
+@import "fo2nb.css";
