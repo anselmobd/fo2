@@ -291,23 +291,24 @@ class Op(View):
                     'os_link': os_link,
                 })
 
-            # Totais por OS + referência
-            o_data = lotes.queries.op.op_os_ref(cursor, op)
-            p.prt('op_os_ref')
+            if i_data[0]['TEM_OS'] == 'S':
+                # Totais por OS + referência
+                o_data = lotes.queries.op.op_os_ref(cursor, op)
+                p.prt('op_os_ref')
 
-            o_link = ('OS')
-            for row in o_data:
-                if row['OS']:
-                    row['LINK'] = '/lotes/os/{}'.format(row['OS'])
-                else:
-                    row['LINK'] = None
-            context.update({
-                'o_headers': ('OS', 'Referência', 'Tamanho', 'Cor',
-                              'Qtd. Lotes', 'Quant. Itens'),
-                'o_fields': ('OS', 'REF', 'TAM', 'COR', 'LOTES', 'QTD'),
-                'o_data': o_data,
-                'o_link': o_link,
-            })
+                o_link = ('OS')
+                for row in o_data:
+                    if row['OS']:
+                        row['LINK'] = '/lotes/os/{}'.format(row['OS'])
+                    else:
+                        row['LINK'] = None
+                context.update({
+                    'o_headers': ('OS', 'Referência', 'Tamanho', 'Cor',
+                                'Qtd. Lotes', 'Quant. Itens'),
+                    'o_fields': ('OS', 'REF', 'TAM', 'COR', 'LOTES', 'QTD'),
+                    'o_data': o_data,
+                    'o_link': o_link,
+                })
 
             # Detalhamento de movimentações de estágios
             u_data = lotes.queries.op.op_movi_estagios(cursor, op)
