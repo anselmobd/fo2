@@ -490,11 +490,13 @@ class FiltraSolicitacaoForm(forms.Form):
         label='Referência', required=False, max_length=5,
         widget=forms.TextInput(
             attrs={'type': 'string', 'size': 5}))
-    CHOICES = [('nf', 'Não filtra'),
-               ('iz', 'Igual a zero'),
-               ('dz', 'Diferente de zero')]
+    CHOICES = [
+        ('dz', 'Diferente de zero'),
+        ('nf', 'Não filtra'),
+        ('iz', 'Igual a zero'),
+    ]
     qtdcd = forms.ChoiceField(
-        label='Qtd. no CD', choices=CHOICES, initial='nf')
+        label='Qtd. no CD', choices=CHOICES, initial='dz')
     pagina = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 
