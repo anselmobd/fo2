@@ -136,11 +136,12 @@
     <h3>Detalhando Roteiros</h3>
     {% for roteiro in roteiros %}
       {% for titulo in roteiro.r_titulos %}
-        <h4>{% if forloop.counter != 1 %}= {% endif %}Alternativa "{{ titulo.alternativa }}" - Roteiro "{{ titulo.roteiro }}"
+        {% if forloop.counter == 1 %}<h4>{% else %}<p>= {% endif %}
+          Alternativa "{{ titulo.alternativa }}" - Roteiro "{{ titulo.roteiro }}"
           {% if titulo.tamanho != '000' or titulo.cor != '000000' %}
             - Tamanho "{{ titulo.tamanho }}"  - Cor "{{ titulo.cor }}"
           {% endif %}
-        </h4>
+          {% if forloop.counter == 1 %}</h4>{% else %}</p>{% endif %}
       {% endfor %}
       <table>
         {% include "layout/html_thead.html" with data=roteiro.r_headers only %}
