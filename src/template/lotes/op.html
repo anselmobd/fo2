@@ -125,6 +125,17 @@
             <b>Vazia</b>
           {% endif %}
         </td>
+        {% if so_data %}
+          <td></td>
+          <td style="border-left: thin solid lightgrey;"></td>
+          <td style="vertical-align: top;">
+            <h3>Sem OS</h3>
+            <table>
+              {% include "layout/html_thead.html" with data=so_headers only %}
+              {% include "layout/html_tbody.html" with fields=so_fields data=so_data only %}
+            </table>
+          </td>
+        {% endif %}
       </tr>
     </table>
     <h3 style="page-break-before: always;">Estágios</h3>

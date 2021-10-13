@@ -218,6 +218,19 @@ class Op(View):
                     'gc_data': gc_data,
                 })
 
+            if i_data[0]['TEM_OS'] == 'S':
+                # Grade de sem OS
+                so_header, so_fields, so_data, total = lotes.queries.op.op_grade(
+                    cursor, op=op, tipo='so', descr_sort=False)
+                p.prt('op_grade sem_os')
+
+                if total != 0:
+                    context.update({
+                        'so_headers': so_header,
+                        'so_fields': so_fields,
+                        'so_data': so_data,
+                    })
+
             # Estágios
             e_data = lotes.queries.op.op_estagios(cursor, op)
             p.prt('op_estagios')
