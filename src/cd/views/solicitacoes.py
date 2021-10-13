@@ -29,7 +29,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         self.SL = lotes.models.SolicitaLote
         self.id = None
 
-    def lista(self, filtro=None, data=None, ref=None, pagina=None):
+    def lista(self, filtro=None, data=None, ref=None, qtdcd=None, pagina=None):
         fields = (
             'numero', 'codigo', 'ativa', 'descricao',
             'data', 'usuario__username', 'concluida', 'can_print', 'coleta',
@@ -38,12 +38,19 @@ class Solicitacoes(LoginRequiredMixin, View):
         descriptions = (
             '#número', 'Código', 'Ativa', 'Descrição',
             'Data do embarque', 'Usuário', 'Concluída', 'Imprime', 'Coleta CD',
-            'Última alteração', 'Qtd. total', 'Qtd. do CD'
+            'Última alteração', 'Qtd. total', 'Qtd. no CD'
         )
         headers = dict(zip(fields, descriptions))
 
         cursor_def = connection.cursor()
         data = queries.lista_solicita_lote(cursor_def, filtro, data, ref)
+
+        if qtdcd != 'nf':
+            data = [
+                row for row in data
+                if (qtdcd == 'iz' and row['total_no_cd'] == 0)
+                or (qtdcd == 'dz' and row['total_no_cd'] != 0)
+            ]
 
         por_pagina = 100
         paginator = Paginator(data, por_pagina)
@@ -261,14 +268,16 @@ class Solicitacoes(LoginRequiredMixin, View):
                 filtro = filter.cleaned_data['filtro']
                 data = filter.cleaned_data['data']
                 ref = filter.cleaned_data['ref']
+                qtdcd = filter.cleaned_data['qtdcd']
                 pagina = filter.cleaned_data['pagina']
             else:
                 filtro = None
                 data = None
                 ref = None
+                qtdcd = None
                 pagina = None
             context['filter'] = filter
-            context.update(self.lista(filtro, data, ref, pagina))
+            context.update(self.lista(filtro, data, ref, qtdcd, pagina))
             return render(request, self.template_name, context)
 
         form = self.Form_class(request.POST)
