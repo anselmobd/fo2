@@ -268,6 +268,14 @@ def nivel_ref_inform(cursor, nivel, ref, upper=True):
           END
           , ' ' ) MODELO
           , r.NUMERO_MOLDE
+        , CASE WHEN EXISTS
+          ( SELECT 
+              rot.CODIGO_ESTAGIO
+            FROM MQOP_050 rot
+            JOIN obrf_070 serv
+              ON serv.CODIGO_ESTAGIO = rot.CODIGO_ESTAGIO
+            WHERE rot.GRUPO_ESTRUTURA = r.REFERENCIA
+          ) THEN 'S' ELSE 'N' END TEM_OS
         FROM referencias r
         JOIN BASI_150 ce
           ON ce.CONTA_ESTOQUE = r.CONTA_ESTOQUE
