@@ -312,6 +312,16 @@ def busca_op(
         , sele.OBSERVACAO
         , sele.OBSERVACAO2
         , sele.UNIDADE
+        , CASE WHEN EXISTS
+          ( SELECT 
+              rot.CODIGO_ESTAGIO
+            FROM MQOP_050 rot
+            JOIN obrf_070 serv
+              ON serv.CODIGO_ESTAGIO = rot.CODIGO_ESTAGIO
+            WHERE rot.GRUPO_ESTRUTURA = sele."REF"
+              AND rot.NUMERO_ALTERNATI = sele.ALTERNATIVA
+              AND rot.NUMERO_ROTEIRO = sele.ROTEIRO
+          ) THEN 'S' ELSE 'N' END TEM_OS
         FROM (
         SELECT
           o.ORDEM_PRODUCAO OP
