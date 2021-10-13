@@ -47,13 +47,25 @@ def sql_op_sort_cor(op, descr_sort):
 
 
 def sql_op_sort_grade(op, tipo):
-    if tipo == 't':
+    if tipo in ('t', 'so'):
         get_seq = 'min(l.SEQUENCIA_ESTAGIO)'
         get_qtd = 'sum(l.QTDE_PECAS_PROG)'
     elif tipo == 's':
         get_seq = 'max(l.SEQUENCIA_ESTAGIO)'
         get_qtd = 'sum(l.QTDE_PECAS_2A)'
 
+    filtro = ''
+    if tipo == 'so':
+        filtro = '''--
+            AND NOT EXISTS (
+              SELECT
+                los.ORDEM_CONFECCAO
+              FROM PCPC_040 los
+              WHERE los.PERIODO_PRODUCAO = l.PERIODO_PRODUCAO 
+                AND los.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+                AND los.NUMERO_ORDEM <> 0
+            )  
+        '''
     sql = f'''
         WITH
         filtro AS (
@@ -84,6 +96,8 @@ def sql_op_sort_grade(op, tipo):
          AND l.SEQUENCIA_ESTAGIO = fs.SEQ
         LEFT JOIN BASI_220 tam
           ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
+        WHERE 1=1
+          {filtro} -- filtro
         GROUP BY
           tam.ORDEM_TAMANHO
         , l.PROCONF_SUBGRUPO
@@ -103,6 +117,7 @@ def op_grade(cursor, op, tipo='t', descr_sort=True):
     Recebe: cursor, OP
     tipo:>t - Todos os lotes
           s - Segunda qualidade
+          so - Apenas lotes sem OS
     descr_sort: False - Apenas código do sortimento (cor)
                >True - Descrição junto ao código do sortimento (cor)
     '''
