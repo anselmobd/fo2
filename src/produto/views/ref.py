@@ -71,7 +71,7 @@ class Ref(View):
 
             context.update({
                 'headers': ('Descrição', 'Conta de estoque',
-                            'Artigo', 'Linha', 'Coleção', 'Modelagem'),
+                            'Artigo', 'Linha', 'Coleção', 'Modelagem', 'OS'),
                 'fields': ('DESCR', 'CONTA_ESTOQUE',
                            'ARTIGO', 'LINHA', 'COLECAO', 'NUMERO_MOLDE'),
                 'data': data,
@@ -92,8 +92,9 @@ class Ref(View):
                     row['CLIENTE'] = '{} - {}'.format(cnpj, row['NOME'])
             context.update({
                 'headers2': ('Coleção', 'Cliente', 'NCM',
-                             'Status (Responsável)'),
-                'fields2': ('COLECAO_CLIENTE', 'CLIENTE', 'NCM', 'STATUS'),
+                             'Status (Responsável)', 'OS'),
+                'fields2': ('COLECAO_CLIENTE', 'CLIENTE', 'NCM',
+                            'STATUS', 'TEM_OS'),
                 'data2': data,
             })
 
