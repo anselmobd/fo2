@@ -148,11 +148,13 @@
       {% include "layout/html_thead.html" with data=t_headers only %}
       {% include "layout/html_tbody.html" with fields=t_fields data=t_data only %}
     </table>
-    <h3>Totais por OS + referência</h3>
-    <table>
-      {% include "layout/html_thead.html" with data=o_headers only %}
-      {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
-    </table>
+    {% if o_data %}
+      <h3>Totais por OS + referência</h3>
+      <table>
+        {% include "layout/html_thead.html" with data=o_headers only %}
+        {% include "layout/html_tbody_link.html" with fields=o_fields data=o_data link=o_link only %}
+      </table>
+    {% endif %}
     <h3>Lotes ordenados por Estágio + OS + referência + cor + tamanho</h3>
     <table>
       {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
