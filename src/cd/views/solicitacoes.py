@@ -8,12 +8,15 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 from geral.functions import has_permission, rec_trac_log_to_dict
 from geral.models import RecordTracking
 from utils.functions import untuple_keys_concat
 from utils.functions.digits import fo2_digit_with
 
 import lotes.models
+import lotes.queries.pedido
 
 import cd.forms
 import cd.queries as queries
@@ -266,6 +269,7 @@ class Solicitacoes(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         context = self.ini_context(request)
+        cursor = db_cursor_so(request)
 
         if 'id' in kwargs:
             self.id = kwargs['id']
@@ -374,9 +378,14 @@ class Solicitacoes(LoginRequiredMixin, View):
 
                     for ipedido in ipedidos:
                         if ipedido not in ipedidos_ja_gravados:
-                            slp = lotes.models.SolicitaLotePedido(
-                                solicitacao=solicitacao, pedido=ipedido)
-                            slp.save()
+                            ped_inf = lotes.queries.pedido.ped_inform(
+                                cursor, ipedido)
+                            if len(ped_inf) == 0:
+                                continue
+                            if ped_inf[0]['STATUS_PEDIDO'] == '0':
+                                slp = lotes.models.SolicitaLotePedido(
+                                    solicitacao=solicitacao, pedido=ipedido)
+                                slp.save()
 
                 except IntegrityError as e:
                     context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
