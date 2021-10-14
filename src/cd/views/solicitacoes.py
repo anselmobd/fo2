@@ -34,12 +34,12 @@ class Solicitacoes(LoginRequiredMixin, View):
 
     def lista(self, filtro=None, data=None, ref=None, qtdcd=None, pagina=None):
         fields = (
-            'numero', 'codigo', 'ativa', 'descricao',
+            'numero', 'codigo', 'ativa', 'descricao', 'pedidos',
             'data', 'usuario__username', 'concluida', 'can_print', 'coleta',
             'update_at', 'total_qtd', 'total_no_cd'
         )
         descriptions = (
-            '#número', 'Código', 'Ativa', 'Descrição',
+             '#número', 'Código', 'Ativa', 'Descrição', 'Pedidos',
             'Data do embarque', 'Usuário', 'Concluída', 'Imprime', 'Coleta CD',
             'Última alteração', 'Qtd. total', 'Qtd. no CD'
         )
@@ -65,6 +65,8 @@ class Solicitacoes(LoginRequiredMixin, View):
             data = paginator.page(paginator.num_pages)
 
         for row in data:
+            if not row['pedidos']:
+                row['pedidos'] = '-'
             row['codigo|LINK'] = reverse(
                 'cd:solicitacao_detalhe', args=[row['id']])
         context = {
