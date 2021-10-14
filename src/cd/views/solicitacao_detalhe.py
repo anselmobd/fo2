@@ -58,6 +58,12 @@ class SolicitacaoDetalhe(LoginRequiredMixin, View):
                 context['solicit_ativa_cod'] = '='
 
         context['solicitacao'] = solicitacao
+        data_ped = lotes.models.SolicitaLotePedido.objects.filter(
+            solicitacao=solicitacao).order_by('pedido').values('pedido')
+        pedidos = ' '.join([
+            str(r['pedido']) for r in data_ped
+        ])
+        context['solicitacao_pedidos'] = pedidos
 
         solicit_qtds = lotes.models.SolicitaLoteQtd.objects.values(
             'id', 'lote__op', 'lote__lote', 'lote__referencia',
