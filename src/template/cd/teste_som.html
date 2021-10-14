@@ -3,10 +3,19 @@
 {% block content %}
 Teste de som
 <script>
+
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }  
+
   function stn(n) {
     var snd = new Audio("/media/number/"+n+".mp3");
     snd.play();
   }
-  stn(4);
+
+  stn(getRandomInt(1, 31));
+
 </script>
 {% endblock content %}
