@@ -466,6 +466,10 @@ class SolicitacaoForm(forms.Form):
     descricao = forms.CharField(
         label='Descrição', required=False,
         widget=forms.TextInput(attrs={'size': 60}))
+    pedidos = forms.CharField(
+        required=False,
+        help_text='(separados apenas por espaço)',
+        widget=forms.TextInput(attrs={'size': 80}))
     data = forms.DateField(
         label='Data do embarque', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
