@@ -29,6 +29,7 @@ def lista_solicita_lote(cursor, filtro=None, data=None, ref=None):
           s.id
         , s.codigo
         , s.descricao
+        , string_agg(distinct slp.pedido::text, ' ' order by slp.pedido::text asc) as pedidos
         , s.data
         , s.ativa
         , s.create_at
@@ -46,6 +47,8 @@ def lista_solicita_lote(cursor, filtro=None, data=None, ref=None):
             end
           ), 0) total_no_cd
         from fo2_cd_solicita_lote s
+        left join fo2_cd_solicita_lote_pedido slp
+          on slp.solicitacao_id = s.id
         left join fo2_cd_solicita_lote_qtd sq
           on sq.solicitacao_id = s.id
          and sq.origin_id = 0
