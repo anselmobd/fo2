@@ -365,18 +365,19 @@ class Solicitacoes(LoginRequiredMixin, View):
                             pass
                     data_ped = lotes.models.SolicitaLotePedido.objects.filter(
                         solicitacao=solicitacao)
+                    ipedidos_ja_gravados = []
                     for slp in data_ped:
                         if slp.pedido not in ipedidos:
                             slp.delete()
+                        else:
+                            ipedidos_ja_gravados.append(slp.pedido)
 
                     for ipedido in ipedidos:
-                        try:
-                            lotes.models.SolicitaLotePedido.objects.get(
-                                solicitacao=solicitacao, pedido=ipedido)
-                        except lotes.models.SolicitaLotePedido.DoesNotExist:
+                        if ipedido not in ipedidos_ja_gravados:
                             slp = lotes.models.SolicitaLotePedido(
                                 solicitacao=solicitacao, pedido=ipedido)
                             slp.save()
+
                 except IntegrityError as e:
                     context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
                         'a solicitação. <{}>'.format(str(e))
