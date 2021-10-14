@@ -201,6 +201,13 @@ class Solicitacoes(LoginRequiredMixin, View):
                 if len(data) == 0:
                     self.id = None
                 else:
+
+                    data_ped = lotes.models.SolicitaLotePedido.objects.filter(
+                        solicitacao=self.id).order_by('pedido').values('pedido')
+                    pedidos = ' '.join([
+                        str(r['pedido']) for r in data_ped
+                    ])
+
                     row = data[0]
                     dia = row.data.strftime(
                         "%Y-%m-%d") if row.data else None
@@ -208,6 +215,7 @@ class Solicitacoes(LoginRequiredMixin, View):
                     context['form'] = self.Form_class(
                         initial={'codigo': row.codigo,
                                  'descricao': row.descricao,
+                                 'pedidos': pedidos,
                                  'data': dia,
                                  'ativa': row.ativa,
                                  'concluida': row.concluida,
@@ -284,6 +292,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         if form.is_valid():
             codigo = form.cleaned_data['codigo']
             descricao = form.cleaned_data['descricao']
+            pedidos = form.cleaned_data['pedidos']
             data = form.cleaned_data['data']
             concluida = form.cleaned_data['concluida']
             if concluida:
@@ -346,6 +355,28 @@ class Solicitacoes(LoginRequiredMixin, View):
                         solicitacao.coleta = coleta
                     if diferente:
                         solicitacao.save()
+
+                    ipedidos = []
+                    for pedido in pedidos.split(' '):
+                        try:
+                            ipedido = int(pedido)
+                            ipedidos.append(ipedido)
+                        except Exception:
+                            pass
+                    data_ped = lotes.models.SolicitaLotePedido.objects.filter(
+                        solicitacao=solicitacao)
+                    for slp in data_ped:
+                        if slp.pedido not in ipedidos:
+                            slp.delete()
+
+                    for ipedido in ipedidos:
+                        try:
+                            lotes.models.SolicitaLotePedido.objects.get(
+                                solicitacao=solicitacao, pedido=ipedido)
+                        except lotes.models.SolicitaLotePedido.DoesNotExist:
+                            slp = lotes.models.SolicitaLotePedido(
+                                solicitacao=solicitacao, pedido=ipedido)
+                            slp.save()
                 except IntegrityError as e:
                     context['msg_erro'] = 'Ocorreu um erro ao gravar ' \
                         'a solicitação. <{}>'.format(str(e))
