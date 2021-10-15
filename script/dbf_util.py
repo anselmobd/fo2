@@ -85,10 +85,10 @@ class DbfUtil():
                     parserclass=self.MyFieldParser,
                 )
             )
+            self.dbf = self.dbf[self.rec_slice][self.fields if self.fields else self.dbf.columns]
 
     def print(self):
-        result = self.dbf[self.rec_slice][self.fields if self.fields else self.dbf.columns]
-        print(result.to_string(index=False))      
+        print(self.dbf.to_string(index=False))      
 
     def to_sqlite(self):
         sql_data = 'dbf.sqlite'
