@@ -1,23 +1,18 @@
 #!/usr/bin/env python
 
+import argparse
 import os
 import pandas as pd
 import sqlite3 as sq
-import sys
 from dbfread import DBF, FieldParser
 from pprint import pprint
 
 
-class DupProcess():
+class DbfUtil():
 
-    def __init__(self, file_name=None, action=None, rec_slice=None, fields=None) -> None:
-        self.file_name = file_name
-        self.action = action
-        self.rec_slice = rec_slice
-        self.fields = fields
-
-        self.load()
-        self.action()
+    def __init__(self) -> None:
+        self.dbf = None
+        self.parseArgs()
 
     @property
     def file_name(self):
@@ -25,25 +20,15 @@ class DupProcess():
       
     @file_name.setter
     def file_name(self, val):
-        if val is None or not os.path.isfile(val):
-            raise Exception('Primeiro parâmetro deve ser o nome do DBF')
         self.__file_name = val
-
-    def nothing(self):
-        pass
 
     @property
     def action(self):
         return self.__action
       
     @action.setter
-    def action(self, val=None):
-        if val is None or val == 'print':
-            self.__action = self.print
-        elif val == 'to_sqlite':
-            self.__action = self.to_sqlite
-        else:
-            self.__action = self.nothing
+    def action(self, val):
+        self.__action = val
   
     def int_def(self, val, default):
         try:
@@ -91,14 +76,15 @@ class DupProcess():
                 return None
 
     def load(self):
-        self.dbf = pd.DataFrame(
-            DBF(
-                self.file_name,
-                encoding='cp850',
-                lowernames=True,
-                parserclass=self.MyFieldParser,
+        if self.dbf is None:
+            self.dbf = pd.DataFrame(
+                DBF(
+                    self.file_name,
+                    encoding='cp850',
+                    lowernames=True,
+                    parserclass=self.MyFieldParser,
+                )
             )
-        )
 
     def print(self):
         result = self.dbf[self.rec_slice][self.fields if self.fields else self.dbf.columns]
@@ -113,5 +99,69 @@ class DupProcess():
         conn.commit()
         conn.close()
 
+    def set_action(self):
+        if self.args.print:
+            self.action = self.print
+        elif self.args.to_sqlite:
+            self.action = self.to_sqlite
+  
+    def dbf_file(self, astring):
+        if not os.path.isfile(astring):
+            raise ValueError  # or TypeError, or `argparse.ArgumentTypeError
+        return astring
+
+    def parseArgs(self):
+        parser = argparse.ArgumentParser(
+            description='Util to process DBF',
+            epilog="(c) Oxigenai",
+            formatter_class=argparse.RawTextHelpFormatter)
+
+        parser.add_argument(
+            "file_name",
+            type=self.dbf_file,
+            help='DBF file name')
+
+        group = parser.add_mutually_exclusive_group(
+            required=True)
+
+        group.add_argument(
+            "-p", "--print",
+            action="store_true",
+            default=False,
+            help='print DBF data frame')
+
+        group.add_argument(
+            "-t", "--to_sqlite",
+            action="store_true",
+            default=False,
+            help='write DBF data frame to SQLite')
+
+        parser.add_argument(
+            "-s", "--slice",
+            type=str,
+            help='slice of records to process')
+
+        parser.add_argument(
+            "-f", "--fields",
+            type=str,
+            help='list of fields to process')
+
+        parser.add_argument(
+            "-v", "--verbosity", action="count", default=0,
+            help="increase output verbosity")
+
+        self.args = parser.parse_args()
+
+        self.file_name = self.args.file_name
+        self.set_action()
+        self.rec_slice = self.args.slice
+        self.fields = self.args.fields
+
+    def run(self):
+        self.load()
+        self.action()
+
+
 if __name__ == '__main__':
-    dp = DupProcess(*sys.argv[1:])
+    du = DbfUtil()
+    du.run()
