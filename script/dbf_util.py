@@ -94,20 +94,21 @@ class DbfUtil():
         sql_data = 'dbf.sqlite'
         conn = sq.connect(sql_data)
         cur = conn.cursor()
-        cur.execute('''DROP TABLE IF EXISTS DBF''')
-        self.dbf.to_sql('DBF', conn, if_exists='replace', index=False)
+        cur.execute(f"DROP TABLE IF EXISTS {self.table_name}")
+        self.dbf.to_sql(self.table_name, conn, if_exists='replace', index=False)
         conn.commit()
         conn.close()
 
     def set_action(self):
         if self.args.print:
             self.action = self.print
-        elif self.args.to_sqlite:
+        elif self.args.table:
             self.action = self.to_sqlite
+            self.table_name = self.args.table
   
     def dbf_file(self, astring):
         if not os.path.isfile(astring):
-            raise ValueError  # or TypeError, or `argparse.ArgumentTypeError
+            raise ValueError
         return astring
 
     def parseArgs(self):
@@ -121,34 +122,33 @@ class DbfUtil():
             type=self.dbf_file,
             help='DBF file name')
 
-        group = parser.add_mutually_exclusive_group(
+        action_group = parser.add_mutually_exclusive_group(
             required=True)
 
-        group.add_argument(
+        action_group.add_argument(
             "-p", "--print",
             action="store_true",
             default=False,
-            help='print DBF data frame')
+            help='Print DBF data frame')
 
-        group.add_argument(
-            "-t", "--to_sqlite",
-            action="store_true",
-            default=False,
-            help='write DBF data frame to SQLite')
+        action_group.add_argument(
+            "-t", "--table",
+            type=str,
+            help='Name of table in SQLite to receive DBF data frame')
 
         parser.add_argument(
             "-s", "--slice",
             type=str,
-            help='slice of records to process')
+            help='Slice of records to process')
 
         parser.add_argument(
             "-f", "--fields",
             type=str,
-            help='list of fields to process')
+            help='List of fields to process')
 
         parser.add_argument(
             "-v", "--verbosity", action="count", default=0,
-            help="increase output verbosity")
+            help="Increase output verbosity")
 
         self.args = parser.parse_args()
 
