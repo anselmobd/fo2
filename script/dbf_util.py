@@ -10,9 +10,9 @@ from pprint import pprint
 
 class DbfUtil():
 
-    def __init__(self) -> None:
+    def __init__(self, argv=None) -> None:
         self.dbf = None
-        self.parseArgs()
+        self.parseArgs(argv)
 
     @property
     def file_name(self):
@@ -111,7 +111,7 @@ class DbfUtil():
             raise ValueError
         return astring
 
-    def parseArgs(self):
+    def parseArgs(self, argv=None):
         parser = argparse.ArgumentParser(
             description='Util to process DBF',
             epilog="(c) Oxigenai",
@@ -150,7 +150,7 @@ class DbfUtil():
             "-v", "--verbosity", action="count", default=0,
             help="Increase output verbosity")
 
-        self.args = parser.parse_args()
+        self.args = parser.parse_args(argv)
 
         self.file_name = self.args.file_name
         self.set_action()
@@ -162,6 +162,10 @@ class DbfUtil():
         self.action()
 
 
-if __name__ == '__main__':
+def main():
     du = DbfUtil()
     du.run()
+
+
+if __name__ == '__main__':
+    main()
