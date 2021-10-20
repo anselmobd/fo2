@@ -108,6 +108,12 @@ urlpatterns = [
     re_path(r'^op/$', views.ops.op.Op.as_view(), name='op'),
     re_path(r'^op/(?P<op>\d+)/$', views.ops.op.Op.as_view(), name='op__get'),
 
+    re_path(
+        r'^reativa_op/(?P<op>\d+)/$',
+        views.ops.reativa_op.ReativaOp.as_view(),
+        name='reativa_op__get'
+    ),
+
     re_path(r'^op/historico/(?P<op>\d+)?/?$', views.ops.historico.Historico.as_view(),
         name='historico_op'),
 
