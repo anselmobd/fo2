@@ -3,17 +3,45 @@
 {% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
 {% block header.content %}{{ titulo }} - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
 {% block content %}
+  <a href="{% url 'email_signature:account_list' %}">Voltar para Contas</a>
   <h4>Geradas</h4>
-  <ul>
-  {% for item in lista %}
-    <li>{{item.conta}}
-      {% if item.erro %}
-        - {{ item.erro }}
-      {% else %}
-        - OK
-      {% endif %}
-    </li>
-  {% endfor %}
-  </ul>
+  {%if lista%}
+    <table>
+      <thead>
+        <tr>
+          <th>
+            Resultado
+          </th>
+          <th>
+            Conta
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for item in lista%}
+        <tr>
+          <td>
+            {% if item.erro %}
+              {{ item.erro }}
+            {% else %}
+              OK
+            {% endif %}
+          </td>
+          <td>
+            {{item.conta}}
+          </td>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  {%else%}
+    Nenhuma
+  {%endif%}
 {% endblock %}
