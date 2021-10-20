@@ -4,14 +4,20 @@
 {% block header.content %}Contas - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
-  <a href="{% url 'email_signature:account_list' %}">Ir para listagem</a><br />
-  <form method="post" id="emsign_accountForm" novalidate>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salva</button>
-  </form>
+  <p>
+    <a title="Ir para listagem" href="{% url 'email_signature:account_list' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a>
+  </p>
+  <p>
+    <form method="post" id="emsign_accountForm" novalidate>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Salva</button>
+    </form>
+  </p>
   {% if account %}
-    <a href="{% url 'email_signature:account_delete' account.id %}">Exclui esta conta</a>
+    <p>
+      <a title="Exclui esta conta" href="{% url 'email_signature:account_delete' account.id %}"><span class="glyphicon glyphicon-trash" style="font-size: 2em" aria-hidden="true"></span></a>
+    </p>
   {% endif %}
 {% endblock %}
 
