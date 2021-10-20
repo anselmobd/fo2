@@ -52,6 +52,12 @@ class Op(View):
                 'link': link,
             })
 
+            for row in i_data:
+                if row['DT_CANCELAMENTO'] is None:
+                    row['DT_CANCELAMENTO'] = ''
+                else:
+                    row['DT_CANCELAMENTO'] = row['DT_CANCELAMENTO'].date()
+
             i2_data = [i_data[0]]
             i3_data = [i_data[0]]
             i4_data = [i_data[0]]
@@ -71,20 +77,20 @@ class Op(View):
 
             if val_parm == 'S':
                 i_headers = (
-                    'Situação', 'Cancelamento', 'Unidade', 'Pedido',
+                    'Situação', 'Cancelamento', 'Data cancelamento', 'Unidade', 'Pedido',
                     'Pedido do cliente', 'Relacionamento com OPs',
                     'Prioridade')
                 i_fields = (
-                    'SITUACAO', 'CANCELAMENTO', 'UNIDADE', 'PEDIDO',
+                    'SITUACAO', 'CANCELAMENTO', 'DT_CANCELAMENTO', 'UNIDADE', 'PEDIDO',
                     'PED_CLIENTE', 'TIPO_OP',
                     'PRIORIDADE')
             else:
                 i_headers = (
-                    'Situação', 'Cancelamento', 'Pedido',
+                    'Situação', 'Cancelamento', 'Data cancelamento', 'Pedido',
                     'Pedido do cliente', 'Relacionamento com OPs',
                     'Prioridade')
                 i_fields = (
-                    'SITUACAO', 'CANCELAMENTO', 'PEDIDO',
+                    'SITUACAO', 'CANCELAMENTO', 'DT_CANCELAMENTO', 'PEDIDO',
                     'PED_CLIENTE', 'TIPO_OP',
                     'PRIORIDADE')
             context.update({
