@@ -160,14 +160,10 @@ class GerarAssinaturas(View):
         self.template_file = get_template_file()
 
         try:
-            self.id = kwargs['id']
+            contas = models.Account.objects.filter(id=kwargs['id'])
         except KeyError:
-            self.id = None
-
-        if self.id is None:
             contas = models.Account.objects.all()
-        else:
-            contas = models.Account.objects.filter(id=self.id)
+
         self.context['lista'] = []
 
         for conta in contas:
