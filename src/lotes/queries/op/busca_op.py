@@ -285,6 +285,7 @@ def busca_op(
         , sele.SITUACAO
         , sele.COD_SITUACAO
         , sele.CANCELAMENTO
+        , sele.DT_CANCELAMENTO
         , sele.ALTERNATIVA
         , sele.ROTEIRO
         , sele."REF"
@@ -394,6 +395,7 @@ def busca_op(
           WHEN o.COD_CANCELAMENTO = 0 THEN ''
           ELSE '-' || COALESCE(c.DESCRICAO, '')
           END CANCELAMENTO
+        , o.DT_CANCELAMENTO
         , o.ALTERNATIVA_PECA ALTERNATIVA
         , o.ROTEIRO_PECA ROTEIRO
         , o.REFERENCIA_PECA REF
@@ -571,6 +573,7 @@ def busca_op(
         , o.SITUACAO
         , o.COD_CANCELAMENTO
         , c.DESCRICAO
+        , o.DT_CANCELAMENTO
         , o.ALTERNATIVA_PECA
         , o.ROTEIRO_PECA
         , o.REFERENCIA_PECA
