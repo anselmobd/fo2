@@ -14,19 +14,9 @@
       <a title="Ir para listagem" href="{% url 'email_signature:account_list' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a>
     </div>
   </p>
-  <form method="post" id="emsign_accountForm" novalidate>
+  <form method="post" id="emsign_accountForm">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Salva</button>
   </form>
-{% endblock %}
-
-{% block javascript %}
-  <script type="text/javascript">
-
-    window.onload = function() {
-      $("#id_codigo").focus();
-    }
-
-  </script>
 {% endblock %}
