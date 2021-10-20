@@ -1,7 +1,5 @@
 from django.urls import re_path
 
-from lotes.views import parametros
-
 from . import views
 
 
