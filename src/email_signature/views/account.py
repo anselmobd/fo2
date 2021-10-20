@@ -5,11 +5,8 @@ from django.contrib.auth.mixins import (
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
+import email_signature.forms
 from email_signature.models import Account
-
-
-_fields = ('email', 'nome', 'setor', 'ddd_1', 'num_1', 'ddd_2', 'num_2',
-           'diretorio', 'subdiretorio')
 
 
 class AccountListView(PermissionRequiredMixin, ListView):
@@ -22,14 +19,14 @@ class AccountListView(PermissionRequiredMixin, ListView):
 class AccountCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'email_signature.can_edit_mail_signature'
     model = Account
-    fields = _fields
+    form_class = email_signature.forms.AccountForm
     success_url = reverse_lazy('email_signature:account_list')
 
 
 class AccountUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = 'email_signature.can_edit_mail_signature'
     model = Account
-    fields = _fields
+    form_class = email_signature.forms.AccountForm
     success_url = reverse_lazy('email_signature:account_list')
 
 
