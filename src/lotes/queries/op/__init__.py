@@ -1,3 +1,4 @@
+from . import reativa_op
 from .busca_op import *
 from .busca_ops_info import *
 from .caixas_op_3lotes import *

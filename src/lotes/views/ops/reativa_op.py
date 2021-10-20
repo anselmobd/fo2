@@ -6,6 +6,8 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+import lotes.queries.op
+
 
 class ReativaOp(PermissionRequiredMixin, View):
 
@@ -13,5 +15,7 @@ class ReativaOp(PermissionRequiredMixin, View):
         self.permission_required = 'lotes.can_repair_seq_op'
 
     def get(self, request, *args, **kwargs):
-        return redirect('apoio_ao_erp')
-
+        cursor = db_cursor_so(request)
+        op = kwargs['op']
+        lotes.queries.op.reativa_op.reativa_op(cursor, op)
+        return redirect('producao:op__get', op)
