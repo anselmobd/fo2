@@ -10,7 +10,11 @@
 {% endblock %}
 
 {% block content %}
-  <a title="Adiciona uma conta" href="{% url 'email_signature:account_add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a>
+  <p>
+    <div>
+      <a title="Adiciona uma conta" href="{% url 'email_signature:account_add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a>
+    </div>
+  </p>
   {%if accounts%}
   <table>
     <thead>
