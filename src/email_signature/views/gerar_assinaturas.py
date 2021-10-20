@@ -39,7 +39,10 @@ class GerarAssinaturas(View):
 
     def apagar_assinatura_local(self):
         arquivo = os.path.join('.', self.temp_file)
-        os.remove(arquivo)
+        try:
+            os.remove(arquivo)
+        except FileNotFoundError:
+            pass
 
     def decode_rstrip(self, lines):
         output = []
