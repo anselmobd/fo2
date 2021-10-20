@@ -4,10 +4,15 @@
 {% block header.content %}Contas - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
-  <a href="{% url 'email_signature:account_list' %}">Ir para listagem</a>
+  <p>
+    <div>
+      <a title="Ir para listagem" href="{% url 'email_signature:account_list' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a>
+    </div>
+  </p>
   <form action="" method="post">{% csrf_token %}
     <p>Confirma excluir a conta "{{ object }}"?</p>
-    <input type="submit" value="Confirma" />
+    <input type="submit" value="Sim" /> 
+    <input type="button" value="Não excluir" 
+      onclick="window.location='{% url 'email_signature:account_change' account.id %}';" />
   </form>
-  <a href="{% url 'email_signature:account_change' account.id %}">Volta para edição</a>
 {% endblock %}
