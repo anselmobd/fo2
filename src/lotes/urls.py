@@ -2,7 +2,6 @@ from django.urls import re_path
 
 from lotes.views import parametros
 
-import lotes.views.ops.corrige_seq
 from . import views
 
 
@@ -69,7 +68,7 @@ urlpatterns = [
         views.lote.ajax_conserto_lote, name='conserto_lote__ajax'),
 
     re_path(r'^corrige_sequenciamento/$',
-        lotes.views.ops.corrige_seq.CorrigeSequenciamento.as_view(), name='corrige_sequenciamento'),
+        views.ops.corrige_seq.CorrigeSequenciamento.as_view(), name='corrige_sequenciamento'),
 
     re_path(r'^distribuicao/$',
         views.Distribuicao.as_view(), name='distribuicao'),
