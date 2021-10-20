@@ -159,9 +159,10 @@ class GerarAssinaturas(View):
     def mount_context(self, **kwargs):
         self.template_file = get_template_file()
 
-        self.id = None
-        if 'id' in kwargs:
+        try:
             self.id = kwargs['id']
+        except KeyError:
+            self.id = None
 
         if self.id is None:
             contas = models.Account.objects.all()
