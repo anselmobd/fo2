@@ -3,14 +3,40 @@
 {% block title.content %}Contas - {{ block.super }}{% endblock title.content %}
 {% block header.content %}Contas - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
 {% block content %}
-  <h4>Listagem</h4>
-  <ul>
-  {% for account in accounts %}
-    <li>{{ account }} <a href="{% url 'email_signature:account_change' account.id %}">Edita</a> |  <a href="{% url 'email_signature:gerar_assinaturas' account.id %}">Gera</a></li>
-  {% empty %}
-    <li>Nenhum conta.</li>
-  {% endfor %}
-  </ul>
-  <a href="{% url 'email_signature:account_add' %}">Adiciona uma conta</a>
+  <a title="Adiciona uma conta" href="{% url 'email_signature:account_add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a>
+  {%if accounts%}
+  <table>
+    <thead>
+      <tr>
+        <th>
+          Conta
+        </th>
+        <th>
+          Gerar
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for account in accounts%}
+      <tr>
+        <td>
+          <a title="Edita" href="{% url 'email_signature:account_change' account.id %}">{{account}}</a>
+        </td>
+        <td>
+          <a title="Gera" href="{% url 'email_signature:gerar_assinaturas' account.id %}"><span class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>
+        </td>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+  {%else%}
+    Nenhuma
+  {%endif%}
 {% endblock %}
