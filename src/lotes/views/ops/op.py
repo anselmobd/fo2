@@ -91,6 +91,7 @@ class Op(View):
                 'i_headers': i_headers,
                 'i_fields': i_fields,
                 'i_data': i_data,
+                'i_reativa_op': op if i_data[0]['CANCELAMENTO'] != '0' else None,
             })
 
             row = i2_data[0]

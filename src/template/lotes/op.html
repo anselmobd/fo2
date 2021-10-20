@@ -31,6 +31,10 @@
       {% include "layout/html_thead.html" with data=i_headers only %}
       {% include "layout/html_tbody_group.html" with fields=i_fields data=i_data group=i_group only %}
     </table>
+    {% if i_reativa_op %}
+      {% url 'producao:reativa_op__get' op as reativa_op %}
+      {% include "layout/link.html" with link=reativa_op text='Reativa a OP '|add:op only %}
+    {% endif %}
     {% if op_unidade and op_unidade == 'S' %}
       <table class="layout">
         <tr>
