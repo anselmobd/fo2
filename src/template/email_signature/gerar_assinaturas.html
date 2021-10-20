@@ -10,7 +10,11 @@
 {% endblock %}
 
 {% block content %}
-  <a href="{% url 'email_signature:account_list' %}">Voltar para Contas</a>
+  <p>
+    <div>
+      <a title="Ir para listagem" href="{% url 'email_signature:account_list' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a>
+    </div>
+  </p>
   <h4>Geradas</h4>
   {%if lista%}
     <table>
