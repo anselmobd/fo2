@@ -17,8 +17,10 @@ class Op(models.Model):
 
     class Meta:
         db_table = "fo2_prod_op"
-        permissions = (("can_repair_seq_op", "Can repair sequence OP"),
-                       )
+        permissions = (
+            ("can_repair_seq_op", "Can repair sequence OP"),
+            ("can_reactivate_op", "Can reactivate OP"),
+        )
 
 
 class Caixa(models.Model):
