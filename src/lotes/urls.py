@@ -16,7 +16,7 @@ urlpatterns = [
         views.estoque_depositos_modelo, name='estoque_depositos_modelo'),
     re_path(r'^ajax/estoque_depositos_modelo/(?P<modelo>[^/]+)/'
         r'(?P<filtra>[^/]+)/$',
-        views.estoque_depositos_modelo, name='get2__estoque_depositos_modelo'),
+        views.estoque_depositos_modelo, name='estoque_depositos_modelo__get2'),
 
     re_path(r'^ajax/op_producao_modelo/(?P<modelo>[^/]+)/$',
         views.op_producao_modelo, name='op_producao_modelo'),
