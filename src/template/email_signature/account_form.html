@@ -4,9 +4,22 @@
 {% block header.content %}Contas - <a href="{% url 'email_signature:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block content %}
-  <p>
-    <a title="Ir para listagem" href="{% url 'email_signature:account_list' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a>
-  </p>
+  <table style="width: 100%;">
+    <tr>
+      <td>
+        <p>
+          <a title="Ir para listagem" href="{% url 'email_signature:account_list' %}"><span class="glyphicon glyphicon-list" style="font-size: 2em" aria-hidden="true"></span></a>
+        </p>
+      </td>
+      <td>
+        {% if account %}
+          <p style="text-align: right;">
+            <a title="Exclui esta conta" href="{% url 'email_signature:account_delete' account.id %}"><span class="glyphicon glyphicon-trash" style="font-size: 2em; color: darkred;" aria-hidden="true"></span></a>
+          </p>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
   <p>
     <form method="post" id="emsign_accountForm" novalidate>
       {% csrf_token %}
@@ -14,11 +27,6 @@
       <button type="submit">Salva</button>
     </form>
   </p>
-  {% if account %}
-    <p>
-      <a title="Exclui esta conta" href="{% url 'email_signature:account_delete' account.id %}"><span class="glyphicon glyphicon-trash" style="font-size: 2em" aria-hidden="true"></span></a>
-    </p>
-  {% endif %}
 {% endblock %}
 
 {% block javascript %}
