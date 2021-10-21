@@ -23,7 +23,7 @@ def get_template(tipo):
         return
 
 
-def get_template_file(tipo):
+def get_template_file(tipo=None):
     template = get_template(tipo)
     if template is not None:
         return f'email_signature/{template}.html'
