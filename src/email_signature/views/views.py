@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.views import View
 from django.shortcuts import (
     redirect,
@@ -11,22 +13,24 @@ def index(request):
     return render(request, 'email_signature/index.html')
 
 
-def get_template():
+def get_template(tipo):
     try:
         return models.Layout.objects.filter(
-            habilitado=True).first().template
+            habilitado=True,
+            tipo=tipo,
+        ).first().template
     except Exception:
         return
 
 
-def get_template_file():
-    template = get_template()
+def get_template_file(tipo):
+    template = get_template(tipo)
     if template is not None:
         return f'email_signature/{template}.html'
 
 
-def show_template(request):
-    template_file = get_template_file()
+def show_template(request, tipo=None):
+    template_file = get_template_file(tipo)
     if template_file is None:
         return redirect('intranet')
 
