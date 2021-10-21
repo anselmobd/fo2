@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from pprint import pprint
 
 from django.db import models
@@ -10,6 +11,11 @@ import remote_files.models
 _TIPO_CHOICES = [
     ('tussor', 'Tussor'),
     ('agator' ,'Agator'),
+]
+_STATE_CHOICES = [
+    ('R', 'Gerar'),
+    ('N', 'Gerando'),
+    ('A', 'Gerada'),
 ]
 
 
@@ -47,19 +53,25 @@ class Account(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
-    generate_at = models.DateTimeField(
-        null=True, blank=True,
-        verbose_name='Gerada em')
+    state = models.CharField(
+        max_length=1,
+        choices=_STATE_CHOICES,
+        default=_STATE_CHOICES[0][0],
+        verbose_name='Estado')
+
 
     def __str__(self):
         setor = '' if self.setor is None else f' ({self.setor})'
         return f'{dict(_TIPO_CHOICES)[self.tipo]} - {self.email} - {self.nome}{setor}'
 
     def save(self, *args, **kwargs):
-        ''' On create, get timestamps '''
         now = timezone.now()
-        if self.id:
-            self.update_at = now
+        if self.id:  # At update have "id"
+            if self.state == 'N':  # Alteração foi de indicação de "GeraNdo"
+                self.state = 'A'  # Marca assinatura como "GeradA
+            else:  # Outras alterações
+                self.update_at = now
+                self.state = 'R'  # Marca assinatura como "GeraR"
         else:  # At create have no "id"
             self.create_at = now
         super(Account, self).save(*args, **kwargs)

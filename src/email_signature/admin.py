@@ -8,7 +8,7 @@ import email_signature.models
 @admin.register(email_signature.models.Account, site=intr_adm_site)
 class AccountAdmin(admin.ModelAdmin):
     ordering = ['tipo', 'email']
-    readonly_fields = ['create_at', 'update_at', 'generate_at']
+    readonly_fields = ['create_at', 'update_at', 'state']
 
 
 @admin.register(email_signature.models.Layout, site=intr_adm_site)
