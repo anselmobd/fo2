@@ -34,6 +34,11 @@ class Account(models.Model):
         remote_files.models.Diretorio, on_delete=models.PROTECT)
     subdiretorio = models.CharField(
         max_length=200, verbose_name='sub-diretório de assinatura')
+    tipo = models.CharField(
+        max_length=10,
+        choices=_TIPO_CHOICES,
+        default=_TIPO_CHOICES[0][0],
+    )
     create_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='Criada em')
