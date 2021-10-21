@@ -16,7 +16,7 @@ def get_template():
         return models.Layout.objects.filter(
             habilitado=True).first().template
     except Exception:
-        pass
+        return
 
 
 def get_template_file():
@@ -28,7 +28,7 @@ def get_template_file():
 def show_template(request):
     template_file = get_template_file()
     if template_file is None:
-        return redirect('apoio_ao_erp')
+        return redirect('intranet')
 
     context = {
         'nome': 'Nome do funcionário',
