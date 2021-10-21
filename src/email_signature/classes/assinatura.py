@@ -1,5 +1,6 @@
 import os
 import subprocess
+import tempfile
 from pprint import pprint
 
 from django.template.loader import render_to_string
@@ -11,7 +12,8 @@ class GeraAssinatura():
 
     def __init__(self, conta):
         self.conta = conta
-        self.temp_file = '_temp_assinatura_file_.html'
+        tf = tempfile.NamedTemporaryFile(prefix="_temp_assinatura_file", suffix=".html")
+        self.temp_file = tf.name
         self.transf = {}
 
     def apagar_assinatura_local(self):
