@@ -152,11 +152,16 @@ class GeraAssinatura():
             return 'Erro acertando dono e grupo'
 
     def exec(self):
+        if self.conta.state != "R":
+            return
+
         self.template_file = get_template_file(self.conta.tipo)
 
         erro = self.gerar_assinatura_local(self.conta)
         if erro is None:
             erro = self.enviar_assinatura(self.conta)
+            self.conta.state = "N"
+            self.conta.save()
         self.apagar_assinatura_local()
         
         return erro
