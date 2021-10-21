@@ -157,8 +157,6 @@ class GerarAssinaturas(View):
             return 'Erro acertando dono e grupo'
 
     def mount_context(self, **kwargs):
-        self.template_file = get_template_file()
-
         try:
             contas = models.Account.objects.filter(id=kwargs['id'])
         except KeyError:
@@ -167,6 +165,8 @@ class GerarAssinaturas(View):
         self.context['lista'] = []
 
         for conta in contas:
+
+            self.template_file = get_template_file(conta.tipo)
 
             erro = self.gerar_assinatura_local(conta)
             if erro is None:
