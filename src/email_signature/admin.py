@@ -13,8 +13,8 @@ class AccountAdmin(admin.ModelAdmin):
 
 @admin.register(email_signature.models.Layout, site=intr_adm_site)
 class LayoutAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'slug', 'template', 'habilitado']
-    search_fields = ['nome']
-    ordering = ['nome']
-    fields = ['nome', 'slug', 'template', 'habilitado']
+    list_display = ['slug', 'tipo', 'nome', 'template', 'habilitado']
+    search_fields = ['tipo', 'nome', 'slug', 'template']
+    ordering = ['slug']
+    fields = ['tipo', 'nome', 'slug', 'template', 'habilitado']
     readonly_fields = ['slug']
