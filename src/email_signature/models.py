@@ -5,6 +5,12 @@ from django.utils.text import slugify
 import remote_files.models
 
 
+_TIPO_CHOICES = [
+    ('tussor', 'Tussor'),
+    ('agator' ,'Agator'),
+]
+
+
 class Account(models.Model):
     email = models.EmailField(
         unique=True,
@@ -56,6 +62,11 @@ class Account(models.Model):
 
 
 class Layout(models.Model):
+    tipo = models.CharField(
+        max_length=10,
+        choices=_TIPO_CHOICES,
+        default=_TIPO_CHOICES[0][0],
+    )
     nome = models.CharField(
         max_length=64)
     slug = models.SlugField()
