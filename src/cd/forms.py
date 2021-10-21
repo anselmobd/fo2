@@ -64,7 +64,7 @@ class RearrumarForm(forms.Form):
 
 class LoteForm(forms.Form):
     endereco = forms.CharField(
-        label='Endereço', min_length=2, max_length=4,
+        label='Endereço', min_length=2, max_length=5,
         widget=forms.TextInput())
     lote = forms.CharField(
         label='Lote', max_length=9, min_length=9,
@@ -94,8 +94,8 @@ class LoteForm(forms.Form):
 
 class EnderecarForm(forms.Form):
     endereco = forms.CharField(
-        label='Endereço', min_length=2, max_length=4,
-        widget=forms.TextInput(attrs={'size': 4}))
+        label='Endereço', min_length=2, max_length=5,
+        widget=forms.TextInput(attrs={'size': 5}))
     lote = forms.CharField(
         label='Lote', max_length=9, min_length=9,
         widget=forms.TextInput(
@@ -266,10 +266,10 @@ class RetirarParcialForm(forms.Form):
 
 class TrocaLocalForm(forms.Form):
     endereco_de = forms.CharField(
-        label='Endereço antigo', min_length=2, max_length=4,
+        label='Endereço antigo', min_length=2, max_length=5,
         widget=forms.TextInput())
     endereco_para = forms.CharField(
-        label='Endereço novo', min_length=2, max_length=4,
+        label='Endereço novo', min_length=2, max_length=5,
         widget=forms.TextInput())
 
     identificado_de = forms.CharField(
@@ -319,11 +319,11 @@ class TrocaLocalForm(forms.Form):
 
 class TrocaEnderecoForm(forms.Form):
     endereco_de = forms.CharField(
-        label='Endereço antigo', min_length=2, max_length=4,
-        widget=forms.TextInput(attrs={'size': 4}))
+        label='Endereço antigo', min_length=2, max_length=5,
+        widget=forms.TextInput(attrs={'size': 5}))
     endereco_para = forms.CharField(
-        label='Endereço novo', min_length=2, max_length=4,
-        widget=forms.TextInput(attrs={'size': 4}))
+        label='Endereço novo', min_length=2, max_length=5,
+        widget=forms.TextInput(attrs={'size': 5}))
 
     identificado_de = forms.CharField(
         label='identificado de', required=False,
@@ -366,7 +366,7 @@ class TrocaEnderecoForm(forms.Form):
 
 class EstoqueForm(forms.Form):
     endereco = forms.CharField(
-        label='Endereço', required=False, min_length=2, max_length=4,
+        label='Endereço', required=False, min_length=2, max_length=5,
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     lote = forms.CharField(
         label='Lote', required=False, min_length=9, max_length=9,
@@ -440,7 +440,7 @@ class EstoqueForm(forms.Form):
 
 class ConfereForm(forms.Form):
     endereco = forms.CharField(
-        label='Endereço', required=False, min_length=1, max_length=4,
+        label='Endereço', required=False, min_length=1, max_length=5,
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
 
     def clean_endereco(self):
