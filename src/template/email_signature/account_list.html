@@ -35,8 +35,12 @@
         </td>
         <td style="text-align: right;">
           <!-- <a title="Gera" href="{% url 'email_signature:gerar_assinaturas' account.id %}"><span class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>- -->
-          <span id="mess_{{account.id}}"></span>
-          <a title="Gera" onclick="javascript:return GeraAssin('{{account.id}}');"><span id="icone_{{account.id}}" class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>
+          {%if account.state == 'R'%}
+            <span id="mess_{{account.id}}"></span>
+            <a title="Gera" href="#" onclick="javascript:return GeraAssin('{{account.id}}');"><span id="icone_{{account.id}}" class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>
+          {%else%}
+            <span class="glyphicon glyphicon-save-file" style="color: darkgreen;" aria-hidden="true"></span>
+          {%endif%}
         </td>
       </tr>
       {%endfor%}
@@ -61,7 +65,7 @@
             result = data['result']
             if (result == 'OK') {
               console.log('OK!');
-              result = 'Gerado'
+              result = 'Gerada'
               cor = 'darkgreen'
             } else {
               console.log('Erro: '+data['descricao_erro']);
