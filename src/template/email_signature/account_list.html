@@ -22,8 +22,8 @@
         <th>
           Conta
         </th>
-        <th>
-          Gerar
+        <th style="text-align: right;">
+            Gerar
         </th>
       </tr>
     </thead>
@@ -33,8 +33,10 @@
         <td>
           <a title="Edita" href="{% url 'email_signature:account_change' account.id %}">{{account}}</a>
         </td>
-        <td>
-          <a title="Gera" href="{% url 'email_signature:gerar_assinaturas' account.id %}"><span class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>
+        <td style="text-align: right;">
+          <!-- <a title="Gera" href="{% url 'email_signature:gerar_assinaturas' account.id %}"><span class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>- -->
+          <span id="mess_{{account.id}}"></span>
+          <a title="Gera" onclick="javascript:return GeraAssin('{{account.id}}');"><span id="icone_{{account.id}}" class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>
         </td>
       </tr>
       {%endfor%}
@@ -43,4 +45,49 @@
   {%else%}
     Nenhuma
   {%endif%}
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    function GeraAssin(id) {
+      $.ajax({
+        type: 'GET',
+        url: '/email_signature/ajax/gerar_assinatura/'+id+'/',
+        data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success : function(data) {
+          var result = 'Sem retorno'
+          var cor = 'black'
+          if (data) {
+            result = data['result']
+            if (result == 'OK') {
+              console.log('OK!');
+              result = 'Gerado'
+              cor = 'darkgreen'
+            } else {
+              console.log('Erro: '+data['descricao_erro']);
+              result = 'Erro: '+data['descricao_erro']
+              cor = 'darkred'
+            }
+          } else {
+            console.log('Sem retorno de pedido');
+          }
+          span_el = document.querySelector('#mess_'+id);
+          span_el.innerHTML=result;
+          span_el = document.querySelector('#icone_'+id);
+          span_el.style.color=cor;
+          span_el.title=result;
+        },  // success
+        error : function(data) {
+          console.log('Erro na requisição');
+          var result = 'Erro na requisição'
+          var cor = 'black'
+          span_el = document.querySelector('#mess_'+id);
+          span_el.innerHTML=result;
+          span_el = document.querySelector('#icone_'+id);
+          span_el.style.color=cor;
+          span_el.title=result;
+        }  // error
+      });  // ajax
+    }  // function
+  </script>
 {% endblock %}
