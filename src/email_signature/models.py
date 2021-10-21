@@ -48,7 +48,7 @@ class Account(models.Model):
 
     def __str__(self):
         setor = '' if self.setor is None else f' ({self.setor})'
-        return f'{self.email} - {self.nome}{setor}'
+        return f'{dict(_TIPO_CHOICES)[self.tipo]} - {self.email} - {self.nome}{setor}'
 
     def save(self, *args, **kwargs):
         ''' On create, get timestamps '''
