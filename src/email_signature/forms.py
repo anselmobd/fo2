@@ -28,7 +28,7 @@ class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = [
-            "email", "nome", "setor",
+            "tipo", "email", "nome", "setor",
             "ddd_1", "num_1", "ddd_2", "num_2",
             "diretorio", "subdiretorio"
         ]
