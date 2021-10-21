@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -45,6 +47,9 @@ class Account(models.Model):
     update_at = models.DateTimeField(
         null=True, blank=True,
         verbose_name='alterado em')
+    generate_at = models.DateTimeField(
+        null=True, blank=True,
+        verbose_name='Gerada em')
 
     def __str__(self):
         setor = '' if self.setor is None else f' ({self.setor})'
