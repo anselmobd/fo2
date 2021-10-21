@@ -13,7 +13,7 @@ class AccountListView(PermissionRequiredMixin, ListView):
     permission_required = 'email_signature.can_edit_mail_signature'
     model = Account
     context_object_name = 'accounts'
-    ordering = ['email']
+    ordering = ['tipo', 'email']
 
 
 class AccountCreateView(PermissionRequiredMixin, CreateView):
