@@ -33,11 +33,15 @@ class GeraAssinatura():
         }
         try:
             assinatura = render_to_string(self.template_file, context)
+        except Exception:
+            return 'Erro', 'Renderizando template'
+        try:
             nome_de_arquivo = os.path.join('.', self.temp_file)
             with open(nome_de_arquivo, 'w') as arquivo:
                 arquivo.write(assinatura)
         except Exception:
-            return 'Erro'
+            return 'Erro', 'Escrevendo arquivo'
+        return None, None
 
     def decode_rstrip(self, lines):
         output = []
@@ -113,14 +117,14 @@ class GeraAssinatura():
 
         exitcode, result, error = self.executa_comando_ssh(["hostname"])
         if exitcode != 0:
-            return 'Sem acesso ao servidor'
+            return 'Sem acesso ao servidor', error
         if result[0] != self.transf['hostname']:
-            return 'Configuração de servidor errada'
+            return 'Configuração de servidor errada', error
 
         exitcode, result, error = self.executa_comando_ssh(
             [f"stat -c '%A %U %G' '{self.transf['dir_servidor']}/'"])
         if exitcode != 0:
-            return 'Erro acessando diretório'
+            return 'Erro acessando diretório', error
         # if result[0] != 'drwxrwxrwx nobody nogroup':
         #     return 'Diretório com direitos não esperados'
 
@@ -128,28 +132,30 @@ class GeraAssinatura():
             [self.temp_file,
              f"{self.transf['user@server']}:{self.transf['arquivo_path']}"])
         if exitcode != 0:
-            return 'Erro copiando arquivo'
+            return 'Erro copiando arquivo', error
 
         stat_index = os.stat(self.temp_file)
 
         exitcode, result, error = self.executa_comando_ssh(
             [f"stat -c '%s' '{self.transf['arquivo_path']}'"])
         if exitcode != 0:
-            return 'Erro verificando o arquivo'
+            return 'Erro verificando o arquivo', error
         if result[0] != str(stat_index.st_size):
-            return 'Arquivo com tamanho errado'
+            return 'Arquivo com tamanho errado', error
 
         exitcode, result, error = self.executa_comando_ssh(
             [f"chmod {self.transf['file_perm']} "
              f"'{self.transf['arquivo_path']}'"])
         if exitcode != 0:
-            return 'Erro acertando permissões'
+            return 'Erro acertando permissões', error
 
         exitcode, result, error = self.executa_comando_ssh(
             [f"chown {self.transf['file_user']}:{self.transf['file_group']} "
              f"'{self.transf['arquivo_path']}'"])
         if exitcode != 0:
-            return 'Erro acertando dono e grupo'
+            return 'Erro acertando dono e grupo', error
+
+        return None, None
 
     def exec(self):
         if self.conta.state != "R":
@@ -157,11 +163,11 @@ class GeraAssinatura():
 
         self.template_file = get_template_file(self.conta.tipo)
 
-        erro = self.gerar_assinatura_local(self.conta)
+        erro, msg = self.gerar_assinatura_local(self.conta)
         if erro is None:
-            erro = self.enviar_assinatura(self.conta)
+            erro, msg = self.enviar_assinatura(self.conta)
             self.conta.state = "N"
             self.conta.save()
         self.apagar_assinatura_local()
         
-        return erro
+        return erro, msg

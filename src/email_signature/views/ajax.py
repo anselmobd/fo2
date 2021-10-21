@@ -20,12 +20,15 @@ def gerar_assinatura(request, id):
         })
         return JsonResponse(data, safe=False)
 
-    erro = classes.assinatura.GeraAssinatura(conta).exec()
-    if not erro:
-        erro = 'OK'
-
-    data.update({
-        'result': erro,
-    })
+    erro, msg = classes.assinatura.GeraAssinatura(conta).exec()
+    if erro:
+        data.update({
+            'result': erro,
+            'descricao_erro': msg,
+        })
+    else:
+        data.update({
+            'result': 'OK',
+        })
 
     return JsonResponse(data, safe=False)
