@@ -82,13 +82,13 @@ class Layout(models.Model):
         db_table = "fo2_emsign_layout"
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.nome)
+        self.slug = slugify(f"{self.tipo}-{self.nome}")
         super(Layout, self).save(*args, **kwargs)
         if self.habilitado:
             outros_habilitados = Layout.objects.filter(
-                habilitado=True
+                habilitado=True,
+                tipo=self.tipo,
             ).exclude(id=self.id)
-            if len(outros_habilitados) != 0:
-                for layout in outros_habilitados:
-                    layout.habilitado = False
-                    layout.save()
+            for layout in outros_habilitados:
+                layout.habilitado = False
+                layout.save()
