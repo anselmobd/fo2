@@ -5,7 +5,7 @@ from pprint import pprint
 
 from django.template.loader import render_to_string
 
-from email_signature.views.views import get_template_file
+import email_signature.functions as functions
 
 
 class GeraAssinatura():
@@ -163,7 +163,7 @@ class GeraAssinatura():
         if self.conta.state != "R":
             return
 
-        self.template_file = get_template_file(self.conta.tipo)
+        self.template_file = functions.gets.get_template_file(self.conta.tipo)
 
         erro, msg = self.gerar_assinatura_local(self.conta)
         if erro is None:
