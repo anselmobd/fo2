@@ -3,7 +3,7 @@ digraph d_django {
   labelloc="t"
   label="Models\n(models.dot)"
   compound=true
-  rankdir = RL
+  rankdir = LR
   node [
     shape = "note"
   ]
@@ -22,8 +22,7 @@ digraph d_django {
     }
     User
   }
-
-  fo2_user -> User [arrowhead=inv]
+  User -> fo2_user [dir=back,arrowtail=inv]
 
 }
 
@@ -50,6 +49,14 @@ digraph d_fo2_base {
       fo2_base_user [label="User"]
     }
     Colaborador
+    {
+      node [
+        shape = "oval"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_base_Colaborador [label="Colaborador"]
+    }
     Requisicao
     TipoImagem
     Imagem
@@ -100,7 +107,7 @@ digraph d_fo2_base {
   Tamanho -> fo2_base_tamanho [dir=back,arrowtail=inv]
   Empresa -> fo2_base_empresa [dir=back,arrowtail=inv]
   SyncDelTable -> SyncDel
-
+  Colaborador -> fo2_base_Colaborador [dir=back,arrowtail=inv]
 }
 
 digraph d_fo2_geral {
@@ -175,8 +182,19 @@ digraph d_fo2_produto {
     label = "Fo2 Produto"
     style="dotted, rounded"
 
-    GtinRange
+    {
+      node [
+        shape = "oval"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_produto_Colaborador [label="Colaborador"]
+    }
     Composicao
+    ComposicaoLinha
+    FichaTecnica
+    GtinLog
+    GtinRange
     {
       node [
         shape = "oval"
@@ -195,7 +213,6 @@ digraph d_fo2_produto {
       ]
       fo2_produto_tamanho [label="Tamanho"]
     }
-    ProdutoTamanho
     ProdutoItem
     {
       node [
@@ -205,7 +222,8 @@ digraph d_fo2_produto {
       ]
       fo2_produto_produtoitem [label="ProdutoItem"]
     }
-    ComposicaoLinha
+    ProdutoTamanho
+    TipoFichaTecnica
   }
 
   Composicao -> Produto
@@ -224,6 +242,12 @@ digraph d_fo2_produto {
 
   Composicao -> ComposicaoLinha
 
+  fo2_produto_Colaborador -> GtinLog
+  Produto -> GtinLog
+  ProdutoCor -> GtinLog
+  ProdutoTamanho -> GtinLog
+
+  TipoFichaTecnica -> FichaTecnica
 }
 
 digraph d_fo2_contabil {
@@ -284,6 +308,7 @@ digraph d_fo2_estoque {
   TipoMovStq -> MovStq
   DocMovStq -> MovStq
   fo2_estoque_user -> MovStq
+  fo2_estoque_produtoitem -> MovStq
   fo2_estoque_produtoitem -> MovStq
 
 }
@@ -378,6 +403,7 @@ digraph d_fo2_comercial {
     MetaEstoqueCor
     MetaFaturamento
     PendenciaFaturamento
+    MetaModeloReferencia
   }
 
   ModeloPassado -> ModeloPassadoPeriodo
@@ -472,7 +498,7 @@ digraph d_fo2_tableheap {
   ]
 
   subgraph cluster_fo2_tableheap {
-    label = "Fo2 Produção (lotes) TableHeap"
+    label = "Fo2 Produção (lotes) Abandon"
     style="dotted, rounded"
 
     TableHeap
@@ -491,7 +517,7 @@ digraph d_fo2_tag {
   ]
 
   subgraph cluster_fo2_tag {
-    label = "Fo2 Produção (lotes) TAG"
+    label = "Fo2 Produção (lotes) Impresso TAG"
     style="dotted, rounded"
 
     {
@@ -526,7 +552,7 @@ digraph d_fo2_producao {
   ]
 
   subgraph cluster_fo2_producao {
-    label = "Fo2 Produção (lotes)"
+    label = "Fo2 Produção (lotes) OP"
     style="dotted, rounded"
 
     {
@@ -540,23 +566,15 @@ digraph d_fo2_producao {
     Caixa
     Op
     Lote
-    SolicitaLote
-    SolicitaLoteQtd
-    LeadColecao
-    RegraLMTamanho
   }
 
   fo2_producao_user -> Lote
   Caixa -> Lote
-
-  fo2_producao_user -> SolicitaLote
-
-  SolicitaLote -> SolicitaLoteQtd
-  Lote -> SolicitaLoteQtd
+  Op -> Lote
 
 }
 
-digraph d_fo2_insumo {
+digraph d_fo2_producao_solicita {
   sortv=14;
   labelloc="t"
   label="Models\n(models.dot)"
@@ -566,15 +584,39 @@ digraph d_fo2_insumo {
     shape = "note"
   ]
 
-  subgraph cluster_fo2_insumo {
-    label = "Fo2 Insumo"
+  subgraph cluster_fo2_producao {
+    label = "Fo2 Produção (lotes) Solictação"
     style="dotted, rounded"
 
-    SugestaoCompra
-    SugestaoCompraDatas
+    {
+      node [
+        shape = "oval"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_producao_solicita_user [label="User"]
+    }
+    {
+      node [
+        shape = "oval"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_producao_solicita_lote [label="Lote"]
+    }   
+    SolicitaLote
+    SolicitaLotePedido
+    SolicitaLoteQtd
+    SolicitaLotePrinted
+    EnderecoDisponivel
   }
 
-  SugestaoCompra -> SugestaoCompraDatas
+  fo2_producao_solicita_user -> SolicitaLote
+  SolicitaLote -> SolicitaLotePedido
+  SolicitaLote -> SolicitaLoteQtd
+  fo2_producao_solicita_lote -> SolicitaLoteQtd
+  SolicitaLote -> SolicitaLotePrinted
+  fo2_producao_solicita_user -> SolicitaLotePrinted
 
 }
 
@@ -655,8 +697,277 @@ digraph d_systextil {
     "Periodo PCPC_010"
     "Produto BASI_030"
     "Tamanho BASI_220"
+    "Usuario HDOC_030"
+    "Empresa FATU_500"
+    "TipoTransacao ESTQ_005"
+    "LinhaNivel1 BASI_120"
   }
 
   "HDoc001 HDOC_001" -> TipoContaEstoque
 
 }
+
+digraph d_itat {
+  sortv=18;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_systextil {
+    label = "ITAT"
+    style = "dotted, rounded"
+
+    Company
+    Location
+    OSType
+    "OS(itat)"
+    EquipmentType
+    Equipment
+    InterfaceType
+    DhcpConfig
+    Interface
+    Share
+  }
+
+  Company -> Location
+  OSType -> "OS(itat)"
+  EquipmentType -> Equipment
+  Equipment -> DhcpConfig
+  Equipment -> DhcpConfig
+  InterfaceType -> Interface
+  Equipment -> Interface
+  DhcpConfig -> Interface
+  Equipment -> Share
+}
+
+digraph d_fo2_servico {
+  sortv=19;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_producao {
+    label = "Fo2 Serviço"
+    style="dotted, rounded"
+
+    Classificacao
+    Documento
+    EquipeAtendimento
+    Evento
+    FuncaoExercida
+    Interacao
+    Status
+    StatusEvento
+    TipoDocumento
+    {
+      node [
+        shape = "oval"
+        style = "dashed"
+        color = gray
+      ]
+      fo2_producao_user [label="User"]
+    }
+    UsuarioFuncao
+  }
+
+  EquipeAtendimento -> UsuarioFuncao
+  FuncaoExercida -> UsuarioFuncao
+  fo2_producao_user -> UsuarioFuncao
+
+  TipoDocumento -> Documento
+  fo2_producao_user -> Documento
+
+  Status -> StatusEvento
+  Evento -> StatusEvento
+  Status -> StatusEvento
+
+  Documento -> Interacao
+  Evento -> Interacao
+  Status -> Interacao
+  fo2_producao_user -> Interacao
+  Classificacao -> Interacao
+  EquipeAtendimento -> Interacao
+}
+
+digraph d_fo2_producao_parametro {
+  sortv=20;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_producao {
+    label = "Fo2 Produção (lotes) Parâmetro"
+    style="dotted, rounded"
+
+    RegraColecao
+    RegraLMTamanho
+  }
+}
+
+digraph d_fo2_o2 {
+  sortv=21;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_producao {
+    label = "Fo2 O2"
+    style="dotted, rounded"
+
+    CsrfToken
+  }
+}
+
+digraph d_fo2_insumo {
+  sortv=22;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_insumo {
+    label = "Fo2 Insumo"
+    style="dotted, rounded"
+
+    SugestaoCompra
+    SugestaoCompraDatas
+  }
+
+  SugestaoCompra -> SugestaoCompraDatas
+
+}
+
+digraph d_fo2_tussor {
+  sortv=23;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_producao {
+    label = "Fo2 Tussor"
+    style="dotted, rounded"
+
+    DIS_DUP
+    DIS_CLI
+  }
+}
+
+digraph d_fo2_persona {
+  sortv=24;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_persona {
+    label = "Fo2 Persona"
+    style="dotted, rounded"
+
+    {
+      node [
+        shape = "diamond"
+        style = "dotted"
+      ]
+      " "
+    }
+  }
+}
+
+digraph d_fo2_beneficia {
+  sortv=25;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_beneficia {
+    label = "Fo2 Beneficia"
+    style="dotted, rounded"
+
+    {
+      node [
+        shape = "diamond"
+        style = "dotted"
+      ]
+      "  "
+    }
+  }
+}
+
+digraph d_fo2_cd {
+  sortv=26;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_cd {
+    label = "Fo2 CD"
+    style="dotted, rounded"
+
+    {
+      node [
+        shape = "diamond"
+        style = "dotted"
+      ]
+      "   "
+    }
+  }
+}
+
+digraph d_fo2_dp {
+  sortv=27;
+  labelloc="t"
+  label="Models\n(models.dot)"
+  compound=true
+  rankdir = LR
+  node [
+    shape = "note"
+  ]
+
+  subgraph cluster_fo2_dp {
+    label = "Fo2 DP"
+    style="dotted, rounded"
+
+    {
+      node [
+        shape = "diamond"
+        style = "dotted"
+      ]
+      "    "
+    }
+  }
+}
+
