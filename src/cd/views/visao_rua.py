@@ -45,9 +45,13 @@ class VisaoRua(View):
             row['local|TARGET'] = '_BLANK'
             row['local|LINK'] = reverse(
                 'cd:estoque_filtro', args=['E', row['local']])
+            row['local_det'] = row['local']
+            row['local_det|TARGET'] = '_BLANK'
+            row['local_det|LINK'] = reverse(
+                'cd:visao_rua_detalhe__get', args=[row['local']])
 
-        headers = ['Endereço', 'Solicitações', 'Lotes (caixas)', 'Qtd. itens']
-        fields = ['local', 'solicitacoes', 'qlotes', 'qtdsum']
+        headers = ['Endereço', 'Solicitações', 'Lotes (caixas)', 'Qtd. itens', 'Detalhe']
+        fields = ['local', 'solicitacoes', 'qlotes', 'qtdsum', 'local_det']
 
         total['local'] = 'Total:'
         total['solicitacoes'] = ''
@@ -65,8 +69,11 @@ class VisaoRua(View):
             'fields': fields,
             'data': data,
             'safe': ['solicitacoes'],
-            'style': {3: 'text-align: right;',
-                      4: 'text-align: right;'},
+            'style': {
+                3: 'text-align: right;',
+                4: 'text-align: right;',
+                5: 'text-align: right;',
+            },
         })
 
         return context
