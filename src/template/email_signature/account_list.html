@@ -10,7 +10,12 @@
 {% endblock %}
 
 {% block content %}
-  <p>
+  <p style="width:100%;">
+    {% if accounts %}
+      <div style="float:right;">
+        <a title="Gera todas as contas atualizadas" href="#" onclick="javascript:return GeraTodas();">Gera alteradas<span class="glyphicon glyphicon-save-file" style="font-size: 2em;" aria-hidden="true"></span></a>
+      </div>
+    {% endif %}
     <div>
       <a title="Adiciona uma conta" href="{% url 'email_signature:account_add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a>
     </div>
@@ -34,17 +39,28 @@
           <a title="Edita" href="{% url 'email_signature:account_change' account.id %}">{{account}}</a>
         </td>
         <td style="text-align: right;">
-          {%if account.state == 'R'%}
-            <span id="mess_{{account.id}}"></span>
-            <a title="Gera" href="#" onclick="javascript:return GeraAssin('{{account.id}}');"><span id="icone_{{account.id}}" class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>
-          {%else%}
-            <span class="glyphicon glyphicon-save-file" style="color: darkgreen;" aria-hidden="true"></span>
-          {%endif%}
+          <span id="mess_{{account.id}}">
+            {%if account.state == 'R'%}
+              Alterada
+            {%endif%}
+          </span>
+          <a title="Gera" href="#" onclick="javascript:return GeraAssin('{{account.id}}');"><span id="icone_{{account.id}}" class="glyphicon glyphicon-save-file" 
+            {%if account.state != 'R'%}
+              style="color: darkgreen;"
+            {%endif%}
+            aria-hidden="true"></span></a>
         </td>
       </tr>
       {%endfor%}
     </tbody>
   </table>
+  <p style="width:100%;">
+    {% if accounts %}
+      <div style="float:right;">
+        <a title="Força gerar todas as contas" href="#" onclick="javascript:return ForcaGeraTodas();">Gera todas<span class="glyphicon glyphicon-save-file" style="font-size: 2em; color: darkred" aria-hidden="true"></span></a>
+      </div>
+    {% endif %}
+  </p>
   {%else%}
     Nenhuma
   {%endif%}
@@ -52,43 +68,95 @@
 
 {% block javascript %}
   <script>
+    var intervalo = 1000;
+    var account_ids = [
+      {%for account in accounts%}
+        {%if account.state == 'R'%}
+          {{account.id}},
+        {%endif%}
+      {%endfor%}
+      -1
+    ];
+    var forca_account_ids = [
+      {%for account in accounts%}
+        {{account.id}},
+      {%endfor%}
+      -1
+    ];
+
+    function GeraTodas() {
+      console.log('todas');
+      if (account_ids[0] != -1) {
+        GeraIdxAccount(0);
+      }
+      return false;
+    }
+
+    function GeraIdxAccount(idx) {
+      console.log(idx);
+      GeraAssin(account_ids[idx]);
+      if (account_ids[idx+1] != -1) {
+        setTimeout(() => { GeraIdxAccount(idx+1); }, intervalo);
+      }
+    }
+
+    function ForcaGeraTodas() {
+      console.log('todas');
+      if (forca_account_ids[0] != -1) {
+        ForcaGeraIdxAccount(0);
+      }
+      return false;
+    }
+
+    function ForcaGeraIdxAccount(idx) {
+      console.log('idx: '+idx);
+      console.log('id: '+forca_account_ids[idx])
+      GeraAssin(forca_account_ids[idx]);
+      if (forca_account_ids[idx+1] != -1) {
+        setTimeout(() => { ForcaGeraIdxAccount(idx+1); }, intervalo);
+      }
+    }
+
     function GeraAssin(id) {
+      span_gerando = document.querySelector('#mess_'+id);
+      span_gerando.innerHTML='Gerando...';
+      var url='/email_signature/ajax/gerar_assinatura/'+id;
       $.ajax({
         type: 'GET',
-        url: '/email_signature/ajax/gerar_assinatura/'+id+'/',
+        url: url,
         data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
         success : function(data) {
-          var result = 'Sem retorno'
-          var cor = 'black'
+          var result = 'Sem retorno';
+          var cor = 'black';
           if (data) {
             result = data['result']
             if (result == 'OK') {
               console.log('OK!');
-              result = 'Gerada'
-              cor = 'darkgreen'
+              result = 'Gerada';
+              cor = 'darkgreen';
             } else {
               console.log(result+': '+data['descricao_erro']);
-              result = result+': '+data['descricao_erro']
-              cor = 'darkred'
+              result = result+': '+data['descricao_erro'];
+              cor = 'darkred';
             }
           } else {
             console.log('Sem retorno de pedido');
           }
-          span_el = document.querySelector('#mess_'+id);
-          span_el.innerHTML=result;
-          span_el = document.querySelector('#icone_'+id);
-          span_el.style.color=cor;
-          span_el.title=result;
+          span_msg = document.querySelector('#mess_'+id);
+          span_msg.innerHTML=result;
+          span_icone = document.querySelector('#icone_'+id);
+          span_icone.style.color=cor;
+          span_icone.title=result;
         },  // success
         error : function(data) {
           console.log('Erro na requisição');
-          var result = 'Erro na requisição'
-          var cor = 'black'
-          span_el = document.querySelector('#mess_'+id);
-          span_el.innerHTML=result;
-          span_el = document.querySelector('#icone_'+id);
-          span_el.style.color=cor;
-          span_el.title=result;
+          var result = 'Erro na requisição';
+          var cor = 'black';
+          span_emsg = document.querySelector('#mess_'+id);
+          span_emsg.innerHTML=result;
+          span_eicone = document.querySelector('#icone_'+id);
+          span_eicone.style.color=cor;
+          span_eicone.title=result;
         }  // error
       });  // ajax
       return false
