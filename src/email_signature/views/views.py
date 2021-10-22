@@ -1,33 +1,16 @@
 from pprint import pprint
 
-from django.views import View
 from django.shortcuts import render
 
-import email_signature.models as models
+import email_signature.functions as functions
 
 
 def index(request):
     return render(request, 'email_signature/index.html')
 
 
-def get_template(tipo):
-    try:
-        return models.Layout.objects.get(
-            habilitado=True,
-            tipo=tipo,
-        ).template
-    except Exception:
-        return
-
-
-def get_template_file(tipo=None):
-    template = get_template(tipo)
-    if template is not None:
-        return f'email_signature/{template}.html'
-
-
 def show_template(request, tipo):
-    template_file = get_template_file(tipo)
+    template_file = functions.gets.get_template_file(tipo)
 
     context = {
         'nome': 'Nome do funcionário',
