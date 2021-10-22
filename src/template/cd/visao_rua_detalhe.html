@@ -12,7 +12,11 @@
 {% block content %}
 <a href="{% url 'cd:visao_cd' %}">Visão do CD&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a><br />
 <a href="{% url 'cd:visao_rua__get' rua %}">Visão geral da rua {{ rua }}&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></span></a><br />
-<h3>Rua {{ rua }}</h3>
+{% if endereco %}
+  <h3>Endereço {{ endereco }}</h3>
+{% else %}
+  <h3>Rua {{ rua }}</h3>
+{% endif %}
 {% if data %}
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
