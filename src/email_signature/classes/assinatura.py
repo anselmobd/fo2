@@ -160,9 +160,6 @@ class GeraAssinatura():
         return None, None
 
     def exec(self):
-        if self.conta.state != "R":
-            return
-
         self.template_file = functions.gets.get_template_file(self.conta.tipo)
 
         erro, msg = self.gerar_assinatura_local(self.conta)
