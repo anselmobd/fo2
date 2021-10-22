@@ -75,6 +75,21 @@ class DbfUtil():
             except Exception:
                 return None
 
+    def mystrip(self, s):
+        return s.strip()
+
+    def filter_dup(self):
+        if self.args.filter_dup:
+            self.dbf.drop(
+                self.dbf[
+                    (self.dbf.d_dupnum == '0000000') |
+                    (self.dbf.d_dupnum.map(self.mystrip).map(len) < 6)
+                ].index,
+                inplace=True
+            )
+            self.dbf.drop_duplicates(
+                subset='d_dupnum', keep='last', inplace=True)
+
     def load(self):
         if self.dbf is None:
             self.dbf = pd.DataFrame(
@@ -85,6 +100,7 @@ class DbfUtil():
                     parserclass=self.MyFieldParser,
                 )
             )
+            self.filter_dup()
             self.dbf = self.dbf[self.rec_slice][self.fields if self.fields else self.dbf.columns]
 
     def print(self):
@@ -145,6 +161,12 @@ class DbfUtil():
             "-f", "--fields",
             type=str,
             help='List of fields to process')
+
+        parser.add_argument(
+            "--filter_dup",
+            action="store_true",
+            default=False,
+            help='Filtra d_dupnum fora do padrão')
 
         parser.add_argument(
             "-v", "--verbosity", action="count", default=0,
