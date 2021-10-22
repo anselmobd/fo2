@@ -27,11 +27,6 @@ urlpatterns = [
         views.show_template,
         name='show_template__get'),
 
-    re_path(r'^gerar_assinaturas$', views.GerarAssinaturas.as_view(),
-        name='gerar_assinaturas'),
-    re_path(r'^gerar_assinaturas/(?P<id>[^/]+)/$',
-        views.GerarAssinaturas.as_view(), name='gerar_assinaturas'),
-
     re_path(r'^ajax/gerar_assinatura/(?P<id>[^/]+)/$',
         views.ajax.gerar_assinatura,
         name='ajax_gerar_assinatura'),
