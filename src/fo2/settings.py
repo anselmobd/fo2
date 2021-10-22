@@ -142,6 +142,7 @@ TEMPLATES = [
                 'django_settings_export.settings_export',
                 'utils.pages_context.alter_context_processor',
                 'geral.functions.get_list_geral_paineis',
+                'email_signature.context.processor',
                 'estoque.pages_context.get_estoque_movimentos',
                 'base.pages_context.main',
             ],
