@@ -1,10 +1,7 @@
 from pprint import pprint
 
 from django.views import View
-from django.shortcuts import (
-    redirect,
-    render,
-    )
+from django.shortcuts import render
 
 import email_signature.models as models
 
@@ -15,10 +12,10 @@ def index(request):
 
 def get_template(tipo):
     try:
-        return models.Layout.objects.filter(
+        return models.Layout.objects.get(
             habilitado=True,
             tipo=tipo,
-        ).first().template
+        ).template
     except Exception:
         return
 
@@ -29,10 +26,8 @@ def get_template_file(tipo=None):
         return f'email_signature/{template}.html'
 
 
-def show_template(request, tipo=None):
+def show_template(request, tipo):
     template_file = get_template_file(tipo)
-    if template_file is None:
-        return redirect('intranet')
 
     context = {
         'nome': 'Nome do funcionário',

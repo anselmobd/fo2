@@ -20,9 +20,6 @@ urlpatterns = [
         views.AccountDeleteView.as_view(),
         name='account_delete'),
 
-    re_path(r'^show_template$',
-        views.show_template,
-        name='show_template'),
     re_path(r'^show_template/(?P<tipo>[^/]+)/$',
         views.show_template,
         name='show_template__get'),
