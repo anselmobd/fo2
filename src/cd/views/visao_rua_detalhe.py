@@ -15,10 +15,16 @@ class VisaoRuaDetalhe(View):
 
     def __init__(self):
         self.template_name = 'cd/visao_rua_detalhe.html'
-        self.title_name = 'Visão detalhada de rua do CD'
+        self.title_name = 'Visão detalhada do CD'
 
     def mount_context(self, rua):
-        context = {'rua': rua}
+        if len(rua) == 1:
+            context = {'rua': rua}
+        else:
+            context = {
+                'rua': rua[0],
+                'endereco': rua,
+            }
 
         solic_dict = get_solic_dict(rua)
 
@@ -67,8 +73,11 @@ class VisaoRuaDetalhe(View):
             'group': group,
             'data': data,
             'safe': ['solicitacoes'],
-            'style': {6: 'text-align: right;',
-                      7: 'text-align: right;'},
+            'style': {
+                6: 'text-align: right;',
+                7: 'text-align: right;',
+                8: 'text-align: right;',
+            },
         })
 
         return context
