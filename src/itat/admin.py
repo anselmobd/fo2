@@ -59,7 +59,7 @@ class EquipmentAdmin(admin.ModelAdmin):
         'type',
         ('name', 'slug'),
         'description',
-        'use',
+        'application',
         'users',
         'primary_ip',
     )
