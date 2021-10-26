@@ -12,6 +12,11 @@ h1 { font-size: 3vw; }
 
 ul { margin-left: -1.5em }
 
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
 /*
 --------------------------------------------------
   Print
