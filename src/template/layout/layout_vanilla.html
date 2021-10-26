@@ -29,16 +29,46 @@
 
 </head>
 <body>
-  <ul class="fo2nb">
-    <li><a class="active imagem h20" href="{% url 'intranet' %}"><img src="{% static "img/DUOMO_micro.png" %}" height="20" width="88" title="Intranet cuecas D'UOMO"></a></li>
-    <li><a class="imagem h22" href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22" title="RH em ação!"></a></li>
-    <li><a href="{% url 'apoio_ao_erp' %}">Apoio</a></li>
-    <li><a target="_blank" href="{% url 'systextil' %}">Systêxtil</a></li>
-    <li class="direita"><a class="imagem h20" href="#"><img src="{% static "img/people.svg" %}" height="20" title="Lista usuários logados" >{{logged_count}}</a></li>
-  </ul>
-  <div class="fo2body">
-    {% block content %}{% endblock %}
-  </div>
+  <header>
+    {% block pageheader %}{% endblock %}
+  </header>
+  <main>
+    <div class="fullwidth">
+      {% block intranetheader %}
+        <div class="noprint">
+
+          <ul class="fo2nb">
+            <li><a class="active imagem h20" href="{% url 'intranet' %}"><img src="{% static "img/DUOMO_micro.png" %}" height="20" width="88" title="Intranet cuecas D'UOMO"></a></li>
+            <li><a class="imagem h22" href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22" title="RH em ação!"></a></li>
+            <li><a href="{% url 'apoio_ao_erp' %}">Apoio</a></li>
+            <li><a target="_blank" href="{% url 'systextil' %}">Systêxtil</a></li>
+            <li class="direita"><a class="imagem h20" href="#"><img src="{% static "img/people.svg" %}" height="20" title="Lista usuários logados" >{{logged_count}}</a></li>
+          </ul>
+
+        </div>
+        <div class="fo2body">
+      {% endblock %}
+      {% block divheader %}
+        <div class="container-fluid">
+          <div class="hidden-xs fo2 page-header">
+            {% block header %}
+              {% block header.pre %}{% endblock header.pre %}{% block header.content %}
+              {% endblock header.content %}{% block header.pos %}{% endblock header.pos %}
+            {% endblock %}
+          </div>
+        </div>
+      {% endblock %}
+      <div class="fo2body container-fluid">
+        {% block content %}{% endblock %}
+      </div>
+      <div class="container-fluid noprint">
+        <hr style="margin-top: 0px; margin-bottom: 5px;">
+      </div>
+      {% block intranetheader %}
+        </div> <!-- class="fo2body" -->
+      {% endblock %}
+    </div>
+  </main>
   {% block footer %}{% endblock %}
   {% block javascript %}{% endblock %}
   {% block footer_space %}{% endblock %}
