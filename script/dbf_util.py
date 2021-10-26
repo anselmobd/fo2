@@ -166,13 +166,13 @@ class DbfUtil():
             help='List of fields to process')
 
         parser.add_argument(
-            "--filter_dup",
+            "--filter-dup",
             action="store_true",
             default=False,
             help='Filtra d_dupnum fora do padrão')
 
         parser.add_argument(
-            "--no_drop",
+            "--no-drop",
             action="store_true",
             default=False,
             help='Não apaga a tabela antes de inserir dados')
