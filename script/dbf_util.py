@@ -109,8 +109,10 @@ class DbfUtil():
     def to_sqlite(self):
         sql_data = 'dbf.sqlite'
         conn = sq.connect(sql_data)
-        cur = conn.cursor()
-        cur.execute(f"DROP TABLE IF EXISTS {self.table_name}")
+        if self.drop:
+            cur = conn.cursor()
+            cur.execute(f"DROP TABLE IF EXISTS {self.table_name}")
+            conn.commit()
         self.dbf.to_sql(self.table_name, conn, if_exists='replace', index=False)
         conn.commit()
         conn.close()
@@ -121,6 +123,7 @@ class DbfUtil():
         elif self.args.table:
             self.action = self.to_sqlite
             self.table_name = self.args.table
+            self.drop = not self.args.no_drop
   
     def dbf_file(self, astring):
         if not os.path.isfile(astring):
@@ -167,6 +170,12 @@ class DbfUtil():
             action="store_true",
             default=False,
             help='Filtra d_dupnum fora do padrão')
+
+        parser.add_argument(
+            "--no_drop",
+            action="store_true",
+            default=False,
+            help='Não apaga a tabela antes de inserir dados')
 
         parser.add_argument(
             "-v", "--verbosity", action="count", default=0,
