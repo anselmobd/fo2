@@ -1,3 +1,42 @@
 <ul>
-  <li><a href="{% url 'systextil:sessions' %}">Seções</a></li>
+  <li><a href="{% url 'systextil' %}" target="_blank"><span class="stnavbar stlogo">Systêxtil<b>ERP</b></span></a></li>
+  <ul>
+    <li>
+    {% if externo %}
+      {%comment%}
+      {%if alter_db%}
+        <a href="http://systextil.tussor.com.br:8045/systextil/sessions" target="_blank">
+      {% else %}
+      {%endcomment%}
+        <a href="http://tussor.systextil.com.br/systextil/sessions" target="_blank">
+      {%comment endif%}{%endcomment%}
+    {% else %}
+      {%comment%}
+      {%if alter_db%}
+        <a href="http://systextil.tussor.com.br/systextil/sessions" target="_blank">
+      {% else %}
+      {%endcomment%}
+        <a href="http://oc.tussor.com.br/systextil/sessions" target="_blank">
+      {%comment endif%}{%endcomment%}
+    {% endif %}
+    Sessões</a></li>
+  </ul>
+  <li><a href="{% url 'apoio_ao_erp' %}">Apoio ao ERP</a></li>
+  <ul>
+    <li><a href="{% url 'systextil:sessions' %}">Sessões</a></li>
+  </ul>
+  <li>Systêxtil</li>
+  <ul>
+    <li><a href="https://systextil.movidesk.com/" target="_blank">Área do cliente (Ticket)</a></li>
+    <li>Base de conhecimento</li>
+    <ul>
+      <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/overview" target="_blank">Pesquise</a></li>
+      <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/pages/6202151" target="_blank">Bugs corrigidos</a></li>
+      <li><a href="https://devsystextil.atlassian.net/wiki/spaces/BCST/pages/296976389" target="_blank">Dúvidas e soluções</a></li>
+    </ul>
+  </ul>
+  <li>InfraWorld</li>
+  <ul>
+    <li><a href="https://suporte.infraworld.com.br/" target="_blank">Suporte</a></li>
+  </ul>
 </ul>
