@@ -130,6 +130,17 @@ class DbfUtil():
         except sq.DatabaseError:
             print('Não criado índice.')
 
+    def existe_registro(self, cursor, table_name, value):
+        sql = f'''
+            select
+                count(*) c
+            from {table_name}
+            where {self.pk_field} = {value}
+        '''
+        cursor.execute(sql)
+        rows = cursor.fetchone()
+        return rows.c != 0
+
     def insert_update(self, table, conn, keys, data_iter):
         if table.schema:
             table_name = '{}.{}'.format(table.schema, table.name)
@@ -153,28 +164,23 @@ class DbfUtil():
                 for kv in zip(keys, row)
             ])
 
-            sql = f'''
-                select
-                    {self.pk_field}
-                from {table_name}
-                where {self.pk_field} = {data[pk_position]}
-            '''
-            conn.execute(sql)
-            rows = conn.fetchall()
-            if len(rows) == 0:
-                sql = f'''
-                    insert into {table_name} ({columns})
-                    values ({values})
-                '''
-            else:
+            existe = self.existe_registro(cursor, table_name, data[pk_position])
+            if existe:
                 sql = f'''
                     UPDATE {table_name}
                     SET {update}
                     where {self.pk_field} = {data[pk_position]}
                 '''
+            else:
+                sql = f'''
+                    insert into {table_name} ({columns})
+                    values ({values})
+                '''
             print(sql)
             conn.execute(sql)
             return
+
+        return
 
     def to_sqlite(self):
         self.pk_field = 'd_dupnum'
