@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+from datetime import date
 import os
 import pandas as pd
 import sqlite3 as sq
@@ -105,6 +106,16 @@ class DbfUtil():
 
     def print(self):
         print(self.dbf.to_string(index=False))      
+
+    def val2sql(self, val):
+        if isinstance(val, str):
+            return f"'{val}'"
+        elif isinstance(val, date):
+            return f"'{val.ctime()}'"
+        elif val is None:
+            return 'NULL'
+        else:
+            return str(val)
 
     def insert_update(self, table, conn, keys, data_iter):
         pass
