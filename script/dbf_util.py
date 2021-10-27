@@ -113,7 +113,12 @@ class DbfUtil():
             cur = conn.cursor()
             cur.execute(f"DROP TABLE IF EXISTS {self.table_name}")
             conn.commit()
-        self.dbf.to_sql(self.table_name, conn, if_exists='replace', index=False)
+        self.dbf.to_sql(
+            self.table_name,
+            conn,
+            if_exists='append',
+            index=False,
+        )
         conn.commit()
         conn.close()
 
