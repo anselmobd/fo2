@@ -158,20 +158,19 @@ class DbfUtil():
         for data in data_iter:
             row = [self.val2sql(v) for v in data]
 
-            values = ', '. join(row)
-            update = ', '. join([
-                f"{kv[0]} = {kv[1]}"
-                for kv in zip(keys, row)
-            ])
-
             existe = self.existe_registro(cursor, table_name, data[pk_position])
             if existe:
+                update = ', '. join([
+                    f"{kv[0]} = {kv[1]}"
+                    for kv in zip(keys, row)
+                ])
                 sql = f'''
                     UPDATE {table_name}
                     SET {update}
                     where {self.pk_field} = {data[pk_position]}
                 '''
             else:
+                values = ', '. join(row)
                 sql = f'''
                     insert into {table_name} ({columns})
                     values ({values})
