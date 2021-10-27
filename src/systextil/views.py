@@ -11,7 +11,7 @@ def index(request):
 
 
 def sessions(request):
-    context = {"titulo": "Seções"}
+    context = {"titulo": "Sessões"}
     json = get_sessions()
 
     ips = {}
