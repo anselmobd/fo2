@@ -106,6 +106,9 @@ class DbfUtil():
     def print(self):
         print(self.dbf.to_string(index=False))      
 
+    def insert_update(self, table, conn, keys, data_iter):
+        pass
+    
     def to_sqlite(self):
         sql_data = 'dbf.sqlite'
         conn = sq.connect(sql_data)
@@ -118,6 +121,7 @@ class DbfUtil():
             conn,
             if_exists='append',
             index=False,
+            method=self.method,
         )
         conn.commit()
         conn.close()
@@ -129,6 +133,10 @@ class DbfUtil():
             self.action = self.to_sqlite
             self.table_name = self.args.table
             self.drop = not self.args.no_drop
+            if self.args.insert_update:
+                self.method = self.insert_update
+            else:
+                self.method = None
   
     def dbf_file(self, astring):
         if not os.path.isfile(astring):
@@ -181,6 +189,12 @@ class DbfUtil():
             action="store_true",
             default=False,
             help='Não apaga a tabela antes de inserir dados')
+
+        parser.add_argument(
+            "--insert-update",
+            action="store_true",
+            default=False,
+            help='Utiliza método insert_update no to_sql')
 
         parser.add_argument(
             "-v", "--verbosity", action="count", default=0,
