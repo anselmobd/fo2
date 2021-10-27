@@ -117,6 +117,19 @@ class DbfUtil():
         else:
             return str(val)
 
+    def create_index(self, conn, table_name):
+        sql = f'''
+            create index if not exists
+                {table_name}_idx
+            on {table_name} (
+                {self.pk_field}
+            )
+        '''
+        try:
+            conn.execute(sql)
+        except sq.DatabaseError:
+            print('Não criado índice.')
+
     def insert_update(self, table, conn, keys, data_iter):
         if table.schema:
             table_name = '{}.{}'.format(table.schema, table.name)
@@ -126,6 +139,8 @@ class DbfUtil():
         columns = ', '.join(k for k in keys)
 
         pk_position = keys.index(self.pk_field)
+
+        self.create_index(conn, table_name)
 
         for data in data_iter:
             row = [self.val2sql(v) for v in data]
