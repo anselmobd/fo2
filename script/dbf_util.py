@@ -118,9 +118,49 @@ class DbfUtil():
             return str(val)
 
     def insert_update(self, table, conn, keys, data_iter):
-        pass
-    
+        if table.schema:
+            table_name = '{}.{}'.format(table.schema, table.name)
+        else:
+            table_name = table.name
+
+        columns = ', '.join(k for k in keys)
+
+        pk_position = keys.index(self.pk_field)
+
+        for data in data_iter:
+            row = [self.val2sql(v) for v in data]
+
+            values = ', '. join(row)
+            update = ', '. join([
+                f"{kv[0]} = {kv[1]}"
+                for kv in zip(keys, row)
+            ])
+
+            sql = f'''
+                select
+                    {self.pk_field}
+                from {table_name}
+                where {self.pk_field} = {data[pk_position]}
+            '''
+            conn.execute(sql)
+            rows = conn.fetchall()
+            if len(rows) == 0:
+                sql = f'''
+                    insert into {table_name} ({columns})
+                    values ({values})
+                '''
+            else:
+                sql = f'''
+                    UPDATE {table_name}
+                    SET {update}
+                    where {self.pk_field} = {data[pk_position]}
+                '''
+            print(sql)
+            conn.execute(sql)
+            return
+
     def to_sqlite(self):
+        self.pk_field = 'd_dupnum'
         sql_data = 'dbf.sqlite'
         conn = sq.connect(sql_data)
         if self.drop:
