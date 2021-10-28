@@ -42,7 +42,18 @@
             <li><a class="imagem h22" href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22" title="RH em ação!"></a></li>
             <li><a class="" href="{% url 'apoio_ao_erp' %}">Apoio</a></li>
             <li><a target="_blank" href="{% url 'systextil' %}">Systêxtil</a></li>
-            <li class="direita"><a class="imagem h20" href="#"><img src="{% static "img/people.svg" %}" height="20" title="Lista usuários logados" >{{logged_count}}</a></li>
+            {% if base_ip_interno %}
+              {% if not request.user.is_authenticated %}
+                <li class="direita"><a href="{% url 'persona:cria_usuario' %}?next={% url 'intranet' %}">Criar conta</a></li>
+              {% endif %}
+            {% endif %}
+            <li class="direita"><a class="imagem h20" href="{% url 'base:usuarios' %}"><img src="{% static "img/people.svg" %}" height="20" title="Lista usuários logados" >{{logged_count}}</a></li>
+            {% if request.user.is_authenticated %}
+              <li class="direita"><a href="/rootadm/password_change/?next={% url 'intranet' %}">Senha</a></li>
+              <li class="direita"><a href="{% url 'encerrar_intranet' %}">Encerrar ({{ request.user.username }})</a></li>
+            {% else %}
+              <li class="direita"><a href="{% url 'login' %}?next={% url 'intranet' %}">Identificar-se</a></li>
+            {% endif %}
           </ul>
 
         </div>
