@@ -12,7 +12,7 @@ class GeraAssinatura():
 
     def __init__(self, conta):
         self.conta = conta
-        tf = tempfile.NamedTemporaryFile(prefix="_temp_assinatura_file", suffix=".html")
+        tf = tempfile.NamedTemporaryFile(prefix=f"_{conta.id}_temp_assinatura_file_", suffix=".html")
         self.temp_file = tf.name
         self.transf = {}
 
