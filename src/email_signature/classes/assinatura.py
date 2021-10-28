@@ -14,12 +14,12 @@ class GeraAssinatura():
         self.conta = conta
         tf = tempfile.NamedTemporaryFile(prefix=f"_{conta.id}_temp_assinatura_file_", suffix=".html")
         self.temp_file = tf.name
+        self.nome_de_arquivo = os.path.join('.', self.temp_file)
         self.transf = {}
 
     def apagar_assinatura_local(self):
-        arquivo = os.path.join('.', self.temp_file)
         try:
-            os.remove(arquivo)
+            os.remove(self.nome_de_arquivo)
         except FileNotFoundError:
             pass
 
@@ -38,8 +38,7 @@ class GeraAssinatura():
         except Exception:
             return 'Erro', 'Renderizando template'
         try:
-            nome_de_arquivo = os.path.join('.', self.temp_file)
-            with open(nome_de_arquivo, 'w') as arquivo:
+            with open(self.nome_de_arquivo, 'w') as arquivo:
                 arquivo.write(assinatura)
         except Exception:
             return 'Erro', 'Escrevendo arquivo'
@@ -162,6 +161,7 @@ class GeraAssinatura():
     def exec(self):
         self.template_file = functions.gets.get_template_file(self.conta.tipo)
 
+        self.apagar_assinatura_local()
         erro, msg = self.gerar_assinatura_local(self.conta)
         if erro is None:
             erro, msg = self.enviar_assinatura(self.conta)
