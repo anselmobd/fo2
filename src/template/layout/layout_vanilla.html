@@ -41,7 +41,7 @@
             <li><a class="active imagem h20" href="{% url 'intranet' %}"><img src="{% static "img/DUOMO_micro.png" %}" height="20" width="88" title="Intranet cuecas D'UOMO"></a></li>
             <li><a class="imagem h22" href="{% url 'rh:index' %}"><img src="{% static "img/RH_micro.jpg" %}" alt="RH" height="22" width="22" title="RH em ação!"></a></li>
             <li><a class="" href="{% url 'apoio_ao_erp' %}">Apoio</a></li>
-            <li><a target="_blank" href="{% url 'systextil' %}">Systêxtil</a></li>
+            <li><a target="_blank" href="{% url 'systextil' %}">Systêxtil<b>ERP</b></a></li>
             {% if base_ip_interno %}
               {% if not request.user.is_authenticated %}
                 <li class="direita"><a href="{% url 'persona:cria_usuario' %}?next={% url 'intranet' %}">Criar conta</a></li>
