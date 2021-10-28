@@ -49,9 +49,9 @@ class RearrumarForm(forms.Form):
             raise forms.ValidationError(
                 "Deve iniciar com uma letra.")
 
-        if not endereco[1:].isdigit():
+        if not endereco[2:].isdigit():
             raise forms.ValidationError(
-                "Depois da letra inicial deve ter apenas números.")
+                "Depois de 1 ou 2 letras iniciais deve ter apenas números.")
 
         lotes_no_local = lotes.models.Lote.objects.filter(
             local=endereco).count()
@@ -83,9 +83,9 @@ class LoteForm(forms.Form):
             if not endereco[0].isalpha():
                 raise forms.ValidationError(
                     "Deve iniciar com uma letra.")
-            if not endereco[1:].isdigit():
+            if not endereco[2:].isdigit():
                 raise forms.ValidationError(
-                    "Depois da letra inicial deve ter apenas números.")
+                    "Depois de 1 ou 2 letras iniciais deve ter apenas números.")
         data = self.data.copy()
         data['endereco'] = endereco
         self.data = data
@@ -116,9 +116,9 @@ class EnderecarForm(forms.Form):
         if not endereco[0].isalpha():
             raise forms.ValidationError(
                 "Deve iniciar com uma letra.")
-        if not endereco[1:].isdigit():
+        if not endereco[2:].isdigit():
             raise forms.ValidationError(
-                "Depois da letra inicial deve ter apenas números.")
+                "Depois de 1 ou 2 letras iniciais deve ter apenas números.")
         data = self.data.copy()
         data['endereco'] = endereco
         self.data = data
@@ -406,9 +406,9 @@ class EstoqueForm(forms.Form):
             if not endereco[0].isalpha():
                 raise forms.ValidationError(
                     "Deve iniciar com uma letra.")
-            if not endereco[1:].isdigit():
+            if not endereco[2:].isdigit():
                 raise forms.ValidationError(
-                    "Depois da letra inicial deve ter apenas números.")
+                    "Depois de 1 ou 2 letras iniciais deve ter apenas números.")
         data = self.data.copy()
         data['endereco'] = endereco
         self.data = data
@@ -450,9 +450,9 @@ class ConfereForm(forms.Form):
                 raise forms.ValidationError(
                     "Deve iniciar com uma letra.")
             if len(endereco) > 1:
-                if not endereco[1:].isdigit():
+                if not endereco[2:].isdigit():
                     raise forms.ValidationError(
-                        "Depois da letra inicial deve ter apenas números.")
+                        "Depois de 1 ou 2 letras iniciais deve ter apenas números.")
         data = self.data.copy()
         data['endereco'] = endereco
         self.data = data
