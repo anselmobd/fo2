@@ -1,9 +1,9 @@
 {% extends 'systextil/index.html' %}
 {% load static %}
 
-{% block title.content %}{{ block.super }} &sol; {{ titulo }}{% endblock title.content %}
+{% block title.content %}{{ block.super }} &rsaquo; {{ titulo }}{% endblock title.content %}
 
-{% block header.content %}{{ block.super }} &sol; <a href="{% url 'systextil:sessions' %}">{{ titulo }}</a>{% endblock header.content %}
+{% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'systextil:sessions' %}">{{ titulo }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
   <style>
