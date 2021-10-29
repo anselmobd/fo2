@@ -1,9 +1,9 @@
 {% extends 'base/index.html' %}
 {% load static %}
 
-{% block title.content %}{{ block.super }} &sol; {{ titulo }}{% endblock title.content %}
+{% block title.content %}{{ block.super }} &rsaquo; {{ titulo }}{% endblock title.content %}
 
-{% block header.content %}{{ block.super }} &sol; <a href="{% url 'base:testa_db' %}">{{ titulo }}</a>{% endblock header.content %}
+{% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'base:testa_db' %}">{{ titulo }}</a>{% endblock header.content %}
 
 {% load l10n %}
 {% load humanize %}
