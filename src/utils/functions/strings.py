@@ -1,3 +1,4 @@
+import textwrap
 from pprint import pprint
 
 
@@ -47,3 +48,19 @@ def split_non_empty(text, sep):
         for t in text.split(sep)
         if t.strip()
     ]
+
+def lm(string):
+    """Left Margin
+    Desidenta string de acordo com a identação da primeira linha.
+    Exemplo de uso:
+    sql = textwrap.dedent('''\
+        select
+          count(*)
+        from tabela
+    ''')
+    print(sql)
+    select
+      count(*)
+    from tabela
+    """
+    return textwrap.dedent(string)
