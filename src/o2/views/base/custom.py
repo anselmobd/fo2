@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.apps import apps
 from django.shortcuts import redirect, render
 from django.views import View
 
@@ -49,8 +50,14 @@ class CustomView(View):
         self.request = request
         self.kwargs = kwargs
 
+        self.app_name = request.resolver_match.app_name
+        self.app_config = apps.get_app_config(self.app_name)
+
         if hasattr(self, 'title_name'):
-            self.context.update({'titulo': self.title_name})
+            self.context.update({
+                'titulo': self.title_name,
+                'app_config': self.app_config,
+            })
 
         if self.get_args2context:
             for arg in self.get_args:
