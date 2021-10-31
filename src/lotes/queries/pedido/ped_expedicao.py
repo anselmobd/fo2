@@ -183,6 +183,17 @@ def ped_expedicao(
         sql += """ --
             , i.CD_IT_PE_ITEM
             , t.ORDEM_TAMANHO"""
-
+    if detalhe == 'o':
+        sql = f"""
+          WITH sele AS
+          ( {sql}
+          )
+          select
+            s.*
+          , p.OBSERVACAO
+          from sele s
+          JOIN PEDI_100 p -- pedido de venda
+            ON p.PEDIDO_VENDA = s.PEDIDO_VENDA
+        """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
