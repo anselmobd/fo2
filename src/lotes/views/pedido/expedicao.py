@@ -127,8 +127,14 @@ class Expedicao(View):
                     row['GTIN_OK'] = 'Sim'
                 else:
                     row['GTIN_OK'] = 'Não'
+            if detalhe == 'o':
+                if row['OBSERVACAO']:
+                    row['CLIENTE'] = "{}<br>{}".format(
+                        row['CLIENTE'],
+                        row['OBSERVACAO'],
+                    )
 
-        if detalhe != 'p':
+        if detalhe not in ['p', 'o']:
             group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
@@ -146,7 +152,10 @@ class Expedicao(View):
         headers.append('Pedido cliente')
         headers.append('Data emissão')
         headers.append('Data embarque')
-        headers.append('Cliente')
+        if detalhe == 'o':
+            headers.append('Cliente / Observação')
+        else:
+            headers.append('Cliente')
         if detalhe in ('r', 'c'):
             headers.append('Referência')
         if detalhe == 'c':
@@ -181,8 +190,9 @@ class Expedicao(View):
             'data': data,
             'style': style,
             'qtd_total': qtd_total,
+            'safe': ['CLIENTE']
         })
-        if detalhe != 'p':
+        if detalhe not in ['p', 'o']:
             context.update({
                 'group': group,
             })
