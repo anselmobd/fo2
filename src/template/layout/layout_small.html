@@ -84,8 +84,10 @@
                       <li><a href="#">One more separated link</a></li>
                     </ul> -->
                   <!-- </li> -->
-                  <li><a href="{% url 'apoio_ao_erp' %}">Apoio</a></li>
-                  <li><a target="_blank" href="{% url 'systextil' %}">Systêxtil<b>ERP</b></a></li>
+                  {% if request.user.is_authenticated or base_ip_interno %}
+                    <li><a href="{% url 'apoio_ao_erp' %}">Apoio</a></li>
+                    <li><a target="_blank" href="{% url 'systextil' %}">Systêxtil<b>ERP</b></a></li>
+                  {% endif %}
                 </ul>
                 <!-- <form class="navbar-form navbar-left">
                   <div class="form-group">
