@@ -603,7 +603,7 @@ class ExpedicaoForm(forms.Form):
         ('r', 'Por pedido-referência'),
         ('c', 'Por pedido-referência-cor-tamanho'),
         ('p', 'Por pedido (e qualidade de GTIN)'),
-        ('o', 'Por pedido-Observação'),
+        ('o', 'Por pedido (e Obs. e OP)'),
         ('g', 'Por grade de referência'),
     ]
     detalhe = forms.ChoiceField(

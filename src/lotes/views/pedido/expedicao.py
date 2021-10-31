@@ -128,6 +128,16 @@ class Expedicao(View):
                 else:
                     row['GTIN_OK'] = 'Não'
             if detalhe == 'o':
+                o_data = queries.pedido.ped_op(cursor, row['PEDIDO_VENDA'])
+                row['OP'] = []
+                for o_row in o_data:
+                    if o_row['SITUACAO'] != 9:
+                        row['OP'].append(o_row['ORDEM_PRODUCAO'])
+                pprint(row['OP'])
+                if row['OP']:
+                    row['OP'] = ', '.join(map(str, sorted(row['OP'])))
+                else:
+                    row['OP'] = '-'
                 if row['OBSERVACAO']:
                     row['CLIENTE'] = "{}<br>{}".format(
                         row['CLIENTE'],
@@ -154,6 +164,7 @@ class Expedicao(View):
         headers.append('Data embarque')
         if detalhe == 'o':
             headers.append('Cliente / Observação')
+            headers.append('OP')
         else:
             headers.append('Cliente')
         if detalhe in ('r', 'c'):
@@ -170,6 +181,8 @@ class Expedicao(View):
         fields.append('DT_EMISSAO')
         fields.append('DT_EMBARQUE')
         fields.append('CLIENTE')
+        if detalhe == 'o':
+            fields.append('OP')
         if detalhe in ('r', 'c'):
             fields.append('REF')
         if detalhe == 'c':
