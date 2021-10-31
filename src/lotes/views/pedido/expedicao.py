@@ -129,11 +129,15 @@ class Expedicao(View):
                     row['GTIN_OK'] = 'Não'
             if detalhe == 'o':
                 o_data = queries.pedido.ped_op(cursor, row['PEDIDO_VENDA'])
-                row['OP'] = []
+                ops = []
                 for o_row in o_data:
                     if o_row['SITUACAO'] != 9:
-                        row['OP'].append(o_row['ORDEM_PRODUCAO'])
-                pprint(row['OP'])
+                        ops.append(o_row['ORDEM_PRODUCAO'])
+                row['OP'] = []
+                for op in sorted(ops):
+                    link = reverse(
+                        'producao:op__get', args=[op])
+                    row['OP'].append(f'<a href="{link}" target="_blank">{op}</a>')
                 if row['OP']:
                     row['OP'] = ', '.join(map(str, sorted(row['OP'])))
                 else:
@@ -183,6 +187,9 @@ class Expedicao(View):
         fields.append('CLIENTE')
         if detalhe == 'o':
             fields.append('OP')
+            safe = ['CLIENTE', 'OP']
+        else:
+            safe = []
         if detalhe in ('r', 'c'):
             fields.append('REF')
         if detalhe == 'c':
@@ -203,7 +210,7 @@ class Expedicao(View):
             'data': data,
             'style': style,
             'qtd_total': qtd_total,
-            'safe': ['CLIENTE']
+            'safe': safe,
         })
         if detalhe not in ['p', 'o']:
             context.update({
