@@ -10,22 +10,22 @@ def ped_expedicao(
     filtro_embarque_de = ''
     if embarque_de is not None:
         filtro_embarque_de = ''' --
-            AND ped.DATA_ENTR_VENDA >= '{}' '''.format(embarque_de)
+            AND ped.DATA_ENTR_VENDA >= DATE '{}' '''.format(embarque_de)
 
     filtro_embarque_ate = ''
     if embarque_ate is not None:
         filtro_embarque_ate = ''' --
-            AND ped.DATA_ENTR_VENDA <= '{}' '''.format(embarque_ate)
+            AND ped.DATA_ENTR_VENDA <= DATE '{}' '''.format(embarque_ate)
 
     filtro_emissao_de = ''
     if emissao_de is not None and emissao_de != '':
         filtro_emissao_de = ''' --
-            AND ped.DATA_EMIS_VENDA >= '{}' '''.format(emissao_de)
+            AND ped.DATA_EMIS_VENDA >= DATE '{}' '''.format(emissao_de)
 
     filtro_emissao_ate = ''
     if emissao_ate is not None and emissao_ate != '':
         filtro_emissao_ate = ''' --
-            AND ped.DATA_EMIS_VENDA <= '{}' '''.format(emissao_ate)
+            AND ped.DATA_EMIS_VENDA <= DATE '{}' '''.format(emissao_ate)
 
     filtro_pedido_tussor = ''
     if pedido_tussor != '':
