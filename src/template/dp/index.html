@@ -1,9 +1,8 @@
-{% extends 'layout/layout.html' %}
-{% load static %}
+{% extends 'intranet.html' %}
 
-{% block title.content %}RH - Informações internas{% endblock title.content %}
+{% block title.content %}{{ block.super }} &rsaquo; DP/RH{% endblock title.content %}
 
-{% block header.content %}RH - Informações internas{% endblock header.content %}
+{% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'dp:index' %}">DP/RH</a>{% endblock header.content %}
 
 {% block content %}
 {% include 'dp/menu.html' %}
