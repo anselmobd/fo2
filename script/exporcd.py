@@ -34,8 +34,8 @@ class ExpCD():
         )
         self.cursor = self.conn.cursor()
     
-    def get_locais(self):
-        sql = """
+    def get_locais_sql(self):
+        return """
             select distinct
               l.local
             from fo2_cd_lote l
@@ -54,25 +54,38 @@ class ExpCD():
             order by
               l.local
         """
-        self.cursor.execute(sql)
+
+    def get_locais(self):
+        self.cursor.execute(self.get_locais_sql())
 
     def print_cursor_fetchall(self):
+        self.get_locais()
         data = self.cursor.fetchall()
         pprint(data[:10])
         print(data[0][0])
         print('fetchall', sys.getsizeof(data))
 
     def print_cursor_dict(self):
+        self.get_locais()
         data = rows_to_dict_list_lower(self.cursor)
         pprint(data[:10])
         print(data[0]['local'])
         print('dict', sys.getsizeof(data))
 
     def print_cursor_namedtuple(self):
+        self.get_locais()
         data = rows_to_namedtuple(self.cursor)
         pprint(data[:10])
         print(data[0].local)
         print('namedtuple', sys.getsizeof(data))
+
+    def print_cursor_pd(self):
+        data = pd.read_sql_query(
+            self.get_locais_sql(), self.conn
+        )
+        pprint(data[:10])
+        pprint(data[0:1])
+        print('pd', sys.getsizeof(data))
 
 
 def get_timeit(func):
@@ -84,12 +97,14 @@ def get_timeit(func):
 def main():
     ecd = ExpCD()
     ecd.conecta()
-    ecd.get_locais()
+
     get_timeit(ecd.print_cursor_fetchall)
-    ecd.get_locais()
+
     get_timeit(ecd.print_cursor_dict)
-    ecd.get_locais()
+
     get_timeit(ecd.print_cursor_namedtuple)
+
+    get_timeit(ecd.print_cursor_pd)
 
 
 if __name__ == '__main__':
