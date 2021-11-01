@@ -142,8 +142,11 @@ class ExpCD():
         self.get_locais()
         data = rows_to_namedtuple(self.cursor)
         if data:
-            with open('out.txt', 'w') as csvfile:
-                csvwriter = csv.writer(csvfile)
+            with open('locais.csv', 'w') as csvfile:
+                csvwriter = csv.writer(
+                    csvfile,
+                    delimiter=';',
+                )
                 csvwriter.writerow(data[0]._fields)
                 for row in data:
                     csvwriter.writerow(self.add_rota(self.convert_local(row)))
