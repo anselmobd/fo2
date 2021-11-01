@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import csv
 import pandas as pd
 import psycopg2
 import sys
@@ -49,6 +50,7 @@ class ExpCD():
         return """
             select distinct
               l.local
+            , '' rota
             from fo2_cd_lote l
             left join fo2_cd_endereco_disponivel ed 
               on ed.disponivel
@@ -136,6 +138,17 @@ class ExpCD():
         return row
 
 
+    def export_locais(self):
+        self.get_locais()
+        data = rows_to_namedtuple(self.cursor)
+        if data:
+            with open('out.txt', 'w') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerow(data[0]._fields)
+                for row in data:
+                    csvwriter.writerow(self.add_rota(self.convert_local(row)))
+
+
 def get_timeit(func):
     starttime = timeit.default_timer()
     func()
@@ -146,13 +159,12 @@ def main():
     ecd = ExpCD()
     ecd.conecta()
 
-    get_timeit(ecd.print_cursor_fetchall)
+    # get_timeit(ecd.print_cursor_fetchall)
+    # get_timeit(ecd.print_cursor_dict)
+    # get_timeit(ecd.print_cursor_namedtuple)
+    # get_timeit(ecd.print_cursor_pd)
 
-    get_timeit(ecd.print_cursor_dict)
-
-    get_timeit(ecd.print_cursor_namedtuple)
-
-    get_timeit(ecd.print_cursor_pd)
+    ecd.export_locais()
 
 
 if __name__ == '__main__':
