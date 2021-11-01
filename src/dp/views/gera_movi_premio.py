@@ -4,15 +4,15 @@ from pprint import pprint
 from django.shortcuts import render
 from django.views import View
 
-import contabil.forms
+import dp.forms
 
 
 class GeraMoviPremio(View):
 
     def __init__(self, *args, **kwargs):
         super(GeraMoviPremio, self).__init__(*args, **kwargs)
-        self.Form_class = contabil.forms.UploadArquivoForm
-        self.template_name = 'contabil/gera_movi_premio.html'
+        self.Form_class = dp.forms.UploadArquivoForm
+        self.template_name = 'dp/gera_movi_premio.html'
         self.title_name = 'Gera movimento prêmio'
 
     def get(self, request, *args, **kwargs):
