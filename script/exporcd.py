@@ -95,6 +95,71 @@ class ExpCD():
             , l.lote
         """
 
+    def get_solicitacoes_pedidos_sql(self):
+        return """
+            with solic_todas as
+            ( select
+                s.id
+              , s.codigo
+              , s.descricao
+              , s.data
+              , s.ativa
+              , s.create_at
+              , s.update_at
+              , s.usuario_id
+              , s.concluida
+              , s.can_print
+              , s.coleta
+              , u.username usuario__username
+              , coalesce(sum(sq.qtd), 0) total_qtd
+              , coalesce(sum(
+                  case when l.local is null
+                  then 0
+                  else sq.qtd
+                  end
+                ), 0) total_no_cd
+              , ( select 
+                    count(*)
+                  from fo2_cd_solicita_lote_pedido slp
+                  where slp.solicitacao_id = s.id
+                ) as n_pedidos
+              from fo2_cd_solicita_lote s
+              left join fo2_cd_solicita_lote_qtd sq
+                on sq.solicitacao_id = s.id
+               and sq.origin_id = 0
+              left join fo2_cd_lote l
+                on l.id = sq.lote_id
+              left join auth_user u
+                on u.id = s.usuario_id
+              where 1=1
+              group by
+                s.id
+              , s.codigo
+              , s.descricao
+              , s.ativa
+              , s.create_at
+              , s.update_at
+              , s.usuario_id
+              , u.username
+              order by
+                s.update_at desc
+            )
+            select
+              s.id num_solic
+            --, s.codigo
+            --, s.descricao
+            , slp.pedido 
+            from solic_todas s
+            join fo2_cd_solicita_lote_pedido slp
+              on slp.solicitacao_id = s.id
+            where 1=1
+              and s.total_no_cd <> 0
+              and s.n_pedidos <> 0
+            order by
+              s.id
+            , slp.pedido 
+        """
+
     def get_locais(self):
         self.cursor.execute(self.get_locais_sql())
 
@@ -191,6 +256,19 @@ class ExpCD():
                 for row in data:
                     csvwriter.writerow(self.convert_local(row))
 
+    def export_solicitacoes_pedidos(self):
+        self.cursor.execute(self.get_solicitacoes_pedidos_sql())
+        data = rows_to_namedtuple(self.cursor)
+        if data:
+            with open('solicitacoes_pedidos.csv', 'w') as csvfile:
+                csvwriter = csv.writer(
+                    csvfile,
+                    delimiter=';',
+                )
+                csvwriter.writerow(data[0]._fields)
+                for row in data:
+                    csvwriter.writerow(row)
+
 
 def get_timeit(func):
     starttime = timeit.default_timer()
@@ -209,6 +287,7 @@ def main():
 
     ecd.export_locais()
     ecd.export_locais_lotes()
+    ecd.export_solicitacoes_pedidos()
 
 
 if __name__ == '__main__':
