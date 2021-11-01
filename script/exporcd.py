@@ -68,6 +68,33 @@ class ExpCD():
               l.local
         """
 
+    def get_locais_lotes_sql(self):
+        return """
+            select
+              l.local
+            , substring(l.lote, 1, 4) periodo
+            , substring(l.lote, 5, 5) oc
+            from fo2_cd_lote l
+            left join fo2_cd_endereco_disponivel ed 
+              on ed.disponivel
+             and l.local like (ed.inicio || '%')
+            left join fo2_cd_endereco_disponivel ned 
+              on ed.disponivel is not null
+             and (not ned.disponivel)
+             and ned.inicio like (ed.inicio || '%')
+             and l.local like (ned.inicio || '%')
+            where l.local is not null
+              and l.local <> ''
+              and ed.disponivel is not null
+              and ned.disponivel is null
+            group by 
+              l.local
+            , l.lote
+            order by
+              l.local
+            , l.lote
+        """
+
     def get_locais(self):
         self.cursor.execute(self.get_locais_sql())
 
@@ -151,6 +178,19 @@ class ExpCD():
                 for row in data:
                     csvwriter.writerow(self.calc_rota(self.convert_local(row)))
 
+    def export_locais_lotes(self):
+        self.cursor.execute(self.get_locais_lotes_sql())
+        data = rows_to_namedtuple(self.cursor)
+        if data:
+            with open('locais_lotes.csv', 'w') as csvfile:
+                csvwriter = csv.writer(
+                    csvfile,
+                    delimiter=';',
+                )
+                csvwriter.writerow(data[0]._fields)
+                for row in data:
+                    csvwriter.writerow(self.convert_local(row))
+
 
 def get_timeit(func):
     starttime = timeit.default_timer()
@@ -168,6 +208,7 @@ def main():
     # get_timeit(ecd.print_cursor_pd)
 
     ecd.export_locais()
+    ecd.export_locais_lotes()
 
 
 if __name__ == '__main__':
