@@ -122,7 +122,7 @@ class ExpCD():
             row = row._replace(local=f'{espaco}{bloco}{andar}{ap}')
         return row
 
-    def add_rota(self, row):
+    def calc_rota(self, row):
         if 'local' in row._fields:
             espaco = row.local[0]
             bloco = row.local[1]
@@ -149,7 +149,7 @@ class ExpCD():
                 )
                 csvwriter.writerow(data[0]._fields)
                 for row in data:
-                    csvwriter.writerow(self.add_rota(self.convert_local(row)))
+                    csvwriter.writerow(self.calc_rota(self.convert_local(row)))
 
 
 def get_timeit(func):
