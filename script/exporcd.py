@@ -24,6 +24,17 @@ def rows_to_namedtuple(cursor):
 
 class ExpCD():
 
+    _RUAS = {
+        'A': 'AB',
+        'B': 'AB',
+        'C': 'CD',
+        'D': 'CD',
+        'E': 'EF',
+        'F': 'EF',
+        'G': 'GH',
+        'H': 'GH',
+    }
+
     def conecta(self):
         self.conn = psycopg2.connect(
             host="localhost",
@@ -86,6 +97,43 @@ class ExpCD():
         pprint(data[:10])
         pprint(data[0:1])
         print('pd', sys.getsizeof(data))
+
+    def convert_local(self, row):
+        if 'local' in row._fields:
+            bloco = row.local[0]
+            andar = row.local[1]
+            ap = row.local[2:]
+            if bloco <= 'H':
+                espaco = '1'
+                andar = f'0{andar}'
+            else:
+                espaco = '2'
+            if bloco == 'D':
+                iap = int(ap)
+                if iap > 18:
+                    iap += 4
+                elif iap > 11:
+                    iap += 3
+                elif iap > 5:
+                    iap += 1
+                ap = f'{iap:02}'
+            row = row._replace(local=f'{espaco}{bloco}{andar}{ap}')
+        return row
+
+    def add_rota(self, row):
+        if 'local' in row._fields:
+            espaco = row.local[0]
+            bloco = row.local[1]
+            ap = row.local[4:]
+            if bloco <= 'H':
+                iap = int(ap)
+                irota = iap//2
+                rua = self._RUAS[bloco]
+                rota = f'{espaco}{rua}{irota:02}'
+            else:
+                rota = f'{espaco}{bloco}'
+            row = row._replace(rota=rota)
+        return row
 
 
 def get_timeit(func):
