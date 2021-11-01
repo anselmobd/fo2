@@ -108,7 +108,3 @@ class NotaFiscalForm(forms.Form):
         label='Nota fiscal',
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
-
-
-class UploadArquivoForm(forms.Form):
-    arquivo = forms.FileField()

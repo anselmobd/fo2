@@ -22,6 +22,4 @@ urlpatterns = [
         views.RemessaIndustrNF.as_view(), name='remeindunf__get'),
 
     re_path(r'^converte/$', views.Converte.as_view(), name='converte'),
-
-    re_path(r'^gera_movi_premio/$', views.GeraMoviPremio.as_view(), name='gera_movi_premio'),
 ]
