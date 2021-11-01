@@ -2,11 +2,24 @@
 
 import pandas as pd
 import psycopg2
+import sys
+import timeit
+from collections import namedtuple
 from pprint import pprint
 
 from db_password import (
     DBPASS,
 )
+
+
+def rows_to_dict_list_lower(cursor):
+    columns = [i[0].lower() for i in cursor.description]
+    return [dict(zip(columns, row)) for row in cursor]
+
+
+def rows_to_namedtuple(cursor):
+    Row = namedtuple('Row', ' '.join([i[0].lower() for i in cursor.description]))
+    return [Row(*row) for row in cursor]
 
 
 class ExpCD():
@@ -43,15 +56,40 @@ class ExpCD():
         """
         self.cursor.execute(sql)
 
-    def print_cursor_all(self):
-        pprint(self.cursor.fetchall())
+    def print_cursor_fetchall(self):
+        data = self.cursor.fetchall()
+        pprint(data[:10])
+        print(data[0][0])
+        print('fetchall', sys.getsizeof(data))
+
+    def print_cursor_dict(self):
+        data = rows_to_dict_list_lower(self.cursor)
+        pprint(data[:10])
+        print(data[0]['local'])
+        print('dict', sys.getsizeof(data))
+
+    def print_cursor_namedtuple(self):
+        data = rows_to_namedtuple(self.cursor)
+        pprint(data[:10])
+        print(data[0].local)
+        print('namedtuple', sys.getsizeof(data))
+
+
+def get_timeit(func):
+    starttime = timeit.default_timer()
+    func()
+    print("Timeit:", timeit.default_timer() - starttime)
 
 
 def main():
     ecd = ExpCD()
     ecd.conecta()
     ecd.get_locais()
-    ecd.print_cursor_all()
+    get_timeit(ecd.print_cursor_fetchall)
+    ecd.get_locais()
+    get_timeit(ecd.print_cursor_dict)
+    ecd.get_locais()
+    get_timeit(ecd.print_cursor_namedtuple)
 
 
 if __name__ == '__main__':
