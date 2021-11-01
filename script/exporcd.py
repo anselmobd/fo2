@@ -18,7 +18,7 @@ def rows_to_dict_list_lower(cursor):
 
 
 def rows_to_namedtuple(cursor):
-    Row = namedtuple('Row', ' '.join([i[0].lower() for i in cursor.description]))
+    Row = namedtuple('Row', [i[0].lower() for i in cursor.description])
     return [Row(*row) for row in cursor]
 
 
