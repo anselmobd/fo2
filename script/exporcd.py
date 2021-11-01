@@ -160,6 +160,81 @@ class ExpCD():
             , slp.pedido 
         """
 
+    def get_solicitacoes_sql(self):
+        return """
+            with solic_todas as
+            ( select
+                s.id
+              , s.codigo
+              , s.descricao
+              , s.data
+              , s.ativa
+              , s.create_at
+              , s.update_at
+              , s.usuario_id
+              , s.concluida
+              , s.can_print
+              , s.coleta
+              , u.username usuario__username
+              , coalesce(sum(sq.qtd), 0) total_qtd
+              , coalesce(sum(
+                  case when l.local is null
+                  then 0
+                  else sq.qtd
+                  end
+                ), 0) total_no_cd
+              , ( select 
+                    count(*)
+                  from fo2_cd_solicita_lote_pedido slp
+                  where slp.solicitacao_id = s.id
+                ) as n_pedidos
+              from fo2_cd_solicita_lote s
+              left join fo2_cd_solicita_lote_qtd sq
+                on sq.solicitacao_id = s.id
+               and sq.origin_id = 0
+              left join fo2_cd_lote l
+                on l.id = sq.lote_id
+              left join auth_user u
+                on u.id = s.usuario_id
+              where 1=1
+              group by
+                s.id
+              , s.codigo
+              , s.descricao
+              , s.ativa
+              , s.create_at
+              , s.update_at
+              , s.usuario_id
+              , u.username
+              order by
+                s.update_at desc
+            )
+            , solic as 
+            ( select
+                s.*
+              from solic_todas s
+              where 1=1
+                and s.total_no_cd <> 0
+                and s.n_pedidos <> 0
+            )
+            select
+              s.id num_solic
+            --, l.lote
+            , substring(l.lote, 1, 4) periodo
+            , substring(l.lote, 5, 5) oc
+            --, l.qtd_produzir tamanho
+            , sq.qtd
+            from solic s
+            join fo2_cd_solicita_lote_qtd sq
+              on sq.solicitacao_id = s.id
+             and sq.origin_id = 0
+            join fo2_cd_lote l
+              on l.id = sq.lote_id
+             and l."local" is not null
+            where 1=1
+              and sq.qtd <> 0
+        """
+
     def get_locais(self):
         self.cursor.execute(self.get_locais_sql())
 
@@ -269,6 +344,19 @@ class ExpCD():
                 for row in data:
                     csvwriter.writerow(row)
 
+    def export_solicitacoes(self):
+        self.cursor.execute(self.get_solicitacoes_sql())
+        data = rows_to_namedtuple(self.cursor)
+        if data:
+            with open('solicitacoes.csv', 'w') as csvfile:
+                csvwriter = csv.writer(
+                    csvfile,
+                    delimiter=';',
+                )
+                csvwriter.writerow(data[0]._fields)
+                for row in data:
+                    csvwriter.writerow(row)
+
 
 def get_timeit(func):
     starttime = timeit.default_timer()
@@ -288,6 +376,7 @@ def main():
     ecd.export_locais()
     ecd.export_locais_lotes()
     ecd.export_solicitacoes_pedidos()
+    ecd.export_solicitacoes()
 
 
 if __name__ == '__main__':
