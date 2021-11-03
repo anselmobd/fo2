@@ -25,8 +25,8 @@ urlpatterns = [
     re_path(r'^exec_gera_fluxo/$',
         views.ExecGeraFluxo.as_view(), name='exec_gera_fluxo'),
 
-    re_path(r'^fluxo/(?P<destino>.)/(?P<id>.+)/$',
-        views.gera_fluxo_dot, name='fluxo'),
+    re_path(r'^gera_fluxo/(?P<destino>.)/(?P<id>.+)/$',
+        views.gera_fluxo, name='gera_fluxo'),
 
     re_path(r'^roteiros_de_fluxo/(?P<id>.+)/$',
         views.roteiros_de_fluxo, name='roteiros_de_fluxo'),
