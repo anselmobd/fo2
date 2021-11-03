@@ -142,11 +142,36 @@ class Expedicao(View):
                     row['OP'] = ', '.join(map(str, sorted(row['OP'])))
                 else:
                     row['OP'] = '-'
+
+                r_data = queries.pedido.referencias.query(cursor, row['PEDIDO_VENDA'])
+                if r_data:
+                    referencias = ', '.join([r['ref'] for r in r_data])
+                else:
+                    referencias = '-'
+
+                obs_html = ''
                 if row['OBSERVACAO']:
-                    row['CLIENTE'] = "{}<br>{}".format(
-                        row['CLIENTE'],
+                    obs_html = """
+                        <ul style="list-style-type: '\N{memo}'; margin-bottom: 0px;">
+                          <li>{}</li>
+                        </ul>
+                    """.format(
                         row['OBSERVACAO'],
                     )
+
+                row['CLIENTE'] = """
+                    <ul style="list-style-type: '\N{department store}'; margin-bottom: 0px;">
+                        <li>{}</li>
+                    </ul>
+                    {}
+                    <ul style="list-style-type: '\N{scroll}'; margin-bottom: 0px;">
+                        <li>{}</li>
+                    </ul>
+                """.format(
+                    row['CLIENTE'],
+                    obs_html,
+                    referencias,
+                )
 
         if detalhe not in ['p', 'o']:
             group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
@@ -167,7 +192,7 @@ class Expedicao(View):
         headers.append('Data emissão')
         headers.append('Data embarque')
         if detalhe == 'o':
-            headers.append('Cliente / Observação')
+            headers.append('\N{department store}Cliente / \N{memo}Observação / \N{scroll}Referências')
             headers.append('OP')
         else:
             headers.append('Cliente')
