@@ -32,7 +32,7 @@ class PopForm(forms.ModelForm):
         fields = ('assunto', 'descricao', 'pop', 'habilitado')
 
 
-class GeraFluxoDotForm(forms.Form):
+class ExecGeraFluxoForm(forms.Form):
     id = forms.CharField(
         label='Fluxo', max_length=3, min_length=1,
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
