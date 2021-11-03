@@ -315,7 +315,7 @@ def pop(request, pop_assunto=None, id=None):
     return render(request, 'geral/pop.html', context)
 
 
-def gera_fluxo_dot(request, destino, id):
+def gera_fluxo(request, destino, id):
     fluxo = dict_fluxo(id)
     if fluxo is None:
         return HttpResponse("Fluxo {} não encontrado".format(id))
