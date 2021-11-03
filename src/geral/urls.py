@@ -22,8 +22,8 @@ urlpatterns = [
 
     re_path(r'^pop/(?P<pop_assunto>[^/]+)/(?P<id>\d+)?$', views.pop, name='pop'),
 
-    re_path(r'^gera_fluxo_dot/$',
-        views.GeraFluxoDot.as_view(), name='gera_fluxo_dot'),
+    re_path(r'^exec_gera_fluxo/$',
+        views.ExecGeraFluxo.as_view(), name='exec_gera_fluxo'),
 
     re_path(r'^fluxo/(?P<destino>.)/(?P<id>.+)/$',
         views.gera_fluxo_dot, name='fluxo'),

@@ -19,7 +19,7 @@
 {% endblock javascript %}
 
 {% block content %}
-<form action="{% url 'geral:gera_fluxo_dot' %}" method="post">
+<form action="{% url 'geral:exec_gera_fluxo' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Gera"/>

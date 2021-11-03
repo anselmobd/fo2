@@ -337,12 +337,12 @@ def gera_fluxo_dot(request, destino, id):
             content_type='text/plain')
 
 
-class GeraFluxoDot(O2BaseGetPostView):
+class ExecGeraFluxo(O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
-        super(GeraFluxoDot, self).__init__(*args, **kwargs)
-        self.Form_class = forms.GeraFluxoDotForm
-        self.template_name = 'geral/gera_fluxo_dot.html'
-        self.title_name = 'Gera fluxo ".dot"'
+        super(ExecGeraFluxo, self).__init__(*args, **kwargs)
+        self.Form_class = forms.ExecGeraFluxoForm
+        self.template_name = 'geral/exec_gera_fluxo.html'
+        self.title_name = 'Gera fluxo'
         self.get_args = ['destino', 'id']
 
     def mount_context(self):
