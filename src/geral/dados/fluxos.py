@@ -28,9 +28,9 @@ def dict_fluxo(id):
         # específicos
         # 'rascunho': '#Rascunho#',
         'rascunho': '',
-        'versao_num': '21.01',
-        'versao_data': '02/03/2021',
-        'versao_sufixo': '20210302',
+        'versao_num': '21.10.05',
+        'versao_data': '05/10/2021',
+        'versao_sufixo': '20211005',
         'id': id,
         'fluxo_num': fluxo_num,
     }
