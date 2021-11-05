@@ -1,0 +1,250 @@
+digraph G {
+  compound=true
+  newrank=true
+  rankdir = LR
+
+  labelloc="t"
+  label="
+    Fluxo Nº#
+    Versão 21.01.01 (01/01/2021)
+    
+    COLEÇÃO
+    
+    Característica 1: Informação 1
+    Característica 2: Informação 2
+  "
+  
+  L_MP [shape=rarrow,style=dashed,label="MP"]
+  L_MD [shape=rarrow,style=dashed,label="MD"]
+  L_PGPB [shape=rarrow,style=dashed,label="PG"]
+  L_PA [shape=rarrow,style=dashed,label="PA"]
+  L_MP -> L_MD -> L_PGPB -> L_PA [style=invis]
+
+  {
+    node [
+      shape = "note"
+    ]
+
+    subgraph cluster_pa_group {
+      label = "PA - 9999*"
+      style="dotted, rounded"
+
+      subgraph cluster_pa_from_md {
+        label = <Alternativa 0#<br />Roteiro 0#>
+        style=rounded
+        pa_from_md [
+          label = <
+            <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+              <tr cellpadding="0"><td><u>Coluna</u></td></tr>
+              <tr><td>valor 1</td></tr>
+              <tr><td>valor 2</td></tr>
+            </table>
+          >
+        ]
+      }
+
+      subgraph cluster_pa_from_pb {
+        label = <Alternativa 1#<br />Roteiro 1#>
+        style=rounded
+        pa_from_pb [
+          label = <
+            <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+              <tr cellpadding="0"><td><u>Coluna</u></td></tr>
+              <tr><td>valor 1</td></tr>
+              <tr><td>valor 2</td></tr>
+            </table>
+          >
+        ]
+      }
+
+      subgraph cluster_pa_from_pg_a {
+        label = <Alternativa 2#<br />Roteiro 2#>
+        style=rounded
+        pa_from_pg_a [
+          label = <
+            <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+              <tr cellpadding="0"><td><u>Coluna</u></td></tr>
+              <tr><td>valor 1</td></tr>
+              <tr><td>valor 2</td></tr>
+            </table>
+          >
+        ]
+      }
+
+      subgraph cluster_pa_from_pg_b {
+        label = <Alternativa 3#<br />Roteiro 3#>
+        style=rounded
+        pa_from_pg_b [
+          label = <
+            <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+              <tr cellpadding="0"><td><u>Coluna</u></td></tr>
+              <tr><td>valor 1</td></tr>
+              <tr><td>valor 2</td></tr>
+            </table>
+          >
+        ]
+      }
+
+    }
+    
+    mp_link [
+      label = "MP - F9999\nFluxo X"
+    ]
+    
+    subgraph cluster_mp {
+      label = <MP - F9999<br /><br />Alternativa X: Xxx<br />Roteiro X: Xxx>
+      style=rounded
+      mp [
+        label = <
+          <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+            <tr cellpadding="0"><td><u>Coluna</u></td></tr>
+            <tr><td>valor 1</td></tr>
+            <tr><td>valor 2</td></tr>
+          </table>
+        >
+      ]
+    }
+
+    md_1_de_2_link [
+      label = "MD 1/2 de kit - M999*\nFluxo X"
+    ]
+    
+    md_2_de_2_link [
+      label = "MD 2/2 de kit - M999*\nFluxo X"
+    ]
+    
+    subgraph cluster_md_group {
+      label = "MD"
+      style="dotted, rounded"
+      
+      subgraph cluster_md_para_pb {
+        label = <MD p/ PB - M999*<br /><br />Alternativa X: Xxx<br />Roteiro X: Xxx>
+        style=rounded
+        md_para_pb [
+          label = <
+            <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+              <tr cellpadding="0"><td><u>Coluna</u></td></tr>
+              <tr><td>valor 1</td></tr>
+              <tr><td>valor 2</td></tr>
+            </table>
+          >
+        ]
+      }
+
+      subgraph cluster_md_para_pg {
+        label = <MD p/ PG - M999A<br /><br />Alternativa X: Xxx<br />Roteiro X: Xxx>
+        style=rounded
+        md_para_pg [
+          label = <
+            <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+              <tr cellpadding="0"><td><u>Coluna</u></td></tr>
+              <tr><td>valor 1</td></tr>
+              <tr><td>valor 2</td></tr>
+            </table>
+          >
+        ]
+      }
+
+    }
+
+    subgraph cluster_pg_group {
+      label = "PG"
+      style="dotted, rounded"
+      
+      subgraph cluster_pb {
+        label = <PB - B9999<br /><br />Alternativa 1#<br />Roteiro 1#>
+        style=rounded
+        pb [
+          label = <
+            <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+              <tr cellpadding="0">
+                <td align="left"><u>Estágio</u></td>
+                <td>&nbsp;</td>
+                <td><u>Insumos</u></td>
+              </tr>
+              <tr>
+                <td align="left">99-xxx</td>
+                <td>&nbsp;</td>
+                <td>
+                  <table BORDER="1" CELLPADDING="0" CELLSPACING="0">
+                    <tr>
+                      <td BORDER="0">Cabide</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td align="left">99-xxx</td>
+                <td>&nbsp;</td>
+                <td>
+                  <table BORDER="1" CELLPADDING="0" CELLSPACING="0">
+                    <tr>
+                      <td BORDER="0">MD p/ PB<br /><b><u>M</u></b>999*</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          >
+        ]
+      }
+
+      subgraph cluster_pg {
+        label = <PG - A9999<br /><br />Alternativa X: Xxx<br />Roteiro X: Xxx>
+        style=rounded
+        pg [
+          label = <
+            <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+              <tr cellpadding="0">
+                <td align="left"><u>Estágio</u></td>
+                <td>&nbsp;</td>
+                <td><u>Insumos</u></td>
+              </tr>
+              <tr>
+                <td align="left">99-xxx</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td align="left">99-xxx</td>
+                <td>&nbsp;</td>
+                <td>
+                  <table BORDER="1" CELLPADDING="0" CELLSPACING="0">
+                    <tr>
+                      <td BORDER="0">MD p/ PG<br /><b><u>M</u></b>999A</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          >
+        ]
+      }
+
+    }
+
+  }
+
+  {rank = same L_MP mp_link mp}
+  {rank = same L_MD md_para_pb md_para_pg md_1_de_2_link md_2_de_2_link}
+  {rank = same L_PGPB pb pg}
+  {rank = same L_PA pa_from_md pa_from_pb pa_from_pg_a pa_from_pg_b}
+
+  mp_link -> md_para_pg [lhead=cluster_md_para_pg,minlen=1]
+
+  md_para_pb -> pb [ltail=cluster_md,lhead=cluster_pb,minlen=1]
+  md_para_pb -> pa_from_md [ltail=cluster_md,lhead=cluster_pa_from_md,minlen=1]
+
+  md_para_pg -> pg [ltail=cluster_md,lhead=cluster_pg,minlen=1]
+
+  md_1_de_2_link -> pg [lhead=cluster_pg,minlen=1]
+  md_1_de_2_link -> pa_from_md [lhead=cluster_pa_from_md,minlen=1]
+
+  md_2_de_2_link -> pg [lhead=cluster_pg,minlen=1]
+  md_2_de_2_link -> pa_from_md [lhead=cluster_pa_from_md,minlen=1]
+
+  pb -> pa_from_pb [ltail=cluster_pg,lhead=cluster_pa_from_pb,minlen=1]
+  pg -> pa_from_pg_a [ltail=cluster_pg,lhead=cluster_pa_from_pg_a,minlen=1]
+  pg -> pa_from_pg_b [ltail=cluster_pg,lhead=cluster_pa_from_pg_b,minlen=1]
+
+}
