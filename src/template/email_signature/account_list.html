@@ -20,6 +20,10 @@
       <a title="Adiciona uma conta" href="{% url 'email_signature:account_add' %}"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a>
     </div>
   </p>
+  <form method='GET'>
+    <input type='text' name='q' value='{{ request.GET.q }}'>
+    <input class="button" type='submit' value="Filtra">
+  </form>
   {%if accounts%}
   <table>
     <thead>
