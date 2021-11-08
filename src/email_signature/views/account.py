@@ -14,6 +14,7 @@ class AccountListView(PermissionRequiredMixin, ListView):
     model = Account
     context_object_name = 'accounts'
     ordering = ['tipo', 'email']
+    paginate_by = 100
 
 
 class AccountCreateView(PermissionRequiredMixin, CreateView):
