@@ -21,7 +21,7 @@
     </div>
   </p>
   <form method='GET'>
-    <input type='text' name='q' value='{{ request.GET.q }}'>
+    <input id="id_filtro" type="text" name="q" value="{{ request.GET.q }}" autofocus>
     <input class="button" type='submit' value="Filtra">
   </form>
   {%if accounts%}
@@ -180,5 +180,9 @@
       });  // ajax
       return false
     }  // function
+
+    var filtro = document.getElementById('id_filtro');
+    filtro.select();
+
   </script>
 {% endblock %}
