@@ -10,12 +10,12 @@ urlpatterns = [
     re_path(r"^$", logistica.views.index, name="index"),
     re_path(
         r"^notafiscal_rel/$",
-        logistica.views.NotafiscalRel.as_view(),
+        logistica.views.nf.consulta.NotafiscalRel.as_view(),
         name="notafiscal_rel",
     ),
     re_path(
         r"^notafiscal_rel/(?P<dia>\d+)/(?P<mes>\d+)/(?P<ano>\d+)/$",
-        logistica.views.NotafiscalRel.as_view(),
+        logistica.views.nf.consulta.NotafiscalRel.as_view(),
         name="notafiscal_rel__get",
     ),
     re_path(
