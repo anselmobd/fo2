@@ -209,6 +209,10 @@ class NotafiscalRel(View):
                            'confirmada', 'uf', 'dest_cnpj', 'dest_nome',
                            'transp_nome', 'volumes', 'valor', 'observacao',
                            'pedido', 'ped_cliente'),
+                'style': untuple_keys_concat({
+                    (15, 16): 'text-align: right;',
+                    (3, 4, 5, 6, 7, 8, 9, 10): 'text-align: center;',
+                }),
                 'data': data,
             })
 
