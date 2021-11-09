@@ -35,7 +35,7 @@ urlpatterns = [
     ),
     re_path(
         r"^notafiscal_movimentadas/$",
-        logistica.views.NotafiscalMovimentadas.as_view(),
+        logistica.views.nf.movimentada.NotafiscalMovimentadas.as_view(),
         name="notafiscal_movimentadas",
     ),
     re_path(
