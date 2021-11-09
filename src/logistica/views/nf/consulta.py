@@ -1,25 +1,19 @@
 from pprint import pprint
-import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 import pytz
 from operator import itemgetter
 
 from django.utils import timezone
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from fo2.connections import db_cursor_so
-
-from base.views import O2BaseGetPostView, O2BaseGetView
 from utils.functions import untuple_keys_concat
-from geral.functions import get_empresa
 
-from logistica.models import *
-from logistica.queries import get_chave_pela_nf
-from logistica.forms import *
+from logistica.models import NotaFiscal
+from logistica.forms import NotafiscalRelForm
 
 
 class NotafiscalRel(View):

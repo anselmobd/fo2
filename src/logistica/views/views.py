@@ -1,15 +1,9 @@
 from pprint import pprint
-import datetime
-from datetime import timedelta
-import pytz
-from operator import itemgetter
 
 from django.utils import timezone
 from django.shortcuts import render, redirect
-from django.views import View
 from django.urls import reverse
 from django.db.models import Q
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from fo2.connections import db_cursor_so
 
