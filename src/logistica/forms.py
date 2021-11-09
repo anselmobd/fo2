@@ -5,7 +5,10 @@ from django import forms
 
 from utils.functions import shift_years
 
-from .models import *
+from .models import (
+    NfEntrada,
+    PosicaoCarga,
+)
 
 
 class NotafiscalChaveForm(forms.Form):

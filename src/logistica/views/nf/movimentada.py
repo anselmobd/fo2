@@ -1,19 +1,14 @@
 from pprint import pprint
 
 from django.utils import timezone
-from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.db.models import Q
 
-from fo2.connections import db_cursor_so
-
 from base.views import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
-from geral.functions import get_empresa
 
-from logistica.models import *
-from logistica.queries import get_chave_pela_nf
-from logistica.forms import *
+from logistica.models import PosicaoCargaAlteracaoLog
+from logistica.forms import NfPosicaoForm
 
 
 class NotafiscalMovimentadas(O2BaseGetPostView):
