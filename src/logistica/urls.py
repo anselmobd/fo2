@@ -25,7 +25,7 @@ urlpatterns = [
     ),
     re_path(
         r"^notafiscal_nf/(?P<nf>\d+)?/?$",
-        logistica.views.notafiscal_nf,
+        logistica.views.nf.numero_nf.notafiscal_nf,
         name="notafiscal_nf",
     ),
     re_path(
