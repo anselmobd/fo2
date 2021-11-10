@@ -7,7 +7,7 @@ import logistica.views.entrada_nf
 
 app_name = 'logistica'
 urlpatterns = [
-    re_path(r"^$", logistica.views.index, name="index"),
+    re_path(r"^$", logistica.views.index.index, name="index"),
     re_path(
         r"^notafiscal_rel/$",
         logistica.views.nf.consulta.NotafiscalRel.as_view(),
