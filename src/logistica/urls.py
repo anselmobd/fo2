@@ -39,11 +39,6 @@ urlpatterns = [
         name="notafiscal_movimentadas",
     ),
     re_path(
-        r"^entrada_nf/_sem_xml/$",
-        logistica.views.EntradaNfSemXml.as_view(),
-        name="entr_nf_sem_xml",
-    ),
-    re_path(
         r"^entrada_nf/lista/$",
         logistica.views.entrada_nf.EntradaNfLista.as_view(),
         name="entr_nf_lista",
