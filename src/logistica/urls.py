@@ -20,7 +20,7 @@ urlpatterns = [
     ),
     re_path(
         r"^notafiscal_chave/(?P<chave>\d+)?/?$",
-        logistica.views.NotafiscalChave.as_view(),
+        logistica.views.notafiscal_chave.NotafiscalChave.as_view(),
         name="notafiscal_chave",
     ),
     re_path(
