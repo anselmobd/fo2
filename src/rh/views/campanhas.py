@@ -29,3 +29,6 @@ def campanhas(request, id):
     elif id == '2021-06':
         return render(
             request, 'rh/campanhas/2021-06-diversidade.html')
+    elif id == '2021-11':
+        return render(
+            request, 'rh/campanhas/2021-11-azul.html')
