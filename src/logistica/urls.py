@@ -45,7 +45,7 @@ urlpatterns = [
     ),
     re_path(
         r"^entrada_nf/historico/(?P<id>[^/]+)/$",
-        logistica.views.EntradaNfHistorico.as_view(),
+        logistica.views.entr_nf_historico.EntradaNfHistorico.as_view(),
         name="entr_nf_historico",
     ),
     re_path(
