@@ -22,6 +22,7 @@
         {%endcomment%}
   {% if request.user.is_authenticated or base_ip_interno %}
         <li><a href="{% url 'systextil:index' %}">Systextil</a></li>
+        <br />
         {% include 'systextil/menu.html' %}
         <br />
         <li><a href="{% url 'servico:index' %}">Serviço</a></li>
