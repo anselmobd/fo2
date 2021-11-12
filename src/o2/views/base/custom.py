@@ -51,6 +51,8 @@ class CustomView(View):
         self.kwargs = kwargs
 
         self.app_name = request.resolver_match.app_name
+        if self.app_name == 'producao':
+            self.app_name = 'lotes'
         self.app_config = apps.get_app_config(self.app_name)
 
         if hasattr(self, 'title_name'):
