@@ -108,7 +108,7 @@ class Converte(View):
                         f"{valor:015.2f}"
                     ]))
 
-            context['contas_erradas'] = utils.functions.strings.join(
+            context['contas_erradas'] = utils.functions.strings.join2(
                 (', ', ' e '), 
                 [
                     c for c in self.contas_verificadas
