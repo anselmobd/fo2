@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views import View
 
 from fo2.connections import db_cursor_so
+import utils.functions.strings
 
 import contabil.forms
 from contabil.queries.plano_de_contas.get import por_reduzida
@@ -107,11 +108,13 @@ class Converte(View):
                         f"{valor:015.2f}"
                     ]))
 
-            contas_erradas = [
-                c for c in self.contas_verificadas
-                if not self.contas_verificadas[c]
-            ]
-            context['contas_erradas'] = ", ".join(contas_erradas)
+            context['contas_erradas'] = utils.functions.strings.join(
+                (', ', ' e '), 
+                [
+                    c for c in self.contas_verificadas
+                    if not self.contas_verificadas[c]
+                ]
+            )
             context['systextil'] = "\n".join(registros)
             context['systextil_download'] = "%0D%0A".join(
                 [r.replace(" ", "%20") for r in registros]
