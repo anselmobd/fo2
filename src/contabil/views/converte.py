@@ -3,7 +3,10 @@ from pprint import pprint
 from django.shortcuts import render
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
 import contabil.forms
+from contabil.queries.plano_de_contas.get import por_reduzida
 
 
 class Converte(View):
@@ -12,7 +15,9 @@ class Converte(View):
         super(Converte, self).__init__(*args, **kwargs)
         self.Form_class = contabil.forms.UploadArquivoForm
         self.template_name = 'contabil/converte.html'
-        self.title_name = 'Converte para importação'
+        self.title_name = 'Converte para Systêxtil'
+        self.contas_verificadas = {}
+
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
@@ -20,7 +25,17 @@ class Converte(View):
         context['form'] = form
         return render(request, self.template_name, context)
 
+    def verifica_conta(self, conta):
+        if conta not in self.contas_verificadas:
+            dados_conta_d = por_reduzida(self.cursor, 2, conta)
+            self.contas_verificadas[conta] = (
+                False
+                if len(dados_conta_d) == 0
+                else True
+            )
+
     def post(self, request, *args, **kwargs):
+        self.cursor = db_cursor_so(request)
         self.request = request
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST, request.FILES)
@@ -59,6 +74,9 @@ class Converte(View):
                     if data in ("C", "D"):
                         continue
 
+                    self.verifica_conta(conta_d)
+                    self.verifica_conta(conta_c)
+
                     valor = float(colunas[4].replace(",", "."))
                     descricao = "/".join([
                         codigos[conta_d],
@@ -89,6 +107,11 @@ class Converte(View):
                         f"{valor:015.2f}"
                     ]))
 
+            contas_erradas = [
+                c for c in self.contas_verificadas
+                if not self.contas_verificadas[c]
+            ]
+            context['contas_erradas'] = ", ".join(contas_erradas)
             context['systextil'] = "\n".join(registros)
             context['systextil_download'] = "%0D%0A".join(
                 [r.replace(" ", "%20") for r in registros]

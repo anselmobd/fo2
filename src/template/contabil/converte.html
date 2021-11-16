@@ -25,6 +25,9 @@
   {% endif %}
   {% if systextil %}
     <h3>Para Systextil</h3>
+    {% if contas_erradas %}
+      <h4>As seguintes contas reduzidas não existem no Systêxtil: {{contas_erradas}}</h4>
+    {% endif %}
     {% if systextil_download %}
       <a download="{{systextil_file}}" href="data:application/octet-stream,{{systextil_download}}">Salvar arquivo convertido</a>
     {% endif %}
