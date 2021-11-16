@@ -97,7 +97,7 @@ class ReferenciaDeposito(View):
         return context
 
     def str_depositos(seft):
-        texto = utils.functions.strings.join(
+        texto = utils.functions.strings.join2(
             (', ', ' e '), (101, 102, 103, 122, 231))
         return texto
 

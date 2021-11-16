@@ -25,10 +25,6 @@ def __join(sep, lista):
         return sep.join(lista)
 
 
-def join(sep, lista):
-    return join2(sep, lista)
-
-
 def join2(sep, lista):
     try:
         return(__join(sep, lista))
