@@ -1,4 +1,15 @@
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
+
+
+def estagios_os(cursor):
+    sql = """
+        SELECT 
+          ts.CODIGO_ESTAGIO EST
+        FROM obrf_070 ts -- Tipos de Serviços - Terceiros
+        WHERE ts.CODIGO_ESTAGIO <> 0
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
 
 
 def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
