@@ -38,6 +38,7 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
           s.CODIGO_ESTAGIO
         , s.CODIGO_ESTAGIO || ' - ' || s.DESCRICAO ESTAGIO
         , s.CODIGO_USUARIO
+        , s.EMPRESA
         , CASE WHEN s.USUARIO IS NULL
           THEN '--SEM RESPONSAVEL--'
           ELSE s.USUARIO || ' ( ' || s.CODIGO_USUARIO || ' )'
@@ -87,6 +88,7 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
             e.CODIGO_ESTAGIO
           , e.DESCRICAO
           , u.USUARIO
+          , u.EMPRESA
           , u.CODIGO_USUARIO
           FROM MQOP_005 e
           CROSS JOIN HDOC_030 u
@@ -133,12 +135,14 @@ def responsavel(cursor, todos, ordem, estagio, usuario, usuario_num):
         """
     if ordem == 'e':
         sql += '''
-              e.CODIGO_ESTAGIO
+              u.EMPRESA
+            , e.CODIGO_ESTAGIO
             , u.USUARIO
         '''
     else:
         sql += '''
-              u.USUARIO
+              u.EMPRESA
+            , u.USUARIO
             , e.CODIGO_ESTAGIO
         '''
     sql += """
