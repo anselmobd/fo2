@@ -56,6 +56,9 @@ def respons_custom(request, todos):
             cursor = db_cursor_so(request)
             data = queries.responsavel(
                 cursor, todos, ordem, estagio, usuario, usuario_num)
+            if len(data) == 0:
+                data = queries.responsavel(
+                    cursor, 'e', ordem, estagio, usuario, usuario_num)
             if len(data) != 0:
                 if ordem == 'e':
                     context.update({
