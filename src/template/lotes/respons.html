@@ -65,14 +65,37 @@
 
   }
 
+  var estagios_os = [
+  {% for estagio_os in estagios_os %}
+    '{{estagio_os}}',
+  {% endfor %}
+    '##'
+  ];
+
   $(document).ready(function() {
     var all_el = document.querySelectorAll('td');
+    var coloca_link = false;
     for (var i=0, len=all_el.length|0; i<len; i=i+1|0) {
+      coloca_link = false;    
 
-      if (all_el[i].id.endsWith('_BL') ||
-          all_el[i].id.endsWith('_EL') ||
-          all_el[i].id.endsWith('_CO') ||
-          all_el[i].id.endsWith('_AO'))
+      if (
+        all_el[i].id.endsWith('_BL') ||
+        all_el[i].id.endsWith('_EL') 
+      )
+      {
+        coloca_link = true;    
+      }
+
+      if (
+        all_el[i].id.endsWith('_CO') ||
+        all_el[i].id.endsWith('_AO')
+      )
+      {
+        estagio = all_el[i].id.split("_")[0];
+        coloca_link = estagios_os.indexOf(estagio) >= 0
+      }
+
+      if (coloca_link)
       {
         link_id = link_change.replace(/\{id\}/g, all_el[i].id);
         if (all_el[i].innerHTML.indexOf('X') != -1) {

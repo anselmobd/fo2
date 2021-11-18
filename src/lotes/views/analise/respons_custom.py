@@ -54,6 +54,10 @@ def respons_custom(request, todos):
             usuario_num = re.sub("\D", "", form.cleaned_data['usuario'])
             ordem = form.cleaned_data['ordem']
             cursor = db_cursor_so(request)
+            if todos == 'e':
+                estagios_os = queries.estagios_os(cursor)
+                estagios_os = [est['est'] for est in estagios_os]
+                context.update({'estagios_os': estagios_os})
             data = queries.responsavel(
                 cursor, todos, ordem, estagio, usuario, usuario_num)
             if len(data) == 0:
