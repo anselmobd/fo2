@@ -44,6 +44,10 @@ def respons_custom(request, todos):
         'editar': editar,
     }
 
+    empresas = {
+        1: "D'UOMO",
+        2: "Agator",
+    }
     if todos in ['t', 'e']:
         context.update({'todos': True})
     if request.method == 'POST':
@@ -63,26 +67,37 @@ def respons_custom(request, todos):
             if len(data) == 0:
                 data = queries.responsavel(
                     cursor, 'e', ordem, estagio, usuario, usuario_num)
+            for row in data:
+                row['EMPRESA'] = empresas[row['EMPRESA']]
             if len(data) != 0:
+                context.update({'data': data})
                 if ordem == 'e':
                     context.update({
-                        'headers': ('Estágio',
-                                    'Usuário Systêxtil ( matrícula )',
-                                    'Baixa Lote', 'Estorna Lote',
-                                    'Cria OS', 'Cancela OS'),
-                        'fields': ('ESTAGIO', 'USUARIO',
-                                   'BL', 'EL', 'CO', 'AO'),
-                        'data': data,
+                        'headers': (
+                            'Estágio',
+                            'Empresa',
+                            'Usuário Systêxtil ( matrícula )',
+                            'Baixa Lote', 'Estorna Lote',
+                            'Cria OS', 'Cancela OS'
+                        ),
+                        'fields': (
+                            'ESTAGIO', 'EMPRESA', 'USUARIO',
+                            'BL', 'EL', 'CO', 'AO'
+                        ),
                     })
                 else:
                     context.update({
-                        'headers': ('Usuário Systêxtil ( matrícula )',
-                                    'Estágio',
-                                    'Baixa Lote', 'Estorna Lote',
-                                    'Cria OS', 'Cancela OS'),
-                        'fields': ('USUARIO', 'ESTAGIO',
-                                   'BL', 'EL', 'CO', 'AO'),
-                        'data': data,
+                        'headers': (
+                            'Empresa',
+                            'Usuário Systêxtil ( matrícula )',
+                            'Estágio',
+                            'Baixa Lote', 'Estorna Lote',
+                            'Cria OS', 'Cancela OS'
+                        ),
+                        'fields': (
+                            'EMPRESA', 'USUARIO', 'ESTAGIO',
+                            'BL', 'EL', 'CO', 'AO'
+                        ),
                     })
     else:
         form = ResponsPorEstagioForm()
