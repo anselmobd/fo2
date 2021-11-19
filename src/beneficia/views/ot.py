@@ -11,9 +11,8 @@ from utils.functions.views import (
     context_to_form_post,
 )
 
-import beneficia.forms
-import beneficia.queries
 from beneficia.forms.main import OtForm
+from beneficia.queries.ot import busca_ot
 
 
 class Ot(View):
@@ -31,7 +30,7 @@ class Ot(View):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        dados = beneficia.queries.busca_ot(self.cursor, self.context['ot'])
+        dados = busca_ot(self.cursor, self.context['ot'])
         if len(dados) == 0:
             return
 

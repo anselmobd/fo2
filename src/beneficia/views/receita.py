@@ -6,15 +6,19 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
-import beneficia.forms
-import beneficia.queries
+from beneficia.forms.main import ReceitaForm
+from beneficia.queries.receita import (
+    receita_cores,
+    receita_inform,
+    receita_subgrupo,
+)
 
 
 class Receita(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(Receita, self).__init__(*args, **kwargs)
-        self.Form_class = beneficia.forms.ReceitaForm
+        self.Form_class = ReceitaForm
         self.template_name = 'beneficia/receita.html'
         self.title_name = 'Receita'
         self.get_args = ['receita']
@@ -27,7 +31,7 @@ class Receita(O2BaseGetPostView):
 
         self.cursor = db_cursor_so(self.request)
 
-        dados = beneficia.queries.receita_inform(self.cursor, self.receita)
+        dados = receita_inform(self.cursor, self.receita)
 
         if not dados:
             return
@@ -38,7 +42,7 @@ class Receita(O2BaseGetPostView):
             'dados': dados,
         })
 
-        sg_dados = beneficia.queries.receita_subgrupo(self.cursor, self.receita)
+        sg_dados = receita_subgrupo(self.cursor, self.receita)
 
         self.context.update({
             'sg_headers': ['Subgrupo', 'Descrição'],
@@ -46,7 +50,7 @@ class Receita(O2BaseGetPostView):
             'sg_dados': sg_dados,
         })
 
-        so_dados = beneficia.queries.receita_cores(self.cursor, self.receita)
+        so_dados = receita_cores(self.cursor, self.receita)
 
         for row in so_dados:
             row['cor|LINK'] = reverse(
