@@ -1,1 +1,1 @@
-from .urls import *
+from .main import *
