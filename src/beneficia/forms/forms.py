@@ -1,7 +1,7 @@
 from django import forms
 
 from base.forms.custom import O2BaseForm
-from base.forms import (
+from base.forms.fields import (
     O2FieldReceitaForm,
     O2FieldReceitaItemForm,
 )

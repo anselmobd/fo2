@@ -5,7 +5,7 @@ from django import forms
 from django.utils import timezone
 
 from base.forms.custom import O2BaseForm
-from base.forms import (
+from base.forms.fields import (
     O2FieldCorForm,
     O2FieldFiltroForm,
     O2FieldNivelForm,

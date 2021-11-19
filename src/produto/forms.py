@@ -3,7 +3,7 @@ import re
 from django import forms
 
 from base.forms.custom import O2BaseForm
-from base.forms import \
+from base.forms.fields import \
     O2FieldNivelForm, \
     O2FieldRefForm, \
     O2FieldTamanhoForm, \
