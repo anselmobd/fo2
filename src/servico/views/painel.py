@@ -8,7 +8,7 @@ from utils.classes import LoggedInUser
 
 import servico.forms
 import servico.models
-from servico.queries.lista import *
+from servico.queries.lista import lista_documentos
 
 
 class Painel(O2BaseGetPostView):

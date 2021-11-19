@@ -8,7 +8,7 @@ from fo2.connections import db_cursor_so
 
 from geral.functions import request_user, has_permission
 from utils.functions import untuple_keys_concat
-from utils.functions.digits import *
+from utils.functions.digits import fo2_digit_with
 from utils.views import group_rowspan
 
 import lotes.models as models

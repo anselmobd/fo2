@@ -6,7 +6,7 @@ from base.views import O2BaseGetView
 
 import comercial.models
 
-from lotes.views.parametros_functions import *
+from lotes.views.parametros_functions import calculaMetaTotalMetas
 
 
 class MetaTotal(O2BaseGetView):
