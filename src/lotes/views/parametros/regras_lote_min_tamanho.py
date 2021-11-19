@@ -12,7 +12,6 @@ import systextil.models
 
 import lotes.forms as forms
 import lotes.models as models
-from lotes.views.parametros_functions import *
 
 
 class RegrasLoteMinTamanho(View):

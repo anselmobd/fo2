@@ -7,7 +7,7 @@ from base.views import O2BaseGetPostView
 
 import servico.forms
 import servico.models
-from servico.queries.lista import *
+from servico.queries.lista import lista_documentos
 
 
 class Lista(O2BaseGetPostView):

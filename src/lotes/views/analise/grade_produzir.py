@@ -1,3 +1,4 @@
+import copy
 from pprint import pprint
 
 from django.conf import settings
@@ -16,7 +17,14 @@ import estoque
 from comercial.models.functions.meta_referencia import meta_ref_incluir
 from comercial.views.estoque import grade_meta_estoque
 
-from lotes.views.a_produzir import *
+from lotes.views.a_produzir import (
+    config_get_value,
+    grade_meta_giro,
+    opera_grade,
+    soma_grades,
+    subtrai_grades,
+    update_gzerada,
+)
 
 
 class GradeProduzir(O2BaseGetPostView):

@@ -14,7 +14,11 @@ from utils.functions import (
 )
 
 import insumo.queries as queries
-from insumo.functions.mapa import *
+from insumo.functions.mapa import (
+    calc_estoque_final_semana,
+    print_data,
+    recalc_estoque,
+)
 
 
 def mapa_por_insumo_dados(cursor, nivel, ref, cor, tam, calc=False):

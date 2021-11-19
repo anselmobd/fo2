@@ -7,7 +7,7 @@ from utils.views import totalize_grouped_data
 
 import comercial.models
 
-from lotes.views.parametros_functions import *
+from lotes.views.parametros_functions import calculaMetaGiroMetas
 
 
 class MetaGiro(O2BaseGetView):
