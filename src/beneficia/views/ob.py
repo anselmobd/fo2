@@ -11,13 +11,13 @@ from utils.functions.views import (
     context_to_form_post,
 )
 
-import beneficia.forms
 import beneficia.queries
+from beneficia.forms.main import ObForm
 
 
 class Ob(View):
 
-    Form_class = beneficia.forms.ObForm
+    Form_class = ObForm
     template_name = 'beneficia/ob.html'
     title_name = 'OB'
 

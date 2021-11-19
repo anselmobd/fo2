@@ -13,11 +13,12 @@ from utils.functions.views import (
 
 import beneficia.forms
 import beneficia.queries
+from beneficia.forms.main import OtForm
 
 
 class Ot(View):
 
-    Form_class = beneficia.forms.OtForm
+    Form_class = OtForm
     template_name = 'beneficia/ot.html'
     title_name = 'OT'
 
