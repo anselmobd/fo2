@@ -11,8 +11,13 @@ from utils.functions.views import (
     context_to_form_post,
 )
 
-import beneficia.queries
 from beneficia.forms.main import ObForm
+from beneficia.queries.ob import (
+    busca_ob,
+    ob_destinos,
+    ob_estagios,
+    ob_tecidos,
+)
 
 
 class Ob(View):
@@ -30,7 +35,7 @@ class Ob(View):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        dados = beneficia.queries.busca_ob(self.cursor, self.context['ob'])
+        dados = busca_ob(self.cursor, self.context['ob'])
         if len(dados) == 0:
             return
 
@@ -56,7 +61,7 @@ class Ob(View):
             'dados': dados,
         })
 
-        est_dados = beneficia.queries.ob_estagios(self.cursor, self.context['ob'])
+        est_dados = ob_estagios(self.cursor, self.context['ob'])
         self.context.update({
             'est_headers': (
                 'Sequência',
@@ -75,7 +80,7 @@ class Ob(View):
             'est_dados': est_dados,
         })
 
-        tec_dados = beneficia.queries.ob_tecidos(self.cursor, self.context['ob'])
+        tec_dados = ob_tecidos(self.cursor, self.context['ob'])
         self.context.update({
             'tec_headers': [
                 'Nível',
@@ -149,7 +154,7 @@ class Ob(View):
                         args=[row['ot']],
                     )
 
-        dest_dados = beneficia.queries.ob_destinos(self.cursor, self.context['ob'])
+        dest_dados = ob_destinos(self.cursor, self.context['ob'])
 
         for row in dest_dados:
             if row['numero']:
