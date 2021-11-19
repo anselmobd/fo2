@@ -1,4 +1,11 @@
-from fo2.urls import *
+from pprint import pprint
+
+from django.contrib.auth import views as auth_views
+from django.urls import re_path
+from django.views.generic import RedirectView
+
+import fo2.views as views
+from fo2.urls import urlpatterns
 
 
 # para não acumular alterações, trabalha sempre em uma cópia nova
