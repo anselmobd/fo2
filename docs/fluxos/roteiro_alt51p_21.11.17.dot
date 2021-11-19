@@ -1,0 +1,240 @@
+digraph G {
+  compound=true
+  newrank=true
+  rankdir = LR
+
+  labelloc="t"
+  label = <Fluxo 51p - Interno<br
+    />Versão 21.11.17 (17/11/2021)<br
+    /><br
+    />SUNGA - SHORT<br
+    /><br
+    />Corte: Interno<br
+    />Estamparia: Interna<sup>*1</sup> ou Sem<br
+    />Costura: Interna>
+  
+  L_MP [shape=rarrow,style=dashed,label="MP"]
+  L_MD [shape=rarrow,style=dashed,label="MD"]
+
+  L_PGPB [shape=rarrow,style=dashed,label="PG"]
+
+  L_PA [shape=rarrow,style=dashed,label="PA"]
+
+  L_MP -> L_MD -> L_PGPB -> L_PA [style=invis]
+
+  {
+    node [
+      shape = "note"
+    ]
+
+    subgraph cluster_pa {
+      label = "PA - 9999*
+Depósito da OP: 101/102"
+      style="dotted, rounded"
+
+
+        subgraph cluster_pa0x {
+
+
+  label = <Individual Encabidado ou<br />Individual Embalado<br />(a desativar)<br /><br />Alternativa 51: Interno<br />Roteiro 51: PA Interno>
+
+
+  style=rounded
+  pa0x [
+    label = <
+    <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+
+      <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">18-Separação insumo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">TAG</td></tr><tr><td BORDER="0">Cabide</td></tr><tr><td BORDER="0">Embalagem</td></tr><tr><td BORDER="0">Etiquetas</td></tr><tr><td BORDER="0">Caixa</td></tr></table></td></tr>
+      <tr><td>#</td><td align="left">60-Embalagem</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">MD<br /><b><u>M</u></b>999*</td></tr></table></td></tr>
+      <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">66-Expedição</td><td>231</td><td>-</td></tr>
+
+
+    </table>
+    >
+  ]
+}
+
+
+
+
+
+
+        subgraph cluster_pa2x {
+
+
+  label = <PA - 9999<b><u>A</u></b><br /><br />Individual Embalado<br /><br />Alternativa 71: PG Interno<br />Roteiro 71: PA de PG Interno>
+
+
+  style=rounded
+  pa2x [
+    label = <
+    <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+
+      <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">19-Separação insumo</td><td>-</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">Embalagem</td></tr><tr><td BORDER="0">Etiquetas</td></tr><tr><td BORDER="0">Caixa</td></tr></table></td></tr>
+      <tr><td>#</td><td align="left">66-Expedição</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PG<br /><b><u>A</u></b>999*</td></tr></table></td></tr>
+
+
+    </table>
+    >
+  ]
+}
+
+
+
+
+        subgraph cluster_pa3x {
+
+
+  label = <PA - 99999<br /><br />Individual Encabidado<br /><br />Alternativa 81: PA de PG Interno<br />Roteiro 81: PA de PG Interno>
+
+
+  style=rounded
+  pa3x [
+    label = <
+    <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+
+      <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">19-Separação insumo</td><td>-</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">Cabide</td></tr><tr><td BORDER="0">Etiquetas</td></tr><tr><td BORDER="0">Caixa</td></tr></table></td></tr>
+      <tr><td>#</td><td align="left">66-Expedição</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PG<br /><b><u>A</u></b>999*</td></tr></table></td></tr>
+
+
+    </table>
+    >
+  ]
+}
+
+
+
+    }
+
+
+    mpforro [
+      label = "Forro - F9999\nFluxo 8"
+    ]
+
+
+
+    subgraph cluster_md {
+      label = "MD
+Depósito da OP: 231"
+      style="dotted, rounded"
+
+
+
+
+        subgraph cluster_mdpg {
+
+
+  label = <MD - <b><u>M</u></b>999*<br /><br />Alternativa 51: Interno<br />Roteiro 51: MD Interno>
+
+
+  style=rounded
+  mdpg [
+    label = <
+    <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+
+      <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">06-Risco</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">12-Etiquetas</td><td>231</td><td>-</td></tr>
+      <tr><td></td><td align="left">15-Corte</td><td>-</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">Forro</td></tr><tr><td BORDER="0">Malha</td></tr></table></td></tr>
+      <tr><td></td><td align="left">16-Recepcao Corte</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">18-Separação insumo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">Etiquetas</td></tr><tr><td BORDER="0">Elástico</td></tr><tr><td BORDER="0">Cadarço</td></tr></table></td></tr>
+      <tr><td></td><td align="left">43<sup>*1</sup>-Sublimação</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">21-Distribuição</td><td>-</td><td>-</td></tr>
+      <tr><td>#</td><td align="left">33-Costura Costurado</td><td>231</td><td>-</td></tr>
+      <tr><td></td><td align="left">45-Transfer / TAG</td><td>231</td><td>-</td></tr>
+      <tr><td></td><td align="left">48-Revisão</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">51-CD MD</td><td>-</td><td>-</td></tr>
+
+
+    </table>
+    >
+  ]
+}
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+      subgraph cluster_pg2x {
+
+
+  label = <PG - <b><u>A</u></b>999*<br />Depósito da OP: 231<br /><br />Alternativa 71: PG Interno<br />Roteiro 71: PG Interno>
+
+
+  style=rounded
+  pg2x [
+    label = <
+    <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+
+      <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">19-Separação insumo</td><td>-</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">TAG</td></tr></table></td></tr>
+      <tr><td>#</td><td align="left">60-Embalagem</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">MD<br /><b><u>M</u></b>999*</td></tr></table></td></tr>
+      <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+
+
+    </table>
+    >
+  ]
+}
+
+
+
+  }
+
+
+  {rank = same L_MP mpforro}
+
+  {rank = same L_MD mdpg}
+
+  {rank = same L_PGPB pg2x}
+
+  {rank = same L_PA pa0x pa2x pa3x}
+
+
+  mpforro -> mdpg
+
+
+
+
+
+      mdpg -> pg2x [ltail=cluster_mdpg]
+
+
+
+
+      mdpg -> pa0x [ltail=cluster_mdpg]
+
+
+
+
+
+
+
+
+
+    pg2x -> pa2x [ltail=cluster_pg2x]
+
+
+    pg2x -> pa3x [ltail=cluster_pg2x]
+
+
+}
