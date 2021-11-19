@@ -12,13 +12,13 @@ from utils.functions.views import (
     context_to_form_post,
 )
 
-import beneficia.forms
 import beneficia.queries
+from beneficia.forms.main import BuscaObForm
 
 
 class BuscaOb(View):
 
-    Form_class = beneficia.forms.BuscaObForm
+    Form_class = BuscaObForm
     template_name = 'beneficia/busca_ob.html'
     title_name = 'Busca OB'
 
