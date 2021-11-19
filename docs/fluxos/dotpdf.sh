@@ -12,10 +12,10 @@ fi
 sleep 0.5
 
 if [ $# -ge 1 ] ; then
-  rm ${PARA}.pdf
-  dot -Tpdf ${DE}.dot -o${PARA}.pdf
-  pdfjam --outfile a4_${PARA}.pdf --paper a4paper ${PARA}.pdf
-  if [ -e ${PARA}.pdf ] ; then
-    evince -s a4_${PARA}.pdf
+  rm pdf/${PARA}.pdf
+  dot -Tpdf ${DE}.dot -opdf/${PARA}.pdf
+  pdfjam --outfile pdf/a4_${PARA}.pdf --paper a4paper pdf/${PARA}.pdf
+  if [ -e pdf/${PARA}.pdf ] ; then
+    evince -s pdf/a4_${PARA}.pdf
   fi
 fi
