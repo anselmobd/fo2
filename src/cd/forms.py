@@ -6,7 +6,7 @@ from django.db.models.functions import Coalesce
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.digits import *
+from utils.functions.digits import fo2_digit_valid
 from utils.functions.strings import only_digits
 
 import lotes.models
