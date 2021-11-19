@@ -12,8 +12,8 @@ from utils.functions.views import (
     context_to_form_post,
 )
 
-import beneficia.queries
 from beneficia.forms.main import BuscaObForm
+from beneficia.queries.ob import busca_ob
 
 
 class BuscaOb(View):
@@ -31,7 +31,7 @@ class BuscaOb(View):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        dados = beneficia.queries.busca_ob(
+        dados = busca_ob(
             self.cursor,
             periodo=self.context['periodo'],
             obs=self.context['obs'],
