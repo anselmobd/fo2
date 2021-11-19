@@ -1,7 +1,7 @@
 from pprint import pprint
 
 from utils.functions.data import filtered_data_fields
-from utils.functions.digits import *
+from utils.functions.digits import fo2_digit_with
 from utils.functions.models import rows_to_dict_list_lower
 
 

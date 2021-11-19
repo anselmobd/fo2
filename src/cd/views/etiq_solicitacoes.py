@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.views import View
 
 from utils.classes import TermalPrint
-from utils.functions.digits import *
 
 import lotes.models
 
