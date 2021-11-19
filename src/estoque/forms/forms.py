@@ -4,7 +4,7 @@ from django import forms
 
 import geral.queries
 import geral.functions
-from base.forms import O2BaseForm, O2FieldRefForm
+from base.forms.custom import O2BaseForm
 from base.forms.fields2 import O2FieldModeloForm2
 
 

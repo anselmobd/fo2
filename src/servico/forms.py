@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from base.forms import O2BaseForm
+from base.forms.custom import O2BaseForm
 
 from servico.models import Interacao
 

@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django import forms
 
-from base.forms import O2BaseForm
+from base.forms.custom import O2BaseForm
 from utils.functions.gtin import gtin_check_digit
 
 

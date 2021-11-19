@@ -4,8 +4,8 @@ from pprint import pprint
 from django import forms
 from django.utils import timezone
 
+from base.forms.custom import O2BaseForm
 from base.forms import (
-    O2BaseForm,
     O2FieldCorForm,
     O2FieldFiltroForm,
     O2FieldNivelForm,
