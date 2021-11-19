@@ -147,3 +147,6 @@ media/pop/
 
 # Docs - arquivos gerados
 docs/models.pdf
+
+# Docs - fluxos
+docs/fluxos/*.pdf

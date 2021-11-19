@@ -1,0 +1,59 @@
+digraph G {
+  newrank=true;
+  rankdir = LR;
+
+  labelloc="t";
+  label="
+    Fluxo 6 - Costura externa de camisa
+    Versão 2.11.17 (17/11/2021)
+
+    CAMISA
+
+    Corte: Interno
+    Costura: Externa
+  "
+
+  L_SETA [shape=rarrow,style=dashed,label="MD"]
+
+  {
+    node [
+      shape = "note"
+    ]
+
+    subgraph cluster_bloco {
+
+
+  label = <MD - x9999<br />Depósito da OP: 231<br /><br />Alternativa 6: Camisa<br />Roteiro 6: MD Camisa>
+
+
+  style=rounded
+  bloco [
+    label = <
+    <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+    <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+
+      <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">06-Risco</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">12-Etiquetas</td><td>231</td><td>-</td></tr>
+      <tr><td></td><td align="left">15-Corte</td><td>-</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">Malha</td></tr></table></td></tr>
+      <tr><td></td><td align="left">16-Recepcao Corte</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">18-Separação insumo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">Transfer</td></tr></table></td></tr>
+      <tr><td></td><td align="left">21-Distribuição</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">OS-OS/NF</td><td></td><td>-</td></tr>
+      <tr><td>#</td><td align="left">24-Recepção</td><td>-</td><td>-</td></tr>
+      <tr><td></td><td align="left">55-Terceiro RJ</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">Etiquetas</td></tr></table></td></tr>
+      <tr><td></td><td align="left">45-Transfer / TAG</td><td>231</td><td>-</td></tr>
+      <tr><td></td><td align="left">51-CD MD</td><td>-</td><td>-</td></tr>
+
+
+    </table>
+    >
+  ]
+}
+
+
+  }
+
+  {rank = same L_SETA bloco}
+
+}
