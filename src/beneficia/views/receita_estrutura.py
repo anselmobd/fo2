@@ -4,15 +4,15 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
-import beneficia.forms
-import beneficia.queries
+from beneficia.forms.main import ReceitaItemForm
+from beneficia.queries.receita import receita_estrutura
 
 
 class ReceitaEstrutura(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(ReceitaEstrutura, self).__init__(*args, **kwargs)
-        self.Form_class = beneficia.forms.ReceitaItemForm
+        self.Form_class = ReceitaItemForm
         self.template_name = 'beneficia/receita_estrutura.html'
         self.title_name = 'Estrutura de receita'
         self.get_args = ['item']
@@ -30,7 +30,7 @@ class ReceitaEstrutura(O2BaseGetPostView):
         )
         self.context.update({'receita': grup})
 
-        dados = beneficia.queries.receita_estrutura(
+        dados = receita_estrutura(
             self.cursor, niv, grup, sub, item
         )
 
