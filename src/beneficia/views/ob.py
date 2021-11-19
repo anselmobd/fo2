@@ -118,10 +118,12 @@ class Ob(View):
         tecido_ob = {
             'TIN': 'OB2',
             'INT': 'OB1',
-            'X': 'Erro',
             '': 'Indefinido',
         }
-        tipo_ob = tecido_ob[tipo_tecido]
+        try:
+            tipo_ob = f"{tecido_ob[tipo_tecido]} ({tipo_tecido})"
+        except KeyError:
+            tipo_ob = f"Erro ({tipo_tecido})"
 
         self.context.update({
             'tipo_ob': tipo_ob,
