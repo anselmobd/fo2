@@ -2,8 +2,8 @@ import re
 
 from django import forms
 
+from base.forms.custom import O2BaseForm
 from base.forms import \
-    O2BaseForm, \
     O2FieldNivelForm, \
     O2FieldRefForm, \
     O2FieldTamanhoForm, \
