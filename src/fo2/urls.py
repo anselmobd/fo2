@@ -81,7 +81,7 @@ urlpatterns = [
 
     re_path(r'^servico/', include('servico.urls')),
 
-    re_path(r'^systext/', include('systextil.urls')),
+    re_path(r'^systext/', include('systextil.urls.main')),
 
     # Links para fora
 
