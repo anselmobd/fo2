@@ -27,10 +27,12 @@
     </li>
     <li><a href="{% url 'systextil:sessions' %}">Detalhado</a></li>
   </ul>
+  {% if perms.systextil.can_be_dba %}
   <li>DBA</li>
   <ul>
     <li><a href="{ % url 'systextil:dba:demorada' %}" target="_blank">Queries demoradas</a></li>
   </ul>
+  {% endif %}
   <li>Na internet</li>
   <ul>
     <li><a href="https://www.systextil.com.br/" target="_blank">Systêxtil</a></li>
