@@ -34,6 +34,7 @@ class O2BaseGetPostView(CustomView):
         super(O2BaseGetPostView, self).__init__(*args, **kwargs)
         self.Form_class = None
         self.form_class_initial = False
+        self.form_dict_initial = {}
         self.cleaned_data2self = False
 
     def do_cleaned_data2self(self):
@@ -65,7 +66,9 @@ class O2BaseGetPostView(CustomView):
 
     def form_initial(self):
         """Metodo chamado no GET para colocar valores no dict que inicializará o Form_class"""
-        return self.empty_form_initial()
+        empty_dict_initial = self.empty_form_initial()
+        empty_dict_initial.update(self.form_dict_initial)
+        return empty_dict_initial
 
     def pre_form(self):
         pass
