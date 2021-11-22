@@ -6,11 +6,7 @@ from django.shortcuts import render
 from systextil.functions import get_sessions
 
 
-def index(request):
-    return render(request, 'systextil/index.html')
-
-
-def sessions(request):
+def view(request):
     context = {"titulo": "Sessões"}
     json = get_sessions()
 
