@@ -1,11 +1,14 @@
 from django.urls import re_path
 
-import systextil.views.views
+from systextil.views import (
+    index,
+    sessions,
+)
 
 
 app_name = 'systextil'
 urlpatterns = [
-    re_path(r'^$', systextil.views.views.index, name='index'),
+    re_path(r'^$', index.view, name='index'),
 
-    re_path(r'^sessions/$', systextil.views.views.sessions, name='sessions'),
+    re_path(r'^sessions/$', sessions.view, name='sessions'),
 ]
