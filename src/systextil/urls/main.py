@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import include, re_path
 
 from systextil.views import (
     index,
@@ -11,4 +11,6 @@ urlpatterns = [
     re_path(r'^$', index.view, name='index'),
 
     re_path(r'^sessions/$', sessions.view, name='sessions'),
+
+    re_path(r'^dba/', include('systextil.urls.dba'), name='dba'),
 ]
