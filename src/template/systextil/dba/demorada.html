@@ -4,6 +4,16 @@
 
 {% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'systextil:demorada' %}">{{ titulo }}</a>{% endblock header.content %}
 
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
 {% block content %}
-Demorada
+  <form action="{% url 'systextil:demorada' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Executa"/>
+  </form>
 {% endblock %}
