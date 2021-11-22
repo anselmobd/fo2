@@ -1,9 +1,9 @@
 from django import forms
 
-__all__=['MinutosForm']
+__all__=['SegundosForm']
 
 
-class MinutosForm(forms.Form):
-    minutos = forms.IntegerField(
+class SegundosForm(forms.Form):
+    segundos = forms.IntegerField(
         initial=60,
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))

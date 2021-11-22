@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import (
 from base.views import O2BaseGetPostView
 from fo2.connections import db_cursor_so
 
-from systextil.forms import MinutosForm
+from systextil.forms import SegundosForm
 from systextil.queries.dba.main import rodando_a_segundos
 
 class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
@@ -18,7 +18,7 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
         self.permission_required = 'systextil.can_be_dba'
         self.template_name = 'systextil/dba/demorada.html'
         self.title_name = 'Queries Demoradas'
-        self.Form_class = MinutosForm
+        self.Form_class = SegundosForm
         self.form_class_initial = True
         self.cleaned_data2self = True
 
@@ -26,7 +26,7 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
 
         cursor = db_cursor_so(self.request)
 
-        data = rodando_a_segundos(cursor,self.minutos)
+        data = rodando_a_segundos(cursor,self.segundos)
         if len(data) == 0:
             self.context.update({
                 'msg': 'Nenhuma query demorada encontrada'
