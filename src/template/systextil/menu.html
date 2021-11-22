@@ -5,25 +5,25 @@
   <br>
   <li>Sessões</li>
   <ul>
-    <li>
+    <li><a 
       {% if externo %}
         {%comment%}
         {%if alter_db%}
-          <a href="http://systextil.tussor.com.br:8045/systextil/sessions" target="_blank">
+          href="http://systextil.tussor.com.br:8045/systextil/sessions"
         {% else %}
         {%endcomment%}
-          <a href="http://tussor.systextil.com.br/systextil/sessions" target="_blank">
+          href="http://tussor.systextil.com.br/systextil/sessions"
         {%comment endif%}{%endcomment%}
       {% else %}
         {%comment%}
         {%if alter_db%}
-          <a href="http://systextil.tussor.com.br/systextil/sessions" target="_blank">
+          href="http://systextil.tussor.com.br/systextil/sessions"
         {% else %}
         {%endcomment%}
-          <a href="http://oc.tussor.com.br/systextil/sessions" target="_blank">
+          href="http://oc.tussor.com.br/systextil/sessions" 
         {%comment endif%}{%endcomment%}
       {% endif %}
-      JSON</a>
+      target="_blank">JSON</a>
     </li>
     <li><a href="{% url 'systextil:sessions' %}">Detalhado</a></li>
   </ul>
