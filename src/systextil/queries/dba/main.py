@@ -11,7 +11,7 @@ def rodando_a_segundos(cursor, segundos):
           s.username
         , s.sid
         , s.serial#
-        , s.last_call_et/60 mins_running
+        , s.last_call_et secs
         , q.sql_text
         from v$session s 
         join v$sqltext_with_newlines q
