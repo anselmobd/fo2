@@ -89,7 +89,7 @@ INSTALLED_APPS = [
     'produto',
     'remote_files',
     'servico',
-    # 'systextil',
+    'systextil',
     'tussor',
     'utils',
 ]
