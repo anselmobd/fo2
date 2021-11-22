@@ -33,7 +33,7 @@ def join2(sep, lista):
 
 
 def join_non_empty(sep, lista):
-    return join(sep, [s for s in lista if str(s).strip()])
+    return join2(sep, [s for s in lista if str(s).strip()])
 
 
 def only_digits(text):
