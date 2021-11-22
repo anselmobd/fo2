@@ -28,10 +28,12 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
         data = rodando_a_segundos(cursor,self.segundos)
 
         for row in data:
-            row['mins_running'] = round(row['mins_running'], 2)
+            mins = row['secs'] // 60
+            secs = row['secs'] % 60
+            row['secs'] = f"{mins}:{secs:02d}"
 
         self.context.update({
-            'headers': ['Username', 'SID', 'Serial#', 'Minutos rodando', 'SQL'],
-            'fields': ['username', 'sid', 'serial#', 'mins_running', 'sql_text'],
+            'headers': ['Username', 'SID', 'Serial#', 'Rodando a', 'SQL'],
+            'fields': ['username', 'sid', 'serial#', 'secs', 'sql_text'],
             'data': data,
         })
