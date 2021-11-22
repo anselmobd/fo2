@@ -27,11 +27,6 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         data = rodando_a_segundos(cursor,self.segundos)
-        if len(data) == 0:
-            self.context.update({
-                'msg': 'Nenhuma query demorada encontrada'
-            })
-            return
 
         self.context.update({
             'headers': ['Username', 'SID', 'Serial#', 'Minutos rodando', 'SQL'],
