@@ -23,10 +23,12 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def mount_context(self):
-
         cursor = db_cursor_so(self.request)
 
         data = rodando_a_segundos(cursor,self.segundos)
+
+        for row in data:
+            row['mins_running'] = round(row['mins_running'], 2)
 
         self.context.update({
             'headers': ['Username', 'SID', 'Serial#', 'Minutos rodando', 'SQL'],
