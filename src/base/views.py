@@ -33,6 +33,7 @@ class O2BaseGetPostView(CustomView):
         """
         super(O2BaseGetPostView, self).__init__(*args, **kwargs)
         self.Form_class = None
+        self.form_class_initial = False
         self.cleaned_data2self = False
 
     def do_cleaned_data2self(self):
@@ -77,7 +78,10 @@ class O2BaseGetPostView(CustomView):
                     return self.post(request, *args, **kwargs)
 
         self.pre_form()
-        self.form = self.Form_class(initial=self.form_initial())
+        if self.form_class_initial:
+            self.form = self.Form_class()
+        else:
+            self.form = self.Form_class(initial=self.form_initial())
         return self.render_mount()
 
     def post(self, request, *args, **kwargs):
