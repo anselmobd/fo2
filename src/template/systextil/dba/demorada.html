@@ -1,8 +1,8 @@
-{% extends 'intranet.html' %}
+{% extends 'systextil/index.html' %}
 
-{% block title.content %}{{ block.super }} &rsaquo; Systextil{% endblock title.content %}
+{% block title.content %}{{ block.super }} &rsaquo; {{ titulo }}{% endblock title.content %}
 
-{% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'systextil:index' %}">Systextil</a>{% endblock header.content %}
+{% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'systextil:demorada' %}">{{ titulo }}</a>{% endblock header.content %}
 
 {% block content %}
 Demorada
