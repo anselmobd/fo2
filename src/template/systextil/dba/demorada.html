@@ -16,4 +16,13 @@
     {{ form.as_p }}
     <input type="submit" value="Executa"/>
   </form>
+  {% if msg %}
+    <h4>{{ msg }}</h4>
+  {% endif %}
+  {% if data %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
 {% endblock %}
