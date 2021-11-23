@@ -1,3 +1,4 @@
+import sqlparse
 from itertools import takewhile
 from pprint import pprint
 
@@ -49,48 +50,55 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             mins = row['secs'] // 60
             secs = row['secs'] % 60
             row['secs'] = f"{mins}:{secs:02d}"
+            row['serial#'] = f"{row['serial#']:d}"
+            row['sql_text'] = sqlparse.format(
+                row['sql_text'],
+                reindent_aligned=True,
+                indent_width=2,
+                keyword_case='upper',
+            )
 
-            linhas = row['sql_text'].split('\n')
-            min_spaces = 1000
-            state = 'inicio'
-            linhas_vazias_inicio = 0
-            iguais = 0
-            ult_tem_algo = True
-            for linha in linhas:
-                linhas_strip = linha.strip()
-                tem_algo = linhas_strip and linhas_strip[:2] != '--'
+            # linhas = row['sql_text'].split('\n')
+            # min_spaces = 1000
+            # state = 'inicio'
+            # linhas_vazias_inicio = 0
+            # iguais = 0
+            # ult_tem_algo = True
+            # for linha in linhas:
+            #     linhas_strip = linha.strip()
+            #     tem_algo = linhas_strip and linhas_strip[:2] != '--'
 
-                if state == 'inicio':
-                    if not tem_algo:
-                        linhas_vazias_inicio += 1
-                    else:
-                        state = 'final'
+            #     if state == 'inicio':
+            #         if not tem_algo:
+            #             linhas_vazias_inicio += 1
+            #         else:
+            #             state = 'final'
 
-                if state == 'final':
-                    if tem_algo == ult_tem_algo:
-                        iguais += 1
-                    else:
-                        ult_tem_algo = tem_algo
-                        iguais = 1
+            #     if state == 'final':
+            #         if tem_algo == ult_tem_algo:
+            #             iguais += 1
+            #         else:
+            #             ult_tem_algo = tem_algo
+            #             iguais = 1
 
-                if tem_algo:
-                    spaces = sum(1 for _ in takewhile(lambda c: c == ' ', linha))
-                    min_spaces = min(spaces, min_spaces)
+            #     if tem_algo:
+            #         spaces = sum(1 for _ in takewhile(lambda c: c == ' ', linha))
+            #         min_spaces = min(spaces, min_spaces)
 
-            if ult_tem_algo:
-                linhas_vazias_final = 0
-            else:
-                linhas_vazias_final = iguais
+            # if ult_tem_algo:
+            #     linhas_vazias_final = 0
+            # else:
+            #     linhas_vazias_final = iguais
 
-            sql_text_list = []
-            for linha in linhas[linhas_vazias_inicio:-linhas_vazias_final]:
-                linhas_strip = linha.strip()
-                if linhas_strip and linhas_strip[:2] != '--':
-                    sql_text_list.append(linha[min_spaces:])
-                else:
-                    sql_text_list.append(linhas_strip)
+            # sql_text_list = []
+            # for linha in linhas[linhas_vazias_inicio:-linhas_vazias_final]:
+            #     linhas_strip = linha.strip()
+            #     if linhas_strip and linhas_strip[:2] != '--':
+            #         sql_text_list.append(linha[min_spaces:])
+            #     else:
+            #         sql_text_list.append(linhas_strip)
 
-            row['sql_text'] = '\n'.join(sql_text_list)
+            # row['sql_text_format'] = '\n'.join(sql_text_list)
                    
             # quebras = row['sql_text'].count('\n')
             # print('quebras', quebras)
@@ -115,3 +123,9 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             'pre': ['sql_text'],
             'data': data,
         })
+        # self.context.update({
+        #     'f_headers': ['Username', 'SID', 'Serial#', 'Rodando a', 'SQL'],
+        #     'f_fields': ['username', 'sid', 'serial#', 'secs', 'sql_text_format'],
+        #     'f_pre': ['sql_text_format'],
+        #     'f_data': data,
+        # })
