@@ -54,6 +54,6 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             row['sql_text_fo2'] = sql_formato_fo2(row['sql_text'])
 
         self.context.update({
-            'headers': ['Username', 'SID', 'Serial', 'Rodando a', 'SQL'],
+            'headers': ['Username', 'SID', 'Serial', 'Tempo', 'SQL'],
             'data': data,
         })
