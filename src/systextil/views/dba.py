@@ -36,12 +36,12 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
         last_sid = -1
         last_serial = -1
         for row in raw_data:
-            if row['sid'] == last_sid and row['serial#'] == last_serial:
+            if row['sid'] == last_sid and row['serial'] == last_serial:
                 data[-1]['sql_text'] += row['sql_text']
             else:
                 data.append(row)                
                 last_sid = row['sid']
-                last_serial = row['serial#']
+                last_serial = row['serial']
 
         # print('data')
         # pprint(data)
@@ -50,7 +50,7 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             mins = row['secs'] // 60
             secs = row['secs'] % 60
             row['mins'] = f"{mins}:{secs:02d}"
-            row['serial#'] = f"{row['serial#']:d}"
+            row['serial'] = f"{row['serial']:d}"
             row['sql_text'] = sqlparse.format(
                 row['sql_text'],
                 reindent_aligned=True,
