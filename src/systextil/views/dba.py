@@ -119,7 +119,7 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
 
         self.context.update({
             'headers': ['Username', 'SID', 'Serial#', 'Rodando a', 'SQL'],
-            'fields': ['username', 'sid', 'serial#', 'secs', 'sql_text'],
+            'fields': ['username', 'sid', 'serial', 'secs', 'sql_text'],
             'pre': ['sql_text'],
             'data': data,
         })
