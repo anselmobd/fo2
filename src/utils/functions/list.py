@@ -5,6 +5,7 @@ from pprint import pprint
 __all__ = [
     'count_at_start',
     'count_at_end',
+    'empty',
 ]
 
 
@@ -18,3 +19,7 @@ def count_at_start(str, test):
 
 def count_at_end(str, test):
     return count_at_start(reversed(str), test)
+
+
+def empty(alist):
+    return not alist
