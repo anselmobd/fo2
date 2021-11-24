@@ -1,6 +1,10 @@
 from pprint import pprint
 
-from utils.functions.list import empty, count_at_start, count_at_end
+from utils.functions.list import (
+    count_at_end,
+    count_at_start,
+    empty,
+)
 
 
 __all__ = [
