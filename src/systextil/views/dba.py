@@ -58,6 +58,40 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
                 keyword_case='upper',
             )
 
+            linhas = row['sql_text'].split('\n')
+            print(len(linhas))
+
+            self.min_spaces = 1000
+            def strip_min_spaces(linha):
+                linha_strip = linha.strip()
+                if linha_strip and linha_strip[:2] != '--':
+                    self.min_spaces = min(
+                        self.min_spaces,
+                        sum(1 for _ in takewhile(lambda c: c == ' ', linha)),
+                    )
+                return linha_strip
+
+            linhas_strip = list(map(strip_min_spaces, linhas))
+            linhas_vazias_inicio = sum(1 for _ in takewhile(lambda l: len(l) == 0, linhas_strip))
+            linhas_vazias_final = sum(1 for _ in takewhile(lambda l: len(l) == 0, reversed(linhas_strip)))
+            print(linhas_vazias_inicio, linhas_vazias_final, self.min_spaces)
+
+            del linhas[:linhas_vazias_inicio]
+            if linhas_vazias_final:
+                del linhas[-linhas_vazias_final:]
+            print(len(linhas))
+
+            def put_min_spaces(linha):
+                linha_strip = linha.strip()
+                if linha_strip and linha_strip[:2] != '--':
+                    linha = linha[self.min_spaces:]
+                else:
+                    linha = linha_strip
+                return linha
+
+            linhas = list(map(put_min_spaces, linhas))
+            row['sql_text_fo2'] = '\n'.join(linhas)
+
             # linhas = row['sql_text'].split('\n')
             # min_spaces = 1000
             # state = 'inicio'
