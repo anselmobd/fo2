@@ -7,6 +7,7 @@
 {% block stylesheet %}
   <style>
     {% include 'layout/simple_table.css' %}
+
     td:not(.sql)  {
       vertical-align: top;
       padding: 2em 0 0 0;
@@ -24,7 +25,6 @@
     {% if data %}
       <table>
         {% include "layout/thead_generic.html" with data=headers only %}
-        <!-- { % include "layout/tbody_generic.html" with fields=fields data=data pre=pre only %} -->
         <tbody>
           {% for row in data %}
             <tr>

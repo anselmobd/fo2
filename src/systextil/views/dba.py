@@ -29,9 +29,6 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
 
         raw_data = rodando_a_segundos(cursor,self.segundos)
 
-        # print('raw_data')
-        # pprint(raw_data)
-
         data = []
         last_sid = -1
         last_serial = -1
@@ -42,9 +39,6 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
                 data.append(row)                
                 last_sid = row['sid']
                 last_serial = row['serial']
-
-        # print('data')
-        # pprint(data)
 
         for row in data:
             mins = row['secs'] // 60
@@ -59,7 +53,6 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             )
 
             linhas = row['sql_text'].split('\n')
-            print(len(linhas))
 
             self.min_spaces = 1000
             def strip_min_spaces(linha):
@@ -74,12 +67,10 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             linhas_strip = list(map(strip_min_spaces, linhas))
             linhas_vazias_inicio = sum(1 for _ in takewhile(lambda l: len(l) == 0, linhas_strip))
             linhas_vazias_final = sum(1 for _ in takewhile(lambda l: len(l) == 0, reversed(linhas_strip)))
-            print(linhas_vazias_inicio, linhas_vazias_final, self.min_spaces)
 
             del linhas[:linhas_vazias_inicio]
             if linhas_vazias_final:
                 del linhas[-linhas_vazias_final:]
-            print(len(linhas))
 
             def put_min_spaces(linha):
                 linha_strip = linha.strip()
@@ -92,68 +83,7 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             linhas = list(map(put_min_spaces, linhas))
             row['sql_text_fo2'] = '\n'.join(linhas)
 
-            # linhas = row['sql_text'].split('\n')
-            # min_spaces = 1000
-            # state = 'inicio'
-            # linhas_vazias_inicio = 0
-            # iguais = 0
-            # ult_tem_algo = True
-            # for linha in linhas:
-            #     linhas_strip = linha.strip()
-            #     tem_algo = linhas_strip and linhas_strip[:2] != '--'
-
-            #     if state == 'inicio':
-            #         if not tem_algo:
-            #             linhas_vazias_inicio += 1
-            #         else:
-            #             state = 'final'
-
-            #     if state == 'final':
-            #         if tem_algo == ult_tem_algo:
-            #             iguais += 1
-            #         else:
-            #             ult_tem_algo = tem_algo
-            #             iguais = 1
-
-            #     if tem_algo:
-            #         spaces = sum(1 for _ in takewhile(lambda c: c == ' ', linha))
-            #         min_spaces = min(spaces, min_spaces)
-
-            # if ult_tem_algo:
-            #     linhas_vazias_final = 0
-            # else:
-            #     linhas_vazias_final = iguais
-
-            # sql_text_list = []
-            # for linha in linhas[linhas_vazias_inicio:-linhas_vazias_final]:
-            #     linhas_strip = linha.strip()
-            #     if linhas_strip and linhas_strip[:2] != '--':
-            #         sql_text_list.append(linha[min_spaces:])
-            #     else:
-            #         sql_text_list.append(linhas_strip)
-
-            # row['sql_text_format'] = '\n'.join(sql_text_list)
-                   
-            # quebras = row['sql_text'].count('\n')
-            # print('quebras', quebras)
-            # i = 0
-            # while True:
-            #     n_chars = len(row['sql_text'])
-            #     print('n_chars', n_chars)
-            #     sql_temp = row['sql_text'].replace('\n ', '\n')
-            #     new_n_chars = len(sql_temp)
-            #     print('new_n_chars', new_n_chars)
-            #     print('n_chars - new_n_chars', n_chars - new_n_chars)
-            #     if (n_chars - new_n_chars) != quebras:
-            #         break
-            #     row['sql_text'] = sql_temp
-            #     i += 1
-            #     if i == 30:
-            #         break
-
         self.context.update({
             'headers': ['Username', 'SID', 'Serial', 'Rodando a', 'SQL'],
-            # 'fields': ['username', 'sid', 'serial', 'mins', 'sql_text'],
-            # 'pre': ['sql_text'],
             'data': data,
         })
