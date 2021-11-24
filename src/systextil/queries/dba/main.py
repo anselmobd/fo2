@@ -10,7 +10,7 @@ def rodando_a_segundos(cursor, segundos):
         SELECT
           s.username
         , s.sid
-        , s.serial#
+        , s.serial# serial
         , s.last_call_et secs
         , q.sql_text
         from v$session s 
