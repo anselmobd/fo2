@@ -20,7 +20,18 @@
     {% if data %}
       <table>
         {% include "layout/thead_generic.html" with data=headers only %}
-        {% include "layout/tbody_generic.html" with fields=fields data=data pre=pre only %}
+        <!-- { % include "layout/tbody_generic.html" with fields=fields data=data pre=pre only %} -->
+        <tbody>
+          {% for row in data %}
+            <tr>
+              <td style="">{{ row.username }}</td>
+              <td style="">{{ row.sid }}</td>
+              <td style="">{{ row.serial }}</td>
+              <td style="">{{ row.mins }}</td>
+              <td style=""><pre>{{ row.sql_text }}</pre></td>
+            </tr>
+          {% endfor %}
+        </tbody>
       </table>
     {% else %}
       <h4>Nenhuma query demorada encontrada</h4>
