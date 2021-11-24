@@ -2,6 +2,11 @@ from itertools import takewhile
 from pprint import pprint
 
 
+__all__ = [
+    'sql_formato_fo2',
+]
+
+
 def sql_formato_fo2(sql):
     """Recebe um SQL como executado no RDBMS
     Retira a identação de todas as linhas não comentário e elimina
