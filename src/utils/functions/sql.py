@@ -42,16 +42,11 @@ def sql_formato_fo2(sql):
         if len(linha_strip) >= 2 and linha_strip[:2] != '--':
             linha = linha[min_spaces:]
         else:
-            pprint(linha)
             if len(linha_strip) >= 2:
-                print('maior')
                 spaces = count_at_start(linha, ' ')
-                print('spaces', spaces)
                 linha = ' '*max(0, spaces-min_spaces)+linha_strip
             else:
-                print('menor')
                 linha = linha_strip
-            pprint(linha)
         return linha
 
     linhas = list(map(put_min_spaces, linhas))
