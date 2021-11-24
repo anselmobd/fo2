@@ -51,7 +51,7 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             secs = row['secs'] % 60
             row['mins'] = f"{mins}:{secs:02d}"
             row['serial'] = f"{row['serial']:d}"
-            row['sql_text'] = sqlparse.format(
+            row['sql_text_parse'] = sqlparse.format(
                 row['sql_text'],
                 reindent_aligned=True,
                 indent_width=2,
@@ -118,14 +118,8 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
             #         break
 
         self.context.update({
-            'headers': ['Username', 'SID', 'Serial#', 'Rodando a', 'SQL'],
-            'fields': ['username', 'sid', 'serial', 'mins', 'sql_text'],
-            'pre': ['sql_text'],
+            'headers': ['Username', 'SID', 'Serial', 'Rodando a', 'SQL'],
+            # 'fields': ['username', 'sid', 'serial', 'mins', 'sql_text'],
+            # 'pre': ['sql_text'],
             'data': data,
         })
-        # self.context.update({
-        #     'f_headers': ['Username', 'SID', 'Serial#', 'Rodando a', 'SQL'],
-        #     'f_fields': ['username', 'sid', 'serial#', 'secs', 'sql_text_format'],
-        #     'f_pre': ['sql_text_format'],
-        #     'f_data': data,
-        # })

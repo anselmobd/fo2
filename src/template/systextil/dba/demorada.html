@@ -7,6 +7,10 @@
 {% block stylesheet %}
   <style>
     {% include 'layout/simple_table.css' %}
+    td:not(.sql)  {
+      vertical-align: top;
+      padding: 2em 0 0 0;
+    }
   </style>
 {% endblock %}
 
@@ -24,11 +28,16 @@
         <tbody>
           {% for row in data %}
             <tr>
-              <td style="">{{ row.username }}</td>
-              <td style="">{{ row.sid }}</td>
-              <td style="">{{ row.serial }}</td>
-              <td style="">{{ row.mins }}</td>
-              <td style=""><pre>{{ row.sql_text }}</pre></td>
+              <td>{{ row.username }}&nbsp;</td>
+              <td>{{ row.sid }}&nbsp;</td>
+              <td>{{ row.serial }}&nbsp;</td>
+              <td>{{ row.mins }}</td>
+              <td class="sql">
+                <button onclick="javascript:showPre(0, {{forloop.counter}});">Formatado</button>
+                <button onclick="javascript:showPre(1, {{forloop.counter}});">Original</button>
+                <pre id="pre0_{{forloop.counter}}" style="display: block">{{ row.sql_text_parse }}</pre>
+                <pre id="pre1_{{forloop.counter}}" style="display: none">{{ row.sql_text }}</pre>
+              </td>
             </tr>
           {% endfor %}
         </tbody>
@@ -38,3 +47,21 @@
     {% endif %}
   {% endif %}
 {% endblock %}
+
+{% block javascript %}
+<script>
+
+  function showPre(pre_num, for_num) {
+    for (i=0; i<2; i++) {
+      pre_id = 'pre'+i+'_'+for_num
+      el = document.getElementById(pre_id)
+      if (i == pre_num) {
+        el.style.display = 'block';
+      } else {
+        el.style.display = 'none';
+      }
+    }
+  }
+
+</script>
+{% endblock javascript %}
