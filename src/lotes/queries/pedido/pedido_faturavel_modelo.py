@@ -14,7 +14,8 @@ from utils.functions import (
 
 def pedido_faturavel_modelo(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
-        cached=True, deposito=None, empresa=1, nat_oper=None, group="dpnr"):
+        cached=True, deposito=None, empresa=1, nat_oper=None, group="dpnr",
+        colecao=None):
     """Devolve dados de pedidos faturáveis
 
     Recebe:
@@ -35,12 +36,17 @@ def pedido_faturavel_modelo(
         return cached_result
 
     filtro_modelo = ''
-    if modelo is not None:
+    if modelo is not None and modelo != '':
         filtro_modelo = f'''--
             AND TRIM(LEADING '0' FROM
                      (REGEXP_REPLACE(i.CD_IT_PE_GRUPO,
                                      '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
                                      ))) = '{modelo}' '''
+
+    filtro_colecao = ''
+    if colecao is not None:
+        filtro_colecao = f'''--
+            AND r.COLECAO = {colecao}'''
 
     filtro_ref = ''
     if ref is not None and ref != '':
@@ -152,7 +158,10 @@ def pedido_faturavel_modelo(
               ) ps -- pedidos pré-filtrados
               JOIN PEDI_110 i -- item de pedido de venda
                 ON i.PEDIDO_VENDA = ps.PEDIDO
+              JOIN basi_030 r
+                ON r.REFERENCIA = i.CD_IT_PE_GRUPO
               WHERE 1=1
+                {filtro_colecao} -- filtro_colecao
                 {filtro_modelo} -- filtro_modelo
                 {filtro_ref} -- filtro_ref
                 {filtro_tam} -- filtro_tam
@@ -160,6 +169,7 @@ def pedido_faturavel_modelo(
                 {filtro_deposito} -- filtro_deposito
               GROUP BY
                 ps.PEDIDO
+              , r.COLECAO
               , i.CD_IT_PE_NIVEL99
               , i.CD_IT_PE_GRUPO
               , i.CD_IT_PE_SUBGRUPO
