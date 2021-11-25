@@ -28,12 +28,17 @@ class PedidoFaturavelModelo(View):
             'tam': tam,
             'cor': cor,
         }
-        lead = produto.queries.lead_de_modelo(cursor, modelo)
+        if colecao:
+            colecao = colecao.colecao
+        
+        lead = 0
+        if modelo:
+            lead = produto.queries.lead_de_modelo(cursor, modelo)
 
         lc_lead = 0
         if colecao:
             try:
-                lc = lotes.models.RegraColecao.objects.get(colecao=colecao.colecao)
+                lc = lotes.models.RegraColecao.objects.get(colecao=colecao)
                 lc_lead = lc.lead
             except lotes.models.RegraColecao.DoesNotExist:
                 pass
@@ -52,7 +57,7 @@ class PedidoFaturavelModelo(View):
 
         data = queries.pedido.pedido_faturavel_modelo(
             cursor, modelo=modelo, periodo=':{}'.format(busca_periodo),
-            cached=False, tam=tam, cor=cor)
+            cached=False, tam=tam, cor=cor, colecao=colecao)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedidos não encontrados',
@@ -107,7 +112,7 @@ class PedidoFaturavelModelo(View):
         if lead != 0:
             data_pos = queries.pedido.pedido_faturavel_modelo(
                 cursor, modelo=modelo, periodo='{}:'.format(busca_periodo),
-                cached=False)
+                cached=False, colecao=colecao)
             if len(data_pos) != 0:
                 for row in data_pos:
                     row['PEDIDO|TARGET'] = '_blank'
