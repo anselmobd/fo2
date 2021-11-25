@@ -12,6 +12,7 @@ from utils.views import totalize_data
 import produto.queries
 
 import lotes.forms as forms
+import lotes.models
 import lotes.queries as queries
 
 
@@ -20,14 +21,23 @@ class PedidoFaturavelModelo(View):
     template_name = 'lotes/pedido_faturavel_modelo.html'
     title_name = 'Pedido faturável por modelo'
 
-    def mount_context(self, cursor, modelo, tam, cor):
+    def mount_context(self, cursor, modelo, colecao, tam, cor):
         context = {
             'modelo': modelo,
+            'colecao': colecao,
             'tam': tam,
             'cor': cor,
         }
-
         lead = produto.queries.lead_de_modelo(cursor, modelo)
+
+        lc_lead = 0
+        if colecao:
+            try:
+                lc = lotes.models.RegraColecao.objects.get(colecao=colecao.colecao)
+                lc_lead = lc.lead
+            except lotes.models.RegraColecao.DoesNotExist:
+                pass
+        lead = max(lead, lc_lead)
 
         context.update({
             'lead': lead,
@@ -137,10 +147,11 @@ class PedidoFaturavelModelo(View):
             form.data['modelo'] = kwargs['modelo']
         if form.is_valid():
             modelo = form.cleaned_data['modelo']
+            colecao = form.cleaned_data['colecao']
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
             cursor = db_cursor_so(request)
             context.update(
-                self.mount_context(cursor, modelo, tam, cor))
+                self.mount_context(cursor, modelo, colecao, tam, cor))
         context['form'] = form
         return render(request, self.template_name, context)

@@ -1,3 +1,4 @@
+from pprint import pprint
 from datetime import datetime, timedelta
 
 from django import forms
@@ -537,9 +538,14 @@ class BuscaOpForm(forms.Form):
 
 class BuscaPedidoForm(forms.Form):
     modelo = forms.CharField(
-        label='Modelo', max_length=5, min_length=1,
+        label='Modelo', max_length=5, min_length=1, required=False,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
+
+    colecao = forms.ModelChoiceField(
+        label='Coleção', required=False,
+        queryset=Colecao.objects.exclude(colecao=0).order_by(
+            'colecao'), empty_label="(Todas)")
 
     tam = forms.CharField(
         label='Tamanho', required=False,
@@ -562,6 +568,23 @@ class BuscaPedidoForm(forms.Form):
         data['cor'] = cor
         self.data = data
         return cor
+
+    def clean(self):
+        if self.errors:
+            return
+        clean_form = super(BuscaPedidoForm, self).clean()
+        if not any(
+            clean_form.get(x, '')
+            for x in (
+                'modelo',
+                'colecao',
+                'tam',
+                'cor',
+            )
+        ):
+            raise forms.ValidationError(
+                "Ao menos um dos filtros deve ser definido.")
+
 
 class ExpedicaoForm(forms.Form):
     embarque_de = forms.DateField(
