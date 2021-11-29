@@ -15,4 +15,5 @@ class LotesPermissions(models.Model):
              "Libera coleta de solicitação"),
             ("manutencao-de-regra-de-lote-por-caixa",
              "Manutenção de regra de lote por caixa"),
+            ("can_reactivate_pedido", "Can reactivate pedido"),
         )
