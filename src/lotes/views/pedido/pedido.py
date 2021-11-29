@@ -58,10 +58,14 @@ class Pedido(View):
                 'data': data,
             })
             self.context.update({
-                'headers2': ('Status do pedido', 'Situação da venda',
-                             'Observação'),
-                'fields2': ('STATUS_PEDIDO', 'SITUACAO_VENDA',
-                            'OBSERVACAO'),
+                'headers2': (
+                    'Status do pedido', 'Cancelamento',
+                    'Situação da venda', 'Observação',
+                ),
+                'fields2': (
+                    'STATUS_PEDIDO', 'CANCELAMENTO_DESCR',
+                    'SITUACAO_VENDA', 'OBSERVACAO',
+                ),
                 'data2': data,
             })
 
