@@ -42,6 +42,10 @@ def ped_inform(cursor, pedido, empresa=1):
           WHEN 5 THEN '5-Cancelado'
           WHEN 9 THEN '9-Aberto na web'
           END STATUS_PEDIDO
+        , ped.COD_CANCELAMENTO
+        , ped.COD_CANCELAMENTO
+            || '-' || canc.DESC_CANC_PEDIDO
+          CANCELAMENTO_DESCR
         , CASE ped.SITUACAO_VENDA
           WHEN 0  THEN '0-Pedido liberado'
           WHEN 5  THEN '5-Pedido suspenso'
@@ -49,6 +53,8 @@ def ped_inform(cursor, pedido, empresa=1):
           WHEN 15 THEN '15-Pedido com NF cancelada'
           END SITUACAO_VENDA
         FROM PEDI_100 ped -- pedido de venda
+        JOIN PEDI_140 canc -- código de cancelamento
+          ON canc.COD_CANC_PEDIDO = ped.COD_CANCELAMENTO
         LEFT JOIN PEDI_010 c
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
