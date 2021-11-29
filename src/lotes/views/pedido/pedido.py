@@ -67,6 +67,7 @@ class Pedido(View):
                     'SITUACAO_VENDA', 'OBSERVACAO',
                 ),
                 'data2': data,
+                'reativa_pedido': pedido if data[0]['COD_CANCELAMENTO'] != 0 else None,
             })
 
             # Depósitos

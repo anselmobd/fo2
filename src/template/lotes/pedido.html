@@ -32,6 +32,10 @@
     {% include "layout/html_thead.html" with data=headers2 only %}
     {% include "layout/html_tbody.html" with fields=fields2 data=data2 only %}
   </table>
+  {% if reativa_pedido %}
+    {% url 'producao:reativa_pedido__get' reativa_pedido as reativa_pedido_link %}
+    {% include "layout/link.html" with link=reativa_pedido_link text='Reativa a pedido' only %}
+  {% endif %}
 {% endif %}
 {% if d_data %}
   <table>
