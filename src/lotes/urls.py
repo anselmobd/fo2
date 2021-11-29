@@ -132,6 +132,12 @@ urlpatterns = [
     re_path(r'^pedido/(?P<pedido>\d+)/$', views.pedido.Pedido.as_view(),
         name='pedido__get'),
 
+    re_path(
+        r'^reativa_pedido/(?P<pedido>\d+)/$',
+        views.pedido.reativa_pedido.ReativaPedido.as_view(),
+        name='reativa_pedido__get'
+    ),
+
     re_path(r'^pedido/historico$', views.pedido.Historico.as_view(), name='pedido_historico'),
     re_path(r'^pedido/historico/(?P<pedido>\d+)/$', views.pedido.Historico.as_view(),
         name='pedido_historico__get'),
