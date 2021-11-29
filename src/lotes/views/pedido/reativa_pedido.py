@@ -12,7 +12,7 @@ from lotes.queries.pedido.reativa_pedido import exec_reativa_pedido
 class ReativaPedido(PermissionRequiredMixin, View):
 
     def __init__(self):
-        self.permission_required = 'lotes.can_repair_seq_op'
+        self.permission_required = 'lotes.can_reactivate_pedido'
 
     def get(self, request, *args, **kwargs):
         cursor = db_cursor_so(request)
