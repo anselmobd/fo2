@@ -32,6 +32,7 @@ def ped_inform(cursor, pedido, empresa=1):
           || '-' || lpad(c.CGC_2, 2, '0')
           || ')' CLIENTE
         , COALESCE(ped.COD_PED_CLIENTE, ' ') PEDIDO_CLIENTE
+        , ped.STATUS_PEDIDO STATUS_PEDIDO_CODIGO
         , CASE ped.STATUS_PEDIDO
           WHEN 0 THEN '0-Digitado'
           WHEN 1 THEN '1-Financeiro'
