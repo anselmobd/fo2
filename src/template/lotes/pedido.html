@@ -16,7 +16,7 @@
     <input type="submit" value="Busca"/>
 </form>
 {% if pedido %}
-  <h3>Pedido: {{ pedido }}</h3>
+  <h3>Pedido: {{ pedido|safe }}</h3>
 {% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
