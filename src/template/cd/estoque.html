@@ -272,6 +272,17 @@ span.spanlink:hover {
       Endereço OP Referência Cor Tamanho Lote
     {% endif %}
   </h4>
+  {% if solicitacao != 'N' %}
+    <h4>Solicitação:
+      {% if solicitacao == 'S' %}
+        Sem solicitações
+      {% elif solicitacao == 'P' %}
+        Parcialmente solicitado
+      {% elif solicitacao == 'I' %}
+        Inteiramente solicitado
+      {% endif %}
+    </h4>
+  {% endif %}
   {% if data %}
     <script type="text/javascript">
       window.onload = function() {

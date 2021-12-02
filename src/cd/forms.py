@@ -397,6 +397,14 @@ class EstoqueForm(forms.Form):
                ('E', 'Endereço OP Referência Cor Tamanho Lote')]
     ordem = forms.ChoiceField(
         label='Ordenação', choices=CHOICES, initial='B')
+    SOLICITACAO_CHOICES = [
+        ('N', 'Não filtrado'),
+        ('S', 'Sem solicitações'),
+        ('P', 'Parcialmente solicitado'),
+        ('I', 'Inteiramente solicitado'),
+    ]
+    solicitacao = forms.ChoiceField(
+        label='Solicitação', choices=SOLICITACAO_CHOICES, initial='N')
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 

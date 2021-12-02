@@ -51,6 +51,7 @@ class Estoque(View):
         if not data_ate:
             data_ate = data_de
         ordem = form.cleaned_data['ordem']
+        solicitacao = form.cleaned_data['solicitacao']
 
         context = {'endereco': endereco,
                    'lote': lote,
@@ -59,6 +60,7 @@ class Estoque(View):
                    'tam': tam,
                    'cor': cor,
                    'ordem': ordem,
+                   'solicitacao': solicitacao,
                    'data_de': data_de,
                    'data_ate': data_ate,
                    'linhas_pagina': linhas_pagina,
@@ -233,15 +235,6 @@ class Estoque(View):
         fields.append('solicita')
         safe.append('solicita')
 
-        quant_lotes = len(data)
-        paginator = Paginator(data, linhas_pagina)
-        try:
-            data = paginator.page(page)
-        except PageNotAnInteger:
-            data = paginator.page(1)
-        except EmptyPage:
-            data = paginator.page(paginator.num_pages)
-
         self.end_disp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values())
         self.end_indisp = list(lotes.models.EnderecoDisponivel.objects.filter(disponivel=False).values())
 
@@ -302,8 +295,10 @@ class Estoque(View):
                         qtd_limite=row['qtd'])
                 else:
                     row['solicita'] = row['qtd'] - slq_qtd
+                row['qtd_resta'] = row['qtd'] - slq_qtd
             else:
-                row['solicita'] = '0'
+                row['solicita'] = 0
+                row['qtd_resta'] = 0
             row['op|LINK'] = reverse(
                 'producao:op__get', args=[row['op']])
             row['lote|LINK'] = reverse(
@@ -316,6 +311,32 @@ class Estoque(View):
                 row['qtd_dif'] = ''
             else:
                 row['qtd_dif'] = '*'
+
+        if solicitacao != 'N':
+            if solicitacao == 'I':
+                data = [
+                    row for row in data
+                    if row['qtd_resta'] == 0
+                ]
+            elif solicitacao == 'S':
+                data = [
+                    row for row in data
+                    if row['qtd_resta'] == row['qtd']
+                ]
+            elif solicitacao == 'P':
+                data = [
+                    row for row in data
+                    if row['qtd_resta'] != 0 and row['qtd_resta'] != row['qtd']
+                ]
+
+        quant_lotes = len(data)
+        paginator = Paginator(data, linhas_pagina)
+        try:
+            data = paginator.page(page)
+        except PageNotAnInteger:
+            data = paginator.page(1)
+        except EmptyPage:
+            data = paginator.page(paginator.num_pages)
 
         context.update({
             'safe': safe,
