@@ -398,7 +398,7 @@ class EstoqueForm(forms.Form):
     ordem = forms.ChoiceField(
         label='Ordenação', choices=CHOICES, initial='B')
     SOLICITACAO_CHOICES = [
-        ('N', 'Não filtrado'),
+        ('N', 'Todos os lotes'),
         ('S', 'Sem solicitações'),
         ('P', 'Parcialmente solicitado'),
         ('I', 'Inteiramente solicitado'),
