@@ -5,7 +5,8 @@ def ped_expedicao(
         cursor, embarque_de='', embarque_ate='',
         pedido_tussor='', pedido_cliente='',
         cliente='', deposito='-', detalhe='r',
-        emissao_de=None, emissao_ate=None, empresa=1):
+        emissao_de=None, emissao_ate=None, empresa=1,
+        cancelamento=None, faturamento=None):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -51,6 +52,13 @@ def ped_expedicao(
         filtro_deposito = ''' --
             AND i.CODIGO_DEPOSITO = '{}'
             '''.format(deposito)
+
+
+    filtro_faturamento = ''
+    if faturamento == 'N':
+        filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NULL"
+    elif faturamento == 'F':
+        filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NOT NULL"
 
     sql = ""
     if detalhe == 'p':
@@ -141,7 +149,6 @@ def ped_expedicao(
     sql += f"""
         WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
           AND ped.CODIGO_EMPRESA = {empresa}
-          AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_embarque_de} -- filtro_embarque_de
           {filtro_embarque_ate} -- filtro_embarque_ate
           {filtro_emissao_de} -- filtro_emissao_de
@@ -150,6 +157,7 @@ def ped_expedicao(
           {filtro_pedido_cliente} -- filtro_pedido_cliente
           {filtro_cliente} -- filtro_cliente
           {filtro_deposito} -- filtro_deposito
+          {filtro_faturamento} -- filtro_faturamento
         GROUP BY
           ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA

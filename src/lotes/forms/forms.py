@@ -632,6 +632,14 @@ class ExpedicaoForm(forms.Form):
     detalhe = forms.ChoiceField(
         label='Detalhe', choices=CHOICES, initial='p')
 
+    CHOICES_FAT = [
+        ('-', 'Todos'),
+        ('F', 'Faturado'),
+        ('N', 'Não faturado')
+    ]
+    faturamento = forms.ChoiceField(
+        choices=CHOICES_FAT, initial='N')
+
     def clean_cliente(self):
         cliente = self.cleaned_data['cliente'].upper()
         data = self.data.copy()
