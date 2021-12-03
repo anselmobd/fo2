@@ -22,7 +22,7 @@ class Expedicao(View):
             self, cursor, embarque_de, embarque_ate,
             emissao_de, emissao_ate,
             pedido_tussor, pedido_cliente, cliente,
-            deposito, detalhe):
+            deposito, detalhe, cancelamento, faturamento):
         context = {
             'embarque_de': embarque_de,
             'embarque_ate': embarque_ate,
@@ -33,6 +33,8 @@ class Expedicao(View):
             'cliente': cliente,
             'detalhe': detalhe,
             'deposito': deposito,
+            'cancelamento': cancelamento,
+            'faturamento': faturamento,
         }
 
         if detalhe == 'g':
@@ -108,6 +110,8 @@ class Expedicao(View):
             cliente=cliente,
             detalhe=detalhe,
             deposito=deposito,
+            cancelamento=cancelamento,
+            faturamento=faturamento,
         )
         if len(data) == 0:
             context.update({
@@ -263,11 +267,13 @@ class Expedicao(View):
             cliente = form.cleaned_data['cliente']
             deposito = form.cleaned_data['deposito']
             detalhe = form.cleaned_data['detalhe']
+            cancelamento = None
+            faturamento = form.cleaned_data['faturamento']
             cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, embarque_de, embarque_ate,
                 emissao_de, emissao_ate,
                 pedido_tussor, pedido_cliente, cliente,
-                deposito, detalhe))
+                deposito, detalhe, cancelamento, faturamento))
         context['form'] = form
         return render(request, self.template_name, context)
