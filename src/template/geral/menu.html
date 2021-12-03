@@ -28,6 +28,7 @@
     {% endif %}
     {% if list_geral_modulos %}
       <br />
+      <li><a href="{% url 'geral:resposavel_informativo' %}">Responsáveis por informativo</a></li>
       <li>Manutenção de informativo</li>
       <ul>
         {% for modulo in list_geral_modulos %}
