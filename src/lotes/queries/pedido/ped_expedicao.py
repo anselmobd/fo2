@@ -53,12 +53,17 @@ def ped_expedicao(
             AND i.CODIGO_DEPOSITO = '{}'
             '''.format(deposito)
 
-
     filtro_faturamento = ''
     if faturamento == 'N':
         filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NULL"
     elif faturamento == 'F':
         filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NOT NULL"
+
+    filtro_cancelamento = ''
+    if cancelamento == 'N':
+        filtro_cancelamento = "AND ped.STATUS_PEDIDO <> 5 -- não cancelado"
+    elif cancelamento == 'C':
+        filtro_cancelamento = "AND ped.STATUS_PEDIDO = 5 -- cancelado"
 
     sql = ""
     if detalhe == 'p':
@@ -147,7 +152,7 @@ def ped_expedicao(
              AND cg.MIN_GTIN = 1
              AND cg.MAX_GTIN = 1"""
     sql += f"""
-        WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+        WHERE 1=1
           AND ped.CODIGO_EMPRESA = {empresa}
           {filtro_embarque_de} -- filtro_embarque_de
           {filtro_embarque_ate} -- filtro_embarque_ate
@@ -158,6 +163,7 @@ def ped_expedicao(
           {filtro_cliente} -- filtro_cliente
           {filtro_deposito} -- filtro_deposito
           {filtro_faturamento} -- filtro_faturamento
+          {filtro_cancelamento} -- filtro_cancelamento
         GROUP BY
           ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA

@@ -632,6 +632,14 @@ class ExpedicaoForm(forms.Form):
     detalhe = forms.ChoiceField(
         label='Detalhe', choices=CHOICES, initial='p')
 
+    CHOICES_CANC = [
+        ('-', 'Todos'),
+        ('C', 'Cancelado'),
+        ('N', 'Não cancelado')
+    ]
+    cancelamento = forms.ChoiceField(
+        choices=CHOICES_CANC, initial='N')
+
     CHOICES_FAT = [
         ('-', 'Todos'),
         ('F', 'Faturado'),
