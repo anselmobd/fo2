@@ -267,7 +267,7 @@ class Expedicao(View):
             cliente = form.cleaned_data['cliente']
             deposito = form.cleaned_data['deposito']
             detalhe = form.cleaned_data['detalhe']
-            cancelamento = None
+            cancelamento = form.cleaned_data['cancelamento']
             faturamento = form.cleaned_data['faturamento']
             cursor = db_cursor_so(request)
             context.update(self.mount_context(
