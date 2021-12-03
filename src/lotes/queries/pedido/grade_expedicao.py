@@ -5,7 +5,8 @@ def grade_expedicao(
         cursor, embarque_de='', embarque_ate='',
         pedido_tussor='', pedido_cliente='',
         cliente='', deposito='-',
-        emissao_de=None, emissao_ate=None, empresa=1):
+        emissao_de=None, emissao_ate=None, empresa=1,
+        cancelamento='N', faturamento='N'):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -52,6 +53,18 @@ def grade_expedicao(
             AND i.CODIGO_DEPOSITO = '{deposito}'
             '''
 
+    filtro_faturamento = ''
+    if faturamento == 'N':
+        filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NULL"
+    elif faturamento == 'F':
+        filtro_faturamento = "AND f.NUM_NOTA_FISCAL IS NOT NULL"
+
+    filtro_cancelamento = ''
+    if cancelamento == 'N':
+        filtro_cancelamento = "AND ped.STATUS_PEDIDO <> 5 -- não cancelado"
+    elif cancelamento == 'C':
+        filtro_cancelamento = "AND ped.STATUS_PEDIDO = 5 -- cancelado"
+
     sql = f"""
         SELECT
           i.CD_IT_PE_GRUPO REF
@@ -69,9 +82,8 @@ def grade_expedicao(
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
-        WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
+        WHERE 1=1
           AND ped.CODIGO_EMPRESA = {empresa}
-          AND f.NUM_NOTA_FISCAL IS NULL
           {filtro_embarque_de} -- filtro_embarque_de
           {filtro_embarque_ate} -- filtro_embarque_ate
           {filtro_emissao_de} -- filtro_emissao_de
@@ -80,6 +92,8 @@ def grade_expedicao(
           {filtro_pedido_cliente} -- filtro_pedido_cliente
           {filtro_cliente} -- filtro_cliente
           {filtro_deposito} -- filtro_deposito
+          {filtro_faturamento} -- filtro_faturamento
+          {filtro_cancelamento} -- filtro_cancelamento
         GROUP BY
           i.CD_IT_PE_GRUPO
         , t.ORDEM_TAMANHO
