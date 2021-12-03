@@ -13,16 +13,18 @@ from django.shortcuts import (
 class ResponsavelInformativoView(View):
 
     def get(self, request, *args, **kwargs):
-        fields = ['painel_modulo__nome', 'usuario__first_name', 'usuario__username']
+        fields = [
+            'painel_modulo__nome',
+            'usuario__first_name',
+            'usuario__username',
+        ]
         dados = UsuarioPainelModulo.objects.filter(
             painel_modulo__habilitado=True,
             usuario__is_active=True,
             usuario__is_superuser=False,
         ).order_by(
-            'painel_modulo__slug', 'usuario__first_name', 'usuario__username'
-        ).values(
-            *fields
-        )
+            'painel_modulo__slug', 'usuario__username'
+        ).values(*fields)
         context = {
             'titulo': 'Responsáveis por informativo',
             'headers': ('Módulo', 'Responsável', 'Login'),
