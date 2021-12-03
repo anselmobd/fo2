@@ -141,6 +141,9 @@ class UsuarioPainelModulo(models.Model):
         PainelModulo, on_delete=models.CASCADE,
         verbose_name='módulo de painel')
 
+    def __str__(self):
+        return f"{self.usuario} -> {self.painel_modulo}"
+
     class Meta:
         db_table = "fo2_ger_usr_pnl_modulo"
         verbose_name = "usuário de modulo de painel"
