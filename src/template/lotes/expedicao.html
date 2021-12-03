@@ -72,6 +72,24 @@
   {% endif %}
   </h4>
 {% endif %}
+{% if cancelamento != '-' %}
+  <h4>Cancelamento:
+    {% if cancelamento == 'C' %}
+      Cancelado
+    {% elif cancelamento == 'N' %}
+      Não cancelado
+    {% endif %}
+  </h4>
+{% endif %}
+{% if faturamento != '-' %}
+  <h4>Faturamento:
+    {% if faturamento == 'F' %}
+      Faturado
+    {% elif faturamento == 'N' %}
+      Não faturado
+    {% endif %}
+  </h4>
+{% endif %}
 {% if msg_erro %}
   <h3>{{ msg_erro }}</h3>
 {% endif %}
