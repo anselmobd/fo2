@@ -6,7 +6,7 @@ def ped_expedicao(
         pedido_tussor='', pedido_cliente='',
         cliente='', deposito='-', detalhe='r',
         emissao_de=None, emissao_ate=None, empresa=1,
-        cancelamento=None, faturamento=None):
+        cancelamento='N', faturamento='N'):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
