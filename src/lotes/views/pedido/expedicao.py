@@ -48,6 +48,8 @@ class Expedicao(View):
                 pedido_cliente=pedido_cliente,
                 cliente=cliente,
                 deposito=deposito,
+                cancelamento=cancelamento,
+                faturamento=faturamento,
             )
             if len(data) == 0:
                 context.update({
