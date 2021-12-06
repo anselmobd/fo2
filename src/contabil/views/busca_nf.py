@@ -50,27 +50,25 @@ class BuscaNF(O2BaseGetPostView):
             row['valor|DECIMALS'] = 2
             row['data'] = row['data'].date()
 
+            row['item'] = f"{row['nivel']}.{row['ref']}.{row['tam']}.{row['cor']}"
+
         self.context = {
             'por_pagina': por_pagina,
             'ref': self.ref,
             'titulo': self.title_name,
             'headers': [
                 'NF', 'Data', 'Cliente',
-                'Nível', 'Referência', 'Tamanho', 'Cor', 'Descrição',
+                'Item', 'Descrição',
                 'Quantidade', 'Valor', 'Pedido'
             ],
             'fields': [
                 'nf', 'data', 'cliente',
-                'nivel', 'ref', 'tam', 'cor', 'narrativa',
+                'item', 'narrativa',
                 'qtd', 'valor', 'pedido'
             ],
             'data': data,
             'style': {
-                4: 'text-align: center;',
-                5: 'text-align: center;',
-                6: 'text-align: center;',
-                7: 'text-align: center;',
-                9: 'text-align: right;',
-                10: 'text-align: right;',
+                6: 'text-align: right;',
+                7: 'text-align: right;',
             },
         }
