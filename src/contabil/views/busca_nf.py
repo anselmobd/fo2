@@ -53,8 +53,8 @@ class BuscaNF(O2BaseGetPostView):
 
             row['item'] = f"{row['nivel']}.{row['ref']}.{row['tam']}.{row['cor']}"
 
-            group = ['nf', 'data', 'cliente']
-            group_rowspan(data, group)
+        group = ['nf', 'data', 'cliente']
+        group_rowspan(data, group)
 
         self.context = {
             'por_pagina': por_pagina,
