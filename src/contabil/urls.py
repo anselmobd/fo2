@@ -7,6 +7,11 @@ app_name = 'contabil'
 urlpatterns = [
     re_path(r'^$', views.index, name='index'),
 
+    re_path(r'^busca_nf/$', views.busca_nf.BuscaNF.as_view(),
+        name='busca_nf'),
+
+    re_path(r'^converte/$', views.Converte.as_view(), name='converte'),
+
     re_path(r'^infadprod/(?P<pedido>.+)?/?$',
         views.InfAdProd.as_view(), name='infadprod'),
 
@@ -21,5 +26,4 @@ urlpatterns = [
     re_path(r'^remeindunf/(?P<nf>.+)?/(?P<detalhe>.+)?/$',
         views.RemessaIndustrNF.as_view(), name='remeindunf__get'),
 
-    re_path(r'^converte/$', views.Converte.as_view(), name='converte'),
 ]

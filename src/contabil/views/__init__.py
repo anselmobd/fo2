@@ -1,3 +1,4 @@
+from . import busca_nf
 from .converte import *
 from .infadprod import *
 from .nota_fiscal import *
