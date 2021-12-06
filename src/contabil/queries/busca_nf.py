@@ -18,6 +18,7 @@ def busca_nf(cursor, ref=None, cor=None):
         , i.NIVEL_ESTRUTURA NIVEL
         , i.GRUPO_ESTRUTURA REF
         , i.SUBGRU_ESTRUTURA TAM
+        , tam.ORDEM_TAMANHO ORD_TAM
         , i.ITEM_ESTRUTURA COR
         , rtc.NARRATIVA 
         , i.QTDE_ITEM_FATUR QTD
@@ -37,6 +38,8 @@ def busca_nf(cursor, ref=None, cor=None):
          AND rtc.GRUPO_ESTRUTURA = i.GRUPO_ESTRUTURA
          AND rtc.SUBGRU_ESTRUTURA = i.SUBGRU_ESTRUTURA
          AND rtc.ITEM_ESTRUTURA = i.ITEM_ESTRUTURA
+        JOIN BASI_220 tam
+          ON tam.TAMANHO_REF = i.SUBGRU_ESTRUTURA
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = f.CGC_9
          AND c.CGC_4 = f.CGC_4
@@ -45,7 +48,10 @@ def busca_nf(cursor, ref=None, cor=None):
           {filtro_ref} -- filtro_ref
           {filtro_cor} -- filtro_cor
         ORDER BY
-          i.CH_IT_NF_NUM_NFIS DESC
+          i.CH_IT_NF_NUM_NFIS
+        , i.GRUPO_ESTRUTURA
+        , i.ITEM_ESTRUTURA
+        , tam.ORDEM_TAMANHO
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
