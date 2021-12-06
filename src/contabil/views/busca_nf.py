@@ -45,6 +45,7 @@ class BuscaNF(O2BaseGetPostView):
             row['data'] = row['data'].date()
 
         self.context = {
+            'por_pagina': por_pagina,
             'ref': self.ref,
             'titulo': self.title_name,
             'headers': [

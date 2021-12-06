@@ -32,7 +32,7 @@
   {% endif %}
   {% if data %}
     {% if data.paginator.num_pages != 1 %}
-      <div>
+      <small>({{por_pagina}} solicitações por página)</small><br />
       <ul class="pagination">
         {% if data.has_previous %}
           <li><a href="#" onclick="setPageAndSubmit(1)" title="Primeira">&Lang;</a></li>
@@ -50,7 +50,6 @@
           <li class="disabled" title="Última"><span>&Rang;</span></li>
         {% endif %}
       </ul>
-      <small>({{por_pagina}} solicitações por página)</small>
     {% endif %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style only %}
