@@ -40,6 +40,8 @@ class BuscaNF(O2BaseGetPostView):
             else:
                 row['pedido|LINK'] = reverse(
                     'producao:pedido__get', args=[row['pedido']])
+            row['nf|LINK'] = reverse(
+                'contabil:nota_fiscal__get', args=[row['nf']])
             row['qtd'] = int(row['qtd'])
             row['valor|DECIMALS'] = 2
             row['data'] = row['data'].date()
