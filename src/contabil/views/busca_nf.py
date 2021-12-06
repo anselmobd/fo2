@@ -31,26 +31,27 @@ class BuscaNF(O2BaseGetPostView):
                     'producao:pedido__get', args=[row['pedido']])
             row['qtd'] = int(row['qtd'])
             row['valor|DECIMALS'] = 2
+            row['data'] = row['data'].date()
 
         self.context = {
             'ref': self.ref,
             'headers': [
-                'NF', 'Cliente',
+                'NF', 'Data', 'Cliente',
                 'Nível', 'Referência', 'Tamanho', 'Cor', 'Descrição',
                 'Quantidade', 'Valor', 'Pedido'
             ],
             'fields': [
-                'nf', 'cliente',
+                'nf', 'data', 'cliente',
                 'nivel', 'ref', 'tam', 'cor', 'narrativa',
                 'qtd', 'valor', 'pedido'
             ],
             'data': data,
             'style': {
-                3: 'text-align: center;',
                 4: 'text-align: center;',
                 5: 'text-align: center;',
                 6: 'text-align: center;',
-                8: 'text-align: right;',
+                7: 'text-align: center;',
                 9: 'text-align: right;',
+                10: 'text-align: right;',
             },
         }
