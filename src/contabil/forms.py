@@ -131,6 +131,15 @@ class buscaNFForm(
             'cor',
         ]
 
+    def clean(self):
+        filtros = (
+            self.cleaned_data['ref'] +
+            self.cleaned_data['cor']
+        )
+        if len(filtros.strip()) == 0:
+            raise forms.ValidationError(
+                "Algum filtro deve ser definido.")
+
 
 class UploadArquivoForm(forms.Form):
     arquivo = forms.FileField()
