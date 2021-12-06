@@ -3,10 +3,18 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def busca_nf(cursor, ref=None, cor=None):
+def busca_nf(cursor, ref=None, cor=None, modelo=None):
     filtro_ref = ''
     if ref is not None and ref != '':
         filtro_ref = f"AND i.GRUPO_ESTRUTURA = '{ref}'"
+
+    filtro_modelo = ''
+    if modelo is not None and modelo != '':
+        filtro_modelo = f'''--
+            AND TRIM(LEADING '0' FROM
+                     (REGEXP_REPLACE(i.GRUPO_ESTRUTURA,
+                                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                     ))) = '{modelo}' '''
 
     filtro_cor = ''
     if cor is not None and cor != '':
@@ -57,6 +65,7 @@ def busca_nf(cursor, ref=None, cor=None):
           AND i.NIVEL_ESTRUTURA = '1'
           -- filtros do form
           {filtro_ref} -- filtro_ref
+          {filtro_modelo} -- filtro_modelo
           {filtro_cor} -- filtro_cor
         ORDER BY
           i.CH_IT_NF_NUM_NFIS DESC
