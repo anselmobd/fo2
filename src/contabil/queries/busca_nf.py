@@ -3,7 +3,15 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def busca_nf(cursor, ref):
+def busca_nf(cursor, ref=None, cor=None):
+    filtro_ref = ''
+    if ref is not None and ref != '':
+        filtro_ref = f"AND i.GRUPO_ESTRUTURA = '{ref}'"
+
+    filtro_cor = ''
+    if cor is not None and cor != '':
+        filtro_cor = f"AND i.ITEM_ESTRUTURA = '{cor}'"
+
     sql = f"""
         SELECT
           i.CH_IT_NF_NUM_NFIS NF
@@ -34,7 +42,8 @@ def busca_nf(cursor, ref):
          AND c.CGC_4 = f.CGC_4
          AND c.CGC_2 = f.CGC_2
         WHERE 1=1
-          AND i.GRUPO_ESTRUTURA = '{ref}'
+          {filtro_ref} -- filtro_ref
+          {filtro_cor} -- filtro_cor
         ORDER BY
           i.CH_IT_NF_NUM_NFIS DESC
     """
