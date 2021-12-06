@@ -15,6 +15,7 @@ def busca_nf(cursor, ref):
         , i.QTDE_ITEM_FATUR QTD
         , i.VALOR_CONTABIL VALOR
         , i.PEDIDO_VENDA PEDIDO
+        , f.DATA_EMISSAO DATA
         , c.NOME_CLIENTE
           || ' (' || lpad(c.CGC_9, 8, '0')
           || '/' || lpad(c.CGC_4, 4, '0')
