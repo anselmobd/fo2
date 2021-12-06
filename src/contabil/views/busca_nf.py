@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 
 from fo2.connections import db_cursor_so
@@ -23,6 +24,16 @@ class BuscaNF(O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
 
         data = busca_nf(cursor, self.ref)
+
+        por_pagina = 100
+        paginator = Paginator(data, por_pagina)
+        try:
+            data = paginator.page(self.pagina)
+        except PageNotAnInteger:
+            data = paginator.page(1)
+        except EmptyPage:
+            data = paginator.page(paginator.num_pages)
+
         for row in data:
             if row['pedido'] == 0:
                 row['pedido'] = '-'
