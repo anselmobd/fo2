@@ -110,5 +110,12 @@ class NotaFiscalForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
+class buscaNFForm(forms.Form):
+    ref = forms.CharField(
+        label='Referência',
+        widget=forms.TextInput(
+            attrs={'autofocus': 'autofocus'}))
+
+
 class UploadArquivoForm(forms.Form):
     arquivo = forms.FileField()
