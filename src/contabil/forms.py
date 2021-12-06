@@ -1,5 +1,11 @@
 from django import forms
 
+from base.forms.custom import O2BaseForm
+from base.forms.fields import (
+    O2FieldCorForm,
+    O2FieldRefForm,
+)
+
 
 class InfAdProdForm(forms.Form):
     pedido = forms.CharField(
@@ -110,14 +116,20 @@ class NotaFiscalForm(forms.Form):
                                'autofocus': 'autofocus'}))
 
 
-class buscaNFForm(forms.Form):
-    ref = forms.CharField(
-        label='Referência',
-        widget=forms.TextInput(
-            attrs={'autofocus': 'autofocus'}))
+class buscaNFForm(
+        O2BaseForm,
+        O2FieldRefForm,
+        O2FieldCorForm):
 
     pagina = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
+
+    class Meta:
+        autofocus_field = 'ref'
+        order_fields = [
+            'ref',
+            'cor',
+        ]
 
 
 class UploadArquivoForm(forms.Form):

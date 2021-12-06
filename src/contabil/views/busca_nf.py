@@ -23,7 +23,7 @@ class BuscaNF(O2BaseGetPostView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        data = busca_nf(cursor, self.ref)
+        data = busca_nf(cursor, self.ref, self.cor)
 
         por_pagina = 100
         paginator = Paginator(data, por_pagina)
