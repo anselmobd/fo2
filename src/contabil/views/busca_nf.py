@@ -6,6 +6,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.views import group_rowspan
 
 import contabil.forms as forms
 from contabil.queries.busca_nf import busca_nf
@@ -52,6 +53,9 @@ class BuscaNF(O2BaseGetPostView):
 
             row['item'] = f"{row['nivel']}.{row['ref']}.{row['tam']}.{row['cor']}"
 
+            group = ['nf', 'data', 'cliente']
+            group_rowspan(data, group)
+
         self.context = {
             'por_pagina': por_pagina,
             'ref': self.ref,
@@ -67,6 +71,7 @@ class BuscaNF(O2BaseGetPostView):
                 'qtd', 'valor', 'pedido'
             ],
             'data': data,
+            'group': group,
             'style': {
                 6: 'text-align: right;',
                 7: 'text-align: right;',
