@@ -1,8 +1,11 @@
+from pprint import pprint
+
 from django import forms
 
 from base.forms.custom import O2BaseForm
 from base.forms.fields import (
     O2FieldCorForm,
+    O2FieldModeloForm,
     O2FieldRefForm,
 )
 
@@ -118,8 +121,10 @@ class NotaFiscalForm(forms.Form):
 
 class buscaNFForm(
         O2BaseForm,
+        O2FieldCorForm,
+        O2FieldModeloForm,
         O2FieldRefForm,
-        O2FieldCorForm):
+        ):
 
     pagina = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
@@ -128,6 +133,7 @@ class buscaNFForm(
         autofocus_field = 'ref'
         order_fields = [
             'ref',
+            'modelo',
             'cor',
         ]
 
@@ -136,7 +142,7 @@ class buscaNFForm(
             self.cleaned_data['ref'] +
             self.cleaned_data['cor']
         )
-        if len(filtros.strip()) == 0:
+        if len(filtros.strip()) == 0 and self.cleaned_data['modelo'] is None:
             raise forms.ValidationError(
                 "Algum filtro deve ser definido.")
 
