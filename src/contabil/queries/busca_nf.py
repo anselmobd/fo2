@@ -44,7 +44,18 @@ def busca_nf(cursor, ref=None, cor=None):
           ON c.CGC_9 = f.CGC_9
          AND c.CGC_4 = f.CGC_4
          AND c.CGC_2 = f.CGC_2
+        JOIN estq_005 t
+          ON t.CODIGO_TRANSACAO = i.TRANSACAO
         WHERE 1=1
+          -- Tussor
+          AND f.CODIGO_EMPRESA = 1
+          -- o faturamento tem uma transação de venda
+          AND t.TIPO_TRANSACAO = 'V'
+          -- não cancelada
+          AND f.COD_CANC_NFISC = 0
+          -- produto fabricado
+          AND i.NIVEL_ESTRUTURA = '1'
+          -- filtros do form
           {filtro_ref} -- filtro_ref
           {filtro_cor} -- filtro_cor
         ORDER BY
