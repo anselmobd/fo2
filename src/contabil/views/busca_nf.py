@@ -46,6 +46,7 @@ class BuscaNF(O2BaseGetPostView):
 
         self.context = {
             'ref': self.ref,
+            'titulo': self.title_name,
             'headers': [
                 'NF', 'Data', 'Cliente',
                 'Nível', 'Referência', 'Tamanho', 'Cor', 'Descrição',
