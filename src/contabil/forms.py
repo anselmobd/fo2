@@ -116,6 +116,9 @@ class buscaNFForm(forms.Form):
         widget=forms.TextInput(
             attrs={'autofocus': 'autofocus'}))
 
+    pagina = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())
+
 
 class UploadArquivoForm(forms.Form):
     arquivo = forms.FileField()
