@@ -59,7 +59,7 @@ def busca_nf(cursor, ref=None, cor=None):
           {filtro_ref} -- filtro_ref
           {filtro_cor} -- filtro_cor
         ORDER BY
-          i.CH_IT_NF_NUM_NFIS
+          i.CH_IT_NF_NUM_NFIS DESC
         , i.GRUPO_ESTRUTURA
         , i.ITEM_ESTRUTURA
         , tam.ORDEM_TAMANHO
