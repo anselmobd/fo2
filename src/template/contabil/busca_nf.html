@@ -6,6 +6,10 @@
 {% block stylesheet %}
   <style>
     {% include 'layout/simple_table.css' %}
+
+    .pagination {
+      margin: 5px 0;
+    }
   </style>
 {% endblock %}
 
@@ -32,24 +36,28 @@
   {% endif %}
   {% if data %}
     {% if data.paginator.num_pages != 1 %}
-      <small>({{por_pagina}} solicitações por página)</small><br />
-      <ul class="pagination">
-        {% if data.has_previous %}
-          <li><a href="#" onclick="setPageAndSubmit(1)" title="Primeira">&Lang;</a></li>
-          <li><a href="#" onclick="setPageAndSubmit({{ data.previous_page_number }})" title="Pág. {{ data.previous_page_number }}">&lang;</a></li>
-        {% else %}
-          <li class="disabled" title="Primeira"><span>&Lang;</span></li>
-          <li class="disabled" title="Anterior"><span>&lang;</span></li>
-        {% endif %}
-        <li class="page-item active"><span>{{ data.number }}</span></li>
-        {% if data.has_next %}
-          <li><a href="#" onclick="setPageAndSubmit({{ data.next_page_number }})" title="Pág. {{ data.next_page_number }}">&rang;</a></li>
-          <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages }})" title="Última">&Rang;{{ data.paginator.num_pages }}</a></li>
-        {% else %}
-          <li class="disabled" title="Próxima"><span>&rang;</span></li>
-          <li class="disabled" title="Última"><span>&Rang;</span></li>
-        {% endif %}
-      </ul>
+      <div style="display: table-cell;"> 
+        <ul class="pagination">
+          {% if data.has_previous %}
+            <li><a href="#" onclick="setPageAndSubmit(1)" title="Primeira">&Lang;</a></li>
+            <li><a href="#" onclick="setPageAndSubmit({{ data.previous_page_number }})" title="Pág. {{ data.previous_page_number }}">&lang;</a></li>
+          {% else %}
+            <li class="disabled" title="Primeira"><span>&Lang;</span></li>
+            <li class="disabled" title="Anterior"><span>&lang;</span></li>
+          {% endif %}
+          <li class="page-item active"><span>{{ data.number }}</span></li>
+          {% if data.has_next %}
+            <li><a href="#" onclick="setPageAndSubmit({{ data.next_page_number }})" title="Pág. {{ data.next_page_number }}">&rang;</a></li>
+            <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages }})" title="Última">&Rang;{{ data.paginator.num_pages }}</a></li>
+          {% else %}
+            <li class="disabled" title="Próxima"><span>&rang;</span></li>
+            <li class="disabled" title="Última"><span>&Rang;</span></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div style="display: table-cell; vertical-align: middle;">
+        &nbsp;<small>({{por_pagina}} solicitações por página)</small>
+      </div>
     {% endif %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
