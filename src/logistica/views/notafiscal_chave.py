@@ -9,6 +9,11 @@ from base.views import O2BaseGetPostView
 
 from logistica.forms import NotafiscalChaveForm
 from logistica.queries import get_nf_pela_chave
+from logistica.models import (
+    NotaFiscal, 
+    PosicaoCargaAlteracao, 
+    PosicaoCargaAlteracaoLog,
+)
 
 
 class NotafiscalChave(PermissionRequiredMixin, O2BaseGetPostView):
