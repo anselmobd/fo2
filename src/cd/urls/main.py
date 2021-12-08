@@ -75,9 +75,9 @@ urlpatterns = [
     re_path(r'^historico_lote/(?P<lote>[^/]+)?$',
         views.HistoricoLote.as_view(), name='historico_lote'),
 
-    re_path(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
-    re_path(r'^rearrumar/m/$',
-        views.RearrumarMobile.as_view(), name='rearrumar_m'),
+    # re_path(r'^rearrumar/$', views.Rearrumar.as_view(), name='rearrumar'),
+    # re_path(r'^rearrumar/m/$',
+    #     views.RearrumarMobile.as_view(), name='rearrumar_m'),
 
     re_path(r'^retirar/$', views.Retirar.as_view(), name='retirar'),
     re_path(r'^retirar/m/$', views.RetirarMobile.as_view(), name='retirar_m'),
