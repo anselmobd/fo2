@@ -1,0 +1,18 @@
+{% extends 'systextil/index.html' %}
+
+{% block title.content %}{{ block.super }} &rsaquo; {{ titulo }}{% endblock title.content %}
+
+{% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'systextil:travadora' %}">{{ titulo }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <table>
+    {% include "layout/html_thead.html" with data=headers only %}
+    {% include "layout/html_tbody.html" with fields=fields data=data only %}
+  </table>
+{% endblock %}
