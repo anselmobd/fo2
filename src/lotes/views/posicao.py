@@ -200,7 +200,7 @@ class Posicao(View):
                 else:
                     row['C_OU_E'] = 'em conserto'
             for field in ['FAMILIA', 'Q_P1', 'Q_P2', 'Q_P']:
-                if row[field] == 0:
+                if row[field] == 0 or row[field] is None:
                     row[field] = '.'
             row['DT_PROD'] = row['DT_PROD'].date()
             row['EST'] = (f"{'&middot;&nbsp;'*estagios.index(row['EST'])}"
