@@ -11,7 +11,7 @@ from fo2.connections import db_cursor_so
 from utils.functions.sql import sql_formato_fo2
 
 from systextil.forms import SessaoForm
-from systextil.queries.dba.main import rodando_a_segundos
+from systextil.queries.dba.main import get_info_sessao
 
 
 class InfoSessao(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
@@ -28,33 +28,19 @@ class InfoSessao(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView)
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        raw_data = rodando_a_segundos(cursor, self.segundos)
-
-        data = []
-        last_sid = -1
-        last_serial = -1
-        for row in raw_data:
-            if row['sid'] == last_sid and row['serial'] == last_serial:
-                data[-1]['sql_text'] += row['sql_text']
-            else:
-                data.append(row)                
-                last_sid = row['sid']
-                last_serial = row['serial']
+        data = get_info_sessao(cursor, self.sessao_id)
 
         for row in data:
-            mins = row['secs'] // 60
-            secs = row['secs'] % 60
-            row['mins'] = f"{mins}:{secs:02d}"
-            row['serial'] = f"{row['serial']:d}"
-            row['sql_text_parse'] = sqlparse.format(
-                row['sql_text'],
-                reindent_aligned=True,
-                indent_width=2,
-                keyword_case='upper',
-            )
-            row['sql_text_fo2'] = sql_formato_fo2(row['sql_text'])
+            row['id_serial'] = f"{row['sid']},{row['serial']}"
 
         self.context.update({
-            'headers': ['Username', 'SID', 'Serial', 'Tempo', 'SQL'],
+            'headers': [
+                'Username', 'Módulo ', 'Status', 'Logon',
+                'Última execução', 'ID,Serial', 'Máquina', 'Informação'
+            ],
+            'fields': [
+                'username', 'module', 'status', 'logon_time',
+                'prev_exec_start', 'id_serial', 'machine', 'client_info'
+            ],
             'data': data,
         })
