@@ -30,7 +30,6 @@ class Travadora(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetView):
                 'systextil:info_sessao__get',
                 args=[row['sessao_travadora']]
             )
-            row['sessao_travadora|TARGET'] = '_blank'
 
         self.context.update({
             'headers': [
