@@ -18,8 +18,9 @@ def KillSessao(request, id_serial):
     info = pformat(data)
     fo2logger.info(f'KillSessao: info: {info}')
 
-    result = do_kill_sessao(cursor, id_serial)
-    result_info = pformat(result)
-    fo2logger.info(f'KillSessao: result: {result_info}')
+    if do_kill_sessao(cursor, id_serial):
+        fo2logger.info(f'KillSessao: success')
+    else:
+        fo2logger.info(f'KillSessao: error')
 
     return redirect('systextil:travadora')
