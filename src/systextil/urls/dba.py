@@ -1,11 +1,15 @@
 from django.urls import re_path
 
-from systextil.views import dba
+from systextil.views.dba import (
+    demorada,
+    travadora,
+)
+
 
 urlpatterns = [
 
-    re_path(r'^demorada/$', dba.Demorada.as_view(), name='demorada'),
+    re_path(r'^demorada/$', demorada.Demorada.as_view(), name='demorada'),
 
-    re_path(r'^travadora/$', dba.Travadora.as_view(), name='travadora'),
+    re_path(r'^travadora/$', travadora.Travadora.as_view(), name='travadora'),
 
 ]
