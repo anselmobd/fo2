@@ -16,13 +16,13 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
   </form>
-  {% if request.POST %}
-    {% if data %}
-      <table>
-        {% include "layout/html_thead.html" with data=headers only %}
-        {% include "layout/html_tbody.html" with fields=fields data=data only %}
-      </table>
-    {% else %}
+  {% if data %}
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% else %}
+    {% if request.POST %}
       <h4>Sessão não encontrada</h4>
     {% endif %}
   {% endif %}

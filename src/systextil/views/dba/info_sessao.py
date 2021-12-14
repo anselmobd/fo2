@@ -23,6 +23,7 @@ class InfoSessao(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView)
         self.title_name = 'Informação sobre sessão'
         self.Form_class = SessaoForm
         self.form_class_initial = True
+        self.get_args = ['sessao_id']
         self.cleaned_data2self = True
 
     def mount_context(self):
