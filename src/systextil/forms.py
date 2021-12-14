@@ -11,6 +11,6 @@ class SegundosForm(forms.Form):
 
 
 class SessaoForm(forms.Form):
-    id = forms.IntegerField(
+    sessao_id = forms.IntegerField(
         label='ID de sessão',
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
