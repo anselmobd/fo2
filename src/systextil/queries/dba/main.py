@@ -62,3 +62,23 @@ def sessoes_travadoras(cursor):
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def get_info_sessao(cursor, sessao_id):
+    sql = f"""
+        SELECT
+          s.username
+        , s.module
+        , s.status
+        , s.logon_time
+        , s.PREV_EXEC_START
+        , s.sid
+        , s.serial# serial
+        , s.machine
+        , s.client_info
+        from v$session s 
+        WHERE 1=1
+          AND s.sid = {sessao_id}
+    """
+    cursor.execute(sql)
+    return rows_to_dict_list_lower(cursor)
