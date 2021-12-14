@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
+from django.urls import reverse
 
 from base.views import O2BaseGetPostView
 from fo2.connections import db_cursor_so
@@ -31,6 +32,12 @@ class InfoSessao(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView)
 
         for row in data:
             row['id_serial'] = f"{row['sid']},{row['serial']}"
+            if row['status'] == "INACTIVE":
+                row['id_serial|LINK'] = reverse(
+                    'systextil:kill_sessao__get',
+                    args=[row['id_serial']]
+                )
+                row['id_serial|GLYPHICON'] = 'glyphicon-remove-sign'
 
         self.context.update({
             'headers': [
