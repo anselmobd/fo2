@@ -6,12 +6,12 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
 )
 
-from base.views import O2BaseGetPostView, O2BaseGetView
+from base.views import O2BaseGetPostView
 from fo2.connections import db_cursor_so
 from utils.functions.sql import sql_formato_fo2
 
 from systextil.forms import SegundosForm
-from systextil.queries.dba.main import rodando_a_segundos, sessoes_travadoras
+from systextil.queries.dba.main import rodando_a_segundos
 
 
 class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
@@ -56,45 +56,5 @@ class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
 
         self.context.update({
             'headers': ['Username', 'SID', 'Serial', 'Tempo', 'SQL'],
-            'data': data,
-        })
-
-
-class Travadora(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetView):
-
-    def __init__(self, *args, **kwargs):
-        super(Travadora, self).__init__(*args, **kwargs)
-        self.permission_required = 'systextil.can_be_dba'
-        self.template_name = 'systextil/dba/travadora.html'
-        self.title_name = 'Sessões travadoras'
-
-    def mount_context(self):
-        cursor = db_cursor_so(self.request)
-
-        data = sessoes_travadoras(cursor)
-
-        self.context.update({
-            'headers': [
-                'Sessão Travadora',
-                'Usuário Travador ',
-                'Sessão Esperando',
-                'Usuário Esperando',
-                'Lock type',
-                'Mode held',
-                'Mode requested',
-                'Lock id1',
-                'Lock id2',
-            ],
-            'fields': [
-                'sessao_travadora',
-                'usuario_travador',
-                'sessao_esperando',
-                'usuario_esperando',
-                'lock_type',
-                'mode_held',
-                'mode_requested',
-                'lock_id1',
-                'lock_id2',
-            ],
             'data': data,
         })
