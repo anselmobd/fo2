@@ -12,7 +12,7 @@
 
 {% block content %}
   <table>
-    {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    {% include "layout/thead_generic.html" with data=headers only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data only %}
   </table>
 {% endblock %}
