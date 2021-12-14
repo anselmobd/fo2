@@ -12,6 +12,8 @@ urlpatterns = [
     re_path(r'^demorada/$', demorada.Demorada.as_view(), name='demorada'),
 
     re_path(r'^info_sessao/$', info_sessao.InfoSessao.as_view(), name='info_sessao'),
+    re_path(r'^info_sessao/(?P<sessao_id>\d+)/$',
+        info_sessao.InfoSessao.as_view(), name='info_sessao__get'),
 
     re_path(r'^travadora/$', travadora.Travadora.as_view(), name='travadora'),
 
