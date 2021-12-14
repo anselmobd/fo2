@@ -1,4 +1,3 @@
-import sqlparse
 from pprint import pprint
 
 from django.contrib.auth.mixins import (
@@ -8,7 +7,6 @@ from django.contrib.auth.mixins import (
 
 from base.views import O2BaseGetPostView
 from fo2.connections import db_cursor_so
-from utils.functions.sql import sql_formato_fo2
 
 from systextil.forms import SessaoForm
 from systextil.queries.dba.main import get_info_sessao
