@@ -1,0 +1,29 @@
+{% extends 'systextil/index.html' %}
+
+{% block title.content %}{{ block.super }} &rsaquo; {{ titulo }}{% endblock title.content %}
+
+{% block header.content %}{{ block.super }} &rsaquo; <a href="{% url 'systextil:info_sessao' %}">{{ titulo }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'systextil:info_sessao' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Busca"/>
+  </form>
+  {% if request.POST %}
+    {% if data %}
+      <table>
+        {% include "layout/html_thead.html" with data=headers only %}
+        {% include "layout/html_tbody.html" with fields=fields data=data only %}
+      </table>
+    {% else %}
+      <h4>Sessão não encontrada</h4>
+    {% endif %}
+  {% endif %}
+{% endblock %}
