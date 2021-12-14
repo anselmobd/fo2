@@ -87,4 +87,4 @@ def get_info_sessao(cursor, sessao_id):
 def do_kill_sessao(cursor, id_serial):
     sql = f"ALTER SYSTEM KILL SESSION '{id_serial}'"
     cursor.execute(sql)
-    return
+    return rows_to_dict_list_lower(cursor)
