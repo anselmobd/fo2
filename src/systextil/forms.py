@@ -8,3 +8,9 @@ class SegundosForm(forms.Form):
         label='Executando a quantos segundos?',
         initial=60,
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
+
+
+class SessaoForm(forms.Form):
+    id = forms.IntegerField(
+        label='ID de sessão',
+        widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
