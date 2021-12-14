@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
+from django.urls import reverse
 
 from base.views import O2BaseGetView
 from fo2.connections import db_cursor_so
@@ -23,6 +24,13 @@ class Travadora(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetView):
         cursor = db_cursor_so(self.request)
 
         data = sessoes_travadoras(cursor)
+
+        for row in data:
+            row['sessao_travadora|LINK'] = reverse(
+                'systextil:info_sessao__get',
+                args=[row['sessao_travadora']]
+            )
+            row['sessao_travadora|TARGET'] = '_blank'
 
         self.context.update({
             'headers': [
