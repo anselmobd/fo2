@@ -21,6 +21,7 @@ class Demorada(PermissionRequiredMixin, O2BaseGetPostView):
         self.Form_class = SegundosForm
         self.form_class_initial = True
         self.cleaned_data2self = True
+        self.get_args = ['segundos']
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
