@@ -21,7 +21,7 @@
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
   </form>
-  {% if request.POST %}
+  {% if data is not None%}
     {% if data %}
       <table>
         {% include "layout/thead_generic.html" with data=headers only %}
