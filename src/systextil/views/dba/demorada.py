@@ -1,10 +1,7 @@
 import sqlparse
 from pprint import pprint
 
-from django.contrib.auth.mixins import (
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-)
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from base.views import O2BaseGetPostView
 from fo2.connections import db_cursor_so
@@ -14,7 +11,7 @@ from systextil.forms import SegundosForm
 from systextil.queries.dba.main import rodando_a_segundos
 
 
-class Demorada(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView):
+class Demorada(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(Demorada, self).__init__(*args, **kwargs)
