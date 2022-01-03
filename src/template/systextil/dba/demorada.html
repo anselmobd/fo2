@@ -22,6 +22,7 @@
     <input type="submit" value="Busca"/>
   </form>
   {% if data is not None%}
+    <h4><i>Queries</i> executando há {{segundos}} segundo{{segundos|pluralize}}</h4>
     {% if data %}
       <table>
         {% include "layout/thead_generic.html" with data=headers only %}
@@ -45,7 +46,7 @@
         </tbody>
       </table>
     {% else %}
-      <h4>Nenhuma query demorada encontrada</h4>
+      <h4>Nenhuma <i>query</i> encontrada</h4>
     {% endif %}
   {% endif %}
 {% endblock %}
