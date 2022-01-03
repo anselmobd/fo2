@@ -5,7 +5,7 @@ __all__=['SegundosForm']
 
 class SegundosForm(forms.Form):
     segundos = forms.IntegerField(
-        label='Executando a quantos segundos?',
+        label='Executando há quantos segundos?',
         initial=60,
         widget=forms.NumberInput(attrs={'autofocus': 'autofocus'}))
 
