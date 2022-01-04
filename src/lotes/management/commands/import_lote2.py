@@ -148,6 +148,75 @@ class Command(BaseCommand):
     def none_value(self, vari, value):
         return value if vari is None else vari
 
+    def set_lote(self, lote, row):
+        alter = False
+        if lote.lote != row['lote']:
+            alter = True
+            lote.lote = row['lote']
+            # self.stdout.write('lote {}'.format(lote.lote))
+        if lote.op != row['op']:
+            alter = True
+            lote.op = row['op']
+            # self.stdout.write('op {}'.format(lote.op))
+        if lote.referencia != row['ref']:
+            alter = True
+            lote.referencia = row['ref']
+            # self.stdout.write('ref {}'.format(lote.referencia))
+        if lote.tamanho != row['tam']:
+            alter = True
+            lote.tamanho = row['tam']
+            # self.stdout.write('tam {}'.format(lote.tamanho))
+        if lote.ordem_tamanho != row['ord_tam']:
+            alter = True
+            lote.ordem_tamanho = row['ord_tam']
+            # self.stdout.write('ord_tam {}'.format(lote.ordem_tamanho))
+        if lote.cor != row['cor']:
+            alter = True
+            lote.cor = row['cor']
+            # self.stdout.write('cor {}'.format(lote.cor))
+        if lote.estagio != row['estagio']:
+            alter = True
+            lote.estagio = row['estagio']
+            # self.stdout.write('estagio {}'.format(lote.estagio))
+        if lote.qtd != row['qtd']:
+            alter = True
+            lote.qtd = row['qtd']
+            # self.stdout.write('qtd {}'.format(lote.qtd))
+        if lote.conserto != row['conserto']:
+            alter = True
+            lote.conserto = row['conserto']
+            # self.stdout.write('conserto {}'.format(lote.conserto))
+        if lote.qtd_produzir != row['qtd_produzir']:
+            alter = True
+            lote.qtd_produzir = row['qtd_produzir']
+            # self.stdout.write('qtd_produzir {}'.format(lote.qtd_produzir))
+        if lote.sync != row['sync']:
+            alter = True
+            lote.sync = row['sync']
+        if lote.sync_id != row['sync_id']:
+            alter = True
+            lote.sync_id = row['sync_id']
+        return alter
+
+    def inclui_atualiza_lotes(self):
+        op = -1
+        for row in self.lotes_to_sync:
+            row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
+            try:
+                lote = lotes.models.Lote.objects.get(lote=row['lote'])
+                acao = 'x'
+            except lotes.models.Lote.DoesNotExist:
+                lote = lotes.models.Lote()
+                acao = '+'
+            if self.set_lote(lote, row):
+                # lote.save()
+                if op != row['op']:
+                    if op != -1:
+                        self.my_println()
+                    op = row['op']
+                    self.my_print(f"OP {op} ")
+                self.my_print(f"{acao}{row['oc']} ")
+
     def syncing(self):
         self.cursor_f = conn = connections['default'].cursor()
         self.cursor_s = db_cursor_so()
@@ -182,9 +251,8 @@ class Command(BaseCommand):
         self.lotes_to_del = self.get_lotes_to_del()
         self.my_pprintln(self.lotes_to_del)
 
-        # count_task = 0
-        # while count_task < self.__MAX_TASKS:
-        #     break
+        self.inclui_atualiza_lotes()
+        # self.my_pprintln(self.lotes_to_sync)
 
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
