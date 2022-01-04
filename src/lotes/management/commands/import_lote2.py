@@ -228,10 +228,10 @@ class Command(BaseCommand):
             row['lote'] = '{}{:05}'.format(row['periodo'], row['oc'])
             try:
                 lote = lotes.models.Lote.objects.get(lote=row['lote'])
-                acao = 'x'
+                acao = 'A'
             except lotes.models.Lote.DoesNotExist:
                 lote = lotes.models.Lote()
-                acao = '+'
+                acao = 'I'
             if self.set_lote(lote, row):
                 lote.save()
                 if op != row['op']:
@@ -253,7 +253,7 @@ class Command(BaseCommand):
                     self.my_println()
                 op = row.op
                 self.my_print(f"OP {op} ")
-            self.my_print(f"-{row.lote[4:].lstrip('0')} ")
+            self.my_print(f"E{row.lote[4:].lstrip('0')} ")
         self.my_println()
         for lote_to_del in self.lotes_to_del:
             sync_del = base.models.SyncDel(
