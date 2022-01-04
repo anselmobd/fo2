@@ -34,37 +34,106 @@ class Command(BaseCommand):
 
     def get_lotes_to_sync(self):
         sql = f"""
-            WITH QUERY AS
-            (
-            SELECT DISTINCT
-              le.PERIODO_PRODUCAO PERIODO
-            , le.ORDEM_CONFECCAO OC
-            , le.FO2_TUSSOR_SYNC
-            FROM PCPC_040 le -- lote estágio
-            WHERE le.FO2_TUSSOR_SYNC > {self.last_sync}
-            ORDER BY 
-              le.FO2_TUSSOR_SYNC
+            WITH SYNCS AS
+            ( SELECT
+                le.FO2_TUSSOR_SYNC
+              FROM PCPC_040 le -- lote estágio
+              WHERE 1=1
+                AND le.FO2_TUSSOR_SYNC > {self.last_sync}
+              ORDER BY
+                le.FO2_TUSSOR_SYNC
+            )
+            , FIRSTS AS
+            ( SELECT
+                *
+              FROM SYNCS le -- lote estágio
+              WHERE rownum <= {self.__MAX_TASKS}
+            )
+            , ULT AS
+            ( SELECT 
+                le.ORDEM_PRODUCAO OP
+              , max(le.CODIGO_ESTAGIO) ULTIMO_ESTAGIO
+              , max(le.SEQUENCIA_ESTAGIO) ULTIMA_SEQ_ESTAGIO
+              FROM PCPC_040 le -- lote estágio
+              GROUP BY
+                le.ORDEM_PRODUCAO
+            )
+            , LOTES AS
+            ( SELECT
+                u.OP
+              , le.PERIODO_PRODUCAO PERIODO
+              , le.ORDEM_CONFECCAO OC
+              , le.PROCONF_GRUPO REF
+              , le.PROCONF_SUBGRUPO TAM
+              , t.ORDEM_TAMANHO ORD_TAM
+              , le.PROCONF_ITEM COR
+              , le.QTDE_PECAS_PROG QTD_PRODUZIR
+              , u.ULTIMO_ESTAGIO
+              , u.ULTIMA_SEQ_ESTAGIO
+              , s.FO2_TUSSOR_SYNC
+              FROM PCPC_040 le -- lote estágio
+              JOIN FIRSTS s
+                ON s.FO2_TUSSOR_SYNC = le.FO2_TUSSOR_SYNC
+              JOIN ULT u
+                ON u.OP = le.ORDEM_PRODUCAO
+              LEFT JOIN BASI_220 t
+                ON t.TAMANHO_REF = le.PROCONF_SUBGRUPO
+              WHERE 1=1
+                AND le.QTDE_PECAS_PROG IS NOT NULL
+                AND le.QTDE_PECAS_PROG <> 0
+              ORDER BY
+                le.FO2_TUSSOR_SYNC
+            )
+            , OCS AS
+            ( SELECT
+                lote.OP
+              , lote.PERIODO
+              , lote.OC
+              , lote.REF
+              , lote.TAM
+              , lote.ORD_TAM
+              , lote.COR
+              , lote.QTD_PRODUZIR
+              , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 999
+                ELSE l.CODIGO_ESTAGIO END ESTAGIO
+              , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN lf.QTDE_PECAS_PROD
+                ELSE l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO END QTD
+              , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 0
+                ELSE l.QTDE_CONSERTO END CONSERTO
+              , lote.FO2_TUSSOR_SYNC
+              FROM LOTES lote
+              LEFT JOIN PCPC_040 l -- lote estágio
+                ON l.ORDEM_PRODUCAO = lote.OP
+               AND l.ORDEM_CONFECCAO = lote.OC
+               AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) <> 0
+              LEFT JOIN PCPC_040 lf -- lote estágio
+                ON l.ORDEM_CONFECCAO IS NULL
+               AND lf.ORDEM_PRODUCAO = lote.OP
+               AND lf.ORDEM_CONFECCAO = lote.OC
+               AND (  (   lote.ULTIMA_SEQ_ESTAGIO = 0
+                      AND lf.CODIGO_ESTAGIO = lote.ULTIMO_ESTAGIO)
+                   OR (   lote.ULTIMA_SEQ_ESTAGIO <> 0
+                      AND lf.SEQUENCIA_ESTAGIO = lote.ULTIMA_SEQ_ESTAGIO)
+                   )
             )
             SELECT
-              *
-            FROM QUERY q
-            WHERE rownum <= {self.__MAX_TASKS}
+              oc.*
+            FROM OCS oc
         """
-        print(sql)
+        self.my_println(sql)
         data = self.cursor_s.execute(sql)
         return rows_to_dict_list_lower(data)
 
     def get_lotes_to_del(self):
         sql = f"""
             WITH QUERY AS
-            (
-            SELECT DISTINCT
-              d.SYNC_ID DELETED_SYNC_ID
-            FROM FO2_TUSSOR_SYNC_DEL d
-            WHERE d.TABELA = 'PCPC_040'
-              AND d.ID > {self.last_del_id}
-            ORDER BY
-              d.SYNC_ID
+            ( SELECT DISTINCT
+                d.SYNC_ID DELETED_SYNC_ID
+              FROM FO2_TUSSOR_SYNC_DEL d
+              WHERE d.TABELA = 'PCPC_040'
+                AND d.ID > {self.last_del_id}
+              ORDER BY
+                d.SYNC_ID
             )
             SELECT 
               *
@@ -105,11 +174,11 @@ class Command(BaseCommand):
 
         # pega no Systêxtil lotes com sync mais recente
         self.lotes_to_sync = self.get_lotes_to_sync()
-        pprint(self.lotes_to_sync)
+        self.my_pprintln(self.lotes_to_sync)
 
         # pega no Systêxtil lotes apagados com id mais recente
         self.lotes_to_del = self.get_lotes_to_del()
-        pprint(self.lotes_to_del)
+        self.my_pprintln(self.lotes_to_del)
 
         # count_task = 0
         # while count_task < self.__MAX_TASKS:
