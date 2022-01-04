@@ -210,7 +210,7 @@ class Command(BaseCommand):
                 lote = lotes.models.Lote()
                 acao = '+'
             if self.set_lote(lote, row):
-                # lote.save()
+                lote.save()
                 if op != row['op']:
                     if op != -1:
                         self.my_println()
