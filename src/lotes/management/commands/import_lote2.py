@@ -16,7 +16,7 @@ import lotes.models
 
 class Command(BaseCommand):
     help = 'Syncronizing Lotes (versão 2)'
-    __MAX_TASKS = 5
+    __MAX_TASKS = 1000
 
     def my_println(self, text=''):
         self.my_print(text, ending='\n')
