@@ -277,10 +277,11 @@ class Command(BaseCommand):
         # self.my_pprintln(self.lotes_to_del)
         self.my_println(f"lotes to del = {len(self.lotes_to_del)}")
 
-        self.inclui_atualiza_lotes()
-        # self.my_pprintln(self.lotes_to_sync)
+        if self.lotes_to_sync:
+            self.inclui_atualiza_lotes()
 
-        self.exclui_lotes()
+        if self.lotes_to_del:
+            self.exclui_lotes()
 
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
