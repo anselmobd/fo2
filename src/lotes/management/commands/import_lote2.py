@@ -70,7 +70,8 @@ class Command(BaseCommand):
               , le.QTDE_PECAS_PROG QTD_PRODUZIR
               , u.ULTIMO_ESTAGIO
               , u.ULTIMA_SEQ_ESTAGIO
-              , s.FO2_TUSSOR_SYNC
+              , s.FO2_TUSSOR_SYNC SYNC
+              , le.FO2_TUSSOR_ID SYNC_ID
               FROM PCPC_040 le -- lote estágio
               JOIN FIRSTS s
                 ON s.FO2_TUSSOR_SYNC = le.FO2_TUSSOR_SYNC
@@ -100,7 +101,8 @@ class Command(BaseCommand):
                 ELSE l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO END QTD
               , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 0
                 ELSE l.QTDE_CONSERTO END CONSERTO
-              , lote.FO2_TUSSOR_SYNC
+              , lote.SYNC
+              , lote.SYNC_ID
               FROM LOTES lote
               LEFT JOIN PCPC_040 l -- lote estágio
                 ON l.ORDEM_PRODUCAO = lote.OP
