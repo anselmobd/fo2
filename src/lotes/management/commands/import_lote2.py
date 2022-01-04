@@ -219,7 +219,7 @@ class Command(BaseCommand):
 
     def syncing(self):
         self.my_println(f"max tasks = {self.__MAX_TASKS}")
-        self.cursor_f = conn = connections['default'].cursor()
+        self.cursor_f = connections['default'].cursor()
         self.cursor_s = db_cursor_so()
 
         try:
