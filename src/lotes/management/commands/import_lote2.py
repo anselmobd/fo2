@@ -119,8 +119,31 @@ class Command(BaseCommand):
                    )
             )
             SELECT
-              oc.*
+              oc.OP
+            , oc.PERIODO
+            , oc.OC
+            , oc.REF
+            , oc.TAM
+            , oc.ORD_TAM
+            , oc.COR
+            , oc.QTD_PRODUZIR
+            , oc.ESTAGIO
+            , oc.QTD
+            , oc.CONSERTO
+            , max(oc.SYNC) SYNC 
             FROM OCS oc
+            GROUP BY
+              oc.OP
+            , oc.PERIODO
+            , oc.OC
+            , oc.REF
+            , oc.TAM
+            , oc.ORD_TAM
+            , oc.COR
+            , oc.QTD_PRODUZIR
+            , oc.ESTAGIO
+            , oc.QTD
+            , oc.CONSERTO
         """
         # self.my_println(sql)
         data = self.cursor_s.execute(sql)
