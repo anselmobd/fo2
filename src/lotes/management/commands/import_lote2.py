@@ -102,7 +102,7 @@ class Command(BaseCommand):
               , CASE WHEN l.ORDEM_CONFECCAO IS NULL THEN 0
                 ELSE l.QTDE_CONSERTO END CONSERTO
               , lote.SYNC
-              , lote.SYNC_ID
+              --, lote.SYNC_ID
               FROM LOTES lote
               LEFT JOIN PCPC_040 l -- lote estágio
                 ON l.ORDEM_PRODUCAO = lote.OP
@@ -194,9 +194,9 @@ class Command(BaseCommand):
         if lote.sync != row['sync']:
             alter = True
             lote.sync = row['sync']
-        if lote.sync_id != row['sync_id']:
-            alter = True
-            lote.sync_id = row['sync_id']
+        # if lote.sync_id != row['sync_id']:
+        #     alter = True
+        #     lote.sync_id = row['sync_id']
         return alter
 
     def inclui_atualiza_lotes(self):
