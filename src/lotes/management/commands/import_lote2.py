@@ -130,7 +130,8 @@ class Command(BaseCommand):
         sql = f"""
             WITH QUERY AS
             ( SELECT DISTINCT
-                d.SYNC_ID DELETED_SYNC_ID
+                d.ID
+              , d.SYNC_ID
               FROM FO2_TUSSOR_SYNC_DEL d
               WHERE d.TABELA = 'PCPC_040'
                 AND d.ID > {self.last_del_id}
