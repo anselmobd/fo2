@@ -217,6 +217,28 @@ class Command(BaseCommand):
                     op = row['op']
                     self.my_print(f"OP {op} ")
                 self.my_print(f"{acao}{row['oc']} ")
+        self.my_println()
+
+    def exclui_lotes(self):
+        op = -1
+        sync_ids = [row['sync_id'] for row in self.lotes_to_del]
+        data = lotes.models.Lote.objects.filter(sync_id__in=sync_ids)
+        for row in data:
+            row.delete()
+            if op != row.op:
+                if op != -1:
+                    self.my_println()
+                op = row.op
+                self.my_print(f"OP {op} ")
+            self.my_print(f"-{row.lote[4:].lstrip('0')} ")
+        self.my_println()
+        for lote_to_del in self.lotes_to_del:
+            sync_del = base.models.SyncDel(
+                id=lote_to_del['id'],
+                tabela=self.table_obj,
+                sync_id=lote_to_del['sync_id'],
+            )
+            sync_del.save()
 
     def syncing(self):
         self.my_println(f"max tasks = {self.__MAX_TASKS}")
@@ -258,6 +280,8 @@ class Command(BaseCommand):
         self.inclui_atualiza_lotes()
         # self.my_pprintln(self.lotes_to_sync)
 
+        self.exclui_lotes()
+
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
         self.my_println('---')
@@ -268,5 +292,4 @@ class Command(BaseCommand):
         except Exception as e:
             raise CommandError('Error syncing lotes "{}"'.format(e))
 
-        self.my_println()
         self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
