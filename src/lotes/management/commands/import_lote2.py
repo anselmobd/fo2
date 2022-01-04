@@ -122,7 +122,7 @@ class Command(BaseCommand):
               oc.*
             FROM OCS oc
         """
-        self.my_println(sql)
+        # self.my_println(sql)
         data = self.cursor_s.execute(sql)
         return rows_to_dict_list_lower(data)
 
@@ -218,6 +218,7 @@ class Command(BaseCommand):
                 self.my_print(f"{acao}{row['oc']} ")
 
     def syncing(self):
+        self.my_println(f"max tasks = {self.__MAX_TASKS}")
         self.cursor_f = conn = connections['default'].cursor()
         self.cursor_s = db_cursor_so()
 
@@ -245,11 +246,13 @@ class Command(BaseCommand):
 
         # pega no Systêxtil lotes com sync mais recente
         self.lotes_to_sync = self.get_lotes_to_sync()
-        self.my_pprintln(self.lotes_to_sync)
+        # self.my_pprintln(self.lotes_to_sync)
+        self.my_println(f"lotes to sync = {len(self.lotes_to_sync)}")
 
         # pega no Systêxtil lotes apagados com id mais recente
         self.lotes_to_del = self.get_lotes_to_del()
-        self.my_pprintln(self.lotes_to_del)
+        # self.my_pprintln(self.lotes_to_del)
+        self.my_println(f"lotes to del = {len(self.lotes_to_del)}")
 
         self.inclui_atualiza_lotes()
         # self.my_pprintln(self.lotes_to_sync)
@@ -264,4 +267,5 @@ class Command(BaseCommand):
         except Exception as e:
             raise CommandError('Error syncing lotes "{}"'.format(e))
 
+        self.my_println()
         self.my_println(format(datetime.datetime.now(), '%H:%M:%S.%f'))
