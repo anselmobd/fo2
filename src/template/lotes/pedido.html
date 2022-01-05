@@ -57,7 +57,9 @@
     {% include "layout/tbody_generic.html" with fields=nf_fields data=nf_data only %}
   </table>
 {% else %}
-  <h3>Pedido não faturado</h3>
+  {% if data %}
+    <h3>Pedido não faturado</h3>
+  {% endif %}
 {% endif %}
 {% if g_data %}
   <br /><a href="{% url 'contabil:infadprod' pedido %}">Lista itens do pedido&nbsp;<span class="glyphicon glyphicon-link" aria-hidden="true"></a>
