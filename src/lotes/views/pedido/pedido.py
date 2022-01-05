@@ -50,6 +50,16 @@ class Pedido(View):
                 row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
                 if row['OBSERVACAO'] is None:
                     row['OBSERVACAO'] = '-'
+                ped_cliente = row['PEDIDO_CLIENTE'].strip()
+                if ped_cliente != '':
+                    row['PEDIDO_CLIENTE|TARGET'] = '_blank'
+                    row['PEDIDO_CLIENTE|LINK'] = reverse(
+                        'producao:expedicao__get', args=[
+                            row['CLIENTE_9'],
+                            ped_cliente,
+                        ])
+                    
+
             self.context.update({
                 'headers': ('Data de emissão', 'Data de embarque',
                             'Cliente', 'Código do pedido no cliente'),
