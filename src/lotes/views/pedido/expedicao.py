@@ -252,7 +252,27 @@ class Expedicao(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        form = self.Form_class()
+        if 'pedido_cliente' in kwargs:
+            cursor = db_cursor_so(request)
+            fields = {
+                'embarque_de': None,
+                'embarque_ate': None,
+                'emissao_de': None,
+                'emissao_ate': None,
+                'pedido_tussor': '',
+                'pedido_cliente': kwargs['pedido_cliente'],
+                'cliente': kwargs['cliente'],
+                'deposito': '-',
+                'detalhe': 'o',
+                'cancelamento': '-',
+                'faturamento': '-',
+            }
+            context.update(
+                self.mount_context(cursor, *fields.values())
+            )
+            form = self.Form_class(initial=fields)
+        else:
+            form = self.Form_class()
         context['form'] = form
         return render(request, self.template_name, context)
 
