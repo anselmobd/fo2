@@ -6,10 +6,10 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from geral.functions import request_user, has_permission
+from geral.functions import has_permission
 from utils.functions import untuple_keys_concat
 from utils.functions.digits import fo2_digit_with
-from utils.views import group_rowspan
+from utils.views import totalize_data
 
 import lotes.models as models
 import lotes.queries as queries
@@ -231,6 +231,7 @@ class Posicao(View):
             'solicitacao_id', 'solicitacao__codigo', 'solicitacao__descricao',
             'solicitacao__data', 
             'solicitacao__usuario__username', 'create_at', 'qtd')
+        slq = list(slq)
 
         desreserva_lote = False
         solicit_id = None
@@ -246,6 +247,12 @@ class Posicao(View):
             row['solicitacao__codigo|TARGET'] = '_blank'
             row['solicitacao__codigo|LINK'] = reverse(
                 'cd:solicitacao_detalhe', args=[row['solicitacao_id']])
+        if len(slq) > 1:
+            totalize_data(slq, {
+                'sum': ['qtd'],
+                'descr': {'create_at': 'Total:'},
+                'row_style': 'font-weight: bold;',
+            })
         context.update({
             'slq_headers': (
                 '#', 'Solicidação', 'Descrição',
