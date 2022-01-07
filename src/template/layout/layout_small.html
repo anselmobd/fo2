@@ -118,7 +118,9 @@
                   {% else %}
                     <li><a href="{% url 'login' %}?next={% url 'intranet' %}">Identificar-se</a></li>
                   {% endif %}
-                  <li><a href="{% url 'base:usuarios' %}"><img title="Lista usuários logados" src="{% static "img/people.svg" %}" alt="people" height="20">{{logged_count}}</a></li>
+                  {% if request.user.is_authenticated or base_ip_interno %}
+                    <li><a href="{% url 'base:usuarios' %}"><img title="Lista usuários logados" src="{% static "img/people.svg" %}" alt="people" height="20">{{logged_count}}</a></li>
+                  {% endif %}
                   {% if base_ip_interno %}
                     {% if not request.user.is_authenticated %}
                       <li><a href="{% url 'persona:cria_usuario' %}?next={% url 'intranet' %}">Criar conta</a></li>
