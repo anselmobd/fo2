@@ -74,7 +74,7 @@ urlpatterns = [
     re_path(r'^edita_respons/$', views.analise.respons_edit, name='edita_respons'),
 
     re_path(r'^expedicao/$', views.pedido.Expedicao.as_view(), name='expedicao'),
-    re_path(r'^expedicao/(?P<cliente>\d+)/(?P<pedido_cliente>\d+)/$',
+    re_path(r'^expedicao/(?P<cliente>\d+)/(?P<pedido_cliente>.+)/$',
         views.pedido.Expedicao.as_view(), name='expedicao__get'),
 
     re_path(r'^grade_produzir/$',
