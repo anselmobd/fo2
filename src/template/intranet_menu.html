@@ -71,12 +71,12 @@
           <li>Usuário{% if request.user.is_authenticated %} ( {{ request.user.username }} ){% endif %}</li>
             <ul>
             {% if request.user.is_authenticated %}
-            <li><a href="{% url 'encerrar' %}">Encerrar sessão</a></li>
+              <li><a href="{% url 'encerrar' %}">Encerrar sessão</a></li>
               <li><a href="/rootadm/password_change/?next=/">Alterar senha</a></li>
             {% else %}
               <li><a href="{% url 'login' %}?next={% url 'intranet' %}">Identificar-se (Login)</a></li>
             {% endif %}
-            {% if logged_count != 0 %}
+            {% if request.user.is_authenticated or base_ip_interno %}
               <li><a href="{% url 'base:usuarios' %}?next=/">{{logged_count}} logado{{ logged_count|pluralize }}</a></li>
             {% endif %}
           </ul>
