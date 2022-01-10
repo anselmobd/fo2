@@ -28,8 +28,8 @@ class ImagemAdmin(admin.ModelAdmin):
     list_filter = [
          "tipo_imagem"
     ]
-    list_display = ["tipo_imagem", "descricao", "slug", "imagem"]
-    fields = ["tipo_imagem", "descricao", "slug", "imagem"]
+    list_display = ["tipo_imagem", "descricao", "slug", "caminho", "imagem"]
+    fields = ["tipo_imagem", "descricao", "slug", "caminho", "imagem"]
     readonly_fields = ['slug']
 
 
