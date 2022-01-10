@@ -24,6 +24,9 @@ class TipoImagemAdmin(admin.ModelAdmin):
 
 @admin.register(Imagem, site=site)
 class ImagemAdmin(admin.ModelAdmin):
+    list_filter = [
+         "tipo_imagem"
+    ]
     list_display = ["tipo_imagem", "descricao", "slug", "imagem"]
     fields = ["tipo_imagem", "descricao", "slug", "imagem"]
     readonly_fields = ['slug']
