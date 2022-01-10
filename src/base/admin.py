@@ -18,6 +18,7 @@ from .models import (
 
 @admin.register(TipoImagem, site=site)
 class TipoImagemAdmin(admin.ModelAdmin):
+    list_display = ["nome", "slug", "descricao"]
     fields = ["nome", "slug", "descricao"]
     readonly_fields = ['slug']
 
