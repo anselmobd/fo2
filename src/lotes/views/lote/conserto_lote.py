@@ -148,10 +148,14 @@ def dict_conserto_lote_custom(
         return data
 
     if row[0] <= 0:
+        # data.update({
+        #     'error_level': 2,
+        #     'msg': f'Lote {lote} sem quantidade a mover no '
+        #             f'estágio {estagio}',
+        # })
         data.update({
-            'error_level': 2,
-            'msg': f'Lote {lote} sem quantidade a mover no '
-                    f'estágio {estagio}',
+            'error_level': 0,
+            'msg': 'OK',
         })
         return data
 
