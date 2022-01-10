@@ -72,6 +72,8 @@ class RetirarParcial(PermissionRequiredMixin, View):
 
             # retirada parcial não tira o lote do endereço, mas
             # ajusta quantidades
+            if lote_rec.conserto == quant_retirar:
+                lote_rec.local = None
             lote_rec.conserto -= quant_retirar
             lote_rec.local_usuario = request.user
             lote_rec.save()
