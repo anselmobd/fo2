@@ -246,12 +246,12 @@ class RetirarParcialForm(forms.Form):
             cleaned_data = super().clean()
             quant = cleaned_data.get('quant', 0)
 
-            if quant == self.lote_record.qtd:
-                self.add_error(
-                    'quant',
-                    "Quantidade igual à disponível. "
-                    "Faça uma retirada de lote inteiro"
-                )
+            # if quant == self.lote_record.qtd:
+            #     self.add_error(
+            #         'quant',
+            #         "Quantidade igual à disponível. "
+            #         "Faça uma retirada de lote inteiro"
+            #     )
 
             if quant > self.lote_record.qtd:
                 self.add_error(
