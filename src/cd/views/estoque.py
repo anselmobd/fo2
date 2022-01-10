@@ -206,10 +206,11 @@ class Estoque(View):
                             if solicitacoes == '':
                                 new_data[-1]['solicitacoes'] = solicit_html
                             else:
-                                new_data[-1]['solicitacoes'] = ', '.join([
-                                    solicitacoes,
-                                    solicit_html
-                                ])
+                                if solicit_html not in solicitacoes:
+                                    new_data[-1]['solicitacoes'] = ', '.join([
+                                        solicitacoes,
+                                        solicit_html
+                                    ])
                     else:
                         row['solicitacoes'] = solicit_html
                         new_data.append(row)
