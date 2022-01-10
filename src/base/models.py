@@ -116,8 +116,9 @@ class TipoImagem(models.Model):
 
 def upload_to(instance, filename):
     _, filename_ext = os.path.splitext(filename)
-    return "upload/imagens/{tipo_imagem}/{filename}{extension}".format(
+    return "upload/imagens/{tipo_imagem}/{caminho}/{filename}{extension}".format(
         tipo_imagem=instance.tipo_imagem.slug,
+        caminho=instance.caminho,
         filename=instance.slug,
         extension=filename_ext.lower(),
     )
@@ -132,6 +133,8 @@ class Imagem(models.Model):
         "Descrição",
         max_length=255)
     slug = models.SlugField()
+    caminho = models.CharField(
+        max_length=255, default='')
     imagem = models.ImageField(
         upload_to=upload_to)
 
@@ -145,6 +148,12 @@ class Imagem(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.descricao)
+        self.caminho = '/'.join([
+            slugify(folder)
+            for folder
+            in self.caminho.split('/')
+        ])
+        self.caminho = self.caminho.strip('/')
         super(Imagem, self).save(*args, **kwargs)
 
 
