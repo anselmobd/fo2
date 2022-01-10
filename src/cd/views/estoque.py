@@ -158,6 +158,7 @@ class Estoque(View):
                 'estagio', 'create_at', 'update_at', 'conserto',
                 'solicitaloteqtd__solicitacao__id',
                 'solicitaloteqtd__solicitacao__data',
+                'solicitaloteqtd__solicitacao__coleta',
                 'solicitaloteqtd__origin_id')
         else:
             data = data_rec.values(
@@ -184,6 +185,7 @@ class Estoque(View):
                         else None
                     )
                     solicit_dt_entrega = row['solicitaloteqtd__solicitacao__data']
+                    solicit_coleta = 'C' if row['solicitaloteqtd__solicitacao__coleta'] else 'N'
                     if solicit_dt_entrega:
                         solicit_dt_entrega = f'({solicit_dt_entrega:%d/%m/%y})'
                     else:
@@ -198,7 +200,7 @@ class Estoque(View):
                         solicit_html = (
                             f'<a href="{solicit_num_link}" '
                             f'target="_BLANK">#{solicit_num}'
-                            f'{solicit_dt_entrega}</a>'
+                            f'{solicit_dt_entrega}{solicit_coleta}</a>'
                         )
                     if row['lote'] == row_anterior['lote']:
                         if solicit_html != '':
