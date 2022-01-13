@@ -20,7 +20,7 @@ def coalesce(value, test):
     return test if value is None else value
 
 
-def sql_where_none_if(field, value, test, operation="=", conector="AND", quote = ""):
+def sql_where_none_if(field, value, test, operation="=", conector="AND", quote = None):
     return sql_where(
         field,
         none_if(value, test),
