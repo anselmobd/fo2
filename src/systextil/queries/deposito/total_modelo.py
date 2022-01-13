@@ -37,13 +37,12 @@ def sql_where_modelo(field, modelo, conector="AND"):
     """
 
 
-def sql_where(field, modelo, conector="AND"):
-    if not bool(field and modelo):
-        return ""
-    calc_modelo = sql_calc_modelo_de_ref(field)
-    return f"""--
-        {conector} {calc_modelo} = '{modelo}'
-    """
+def sql_where(field, value, operation="=", conector="AND", quote = ""):
+    if bool(field) and value is not None:
+        if not quote and isinstance(value, str):
+            quote = "'"
+        return f"{conector} {field} {operation} {quote}{value}{quote}"
+    return ""
 
 
 def sql_filtra_deposito(field, deposito, conector='AND'):
