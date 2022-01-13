@@ -1,4 +1,5 @@
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import sql_where, none_if
 
 
 def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
@@ -21,6 +22,11 @@ def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
     list of dict
         Dados estruturados resultantes da execução da query
     """
+
+    filtro_alternativa = sql_where(
+      'o.ALTERNATIVA_PECA',
+      none_if(alternativa, ''),
+    )
 
     sql = f"""
         SELECT
@@ -61,7 +67,7 @@ def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
           AND o.SITUACAO IN (2, 4)
           AND o.DATA_ENTRADA_CORTE >= '{data_de}'
           AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
-          AND (o.ALTERNATIVA_PECA = '{alternativa}' OR '{alternativa}' IS NULL)
+          {filtro_alternativa} -- filtro_alternativa
         UNION
         SELECT
           p1.*
@@ -86,7 +92,7 @@ def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
           AND o.SITUACAO IN (2, 4)
           AND o.DATA_ENTRADA_CORTE >= '{data_de}'
           AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
-          AND (o.ALTERNATIVA_PECA = '{alternativa}' OR '{alternativa}' IS NULL)
+          {filtro_alternativa} -- filtro_alternativa
         ) p1
         JOIN PCPC_020 o1
           ON o1.DATA_ENTRADA_CORTE = p1.DATA_ENTRADA_CORTE
