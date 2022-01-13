@@ -12,21 +12,32 @@ from utils.functions.models import (
 )
 
 
-def sql_calc_modelo_de_ref(field):
-    return f'''--
-          TRIM(
-            LEADING '0' FROM (
-              REGEXP_REPLACE(
-                {field},
-                '^[a-zA-Z]?([0-9]+)[a-zA-Z]*$',
-                '\\1'
-              )
+def sql_calc_modelo_de_ref(field=""):
+    if field:
+        return f"""--
+            TRIM(
+                LEADING '0' FROM (
+                REGEXP_REPLACE(
+                    {field},
+                    '^[a-zA-Z]?([0-9]+)[a-zA-Z]*$',
+                    '\\1'
+                )
+                )
             )
-          )
-    '''
+        """
+    return ""
 
 
 def sql_where_modelo(field, modelo, conector="AND"):
+    if not bool(field and modelo):
+        return ""
+    calc_modelo = sql_calc_modelo_de_ref(field)
+    return f"""--
+        {conector} {calc_modelo} = '{modelo}'
+    """
+
+
+def sql_where(field, modelo, conector="AND"):
     if not bool(field and modelo):
         return ""
     calc_modelo = sql_calc_modelo_de_ref(field)
