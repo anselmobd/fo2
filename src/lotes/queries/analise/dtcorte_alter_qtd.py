@@ -2,8 +2,27 @@ from utils.functions.models import rows_to_dict_list
 
 
 def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
-    # Produção por data de corte/gargalo e alternativa
-    sql = """
+    """
+    Calcula produção por data de corte/gargalo e alternativa
+
+    Parameters
+    ----------
+    cursor :
+        cursor de execução em banco de dados conectado
+    data_de : date
+        data inicial
+    data_ate : date
+        data final
+    alternativa :
+        anternativa de produção
+
+    Returns
+    -------
+    list of dict
+        Dados estruturados resultantes da execução da query
+    """
+
+    sql = f"""
         SELECT
           pp.PERIODO_PRODUCAO PERIODO
         , p.DATA_INI_PERIODO PERIODO_INI
@@ -126,6 +145,6 @@ def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
         , pp.ROTEIRO_PECA
         , pp.TIPO_ORDEM
         , pp.PERIODO_PRODUCAO
-    """.format(data_de=data_de, data_ate=data_ate, alternativa=alternativa)
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
