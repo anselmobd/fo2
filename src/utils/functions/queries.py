@@ -7,3 +7,7 @@ def sql_where(field, value, operation="=", conector="AND", quote = ""):
             quote = "'"
         return f"{conector} {field} {operation} {quote}{value}{quote}"
     return ""
+
+
+def none_if(value, test):
+    return None if value == test else value
