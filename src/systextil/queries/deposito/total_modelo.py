@@ -18,7 +18,7 @@ def sql_calc_modelo(field):
             LEADING '0' FROM (
               REGEXP_REPLACE(
                 {field},
-                '^[abAB]?([0-9]+)[a-zA-Z]*$',
+                '^[a-zA-Z]?([0-9]+)[a-zA-Z]*$',
                 '\\1'
               )
             )
