@@ -26,7 +26,7 @@ def sql_calc_modelo(field):
     '''
 
 
-def sql_filtra_modelo(field, modelo, conector='AND'):
+def sql_where_modelo(field, modelo, conector='AND'):
     if field is None or field == '':
         return ''
     if modelo is None or modelo == '':
@@ -110,7 +110,7 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
 
 def total_modelo_deposito(cursor, modelo, deposito):
 
-    filtro_modelo = sql_filtra_modelo(
+    filtro_modelo = sql_where_modelo(
         'e.CDITEM_GRUPO',
         modelo,
     )
