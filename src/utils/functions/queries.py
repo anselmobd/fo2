@@ -11,3 +11,13 @@ def sql_where(field, value, operation="=", conector="AND", quote = ""):
 
 def none_if(value, test):
     return None if value == test else value
+
+
+def sql_where_none_if(field, value, test, operation="=", conector="AND", quote = ""):
+    return sql_where(
+        field,
+        none_if(value, test),
+        operation=operation,
+        conector=conector,
+        quote=quote,
+    )
