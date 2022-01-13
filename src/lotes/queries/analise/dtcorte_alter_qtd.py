@@ -1,5 +1,5 @@
 from utils.functions.models import rows_to_dict_list
-from utils.functions.queries import sql_where, none_if
+from utils.functions.queries import sql_where_none_if
 
 
 def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
@@ -23,10 +23,8 @@ def dtcorte_alter_qtd(cursor, data_de, data_ate, alternativa):
         Dados estruturados resultantes da execução da query
     """
 
-    filtro_alternativa = sql_where(
-      'o.ALTERNATIVA_PECA',
-      none_if(alternativa, ''),
-    )
+    filtro_alternativa = sql_where_none_if(
+        'o.ALTERNATIVA_PECA', alternativa, '')
 
     sql = f"""
         SELECT
