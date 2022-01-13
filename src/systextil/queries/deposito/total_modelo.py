@@ -12,7 +12,7 @@ from utils.functions.models import (
 )
 
 
-def sql_calc_modelo(field):
+def sql_calc_modelo_de_ref(field):
     return f'''--
           TRIM(
             LEADING '0' FROM (
@@ -32,7 +32,7 @@ def sql_where_modelo(field, modelo, conector='AND'):
     if modelo is None or modelo == '':
         return ''
     return f'''--
-        {conector} {sql_calc_modelo(field)} = '{modelo}'
+        {conector} {sql_calc_modelo_de_ref(field)} = '{modelo}'
     '''
 
 
@@ -78,7 +78,7 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
         deposito,
     )
 
-    calc_modelo = sql_calc_modelo('e.CDITEM_GRUPO')
+    calc_modelo = sql_calc_modelo_de_ref('e.CDITEM_GRUPO')
 
     filtro_modelo = sql_filtra_modelo(
         f'{calc_modelo}',
