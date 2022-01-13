@@ -13,6 +13,10 @@ def none_if(value, test):
     return None if value == test else value
 
 
+def coalesce(value, test):
+    return test if value is None else value
+
+
 def sql_where_none_if(field, value, test, operation="=", conector="AND", quote = ""):
     return sql_where(
         field,
