@@ -10,6 +10,7 @@ from utils.functions.models import (
     rows_to_key_dict,
     rows_to_dict_list_lower,
 )
+from utils.functions.queries import sql_where
 
 
 def sql_calc_modelo_de_ref(field=""):
@@ -28,13 +29,13 @@ def sql_calc_modelo_de_ref(field=""):
     return ""
 
 
-def sql_where_modelo(field, modelo, conector="AND"):
-    if not bool(field and modelo):
-        return ""
-    calc_modelo = sql_calc_modelo_de_ref(field)
-    return f"""--
-        {conector} {calc_modelo} = '{modelo}'
-    """
+def sql_where_modelo_de_ref(field, modelo, operation="=", conector="AND"):
+    return sql_where(
+        sql_calc_modelo_de_ref(field),
+        str(modelo),
+        operation=operation,
+        conector=conector,
+    )
 
 
 def sql_filtra_deposito(field, deposito, conector='AND'):
@@ -111,7 +112,7 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
 
 def total_modelo_deposito(cursor, modelo, deposito):
 
-    filtro_modelo = sql_where_modelo(
+    filtro_modelo = sql_where_modelo_de_ref(
         'e.CDITEM_GRUPO',
         modelo,
     )
