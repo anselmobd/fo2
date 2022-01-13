@@ -26,14 +26,13 @@ def sql_calc_modelo_de_ref(field):
     '''
 
 
-def sql_where_modelo(field, modelo, conector='AND'):
-    if field is None or field == '':
-        return ''
-    if modelo is None or modelo == '':
-        return ''
-    return f'''--
-        {conector} {sql_calc_modelo_de_ref(field)} = '{modelo}'
-    '''
+def sql_where_modelo(field, modelo, conector="AND"):
+    if not bool(field and modelo):
+        return ""
+    calc_modelo = sql_calc_modelo_de_ref(field)
+    return f"""--
+        {conector} {calc_modelo} = '{modelo}'
+    """
 
 
 def sql_filtra_deposito(field, deposito, conector='AND'):
