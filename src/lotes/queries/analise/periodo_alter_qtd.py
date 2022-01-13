@@ -1,4 +1,7 @@
+from pprint import pprint
+
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import sql_where_none_if
 
 
 def periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
@@ -21,6 +24,9 @@ def periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
     list of dict
         Dados estruturados resultantes da execução da query
     """
+
+    filtro_alternativa = sql_where_none_if(
+        'o.ALTERNATIVA_PECA', alternativa, '')
 
     sql = f"""
         SELECT
@@ -59,7 +65,7 @@ def periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
           AND o.SITUACAO IN (2, 4)
           AND l.PERIODO_PRODUCAO >= '{periodo_de}'
           AND l.PERIODO_PRODUCAO <= '{periodo_ate}'
-          AND (o.ALTERNATIVA_PECA = '{alternativa}' OR '{alternativa}' IS NULL)
+          {filtro_alternativa} -- filtro_alternativa
         UNION
         SELECT distinct
           l.PERIODO_PRODUCAO
@@ -78,7 +84,7 @@ def periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
           AND o.SITUACAO IN (2, 4)
           AND l.PERIODO_PRODUCAO >= '{periodo_de}'
           AND l.PERIODO_PRODUCAO <= '{periodo_ate}'
-          AND (o.ALTERNATIVA_PECA = '{alternativa}' OR '{alternativa}' IS NULL)
+          {filtro_alternativa} -- filtro_alternativa
         ) pp
         JOIN pcpc_040 l
           ON l.PERIODO_PRODUCAO = pp.PERIODO_PRODUCAO
