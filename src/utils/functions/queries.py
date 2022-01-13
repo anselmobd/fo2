@@ -4,11 +4,29 @@ from pprint import pprint
 def sql_where(field, value, operation="=", conector="AND", quote = None):
     if bool(field) and value is not None:
         if quote is None:
-            if isinstance(value, str):
+            if isinstance(value, tuple):
+                test_value = value[0]
+            else:
+                test_value = value
+            if isinstance(test_value, str):
                 quote = "'"
             else:
                 quote = ""
-        return f"{conector} {field} {operation} {quote}{value}{quote}"
+        if isinstance(value, tuple):
+            if operation.upper() in ("=", "IN"):
+                values = ", ".join([
+                    f"{quote}{item}{quote}"
+                    for item in value
+                ])
+                return f"{conector} {field} IN ({values})"
+            else:
+                tests = []
+                for item in value:
+                    tests.append(f"{field} {operation} {quote}{item}{quote}")
+                or_tests = ' OR '.join(tests) 
+                return f"{conector} ({or_tests})"
+        else:
+            return f"{conector} {field} {operation} {quote}{value}{quote}"
     return ""
 
 
