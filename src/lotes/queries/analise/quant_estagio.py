@@ -47,21 +47,23 @@ def quant_estagio(
                 , o.ORDEM_PRODUCAO
                 , o.PEDIDO_VENDA"""
 
-    filtro_tipo = ''
-    if tipo is not None:
-        if tipo == 'a':
-            filtro_tipo = "AND l.PROCONF_GRUPO < 'A0000'"
-        elif tipo == 'g':
-            filtro_tipo = "AND l.PROCONF_GRUPO like 'A%'"
-        elif tipo == 'b':
-            filtro_tipo = "AND l.PROCONF_GRUPO like 'B%'"
-        elif tipo == 'p':
-            filtro_tipo = \
-                "AND (l.PROCONF_GRUPO like 'A%' OR l.PROCONF_GRUPO like 'B%')"
-        elif tipo == 'v':
-            filtro_tipo = "AND l.PROCONF_GRUPO < 'C0000'"
-        elif tipo == 'm':
-            filtro_tipo = "AND l.PROCONF_GRUPO >= 'C0000'"
+    OPERATION_IDX = 0
+    VALUE_IDX = 1
+    tipo_params = {
+        'a': ["<", "A0000"],
+        'g': ["LIKE", "A%"],
+        'b': ["LIKE", "B%"],
+        'p': ["LIKE", ("A%", "B%")],
+        'v': ["<", "C0000"],
+        'm': [">=", "C0000"],
+    }
+    filtro_tipo = ""
+    if tipo in tipo_params:
+        filtro_tipo = sql_where(
+            'l.PROCONF_GRUPO',
+            tipo_params[tipo][VALUE_IDX],
+            operation=tipo_params[tipo][OPERATION_IDX],
+        )
 
     sql = f"""
         SELECT
