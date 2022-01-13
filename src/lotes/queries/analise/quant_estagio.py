@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import coalesce, sql_where, sql_where_none_if
 
 
 def quant_estagio(
@@ -24,31 +25,18 @@ def quant_estagio(
         monta_filtro('NOT IN', less),
     ])
 
-    filtra_estagio = ''
-    if estagio is not None and estagio != '':
-        filtra_estagio = """--
-            AND l.CODIGO_ESTAGIO = {} """.format(estagio)
+    filtra_estagio = sql_where_none_if('l.CODIGO_ESTAGIO', estagio, '')
 
-    filtra_ref = ''
-    if ref is not None and ref != '':
-        if '%' in ref:
-            filtra_ref = """--
-                AND l.PROCONF_GRUPO LIKE '{}' """.format(ref)
-        else:
-            filtra_ref = """--
-                AND l.PROCONF_GRUPO = '{}' """.format(ref)
+    ref = coalesce(ref, '')
+    filtra_ref = sql_where_none_if(
+        'l.PROCONF_GRUPO', ref, '',
+        operation="LIKE" if '%' in ref else "=")
 
-    filtro_tam = ''
-    if tam is not None and tam != '':
-        filtro_tam = "AND l.PROCONF_SUBGRUPO = '{tam}'".format(tam=tam)
+    filtro_tam = sql_where_none_if('l.PROCONF_SUBGRUPO', tam, '')
 
-    filtro_cor = ''
-    if cor is not None and cor != '':
-        filtro_cor = "AND l.PROCONF_ITEM = '{cor}'".format(cor=cor)
+    filtro_cor = sql_where_none_if('l.PROCONF_ITEM', cor, '')
 
-    filtro_deposito = ''
-    if deposito is not None:
-        filtro_deposito = f"AND o.DEPOSITO_ENTRADA = {deposito}"
+    filtro_deposito = sql_where('o.DEPOSITO_ENTRADA', deposito, quote='')
 
     filtro_group = ''
     if group is not None:
