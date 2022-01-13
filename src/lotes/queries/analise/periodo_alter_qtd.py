@@ -2,8 +2,27 @@ from utils.functions.models import rows_to_dict_list
 
 
 def periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
-    # Produção por periodo e alternativa
-    sql = """
+    """
+    Calcula produção por periodo e alternativa
+
+    Parameters
+    ----------
+    cursor :
+        cursor de execução em banco de dados conectado
+    periodo_de :
+        periodo inicial
+    periodo_ate :
+        periodo final
+    alternativa :
+        anternativa de produção
+
+    Returns
+    -------
+    list of dict
+        Dados estruturados resultantes da execução da query
+    """
+
+    sql = f"""
         SELECT
           pp.PERIODO_PRODUCAO PERIODO
         , p.DATA_INI_PERIODO PERIODO_INI
@@ -96,7 +115,6 @@ def periodo_alter_qtd(cursor, periodo_de, periodo_ate, alternativa):
         , pp.ROTEIRO_PECA
         , pp.TIPO_ORDEM
         , pp.DATA_ENTRADA_CORTE
-    """.format(periodo_de=periodo_de, periodo_ate=periodo_ate,
-               alternativa=alternativa)
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
