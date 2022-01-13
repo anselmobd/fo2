@@ -1,10 +1,13 @@
 from pprint import pprint
 
 
-def sql_where(field, value, operation="=", conector="AND", quote = ""):
+def sql_where(field, value, operation="=", conector="AND", quote = None):
     if bool(field) and value is not None:
-        if not quote and isinstance(value, str):
-            quote = "'"
+        if quote is None:
+            if isinstance(value, str):
+                quote = "'"
+            else:
+                quote = ""
         return f"{conector} {field} {operation} {quote}{value}{quote}"
     return ""
 
