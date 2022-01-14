@@ -31,7 +31,6 @@ def quant_estagio(
         'o': ['o.ORDEM_PRODUCAO'],
         'op': ['o.ORDEM_PRODUCAO', 'o.PEDIDO_VENDA'],
     }
-    print(group)
     filtro_group = ''
     if group in group_params:
         filtro_group = ', '.join([""]+group_params[group])
