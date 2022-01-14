@@ -269,7 +269,7 @@ class ItemNoTempo(View):
                 })
 
         oc_dados = lotes.queries.analise.quant_estagio(
-            self.cursor, only=[57, 63], group='op',
+            self.cursor, only=(57, 63), group='op',
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']})
 
@@ -304,7 +304,7 @@ class ItemNoTempo(View):
                 })
 
         op_dados = lotes.queries.analise.quant_estagio(
-            self.cursor, less=[57, 63], group='op',
+            self.cursor, less=(57, 63), group='op',
             **{f: self.context[f] for f in [
                 'ref', 'cor', 'tam', 'deposito']})
 
