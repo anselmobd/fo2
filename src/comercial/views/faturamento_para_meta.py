@@ -32,9 +32,12 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         ano = self.form.cleaned_data['ano']
         mes = self.form.cleaned_data['mes']
         ref = self.form.cleaned_data['ref']
+        colecao = self.form.cleaned_data['colecao']
         cliente = self.form.cleaned_data['cliente']
         apresentacao = self.form.cleaned_data['apresentacao']
         ordem = self.form.cleaned_data['ordem']
+
+        colecao_codigo = 0 if colecao is None else colecao.colecao
 
         percentual = (
             ordem == 'valor' and
@@ -51,12 +54,14 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             'ano': ano_atual,
             'mes': mes,
             'ref': ref,
+            'colecao': colecao,
+            'colecao_codigo': colecao_codigo,
             'cliente': cliente,
         })
 
         faturados = comercial.queries.faturamento_para_meta(
             cursor, ano_atual, mes, ref=ref, cliente=cliente,
-            tipo=apresentacao, ordem=ordem)
+            tipo=apresentacao, ordem=ordem, colecao=colecao_codigo)
 
         if len(faturados) == 0:
             self.context.update({

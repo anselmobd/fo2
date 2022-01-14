@@ -4,6 +4,8 @@ from base.forms.custom import O2BaseForm
 from base.forms.fields import O2FieldRefForm, O2FieldModeloForm, O2FieldClienteForm
 from utils.functions import mes_atual, ano_atual
 
+from systextil.models import Colecao
+
 
 class ClienteForm(forms.Form):
     cnpj = forms.CharField(
@@ -124,6 +126,11 @@ class FaturamentoParaMetaForm(
 
     mes = forms.IntegerField(required=False, initial=mes_atual)
 
+    colecao = forms.ModelChoiceField(
+        label='Coleção da referência', required=False,
+        queryset=Colecao.objects.exclude(colecao=0).order_by(
+            'colecao'), empty_label="(Todas)")
+
     CHOICES = [
         ('mes', 'Por mês'),
         ('nota', 'Por nota'),
@@ -148,6 +155,7 @@ class FaturamentoParaMetaForm(
             'ano',
             'mes',
             'ref',
+            'colecao',
             'cliente',
             'apresentacao',
             'ordem',

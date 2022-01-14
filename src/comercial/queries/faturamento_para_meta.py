@@ -5,7 +5,7 @@ from utils.functions.models import rows_to_dict_list_lower
 
 def faturamento_para_meta(
         cursor, ano, mes=None, tipo='mes', empresa=1,
-        ref=None, ordem='apresentacao', cliente=None):
+        ref=None, ordem='apresentacao', cliente=None, colecao=None):
     '''
         tipo:
             mes - totaliza por mês
