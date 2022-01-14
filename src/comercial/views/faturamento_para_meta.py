@@ -146,11 +146,11 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                 },
             },
             'referencia': {
-                'headers': ['Referencia', 'Valor', ],
-                'fields': ['ref', 'valor', ],
+                'headers': ['Referencia', 'Coleção', 'Valor', ],
+                'fields': ['ref', 'colecao', 'valor', ],
                 'data': faturados,
                 'style': {
-                    2: 'text-align: right;',
+                    3: 'text-align: right;',
                 },
             },
             'modelo': {
