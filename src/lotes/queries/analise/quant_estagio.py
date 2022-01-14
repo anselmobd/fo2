@@ -15,6 +15,7 @@ def quant_estagio(
 
     filtra_estagio = sql_where_none_if('l.CODIGO_ESTAGIO', estagio, '')
 
+    # coalesce necessário por causa do if abaixo
     ref = coalesce(ref, '')
     filtra_ref = sql_where_none_if(
         'l.PROCONF_GRUPO', ref, '',
