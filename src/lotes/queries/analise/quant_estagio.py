@@ -99,5 +99,6 @@ def quant_estagio(
         , t.ORDEM_TAMANHO
         , l.PROCONF_ITEM
     """
+    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
