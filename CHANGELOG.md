@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.3.1 - 2022/01/14
+---
+
+- algumas correções
+- iniciadas rotinas "sql_where" e aplicando em algumas queries
+- tela Faturamento no mês agora lida com Coleção
+
 0.3 - 2022/01/05
 ---
 
