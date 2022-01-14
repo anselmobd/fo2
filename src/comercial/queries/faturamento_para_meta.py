@@ -152,11 +152,14 @@ def faturamento_para_meta(
             'fields': """--
                 , fi.NIVEL_ESTRUTURA NIVEL
                 , fi.GRUPO_ESTRUTURA REF
+                , co.COLECAO || '-' || co.DESCR_COLECAO COLECAO
             """,
             'group': """--
                 GROUP BY
                   fi.NIVEL_ESTRUTURA
                 , fi.GRUPO_ESTRUTURA
+                , co.COLECAO
+                , co.DESCR_COLECAO
             """,
             'order': """--
                 ORDER BY
@@ -205,6 +208,8 @@ def faturamento_para_meta(
          and fi.ch_it_nf_ser_nfis = f.serie_nota_fisc
         JOIN BASI_030 r
           ON r.NIVEL_ESTRUTURA = fi.NIVEL_ESTRUTURA 
+        JOIN BASI_140 co
+          ON co.COLECAO = r.COLECAO 
         AND r.REFERENCIA = fi.GRUPO_ESTRUTURA 
         JOIN estq_005 t
           ON t.CODIGO_TRANSACAO = fi.TRANSACAO
