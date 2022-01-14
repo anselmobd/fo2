@@ -145,12 +145,33 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                     2: 'text-align: right;',
                 },
             },
+            'cliente_percentual': {
+                'headers': ['Cliente', 'Valor', 'Participação(%)', 'Acumulada(%)', '#'],
+                'fields': ['cliente', 'valor', 'percent', 'acumulada', 'idx'],
+                'style': {
+                    2: 'text-align: right;',
+                    3: 'text-align: right;',
+                    4: 'text-align: right;',
+                    5: 'text-align: right;',
+                },
+            },
             'referencia': {
                 'headers': ['Referencia', 'Coleção', 'Valor', ],
                 'fields': ['ref', 'colecao', 'valor', ],
                 'data': faturados,
                 'style': {
                     3: 'text-align: right;',
+                },
+            },
+            'referencia_percentual': {
+                'headers': ['Referencia', 'Coleção', 'Valor', 'Participação(%)', 'Acumulada(%)', '#'],
+                'fields': ['ref', 'colecao', 'valor', 'percent', 'acumulada', 'idx'],
+                'data': faturados,
+                'style': {
+                    3: 'text-align: right;',
+                    4: 'text-align: right;',
+                    5: 'text-align: right;',
+                    6: 'text-align: right;',
                 },
             },
             'modelo': {
@@ -161,19 +182,25 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                     2: 'text-align: right;',
                 },
             },
+            'modelo_percentual': {
+                'headers': ['Modelo', 'Valor', 'Participação(%)', 'Acumulada(%)', '#'],
+                'fields': ['modelo', 'valor', 'percent', 'acumulada', 'idx'],
+                'data': faturados,
+                'style': {
+                    2: 'text-align: right;',
+                    3: 'text-align: right;',
+                    4: 'text-align: right;',
+                    5: 'text-align: right;',
+                },
+            },
         }
+
+        if percentual:
+            apresentacao += '_percentual'
 
         headers = tabela[apresentacao]['headers']
         fields = tabela[apresentacao]['fields']
         style = tabela[apresentacao]['style']
-        if percentual:
-            headers += ['Participação(%)', 'Acumulada(%)', '#']
-            fields += ['percent', 'acumulada', 'idx']
-            style.update({
-                3: 'text-align: right;',
-                4: 'text-align: right;',
-                5: 'text-align: right;',
-            })
 
         self.context.update({
             'headers': headers,
