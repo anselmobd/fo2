@@ -200,6 +200,20 @@ def faturamento_para_meta(
                 , co.COLECAO
             """
         },
+        'colecao': {
+            'fields': """--
+                , co.COLECAO || '-' || co.DESCR_COLECAO COLECAO
+            """,
+            'group': """--
+                GROUP BY
+                  co.COLECAO
+                , co.DESCR_COLECAO
+            """,
+            'order': """--
+                ORDER BY
+                  co.COLECAO
+            """
+        },
     }
 
     if ordem == 'apresentacao':

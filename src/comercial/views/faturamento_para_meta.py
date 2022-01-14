@@ -41,7 +41,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
 
         percentual = (
             ordem == 'valor' and
-            apresentacao in ['cliente', 'referencia', 'modelo']
+            apresentacao in ['cliente', 'referencia', 'modelo', 'colecao']
         )
 
         if ano is None:
@@ -191,6 +191,25 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                     4: 'text-align: right;',
                     5: 'text-align: right;',
                     6: 'text-align: right;',
+                },
+            },
+            'colecao': {
+                'headers': ['Coleção', 'Valor', ],
+                'fields': ['colecao', 'valor', ],
+                'data': faturados,
+                'style': {
+                    2: 'text-align: right;',
+                },
+            },
+            'colecao_percentual': {
+                'headers': ['Coleção', 'Valor', 'Participação(%)', 'Acumulada(%)', '#'],
+                'fields': ['colecao', 'valor', 'percent', 'acumulada', 'idx'],
+                'data': faturados,
+                'style': {
+                    2: 'text-align: right;',
+                    3: 'text-align: right;',
+                    4: 'text-align: right;',
+                    5: 'text-align: right;',
                 },
             },
         }
