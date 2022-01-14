@@ -10,7 +10,7 @@ from utils.functions.models import (
     rows_to_key_dict,
     rows_to_dict_list_lower,
 )
-from utils.functions.queries import sql_where
+from utils.functions.queries import sql_where, sql_where_none_if
 
 
 def sql_calc_modelo_de_ref(field=""):
@@ -36,16 +36,6 @@ def sql_where_modelo_de_ref(field, modelo, operation="=", conector="AND"):
         operation=operation,
         conector=conector,
     )
-
-
-def sql_filtra_deposito(field, deposito, conector='AND'):
-    if deposito is None or deposito == '':
-        return ''
-    if type(deposito) is tuple:
-        lista = ", ".join(map(str, deposito))
-        return f"{conector} {field} IN ({lista})"
-    else:
-        return f"{conector} {field} = '{deposito}'"
 
 
 def sql_filtra_modelo(field, modelo, conector='AND'):
@@ -75,10 +65,8 @@ def totais_modelos_depositos(cursor, deposito, modelos=None):
             cache.set(f"{key_cache}_calc_", "c", timeout=entkeys._SECOND * 5)
             break
 
-    filtro_deposito = sql_filtra_deposito(
-        'e.DEPOSITO',
-        deposito,
-    )
+    filtro_deposito = sql_where_none_if(
+        'e.DEPOSITO', deposito, '', operation="IN")
 
     calc_modelo = sql_calc_modelo_de_ref('e.CDITEM_GRUPO')
 
@@ -117,10 +105,8 @@ def total_modelo_deposito(cursor, modelo, deposito):
         modelo,
     )
 
-    filtro_deposito = sql_filtra_deposito(
-        'e.DEPOSITO',
-        deposito,
-    )
+    filtro_deposito = sql_where_none_if(
+        'e.DEPOSITO', deposito, '', operation="IN")
 
     sql = f'''
         SELECT
