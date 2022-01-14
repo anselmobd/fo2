@@ -8,21 +8,9 @@ def quant_estagio(
         cursor, estagio=None, ref=None, tipo=None, cor=None, tam=None,
         only=None, less=None, group=None, deposito=None):
 
-    def monta_filtro(in_, estagios):
-        filtro = ''
-        if estagios is not None:
-            lista_estagios = ''
-            sep = ''
-            for estagio in estagios:
-                    lista_estagios += f'{sep}{str(estagio)}'
-                    sep = ', '
-            filtro = (
-                f'AND l.CODIGO_ESTAGIO {in_} ({lista_estagios})')
-        return filtro
-
     filtra_estagios = ' '.join([
-        monta_filtro('IN', only),
-        monta_filtro('NOT IN', less),
+        sql_where('l.CODIGO_ESTAGIO', only, operation="IN"),
+        sql_where('l.CODIGO_ESTAGIO', less, operation="NOT IN"),
     ])
 
     filtra_estagio = sql_where_none_if('l.CODIGO_ESTAGIO', estagio, '')
