@@ -128,7 +128,7 @@ class FaturamentoParaMetaForm(
 
     colecao = forms.ModelChoiceField(
         label='Coleção da referência', required=False,
-        queryset=Colecao.objects.exclude(colecao=0).order_by(
+        queryset=Colecao.objects.all().order_by(
             'colecao'), empty_label="(Todas)")
 
     CHOICES = [
