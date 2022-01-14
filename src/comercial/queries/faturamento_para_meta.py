@@ -35,6 +35,10 @@ def faturamento_para_meta(
     if ref:
         filtra_ref = f"AND fi.GRUPO_ESTRUTURA = '{ref}'"
 
+    filtra_colecao = ""
+    if colecao:
+        filtra_colecao = f"AND r.COLECAO = '{colecao}'"
+
     filtro_cliente = ''
     if cliente is not None and cliente != '':
         filtro_cliente = f'''--
@@ -199,6 +203,9 @@ def faturamento_para_meta(
           ON fi.ch_it_nf_cd_empr = f.codigo_empresa
          and fi.ch_it_nf_num_nfis = f.num_nota_fiscal
          and fi.ch_it_nf_ser_nfis = f.serie_nota_fisc
+        JOIN BASI_030 r
+          ON r.NIVEL_ESTRUTURA = fi.NIVEL_ESTRUTURA 
+        AND r.REFERENCIA = fi.GRUPO_ESTRUTURA 
         JOIN estq_005 t
           ON t.CODIGO_TRANSACAO = fi.TRANSACAO
         JOIN PEDI_080 n
@@ -214,6 +221,7 @@ def faturamento_para_meta(
         WHERE 1=1
           AND f.CODIGO_EMPRESA = {empresa}
           {filtra_ref} -- filtra_ref
+          {filtra_colecao} -- filtra_colecao
           {filtro_cliente} -- filtro_cliente
           -- ou o faturamento tem uma transação de venda
           -- ou é o caso especial de remessa de residuo
