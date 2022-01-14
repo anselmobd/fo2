@@ -5,6 +5,7 @@ from django.core.cache import cache
 from utils.functions.models import rows_to_dict_list
 
 from utils.functions import my_make_key_cache, fo2logger
+from utils.functions.queries import coalesce, sql_where, sql_where_none_if
 
 
 def totais_estagios(
@@ -20,46 +21,36 @@ def totais_estagios(
 
     filtro_tipo_roteiro = ''
     if tipo_roteiro != 't':
-        if tipo_roteiro == 'p':
-            filtro_tipo_roteiro += 'AND NOT EXISTS'
-        else:
-            filtro_tipo_roteiro += 'AND EXISTS'
-        filtro_tipo_roteiro += '''
-          ( SELECT
-              ia.*
-            FROM BASI_050 ia -- insumos de alternativa
-            WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
-              AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
-              AND ia.NIVEL_COMP = 1
-              AND ia.GRUPO_COMP <= 'B9999'
-          ) -- se tem componente que é PA, PG ou PB
+        not_operation = 'NOT' if tipo_roteiro == 'p' else ''
+        filtro_tipo_roteiro = f'''--
+            AND {not_operation} EXISTS
+              ( SELECT
+                  ia.*
+                FROM BASI_050 ia -- insumos de alternativa
+                WHERE ia.GRUPO_ITEM = o.REFERENCIA_PECA
+                  AND ia.ALTERNATIVA_ITEM = o.ALTERNATIVA_PECA
+                  AND ia.NIVEL_COMP = 1
+                  AND ia.GRUPO_COMP <= 'B9999'
+              ) -- se tem componente que é PA, PG ou PB
         '''
 
-    filtro_cnpj9 = ''
-    if cnpj9 is not None:
-        filtro_cnpj9 = '''--
-            AND r.CGC_CLIENTE_9 = {}'''.format(cnpj9)
+    filtro_cnpj9 = sql_where('r.CGC_CLIENTE_9', cnpj9)
 
-    filtro_deposito = ''
-    if deposito is not None and deposito != '':
-        filtro_deposito = '''--
-            AND o.DEPOSITO_ENTRADA = {}'''.format(deposito)
+    filtro_deposito = sql_where_none_if(
+        'o.DEPOSITO_ENTRADA', deposito, '', quote='')
 
-    filtro_data_de = ''
-    if data_de is not None and data_de != '':
-        filtro_data_de = ''' --
-            AND o.DATA_ENTRADA_CORTE >= '{}' '''.format(data_de)
+    data_de = coalesce(data_de, '')
+    filtro_data_de = sql_where_none_if(
+        'o.DATA_ENTRADA_CORTE', str(data_de), '', operation=">=")
 
-    filtro_data_ate = ''
-    if data_ate is not None and data_ate != '':
-        filtro_data_ate = ''' --
-            AND o.DATA_ENTRADA_CORTE <= '{}' '''.format(data_ate)
+    data_ate = coalesce(data_ate, '')
+    filtro_data_ate = sql_where_none_if(
+        'o.DATA_ENTRADA_CORTE', str(data_ate), '', operation="<=")
 
-    lista_op_prog = '0'
-    if ops_prog:
-        lista_op_prog = ', '.join([str(op) for op in ops_prog])
+    filtro_op_prog = sql_where(
+        'l.ORDEM_PRODUCAO', tuple([0]+ops_prog), operation="IN")
 
-    sql = """
+    sql = f"""
         SELECT
           CASE WHEN e.DESCRICAO IS NULL THEN l.CODIGO_ESTAGIO+100
           ELSE l.CODIGO_ESTAGIO
@@ -233,7 +224,7 @@ def totais_estagios(
          AND r.REFERENCIA = o.REFERENCIA_PECA
         LEFT JOIN MQOP_005 e_p
           ON e_p.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
-        AND l.ORDEM_PRODUCAO IN ({lista_op_prog}) -- lista_op_prog
+         {filtro_op_prog} -- filtro_op_prog
         LEFT JOIN MQOP_005 e
           ON e.CODIGO_ESTAGIO = l.CODIGO_ESTAGIO
         AND e_p.CODIGO_ESTAGIO IS NULL 
@@ -252,14 +243,7 @@ def totais_estagios(
           sum((l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO)) > 0
         ORDER BY
           l.CODIGO_ESTAGIO
-    """.format(
-        lista_op_prog=lista_op_prog,
-        filtro_tipo_roteiro=filtro_tipo_roteiro,
-        filtro_cnpj9=filtro_cnpj9,
-        filtro_deposito=filtro_deposito,
-        filtro_data_de=filtro_data_de,
-        filtro_data_ate=filtro_data_ate,
-    )
+    """
     cursor.execute(sql)
 
     cached_result = rows_to_dict_list(cursor)
