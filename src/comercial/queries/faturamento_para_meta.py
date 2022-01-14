@@ -169,24 +169,34 @@ def faturamento_para_meta(
         },
         'modelo': {
             'fields': """--
-                , TO_NUMBER(
-                    REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
-                  ) MODELO
+                , CASE WHEN fi.NIVEL_ESTRUTURA = 1 THEN
+                    TO_NUMBER(
+                      REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
+                    )
+                  ELSE 0
+                  END
+                  MODELO
                 , co.COLECAO || '-' || co.DESCR_COLECAO COLECAO
             """,
             'group': """--
                 GROUP BY
-                  TO_NUMBER(
-                    REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
-                  )
+                  CASE WHEN fi.NIVEL_ESTRUTURA = 1 THEN
+                    TO_NUMBER(
+                      REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
+                    )
+                  ELSE 0
+                  END
                 , co.COLECAO
                 , co.DESCR_COLECAO
             """,
             'order': """--
                 ORDER BY
-                  TO_NUMBER(
-                    REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
-                  )
+                  CASE WHEN fi.NIVEL_ESTRUTURA = 1 THEN
+                    TO_NUMBER(
+                      REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
+                    )
+                  ELSE 0
+                  END
                 , co.COLECAO
             """
         },
