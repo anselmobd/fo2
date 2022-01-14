@@ -175,22 +175,22 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                 },
             },
             'modelo': {
-                'headers': ['Modelo', 'Valor', ],
-                'fields': ['modelo', 'valor', ],
+                'headers': ['Modelo', 'Coleção', 'Valor', ],
+                'fields': ['modelo', 'colecao', 'valor', ],
                 'data': faturados,
                 'style': {
-                    2: 'text-align: right;',
+                    3: 'text-align: right;',
                 },
             },
             'modelo_percentual': {
-                'headers': ['Modelo', 'Valor', 'Participação(%)', 'Acumulada(%)', '#'],
-                'fields': ['modelo', 'valor', 'percent', 'acumulada', 'idx'],
+                'headers': ['Modelo', 'Coleção', 'Valor', 'Participação(%)', 'Acumulada(%)', '#'],
+                'fields': ['modelo', 'colecao', 'valor', 'percent', 'acumulada', 'idx'],
                 'data': faturados,
                 'style': {
-                    2: 'text-align: right;',
                     3: 'text-align: right;',
                     4: 'text-align: right;',
                     5: 'text-align: right;',
+                    6: 'text-align: right;',
                 },
             },
         }
