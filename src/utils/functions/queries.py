@@ -13,12 +13,18 @@ def sql_where(field, value, operation="=", conector="AND", quote = None):
             else:
                 quote = ""
         if isinstance(value, tuple):
-            if operation.upper() in ("=", "IN"):
+            if operation.upper() in ("=", "<>", "IN", "NOT IN"):
                 values = ", ".join([
                     f"{quote}{item}{quote}"
                     for item in value
                 ])
-                return f"{conector} {field} IN ({values})"
+                if "IN" not in operation.upper():
+                    if operation == "=":
+                        operation = "IN"
+                    else:
+                        operation = "NOT IN"
+                return f"{conector} {field} {operation} ({values})"
+                
             else:
                 tests = []
                 for item in value:
