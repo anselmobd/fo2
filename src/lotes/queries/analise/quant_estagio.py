@@ -26,14 +26,14 @@ def quant_estagio(
 
     filtro_deposito = sql_where('o.DEPOSITO_ENTRADA', deposito, quote='')
 
+    group_params = {
+        'o': ['o.ORDEM_PRODUCAO'],
+        'op': ['o.ORDEM_PRODUCAO', 'o.PEDIDO_VENDA'],
+    }
+    print(group)
     filtro_group = ''
-    if group is not None:
-        if group == 'o':
-            filtro_group = ", o.ORDEM_PRODUCAO"
-        elif group == 'op':
-            filtro_group = """--
-                , o.ORDEM_PRODUCAO
-                , o.PEDIDO_VENDA"""
+    if group in group_params:
+        filtro_group = ', '.join([""]+group_params[group])
 
     OPERATION_IDX = 0
     VALUE_IDX = 1
@@ -99,6 +99,5 @@ def quant_estagio(
         , t.ORDEM_TAMANHO
         , l.PROCONF_ITEM
     """
-    print(sql)
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
