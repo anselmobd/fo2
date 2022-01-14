@@ -36,7 +36,7 @@ def faturamento_para_meta(
         filtra_ref = f"AND fi.GRUPO_ESTRUTURA = '{ref}'"
 
     filtra_colecao = ""
-    if colecao:
+    if colecao is not None:
         filtra_colecao = f"AND r.COLECAO = '{colecao}'"
 
     filtro_cliente = ''

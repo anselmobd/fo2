@@ -37,7 +37,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         apresentacao = self.form.cleaned_data['apresentacao']
         ordem = self.form.cleaned_data['ordem']
 
-        colecao_codigo = 0 if colecao is None else colecao.colecao
+        colecao_codigo = None if colecao is None else colecao.colecao
 
         percentual = (
             ordem == 'valor' and
