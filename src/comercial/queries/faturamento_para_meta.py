@@ -172,18 +172,22 @@ def faturamento_para_meta(
                 , TO_NUMBER(
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
                   ) MODELO
+                , co.COLECAO || '-' || co.DESCR_COLECAO COLECAO
             """,
             'group': """--
                 GROUP BY
                   TO_NUMBER(
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
                   )
+                , co.COLECAO
+                , co.DESCR_COLECAO
             """,
             'order': """--
                 ORDER BY
                   TO_NUMBER(
                     REGEXP_REPLACE(fi.GRUPO_ESTRUTURA, '[^0-9]', '')
                   )
+                , co.COLECAO
             """
         },
     }
