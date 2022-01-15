@@ -10,7 +10,7 @@ def get_sessions():
         "http://tussor.systextil.com.br/systextil/sessions",
     ]
     if acesso_externo():
-        urls = urls.reverse()
+        urls.reverse()
     for u in urls:
         try:
             req = requests.get(u, timeout=10)
