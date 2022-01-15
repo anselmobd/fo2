@@ -14,7 +14,7 @@ def get_sessions():
     for u in urls:
         try:
             req = requests.get(u, timeout=10)
-        except requests.exceptions.ConnectTimeout:
+        except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError):
             continue
         if req.status_code == 200:
             return req.json()
