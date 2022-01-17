@@ -201,7 +201,7 @@ def faturamento_para_meta(
         mes = f"{mes:02}"
         prox_mes = f"{prox_mes:02}"
 
-    filtra_emissao = """
+    filtra_emissao = f"""
         AND f.DATA_EMISSAO >=
             TIMESTAMP '{ano}-{mes}-01 00:00:00.000'
         AND f.DATA_EMISSAO <
