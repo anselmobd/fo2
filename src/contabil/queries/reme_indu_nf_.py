@@ -140,7 +140,10 @@ def reme_indu_nf(
           ON cind.CGC_9 = nf.CGC_9
          AND cind.CGC_4 = nf.CGC_4
         JOIN FATU_060 inf -- nota fiscal da Tussor - capa
-          ON inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
+          ON inf.ch_it_nf_cd_empr = nf.codigo_empresa
+         and inf.ch_it_nf_num_nfis = nf.num_nota_fiscal
+         and inf.ch_it_nf_ser_nfis = nf.serie_nota_fisc
+         AND inf.NR_CAIXA = 0
         LEFT JOIN OBRF_082 osi -- OS - item de OS
           ON osi.NUM_NF_SAI = nf.NUM_NOTA_FISCAL
          AND osi.PRODSAI_GRUPO = inf.GRUPO_ESTRUTURA

@@ -46,6 +46,7 @@ def os_itens(cursor, os):
           ON tam.TAMANHO_REF = s.PRODSAI_SUBGRUPO
         LEFT JOIN FATU_050 nf -- nota fiscal da Tussor
           ON nf.NUM_NOTA_FISCAL = s.NUM_NF_SAI
+         AND nf.NUMERO_CAIXA_ECF = 0
         LEFT JOIN OBRF_015 ie -- item de nota fiscal de entrada
           ON s.NUM_NF_SAI <> 0
          AND ie.NUM_NOTA_ORIG = s.NUM_NF_SAI

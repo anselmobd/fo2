@@ -10,6 +10,7 @@ def get_nf_pela_chave(cursor, chave):
         FROM FATU_050 f
         WHERE f.CODIGO_EMPRESA = 1
           AND f.NUMERO_DANF_NFE = %s
+          AND f.NUMERO_CAIXA_ECF = 0
     """
     cursor.execute(sql, [chave])
     return rows_to_dict_list(cursor)
@@ -22,6 +23,7 @@ def get_chave_pela_nf(cursor, nf):
         FROM FATU_050 f
         WHERE f.CODIGO_EMPRESA = 1
           AND f.NUM_NOTA_FISCAL = %s
+          AND f.NUMERO_CAIXA_ECF = 0
     """
     cursor.execute(sql, [nf])
     return rows_to_dict_list(cursor)

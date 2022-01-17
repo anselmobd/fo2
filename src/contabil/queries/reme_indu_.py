@@ -150,6 +150,7 @@ def reme_indu(
          AND osi.PRODSAI_ITEM = oo.PROCONF_ITEM
         JOIN FATU_050 nf -- nota fiscal da Tussor - capa
           ON nf.NUM_NOTA_FISCAL = osi.NUM_NF_SAI
+         AND nf.NUMERO_CAIXA_ECF = 0
         LEFT JOIN PEDI_010 cind -- cliente - industrializador
           ON cind.CGC_9 = nf.CGC_9
          AND cind.CGC_4 = nf.CGC_4

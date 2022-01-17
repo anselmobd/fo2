@@ -17,7 +17,10 @@ def nf_itens(cursor, nf):
         , rtc.NARRATIVA
         FROM FATU_050 f -- fatura de saída
         JOIN fatu_060 i -- item de nf de saída
-          ON i.CH_IT_NF_NUM_NFIS = f.NUM_NOTA_FISCAL
+          ON i.ch_it_nf_cd_empr = f.codigo_empresa
+         and i.ch_it_nf_num_nfis = f.num_nota_fiscal
+         and i.ch_it_nf_ser_nfis = f.serie_nota_fisc
+         AND i.NR_CAIXA = 0
         LEFT JOIN basi_010 rtc
           ON rtc.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
          AND rtc.GRUPO_ESTRUTURA = i.GRUPO_ESTRUTURA

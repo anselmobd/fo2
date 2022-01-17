@@ -52,7 +52,10 @@ def item_no_tempo(
                   ( SELECT
                       min(inf.PEDIDO_VENDA)
                     FROM fatu_060 inf -- item de nf de saída
-                    WHERE inf.CH_IT_NF_NUM_NFIS = f.NUM_NOTA_FISCAL
+                    WHERE inf.ch_it_nf_cd_empr = f.codigo_empresa
+                      and inf.ch_it_nf_num_nfis = f.num_nota_fiscal
+                      and inf.ch_it_nf_ser_nfis = f.serie_nota_fisc
+                      AND inf.NR_CAIXA = 0
                   )
                 ELSE f.PEDIDO_VENDA
               END
@@ -83,6 +86,7 @@ def item_no_tempo(
         LEFT JOIN FATU_050 f -- fatura
           ON t.CNPJ_9 <> 0
          AND f.NUM_NOTA_FISCAL = t.NUMERO_DOCUMENTO
+         AND f.NUMERO_CAIXA_ECF = 0
         LEFT JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = t.CNPJ_9
          AND c.CGC_4 = t.CNPJ_4

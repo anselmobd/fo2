@@ -45,6 +45,7 @@ def pedido_faturavel_sortimento(
           LEFT JOIN FATU_050 fok -- fatura
             ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
            AND fok.SITUACAO_NFISC = 1  -- 1=emitida; 2=cancelada
+           AND fok.NUMERO_CAIXA_ECF = 0
         )
         , it_ped_qtd AS -- itens de pedidos com qtd
         (

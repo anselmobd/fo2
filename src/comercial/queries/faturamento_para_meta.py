@@ -258,6 +258,7 @@ def faturamento_para_meta(
           ON fi.ch_it_nf_cd_empr = f.codigo_empresa
          and fi.ch_it_nf_num_nfis = f.num_nota_fiscal
          and fi.ch_it_nf_ser_nfis = f.serie_nota_fisc
+         AND fi.NR_CAIXA = 0
         JOIN BASI_030 r
           ON r.NIVEL_ESTRUTURA = fi.NIVEL_ESTRUTURA 
         JOIN BASI_140 co

@@ -38,10 +38,12 @@ class AnaliseVendas():
            AND inf.GRUPO_ESTRUTURA = item.GRUPO_ESTRUTURA 
            AND inf.SUBGRU_ESTRUTURA = item.SUBGRU_ESTRUTURA 
            AND inf.ITEM_ESTRUTURA = item.ITEM_ESTRUTURA 
+           AND inf.NR_CAIXA = 0
           LEFT JOIN FATU_050 nf -- nota fiscal da Tussor - capa
             ON nf.CODIGO_EMPRESA = inf.CH_IT_NF_CD_EMPR
            AND nf.NUM_NOTA_FISCAL = inf.CH_IT_NF_NUM_NFIS
            AND nf.SERIE_NOTA_FISC = inf.CH_IT_NF_SER_NFIS
+           AND nf.NUMERO_CAIXA_ECF = 0
           LEFT JOIN estq_005 t -- transação de estoque
             ON t.CODIGO_TRANSACAO = inf.TRANSACAO
           LEFT JOIN PEDI_080 nop -- natureza de operação

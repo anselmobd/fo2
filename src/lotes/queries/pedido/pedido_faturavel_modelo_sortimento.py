@@ -79,9 +79,11 @@ def pedido_faturavel_modelo_sortimento(
                 LEFT JOIN FATU_050 fok -- fatura
                   ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
                  AND fok.SITUACAO_NFISC <> 2  -- cancelada
+                 AND fok.NUMERO_CAIXA_ECF = 0
                 LEFT JOIN FATU_050 fcanc -- fatura
                   ON fcanc.PEDIDO_VENDA = ped.PEDIDO_VENDA
                  AND fcanc.SITUACAO_NFISC = 2  -- cancelada
+                 AND fcanc.NUMERO_CAIXA_ECF = 0
                 WHERE ped.STATUS_PEDIDO <> 5 -- não cancelado
                   AND fok.NUM_NOTA_FISCAL IS NULL
                 {filtra_periodo} -- filtra_periodo
@@ -114,6 +116,7 @@ def pedido_faturavel_modelo_sortimento(
              AND inf.GRUPO_ESTRUTURA = pq.REF
              AND inf.SUBGRU_ESTRUTURA = pq.TAM
              AND inf.ITEM_ESTRUTURA = pq.COR
+             AND inf.NR_CAIXA = 0
             GROUP BY
               pq.PEDIDO
             , pq.REF

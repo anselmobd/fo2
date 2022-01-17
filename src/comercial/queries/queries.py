@@ -227,7 +227,10 @@ def get_vendas(
           ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
          AND nop.ESTADO_NATOPER = nf.NATOP_NF_EST_OPER
         JOIN fatu_060 inf -- item de nf de saída
-          ON inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
+          ON inf.ch_it_nf_cd_empr = nf.codigo_empresa
+         and inf.ch_it_nf_num_nfis = nf.num_nota_fiscal
+         and inf.ch_it_nf_ser_nfis = nf.serie_nota_fisc
+         AND inf.NR_CAIXA = 0
         LEFT JOIN BASI_030 r -- item (ref+tam+cor)
           on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
          AND r.REFERENCIA = inf.GRUPO_ESTRUTURA
@@ -525,7 +528,10 @@ def get_vendas_new(
           ON nop.NATUR_OPERACAO = nf.NATOP_NF_NAT_OPER
          AND nop.ESTADO_NATOPER = nf.NATOP_NF_EST_OPER
         JOIN fatu_060 inf -- item de nf de saída
-          ON inf.CH_IT_NF_NUM_NFIS = nf.NUM_NOTA_FISCAL
+          ON inf.ch_it_nf_cd_empr = nf.codigo_empresa
+         and inf.ch_it_nf_num_nfis = nf.num_nota_fiscal
+         and inf.ch_it_nf_ser_nfis = nf.serie_nota_fisc
+         AND inf.NR_CAIXA = 0
         LEFT JOIN BASI_030 r -- ref
           on r.NIVEL_ESTRUTURA = inf.NIVEL_ESTRUTURA
          AND r.REFERENCIA = inf.GRUPO_ESTRUTURA

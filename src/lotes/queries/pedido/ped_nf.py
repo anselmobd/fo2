@@ -20,6 +20,7 @@ def ped_nf(cursor, pedido):
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
         WHERE f.PEDIDO_VENDA = %s
+          AND f.NUMERO_CAIXA_ECF = 0
         ORDER BY
           f.NUM_NOTA_FISCAL
     """

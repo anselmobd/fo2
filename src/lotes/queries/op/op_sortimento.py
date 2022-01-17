@@ -344,6 +344,7 @@ def op_sortimentos(cursor, **kwargs):
             LEFT JOIN FATU_050 fok
               ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND fok.SITUACAO_NFISC <> 2  -- cancelada
+             AND fok.NUMERO_CAIXA_ECF = 0
             WHERE 1=1
               {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op
@@ -404,6 +405,7 @@ def op_sortimentos(cursor, **kwargs):
             LEFT JOIN FATU_050 fok
               ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND fok.SITUACAO_NFISC <> 2  -- cancelada
+             AND fok.NUMERO_CAIXA_ECF = 0
             WHERE 1=1
               {filtro_especifico} -- filtro_especifico
               {filtra_op} -- filtra_op

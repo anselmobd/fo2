@@ -105,9 +105,11 @@ def sortimento(cursor, **kwargs):
             LEFT JOIN FATU_050 f -- fatura
               ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND f.SITUACAO_NFISC <> 2  -- cancelada
+             AND f.NUMERO_CAIXA_ECF = 0
             LEFT JOIN FATU_050 fok -- fatura
               ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND fok.SITUACAO_NFISC <> 2  -- cancelada
+             AND fok.NUMERO_CAIXA_ECF = 0
             LEFT JOIN BASI_220 t -- tamanhos
               ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
             WHERE 1=1
@@ -150,9 +152,11 @@ def sortimento(cursor, **kwargs):
         LEFT JOIN FATU_050 f -- fatura
           ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND f.SITUACAO_NFISC <> 2  -- cancelada
+         AND f.NUMERO_CAIXA_ECF = 0
         LEFT JOIN FATU_050 fok -- fatura
           ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
+         AND fok.NUMERO_CAIXA_ECF = 0
     '''
     if descr_sort:
         sql += '''
@@ -208,9 +212,11 @@ def sortimento(cursor, **kwargs):
             LEFT JOIN FATU_050 f -- fatura
               ON f.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND f.SITUACAO_NFISC <> 2  -- cancelada
+             AND f.NUMERO_CAIXA_ECF = 0
             LEFT JOIN FATU_050 fok -- fatura
               ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
              AND fok.SITUACAO_NFISC <> 2  -- cancelada
+             AND fok.NUMERO_CAIXA_ECF = 0
             WHERE 1=1
               {filtra_pedido} -- filtra_pedido
               {filtro_modelo} -- filtro_modelo

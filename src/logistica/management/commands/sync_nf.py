@@ -86,7 +86,7 @@ class Command(BaseCommand):
                  AND t.FORNECEDOR9 = f.TRANSPOR_FORNE9
                  AND t.FORNECEDOR4 = f.TRANSPOR_FORNE4
                  AND t.FORNECEDOR2 = f.TRANSPOR_FORNE2
-                --WHERE rownum = 1
+                -- WHERE f.NUMERO_CAIXA_ECF = 0
                 ORDER BY
                   f.NUM_NOTA_FISCAL DESC
             '''

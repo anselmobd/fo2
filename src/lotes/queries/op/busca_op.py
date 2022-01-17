@@ -529,12 +529,14 @@ def busca_op(
         LEFT JOIN FATU_050 fok
           ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
+         AND fok.NUMERO_CAIXA_ECF = 0
         LEFT JOIN (
            SELECT
              fcanc1.PEDIDO_VENDA
            , MAX(fcanc1.NUM_NOTA_FISCAL) NUM_NOTA_FISCAL
            FROM FATU_050 fcanc1
            WHERE fcanc1.SITUACAO_NFISC = 2  -- cancelada
+             AND fcanc1.NUMERO_CAIXA_ECF = 0
            GROUP BY
              fcanc1.PEDIDO_VENDA
          ) fcanc
