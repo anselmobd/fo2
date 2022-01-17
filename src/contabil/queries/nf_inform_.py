@@ -3,8 +3,9 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list
 
 
-def nf_inform(cursor, nf):
-    sql = """
+def nf_inform(cursor, nf, especiais=False):
+    filtra_especial = "" if especiais else "AND f.NUMERO_CAIXA_ECF = 0"
+    sql = f"""
         SELECT
           f.BASE_ICMS VALOR
         , f.QTDE_EMBALAGENS VOLUMES
@@ -28,8 +29,8 @@ def nf_inform(cursor, nf):
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
-        WHERE f.NUMERO_CAIXA_ECF = 0
-          AND f.NUM_NOTA_FISCAL = %s
+        WHERE f.NUM_NOTA_FISCAL = %s
+          {filtra_especial} -- filtra_especial
     """
     cursor.execute(sql, [nf])
     return rows_to_dict_list(cursor)

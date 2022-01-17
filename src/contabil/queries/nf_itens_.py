@@ -3,8 +3,9 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list
 
 
-def nf_itens(cursor, nf):
-    sql = """
+def nf_itens(cursor, nf, especiais=False):
+    filtra_especial = "" if especiais else "AND i.NR_CAIXA = 0"
+    sql = f"""
         SELECT
           i.SEQ_ITEM_NFISC
         , i.NIVEL_ESTRUTURA
@@ -20,7 +21,7 @@ def nf_itens(cursor, nf):
           ON i.ch_it_nf_cd_empr = f.codigo_empresa
          and i.ch_it_nf_num_nfis = f.num_nota_fiscal
          and i.ch_it_nf_ser_nfis = f.serie_nota_fisc
-         AND i.NR_CAIXA = 0
+         {filtra_especial} -- filtra_especial
         LEFT JOIN basi_010 rtc
           ON rtc.NIVEL_ESTRUTURA = i.NIVEL_ESTRUTURA
          AND rtc.GRUPO_ESTRUTURA = i.GRUPO_ESTRUTURA

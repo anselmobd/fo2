@@ -21,7 +21,7 @@ class NotaFiscal(View):
         context = {'nf': nf}
 
         # informações gerais
-        data = queries.nf_inform(cursor, nf)
+        data = queries.nf_inform(cursor, nf, especiais=True)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nota fiscal não encontrada',
@@ -45,7 +45,7 @@ class NotaFiscal(View):
             })
 
             # itens
-            i_data = queries.nf_itens(cursor, nf)
+            i_data = queries.nf_itens(cursor, nf, especiais=True)
             max_digits = 0
             for row in i_data:
                 if row['PEDIDO_VENDA'] == 0:
