@@ -58,6 +58,9 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             'colecao': colecao,
             'colecao_codigo': colecao_codigo,
             'cliente': cliente,
+            'apresentacao': dict(self.Form_class.base_fields['apresentacao'].choices)[apresentacao],
+            'ordem': dict(self.Form_class.base_fields['ordem'].choices)[ordem],
+            'exclui': dict(self.Form_class.base_fields['exclui'].choices)[exclui],
         })
 
         faturados = comercial.queries.faturamento_para_meta(
