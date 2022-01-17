@@ -139,7 +139,7 @@ class FaturamentoParaMetaForm(
         ('referencia', '*Por referência'),
         ('modelo', '*Por modelo'),
         ('colecao', '*Por coleção'),
-        ]
+    ]
     apresentacao = forms.ChoiceField(
         choices=CHOICES, initial='mes', label='Apresentação')
 
@@ -147,9 +147,16 @@ class FaturamentoParaMetaForm(
         ('apresentacao', 'Pela informação da apresentação'),
         ('valor', '*Pelo valor'),
         ('qtd', '*Pela quantidade'),
-        ]
+    ]
     ordem = forms.ChoiceField(
         choices=CHOICES, initial='apresentacao')
+
+    CHOICES = [
+        ('canceladas', 'Apenas canceladas'),
+        ('devolvidas', 'Canceladas e devolvidas'),
+    ]
+    exclui = forms.ChoiceField(
+        choices=CHOICES, initial='canceladas')
 
     class Meta:
         autofocus_field = 'ano'
@@ -161,6 +168,7 @@ class FaturamentoParaMetaForm(
             'cliente',
             'apresentacao',
             'ordem',
+            'exclui',
         ]
 
 

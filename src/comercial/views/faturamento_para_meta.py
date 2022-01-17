@@ -36,6 +36,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         cliente = self.form.cleaned_data['cliente']
         apresentacao = self.form.cleaned_data['apresentacao']
         ordem = self.form.cleaned_data['ordem']
+        exclui = self.form.cleaned_data['exclui']
 
         colecao_codigo = None if colecao is None else colecao.colecao
 
@@ -61,7 +62,8 @@ class FaturamentoParaMeta(O2BaseGetPostView):
 
         faturados = comercial.queries.faturamento_para_meta(
             cursor, ano_atual, mes, ref=ref, cliente=cliente,
-            tipo=apresentacao, ordem=ordem, colecao=colecao_codigo)
+            tipo=apresentacao, ordem=ordem, colecao=colecao_codigo,
+            verifica_devolucao=exclui=='devolvidas')
 
         if len(faturados) == 0:
             self.context.update({
