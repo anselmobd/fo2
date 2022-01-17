@@ -174,7 +174,8 @@ SQL_TIPO_FAT_META = {
 
 def faturamento_para_meta(
         cursor, ano, mes=None, tipo='mes', empresa=1,
-        ref=None, ordem='apresentacao', cliente=None, colecao=None):
+        ref=None, ordem='apresentacao', cliente=None,
+        colecao=None, verifica_devolucao=False):
     '''
         tipo: 
             mes - totaliza por mês
@@ -225,6 +226,13 @@ def faturamento_para_meta(
               || '-' || lpad(c.CGC_2, 2, '0')
               || ')' like '%{cliente}%' '''
 
+    filtra_devolvidas = ''
+    if verifica_devolucao:
+        filtra_devolvidas = """
+            -- sem nota de devolução
+            AND fe.DOCUMENTO IS NULL
+        """
+
     sql_fields = SQL_TIPO_FAT_META[tipo]['fields']
     sql_group = SQL_TIPO_FAT_META[tipo]['group']
     if ordem == 'apresentacao':
@@ -267,6 +275,9 @@ def faturamento_para_meta(
         LEFT JOIN PEDI_100 ped -- pedido de venda  
           ON f.PEDIDO_VENDA > 0
          AND ped.PEDIDO_VENDA = f.PEDIDO_VENDA
+        LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
+          ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
+         AND fe.SITUACAO_ENTRADA = 1 -- ativa
         WHERE 1=1
           AND f.CODIGO_EMPRESA = {empresa}
           {filtra_ref} -- filtra_ref
@@ -284,6 +295,7 @@ def faturamento_para_meta(
           -- utilizou natureza configurada como faturamento
           AND n.faturamento = 1
           {filtra_emissao} -- filtra_emissao
+          {filtra_devolvidas} -- filtra_devolvidas
         {sql_group} -- group
         {sql_order} -- order
     """
