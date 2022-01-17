@@ -88,6 +88,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                     faturado['idx'] = idx + 1
                 else:
                     faturado['idx'] = ' '
+                    faturado['acumulada'] = ' '
             faturado['valor|DECIMALS'] = 2
             if apresentacao in ['nota', 'nota_referencia']:
                 faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"
