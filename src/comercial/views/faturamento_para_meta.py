@@ -40,7 +40,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
         colecao_codigo = None if colecao is None else colecao.colecao
 
         percentual = (
-            ordem == 'valor' and
+            ordem in ['valor', 'qtd'] and
             apresentacao in ['cliente', 'referencia', 'modelo', 'colecao']
         )
 
@@ -75,13 +75,14 @@ class FaturamentoParaMeta(O2BaseGetPostView):
             'row_style': 'font-weight: bold;',
         })
 
-        valor_total = faturados[-1]['valor']
+        if percentual:
+            valor_total = faturados[-1][ordem]
         participacao_acumulada = 0
         for idx, faturado in enumerate(faturados):
             if percentual:
-                faturado['percent'] = faturado['valor'] / valor_total * 100
+                faturado['percent'] = faturado[ordem] / valor_total * 100
                 faturado['percent|DECIMALS'] = 1
-                participacao_acumulada += faturado['valor']
+                participacao_acumulada += faturado[ordem]
                 faturado['acumulada'] = participacao_acumulada / valor_total * 100
                 faturado['acumulada|DECIMALS'] = 1
                 if (idx + 1) < len(faturados):
@@ -89,6 +90,7 @@ class FaturamentoParaMeta(O2BaseGetPostView):
                 else:
                     faturado['idx'] = ' '
                     faturado['acumulada'] = ' '
+            faturado['qtd|DECIMALS'] = 2
             faturado['valor|DECIMALS'] = 2
             if apresentacao in ['nota', 'nota_referencia']:
                 faturado['cfop'] = f"{faturado['nat']}{faturado['div']}"

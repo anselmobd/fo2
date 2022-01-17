@@ -146,6 +146,7 @@ class FaturamentoParaMetaForm(
     CHOICES = [
         ('apresentacao', 'Pela informação da apresentação'),
         ('valor', '*Pelo valor'),
+        ('qtd', '*Pela quantidade'),
         ]
     ordem = forms.ChoiceField(
         choices=CHOICES, initial='apresentacao')

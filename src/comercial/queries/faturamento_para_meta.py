@@ -229,10 +229,15 @@ def faturamento_para_meta(
     sql_group = SQL_TIPO_FAT_META[tipo]['group']
     if ordem == 'apresentacao':
         sql_order = SQL_TIPO_FAT_META[tipo]['order']
-    else:
+    elif ordem == 'valor':
         sql_order = """
             ORDER BY
               1 DESC
+        """
+    else:  # ordem == 'qtd':
+        sql_order = """
+            ORDER BY
+              2 DESC
         """
 
     sql = f"""
