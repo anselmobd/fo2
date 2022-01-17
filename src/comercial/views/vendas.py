@@ -37,6 +37,9 @@ class Vendas(O2BaseGetPostView):
                 '2 meses atrás': '2:1',
                 '3 meses atrás': '3:2',
             },
+            'atual': {
+                'Mês atual': '0:',
+            },
         }
 
         meta_cols = {}

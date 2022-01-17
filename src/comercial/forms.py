@@ -47,6 +47,7 @@ class VendasForm(
         ('a123', 'Mês atual e 3 anteriores'),
         ('3612', '3 e 6 meses, 1 e 2 anos'),
         ('meta', 'Períodos de análises de metas'),
+        ('atual', 'Mês atual'),
     ]
     periodo = forms.ChoiceField(
         label='Períodos em colunas', choices=CHOICES, initial='0')
