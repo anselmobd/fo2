@@ -1,8 +1,9 @@
 from utils.functions.models import rows_to_dict_list
 
 
-def ped_nf(cursor, pedido):
-    sql = """
+def ped_nf(cursor, pedido, especiais=False):
+    filtra_especial = "" if especiais else "AND f.NUMERO_CAIXA_ECF = 0"
+    sql = f"""
         SELECT
           f.NUM_NOTA_FISCAL NF
         , f.BASE_ICMS VALOR
@@ -20,7 +21,7 @@ def ped_nf(cursor, pedido):
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
         WHERE f.PEDIDO_VENDA = %s
-          AND f.NUMERO_CAIXA_ECF = 0
+          {filtra_especial} -- filtra_especial
         ORDER BY
           f.NUM_NOTA_FISCAL
     """

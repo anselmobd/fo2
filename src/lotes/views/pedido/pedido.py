@@ -120,7 +120,7 @@ class Pedido(View):
             })
 
             # NFs
-            nf_data = queries.pedido.ped_nf(cursor, pedido)
+            nf_data = queries.pedido.ped_nf(cursor, pedido, especiais=True)
             for row in nf_data:
                 row['NF|LINK'] = reverse(
                     'contabil:nota_fiscal__get', args=[row['NF']])
