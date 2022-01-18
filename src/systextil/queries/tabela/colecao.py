@@ -30,7 +30,7 @@ def query_colecao(cursor):
             CASE WHEN re.REFERENCIA LIKE 'F%'
                   AND re.NIVEL_ESTRUTURA = 1
             THEN 1 ELSE 0 END 
-          ) PARTE
+          ) MP
         , sum(
             CASE WHEN re.REFERENCIA > '99999'
                   AND NOT re.REFERENCIA LIKE 'F%' 
@@ -42,7 +42,7 @@ def query_colecao(cursor):
             CASE WHEN re.REFERENCIA LIKE 'Z%'
                   AND re.NIVEL_ESTRUTURA = 1
             THEN 1 ELSE 0 END 
-          ) MP
+          ) DESMONTE
         , sum(
             CASE WHEN re.NIVEL_ESTRUTURA != 1 THEN 1 ELSE 0 END 
           ) INSUMO
