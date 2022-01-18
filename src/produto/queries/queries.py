@@ -757,6 +757,7 @@ def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa):
           ON ia.NIVEL_COMP = r.NIVEL_ESTRUTURA
          AND ia.GRUPO_COMP = r.REFERENCIA
         WHERE r.NIVEL_ESTRUTURA = 1
+          AND NOT r.DESCR_REFERENCIA LIKE '-%'
           AND r.RESPONSAVEL IS NOT NULL
           {filtro} -- filtro
           {filtro_cor} -- filtro_cor
