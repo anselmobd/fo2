@@ -52,32 +52,6 @@ def index(request):
         return render(request, 'geral/index.html')
 
 
-def deposito(request):
-    cursor = db_cursor_so(request)
-    data = query_deposito(cursor)
-    propriedades = {
-        1: 'Próprio',
-        2: 'Em terceiros',
-        3: 'De terceiros',
-    }
-    for row in data:
-        if row['FORN'] == ' ':
-            row['CNPJ'] = ''
-        else:
-            row['CNPJ'] = \
-                f"{format_cnpj(row)} - {row['FORN']}"
-        if row['PROP'] in propriedades:
-            row['PROP'] = '{} - {}'.format(
-                row['PROP'], propriedades[row['PROP']])
-    context = {
-        'titulo': 'Depósitos',
-        'headers': ('Depósito', 'Descrição', 'Propriedade', 'Terceiro'),
-        'fields': ('COD', 'DESCR', 'PROP', 'CNPJ'),
-        'data': data,
-    }
-    return render(request, 'geral/tabela_geral.html', context)
-
-
 def estagio(request):
     cursor = db_cursor_so(request)
     data = queries.estagios(cursor)
