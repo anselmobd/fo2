@@ -1,6 +1,27 @@
 Changelog
 =========
 
+0.3.2 - 2022/01/18
+---
+
+- Atualização geral de pacotes pip
+- Meta de faturamento-Faturamento no mês:
+  - adicionado filtro e apresentação por coleção
+  - visualizando e ordenando por quantidade
+  - filtro para esconder devolvidas
+- Faturamentos especiais, que não devem afetar meta nem análises de
+  venda são marcadas na capa com NUMERO_CAIXA_ECF <> 0 e nos itens
+  com NR_CAIXA <> 0. Em consequencia todas as rotinas evitam ver
+  essas NFs, menos command sync_nf, tela de Pedido e tela de Nota Fiscal.
+- Apoio-Systextil: criado menu da app systextil no Apoio
+- Apoio-Systextil-Depósitos: view movida da app geral para app systextil
+- Apoio-Systextil-Coleções apresentando quantidades de referências por
+  tipo de produto
+- OP-Busca por inicio de CNPJ de cliente e por estágio de OP que a
+  identifica como de corte ou de tecelagem
+- Produto-Busca por Coleção
+- Comercial-Análises comerciais-Vendas por Coleção
+
 0.3.1 - 2022/01/14
 ---
 
