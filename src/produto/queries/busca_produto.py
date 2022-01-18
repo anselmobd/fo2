@@ -3,37 +3,54 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list
 
 
-def busca_produto(cursor, filtro_inteiro, cor, roteiro=None, alternativa=None, colecao=None):
-    filtro = ''
-    for palavra in filtro_inteiro.split(' '):
-        filtro += """--
-              AND (  r.REFERENCIA LIKE '%{palavra}%'
-                  OR r.DESCR_REFERENCIA LIKE '%{palavra}%'
-                  OR r.RESPONSAVEL LIKE '%{palavra}%'
-                  OR r.CGC_CLIENTE_9 LIKE '%{palavra}%'
-                  OR c.NOME_CLIENTE LIKE '%{palavra}%'
-                  OR c.FANTASIA_CLIENTE LIKE '%{palavra}%'
-                  )
-        """.format(palavra=palavra)
+def busca_produto(
+        cursor, filtro=None, cor=None, roteiro=None, alternativa=None, colecao=None):
+    filtro_multiplo = ""
+    if filtro is not None:
+        sep = ""
+        for palavra in filtro.split(' '):
+            if palavra:
+                filtro_multiplo += f"""--
+                    {sep} (  r.REFERENCIA LIKE '%{palavra}%'
+                        OR r.DESCR_REFERENCIA LIKE '%{palavra}%'
+                        OR r.RESPONSAVEL LIKE '%{palavra}%'
+                        OR r.CGC_CLIENTE_9 LIKE '%{palavra}%'
+                        OR c.NOME_CLIENTE LIKE '%{palavra}%'
+                        OR c.FANTASIA_CLIENTE LIKE '%{palavra}%'
+                        )
+                """
+                sep = "OR"
+        if filtro_multiplo:
+            filtro_multiplo = f"""--
+                AND ( {filtro_multiplo} )
+            """
 
     filtro_cor = ''
     get_cor = ''
-    if len(cor.strip()) == 0:
-        get_cor = """--
-            , '' COR
-            , '' COR_DESC
-        """
-    else:
-        get_cor = """--
-            , cor.ITEM_ESTRUTURA COR
-            , cor.DESCRICAO_15 COR_DESC
-        """
-    for palavra in cor.split(' '):
-        filtro_cor += """--
-              AND (  cor.ITEM_ESTRUTURA LIKE '%{palavra}%'
-                  OR cor.DESCRICAO_15 LIKE '%{palavra}%'
-                  )
-        """.format(palavra=palavra)
+    if cor is not None:
+        if len(cor.strip()) == 0:
+            get_cor = """--
+                , '' COR
+                , '' COR_DESC
+            """
+        else:
+            get_cor = """--
+                , cor.ITEM_ESTRUTURA COR
+                , cor.DESCRICAO_15 COR_DESC
+            """
+        sep = ""
+        for palavra in cor.split(' '):
+            if palavra:
+                filtro_cor += f"""--
+                    {sep} (  cor.ITEM_ESTRUTURA LIKE '%{palavra}%'
+                        OR cor.DESCRICAO_15 LIKE '%{palavra}%'
+                        )
+                """
+                sep = "OR"
+        if filtro_cor:
+            filtro_cor = f"""--
+                AND ( {filtro_cor} )
+            """
 
     get_alternativa = ''
     get_roteiro = ''
@@ -126,7 +143,7 @@ def busca_produto(cursor, filtro_inteiro, cor, roteiro=None, alternativa=None, c
         WHERE r.NIVEL_ESTRUTURA = 1
           AND NOT r.DESCR_REFERENCIA LIKE '-%'
           AND r.RESPONSAVEL IS NOT NULL
-          {filtro} -- filtro
+          {filtro_multiplo} -- filtro
           {filtro_cor} -- filtro_cor
           {filtro_roteiro} -- filtro_roteiro
           {filtro_alternativa} -- filtro_alternativa

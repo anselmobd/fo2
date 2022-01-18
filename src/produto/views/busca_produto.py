@@ -20,7 +20,9 @@ class Busca(View):
 
         colecao_codigo = colecao.colecao if colecao else None
         data = queries.busca_produto(
-            cursor, filtro, cor,
+            cursor,
+            filtro=filtro,
+            cor=cor,
             roteiro=roteiro,
             alternativa=alternativa,
             colecao=colecao_codigo,
