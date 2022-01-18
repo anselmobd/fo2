@@ -645,7 +645,7 @@ def busca_cliente_de_produto(cursor, cliente):
     return rows_to_dict_list_lower(cursor)
 
 
-def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa):
+def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa, colecao=None):
     filtro = ''
     for palavra in filtro_inteiro.split(' '):
         filtro += """--
@@ -707,7 +707,13 @@ def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa):
               AND ro.NUMERO_ROTEIRO = {roteiro}
         """.format(roteiro=roteiro)
 
-    sql = """
+    filtro_colecao = ''
+    if colecao is not None and colecao != '':
+        filtro_colecao += f"""--
+              AND r.COLECAO = {colecao}
+        """
+        
+    sql = f"""
         SELECT
           rownum NUM
         , rr.NIVEL
@@ -723,6 +729,7 @@ def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa):
         , rr.CLIENTE
         , rr.ROTEIRO
         , rr.ALTERNATIVA
+        , rr.COLECAO
         FROM (
         SELECT DISTINCT
           r.NIVEL_ESTRUTURA NIVEL
@@ -739,10 +746,13 @@ def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa):
         , r.CGC_CLIENTE_4 CNPJ4
         , r.CGC_CLIENTE_2 CNPJ2
         , COALESCE(c.FANTASIA_CLIENTE, c.NOME_CLIENTE) CLIENTE
+        , co.COLECAO || '-' || co.DESCR_COLECAO COLECAO
         {get_cor} -- get_cor
         {get_roteiro} -- get_roteiro
         {get_alternativa} -- get_alternativa
         FROM BASI_030 r
+        LEFT JOIN BASI_140 co
+          ON co.COLECAO = r.COLECAO 
         LEFT JOIN BASI_010 cor
           ON cor.NIVEL_ESTRUTURA = r.NIVEL_ESTRUTURA
          AND cor.GRUPO_ESTRUTURA = r.REFERENCIA
@@ -763,18 +773,11 @@ def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa):
           {filtro_cor} -- filtro_cor
           {filtro_roteiro} -- filtro_roteiro
           {filtro_alternativa} -- filtro_alternativa
+          {filtro_colecao} -- filtro_colecao
         ORDER BY
           NLSSORT(r.REFERENCIA,'NLS_SORT=BINARY_AI')
         ) rr
-    """.format(
-        filtro=filtro,
-        filtro_cor=filtro_cor,
-        filtro_roteiro=filtro_roteiro,
-        filtro_alternativa=filtro_alternativa,
-        get_cor=get_cor,
-        get_roteiro=get_roteiro,
-        get_alternativa=get_alternativa,
-        )
+    """
     cursor.execute(sql)
     return rows_to_dict_list(cursor)
 

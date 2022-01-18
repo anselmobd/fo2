@@ -239,14 +239,16 @@ class Busca(View):
     template_name = 'produto/busca.html'
     title_name = 'Listagem de produtos'
 
-    def mount_context(self, cursor, filtro, cor, roteiro, alternativa):
+    def mount_context(self, cursor, filtro, cor, roteiro, alternativa, colecao):
         context = {'filtro': filtro}
 
         if roteiro is None:
             roteiro = 0
         if alternativa is None:
             alternativa = 0
-        data = queries.busca_produto(cursor, filtro, cor, roteiro, alternativa)
+        colecao_codigo = colecao.colecao if colecao else None
+        data = queries.busca_produto(
+            cursor, filtro, cor, roteiro, alternativa, colecao=colecao_codigo)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum produto selecionado',
@@ -275,9 +277,9 @@ class Busca(View):
                     row['CLIENTE'] = '{} - {}'.format(cnpj, row['CLIENTE'])
 
             headers = ['#', 'Tipo', 'Referência', 'Descrição',
-                       'Status (Responsável)', 'Cliente']
+                       'Status (Responsável)', 'Cliente', 'Coleção']
             fields = ['NUM', 'TIPO', 'REF', 'DESCR',
-                      'RESP', 'CLIENTE']
+                      'RESP', 'CLIENTE', 'COLECAO']
             if len(cor) != 0:
                 headers.append('Cor')
                 headers.append('Cor Descr.')
@@ -318,9 +320,10 @@ class Busca(View):
             cor = form.cleaned_data['cor']
             roteiro = form.cleaned_data['roteiro']
             alternativa = form.cleaned_data['alternativa']
+            colecao = form.cleaned_data['colecao']
             cursor = db_cursor_so(request)
             context.update(self.mount_context(
-                cursor, filtro, cor, roteiro, alternativa))
+                cursor, filtro, cor, roteiro, alternativa, colecao))
         context['form'] = form
         return render(request, self.template_name, context)
 

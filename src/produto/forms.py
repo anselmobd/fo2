@@ -11,7 +11,7 @@ from base.forms.fields import \
     O2FieldGtinForm, \
     O2FieldFiltroForm
 
-from systextil.models import Produto as S_Produto
+import systextil.models
 
 from .models import Produto
 
@@ -49,8 +49,13 @@ class FiltroRefForm(
         required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
+    colecao = forms.ModelChoiceField(
+        label='Coleção', required=False,
+        queryset=systextil.models.Colecao.objects.all().order_by(
+            'colecao'), empty_label="(Todas)")
+
     class Meta:
-        order_fields = ['filtro', 'cor', 'alternativa', 'roteiro']
+        order_fields = ['filtro', 'cor', 'alternativa', 'roteiro', 'colecao']
         autofocus_field = 'filtro'
 
 
@@ -98,9 +103,9 @@ class ProdutoForm(forms.ModelForm):
         if referencia >= 'A0000':
             raise forms.ValidationError("Referência não parece ser de PA")
         try:
-            sprod = S_Produto.objects.get(
+            sprod = systextil.models.Produto.objects.get(
                 nivel_estrutura='1', referencia=referencia)
-        except S_Produto.DoesNotExist:
+        except systextil.models.Produto.DoesNotExist:
             raise forms.ValidationError("Referência não existe no Systêxtil")
         return self.cleaned_data
 
