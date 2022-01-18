@@ -30,6 +30,9 @@
 {% if deposito %}
   <h4>Depósito: {{ deposito }}</h4>
 {% endif %}
+{% if cnpj9 %}
+  <h4>Início do CNPJ9: {{ cnpj9 }}</h4>
+{% endif %}
 {% if tipo and tipo != 't' %}
   <h4>Tipo:
     {% if   tipo == 'a' %}PA

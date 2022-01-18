@@ -19,7 +19,7 @@ class BuscaOP(View):
     title_name = 'Busca OP'
 
     def mount_context(
-            self, cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
+            self, cursor, ref, modelo, tam, cor, deposito, cnpj9, tipo, tipo_alt,
             situacao, posicao, motivo, quant_fin, quant_emp,
             data_de, data_ate, apenas_totais):
         context = {
@@ -28,6 +28,7 @@ class BuscaOP(View):
             'tam': tam,
             'cor': cor,
             'deposito': deposito,
+            'cnpj9': cnpj9,
             'tipo': tipo,
             'tipo_alt': tipo_alt,
             'situacao': situacao,
@@ -44,7 +45,7 @@ class BuscaOP(View):
             cursor, ref=ref, modelo=modelo, tam=tam, cor=cor,
             deposito=deposito, tipo=tipo, tipo_alt=tipo_alt, situacao=situacao,
             posicao=posicao, motivo=motivo, quant_fin=quant_fin,
-            quant_emp=quant_emp, data_de=data_de, data_ate=data_ate)
+            quant_emp=quant_emp, data_de=data_de, data_ate=data_ate, cnpj9=cnpj9)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'OPs não encontradas',
@@ -210,6 +211,7 @@ class BuscaOP(View):
             tam = form.cleaned_data['tam']
             cor = form.cleaned_data['cor']
             deposito = form.cleaned_data['deposito']
+            cnpj9 = form.cleaned_data['cnpj9']
             tipo = form.cleaned_data['tipo']
             tipo_alt = form.cleaned_data['tipo_alt']
             situacao = form.cleaned_data['situacao']
@@ -223,7 +225,7 @@ class BuscaOP(View):
             cursor = db_cursor_so(request)
             context.update(
                 self.mount_context(
-                    cursor, ref, modelo, tam, cor, deposito, tipo, tipo_alt,
+                    cursor, ref, modelo, tam, cor, deposito, cnpj9, tipo, tipo_alt,
                     situacao, posicao, motivo, quant_fin, quant_emp,
                     data_de, data_ate, apenas_totais))
         context['form'] = form

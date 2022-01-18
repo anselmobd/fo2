@@ -439,6 +439,10 @@ class BuscaOpForm(forms.Form):
         label='Depósito', required=False, max_length=3,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
+    cnpj9 = forms.CharField(
+        label='Início do CNPJ', required=False,
+        widget=forms.TextInput(attrs={'type': 'number'}))
+
     CHOICES = [('t', 'Todos'),
                ('a', 'PA'),
                ('g', 'PG'),

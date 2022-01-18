@@ -13,8 +13,8 @@ def op_inform(cursor, op, cached=False):
 def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
-        motivo=None, cached=False, quant_fin=None, quant_emp=None,
-        data_de=None, data_ate=None):
+        motivo=None, quant_fin=None, quant_emp=None,
+        data_de=None, data_ate=None, cnpj9=None, cached=False):
     """
     posicao: t - Todas as OPs
              p - Em produção
@@ -273,6 +273,12 @@ def busca_op(
             AND o.DATA_ENTRADA_CORTE <= '{data_ate}'
         """
 
+    filtra_cnpj9 = ""
+    if cnpj9 is not None and cnpj9 != '':
+        filtra_cnpj9 = f"""
+            AND ped.CLI_PED_CGC_CLI9 = '{cnpj9}'
+        """
+
     sql = '''
         SELECT
           sele.OP
@@ -526,6 +532,10 @@ def busca_op(
           ON d.CODIGO_DEPOSITO = o.DEPOSITO_ENTRADA
         LEFT JOIN PEDI_100 ped -- pedido de venda
           ON ped.PEDIDO_VENDA = o.PEDIDO_VENDA
+        --LEFT JOIN PEDI_010 cli -- cliente
+        --  ON cli.CGC_9 = ped.CLI_PED_CGC_CLI9
+        -- AND cli.CGC_4 = ped.CLI_PED_CGC_CLI4
+        -- AND cli.CGC_2 = ped.CLI_PED_CGC_CLI2
         LEFT JOIN FATU_050 fok
           ON fok.PEDIDO_VENDA = ped.PEDIDO_VENDA
          AND fok.SITUACAO_NFISC <> 2  -- cancelada
@@ -549,6 +559,7 @@ def busca_op(
           {filtro_motivo} -- filtro_motivo
           {filtra_ref} -- filtra_ref
           {filtra_modelo} -- filtra_modelo
+          {filtra_cnpj9} -- filtra_cnpj9
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
           {filtra_cor_tam} -- filtra_cor_tam
@@ -608,6 +619,7 @@ def busca_op(
         filtro_motivo=filtro_motivo,
         filtra_ref=filtra_ref,
         filtra_modelo=filtra_modelo,
+        filtra_cnpj9=filtra_cnpj9,
         filtra_tam=filtra_tam,
         filtra_qtd_tam=filtra_qtd_tam,
         filtra_cor=filtra_cor,
