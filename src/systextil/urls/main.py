@@ -16,4 +16,6 @@ urlpatterns = [
     re_path(r'^dba/', include('systextil.urls.dba'), name='dba'),
 
     re_path(r'^sessions/$', sessions.view, name='sessions'),
+
+    re_path(r'^table/', include('systextil.urls.table'), name='table'),
 ]
