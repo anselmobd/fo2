@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list
 
 
-def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa, colecao=None):
+def busca_produto(cursor, filtro_inteiro, cor, roteiro=None, alternativa=None, colecao=None):
     filtro = ''
     for palavra in filtro_inteiro.split(' '):
         filtro += """--
@@ -37,8 +37,7 @@ def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa, colecao=Non
 
     get_alternativa = ''
     get_roteiro = ''
-
-    if roteiro == 0 and alternativa == 0:
+    if roteiro is None and alternativa is None:
         get_alternativa = """--
             , 0 ALTERNATIVA
         """
@@ -54,13 +53,13 @@ def busca_produto(cursor, filtro_inteiro, cor, roteiro, alternativa, colecao=Non
         """
 
     filtro_alternativa = ''
-    if alternativa != 0:
+    if alternativa is not None and alternativa != '0':
         filtro_alternativa += """--
               AND ia.ALTERNATIVA_ITEM = {alternativa}
         """.format(alternativa=alternativa)
 
     filtro_roteiro = ''
-    if roteiro != 0:
+    if roteiro is not None and roteiro != '0':
         filtro_roteiro += """--
               AND ro.NUMERO_ROTEIRO = {roteiro}
         """.format(roteiro=roteiro)

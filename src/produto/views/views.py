@@ -242,13 +242,13 @@ class Busca(View):
     def mount_context(self, cursor, filtro, cor, roteiro, alternativa, colecao):
         context = {'filtro': filtro}
 
-        if roteiro is None:
-            roteiro = 0
-        if alternativa is None:
-            alternativa = 0
         colecao_codigo = colecao.colecao if colecao else None
         data = queries.busca_produto(
-            cursor, filtro, cor, roteiro, alternativa, colecao=colecao_codigo)
+            cursor, filtro, cor,
+            roteiro=roteiro,
+            alternativa=alternativa,
+            colecao=colecao_codigo,
+        )
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhum produto selecionado',
@@ -286,7 +286,7 @@ class Busca(View):
                 fields.append('COR')
                 fields.append('COR_DESC')
 
-            if roteiro != 0 or alternativa != 0:
+            if roteiro is not None or alternativa is not None:
                 headers.append('Alternativa')
                 fields.append('ALTERNATIVA')
                 headers.append('Roteiro')
