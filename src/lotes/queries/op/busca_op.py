@@ -14,7 +14,7 @@ def busca_op(
         cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
         deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
         motivo=None, quant_fin=None, quant_emp=None,
-        data_de=None, data_ate=None, cnpj9=None, cached=False):
+        data_de=None, data_ate=None, cnpj9=None, estagio_op=None, cached=False):
     """
     posicao: t - Todas as OPs
              p - Em produção
@@ -278,6 +278,17 @@ def busca_op(
         filtra_cnpj9 = f"""
             AND ped.CLI_PED_CGC_CLI9 = '{cnpj9}'
         """
+
+    filtra_estagio_op = ""
+    if estagio_op is not None and estagio_op != 'qq':
+        filtra_estagio_op = f"""--
+            AND EXISTS
+            ( SELECT
+                *
+              FROM PCPC_040 l
+              WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
+                AND l.CODIGO_ESTAGIO = {estagio_op}
+            )"""
 
     sql = '''
         SELECT
@@ -560,6 +571,7 @@ def busca_op(
           {filtra_ref} -- filtra_ref
           {filtra_modelo} -- filtra_modelo
           {filtra_cnpj9} -- filtra_cnpj9
+          {filtra_estagio_op} -- filtra_estagio_op
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
           {filtra_cor_tam} -- filtra_cor_tam
@@ -620,6 +632,7 @@ def busca_op(
         filtra_ref=filtra_ref,
         filtra_modelo=filtra_modelo,
         filtra_cnpj9=filtra_cnpj9,
+        filtra_estagio_op=filtra_estagio_op,
         filtra_tam=filtra_tam,
         filtra_qtd_tam=filtra_qtd_tam,
         filtra_cor=filtra_cor,

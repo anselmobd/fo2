@@ -443,6 +443,13 @@ class BuscaOpForm(forms.Form):
         label='Início do CNPJ', required=False,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
+    CHOICES = [('qq', 'Qualquer'),
+               ('15', 'Corte'),
+               ('22', 'Tecelagem'),
+               ]
+    estagio_op = forms.ChoiceField(
+        label='OP com estágio', choices=CHOICES, initial='qq')
+
     CHOICES = [('t', 'Todos'),
                ('a', 'PA'),
                ('g', 'PG'),
