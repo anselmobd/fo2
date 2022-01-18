@@ -27,17 +27,17 @@ def busca_produto(
 
     filtro_cor = ''
     get_cor = ''
-    if cor is not None:
-        if len(cor.strip()) == 0:
-            get_cor = """--
-                , '' COR
-                , '' COR_DESC
-            """
-        else:
-            get_cor = """--
-                , cor.ITEM_ESTRUTURA COR
-                , cor.DESCRICAO_15 COR_DESC
-            """
+    if cor is None or len(cor.strip()) == 0:
+        get_cor = """--
+            , '' COR
+            , '' COR_DESC
+        """
+    else:
+        get_cor = """--
+            , cor.ITEM_ESTRUTURA COR
+            , cor.DESCRICAO_15 COR_DESC
+        """
+    if cor is not None and len(cor.strip()) > 0:
         sep = ""
         for palavra in cor.split(' '):
             if palavra:
