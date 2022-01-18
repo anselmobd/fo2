@@ -1,4 +1,5 @@
 from .busca_modelo import *
+from .busca_produto import *
 from .custo import *
 from .custo_ref import *
 from .ficha_tecnica import *
