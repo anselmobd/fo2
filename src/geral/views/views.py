@@ -23,6 +23,8 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 from utils.functions.format import format_cnpj
 
+from systextil.queries.tabela.deposito import query_deposito
+
 import geral.forms as forms
 import geral.queries as queries
 from geral.dados.fluxo_roteiros import get_roteiros_de_fluxo
@@ -52,7 +54,7 @@ def index(request):
 
 def deposito(request):
     cursor = db_cursor_so(request)
-    data = queries.deposito(cursor)
+    data = query_deposito(cursor)
     propriedades = {
         1: 'Próprio',
         2: 'Em terceiros',
