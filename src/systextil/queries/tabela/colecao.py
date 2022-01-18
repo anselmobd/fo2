@@ -50,7 +50,7 @@ def query_colecao(cursor):
         FROM BASI_140 col
         LEFT JOIN basi_030 re
           ON re.COLECAO = col.COLECAO 
-        AND NOT re.DESCR_REFERENCIA LIKE '--%'
+        AND NOT re.DESCR_REFERENCIA LIKE '-%'
         GROUP BY
           col.COLECAO
         , col.DESCR_COLECAO
