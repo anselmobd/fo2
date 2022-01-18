@@ -94,11 +94,15 @@ class Vendas(O2BaseGetPostView):
             })
         periodo_cols=self.periodo_cols_options[self.periodo]      
 
+        colecao_codigo = None if self.colecao is None else self.colecao.colecao
+
         av = queries.AnaliseVendas(
             cursor, ref=self.ref, modelo=self.modelo, infor=self.infor, ordem=self.ordem,
             periodo_cols=periodo_cols,
             qtd_por_mes=(self.qtd_por_mes=='m'),
-            com_venda=(self.lista=='venda'))
+            com_venda=(self.lista=='venda'),
+            colecao=colecao_codigo,
+        )
         data = av.data
 
         for row in data:

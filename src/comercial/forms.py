@@ -18,6 +18,11 @@ class VendasForm(
         O2FieldRefForm,
         O2FieldModeloForm):
 
+    colecao = forms.ModelChoiceField(
+        label='Coleção da referência', required=False,
+        queryset=Colecao.objects.all().order_by(
+            'colecao'), empty_label="(Todas)")
+
     CHOICES = [
         ('ref', 'Referência'),
         ('modelo', 'Modelo'),
@@ -64,6 +69,7 @@ class VendasForm(
         order_fields = [
             'ref',
             'modelo',
+            'colecao',
             'infor',
             'ordem',
             'lista',

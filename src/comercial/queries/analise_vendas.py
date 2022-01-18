@@ -161,7 +161,8 @@ class AnaliseVendas():
 
     def __init__(
         self, cursor, ref=None, modelo=None, infor=None, ordem=None,
-        periodo_cols=None, qtd_por_mes=False, com_venda=False, field_ini=None):
+        periodo_cols=None, qtd_por_mes=False, com_venda=False, field_ini=None,
+        colecao=None):
 
         self.hoje = date.today()
         self.ini_mes = self.hoje.replace(day=1)
@@ -175,6 +176,7 @@ class AnaliseVendas():
 
         self.ref = ref
         self.modelo = modelo
+        self.colecao = colecao
         self.infor = infor
         self.com_venda = com_venda
         self.periodo_cols = periodo_cols
@@ -195,6 +197,15 @@ class AnaliseVendas():
 
     modelo = property(fset=_set_modelo)
     del _set_modelo
+
+    def _set_colecao(self, value):
+        if value:
+            data = produto.queries.busca_produto(self.cursor, colecao=value)
+            if data:
+                self.ref = [row['REF'] for row in data]
+
+    colecao = property(fset=_set_colecao)
+    del _set_colecao
 
     def _set_infor(self, selecao):
         if selecao:
