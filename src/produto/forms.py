@@ -74,8 +74,12 @@ class GtinLogForm(
         O2FieldRefForm,
         O2FieldGtinForm):
 
+    usuario = forms.CharField(
+        label='Usuário', max_length=30, required=False,
+        widget=forms.TextInput(attrs={'type': 'string'}))
+
     class Meta:
-        order_fields = ['ref', 'gtin']
+        order_fields = ['ref', 'gtin', 'usuario']
         autofocus_field = 'ref'
 
     def clean(self):
@@ -87,6 +91,7 @@ class GtinLogForm(
             for x in (
                 'ref',
                 'gtin',
+                'usuario',
             )
         ):
             raise forms.ValidationError(

@@ -3,8 +3,6 @@ from pprint import pprint
 from django.shortcuts import render
 from django.views import View
 
-from fo2.connections import db_cursor_so
-
 import produto.forms
 import produto.models
 
@@ -14,10 +12,11 @@ class GtinLog(View):
     template_name = 'produto/gtin/log.html'
     title_name = 'Log de alterações GTIN'
 
-    def mount_context(self, cursor, ref, gtin):
+    def mount_context(self, ref, gtin, usuario):
         context = {
             'ref': ref,
             'gtin': gtin,
+            'usuario': usuario,
             }
 
         data = produto.models.GtinLog.objects
@@ -25,6 +24,8 @@ class GtinLog(View):
             data = data.filter(produto__referencia=ref)
         if gtin:
             data = data.filter(gtin=gtin)
+        if usuario:
+            data = data.filter(colaborador__user__username=usuario)
         data = data.order_by('-quando').values(
             'colaborador__user__username',
             'quando',
@@ -94,7 +95,7 @@ class GtinLog(View):
         if form.is_valid():
             ref = form.cleaned_data['ref']
             gtin = form.cleaned_data['gtin']
-            cursor = db_cursor_so(request)
-            context.update(self.mount_context(cursor, ref, gtin))
+            usuario = form.cleaned_data['usuario']
+            context.update(self.mount_context(ref, gtin, usuario))
         context['form'] = form
         return render(request, self.template_name, context)
