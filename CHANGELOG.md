@@ -4,7 +4,9 @@ Changelog
 0.3.3 - 2022/01/21
 ---
 
-- Grade de pedidos a embarcar; Grade Pedidos: adicionado Cliente
+- Grade de pedidos a embarcar
+  - Grade Pedidos: adicionado Cliente
+  - Adiciona grade por Modelo
 - Log de alterações GTIN
 
 0.3.2 - 2022/01/18

@@ -71,7 +71,7 @@ def pedido_faturavel_sortimento(
         )
     """
     if retorno == 'r':
-        sql += """
+        sql += """--
             , it_qtd AS -- itens de qtd final
             (
               SELECT
@@ -97,8 +97,31 @@ def pedido_faturavel_sortimento(
               ped.*
             FROM it_qtd ped
         """
+    elif retorno == 'm':
+        sql += """--
+            , it_qtd AS -- itens de qtd final
+            (
+              SELECT
+                TRIM(LEADING '0' FROM (
+                  REGEXP_REPLACE(pq.REF, '[^0-9]', '')
+                )) MODELO
+              , sum(pq.QTD) QTD
+              FROM it_ped_qtd pq -- itens de ped com qtd e qtd fat e dev
+              LEFT JOIN BASI_220 t -- tamanhos
+                ON t.TAMANHO_REF = pq.TAM
+              GROUP BY
+                TRIM(LEADING '0' FROM (
+                  REGEXP_REPLACE(pq.REF, '[^0-9]', '')
+                ))
+              ORDER BY
+                1
+            )
+            SELECT
+              ped.*
+            FROM it_qtd ped
+        """
     elif retorno == 'p':
-        sql += f"""
+        sql += f"""--
             , it_qtd AS -- itens de qtd final
             (
               SELECT

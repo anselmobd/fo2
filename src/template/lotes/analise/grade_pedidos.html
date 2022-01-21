@@ -42,6 +42,12 @@
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
 
+    <h4>Modelos</h4>
+    <table>
+      {% include "layout/thead_generic.html" with data=m_headers style=m_style only %}
+      {% include "layout/tbody_generic.html" with fields=m_fields data=m_data style=m_style only %}
+    </table>
+
     <h4>Pedidos</h4>
     <table>
       {% include "layout/thead_generic.html" with data=p_headers style=p_style only %}
