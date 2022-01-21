@@ -20,7 +20,12 @@ class GtinLog(View):
             'gtin': gtin,
             }
 
-        fields = [
+        data = produto.models.GtinLog.objects
+        if ref:
+            data = data.filter(produto__referencia=ref)
+        if gtin:
+            data = data.filter(gtin=gtin)
+        data = data.order_by('-quando').values(
             'colaborador__user__username',
             'quando',
             'produto__referencia',
@@ -29,29 +34,45 @@ class GtinLog(View):
             'tamanho__tamanho__nome',
             'tamanho__descricao',
             'gtin',
-        ]
-
-        data = produto.models.GtinLog.objects
-        if ref:
-            data = data.filter(produto__referencia=ref)
-        if gtin:
-            data = data.filter(gtin=gtin)
-        data = data.order_by('-quando').values(*fields)
+        )
 
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
+        
+        for row in data:
+            if row['tamanho__tamanho__nome'] == row['tamanho__descricao']:
+                row['tamanho'] = row['tamanho__descricao']
+            else:
+                row['tamanho'] = ' '.join([
+                    row['tamanho__tamanho__nome'],
+                    row['tamanho__descricao'],
+                ])
+            if row['cor__cor'] == row['cor__descricao']:
+                row['cor'] = row['cor__cor']
+            else:
+                row['cor'] = ' '.join([
+                    row['cor__cor'],
+                    row['cor__descricao'],
+                ])
 
         headers = [
             'Usuário',
             'Data hora',
+            'GTIN',
             'Referência',
             'Cor',
-            'Descr.',
             'Tamanho',
-            'Descr.',
-            'GTIN',
         ]
+        fields = [
+            'colaborador__user__username',
+            'quando',
+            'gtin',
+            'produto__referencia',
+            'cor',
+            'tamanho',
+        ]
+
 
         context.update({
             'headers': headers,
