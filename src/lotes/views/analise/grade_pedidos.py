@@ -64,6 +64,12 @@ class GradePedidos(O2BaseGetPostView):
                 'producao:pedido__get', args=[row['pedido']])
             row['pedido|TARGET'] = '_BLANK'
 
+            cnpj9 = row['cnpj9']
+            cnpj4 = row['cnpj4']
+            cnpj2 = row['cnpj2']
+            nome = row['nome_cliente']
+            row['cliente'] = f"{cnpj9}/{cnpj4}-{cnpj2} {nome}"
+
         totalize_data(p_data, {
             'sum': ['qtd'],
             'descr': {'pedido': 'Total:'},
@@ -71,10 +77,10 @@ class GradePedidos(O2BaseGetPostView):
         })
 
         self.context.update({
-            'p_headers': ['Data de embarque', 'Pedido', 'Quantidade'],
-            'p_fields': ['data', 'pedido', 'qtd'],
+            'p_headers': ['Data de embarque', 'Pedido', 'Cliente', 'Quantidade'],
+            'p_fields': ['data', 'pedido', 'cliente', 'qtd'],
             'p_data': p_data,
             'p_style': {
-                3: 'text-align: right;',
+                4: 'text-align: right;',
             },
         })

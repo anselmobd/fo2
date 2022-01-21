@@ -104,14 +104,26 @@ def pedido_faturavel_sortimento(
               SELECT
                 ped.DATA_ENTR_VENDA DATA
               , pq.PEDIDO
+              , c.CGC_9 CNPJ9
+              , c.CGC_4 CNPJ4
+              , c.CGC_2 CNPJ2
+              , c.NOME_CLIENTE
               , sum(pq.QTD) QTD
               FROM it_ped_qtd pq -- itens de ped com qtd e qtd fat e dev
               JOIN PEDI_100 ped -- pedido de venda
                 ON ped.PEDIDO_VENDA = pq.PEDIDO
+              LEFT JOIN PEDI_010 c -- cliente - do pedido de venda
+                ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
+               AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
+               AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
               WHERE ped.CODIGO_EMPRESA = {empresa}
               GROUP BY
                 ped.DATA_ENTR_VENDA
               , pq.PEDIDO
+              , c.CGC_9
+              , c.CGC_4
+              , c.CGC_2
+              , c.NOME_CLIENTE
               ORDER BY
                 ped.DATA_ENTR_VENDA
               , pq.PEDIDO
