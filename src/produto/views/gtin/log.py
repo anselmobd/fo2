@@ -1,18 +1,16 @@
-import urllib
 from pprint import pprint
 
 from django.shortcuts import render
-from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
 
-import produto.forms as forms
-import produto.queries as queries
+import produto.forms
+import produto.models
 
 
 class GtinLog(View):
-    Form_class = forms.GtinPesquisaForm
+    Form_class = produto.forms.GtinLogForm
     template_name = 'produto/gtin/log.html'
     title_name = 'Log de alterações GTIN'
 
@@ -22,52 +20,38 @@ class GtinLog(View):
             'gtin': gtin,
             }
 
-        data = queries.gtin(cursor, ref=ref, gtin=gtin)
+        fields = [
+            'colaborador__user__username',
+            'quando',
+            'produto__referencia',
+            'cor__cor',
+            'cor__descricao',
+            'tamanho__tamanho__nome',
+            'tamanho__descricao',
+            'gtin',
+        ]
+
+        data = produto.models.GtinLog.objects
+        if ref:
+            data = data.filter(produto__referencia=ref)
+        if gtin:
+            data = data.filter(gtin=gtin)
+        data = data.order_by('-quando').values(*fields)
+
         if len(data) == 0:
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        for row in data:
-            row['REF|LINK'] = reverse('produto:ref__get', args=[row['REF']])
-            row['REF|TARGET'] = '_blank'
-            row['BAR'] = ''
-            row['BAR|GLYPHICON'] = 'glyphicon-barcode'
-            row['BAR|LINK'] = '{}?{}'.format(
-                reverse('produto:gtin_pesquisa'),
-                urllib.parse.urlencode({
-                    'ref': row['REF'],
-                }))
-            if row['GTIN'] == 'SEM GTIN':
-                row['QTD'] = ''
-            else:
-                if row['QTD'] == 1:
-                    row['QTD'] = 'Único'
-                else:
-                    row['QTD|LINK'] = '{}?{}'.format(
-                        reverse('produto:gtin_pesquisa'),
-                        urllib.parse.urlencode({
-                            'gtin': row['GTIN'],
-                        }))
-
-        headers = ['Referência', 'GTINs']
-        fields = ['REF', 'BAR']
-        if ref and not gtin:
-            headers = []
-            fields = []
-        headers.append('Cor')
-        fields.append('COR')
-        headers.append('Tamanho')
-        fields.append('TAM')
-
-        if gtin and not ref:
-            context.update({
-                'qtd_repetido': data[0]['QTD']
-            })
-        else:
-            headers.append('GTIN')
-            fields.append('GTIN')
-            headers.append('')
-            fields.append('QTD')
+        headers = [
+            'Usuário',
+            'Data hora',
+            'Referência',
+            'Cor',
+            'Descr.',
+            'Tamanho',
+            'Descr.',
+            'GTIN',
+        ]
 
         context.update({
             'headers': headers,
@@ -78,26 +62,14 @@ class GtinLog(View):
         return context
 
     def get(self, request, *args, **kwargs):
-        if 'gtin' in request.GET:
-            kwargs['gtin'] = request.GET['gtin']
-            return self.post(request, *args, **kwargs)
-        elif 'ref' in request.GET:
-            kwargs['ref'] = request.GET['ref']
-            return self.post(request, *args, **kwargs)
-        else:
-            context = {'titulo': self.title_name}
-            form = self.Form_class()
-            context['form'] = form
-            return render(request, self.template_name, context)
+        context = {'titulo': self.title_name}
+        form = self.Form_class()
+        context['form'] = form
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
-        form.data = form.data.copy()
-        if 'ref' in kwargs:
-            form.data['ref'] = kwargs['ref']
-        if 'gtin' in kwargs:
-            form.data['gtin'] = kwargs['gtin']
         if form.is_valid():
             ref = form.cleaned_data['ref']
             gtin = form.cleaned_data['gtin']

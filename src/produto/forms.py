@@ -69,6 +69,30 @@ class GtinPesquisaForm(
         autofocus_field = 'ref'
 
 
+class GtinLogForm(
+        O2BaseForm,
+        O2FieldRefForm,
+        O2FieldGtinForm):
+
+    class Meta:
+        order_fields = ['ref', 'gtin']
+        autofocus_field = 'ref'
+
+    def clean(self):
+        if self.errors:
+            return
+        clean_form = super(GtinLogForm, self).clean()
+        if not any(
+            clean_form.get(x, '')
+            for x in (
+                'ref',
+                'gtin',
+            )
+        ):
+            raise forms.ValidationError(
+                "Ao menos um dos filtros deve ser definido.")
+
+
 class GtinDefineForm(
         O2BaseForm,
         O2FieldRefForm,
