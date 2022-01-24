@@ -8,6 +8,7 @@ from systextil.models import Empresa as ErpEmpresa
 
 from .models import (
     Colaborador,
+    Documento,
     Empresa,
     Imagem,
     Requisicao,
@@ -30,6 +31,16 @@ class ImagemAdmin(admin.ModelAdmin):
     ]
     list_display = ["grupo_arquivo", "caminho", "descricao", "slug", "imagem"]
     fields = ["grupo_arquivo", "caminho", "descricao", "slug", "imagem"]
+    readonly_fields = ['slug']
+
+
+@admin.register(Documento, site=site)
+class DocumentoAdmin(admin.ModelAdmin):
+    list_filter = [
+         "grupo_arquivo"
+    ]
+    list_display = ["grupo_arquivo", "caminho", "descricao", "slug", "arquivo"]
+    fields = ["grupo_arquivo", "caminho", "descricao", "slug", "arquivo"]
     readonly_fields = ['slug']
 
 

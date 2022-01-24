@@ -172,6 +172,48 @@ class ImagemTag(Imagem):
         verbose_name_plural = "Imagens para TAG"
 
 
+def documento_upload_to(instance, filename):
+    _, filename_ext = os.path.splitext(filename)
+    return "upload/documento/{grupo_arquivo}/{caminho}/{filename}{extension}".format(
+        grupo_arquivo=instance.grupo_arquivo.slug,
+        caminho=instance.caminho,
+        filename=instance.slug,
+        extension=filename_ext.lower(),
+    )
+
+
+class Documento(models.Model):
+    grupo_arquivo = models.ForeignKey(
+        GrupoArquivo,
+        verbose_name='Grupo do arquivo',
+        on_delete=models.PROTECT)
+    descricao = models.CharField(
+        "Descrição",
+        max_length=255)
+    slug = models.SlugField()
+    caminho = models.CharField(
+        max_length=255, default='')
+    arquivo = models.FileField(
+        upload_to=documento_upload_to)
+
+    def __str__(self):
+        return '({}) {}'.format(self.grupo_arquivo.nome, self.descricao)
+
+    class Meta:
+        db_table = "fo2_documento"
+        verbose_name = "Documento"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.descricao)
+        self.caminho = '/'.join([
+            slugify(folder)
+            for folder
+            in self.caminho.split('/')
+        ])
+        self.caminho = self.caminho.strip('/')
+        super(Documento, self).save(*args, **kwargs)
+
+
 class Tamanho(models.Model):
     nome = models.CharField(max_length=3)
     ordem = models.IntegerField()
