@@ -26,7 +26,8 @@ def pedido_faturavel_modelo(
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
         'pedido_faturavel_modelo',
-        modelo, ref, cor, tam, periodo, deposito
+        modelo, ref, cor, tam, periodo, deposito,
+        empresa, nat_oper, group, colecao
     )
 
     cached_result = cache.get(key_cache)
