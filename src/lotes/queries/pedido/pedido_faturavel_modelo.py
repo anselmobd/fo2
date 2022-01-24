@@ -129,7 +129,7 @@ def pedido_faturavel_modelo(
               , i.CD_IT_PE_SUBGRUPO TAM
               , i.CD_IT_PE_ITEM COR
               , sum(i.QTDE_PEDIDA) QTD
-              , sum(i.QTDE_PEDIDA*i.VALOR_UNITARIO) PRECO
+              , sum(i.QTDE_PEDIDA*i.VALOR_UNITARIO*(100-ps.PERC_DESC_DUPLIC)/100) PRECO
               , CASE WHEN ps.NFCANC IS NULL
                 THEN 'Não faturado'
                 ELSE 'Faturamento cancelado'
@@ -137,6 +137,7 @@ def pedido_faturavel_modelo(
               FROM (
                 SELECT
                   ped.PEDIDO_VENDA PEDIDO
+                , ped.PERC_DESC_DUPLIC
         --        , max(fok.NUM_NOTA_FISCAL) NFOK
                 , max(fcanc.NUM_NOTA_FISCAL) NFCANC
                 FROM PEDI_100 ped -- pedido de venda
@@ -158,6 +159,7 @@ def pedido_faturavel_modelo(
                   {filtra_periodo} -- filtra_periodo
                 GROUP BY
                   ped.PEDIDO_VENDA
+                , ped.PERC_DESC_DUPLIC  
               ) ps -- pedidos pré-filtrados
               JOIN PEDI_110 i -- item de pedido de venda
                 ON i.PEDIDO_VENDA = ps.PEDIDO
