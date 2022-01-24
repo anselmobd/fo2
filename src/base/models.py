@@ -130,6 +130,10 @@ class Imagem(models.Model):
         verbose_name='Tipo da imagem',
         on_delete=models.CASCADE,
         related_name='imagens_tipo')
+    grupo_arquivo = models.ForeignKey(
+        GrupoArquivo,
+        verbose_name='Grupo do arquivo',
+        on_delete=models.PROTECT)
     descricao = models.CharField(
         "Descrição",
         max_length=255)
