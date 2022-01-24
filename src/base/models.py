@@ -106,8 +106,8 @@ class GrupoArquivo(models.Model):
 
     class Meta:
         db_table = "fo2_grupo_arquivo"
-        verbose_name = 'Tipo de imagem'
-        verbose_name_plural = 'Tipos de imagem'
+        verbose_name = 'Grupo de arquivo'
+        verbose_name_plural = 'Grupos de arquivo'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
