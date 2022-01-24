@@ -51,7 +51,7 @@ class PedidosParaMeta(O2BaseGetView):
                 args=[row['PEDIDO']],
             )
 
-            row['valor|DECIMALS'] = 2
+            row['PRECO|DECIMALS'] = 2
             row['N'] = n
             n += 1
 
