@@ -15,7 +15,7 @@ from utils.functions import (
 def pedido_faturavel_modelo(
         cursor, modelo=None, ref=None, cor=None, tam=None, periodo=None,
         cached=True, deposito=None, empresa=1, nat_oper=None, group="dpnr",
-        colecao=None):
+        colecao=None, desconto_duplicata=False):
     """Devolve dados de pedidos faturáveis
 
     Recebe:
@@ -27,7 +27,7 @@ def pedido_faturavel_modelo(
     key_cache = my_make_key_cache(
         'pedido_faturavel_modelo',
         modelo, ref, cor, tam, periodo, deposito,
-        empresa, nat_oper, group, colecao
+        empresa, nat_oper, group, colecao, desconto_duplicata
     )
 
     cached_result = cache.get(key_cache)
@@ -90,6 +90,12 @@ def pedido_faturavel_modelo(
             sep = ', '
         filtra_nat_oper += f')'
 
+    if desconto_duplicata:
+        calculo_preco = "sum(i.QTDE_PEDIDA*i.VALOR_UNITARIO*(100-ps.PERC_DESC_DUPLIC)/100) PRECO"
+    else:
+        calculo_preco = "sum(i.QTDE_PEDIDA*i.VALOR_UNITARIO) PRECO"
+
+
     sql = f"""
         SELECT
           pref.PEDIDO
@@ -129,7 +135,7 @@ def pedido_faturavel_modelo(
               , i.CD_IT_PE_SUBGRUPO TAM
               , i.CD_IT_PE_ITEM COR
               , sum(i.QTDE_PEDIDA) QTD
-              , sum(i.QTDE_PEDIDA*i.VALOR_UNITARIO*(100-ps.PERC_DESC_DUPLIC)/100) PRECO
+              , {calculo_preco} -- calculo_preco
               , CASE WHEN ps.NFCANC IS NULL
                 THEN 'Não faturado'
                 ELSE 'Faturamento cancelado'
