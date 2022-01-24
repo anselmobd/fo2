@@ -90,7 +90,7 @@ class Requisicao(models.Model):
         super(Requisicao, self).save(*args, **kwargs)
 
 
-class TipoImagem(models.Model):
+class GrupoArquivo(models.Model):
     nome = models.CharField(
         db_index=True,
         max_length=10,
@@ -111,7 +111,7 @@ class TipoImagem(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nome)
-        super(TipoImagem, self).save(*args, **kwargs)
+        super(GrupoArquivo, self).save(*args, **kwargs)
 
 
 def upload_to(instance, filename):
@@ -126,7 +126,7 @@ def upload_to(instance, filename):
 
 class Imagem(models.Model):
     tipo_imagem = models.ForeignKey(
-        TipoImagem,
+        GrupoArquivo,
         verbose_name='Tipo da imagem',
         on_delete=models.CASCADE)
     descricao = models.CharField(

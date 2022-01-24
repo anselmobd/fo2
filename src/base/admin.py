@@ -12,11 +12,11 @@ from .models import (
     Imagem,
     Requisicao,
     Tamanho,
-    TipoImagem,
+    GrupoArquivo,
 )
 
 
-@admin.register(TipoImagem, site=site)
+@admin.register(GrupoArquivo, site=site)
 class TipoImagemAdmin(admin.ModelAdmin):
     list_display = ["nome", "slug", "descricao"]
     fields = ["nome", "slug", "descricao"]
