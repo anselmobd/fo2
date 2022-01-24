@@ -171,6 +171,7 @@ def pedido_faturavel_modelo(
                 ON i.PEDIDO_VENDA = ps.PEDIDO
               JOIN basi_030 r
                 ON r.REFERENCIA = i.CD_IT_PE_GRUPO
+               AND r.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99 
               WHERE 1=1
                 {filtro_colecao} -- filtro_colecao
                 {filtro_modelo} -- filtro_modelo
