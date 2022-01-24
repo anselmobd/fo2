@@ -105,7 +105,7 @@ class GrupoArquivo(models.Model):
         return self.nome
 
     class Meta:
-        db_table = "fo2_tipo_imagem"
+        db_table = "fo2_grupo_arquivo"
         verbose_name = 'Tipo de imagem'
         verbose_name_plural = 'Tipos de imagem'
 
