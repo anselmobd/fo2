@@ -358,3 +358,5 @@ MIKROTIK = {
     'user': 'anselmo',
     'key_file': '/home/anselmo/.ssh/id_rsa',
 }
+
+FILE_UPLOAD_PERMISSIONS = 0o644
