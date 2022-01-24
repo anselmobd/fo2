@@ -116,8 +116,8 @@ class GrupoArquivo(models.Model):
 
 def upload_to(instance, filename):
     _, filename_ext = os.path.splitext(filename)
-    return "upload/imagens/{tipo_imagem}/{caminho}/{filename}{extension}".format(
-        tipo_imagem=instance.tipo_imagem.slug,
+    return "upload/imagens/{grupo_arquivo}/{caminho}/{filename}{extension}".format(
+        grupo_arquivo=instance.grupo_arquivo.slug,
         caminho=instance.caminho,
         filename=instance.slug,
         extension=filename_ext.lower(),
@@ -144,7 +144,7 @@ class Imagem(models.Model):
         upload_to=upload_to)
 
     def __str__(self):
-        return '({}) {}'.format(self.tipo_imagem.nome, self.descricao)
+        return '({}) {}'.format(self.grupo_arquivo.nome, self.descricao)
 
     class Meta:
         db_table = "fo2_imagem"
@@ -165,7 +165,7 @@ class Imagem(models.Model):
 class ImagemTagManager(models.Manager):
     def get_queryset(self):
         return super(ImagemTagManager, self).get_queryset().filter(
-            tipo_imagem__nome='TAG')
+            grupo_arquivo__nome='TAG')
 
 
 class ImagemTag(Imagem):

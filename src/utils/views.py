@@ -119,7 +119,7 @@ def image_to_data_url(filename):
 def data_url_image(tipo, imagem):
     try:
         imagem = base.models.Imagem.objects.get(
-            tipo_imagem__slug=tipo,
+            grupo_arquivo__slug=tipo,
             slug=imagem,
         )
         return image_to_data_url(imagem.imagem.path)
