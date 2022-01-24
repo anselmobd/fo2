@@ -125,11 +125,6 @@ def upload_to(instance, filename):
 
 
 class Imagem(models.Model):
-    tipo_imagem = models.ForeignKey(
-        GrupoArquivo,
-        verbose_name='Tipo da imagem',
-        on_delete=models.CASCADE,
-        related_name='imagens_tipo')
     grupo_arquivo = models.ForeignKey(
         GrupoArquivo,
         verbose_name='Grupo do arquivo',
