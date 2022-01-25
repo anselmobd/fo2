@@ -13,6 +13,7 @@ from django.utils.timezone import utc
 import utils.functions.strings
 
 from lotes.classes import YamlUser
+from systextil.queries.tabela.deposito import query_deposito
 
 import geral.models as models
 import geral.queries
@@ -181,7 +182,7 @@ def depositos_choices(
 
     depositos_only = []
     if only is not None:
-        depositos_only = geral.queries.deposito(cursor, only=only)
+        depositos_only = query_deposito(cursor, only=only)
 
     if rest is not None:
         if rest:
@@ -189,7 +190,7 @@ def depositos_choices(
 
     depositos_less = []
     if less is not None:
-        depositos_less = geral.queries.deposito(cursor, less=less)
+        depositos_less = query_deposito(cursor, less=less)
 
     for deposito in (todos + grupo + depositos_only + depositos_less):
         if deposito['COD'] in (cod_todos, cod_only):
