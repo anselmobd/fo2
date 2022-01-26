@@ -22,7 +22,7 @@ class Expedicao(View):
             self, cursor, embarque_de, embarque_ate,
             emissao_de, emissao_ate,
             pedido_tussor, pedido_cliente, cliente,
-            deposito, detalhe, cancelamento, faturamento):
+            deposito, detalhe, cancelamento, faturamento, colecao):
         context = {
             'embarque_de': embarque_de,
             'embarque_ate': embarque_ate,
@@ -35,7 +35,10 @@ class Expedicao(View):
             'deposito': deposito,
             'cancelamento': cancelamento,
             'faturamento': faturamento,
+            'colecao': colecao,
         }
+
+        colecao_codigo = None if colecao is None else colecao.colecao
 
         if detalhe == 'g':
             data = queries.pedido.grade_expedicao(
@@ -50,6 +53,7 @@ class Expedicao(View):
                 deposito=deposito,
                 cancelamento=cancelamento,
                 faturamento=faturamento,
+                colecao=colecao_codigo,
             )
             if len(data) == 0:
                 context.update({
@@ -114,6 +118,7 @@ class Expedicao(View):
             deposito=deposito,
             cancelamento=cancelamento,
             faturamento=faturamento,
+            colecao=colecao_codigo,
         )
         if len(data) == 0:
             context.update({
@@ -266,6 +271,7 @@ class Expedicao(View):
                 'detalhe': 'o',
                 'cancelamento': '-',
                 'faturamento': '-',
+                'colecao': None,
             }
             context.update(
                 self.mount_context(cursor, *fields.values())
@@ -291,11 +297,12 @@ class Expedicao(View):
             detalhe = form.cleaned_data['detalhe']
             cancelamento = form.cleaned_data['cancelamento']
             faturamento = form.cleaned_data['faturamento']
+            colecao = form.cleaned_data['colecao']
             cursor = db_cursor_so(request)
             context.update(self.mount_context(
                 cursor, embarque_de, embarque_ate,
                 emissao_de, emissao_ate,
                 pedido_tussor, pedido_cliente, cliente,
-                deposito, detalhe, cancelamento, faturamento))
+                deposito, detalhe, cancelamento, faturamento, colecao))
         context['form'] = form
         return render(request, self.template_name, context)

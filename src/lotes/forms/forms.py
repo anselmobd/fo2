@@ -659,6 +659,11 @@ class ExpedicaoForm(forms.Form):
     faturamento = forms.ChoiceField(
         choices=CHOICES_FAT, initial='N')
 
+    colecao = forms.ModelChoiceField(
+        label='Coleção da referência', required=False,
+        queryset=Colecao.objects.exclude(colecao=0).order_by(
+            'colecao'), empty_label="(Todas)")
+
     def clean_cliente(self):
         cliente = self.cleaned_data['cliente'].upper()
         data = self.data.copy()
