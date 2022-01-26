@@ -6,7 +6,7 @@ def ped_expedicao(
         pedido_tussor='', pedido_cliente='',
         cliente='', deposito='-', detalhe='r',
         emissao_de=None, emissao_ate=None, empresa=1,
-        cancelamento='N', faturamento='N'):
+        cancelamento='N', faturamento='N', colecao=None):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -64,6 +64,10 @@ def ped_expedicao(
         filtro_cancelamento = "AND ped.STATUS_PEDIDO <> 5 -- não cancelado"
     elif cancelamento == 'C':
         filtro_cancelamento = "AND ped.STATUS_PEDIDO = 5 -- cancelado"
+
+    filtro_colecao = ''
+    if colecao is not None:
+      filtro_colecao = f"AND r.COLECAO = {colecao}"
 
     sql = ""
     if detalhe == 'p':
@@ -139,6 +143,9 @@ def ped_expedicao(
          AND f.NUMERO_CAIXA_ECF = 0
         JOIN PEDI_110 i -- item de pedido de venda
           ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
+        JOIN BASI_030 r -- ref
+          on r.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
+         AND r.REFERENCIA = i.CD_IT_PE_GRUPO
         LEFT JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
         LEFT JOIN PEDI_010 c -- cliente
@@ -165,6 +172,7 @@ def ped_expedicao(
           {filtro_deposito} -- filtro_deposito
           {filtro_faturamento} -- filtro_faturamento
           {filtro_cancelamento} -- filtro_cancelamento
+          {filtro_colecao} -- filtro_colecao
         GROUP BY
           ped.PEDIDO_VENDA
         , ped.DATA_EMIS_VENDA
