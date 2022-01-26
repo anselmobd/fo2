@@ -6,7 +6,7 @@ def grade_expedicao(
         pedido_tussor='', pedido_cliente='',
         cliente='', deposito='-',
         emissao_de=None, emissao_ate=None, empresa=1,
-        cancelamento='N', faturamento='N'):
+        cancelamento='N', faturamento='N', colecao=None):
 
     filtro_embarque_de = ''
     if embarque_de is not None:
@@ -65,6 +65,10 @@ def grade_expedicao(
     elif cancelamento == 'C':
         filtro_cancelamento = "AND ped.STATUS_PEDIDO = 5 -- cancelado"
 
+    filtro_colecao = ''
+    if colecao is not None:
+      filtro_colecao = f"AND r.COLECAO = {colecao}"
+
     sql = f"""
         SELECT
           i.CD_IT_PE_GRUPO REF
@@ -77,6 +81,9 @@ def grade_expedicao(
          AND f.NUMERO_CAIXA_ECF = 0
         JOIN PEDI_110 i -- item de pedido de venda
           ON i.PEDIDO_VENDA = ped.PEDIDO_VENDA
+        JOIN BASI_030 r -- ref
+          on r.NIVEL_ESTRUTURA = i.CD_IT_PE_NIVEL99
+         AND r.REFERENCIA = i.CD_IT_PE_GRUPO
         LEFT JOIN BASI_220 t -- tamanhos
           ON t.TAMANHO_REF = i.CD_IT_PE_SUBGRUPO
         LEFT JOIN PEDI_010 c -- cliente
@@ -95,6 +102,7 @@ def grade_expedicao(
           {filtro_deposito} -- filtro_deposito
           {filtro_faturamento} -- filtro_faturamento
           {filtro_cancelamento} -- filtro_cancelamento
+          {filtro_colecao} -- filtro_colecao
         GROUP BY
           i.CD_IT_PE_GRUPO
         , t.ORDEM_TAMANHO
