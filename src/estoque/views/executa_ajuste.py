@@ -23,7 +23,7 @@ def executa_ajuste(request, **kwargs):
     num_doc = kwargs['num_doc']
     trail = kwargs['trail']
 
-    if dep not in ['101', '102', '231']:
+    if dep not in ['101', '102', '231', '122']:
         data.update({
             'result': 'ERR',
             'descricao_erro': 'Depósito inválido',
