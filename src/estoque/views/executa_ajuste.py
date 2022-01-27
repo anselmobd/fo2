@@ -5,6 +5,7 @@ from django.http import JsonResponse
 
 from fo2.connections import db_cursor_so
 
+from utils.functions import get_client_ip
 from utils.views import request_hash_trail
 
 import estoque.classes
@@ -84,7 +85,9 @@ def executa_ajuste(request, **kwargs):
             trans,
             es,
             quant,
-            preco_medio
+            preco_medio,
+            request.user,
+            get_client_ip(request),
             ):
         data.update({
             'result': 'OK',
