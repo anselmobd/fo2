@@ -495,7 +495,7 @@ class FiltraSolicitacaoForm(forms.Form):
     filtro = forms.CharField(
         max_length=20, min_length=1, required=False,
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
-    data = forms.DateField(
+    data_de = forms.DateField(
         label='Data do embarque', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
     ref = forms.CharField(
