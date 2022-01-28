@@ -5,7 +5,7 @@ from utils.functions.digits import fo2_digit_with
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def lista_solicita_lote(cursor, filtro=None, data_de=None, data_ate=None, ref=None):
+def lista_solicita_lote(cursor, filtro=None, data_de=None, ref=None, data_ate=None):
     filtra_data = ''
     if data_de is not None:
         if data_ate is None:
