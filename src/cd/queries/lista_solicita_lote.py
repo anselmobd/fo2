@@ -5,12 +5,18 @@ from utils.functions.digits import fo2_digit_with
 from utils.functions.models import rows_to_dict_list_lower
 
 
-def lista_solicita_lote(cursor, filtro=None, data=None, ref=None):
+def lista_solicita_lote(cursor, filtro=None, data_de=None, data_ate=None, ref=None):
     filtra_data = ''
-    if data is not None:
-        filtra_data = f'''--
-            AND s.data = '{data}'
-        '''
+    if data_de is not None:
+        if data_ate is None:
+            filtra_data = f'''--
+                AND s.data = '{data_de}'
+            '''
+        else:
+            filtra_data = f'''--
+                AND s.data >= '{data_de}'
+                AND s.data <= '{data_ate}'
+            '''
     filtra_ref = ''
     if ref is not None and ref != '':
         filtra_ref = f'''--
@@ -75,26 +81,25 @@ def lista_solicita_lote(cursor, filtro=None, data=None, ref=None):
         order by
           s.update_at desc
     '''
-    print(sql)
     cursor.execute(sql)
-    data = rows_to_dict_list_lower(cursor)
+    dados = rows_to_dict_list_lower(cursor)
 
-    for row in data:
+    for row in dados:
         row['num'] = fo2_digit_with(row['id'])
         row['numero'] = f"#{row['num']}"
 
     if filtro:
-        data = filtered_data_fields(
+        dados = filtered_data_fields(
             filtro,
-            data,
+            dados,
             'numero',
             'codigo',
             'descricao',
             'usuario__username',
         )
 
-    for row in data:
+    for row in dados:
         if row['data'] is None:
             row['data'] = ''
 
-    return data
+    return dados
