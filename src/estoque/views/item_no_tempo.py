@@ -98,14 +98,17 @@ class ItemNoTempo(View):
         estoque_no_tempo = estoque
         for row in dados:
             row['estoque'] = estoque_no_tempo
+            row['estoque|DECIMALS'] = 0
             estoque_no_tempo -= row['qtd_sinal']
 
             if row['es'] == 'E':
                 row['qtd_e'] = row['qtd']
+                row['qtd_e|DECIMALS'] = 0
                 row['qtd_s'] = '.'
             else:
                 row['qtd_e'] = '.'
                 row['qtd_s'] = row['qtd']
+                row['qtd_s|DECIMALS'] = 0
 
             row['tipo'] = row['proc']
             tipo_doc = ''
