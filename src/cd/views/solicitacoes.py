@@ -32,7 +32,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         self.SL = lotes.models.SolicitaLote
         self.id = None
 
-    def lista(self, filtro=None, data_de=None, ref=None, qtdcd=None, pagina=None):
+    def lista(self, filtro=None, data_de=None, data_ate=None, ref=None, qtdcd=None, pagina=None):
         fields = (
             'numero', 'codigo', 'ativa', 'descricao', 'pedidos',
             'data', 'usuario__username', 'concluida', 'can_print', 'coleta',
@@ -46,7 +46,7 @@ class Solicitacoes(LoginRequiredMixin, View):
         headers = dict(zip(fields, descriptions))
 
         cursor_def = connection.cursor()
-        data = queries.lista_solicita_lote(cursor_def, filtro, data_de, ref)
+        data = queries.lista_solicita_lote(cursor_def, filtro, data_de, ref, data_ate)
 
         if qtdcd != 'nf':
             data = [
@@ -281,17 +281,19 @@ class Solicitacoes(LoginRequiredMixin, View):
             if filter.is_valid():
                 filtro = filter.cleaned_data['filtro']
                 data_de = filter.cleaned_data['data_de']
+                data_ate = filter.cleaned_data['data_ate']
                 ref = filter.cleaned_data['ref']
                 qtdcd = filter.cleaned_data['qtdcd']
                 pagina = filter.cleaned_data['pagina']
             else:
                 filtro = None
                 data_de = None
+                data_ate = None
                 ref = None
                 qtdcd = None
                 pagina = None
             context['filter'] = filter
-            context.update(self.lista(filtro, data_de, ref, qtdcd, pagina))
+            context.update(self.lista(filtro, data_de, data_ate, ref, qtdcd, pagina))
             return render(request, self.template_name, context)
 
         form = self.Form_class(request.POST)

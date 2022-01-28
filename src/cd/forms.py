@@ -497,6 +497,10 @@ class FiltraSolicitacaoForm(forms.Form):
         widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     data_de = forms.DateField(
         label='Data do embarque', required=False,
+        help_text="(Data única ou início de período)",
+        widget=forms.DateInput(attrs={'type': 'date'}))
+    data_ate = forms.DateField(
+        label='Data do embarque, final de período', required=False,
         widget=forms.DateInput(attrs={'type': 'date'}))
     ref = forms.CharField(
         label='Referência', required=False, max_length=5,
