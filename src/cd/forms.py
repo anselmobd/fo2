@@ -1,6 +1,8 @@
+import datetime
 from pprint import pprint
 
 from django import forms
+from django.conf import settings
 from django.db.models import F, Sum, Value
 from django.db.models.functions import Coalesce
 
@@ -595,6 +597,10 @@ class EtiquetasSolicitacoesForm(forms.Form):
                 id=numero[:-2])
         except lotes.models.SolicitaLote.DoesNotExist:
             raise forms.ValidationError("Solicitação não existe")
+
+        if settings.DESLIGANDO_CD_FASE >= 1:
+            if solicitacao.create_at > datetime.datetime(2022, 2, 1, 18, 0, 0):
+                raise forms.ValidationError("Solicitação criada depois de 01/02/2022 18h00.")
 
         solicitacao_prt = lotes.models.SolicitaLotePrinted.objects.filter(
             solicitacao=solicitacao

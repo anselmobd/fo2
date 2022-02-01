@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import connection
 from django.db.models import F, Sum, Value
@@ -25,6 +26,7 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
         self.context = {
             'titulo': 'Etiquetas de solicitações',
             'passo': 1,
+            'DESLIGANDO_CD_FASE': settings.DESLIGANDO_CD_FASE,
         }
 
     def imprime(self, data):
@@ -97,8 +99,6 @@ class EtiquetasSolicitacoes(PermissionRequiredMixin, View):
         return [d for n, d in enumerate(data) if n+1 in selecionadas]
 
     def mount_context(self, form):
-        cursor = connection.cursor()
-
         numero = form.cleaned_data['numero']
         buscado_numero = form.cleaned_data['buscado_numero']
         selecao = form.cleaned_data['selecao']

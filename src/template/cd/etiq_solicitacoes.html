@@ -10,6 +10,9 @@
 {% endblock %}
 
 {% block content %}
+{% if DESLIGANDO_CD_FASE >= 1 %}
+  Só pode imprimir etiquetas parciais, se for de solicitações criadas antes de 01/02/2022 18h00.
+{% endif %}
 <form action="{% url 'cd:etiq_solicitacoes' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
