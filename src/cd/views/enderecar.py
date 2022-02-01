@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
@@ -71,28 +72,30 @@ class Enderecar(PermissionRequiredMixin, View):
                             'Identifique o lote novamente.'})
                 return context
 
-            level = 999
-            if lote_rec.conserto == 0:
-                # se lote não tem quantidade endereçada,
-                # então endereça (coloca qtd total em conserto)
-                data = dict_conserto_lote(
-                    request, lote, '63', 'in', qtd_livre)
+            if settings.DESLIGANDO_CD_FASE < 1:
+                level = 999
+                if lote_rec.conserto == 0:
+                    # se lote não tem quantidade endereçada,
+                    # então endereça (coloca qtd total em conserto)
+                    data = dict_conserto_lote(
+                        request, lote, '63', 'in', qtd_livre)
 
-                if data['error_level'] > 0:
-                    level = data['error_level']
-                    erro = data['msg']
-                    context.update({
-                        'concerto_erro':
-                            f'Erro ao inserir {qtd_livre} '
-                            f'peça{"s" if qtd_livre > 1 else ""} no '
-                            f'concerto: {level} - "{erro}"',
-                    })
-                    if level not in [1, 2, 3]:
-                        return context
+                    if data['error_level'] > 0:
+                        level = data['error_level']
+                        erro = data['msg']
+                        context.update({
+                            'concerto_erro':
+                                f'Erro ao inserir {qtd_livre} '
+                                f'peça{"s" if qtd_livre > 1 else ""} no '
+                                f'concerto: {level} - "{erro}"',
+                        })
+                        if level not in [1, 2, 3]:
+                            return context
 
-            if level == 0:
-                context['qtd_livre'] = 0
-                lote_rec.conserto += qtd_livre
+                if level == 0:
+                    context['qtd_livre'] = 0
+                    lote_rec.conserto += qtd_livre
+
             lote_rec.local = endereco
             lote_rec.local_usuario = request.user
             lote_rec.save()
