@@ -360,3 +360,11 @@ MIKROTIK = {
 }
 
 FILE_UPLOAD_PERMISSIONS = 0o644
+
+# Fase 1:
+# . Desligada rotina de passar quantidades para conserto
+# . Só pode imprimir etiquetas parciais, se for de solicitações
+#   criadas antes de 2022-02-01 18h00
+# . Tira do conserto todos os lotes que não pertencem a solicitações
+#   criadas antes de 2022-02-01 18h00
+DESLIGANDO_CD_FASE = 1
