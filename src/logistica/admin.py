@@ -72,7 +72,10 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     ]
 
     def list_quantidade(self, obj):
-        return int(round(obj.quantidade))
+        if obj.quantidade:
+            return int(round(obj.quantidade))
+        else:
+            return '-'
 
     list_quantidade.short_description = 'Qtd.'
 
