@@ -26,8 +26,8 @@ class NotaFiscalAdmin(admin.ModelAdmin):
         "dest_nome",
         "dest_cnpj",
         "valor",
-        "volumes",
-        "cod_status",
+        "list_volumes",
+        "list_quantidade",
         "observacao",
     ]
     list_editable = ["saida", "entrega", "confirmada"]
@@ -41,7 +41,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
         ("dest_cnpj", "dest_nome", "uf", "transp_nome"),
         ("pedido", "ped_cliente"),
         ("natu_venda", "natu_descr"),
-        ("volumes", "valor"),
+        ("volumes", "valor", "quantidade"),
         ("faturamento", "cod_status", "msg_status"),
         "saida",
         "entrega",
@@ -58,6 +58,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
         "ped_cliente",
         "volumes",
         "valor",
+        "quantidade",
         "cod_status",
         "msg_status",
         "ativa",
@@ -70,6 +71,20 @@ class NotaFiscalAdmin(admin.ModelAdmin):
         "natu_venda",
     ]
 
+    def list_quantidade(self, obj):
+        return int(round(obj.quantidade))
+
+    list_quantidade.short_description = 'Qtd.'
+
+    def list_volumes(self, obj):
+        return obj.volumes
+
+    list_volumes.short_description = 'Vol.'
+
+    class Media:
+            css = {
+                'all': ('/static/admin/css/logist_nf.css',)
+            }
 
 intr_adm_site.register(models.NotaFiscal, NotaFiscalAdmin)
 

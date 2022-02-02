@@ -1,0 +1,9 @@
+th.column-list_quantidade,
+td.field-list_quantidade,
+th.column-valor,
+td.field-valor,
+th.column-list_volumes,
+td.field-list_volumes
+{
+    text-align: right;
+}
