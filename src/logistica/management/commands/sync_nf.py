@@ -36,6 +36,22 @@ class Command(BaseCommand):
 
             # sync all
             sql = '''
+                WITH nf_qtd AS
+                ( SELECT
+                    f.codigo_empresa
+                  , f.num_nota_fiscal
+                  , f.serie_nota_fisc
+                  , sum(fi.QTDE_ITEM_FATUR) QTD
+                  FROM FATU_050 f
+                  JOIN fatu_060 fi
+                    ON fi.ch_it_nf_cd_empr = f.codigo_empresa
+                   AND fi.ch_it_nf_num_nfis = f.num_nota_fiscal
+                   AND fi.ch_it_nf_ser_nfis = f.serie_nota_fisc
+                  GROUP BY 
+                    f.codigo_empresa
+                  , f.num_nota_fiscal
+                  , f.serie_nota_fisc
+                )
                 SELECT
                   f.NUM_NOTA_FISCAL NF
                 , f.BASE_ICMS VALOR
@@ -68,7 +84,12 @@ class Command(BaseCommand):
                 , f.PEDIDO_VENDA PEDIDO
                 , p.COD_PED_CLIENTE PED_CLIENTE
                 , fe.DOCUMENTO NF_DEVOLUCAO
+                , fi.QTD
                 FROM FATU_050 f
+                JOIN nf_qtd fi
+                  ON fi.codigo_empresa = f.codigo_empresa
+                 AND fi.num_nota_fiscal = f.num_nota_fiscal
+                 AND fi.serie_nota_fisc = f.serie_nota_fisc
                 LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
                   ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
                  AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
@@ -121,6 +142,7 @@ class Command(BaseCommand):
                     faturamento,
                     row_st['VALOR'],
                     row_st['VOLUMES'],
+                    row_st['QTD'],
                     dest_cnpj,
                     row_st['CLIENTE'],
                     row_st['COD_STATUS'],
@@ -162,6 +184,10 @@ class Command(BaseCommand):
                     self.print_diff(
                         'volumes', nf_fo2.volumes, row_st['VOLUMES'])
                     nf_fo2.volumes = row_st['VOLUMES']
+
+                    self.print_diff(
+                        'qtd', nf_fo2.volumes, row_st['QTD'])
+                    nf_fo2.quantidade = row_st['QTD']
 
                     self.print_diff('cnpj', nf_fo2.dest_cnpj, dest_cnpj)
                     nf_fo2.dest_cnpj = dest_cnpj
