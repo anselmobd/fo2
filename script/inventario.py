@@ -13,13 +13,20 @@ from db_password import DBPASS_POSTGRE, DBPASS_ORACLE
 
 class Oracle:
 
-    def __init__(self):
-        self.username = 'systextil'
-        self.password = DBPASS_ORACLE
-        self.hostname = 'localhost'
-        self.port = 28521
-        self.servicename = 'XE'
-        self.schema = 'SYSTEXTIL'
+    def __init__(self,
+        username='systextil',
+        password=DBPASS_ORACLE,
+        hostname='localhost',
+        port=28521,
+        servicename='XE',
+        schema='SYSTEXTIL',
+    ):
+        self.username = username
+        self.password = password
+        self.hostname = hostname
+        self.port = port
+        self.servicename = servicename
+        self.schema = schema
 
     def connect(self):
         try:
