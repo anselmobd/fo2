@@ -182,22 +182,26 @@ class NotafiscalRel(View):
                     row['ativa'] = 'Cancelada'
                 if row['nf_devolucao'] is None:
                     row['nf_devolucao'] = 'Não'
+                if row['quantidade'] is None:
+                    row['quantidade'] = '-'
+                else:
+                    row['quantidade'] = int(round(row['quantidade']))
 
             context.update({
                 'headers': ('No.', 'Faturamento', 'Venda', 'Ativa',
                             'Devolvida', 'Posição',
                             'Atraso', 'Saída', 'Agendada',
                             'Entregue', 'UF', 'CNPJ', 'Cliente',
-                            'Transp.', 'Vol.', 'Valor', 'Observação',
-                            'Pedido', 'Ped.Cliente'),
+                            'Transp.', 'Vol.', 'Valor', 'Qtd.',
+                            'Observação', 'Pedido', 'Ped.Cliente'),
                 'fields': ('numero', 'faturamento', 'venda', 'ativa',
                            'nf_devolucao', 'posicao__nome',
                            'atraso', 'saida', 'entrega',
                            'confirmada', 'uf', 'dest_cnpj', 'dest_nome',
-                           'transp_nome', 'volumes', 'valor', 'observacao',
-                           'pedido', 'ped_cliente'),
+                           'transp_nome', 'volumes', 'valor', 'quantidade',
+                           'observacao', 'pedido', 'ped_cliente'),
                 'style': untuple_keys_concat({
-                    (15, 16): 'text-align: right;',
+                    (15, 16, 17): 'text-align: right;',
                     (3, 4, 5, 6, 7, 8, 9, 10): 'text-align: center;',
                 }),
                 'data': data,
