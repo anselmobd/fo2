@@ -20,12 +20,18 @@ def monta_update(
     numero=None, confirmada=None, saida=None, 
     entrega=None, observacao=None, **kwargs
 ):
+    saida_teste = f" <> '{saida}'" if saida else "IS NOT NULL"
     saida = f"'{saida}'" if saida else "NULL"
+
+    entrega_teste = f" <> '{entrega}'" if entrega else "IS NOT NULL"
     entrega = f"'{entrega}'" if entrega else "NULL"
+
     if observacao:
         observacao = observacao.replace("'", "''")
+        observacao_teste = f" <> '{observacao}'"
         observacao = f"'{observacao}'"
     else:
+        observacao_teste = "IS NOT NULL"
         observacao = "NULL"
 
     sql = f"""
@@ -36,6 +42,12 @@ def monta_update(
         , entrega = {entrega}
         , observacao = {observacao}
         where numero = {numero}
+        and (
+          confirmada <> {confirmada}
+          or saida {saida_teste}
+          or entrega {entrega_teste}
+          or observacao {observacao_teste}
+        )
     """
     return sql
 
