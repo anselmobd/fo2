@@ -82,12 +82,19 @@ class Oracle:
 
 class Postgre:
 
-    def __init__(self):
-        self.username = "tussor_fo2"
-        self.password = DBPASS_POSTGRE
-        self.hostname = "127.0.0.1"
-        self.port = 25432
-        self.database = "tussor_fo2_production"
+    def __init__(
+        self,
+        username="tussor_fo2",
+        password=DBPASS_POSTGRE,
+        hostname="127.0.0.1",
+        port=25432,
+        database="tussor_fo2_production",
+    ):
+        self.username = username
+        self.password = password
+        self.hostname = hostname
+        self.port = port
+        self.database = database
 
     def connect(self):
         try:
