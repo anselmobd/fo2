@@ -56,6 +56,17 @@ class Command(BaseCommand):
                   , f.num_nota_fiscal
                   , f.serie_nota_fisc
                 )
+                , ped_dep AS
+                (
+                SELECT
+                  ped.PEDIDO_VENDA
+                , min(iped.CODIGO_DEPOSITO) CODIGO_DEPOSITO
+                FROM PEDI_100 ped -- pedido de venda
+                JOIN PEDI_110 iped -- item de pedido de venda
+                  ON iped.PEDIDO_VENDA = ped.PEDIDO_VENDA
+                GROUP BY 
+                  ped.PEDIDO_VENDA
+                )
                 SELECT
                   f.NUM_NOTA_FISCAL NF
                 , f.BASE_ICMS VALOR
@@ -87,6 +98,10 @@ class Command(BaseCommand):
                   , '-') TRANSP
                 , f.PEDIDO_VENDA PEDIDO
                 , p.COD_PED_CLIENTE PED_CLIENTE
+                , pd.CODIGO_DEPOSITO DEPOSITO
+                , CASE WHEN pd.CODIGO_DEPOSITO = 101 THEN 'a'
+                  WHEN pd.CODIGO_DEPOSITO = 102 THEN 'v'
+                  ELSE 'o' END TIPO
                 , fe.DOCUMENTO NF_DEVOLUCAO
                 , fi.QTD
                 FROM FATU_050 f
@@ -99,6 +114,8 @@ class Command(BaseCommand):
                  AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
                 LEFT JOIN PEDI_100 p
                   ON p.PEDIDO_VENDA = f.PEDIDO_VENDA
+                LEFT JOIN ped_dep pd
+                  ON pd.PEDIDO_VENDA = p.PEDIDO_VENDA
                 JOIN PEDI_010 c
                   ON c.CGC_9 = f.CGC_9
                  AND c.CGC_4 = f.CGC_4
@@ -125,12 +142,6 @@ class Command(BaseCommand):
             count_task = 0
             for row_st in nfs_st:
                 faturamento = row_st['FATURAMENTO']
-                # if row_st['FATURAMENTO'] is None:
-                #     faturamento = None
-                # else:
-                #     faturamento = timezone.make_aware(
-                #         row_st['FATURAMENTO'],
-                #         timezone.get_current_timezone())
                 dest_cnpj = '{:08d}/{:04d}-{:02d}'.format(
                     row_st['CNPJ9'],
                     row_st['CNPJ4'],
@@ -160,6 +171,7 @@ class Command(BaseCommand):
                     row_st['PEDIDO'],
                     row_st['PED_CLIENTE'],
                     row_st['NF_DEVOLUCAO'],
+                    row_st['TIPO'],
                 )))
                 hash_object = hashlib.md5(hash_cache.encode())
                 trail = hash_object.hexdigest()
@@ -241,6 +253,10 @@ class Command(BaseCommand):
                         'nf_devolucao',
                         nf_fo2.nf_devolucao, row_st['NF_DEVOLUCAO'])
                     nf_fo2.nf_devolucao = row_st['NF_DEVOLUCAO']
+
+                    self.print_diff(
+                        'tipo', nf_fo2.tipo, row_st['TIPO'])
+                    nf_fo2.tipo = row_st['TIPO']
 
                     self.print_diff('trail', nf_fo2.trail, trail)
                     nf_fo2.trail = trail
