@@ -28,6 +28,10 @@ class Command(BaseCommand):
             self.my_println(
                 '{} = {}'.format(title, novo))
 
+    def print_diff_alt(self, title, antigo, novo):
+        if antigo != novo:
+            self.my_println(f'{title} = {antigo} -> {novo}')
+
     def handle(self, *args, **options):
         self.my_println('---')
         self.my_println('{}'.format(datetime.datetime.now()))
@@ -120,12 +124,13 @@ class Command(BaseCommand):
 
             count_task = 0
             for row_st in nfs_st:
-                if row_st['FATURAMENTO'] is None:
-                    faturamento = None
-                else:
-                    faturamento = timezone.make_aware(
-                        row_st['FATURAMENTO'],
-                        timezone.get_current_timezone())
+                faturamento = row_st['FATURAMENTO']
+                # if row_st['FATURAMENTO'] is None:
+                #     faturamento = None
+                # else:
+                #     faturamento = timezone.make_aware(
+                #         row_st['FATURAMENTO'],
+                #         timezone.get_current_timezone())
                 dest_cnpj = '{:08d}/{:04d}-{:02d}'.format(
                     row_st['CNPJ9'],
                     row_st['CNPJ4'],
@@ -175,7 +180,7 @@ class Command(BaseCommand):
                     nf_fo2 = models.NotaFiscal(numero=row_st['NF'])
 
                 if edit:
-                    self.print_diff('data', nf_fo2.faturamento, faturamento)
+                    self.print_diff_alt('data', nf_fo2.faturamento, faturamento)
                     nf_fo2.faturamento = faturamento
 
                     self.print_diff('valor', nf_fo2.valor, row_st['VALOR'])
