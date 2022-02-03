@@ -1,3 +1,7 @@
+from collections import OrderedDict
+from pprint import pprint
+
+
 def equal_dicts(d1, d2):
     ''' Devolve True se dicionários são iguais.
     Só funciona se todos os valores forem serializáveis.
@@ -18,3 +22,12 @@ def update_dict(original, adding):
         else:
             result[key] = adding[key]
     return result
+
+
+def dict_firsts(adict, firsts):
+    adict = OrderedDict(adict)
+    keys = list(adict.keys())
+    for key in keys:
+        if key not in firsts:
+            adict.move_to_end(key)
+    return dict(adict)
