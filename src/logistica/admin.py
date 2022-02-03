@@ -13,6 +13,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_display = [
         "numero",
+        "tipo",
         "faturamento",
         "posicao",
         "saida",
@@ -37,7 +38,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
     search_fields = ["numero", "transp_nome", "dest_nome"]
     ordering = ["-numero"]
     fields = (
-        ("numero", "ativa", "nf_devolucao", "posicao"),
+        ("numero", "tipo", "ativa", "nf_devolucao", "posicao"),
         ("dest_cnpj", "dest_nome", "uf", "transp_nome"),
         ("pedido", "ped_cliente"),
         ("natu_venda", "natu_descr"),
@@ -69,6 +70,7 @@ class NotaFiscalAdmin(admin.ModelAdmin):
         "transp_nome",
         "natu_descr",
         "natu_venda",
+        "tipo"
     ]
 
     def list_quantidade(self, obj):
