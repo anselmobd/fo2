@@ -126,12 +126,13 @@ class Postgre:
         except psycopg2.Error as e:
             print('[Execute error] {}'.format(e))
             sys.exit(3)
-
-        result = {
-            'keys': [f[0] for f in self.cursor.description],
-            'data': self.cursor.fetchall(),
-        }
-        return result
+        if self.cursor.description:
+            return {
+                'keys': [f[0] for f in self.cursor.description],
+                'data': self.cursor.fetchall(),
+            }
+        else:
+            self.con.commit()
 
     def close(self):
         try:
