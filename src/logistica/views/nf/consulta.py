@@ -122,6 +122,11 @@ class NotafiscalRel(View):
             context.update({
                 'posicao': form['posicao'].nome,
             })
+        if form['tipo'] != '-':
+            select = select.filter(tipo=form['tipo'])
+            context.update({
+                'tipo': form['tipo'],
+            })
 
         select = select.order_by('-numero')
         data = list(select.values(*fields, 'posicao__nome'))
@@ -186,15 +191,21 @@ class NotafiscalRel(View):
                     row['quantidade'] = '-'
                 else:
                     row['quantidade'] = int(round(row['quantidade']))
+                if row['tipo'] == 'a':
+                    row['tipo'] = 'Atacado'
+                elif row['tipo'] == 'v':
+                    row['tipo'] = 'Varejo'
+                else:
+                    row['tipo'] = 'Outras'
 
             context.update({
-                'headers': ('No.', 'Faturamento', 'Venda', 'Ativa',
+                'headers': ('No.', 'Faturamento', 'Venda', 'Tipo', 'Ativa',
                             'Devolvida', 'Posição',
                             'Atraso', 'Saída', 'Agendada',
                             'Entregue', 'UF', 'CNPJ', 'Cliente',
                             'Transp.', 'Vol.', 'Valor', 'Qtd.',
                             'Observação', 'Pedido', 'Ped.Cliente'),
-                'fields': ('numero', 'faturamento', 'venda', 'ativa',
+                'fields': ('numero', 'faturamento', 'venda', 'tipo', 'ativa',
                            'nf_devolucao', 'posicao__nome',
                            'atraso', 'saida', 'entrega',
                            'confirmada', 'uf', 'dest_cnpj', 'dest_nome',

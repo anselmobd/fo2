@@ -135,6 +135,17 @@ span.spanlink:hover {
     {% if posicao %}
       <li>Posição: {{ posicao }}</li>
     {% endif %}
+    {% if tipo %}
+      <li>Tipo:
+      {% if tipo == 'a' %}
+        Atacado
+      {% elif tipo == 'v' %}
+        Varejo
+      {% else %}
+        Outras
+      {% endif %}
+      </li>
+    {% endif %}
   </ul>
   <h4>Ordenação:
     {% if ordem == 'N' %}
