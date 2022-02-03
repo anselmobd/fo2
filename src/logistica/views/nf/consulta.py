@@ -128,7 +128,11 @@ class NotafiscalRel(View):
                 'tipo': form['tipo'],
             })
 
-        select = select.order_by('-numero')
+        if form['ordem'] == 'N':
+            select = select.order_by('-numero')
+        elif form['ordem'] == 'P':
+            select = select.order_by('pedido')
+
         data = list(select.values(*fields, 'posicao__nome'))
         data_length = len(data)
 
@@ -199,7 +203,7 @@ class NotafiscalRel(View):
                     row['tipo'] = 'Outras'
 
             context.update({
-                'headers': ('No.', 'Faturamento', 'Venda', 'Tipo', 'Ativa',
+                'headers': ('NF', 'Faturamento', 'Venda', 'Tipo', 'Ativa',
                             'Devolvida', 'Posição',
                             'Atraso', 'Saída', 'Agendada',
                             'Entregue', 'UF', 'CNPJ', 'Cliente',

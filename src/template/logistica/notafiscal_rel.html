@@ -149,7 +149,9 @@ span.spanlink:hover {
   </ul>
   <h4>Ordenação:
     {% if ordem == 'N' %}
-      Número da nota fiscal
+      Número da nota fiscal (decrescente)
+    {% elif ordem == 'P' %}
+      Número do pedido (crescente)
     {% elif ordem == 'A' %}
       Atraso (maior primeiro)
     {% endif %}
