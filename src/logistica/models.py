@@ -62,6 +62,20 @@ class NotaFiscal(models.Model):
         PosicaoCarga, default=1, verbose_name="Posição", on_delete=models.PROTECT
     )
 
+    ATACADO = 'a'
+    VAREJO = 'v'
+    OUTROS = 'o'
+    TIPO_NOTA = (
+        (ATACADO, "Atacado"),
+        (VAREJO, "Varejo"),
+        (OUTROS, "")
+    )
+    tipo = models.CharField(
+        max_length=1,
+        choices=TIPO_NOTA,
+        default=OUTROS,
+    )
+
     # campos editáveis
     saida = models.DateField(null=True, blank=True, verbose_name="saída")
     entrega = models.DateField(null=True, blank=True, verbose_name="agendamento")
