@@ -202,7 +202,7 @@ class Command(BaseCommand):
                         'volumes', nf_fo2.volumes, row_st['VOLUMES'])
                     nf_fo2.volumes = row_st['VOLUMES']
 
-                    self.print_diff(
+                    self.print_diff_alt(
                         'qtd', nf_fo2.volumes, row_st['QTD'])
                     nf_fo2.quantidade = row_st['QTD']
 
