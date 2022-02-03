@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from utils.functions import untuple_keys_concat
+from utils.functions.dict import dict_firsts
 
 from logistica.models import NotaFiscal
 from logistica.forms import NotafiscalRelForm
@@ -202,23 +203,72 @@ class NotafiscalRel(View):
                 else:
                     row['tipo'] = 'Outras'
 
+            style_center = 'text-align: center;'
+            style_right = 'text-align: right;'
+            columns = {
+                'numero':
+                    'NF',
+                'faturamento':
+                    'Faturamento',
+                'venda':
+                    ('Venda', style_center),
+                'tipo':
+                    ('Tipo', style_center),
+                'ativa':
+                    ('Ativa', style_center),
+                'nf_devolucao':
+                    ('Devolvida', style_center),
+                'posicao__nome':
+                    ('Posição', style_center),
+                'atraso':
+                    ('Atraso', style_center),
+                'saida':
+                    ('Saída', style_center),
+                'entrega':
+                    ('Agendada', style_center),
+                'confirmada':
+                    ('Entregue', style_center),
+                'uf':
+                    'UF',
+                'dest_cnpj':
+                    'CNPJ',
+                'dest_nome':
+                    'Cliente',
+                'transp_nome':
+                    'Transp.',
+                'volumes':
+                    ('Vol.', style_right),
+                'valor':
+                    ('Valor', style_right),
+                'quantidade':
+                    ('Qtd.', style_right),
+                'observacao':
+                    'Observação',
+                'pedido':
+                    'Pedido',
+                'ped_cliente':
+                    'Ped.Cliente',
+            }
+
+            if form['ordem'] == 'A':
+                columns = dict_firsts(columns, ['atraso'])
+            elif form['ordem'] == 'P':
+                columns = dict_firsts(columns, ['pedido', 'ped_cliente'])
+
+            fields = columns.keys()
+            headers = map(
+                lambda x : x[0] if isinstance(x, tuple) else x,
+                columns.values()
+            )
+            style = {}
+            for idx, value in enumerate(columns.values()):
+                if isinstance(value, tuple):
+                    style[idx+1] = value[1]
+
             context.update({
-                'headers': ('NF', 'Faturamento', 'Venda', 'Tipo', 'Ativa',
-                            'Devolvida', 'Posição',
-                            'Atraso', 'Saída', 'Agendada',
-                            'Entregue', 'UF', 'CNPJ', 'Cliente',
-                            'Transp.', 'Vol.', 'Valor', 'Qtd.',
-                            'Observação', 'Pedido', 'Ped.Cliente'),
-                'fields': ('numero', 'faturamento', 'venda', 'tipo', 'ativa',
-                           'nf_devolucao', 'posicao__nome',
-                           'atraso', 'saida', 'entrega',
-                           'confirmada', 'uf', 'dest_cnpj', 'dest_nome',
-                           'transp_nome', 'volumes', 'valor', 'quantidade',
-                           'observacao', 'pedido', 'ped_cliente'),
-                'style': untuple_keys_concat({
-                    (15, 16, 17): 'text-align: right;',
-                    (3, 4, 5, 6, 7, 8, 9, 10): 'text-align: center;',
-                }),
+                'headers': headers,
+                'fields': fields,
+                'style': style,
                 'data': data,
             })
 
