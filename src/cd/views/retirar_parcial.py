@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
@@ -26,6 +27,7 @@ class RetirarParcial(PermissionRequiredMixin, View):
             self.title_name = 'Retirar lote parcial'
 
     def mount_context(self, request, form):
+        conserto_as_enderecado = settings.DESLIGANDO_CD_FASE < 1
         context = {}
 
         lote = form.cleaned_data['lote']
@@ -72,9 +74,14 @@ class RetirarParcial(PermissionRequiredMixin, View):
 
             # retirada parcial não tira o lote do endereço, mas
             # ajusta quantidades
-            if lote_rec.conserto == quant_retirar:
-                lote_rec.local = None
-            lote_rec.conserto -= quant_retirar
+            if conserto_as_enderecado:
+                if lote_rec.conserto == quant_retirar:
+                    lote_rec.local = None
+                lote_rec.conserto -= quant_retirar
+            else:
+                if lote_rec.qtd == quant_retirar:
+                    lote_rec.local = None
+                lote_rec.qtd -= quant_retirar
             lote_rec.local_usuario = request.user
             lote_rec.save()
 
