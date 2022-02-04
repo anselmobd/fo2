@@ -5,8 +5,8 @@ from django.utils import timezone
 from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from base.paginator import paginator_basic
 from utils.functions import ldict_coalesce, ldict_if_else
 from utils.functions.dict import dict_firsts
 
@@ -57,13 +57,7 @@ class NotafiscalRel(View):
             if form['ordem'] == 'A':
                 data.sort(key=itemgetter('atraso'), reverse=True)
 
-            paginator = Paginator(data, form['por_pagina'])
-            try:
-                data = paginator.page(form['page'])
-            except PageNotAnInteger:
-                data = paginator.page(1)
-            except EmptyPage:
-                data = paginator.page(paginator.num_pages)
+            data = paginator_basic(data, form['por_pagina'], form['page'])
 
             for row in data:
                 row['numero|LINK'] = reverse(
