@@ -66,10 +66,25 @@ class NotafiscalRel(View):
             except EmptyPage:
                 data = paginator.page(paginator.num_pages)
 
+            dict_tipo = {
+                'a': 'Atacado',
+                'v': 'Varejo',
+                'o': 'Outras',
+            }
+
+            for row in data:
+                row['numero|LINK'] = reverse(
+                    'logistica:notafiscal_nf', args=[row['numero']])
+                row['numero|TARGET'] = '_BLANK'
+                if row['quantidade']:
+                    row['quantidade'] = int(round(row['quantidade']))
+                row['tipo'] = dict_tipo[row['tipo']]
+
             ldict_coalesce(data,
                 [
-                    [['saida', 'entrega'], '-'],
+                    [['saida', 'entrega', 'quantidade'], '-'],
                     [['observacao', 'ped_cliente'], ' '],
+                    [['nf_devolucao'], 'Não'],
                 ]
             )
             ldict_if_else(data,
@@ -78,23 +93,6 @@ class NotafiscalRel(View):
                     [['ativa'], 'Ativa', 'Cancelada'],
                 ]
             )
-
-            for row in data:
-                row['numero|LINK'] = reverse(
-                    'logistica:notafiscal_nf', args=[row['numero']])
-                row['numero|TARGET'] = '_BLANK'
-                if row['nf_devolucao'] is None:
-                    row['nf_devolucao'] = 'Não'
-                if row['quantidade'] is None:
-                    row['quantidade'] = '-'
-                else:
-                    row['quantidade'] = int(round(row['quantidade']))
-                if row['tipo'] == 'a':
-                    row['tipo'] = 'Atacado'
-                elif row['tipo'] == 'v':
-                    row['tipo'] = 'Varejo'
-                else:
-                    row['tipo'] = 'Outras'
 
             style_center = 'text-align: center;'
             style_right = 'text-align: right;'
