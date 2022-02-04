@@ -320,7 +320,7 @@ def acesso_externo():
 
 
 def coalesce(value, default=None):
-    """Substitui None por default"""
+    """Recebendo valor, retorna este ou default"""
     if value is None:
         return default
     else:
@@ -333,6 +333,7 @@ def dict_coalesce(adict, fields, default):
         if adict[field] is None:
             adict[field] = default
 
+
 def ldict_coalesce(adict, fields, default=None):
     """Substitui None por default em fields de lista de dicionários
     Caso default seja None, fields é uma lista de pares de fields e defaults.
@@ -343,3 +344,32 @@ def ldict_coalesce(adict, fields, default=None):
                 dict_coalesce(row, *fields_default)
         else:
             dict_coalesce(row, fields, default)
+
+
+def if_else(value, then_, else_):
+    """Recebendo booleano, retorna then ou else"""
+    if value:
+        return then_
+    else:
+        return else_
+
+
+def dict_if_else(adict, fields, then_, else_):
+    """Substitui booleano por then ou else em fields de dicionário"""
+    for field in fields:
+        if adict[field]:
+            adict[field] = then_
+        else:
+            adict[field] = else_
+
+
+def ldict_if_else(adict, fields, then_=None, else_=None):
+    """Substitui booleano por then ou else em fields de lista de dicionários
+    Caso then seja None, fields é uma lista de trincas de fields, then e else.
+    """
+    for row in adict:
+        if then_ is None:
+            for fields_then_else in fields:
+                dict_if_else(row, *fields_then_else)
+        else:
+            dict_if_else(row, fields, then_, else_)

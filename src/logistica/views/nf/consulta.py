@@ -7,7 +7,7 @@ from django.views import View
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from utils.functions import ldict_coalesce
+from utils.functions import ldict_coalesce, ldict_if_else
 from utils.functions.dict import dict_firsts
 
 from logistica.models import NotaFiscal
@@ -69,7 +69,13 @@ class NotafiscalRel(View):
             ldict_coalesce(data,
                 [
                     [['saida', 'entrega'], '-'],
-                    [['observacao', 'ped_cliente'], ' ']
+                    [['observacao', 'ped_cliente'], ' '],
+                ]
+            )
+            ldict_if_else(data,
+                [
+                    [['confirmada', 'natu_venda'], 'Sim', 'Não'],
+                    [['ativa'], 'Ativa', 'Cancelada'],
                 ]
             )
 
@@ -77,18 +83,6 @@ class NotafiscalRel(View):
                 row['numero|LINK'] = reverse(
                     'logistica:notafiscal_nf', args=[row['numero']])
                 row['numero|TARGET'] = '_BLANK'
-                if row['confirmada']:
-                    row['confirmada'] = 'S'
-                else:
-                    row['confirmada'] = 'N'
-                if row['natu_venda']:
-                    row['venda'] = 'Sim'
-                else:
-                    row['venda'] = 'Não'
-                if row['ativa']:
-                    row['ativa'] = 'Ativa'
-                else:
-                    row['ativa'] = 'Cancelada'
                 if row['nf_devolucao'] is None:
                     row['nf_devolucao'] = 'Não'
                 if row['quantidade'] is None:
@@ -109,7 +103,7 @@ class NotafiscalRel(View):
                     'NF',
                 'faturamento':
                     'Faturamento',
-                'venda':
+                'natu_venda':
                     ('Venda', style_center),
                 'tipo':
                     ('Tipo', style_center),
