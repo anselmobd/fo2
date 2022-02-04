@@ -30,42 +30,64 @@ class NotaFiscalManager(models.Manager):
 
     def xfilter(
         self,
-        listadas='T',
         data_de=None,
         data_ate=None,
         uf=None,
+        nf=None,
+        transportadora=None,
+        cliente=None,
+        listadas='T',
         **kwargs
     ):
         local = pytz.timezone("America/Sao_Paulo")
 
-        filter = {}
-
-        if listadas.upper() == 'V':
-            filter.update({
-                'natu_venda' : True,
-                'ativa': True,
-            })
-
-        if uf:
-            filter['uf'] = uf
+        filters = {}
+        conditions = []
 
         if data_de:
             datatime_de = datetime.combine(
                 data_de, datetime.min.time())
             local_dt = local.localize(datatime_de, is_dst=None)
             dt_de = local_dt.astimezone(pytz.utc)
-            filter['faturamento__gte'] = dt_de
+            filters['faturamento__gte'] = dt_de
 
         if data_ate:
             datatime_ate = datetime.combine(
                 data_ate + timedelta(days=1), datetime.min.time())
             local_ate_dt = local.localize(datatime_ate, is_dst=None)
             dt_ate = local_ate_dt.astimezone(pytz.utc)
-            filter['faturamento__lte'] = dt_ate
+            filters['faturamento__lte'] = dt_ate
+
+        if uf:
+            filters['uf'] = uf
+
+        if nf:
+            filters['numero'] = nf
+
+        if transportadora:
+            filters['transp_nome__icontains'] = transportadora
+
+        if cliente:
+            conditions.append(
+                models.Q(dest_nome__icontains=cliente) | \
+                models.Q(dest_cnpj__contains=cliente)
+            )
+
+        if listadas.upper() == 'V':
+            filters.update({
+                'natu_venda' : True,
+                'ativa': True,
+            })
 
         select = super(NotaFiscalManager, self).get_queryset()
-        if filter:
-            select = select.filter(**filter)
+
+        if filters:
+            select = select.filter(**filters)
+
+        if conditions:
+            for condition in conditions:
+                select = select.filter(condition)
+
         return select
 
 
