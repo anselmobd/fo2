@@ -22,9 +22,7 @@ class NotafiscalRel(View):
     def mount_context(self, form, form_obj):
         context = dict(form)
         context.update({
-            'data_saida': [
-                ord[1] for ord in form_obj.fields['data_saida'].choices
-                if ord[0] == form['data_saida']][0],
+            'data_saida': dict(form_obj.fields['data_saida'].choices)[form['data_saida']],
             'posicao': '' if form['posicao'] is None else form['posicao'].nome,
         })
 
