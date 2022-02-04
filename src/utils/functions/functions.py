@@ -320,14 +320,26 @@ def acesso_externo():
 
 
 def coalesce(value, default=None):
+    """Substitui None por default"""
     if value is None:
         return default
     else:
         return value
 
 
-def dict_coalesce(adict, fields, default=None):
+def dict_coalesce(adict, fields, default):
+    """Substitui None por default em fields de dicionário"""
+    for field in fields:
+        if adict[field] is None:
+            adict[field] = default
+
+def ldict_coalesce(adict, fields, default=None):
+    """Substitui None por default em fields de lista de dicionários
+    Caso default seja None, fields é uma lista de pares de fields e defaults.
+    """
     for row in adict:
-        for field in fields:
-            if row[field] is None:
-                row[field] = default
+        if default is None:
+            for fields_default in fields:
+                dict_coalesce(row, *fields_default)
+        else:
+            dict_coalesce(row, fields, default)

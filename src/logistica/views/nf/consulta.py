@@ -7,7 +7,7 @@ from django.views import View
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from utils.functions import dict_coalesce
+from utils.functions import ldict_coalesce
 from utils.functions.dict import dict_firsts
 
 from logistica.models import NotaFiscal
@@ -66,8 +66,12 @@ class NotafiscalRel(View):
             except EmptyPage:
                 data = paginator.page(paginator.num_pages)
 
-            dict_coalesce(data, ['saida', 'entrega'], '-')
-            dict_coalesce(data, ['observacao', 'ped_cliente'], ' ')
+            ldict_coalesce(data,
+                [
+                    [['saida', 'entrega'], '-'],
+                    [['observacao', 'ped_cliente'], ' ']
+                ]
+            )
 
             for row in data:
                 row['numero|LINK'] = reverse(
