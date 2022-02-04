@@ -25,9 +25,14 @@ def update_dict(original, adding):
 
 
 def dict_firsts(adict, firsts):
-    adict = OrderedDict(adict)
+    eh_ordered = isinstance(adict, OrderedDict)
+    if not eh_ordered:
+        adict = OrderedDict(adict)
     keys = list(adict.keys())
     for key in keys:
         if key not in firsts:
             adict.move_to_end(key)
-    return dict(adict)
+    if eh_ordered:
+        return adict
+    else:
+        return dict(adict)
