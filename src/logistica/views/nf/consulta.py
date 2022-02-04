@@ -33,91 +33,20 @@ class NotafiscalRel(View):
         context = {
             'linhas_pagina': linhas_pagina,
             'paginas_vizinhas': paginas_vizinhas,
-            'ordem': form['ordem'],
         }
 
         fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
 
-        if form['listadas'] == 'V':
-            select = NotaFiscal.objects.filter(
-                natu_venda=True).filter(ativa=True)
-            context.update({
-                'listadas': 'V',
-            })
-        else:
-            select = NotaFiscal.objects
-            context.update({
-                'listadas': 'T',
-            })
-        if form['data_de']:
-            datatime_de = datetime.combine(
-                form['data_de'], datetime.min.time())
-            local_dt = local.localize(datatime_de, is_dst=None)
-            # local_dt = local.localize(form['data_de'])
-            # local_dt = form['data_de']
-            dt_de = local_dt.astimezone(pytz.utc)
-            select = select.filter(
-                faturamento__gte=dt_de
-                )
-            context.update({
-                'data_de': form['data_de'],
-            })
-        if form['data_ate']:
-            datatime_ate = datetime.combine(
-                form['data_ate'] + timedelta(days=1), datetime.min.time())
-            local_dt = local.localize(datatime_ate, is_dst=None)
-            dt_ate = local_dt.astimezone(pytz.utc)
-            select = select.filter(
-                faturamento__lte=dt_ate
-                )
-            context.update({
-                'data_ate': form['data_ate'],
-            })
-        if form['uf']:
-            select = select.filter(uf=form['uf'])
-            context.update({
-                'uf': form['uf'],
-            })
-        if form['nf']:
-            select = select.filter(numero=form['nf'])
-            context.update({
-                'nf': form['nf'],
-            })
-        if form['transportadora']:
-            condition = Q(transp_nome__icontains=form['transportadora'])
-            select = select.filter(condition)
-            context.update({
-                'transportadora': form['transportadora'],
-            })
-        if form['cliente']:
-            condition = Q(dest_nome__icontains=form['cliente']) | \
-                        Q(dest_cnpj__contains=form['cliente'])
-            select = select.filter(condition)
-            context.update({
-                'cliente': form['cliente'],
-            })
-        if form['pedido']:
-            select = select.filter(pedido=form['pedido'])
-            context.update({
-                'pedido': form['pedido'],
-            })
-        if form['ped_cliente']:
-            select = select.filter(ped_cliente=form['ped_cliente'])
-            context.update({
-                'ped_cliente': form['ped_cliente'],
-            })
-        if form['entregue'] != 'T':
-            select = select.filter(confirmada=form['entregue'] == 'S')
-            context.update({
-                'entregue': form['entregue'],
-            })
-        if form['data_saida'] != 'N':
-            select = select.filter(saida__isnull=form['data_saida'] == 'S')
-            context.update({
-                'data_saida': [
-                    ord[1] for ord in form_obj.fields['data_saida'].choices
-                    if ord[0] == form['data_saida']][0],
-            })
+        context.update(form)
+
+        context.update({
+            'data_saida': [
+                ord[1] for ord in form_obj.fields['data_saida'].choices
+                if ord[0] == form['data_saida']][0],
+        })
+
+        select = NotaFiscal.objects.xfilter(**form)
+
         if form['posicao'] is not None:
             select = select.filter(posicao_id=form['posicao'].id)
             context.update({
@@ -128,11 +57,6 @@ class NotafiscalRel(View):
             context.update({
                 'tipo': form['tipo'],
             })
-
-        if form['ordem'] == 'N':
-            select = select.order_by('-numero')
-        elif form['ordem'] == 'P':
-            select = select.order_by('pedido')
 
         data = list(select.values(*fields, 'posicao__nome'))
         data_length = len(data)

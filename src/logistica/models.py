@@ -36,6 +36,11 @@ class NotaFiscalManager(models.Manager):
         nf=None,
         transportadora=None,
         cliente=None,
+        pedido=None,
+        ped_cliente=None,
+        data_saida='N',
+        entregue='T',
+        ordem='A',
         listadas='T',
         **kwargs
     ):
@@ -43,6 +48,7 @@ class NotaFiscalManager(models.Manager):
 
         filters = {}
         conditions = []
+        order = None
 
         if data_de:
             datatime_de = datetime.combine(
@@ -73,6 +79,23 @@ class NotaFiscalManager(models.Manager):
                 models.Q(dest_cnpj__contains=cliente)
             )
 
+        if pedido:
+            filters['pedido'] = pedido
+
+        if ped_cliente:
+            filters['ped_cliente'] = ped_cliente
+
+        if data_saida != 'N':
+            filters['saida__isnull'] = data_saida == 'S'
+
+        if entregue != 'T':
+            filters['confirmada'] = entregue == 'S'
+
+        if ordem == 'N':
+            order = '-numero'
+        elif ordem == 'P':
+            order = 'pedido'
+
         if listadas.upper() == 'V':
             filters.update({
                 'natu_venda' : True,
@@ -87,6 +110,9 @@ class NotaFiscalManager(models.Manager):
         if conditions:
             for condition in conditions:
                 select = select.filter(condition)
+
+        if order:
+            select = select.order_by(order)
 
         return select
 
