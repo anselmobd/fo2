@@ -82,7 +82,8 @@ class BuscaOP(View):
             end_set = set()
             qtd_end = 0
             for end in enderecos:
-                if end['local'][0] in ends_ok:
+                letter_ini = ''.join(filter(str.isalpha, end['local']))
+                if letter_ini in ends_ok:
                     if end['local'] not in ends_nok:
                         end_set.add(end['local'])
                         qtd_end += end['qtd']
