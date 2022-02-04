@@ -186,7 +186,7 @@ class RetirarForm(forms.Form):
                 return lote
 
             ende = self.lote_object.local
-            rua = ende[0]
+            rua = ''.join(filter(str.isalpha, ende))
             try:
                 # rua é válida
                 lotes.models.EnderecoDisponivel.objects.get(inicio=rua, disponivel=True) 
