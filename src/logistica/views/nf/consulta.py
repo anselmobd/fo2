@@ -53,10 +53,9 @@ class NotafiscalRel(View):
                 else:
                     row['atraso'] = (
                         row['saida'] - row['faturamento'].date()).days
-                row['atraso_order'] = -row['atraso']
 
             if form['ordem'] == 'A':
-                data.sort(key=itemgetter('atraso_order'))
+                data.sort(key=itemgetter('atraso'), reverse=True)
 
             paginator = Paginator(data, form['por_pagina'])
             try:
@@ -66,19 +65,13 @@ class NotafiscalRel(View):
             except EmptyPage:
                 data = paginator.page(paginator.num_pages)
 
-            dict_tipo = {
-                'a': 'Atacado',
-                'v': 'Varejo',
-                'o': 'Outras',
-            }
-
             for row in data:
                 row['numero|LINK'] = reverse(
                     'logistica:notafiscal_nf', args=[row['numero']])
                 row['numero|TARGET'] = '_BLANK'
                 if row['quantidade']:
                     row['quantidade'] = int(round(row['quantidade']))
-                row['tipo'] = dict_tipo[row['tipo']]
+                row['tipo'] = dict(NotaFiscal.TIPO_NOTA)[row['tipo']]
 
             ldict_coalesce(data,
                 [
