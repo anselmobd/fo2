@@ -92,8 +92,7 @@ class NotafiscalRelForm(forms.Form):
         choices=CHOICES, initial='-')
 
     por_pagina = forms.IntegerField(
-        label='NF por página', required=False,
-        help_text='Padrão: 100 por página.',
+        label='NF por página', required=True, initial=100,
         widget=forms.TextInput(attrs={'type': 'number'}))
 
     page = forms.IntegerField(

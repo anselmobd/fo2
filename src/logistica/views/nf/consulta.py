@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from utils.functions.dict import dict_firsts
+from geral.functions import coalesce
 
 from logistica.models import NotaFiscal
 from logistica.forms import NotafiscalRelForm
@@ -19,21 +20,7 @@ class NotafiscalRel(View):
     title_name = 'Consulta de datas de NF'
 
     def mount_context(self, form, form_obj):
-        if form['por_pagina']:
-            linhas_pagina = form['por_pagina']
-        else:
-            linhas_pagina = 100
-        paginas_vizinhas = 5
-
-        context = {
-            'linhas_pagina': linhas_pagina,
-            'paginas_vizinhas': paginas_vizinhas,
-        }
-
-        fields = [f.get_attname() for f in NotaFiscal._meta.get_fields()]
-
-        context.update(form)
-
+        context = dict(form)
         context.update({
             'data_saida': [
                 ord[1] for ord in form_obj.fields['data_saida'].choices
@@ -42,18 +29,21 @@ class NotafiscalRel(View):
         })
 
         select = NotaFiscal.objects.xfilter(**form)
+        data = list(select.values(
+            *[f.get_attname() for f in NotaFiscal._meta.get_fields()],
+            'posicao__nome',
+        ))
 
-        data = list(select.values(*fields, 'posicao__nome'))
-        data_length = len(data)
-
-        if data_length == 0:
+        if len(data) == 0:
             context.update({
                 'msg_erro': 'Nenhuma NF encontrada',
             })
         else:
 
+            paginas_vizinhas = 5
             context.update({
-                'data_length': data_length,
+                'data_length': len(data),
+                'paginas_vizinhas': paginas_vizinhas,
             })
 
             for row in data:
@@ -69,7 +59,7 @@ class NotafiscalRel(View):
             if form['ordem'] == 'A':
                 data.sort(key=itemgetter('atraso_order'))
 
-            paginator = Paginator(data, linhas_pagina)
+            paginator = Paginator(data, form['por_pagina'])
             try:
                 data = paginator.page(form['page'])
             except PageNotAnInteger:
