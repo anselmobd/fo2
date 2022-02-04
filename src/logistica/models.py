@@ -42,6 +42,8 @@ class NotaFiscalManager(models.Manager):
         entregue='T',
         ordem='A',
         listadas='T',
+        posicao=None,
+        tipo='-',
         **kwargs
     ):
         local = pytz.timezone("America/Sao_Paulo")
@@ -101,6 +103,12 @@ class NotaFiscalManager(models.Manager):
                 'natu_venda' : True,
                 'ativa': True,
             })
+
+        if posicao:
+            filters['posicao_id'] = posicao.id
+
+        if tipo != '-':
+            filters['tipo'] = tipo
 
         select = super(NotaFiscalManager, self).get_queryset()
 

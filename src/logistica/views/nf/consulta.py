@@ -43,20 +43,10 @@ class NotafiscalRel(View):
             'data_saida': [
                 ord[1] for ord in form_obj.fields['data_saida'].choices
                 if ord[0] == form['data_saida']][0],
+            'posicao': '' if form['posicao'] is None else form['posicao'].nome,
         })
 
         select = NotaFiscal.objects.xfilter(**form)
-
-        if form['posicao'] is not None:
-            select = select.filter(posicao_id=form['posicao'].id)
-            context.update({
-                'posicao': form['posicao'].nome,
-            })
-        if form['tipo'] != '-':
-            select = select.filter(tipo=form['tipo'])
-            context.update({
-                'tipo': form['tipo'],
-            })
 
         data = list(select.values(*fields, 'posicao__nome'))
         data_length = len(data)
