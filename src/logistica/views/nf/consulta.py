@@ -7,8 +7,8 @@ from django.views import View
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from utils.functions import coalesce
 from utils.functions.dict import dict_firsts
-from geral.functions import coalesce
 
 from logistica.models import NotaFiscal
 from logistica.forms import NotafiscalRelForm
@@ -71,8 +71,7 @@ class NotafiscalRel(View):
                 row['numero|LINK'] = reverse(
                     'logistica:notafiscal_nf', args=[row['numero']])
                 row['numero|TARGET'] = '_BLANK'
-                if row['entrega'] is None:
-                    row['entrega'] = '-'
+                row['entrega'] = coalesce(row['entrega'], '-')
                 if row['confirmada']:
                     row['confirmada'] = 'S'
                 else:

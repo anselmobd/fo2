@@ -309,6 +309,7 @@ def dia_atual():
     hoje = datetime.date.today()
     return hoje.day
 
+
 def acesso_externo():
     acesso_interno = AcessoInterno()
     try:
@@ -316,3 +317,10 @@ def acesso_externo():
     except Exception:
         acesso_externo = False
     return acesso_externo
+
+
+def coalesce(value, default=None):
+    if value is None:
+        return default
+    else:
+        return value

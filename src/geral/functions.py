@@ -11,6 +11,7 @@ from django.db.models import Min
 from django.utils.timezone import utc
 
 import utils.functions.strings
+from utils.functions import coalesce
 
 from lotes.classes import YamlUser
 from systextil.queries.tabela.deposito import query_deposito
@@ -77,13 +78,6 @@ def has_permission(request, permission):
     if user:
         can = user.has_perm(permission)
     return can
-
-
-def coalesce(value, default=None):
-    if value is None:
-        return default
-    else:
-        return value
 
 
 def config_get_typed_value(config):
