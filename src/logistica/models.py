@@ -1,3 +1,5 @@
+import pytz
+from datetime import datetime, timedelta
 from pprint import pprint
 
 from django.contrib.auth.models import User
@@ -22,6 +24,49 @@ class PosicaoCarga(models.Model):
         db_table = "fo2_pos_carga"
         verbose_name = "Posição de carga(NF)"
         verbose_name_plural = "Posições de carga(NF)"
+
+
+class NotaFiscalManager(models.Manager):
+
+    def xfilter(
+        self,
+        listadas='T',
+        data_de=None,
+        data_ate=None,
+        uf=None,
+        **kwargs
+    ):
+        local = pytz.timezone("America/Sao_Paulo")
+
+        filter = {}
+
+        if listadas.upper() == 'V':
+            filter.update({
+                'natu_venda' : True,
+                'ativa': True,
+            })
+
+        if uf:
+            filter['uf'] = uf
+
+        if data_de:
+            datatime_de = datetime.combine(
+                data_de, datetime.min.time())
+            local_dt = local.localize(datatime_de, is_dst=None)
+            dt_de = local_dt.astimezone(pytz.utc)
+            filter['faturamento__gte'] = dt_de
+
+        if data_ate:
+            datatime_ate = datetime.combine(
+                data_ate + timedelta(days=1), datetime.min.time())
+            local_ate_dt = local.localize(datatime_ate, is_dst=None)
+            dt_ate = local_ate_dt.astimezone(pytz.utc)
+            filter['faturamento__lte'] = dt_ate
+
+        select = super(NotaFiscalManager, self).get_queryset()
+        if filter:
+            select = select.filter(**filter)
+        return select
 
 
 class NotaFiscal(models.Model):
@@ -81,6 +126,8 @@ class NotaFiscal(models.Model):
     entrega = models.DateField(null=True, blank=True, verbose_name="agendamento")
     confirmada = models.BooleanField(default=False, verbose_name="entregue")
     observacao = models.TextField(null=True, blank=True, verbose_name="observação")
+
+    objects = NotaFiscalManager()
 
     def save(self, *args, **kwargs):
         if self.id:
