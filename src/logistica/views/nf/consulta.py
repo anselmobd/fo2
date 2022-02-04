@@ -40,10 +40,8 @@ class NotafiscalRel(View):
             })
         else:
 
-            paginas_vizinhas = 5
             context.update({
                 'data_length': len(data),
-                'paginas_vizinhas': paginas_vizinhas,
             })
 
             for row in data:

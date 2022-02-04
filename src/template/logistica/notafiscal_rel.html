@@ -172,7 +172,7 @@ span.spanlink:hover {
     {% endif %}
   </h3>
 
-  {% with pag_neib=paginas_vizinhas|stringformat:"i" %}
+  {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
   {% with pag_neibn="-"|add:pag_neib %}
   {% if data.paginator.num_pages != 1 %}
     <ul class="pagination">
