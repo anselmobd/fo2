@@ -7,7 +7,7 @@ from django.views import View
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from utils.functions import coalesce
+from utils.functions import dict_coalesce
 from utils.functions.dict import dict_firsts
 
 from logistica.models import NotaFiscal
@@ -48,7 +48,6 @@ class NotafiscalRel(View):
 
             for row in data:
                 if row['saida'] is None:
-                    row['saida'] = '-'
                     row['atraso'] = (
                         timezone.now() - row['faturamento']).days
                 else:
@@ -67,19 +66,17 @@ class NotafiscalRel(View):
             except EmptyPage:
                 data = paginator.page(paginator.num_pages)
 
+            dict_coalesce(data, ['saida', 'entrega'], '-')
+            dict_coalesce(data, ['observacao', 'ped_cliente'], ' ')
+
             for row in data:
                 row['numero|LINK'] = reverse(
                     'logistica:notafiscal_nf', args=[row['numero']])
                 row['numero|TARGET'] = '_BLANK'
-                row['entrega'] = coalesce(row['entrega'], '-')
                 if row['confirmada']:
                     row['confirmada'] = 'S'
                 else:
                     row['confirmada'] = 'N'
-                if row['observacao'] is None:
-                    row['observacao'] = ' '
-                if row['ped_cliente'] is None:
-                    row['ped_cliente'] = ' '
                 if row['natu_venda']:
                     row['venda'] = 'Sim'
                 else:

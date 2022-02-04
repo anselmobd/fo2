@@ -324,3 +324,10 @@ def coalesce(value, default=None):
         return default
     else:
         return value
+
+
+def dict_coalesce(adict, fields, default=None):
+    for row in adict:
+        for field in fields:
+            if row[field] is None:
+                row[field] = default
