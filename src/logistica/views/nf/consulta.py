@@ -1,16 +1,12 @@
 from pprint import pprint
-from datetime import datetime, timedelta
-import pytz
 from operator import itemgetter
 
 from django.utils import timezone
 from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
-from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from utils.functions import untuple_keys_concat
 from utils.functions.dict import dict_firsts
 
 from logistica.models import NotaFiscal
@@ -28,7 +24,6 @@ class NotafiscalRel(View):
         else:
             linhas_pagina = 100
         paginas_vizinhas = 5
-        local = pytz.timezone("America/Sao_Paulo")
 
         context = {
             'linhas_pagina': linhas_pagina,
