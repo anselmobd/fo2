@@ -60,7 +60,7 @@ class BuscaOP(View):
         for end in ends:
             ends_ok.add(end['inicio'])
 
-        endsin = lotes.models.EnderecoDisponivel.objects.filter(disponivel=True).values('inicio')
+        endsin = lotes.models.EnderecoDisponivel.objects.filter(disponivel=False).values('inicio')
         ends_nok = set()
         for ende in endsin:
             ends_nok.add(ende['inicio'])
