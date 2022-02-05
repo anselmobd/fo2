@@ -146,6 +146,8 @@ class EnderecarForm(forms.Form):
 
 
 class RetirarForm(forms.Form):
+    _tipo_retirada = 'total'
+
     lote = forms.CharField(
         label='Lote', max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'type': 'number', 'size': 9,
@@ -206,9 +208,10 @@ class RetirarForm(forms.Form):
                 "Lote não consta em nenhuma solicitação")
 
         slq = slqs[0]
-        if slq['qtdsum'] != slq['lote__qtd']:
-            raise forms.ValidationError(
-                "Solicitação não é de total disponível")
+        if self._tipo_retirada == 'total':
+            if slq['qtdsum'] != slq['lote__qtd']:
+                raise forms.ValidationError(
+                    "Solicitação não é de total disponível")
 
         if not slq['solicitacao__coleta']:
             raise forms.ValidationError(
@@ -222,6 +225,8 @@ class RetirarForm(forms.Form):
 
 
 class RetirarParcialForm(forms.Form):
+    _tipo_retirada = 'parcial'
+
     lote = forms.CharField(
         label='Lote', max_length=9, min_length=9,
         widget=forms.TextInput(attrs={'type': 'number', 'size': 9,
@@ -235,62 +240,7 @@ class RetirarParcialForm(forms.Form):
         required=False,
         widget=forms.HiddenInput())
 
-    def clean_lote(self):
-        lote = only_digits(self.cleaned_data.get('lote', ''))
-
-        try:
-            self.lote_object = lotes.models.Lote.objects.get(lote=lote)
-        except lotes.models.Lote.DoesNotExist:
-            raise forms.ValidationError("Lote não encontrado")
-
-        if self.lote_object.local is None:
-            raise forms.ValidationError("Lote não endereçado")
-
-        try:
-            self.op_object = lotes.models.Op.objects.get(
-                op=self.lote_object.op)
-        except lotes.models.Op.DoesNotExist:
-            raise forms.ValidationError("OP do lote não encontrada")
-
-        slqs = lotes.models.SolicitaLoteQtd.objects.filter(
-            lote=self.lote_object
-        ).values(
-            'solicitacao__coleta',
-            'lote__qtd',
-        ).annotate(
-            qtdsum=Sum('qtd')
-        )
-
-        if len(slqs) == 0:
-            if self.op_object.pedido != 0:
-                return lote
-
-            ende = self.lote_object.local
-            rua = ''.join(filter(str.isalpha, ende))
-            try:
-                lotes.models.EnderecoDisponivel.objects.get(inicio=rua, disponivel=True) 
-            except lotes.models.EnderecoDisponivel.DoesNotExist:
-                # rua não válida -> permite retirar
-                return lote
-
-            try:
-                lotes.models.EnderecoDisponivel.objects.get(inicio=ende, disponivel=False) 
-                # endereço é inválido -> permite retirar
-                return lote
-            except lotes.models.EnderecoDisponivel.DoesNotExist:
-                pass
-
-
-            # rua válida e endereço não é inválido -> só retira com solicitação
-            raise forms.ValidationError(
-                "Lote não consta em nenhuma solicitação")
-
-        slq = slqs[0]
-        if not slq['solicitacao__coleta']:
-            raise forms.ValidationError(
-                "Coleta no CD não liberada")
-
-        return lote
+    clean_lote = RetirarForm.clean_lote
 
     def clean(self):
         if not self.errors:
@@ -304,7 +254,7 @@ class RetirarParcialForm(forms.Form):
             #         "Faça uma retirada de lote inteiro"
             #     )
 
-            if quant > self.lote_record.qtd:
+            if quant > self.lote_object.qtd:
                 self.add_error(
                     "quant",
                     "Quantidade maior que a disponível"
