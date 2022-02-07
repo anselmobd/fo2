@@ -9,7 +9,7 @@ from collections import namedtuple
 from pprint import pprint
 
 from db_password import (
-    DBPASS,
+    DBPASS_POSTGRE,
 )
 
 
@@ -42,7 +42,7 @@ class ExpCD():
             port=25432,
             database="tussor_fo2_production",
             user="tussor_fo2",
-            password=DBPASS,
+            password=DBPASS_POSTGRE,
         )
         self.cursor = self.conn.cursor()
     
@@ -275,8 +275,10 @@ class ExpCD():
             if bloco <= 'H':
                 espaco = '1'
                 andar = f'0{andar}'
-            else:
+            if bloco in ['S', 'Y']:
                 espaco = '2'
+            else:
+                espaco = '1'
             if bloco == 'D':
                 iap = int(ap)
                 if iap > 18:
