@@ -10,10 +10,15 @@ def op_movi_estagios(cursor, op):
         , count(*) LOTES
         , CASE
           WHEN u.QTDE_PRODUZIDA = 0
-          AND u.QTDE_PECAS_2A = 0
-          AND u.QTDE_PERDAS = 0
-          AND u.QTDE_CONSERTO < 0
+           AND u.QTDE_PECAS_2A = 0
+           AND u.QTDE_PERDAS = 0
+           AND u.QTDE_CONSERTO < 0
           THEN 'DESENDEREÇA'
+          WHEN u.QTDE_PRODUZIDA = 0
+           AND u.QTDE_PECAS_2A = 0
+           AND u.QTDE_PERDAS = 0
+           AND u.QTDE_CONSERTO > 0
+          THEN 'ENDEREÇA'
           WHEN u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
               u.QTDE_PERDAS + u.QTDE_CONSERTO < 0
           THEN 'ESTORNO'
@@ -56,10 +61,15 @@ def op_movi_estagios(cursor, op):
         , ll.EST
         , CASE
           WHEN u.QTDE_PRODUZIDA = 0
-          AND u.QTDE_PECAS_2A = 0
-          AND u.QTDE_PERDAS = 0
-          AND u.QTDE_CONSERTO < 0
+           AND u.QTDE_PECAS_2A = 0
+           AND u.QTDE_PERDAS = 0
+           AND u.QTDE_CONSERTO < 0
           THEN 'DESENDEREÇA'
+          WHEN u.QTDE_PRODUZIDA = 0
+           AND u.QTDE_PECAS_2A = 0
+           AND u.QTDE_PERDAS = 0
+           AND u.QTDE_CONSERTO > 0
+          THEN 'ENDEREÇA'
           WHEN u.QTDE_PRODUZIDA + u.QTDE_PECAS_2A +
               u.QTDE_PERDAS + u.QTDE_CONSERTO < 0
           THEN 'ESTORNO'
