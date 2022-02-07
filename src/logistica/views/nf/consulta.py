@@ -79,11 +79,15 @@ class NotafiscalRel(View):
 
             style_center = 'text-align: center;'
             style_right = 'text-align: right;'
+            faturamento_cor = 'color: green;'
+            saida_cor = 'color: darkorange;'
+            entrega_cor = 'color: blue;'
+            observacao_cor = 'color: red;'
             columns = {
                 'numero':
                     'NF',
                 'faturamento':
-                    'Faturamento',
+                    ('Faturamento', faturamento_cor),
                 'natu_venda':
                     ('Venda', style_center),
                 'tipo':
@@ -97,9 +101,9 @@ class NotafiscalRel(View):
                 'atraso':
                     ('Atraso', style_center),
                 'saida':
-                    ('Saída', style_center),
+                    ('Saída', style_center + saida_cor),
                 'entrega':
-                    ('Agendada', style_center),
+                    ('Agendada', style_center + entrega_cor),
                 'confirmada':
                     ('Entregue', style_center),
                 'uf':
@@ -117,7 +121,7 @@ class NotafiscalRel(View):
                 'quantidade':
                     ('Qtd.', style_right),
                 'observacao':
-                    'Observação',
+                    ('Observação', observacao_cor),
                 'pedido':
                     'Pedido',
                 'ped_cliente':
@@ -138,7 +142,7 @@ class NotafiscalRel(View):
             for idx, value in enumerate(columns.values()):
                 if isinstance(value, tuple):
                     style[idx+1] = value[1]
-
+            pprint(style)
             context.update({
                 'headers': headers,
                 'fields': fields,
