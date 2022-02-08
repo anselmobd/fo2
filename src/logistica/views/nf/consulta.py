@@ -79,10 +79,10 @@ class NotafiscalRel(View):
 
             style_center = 'text-align: center;'
             style_right = 'text-align: right;'
-            faturamento_cor = 'color: green;'
-            saida_cor = 'color: darkorange;'
-            entrega_cor = 'color: blue;'
-            observacao_cor = 'color: red;'
+            faturamento_cor = 'color: green !important;'
+            saida_cor = 'color: darkorange !important;'
+            entrega_cor = 'color: blue !important;'
+            observacao_cor = 'color: red !important;'
             columns = {
                 'numero':
                     'NF',
