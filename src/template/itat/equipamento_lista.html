@@ -10,11 +10,6 @@
 .pagination {
   margin: 0.5em 0em auto;
 }
-thead th
-{
-  position: sticky;
-  top: 0px;
-}
 </style>
 {% endblock %}
 
@@ -85,7 +80,7 @@ thead th
       <small>({{por_pagina}} notas por página)</small>
     {% endif %}
     <table>
-      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
     </table>
   {% endif %}
