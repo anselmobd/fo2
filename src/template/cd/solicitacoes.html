@@ -6,13 +6,6 @@
 {% block stylesheet %}
 <style>
 {% include 'layout/simple_table.css' %}
-
-thead th
-{
-  position: sticky;
-  top: 0px;
-}
-
 </style>
 {% endblock %}
 
@@ -101,7 +94,7 @@ thead th
   {% if hdata %}
     <h4>Histórico</h4>
     <table>
-      {% include "layout/thead_generic.html" with data=hheaders style=hstyle only %}
+      {% include "layout/thead_generic.html" with data=hheaders style=hstyle sticky=True only %}
       {% include "layout/tbody_generic.html" with fields=hfields data=hdata safe=hsafe style=hstyle only %}
     </table>
   {% endif %}
@@ -144,17 +137,17 @@ thead th
   <table>
     <thead>
       <tr>
-        <th>
+        <th class="sticky">
           &nbsp;
         </th>
         {% for field in fields %}
+          <th class="sticky"
           {% if field == 'total_qtd' or field == 'total_no_cd' %}
-            <th style="text-align: right;">
+            style="text-align: right;">
           {% elif field == 'ativa' or field == 'concluida' or field == 'can_print' or field == 'coleta' %}
-            <th style="text-align: center;">
-          {% else %}
-            <th>
+            style="text-align: center;">
           {% endif %}
+          >
             {{headers|get_item:field}}
           </th>
         {% endfor%}
