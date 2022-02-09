@@ -157,7 +157,13 @@ def min_not_None(*args):
 
 
 def debug(message, level=None, depth=1):
-    callerframerecord = inspect.stack()[depth]
+    if isinstance(depth, int):
+        depth = slice(depth, depth+1)
+    for callerframerecord in inspect.stack()[depth]:
+        debug_print(callerframerecord, message, level)
+
+
+def debug_print(callerframerecord, message, level=None):
     frame = callerframerecord[0]
     info = inspect.getframeinfo(frame)
     if level is None:
