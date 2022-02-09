@@ -39,17 +39,15 @@ class Op(View):
             data = lotes.queries.lote.op_lotes(cursor, op)
             p.prt('op_lotes')
 
-            link = ('LOTE')
             for row in data:
                 row['LOTE'] = '{}{:05}'.format(row['PERIODO'], row['OC'])
-                row['LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
+                row['LOTE|LINK'] = '/lotes/posicao/{}'.format(row['LOTE'])
             context.update({
                 'headers': ('Estágio', 'OS', 'Referência', 'Cor', 'Tamanho',
                             'Período', 'OC', 'Quant.', 'Lote/OC'),
                 'fields': ('EST', 'OS', 'REF', 'COR', 'TAM',
                            'PERIODO', 'OC', 'QTD', 'LOTE'),
                 'data': data,
-                'link': link,
             })
 
             for row in i_data:
@@ -290,9 +288,8 @@ class Op(View):
             p.prt('op_get_os')
 
             if len(os_data) != 0:
-                os_link = ('OS')
                 for row in os_data:
-                    row['LINK'] = '/lotes/os/{}'.format(row['OS'])
+                    row['OS|LINK'] = '/lotes/os/{}'.format(row['OS'])
                     cnpj = '{:08d}/{:04d}-{:02d}'.format(
                         row['CNPJ9'],
                         row['CNPJ4'],
@@ -308,7 +305,6 @@ class Op(View):
                                   'SITUACAO', 'CANC',
                                   'LOTES', 'QTD'),
                     'os_data': os_data,
-                    'os_link': os_link,
                 })
 
             if i_data[0]['TEM_OS'] == 'S':
@@ -316,18 +312,14 @@ class Op(View):
                 o_data = lotes.queries.op.op_os_ref(cursor, op)
                 p.prt('op_os_ref')
 
-                o_link = ('OS')
                 for row in o_data:
                     if row['OS']:
-                        row['LINK'] = '/lotes/os/{}'.format(row['OS'])
-                    else:
-                        row['LINK'] = None
+                        row['OS|LINK'] = '/lotes/os/{}'.format(row['OS'])
                 context.update({
                     'o_headers': ('OS', 'Referência', 'Tamanho', 'Cor',
                                 'Qtd. Lotes', 'Quant. Itens'),
                     'o_fields': ('OS', 'REF', 'TAM', 'COR', 'LOTES', 'QTD'),
                     'o_data': o_data,
-                    'o_link': o_link,
                 })
 
             # Detalhamento de movimentações de estágios
