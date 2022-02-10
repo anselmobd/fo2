@@ -41,6 +41,9 @@ with open(os.path.join(ROOT_DIR, 'etc/secret_key.txt')) as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+DEBUG_CURSOR_EXECUTE = True
+DEBUG_CURSOR_EXECUTE_PRT = True
+
 ALLOWED_HOSTS = [
     # production
     '192.168.1.96', '177.23.138.90', ' 192.141.163.26',

@@ -12,6 +12,9 @@ from .db_password import (
 
 DEBUG = False
 
+# DEBUG_CURSOR_EXECUTE = False
+DEBUG_CURSOR_EXECUTE_PRT = False
+
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 DATABASES = {
