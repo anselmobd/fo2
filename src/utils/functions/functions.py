@@ -209,6 +209,18 @@ def debug_print(line):
     sys.stdout.flush()
 
 
+def debug_cursor_execute(cursor, sql, prt=False):
+    statment = "\n".join([
+        f"-- {line}"
+        for line
+        in debug(depth=slice(2, None), prt=False)
+    ])
+    statment += sql
+    if prt:
+        print(statment)
+    cursor.execute(statment)
+
+
 def line_tik():
     debug(int(round(time.time() * 1000))/1000, 1, depth=2)
 
