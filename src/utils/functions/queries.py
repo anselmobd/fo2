@@ -1,4 +1,4 @@
-from pprint import pprint
+from pprint import pprint, pformat
 
 from django.conf import settings
 
@@ -59,17 +59,27 @@ def sql_where_none_if(field, value, test, operation="=", conector="AND", quote =
 
 
 def debug_cursor_execute(
-        cursor, sql, prt=settings.DEBUG_CURSOR_EXECUTE_PRT
+        cursor, sql, list_args=None, prt=settings.DEBUG_CURSOR_EXECUTE_PRT
     ):
+    info = []
     if settings.DEBUG_CURSOR_EXECUTE:
-        statment = "\n".join([
-            f"-- {line}"
-            for line
-            in debug(depth=slice(2, None), prt=False)
-        ])
-    else:
-        statment = ''
+        info.append(
+            "\n".join([
+                f"-- {line}"
+                for line
+                in debug(depth=slice(2, None), prt=False)
+            ])
+        )
+        if list_args:
+            info.append(
+                "\n".join([
+                    f"-- arg[{idx}]={pformat(line)}"
+                    for idx, line
+                    in enumerate(list_args)
+                ])
+            )
+    statment = "\n".join(info)
     statment += sql
     if prt:
         print(statment)
-    cursor.execute(statment)
+    cursor.execute(statment, list_args)
