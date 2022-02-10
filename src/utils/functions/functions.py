@@ -163,27 +163,20 @@ def debug(message, level=None, depth=1):
         debug_print(callerframerecord, message, level)
 
 
-def debug_print(callerframerecord, message, level=None):
+def debug_print(callerframerecord, message, level=0):
     frame = callerframerecord[0]
     info = inspect.getframeinfo(frame)
-    if level is None:
-        level = 0
-    msg = ''
+
+    msg_list = []
     if level >= 3:
-        msg += 'file={filename}-'
+        msg_list.append(f"file={info.filename}")
     if level >= 2:
-        msg += 'func={function}-'
+        msg_list.append(f"func={info.function}")
     if level >= 1:
-        msg += 'line={line}-'
-    msg += '{message}'
-    print(
-        msg.format(
-            filename=info.filename,
-            function=info.function,
-            line=info.lineno,
-            message=message,
-            )
-        )
+        msg_list.append(f"line={info.lineno}")
+    msg_list.append(message)
+
+    print('-'.join(msg_list))
     sys.stdout.flush()
 
 
