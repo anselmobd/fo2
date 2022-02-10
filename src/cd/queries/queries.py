@@ -3,8 +3,7 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 
 from cd.queries.functions import where_ende_disponivel
-
-import lotes.models
+from utils.functions.queries import debug_cursor_execute
 
 
 def inconsistencias_detalhe(cursor, op, ocs, est63=False):
@@ -101,7 +100,7 @@ def inconsistencias_detalhe(cursor, op, ocs, est63=False):
         , i.COR
         , i.OC
     '''.format(op=op, ocs=ocs_str, filtro_est63=filtro_est63)
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
 
 
@@ -139,7 +138,7 @@ def sum_pedido(cursor, referencia=None):
         filter_referencia=filter_referencia,
         filter_local=filter_local,
     )
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
 
 
@@ -163,7 +162,7 @@ def historico(cursor, op):
         , l."local"
         , u.username
     '''
-    cursor.execute(sql, [op])
+    debug_cursor_execute(cursor, sql, [op])
     return rows_to_dict_list_lower(cursor)
 
 
@@ -184,7 +183,7 @@ def historico_detalhe(cursor, op):
           1
         , l."local"
     '''
-    cursor.execute(sql, [op])
+    debug_cursor_execute(cursor, sql, [op])
     return rows_to_dict_list_lower(cursor)
 
 
@@ -201,5 +200,5 @@ def historico_lote(cursor, lote):
         order by
           t."time"
     '''
-    cursor.execute(sql, [lote])
+    debug_cursor_execute(cursor, sql, [lote])
     return rows_to_dict_list_lower(cursor)

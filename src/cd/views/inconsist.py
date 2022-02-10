@@ -7,6 +7,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 import lotes.models
 
@@ -112,7 +113,7 @@ class Inconsistencias(View):
                   op.ORDEM_PRODUCAO
                 , le.SEQUENCIA_ESTAGIO
             '''.format(filtro=filtro)
-            cursor.execute(sql)
+            debug_cursor_execute(cursor, sql)
             estagios = rows_to_dict_list_lower(cursor)
 
             for op in ops:
