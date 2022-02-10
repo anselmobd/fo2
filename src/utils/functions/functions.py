@@ -156,16 +156,19 @@ def min_not_None(*args):
     return mini
 
 
-def debug(message, level=None, depth=1):
+def debug(message=None, level=0, depth=1):
     if isinstance(depth, int):
         depth = slice(depth, depth+1)
     for callerframerecord in inspect.stack()[depth]:
         debug_print(callerframerecord, message, level)
 
 
-def debug_print(callerframerecord, message, level=0):
+def debug_print(callerframerecord, message=None, level=0):
     frame = callerframerecord[0]
     info = inspect.getframeinfo(frame)
+
+    if not message and not level:
+        level = 3
 
     msg_list = []
     if level >= 3:
@@ -174,7 +177,8 @@ def debug_print(callerframerecord, message, level=0):
         msg_list.append(f"func={info.function}")
     if level >= 1:
         msg_list.append(f"line={info.lineno}")
-    msg_list.append(message)
+    if message:
+        msg_list.append(message)
 
     print('-'.join(msg_list))
     sys.stdout.flush()
