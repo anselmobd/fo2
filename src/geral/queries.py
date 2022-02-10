@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 
 
 def unidades(cursor):
@@ -27,7 +28,7 @@ def unidades(cursor):
         ORDER BY
           di.DIVISAO_PRODUCAO
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -46,7 +47,7 @@ def estagios(cursor):
         ORDER BY
           e.CODIGO_ESTAGIO
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -61,5 +62,5 @@ def periodos_confeccao(cursor):
         ORDER BY
           p.PERIODO_PRODUCAO
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
