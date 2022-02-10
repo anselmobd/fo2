@@ -2,6 +2,7 @@ import datetime
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import split_non_empty
 
 
@@ -131,7 +132,7 @@ def busca_ob(
           b.ORDEM_PRODUCAO
     '''
 
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
 
     for row in dados:
@@ -174,7 +175,7 @@ def ob_estagios(cursor, ob=None):
           {filtra_ob} -- filtra_ob
     '''
 
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
 
     for row in dados:
@@ -223,7 +224,7 @@ def ob_tecidos(cursor, ob=None):
           {filtra_ob} -- filtra_ob
     '''
 
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
 
     return dados
@@ -251,7 +252,7 @@ def ob_destinos(cursor, ob=None):
           b.NR_PEDIDO_ORDEM
     '''
 
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
 
     return dados

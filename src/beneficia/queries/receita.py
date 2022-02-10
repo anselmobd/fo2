@@ -2,6 +2,7 @@ import datetime
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def receita_inform(cursor, receita):
@@ -18,7 +19,7 @@ def receita_inform(cursor, receita):
         , r.DESCR_REFERENCIA DESCR
         FROM referencias r
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
 
 
@@ -33,7 +34,7 @@ def receita_subgrupo(cursor, receita):
         ORDER BY
           t.TAMANHO_REF
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
 
 
@@ -50,7 +51,7 @@ def receita_cores(cursor, receita):
           c.SUBGRU_ESTRUTURA
         , c.ITEM_ESTRUTURA
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
 
 
@@ -84,7 +85,7 @@ def receita_estrutura(cursor, niv, grup, sub, item):
         ORDER BY 
           re.SEQUENCIA
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
     for row in dados:
         row['comp'] = '.'.join([

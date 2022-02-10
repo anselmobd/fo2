@@ -2,6 +2,7 @@ import datetime
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def busca_ot(cursor, ot=None):
@@ -31,7 +32,7 @@ def busca_ot(cursor, ot=None):
           t.ORDEM_AGRUPAMENTO
     '''
 
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
 
     tipo_ordem = {
