@@ -156,7 +156,9 @@ def min_not_None(*args):
     return mini
 
 
-def debug(message=None, level=0, depth=1):
+def debug(message=None, level=0, depth=None):
+    if depth is None:
+        depth = slice(1,None)
     if isinstance(depth, int):
         depth = slice(depth, depth+1)
     for callerframerecord in inspect.stack()[depth]:
