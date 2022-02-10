@@ -156,15 +156,24 @@ def min_not_None(*args):
     return mini
 
 
-def debug(message=None, level=0, depth=None):
+def debug(message=None, level=0, depth=None, prt=True):
     if depth is None:
         depth = slice(1,None)
     if isinstance(depth, int):
         depth = slice(depth, depth+1)
+    if not prt:
+        lines = []
     for callerframerecord in inspect.stack()[depth]:
-        debug_print(
-            debug_line(
-                callerframerecord, message, level))
+        line = debug_line(
+            callerframerecord, message, level
+        )
+        if line:
+            if prt:
+                debug_print(line)
+            else:
+                lines.append(line)
+    if not prt:
+        return lines
 
 
 def debug_line(callerframerecord, message=None, level=0):
@@ -196,9 +205,8 @@ def debug_line(callerframerecord, message=None, level=0):
 
 
 def debug_print(line):
-    if line:
-        print(line)
-        sys.stdout.flush()
+    print(line)
+    sys.stdout.flush()
 
 
 def line_tik():
