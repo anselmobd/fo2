@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from utils.functions import debug
+
 
 def sql_where(field, value, operation="=", conector="AND", quote = None):
     if bool(field) and value is not None:
@@ -52,3 +54,15 @@ def sql_where_none_if(field, value, test, operation="=", conector="AND", quote =
         conector=conector,
         quote=quote,
     )
+
+
+def debug_cursor_execute(cursor, sql, prt=False):
+    statment = "\n".join([
+        f"-- {line}"
+        for line
+        in debug(depth=slice(2, None), prt=False)
+    ])
+    statment += sql
+    if prt:
+        print(statment)
+    cursor.execute(statment)
