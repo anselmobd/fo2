@@ -162,10 +162,12 @@ def debug(message=None, level=0, depth=None):
     if isinstance(depth, int):
         depth = slice(depth, depth+1)
     for callerframerecord in inspect.stack()[depth]:
-        debug_print(callerframerecord, message, level)
+        debug_print(
+            debug_line(
+                callerframerecord, message, level))
 
 
-def debug_print(callerframerecord, message=None, level=0):
+def debug_line(callerframerecord, message=None, level=0):
     frame = callerframerecord[0]
     info = inspect.getframeinfo(frame)
 
@@ -190,8 +192,13 @@ def debug_print(callerframerecord, message=None, level=0):
     if message:
         msg_list.append(message)
 
-    print(';'.join(msg_list))
-    sys.stdout.flush()
+    return ';'.join(msg_list)
+
+
+def debug_print(line):
+    if line:
+        print(line)
+        sys.stdout.flush()
 
 
 def line_tik():
