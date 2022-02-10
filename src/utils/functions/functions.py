@@ -167,12 +167,20 @@ def debug_print(callerframerecord, message=None, level=0):
     frame = callerframerecord[0]
     info = inspect.getframeinfo(frame)
 
+    if info.filename.startswith(settings.BASE_DIR):
+        filename = info.filename[len(settings.BASE_DIR)+1:]
+    else:
+        return
+
+    if info.function == '__call__':
+        return
+
     if not message and not level:
         level = 3
 
     msg_list = []
     if level >= 3:
-        msg_list.append(f"file={info.filename}")
+        msg_list.append(f"file={filename}")
     if level >= 2:
         msg_list.append(f"func={info.function}")
     if level >= 1:
@@ -180,7 +188,7 @@ def debug_print(callerframerecord, message=None, level=0):
     if message:
         msg_list.append(message)
 
-    print('-'.join(msg_list))
+    print(';'.join(msg_list))
     sys.stdout.flush()
 
 
