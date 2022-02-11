@@ -6,6 +6,7 @@ from django.core.cache import cache
 from utils.cache import entkeys
 from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list, rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def produtos_n1_basic(cursor, param):
@@ -169,7 +170,7 @@ def produtos_n1_basic(cursor, param):
             ORDER BY
             p.REFERENCIA
         '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     data = rows_to_dict_list(cursor)
     return data
 
@@ -291,7 +292,7 @@ def nivel_ref_inform(cursor, nivel, ref, upper=True):
           ON cl.CGC_9 = r.CGC_CLIENTE_9
          and cl.CGC_4 = r.CGC_CLIENTE_4
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     if upper:
         return rows_to_dict_list(cursor)
     else:
@@ -318,7 +319,7 @@ def ref_utilizada_em(cursor, ref):
         WHERE ec.NIVEL_COMP = 1
           AND ec.GRUPO_COMP = '{ref}'
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -338,7 +339,7 @@ def prod_cores(cursor, nivel, grupo):
         ORDER BY
           c.ITEM_ESTRUTURA
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -363,7 +364,7 @@ def prod_tamanhos(cursor, nivel, grupo):
         ORDER BY
           tam.ORDEM_TAMANHO
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -407,7 +408,7 @@ def ref_roteiros(cursor, ref):
         , r.SUBGRU_ESTRUTURA
         , r.ITEM_ESTRUTURA
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -437,7 +438,7 @@ def ref_1roteiro(cursor, ref, alternativa, roteiro, tamanho, cor):
         ORDER BY
           r.SEQ_OPERACAO
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -514,7 +515,7 @@ def nivel_ref_estruturas(cursor, nivel, ref):
         , ia.SUB_ITEM
         , ia.ITEM_ITEM
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -593,7 +594,7 @@ def modelo_inform(cursor, modelo, tipo=None):
         WHERE 1=1
           {filtra_tipo} -- filtra_tipo
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -639,7 +640,7 @@ def busca_cliente_de_produto(cursor, cliente):
     """.format(
         filtro=filtro,
         )
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
 
 
@@ -700,7 +701,7 @@ def estr_estagio_de_insumo(cursor):
         , e.ALTERNATIVA_ITEM
         , e.GRUPO_COMP
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -743,7 +744,7 @@ def multiplas_colecoes(cursor):
         , p.modelo
         , r.COLECAO
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -767,7 +768,7 @@ def get_roteiros_ref(cursor, ref):
           er.NUMERO_ROTEIRO
         , er.SEQ_OPERACAO
     """
-    cursor.execute(sql, [ref])
+    debug_cursor_execute(cursor, sql, [ref])
     return rows_to_dict_list(cursor)
 
 
@@ -944,7 +945,7 @@ def get_refs(cursor):
         ORDER BY
           r.REFERENCIA
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -998,7 +999,7 @@ def info_xml(cursor, ref=None):
     """.format(
         filtra_ref=filtra_ref,
     )
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -1036,7 +1037,7 @@ def por_cliente(cursor, cliente=None):
     """.format(
         filtra_cliente=filtra_cliente,
     )
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -1080,7 +1081,7 @@ def item_narrativa(cursor, nivel, ref, tam, cor):
           {filtra_tam} -- filtra_tam
           {filtra_cor} -- filtra_cor
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     result = rows_to_dict_list(cursor)
 
     cache.set(key_cache, result, timeout=entkeys._MINUTE * 5)

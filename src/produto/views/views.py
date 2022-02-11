@@ -13,6 +13,7 @@ from geral.dados.colecao_fluxos import dict_colecao_fluxos
 from geral.dados.fluxo_roteiros import get_roteiros_de_fluxo
 from utils.forms import FiltroForm
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 from utils.views import group_rowspan
 
 import produto.forms as forms
@@ -47,7 +48,7 @@ def lista_item_n1_sem_preco_medio(request):
         , tam.ORDEM_TAMANHO
         , ptc.ITEM_ESTRUTURA
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     data = rows_to_dict_list(cursor)
     if len(data) == 0:
         context.update({
@@ -71,7 +72,7 @@ def estatistica(request):
         FROM BASI_030 p
         WHERE p.NIVEL_ESTRUTURA <> 0
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     data = rows_to_dict_list(cursor)
     row = data[0]
     context = {
@@ -100,7 +101,7 @@ def stat_nivel(request):
             AND o.PROCONF_GRUPO = r.REFERENCIA
         )
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
 
     sql = '''
         SELECT
@@ -135,7 +136,7 @@ def stat_nivel(request):
         ORDER BY
           1
     '''
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     data = cursor.fetchall()
     return JsonResponse(data, safe=False)
 
@@ -215,7 +216,7 @@ def stat_niveis(request, nivel):
             ORDER BY
               p.REFERENCIA
         '''
-        cursor.execute(sql, [nivel[0]])
+        debug_cursor_execute(cursor, sql, [nivel[0]])
         data = rows_to_dict_list(cursor)
         context = {
             'nivel': nivel,
@@ -487,7 +488,7 @@ def gera_roteiros_padrao_ref(cursor, ref):
 
     # output += pformat(sqls, indent=4)+'\n'
     for sql in sqls:
-        cursor.execute(sql)
+        debug_cursor_execute(cursor, sql)
 
     return output, [roteiro_correto, roteiro_errado, gargalo_errado]
 

@@ -7,6 +7,7 @@ from django.utils import timezone
 from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 import logistica.models as models
 
 
@@ -30,7 +31,7 @@ class Command(BaseCommand):
                       )
                   -- AND rownum = 1
             '''
-            cursor.execute(sql_get)
+            debug_cursor_execute(cursor, sql_get)
             zeroed_ori = rows_to_dict_list(cursor)
             # self.stdout.write('len(zeroed_ori) = {}'.format(len(zeroed_ori)))
 
@@ -46,9 +47,9 @@ class Command(BaseCommand):
             '''
             for ori in zeroed_ori:
                 # self.stdout.write(str([ori['REF'], ori['TAM'], ori['COR']]))
-                cursor.execute(sql_set, [ori['REF'], ori['TAM'], ori['COR']])
+                debug_cursor_execute(cursor, sql_set, [ori['REF'], ori['TAM'], ori['COR']])
 
-            cursor.execute(sql_get)
+            debug_cursor_execute(cursor, sql_get)
             zeroed_new = rows_to_dict_list(cursor)
 
             date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")

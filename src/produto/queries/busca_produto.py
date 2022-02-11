@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 
 
 def busca_produto(
@@ -152,5 +153,5 @@ def busca_produto(
           NLSSORT(r.REFERENCIA,'NLS_SORT=BINARY_AI')
         ) rr
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)

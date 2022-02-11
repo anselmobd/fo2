@@ -4,6 +4,7 @@ from django.core.cache import cache
 
 from utils.functions import my_make_key_cache, fo2logger
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 
 import lotes.models
 
@@ -29,7 +30,7 @@ def colecoes_de_modelo(cursor, modelo):
         GROUP BY
           r.COLECAO
     """.format(modelo)
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     result = rows_to_dict_list(cursor)
 
     cache.set(key_cache, result)

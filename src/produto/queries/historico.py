@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import connection
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 
 
 def hist_narrativa(referencia):
@@ -24,5 +25,5 @@ def hist_narrativa(referencia):
       order by
         h.sequencia desc
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)

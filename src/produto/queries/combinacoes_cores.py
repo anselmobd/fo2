@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 
 
 def combinacoes_cores(cursor, ref, alt):
@@ -68,7 +69,7 @@ def combinacoes_cores(cursor, ref, alt):
           ELSE e.ITEM_COMP
           END
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 

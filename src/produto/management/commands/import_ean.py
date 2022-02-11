@@ -8,6 +8,7 @@ from django.core.management.base import BaseCommand, CommandError
 from fo2.connections import db_cursor_so
 
 from utils.functions.gtin import gtin_check_digit
+from utils.functions.queries import debug_cursor_execute
 
 
 class Command(BaseCommand):
@@ -96,7 +97,7 @@ class Command(BaseCommand):
                     tam=ref_bar['tamanho'],
                     cor=ref_bar['cor'],
                 )
-                cursor.execute(sql)
+                debug_cursor_execute(cursor, sql)
                 if cursor.rowcount > 0:
                     pprint(ref_bar)
 

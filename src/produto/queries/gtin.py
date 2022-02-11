@@ -3,6 +3,7 @@ from pprint import pprint
 from django.db.utils import DatabaseError
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 
 
 def gtin(cursor, ref=None, tam=None, cor=None, gtin=None):
@@ -61,7 +62,7 @@ def gtin(cursor, ref=None, tam=None, cor=None, gtin=None):
         , rtc.SUBGRU_ESTRUTURA
     """
 
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
 
 
@@ -77,7 +78,7 @@ def set_gtin(cursor, niv, ref, tam, cor, gtin):
           AND rtc.ITEM_ESTRUTURA = '{cor}'
     """
     try:
-        cursor.execute(sql_select)
+        debug_cursor_execute(cursor, sql_select)
         data = rows_to_dict_list(cursor)
         if len(data) != 1:
             return -1, 'Item não único'
@@ -96,12 +97,12 @@ def set_gtin(cursor, niv, ref, tam, cor, gtin):
           AND rtc.ITEM_ESTRUTURA = '{cor}'
     """
     try:
-        cursor.execute(sql_update)
+        debug_cursor_execute(cursor, sql_update)
     except DatabaseError as error:
         return -3, error
 
     try:
-        cursor.execute(sql_select)
+        debug_cursor_execute(cursor, sql_select)
         data = rows_to_dict_list(cursor)
         if data[0]['GTIN'] != gtin:
             return -4, 'GTIN não atualizado'
