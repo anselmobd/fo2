@@ -1,0 +1,28 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'cd:atividade_cd' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+  </form>
+  <br/>
+
+  {% if erro %}
+    <h3>{{ erro }}</h3>
+  {% else %}
+    {% if data_de %}
+      <h2>Data: {{ data_de }}</h2>
+    {% endif %}
+  {% endif %}
+
+{% endblock content %}

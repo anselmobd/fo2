@@ -9,6 +9,9 @@ urlpatterns = [
 
     re_path(r'^s/$', views.teste_som, name='teste_som'),
 
+    re_path(r'^atividade_cd/?$',
+        views.AtividadeCD.as_view(), name='atividade_cd'),
+
     re_path(r'^estoque/(?P<ordem>.)/(?P<filtro>.+)/$',
         views.Estoque.as_view(), name='estoque_filtro'),
     re_path(r'^estoque/$', views.Estoque.as_view(), name='estoque'),
