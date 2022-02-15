@@ -1,6 +1,7 @@
 from django.urls import re_path
 
 from . import views
+import lotes.views.por_celula
 
 
 app_name = 'producao'
@@ -157,6 +158,9 @@ urlpatterns = [
     re_path(r'^posicao/$', views.Posicao.as_view(), name='posicao'),
     re_path(r'^posicao/(?P<lote>\d+)/$', views.Posicao.as_view(),
         name='posicao__get'),
+
+    re_path(r'^por_celula/$',
+        lotes.views.por_celula.PorCelula.as_view(), name='por_celula'),
 
     re_path(r'^quant_estagio/$',
         views.analise.QuantEstagio.as_view(), name='quant_estagio'),
