@@ -21,8 +21,20 @@
     <h3>{{ erro }}</h3>
   {% else %}
     {% if data_de %}
-      <h2>Data: {{ data_de }}</h2>
+      <h4>Data: {{ data_de }}
+        {% if data_de %}
+          até {{ data_ate }}
+        {% endif %}
+      </h4>
     {% endif %}
+
+    {% if data %}
+      <table>
+        {% include "layout/thead_generic.html" with data=headers only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      </table>
+    {% endif %}
+
   {% endif %}
 
 {% endblock content %}

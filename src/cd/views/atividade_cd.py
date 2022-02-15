@@ -1,10 +1,13 @@
+from datetime import datetime
 from pprint import pprint
 
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 
+import geral.models
 import lotes.models
+from geral.functions import rec_trac_log_to_dict
 
 import cd.forms
 
@@ -18,7 +21,70 @@ class AtividadeCD(View):
 
     def mount_context(self, request, form):
         data_de = form.cleaned_data['data_de']
-        context = {'data_de': data_de}
+        data_ate = form.cleaned_data['data_ate']
+        if not data_ate:
+            data_ate = data_de
+
+        data_ini = datetime.combine(data_de, datetime.min.time())
+        data_fim = datetime.combine(data_ate, datetime.max.time())
+
+        context = {
+            'data_de': data_de,
+            'data_ate': data_ate,
+        }
+
+        tracking = list(geral.models.RecordTracking.objects.filter(
+            table='Lote',
+            iud='u',
+            log__contains='local:',
+            time__gte=data_ini,
+            time__lte=data_fim,
+        ).order_by('time'))
+
+        ids = [entry.record_id for entry in tracking]
+
+        ocs = list(lotes.models.Lote.objects.filter(
+            id__in=ids
+        ))
+        lote = {
+            oc.id: oc
+            for oc in ocs
+        }
+
+        dados = []
+        for entry in tracking:
+            oc = lote[entry.record_id]
+            if oc.estagio < 63:
+                continue
+            dict_log = rec_trac_log_to_dict(entry.log, entry.log_version)
+            dados.append({
+                'time': entry.time,
+                'user': entry.user,
+                'op': oc.op,
+                'referencia': oc.referencia,
+                'lote': oc.lote,
+                'local': dict_log['local'] if dict_log['local'] else 'SAIU!',
+            })
+
+        context.update({
+            'headers': [
+                'Hora',
+                'Usuário',
+                'OP',
+                'Referência',
+                'Lote',
+                'Local',
+            ],
+            'fields': [
+                'time',
+                'user',
+                'op',
+                'referencia',
+                'lote',
+                'local',
+            ],
+            'data': dados,
+        })
 
         return context
 
