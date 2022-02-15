@@ -291,56 +291,8 @@ def busca_op(
             )"""
 
     sql = '''
-        SELECT
-          sele.OP
-        , sele.PED
-        , sele.ESTAGIO
-        , sele.TIPO_REF
-        , sele.TIPO_OP
-        , sele.TIPO_FM_OP
-        , sele.OP_REL
-        , sele.SITUACAO
-        , sele.COD_SITUACAO
-        , sele.CANCELAMENTO
-        , sele.DT_CANCELAMENTO
-        , sele.ALTERNATIVA
-        , sele.ROTEIRO
-        , sele."REF"
-        , sele.MODELO
-        , sele.LOTES
-        , COALESCE(sele.QTD, 0) QTD
-        , COALESCE(sele.QTD_AP, 0) QTD_AP
-        , COALESCE(sele.QTD_CD, 0) QTD_CD
-        , COALESCE(sele.QTD_F, 0) QTD_F
-        , sele.DT_DIGITACAO
-        , sele.DT_CORTE
-        , sele.PERIODO
-        , sele.PERIODO_INI
-        , sele.PERIODO_FIM
-        , sele.DEPOSITO_CODIGO
-        , sele.DEPOSITO
-        , sele.PEDIDO
-        , sele.PRIORIDADE
-        , sele.PED_CLIENTE
-        , sele.DT_EMBARQUE
-        , sele.STATUS_PEDIDO
-        , sele.MOLDE
-        , sele.DESCR_REF
-        , sele.COLECAO
-        , sele.OBSERVACAO
-        , sele.OBSERVACAO2
-        , sele.UNIDADE
-        , CASE WHEN EXISTS
-          ( SELECT 
-              rot.CODIGO_ESTAGIO
-            FROM MQOP_050 rot
-            JOIN obrf_070 serv
-              ON serv.CODIGO_ESTAGIO = rot.CODIGO_ESTAGIO
-            WHERE rot.GRUPO_ESTRUTURA = sele."REF"
-              AND rot.NUMERO_ALTERNATI = sele.ALTERNATIVA
-              AND rot.NUMERO_ROTEIRO = sele.ROTEIRO
-          ) THEN 'S' ELSE 'N' END TEM_OS
-        FROM (
+        WITH selecao AS
+        (
         SELECT
           o.ORDEM_PRODUCAO OP
         , o.PEDIDO_VENDA PED
@@ -622,7 +574,57 @@ def busca_op(
         , o.OBSERVACAO2
         ORDER BY
           o.ORDEM_PRODUCAO DESC
-        ) sele
+        )
+        SELECT
+          sele.OP
+        , sele.PED
+        , sele.ESTAGIO
+        , sele.TIPO_REF
+        , sele.TIPO_OP
+        , sele.TIPO_FM_OP
+        , sele.OP_REL
+        , sele.SITUACAO
+        , sele.COD_SITUACAO
+        , sele.CANCELAMENTO
+        , sele.DT_CANCELAMENTO
+        , sele.ALTERNATIVA
+        , sele.ROTEIRO
+        , sele."REF"
+        , sele.MODELO
+        , sele.LOTES
+        , COALESCE(sele.QTD, 0) QTD
+        , COALESCE(sele.QTD_AP, 0) QTD_AP
+        , COALESCE(sele.QTD_CD, 0) QTD_CD
+        , COALESCE(sele.QTD_F, 0) QTD_F
+        , sele.DT_DIGITACAO
+        , sele.DT_CORTE
+        , sele.PERIODO
+        , sele.PERIODO_INI
+        , sele.PERIODO_FIM
+        , sele.DEPOSITO_CODIGO
+        , sele.DEPOSITO
+        , sele.PEDIDO
+        , sele.PRIORIDADE
+        , sele.PED_CLIENTE
+        , sele.DT_EMBARQUE
+        , sele.STATUS_PEDIDO
+        , sele.MOLDE
+        , sele.DESCR_REF
+        , sele.COLECAO
+        , sele.OBSERVACAO
+        , sele.OBSERVACAO2
+        , sele.UNIDADE
+        , CASE WHEN EXISTS
+          ( SELECT 
+              rot.CODIGO_ESTAGIO
+            FROM MQOP_050 rot
+            JOIN obrf_070 serv
+              ON serv.CODIGO_ESTAGIO = rot.CODIGO_ESTAGIO
+            WHERE rot.GRUPO_ESTRUTURA = sele."REF"
+              AND rot.NUMERO_ALTERNATI = sele.ALTERNATIVA
+              AND rot.NUMERO_ROTEIRO = sele.ROTEIRO
+          ) THEN 'S' ELSE 'N' END TEM_OS
+        FROM selecao sele
         where 1=1
         {filtro_quant_fin} -- filtro_quant_fin
         {filtro_quant_emp} -- filtro_quant_emp
