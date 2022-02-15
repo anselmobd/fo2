@@ -3,6 +3,7 @@ from django.core.cache import cache
 from utils.functions.models import rows_to_dict_list
 
 from utils.functions import fo2logger, my_make_key_cache
+from utils.functions.queries import debug_cursor_execute
 
 
 def op_inform(cursor, op, cached=False):
@@ -650,7 +651,7 @@ def busca_op(
         filtra_data_de=filtra_data_de,
         filtra_data_ate=filtra_data_ate,
     )
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
 
     cached_result = rows_to_dict_list(cursor)
     cache.set(key_cache, cached_result)
