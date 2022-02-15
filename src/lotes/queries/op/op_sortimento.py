@@ -66,7 +66,7 @@ def op_sortimentos(cursor, **kwargs):
             AND TRIM( LEADING '0' FROM
                   REGEXP_REPLACE(
                     o.REFERENCIA_PECA,
-                    '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$',
+                    '^[a-zA-Z]?([^a-zA-Z]+)[a-zA-Z]*$',
                     '\\1'
                   )
                 ) = '{}'

@@ -13,7 +13,7 @@ def busca_nf(cursor, ref=None, cor=None, modelo=None):
         filtro_modelo = f'''--
             AND TRIM(LEADING '0' FROM
                      (REGEXP_REPLACE(i.GRUPO_ESTRUTURA,
-                                     '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
+                                     '^[a-zA-Z]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
                                      ))) = '{modelo}' '''
 
     filtro_cor = ''
