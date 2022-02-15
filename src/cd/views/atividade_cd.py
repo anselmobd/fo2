@@ -52,12 +52,14 @@ class AtividadeCD(View):
         }
 
         dados = []
+        count = 1
         for entry in tracking:
             oc = lote[entry.record_id]
             if oc.estagio < 63:
                 continue
             dict_log = rec_trac_log_to_dict(entry.log, entry.log_version)
             dados.append({
+                'count': count,
                 'time': entry.time,
                 'user': entry.user,
                 'op': oc.op,
@@ -65,23 +67,26 @@ class AtividadeCD(View):
                 'lote': oc.lote,
                 'local': dict_log['local'] if dict_log['local'] else 'SAIU!',
             })
+            count += 1
 
         context.update({
             'headers': [
+                'Nº',
                 'Hora',
-                'Usuário',
                 'OP',
                 'Referência',
                 'Lote',
                 'Local',
+                'Usuário',
             ],
             'fields': [
+                'count',
                 'time',
-                'user',
                 'op',
                 'referencia',
                 'lote',
                 'local',
+                'user',
             ],
             'data': dados,
         })
