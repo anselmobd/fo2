@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 
 from django.urls import reverse
@@ -19,6 +20,10 @@ class PorCelula(O2BaseGetPostView):
         self.title_name = 'Produção por célula'
         self.cleaned_data2self = True
         self.get_args2context = True
+        self.form_dict_initial = {
+            # 'data_de': datetime.date.today.isoformat(),
+            'celula': 2836,
+        }
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -26,10 +31,13 @@ class PorCelula(O2BaseGetPostView):
         if not self.data_ate:
             self.data_ate = self.data_de
 
+        celula_divisao = self.celula.divisao_producao if self.celula else -1
+
         dados = query_por_celula(
             self.cursor,
             self.data_de,
             self.data_ate,
+            celula_divisao,
         )
         # pprint(dados)
         # pprint(self.context)
