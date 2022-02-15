@@ -8,6 +8,7 @@ from fo2.connections import db_cursor, db_cursor_so
 
 import lotes.models as models
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 from lotes.queries.oracle import (
     oracle_existe_col, 
@@ -175,7 +176,7 @@ class Command(BaseCommand):
                     AND lf.SEQUENCIA_ESTAGIO = lote.ULTIMA_SEQ_ESTAGIO)
                  )
         '''
-        cursor.execute(sql)
+        debug_cursor_execute(cursor, sql)
         return rows_to_dict_list_lower(cursor)
 
     def set_lote(self, lote, row):

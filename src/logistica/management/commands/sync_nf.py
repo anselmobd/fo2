@@ -8,6 +8,7 @@ from django.utils import timezone
 from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 
 import logistica.models as models
 
@@ -132,7 +133,7 @@ class Command(BaseCommand):
                 ORDER BY
                   f.NUM_NOTA_FISCAL DESC
             '''
-            cursor.execute(sql)
+            debug_cursor_execute(cursor, sql)
             nfs_st = rows_to_dict_list(cursor)
 
             nfs_fo2_list = list(models.NotaFiscal.objects.values_list(

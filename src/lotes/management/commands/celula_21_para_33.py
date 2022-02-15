@@ -8,6 +8,7 @@ from fo2.connections import db_cursor_so
 
 import logistica.models as models
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
 
 
 class Command(BaseCommand):
@@ -41,7 +42,7 @@ class Command(BaseCommand):
                       OR l33.QTDE_PERDAS <> 0
                       )
             '''
-            cursor.execute(sql_get)
+            debug_cursor_execute(cursor, sql_get)
             lotes_ori = rows_to_dict_list(cursor)
             # self.stdout.write('len(lotes_ori) = {}'.format(len(lotes_ori)))
 
@@ -58,12 +59,13 @@ class Command(BaseCommand):
                 # self.stdout.write(str(
                 #    [ori['CODIGO_FAMILIA'], ori['PERIODO_PRODUCAO'],
                 #     ori['ORDEM_CONFECCAO']]))
-                cursor.execute(
+                debug_cursor_execute(
+                    cursor, 
                     sql_set,
                     [ori['CODIGO_FAMILIA'], ori['PERIODO_PRODUCAO'],
                      ori['ORDEM_CONFECCAO']])
 
-            cursor.execute(sql_get)
+            debug_cursor_execute(cursor, sql_get)
             lotes_new = rows_to_dict_list(cursor)
 
             date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")

@@ -6,8 +6,9 @@ from django.utils import timezone
 
 from fo2.connections import db_cursor_so
 
-from utils.functions.models import rows_to_dict_list_lower
 import logistica.models as models
+from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 class Command(BaseCommand):
@@ -35,7 +36,7 @@ class Command(BaseCommand):
                 ) r
                 WHERE rownum <= 100
             '''
-            cursor.execute(sql_get)
+            debug_cursor_execute(cursor, sql_get)
             lotes = rows_to_dict_list_lower(cursor)
             # self.stdout.write('len(lotes) = {}'.format(len(lotes)))
             # pprint(lotes)
@@ -57,7 +58,7 @@ class Command(BaseCommand):
             for lote in lotes:
                 # self.stdout.write(str([lote['periodo'], lote['oc']]))
                 self.stdout.write(str(lote))
-                cursor.execute(sql_seq, [lote['periodo'], lote['oc']])
+                debug_cursor_execute(cursor, sql_seq, [lote['periodo'], lote['oc']])
                 seqs = rows_to_dict_list_lower(cursor)
                 # self.stdout.write('len(seqs) = {}'.format(len(seqs)))
                 # pprint(seqs)
@@ -71,7 +72,7 @@ class Command(BaseCommand):
                 for seq in seqs:
                     # self.stdout.write(str([seq['rid'], seq['seq']]))
                     self.stdout.write(str(seq))
-                    cursor.execute(sql_setseq, [seq['seq'], seq['rid']])
+                    debug_cursor_execute(cursor, sql_setseq, [seq['seq'], seq['rid']])
 
         except Exception as e:
             raise CommandError(

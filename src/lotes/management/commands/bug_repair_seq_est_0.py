@@ -7,6 +7,7 @@ from django.utils import timezone
 from fo2.connections import db_cursor_so
 
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 import logistica.models as models
 
 
@@ -47,7 +48,7 @@ class Command(BaseCommand):
             ) oo
             WHERE rownum <= 10
         '''
-        cursor.execute(sql_get)
+        cudebug_cursor_execute(cursor, sql_get)
         ops = rows_to_dict_list_lower(cursor)
         # self.stdout.write('len(ops) = {}'.format(len(ops)))
         # self.stdout.write('op = {}'.format(ops[0]['op']))
@@ -67,7 +68,7 @@ class Command(BaseCommand):
                   le.PERIODO_PRODUCAO
                 , le.ORDEM_CONFECCAO
             '''
-            cursor.execute(sql_get, [op])
+            cursor.debug_cursor_execute(cursor, sql_get, [op])
             lotes = rows_to_dict_list_lower(cursor)
             self.stdout.write('len(lotes) = {}'.format(len(lotes)))
             # pprint(lotes)
@@ -97,7 +98,7 @@ class Command(BaseCommand):
             '''
             for lote in lotes:
                 # self.stdout.write(str([lote['periodo'], lote['oc']]))
-                cursor.execute(sql_seq, [lote['periodo'], lote['oc']])
+                debug_cursor_execute(cursor, sql_seq, [lote['periodo'], lote['oc']])
                 seqs = rows_to_dict_list_lower(cursor)
                 # self.stdout.write('len(seqs) = {}'.format(len(seqs)))
                 # pprint(seqs)
@@ -114,7 +115,7 @@ class Command(BaseCommand):
                 for seq in seqs:
                     self.stdout.write(str([seq['rid'], seq['seq']]))
                     # self.stdout.write(str(seq))
-                    cursor.execute(sql_setseq, [seq['seq'], seq['rid']])
+                    debug_cursor_execute(cursor, sql_setseq, [seq['seq'], seq['rid']])
                 # return
 
         # except Exception as e:
