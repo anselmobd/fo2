@@ -138,8 +138,8 @@ class AtividadeCD(View):
                 'headers': [
                     'Data',
                     'Nº Endereçamentos',
-                    'Primeiro',
-                    'Último',
+                    'De',
+                    'Até',
                 ],
                 'fields': [
                     'data',

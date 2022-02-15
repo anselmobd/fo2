@@ -641,6 +641,6 @@ class AtividadeCDForm(forms.Form):
         # ('ud', 'Usuário, Data'),
     ]
     apresentacao = forms.ChoiceField(
-        label='Apresentação', choices=CHOICES, initial='l')
+        label='Apresentação', choices=CHOICES, initial='d')
 
 
