@@ -22,7 +22,7 @@
   {% else %}
     {% if data_de %}
       <h4>Data: {{ data_de }}
-        {% if data_de %}
+        {% if data_de != data_ate %}
           até {{ data_ate }}
         {% endif %}
       </h4>
