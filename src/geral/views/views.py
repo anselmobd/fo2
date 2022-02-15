@@ -92,7 +92,9 @@ class PainelView(View):
         ultimo_mes = timezone.now() - datetime.timedelta(days=61)
 
         layout = painel.layout
-        config = yaml.load(layout)
+        pprint(layout)
+        config = yaml.load(layout, Loader=yaml.Loader)
+        pprint(config)
         for dado in config['dados']:
             try:
                 modulo = PainelModulo.objects.get(slug=dado['modulo'])
