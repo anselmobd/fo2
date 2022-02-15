@@ -634,5 +634,13 @@ class AtividadeCDForm(forms.Form):
         label='Data final', required=False,
         help_text='(Se não informar, assume igual a inicial.)',
         widget=forms.DateInput(attrs={'type': 'date'}))
+    CHOICES = [
+        ('l', 'Listagem'),
+        ('d', 'Data'),
+        # ('du', 'Data, Usuário'),
+        # ('ud', 'Usuário, Data'),
+    ]
+    apresentacao = forms.ChoiceField(
+        label='Apresentação', choices=CHOICES, initial='l')
 
 
