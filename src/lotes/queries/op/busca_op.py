@@ -41,79 +41,79 @@ def busca_op(
 
     filtra_op = ""
     if op is not None and op != '':
-        filtra_op = """--
-            AND o.ORDEM_PRODUCAO = '{}'
+        filtra_op = f"""--
+            AND o.ORDEM_PRODUCAO = '{op}'
             AND rownum = 1
-        """.format(op)
+        """
 
     filtra_ref = ""
     if ref is not None and ref != '':
         if '%' in ref:
-            filtra_ref = """--
-                AND o.REFERENCIA_PECA like '{}'
-            """.format(ref)
+            filtra_ref = f"""--
+                AND o.REFERENCIA_PECA like '{ref}'
+            """
         else:
-            filtra_ref = """--
-                AND o.REFERENCIA_PECA = '{}'
-            """.format(ref)
+            filtra_ref = f"""--
+                AND o.REFERENCIA_PECA = '{ref}'
+            """
 
     filtra_modelo = ""
     if modelo is not None and modelo != '':
-        filtra_modelo = """--
+        filtra_modelo = f"""--
             AND TRIM(LEADING '0' FROM
                    (REGEXP_REPLACE(o.REFERENCIA_PECA,
                                    '^[abAB]?([^a-zA-Z]+)[a-zA-Z]*$', '\\1'
-                                   ))) = '{}'
-        """.format(modelo)
+                                   ))) = '{modelo}'
+        """
 
     filtra_tam = ""
     filtra_qtd_tam = ""
     if tam is not None and tam != '':
-        filtra_tam = """
+        filtra_tam = f"""
             AND EXISTS
             ( SELECT
                 l.*
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-                AND l.PROCONF_SUBGRUPO = '{}'
+                AND l.PROCONF_SUBGRUPO = '{tam}'
             )
-        """.format(tam)
-        filtra_qtd_tam = "AND l.PROCONF_SUBGRUPO = '{}'".format(tam)
+        """
+        filtra_qtd_tam = f"AND l.PROCONF_SUBGRUPO = '{tam}'"
 
     filtra_cor = ""
     filtra_qtd_cor = ""
     if cor is not None and cor != '':
-        filtra_cor = """
+        filtra_cor = f"""
             AND EXISTS
             ( SELECT
                 l.*
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-                AND l.PROCONF_ITEM = '{}'
+                AND l.PROCONF_ITEM = '{cor}'
             )
-        """.format(cor)
-        filtra_qtd_cor = "AND l.PROCONF_ITEM = '{}'".format(cor)
+        """
+        filtra_qtd_cor = f"AND l.PROCONF_ITEM = '{cor}'"
 
     filtra_cor_tam = ""
     if filtra_tam and filtra_cor:
-        filtra_cor_tam = """--
+        filtra_cor_tam = f"""--
             AND EXISTS
             ( SELECT
                 l.*
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
-                AND l.PROCONF_SUBGRUPO = '{}'
-                AND l.PROCONF_ITEM = '{}'
+                AND l.PROCONF_SUBGRUPO = '{tam}'
+                AND l.PROCONF_ITEM = '{cor}'
             )
-        """.format(tam, cor)
+        """
         filtra_tam = ""
         filtra_cor = ""
 
     filtra_deposito = ""
     if deposito is not None and deposito != '':
-        filtra_deposito = """
-            AND o.DEPOSITO_ENTRADA = '{}'
-        """.format(deposito)
+        filtra_deposito = f"""
+            AND o.DEPOSITO_ENTRADA = '{deposito}'
+        """
 
     filtra_posicao = ""
     if posicao == 'p':
@@ -291,7 +291,7 @@ def busca_op(
                 AND l.CODIGO_ESTAGIO = {estagio_op}
             )"""
 
-    sql = '''
+    sql = f'''
         WITH selecao AS
         (
         SELECT
@@ -629,28 +629,7 @@ def busca_op(
         where 1=1
         {filtro_quant_fin} -- filtro_quant_fin
         {filtro_quant_emp} -- filtro_quant_emp
-    '''.format(
-        filtra_op=filtra_op,
-        filtro_motivo=filtro_motivo,
-        filtra_ref=filtra_ref,
-        filtra_modelo=filtra_modelo,
-        filtra_cnpj9=filtra_cnpj9,
-        filtra_estagio_op=filtra_estagio_op,
-        filtra_tam=filtra_tam,
-        filtra_qtd_tam=filtra_qtd_tam,
-        filtra_cor=filtra_cor,
-        filtra_cor_tam=filtra_cor_tam,
-        filtra_qtd_cor=filtra_qtd_cor,
-        filtra_deposito=filtra_deposito,
-        filtro_tipo=filtro_tipo,
-        filtro_tipo_alt=filtro_tipo_alt,
-        filtra_situacao=filtra_situacao,
-        filtra_posicao=filtra_posicao,
-        filtro_quant_fin=filtro_quant_fin,
-        filtro_quant_emp=filtro_quant_emp,
-        filtra_data_de=filtra_data_de,
-        filtra_data_ate=filtra_data_ate,
-    )
+    '''
     debug_cursor_execute(cursor, sql)
 
     cached_result = rows_to_dict_list(cursor)
