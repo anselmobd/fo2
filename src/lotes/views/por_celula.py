@@ -46,8 +46,8 @@ class PorCelula(O2BaseGetPostView):
         group_rowspan(dados, group)
 
         self.context.update({
-            'headers': ['Data', 'Referência', 'Lotes', 'Produzido', 'Perda'],
-            'fields': ['data', 'ref', 'lotes', 'qtd', 'perda'],
+            'headers': ['Data','OP', 'Referência', 'Lotes', 'Produzido', 'Perda'],
+            'fields': ['data', 'op', 'ref', 'lotes', 'qtd', 'perda'],
             'group': group,
             'dados': dados,
         })

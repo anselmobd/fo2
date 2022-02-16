@@ -37,6 +37,7 @@ def query(cursor, dada_de=None, dada_ate=None, celula=None, estagio=None):
         ) 
         SELECT
           TO_DATE(ml.DATA_PRODUCAO) data
+        , l.ORDEM_PRODUCAO op
         , l.PROCONF_GRUPO ref
         , count(l.ORDEM_CONFECCAO) lotes
         , sum(l.QTDE_PECAS_PROD) qtd
@@ -62,9 +63,11 @@ def query(cursor, dada_de=None, dada_ate=None, celula=None, estagio=None):
           AND l.QTDE_PECAS_PROD <> 0 
         GROUP BY 
           ml.DATA_PRODUCAO
+        , l.ORDEM_PRODUCAO
         , l.PROCONF_GRUPO
         ORDER BY 
           ml.DATA_PRODUCAO
+        , l.ORDEM_PRODUCAO
     '''
     debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
