@@ -5,6 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.views import group_rowspan
 
 from lotes.forms.por_celula import PorCelulaForm
 from lotes.queries.producao.por_celula import query as query_por_celula
@@ -41,8 +42,12 @@ class PorCelula(O2BaseGetPostView):
             })
             return
 
+        group = ['data']
+        group_rowspan(dados, group)
+
         self.context.update({
             'headers': ['Data', 'Referência', 'Lotes', 'Produzido', 'Perda'],
             'fields': ['data', 'ref', 'lotes', 'qtd', 'perda'],
+            'group': group,
             'dados': dados,
         })

@@ -26,7 +26,7 @@
       <h4>Produção</h4>
       <table>
         {% include "layout/thead_generic.html" with data=headers style=style only %}
-        {% include "layout/tbody_generic.html" with fields=fields data=dados style=style only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}
       </table>
     {% endif %}
   {% endif %}
