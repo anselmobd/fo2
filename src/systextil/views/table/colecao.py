@@ -37,14 +37,14 @@ def view(request):
         'headers': (
             'Código',
             'Descrição',
-            'Produto',
+            'Produto (Nível 1)',
             'PA',
             'PG',
             'PB',
             'MP',
             'MD',
             'Desmonte',
-            'Insumo',
+            'Insumo (Nível 2 e 9)',
             'Total',
         ),
         'fields': (
