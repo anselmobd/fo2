@@ -27,22 +27,18 @@ class PorCelulaForm(forms.Form):
 
     celula = forms.ModelChoiceField(
         label='Célula',
-        required=False,
         queryset=Familia.objects.filter(
             divisao_producao__range=['1000', '9999']
         ).order_by(
             'divisao_producao'
         ),
-        empty_label="(Todas)",
         initial=2836,
     )
 
     estagio = forms.ModelChoiceField(
         label='Estágio',
-        required=False,
         queryset=Estagio.objects.all().order_by(
             'codigo_estagio'
         ),
-        empty_label="(Todos)",
         initial=33,
     )
