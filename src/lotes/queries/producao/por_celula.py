@@ -4,7 +4,7 @@ from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def query(cursor, dada_de=None, dada_ate=None, celula=-1):
+def query(cursor, dada_de=None, dada_ate=None, celula=-1, estagio=-1):
     filtro_dada_de = (
         f"AND ml.DATA_PRODUCAO >= '{dada_de}'"
     ) if dada_de else ''
@@ -16,6 +16,10 @@ def query(cursor, dada_de=None, dada_ate=None, celula=-1):
     filtro_celula = (
         f"AND l.CODIGO_FAMILIA = '{celula}'"
     ) if celula != -1 else ''
+
+    filtro_estagio = (
+        f"AND l.CODIGO_ESTAGIO = '{estagio}'"
+    ) if estagio != -1 else ''
 
     sql = f'''
         WITH mlseq AS
@@ -52,7 +56,8 @@ def query(cursor, dada_de=None, dada_ate=None, celula=-1):
           {filtro_dada_ate} -- filtro_dada_ate
           -- AND l.CODIGO_FAMILIA = 2836
           {filtro_celula} -- filtro_celula
-          AND l.CODIGO_ESTAGIO = 33
+          -- AND l.CODIGO_ESTAGIO = 33
+          {filtro_estagio} -- filtro_estagio
           AND l.QTDE_PECAS_PROD <> 0 
         GROUP BY 
           ml.DATA_PRODUCAO

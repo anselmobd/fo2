@@ -28,12 +28,14 @@ class PorCelula(O2BaseGetPostView):
             self.data_ate = self.data_de
 
         celula_divisao = self.celula.divisao_producao if self.celula else -1
+        codigo_estagio = self.estagio.codigo_estagio if self.estagio else -1
 
         dados = query_por_celula(
             self.cursor,
             self.data_de,
             self.data_ate,
             celula_divisao,
+            codigo_estagio,
         )
         # pprint(dados)
         # pprint(self.context)

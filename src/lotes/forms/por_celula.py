@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django import forms
 
-from systextil.models import Familia
+from systextil.models import Familia, Estagio
 from utils.functions.date import today_ymd
 
 class PorCelulaForm(forms.Form):
@@ -35,4 +35,14 @@ class PorCelulaForm(forms.Form):
         ),
         empty_label="(Todas)",
         initial=2836,
+    )
+
+    estagio = forms.ModelChoiceField(
+        label='Estágio',
+        required=False,
+        queryset=Estagio.objects.all().order_by(
+            'codigo_estagio'
+        ),
+        empty_label="(Todos)",
+        initial=33,
     )
