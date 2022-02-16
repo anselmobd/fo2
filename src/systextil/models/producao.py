@@ -26,3 +26,20 @@ class Periodo(models.Model):
         app_label = 'systextil'
         db_table = "PCPC_010"
         verbose_name = "Período"
+
+
+class Estagio(models.Model):
+    codigo_estagio = models.IntegerField(primary_key=True)
+    descricao = models.CharField(
+        max_length=20,
+        verbose_name='Descrição')
+    leed_time = models.DecimalField(max_digits=8, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.codigo_estagio}-{self.descricao}"
+
+    class Meta:
+        managed = False
+        app_label = 'systextil'
+        db_table = "MQOP_005"
+        verbose_name = "Estágio"
