@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 
 
@@ -25,3 +26,8 @@ def dow_info(dt, info, capitalize=False):
     if capitalize:
         result = result.capitalize()
     return result
+
+
+def today_ymd():
+    """Return today in format YYY-MM-DD"""
+    return datetime.date.today().strftime('%Y-%m-%d')
