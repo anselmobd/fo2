@@ -36,6 +36,9 @@ class PorCelula(O2BaseGetPostView):
         )
 
         if not dados:
+            self.context.update({
+                'msg_erro': 'Nenhuma produção encontrada',
+            })
             return
 
         self.context.update({
