@@ -42,7 +42,7 @@ class PorCelula(O2BaseGetPostView):
             return
 
         self.context.update({
-            'headers': ['Data', 'Referência', 'Lotes', 'Peças'],
-            'fields': ['data', 'ref', 'lotes', 'qtd'],
+            'headers': ['Data', 'Referência', 'Lotes', 'Produzido', 'Perda'],
+            'fields': ['data', 'ref', 'lotes', 'qtd', 'perda'],
             'dados': dados,
         })

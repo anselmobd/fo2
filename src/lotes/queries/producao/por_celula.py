@@ -40,6 +40,7 @@ def query(cursor, dada_de=None, dada_ate=None, celula=None, estagio=None):
         , l.PROCONF_GRUPO ref
         , count(l.ORDEM_CONFECCAO) lotes
         , sum(l.QTDE_PECAS_PROD) qtd
+        , sum(l.QTDE_PERDAS) perda
         FROM PCPC_040 l
         JOIN mlseq mls
           ON mls.per = l.PERIODO_PRODUCAO
