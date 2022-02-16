@@ -330,20 +330,6 @@ def roteiros_de_fluxo(request, id):
         content_type='text/plain')
 
 
-def unidade(request):
-    cursor = db_cursor_so(request)
-    data = queries.unidades(cursor)
-    context = {
-        'titulo': 'Unidades / Divisões',
-        'headers': ('Código ', 'Descrição', 'UF', 'Cidade',
-                    '(CNPJ) Razão social'),
-        'fields': ('DIV', 'DESCR', 'UF', 'CIDADE',
-                   'NOME'),
-        'data': data,
-    }
-    return render(request, 'geral/unidade.html', context)
-
-
 class Configuracao(PermissionRequiredMixin, View):
     def __init__(self, *args, **kwargs):
         self.permission_required = 'geral.change_config'

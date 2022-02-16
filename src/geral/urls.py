@@ -30,8 +30,6 @@ urlpatterns = [
     re_path(r'^roteiros_de_fluxo/(?P<id>.+)/$',
         views.roteiros_de_fluxo, name='roteiros_de_fluxo'),
 
-    re_path(r'^unidade/$', views.unidade, name='unidade'),
-
     re_path(r'^configuracao/$', views.Configuracao.as_view(), name='configuracao'),
 
 ]
