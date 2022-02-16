@@ -5,6 +5,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.functions import untuple_keys_concat
 from utils.views import group_rowspan
 
 from lotes.forms.por_celula import PorCelulaForm
@@ -50,4 +51,7 @@ class PorCelula(O2BaseGetPostView):
             'fields': ['data', 'op', 'ref', 'lotes', 'qtd', 'perda'],
             'group': group,
             'dados': dados,
+            'style': untuple_keys_concat({
+                (4, 5, 6): 'text-align: right;',
+            }),
         })
