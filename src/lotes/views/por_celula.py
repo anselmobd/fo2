@@ -6,7 +6,7 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
-from utils.views import group_rowspan
+from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.por_celula import PorCelulaForm
 from lotes.queries.producao.por_celula import query as query_por_celula
@@ -44,6 +44,16 @@ class PorCelula(O2BaseGetPostView):
             return
 
         group = ['data']
+        totalize_grouped_data(dados, {
+            'group': group,
+            'sum': ['lotes', 'qtd', 'perda'],
+            'count': [],
+            'descr': {'data': 'Total do dia:'},
+            'flags': ['NO_TOT_1'],
+            'global_sum': ['lotes', 'qtd', 'perda'],
+            'global_descr':  {'data': 'Total geral:'},
+            'row_style': 'font-weight: bold;',
+        })
         group_rowspan(dados, group)
 
         self.context.update({
