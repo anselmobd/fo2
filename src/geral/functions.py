@@ -17,7 +17,6 @@ from lotes.classes import YamlUser
 from systextil.queries.tabela.deposito import query_deposito
 
 import geral.models as models
-import geral.queries
 from .models import Painel, PainelModulo, PopAssunto
 
 

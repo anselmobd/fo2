@@ -26,7 +26,6 @@ from utils.functions.format import format_cnpj
 from systextil.queries.tabela.deposito import query_deposito
 
 import geral.forms as forms
-import geral.queries as queries
 from geral.dados.fluxo_roteiros import get_roteiros_de_fluxo
 from geral.dados.fluxos import dict_fluxo
 from geral.functions import (
@@ -50,23 +49,6 @@ def index(request):
         return render(request, 'geral/index_agator.html')
     else:
         return render(request, 'geral/index.html')
-
-
-def periodo_confeccao(request):
-    cursor = db_cursor_so(request)
-    data = queries.periodos_confeccao(cursor)
-
-    for row in data:
-        row['INI'] = row['INI'].date()
-        row['FIM'] = row['FIM'].date()
-
-    context = {
-        'titulo': 'Períodos de confecção',
-        'headers': ('Período', 'Data de início', 'Data de fim'),
-        'fields': ('PERIODO', 'INI', 'FIM'),
-        'data': data,
-    }
-    return render(request, 'geral/tabela_geral.html', context)
 
 
 class PainelView(View):

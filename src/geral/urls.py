@@ -7,9 +7,6 @@ app_name = 'geral'
 urlpatterns = [
     re_path(r'^$', views.index, name='index'),
 
-    re_path(r'^periodo_confeccao/$',
-        views.periodo_confeccao, name='periodo_confeccao'),
-
     re_path(r'^painel/(?P<painel>[^/]*)/?$',
         views.PainelView.as_view(), name='painel'),
 

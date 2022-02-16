@@ -1,6 +1,5 @@
 <ul>
   {% if empresa == 'tussor' %}
-    <li><a href="{% url 'geral:periodo_confeccao' %}">Períodos de confecção</a></li>
     {% if request.user.is_authenticated %}
       {% if request.user.username == 'anselmo_sis' %}
         <li><a href="{% url 'geral:exec_gera_fluxo' %}">Gera fluxo</a></li>

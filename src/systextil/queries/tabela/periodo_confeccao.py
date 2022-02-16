@@ -1,10 +1,10 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def periodos_confeccao(cursor):
+def query(cursor):
     sql = '''
         SELECT
           p.PERIODO_PRODUCAO PERIODO
@@ -16,4 +16,8 @@ def periodos_confeccao(cursor):
           p.PERIODO_PRODUCAO
     '''
     debug_cursor_execute(cursor, sql)
-    return rows_to_dict_list(cursor)
+    dados = rows_to_dict_list_lower(cursor)
+    for row in dados:
+        row['ini'] = row['ini'].date()
+        row['fim'] = row['fim'].date()
+    return dados

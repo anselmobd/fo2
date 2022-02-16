@@ -2,7 +2,6 @@ from pprint import pprint
 from django import forms
 # from django.core.exceptions import ValidationError
 
-import geral.queries
 import geral.functions
 from base.forms.custom import O2BaseForm
 from base.forms.fields2 import O2FieldModeloForm2
