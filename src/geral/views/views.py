@@ -52,18 +52,6 @@ def index(request):
         return render(request, 'geral/index.html')
 
 
-def estagio(request):
-    cursor = db_cursor_so(request)
-    data = queries.estagios(cursor)
-    context = {
-        'titulo': 'Estágios',
-        'headers': ('Estágio', 'Descrição', 'Lead time', 'Depósito'),
-        'fields': ('EST', 'DESCR', 'LT', 'DEP'),
-        'data': data,
-    }
-    return render(request, 'geral/tabela_geral.html', context)
-
-
 def periodo_confeccao(request):
     cursor = db_cursor_so(request)
     data = queries.periodos_confeccao(cursor)

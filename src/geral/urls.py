@@ -7,8 +7,6 @@ app_name = 'geral'
 urlpatterns = [
     re_path(r'^$', views.index, name='index'),
 
-    re_path(r'^estagio/$', views.estagio, name='estagio'),
-
     re_path(r'^periodo_confeccao/$',
         views.periodo_confeccao, name='periodo_confeccao'),
 
