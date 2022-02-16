@@ -1,10 +1,9 @@
-import datetime
 from pprint import pprint
 
 from django import forms
 
 from systextil.models import Familia
-
+from utils.functions.date import today_ymd
 
 class PorCelulaForm(forms.Form):
     data_de = forms.DateField(
@@ -15,7 +14,7 @@ class PorCelulaForm(forms.Form):
                 'autofocus': 'autofocus'
             }
         ),
-        # initial=datetime.date.today,
+        initial=today_ymd,
     )
 
     data_ate = forms.DateField(
@@ -35,4 +34,5 @@ class PorCelulaForm(forms.Form):
             'divisao_producao'
         ),
         empty_label="(Todas)",
+        initial=2836,
     )

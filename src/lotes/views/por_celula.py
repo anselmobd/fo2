@@ -1,4 +1,3 @@
-import datetime
 from pprint import pprint
 
 from django.urls import reverse
@@ -20,10 +19,7 @@ class PorCelula(O2BaseGetPostView):
         self.title_name = 'Produção por célula'
         self.cleaned_data2self = True
         self.get_args2context = True
-        self.form_dict_initial = {
-            # 'data_de': datetime.date.today.isoformat(),
-            'celula': 2836,
-        }
+        self.form_class_initial = True
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
