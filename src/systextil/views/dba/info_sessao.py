@@ -21,7 +21,7 @@ class InfoSessao(LoginRequiredMixin, PermissionRequiredMixin, O2BaseGetPostView)
         self.template_name = 'systextil/dba/info_sessao.html'
         self.title_name = 'Informação sobre sessão'
         self.Form_class = SessaoForm
-        self.form_class_initial = True
+        self.form_class_has_initial = True
         self.get_args = ['sessao_id']
         self.cleaned_data2self = True
 

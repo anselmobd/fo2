@@ -19,7 +19,7 @@ class PorCelula(O2BaseGetPostView):
         self.title_name = 'Produção por célula'
         self.cleaned_data2self = True
         self.get_args2context = True
-        self.form_class_initial = True
+        self.form_class_has_initial = True
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)

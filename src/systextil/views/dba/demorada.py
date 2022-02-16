@@ -19,7 +19,7 @@ class Demorada(PermissionRequiredMixin, O2BaseGetPostView):
         self.template_name = 'systextil/dba/demorada.html'
         self.title_name = 'Queries Demoradas'
         self.Form_class = SegundosForm
-        self.form_class_initial = True
+        self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.get_args = ['segundos']
 
