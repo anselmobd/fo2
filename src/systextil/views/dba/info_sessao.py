@@ -9,7 +9,7 @@ from django.urls import reverse
 from base.views import O2BaseGetPostView
 from fo2.connections import db_cursor_so
 
-from systextil.forms import SessaoForm
+from systextil.forms.main import SessaoForm
 from systextil.queries.dba.main import get_info_sessao
 
 

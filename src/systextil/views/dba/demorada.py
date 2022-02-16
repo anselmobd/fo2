@@ -7,7 +7,7 @@ from base.views import O2BaseGetPostView
 from fo2.connections import db_cursor_so
 from utils.functions.sql import sql_formato_fo2
 
-from systextil.forms import SegundosForm
+from systextil.forms.main import SegundosForm
 from systextil.queries.dba.main import rodando_a_segundos
 
 

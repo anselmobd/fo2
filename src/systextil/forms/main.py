@@ -1,6 +1,6 @@
 from django import forms
 
-__all__=['SegundosForm']
+__all__=['SegundosForm', 'SessaoForm']
 
 
 class SegundosForm(forms.Form):
