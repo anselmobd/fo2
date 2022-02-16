@@ -27,8 +27,8 @@ class PorCelula(O2BaseGetPostView):
         if not self.data_ate:
             self.data_ate = self.data_de
 
-        celula_divisao = self.celula.divisao_producao if self.celula else -1
-        codigo_estagio = self.estagio.codigo_estagio if self.estagio else -1
+        celula_divisao = self.celula.divisao_producao if self.celula else None
+        codigo_estagio = self.estagio.codigo_estagio if self.estagio else None
 
         dados = query_por_celula(
             self.cursor,
