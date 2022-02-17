@@ -1,0 +1,166 @@
+digraph G {
+  compound=true
+  newrank=true
+  rankdir = LR
+
+  labelloc="t"
+  label=<Fluxo 8d - Desmonte de PA de varejo para PG/PB<br
+    />Versão 22.02.17 (17/02/2022)>
+  
+  L_PGPB [shape=larrow,style=dashed,label="PG/PB"]
+  L_PA [shape=larrow,style=dashed,label="PA"]
+
+  L_PGPB -> L_PA [style=invis]
+
+  {
+    node [
+      shape = "note"
+    ]
+
+    subgraph cluster_pa {
+      label = <PA de varejo<br
+        />Depósito: 102>
+      style="dotted, rounded"
+
+      pa19A [
+        label = <PA - 9999<b><u>A</u></b><br/>Individual Encabidado>
+      ]
+
+      pa199 [
+        label = <PA - 99999<br/>Individual Embalado>
+      ]
+
+      pa299 [
+        label = <PA - 99999<br/>kit>
+      ]
+
+    }
+
+    subgraph cluster_pb1B9 {
+      label = <PB - <b><u>B</u></b>9999<br
+        />Depósito da OP: 231<br
+        /><br
+        />Individual Encabidado<br
+        /><br
+        />Alternativa 18: PB de PA Encabidado<br
+        />Roteiro 18: PB de PA Encabidado>
+      style=rounded
+      pb1B9 [
+        label = <
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+          <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+          <tr><td>#</td><td align="left">20-Separação PA varejo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PA <br />9999<b><u>A</u></b></td></tr></table></td></tr>
+          <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">64-Recepção Expedição</td><td>-</td><td>-</td></tr>
+        </table>
+        >
+      ]
+    }
+
+    subgraph cluster_pg1A9 {
+      label = <PG - <b><u>A</u></b>9999<br
+        />Depósito da OP: 231<br
+        /><br
+        />Individual Embalado<br
+        /><br
+        />Alternativa 28: PG de PA Encabidado<br
+        />Roteiro 28: PG de PA Encabidado>
+      style=rounded
+      pg1A9 [
+        label = <
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+          <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+          <tr><td>#</td><td align="left">20-Separação PA varejo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PA <br />9999<b><u>A</u></b></td></tr></table></td></tr>
+          <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">64-Recepção Expedição</td><td>-</td><td>-</td></tr>
+        </table>
+        >
+      ]
+    }
+
+    subgraph cluster_pb2B9 {
+      label = <PB - <b><u>B</u></b>9999<br
+        />Depósito da OP: 231<br
+        /><br
+        />Individual Encabidado<br
+        /><br
+        />Alternativa 38: PB de PA Embalado<br
+        />Roteiro 38: PB de PA Embalado>
+      style=rounded
+      pb2B9 [
+        label = <
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+          <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">18-Separação insumo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">Cabide</td></tr></table></td></tr>
+          <tr><td>#</td><td align="left">20-Separação PA varejo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PA <br />99999</td></tr></table></td></tr>
+          <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">64-Recepção Expedição</td><td>-</td><td>-</td></tr>
+        </table>
+        >
+      ]
+    }
+
+    subgraph cluster_pg2A9 {
+      label = <PG - <b><u>A</u></b>9999<br
+        />Depósito da OP: 231<br
+        /><br
+        />Individual Embalado<br
+        /><br
+        />Alternativa 48: PG de PA Embalado<br
+        />Roteiro 48: PG de PA Embalado>
+      style=rounded
+      pg2A9 [
+        label = <
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+          <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+          <tr><td>#</td><td align="left">20-Separação PA varejo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PA <br />99999</td></tr></table></td></tr>
+          <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">64-Recepção Expedição</td><td>-</td><td>-</td></tr>
+        </table>
+        >
+      ]
+    }
+
+    subgraph cluster_pg3A9 {
+      label = <PG - <b><u>A</u></b>9999<br
+        />Depósito da OP: 231<br
+        /><br
+        />kit<br
+        /><br
+        />Alternativa 58: PG de PA Kit<br
+        />Roteiro 58: PG de PA Kit>
+      style=rounded
+      pg3A9 [
+        label = <
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+          <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+          <tr><td>#</td><td align="left">20-Separação PA varejo</td><td>231</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PA <br />99999</td></tr></table></td></tr>
+          <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">64-Recepção Expedição</td><td>-</td><td>-</td></tr>
+        </table>
+        >
+      ]
+    }
+
+  }
+
+  {rank = same L_PGPB pb1B9 pb2B9 pg1A9 pg2A9 pg3A9}
+  {rank = same L_PA pa19A pa199 pa299}
+
+  pa19A -> pb1B9
+  pa19A -> pg1A9
+  pa199 -> pb2B9
+  pa199 -> pg2A9
+  pa299 -> pg3A9
+
+}
