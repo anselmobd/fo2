@@ -1,4 +1,5 @@
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def repair_sequencia_estagio(cursor, periodo, oc, exec):
@@ -6,14 +7,7 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
     # get new and old value to SEQUENCIA_ESTAGIO and ROWIDs
     sql_seq = '''
         SELECT
-          ( SELECT
-              count(DISTINCT (l.ESTAGIO_ANTERIOR || '_' ||l.CODIGO_ESTAGIO))
-            FROM PCPC_040 l -- lote
-            WHERE l.ORDEM_PRODUCAO = le.ORDEM_PRODUCAO
-              AND l.ORDEM_CONFECCAO = le.ORDEM_CONFECCAO
-              AND l.SEQ_OPERACAO <= le.SEQ_OPERACAO
-          ) SEQ_NEW__OLD
-        , er.SEQUENCIA_ESTAGIO SEQ_NEW
+          er.SEQUENCIA_ESTAGIO SEQ_NEW
         , le.SEQUENCIA_ESTAGIO SEQ_OLD
         , le.CODIGO_ESTAGIO EST
         , le.ROWID RID
@@ -32,7 +26,7 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
           le.SEQ_OPERACAO
         , le.ROWID
     '''
-    cursor.execute(sql_seq, [periodo, oc])
+    debug_cursor_execute(cursor, sql_seq, [periodo, oc])
     seqs = rows_to_dict_list_lower(cursor)
 
     sql_setseq = '''
@@ -51,7 +45,7 @@ def repair_sequencia_estagio(cursor, periodo, oc, exec):
         sep_ests = ', '
         if seq['seq_new'] != seq['seq_old']:
             if exec:
-                cursor.execute(sql_setseq, [seq['seq_new'], seq['rid']])
+                debug_cursor_execute(cursor, sql_setseq, [seq['seq_new'], seq['rid']])
             alt += '{}{}-{}'.format(sep, seq['seq_old'], seq['seq_new'])
             sep = ', '
             corrigido = True
