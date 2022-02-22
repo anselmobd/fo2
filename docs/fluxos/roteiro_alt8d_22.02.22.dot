@@ -1,0 +1,123 @@
+digraph G {
+  compound=true
+  newrank=true
+  rankdir = LR
+
+  labelloc="t"
+  label=<Fluxo 8d - Desmonte de PA de varejo para PG<br
+    />Versão 22/02/2022>
+  
+  L_MP [shape=larrow,style=dashed,label="MP"]
+  L_PG [shape=larrow,style=dashed,label="PG"]
+  L_PA [shape=larrow,style=dashed,label="PA"]
+
+  L_MP -> L_PG -> L_PA [style=invis]
+
+  {
+    node [
+      shape = "note"
+    ]
+
+    mpcab [
+      label = <MP CABIDE>
+    ]
+
+    subgraph cluster_pa {
+      label = <PA de varejo<br
+        />Depósito: 102>
+      style="dotted, rounded"
+
+      paenc [
+        label = <PA - 99999<br/>Individual Encabidado>
+      ]
+
+      paemb [
+        label = <PA - 9999<b><u>A</u></b><br/>Individual Embalado>
+      ]
+
+      pakit [
+        label = <PA - 99999<br/>kit>
+      ]
+
+    }
+
+    subgraph cluster_pgdeenc {
+      label = <PG - <b><u>A</u></b>9999<br
+        />Depósito da OP: 231<br
+        /><br
+        />Individual Embalado<br
+        /><br
+        />Alternativa 18: PG de PA Encabidado<br
+        />Roteiro 18: PG de PA Encabidado>
+      style=rounded
+      pgdeenc [
+        label = <
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+          <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+          <tr><td>#</td><td align="left">20-Separação PA varejo</td><td>102</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PA <br />99999</td></tr></table></td></tr>
+          <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">64-Recepção Expedição</td><td>-</td><td>-</td></tr>
+        </table>
+        >
+      ]
+    }
+
+    subgraph cluster_pgdeemb {
+      label = <PG - <b><u>A</u></b>9999<br
+        />Depósito da OP: 231<br
+        /><br
+        />Individual Embalado<br
+        /><br
+        />Alternativa 28: PG de PA Embalado<br
+        />Roteiro 28: PG de PA Embalado>
+      style=rounded
+      pgdeemb [
+        label = <
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+          <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+          <tr><td>#</td><td align="left">20-Separação PA varejo</td><td>102</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PA <br />9999<b><u>A</u></b></td></tr></table></td></tr>
+          <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">64-Recepção Expedição</td><td>-</td><td>-</td></tr>
+        </table>
+        >
+      ]
+    }
+
+    subgraph cluster_pgkit {
+      label = <PG - <b><u>A</u></b>9999<br
+        />Depósito da OP: 231<br
+        /><br
+        />kit<br
+        /><br
+        />Alternativa 38: PG de PA Kit<br
+        />Roteiro 38: PG de PA Kit>
+      style=rounded
+      pgkit [
+        label = <
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <tr cellpadding="0"><td><u>G</u> </td><td align="left"><u>Estágio</u></td><td><u>Dep.</u></td><td><u>Insumos</u></td></tr>
+          <tr><td></td><td align="left">03-PCP (Liberação)</td><td>-</td><td>-</td></tr>
+          <tr><td>#</td><td align="left">20-Separação PA varejo</td><td>102</td><td><table BORDER="1" CELLPADDING="0" CELLSPACING="0"><tr><td BORDER="0">PA <br />99999</td></tr></table></td></tr>
+          <tr><td></td><td align="left">57-Armazena</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">63-CD</td><td>-</td><td>-</td></tr>
+          <tr><td></td><td align="left">64-Recepção Expedição</td><td>-</td><td>-</td></tr>
+        </table>
+        >
+      ]
+    }
+
+  }
+
+  {rank = same L_MP mpcab}
+  {rank = same L_PG pgdeenc pgdeemb pgkit}
+  {rank = same L_PA paenc paemb pakit}
+
+  paenc -> pgdeenc
+  paemb -> pgdeemb
+  pakit -> pgkit
+  pgdeenc -> mpcab
+}
