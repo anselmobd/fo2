@@ -19,20 +19,20 @@ def ajax_mapa_compras_semana_ref(request, item, dtini, qtdsem):
 
     def return_result(result):
         cached_result = result
-        cache.set(key_cache, cached_result, timeout=entkeys._DAY*10)
+        cache.set(key_cache, cached_result, timeout=entkeys._HOUR)
         fo2logger.info('calculated '+key_cache)
-        entkeys.add(key_cache, (nivel, ref, cor, tam), timeout=entkeys._DAY*10)
+        entkeys.add(key_cache, (nivel, ref, cor, tam), timeout=entkeys._HOUR)
         return cached_result
 
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
-        'mapa_compras_semana_ref', item, dtini, qtdsem)
+        'ajax_mapa_compras_semana_ref', item, dtini, qtdsem)
     cached_result = cache.get(key_cache)
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)
         return cached_result
 
-    template_name = 'insumo/mapa_compras_semana_ref.html'
+    template_name = 'insumo/ajax_mapa_compras_semana_ref.html'
 
     nivel = item[0]
     ref = item[2:7]
