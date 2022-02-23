@@ -1,4 +1,7 @@
+from pprint import pprint
+
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def refs_com_movimento(cursor, data_ini=None):
@@ -6,10 +9,10 @@ def refs_com_movimento(cursor, data_ini=None):
     if data_ini is not None:
         filtro_data_ini = (
             "AND ee.DATA_MOVIMENTO >= "
-            "TO_DATE('{data_ini}', 'yyyy-mm-dd')".format(data_ini=data_ini)
+            f"DATE '{data_ini}'"
         )
 
-    sql = '''
+    sql = f'''
         SELECT DISTINCT
           ee.GRUPO_ESTRUTURA REF
         FROM ESTQ_300_ESTQ_310 ee
@@ -19,8 +22,6 @@ def refs_com_movimento(cursor, data_ini=None):
           {filtro_data_ini} -- filtro_data_ini
         ORDER BY
           ee.GRUPO_ESTRUTURA
-    '''.format(
-        filtro_data_ini=filtro_data_ini,
-    )
-    cursor.execute(sql)
+    '''
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
