@@ -2,6 +2,7 @@ import re
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 import insumo.queries as queries
 
@@ -15,12 +16,11 @@ def insumos_cor_tamanho_usados(
 
     filtra_qtd_itens = ''
     if qtd_itens != '0':
-        filtra_qtd_itens = 'WHERE rownum <= {qtd_itens}'.format(
-            qtd_itens=qtd_itens)
+        filtra_qtd_itens = f"WHERE rownum <= {qtd_itens}"
 
     filtra_nivel = ''
     if nivel in ['2', '9']:
-        filtra_nivel = "AND r.NIVEL_ESTRUTURA = '{nivel}'".format(nivel=nivel)
+        filtra_nivel = f"AND r.NIVEL_ESTRUTURA = '{nivel}'"
 
     filtra_uso = ''
     if uso == 'U':
@@ -45,20 +45,20 @@ def insumos_cor_tamanho_usados(
         else:
             for parte in insumo.split():
                 if parte:
-                    filtra_insumo += sep + """
+                    filtra_insumo += sep + f"""
                         ( r.REFERENCIA LIKE '%{parte}%'
                         OR r.DESCR_REFERENCIA LIKE '%{parte}%')
-                    """.format(parte=parte)
+                    """
         if nivel:
-            filtra_insumo += sep + """
+            filtra_insumo += sep + f"""
                 r.NIVEL_ESTRUTURA = '{nivel}'
-            """.format(nivel=nivel)
+            """
         if ref:
-            filtra_insumo += sep + """
+            filtra_insumo += sep + f"""
                 r.REFERENCIA = '{ref}'
-            """.format(ref=ref)
+            """
 
-    sql = """
+    sql = f"""
         WITH insumos AS
         (
             SELECT DISTINCT
@@ -104,10 +104,6 @@ def insumos_cor_tamanho_usados(
           i.*
         FROM insumos i
         {filtra_qtd_itens} -- filtra_qtd_itens
-    """.format(
-        filtra_qtd_itens=filtra_qtd_itens,
-        filtra_nivel=filtra_nivel,
-        filtra_uso=filtra_uso,
-        filtra_insumo=filtra_insumo)
-    cursor.execute(sql)
+    """
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
