@@ -26,7 +26,7 @@ def ajax_mapa_compras_semana_ref(request, item, dtini, qtdsem):
 
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
-        'ajax_mapa_compras_semana_ref', item, dtini, qtdsem)
+        'ajax_mapa_compras_semana_ref-20220223', item, dtini, qtdsem)
     cached_result = cache.get(key_cache)
     if cached_result is not None:
         fo2logger.info('cached '+key_cache)
