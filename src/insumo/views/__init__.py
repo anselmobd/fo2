@@ -1,6 +1,6 @@
 from .mapa_compras_necessidade_detalhe import *
 from .mapa_compras_necessidades import *
-from .mapa_compras_semana_ref_ import *
+from .mapa_compras_semana_ref import *
 from .mapa_compras_semana import *
 from .mapa_compras import *
 from .mapa import *

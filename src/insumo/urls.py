@@ -91,7 +91,7 @@ urlpatterns = [
 
     re_path(r'^mapa_compras_semana_ref/(?P<item>(?:.{2}|\d\..{5}\..{6}\..{1,3}))/'
         r'(?P<dtini>\d{8})/(?P<qtdsem>(?:\d{1,2}|--))/$',
-        views.mapa_compras_semana_ref,
+        views.ajax_mapa_compras_semana_ref,
         name='mapa_compras_semana_ref__get'),
 
     re_path(r'^mapa_compras/(?P<nivel>[29])/(?P<ref>.{5})/(?P<cor>.{6})/'

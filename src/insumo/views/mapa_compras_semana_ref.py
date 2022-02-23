@@ -15,7 +15,7 @@ from utils.functions import fo2logger, my_make_key_cache
 import insumo.functions
 
 
-def mapa_compras_semana_ref(request, item, dtini, qtdsem):
+def ajax_mapa_compras_semana_ref(request, item, dtini, qtdsem):
 
     def return_result(result):
         cached_result = result
