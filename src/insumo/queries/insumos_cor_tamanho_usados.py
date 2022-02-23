@@ -4,14 +4,14 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
-import insumo.queries as queries
+from insumo.queries.insumos_cor_tamanho import insumos_cor_tamanho as q_insumos_cor_tamanho
 
 
 def insumos_cor_tamanho_usados(
         cursor, qtd_itens='0', nivel=None, uso=None, insumo=None):
 
     if uso == 'T':
-        return queries.insumos_cor_tamanho(
+        return q_insumos_cor_tamanho(
                 cursor, qtd_itens=qtd_itens, nivel=nivel, insumo=insumo)
 
     filtra_qtd_itens = ''
