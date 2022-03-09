@@ -14,8 +14,13 @@ def view(request):
     if "sessions" in json:
         for session in json["sessions"]:
             ip = session["clientId"]
-            desde = datetime.datetime.fromtimestamp(session["startTimestamp"]/1000.0)
-            desde_str = desde.strftime('%d/%m/%Y %H:%M:%S')
+            try:
+                startTimestamp = session["startTimestamp"]/1000.0
+                desde = datetime.datetime.fromtimestamp(startTimestamp)
+                desde_str = desde.strftime('%d/%m/%Y %H:%M:%S')
+            except TypeError:
+                desde = session["startTimestamp"]
+                desde_str = desde
             if ip in ips:
                 row = ips[ip]
                 if desde < row["desde"]:
