@@ -24,9 +24,8 @@ class RoteirosSemSequ(View):
                 'msg_erro': 'Nenhum roteiro sem sequência.',
             })
         else:
-            link = ('ref')
             for row in data:
-                row['LINK'] = reverse('produto:ref__get', args=[row['ref']])
+                row['ref|LINK'] = reverse('produto:ref__get', args=[row['ref']])
 
             context.update({
                 'headers': ('Referência', 'Tamanho', 'Cor', 
@@ -34,7 +33,6 @@ class RoteirosSemSequ(View):
                 'fields': ('ref', 'tam', 'cor',
                            'alt', 'rot'),
                 'data': data,
-                'link': link,
             })
 
         return context
