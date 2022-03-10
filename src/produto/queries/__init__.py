@@ -6,6 +6,7 @@ from .custo_item import *
 from .item_componentes import *
 from .gtin import *
 from .historico import *
+from .multiplas_colecoes import *
 from .queries import *
 from .ref_custo import *
 from .ref_estrutura_comp import *
