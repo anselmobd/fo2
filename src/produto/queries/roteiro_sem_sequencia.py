@@ -19,4 +19,4 @@ def roteiro_sem_sequencia():
         ],
         group_all_fields=True,
         order_all_fields=True,
-    ).squery().debug_execute()
+    ).squery.debug_execute()

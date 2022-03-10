@@ -21,26 +21,58 @@ class MountQuery():
         self.fields = fields
         self.table = table
         self.where = where
-        self.group = group
-        self.order = order
+        self.group_arg = group if group else []
+        self.order_arg = order if order else []
         self.group_all_fields = group_all_fields
         self.order_all_fields = order_all_fields
 
-    def squery(self):
-        return SQuery(self.query())
+        self._group = None
+        self._order = None
 
-    def query(self):
-        if self.group_all_fields:
-            self.group = self.off_alias(self.fields)
-        if self.order_all_fields:
-            self.order = self.off_alias(self.fields)
-        return self.mount_query(
-            self.fields,
-            self.table,
-            self.where,
-            self.group,
-            self.order,
-        )
+    @property
+    def group(self):
+        if not self._group:
+            group_form_fields = (
+                self.off_alias(self.fields)
+                if self.group_all_fields
+                else []
+            )
+            self._group = group_form_fields + self.group_arg
+        return self._group
+
+    @property
+    def order(self):
+        if not self._order:
+            order_form_fields = (
+                self.off_alias(self.fields)
+                if self.order_all_fields
+                else []
+            )
+            self._order = order_form_fields + self.order_arg
+        return self._order
+
+    @property
+    def sql(self):
+        qselect = f"""SELECT
+            {", ".join(self.fields)}"""
+        qfrom = f"""FROM {self.table}"""
+        qwhere = f"""WHERE
+            {" AND ".join(self.where)}""" if self.where else "--"
+        qgroup = f"""GROUP BY
+            {", ".join(self.group)}""" if self.group else "--"
+        qorder = f"""ORDER BY
+            {", ".join(self.order)}""" if self.order else "--"
+        return f"""
+            {qselect}
+            {qfrom}
+            {qwhere}
+            {qgroup}
+            {qorder}
+        """
+
+    @property
+    def squery(self):
+        return SQuery(self.sql)
 
     def off_alias(self, fields):
         new_fields = []
@@ -54,38 +86,13 @@ class MountQuery():
             new_fields.append(field)
         return new_fields
 
-    def mount_query(
-            self,
-            fields,
-            table,
-            where,
-            group,
-            order,
-        ):
-        qselect = f"""SELECT
-            {", ".join(fields)}"""
-        qfrom = f"""FROM {table}"""
-        qwhere = f"""WHERE
-            {" AND ".join(where)}""" if where else "--"
-        qgroup = f"""GROUP BY
-            {", ".join(group)}""" if group else "--"
-        qorder = f"""ORDER BY
-            {", ".join(order)}""" if order else "--"
-        return f"""
-            {qselect}
-            {qfrom}
-            {qwhere}
-            {qgroup}
-            {qorder}
-        """
-
 
 class SQuery():
 
     def __init__(self, sql) -> None:
         self.cursor = db_cursor_so()
         if isinstance(sql, MountQuery):
-            self.sql = sql.sql()
+            self.sql = sql.sql
         else:
             self.sql = sql
 
