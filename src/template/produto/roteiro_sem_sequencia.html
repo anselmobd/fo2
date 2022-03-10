@@ -11,11 +11,12 @@
 
 {% block content %}
   {% if data %}
+    <h4>{{ data|length }} Roteiro{{ data|length|pluralize }} com problema</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data only %}
     </table>
   {% else %}
-    <h4>Nenhum roteiro sem sequência.</h4>
+    <h4>Nenhum roteiro sem sequência</h4>
   {% endif %}
 {% endblock %}
