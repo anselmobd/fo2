@@ -1,10 +1,10 @@
 from pprint import pprint
 
-from systextil.queries.base import SQuery, MountQuery
+from systextil.queries.base import SMountQuery
 
 
 def roteiro_sem_sequencia():
-    return MountQuery(
+    return SMountQuery(
         fields=[
           "r.GRUPO_ESTRUTURA REF",
           "r.SUBGRU_ESTRUTURA TAM",
@@ -19,4 +19,4 @@ def roteiro_sem_sequencia():
         ],
         group_all_fields=True,
         order_all_fields=True,
-    ).squery.debug_execute()
+    ).oquery.debug_execute()
