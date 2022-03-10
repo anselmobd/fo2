@@ -9,4 +9,5 @@ from .historico import *
 from .modelo import *
 from .multiplas_colecoes import *
 from .ref import *
+from .roteiro_sem_sequencia import *
 from .views import *

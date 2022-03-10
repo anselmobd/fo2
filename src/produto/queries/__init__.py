@@ -9,3 +9,4 @@ from .historico import *
 from .queries import *
 from .ref_custo import *
 from .ref_estrutura_comp import *
+from .roteiro_sem_sequencia import *

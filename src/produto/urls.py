@@ -89,6 +89,9 @@ urlpatterns = [
     re_path(r'^ref/$', views.Ref.as_view(), name='ref'),
     re_path(r'^ref/(?P<ref>.+)/$', views.Ref.as_view(), name='ref__get'),
 
+    re_path(r'^roteiro_sem_sequencia/$',
+        views.RoteirosSemSequ.as_view(), name='roteiro_sem_sequencia'),
+
     re_path(r'^roteiros_padrao_ref/(?P<ref>[^/]+)?/?$',
         views.RoteirosPadraoRef.as_view(), name='roteiros_padrao_ref'),
 
