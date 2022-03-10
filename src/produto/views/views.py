@@ -269,47 +269,6 @@ class EstrEstagioDeInsumo(View):
         return render(request, self.template_name, context)
 
 
-class MultiplasColecoes(View):
-    Form_class = FiltroForm
-    template_name = 'produto/multiplas_colecoes.html'
-    title_name = 'Múltiplas coleções em modelo'
-
-    def mount_context(self, cursor):
-        context = {}
-
-        # Informações básicas
-        data = queries.multiplas_colecoes(cursor)
-        if len(data) == 0:
-            context.update({
-                'msg_erro': 'Nenhum erro de múltiplas coleções em modelos.',
-            })
-        else:
-            link = ('REF')
-            for row in data:
-                row['LINK'] = reverse('produto:ref__get', args=[row['REF']])
-
-            group = ['MODELO', 'COLECOES']
-            group_rowspan(data, group)
-
-            context.update({
-                'headers': ('Modelo', 'Nº coleções', 'Coleção', 'Descrição',
-                            'Referência', 'Descrição'),
-                'fields': ('MODELO', 'COLECOES', 'COLECAO', 'DESCR_COLECAO',
-                           'REF', 'DESCR'),
-                'data': data,
-                'link': link,
-                'group': group,
-            })
-
-        return context
-
-    def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        cursor = db_cursor_so(request)
-        context.update(self.mount_context(cursor))
-        return render(request, self.template_name, context)
-
-
 class RoteirosPadraoRef(View):
     Form_class = forms.GeraRoteirosRefForm
     template_name = 'produto/roteiros_padrao_ref.html'
