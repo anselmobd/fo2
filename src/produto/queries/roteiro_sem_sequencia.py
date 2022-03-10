@@ -4,7 +4,7 @@ from systextil.queries.base import SQuery
 
 
 def roteiro_sem_sequencia():
-    sql = """
+    return SQuery("""
         SELECT
           r.GRUPO_ESTRUTURA REF
         , r.SUBGRU_ESTRUTURA TAM
@@ -26,5 +26,4 @@ def roteiro_sem_sequencia():
         , r.ITEM_ESTRUTURA
         , r.NUMERO_ALTERNATI
         , r.NUMERO_ROTEIRO
-    """
-    return SQuery(sql).debug_execute()
+    """).debug_execute()
