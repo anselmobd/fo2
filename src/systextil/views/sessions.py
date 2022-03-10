@@ -17,10 +17,12 @@ def view(request):
             try:
                 startTimestamp = session["startTimestamp"]/1000.0
                 desde = datetime.datetime.fromtimestamp(startTimestamp)
-                desde_str = desde.strftime('%d/%m/%Y %H:%M:%S')
             except TypeError:
-                desde = session["startTimestamp"]
-                desde_str = desde
+                desde = datetime.datetime.strptime(
+                    session["startTimestamp"],
+                    '%Y-%m-%d %H:%M:%S.%f'
+                )
+            desde_str = desde.strftime('%d/%m/%Y %H:%M:%S')
             if ip in ips:
                 row = ips[ip]
                 if desde < row["desde"]:
