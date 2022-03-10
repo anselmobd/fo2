@@ -26,12 +26,15 @@ class MountQuery():
         self.group_all_fields = group_all_fields
         self.order_all_fields = order_all_fields
 
-    def sql(self):
+    def squery(self):
+        return SQuery(self.query())
+
+    def query(self):
         if self.group_all_fields:
             self.group = self.off_alias(self.fields)
         if self.order_all_fields:
             self.order = self.off_alias(self.fields)
-        return self.query(
+        return self.mount_query(
             self.fields,
             self.table,
             self.where,
@@ -51,7 +54,7 @@ class MountQuery():
             new_fields.append(field)
         return new_fields
 
-    def query(
+    def mount_query(
             self,
             fields,
             table,
