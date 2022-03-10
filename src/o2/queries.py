@@ -54,22 +54,28 @@ class MountQuery():
 
     @property
     def query(self):
-        qselect = f"""SELECT
-            {", ".join(self.fields)}"""
-        qfrom = f"""FROM {self.table}"""
-        qwhere = f"""WHERE
-            {" AND ".join(self.where)}""" if self.where else "--"
-        qgroup = f"""GROUP BY
-            {", ".join(self.group)}""" if self.group else "--"
-        qorder = f"""ORDER BY
-            {", ".join(self.order)}""" if self.order else "--"
-        return f"""
-            {qselect}
-            {qfrom}
-            {qwhere}
-            {qgroup}
-            {qorder}
-        """
+        fields = "\n, ".join(self.fields)
+        qselect = "\n  ".join(["SELECT", fields])
+
+        qfrom = f"FROM {self.table}"
+
+        where = "\n  AND ".join(self.where) if self.where else ""
+        qwhere = " ".join(["WHERE", where]) if where else "-- where"
+
+        group = "\n, ".join(self.group) if self.group else ""
+        qgroup = "\n  ".join(["GROUP BY", group]) if group else "-- group"
+
+        order = "\n, ".join(self.order) if self.order else ""
+        qorder = "\n  ".join(["ORDER BY", order]) if order else "-- order"
+
+        sql = "\n".join([
+            qselect,
+            qfrom,
+            qwhere,
+            qgroup,
+            qorder,
+        ])
+        return sql
 
     @property
     def OQuery(self):
