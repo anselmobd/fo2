@@ -78,8 +78,8 @@ def debug_cursor_execute(
                     in enumerate(list_args)
                 ])
             )
+    info.append(sql)
     statment = "\n".join(info)
-    statment += sql
     if prt:
         print(statment)
     cursor.execute(statment, list_args)
