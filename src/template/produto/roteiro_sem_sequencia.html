@@ -4,19 +4,18 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'produto:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
 {% endblock %}
 
 {% block content %}
-{% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
-{% endif %}
-{% if data %}
-  <table>
-    {% include "layout/thead_generic.html" with data=headers only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data only %}
-  </table>
-{% endif %}
+  {% if data %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% else %}
+    <h4>Nenhum roteiro sem sequência.</h4>
+  {% endif %}
 {% endblock %}

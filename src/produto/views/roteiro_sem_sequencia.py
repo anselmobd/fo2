@@ -16,29 +16,24 @@ class RoteirosSemSequ(View):
     template_name = 'produto/roteiro_sem_sequencia.html'
     title_name = 'Roteiros sem sequência'
 
-    def mount_context(self, cursor):
-        context = {}
+    def mount_context(self, request):
+        cursor = db_cursor_so(request)
+
         data = queries.roteiro_sem_sequencia(cursor)
-        if len(data) == 0:
-            context.update({
-                'msg_erro': 'Nenhum roteiro sem sequência.',
-            })
-        else:
-            for row in data:
-                row['ref|LINK'] = reverse('produto:ref__get', args=[row['ref']])
 
-            context.update({
-                'headers': ('Referência', 'Tamanho', 'Cor', 
-                            'Alternativa', 'Roteiro'),
-                'fields': ('ref', 'tam', 'cor',
-                           'alt', 'rot'),
-                'data': data,
-            })
+        for row in data:
+            row['ref|LINK'] = reverse('produto:ref__get', args=[row['ref']])
+            row['ref|TARGET'] = '_blank'
 
-        return context
+        return {
+            'headers': ('Referência', 'Tamanho', 'Cor', 
+                        'Alternativa', 'Roteiro'),
+            'fields': ('ref', 'tam', 'cor',
+                        'alt', 'rot'),
+            'data': data,
+        }
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        cursor = db_cursor_so(request)
-        context.update(self.mount_context(cursor))
+        context.update(self.mount_context(request))
         return render(request, self.template_name, context)
