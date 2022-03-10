@@ -4,8 +4,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from fo2.connections import db_cursor_so
-
 from utils.forms import FiltroForm
 
 import produto.queries as queries
@@ -16,10 +14,8 @@ class RoteirosSemSequ(View):
     template_name = 'produto/roteiro_sem_sequencia.html'
     title_name = 'Roteiros sem sequência'
 
-    def mount_context(self, request):
-        cursor = db_cursor_so(request)
-
-        data = queries.roteiro_sem_sequencia(cursor)
+    def mount_context(self):
+        data = queries.roteiro_sem_sequencia()
 
         for row in data:
             row['ref|LINK'] = reverse('produto:ref__get', args=[row['ref']])
@@ -35,5 +31,5 @@ class RoteirosSemSequ(View):
 
     def get(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        context.update(self.mount_context(request))
+        context.update(self.mount_context())
         return render(request, self.template_name, context)

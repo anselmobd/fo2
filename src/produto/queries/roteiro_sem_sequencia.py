@@ -1,10 +1,13 @@
 from pprint import pprint
 
+from fo2.connections import db_cursor_so
+
 from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def roteiro_sem_sequencia(cursor):
+def roteiro_sem_sequencia():
+    cursor = db_cursor_so()
     sql = """
         SELECT
           r.GRUPO_ESTRUTURA REF
