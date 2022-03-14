@@ -47,10 +47,10 @@ class RomaneioCorte(O2BaseGetPostView):
         )
 
         self.context.update({
-            'headers': ['OP', 'Referência', 'Lotes', 'Produzido'],
-            'fields': ['op', 'ref', 'lotes', 'qtd'],
+            'headers': ['OP', 'Referência', 'Tamanho', 'Cor', 'Lotes', 'Produzido'],
+            'fields': ['op', 'ref', 'tam', 'cor', 'lotes', 'qtd'],
             'dados': dados,
             'style': untuple_keys_concat({
-                (3, 4): 'text-align: right;',
+                (5, 6): 'text-align: right;',
             }),
         })

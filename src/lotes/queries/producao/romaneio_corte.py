@@ -27,19 +27,23 @@ def query(cursor, dada=None):
           TO_DATE(ml.DATA_PRODUCAO) data
         , l.ORDEM_PRODUCAO op
         , l.PROCONF_GRUPO ref
+        , l.PROCONF_SUBGRUPO tam
+        , l.PROCONF_ITEM cor
         , count(l.ORDEM_CONFECCAO) lotes
         , sum(l.QTDE_PECAS_PROD) qtd
         , sum(l.QTDE_PERDAS) perda
         FROM PCPC_040 l
         JOIN mlseq mls
           ON mls.per = l.PERIODO_PRODUCAO
-        AND mls.ord = l.ORDEM_CONFECCAO
-        AND mls.est = l.CODIGO_ESTAGIO
+         AND mls.ord = l.ORDEM_CONFECCAO
+         AND mls.est = l.CODIGO_ESTAGIO
         JOIN PCPC_045 ml
           ON ml.PCPC040_PERCONF = l.PERIODO_PRODUCAO
-        AND ml.PCPC040_ORDCONF = l.ORDEM_CONFECCAO 
-        AND ml.PCPC040_ESTCONF = l.CODIGO_ESTAGIO
-        AND ml.SEQUENCIA = mls.seq
+         AND ml.PCPC040_ORDCONF = l.ORDEM_CONFECCAO 
+         AND ml.PCPC040_ESTCONF = l.CODIGO_ESTAGIO
+         AND ml.SEQUENCIA = mls.seq
+        LEFT JOIN BASI_220 t -- tamanhos
+          ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE 1=1
           -- AND ml.DATA_PRODUCAO = DATE '2022-02-15'
           {filtro_dada} -- filtro_dada_de
@@ -49,9 +53,16 @@ def query(cursor, dada=None):
           ml.DATA_PRODUCAO
         , l.ORDEM_PRODUCAO
         , l.PROCONF_GRUPO
+        , l.PROCONF_ITEM
+        , t.ORDEM_TAMANHO
+        , l.PROCONF_SUBGRUPO
         ORDER BY 
           ml.DATA_PRODUCAO
         , l.ORDEM_PRODUCAO
+        , l.PROCONF_GRUPO
+        , l.PROCONF_ITEM
+        , t.ORDEM_TAMANHO
+        , l.PROCONF_SUBGRUPO
     '''
     debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
