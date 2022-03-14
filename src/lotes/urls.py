@@ -1,7 +1,10 @@
 from django.urls import re_path
 
 from . import views
-import lotes.views.por_celula
+from lotes.views import (
+    por_celula,
+    romaneio_corte,
+)
 
 
 app_name = 'producao'
@@ -160,7 +163,7 @@ urlpatterns = [
         name='posicao__get'),
 
     re_path(r'^por_celula/$',
-        lotes.views.por_celula.PorCelula.as_view(), name='por_celula'),
+        por_celula.PorCelula.as_view(), name='por_celula'),
 
     re_path(r'^quant_estagio/$',
         views.analise.QuantEstagio.as_view(), name='quant_estagio'),
@@ -179,6 +182,9 @@ urlpatterns = [
 
     re_path(r'^respons_todos/$', views.analise.respons_todos,
         name='respons_todos'),
+
+    re_path(r'^romaneio_corte/$',
+        romaneio_corte.RomaneioCorte.as_view(), name='romaneio_corte'),
 
     re_path(r'^totais_estagio/$',
         views.analise.TotalEstagio.as_view(), name='totais_estagio'),

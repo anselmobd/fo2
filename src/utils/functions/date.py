@@ -31,3 +31,8 @@ def dow_info(dt, info, capitalize=False):
 def today_ymd():
     """Return today in format YYY-MM-DD"""
     return datetime.date.today().strftime('%Y-%m-%d')
+
+
+def yesterday_ymd():
+    """Return today in format YYY-MM-DD"""
+    return datetime.date.today().strftime('%Y-%m-%d')
