@@ -109,7 +109,6 @@ def query2(cursor, data=None):
             l.ORDEM_PRODUCAO OP
           , min(l.PERIODO_PRODUCAO) PER1
           , min(l.SEQUENCIA_ESTAGIO) SEQ1
-          , COUNT(DISTINCT COALESCE(l.PERIODO_PRODUCAO || l.ORDEM_CONFECCAO, '')) TOT_LOTES
           FROM PCPC_040 l
           GROUP BY 
             l.ORDEM_PRODUCAO
@@ -119,7 +118,6 @@ def query2(cursor, data=None):
             om.OP
           , om.PER1
           , om.SEQ1
-          , om.TOT_LOTES
           , min(l.ORDEM_CONFECCAO) OC1
           , min(
               CASE WHEN l.SEQUENCIA_ESTAGIO = om.SEQ1
@@ -135,7 +133,6 @@ def query2(cursor, data=None):
             om.OP
           , om.PER1
           , om.SEQ1
-          , om.TOT_LOTES
         )
         , op_lotes AS 
         ( SELECT
@@ -147,7 +144,6 @@ def query2(cursor, data=None):
           , t.ORDEM_TAMANHO TAM_ORD
           , l.PROCONF_SUBGRUPO TAM
           , l.PROCONF_ITEM COR
-          , om.TOT_LOTES
           FROM op_mov mov
           JOIN op_min om
             ON om.OP = mov.OP
@@ -166,7 +162,6 @@ def query2(cursor, data=None):
           , ol.TAM_ORD  
           , ol.TAM  
           , ol.COR  
-          , ol.TOT_LOTES
           , sum(ol.MOV_QTD) MOV_QTD
           , sum(ol.MOV_LOTES) MOV_LOTES
           FROM op_lotes ol
@@ -177,7 +172,6 @@ def query2(cursor, data=None):
           , ol.TAM_ORD  
           , ol.TAM  
           , ol.COR  
-          , ol.TOT_LOTES
           ORDER BY 
             ol.OP
           , ol.REF  
@@ -202,7 +196,6 @@ def query2(cursor, data=None):
         , ol.COR
         , ol.MOV_QTD
         , ol.MOV_LOTES
-        , ol.TOT_LOTES
         FROM op_ref ol
         JOIN pcpc_020 op
           ON op.ORDEM_PRODUCAO = ol.OP
@@ -241,7 +234,6 @@ def query2(cursor, data=None):
             l.ORDEM_PRODUCAO OP
           , min(l.PERIODO_PRODUCAO) PER1
           , min(l.SEQUENCIA_ESTAGIO) SEQ1
-          , COUNT(DISTINCT COALESCE(l.PERIODO_PRODUCAO || l.ORDEM_CONFECCAO, '')) TOT_LOTES
           FROM PCPC_040 l
           GROUP BY 
             l.ORDEM_PRODUCAO
@@ -251,7 +243,6 @@ def query2(cursor, data=None):
             om.OP
           , om.PER1
           , om.SEQ1
-          , om.TOT_LOTES
           , min(l.ORDEM_CONFECCAO) OC1
           , min(
               CASE WHEN l.SEQUENCIA_ESTAGIO = om.SEQ1
@@ -267,11 +258,15 @@ def query2(cursor, data=None):
             om.OP
           , om.PER1
           , om.SEQ1
-          , om.TOT_LOTES
         )
         SELECT 
           l.ORDEM_PRODUCAO OP
+        , l.PROCONF_NIVEL99 NIVEL
+        , l.PROCONF_GRUPO REF
+        , l.PROCONF_SUBGRUPO TAM
+        , l.PROCONF_ITEM COR
         , sum(l.QTDE_PECAS_PROG) TOT_QTD
+        , COUNT(DISTINCT COALESCE(l.PERIODO_PRODUCAO || l.ORDEM_CONFECCAO, '')) TOT_LOTES
         FROM op_min om
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = om.OP
@@ -280,23 +275,42 @@ def query2(cursor, data=None):
           ({str_ops})
         GROUP BY 
           l.ORDEM_PRODUCAO
+        , l.PROCONF_NIVEL99
+        , l.PROCONF_GRUPO
+        , l.PROCONF_SUBGRUPO
+        , l.PROCONF_ITEM
     '''
     debug_cursor_execute(cursor, sql)
     dados_op_tot = rows_to_dict_list_lower(cursor)
-    op_tot = {
-        r['op']: r['tot_qtd']
-        for r in dados_op_tot
-    }
 
-    for row in dados:
-        if row['ped'] == 0:
-            row['ped'] = '-'
-        row['tot_qtd'] = op_tot[row['op']]
+    for row in dados_op_tot:
         row['item'] = '.'.join([
             row['nivel'],
             row['ref'],
             row['tam'],
             row['cor'],
         ])
+
+    op_tot = {
+        (r['op'], r['item']):
+            (
+                r['tot_qtd'],
+                r['tot_lotes'],
+            )
+        for r in dados_op_tot
+    }
+
+    for row in dados:
+        if row['ped'] == 0:
+            row['ped'] = '-'
+        row['item'] = '.'.join([
+            row['nivel'],
+            row['ref'],
+            row['tam'],
+            row['cor'],
+        ])
+        row['tot_qtd'], row['tot_lotes'] = op_tot[(row['op'], row['item'])]
+        row['percent_qtd'] = f"{round(row['mov_qtd']/row['tot_qtd']*100)}%"
+        row['percent_lotes'] = f"{round(row['mov_lotes']/row['tot_lotes']*100)}%"
 
     return dados
