@@ -4,10 +4,10 @@ from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def query(cursor, dada=None):
-    filtro_dada = (
-        f"AND ml.DATA_PRODUCAO = '{dada}'"
-    ) if dada else ''
+def query(cursor, data=None):
+    filtro_data = (
+        f"AND ml.DATA_PRODUCAO = '{data}'"
+    ) if data else ''
 
     sql = f'''
         WITH mlseq AS
@@ -46,7 +46,7 @@ def query(cursor, dada=None):
           ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE 1=1
           -- AND ml.DATA_PRODUCAO = DATE '2022-02-15'
-          {filtro_dada} -- filtro_dada_de
+          {filtro_data} -- filtro_data
           AND l.CODIGO_ESTAGIO = 16
           AND l.QTDE_PECAS_PROD <> 0 
         GROUP BY 
