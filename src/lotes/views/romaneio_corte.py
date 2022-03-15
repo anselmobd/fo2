@@ -9,7 +9,7 @@ from utils.functions import untuple_keys_concat
 from utils.views import totalize_data
 
 from lotes.forms.romaneio_corte import RomaneioCorteForm
-from lotes.queries.producao.romaneio_corte import query as query_romaneio_corte
+from lotes.queries.producao.romaneio_corte import query2 as query_romaneio_corte
 
 
 class RomaneioCorte(O2BaseGetPostView):
@@ -37,20 +37,24 @@ class RomaneioCorte(O2BaseGetPostView):
                 'producao:op__get',
                 args=[row['op']],
             )
-        totalize_data(
-            dados,
-            {
-                'sum': ['lotes', 'qtd', 'perda'],
-                'descr': {'data': 'Total:'},
-                'row_style': 'font-weight: bold;',
-            }
-        )
+
+        # totalize_data(
+        #     dados,
+        #     {
+        #         'sum': ['lotes', 'qtd', 'perda'],
+        #         'descr': {'data': 'Total:'},
+        #         'row_style': 'font-weight: bold;',
+        #     }
+        # )
 
         self.context.update({
-            'headers': ['OP', 'Referência', 'Tamanho', 'Cor', 'Lotes', 'Produzido'],
-            'fields': ['op', 'ref', 'tam', 'cor', 'lotes', 'qtd'],
+            # 'headers': ['OP', 'Referência', 'Tamanho', 'Cor', 'Lotes', 'Produzido'],
+            # 'fields': ['op', 'ref', 'tam', 'cor', 'lotes', 'qtd'],
+            'headers': ['Cliente', 'Pedido', 'OP', 'Item', 'Quant.', 'Lotes', 'Quant.OP', 'Lotes OP'],
+            'fields': ['cliente', 'ped', 'op', 'item', 'mov_qtd', 'mov_lotes', 'tot_qtd', 'tot_lotes'],
             'dados': dados,
             'style': untuple_keys_concat({
-                (5, 6): 'text-align: right;',
+                2: 'text-align: center;',
+                (5, 6, 7, 8): 'text-align: right;',
             }),
         })
