@@ -10,10 +10,12 @@
 {% endblock %}
 
 {% block content %}
-  {% if dados %}
+  {% if data %}
     <table>
       {% include "layout/thead_generic.html" with data=headers only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data only %}
     </table>
+  {% else %}
+    <h4>Nenhum palete encontrado</h4>
   {% endif %}
 {% endblock content %}
