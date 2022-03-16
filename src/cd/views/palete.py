@@ -1,15 +1,14 @@
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import render
-from django.views import View
+
+from base.views import O2BaseGetView
 
 
-class Palete(PermissionRequiredMixin, View):
+class Palete(PermissionRequiredMixin, O2BaseGetView):
 
-    def __init__(self, mobile=False):
+    def __init__(self, *args, **kwargs):
+        super(Palete, self).__init__(*args, **kwargs)
         self.permission_required = 'lotes.can_relocate_lote'
-        # self.Form_class = cd.forms.TrocaEnderecoForm
-        self.template_name = 'cd/troca_endereco.html'
-        self.title_name = 'Trocar endereço'
-
+        self.template_name = 'cd/palete.html'
+        self.title_name = 'Paletes'
