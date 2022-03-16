@@ -9,7 +9,7 @@ from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.romaneio_corte import RomaneioCorteForm
-from lotes.queries.producao.romaneio_corte import query2 as query_romaneio_corte
+from lotes.queries.producao.romaneio_corte import query as query_romaneio_corte
 
 
 class RomaneioCorte(O2BaseGetPostView):

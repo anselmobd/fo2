@@ -4,7 +4,7 @@ from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def query(cursor, data=None):
+def query_OLD(cursor, data=None):
     filtro_data = (
         f"AND ml.DATA_PRODUCAO = '{data}'"
     ) if data else ''
@@ -71,7 +71,7 @@ def query(cursor, data=None):
     return dados
 
 
-def query2(cursor, data=None):
+def query(cursor, data=None):
     data_value = (
         f"DATE '{data}'"
     ) if data else 'NULL'
