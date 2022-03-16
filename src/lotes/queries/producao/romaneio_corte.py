@@ -187,7 +187,8 @@ def query2(cursor, data=None):
           THEN 'ESTOQUE' 
           ELSE COALESCE(cli.FANTASIA_CLIENTE, cli.NOME_CLIENTE)
           END CLIENTE
-        , op.PEDIDO_VENDA PED
+        , ped.COD_PED_CLIENTE PED_CLI
+        , ped.PEDIDO_VENDA PED
         , ol.OP
         , ol.NIVEL
         , ol.REF
@@ -301,8 +302,10 @@ def query2(cursor, data=None):
     }
 
     for row in dados:
-        if row['ped'] == 0:
+        if not row['ped']:
             row['ped'] = '-'
+        if not row['ped_cli']:
+            row['ped_cli'] = '-'
         row['item'] = '.'.join([
             row['nivel'],
             row['ref'],
