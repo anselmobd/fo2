@@ -6,7 +6,7 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
-from utils.views import totalize_data
+from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.romaneio_corte import RomaneioCorteForm
 from lotes.queries.producao.romaneio_corte import query2 as query_romaneio_corte
@@ -38,31 +38,33 @@ class RomaneioCorte(O2BaseGetPostView):
                 args=[row['op']],
             )
 
-        # totalize_data(
-        #     dados,
-        #     {
-        #         'sum': ['lotes', 'qtd', 'perda'],
-        #         'descr': {'data': 'Total:'},
-        #         'row_style': 'font-weight: bold;',
-        #     }
-        # )
+        group = ['cliente']
+        totalize_grouped_data(dados, {
+            'group': group,
+            'sum': ['mov_qtd', 'mov_lotes'],
+            'count': [],
+            'descr': {'cliente': 'Totais:'},
+            'global_sum': ['mov_qtd', 'mov_lotes'],
+            'global_descr': {'cliente': 'Totais gerais:'},
+            'row_style': 'font-weight: bold;',
+        })
+        group_rowspan(dados, group)
 
         self.context.update({
-            # 'headers': ['OP', 'Referência', 'Tamanho', 'Cor', 'Lotes', 'Produzido'],
-            # 'fields': ['op', 'ref', 'tam', 'cor', 'lotes', 'qtd'],
             'headers': [
-                'Cliente', 'Pedido', 'OP', 'Item',
+                'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item',
                 'Quant.', '%Quant.', 'Quant.OP',
                 'Lotes', '%Lotes', 'Lotes OP'
             ],
             'fields': [
-                'cliente', 'ped', 'op', 'item',
+                'cliente', 'ped', 'ped_cli', 'op', 'item',
                 'mov_qtd', 'percent_qtd', 'tot_qtd',
                 'mov_lotes', 'percent_lotes', 'tot_lotes'
             ],
+            'group': group,
             'dados': dados,
             'style': untuple_keys_concat({
-                2: 'text-align: center;',
-                (5, 6, 7, 8, 9, 10): 'text-align: right;',
+                (2, 3): 'text-align: center;',
+                (6, 7, 8, 9, 10, 11): 'text-align: right;',
             }),
         })
