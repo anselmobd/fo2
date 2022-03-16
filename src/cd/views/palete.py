@@ -11,7 +11,7 @@ class Palete(PermissionRequiredMixin, O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
         super(Palete, self).__init__(*args, **kwargs)
-        self.permission_required = 'lotes.can_relocate_lote'
+        self.permission_required = 'lotes.can_admin_pallet'
         self.template_name = 'cd/palete.html'
         self.title_name = 'Paletes'
 
