@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     # Project
     'base',
     'beneficia',
+    'cd',
     'comercial',
     'contabil',
     'email_signature',
