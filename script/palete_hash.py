@@ -1,27 +1,29 @@
-from socket import if_indextoname, if_nameindex
+from string import digits
 import sys
 
 
-def tpl_int_math_hash(num):
-    alt_num = 702+num*702702
-    raiz2 = (alt_num)**(1/2)
-    raiz3 = (alt_num)**(1/3)
-    raiz2_str = f"{raiz2:.4f}"
-    raiz3_str = f"{raiz3:.4f}"
-    hash99_str = ''.join([
-        raiz2_str[-1],
-        raiz3_str[-1]
-    ])
-    hash99 = int(hash99_str)
-    print(f"{num};{hash99}")
+TPL_HASH_ALPHA = "ABCDEFGHIJKLMNPQRSTUVWXYZ"
 
 
-def tpl_int_hash(num):
-    alt_num = num + 765432
+def tpl_hash_verify(strint):
+    return strint == tpl_hashed(tpl_unhashed(strint))
+
+
+def tpl_hashed(strint):
+    return strint + tpl_hash_code(strint)
+
+
+def tpl_unhashed(strint):
+    return strint[:-1]
+
+
+def tpl_hash_code(strint):
+    int_num = int(strint)
+    alt_num = int_num + 765432
     str_num = str(alt_num)
     digits = strint_mod11_10_digits(str_num, ndigits=2)
     int_digits = int(digits)
-    return int_digits
+    return TPL_HASH_ALPHA[int_digits%len(TPL_HASH_ALPHA)]
 
 
 def strint_mod11_10_digits(strint, ndigits=1):
@@ -46,8 +48,7 @@ def strint_mod11_10_digit(strint):
 
 if __name__ == '__main__':
     arg1 = int(sys.argv[1])
-    # tpl_int_hash(arg1)
 
     for num in range(arg1):
-        print(f"{num};{tpl_int_hash(num)}")
+        print(f"{num};{tpl_hash_code(str(num))}")
        
