@@ -4,9 +4,11 @@ import sys
 from xml.dom import InvalidCharacterErr
 
 
-_TPL_HASH_ALPHA = "ABCDEFGHIJKLMNPQRSTUVWXYZ"
-_LEN_TPL_HASH_ALPHA = 25
-
+_PLT_HASH_ALPHA = "ABCDEFGHIJKLMNPQRSTUVWXYZ"
+_PLT_LEN_HASH_ALPHA = len(_PLT_HASH_ALPHA)
+_PLT_SALT = 765432
+_PLT_PREFIX = "PLT"
+_PLT_NUM_LEN = 4
 
 def plt_split(code):
     prefix_list = []
@@ -22,12 +24,12 @@ def plt_split(code):
     len_hash = len(hash)
     if len_code <= len_prefix + len_hash:
         raise ValueError("Valid formats: A*9* or A*9*A")
-    number = code[len_prefix:len_code-len_hash]
-    return prefix, number, hash
+    str_num = code[len_prefix:len_code-len_hash]
+    return prefix, str_num, hash
 
 
-def plt_verify(strint):
-    return strint == plt_hashed(strint)
+def plt_verify(str_num):
+    return str_num == plt_hashed(str_num)
 
 
 def plt_hashed(code):
@@ -35,8 +37,8 @@ def plt_hashed(code):
 
 
 def plt_unhashed(code):
-    prefix, strint, _ = plt_split(code)
-    return ''.join([prefix, strint])
+    prefix, str_num, _ = plt_split(code)
+    return ''.join([prefix, str_num])
 
 
 def plt_next(code):
@@ -45,7 +47,7 @@ def plt_next(code):
     return plt_mount(next_num, prefix, len(str_num))
 
 
-def plt_mount(num, prefix="PLT", num_len=4):
+def plt_mount(num, prefix=_PLT_PREFIX, num_len=_PLT_NUM_LEN):
     str_num = str(num)
     len_str_num = len(str_num)
     if len_str_num > num_len:
@@ -55,33 +57,34 @@ def plt_mount(num, prefix="PLT", num_len=4):
 
 
 def plt_hash(code):
-    _, strint, _ = plt_split(code)
-    int_num = int(strint)
-    alt_num = int_num + 765432
-    str_num = str(alt_num)
-    digits = strint_mod11_10_digits(str_num, ndigits=2)
-    int_digits = int(digits)
-    return _TPL_HASH_ALPHA[int_digits%_LEN_TPL_HASH_ALPHA]
+    _, str_num, _ = plt_split(code)
+    num = int(str_num)
+    num_salt = num + _PLT_SALT
+    str_num_salt = str(num_salt)
+    hash_digits = str_num_mod1110_digits(str_num_salt, ndigits=2)
+    hash_int = int(hash_digits)
+    hash = _PLT_HASH_ALPHA[hash_int%_PLT_LEN_HASH_ALPHA]
+    return hash
 
 
-def strint_mod11_10_digits(strint, ndigits=1):
+def str_num_mod1110_digits(str_num, ndigits=1):
     digits = ''
     for _ in range(ndigits):
-        digit = strint_mod11_10_digit(strint+digits)
+        digit = str_num_mod1110_digit(str_num+digits)
         digits += digit
     return digits
 
 
-def strint_mod11_10_digit(strint):
+def str_num_mod1110_digit(str_num):
     sum = 0
-    for idx, digit in enumerate(strint[::-1]):
+    for idx, str_digit in enumerate(str_num[::-1]):
         mult = idx%8+2
-        digit_int = int(digit)
-        calc = mult * digit_int 
-        calc_11 = calc % 11
-        sum += calc_11
-    sum_10 = sum % 10
-    return str(sum_10)
+        digit = int(str_digit)
+        calc = mult * digit 
+        calc_mod11 = calc % 11
+        sum += calc_mod11
+    sum_mod10 = sum % 10
+    return str(sum_mod10)
 
 
 if __name__ == '__main__':
