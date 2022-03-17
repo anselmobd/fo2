@@ -1,29 +1,52 @@
+from decimal import InvalidContext
 from string import digits
 import sys
+from xml.dom import InvalidCharacterErr
 
 
-TPL_HASH_ALPHA = "ABCDEFGHIJKLMNPQRSTUVWXYZ"
+_TPL_HASH_ALPHA = "ABCDEFGHIJKLMNPQRSTUVWXYZ"
+_LEN_TPL_HASH_ALPHA = 25
 
 
-def tpl_hash_verify(strint):
-    return strint == tpl_hashed(tpl_unhashed(strint))
+def plt_split(code):
+    prefix_list = []
+    for char in code:
+        if char.isalpha():
+            prefix_list.append(char)
+        else:
+            break
+    prefix = ''.join(prefix_list)
+    hash = code[-1] if code[-1].isalpha() else ''
+    len_code = len(code)
+    len_prefix = len(prefix)
+    len_hash = len(hash)
+    if len_code <= len_prefix + len_hash:
+        raise ValueError("Valid formats: A*9* or A*9*A")
+    number = code[len_prefix:len_code-len_hash]
+    return prefix, number, hash
 
 
-def tpl_hashed(strint):
-    return strint + tpl_hash_code(strint)
+def plt_verify(strint):
+    return strint == plt_hashed(strint)
 
 
-def tpl_unhashed(strint):
-    return strint[:-1]
+def plt_hashed(code):
+    return plt_unhashed(code) + plt_hash(code)
 
 
-def tpl_hash_code(strint):
+def plt_unhashed(code):
+    prefix, strint, _ = plt_split(code)
+    return ''.join([prefix, strint])
+
+
+def plt_hash(code):
+    _, strint, _ = plt_split(code)
     int_num = int(strint)
     alt_num = int_num + 765432
     str_num = str(alt_num)
     digits = strint_mod11_10_digits(str_num, ndigits=2)
     int_digits = int(digits)
-    return TPL_HASH_ALPHA[int_digits%len(TPL_HASH_ALPHA)]
+    return _TPL_HASH_ALPHA[int_digits%_LEN_TPL_HASH_ALPHA]
 
 
 def strint_mod11_10_digits(strint, ndigits=1):
@@ -50,5 +73,5 @@ if __name__ == '__main__':
     arg1 = int(sys.argv[1])
 
     for num in range(arg1):
-        print(f"{num};{tpl_hash_code(str(num))}")
+        print(f"{num};{plt_hash(str(num))}")
        
