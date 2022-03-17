@@ -40,14 +40,18 @@ def plt_unhashed(code):
 
 
 def plt_next(code):
-    prefix, strint, _ = plt_split(code)
-    next_int = int(strint) + 1 
-    return plt_mount(next_int, prefix, len(strint))
+    prefix, str_num, _ = plt_split(code)
+    next_num = int(str_num) + 1 
+    return plt_mount(next_num, prefix, len(str_num))
 
 
-def plt_mount(int_num, prefix="PLT", int_len=4):
-    strint = str(int_num).zfill(int_len)
-    return plt_hashed(''.join([prefix, strint]))
+def plt_mount(num, prefix="PLT", num_len=4):
+    str_num = str(num)
+    len_str_num = len(str_num)
+    if len_str_num > num_len:
+        prefix = prefix[:num_len-len_str_num]
+    str_num = str_num.zfill(num_len)
+    return plt_hashed(''.join([prefix, str_num]))
 
 
 def plt_hash(code):
