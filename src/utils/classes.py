@@ -236,12 +236,13 @@ class TermalPrint:
         if self._write_file:
             self._file.close()
 
-    def printer_send(self):
+    def printer_send(self, count=1):
         data = self.render().encode('cp850')
-        self._lpr.stdin.write(data)
+        for _ in range(count):
+            self._lpr.stdin.write(data)
 
-        if self._write_file:
-            self._file.write(data)
+            if self._write_file:
+                self._file.write(data)
 
     def printer_send1(self):
         self.printer_start()
