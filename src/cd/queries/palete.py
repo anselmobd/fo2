@@ -36,25 +36,36 @@ def query_palete(impressa_SNA='A', order='D'):
     ).oquery.debug_execute()
 
 
-def add_palete(cursor):
+def add_palete(cursor, quant=1):
     paletes = query_palete()
     if len(paletes) == 0:
         palete = Plt().mount(1)
     else:
         palete = Plt(paletes[0]['palete']).next()
 
-    sql = f"""
-        INSERT INTO SYSTEXTIL.ENDR_012
-        (COD_CONTAINER, COD_TIPO, ENDERECO, TARA_CONTAINER, QUANTIDADE_MAXIMO, ULTIMA_ATUALIZACAO_TARA, SITUACAO)
-        VALUES('{palete}', 1, NULL, 1, 1, CURRENT_TIMESTAMP, '1')
-    """
+    if isinstance(quant, str):
+        quant = int(quant)
 
-    try:
-        debug_cursor_execute(cursor, sql)
-        return True, ''
-    except Exception as e:
-        return False, repr(e)
+    ok = False
+    message = ''
+    for _ in range(quant):
+        sql = f"""
+            INSERT INTO SYSTEXTIL.ENDR_012
+            (COD_CONTAINER, COD_TIPO, ENDERECO, TARA_CONTAINER, QUANTIDADE_MAXIMO, ULTIMA_ATUALIZACAO_TARA, SITUACAO)
+            VALUES('{palete}', 1, NULL, 1, 1, CURRENT_TIMESTAMP, '1')
+        """
+        try:
+            debug_cursor_execute(cursor, sql)
+            ok = True
+        except Exception as e:
+            ok = False
+            message = repr(e)
+        if ok:
+            palete = Plt(palete).next()
+        else:
+            break
 
+    return ok, message
 
 def mark_palete_impresso(cursor, palete):
     sql = f"""
