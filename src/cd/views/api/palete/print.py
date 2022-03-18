@@ -8,6 +8,7 @@ from utils.classes import TermalPrint
 import lotes.models
 
 from cd.classes.palete import Plt
+from cd.queries.palete import query_palete
 
 
 class PaletePrint(View):
@@ -51,9 +52,7 @@ class PaletePrint(View):
                 self.verifica_usuario_impresso(),]):
             return False
 
-        data = [{
-            'code': self.code,
-        }]
+        data = query_palete('N', 'A')
 
         teg = TermalPrint(
             self.usuario_impresso.impressora_termica.nome,
