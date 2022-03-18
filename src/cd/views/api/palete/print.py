@@ -52,8 +52,6 @@ class PaletePrint(View):
                 self.verifica_usuario_impresso(),]):
             return False
 
-        data = query_palete('N', 'A')
-
         teg = TermalPrint(
             self.usuario_impresso.impressora_termica.nome,
             file_dir=f"impresso/{self.impresso}/%Y/%m"
@@ -61,7 +59,7 @@ class PaletePrint(View):
         teg.template(self.usuario_impresso.modelo.gabarito, '\r\n')
         teg.printer_start()
         try:
-            for row in data:
+            for row in self.data:
                 teg.context(row)
                 teg.printer_send(2)
         finally:
@@ -87,13 +85,24 @@ class PaletePrint(View):
             'code': self.code,
         })
 
+        self.data = query_palete('N', 'A')
+        pprint(self.data)
+        if not self.data:
+            self.context.update({
+                'result': 'ERRO',
+                'state': 'Nada a imprimir',
+            })
+            return
+
         if self.print():
             self.context.update({
                 'result': 'OK',
+                'state': 'OK!',
             })
         else:
             self.context.update({
                 'result': 'ERRO',
+                'state': 'Erro ao imprimir',
             })
 
 
