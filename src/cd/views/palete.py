@@ -19,7 +19,7 @@ class Palete(PermissionRequiredMixin, O2BaseGetView):
         data = query_palete()
 
         self.context.update({
-            'headers': ['Palete', 'Impressa'],
+            'headers': ['Palete', 'Etiqueta impressa?'],
             'fields': ['palete', 'impressa'],
             'data': data,
             'ultimo': data[0]['palete'] if data else 'X',
