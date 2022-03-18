@@ -12,6 +12,7 @@ def query_palete():
     return SMountQuery(
         fields=[
           "co.COD_CONTAINER palete",
+          "COALESCE(co.TUSSOR_IMPRESSA, 'N') impressa",
         ],
         table="ENDR_012 co",
         where=[
