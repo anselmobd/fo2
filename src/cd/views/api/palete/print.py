@@ -3,6 +3,8 @@ from pprint import pprint
 from django.http import JsonResponse
 from django.views import View
 
+from utils.classes import TermalPrint
+
 import lotes.models
 
 from cd.classes.palete import Plt
@@ -44,9 +46,28 @@ class PaletePrint(View):
 
 
     def print(self):
-        if all([self.verifica_impresso(),
+        if not all([
+                self.verifica_impresso(),
                 self.verifica_usuario_impresso(),]):
             return False
+
+        data = [{
+            'code': self.code,
+        }]
+
+        teg = TermalPrint(
+            self.usuario_impresso.impressora_termica.nome,
+            file_dir=f"impresso/{self.impresso}/%Y/%m"
+        )
+        teg.template(self.usuario_impresso.modelo.gabarito, '\r\n')
+        teg.printer_start()
+        try:
+            for row in data:
+                teg.context(row)
+                teg.printer_send(2)
+        finally:
+            teg.printer_end()
+
 
         return True
 
