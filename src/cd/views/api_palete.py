@@ -8,10 +8,10 @@ from fo2.connections import db_cursor_so
 from cd.queries.palete import add_palete, query_palete, mark_palete_impresso
 
 
-def palete_add(request):
+def palete_add(request, quant):
     data = {}
     cursor = db_cursor_so(request)
-    result, message = add_palete(cursor)
+    result, message = add_palete(cursor, quant)
     if result:
         data.update({
             'result': 'OK',
