@@ -14,6 +14,8 @@
     <a title="Adiciona palete" href="#" onclick="PaleteAdd();return false;"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a>
     <span style="font-size: 2em">&nbsp;</span>
     <a title="Imprime etiquetas" href="#" onclick="PaletePrint();return false;"><span class="glyphicon glyphicon-print" style="font-size: 2em" aria-hidden="true"></span></a>
+    <span style="font-size: 2em">&nbsp;</span>
+    <a title="Marca como impressas" href="#" onclick="MarkPrinted();return false;"><span class="glyphicon glyphicon-ok-circle" style="font-size: 2em" aria-hidden="true"></span></a>
   </div>
   {% if data %}
     <table>
@@ -75,6 +77,33 @@ function PaleteAdd(id) {
         if (erro) {
           alert(erro);
         }
+      },
+      error : function(data) {
+        alert('Erro na requisição');
+      }
+    });
+  }
+
+  function MarkPrinted(id) {
+    $.ajax({
+      type: 'GET',
+      url: '{% url 'cd:palete_printed' %}',
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        erro = '';
+        if (data) {
+          if (data['result'] == 'OK') {
+            console.log('State: '+data['state']);
+          } else {
+            erro = 'Erro: '+data['state'];
+          }
+        } else {
+          erro = 'Sem retorno';
+        }
+        if (erro) {
+          alert(erro);
+        }
+        location.reload(true);
       },
       error : function(data) {
         alert('Erro na requisição');
