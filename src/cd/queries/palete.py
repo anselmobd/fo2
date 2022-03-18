@@ -15,7 +15,7 @@ def query_palete():
         ],
         table="ENDR_012 co",
         where=[
-            "co.COD_CONTAINER LIKE 'PLT%'",
+            "co.COD_CONTAINER LIKE 'P%'",
         ],
         order=[
           "co.COD_CONTAINER DESC",
