@@ -22,5 +22,4 @@ class Palete(PermissionRequiredMixin, O2BaseGetView):
             'headers': ['Palete', 'Etiqueta impressa?'],
             'fields': ['palete', 'impressa'],
             'data': data,
-            'ultimo': data[0]['palete'] if data else 'X',
         })

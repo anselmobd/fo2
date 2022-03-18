@@ -63,7 +63,7 @@ function PaleteAdd(id) {
   function PaletePrint(id) {
     $.ajax({
       type: 'GET',
-      url: '{% url 'cd:palete_print' ultimo %}',
+      url: '{% url 'cd:palete_print' %}',
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success : function(data) {
         erro = '';
