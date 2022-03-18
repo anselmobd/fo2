@@ -54,3 +54,17 @@ def add_palete(cursor):
         return True, ''
     except Exception as e:
         return False, repr(e)
+
+
+def mark_palete_impresso(cursor, palete):
+    sql = f"""
+        UPDATE SYSTEXTIL.ENDR_012
+        SET 
+            TUSSOR_IMPRESSA = 'S'
+        WHERE COD_CONTAINER = '{palete}'
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+        return True, ''
+    except Exception as e:
+        return False, repr(e)
