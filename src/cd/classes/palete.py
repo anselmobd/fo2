@@ -30,12 +30,12 @@ class Plt():
         len_hash = len(hash)
         if len_code <= len_prefix + len_hash:
             raise ValueError("Valid formats: A*9* or A*9*A")
-        str_num = code[len_prefix:len_code-len_hash]
-        return prefix, str_num, hash
+        strnum = code[len_prefix:len_code-len_hash]
+        return prefix, strnum, hash
 
 
-    def verify(self, str_num):
-        return str_num == self.hashed(str_num)
+    def verify(self, strnum):
+        return strnum == self.hashed(strnum)
 
 
     def hashed(self, code):
@@ -43,33 +43,33 @@ class Plt():
 
 
     def unhashed(self, code):
-        prefix, str_num, _ = self.split(code)
-        return ''.join([prefix, str_num])
+        prefix, strnum, _ = self.split(code)
+        return ''.join([prefix, strnum])
 
 
     def next(self, code=None):
         if not code:
             code = self.code
-        prefix, str_num, _ = self.split(code)
-        next_num = int(str_num) + 1 
-        return self.mount(next_num, prefix, len(str_num))
+        prefix, strnum, _ = self.split(code)
+        next_num = int(strnum) + 1 
+        return self.mount(next_num, prefix, len(strnum))
 
 
     def mount(self, num, prefix=_PLT_PREFIX, num_len=_PLT_NUM_LEN):
-        str_num = str(num)
-        len_str_num = len(str_num)
-        if len_str_num > num_len:
-            prefix = prefix[:num_len-len_str_num]
-        str_num = str_num.zfill(num_len)
-        return self.hashed(''.join([prefix, str_num]))
+        strnum = str(num)
+        len_strnum = len(strnum)
+        if len_strnum > num_len:
+            prefix = prefix[:num_len-len_strnum]
+        strnum = strnum.zfill(num_len)
+        return self.hashed(''.join([prefix, strnum]))
 
 
     def hash(self, code):
-        _, str_num, _ = self.split(code)
-        num = int(str_num)
+        _, strnum, _ = self.split(code)
+        num = int(strnum)
         num_salt = num + self._PLT_SALT
-        str_num_salt = str(num_salt)
-        hash_digits = strnum_mod1110_digits(str_num_salt, ndigits=2)
+        strnum_salt = str(num_salt)
+        hash_digits = strnum_mod1110_digits(strnum_salt, ndigits=2)
         hash_int = int(hash_digits)
         hash = self._PLT_HASH_ALPHA[hash_int%self._PLT_LEN_HASH_ALPHA]
         return hash
