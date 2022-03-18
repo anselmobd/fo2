@@ -5,7 +5,7 @@ from cd.views import (
     palete,
     api_palete,
 )
-from cd.views.api.palete.print import palete_print
+from cd.views.api.palete.print import PaletePrint
 
 
 app_name = 'cd'
@@ -118,5 +118,5 @@ urlpatterns = [
         api_palete.palete_add, name='palete_add'),
 
     re_path(r'^api/palete_print/(?P<code>.+)$',
-        palete_print, name='palete_print'),
+        PaletePrint.as_view(), name='palete_print'),
 ]
