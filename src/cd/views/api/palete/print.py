@@ -70,29 +70,34 @@ class PaletePrint(View):
 
 
     def mount_context(self):
-        try:
-            code_ok = Plt(self.code).verify()
-        except ValueError:
-            code_ok = False
-        if not code_ok:
-            self.context.update({
-                'result': 'ERRO',
-                'state': 'Código inválido',
-            })
-            return
+        if self.code:
+            try:
+                code_ok = Plt(self.code).verify()
+            except ValueError:
+                code_ok = False
+            if not code_ok:
+                self.context.update({
+                    'result': 'ERRO',
+                    'state': 'Código inválido',
+                })
+                return
 
-        self.context.update({
-            'code': self.code,
-        })
-
-        self.data = query_palete('N', 'A')
-        pprint(self.data)
-        if not self.data:
             self.context.update({
-                'result': 'ERRO',
-                'state': 'Nada a imprimir',
+                'code': self.code,
             })
-            return
+
+            self.data = [{
+                'palete': self.code
+            }]
+
+        else:
+            self.data = query_palete('N', 'A')
+            if not self.data:
+                self.context.update({
+                    'result': 'ERRO',
+                    'state': 'Nada a imprimir',
+                })
+                return
 
         if self.print():
             self.context.update({
@@ -107,7 +112,7 @@ class PaletePrint(View):
 
 
     def get(self, request, *args, **kwargs):
-        self.code = kwargs['code']
+        self.code = kwargs['code'] if 'code' in kwargs else None
         self.context = {}
         self.mount_context()
         return JsonResponse(self.context, safe=False)
