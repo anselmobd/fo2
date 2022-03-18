@@ -3,7 +3,7 @@ from pprint import pprint
 from django.db import IntegrityError
 from django.db.models import Q
 
-from o2.functions import csrf_used
+from o2.functions.csrf import csrf_used
 
 import servico.models
 
