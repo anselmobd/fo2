@@ -14,7 +14,7 @@ class Plt():
     def __init__(self, code=None) -> None:
         self.code = code
 
-    def plt_split(self, code=None):
+    def split(self, code=None):
         if not code:
             code = self.code
         prefix_list = []
@@ -34,38 +34,38 @@ class Plt():
         return prefix, str_num, hash
 
 
-    def plt_verify(self, str_num):
-        return str_num == self.plt_hashed(str_num)
+    def verify(self, str_num):
+        return str_num == self.hashed(str_num)
 
 
-    def plt_hashed(self, code):
-        return self.plt_unhashed(code) + self.plt_hash(code)
+    def hashed(self, code):
+        return self.unhashed(code) + self.hash(code)
 
 
-    def plt_unhashed(self, code):
-        prefix, str_num, _ = self.plt_split(code)
+    def unhashed(self, code):
+        prefix, str_num, _ = self.split(code)
         return ''.join([prefix, str_num])
 
 
-    def plt_next(self, code=None):
+    def next(self, code=None):
         if not code:
             code = self.code
-        prefix, str_num, _ = self.plt_split(code)
+        prefix, str_num, _ = self.split(code)
         next_num = int(str_num) + 1 
-        return self.plt_mount(next_num, prefix, len(str_num))
+        return self.mount(next_num, prefix, len(str_num))
 
 
-    def plt_mount(self, num, prefix=_PLT_PREFIX, num_len=_PLT_NUM_LEN):
+    def mount(self, num, prefix=_PLT_PREFIX, num_len=_PLT_NUM_LEN):
         str_num = str(num)
         len_str_num = len(str_num)
         if len_str_num > num_len:
             prefix = prefix[:num_len-len_str_num]
         str_num = str_num.zfill(num_len)
-        return self.plt_hashed(''.join([prefix, str_num]))
+        return self.hashed(''.join([prefix, str_num]))
 
 
-    def plt_hash(self, code):
-        _, str_num, _ = self.plt_split(code)
+    def hash(self, code):
+        _, str_num, _ = self.split(code)
         num = int(str_num)
         num_salt = num + self._PLT_SALT
         str_num_salt = str(num_salt)
