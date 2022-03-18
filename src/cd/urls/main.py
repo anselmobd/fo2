@@ -119,4 +119,8 @@ urlpatterns = [
 
     re_path(r'^api/palete_print/(?P<code>.+)$',
         PaletePrint.as_view(), name='palete_print'),
+
+    re_path(r'^api/palete_printed/$',
+        api_palete.palete_printed, name='palete_printed'),
+
 ]
