@@ -22,3 +22,12 @@ def palete_add(request):
             'state': message,
         })
     return JsonResponse(data, safe=False)
+
+
+def palete_print(request, code):
+    data = {}
+    data.update({
+        'result': 'OK',
+        'code': code,
+    })
+    return JsonResponse(data, safe=False)
