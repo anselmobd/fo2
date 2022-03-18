@@ -11,7 +11,9 @@
 
 {% block content %}
   <div>
-    <a title="Adiciona palete" href="{% url 'cd:palete_add' %}" onclick="PaleteAdd();return false;"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a>
+    <a title="Adiciona palete" href="#" onclick="PaleteAdd();return false;"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em" aria-hidden="true"></span></a>
+    <span style="font-size: 2em">&nbsp;</span>
+    <a title="Imprime etiqueta do {{ultimo}}" href="#" onclick="PaletePrint();return false;"><span class="glyphicon glyphicon-print" style="font-size: 2em" aria-hidden="true"></span></a>
   </div>
   {% if data %}
     <table>
@@ -27,7 +29,7 @@
 {% block javascript.pos %}
 <script>
 
-  function PaleteAdd(id) {
+function PaleteAdd(id) {
     $.ajax({
       type: 'GET',
       url: '{% url 'cd:palete_add' %}',
@@ -47,6 +49,32 @@
           alert(erro);
         }
         location.reload(true);
+      },
+      error : function(data) {
+        alert('Erro na requisição');
+      }
+    });
+  }
+
+  function PaletePrint(id) {
+    $.ajax({
+      type: 'GET',
+      url: '{% url 'cd:palete_print' ultimo %}',
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        erro = '';
+        if (data) {
+          if (data['result'] == 'OK') {
+            console.log('Code: '+data['code']);
+          } else {
+            erro = 'Erro: '+data['state'];
+          }
+        } else {
+          erro = 'Sem retorno';
+        }
+        if (erro) {
+          alert(erro);
+        }
       },
       error : function(data) {
         alert('Erro na requisição');

@@ -22,4 +22,5 @@ class Palete(PermissionRequiredMixin, O2BaseGetView):
             'headers': ['Palete'],
             'fields': ['palete'],
             'data': data,
+            'ultimo': data[0]['palete'],
         })
