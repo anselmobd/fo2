@@ -8,12 +8,17 @@ from utils.functions.queries import debug_cursor_execute
 from cd.classes.palete import Plt
 
 
-def query_palete(impressa_SNA='A'):
+def query_palete(impressa_SNA='A', order='D'):
     where_impressa = []
-    if impressa_SNA == 'S':
-        where_impressa = ["co.TUSSOR_IMPRESSA = 'S'"]
-    elif impressa_SNA == 'N':
-        where_impressa = ["co.TUSSOR_IMPRESSA <> 'S'"]
+    if impressa_SNA != 'A':
+        where_impressa = [
+            f"COALESCE(co.TUSSOR_IMPRESSA, 'N') = '{impressa_SNA}'"
+        ]
+
+    if order[0].upper() == 'D':
+        order = "DESC"
+    else:
+        order = "ASC"
 
     return SMountQuery(
         fields=[
@@ -26,7 +31,7 @@ def query_palete(impressa_SNA='A'):
         ]+
         where_impressa,
         order=[
-          "co.COD_CONTAINER DESC",
+          f"co.COD_CONTAINER {order}",
         ],
     ).oquery.debug_execute()
 
