@@ -1,7 +1,10 @@
 from django.urls import include, re_path
 
 import cd.views as views
-from cd.views import palete
+from cd.views import (
+    palete,
+    api_palete,
+)
 
 
 app_name = 'cd'
@@ -109,4 +112,7 @@ urlpatterns = [
 
     re_path(r'^palete/$',
         palete.Palete.as_view(), name='palete'),
+
+    re_path(r'^api/palete_add/$',
+        api_palete.palete_add, name='palete_add'),
 ]

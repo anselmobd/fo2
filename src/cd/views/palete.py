@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from base.views import O2BaseGetView
 
-from cd.queries.palete import query_pallete
+from cd.queries.palete import query_palete
 
 
 class Palete(PermissionRequiredMixin, O2BaseGetView):
@@ -16,7 +16,7 @@ class Palete(PermissionRequiredMixin, O2BaseGetView):
         self.title_name = 'Paletes'
 
     def mount_context(self):
-        data = query_pallete()
+        data = query_palete()
 
         self.context.update({
             'headers': ['Palete'],
