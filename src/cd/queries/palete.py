@@ -8,7 +8,13 @@ from utils.functions.queries import debug_cursor_execute
 from cd.classes.palete import Plt
 
 
-def query_palete():
+def query_palete(impressa_SNA='A'):
+    where_impressa = []
+    if impressa_SNA == 'S':
+        where_impressa = ["co.TUSSOR_IMPRESSA = 'S'"]
+    elif impressa_SNA == 'N':
+        where_impressa = ["co.TUSSOR_IMPRESSA <> 'S'"]
+
     return SMountQuery(
         fields=[
           "co.COD_CONTAINER palete",
@@ -17,7 +23,8 @@ def query_palete():
         table="ENDR_012 co",
         where=[
             "co.COD_CONTAINER LIKE 'P%'",
-        ],
+        ]+
+        where_impressa,
         order=[
           "co.COD_CONTAINER DESC",
         ],
