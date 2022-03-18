@@ -11,6 +11,11 @@
 
 {% block content %}
   <div>
+    <label>Quant.:
+      <input type="number" placeholder="0" required name="quant" id="quant"
+        min="1" value="1" step="1" maxlength="4" size="4">
+    </label>
+    <br/>
     <div style="float:right;">
       <a title="Imprime etiquetas" href="#" onclick="PaletePrint();return false;"><span class="glyphicon glyphicon-print" style="font-size: 2em" aria-hidden="true"></span></a>
       <span style="font-size: 2em">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -34,9 +39,12 @@
 <script>
 
 function PaleteAdd(id) {
+    const quantval = document.getElementById('quant').value;
+    const urlq = '{% url 'cd:palete_add' 0 %}'+quantval;
+    console.log(urlq);
     $.ajax({
       type: 'GET',
-      url: '{% url 'cd:palete_add' %}',
+      url: urlq,
       data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success : function(data) {
         erro = '';
