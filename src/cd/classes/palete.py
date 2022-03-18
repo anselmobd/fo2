@@ -34,8 +34,10 @@ class Plt():
         return prefix, strnum, hash
 
 
-    def verify(self, strnum):
-        return strnum == self.hashed(strnum)
+    def verify(self, code=None):
+        if not code:
+            code = self.code
+        return code == self.hashed(code)
 
 
     def hashed(self, code):
