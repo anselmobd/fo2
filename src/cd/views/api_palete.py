@@ -14,6 +14,7 @@ def palete_add(request):
     if result:
         data.update({
             'result': 'OK',
+            'state': 'OK!',
         })
     else:
         data.update({
