@@ -5,6 +5,8 @@ from systextil.queries.base import SMountQuery
 
 from utils.functions.queries import debug_cursor_execute
 
+from cd.classes.palete import Plt
+
 
 def query_palete():
     return SMountQuery(
@@ -24,21 +26,14 @@ def query_palete():
 def add_palete(cursor):
     paletes = query_palete()
     if len(paletes) == 0:
-        next_palete = 1
+        palete = Plt().mount(1)
     else:
-        palete = paletes[0]['palete']
-        numeros = palete[3:7]
-        if numeros.isdigit():
-            next_palete = int(numeros) + 1
-        else:
-            return False, "Último palete inválido"
-
-    numeros = f"{next_palete:04d}"
+        palete = Plt(paletes[0]['palete']).next()
 
     sql = f"""
         INSERT INTO SYSTEXTIL.ENDR_012
         (COD_CONTAINER, COD_TIPO, ENDERECO, TARA_CONTAINER, QUANTIDADE_MAXIMO, ULTIMA_ATUALIZACAO_TARA, SITUACAO)
-        VALUES('PLT{next_palete:04d}A', 1, NULL, 1, 1, CURRENT_TIMESTAMP, '1')
+        VALUES('{palete}', 1, NULL, 1, 1, CURRENT_TIMESTAMP, '1')
     """
 
     try:
