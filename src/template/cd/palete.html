@@ -147,7 +147,9 @@ function PaleteAdd(id) {
         erro = '';
         if (data) {
           if (data['result'] == 'OK') {
-            console.log('State: '+data['state']);
+            console.log('State: OK! '+data['state']);
+          } if (data['result'] == 'NULL') {
+            console.log('State: NULL! '+data['state']);
           } else {
             erro = 'Erro: '+data['state'];
           }
@@ -157,7 +159,9 @@ function PaleteAdd(id) {
         if (erro) {
           alert(erro);
         }
-        location.reload(true);
+        if (data['result'] != 'NULL') {
+          location.reload(true);
+        }
       },
       error : function(data) {
         alert('Erro na requisição');

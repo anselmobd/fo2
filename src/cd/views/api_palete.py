@@ -28,12 +28,13 @@ def palete_add(request, quant):
 def palete_printed(request):
     cursor = db_cursor_so(request)
     data = query_palete('N', 'A')
-
+    pprint(data)
     if not data:
         context = {
-            'result': 'OK',
+            'result': 'NULL',
             'state': "Nenhum palete disponível para marcar",
         }
+        return JsonResponse(context, safe=False)
 
     last_palete = None
     ok = False
