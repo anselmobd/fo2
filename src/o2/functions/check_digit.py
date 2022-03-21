@@ -2,6 +2,26 @@ import sys
 from pprint import pprint
 
 
+_HASH_CHARSET ={
+    'N': "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    'A': "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    'O': "ABCDEFGHIJKLMNPQRSTUVWXYZ",
+}
+
+
+def mod1110_modchar_o(strnum):
+    return mod1110_modchar(strnum, charset="O")
+
+
+def mod1110_modchar(strnum, charset):
+    hash_digits = mod1110_digits(strnum, ndigits=2)
+    hash_int = int(hash_digits)
+    hash_charset = _HASH_CHARSET[charset]
+    len_hash_charset = len(hash_charset)
+    hash = hash_charset[hash_int%len_hash_charset]
+    return hash
+
+
 def mod1110_digits(strnum, ndigits=2):
     """Calcula dígitos verificadores de string de representação numérica.
     Segue a lógica do mod1110_digit.
