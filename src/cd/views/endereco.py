@@ -14,6 +14,7 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
     def __init__(self, *args, **kwargs):
         super(Endereco, self).__init__(*args, **kwargs)
         self.Form_class = EnderecoForm
+        self.form_class_has_initial = True
         self.permission_required = 'cd.can_admin_pallet'
         self.template_name = 'cd/endereco.html'
         self.title_name = 'Endereços'
