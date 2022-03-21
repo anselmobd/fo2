@@ -1,0 +1,67 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+    .pagination {
+      margin: 0.5em 0em auto;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  {% if data %}
+
+    {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
+    {% with pag_neibn="-"|add:pag_neib %}
+    {% if data.paginator.num_pages != 1 %}
+      <ul class="pagination">
+        {% if data.number > pag_neib|add:1 %}
+          <li><a href="{% url 'cd:endereco' %}">
+            <span>1
+              {% if data.number > pag_neib|add:2 %}
+                <span class="glyphicon glyphicon-step-backward"></span>
+              {% endif %}
+            </span>
+          </a></li>
+        {% endif %}
+        {% for i in data.paginator.page_range %}
+          {% if i >= data.number|add:pag_neibn %}
+            {% if i <= data.number|add:pag_neib %}
+              {% if data.number == i %}
+                <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+              {% else %}
+                {% if i == 1 %}
+                  <li><a href="{% url 'cd:endereco' %}"">{{ i }}</a></li>
+                {% else %}
+                  <li><a href="{% url 'cd:endereco' %}?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {% if data.number < data.paginator.num_pages|add:pag_neibn %}
+          <li><a href="{% url 'cd:endereco' %}?page={{ data.paginator.num_pages }}">
+            <span>
+              {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
+                <span class="glyphicon glyphicon-step-forward"></span>
+              {% endif %}
+            {{ data.paginator.num_pages }}</span>
+          </a></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+    {% endwith %}
+
+    <table>
+      {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% else %}
+    <h4>Nenhum endereço encontrado</h4>
+  {% endif %}
+{% endblock content %}

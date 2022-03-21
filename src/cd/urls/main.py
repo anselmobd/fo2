@@ -2,8 +2,9 @@ from django.urls import include, re_path
 
 import cd.views as views
 from cd.views import (
-    palete,
     api_palete,
+    endereco,
+    palete,
 )
 from cd.views.api.palete.print import PaletePrint
 
@@ -122,5 +123,8 @@ urlpatterns = [
 
     re_path(r'^api/palete_printed/$',
         api_palete.palete_printed, name='palete_printed'),
+
+    re_path(r'^endereco/$',
+        endereco.Endereco.as_view(), name='endereco'),
 
 ]
