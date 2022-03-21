@@ -18,8 +18,7 @@ def mod1110_modchar(strnum, charset):
     hash_int = int(hash_digits)
     hash_charset = _HASH_CHARSET[charset]
     len_hash_charset = len(hash_charset)
-    hash = hash_charset[hash_int%len_hash_charset]
-    return hash
+    return hash_charset[hash_int%len_hash_charset]
 
 
 def mod1110_digits(strnum, ndigits=2):
