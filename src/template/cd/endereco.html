@@ -13,6 +13,11 @@
 {% endblock %}
 
 {% block content %}
+  <form action="{% url 'cd:endereco' %}" method="post" name="formName">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="filtra" value="Filtra"/>
+  </form>
   {% if data %}
 
     {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
@@ -20,7 +25,7 @@
     {% if data.paginator.num_pages != 1 %}
       <ul class="pagination">
         {% if data.number > pag_neib|add:1 %}
-          <li><a href="{% url 'cd:endereco' %}">
+          <li><a href="#" onclick="setPageAndSubmit(1)">
             <span>1
               {% if data.number > pag_neib|add:2 %}
                 <span class="glyphicon glyphicon-step-backward"></span>
@@ -34,17 +39,13 @@
               {% if data.number == i %}
                 <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
               {% else %}
-                {% if i == 1 %}
-                  <li><a href="{% url 'cd:endereco' %}"">{{ i }}</a></li>
-                {% else %}
-                  <li><a href="{% url 'cd:endereco' %}?page={{ i }}">{{ i }}</a></li>
-                {% endif %}
+                <li><a href="#" onclick="setPageAndSubmit({{ i }})">{{ i }}</a></li>
               {% endif %}
             {% endif %}
           {% endif %}
         {% endfor %}
         {% if data.number < data.paginator.num_pages|add:pag_neibn %}
-          <li><a href="{% url 'cd:endereco' %}?page={{ data.paginator.num_pages }}">
+          <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">
             <span>
               {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
                 <span class="glyphicon glyphicon-step-forward"></span>
@@ -62,6 +63,17 @@
       {% include "layout/tbody_generic.html" with fields=fields data=data only %}
     </table>
   {% else %}
-    <h4>Nenhum endereço encontrado</h4>
+    {% if request.POST %}
+      <h4>Nenhum endereço encontrado</h4>
+    {% endif %}
   {% endif %}
 {% endblock content %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    function setPageAndSubmit(page) {
+      document.getElementById('id_page').value = page;
+      document.formName.submit();
+    }
+  </script>
+{% endblock %}
