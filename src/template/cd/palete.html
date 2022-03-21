@@ -146,21 +146,16 @@ function PaleteAdd(id) {
       success : function(data) {
         erro = '';
         if (data) {
-          if (data['result'] == 'OK') {
-            console.log('State: OK! '+data['state']);
-          } if (data['result'] == 'NULL') {
-            console.log('State: NULL! '+data['state']);
+          if (data['status'] == 'ERRO') {
+            alert(data['message']);
           } else {
-            erro = 'Erro: '+data['state'];
+            console.log(data['message']);
+          }
+          if (data['status'] != 'VAZIO') {
+            location.reload(true);
           }
         } else {
-          erro = 'Sem retorno';
-        }
-        if (erro) {
-          alert(erro);
-        }
-        if (data['result'] != 'NULL') {
-          location.reload(true);
+          alert('Sem retorno');
         }
       },
       error : function(data) {

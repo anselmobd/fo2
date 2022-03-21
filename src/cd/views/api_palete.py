@@ -26,39 +26,35 @@ def palete_add(request, quant):
 
 
 def palete_printed(request):
+
+    def result(status, message):
+        return JsonResponse({
+            'status': status,
+            'message': message,
+        }, safe=False)
+
     cursor = db_cursor_so(request)
     data = query_palete('N', 'A')
-    pprint(data)
+
     if not data:
-        context = {
-            'result': 'NULL',
-            'state': "Nenhum palete disponível para marcar",
-        }
-        return JsonResponse(context, safe=False)
+        return result(
+            'VAZIO',
+            "Todos os paletes marcados como impressos",
+        )
 
     last_palete = None
-    ok = False
     for row in data:
-        ok = mark_palete_impresso(cursor, row['palete'])
-        if ok:
+        if mark_palete_impresso(cursor, row['palete']):
             last_palete = row['palete']
         else:
-            break
+            return result(
+                'ERRO',
+                f"Erro! Último palete marcado: {last_palete}"
+                if last_palete
+                else "Erro! Nenhum palete marcado!",
+            )
 
-    if ok:
-        context = {
-            'result': 'OK',
-                'state': f"OK! Último palete marcado: {last_palete}",
-        }
-    else:
-        if last_palete:
-            context = {
-                'result': 'ERROR',
-                'state': f"Erro! Último palete marcado: {last_palete}",
-            }
-        else:
-            context = {
-                'result': 'ERROR',
-                'state': "Erro! Nenhum palete marcado!",
-            }
-    return JsonResponse(context, safe=False)
+    return result(
+        'OK',
+        f"OK! Último palete marcado: {last_palete}",
+    )
