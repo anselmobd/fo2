@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 from django.db.models import Count, Sum
@@ -17,24 +18,57 @@ class VisaoCd(View):
 
     def mount_context(self):
         context = {}
-        locais_recs = lotes.models.Lote.objects.all().exclude(
+
+        # locais_recs = lotes.models.Lote.objects.all().exclude(
+        #     local__isnull=True
+        # ).exclude(
+        #     local__exact=''
+        # ).annotate(
+        #     rua=Substr('local', 1, 1)
+        # ).values(
+        #     'rua'
+        # ).annotate(
+        #     qenderecos=Count('local', distinct=True),
+        #     qlotes=Count('lote'),
+        #     qtdsum=Sum('qtd')
+        # ).order_by('rua')
+
+        lotes_recs = lotes.models.Lote.objects.all().exclude(
             local__isnull=True
         ).exclude(
             local__exact=''
-        ).annotate(
-            rua=Substr('local', 1, 1)
         ).values(
-            'rua'
-        ).annotate(
-            qenderecos=Count('local', distinct=True),
-            qlotes=Count('lote'),
-            qtdsum=Sum('qtd')
-        ).order_by('rua')
-        if len(locais_recs) == 0:
+            'local', 'lote', 'qtd'
+        ).order_by('local')
+        if len(lotes_recs) == 0:
             return context
 
-        data = list(locais_recs.values(
-            'rua', 'qenderecos', 'qlotes', 'qtdsum'))
+        ruas = {}
+        for lote in lotes_recs:
+            try:
+                rua = re.search('^[A-Z]+', lote['local']).group(0)
+            except AttributeError:
+                rua = '#'
+            if rua in ruas:
+                ruas[rua]['ends'].add(lote['local'])
+                ruas[rua]['qlotes'] += 1
+                ruas[rua]['qtdsum'] += lote['qtd']
+            else:
+                ruas[rua] = {
+                    'ends': set([lote['local']]),
+                    'qlotes': 1,
+                    'qtdsum': lote['qtd'],
+                }
+
+        data = [
+            {
+                'rua': rua,
+                'qenderecos': len(ruas[rua]['ends']),
+                'qlotes': ruas[rua]['qlotes'],
+                'qtdsum': ruas[rua]['qtdsum'],
+            }
+            for rua in ruas
+        ]
 
         headers = ['Rua', 'Endereços', 'Lotes (caixas)', 'Qtd. itens']
         fields = ['rua', 'qenderecos', 'qlotes', 'qtdsum']
