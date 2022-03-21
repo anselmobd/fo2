@@ -43,7 +43,7 @@ def palete_printed(request):
         )
 
     for row in data:
-        err_message = mark_palete_printed(cursor, row['palete']):
+        err_message = mark_palete_printed(cursor, row['palete'])
         if err_message:
             return result(
                 'ERRO',
