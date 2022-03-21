@@ -1,3 +1,4 @@
+import operator
 import re
 from pprint import pprint
 
@@ -70,10 +71,30 @@ class VisaoCd(View):
             for rua in ruas
         ]
 
-        headers = ['Rua', 'Endereços', 'Lotes (caixas)', 'Qtd. itens']
-        fields = ['rua', 'qenderecos', 'qlotes', 'qtdsum']
+        for row in data:
+            if row['rua'] in 'ABCDEFGH':
+                row['order'] = 1
+                row['area'] = 'Estantes'
+            elif row['rua'].startswith('Q'):
+                row['order'] = 2
+                row['area'] = 'Quarto andar'
+            elif (
+                    row['rua'].startswith('S') or
+                    row['rua'].startswith('Y')
+                 ):
+                row['order'] = 3
+                row['area'] = 'Externo'
+            else:
+                row['order'] = 4
+                row['area'] = 'Indefinido'
+
+        data.sort(key=operator.itemgetter('order', 'rua'))
+
+        headers = ['Área', 'Rua', 'Endereços', 'Lotes (caixas)', 'Qtd. itens']
+        fields = ['area', 'rua', 'qenderecos', 'qlotes', 'qtdsum']
 
         total = data[0].copy()
+        total['area'] = ''
         total['rua'] = 'Totais:'
         total['|STYLE'] = 'font-weight: bold;'
         quant_fileds = ['qenderecos', 'qlotes', 'qtdsum']
@@ -92,9 +113,9 @@ class VisaoCd(View):
             'headers': headers,
             'fields': fields,
             'data': data,
-            'style': {2: 'text-align: right;',
-                      3: 'text-align: right;',
-                      4: 'text-align: right;'},
+            'style': {3: 'text-align: right;',
+                      4: 'text-align: right;',
+                      5: 'text-align: right;'},
         })
 
         return context
