@@ -11,16 +11,16 @@ from cd.queries.palete import add_palete, query_palete, mark_palete_impresso
 def palete_add(request, quant):
     data = {}
     cursor = db_cursor_so(request)
-    result, message = add_palete(cursor, quant)
-    if result:
+    err_message = add_palete(cursor, quant)
+    if err_message:
         data.update({
-            'result': 'OK',
-            'state': 'OK!',
+            'result': 'ERROR',
+            'state': err_message,
         })
     else:
         data.update({
-            'result': 'ERROR',
-            'state': message,
+            'result': 'OK',
+            'state': 'OK!',
         })
     return JsonResponse(data, safe=False)
 

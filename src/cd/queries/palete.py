@@ -37,6 +37,10 @@ def query_palete(impressa_SNA='A', order='D'):
 
 
 def add_palete(cursor, quant=1):
+    """Cria palete no banco de dados
+    Recebe: cursor e quant de paletes a ser criados
+    Retorna: Se sucesso, None, senão, mensagem de erro
+    """
     paletes = query_palete()
     if len(paletes) == 0:
         palete = Plt().mount(1)
@@ -46,8 +50,6 @@ def add_palete(cursor, quant=1):
     if isinstance(quant, str):
         quant = int(quant)
 
-    ok = False
-    message = ''
     for _ in range(quant):
         sql = f"""
             INSERT INTO SYSTEXTIL.ENDR_012
@@ -56,16 +58,10 @@ def add_palete(cursor, quant=1):
         """
         try:
             debug_cursor_execute(cursor, sql)
-            ok = True
         except Exception as e:
-            ok = False
-            message = repr(e)
-        if ok:
-            palete = Plt(palete).next()
-        else:
-            break
+            return repr(e)
+        palete = Plt(palete).next()
 
-    return ok, message
 
 def mark_palete_impresso(cursor, palete):
     sql = f"""
