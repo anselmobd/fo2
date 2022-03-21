@@ -42,19 +42,15 @@ def palete_printed(request):
             "Todos os paletes marcados como impressos",
         )
 
-    last_palete = None
     for row in data:
-        if mark_palete_impresso(cursor, row['palete']):
-            last_palete = row['palete']
-        else:
+        err_message = mark_palete_impresso(cursor, row['palete']):
+        if err_message:
             return result(
                 'ERRO',
-                f"Erro! Último palete marcado: {last_palete}"
-                if last_palete
-                else "Erro! Nenhum palete marcado!",
+                f"Erro ao marcar palete {row['palete']}. {err_message}",
             )
 
     return result(
         'OK',
-        f"OK! Último palete marcado: {last_palete}",
+        f"OK! Último palete marcado: {row['palete']}",
     )
