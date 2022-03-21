@@ -64,6 +64,10 @@ def add_palete(cursor, quant=1):
 
 
 def mark_palete_impresso(cursor, palete):
+    """Marca palete como impresso no banco de dados
+    Recebe: cursor e código do palete a ser marcado
+    Retorna: Se sucesso, None, senão, mensagem de erro
+    """
     sql = f"""
         UPDATE SYSTEXTIL.ENDR_012
         SET 
@@ -72,6 +76,5 @@ def mark_palete_impresso(cursor, palete):
     """
     try:
         debug_cursor_execute(cursor, sql)
-        return True, ''
     except Exception as e:
-        return False, repr(e)
+        return repr(e)
