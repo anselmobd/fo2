@@ -63,7 +63,7 @@ def add_palete(cursor, quant=1):
         palete = Plt(palete).next()
 
 
-def mark_palete_impresso(cursor, palete):
+def mark_palete_printed(cursor, palete):
     """Marca palete como impresso no banco de dados
     Recebe: cursor e código do palete a ser marcado
     Retorna: Se sucesso, None, senão, mensagem de erro

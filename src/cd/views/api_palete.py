@@ -5,7 +5,7 @@ from django.http import JsonResponse
 
 from fo2.connections import db_cursor_so
 
-from cd.queries.palete import add_palete, query_palete, mark_palete_impresso
+from cd.queries.palete import add_palete, query_palete, mark_palete_printed
 
 
 def palete_add(request, quant):
@@ -43,7 +43,7 @@ def palete_printed(request):
         )
 
     for row in data:
-        err_message = mark_palete_impresso(cursor, row['palete']):
+        err_message = mark_palete_printed(cursor, row['palete']):
         if err_message:
             return result(
                 'ERRO',
