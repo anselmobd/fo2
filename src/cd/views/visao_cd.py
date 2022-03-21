@@ -2,11 +2,11 @@ import operator
 import re
 from pprint import pprint
 
-from django.db.models import Count, Sum
-from django.db.models.functions import Substr
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+
+from utils.views import group_rowspan, totalize_grouped_data
 
 import lotes.models
 
@@ -19,20 +19,6 @@ class VisaoCd(View):
 
     def mount_context(self):
         context = {}
-
-        # locais_recs = lotes.models.Lote.objects.all().exclude(
-        #     local__isnull=True
-        # ).exclude(
-        #     local__exact=''
-        # ).annotate(
-        #     rua=Substr('local', 1, 1)
-        # ).values(
-        #     'rua'
-        # ).annotate(
-        #     qenderecos=Count('local', distinct=True),
-        #     qlotes=Count('lote'),
-        #     qtdsum=Sum('qtd')
-        # ).order_by('rua')
 
         lotes_recs = lotes.models.Lote.objects.all().exclude(
             local__isnull=True
@@ -93,26 +79,30 @@ class VisaoCd(View):
         headers = ['Área', 'Rua', 'Endereços', 'Lotes (caixas)', 'Qtd. itens']
         fields = ['area', 'rua', 'qenderecos', 'qlotes', 'qtdsum']
 
-        total = data[0].copy()
-        total['area'] = ''
-        total['rua'] = 'Totais:'
-        total['|STYLE'] = 'font-weight: bold;'
-        quant_fileds = ['qenderecos', 'qlotes', 'qtdsum']
-        for field in quant_fileds:
-            total[field] = 0
         for row in data:
-            for field in quant_fileds:
-                total[field] += row[field]
             row['qenderecos|LINK'] = reverse(
                 'cd:visao_rua__get', args=[row['rua']])
             row['qlotes|LINK'] = reverse(
                 'cd:visao_rua_detalhe__get', args=[row['rua']])
-        data.append(total)
+
+        group = ['area']
+        totalize_grouped_data(data, {
+            'group': group,
+            'sum': ['qenderecos', 'qlotes', 'qtdsum'],
+            'count': [],
+            'descr': {'rua': 'Totais:'},
+            'flags': ['NO_TOT_1'],
+            'global_sum': ['qenderecos', 'qlotes', 'qtdsum'],
+            'global_descr': {'rua': 'Totais gerais:'},
+            'row_style': 'font-weight: bold;',
+        })
+        group_rowspan(data, group)
 
         context.update({
             'headers': headers,
             'fields': fields,
             'data': data,
+            'group': group,
             'style': {3: 'text-align: right;',
                       4: 'text-align: right;',
                       5: 'text-align: right;'},
