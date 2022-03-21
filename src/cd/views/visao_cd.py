@@ -72,7 +72,7 @@ class VisaoCd(View):
         ]
 
         for row in data:
-            if row['rua'] in 'ABCDEFGH':
+            if row['rua'] in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
                 row['order'] = 1
                 row['area'] = 'Estantes'
             elif row['rua'].startswith('Q'):
