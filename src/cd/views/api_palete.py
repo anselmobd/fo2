@@ -29,6 +29,12 @@ def palete_printed(request):
     cursor = db_cursor_so(request)
     data = query_palete('N', 'A')
 
+    if not data:
+        context = {
+            'result': 'OK',
+            'state': "Nenhum palete disponível para marcar",
+        }
+
     last_palete = None
     ok = False
     for row in data:
@@ -41,17 +47,17 @@ def palete_printed(request):
     if ok:
         context = {
             'result': 'OK',
-                'state': f"Último palete marcado: {last_palete}",
+                'state': f"OK! Último palete marcado: {last_palete}",
         }
     else:
         if last_palete:
             context = {
                 'result': 'ERROR',
-                'state': f"Último palete marcado: {last_palete}",
+                'state': f"Erro! Último palete marcado: {last_palete}",
             }
         else:
             context = {
                 'result': 'ERROR',
-                'state': "Nenhum palete marcado",
+                'state': "Erro! Nenhum palete marcado!",
             }
     return JsonResponse(context, safe=False)
