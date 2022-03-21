@@ -2,20 +2,25 @@ import sys
 from pprint import pprint
 
 
-def strnum_mod1110_digits(strnum, ndigits=2):
+def mod1110_digits(strnum, ndigits=2):
+    """Calcula dígitos verificadores de string de representação numérica.
+    Segue a lógica do mod1110_digit.
+    A cada dígito calculado este é adicionado à direita na string e faz
+    parte do cálculo do próximo dígito.
+    """
     digits = ''
     for _ in range(ndigits):
-        digit = strnum_mod1110_digit(strnum+digits)
+        digit = mod1110_digit(strnum+digits)
         digits += digit
     return digits
 
 
-def strnum_mod1110_digit(strnum):
+def mod1110_digit(strnum):
     """Calcula dígito verificador de string de representação numérica.
     Recebe: String representando um valor inteiro, com ou sem zeros à 
             esquerda.
             Obs.: Zeros à esquerda são significativos
-    Retorna: String representando um dígito verificador
+    Retorna: String representando um dígito verificador.
     """
     sum = 0
     for idx, strdigit in enumerate(strnum[::-1]):
@@ -39,5 +44,5 @@ if __name__ == '__main__':
     arg1 = int(sys.argv[1])
 
     for num in range(arg1):
-        print(f"{num};{strnum_mod1110_digits(str(num))}")
+        print(f"{num};{mod1110_digits(str(num))}")
        

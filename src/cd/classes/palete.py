@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from o2.functions.check_digit import strnum_mod1110_digits
+from o2.functions.check_digit import mod1110_digits
 
 
 class Plt():
@@ -71,7 +71,7 @@ class Plt():
         num = int(strnum)
         num_salt = num + self._PLT_SALT
         strnum_salt = str(num_salt)
-        hash_digits = strnum_mod1110_digits(strnum_salt, ndigits=2)
+        hash_digits = mod1110_digits(strnum_salt, ndigits=2)
         hash_int = int(hash_digits)
         hash = self._PLT_HASH_ALPHA[hash_int%self._PLT_LEN_HASH_ALPHA]
         return hash
