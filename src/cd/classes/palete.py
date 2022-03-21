@@ -1,12 +1,10 @@
 from pprint import pprint
 
-from o2.functions.check_digit import mod1110_digits
+from o2.functions.check_digit import mod1110_modchar_o
 
 
 class Plt():
 
-    _PLT_HASH_ALPHA = "ABCDEFGHIJKLMNPQRSTUVWXYZ"
-    _PLT_LEN_HASH_ALPHA = len(_PLT_HASH_ALPHA)
     _PLT_SALT = 765432
     _PLT_PREFIX = "PLT"
     _PLT_NUM_LEN = 4
@@ -71,7 +69,4 @@ class Plt():
         num = int(strnum)
         num_salt = num + self._PLT_SALT
         strnum_salt = str(num_salt)
-        hash_digits = mod1110_digits(strnum_salt, ndigits=2)
-        hash_int = int(hash_digits)
-        hash = self._PLT_HASH_ALPHA[hash_int%self._PLT_LEN_HASH_ALPHA]
-        return hash
+        return mod1110_modchar_o(strnum_salt)
