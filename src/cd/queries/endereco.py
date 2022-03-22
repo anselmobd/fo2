@@ -1,3 +1,5 @@
+import operator
+import re
 from pprint import pprint
 
 from systextil.queries.base import SMountQuery
@@ -28,7 +30,7 @@ def query_endereco(tipo):
         where_tipo = [
             f"REGEXP_LIKE(e.COD_ENDERECO, '^1{tipo}[0123456789]{{4}}$')",
         ]
-    return SMountQuery(
+    data = SMountQuery(
         fields=[
           "e.COD_ENDERECO end",
         ],
@@ -38,3 +40,28 @@ def query_endereco(tipo):
           f"e.COD_ENDERECO",
         ],
     ).oquery.debug_execute()
+
+    for row in data:
+        try:
+            rua = re.search('^[0-9]([A-Z]+)[0-9]+', row['end']).group(1)
+        except AttributeError:
+            rua = '#'
+        if rua in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+            row['order'] = 1
+            row['area'] = 'Estantes'
+        elif rua.startswith('Q'):
+            row['order'] = 2
+            row['area'] = 'Quarto andar'
+        elif (
+                rua.startswith('S') or
+                rua.startswith('Y')
+              ):
+            row['order'] = 3
+            row['area'] = 'Externo'
+        else:
+            row['order'] = 4
+            row['area'] = 'Indefinido'
+
+    data.sort(key=operator.itemgetter('order', 'end'))
+
+    return data
