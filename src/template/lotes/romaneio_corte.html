@@ -32,10 +32,10 @@
           <ul>
             <li>Pedido:
             <input type="decimal" placeholder="000" required
-              name="cliente{{cliente}}" id="cliente{{cliente}}"
+              name="pedido_{{cliente}}" id="pedido_{{cliente}}"
               maxlength="6" size="6">
             <input type="submit" 
-              name="submit{{cliente}}" id="submit{{cliente}}"
+              name="submit_{{cliente}}" id="submit_{{cliente}}"
               value="Prepara" onclick="return Prepara('{{cliente}}');">
             </li>
           </ul>
@@ -53,7 +53,35 @@
 <script>
 
   function Prepara(slug) {
-    console.log('{{form.data.value}}', slug);
+    var pedido = document.getElementById('pedido_'+slug).value;
+
+    var link = '{% url 'producao:prepara_pedido_corte' '0000-00-00' 'cliente' 'ped999' %}';
+    link = link.replace('0000-00-00', '{{form.data.value}}');
+    link = link.replace('cliente', slug);
+    link = link.replace('ped999', pedido);
+    console.log(link);
+
+    $.ajax({
+      type: 'GET',
+      url: link,
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        erro = '';
+        if (data) {
+          if (data['status'] == 'ERRO') {
+            alert(data['message']);
+          } else {
+            console.log(data['message']);
+          }
+        } else {
+          alert('Sem retorno');
+        }
+      },
+      error : function(data) {
+        alert('Erro na requisição');
+      }
+    });
+
     return false;
   }
 

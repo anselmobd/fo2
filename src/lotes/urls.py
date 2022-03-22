@@ -3,6 +3,7 @@ from django.urls import re_path
 from . import views
 from lotes.views import (
     por_celula,
+    prepara_pedido_corte,
     romaneio_corte,
 )
 
@@ -185,6 +186,9 @@ urlpatterns = [
 
     re_path(r'^romaneio_corte/$',
         romaneio_corte.RomaneioCorte.as_view(), name='romaneio_corte'),
+
+    re_path(r'^ajax/prepara_pedido_corte/(?P<data>[^/]+)/(?P<cliente>[^/]+)/(?P<pedido>[^/]+)/$',
+        prepara_pedido_corte.PreparaPedidoCorte.as_view(), name='prepara_pedido_corte'),
 
     re_path(r'^totais_estagio/$',
         views.analise.TotalEstagio.as_view(), name='totais_estagio'),
