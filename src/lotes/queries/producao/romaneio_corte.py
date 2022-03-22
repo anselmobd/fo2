@@ -55,13 +55,18 @@ def query_completa(cursor, data=None):
         )
         SELECT DISTINCT 
           l.ORDEM_PRODUCAO OP
+        , l.PROCONF_NIVEL99 nivel
         , l.PROCONF_GRUPO ref
         , l.PROCONF_SUBGRUPO tam
         , t.ORDEM_TAMANHO
         , l.PROCONF_ITEM cor
         , op.PEDIDO_VENDA ped
         , ped.COD_PED_CLIENTE PED_CLI
-        , sum(l.QTDE_PECAS_PROD + l.QTDE_PERDAS) QTD
+        , CASE WHEN op.PEDIDO_VENDA = 0
+          THEN 'ESTOQUE' 
+          ELSE COALESCE(cli.FANTASIA_CLIENTE, cli.NOME_CLIENTE)
+          END CLIENTE
+        , sum(l.QTDE_PECAS_PROD + l.QTDE_PERDAS) mov_qtd
         FROM filtro, PCPC_040 l
         JOIN op_completas_ate_16 oc16
           ON oc16.OP = l.ORDEM_PRODUCAO
@@ -71,15 +76,22 @@ def query_completa(cursor, data=None):
           ON op.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
         LEFT JOIN PEDI_100 ped
           ON ped.PEDIDO_VENDA = op.PEDIDO_VENDA
+        LEFT JOIN PEDI_010 cli
+          ON cli.CGC_9 = ped.CLI_PED_CGC_CLI9
+         AND cli.CGC_4 = ped.CLI_PED_CGC_CLI4
+         AND cli.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE filtro.EST = l.CODIGO_ESTAGIO 
         GROUP BY 
           l.ORDEM_PRODUCAO
+        , l.PROCONF_NIVEL99
         , l.PROCONF_GRUPO
         , l.PROCONF_ITEM
         , t.ORDEM_TAMANHO
         , l.PROCONF_SUBGRUPO
         , op.PEDIDO_VENDA
         , ped.COD_PED_CLIENTE
+        , cli.FANTASIA_CLIENTE
+        , cli.NOME_CLIENTE
         ORDER BY 
           l.ORDEM_PRODUCAO
         , l.PROCONF_GRUPO
@@ -89,6 +101,18 @@ def query_completa(cursor, data=None):
     """
     debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
+
+    for row in dados:
+        if not row['ped']:
+            row['ped'] = '-'
+        if not row['ped_cli']:
+            row['ped_cli'] = '-'
+        row['item'] = '.'.join([
+            row['nivel'],
+            row['ref'],
+            row['tam'],
+            row['cor'],
+        ])
 
     return dados
 
