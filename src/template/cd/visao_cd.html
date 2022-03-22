@@ -12,7 +12,7 @@
 {% block content %}
 {% if data %}
   <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data group=group style=style only %}
   </table>
 {% endif %}
