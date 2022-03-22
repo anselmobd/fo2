@@ -120,11 +120,13 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
         data = paginator_basic(data, 50, self.page)
 
         if self.tipo == 'TO':
-            headers = ['Área', 'Endereço']
-            fields = ['area', 'end']
+            headers = ['Área']
+            fields = ['area']
         else:            
-            headers = ['Endereço']
-            fields = ['end']
+            headers = []
+            fields = []
+        headers += ['Endereço', 'Rota']
+        fields += ['end', 'rota']
 
         self.context.update({
             'headers': headers,

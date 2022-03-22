@@ -33,6 +33,7 @@ def query_endereco(tipo):
     data = SMountQuery(
         fields=[
           "e.COD_ENDERECO end",
+          "e.ROTA",
         ],
         table="ENDR_013 e",
         where=where_tipo,
