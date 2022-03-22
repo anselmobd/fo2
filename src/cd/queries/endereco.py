@@ -95,3 +95,18 @@ def calc_rota(endereco):
         rota = f'{espaco}{bloco}'
     return rota
 
+def add_endereco(cursor, endereco):
+    """Cria endereco no banco de dados
+    Recebe: cursor e endereco a ser criado
+    Retorna: Se sucesso, None, senão, mensagem de erro
+    """
+    rota = calc_rota(endereco)
+    sql = f"""
+        INSERT INTO SYSTEXTIL.ENDR_013
+        (RUA, BOX, ALTURA, COD_ENDERECO, EMPRESA, PROCESSO, SITUACAO, TIPO_ENDERECO, ROTA)
+        VALUES(NULL, NULL, NULL, '{endereco}', 1, 1, '1', '1', '{rota}')
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+    except Exception as e:
+        return repr(e)
