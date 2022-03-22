@@ -28,8 +28,10 @@ class RomaneioCorte(O2BaseGetPostView):
 
         if self.tipo == 'p':
             dados = romaneio_corte.query(self.cursor, self.data)
-        else:
+        elif self.tipo == 'c':
             dados = romaneio_corte.query_completa(self.cursor, self.data)
+        else:  # if self.tipo == 'n':
+            dados = romaneio_corte.query_completa(self.cursor, self.data, nf=True)
 
         if not dados:
             return
@@ -73,7 +75,7 @@ class RomaneioCorte(O2BaseGetPostView):
                 }),
             })
 
-        else:
+        elif self.tipo == 'c':
             group = ['cliente']
             totalize_grouped_data(dados, {
                 'group': group,
@@ -100,3 +102,32 @@ class RomaneioCorte(O2BaseGetPostView):
                     6: 'text-align: right;',
                 }),
             })
+
+        else:  # if self.tipo == 'n':
+
+            group = ['cliente', 'obs']
+            totalize_grouped_data(dados, {
+                'group': group,
+                'sum': ['mov_qtd'],
+                'count': [],
+                'descr': {'obs': 'Totais:'},
+                'global_sum': ['mov_qtd'],
+                'global_descr': {'obs': 'Totais gerais:'},
+                'row_style': 'font-weight: bold;',
+            })
+            group_rowspan(dados, group)
+
+            self.context.update({
+                'headers': [
+                    'Cliente', 'Observação', 'Item', 'Quant.'
+                ],
+                'fields': [
+                    'cliente', 'obs', 'item', 'mov_qtd'
+                ],
+                'group': group,
+                'dados': dados,
+                'style': untuple_keys_concat({
+                    4: 'text-align: right;',
+                }),
+            })
+

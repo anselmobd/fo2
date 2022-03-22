@@ -18,6 +18,7 @@ class RomaneioCorteForm(forms.Form):
     )
     CHOICES = [
         ('c', 'OPs completadas no estágio 16 na data'),
+        ('n', 'OPs completadas no estágio 16 na data; para NF'),
         ('p', 'Produção do estágio 16 na data'),
     ]
     tipo = forms.ChoiceField(

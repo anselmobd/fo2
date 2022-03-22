@@ -3,7 +3,7 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
-def query_completa(cursor, data=None):
+def query_completa(cursor, data=None, nf=False):
     data_value = (
         f"DATE '{data}'"
     ) if data else 'NULL'
@@ -66,6 +66,9 @@ def query_completa(cursor, data=None):
           THEN 'ESTOQUE' 
           ELSE COALESCE(cli.FANTASIA_CLIENTE, cli.NOME_CLIENTE)
           END CLIENTE
+        , cli.CGC_9
+        , cli.CGC_4
+        , cli.CGC_2
         , sum(l.QTDE_PECAS_PROD + l.QTDE_PERDAS) mov_qtd
         FROM filtro, PCPC_040 l
         JOIN op_completas_ate_16 oc16
@@ -92,6 +95,9 @@ def query_completa(cursor, data=None):
         , ped.COD_PED_CLIENTE
         , cli.FANTASIA_CLIENTE
         , cli.NOME_CLIENTE
+        , cli.CGC_9
+        , cli.CGC_4
+        , cli.CGC_2
         ORDER BY 
           l.ORDEM_PRODUCAO
         , l.PROCONF_GRUPO
@@ -102,17 +108,44 @@ def query_completa(cursor, data=None):
     debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
 
+    clientes = {}
     for row in dados:
         if not row['ped']:
             row['ped'] = '-'
         if not row['ped_cli']:
             row['ped_cli'] = '-'
+        if nf:
+            if row['cliente'] not in clientes:
+                clientes[row['cliente']] = {}
+            cliaux = clientes[row['cliente']]
+            if row['ped_cli'] not in cliaux:
+                cliaux[row['ped_cli']] = set()
+            pedaux = cliaux[row['ped_cli']]
+            pedaux.add(row['op'])
         row['item'] = '.'.join([
             row['nivel'],
             row['ref'],
             row['tam'],
             row['cor'],
         ])
+
+    if nf:
+        for cli in clientes:
+            cliaux = clientes[cli]
+            if cli == 'ESTOQUE':
+                ops = ', '.join(map(str, cliaux['-']))
+                cliaux['obs'] = f"OP({ops})"
+            else:
+                peds = list(cliaux.keys())
+                cliaux['obs'] = ''
+                sep = ''
+                for ped in peds:
+                    ops = ', '.join(map(str, cliaux[ped]))
+                    cliaux['obs'] += sep + f"Pedido({ped})-OP({ops})"
+                    sep = ', '
+        pprint(clientes)
+        for row in dados:
+            row['obs'] = clientes[row['cliente']]['obs']
 
     return dados
 
