@@ -3,10 +3,19 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
-def query_completa(cursor, data=None, nf=False):
+def query_completa(cursor, data=None, nf=False, cliente=None):
     data_value = (
         f"DATE '{data}'"
     ) if data else 'NULL'
+
+    filtra_cliente = f"""--
+        AND (
+          CASE WHEN op.PEDIDO_VENDA = 0
+          THEN 'ESTOQUE' 
+          ELSE COALESCE(cli.FANTASIA_CLIENTE, cli.NOME_CLIENTE)
+          END
+        ) = '{cliente}'
+    """ if cliente else ''
 
     sql = f"""
         WITH
@@ -90,6 +99,7 @@ def query_completa(cursor, data=None, nf=False):
          AND cli.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND cli.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE filtro.EST = l.CODIGO_ESTAGIO 
+          {filtra_cliente} -- filtra_cliente
         GROUP BY 
           l.ORDEM_PRODUCAO
         , l.PROCONF_NIVEL99
