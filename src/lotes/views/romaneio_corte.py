@@ -46,93 +46,74 @@ class RomaneioCorte(O2BaseGetPostView):
 
         if self.tipo == 'p':
             group = ['cliente']
-            totalize_grouped_data(dados, {
-                'group': group,
-                'sum': ['mov_qtd', 'mov_lotes'],
-                'count': [],
-                'descr': {'cliente': 'Totais:'},
-                'global_sum': ['mov_qtd', 'mov_lotes'],
-                'global_descr': {'cliente': 'Totais gerais:'},
-                'row_style': 'font-weight: bold;',
-            })
-            group_rowspan(dados, group)
+            sum_fields = ['mov_qtd', 'mov_lotes']
+            label_tot_field = 'cliente'
 
-            self.context.update({
-                'headers': [
-                    'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item',
-                    'Quant.', '%Quant.', 'Quant.OP',
-                    'Lotes', '%Lotes', 'Lotes OP'
-                ],
-                'fields': [
-                    'cliente', 'ped', 'ped_cli', 'op', 'item',
-                    'mov_qtd', 'percent_qtd', 'tot_qtd',
-                    'mov_lotes', 'percent_lotes', 'tot_lotes'
-                ],
-                'group': group,
-                'dados': dados,
-                'style': untuple_keys_concat({
-                    (2, 3): 'text-align: center;',
-                    (6, 7, 8, 9, 10, 11): 'text-align: right;',
-                }),
-            })
+            headers = [
+                'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item',
+                'Quant.', '%Quant.', 'Quant.OP',
+                'Lotes', '%Lotes', 'Lotes OP'
+            ]
+            fields = [
+                'cliente', 'ped', 'ped_cli', 'op', 'item',
+                'mov_qtd', 'percent_qtd', 'tot_qtd',
+                'mov_lotes', 'percent_lotes', 'tot_lotes'
+            ]
+            style_center = (2, 3)
+            style_right = (6, 7, 8, 9, 10, 11)
 
         elif self.tipo == 'c':
             group = ['cliente']
-            totalize_grouped_data(dados, {
-                'group': group,
-                'sum': ['mov_qtd'],
-                'count': [],
-                'descr': {'cliente': 'Totais:'},
-                'global_sum': ['mov_qtd'],
-                'global_descr': {'cliente': 'Totais gerais:'},
-                'row_style': 'font-weight: bold;',
-            })
-            group_rowspan(dados, group)
+            sum_fields = ['mov_qtd']
+            label_tot_field = 'cliente'
 
-            self.context.update({
-                'headers': [
-                    'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item', 'Quant.'
-                ],
-                'fields': [
-                    'cliente', 'ped', 'ped_cli', 'op', 'item', 'mov_qtd'
-                ],
-                'group': group,
-                'dados': dados,
-                'style': untuple_keys_concat({
-                    (2, 3): 'text-align: center;',
-                    6: 'text-align: right;',
-                }),
-            })
+            headers = [
+                'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item', 'Quant.'
+            ]
+            fields = [
+                'cliente', 'ped', 'ped_cli', 'op', 'item', 'mov_qtd'
+            ]
+            style_center = (2, 3)
+            style_right = (6)
 
         else:  # if self.tipo == 'n':
 
             group = ['cliente', 'obs']
-            totalize_grouped_data(dados, {
-                'group': group,
-                'sum': ['mov_qtd'],
-                'count': [],
-                'descr': {'obs': 'Totais:'},
-                'global_sum': ['mov_qtd'],
-                'global_descr': {'obs': 'Totais gerais:'},
-                'row_style': 'font-weight: bold;',
-            })
-            group_rowspan(dados, group)
+            sum_fields = ['mov_qtd']
+            label_tot_field = 'obs'
 
-            self.context.update({
-                'headers': [
-                    'Cliente', 'Observação', 'Item', 'Quant.'
-                ],
-                'fields': [
-                    'cliente', 'obs', 'item', 'mov_qtd'
-                ],
-                'group': group,
-                'dados': dados,
-                'style': untuple_keys_concat({
-                    4: 'text-align: right;',
-                }),
-            })
+            headers = [
+                'Cliente', 'Observação', 'Item', 'Quant.'
+            ]
+            fields = [
+                'cliente', 'obs', 'item', 'mov_qtd'
+            ]
+            style_center = (999)
+            style_right = (4)
 
             if self.data < datetime.date.today():
                 self.context.update({
                     'clientes': dict(enumerate(clientes)),
                 })
+
+        totalize_grouped_data(dados, {
+            'group': group,
+            'sum': sum_fields,
+            'count': [],
+            'descr': {label_tot_field: 'Totais:'},
+            'global_sum': sum_fields,
+            'global_descr': {label_tot_field: 'Totais gerais:'},
+            'row_style': 'font-weight: bold;',
+        })
+        group_rowspan(dados, group)
+
+        self.context.update({
+            'headers': headers,
+            'fields': fields,
+            'group': group,
+            'dados': dados,
+            'style': untuple_keys_concat({
+                style_center: 'text-align: center;',
+                style_right: 'text-align: right;',
+            }),
+        })
