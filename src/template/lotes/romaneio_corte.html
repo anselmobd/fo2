@@ -36,7 +36,7 @@
               maxlength="6" size="6">
             <input type="submit" 
               name="submit{{cliente}}" id="submit{{cliente}}"
-              value="Prepara" onsubmit="Prepara({{cliente}});return false;">
+              value="Prepara" onclick="return Prepara('{{cliente}}');">
             </li>
           </ul>
         {% endfor %}
@@ -52,8 +52,9 @@
 {% block javascript.pos %}
 <script>
 
-  function PaleteAdd(idx) {
-    console.log(idx);
+  function Prepara(slug) {
+    console.log('{{form.data.value}}', slug);
+    return false;
   }
 
 </script>

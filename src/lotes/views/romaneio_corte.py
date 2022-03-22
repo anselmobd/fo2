@@ -1,6 +1,7 @@
 import datetime
 from pprint import pprint
 
+from django.utils.text import slugify
 from django.urls import reverse
 
 from fo2.connections import db_cursor_so
@@ -93,7 +94,10 @@ class RomaneioCorte(O2BaseGetPostView):
 
             if self.data < datetime.date.today():
                 self.context.update({
-                    'clientes': dict(enumerate(clientes)),
+                    'clientes': {
+                        slugify(c): c
+                        for c in clientes
+                    },
                 })
 
         totalize_grouped_data(dados, {
