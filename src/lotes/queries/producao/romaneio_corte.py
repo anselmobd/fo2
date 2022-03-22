@@ -54,7 +54,11 @@ def query_completa(cursor, data=None, nf=False):
             o.OP
         )
         SELECT DISTINCT 
-          l.ORDEM_PRODUCAO OP
+          CASE WHEN op.PEDIDO_VENDA = 0
+          THEN 0
+          ELSE 1
+          END PEDIDO_ORDEM
+        , l.ORDEM_PRODUCAO OP
         , l.PROCONF_NIVEL99 nivel
         , l.PROCONF_GRUPO ref
         , l.PROCONF_SUBGRUPO tam
@@ -62,6 +66,8 @@ def query_completa(cursor, data=None, nf=False):
         , l.PROCONF_ITEM cor
         , op.PEDIDO_VENDA ped
         , ped.COD_PED_CLIENTE PED_CLI
+        , cli.FANTASIA_CLIENTE
+        , cli.NOME_CLIENTE
         , CASE WHEN op.PEDIDO_VENDA = 0
           THEN 'ESTOQUE' 
           ELSE COALESCE(cli.FANTASIA_CLIENTE, cli.NOME_CLIENTE)
@@ -99,7 +105,19 @@ def query_completa(cursor, data=None, nf=False):
         , cli.CGC_4
         , cli.CGC_2
         ORDER BY 
-          l.ORDEM_PRODUCAO
+          CASE WHEN op.PEDIDO_VENDA = 0
+          THEN 0
+          ELSE 1
+          END
+        , cli.FANTASIA_CLIENTE
+        , cli.NOME_CLIENTE
+        , cli.CGC_9
+        , cli.CGC_4
+        , cli.CGC_2
+        , ped.COD_PED_CLIENTE
+        , op.PEDIDO_VENDA
+        , l.ORDEM_PRODUCAO
+        , l.PROCONF_NIVEL99
         , l.PROCONF_GRUPO
         , l.PROCONF_ITEM
         , t.ORDEM_TAMANHO
