@@ -65,3 +65,13 @@ def query_endereco(tipo):
     data.sort(key=operator.itemgetter('order', 'end'))
 
     return data
+
+def endereco_split(endereco):
+    """Split endereço em espaco, bloco, andar e ap"""
+    try:
+        busca = re.search('^([0-9])([A-Z]+)([0-9]{2})([0-9]{2})$', endereco)
+    except AttributeError:
+        return None, None, None
+    return busca.group(1), busca.group(2), busca.group(3), busca.group(4)
+
+def calc_rota(endereco):
