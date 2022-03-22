@@ -161,9 +161,10 @@ def query_completa(cursor, data=None, nf=False):
                     ops = ', '.join(map(str, cliaux[ped]))
                     cliaux['obs'] += sep + f"Pedido({ped})-OP({ops})"
                     sep = ', '
-        pprint(clientes)
         for row in dados:
             row['obs'] = clientes[row['cliente']]['obs']
+        
+        dados = dados, list(clientes.keys())
 
     return dados
 

@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 
 from django.urls import reverse
@@ -31,7 +32,7 @@ class RomaneioCorte(O2BaseGetPostView):
         elif self.tipo == 'c':
             dados = romaneio_corte.query_completa(self.cursor, self.data)
         else:  # if self.tipo == 'n':
-            dados = romaneio_corte.query_completa(self.cursor, self.data, nf=True)
+            dados, clientes = romaneio_corte.query_completa(self.cursor, self.data, nf=True)
 
         if not dados:
             return
@@ -131,3 +132,7 @@ class RomaneioCorte(O2BaseGetPostView):
                 }),
             })
 
+            if self.data < datetime.date.today():
+                self.context.update({
+                    'clientes': dict(enumerate(clientes)),
+                })

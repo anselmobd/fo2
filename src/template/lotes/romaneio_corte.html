@@ -24,8 +24,38 @@
         {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
         {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}
       </table>
+      {% if clientes %}
+        <h3>Prepara pedidos Filial->Matriz</h3>
+        <ul>
+        {% for cliente in clientes %}
+          <li><label>{{clientes|get_item:cliente}}</label></li>
+          <ul>
+            <li>Pedido:
+            <input type="decimal" placeholder="000" required
+              name="cliente{{cliente}}" id="cliente{{cliente}}"
+              maxlength="6" size="6">
+            <input type="submit" 
+              name="submit{{cliente}}" id="submit{{cliente}}"
+              value="Prepara" onsubmit="Prepara({{cliente}});return false;">
+            </li>
+          </ul>
+        {% endfor %}
+      </ul>
+      {% endif %}
     {% else %}
       <h4>Nenhuma produção encontrada</h4>
     {% endif %}
   {% endif %}
 {% endblock %}
+
+{% block javascript %}
+{% block javascript.pos %}
+<script>
+
+  function PaleteAdd(idx) {
+    console.log(idx);
+  }
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}
