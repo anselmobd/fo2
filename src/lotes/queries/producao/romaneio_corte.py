@@ -3,6 +3,95 @@ from pprint import pprint
 from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
+def query_completa(cursor, data=None):
+    data_value = (
+        f"DATE '{data}'"
+    ) if data else 'NULL'
+
+    sql = f"""
+        WITH
+          filtro AS 
+        (
+          SELECT 
+            16 EST
+          , {data_value} DT 
+          FROM dual 
+          WHERE {data_value} IS NOT NULL
+        )
+        , op_algum_mov AS 
+        ( SELECT DISTINCT 
+            ml.ORDEM_PRODUCAO OP
+          , SUM(COALESCE(ml.QTDE_PRODUZIDA, 0)) MOV_QTD
+          FROM filtro, pcpc_045 ml
+          WHERE ml.PCPC040_ESTCONF = filtro.EST
+            AND ml.DATA_PRODUCAO = filtro.DT
+          HAVING
+            SUM(COALESCE(ml.QTDE_PRODUZIDA, 0)) > 0
+          GROUP BY 
+            ml.ORDEM_PRODUCAO
+        )
+        , op_seq_est_16 AS
+        ( SELECT DISTINCT 
+            o.OP
+          , max(l.SEQUENCIA_ESTAGIO) SEQ_EST
+          FROM filtro, PCPC_040 l
+          JOIN op_algum_mov o
+            ON o.OP = l.ORDEM_PRODUCAO
+          WHERE l.CODIGO_ESTAGIO = filtro.EST
+          GROUP BY
+            o.OP
+        )
+        , op_completas_ate_16 AS
+        ( SELECT
+            o.OP
+          FROM PCPC_040 l
+          JOIN op_seq_est_16 o
+            ON o.OP = l.ORDEM_PRODUCAO
+          AND o.SEQ_EST >= l.SEQUENCIA_ESTAGIO
+          HAVING 
+            sum(l.QTDE_PECAS_PROG) = sum(l.QTDE_PECAS_PROD + l.QTDE_PERDAS)
+          GROUP BY
+            o.OP
+        )
+        SELECT DISTINCT 
+          l.ORDEM_PRODUCAO OP
+        , l.PROCONF_GRUPO ref
+        , l.PROCONF_SUBGRUPO tam
+        , t.ORDEM_TAMANHO
+        , l.PROCONF_ITEM cor
+        , op.PEDIDO_VENDA ped
+        , ped.COD_PED_CLIENTE PED_CLI
+        , sum(l.QTDE_PECAS_PROD + l.QTDE_PERDAS) QTD
+        FROM filtro, PCPC_040 l
+        JOIN op_completas_ate_16 oc16
+          ON oc16.OP = l.ORDEM_PRODUCAO
+        LEFT JOIN BASI_220 t -- tamanhos
+          ON t.TAMANHO_REF = l.PROCONF_SUBGRUPO
+        JOIN pcpc_020 op
+          ON op.ORDEM_PRODUCAO = l.ORDEM_PRODUCAO
+        LEFT JOIN PEDI_100 ped
+          ON ped.PEDIDO_VENDA = op.PEDIDO_VENDA
+        WHERE filtro.EST = l.CODIGO_ESTAGIO 
+        GROUP BY 
+          l.ORDEM_PRODUCAO
+        , l.PROCONF_GRUPO
+        , l.PROCONF_ITEM
+        , t.ORDEM_TAMANHO
+        , l.PROCONF_SUBGRUPO
+        , op.PEDIDO_VENDA
+        , ped.COD_PED_CLIENTE
+        ORDER BY 
+          l.ORDEM_PRODUCAO
+        , l.PROCONF_GRUPO
+        , l.PROCONF_ITEM
+        , t.ORDEM_TAMANHO
+        , l.PROCONF_SUBGRUPO
+    """
+    debug_cursor_execute(cursor, sql)
+    dados = rows_to_dict_list_lower(cursor)
+
+    return dados
+
 
 def query_OLD(cursor, data=None):
     filtro_data = (
