@@ -9,7 +9,7 @@ from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.romaneio_corte import RomaneioCorteForm
-from lotes.queries.producao.romaneio_corte import query as query_romaneio_corte
+from lotes.queries.producao import romaneio_corte
 
 
 class RomaneioCorte(O2BaseGetPostView):
@@ -26,7 +26,10 @@ class RomaneioCorte(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        dados = query_romaneio_corte(self.cursor, self.data)
+        if self.tipo == 'p':
+            dados = romaneio_corte.query(self.cursor, self.data)
+        else:
+            dados = romaneio_corte.query_completa(self.cursor, self.data)
 
         if not dados:
             return
@@ -38,33 +41,62 @@ class RomaneioCorte(O2BaseGetPostView):
                 args=[row['op']],
             )
 
-        group = ['cliente']
-        totalize_grouped_data(dados, {
-            'group': group,
-            'sum': ['mov_qtd', 'mov_lotes'],
-            'count': [],
-            'descr': {'cliente': 'Totais:'},
-            'global_sum': ['mov_qtd', 'mov_lotes'],
-            'global_descr': {'cliente': 'Totais gerais:'},
-            'row_style': 'font-weight: bold;',
-        })
-        group_rowspan(dados, group)
+        if self.tipo == 'p':
+            group = ['cliente']
+            totalize_grouped_data(dados, {
+                'group': group,
+                'sum': ['mov_qtd', 'mov_lotes'],
+                'count': [],
+                'descr': {'cliente': 'Totais:'},
+                'global_sum': ['mov_qtd', 'mov_lotes'],
+                'global_descr': {'cliente': 'Totais gerais:'},
+                'row_style': 'font-weight: bold;',
+            })
+            group_rowspan(dados, group)
 
-        self.context.update({
-            'headers': [
-                'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item',
-                'Quant.', '%Quant.', 'Quant.OP',
-                'Lotes', '%Lotes', 'Lotes OP'
-            ],
-            'fields': [
-                'cliente', 'ped', 'ped_cli', 'op', 'item',
-                'mov_qtd', 'percent_qtd', 'tot_qtd',
-                'mov_lotes', 'percent_lotes', 'tot_lotes'
-            ],
-            'group': group,
-            'dados': dados,
-            'style': untuple_keys_concat({
-                (2, 3): 'text-align: center;',
-                (6, 7, 8, 9, 10, 11): 'text-align: right;',
-            }),
-        })
+            self.context.update({
+                'headers': [
+                    'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item',
+                    'Quant.', '%Quant.', 'Quant.OP',
+                    'Lotes', '%Lotes', 'Lotes OP'
+                ],
+                'fields': [
+                    'cliente', 'ped', 'ped_cli', 'op', 'item',
+                    'mov_qtd', 'percent_qtd', 'tot_qtd',
+                    'mov_lotes', 'percent_lotes', 'tot_lotes'
+                ],
+                'group': group,
+                'dados': dados,
+                'style': untuple_keys_concat({
+                    (2, 3): 'text-align: center;',
+                    (6, 7, 8, 9, 10, 11): 'text-align: right;',
+                }),
+            })
+
+        else:
+            group = ['cliente']
+            totalize_grouped_data(dados, {
+                'group': group,
+                'sum': ['mov_qtd'],
+                'count': [],
+                'descr': {'cliente': 'Totais:'},
+                'global_sum': ['mov_qtd'],
+                'global_descr': {'cliente': 'Totais gerais:'},
+                'row_style': 'font-weight: bold;',
+            })
+            group_rowspan(dados, group)
+
+            self.context.update({
+                'headers': [
+                    'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item', 'Quant.'
+                ],
+                'fields': [
+                    'cliente', 'ped', 'ped_cli', 'op', 'item', 'mov_qtd'
+                ],
+                'group': group,
+                'dados': dados,
+                'style': untuple_keys_concat({
+                    (2, 3): 'text-align: center;',
+                    6: 'text-align: right;',
+                }),
+            })
