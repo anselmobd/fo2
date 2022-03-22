@@ -75,3 +75,23 @@ def endereco_split(endereco):
     return busca.group(1), busca.group(2), busca.group(3), busca.group(4)
 
 def calc_rota(endereco):
+    RUAS = {
+        'A': 'AB',
+        'B': 'AB',
+        'C': 'CD',
+        'D': 'CD',
+        'E': 'EF',
+        'F': 'EF',
+        'G': 'GH',
+        'H': 'GH',
+    }
+    espaco, bloco, andar, ap = endereco_split(endereco)
+    if bloco <= 'H':
+        iap = int(ap)
+        irota = iap//2
+        rua = RUAS[bloco]
+        rota = f'{espaco}{rua}{irota:02}'
+    else:
+        rota = f'{espaco}{bloco}'
+    return rota
+
