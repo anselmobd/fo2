@@ -25,6 +25,7 @@ def query_deposito(cursor, only=None, less=None):
     sql = f'''
         SELECT
           d.CODIGO_DEPOSITO COD
+        , d.LOCAL_DEPOSITO EMPRESA
         , d.DESCRICAO DESCR
         , d.TIP_PROPRIEDADE_DEPOSITO PROP
         , d.CNPJ9

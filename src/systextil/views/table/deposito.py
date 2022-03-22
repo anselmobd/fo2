@@ -17,6 +17,11 @@ def deposito(request):
         2: 'Em terceiros',
         3: 'De terceiros',
     }
+    empresas = {
+        1: 'Tussor',
+        2: 'Agator',
+        3: 'Filial Corte',
+    }
     for row in data:
         if row['FORN'] == ' ':
             row['CNPJ'] = ''
@@ -26,10 +31,12 @@ def deposito(request):
         if row['PROP'] in propriedades:
             row['PROP'] = '{} - {}'.format(
                 row['PROP'], propriedades[row['PROP']])
+        if row['EMPRESA'] in empresas:
+            row['EMPRESA'] = empresas[row['EMPRESA']]
     context = {
         'titulo': 'Depósitos',
-        'headers': ('Depósito', 'Descrição', 'Propriedade', 'Terceiro'),
-        'fields': ('COD', 'DESCR', 'PROP', 'CNPJ'),
+        'headers': ('Depósito', 'Descrição', 'Empresa', 'Propriedade', 'Terceiro'),
+        'fields': ('COD', 'DESCR', 'EMPRESA', 'PROP', 'CNPJ'),
         'data': data,
     }
     return render(request, 'systextil/tabela.html', context)
