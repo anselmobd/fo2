@@ -1,9 +1,14 @@
 from pprint import pprint
 
+from django.utils.text import slugify
+
 from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
-def query_completa(cursor, data=None, nf=False, cliente=None):
+
+def query_completa(
+        cursor, data=None, nf=False,
+        cliente=None, cliente_slug=None):
     data_value = (
         f"DATE '{data}'"
     ) if data else 'NULL'
@@ -135,6 +140,13 @@ def query_completa(cursor, data=None, nf=False, cliente=None):
     """
     debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
+
+    if cliente_slug:
+        dados = [
+            row
+            for row in dados
+            if slugify(row['cliente']) == cliente_slug
+        ]
 
     clientes = {}
     for row in dados:
