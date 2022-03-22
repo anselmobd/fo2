@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 from django.db.models import Count, Sum
@@ -18,13 +19,14 @@ class VisaoRuaDetalhe(View):
         self.title_name = 'Visão detalhada do CD'
 
     def mount_context(self, rua):
-        if len(rua) == 1:
-            context = {'rua': rua}
-        else:
-            context = {
-                'rua': rua[0],
-                'endereco': rua,
-            }
+        try:
+            letras = re.search('^[A-Z]+', rua).group(0)
+        except AttributeError:
+            letras = rua[0]
+        context = {
+            'rua': letras,
+            'endereco': rua,
+        }
 
         solic_dict = get_solic_dict(rua)
 
