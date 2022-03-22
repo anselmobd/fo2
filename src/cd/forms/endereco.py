@@ -6,7 +6,7 @@ from django import forms
 class EnderecoForm(forms.Form):
     CHOICES = [
         ('TO', 'Todos'),
-        ('ES', 'Internos - Estantes'),
+        ('ES', 'Internos - Estantes (gera)'),
         ('NE', 'Internos - não Estantes'),
         ('IN', 'Internos - Todos'),
         ('EX', 'Externos'),

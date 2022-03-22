@@ -2,11 +2,16 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
+from fo2.connections import db_cursor_so
+
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
 
 from cd.forms.endereco import EnderecoForm
-from cd.queries.endereco import query_endereco
+from cd.queries.endereco import (
+    add_endereco,
+    query_endereco,
+)
 
 
 class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
@@ -95,7 +100,22 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
         return enderecos
 
     def mount_context(self):
+        cursor = db_cursor_so(self.request)
         data = query_endereco(self.tipo)
+
+        count_add = 0
+        if self.tipo == 'ES':
+            enderecos = self.gera_dict_estantes()
+            for endereco in enderecos:
+                if not next(
+                    (d for d in data if d['end'] == endereco),
+                    False
+                ):
+                    add_endereco(cursor, endereco)
+                    count_add += 1
+
+        if count_add:
+            data = query_endereco(self.tipo)
 
         data = paginator_basic(data, 50, self.page)
 
