@@ -21,6 +21,79 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
         self.title_name = 'Endereços'
         self.cleaned_data2self = True
 
+    def gera_dict_estantes(self):
+        estantes = {
+            'A': {
+                'len': 28,
+            },
+            'B': {
+                'len': 28,
+                'vazio': {
+                    (12, 13): (1,)
+                }
+            },
+            'C': {
+                'len': 28,
+                'vazio': {
+                    (12, 13): (1,)
+                }
+            },
+            'D': {
+                'len': 28,
+                'vazio': {
+                    (6, 13, 14, 22): (1, 2, 3)
+                }
+            },
+            'E': {
+                'len': 30,
+                'vazio': {
+                    (13, 14): (1,)
+                }
+            },
+            'F': {
+                'len': 30,
+                'vazio': {
+                    (12, 13): (1,)
+                }
+            },
+            'G': {
+                'len': 30,
+                'vazio': {
+                    (12, 13): (1,)
+                }
+            },
+            'H': {
+                'len': 30,
+            },
+        }
+        enderecos = []
+        enderecos_vazios = []
+        for estante in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+            for coluna in range(estantes[estante]['len']):
+                for andar in range(1, 4):
+                    try:
+                        vazio = estantes[estante]['vazio']
+                    except KeyError:
+                        vazio = {}
+                    try:
+                        colunas_diferentes = list(vazio.keys())[0]
+                    except IndexError:
+                        colunas_diferentes = []
+                    if coluna in colunas_diferentes:
+                        try:
+                            andares_vazios = list(vazio.values())[0]
+                        except IndexError:
+                            andares_vazios = []
+                        andar_vazio = andar in andares_vazios
+                    else:
+                        andar_vazio = False
+                    endereco = f"1{estante}{andar:02}{coluna:02}"
+                    if andar_vazio:
+                        enderecos_vazios.append(endereco)
+                    else:
+                        enderecos.append(endereco)
+        return enderecos
+
     def mount_context(self):
         data = query_endereco(self.tipo)
 
