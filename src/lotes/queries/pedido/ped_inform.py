@@ -4,8 +4,21 @@ from utils.functions.models import rows_to_dict_list
 
 
 def ped_inform(cursor, pedido, empresa=1):
-    # Informações sobre Pedido
-    sql = """
+
+    filtra_pedido = f"AND ped.PEDIDO_VENDA = {pedido}"
+
+    filtro_empresa = ""
+    if empresa:
+        if not isinstance(empresa, tuple):
+            empresa = (empresa, )
+        empresas_list = []
+        for empr in empresa:
+            empresas_list.append(f"ped.CODIGO_EMPRESA = {empr}")
+        filtro_empresa = f"""--
+            AND ({' OR '.join(empresas_list)})
+        """
+
+    sql = f"""
         SELECT
           ped.PEDIDO_VENDA
         , COALESCE(
@@ -53,6 +66,12 @@ def ped_inform(cursor, pedido, empresa=1):
           WHEN 10 THEN '10-Faturado total'
           WHEN 15 THEN '15-Pedido com NF cancelada'
           END SITUACAO_VENDA
+        , ped.CODIGO_EMPRESA
+        , CASE ped.CODIGO_EMPRESA
+          WHEN 1 THEN '1-Tussor'
+          WHEN 2 THEN '2-Agator'
+          WHEN 3 THEN '3-Filial Corte'
+          END EMPRESA
         FROM PEDI_100 ped -- pedido de venda
         JOIN PEDI_140 canc -- código de cancelamento
           ON canc.COD_CANC_PEDIDO = ped.COD_CANCELAMENTO
@@ -60,8 +79,9 @@ def ped_inform(cursor, pedido, empresa=1):
           ON c.CGC_9 = ped.CLI_PED_CGC_CLI9
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
-        WHERE ped.PEDIDO_VENDA = %s
-          AND ped.CODIGO_EMPRESA = %s
+        WHERE 1=1
+          {filtra_pedido} -- filtra_pedido
+          {filtro_empresa} -- filtro_empresa
     """
-    cursor.execute(sql, [pedido, empresa])
+    cursor.execute(sql)
     return rows_to_dict_list(cursor)
