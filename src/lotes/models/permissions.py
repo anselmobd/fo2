@@ -16,4 +16,6 @@ class LotesPermissions(models.Model):
             ("manutencao-de-regra-de-lote-por-caixa",
              "Manutenção de regra de lote por caixa"),
             ("can_reactivate_pedido", "Can reactivate pedido"),
+            ("prepara-pedidos-filial-matriz",
+             "Prepara pedidos Filial->Matriz"),
         )
