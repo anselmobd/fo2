@@ -6,6 +6,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from geral.functions import has_permission
 from utils.functions import untuple_keys_concat
 from utils.views import totalize_grouped_data, group_rowspan
 
@@ -90,7 +91,9 @@ class RomaneioCorte(O2BaseGetPostView):
             ]
             style_center = (999)
             style_right = (4)
-            if self.data < datetime.date.today():
+            if (self.data < datetime.date.today() and
+                has_permission(self.request, 'lotes.prepara_pedidos_filial_matriz')
+            ):
                 self.context.update({
                     'clientes': {
                         c: clientes[c]['cliente']
