@@ -141,52 +141,56 @@ def query_completa(
     debug_cursor_execute(cursor, sql)
     dados = rows_to_dict_list_lower(cursor)
 
-    if cliente_slug:
-        dados = [
-            row
-            for row in dados
-            if slugify(row['cliente']) == cliente_slug
-        ]
-
-    clientes = {}
     for row in dados:
         if not row['ped']:
             row['ped'] = '-'
         if not row['ped_cli']:
             row['ped_cli'] = '-'
-        if nf:
-            if row['cliente'] not in clientes:
-                clientes[row['cliente']] = {}
-            cliaux = clientes[row['cliente']]
-            if row['ped_cli'] not in cliaux:
-                cliaux[row['ped_cli']] = set()
-            pedaux = cliaux[row['ped_cli']]
-            pedaux.add(row['op'])
         row['item'] = '.'.join([
             row['nivel'],
             row['ref'],
             row['tam'],
             row['cor'],
         ])
+        row['cliente_slug'] = slugify(row['cliente'])
+
+    if cliente_slug:
+        dados = [
+            row
+            for row in dados
+            if row['cliente_slug'] == cliente_slug
+        ]
 
     if nf:
+        clientes = {}
+        for row in dados:
+            if row['cliente_slug'] not in clientes:
+                clientes[row['cliente_slug']] = {
+                    'cliente': row['cliente'],
+                    'pedidos': {}
+                }
+            cliaux = clientes[row['cliente_slug']]['pedidos']
+            if row['ped_cli'] not in cliaux:
+                cliaux[row['ped_cli']] = {row['op']}
+            else:
+                cliaux[row['ped_cli']].add(row['op'])
+
         for cli in clientes:
             cliaux = clientes[cli]
-            if cli == 'ESTOQUE':
-                ops = ', '.join(map(str, cliaux['-']))
+            if cli == 'estoque':
+                ops = ', '.join(map(str, cliaux['pedidos']['-']))
                 cliaux['obs'] = f"OP({ops})"
             else:
-                peds = list(cliaux.keys())
                 cliaux['obs'] = ''
                 sep = ''
-                for ped in peds:
-                    ops = ', '.join(map(str, cliaux[ped]))
+                for ped in cliaux['pedidos']:
+                    ops = ', '.join(map(str, cliaux['pedidos'][ped]))
                     cliaux['obs'] += sep + f"Pedido({ped})-OP({ops})"
                     sep = ', '
         for row in dados:
-            row['obs'] = clientes[row['cliente']]['obs']
+            row['obs'] = clientes[row['cliente_slug']]['obs']
         
-        dados = dados, list(clientes.keys())
+        dados = dados, clientes
 
     return dados
 

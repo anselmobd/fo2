@@ -1,7 +1,6 @@
 import datetime
 from pprint import pprint
 
-from django.utils.text import slugify
 from django.urls import reverse
 
 from fo2.connections import db_cursor_so
@@ -91,11 +90,10 @@ class RomaneioCorte(O2BaseGetPostView):
             ]
             style_center = (999)
             style_right = (4)
-
             if self.data < datetime.date.today():
                 self.context.update({
                     'clientes': {
-                        slugify(c): c
+                        c: clientes[c]['cliente']
                         for c in clientes
                     },
                 })
