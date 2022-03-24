@@ -6,7 +6,10 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 import lotes.queries
-from lotes.queries.pedido.ped_alter import altera_pedido
+from lotes.queries.pedido.ped_alter import (
+    altera_pedido,
+    altera_pedido_itens,
+)
 from lotes.queries.pedido.mensagem_nf import cria_mens_nf
 from lotes.queries.producao import romaneio_corte
 
@@ -24,7 +27,7 @@ class PreparaPedidoCorte(View):
         if not dados:
             return ('ERRO', "Pedido não encontrado!")
 
-        _, clientes = romaneio_corte.query_completa(cursor, data, nf=True, cliente_slug=cliente)
+        dados, clientes = romaneio_corte.query_completa(cursor, data, nf=True, cliente_slug=cliente)
 
         #   exemplos de observações:
         # MPCFM - Movimentação de Peças Cortadas da Filial p/ Matriz; Data: 2022-03-16
@@ -35,16 +38,17 @@ class PreparaPedidoCorte(View):
 
         if cliente == 'estoque':
             observacao = (
-                "[MPCFM] Movimentacao de Pecas Cortadas da Filial para Matriz; Data: 2022-03-16",
+                f"[MPCFM] Movimentacao de Pecas Cortadas da Filial para Matriz; Data: {data}",
                 f"Producao para estoque: {clientes[cliente]['obs']}",
             )
         else:
             observacao = (
-                "[MPCFM] Movimentacao de Pecas Cortadas da Filial para Matriz; Data: 2022-03-16",
+                f"[MPCFM] Movimentacao de Pecas Cortadas da Filial para Matriz; Data: {data}",
                 f"Producao para o cliente {cliente.capitalize()}: {clientes[cliente]['obs']}",
             )
 
         cria_mens_nf(cursor, pedido, observacao)
+        altera_pedido_itens(cursor, pedido, 302, 'RJ', dados)
         altera_pedido(cursor, pedido, 3, "\n".join(observacao))
 
         return ('OK', "OK!")
