@@ -31,7 +31,7 @@ class PreparaPedidoCorte(View):
         if dados[0]['NF'] is not None:
             return ('ERRO', "Pedido faturado!")
 
-        dados, clientes = romaneio_corte.query_completa(cursor, data, nf=True, cliente_slug=cliente)
+        dados, clientes = romaneio_corte.query_completa(cursor, data, para_nf=True, cliente_slug=cliente)
 
         #   exemplos de observações:
         # MPCFM - Movimentação de Peças Cortadas da Filial p/ Matriz; Data: 2022-03-16

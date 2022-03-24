@@ -7,7 +7,7 @@ from utils.functions.queries import debug_cursor_execute
 
 
 def query_completa(
-        cursor, data=None, nf=False,
+        cursor, data=None, para_nf=False,
         cliente=None, cliente_slug=None):
     data_value = (
         f"DATE '{data}'"
@@ -161,7 +161,7 @@ def query_completa(
             if row['cliente_slug'] == cliente_slug
         ]
 
-    if nf:
+    if para_nf:
         clientes = {}
         for row in dados:
             if row['cliente_slug'] not in clientes:

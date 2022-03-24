@@ -33,7 +33,7 @@ class RomaneioCorte(O2BaseGetPostView):
         elif self.tipo == 'c':
             dados = romaneio_corte.query_completa(self.cursor, self.data)
         else:  # if self.tipo == 'n':
-            dados, clientes = romaneio_corte.query_completa(self.cursor, self.data, nf=True)
+            dados, clientes = romaneio_corte.query_completa(self.cursor, self.data, para_nf=True)
 
         if not dados:
             return
