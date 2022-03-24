@@ -3,12 +3,29 @@ from pprint import pprint
 __all__=['altera_pedido', 'altera_pedido_itens']
 
 
-def altera_pedido(cursor, pedido, empresa, observacao):
+def altera_pedido(cursor, data, pedido, empresa, qtd, observacao):
     sql = f"""
         UPDATE PEDI_100 p 
         SET 
           p.OBSERVACAO = '{observacao}'
         , p.COD_PED_CLIENTE = ''
+        , p.DATA_EMIS_VENDA = DATE '{data}'
+        , p.DATA_ENTR_VENDA = DATE '{data}'
+        , p.DATA_DIGIT_VENDA = CURRENT_DATE
+        , p.NUM_PERIODO_PROD = (
+            SELECT 
+              p.PERIODO_PRODUCAO
+            FROM PCPC_010 p -- períodos
+            WHERE 1=1
+              AND p.AREA_PERIODO = 1
+              AND p.DATA_INI_PERIODO <= DATE '{data}'
+              AND p.DATA_FIM_PERIODO >= DATE '{data}'
+          )
+        , QTDE_TOTAL_PEDI={qtd}
+        , VALOR_TOTAL_PEDI={qtd*2}
+        , QTDE_SALDO_PEDI={qtd}
+        , VALOR_SALDO_PEDI={qtd*2}
+        , VALOR_LIQ_ITENS={qtd*2}
         WHERE 1=1
           AND p.CODIGO_EMPRESA = {empresa}
           AND p.PEDIDO_VENDA = {pedido}
