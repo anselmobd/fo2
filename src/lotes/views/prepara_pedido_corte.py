@@ -7,6 +7,7 @@ from fo2.connections import db_cursor_so
 
 import lotes.queries
 from lotes.queries.pedido.ped_alter import altera_pedido
+from lotes.queries.pedido.mensagem_nf import cria_mens_nf
 from lotes.queries.producao import romaneio_corte
 
 
@@ -34,16 +35,17 @@ class PreparaPedidoCorte(View):
 
         if cliente == 'estoque':
             observacao = (
-                "[MPCFM] Movimentacao de Pecas Cortadas da Filial p/ Matriz; Data: 2022-03-16\n"
-                f"Producao para estoque. {dados[0]['obs']}\n"
+                "[MPCFM] Movimentacao de Pecas Cortadas da Filial para Matriz; Data: 2022-03-16",
+                f"Producao para estoque. {dados[0]['obs']}",
             )
         else:
             observacao = (
-                "[MPCFM] Movimentacao de Pecas Cortadas da Filial p/ Matriz; Data: 2022-03-16\n"
-                f"Producao para o cliente {cliente.capitalize()}. {dados[0]['obs']}\n"
+                "[MPCFM] Movimentacao de Pecas Cortadas da Filial para Matriz; Data: 2022-03-16",
+                f"Producao para o cliente {cliente.capitalize()}. {dados[0]['obs']}",
             )
 
-        altera_pedido(cursor, pedido, 3, observacao)
+        cria_mens_nf(cursor, pedido, observacao)
+        altera_pedido(cursor, pedido, 3, "\n".join(observacao))
 
         return ('OK', "OK!")
 
