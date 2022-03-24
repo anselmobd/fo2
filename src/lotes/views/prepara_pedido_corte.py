@@ -26,6 +26,10 @@ class PreparaPedidoCorte(View):
         dados = lotes.queries.pedido.ped_inform(cursor, pedido, empresa=3)
         if not dados:
             return ('ERRO', "Pedido não encontrado!")
+        if dados[0]['COD_CANCELAMENTO'] != 0:
+            return ('ERRO', "Pedido cancelado!")
+        if dados[0]['NF'] is not None:
+            return ('ERRO', "Pedido faturado!")
 
         dados, clientes = romaneio_corte.query_completa(cursor, data, nf=True, cliente_slug=cliente)
 
