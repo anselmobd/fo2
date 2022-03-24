@@ -28,7 +28,7 @@ class Pedido(View):
                 'extends_html': 'lotes/index_agator.html',
             })
         else:
-            self.empresa = 1
+            self.empresa = (1, 3)
             self.context.update({
                 'extends_html': 'lotes/index.html'
             })
@@ -61,9 +61,9 @@ class Pedido(View):
                     
 
             self.context.update({
-                'headers': ('Data de emissão', 'Data de embarque',
+                'headers': ('Empresa', 'Data de emissão', 'Data de embarque',
                             'Cliente', 'Código do pedido no cliente'),
-                'fields': ('DT_EMISSAO', 'DT_EMBARQUE',
+                'fields': ('EMPRESA', 'DT_EMISSAO', 'DT_EMBARQUE',
                            'CLIENTE', 'PEDIDO_CLIENTE'),
                 'data': data,
             })
