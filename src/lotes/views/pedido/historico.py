@@ -22,7 +22,7 @@ class Historico(View):
     def mount_context(self, cursor, pedido):
         context = {'pedido': pedido}
 
-        data = queries.pedido.ped_inform(cursor, pedido)
+        data = queries.pedido.ped_inform(cursor, pedido, empresa=None)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Pedido não encontrado',
