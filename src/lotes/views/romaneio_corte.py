@@ -79,6 +79,14 @@ class RomaneioCorte(O2BaseGetPostView):
 
         else:  # if self.tipo == 'n':
 
+            for row in dados:
+                if row['pedido_filial'] != '-':
+                    row['pedido_filial|TARGET'] = '_blank'
+                    row['pedido_filial|LINK'] = reverse(
+                        'producao:pedido__get',
+                        args=[row['pedido_filial']],
+                    )
+
             group = ['cliente', 'pedido_filial', 'obs']
             sum_fields = ['mov_qtd']
             label_tot_field = 'obs'
