@@ -1,4 +1,9 @@
+from pprint import pprint
+
 from utils.functions.models import rows_to_dict_list
+from utils.functions.queries import debug_cursor_execute
+
+__all__ = ['op_pendente']
 
 
 def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
@@ -138,5 +143,5 @@ def op_pendente(cursor, estagio, periodo_de, periodo_ate, data_de, data_ate,
         , l.ORDEM_PRODUCAO
         ) pend
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list(cursor)
