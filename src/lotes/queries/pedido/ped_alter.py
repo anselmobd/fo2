@@ -1,4 +1,8 @@
+import re
 from pprint import pprint
+
+from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 __all__=['altera_pedido', 'altera_pedido_itens']
 
@@ -58,3 +62,39 @@ def inclui_pedido_item(cursor, pedido, nat_cod, nat_uf, seq, row):
         {nat_cod}, '{nat_uf}', 0, NULL, 0, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, NULL, 0, NULL, NULL, 0, NULL, '00', NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0)
     """.format(**row)
     cursor.execute(sql)
+
+
+def query_pedidos_filial(cursor, data):
+    sql = f"""
+        SELECT
+          p.PEDIDO_VENDA ped
+        , p.OBSERVACAO obs
+        FROM PEDI_100 p 
+        WHERE 1=1
+          AND p.CODIGO_EMPRESA = 3
+          AND p.COD_CANCELAMENTO = 0
+          AND p.DATA_EMIS_VENDA = DATE '{data}'
+          AND p.DATA_ENTR_VENDA = DATE '{data}'
+    """
+    debug_cursor_execute(cursor, sql)
+    dados = rows_to_dict_list_lower(cursor)
+
+    peds = {}
+    for row in dados:
+        if not re.search('^\[MPCFM\] ', row['obs']):
+            continue
+        if not re.search(f"Data: {data}", row['obs']):
+            continue
+        if re.search("Producao para estoque:", row['obs']):
+            cliente = 'estoque'
+        else:
+            cliente_match = re.search('Producao para o cliente ([^ ]+):', row['obs'])
+            if not cliente_match:
+                continue
+            cliente = cliente_match.group(1).lower()
+        if cliente in peds:
+            peds[cliente] = ', '.join([peds[cliente], row['ped']])
+        else:
+            peds[cliente] = row['ped']
+    pprint(peds)
+    return peds
