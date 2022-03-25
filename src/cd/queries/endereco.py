@@ -96,6 +96,9 @@ def endereco_split(endereco):
                 parts['coluna'] = ap_parts.group(2)
             except Exception:
                 pass
+    else:
+        parts['espaco'] = endereco[0]
+        parts['bloco'] = endereco[1:]
     return parts
 
 
