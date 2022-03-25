@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 from django.http import JsonResponse
@@ -30,6 +31,9 @@ class PreparaPedidoCorte(View):
             return ('ERRO', "Pedido cancelado!")
         if dados[0]['NF'] is not None:
             return ('ERRO', "Pedido faturado!")
+        if dados[0]['OBSERVACAO']:
+            if re.search('^\[MPCFM\] ', dados[0]['OBSERVACAO']):
+                return ('ERRO', "Pedido já preparado!")
 
         dados, clientes = romaneio_corte.query_completa(cursor, data, para_nf=True, cliente_slug=cliente)
 
