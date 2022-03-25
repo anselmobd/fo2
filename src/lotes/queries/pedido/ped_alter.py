@@ -81,6 +81,8 @@ def query_pedidos_filial(cursor, data):
 
     peds = {}
     for row in dados:
+        if not row['obs']:
+            continue
         if not re.search('^\[MPCFM\] ', row['obs']):
             continue
         if not re.search(f"Data: {data}", row['obs']):
