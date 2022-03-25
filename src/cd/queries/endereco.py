@@ -45,6 +45,8 @@ def query_endereco(tipo):
     for row in data:
         parts = endereco_split(row['end'])
         row['bloco'] = parts['bloco']
+        row['andar'] = parts['andar']
+        row['coluna'] = parts['coluna']
         if parts['bloco'] in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
             row['prioridade'] = 1
             row['order_ap'] = 10000 + int(parts['coluna']) * 100 + int(parts['andar'])
