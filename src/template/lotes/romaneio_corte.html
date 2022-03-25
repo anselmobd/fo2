@@ -76,6 +76,7 @@
               <div class="line"></div>
               <div class="line"></div>
             </span>
+            <span id="mensagem_{{cliente}}" style="display:none"></span>
             <span class="glyphicon glyphicon-ok-sign" id="runok_{{cliente}}" style="display:none;font-size:1em;color:darkgreen" aria-hidden="true"></span>
             <span class="glyphicon glyphicon-alert" id="runerr_{{cliente}}" style="display:none;font-size:1em;color:darkred" aria-hidden="true"></span>
             </span>
@@ -100,9 +101,11 @@
     var pedido = pedido_el.value;
     var submit_el = document.getElementById('submit_'+slug);
     var running_el = document.getElementById('running_'+slug);
+    var msg_el = document.getElementById('mensagem_'+slug);
     var runok_el = document.getElementById('runok_'+slug);
     var runerr_el = document.getElementById('runerr_'+slug);
     running_el.style.display = "inline";
+    msg_el.style.display = "none";
     runok_el.style.display = "none";
     runerr_el.style.display = "none";
 
@@ -120,10 +123,15 @@
         erro = '';
         if (data) {
           if (data['status'] == 'ERRO') {
-            alert(data['message']);
+            // alert(data['message']);
+            console.log(data['message']);
+            msg_el.innerHTML = data['message'];
+            msg_el.style.display = "inline";
             runerr_el.style.display = "inline";
           } else {
             console.log(data['message']);
+            msg_el.innerHTML = data['message'];
+            msg_el.style.display = "inline";
             runok_el.style.display = "inline";
             pedido_el.style.display = "none";
             submit_el.style.display = "none";
@@ -132,15 +140,21 @@
 
           }
         } else {
-          alert('Sem retorno');
+          // alert('Sem retorno');
+          console.log('Sem retorno');
+          msg_el.innerHTML = 'Sem retorno';
+          msg_el.style.display = "inline";
           runerr_el.style.display = "inline";
         }
         running_el.style.display = "none";
       },
       error : function(data) {
-        alert('Erro na requisição');
-        running_el.style.display = "none";
+        // alert('Erro na requisição');
+        console.log('Erro na requisição');
+        msg_el.innerHTML = 'Erro na requisição';
+        msg_el.style.display = "inline";
         runerr_el.style.display = "inline";
+        running_el.style.display = "none";
       }
     });
 
