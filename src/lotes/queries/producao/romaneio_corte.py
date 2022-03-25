@@ -5,6 +5,8 @@ from django.utils.text import slugify
 from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
+from lotes.queries.pedido.ped_alter import query_pedidos_filial
+
 
 def query_completa(
         cursor, data=None, para_nf=False,
@@ -175,6 +177,8 @@ def query_completa(
             else:
                 cliaux[row['ped_cli']].add(row['op'])
 
+        peds = query_pedidos_filial(cursor, data)
+
         for cli in clientes:
             cliaux = clientes[cli]
             if cli == 'estoque':
@@ -187,8 +191,12 @@ def query_completa(
                     ops = ', '.join(map(str, cliaux['pedidos'][ped]))
                     cliaux['obs'] += sep + f"Pedido({ped})-OP({ops})"
                     sep = ', '
+
+            cliaux['pedido_filial'] = peds[cli] if cli in peds else '-'
+
         for row in dados:
             row['obs'] = clientes[row['cliente_slug']]['obs']
+            row['pedido_filial'] = clientes[row['cliente_slug']]['pedido_filial']
         
         dados = dados, clientes
 

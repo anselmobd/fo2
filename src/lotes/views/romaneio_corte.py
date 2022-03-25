@@ -79,18 +79,18 @@ class RomaneioCorte(O2BaseGetPostView):
 
         else:  # if self.tipo == 'n':
 
-            group = ['cliente', 'obs']
+            group = ['cliente', 'pedido_filial', 'obs']
             sum_fields = ['mov_qtd']
             label_tot_field = 'obs'
 
             headers = [
-                'Cliente', 'Observação', 'Item', 'Quant.'
+                'Cliente', 'Pedido', 'Observação', 'Item', 'Quant.'
             ]
             fields = [
-                'cliente', 'obs', 'item', 'mov_qtd'
+                'cliente', 'pedido_filial','obs', 'item', 'mov_qtd'
             ]
             style_center = (999)
-            style_right = (4)
+            style_right = (5)
             if (self.data < datetime.date.today() and
                 has_permission(self.request, 'lotes.prepara_pedidos_filial_matriz')
             ):
