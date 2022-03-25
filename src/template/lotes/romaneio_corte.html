@@ -40,8 +40,6 @@
       }
     }
 
-
-
   </style>
 {% endblock %}
 
@@ -66,7 +64,7 @@
         {% for cliente in clientes %}
           <li><label>{{clientes|get_item:cliente}}</label></li>
           <ul>
-            <li>Pedido:
+            <li>Pedido: <span id="pedido_preparado_{{cliente}}" style="display:none"></span>
             <input type="decimal" placeholder="000" required
               name="pedido_{{cliente}}" id="pedido_{{cliente}}"
               maxlength="6" size="6">
@@ -97,7 +95,10 @@
 <script>
 
   function Prepara(slug) {
-    var pedido = document.getElementById('pedido_'+slug).value;
+    var ped_prep_el = document.getElementById('pedido_preparado_'+slug);
+    var pedido_el = document.getElementById('pedido_'+slug);
+    var pedido = pedido_el.value;
+    var submit_el = document.getElementById('submit_'+slug);
     var running_el = document.getElementById('running_'+slug);
     var runok_el = document.getElementById('runok_'+slug);
     var runerr_el = document.getElementById('runerr_'+slug);
@@ -124,6 +125,11 @@
           } else {
             console.log(data['message']);
             runok_el.style.display = "inline";
+            pedido_el.style.display = "none";
+            submit_el.style.display = "none";
+            ped_prep_el.innerHTML = pedido;
+            ped_prep_el.style.display = "inline";
+
           }
         } else {
           alert('Sem retorno');
