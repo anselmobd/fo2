@@ -6,6 +6,42 @@
 {% block stylesheet %}
   <style>
     {% include 'layout/simple_table.css' %}
+
+    .pagination {
+      margin: 0.5em 0em auto;
+    }
+
+    .load-3 .line:nth-last-child(1) {
+      animation: loadingC 0.6s 0.1s linear infinite;
+    }
+    .load-3 .line:nth-last-child(2) {
+      animation: loadingC 0.6s 0.2s linear infinite;
+    }
+    .load-3 .line:nth-last-child(3) {
+      animation: loadingC 0.6s 0.3s linear infinite;
+    }
+    .line {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 6px;
+      background-color: #4b9cdb;
+    }
+
+    @keyframes loadingC {
+      0 {
+        transform: translate(0, 0);
+      }
+      50% {
+        transform: translate(0, -10px);
+      }
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+
+
+
   </style>
 {% endblock %}
 
@@ -37,6 +73,14 @@
             <input type="submit" 
               name="submit_{{cliente}}" id="submit_{{cliente}}"
               value="Prepara" onclick="return Prepara('{{cliente}}');">
+            <span class="load-3" id="running_{{cliente}}" style="display:none">
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+            </span>
+            <span class="glyphicon glyphicon-ok-sign" id="runok_{{cliente}}" style="display:none;font-size:1em;color:darkgreen" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-alert" id="runerr_{{cliente}}" style="display:none;font-size:1em;color:darkred" aria-hidden="true"></span>
+            </span>
             </li>
           </ul>
         {% endfor %}
@@ -54,6 +98,12 @@
 
   function Prepara(slug) {
     var pedido = document.getElementById('pedido_'+slug).value;
+    var running_el = document.getElementById('running_'+slug);
+    var runok_el = document.getElementById('runok_'+slug);
+    var runerr_el = document.getElementById('runerr_'+slug);
+    running_el.style.display = "inline";
+    runok_el.style.display = "none";
+    runerr_el.style.display = "none";
 
     var link = '{% url 'producao:prepara_pedido_corte' '0000-00-00' 'cliente' 'ped999' %}';
     link = link.replace('0000-00-00', '{{form.data.value}}');
@@ -70,15 +120,21 @@
         if (data) {
           if (data['status'] == 'ERRO') {
             alert(data['message']);
+            runerr_el.style.display = "inline";
           } else {
             console.log(data['message']);
+            runok_el.style.display = "inline";
           }
         } else {
           alert('Sem retorno');
+          runerr_el.style.display = "inline";
         }
+        running_el.style.display = "none";
       },
       error : function(data) {
         alert('Erro na requisição');
+        running_el.style.display = "none";
+        runerr_el.style.display = "inline";
       }
     });
 
