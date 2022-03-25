@@ -43,27 +43,29 @@ def query_endereco(tipo):
     ).oquery.debug_execute()
 
     for row in data:
-        try:
-            rua = re.search('^[0-9]([A-Z]+)[0-9]+', row['end']).group(1)
-        except AttributeError:
-            rua = '#'
-        if rua in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
-            row['order'] = 1
-            row['area'] = 'Estantes'
-        elif rua.startswith('Q'):
-            row['order'] = 2
-            row['area'] = 'Quarto andar'
+        parts = endereco_split(row['end'])
+        row['bloco'] = parts['bloco']
+        if parts['bloco'] in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+            row['prioridade'] = 1
+            row['order_ap'] = 10000 + int(parts['coluna']) * 100 + int(parts['andar'])
+            row['espaco'] = 'Estantes'
+        elif parts['bloco'].startswith('Q'):
+            row['prioridade'] = 2
+            row['order_ap'] = int(parts['apartamento'])
+            row['espaco'] = 'Quarto andar'
         elif (
-                rua.startswith('S') or
-                rua.startswith('Y')
+                parts['bloco'].startswith('S') or
+                parts['bloco'].startswith('Y')
               ):
-            row['order'] = 3
-            row['area'] = 'Externo'
+            row['prioridade'] = 3
+            row['order_ap'] = 0
+            row['espaco'] = 'Externo'
         else:
-            row['order'] = 4
-            row['area'] = 'Indefinido'
+            row['prioridade'] = 4
+            row['order_ap'] = 0
+            row['espaco'] = 'Indefinido'
 
-    data.sort(key=operator.itemgetter('order', 'end'))
+    data.sort(key=operator.itemgetter('prioridade', 'bloco', 'order_ap'))
 
     return data
 
@@ -114,7 +116,7 @@ def calc_rota(endereco):
         'H': 'GH',
     }
     parts = endereco_split(endereco)
-    if parts['bloco']:
+    if parts['bloco'] in ruas:
         icoluna = int(parts['coluna'])
         irota = icoluna//2
         rua = ruas[parts['bloco']]

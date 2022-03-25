@@ -33,7 +33,6 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
 
         count_add = 0
         if self.tipo == 'ES':
-            # enderecos = self.gera_dict_estantes()
             enderecos = gera_estantes_enderecos()
             for endereco in enderecos:
                 if not next(
@@ -49,8 +48,8 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
         data = paginator_basic(data, 50, self.page)
 
         if self.tipo == 'TO':
-            headers = ['Área']
-            fields = ['area']
+            headers = ['Espaço']
+            fields = ['espaco']
         else:            
             headers = []
             fields = []
