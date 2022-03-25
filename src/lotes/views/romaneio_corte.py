@@ -98,6 +98,7 @@ class RomaneioCorte(O2BaseGetPostView):
                     'clientes': {
                         c: clientes[c]['cliente']
                         for c in clientes
+                        if clientes[c]['pedido_filial'] == '-'
                     },
                 })
 
