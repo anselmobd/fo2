@@ -67,13 +67,37 @@ def query_endereco(tipo):
 
     return data
 
+
 def endereco_split(endereco):
-    """Split endereço em espaco, bloco, andar e ap"""
+    """Split endereço em espaco, bloco e apartamento; e este último em andar e coluna"""
+    parts = {
+        'espaco' : None,
+        'bloco' : None,
+        'apartamento' : None,
+        'andar' : None,
+        'coluna' : None,
+    }
     try:
-        busca = re.search('^([0-9])([A-Z]+)([0-9]{2})([0-9]{2})$', endereco)
-    except AttributeError:
-        return None, None, None
-    return busca.group(1), busca.group(2), busca.group(3), busca.group(4)
+        end_parts = re.search('^([0-9])(.+)([0-9]+)$', endereco)
+    except Exception:
+        end_parts = None
+    if end_parts:
+        try:
+            parts['espaco'] = end_parts.group(1)
+            parts['bloco'] = end_parts.group(2)
+            parts['apartamento'] = end_parts.group(3)
+        except AttributeError:
+            end_parts = None
+    if end_parts:
+        if parts['apartamento'] and len(parts['apartamento']) >= 4:
+            try:
+                ap_parts = re.search('^([0-9]+)([0-9]{2})$', parts['apartamento'])
+                parts['andar'] = ap_parts.group(1)
+                parts['coluna'] = ap_parts.group(2)
+            except Exception:
+                pass
+    return parts
+
 
 def calc_rota(endereco):
     ruas = {
@@ -86,15 +110,16 @@ def calc_rota(endereco):
         'G': 'GH',
         'H': 'GH',
     }
-    espaco, bloco, andar, ap = endereco_split(endereco)
-    if bloco in ruas.keys():
-        iap = int(ap)
-        irota = iap//2
-        rua = ruas[bloco]
-        rota = f'{espaco}{rua}{irota:02}'
+    parts = endereco_split(endereco)
+    if parts['bloco']:
+        icoluna = int(parts['coluna'])
+        irota = icoluna//2
+        rua = ruas[parts['bloco']]
+        rota = f"{parts['espaco']}{rua}{irota:02}"
     else:
-        rota = f'{espaco}{bloco}'
+        rota = f"{parts['espaco']}{parts['bloco']}"
     return rota
+
 
 def add_endereco(cursor, endereco):
     """Cria endereco no banco de dados
