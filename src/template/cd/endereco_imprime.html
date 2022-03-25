@@ -15,14 +15,9 @@
     {{ form.as_p }}
     <input type="submit" name="imprime" value="Imprime"/>
   </form>
-  {% if data %}
-    <table>
-      {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
-    </table>
-  {% else %}
-    {% if request.POST %}
-      <h4>Nenhum endereço encontrado</h4>
+  {% if request.POST %}
+    {% if mensagem %}
+      <h4>{{mensagem}}</h4>
     {% endif %}
   {% endif %}
 {% endblock content %}
