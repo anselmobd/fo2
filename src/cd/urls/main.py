@@ -4,6 +4,7 @@ import cd.views as views
 from cd.views import (
     api_palete,
     endereco,
+    endereco_imprime,
     palete,
 )
 from cd.views.api.palete.print import PaletePrint
@@ -126,5 +127,8 @@ urlpatterns = [
 
     re_path(r'^endereco/$',
         endereco.Endereco.as_view(), name='endereco'),
+
+    re_path(r'^endereco_imprime/$',
+        endereco_imprime.EnderecoImprime.as_view(), name='endereco_imprime'),
 
 ]

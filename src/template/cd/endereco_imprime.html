@@ -1,0 +1,28 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'cd:endereco_imprime' %}" method="post" name="formName">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="imprime" value="Imprime"/>
+  </form>
+  {% if data %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% else %}
+    {% if request.POST %}
+      <h4>Nenhum endereço encontrado</h4>
+    {% endif %}
+  {% endif %}
+{% endblock content %}
