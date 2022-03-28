@@ -61,7 +61,7 @@ class PaletePrint(View):
         try:
             for row in self.data:
                 teg.context(row)
-                teg.printer_send(2)
+                teg.printer_send(self.copias)
         finally:
             teg.printer_end()
 
@@ -112,6 +112,11 @@ class PaletePrint(View):
 
 
     def get(self, request, *args, **kwargs):
+        self.copias = (
+            kwargs['copias']
+            if 'copias' in kwargs and kwargs['copias']
+            else 1
+        )
         self.code = kwargs['code'] if 'code' in kwargs else None
         self.context = {}
         self.mount_context()
