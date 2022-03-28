@@ -68,16 +68,47 @@ class EnderecoImprime(PermissionRequiredMixin, O2BaseGetPostView):
         teg.template(self.usuario_impresso.modelo.gabarito, '\r\n')
         teg.printer_start()
         try:
+            imprime = False
             for row in self.data:
-                teg.context(row)
-                teg.printer_send()
+                if row['end'] == self.inicial:
+                    imprime = True
+                if imprime:
+                    teg.context(row)
+                    teg.printer_send()
+                    if row['end'] == self.final:
+                        break
         finally:
             teg.printer_end()
 
     def mount_context(self):
-        dados = query_endereco('TO')
-        self.data = dados[0:3]
-        pprint(self.data)
+        self.inicial = self.inicial.upper()
+        self.final = self.final.upper()
+
+        self.data = query_endereco('TO')
+
+        if not next(
+            (
+                row for row in self.data
+                if row["end"] == self.inicial
+            ),
+            False
+        ):
+            self.context.update({
+                'mensagem': 'Endereço inicial não existe',
+            })
+            return
+
+        if not next(
+            (
+                row for row in self.data
+                if row["end"] == self.final
+            ),
+            False
+        ):
+            self.context.update({
+                'mensagem': 'Endereço final não existe',
+            })
+            return
 
         if self.print():
             self.context.update({
