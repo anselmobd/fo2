@@ -37,7 +37,7 @@ class ModeloTermica(models.Model):
     #     null=True, blank=True,
     #     verbose_name='modelo')
 
-    # Tive problemas novamente. Mensagem reclamendo de 2048. Não entendi.
+    # Tive problemas novamente. Mensagem reclamando de 2048. Não entendi.
     # Só criando outro campo consegui voltar ao trabalho.
     # receita = models.CharField(
     #     null=True, blank=True, max_length=8192,
@@ -79,16 +79,16 @@ class ImpressoraTermica(models.Model):
 
 class UsuarioImpresso(models.Model):
     usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        User, on_delete=models.PROTECT,
         verbose_name='usuário')
     impresso = models.ForeignKey(
-        Impresso, on_delete=models.CASCADE,
+        Impresso, on_delete=models.PROTECT,
         verbose_name='impresso')
     impressora_termica = models.ForeignKey(
-        ImpressoraTermica, on_delete=models.CASCADE,
+        ImpressoraTermica, on_delete=models.PROTECT,
         verbose_name='impressora térmica')
     modelo = models.ForeignKey(
-        ModeloTermica, on_delete=models.CASCADE,
+        ModeloTermica, on_delete=models.PROTECT,
         verbose_name='modelo padrão')
 
     class Meta:
