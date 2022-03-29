@@ -84,6 +84,7 @@ def posicao_estoque(
             , e.deposito
             , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
         field_quantidade = '''--
+            , sum(e.qtde_estoque_atu) qtd
             , sum(case when e.qtde_estoque_atu > 0
                   then e.qtde_estoque_atu else 0 end) qtd_positiva
             , sum(case when e.qtde_estoque_atu < 0
@@ -102,6 +103,7 @@ def posicao_estoque(
             , e.deposito
             , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
         field_quantidade = '''--
+            , sum(e.qtde_estoque_atu) qtd
             , sum(case when e.qtde_estoque_atu > 0
                   then e.qtde_estoque_atu else 0 end) qtd_positiva
             , sum(case when e.qtde_estoque_atu < 0
@@ -118,6 +120,7 @@ def posicao_estoque(
             , e.cditem_subgrupo
             , e.cditem_item'''
         field_quantidade = '''--
+            , sum(e.qtde_estoque_atu) qtd
             , sum(case when e.qtde_estoque_atu > 0
                   then e.qtde_estoque_atu else 0 end) qtd_positiva
             , sum(case when e.qtde_estoque_atu < 0
@@ -137,6 +140,7 @@ def posicao_estoque(
             , e.cditem_subgrupo
             , e.cditem_item'''
         field_quantidade = '''--
+            , sum(e.qtde_estoque_atu) qtd
             , sum(case when e.qtde_estoque_atu > 0
                   then e.qtde_estoque_atu else 0 end) qtd_positiva
             , sum(case when e.qtde_estoque_atu < 0
