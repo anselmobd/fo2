@@ -72,7 +72,7 @@ class PosicaoEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        self.totalizers(agrupamento, data, 'Totais:')
+        self.totalizers(agrupamento, data, 'Totais gerais:')
 
         if agrupamento == 'r':
             context.update({
@@ -161,10 +161,16 @@ class PosicaoEstoque(View):
 
         row_tot = data[-1].copy()
 
-        data = paginator_basic(data, 50, page)
+        data = paginator_basic(data, 75, page)
 
-        if page != data.paginator.num_pages:
-            data.object_list.append(row_tot)
+        if data.paginator.num_pages > 1:
+            if len(data.object_list) > 2:
+                if page == data.paginator.num_pages:
+                    data.object_list = data.object_list[:-1]
+
+                self.totalizers(agrupamento, data.object_list, 'Totais da página:')
+
+                data.object_list.append(row_tot)
 
         context.update({
             'data': data,
