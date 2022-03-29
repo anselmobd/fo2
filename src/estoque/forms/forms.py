@@ -15,7 +15,7 @@ class PorDepositoForm(forms.Form):
 
     ref = forms.CharField(
         label='Referência ou modelo',
-        required=True, min_length=1, max_length=5,
+        required=False, min_length=1, max_length=5,
         widget=forms.TextInput(attrs={'type': 'string'}))
 
     tam = forms.CharField(
@@ -50,6 +50,9 @@ class PorDepositoForm(forms.Form):
                ]
     tipo = forms.ChoiceField(
         choices=CHOICES, initial='t')
+
+    page = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())
 
     def __init__(self, *args, cursor=None, **kwargs):
         super().__init__(*args, **kwargs)

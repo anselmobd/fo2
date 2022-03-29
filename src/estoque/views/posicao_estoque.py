@@ -5,6 +5,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from base.paginator import paginator_basic
 from utils.views import totalize_data
 
 from estoque import forms, queries
@@ -16,7 +17,8 @@ class PosicaoEstoque(View):
     title_name = 'Posição de estoque'
 
     def mount_context(
-            self, cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo):
+            self, cursor, nivel, ref, tam, cor,
+            deposito, agrupamento, tipo, page):
         context = {
             'nivel': nivel,
             'tam': tam,
@@ -159,6 +161,14 @@ class PosicaoEstoque(View):
             context.update({
                 'style': {7: 'text-align: right;'},
             })
+
+        row_tot = data[-1].copy()
+
+        data = paginator_basic(data, 50, page)
+
+        if page != data.paginator.num_pages:
+            data.object_list.append(row_tot)
+
         context.update({
             'data': data,
         })
@@ -184,7 +194,9 @@ class PosicaoEstoque(View):
             deposito = form.cleaned_data['deposito']
             agrupamento = form.cleaned_data['agrupamento']
             tipo = form.cleaned_data['tipo']
+            page = form.cleaned_data['page']
             context.update(self.mount_context(
-                cursor, nivel, ref, tam, cor, deposito, agrupamento, tipo))
+                cursor, nivel, ref, tam, cor,
+                deposito, agrupamento, tipo, page))
         context['form'] = form
         return render(request, self.template_name, context)
