@@ -16,6 +16,33 @@ class PosicaoEstoque(View):
     template_name = 'estoque/posicao_estoque.html'
     title_name = 'Posição de estoque'
 
+    def totalize_data(self, data, sum, descr):
+        totalize_data(data, {
+            'sum': sum,
+            'descr': descr,
+            'row_style': 'font-weight: bold;',
+        })
+
+    def totalizers(self, agrupamento, data, dep_descr):
+        if agrupamento in ['r', 'd']:
+            self.totalize_data(
+                data,
+                ['qtd_positiva', 'qtd_negativa', 'qtd'],
+                {'dep_descr': dep_descr},
+            )
+        elif agrupamento in ['tc', 'ct']:
+            self.totalize_data(
+                data,
+                ['qtd_positiva', 'qtd_negativa', 'qtd'],
+                {'cditem_item': dep_descr},
+            )
+        elif agrupamento in ['rctd', 'rtcd']:
+            self.totalize_data(
+                data,
+                ['qtd'],
+                {'dep_descr': dep_descr},
+            )
+
     def mount_context(
             self, cursor, nivel, ref, tam, cor,
             deposito, agrupamento, tipo, page):
@@ -45,27 +72,7 @@ class PosicaoEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        if agrupamento in ['r', 'd']:
-            totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
-                'count': [],
-                'descr': {'dep_descr': 'Totais:'},
-                'row_style': 'font-weight: bold;',
-            })
-        elif agrupamento in ['tc', 'ct']:
-            totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
-                'count': [],
-                'descr': {'cditem_item': 'Totais:'},
-                'row_style': 'font-weight: bold;',
-            })
-        elif agrupamento in ['rctd', 'rtcd']:
-            totalize_data(data, {
-                'sum': ['qtd'],
-                'count': [],
-                'descr': {'dep_descr': 'Total:'},
-                'row_style': 'font-weight: bold;',
-            })
+        self.totalizers(agrupamento, data, 'Totais:')
 
         if agrupamento == 'r':
             context.update({
