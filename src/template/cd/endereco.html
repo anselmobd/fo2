@@ -16,7 +16,7 @@
   <form action="{% url 'cd:endereco' %}" method="post" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="filtra" value="Filtra"/>
+    <input type="submit" name="filtra" value="Filtra" onclick="page1()"/>
   </form>
   {% if data %}
 
@@ -95,5 +95,11 @@
       document.getElementById('id_page').value = page;
       document.formName.submit();
     }
+
+    function page1() {
+      document.getElementById('id_page').value = '1';
+      document.formName.submit();
+    }
+
   </script>
 {% endblock %}
