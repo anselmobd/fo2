@@ -47,71 +47,75 @@ class PosicaoEstoque(View):
 
         if agrupamento == 'r':
             totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa'],
+                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 'count': [],
                 'descr': {'dep_descr': 'Totais:'},
                 'row_style': 'font-weight: bold;',
             })
-            soma = data[-1]['qtd_positiva'] + data[-1]['qtd_negativa']
             context.update({
                 'headers': ('Nível', 'Referência', 'Depósito',
-                            'Quantidades Positivas', 'Quantidades Negativas'),
+                            'Quantidades Positivas', 'Quantidades Negativas',
+                            'Quantidade total'),
                 'fields': ('cditem_nivel99', 'cditem_grupo', 'dep_descr',
-                           'qtd_positiva', 'qtd_negativa'),
+                           'qtd_positiva', 'qtd_negativa',
+                           'qtd'),
                 'style': {4: 'text-align: right;',
-                          5: 'text-align: right;'},
-                'soma': soma,
+                          5: 'text-align: right;',
+                          6: 'text-align: right;'},
             })
         elif agrupamento == 'd':
             totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa'],
+                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 'count': [],
                 'descr': {'dep_descr': 'Totais:'},
                 'row_style': 'font-weight: bold;',
             })
-            soma = data[-1]['qtd_positiva'] + data[-1]['qtd_negativa']
             context.update({
                 'headers': ('Depósito',
-                            'Quantidades Positivas', 'Quantidades Negativas'),
+                            'Quantidades Positivas', 'Quantidades Negativas',
+                            'Quantidade total'),
                 'fields': ('dep_descr',
-                           'qtd_positiva', 'qtd_negativa'),
+                           'qtd_positiva', 'qtd_negativa',
+                           'qtd'),
                 'style': {2: 'text-align: right;',
-                          3: 'text-align: right;'},
-                'soma': soma,
+                          3: 'text-align: right;',
+                          4: 'text-align: right;'},
             })
         elif agrupamento == 'tc':
             totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa'],
+                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 'count': [],
                 'descr': {'cditem_item': 'Totais:'},
                 'row_style': 'font-weight: bold;',
             })
-            soma = data[-1]['qtd_positiva'] + data[-1]['qtd_negativa']
             context.update({
                 'headers': ('Nível', 'Tamanho', 'Cor',
-                            'Quantidades Positivas', 'Quantidades Negativas'),
+                            'Quantidades Positivas', 'Quantidades Negativas',
+                            'Quantidade total'),
                 'fields': ('cditem_nivel99', 'cditem_subgrupo', 'cditem_item',
-                           'qtd_positiva', 'qtd_negativa'),
+                           'qtd_positiva', 'qtd_negativa',
+                           'qtd'),
                 'style': {4: 'text-align: right;',
-                          5: 'text-align: right;'},
-                'soma': soma,
+                          5: 'text-align: right;',
+                          6: 'text-align: right;'},
             })
         elif agrupamento == 'ct':
             totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa'],
+                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 'count': [],
                 'descr': {'cditem_item': 'Totais:'},
                 'row_style': 'font-weight: bold;',
             })
-            soma = data[-1]['qtd_positiva'] + data[-1]['qtd_negativa']
             context.update({
                 'headers': ('Nível', 'Cor', 'Tamanho',
-                            'Quantidades Positivas', 'Quantidades Negativas'),
+                            'Quantidades Positivas', 'Quantidades Negativas',
+                            'Quantidade total'),
                 'fields': ('cditem_nivel99', 'cditem_item', 'cditem_subgrupo',
-                           'qtd_positiva', 'qtd_negativa'),
+                           'qtd_positiva', 'qtd_negativa',
+                           'qtd'),
                 'style': {4: 'text-align: right;',
-                          5: 'text-align: right;'},
-                'soma': soma,
+                          5: 'text-align: right;',
+                          6: 'text-align: right;'},
             })
         elif agrupamento == 'rctd':
             totalize_data(data, {
