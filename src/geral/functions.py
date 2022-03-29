@@ -190,7 +190,7 @@ def depositos_choices(
             descr = deposito['DESCR']
         else:
             descr = f"{deposito['COD']} - {deposito['DESCR']}"
-            if deposito['COD'] <= 2:
+            if deposito['COD'] <= 9:
                 continue
         CHOICES.append((
             deposito['COD'],
