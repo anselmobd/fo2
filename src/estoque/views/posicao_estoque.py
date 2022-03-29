@@ -45,13 +45,29 @@ class PosicaoEstoque(View):
             context.update({'erro': 'Nada selecionado'})
             return context
 
-        if agrupamento == 'r':
+        if agrupamento in ['r', 'd']:
             totalize_data(data, {
                 'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
                 'count': [],
                 'descr': {'dep_descr': 'Totais:'},
                 'row_style': 'font-weight: bold;',
             })
+        elif agrupamento in ['tc', 'ct']:
+            totalize_data(data, {
+                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
+                'count': [],
+                'descr': {'cditem_item': 'Totais:'},
+                'row_style': 'font-weight: bold;',
+            })
+        elif agrupamento in ['rctd', 'rtcd']:
+            totalize_data(data, {
+                'sum': ['qtd'],
+                'count': [],
+                'descr': {'dep_descr': 'Total:'},
+                'row_style': 'font-weight: bold;',
+            })
+
+        if agrupamento == 'r':
             context.update({
                 'headers': ('Nível', 'Referência', 'Depósito',
                             'Quantidades Positivas', 'Quantidades Negativas',
@@ -64,12 +80,6 @@ class PosicaoEstoque(View):
                           6: 'text-align: right;'},
             })
         elif agrupamento == 'd':
-            totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
-                'count': [],
-                'descr': {'dep_descr': 'Totais:'},
-                'row_style': 'font-weight: bold;',
-            })
             context.update({
                 'headers': ('Depósito',
                             'Quantidades Positivas', 'Quantidades Negativas',
@@ -82,12 +92,6 @@ class PosicaoEstoque(View):
                           4: 'text-align: right;'},
             })
         elif agrupamento == 'tc':
-            totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
-                'count': [],
-                'descr': {'cditem_item': 'Totais:'},
-                'row_style': 'font-weight: bold;',
-            })
             context.update({
                 'headers': ('Nível', 'Tamanho', 'Cor',
                             'Quantidades Positivas', 'Quantidades Negativas',
@@ -100,12 +104,6 @@ class PosicaoEstoque(View):
                           6: 'text-align: right;'},
             })
         elif agrupamento == 'ct':
-            totalize_data(data, {
-                'sum': ['qtd_positiva', 'qtd_negativa', 'qtd'],
-                'count': [],
-                'descr': {'cditem_item': 'Totais:'},
-                'row_style': 'font-weight: bold;',
-            })
             context.update({
                 'headers': ('Nível', 'Cor', 'Tamanho',
                             'Quantidades Positivas', 'Quantidades Negativas',
@@ -118,12 +116,6 @@ class PosicaoEstoque(View):
                           6: 'text-align: right;'},
             })
         elif agrupamento == 'rctd':
-            totalize_data(data, {
-                'sum': ['qtd'],
-                'count': [],
-                'descr': {'dep_descr': 'Total:'},
-                'row_style': 'font-weight: bold;',
-            })
             context.update({
                 'headers': ('Nível', 'Referência', 'Cor',
                             'Tamanho', 'Depósito', 'Quantidade'),
@@ -132,12 +124,6 @@ class PosicaoEstoque(View):
                 'style': {6: 'text-align: right;'},
             })
         else:  # rtcd
-            totalize_data(data, {
-                'sum': ['qtd'],
-                'count': [],
-                'descr': {'dep_descr': 'Total:'},
-                'row_style': 'font-weight: bold;',
-            })
             lote_acomp_0 = True
             for row in data:
                 if row['lote_acomp'] != 0:
