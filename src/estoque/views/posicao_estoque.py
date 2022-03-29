@@ -161,7 +161,7 @@ class PosicaoEstoque(View):
 
         row_tot = data[-1].copy()
 
-        data = paginator_basic(data, 75, page)
+        data = paginator_basic(data, 50, page)
 
         if data.paginator.num_pages > 1:
             if len(data.object_list) > 2:
