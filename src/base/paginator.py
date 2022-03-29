@@ -5,9 +5,9 @@ from utils.functions import coalesce
 
 
 class MyPaginator(Paginator):
-    def __init__(self, *args, pag_neib=None, **kwargs):
+    def __init__(self, *args, pag_neib=None, orphans=1, **kwargs):
         self.__pag_neib = coalesce(pag_neib, 5)
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, orphans=orphans, **kwargs)
 
     @property
     def pag_neib(self):
