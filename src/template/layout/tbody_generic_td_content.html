@@ -4,11 +4,15 @@
   {% endif %}
 {% endwith %}
 
-{% if field in safe %}
-  {% if field in pre %}<pre>{% endif %}{{ row|get_item:field|safe }}{% if field in pre %}</pre>{% endif %}
-{% else %}
-  {% if field in pre %}<pre>{% endif %}{% include "layout/html_tbody_fieldlink.html" with row=row field=field count=count decimals=decimals only %}{% if field in pre %}</pre>{% endif %}
-{% endif %}
+{% if field in pre %}<pre>{% endif %}
+{% with field|add:'|SAFE' as field_safe %}
+  {% if field in safe or row|get_item:field_safe %}
+    {{ row|get_item:field|safe }}
+  {% else %}
+    {% include "layout/html_tbody_fieldlink.html" with row=row field=field count=count decimals=decimals only %}
+  {% endif %}
+{% endwith %}
+{% if field in pre %}</pre>{% endif %}
 
 {% with field|add:'|HOVER' as field_hover %}
   {% if row|get_item:field_hover %}
