@@ -4,94 +4,96 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'estoque:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
 {% endblock %}
 
 {% block content %}
-<form action="" method="post" name="formName">
+  <form action="" method="post" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca" onclick="page1()"/>
-</form>
-{% if request.POST %}
-  {% include "layout/form_inputs_report.html" with form=form h=5 only %}
-{% endif %}
-{% if data %}
+  </form>
+  {% if request.POST %}
+    {% include "layout/form_inputs_report.html" with form=form h=5 only %}
 
-{% for i in "d_" %}
+    {% if data %}
 
-  {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
-  {% with pag_neibn="-"|add:pag_neib %}
-  {% if data.paginator.num_pages != 1 %}
-    <ul class="pagination">
-      {% if data.number > 1 %}
-        <li title="Anterior {{ data.number|add:-1 }}"><a href="#" onclick="setPageAndSubmit({{ data.number|add:-1|safe }})">
-          <span class="glyphicon glyphicon-step-backward"></span>
-        </a></li>
-      {% else %}
-        <li><a href="#" onclick="false">
-          <span class="glyphicon glyphicon-step-backward" style="color: gray;"></span>
-        </a></li>
-      {% endif %}
-      {% if data.number < data.paginator.num_pages %}
-        <li title="Próxima {{ data.number|add:1 }}"><a href="#" onclick="setPageAndSubmit({{ data.number|add:1|safe }})">
-          <span class="glyphicon glyphicon-step-forward"></span>
-        </a></li>
-      {% else %}
-        <li><a href="#" onclick="false">
-          <span class="glyphicon glyphicon-step-forward" style="color: gray;"></span>
-        </a></li>
-      {% endif %}
-    </ul>
-    <ul class="pagination">
-      {% if data.number > pag_neib|add:1 %}
-        <li><a href="#" onclick="setPageAndSubmit(1)">
-          <span>1
-            {% if data.number > pag_neib|add:2 %}
-              <span class="glyphicon glyphicon-fast-backward"></span>
+      {% for i in "d_" %}
+
+        {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
+          {% with pag_neibn="-"|add:pag_neib %}
+            {% if data.paginator.num_pages != 1 %}
+              <ul class="pagination">
+                {% if data.number > 1 %}
+                  <li title="Anterior {{ data.number|add:-1 }}"><a href="#" onclick="setPageAndSubmit({{ data.number|add:-1|safe }})">
+                    <span class="glyphicon glyphicon-step-backward"></span>
+                  </a></li>
+                {% else %}
+                  <li><a href="#" onclick="false">
+                    <span class="glyphicon glyphicon-step-backward" style="color: gray;"></span>
+                  </a></li>
+                {% endif %}
+                {% if data.number < data.paginator.num_pages %}
+                  <li title="Próxima {{ data.number|add:1 }}"><a href="#" onclick="setPageAndSubmit({{ data.number|add:1|safe }})">
+                    <span class="glyphicon glyphicon-step-forward"></span>
+                  </a></li>
+                {% else %}
+                  <li><a href="#" onclick="false">
+                    <span class="glyphicon glyphicon-step-forward" style="color: gray;"></span>
+                  </a></li>
+                {% endif %}
+              </ul>
+              <ul class="pagination">
+                {% if data.number > pag_neib|add:1 %}
+                  <li><a href="#" onclick="setPageAndSubmit(1)">
+                    <span>1
+                      {% if data.number > pag_neib|add:2 %}
+                        <span class="glyphicon glyphicon-fast-backward"></span>
+                      {% endif %}
+                    </span>
+                  </a></li>
+                {% endif %}
+                {% for i in data.paginator.page_range %}
+                  {% if i >= data.number|add:pag_neibn %}
+                    {% if i <= data.number|add:pag_neib %}
+                      {% if data.number == i %}
+                        <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+                      {% else %}
+                        <li><a href="#" onclick="setPageAndSubmit({{ i|safe }})">{{ i }}</a></li>
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+                {% if data.number < data.paginator.num_pages|add:pag_neibn %}
+                  <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages|safe }})">
+                    <span>
+                      {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
+                        <span class="glyphicon glyphicon-fast-forward"></span>
+                      {% endif %}
+                    {{ data.paginator.num_pages }}</span>
+                  </a></li>
+                {% endif %}
+              </ul>
             {% endif %}
-          </span>
-        </a></li>
-      {% endif %}
-      {% for i in data.paginator.page_range %}
-        {% if i >= data.number|add:pag_neibn %}
-          {% if i <= data.number|add:pag_neib %}
-            {% if data.number == i %}
-              <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
-            {% else %}
-              <li><a href="#" onclick="setPageAndSubmit({{ i|safe }})">{{ i }}</a></li>
-            {% endif %}
-          {% endif %}
+          {% endwith %}
+        {% endwith %}
+
+        {% if i == "d" %}
+          <table>
+            {% include "layout/thead_generic.html" with data=headers style=style only %}
+            {% include "layout/tbody_generic.html" with fields=fields data=data style=style decimals=decimals only %}
+          </table>
         {% endif %}
+
       {% endfor %}
-      {% if data.number < data.paginator.num_pages|add:pag_neibn %}
-        <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages|safe }})">
-          <span>
-            {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
-              <span class="glyphicon glyphicon-fast-forward"></span>
-            {% endif %}
-          {{ data.paginator.num_pages }}</span>
-        </a></li>
-      {% endif %}
-    </ul>
+
+    {% else %}
+      <h4>Nada selecionado</h4>
+    {% endif %}
+
   {% endif %}
-  {% endwith %}
-  {% endwith %}
-
-  {% if i == "d" %}
-    <table>
-      {% include "layout/thead_generic.html" with data=headers style=style only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data style=style decimals=decimals only %}
-    </table>
-  {% endif %}
-
-{% endfor %}
-
-{% else %}
-  <h4>Nada selecionado</h4>
-{% endif %}
 {% endblock %}
 
 {% block javascript %}
