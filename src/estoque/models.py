@@ -14,6 +14,7 @@ class EstoquePermissions(models.Model):
         managed = False
         permissions = (
             ("can_transferencia", "Pode fazer transferência entre depósitos"),
+            ("pode_zerar_depositos", "Pode zerar depósitos"),
         )
 
 
