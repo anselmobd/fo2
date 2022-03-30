@@ -23,6 +23,8 @@
 {% endif %}
 {% if data %}
 
+{% for i in "d_" %}
+
   {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
   {% with pag_neibn="-"|add:pag_neib %}
   {% if data.paginator.num_pages != 1 %}
@@ -81,10 +83,15 @@
   {% endwith %}
   {% endwith %}
 
-  <table>
-    {% include "layout/thead_generic.html" with data=headers style=style only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data style=style decimals=decimals only %}
-  </table>
+  {% if i == "d" %}
+    <table>
+      {% include "layout/thead_generic.html" with data=headers style=style only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data style=style decimals=decimals only %}
+    </table>
+  {% endif %}
+
+{% endfor %}
+
 {% endif %}
 {% endblock %}
 
