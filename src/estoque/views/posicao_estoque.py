@@ -116,11 +116,12 @@ class PosicaoEstoque(View):
             context.update({
                 'modelo': modelo,
             })
+
         data = queries.posicao_estoque(
             cursor, nivel, ref, tam, cor, deposito, zerados=False,
             group=agrupamento, tipo=tipo, modelo=modelo)
-        if len(data) == 0:
-            context.update({'erro': 'Nada selecionado'})
+
+        if not data:
             return context
 
         self.totalizers(agrupamento, data, 'Totais gerais:')
@@ -136,14 +137,7 @@ class PosicaoEstoque(View):
             *self.agrup_fields[agrup]
         )
 
-        context.update({
-            'headers': headers,
-            'fields': fields,
-            'style': style,
-            'decimals': decimals,
-        })
-
-        row_tot = data[-1].copy()
+        row_totalizer = data[-1].copy()
 
         data = paginator_basic(data, 50, page)
 
@@ -154,9 +148,13 @@ class PosicaoEstoque(View):
 
                 self.totalizers(agrupamento, data.object_list, 'Totais da página:')
 
-                data.object_list.append(row_tot)
+                data.object_list.append(row_totalizer)
 
         context.update({
+            'headers': headers,
+            'fields': fields,
+            'style': style,
+            'decimals': decimals,
             'data': data,
         })
 
