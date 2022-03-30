@@ -35,6 +35,7 @@ class O2BaseGetPostView(CustomView):
         self.Form_class = None
         self.form_class_has_initial = False
         self.form_dict_initial = {}
+        self.form_create_kwargs = {}
         self.cleaned_data2self = False
 
     def do_cleaned_data2self(self):
@@ -82,15 +83,16 @@ class O2BaseGetPostView(CustomView):
 
         self.pre_form()
         if self.form_class_has_initial:
-            self.form = self.Form_class()
+            self.form = self.Form_class(**self.form_create_kwargs)
         else:
-            self.form = self.Form_class(initial=self.form_initial())
+            self.form = self.Form_class(
+                initial=self.form_initial(), **self.form_create_kwargs)
         return self.render_mount()
 
     def post(self, request, *args, **kwargs):
         self.init_self(request, kwargs)
         self.pre_form()
-        self.form = self.Form_class(self.request.POST)
+        self.form = self.Form_class(self.request.POST, **self.form_create_kwargs)
 
         if self.get_args2form:
             for arg in self.get_args:
