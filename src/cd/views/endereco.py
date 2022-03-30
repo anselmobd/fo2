@@ -25,7 +25,6 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
         self.permission_required = 'cd.can_admin_pallet'
         self.template_name = 'cd/endereco.html'
         self.title_name = 'Endereços'
-        self.cleaned_data2self = True
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
