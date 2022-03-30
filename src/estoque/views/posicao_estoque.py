@@ -28,9 +28,9 @@ class PosicaoEstoque(View):
                 'lote_acomp': ['Lote do produto'],
                 'qtd_positiva': ['Quantidades Positivas', 'r'],
                 'qtd_negativa': ['Quantidades Negativas', 'r'],
-                'qtd': ['Quantidade', 'r'],
+                'qtd': ['Quantidade', 'r', 0],
             },
-            ['header', '+style'],
+            ['header', '+style', 'decimals'],
             style = {
                 'r': 'text-align: right;',
             }
@@ -95,26 +95,26 @@ class PosicaoEstoque(View):
         self.totalizers(agrupamento, data, 'Totais gerais:')
 
         if agrupamento == 'r':
-            headers, fields, style = self.table.hfs(
+            headers, fields, style, decimals = self.table.hfsd(
                 'nivel', 'ref', 'dep_descr',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             )
         elif agrupamento == 'd':
-            headers, fields, style = self.table.hfs(
+            headers, fields, style, decimals = self.table.hfsd(
                 'dep_descr', 'qtd_positiva', 'qtd_negativa',  'qtd'
             )
         elif agrupamento == 'tc':
-            headers, fields, style = self.table.hfs(
+            headers, fields, style, decimals = self.table.hfsd(
                 'nivel', 'tam', 'cor',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             )
         elif agrupamento == 'ct':
-            headers, fields, style = self.table.hfs(
+            headers, fields, style, decimals = self.table.hfsd(
                 'nivel', 'cor', 'tam',
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             )
         elif agrupamento == 'rctd':
-            headers, fields, style = self.table.hfs(
+            headers, fields, style, decimals = self.table.hfsd(
                 'nivel', 'ref', 'cor', 'tam',
                 'dep_descr', 'qtd'
             )
@@ -124,12 +124,12 @@ class PosicaoEstoque(View):
                 if row['lote_acomp'] != 0:
                     lote_acomp_0 = False
             if lote_acomp_0:
-                headers, fields, style = self.table.hfs(
+                headers, fields, style, decimals = self.table.hfsd(
                     'nivel', 'ref', 'tam', 'cor',
                     'dep_descr', 'qtd'
                 )
             else:
-                headers, fields, style = self.table.hfs(
+                headers, fields, style, decimals = self.table.hfsd(
                     'nivel', 'ref', 'tam', 'cor',
                     'dep_descr', 'lote_acomp', 'qtd'
                 )
@@ -138,6 +138,7 @@ class PosicaoEstoque(View):
             'headers': headers,
             'fields': fields,
             'style': style,
+            'decimals': decimals,
         })
 
         row_tot = data[-1].copy()

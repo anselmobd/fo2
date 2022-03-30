@@ -271,6 +271,7 @@ class TableDefs(object):
             'field': {
                 'header': 'Header',
                 'style': 'text-align: right;',
+                'decimals': 
             },
             ...
         }
