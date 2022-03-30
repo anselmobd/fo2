@@ -30,8 +30,8 @@ class PosicaoEstoque(O2BaseGetPostView):
                 'tam': ['Tamanho'],
                 'dep_descr': ['Depósito'],
                 'lote_acomp': ['Lote do produto'],
-                'qtd_positiva': ['Quantidades Positivas', 'r'],
-                'qtd_negativa': ['Quantidades Negativas', 'r'],
+                'qtd_positiva': ['Quant. Positiva', 'r'],
+                'qtd_negativa': ['Quant. Negativa', 'r'],
                 'qtd': ['Quantidade', 'r', 0],
             },
             ['header', '+style', 'decimals'],
@@ -45,7 +45,8 @@ class PosicaoEstoque(O2BaseGetPostView):
                 'qtd_positiva', 'qtd_negativa',  'qtd'
             ),
             'd': (
-                'dep_descr', 'qtd_positiva', 'qtd_negativa',  'qtd'
+                'dep_descr',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
             ),
             'tc': (
                 'nivel', 'tam', 'cor',
@@ -85,24 +86,24 @@ class PosicaoEstoque(O2BaseGetPostView):
             'row_style': 'font-weight: bold;',
         })
 
-    def totalizers(self, agrupamento, data, dep_descr):
-        if agrupamento in ['r', 'd']:
+    def totalizers(self, data, sum_text):
+        if self.agrupamento in ['r', 'd']:
             self.totalize_data(
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
-                {'dep_descr': dep_descr},
+                {'dep_descr': sum_text},
             )
-        elif agrupamento in ['tc', 'ct']:
+        elif self.agrupamento in ['tc', 'ct']:
             self.totalize_data(
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
-                {'cor': dep_descr},
+                {'cor': sum_text},
             )
-        elif agrupamento in ['rctd', 'rtcd']:
+        elif self.agrupamento in ['rctd', 'rtcd']:
             self.totalize_data(
                 data,
                 ['qtd'],
-                {'dep_descr': dep_descr},
+                {'dep_descr': sum_text},
             )
 
     def mount_context(self):
@@ -119,7 +120,7 @@ class PosicaoEstoque(O2BaseGetPostView):
         if not data:
             return
 
-        self.totalizers(self.agrupamento, data, 'Totais gerais:')
+        self.totalizers(data, 'Totais gerais:')
 
         agrup = self.agrupamento
         if self.agrupamento == 'rtcd':
@@ -137,7 +138,7 @@ class PosicaoEstoque(O2BaseGetPostView):
                 if self.page == data.paginator.num_pages:
                     data.object_list = data.object_list[:-1]
 
-                self.totalizers(self.agrupamento, data.object_list, 'Totais da página:')
+                self.totalizers(data.object_list, 'Totais da página:')
 
                 data.object_list.append(row_totalizer)
 
