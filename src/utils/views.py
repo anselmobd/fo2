@@ -380,9 +380,3 @@ def request_hash_trail(request, *fields):
         request.session.session_key,
     ]
     return hash_trail(*params)
-
-
-class TableHfs(TableDefs):
-
-    def __init__(self, definition, keys=None, **kwargs):
-        super(TableHfs, self).__init__(definition, keys, **kwargs)

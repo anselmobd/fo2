@@ -6,7 +6,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
-from utils.views import totalize_data, TableHfs
+from utils.views import totalize_data, TableDefs
 
 from estoque import forms, queries
 
@@ -18,7 +18,7 @@ class PosicaoEstoque(View):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.table = TableHfs(
+        self.table = TableDefs(
             {
                 'nivel': ['Nível'],
                 'ref': ['Referência'],

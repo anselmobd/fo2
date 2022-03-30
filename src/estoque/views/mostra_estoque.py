@@ -9,7 +9,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from geral.functions import has_permission, request_user
-from utils.views import TableHfs, request_hash_trail, totalize_data
+from utils.views import TableDefs, request_hash_trail, totalize_data
 
 import produto.queries
 
@@ -23,7 +23,7 @@ class MostraEstoque(View):
         self.Form_class = forms.MostraEstoqueForm
         self.template_name = 'estoque/mostra_estoque.html'
         self.title_name = 'Ajuste de estoque'
-        self.table = TableHfs({
+        self.table = TableDefs({
             'ref': ['Referência'],
             'cor': ['Cor'],
             'tam': ['Tamanho'],
