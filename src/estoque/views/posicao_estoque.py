@@ -34,7 +34,7 @@ class PosicaoEstoque(View):
             self.totalize_data(
                 data,
                 ['qtd_positiva', 'qtd_negativa', 'qtd'],
-                {'cditem_item': dep_descr},
+                {'cor': dep_descr},
             )
         elif agrupamento in ['rctd', 'rtcd']:
             self.totalize_data(
@@ -79,7 +79,7 @@ class PosicaoEstoque(View):
                 'headers': ('Nível', 'Referência', 'Depósito',
                             'Quantidades Positivas', 'Quantidades Negativas',
                             'Quantidade total'),
-                'fields': ('cditem_nivel99', 'cditem_grupo', 'dep_descr',
+                'fields': ('nivel', 'ref', 'dep_descr',
                            'qtd_positiva', 'qtd_negativa',
                            'qtd'),
                 'style': {4: 'text-align: right;',
@@ -103,7 +103,7 @@ class PosicaoEstoque(View):
                 'headers': ('Nível', 'Tamanho', 'Cor',
                             'Quantidades Positivas', 'Quantidades Negativas',
                             'Quantidade total'),
-                'fields': ('cditem_nivel99', 'cditem_subgrupo', 'cditem_item',
+                'fields': ('nivel', 'tam', 'cor',
                            'qtd_positiva', 'qtd_negativa',
                            'qtd'),
                 'style': {4: 'text-align: right;',
@@ -115,7 +115,7 @@ class PosicaoEstoque(View):
                 'headers': ('Nível', 'Cor', 'Tamanho',
                             'Quantidades Positivas', 'Quantidades Negativas',
                             'Quantidade total'),
-                'fields': ('cditem_nivel99', 'cditem_item', 'cditem_subgrupo',
+                'fields': ('nivel', 'cor', 'tam',
                            'qtd_positiva', 'qtd_negativa',
                            'qtd'),
                 'style': {4: 'text-align: right;',
@@ -126,8 +126,8 @@ class PosicaoEstoque(View):
             context.update({
                 'headers': ('Nível', 'Referência', 'Cor',
                             'Tamanho', 'Depósito', 'Quantidade'),
-                'fields': ('cditem_nivel99', 'cditem_grupo', 'cditem_item',
-                           'cditem_subgrupo', 'dep_descr', 'qtd'),
+                'fields': ('nivel', 'ref', 'cor',
+                           'tam', 'dep_descr', 'qtd'),
                 'style': {6: 'text-align: right;'},
             })
         else:  # rtcd
@@ -140,8 +140,8 @@ class PosicaoEstoque(View):
                     'headers': ('Nível', 'Referência',
                                 'Tamanho', 'Cor',
                                 'Depósito', 'Quantidade'),
-                    'fields': ('cditem_nivel99', 'cditem_grupo',
-                               'cditem_subgrupo', 'cditem_item',
+                    'fields': ('nivel', 'ref',
+                               'tam', 'cor',
                                'dep_descr', 'qtd'),
                 })
             else:
@@ -149,8 +149,8 @@ class PosicaoEstoque(View):
                     'headers': ('Nível', 'Referência',
                                 'Tamanho', 'Cor', 'Depósito',
                                 'Lote do produto', 'Quantidade'),
-                    'fields': ('cditem_nivel99', 'cditem_grupo',
-                               'cditem_subgrupo', 'cditem_item', 'dep_descr',
+                    'fields': ('nivel', 'ref',
+                               'tam', 'cor', 'dep_descr',
                                'lote_acomp', 'qtd'),
                     'style': {7: 'text-align: right;'},
                 })

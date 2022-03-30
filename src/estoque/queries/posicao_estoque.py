@@ -46,9 +46,9 @@ def posicao_estoque(
 
     if group in ['', 'rtcd']:
         select_fields = '''--
-            , e.cditem_grupo
-            , e.cditem_subgrupo
-            , e.cditem_item
+            , e.cditem_grupo ref
+            , e.cditem_subgrupo tam
+            , e.cditem_item cor
             , e.deposito
             , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR
             , e.lote_acomp'''
@@ -63,9 +63,9 @@ def posicao_estoque(
             , e.lote_acomp'''
     elif group == 'rctd':
         select_fields = '''--
-            , e.cditem_grupo
-            , e.cditem_subgrupo
-            , e.cditem_item
+            , e.cditem_grupo ref
+            , e.cditem_subgrupo tam
+            , e.cditem_item cor
             , e.deposito
             , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR
             , e.lote_acomp'''
@@ -80,7 +80,7 @@ def posicao_estoque(
             , e.lote_acomp'''
     elif group == 'r':
         select_fields = '''--
-            , e.cditem_grupo
+            , e.cditem_grupo ref
             , e.deposito
             , e.deposito || ' - ' || d.DESCRICAO DEP_DESCR'''
         field_quantidade = '''--
@@ -117,8 +117,8 @@ def posicao_estoque(
             , e.deposito'''
     elif group == 'tc':
         select_fields = '''--
-            , e.cditem_subgrupo
-            , e.cditem_item'''
+            , e.cditem_subgrupo tam
+            , e.cditem_item cor'''
         field_quantidade = '''--
             , sum(e.qtde_estoque_atu) qtd
             , sum(case when e.qtde_estoque_atu > 0
@@ -137,8 +137,8 @@ def posicao_estoque(
             , e.cditem_item'''
     elif group == 'ct':
         select_fields = '''--
-            , e.cditem_subgrupo
-            , e.cditem_item'''
+            , e.cditem_subgrupo tam
+            , e.cditem_item cor'''
         field_quantidade = '''--
             , sum(e.qtde_estoque_atu) qtd
             , sum(case when e.qtde_estoque_atu > 0
@@ -173,7 +173,7 @@ def posicao_estoque(
 
     sql = f'''
         SELECT
-          e.cditem_nivel99
+          e.cditem_nivel99 nivel
         {select_fields} -- select_fields
         {field_quantidade} -- field_quantidade
         FROM ESTQ_040 e
