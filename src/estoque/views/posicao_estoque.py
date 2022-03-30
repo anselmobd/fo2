@@ -35,6 +35,37 @@ class PosicaoEstoque(View):
                 'r': 'text-align: right;',
             }
         )
+        self.agrup_fields = {
+            'r': (
+                'nivel', 'ref', 'dep_descr',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            ),
+            'd': (
+                'dep_descr', 'qtd_positiva', 'qtd_negativa',  'qtd'
+            ),
+            'tc': (
+                'nivel', 'tam', 'cor',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            ),
+            'ct': (
+                'nivel', 'cor', 'tam',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            ),
+            'rctd': (
+                'nivel', 'ref', 'cor', 'tam',
+                'dep_descr', 'qtd'
+            ),
+            'rtcd': (
+                'nivel', 'ref', 'tam', 'cor',
+                'dep_descr', 'qtd'
+            ),
+            'rtcd+': (
+                'nivel', 'ref', 'tam', 'cor',
+                'dep_descr', 'lote_acomp', 'qtd'
+            ),
+        }
+
+
 
     def totalize_data(self, data, sum, descr):
         totalize_data(data, {
@@ -94,45 +125,16 @@ class PosicaoEstoque(View):
 
         self.totalizers(agrupamento, data, 'Totais gerais:')
 
-        if agrupamento == 'r':
-            headers, fields, style, decimals = self.table.hfsd(
-                'nivel', 'ref', 'dep_descr',
-                'qtd_positiva', 'qtd_negativa',  'qtd'
-            )
-        elif agrupamento == 'd':
-            headers, fields, style, decimals = self.table.hfsd(
-                'dep_descr', 'qtd_positiva', 'qtd_negativa',  'qtd'
-            )
-        elif agrupamento == 'tc':
-            headers, fields, style, decimals = self.table.hfsd(
-                'nivel', 'tam', 'cor',
-                'qtd_positiva', 'qtd_negativa',  'qtd'
-            )
-        elif agrupamento == 'ct':
-            headers, fields, style, decimals = self.table.hfsd(
-                'nivel', 'cor', 'tam',
-                'qtd_positiva', 'qtd_negativa',  'qtd'
-            )
-        elif agrupamento == 'rctd':
-            headers, fields, style, decimals = self.table.hfsd(
-                'nivel', 'ref', 'cor', 'tam',
-                'dep_descr', 'qtd'
-            )
-        else:  # rtcd
-            lote_acomp_0 = True
+        agrup = agrupamento
+        if agrupamento == 'rtcd':
             for row in data:
                 if row['lote_acomp'] != 0:
-                    lote_acomp_0 = False
-            if lote_acomp_0:
-                headers, fields, style, decimals = self.table.hfsd(
-                    'nivel', 'ref', 'tam', 'cor',
-                    'dep_descr', 'qtd'
-                )
-            else:
-                headers, fields, style, decimals = self.table.hfsd(
-                    'nivel', 'ref', 'tam', 'cor',
-                    'dep_descr', 'lote_acomp', 'qtd'
-                )
+                    agrup = 'rtcd+'
+                    break
+
+        headers, fields, style, decimals = self.table.hfsd(
+            *self.agrup_fields[agrup]
+        )
 
         context.update({
             'headers': headers,
