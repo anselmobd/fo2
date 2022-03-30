@@ -6,7 +6,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
-from utils.views import totalize_data
+from utils.views import totalize_data, TableHfs
 
 from estoque import forms, queries
 
@@ -15,6 +15,26 @@ class PosicaoEstoque(View):
     Form_class = forms.PorDepositoForm
     template_name = 'estoque/posicao_estoque.html'
     title_name = 'Posição de estoque'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.table = TableHfs(
+            {
+                'nivel': ['Nível'],
+                'ref': ['Referência'],
+                'cor': [],
+                'tam': ['Tamanho'],
+                'dep_descr': ['Depósito'],
+                'lote_acomp': ['Lote do produto'],
+                'qtd_positiva': ['Quantidades Positivas', 'r'],
+                'qtd_negativa': ['Quantidades Negativas', 'r'],
+                'qtd': ['Quantidade', 'r'],
+            },
+            ['header', '+style'],
+            style = {
+                'r': 'text-align: right;',
+            }
+        )
 
     def totalize_data(self, data, sum, descr):
         totalize_data(data, {
@@ -75,89 +95,50 @@ class PosicaoEstoque(View):
         self.totalizers(agrupamento, data, 'Totais gerais:')
 
         if agrupamento == 'r':
-            context.update({
-                'headers': ('Nível', 'Referência', 'Depósito',
-                            'Quantidades Positivas', 'Quantidades Negativas',
-                            'Quantidade total'),
-                'fields': ('nivel', 'ref', 'dep_descr',
-                           'qtd_positiva', 'qtd_negativa',
-                           'qtd'),
-                'style': {4: 'text-align: right;',
-                          5: 'text-align: right;',
-                          6: 'text-align: right;'},
-            })
+            headers, fields, style = self.table.hfs(
+                'nivel', 'ref', 'dep_descr',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            )
         elif agrupamento == 'd':
-            context.update({
-                'headers': ('Depósito',
-                            'Quantidades Positivas', 'Quantidades Negativas',
-                            'Quantidade total'),
-                'fields': ('dep_descr',
-                           'qtd_positiva', 'qtd_negativa',
-                           'qtd'),
-                'style': {2: 'text-align: right;',
-                          3: 'text-align: right;',
-                          4: 'text-align: right;'},
-            })
+            headers, fields, style = self.table.hfs(
+                'dep_descr', 'qtd_positiva', 'qtd_negativa',  'qtd'
+            )
         elif agrupamento == 'tc':
-            context.update({
-                'headers': ('Nível', 'Tamanho', 'Cor',
-                            'Quantidades Positivas', 'Quantidades Negativas',
-                            'Quantidade total'),
-                'fields': ('nivel', 'tam', 'cor',
-                           'qtd_positiva', 'qtd_negativa',
-                           'qtd'),
-                'style': {4: 'text-align: right;',
-                          5: 'text-align: right;',
-                          6: 'text-align: right;'},
-            })
+            headers, fields, style = self.table.hfs(
+                'nivel', 'tam', 'cor',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            )
         elif agrupamento == 'ct':
-            context.update({
-                'headers': ('Nível', 'Cor', 'Tamanho',
-                            'Quantidades Positivas', 'Quantidades Negativas',
-                            'Quantidade total'),
-                'fields': ('nivel', 'cor', 'tam',
-                           'qtd_positiva', 'qtd_negativa',
-                           'qtd'),
-                'style': {4: 'text-align: right;',
-                          5: 'text-align: right;',
-                          6: 'text-align: right;'},
-            })
+            headers, fields, style = self.table.hfs(
+                'nivel', 'cor', 'tam',
+                'qtd_positiva', 'qtd_negativa',  'qtd'
+            )
         elif agrupamento == 'rctd':
-            context.update({
-                'headers': ('Nível', 'Referência', 'Cor',
-                            'Tamanho', 'Depósito', 'Quantidade'),
-                'fields': ('nivel', 'ref', 'cor',
-                           'tam', 'dep_descr', 'qtd'),
-                'style': {6: 'text-align: right;'},
-            })
+            headers, fields, style = self.table.hfs(
+                'nivel', 'ref', 'cor', 'tam',
+                'dep_descr', 'qtd'
+            )
         else:  # rtcd
             lote_acomp_0 = True
             for row in data:
                 if row['lote_acomp'] != 0:
                     lote_acomp_0 = False
             if lote_acomp_0:
-                context.update({
-                    'headers': ('Nível', 'Referência',
-                                'Tamanho', 'Cor',
-                                'Depósito', 'Quantidade'),
-                    'fields': ('nivel', 'ref',
-                               'tam', 'cor',
-                               'dep_descr', 'qtd'),
-                })
+                headers, fields, style = self.table.hfs(
+                    'nivel', 'ref', 'tam', 'cor',
+                    'dep_descr', 'qtd'
+                )
             else:
-                context.update({
-                    'headers': ('Nível', 'Referência',
-                                'Tamanho', 'Cor', 'Depósito',
-                                'Lote do produto', 'Quantidade'),
-                    'fields': ('nivel', 'ref',
-                               'tam', 'cor', 'dep_descr',
-                               'lote_acomp', 'qtd'),
-                    'style': {7: 'text-align: right;'},
-                })
-            data[-1]['lote_acomp'] = ''
-            context.update({
-                'style': {7: 'text-align: right;'},
-            })
+                headers, fields, style = self.table.hfs(
+                    'nivel', 'ref', 'tam', 'cor',
+                    'dep_descr', 'lote_acomp', 'qtd'
+                )
+
+        context.update({
+            'headers': headers,
+            'fields': fields,
+            'style': style,
+        })
 
         row_tot = data[-1].copy()
 
