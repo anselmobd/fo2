@@ -6,18 +6,22 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
+from base.views import O2BaseGetPostView
 from utils.views import totalize_data, TableDefs
 
 from estoque import forms, queries
 
 
-class PosicaoEstoque(View):
-    Form_class = forms.PorDepositoForm
-    template_name = 'estoque/posicao_estoque.html'
-    title_name = 'Posição de estoque'
+class PosicaoEstoque(O2BaseGetPostView):
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        self._cursor = None
+        super(PosicaoEstoque, self).__init__(*args, **kwargs)
+        self.Form_class = forms.PorDepositoForm
+        self.template_name = 'estoque/posicao_estoque.html'
+        self.title_name = 'Posição de estoque'
+        self.cleaned_data2self = True
+
         self.table = TableDefs(
             {
                 'nivel': ['Nível'],
@@ -65,7 +69,14 @@ class PosicaoEstoque(View):
             ),
         }
 
+    @property
+    def cursor(self):
+        if not self._cursor:
+            self._cursor = db_cursor_so(self.request)
+        return self._cursor
 
+    def pre_form(self):
+        self.form_create_kwargs = {'cursor': self.cursor}
 
     def totalize_data(self, data, sum, descr):
         totalize_data(data, {
@@ -94,40 +105,27 @@ class PosicaoEstoque(View):
                 {'dep_descr': dep_descr},
             )
 
-    def mount_context(
-            self, cursor, nivel, ref, tam, cor,
-            deposito, agrupamento, tipo, page):
-        context = {
-            'nivel': nivel,
-            'tam': tam,
-            'cor': cor,
-            'deposito': deposito,
-            'agrupamento': agrupamento,
-            'tipo': tipo,
-            }
-        modelo = None
-        if len(ref) % 5 == 0:
-            context.update({
-                'ref': ref,
-            })
-        else:
-            modelo = ref.lstrip("0")
-            ref = ''
-            context.update({
-                'modelo': modelo,
+    def mount_context(self):
+        self.modelo = None
+        if len(self.ref) % 5 != 0:
+            self.modelo = self.ref.lstrip("0")
+            self.ref = ''
+            self.context.update({
+                'modelo': self.modelo,
             })
 
         data = queries.posicao_estoque(
-            cursor, nivel, ref, tam, cor, deposito, zerados=False,
-            group=agrupamento, tipo=tipo, modelo=modelo)
+            self.cursor, self.nivel, self.ref, self.tam, self.cor,
+            self.deposito, zerados=False, group=self.agrupamento,
+            tipo=self.tipo, modelo=self.modelo)
 
         if not data:
-            return context
+            return
 
-        self.totalizers(agrupamento, data, 'Totais gerais:')
+        self.totalizers(self.agrupamento, data, 'Totais gerais:')
 
-        agrup = agrupamento
-        if agrupamento == 'rtcd':
+        agrup = self.agrupamento
+        if self.agrupamento == 'rtcd':
             for row in data:
                 if row['lote_acomp'] != 0:
                     agrup = 'rtcd+'
@@ -139,49 +137,21 @@ class PosicaoEstoque(View):
 
         row_totalizer = data[-1].copy()
 
-        data = paginator_basic(data, 50, page)
+        data = paginator_basic(data, 50, self.page)
 
         if data.paginator.num_pages > 1:
             if len(data.object_list) > 2:
-                if page == data.paginator.num_pages:
+                if self.page == data.paginator.num_pages:
                     data.object_list = data.object_list[:-1]
 
-                self.totalizers(agrupamento, data.object_list, 'Totais da página:')
+                self.totalizers(self.agrupamento, data.object_list, 'Totais da página:')
 
                 data.object_list.append(row_totalizer)
 
-        context.update({
+        self.context.update({
             'headers': headers,
             'fields': fields,
             'style': style,
             'decimals': decimals,
             'data': data,
         })
-
-        return context
-
-    def get(self, request, *args, **kwargs):
-        cursor = db_cursor_so(request)
-        context = {'titulo': self.title_name}
-        form = self.Form_class(cursor=cursor)
-        context['form'] = form
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        cursor = db_cursor_so(request)
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST, cursor=cursor)
-        if form.is_valid():
-            nivel = form.cleaned_data['nivel']
-            ref = form.cleaned_data['ref']
-            tam = form.cleaned_data['tam']
-            cor = form.cleaned_data['cor']
-            deposito = form.cleaned_data['deposito']
-            agrupamento = form.cleaned_data['agrupamento']
-            tipo = form.cleaned_data['tipo']
-            page = form.cleaned_data['page']
-            context.update(self.mount_context(
-                cursor, nivel, ref, tam, cor,
-                deposito, agrupamento, tipo, page))
-        context['form'] = form
-        return render(request, self.template_name, context)
