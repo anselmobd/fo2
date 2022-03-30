@@ -110,9 +110,6 @@ class PosicaoEstoque(O2BaseGetPostView):
         if len(self.ref) % 5 != 0:
             self.modelo = self.ref.lstrip("0")
             self.ref = ''
-            self.context.update({
-                'modelo': self.modelo,
-            })
 
         data = queries.posicao_estoque(
             self.cursor, self.nivel, self.ref, self.tam, self.cor,
@@ -131,10 +128,6 @@ class PosicaoEstoque(O2BaseGetPostView):
                     agrup = 'rtcd+'
                     break
 
-        headers, fields, style, decimals = self.table.hfsd(
-            *self.agrup_fields[agrup]
-        )
-
         row_totalizer = data[-1].copy()
 
         data = paginator_basic(data, 50, self.page)
@@ -147,6 +140,10 @@ class PosicaoEstoque(O2BaseGetPostView):
                 self.totalizers(self.agrupamento, data.object_list, 'Totais da página:')
 
                 data.object_list.append(row_totalizer)
+
+        headers, fields, style, decimals = self.table.hfsd(
+            *self.agrup_fields[agrup]
+        )
 
         self.context.update({
             'headers': headers,
