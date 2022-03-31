@@ -120,7 +120,9 @@ class ItemNoTempo(View):
                 row['proc'] = '_'
                 tipo_doc = '802'
             else:
-                if row['proc'] in ('estq_f015'):
+                if row['proc'] == '_':
+                    row['tipo'] = 'Movimentação'
+                elif row['proc'] in ('estq_f015'):
                     row['tipo'] = 'Movimentação de estoques'
                 elif row['proc'] in ('estq_f950'):
                     row['tipo'] = 'Acerto de estoques'
@@ -157,6 +159,10 @@ class ItemNoTempo(View):
                 elif row['proc'] in ('pcpc_f230'):
                     row['tipo'] = 'Baixa da OP por estagio'
                     tipo_doc = 'op'
+                else:
+                    row['tipo'] = 'Movimentação'
+
+            pprint(dados)
 
             row['trans_descr'] = row['trans_descr'].capitalize()
             if tipo_doc == '':
