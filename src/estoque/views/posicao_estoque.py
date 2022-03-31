@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django.views import View
+from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
@@ -34,6 +35,7 @@ class PosicaoEstoque(O2BaseGetPostView):
                 'qtd_negativa': ['Quant. Negativa', 'r'],
                 'qtd': ['Quantidade', 'r', 0],
                 'zera': ['Zera', 'c'],
+                'item_no_tempo': ['No tempo', 'c'],
             },
             ['header', '+style', 'decimals'],
             style = {
@@ -153,6 +155,7 @@ class PosicaoEstoque(O2BaseGetPostView):
                 self.request,
                 'estoque.pode_zerar_depositos'
             ):
+                self.table.add('zera')
                 for row in data.object_list:
                     if row['nivel']:
                         row['zera|SAFE'] = True
@@ -162,7 +165,16 @@ class PosicaoEstoque(O2BaseGetPostView):
                     else:
                         row['zera'] = ' '
 
-                self.table.add('zera')
+        elif self.agrupamento in ['rctd', 'rtcd', 'rtcd+']:
+            self.table.add('item_no_tempo')
+            for row in data.object_list:
+                row['item_no_tempo'] = ''
+                if row['nivel']:
+                    row['item_no_tempo|GLYPHICON'] = 'glyphicon-time'
+                    row['item_no_tempo|TARGET'] = '_BLANK'
+                    row['item_no_tempo|LINK'] = reverse(
+                        'estoque:item_no_tempo__get', args=[
+                            row['ref'], row['cor'], row['tam'], row['deposito']])
 
         headers, fields, style, decimals = self.table.hfsd()
 
