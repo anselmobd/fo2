@@ -109,5 +109,32 @@
       document.formName.submit();
     }
 
+    function do_zera(ref, dep) {
+      console.log(ref, dep);
+      return false;
+    }
+
+    function mountZeraButtons() {
+      var zera_spans = document.querySelectorAll('.zera');
+      var i;
+      for (i = 0; i < zera_spans.length; ++i) {
+        const myCodes = zera_spans[i].id.split("_");
+        let ref1 = myCodes[1];
+        let dep1 = myCodes[2];
+        on_click = 'do_zera("'+ref1+'", "'+dep1+'");';
+        console.log(zera_spans[i].id, ref1, dep1, on_click);
+        zera_spans[i].outerHTML = 
+          '<a title="Zera '+ref1+' no depósito '+dep1+'"'+
+          'href="#" id="a_'+ref1+'_'+dep1+'">'+
+          '<span class="glyphicon glyphicon-repeat" '+
+          'style="font-size: 1em" aria-hidden="true"></span></a>';
+        document.getElementById('a_'+ref1+'_'+dep1).onclick = function() { do_zera(ref1, dep1); };
+      }
+    }
+
+    window.onload = function() {
+        mountZeraButtons();
+      }
+
   </script>
 {% endblock %}

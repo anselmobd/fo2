@@ -1,12 +1,12 @@
 from pprint import pprint
 
-from django.shortcuts import render
 from django.views import View
 
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
+from geral.functions import has_permission
 from utils.views import totalize_data, TableDefs
 
 from estoque import forms, queries
@@ -33,10 +33,12 @@ class PosicaoEstoque(O2BaseGetPostView):
                 'qtd_positiva': ['Quant. Positiva', 'r'],
                 'qtd_negativa': ['Quant. Negativa', 'r'],
                 'qtd': ['Quantidade', 'r', 0],
+                'zera': ['Zera', 'c'],
             },
             ['header', '+style', 'decimals'],
             style = {
                 'r': 'text-align: right;',
+                'c': 'text-align: center;',
             }
         )
         self.agrup_fields = {
@@ -142,9 +144,25 @@ class PosicaoEstoque(O2BaseGetPostView):
 
                 data.object_list.append(row_totalizer)
 
-        headers, fields, style, decimals = self.table.hfsd(
+        self.table.cols(
             *self.agrup_fields[agrup]
         )
+
+        if self.agrupamento == 'r':
+            if has_permission(
+                self.request,
+                'estoque.pode_zerar_depositos'
+            ):
+                for row in data.object_list:
+                    if row['nivel']:
+                        row['zera|SAFE'] = True
+                        row['zera'] = (
+                            '<span class="zera" id="zera_{ref}_{deposito}">-</span>'.format(
+                                **row))
+
+                self.table.add('zera')
+
+        headers, fields, style, decimals = self.table.hfsd()
 
         self.context.update({
             'headers': headers,
