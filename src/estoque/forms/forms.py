@@ -9,7 +9,7 @@ from base.forms.fields2 import O2FieldModeloForm2
 
 class PorDepositoForm(forms.Form):
     nivel = forms.IntegerField(
-        label='Nível', required=False,
+        label='Nível', required=True,
         widget=forms.TextInput(attrs={'type': 'number',
                                'autofocus': 'autofocus'}))
 
