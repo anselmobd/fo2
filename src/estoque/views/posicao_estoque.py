@@ -159,6 +159,8 @@ class PosicaoEstoque(O2BaseGetPostView):
                         row['zera'] = (
                             '<span class="zera" id="zera_{ref}_{deposito}">-</span>'.format(
                                 **row))
+                    else:
+                        row['zera'] = ' '
 
                 self.table.add('zera')
 
