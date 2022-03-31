@@ -116,7 +116,7 @@ class ItemNoTempo(View):
                 row['tipo'] = 'Ajuste por inventário'
                 row['proc'] = '_'
             elif (row['doc'] // 1000000) == 802:
-                row['tipo'] = 'Transferência entre depósitos'
+                row['tipo'] = 'Movimentação'
                 row['proc'] = '_'
                 tipo_doc = '802'
             else:
