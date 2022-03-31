@@ -140,32 +140,32 @@
       link = link.replace('deposito', dep);
       console.log(link);
 
-      $.ajax({
-        type: 'GET',
-        url: link,
-        data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
-        success : function(data) {
-          erro = '';
-          if (data) {
-            if (data['status'] == 'ERRO') {
-              console.log(data['status']);
-              runerr_el.style.display = "inline";
-            } else {
-              console.log(data['status']);
-              runok_el.style.display = "inline";
-            }
-          } else {
-            console.log('Sem retorno');
-            runerr_el.style.display = "inline";
-          }
-          run_el.style.display = "none";
-        },
-        error : function(data) {
-          console.log('Erro na requisição');
-          runerr_el.style.display = "inline";
-          run_el.style.display = "none";
-        }
-      });
+      // $.ajax({
+      //   type: 'GET',
+      //   url: link,
+      //   data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      //   success : function(data) {
+      //     erro = '';
+      //     if (data) {
+      //       if (data['status'] == 'ERRO') {
+      //         console.log(data['status']);
+      //         runerr_el.style.display = "inline";
+      //       } else {
+      //         console.log(data['status']);
+      //         runok_el.style.display = "inline";
+      //       }
+      //     } else {
+      //       console.log('Sem retorno');
+      //       runerr_el.style.display = "inline";
+      //     }
+      //     run_el.style.display = "none";
+      //   },
+      //   error : function(data) {
+      //     console.log('Erro na requisição');
+      //     runerr_el.style.display = "inline";
+      //     run_el.style.display = "none";
+      //   }
+      // });
 
       return false;
     }
@@ -204,13 +204,14 @@
 
       span_zera_tudo_el = document.getElementById('span_zera_tudo');
       span_zera_tudo_el.outerHTML = 
-        '<a title="Zera todos listados na página" href="#" onclick="return zera_tudo();">'+
+        '<a id="a_zera_tudo" title="Zera todos listados na página" href="#" onclick="return zera_tudo();">'+
         '<span class="glyphicon glyphicon-minus-sign" style="color:orange" aria-hidden="true"></span>'+
         '</a>';
 
     }
 
     function zera_tudo() {
+      document.getElementById('a_zera_tudo').style.display = "none";
       a_zera_els = document.querySelectorAll('.a_zera');
       setTimeout(() => { zera_by_idx(0); }, intervalo);
       return false;
