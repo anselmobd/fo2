@@ -63,7 +63,7 @@ class PorDepositoForm(forms.Form):
         CHOICES = geral.functions.depositos_choices(
             self.cursor,
             cod_todos='999', descr_todos='--Todos--', cod_only='A00',
-            only=(101, 102, 103, 122, 231), rest=True)
+            only=(101, 102, 231), rest=True)
         setattr(self.fields['deposito'], 'choices', CHOICES)
 
     def upper_clean(self, field_name):
