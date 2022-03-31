@@ -60,7 +60,7 @@ class ItemNoTempoForm(forms.Form):
     def mount_choices(self):
         CHOICES = geral.functions.depositos_choices(
             self.cursor,
-            only=(101, 102, 103, 122, 231), rest=True)
+            only=(101, 102, 103, 122, 231), rest=True, controle=True)
         setattr(self.fields['deposito'], 'choices', CHOICES)
 
     def clean_ref(self):
