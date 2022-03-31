@@ -34,7 +34,7 @@ class PosicaoEstoque(O2BaseGetPostView):
                 'qtd_positiva': ['Quant. Positiva', 'r'],
                 'qtd_negativa': ['Quant. Negativa', 'r'],
                 'qtd': ['Quantidade', 'r', 0],
-                'zera': [('Zera<span id="span_zera_tudo"></span>', ), 'c'],
+                'zera': [('<span id="span_zera_tudo">Zera</span>', ), 'c'],
                 'item_no_tempo': ['No tempo', 'c'],
             },
             ['header', '+style', 'decimals'],

@@ -204,26 +204,36 @@
 
       span_zera_tudo_el = document.getElementById('span_zera_tudo');
       span_zera_tudo_el.outerHTML = 
+        '<span id="text_zera_tudo">Zera</span>'+
         '<a id="a_zera_tudo" title="Zera todos listados na página" href="#" onclick="return zera_tudo();">'+
         '<span class="glyphicon glyphicon-minus-sign" style="color:orange" aria-hidden="true"></span>'+
-        '</a>';
+        '</a>'+
+        '<span id="run_zera_tudo" '+
+        'style="display:none;color:brown" '+
+        'class="rotate glyphicon glyphicon-repeat" '+
+        'aria-hidden="true"></span>';
 
     }
 
     function zera_tudo() {
       document.getElementById('a_zera_tudo').style.display = "none";
+      document.getElementById('text_zera_tudo').style.display = "none";
+      document.getElementById('run_zera_tudo').style.display = "block";
       a_zera_els = document.querySelectorAll('.a_zera');
       setTimeout(() => { zera_by_idx(0); }, intervalo);
       return false;
     }
 
     function zera_by_idx(idx) {
+      if (idx == a_zera_els.length) {
+        document.getElementById('text_zera_tudo').style.display = "inline";
+        document.getElementById('run_zera_tudo').style.display = "none";
+        return
+      }
       console.log('idx: '+idx);
       console.log('id: '+a_zera_els[idx].id)
       a_zera_els[idx].click();
-      if (idx < a_zera_els.length) {
-        setTimeout(() => { zera_by_idx(idx+1); }, intervalo);
-      }
+      setTimeout(() => { zera_by_idx(idx+1); }, intervalo);
     }
 
     window.onload = function() {
