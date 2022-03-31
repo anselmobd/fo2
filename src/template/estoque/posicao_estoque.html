@@ -112,6 +112,9 @@
 {% block javascript %}
   <script type="text/javascript">
 
+    var intervalo = 500;
+    var a_zera_els;
+
     function setPageAndSubmit(page) {
       document.getElementById('id_page').value = page;
       document.formName.submit();
@@ -177,7 +180,8 @@
         on_click = 'do_zera("'+ref1+'", "'+dep1+'");';
         console.log(zera_spans[i].id, ref1, dep1, on_click);
         zera_spans[i].outerHTML = 
-          '<a title="Zera '+ref1+' no depósito '+dep1+'"'+
+          '<a title="Zera '+ref1+' no depósito '+dep1+'" '+
+          'class="a_zera" '+
           'href="#" id="a_'+ref1+'_'+dep1+'">'+
           '<span '+
           'class="glyphicon glyphicon-minus-sign" '+
@@ -197,11 +201,33 @@
           '';
         document.getElementById('a_'+ref1+'_'+dep1).onclick = function() { return do_zera(ref1, dep1); };
       }
+
+      span_zera_tudo_el = document.getElementById('span_zera_tudo');
+      span_zera_tudo_el.outerHTML = 
+        '<a title="Zera todos listados na página" href="#" onclick="return zera_tudo();">'+
+        '<span class="glyphicon glyphicon-minus-sign" style="color:orange" aria-hidden="true"></span>'+
+        '</a>';
+
+    }
+
+    function zera_tudo() {
+      a_zera_els = document.querySelectorAll('.a_zera');
+      setTimeout(() => { zera_by_idx(0); }, intervalo);
+      return false;
+    }
+
+    function zera_by_idx(idx) {
+      console.log('idx: '+idx);
+      console.log('id: '+a_zera_els[idx].id)
+      a_zera_els[idx].click();
+      if (idx < a_zera_els.length) {
+        setTimeout(() => { zera_by_idx(idx+1); }, intervalo);
+      }
     }
 
     window.onload = function() {
-        mountZeraButtons();
-      }
+      mountZeraButtons();
+    }
 
   </script>
 {% endblock %}
