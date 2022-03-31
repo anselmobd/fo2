@@ -6,6 +6,19 @@
 {% block stylesheet %}
   <style>
     {% include 'layout/simple_table.css' %}
+
+    .rotate {
+      animation: rotation 2s infinite linear;
+    }
+    @keyframes rotation {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(359deg);
+      }
+    }
+
   </style>
 {% endblock %}
 
@@ -110,7 +123,47 @@
     }
 
     function do_zera(ref, dep) {
-      console.log(ref, dep);
+      var a_el = document.getElementById('a_'+ref+'_'+dep);
+      var run_el = document.getElementById('run_'+ref+'_'+dep);
+      var runok_el = document.getElementById('runok_'+ref+'_'+dep);
+      var runerr_el = document.getElementById('runerr_'+ref+'_'+dep);
+      a_el.style.display = "none";
+      run_el.style.display = "block";
+      runok_el.style.display = "none";
+      runerr_el.style.display = "none";
+
+      var link = '{% url 'estoque:zera_ref' 'referencia' 'deposito' %}';
+      link = link.replace('referencia', ref);
+      link = link.replace('deposito', dep);
+      console.log(link);
+
+      $.ajax({
+        type: 'GET',
+        url: link,
+        data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success : function(data) {
+          erro = '';
+          if (data) {
+            if (data['status'] == 'ERRO') {
+              console.log(data['status']);
+              runerr_el.style.display = "inline";
+            } else {
+              console.log(data['status']);
+              runok_el.style.display = "inline";
+            }
+          } else {
+            console.log('Sem retorno');
+            runerr_el.style.display = "inline";
+          }
+          run_el.style.display = "none";
+        },
+        error : function(data) {
+          console.log('Erro na requisição');
+          runerr_el.style.display = "inline";
+          run_el.style.display = "none";
+        }
+      });
+
       return false;
     }
 
@@ -126,9 +179,23 @@
         zera_spans[i].outerHTML = 
           '<a title="Zera '+ref1+' no depósito '+dep1+'"'+
           'href="#" id="a_'+ref1+'_'+dep1+'">'+
-          '<span class="glyphicon glyphicon-repeat" '+
-          'style="font-size: 1em" aria-hidden="true"></span></a>';
-        document.getElementById('a_'+ref1+'_'+dep1).onclick = function() { do_zera(ref1, dep1); };
+          '<span '+
+          'class="glyphicon glyphicon-repeat" '+
+          'aria-hidden="true"></span></a>'+
+          '<span id="run_'+ref1+'_'+dep1+'" '+
+          'style="display:none;color:brown" '+
+          'class="rotate glyphicon glyphicon-repeat" '+
+          'aria-hidden="true"></span>'+
+          '<span id="runok_'+ref1+'_'+dep1+'" '+
+          'style="display:none;color:darkgreen" '+
+          'class="glyphicon glyphicon-ok-sign" '+
+          'aria-hidden="true"></span>'+
+          '<span id="runerr_'+ref1+'_'+dep1+'" '+
+          'style="display:none;color:darkred" '+
+          'class="glyphicon glyphicon-alert" '+
+          'aria-hidden="true"></span>'+
+          '';
+        document.getElementById('a_'+ref1+'_'+dep1).onclick = function() { return do_zera(ref1, dep1); };
       }
     }
 
