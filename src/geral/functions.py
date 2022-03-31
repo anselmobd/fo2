@@ -148,7 +148,7 @@ def config_set_value(param_codigo, value, usuario=None):
 
 def depositos_choices(
         cursor, cod_todos=None, descr_todos=None, cod_only=None,
-        only=None, less=None, rest=None):
+        only=None, less=None, rest=None, controle=False):
     CHOICES = []
 
     todos = []
@@ -190,7 +190,7 @@ def depositos_choices(
             descr = deposito['DESCR']
         else:
             descr = f"{deposito['COD']} - {deposito['DESCR']}"
-            if deposito['COD'] <= 9:
+            if not controle and deposito['COD'] <= 9:
                 continue
         CHOICES.append((
             deposito['COD'],
