@@ -29,7 +29,7 @@ class ZeraRef(PermissionRequiredMixin, View):
         num_doc = '0'
         descricao = f"Zera ref. {context['ref']} no dep. {context['dep']}"
         cria_num_doc = 's'
-
+        status = 'OK'
         for row in tam_cor_qtd:
             if row['qtd'] > 0:
                 tip_mov = 'sai-bal'
@@ -67,11 +67,15 @@ class ZeraRef(PermissionRequiredMixin, View):
                 cria_num_doc = 'n'
                 row.update({'result': 'OK'})
             except Exception as e:
+                status = 'ERRO'
                 row.update({
                     'result': 'ERRO',
                     'message': str(e),
                 })
 
+        context.update({
+            'status': status,
+        })
         context['tam_cor_qtd'] = [
             {
                 k: v 
