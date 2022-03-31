@@ -32,15 +32,15 @@ class ZeraRef(PermissionRequiredMixin, View):
 
         for row in tam_cor_qtd:
             if row['qtd'] > 0:
-                tip_mov = 'ent-bal'
-                quantidade = row['qtd']
-                deposito_origem = None
-                deposito_destino = context['dep']
-            else:
                 tip_mov = 'sai-bal'
-                quantidade = -row['qtd']
+                quantidade = row['qtd']
                 deposito_origem = context['dep']
                 deposito_destino = None
+            else:
+                tip_mov = 'ent-bal'
+                quantidade = -row['qtd']
+                deposito_origem = None
+                deposito_destino = context['dep']
 
             try:
                 transf = Transfere(
@@ -76,7 +76,7 @@ class ZeraRef(PermissionRequiredMixin, View):
             {
                 k: v 
                 for k, v in d.items()
-                if k in ['tam', 'cor', 'qtd']
+                if k in ['tam', 'cor', 'qtd', 'result', 'message']
             }
             for d in tam_cor_qtd
         ]      
