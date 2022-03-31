@@ -8,7 +8,10 @@ from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
 
 from cd.forms.endereco import EnderecoForm
-from cd.functions.estante import gera_estantes_enderecos
+from cd.functions.estante import (
+    gera_estantes_enderecos,
+    gera_quarto_andar_enderecos,
+)
 from cd.queries.endereco import (
     add_endereco,
     query_endereco,
@@ -40,6 +43,16 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
                 ):
                     add_endereco(cursor, endereco)
                     count_add += 1
+        elif self.tipo == 'QA':
+            enderecos = gera_quarto_andar_enderecos()
+            for endereco in enderecos:
+                if not next(
+                    (d for d in data if d['end'] == endereco),
+                    False
+                ):
+                    add_endereco(cursor, endereco)
+                    count_add += 1
+
 
         if count_add:
             data = query_endereco(self.tipo)

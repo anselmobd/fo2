@@ -6,8 +6,9 @@ from django import forms
 class EnderecoForm(forms.Form):
     CHOICES = [
         ('TO', 'Todos'),
-        ('ES', 'Internos - Estantes (gera)'),
-        ('NE', 'Internos - não Estantes'),
+        ('ES', 'Internos - Estantes (Gera)'),
+        ('QA', 'Internos - Quarto andar (Gera)'),
+        ('NG', 'Internos - não Gerados'),
         ('IN', 'Internos - Todos'),
         ('EX', 'Externos'),
         ('A', 'Estante A'),

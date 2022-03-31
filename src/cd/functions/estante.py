@@ -75,3 +75,10 @@ def gera_estantes_enderecos():
                 else:
                     enderecos.append(endereco)
     return enderecos
+
+
+def gera_quarto_andar_enderecos():
+    return [
+        f"1Q{i:04}"
+        for i in range(1, 51)
+    ]

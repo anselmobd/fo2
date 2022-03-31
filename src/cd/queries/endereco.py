@@ -13,10 +13,14 @@ def query_endereco(tipo):
         where_tipo = [
             f"REGEXP_LIKE(e.COD_ENDERECO, '^1[ABCDEFGH][0123456789]{{4}}$')",
         ]
-    elif tipo == 'NE':
+    elif tipo == 'QA':
+        where_tipo = [
+            f"REGEXP_LIKE(e.COD_ENDERECO, '^1Q[0123456789]{{4}}$')",
+        ]
+    elif tipo == 'NG':
         where_tipo = [
             "e.COD_ENDERECO LIKE '1%'",
-            f"NOT REGEXP_LIKE(e.COD_ENDERECO, '^1[ABCDEFGH][0123456789]{{4}}$')",
+            f"NOT REGEXP_LIKE(e.COD_ENDERECO, '^1[ABCDEFGHQ][0123456789]{{4}}$')",
         ]
     elif tipo == 'IN':
         where_tipo = [
