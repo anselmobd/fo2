@@ -1,7 +1,7 @@
 from django.urls import re_path
 
 from . import views
-
+from .views import zera_ref
 
 app_name = 'estoque'
 urlpatterns = [
@@ -80,5 +80,9 @@ urlpatterns = [
          r'$'),
         views.Movimenta.as_view(),
         name='movimenta'),
+
+    re_path(r'^ajax/zera_ref/(?P<ref>[^/]+)/(?P<dep>[^/]+)/$',
+        zera_ref.ZeraRef.as_view(),
+        name='zera_ref'),
 
 ]
