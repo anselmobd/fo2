@@ -233,9 +233,11 @@
       setTimeout(() => { zera_by_idx(idx+1); }, intervalo);
     }
 
-    window.onload = function() {
-      mountZeraButtons();
-    }
+    {% if data %}
+      window.onload = function() {
+        mountZeraButtons();
+      }
+    {% endif %}
 
   </script>
 {% endblock %}
