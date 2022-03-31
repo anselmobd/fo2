@@ -140,32 +140,32 @@
       link = link.replace('deposito', dep);
       console.log(link);
 
-      // $.ajax({
-      //   type: 'GET',
-      //   url: link,
-      //   data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
-      //   success : function(data) {
-      //     erro = '';
-      //     if (data) {
-      //       if (data['status'] == 'ERRO') {
-      //         console.log(data['status']);
-      //         runerr_el.style.display = "inline";
-      //       } else {
-      //         console.log(data['status']);
-      //         runok_el.style.display = "inline";
-      //       }
-      //     } else {
-      //       console.log('Sem retorno');
-      //       runerr_el.style.display = "inline";
-      //     }
-      //     run_el.style.display = "none";
-      //   },
-      //   error : function(data) {
-      //     console.log('Erro na requisição');
-      //     runerr_el.style.display = "inline";
-      //     run_el.style.display = "none";
-      //   }
-      // });
+      $.ajax({
+        type: 'GET',
+        url: link,
+        data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success : function(data) {
+          erro = '';
+          if (data) {
+            if (data['status'] == 'ERRO') {
+              console.log(data['status']);
+              runerr_el.style.display = "inline";
+            } else {
+              console.log(data['status']);
+              runok_el.style.display = "inline";
+            }
+          } else {
+            console.log('Sem retorno');
+            runerr_el.style.display = "inline";
+          }
+          run_el.style.display = "none";
+        },
+        error : function(data) {
+          console.log('Erro na requisição');
+          runerr_el.style.display = "inline";
+          run_el.style.display = "none";
+        }
+      });
 
       return false;
     }
