@@ -35,36 +35,18 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
         cursor = db_cursor_so(self.request)
         data = query_endereco(self.tipo)
 
-        count_add = 0
+        enderecos = []
         if self.tipo == 'ES':
             enderecos = gera_estantes_enderecos()
-            for endereco in enderecos:
-                if not next(
-                    (d for d in data if d['end'] == endereco),
-                    False
-                ):
-                    add_endereco(cursor, endereco)
-                    count_add += 1
         elif self.tipo == 'QA':
             enderecos = gera_quarto_andar_enderecos()
-            for endereco in enderecos:
-                if not next(
-                    (d for d in data if d['end'] == endereco),
-                    False
-                ):
-                    add_endereco(cursor, endereco)
-                    count_add += 1
         elif self.tipo == 'LA':
             enderecos = gera_lateral_enderecos()
-            for endereco in enderecos:
-                if not next(
-                    (d for d in data if d['end'] == endereco),
-                    False
-                ):
-                    add_endereco(cursor, endereco)
-                    count_add += 1
         elif self.tipo == 'S':
             enderecos = gera_externos_s_enderecos()
+
+        if enderecos:
+            count_add = 0
             for endereco in enderecos:
                 if not next(
                     (d for d in data if d['end'] == endereco),
@@ -73,9 +55,8 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
                     add_endereco(cursor, endereco)
                     count_add += 1
 
-
-        if count_add:
-            data = query_endereco(self.tipo)
+            if count_add:
+                data = query_endereco(self.tipo)
 
         data = paginator_basic(data, 50, self.page)
 
