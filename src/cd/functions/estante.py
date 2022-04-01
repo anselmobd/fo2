@@ -82,3 +82,10 @@ def gera_quarto_andar_enderecos():
         f"1Q{i:04}"
         for i in range(1, 51)
     ]
+
+
+def gera_lateral_enderecos():
+    return [
+        f"1L{i:04}"
+        for i in range(1, 15)
+    ]

@@ -8,6 +8,7 @@ class EnderecoForm(forms.Form):
         ('TO', 'Todos'),
         ('ES', 'Internos - Estantes (Gera)'),
         ('QA', 'Internos - Quarto andar (Gera)'),
+        ('LA', 'Internos - Lateral (Gera)'),
         ('NG', 'Internos - não Gerados'),
         ('IN', 'Internos - Todos'),
         ('EX', 'Externos'),
