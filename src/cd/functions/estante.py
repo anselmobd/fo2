@@ -89,3 +89,10 @@ def gera_lateral_enderecos():
         f"1L{i:04}"
         for i in range(1, 15)
     ]
+
+
+def gera_externos_s_enderecos():
+    return [
+        f"2S{i:04}"
+        for i in range(1, 168)
+    ]
