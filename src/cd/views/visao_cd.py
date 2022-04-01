@@ -61,17 +61,20 @@ class VisaoCd(View):
             if row['rua'] in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
                 row['order'] = 1
                 row['area'] = 'Estantes'
-            elif row['rua'].startswith('Q'):
+            elif row['rua'].startswith('QA'):
                 row['order'] = 2
                 row['area'] = 'Quarto andar'
+            elif row['rua'].startswith('LB'):
+                row['order'] = 3
+                row['area'] = 'Lateral'
             elif (
                     row['rua'].startswith('S') or
                     row['rua'].startswith('Y')
                  ):
-                row['order'] = 3
+                row['order'] = 4
                 row['area'] = 'Externo'
             else:
-                row['order'] = 4
+                row['order'] = 5
                 row['area'] = 'Indefinido'
 
         data.sort(key=operator.itemgetter('order', 'rua'))
