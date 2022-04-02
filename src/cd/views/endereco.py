@@ -58,6 +58,10 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
             if count_add:
                 data = query_endereco(self.tipo)
 
+        self.context.update({
+            'quant': len(data),
+        })
+
         data = paginator_basic(data, 50, self.page)
 
         if self.tipo == 'TO':

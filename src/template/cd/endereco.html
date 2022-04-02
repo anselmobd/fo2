@@ -79,6 +79,7 @@
     {% endwith %}
 
     <table>
+      <h4>{{quant}} endereços encontrados</h4>
       {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data only %}
     </table>
