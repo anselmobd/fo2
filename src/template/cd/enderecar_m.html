@@ -11,6 +11,10 @@ table {
 {% endblock %}
 
 {% block content %}
+<h4>Rotina desligada</h4>
+{% endblock content %}
+
+{% block content_OFF %}
 <div class="row">
   <div class="leftcol50">
     <p>
@@ -83,9 +87,9 @@ table {
     </table>
   {% endif %}
 {% endif %}
-{% endblock content %}
+{% endblock content_OFF %}
 
-{% block javascript %}
+{% block javascript_OFF %}
 <script>
   var inp = document.getElementById('id_lote');
   inp.select();
@@ -136,4 +140,4 @@ table {
   {% endif %}
 
 </script>
-{% endblock javascript %}
+{% endblock javascript_OFF %}
