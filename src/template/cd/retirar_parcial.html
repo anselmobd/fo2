@@ -10,6 +10,10 @@
 {% endblock %}
 
 {% block content %}
+<h4>Rotina desligada</h4>
+{% endblock content %}
+
+{% block content_OFF %}
 <h4 class="visible-xs">{{ titulo }}</h4>
 <form action="{% url 'cd:retirar_parcial' %}" method="post">
     {% csrf_token %}
@@ -63,9 +67,9 @@
     </table>
   {% endif %}
 {% endif %}
-{% endblock content %}
+{% endblock content_OFF %}
 
-{% block javascript %}
+{% block javascript_OFF %}
 <script>
   var inp = document.getElementById('id_lote');
   inp.select();
@@ -95,4 +99,4 @@
   {% endif %}
 
 </script>
-{% endblock javascript %}
+{% endblock javascript_OFF %}
