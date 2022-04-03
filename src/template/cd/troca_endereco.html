@@ -10,6 +10,10 @@
 {% endblock %}
 
 {% block content %}
+<h4>Rotina desligada</h4>
+{% endblock content %}
+
+{% block content_OFF %}
 <h3 class="visible-xs">{{ titulo }}</h3>
 <form action="{% url 'cd:troca_endereco' %}" method="post">
     {% csrf_token %}
@@ -47,4 +51,4 @@
     </table>
   {% endif %}
 {% endif %}
-{% endblock content %}
+{% endblock content_OFF %}
