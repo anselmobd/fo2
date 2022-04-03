@@ -64,7 +64,7 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
 
         data = paginator_basic(data, 50, self.page)
 
-        if self.tipo == 'TO':
+        if self.tipo in ('TO', 'IN'):
             headers = ['Espaço']
             fields = ['espaco']
         else:            
