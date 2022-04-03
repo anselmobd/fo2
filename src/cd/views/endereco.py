@@ -36,13 +36,13 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
         data = query_endereco(self.tipo)
 
         enderecos = []
-        if self.tipo == 'ES':
+        if self.tipo == 'IE':
             enderecos = gera_estantes_enderecos()
-        elif self.tipo == 'QA':
+        elif self.tipo == 'IQ':
             enderecos = gera_quarto_andar_enderecos()
-        elif self.tipo == 'LA':
+        elif self.tipo == 'IL':
             enderecos = gera_lateral_enderecos()
-        elif self.tipo == 'S':
+        elif self.tipo == 'EL':
             enderecos = gera_externos_s_enderecos()
 
         if enderecos:
@@ -64,7 +64,7 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
 
         data = paginator_basic(data, 50, self.page)
 
-        if self.tipo in ('TO', 'IN'):
+        if self.tipo in ('TO', 'IT', 'ET'):
             headers = ['Espaço']
             fields = ['espaco']
         else:            

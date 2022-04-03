@@ -9,35 +9,39 @@ from utils.functions.queries import debug_cursor_execute
 
 def query_endereco(tipo):
     where_tipo = []
-    if tipo == 'ES':
+    if tipo == 'IE':
         where_tipo = [
             f"REGEXP_LIKE(e.COD_ENDERECO, '^1[ABCDEFGH][0123456789]{{4}}$')",
         ]
-    elif tipo == 'QA':
+    elif tipo == 'IQ':
         where_tipo = [
             f"REGEXP_LIKE(e.COD_ENDERECO, '^1Q[0123456789]{{4}}$')",
         ]
-    elif tipo == 'LA':
+    elif tipo == 'IL':
         where_tipo = [
             f"REGEXP_LIKE(e.COD_ENDERECO, '^1L[0123456789]{{4}}$')",
-        ]
-    elif tipo == 'NG':
-        where_tipo = [
-            "e.COD_ENDERECO LIKE '1%'",
-            f"NOT REGEXP_LIKE(e.COD_ENDERECO, '^1[ABCDEFGHLQ][0123456789]{{4}}$')",
         ]
     elif tipo == 'IN':
         where_tipo = [
             "e.COD_ENDERECO LIKE '1%'",
+            f"NOT REGEXP_LIKE(e.COD_ENDERECO, '^1[ABCDEFGHLQ][0123456789]{{4}}$')",
         ]
-    elif tipo == 'S':
+    elif tipo == 'IT':
+        where_tipo = [
+            "e.COD_ENDERECO LIKE '1%'",
+        ]
+    elif tipo == 'EL':
         where_tipo = [
             f"REGEXP_LIKE(e.COD_ENDERECO, '^2S[0123456789]{{4}}$')",
         ]
-    elif tipo == 'EX':
+    elif tipo == 'EN':
         where_tipo = [
             "e.COD_ENDERECO LIKE '2%'",
             f"NOT REGEXP_LIKE(e.COD_ENDERECO, '^2S[0123456789]{{4}}$')",
+        ]
+    elif tipo == 'ET':
+        where_tipo = [
+            "e.COD_ENDERECO LIKE '2%'",
         ]
     elif tipo != 'TO':
         where_tipo = [
