@@ -2,12 +2,11 @@ import operator
 import re
 from pprint import pprint
 
-from systextil.queries.base import SMountQuery
-
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def query_endereco(tipo):
+def query_endereco(cursor, tipo):
     where_tipo = []
     if tipo == 'IE':
         where_tipo = [
@@ -47,18 +46,29 @@ def query_endereco(tipo):
         where_tipo = [
             f"REGEXP_LIKE(e.COD_ENDERECO, '^1{tipo}[0123456789]{{4}}$')",
         ]
-    data = SMountQuery(
-        fields=[
-          "e.COD_ENDERECO end",
-          "e.ROTA",
-        ],
-        table="ENDR_013 e",
-        where=where_tipo,
-        order=[
-          f"e.COD_ENDERECO",
-        ],
-    ).oquery.debug_execute()
+    field_list=[
+        "e.COD_ENDERECO end",
+        "e.ROTA",
+    ]
+    order_list=[
+        f"e.COD_ENDERECO",
+    ]
 
+    where = "\n  AND ".join(where_tipo) if where_tipo else ""
+    fields = "\n, ".join(field_list)
+    order = "\n, ".join(order_list) if order_list else ""
+
+    sql = f"""
+        select
+          {fields}
+        from ENDR_013 e
+        where {where}
+        order by {order}
+    """
+   
+    debug_cursor_execute(cursor, sql)
+    data = dictlist(cursor)
+    
     for row in data:
         parts = endereco_split(row['end'])
         tamanho = len(row['end'])

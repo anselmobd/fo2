@@ -33,7 +33,7 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
-        data = query_endereco(self.tipo)
+        data = query_endereco(cursor, self.tipo)
 
         enderecos = []
         if self.tipo == 'IE':
