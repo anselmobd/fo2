@@ -70,8 +70,8 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
         else:            
             headers = []
             fields = []
-        headers += ['Endereço', 'Rota']
-        fields += ['end', 'rota']
+        headers += ["Endereço", "Rota", "Palete"]
+        fields += ['end', 'rota', 'palete']
 
         self.context.update({
             'headers': headers,

@@ -49,6 +49,7 @@ def query_endereco(cursor, tipo):
     field_list=[
         "e.COD_ENDERECO end",
         "e.ROTA",
+        "c.COD_CONTAINER palete"
     ]
     order_list=[
         f"e.COD_ENDERECO",
@@ -62,6 +63,8 @@ def query_endereco(cursor, tipo):
         select
           {fields}
         from ENDR_013 e
+        left join ENDR_012 c -- container palete
+          on c.ENDERECO = e.COD_ENDERECO
         where {where}
         order by {order}
     """
@@ -70,6 +73,8 @@ def query_endereco(cursor, tipo):
     data = dictlist(cursor)
     
     for row in data:
+        if not row['palete']:
+            row['palete'] = '-'
         parts = endereco_split(row['end'])
         tamanho = len(row['end'])
         row['bloco'] = parts['bloco']
