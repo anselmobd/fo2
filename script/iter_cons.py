@@ -427,7 +427,58 @@ lin_ini = 8213
 lin_count = 2000
 do_arq()
 
+##########################################################################
+# tira tudo do conserto - 2022-04-03
+##########################################################################
 
+from pprint import pprint
+import lotes.models
+from lotes.views.lote.conserto_lote import dict_conserto_lote_custom
+
+from fo2.connections import db_conn_so
+cursor = db_conn_so().cursor()
+
+from django.contrib.auth.models import User
+usuario = User.objects.get(username='anselmo_sis')
+
+from collections import namedtuple
+
+
+pprint(dict_conserto_lote_custom(
+    cursor, '201803445', '63', 'out', 0, username='anselmo_sis'
+))
+pprint(dict_conserto_lote_custom(
+    cursor, '191402902', '63', 'out', 0, username='anselmo_sis'
+))
+
+
+sql = """
+    SELECT DISTINCT 
+      l.PERIODO_PRODUCAO PER
+    , l.ORDEM_CONFECCAO OC
+    FROM PCPC_040 l
+    WHERE 1=1
+      AND l.QTDE_CONSERTO <> 0
+      AND l.CODIGO_ESTAGIO = 63
+"""
+dados = list(cursor.execute(sql))
+pprint(dados[:2])
+
+Lote = namedtuple('Lote', ['per', 'oc'])
+
+lotes = []
+for row in dados:
+    lotes.append(
+        "{lote.per}{lote.oc:05}".format(lote=Lote(*row))
+    )
+
+pprint(lotes[:2])
+
+for idx, lote in enumerate(lotes[:1000]):
+    print(idx+1)
+    pprint(dict_conserto_lote_custom(
+        cursor, lote, '63', 'out', 0, username='anselmo_sis'
+    ))
 
 
 
