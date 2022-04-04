@@ -187,8 +187,18 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def end_novo_para_antigo(self, endereco):
-        if endereco[1] in 'ABCDEFGH':
+        if endereco[1] in 'ABCEFGH':
             return endereco[1]+endereco[3:]
+        elif endereco[1] == 'D':
+            andar = int(endereco[2:4])
+            coluna = int(endereco[4:6])
+            if coluna > 22:
+                coluna -= 4
+            elif coluna > 14:
+                coluna -= 3
+            elif coluna > 6:
+                coluna -= 1
+            return f'1D{andar:1}{coluna:02}'
         elif endereco[1] == 'L':
             return endereco[1:2]+'B'+endereco[3:]
         elif endereco[1] == 'Q':
@@ -240,6 +250,8 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         if not end_antigo:
             return {endereco: 'sem endereço antigo'}
 
+        # return {endereco: 'debug'}
+        
         lotes_a = self.lotes_end_apoio(end_antigo)
         pprint(lotes_a)
 
