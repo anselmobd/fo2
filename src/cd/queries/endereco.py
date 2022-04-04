@@ -188,6 +188,7 @@ def lotes_em_endereco(cursor, endereco):
         SELECT
           lp.ORDEM_PRODUCAO op
         , lp.ORDEM_CONFECCAO lote
+        , UPPER(lp.COD_CONTAINER) palete
         FROM ENDR_014 lp -- lote/palete - oc/container
         JOIN ENDR_015 ec -- endereço/container
           ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
