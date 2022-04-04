@@ -205,16 +205,11 @@ def lotes_em_endereco(cursor, endereco):
     return dictlist(cursor)
 
 
-def add_lote_in_endereco(cursor, endereco):
-    """Cria endereco no banco de dados
-    Recebe: cursor e endereco a ser criado
-    Retorna: Se sucesso, None, senão, mensagem de erro
-    """
-    rota = calc_rota(endereco)
+def add_lote_in_endereco(cursor, endereco, op, lote):
     sql = f"""
-        INSERT INTO SYSTEXTIL.ENDR_013
-        (RUA, BOX, ALTURA, COD_ENDERECO, EMPRESA, PROCESSO, SITUACAO, TIPO_ENDERECO, ROTA)
-        VALUES(NULL, NULL, NULL, '{endereco}', 1, 1, '1', '1', '{rota}')
+        INSERT INTO SYSTEXTIL.ENDR_014
+        (COD_CONTAINER, ORDEM_PRODUCAO, ORDEM_CONFECCAO, DATA_INCLUSAO, NIVEL, GRUPO, SUB, ITEM, QUANTIDADE)
+        VALUES('{endereco}', {op}, '{lote}', CURRENT_TIMESTAMP, NULL, NULL, NULL, NULL, 0);
     """
     try:
         debug_cursor_execute(cursor, sql)
