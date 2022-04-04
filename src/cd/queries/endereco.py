@@ -182,3 +182,16 @@ def add_endereco(cursor, endereco):
         debug_cursor_execute(cursor, sql)
     except Exception as e:
         return repr(e)
+
+def lotes_em_endereco(cursor, endereco):
+    sql = f"""
+        SELECT
+        lp.ORDEM_CONFECCAO lote
+        FROM ENDR_014 lp -- lote/palete - oc/container
+        JOIN ENDR_015 ec -- endereço/container
+        ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
+        WHERE 1=1
+        AND ec.COD_ENDERECO = '{endereco}'
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
