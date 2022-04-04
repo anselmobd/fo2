@@ -186,17 +186,38 @@ def add_endereco(cursor, endereco):
 def lotes_em_endereco(cursor, endereco):
     sql = f"""
         SELECT
-          lp.ORDEM_PRODUCAO op
+          e.COD_ENDERECO endereco
+        , UPPER(ec.COD_CONTAINER) palete
+        , lp.ORDEM_PRODUCAO op
         , lp.ORDEM_CONFECCAO lote
-        , UPPER(lp.COD_CONTAINER) palete
-        FROM ENDR_014 lp -- lote/palete - oc/container
-        JOIN ENDR_015 ec -- endereço/container
-          ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
+        FROM ENDR_013 e -- endereço
+        LEFT JOIN ENDR_015 ec -- endereço/container
+          ON ec.COD_ENDERECO = e.COD_ENDERECO 
+        LEFT JOIN ENDR_014 lp -- lote/palete - oc/container
+          ON UPPER(lp.COD_CONTAINER) = UPPER(ec.COD_CONTAINER)
         WHERE 1=1
-          AND ec.COD_ENDERECO = '{endereco}'
+          AND e.COD_ENDERECO = '{endereco}'
         ORDER BY
           lp.ORDEM_PRODUCAO
         , lp.ORDEM_CONFECCAO
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
+
+
+def add_lote_in_endereco(cursor, endereco):
+    """Cria endereco no banco de dados
+    Recebe: cursor e endereco a ser criado
+    Retorna: Se sucesso, None, senão, mensagem de erro
+    """
+    rota = calc_rota(endereco)
+    sql = f"""
+        INSERT INTO SYSTEXTIL.ENDR_013
+        (RUA, BOX, ALTURA, COD_ENDERECO, EMPRESA, PROCESSO, SITUACAO, TIPO_ENDERECO, ROTA)
+        VALUES(NULL, NULL, NULL, '{endereco}', 1, 1, '1', '1', '{rota}')
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+    except Exception as e:
+        return repr(e)
+
