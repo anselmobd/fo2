@@ -284,15 +284,17 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         self.final = self.final.upper()
 
         self.data = query_endereco(self.cursor, 'TO')
+        pprint(self.data[:2])
 
         self.primeiro = next(
             (
                 idx for idx, row in enumerate(self.data)
-                if row["end"] == self.inicial
+                if row['end'] == self.inicial
             )
+            , None
         )
         pprint(self.primeiro)
-        if not self.primeiro:
+        if self.primeiro is None:
             self.context.update({
                 'mensagem': 'Endereço inicial não existe',
             })
@@ -301,11 +303,12 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         self.ultimo = next(
             (
                 idx for idx, row in enumerate(self.data)
-                if row["end"] == self.final
+                if row['end'] == self.final
             )
+            , None
         )
         pprint(self.ultimo)
-        if not self.ultimo:
+        if self.ultimo is None:
             self.context.update({
                 'mensagem': 'Endereço final não existe',
             })
@@ -317,4 +320,4 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
             })
             return
 
-        self.importa()
+        # self.importa()
