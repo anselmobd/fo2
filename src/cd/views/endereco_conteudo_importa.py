@@ -1,4 +1,5 @@
-from pprint import pprint
+from pprint import pprint, pformat
+from collections import OrderedDict
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -56,7 +57,7 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         pprint(self.lotes_s)
 
         if not palete:
-            return
+            return {endereco: 'sem palete'}
 
         end_antigo = self.end_novo_para_antigo(
             endereco)
@@ -64,21 +65,38 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         print(end_antigo)
         pprint(lotes_a)
 
+        result = {}
         for row_a in lotes_a:
             if not self.row_exist(row_a):
                 print('inclui em', palete)
                 pprint(row_a)
-                add_lote_in_endereco(
+                if add_lote_in_endereco(
                     self.cursor,
                     palete,
                     row_a['op'],
                     row_a['lote'],
-                )
-                return
+                ):
+                    key = 'OK'
+                else:
+                    key = 'ERRO'
+                try:
+                    result[key].append(row_a['lote'])
+                except Exception:
+                    result[key] = [row_a['lote']]
+                # break
+                
+        return {endereco: result}
 
     def importa(self):
+        result = OrderedDict()
         for row in self.data[self.primeiro:self.ultimo+1]:
-            self.importa_end(row['end'])
+            result.update(
+                self.importa_end(row['end'])
+            )
+        self.context.update({
+            'mensagem': 'Processado',
+            'log': pformat(result),
+        })
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -120,7 +138,4 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
             })
             return
 
-        if self.importa():
-            self.context.update({
-                'mensagem': 'OK!',
-            })
+        self.importa()

@@ -19,5 +19,8 @@
     {% if mensagem %}
       <h4>{{mensagem}}</h4>
     {% endif %}
+    {% if log %}
+      <pre>{{log}}</pre>
+    {% endif %}
   {% endif %}
 {% endblock content %}
