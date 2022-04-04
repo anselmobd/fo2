@@ -193,6 +193,9 @@ def lotes_em_endereco(cursor, endereco):
           ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
         WHERE 1=1
           AND ec.COD_ENDERECO = '{endereco}'
+        ORDER BY
+          lp.ORDEM_PRODUCAO
+        , lp.ORDEM_CONFECCAO
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
