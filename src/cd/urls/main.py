@@ -3,6 +3,7 @@ from django.urls import include, re_path
 import cd.views as views
 from cd.views import (
     api_palete,
+    compara_apoio_systextil,
     endereco,
     endereco_imprime,
     endereco_conteudo_importa,
@@ -135,5 +136,9 @@ urlpatterns = [
     re_path(r'^endereco_conteudo_importa/$',
         endereco_conteudo_importa.EnderecoImporta.as_view(),
         name='endereco_conteudo_importa'),
+
+    re_path(r'^compara_apoio_systextil/$',
+        compara_apoio_systextil.ComparaApoioSystextil.as_view(),
+        name='compara_apoio_systextil'),
 
 ]

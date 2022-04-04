@@ -134,7 +134,6 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         '2S0111': {'palete':'PLT0911', 'antigo': 'S140'},
         '2S0112': {'palete':'PLT0912', 'antigo': 'YB103'},
         '2S0113': {'palete':'PLT0913', 'antigo': 'YB104'},
-        '2S0114': {'palete':'PLT0914', 'antigo': 'S040'},
         '2S0115': {'palete':'PLT0915', 'antigo': 'S038'},
         '2S0116': {'palete':'PLT0916', 'antigo': 'YB100'},
         '2S0117': {'palete':'PLT0917', 'antigo': 'YB101'},
