@@ -186,12 +186,13 @@ def add_endereco(cursor, endereco):
 def lotes_em_endereco(cursor, endereco):
     sql = f"""
         SELECT
-        lp.ORDEM_CONFECCAO lote
+          lp.ORDEM_PRODUCAO op
+        , lp.ORDEM_CONFECCAO lote
         FROM ENDR_014 lp -- lote/palete - oc/container
         JOIN ENDR_015 ec -- endereço/container
-        ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
+          ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
         WHERE 1=1
-        AND ec.COD_ENDERECO = '{endereco}'
+          AND ec.COD_ENDERECO = '{endereco}'
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
