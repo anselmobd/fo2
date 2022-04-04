@@ -213,6 +213,6 @@ def add_lote_in_endereco(cursor, endereco, op, lote):
     """
     try:
         debug_cursor_execute(cursor, sql)
+        return True
     except Exception as e:
-        return repr(e)
-
+        return False
