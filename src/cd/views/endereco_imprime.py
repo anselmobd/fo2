@@ -2,6 +2,8 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
+from fo2.connections import db_cursor_so
+
 from base.views import O2BaseGetPostView
 from utils.classes import TermalPrint
 
@@ -81,10 +83,12 @@ class EnderecoImprime(PermissionRequiredMixin, O2BaseGetPostView):
             teg.printer_end()
 
     def mount_context(self):
+        cursor = db_cursor_so(self.request)
+
         self.inicial = self.inicial.upper()
         self.final = self.final.upper()
 
-        self.data = query_endereco('TO')
+        self.data = query_endereco(cursor, 'TO')
 
         if not next(
             (

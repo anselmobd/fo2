@@ -56,7 +56,7 @@ class Endereco(PermissionRequiredMixin, O2BaseGetPostView):
                     count_add += 1
 
             if count_add:
-                data = query_endereco(self.tipo)
+                data = query_endereco(cursor, self.tipo)
 
         self.context.update({
             'quant': len(data),
