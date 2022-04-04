@@ -320,4 +320,4 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
             })
             return
 
-        # self.importa()
+        self.importa()
