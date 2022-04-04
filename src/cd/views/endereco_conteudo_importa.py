@@ -28,9 +28,27 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         self.title_name = 'Importa conteudo de endereços'
         self.cleaned_data2self = True
 
+    def end_novo_para_antigo(self, endereco):
+        if endereco[1] in 'ABCDEFGH':
+            return endereco[1]+endereco[3:]
+
+    def lotes_end_apoio(self, endereco):
+        data_rec = lotes.models.Lote.objects
+        data_rec = data_rec.filter(local=endereco)
+        data_rec = data_rec.order_by('op', 'lote')
+        data = data_rec.values('op', 'lote')
+        return list(data)
+
     def importa(self):
         lotes_s = lotes_em_endereco(self.cursor, self.inicial)
+        print(self.inicial)
         pprint(lotes_s)
+
+        end_antigo = self.end_novo_para_antigo(
+            self.inicial)
+        lotes_a = self.lotes_end_apoio(end_antigo)
+        print(end_antigo)
+        pprint(lotes_a)
 
         self.context.update({
             'mensagem': f'{len(lotes_s)} lotes',
