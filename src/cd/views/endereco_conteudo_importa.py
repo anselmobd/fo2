@@ -10,7 +10,10 @@ from utils.classes import TermalPrint
 import lotes.models
 
 from cd.forms.endereco import EnderecoImprimeForm
-from cd.queries.endereco import query_endereco
+from cd.queries.endereco import (
+    lotes_em_endereco, 
+    query_endereco,
+)
 
 
 class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
@@ -26,18 +29,21 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
 
     def importa(self):
+        lotes_s = lotes_em_endereco(self.cursor, self.inicial)
+        pprint(lotes_s)
+
         self.context.update({
-            'mensagem': 'problema',
+            'mensagem': f'{len(lotes_s)} lotes',
         })
         return False
 
     def mount_context(self):
-        cursor = db_cursor_so(self.request)
+        self.cursor = db_cursor_so(self.request)
 
         self.inicial = self.inicial.upper()
         self.final = self.final.upper()
 
-        self.data = query_endereco(cursor, 'TO')
+        self.data = query_endereco(self.cursor, 'TO')
 
         if not next(
             (

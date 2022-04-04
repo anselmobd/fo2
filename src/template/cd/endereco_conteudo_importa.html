@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <form action="{% url 'cd:endereco_imprime' %}" method="post" name="formName">
+  <form action="{% url 'cd:endereco_conteudo_importa' %}" method="post" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="importa" value="Importa"/>
