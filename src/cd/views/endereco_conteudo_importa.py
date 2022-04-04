@@ -198,7 +198,7 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
                 coluna -= 3
             elif coluna > 6:
                 coluna -= 1
-            return f'1D{andar:1}{coluna:02}'
+            return f'D{andar:1}{coluna:02}'
         elif endereco[1] == 'L':
             return endereco[1:2]+'B'+endereco[3:]
         elif endereco[1] == 'Q':
