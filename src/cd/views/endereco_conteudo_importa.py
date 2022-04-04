@@ -11,6 +11,7 @@ import lotes.models
 
 from cd.forms.endereco import EnderecoImprimeForm
 from cd.queries.endereco import (
+    add_lote_in_endereco,
     lotes_em_endereco, 
     query_endereco,
 )
@@ -39,21 +40,45 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         data = data_rec.values('op', 'lote')
         return list(data)
 
-    def importa(self):
-        lotes_s = lotes_em_endereco(self.cursor, self.inicial)
-        print(self.inicial)
-        pprint(lotes_s)
+    def row_exist(self, row_a):
+        for row_s in self.lotes_s:
+            if (
+                row_s['op'] == row_a['op'] and
+                row_s['lote'] == row_a['lote']
+            ):
+                return True
+        return False
+
+    def importa_end(self, endereco):
+        self.lotes_s = lotes_em_endereco(self.cursor, endereco)
+        palete = self.lotes_s[0]['palete']
+        print(endereco)
+        pprint(self.lotes_s)
+
+        if not palete:
+            return
 
         end_antigo = self.end_novo_para_antigo(
-            self.inicial)
+            endereco)
         lotes_a = self.lotes_end_apoio(end_antigo)
         print(end_antigo)
         pprint(lotes_a)
 
-        self.context.update({
-            'mensagem': f'{len(lotes_s)} lotes',
-        })
-        return False
+        for row_a in lotes_a:
+            if not self.row_exist(row_a):
+                print('inclui em', palete)
+                pprint(row_a)
+                add_lote_in_endereco(
+                    self.cursor,
+                    palete,
+                    row_a['op'],
+                    row_a['lote'],
+                )
+                return
+
+    def importa(self):
+        for row in self.data[self.primeiro:self.ultimo+1]:
+            self.importa_end(row['end'])
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
@@ -63,27 +88,35 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
 
         self.data = query_endereco(self.cursor, 'TO')
 
-        if not next(
+        self.primeiro = next(
             (
-                row for row in self.data
+                idx for idx, row in enumerate(self.data)
                 if row["end"] == self.inicial
-            ),
-            False
-        ):
+            )
+        )
+        pprint(self.primeiro)
+        if not self.primeiro:
             self.context.update({
                 'mensagem': 'Endereço inicial não existe',
             })
             return
 
-        if not next(
+        self.ultimo = next(
             (
-                row for row in self.data
+                idx for idx, row in enumerate(self.data)
                 if row["end"] == self.final
-            ),
-            False
-        ):
+            )
+        )
+        pprint(self.ultimo)
+        if not self.ultimo:
             self.context.update({
                 'mensagem': 'Endereço final não existe',
+            })
+            return
+
+        if self.ultimo < self.primeiro:
+            self.context.update({
+                'mensagem': 'Endereço final anterior ao inicial',
             })
             return
 
