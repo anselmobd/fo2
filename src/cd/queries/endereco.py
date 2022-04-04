@@ -205,6 +205,26 @@ def lotes_em_endereco(cursor, endereco):
     return dictlist(cursor)
 
 
+def lotes_em_palete(cursor, palete):
+    sql = f"""
+        SELECT
+          ec.COD_ENDERECO endereco
+        , lp.COD_CONTAINER palete
+        , lp.ORDEM_PRODUCAO op
+        , lp.ORDEM_CONFECCAO lote
+        FROM ENDR_014 lp -- lote/palete - oc/container
+        LEFT JOIN ENDR_015 ec -- endereço/container
+          ON ec.COD_CONTAINER = lp.COD_CONTAINER 
+        WHERE 1=1
+          AND lp.COD_CONTAINER = '{palete}'
+        ORDER BY
+          lp.ORDEM_PRODUCAO
+        , lp.ORDEM_CONFECCAO
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
+
+
 def add_lote_in_endereco(cursor, endereco, op, lote):
     sql = f"""
         INSERT INTO SYSTEXTIL.ENDR_014
