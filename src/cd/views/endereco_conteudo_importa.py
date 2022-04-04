@@ -13,7 +13,8 @@ import lotes.models
 from cd.forms.endereco import EnderecoImprimeForm
 from cd.queries.endereco import (
     add_lote_in_endereco,
-    lotes_em_endereco, 
+    lotes_em_endereco,
+    lotes_em_palete,
     query_endereco,
 )
 
@@ -217,14 +218,15 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         return False
 
     def importa_end(self, endereco):
-        self.lotes_s = lotes_em_endereco(self.cursor, endereco)
         if endereco[1] == 'S':
             palete = (
                 self.externos[endereco]['palete']
                 if endereco in self.externos
                 else None
             )
+            self.lotes_s = lotes_em_palete(self.cursor, palete)
         else:
+            self.lotes_s = lotes_em_endereco(self.cursor, endereco)
             palete = self.lotes_s[0]['palete']
         print(endereco)
         pprint(self.lotes_s)
