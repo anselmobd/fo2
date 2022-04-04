@@ -32,7 +32,7 @@ class ComparaApoioSystextil(O2BaseGetView):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
-        data = query_endereco(cursor, 'IL')
+        data = query_endereco(cursor, 'TO')
 
         view_aux = EnderecoImporta()
         ends_importados = set()

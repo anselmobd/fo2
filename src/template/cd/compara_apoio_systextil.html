@@ -73,6 +73,7 @@
     {% endwith %}
     {% endwith %}
 
+    <h4>{{data|length}} endereços</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data only %}
