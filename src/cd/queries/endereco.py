@@ -49,23 +49,24 @@ def query_endereco(cursor, tipo):
     field_list=[
         "e.COD_ENDERECO end",
         "e.ROTA",
-        "c.COD_CONTAINER palete"
+        "ec.COD_CONTAINER palete",
     ]
     order_list=[
         f"e.COD_ENDERECO",
     ]
-
     where = "\n  AND ".join(where_tipo) if where_tipo else ""
+    qwhere = " ".join(["WHERE", where]) if where else "-- where"
+
     fields = "\n, ".join(field_list)
     order = "\n, ".join(order_list) if order_list else ""
 
     sql = f"""
         select
           {fields}
-        from ENDR_013 e
-        left join ENDR_012 c -- container palete
-          on c.ENDERECO = e.COD_ENDERECO
-        where {where}
+        from ENDR_013 e -- endereço
+        left join ENDR_015 ec -- endereço/container
+          on ec.COD_ENDERECO = e.COD_ENDERECO
+        {qwhere}
         order by {order}
     """
    
