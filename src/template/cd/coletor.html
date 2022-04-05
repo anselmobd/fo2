@@ -1,0 +1,18 @@
+{% extends 'cd/layout_m.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="leftcol50">
+    <p>
+      Coletor
+    </p>
+  </div>
+  <div class="rightcol50">
+    <a class="botao back" href="{% url 'cd:index' %}">CD</a>
+  </div>
+</div>
+<hr>
+<a class="botao regular" href="{% url 'cd:conteudo_palete' %}">Conteúdo de endereço</a>
+<!-- <div class="hspace"></div> -->
+<!-- <a class="botao regular" href="{% url 'cd:troca_endereco_m' %}">Troca de endereço</a> -->
+{% endblock %}

@@ -146,4 +146,6 @@ urlpatterns = [
         conteudo_palete.ConteudoPalete.as_view(),
         name='conteudo_palete'),
 
+    re_path(r'^coletor/$', views.coletor, name='coletor'),
+
 ]

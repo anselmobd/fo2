@@ -15,5 +15,9 @@ def movimentacao(request):
     return render(request, 'cd/movimentacao.html')
 
 
+def coletor(request):
+    return render(request, 'cd/coletor.html')
+
+
 def menu_desligado(request):
     return redirect('apoio_ao_erp')
