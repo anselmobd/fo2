@@ -4,6 +4,7 @@ import cd.views as views
 from cd.views import (
     api_palete,
     compara_apoio_systextil,
+    conteudo_palete,
     endereco,
     endereco_imprime,
     endereco_conteudo_importa,
@@ -140,5 +141,9 @@ urlpatterns = [
     re_path(r'^compara_apoio_systextil/$',
         compara_apoio_systextil.ComparaApoioSystextil.as_view(),
         name='compara_apoio_systextil'),
+
+    re_path(r'^conteudo_palete/$',
+        conteudo_palete.ConteudoPalete.as_view(),
+        name='conteudo_palete'),
 
 ]

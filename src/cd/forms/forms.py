@@ -644,3 +644,14 @@ class AtividadeCDForm(forms.Form):
         label='Apresentação', choices=CHOICES, initial='d')
 
 
+class ConteudoPaleteForm(forms.Form):
+    codigo = forms.CharField(
+        label='Endereço', min_length=6, max_length=8,
+        widget=forms.TextInput(
+            attrs={
+                'size': 8,
+                'autofocus': 'autofocus',
+                'style': 'text-transform:uppercase;',
+            }
+        )
+    )

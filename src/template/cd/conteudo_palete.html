@@ -1,0 +1,40 @@
+{% extends 'cd/layout_m.html' %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+table {
+  font-size: 2vw;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="leftcol50">
+    <p>
+      {{ titulo }}
+    </p>
+  </div>
+  <div class="rightcol50">
+    <!-- <a class="botao back" href="{% url 'cd:movimentacao' %}">Movimentação</a> -->
+  </div>
+</div>
+<hr>
+<form action="{% url 'cd:conteudo_palete' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+</form>
+{% if erro %}
+  <p class="erro">{{ erro }}</p>
+{% else %}
+  {% if data %}
+    {{ data|length }} lote{{ data|length|pluralize }} no endereço {{ endereco }}
+    <table id="lista_table">
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock content %}
