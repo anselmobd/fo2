@@ -36,11 +36,12 @@ class ConteudoPalete(View):
                 'erro': 'Nenhum lote no endereço.'})
             return context
 
-        pprint(lotes_end)
+        eh_palete = len(codigo) == 8
 
         context.update({
-            'headers': ['Lote', 'OP', 'Palete'],
-            'fields': ['lote', 'op', 'palete'],
+            'eh_palete': eh_palete,
+            'headers': ['Lote', 'OP', 'Endereço' if eh_palete else 'Palete'],
+            'fields': ['lote', 'op', 'endereco' if eh_palete else 'palete'],
             'data': lotes_end,
         })
 

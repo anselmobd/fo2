@@ -195,8 +195,8 @@ def lotes_em_endereco(cursor, endereco):
           ON ec.COD_ENDERECO = e.COD_ENDERECO 
         LEFT JOIN ENDR_014 lp -- lote/palete - oc/container
           ON UPPER(lp.COD_CONTAINER) = UPPER(ec.COD_CONTAINER)
-        WHERE 1=1
-          AND e.COD_ENDERECO = '{endereco}'
+        WHERE e.COD_ENDERECO = '{endereco}'
+           OR UPPER(ec.COD_CONTAINER)  = '{endereco}'
         ORDER BY
           lp.ORDEM_PRODUCAO
         , lp.ORDEM_CONFECCAO
