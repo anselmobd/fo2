@@ -59,12 +59,20 @@ def gera_estantes_enderecos():
                 except KeyError:
                     exclude = {}
                 try:
-                    colunas_diferentes = list(exclude.keys())[0]
+                    excludes = list(exclude.keys())
                 except IndexError:
+                    excludes = []
+
+                for colunas_diferentes_candidate in excludes:
+                    if coluna in colunas_diferentes_candidate:
+                        colunas_diferentes = colunas_diferentes_candidate
+                        break
+                else:
                     colunas_diferentes = []
+
                 if coluna in colunas_diferentes:
                     try:
-                        andares_excludes = list(exclude.values())[0]
+                        andares_excludes = list(exclude[colunas_diferentes])
                     except IndexError:
                         andares_excludes = []
                     andar_exclude = andar in andares_excludes
