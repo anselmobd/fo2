@@ -87,7 +87,7 @@ def gera_quarto_andar_enderecos():
 def gera_lateral_enderecos():
     return [
         f"1L{i:04}"
-        for i in range(1, 15)
+        for i in range(1, 13)
     ]
 
 
