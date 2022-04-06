@@ -10,6 +10,10 @@
 {% endblock %}
 
 {% block content %}
+  <h4>Rotina desligada</h4>
+{% endblock content %}
+
+{% block content_OFF %}
   <form action="{% url 'cd:endereco_conteudo_importa' %}" method="post" name="formName">
     {% csrf_token %}
     {{ form.as_p }}
@@ -23,4 +27,4 @@
       <pre>{{log}}</pre>
     {% endif %}
   {% endif %}
-{% endblock content %}
+{% endblock content_OFF %}
