@@ -1,8 +1,24 @@
 <ul>
-  <li><a href="{% url 'cd:coletor' %}">Coletor</a></li>
+  <li>Sistema novo</li>
   <ul>
-    <li><a href="{% url 'cd:conteudo_palete' %}">Conteúdo de endereço</a></li>
+    <li><a href="{% url 'cd:coletor' %}">Coletor</a></li>
+    <ul>
+      <li><a href="{% url 'cd:conteudo_palete' %}">Conteúdo de endereço</a></li>
+    </ul>
+    <li>Análise</li>
+    <ul>
+      <li><a href="{% url 'cd:palete' %}">Paletes</a></li>
+      <li><a href="{% url 'cd:endereco' %}">Endereços</a></li>
+      <ul>
+        <li><a href="{% url 'cd:endereco_imprime' %}">Imprime</a></li>
+        <!-- <li><a href="{% url 'cd:endereco_conteudo_importa' %}">Importa conteudo</a></li> -->
+      </ul>
+      <!-- <li><a href="{% url 'cd:compara_apoio_systextil' %}">Compara Apoio Systextil</a></li> -->
+    </ul>
   </ul>
+  <br/>
+  <li>Sistema antigo</li>
+  <ul>
   <li><a href="{% url 'cd:movimentacao' %}">Movimentação</a></li>
   <ul>
     <!-- <li><a href="{% url 'cd:troca_local' %}">Troca de endereço de pallet</a></li> -->
@@ -40,14 +56,5 @@
     <li><a href="{% url 'cd:etiq_solicitacoes' %}">Etiquetas de solicitações</a></li>
   </ul>
   <!-- <li><a href="{% url 'cd:mapa:index' %}">Mapa</a></li> -->
-  <li>Systextil</li>
-  <ul>
-    <li><a href="{% url 'cd:palete' %}">Paletes</a></li>
-    <li><a href="{% url 'cd:endereco' %}">Endereços</a></li>
-    <ul>
-      <li><a href="{% url 'cd:endereco_imprime' %}">Imprime</a></li>
-      <!-- <li><a href="{% url 'cd:endereco_conteudo_importa' %}">Importa conteudo</a></li> -->
-    </ul>
-    <!-- <li><a href="{% url 'cd:compara_apoio_systextil' %}">Compara Apoio Systextil</a></li> -->
   </ul>
 </ul>
