@@ -37,28 +37,29 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
         cursor = db_cursor_so(self.request)
         data = query_endereco(cursor, self.tipo)
 
-        enderecos = []
-        if self.tipo == 'IE':
-            enderecos = gera_estantes_enderecos()
-        elif self.tipo == 'IQ':
-            enderecos = gera_quarto_andar_enderecos()
-        elif self.tipo == 'IL':
-            enderecos = gera_lateral_enderecos()
-        elif self.tipo == 'EL':
-            enderecos = gera_externos_s_enderecos()
+        if has_permission(self.request, 'cd.can_admin_pallet'):
+            enderecos = []
+            if self.tipo == 'IE':
+                enderecos = gera_estantes_enderecos()
+            elif self.tipo == 'IQ':
+                enderecos = gera_quarto_andar_enderecos()
+            elif self.tipo == 'IL':
+                enderecos = gera_lateral_enderecos()
+            elif self.tipo == 'EL':
+                enderecos = gera_externos_s_enderecos()
 
-        if enderecos:
-            count_add = 0
-            for endereco in enderecos:
-                if not next(
-                    (d for d in data if d['end'] == endereco),
-                    False
-                ):
-                    add_endereco(cursor, endereco)
-                    count_add += 1
+            if enderecos:
+                count_add = 0
+                for endereco in enderecos:
+                    if not next(
+                        (d for d in data if d['end'] == endereco),
+                        False
+                    ):
+                        add_endereco(cursor, endereco)
+                        count_add += 1
 
-            if count_add:
-                data = query_endereco(cursor, self.tipo)
+                if count_add:
+                    data = query_endereco(cursor, self.tipo)
 
         self.context.update({
             'quant': len(data),
