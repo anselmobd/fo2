@@ -646,7 +646,7 @@ class AtividadeCDForm(forms.Form):
 
 class ConteudoPaleteForm(forms.Form):
     codigo = forms.CharField(
-        label='Endereço ou Palete', min_length=6, max_length=8,
+        label='End. ou Palete', min_length=6, max_length=8,
         widget=forms.TextInput(
             attrs={
                 'size': 8,
