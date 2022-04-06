@@ -17,7 +17,8 @@ def gera_estantes_enderecos():
         'C': {
             'len': 28,
             'exclude': {
-                (12, 13): (1,)
+                (12,): (1,),
+                (13,): (1, 3),
             }
         },
         'D': {
