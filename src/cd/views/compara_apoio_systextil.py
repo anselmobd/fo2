@@ -31,6 +31,7 @@ class ComparaApoioSystextil(O2BaseGetView):
         self.title_name = 'Compara Apoio Systextil'
 
     def mount_context(self):
+        return
         cursor = db_cursor_so(self.request)
         data = query_endereco(cursor, 'TO')
 
