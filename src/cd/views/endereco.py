@@ -18,6 +18,7 @@ from cd.queries.endereco import (
     add_endereco,
     query_endereco,
 )
+from cd.views.endereco_conteudo_importa import EnderecoImporta
 
 
 class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
@@ -64,14 +65,18 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
 
         data = paginator_basic(data, 50, self.page)
 
+        view_aux = EnderecoImporta()
+        for row in data.object_list:
+            row['end_antigo'] = view_aux.end_novo_para_antigo(row['end'])
+
         if self.tipo in ('TO', 'IT', 'ET'):
             headers = ['Espaço']
             fields = ['espaco']
         else:            
             headers = []
             fields = []
-        headers += ["Endereço", "Rota", "Palete"]
-        fields += ['end', 'rota', 'palete']
+        headers += ["Endereço", "Rota", "Palete", "Endereço antigo"]
+        fields += ['end', 'rota', 'palete', 'end_antigo']
 
         self.context.update({
             'headers': headers,
