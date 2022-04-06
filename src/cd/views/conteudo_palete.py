@@ -31,7 +31,7 @@ class ConteudoPalete(View):
 
         lotes_end = lotes_em_endereco(cursor, codigo)
 
-        if not lotes_end:
+        if (not lotes_end) or (not lotes_end[0]['lote']):
             context.update({
                 'erro': 'Nenhum lote no endereço.'})
             return context
