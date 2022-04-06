@@ -6,6 +6,7 @@ from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
 from base.views import O2BaseGetPostView
+from geral.functions import has_permission
 
 from cd.forms.endereco import EnderecoForm
 from cd.functions.estante import (
@@ -65,9 +66,10 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
 
         data = paginator_basic(data, 50, self.page)
 
-        view_aux = EnderecoImporta()
-        for row in data.object_list:
-            row['end_antigo'] = view_aux.end_novo_para_antigo(row['end'])
+        if has_permission(self.request, 'cd.can_admin_pallet'):
+            view_aux = EnderecoImporta()
+            for row in data.object_list:
+                row['end_antigo'] = view_aux.end_novo_para_antigo(row['end'])
 
         if self.tipo in ('TO', 'IT', 'ET'):
             headers = ['Espaço']
@@ -75,8 +77,12 @@ class Endereco(O2BaseGetPostView):  # PermissionRequiredMixin
         else:            
             headers = []
             fields = []
-        headers += ["Endereço", "Rota", "Palete", "Endereço antigo"]
-        fields += ['end', 'rota', 'palete', 'end_antigo']
+        headers += ["Endereço", "Rota", "Palete"]
+        fields += ['end', 'rota', 'palete']
+
+        if has_permission(self.request, 'cd.can_admin_pallet'):
+            headers += ["Endereço antigo"]
+            fields += ['end_antigo']
 
         self.context.update({
             'headers': headers,
