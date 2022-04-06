@@ -292,7 +292,8 @@ class EnderecoImporta(PermissionRequiredMixin, O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
 
         self.inicial = self.inicial.upper()
-        self.final = self.final.upper()
+        # self.final = self.final.upper()
+        self.final = self.inicial
 
         self.data = query_endereco(self.cursor, 'TO')
         pprint(self.data[:2])
