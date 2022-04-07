@@ -143,7 +143,7 @@ urlpatterns = [
         compara_apoio_systextil.ComparaApoioSystextil.as_view(),
         name='compara_apoio_systextil'),
 
-    re_path(r'^conteudo_palete/$',
+    re_path(r'^conteudo_palete/(?P<codigo>[^/]+)?$',
         conteudo_palete.ConteudoPalete.as_view(),
         name='conteudo_palete'),
 

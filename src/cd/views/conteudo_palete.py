@@ -52,6 +52,8 @@ class ConteudoPalete(View):
         return context
 
     def get(self, request, *args, **kwargs):
+        if 'codigo' in kwargs and kwargs['codigo']:
+            return self.post(request, *args, **kwargs)
         context = {'titulo': self.title_name}
         form = self.Form_class()
         context['form'] = form
@@ -59,7 +61,10 @@ class ConteudoPalete(View):
 
     def post(self, request, *args, **kwargs):
         context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
+        if 'codigo' in kwargs and kwargs['codigo']:
+            form = self.Form_class(kwargs)
+        else:
+            form = self.Form_class(request.POST)
         if form.is_valid():
             data = self.mount_context(request, form)
             context.update(data)
