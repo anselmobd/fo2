@@ -8,13 +8,13 @@ from base.views import O2BaseGetView
 from cd.queries.palete import query_palete
 
 
-class Palete(PermissionRequiredMixin, O2BaseGetView):
+class AdminPalete(PermissionRequiredMixin, O2BaseGetView):
 
     def __init__(self, *args, **kwargs):
-        super(Palete, self).__init__(*args, **kwargs)
+        super(AdminPalete, self).__init__(*args, **kwargs)
         self.permission_required = 'cd.can_admin_pallet'
         self.template_name = 'cd/palete.html'
-        self.title_name = 'Paletes'
+        self.title_name = 'Administração inicial'
 
     def mount_context(self):
         page = self.request.GET.get('page', 1)

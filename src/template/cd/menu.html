@@ -6,9 +6,12 @@
       <li><a href="{% url 'cd:conteudo_palete' %}">Conteúdo de endereço</a></li>
       <li><a href="{% url 'cd:localiza_lote' %}">Localiza lote</a></li>
     </ul>
-    <li>Análise</li>
+    <li>Análises</li>
     <ul>
-      <li><a href="{% url 'cd:palete' %}">Paletes</a></li>
+      <li>Paletes</li>
+      <ul>
+        <li><a href="{% url 'cd:palete' %}">Administração inicial</a></li>
+      </ul>
       <li><a href="{% url 'cd:endereco' %}">Endereços</a></li>
       <ul>
         <li><a href="{% url 'cd:endereco_imprime' %}">Imprime</a></li>

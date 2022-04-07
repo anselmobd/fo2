@@ -119,7 +119,7 @@ urlpatterns = [
     re_path(r'^mapa/', include('cd.urls.mapa')),
 
     re_path(r'^palete/$',
-        palete.Palete.as_view(), name='palete'),
+        palete.AdminPalete.as_view(), name='palete'),
 
     re_path(r'^api/palete_add/(?P<quant>.+)$',
         api_palete.palete_add, name='palete_add'),
