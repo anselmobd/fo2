@@ -53,7 +53,7 @@ class LocalizaLote(View):
             'palete': local[0]['palete'],
         })
 
-        lotes_end = lotes_em_endereco(cursor, local[0]['endereco'])
+        lotes_end = lotes_em_endereco(cursor, local[0]['palete'])
 
         context.update({
             'headers': ['Lote', 'OP'],
