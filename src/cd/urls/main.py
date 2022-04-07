@@ -149,7 +149,7 @@ urlpatterns = [
 
     re_path(r'^coletor/$', views.coletor, name='coletor'),
 
-    re_path(r'^localiza_lote/$',
+    re_path(r'^localiza_lote/(?P<lote>[^/]+)?$',
         localiza_lote.LocalizaLote.as_view(),
         name='localiza_lote'),
 
