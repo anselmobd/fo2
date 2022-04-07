@@ -3,6 +3,7 @@ from pprint import pprint
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
@@ -38,8 +39,15 @@ class ConteudoPalete(View):
 
         eh_palete = len(codigo) == 8
 
+        enderecos = set()
         for row in lotes_end:
-            if not row['endereco']:
+            row['lote|LINK'] = reverse(
+                'cd:localiza_lote',
+                args=[row['lote']]
+            )
+            if row['endereco']:
+                enderecos.add(row['endereco'])
+            else:
                 row['endereco'] = '-'
 
         context.update({
