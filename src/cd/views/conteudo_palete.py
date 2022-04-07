@@ -38,6 +38,10 @@ class ConteudoPalete(View):
 
         eh_palete = len(codigo) == 8
 
+        for row in lotes_end:
+            if not row['endereco']:
+                row['endereco'] = '-'
+
         context.update({
             'eh_palete': eh_palete,
             'headers': ['Lote', 'OP', 'Endereço' if eh_palete else 'Palete'],
