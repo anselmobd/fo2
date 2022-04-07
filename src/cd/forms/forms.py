@@ -655,3 +655,16 @@ class ConteudoPaleteForm(forms.Form):
             }
         )
     )
+
+
+class LocalizaLoteForm(forms.Form):
+    lote = forms.CharField(
+        min_length=9, max_length=9,
+        widget=forms.TextInput(
+            attrs={
+                'size': 9,
+                'type': 'number',
+                'autofocus': 'autofocus',
+            }
+        )
+    )

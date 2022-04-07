@@ -1,0 +1,45 @@
+{% extends 'cd/layout_m.html' %}
+
+{% block stylesheet %}
+<style>
+{% include 'layout/simple_table.css' %}
+table {
+  font-size: 2vw;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="leftcol50">
+    <p>
+      {{ titulo }}
+    </p>
+  </div>
+  <div class="rightcol50">
+    <a class="botao back" href="{% url 'cd:coletor' %}">Coletor</a>
+  </div>
+</div>
+<hr>
+<form action="{% url 'cd:localiza_lote' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca"/>
+</form>
+{% if erro %}
+  <p class="erro">{{ erro }}</p>
+{% else %}
+  {% if data %}
+    {% if varios_locais %}
+      <p class="erro">Lote em vários locais</p>
+    {%else%}
+      Endereco {{endereco}} Palete {{palete}}<br/>
+      {{ data|length }} lote{{ data|length|pluralize }}
+    {%endif%}
+    <table id="lista_table">
+      {% include "layout/thead_generic.html" with data=headers only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock content %}

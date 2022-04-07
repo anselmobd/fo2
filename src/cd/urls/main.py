@@ -8,6 +8,7 @@ from cd.views import (
     endereco,
     endereco_imprime,
     endereco_conteudo_importa,
+    localiza_lote,
     palete,
 )
 from cd.views.api.palete.print import PaletePrint
@@ -147,5 +148,9 @@ urlpatterns = [
         name='conteudo_palete'),
 
     re_path(r'^coletor/$', views.coletor, name='coletor'),
+
+    re_path(r'^localiza_lote/$',
+        localiza_lote.LocalizaLote.as_view(),
+        name='localiza_lote'),
 
 ]
