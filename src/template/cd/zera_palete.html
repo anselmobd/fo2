@@ -1,0 +1,34 @@
+{% extends 'cd/layout_m.html' %}
+
+{% block stylesheet %}
+  <style>
+  {% include 'layout/simple_table.css' %}
+  table {
+    font-size: 2vw;
+  }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="leftcol50">
+      <p>
+        {{ titulo }}
+      </p>
+    </div>
+    <div class="rightcol50">
+      <a class="botao back" href="{% url 'cd:coletor' %}">Coletor</a>
+    </div>
+  </div>
+  <hr>
+  <form action="{% url 'cd:zera_palete' %}" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" name="zera" value="Zera"/>
+  </form>
+  {% if erro %}
+    <p class="erro">{{ erro }}</p>
+  {% else %}
+    {{ mensagem }}
+  {% endif %}
+{% endblock content %}

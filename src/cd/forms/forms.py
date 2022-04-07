@@ -668,3 +668,20 @@ class LocalizaLoteForm(forms.Form):
             }
         )
     )
+
+
+class ZeraPaleteForm(forms.Form):
+    palete = forms.CharField(
+        min_length=8, max_length=8,
+        widget=forms.TextInput(
+            attrs={
+                'size': 8,
+                'autofocus': 'autofocus',
+                'style': 'text-transform:uppercase;',
+            }
+        )
+    )
+    confirma = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput()
+    )

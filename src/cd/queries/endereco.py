@@ -248,3 +248,15 @@ def local_de_lote(cursor, lote):
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
+
+
+def zera_palete(cursor, palete):
+    sql = f"""
+        DELETE FROM ENDR_014 lp -- lote/palete - oc/container
+        WHERE lp.COD_CONTAINER  = {palete}
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+        return True
+    except Exception as e:
+        return False
