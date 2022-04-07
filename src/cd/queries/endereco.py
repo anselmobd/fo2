@@ -186,17 +186,15 @@ def add_endereco(cursor, endereco):
 def lotes_em_endereco(cursor, endereco):
     sql = f"""
         SELECT
-          e.COD_ENDERECO endereco
-        , UPPER(ec.COD_CONTAINER) palete
+          ec.COD_ENDERECO endereco
+        , UPPER(lp.COD_CONTAINER) palete
         , lp.ORDEM_PRODUCAO op
         , lp.ORDEM_CONFECCAO lote
-        FROM ENDR_013 e -- endereço
+        FROM ENDR_014 lp -- lote/palete - oc/container
         LEFT JOIN ENDR_015 ec -- endereço/container
-          ON ec.COD_ENDERECO = e.COD_ENDERECO 
-        LEFT JOIN ENDR_014 lp -- lote/palete - oc/container
-          ON UPPER(lp.COD_CONTAINER) = UPPER(ec.COD_CONTAINER)
-        WHERE e.COD_ENDERECO = '{endereco}'
-           OR UPPER(ec.COD_CONTAINER)  = '{endereco}'
+          ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
+        WHERE ec.COD_ENDERECO = '{endereco}'
+           OR UPPER(lp.COD_CONTAINER)  = '{endereco}'
         ORDER BY
           lp.ORDEM_PRODUCAO
         , lp.ORDEM_CONFECCAO
