@@ -236,3 +236,17 @@ def add_lote_in_endereco(cursor, endereco, op, lote):
         return True
     except Exception as e:
         return False
+
+
+def local_de_lote(cursor, lote):
+    sql = f"""
+        SELECT
+          ec.COD_ENDERECO endereco 
+        , lp.COD_CONTAINER palete
+        FROM ENDR_014 lp -- lote/palete - oc/container
+        LEFT JOIN ENDR_015 ec -- endereço/container
+          ON ec.COD_CONTAINER = lp.COD_CONTAINER 
+        WHERE lp.ORDEM_CONFECCAO = {lote}
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
