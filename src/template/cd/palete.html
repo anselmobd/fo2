@@ -32,7 +32,7 @@
     {% if data.paginator.num_pages != 1 %}
       <ul class="pagination">
         {% if data.number > pag_neib|add:1 %}
-          <li><a href="{% url 'cd:palete' %}">
+          <li><a href="{% url 'cd:admin_palete' %}">
             <span>1
               {% if data.number > pag_neib|add:2 %}
                 <span class="glyphicon glyphicon-step-backward"></span>
@@ -47,16 +47,16 @@
                 <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
               {% else %}
                 {% if i == 1 %}
-                  <li><a href="{% url 'cd:palete' %}"">{{ i }}</a></li>
+                  <li><a href="{% url 'cd:admin_palete' %}"">{{ i }}</a></li>
                 {% else %}
-                  <li><a href="{% url 'cd:palete' %}?page={{ i }}">{{ i }}</a></li>
+                  <li><a href="{% url 'cd:admin_palete' %}?page={{ i }}">{{ i }}</a></li>
                 {% endif %}
               {% endif %}
             {% endif %}
           {% endif %}
         {% endfor %}
         {% if data.number < data.paginator.num_pages|add:pag_neibn %}
-          <li><a href="{% url 'cd:palete' %}?page={{ data.paginator.num_pages }}">
+          <li><a href="{% url 'cd:admin_palete' %}?page={{ data.paginator.num_pages }}">
             <span>
               {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
                 <span class="glyphicon glyphicon-step-forward"></span>
