@@ -33,7 +33,13 @@ table {
     {% if varios_locais %}
       <p class="erro">Lote em vários locais</p>
     {%else%}
-      Endereco {{endereco}} Palete {{palete}}<br/>
+      Local
+      {% if endereco %}
+        {% url 'cd:conteudo_palete' endereco as lotes_endereco %}
+        {% include "layout/link.html" with link=lotes_endereco text=endereco only %} -
+      {% endif %}
+      {% url 'cd:conteudo_palete' palete as lotes_palete %}
+      {% include "layout/link.html" with link=lotes_palete text=palete only %}<br/>
       {{ data|length }} lote{{ data|length|pluralize }}
     {%endif%}
     <table id="lista_table">
