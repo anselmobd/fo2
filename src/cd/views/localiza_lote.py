@@ -3,6 +3,7 @@ from pprint import pprint
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
@@ -54,6 +55,12 @@ class LocalizaLote(View):
         })
 
         lotes_end = lotes_em_endereco(cursor, local[0]['palete'])
+
+        for row in lotes_end:
+            row['lote|LINK'] = reverse(
+                'cd:localiza_lote',
+                args=[row['lote']]
+            )
 
         context.update({
             'headers': ['Lote', 'OP'],
