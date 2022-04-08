@@ -28,7 +28,7 @@ class ZeraPalete(View):
     def __init__(self):
         self.Form_class = cd.forms.ZeraPaleteForm
         self.template_name = 'cd/zera_palete.html'
-        self.context = {'titulo': 'Conteúdo'}
+        self.context = {'titulo': 'Esvazia palete'}
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
