@@ -1,3 +1,4 @@
+from datetime import datetime
 from pprint import pprint
 
 from django.conf import settings
@@ -39,8 +40,8 @@ class ConteudoLocal(View):
 
         eh_palete = len(codigo) == 8
 
-        headers = ['Lote', 'OP']
-        fields = ['lote', 'op']
+        headers = ["Bipado em", "Lote", "OP"]
+        fields = ['data', 'lote', 'op']
 
         if eh_palete:
             enderecos = set()
@@ -65,7 +66,21 @@ class ConteudoLocal(View):
                 headers += ['Palete']
                 fields += ['palete']
 
+        dados = []
+        ult_data = datetime(3000, 1, 1)
         for row in lotes_end:
+            if row['data'].date() < ult_data.date():
+                ult_data = row['data']
+                dados.append({
+                    'data': ult_data.strftime("%m/%d/%y"),
+                    'data|STYLE': "font-weight: bold;",
+                    'lote': '',
+                    'op': '',
+                    'palete': '',
+                    'endereco': '',
+                })
+            dados.append(row)
+            row['data'] = row['data'].strftime("%H:%M:%S")
             row['lote|LINK'] = reverse(
                 'cd:localiza_lote',
                 args=[row['lote']]
@@ -77,7 +92,7 @@ class ConteudoLocal(View):
             'eh_palete': eh_palete,
             'headers': headers,
             'fields': fields,
-            'data': lotes_end,
+            'data': dados,
         })
 
         return context
