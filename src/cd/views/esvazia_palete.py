@@ -17,17 +17,17 @@ import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
     lotes_em_endereco,
-    zera_palete,
+    esvazia_palete,
     get_palete,
     palete_guarda_hist,
 )
 
 
-class ZeraPalete(View):
+class EsvaziaPalete(View):
 
     def __init__(self):
         self.Form_class = cd.forms.ZeraPaleteForm
-        self.template_name = 'cd/zera_palete.html'
+        self.template_name = 'cd/esvazia_palete.html'
         self.context = {'titulo': 'Esvazia palete'}
 
     def mount_context(self):
@@ -67,7 +67,7 @@ class ZeraPalete(View):
             self.context.update({
                 'erro': f"Erro ao guardar histórico do palete {palete}."})
 
-        if zera_palete(cursor, palete):
+        if esvazia_palete(cursor, palete):
             self.context.update({
                 'mensagem': f"{palete} zerado!"})
         else:

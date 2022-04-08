@@ -9,8 +9,8 @@ from cd.views import (
     endereco,
     endereco_imprime,
     endereco_conteudo_importa,
+    esvazia_palete,
     localiza_lote,
-    zera_palete,
 )
 from cd.views.api.palete.print import PaletePrint
 
@@ -155,7 +155,11 @@ urlpatterns = [
         name='localiza_lote'),
 
     re_path(r'^zera_palete/$',
-        zera_palete.ZeraPalete.as_view(),
+        esvazia_palete.EsvaziaPalete.as_view(),
         name='zera_palete'),
+
+    re_path(r'^esvazia_palete/$',
+        esvazia_palete.EsvaziaPalete.as_view(),
+        name='esvazia_palete'),
 
 ]

@@ -250,7 +250,7 @@ def local_de_lote(cursor, lote):
     return dictlist(cursor)
 
 
-def zera_palete(cursor, palete):
+def esvazia_palete(cursor, palete):
     sql = f"""
         DELETE FROM ENDR_014 lp -- lote/palete - oc/container
         WHERE lp.COD_CONTAINER  = '{palete}'

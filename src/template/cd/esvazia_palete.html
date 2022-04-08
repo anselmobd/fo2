@@ -21,7 +21,7 @@
     </div>
   </div>
   <hr>
-  <form action="{% url 'cd:zera_palete' %}" method="post">
+  <form action="{% url 'cd:esvazia_palete' %}" method="post">
     {% csrf_token %}
       {{ form.as_p }}
     {% if identificado %}
