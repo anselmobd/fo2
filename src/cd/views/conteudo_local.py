@@ -39,21 +39,44 @@ class ConteudoLocal(View):
 
         eh_palete = len(codigo) == 8
 
-        enderecos = set()
+        headers = ['Lote', 'OP']
+        fields = ['lote', 'op']
+
+        if eh_palete:
+            enderecos = set()
+            for row in lotes_end:
+                if row['endereco']:
+                    enderecos.add(row['endereco'])
+            context.update({
+                'endereco_lotes': ', '.join(enderecos),
+            })
+            if len(enderecos) > 1:
+                headers += ['Endereço']
+                fields += ['endereco']
+        else:
+            paletes = set()
+            for row in lotes_end:
+                if row['palete']:
+                    paletes.add(row['palete'])
+            context.update({
+                'palete_lotes': ', '.join(paletes),
+            })
+            if len(paletes) > 1:
+                headers += ['Palete']
+                fields += ['palete']
+
         for row in lotes_end:
             row['lote|LINK'] = reverse(
                 'cd:localiza_lote',
                 args=[row['lote']]
             )
-            if row['endereco']:
-                enderecos.add(row['endereco'])
-            else:
+            if not row['endereco']:
                 row['endereco'] = '-'
 
         context.update({
             'eh_palete': eh_palete,
-            'headers': ['Lote', 'OP', 'Endereço' if eh_palete else 'Palete'],
-            'fields': ['lote', 'op', 'endereco' if eh_palete else 'palete'],
+            'headers': headers,
+            'fields': fields,
             'data': lotes_end,
         })
 

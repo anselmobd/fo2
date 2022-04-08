@@ -31,6 +31,12 @@ table {
 {% else %}
   {% if data %}
     {{ data|length }} lote{{ data|length|pluralize }} no {% if eh_palete %}palete{%else%}endereço{%endif%} {{ endereco }}
+    {% if endereco_lotes %}
+      <br/>Endereço: {{endereco_lotes}}
+    {% endif %}
+    {% if palete_lotes %}
+      <br/>Palete: {{palete_lotes}}
+    {% endif %}
     <table id="lista_table">
       {% include "layout/thead_generic.html" with data=headers only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data only %}
