@@ -69,10 +69,10 @@ class EsvaziaPalete(View):
 
         if esvazia_palete(cursor, palete):
             self.context.update({
-                'mensagem': f"{palete} zerado!"})
+                'mensagem': f"{palete} esvaziado!"})
         else:
             self.context.update({
-                'erro': f"Erro ao zerar palete {palete}."})
+                'erro': f"Erro ao esvaziar palete {palete}."})
 
         self.context['identificado'] = None
 
