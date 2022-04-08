@@ -10,7 +10,9 @@
     <ul>
       <li>Paletes</li>
       <ul>
-        <li><a href="{% url 'cd:admin_palete' %}">Administração inicial</a></li>
+        {% if perms.cd.can_admin_pallet %}
+          <li><a href="{% url 'cd:admin_palete' %}">Administração inicial</a></li>
+        {% endif %}
       </ul>
       <li><a href="{% url 'cd:endereco' %}">Endereços</a></li>
       <ul>
@@ -46,7 +48,7 @@
   <li>Análise</li>
   <ul>
     <li><a href="{% url 'cd:estoque' %}">Estoque CD</a></li>
-    <li><a href="{% url 'cd:grade_estoque' %}">Grades do estoque</a></li>
+    <!-- <li><a href="{% url 'cd:grade_estoque' %}">Grades do estoque</a></li> -->
     <li><a href="{% url 'cd:inconsist' %}">Inconsistências Systêxtil</a></li>
     <li><a href="{% url 'cd:visao_cd' %}">Visão do CD</a></li>
     <li><a href="{% url 'cd:endereco_lote' %}">Verifica endereço de lote</a></li>
