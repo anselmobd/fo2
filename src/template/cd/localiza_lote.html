@@ -35,10 +35,10 @@ table {
     {%else%}
       Local
       {% if endereco %}
-        {% url 'cd:conteudo_palete' endereco as lotes_endereco %}
+        {% url 'cd:conteudo_local' endereco as lotes_endereco %}
         {% include "layout/link.html" with link=lotes_endereco text=endereco only %} -
       {% endif %}
-      {% url 'cd:conteudo_palete' palete as lotes_palete %}
+      {% url 'cd:conteudo_local' palete as lotes_palete %}
       {% include "layout/link.html" with link=lotes_palete text=palete only %}<br/>
       {{ data|length }} lote{{ data|length|pluralize }}
     {%endif%}

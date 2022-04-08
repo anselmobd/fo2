@@ -21,7 +21,7 @@ table {
   </div>
 </div>
 <hr>
-<form action="{% url 'cd:conteudo_palete' %}" method="post">
+<form action="{% url 'cd:conteudo_local' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="busca" value="Busca"/>
