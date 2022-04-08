@@ -5,7 +5,7 @@ from cd.views import (
     admin_palete,
     api_palete,
     compara_apoio_systextil,
-    conteudo_palete,
+    conteudo_local,
     endereco,
     endereco_imprime,
     endereco_conteudo_importa,
@@ -145,8 +145,12 @@ urlpatterns = [
         name='compara_apoio_systextil'),
 
     re_path(r'^conteudo_palete/(?P<codigo>[^/]+)?$',
-        conteudo_palete.ConteudoPalete.as_view(),
+        conteudo_local.ConteudoPalete.as_view(),
         name='conteudo_palete'),
+
+    re_path(r'^conteudo_local/(?P<codigo>[^/]+)?$',
+        conteudo_local.ConteudoPalete.as_view(),
+        name='conteudo_local'),
 
     re_path(r'^coletor/$', views.coletor, name='coletor'),
 
