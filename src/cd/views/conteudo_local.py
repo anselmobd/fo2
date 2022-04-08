@@ -21,7 +21,7 @@ class ConteudoLocal(View):
 
     def __init__(self):
         self.Form_class = cd.forms.ConteudoLocalForm
-        self.template_name = 'cd/conteudo_palete.html'
+        self.template_name = 'cd/conteudo_local.html'
         self.title_name = 'Conteúdo'
 
     def mount_context(self, request, form):
