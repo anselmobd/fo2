@@ -17,10 +17,10 @@ import cd.views.gerais
 from cd.queries.endereco import lotes_em_endereco
 
 
-class ConteudoPalete(View):
+class ConteudoLocal(View):
 
     def __init__(self):
-        self.Form_class = cd.forms.ConteudoPaleteForm
+        self.Form_class = cd.forms.ConteudoLocalForm
         self.template_name = 'cd/conteudo_palete.html'
         self.title_name = 'Conteúdo'
 

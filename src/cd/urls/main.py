@@ -145,11 +145,11 @@ urlpatterns = [
         name='compara_apoio_systextil'),
 
     re_path(r'^conteudo_palete/(?P<codigo>[^/]+)?$',
-        conteudo_local.ConteudoPalete.as_view(),
+        conteudo_local.ConteudoLocal.as_view(),
         name='conteudo_palete'),
 
     re_path(r'^conteudo_local/(?P<codigo>[^/]+)?$',
-        conteudo_local.ConteudoPalete.as_view(),
+        conteudo_local.ConteudoLocal.as_view(),
         name='conteudo_local'),
 
     re_path(r'^coletor/$', views.coletor, name='coletor'),

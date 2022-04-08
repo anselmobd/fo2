@@ -644,7 +644,7 @@ class AtividadeCDForm(forms.Form):
         label='Apresentação', choices=CHOICES, initial='d')
 
 
-class ConteudoPaleteForm(forms.Form):
+class ConteudoLocalForm(forms.Form):
     codigo = forms.CharField(
         label='End. ou Palete', min_length=6, max_length=8,
         widget=forms.TextInput(
