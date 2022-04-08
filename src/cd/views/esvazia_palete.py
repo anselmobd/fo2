@@ -48,7 +48,6 @@ class EsvaziaPalete(View):
             return
 
         lotes_end = lotes_em_endereco(cursor, palete)
-        pprint(lotes_end)
         if lotes_end:
             self.context.update({
                 'quant_lotes': len(lotes_end),
@@ -60,7 +59,6 @@ class EsvaziaPalete(View):
             return
 
         if not identificado:
-            print('not identificado')
             self.context['identificado'] = palete
             self.context['form'].data = self.context['form'].data.copy()
             self.context['form'].data['identificado'] = palete
