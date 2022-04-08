@@ -33,6 +33,9 @@
   {% if erro %}
     <p class="erro">{{ erro }}</p>
   {% endif %}
+  {% if quant_lotes %}
+    <p>{{ quant_lotes }} lote{{ quant_lotes|pluralize }} no palete {{ palete }}</p>
+  {% endif %}
   {% if mensagem %}
     <p>{{ mensagem }}</p>
   {% endif %}

@@ -47,14 +47,24 @@ class EsvaziaPalete(View):
             self.context['identificado'] = None
             return
 
+        lotes_end = lotes_em_endereco(cursor, palete)
+        pprint(lotes_end)
+        if lotes_end:
+            self.context.update({
+                'quant_lotes': len(lotes_end),
+            })
+        else:
+            self.context.update({
+                'erro': "Palete já vazio."})
+            self.context['identificado'] = None
+            return
+
         if not identificado:
             print('not identificado')
             self.context['identificado'] = palete
             self.context['form'].data = self.context['form'].data.copy()
             self.context['form'].data['identificado'] = palete
             self.context['form'].data['palete'] = None
-            self.context.update({
-                'mensagem': f"{palete} identificado."})
             return
 
         if identificado != palete:
