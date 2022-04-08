@@ -260,3 +260,36 @@ def zera_palete(cursor, palete):
         return True
     except Exception as e:
         return False
+
+def palete_guarda_hist(cursor, palete):
+    sql = f"""
+        INSERT INTO ENDR_014_HIST_DUOMO
+          (COD_CONTAINER, ORDEM_PRODUCAO, ORDEM_CONFECCAO, DATA_INCLUSAO, NIVEL, GRUPO, SUB, ITEM, QUANTIDADE)
+        SELECT
+          COD_CONTAINER, ORDEM_PRODUCAO, ORDEM_CONFECCAO, DATA_INCLUSAO, NIVEL, GRUPO, SUB, ITEM, QUANTIDADE
+        FROM ENDR_014 -- lote/palete - oc/container
+        WHERE COD_CONTAINER = '{palete}'
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+        return True
+    except Exception as e:
+        return False
+
+def get_palete(cursor, palete):
+    sql = f"""
+        SELECT
+          e.COD_CONTAINER
+        , e.COD_TIPO
+        , e.ENDERECO
+        , e.TARA_CONTAINER
+        , e.QUANTIDADE_MAXIMO
+        , e.ULTIMA_ATUALIZACAO_TARA
+        , e.SITUACAO
+        , e.TUSSOR_IMPRESSA
+        FROM ENDR_012 e -- container palete
+        WHERE 1=1
+          AND e.COD_CONTAINER = '{palete}'
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
