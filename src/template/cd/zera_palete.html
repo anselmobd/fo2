@@ -25,7 +25,7 @@
     {% csrf_token %}
       {{ form.as_p }}
     {% if identificado %}
-      <input type="submit" name="zera" value="Zera"/>
+      <input type="submit" name="esvazia" value="Esvazia"/>
     {% else %}
       <input type="submit" name="identifica" value="Identifica"/>
     {% endif %}
