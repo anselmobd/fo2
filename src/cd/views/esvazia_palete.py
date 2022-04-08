@@ -26,7 +26,7 @@ from cd.queries.endereco import (
 class EsvaziaPalete(View):
 
     def __init__(self):
-        self.Form_class = cd.forms.ZeraPaleteForm
+        self.Form_class = cd.forms.EsvaziaPaleteForm
         self.template_name = 'cd/esvazia_palete.html'
         self.context = {'titulo': 'Esvazia palete'}
 
