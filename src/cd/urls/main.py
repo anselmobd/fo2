@@ -2,6 +2,7 @@ from django.urls import include, re_path
 
 import cd.views as views
 from cd.views import (
+    admin_palete,
     api_palete,
     compara_apoio_systextil,
     conteudo_palete,
@@ -9,7 +10,6 @@ from cd.views import (
     endereco_imprime,
     endereco_conteudo_importa,
     localiza_lote,
-    palete,
     zera_palete,
 )
 from cd.views.api.palete.print import PaletePrint

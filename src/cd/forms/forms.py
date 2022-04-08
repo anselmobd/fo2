@@ -681,7 +681,7 @@ class ZeraPaleteForm(forms.Form):
             }
         )
     )
-    confirma = forms.CharField(
+    identificado = forms.CharField(
         required=False,
         widget=forms.HiddenInput()
     )

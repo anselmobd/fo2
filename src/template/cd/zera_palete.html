@@ -22,13 +22,18 @@
   </div>
   <hr>
   <form action="{% url 'cd:zera_palete' %}" method="post">
-      {% csrf_token %}
+    {% csrf_token %}
       {{ form.as_p }}
+    {% if identificado %}
       <input type="submit" name="zera" value="Zera"/>
+    {% else %}
+      <input type="submit" name="identifica" value="Identifica"/>
+    {% endif %}
   </form>
   {% if erro %}
     <p class="erro">{{ erro }}</p>
-  {% else %}
-    {{ mensagem }}
+  {% endif %}
+  {% if mensagem %}
+    <p>{{ mensagem }}</p>
   {% endif %}
 {% endblock content %}

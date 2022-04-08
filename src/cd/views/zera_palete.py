@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django import forms
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
@@ -14,7 +15,12 @@ from lotes.views.lote.conserto_lote import dict_conserto_lote
 
 import cd.forms
 import cd.views.gerais
-from cd.queries.endereco import lotes_em_endereco, zera_palete
+from cd.queries.endereco import (
+    lotes_em_endereco,
+    zera_palete,
+    get_palete,
+    palete_guarda_hist,
+)
 
 
 class ZeraPalete(View):
@@ -22,50 +28,62 @@ class ZeraPalete(View):
     def __init__(self):
         self.Form_class = cd.forms.ZeraPaleteForm
         self.template_name = 'cd/zera_palete.html'
-        self.title_name = 'Conteúdo'
+        self.context = {'titulo': 'Conteúdo'}
 
-    def mount_context(self, request, form):
-        cursor = db_cursor_so(request)
+    def mount_context(self):
+        cursor = db_cursor_so(self.request)
 
-        confirma = form.cleaned_data['confirma']
-        palete = form.cleaned_data['palete'].upper()
-        context = {'palete': palete}
+        identificado = self.context['form'].cleaned_data['identificado']
+        palete = self.context['form'].cleaned_data['palete'].upper()
+        self.context.update({
+            'palete': palete,
+            'identificado': identificado,
+        })
 
-        if confirma:
+        dados_palete = get_palete(cursor, palete)
+        if not dados_palete:
+            self.context.update({
+                'erro': "Palete inexistênte."})
+            self.context['identificado'] = None
+            return
 
-            if confirma == palete:
-                # zera_palete(cursor, palete)
-                context.update({
-                    'erro': 'Confirmado.'})
-                return context
-            else:
-                context.update({
-                    'erro': 'Não confirmado.'})
-                return context
-       
-        lotes_end = lotes_em_endereco(cursor, palete)
+        if not identificado:
+            print('not identificado')
+            self.context['identificado'] = palete
+            self.context['form'].data = self.context['form'].data.copy()
+            self.context['form'].data['identificado'] = palete
+            self.context['form'].data['palete'] = None
+            self.context.update({
+                'mensagem': f"{palete} identificado."})
+            return
 
-        if (not lotes_end) or (not lotes_end[0]['lote']):
-            context.update({
-                'erro': 'Nenhum lote no palete.'})
-            return context
-        
-        context.update({
-            'erro': 'Não confirmado.'})
-        return context
+        if identificado != palete:
+            self.context.update({
+                'erro': "Não confirmado mesmo palete."})
+            self.context['identificado'] = None
+            return
+
+        if not palete_guarda_hist(cursor, palete):
+            self.context.update({
+                'erro': f"Erro ao guardar histórico do palete {palete}."})
+
+        if zera_palete(cursor, palete):
+            self.context.update({
+                'mensagem': f"{palete} zerado!"})
+        else:
+            self.context.update({
+                'erro': f"Erro ao zerar palete {palete}."})
+
+        self.context['identificado'] = None
 
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = self.Form_class()
+        return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        form = self.Form_class(request.POST)
-        if form.is_valid():
-            data = self.mount_context(request, form)
-            context.update(data)
-        context['form'] = form
-        return render(request, self.template_name, context)
+        request = self.request
+        self.context['form'] = self.Form_class(request.POST)
+        if self.context['form'].is_valid():
+            self.mount_context()
+        return render(request, self.template_name, self.context)
