@@ -1,21 +1,18 @@
 from datetime import datetime
 from pprint import pprint
 
-from django.conf import settings
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
 from fo2.connections import db_cursor_so
 
-import lotes.models
-import lotes.queries
-from lotes.views.lote.conserto_lote import dict_conserto_lote
-
 import cd.forms
 import cd.views.gerais
-from cd.queries.endereco import lotes_em_endereco
+from cd.queries.endereco import (
+    lotes_em_endereco,
+    get_esvaziamentos_de_palete,
+)
 
 
 class ConteudoLocal(View):
@@ -25,6 +22,16 @@ class ConteudoLocal(View):
         self.template_name = 'cd/conteudo_local.html'
         self.title_name = 'Conteúdo'
 
+    def add_esvaziamento(self, cursor, codigo, context):
+        dh_esvaziamento = get_esvaziamentos_de_palete(cursor, codigo)
+
+        if dh_esvaziamento:
+            context.update({
+                'e_headers': ['Data/hora'],
+                'e_fields': ['dh'],
+                'e_data': dh_esvaziamento,
+            })
+
     def mount_context(self, request, form):
         cursor = db_cursor_so(request)
 
@@ -33,12 +40,14 @@ class ConteudoLocal(View):
 
         lotes_end = lotes_em_endereco(cursor, codigo)
 
+        eh_palete = len(codigo) == 8
+
         if (not lotes_end) or (not lotes_end[0]['lote']):
             context.update({
                 'erro': 'Nenhum lote no endereço.'})
+            if eh_palete:
+                self.add_esvaziamento(cursor, codigo, context)
             return context
-
-        eh_palete = len(codigo) == 8
 
         headers = ["Bipado em", "Lote", "OP"]
         fields = ['data', 'lote', 'op']
@@ -94,6 +103,9 @@ class ConteudoLocal(View):
             'fields': fields,
             'data': dados,
         })
+
+        if eh_palete:
+            self.add_esvaziamento(cursor, codigo, context)
 
         return context
 
