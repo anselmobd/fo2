@@ -24,7 +24,8 @@
   {% if erro %}
     <p class="erro">{{ erro }}</p>
   {% else %}
-    Palete {{ palete }}<br/>
+    {% url 'cd:conteudo_local' palete as lotes_palete %}
+    Palete {% include "layout/link.html" with link=lotes_palete text=palete only %}<br/>
     Versão {{ data_versao }}
     {% if conta_inseridos %}
       <br/>{{ conta_inseridos }} inserido{{ conta_inseridos|pluralize }}
