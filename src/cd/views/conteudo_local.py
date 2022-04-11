@@ -12,6 +12,7 @@ import cd.views.gerais
 from cd.queries.endereco import (
     lotes_em_endereco,
     get_esvaziamentos_de_palete,
+    get_palete,
 )
 
 
@@ -90,6 +91,19 @@ class ConteudoLocal(View):
             'data': dados,
         })
 
+    def palete_ok(self, palete):
+        dados_palete = get_palete(self.cursor, palete)
+        if not dados_palete:
+            self.context.update({
+                'erro': "Palete inexistênte."})
+            return False
+        return True
+
+    def local_ok(self):
+        if self.eh_palete:
+            return self.palete_ok(self.local)
+        return True
+
     def mount_context(self, request, form):
         self.cursor = db_cursor_so(request)
 
@@ -99,6 +113,9 @@ class ConteudoLocal(View):
             'local': self.local,
             'eh_palete': self.eh_palete,
         })
+
+        if not self.local_ok():
+            return
 
         self.lotes_end = lotes_em_endereco(self.cursor, self.local)
 
