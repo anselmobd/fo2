@@ -22,39 +22,41 @@ class ConteudoLocal(View):
         self.template_name = 'cd/conteudo_local.html'
         self.context = {'titulo': 'Conteúdo'}
 
-    def add_esvaziamento(self, codigo):
-        dh_esvaziamento = get_esvaziamentos_de_palete(self.cursor, codigo)
+    def get_esvaziamentos(self):
+        if not self.eh_palete:
+            return
 
-        if dh_esvaziamento:
+        dados_esvaziamento = get_esvaziamentos_de_palete(self.cursor, self.codigo)
+
+        if dados_esvaziamento:
             self.context.update({
                 'e_headers': ['Data/hora'],
                 'e_fields': ['dh'],
-                'e_data': dh_esvaziamento,
+                'e_data': dados_esvaziamento,
             })
 
     def mount_context(self, request, form):
         self.cursor = db_cursor_so(request)
 
-        codigo = form.cleaned_data['codigo'].upper()
+        self.codigo = form.cleaned_data['codigo'].upper()
         self.context.update({
-            'endereco': codigo
+            'endereco': self.codigo
         })
 
-        lotes_end = lotes_em_endereco(self.cursor, codigo)
+        lotes_end = lotes_em_endereco(self.cursor, self.codigo)
 
-        eh_palete = len(codigo) == 8
+        self.eh_palete = len(self.codigo) == 8
 
         if (not lotes_end) or (not lotes_end[0]['lote']):
             self.context.update({
                 'erro': 'Nenhum lote no endereço.'})
-            if eh_palete:
-                self.add_esvaziamento(codigo)
+            self.get_esvaziamentos()
             return
 
         headers = ["Bipado em", "Lote", "OP"]
         fields = ['data', 'lote', 'op']
 
-        if eh_palete:
+        if self.eh_palete:
             enderecos = set()
             for row in lotes_end:
                 if row['endereco']:
@@ -100,14 +102,13 @@ class ConteudoLocal(View):
                 row['endereco'] = '-'
 
         self.context.update({
-            'eh_palete': eh_palete,
+            'eh_palete': self.eh_palete,
             'headers': headers,
             'fields': fields,
             'data': dados,
         })
 
-        if eh_palete:
-            self.add_esvaziamento(codigo)
+        self.get_esvaziamentos()
 
         return
 
