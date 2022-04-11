@@ -295,6 +295,25 @@ def get_palete(cursor, palete):
     return dictlist(cursor)
 
 
+def get_endereco(cursor, endereco):
+    sql = f"""
+        SELECT
+          e.RUA
+        , e.BOX
+        , e.ALTURA
+        , e.COD_ENDERECO
+        , e.EMPRESA
+        , e.PROCESSO
+        , e.SITUACAO
+        , e.TIPO_ENDERECO
+        , e.ROTA
+        FROM ENDR_013 e
+        WHERE e.COD_ENDERECO = '{endereco}'
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
+
+
 def get_esvaziamentos_de_palete(cursor, palete):
     sql = f"""
         SELECT DISTINCT
