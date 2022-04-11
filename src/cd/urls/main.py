@@ -144,10 +144,6 @@ urlpatterns = [
         compara_apoio_systextil.ComparaApoioSystextil.as_view(),
         name='compara_apoio_systextil'),
 
-    re_path(r'^conteudo_palete/(?P<codigo>[^/]+)?$',
-        conteudo_local.ConteudoLocal.as_view(),
-        name='conteudo_palete'),
-
     re_path(r'^conteudo_local/(?P<codigo>[^/]+)?$',
         conteudo_local.ConteudoLocal.as_view(),
         name='conteudo_local'),
@@ -157,10 +153,6 @@ urlpatterns = [
     re_path(r'^localiza_lote/(?P<lote>[^/]+)?$',
         localiza_lote.LocalizaLote.as_view(),
         name='localiza_lote'),
-
-    re_path(r'^zera_palete/$',
-        esvazia_palete.EsvaziaPalete.as_view(),
-        name='zera_palete'),
 
     re_path(r'^esvazia_palete/$',
         esvazia_palete.EsvaziaPalete.as_view(),
