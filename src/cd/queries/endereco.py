@@ -279,17 +279,16 @@ def palete_guarda_hist(cursor, palete):
 def get_palete(cursor, palete):
     sql = f"""
         SELECT
-          e.COD_CONTAINER
-        , e.COD_TIPO
-        , e.ENDERECO
-        , e.TARA_CONTAINER
-        , e.QUANTIDADE_MAXIMO
-        , e.ULTIMA_ATUALIZACAO_TARA
-        , e.SITUACAO
-        , e.TUSSOR_IMPRESSA
-        FROM ENDR_012 e -- container palete
-        WHERE 1=1
-          AND e.COD_CONTAINER = '{palete}'
+          p.COD_CONTAINER
+        , p.COD_TIPO
+        , p.ENDERECO
+        , p.TARA_CONTAINER
+        , p.QUANTIDADE_MAXIMO
+        , p.ULTIMA_ATUALIZACAO_TARA
+        , p.SITUACAO
+        , p.TUSSOR_IMPRESSA
+        FROM ENDR_012 p -- container palete
+        WHERE p.COD_CONTAINER = '{palete}'
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
