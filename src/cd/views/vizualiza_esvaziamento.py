@@ -10,10 +10,7 @@ from fo2.connections import db_cursor_so
 import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
-    lotes_em_endereco,
-    get_endereco,
-    get_esvaziamentos_de_palete,
-    get_palete,
+    lotes_em_versao_palete,
 )
 
 
@@ -32,6 +29,14 @@ class VisualizaEsvaziamento(View):
             self.context['data_versao'])
         self.context.update({
             'data_versao': data_versao,
+        })
+
+        lotes_versao = lotes_em_versao_palete(self.cursor, palete, data_versao)
+
+        self.context.update({
+            'headers': ['Bipado em', 'Lote'],
+            'fields': ['data', 'lote'],
+            'data': lotes_versao,
         })
 
     def get(self, request, *args, **kwargs):
