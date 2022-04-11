@@ -51,8 +51,9 @@ class VisualizaEsvaziamento(View):
         lotes = lotes.union(set(lotes_end_dict.keys()))
 
         dados = []
-        conta_inseridos = 0
         conta_retirados = 0
+        conta_inseridos = 0
+        conta_confirmados = 0
         for lote in lotes:
             data_antes = lotes_versao_dict[lote] if lote in lotes_versao_dict else None
             data_agora = lotes_end_dict[lote] if lote in lotes_end_dict else None
@@ -68,6 +69,7 @@ class VisualizaEsvaziamento(View):
                 ordem = 2
             else:
                 style = 'color: darkgreen;'
+                conta_confirmados += 1
                 ordem = 3
             style += 'text-align: center;'
             dados.append({
@@ -81,8 +83,9 @@ class VisualizaEsvaziamento(View):
         dados.sort(key=operator.itemgetter('ordem', 'lote'))
 
         self.context.update({
-            'conta_inseridos': conta_inseridos,
             'conta_retirados': conta_retirados,
+            'conta_inseridos': conta_inseridos,
+            'conta_confirmados': conta_confirmados,
             'headers': ['Bipado antes', 'Lote', 'Bipado agora'],
             'fields': ['data_antes', 'lote', 'data_agora'],
             'data': dados,
