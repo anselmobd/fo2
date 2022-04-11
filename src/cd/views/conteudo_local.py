@@ -129,13 +129,13 @@ class ConteudoLocal(View):
 
         self.lotes_end = lotes_em_endereco(self.cursor, self.local)
 
-        if (not self.lotes_end) or (not self.lotes_end[0]['lote']):
+        tem_lotes = self.lotes_end and self.lotes_end[0]['lote']
+
+        if tem_lotes:
+            self.get_lotes()
+        else:
             self.context.update({
                 'erro': 'Nenhum lote no endereço.'})
-            self.get_esvaziamentos()
-            return
-
-        self.get_lotes()
 
         self.get_esvaziamentos()
 
