@@ -11,6 +11,7 @@ from cd.views import (
     endereco_conteudo_importa,
     esvazia_palete,
     localiza_lote,
+    vizualiza_esvaziamento,
 )
 from cd.views.api.palete.print import PaletePrint
 
@@ -157,5 +158,9 @@ urlpatterns = [
     re_path(r'^esvazia_palete/$',
         esvazia_palete.EsvaziaPalete.as_view(),
         name='esvazia_palete'),
+
+    re_path(r'^vizualiza_esvaziamento/(?P<palete>[^/]+)/(?P<data_versao>[^/]+)/$',
+        vizualiza_esvaziamento.VisualizaEsvaziamento.as_view(),
+        name='vizualiza_esvaziamento'),
 
 ]

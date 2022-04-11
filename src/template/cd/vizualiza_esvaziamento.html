@@ -1,0 +1,36 @@
+{% extends 'cd/layout_m.html' %}
+
+{% block stylesheet %}
+<style>
+  {% include 'layout/simple_table.css' %}
+  table {
+    font-size: 4vw;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="leftcol50">
+      <p>
+        {{ titulo }}
+      </p>
+    </div>
+    <div class="rightcol50">
+      <a class="botao back" href="{% url 'cd:coletor' %}">Coletor</a>
+    </div>
+  </div>
+  <hr>
+  {% if erro %}
+    <p class="erro">{{ erro }}</p>
+  {% else %}
+    Palete {{ palete }}<br/>
+    Versão {{ data_versao }}
+    {% if data %}
+      <table id="lista_table">
+        {% include "layout/thead_generic.html" with data=headers only %}
+        {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      </table>
+    {% endif %}
+  {% endif %}
+{% endblock content %}
