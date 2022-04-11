@@ -16,7 +16,7 @@ from lotes.views.lote.conserto_lote import dict_conserto_lote
 import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
-    lotes_em_endereco,
+    lotes_em_local,
     esvazia_palete,
     get_palete,
     palete_guarda_hist,
@@ -47,7 +47,7 @@ class EsvaziaPalete(View):
             self.context['identificado'] = None
             return
 
-        lotes_end = lotes_em_endereco(cursor, palete)
+        lotes_end = lotes_em_local(cursor, palete)
         if lotes_end:
             self.context.update({
                 'quant_lotes': len(lotes_end),

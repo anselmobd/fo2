@@ -183,7 +183,7 @@ def add_endereco(cursor, endereco):
     except Exception as e:
         return repr(e)
 
-def lotes_em_endereco(cursor, endereco):
+def lotes_em_local(cursor, local):
     sql = f"""
         SELECT
           ec.COD_ENDERECO endereco
@@ -194,8 +194,8 @@ def lotes_em_endereco(cursor, endereco):
         FROM ENDR_014 lp -- lote/palete - oc/container
         LEFT JOIN ENDR_015 ec -- endereço/container
           ON UPPER(ec.COD_CONTAINER) = UPPER(lp.COD_CONTAINER)
-        WHERE ec.COD_ENDERECO = '{endereco}'
-           OR UPPER(lp.COD_CONTAINER)  = '{endereco}'
+        WHERE ec.COD_ENDERECO = '{local}'
+           OR UPPER(lp.COD_CONTAINER)  = '{local}'
         ORDER BY
           lp.DATA_INCLUSAO DESC
     """

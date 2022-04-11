@@ -10,7 +10,7 @@ from fo2.connections import db_cursor_so
 import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
-    lotes_em_endereco,
+    lotes_em_local,
     get_endereco,
     get_esvaziamentos_de_palete,
     get_palete,
@@ -137,7 +137,7 @@ class ConteudoLocal(View):
         if not self.local_ok():
             return
 
-        self.lotes_end = lotes_em_endereco(self.cursor, self.local)
+        self.lotes_end = lotes_em_local(self.cursor, self.local)
 
         tem_lotes = self.lotes_end and self.lotes_end[0]['lote']
 
