@@ -203,6 +203,22 @@ def lotes_em_local(cursor, local):
     return dictlist(cursor)
 
 
+def lotes_em_versao_palete(cursor, palete, data_versao):
+    sql = f"""
+        SELECT
+          lph.ORDEM_PRODUCAO op
+        , lph.ORDEM_CONFECCAO lote
+        , lph.DATA_INCLUSAO data
+        FROM ENDR_014_HIST_DUOMO lph -- esvaziamento de palete - lote/palete - oc/container
+        WHERE lph.COD_CONTAINER = '{palete}'
+          AND lph.DATA_VERSAO = '{data_versao}'
+        ORDER BY
+          lph.DATA_INCLUSAO DESC
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
+
+
 def lotes_em_palete(cursor, palete):
     sql = f"""
         SELECT
