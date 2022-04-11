@@ -11,6 +11,7 @@ import cd.forms
 import cd.views.gerais
 from cd.queries.endereco import (
     lotes_em_endereco,
+    get_endereco,
     get_esvaziamentos_de_palete,
     get_palete,
 )
@@ -99,10 +100,19 @@ class ConteudoLocal(View):
             return False
         return True
 
+    def endereco_ok(self, endereco):
+        dados_endereco = get_endereco(self.cursor, endereco)
+        if not dados_endereco:
+            self.context.update({
+                'erro': "Endereço inexistênte."})
+            return False
+        return True
+
     def local_ok(self):
         if self.eh_palete:
             return self.palete_ok(self.local)
-        return True
+        else:
+            return self.endereco_ok(self.local)
 
     def mount_context(self, request, form):
         self.cursor = db_cursor_so(request)
