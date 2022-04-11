@@ -293,3 +293,16 @@ def get_palete(cursor, palete):
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
+
+
+def get_esvaziamentos_de_palete(cursor, palete):
+    sql = f"""
+        SELECT DISTINCT
+          h.DATA_VERSAO dh
+        FROM ENDR_014_HIST_DUOMO h
+        WHERE h.COD_CONTAINER = '{palete}'
+        ORDER BY 
+          h.DATA_VERSAO DESC
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
