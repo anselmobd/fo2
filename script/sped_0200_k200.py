@@ -46,16 +46,25 @@ class Sped:
             nome
         )
 
-    def import_linha(self, linha):
+    def import_linha(self, linha, bloco_id, pos_nivel):
         bloco = linha[1:5]
         if bloco not in self.blocos:
             self.blocos[bloco] = []
-        self.blocos[bloco].append(linha)
+        if (
+            args.com_corte
+            or (
+                not (
+                    (bloco == bloco_id)
+                    and (linha[pos_nivel] == '2')
+                )
+            )
+        ):
+            self.blocos[bloco].append(linha)
 
-    def import_bloco(self, arq):
+    def import_bloco(self, arq, bloco_id, pos_nivel):
         with open(arq) as data:
             for linha in data.read().splitlines():
-                self.import_linha(linha)
+                self.import_linha(linha, bloco_id, pos_nivel)
 
     def bloco0000(self):
         dt_pos_fim = datetime.strptime(
@@ -166,6 +175,8 @@ def parse_args():
     parser.add_argument(
         "arqk200",
         help='Bloco K200')
+    parser.add_argument(
+        '--com_corte', action='store_true')
     return parser.parse_args()
 
 
@@ -177,6 +188,6 @@ if __name__ == '__main__':
     sped = Sped()
     sped.ano = args.ano
     sped.mes = args.mes
-    sped.import_bloco(args.arq0200)
-    sped.import_bloco(args.arqk200)
+    sped.import_bloco(args.arq0200, '0200', 6)
+    sped.import_bloco(args.arqk200, 'K200', 15)
     sped.print()
