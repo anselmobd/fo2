@@ -30,7 +30,7 @@ table {
   <p class="erro">{{ erro }}</p>
 {% else %}
   {% if data %}
-    {{ data|length }} lote{{ data|length|pluralize }} no {% if eh_palete %}palete{%else%}endereço{%endif%} {{ endereco }}
+    {{ data|length }} lote{{ data|length|pluralize }} no {% if eh_palete %}palete{%else%}endereço{%endif%} {{ local }}
     {% if endereco_lotes %}
       <br/>Endereço: {{endereco_lotes}}
     {% endif %}

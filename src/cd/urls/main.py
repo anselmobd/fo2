@@ -144,7 +144,7 @@ urlpatterns = [
         compara_apoio_systextil.ComparaApoioSystextil.as_view(),
         name='compara_apoio_systextil'),
 
-    re_path(r'^conteudo_local/(?P<codigo>[^/]+)?$',
+    re_path(r'^conteudo_local/(?P<local>[^/]+)?$',
         conteudo_local.ConteudoLocal.as_view(),
         name='conteudo_local'),
 

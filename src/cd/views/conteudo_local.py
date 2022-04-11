@@ -26,7 +26,7 @@ class ConteudoLocal(View):
         if not self.eh_palete:
             return
 
-        dados_esvaziamento = get_esvaziamentos_de_palete(self.cursor, self.codigo)
+        dados_esvaziamento = get_esvaziamentos_de_palete(self.cursor, self.local)
 
         if dados_esvaziamento:
             self.context.update({
@@ -38,14 +38,14 @@ class ConteudoLocal(View):
     def mount_context(self, request, form):
         self.cursor = db_cursor_so(request)
 
-        self.codigo = form.cleaned_data['codigo'].upper()
+        self.local = form.cleaned_data['local'].upper()
         self.context.update({
-            'endereco': self.codigo
+            'local': self.local
         })
 
-        lotes_end = lotes_em_endereco(self.cursor, self.codigo)
+        lotes_end = lotes_em_endereco(self.cursor, self.local)
 
-        self.eh_palete = len(self.codigo) == 8
+        self.eh_palete = len(self.local) == 8
 
         if (not lotes_end) or (not lotes_end[0]['lote']):
             self.context.update({
@@ -113,14 +113,14 @@ class ConteudoLocal(View):
         return
 
     def get(self, request, *args, **kwargs):
-        if 'codigo' in kwargs and kwargs['codigo']:
+        if 'local' in kwargs and kwargs['local']:
             return self.post(request, *args, **kwargs)
         form = self.Form_class()
         self.context['form'] = form
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        if 'codigo' in kwargs and kwargs['codigo']:
+        if 'local' in kwargs and kwargs['local']:
             form = self.Form_class(kwargs)
         else:
             form = self.Form_class(request.POST)
