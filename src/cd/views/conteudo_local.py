@@ -24,6 +24,9 @@ class ConteudoLocal(View):
         self.template_name = 'cd/conteudo_local.html'
         self.context = {'titulo': 'Conteúdo'}
 
+    def dt_to_dtget(self, data_versao):
+        return data_versao.strftime('%Y%m%d%H%M%S')
+
     def get_esvaziamentos(self):
         if not self.eh_palete:
             return
@@ -31,6 +34,13 @@ class ConteudoLocal(View):
         dados_esvaziamento = get_esvaziamentos_de_palete(self.cursor, self.local)
 
         if dados_esvaziamento:
+
+            for row in dados_esvaziamento:
+                row['dh|LINK'] = reverse(
+                    'cd:vizualiza_esvaziamento',
+                    args=[self.local, self.dt_to_dtget(row['dh'])]
+                )
+
             self.context.update({
                 'e_headers': ['Data/hora'],
                 'e_fields': ['dh'],
