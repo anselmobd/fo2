@@ -1,3 +1,4 @@
+import operator
 from datetime import datetime
 from pprint import pprint
 
@@ -52,26 +53,32 @@ class VisualizaEsvaziamento(View):
         dados = []
         conta_inseridos = 0
         conta_retirados = 0
-        for lote in sorted(lotes):
+        for lote in lotes:
             data_antes = lotes_versao_dict[lote] if lote in lotes_versao_dict else None
             data_agora = lotes_end_dict[lote] if lote in lotes_end_dict else None
             if data_antes and not data_agora:
                 style = 'color: red;'
                 data_agora = 'retirado'
                 conta_retirados += 1
+                ordem = 1
             elif data_agora and not data_antes:
                 style = 'color: darkorange;'
                 data_antes = 'inserido'
                 conta_inseridos += 1
+                ordem = 2
             else:
                 style = 'color: darkgreen;'
+                ordem = 3
             style += 'text-align: center;'
             dados.append({
+                'ordem': ordem,
                 'lote': lote,
                 'data_antes': data_antes,
                 'data_agora': data_agora,
                 '|STYLE': style,
             })
+
+        dados.sort(key=operator.itemgetter('ordem', 'lote'))
 
         self.context.update({
             'conta_inseridos': conta_inseridos,
