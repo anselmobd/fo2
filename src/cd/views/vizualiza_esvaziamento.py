@@ -23,9 +23,16 @@ class VisualizaEsvaziamento(View):
         self.template_name = 'cd/vizualiza_esvaziamento.html'
         self.context = {'titulo': 'Esvaziamento'}
 
+    def dtget_to_dt(self, data_versao):
+        return datetime.strptime(data_versao, '%Y%m%d%H%M%S')
+
     def mount_context(self):
         palete = self.context['palete']
-        data_versao = self.context['data_versao']
+        data_versao = self.dtget_to_dt(
+            self.context['data_versao'])
+        self.context.update({
+            'data_versao': data_versao,
+        })
 
     def get(self, request, *args, **kwargs):
         self.cursor = db_cursor_so(request)
