@@ -35,30 +35,13 @@ class ConteudoLocal(View):
                 'e_data': dados_esvaziamento,
             })
 
-    def mount_context(self, request, form):
-        self.cursor = db_cursor_so(request)
-
-        self.local = form.cleaned_data['local'].upper()
-        self.context.update({
-            'local': self.local
-        })
-
-        lotes_end = lotes_em_endereco(self.cursor, self.local)
-
-        self.eh_palete = len(self.local) == 8
-
-        if (not lotes_end) or (not lotes_end[0]['lote']):
-            self.context.update({
-                'erro': 'Nenhum lote no endereço.'})
-            self.get_esvaziamentos()
-            return
-
+    def get_lotes(self):
         headers = ["Bipado em", "Lote", "OP"]
         fields = ['data', 'lote', 'op']
 
         if self.eh_palete:
             enderecos = set()
-            for row in lotes_end:
+            for row in self.lotes_end:
                 if row['endereco']:
                     enderecos.add(row['endereco'])
             self.context.update({
@@ -69,7 +52,7 @@ class ConteudoLocal(View):
                 fields += ['endereco']
         else:
             paletes = set()
-            for row in lotes_end:
+            for row in self.lotes_end:
                 if row['palete']:
                     paletes.add(row['palete'])
             self.context.update({
@@ -81,7 +64,7 @@ class ConteudoLocal(View):
 
         dados = []
         ult_data = datetime(3000, 1, 1)
-        for row in lotes_end:
+        for row in self.lotes_end:
             if row['data'].date() < ult_data.date():
                 ult_data = row['data']
                 dados.append({
@@ -102,15 +85,32 @@ class ConteudoLocal(View):
                 row['endereco'] = '-'
 
         self.context.update({
-            'eh_palete': self.eh_palete,
             'headers': headers,
             'fields': fields,
             'data': dados,
         })
 
-        self.get_esvaziamentos()
+    def mount_context(self, request, form):
+        self.cursor = db_cursor_so(request)
 
-        return
+        self.local = form.cleaned_data['local'].upper()
+        self.eh_palete = len(self.local) == 8
+        self.context.update({
+            'local': self.local,
+            'eh_palete': self.eh_palete,
+        })
+
+        self.lotes_end = lotes_em_endereco(self.cursor, self.local)
+
+        if (not self.lotes_end) or (not self.lotes_end[0]['lote']):
+            self.context.update({
+                'erro': 'Nenhum lote no endereço.'})
+            self.get_esvaziamentos()
+            return
+
+        self.get_lotes()
+
+        self.get_esvaziamentos()
 
     def get(self, request, *args, **kwargs):
         if 'local' in kwargs and kwargs['local']:
