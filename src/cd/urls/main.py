@@ -10,6 +10,7 @@ from cd.views import (
     endereco_imprime,
     endereco_conteudo_importa,
     esvazia_palete,
+    grade_cd,
     localiza_lote,
     vizualiza_esvaziamento,
 )
@@ -81,6 +82,11 @@ urlpatterns = [
         views.Grade.as_view(), name='grade_estoque_detalhe'),
     re_path(r'^grade_estoque/(?P<referencia>[^/]+)?/?$',
         views.Grade.as_view(), name='grade_estoque'),
+
+    re_path(r'^grade_cd/(?P<referencia>[^/]+)/(?P<detalhe>[^/]+)?/?$',
+        grade_cd.GradeCd.as_view(), name='grade_cd_detalhe'),
+    re_path(r'^grade_cd/(?P<referencia>[^/]+)?/?$',
+        grade_cd.GradeCd.as_view(), name='grade_cd'),
 
     re_path(r'^historico/?$',
         views.Historico.as_view(), name='historico'),
