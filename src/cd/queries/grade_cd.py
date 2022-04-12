@@ -18,6 +18,7 @@ def lotes_em_estoque(cursor, get='ref'):
             , l.ORDEM_CONFECCAO oc
             , l.PROCONF_GRUPO ref
             , l.PROCONF_SUBGRUPO tam
+            , tam.ORDEM_TAMANHO ordem_tam
             , l.PROCONF_ITEM cor
             , l.ORDEM_PRODUCAO op
             , l.QTDE_PECAS_PROG prog
@@ -31,6 +32,8 @@ def lotes_em_estoque(cursor, get='ref'):
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
          AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+        LEFT JOIN BASI_220 tam -- cadastro de tamanhos
+          ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE l.CODIGO_ESTAGIO = 63
           AND l.QTDE_DISPONIVEL_BAIXA > 0
     """
