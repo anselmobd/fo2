@@ -4,8 +4,7 @@ from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def lotes_em_estoque(cursor, get='ref'):
-
+def sql_em_estoque(get='ref'):
     if get == 'ref':
         distinct = True
         fields = """
@@ -37,5 +36,9 @@ def lotes_em_estoque(cursor, get='ref'):
         WHERE l.CODIGO_ESTAGIO = 63
           AND l.QTDE_DISPONIVEL_BAIXA > 0
     """
+    return sql
+
+def lotes_em_estoque(cursor, get='ref'):
+    sql = sql_em_estoque(get)
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
