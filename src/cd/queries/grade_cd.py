@@ -143,6 +143,19 @@ def grade_estoque(cursor, tipo=None, ref=None):
                 {sql_base_p}
             )
         """
+    if tipo == 'i-sp':
+        sql_base_i = sql_em_estoque(tipo='i', ref=ref)
+        sql_base_s = sql_em_estoque(tipo='s', ref=ref, sinal="-")
+        sql_base_p = sql_em_estoque(tipo='p', ref=ref, sinal="-")
+        sql_base = f"""--
+            (
+                {sql_base_i}
+                UNION
+                {sql_base_s}
+                UNION
+                {sql_base_p}
+            )
+        """
 
     sql = f"""
         WITH base as
