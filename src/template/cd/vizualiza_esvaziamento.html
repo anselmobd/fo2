@@ -25,16 +25,16 @@
     <p class="erro">{{ erro }}</p>
   {% else %}
     {% url 'cd:conteudo_local' palete as lotes_palete %}
-    Palete {% include "layout/link.html" with link=lotes_palete text=palete only %}<br/>
-    Versão {{ data_versao }}
+    {% include "layout/link.html" with link=lotes_palete text=palete only %}
+    {{ data_versao }}
     {% if conta_retirados %}
-      <br/>{{ conta_retirados }} retirado{{ conta_retirados|pluralize }}
+      <br/>{{ conta_retirados }} <span style="color: red;">retirado{{ conta_retirados|pluralize }}</span>
     {% endif %}
     {% if conta_inseridos %}
-      <br/>{{ conta_inseridos }} inserido{{ conta_inseridos|pluralize }}
+      <br/>{{ conta_inseridos }} <span style="color: darkorange;">inserido{{ conta_inseridos|pluralize }}</span>
     {% endif %}
     {% if conta_confirmados %}
-      <br/>{{ conta_confirmados }} confirmado{{ conta_confirmados|pluralize }}
+      <br/>{{ conta_confirmados }} <span style="color: darkgreen;">confirmado{{ conta_confirmados|pluralize }}</span>
     {% endif %}
     {% if data %}
       <table id="lista_table">
