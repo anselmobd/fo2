@@ -232,7 +232,7 @@ class Grade(View):
                     if total_pedido is None:
                         total_pedido = 0
 
-                    solped_ref = {'total': 1}
+                    solped_ref = grade_estoque(self.cursor_s, tipo='sp', ref=ref)
                     # solped_ref = queries.grade_solicitacao(
                     #     cursor_def, ref, tipo='sp', grade_inventario=True)
                     if solped_ref['total'] != 0:
@@ -256,7 +256,7 @@ class Grade(View):
                             'disponivel': dispon_ref,
                             })
                         if detalhe:
-                            solic_ref = {'total': 0}
+                            solic_ref = grade_estoque(self.cursor_s, tipo='s', ref=ref)
                             # solic_ref = queries.grade_solicitacao(
                             #     cursor_def, ref, tipo='s',
                             #     grade_inventario=True)
