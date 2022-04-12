@@ -1,6 +1,9 @@
 from django.urls import re_path
 
 from . import views
+from comercial.views import (
+    lista_referencias
+)
 
 
 app_name = 'comercial'
@@ -33,6 +36,9 @@ urlpatterns = [
         name='ficha_cliente'),
     re_path(r'^ficha_cliente/(?P<cnpj>.+)/$', views.FichaCliente.as_view(),
         name='ficha_cliente__get'),
+
+    re_path(r'^lista_referencias/$', lista_referencias.ListaReferencias.as_view(),
+        name='lista_referencias'),
 
     re_path(r'^metas/$',
         views.estoque.Metas.as_view(),
