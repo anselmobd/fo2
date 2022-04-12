@@ -47,11 +47,10 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
             , l.QTDE_DISPONIVEL_BAIXA qtd_dbaixa
         """
 
-    field_qtd = f"""--
-        , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
-    """
-
     if tipo == 'p':
+        field_qtd = f"""--
+            , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
+        """
         tipo_join = """--
             JOIN PCPC_020 op
               ON op.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
@@ -72,38 +71,18 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
         tipo_filter = """--
               AND sl.SITUACAO IN (2, 3, 4)
         """
-    elif tipo == 'sp-----------':
-        soma_qtd = """--
-            ( CASE WHEN op.PEDIDO_VENDA <> 0
-              THEN l.QTDE_DISPONIVEL_BAIXA
-              ELSE 0
-              END
-              +
-              CASE WHEN sl.SITUACAO IS NOT NULL
-              THEN sl.QTDE
-              ELSE 0
-              END
-            )
-        """
+    elif tipo == 'i':
         field_qtd = f"""--
-            , {soma_qtd} qtd
+            , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
         """
-        tipo_join = """--
-            JOIN PCPC_020 op
-              ON op.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
-            LEFT JOIN PCPC_044 sl
-              ON sl.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
-             AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
-        """
-        tipo_filter = f"""--
-              AND (sl.SITUACAO IS NULL OR sl.SITUACAO IN (2, 3, 4))
-              AND {soma_qtd} <> 0
-        """
-    else:
         tipo_join = ""
         tipo_filter = """--
               AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
+    else:
+        field_qtd = ""
+        tipo_join = ""
+        tipo_filter = ""
 
     sql = f"""
         SELECT {"DISTINCT" if distinct else ""}
