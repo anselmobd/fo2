@@ -44,8 +44,12 @@ def sql_em_estoque(tipo=None, ref=None, get=None):
             , l.PROCONF_ITEM cor
             , l.ORDEM_PRODUCAO op
             , l.QTDE_PECAS_PROG qtd_prog
-            , l.QTDE_DISPONIVEL_BAIXA qtd
+            , l.QTDE_DISPONIVEL_BAIXA qtd_dbaixa
         """
+
+    field_qtd = """--
+        , l.QTDE_DISPONIVEL_BAIXA qtd
+    """
 
     if tipo == 'p':
         tipo_join = """--
@@ -54,14 +58,57 @@ def sql_em_estoque(tipo=None, ref=None, get=None):
         """
         tipo_filter = """--
               AND op.PEDIDO_VENDA <> 0
+              AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
+    elif tipo == 's':
+        field_qtd = """--
+            , sl.QTDE qtd
+        """
+        tipo_join = """--
+            JOIN PCPC_044 sl
+              ON sl.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
+             AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+        """
+        tipo_filter = """--
+              AND sl.SITUACAO IN (2, 3, 4)
+        """
+    elif tipo == 'sp':
+        soma_qtd = """--
+            ( CASE WHEN op.PEDIDO_VENDA <> 0
+              THEN l.QTDE_DISPONIVEL_BAIXA
+              ELSE 0
+              END
+              +
+              CASE WHEN sl.SITUACAO IS NOT NULL
+              THEN sl.QTDE
+              ELSE 0
+              END
+            )
+        """
+        field_qtd = f"""--
+            , {soma_qtd} qtd
+        """
+        tipo_join = """--
+            JOIN PCPC_020 op
+              ON op.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
+            LEFT JOIN PCPC_044 sl
+              ON sl.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
+             AND sl.ORDEM_CONFECCAO = l.ORDEM_CONFECCAO 
+        """
+        tipo_filter = f"""--
+              AND (sl.SITUACAO IS NULL OR sl.SITUACAO IN (2, 3, 4))
+              AND {soma_qtd} <> 0
         """
     else:
         tipo_join = ""
-        tipo_filter = ""
+        tipo_filter = """--
+              AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
 
     sql = f"""
         SELECT {"DISTINCT" if distinct else ""}
         {fields} -- fields
+        {field_qtd} -- field_qtd
         FROM ENDR_014 lp
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
@@ -70,7 +117,6 @@ def sql_em_estoque(tipo=None, ref=None, get=None):
         LEFT JOIN BASI_220 tam -- cadastro de tamanhos
           ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE l.CODIGO_ESTAGIO = 63
-          AND l.QTDE_DISPONIVEL_BAIXA > 0
           {tipo_filter} -- tipo_filter
           {filter_ref} -- filter_ref
     """
