@@ -10,7 +10,6 @@ from cd.views import (
     endereco_imprime,
     endereco_conteudo_importa,
     esvazia_palete,
-    grade_cd,
     localiza_lote,
     vizualiza_esvaziamento,
 )
