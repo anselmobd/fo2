@@ -13,7 +13,10 @@ import lotes.models
 
 import cd.queries as queries
 import cd.forms
-from cd.queries.grade_cd import lotes_em_estoque
+from cd.queries.grade_cd import (
+    grade_estoque,
+    lotes_em_estoque,
+)
 
 
 class Grade(View):
@@ -207,8 +210,9 @@ class Grade(View):
                 for row in mod_referencias_todos:
                     ref = row['referencia']
 
-                    invent_ref = queries.grade_solicitacao(
-                        cursor_def, ref, tipo='i', grade_inventario=True)
+                    invent_ref = grade_estoque(self.cursor_s, ref=ref)
+                    # invent_ref = queries.grade_solicitacao(
+                    #     cursor_def, ref, tipo='i', grade_inventario=True)
                     grade_ref = {
                         'ref': ref,
                         'inventario': invent_ref,
@@ -222,12 +226,15 @@ class Grade(View):
                         grade_ref.update({'tipo': row['grade_tipo']})
                         tipo_ant = row['grade_tipo']
 
-                    sum_pedido = queries.sum_pedido(cursor_def, ref)
+                    sum_pedido = [{'qtd': None}]
+                    # sum_pedido = queries.sum_pedido(cursor_def, ref)
                     total_pedido = sum_pedido[0]['qtd']
                     if total_pedido is None:
                         total_pedido = 0
-                    solped_ref = queries.grade_solicitacao(
-                        cursor_def, ref, tipo='sp', grade_inventario=True)
+
+                    solped_ref = {'total': 0}
+                    # solped_ref = queries.grade_solicitacao(
+                    #     cursor_def, ref, tipo='sp', grade_inventario=True)
                     if solped_ref['total'] != 0:
                         if total_pedido == 0:
                             link_detalhe = False
@@ -275,8 +282,9 @@ class Grade(View):
                             if row['grade_tipo'] == 'PA/PG']
 
                 if len(refs) > totaliza_mais_que:
-                    dispon_modelo = queries.grade_solicitacao(
-                        cursor_def, refs, tipo='i-sp')
+                    dispon_modelo = {'total': 0}
+                    # dispon_modelo = queries.grade_solicitacao(
+                    #     cursor_def, refs, tipo='i-sp')
                     if dispon_modelo['total'] != 0:
 
                         if totais:  # se for totais add borda entre as colunas
@@ -306,8 +314,9 @@ class Grade(View):
             if totais:
                 refs = [row['referencia'] for row in referencias
                         if row['grade_tipo'] == 'PA/PG']
-                dispon_sel_modelo = queries.grade_solicitacao(
-                    cursor_def, refs, tipo='i-sp')
+                dispon_sel_modelo = {'fields': []}
+                # dispon_sel_modelo = queries.grade_solicitacao(
+                #     cursor_def, refs, tipo='i-sp')
 
                 for i in range(1, len(dispon_sel_modelo['fields'])):
                     i_column = i + 1
