@@ -86,15 +86,19 @@ def dict_options(dictionary, *args):
 
 class DataSql(object):
     """docstring for DataDim."""
-    def __init__(self, cursor, args=[], sql=''):
+    def __init__(self, cursor, args=[], sql='', case=None):
         self._cursor = cursor
         self.args = args
+        self.case = case
         if sql:
             self.sql = sql
 
     def execute(self, sql):
         self._cursor.execute(sql, self.args)
-        return rows_to_dict_list(self._cursor)
+        if self.case and self.case.startswith('l'):
+            return rows_to_dict_list_lower(self._cursor)
+        else:
+            return rows_to_dict_list(self._cursor)
 
     @property
     def sql(self): pass
@@ -155,7 +159,7 @@ class GradeQtd(object):
 
     class DataDim(DataSql):
         """docstring for DataDim."""
-        def __init__(self, cursor, args, sql, **kwargs):
+        def __init__(self, cursor, args, sql, case=None, **kwargs):
             self.id_field = \
                 dict_def_options(kwargs, '', 'id', 'id_field')
             self.facade_field = \
@@ -165,7 +169,7 @@ class GradeQtd(object):
             self.name_plural = kwargs.get('name_plural', self.name+'s')
             self.total = kwargs.get('total', '')
             self.forca_total = kwargs.get('forca_total', False)
-            super(GradeQtd.DataDim, self).__init__(cursor, args, sql)
+            super(GradeQtd.DataDim, self).__init__(cursor, args, sql, case=case)
 
         def execute(self, sql):
             data_dim = super(GradeQtd.DataDim, self).execute(sql)
@@ -181,16 +185,17 @@ class GradeQtd(object):
                 data_dim.append(column)
             return data_dim
 
-    def __init__(self, cursor, args=[]):
+    def __init__(self, cursor, args=[], case=None):
         self._cursor = cursor
         self.args = args
+        self.case = case
         self.total = 0
         self._table_data = None
 
     def row(self, **kwargs):
         if 'sql' in kwargs:
             self._row = self.DataDim(
-                self._cursor, self.args, **kwargs)
+                self._cursor, self.args, case=self.case, **kwargs)
             if len(self._row.data) > 1 and self._row.name_plural:
                 self._row.name = self._row.name_plural
             return self._row.data
@@ -199,7 +204,7 @@ class GradeQtd(object):
     def col(self, **kwargs):
         if 'sql' in kwargs:
             self._col = self.DataDim(
-                self._cursor, self.args, **kwargs)
+                self._cursor, self.args, case=self.case, **kwargs)
             if len(self._col.data) > 1 and self._col.name_plural:
                 self._col.name = self._col.name_plural
             return self._col.data
@@ -208,7 +213,7 @@ class GradeQtd(object):
     def value(self, **kwargs):
         if 'sql' in kwargs:
             self._value = self.DataDim(
-                self._cursor, self.args, **kwargs)
+                self._cursor, self.args, case=self.case, **kwargs)
             return self._value.data
         return None
 
