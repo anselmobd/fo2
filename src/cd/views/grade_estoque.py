@@ -226,9 +226,11 @@ class Grade(View):
                         grade_ref.update({'tipo': row['grade_tipo']})
                         tipo_ant = row['grade_tipo']
 
-                    sum_pedido = [{'qtd': 2}]
+                    pedido_ref = grade_estoque(self.cursor_s, tipo='p', ref=ref)
+                    total_pedido = pedido_ref['total']
+                    # sum_pedido = [{'qtd': 2}]
                     # sum_pedido = queries.sum_pedido(cursor_def, ref)
-                    total_pedido = sum_pedido[0]['qtd']
+                    # total_pedido = sum_pedido[0]['qtd']
                     if total_pedido is None:
                         total_pedido = 0
 
@@ -264,7 +266,7 @@ class Grade(View):
                                 grade_ref.update({
                                     'solicitacoes': solic_ref,
                                     })
-                            pedido_ref = grade_estoque(self.cursor_s, tipo='p', ref=ref)
+                            # pedido_ref = grade_estoque(self.cursor_s, tipo='p', ref=ref)
                             # pedido_ref = queries.grade_solicitacao(
                             #     cursor_def, ref, tipo='p',
                             #     grade_inventario=True)
