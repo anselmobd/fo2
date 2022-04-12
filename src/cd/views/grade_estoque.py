@@ -210,7 +210,7 @@ class Grade(View):
                 for row in mod_referencias_todos:
                     ref = row['referencia']
 
-                    invent_ref = grade_estoque(self.cursor_s, ref=ref)
+                    invent_ref = grade_estoque(self.cursor_s, tipo='i', ref=ref)
                     # invent_ref = queries.grade_solicitacao(
                     #     cursor_def, ref, tipo='i', grade_inventario=True)
                     grade_ref = {
@@ -226,13 +226,13 @@ class Grade(View):
                         grade_ref.update({'tipo': row['grade_tipo']})
                         tipo_ant = row['grade_tipo']
 
-                    sum_pedido = [{'qtd': None}]
+                    sum_pedido = [{'qtd': 2}]
                     # sum_pedido = queries.sum_pedido(cursor_def, ref)
                     total_pedido = sum_pedido[0]['qtd']
                     if total_pedido is None:
                         total_pedido = 0
 
-                    solped_ref = {'total': 0}
+                    solped_ref = {'total': 1}
                     # solped_ref = queries.grade_solicitacao(
                     #     cursor_def, ref, tipo='sp', grade_inventario=True)
                     if solped_ref['total'] != 0:
@@ -245,9 +245,10 @@ class Grade(View):
                         else:
                             link_detalhe = True
                             solped_titulo = 'Solicitações+Pedidos'
-                        dispon_ref = queries.grade_solicitacao(
-                            cursor_def, ref, tipo='i-sp',
-                            grade_inventario=True)
+                        dispon_ref = []
+                        # dispon_ref = queries.grade_solicitacao(
+                        #     cursor_def, ref, tipo='i-sp',
+                        #     grade_inventario=True)
                         grade_ref.update({
                             'solped_titulo': solped_titulo,
                             'link_detalhe': link_detalhe,
@@ -255,16 +256,18 @@ class Grade(View):
                             'disponivel': dispon_ref,
                             })
                         if detalhe:
-                            solic_ref = queries.grade_solicitacao(
-                                cursor_def, ref, tipo='s',
-                                grade_inventario=True)
+                            solic_ref = {'total': 0}
+                            # solic_ref = queries.grade_solicitacao(
+                            #     cursor_def, ref, tipo='s',
+                            #     grade_inventario=True)
                             if solic_ref['total'] != 0:
                                 grade_ref.update({
                                     'solicitacoes': solic_ref,
                                     })
-                            pedido_ref = queries.grade_solicitacao(
-                                cursor_def, ref, tipo='p',
-                                grade_inventario=True)
+                            pedido_ref = grade_estoque(self.cursor_s, tipo='p', ref=ref)
+                            # pedido_ref = queries.grade_solicitacao(
+                            #     cursor_def, ref, tipo='p',
+                            #     grade_inventario=True)
                             if pedido_ref['total'] != 0:
                                 grade_ref.update({
                                     'pedido': pedido_ref,
