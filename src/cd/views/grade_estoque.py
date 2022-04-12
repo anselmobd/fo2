@@ -99,6 +99,7 @@ class Grade(View):
             # referencias = data_rec.distinct().values(
             #     'referencia').order_by('referencia')
             for row in referencias:
+                row['referencia'] = row['ref']
                 row['modelo'] = int(
                     ''.join([c for c in row['referencia'] if c.isdigit()]))
 
