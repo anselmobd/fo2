@@ -25,7 +25,7 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
     elif isinstance(ref, str):
         filter_ref = f"and l.PROCONF_GRUPO = '{ref}'"
     else:
-        refs = ', '.join(ref)
+        refs = ', '.join([f"'{r}'" for r in ref])
         filter_ref = f"and l.PROCONF_GRUPO in ({refs})"
 
     if get == 'ref':
