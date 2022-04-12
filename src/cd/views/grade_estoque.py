@@ -247,7 +247,7 @@ class Grade(View):
                         else:
                             link_detalhe = True
                             solped_titulo = 'Solicitações+Pedidos'
-                        dispon_ref = []
+                        dispon_ref = grade_estoque(self.cursor_s, tipo='i-sp', ref=ref)
                         # dispon_ref = queries.grade_solicitacao(
                         #     cursor_def, ref, tipo='i-sp',
                         #     grade_inventario=True)
@@ -266,7 +266,7 @@ class Grade(View):
                                 grade_ref.update({
                                     'solicitacoes': solic_ref,
                                     })
-                            # pedido_ref = grade_estoque(self.cursor_s, tipo='p', ref=ref)
+                            # pedido_ref = grade_estoque(self.cursor_s, tipo='p', ref=ref) # está calculado acima
                             # pedido_ref = queries.grade_solicitacao(
                             #     cursor_def, ref, tipo='p',
                             #     grade_inventario=True)
@@ -287,7 +287,7 @@ class Grade(View):
                             if row['grade_tipo'] == 'PA/PG']
 
                 if len(refs) > totaliza_mais_que:
-                    dispon_modelo = {'total': 0}
+                    dispon_modelo = grade_estoque(self.cursor_s, tipo='i-sp', ref=refs)
                     # dispon_modelo = queries.grade_solicitacao(
                     #     cursor_def, refs, tipo='i-sp')
                     if dispon_modelo['total'] != 0:
