@@ -7,7 +7,18 @@ from utils.functions.models import (
 from utils.functions.queries import debug_cursor_execute
 
 
-def sql_em_estoque(ref=None, get=None):
+def sql_em_estoque(tipo=None, ref=None, get=None):
+    """Monta SQL base de lotes em produção final
+    (por ora, apenas endereçados)
+    Recebe:
+      tipo
+        i = inventário; todos os lotes
+        p = lotes de OPs de Pedidos
+      ref
+        None = grade total (da solicitação)
+        string = filtra uma referência
+        list = lista de referências
+    """
 
     if ref is None:
         filter_ref = ''
@@ -36,6 +47,18 @@ def sql_em_estoque(ref=None, get=None):
             , l.QTDE_DISPONIVEL_BAIXA qtd
         """
 
+    if tipo == 'p':
+        tipo_join = """--
+            JOIN PCPC_020 op
+              ON op.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO
+        """
+        tipo_filter = """--
+              AND op.PEDIDO_VENDA <> 0
+        """
+    else:
+        tipo_join = ""
+        tipo_filter = ""
+
     sql = f"""
         SELECT {"DISTINCT" if distinct else ""}
         {fields} -- fields
@@ -43,10 +66,12 @@ def sql_em_estoque(ref=None, get=None):
         JOIN PCPC_040 l
           ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
          AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
+        {tipo_join} -- tipo_join
         LEFT JOIN BASI_220 tam -- cadastro de tamanhos
           ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE l.CODIGO_ESTAGIO = 63
           AND l.QTDE_DISPONIVEL_BAIXA > 0
+          {tipo_filter} -- tipo_filter
           {filter_ref} -- filter_ref
     """
     return sql
@@ -57,12 +82,10 @@ def lotes_em_estoque(cursor, get='ref'):
     return dictlist(cursor)
 
 
-def grade_estoque(cursor, ref=None):
-
-    # Grade de solicitação
+def grade_estoque(cursor, tipo=None, ref=None):
     grade = GradeQtd(cursor, case='lower')
 
-    sql_base = sql_em_estoque(ref=ref)
+    sql_base = sql_em_estoque(tipo=tipo, ref=ref)
 
     sql = f"""
         WITH base as
