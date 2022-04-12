@@ -7,7 +7,7 @@ from utils.functions.models import (
 from utils.functions.queries import debug_cursor_execute
 
 
-def sql_em_estoque(tipo=None, ref=None, get=None):
+def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
     """Monta SQL base de lotes em produção final
     (por ora, apenas endereçados)
     Recebe:
@@ -47,8 +47,8 @@ def sql_em_estoque(tipo=None, ref=None, get=None):
             , l.QTDE_DISPONIVEL_BAIXA qtd_dbaixa
         """
 
-    field_qtd = """--
-        , l.QTDE_DISPONIVEL_BAIXA qtd
+    field_qtd = f"""--
+        , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
     """
 
     if tipo == 'p':
@@ -61,8 +61,8 @@ def sql_em_estoque(tipo=None, ref=None, get=None):
               AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
     elif tipo == 's':
-        field_qtd = """--
-            , sl.QTDE qtd
+        field_qtd = f"""--
+            , {sinal}sl.QTDE qtd
         """
         tipo_join = """--
             JOIN PCPC_044 sl
@@ -72,7 +72,7 @@ def sql_em_estoque(tipo=None, ref=None, get=None):
         tipo_filter = """--
               AND sl.SITUACAO IN (2, 3, 4)
         """
-    elif tipo == 'sp':
+    elif tipo == 'sp-----------':
         soma_qtd = """--
             ( CASE WHEN op.PEDIDO_VENDA <> 0
               THEN l.QTDE_DISPONIVEL_BAIXA
@@ -131,7 +131,18 @@ def lotes_em_estoque(cursor, get='ref'):
 def grade_estoque(cursor, tipo=None, ref=None):
     grade = GradeQtd(cursor, case='lower')
 
-    sql_base = sql_em_estoque(tipo=tipo, ref=ref)
+    if tipo in 'isp':
+        sql_base = sql_em_estoque(tipo=tipo, ref=ref)
+    if tipo == 'sp':
+        sql_base_s = sql_em_estoque(tipo='s', ref=ref)
+        sql_base_p = sql_em_estoque(tipo='p', ref=ref)
+        sql_base = f"""--
+            (
+                {sql_base_s}
+                UNION
+                {sql_base_p}
+            )
+        """
 
     sql = f"""
         WITH base as
@@ -170,7 +181,7 @@ def grade_estoque(cursor, tipo=None, ref=None):
     sql = f"""
         WITH base as
         ({sql_base})    
-        SELECT distinct
+        SELECT
           b.tam tamanho
         , b.cor
         , sum(b.qtd) qtd
