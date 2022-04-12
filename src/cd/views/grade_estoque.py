@@ -319,7 +319,7 @@ class Grade(View):
             if totais:
                 refs = [row['referencia'] for row in referencias
                         if row['grade_tipo'] == 'PA/PG']
-                dispon_sel_modelo = {'fields': []}
+                dispon_sel_modelo = grade_estoque(self.cursor_s, tipo='i-sp', ref=refs)
                 # dispon_sel_modelo = queries.grade_solicitacao(
                 #     cursor_def, refs, tipo='i-sp')
 
