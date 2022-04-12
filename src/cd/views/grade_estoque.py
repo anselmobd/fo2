@@ -6,11 +6,14 @@ from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
 
+from fo2.connections import db_cursor_so
+
 from utils.views import group_rowspan
 import lotes.models
 
 import cd.queries as queries
 import cd.forms
+from cd.queries.grade_cd import lotes_em_estoque
 
 
 class Grade(View):
@@ -61,7 +64,7 @@ class Grade(View):
         if limpo:
             context['limpo'] = True
 
-        cursor_def = connection.cursor()
+        # cursor_def = connection.cursor()
 
         if totais:
             self.template_name = 'cd/grade_estoque_totais.html'
@@ -84,16 +87,17 @@ class Grade(View):
             modelos = [refnum]
             exec = 'grade'
         else:  # Todos ou Modelo ou Totais
-            data_rec = lotes.models.Lote.objects
-            data_rec = data_rec.exclude(
-                local__isnull=True
-            ).exclude(
-                local__exact=''
-            ).exclude(
-                qtd__lte=0)
+            # data_rec = lotes.models.Lote.objects
+            # data_rec = data_rec.exclude(
+            #     local__isnull=True
+            # ).exclude(
+            #     local__exact=''
+            # ).exclude(
+            #     qtd__lte=0)
 
-            referencias = data_rec.distinct().values(
-                'referencia').order_by('referencia')
+            referencias = lotes_em_estoque(self.cursor_s, get='ref')
+            # referencias = data_rec.distinct().values(
+            #     'referencia').order_by('referencia')
             for row in referencias:
                 row['modelo'] = int(
                     ''.join([c for c in row['referencia'] if c.isdigit()]))
@@ -332,6 +336,7 @@ class Grade(View):
         return context
 
     def get(self, request, *args, **kwargs):
+        self.cursor_s = db_cursor_so(request)
         page = request.GET.get('page', 1)
         limpo = request.GET.get('limpo', 'N') == 'S'
         if 'referencia' in kwargs and kwargs['referencia'] is not None:
@@ -350,6 +355,7 @@ class Grade(View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.cursor_s = db_cursor_so(request)
         context = {'titulo': self.title_name}
         form = self.Form_class(request.POST)
         if form.is_valid():

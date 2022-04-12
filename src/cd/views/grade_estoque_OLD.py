@@ -13,7 +13,7 @@ import cd.queries as queries
 import cd.forms
 
 
-class GradeCd(View):
+class Grade(View):
 
     def __init__(self):
         self.Form_class = cd.forms.AskReferenciaForm
