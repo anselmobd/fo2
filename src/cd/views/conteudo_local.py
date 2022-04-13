@@ -19,6 +19,11 @@ from cd.queries.endereco import (
 
 class ConteudoLocal(View):
 
+    _PALETE = 1
+    _ENDERECO = 2
+    _INTEGER = 3
+    _ERRO = 0
+
     def __init__(self):
         self.Form_class = cd.forms.ConteudoLocalForm
         self.template_name = 'cd/conteudo_local.html'
@@ -28,7 +33,7 @@ class ConteudoLocal(View):
         return data_versao.strftime('%Y%m%d%H%M%S')
 
     def get_esvaziamentos(self):
-        if not self.eh_palete:
+        if not self.tipo_local == self._PALETE:
             return
 
         dados_esvaziamento = get_esvaziamentos_de_palete(self.cursor, self.local)
@@ -51,7 +56,7 @@ class ConteudoLocal(View):
         headers = ["Bipado em", "Lote", "OP"]
         fields = ['data', 'lote', 'op']
 
-        if self.eh_palete:
+        if self.tipo_local == self._PALETE:
             enderecos = set()
             for row in self.lotes_end:
                 if row['endereco']:
@@ -119,7 +124,7 @@ class ConteudoLocal(View):
         return True
 
     def local_ok(self):
-        if self.eh_palete:
+        if self.tipo_local == self._PALETE:
             return self.palete_ok(self.local)
         else:
             return self.endereco_ok(self.local)
@@ -128,10 +133,13 @@ class ConteudoLocal(View):
         self.cursor = db_cursor_so(request)
 
         self.local = form.cleaned_data['local'].upper()
-        self.eh_palete = len(self.local) == 8
+        if len(self.local) == 8:
+            self.tipo_local = self._PALETE
+        else:
+            self.tipo_local = self._ENDERECO
         self.context.update({
             'local': self.local,
-            'eh_palete': self.eh_palete,
+            'eh_palete': self.tipo_local == self._PALETE,
         })
 
         if not self.local_ok():
