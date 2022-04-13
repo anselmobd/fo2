@@ -87,7 +87,7 @@ def get_paletes(cursor):
           p.COD_CONTAINER
         , p.COD_TIPO
         , p.ENDERECO
-        , MIN(ec.COD_ENDERECO) ENDERECO_CONTAINER
+        , COALESCE(MIN(ec.COD_ENDERECO), '-') ENDERECO_CONTAINER
         , COUNT(DISTINCT ec.COD_ENDERECO) enderecos
         , p.TARA_CONTAINER
         , p.QUANTIDADE_MAXIMO
