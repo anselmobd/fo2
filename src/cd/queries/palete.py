@@ -87,13 +87,14 @@ def get_paletes(cursor):
           p.COD_CONTAINER
         , p.COD_TIPO
         , p.ENDERECO
-        , COALESCE(MIN(ec.COD_ENDERECO), '-') ENDERECO_CONTAINER
+        , MIN(ec.COD_ENDERECO) ENDERECO_CONTAINER
         , COUNT(DISTINCT ec.COD_ENDERECO) enderecos
         , p.TARA_CONTAINER
         , p.QUANTIDADE_MAXIMO
         , p.ULTIMA_ATUALIZACAO_TARA
         , p.SITUACAO
         , p.TUSSOR_IMPRESSA
+        , MAX(lp.DATA_INCLUSAO) ULTIMA_INCLUSAO
         , COUNT(lp.COD_CONTAINER) lotes
         FROM ENDR_012 p -- container palete
         LEFT JOIN ENDR_014 lp -- lote/palete - oc/container
