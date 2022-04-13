@@ -1,4 +1,5 @@
 cx-Oracle==8.3.0
+dbfread==2.0.7
 Django==2.1.15
 django-firebird==1.11
 django-ipware==4.0.0
@@ -11,6 +12,7 @@ gunicorn==20.1.0
 pandas==1.1.5
 Pillow==9.0.0
 psycopg2-binary==2.9.3
+pysmb==1.2.7
 python-stdnum==1.17
 pytz==2021.3
 PyYAML==6.0
