@@ -1,7 +1,7 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db import connection
 from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
@@ -9,9 +9,7 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from utils.views import group_rowspan
-import lotes.models
 
-import cd.queries as queries
 import cd.forms
 from cd.queries.grade_cd import (
     grade_estoque,
@@ -19,9 +17,10 @@ from cd.queries.grade_cd import (
 )
 
 
-class Grade(View):
+class Grade(PermissionRequiredMixin, View):
 
     def __init__(self):
+        self.permission_required = 'cd.can_view_grades_estoque'
         self.Form_class = cd.forms.AskReferenciaForm
         self.template_name = 'cd/grade_estoque.html'
         self.title_name = 'Seleção de grade de estoque'
