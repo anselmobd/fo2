@@ -3,6 +3,7 @@ from django.urls import include, re_path
 import cd.views as views
 from cd.views import (
     admin_palete,
+    api_lote,
     api_palete,
     compara_apoio_systextil,
     conteudo_local,
@@ -162,5 +163,8 @@ urlpatterns = [
     re_path(r'^vizualiza_esvaziamento/(?P<palete>[^/]+)/(?P<data_versao>[^/]+)/$',
         vizualiza_esvaziamento.VisualizaEsvaziamento.as_view(),
         name='vizualiza_esvaziamento'),
+
+    re_path(r'^api/retira_lote/(?P<lote>.+)$',
+        api_lote.retira_lote, name='retira_lote'),
 
 ]
