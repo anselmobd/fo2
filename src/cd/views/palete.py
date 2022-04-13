@@ -28,7 +28,7 @@ class Palete(O2BaseGetView):
             'headers': [
                 'Palete',
                 'Endereço',
-                'Quant. Lotes',
+                'Nº Lotes',
             ],
             'fields': [
                 'cod_container',
