@@ -22,7 +22,7 @@ class Palete(O2BaseGetView):
         data = get_paletes(cursor)
         pprint(data[0])
 
-        data = paginator_basic(data, 50, page)
+        data = paginator_basic(data, 100, page)
 
         self.context.update({
             'headers': [
