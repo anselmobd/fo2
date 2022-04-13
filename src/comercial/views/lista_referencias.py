@@ -7,6 +7,10 @@ from pprint import pprint
 from django.shortcuts import render
 from django.views import View
 
+from fo2.connections import db_cursor_so
+
+from systextil.queries.op.referencia import referencias_com_op
+
 from utils.functions.strings import only_digits
 
 
@@ -18,6 +22,7 @@ class ListaReferencias(View):
         self.context = {'titulo': 'Lista referências'}
 
     def mount_context(self):
+        cursor = db_cursor_so(self.request)
 
         # There will be some mechanism to capture userID, password, client_machine_name, server_name and server_ip
         # client_machine_name can be an arbitary ASCII string
@@ -33,30 +38,40 @@ class ListaReferencias(View):
         # so you might need to perform a file_obj.seek() if you need
         # to read from the beginning
 
-        refs = set()
+        refs_old = set()
         with DBF(file_obj.name) as bars:
             print('DBF')
             for bar in bars:
                 if bar['B_DESLIG'] is None:
-                    refs.add(bar['B_PROD'])
+                    refs_old.add(bar['B_PROD'])
 
         file_obj.close()
 
+        modelos_op = set()
+        refs_op = referencias_com_op(cursor)
+        for row in refs_op:
+            digits = only_digits(row['ref'])
+            if digits:
+                modelos_op.add(int(digits))
+
         dados = []
-        for ref in refs:
+        for ref in refs_old:
+            modelo = int(only_digits(ref))
             dados.append({
-                'modelo': int(only_digits(ref)),
+                'modelo': modelo,
                 'ref': ref,
+                'op': 'S' if modelo in modelos_op else 'N',
             })
         
         dados.sort(key=operator.itemgetter('modelo', 'ref'))
 
         self.context.update({
-            'headers': ['Modelo', 'Referência sistema antigo'],
-            'fields': ['modelo', 'ref'],
+            'headers': ['Referência sistema antigo', 'Modelo', 'Modelo tem OP'],
+            'fields': ['ref', 'modelo', 'op'],
             'data': dados,
         })
 
     def get(self, request, *args, **kwargs):
+        self.request = request
         self.mount_context()
         return render(request, self.template_name, self.context)
