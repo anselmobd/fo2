@@ -3,6 +3,7 @@ from pprint import pprint
 
 from systextil.queries.base import SMountQuery
 
+from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 from cd.classes.palete import Plt
@@ -78,3 +79,40 @@ def mark_palete_printed(cursor, palete):
         debug_cursor_execute(cursor, sql)
     except Exception as e:
         return repr(e)
+
+
+def get_paletes(cursor):
+    sql = f"""
+        SELECT
+          p.COD_CONTAINER
+        , p.COD_TIPO
+        , p.ENDERECO
+        , MIN(ec.COD_ENDERECO) ENDERECO_CONTAINER
+        , COUNT(DISTINCT ec.COD_ENDERECO) enderecos
+        , p.TARA_CONTAINER
+        , p.QUANTIDADE_MAXIMO
+        , p.ULTIMA_ATUALIZACAO_TARA
+        , p.SITUACAO
+        , p.TUSSOR_IMPRESSA
+        , COUNT(lp.COD_CONTAINER) lotes
+        FROM ENDR_012 p -- container palete
+        LEFT JOIN ENDR_014 lp -- lote/palete - oc/container
+          ON lp.COD_CONTAINER = p.COD_CONTAINER
+        LEFT JOIN ENDR_015 ec -- endereço/container 
+          ON ec.COD_CONTAINER = p.COD_CONTAINER
+        --WHERE 1=1
+        --  AND p.COD_CONTAINER = 'PLT0999I'
+        GROUP BY 
+          p.COD_CONTAINER
+        , p.COD_TIPO
+        , p.ENDERECO
+        , p.TARA_CONTAINER
+        , p.QUANTIDADE_MAXIMO
+        , p.ULTIMA_ATUALIZACAO_TARA
+        , p.SITUACAO
+        , p.TUSSOR_IMPRESSA
+        ORDER BY 
+          p.COD_CONTAINER
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
