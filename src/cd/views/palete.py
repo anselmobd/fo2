@@ -24,16 +24,24 @@ class Palete(O2BaseGetView):
 
         data = paginator_basic(data, 100, page)
 
+        for row in data:
+            if not row['endereco_container']:
+                row['endereco_container'] = '-'
+            if not row['ultima_inclusao']:
+                row['ultima_inclusao'] = '-'
+
         self.context.update({
             'headers': [
                 'Palete',
                 'Endereço',
                 'Nº Lotes',
+                'Última inclusão',
             ],
             'fields': [
                 'cod_container',
                 'endereco_container',
                 'lotes',
+                'ultima_inclusao',
             ],
             'data': data,
         })
