@@ -11,4 +11,5 @@ class CdPermissions(models.Model):
         permissions = (
             ("can_admin_pallet", "Pode administrar paletes"),
             ("can_view_grades_estoque", "Pode visualizar grades do estoque"),
+            ("can_del_lote_de_palete", "Pode retirar lote de palete"),
         )
