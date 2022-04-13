@@ -8,7 +8,9 @@ from cd.queries.lote import tira_lote
 
 
 def retira_lote(request, lote):
-    data = {}
+    data = {
+        'lote': lote,
+    }
     cursor = db_cursor_so(request)
     err_message = tira_lote(cursor, lote)
     if err_message:
