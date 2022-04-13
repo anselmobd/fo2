@@ -25,14 +25,13 @@ class ListaReferencias(View):
         conn = SMBConnection('', '', 'localhost', 'arquivos.t', use_ntlm_v2 = True)
         assert conn.connect('arquivos.t', 139)
 
-        file_obj = tempfile.NamedTemporaryFile('wb', delete=False)
+        file_obj = tempfile.NamedTemporaryFile()  # 'wb', delete=False)
         file_attributes, filesize = conn.retrieveFile('teg', '/Tussor/bd/DIS_BAR.DBF', file_obj)
         # Retrieved file contents are inside file_obj
         # Do what you need with the file_obj and then close it
         # Note that the file obj is positioned at the end-of-file,
         # so you might need to perform a file_obj.seek() if you need
         # to read from the beginning
-        file_obj.close()
 
         refs = set()
         with DBF(file_obj.name) as bars:
@@ -40,6 +39,8 @@ class ListaReferencias(View):
             for bar in bars:
                 if bar['B_DESLIG'] is None:
                     refs.add(bar['B_PROD'])
+
+        file_obj.close()
 
         dados = []
         for ref in refs:
