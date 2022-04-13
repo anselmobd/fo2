@@ -1,11 +1,15 @@
+import re
 from datetime import datetime
 from pprint import pprint
 
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+from cd.classes.palete import Plt
 
 from fo2.connections import db_cursor_so
+
+from utils.functions.strings import only_digits
 
 import cd.forms
 import cd.views.gerais
@@ -19,10 +23,12 @@ from cd.queries.endereco import (
 
 class ConteudoLocal(View):
 
-    _PALETE = 1
-    _ENDERECO = 2
+    _PALETE = 0
+    _ENDERECO = 1
+    _ERRO = 2
     _INTEGER = 3
-    _ERRO = 0
+    _NOME_TIPO_LOCAL = ['palete', 'endereço', 'código']
+
 
     def __init__(self):
         self.Form_class = cd.forms.ConteudoLocalForm
@@ -33,9 +39,6 @@ class ConteudoLocal(View):
         return data_versao.strftime('%Y%m%d%H%M%S')
 
     def get_esvaziamentos(self):
-        if not self.tipo_local == self._PALETE:
-            return
-
         dados_esvaziamento = get_esvaziamentos_de_palete(self.cursor, self.local)
 
         if dados_esvaziamento:
@@ -107,43 +110,48 @@ class ConteudoLocal(View):
             'data': dados,
         })
 
-    def palete_ok(self, palete):
-        dados_palete = get_palete(self.cursor, palete)
-        if not dados_palete:
-            self.context.update({
-                'erro': "Palete inexistênte."})
-            return False
-        return True
-
-    def endereco_ok(self, endereco):
-        dados_endereco = get_endereco(self.cursor, endereco)
-        if not dados_endereco:
-            self.context.update({
-                'erro': "Endereço inexistênte."})
-            return False
-        return True
-
     def local_ok(self):
         if self.tipo_local == self._PALETE:
-            return self.palete_ok(self.local)
+            return get_palete(self.cursor, self.local)
+        elif self.tipo_local == self._ENDERECO:
+            return get_endereco(self.cursor, self.local)
+        elif self.tipo_local == self._INTEGER:
+            local = only_digits(self.local)
+            if local:
+                local = int(local)
+                palete = Plt().mount(local)
+                if get_palete(self.cursor, palete):
+                    self.local = palete
+                    self.tipo_local = self._PALETE
+                    return True
+            self.tipo_local = self._ERRO
+        return False
+
+    def get_tipo_local(self, local):
+        if re.match("^P[L0-9][T0-9][0-9]{4}[A-Z]$", local):
+            return self._PALETE
+        elif re.match("^[12][A-Z]{1,2}[0-9]{4}$", local):
+            return self._ENDERECO
+        elif re.match("^[0-9]+$", local):
+            return self._INTEGER
         else:
-            return self.endereco_ok(self.local)
+            return self._ERRO
 
     def mount_context(self, request, form):
         self.cursor = db_cursor_so(request)
 
         self.local = form.cleaned_data['local'].upper()
-        if len(self.local) == 8:
-            self.tipo_local = self._PALETE
-        else:
-            self.tipo_local = self._ENDERECO
+
+        self.tipo_local = self.get_tipo_local(self.local)
+        if not self.local_ok():
+            self.context.update({
+                'erro': f"{self._NOME_TIPO_LOCAL[self.tipo_local].capitalize()} inexistênte."})
+            return
+
         self.context.update({
             'local': self.local,
-            'eh_palete': self.tipo_local == self._PALETE,
+            'nome_tipo_local': self._NOME_TIPO_LOCAL[self.tipo_local],
         })
-
-        if not self.local_ok():
-            return
 
         self.lotes_end = lotes_em_local(self.cursor, self.local)
 
@@ -153,9 +161,10 @@ class ConteudoLocal(View):
             self.get_lotes()
         else:
             self.context.update({
-                'erro': 'Nenhum lote no endereço.'})
+                'erro': f"Zero lote no {self._NOME_TIPO_LOCAL[self.tipo_local]} {self.local}."})
 
-        self.get_esvaziamentos()
+        if self.tipo_local == self._PALETE:
+            self.get_esvaziamentos()
 
     def get(self, request, *args, **kwargs):
         if 'local' in kwargs and kwargs['local']:
