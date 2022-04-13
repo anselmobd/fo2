@@ -12,6 +12,7 @@ from cd.views import (
     endereco_conteudo_importa,
     esvazia_palete,
     localiza_lote,
+    palete,
     vizualiza_esvaziamento,
 )
 from cd.views.api.palete.print import PaletePrint
@@ -166,5 +167,8 @@ urlpatterns = [
 
     re_path(r'^api/retira_lote/(?P<lote>.+)$',
         api_lote.retira_lote, name='retira_lote'),
+
+    re_path(r'^palete/$',
+        palete.Palete.as_view(), name='palete'),
 
 ]

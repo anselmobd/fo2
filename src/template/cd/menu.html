@@ -10,7 +10,7 @@
     <li>Análises</li>
     <ul>
       <li><a href="{% url 'cd:grade_estoque' %}">Grades do estoque</a></li>
-      <li>Paletes</li>
+      <li><a href="{% url 'cd:palete' %}">Paletes</a></li>
       <ul>
         {% if perms.cd.can_admin_pallet %}
           <li><a href="{% url 'cd:admin_palete' %}">Administração inicial</a></li>
