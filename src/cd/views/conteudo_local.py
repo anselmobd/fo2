@@ -9,6 +9,7 @@ from cd.classes.palete import Plt
 
 from fo2.connections import db_cursor_so
 
+from geral.functions import has_permission
 from utils.functions.strings import only_digits
 
 import cd.forms
@@ -94,6 +95,7 @@ class ConteudoLocal(View):
                     'op': '',
                     'palete': '',
                     'endereco': '',
+                    'retira': '',
                 })
             dados.append(row)
             row['data'] = row['data'].strftime("%H:%M:%S")
@@ -103,6 +105,16 @@ class ConteudoLocal(View):
             )
             if not row['endereco']:
                 row['endereco'] = '-'
+            row['retira'] = 'X'
+            row['retira|LINK'] = reverse(
+                'cd:retira_lote',
+                args=[row['lote']]
+            )
+            row['retira|TARGET'] = '_blank'
+
+        if has_permission(self.request, 'cd.can_del_lote_de_palete'):
+            headers.append('Retira')
+            fields.append('retira')
 
         self.context.update({
             'headers': headers,
