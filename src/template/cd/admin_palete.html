@@ -1,0 +1,169 @@
+{% extends 'cd/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'cd:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+    .pagination {
+      margin: 0.5em 0em auto;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div>
+    <label>Quant.:
+      <input type="number" placeholder="0" required name="quant" id="quant"
+        min="1" value="1" step="1" maxlength="4" size="4">
+    </label>
+    <div style="float:right;">
+      <a title="Imprime etiquetas" href="#" onclick="PaletePrint();return false;"><span class="glyphicon glyphicon-print" style="font-size: 2em" aria-hidden="true"></span></a>
+      <span style="font-size: 2em">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <a title="Marca como impressas" href="#" onclick="MarkPrinted();return false;"><span class="glyphicon glyphicon-ok-circle" style="font-size: 2em" aria-hidden="true"></span></a>
+    </div>
+    <a title="Adiciona palete" href="#" onclick="PaleteAdd();return false;"><span class="glyphicon glyphicon-plus-sign" style="font-size: 2em;vertical-align: middle;" aria-hidden="true"></span></a>
+  </div>
+  {% if data %}
+
+    {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
+    {% with pag_neibn="-"|add:pag_neib %}
+    {% if data.paginator.num_pages != 1 %}
+      <ul class="pagination">
+        {% if data.number > pag_neib|add:1 %}
+          <li><a href="{% url 'cd:admin_palete' %}">
+            <span>1
+              {% if data.number > pag_neib|add:2 %}
+                <span class="glyphicon glyphicon-step-backward"></span>
+              {% endif %}
+            </span>
+          </a></li>
+        {% endif %}
+        {% for i in data.paginator.page_range %}
+          {% if i >= data.number|add:pag_neibn %}
+            {% if i <= data.number|add:pag_neib %}
+              {% if data.number == i %}
+                <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+              {% else %}
+                {% if i == 1 %}
+                  <li><a href="{% url 'cd:admin_palete' %}"">{{ i }}</a></li>
+                {% else %}
+                  <li><a href="{% url 'cd:admin_palete' %}?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {% if data.number < data.paginator.num_pages|add:pag_neibn %}
+          <li><a href="{% url 'cd:admin_palete' %}?page={{ data.paginator.num_pages }}">
+            <span>
+              {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
+                <span class="glyphicon glyphicon-step-forward"></span>
+              {% endif %}
+            {{ data.paginator.num_pages }}</span>
+          </a></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+    {% endwith %}
+
+    <table>
+      {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+    </table>
+  {% else %}
+    <h4>Nenhum palete encontrado</h4>
+  {% endif %}
+{% endblock content %}
+
+{% block javascript %}
+{% block javascript.pos %}
+<script>
+
+function PaleteAdd(id) {
+    const quantval = document.getElementById('quant').value;
+    const urlq = '{% url 'cd:palete_add' 0 %}'+quantval;
+    console.log(urlq);
+    $.ajax({
+      type: 'GET',
+      url: urlq,
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        erro = '';
+        if (data) {
+          if (data['result'] == 'OK') {
+            console.log('State: '+data['state']);
+          } else {
+            erro = 'Erro: '+data['state'];
+          }
+        } else {
+          erro = 'Sem retorno';
+        }
+        if (erro) {
+          alert(erro);
+        }
+        location.reload(true);
+      },
+      error : function(data) {
+        alert('Erro na requisição');
+      }
+    });
+  }
+
+  function PaletePrint(id) {
+    $.ajax({
+      type: 'GET',
+      url: '{% url 'cd:palete_print' %}',
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        erro = '';
+        if (data) {
+          if (data['result'] == 'OK') {
+            console.log('Code: '+data['code']);
+          } else {
+            erro = 'Erro: '+data['state'];
+          }
+        } else {
+          erro = 'Sem retorno';
+        }
+        if (erro) {
+          alert(erro);
+        }
+      },
+      error : function(data) {
+        alert('Erro na requisição');
+      }
+    });
+  }
+
+  function MarkPrinted(id) {
+    $.ajax({
+      type: 'GET',
+      url: '{% url 'cd:palete_printed' %}',
+      data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+      success : function(data) {
+        erro = '';
+        if (data) {
+          if (data['status'] == 'ERRO') {
+            alert(data['message']);
+          } else {
+            console.log(data['message']);
+          }
+          if (data['status'] != 'VAZIO') {
+            location.reload(true);
+          }
+        } else {
+          alert('Sem retorno');
+        }
+      },
+      error : function(data) {
+        alert('Erro na requisição');
+      }
+    });
+  }
+
+</script>
+{% endblock javascript.pos %}
+{% endblock javascript %}

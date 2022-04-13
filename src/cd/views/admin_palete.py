@@ -13,7 +13,7 @@ class AdminPalete(PermissionRequiredMixin, O2BaseGetView):
     def __init__(self, *args, **kwargs):
         super(AdminPalete, self).__init__(*args, **kwargs)
         self.permission_required = 'cd.can_admin_pallet'
-        self.template_name = 'cd/palete.html'
+        self.template_name = 'cd/admin_palete.html'
         self.title_name = 'Administração inicial de paletes'
 
     def mount_context(self):
