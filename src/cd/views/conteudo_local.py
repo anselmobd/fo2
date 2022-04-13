@@ -89,7 +89,7 @@ class ConteudoLocal(View):
             if row['data'].date() < ult_data.date():
                 ult_data = row['data']
                 dados.append({
-                    'data': ult_data.strftime("%m/%d/%y"),
+                    'data': ult_data.strftime("%d/%m/%y"),
                     'data|STYLE': "font-weight: bold;",
                     'lote': '',
                     'op': '',
