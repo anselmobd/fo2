@@ -10,6 +10,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from systextil.queries.op.referencia import referencias_com_op
+from systextil.queries.faturamento.referencia import referencias_vendidas
 
 from utils.functions.strings import only_digits
 
@@ -54,6 +55,13 @@ class ListaReferencias(View):
             if digits:
                 modelos_op.add(int(digits))
 
+        modelos_vendidos = set()
+        refs_vendidos = referencias_vendidas(cursor)
+        for row in refs_vendidos:
+            digits = only_digits(row['ref'])
+            if digits:
+                modelos_vendidos.add(int(digits))
+
         dados = []
         for ref in refs_old:
             modelo = int(only_digits(ref))
@@ -61,13 +69,19 @@ class ListaReferencias(View):
                 'modelo': modelo,
                 'ref': ref,
                 'op': 'S' if modelo in modelos_op else 'N',
+                'nf': 'S' if modelo in modelos_vendidos else 'N',
             })
         
         dados.sort(key=operator.itemgetter('modelo', 'ref'))
 
         self.context.update({
-            'headers': ['Referência sistema antigo', 'Modelo', 'Modelo tem OP'],
-            'fields': ['ref', 'modelo', 'op'],
+            'headers': [
+                'Referência sistema antigo',
+                'Modelo',
+                'Modelo tem OP',
+                'Modelo vendido',
+            ],
+            'fields': ['ref', 'modelo', 'op', 'nf'],
             'data': dados,
         })
 
