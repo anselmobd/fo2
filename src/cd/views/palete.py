@@ -3,7 +3,9 @@ from pprint import pprint
 from base.paginator import paginator_basic
 from base.views import O2BaseGetView
 
-from cd.queries.palete import query_palete
+from fo2.connections import db_cursor_so
+
+from cd.queries.palete import get_paletes
 
 
 class Palete(O2BaseGetView):
@@ -14,14 +16,24 @@ class Palete(O2BaseGetView):
         self.title_name = 'Paletes'
 
     def mount_context(self):
+        cursor = db_cursor_so(self.request)
         page = self.request.GET.get('page', 1)
 
-        data = query_palete()
+        data = get_paletes(cursor)
+        pprint(data[0])
 
         data = paginator_basic(data, 50, page)
 
         self.context.update({
-            'headers': ['Palete'],
-            'fields': ['palete'],
+            'headers': [
+                'Palete',
+                'Endereço',
+                'Quant. Lotes',
+            ],
+            'fields': [
+                'cod_container',
+                'endereco_container',
+                'lotes',
+            ],
             'data': data,
         })
