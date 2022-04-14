@@ -26,20 +26,20 @@
       <ul class="pagination">
         {% if data.number > 1 %}
           <li title="Anterior {{ data.number|add:-1 }}"><a href="#" onclick="setPageAndSubmit({{ data.number|add:-1 }})">
-            <span class="glyphicon glyphicon-step-backward"></span>
+            <span class="glyphicon glyphicon-chevron-left"></span>
           </a></li>
         {% else %}
           <li><a href="#" onclick="false">
-            <span class="glyphicon glyphicon-step-backward" style="color: gray;"></span>
+            <span class="glyphicon glyphicon-chevron-left" style="color: gray;"></span>
           </a></li>
         {% endif %}
         {% if data.number < data.paginator.num_pages %}
           <li title="Próxima {{ data.number|add:1 }}"><a href="#" onclick="setPageAndSubmit({{ data.number|add:1 }})">
-            <span class="glyphicon glyphicon-step-forward"></span>
+            <span class="glyphicon glyphicon-chevron-right"></span>
           </a></li>
         {% else %}
           <li><a href="#" onclick="false">
-            <span class="glyphicon glyphicon-step-forward" style="color: gray;"></span>
+            <span class="glyphicon glyphicon-chevron-right" style="color: gray;"></span>
           </a></li>
         {% endif %}
       </ul>
@@ -48,7 +48,7 @@
           <li><a href="#" onclick="setPageAndSubmit(1)">
             <span>1
               {% if data.number > pag_neib|add:2 %}
-                <span class="glyphicon glyphicon-fast-backward"></span>
+                <span class="glyphicon glyphicon-chevron-left" style="text-shadow: lightblue 4px 0px;"></span>
               {% endif %}
             </span>
           </a></li>
@@ -68,7 +68,7 @@
           <li><a href="#" onclick="setPageAndSubmit({{ data.paginator.num_pages }})">
             <span>
               {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
-                <span class="glyphicon glyphicon-fast-forward"></span>
+                <span class="glyphicon glyphicon-chevron-right" style="text-shadow: lightblue -4px 0px;"></span>
               {% endif %}
             {{ data.paginator.num_pages }}</span>
           </a></li>
