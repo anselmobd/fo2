@@ -33,6 +33,6 @@
 
 {% block javascript %}
   <script type="text/javascript">
-    {% include "layout/paginator_javascript.js" with form='myForm' only %}
+    {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
   </script>
 {% endblock %}
