@@ -30,7 +30,7 @@ table {
   <p class="erro">{{ erro }}</p>
 {% else %}
   {% if data %}
-    {{ data|length }} lote{{ data|length|pluralize }} no {{nome_tipo_local}} {{ local }}
+    {{ qtd_lotes }} lote{{ qtd_lotes|pluralize }} no {{nome_tipo_local}} {{ local }}
     {% if endereco_lotes %}
       <br/>Endereço: {{endereco_lotes}}
     {% endif %}

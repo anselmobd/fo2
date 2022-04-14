@@ -120,6 +120,7 @@ class ConteudoLocal(View):
             'headers': headers,
             'fields': fields,
             'data': dados,
+            'qtd_lotes': len(self.lotes_end),
         })
 
     def local_ok(self):
