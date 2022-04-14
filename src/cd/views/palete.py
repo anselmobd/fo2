@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.urls import reverse
+
 from base.paginator import paginator_basic
 from base.views import O2BaseGetView
 
@@ -25,6 +27,10 @@ class Palete(O2BaseGetView):
         data = paginator_basic(data, 100, page)
 
         for row in data:
+            row['cod_container|LINK'] = reverse(
+                'cd:conteudo_local',
+                args=[row['cod_container']]
+            )
             if not row['endereco_container']:
                 row['endereco_container'] = '-'
             if not row['ultima_inclusao']:
