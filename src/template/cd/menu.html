@@ -1,31 +1,32 @@
 <ul>
-  <li>Sistema novo</li>
+  <li><a href="{% url 'cd:coletor' %}">Coletor</a></li>
   <ul>
-    <li><a href="{% url 'cd:coletor' %}">Coletor</a></li>
+    <li><a href="{% url 'cd:conteudo_local' %}">Conteúdo do local</a></li>
+    <li><a href="{% url 'cd:localiza_lote' %}">Localiza lote</a></li>
+    <li><a href="{% url 'cd:esvazia_palete' %}">Esvazia palete</a></li>
+  </ul>
+  <li>Endereçamento</li>
+  <ul>
+    <li><a href="{% url 'cd:palete' %}">Paletes</a></li>
     <ul>
-      <li><a href="{% url 'cd:conteudo_local' %}">Conteúdo do local</a></li>
-      <li><a href="{% url 'cd:localiza_lote' %}">Localiza lote</a></li>
-      <li><a href="{% url 'cd:esvazia_palete' %}">Esvazia palete</a></li>
-    </ul>
-    <li>Análises</li>
-    <ul>
-      <li><a href="{% url 'cd:grade_estoque' %}">Grades do estoque</a></li>
-      <li><a href="{% url 'cd:palete' %}">Paletes</a></li>
-      <ul>
-        {% if perms.cd.can_admin_pallet %}
-          <li><a href="{% url 'cd:admin_palete' %}">Administração inicial</a></li>
-        {% endif %}
-      </ul>
-      <li><a href="{% url 'cd:endereco' %}">Endereços</a></li>
       {% if perms.cd.can_admin_pallet %}
-        <ul>
-          <li><a href="{% url 'cd:endereco_imprime' %}">Imprime</a></li>
-          <!-- <li><a href="{% url 'cd:endereco_conteudo_importa' %}">Importa conteudo</a></li> -->
-        </ul>
-        <!-- <li><a href="{% url 'cd:compara_apoio_systextil' %}">Compara Apoio Systextil</a></li> -->
+        <li><a href="{% url 'cd:admin_palete' %}">Administração inicial</a></li>
       {% endif %}
     </ul>
+    <li><a href="{% url 'cd:endereco' %}">Endereços</a></li>
+    {% if perms.cd.can_admin_pallet %}
+      <ul>
+        <li><a href="{% url 'cd:endereco_imprime' %}">Imprime</a></li>
+        <!-- <li><a href="{% url 'cd:endereco_conteudo_importa' %}">Importa conteudo</a></li> -->
+      </ul>
+      <!-- <li><a href="{% url 'cd:compara_apoio_systextil' %}">Compara Apoio Systextil</a></li> -->
+    {% endif %}
   </ul>
+  <li>Análises</li>
+  <ul>
+    <li><a href="{% url 'cd:grade_estoque' %}">Grades do estoque</a></li>
+  </ul>
+
   <br/>
   <li>Sistema antigo</li>
   <ul>
