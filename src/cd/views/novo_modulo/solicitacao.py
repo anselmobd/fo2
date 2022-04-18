@@ -20,7 +20,10 @@ class Solicitacao(O2BaseGetView):
         cursor = db_cursor_so(self.request)
 
         data = get_solicitacao(cursor, self.context['solicitacao'])
-        pprint(data)
+
+        for row in data:
+            if not row['codigo_estagio']:
+                row['codigo_estagio'] = 'Finalizado'
 
         self.context.update({
             'headers': [
