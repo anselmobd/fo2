@@ -1,5 +1,7 @@
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
@@ -48,6 +50,13 @@ class Solicitacoes(O2BaseGetView):
         })
 
         data = paginator_basic(data, 100, page)
+
+        for row in data:
+            row['solicitacao|TARGET'] = '_blank'
+            row['solicitacao|LINK'] = reverse(
+                'cd:novo_solicitacao',
+                args=[row['solicitacao']]
+            )
 
         self.context.update({
             'headers': [
