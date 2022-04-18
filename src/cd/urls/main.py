@@ -15,6 +15,7 @@ from cd.views import (
     palete,
     vizualiza_esvaziamento,
 )
+from cd.views.novo_modulo import solicitacoes
 from cd.views.api.palete.print import PaletePrint
 
 
@@ -170,5 +171,8 @@ urlpatterns = [
 
     re_path(r'^palete/$',
         palete.Palete.as_view(), name='palete'),
+
+    re_path(r'^novo/solicitacoes/(?P<id>[^/]+)?$',
+        solicitacoes.Solicitacoes.as_view(), name='novo_solicitacoes'),
 
 ]
