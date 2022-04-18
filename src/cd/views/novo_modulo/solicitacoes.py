@@ -1,13 +1,11 @@
 from pprint import pprint
 
-from django.urls import reverse
-
 from base.paginator import paginator_basic
 from base.views import O2BaseGetView
 
 from fo2.connections import db_cursor_so
 
-from cd.queries.palete import get_paletes
+from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 
 
 class Solicitacoes(O2BaseGetView):
@@ -20,35 +18,17 @@ class Solicitacoes(O2BaseGetView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
         page = self.request.GET.get('page', 1)
-        return
 
-        data = get_paletes(cursor)
-        pprint(data[0])
+        data = get_solicitacoes(cursor)
 
         data = paginator_basic(data, 100, page)
 
-        for row in data:
-            row['cod_container|LINK'] = reverse(
-                'cd:conteudo_local',
-                args=[row['cod_container']]
-            )
-            if not row['endereco_container']:
-                row['endereco_container'] = '-'
-            if not row['ultima_inclusao']:
-                row['ultima_inclusao'] = '-'
-
         self.context.update({
             'headers': [
-                'Palete',
-                'Endereço',
-                'Nº Lotes',
-                'Última inclusão',
+                'Solicitação',
             ],
             'fields': [
-                'cod_container',
-                'endereco_container',
-                'lotes',
-                'ultima_inclusao',
+                'solicitacao',
             ],
             'data': data,
         })
