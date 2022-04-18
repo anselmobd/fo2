@@ -37,3 +37,24 @@ def get_solicitacoes(cursor):
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
+
+
+def get_solicitacao(cursor, id):
+    sql = f"""
+        SELECT DISTINCT
+          sl.*
+        , l.CODIGO_ESTAGIO
+        FROM pcpc_044 sl -- solicitação / lote 
+        LEFT JOIN PCPC_040 l
+          ON l.QTDE_EM_PRODUCAO_PACOTE > 0
+         AND l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
+         AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+        WHERE sl.SOLICITACAO  = {id}
+        ORDER BY
+          sl.SITUACAO
+        , l.CODIGO_ESTAGIO
+        , sl.ORDEM_PRODUCAO
+        , sl.ORDEM_CONFECCAO
+    """
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
