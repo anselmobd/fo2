@@ -43,16 +43,24 @@ def get_solicitacao(cursor, id):
     sql = f"""
         SELECT DISTINCT
           sl.*
-        , l.CODIGO_ESTAGIO
+        , lest.CODIGO_ESTAGIO
+        , l.PROCONF_NIVEL99 NIVEL
+        , l.PROCONF_GRUPO REF
+        , l.PROCONF_SUBGRUPO TAM
+        , l.PROCONF_ITEM COR
         FROM pcpc_044 sl -- solicitação / lote 
+        LEFT JOIN PCPC_040 lest
+          ON lest.QTDE_EM_PRODUCAO_PACOTE > 0
+         AND lest.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
+         AND lest.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
         LEFT JOIN PCPC_040 l
-          ON l.QTDE_EM_PRODUCAO_PACOTE > 0
+          ON l.SEQUENCIA_ESTAGIO = 1
          AND l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
          AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
         WHERE sl.SOLICITACAO  = {id}
         ORDER BY
           sl.SITUACAO
-        , l.CODIGO_ESTAGIO
+        , lest.CODIGO_ESTAGIO
         , sl.ORDEM_PRODUCAO
         , sl.ORDEM_CONFECCAO
     """
