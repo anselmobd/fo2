@@ -11,11 +11,12 @@
 
 {% block content %}
   {% if data %}
+    <h4>Solicitação {{solicitacao}}</h4>
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
   {% else %}
-    <h4>solicitação não encontrada</h4>
+    <h4>Solicitação {{solicitacao}} não encontrada</h4>
   {% endif %}
 {% endblock content %}

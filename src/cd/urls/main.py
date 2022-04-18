@@ -178,7 +178,7 @@ urlpatterns = [
     re_path(r'^novo/solicitacoes/$',
         solicitacoes.Solicitacoes.as_view(), name='novo_solicitacoes'),
 
-    re_path(r'^novo/solicitacao/(?P<id>[^/]+)?$',
+    re_path(r'^novo/solicitacao/(?P<solicitacao>[^/]+)$',
         solicitacao.Solicitacao.as_view(), name='novo_solicitacao'),
 
 ]

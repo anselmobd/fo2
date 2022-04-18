@@ -13,16 +13,17 @@ class Solicitacao(O2BaseGetView):
         super(Solicitacao, self).__init__(*args, **kwargs)
         self.template_name = 'cd/novo_modulo/solicitacao.html'
         self.title_name = 'Solicitação'
+        self.get_args = ['solicitacao']
+        self.get_args2context = True
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        data = get_solicitacao(cursor, 207)
+        data = get_solicitacao(cursor, self.context['solicitacao'])
         pprint(data)
 
         self.context.update({
             'headers': [
-                'Solicitação',
                 'Situação',
                 'Estágio',
                 'OP',
@@ -36,7 +37,6 @@ class Solicitacao(O2BaseGetView):
                 'OP destino',
             ],
             'fields': [
-                'solicitacao',
                 'situacao',
                 'codigo_estagio',
                 'ordem_producao',
