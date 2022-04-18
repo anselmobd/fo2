@@ -14,7 +14,7 @@
   <form action="{% url 'cd:endereco' %}" method="post" name="myForm">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="filtra" value="Filtra" onclick="page1()"/>
+    <input type="submit" name="filtra" value="Filtra" onclick="o2SetPage1AndSubmit()"/>
   </form>
   {% if data %}
     {% include "layout/paginator.html" with data=data only %}
