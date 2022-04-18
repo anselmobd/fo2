@@ -14,8 +14,8 @@
   {% if data %}
     {% include "layout/paginator_get.html" with data=data url_name='cd:novo_solicitacoes' only %}
     <table>
-      {% include "layout/thead_generic.html" with data=headers thclass='sticky' only %}
-      {% include "layout/tbody_generic.html" with fields=fields data=data only %}
+      {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
+      {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
     {% include "layout/paginator_get.html" with data=data url_name='cd:novo_solicitacoes' only %}
   {% else %}
