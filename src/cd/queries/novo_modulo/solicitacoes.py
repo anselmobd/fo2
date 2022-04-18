@@ -18,8 +18,11 @@ def get_solicitacoes(cursor):
         , sum(CASE WHEN sl.SITUACAO = 4 THEN sl.QTDE ELSE 0 END) qtde_4
         , sum(CASE WHEN sl.SITUACAO = 5 THEN 1 ELSE 0 END) lotes_5
         , sum(CASE WHEN sl.SITUACAO = 5 THEN sl.QTDE ELSE 0 END) qtde_5
+        , sum(1) lotes_tot
+        , sum(sl.QTDE) qtde_tot
         FROM pcpc_044 sl -- solicitação / lote 
         WHERE sl.SOLICITACAO IS NOT NULL 
+          AND sl.OP_DESTINO  > 0
         GROUP BY 
           sl.SOLICITACAO
         ORDER BY 

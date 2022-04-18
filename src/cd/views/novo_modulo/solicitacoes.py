@@ -35,6 +35,8 @@ class Solicitacoes(O2BaseGetView):
                 'qtde_4',
                 'lotes_5',
                 'qtde_5',
+                'lotes_tot',
+                'qtde_tot',
             ],
             'count': [],
             'descr': {'solicitacao': 'Totais:'},
@@ -56,6 +58,8 @@ class Solicitacoes(O2BaseGetView):
                 'Qtd.',
                 'Sit.5 Lotes',
                 'Qtd.',
+                'Total Lotes',
+                'Qtd.',
             ],
             'fields': [
                 'solicitacao',
@@ -69,9 +73,11 @@ class Solicitacoes(O2BaseGetView):
                 'qtde_4',
                 'lotes_5',
                 'qtde_5',
+                'lotes_tot',
+                'qtde_tot',
             ],
             'style': untuple_keys_concat({
-                tuple(range(2, 12)): 'text-align: right;',
+                tuple(range(2, 14)): 'text-align: right;',
             }),
             'data': data,
         })
