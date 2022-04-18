@@ -8,21 +8,28 @@ def get_solicitacoes(cursor):
     sql = f"""
         SELECT DISTINCT
           sl.SOLICITACAO 
-        , sum(CASE WHEN sl.SITUACAO = 1 THEN 1 ELSE 0 END) lotes_1
-        , sum(CASE WHEN sl.SITUACAO = 1 THEN sl.QTDE ELSE 0 END) qtde_1
-        , sum(CASE WHEN sl.SITUACAO = 2 THEN 1 ELSE 0 END) lotes_2
-        , sum(CASE WHEN sl.SITUACAO = 2 THEN sl.QTDE ELSE 0 END) qtde_2
-        , sum(CASE WHEN sl.SITUACAO = 3 THEN 1 ELSE 0 END) lotes_3
-        , sum(CASE WHEN sl.SITUACAO = 3 THEN sl.QTDE ELSE 0 END) qtde_3
-        , sum(CASE WHEN sl.SITUACAO = 4 THEN 1 ELSE 0 END) lotes_4
-        , sum(CASE WHEN sl.SITUACAO = 4 THEN sl.QTDE ELSE 0 END) qtde_4
-        , sum(CASE WHEN sl.SITUACAO = 5 THEN 1 ELSE 0 END) lotes_5
-        , sum(CASE WHEN sl.SITUACAO = 5 THEN sl.QTDE ELSE 0 END) qtde_5
-        , sum(1) lotes_tot
-        , sum(sl.QTDE) qtde_tot
+        , sum(CASE WHEN sl.SITUACAO = 1 THEN 1 ELSE 0 END) l1
+        , sum(CASE WHEN sl.SITUACAO = 1 THEN sl.QTDE ELSE 0 END) q1
+        , sum(CASE WHEN sl.SITUACAO = 2 THEN 1 ELSE 0 END) l2
+        , sum(CASE WHEN sl.SITUACAO = 2 THEN sl.QTDE ELSE 0 END) q2
+        , sum(CASE WHEN sl.SITUACAO = 3 THEN 1 ELSE 0 END) l3
+        , sum(CASE WHEN sl.SITUACAO = 3 THEN sl.QTDE ELSE 0 END) q3
+        , sum(CASE WHEN sl.SITUACAO = 4 THEN 1 ELSE 0 END) l4
+        , sum(CASE WHEN sl.SITUACAO = 4 THEN sl.QTDE ELSE 0 END) q4
+        , sum(CASE WHEN sl.SITUACAO = 5 THEN 1 ELSE 0 END) l5
+        , sum(CASE WHEN sl.SITUACAO = 5 THEN sl.QTDE ELSE 0 END) q5
+        , sum(CASE WHEN l.CODIGO_ESTAGIO IS NULL THEN 1 ELSE 0 END) lf
+        , sum(CASE WHEN l.CODIGO_ESTAGIO IS NULL THEN sl.QTDE ELSE 0 END) qf
+        , sum(CASE WHEN l.CODIGO_ESTAGIO IS NOT NULL THEN 1 ELSE 0 END) lp
+        , sum(CASE WHEN l.CODIGO_ESTAGIO IS NOT NULL THEN sl.QTDE ELSE 0 END) qp
+        , sum(1) lt
+        , sum(sl.QTDE) qt
         FROM pcpc_044 sl -- solicitação / lote 
+        LEFT JOIN PCPC_040 l
+          ON l.QTDE_EM_PRODUCAO_PACOTE > 0
+         AND l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
+         AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
         WHERE sl.SOLICITACAO IS NOT NULL 
-          AND sl.OP_DESTINO  > 0
         GROUP BY 
           sl.SOLICITACAO
         ORDER BY 
