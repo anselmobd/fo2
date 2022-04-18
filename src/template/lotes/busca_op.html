@@ -58,12 +58,19 @@
     {% endif %}
   </h4>
 {% endif %}
+<h4>Estágios considerados como CD:
+  {% if estagios_cd == 's' %}
+    Somente estágio 63
+  {% else %}
+    Estágios 60, 57, 63, 64 e 66
+  {% endif %}
+</h4>
 {% if posicao and posicao != 't' %}
   <h4>Posição:
     {% if   posicao == 'p' %}Em produção
     {% elif posicao == 'f' %}Finalizadas
-    {% elif posicao == 'p63' %}Em produção, exceto OPs apenas no 63-CD
-    {% elif posicao == 'f63' %}Finalizadas, incluindo OPs apenas no 63-CD
+    {% elif posicao == 'pcd' %}Em produção, exceto OPs apenas no CD
+    {% elif posicao == 'fcd' %}Finalizadas, incluindo OPs apenas no CD
     {% endif %}
   </h4>
 {% endif %}

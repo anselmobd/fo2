@@ -475,11 +475,18 @@ class BuscaOpForm(forms.Form):
     situacao = forms.ChoiceField(
         label='Situação da OP', choices=CHOICES, initial='a')
 
+    CHOICES = [
+        ('v', 'Estágios 60, 57, 63, 64 e 66'),
+        ('s', 'Somente estágio 63'),
+    ]
+    estagios_cd = forms.ChoiceField(
+        label='Estágios considerados como CD', choices=CHOICES, initial='v')
+
     CHOICES = [('t', 'Todas as OPs'),
                ('p', 'Em produção'),
                ('f', 'Finalizadas'),
-               ('p63', 'Em produção, exceto OPs apenas no 63-CD'),
-               ('f63', 'Finalizadas, incluindo OPs apenas no 63-CD'),
+               ('pcd', 'Em produção, exceto OPs apenas no CD'),
+               ('fcd', 'Finalizadas, incluindo OPs apenas no CD'),
                ]
     posicao = forms.ChoiceField(
         label='Posição da produção', choices=CHOICES, initial='t')

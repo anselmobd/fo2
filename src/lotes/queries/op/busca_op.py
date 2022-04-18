@@ -12,23 +12,41 @@ def op_inform(cursor, op, cached=False):
 
 
 def busca_op(
-        cursor, op=None, ref=None, modelo=None, tam=None, cor=None,
-        deposito=None, tipo=None, tipo_alt=None, situacao=None, posicao=None,
-        motivo=None, quant_fin=None, quant_emp=None,
-        data_de=None, data_ate=None, cnpj9=None, estagio_op=None, cached=False):
+    cursor,
+    op=None,
+    ref=None,
+    modelo=None,
+    tam=None,
+    cor=None,
+    deposito=None,
+    tipo=None,
+    tipo_alt=None,
+    situacao=None,
+    estagios_cd='s',
+    posicao=None,
+    motivo=None,
+    quant_fin=None,
+    quant_emp=None,
+    data_de=None,
+    data_ate=None,
+    cnpj9=None,
+    estagio_op=None,
+    cached=False
+):
     """
     posicao: t - Todas as OPs
              p - Em produção
              f - Finalizadas
-             p63 - Em produção, exceto OPs apenas no 63-CD
-             f63 - Finalizadas, incluindo OPs apenas no 63-CD
+             pcd - Em produção, exceto OPs apenas no CD
+             fcp - Finalizadas, incluindo OPs apenas no CD
     """
     # key_cache = make_key_cache()
     key_cache = my_make_key_cache(
         'busca_op',
         op, ref, modelo, tam, cor,
-        deposito, tipo, tipo_alt, situacao, posicao,
-        motivo, quant_fin, quant_emp,
+        deposito, tipo, tipo_alt, situacao,
+        estagios_cd, posicao, motivo,
+        quant_fin, quant_emp,
     )
 
     cached_result = None
@@ -115,6 +133,13 @@ def busca_op(
             AND o.DEPOSITO_ENTRADA = '{deposito}'
         """
 
+    if estagios_cd == 's':
+        estagio_diferente = "l.CODIGO_ESTAGIO <> 63"
+        estagio_igual = "l.CODIGO_ESTAGIO = 63"
+    else:
+        estagio_diferente = "l.CODIGO_ESTAGIO not in (60, 57, 63, 64, 66)"
+        estagio_igual = "l.CODIGO_ESTAGIO in (60, 57, 63, 64, 66)"
+
     filtra_posicao = ""
     if posicao == 'p':
         filtra_posicao = """--
@@ -125,15 +150,15 @@ def busca_op(
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_DISPONIVEL_BAIXA > 0 OR l.QTDE_CONSERTO > 0)
             )"""
-    elif posicao == 'p63':
-        filtra_posicao = """--
+    elif posicao == 'pcd':
+        filtra_posicao = f"""--
             AND EXISTS
             ( SELECT
                 *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_DISPONIVEL_BAIXA > 0 OR l.QTDE_CONSERTO > 0)
-                AND l.CODIGO_ESTAGIO <> 63
+                AND {estagio_diferente}
             )"""
     elif posicao == 'f':
         filtra_posicao = """--
@@ -144,15 +169,15 @@ def busca_op(
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_DISPONIVEL_BAIXA > 0 OR l.QTDE_CONSERTO > 0)
             )"""
-    elif posicao == 'f63':
-        filtra_posicao = """--
+    elif posicao == 'fcd':
+        filtra_posicao = f"""--
             AND NOT EXISTS
             ( SELECT
                 *
               FROM PCPC_040 l
               WHERE l.ORDEM_PRODUCAO = o.ORDEM_PRODUCAO
                 AND (l.QTDE_DISPONIVEL_BAIXA > 0 OR l.QTDE_CONSERTO > 0)
-                AND l.CODIGO_ESTAGIO <> 63
+                AND {estagio_diferente}
             )"""
 
     filtra_situacao = ""
@@ -308,11 +333,11 @@ def busca_op(
               JOIN PCPC_040 l
                 ON l.ORDEM_PRODUCAO = op.ORDEM_PRODUCAO
               -- WHERE (l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO) > 0
-              WHERE ( ( l.CODIGO_ESTAGIO <> 63
+              WHERE ( ( {estagio_diferente} -- l.CODIGO_ESTAGIO <> 63
                       AND (l.QTDE_EM_PRODUCAO_PACOTE - l.QTDE_CONSERTO) > 0
                       )
                     OR
-                      ( l.CODIGO_ESTAGIO = 63
+                      ( {estagio_igual} -- l.CODIGO_ESTAGIO = 63
                       AND (l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO) > 0
                       )
                     )
@@ -472,7 +497,7 @@ def busca_op(
           , SUM( l.QTDE_DISPONIVEL_BAIXA + l.QTDE_CONSERTO ) QTD_CD
           FROM pcpc_040 l
           WHERE 1=1
-            AND l.CODIGO_ESTAGIO IN (57, 63)
+            AND {estagio_igual} -- AND l.CODIGO_ESTAGIO IN (57, 63)
             {filtra_qtd_tam} -- filtra_qtd_tam
             {filtra_qtd_cor} -- filtra_qtd_cor
           GROUP BY

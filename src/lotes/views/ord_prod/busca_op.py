@@ -21,7 +21,7 @@ class BuscaOP(View):
     def mount_context(
             self, cursor, ref, modelo, tam, cor, deposito,
             cnpj9, estagio_op, tipo, tipo_alt,
-            situacao, posicao, motivo, quant_fin, quant_emp,
+            situacao, estagios_cd, posicao, motivo, quant_fin, quant_emp,
             data_de, data_ate, apenas_totais):
         context = {
             'ref': ref,
@@ -34,6 +34,7 @@ class BuscaOP(View):
             'tipo': tipo,
             'tipo_alt': tipo_alt,
             'situacao': situacao,
+            'estagios_cd': estagios_cd,
             'posicao': posicao,
             'motivo': motivo,
             'quant_fin': quant_fin,
@@ -46,7 +47,7 @@ class BuscaOP(View):
         data = lotes.queries.op.busca_op(
             cursor, ref=ref, modelo=modelo, tam=tam, cor=cor,
             deposito=deposito, tipo=tipo, tipo_alt=tipo_alt, situacao=situacao,
-            posicao=posicao, motivo=motivo, quant_fin=quant_fin,
+            estagios_cd=estagios_cd, posicao=posicao, motivo=motivo, quant_fin=quant_fin,
             quant_emp=quant_emp, data_de=data_de, data_ate=data_ate,
             cnpj9=cnpj9, estagio_op=estagio_op)
         if len(data) == 0:
@@ -149,7 +150,8 @@ class BuscaOP(View):
             row['QTD_OUTROS'] = row['QTD_AP'] - row['QTD_CD']
 
         totalize_data(data, {
-            'sum': ['QTD', 'QTD_AP', 'QTD_F', 'QTD_CD', 'QTD_OUTROS', 'QTD_END', 'QTD_NEND'],
+            # 'sum': ['QTD', 'QTD_AP', 'QTD_F', 'QTD_CD', 'QTD_OUTROS', 'QTD_END', 'QTD_NEND'],
+            'sum': ['QTD', 'QTD_AP', 'QTD_F', 'QTD_CD', 'QTD_OUTROS'],
             'count': [],
             'descr': {'LOTES': 'Totais:'}})
 
@@ -159,7 +161,7 @@ class BuscaOP(View):
                         'Tipo', 'Referência',
                         'Alt.', 'Roteiro', 'Estágio',
                         'Quant. Lotes', 'Quant. Itens',
-                        'Ends.', 'Quant. End.', 'Quant. não End',
+                        # 'Ends.', 'Quant. End.', 'Quant. não End',
                         'Quant. CD', 'Quant. não CD',
                         'Quant. a Prod.', 'Quant. Finaliz.',
                         'Depósito', 'Período',
@@ -170,7 +172,7 @@ class BuscaOP(View):
                        'TIPO_REF', 'REF',
                        'ALTERNATIVA', 'ROTEIRO', 'ESTAGIO',
                        'LOTES', 'QTD',
-                       'ENDS', 'QTD_END', 'QTD_NEND',
+                    #    'ENDS', 'QTD_END', 'QTD_NEND',
                        'QTD_CD', 'QTD_OUTROS',
                        'QTD_AP', 'QTD_F',
                        'DEPOSITO_CODIGO', 'PERIODO',
@@ -220,6 +222,7 @@ class BuscaOP(View):
             tipo = form.cleaned_data['tipo']
             tipo_alt = form.cleaned_data['tipo_alt']
             situacao = form.cleaned_data['situacao']
+            estagios_cd = form.cleaned_data['estagios_cd']
             posicao = form.cleaned_data['posicao']
             motivo = form.cleaned_data['motivo']
             quant_fin = form.cleaned_data['quant_fin']
@@ -232,7 +235,7 @@ class BuscaOP(View):
                 self.mount_context(
                     cursor, ref, modelo, tam, cor, deposito,
                     cnpj9, estagio_op, tipo, tipo_alt,
-                    situacao, posicao, motivo, quant_fin, quant_emp,
+                    situacao, estagios_cd, posicao, motivo, quant_fin, quant_emp,
                     data_de, data_ate, apenas_totais))
         context['form'] = form
         return render(request, self.template_name, context)
