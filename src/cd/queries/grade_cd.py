@@ -109,8 +109,8 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
     """
     return sql
 
-def lotes_em_estoque(cursor, get='ref'):
-    sql = sql_em_estoque(get=get)
+def refs_em_estoque(cursor):
+    sql = sql_em_estoque(get='ref')
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
 
