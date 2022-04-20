@@ -8,16 +8,24 @@ from utils.functions.queries import debug_cursor_execute
 
 
 def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
-    """Monta SQL base de lotes em produção final
-    (por ora, apenas endereçados)
+    """Monta SQL base de selecão de lotes
+    - endereçados; e
+    - no estágio 63
     Recebe:
       tipo
-        i = inventário; todos os lotes
         p = lotes de OPs de Pedidos
+        s = solicitado (situação 2, 3 ou 4)
+        i = inventário; todos os lotes
       ref
         None = grade total (da solicitação)
         string = filtra uma referência
         list = lista de referências
+      get
+        ref = busca apenas o campo referência (com distinct)
+        None = busca lote, item, op e quantidades
+      sinal: positivo ou negativo
+        '+' = quantidades como estão no banco de dados
+        '-' = inverte o sinal das quantidades       
     """
 
     if ref is None:
