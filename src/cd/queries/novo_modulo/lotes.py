@@ -2,6 +2,7 @@ from pprint import pprint
 
 from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
+from utils.functions.strings import only_digits
 
 
 def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
@@ -117,4 +118,11 @@ def refs_em_estoque(cursor):
 def lotes_em_estoque(cursor, tipo=None, ref=None, get=None):
     sql = sql_em_estoque(tipo=tipo, ref=ref, get=get)
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    dados = dictlist(cursor)
+    for row in dados:
+        try:
+            modelo = int(only_digits(row['ref']))
+        except ValueError:
+            modelo = 0
+        row['modelo'] = modelo
+    return dados
