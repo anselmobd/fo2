@@ -8,7 +8,7 @@ from cd.queries.novo_modulo.lotes import sql_em_estoque
 def grade_estoque(cursor, tipo=None, ref=None):
     grade = GradeQtd(cursor, case='lower')
 
-    if tipo in 'isp':
+    if tipo in ['i', 's', 'p']:
         sql_base = sql_em_estoque(tipo=tipo, ref=ref)
     if tipo == 'sp':
         sql_base_s = sql_em_estoque(tipo='s', ref=ref)
