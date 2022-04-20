@@ -1,3 +1,4 @@
+from operator import itemgetter
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -24,25 +25,35 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
 
     def mount_context(self):
-        inventario = lotes_em_estoque(self.cursor, get='ref')
-        modelos = set([
-            int(only_digits(r['ref']))
-            for r in inventario
-        ])
-        modelos = sorted(modelos)
-        data = [
-            {'modelo': m}
-            for m in modelos
-        ]
+        referencias = lotes_em_estoque(self.cursor, get='ref')
 
-        data = paginator_basic(data, 10, self.page)
+        referencias = sorted(referencias, key=itemgetter('modelo', 'ref'))
 
-        headers = ['Modelo']
-        fields = ['modelo']
+        referencias = paginator_basic(referencias, 1, self.page)
+
+        inventario = lotes_em_estoque(self.cursor, tipo='i')
+        pedido = lotes_em_estoque(self.cursor, tipo='p')
+        solicitado = lotes_em_estoque(self.cursor, tipo='s')
+
+        grades = []
+        for row_ref in referencias.object_list:
+            referencia = row_ref['modelo']
+
+            inventario_ref = filter(lambda x: x['ref'] == referencia, inventario)
+            pprint(inventario_ref)
+            grade_ref = {
+                'ref': row_ref['ref'],
+                'inventario': inventario_ref,
+                }
+            grades.append(grade_ref)
+
+        headers = ["Referência", "Modelo"]
+        fields = ['ref', 'modelo']
         self.context.update({
             'headers': headers,
             'fields': fields,
-            'data': data,
+            'data': referencias,
+            'grades': grades,
         })
 
     def get(self, request, *args, **kwargs):
