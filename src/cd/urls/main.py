@@ -16,6 +16,7 @@ from cd.views import (
     vizualiza_esvaziamento,
 )
 from cd.views.novo_modulo import (
+    grade_estoque_totais,
     solicitacao,
     solicitacoes,
 )
@@ -87,6 +88,9 @@ urlpatterns = [
         views.Grade.as_view(), name='grade_estoque_detalhe'),
     re_path(r'^grade_estoque/(?P<referencia>[^/]+)?/?$',
         views.Grade.as_view(), name='grade_estoque'),
+
+    re_path(r'^grade_estoque_totais/$',
+        grade_estoque_totais.GradeEstoqueTotais.as_view(), name='grade_estoque_totais'),
 
     re_path(r'^historico/?$',
         views.Historico.as_view(), name='historico'),
