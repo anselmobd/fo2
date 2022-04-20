@@ -12,11 +12,12 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
       tipo
         p = lotes de OPs de Pedidos
         s = solicitado (situação 2, 3 ou 4)
-        i = inventário; todos os lotes
-      ref
-        None = grade total (da solicitação)
-        string = filtra uma referência
-        list = lista de referências
+        i = inventário: todos os lotes com quantidade
+        None = todos os lotes
+      ref: filtro de referências
+        None = não filtra
+        string = uma referência
+        list = uma lista de referências
       get
         ref = busca apenas o campo referência (com distinct)
         None = busca lote, item, op e quantidades
@@ -106,7 +107,14 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
     """
     return sql
 
+
 def refs_em_estoque(cursor):
     sql = sql_em_estoque(get='ref')
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)
+
+
+def lotes_em_estoque(cursor, tipo=None, ref=None, get=None):
+    sql = sql_em_estoque(tipo=tipo, ref=ref, get=get)
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
