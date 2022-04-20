@@ -11,7 +11,7 @@ from fo2.connections import db_cursor_so
 from utils.views import group_rowspan
 
 import cd.forms
-from cd.queries.grade_cd import (
+from cd.queries.novo_modulo.grade_cd import (
     grade_estoque,
     refs_em_estoque,
 )

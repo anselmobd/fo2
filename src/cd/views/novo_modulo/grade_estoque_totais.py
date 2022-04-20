@@ -11,9 +11,9 @@ from fo2.connections import db_cursor_so
 from utils.views import group_rowspan
 
 import cd.forms
-from cd.queries.grade_cd import (
+from cd.queries.novo_modulo.grade_cd import (
     grade_estoque,
-    lotes_em_estoque,
+    refs_em_estoque,
 )
 
 
@@ -24,13 +24,13 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
 
     def mount_context(self):
-        return
+        inventario = grade_estoque(self.cursor, tipo='i')
+        referencias = refs_em_estoque(self.cursor_s, get='ref')
+        pprint(inventario)
 
     def get(self, request, *args, **kwargs):
-        self.cursor_s = db_cursor_so(request)
+        self.cursor = db_cursor_so(request)
         self.page = request.GET.get('page', 1)
         self.context = {}
         self.mount_context()
-        form = self.Form_class()
-        self.context['form'] = form
         return render(request, self.template_name, self.context)
