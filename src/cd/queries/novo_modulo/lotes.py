@@ -17,7 +17,11 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
         None = todos os lotes
       ref: filtro de referências
         None = não filtra
-        string = uma referência
+        {condição}string = uma referência
+          condição: altera o funcionamento do filtro
+            '' = igualdade
+            '<' = menor que
+            '>' = maior que
         list = uma lista de referências
       get
         ref = busca apenas o campo referência (com distinct)
@@ -30,7 +34,15 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
     if ref is None:
         filter_ref = ''
     elif isinstance(ref, str):
-        filter_ref = f"and l.PROCONF_GRUPO = '{ref}'"
+        if ref[0] == '<':
+            ref = ref[1:]
+            condicao = '<'
+        elif ref[0] == '>':
+            ref = ref[1:]
+            condicao = '>'
+        else:
+            condicao = '='
+        filter_ref = f"and l.PROCONF_GRUPO {condicao} '{ref}'"
     else:
         refs = ', '.join([f"'{r}'" for r in ref])
         filter_ref = f"and l.PROCONF_GRUPO in ({refs})"
