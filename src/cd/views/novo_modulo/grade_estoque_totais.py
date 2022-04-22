@@ -40,7 +40,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
             )
 
     def mount_context(self):
-        filtra_ref = '>B0000'
+        filtra_ref = None  # '>A0000'
         referencias = lotes_em_estoque(self.cursor, get='ref', ref=filtra_ref)
 
         referencias = sorted(referencias, key=itemgetter('modelo', 'ref'))
@@ -88,31 +88,31 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
                     grade_disponivel_ref = subtrai_grades(
                         grade_disponivel_ref, grade_solicitado_ref)
 
-            grade_ref = {
-                'inventario': grade_invent_ref,
-                'pedido': grade_pedido_ref,
-                'solicitacoes': grade_solicitado_ref,
-                'disponivel': grade_disponivel_ref,
-                'solped_titulo': 'Pedidos',
-                'ref': referencia,
-                'refnum': modelo,
-            }
-
-            if modelo_ant != modelo:
-                grade_ref.update({
+            if grade_invent_ref['total'] != 0:
+                grade_ref = {
+                    'inventario': grade_invent_ref,
+                    'pedido': grade_pedido_ref,
+                    'solicitacoes': grade_solicitado_ref,
+                    'disponivel': grade_disponivel_ref,
+                    'solped_titulo': 'Pedidos',
+                    'ref': referencia,
                     'refnum': modelo,
-                })
-                modelo_ant = modelo
+                }
 
-            grades.append(grade_ref)
-            # break
+                if modelo_ant != modelo:
+                    grade_ref.update({
+                        'refnum': modelo,
+                    })
+                    modelo_ant = modelo
+
+                grades.append(grade_ref)
 
         headers = ["Referência", "Modelo"]
         fields = ['ref', 'modelo']
         self.context.update({
-            # 'headers': headers,
-            # 'fields': fields,
-            # 'data': referencias,
+            'headers': headers,
+            'fields': fields,
+            'data': referencias,
             'grades': grades,
         })
         pprint(self.context)
