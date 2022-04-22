@@ -94,14 +94,12 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
                     'pedido': grade_pedido_ref,
                     'solicitacoes': grade_solicitado_ref,
                     'disponivel': grade_disponivel_ref,
-                    'solped_titulo': 'Pedidos',
                     'ref': referencia,
-                    'refnum': modelo,
                 }
 
                 if modelo_ant != modelo:
                     grade_ref.update({
-                        'refnum': modelo,
+                        'modelo': modelo,
                     })
                     modelo_ant = modelo
 

@@ -1,8 +1,8 @@
 {% if grades %}
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
-    {% if grade.refnum %}
-      <h4 style="padding-left: 2em;">Referência numérica (modelo): <b>{{ grade.refnum }}</b></h4>
+    {% if grade.modelo %}
+      <h4 style="padding-left: 2em;">Referência numérica (modelo): <b>{{ grade.modelo }}</b></h4>
     {% endif %}
     {% if grade.ref %}
       <h4 style="padding-left: 6em;">Referência: <b><a href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
