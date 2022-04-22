@@ -209,6 +209,7 @@ def opera_grades(g1, g2, operacao):
     totais[sortimento_field1] = 'Total'
     totais['|STYLE'] = 'font-weight: bold;'
     grade['data'].append(totais)
+    grade['total'] = totais['total']
     return grade
 
 
@@ -231,6 +232,7 @@ def opera_grade(grd, func):
             lin_tot[col] += (linha[col] - ori)
             linha[col_tot] += (linha[col] - ori)
             lin_tot[col_tot] += (linha[col] - ori)
+    grade['total'] = lin_tot[col_tot]
     return grade
 
 
