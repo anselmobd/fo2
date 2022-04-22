@@ -1,5 +1,5 @@
 {% if grades %}
-  {% include "layout/paginator_get.html" with data=dados url_name='cd:grade_estoque_totais' only %}
+  {% include "layout/paginator.html" with data=dados url_name='cd:grade_estoque_totais' only %}
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
     {% if grade.modelo %}
@@ -61,5 +61,5 @@
     </table>
     </div>
   {% endfor %}
-  {% include "layout/paginator_get.html" with data=dados url_name='cd:grade_estoque_totais' only %}
+  {% include "layout/paginator.html" with data=dados url_name='cd:grade_estoque_totais' only %}
 {% endif %}

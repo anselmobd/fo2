@@ -18,6 +18,7 @@ from lotes.views.a_produzir import (
     update_gzerada,
 )
 
+import cd.forms
 from cd.queries.novo_modulo.lotes import lotes_em_estoque
 
 
@@ -25,6 +26,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
     def __init__(self):
         self.permission_required = 'cd.can_view_grades_estoque'
+        self.Form_class = cd.forms.GradeEstoqueTotaisForm
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
         self.context = {'titulo': 'Todas as grades do estoque'}
 
@@ -41,7 +43,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
                 field_quantidade='qtd',
             )
 
-    def mount_context(self):
+    def mount_context(self, caso, page):
         p = Perf(id='GradeEstoqueTotais', on=True)
 
         referencias = lotes_em_estoque(self.cursor, get='ref')
@@ -51,7 +53,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
             row['modelo']
             for row in referencias
         ])))
-        dados_modelos, modelos = list_paginator_basic(modelos, 20, self.page)
+        dados_modelos, modelos = list_paginator_basic(modelos, 20, page)
 
         referencias = sorted([
             row
@@ -141,6 +143,16 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.cursor = db_cursor_so(request)
-        self.page = request.GET.get('page', 1)
-        self.mount_context()
+        form = self.Form_class()
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        self.cursor = db_cursor_so(request)
+        form = self.Form_class(request.POST)
+        if form.is_valid():
+            caso = form.cleaned_data['caso']
+            page = form.cleaned_data['page']
+            self.mount_context(caso, page)
+        self.context['form'] = form
         return render(request, self.template_name, self.context)

@@ -685,3 +685,14 @@ class EsvaziaPaleteForm(forms.Form):
         required=False,
         widget=forms.HiddenInput()
     )
+
+
+class GradeEstoqueTotaisForm(forms.Form):
+    CHOICES = [
+        ('t', 'Todas as referências'),
+        # ('n', 'Referências com alguma disponibilidade negativa'),
+    ]
+    caso = forms.ChoiceField(
+        choices=CHOICES, initial='t')
+    page = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())

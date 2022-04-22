@@ -11,5 +11,17 @@
 {% endblock %}
 
 {% block content %}
+<form action="{% url 'cd:grade_estoque_totais' %}" method="post" name="myForm">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
+</form>
+<br/>
 {% include "cd/novo_modulo/grade_estoque_totais_conteudo.html" %}
 {% endblock content %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
+  </script>
+{% endblock %}
