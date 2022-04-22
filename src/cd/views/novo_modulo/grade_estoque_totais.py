@@ -26,6 +26,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
     def __init__(self):
         self.permission_required = 'cd.can_view_grades_estoque'
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
+        self.context = {'titulo': 'Todas as grades do estoque'}
 
     def grade_dados(self, dados, referencia):
         return filter_dictlist_to_grade_qtd(
@@ -128,6 +129,5 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         self.cursor = db_cursor_so(request)
         self.page = request.GET.get('page', 1)
-        self.context = {}
         self.mount_context()
         return render(request, self.template_name, self.context)
