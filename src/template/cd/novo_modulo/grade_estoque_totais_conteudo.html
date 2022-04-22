@@ -1,8 +1,11 @@
 {% if grades %}
-  {% include "layout/paginator_get.html" with data=referencias url_name='cd:grade_estoque_totais' only %}
+  {% include "layout/paginator_get.html" with data=dados url_name='cd:grade_estoque_totais' only %}
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
     {% if grade.modelo %}
+      {% if forloop.counter != 1 %}
+        <hr>
+      {% endif %}
       <h4 style="padding-left: 2em;">Referência numérica (modelo): <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.modelo }}</a></b></h4>
     {% endif %}
     {% if grade.ref %}
@@ -58,5 +61,5 @@
     </table>
     </div>
   {% endfor %}
-  {% include "layout/paginator_get.html" with data=referencias url_name='cd:grade_estoque_totais' only %}
+  {% include "layout/paginator_get.html" with data=dados url_name='cd:grade_estoque_totais' only %}
 {% endif %}

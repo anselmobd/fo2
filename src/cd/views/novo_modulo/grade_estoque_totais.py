@@ -8,7 +8,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
-from base.paginator import paginator_basic
+from base.paginator import list_paginator_basic
 from utils.classes import Perf
 from utils.functions.dictlist import filter_dictlist_to_grade_qtd
 
@@ -43,14 +43,27 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
     def mount_context(self):
         p = Perf(id='GradeEstoqueTotais', on=True)
-        filtra_ref = None  # '>A0000'
-        referencias = lotes_em_estoque(self.cursor, get='ref', ref=filtra_ref)
+
+        referencias = lotes_em_estoque(self.cursor, get='ref')
         p.prt('referencias')
 
-        referencias = sorted(referencias, key=itemgetter('modelo', 'ref'))
+        modelos = sorted(list(set([
+            row['modelo']
+            for row in referencias
+        ])))
+        dados_modelos, modelos = list_paginator_basic(modelos, 20, self.page)
 
-        referencias = paginator_basic(referencias, 20, self.page)
+        referencias = sorted([
+            row
+            for row in referencias
+            if row['modelo'] in modelos
+        ], key=itemgetter('modelo', 'ref'))
         p.prt('paginator')
+
+        filtra_ref = [
+            row['ref']
+            for row in referencias
+        ]
 
         inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref)
         p.prt('inventario')
@@ -61,7 +74,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
         grades = []
         modelo_ant = -1
-        for row_ref in referencias.object_list:
+        for row_ref in referencias:
             referencia = row_ref['ref']
             modelo = row_ref['modelo']
 
@@ -123,7 +136,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         p.prt('for referencias')
         self.context.update({
             'grades': grades,
-            'referencias': referencias,
+            'dados': dados_modelos,
         })
 
     def get(self, request, *args, **kwargs):
