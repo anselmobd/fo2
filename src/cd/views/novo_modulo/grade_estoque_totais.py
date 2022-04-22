@@ -45,7 +45,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
         referencias = sorted(referencias, key=itemgetter('modelo', 'ref'))
 
-        referencias = paginator_basic(referencias, 9999, self.page)
+        referencias = paginator_basic(referencias, 50, self.page)
 
         inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref)
         pedido = lotes_em_estoque(self.cursor, tipo='p', ref=filtra_ref)
@@ -107,15 +107,9 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
                 grades.append(grade_ref)
 
-        headers = ["Referência", "Modelo"]
-        fields = ['ref', 'modelo']
         self.context.update({
-            'headers': headers,
-            'fields': fields,
-            'data': referencias,
             'grades': grades,
         })
-        pprint(self.context)
 
     def get(self, request, *args, **kwargs):
         self.cursor = db_cursor_so(request)

@@ -2,11 +2,7 @@
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
     {% if grade.refnum %}
-      {% if grade.refnum == 'TOTAL' %}
-        <h4 style="padding-left: 2em;"><b>Total das grades acima</b></h4>
-      {% else %}
-        <h4 style="padding-left: 2em;">Referência numérica: <b>{{ grade.refnum }}</b></h4>
-      {% endif %}
+      <h4 style="padding-left: 2em;">Referência numérica (modelo): <b>{{ grade.refnum }}</b></h4>
     {% endif %}
     {% if grade.ref %}
       <h4 style="padding-left: 6em;">Referência: <b><a href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
@@ -61,28 +57,4 @@
     </table>
     </div>
   {% endfor %}
-{% endif %}
-{% if data %}
-  {% if link_num %}
-    {% if refnum %}
-      <h4>Grades da referência numérica: <b><a href="{% url 'cd:grade_estoque' refnum %}">{{ refnum }}</a></b></h4>
-    {% endif %}
-  {% endif %}
-  <table>
-    {% include "layout/thead_generic.html" with data=headers only %}
-    {% include "layout/tbody_generic.html" with fields=fields data=data group=group only %}
-  </table>
-{% endif %}
-{% if exec == 'totais' %}
-  <span id="sel_modelos" style="display:none;"></span>
-  <script>
-    function recalcula_total(limpa) {
-      var limpo = '';
-      if (limpa) {
-        limpo = '?limpo=S'
-      }
-      $('.div_func').click();
-      window.open("{% url 'cd:grade_estoque' %}"+$("#sel_modelos").text()+limpo, "_self");
-    }
-  </script>
 {% endif %}
