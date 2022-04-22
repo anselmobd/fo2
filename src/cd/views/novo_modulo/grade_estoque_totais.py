@@ -26,15 +26,16 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
 
     def mount_context(self):
-        referencias = lotes_em_estoque(self.cursor, get='ref', ref=['B0001', 'B0002'])
+        filtra_ref = '<0002Z'
+        referencias = lotes_em_estoque(self.cursor, get='ref', ref=filtra_ref)
 
         referencias = sorted(referencias, key=itemgetter('modelo', 'ref'))
 
-        referencias = paginator_basic(referencias, 2, self.page)
+        referencias = paginator_basic(referencias, 20, self.page)
 
-        inventario = lotes_em_estoque(self.cursor, tipo='i', ref=['B0001', 'B0002'])
-        pedido = lotes_em_estoque(self.cursor, tipo='p', ref=['B0001', 'B0002'])
-        solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=['B0001', 'B0002'])
+        inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref)
+        pedido = lotes_em_estoque(self.cursor, tipo='p', ref=filtra_ref)
+        solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=filtra_ref)
 
         grades = []
         for row_ref in referencias.object_list:
@@ -68,13 +69,14 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
                 'refnum': row_ref['modelo'],
             }
             grades.append(grade_ref)
+            break
 
         headers = ["Referência", "Modelo"]
         fields = ['ref', 'modelo']
         self.context.update({
-            # 'headers': headers,
-            # 'fields': fields,
-            # 'data': referencias,
+            'headers': headers,
+            'fields': fields,
+            'data': referencias,
             'grades': grades,
         })
         pprint(self.context)
