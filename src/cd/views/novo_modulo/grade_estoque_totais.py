@@ -48,7 +48,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
         referencias = sorted(referencias, key=itemgetter('modelo', 'ref'))
 
-        referencias = paginator_basic(referencias, 10, self.page)
+        referencias = paginator_basic(referencias, 20, self.page)
         p.prt('paginator')
 
         inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref)
@@ -122,6 +122,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         p.prt('for referencias')
         self.context.update({
             'grades': grades,
+            'referencias': referencias,
         })
 
     def get(self, request, *args, **kwargs):
