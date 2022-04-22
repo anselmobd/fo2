@@ -46,7 +46,7 @@
             </table>
           </td>
         {% endif %}
-        {% if grade.disponivel.total != grade.inventario.total %}
+        {% if grade.solicitacoes.total != 0 or grade.pedido.total != 0 %}
           <td>&nbsp;</td>
           <td style="border-left: thin solid lightgrey;">&nbsp;</td>
           <td style="vertical-align: top;">

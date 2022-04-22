@@ -63,20 +63,30 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
             gzerada = update_gzerada(gzerada, grade_invent_ref)
 
             grade_pedido_ref = self.grade_dados(pedido, referencia)
-            gzerada = update_gzerada(gzerada, grade_pedido_ref)
+            if grade_pedido_ref['total'] != 0:
+                gzerada = update_gzerada(gzerada, grade_pedido_ref)
 
             grade_solicitado_ref = self.grade_dados(solicitado, referencia)
-            gzerada = update_gzerada(gzerada, grade_solicitado_ref)
+            if grade_solicitado_ref['total'] != 0:
+                gzerada = update_gzerada(gzerada, grade_solicitado_ref)
 
             grade_invent_ref = soma_grades(gzerada, grade_invent_ref)
-            grade_pedido_ref = soma_grades(gzerada, grade_pedido_ref)
-            grade_solicitado_ref = soma_grades(gzerada, grade_solicitado_ref)
 
-            grade_disponivel_ref = copy.deepcopy(grade_invent_ref)
             if grade_pedido_ref['total'] != 0:
-                grade_disponivel_ref = subtrai_grades(grade_disponivel_ref, grade_pedido_ref)
+                grade_pedido_ref = soma_grades(gzerada, grade_pedido_ref)
             if grade_solicitado_ref['total'] != 0:
-                grade_disponivel_ref = subtrai_grades(grade_disponivel_ref, grade_solicitado_ref)
+                grade_solicitado_ref = soma_grades(gzerada, grade_solicitado_ref)
+
+            if grade_pedido_ref['total'] == 0 and grade_solicitado_ref['total'] == 0:
+                grade_disponivel_ref = grade_invent_ref
+            else:
+                grade_disponivel_ref = copy.deepcopy(grade_invent_ref)
+                if grade_pedido_ref['total'] != 0:
+                    grade_disponivel_ref = subtrai_grades(
+                        grade_disponivel_ref, grade_pedido_ref)
+                if grade_solicitado_ref['total'] != 0:
+                    grade_disponivel_ref = subtrai_grades(
+                        grade_disponivel_ref, grade_solicitado_ref)
 
             grade_ref = {
                 'inventario': grade_invent_ref,
