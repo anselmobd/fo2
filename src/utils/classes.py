@@ -285,12 +285,12 @@ class Perf:
         try:
             return self._id
         except Exception:
-            self._id = None
+            self.id = None
         return self._id
 
     @id.setter
     def id(self, value):
-        self._id = '' if value is None else ''.join([value, ':'])
+        self._id = '' if value is None else f"{value}:"
 
 
 class LowerCaseValidator(object):
