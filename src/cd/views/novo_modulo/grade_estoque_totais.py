@@ -9,6 +9,7 @@ from django.views import View
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
+from utils.classes import Perf
 from utils.functions.dictlist import filter_dictlist_to_grade_qtd
 
 from lotes.views.a_produzir import (
@@ -40,16 +41,22 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
             )
 
     def mount_context(self):
+        p = Perf(id='GradeEstoqueTotais', on=True)
         filtra_ref = None  # '>A0000'
         referencias = lotes_em_estoque(self.cursor, get='ref', ref=filtra_ref)
+        p.prt('referencias')
 
         referencias = sorted(referencias, key=itemgetter('modelo', 'ref'))
 
-        referencias = paginator_basic(referencias, 50, self.page)
+        referencias = paginator_basic(referencias, 10, self.page)
+        p.prt('paginator')
 
         inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref)
+        p.prt('inventario')
         pedido = lotes_em_estoque(self.cursor, tipo='p', ref=filtra_ref)
+        p.prt('pedido')
         solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=filtra_ref)
+        p.prt('solicitado')
 
         grades = []
         modelo_ant = -1
@@ -61,21 +68,27 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
     
             grade_invent_ref = self.grade_dados(inventario, referencia)
             gzerada = update_gzerada(gzerada, grade_invent_ref)
+            p.prt(f"{referencia} grade_invent_ref")
 
             grade_pedido_ref = self.grade_dados(pedido, referencia)
             if grade_pedido_ref['total'] != 0:
                 gzerada = update_gzerada(gzerada, grade_pedido_ref)
+            p.prt(f"{referencia} grade_pedido_ref")
 
             grade_solicitado_ref = self.grade_dados(solicitado, referencia)
             if grade_solicitado_ref['total'] != 0:
                 gzerada = update_gzerada(gzerada, grade_solicitado_ref)
+            p.prt(f"{referencia} grade_solicitado_ref")
 
             grade_invent_ref = soma_grades(gzerada, grade_invent_ref)
+            p.prt(f"{referencia} soma_grades grade_invent_ref")
 
             if grade_pedido_ref['total'] != 0:
                 grade_pedido_ref = soma_grades(gzerada, grade_pedido_ref)
+                p.prt(f"{referencia} soma_grades grade_pedido_ref")
             if grade_solicitado_ref['total'] != 0:
                 grade_solicitado_ref = soma_grades(gzerada, grade_solicitado_ref)
+                p.prt(f"{referencia} soma_grades grade_solicitado_ref")
 
             if grade_pedido_ref['total'] == 0 and grade_solicitado_ref['total'] == 0:
                 grade_disponivel_ref = grade_invent_ref
@@ -87,6 +100,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
                 if grade_solicitado_ref['total'] != 0:
                     grade_disponivel_ref = subtrai_grades(
                         grade_disponivel_ref, grade_solicitado_ref)
+            p.prt(f"{referencia} grade_disponivel_ref")
 
             if grade_invent_ref['total'] != 0:
                 grade_ref = {
@@ -105,6 +119,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
                 grades.append(grade_ref)
 
+        p.prt('for referencias')
         self.context.update({
             'grades': grades,
         })
