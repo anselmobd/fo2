@@ -1,4 +1,5 @@
 {% if grades %}
+  {% include "layout/form_inputs_report.html" with form=form h=4 only %}
   <p>{{ modelos_por_pagina }} referências numéricas (modelos) por página</p>
   {% include "layout/paginator.html" with data=dados url_name='cd:grade_estoque_totais' only %}
   {% for grade in grades %}
@@ -47,16 +48,18 @@
             </table>
           </td>
         {% endif %}
-        {% if grade.solicitacoes.total != 0 or grade.pedido.total != 0 %}
-          <td>&nbsp;</td>
-          <td style="border-left: thin solid lightgrey;">&nbsp;</td>
-          <td style="vertical-align: top;">
-            <h4>Inventário</h4>
-            <table style="width: auto;">
-              {% include "layout/thead_generic.html" with data=grade.inventario.headers style=grade.inventario.style only %}
-              {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group style=grade.inventario.style only %}
-            </table>
-          </td>
+        {% if grade.inventario %}
+          {% if grade.solicitacoes.total != 0 or grade.pedido.total != 0 %}
+            <td>&nbsp;</td>
+            <td style="border-left: thin solid lightgrey;">&nbsp;</td>
+            <td style="vertical-align: top;">
+              <h4>Inventário</h4>
+              <table style="width: auto;">
+                {% include "layout/thead_generic.html" with data=grade.inventario.headers style=grade.inventario.style only %}
+                {% include "layout/tbody_generic.html" with fields=grade.inventario.fields data=grade.inventario.data group=grade.inventario.group style=grade.inventario.style only %}
+              </table>
+            </td>
+          {% endif %}
         {% endif %}
       </tr>
     </table>
