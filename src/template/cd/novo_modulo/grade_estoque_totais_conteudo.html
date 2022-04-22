@@ -1,42 +1,15 @@
 {% if grades %}
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
-      {% if grade.refnum != 'TOTAL' %}
-        <div class="div_func" onclick="func_{{ grade.refnum|safe }}();">
-          <script>
-            function func_{{ grade.refnum|safe }}() {
-              $("#sel_modelos").append("_{{ grade.refnum|safe }}");
-            };
-          </script>
-        </div>
-      {% endif %}
-    {% if link_num %}
-      {% if grade.refnum %}
-        {% if link_num_hr and exec != 'totais' %}
-          <hr>
-        {% endif %}
-        {% if exec == 'totais' %}
-          {% if grade.refnum == 'TOTAL' %}
-            <h4 style="padding-left: 2em;"><b>Total das grades acima</b></h4>
-          {% else %}
-            {% if limpo %}
-              <h4 style="padding-left: 2em;">Referência numérica: <b>{{ grade.refnum }}</b></h4>
-            {% else %}
-              <h4 style="padding-left: 2em;">Referência numérica: <b><a href="#" onclick="$('.mod_{{ grade.refnum|safe }}').remove(); $('.mod_TOTAL').remove(); return false;">{{ grade.refnum }}</a></b></h4>
-            {% endif %}
-          {% endif %}
-        {% else %}
-          <h4 style="padding-left: 2em;">Referência numérica: <b><a href="{% url 'cd:grade_estoque' grade.refnum %}">{{ grade.refnum }}</a></b></h4>
-        {% endif %}
+    {% if grade.refnum %}
+      {% if grade.refnum == 'TOTAL' %}
+        <h4 style="padding-left: 2em;"><b>Total das grades acima</b></h4>
+      {% else %}
+        <h4 style="padding-left: 2em;">Referência numérica: <b>{{ grade.refnum }}</b></h4>
       {% endif %}
     {% endif %}
     {% if grade.ref %}
-      {% if title_ref %}
-        <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
-      {% endif %}
-      {% if link_ref %}
-        <h4 style="padding-left: 6em;">Referência: <b><a href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
-      {% endif %}
+      <h4 style="padding-left: 6em;">Referência: <b><a href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
     {% endif %}
     <table class="layout">
       <tr>
