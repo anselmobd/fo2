@@ -50,10 +50,12 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
 
             grade_invent_ref = self.grade_dados(inventario, referencia)
             grade_pedido_ref = self.grade_dados(pedido, referencia)
+            grade_solicitado_ref = self.grade_dados(solicitado, referencia)
 
             grade_ref = {
                 'inventario': grade_invent_ref,
-                'solped': grade_pedido_ref,
+                'pedido': grade_pedido_ref,
+                'solicitacoes': grade_solicitado_ref,
                 'solped_titulo': 'Pedidos',
                 'ref': referencia,
                 'refnum': row_ref['modelo'],
