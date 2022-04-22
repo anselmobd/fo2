@@ -1,3 +1,4 @@
+import copy
 from operator import itemgetter
 from pprint import pprint
 
@@ -9,6 +10,12 @@ from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
 from utils.functions.dictlist import filter_dictlist_to_grade_qtd
+
+from lotes.views.a_produzir import (
+    soma_grades,
+    subtrai_grades,
+    update_gzerada,
+)
 
 from cd.queries.novo_modulo.lotes import lotes_em_estoque
 
@@ -50,14 +57,32 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
             referencia = row_ref['ref']
             modelo = row_ref['modelo']
 
+            gzerada = None
+    
             grade_invent_ref = self.grade_dados(inventario, referencia)
+            gzerada = update_gzerada(gzerada, grade_invent_ref)
+
             grade_pedido_ref = self.grade_dados(pedido, referencia)
+            gzerada = update_gzerada(gzerada, grade_pedido_ref)
+
             grade_solicitado_ref = self.grade_dados(solicitado, referencia)
+            gzerada = update_gzerada(gzerada, grade_solicitado_ref)
+
+            grade_invent_ref = soma_grades(gzerada, grade_invent_ref)
+            grade_pedido_ref = soma_grades(gzerada, grade_pedido_ref)
+            grade_solicitado_ref = soma_grades(gzerada, grade_solicitado_ref)
+
+            grade_disponivel_ref = copy.deepcopy(grade_invent_ref)
+            if grade_pedido_ref['total'] != 0:
+                grade_disponivel_ref = subtrai_grades(grade_disponivel_ref, grade_pedido_ref)
+            if grade_solicitado_ref['total'] != 0:
+                grade_disponivel_ref = subtrai_grades(grade_disponivel_ref, grade_solicitado_ref)
 
             grade_ref = {
                 'inventario': grade_invent_ref,
                 'pedido': grade_pedido_ref,
                 'solicitacoes': grade_solicitado_ref,
+                'disponivel': grade_disponivel_ref,
                 'solped_titulo': 'Pedidos',
                 'ref': referencia,
                 'refnum': modelo,
