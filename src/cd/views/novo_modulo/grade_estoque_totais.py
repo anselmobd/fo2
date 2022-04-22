@@ -47,6 +47,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
             )
 
     def mount_context(self, caso, page):
+        self.cursor = db_cursor_so(self.request)
         p = Perf(id='GradeEstoqueTotais', on=True)
 
         referencias = lotes_em_estoque(self.cursor, get='ref')
@@ -149,13 +150,13 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         })
 
     def get(self, request, *args, **kwargs):
-        self.cursor = db_cursor_so(request)
+        self.request = request
         form = self.Form_class()
         self.context['form'] = form
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        self.cursor = db_cursor_so(request)
+        self.request = request
         form = self.Form_class(request.POST)
         if form.is_valid():
             caso = form.cleaned_data['caso']
