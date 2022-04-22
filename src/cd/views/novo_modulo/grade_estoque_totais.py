@@ -2,20 +2,14 @@ from operator import itemgetter
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.views import View
-from django.urls import reverse
 
 from fo2.connections import db_cursor_so
 
-from utils.views import group_rowspan
-
 from base.paginator import paginator_basic
-from utils.functions.strings import only_digits
-from utils.functions.dictlist import dados_to_grade
+from utils.functions.dictlist import filter_dictlist_to_grade_qtd
 
-import cd.forms
 from cd.queries.novo_modulo.lotes import lotes_em_estoque
 
 
@@ -41,27 +35,17 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         for row_ref in referencias.object_list:
             referencia = row_ref['ref']
 
-            inventario_ref = list(
-                filter(
-                    lambda x: x['ref'] == referencia,
-                    inventario,
-                )
-            )
-            # pprint(inventario_ref)
-
-            grade_invent_ref = dados_to_grade(
-                inventario_ref,
+            grade_invent_ref = filter_dictlist_to_grade_qtd(
+                inventario,
+                field_filter='ref',
+                facade_filter='referencia',
+                value_filter=referencia,
                 field_linha='cor',
                 field_coluna='tam',
                 facade_coluna='Tamanho',
                 field_ordem_coluna='ordem_tam',
                 field_quantidade='qtd',
             )
-
-            grade_invent_ref.update({
-                'referencia': referencia,
-            })
-            # pprint(grade_invent_ref)
 
             grade_ref = {
                 'inventario': grade_invent_ref,

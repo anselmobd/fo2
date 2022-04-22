@@ -1,7 +1,42 @@
 from pprint import pprint
 
 
-def dados_to_grade(
+def filter_dictlist_to_grade_qtd(
+    dados,
+    field_filter=None,
+    facade_filter=None,
+    value_filter=None,
+    field_linha=None,
+    facade_linha=None,
+    field_coluna=None,
+    facade_coluna=None,
+    field_ordem_coluna=None,
+    field_quantidade=None,
+):
+    dados_filtrados = list(
+        filter(
+            lambda x: x[field_filter] == value_filter,
+            dados,
+        )
+    )
+
+    result = dictlist_to_grade_qtd(
+        dados_filtrados,
+        field_linha=field_linha,
+        facade_linha=facade_linha,
+        field_coluna=field_coluna,
+        facade_coluna=facade_coluna,
+        field_ordem_coluna=field_ordem_coluna,
+        field_quantidade=field_quantidade,
+    )
+
+    result.update({
+        facade_filter: value_filter,
+    })
+
+    return result
+
+def dictlist_to_grade_qtd(
     dados,
     field_linha=None,
     facade_linha=None,
