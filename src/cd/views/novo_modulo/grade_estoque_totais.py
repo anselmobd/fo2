@@ -28,7 +28,10 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         self.permission_required = 'cd.can_view_grades_estoque'
         self.Form_class = cd.forms.GradeEstoqueTotaisForm
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
-        self.context = {'titulo': 'Todas as grades do estoque'}
+        self.context = {
+            'titulo': 'Todas as grades do estoque',
+            'modelos_por_pagina': 20,
+        }
 
     def grade_dados(self, dados, referencia):
         return filter_dictlist_to_grade_qtd(
@@ -53,7 +56,8 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
             row['modelo']
             for row in referencias
         ])))
-        dados_modelos, modelos = list_paginator_basic(modelos, 20, page)
+        dados_modelos, modelos = list_paginator_basic(
+            modelos, self.context['modelos_por_pagina'], page)
 
         referencias = sorted([
             row
