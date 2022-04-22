@@ -19,6 +19,19 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         self.permission_required = 'cd.can_view_grades_estoque'
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
 
+    def grade_dados(self, dados, referencia):
+        return filter_dictlist_to_grade_qtd(
+                dados,
+                field_filter='ref',
+                facade_filter='referencia',
+                value_filter=referencia,
+                field_linha='cor',
+                field_coluna='tam',
+                facade_coluna='Tamanho',
+                field_ordem_coluna='ordem_tam',
+                field_quantidade='qtd',
+            )
+
     def mount_context(self):
         filtra_ref = '<0002Z'
         referencias = lotes_em_estoque(self.cursor, get='ref', ref=filtra_ref)
@@ -35,20 +48,13 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         for row_ref in referencias.object_list:
             referencia = row_ref['ref']
 
-            grade_invent_ref = filter_dictlist_to_grade_qtd(
-                inventario,
-                field_filter='ref',
-                facade_filter='referencia',
-                value_filter=referencia,
-                field_linha='cor',
-                field_coluna='tam',
-                facade_coluna='Tamanho',
-                field_ordem_coluna='ordem_tam',
-                field_quantidade='qtd',
-            )
+            grade_invent_ref = self.grade_dados(inventario, referencia)
+            grade_pedido_ref = self.grade_dados(pedido, referencia)
 
             grade_ref = {
                 'inventario': grade_invent_ref,
+                'solped': grade_pedido_ref,
+                'solped_titulo': 'Pedidos',
                 'ref': referencia,
                 'refnum': row_ref['modelo'],
             }
