@@ -11,6 +11,8 @@ from fo2.connections import db_cursor_so
 from utils.functions.digits import fo2_digit_valid
 from utils.functions.strings import only_digits
 
+from systextil.models import Colecao
+
 import lotes.models
 import lotes.queries.lote
 
@@ -694,5 +696,9 @@ class GradeEstoqueTotaisForm(forms.Form):
     ]
     caso = forms.ChoiceField(
         choices=CHOICES, initial='t')
+    colecao = forms.ModelChoiceField(
+        label='Coleção da referência', required=False,
+        queryset=Colecao.objects.all().order_by(
+            'colecao'), empty_label="(Todas)")
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())

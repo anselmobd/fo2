@@ -3,12 +3,11 @@ from operator import itemgetter
 from pprint import pprint
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import render
-from django.views import View
 
 from fo2.connections import db_cursor_so
 
 from base.paginator import list_paginator_basic
+from base.views import O2BaseGetPostView
 from utils.classes import Perf
 from utils.functions.dictlist import filter_dictlist_to_grade_qtd
 
@@ -22,16 +21,15 @@ import cd.forms
 from cd.queries.novo_modulo.lotes import lotes_em_estoque
 
 
-class GradeEstoqueTotais(PermissionRequiredMixin, View):
+class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
+        super(GradeEstoqueTotais, self).__init__()
         self.permission_required = 'cd.can_view_grades_estoque'
         self.Form_class = cd.forms.GradeEstoqueTotaisForm
+        self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
-        self.context = {
-            'titulo': 'Todas as grades do estoque',
-            'modelos_por_pagina': 20,
-        }
+        self.title_name = 'Todas as grades do estoque'
 
     def grade_dados(self, dados, referencia):
         return filter_dictlist_to_grade_qtd(
@@ -46,9 +44,11 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
                 field_quantidade='qtd',
             )
 
-    def mount_context(self, caso, page):
-        self.cursor = db_cursor_so(self.request)
+    def mount_context(self):
         p = Perf(id='GradeEstoqueTotais', on=True)
+
+        self.cursor = db_cursor_so(self.request)
+        modelos_por_pagina = 20
 
         referencias = lotes_em_estoque(self.cursor, get='ref')
         p.prt('referencias')
@@ -58,7 +58,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
             for row in referencias
         ])))
         dados_modelos, modelos = list_paginator_basic(
-            modelos, self.context['modelos_por_pagina'], page)
+            modelos, modelos_por_pagina, self.page)
 
         referencias = sorted([
             row
@@ -128,7 +128,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
                     'disponivel': grade_disponivel_ref,
                     'ref': referencia,
                 }
-                if caso == 't':
+                if self.caso == 't':
                     grade_ref.update({
                         'inventario': grade_invent_ref,
                         'pedido': grade_pedido_ref,
@@ -146,21 +146,6 @@ class GradeEstoqueTotais(PermissionRequiredMixin, View):
         p.prt('for referencias')
         self.context.update({
             'grades': grades,
+            'modelos_por_pagina': modelos_por_pagina,
             'dados': dados_modelos,
         })
-
-    def get(self, request, *args, **kwargs):
-        self.request = request
-        form = self.Form_class()
-        self.context['form'] = form
-        return render(request, self.template_name, self.context)
-
-    def post(self, request, *args, **kwargs):
-        self.request = request
-        form = self.Form_class(request.POST)
-        if form.is_valid():
-            caso = form.cleaned_data['caso']
-            page = form.cleaned_data['page']
-            self.mount_context(caso, page)
-        self.context['form'] = form
-        return render(request, self.template_name, self.context)
