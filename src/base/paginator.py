@@ -22,3 +22,16 @@ def paginator_basic(data, nrows, page, pag_neib=None):
         return paginator.page(1)
     except EmptyPage:
         return paginator.page(paginator.num_pages)
+
+
+def list_paginator_basic(data_list, nrows, page, pag_neib=None):
+    data = [
+        {'value': value}
+        for value in data_list
+    ]
+    data = paginator_basic(data, nrows, page, pag_neib)
+    values_list = [
+        row['value']
+        for row in data
+    ]
+    return data, values_list
