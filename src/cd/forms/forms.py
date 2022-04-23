@@ -695,7 +695,7 @@ class GradeEstoqueTotaisForm(forms.Form):
         ('t', 'Todas as grades'),
         ('d', 'Apenas grade de disponibilidade'),
     ]
-    caso = forms.ChoiceField(
+    apresenta = forms.ChoiceField(
         choices=CHOICES, initial='t')
     colecao = forms.ChoiceField(
         label='Coleção da referência',
@@ -703,6 +703,13 @@ class GradeEstoqueTotaisForm(forms.Form):
     tabela = forms.ChoiceField(
         label='Modelos da tabela de preços',
         required=False, initial=None)
+    CHOICES_PAGINADOR = [
+        ('s', 'Sim'),
+        ('n', 'Não'),
+    ]
+    usa_paginador = forms.ChoiceField(
+        label='Utiliza paginador',
+        choices=CHOICES_PAGINADOR, initial='s')
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 

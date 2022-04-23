@@ -53,6 +53,8 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
 
         self.cursor = db_cursor_so(self.request)
         modelos_por_pagina = 20
+        if self.usa_paginador == 'n':
+            modelos_por_pagina = 99999
 
         colecao_codigo = None if self.colecao == '' else self.colecao
         
@@ -144,7 +146,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                     'disponivel': grade_disponivel_ref,
                     'ref': referencia,
                 }
-                if self.caso == 't':
+                if self.apresenta == 't':
                     grade_ref.update({
                         'inventario': grade_invent_ref,
                         'pedido': grade_pedido_ref,
