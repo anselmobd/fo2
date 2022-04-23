@@ -1,6 +1,8 @@
 {% if grades %}
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
-  <p>{{ modelos_por_pagina }} modelos por página</p>
+  {% if dados.paginator.num_pages != 1 %}
+    <p>{{ modelos_por_pagina }} modelos por página</p>
+  {% endif %}
   {% include "layout/paginator.html" with data=dados url_name='cd:grade_estoque_totais' only %}
   <p>Modelos: {% for dado in dados %}{% if forloop.counter != 1 %}, {% endif %}{{ dado.value|safe }}{% endfor %}</p>
   {% for grade in grades %}
