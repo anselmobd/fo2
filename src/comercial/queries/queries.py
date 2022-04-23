@@ -788,7 +788,7 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=None
     return rows_to_dict_list_lower(cursor)
 
 
-def get_tabela_preco(cursor, col=None, mes=None, seq=None):
+def get_tabela_preco(cursor, col=None, mes=None, seq=None, tipo=None):
     filtra_col = ''
     if col is not None:
         filtra_col = f"AND t.COL_TABELA_PRECO = '{col}'"
@@ -798,6 +798,9 @@ def get_tabela_preco(cursor, col=None, mes=None, seq=None):
     filtra_seq = ''
     if seq is not None:
         filtra_seq = f"AND t.SEQ_TABELA_PRECO = '{seq}'"
+    filtra_tipo = ''
+    if tipo is not None:
+        filtra_tipo = f"AND t.TIPO_PRECO = '{tipo}'"
     sql = f"""
         SELECT
           t.*
@@ -807,6 +810,7 @@ def get_tabela_preco(cursor, col=None, mes=None, seq=None):
           {filtra_col} -- filtra_col
           {filtra_mes} -- filtra_mes
           {filtra_seq} -- filtra_seq
+          {filtra_tipo} -- filtra_tipo
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
