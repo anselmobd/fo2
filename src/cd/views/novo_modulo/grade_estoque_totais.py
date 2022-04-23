@@ -141,25 +141,24 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                         grade_disponivel_ref, grade_solicitado_ref)
             p.prt(f"{referencia} grade_disponivel_ref")
 
-            if grade_invent_ref['total'] != 0:
-                grade_ref = {
-                    'disponivel': grade_disponivel_ref,
-                    'ref': referencia,
-                }
-                if self.apresenta == 't':
-                    grade_ref.update({
-                        'inventario': grade_invent_ref,
-                        'pedido': grade_pedido_ref,
-                        'solicitacoes': grade_solicitado_ref,
-                    })
+            grade_ref = {
+                'disponivel': grade_disponivel_ref,
+                'ref': referencia,
+            }
+            if self.apresenta == 't':
+                grade_ref.update({
+                    'inventario': grade_invent_ref,
+                    'pedido': grade_pedido_ref,
+                    'solicitacoes': grade_solicitado_ref,
+                })
 
-                if modelo_ant != modelo:
-                    grade_ref.update({
-                        'modelo': modelo,
-                    })
-                    modelo_ant = modelo
+            if modelo_ant != modelo:
+                grade_ref.update({
+                    'modelo': modelo,
+                })
+                modelo_ant = modelo
 
-                grades.append(grade_ref)
+            grades.append(grade_ref)
 
         p.prt('for referencias')
         self.context.update({
