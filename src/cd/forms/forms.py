@@ -15,6 +15,7 @@ from systextil.models import Colecao
 
 import lotes.models
 import lotes.queries.lote
+from comercial.queries import get_tabela_preco
 
 
 class RearrumarForm(forms.Form):
@@ -699,11 +700,17 @@ class GradeEstoqueTotaisForm(forms.Form):
     colecao = forms.ChoiceField(
         label='Coleção da referência',
         required=False, initial=None)
+    tabela = forms.ChoiceField(
+        label='Tabela de preços',
+        required=False, initial=None)
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super(GradeEstoqueTotaisForm, self).__init__(*args, **kwargs)
+
+        cursor = db_cursor_so(self.request)
 
         CHOICES = [(None, '(Todas)')]
         colecoes = Colecao.objects.all().order_by('colecao')
@@ -713,3 +720,18 @@ class GradeEstoqueTotaisForm(forms.Form):
                 f"{colecao.colecao}-{colecao.descr_colecao}"
             ))
         self.fields['colecao'].choices = CHOICES
+
+        CHOICES_TABELA = [(None, 'Nenhuma específica')]
+        tabelas = get_tabela_preco(cursor, col=1, mes=1, order='d')
+        pprint(tabelas)
+        for tabela in tabelas:
+            codigo_tabela = "{:02d}.{:02d}.{:02d}".format(
+                tabela['col_tabela_preco'],
+                tabela['mes_tabela_preco'],
+                tabela['seq_tabela_preco'],
+            )
+            CHOICES_TABELA.append((
+                codigo_tabela,
+                f"{codigo_tabela}-{tabela['descricao']}"
+            ))
+        self.fields['tabela'].choices = CHOICES_TABELA
