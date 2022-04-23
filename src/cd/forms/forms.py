@@ -701,7 +701,7 @@ class GradeEstoqueTotaisForm(forms.Form):
         label='Coleção da referência',
         required=False, initial=None)
     tabela = forms.ChoiceField(
-        label='Tabela de preços',
+        label='Modelos da tabela de preços',
         required=False, initial=None)
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
@@ -721,9 +721,8 @@ class GradeEstoqueTotaisForm(forms.Form):
             ))
         self.fields['colecao'].choices = CHOICES
 
-        CHOICES_TABELA = [(None, 'Nenhuma específica')]
+        CHOICES_TABELA = [(None, '--')]
         tabelas = get_tabela_preco(cursor, col=1, mes=1, order='d')
-        pprint(tabelas)
         for tabela in tabelas:
             codigo_tabela = "{:02d}.{:02d}.{:02d}".format(
                 tabela['col_tabela_preco'],

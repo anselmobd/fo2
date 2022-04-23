@@ -10,6 +10,10 @@ from base.paginator import list_paginator_basic
 from base.views import O2BaseGetPostView
 from utils.classes import Perf
 from utils.functions.dictlist import filter_dictlist_to_grade_qtd
+from utils.functions.strings import only_digits
+
+from comercial.queries import itens_tabela_preco
+
 
 from lotes.views.a_produzir import (
     soma_grades,
@@ -51,6 +55,15 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         modelos_por_pagina = 20
 
         colecao_codigo = None if self.colecao == '' else self.colecao
+        
+        tabela_codigo = None if self.tabela == '' else self.tabela
+        if tabela_codigo:
+            tabela_chunks = tabela_codigo.split('.')
+            itens_tabela = itens_tabela_preco(self.cursor, *tabela_chunks)
+            modelos_tabela = set([
+                int(only_digits(row['grupo_estrutura']))
+                for row in itens_tabela
+            ])
 
         referencias = lotes_em_estoque(self.cursor, colecao=colecao_codigo, get='ref')
         p.prt('referencias')
@@ -58,6 +71,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         modelos = sorted(list(set([
             row['modelo']
             for row in referencias
+            if (not tabela_codigo) or (row['modelo'] in modelos_tabela)
         ])))
         dados_modelos, modelos = list_paginator_basic(
             modelos, modelos_por_pagina, self.page)
