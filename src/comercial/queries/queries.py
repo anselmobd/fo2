@@ -788,7 +788,7 @@ def devolucao_para_meta(cursor, ano, mes=None, tipo='total', empresa=1, ref=None
     return rows_to_dict_list_lower(cursor)
 
 
-def get_tabela_preco(cursor, col=None, mes=None, seq=None, tipo=None):
+def get_tabela_preco(cursor, col=None, mes=None, seq=None, tipo=None, order=None):
     filtra_col = ''
     if col is not None:
         filtra_col = f"AND t.COL_TABELA_PRECO = '{col}'"
@@ -801,6 +801,21 @@ def get_tabela_preco(cursor, col=None, mes=None, seq=None, tipo=None):
     filtra_tipo = ''
     if tipo is not None:
         filtra_tipo = f"AND t.TIPO_PRECO = '{tipo}'"
+    order_by = ''
+    if order in ['a', 'asc']:
+        order_by = f"""
+            ORDER BY
+              t.COL_TABELA_PRECO
+            , t.MES_TABELA_PRECO
+            , t.SEQ_TABELA_PRECO
+        """
+    elif order in ['d', 'desc']:
+        order_by = f"""
+            ORDER BY
+              t.COL_TABELA_PRECO DESC
+            , t.MES_TABELA_PRECO DESC
+            , t.SEQ_TABELA_PRECO DESC
+        """
     sql = f"""
         SELECT
           t.*
@@ -811,6 +826,7 @@ def get_tabela_preco(cursor, col=None, mes=None, seq=None, tipo=None):
           {filtra_mes} -- filtra_mes
           {filtra_seq} -- filtra_seq
           {filtra_tipo} -- filtra_tipo
+        {order_by} -- order_by
     """
     cursor.execute(sql)
     return rows_to_dict_list_lower(cursor)
