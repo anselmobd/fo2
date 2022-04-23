@@ -24,7 +24,7 @@ class TabelaDePreco(View):
                         '3 números inteiros separados por ".".'
             })
 
-            data = queries.get_tabela_preco(cursor)
+            data = queries.get_tabela_preco(cursor, order='a')
             if len(data) == 0:
                 context.update({'erro': 'Sem tabelas de preço'})
                 return context
