@@ -696,9 +696,20 @@ class GradeEstoqueTotaisForm(forms.Form):
     ]
     caso = forms.ChoiceField(
         choices=CHOICES, initial='t')
-    colecao = forms.ModelChoiceField(
-        label='Coleção da referência', required=False,
-        queryset=Colecao.objects.all().order_by(
-            'colecao'), empty_label="(Todas)")
+    colecao = forms.ChoiceField(
+        label='Coleção da referência',
+        required=False, initial=None)
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        super(GradeEstoqueTotaisForm, self).__init__(*args, **kwargs)
+
+        CHOICES = [(None, '(Todas)')]
+        colecoes = Colecao.objects.all().order_by('colecao')
+        for colecao in colecoes:
+            CHOICES.append((
+                colecao.colecao,
+                f"{colecao.colecao}-{colecao.descr_colecao}"
+            ))
+        self.fields['colecao'].choices = CHOICES
