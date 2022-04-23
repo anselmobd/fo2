@@ -5,7 +5,7 @@ from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import only_digits
 
 
-def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
+def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
     """Monta SQL base de selecão de lotes
     - endereçados; e
     - no estágio 63
@@ -46,6 +46,16 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
     else:
         refs = ', '.join([f"'{r}'" for r in ref])
         filter_ref = f"and l.PROCONF_GRUPO in ({refs})"
+
+    join_para_colecao = ""
+    filter_colecao = ""
+    if colecao is not None:
+        join_para_colecao = """
+            JOIN BASI_030 r
+              ON r.NIVEL_ESTRUTURA = 1
+             AND r.REFERENCIA = l.PROCONF_GRUPO 
+        """
+        filter_colecao = f"AND r.COLECAO = '{colecao}'"
 
     if get == 'ref':
         distinct = True
@@ -112,11 +122,13 @@ def sql_em_estoque(tipo=None, ref=None, get=None, sinal='+'):
           ON l.ORDEM_PRODUCAO = lp.ORDEM_PRODUCAO 
          AND l.ORDEM_CONFECCAO = MOD(lp.ORDEM_CONFECCAO, 100000)
         {tipo_join} -- tipo_join
+        {join_para_colecao} -- join_para_colecao
         LEFT JOIN BASI_220 tam -- cadastro de tamanhos
           ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
         WHERE l.CODIGO_ESTAGIO = 63
           {tipo_filter} -- tipo_filter
           {filter_ref} -- filter_ref
+          {filter_colecao} -- filter_colecao
     """
     return sql
 
@@ -127,8 +139,8 @@ def refs_em_estoque(cursor):
     return dictlist(cursor)
 
 
-def lotes_em_estoque(cursor, tipo=None, ref=None, get=None):
-    sql = sql_em_estoque(tipo=tipo, ref=ref, get=get)
+def lotes_em_estoque(cursor, tipo=None, ref=None, colecao=None, get=None):
+    sql = sql_em_estoque(tipo=tipo, ref=ref, colecao=colecao, get=get)
     debug_cursor_execute(cursor, sql)
     dados = dictlist(cursor)
     for row in dados:

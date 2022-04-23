@@ -50,7 +50,9 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         self.cursor = db_cursor_so(self.request)
         modelos_por_pagina = 20
 
-        referencias = lotes_em_estoque(self.cursor, get='ref')
+        colecao_codigo = None if self.colecao is None else self.colecao.colecao
+
+        referencias = lotes_em_estoque(self.cursor, colecao=colecao_codigo, get='ref')
         p.prt('referencias')
 
         modelos = sorted(list(set([
