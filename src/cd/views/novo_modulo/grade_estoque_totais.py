@@ -75,6 +75,16 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             for row in referencias
             if (not tabela_codigo) or (row['modelo'] in modelos_tabela)
         ])))
+        qtd_referencias = len([
+            row
+            for row in referencias
+            if row['modelo'] in modelos
+        ])
+        self.context.update({
+            'qtd_modelos': len(modelos),
+            'qtd_referencias': qtd_referencias,
+        })
+
         dados_modelos, modelos = list_paginator_basic(
             modelos, modelos_por_pagina, self.page)
 

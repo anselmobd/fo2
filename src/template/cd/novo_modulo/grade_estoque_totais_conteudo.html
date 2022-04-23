@@ -1,5 +1,6 @@
 {% if grades %}
   {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+  <h4>Encontradas {{qtd_referencias}} referência{{qtd_referencias|pluralize}} em {{qtd_modelos}} modelo{{qtd_modelos|pluralize}}</h4>
   {% if dados.paginator.num_pages != 1 %}
     <p>{{ modelos_por_pagina }} modelos por página</p>
   {% endif %}
