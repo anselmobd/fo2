@@ -15,7 +15,7 @@ from utils.functions.strings import only_digits
 from comercial.queries import itens_tabela_preco
 
 
-from lotes.views.a_produzir import (
+from utils.functions.dictlist.operacoes_grade import (
     soma_grades,
     subtrai_grades,
     update_gzerada,

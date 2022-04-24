@@ -20,12 +20,13 @@ from comercial.views.estoque import grade_meta_estoque
 from lotes.views.a_produzir import (
     config_get_value,
     grade_meta_giro,
+)
+from utils.functions.dictlist.operacoes_grade import (
     opera_grade,
     soma_grades,
     subtrai_grades,
     update_gzerada,
 )
-
 
 class GradeProduzir(O2BaseGetPostView):
 
