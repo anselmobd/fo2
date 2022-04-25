@@ -741,3 +741,20 @@ class GradeEstoqueTotaisForm(forms.Form):
                 f"{codigo_tabela}-{tabela['descricao']}"
             ))
         self.fields['tabela'].choices = CHOICES_TABELA
+
+
+class SolicitacoesForm(forms.Form):
+    solicitacao = forms.CharField(
+        label='Solicitação',
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+                'autofocus': 'autofocus'
+            },
+        ),
+    )
+    page = forms.IntegerField(
+        required=False,
+        widget=forms.HiddenInput()
+    )

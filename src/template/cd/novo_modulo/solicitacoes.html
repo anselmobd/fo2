@@ -11,15 +11,27 @@
 {% endblock %}
 
 {% block content %}
+  <form action="{% url 'cd:novo_solicitacoes' %}" method="post" name="myForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
+  </form>
+  <br/>
   {% if data %}
-    Situçação: 1=A confirmar; 2=Confirmado; 3=Programado; 4=Solicitado; 5=Baixado
-    {% include "layout/paginator_get.html" with data=data url_name='cd:novo_solicitacoes' only %}
+    <p>Situçação: 1=A confirmar; 2=Confirmado; 3=Programado; 4=Solicitado; 5=Baixado</p>
+    {% include "layout/paginator.html" with data=data url_name='cd:novo_solicitacoes' only %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
       {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
     </table>
-    {% include "layout/paginator_get.html" with data=data url_name='cd:novo_solicitacoes' only %}
+    {% include "layout/paginator.html" with data=data url_name='cd:novo_solicitacoes' only %}
   {% else %}
     <h4>Nenhuma solicitação encontrada</h4>
   {% endif %}
 {% endblock content %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
+  </script>
+{% endblock %}

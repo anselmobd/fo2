@@ -5,25 +5,27 @@ from django.urls import reverse
 from fo2.connections import db_cursor_so
 
 from base.paginator import paginator_basic
-from base.views import O2BaseGetView
+from base.views import O2BaseGetPostView
 from utils.functions import untuple_keys_concat
 from utils.views import totalize_data
 
+import cd.forms
 from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 
 
-class Solicitacoes(O2BaseGetView):
+class Solicitacoes(O2BaseGetPostView):
 
     def __init__(self, *args, **kwargs):
         super(Solicitacoes, self).__init__(*args, **kwargs)
+        self.Form_class = cd.forms.SolicitacoesForm
+        self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/solicitacoes.html'
         self.title_name = 'Solicitações'
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
-        page = self.request.GET.get('page', 1)
 
-        data = get_solicitacoes(cursor)
+        data = get_solicitacoes(cursor, self.solicitacao)
 
         totalize_data(data, {
             'sum': [
@@ -47,9 +49,10 @@ class Solicitacoes(O2BaseGetView):
             'count': [],
             'descr': {'solicitacao': 'Totais:'},
             'row_style': 'font-weight: bold;',
+            'flags': ['NO_TOT_1'],
         })
 
-        data = paginator_basic(data, 100, page)
+        data = paginator_basic(data, 20, self.page)
 
         for row in data:
             row['solicitacao|TARGET'] = '_blank'
