@@ -37,16 +37,24 @@ class O2BaseGetPostView(CustomView):
         self.form_dict_initial = {}
         self.form_create_kwargs = {}
         self.cleaned_data2self = False
+        self.cleaned_data2data = False
 
     def do_cleaned_data2self(self):
         if self.cleaned_data2self:
             for field in self.form.cleaned_data:
                 setattr(self, field, self.form.cleaned_data[field])
 
+    def do_cleaned_data2data(self):
+        if self.cleaned_data2data:
+            self.form.data = dict(self.form.data)
+            for field in self.form.cleaned_data:
+                self.form.data[field] = self.form.cleaned_data[field]
+
     def render_mount(self):
         self.pre_mount_context()
         if self.form.is_valid():
             self.do_cleaned_data2self()
+            self.do_cleaned_data2data()
             self.mount_context()
         self.context['form'] = self.form
         return self.my_render()
