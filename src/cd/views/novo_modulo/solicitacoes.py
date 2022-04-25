@@ -19,6 +19,7 @@ class Solicitacoes(O2BaseGetPostView):
         super(Solicitacoes, self).__init__(*args, **kwargs)
         self.Form_class = cd.forms.SolicitacoesForm
         self.cleaned_data2self = True
+        self.cleaned_data2data = True
         self.template_name = 'cd/novo_modulo/solicitacoes.html'
         self.title_name = 'Solicitações'
 

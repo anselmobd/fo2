@@ -749,6 +749,7 @@ class SolicitacoesForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
+                'size': 6,
                 'type': 'number',
                 'autofocus': 'autofocus',
             },
@@ -758,19 +759,33 @@ class SolicitacoesForm(forms.Form):
         label='Pedido destino',
         required=False,
         widget=forms.TextInput(
-            attrs={'type': 'number'},
+            attrs={
+                'size': 9,
+                'type': 'number',
+            },
         ),
     )
     ref_destino = forms.CharField(
         label='Referência destino',
         required=False,
-        min_length=5,
+        min_length=1,
         max_length=5,
         widget=forms.TextInput(
-            attrs={'type': 'string'}
+            attrs={
+                'size': 5,
+                'type': 'string',
+                'style': 'text-transform:uppercase;',
+                'placeholder': '0...',
+            }
         )
     )
     page = forms.IntegerField(
         required=False,
         widget=forms.HiddenInput()
     )
+
+    def clean_ref_destino(self):
+        cleaned = self.cleaned_data['ref_destino']
+        if len(cleaned) == 0:
+            return ''
+        return cleaned.upper().zfill(5)
