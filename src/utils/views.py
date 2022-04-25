@@ -128,6 +128,10 @@ def data_url_image(tipo, imagem):
 
 
 def totalize_data(data, config):
+    if 'flags' in config and 'NO_TOT_1' in config['flags']:
+        if len(data) < 2:
+            return
+
     totrow = data[0].copy()
     for key in totrow.keys():
         totrow[key] = ''
