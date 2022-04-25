@@ -25,7 +25,11 @@ class Solicitacoes(O2BaseGetPostView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        data = get_solicitacoes(cursor, self.solicitacao)
+        data = get_solicitacoes(
+            cursor,
+            self.solicitacao,
+            self.pedido_destino,
+        )
 
         totalize_data(data, {
             'sum': [

@@ -4,11 +4,15 @@ from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
 
 
-def get_solicitacoes(cursor, solicitacao):
+def get_solicitacoes(cursor, solicitacao=None, pedido_destino=None):
 
-    filtra_solicitacao = f"""
+    filtra_solicitacao = f"""--
         AND sl.SOLICITACAO = {solicitacao}
     """ if solicitacao else ''
+
+    filtra_pedido_destino = f"""--
+        AND sl.PEDIDO_DESTINO = {pedido_destino}
+    """ if pedido_destino else ''
 
     sql = f"""
         SELECT DISTINCT
@@ -36,6 +40,7 @@ def get_solicitacoes(cursor, solicitacao):
          AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
         WHERE sl.SOLICITACAO IS NOT NULL 
           {filtra_solicitacao} -- filtra_solicitacao
+          {filtra_pedido_destino} -- filtra_pedido_destino
         GROUP BY 
           sl.SOLICITACAO
         ORDER BY 

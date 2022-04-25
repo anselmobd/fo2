@@ -750,8 +750,15 @@ class SolicitacoesForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'type': 'number',
-                'autofocus': 'autofocus'
+                'autofocus': 'autofocus',
             },
+        ),
+    )
+    pedido_destino = forms.CharField(
+        label='Pedido destino',
+        required=False,
+        widget=forms.TextInput(
+            attrs={'type': 'number'},
         ),
     )
     page = forms.IntegerField(
