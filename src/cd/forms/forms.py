@@ -761,6 +761,15 @@ class SolicitacoesForm(forms.Form):
             attrs={'type': 'number'},
         ),
     )
+    ref_destino = forms.CharField(
+        label='Referência destino',
+        required=False,
+        min_length=5,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={'type': 'string'}
+        )
+    )
     page = forms.IntegerField(
         required=False,
         widget=forms.HiddenInput()
