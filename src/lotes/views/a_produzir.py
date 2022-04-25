@@ -9,14 +9,15 @@ from fo2.connections import db_cursor_so
 from base.forms.forms2 import ModeloForm2
 from base.views import O2BaseGetPostView, O2BaseGetView
 from geral.functions import config_get_value
-from utils.functions.dictlist.operacoes_grade import (
-    inverte_sinal_grade,
-    grade_filtra_linhas_zeradas,
-    opera_grade,
-    soma_grades,
-    subtrai_grades,
-    update_gzerada,
-)
+from utils.functions.dictlist.operacoes_grade import OperacoesGrade
+# from utils.functions.dictlist.operacoes_grade import (
+#     og.inverte_sinal_grade,
+#     og.grade_filtra_linhas_zeradas,
+#     og.opera_grade,
+#     og.soma_grades,
+#     og.subtrai_grades,
+#     og.update_gzerada,
+# )
 from utils.views import totalize_data
 
 import comercial.models
@@ -134,6 +135,7 @@ class GradeProduzirOld(O2BaseGetPostView):
 
     def mount_context(self):
         cursor = db_cursor_so(self.request)
+        og = OperacoesGrade()
 
         modelo = self.form.cleaned_data['modelo']
         self.context.update({
@@ -192,7 +194,7 @@ class GradeProduzirOld(O2BaseGetPostView):
         else:
             gme = grade_meta_estoque(meta)
             calcula_grade = True
-            gzerada = update_gzerada(gzerada, gme)
+            gzerada = og.update_gzerada(gzerada, gme)
 
         lead = produto.queries.lead_de_modelo(cursor, modelo)
         gmg = None
@@ -203,7 +205,7 @@ class GradeProduzirOld(O2BaseGetPostView):
         else:
             gmg = grade_meta_giro(meta, lead, show_distrib=False)
             calcula_grade = True
-            gzerada = update_gzerada(gzerada, gmg)
+            gzerada = og.update_gzerada(gzerada, gmg)
 
         if not calcula_grade:
             return
@@ -221,7 +223,7 @@ class GradeProduzirOld(O2BaseGetPostView):
                 'data': g_data,
                 'style': g_style,
             }
-            gzerada = update_gzerada(gzerada, gopa)
+            gzerada = og.update_gzerada(gzerada, gopa)
 
         gf_header, gf_fields, gf_data, gf_style, total_opf = \
             lotes.queries.op.op_sortimentos(
@@ -236,8 +238,8 @@ class GradeProduzirOld(O2BaseGetPostView):
                 'data': gf_data,
                 'style': gf_style,
             }
-            gopf = grade_filtra_linhas_zeradas(gopf)
-            gzerada = update_gzerada(gzerada, gopf)
+            gopf = og.grade_filtra_linhas_zeradas(gopf)
+            gzerada = og.update_gzerada(gzerada, gopf)
 
         gpf_header, gpf_fields, gpf_data, gpf_style, total_oppf = \
             lotes.queries.op.op_sortimentos(
@@ -252,10 +254,10 @@ class GradeProduzirOld(O2BaseGetPostView):
                 'data': gpf_data,
                 'style': gpf_style,
             }
-            goppf = inverte_sinal_grade(goppf)
+            goppf = og.inverte_sinal_grade(goppf)
             total_oppf = -total_oppf
-            goppf = grade_filtra_linhas_zeradas(goppf)
-            gzerada = update_gzerada(gzerada, goppf)
+            goppf = og.grade_filtra_linhas_zeradas(goppf)
+            gzerada = og.update_gzerada(gzerada, goppf)
 
         dias_alem_lead = config_get_value('DIAS-ALEM-LEAD', default=7)
         self.context.update({
@@ -281,42 +283,42 @@ class GradeProduzirOld(O2BaseGetPostView):
                 'data': gp_data,
                 'style': gp_style,
             }
-            gzerada = update_gzerada(gzerada, gped)
+            gzerada = og.update_gzerada(gzerada, gped)
 
         # Utiliza grade zerada para igualar cores e tamanhos das grades base
         # dos cálculos
         if gme is not None:
-            gme = soma_grades(gzerada, gme)
+            gme = og.soma_grades(gzerada, gme)
             self.context.update({
                 'gme': gme,
             })
 
         if gmg is not None:
-            gmg = soma_grades(gzerada, gmg)
+            gmg = og.soma_grades(gzerada, gmg)
             self.context.update({
                 'gmg': gmg,
             })
 
         if gopa is not None:
-            gopa = soma_grades(gzerada, gopa)
+            gopa = og.soma_grades(gzerada, gopa)
             self.context.update({
                 'gopa': gopa,
             })
 
         if gopf is not None:
-            gopf = soma_grades(gzerada, gopf)
+            gopf = og.soma_grades(gzerada, gopf)
             self.context.update({
                 'gopf': gopf,
             })
 
         if goppf is not None:
-            goppf = soma_grades(gzerada, goppf)
+            goppf = og.soma_grades(gzerada, goppf)
             self.context.update({
                 'goppf': goppf,
             })
 
         if gped is not None:
-            gped = soma_grades(gzerada, gped)
+            gped = og.soma_grades(gzerada, gped)
             self.context.update({
                 'gped': gped,
             })
@@ -336,7 +338,7 @@ class GradeProduzirOld(O2BaseGetPostView):
                 total_op = total_opf
             else:
                 conta_grade_op = 2
-                gop = soma_grades(gopa, gopf)
+                gop = og.soma_grades(gopa, gopf)
                 total_op = total_opa + total_opf
 
         if goppf is not None:
@@ -344,7 +346,7 @@ class GradeProduzirOld(O2BaseGetPostView):
             if gop is None:
                 gop = goppf
             else:
-                gop = soma_grades(gop, goppf)
+                gop = og.soma_grades(gop, goppf)
             total_op += total_oppf
 
         self.context.update({
@@ -359,7 +361,7 @@ class GradeProduzirOld(O2BaseGetPostView):
             elif meta.meta_giro == 0:
                 gm = gme
             else:
-                gm = soma_grades(gme, gmg)
+                gm = og.soma_grades(gme, gmg)
 
             self.context.update({
                 'gm': gm,
@@ -370,9 +372,9 @@ class GradeProduzirOld(O2BaseGetPostView):
             if total_ped == 0:
                 gopp = gop
             elif total_op == 0:
-                gopp = subtrai_grades(gzerada, gped)
+                gopp = og.subtrai_grades(gzerada, gped)
             else:
-                gopp = subtrai_grades(gop, gped)
+                gopp = og.subtrai_grades(gop, gped)
 
             self.context.update({
                 'gopp': gopp,
@@ -385,17 +387,17 @@ class GradeProduzirOld(O2BaseGetPostView):
             elif gm is None:
                 gresult = gopp
             else:
-                gresult = subtrai_grades(gm, gopp)
+                gresult = og.subtrai_grades(gm, gopp)
 
         glm = None
         glc = None
 
         if gresult is not None:
-            gap = opera_grade(gresult, lambda x: x if x > 0 else 0)
+            gap = og.opera_grade(gresult, lambda x: x if x > 0 else 0)
             self.context.update({
                 'gap': gap,
             })
-            gex = opera_grade(gresult, lambda x: -x if x < 0 else 0)
+            gex = og.opera_grade(gresult, lambda x: -x if x < 0 else 0)
             self.context.update({
                 'gex': gex,
             })
