@@ -12,6 +12,7 @@
 
 {% block content %}
   {% if data %}
+    Situçação: 1=A confirmar; 2=Confirmado; 3=Programado; 4=Solicitado; 5=Baixado
     {% include "layout/paginator_get.html" with data=data url_name='cd:novo_solicitacoes' only %}
     <table>
       {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
