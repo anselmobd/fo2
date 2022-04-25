@@ -15,11 +15,7 @@ from utils.functions.strings import only_digits
 from comercial.queries import itens_tabela_preco
 
 
-from utils.functions.dictlist.operacoes_grade import (
-    soma_grades,
-    subtrai_grades,
-    update_gzerada,
-)
+from utils.functions.dictlist.operacoes_grade import OperacoesGrade
 
 import cd.forms
 from cd.queries.novo_modulo.lotes import lotes_em_estoque
@@ -52,6 +48,8 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         p = Perf(id='GradeEstoqueTotais', on=True)
 
         self.cursor = db_cursor_so(self.request)
+        og = OperacoesGrade()
+
         modelos_por_pagina = 20
         if self.usa_paginador == 'n':
             modelos_por_pagina = 99999
@@ -116,27 +114,27 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             gzerada = None
     
             grade_invent_ref = self.grade_dados(inventario, referencia)
-            gzerada = update_gzerada(gzerada, grade_invent_ref)
+            gzerada = og.update_gzerada(gzerada, grade_invent_ref)
             p.prt(f"{referencia} grade_invent_ref")
 
             grade_pedido_ref = self.grade_dados(pedido, referencia)
             if grade_pedido_ref['total'] != 0:
-                gzerada = update_gzerada(gzerada, grade_pedido_ref)
+                gzerada = og.update_gzerada(gzerada, grade_pedido_ref)
             p.prt(f"{referencia} grade_pedido_ref")
 
             grade_solicitado_ref = self.grade_dados(solicitado, referencia)
             if grade_solicitado_ref['total'] != 0:
-                gzerada = update_gzerada(gzerada, grade_solicitado_ref)
+                gzerada = og.update_gzerada(gzerada, grade_solicitado_ref)
             p.prt(f"{referencia} grade_solicitado_ref")
 
-            grade_invent_ref = soma_grades(gzerada, grade_invent_ref)
+            grade_invent_ref = og.soma_grades(gzerada, grade_invent_ref)
             p.prt(f"{referencia} soma_grades grade_invent_ref")
 
             if grade_pedido_ref['total'] != 0:
-                grade_pedido_ref = soma_grades(gzerada, grade_pedido_ref)
+                grade_pedido_ref = og.soma_grades(gzerada, grade_pedido_ref)
                 p.prt(f"{referencia} soma_grades grade_pedido_ref")
             if grade_solicitado_ref['total'] != 0:
-                grade_solicitado_ref = soma_grades(gzerada, grade_solicitado_ref)
+                grade_solicitado_ref = og.soma_grades(gzerada, grade_solicitado_ref)
                 p.prt(f"{referencia} soma_grades grade_solicitado_ref")
 
             if grade_pedido_ref['total'] == 0 and grade_solicitado_ref['total'] == 0:
@@ -144,10 +142,10 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             else:
                 grade_disponivel_ref = copy.deepcopy(grade_invent_ref)
                 if grade_pedido_ref['total'] != 0:
-                    grade_disponivel_ref = subtrai_grades(
+                    grade_disponivel_ref = og.subtrai_grades(
                         grade_disponivel_ref, grade_pedido_ref)
                 if grade_solicitado_ref['total'] != 0:
-                    grade_disponivel_ref = subtrai_grades(
+                    grade_disponivel_ref = og.subtrai_grades(
                         grade_disponivel_ref, grade_solicitado_ref)
             p.prt(f"{referencia} grade_disponivel_ref")
 
