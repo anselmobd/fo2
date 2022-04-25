@@ -1,11 +1,11 @@
 from pprint import pprint
 
+from utils.functions.dictlist.operacoes_grade import OperacoesGrade
+
 import comercial.models
 import produto.models
 import produto.queries
 from comercial.views.estoque import grade_meta_estoque
-
-import lotes.views.a_produzir
 
 
 def grade_meta_giro(meta, lead, show_distrib=True):
@@ -109,6 +109,7 @@ def calculaMetaGiroMetas(cursor, metas):
 
 
 def calculaMetaTotalMetas(cursor, metas):
+    og = OperacoesGrade()
     metas_list = []
     total = 0
     for meta in metas:
@@ -123,7 +124,7 @@ def calculaMetaTotalMetas(cursor, metas):
 
         total += qtd
 
-        grade = lotes.views.a_produzir.soma_grades(ggrade, egrade)
+        grade = og.soma_grades(ggrade, egrade)
 
         metas_list.append({
             'modelo': meta.modelo,
