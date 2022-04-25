@@ -7,13 +7,17 @@ import systextil.models
 class OperacoesGrade():
 
     def __init__(self) -> None:
-        self._s_tamanhos = None
+        self._ordem_tamanho = None
 
     @property
-    def s_tamanhos(self):
-        if self._s_tamanhos is None:
-            self._s_tamanhos = systextil.models.Tamanho.objects.all().values()
-        return self._s_tamanhos
+    def ordem_tamanho(self):
+        if self._ordem_tamanho is None:
+            tamanhos = systextil.models.Tamanho.objects.all().values()
+            self._ordem_tamanho = {
+                tam['tamanho_ref']: tam['ordem_tamanho']
+                for tam in tamanhos
+            }
+        return self._ordem_tamanho
 
     def get_celula(self, grd, tam, cor):
         result = 0
@@ -50,12 +54,8 @@ class OperacoesGrade():
         tamanhos = list(tamanhos1.union(tamanhos2))
         tamanhos = sorted(
             tamanhos,
-            key=lambda tam: [
-                s_tam['ordem_tamanho']
-                for s_tam in self.s_tamanhos
-                if s_tam['tamanho_ref'] == tam
-            ])
-
+            key=lambda tam: self.ordem_tamanho[tam],
+        )
         sortimento_field1 = g1['fields'][0]
         sortimento_field2 = g2['fields'][0]
         cores1 = set([
