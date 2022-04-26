@@ -779,6 +779,20 @@ class SolicitacoesForm(forms.Form):
             }
         )
     )
+    ref_reservada = forms.CharField(
+        label='Referência reservada',
+        required=False,
+        min_length=1,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
+                'type': 'string',
+                'style': 'text-transform:uppercase;',
+                'placeholder': '0...',
+            }
+        )
+    )
     page = forms.IntegerField(
         required=False,
         widget=forms.HiddenInput()
@@ -786,6 +800,12 @@ class SolicitacoesForm(forms.Form):
 
     def clean_ref_destino(self):
         cleaned = self.cleaned_data['ref_destino']
+        if len(cleaned) == 0:
+            return ''
+        return cleaned.upper().zfill(5)
+
+    def clean_ref_reservada(self):
+        cleaned = self.cleaned_data['ref_reservada']
         if len(cleaned) == 0:
             return ''
         return cleaned.upper().zfill(5)
