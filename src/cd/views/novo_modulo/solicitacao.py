@@ -1,10 +1,10 @@
-from operator import itemgetter
 from pprint import pprint
 
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
 from utils.functions import untuple_keys_concat
+from utils.functions.models import dict_list_to_dict
 from utils.views import totalize_data
 
 from lotes.queries.pedido import ped_inform
@@ -20,12 +20,11 @@ class Solicitacao(O2BaseGetView):
         self.get_args = ['solicitacao']
         self.get_args2context = True
 
-    def mount_context(self):
-        cursor = db_cursor_so(self.request)
+    def monta_dados_solicitados(self):
+        self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
 
-        solicitados = get_solicitacao(cursor, self.context['solicitacao'])
-
-        totalize_data(solicitados, {
+    def context_solicitados(self):
+        totalize_data(self.dados_solicitados, {
             'sum': [
                 'qtde',
             ],
@@ -77,36 +76,39 @@ class Solicitacao(O2BaseGetView):
                     'text-align: center;',
                 (5, 13): 'text-align: right;',
             }),
-            'data': solicitados,
+            'data': self.dados_solicitados,
         })
 
-        pedidos_dict = {}
-        for row in solicitados:
+    def monta_dados_pedidos(self):
+        dict_pedidos = {}
+        for row in self.dados_solicitados:
             pedido = row['pedido_destino']
-            if pedido not in pedidos_dict:
-                pedidos_dict[pedido] = {'qtde': 0}
-            pedidos_dict[pedido]['qtde'] += row['qtde']
+            if pedido not in dict_pedidos:
+                dict_pedidos[pedido] = {'qtde': 0}
+            dict_pedidos[pedido]['qtde'] += row['qtde']
 
-        pedidos_tuple = tuple(pedidos_dict.keys())
-        pedidos = [
+        pedidos_tuple = tuple(dict_pedidos.keys())
+
+        pedidos_info = dict_list_to_dict(
+            ped_inform(self.cursor, pedidos_tuple),
+            'PEDIDO_VENDA',
+        )
+
+        self.dados_pedidos = [
             {
                 'pedido': pedido,
-                'qtde': pedidos_dict[pedido]['qtde'],
+                'cliente': (
+                    pedidos_info[pedido]['CLIENTE']
+                    if pedido in pedidos_info
+                    else '-'
+                ),
+                'qtde': dict_pedidos[pedido]['qtde'],
             }
-            for pedido in pedidos_dict
+            for pedido in dict_pedidos
         ]
-        pedidos = sorted(pedidos, key=itemgetter('pedido'))
 
-        pedidos_info = ped_inform(cursor, pedidos_tuple)
-
-        for row in pedidos:
-            pedido_info = list(filter(
-                lambda info: info['PEDIDO_VENDA'] == row['pedido'],
-                pedidos_info
-            ))
-            row['cliente'] = pedido_info[0]['CLIENTE'] if len(pedido_info) else '-'
-
-        totalize_data(pedidos, {
+    def context_pedidos(self):
+        totalize_data(self.dados_pedidos, {
             'sum': [
                 'qtde',
             ],
@@ -122,5 +124,16 @@ class Solicitacao(O2BaseGetView):
             'p_style': {
                 3: 'text-align: right;'
             },
-            'p_data': pedidos,
+            'p_data': self.dados_pedidos,
         })
+
+    def mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+
+        self.monta_dados_solicitados()
+
+        self.monta_dados_pedidos()
+
+        self.context_solicitados()
+
+        self.context_pedidos()
