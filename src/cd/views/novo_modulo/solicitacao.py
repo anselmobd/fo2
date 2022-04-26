@@ -1,3 +1,4 @@
+from operator import itemgetter
 from pprint import pprint
 
 from fo2.connections import db_cursor_so
@@ -7,6 +8,7 @@ from utils.functions import untuple_keys_concat
 from utils.functions.dictlist.dictlist_to_grade import filter_dictlist_to_grade_qtd
 from utils.functions.dictlist.operacoes_grade import OperacoesGrade
 from utils.functions.models import dict_list_to_dict
+from utils.functions.strings import only_digits
 from utils.views import totalize_data
 
 from lotes.queries.pedido import ped_inform
@@ -130,26 +132,43 @@ class Solicitacao(O2BaseGetView):
         })
 
     def monta_grades_solicitadas(self):
-        ref_solicitadas = set()
+        refs_solicitadas_set = set()
         for row in self.dados_solicitados:
-            ref_solicitadas.add(row['ref'])
+            refs_solicitadas_set.add(row['ref'])
+
+        refs_solicitadas = []
+        for ref in refs_solicitadas_set:
+            refs_solicitadas.append({
+                'ref': ref,
+                'modelo': int(only_digits(ref)),
+            })
+
+        refs_solicitadas = sorted([
+            row
+            for row in refs_solicitadas
+        ], key=itemgetter('modelo', 'ref'))
 
         self.grades_solicitadas = []
-        for ref in ref_solicitadas:
-
+        modelo_ant = -1
+        for ref in refs_solicitadas:
             grade_ref = filter_dictlist_to_grade_qtd(
                 self.dados_solicitados,
                 field_filter='ref',
                 facade_filter='referencia',
-                value_filter=ref,
+                value_filter=ref['ref'],
                 field_linha='cor',
                 field_coluna='tam',
                 facade_coluna='Tamanho',
                 field_quantidade='qtde',
             )
             grade_ref = self.og.ordena_tamanhos(grade_ref)
+            if modelo_ant != ref['modelo']:
+                grade_ref.update({
+                    'modelo': ref['modelo'],
+                })
+                modelo_ant = ref['modelo']
             grade_ref.update({
-                'ref': ref,
+                'ref': ref['ref'],
             })
 
             self.grades_solicitadas.append(grade_ref)
