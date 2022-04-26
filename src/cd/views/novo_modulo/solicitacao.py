@@ -153,7 +153,6 @@ class Solicitacao(O2BaseGetView):
                 'ref': ref,
             })
 
-            pprint(grade_ref)
             grades.append(grade_ref)
 
         self.context.update({
