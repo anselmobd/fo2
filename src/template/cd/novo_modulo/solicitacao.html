@@ -19,6 +19,7 @@
     </ul>
     <div class="tab-content">
       <div id="lotes" class="tab-pane fade in active">
+        <p>Lista registros em que a OP não tem estágio 63-CD (isso exclui OPs de expedição)</p>
         <table>
           {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
           {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
