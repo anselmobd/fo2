@@ -95,6 +95,14 @@ def get_solicitacao(cursor, id):
         , l.PROCONF_ITEM COR
         , l.QTDE_PECAS_PROG QTD_ORI
         FROM pcpc_044 sl -- solicitação / lote 
+        -- Na tabela de solicitações aparece a OP de expedição também como
+        -- reservada, com situação 4. Para tentar evitar isso, não listo
+        -- lotes que pertençam a OP que não tem estágio 63
+        -- (OPs de expedição não tem 63)
+        JOIN PCPC_040 l_filtro
+          ON l_filtro.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
+         AND l_filtro.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
+         AND l_filtro.CODIGO_ESTAGIO = 63
         LEFT JOIN PCPC_040 lest
           ON lest.QTDE_EM_PRODUCAO_PACOTE > 0
          AND lest.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
