@@ -4,6 +4,8 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
 from utils.functions import untuple_keys_concat
+from utils.functions.dictlist.dictlist_to_grade import filter_dictlist_to_grade_qtd
+from utils.functions.dictlist.operacoes_grade import OperacoesGrade
 from utils.functions.models import dict_list_to_dict
 from utils.views import totalize_data
 
@@ -135,16 +137,32 @@ class Solicitacao(O2BaseGetView):
     def context_grades_solicitadas(self):
         grades = []
         for ref in self.ref_solicitadas:
-            grade = {
+
+            grade_ref = filter_dictlist_to_grade_qtd(
+                self.dados_solicitados,
+                field_filter='ref',
+                facade_filter='referencia',
+                value_filter=ref,
+                field_linha='cor',
+                field_coluna='tam',
+                facade_coluna='Tamanho',
+                field_quantidade='qtde',
+            )
+            grade_ref = self.og.ordena_tamanhos(grade_ref)
+            grade_ref.update({
                 'ref': ref,
-            }
-            grades.append(grade)
+            })
+
+            pprint(grade_ref)
+            grades.append(grade_ref)
+
         self.context.update({
             'grades_solicitadas': grades,
         })
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
+        self.og = OperacoesGrade()
 
         self.monta_dados_solicitados()
 
