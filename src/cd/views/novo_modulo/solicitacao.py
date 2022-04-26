@@ -7,6 +7,7 @@ from base.views import O2BaseGetView
 from utils.functions import untuple_keys_concat
 from utils.views import totalize_data
 
+from lotes.queries.pedido import ped_inform
 from cd.queries.novo_modulo.solicitacoes import get_solicitacao
 
 
@@ -22,28 +23,9 @@ class Solicitacao(O2BaseGetView):
     def mount_context(self):
         cursor = db_cursor_so(self.request)
 
-        data = get_solicitacao(cursor, self.context['solicitacao'])
+        solicitados = get_solicitacao(cursor, self.context['solicitacao'])
 
-        pedidos_dict = {}
-        for row in data:
-            if not row['codigo_estagio']:
-                row['codigo_estagio'] = 'Finalizado'
-            row['int_parc'] = 'Inteiro' if row['qtde'] == row['qtd_ori'] else 'parcial'
-            pedido = row['pedido_destino']
-            if pedido not in pedidos_dict:
-                pedidos_dict[pedido] = {'qtde': 0}
-            pedidos_dict[pedido]['qtde'] += row['qtde']
-
-        pedidos = [
-            {
-                'pedido': pedido,
-                'qtde': pedidos_dict[pedido]['qtde'],
-            }
-            for pedido in pedidos_dict
-        ]
-        pedidos = sorted(pedidos, key=itemgetter('pedido'))
-
-        totalize_data(data, {
+        totalize_data(solicitados, {
             'sum': [
                 'qtde',
             ],
@@ -95,8 +77,34 @@ class Solicitacao(O2BaseGetView):
                     'text-align: center;',
                 (5, 13): 'text-align: right;',
             }),
-            'data': data,
+            'data': solicitados,
         })
+
+        pedidos_dict = {}
+        for row in solicitados:
+            pedido = row['pedido_destino']
+            if pedido not in pedidos_dict:
+                pedidos_dict[pedido] = {'qtde': 0}
+            pedidos_dict[pedido]['qtde'] += row['qtde']
+
+        pedidos_tuple = tuple(pedidos_dict.keys())
+        pedidos = [
+            {
+                'pedido': pedido,
+                'qtde': pedidos_dict[pedido]['qtde'],
+            }
+            for pedido in pedidos_dict
+        ]
+        pedidos = sorted(pedidos, key=itemgetter('pedido'))
+
+        pedidos_info = ped_inform(cursor, pedidos_tuple)
+
+        for row in pedidos:
+            pedido_info = list(filter(
+                lambda info: info['PEDIDO_VENDA'] == row['pedido'],
+                pedidos_info
+            ))
+            row['cliente'] = pedido_info[0]['CLIENTE'] if len(pedido_info) else '-'
 
         totalize_data(pedidos, {
             'sum': [
@@ -109,10 +117,10 @@ class Solicitacao(O2BaseGetView):
         })
 
         self.context.update({
-            'p_headers': ["Pedido", "Quantidade"],
-            'p_fields': ['pedido', 'qtde'],
+            'p_headers': ["Pedido", "Cliente", "Quantidade"],
+            'p_fields': ['pedido', 'cliente', 'qtde'],
             'p_style': {
-                2: 'text-align: right;'
+                3: 'text-align: right;'
             },
             'p_data': pedidos,
         })

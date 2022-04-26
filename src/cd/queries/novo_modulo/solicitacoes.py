@@ -90,4 +90,7 @@ def get_solicitacao(cursor, id):
     dados = dictlist(cursor)
     for row in dados:
         row['lote'] = '{}{:05}'.format(row['periodo'], row['ordem_confeccao'])
+        if not row['codigo_estagio']:
+            row['codigo_estagio'] = 'Finalizado'
+        row['int_parc'] = 'Inteiro' if row['qtde'] == row['qtd_ori'] else 'parcial'
     return dados
