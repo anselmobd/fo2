@@ -3,6 +3,7 @@ from pprint import pprint
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
+from utils.functions import untuple_keys_concat
 
 from cd.queries.novo_modulo.solicitacoes import get_solicitacao
 
@@ -24,6 +25,7 @@ class Solicitacao(O2BaseGetView):
         for row in data:
             if not row['codigo_estagio']:
                 row['codigo_estagio'] = 'Finalizado'
+            row['int_parc'] = 'Inteiro' if row['qtde'] == row['qtd_ori'] else 'parcial'
 
         self.context.update({
             'headers': [
@@ -31,6 +33,7 @@ class Solicitacao(O2BaseGetView):
                 'Estágio',
                 'OP',
                 'Lote',
+                'Qtd.Lote',
                 'Referência',
                 'Tamanho',
                 'Cor',
@@ -38,7 +41,8 @@ class Solicitacao(O2BaseGetView):
                 'Referência',
                 'Tamanho',
                 'Cor',
-                'Quantidade',
+                'Qtde.',
+                'Parcial?',
                 'Alter.',
                 'OP destino',
             ],
@@ -47,6 +51,7 @@ class Solicitacao(O2BaseGetView):
                 'codigo_estagio',
                 'ordem_producao',
                 'lote',
+                'qtd_ori',
                 'ref',
                 'tam',
                 'cor',
@@ -55,8 +60,14 @@ class Solicitacao(O2BaseGetView):
                 'sub_destino',
                 'cor_destino',
                 'qtde',
+                'int_parc',
                 'alter_destino',
                 'op_destino',
             ],
+            'style': untuple_keys_concat({
+                (1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16):
+                    'text-align: center;',
+                (5, 13): 'text-align: right;',
+            }),
             'data': data,
         })
