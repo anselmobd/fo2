@@ -9,6 +9,7 @@ def get_solicitacoes(
   solicitacao=None,
   pedido_destino=None,
   ref_destino=None,
+  ref_reservada=None,
 ):
     filtra_solicitacao = f"""--
         AND sl.SOLICITACAO = {solicitacao}
@@ -25,6 +26,10 @@ def get_solicitacoes(
             OR sl.GRUPO_DESTINO = '{ref_destino}'
             )
     """ if ref_destino else ''
+
+    filtra_ref_reservada = f"""--
+        AND l.PROCONF_GRUPO = '{ref_reservada}'
+    """ if ref_reservada else ''
 
     sql = f"""
         SELECT DISTINCT
@@ -54,6 +59,7 @@ def get_solicitacoes(
           {filtra_solicitacao} -- filtra_solicitacao
           {filtra_pedido_destino} -- filtra_pedido_destino
           {filtra_ref_destino} -- filtra_ref_destino
+          {filtra_ref_reservada} -- filtra_ref_reservada
         GROUP BY 
           sl.SOLICITACAO
         ORDER BY 
