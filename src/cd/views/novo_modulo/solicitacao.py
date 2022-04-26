@@ -130,13 +130,12 @@ class Solicitacao(O2BaseGetView):
         })
 
     def monta_grades_solicitadas(self):
-        self.ref_solicitadas = set()
+        ref_solicitadas = set()
         for row in self.dados_solicitados:
-            self.ref_solicitadas.add(row['ref'])
+            ref_solicitadas.add(row['ref'])
 
-    def context_grades_solicitadas(self):
-        grades = []
-        for ref in self.ref_solicitadas:
+        self.grades_solicitadas = []
+        for ref in ref_solicitadas:
 
             grade_ref = filter_dictlist_to_grade_qtd(
                 self.dados_solicitados,
@@ -153,10 +152,11 @@ class Solicitacao(O2BaseGetView):
                 'ref': ref,
             })
 
-            grades.append(grade_ref)
+            self.grades_solicitadas.append(grade_ref)
 
+    def context_grades_solicitadas(self):
         self.context.update({
-            'grades_solicitadas': grades,
+            'grades_solicitadas': self.grades_solicitadas,
         })
 
     def mount_context(self):
