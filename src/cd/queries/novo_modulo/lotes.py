@@ -105,14 +105,15 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
             , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
         """
         tipo_join = ""
-        tipo_filter = ""
-        # "--
-        #       AND l.QTDE_DISPONIVEL_BAIXA > 0
-        # """
+        tipo_filter = """--
+              AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
     else:
         field_qtd = ""
         tipo_join = ""
-        tipo_filter = ""
+        tipo_filter = """--
+              AND l.QTDE_DISPONIVEL_BAIXA > 0
+        """
 
     sql = f"""
         SELECT {"DISTINCT" if distinct else ""}
