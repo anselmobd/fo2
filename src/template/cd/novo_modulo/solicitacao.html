@@ -15,6 +15,7 @@
     <ul class="nav nav-tabs" id="myTab">
       <li class="active"><a data-toggle="tab" href="#lotes">Lotes</a></li>
       <li><a data-toggle="tab" href="#pedidos">Pedidos</a></li>
+      <li><a data-toggle="tab" href="#grade_solicitado">Referências solicitadas</a></li>
     </ul>
     <div class="tab-content">
       <div id="lotes" class="tab-pane fade in active">
@@ -28,6 +29,15 @@
           {% include "layout/thead_generic.html" with data=p_headers style=p_style thclass='sticky' only %}
           {% include "layout/tbody_generic.html" with fields=p_fields data=p_data style=p_style only %}
         </table>
+      </div>
+      <div id="grade_solicitado" class="tab-pane fade">
+        {% for grade in grades_solicitadas %}
+          <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
+          <table>
+            {% include "layout/thead_generic.html" with data=grade.headers style=grade.style thclass='sticky' only %}
+            {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data style=grade.style only %}
+          </table>
+        {% endfor %}
       </div>
     </div>
   {% else %}

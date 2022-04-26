@@ -127,6 +127,22 @@ class Solicitacao(O2BaseGetView):
             'p_data': self.dados_pedidos,
         })
 
+    def monta_grades_solicitadas(self):
+        self.ref_solicitadas = set()
+        for row in self.dados_solicitados:
+            self.ref_solicitadas.add(row['ref'])
+
+    def context_grades_solicitadas(self):
+        grades = []
+        for ref in self.ref_solicitadas:
+            grade = {
+                'ref': ref,
+            }
+            grades.append(grade)
+        self.context.update({
+            'grades_solicitadas': grades,
+        })
+
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
@@ -134,6 +150,10 @@ class Solicitacao(O2BaseGetView):
 
         self.monta_dados_pedidos()
 
+        self.monta_grades_solicitadas()
+
         self.context_solicitados()
 
         self.context_pedidos()
+
+        self.context_grades_solicitadas()
