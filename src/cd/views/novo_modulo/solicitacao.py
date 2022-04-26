@@ -67,6 +67,8 @@ class Solicitacao(O2BaseGetView):
             row['grupo_destino|GLYPHICON'] = '_'
             row['grupo_destino|TARGET'] = '_blank'
 
+            row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
+
         totalize_data(self.dados_solicitados, {
             'sum': [
                 'qtde',
@@ -84,17 +86,18 @@ class Solicitacao(O2BaseGetView):
                 'OP',
                 'Lote',
                 'Qtd.Lote',
-                'Referência',
-                'Tamanho',
+                'Ref.',
+                'Tam.',
                 'Cor',
                 'Pedido destino',
-                'Referência',
-                'Tamanho',
+                'Ref.',
+                'Tam.',
                 'Cor',
                 'Qtde.',
                 'Parcial?',
                 'Alter.',
                 'OP destino',
+                'Inclusão',
             ],
             'fields': [
                 'situacao',
@@ -113,6 +116,7 @@ class Solicitacao(O2BaseGetView):
                 'int_parc',
                 'alter_destino',
                 'op_destino',
+                'inclusao',
             ],
             'style': untuple_keys_concat({
                 (1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16):
