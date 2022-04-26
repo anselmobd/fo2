@@ -64,6 +64,7 @@ def get_solicitacao(cursor, id):
         SELECT DISTINCT
           sl.*
         , lest.CODIGO_ESTAGIO
+        , l.PERIODO_PRODUCAO PERIODO
         , l.PROCONF_NIVEL99 NIVEL
         , l.PROCONF_GRUPO REF
         , l.PROCONF_SUBGRUPO TAM
@@ -85,4 +86,7 @@ def get_solicitacao(cursor, id):
         , sl.ORDEM_CONFECCAO
     """
     debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    dados = dictlist(cursor)
+    for row in dados:
+        row['lote'] = '{}{:05}'.format(row['periodo'], row['ordem_confeccao'])
+    return dados
