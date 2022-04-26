@@ -69,6 +69,7 @@ def get_solicitacao(cursor, id):
         , l.PROCONF_GRUPO REF
         , l.PROCONF_SUBGRUPO TAM
         , l.PROCONF_ITEM COR
+        , l.QTDE_PECAS_PROG QTD_ORI
         FROM pcpc_044 sl -- solicitação / lote 
         LEFT JOIN PCPC_040 lest
           ON lest.QTDE_EM_PRODUCAO_PACOTE > 0
