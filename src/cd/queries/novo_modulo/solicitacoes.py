@@ -19,7 +19,11 @@ def get_solicitacoes(
     """ if pedido_destino else ''
 
     filtra_ref_destino = f"""--
-        AND sl.GRUPO_DESTINO = '{ref_destino}'
+        AND ( ( sl.GRUPO_DESTINO = '00000'
+              AND l.PROCONF_GRUPO = '{ref_destino}'
+              )
+            OR sl.GRUPO_DESTINO = '{ref_destino}'
+            )
     """ if ref_destino else ''
 
     sql = f"""
