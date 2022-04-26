@@ -32,13 +32,17 @@
       </div>
       <div id="grade_solicitado" class="tab-pane fade">
         {% for grade in grades_solicitadas %}
-          {% if grade.modelo %}
+          {% if grade.modelo and grade.ref != 'total' %}
             {% if forloop.counter != 1 %}
               <hr/>
             {% endif %}
             <h4 style="padding-left: 3em;">Modelo: <b>{{ grade.modelo }}</b></h4>
           {% endif %}
-          <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
+          {% if grade.ref == 'total' %}
+            <h4 style="padding-left: 3em;">Total do modelo: <b>{{ grade.modelo }}</b></h4>
+          {% else %}
+            <h4 style="padding-left: 6em;">Referência: <b>{{ grade.ref }}</b></h4>
+          {% endif %}
           <table style="width: auto;">
             {% include "layout/thead_generic.html" with data=grade.headers style=grade.style thclass='sticky' only %}
             {% include "layout/tbody_generic.html" with fields=grade.fields data=grade.data style=grade.style only %}

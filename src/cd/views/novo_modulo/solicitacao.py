@@ -1,3 +1,4 @@
+import copy
 from operator import itemgetter
 from pprint import pprint
 
@@ -150,7 +151,18 @@ class Solicitacao(O2BaseGetView):
 
         self.grades_solicitadas = []
         modelo_ant = -1
+        quant_refs_modelo = 1
+        total_modelo = None
         for ref in refs_solicitadas:
+            if modelo_ant not in (-1, ref['modelo']):
+                if quant_refs_modelo > 1:
+                    total_modelo.update({
+                        'modelo': modelo_ant,
+                        'ref': 'total',
+                    })
+                    self.grades_solicitadas.append(total_modelo)
+                total_modelo = None
+
             grade_ref = filter_dictlist_to_grade_qtd(
                 self.dados_solicitados,
                 field_filter='ref',
@@ -162,16 +174,33 @@ class Solicitacao(O2BaseGetView):
                 field_quantidade='qtde',
             )
             grade_ref = self.og.ordena_tamanhos(grade_ref)
-            if modelo_ant != ref['modelo']:
+
+            if total_modelo:
+                total_modelo = self.og.soma_grades(total_modelo, grade_ref)
+            else:
+                total_modelo = copy.deepcopy(grade_ref)
+
+            grade_ref.update({
+                'ref': ref['ref'],
+            })
+            if modelo_ant == ref['modelo']:
+                quant_refs_modelo += 1
+            else:
+                quant_refs_modelo = 1
                 grade_ref.update({
                     'modelo': ref['modelo'],
                 })
                 modelo_ant = ref['modelo']
-            grade_ref.update({
-                'ref': ref['ref'],
-            })
+
 
             self.grades_solicitadas.append(grade_ref)
+
+        if quant_refs_modelo > 1:
+            total_modelo.update({
+                'modelo': modelo_ant,
+                'ref': 'total',
+            })
+            self.grades_solicitadas.append(total_modelo)
 
     def context_grades_solicitadas(self):
         self.context.update({
