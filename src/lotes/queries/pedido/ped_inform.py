@@ -12,7 +12,8 @@ def ped_inform(cursor, pedido, empresa=1):
             empresa = (empresa, )
         empresas_list = []
         for empr in empresa:
-            empresas_list.append(f"ped.CODIGO_EMPRESA = {empr}")
+            if empr:
+                empresas_list.append(f"ped.CODIGO_EMPRESA = {empr}")
         filtro_empresa = f"""--
             AND ({' OR '.join(empresas_list)})
         """
@@ -21,7 +22,8 @@ def ped_inform(cursor, pedido, empresa=1):
         pedido = (pedido, )
     pedido_list = []
     for ped in pedido:
-        pedido_list.append(f"ped.PEDIDO_VENDA = {ped}")
+        if ped:
+            pedido_list.append(f"ped.PEDIDO_VENDA = {ped}")
     filtro_pedido = f"""--
         AND ({' OR '.join(pedido_list)})
     """
