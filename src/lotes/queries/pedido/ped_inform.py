@@ -17,6 +17,14 @@ def ped_inform(cursor, pedido, empresa=1):
             AND ({' OR '.join(empresas_list)})
         """
 
+    if not isinstance(pedido, tuple):
+        pedido = (pedido, )
+    pedido_list = []
+    for ped in pedido:
+        pedido_list.append(f"ped.PEDIDO_VENDA = {ped}")
+    filtro_pedido = f"""--
+        AND ({' OR '.join(pedido_list)})
+    """
     sql = f"""
         SELECT
           ped.PEDIDO_VENDA
@@ -77,7 +85,7 @@ def ped_inform(cursor, pedido, empresa=1):
             LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
               ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
              AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada 
-            WHERE f.PEDIDO_VENDA = {pedido}
+            WHERE f.PEDIDO_VENDA = ped.PEDIDO_VENDA
               AND f.SITUACAO_NFISC = 1
               AND fe.SITUACAO_ENTRADA IS NULL
           ) NF
@@ -89,7 +97,7 @@ def ped_inform(cursor, pedido, empresa=1):
          AND c.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND c.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE 1=1
-          AND ped.PEDIDO_VENDA = {pedido}
+          {filtro_pedido} -- filtro_pedido
           {filtro_empresa} -- filtro_empresa
     """
     debug_cursor_execute(cursor, sql)
