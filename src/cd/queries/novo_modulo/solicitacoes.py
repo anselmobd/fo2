@@ -50,6 +50,7 @@ def get_solicitacoes(
         , sum(CASE WHEN l.CODIGO_ESTAGIO IS NOT NULL THEN sl.QTDE ELSE 0 END) qp
         , sum(1) lt
         , sum(sl.QTDE) qt
+        , max(sl.INCLUSAO) inclusao
         FROM pcpc_044 sl -- solicitação / lote 
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo
