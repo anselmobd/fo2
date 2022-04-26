@@ -2,6 +2,8 @@ import copy
 from operator import itemgetter
 from pprint import pprint
 
+from django.urls import reverse
+
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
@@ -29,6 +31,42 @@ class Solicitacao(O2BaseGetView):
         self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
 
     def context_solicitados(self):
+        for row in self.dados_solicitados:
+            row['ordem_producao|LINK'] = reverse(
+                'producao:op__get',
+                args=[row['ordem_producao']],
+            )
+            row['ordem_producao|GLYPHICON'] = '_'
+            row['ordem_producao|TARGET'] = '_blank'
+
+            row['lote|LINK'] = reverse(
+                'producao:posicao__get',
+                args=[row['lote']],
+            )
+            row['lote|GLYPHICON'] = '_'
+            row['lote|TARGET'] = '_blank'
+
+            row['ref|LINK'] = reverse(
+                'produto:ref__get',
+                args=[row['ref']],
+            )
+            row['ref|GLYPHICON'] = '_'
+            row['ref|TARGET'] = '_blank'
+
+            row['pedido_destino|LINK'] = reverse(
+                'producao:pedido__get',
+                args=[row['pedido_destino']],
+            )
+            row['pedido_destino|GLYPHICON'] = '_'
+            row['pedido_destino|TARGET'] = '_blank'
+
+            row['grupo_destino|LINK'] = reverse(
+                'produto:ref__get',
+                args=[row['grupo_destino']],
+            )
+            row['grupo_destino|GLYPHICON'] = '_'
+            row['grupo_destino|TARGET'] = '_blank'
+
         totalize_data(self.dados_solicitados, {
             'sum': [
                 'qtde',
