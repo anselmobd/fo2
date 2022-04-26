@@ -1,9 +1,11 @@
+from operator import itemgetter
 from pprint import pprint
 
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetView
 from utils.functions import untuple_keys_concat
+from utils.views import totalize_data
 
 from cd.queries.novo_modulo.solicitacoes import get_solicitacao
 
@@ -39,6 +41,17 @@ class Solicitacao(O2BaseGetView):
             }
             for pedido in pedidos_dict
         ]
+        pedidos = sorted(pedidos, key=itemgetter('pedido'))
+
+        totalize_data(data, {
+            'sum': [
+                'qtde',
+            ],
+            'count': [],
+            'descr': {'situacao': 'Total:'},
+            'row_style': 'font-weight: bold;',
+            'flags': ['NO_TOT_1'],
+        })
 
         self.context.update({
             'headers': [
@@ -83,7 +96,19 @@ class Solicitacao(O2BaseGetView):
                 (5, 13): 'text-align: right;',
             }),
             'data': data,
+        })
 
+        totalize_data(pedidos, {
+            'sum': [
+                'qtde',
+            ],
+            'count': [],
+            'descr': {'pedido': 'Total:'},
+            'row_style': 'font-weight: bold;',
+            'flags': ['NO_TOT_1'],
+        })
+
+        self.context.update({
             'p_headers': ["Pedido", "Quantidade"],
             'p_fields': ['pedido', 'qtde'],
             'p_style': {
