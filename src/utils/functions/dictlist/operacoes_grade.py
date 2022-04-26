@@ -141,3 +141,8 @@ class OperacoesGrade():
             return gzerada_aux
         else:
             return self.soma_grades(gzerada, gzerada_aux)
+
+    def ordena_tamanhos(self, grade):
+        gzerada = None
+        gzerada = self.update_gzerada(gzerada, grade)
+        return self.soma_grades(gzerada, grade)
