@@ -102,9 +102,17 @@ def get_solicitacao(cursor, id):
     """
     debug_cursor_execute(cursor, sql)
     dados = dictlist(cursor)
+
     for row in dados:
         row['lote'] = '{}{:05}'.format(row['periodo'], row['ordem_confeccao'])
         if not row['codigo_estagio']:
             row['codigo_estagio'] = 'Finalizado'
         row['int_parc'] = 'Inteiro' if row['qtde'] == row['qtd_ori'] else 'parcial'
+        if row['grupo_destino'] == '00000':
+            row['grupo_destino'] = row['ref']
+        if row['sub_destino'] == '0':
+            row['sub_destino'] = row['tam']
+        if row['cor_destino'] == '0':
+            row['cor_destino'] = row['cor']
+
     return dados
