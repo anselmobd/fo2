@@ -6,6 +6,11 @@
   {% endif %}
   {% include "layout/paginator.html" with data=dados url_name='cd:grade_estoque_totais' only %}
   <p>Modelos: {% for dado in dados %}{% if forloop.counter != 1 %}, {% endif %}{{ dado.value|safe }}{% endfor %}</p>
+  <p>Inventário = Endereçado e quantidade no 63-CD.<br/>
+    Pedidos = Inventário, porém apenas OPs de pedido.<br/>
+    Solicitações = Endereçado, com 63-CD no roteiro e situação 2(Confirmado), 3(Programado) ou 4(Solicitado).<br/>
+    Disponível = Inventário - Pedidos - Solicitações
+  </p>
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
     {% if grade.modelo %}
@@ -43,7 +48,7 @@
           <td>&nbsp;</td>
           <td style="border-left: thin solid lightgrey;">&nbsp;</td>
           <td style="vertical-align: top;">
-            <h4>Pedido</h4>
+            <h4>Pedidos</h4>
             <table style="width: auto;">
               {% include "layout/thead_generic.html" with data=grade.pedido.headers style=grade.pedido.style only %}
               {% include "layout/tbody_generic.html" with fields=grade.pedido.fields data=grade.pedido.data group=grade.pedido.group style=grade.pedido.style only %}
