@@ -22,10 +22,23 @@ class Solicitacao(O2BaseGetView):
 
         data = get_solicitacao(cursor, self.context['solicitacao'])
 
+        pedidos_dict = {}
         for row in data:
             if not row['codigo_estagio']:
                 row['codigo_estagio'] = 'Finalizado'
             row['int_parc'] = 'Inteiro' if row['qtde'] == row['qtd_ori'] else 'parcial'
+            pedido = row['pedido_destino']
+            if pedido not in pedidos_dict:
+                pedidos_dict[pedido] = {'qtde': 0}
+            pedidos_dict[pedido]['qtde'] += row['qtde']
+
+        pedidos = [
+            {
+                'pedido': pedido,
+                'qtde': pedidos_dict[pedido]['qtde'],
+            }
+            for pedido in pedidos_dict
+        ]
 
         self.context.update({
             'headers': [
@@ -70,4 +83,11 @@ class Solicitacao(O2BaseGetView):
                 (5, 13): 'text-align: right;',
             }),
             'data': data,
+
+            'p_headers': ["Pedido", "Quantidade"],
+            'p_fields': ['pedido', 'qtde'],
+            'p_style': {
+                2: 'text-align: right;'
+            },
+            'p_data': pedidos,
         })
