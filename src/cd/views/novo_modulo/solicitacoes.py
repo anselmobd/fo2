@@ -62,6 +62,8 @@ class Solicitacoes(O2BaseGetPostView):
         data = paginator_basic(data, 20, self.page)
 
         for row in data:
+            if row['solicitacao'] == 'Totais:':
+                continue
             row['solicitacao|TARGET'] = '_blank'
             row['solicitacao|LINK'] = reverse(
                 'cd:novo_solicitacao',
