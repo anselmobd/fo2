@@ -6,6 +6,8 @@ from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
 
+from contabil.queries import nf_inform
+
 import comercial.forms
 from comercial.queries.gerencia import nf_especial
 
@@ -49,6 +51,13 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'nf': self.nf,
         })
+
+        data = nf_inform(self.cursor, self.nf, especiais=True)
+        if len(data) == 0:
+            self.context.update({
+                'msg_erro': 'Nota fiscal não encontrada',
+            })
+            return
 
         mess_error = nf_especial.set_nf_especial(self.cursor, self.nf)
 

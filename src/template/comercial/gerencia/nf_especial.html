@@ -18,6 +18,9 @@
     {{ form.as_p }}
     <input type="submit" value="Altera tipo de NF"/>
   </form>
+  {% if msg_erro %}
+    <h4>{{msg_erro}}</h4>
+  {% endif %}
   {% if result %}
     {% if result == 'OK' %}
       <h4>NF {{nf}} marcada como especial</h4>
