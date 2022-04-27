@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from fo2.connections import db_cursor_so
 
 from base.views import O2BaseGetPostView
+from utils.views import group_rowspan, totalize_grouped_data
 
 from contabil.queries import nf_inform
 
@@ -24,6 +25,25 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
 
     def mount_nfs_especiais(self):
         dados = nf_especial.get_nfs_especiais(self.cursor)
+
+        group = ['nf']
+        totalize_grouped_data(dados, {
+            'group': group,
+            'sum': ['qtd', 'val_tot'],
+            'count': [],
+            'descr': {'nf': 'Totais:'},
+            'flags': ['NO_TOT_1'],
+            'global_sum': ['qtd', 'val_tot'],
+            'global_descr': {'nf': 'Totais gerais:'},
+            'row_style': 'font-weight: bold;',
+        })
+        group_rowspan(dados, group)
+
+        for row in dados:
+            row['qtd|DECIMALS'] = 0
+            row['val_uni|DECIMALS'] = 2
+            row['val_tot|DECIMALS'] = 2
+
         self.context.update({
             'headers': [
                 'NF',
@@ -31,6 +51,9 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
                 'Referência',
                 'Tamanho',
                 'Cor',
+                'Quantidade',
+                'Preço',
+                'Total',
             ],
             'fields': [
                 'nf',
@@ -38,7 +61,16 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
                 'ref',
                 'tam',
                 'cor',
+                'qtd',
+                'val_uni',
+                'val_tot',
             ],
+            'style': {
+                6: 'text-align: right;',
+                7: 'text-align: right;',
+                8: 'text-align: right;',
+            },
+            'group': group,
             'data': dados,
         })
 
