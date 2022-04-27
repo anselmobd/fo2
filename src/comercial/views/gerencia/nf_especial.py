@@ -7,7 +7,7 @@ from fo2.connections import db_cursor_so
 from base.views import O2BaseGetPostView
 
 import comercial.forms
-
+from comercial.queries.gerencia import nf_especial
 
 class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
 
@@ -19,5 +19,16 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
         self.template_name = 'comercial/gerencia/nf_especial.html'
         self.title_name = 'NF especial'
 
-    def mount_context(self):
+
+    def pre_mount_context(self):
         self.cursor = db_cursor_so(self.request)
+
+        dados = nf_especial.get_nfs_especiais(self.cursor)
+        self.context.update({
+            'headers': ['empr', 'nf', 'serie', 'nivel', 'ref', 'tam', 'cor'],
+            'fields': ['empr', 'nf', 'serie', 'nivel', 'ref', 'tam', 'cor'],
+            'data': dados,
+        })
+
+    def mount_context(self):
+        pass
