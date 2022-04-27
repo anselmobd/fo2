@@ -31,34 +31,52 @@ def get_nfs_especiais(cursor):
     return dictlist(cursor)
 
 
-def set_nf_especial(cursor, nf):
+def set_nf_especial(cursor, nf, especial):
     """Marca NF e itens como especiais
     Recebe: cursor e número da NF
     Retorna: Se sucesso, None, senão, mensagem de erro
     """
 
+    if especial:
+      sql_set = "nfc.NUMERO_CAIXA_ECF = 1"
+      sql_filter = "AND nfc.NUMERO_CAIXA_ECF <> 1"
+    else:
+      sql_set = "nfc.NUMERO_CAIXA_ECF = 0"
+      sql_filter = "AND nfc.NUMERO_CAIXA_ECF <> 0"
+
     sql = f"""
         UPDATE FATU_050 nfc
         SET
-          nfc.NUMERO_CAIXA_ECF = 1
+          -- nfc.NUMERO_CAIXA_ECF = 1
+          {sql_set} -- sql_set
         WHERE nfc.CODIGO_EMPRESA = 1
           AND nfc.NUM_NOTA_FISCAL = {nf}
           AND nfc.SERIE_NOTA_FISC = 1
-          AND nfc.NUMERO_CAIXA_ECF <> 1
+          --AND nfc.NUMERO_CAIXA_ECF <> 1
+          {sql_filter} -- sql_filter
     """
     try:
         debug_cursor_execute(cursor, sql)
     except Exception as e:
         return repr(e)
 
+    if especial:
+      sql_set = "nfi.NR_CAIXA = 1"
+      sql_filter = "AND nfi.NR_CAIXA <> 1"
+    else:
+      sql_set = "nfi.NR_CAIXA = 0"
+      sql_filter = "AND nfi.NR_CAIXA <> 0"
+
     sql = f"""
         UPDATE FATU_060 nfi
         SET
-          nfi.NR_CAIXA = 1
+          -- nfi.NR_CAIXA = 1
+          {sql_set} -- sql_set
         WHERE nfi.CH_IT_NF_CD_EMPR = 1
           AND nfi.CH_IT_NF_NUM_NFIS = {nf}
           AND nfi.CH_IT_NF_SER_NFIS = 1
-          AND nfi.NR_CAIXA <> 1
+          -- AND nfi.NR_CAIXA <> 1
+          {sql_filter} -- sql_filter
     """
     try:
         debug_cursor_execute(cursor, sql)
