@@ -59,7 +59,12 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
             })
             return
 
-        mess_error = nf_especial.set_nf_especial(self.cursor, self.nf)
+        especial = data[0]['ESPECIAL'] == 1
+        self.context.update({
+            'especial': especial,
+        })
+
+        mess_error = nf_especial.set_nf_especial(self.cursor, self.nf, not especial)
 
         if mess_error:
             self.context.update({

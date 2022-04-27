@@ -23,7 +23,11 @@
   {% endif %}
   {% if result %}
     {% if result == 'OK' %}
-      <h4>NF {{nf}} marcada como especial</h4>
+      {% if especial %}
+        <h4>NF {{nf}} desmarcada como especial</h4>
+      {% else %}
+        <h4>NF {{nf}} marcada como especial</h4>
+      {% endif %}
     {% else %}
       <h4>Ao processar NF {{nf}}</h4>
       <h4>{{result}}</h4>
