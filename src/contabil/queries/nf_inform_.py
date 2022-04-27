@@ -22,6 +22,7 @@ def nf_inform(cursor, nf, especiais=False):
           || '/' || lpad(c.CGC_4, 4, '0')
           || '-' || lpad(c.CGC_2, 2, '0')
           || ')' CLIENTE
+        , f.NUMERO_CAIXA_ECF especial
         FROM FATU_050 f -- fatura
         JOIN PEDI_010 c -- cliente
           ON c.CGC_9 = f.CGC_9
