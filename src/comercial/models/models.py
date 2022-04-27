@@ -2,6 +2,17 @@ from django.db.models import Exists, OuterRef
 from django.db import models
 
 
+
+class ComercialPermissions(models.Model):
+
+    class Meta:
+        verbose_name = 'Permissões do Comercial'
+        managed = False
+        permissions = (
+            ("can_gerenciar_nf_especial", "Pode gerenciar NF especial"),
+        )
+
+
 class ModeloPassado(models.Model):
     nome = models.CharField(
         max_length=50,
