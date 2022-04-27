@@ -29,3 +29,38 @@ def get_nfs_especiais(cursor):
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)
+
+
+def set_nf_especial(cursor, nf):
+    """Marca NF e itens como especiais
+    Recebe: cursor e número da NF
+    Retorna: Se sucesso, None, senão, mensagem de erro
+    """
+
+    sql = f"""
+        UPDATE FATU_050 nfc
+        SET
+          nfc.NUMERO_CAIXA_ECF = 1
+        WHERE nfc.CODIGO_EMPRESA = 1
+          AND nfc.NUM_NOTA_FISCAL = {nf}
+          AND nfc.SERIE_NOTA_FISC = 1
+          AND nfc.NUMERO_CAIXA_ECF <> 1
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+    except Exception as e:
+        return repr(e)
+
+    sql = f"""
+        UPDATE FATU_060 nfi
+        SET
+          nfi.NR_CAIXA = 1
+        WHERE nfi.CH_IT_NF_CD_EMPR = 1
+          AND nfi.CH_IT_NF_NUM_NFIS = {nf}
+          AND nfi.CH_IT_NF_SER_NFIS = 1
+          AND nfi.NR_CAIXA <> 1
+    """
+    try:
+        debug_cursor_execute(cursor, sql)
+    except Exception as e:
+        return repr(e)
