@@ -23,9 +23,9 @@ def get_nfs_especiais(cursor):
           AND nfi.NR_CAIXA = 1
           AND nfc.NUMERO_CAIXA_ECF = 1
         ORDER BY 
-          nfc.NUM_NOTA_FISCAL
-        , nfc.SERIE_NOTA_FISC
-        , nfi.SEQ_ITEM_NFISC 
+          nfc.NUM_NOTA_FISCAL DESC
+        , nfc.SERIE_NOTA_FISC DESC
+        , nfi.SEQ_ITEM_NFISC
     """
     debug_cursor_execute(cursor, sql)
     return dictlist(cursor)

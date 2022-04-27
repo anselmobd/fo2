@@ -25,8 +25,24 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
 
         dados = nf_especial.get_nfs_especiais(self.cursor)
         self.context.update({
-            'headers': ['empr', 'nf', 'serie', 'nivel', 'ref', 'tam', 'cor'],
-            'fields': ['empr', 'nf', 'serie', 'nivel', 'ref', 'tam', 'cor'],
+            'headers': [
+                'Empresa',
+                'NF',
+                'Série',
+                'Nível',
+                'Referência',
+                'Tamanho',
+                'Cor',
+            ],
+            'fields': [
+                'empr',
+                'nf',
+                'serie',
+                'nivel',
+                'ref',
+                'tam',
+                'cor',
+            ],
             'data': dados,
         })
 

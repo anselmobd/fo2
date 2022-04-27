@@ -18,6 +18,7 @@
     {{ form.as_p }}
     <input type="submit" value="Altera tipo de NF"/>
   </form>
+  <h4>Notas e itens já marcados como especiais</h4>
   <table>
     {% include "layout/thead_generic.html" with data=headers style=style only %}
     {% include "layout/tbody_generic.html" with fields=fields data=data style=style decimals=decimals only %}
