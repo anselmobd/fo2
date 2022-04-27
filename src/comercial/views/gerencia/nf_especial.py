@@ -26,18 +26,14 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
         dados = nf_especial.get_nfs_especiais(self.cursor)
         self.context.update({
             'headers': [
-                'Empresa',
                 'NF',
-                'Série',
                 'Nível',
                 'Referência',
                 'Tamanho',
                 'Cor',
             ],
             'fields': [
-                'empr',
                 'nf',
-                'serie',
                 'nivel',
                 'ref',
                 'tam',
@@ -47,4 +43,12 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
         })
 
     def mount_context(self):
-        pass
+        self.context.update({
+            'nf': self.nf,
+        })
+
+        result = nf_especial.set_nf_especial(self.cursor, self.nf)
+
+        self.context.update({
+            'result': f'ERROR ({result})' if result else 'OK',
+        })
