@@ -201,3 +201,13 @@ class TabelaDePrecoForm(forms.Form):
         data['tabela'] = tabela
         self.data = data
         return tabela
+
+class NfEspecialForm(forms.Form):
+    nf = forms.IntegerField(
+        label='NF',
+        required=True,
+        widget=forms.NumberInput(
+            attrs={'autofocus': 'autofocus'}
+        ),
+    )
+

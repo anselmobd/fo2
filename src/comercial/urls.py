@@ -4,6 +4,9 @@ from . import views
 from comercial.views import (
     lista_referencias
 )
+from comercial.views.gerencia import (
+    nf_especial
+)
 
 
 app_name = 'comercial'
@@ -36,6 +39,10 @@ urlpatterns = [
         name='ficha_cliente'),
     re_path(r'^ficha_cliente/(?P<cnpj>.+)/$', views.FichaCliente.as_view(),
         name='ficha_cliente__get'),
+
+    re_path(r'^gerencia/nf_especial$',
+        nf_especial.NfEspecial.as_view(),
+        name='gerencia_nf_especial'),
 
     re_path(r'^lista_referencias/$', lista_referencias.ListaReferencias.as_view(),
         name='lista_referencias'),

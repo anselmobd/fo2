@@ -1,4 +1,10 @@
 <ul>
+  {% if perms.comercial.can_gerenciar_nf_especial %}
+    <li>Gerência</li>
+    <ul>
+      <li><a href="{% url 'comercial:gerencia_nf_especial' %}">NF especial</a></li>
+    </ul>
+  {% endif %}
   <li>Análises comerciais</li>
   <ul>
     <li><a href="{% url 'comercial:vendas' %}">Vendas</a></li>

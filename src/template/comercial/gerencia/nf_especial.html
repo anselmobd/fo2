@@ -1,0 +1,25 @@
+{% extends 'comercial/index.html' %}
+
+{% block title.content %}{{ titulo }} - {{ block.super }}{% endblock title.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'comercial:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% load l10n %}
+{% load humanize %}
+
+{% block stylesheet %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form action="{% url 'comercial:gerencia_nf_especial' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Altera tipo de NF"/>
+  </form>
+  <table>
+    {% include "layout/thead_generic.html" with data=headers style=style only %}
+    {% include "layout/tbody_generic.html" with fields=fields data=data style=style decimals=decimals only %}
+  </table>
+{% endblock %}
