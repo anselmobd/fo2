@@ -20,9 +20,7 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
         self.title_name = 'NF especial'
 
 
-    def pre_mount_context(self):
-        self.cursor = db_cursor_so(self.request)
-
+    def mount_nfs_especiais(self):
         dados = nf_especial.get_nfs_especiais(self.cursor)
         self.context.update({
             'headers': [
@@ -42,13 +40,25 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
             'data': dados,
         })
 
+    def pre_mount_context(self):
+        self.cursor = db_cursor_so(self.request)
+
+        self.mount_nfs_especiais()
+
     def mount_context(self):
         self.context.update({
             'nf': self.nf,
         })
 
-        result = nf_especial.set_nf_especial(self.cursor, self.nf)
+        mess_error = nf_especial.set_nf_especial(self.cursor, self.nf)
 
+        if mess_error:
+            self.context.update({
+                'result': f'Erro: {mess_error}',
+            })
+            return
+
+        self.mount_nfs_especiais()
         self.context.update({
-            'result': f'ERROR ({result})' if result else 'OK',
+            'result': 'OK',
         })
