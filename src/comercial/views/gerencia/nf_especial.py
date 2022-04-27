@@ -26,15 +26,18 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
     def mount_nfs_especiais(self):
         dados = nf_especial.get_nfs_especiais(self.cursor)
 
-        group = ['nf']
+        for row in dados:
+            row['data'] = row['data'].date()
+
+        group = ['nf', 'data']
         totalize_grouped_data(dados, {
             'group': group,
             'sum': ['qtd', 'val_tot'],
             'count': [],
-            'descr': {'nf': 'Totais:'},
+            'descr': {'data': 'Totais:'},
             'flags': ['NO_TOT_1'],
             'global_sum': ['qtd', 'val_tot'],
-            'global_descr': {'nf': 'Totais gerais:'},
+            'global_descr': {'data': 'Totais gerais:'},
             'row_style': 'font-weight: bold;',
         })
         group_rowspan(dados, group)
@@ -47,6 +50,7 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'headers': [
                 'NF',
+                'Data',
                 'Nível',
                 'Referência',
                 'Tamanho',
@@ -57,6 +61,7 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
             ],
             'fields': [
                 'nf',
+                'data',
                 'nivel',
                 'ref',
                 'tam',
@@ -66,9 +71,9 @@ class NfEspecial(PermissionRequiredMixin, O2BaseGetPostView):
                 'val_tot',
             ],
             'style': {
-                6: 'text-align: right;',
                 7: 'text-align: right;',
                 8: 'text-align: right;',
+                9: 'text-align: right;',
             },
             'group': group,
             'data': dados,

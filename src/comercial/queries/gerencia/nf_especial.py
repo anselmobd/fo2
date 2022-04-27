@@ -10,6 +10,7 @@ def get_nfs_especiais(cursor):
           nfc.CODIGO_EMPRESA empr
         , nfc.NUM_NOTA_FISCAL nf
         , nfc.SERIE_NOTA_FISC serie
+        , nfc.DATA_EMISSAO data
         , nfi.NIVEL_ESTRUTURA nivel
         , nfi.GRUPO_ESTRUTURA ref
         , nfi.SUBGRU_ESTRUTURA tam
