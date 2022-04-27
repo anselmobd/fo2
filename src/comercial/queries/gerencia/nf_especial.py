@@ -14,6 +14,9 @@ def get_nfs_especiais(cursor):
         , nfi.GRUPO_ESTRUTURA ref
         , nfi.SUBGRU_ESTRUTURA tam
         , nfi.ITEM_ESTRUTURA cor
+        , nfi.QTDE_ITEM_FATUR qtd
+        , nfi.VALOR_UNITARIO val_uni
+        , nfi.VALOR_CONTABIL val_tot
         FROM FATU_050 nfc
         JOIN FATU_060 nfi
           ON nfi.CH_IT_NF_CD_EMPR = nfc.CODIGO_EMPRESA
