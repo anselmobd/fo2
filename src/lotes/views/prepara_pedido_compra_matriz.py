@@ -8,11 +8,8 @@ from fo2.connections import db_cursor_so
 
 import lotes.queries
 from lotes.queries.pedido.ped_alter import (
-    altera_pedido,
-    altera_pedido_itens,
+    inclui_pedido_compra_matriz_capa,
 )
-from lotes.queries.pedido.mensagem_nf import cria_mens_nf
-from lotes.queries.producao import romaneio_corte
 
 
 class PreparaPedidoCompraMatriz(View):
@@ -33,8 +30,9 @@ class PreparaPedidoCompraMatriz(View):
         ):
             return ('ERRO', "Não é pedido preparado para faturar filial!")
 
-        # cria_pedido_compra_matriz_capa(cursor, pedido_filial)
-        # cria_pedido_compra_matriz_itens(cursor, pedido_filial)
+        inclui_pedido_compra_matriz_capa(cursor, pedido_filial)
+        # pedido_compra_matriz = get_pedido_compra_matriz(cursor, pedido_filial)
+        # inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra_matriz)
 
         return ('OK', "OK!")
 
