@@ -10,6 +10,9 @@ import lotes.queries
 from lotes.queries.pedido.ped_alter import (
     exclui_pedido_compra_matriz_capa,
     inclui_pedido_compra_matriz_capa,
+    emite_pedido_compra_matriz,
+    inclui_pedido_compra_matriz_itens,
+    get_pedido_compra_matriz_itens,
     pedido_matriz_de_pedido_filial,
 )
 
@@ -36,26 +39,22 @@ class PreparaPedidoCompraMatriz(View):
         pedido_compra_matriz = pedido_matriz_de_pedido_filial(cursor, pedido_filial)
         if pedido_compra_matriz:
             pedido_compra = pedido_compra_matriz[0]['pedido_compra']
-            print('existe', pedido_compra)
 
-            g_header, g_fields, g_data, g_style, g_total = \
-                lotes.queries.pedido.sortimento(
-                    cursor, pedido=pedido_compra, total='Total')
-
-            if len(g_data) != 0:
-                print('excluido', pedido_compra)
+            referencias =  get_pedido_compra_matriz_itens(cursor, pedido_compra)
+            if len(referencias) == 0:
                 exclui_pedido_compra_matriz_capa(cursor, pedido_compra)
-                return ('ERRO', "Existia vazio!")
+
+        if not pedido_compra_matriz:
+            inclui_pedido_compra_matriz_capa(cursor, pedido_filial)
 
         pedido_compra_matriz = pedido_matriz_de_pedido_filial(cursor, pedido_filial)
 
-        if not pedido_compra_matriz:
-            print('não existe')
-            inclui_pedido_compra_matriz_capa(cursor, pedido_filial)
-            print('incluido')
+        if pedido_compra_matriz:
+            pedido_compra = pedido_compra_matriz[0]['pedido_compra']
 
-        # pedido_compra_matriz = get_pedido_compra_matriz(cursor, pedido_filial)
-        # inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra_matriz)
+            inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra)
+
+            emite_pedido_compra_matriz(cursor, pedido_compra)
 
         return ('OK', "OK!")
 
