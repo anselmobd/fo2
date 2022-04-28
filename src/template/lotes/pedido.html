@@ -37,11 +37,33 @@
     {% include "layout/link.html" with link=reativa_pedido_link text='Reativa a pedido' only %}
   {% endif %}
 {% endif %}
+{% if d_data and s_data %}
+  <table class="layout">
+    <tr>
+      <td>
+{% endif %}
 {% if d_data %}
   <table>
     {% include "layout/html_thead.html" with data=d_headers only %}
     {% include "layout/html_tbody.html" with fields=d_fields data=d_data only %}
   </table>
+{% endif %}
+{% if d_data and s_data %}
+  </td>
+  <td></td>
+  <td style="border-left: thin solid lightgrey;"></td>
+  <td>
+{% endif %}
+{% if s_data %}
+  <table>
+    {% include "layout/thead_generic.html" with data=s_headers style=s_style only %}
+    {% include "layout/tbody_generic.html" with fields=s_fields data=s_data group=s_group style=s_style only %}
+  </table>
+{% endif %}
+{% if d_data and s_data %}
+    </td>
+  </tr>
+</table>
 {% endif %}
 {% if o_data %}
   <h3>OP do pedido</h3>

@@ -6,6 +6,7 @@ from django.views import View
 
 from fo2.connections import db_cursor_so
 
+from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
 from base.forms.forms2 import PedidoForm2
 from geral.functions import get_empresa
 
@@ -86,6 +87,20 @@ class Pedido(View):
                 'd_headers': ('Depósito', 'Quantidade'),
                 'd_fields': ('DEPOSITO', 'QTD'),
                 'd_data': d_data,
+            })
+
+            # Solicitações
+            s_data = get_solicitacoes(cursor, pedido_destino=pedido)
+            for row in s_data:
+                row['solicitacao|TARGET'] = '_blank'
+                row['solicitacao|LINK'] = reverse(
+                    'cd:novo_solicitacao',
+                    args=[row['solicitacao']]
+                )
+            self.context.update({
+                's_headers': ["Solicitação"],
+                's_fields': ["solicitacao"],
+                's_data': s_data,
             })
 
             # OPs
