@@ -13,6 +13,7 @@ from lotes.queries.pedido.ped_alter import (
 )
 from lotes.queries.pedido.mensagem_nf import cria_mens_nf
 from lotes.queries.producao import romaneio_corte
+from lotes.views.prepara_pedido_compra_matriz import cria_pedido_compra_matriz
 
 
 class PreparaPedidoCorte(View):
@@ -63,6 +64,9 @@ class PreparaPedidoCorte(View):
         for row in dados:
             qtd_itens += row['mov_qtd']
         altera_pedido(cursor, data, pedido, 3, qtd_itens, "\n".join(observacao))
+
+        if not cria_pedido_compra_matriz(cursor, pedido):
+            return ('ERRO', "Algum erro ocorreu durante a criação do pedido de compra!")
 
         return ('OK', "OK!")
 
