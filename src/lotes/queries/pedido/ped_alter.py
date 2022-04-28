@@ -199,3 +199,86 @@ def exclui_pedido_compra_matriz_capa(cursor, pedido_compra):
         WHERE PEDIDO_COMPRA = {pedido_compra}
     """
     cursor.execute(sql)
+
+
+def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
+    sql = f"""
+        INSERT INTO SYSTEXTIL.SUPR_100
+        ( NUM_PED_COMPRA, SEQ_ITEM_PEDIDO, ITEM_100_NIVEL99, ITEM_100_GRUPO,
+          ITEM_100_SUBGRUPO, ITEM_100_ITEM, DESCRICAO_ITEM, UNIDADE_MEDIDA,
+          QTDE_PEDIDA_ITEM, QTDE_SALDO_ITEM, PRECO_ITEM_COMP, PERCENTUAL_DESC, 
+          PERCENTUAL_IPI, OUTRAS_DESPESAS, CENTRO_CUSTO, CODIGO_DEPOSITO, 
+          DATA_PREV_ENTR, NUM_REQUISICAO, SEQ_ITEM_REQ, COD_CANCELAMENTO, 
+          DT_CANCELAMENTO, SITUACAO_ITEM, NUMERO_COLETA, CODIGO_CONTABIL, 
+          PERC_ENC_FINAN, DATA_PREV_ENTR_INI, FLAG_ORCAMENTO, PROJETO, SUBPROJETO, 
+          SERVICO, PERC_IVA, PERIODO_COMPRAS, OBSERVACAO_ITEM, EXECUTA_TRIGGER, 
+          UNIDADE_CONV, FATOR_CONV, VALOR_CONV, COD_FABRICANTE_PROD, COD_PROD_FABRICANTE, 
+          NUMERO_REQ_OBC, CNPJ9_DESTINO, CNPJ4_DESTINO, CNPJ2_DESTINO, COD_APLICACAO, 
+          ORIGEM_ITEM, NUMERO_COTACAO, QTDE_A_ENTREGAR, FLAG_MARCAR, CHAVE_NF, 
+          SEQUENCIA_ITEM_NF, REUTILIZA_SDCV_OBC, CODIGO_TRANSACAO
+        )
+        SELECT
+          {pedido_compra} -- NUM_PED_COMPRA
+        , pvi.SEQ_ITEM_PEDIDO -- SEQ_ITEM_PEDIDO
+        , pvi.CD_IT_PE_NIVEL99 -- '9' -- ITEM_100_NIVEL99
+        , pvi.CD_IT_PE_GRUPO -- 'ET066' -- ITEM_100_GRUPO
+        , pvi.CD_IT_PE_SUBGRUPO -- 'UNI' -- ITEM_100_SUBGRUPO
+        , pvi.CD_IT_PE_ITEM -- '0000UN' -- ITEM_100_ITEM
+        , i.NARRATIVA -- DESCRICAO_ITEM
+        , 'UN' -- UNIDADE_MEDIDA
+        , pvi.QTDE_PEDIDA -- QTDE_PEDIDA_ITEM
+        , 0 -- QTDE_SALDO_ITEM
+        , 2 -- PRECO_ITEM_COMP
+        , 0 -- PERCENTUAL_DESC
+        , 0 -- PERCENTUAL_IPI
+        , 0 -- OUTRAS_DESPESAS
+        , 431013 -- CENTRO_CUSTO -- CORTE
+        , 231 -- CODIGO_DEPOSITO
+        , pvc.DATA_EMIS_VENDA -- DATA_PREV_ENTR
+        , 0 -- NUM_REQUISICAO
+        , 0 -- SEQ_ITEM_REQ
+        , 0 -- COD_CANCELAMENTO
+        , NULL -- DT_CANCELAMENTO
+        , 2 -- SITUACAO_ITEM
+        , 0 -- NUMERO_COLETA
+        , 128 -- CODIGO_CONTABIL -- semi-acabado MD
+        , 0 -- PERC_ENC_FINAN
+        , pvc.DATA_EMIS_VENDA -- DATA_PREV_ENTR_INI
+        , 0 -- FLAG_ORCAMENTO
+        , 0 -- PROJETO
+        , 0 -- SUBPROJETO
+        , 0 -- SERVICO
+        , 0 -- PERC_IVA
+        , pvc.NUM_PERIODO_PROD -- PERIODO_COMPRAS
+        , NULL -- OBSERVACAO_ITEM
+        , NULL -- EXECUTA_TRIGGER
+        , NULL -- UNIDADE_CONV
+        , 0 -- FATOR_CONV
+        , 2 -- VALOR_CONV
+        , ' ' -- COD_FABRICANTE_PROD
+        , ' ' -- COD_PROD_FABRICANTE
+        , NULL -- NUMERO_REQ_OBC
+        , 0 -- CNPJ9_DESTINO
+        , 0 -- CNPJ4_DESTINO
+        , 0 -- CNPJ2_DESTINO
+        , 5 -- COD_APLICACAO -- material intermadiário
+        , 0 -- ORIGEM_ITEM
+        , NULL -- NUMERO_COTACAO
+        , NULL -- QTDE_A_ENTREGAR
+        , NULL -- FLAG_MARCAR
+        , NULL -- CHAVE_NF
+        , NULL -- SEQUENCIA_ITEM_NF
+        , NULL -- REUTILIZA_SDCV_OBC
+        , 0 -- CODIGO_TRANSACAO
+        FROM PEDI_100 pvc -- capa de pedido de compra
+        JOIN PEDI_110 pvi -- item de pedido de compra
+        ON pvi.PEDIDO_VENDA = pvc.PEDIDO_VENDA
+        LEFT JOIN basi_010 i -- item 
+        ON i.NIVEL_ESTRUTURA = pvi.CD_IT_PE_NIVEL99
+        AND i.GRUPO_ESTRUTURA = pvi.CD_IT_PE_GRUPO
+        AND i.SUBGRU_ESTRUTURA = pvi.CD_IT_PE_SUBGRUPO
+        AND i.ITEM_ESTRUTURA = pvi.CD_IT_PE_ITEM
+        WHERE 1=1
+          AND pvc.PEDIDO_VENDA = {pedido_filial}
+    """
+    cursor.execute(sql)
