@@ -197,18 +197,15 @@ def query_completa(
 
             if cli in peds:
                 cliaux['pedido_filial'] = peds[cli]
-                pprint(peds[cli])
                 pedido_matriz = pedido_matriz_de_pedido_filial(
                     cursor, peds[cli]
                 )
-                pprint(pedido_matriz)
+                if pedido_matriz:
+                    cliaux['pedido_matriz'] = pedido_matriz[0]['pedido_compra']
+                else:
+                    cliaux['pedido_matriz'] = '+'
             else:
                 cliaux['pedido_filial'] = '-'
-                pedido_matriz = None
-
-            if pedido_matriz:
-                cliaux['pedido_matriz'] = pedido_matriz[0]['pedido_compra']
-            else:
                 cliaux['pedido_matriz'] = '-'
 
         for row in dados:
