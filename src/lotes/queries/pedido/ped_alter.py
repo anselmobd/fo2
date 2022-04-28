@@ -191,3 +191,11 @@ def inclui_pedido_compra_matriz_capa(cursor, pedido_filial):
           AND pvc.PEDIDO_VENDA = {pedido_filial}
     """
     cursor.execute(sql)
+
+
+def exclui_pedido_compra_matriz_capa(cursor, pedido_compra):
+    sql = f"""
+        DELETE FROM SYSTEXTIL.SUPR_090
+        WHERE PEDIDO_COMPRA = {pedido_compra}
+    """
+    cursor.execute(sql)
