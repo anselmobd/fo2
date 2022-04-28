@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.queries import debug_cursor_execute
 
 
 def query(cursor, pedido):
@@ -12,5 +13,5 @@ def query(cursor, pedido):
         ORDER BY
           i.CD_IT_PE_GRUPO
     """
-    cursor.execute(sql)
+    debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
