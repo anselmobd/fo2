@@ -290,3 +290,14 @@ def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
           AND pvc.PEDIDO_VENDA = {pedido_filial}
     """
     cursor.execute(sql)
+
+
+def get_pedido_compra_matriz_itens(cursor, pedido_compra):
+    sql = f"""
+        SELECT
+          *
+        FROM SUPR_100
+        WHERE NUM_PED_COMPRA = {pedido_compra}
+    """
+    debug_cursor_execute(cursor, sql)
+    return rows_to_dict_list_lower(cursor)
