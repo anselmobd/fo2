@@ -51,7 +51,10 @@ class RomaneioCorte(O2BaseGetPostView):
             label_tot_field = 'cliente'
 
             headers = [
-                'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item',
+                'Cliente',
+                ('Pedido<br/>venda<br/>matriz', ),
+                ('Código<br/>pedido<br/>cliente', ),
+                'OP', 'Item',
                 'Quant.', '%Quant.', 'Quant.OP',
                 'Lotes', '%Lotes', 'Lotes OP'
             ]
@@ -69,7 +72,12 @@ class RomaneioCorte(O2BaseGetPostView):
             label_tot_field = 'cliente'
 
             headers = [
-                'Cliente', 'Pedido', 'Cód.Ped.Cliente', 'OP', 'Item', 'Quant.'
+                'Cliente',
+                ('Pedido<br/>venda<br/>matriz', ),
+                ('Código<br/>pedido<br/>cliente', ),
+                'OP',
+                'Item',
+                'Quant.',
             ]
             fields = [
                 'cliente', 'ped', 'ped_cli', 'op', 'item', 'mov_qtd'
@@ -87,18 +95,28 @@ class RomaneioCorte(O2BaseGetPostView):
                         args=[row['pedido_filial']],
                     )
 
-            group = ['cliente', 'pedido_filial', 'obs']
+            group = ['cliente', 'pedido_filial', 'pedido_matriz', 'obs']
             sum_fields = ['mov_qtd']
             label_tot_field = 'obs'
 
             headers = [
-                'Cliente', 'Pedido', 'Observação', 'Item', 'Quant.'
+                'Cliente',
+                ('Pedido<br/>venda<br/>filial', ),
+                ('Pedido<br/>compra<br/>matriz', ),
+                'Observação',
+                'Item',
+                'Quant.'
             ]
             fields = [
-                'cliente', 'pedido_filial','obs', 'item', 'mov_qtd'
+                'cliente',
+                'pedido_filial',
+                'pedido_matriz',
+                'obs',
+                'item',
+                'mov_qtd'
             ]
-            style_center = (999)
-            style_right = (5)
+            style_center = (1, 2, 3)
+            style_right = (6)
             if (self.data < datetime.date.today() and
                 has_permission(self.request, 'lotes.prepara_pedidos_filial_matriz')
             ):
