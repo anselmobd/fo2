@@ -159,7 +159,7 @@ def inclui_pedido_compra_matriz_capa(cursor, pedido_filial):
         , 1 -- CODIGO_COMPRADOR
         , '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']' -- VENDEDOR_CONTATO
         , 0 -- COD_CANCELAMENTO
-        , 2 -- SITUACAO_PEDIDO
+        , 1 -- SITUACAO_PEDIDO a emitir
         , 0 -- VALOR_FRETE
         , 0 -- VALOR_OUTRAS
         , 0 -- COD_PORTADOR
@@ -192,6 +192,14 @@ def inclui_pedido_compra_matriz_capa(cursor, pedido_filial):
     """
     cursor.execute(sql)
 
+def emite_pedido_compra_matriz(cursor, pedido_compra, emite=True):
+    val_situacao = '2' if emite else '1'
+    sql = f"""
+        UPDATE SUPR_090
+        SET SITUACAO_PEDIDO = {val_situacao}
+        WHERE PEDIDO_COMPRA = {pedido_compra}
+    """
+    cursor.execute(sql)
 
 def exclui_pedido_compra_matriz_capa(cursor, pedido_compra):
     sql = f"""
