@@ -5,7 +5,10 @@ from django.utils.text import slugify
 from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
-from lotes.queries.pedido.ped_alter import query_pedidos_filial
+from lotes.queries.pedido.ped_alter import (
+    query_pedidos_filial,
+    pedido_matriz_de_pedido_filial,
+)
 
 
 def query_completa(
@@ -192,11 +195,26 @@ def query_completa(
                     cliaux['obs'] += sep + f"Pedido({ped})-OP({ops})"
                     sep = ', '
 
-            cliaux['pedido_filial'] = peds[cli] if cli in peds else '-'
+            if cli in peds:
+                cliaux['pedido_filial'] = peds[cli]
+                pprint(peds[cli])
+                pedido_matriz = pedido_matriz_de_pedido_filial(
+                    cursor, peds[cli]
+                )
+                pprint(pedido_matriz)
+            else:
+                cliaux['pedido_filial'] = '-'
+                pedido_matriz = None
+
+            if pedido_matriz:
+                cliaux['pedido_matriz'] = pedido_matriz[0]['pedido_compra']
+            else:
+                cliaux['pedido_matriz'] = '-'
 
         for row in dados:
             row['obs'] = clientes[row['cliente_slug']]['obs']
             row['pedido_filial'] = clientes[row['cliente_slug']]['pedido_filial']
+            row['pedido_matriz'] = clientes[row['cliente_slug']]['pedido_matriz']
         
         dados = dados, clientes
 
