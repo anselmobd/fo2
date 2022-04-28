@@ -94,6 +94,14 @@ class RomaneioCorte(O2BaseGetPostView):
                         'producao:pedido__get',
                         args=[row['pedido_filial']],
                     )
+                if row['pedido_matriz'] == '+':
+                    row['pedido_matriz'] = ""
+                    row['pedido_matriz|GLYPHICON'] = 'glyphicon-plus-sign'
+                    row['pedido_matriz|TARGET'] = '_blank'
+                    row['pedido_matriz|LINK'] = reverse(
+                        'producao:prepara_pedido_compra_matriz',
+                        args=[row['pedido_filial']],
+                    )
 
             group = ['cliente', 'pedido_filial', 'pedido_matriz', 'obs']
             sum_fields = ['mov_qtd']
