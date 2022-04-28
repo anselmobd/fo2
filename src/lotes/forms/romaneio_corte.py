@@ -3,7 +3,7 @@ from pprint import pprint
 from django import forms
 
 from systextil.models import Familia, Estagio
-from utils.functions.date import today_ymd
+from utils.functions.date import yesterday_ymd
 
 class RomaneioCorteForm(forms.Form):
     data = forms.DateField(
@@ -14,7 +14,7 @@ class RomaneioCorteForm(forms.Form):
                 'autofocus': 'autofocus'
             }
         ),
-        initial=today_ymd,
+        initial=yesterday_ymd,
     )
     CHOICES = [
         ('n', 'OPs completadas no estágio 16 na data; para NF'),
