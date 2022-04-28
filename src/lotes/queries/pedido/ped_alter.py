@@ -120,4 +120,4 @@ def pedido_matriz_de_pedido_filial(cursor, pedido_filial):
           AND pcc.VENDEDOR_CONTATO = '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']'
     """
     debug_cursor_execute(cursor, sql)
-    dados = rows_to_dict_list_lower(cursor)
+    return rows_to_dict_list_lower(cursor)
