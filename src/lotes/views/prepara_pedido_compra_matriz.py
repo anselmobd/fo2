@@ -45,6 +45,7 @@ class PreparaPedidoCompraMatriz(View):
             if len(g_data) != 0:
                 print('excluido', pedido_compra)
                 exclui_pedido_compra_matriz_capa(cursor, pedido_compra)
+                return ('ERRO', "Existia vazio!")
 
         pedido_compra_matriz = pedido_matriz_de_pedido_filial(cursor, pedido_filial)
 
