@@ -292,6 +292,14 @@ def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
     cursor.execute(sql)
 
 
+def exclui_pedido_compra_matriz_itens(cursor, pedido_compra):
+    sql = f"""
+        DELETE FROM SUPR_100
+        WHERE NUM_PED_COMPRA = {pedido_compra}
+    """
+    cursor.execute(sql)
+
+
 def get_pedido_compra_matriz_itens(cursor, pedido_compra):
     sql = f"""
         SELECT
