@@ -100,3 +100,24 @@ def query_pedidos_filial(cursor, data):
             peds[cliente] = row['ped']
     pprint(peds)
     return peds
+
+
+def pedido_matriz_de_pedido_filial(cursor, pedido_filial):
+    sql = f"""
+        SELECT 
+          pcc.*
+        FROM SUPR_090 pcc, PEDI_100 pvc
+        WHERE 1=1
+          AND pvc.PEDIDO_VENDA = {pedido_filial}
+          AND pcc.FORN_PED_FORNE9 = 7681643 
+          AND pcc.FORN_PED_FORNE4 = 2 
+          AND pcc.FORN_PED_FORNE2 = 78 
+          AND pcc.DT_EMIS_PED_COMP = pvc.DATA_EMIS_VENDA 
+          AND pcc.DATA_PREV_ENTR = pvc.DATA_EMIS_VENDA 
+          AND pcc.DATETIME_PEDIDO = pvc.DATA_EMIS_VENDA 
+          AND pcc.TIME_PEDIDO = TIMESTAMP '1970-01-01 00:00:00.000000'
+          AND pcc.VENDEDOR_CONTATO LIKE '[PED.FILIAL:%'
+          AND pcc.VENDEDOR_CONTATO = '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']'
+    """
+    debug_cursor_execute(cursor, sql)
+    dados = rows_to_dict_list_lower(cursor)
