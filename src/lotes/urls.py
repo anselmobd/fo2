@@ -4,6 +4,7 @@ from . import views
 from lotes.views import (
     por_celula,
     prepara_pedido_corte,
+    prepara_pedido_compra_matriz,
     romaneio_corte,
 )
 
@@ -189,6 +190,10 @@ urlpatterns = [
 
     re_path(r'^ajax/prepara_pedido_corte/(?P<data>[^/]+)/(?P<cliente>[^/]+)/(?P<pedido>[^/]+)/$',
         prepara_pedido_corte.PreparaPedidoCorte.as_view(), name='prepara_pedido_corte'),
+
+    re_path(r'^ajax/prepara_pedido_compra_matriz/(?P<pedido_filial>[^/]+)/$',
+        prepara_pedido_compra_matriz.PreparaPedidoCompraMatriz.as_view(),
+        name='prepara_pedido_compra_matriz'),
 
     re_path(r'^totais_estagio/$',
         views.analise.TotalEstagio.as_view(), name='totais_estagio'),
