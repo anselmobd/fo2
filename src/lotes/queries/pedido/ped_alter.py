@@ -121,3 +121,73 @@ def pedido_matriz_de_pedido_filial(cursor, pedido_filial):
     """
     debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
+
+
+def inclui_pedido_compra_matriz_capa(cursor, pedido_filial):
+    sql = f"""
+        INSERT INTO SYSTEXTIL.SUPR_090
+        ( PEDIDO_COMPRA, DT_EMIS_PED_COMP, COND_PGTO_COMPRA,
+          FORN_PED_FORNE9, FORN_PED_FORNE4, FORN_PED_FORNE2, DATA_PREV_ENTR,
+          TRAN_PED_FORNE9, TRAN_PED_FORNE4, TRAN_PED_FORNE2, TIPO_FRETE,
+          COD_END_ENTREGA, COD_END_COBRANCA, CODIGO_COMPRADOR, VENDEDOR_CONTATO,
+          COD_CANCELAMENTO, SITUACAO_PEDIDO, VALOR_FRETE, VALOR_OUTRAS, COD_PORTADOR,
+          CODIGO_EMPRESA, VAL_ENC_FINAN, TAB_PRECO, CODIGO_TRANSACAO, FLAG_EXPORTADO,
+          COD_MOEDA, DATETIME_PEDIDO, TIME_PEDIDO, PESO_TOTAL, EXECUTA_TRIGGER,
+          OBSERVACAO, DATA_CHEGADA, VOLUME, TIPO_FRETE_REDESPACHO, NUMERO_COMPRA_OBC,
+          E_MAIL, ASSUNTO_EMAIL, TEXTO_EMAIL, TIPO_PEDIDO, ENVIA_EMAIL_EMERGENCIAL,
+          PEDIDO_REGISTRO, REUTILIZA_SDCV_OBC, ORDEM_SERVICO
+        )
+        SELECT 
+          ( SELECT 
+              COALESCE(max(pcc.PEDIDO_COMPRA), 702000) + 1
+            FROM SUPR_090 pcc
+            WHERE 1=1
+              AND pcc.PEDIDO_COMPRA > 702000
+          ) -- PEDIDO_COMPRA
+        , pvc.DATA_EMIS_VENDA -- DT_EMIS_PED_COMP
+        , 1 -- COND_PGTO_COMPRA
+        , 7681643 -- FORN_PED_FORNE9
+        , 2 -- FORN_PED_FORNE4
+        , 78 -- FORN_PED_FORNE2
+        , pvc.DATA_EMIS_VENDA -- DATA_PREV_ENTR
+        , 0 -- TRAN_PED_FORNE9
+        , 0 -- TRAN_PED_FORNE4
+        , 0 -- TRAN_PED_FORNE2
+        , 9 -- TIPO_FRETE
+        , 1 -- COD_END_ENTREGA
+        , 1 -- COD_END_COBRANCA
+        , 1 -- CODIGO_COMPRADOR
+        , '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']' -- VENDEDOR_CONTATO
+        , 0 -- COD_CANCELAMENTO
+        , 1 -- SITUACAO_PEDIDO
+        , 0 -- VALOR_FRETE
+        , 0 -- VALOR_OUTRAS
+        , 0 -- COD_PORTADOR
+        , 1 -- CODIGO_EMPRESA
+        , 0 -- VAL_ENC_FINAN
+        , 0 -- TAB_PRECO
+        , 0 -- CODIGO_TRANSACAO
+        , 0 -- FLAG_EXPORTADO
+        , 0 -- COD_MOEDA
+        , pvc.DATA_EMIS_VENDA -- DATETIME_PEDIDO
+        , TIMESTAMP '1970-01-01 00:00:00.000000' -- TIME_PEDIDO
+        , 0 -- PESO_TOTAL
+        , NULL -- EXECUTA_TRIGGER
+        , NULL -- OBSERVACAO
+        , NULL -- DATA_CHEGADA
+        , 0 -- VOLUME
+        , 4 -- TIPO_FRETE_REDESPACHO
+        , NULL -- NUMERO_COMPRA_OBC
+        , NULL -- E_MAIL
+        , NULL -- ASSUNTO_EMAIL
+        , NULL -- TEXTO_EMAIL
+        , 0 -- TIPO_PEDIDO
+        , 0 -- ENVIA_EMAIL_EMERGENCIAL
+        , NULL -- PEDIDO_REGISTRO
+        , NULL -- REUTILIZA_SDCV_OBC
+        , 0 -- ORDEM_SERVICO
+        FROM PEDI_100 pvc -- capa de pedido de compra
+        WHERE 1=1
+          AND pvc.PEDIDO_VENDA = {pedido_filial}
+    """
+    cursor.execute(sql)
