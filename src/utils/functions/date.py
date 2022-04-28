@@ -33,6 +33,14 @@ def today_ymd():
     return datetime.date.today().strftime('%Y-%m-%d')
 
 
+def yesterday(my_date):
+    """Return yesterday"""
+    return (
+        my_date
+        - datetime.timedelta(days=1)
+    )
+
+
 def yesterday_ymd():
     """Return today in format YYY-MM-DD"""
     return datetime.date.today().strftime('%Y-%m-%d')
