@@ -196,9 +196,12 @@ def query_completa(
                     sep = ', '
 
             if cli in peds:
-                cliaux['pedido_filial'] = peds[cli]
+                ped1 = peds[cli][0]
+                cliaux['pedido_filial'] = ped1['ped']
+                cliaux['pedido_filial_nf'] = '*' if ped1['nf'] else ''
+                cliaux['pedido_filial_quant'] = '+' if len(peds[cli]) > 1 else ''
                 pedido_matriz = pedido_matriz_de_pedido_filial(
-                    cursor, peds[cli]
+                    cursor, ped1['ped']
                 )
                 if pedido_matriz:
                     cliaux['pedido_matriz'] = pedido_matriz[0]['pedido_compra']
@@ -209,9 +212,13 @@ def query_completa(
                 cliaux['pedido_matriz'] = '-'
 
         for row in dados:
-            row['obs'] = clientes[row['cliente_slug']]['obs']
-            row['pedido_filial'] = clientes[row['cliente_slug']]['pedido_filial']
-            row['pedido_matriz'] = clientes[row['cliente_slug']]['pedido_matriz']
+            cli_slug = row['cliente_slug']
+            cli_row = clientes[cli_slug]
+            row['obs'] = cli_row['obs']
+            row['pedido_filial'] = cli_row['pedido_filial']
+            row['pedido_filial_nf'] = cli_row.get('pedido_filial_nf', '')
+            row['pedido_filial_quant'] = cli_row.get('pedido_filial_quant', '')
+            row['pedido_matriz'] = cli_row['pedido_matriz']
         
         dados = dados, clientes
 

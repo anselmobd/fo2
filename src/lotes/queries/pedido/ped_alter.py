@@ -69,7 +69,10 @@ def query_pedidos_filial(cursor, data):
         SELECT
           p.PEDIDO_VENDA ped
         , p.OBSERVACAO obs
-        FROM PEDI_100 p 
+        , f.NUM_NOTA_FISCAL nf
+        FROM PEDI_100 p
+        LEFT JOIN FATU_050 f
+          ON f.PEDIDO_VENDA = p.PEDIDO_VENDA
         WHERE 1=1
           AND p.CODIGO_EMPRESA = 3
           AND p.COD_CANCELAMENTO = 0
@@ -81,23 +84,23 @@ def query_pedidos_filial(cursor, data):
 
     peds = {}
     for row in dados:
-        if not row['obs']:
+        obs = row.pop('obs')
+        if not obs:
             continue
-        if not re.search('^\[MPCFM\] ', row['obs']):
+        if not re.search('^\[MPCFM\] ', obs):
             continue
-        if not re.search(f"Data: {data}", row['obs']):
+        if not re.search(f"Data: {data}", obs):
             continue
-        if re.search("Producao para estoque:", row['obs']):
+        if re.search("Producao para estoque:", obs):
             cliente = 'estoque'
         else:
-            cliente_match = re.search('Producao para o cliente ([^ ]+):', row['obs'])
+            cliente_match = re.search('Producao para o cliente ([^ ]+):', obs)
             if not cliente_match:
                 continue
             cliente = cliente_match.group(1).lower()
-        if cliente in peds:
-            peds[cliente] = ', '.join([peds[cliente], row['ped']])
-        else:
-            peds[cliente] = row['ped']
+        if cliente not in peds:
+            peds[cliente] = []
+        peds[cliente].append(row)
     return peds
 
 

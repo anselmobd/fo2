@@ -94,6 +94,11 @@ class RomaneioCorte(O2BaseGetPostView):
                         'producao:pedido__get',
                         args=[row['pedido_filial']],
                     )
+                    row['pedido_filial'] = ''.join([
+                        row['pedido_filial_nf'],
+                        str(row['pedido_filial']),
+                        row['pedido_filial_quant'],
+                    ])
                 if row['pedido_matriz'] == '+':
                     row['pedido_matriz'] = ""
                     row['pedido_matriz|GLYPHICON'] = 'glyphicon-plus-sign'
@@ -135,6 +140,9 @@ class RomaneioCorte(O2BaseGetPostView):
                         if clientes[c]['pedido_filial'] == '-'
                     },
                 })
+            self.context.update({
+                'legenda': "Pedido venda filial assinalado com '*' está faturado.",
+            })
 
         totalize_grouped_data(dados, {
             'group': group,
