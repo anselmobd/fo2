@@ -18,6 +18,8 @@ urlpatterns = [
     re_path(r'^nota_fiscal/$', views.NotaFiscal.as_view(), name='nota_fiscal'),
     re_path(r'^nota_fiscal/(?P<nf>\d+)/$', views.NotaFiscal.as_view(),
         name='nota_fiscal__get'),
+    re_path(r'^nota_fiscal/(?P<empresa>\d+)/(?P<nf>\d+)/$', views.NotaFiscal.as_view(),
+        name='nota_fiscal__get2'),
 
     re_path(r'^remeindu/$', views.RemessaIndustr.as_view(), name='remeindu'),
 

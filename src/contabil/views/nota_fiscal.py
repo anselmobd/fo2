@@ -107,7 +107,10 @@ class NotaFiscal(View):
         form.data = form.data.copy()
         if 'nf' in kwargs:
             form.data['nf'] = kwargs['nf']
-            form.data['empresa'] = 1
+            if 'empresa' in kwargs:
+                form.data['empresa'] = kwargs['empresa']
+            else:
+                form.data['empresa'] = 1
         if form.is_valid():
             nf = form.cleaned_data['nf']
             empresa = form.cleaned_data['empresa']
