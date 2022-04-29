@@ -4,34 +4,32 @@
 {% block header.content %}{{ titulo }} - <a href="{% url 'contabil:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block stylesheet %}
-<style>
-{% include 'layout/simple_table.css' %}
-</style>
+  <style>
+    {% include 'layout/simple_table.css' %}
+  </style>
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'contabil:nota_fiscal' %}" method="post">
+  <form action="{% url 'contabil:nota_fiscal' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Busca"/>
-</form>
-{% if nf %}
-  <h3>Nota fiscal: {{ nf }}</h3>
-{% endif %}
-{% if msg_erro %}
-  <h3>{{ msg_erro }}</h3>
-{% endif %}
-{% if data %}
-  <table>
-    {% include "layout/html_thead.html" with data=headers only %}
-    {% include "layout/html_tbody.html" with fields=fields data=data only %}
-  </table>
-{% endif %}
-{% if i_data %}
-  <h3>Itens da NF</h3>
-  <table>
-    {% include "layout/thead_generic.html" with data=i_headers style=i_style only %}
-    {% include "layout/tbody_generic.html" with fields=i_fields data=i_data style=i_style only %}
-  </table>
-{% endif %}
+  </form>
+  {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+  {% if msg_erro %}
+    <h3>{{ msg_erro }}</h3>
+  {% endif %}
+  {% if data %}
+    <table>
+      {% include "layout/html_thead.html" with data=headers only %}
+      {% include "layout/html_tbody.html" with fields=fields data=data only %}
+    </table>
+  {% endif %}
+  {% if i_data %}
+    <h3>Itens da NF</h3>
+    <table>
+      {% include "layout/thead_generic.html" with data=i_headers style=i_style only %}
+      {% include "layout/tbody_generic.html" with fields=i_fields data=i_data style=i_style only %}
+    </table>
+  {% endif %}
 {% endblock %}
