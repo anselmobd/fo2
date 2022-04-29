@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from o2.functions.check_digit import mod1110_modchar_o
+from utils.classes.numbers import BaseConversion
 
 
 class Plt():
@@ -68,7 +69,8 @@ class Plt():
         return self.hashed(''.join([prefix, strnum]))
 
     def prefix_to_int(self, prefix):
-        return 3
+        bc = BaseConversion('A')
+        return bc.str_to_number(prefix)
 
     def hash(self, code):
         prefix, strnum, _ = self.split(code)
@@ -77,6 +79,6 @@ class Plt():
             self.prefix_to_int(prefix),
         )
         num = int(strnum)
-        num_salt = (num + self._PLT_SALT) * prefix_val
+        num_salt = (num + self._PLT_SALT) * (prefix_val % 100)
         strnum_salt = str(num_salt)
         return mod1110_modchar_o(strnum_salt)
