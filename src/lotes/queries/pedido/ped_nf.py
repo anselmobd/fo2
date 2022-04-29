@@ -1,8 +1,12 @@
-from utils.functions.models import rows_to_dict_list
+from pprint import pprint
+
+from utils.functions.models import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
-def ped_nf(cursor, pedido, especiais=False):
+def ped_nf(cursor, pedido, especiais=False, empresa=1):
     filtra_especial = "" if especiais else "AND f.NUMERO_CAIXA_ECF = 0"
+    filtra_empresa = f"AND f.CODIGO_EMPRESA = {empresa}"
     sql = f"""
         SELECT
           f.NUM_NOTA_FISCAL NF
@@ -16,14 +20,16 @@ def ped_nf(cursor, pedido, especiais=False):
         , f.NATOP_NF_NAT_OPER NAT
         , f.NATOP_NF_EST_OPER UF
         , fe.DOCUMENTO NF_DEVOLUCAO
+        , f.CODIGO_EMPRESA
         FROM FATU_050 f
         LEFT JOIN OBRF_010 fe -- nota fiscal de entrada/devolução
           ON fe.NOTA_DEV = f.NUM_NOTA_FISCAL
          AND fe.SITUACAO_ENTRADA <> 2 -- não cancelada
-        WHERE f.PEDIDO_VENDA = %s
+        WHERE f.PEDIDO_VENDA = {pedido}
+          {filtra_empresa} -- filtra_empresa
           {filtra_especial} -- filtra_especial
         ORDER BY
           f.NUM_NOTA_FISCAL
     """
-    cursor.execute(sql, [pedido])
-    return rows_to_dict_list(cursor)
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor, name_case=str.upper)
