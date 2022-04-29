@@ -1,10 +1,12 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list
+from utils.functions.models import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
-def nf_itens(cursor, nf, especiais=False):
+def nf_itens(cursor, nf, especiais=False, empresa=1):
     filtra_especial = "" if especiais else "AND i.NR_CAIXA = 0"
+    filtra_empresa = f"AND f.CODIGO_EMPRESA = {empresa}"
     sql = f"""
         SELECT
           i.SEQ_ITEM_NFISC
@@ -16,6 +18,7 @@ def nf_itens(cursor, nf, especiais=False):
         , i.VALOR_CONTABIL
         , i.PEDIDO_VENDA
         , rtc.NARRATIVA
+        , f.CODIGO_EMPRESA  
         FROM FATU_050 f -- fatura de saída
         JOIN fatu_060 i -- item de nf de saída
           ON i.ch_it_nf_cd_empr = f.codigo_empresa
@@ -27,9 +30,10 @@ def nf_itens(cursor, nf, especiais=False):
          AND rtc.GRUPO_ESTRUTURA = i.GRUPO_ESTRUTURA
          AND rtc.SUBGRU_ESTRUTURA = i.SUBGRU_ESTRUTURA
          AND rtc.ITEM_ESTRUTURA = i.ITEM_ESTRUTURA
-        WHERE f.NUM_NOTA_FISCAL = %s
+        WHERE f.NUM_NOTA_FISCAL = {nf}
+        {filtra_empresa} -- filtra_empresa
         ORDER BY
           i.SEQ_ITEM_NFISC
     """
-    cursor.execute(sql, [nf])
-    return rows_to_dict_list(cursor)
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor, name_case=str.upper)
