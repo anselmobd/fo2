@@ -47,6 +47,8 @@ class Pedido(View):
             })
             return
 
+        empresa = data[0]['CODIGO_EMPRESA']
+
         for row in data:
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
@@ -98,6 +100,7 @@ class Pedido(View):
                 'cd:novo_solicitacao',
                 args=[row['solicitacao']]
             )
+
         self.context.update({
             's_headers': ["Solicitação"],
             's_fields': ["solicitacao"],
@@ -137,7 +140,7 @@ class Pedido(View):
         })
 
         # NFs
-        nf_data = queries.pedido.ped_nf(cursor, pedido, especiais=True)
+        nf_data = queries.pedido.ped_nf(cursor, pedido, especiais=True, empresa=empresa)
         for row in nf_data:
             row['NF|LINK'] = reverse(
                 'contabil:nota_fiscal__get', args=[row['NF']])
@@ -152,10 +155,22 @@ class Pedido(View):
                 row['SITUACAO'] += '/Devolvida'
 
         self.context.update({
-            'nf_headers': ('NF', 'Data', 'Situação', 'Valor',
-                            'NF Devolução'),
-            'nf_fields': ('NF', 'DATA', 'SITUACAO', 'VALOR',
-                            'NF_DEVOLUCAO'),
+            'nf_headers': (
+                'Empresa',
+                'NF',
+                'Data',
+                'Situação',
+                'Valor',
+                'NF Devolução',
+            ),
+            'nf_fields': (
+                'CODIGO_EMPRESA',
+                'NF',
+                'DATA',
+                'SITUACAO',
+                'VALOR',
+                'NF_DEVOLUCAO',
+            ),
             'nf_data': nf_data,
         })
 
