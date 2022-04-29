@@ -98,7 +98,6 @@ def query_pedidos_filial(cursor, data):
             peds[cliente] = ', '.join([peds[cliente], row['ped']])
         else:
             peds[cliente] = row['ped']
-    pprint(peds)
     return peds
 
 
