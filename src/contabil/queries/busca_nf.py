@@ -1,9 +1,10 @@
 from pprint import pprint
 
-from utils.functions.models import rows_to_dict_list_lower
+from utils.functions.models import dictlist
+from utils.functions.queries import debug_cursor_execute
 
 
-def busca_nf(cursor, ref=None, cor=None, modelo=None):
+def busca_nf(cursor, ref=None, cor=None, modelo=None, empresa=None):
     filtro_ref = ''
     if ref is not None and ref != '':
         filtro_ref = f"AND i.GRUPO_ESTRUTURA = '{ref}'"
@@ -19,6 +20,8 @@ def busca_nf(cursor, ref=None, cor=None, modelo=None):
     filtro_cor = ''
     if cor is not None and cor != '':
         filtro_cor = f"AND i.ITEM_ESTRUTURA = '{cor}'"
+
+    filtra_empresa = "" if empresa is None else f"AND f.CODIGO_EMPRESA = {empresa}"
 
     sql = f"""
         SELECT
@@ -38,6 +41,7 @@ def busca_nf(cursor, ref=None, cor=None, modelo=None):
           || '/' || lpad(c.CGC_4, 4, '0')
           || '-' || lpad(c.CGC_2, 2, '0')
           || ')' AS CLIENTE
+        , f.CODIGO_EMPRESA
         FROM FATU_050 f -- fatura de saída
         JOIN FATU_060 i -- item de nf de saída
           ON i.ch_it_nf_cd_empr = f.codigo_empresa
@@ -59,13 +63,22 @@ def busca_nf(cursor, ref=None, cor=None, modelo=None):
           ON t.CODIGO_TRANSACAO = i.TRANSACAO
         WHERE 1=1
           -- Tussor
-          AND f.CODIGO_EMPRESA = 1
+          -- 2022-04-29 parei de filtrar isso para 
+          -- poder achar faturamento do corte
+          -- AND f.CODIGO_EMPRESA = 1
+          {filtra_empresa} -- filtra_empresa
+
           -- o faturamento tem uma transação de venda
-          AND t.TIPO_TRANSACAO = 'V'
+          -- 2022-04-29 parei de filtrar isso para 
+          -- poder achar faturamento do corte
+          -- AND t.TIPO_TRANSACAO = 'V'
+
           -- não cancelada
           AND f.COD_CANC_NFISC = 0
+
           -- produto fabricado
           AND i.NIVEL_ESTRUTURA = '1'
+
           -- filtros do form
           {filtro_ref} -- filtro_ref
           {filtro_modelo} -- filtro_modelo
@@ -76,5 +89,5 @@ def busca_nf(cursor, ref=None, cor=None, modelo=None):
         , i.ITEM_ESTRUTURA
         , tam.ORDEM_TAMANHO
     """
-    cursor.execute(sql)
-    return rows_to_dict_list_lower(cursor)
+    debug_cursor_execute(cursor, sql)
+    return dictlist(cursor)

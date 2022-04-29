@@ -44,7 +44,9 @@ class BuscaNF(O2BaseGetPostView):
             row['pedido|GLYPHICON'] = '_'
 
             row['nf|LINK'] = reverse(
-                'contabil:nota_fiscal__get', args=[row['nf']])
+                'contabil:nota_fiscal__get2',
+                args=[row['codigo_empresa'], row['nf']],
+            )
             row['nf|GLYPHICON'] = '_'
 
             row['qtd'] = int(row['qtd'])
@@ -53,7 +55,7 @@ class BuscaNF(O2BaseGetPostView):
 
             row['item'] = f"{row['nivel']}.{row['ref']}.{row['tam']}.{row['cor']}"
 
-        group = ['nf', 'data', 'cliente']
+        group = ['codigo_empresa', 'nf', 'data', 'cliente']
         group_rowspan(data, group)
 
         self.context = {
@@ -61,12 +63,12 @@ class BuscaNF(O2BaseGetPostView):
             'ref': self.ref,
             'titulo': self.title_name,
             'headers': [
-                'NF', 'Data', 'Cliente',
+                'Empr.', 'NF', 'Data', 'Cliente',
                 'Item', 'Descrição',
                 'Quantidade', 'Valor', 'Pedido'
             ],
             'fields': [
-                'nf', 'data', 'cliente',
+                'codigo_empresa', 'nf', 'data', 'cliente',
                 'item', 'narrativa',
                 'qtd', 'valor', 'pedido'
             ],
