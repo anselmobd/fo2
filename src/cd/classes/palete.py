@@ -6,6 +6,10 @@ from o2.functions.check_digit import mod1110_modchar_o
 class Plt():
 
     _PLT_SALT = 765432
+    _PLT_PREFIX_DEFAULTS = {
+        "PLT": 1,
+        "CALHA": 2,
+    }
     _PLT_PREFIX = "PLT"
     _PLT_NUM_LEN = 4
 
@@ -63,10 +67,16 @@ class Plt():
         strnum = strnum.zfill(num_len)
         return self.hashed(''.join([prefix, strnum]))
 
+    def prefix_to_int(self, prefix):
+        return 3
 
     def hash(self, code):
-        _, strnum, _ = self.split(code)
+        prefix, strnum, _ = self.split(code)
+        prefix_val = self._PLT_PREFIX_DEFAULTS.get(
+            prefix,
+            self.prefix_to_int(prefix),
+        )
         num = int(strnum)
-        num_salt = num + self._PLT_SALT
+        num_salt = (num + self._PLT_SALT) * prefix_val
         strnum_salt = str(num_salt)
         return mod1110_modchar_o(strnum_salt)
