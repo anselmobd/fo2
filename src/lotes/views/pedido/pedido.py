@@ -45,136 +45,138 @@ class Pedido(View):
             self.context.update({
                 'msg_erro': 'Pedido não encontrado',
             })
-        else:
-            for row in data:
-                row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
-                row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
-                if row['OBSERVACAO'] is None:
-                    row['OBSERVACAO'] = '-'
-                ped_cliente = row['PEDIDO_CLIENTE'].strip()
-                if ped_cliente != '':
-                    row['PEDIDO_CLIENTE|TARGET'] = '_blank'
-                    row['PEDIDO_CLIENTE|LINK'] = reverse(
-                        'producao:expedicao__get', args=[
-                            row['CLIENTE_9'],
-                            ped_cliente,
-                        ])
-                    
+            return
+
+        for row in data:
+            row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
+            row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
+            if row['OBSERVACAO'] is None:
+                row['OBSERVACAO'] = '-'
+            ped_cliente = row['PEDIDO_CLIENTE'].strip()
+            if ped_cliente != '':
+                row['PEDIDO_CLIENTE|TARGET'] = '_blank'
+                row['PEDIDO_CLIENTE|LINK'] = reverse(
+                    'producao:expedicao__get', args=[
+                        row['CLIENTE_9'],
+                        ped_cliente,
+                    ])
+
+        self.context.update({
+            'headers': ('Empresa', 'Data de emissão', 'Data de embarque',
+                        'Cliente', 'Código do pedido no cliente'),
+            'fields': ('EMPRESA', 'DT_EMISSAO', 'DT_EMBARQUE',
+                        'CLIENTE', 'PEDIDO_CLIENTE'),
+            'data': data,
+        })
+
+        self.context.update({
+            'headers2': (
+                'Status do pedido', 'Cancelamento',
+                'Situação da venda', 'Observação',
+            ),
+            'fields2': (
+                'STATUS_PEDIDO', 'CANCELAMENTO_DESCR',
+                'SITUACAO_VENDA', 'OBSERVACAO',
+            ),
+            'data2': data,
+            'reativa_pedido': pedido if data[0]['COD_CANCELAMENTO'] != 0 else None,
+        })
+
+        # Depósitos
+        d_data = queries.pedido.ped_dep_qtd(cursor, pedido)
+        self.context.update({
+            'd_headers': ('Depósito', 'Quantidade'),
+            'd_fields': ('DEPOSITO', 'QTD'),
+            'd_data': d_data,
+        })
+
+        # Solicitações
+        s_data = get_solicitacoes(cursor, pedido_destino=pedido)
+        for row in s_data:
+            row['solicitacao|TARGET'] = '_blank'
+            row['solicitacao|LINK'] = reverse(
+                'cd:novo_solicitacao',
+                args=[row['solicitacao']]
+            )
+        self.context.update({
+            's_headers': ["Solicitação"],
+            's_fields': ["solicitacao"],
+            's_data': s_data,
+        })
+
+        # OPs
+        o_data = queries.pedido.ped_op(cursor, pedido)
+        for row in o_data:
+            row['ORDEM_PRODUCAO|LINK'] = '/lotes/op/{}'.format(
+                row['ORDEM_PRODUCAO'])
+            row['REFERENCIA_PECA|LINK'] = reverse(
+                'produto:ref__get', args=[row['REFERENCIA_PECA']])
+            if row['ORDEM_PRINCIPAL'] == 0:
+                row['ORDEM_PRINCIPAL'] == ''
+            else:
+                row['ORDEM_PRINCIPAL|LINK'] = '/lotes/op/{}'.format(
+                    row['ORDEM_PRINCIPAL'])
+            row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
+            if row['DT_CORTE'] is None:
+                row['DT_CORTE'] = '-'
+            else:
+                row['DT_CORTE'] = row['DT_CORTE'].date()
+            if row['SITUACAO'] == 9:
+                row['SITUACAO'] = 'Cancelada'
+            else:
+                row['SITUACAO'] = 'Ativa'
+
+        self.context.update({
+            'o_headers': ('Stuação', 'OP', 'Tipo',
+                            'Referência', 'OP principal', 'Quantidade',
+                            'Data Digitação', 'Data Corte'),
+            'o_fields': ('SITUACAO', 'ORDEM_PRODUCAO', 'TIPO',
+                            'REFERENCIA_PECA', 'ORDEM_PRINCIPAL', 'QTD',
+                            'DT_DIGITACAO', 'DT_CORTE'),
+            'o_data': o_data,
+        })
+
+        # NFs
+        nf_data = queries.pedido.ped_nf(cursor, pedido, especiais=True)
+        for row in nf_data:
+            row['NF|LINK'] = reverse(
+                'contabil:nota_fiscal__get', args=[row['NF']])
+            if row['SITUACAO'] == 1:
+                row['SITUACAO'] = 'Ativa'
+            else:
+                row['SITUACAO'] = 'Cancelada'
+
+            if row['NF_DEVOLUCAO'] is None:
+                row['NF_DEVOLUCAO'] = '-'
+            else:
+                row['SITUACAO'] += '/Devolvida'
+
+        self.context.update({
+            'nf_headers': ('NF', 'Data', 'Situação', 'Valor',
+                            'NF Devolução'),
+            'nf_fields': ('NF', 'DATA', 'SITUACAO', 'VALOR',
+                            'NF_DEVOLUCAO'),
+            'nf_data': nf_data,
+        })
+
+        # Grade
+        g_header, g_fields, g_data, g_style, g_total = \
+            queries.pedido.sortimento(cursor, pedido=pedido, total='Total')
+        if len(g_data) != 0:
+            for i in range(1, len(g_fields)):
+                i_column = i + 1
+                g_style[i_column] = g_style[i_column] + \
+                    'border-left-style: solid;' \
+                    'border-left-width: thin;' \
+                    'text-align: right;'
 
             self.context.update({
-                'headers': ('Empresa', 'Data de emissão', 'Data de embarque',
-                            'Cliente', 'Código do pedido no cliente'),
-                'fields': ('EMPRESA', 'DT_EMISSAO', 'DT_EMBARQUE',
-                           'CLIENTE', 'PEDIDO_CLIENTE'),
-                'data': data,
+                'g_headers': g_header,
+                'g_fields': g_fields,
+                'g_data': g_data,
+                'g_style': g_style,
+                'g_total': g_total,
             })
-            self.context.update({
-                'headers2': (
-                    'Status do pedido', 'Cancelamento',
-                    'Situação da venda', 'Observação',
-                ),
-                'fields2': (
-                    'STATUS_PEDIDO', 'CANCELAMENTO_DESCR',
-                    'SITUACAO_VENDA', 'OBSERVACAO',
-                ),
-                'data2': data,
-                'reativa_pedido': pedido if data[0]['COD_CANCELAMENTO'] != 0 else None,
-            })
-
-            # Depósitos
-            d_data = queries.pedido.ped_dep_qtd(cursor, pedido)
-            self.context.update({
-                'd_headers': ('Depósito', 'Quantidade'),
-                'd_fields': ('DEPOSITO', 'QTD'),
-                'd_data': d_data,
-            })
-
-            # Solicitações
-            s_data = get_solicitacoes(cursor, pedido_destino=pedido)
-            for row in s_data:
-                row['solicitacao|TARGET'] = '_blank'
-                row['solicitacao|LINK'] = reverse(
-                    'cd:novo_solicitacao',
-                    args=[row['solicitacao']]
-                )
-            self.context.update({
-                's_headers': ["Solicitação"],
-                's_fields': ["solicitacao"],
-                's_data': s_data,
-            })
-
-            # OPs
-            o_data = queries.pedido.ped_op(cursor, pedido)
-            for row in o_data:
-                row['ORDEM_PRODUCAO|LINK'] = '/lotes/op/{}'.format(
-                    row['ORDEM_PRODUCAO'])
-                row['REFERENCIA_PECA|LINK'] = reverse(
-                    'produto:ref__get', args=[row['REFERENCIA_PECA']])
-                if row['ORDEM_PRINCIPAL'] == 0:
-                    row['ORDEM_PRINCIPAL'] == ''
-                else:
-                    row['ORDEM_PRINCIPAL|LINK'] = '/lotes/op/{}'.format(
-                        row['ORDEM_PRINCIPAL'])
-                row['DT_DIGITACAO'] = row['DT_DIGITACAO'].date()
-                if row['DT_CORTE'] is None:
-                    row['DT_CORTE'] = '-'
-                else:
-                    row['DT_CORTE'] = row['DT_CORTE'].date()
-                if row['SITUACAO'] == 9:
-                    row['SITUACAO'] = 'Cancelada'
-                else:
-                    row['SITUACAO'] = 'Ativa'
-            self.context.update({
-                'o_headers': ('Stuação', 'OP', 'Tipo',
-                              'Referência', 'OP principal', 'Quantidade',
-                              'Data Digitação', 'Data Corte'),
-                'o_fields': ('SITUACAO', 'ORDEM_PRODUCAO', 'TIPO',
-                             'REFERENCIA_PECA', 'ORDEM_PRINCIPAL', 'QTD',
-                             'DT_DIGITACAO', 'DT_CORTE'),
-                'o_data': o_data,
-            })
-
-            # NFs
-            nf_data = queries.pedido.ped_nf(cursor, pedido, especiais=True)
-            for row in nf_data:
-                row['NF|LINK'] = reverse(
-                    'contabil:nota_fiscal__get', args=[row['NF']])
-                if row['SITUACAO'] == 1:
-                    row['SITUACAO'] = 'Ativa'
-                else:
-                    row['SITUACAO'] = 'Cancelada'
-
-                if row['NF_DEVOLUCAO'] is None:
-                    row['NF_DEVOLUCAO'] = '-'
-                else:
-                    row['SITUACAO'] += '/Devolvida'
-
-            self.context.update({
-                'nf_headers': ('NF', 'Data', 'Situação', 'Valor',
-                               'NF Devolução'),
-                'nf_fields': ('NF', 'DATA', 'SITUACAO', 'VALOR',
-                              'NF_DEVOLUCAO'),
-                'nf_data': nf_data,
-            })
-
-            # Grade
-            g_header, g_fields, g_data, g_style, g_total = \
-                queries.pedido.sortimento(cursor, pedido=pedido, total='Total')
-            if len(g_data) != 0:
-                for i in range(1, len(g_fields)):
-                    i_column = i + 1
-                    g_style[i_column] = g_style[i_column] + \
-                        'border-left-style: solid;' \
-                        'border-left-width: thin;' \
-                        'text-align: right;'
-
-                self.context.update({
-                    'g_headers': g_header,
-                    'g_fields': g_fields,
-                    'g_data': g_data,
-                    'g_style': g_style,
-                    'g_total': g_total,
-                })
 
 
     def get(self, request, *args, **kwargs):
