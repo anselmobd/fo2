@@ -17,11 +17,12 @@ class NotaFiscal(View):
     template_name = 'contabil/nota_fiscal.html'
     title_name = 'Nota fiscal'
 
-    def mount_context(self, cursor, nf):
+    def mount_context(self, cursor, nf, empresa):
         context = {'nf': nf}
 
         # informações gerais
-        data = queries.nf_inform(cursor, nf, especiais=True)
+        data = queries.nf_inform(
+            cursor, nf, especiais=True, empresa=empresa)
         if len(data) == 0:
             context.update({
                 'msg_erro': 'Nota fiscal não encontrada',
@@ -45,7 +46,7 @@ class NotaFiscal(View):
             })
 
             # itens
-            i_data = queries.nf_itens(cursor, nf, especiais=True)
+            i_data = queries.nf_itens(cursor, nf, especiais=True, empresa=empresa)
             max_digits = 0
             for row in i_data:
                 if row['PEDIDO_VENDA'] == 0:
@@ -106,9 +107,11 @@ class NotaFiscal(View):
         form.data = form.data.copy()
         if 'nf' in kwargs:
             form.data['nf'] = kwargs['nf']
+            form.data['empresa'] = 1
         if form.is_valid():
             nf = form.cleaned_data['nf']
+            empresa = form.cleaned_data['empresa']
             cursor = db_cursor_so(request)
-            context.update(self.mount_context(cursor, nf))
+            context.update(self.mount_context(cursor, nf, empresa))
         context['form'] = form
         return render(request, self.template_name, context)
