@@ -225,7 +225,7 @@ def query_completa(
     return dados
 
 
-def query(cursor, data=None):
+def produzido_no_dia(cursor, data=None):
     data_value = (
         f"DATE '{data}'"
     ) if data else 'NULL'
