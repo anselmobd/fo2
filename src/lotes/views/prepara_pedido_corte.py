@@ -36,7 +36,7 @@ class PreparaPedidoCorte(View):
             if re.search('^\[MPCFM\] ', dados[0]['OBSERVACAO']):
                 return ('ERRO', "Pedido já preparado!")
 
-        dados, clientes = producao_ops_finalizadas.producao_ops_completadas(
+        dados, clientes = producao_ops_finalizadas.query(
             cursor, data, para_nf=True, cliente_slug=cliente)
 
         #   exemplos de observações:

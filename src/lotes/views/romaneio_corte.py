@@ -12,9 +12,9 @@ from utils.views import totalize_grouped_data, group_rowspan
 
 from lotes.forms.romaneio_corte import RomaneioCorteForm
 from lotes.queries.producao.romaneio_corte import (
+    pedidos_gerados,
     producao_ops_finalizadas,
     produzido_no_dia,
-    pedidos_gerados,
 )
 
 
@@ -36,9 +36,9 @@ class RomaneioCorte(O2BaseGetPostView):
         if self.tipo == 'p':  # Visualiza a produção do estágio 16 na data
             dados = produzido_no_dia.query(self.cursor, self.data)
         elif self.tipo == 'c':  # Visualiza OPs completadas no estágio 16 na data
-            dados = producao_ops_finalizadas.producao_ops_completadas(self.cursor, self.data)
+            dados = producao_ops_finalizadas.query(self.cursor, self.data)
         elif self.tipo == 'n':  # Gera pedidos para NF (OPs completadas no estágio 16 na data)
-            dados, clientes = producao_ops_finalizadas.producao_ops_completadas(self.cursor, self.data, para_nf=True)
+            dados, clientes = producao_ops_finalizadas.query(self.cursor, self.data, para_nf=True)
         elif self.tipo == 'g':  # Pedidos gerados para NF
             dados, clientes = pedidos_gerados.query(self.cursor, self.data)
 
