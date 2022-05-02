@@ -11,21 +11,10 @@ from lotes.queries.pedido.ped_alter import (
 )
 
 
-def query(
-        cursor, data=None, para_nf=False,
-        cliente=None, cliente_slug=None):
+def query(cursor, data=None, para_nf=False, cliente_slug=None):
     data_value = (
         f"DATE '{data}'"
     ) if data else 'NULL'
-
-    filtra_cliente = f"""--
-        AND (
-          CASE WHEN op.PEDIDO_VENDA = 0
-          THEN 'ESTOQUE' 
-          ELSE COALESCE(cli.FANTASIA_CLIENTE, cli.NOME_CLIENTE)
-          END
-        ) = '{cliente}'
-    """ if cliente else ''
 
     sql = f"""
         WITH
@@ -109,7 +98,6 @@ def query(
          AND cli.CGC_4 = ped.CLI_PED_CGC_CLI4
          AND cli.CGC_2 = ped.CLI_PED_CGC_CLI2
         WHERE filtro.EST = l.CODIGO_ESTAGIO 
-          {filtra_cliente} -- filtra_cliente
         GROUP BY 
           l.ORDEM_PRODUCAO
         , l.PROCONF_NIVEL99
