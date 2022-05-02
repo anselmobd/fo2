@@ -12,7 +12,7 @@ from lotes.queries.pedido.ped_alter import (
     altera_pedido_itens,
 )
 from lotes.queries.pedido.mensagem_nf import cria_mens_nf
-from lotes.queries.producao.romaneio_corte import producao_ops_completadas
+from lotes.queries.producao.romaneio_corte import producao_ops_finalizadas
 from lotes.views.prepara_pedido_compra_matriz import cria_pedido_compra_matriz
 
 
@@ -36,7 +36,7 @@ class PreparaPedidoCorte(View):
             if re.search('^\[MPCFM\] ', dados[0]['OBSERVACAO']):
                 return ('ERRO', "Pedido já preparado!")
 
-        dados, clientes = producao_ops_completadas.producao_ops_completadas(
+        dados, clientes = producao_ops_finalizadas.producao_ops_completadas(
             cursor, data, para_nf=True, cliente_slug=cliente)
 
         #   exemplos de observações:
