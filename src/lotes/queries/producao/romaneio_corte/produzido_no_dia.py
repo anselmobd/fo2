@@ -4,7 +4,7 @@ from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
 
-def produzido_no_dia(cursor, data=None):
+def query(cursor, data=None):
     data_value = (
         f"DATE '{data}'"
     ) if data else 'NULL'
