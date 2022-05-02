@@ -11,20 +11,15 @@ from lotes.queries.pedido.ped_alter import (
 )
 
 
-def query(cursor, data=None, para_nf=False, cliente_slug=None):
-    data_value = (
-        f"DATE '{data}'"
-    ) if data else 'NULL'
-
+def query(cursor, data, para_nf=False, cliente_slug=None):
     sql = f"""
         WITH
           filtro AS 
         (
           SELECT 
             16 EST
-          , {data_value} DT 
+          , '{data}' DT 
           FROM dual 
-          WHERE {data_value} IS NOT NULL
         )
         , op_algum_mov AS 
         ( SELECT DISTINCT 
