@@ -35,6 +35,8 @@ class RomaneioCorte(O2BaseGetPostView):
             dados = romaneio_corte.query_completa(self.cursor, self.data)
         elif self.tipo == 'n':  # Gera pedidos para NF (OPs completadas no estágio 16 na data)
             dados, clientes = romaneio_corte.query_completa(self.cursor, self.data, para_nf=True)
+        elif self.tipo == 'g':  # Pedidos gerados para NF
+            dados, clientes = romaneio_corte.gerados(self.cursor, self.data)
 
         if not dados:
             return
