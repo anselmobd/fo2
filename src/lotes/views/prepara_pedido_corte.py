@@ -36,7 +36,8 @@ class PreparaPedidoCorte(View):
             if re.search('^\[MPCFM\] ', dados[0]['OBSERVACAO']):
                 return ('ERRO', "Pedido já preparado!")
 
-        dados, clientes = romaneio_corte.query_completa(cursor, data, para_nf=True, cliente_slug=cliente)
+        dados, clientes = romaneio_corte.producao_ops_completadas(
+            cursor, data, para_nf=True, cliente_slug=cliente)
 
         #   exemplos de observações:
         # MPCFM - Movimentação de Peças Cortadas da Filial p/ Matriz; Data: 2022-03-16

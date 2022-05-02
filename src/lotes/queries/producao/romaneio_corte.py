@@ -11,7 +11,7 @@ from lotes.queries.pedido.ped_alter import (
 )
 
 
-def query_completa(
+def producao_ops_completadas(
         cursor, data=None, para_nf=False,
         cliente=None, cliente_slug=None):
     data_value = (
