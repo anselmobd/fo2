@@ -28,11 +28,12 @@ class RomaneioCorte(O2BaseGetPostView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
 
-        if self.tipo == 'p':
+        dados = []
+        if self.tipo == 'p':  # Visualiza a produção do estágio 16 na data
             dados = romaneio_corte.query(self.cursor, self.data)
-        elif self.tipo == 'c':
+        elif self.tipo == 'c':  # Visualiza OPs completadas no estágio 16 na data
             dados = romaneio_corte.query_completa(self.cursor, self.data)
-        else:  # if self.tipo == 'n':
+        elif self.tipo == 'n':  # Gera pedidos para NF (OPs completadas no estágio 16 na data)
             dados, clientes = romaneio_corte.query_completa(self.cursor, self.data, para_nf=True)
 
         if not dados:
