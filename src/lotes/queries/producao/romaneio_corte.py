@@ -206,7 +206,7 @@ def query_completa(
                 if pedido_matriz:
                     cliaux['pedido_matriz'] = pedido_matriz[0]['pedido_compra']
                 else:
-                    cliaux['pedido_matriz'] = '+'
+                    cliaux['pedido_matriz'] = '-'
             else:
                 cliaux['pedido_filial'] = '-'
                 cliaux['pedido_matriz'] = '-'
