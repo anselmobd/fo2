@@ -21,8 +21,6 @@ def query(cursor, data):
                 , {nf_ped['ped']} pedido_filial
                 , pv.OBSERVACAO obs
                 , pvi.CD_IT_PE_NIVEL99 ||'.'|| pvi.CD_IT_PE_GRUPO ||'.'|| pvi.CD_IT_PE_SUBGRUPO  ||'.'|| pvi.CD_IT_PE_ITEM item
-                , 1 mov_qt
-                , 1 op
                 , pvi.QTDE_PEDIDA mov_qtd
                 from PEDI_100 pv
                 join PEDI_110 pvi

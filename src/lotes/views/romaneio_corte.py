@@ -42,18 +42,19 @@ class RomaneioCorte(O2BaseGetPostView):
             dados = producao_ops_finalizadas.query_base(self.cursor, self.data)
         elif self.tipo == 'n':  # Gera pedidos para NF (OPs completadas no estágio 16 na data)
             dados, clientes = producao_ops_finalizadas.query(self.cursor, self.data, para_nf=True)
-        elif self.tipo == 'g':  # Pedidos gerados para NF
+        elif self.tipo == 'g':  # Pedidos gerados para NF e faturados
             dados = pedidos_gerados.query(self.cursor, self.data)
 
         if not dados:
             return
 
-        for row in dados:
-            row['op|TARGET'] = '_blank'
-            row['op|LINK'] = reverse(
-                'producao:op__get',
-                args=[row['op']],
-            )
+        if self.tipo in ('p', 'c'):
+            for row in dados:
+                row['op|TARGET'] = '_blank'
+                row['op|LINK'] = reverse(
+                    'producao:op__get',
+                    args=[row['op']],
+                )
 
         if self.tipo == 'p':
             group = ['cliente']
