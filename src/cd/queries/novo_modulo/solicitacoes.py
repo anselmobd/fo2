@@ -60,6 +60,8 @@ def get_solicitacoes(
         , sum(1) lt
         , sum(sl.QTDE) qt
         , max(sl.INCLUSAO) inclusao
+        , LISTAGG(DISTINCT sl.PEDIDO_DESTINO, ', ')
+          WITHIN GROUP (ORDER BY sl.PEDIDO_DESTINO) pedidos_destino
         FROM pcpc_044 sl -- solicitação / lote 
         -- Na tabela de solicitações aparece a OP de expedição também como
         -- reservada, com situação 4. Para tentar evitar isso, não listo

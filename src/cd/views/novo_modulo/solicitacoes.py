@@ -91,6 +91,7 @@ class Solicitacoes(O2BaseGetPostView):
                 'Fin.L.',
                 'Fin.Q.',
                 'Inclusão',
+                # 'Peds.Dest.',
             ],
             'fields': [
                 'solicitacao',
@@ -111,6 +112,7 @@ class Solicitacoes(O2BaseGetPostView):
                 'lf',
                 'qf',
                 'inclusao',
+                # 'pedidos_destino',
             ],
             'style': untuple_keys_concat({
                 tuple(range(2, 19)): 'text-align: right;',
