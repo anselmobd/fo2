@@ -8,6 +8,8 @@ from fo2.connections import db_cursor_so
 
 from utils.views import totalize_grouped_data, group_rowspan
 
+from cd.queries.novo_modulo.solicitacoes import get_solicitacoes
+
 import lotes.forms as forms
 import lotes.models as models
 import lotes.queries as queries
@@ -126,8 +128,37 @@ class Expedicao(View):
             })
             return context
 
+        pedidos = list(set([
+            row['PEDIDO_VENDA']
+            for row in data
+        ]))
+
+        solict_pedidos = {}
+        s_dados = get_solicitacoes(cursor, pedido_destino=pedidos)
+        for row in s_dados:
+            pedidos_destino_list = map(
+                str.strip,
+                row['pedidos_destino'].split(',')
+            )
+            for pedido in pedidos_destino_list:
+                ped = int(pedido)
+                if ped not in solict_pedidos:
+                    solict_pedidos[(ped)] = []
+                solict_pedidos[ped].append(row['solicitacao'])
+
+        for ped in solict_pedidos:
+            solict_pedidos[ped] = ', '.join(map(str, solict_pedidos[ped]))
+        pprint(solict_pedidos)
+
         qtd_total = 0
         for row in data:
+            if row['PEDIDO_VENDA'] in solict_pedidos:
+                row['SOLICITACAO'] = solict_pedidos[row['PEDIDO_VENDA']]
+                row['SOLICITACAO|TARGET'] = '_blank'
+                row['SOLICITACAO|LINK'] = reverse(
+                    'cd:novo_solicitacao', args=[row['SOLICITACAO']])
+            else:
+                row['SOLICITACAO'] = '-'
             qtd_total += row['QTD']
             row['DT_EMISSAO'] = row['DT_EMISSAO'].date()
             row['DT_EMBARQUE'] = row['DT_EMBARQUE'].date()
@@ -185,7 +216,7 @@ class Expedicao(View):
                 )
 
         if detalhe not in ['p', 'o']:
-            group = ['PEDIDO_VENDA', 'PEDIDO_CLIENTE',
+            group = ['PEDIDO_VENDA', 'SOLICITACAO', 'PEDIDO_CLIENTE',
                      'DT_EMISSAO', 'DT_EMBARQUE',
                      'CLIENTE']
             totalize_grouped_data(data, {
@@ -197,6 +228,7 @@ class Expedicao(View):
             group_rowspan(data, group)
 
         headers = ['Pedido Tussor']
+        headers.append('Solicitação')
         if detalhe == 'p':
             headers.append('GTIN OK')
         headers.append('Pedido cliente')
@@ -215,6 +247,7 @@ class Expedicao(View):
         headers.append('Quant.')
 
         fields = ['PEDIDO_VENDA']
+        fields.append('SOLICITACAO')
         if detalhe == 'p':
             fields.append('GTIN_OK')
         fields.append('PEDIDO_CLIENTE')
@@ -233,7 +266,7 @@ class Expedicao(View):
             fields.append('TAM')
         fields.append('QTD')
 
-        quant_col = 7
+        quant_col = 8
         # if detalhe in ('r', 'c'):
         #     quant_col += 0
         if detalhe == 'c':
