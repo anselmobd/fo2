@@ -1,4 +1,5 @@
 from pprint import pprint
+from typing import Iterable
 
 from utils.functions.models import dictlist
 from utils.functions.queries import debug_cursor_execute
@@ -15,9 +16,17 @@ def get_solicitacoes(
         AND sl.SOLICITACAO = {solicitacao}
     """ if solicitacao else ''
 
-    filtra_pedido_destino = f"""--
-        AND sl.PEDIDO_DESTINO = {pedido_destino}
-    """ if pedido_destino else ''
+    if pedido_destino:
+        if isinstance(pedido_destino, Iterable):
+            condicao = ", ".join(map(str, pedido_destino))
+            condicao = f" IN ({condicao})"
+        else:
+            condicao = f"= {pedido_destino}"
+        filtra_pedido_destino = f"""--
+            AND sl.PEDIDO_DESTINO {condicao}
+        """
+    else:
+        filtra_pedido_destino = ""
 
     filtra_ref_destino = f"""--
         AND ( ( sl.GRUPO_DESTINO = '00000'
