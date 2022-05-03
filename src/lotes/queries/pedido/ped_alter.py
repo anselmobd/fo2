@@ -238,10 +238,10 @@ def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
         SELECT
           {pedido_compra} -- NUM_PED_COMPRA
         , pvi.SEQ_ITEM_PEDIDO -- SEQ_ITEM_PEDIDO
-        , pvi.CD_IT_PE_NIVEL99 -- '9' -- ITEM_100_NIVEL99
-        , pvi.CD_IT_PE_GRUPO -- 'ET066' -- ITEM_100_GRUPO
-        , pvi.CD_IT_PE_SUBGRUPO -- 'UNI' -- ITEM_100_SUBGRUPO
-        , pvi.CD_IT_PE_ITEM -- '0000UN' -- ITEM_100_ITEM
+        , pvi.CD_IT_PE_NIVEL99 -- ITEM_100_NIVEL99
+        , pvi.CD_IT_PE_GRUPO -- ITEM_100_GRUPO
+        , pvi.CD_IT_PE_SUBGRUPO -- ITEM_100_SUBGRUPO
+        , pvi.CD_IT_PE_ITEM -- ITEM_100_ITEM
         , i.NARRATIVA -- DESCRICAO_ITEM
         , 'UN' -- UNIDADE_MEDIDA
         , pvi.QTDE_PEDIDA -- QTDE_PEDIDA_ITEM
@@ -257,7 +257,7 @@ def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
         , 0 -- SEQ_ITEM_REQ
         , 0 -- COD_CANCELAMENTO
         , NULL -- DT_CANCELAMENTO
-        , 2 -- SITUACAO_ITEM
+        , 1 -- SITUACAO_ITEM
         , 0 -- NUMERO_COLETA
         , 128 -- CODIGO_CONTABIL -- semi-acabado MD
         , 0 -- PERC_ENC_FINAN
@@ -279,7 +279,7 @@ def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
         , 0 -- CNPJ9_DESTINO
         , 0 -- CNPJ4_DESTINO
         , 0 -- CNPJ2_DESTINO
-        , 5 -- COD_APLICACAO -- material intermadiário
+        , 5 -- COD_APLICACAO -- material intermediário
         , 0 -- ORIGEM_ITEM
         , NULL -- NUMERO_COTACAO
         , NULL -- QTDE_A_ENTREGAR
@@ -290,12 +290,12 @@ def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
         , 0 -- CODIGO_TRANSACAO
         FROM PEDI_100 pvc -- capa de pedido de compra
         JOIN PEDI_110 pvi -- item de pedido de compra
-        ON pvi.PEDIDO_VENDA = pvc.PEDIDO_VENDA
+          ON pvi.PEDIDO_VENDA = pvc.PEDIDO_VENDA
         LEFT JOIN basi_010 i -- item 
-        ON i.NIVEL_ESTRUTURA = pvi.CD_IT_PE_NIVEL99
-        AND i.GRUPO_ESTRUTURA = pvi.CD_IT_PE_GRUPO
-        AND i.SUBGRU_ESTRUTURA = pvi.CD_IT_PE_SUBGRUPO
-        AND i.ITEM_ESTRUTURA = pvi.CD_IT_PE_ITEM
+          ON i.NIVEL_ESTRUTURA = pvi.CD_IT_PE_NIVEL99
+         AND i.GRUPO_ESTRUTURA = pvi.CD_IT_PE_GRUPO
+         AND i.SUBGRU_ESTRUTURA = pvi.CD_IT_PE_SUBGRUPO
+         AND i.ITEM_ESTRUTURA = pvi.CD_IT_PE_ITEM
         WHERE 1=1
           AND pvc.PEDIDO_VENDA = {pedido_filial}
     """
