@@ -108,6 +108,12 @@ def pedido_matriz_de_pedido_filial(cursor, pedido_filial):
     sql = f"""
         SELECT 
           pcc.*
+        , (
+            SELECT
+              count(*)
+            FROM OBRF_015 nfei
+            WHERE nfei.PEDIDO_COMPRA = pcc.PEDIDO_COMPRA
+          ) itens_nf_entrada
         FROM SUPR_090 pcc, PEDI_100 pvc
         WHERE 1=1
           AND pvc.PEDIDO_VENDA = {pedido_filial}
@@ -120,6 +126,8 @@ def pedido_matriz_de_pedido_filial(cursor, pedido_filial):
           AND pcc.TIME_PEDIDO = TIMESTAMP '1970-01-01 00:00:00.000000'
           AND pcc.VENDEDOR_CONTATO LIKE '[PED.FILIAL:%'
           AND pcc.VENDEDOR_CONTATO = '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']'
+          --
+          AND pcc.COD_CANCELAMENTO = 0
     """
     debug_cursor_execute(cursor, sql)
     return rows_to_dict_list_lower(cursor)
