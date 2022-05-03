@@ -139,17 +139,6 @@ class RomaneioCorte(O2BaseGetPostView):
         elif self.tipo == 'g':
 
             for row in dados:
-                row['pedido_filial|GLYPHICON'] = '_'
-                row['pedido_filial|TARGET'] = '_blank'
-                row['pedido_filial|LINK'] = reverse(
-                    'producao:pedido__get',
-                    args=[row['pedido_filial']],
-                )
-                row['pedido_filial'] = ''.join([
-                    '*',
-                    f"{row['pedido_filial']:n}",
-                ])
-
                 if row['pedido_matriz'] == '+':
                     row['pedido_matriz'] = ""
                     row['pedido_matriz|GLYPHICON'] = 'glyphicon-plus-sign'
@@ -163,6 +152,17 @@ class RomaneioCorte(O2BaseGetPostView):
                         row['pedido_matriz_nf'],
                         f"{row['pedido_matriz']:n}",
                     ])
+
+                row['pedido_filial|GLYPHICON'] = '_'
+                row['pedido_filial|TARGET'] = '_blank'
+                row['pedido_filial|LINK'] = reverse(
+                    'producao:pedido__get',
+                    args=[row['pedido_filial']],
+                )
+                row['pedido_filial'] = ''.join([
+                    '*',
+                    f"{row['pedido_filial']:n}",
+                ])
 
         if self.tipo in ('n', 'g'):
             group = ['cliente', 'pedido_filial', 'pedido_matriz', 'obs']
