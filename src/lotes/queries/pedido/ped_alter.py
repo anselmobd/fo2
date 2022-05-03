@@ -124,8 +124,8 @@ def pedido_matriz_de_pedido_filial(cursor, pedido_filial):
           AND pcc.DATA_PREV_ENTR = pvc.DATA_EMIS_VENDA 
           AND pcc.DATETIME_PEDIDO = pvc.DATA_EMIS_VENDA 
           AND pcc.TIME_PEDIDO = TIMESTAMP '1970-01-01 00:00:00.000000'
-          AND pcc.VENDEDOR_CONTATO LIKE '[PED.FILIAL:%'
-          AND pcc.VENDEDOR_CONTATO = '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']'
+          AND pcc.OBSERVACAO LIKE '[PED.FILIAL:%'
+          AND pcc.OBSERVACAO = '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']'
           --
           AND pcc.COD_CANCELAMENTO = 0
     """
@@ -167,7 +167,7 @@ def inclui_pedido_compra_matriz_capa(cursor, pedido_filial):
         , 1 -- COD_END_ENTREGA
         , 1 -- COD_END_COBRANCA
         , 1 -- CODIGO_COMPRADOR
-        , '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']' -- VENDEDOR_CONTATO
+        , NULL -- VENDEDOR_CONTATO
         , 0 -- COD_CANCELAMENTO
         , 1 -- SITUACAO_PEDIDO a emitir
         , 0 -- VALOR_FRETE
@@ -183,7 +183,7 @@ def inclui_pedido_compra_matriz_capa(cursor, pedido_filial):
         , TIMESTAMP '1970-01-01 00:00:00.000000' -- TIME_PEDIDO
         , 0 -- PESO_TOTAL
         , NULL -- EXECUTA_TRIGGER
-        , NULL -- OBSERVACAO
+        , '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']' -- OBSERVACAO
         , NULL -- DATA_CHEGADA
         , 0 -- VOLUME
         , 4 -- TIPO_FRETE_REDESPACHO
