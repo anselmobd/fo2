@@ -28,7 +28,7 @@ def query(cursor, data):
                 where 1=1
                   and pv.PEDIDO_VENDA = {nf_ped['ped']}
                 order by
-                  5
+                  pvi.SEQ_ITEM_PEDIDO 
             '''
             debug_cursor_execute(cursor, sql)
             dados_cliente = rows_to_dict_list_lower(cursor)
