@@ -36,7 +36,7 @@ class RomaneioCorte(O2BaseGetPostView):
         if self.tipo == 'p':  # Visualiza a produção do estágio 16 na data
             dados = produzido_no_dia.query(self.cursor, self.data)
         elif self.tipo == 'c':  # Visualiza OPs completadas no estágio 16 na data
-            dados = producao_ops_finalizadas.query(self.cursor, self.data)
+            dados = producao_ops_finalizadas.query_base(self.cursor, self.data)
         elif self.tipo == 'n':  # Gera pedidos para NF (OPs completadas no estágio 16 na data)
             dados, clientes = producao_ops_finalizadas.query(self.cursor, self.data, para_nf=True)
         elif self.tipo == 'g':  # Pedidos gerados para NF

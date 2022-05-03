@@ -12,6 +12,15 @@ from lotes.queries.pedido.ped_alter import (
 
 
 def query(cursor, data, para_nf=False, cliente_slug=None):
+    dados = query_base(cursor, data, cliente_slug=cliente_slug)
+    if para_nf:
+        dados, clientes = query_para_nf(cursor, dados, data)
+        return dados, clientes
+    else:
+        return dados
+
+
+def query_base(cursor, data, cliente_slug=None):
     sql = f"""
         WITH
           filtro AS 
@@ -149,60 +158,61 @@ def query(cursor, data, para_nf=False, cliente_slug=None):
             if row['cliente_slug'] == cliente_slug
         ]
 
-    if para_nf:
-        clientes = {}
-        for row in dados:
-            if row['cliente_slug'] not in clientes:
-                clientes[row['cliente_slug']] = {
-                    'cliente': row['cliente'],
-                    'pedidos': {}
-                }
-            cliaux = clientes[row['cliente_slug']]['pedidos']
-            if row['ped_cli'] not in cliaux:
-                cliaux[row['ped_cli']] = {row['op']}
-            else:
-                cliaux[row['ped_cli']].add(row['op'])
-
-        peds = query_pedidos_filial(cursor, data)
-
-        for cli in clientes:
-            cliaux = clientes[cli]
-            if cli == 'estoque':
-                ops = ', '.join(map(str, cliaux['pedidos']['-']))
-                cliaux['obs'] = f"OP({ops})"
-            else:
-                cliaux['obs'] = ''
-                sep = ''
-                for ped in cliaux['pedidos']:
-                    ops = ', '.join(map(str, cliaux['pedidos'][ped]))
-                    cliaux['obs'] += sep + f"Pedido({ped})-OP({ops})"
-                    sep = ', '
-
-            if cli in peds:
-                ped1 = peds[cli][0]
-                cliaux['pedido_filial'] = ped1['ped']
-                cliaux['pedido_filial_nf'] = '*' if ped1['nf'] else ''
-                cliaux['pedido_filial_quant'] = '+' if len(peds[cli]) > 1 else ''
-                pedido_matriz = pedido_matriz_de_pedido_filial(
-                    cursor, ped1['ped']
-                )
-                if pedido_matriz:
-                    cliaux['pedido_matriz'] = pedido_matriz[0]['pedido_compra']
-                else:
-                    cliaux['pedido_matriz'] = '-'
-            else:
-                cliaux['pedido_filial'] = '-'
-                cliaux['pedido_matriz'] = '-'
-
-        for row in dados:
-            cli_slug = row['cliente_slug']
-            cli_row = clientes[cli_slug]
-            row['obs'] = cli_row['obs']
-            row['pedido_filial'] = cli_row['pedido_filial']
-            row['pedido_filial_nf'] = cli_row.get('pedido_filial_nf', '')
-            row['pedido_filial_quant'] = cli_row.get('pedido_filial_quant', '')
-            row['pedido_matriz'] = cli_row['pedido_matriz']
-        
-        dados = dados, clientes
-
     return dados
+
+
+def query_para_nf(cursor, dados, data):
+    clientes = {}
+    for row in dados:
+        if row['cliente_slug'] not in clientes:
+            clientes[row['cliente_slug']] = {
+                'cliente': row['cliente'],
+                'pedidos': {}
+            }
+        cliaux = clientes[row['cliente_slug']]['pedidos']
+        if row['ped_cli'] not in cliaux:
+            cliaux[row['ped_cli']] = {row['op']}
+        else:
+            cliaux[row['ped_cli']].add(row['op'])
+
+    peds = query_pedidos_filial(cursor, data)
+
+    for cli in clientes:
+        cliaux = clientes[cli]
+        if cli == 'estoque':
+            ops = ', '.join(map(str, cliaux['pedidos']['-']))
+            cliaux['obs'] = f"OP({ops})"
+        else:
+            cliaux['obs'] = ''
+            sep = ''
+            for ped in cliaux['pedidos']:
+                ops = ', '.join(map(str, cliaux['pedidos'][ped]))
+                cliaux['obs'] += sep + f"Pedido({ped})-OP({ops})"
+                sep = ', '
+
+        if cli in peds:
+            ped1 = peds[cli][0]
+            cliaux['pedido_filial'] = ped1['ped']
+            cliaux['pedido_filial_nf'] = '*' if ped1['nf'] else ''
+            cliaux['pedido_filial_quant'] = '+' if len(peds[cli]) > 1 else ''
+            pedido_matriz = pedido_matriz_de_pedido_filial(
+                cursor, ped1['ped']
+            )
+            if pedido_matriz:
+                cliaux['pedido_matriz'] = pedido_matriz[0]['pedido_compra']
+            else:
+                cliaux['pedido_matriz'] = '-'
+        else:
+            cliaux['pedido_filial'] = '-'
+            cliaux['pedido_matriz'] = '-'
+
+    for row in dados:
+        cli_slug = row['cliente_slug']
+        cli_row = clientes[cli_slug]
+        row['obs'] = cli_row['obs']
+        row['pedido_filial'] = cli_row['pedido_filial']
+        row['pedido_filial_nf'] = cli_row.get('pedido_filial_nf', '')
+        row['pedido_filial_quant'] = cli_row.get('pedido_filial_quant', '')
+        row['pedido_matriz'] = cli_row['pedido_matriz']
+    
+    return dados, clientes
