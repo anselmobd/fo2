@@ -245,7 +245,7 @@ def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
         , i.NARRATIVA -- DESCRICAO_ITEM
         , 'UN' -- UNIDADE_MEDIDA
         , pvi.QTDE_PEDIDA -- QTDE_PEDIDA_ITEM
-        , 0 -- QTDE_SALDO_ITEM
+        , pvi.QTDE_PEDIDA -- QTDE_SALDO_ITEM
         , 2 -- PRECO_ITEM_COMP
         , 0 -- PERCENTUAL_DESC
         , 0 -- PERCENTUAL_IPI
@@ -279,7 +279,7 @@ def inclui_pedido_compra_matriz_itens(cursor, pedido_filial, pedido_compra):
         , 0 -- CNPJ9_DESTINO
         , 0 -- CNPJ4_DESTINO
         , 0 -- CNPJ2_DESTINO
-        , 5 -- COD_APLICACAO -- material intermediário
+        , 0 -- COD_APLICACAO
         , 0 -- ORIGEM_ITEM
         , NULL -- NUMERO_COTACAO
         , NULL -- QTDE_A_ENTREGAR
