@@ -200,6 +200,10 @@ def query_para_nf(cursor, dados, data):
             )
             if pedido_matriz:
                 cliaux['pedido_matriz'] = pedido_matriz[0]['pedido_compra']
+                cliaux['pedido_matriz_nf'] = '*' if (
+                    pedido_matriz[0]['situacao_pedido'] == 4
+                    and pedido_matriz[0]['itens_nf_entrada'] > 0
+                ) else ''
             else:
                 cliaux['pedido_matriz'] = '-'
         else:
@@ -214,5 +218,6 @@ def query_para_nf(cursor, dados, data):
         row['pedido_filial_nf'] = cli_row.get('pedido_filial_nf', '')
         row['pedido_filial_quant'] = cli_row.get('pedido_filial_quant', '')
         row['pedido_matriz'] = cli_row['pedido_matriz']
+        row['pedido_matriz_nf'] = cli_row.get('pedido_matriz_nf', '')
     
     return dados, clientes

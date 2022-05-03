@@ -56,7 +56,7 @@
     {% if dados %}
       <table>
         {% if legenda %}
-          <p>{{ legenda }}</p>
+          <p>{{ legenda|safe }}</p>
         {% endif %}
         {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
         {% include "layout/tbody_generic.html" with fields=fields data=dados group=group style=style only %}

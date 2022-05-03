@@ -110,6 +110,11 @@ class RomaneioCorte(O2BaseGetPostView):
                         f"{row['pedido_filial']:n}",
                         row['pedido_filial_quant'],
                     ])
+                if row['pedido_matriz'] != '-':
+                    row['pedido_matriz'] = ''.join([
+                        row['pedido_matriz_nf'],
+                        f"{row['pedido_matriz']:n}",
+                    ])
                 # if row['pedido_matriz'] == '+':
                 #     row['pedido_matriz'] = ""
                 #     row['pedido_matriz|GLYPHICON'] = 'glyphicon-plus-sign'
@@ -152,7 +157,8 @@ class RomaneioCorte(O2BaseGetPostView):
                     },
                 })
             self.context.update({
-                'legenda': "Pedido venda filial assinalado com '*' está faturado.",
+                'legenda': "'Pedido venda filial' assinalado com '*' está faturado.<br/>"
+                    "'Pedido compra matriz' assinalado com '*' está recebido.",
             })
 
         totalize_grouped_data(dados, {
