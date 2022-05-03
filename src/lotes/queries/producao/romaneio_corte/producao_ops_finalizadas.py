@@ -6,7 +6,7 @@ from utils.functions.models import rows_to_dict_list_lower
 from utils.functions.queries import debug_cursor_execute
 
 from lotes.queries.pedido.ped_alter import (
-    query_pedidos_filial,
+    pedidos_filial_na_data,
     pedido_matriz_de_pedido_filial,
 )
 
@@ -175,7 +175,7 @@ def query_para_nf(cursor, dados, data):
         else:
             cliaux[row['ped_cli']].add(row['op'])
 
-    peds = query_pedidos_filial(cursor, data)
+    peds = pedidos_filial_na_data(cursor, data)
 
     for cli in clientes:
         cliaux = clientes[cli]

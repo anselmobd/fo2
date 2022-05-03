@@ -64,7 +64,7 @@ def inclui_pedido_item(cursor, pedido, nat_cod, nat_uf, seq, row):
     cursor.execute(sql)
 
 
-def query_pedidos_filial(cursor, data):
+def pedidos_filial_na_data(cursor, data):
     sql = f"""
         SELECT
           p.PEDIDO_VENDA ped
