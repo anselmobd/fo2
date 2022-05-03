@@ -96,6 +96,7 @@ class RomaneioCorte(O2BaseGetPostView):
 
             for row in dados:
                 if row['pedido_filial'] != '-':
+                    row['pedido_filial|GLYPHICON'] = '_'
                     row['pedido_filial|TARGET'] = '_blank'
                     row['pedido_filial|LINK'] = reverse(
                         'producao:pedido__get',
