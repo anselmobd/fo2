@@ -124,28 +124,6 @@ class RomaneioCorte(O2BaseGetPostView):
                 #         args=[row['pedido_filial']],
                 #     )
 
-            group = ['cliente', 'pedido_filial', 'pedido_matriz', 'obs']
-            sum_fields = ['mov_qtd']
-            label_tot_field = 'obs'
-
-            headers = [
-                'Cliente',
-                ('Pedido<br/>venda<br/>filial', ),
-                ('Pedido<br/>compra<br/>matriz', ),
-                'Observação',
-                'Item',
-                'Quant.'
-            ]
-            fields = [
-                'cliente',
-                'pedido_filial',
-                'pedido_matriz',
-                'obs',
-                'item',
-                'mov_qtd'
-            ]
-            style_center = (1, 2, 3)
-            style_right = (6)
             if (self.data < datetime.date.today() and
                 has_permission(self.request, 'lotes.prepara_pedidos_filial_matriz')
             ):
@@ -159,6 +137,33 @@ class RomaneioCorte(O2BaseGetPostView):
 
         elif self.tipo == 'g':
 
+            for row in dados:
+                row['pedido_filial|GLYPHICON'] = '_'
+                row['pedido_filial|TARGET'] = '_blank'
+                row['pedido_filial|LINK'] = reverse(
+                    'producao:pedido__get',
+                    args=[row['pedido_filial']],
+                )
+                row['pedido_filial'] = ''.join([
+                    '*',
+                    f"{row['pedido_filial']:n}",
+                ])
+
+                if row['pedido_matriz'] == '+':
+                    row['pedido_matriz'] = ""
+                    row['pedido_matriz|GLYPHICON'] = 'glyphicon-plus-sign'
+                    row['pedido_matriz|TARGET'] = '_blank'
+                    row['pedido_matriz|LINK'] = reverse(
+                        'producao:prepara_pedido_compra_matriz',
+                        args=[row['pedido_filial']],
+                    )
+                else:
+                    row['pedido_matriz'] = ''.join([
+                        row['pedido_matriz_nf'],
+                        f"{row['pedido_matriz']:n}",
+                    ])
+
+        if self.tipo in ('n', 'g'):
             group = ['cliente', 'pedido_filial', 'pedido_matriz', 'obs']
             sum_fields = ['mov_qtd']
             label_tot_field = 'obs'
@@ -182,7 +187,6 @@ class RomaneioCorte(O2BaseGetPostView):
             style_center = (1, 2, 3)
             style_right = (6)
 
-        if self.tipo in ('n', 'g'):
             self.context.update({
                 'legenda': "'Pedido venda filial' assinalado com '*' está faturado.<br/>"
                     "'Pedido compra matriz' assinalado com '*' está recebido.",
