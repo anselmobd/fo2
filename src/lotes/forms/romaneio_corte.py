@@ -18,7 +18,7 @@ class RomaneioCorteForm(forms.Form):
     )
     CHOICES = [
         ('n', 'Gera pedidos para NF (OPs completadas no estágio 16 na data)'),
-        # ('g', 'Pedidos gerados para NF'),
+        ('g', 'Pedidos gerados para NF'),
         ('c', 'Visualiza OPs completadas no estágio 16 na data'),
         ('p', 'Visualiza a produção do estágio 16 na data'),
     ]

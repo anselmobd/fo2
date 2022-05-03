@@ -43,7 +43,7 @@ class RomaneioCorte(O2BaseGetPostView):
         elif self.tipo == 'n':  # Gera pedidos para NF (OPs completadas no estágio 16 na data)
             dados, clientes = producao_ops_finalizadas.query(self.cursor, self.data, para_nf=True)
         elif self.tipo == 'g':  # Pedidos gerados para NF
-            dados, clientes = pedidos_gerados.query(self.cursor, self.data)
+            dados = pedidos_gerados.query(self.cursor, self.data)
 
         if not dados:
             return
@@ -95,7 +95,7 @@ class RomaneioCorte(O2BaseGetPostView):
             style_center = (2, 3)
             style_right = (6)
 
-        else:  # if self.tipo == 'n':
+        elif self.tipo == 'n':
 
             for row in dados:
                 if row['pedido_filial'] != '-':
@@ -156,6 +156,33 @@ class RomaneioCorte(O2BaseGetPostView):
                         if clientes[c]['pedido_filial'] == '-'
                     },
                 })
+
+        elif self.tipo == 'g':
+
+            group = ['cliente', 'pedido_filial', 'pedido_matriz', 'obs']
+            sum_fields = ['mov_qtd']
+            label_tot_field = 'obs'
+
+            headers = [
+                'Cliente',
+                ('Pedido<br/>venda<br/>filial', ),
+                ('Pedido<br/>compra<br/>matriz', ),
+                'Observação',
+                'Item',
+                'Quant.'
+            ]
+            fields = [
+                'cliente',
+                'pedido_filial',
+                'pedido_matriz',
+                'obs',
+                'item',
+                'mov_qtd'
+            ]
+            style_center = (1, 2, 3)
+            style_right = (6)
+
+        if self.tipo in ('n', 'g'):
             self.context.update({
                 'legenda': "'Pedido venda filial' assinalado com '*' está faturado.<br/>"
                     "'Pedido compra matriz' assinalado com '*' está recebido.",
