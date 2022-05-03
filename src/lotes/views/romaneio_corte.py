@@ -1,6 +1,8 @@
 import datetime
+import locale
 from pprint import pprint
 
+from django.conf import settings
 from django.urls import reverse
 
 from fo2.connections import db_cursor_so
@@ -31,6 +33,7 @@ class RomaneioCorte(O2BaseGetPostView):
 
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
+        locale.setlocale(locale.LC_ALL, settings.LOCAL_LOCALE)
 
         dados = []
         if self.tipo == 'p':  # Visualiza a produção do estágio 16 na data
@@ -104,7 +107,7 @@ class RomaneioCorte(O2BaseGetPostView):
                     )
                     row['pedido_filial'] = ''.join([
                         row['pedido_filial_nf'],
-                        str(row['pedido_filial']),
+                        f"{row['pedido_filial']:n}",
                         row['pedido_filial_quant'],
                     ])
                 # if row['pedido_matriz'] == '+':

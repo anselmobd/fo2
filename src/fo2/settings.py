@@ -297,6 +297,8 @@ FORMAT_MODULE_PATH = [
     'fo2.formats',
 ]
 
+LOCAL_LOCALE = ('pt_BR', 'UTF-8')
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
