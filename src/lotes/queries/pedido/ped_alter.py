@@ -167,7 +167,7 @@ def inclui_pedido_compra_matriz_capa(cursor, pedido_filial):
         , 1 -- COD_END_ENTREGA
         , 1 -- COD_END_COBRANCA
         , 1 -- CODIGO_COMPRADOR
-        , NULL -- VENDEDOR_CONTATO
+        , '[PED.FILIAL:' || pvc.PEDIDO_VENDA || ']' -- VENDEDOR_CONTATO
         , 0 -- COD_CANCELAMENTO
         , 1 -- SITUACAO_PEDIDO a emitir
         , 0 -- VALOR_FRETE
