@@ -34,12 +34,9 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
     if ref is None:
         filter_ref = ''
     elif isinstance(ref, str):
-        if ref[0] == '<':
+        if ref[0] in ['<', '>']:
+            condicao = ref[0]
             ref = ref[1:]
-            condicao = '<'
-        elif ref[0] == '>':
-            ref = ref[1:]
-            condicao = '>'
         else:
             condicao = '='
         filter_ref = f"and l.PROCONF_GRUPO {condicao} '{ref}'"
