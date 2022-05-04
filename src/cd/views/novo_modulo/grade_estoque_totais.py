@@ -15,7 +15,10 @@ from utils.functions.strings import only_digits
 from comercial.queries import itens_tabela_preco
 
 
-from utils.functions.dictlist.operacoes_grade import OperacoesGrade
+from utils.functions.dictlist import (
+    operacoes_grade,
+    operacoes_dictlist,
+)
 
 import cd.forms
 from cd.queries.novo_modulo.lotes import lotes_em_estoque
@@ -48,7 +51,8 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         p = Perf(id='GradeEstoqueTotais', on=True)
 
         self.cursor = db_cursor_so(self.request)
-        og = OperacoesGrade()
+        og = operacoes_grade.OperacoesGrade()
+        odl = operacoes_dictlist.OperacoesDictList()
 
         modelos_por_pagina = 20
         if self.usa_paginador == 'n':
@@ -107,6 +111,8 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         p.prt('pedido')
         solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=filtra_ref)
         p.prt('solicitado')
+        ped_solit = odl.merge(pedido, solicitado, ['op', 'oc'], ['qtd'])
+        p.prt('ped_solit')
 
         grades = []
         modelo_ant = -1
@@ -130,26 +136,35 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                 gzerada = og.update_gzerada(gzerada, grade_solicitado_ref)
             p.prt(f"{referencia} grade_solicitado_ref")
 
+            grade_ped_solit_ref = self.grade_dados(ped_solit, referencia)
+            p.prt(f"{referencia} grade_ped_solit_ref")
+
             grade_invent_ref = og.soma_grades(gzerada, grade_invent_ref)
             p.prt(f"{referencia} soma_grades grade_invent_ref")
 
             if grade_pedido_ref['total'] != 0:
                 grade_pedido_ref = og.soma_grades(gzerada, grade_pedido_ref)
                 p.prt(f"{referencia} soma_grades grade_pedido_ref")
+
             if grade_solicitado_ref['total'] != 0:
                 grade_solicitado_ref = og.soma_grades(gzerada, grade_solicitado_ref)
                 p.prt(f"{referencia} soma_grades grade_solicitado_ref")
+
+            grade_ped_solit_ref = og.soma_grades(gzerada, grade_ped_solit_ref)
+            p.prt(f"{referencia} soma_grades grade_ped_solit_ref")
 
             if grade_pedido_ref['total'] == 0 and grade_solicitado_ref['total'] == 0:
                 grade_disponivel_ref = grade_invent_ref
             else:
                 grade_disponivel_ref = copy.deepcopy(grade_invent_ref)
-                if grade_pedido_ref['total'] != 0:
-                    grade_disponivel_ref = og.subtrai_grades(
-                        grade_disponivel_ref, grade_pedido_ref)
-                if grade_solicitado_ref['total'] != 0:
-                    grade_disponivel_ref = og.subtrai_grades(
-                        grade_disponivel_ref, grade_solicitado_ref)
+                # if grade_pedido_ref['total'] != 0:
+                #     grade_disponivel_ref = og.subtrai_grades(
+                #         grade_disponivel_ref, grade_pedido_ref)
+                # if grade_solicitado_ref['total'] != 0:
+                #     grade_disponivel_ref = og.subtrai_grades(
+                #         grade_disponivel_ref, grade_solicitado_ref)
+                grade_disponivel_ref = og.subtrai_grades(
+                    grade_disponivel_ref, grade_ped_solit_ref)
             p.prt(f"{referencia} grade_disponivel_ref")
 
             grade_ref = {
