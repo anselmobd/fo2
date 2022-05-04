@@ -65,7 +65,10 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                 for row in itens_tabela
             ])
 
-        referencias = lotes_em_estoque(self.cursor, colecao=colecao_codigo, get='ref')
+        self.referencia = None if self.referencia == '' else self.referencia
+
+        referencias = lotes_em_estoque(
+            self.cursor, ref=self.referencia, colecao=colecao_codigo, get='ref')
         p.prt('referencias')
 
         modelos = sorted(list(set([

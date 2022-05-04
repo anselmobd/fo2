@@ -697,12 +697,30 @@ class GradeEstoqueTotaisForm(forms.Form):
     ]
     apresenta = forms.ChoiceField(
         choices=CHOICES, initial='t')
+
     colecao = forms.ChoiceField(
         label='Coleção da referência',
         required=False, initial=None)
+
     tabela = forms.ChoiceField(
         label='Modelos da tabela de preços',
         required=False, initial=None)
+
+    referencia = forms.CharField(
+        label='Referência',
+        required=False,
+        min_length=1,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
+                'type': 'string',
+                'style': 'text-transform:uppercase;',
+                'placeholder': '0...',
+            }
+        )
+    )
+
     CHOICES_PAGINADOR = [
         ('s', 'Sim'),
         ('n', 'Não'),
@@ -742,6 +760,13 @@ class GradeEstoqueTotaisForm(forms.Form):
             ))
         self.fields['tabela'].choices = CHOICES_TABELA
 
+    def clean_referencia(self):
+        cleaned = self.cleaned_data['referencia']
+        cleaned = '' if len(cleaned) == 0 else cleaned.upper().zfill(5)
+        data = self.data.copy()
+        data['referencia'] = cleaned
+        self.data = data
+        return cleaned
 
 class SolicitacoesForm(forms.Form):
     solicitacao = forms.CharField(

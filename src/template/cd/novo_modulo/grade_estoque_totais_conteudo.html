@@ -9,8 +9,7 @@
   <p>Inventário = Endereçado e quantidade no 63-CD.<br/>
     Pedidos = Inventário, porém apenas OPs de pedido.<br/>
     Solicitações = Endereçado, com 63-CD no roteiro e situação 2(Confirmado), 3(Programado) ou 4(Solicitado).<br/>
-    Disponível = Inventário - Pedidos - Solicitações
-  </p>
+    Disponível = Inventário - Pedidos - Solicitações</p>
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
     {% if grade.modelo %}
