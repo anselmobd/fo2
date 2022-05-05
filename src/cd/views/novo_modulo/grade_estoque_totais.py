@@ -139,8 +139,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                 if quant_refs_modelo > 1:
                     grades.append({
                         'disponivel': total_modelo,
-                        'modelo': modelo_ant,
-                        'ref': 'total',
+                        'total_modelo': modelo_ant,
                     })
                 total_modelo = None
 
@@ -221,8 +220,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         if quant_refs_modelo > 1:
             grades.append({
                 'disponivel': total_modelo,
-                'modelo': modelo_ant,
-                'ref': 'total',
+                'total_modelo': modelo_ant,
             })
 
         p.prt('for referencias')
