@@ -32,7 +32,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         self.Form_class = cd.forms.GradeEstoqueTotaisForm
         self.cleaned_data2self = True
         self.template_name = 'cd/novo_modulo/grade_estoque_totais.html'
-        self.title_name = 'Todas as grades do estoque'
+        self.title_name = 'Totais de grades do estoque'
 
     def grade_dados(self, dados, referencia):
         return filter_dictlist_to_grade_qtd(
