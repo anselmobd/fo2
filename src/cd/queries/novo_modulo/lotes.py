@@ -138,14 +138,21 @@ def refs_em_estoque(cursor):
     return dictlist(cursor)
 
 
-def lotes_em_estoque(cursor, tipo=None, ref=None, colecao=None, get=None):
+def lotes_em_estoque(cursor, tipo=None, ref=None, colecao=None, get=None, modelo=None):
     sql = sql_em_estoque(tipo=tipo, ref=ref, colecao=colecao, get=get)
     debug_cursor_execute(cursor, sql)
     dados = dictlist(cursor)
+    if modelo:
+        dados_modelo = []
     for row in dados:
         try:
-            modelo = int(only_digits(row['ref']))
+            ref_modelo = int(only_digits(row['ref']))
         except ValueError:
-            modelo = 0
-        row['modelo'] = modelo
-    return dados
+            ref_modelo = 0
+        row['modelo'] = ref_modelo
+        if ref_modelo == modelo:
+            dados_modelo.append(row)
+    if modelo:
+        return dados_modelo
+    else:
+        return dados
