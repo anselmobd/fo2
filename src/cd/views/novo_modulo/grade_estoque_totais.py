@@ -129,9 +129,20 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
 
         grades = []
         modelo_ant = -1
+        quant_refs_modelo = 1
+        total_modelo = None
         for row_ref in referencias:
             referencia = row_ref['ref']
             modelo = row_ref['modelo']
+
+            if modelo_ant not in (-1, modelo):
+                if quant_refs_modelo > 1:
+                    grades.append({
+                        'disponivel': total_modelo,
+                        'modelo': modelo_ant,
+                        'ref': 'total',
+                    })
+                total_modelo = None
 
             gzerada = None
     
@@ -180,6 +191,11 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                     grade_disponivel_ref, grade_ped_solit_ref)
             p.prt(f"{referencia} grade_disponivel_ref")
 
+            if total_modelo:
+                total_modelo = og.soma_grades(total_modelo, grade_disponivel_ref)
+            else:
+                total_modelo = copy.deepcopy(grade_disponivel_ref)
+
             grade_ref = {
                 'disponivel': grade_disponivel_ref,
                 'ref': referencia,
@@ -191,13 +207,23 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                     'solicitacoes': grade_solicitado_ref,
                 })
 
-            if modelo_ant != modelo:
+            if modelo_ant == modelo:
+                quant_refs_modelo += 1
+            else:
+                quant_refs_modelo = 1
                 grade_ref.update({
                     'modelo': modelo,
                 })
                 modelo_ant = modelo
 
             grades.append(grade_ref)
+
+        if quant_refs_modelo > 1:
+            grades.append({
+                'disponivel': total_modelo,
+                'modelo': modelo_ant,
+                'ref': 'total',
+            })
 
         p.prt('for referencias')
         self.context.update({

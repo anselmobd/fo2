@@ -12,11 +12,13 @@
     Disponível = Inventário - (junção de Pedidos e Solicitações)</p>
   {% for grade in grades %}
     <div class="mod_{{ grade.refnum|safe }}">
-    {% if grade.modelo %}
+    {% if grade.modelo and grade.ref != 'total' %}
       <hr>
       <h4 style="padding-left: 2em;">Modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.modelo|safe }}</a></b></h4>
     {% endif %}
-    {% if grade.ref %}
+    {% if grade.ref == 'total' %}
+      <h4 style="padding-left: 4em;">Total do modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.modelo|safe }}</a></b></h4>
+    {% else %}
       <h4 style="padding-left: 6em;">Referência: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
     {% endif %}
     <table class="layout">
