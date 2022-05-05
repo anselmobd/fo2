@@ -143,6 +143,8 @@ class ConteudoLocal(View):
     def get_tipo_local(self, local):
         if re.match("^P[L0-9][T0-9][0-9]{4}[A-Z]$", local):
             return self._PALETE
+        elif re.match("^CALHA[0-9]{2}[A-Z]$", local):
+            return self._PALETE
         elif re.match("^[12][A-Z]{1,2}[0-9]{4}$", local):
             return self._ENDERECO
         elif re.match("^[0-9]+$", local):
