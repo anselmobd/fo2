@@ -139,7 +139,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             modelo = row_ref['modelo']
 
             if modelo_ant not in (-1, modelo):
-                if quant_refs_modelo > 1:
+                if self.apresenta == 't' or quant_refs_modelo > 1:
                     grades.append({
                         'disponivel': total_modelo,
                         'total_modelo': modelo_ant,
@@ -207,6 +207,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                 'disponivel': grade_disponivel_ref,
                 'ref': referencia,
             }
+
             if self.apresenta == 'g':
                 grade_ref.update({
                     'inventario': grade_invent_ref,
@@ -223,9 +224,10 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                 })
                 modelo_ant = modelo
 
-            grades.append(grade_ref)
+            if self.apresenta != 't':
+                grades.append(grade_ref)
 
-        if quant_refs_modelo > 1:
+        if self.apresenta == 't' or quant_refs_modelo > 1:
             grades.append({
                 'disponivel': total_modelo,
                 'total_modelo': modelo_ant,

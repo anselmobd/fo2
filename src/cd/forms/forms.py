@@ -693,7 +693,8 @@ class EsvaziaPaleteForm(forms.Form):
 class GradeEstoqueTotaisForm(forms.Form):
     CHOICES = [
         ('g', 'Todas as grades'),
-        ('d', 'Apenas grade de disponibilidade'),
+        ('d', 'Apenas grades de disponibilidade'),
+        ('t', 'Apenas grades totais'),
     ]
     apresenta = forms.ChoiceField(
         choices=CHOICES, initial='t')
