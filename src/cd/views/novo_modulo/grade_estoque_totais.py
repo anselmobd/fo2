@@ -59,13 +59,13 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             modelos_por_pagina = 99999
 
         colecao_codigo = None if self.colecao == '' else self.colecao
-        
         tabela_codigo = None if self.tabela == '' else self.tabela
-
         self.referencia = None if self.referencia == '' else self.referencia
+        self.modelo = None if self.modelo == '' else int(self.modelo)
 
         referencias = lotes_em_estoque(
-            self.cursor, ref=self.referencia, colecao=colecao_codigo, get='ref')
+            self.cursor, ref=self.referencia, colecao=colecao_codigo,
+            modelo=self.modelo, get='ref')
         p.prt('referencias')
 
         if tabela_codigo:
@@ -91,10 +91,17 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             for row in referencias
             if row['modelo'] in modelos
         ])
+
         self.context.update({
             'qtd_modelos': len(modelos),
             'qtd_referencias': qtd_referencias,
         })
+
+        if qtd_referencias == 0:
+            self.context.update({
+                'erro': "Nenhuma referência selecionada",
+            })
+            return            
 
         dados_modelos, modelos = list_paginator_basic(
             modelos, modelos_por_pagina, self.page)

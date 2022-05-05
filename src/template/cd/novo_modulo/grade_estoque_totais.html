@@ -16,6 +16,9 @@
   {{ form.as_p }}
   <input type="submit" name="busca" value="Busca" onclick="o2SetPage1AndSubmit()"/>
 </form>
+{% if erro %}
+  <h4>{{ erro }}</h4>
+{% endif %}
 <br/>
 {% include "cd/novo_modulo/grade_estoque_totais_conteudo.html" %}
 {% endblock content %}
