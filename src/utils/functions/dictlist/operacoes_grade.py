@@ -115,7 +115,7 @@ class OperacoesGrade():
     def grade_filtra_linhas_zeradas(self, grd):
         grade = copy.deepcopy(grd)
         for linha in grade['data'][:-1]:
-            if linha['Total'] == 0:
+            if linha['total'] == 0:
                 grade['data'].remove(linha)
         return grade
 
