@@ -17,10 +17,15 @@
       <h4 style="padding-left: 2em;">Modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.modelo }}</a></b></h4>
     {% endif %}
     {% if grade.total_modelo %}
-      <h4 style="padding-left: 4em;">Total do modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.total_modelo }}</a></b></h4>
+      {% if grade.total_modelo == 'geral' %}
+      <hr>
+      <h4 style="padding-left: 8em;"><b>Total geral</b></h4>
+      {% else %}
+        <h4 style="padding-left: 6em;">Total do modelo: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.modelo %}">{{ grade.total_modelo }}</a></b></h4>
+      {% endif %}
     {% endif %}
     {% if grade.ref %}
-      <h4 style="padding-left: 6em;">Referência: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
+      <h4 style="padding-left: 4em;">Referência: <b><a target="_blank" href="{% url 'cd:grade_estoque' grade.ref %}">{{ grade.ref }}</a></b></h4>
     {% endif %}
     <table class="layout">
       <tr>

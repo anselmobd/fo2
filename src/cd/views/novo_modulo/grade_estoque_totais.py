@@ -131,7 +131,10 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         modelo_ant = -1
         quant_refs_modelo = 1
         total_modelo = None
+        quant_refs_geral = 0
+        total_geral = None
         for row_ref in referencias:
+            quant_refs_geral += 1
             referencia = row_ref['ref']
             modelo = row_ref['modelo']
 
@@ -195,6 +198,11 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             else:
                 total_modelo = copy.deepcopy(grade_disponivel_ref)
 
+            if total_geral:
+                total_geral = og.soma_grades(total_geral, grade_disponivel_ref)
+            else:
+                total_geral = copy.deepcopy(grade_disponivel_ref)
+
             grade_ref = {
                 'disponivel': grade_disponivel_ref,
                 'ref': referencia,
@@ -221,6 +229,12 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             grades.append({
                 'disponivel': total_modelo,
                 'total_modelo': modelo_ant,
+            })
+
+        if quant_refs_geral > 1:
+            grades.append({
+                'disponivel': og.grade_filtra_linhas_zeradas(total_geral),
+                'total_modelo': 'geral',
             })
 
         p.prt('for referencias')
