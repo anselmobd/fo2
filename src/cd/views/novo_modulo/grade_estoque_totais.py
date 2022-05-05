@@ -207,7 +207,7 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
                 'disponivel': grade_disponivel_ref,
                 'ref': referencia,
             }
-            if self.apresenta == 't':
+            if self.apresenta == 'g':
                 grade_ref.update({
                     'inventario': grade_invent_ref,
                     'pedido': grade_pedido_ref,
