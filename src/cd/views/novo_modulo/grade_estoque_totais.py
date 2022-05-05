@@ -61,13 +61,6 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         colecao_codigo = None if self.colecao == '' else self.colecao
         
         tabela_codigo = None if self.tabela == '' else self.tabela
-        if tabela_codigo:
-            tabela_chunks = tabela_codigo.split('.')
-            itens_tabela = itens_tabela_preco(self.cursor, *tabela_chunks)
-            modelos_tabela = set([
-                int(only_digits(row['grupo_estrutura']))
-                for row in itens_tabela
-            ])
 
         self.referencia = None if self.referencia == '' else self.referencia
 
@@ -75,11 +68,24 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             self.cursor, ref=self.referencia, colecao=colecao_codigo, get='ref')
         p.prt('referencias')
 
-        modelos = sorted(list(set([
-            row['modelo']
-            for row in referencias
-            if (not tabela_codigo) or (row['modelo'] in modelos_tabela)
-        ])))
+        if tabela_codigo:
+            tabela_chunks = tabela_codigo.split('.')
+            itens_tabela = itens_tabela_preco(self.cursor, *tabela_chunks)
+            modelos_tabela = set([
+                int(only_digits(row['grupo_estrutura']))
+                for row in itens_tabela
+            ])
+            modelos = sorted(list(set([
+                row['modelo']
+                for row in referencias
+                if row['modelo'] in modelos_tabela
+            ])))
+        else:
+            modelos = sorted(list(set([
+                row['modelo']
+                for row in referencias
+            ])))
+
         qtd_referencias = len([
             row
             for row in referencias
