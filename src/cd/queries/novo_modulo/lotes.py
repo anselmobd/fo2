@@ -91,6 +91,17 @@ class SqlEmEstoque():
         self.sinal = sinal
         self.fields_tuple = fields_tuple
 
+        self.available_fields = {
+            'ref': "l.PROCONF_GRUPO",
+            'per': "l.PERIODO_PRODUCAO",
+            'oc': "l.ORDEM_CONFECCAO",
+            'tam': "l.PROCONF_SUBGRUPO",
+            'ordem_tam': "tam.ORDEM_TAMANHO",
+            'cor': "l.PROCONF_ITEM",
+            'op': "l.ORDEM_PRODUCAO",
+            'qtd_prog': "l.QTDE_PECAS_PROG",
+            'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
+        }
     def sql(self):
         tipo = self.tipo
         ref = self.ref
@@ -124,18 +135,6 @@ class SqlEmEstoque():
 
         fields_tuple = fields_tuple if fields_tuple else []
         fields_set = {'ref'}.union(fields_tuple)
-
-        available_fields = {
-            'ref': "l.PROCONF_GRUPO",
-            'per': "l.PERIODO_PRODUCAO",
-            'oc': "l.ORDEM_CONFECCAO",
-            'tam': "l.PROCONF_SUBGRUPO",
-            'ordem_tam': "tam.ORDEM_TAMANHO",
-            'cor': "l.PROCONF_ITEM",
-            'op': "l.ORDEM_PRODUCAO",
-            'qtd_prog': "l.QTDE_PECAS_PROG",
-            'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
-        }
 
         distinct = False
         if get == 'ref':
@@ -196,7 +195,7 @@ class SqlEmEstoque():
 
         fields = "\n, ".join(
             [
-                f"{available_fields[field.split()[0]]} {field.split()[-1]}"
+                f"{self.available_fields[field.split()[0]]} {field.split()[-1]}"
                 for field in fields_set
             ]
         )
