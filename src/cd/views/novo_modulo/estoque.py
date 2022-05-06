@@ -37,7 +37,15 @@ class NovoEstoque(O2BaseGetPostView):
             tipo='iq',
             ref=self.referencia,
             modelo=self.modelo,
-            get='lote_qtd',
+            field_list=[
+                'tam',
+                'cor',
+                'op',
+                'per',
+                'oc',
+                'qtd_prog',
+                'qtd_dbaixa',
+            ],
             # filter={
 
             # }

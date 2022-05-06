@@ -32,10 +32,10 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+', field
       sinal: positivo ou negativo
         '+' = quantidades como estão no banco de dados
         '-' = inverte o sinal das quantidades       
-      #field_list
-      #  Lista de fields que devem ser retornados
-      #    Field pode ter alias a ser utilizado. Ex.: "qtd quanti"
-      #    obs.: ref sempre é retornado
+      field_list
+        Lista de fields que devem ser retornados
+          Field pode ter alias a ser utilizado. Ex.: "qtd quanti"
+          obs.: ref sempre é retornado
     """
 
     if ref is None:
