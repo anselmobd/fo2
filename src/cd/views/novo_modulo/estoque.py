@@ -8,7 +8,7 @@ from utils.classes import Perf
 from utils.functions.functions import untuple_keys_concat
 
 import cd.forms
-from cd.queries.novo_modulo.lotes import lotes_em_estoque
+from cd.queries.novo_modulo.lotes import LotesEmEstoque
 
 
 class NovoEstoque(O2BaseGetPostView):
@@ -32,12 +32,12 @@ class NovoEstoque(O2BaseGetPostView):
         self.referencia = None if self.referencia == '' else self.referencia
         self.modelo = None if self.modelo == '' else int(self.modelo)
 
-        lotes = lotes_em_estoque(
+        lotes_em_estoque = LotesEmEstoque(
             self.cursor,
             tipo='iq',
             ref=self.referencia,
             modelo=self.modelo,
-            field_list=[
+            fields_tuple=(
                 'tam',
                 'cor',
                 'op',
@@ -45,11 +45,10 @@ class NovoEstoque(O2BaseGetPostView):
                 'oc',
                 'qtd_prog',
                 'qtd_dbaixa',
-            ],
-            # filter={
-
-            # }
+            ),
         )
+
+        lotes = lotes_em_estoque.dados()
         
         lotes = paginator_basic(lotes, lotes_por_pagina, self.page)
         pprint(lotes.__dict__)
