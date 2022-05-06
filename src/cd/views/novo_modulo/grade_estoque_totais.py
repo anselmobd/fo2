@@ -21,7 +21,7 @@ from utils.functions.dictlist import (
 )
 
 import cd.forms
-from cd.queries.novo_modulo.lotes import lotes_em_estoque
+from cd.queries.novo_modulo.lotes import LotesEmEstoque
 
 
 class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
@@ -63,9 +63,17 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
         self.referencia = None if self.referencia == '' else self.referencia
         self.modelo = None if self.modelo == '' else int(self.modelo)
 
-        referencias = lotes_em_estoque(
-            self.cursor, ref=self.referencia, colecao=colecao_codigo,
-            modelo=self.modelo, get='ref')
+        # referencias = lotes_em_estoque(
+        #     self.cursor, ref=self.referencia, colecao=colecao_codigo,
+        #     modelo=self.modelo, get='ref')
+        lot_em_stq = LotesEmEstoque(
+            self.cursor,
+            ref=self.referencia,
+            colecao=colecao_codigo,
+            modelo=self.modelo,
+            get='ref',
+        )
+        referencias = lot_em_stq.dados()
         p.prt('referencias')
 
         if tabela_codigo:
@@ -118,12 +126,36 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             for row in referencias
         ]
 
-        inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref, get='lote_qtd')
+        # inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref, get='lote_qtd')
+        lot_em_stq = LotesEmEstoque(
+            self.cursor,
+            tipo='i',
+            ref=filtra_ref,
+            get='lote_qtd'
+        )
+        inventario = lot_em_stq.dados()
         p.prt('inventario')
-        pedido = lotes_em_estoque(self.cursor, tipo='p', ref=filtra_ref, get='lote_qtd')
+
+        # pedido = lotes_em_estoque(self.cursor, tipo='p', ref=filtra_ref, get='lote_qtd')
+        lot_em_stq = LotesEmEstoque(
+            self.cursor,
+            tipo='p',
+            ref=filtra_ref,
+            get='lote_qtd'
+        )
+        pedido = lot_em_stq.dados()
         p.prt('pedido')
-        solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=filtra_ref, get='lote_qtd')
+
+        # solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=filtra_ref, get='lote_qtd')
+        lot_em_stq = LotesEmEstoque(
+            self.cursor,
+            tipo='s',
+            ref=filtra_ref,
+            get='lote_qtd'
+        )
+        solicitado = lot_em_stq.dados()
         p.prt('solicitado')
+
         ped_solit = odl.merge(pedido, solicitado, ['op', 'oc'], ['qtd'])
         p.prt('ped_solit')
 
