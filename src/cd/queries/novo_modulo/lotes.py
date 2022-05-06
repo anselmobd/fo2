@@ -49,7 +49,6 @@ class LotesEmEstoque():
             return dados
 
 
-
 class SqlEmEstoque():
     """Monta SQL base de selecão de lotes
     - endereçados; e
@@ -61,14 +60,15 @@ class SqlEmEstoque():
         s = solicitado (situação 2, 3 ou 4) de OP com estágio 63
         iq = inventário: todos os lotes endereçados e com quantidade em qq estágio
         None = todos os lotes
-    ref: filtro de referências
-        None = não filtra
-        {condição}string = uma referência
-        condição: altera o funcionamento do filtro
-            '' = igualdade
-            '<' = menor que
-            '>' = maior que
-        list = uma lista de referências
+    ref: filtro de referências, caso não None
+        iterable = uma lista de cond_expr
+        string = cond_expr[, cond_expr]
+            É transformada em uma lista de cond_expr
+        Obs.:
+            cond_expr = [condição] valor = filtro de uma referência
+            condição: altera o funcionamento do filtro
+                None = igualdade
+                Várias condições válidas no SQL como '<', '>', '>='...
     get
         ref = busca apenas o campo referência (com distinct)
         None = busca apenas o campo referência (sem distinct)
@@ -102,6 +102,15 @@ class SqlEmEstoque():
             'qtd_prog': "l.QTDE_PECAS_PROG",
             'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
         }
+
+    def condicao_valor(self, ref):
+        if len(ref.split()) == 2:
+            condicao = ref.split()[0]
+            ref = str(ref.split()[1])
+        else:
+            condicao = '='
+        return condicao, ref
+
     def sql(self):
         tipo = self.tipo
         ref = self.ref
@@ -110,18 +119,27 @@ class SqlEmEstoque():
         sinal = self.sinal
         fields_tuple = self.fields_tuple
 
-        if ref is None:
-            filter_ref = ''
-        elif isinstance(ref, str):
-            if ref[0] in ['<', '>']:
-                condicao = ref[0]
-                ref = ref[1:]
-            else:
-                condicao = '='
-            filter_ref = f"and l.PROCONF_GRUPO {condicao} '{ref}'"
-        else:
-            refs = ', '.join([f"'{r}'" for r in ref])
-            filter_ref = f"and l.PROCONF_GRUPO in ({refs})"
+        filter_ref = ''
+        ref_conds = []
+        ref_in = []
+        if isinstance(ref, str):
+            ref = map(
+                str.strip,
+                ref.split(','),
+            )
+        if ref is not None:  # iterable
+            for r in ref:
+                condicao, valor = self.condicao_valor(r)
+                if condicao == '=':
+                    ref_in.append(valor)
+                else:
+                    ref_conds.append(f"l.PROCONF_GRUPO {condicao} '{valor}'")
+        if ref_in:
+            refs = ', '.join([f"'{r}'" for r in ref_in])
+            ref_conds.append(f"l.PROCONF_GRUPO in ({refs})")
+        if ref_conds:
+            filters_ref = " AND ".join(ref_conds)
+            filter_ref = f"AND {filters_ref}"
 
         join_para_colecao = ""
         filter_colecao = ""
