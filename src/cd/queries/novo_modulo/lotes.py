@@ -11,9 +11,9 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
     - no estágio 63
     Recebe:
       tipo
-        p = lotes de OPs de Pedidos
-        s = solicitado (situação 2, 3 ou 4)
-        i = inventário: todos os lotes com quantidade
+        i = inventário: todos os lotes endereçados e com quantidade no estágio 63
+        p = lotes que aparece no inventário (opção acima) e são de OPs de Pedidos
+        s = solicitado (situação 2, 3 ou 4) de OP com estágio 63
         None = todos os lotes
       ref: filtro de referências
         None = não filtra
