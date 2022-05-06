@@ -397,9 +397,8 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+', field
 
 
 def refs_em_estoque(cursor):
-    sql = sql_em_estoque(get='ref')
-    debug_cursor_execute(cursor, sql)
-    return dictlist(cursor)
+    lot_em_stq = LotesEmEstoque( cursor, get='ref')
+    return lot_em_stq.dados()
 
 
 def lotes_em_estoque(cursor, tipo=None, ref=None, colecao=None, get=None, modelo=None, field_list=None):
