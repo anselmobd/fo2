@@ -36,6 +36,15 @@ def join_non_empty(sep, lista):
     return join2(sep, [s for s in lista if str(s).strip()])
 
 
+def is_only_digits(text):
+    return all(
+        map(
+            str.isdigit,
+            [ch for ch in text]
+        )
+    )
+
+
 def only_digits(text):
     return ''.join(
         [char for char in text if char.isdigit()]
