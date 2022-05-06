@@ -229,13 +229,13 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
 
         if self.apresenta == 't' or quant_refs_modelo > 1:
             grades.append({
-                'disponivel': total_modelo,
+                'disponivel': og.grade_filtra_linhas_zeradas(total_modelo, total_field='total'),
                 'total_modelo': modelo_ant,
             })
 
         if quant_refs_geral > 1:
             grades.append({
-                'disponivel': og.grade_filtra_linhas_zeradas(total_geral),
+                'disponivel': og.grade_filtra_linhas_zeradas(total_geral, total_field='total'),
                 'total_modelo': 'geral',
             })
 

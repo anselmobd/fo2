@@ -112,10 +112,10 @@ class OperacoesGrade():
         return grade
 
 
-    def grade_filtra_linhas_zeradas(self, grd):
+    def grade_filtra_linhas_zeradas(self, grd, total_field='Total'):
         grade = copy.deepcopy(grd)
         for linha in grade['data'][:-1]:
-            if linha['total'] == 0:
+            if linha[total_field] == 0:
                 grade['data'].remove(linha)
         return grade
 
