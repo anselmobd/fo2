@@ -16,6 +16,7 @@ from cd.views import (
     vizualiza_esvaziamento,
 )
 from cd.views.novo_modulo import (
+    estoque,
     grade_estoque_totais,
     solicitacao,
     solicitacoes,
@@ -185,4 +186,7 @@ urlpatterns = [
     re_path(r'^novo/solicitacao/(?P<solicitacao>[^/]+)$',
         solicitacao.Solicitacao.as_view(), name='novo_solicitacao'),
 
+    re_path(r'^novo/estoque/(?P<ordem>.)/(?P<filtro>.+)/$',
+        estoque.Estoque.as_view(), name='novo_estoque_filtro'),
+    re_path(r'^novo/estoque/$', estoque.Estoque.as_view(), name='novo_estoque'),
 ]

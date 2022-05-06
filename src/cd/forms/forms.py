@@ -848,3 +848,18 @@ class SolicitacoesForm(forms.Form):
         if len(cleaned) == 0:
             return ''
         return cleaned.upper().zfill(5)
+
+
+class EstoqueForm(forms.Form):
+    lote = forms.CharField(
+        min_length=9,
+        max_length=9,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 9,
+                'type': 'number',
+                'autofocus': 'autofocus',
+            }
+        )
+    )
