@@ -9,10 +9,10 @@ def grade_estoque(cursor, tipo=None, ref=None):
     grade = GradeQtd(cursor, case='lower')
 
     if tipo in ['i', 's', 'p']:
-        sql_base = sql_em_estoque(tipo=tipo, ref=ref)
+        sql_base = sql_em_estoque(tipo=tipo, ref=ref, get='lote_qtd')
     if tipo == 'sp':
-        sql_base_s = sql_em_estoque(tipo='s', ref=ref)
-        sql_base_p = sql_em_estoque(tipo='p', ref=ref)
+        sql_base_s = sql_em_estoque(tipo='s', ref=ref, get='lote_qtd')
+        sql_base_p = sql_em_estoque(tipo='p', ref=ref, get='lote_qtd')
         sql_base = f"""--
             (
                 {sql_base_s}
@@ -21,9 +21,9 @@ def grade_estoque(cursor, tipo=None, ref=None):
             )
         """
     if tipo == 'i-sp':
-        sql_base_i = sql_em_estoque(tipo='i', ref=ref)
-        sql_base_s = sql_em_estoque(tipo='s', ref=ref, sinal="-")
-        sql_base_p = sql_em_estoque(tipo='p', ref=ref, sinal="-")
+        sql_base_i = sql_em_estoque(tipo='i', ref=ref, get='lote_qtd')
+        sql_base_s = sql_em_estoque(tipo='s', ref=ref, sinal="-", get='lote_qtd')
+        sql_base_p = sql_em_estoque(tipo='p', ref=ref, sinal="-", get='lote_qtd')
         sql_base = f"""--
             (
                 {sql_base_i}

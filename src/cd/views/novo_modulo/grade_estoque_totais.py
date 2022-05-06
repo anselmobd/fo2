@@ -118,11 +118,11 @@ class GradeEstoqueTotais(PermissionRequiredMixin, O2BaseGetPostView):
             for row in referencias
         ]
 
-        inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref)
+        inventario = lotes_em_estoque(self.cursor, tipo='i', ref=filtra_ref, get='lote_qtd')
         p.prt('inventario')
-        pedido = lotes_em_estoque(self.cursor, tipo='p', ref=filtra_ref)
+        pedido = lotes_em_estoque(self.cursor, tipo='p', ref=filtra_ref, get='lote_qtd')
         p.prt('pedido')
-        solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=filtra_ref)
+        solicitado = lotes_em_estoque(self.cursor, tipo='s', ref=filtra_ref, get='lote_qtd')
         p.prt('solicitado')
         ped_solit = odl.merge(pedido, solicitado, ['op', 'oc'], ['qtd'])
         p.prt('ped_solit')

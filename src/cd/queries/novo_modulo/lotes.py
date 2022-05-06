@@ -5,7 +5,7 @@ from utils.functions.queries import debug_cursor_execute
 from utils.functions.strings import only_digits
 
 
-def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
+def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+', field_list=None):
     """Monta SQL base de selecão de lotes
     - endereçados; e
     - no estágio 63
@@ -26,10 +26,16 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
         list = uma lista de referências
       get
         ref = busca apenas o campo referência (com distinct)
-        None = busca lote, item, op e quantidades
+        None = busca apenas o campo referência (sem distinct)
+        lote_qtd = busca op, lote, item e quantidades
+        # loc = busca op, lote, item, quantidades e informação de endereçamento
       sinal: positivo ou negativo
         '+' = quantidades como estão no banco de dados
         '-' = inverte o sinal das quantidades       
+      #field_list
+      #  Lista de fields que devem ser retornados
+      #    Field pode ter alias a ser utilizado. Ex.: "qtd quanti"
+      #    obs.: ref sempre é retornado
     """
 
     if ref is None:
@@ -55,24 +61,35 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
         """
         filter_colecao = f"AND r.COLECAO = '{colecao}'"
 
+    field_list = field_list if field_list else []
+    fields_set = {'ref'}.union(field_list)
+
+    available_fields = {
+        'ref': "l.PROCONF_GRUPO",
+        'per': "l.PERIODO_PRODUCAO",
+        'oc': "l.ORDEM_CONFECCAO",
+        'tam': "l.PROCONF_SUBGRUPO",
+        'ordem_tam': "tam.ORDEM_TAMANHO",
+        'cor': "l.PROCONF_ITEM",
+        'op': "l.ORDEM_PRODUCAO",
+        'qtd_prog': "l.QTDE_PECAS_PROG",
+        'qtd_dbaixa': "l.QTDE_DISPONIVEL_BAIXA",
+    }
+
+    distinct = False
     if get == 'ref':
         distinct = True
-        fields = """--
-              l.PROCONF_GRUPO ref
-        """
-    else:
-        distinct = False
-        fields = """--
-              l.PERIODO_PRODUCAO per
-            , l.ORDEM_CONFECCAO oc
-            , l.PROCONF_GRUPO ref
-            , l.PROCONF_SUBGRUPO tam
-            , tam.ORDEM_TAMANHO ordem_tam
-            , l.PROCONF_ITEM cor
-            , l.ORDEM_PRODUCAO op
-            , l.QTDE_PECAS_PROG qtd_prog
-            , l.QTDE_DISPONIVEL_BAIXA qtd_dbaixa
-        """
+    elif get == 'lote_qtd':
+        fields_set = fields_set.union([
+            'per',
+            'oc',
+            'tam',
+            'ordem_tam',
+            'cor',
+            'op',
+            'qtd_prog',
+            'qtd_dbaixa',
+        ])
 
     filtra_estagio = "AND l.CODIGO_ESTAGIO = 63"
     if tipo == 'p':
@@ -116,6 +133,13 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
               AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
 
+    fields = "\n, ".join(
+        [
+            f"{available_fields[field.split()[0]]} {field.split()[-1]}"
+            for field in fields_set
+        ]
+    )
+
     sql = f"""
         SELECT {"DISTINCT" if distinct else ""}
         {fields} -- fields
@@ -143,8 +167,8 @@ def refs_em_estoque(cursor):
     return dictlist(cursor)
 
 
-def lotes_em_estoque(cursor, tipo=None, ref=None, colecao=None, get=None, modelo=None):
-    sql = sql_em_estoque(tipo=tipo, ref=ref, colecao=colecao, get=get)
+def lotes_em_estoque(cursor, tipo=None, ref=None, colecao=None, get=None, modelo=None, field_list=None):
+    sql = sql_em_estoque(tipo=tipo, ref=ref, colecao=colecao, get=get, field_list=field_list)
     debug_cursor_execute(cursor, sql)
     dados = dictlist(cursor)
     if modelo:
