@@ -742,6 +742,7 @@ class GradeEstoqueTotaisForm(forms.Form):
     usa_paginador = forms.ChoiceField(
         label='Utiliza paginador',
         choices=CHOICES_PAGINADOR, initial='s')
+
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
 
@@ -863,3 +864,6 @@ class NovoEstoqueForm(forms.Form):
             }
         )
     )
+
+    page = forms.IntegerField(
+        required=False, widget=forms.HiddenInput())
