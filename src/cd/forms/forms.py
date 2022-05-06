@@ -850,7 +850,7 @@ class SolicitacoesForm(forms.Form):
         return cleaned.upper().zfill(5)
 
 
-class EstoqueForm(forms.Form):
+class NovoEstoqueForm(forms.Form):
     lote = forms.CharField(
         min_length=9,
         max_length=9,

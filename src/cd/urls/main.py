@@ -187,6 +187,6 @@ urlpatterns = [
         solicitacao.Solicitacao.as_view(), name='novo_solicitacao'),
 
     re_path(r'^novo/estoque/(?P<ordem>.)/(?P<filtro>.+)/$',
-        estoque.Estoque.as_view(), name='novo_estoque_filtro'),
-    re_path(r'^novo/estoque/$', estoque.Estoque.as_view(), name='novo_estoque'),
+        estoque.NovoEstoque.as_view(), name='novo_estoque_filtro'),
+    re_path(r'^novo/estoque/$', estoque.NovoEstoque.as_view(), name='novo_estoque'),
 ]
