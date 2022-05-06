@@ -14,6 +14,7 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
         i = inventário: todos os lotes endereçados e com quantidade no estágio 63
         p = lotes que aparece no inventário (opção acima) e são de OPs de Pedidos
         s = solicitado (situação 2, 3 ou 4) de OP com estágio 63
+        iq = inventário: todos os lotes endereçados e com quantidade em qq estágio
         None = todos os lotes
       ref: filtro de referências
         None = não filtra
@@ -73,6 +74,7 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
             , l.QTDE_DISPONIVEL_BAIXA qtd_dbaixa
         """
 
+    filtra_estagio = "AND l.CODIGO_ESTAGIO = 63"
     if tipo == 'p':
         field_qtd = f"""--
             , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
@@ -97,7 +99,7 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
         tipo_filter = """--
               AND sl.SITUACAO IN (2, 3, 4)
         """
-    elif tipo == 'i':
+    elif tipo and tipo.startswith('i'):
         field_qtd = f"""--
             , {sinal}l.QTDE_DISPONIVEL_BAIXA qtd
         """
@@ -105,6 +107,8 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
         tipo_filter = """--
               AND l.QTDE_DISPONIVEL_BAIXA > 0
         """
+        if 'q' in tipo:
+            filtra_estagio = ''
     else:
         field_qtd = ""
         tipo_join = ""
@@ -124,7 +128,8 @@ def sql_em_estoque(tipo=None, ref=None, get=None, colecao=None, sinal='+'):
         {join_para_colecao} -- join_para_colecao
         LEFT JOIN BASI_220 tam -- cadastro de tamanhos
           ON tam.TAMANHO_REF = l.PROCONF_SUBGRUPO
-        WHERE l.CODIGO_ESTAGIO = 63
+        WHERE 1=1
+          {filtra_estagio} -- filtra_estagio
           {tipo_filter} -- tipo_filter
           {filter_ref} -- filter_ref
           {filter_colecao} -- filter_colecao
