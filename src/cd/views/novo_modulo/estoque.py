@@ -29,7 +29,18 @@ class NovoEstoque(O2BaseGetPostView):
         # if self.usa_paginador == 'n':
         #     modelos_por_pagina = 99999
 
-        lotes = lotes_em_estoque(self.cursor, tipo='iq',)
+        self.referencia = None if self.referencia == '' else self.referencia
+        self.modelo = None if self.modelo == '' else int(self.modelo)
+
+        lotes = lotes_em_estoque(
+            self.cursor,
+            tipo='iq',
+            ref=self.referencia,
+            modelo=self.modelo,
+            # filter={
+
+            # }
+        )
         
         lotes = paginator_basic(lotes, lotes_por_pagina, self.page)
         pprint(lotes.__dict__)

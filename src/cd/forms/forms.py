@@ -9,6 +9,7 @@ from django.db.models.functions import Coalesce
 from fo2.connections import db_cursor_so
 
 from utils.functions.digits import fo2_digit_valid
+from utils.functions.functions import is_number
 from utils.functions.strings import only_digits
 
 from systextil.models import Colecao
@@ -852,18 +853,62 @@ class SolicitacoesForm(forms.Form):
 
 
 class NovoEstoqueForm(forms.Form):
-    lote = forms.CharField(
-        min_length=9,
-        max_length=9,
+    # lote = forms.CharField(
+    #     min_length=9,
+    #     max_length=9,
+    #     required=False,
+    #     widget=forms.TextInput(
+    #         attrs={
+    #             'size': 9,
+    #             'type': 'number',
+    #             'autofocus': 'autofocus',
+    #         }
+    #     )
+    # )
+
+    referencia = forms.CharField(
+        label='Referência',
         required=False,
+        min_length=1,
+        max_length=5,
         widget=forms.TextInput(
             attrs={
-                'size': 9,
+                'size': 5,
+                'type': 'string',
+                'style': 'text-transform:uppercase;',
+                'placeholder': '0...',
+            }
+        )
+    )
+
+    modelo = forms.CharField(
+        required=False,
+        min_length=1,
+        max_length=5,
+        widget=forms.TextInput(
+            attrs={
+                'size': 5,
                 'type': 'number',
-                'autofocus': 'autofocus',
+                'placeholder': '0',
             }
         )
     )
 
     page = forms.IntegerField(
         required=False, widget=forms.HiddenInput())
+
+    def clean_referencia(self):
+        cleaned = self.cleaned_data['referencia']
+        if len(cleaned) == 0:
+            cleaned = ''
+        else:
+            if cleaned[0].isalpha():
+                if len(cleaned) > 1 and is_number(cleaned[1:]):
+                    cleaned = cleaned[0].upper() + cleaned[1:].upper().zfill(4)
+            else:
+                cleaned.upper().zfill(5)
+
+        data = self.data.copy()
+        data['referencia'] = cleaned
+        self.data = data
+        return cleaned
