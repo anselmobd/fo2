@@ -37,18 +37,11 @@ def join_non_empty(sep, lista):
 
 
 def is_only_digits(text):
-    return all(
-        map(
-            str.isdigit,
-            [ch for ch in text]
-        )
-    )
+    return all(map(str.isdigit, text))
 
 
 def only_digits(text):
-    return ''.join(
-        [char for char in text if char.isdigit()]
-    )
+    return ''.join(filter(str.isdigit, text))
 
 
 def split_non_empty(text, sep):
