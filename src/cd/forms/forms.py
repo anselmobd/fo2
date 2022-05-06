@@ -9,8 +9,7 @@ from django.db.models.functions import Coalesce
 from fo2.connections import db_cursor_so
 
 from utils.functions.digits import fo2_digit_valid
-from utils.functions.functions import is_number
-from utils.functions.strings import only_digits
+from utils.functions.strings import only_digits, is_only_digits
 
 from systextil.models import Colecao
 
@@ -902,11 +901,14 @@ class NovoEstoqueForm(forms.Form):
         if len(cleaned) == 0:
             cleaned = ''
         else:
-            if cleaned[0].isalpha():
-                if len(cleaned) > 1 and is_number(cleaned[1:]):
-                    cleaned = cleaned[0].upper() + cleaned[1:].upper().zfill(4)
+            if (
+                len(cleaned) > 1 and 
+                cleaned[0].isalpha() and 
+                is_only_digits(cleaned[1:])
+            ):
+                cleaned = cleaned[0].upper() + cleaned[1:].upper().zfill(4)
             else:
-                cleaned.upper().zfill(5)
+                cleaned = cleaned.upper().zfill(5)
 
         data = self.data.copy()
         data['referencia'] = cleaned
