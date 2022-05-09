@@ -17,7 +17,7 @@ def get_solicitacoes(
     """ if solicitacao else ''
 
     if pedido_destino:
-        if isinstance(pedido_destino, Iterable):
+        if isinstance(pedido_destino, (tuple, list)):
             condicao = ", ".join(map(str, pedido_destino))
             condicao = f" IN ({condicao})"
         else:
