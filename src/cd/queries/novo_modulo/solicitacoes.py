@@ -108,7 +108,16 @@ def get_solicitacoes(
     return dictlist(cursor)
 
 
-def get_solicitacao(cursor, id):
+def get_solicitacao(
+    cursor,
+    solicitacao=None,
+):
+
+    if solicitacao and solicitacao != '-':
+        filtra_solicitacao = f"AND sl.SOLICITACAO = {solicitacao}"
+    else:
+        filtra_solicitacao = "AND sl.SOLICITACAO IS NULL"
+
     sql = f"""
         SELECT DISTINCT
           sl.ORDEM_PRODUCAO
@@ -170,7 +179,8 @@ def get_solicitacao(cursor, id):
           ON ec.COD_CONTAINER = lp.COD_CONTAINER
         LEFT JOIN ENDR_013 e -- endereço
           ON e.COD_ENDERECO = ec.COD_ENDERECO
-        WHERE sl.SOLICITACAO  = {id}
+        WHERE 1=1
+          {filtra_solicitacao} -- filtra_solicitacao
         ORDER BY
           sl.SITUACAO
         , lest.CODIGO_ESTAGIO
