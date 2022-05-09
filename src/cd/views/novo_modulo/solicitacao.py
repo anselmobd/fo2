@@ -28,7 +28,17 @@ class Solicitacao(O2BaseGetView):
         self.get_args2context = True
 
     def monta_dados_solicitados(self):
-        self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
+        if self.context['pedido'] is not None:
+            if self.context['pedido'] == 0:
+                self.dados_solicitados = []
+            else:
+                self.dados_solicitados = get_solicitacao(
+                    self.cursor,
+                    pedido_destino=self.pedido,
+                )
+        else:
+            self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
+
         self.dados_enderecados = copy.deepcopy(self.dados_solicitados)
         self.dados_enderecados.sort(
             key=itemgetter(
@@ -229,6 +239,10 @@ class Solicitacao(O2BaseGetView):
         })
 
     def monta_dados_pedidos(self):
+        if not self.dados_solicitados:
+            self.dados_pedidos = []
+            return
+
         dict_pedidos = {}
         for row in self.dados_solicitados:
             pedido = row['pedido_destino']
@@ -277,6 +291,10 @@ class Solicitacao(O2BaseGetView):
         })
 
     def monta_grades_solicitadas(self):
+        if not self.dados_solicitados:
+            self.grades_solicitadas = []
+            return
+
         refs_solicitadas_set = set()
         for row in self.dados_solicitados:
             refs_solicitadas_set.add(row['ref'])
@@ -354,6 +372,12 @@ class Solicitacao(O2BaseGetView):
     def mount_context(self):
         self.cursor = db_cursor_so(self.request)
         self.og = OperacoesGrade()
+
+        if self.context['solicitacao'] == '-':
+            self.context['solicitacao'] = 'Sem número'
+            self.context['pedido'] = self.request.GET.get('pedido', 0)
+        else:
+            self.context['pedido'] = None
 
         self.monta_dados_solicitados()
 
