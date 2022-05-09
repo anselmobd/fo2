@@ -71,11 +71,12 @@ class Solicitacoes(O2BaseGetPostView):
                     args=[row['solicitacao']]
                 )
             else:
-                # row['solicitacao|LINK'] = reverse(
-                #     'cd:novo_solicitacao',
-                #     args=['-']
-                # )
-                row['solicitacao'] = 'Sem Número'
+                if self.pedido_destino:
+                    row['solicitacao'] = 'Sem Número'
+                    row['solicitacao|LINK'] = reverse(
+                        'cd:novo_solicitacao',
+                        args=['-']
+                    )+f"?pedido={self.pedido_destino}"
             row['solicitacao|TARGET'] = '_blank'
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
