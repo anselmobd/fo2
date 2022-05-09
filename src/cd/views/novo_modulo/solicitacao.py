@@ -74,6 +74,11 @@ class Solicitacao(O2BaseGetView):
             else:
                 row['inclusao_palete'] = '-'
 
+            if row['inclusao_endereco']:
+                row['inclusao_endereco'] = row['inclusao_endereco'].strftime("%d/%m/%y %H:%M")
+            else:
+                row['inclusao_endereco'] = '-'
+
         totalize_data(self.dados_solicitados, {
             'sum': [
                 'qtde',
@@ -105,6 +110,8 @@ class Solicitacao(O2BaseGetView):
                 'Inclusão S.',
                 'Palete',
                 'Inclusão P.',
+                'Endereço',
+                'Inclusão E.',
             ],
             'fields': [
                 'situacao',
@@ -126,6 +133,9 @@ class Solicitacao(O2BaseGetView):
                 'inclusao',
                 'palete',
                 'inclusao_palete',
+                'endereco',
+                'inclusao_endereco',
+
             ],
             'style': untuple_keys_concat({
                 (1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16):

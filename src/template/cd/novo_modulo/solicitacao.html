@@ -20,7 +20,8 @@
     <div class="tab-content">
       <div id="lotes" class="tab-pane fade in active">
         <p>Lista registros em que a OP não tem estágio 63-CD (isso exclui OPs de expedição)<br/>
-        "Palete" é onde está atualmente o lote. "Inclusão P." é quando o lote foi incluido no palete.</p>
+          "Palete" é onde está atualmente o lote. "Inclusão P." é quando o lote foi incluido no palete.<br/>
+          "Endereço" é onde está atualmente o Palete. "Inclusão E." é quando o palete foi incluido no endereço.</p>
         <table>
           {% include "layout/thead_generic.html" with data=headers style=style thclass='sticky' only %}
           {% include "layout/tbody_generic.html" with fields=fields data=data style=style only %}
