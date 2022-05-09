@@ -833,6 +833,17 @@ class SolicitacoesForm(forms.Form):
             }
         )
     )
+    lote = forms.CharField(
+        min_length=9,
+        max_length=9,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'size': 9,
+                'type': 'number',
+            }
+        )
+    )
     page = forms.IntegerField(
         required=False,
         widget=forms.HiddenInput()
