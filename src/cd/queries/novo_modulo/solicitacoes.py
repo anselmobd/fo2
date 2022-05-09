@@ -40,6 +40,15 @@ def get_solicitacoes(
         AND l.PROCONF_GRUPO = '{ref_reservada}'
     """ if ref_reservada else ''
 
+    if (
+        filtra_pedido_destino
+        # or filtra_ref_destino
+        # or filtra_ref_reservada
+    ):
+        solicitacao_nula = ""
+    else:
+        solicitacao_nula = "AND sl.SOLICITACAO IS NOT NULL"
+
     sql = f"""
         SELECT DISTINCT
           sl.SOLICITACAO 
@@ -75,7 +84,8 @@ def get_solicitacoes(
           ON l.QTDE_EM_PRODUCAO_PACOTE > 0
          AND l.ORDEM_PRODUCAO = sl.ORDEM_PRODUCAO
          AND l.ORDEM_CONFECCAO = sl.ORDEM_CONFECCAO
-        WHERE sl.SOLICITACAO IS NOT NULL 
+        WHERE 1=1
+          {solicitacao_nula} -- solicitacao_nula
           {filtra_solicitacao} -- filtra_solicitacao
           {filtra_pedido_destino} -- filtra_pedido_destino
           {filtra_ref_destino} -- filtra_ref_destino
