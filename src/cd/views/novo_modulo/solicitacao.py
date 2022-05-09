@@ -29,6 +29,17 @@ class Solicitacao(O2BaseGetView):
 
     def monta_dados_solicitados(self):
         self.dados_solicitados = get_solicitacao(self.cursor, self.context['solicitacao'])
+        self.dados_enderecados = copy.deepcopy(self.dados_solicitados)
+        self.dados_enderecados.sort(
+            key=itemgetter(
+                'rota',
+                'endereco',
+                'situacao',
+                'ordem_producao',
+                'lote',
+            ),
+            reverse=True,
+        )
 
     def context_solicitados(self):
         for row in self.dados_solicitados:
@@ -69,16 +80,6 @@ class Solicitacao(O2BaseGetView):
 
             row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
 
-            if row['inclusao_palete']:
-                row['inclusao_palete'] = row['inclusao_palete'].strftime("%d/%m/%y %H:%M")
-            else:
-                row['inclusao_palete'] = '-'
-
-            if row['inclusao_endereco']:
-                row['inclusao_endereco'] = row['inclusao_endereco'].strftime("%d/%m/%y %H:%M")
-            else:
-                row['inclusao_endereco'] = '-'
-
         totalize_data(self.dados_solicitados, {
             'sum': [
                 'qtde',
@@ -108,10 +109,6 @@ class Solicitacao(O2BaseGetView):
                 'Alter.',
                 'OP destino',
                 'Inclusão S.',
-                'Palete',
-                'Inclusão P.',
-                'Endereço',
-                'Inclusão E.',
             ],
             'fields': [
                 'situacao',
@@ -131,11 +128,6 @@ class Solicitacao(O2BaseGetView):
                 'alter_destino',
                 'op_destino',
                 'inclusao',
-                'palete',
-                'inclusao_palete',
-                'endereco',
-                'inclusao_endereco',
-
             ],
             'style': untuple_keys_concat({
                 (1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16):
@@ -143,6 +135,97 @@ class Solicitacao(O2BaseGetView):
                 (5, 13): 'text-align: right;',
             }),
             'data': self.dados_solicitados,
+        })
+
+    def context_enderecos(self):
+        for row in self.dados_enderecados:
+            row['ordem_producao|LINK'] = reverse(
+                'producao:op__get',
+                args=[row['ordem_producao']],
+            )
+            row['ordem_producao|GLYPHICON'] = '_'
+            row['ordem_producao|TARGET'] = '_blank'
+
+            row['lote|LINK'] = reverse(
+                'producao:posicao__get',
+                args=[row['lote']],
+            )
+            row['lote|GLYPHICON'] = '_'
+            row['lote|TARGET'] = '_blank'
+
+            row['ref|LINK'] = reverse(
+                'produto:ref__get',
+                args=[row['ref']],
+            )
+            row['ref|GLYPHICON'] = '_'
+            row['ref|TARGET'] = '_blank'
+
+            row['inclusao'] = row['inclusao'].strftime("%d/%m/%y %H:%M")
+
+            if row['inclusao_palete']:
+                row['inclusao_palete'] = row['inclusao_palete'].strftime("%d/%m/%y %H:%M")
+            else:
+                row['inclusao_palete'] = '-'
+
+            if row['inclusao_endereco']:
+                row['inclusao_endereco'] = row['inclusao_endereco'].strftime("%d/%m/%y %H:%M")
+            else:
+                row['inclusao_endereco'] = '-'
+
+        totalize_data(self.dados_enderecados, {
+            'sum': [
+                'qtde',
+            ],
+            'count': [],
+            'descr': {'situacao': 'Total:'},
+            'row_style': 'font-weight: bold;',
+            'flags': ['NO_TOT_1'],
+        })
+
+        self.context.update({
+            'e_headers': [
+                'Situação',
+                'Estágio',
+                'OP',
+                'Lote',
+                'Qtd.Lote',
+                'Ref.',
+                'Tam.',
+                'Cor',
+                'Qtde.',
+                'Parcial?',
+                'Inclusão S.',
+                'Palete',
+                'Inclusão P.',
+                'Rota',
+                'Endereço',
+                'Inclusão E.',
+            ],
+            'e_fields': [
+                'situacao',
+                'codigo_estagio',
+                'ordem_producao',
+                'lote',
+                'qtd_ori',
+                'ref',
+                'tam',
+                'cor',
+                'qtde',
+                'int_parc',
+                'inclusao',
+                'palete',
+                'inclusao_palete',
+                'rota',
+                'endereco',
+                'inclusao_endereco',
+
+            ],
+            'e_style': untuple_keys_concat({
+                (1, 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16):
+                    'text-align: center;',
+                (5, 9): 'text-align: right;',
+            }),
+            'e_data': self.dados_enderecados,
         })
 
     def monta_dados_pedidos(self):
@@ -279,6 +362,8 @@ class Solicitacao(O2BaseGetView):
         self.monta_grades_solicitadas()
 
         self.context_solicitados()
+
+        self.context_enderecos()
 
         self.context_pedidos()
 
